@@ -522,13 +522,13 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     renderWithMessages(<TaskCollection article={article} kind="vocabulary" />);
     const chip = await screen.findByRole("button", { name: "cat" });
     fireEvent.keyDown(chip, { key: "Enter" });
-    expect(chip.className).toMatch(/border-blue-400/);
+    expect(chip.className).toMatch(/lf-well--gold/);
 
     cleanup();
     renderWithMessages(<TaskVocabularyCollection article={article} />);
     const vocabChip = await screen.findByRole("button", { name: "cat" });
     fireEvent.keyDown(vocabChip, { key: "Enter" });
-    expect(vocabChip.className).toMatch(/border-blue-400/);
+    expect(vocabChip.className).toMatch(/lf-well--gold/);
   });
 
   it("flips the flashcard face by keyboard", async () => {

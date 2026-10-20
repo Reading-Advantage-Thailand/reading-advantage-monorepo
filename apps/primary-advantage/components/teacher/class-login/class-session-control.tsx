@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { Button } from "@/components/ui/button";
 import { errorKey, postStudentLogin, type ClassLoginErrorKey, type ClassRoster } from "./api";
 
@@ -31,7 +32,7 @@ export interface ClassSessionControlProps {
  */
 export function ClassSessionControl({ classroomId, openSession, fetchedAt, onChange }: ClassSessionControlProps) {
   const t = useTranslations("ClassLogin");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const [started, setStarted] = useState<(StartResult & { at: number }) | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ClassLoginErrorKey | null>(null);

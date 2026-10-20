@@ -128,6 +128,21 @@ describe("updateUserActivity server XP authority", () => {
     expect(capture.userRows[0]?.xp).toBe(UserXpEarned.MCQuestion);
   });
 
+  it("gives the task XP again on a second pass: a new activity row and one new XP log (legacy rule)", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "student-1", role: "STUDENT" });
+    const capture: TxCapture = { xpRows: [], userRows: [] };
+    // After "Start again" the closed attempt left no user_activity row, so the existing-row lookup is empty.
+    primeDb(158, capture);
+
+    const result = await updateUserActivity("article-1", ActivityType.MC_QUESTION, 30, {});
+
+    expect(result).toEqual({ success: true });
+    expect(mocks.insert).toHaveBeenCalledTimes(2);
+    expect(capture.xpRows).toHaveLength(1);
+    expect(capture.xpRows[0]?.xpEarned).toBe(UserXpEarned.MCQuestion);
+    expect(capture.userRows[0]?.xp).toBe(158 + UserXpEarned.MCQuestion);
+  });
+
   it("rejects anonymous callers without writing", async () => {
     mocks.currentUser.mockResolvedValue(null);
 

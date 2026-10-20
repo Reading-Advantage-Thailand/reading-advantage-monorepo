@@ -65,6 +65,7 @@ const lesson = {
   summary: "May meets her class.",
   thaiSummary: "เมย์พบเพื่อนร่วมชั้น",
   stepsDone: [1, 2],
+  hasPrint: true,
 };
 
 /**
@@ -101,6 +102,17 @@ describe("teacher lesson page (FR-8, FR-9, FR-12, FR-13)", () => {
     expect(mocks.getTeacherLesson).toHaveBeenCalledWith(expect.objectContaining({ classBookId: CB, number: 2 }));
   });
 
+  it("links the print page with print data and shows the not-ready line without it", async () => {
+    await renderPage();
+    expect(screen.getByRole("link", { name: en.lesson.print })).toHaveAttribute("href", `${HERE}/print`);
+    expect(screen.queryByText(en.lesson.printNotReady)).not.toBeInTheDocument();
+    cleanup();
+    mocks.getTeacherLesson.mockResolvedValue({ ...lesson, hasPrint: false });
+    await renderPage();
+    expect(screen.queryByRole("link", { name: en.lesson.print })).not.toBeInTheDocument();
+    expect(screen.getByText(en.lesson.printNotReady)).toBeInTheDocument();
+  });
+
   it("lists the guide by period, marks the steps done, and links the games on the practice steps", async () => {
     await renderPage();
     const guideRegion = screen.getByRole("region", { name: en.guide.title });
@@ -108,8 +120,8 @@ describe("teacher lesson page (FR-8, FR-9, FR-12, FR-13)", () => {
     expect(within(guideRegion).getByRole("region", { name: "Period 3" })).toBeInTheDocument();
     expect(within(guideRegion).getAllByText(en.guide.done)).toHaveLength(2);
     expect(within(guideRegion).getByText("# Step 1 script")).toBeInTheDocument();
-    // step 1 (bell-ringer) and step 9 (practice) link the games
-    expect(within(guideRegion).getAllByRole("link", { name: en.guide.games })).toHaveLength(2);
+    // only the practice step 9 links the games: the projector games of the lesson
+    expect(within(guideRegion).getAllByRole("link", { name: en.guide.games }).map((a) => a.getAttribute("href"))).toEqual([`${HERE}/projector#projector-games`]);
   });
 
   it("shows the answer key with the correct option, the model answers, and the activities", async () => {

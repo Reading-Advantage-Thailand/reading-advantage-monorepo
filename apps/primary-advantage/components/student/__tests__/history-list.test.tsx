@@ -81,6 +81,19 @@ describe("HistoryList records", () => {
     expect(screen.getByRole("searchbox", { name: t.search })).toBeInTheDocument();
   });
 
+  it("tags a story that the student did again with its attempt number (lesson repeat low)", async () => {
+    fetchMock.mockResolvedValue(
+      ok({
+        data: [{ ...record("a1", "The Moon"), attemptNumber: 2 }, { ...record("a2", "Frogs"), attemptNumber: 1 }],
+        pagination: { page: 1, limit: 10, total: 2, totalPages: 1 },
+      }),
+    );
+    renderWithMessages(<HistoryList variant="history" />, { locale: "en" });
+    const [first, second] = await screen.findAllByRole("listitem");
+    expect(within(first).getByText("Attempt 2")).toBeInTheDocument();
+    expect(within(second).queryByText(/Attempt/)).not.toBeInTheDocument();
+  });
+
   it("shows page controls only for more than one page, and loads the next page", async () => {
     const t = testMessages.en.StudentHistory;
     fetchMock

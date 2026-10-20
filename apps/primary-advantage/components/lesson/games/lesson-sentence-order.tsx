@@ -1,4 +1,5 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, {
   useState,
   useEffect,
@@ -7,9 +8,7 @@ import React, {
   useRef,
 } from "react";
 import { Header } from "@/components/header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { RpgButton, Sign } from "@/components/rpg/chrome";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@reading-advantage/ui";
 import {
@@ -194,6 +193,7 @@ export function OrderSentenceGame({
   const [isPlayingHintAudio, setIsPlayingHintAudio] = useState(false);
   const [showCorrectOrder, setShowCorrectOrder] = useState(false);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
   const [highlightHintsEnabled, setHighlightHintsEnabled] = useState(false);
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
 
@@ -449,7 +449,9 @@ export function OrderSentenceGame({
       return;
     }
     setGameComplete(true);
-    if (isDeck) {
+    if (isPreview) {
+      notSaved();
+    } else if (isDeck) {
       await fetch(`/api/flashcard/decks/${deckId}/sentences-for-ordering`, {
         method: "POST",
         body: JSON.stringify({
@@ -469,7 +471,7 @@ export function OrderSentenceGame({
     }
     setIsPlaying(false);
     await refresh();
-  }, [currentIndex, activeSentences.length, isDeck, articleId, deckId, refresh]);
+  }, [currentIndex, activeSentences.length, isDeck, articleId, deckId, refresh, isPreview]);
 
   const handleRestart = useCallback(() => {
     if (currentSentenceGroup?.sentences) {
@@ -704,8 +706,8 @@ export function OrderSentenceGame({
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="space-y-4 text-center">
-          <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
+        <div className="cq-panel space-y-4 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[var(--cq-wood-dark)]" />
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">{t("loading")}</h3>
             <p className="text-muted-foreground text-sm">
@@ -723,75 +725,70 @@ export function OrderSentenceGame({
 
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="space-y-8 text-center">
+        <div className="cq-panel space-y-8 text-center">
           {/* Trophy Animation */}
           <div className="relative">
             <div className="animate-bounce">
-              <Trophy className="mx-auto h-24 w-24 text-yellow-500" />
+              <span className="lf-medal mx-auto size-28">
+                <Trophy className="h-16 w-16 text-[var(--cq-wood-dark)]" />
+              </span>
             </div>
-            <div className="bg-primary absolute -top-2 -right-2 h-6 w-6 animate-ping rounded-full" />
+            <div className="absolute -top-2 -right-2 h-6 w-6 animate-ping rounded-full bg-[var(--cq-gold)]" />
           </div>
 
           {/* Results Header */}
           <div className="space-y-4">
-            <h1 className="gradient-text text-4xl font-bold md:text-5xl">
+            <h1 className="text-4xl font-bold text-[var(--cq-wood-dark)] md:text-5xl">
               🎉 {t("completedTitle")}
             </h1>
-            <p className="text-muted-foreground text-xl">
+            <p className="cq-muted text-xl">
               {t("completedDescription", { count: activeSentences.length })}
             </p>
           </div>
 
           {/* Stats Grid */}
           <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-3">
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Target className="mx-auto mb-3 h-8 w-8 text-blue-500" />
-                <div className="text-3xl font-bold text-blue-600">{score}</div>
-                <p className="text-muted-foreground text-sm">{t("correct")}</p>
-              </CardContent>
-            </Card>
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <Target className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+              <div className="text-3xl font-bold">{score}</div>
+              <p className="text-sm">{t("correct")}</p>
+            </div>
 
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Zap className="mx-auto mb-3 h-8 w-8 text-green-500" />
-                <div className="text-3xl font-bold text-green-600">
-                  {accuracy}%
-                </div>
-                <p className="text-muted-foreground text-sm">{t("accuracy")}</p>
-              </CardContent>
-            </Card>
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <Zap className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+              <div className="text-3xl font-bold">
+                {accuracy}%
+              </div>
+              <p className="text-sm">{t("accuracy")}</p>
+            </div>
 
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Clock className="mx-auto mb-3 h-8 w-8 text-purple-500" />
-                <div className="text-3xl font-bold text-purple-600">
-                  {formatTime(timer)}
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  {t("totalTime")}
-                </p>
-              </CardContent>
-            </Card>
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <Clock className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+              <div className="text-3xl font-bold">
+                {formatTime(timer)}
+              </div>
+              <p className="text-sm">
+                {t("totalTime")}
+              </p>
+            </div>
           </div>
 
           {/* Action Buttons */}
           <div className="mx-auto flex max-w-md flex-col gap-4 sm:flex-row">
             {labels.showBackButton && (
-              <Button
+              <RpgButton
                 onClick={handleBack}
-                size="lg"
-                variant="outline"
+                tone="iron"
                 className="flex-1"
               >
-                <ArrowLeft className="mr-2 h-4 w-4" />
+                <ArrowLeft className="h-4 w-4" />
                 {t("backToMenu")}
-              </Button>
+              </RpgButton>
             )}
-            <Button onClick={handleRestartGame} size="lg" className="flex-1">
-              <RotateCcw className="mr-2 h-4 w-4" />
+            <RpgButton onClick={handleRestartGame} tone="gold" className="flex-1">
+              <RotateCcw className="h-4 w-4" />
               {t("playAgain")}
-            </Button>
+            </RpgButton>
           </div>
         </div>
       </div>
@@ -802,20 +799,22 @@ export function OrderSentenceGame({
   if (!isPlaying) {
     return (
       <div className="container mx-auto max-w-4xl space-y-8 px-4">
-        <Header heading={t("title")} text={t("description")} />
+        <div className="cq-panel">
+          <Header heading={t("title")} text={t("description")} />
+        </div>
 
-        <Card className="mx-auto max-w-2xl">
-          <CardHeader className="pb-6 text-center">
-            <CardTitle className="text-2xl">{t("readyToStart")}</CardTitle>
-            <p className="text-muted-foreground">{t("arrangeSentences")}</p>
-          </CardHeader>
+        <div className="cq-panel mx-auto flex max-w-2xl flex-col gap-6 py-6">
+          <div className="flex flex-col items-center gap-2 px-6 pb-6 text-center">
+            <Sign className="text-2xl">{t("readyToStart")}</Sign>
+            <p className="cq-muted">{t("arrangeSentences")}</p>
+          </div>
 
-          <CardContent className="space-y-8">
+          <div className="space-y-8 px-6">
             {/* Game Stats */}
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-2 text-center">
-                <div className="bg-primary/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
-                  <span className="text-primary text-2xl font-bold">
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <span className="text-2xl font-bold">
                     {activeSentences.length}
                   </span>
                 </div>
@@ -826,8 +825,8 @@ export function OrderSentenceGame({
               </div>
 
               <div className="space-y-2 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500/10">
-                  <GripVertical className="h-6 w-6 text-green-600" />
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <GripVertical className="h-6 w-6" />
                 </div>
                 <p className="text-sm font-medium">{t("dragAndDrop")}</p>
                 <p className="text-muted-foreground text-xs">
@@ -836,8 +835,8 @@ export function OrderSentenceGame({
               </div>
 
               <div className="space-y-2 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10">
-                  <Clock className="h-6 w-6 text-purple-600" />
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <Clock className="h-6 w-6" />
                 </div>
                 <p className="text-sm font-medium">
                   {t("playtime", { time: 15 })}
@@ -851,12 +850,12 @@ export function OrderSentenceGame({
             <Separator />
 
             {/* Game Instructions */}
-            <div className="bg-muted/50 space-y-3 rounded-lg p-6">
+            <div className="lf-well space-y-3 p-6">
               <div className="flex items-center gap-2">
-                <div className="bg-primary h-2 w-2 rounded-full" />
+                <div className="lf-stud" />
                 <p className="text-sm font-medium">{t("howToPlay")}</p>
               </div>
-              <ul className="text-muted-foreground ml-4 space-y-2 text-sm">
+              <ul className="cq-muted ml-4 space-y-2 text-sm">
                 <li>• {t("eachGameShows")}</li>
                 <li>• {t("dragSentences")}</li>
                 <li>• {t("completeAll")}</li>
@@ -865,19 +864,19 @@ export function OrderSentenceGame({
 
             <Separator />
 
-            <Button
+            <RpgButton
               onClick={handleStartGame}
-              size="lg"
+              tone="gold"
               className="h-12 w-full"
               disabled={activeSentences.length === 0}
             >
-              <Play className="mr-2 h-5 w-5" />
+              <Play className="h-5 w-5" />
               {activeSentences.length === 0
                 ? t("noSentencesAvailable")
                 : t("startGame")}
-            </Button>
-          </CardContent>
-        </Card>
+            </RpgButton>
+          </div>
+        </div>
       </div>
     );
   }
@@ -885,9 +884,9 @@ export function OrderSentenceGame({
   if (!currentSentenceGroup) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="space-y-4 text-center">
-          <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
-          <p className="text-muted-foreground">{labels.loadingNextChallenge}</p>
+        <div className="cq-panel space-y-4 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[var(--cq-wood-dark)]" />
+          <p className="cq-muted">{labels.loadingNextChallenge}</p>
         </div>
       </div>
     );
@@ -895,14 +894,16 @@ export function OrderSentenceGame({
 
   return (
     <div className="container mx-auto max-w-4xl space-y-4 px-4">
-      <Header heading={t("title")} text={t("descriptionPlaying")} />
+      <div className="cq-panel">
+        <Header heading={t("title")} text={t("descriptionPlaying")} />
+      </div>
 
       {/* Hidden audio element for playback */}
       <audio ref={audioRef} style={{ display: "none" }} />
 
       {/* Minimal Progress Bar */}
-      <div className="space-y-2">
-        <div className="text-muted-foreground flex items-center justify-between text-sm">
+      <div className="cq-panel space-y-2">
+        <div className="cq-muted flex items-center justify-between text-sm">
           <span>
             {currentIndex + 1} of {activeSentences.length}
           </span>
@@ -916,82 +917,78 @@ export function OrderSentenceGame({
             </span>
           </div>
         </div>
-        <Progress value={progress} className="h-1" />
+        <Progress value={progress} className="h-3 border-2 border-[var(--cq-wood-dark)] bg-[#2a1d12] [&>[data-slot=progress-indicator]]:bg-[var(--cq-gold)]" />
       </div>
 
       {/* Game Card */}
-      <Card>
-        <CardHeader>
+      <div className="cq-panel flex flex-col gap-6 py-6">
+        <div className="px-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="space-y-3">
-              <CardTitle className="text-xl">
+            <div className="flex flex-col items-start gap-3">
+              <Sign className="text-xl">
                 📖 {currentSentenceGroup.articleTitle}
-              </CardTitle>
-              <p className="text-muted-foreground text-sm">
+              </Sign>
+              <p className="cq-muted text-sm">
                 {t("descriptionPlaying2")}
               </p>
             </div>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent className="space-y-6">
+        <div className="space-y-6 px-6">
           {/* Hint Controls */}
 
-          <div className="bg-muted/30 flex flex-wrap items-center gap-3 rounded-lg border p-4">
+          <div className="lf-well flex flex-wrap items-center gap-3 p-4">
             <div className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-yellow-500" />
+              <Lightbulb className="h-4 w-4 text-[var(--cq-gold-dark)]" />
               <span className="text-sm font-medium">{labels.hintsTitle}</span>
             </div>
 
             {/* Highlight Toggle */}
             <div className="flex items-center gap-2">
-              <Button
+              <RpgButton
                 onClick={toggleHighlightHints}
-                variant={highlightHintsEnabled ? "default" : "outline"}
-                size="sm"
-                className="h-8"
+                tone={highlightHintsEnabled ? "gold" : "wood"}
+                small
               >
-                <Target className="mr-1 h-3 w-3" />
+                <Target className="h-3 w-3" />
                 {t("hints.highlight")}
-              </Button>
+              </RpgButton>
             </div>
 
             {/* Audio Toggle */}
             <div className="flex items-center gap-2">
-              <Button
+              <RpgButton
                 onClick={toggleAudioHints}
-                variant={audioHintsEnabled ? "default" : "outline"}
-                size="sm"
-                className="h-8"
+                tone={audioHintsEnabled ? "gold" : "wood"}
+                small
               >
-                <Volume2 className="mr-1 h-3 w-3" />
+                <Volume2 className="h-3 w-3" />
                 {t("hints.audio")}
-              </Button>
+              </RpgButton>
             </div>
 
             {/* Audio Play Button - Only show when audio hints are enabled */}
             {audioHintsEnabled && (
               <>
                 <Separator orientation="vertical" className="h-6" />
-                <Button
+                <RpgButton
                   onClick={playHintAudio}
-                  variant="outline"
-                  size="sm"
-                  className="h-8"
+                  small
                   disabled={isPlayingHintAudio}
                 >
                   {isPlayingHintAudio ? (
                     <>
-                      <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                      <Loader2 className="h-3 w-3 animate-spin" />
                       {t("hints.playing")}
                     </>
                   ) : (
                     <>
-                      <Play className="mr-2 h-3 w-3" />
+                      <Play className="h-3 w-3" />
                       {t("hints.playOrder")}
                     </>
                   )}
-                </Button>
+                </RpgButton>
               </>
             )}
           </div>
@@ -1006,7 +1003,7 @@ export function OrderSentenceGame({
               </p>
             </div>
 
-            <div className="border-muted-foreground/25 bg-muted/30 min-h-[400px] rounded-lg border-2 border-dashed p-4">
+            <div className="min-h-[400px] rounded-lg border-2 border-dashed border-[var(--cq-parchment-edge)] bg-[rgba(107,84,56,0.08)] p-4">
               {userOrder.length === 0 ? (
                 <div className="flex h-full items-center justify-center">
                   <p className="text-muted-foreground">
@@ -1036,24 +1033,24 @@ export function OrderSentenceGame({
                         })}
                         onKeyDown={(e) => handleItemKeyDown(e, index)}
                         className={cn(
-                          "group relative rounded-lg border-2 p-4 transition-all duration-200",
+                          "lf-well group relative p-4 transition-all duration-200",
                           "cursor-move select-none",
                           {
                             // Normal state
-                            "border-border bg-card hover:bg-muted/50":
+                            "hover:bg-white/60":
                               dragOverIndex !== index &&
                               draggedItem?.id !== item.id &&
                               !isInCorrectPos,
 
                             // Hint: Correct position highlighting
-                            "border-green-400 bg-green-50 shadow-md ring-2 ring-green-200 dark:bg-green-950/30 dark:ring-green-800":
+                            "lf-good shadow-md":
                               // hintsEnabled && isInCorrectPos && !isCompleted,
                               highlightHintsEnabled &&
                               isInCorrectPos &&
                               !isCompleted,
 
                             // Drag over state
-                            "border-primary bg-primary/5 scale-[1.02] shadow-md":
+                            "lf-well--gold scale-[1.02] shadow-md":
                               dragOverIndex === index,
 
                             // Being dragged
@@ -1061,9 +1058,9 @@ export function OrderSentenceGame({
                               draggedItem?.id === item.id,
 
                             // Completed states
-                            "border-green-500 bg-green-50 dark:bg-green-950/20":
+                            "lf-good":
                               isCompleted && isCorrect,
-                            "border-red-500 bg-red-50 dark:bg-red-950/20":
+                            "lf-bad":
                               isCompleted && !isCorrect,
                           },
                         )}
@@ -1075,7 +1072,7 @@ export function OrderSentenceGame({
                               className={cn(
                                 "flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold transition-colors",
                                 {
-                                  "bg-green-500 text-white":
+                                  "bg-[#2f6b35] text-[#fff4dc]":
                                     highlightHintsEnabled &&
                                     isInCorrectPos &&
                                     !isCompleted,
@@ -1098,12 +1095,9 @@ export function OrderSentenceGame({
                               {highlightHintsEnabled &&
                                 isInCorrectPos &&
                                 !isCompleted && (
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                                  >
+                                  <span className="lg-chip lf-good inline-flex items-center gap-1">
                                     {labels.correctBadge}
-                                  </Badge>
+                                  </span>
                                 )}
                             </div>
                           </div>
@@ -1118,22 +1112,22 @@ export function OrderSentenceGame({
 
           {/* Result Display */}
           {showResult && (
-            <Card
+            <div
               aria-live="polite"
               className={cn(
-                "border-2",
+                "rounded-xl border-2",
                 isCorrect
-                  ? "border-green-500 bg-green-50 dark:bg-green-950/20"
-                  : "border-red-500 bg-red-50 dark:bg-red-950/20",
+                  ? "lf-good"
+                  : "lf-bad",
               )}
             >
-              <CardContent className="p-6">
+              <div className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-3">
                     {isCorrect ? (
-                      <CheckCircle className="h-6 w-6 text-green-600" />
+                      <CheckCircle className="lf-text-good h-6 w-6" />
                     ) : (
-                      <XCircle className="h-6 w-6 text-red-600" />
+                      <XCircle className="lf-text-bad h-6 w-6" />
                     )}
                     <h3 className="text-lg font-semibold">
                       {isCorrect
@@ -1143,7 +1137,7 @@ export function OrderSentenceGame({
                   </div>
 
                   {!isCorrect && showCorrectOrder && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 text-[var(--cq-ink)]">
                       <Separator />
                       <div>
                         <h4 className="mb-3 font-medium">
@@ -1153,7 +1147,7 @@ export function OrderSentenceGame({
                           {currentSentenceGroup.correctOrder.map(
                             (sentence, index) => (
                               <div key={index} className="flex gap-3 text-sm">
-                                <span className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--cq-wood-dark)] text-xs font-bold text-[#fff4dc]">
                                   {index + 1}
                                 </span>
                                 <p className="flex-1">{sentence}</p>
@@ -1165,62 +1159,58 @@ export function OrderSentenceGame({
                     </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
+            <RpgButton
               onClick={handleRestart}
-              variant="outline"
-              size="sm"
               className="sm:w-auto"
             >
               {showCorrectOrder || isCompleted ? (
-                <RotateCcw className="mr-2 h-4 w-4" />
+                <RotateCcw className="h-4 w-4" />
               ) : (
-                <Shuffle className="mr-2 h-4 w-4" />
+                <Shuffle className="h-4 w-4" />
               )}
               {showCorrectOrder || isCompleted
                 ? t("playAgain")
                 : t("shuffleAgain")}
-            </Button>
+            </RpgButton>
 
             {!isCompleted && (
-              <Button
+              <RpgButton
                 onClick={handleCheckAnswer}
-                variant="outline"
-                size="sm"
+                tone="gold"
                 className="sm:w-auto"
               >
-                <CheckCircle className="mr-2 h-4 w-4" />
+                <CheckCircle className="h-4 w-4" />
                 {t("checkAnswer")}
-              </Button>
+              </RpgButton>
             )}
 
             {isCompleted && !isCorrect && !showCorrectOrder && (
-              <Button
+              <RpgButton
                 onClick={handleShowAnswer}
-                variant="secondary"
-                size="sm"
+                tone="iron"
                 className="sm:w-auto"
               >
-                <XCircle className="mr-2 h-4 w-4" />
+                <XCircle className="h-4 w-4" />
                 {t("showAnswer")}
-              </Button>
+              </RpgButton>
             )}
 
             {isCompleted && (
-              <Button onClick={handleNext} className="flex-1">
+              <RpgButton onClick={handleNext} tone="gold" className="flex-1">
                 {currentIndex < activeSentences.length - 1
                   ? t("nextSentence")
                   : t("finishGame")}
-              </Button>
+              </RpgButton>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

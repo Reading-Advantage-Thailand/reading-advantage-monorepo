@@ -11,11 +11,12 @@ import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { CsvUploadSummary } from "./schema";
 import { logger } from "@/lib/observability/logger";
+import { recordSystemImportAudit, resolveImportSchool } from "@/server/utils/import-school";
 /**
  * CSV Upload API Route
  *
  * Permissions: Admin, System, or Teacher roles only
- * School Assignment: Users are automatically assigned to uploader's school (except System users)
+ * School Assignment: Users go to the school of the session. SYSTEM chooses the school with the form field schoolId.
  *
  * Allowed filenames: students.csv, teachers.csv, classes.csv
  *
@@ -71,19 +72,31 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    const tenant = { schoolId: authUser.schoolId ?? null };
-    const tenantDb = getTenantDB(tenant);
-    // roles and schools are EXEMPT; classroomStudents, classroomTeachers,
-    // and userRoles are REFERENTIAL (owner-FK scoped below). The tenant is
-    // unknown until the session user row loads, so that single-row PK
-    // lookup also uses this handle.
-    const globalDb = getUnscopedDB("upload CSV import: roles and schools are EXEMPT; membership and user-role tables are REFERENTIAL; session user lookup runs before the tenant is known");
-    // users and classrooms are FLAT. School staff use the tenant-scoped
-    // handle; SYSTEM actors carry no school, so their global writes use the
-    // escape hatch with the reason above.
-    const staffDb: DB = tenant.schoolId ? tenantDb : globalDb;
+    // The target school comes from the verified session; SYSTEM names it in the form.
+    const formData = await request.formData();
+    const target = await resolveImportSchool(authUser, formData.get("schoolId"));
+    if ("error" in target) {
+      return NextResponse.json(
+        {
+          error: target.error,
+          details: [
+            target.error === "School association required"
+              ? "Users must be associated with a school to upload CSV files"
+              : target.error,
+          ],
+        },
+        { status: 400 },
+      );
+    }
+    const targetSchoolId = target.schoolId;
+    const tenantDb = getTenantDB({ schoolId: targetSchoolId });
+    // roles and schools are EXEMPT; classroomStudents, classroomTeachers, and userRoles are
+    // REFERENTIAL (owner-FK scoped below). The session user lookup is a single-row PK read.
+    const globalDb = getUnscopedDB("upload CSV import: roles and schools are EXEMPT; membership and user-role tables are REFERENTIAL; session user lookup is a PK read");
+    // users and classrooms are FLAT: every write and lookup uses the tenant handle of the target school.
+    const staffDb: DB = tenantDb;
 
-    // Get current user with school information (replaces Prisma `findUnique({ include: School, roles })`).
+    // Get current user (replaces Prisma `findUnique({ include: School, roles })`).
     const [currentUser] = await globalDb.select().from(users)
       .where(eq(users.id, authUser.id))
       .limit(1);
@@ -92,28 +105,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Stitch school include via FK.
-    let userSchool: { id: string; name: string } | null = null;
-    if (currentUser.schoolId) {
-      const [s] = await globalDb.select({ id: schools.id, name: schools.name })
-        .from(schools)
-        .where(eq(schools.id, currentUser.schoolId))
-        .limit(1);
-      userSchool = s;
-    }
-
-    if (authUser.role !== "SYSTEM" && !currentUser.schoolId) {
-      return NextResponse.json(
-        {
-          error: "School association required",
-          details: [
-            "Users must be associated with a school to upload CSV files",
-          ],
-        },
-        { status: 400 },
-      );
-    }
-    const formData = await request.formData();
+    const [userSchool] = await globalDb.select({ id: schools.id, name: schools.name })
+      .from(schools)
+      .where(eq(schools.id, targetSchoolId))
+      .limit(1);
     const file = formData.get("file") as File;
 
     if (!file) {
@@ -324,7 +319,7 @@ export async function POST(request: NextRequest) {
         xp: 0, // Default XP
         // FR-2.1: the session school is the sole stamp source. The stored
         // user row can lag the session after a school change.
-        schoolId: authUser.schoolId ?? null,
+        schoolId: targetSchoolId,
       };
 
       processedUsers.push(userData);
@@ -375,7 +370,7 @@ export async function POST(request: NextRequest) {
           .where(and(
             inArray(classrooms.name, studentClassNames),
             eq(users.role, "STUDENT"),
-            ...(authUser.schoolId ? [eq(classrooms.schoolId, authUser.schoolId)] : []),
+            eq(classrooms.schoolId, targetSchoolId),
           ))
       : [];
     const existingStudentKeys = new Set(
@@ -491,7 +486,7 @@ export async function POST(request: NextRequest) {
           const [created] = await staffDb.insert(classrooms).values({
             name: classroomName,
             // FR-2.1: the session school is the sole stamp source.
-            schoolId: authUser.schoolId ?? null,
+            schoolId: targetSchoolId,
             teacherId: ownerId,
             createdBy: currentUser.id,
           }).returning();
@@ -544,7 +539,7 @@ export async function POST(request: NextRequest) {
       try {
         const { provisioned, failed } = await studentLogin.provisionStudentLogins({
           db: globalDb,
-          schoolId: authUser.schoolId ?? null,
+          schoolId: targetSchoolId,
           students: Array.from(studentSeeds.values()),
         });
         studentLogins = provisioned.map((login) => ({
@@ -569,6 +564,18 @@ export async function POST(request: NextRequest) {
       skippedExisting,
     });
 
+    await recordSystemImportAudit(authUser, targetSchoolId, {
+      fileName: filename,
+      counts: {
+        inserted: createdUsers.length,
+        skippedDuplicate,
+        skippedExisting,
+        classroomsCreated,
+        studentAssignments,
+        teacherAssignments,
+      },
+    });
+
     return NextResponse.json({
       success: true,
       ...summary,
@@ -588,22 +595,18 @@ export async function POST(request: NextRequest) {
         teacherAssignments: teacherAssignments,
         errors: errors.length,
       },
-      schoolInfo: userSchool
-        ? {
-            id: userSchool.id,
-            name: userSchool.name,
-            note: "All imported users have been assigned to this school",
-          }
-        : {
-            note: "system user - users imported without school assignment",
-          },
+      schoolInfo: {
+        id: userSchool?.id ?? targetSchoolId,
+        name: userSchool?.name,
+        note: "All imported users have been assigned to this school",
+      },
       note: "Users created with default values: cefrLevel=A0-, level=1, xp=0. Students get a generated username and an initial password, shown once in studentLogins.",
       studentLogins,
       studentLoginsFailed: studentLoginsFailedNames.length,
       studentLoginsFailedNames,
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
-    console.error("File upload error:", error);
+    logger.error("csv_upload_failed", { error });
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 },
@@ -612,7 +615,7 @@ export async function POST(request: NextRequest) {
     if (tempFilePath) {
       unlink(tempFilePath, (err) => {
         if (err) {
-          console.error("Error deleting temp file:", err);
+          logger.error("csv_upload_temp_file_delete_failed", { error: err });
         }
       });
     }

@@ -5,16 +5,19 @@ export interface MockDb {
   select: ReturnType<typeof vi.fn>;
   update: ReturnType<typeof vi.fn>;
   delete: ReturnType<typeof vi.fn>;
+  /** Calls of `.for(...)` on any select chain. */
+  forLock: ReturnType<typeof vi.fn>;
   transaction: <T>(fn: (tx: MockDb) => Promise<T>) => Promise<T>;
 }
 
-function createQueryBuilder(val: unknown) {
+function createQueryBuilder(val: unknown, forSpy: ReturnType<typeof vi.fn>) {
   const builder = {
     limit: vi.fn().mockReturnThis(),
     offset: vi.fn().mockReturnThis(),
     orderBy: vi.fn().mockReturnThis(),
     groupBy: vi.fn().mockReturnThis(),
     where: vi.fn().mockReturnThis(),
+    for: forSpy,
     innerJoin: vi.fn().mockReturnThis(),
     leftJoin: vi.fn().mockReturnThis(),
     then(
@@ -50,6 +53,8 @@ export function createMockDb(overrides: {
   transactionFn?: (tx: MockDb) => Promise<unknown>;
 } = {}): MockDb {
   let selectCallIndex = 0;
+  /** Shared spy of `.for(...)` (row lock) on every select chain. */
+  const forLock = vi.fn().mockReturnThis();
   const getResolvedValue = () => {
     if (overrides.selectSequence && overrides.selectSequence.length > 0) {
       const result = overrides.selectSequence[selectCallIndex % overrides.selectSequence.length];
@@ -60,6 +65,7 @@ export function createMockDb(overrides: {
   };
 
   const mockDb: MockDb = {
+    forLock,
     insert: vi.fn().mockReturnValue({
       values: vi.fn().mockImplementation((values: unknown) => {
         const conflictResult = overrides.conflictInsertReturning
@@ -80,13 +86,13 @@ export function createMockDb(overrides: {
       const resolvedValue = getResolvedValue();
       return {
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-          innerJoin: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-          leftJoin: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
+          where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue, forLock)),
+          innerJoin: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue, forLock)),
+          leftJoin: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue, forLock)),
           // Support queries without .where() (e.g. .from(t).limit(n).offset(n))
-          limit: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-          offset: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-          orderBy: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
+          limit: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue, forLock)),
+          offset: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue, forLock)),
+          orderBy: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue, forLock)),
           then(
             onFulfilled?: (value: unknown) => unknown,
             onRejected?: (reason: unknown) => unknown

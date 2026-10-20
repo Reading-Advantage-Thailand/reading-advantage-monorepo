@@ -1,4 +1,5 @@
 import React from "react";
+import { getTranslations } from "next-intl/server";
 import { siteConfig } from "@/configs/site-config";
 import { Link } from "@/i18n/navigation";
 import { Icons } from "@/components/icons";
@@ -11,11 +12,12 @@ import { Scene } from "@/components/rpg/scene";
  * @param props.children The sign-in page.
  * @returns The layout.
  */
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = await getTranslations("PublicSite");
   return (
     <Scene place="gatehouse" className="min-h-screen px-4 py-6">
       <div className="flex items-center justify-between gap-2">
@@ -29,7 +31,7 @@ export default function AuthLayout({
       <div className="flex flex-1 items-center justify-center">
         <div className="cq-panel w-full max-w-md">{children}</div>
       </div>
-      <p className="cq-on-scene text-center text-sm">{siteConfig.description}</p>
+      <p className="cq-on-scene text-center text-sm">{t("tagline")}</p>
     </Scene>
   );
 }

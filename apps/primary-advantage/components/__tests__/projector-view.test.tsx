@@ -17,6 +17,7 @@ const lesson: TeacherLesson = {
   summary: null,
   thaiSummary: null,
   stepsDone: [],
+  hasPrint: false,
 };
 
 afterEach(cleanup);

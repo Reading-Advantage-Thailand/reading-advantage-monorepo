@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ActivityType, UserXpEarned } from "@/types/enum";
-import { ROLES, passwordSchema } from "@reading-advantage/auth";
-import { ROLE_HIERARCHY, type Role } from "@reading-advantage/auth/roles";
+import { ROLES, ROLE_HIERARCHY, type Role } from "@reading-advantage/auth/roles";
+import { passwordSchema } from "@reading-advantage/auth/password-schema";
 import { STAFF_ROLES } from "./permissions";
 
 /** Session roles allowed to manage other users. */
@@ -79,6 +79,21 @@ export function canSetPasswordFor(actorRole: unknown, targetRole: unknown): bool
 }
 
 /**
+ * Checks whether an actor may change the role of another account.
+ * It follows the password matrix, and an ADMIN may also change another ADMIN of the same school.
+ * The caller must check the school and the new role (ADMIN or lower) itself.
+ * @param actorRole The effective role of the caller.
+ * @param targetRole The effective role of the account whose role changes.
+ * @param isSelf True when the caller and the target are the same account.
+ * @returns True when the role change is allowed.
+ */
+export function canChangeRoleFor(actorRole: unknown, targetRole: unknown, isSelf: boolean): boolean {
+  if (isSelf) return false;
+  if (normalizeRole(actorRole) === "ADMIN" && normalizeRole(targetRole) === "ADMIN") return true;
+  return canSetPasswordFor(actorRole, targetRole);
+}
+
+/**
  * Checks whether a session user manages other users.
  * @param user The session user, or null for anonymous callers.
  * @returns True when the caller holds ADMIN or SYSTEM.
@@ -150,6 +165,9 @@ export const XP_AWARD_BY_ACTIVITY: Record<ActivityType, number> = {
   [ActivityType.MC_QUESTION]: UserXpEarned.MCQuestion,
   [ActivityType.SA_QUESTION]: UserXpEarned.MCQuestion,
   [ActivityType.LA_QUESTION]: UserXpEarned.MCQuestion,
+  [ActivityType.STORIES_MC_QUESTION]: UserXpEarned.MCQuestion,
+  [ActivityType.STORIES_SA_QUESTION]: UserXpEarned.MCQuestion,
+  [ActivityType.STORIES_LA_QUESTION]: UserXpEarned.MCQuestion,
   [ActivityType.SENTENCE_FLASHCARDS]: UserXpEarned.SENTENCE_FLASHCARDS,
   [ActivityType.SENTENCE_MATCHING]: UserXpEarned.SENTENCE_MATCHING,
   [ActivityType.SENTENCE_ORDERING]: UserXpEarned.SENTENCE_ORDERING,
@@ -290,9 +308,6 @@ export const patchUserBodySchema = z.object({
   cefrLevel: z.string().min(1).max(16).optional(),
   password: passwordSchema.optional(),
 });
-
-/** Bounded article generation amount per genre. */
-export const amountPerGenreSchema = z.coerce.number().int().min(1).max(10);
 
 /** File name for temp cleanup; rejects directory traversal. */
 export const cleanupFileNameSchema = z

@@ -20,6 +20,11 @@ ARG NEXT_PUBLIC_STORAGE_BUCKET_NAME
 ENV NEXT_PUBLIC_STORAGE_BUCKET_NAME=${NEXT_PUBLIC_STORAGE_BUCKET_NAME}
 RUN pnpm turbo run build --filter=primary-advantage
 
+# Owner rule: no ElvGames asset in the image. The standalone trace also copies ElvGames files of other apps
+# (spec E-7, asset-copy.md). Delete them here, in the builder stage, so no runner layer holds the bytes.
+# The guard test lib/__tests__/removed-surfaces.test.ts reads this line.
+RUN rm -rf /app/apps/primary-advantage/.next/standalone/apps/advantage-games/public/assets/apk/standard-pack-qc /app/apps/primary-advantage/.next/standalone/apps/reading-advantage/public/assets/apk/standard-pack-qc /app/apps/primary-advantage/.next/standalone/apps/advantage-games/scripts/generate-standard-pack-qc-preview.mjs /app/apps/primary-advantage/.next/standalone/apps/advantage-games/src/lib/apk/standard-pack-qc-preview.json
+
 FROM node:22-alpine AS runner
 ENV HOSTNAME=0.0.0.0
 ENV NODE_ENV=production

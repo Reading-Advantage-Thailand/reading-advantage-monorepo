@@ -26,8 +26,11 @@ describe("proxy route policies", () => {
     expect(roleDefaultRedirects.teacher).toBe(TEACHER_HOME);
   });
 
-  it("restricts /student to the student role", () => {
-    expect([...protectedRoutes["/student"]]).toEqual([ROLES.STUDENT]);
+  it("admits the student and the staff roles to /student, never the intern", () => {
+    expect([...protectedRoutes["/student"]].sort()).toEqual(
+      [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM].sort(),
+    );
+    expect(protectedRoutes["/student"]).not.toContain(ROLES.INTERN);
   });
 
   it("leaves the sign-in and QR card pages open to a signed-out user", () => {

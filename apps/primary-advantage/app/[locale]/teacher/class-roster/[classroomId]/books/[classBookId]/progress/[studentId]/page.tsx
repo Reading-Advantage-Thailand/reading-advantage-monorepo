@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { intlFormatter } from "@/lib/intl-locale";
 import { ArrowLeftIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getStudentLessonSteps, type StudentLessonSteps } from "@reading-advantage/domain/primary-books";
@@ -50,7 +51,7 @@ export default async function StudentProgressPage({ params }: { params: Params }
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
   const data = await loadSteps(user, classBookId, studentId);
   if (!data) notFound();
-  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook.progress"), getFormatter()]);
+  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook.progress"), getLocale().then(intlFormatter)]);
   const name = data.student.name ?? data.student.username;
 
   return (
@@ -81,6 +82,7 @@ export default async function StudentProgressPage({ params }: { params: Params }
                 <div className="flex flex-wrap items-center gap-2 text-sm">
                   <span>{t("steps", { done })}</span>
                   {latest > 0 ? <span className="text-muted-foreground">{t("minutes", { minutes: Math.round(latest / 60) })}</span> : null}
+                  {(lesson.earlierAttempts?.length ?? 0) > 0 ? <StatusChip tone="info">{t("attemptCurrent", { number: lesson.attemptNumber })}</StatusChip> : null}
                   {openedBeforeTaught ? <StatusChip tone="warning">{t("openedBeforeTaught")}</StatusChip> : null}
                 </div>
               </div>
@@ -98,6 +100,23 @@ export default async function StudentProgressPage({ params }: { params: Params }
                   </li>
                 ))}
               </ol>
+              {(lesson.earlierAttempts?.length ?? 0) > 0 ? (
+                <details open className="flex flex-col gap-2">
+                  <summary className="min-h-11 cursor-pointer text-sm font-semibold">{t("earlierAttempts", { count: lesson.earlierAttempts.length })}</summary>
+                  <ul aria-label={t("earlierAttempts", { count: lesson.earlierAttempts.length })} className="flex flex-col gap-2">
+                    {[...lesson.earlierAttempts]
+                      .sort((a, b) => b.attemptNumber - a.attemptNumber)
+                      .map((attempt) => (
+                        <li key={attempt.attemptNumber} className="bg-muted/50 rounded-md p-3 text-sm">
+                          <p className="font-medium">
+                            {t("attemptNumber", { number: attempt.attemptNumber })} · {t("closedOn", { date: format.dateTime(attempt.closedAt, { day: "numeric", month: "short" }) })} · {t(`reason.${attempt.closeReason}`)}
+                          </p>
+                          <p className="text-muted-foreground">{t("attemptSummary", { done: attempt.doneSteps, minutes: Math.round(attempt.seconds / 60), xp: attempt.xpEarned })}</p>
+                        </li>
+                      ))}
+                  </ul>
+                </details>
+              ) : null}
             </li>
           );
         })}

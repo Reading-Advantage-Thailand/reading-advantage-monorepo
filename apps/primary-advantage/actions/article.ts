@@ -1,11 +1,6 @@
 "use server";
 
 import {
-  generateAllArticle,
-  generateAllArticleNew,
-} from "@/server/controllers/articleController";
-import {
-  deleteArticleByIdModel,
   getArticleActivity,
 } from "@/server/models/articleModel";
 import {
@@ -18,56 +13,14 @@ import {
 import {
   userActivity,
   xpLogs,
+  primaryLessonAttempts,
 } from '@reading-advantage/db';
+import { createTenantDB } from "@reading-advantage/domain";
+import { getLessonGameResults } from "@reading-advantage/domain/games";
 import { currentUser } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
+import { guardStudentAction, studentViewModeFor } from "@/lib/student-view";
 import { ActivityType } from "@/types/enum";
-import { canRunContentTooling } from "@/lib/authorization";
-
-/**
- * Rejects callers without bulk content-tooling rights.
- * @returns An error result, or null when the caller may proceed.
- */
-async function requireToolingAccess(): Promise<{ success: false; error: string } | null> {
-  const user = await currentUser();
-  if (!user) return { success: false, error: "Unauthorized" };
-  if (!canRunContentTooling(user)) return { success: false, error: "Forbidden" };
-  return null;
-}
-
-/**
- * Generates articles across genres with the bulk generator.
- * @param amountPerGenre The bounded article count per genre.
- * @returns The generation result.
- */
-export async function generateArticle(amountPerGenre: number) {
-  const denied = await requireToolingAccess();
-  if (denied) return denied;
-  const result = await generateAllArticle(amountPerGenre);
-  return result;
-}
-
-/**
- * Generates articles with the new bulk generator.
- * @param amountPerGenre The bounded article count per genre.
- * @returns The generation result.
- */
-export async function generateArticleNew(amountPerGenre: number) {
-  const denied = await requireToolingAccess();
-  if (denied) return denied;
-  const result = await generateAllArticleNew(amountPerGenre);
-  return result;
-}
-
-/**
- * Deletes one article by its identifier.
- * @param articleId The article identifier.
- * @returns The deletion result.
- */
-export async function getDeleteArticleById(articleId: string) {
-  const denied = await requireToolingAccess();
-  if (denied) return denied;
-  return await deleteArticleByIdModel(articleId);
-}
 
 /**
  * Tracks one article access for the signed-in user.
@@ -79,6 +32,9 @@ export async function fetchArticleActivity(articleId: string) {
   if (!user) {
     return { success: false, error: "Unauthorized" };
   }
+
+  const preview = guardStudentAction(user, "fetch_article_activity");
+  if (preview) return preview;
   try {
     const result = await getArticleActivity(articleId);
 
@@ -93,12 +49,21 @@ export async function fetchArticleActivity(articleId: string) {
   }
 }
 
+/**
+ * Reads the summary of one lesson for the signed-in student: the XP, the quiz scores, and the attempt
+ * number. Staff in a preview get the empty model and no row of their own is read.
+ * @param articleId The lesson article.
+ * @returns The summary data, or a short error.
+ */
 export async function getLessonSummaryData(articleId: string) {
   try {
     const user = await currentUser();
 
     if (!user) {
       return { error: "User not found" };
+    }
+    if (studentViewModeFor(user.role) === "preview") {
+      return { success: true, data: { totalXp: 0, gameXp: 0, attemptNumber: 1, quizScores: { mcqScore: 0, saqScore: 0 } } };
     }
 
     // Fetch user activities for this article (replace Prisma `include: { xpLogs: true }`
@@ -158,12 +123,29 @@ export async function getLessonSummaryData(articleId: string) {
         ),
       );
 
-    const totalXp = xpLogsRows.reduce((sum, log) => sum + log.xpEarned, 0);
+    // The attempt number is the closed attempts of this student on the article plus one (S4).
+    const closedAttempts = await db
+      .select({ attemptNumber: primaryLessonAttempts.attemptNumber })
+      .from(primaryLessonAttempts)
+      .where(and(eq(primaryLessonAttempts.studentId, user.id as string), eq(primaryLessonAttempts.articleId, articleId)));
+    const attemptNumber = Math.max(0, ...closedAttempts.map((row) => row.attemptNumber)) + 1;
+
+    // A lesson game run saves in `game_completions`, not in `user_activity`: add its XP here.
+    let gameXp = 0;
+    try {
+      const tenant = { schoolId: user.schoolId };
+      gameXp = (await getLessonGameResults({ db: createTenantDB(db, tenant), user, tenant, input: { articleId } })).totalXp;
+    } catch (error) {
+      logger.error("lesson_summary_game_xp_failed", { error, userId: user.id, articleId });
+    }
+    const totalXp = xpLogsRows.reduce((sum, log) => sum + log.xpEarned, 0) + gameXp;
 
     return {
       success: true,
       data: {
         totalXp,
+        gameXp,
+        attemptNumber,
         quizScores: {
           mcqScore,
           saqScore,

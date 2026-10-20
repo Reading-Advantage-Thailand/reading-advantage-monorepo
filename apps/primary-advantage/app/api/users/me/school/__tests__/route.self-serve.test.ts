@@ -85,35 +85,41 @@ describe("POST /api/users/me/school self-serve gate (C2)", () => {
     mocks.getCurrentUser.mockResolvedValue({ id: "u1", role: "STUDENT", schoolId: null });
   });
 
-  it("creates a new school for a school-less self-serve STUDENT", async () => {
+  it("refuses a school-less STUDENT and writes nothing", async () => {
     queue({ role: "STUDENT" }, ["user"]);
-    const response = await POST(post());
-    expect(response.status).toBe(201);
-    expect(mocks.insert).toHaveBeenCalled();
-  });
-
-  it.each(["TEACHER", "ADMIN", "SYSTEM"])(
-    "refuses a school-less %s account and writes nothing",
-    async (role) => {
-      mocks.getCurrentUser.mockResolvedValue({ id: "u1", role, schoolId: null });
-      queue({ role }, ["user"]);
-      const response = await POST(post());
-      expect(response.status).toBe(403);
-      expect(mocks.insert).not.toHaveBeenCalled();
-      expect(mocks.update).not.toHaveBeenCalled();
-      expect(mocks.delete).not.toHaveBeenCalled();
-    },
-  );
-
-  it("refuses a STUDENT whose legacy roles are not only the self-serve user role", async () => {
-    queue({ role: "STUDENT" }, ["teacher"]);
     const response = await POST(post());
     expect(response.status).toBe(403);
     expect(mocks.insert).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.delete).not.toHaveBeenCalled();
+  });
+
+  it("creates a school for a school-less TEACHER that has no user_roles row and makes it ADMIN", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "u1", role: "TEACHER", schoolId: null });
+    queue({ role: "TEACHER" }, []);
+    const response = await POST(post());
+    expect(response.status).toBe(201);
+    expect(mocks.update).toHaveBeenCalled();
+    expect(mocks.insert).toHaveBeenCalled();
+  });
+
+  it("creates a school for a school-less ADMIN", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "u1", role: "ADMIN", schoolId: null });
+    queue({ role: "ADMIN" }, []);
+    const response = await POST(post());
+    expect(response.status).toBe(201);
+  });
+
+  it("does not downgrade a SYSTEM account that creates a school", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "u1", role: "SYSTEM", schoolId: null });
+    queue({ role: "SYSTEM" }, []);
+    const response = await POST(post());
+    expect(response.status).toBe(201);
+    expect(mocks.update).not.toHaveBeenCalledWith(expect.objectContaining({ role: "ADMIN" }));
   });
 
   it("refuses a user who already has a school", async () => {
-    queue({ role: "STUDENT", schoolId: "school-x" }, ["user"]);
+    queue({ role: "TEACHER", schoolId: "school-x" }, ["user"]);
     const response = await POST(post());
     expect(response.status).toBe(400);
     expect(mocks.insert).not.toHaveBeenCalled();

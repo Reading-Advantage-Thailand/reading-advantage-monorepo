@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { startVoice, studentVoiceSessions } from "@/server/controllers/voiceController";
 import { voiceActor, voiceErrorResponse } from "@/lib/voice-route";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * GET /api/voice/sessions: the student's finished sessions, newest first.
@@ -24,6 +25,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const actor = await voiceActor();
   if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const preview = guardStudentRoute(actor.user, "voice_start");
+  if (preview) return preview;
   try {
     const body = (await request.json().catch(() => ({}))) as { articleId?: string | null; sdp?: string };
     const result = await startVoice(actor.user, actor.authStrength, { articleId: body.articleId ?? null, sdp: String(body.sdp ?? "") });

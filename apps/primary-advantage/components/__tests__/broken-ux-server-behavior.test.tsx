@@ -34,20 +34,9 @@ vi.mock("@/server/controllers/schoolController", () => ({
   getSchoolLeaderboardController: vi.fn(),
 }));
 
-vi.mock("@/components/admin/admin-stats-cards", () => ({
-  AdminStatsCards: () => null,
-}));
-vi.mock("@/components/admin/admin-recent-activity", () => ({
-  AdminRecentActivity: () => null,
-}));
-vi.mock("@/components/admin/admin-quick-actions", () => ({
-  AdminQuickActions: () => null,
-}));
-vi.mock("@/components/admin/admin-overview-charts", () => ({
-  AdminOverviewCharts: () => null,
-}));
-vi.mock("@/components/admin/admin-dashboard-header", () => ({
-  AdminDashboardHeader: () => null,
+// The layout loads school_admins rows for a TEACHER; this test has no database.
+vi.mock("@/server/utils/school-admin-rows", () => ({
+  withSchoolAdminRows: async (user: object) => ({ ...user, SchoolAdmins: [] }),
 }));
 
 import AdminPage from "../../app/[locale]/admin/page";
@@ -123,7 +112,10 @@ describe("FR-3 app layout main pane", () => {
 
 describe("FR-7 Get Started link", () => {
   it("keeps every internal signin link free of target=_blank", async () => {
-    getTranslationsMock.mockImplementation(async () => (key: string) => key);
+    getTranslationsMock.mockImplementation(async () =>
+      Object.assign((key: string) => key, { raw: () => ["point"] }),
+    );
+    getLocaleMock.mockResolvedValue("en");
     const tree = await Home();
     const signinLinks = findAll(
       tree,

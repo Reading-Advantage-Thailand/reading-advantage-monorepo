@@ -36,7 +36,6 @@ import {
   Plus,
   Pencil,
   Trash2,
-  Mail,
   User,
   Calendar,
   GraduationCap,
@@ -53,6 +52,8 @@ import {
 } from "@/types/index.d";
 import { useTranslations } from "next-intl";
 import { fetchJsonList } from "@/lib/fetch-json";
+import { useSession } from "@reading-advantage/auth-client";
+import { SchoolSelect } from "@/components/admin/school-select";
 
 // Updated Teacher interface to match API response
 interface Teacher extends Omit<TeacherData, "createdAt"> {
@@ -72,6 +73,13 @@ interface Classroom {
 
 export function TeachersTable() {
   const t = useTranslations("AdminTeachers.Table");
+  const { user: sessionUser } = useSession();
+  const isSystem = sessionUser?.role === "SYSTEM";
+  const [schools, setSchools] = useState<Array<{ id: string; name: string }>>([]);
+  const [schoolFilter, setSchoolFilter] = useState("");
+  const [dialogSchoolId, setDialogSchoolId] = useState("");
+  const [refusal, setRefusal] = useState<{ name: string; classNames: string[] } | null>(null);
+  const [moveError, setMoveError] = useState<string | null>(null);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [statistics, setStatistics] = useState({
@@ -89,12 +97,14 @@ export function TeachersTable() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isConfirmMoveDialogOpen, setIsConfirmMoveDialogOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [addSchoolId, setAddSchoolId] = useState("");
   const [pendingTeacherData, setPendingTeacherData] = useState<{
     name: string;
     email: string;
     role: "teacher" | "admin";
     classroomIds: string[];
     password?: string;
+    schoolId?: string;
     existingSchool: { id: string; name: string };
   } | null>(null);
   const [formData, setFormData] = useState({
@@ -107,17 +117,20 @@ export function TeachersTable() {
   const [showPasswordField, setShowPasswordField] = useState(false);
 
   // Fetch teachers data from API
-  const fetchTeachers = async () => {
+  const fetchTeachers = async (schoolId: string = schoolFilter) => {
     try {
       setIsLoading(true);
       const data = await fetchJsonList<TeachersResponse>(
-        "/api/teachers",
+        schoolId ? `/api/teachers?schoolId=${schoolId}` : "/api/teachers",
         "Failed to fetch teachers",
       );
 
       // Convert API data to component format
       const teachersWithDates = data.teachers.map((teacher) => ({
         ...teacher,
+        // The API reports the stored users.role value (TEACHER, ADMIN); the table
+        // forms and badges below use the lowercase teacher role names.
+        role: (teacher.role ?? "teacher").toLowerCase(),
         createdAt: new Date(teacher.createdAt),
       }));
 
@@ -132,11 +145,13 @@ export function TeachersTable() {
   };
 
   // Fetch available classrooms for assignment
-  const fetchClassrooms = async () => {
+  const fetchClassrooms = async (schoolId?: string) => {
     try {
       setIsClassroomsLoading(true);
 
-      const response = await fetch("/api/classrooms");
+      const response = await fetch(
+        schoolId ? `/api/classrooms?schoolId=${schoolId}` : "/api/classrooms",
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -166,9 +181,41 @@ export function TeachersTable() {
 
   // Load data on component mount
   useEffect(() => {
-    fetchTeachers();
     fetchClassrooms();
   }, []);
+
+  // The teacher list reloads when SYSTEM changes the school filter.
+  useEffect(() => {
+    fetchTeachers(schoolFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [schoolFilter]);
+
+  // SYSTEM sees the school names in the column, the filter, and the edit dialog.
+  useEffect(() => {
+    if (!isSystem) return;
+    let active = true;
+    fetch("/api/schools")
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error())))
+      .then((rows: Array<{ id: string; name: string }>) => {
+        if (active) setSchools(rows.map(({ id, name }) => ({ id, name })));
+      })
+      .catch(() => {
+        if (active) setSchools([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, [isSystem]);
+
+  const schoolName = (id: string | null | undefined) =>
+    schools.find((school) => school.id === id)?.name ?? t("schoolManage.noSchool");
+
+  /** True when SYSTEM chose another school for the teacher in the edit dialog. */
+  const schoolChanged =
+    isSystem &&
+    selectedTeacher?.role === "teacher" &&
+    dialogSchoolId !== "" &&
+    dialogSchoolId !== (selectedTeacher?.schoolId ?? "");
 
   // Filter teachers based on search term
   const filteredTeachers = teachers.filter(
@@ -182,11 +229,19 @@ export function TeachersTable() {
       // Use pendingTeacherData if force is true and it exists, otherwise use formData
       const dataToUse =
         force && pendingTeacherData ? pendingTeacherData : formData;
+      // SYSTEM creates into the picked school; other callers keep their own school.
+      const chosenSchoolId =
+        force && pendingTeacherData
+          ? pendingTeacherData.schoolId
+          : isSystem
+            ? addSchoolId || undefined
+            : undefined;
 
       const requestData: CreateTeacherRequest & {
         classroomIds?: string[];
         password?: string;
         force?: boolean;
+        schoolId?: string;
       } = {
         name: dataToUse.name,
         email: dataToUse.email,
@@ -197,6 +252,7 @@ export function TeachersTable() {
             : formData.assignedClassroomIds,
         ...(dataToUse.password && { password: dataToUse.password }),
         ...(force && { force: true }),
+        ...(chosenSchoolId ? { schoolId: chosenSchoolId } : {}),
       };
 
       const response = await fetch("/api/teachers", {
@@ -219,6 +275,7 @@ export function TeachersTable() {
             role: formData.role,
             classroomIds: formData.assignedClassroomIds,
             ...(formData.password && { password: formData.password }),
+            ...(chosenSchoolId ? { schoolId: chosenSchoolId } : {}),
             existingSchool: responseData.existingSchool,
           });
           setIsConfirmMoveDialogOpen(true);
@@ -251,8 +308,10 @@ export function TeachersTable() {
 
   const handleEditTeacher = async () => {
     if (!selectedTeacher) return;
+    setMoveError(null);
 
     try {
+      // The PUT goes first (M10): when it fails, the teacher stays in the old school and no move runs.
       const requestData: UpdateTeacherRequest & {
         classroomIds?: string[];
         password?: string;
@@ -260,7 +319,8 @@ export function TeachersTable() {
         name: formData.name,
         email: formData.email,
         role: formData.role,
-        classroomIds: formData.assignedClassroomIds,
+        // After a move the class links are set by the move.
+        ...(!schoolChanged && { classroomIds: formData.assignedClassroomIds }),
         ...(formData.password && { password: formData.password }),
       };
 
@@ -278,7 +338,30 @@ export function TeachersTable() {
         throw new Error(errorData.error || "Failed to update teacher");
       }
 
-      const result = await response.json();
+      if (schoolChanged) {
+        const moveResponse = await fetch(`/api/teachers/${selectedTeacher.id}/move`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            schoolId: dialogSchoolId,
+            classroomIds: formData.assignedClassroomIds,
+          }),
+        });
+        if (!moveResponse.ok) {
+          // The fields are saved and the teacher stays in the old school: refresh the list, keep the dialog.
+          fetchTeachers();
+          const moveError = await moveResponse.json().catch(() => ({}));
+          if (moveResponse.status === 409 && Array.isArray(moveError.classNames)) {
+            setRefusal({ name: selectedTeacher.name ?? "", classNames: moveError.classNames });
+            return;
+          }
+          const message = moveError.error || t("schoolManage.moveFailed");
+          setMoveError(message);
+          toast.error(message);
+          return;
+        }
+        toast.success(t("schoolManage.moved"));
+      }
 
       toast.success("Teacher updated successfully");
 
@@ -326,6 +409,9 @@ export function TeachersTable() {
       password: "",
     });
     setShowPasswordField(false);
+    setDialogSchoolId(teacher.schoolId ?? "");
+    if (isSystem && teacher.schoolId) fetchClassrooms(teacher.schoolId);
+    setMoveError(null);
     setIsEditDialogOpen(true);
   };
 
@@ -335,6 +421,8 @@ export function TeachersTable() {
   };
 
   const resetForm = () => {
+    setMoveError(null);
+    setAddSchoolId("");
     setFormData({
       name: "",
       email: "",
@@ -343,6 +431,15 @@ export function TeachersTable() {
       password: "",
     });
     setShowPasswordField(false);
+  };
+
+  /** Opens the add dialog with a fresh form. SYSTEM gets no class list until it picks a school. */
+  const openAddDialog = () => {
+    resetForm();
+    // SYSTEM lists classes only after it picks a school.
+    if (isSystem) setClassrooms([]);
+    else fetchClassrooms();
+    setIsAddDialogOpen(true);
   };
 
   const getInitials = (name: string | null) => {
@@ -377,6 +474,27 @@ export function TeachersTable() {
           className="pl-10"
         />
       </div>
+
+      {isSystem && (
+        <div className="max-w-sm">
+          <Select
+            value={schoolFilter || "all"}
+            onValueChange={(value) => setSchoolFilter(value === "all" ? "" : value)}
+          >
+            <SelectTrigger className="h-11" aria-label={t("schoolManage.filterLabel")}>
+              <SelectValue placeholder={t("schoolManage.filterAll")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("schoolManage.filterAll")}</SelectItem>
+              {schools.map((school) => (
+                <SelectItem key={school.id} value={school.id}>
+                  {school.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {/* Statistics Cards */}
       <div className="grid gap-4 md:grid-cols-3">
@@ -436,7 +554,7 @@ export function TeachersTable() {
           <CardTitle>{t("title")}</CardTitle>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2" onClick={openAddDialog}>
                 <Plus className="h-4 w-4" />
                 {t("actions.addTeacher")}
               </Button>
@@ -505,6 +623,19 @@ export function TeachersTable() {
                     placeholder={t("form.passwordPlaceholder")}
                   />
                 </div>
+                {isSystem && (
+                  <div className="grid gap-2">
+                    <SchoolSelect
+                      value={addSchoolId}
+                      onChange={(id) => {
+                        setAddSchoolId(id);
+                        // The class list of the previous school does not apply to the new one.
+                        setFormData((current) => ({ ...current, assignedClassroomIds: [] }));
+                        fetchClassrooms(id);
+                      }}
+                    />
+                  </div>
+                )}
                 <div className="grid gap-2">
                   <Label>{t("form.assignClassrooms")}</Label>
                   <div className="rounded-lg border p-3">
@@ -586,7 +717,7 @@ export function TeachersTable() {
                 </Button>
                 <Button
                   onClick={() => handleAddTeacher(false)}
-                  disabled={!formData.name || !formData.email}
+                  disabled={!formData.name || !formData.email || (isSystem && !addSchoolId)}
                 >
                   {t("actions.add")}
                 </Button>
@@ -599,12 +730,12 @@ export function TeachersTable() {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("tableHeaders.teacher")}</TableHead>
-                <TableHead>{t("tableHeaders.email")}</TableHead>
                 <TableHead>{t("tableHeaders.role")}</TableHead>
+                {isSystem && <TableHead>{t("tableHeaders.school")}</TableHead>}
                 <TableHead>{t("tableHeaders.assignedClassrooms")}</TableHead>
                 <TableHead>{t("tableHeaders.students")}</TableHead>
                 <TableHead>{t("tableHeaders.classes")}</TableHead>
-                <TableHead>{t("tableHeaders.joined")}</TableHead>
+                <TableHead className="hidden 2xl:table-cell">{t("tableHeaders.joined")}</TableHead>
                 <TableHead className="text-right">
                   {t("tableHeaders.actions")}
                 </TableHead>
@@ -613,7 +744,7 @@ export function TeachersTable() {
             <TableBody>
               {filteredTeachers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-8 text-center">
+                  <TableCell colSpan={isSystem ? 8 : 7} className="py-8 text-center">
                     <div className="flex flex-col items-center gap-2">
                       {isLoading ? (
                         <>
@@ -649,15 +780,11 @@ export function TeachersTable() {
                             {getInitials(teacher.name)}
                           </AvatarFallback>
                         </Avatar>
+                        {/* The email sits under the name, so the table fits beside the menu. */}
                         <div>
                           <p className="font-medium">{teacher.name || "N/A"}</p>
+                          <p className="text-muted-foreground text-xs">{teacher.email || "N/A"}</p>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Mail className="text-muted-foreground h-4 w-4" />
-                        {teacher.email || "N/A"}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -665,7 +792,10 @@ export function TeachersTable() {
                         {teacher.role}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    {isSystem && (
+                      <TableCell className="whitespace-normal">{schoolName(teacher.schoolId)}</TableCell>
+                    )}
+                    <TableCell className="whitespace-normal">
                       <div className="flex flex-wrap gap-1">
                         {teacher.assignedClassrooms &&
                         teacher.assignedClassrooms.length > 0 ? (
@@ -688,7 +818,7 @@ export function TeachersTable() {
                     </TableCell>
                     <TableCell>{teacher.totalStudents}</TableCell>
                     <TableCell>{teacher.totalClasses}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden 2xl:table-cell">
                       {teacher.createdAt.toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
@@ -750,6 +880,30 @@ export function TeachersTable() {
                 placeholder={t("form.emailPlaceholder")}
               />
             </div>
+            {isSystem && selectedTeacher?.role === "teacher" && (
+              <div className="grid gap-2">
+                <SchoolSelect
+                  value={dialogSchoolId}
+                  onChange={(id) => {
+                    setDialogSchoolId(id);
+                    // The class list of the old school does not apply to the new one.
+                    setFormData((current) => ({ ...current, assignedClassroomIds: [] }));
+                    setMoveError(null);
+                    fetchClassrooms(id);
+                  }}
+                />
+                {schoolChanged && (
+                  <p className="text-muted-foreground text-sm" role="status">
+                    {t("schoolManage.notice", { school: schoolName(dialogSchoolId) })}
+                  </p>
+                )}
+                {moveError && (
+                  <p className="text-destructive text-sm" role="alert">
+                    {moveError}
+                  </p>
+                )}
+              </div>
+            )}
             <div className="grid gap-2">
               <Label htmlFor="edit-role">{t("form.role")}</Label>
               <Select
@@ -877,6 +1031,33 @@ export function TeachersTable() {
               disabled={!formData.name || !formData.email}
             >
               {t("actions.update")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Move refused: the teacher owns classes (409) */}
+      <Dialog open={refusal !== null} onOpenChange={(open) => !open && setRefusal(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{t("schoolManage.refusedTitle")}</DialogTitle>
+            <DialogDescription>
+              {t("schoolManage.refusedDescription", { name: refusal?.name ?? "" })}
+            </DialogDescription>
+          </DialogHeader>
+          <ul className="flex flex-wrap gap-2" aria-label={t("tableHeaders.classes")}>
+            {refusal?.classNames.map((className) => (
+              <li key={className}>
+                <Badge variant="secondary">
+                  <School className="mr-1 h-3 w-3" />
+                  {className}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRefusal(null)}>
+              {t("schoolManage.refusedClose")}
             </Button>
           </DialogFooter>
         </DialogContent>

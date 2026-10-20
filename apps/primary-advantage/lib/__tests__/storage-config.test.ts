@@ -98,3 +98,37 @@ describe("article picture URLs", () => {
     expect(getArticleImageUrl({ id: "new-id" }, 1)).toMatch(/\/images\/new-id_1\.png$/);
   });
 });
+
+describe("story picture keys", () => {
+  it("getStoryImageKey uses the stored key (the legacy cuid) before the row id", async () => {
+    const { getStoryImageKey } = await importStorageConfig();
+    expect(getStoryImageKey({ id: "uuid-1", image: "cl9legacy" })).toBe("cl9legacy");
+    expect(getStoryImageKey({ id: "uuid-1", image: null })).toBe("uuid-1");
+    expect(getStoryImageKey({ id: "uuid-1", image: "https://x.test/a.png" })).toBe("uuid-1");
+  });
+
+  it("getStoryImageUrl builds images/story/<key>.png in the bucket", async () => {
+    const { getStoryImageUrl, getStorageUrl } = await importStorageConfig();
+    expect(getStoryImageUrl({ id: "uuid-1", image: "cl9legacy" })).toBe(
+      getStorageUrl("images/story/cl9legacy.png"),
+    );
+  });
+});
+
+describe("chapter picture and audio", () => {
+  it("getChapterImageKey uses the stored key before the chapter id", async () => {
+    const { getChapterImageKey } = await importStorageConfig();
+    expect(getChapterImageKey({ id: "ch-1", image: "cl9chapter" })).toBe("cl9chapter");
+    expect(getChapterImageKey({ id: "ch-1", image: null })).toBe("ch-1");
+  });
+
+  it("getChapterImageUrl builds images/story/<key>.png in the bucket", async () => {
+    const { getChapterImageUrl, getStorageUrl } = await importStorageConfig();
+    expect(getChapterImageUrl({ id: "ch-1", image: "cl9chapter" })).toBe(getStorageUrl("images/story/cl9chapter.png"));
+  });
+
+  it("getAudioUrl builds the chapter audio URL from the key with no leading slash", async () => {
+    const { getAudioUrl, getStorageUrl } = await importStorageConfig();
+    expect(getAudioUrl("audio/cl9chapter.mp3")).toBe(getStorageUrl("audio/cl9chapter.mp3"));
+  });
+});

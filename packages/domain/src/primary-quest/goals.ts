@@ -3,10 +3,11 @@
  * existing data only: reading days, question accuracy, the streak, and lesson steps. A met goal
  * earns one named power-up; the week is capped; the evaluation runs any number of times.
  */
-import { and, count, eq, gte, sql } from "drizzle-orm";
+import { assertStudentRecordWriter } from "../primary-avatar/permissions.js";
+import { and, count, eq, gte } from "drizzle-orm";
 import { primaryClassQuestPowerUp, primaryStudentLessonSteps, userActivity } from "@reading-advantage/db/schema";
 import type { QuestPowerUpRow } from "@reading-advantage/game-contracts";
-import { SCHOOL_TIME_ZONE } from "../calendar-day.js";
+import { bangkokDay } from "../primary-dashboards/activity.js";
 import { countStreakFromDays } from "../primary-home/streak.js";
 import type { Ctx } from "../primary-books/class-books.js";
 import { POWER_UP_CAP_PER_WEEK, canEarnPowerUp } from "./rules.js";
@@ -17,7 +18,7 @@ import type { QuestGoal } from "./templates.js";
 const STREAK_WINDOW_DAYS = 366;
 const MC_QUESTION = "MC_QUESTION";
 /** The calendar day of an activity row in the school time zone (the column holds UTC without a zone). */
-const ACTIVITY_DAY = sql<string>`to_char(date_trunc('day', (${userActivity.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE ${sql.raw(`'${SCHOOL_TIME_ZONE}'`)}), 'YYYY-MM-DD')`;
+const ACTIVITY_DAY = bangkokDay(userActivity.createdAt);
 
 /** What the goals are judged on. */
 export interface GoalFacts {
@@ -118,8 +119,10 @@ export async function readGoalFacts(raw: Ctx["db"], userId: string, startsAt: Da
  * repeat grants nothing twice.
  * @param ctx The database and the student.
  * @returns Every power-up of the student in this quest, in the order earned; empty without a quest.
+ * @throws {AuthError} FORBIDDEN when the user is not a student.
  */
 export async function awardPowerUps(ctx: Ctx): Promise<QuestPowerUpRow[]> {
+  assertStudentRecordWriter(ctx.user);
   const found = await studentQuest(ctx);
   if (!found) return [];
   const { raw, quest, template } = found;

@@ -8,7 +8,7 @@ import { act, cleanup, fireEvent, screen, within } from "@testing-library/react"
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithMessages, testMessages } from "@/components/__tests__/helpers/render-with-messages";
+import { renderWithMessages, withMessages, testMessages } from "@/components/__tests__/helpers/render-with-messages";
 
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ children, href, ...rest }: { children?: ReactNode; href: string }) => (
@@ -16,8 +16,11 @@ vi.mock("@/i18n/navigation", () => ({
       {children}
     </a>
   ),
-  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn(), replace: replaceMock }),
 }));
+const replaceMock = vi.hoisted(() => vi.fn());
+const searchState = vi.hoisted(() => ({ query: "" }));
+vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams(searchState.query) }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 import MyClasses from "../my-classes";
@@ -44,6 +47,8 @@ async function flush() {
 }
 
 beforeEach(() => {
+  searchState.query = "";
+  replaceMock.mockReset();
   failures = 0;
   fetchMock.mockReset();
   fetchMock.mockImplementation(async () =>
@@ -100,6 +105,89 @@ describe("My Classes", () => {
     fireEvent.click(screen.getByRole("button", { name: en.Error.retry }));
     await flush();
     expect(screen.getByRole("link", { name: "P3A" })).toBeInTheDocument();
+  });
+});
+
+describe("My Classes edit link (FR-4)", () => {
+  it("opens the edit dialog of the class named by ?edit", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText(en.TeacherMyClasses.edit.title)).toBeInTheDocument();
+    expect(within(dialog).getByDisplayValue("P3A")).toBeInTheDocument();
+  });
+
+  it("shows the list only when the id is not a listed class", async () => {
+    searchState.query = "edit=00000000-0000-4000-8000-00000000dead";
+    renderWithMessages(<MyClasses />);
+    await flush();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "P3A" })).toBeInTheDocument();
+  });
+
+  it("removes edit from the URL when the dialog closes", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
+    await flush();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(replaceMock).toHaveBeenCalledWith("/teacher/my-classes");
+  });
+
+  it("opens the same ?edit id again after the dialog closed and the URL was cleared", async () => {
+    searchState.query = `edit=${C1}`;
+    const view = renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
+    await flush();
+    searchState.query = "";
+    view.rerender(withMessages(<MyClasses />, "en"));
+    await flush();
+    searchState.query = `edit=${C1}`;
+    view.rerender(withMessages(<MyClasses />, "en"));
+    await flush();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("sends the grade as a string when the list returned the integer column (H-1)", async () => {
+    classes[0].grade = 4 as unknown as string;
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: en.TeacherMyClasses.edit.submit }));
+    await flush();
+    classes[0].grade = "3";
+    const patch = fetchMock.mock.calls.find(([, init]) => init?.method === "PATCH");
+    expect(JSON.parse(patch?.[1].body as string)).toEqual({ classroomName: "P3A", grade: "4" });
+  });
+
+  it("does not open the dialog again after a save while the URL still names the class", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: en.TeacherMyClasses.edit.submit }));
+    await flush();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("lists the grades 1 to 12 in the edit dialog (L-13)", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+    const dialog = screen.getByRole("dialog");
+    fireEvent.keyDown(within(dialog).getByRole("combobox"), { key: "ArrowDown" });
+    await flush();
+    expect(screen.getAllByRole("option")).toHaveLength(12);
+  });
+
+  it("does not touch the URL when no edit query is set", async () => {
+    renderWithMessages(<MyClasses />);
+    await flush();
+    expect(replaceMock).not.toHaveBeenCalled();
   });
 });
 

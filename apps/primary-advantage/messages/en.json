@@ -1,7 +1,7 @@
 {
   "LocaleSwitcher": {
     "label": "Change language",
-    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 中文} cn {🇨🇳 台灣} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
+    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 繁體中文} cn {🇨🇳 简体中文} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
   },
   "common": {
     "tryAgain": "Try Again"
@@ -22,7 +22,7 @@
     "home": "Home",
     "about": "About",
     "contact": "Contact",
-    "authors": "Authors",
+    "books": "Our books",
     "login": "Login",
     "menu": "Menu",
     "usernav": {
@@ -49,8 +49,6 @@
     "assignments": "Assignments",
     "sentences": "Sentences",
     "vocabulary": "Vocabulary",
-    "games": "Games",
-    "testing": "Testing",
     "systemdashboard": "System Dashboard",
     "licenses": "Licenses Dashboard",
     "schools": "Schools Dashboard",
@@ -68,7 +66,6 @@
     "userProfile": "User Profile",
     "schoolProfile": "School Profile",
     "studentsandclasses": "Students and Classes",
-    "articlecreation": "Article Creation",
     "back": "Back",
     "subItem": {
       "admin": "Admin",
@@ -84,7 +81,8 @@
       "overviewReports": "Overview Reports",
       "performanceAnalytics": "Performance Analytics",
       "progressTracking": "Progress Tracking"
-    }
+    },
+    "schoollicense": "School license"
   },
   "Leaderboard": {
     "title": "Leaderboard",
@@ -211,7 +209,16 @@
         "updateFailed": "Failed to update classroom",
         "updateSuccess": "Classroom updated successfully",
         "deleteSuccess": "Classroom deleted successfully",
-        "deleteFailed": "Failed to delete classroom"
+        "deleteFailed": "Failed to delete classroom",
+        "teachersRefused": "The teachers did not change. A teacher belongs to another school."
+      },
+      "picker": {
+        "hint": "Check the teachers who teach this class.",
+        "owner": "Class owner",
+        "loading": "Loading teachers...",
+        "loadFailed": "The teacher list did not load.",
+        "empty": "This school has no teachers.",
+        "selected": "{count, plural, one {# teacher selected} other {# teachers selected}}. The class owner stays on the class."
       }
     },
     "Students": {
@@ -254,6 +261,7 @@
       "maxSize": "Max size: 5MB",
       "browse": "Browse",
       "supportedFormat": "Supported format: CSV files only, maximum size 5MB",
+      "chooseSchool": "Choose a school before you import.",
       "fileSelected": {
         "title": "File Selected",
         "name": "Name",
@@ -263,6 +271,7 @@
       "failedTitle": "Upload Failed",
       "successTitle": "Upload Successful",
       "success": {
+        "school": "School",
         "file": "File",
         "size": "Size",
         "savedAs": "Saved as",
@@ -367,79 +376,148 @@
     }
   },
   "AdminDashboard": {
-    "title": "Admin Dashboard",
-    "subtitle": "Manage your school's educational platform",
-    "actions": {
-      "importData": "Import Data",
-      "addTeacher": "Add Teacher"
-    },
-    "stats": {
-      "teachers": "Teachers",
-      "teachersDesc": "Active teachers in your school",
-      "students": "Students",
-      "studentsDesc": "Enrolled students",
-      "articles": "Articles",
-      "articlesDesc": "Available reading materials",
-      "growth": "Monthly Growth",
-      "growthDesc": "Student enrollment growth",
-      "loadError": "Failed to load statistics"
-    },
-    "quickActions": {
-      "title": "Quick Actions",
-      "addTeacher": "Add Teacher",
-      "addTeacherDesc": "Register a new teacher account",
-      "addStudent": "Add Student",
-      "addStudentDesc": "Create a new student profile",
-      "createArticle": "Create Article",
-      "createArticleDesc": "Generate new reading content",
-      "importData": "Import Data",
-      "importDataDesc": "Bulk import users and content",
-      "viewReports": "View Reports",
-      "viewReportsDesc": "Access analytics and insights",
-      "reedyCosts": "Reedy costs",
-      "reedyCostsDesc": "Minutes, cost, and failures by school and month",
-      "manageClassrooms": "Manage Classrooms",
-      "manageClassroomsDesc": "Organize classes and assignments"
-    },
-    "recentActivity": {
-      "title": "Recent Activity",
-      "empty": "No recent activity to display",
-      "viewAll": "View all activity",
-      "loadError": "Failed to load recent activity"
-    },
-    "systemStatus": {
-      "title": "System Status",
-      "serverHealth": "Server Health",
-      "database": "Database",
-      "aiServices": "AI Services",
-      "healthy": "Healthy",
-      "connected": "Connected",
-      "operational": "Operational"
+    "title": "School dashboard",
+    "period": "{start} to {end}",
+    "rangeLabel": "Time range",
+    "days": "{count} days",
+    "chooseSchool": "Choose a school",
+    "chooseSchoolHint": "Pick a school to see its numbers.",
+    "keyNumbers": {
+      "heading": "Key numbers",
+      "activeStudents": "Active students",
+      "activeTeachers": "Active teachers",
+      "classes": "Classes with activity",
+      "articles": "Articles opened",
+      "xp": "XP earned",
+      "newStudents": "New students",
+      "activeStudentsSub": "of {total} students ({percent}%)",
+      "activeTeachersSub": "of {total} teachers signed in",
+      "classesSub": "of {total} classes",
+      "articlesSub": "by students",
+      "xpSub": "by students",
+      "newStudentsSub": "added in this range",
+      "empty": "No students in this school yet. The numbers appear after the first student is added."
     },
     "alerts": {
-      "title": "System Alerts",
-      "lowStorage": {
-        "title": "Storage Space Low",
-        "description": "Consider upgrading your storage plan"
+      "heading": "Alerts",
+      "none": "No alerts. All checks pass.",
+      "noneEmpty": "Alerts start when students sign in.",
+      "severity": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium"
       },
-      "newRegistrations": {
-        "title": "New Teacher Registrations",
-        "description": "5 teachers pending approval"
+      "lowActivity": "Only {percent}% of students were active in the last 30 days",
+      "lowActivityHint": "{active} of {total} students had an activity in the last 30 days.",
+      "licenseEndsSoon": "The license ends in {days, plural, =0 {less than a day} one {# day} other {# days}}",
+      "licenseEndsSoonHint": "Renew the license before it ends.",
+      "licenseEnded": "The license of this school has ended",
+      "licenseEndedHint": "No active license is left. Contact Reading Advantage to renew it.",
+      "seatsNearlyFull": "Seats are nearly full: {seatsUsed} of {seats} used ({percent}%)",
+      "seatsNearlyFullHint": "Students use the seats of the license. Ask for more seats before it is full."
+    },
+    "adoption": {
+      "heading": "Adoption",
+      "byCefr": "CEFR level",
+      "byGrade": "Class grade",
+      "level": "Level",
+      "grade": "Grade",
+      "noGrade": "No grade",
+      "students": "Students",
+      "active": "Active",
+      "share": "Active share",
+      "averageXp": "Average XP",
+      "note": "Active means one activity in the last {days} days. Average XP counts every student of the row.",
+      "empty": "No students in this school yet."
+    },
+    "teachers": {
+      "heading": "Teachers",
+      "teacher": "Teacher",
+      "classes": "Classes",
+      "activeOfStudents": "Active / students",
+      "engagement": "Engagement",
+      "noStudents": "No students",
+      "classCount": "{count, plural, =0 {No classes} one {# class} other {# classes}}",
+      "empty": "No teachers in this school yet.",
+      "unnamed": "Teacher without a name"
+    },
+    "activity": {
+      "heading": "Activity by day",
+      "empty": "Activity appears after students start.",
+      "events": "Activity events",
+      "peak": "Busiest day (students)",
+      "average": "Daily average (students)",
+      "aria": "{count} days, active students per day",
+      "cell": "{day}: {count} active students",
+      "weekdays": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
       }
     },
-    "charts": {
-      "title": "Analytics Overview",
-      "userGrowth": "User Growth",
-      "topArticles": "Most Popular Articles",
-      "activityByLevel": "Activity by CEFR Level",
-      "performance": "Performance Metrics"
-    }
+    "loadError": "The school dashboard did not load",
+    "loadErrorHint": "Try again. If the problem stays, tell Reading Advantage.",
+    "back": "Go to teachers"
   },
-  "AdminArticleCreationPage": {
-    "header": {
-      "heading": "Article Creation & Management",
-      "text": "Create, generate, and approve articles for Primary Advantage"
-    }
+  "SystemDashboard": {
+    "title": "System dashboard",
+    "week": "This week: {start} to {end}",
+    "totals": {
+      "heading": "Platform totals",
+      "schools": "Schools",
+      "students": "Students",
+      "teachers": "Teachers",
+      "active": "Active students this week",
+      "activeSub": "{active} of {total} ({percent}%)",
+      "articles": "Articles opened this week",
+      "seatsUsed": "Seats used",
+      "seatsOf": "of {seats} seats",
+      "noLicense": "No license",
+      "withoutSchool": "{count, plural, one {# student has no school. This student is not in the table.} other {# students have no school. They are not in the table.}} Assign a school on the Users page."
+    },
+    "table": {
+      "heading": "Schools",
+      "search": "Search by school name",
+      "searchLabel": "Search schools",
+      "sortBy": "Sort by",
+      "sortDefault": "Quiet first",
+      "sortAsc": "Low to high",
+      "sortDesc": "High to low",
+      "sortDirection": "Change the sort order",
+      "noMatch": "No school matches “{query}”.",
+      "empty": "No schools yet",
+      "emptyHint": "Add the first school on the Schools page.",
+      "goToSchools": "Go to Schools",
+      "columns": {
+        "name": "School",
+        "active": "Active students",
+        "articles": "Articles opened",
+        "seats": "Seats",
+        "last": "Last activity",
+        "status": "Status"
+      },
+      "activeOf": "{active} of {students} ({percent}%)",
+      "seatsOf": "{used} of {total}",
+      "noLicense": "No license",
+      "none": "None",
+      "open": "Open",
+      "openFor": "Open the dashboard of {name}",
+      "openCard": "Open dashboard",
+      "actions": "Actions",
+      "footnote": "This week means the last 7 days, today included. Quiet means a school with students and no activity this week. Seats count students only."
+    },
+    "status": {
+      "quiet": "Quiet",
+      "active": "Active",
+      "noStudents": "No students"
+    },
+    "loadError": "The system dashboard did not load",
+    "loadErrorHint": "Try again. If the problem stays, tell the support team.",
+    "back": "Go to Schools"
   },
   "Components": {
     "translationLanguage": "Translation language",
@@ -460,6 +538,12 @@
     "seekBack": "Seek back",
     "seekForward": "Seek forward",
     "playbackSpeed": "Playback speed",
+    "previousSentence": "Previous sentence",
+    "replaySentence": "Replay this sentence",
+    "nextSentence": "Next sentence",
+    "changeSpeed": "Speed {speed} times. Change speed",
+    "closeAudio": "Close the audio",
+    "readAlongHint": "Tap a word to hear it from there. Tap a line to hear the whole sentence.",
     "openActionsMenu": "Open actions menu",
     "showNotifications": "Show notifications",
     "toggleDetails": "Toggle details",
@@ -473,131 +557,7 @@
     "confirmRetake": "Confirm Retake",
     "areYouSureYouWantToRetakeThisQuiz": "Are you sure you want to retake this quiz? Your previous answers will be cleared.",
     "loadError": "Failed to load",
-    "emptyList": "No sentences yet",
-    "AdminArticleCreation": {
-      "tabs": {
-        "createArticle": "Create Article",
-        "previewEdit": "Preview & Edit",
-        "manageArticles": "Manage Articles"
-      },
-      "aiArticleGenerator": "AI Article Generator",
-      "aiArticleGeneratorDesc": "Use AI to generate high-quality articles with your chosen settings.",
-      "articleType": "Article Type",
-      "fiction": "Fiction",
-      "nonFiction": "Nonfiction",
-      "genre": "Genre",
-      "subgenre": "Subgenre",
-      "cefrLevel": "CEFR Level",
-      "articleTopic": "Article Topic",
-      "placeholder": {
-        "genre": "Select a genre",
-        "subgenre": "Select a subgenre",
-        "cefr": "Select CEFR level",
-        "topic": "Describe the topic, theme, or key points"
-      },
-      "cefrLevels": {
-        "A1": "A1",
-        "A2": "A2",
-        "B1": "B1",
-        "B2": "B2",
-        "C1": "C1",
-        "C2": "C2"
-      },
-      "error": "Error",
-      "generateWithAI": "Generate with AI",
-      "dialog": {
-        "approval": {
-          "title": "Confirm Approval",
-          "description": "Are you sure you want to approve and publish this article? This action will publish the article to the platform."
-        },
-        "backToCreate": {
-          "title": "Back to Create?",
-          "description": "If you go back to Create, your changes will be lost.",
-          "warning": "This action will reset the article to the initial state."
-        },
-        "common": {
-          "cancel": "Cancel",
-          "confirm": "Confirm",
-          "ok": "OK"
-        }
-      },
-      "loading": {
-        "titles": {
-          "generate": "Generating Your Article",
-          "save": "Saving Article Draft",
-          "approve": "Approving & Publishing Article"
-        },
-        "descriptions": {
-          "generate": "Please wait while AI creates your amazing content...",
-          "save": "Saving your changes as a draft...",
-          "approve": "Publishing your article to the platform..."
-        }
-      },
-      "preview": {
-        "title": "Article Preview",
-        "description": "Review the article content (read-only)"
-      },
-      "editor": {
-        "title": "Article Editor",
-        "description": "Review and edit the generated content before approval"
-      },
-      "modified": "Modified",
-      "badges": {
-        "type": "Type",
-        "genre": "Genre",
-        "subgenre": "Subgenre",
-        "cefrLevel": "CEFR Level"
-      },
-      "fields": {
-        "title": "Article Title",
-        "content": "Article Content",
-        "summary": "Article Summary"
-      },
-      "placeholders": {
-        "title": "Enter article title...",
-        "content": "Enter the main article content...",
-        "summary": "Enter article summary..."
-      },
-      "buttons": {
-        "backToCreate": "Back to Create",
-        "approveAndPublish": "Approve and Publish",
-        "saveAsDraft": "Save as Draft",
-        "backToManage": "Back to Manage",
-        "switchToEdit": "Switch to Edit",
-        "refresh": "Refresh",
-        "preview": "Preview",
-        "edit": "Edit",
-        "delete": "Delete",
-        "deleting": "Deleting..."
-      },
-      "manage": {
-        "title": "Article Management",
-        "description": "Manage your articles",
-        "loading": "Loading articles...",
-        "empty": "No articles found"
-      },
-      "status": {
-        "draft": "Draft",
-        "published": "Published"
-      },
-      "list": {
-        "topic": "Topic",
-        "cefr": "CEFR",
-        "rating": "Rating",
-        "created": "Created"
-      },
-      "toasts": {
-        "fetchFailed": "Failed to fetch articles",
-        "generateSuccess": "Article generated successfully!",
-        "saveSuccess": "Article saved as draft successfully!",
-        "saveFailed": "Failed to save article",
-        "approveSuccess": "Article approved and published successfully!",
-        "approveFailed": "Failed to approve article",
-        "deleteSuccess": "Article deleted successfully",
-        "deleteFailed": "Failed to delete article",
-        "deleteError": "An error occurred while deleting the article"
-      }
-    }
+    "emptyList": "No sentences yet"
   },
   "WordList": {
     "title": "Word List",
@@ -749,6 +709,7 @@
     "description": "View student progress and classroom analytics",
     "activityprogress": "Activity Progress",
     "recentactivity": "Recent Activity",
+    "attemptTag": "Attempt {number}",
     "activityheatmap": "Activity Heatmap",
     "xpoverall": "XP Overall",
     "readingstatschart": "Reading Stats Chart",
@@ -760,6 +721,9 @@
       "MC_QUESTION": "Multiple Choice Question",
       "SA_QUESTION": "Short Answer Question",
       "LA_QUESTION": "Long Answer Question",
+      "STORIES_MC_QUESTION": "Story multiple choice question",
+      "STORIES_SA_QUESTION": "Story short answer question",
+      "STORIES_LA_QUESTION": "Story long answer question",
       "ARTICLE_READ": "Article Read",
       "ARTICLE_RATING": "Story rating",
       "STORIES_RATING": "Story series rating",
@@ -1385,115 +1349,6 @@
     "description": "Review vocabulary words and expand your language skills with spaced repetition",
     "translationLanguageDescription": "Definitions will be shown in this language"
   },
-  "HomePage": {
-    "hero": {
-      "title": "Help Young Students Become Amazing Readers with AI-Powered Fun!",
-      "subtitle": "Reading adventures tailored for ages 8-12 (Grades 3-6).",
-      "getStarted": "Get Started Now!"
-    },
-    "features": {
-      "title": "Cool Features",
-      "description": "Discover how Primary Advantage makes reading fun and helps you learn!",
-      "funStory": {
-        "title": "Fun Story Adventures",
-        "description": "Discover exciting stories and articles just for kids your age, always something new to read!"
-      },
-      "understand": {
-        "title": "Understand the Story",
-        "description": "Answer fun questions about what you read to help you remember and understand better."
-      },
-      "readingLevels": {
-        "title": "Just Right Reading Levels",
-        "description": "Read stories that are perfect for how you read, making it easy and enjoyable."
-      },
-      "learnWords": {
-        "title": "Learn New Words",
-        "description": "Find new and interesting words in the stories and learn what they mean with fun tools."
-      },
-      "listenAlong": {
-        "title": "Listen Along",
-        "description": "Hear the stories read aloud to you, great for listening and following along."
-      },
-      "seeProgress": {
-        "title": "See How You're Growing",
-        "description": "Check out your reading progress and see all the cool things you're learning!"
-      },
-      "makeYours": {
-        "title": "Make It Yours",
-        "description": "Pick stories you like and set goals for reading, creating your own reading adventure."
-      },
-      "helpTeachers": {
-        "title": "Help for Teachers",
-        "description": "Tools for teachers to see how the class is doing and help everyone learn."
-      }
-    },
-    "benefits": {
-      "title": "Why Schools Love Primary Advantage",
-      "description": "See how Primary Advantage can help teachers and students in schools!",
-      "superReader": {
-        "title": "Become a Super Reader",
-        "description": "Read lots of exciting stories and play games to boost your reading skills!"
-      },
-      "ownPath": {
-        "title": "Your Own Reading Path",
-        "description": "Read stories that match your reading level and interests, made just for you."
-      },
-      "storiesLove": {
-        "title": "Stories You'll Love",
-        "description": "Enjoy different kinds of stories with pictures and sounds that make reading fun."
-      },
-      "watchGrow": {
-        "title": "Watch Your Reading Power Grow",
-        "description": "See your progress and how you're becoming a better reader every day."
-      },
-      "learnWords": {
-        "title": "Learn Lots of New Words",
-        "description": "Discover fun words in stories and remember them with cool activities."
-      },
-      "easyUse": {
-        "title": "Easy to Use Anywhere",
-        "description": "Read and learn at school or at home, whenever you want!"
-      },
-      "greatSchools": {
-        "title": "Great for Schools",
-        "description": "A smart way for schools to help all students become great readers."
-      },
-      "moreTime": {
-        "title": "More Time for Teaching Fun",
-        "description": "Our tools help teachers find great stories and see student progress easily."
-      }
-    },
-    "contact": {
-      "title": "Let's Get in Touch",
-      "description": "Have a question or need more information? Contact us today to learn more about our platform.",
-      "formTitle": "Contact Us",
-      "formDescription": "Get in touch with us to learn more about our platform",
-      "name": "Name",
-      "namePlaceholder": "John Doe",
-      "institution": "Institution",
-      "institutionPlaceholder": "University of Example",
-      "email": "Email",
-      "emailPlaceholder": "m@example.com",
-      "inquiry": "Inquiry",
-      "inquiryPlaceholder": "Select an option",
-      "inquiryOptions": {
-        "sales": "Sales",
-        "support": "Support",
-        "partnerships": "Partnerships"
-      },
-      "message": "Message",
-      "messagePlaceholder": "Type your message here.",
-      "sendMessage": "Send Message"
-    },
-    "cta": {
-      "title": "Ready for a Primary Adventure?",
-      "description": "Start your free trial and see how fun reading can be with Primary Advantage! It's perfect for students aged 8-12."
-    }
-  },
-  "AboutPage": {
-    "title": "About Us",
-    "description": "Learn more about Primary Advantage and our mission"
-  },
   "AuthPage": {
     "signin": {
       "title": "Sign In",
@@ -1521,6 +1376,13 @@
       "avatar": "My avatar",
       "username": "Username",
       "usernameDescription": "The username is used to represent themselves on the platform.",
+      "displayName": "Display name",
+      "displayNameDescription": "The display name shows your name on the platform. You can change it.",
+      "signInUsername": "Sign-in username",
+      "signInUsernameDescription": "You use this name to sign in. It never changes.",
+      "codeOnlyError": "Your class code sign-in cannot change the profile. Sign in with your username and password.",
+      "updateSuccess": "Display name updated.",
+      "updateError": "Could not update the display name. Try again.",
       "email": "Email",
       "level": "Primary advantage level",
       "xp": "Primary advantage XP",
@@ -1531,9 +1393,7 @@
       "resendVerification": "Resend verification email",
       "unknown": "unknown",
       "update": "Update",
-      "activate": "Activate",
-      "license": "License",
-      "licenseDescription": "Enter the new license for the user"
+      "activate": "Activate"
     },
     "schoolProfile": {
       "title": "School Profile",
@@ -1592,6 +1452,43 @@
         "title": "No School Associated",
         "description": "You don't have a school associated with your account yet. Create one to get started and gain Admin access to manage school features.",
         "createSchool": "Create School"
+      },
+      "licensePanel": {
+        "title": "License",
+        "viewOnly": "View only. To change a license, contact Reading Advantage.",
+        "overChip": "Over limit",
+        "overTitle": "{count, plural, one {# student} other {# students}} over the limit.",
+        "overBody": "The school has {used} students and {seats} seats. Students keep access. Ask for more seats before the next term.",
+        "noneChip": "No active license",
+        "noneTitle": "The school has no seats now.",
+        "noneBody": "{used} students use the app. Ask for a license.",
+        "seatsTitle": "Seats",
+        "seatsUsed": "Seats used",
+        "seatsFree": "Seats free",
+        "seatsTotal": "Seats in total",
+        "seatsNote": "Seats count the licenses that are active today. Seats used count the students of the school. Teachers and admins use no seat.",
+        "licensesTitle": "Licenses",
+        "noLicense": "This school has no license.",
+        "seatsCount": "{count} seats",
+        "dateRange": "{start} to {end}",
+        "noEnd": "no end date",
+        "state": {
+          "active": "Active",
+          "ended": "Ended",
+          "inactive": "Inactive"
+        },
+        "holdersTitle": "Seat holders",
+        "holdersRange": "Students {from} to {to} of {total}",
+        "holdersEmpty": "The school has no students.",
+        "holdersError": "The seat holders did not load.",
+        "colName": "Name",
+        "colUsername": "Username",
+        "colClasses": "Classes",
+        "colJoined": "Joined",
+        "noClass": "No class",
+        "previous": "Previous",
+        "next": "Next",
+        "pageOf": "Page {page} of {pages}"
       }
     }
   },
@@ -1893,11 +1790,61 @@
         "more": "+{count} more {count, plural, one {sentence} other {sentences}} saved"
       },
       "actions": {
-        "backToRead": "Back to Read Page"
+        "backToRead": "Back to Read Page",
+        "startAgain": "Start Again",
+        "restarting": "Restarting..."
       },
       "toast": {
         "failed": "Failed to load lesson summary"
-      }
+      },
+      "restart": {
+        "title": "Start this lesson again?",
+        "body1": "Your work on this lesson goes into your history.",
+        "body2": "You keep your XP. You can earn XP again.",
+        "cancel": "Cancel",
+        "error": "We could not start the lesson again. Try again."
+      },
+      "attempt": "Attempt {number}",
+      "attemptXp": "XP in attempt {number}",
+      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
+      "previewNote": "Preview: nothing is saved."
+    }
+  },
+  "LessonGames": {
+    "title": "Vocabulary games",
+    "subtitle": "Play with the words of this lesson.",
+    "choose": "Choose a game",
+    "wordsReady": "{count, plural, one {# word ready} other {# words ready}}",
+    "sentencesReady": "{count, plural, one {# sentence ready} other {# sentences ready}}",
+    "play": "Play",
+    "playAgain": "Play again",
+    "locked": "Locked",
+    "newTag": "New",
+    "notPlayed": "New: not played yet",
+    "last": "Last: {correct}/{total} correct",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, one {Needs # word} other {Needs # words}}",
+    "needSentences": "{count, plural, one {Needs # sentence} other {Needs # sentences}}",
+    "lockedLesson": "Locked for now",
+    "simpleHint": "Slow phone or a game does not start?",
+    "simpleGame": "Simple game",
+    "backToGames": "Back to the games",
+    "loading": "Getting the words of this lesson…",
+    "inputFailed": "We could not get the words of this lesson. Play the simple game.",
+    "noGames": "No game fits this lesson yet. Play the simple game.",
+    "loadFailed": "The game did not start. Play the simple game instead.",
+    "sentenceTitle": "Sentence games",
+    "sentenceInputFailed": "We could not get the sentences of this lesson. Play one of the four activities below.",
+    "sentenceLoadFailed": "The game did not start. Play one of the four activities below.",
+    "runLine": "You got {correct} of {total}.",
+    "runLineXp": "You got {correct} of {total}. +{xp} XP",
+    "pitch": {
+      "rpg-battle": "Pick the right meaning to hit the goblin king.",
+      "rune-match": "Match each word with its rune.",
+      "dragon-rider": "Fly through the gate with the right word.",
+      "enchanted-library": "Catch the right book, dodge the wrong one.",
+      "castle-defense": "Put the words in order to hold the wall.",
+      "potion-rush": "Build the sentence before the potion boils."
     }
   },
   "LessonLanguageQuestion": {
@@ -2342,6 +2289,7 @@
     "ClassroomNavigation": {
       "nav": {
         "classRoster": "Class Roster",
+        "classBook": "Class book",
         "reports": "Reports",
         "reedy": "Reedy",
         "avatars": "Avatars",
@@ -2711,7 +2659,8 @@
         "students": "Students",
         "classes": "Classes",
         "joined": "Joined",
-        "actions": "Actions"
+        "actions": "Actions",
+        "school": "School"
       },
       "loading": "Loading teachers...",
       "empty": {
@@ -2726,10 +2675,31 @@
         "createError": "Failed to create teacher",
         "updateError": "Failed to update teacher",
         "deleteError": "Failed to delete teacher"
+      },
+      "schoolManage": {
+        "school": "School",
+        "noSchool": "No school",
+        "filterLabel": "Filter by school",
+        "filterAll": "All schools",
+        "notice": "Saving moves the teacher to {school}. Choose the classes of that school below.",
+        "moved": "Teacher moved to the new school",
+        "refusedTitle": "The teacher cannot move yet",
+        "refusedDescription": "{name} owns these classes. Give each class to another owner, then try again.",
+        "refusedClose": "Close",
+        "moveFailed": "The move failed"
       }
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "Student added successfully",
+      "addError": "Failed to add student",
+      "updateSuccess": "Student updated successfully",
+      "updateError": "Failed to update student",
+      "deleteSuccess": "Student deleted successfully",
+      "deleteError": "Failed to delete student",
+      "fetchError": "Failed to load students"
+    },
     "header": {
       "title": "Student Management",
       "subtitle": "Manage students and their progress"
@@ -2828,7 +2798,12 @@
     "loadingGame": "Loading the game…",
     "loadingChallenge": "Loading the challenge…",
     "challengeMismatch": "This game cannot run this challenge.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "exitGame": "Exit game",
+    "exitTitle": "Leave the game?",
+    "exitBody": "This game does not count. You can play it again later.",
+    "exitCancel": "Keep playing",
+    "exitConfirm": "Leave"
   },
   "StudentGames": {
     "rewardInInventory": "It is in your inventory. Wear it from your avatar page.",
@@ -2864,7 +2839,6 @@
     "link": "Word adventures"
   },
   "Footer": {
-    "tagline": "Providing the best English learning experience.",
     "about": "About",
     "aboutUs": "About Us",
     "features": "Features",
@@ -3052,7 +3026,8 @@
       "label": "Class code",
       "help": "Type the code your teacher shows you.",
       "next": "Next",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "oldLink": "This link has an old class code. Type the code that your teacher shows."
     },
     "names": {
       "title": "Who are you?",
@@ -3571,6 +3546,7 @@
     "searching": "Searching...",
     "score": "Score {score}",
     "readOn": "Read {date}",
+    "attemptTag": "Attempt {number}",
     "status": {
       "READ": "Read",
       "UNRATED": "Not rated yet",
@@ -3604,16 +3580,24 @@
       "classes": "Classes",
       "students": "Students",
       "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "needsHelp": "Need help",
+      "activeStudents": "Active students (30 days)",
+      "activeStudentsOf": "{active} of {total} ({percent}%)",
+      "noStudentsYet": "No students yet",
+      "averageLevel": "Average level",
+      "averageLevelHint": "Primary level 1 to 15",
+      "activeToday": "Active today",
+      "activeTodayOf": "{count, plural, one {of # student} other {of # students}}",
+      "completedToday": "Completed today",
+      "completedTodayHint": "assignments done",
+      "needsHelpHint": "See the list below"
     },
     "classes": {
       "heading": "My classes",
-      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
       "grade": "Grade {grade}",
       "empty": "No classes yet",
       "emptyHint": "Create a class on My Classes, then add your students.",
-      "goToClasses": "Go to My Classes",
-      "all": "All classes"
+      "goToClasses": "Go to My Classes"
     },
     "assignments": {
       "heading": "Open assignments",
@@ -3633,7 +3617,41 @@
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadErrorHint": "Check your connection and try again.",
+    "table": {
+      "search": "Search by class name",
+      "searchLabel": "Search classes",
+      "sortBy": "Sort by",
+      "sortAsc": "Ascending",
+      "sortDesc": "Descending",
+      "sortDirection": "Change the sort order",
+      "csv": "Download CSV",
+      "csvLabel": "Download CSV of the shown classes",
+      "noMatch": "No class matches “{query}”.",
+      "legend": "Active means one activity in the last 7 days. XP trend compares with the 7 days before (up or down by more than 5%).",
+      "activeOf": "{active} of {students} ({percent}%)",
+      "actions": "Actions",
+      "columns": {
+        "name": "Class",
+        "students": "Students",
+        "active": "Active (7 days)",
+        "level": "Average level",
+        "xp": "XP (7 days)",
+        "trend": "Trend",
+        "status": "Status"
+      },
+      "trend": {
+        "up": "Up",
+        "flat": "Flat",
+        "down": "Down"
+      },
+      "status": {
+        "onTrack": "On track",
+        "someQuiet": "Some quiet",
+        "needsAttention": "Needs attention",
+        "noStudents": "No students"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "Start class",
@@ -3649,8 +3667,19 @@
     "classBook": {
       "title": "Class book",
       "hint": "The book and the lesson plan for this class will show here.",
-      "none": "No book is assigned to this class yet.",
-      "noCatalogue": "No books are in the catalogue yet.",
+      "slotTitle": "Class books",
+      "slotEmpty": "No class has a book yet. Open a class to assign one.",
+      "slotNoClass": "You have no classes yet. Create a class to assign a book.",
+      "slotError": "We could not load the class books. Reload the page to try again.",
+      "assignRow": "Assign a book",
+      "slotNext": "Next",
+      "goToClasses": "Go to my classes",
+      "none": "No book is assigned to this class yet. Choose a book below to start.",
+      "emptyCatalogueTitle": "The book list is not ready yet.",
+      "emptyCatalogueBody": "Tell your school admin, who asks Reading Advantage to load the books.",
+      "loadErrorTitle": "We could not load the class books.",
+      "loadErrorBody": "Check the internet connection and try again.",
+      "retry": "Try again",
       "assign": "Assign a book",
       "book": "Book",
       "chooseBook": "Choose a book",
@@ -3664,6 +3693,12 @@
       "pointer": "Lesson {current} of {total}",
       "taughtCount": "{count, plural, =0 {No lessons taught yet} one {# lesson taught} other {# lessons taught}}",
       "pacing": "Lesson plan",
+      "nowInClass": "Now in class",
+      "openLesson": "Open lesson",
+      "lessonTitle": "Lesson {number}: {title}",
+      "taughtLabel": "Lessons taught",
+      "stepsMeter": "Workbook steps done",
+      "assignAnother": "Assign another book",
       "backToClass": "Back to class",
       "nextStep": "Next step",
       "nextStepValue": "Step {step}: {title}",
@@ -3681,8 +3716,24 @@
       "steps": "Workbook steps done in class",
       "stepLabel": "Step {step}: {title}",
       "actionError": "The change was not saved. Try again.",
+      "teachAgain": "Teach again",
+      "teachAgainTitle": "Teach lesson {number} again?",
+      "teachAgainBody1": "The class starts lesson {number} again. The lesson becomes the current lesson.",
+      "teachAgainBody2": "The work of each student goes into the history. The XP stays.",
+      "teachAgainCancel": "Cancel",
+      "taughtTimes": "{count, plural, one {Taught # time} other {Taught # times}}",
+      "runChip": "Run {number}",
+      "earlierRuns": "Earlier runs ({count})",
+      "earlierRun": "Run {number} · taught {date} · {done} of {total} steps done",
+      "earlierRunNoDate": "Run {number} · not marked taught · {done} of {total} steps done",
       "lesson": {
         "projector": "Projector",
+        "projectorGames": {
+          "title": "Games for the class",
+          "hint": "Choose a game to show on the projector. The answer hint is on and nothing saves.",
+          "loading": "Getting the words and sentences of this lesson…",
+          "inputFailed": "We could not get the words of this lesson. Try again later."
+        },
         "rehearsal": "Rehearsal (student view)",
         "answerKey": "Answer key",
         "teachersOnly": "Teachers only. Students never see this section.",
@@ -3702,7 +3753,7 @@
         "noKey": "This lesson has no answer key in the catalogue yet.",
         "summary": "Lesson summary",
         "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
-        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "rehearsalHint": "You see the lesson as a student does. Nothing you do here is saved.",
         "backToLesson": "Back to the lesson",
         "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
         "vocabulary": "Vocabulary",
@@ -3712,7 +3763,18 @@
         "showAll": "Show all paragraphs",
         "previous": "Previous",
         "next": "Next",
-        "paragraph": "Paragraph {number} of {total}"
+        "paragraph": "Paragraph {number} of {total}",
+        "print": "Print this lesson",
+        "printNow": "Print",
+        "printLoading": "Loading the pictures...",
+        "printNotReady": "The print version of this lesson is not ready yet.",
+        "printHint": "Choose A4 paper. Turn off \"Headers and footers\" in the print window.",
+        "printFrameTitle": "Print preview of the lesson",
+        "printBubbleWait": "Hold on...",
+        "printBubbleReady": "Ready!",
+        "printBubbleNotYet": "Not yet!",
+        "printNotReadyTitle": "The print version is not ready",
+        "printNotReadyBody": "This lesson has no print version yet. Use the projector or the lesson guide."
       },
       "guide": {
         "title": "Teacher guide",
@@ -3775,7 +3837,19 @@
         "openedBeforeTaught": "Opened before taught",
         "stepLabel": "Step {step}: {status}",
         "backToGrid": "Back to class progress",
-        "studentTitle": "{name}"
+        "studentTitle": "{name}",
+        "attemptCurrent": "Attempt {number} (current)",
+        "earlierAttempts": "Earlier attempts ({count})",
+        "attemptNumber": "Attempt {number}",
+        "closedOn": "Closed {date}",
+        "reason": {
+          "student_restart": "Student started again",
+          "teacher_teach_again": "Teacher taught again",
+          "legacy_import": "Moved from the old system"
+        },
+        "attemptSummary": "{done} of 14 steps · {minutes} min · {xp} XP",
+        "attemptsLabel": "attempt {number}",
+        "attemptsLegend": "Gold dot: the student is on a later attempt. The number is the attempt."
       }
     }
   },
@@ -3813,7 +3887,9 @@
     "goToClasses": "Go to My Classes",
     "statusFilter": "Show students by status",
     "selectStudentFor": "Select {name}",
-    "progressLabel": "{percent}% done"
+    "progressLabel": "{percent}% done",
+    "newAssignment": "New assignment",
+    "newAssignmentHint": "Choose a story. On the story page, click Assignments."
   },
   "TeacherStudents": {
     "classLabel": "Class",
@@ -3839,5 +3915,286 @@
     "backToClass": "Back to class",
     "studentLevel": "Level: {level}",
     "challengesHint": "Make a word challenge for a class game."
+  },
+  "BookLink": {
+    "bubbleRead": "Ready to read?",
+    "bubbleWrite": "Time to write!",
+    "landingQuestion": "Which app do you use?",
+    "lessonLine": "Lesson {number}: {title}",
+    "writingTask": "Writing task",
+    "choiceSchool": "My school uses Primary Advantage",
+    "choiceSchoolHint": "Sign in with your class code",
+    "choiceTutor": "I study with Tutor Advantage",
+    "choiceTutorHint": "Open the lesson in LINE",
+    "bubbleOhNo": "Oh no!",
+    "bubbleOops": "Oops!",
+    "bubbleNotYet": "Not yet!",
+    "unknownBookTitle": "We do not know this book",
+    "unknownBookBody": "The book in this link is not in Primary Advantage. Check the code on your page.",
+    "noLessonTitle": "This lesson is not in the book",
+    "noLessonBody": "{book} has Lessons 1 to {count}. Check the number on your page.",
+    "notReadyTitle": "This lesson is not ready yet",
+    "notReadyBody": "Ask your teacher.",
+    "noClassTitle": "No class uses this book",
+    "noClassBody": "{book} is not assigned to any of your classes. Open a class, then assign the book on the class page.",
+    "teacherOnlyTitle": "This link is for a class teacher",
+    "teacherOnlyBody": "Sign in as a teacher of a class to open this lesson.",
+    "wrongAccountTitle": "This link is not for this account",
+    "wrongAccountBody": "Sign in with a student or teacher account to open this lesson.",
+    "unknownAddressTitle": "We do not know this address",
+    "unknownAddressBody": "Scan the code on your page again. If it still fails, ask your teacher.",
+    "retryTitle": "We could not open the lesson",
+    "retryBody": "Check the internet connection and try again.",
+    "toHome": "Go to my home",
+    "toClasses": "Go to my classes",
+    "toStart": "Go to the start page",
+    "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "Student preview",
+    "bannerNote": "You see what a student sees. Student answers here are not saved.",
+    "exit": "Exit preview",
+    "menuItem": "Student view",
+    "notSaved": "Preview: not saved",
+    "backHome": "Back to home",
+    "emptyTitle": "Nothing to show yet",
+    "homeHeroTitle": "Hello, Student",
+    "homeHeroLine": "This is the home a student sees. Hero, XP, and coins start at zero.",
+    "emptyLesson": "A student sees today's lesson here.",
+    "emptyBooks": "A student sees the class books here.",
+    "emptyReading": "A student sees the story to continue here.",
+    "emptyQuest": "A student sees the Class Quest here.",
+    "emptyHistory": "A student sees the stories they read here.",
+    "emptyReports": "A student sees XP charts and activity here.",
+    "emptySentences": "A student sees saved sentences and practice here.",
+    "emptyVocabulary": "A student sees saved words here.",
+    "questNoClass": "Not in a class",
+    "reedyStudentsOnly": "Only students talk to Reedy",
+    "reedyStudentsOnlyLine": "Reedy uses voice minutes, so a student account starts the talk.",
+    "gameSampleWords": "This game uses sample words. Nothing is saved."
+  },
+  "Stories": {
+    "tabsLabel": "Read",
+    "tabArticles": "Articles",
+    "tabStories": "Stories",
+    "title": "Stories",
+    "subtitle": "Pick a book from the shelf. Each story has chapters.",
+    "yourLevel": "Your level: {cefr} · Stories of level {from} to {to}",
+    "search": "Search stories",
+    "searchPlaceholder": "Search by title or topic",
+    "searchButton": "Search",
+    "genres": "Genres",
+    "allGenres": "All",
+    "shelf": "Stories",
+    "level": "Level {level}",
+    "pages": "Pages",
+    "pageOf": "Page {page} of {pages}",
+    "back": "Back",
+    "next": "Turn the page",
+    "empty": "No stories match.",
+    "emptyHint": "Try another genre or clear the search.",
+    "clearFilters": "Clear the filters",
+    "loadError": "We could not load the stories.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "backToShelf": "Back to the shelf",
+    "cefr": "CEFR {level}",
+    "chapterCount": "{count, plural, one {# chapter} other {# chapters}}",
+    "storyParts": "Story sections",
+    "chaptersSign": "Chapters",
+    "charactersSign": "Characters",
+    "chapterNumber": "Chapter {n}",
+    "chapterDone": "Done",
+    "startChapter": "Start chapter {n}",
+    "readAgain": "Read again",
+    "noChapters": "This story has no chapters yet.",
+    "noCharacters": "This story has no characters yet.",
+    "background": "Background:",
+    "chapterNav": "Chapter navigation",
+    "chapterNext": "Next chapter",
+    "chapterToStory": "Back to the story",
+    "chapterOf": "Chapter {n} of {total}",
+    "chapterPicture": "Chapter picture",
+    "chapterLoadError": "We could not open this chapter.",
+    "chapterLoadErrorHint": "Check the internet connection and try again.",
+    "quizTitle": "Questions",
+    "mcTitle": "Multiple choice",
+    "saTitle": "Short answer",
+    "laTitle": "Long answer",
+    "mcDone": "Done: {score} of {total}",
+    "xpEarned": "+{xp} XP",
+    "noXpLeft": "Practice only: no XP left for this chapter",
+    "answerAll": "Answer all {total} questions.",
+    "submitQuiz": "Submit",
+    "retakeQuiz": "Retake",
+    "yourAnswer": "Your answer",
+    "answerPlaceholder": "Write your answer here.",
+    "getFeedback": "Get feedback",
+    "feedbackTitle": "Feedback",
+    "scoreLabel": "Score: {score}",
+    "tooShort": "Write at least {min} characters.",
+    "alreadySubmitted": "Already submitted.",
+    "submitAnswer": "Submit answer",
+    "doneLabel": "Done",
+    "triesLeft": "{n, plural, one {# try left} other {# tries left}}"
+  },
+  "PwaInstall": {
+    "title": "Add Primary Advantage to your home screen",
+    "iosShare": "Tap the Share button in Safari.",
+    "iosAdd": "Tap Add to Home Screen.",
+    "iosConfirm": "Tap Add.",
+    "install": "Install",
+    "dismiss": "Not now",
+    "offlineSign": "You are offline. The app needs the internet."
+  },
+  "PublicSite": {
+    "tagline": "Printed English workbooks and a reading app for grades 3–6",
+    "trialCta": "Contact us for a free trial",
+    "signIn": "Sign in"
+  },
+  "PublicHome": {
+    "meta": {
+      "title": "Primary Advantage | English workbooks and a reading app for grades 3–6",
+      "description": "Primary Advantage pairs printed English workbooks with a reading app for grades 3–6. CEFR-aligned levels, a game world around the reading, and tools for Thai teachers."
+    },
+    "hero": {
+      "title": "Primary Advantage",
+      "tagline": "Read the book in class. Continue the adventure in the app.",
+      "forSchools": "For schools",
+      "phoneAlt": "The Primary Advantage home page on a phone: the student's hero in the guild hall, with the day streak, XP, and level signs and the Class Quest banner"
+    },
+    "book": {
+      "title": "The book and the app",
+      "body": "Each Primary Advantage workbook has 14 lessons. The app has the same lessons, with audio, pictures, and practice. Students read the printed book in class and continue in the app.",
+      "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook",
+      "classBookAlt": "The class book on a phone: Primary Advantage Origins 2, with lesson 1 marked \"Now in class\"",
+      "classBookCaption": "In the app: the class book for Primary Advantage Origins 2"
+    },
+    "inside": {
+      "title": "Inside the app",
+      "intro": "Every page of the app is a place in Chibi Quest, a picture-book game world. The story page stays plain, so the reading comes first.",
+      "hero": {
+        "title": "Choose a hero",
+        "body": "Each student chooses a hero, then picks its skin, hair, eye, and clothes colors.",
+        "alt": "The hero shrine: the hero classes stand on stones, each with a name sign"
+      },
+      "shop": {
+        "title": "Earn GP, choose gear",
+        "body": "Students earn Guild Points (GP) when they read and practice. They spend GP on gear for their hero in the shop. GP cannot be bought with money.",
+        "alt": "The avatar shop on a phone: gear with GP prices, and the bracers marked \"Owned\" after the student buys them"
+      },
+      "quest": {
+        "title": "Class Quest: one boss, the whole class",
+        "body": "During the week, students meet reading goals to earn power-ups. Then the whole class fights one boss together on the classroom projector. There is no leaderboard and no ranking.",
+        "alt": "Class Quest on a phone: the Goblin King, the class damage meter, and the student's hero with five hearts"
+      },
+      "reedy": {
+        "title": "Reedy Preview: speaking practice",
+        "body": "After a lesson, students talk about the story with Reedy, a speaking coach, in English and Thai. Reedy is new, so it can make mistakes. Each student has a monthly time limit.",
+        "alt": "Reedy Preview on a phone: the student's Wizard hero at the campfire, the minutes meter, and the Preview label"
+      },
+      "wordAdventures": {
+        "title": "Word adventures",
+        "body": "Games that use the words and sentences each student saved from their reading. A 2D mode runs on older phones.",
+        "alt": "Word adventures on desktop: game cards for Rune Match, Labyrinth of the Goblin King, Potion Rush, and Dragon Flight"
+      }
+    },
+    "teachers": {
+      "title": "For teachers",
+      "body": "Designed for Thai teachers. Each lesson has a step-by-step plan in the Teacher manual, so you always know what to do next.",
+      "points": [
+        "Open each lesson for the class when you teach it from the workbook.",
+        "Show the lesson and the Class Quest battle on the classroom projector.",
+        "See each student's progress, lesson by lesson, and who needs help."
+      ],
+      "alt": "The class progress page on desktop: each student's lessons, with a mark on the students who need help"
+    },
+    "levels": {
+      "title": "Levels",
+      "body": "Primary Advantage is CEFR-aligned, with 15 levels from Pre-A1 (A0) to B2. Each CEFR band has three levels, so students move up in small steps."
+    },
+    "families": {
+      "title": "For families",
+      "body": "Children can also learn with the same books outside school. In Tutor Advantage, a local tutor teaches the class, and one class package uses one workbook.",
+      "link": "Find out about Tutor Advantage"
+    },
+    "contact": {
+      "title": "Talk to us",
+      "body": "Schools: ask us for a free trial or a demo. Families: ask us about Tutor Advantage classes.",
+      "line": "LINE Official Account",
+      "lineQrAlt": "QR code for the Reading Advantage LINE Official Account",
+      "facebook": "Facebook",
+      "phone": "Phone",
+      "email": "Email"
+    }
+  },
+  "PublicAbout": {
+    "meta": {
+      "title": "About us | Primary Advantage",
+      "description": "Reading Advantage (Thailand) is a curriculum publisher in Khon Kaen. We make Primary Advantage: printed English workbooks and a reading app for grades 3–6."
+    },
+    "title": "About us",
+    "who": {
+      "title": "Who we are",
+      "body": "Reading Advantage (Thailand) is a curriculum publisher in Khon Kaen. Phikul Phookathin and Daniel Bo started the company in January 2024. We make printed English workbooks and matching apps for Thai schools and families."
+    },
+    "product": {
+      "title": "What Primary Advantage is",
+      "body": "Primary Advantage is English reading for grades 3–6 (ages 8–11). Each workbook has 14 lessons with stories and informational texts, new words, questions, and writing, and the app has the same lessons. Every article, question, and word is being tagged to Mastery Advantage, our map of English skills. The method is extensive reading. Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)."
+    },
+    "schools": {
+      "title": "For schools: Blended Learning",
+      "body": "Schools use Primary Advantage through Blended Learning: printed workbooks and the app, with teacher training and step-by-step lesson plans. The lesson plans assume the teacher is a fluent Thai speaker, not a native English teacher."
+    },
+    "families": {
+      "title": "For families: Tutor Advantage",
+      "body": "Families can learn with the same books through Tutor Advantage. A local tutor teaches the class, and one class package uses one workbook.",
+      "link": "Find out about Tutor Advantage"
+    }
+  },
+  "PublicContact": {
+    "meta": {
+      "title": "Contact us | Primary Advantage",
+      "description": "Contact Reading Advantage about Primary Advantage: a free trial or a demo for your school, or Tutor Advantage classes for your child."
+    },
+    "title": "Contact us",
+    "intro": "Schools can ask for a free trial or a demo. Families can ask about Tutor Advantage classes. Send us a message on LINE or Facebook, call us, or send an email.",
+    "line": "LINE Official Account",
+    "lineQrAlt": "QR code for the Reading Advantage LINE Official Account",
+    "facebook": "Facebook",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "PublicBooks": {
+    "meta": {
+      "title": "Our books | Primary Advantage",
+      "description": "The Primary Advantage workbook series: Origins, Quest, and Adventure. Written and edited by the Reading Advantage team in Khon Kaen."
+    },
+    "title": "Our books",
+    "intro": "Primary Advantage is a series of printed English workbooks for grades 3–6. Each book has 14 lessons, and the app has the same lessons. The series follows the CEFR levels.",
+    "series": {
+      "origins": {
+        "title": "Primary Advantage Origins",
+        "body": "Pre-A1 (A0). First stories and short informational texts about school, family, friends, and the world around them. Primary Advantage Origins 2 and Primary Advantage Origins 3.1 are in print. Primary Advantage Origins 3.2 is next."
+      },
+      "quest": {
+        "title": "Primary Advantage Quest",
+        "body": "A1. Longer stories and texts, with new words in each lesson, for students who can read simple English. Primary Advantage Quest 4 is the first Quest book in preparation."
+      },
+      "adventure": {
+        "title": "Primary Advantage Adventure",
+        "body": "A2. Stories and informational texts for students who read with more confidence. The Adventure books are planned."
+      }
+    },
+    "team": {
+      "title": "Who makes the books",
+      "body": "The Reading Advantage team in Khon Kaen writes and edits every book. The founders lead the team: Phikul Phookathin (President; M.Ed., Educational Leadership) and Daniel Bo (Product Manager). Together they have 40 years of teaching experience."
+    },
+    "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook",
+    "covers": {
+      "origins2": "The cover of the Primary Advantage Origins 2 workbook",
+      "origins31": "The cover of the Primary Advantage Origins 3.1 workbook",
+      "origins32": "The cover of the Primary Advantage Origins 3.2 workbook",
+      "quest4": "The cover of the Primary Advantage Quest 4 workbook"
+    }
   }
 }

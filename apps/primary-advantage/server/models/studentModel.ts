@@ -19,6 +19,7 @@ import {
 } from '@reading-advantage/db';
 import { studentLogin } from "@reading-advantage/domain";
 import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, resolveCreationSchoolId, schoolScopeConditions } from "@/server/utils/auth";
+import { roleSql, setUserRole } from "@/server/utils/role-sql";
 import { canSetPasswordFor } from "@/lib/authorization";
 import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
@@ -44,13 +45,21 @@ interface StudentQueryParams {
 const studentRole = "student";
 
 /**
+ * Builds the condition that selects student accounts (see `roleSql`).
+ * @returns A SQL condition to spread into a where clause.
+ */
+function isStudentUser() {
+  return roleSql(studentRole);
+}
+
+/**
  * Build the join+where clause that limits to users whose role.name is
  * "student". The Prisma model exposed `roles: { some: { role: { name } } }`;
  * we replace it with two inner joins + an eq on the role name.
  */
 function studentJoinAndWhere(extra: any[] = []) {
   return and(
-    eq(roles.name, studentRole),
+    isStudentUser(),
     ...extra,
   );
 }
@@ -69,7 +78,7 @@ export const getStudents = async (
     const offset = (page - 1) * limit;
 
     // Build where clause based on user's permissions
-    const whereConditions: any[] = [eq(roles.name, studentRole)];
+    const whereConditions: any[] = [isStudentUser()];
 
     // If user is school admin, only show students from their school
     whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
@@ -118,15 +127,11 @@ export const getStudents = async (
         createdAt: users.createdAt,
       })
         .from(users)
-        .innerJoin(userRoles, eq(userRoles.userId, users.id))
-        .innerJoin(roles, eq(roles.id, userRoles.roleId))
         .where(and(...whereConditions))
         .orderBy(desc(users.createdAt))
         .limit(limit)
         .offset(offset),
       db.select({ value: count() }).from(users)
-        .innerJoin(userRoles, eq(userRoles.userId, users.id))
-        .innerJoin(roles, eq(roles.id, userRoles.roleId))
         .where(and(...whereConditions)),
     ]);
     const totalCount = Number(countRow[0]?.value ?? 0);
@@ -187,7 +192,7 @@ export const getStudentById = async (
     // Build where clause based on user's permissions
     const whereConditions: any[] = [
       eq(users.id, id),
-      eq(roles.name, studentRole),
+      isStudentUser(),
     ];
 
     // If user is school admin, only show students from their school
@@ -205,8 +210,6 @@ export const getStudentById = async (
       classroomName: classrooms.name,
     })
       .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .leftJoin(classroomStudents, eq(classroomStudents.studentId, users.id))
       .leftJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
       .where(and(...whereConditions))
@@ -263,16 +266,6 @@ export const createStudent = async (params: {
     params;
 
   try {
-    // Get the Student role ID
-    const [roleRecord] = await db.select({ id: roles.id })
-      .from(roles)
-      .where(eq(roles.name, studentRole))
-      .limit(1);
-
-    if (!roleRecord) {
-      return { success: false, error: "Student role not found" };
-    }
-
     // Determine school assignment: only a SYSTEM caller may choose it.
     const target = await resolveCreationSchoolId(userWithRoles, params.schoolId);
     if ("error" in target) {
@@ -326,10 +319,7 @@ export const createStudent = async (params: {
 
       await upsertCredentialAccount(tx, created.id, hashedPassword);
 
-      await tx.insert(userRoles).values({
-        userId: created.id,
-        roleId: roleRecord.id,
-      });
+      await setUserRole(tx, created.id, studentRole);
 
       if (classroomId) {
         await tx.insert(classroomStudents).values({
@@ -409,7 +399,7 @@ export const updateStudent = async (
     // Build where clause based on user's permissions
     const whereConditions: any[] = [
       eq(users.id, id),
-      eq(roles.name, studentRole),
+      isStudentUser(),
     ];
 
     // If user is school admin, only allow updates to students from their school
@@ -423,8 +413,6 @@ export const updateStudent = async (
       sessionRole: users.role,
     })
       .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .where(and(...whereConditions))
       .limit(1);
 
@@ -546,7 +534,7 @@ export const deleteStudent = async (
     // Build where clause based on user's permissions
     const whereConditions: any[] = [
       eq(users.id, id),
-      eq(roles.name, studentRole),
+      isStudentUser(),
     ];
 
     // If user is school admin, only allow deletion of students from their school
@@ -555,8 +543,6 @@ export const deleteStudent = async (
     // Check if student exists and user has permission to delete
     const [existingStudent] = await db.select({ id: users.id, sessionRole: users.role })
       .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .where(and(...whereConditions))
       .limit(1);
 
@@ -591,7 +577,7 @@ export const deleteStudent = async (
 export const getStudentStatistics = async (userWithRoles: UserWithRoles) => {
   try {
     // Build where clause based on user's permissions
-    const whereConditions: any[] = [eq(roles.name, studentRole)];
+    const whereConditions: any[] = [isStudentUser()];
 
     // If user is school admin, only show students from their school
     whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
@@ -606,8 +592,6 @@ export const getStudentStatistics = async (userWithRoles: UserWithRoles) => {
       recentActivityUserId: userActivity.userId,
     })
       .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .leftJoin(
         userActivity,
         and(
@@ -637,9 +621,10 @@ export const getStudentStatistics = async (userWithRoles: UserWithRoles) => {
     );
 
     const mostCommonLevel =
-      Object.entries(levelCounts).reduce((a, b) =>
-        levelCounts[a[0]] > levelCounts[b[0]] ? a : b,
-      )?.[0] || "A0-";
+      Object.entries(levelCounts).reduce<[string, number]>(
+        (a, b) => (a[1] > b[1] ? a : b),
+        ["A0-", 0],
+      )[0];
 
     // Calculate active users this week
     const activeUserIds = new Set(

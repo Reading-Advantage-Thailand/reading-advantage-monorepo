@@ -24,6 +24,9 @@ import { cn } from "@/lib/utils";
 import type { UserActivityLog, UserXpLog } from "@/types";
 import { TEACHER_ACTION } from "./teacher-shell";
 
+/** A student counts as active this week when the newest activity is at most 7 days old. */
+const ACTIVE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+
 interface Classroom {
   id: string;
   name: string;
@@ -38,7 +41,8 @@ interface Student {
   email: string;
   cefrLevel?: string;
   xp?: number;
-  lastActivity?: Date;
+  /** Newest activity time: an ISO string from the server JSON, or null when the student has none. */
+  lastActivity?: Date | string | null;
   classrooms?: Array<{
     id: string;
     name: string;
@@ -152,8 +156,14 @@ export default function TeacherProgressReports({ classrooms, students, initialCl
       const level = student.cefrLevel || "A0";
       levelCounts[level] = (levelCounts[level] ?? 0) + 1;
     }
+    const weekAgo = Date.now() - ACTIVE_WINDOW_MS;
+    const active = filteredStudents.filter(
+      (student) => student.lastActivity != null && new Date(student.lastActivity).getTime() >= weekAgo,
+    ).length;
     return {
       total,
+      active,
+      activeRate: total ? Math.round((active / total) * 100) : 0,
       avgXp: total ? Math.round(filteredStudents.reduce((sum, student) => sum + (student.xp || 0), 0) / total) : 0,
       mostCommonLevel: Object.entries(levelCounts).sort(([, a], [, b]) => b - a)[0]?.[0] ?? "A0",
     };
@@ -292,6 +302,11 @@ export default function TeacherProgressReports({ classrooms, students, initialCl
     { label: t("progress.totalStudents"), value: String(stats.total) },
     { label: t("progress.averageXp"), value: String(stats.avgXp) },
     { label: t("progress.mostCommonLevel"), value: stats.mostCommonLevel },
+    {
+      label: t("progress.activeThisWeek"),
+      value: `${stats.activeRate}%`,
+      detail: t("progress.activeThisWeekDescription", { count: stats.active, total: stats.total }),
+    },
   ];
 
   return (
@@ -328,11 +343,12 @@ export default function TeacherProgressReports({ classrooms, students, initialCl
         </div>
       </div>
 
-      <ul className="grid grid-cols-3 gap-2 sm:gap-3">
+      <ul className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
         {tiles.map((tile) => (
           <li key={tile.label} className="bg-card flex min-w-0 flex-col gap-1 rounded-2xl border p-3 shadow-sm sm:p-4">
             <span className="text-muted-foreground text-xs font-medium break-words sm:text-sm">{tile.label}</span>
             <span className="text-xl font-bold sm:text-2xl">{tile.value}</span>
+            {"detail" in tile ? <span className="text-muted-foreground text-xs break-words">{tile.detail}</span> : null}
           </li>
         ))}
       </ul>

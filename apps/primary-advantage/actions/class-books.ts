@@ -1,8 +1,9 @@
 "use server";
 
 import { db } from "@reading-advantage/db";
-import { assignClassBook, markLessonTaught, markStepDone, setCurrentLesson } from "@reading-advantage/domain/primary-books";
+import { assignClassBook, markLessonTaught, markStepDone, setCurrentLesson, teachLessonAgain } from "@reading-advantage/domain/primary-books";
 import { currentUser } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
 
 /** The result of a class book action; null before the first call of a form. */
 export type ClassBookActionState = { success: true } | { success: false; error: string } | null;
@@ -77,4 +78,18 @@ export async function markLessonTaughtAction(classBookId: string, lessonNumber: 
  */
 export async function markStepDoneAction(classBookId: string, lessonNumber: number, step: number, done: boolean): Promise<ClassBookActionState> {
   return run((user) => markStepDone({ db, user, input: { classBookId, lessonNumber, step, done } }));
+}
+
+/**
+ * Teaches a lesson again for the class: the run goes into the history and the students' attempts close.
+ * @param classBookId The class book.
+ * @param lessonNumber The lesson.
+ * @returns The action state.
+ */
+export async function teachLessonAgainAction(classBookId: string, lessonNumber: number): Promise<ClassBookActionState> {
+  return run(async (user) => {
+    const out = await teachLessonAgain({ db, user, input: { classBookId, lessonNumber } });
+    if (out.skippedStudents > 0) logger.warn("teach_again_students_skipped", { classBookId, lessonNumber, userId: user.id, skippedStudents: out.skippedStudents });
+    if (out.auditFailed) logger.error("teach_again_audit_failed", { classBookId, lessonNumber, userId: user.id });
+  });
 }

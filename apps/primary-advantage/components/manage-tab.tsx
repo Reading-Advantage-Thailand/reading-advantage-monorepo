@@ -1,5 +1,6 @@
 "use client";
 
+import { isPreviewResult } from "@/lib/student-view";
 import React, { startTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Header } from "./header";
@@ -13,7 +14,7 @@ import { toast } from "sonner";
 import { deleteFlashcardCard } from "@/actions/flashcard";
 import { useFormatDate } from "@/lib/utils";
 import type { InferSelectModel } from "drizzle-orm";
-import { flashcardCards } from "@reading-advantage/db";
+import type { flashcardCards } from "@reading-advantage/db";
 
 type Sentence = InferSelectModel<typeof flashcardCards>;
 
@@ -23,6 +24,7 @@ interface ManageTabProps {
 
 export default function ManageTab({ data }: ManageTabProps) {
   const t = useTranslations("SentencesPage.manage");
+  const tv = useTranslations("StudentView");
   const formatDate = useFormatDate();
   const [sentences, setSentences] = React.useState<Sentence[]>(data);
 
@@ -111,7 +113,9 @@ export default function ManageTab({ data }: ManageTabProps) {
   const handleDelete = async (id: string) => {
     startTransition(async () => {
       const result = await deleteFlashcardCard(id);
-      if (result.success) {
+      if (isPreviewResult(result)) {
+        toast.info(tv("notSaved"));
+      } else if (result.success) {
         toast.success(result.message);
         setSentences(sentences.filter((sentence) => sentence.id !== id));
       } else {

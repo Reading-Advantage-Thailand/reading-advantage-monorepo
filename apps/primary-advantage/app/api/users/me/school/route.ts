@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
 import { eq, and, desc, inArray } from 'drizzle-orm';
-import { users, schools, schoolAdmins, userRoles, roles, licenses } from '@reading-advantage/db/schema';
+import { users, schools, schoolAdmins, licenses } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { getSchoolDetail } from "@/server/models/schoolModel";
+import { getLicenseViewForCaller } from "@/server/models/schoolLicenseView";
 import { z } from "zod";
 import { normalizeRole } from "@/lib/authorization";
+import { setUserRole } from "@/server/utils/role-sql";
+import { canManageSchool } from "@/server/utils/school-access";
+import { loadOwnSchoolAdminRows } from "@/server/utils/school-admin-rows";
+import { logger } from "@/lib/observability/logger";
 
 const schoolSchema = z.object({
   name: z.string().min(2).max(100),
@@ -54,11 +59,16 @@ export async function GET() {
       return NextResponse.json({ school: null });
     }
 
-    const school = await getSchoolDetail(user.schoolId);
+    // The license view and the license key go to a school admin only.
+    const licenseView = await getLicenseViewForCaller(currentUser);
+    const school = await getSchoolDetail(user.schoolId, {
+      withLicense: licenseView !== null,
+      hideStaffEmails: normalizeRole(user.role) === "STUDENT",
+    });
 
-    return NextResponse.json({ school });
+    return NextResponse.json({ school, licenseView });
   } catch (error) {
-    console.error("Error fetching user school:", error);
+    logger.error("school_fetch_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -110,10 +120,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Only the self-serve account type may create a school: a school-less
-    // STUDENT whose only legacy role is "user" (the sign-up default). Staff
-    // accounts never gain admin rights through this route.
-    if (normalizeRole(existingUser.role) !== "STUDENT") {
+    // Only a TEACHER or ADMIN without a school, or SYSTEM, may create a school.
+    // users.role is the truth. A STUDENT never gains admin rights through this route.
+    const callerRole = normalizeRole(existingUser.role);
+    if (callerRole !== "TEACHER" && callerRole !== "ADMIN" && callerRole !== "SYSTEM") {
       return NextResponse.json(
         { error: "This account type cannot create a school" },
         { status: 403 },
@@ -132,42 +142,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const currentUserRoleRows = await rawDb.select({
-      roleId: userRoles.roleId,
-      roleName: roles.name,
-    })
-      .from(userRoles)
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .where(eq(userRoles.userId, authUser.id));
-
     const currentUser = existingUser;
-    const currentRoles = currentUserRoleRows.map((r) => r.roleName);
-    if (currentRoles.length === 0 || !currentRoles.every((name) => name === "user")) {
-      return NextResponse.json(
-        { error: "This account type cannot create a school" },
-        { status: 403 },
-      );
-    }
 
-    // The self-serve owner of a new school becomes its admin.
-    const roleUpgraded = true;
-    const [existingAdminRole] = await rawDb.select().from(roles)
-      .where(eq(roles.name, "admin"))
-      .limit(1);
-
-    let adminRole = existingAdminRole;
-    if (!adminRole) {
-      const [created] = await rawDb.insert(roles).values({ name: "admin" }).returning();
-      adminRole = created;
-    }
-
-    await rawDb.delete(userRoles)
-      .where(eq(userRoles.userId, currentUser.id));
-
-    await rawDb.insert(userRoles).values({
-      userId: currentUser.id,
-      roleId: adminRole.id,
-    });
+    // The owner of a new school becomes its admin. SYSTEM and ADMIN keep their role.
+    const roleUpgraded = callerRole === "TEACHER";
+    if (roleUpgraded) await setUserRole(rawDb, currentUser.id, "admin");
 
     // Create school (replaces Prisma `school.create`).
     const [school] = await rawDb.insert(schools).values({
@@ -238,7 +217,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(schoolWithOwner, { status: 201 });
   } catch (error) {
-    console.error("Error creating school:", error);
+    logger.error("school_create_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -307,6 +286,21 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(
         { error: "User has no school associated" },
         { status: 400 },
+      );
+    }
+
+    // Only an admin of the school (or its owner, or SYSTEM) may change the school.
+    // A TEACHER with a school_admins row for this school counts as a school admin.
+    const canManage =
+      canManageSchool(user, userSchool) ||
+      canManageSchool(
+        { ...user, hasSchoolAdminRow: (await loadOwnSchoolAdminRows(user.id, userSchool.id)).length > 0 },
+        userSchool,
+      );
+    if (!canManage) {
+      return NextResponse.json(
+        { error: "Only a school admin can update the school" },
+        { status: 403 },
       );
     }
 
@@ -391,7 +385,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(schoolWithOwner);
   } catch (error) {
-    console.error("Error updating school:", error);
+    logger.error("school_update_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -460,23 +454,14 @@ export async function DELETE() {
     }
 
     // Check if user is the owner of the school
-    if (userSchool.ownerId !== currentUser.id) {
+    // A school without an owner (migrated data) may be deleted by an ADMIN of that school.
+    const ownerlessAdmin = !userSchool.ownerId && normalizeRole(user.role) === "ADMIN";
+    if (userSchool.ownerId !== currentUser.id && !ownerlessAdmin) {
       return NextResponse.json(
         { error: "Only the school owner can delete the school" },
         { status: 403 },
       );
     }
-
-    // Get owner's current roles before deleting school.
-    const ownerRoleRows = await tenantDb
-      .unscoped("userRoles is REFERENTIAL and roles is EXEMPT; stitched by userId")
-      .select({
-      roleId: userRoles.roleId,
-      roleName: roles.name,
-    })
-      .from(userRoles)
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .where(eq(userRoles.userId, currentUser.id));
 
     // Delete the school (replaces Prisma `school.delete`).
     await tenantDb
@@ -484,39 +469,13 @@ export async function DELETE() {
       .delete(schools)
       .where(eq(schools.id, userSchool.id));
 
-    // Downgrade owner's role from Admin to User if they have Admin role
-    const hasAdminRole = ownerRoleRows.some(
-      (r) => r.roleName === "admin",
-    );
-
-    if (hasAdminRole) {
-      // Find or create User role
-      const [existingUserRole] = await tenantDb
-        .unscoped("roles is EXEMPT; looked up by name")
-        .select().from(roles)
-        .where(eq(roles.name, "user"))
-        .limit(1);
-
-      let userRole = existingUserRole;
-      if (!userRole) {
-        const [created] = await tenantDb
-          .unscoped("roles is EXEMPT; created by name")
-          .insert(roles).values({ name: "user" }).returning();
-        userRole = created;
-      }
-
-      // Remove all existing roles and set User role
-      await tenantDb
-        .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-        .delete(userRoles)
-        .where(eq(userRoles.userId, currentUser.id));
-
-      await tenantDb
-        .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-        .insert(userRoles).values({
-        userId: currentUser.id,
-        roleId: userRole.id,
-      });
+    // Downgrade the owner from ADMIN to TEACHER. users.role is the truth.
+    if (String(user.role).toUpperCase() === "ADMIN") {
+      await setUserRole(
+        tenantDb.unscoped("roles is EXEMPT and userRoles is REFERENTIAL; role change by user id"),
+        currentUser.id,
+        "teacher",
+      );
 
       // Remove school association
       await tenantDb.update(users)
@@ -526,7 +485,7 @@ export async function DELETE() {
 
     return NextResponse.json({ message: "School deleted successfully" });
   } catch (error) {
-    console.error("Error deleting school:", error);
+    logger.error("school_delete_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

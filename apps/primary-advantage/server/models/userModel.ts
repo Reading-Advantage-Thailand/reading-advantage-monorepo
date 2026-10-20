@@ -12,6 +12,7 @@ import {
   userActivity,
   xpLogs,
   articles,
+  primaryLessonAttempts,
   roles,
   userRoles,
 } from '@reading-advantage/db';
@@ -40,17 +41,11 @@ export const createUser = async (data: {
 
     const hashedPassword = await hashNewPassword(data.password);
 
-    // Find the User role
+    // The default "user" role row is optional: users.role is the truth.
     const [userRole] = await db.select({ id: roles.id })
       .from(roles)
       .where(eq(roles.name, "user"))
       .limit(1);
-
-    if (!userRole) {
-      return {
-        error: "Default user role not found",
-      };
-    }
 
     // Create user with transaction to ensure role assignment
     const newUser = await db.transaction(async (tx) => {
@@ -68,10 +63,12 @@ export const createUser = async (data: {
       await upsertCredentialAccount(tx, user.id, hashedPassword);
 
       // Assign the User role to the new user
-      await tx.insert(userRoles).values({
-        userId: user.id,
-        roleId: userRole.id,
-      });
+      if (userRole) {
+        await tx.insert(userRoles).values({
+          userId: user.id,
+          roleId: userRole.id,
+        });
+      }
 
       return user;
     });
@@ -150,15 +147,15 @@ export const getUserByEmail = async (email: string) => {
     const userWithRoles = { ...user, roles: rolesForUser };
 
     if (userWithRoles.roles.length === 0) {
-      return await db.transaction(async (tx) => {
-        const [role] = await tx.select({ id: roles.id })
-          .from(roles)
-          .where(eq(roles.name, "user"))
-          .limit(1);
+      const [defaultRole] = await db.select({ id: roles.id })
+        .from(roles)
+        .where(eq(roles.name, "user"))
+        .limit(1);
+      // No "user" roles row (migrated database): users.role is the truth, so return as is.
+      if (!defaultRole) return userWithRoles;
 
-        if (!role) {
-          throw new Error("Default user role not found");
-        }
+      return await db.transaction(async (tx) => {
+        const role = defaultRole;
 
         await tx.insert(userRoles).values({
           userId: user.id,
@@ -204,10 +201,40 @@ export const getUserById = async (id: string) => {
   }
 };
 
+/** Reads a date that a JSON copy stored as an ISO string. */
+const toDate = (value: unknown, fallback: Date): Date => {
+  const date = value instanceof Date ? value : typeof value === "string" ? new Date(value) : fallback;
+  return Number.isNaN(date.getTime()) ? fallback : date;
+};
+
+/**
+ * Reads the activity rows that closed lesson attempts moved into the history, with their attempt
+ * number. The moved rows keep their ids, so the XP logs still point to them.
+ * @param userId The student.
+ * @returns The moved rows (dates restored) and the highest closed attempt number of each article.
+ */
+const getMovedActivity = async (userId: string) => {
+  const attempts = await db
+    .select({ articleId: primaryLessonAttempts.articleId, attemptNumber: primaryLessonAttempts.attemptNumber, activities: primaryLessonAttempts.activities })
+    .from(primaryLessonAttempts)
+    .where(eq(primaryLessonAttempts.studentId, userId));
+  const closed = new Map<string, number>();
+  const moved = attempts.flatMap((attempt) => {
+    closed.set(attempt.articleId, Math.max(closed.get(attempt.articleId) ?? 0, attempt.attemptNumber));
+    const items = Array.isArray(attempt.activities) ? (attempt.activities as Record<string, unknown>[]) : [];
+    return items.map((item) => {
+      const createdAt = toDate(item.createdAt, new Date(0));
+      return { ...item, createdAt, updatedAt: toDate(item.updatedAt, createdAt), attemptNumber: attempt.attemptNumber, moved: true } as typeof userActivity.$inferSelect & { attemptNumber: number; moved: true };
+    });
+  });
+  return { moved, closed };
+};
+
 /**
  * Reads the activity rows and XP logs of a user, with the user columns that the report pages
  * show. The full users row is never returned (it has the password hash).
  * @param id The user id.
+ * Rows that closed lesson attempts moved into the history are included, and each row has its `attemptNumber`.
  * @returns `{ activity, xpLogs, user }`, or undefined when the user does not exist or a read fails.
  */
 export const getUserActivity = async (id: string) => {
@@ -229,7 +256,13 @@ export const getUserActivity = async (id: string) => {
     const xpLogRows = await db.select().from(xpLogs)
       .where(eq(xpLogs.userId, id));
 
-    return { activity, xpLogs: xpLogRows, user };
+    const { moved, closed } = await getMovedActivity(id);
+    const withAttempt = [
+      ...activity.map((row) => ({ ...row, attemptNumber: (closed.get(row.targetId ?? "") ?? 0) + 1 })),
+      ...moved,
+    ].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+    return { activity: withAttempt, xpLogs: xpLogRows, user };
   } catch (error) {
   }
 };
@@ -262,6 +295,16 @@ export const getUserArticleRecords = async (
     const articleActivities = await db.select().from(userActivity)
       .where(and(...activityConditions))
       .orderBy(desc(userActivity.updatedAt));
+
+    // Closed attempts keep their rows in the history: an article with only moved rows stays listed.
+    const recordTypes: string[] = [ActivityType.ARTICLE_READ, ActivityType.MC_QUESTION, ActivityType.SA_QUESTION, ActivityType.LA_QUESTION, ActivityType.ARTICLE_RATING];
+    const { moved, closed } = await getMovedActivity(userId);
+    // Each row has its attempt number: a live row follows the closed attempts of its article.
+    const attemptOf = new Map<string, number>();
+    for (const row of articleActivities) attemptOf.set(row.id, (closed.get(row.targetId ?? "") ?? 0) + 1);
+    for (const row of moved) attemptOf.set(row.id, row.attemptNumber);
+    articleActivities.push(...moved.filter((row) => recordTypes.includes(row.activityType)));
+    articleActivities.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
 
     // Group activities by article
     const articleMap = new Map();
@@ -380,6 +423,7 @@ export const getUserArticleRecords = async (
           updated_at: data.lastUpdated.toISOString(),
           rated: article.rating || 0,
           status: status,
+          attemptNumber: Math.max(1, ...activities.map((a: any) => attemptOf.get(a.id) ?? 1)),
         };
       })
       .filter(Boolean)

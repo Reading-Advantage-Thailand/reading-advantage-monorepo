@@ -87,6 +87,16 @@ export function targetBookOf(state: LibraryState): Book | null {
   return state.books.find((b) => b.correct) ?? null;
 }
 
+/**
+ * The book that Helper mode marks: the right book, but only after a wrong book in this round. A
+ * mark from the start would give the answer away (owner test, 2026-10-14), so the student reads
+ * the words first and gets the hint after one mistake.
+ */
+export function hintBookOf(state: LibraryState): Book | null {
+  if (!state.helper || !(state.rounds[state.round]?.wrong ?? 0)) return null;
+  return targetBookOf(state);
+}
+
 /** The distance at which the hero touches a book. */
 export const TOUCH = TUNING.heroRadius + TUNING.bookRadius;
 

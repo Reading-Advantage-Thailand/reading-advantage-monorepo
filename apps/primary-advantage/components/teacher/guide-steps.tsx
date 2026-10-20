@@ -4,8 +4,23 @@ import type { LessonGuidePeriod, LessonGuideStep } from "@reading-advantage/doma
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-/** Workbook steps that use the games: the bell-ringer (1) and the practice steps (9, 10). FR-13. */
-export const GAME_STEPS = [1, 9, 10];
+/** Workbook steps that use the games: the practice steps (9, 10). FR-13; the owner moved the games out of step 1 (2026-10-14). */
+export const GAME_STEPS = [9, 10];
+
+/** Workbook steps whose games link opens the projector games of the lesson (the practice steps). */
+export const PROJECTOR_GAME_STEPS = [9, 10];
+
+/**
+ * Picks the games link of one step: the practice steps open the projector games when the page
+ * gives that link; every other game step opens the game challenges.
+ * @param step The workbook step number.
+ * @param gamesHref The default games link.
+ * @param projectorHref The projector games link of the lesson, when the page has one.
+ * @returns The link target.
+ */
+export function gamesHrefOf(step: number, gamesHref: string, projectorHref?: string): string {
+  return projectorHref && PROJECTOR_GAME_STEPS.includes(step) ? projectorHref : gamesHref;
+}
 
 /**
  * One list of the guide (teacher actions, teacher language, student actions, or watch-fors).
@@ -34,10 +49,11 @@ function GuideList({ heading, items }: { heading: string; items: string[] }) {
  * @param props.guide The periods with their steps, in the guide language of the locale.
  * @param props.stepsDone Workbook steps the class has done; marks them. Empty on the manual.
  * @param props.gamesHref Where the games link opens.
+ * @param props.projectorHref Where the games link of steps 9 and 10 opens (the projector games).
  * @param props.t The `TeacherUi.classBook` translator of the page.
  * @returns The guide sections.
  */
-export function GuideSteps({ guide, stepsDone = [], gamesHref = "/teacher/game-challenges", t }: { guide: LessonGuidePeriod[]; stepsDone?: number[]; gamesHref?: string; t: Awaited<ReturnType<typeof getTranslations<"TeacherUi.classBook">>> }) {
+export function GuideSteps({ guide, stepsDone = [], gamesHref = "/teacher/game-challenges", projectorHref, t }: { guide: LessonGuidePeriod[]; stepsDone?: number[]; gamesHref?: string; projectorHref?: string; t: Awaited<ReturnType<typeof getTranslations<"TeacherUi.classBook">>> }) {
   if (!guide.length) return <p className="text-muted-foreground text-sm">{t("guide.empty")}</p>;
   return (
     <div className="flex flex-col gap-6">
@@ -48,7 +64,7 @@ export function GuideSteps({ guide, stepsDone = [], gamesHref = "/teacher/game-c
           </h3>
           <ol className="flex flex-col gap-3">
             {group.steps.map((step) => (
-              <GuideStepItem key={step.step} step={step} done={stepsDone.includes(step.step)} gamesHref={gamesHref} labels={{ step: t("stepLabel", { step: step.step, title: step.title }), done: t("guide.done"), teacherActions: t("guide.teacherActions"), teacherLanguage: t("guide.teacherLanguage"), studentActions: t("guide.studentActions"), watchFor: t("guide.watchFor"), script: t("guide.script"), games: t("guide.games") }} />
+              <GuideStepItem key={step.step} step={step} done={stepsDone.includes(step.step)} gamesHref={gamesHrefOf(step.step, gamesHref, projectorHref)} labels={{ step: t("stepLabel", { step: step.step, title: step.title }), done: t("guide.done"), teacherActions: t("guide.teacherActions"), teacherLanguage: t("guide.teacherLanguage"), studentActions: t("guide.studentActions"), watchFor: t("guide.watchFor"), script: t("guide.script"), games: t("guide.games") }} />
             ))}
           </ol>
         </section>

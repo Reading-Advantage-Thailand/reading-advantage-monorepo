@@ -31,7 +31,7 @@ export function modelPackRoot(id: string, version: string = packVersion(id)): st
  */
 export const MODEL_PACKS: Readonly<Record<string, readonly string[]>> = {
   heroes: ['knight', 'wizard', 'cleric', 'adventurer', 'ranger', 'paladin'],
-  'dungeon-monsters': ['skeleton', 'giant-bat', 'mimic', 'dragon-fire'],
+  'dungeon-monsters': ['skeleton', 'giant-bat', 'mimic', 'dragon-fire', 'ghost'],
   folk: ['farmer', 'villager', 'innkeeper', 'guard', 'druid', 'orc-warrior', 'goblin-warrior', 'slime', 'bandit', 'zombie'],
   'potion-shop': [
     'counter', 'shelf', 'bottle', 'cauldron', 'fireplace', 'candle-cluster', 'workbench', 'crate', 'barrel', 'sack',
@@ -91,7 +91,7 @@ export const GAME_LOADS: Readonly<Record<string, GameModelLoad>> = {
   'shadow-gate-dungeon': { models: ['arch', 'bone-pile', 'cell-bars', 'chains', 'crystal-cluster', 'floor', 'floor-cracked', 'gate', 'hanging-cage', 'pillar', 'skeleton', 'torch-sconce', 'wall', 'wall-corner'], hero: true },
   'realm-carver': { models: ['bandit', 'boulder', 'bush', 'fence', 'forest-ground', 'goblin-warrior', 'grass-ground', 'mushroom-cluster', 'oak-tree', 'pine-tree', 'rock-cluster', 'slime', 'wildflowers'], hero: true },
   'alchemists-synthesis': { models: ['wood-floor', 'plaster-wall', 'plaster-wall-window', 'shelf', 'bottle', 'fireplace', 'candle-cluster', 'cauldron', 'barrel', 'crate', 'sack', 'lantern', 'counter', 'mushroom', 'apple', 'pumpkin', 'crystal-cluster', 'bread'], hero: true },
-  'enchanted-library': { models: ['candle-cluster', 'chandelier', 'lantern', 'plaster-wall', 'plaster-wall-window', 'shelf', 'skeleton', 'wood-floor'], hero: true },
+  'enchanted-library': { models: ['candle-cluster', 'chandelier', 'ghost', 'lantern', 'plaster-wall', 'plaster-wall-window', 'shelf', 'wood-floor'], hero: true },
   'gryphon-patrol': { models: ['griffin', 'giant-bat', 'oak-tree', 'pine-tree', 'ancient-oak', 'bush', 'fern', 'wildflowers', 'boulder', 'rock-cluster', 'cottage', 'barn', 'well', 'hay-bale'], hero: true },
   'magic-defense': { models: ['altar', 'arch', 'barrel', 'bone-pile', 'brazier', 'candle-cluster', 'cauldron', 'cell-bars', 'chains', 'crate', 'crystal-cluster', 'door', 'dragon-fire', 'floor', 'floor-cracked', 'gate', 'giant-bat', 'gold-pile', 'hanging-cage', 'mimic', 'moss-tuft', 'mushroom-cluster', 'pillar', 'rubble', 'sarcophagus', 'skeleton', 'stairs', 'torch-sconce', 'treasure-chest', 'walkway', 'wall', 'wall-corner'], hero: true },
   'griffin-sky-joust': { models: ['griffin', 'giant-bat', 'oak-tree', 'pine-tree', 'rock-cluster', 'bush'], hero: true },
@@ -233,7 +233,7 @@ export function gameBudgetErrors(game: string, load: GameModelLoad, packs: Reado
 export interface ModelIndex {
   /** `packs/<id>/<version>/<file>` for a model of a loaded pack, else undefined. */
   path(name: string): string | undefined;
-  /** The preset texture of a hero (`packs/heroes/<version>/knight/royal.webp`), else undefined. */
+  /** The preset texture of a model with presets, a hero or the ghost (`packs/heroes/<version>/knight/royal.webp`), else undefined. */
   preset(hero: string, preset: string): string | undefined;
 }
 

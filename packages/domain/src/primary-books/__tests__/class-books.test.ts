@@ -7,6 +7,7 @@ import {
   getClassBookPacing,
   getStudentBook,
   getStudentClassBooks,
+  getTeacherBookSlots,
   listCatalogueBooks,
   listClassBooks,
   markLessonTaught,
@@ -35,8 +36,8 @@ const dbWith = (selects: unknown[][]) => createMockDb({ selectSequence: selects,
 
 describe("assignClassBook", () => {
   it("inserts the class book for a class the teacher owns and returns it with the taught count", async () => {
-    // managedClass, (list) managedClass, class books, taught lessons
-    const mock = dbWith([[classRow], [classRow], [classBookRow], [{ classBookId: CLASS_BOOK, taughtAt: new Date() }, { classBookId: CLASS_BOOK, taughtAt: null }]]);
+    // managedClass, (list) managedClass, class books, lesson states, lesson titles
+    const mock = dbWith([[classRow], [classRow], [classBookRow], [{ classBookId: CLASS_BOOK, lessonNumber: 1, taughtAt: new Date(), stepsDone: [] }, { classBookId: CLASS_BOOK, lessonNumber: 2, taughtAt: null, stepsDone: [] }], []]);
     const result = await assignClassBook({ db: mock as unknown as DB, user: teacher, input: { classroomId: CLASS, bookId: BOOK } });
     expect(result).toMatchObject({ id: CLASS_BOOK, bookKey: "o3-2", mode: "teacher_led", currentLesson: 3, taughtCount: 1 });
     expect(mock.insert).toHaveBeenCalledTimes(1);
@@ -50,7 +51,7 @@ describe("assignClassBook", () => {
   });
 
   it("lets a co-teacher assign a book", async () => {
-    const mock = dbWith([[classRow], [{ classroomId: CLASS }], [classRow], [{ classroomId: CLASS }], [classBookRow], []]);
+    const mock = dbWith([[classRow], [{ classroomId: CLASS }], [classRow], [{ classroomId: CLASS }], [classBookRow], [], []]);
     const result = await assignClassBook({ db: mock as unknown as DB, user: otherTeacher, input: { classroomId: CLASS, bookId: BOOK, mode: "independent" } });
     expect(result.taughtCount).toBe(0);
     expect(mock.insert).toHaveBeenCalledTimes(1);
@@ -76,9 +77,91 @@ describe("listClassBooks", () => {
 
   it("returns the books of the class oldest first with taught counts", async () => {
     const second = { ...classBookRow, id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", bookKey: "q4", bookName: "Quest 4", currentLesson: 1 };
-    const mock = dbWith([[classRow], [classBookRow, second], [{ classBookId: CLASS_BOOK, taughtAt: new Date() }, { classBookId: CLASS_BOOK, taughtAt: new Date() }]]);
+    const mock = dbWith([[classRow], [classBookRow, second], [{ classBookId: CLASS_BOOK, lessonNumber: 1, taughtAt: new Date(), stepsDone: [] }, { classBookId: CLASS_BOOK, lessonNumber: 2, taughtAt: new Date(), stepsDone: [] }], []]);
     const result = await listClassBooks({ db: mock as unknown as DB, user: teacher, classroomId: CLASS });
     expect(result.map((book) => [book.bookKey, book.taughtCount])).toEqual([["o3-2", 2], ["q4", 0]]);
+  });
+
+  it("counts a lesson taught in an earlier run after Teach again", async () => {
+    const run = { runNumber: 1, taughtAt: "2026-10-06T08:00:00.000Z", stepsDone: [], closedAt: "2026-10-12T08:00:00.000Z", closedByUserId: "t1" };
+    const mock = dbWith([[classRow], [classBookRow], [{ classBookId: CLASS_BOOK, lessonNumber: 1, taughtAt: null, stepsDone: [], earlierRuns: [run] }], []]);
+    const [book] = await listClassBooks({ db: mock as unknown as DB, user: teacher, classroomId: CLASS });
+    expect(book.taughtCount).toBe(1);
+  });
+
+  it("returns the current lesson title and the next workbook step with its period", async () => {
+    // current lesson 3 has steps 1-4 done: the next step is 5 in period 2
+    const mock = dbWith([[classRow], [classBookRow], [{ classBookId: CLASS_BOOK, lessonNumber: 3, taughtAt: null, stepsDone: [1, 2, 3, 4] }], [lesson(3)]]);
+    const [book] = await listClassBooks({ db: mock as unknown as DB, user: teacher, classroomId: CLASS });
+    expect(book).toMatchObject({ lessonTitle: "Lesson 3", stepsDoneCount: 4, nextStep: 5, nextStepPeriod: 2 });
+  });
+
+  it("starts at step 1 when the lesson has no state, and has no next step when all 13 are done", async () => {
+    const fresh = dbWith([[classRow], [classBookRow], [], [lesson(3)]]);
+    expect((await listClassBooks({ db: fresh as unknown as DB, user: teacher, classroomId: CLASS }))[0]).toMatchObject({ nextStep: 1, nextStepPeriod: 1, stepsDoneCount: 0 });
+    const all = Array.from({ length: 13 }, (_, i) => i + 1);
+    const done = dbWith([[classRow], [classBookRow], [{ classBookId: CLASS_BOOK, lessonNumber: 3, taughtAt: null, stepsDone: all }], [lesson(3)]]);
+    expect((await listClassBooks({ db: done as unknown as DB, user: teacher, classroomId: CLASS }))[0]).toMatchObject({ nextStep: null, nextStepPeriod: null, stepsDoneCount: 13 });
+  });
+
+  it("gives FORBIDDEN for a class of another school", async () => {
+    const mock = dbWith([[{ ...classRow, schoolId: "school-2" }]]);
+    await expect(listClassBooks({ db: mock as unknown as DB, user: teacher, classroomId: CLASS })).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("gives a null title when the catalogue lacks the current lesson", async () => {
+    const mock = dbWith([[classRow], [classBookRow], [], []]);
+    expect((await listClassBooks({ db: mock as unknown as DB, user: teacher, classroomId: CLASS }))[0].lessonTitle).toBeNull();
+  });
+});
+
+describe("getTeacherBookSlots", () => {
+  const CLASS_2 = "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee";
+  const second = { ...classBookRow, id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", bookKey: "q4", bookName: "Quest 4", currentLesson: 1 };
+
+  it("returns one row for each class book and one row for a class without a book", async () => {
+    // co-taught ids, classes, class books, lesson states, lesson titles
+    const mock = dbWith([
+      [],
+      [{ id: CLASS, name: "P3A" }, { id: CLASS_2, name: "P4B" }],
+      [classBookRow, second],
+      [{ classBookId: CLASS_BOOK, lessonNumber: 3, taughtAt: null, stepsDone: [1, 2, 3, 4] }],
+      [lesson(3)],
+    ]);
+    const slots = await getTeacherBookSlots({ db: mock as unknown as DB, user: teacher });
+    expect(slots).toHaveLength(3);
+    expect(slots[0]).toMatchObject({ classroomId: CLASS, classroomName: "P3A", classBookId: CLASS_BOOK, bookName: "Origins 3.2", currentLesson: 3, lessonCount: 14, lessonTitle: "Lesson 3", nextStep: 5, nextStepPeriod: 2 });
+    expect(slots[1]).toMatchObject({ classroomId: CLASS, bookName: "Quest 4", nextStep: 1 });
+    expect(slots[2]).toEqual({ classroomId: CLASS_2, classroomName: "P4B", classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null });
+  });
+
+  it("lists several books of one class and starts a book without state at step 1", async () => {
+    const mock = dbWith([[{ classroomId: CLASS }], [{ id: CLASS, name: "P3A" }], [classBookRow, second], [], []]);
+    const slots = await getTeacherBookSlots({ db: mock as unknown as DB, user: teacher });
+    expect(slots.map((slot) => [slot.bookName, slot.nextStep, slot.lessonTitle])).toEqual([["Origins 3.2", 1, null], ["Quest 4", 1, null]]);
+  });
+
+  it("parses the rows with teacherBookSlotSchema and rejects a bad pointer", async () => {
+    const mock = dbWith([[], [{ id: CLASS, name: "P3A" }], [{ ...classBookRow, currentLesson: 0 }], [], []]);
+    await expect(getTeacherBookSlots({ db: mock as unknown as DB, user: teacher })).rejects.toThrow();
+  });
+
+  it("returns no row, and reads no book, when the teacher has no class", async () => {
+    const mock = dbWith([[], []]);
+    expect(await getTeacherBookSlots({ db: mock as unknown as DB, user: teacher })).toEqual([]);
+    expect(mock.select).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns no row for a user without a school", async () => {
+    const mock = dbWith([]);
+    expect(await getTeacherBookSlots({ db: mock as unknown as DB, user: { ...teacher, schoolId: null as unknown as string } })).toEqual([]);
+    expect(mock.select).not.toHaveBeenCalled();
+  });
+
+  it("refuses a student", async () => {
+    const mock = dbWith([]);
+    await expect(getTeacherBookSlots({ db: mock as unknown as DB, user: student })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mock.select).not.toHaveBeenCalled();
   });
 });
 
@@ -169,7 +252,34 @@ describe("getClassBookPacing", () => {
   });
 });
 
+describe("getClassBookPacing runs", () => {
+  it("returns the run number and the earlier runs of a lesson, and 1 and none by default", async () => {
+    const run = { runNumber: 1, taughtAt: "2026-10-06T08:00:00.000Z", stepsDone: [1, 2, 3], closedAt: "2026-10-12T08:00:00.000Z", closedByUserId: "t1" };
+    const mock = dbWith([
+      [classBookRow],
+      [classRow],
+      [lesson(1), lesson(2)],
+      [{ lessonNumber: 1, taughtAt: null, stepsDone: [], runNumber: 2, earlierRuns: [run] }],
+    ]);
+    const result = await getClassBookPacing({ db: mock as unknown as DB, user: teacher, classBookId: CLASS_BOOK });
+    expect(result.lessons[0]).toMatchObject({ number: 1, runNumber: 2, earlierRuns: [{ runNumber: 1, stepsDone: [1, 2, 3], closedByUserId: "t1" }] });
+    expect(result.lessons[0].earlierRuns[0].taughtAt).toEqual(new Date("2026-10-06T08:00:00.000Z"));
+    expect(result.lessons[1]).toMatchObject({ number: 2, runNumber: 1, earlierRuns: [] });
+    // Teach again clears the taught time of the open run; the lesson still counts as taught (T5).
+    expect(result.classBook.taughtCount).toBe(1);
+  });
+});
+
 describe("getStudentClassBooks", () => {
+  it("unlocks only the steps marked again after Teach again", async () => {
+    const mock = dbWith([[{ classroomId: CLASS }], [classBookRow], [lesson(3)], [{ classBookId: CLASS_BOOK, lessonNumber: 3, stepsDone: [] }]]);
+    const result = await getStudentClassBooks({ db: mock as unknown as DB, user: student });
+    expect(result[0].lesson?.unlockedAppSteps).toEqual([]);
+    const again = dbWith([[{ classroomId: CLASS }], [classBookRow], [lesson(3)], [{ classBookId: CLASS_BOOK, lessonNumber: 3, stepsDone: [1, 2, 3] }]]);
+    const more = await getStudentClassBooks({ db: again as unknown as DB, user: student });
+    expect(more[0].lesson?.unlockedAppSteps).toEqual([1, 2, 3]);
+  });
+
   it("returns the current lesson of each class book with the unlocked app steps", async () => {
     // memberships, class books, current lessons, state rows
     const mock = dbWith([[{ classroomId: CLASS }], [classBookRow], [lesson(3)], [{ classBookId: CLASS_BOOK, lessonNumber: 3, stepsDone: [1, 2, 3, 4, 5, 6, 7, 8, 9] }]]);

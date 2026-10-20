@@ -5,7 +5,7 @@
  * Routes must reach the database through the domain layer (createTenantDB /
  * TenantDB), not by importing the `@reading-advantage/db` client barrel
  * directly. Per the track spec, a NEW direct import in `app/api` fails this
- * static test; the APK (`v1/apk`) and host-proof surfaces are excluded.
+ * static test; the APK (`v1/apk`) surface is excluded.
  *
  * Routes that still carried the direct import when this ratchet landed are
  * listed in DIRECT_DB_BASELINE. The list only shrinks: when a route migrates
@@ -29,7 +29,7 @@ const apiDir = join(appDir, "app", "api");
 const DIRECT_DB_IMPORT = /["']@reading-advantage\/db(?:\/client)?["']/;
 
 /** Surfaces already reviewed against TenantDB; outside this invariant. */
-const EXCLUDED_SEGMENTS = ["v1/apk", "host-proof"] as const;
+const EXCLUDED_SEGMENTS = ["v1/apk"] as const;
 
 /**
  * Routes that still import the db client directly today. Reviewed baseline —
@@ -73,7 +73,7 @@ describe("AC-1: no direct @reading-advantage/db imports in app/api routes", () =
     expect(guardedRoutes.length).toBeGreaterThan(0);
   });
 
-  it("excludes the APK and host-proof surfaces from the invariant", () => {
+  it("excludes the APK surface from the invariant", () => {
     for (const route of guardedRoutes) {
       expect(isExcluded(route), `${route} must be excluded`).toBe(false);
     }

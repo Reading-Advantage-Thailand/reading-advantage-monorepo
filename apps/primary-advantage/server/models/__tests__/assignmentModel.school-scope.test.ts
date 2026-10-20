@@ -101,7 +101,7 @@ describe("getAssignmentById school scope", () => {
       role: "TEACHER",
       schoolId: "school-a",
     });
-    primeReads(classroomA, []);
+    primeReads({ ...classroomA, teacherId: "teacher-a" }, []);
 
     const result = (await getAssignmentById("assignment-1")) as Record<
       string,
@@ -109,5 +109,13 @@ describe("getAssignmentById school scope", () => {
     >;
 
     expect(result).toMatchObject({ id: "assignment-1" });
+  });
+
+  it("refuses a same-school teacher who does not teach the class", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "teacher-b", role: "TEACHER", schoolId: "school-a" });
+    primeReads({ ...classroomA, teacherId: "teacher-a" }, []);
+    mocks.select.mockReturnValueOnce(chain([]));
+
+    await expect(getAssignmentById("assignment-1")).rejects.toBeInstanceOf(AssignmentForbiddenError);
   });
 });

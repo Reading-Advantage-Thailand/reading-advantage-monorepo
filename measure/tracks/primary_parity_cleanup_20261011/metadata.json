@@ -1,0 +1,18 @@
+{
+  "track_id": "primary_parity_cleanup_20261011",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: cleanup (System Testing page, Admin Article Creation, content generation, old game host M4 with the ElvGames copy first, old game URL redirects, AI model configuration)",
+  "estimated_tasks": 38,
+  "actual_tasks": null,
+  "deviation_notes": "Phase 6: outputFileTracingExcludes has no effect in a Turbopack build; a Dockerfile RUN rm -rf line (guarded by removed-surfaces.test.ts) deletes the ElvGames files of other apps from the image (spec E-7). Phase 6: lockfile edited by hand (Primary importer only). Phase 8: VertexProvider extends GoogleProvider. Phase 9: batch captures and owner look check are open (orchestrator).",
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 2,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}

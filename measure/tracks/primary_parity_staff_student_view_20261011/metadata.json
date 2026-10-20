@@ -1,0 +1,53 @@
+{
+  "track_id": "primary_parity_staff_student_view_20261011",
+  "type": "feature",
+  "status": "complete-pending-batch-capture",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-12T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Staff student view (Preview mode)",
+  "estimated_tasks": 31,
+  "actual_tasks": 31,
+  "deviation_notes": "Phase A prepared only: the kit run and the captures are a batch step (orchestrator). legacyPath holds raw legacy ids. Pairs for avatar, shop, Class Quest, Reedy, class book, and lesson are new only (legacy has no such pages). Two step modules open the first managed class book and lesson. The go/no-go block 'staff ...' reads pages only. S3 added 15 copy keys that are English in th, cn, tw, vi (owner translation pass). No sample-words line inside the apk game (check in batch). Defaults used: D8 SYSTEM school rule, preview book in independent mode, banner design of Phase 0.",
+  "sprint": {
+    "goal": "A teacher, a school admin, and a SYSTEM user open each student page from the account menu, see what a student of their school sees, and no student record changes.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Staff open the student pages",
+        "size": "M",
+        "priority": "Must",
+        "status": "complete-pending-batch-capture"
+      },
+      {
+        "id": "S2",
+        "title": "Nothing saves in Preview mode",
+        "size": "L",
+        "priority": "Must",
+        "status": "complete-pending-batch-capture"
+      },
+      {
+        "id": "S3",
+        "title": "Pages that need a student record show a preview state",
+        "size": "M",
+        "priority": "Must",
+        "status": "complete-pending-batch-capture"
+      },
+      {
+        "id": "S4",
+        "title": "Class books and lessons in preview",
+        "size": "M",
+        "priority": "Should",
+        "status": "complete-pending-batch-capture"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  },
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 3,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}

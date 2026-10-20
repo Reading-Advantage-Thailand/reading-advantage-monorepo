@@ -1,0 +1,73 @@
+{
+  "member": "primary_parity_print_lesson_20261011",
+  "pairs": [
+    {
+      "id": "PRT-A1",
+      "rows": ["TCH-01"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "steps": "./acceptance-steps-print-lesson.ts",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-class-book-slot]" },
+      "checks": [
+        {
+          "id": "PRT-A1-a",
+          "behavior": "New only: lesson 5 of Origins 3.2 shows a third outline button \"Print this lesson\" with a printer icon, after Projector and Rehearsal. The legacy app has no print page (difference on purpose; the old Workbooks page /teacher/workbook-generate was dropped). Run the class books browser check first so that a book is assigned and the print data is imported."
+        },
+        {
+          "id": "PRT-A1-b",
+          "behavior": "New only: on a lesson without print data the button does not show and the line \"The print version of this lesson is not ready yet.\" shows."
+        }
+      ]
+    },
+    {
+      "id": "PRT-A2",
+      "rows": ["TCH-01"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "steps": "./acceptance-steps-print-lesson.ts",
+      "colorSchemes": ["light", "dark"],
+      "widths": [375, 1280],
+      "waitFor": { "new": "[data-class-book-slot]" },
+      "checks": [
+        {
+          "id": "PRT-A2-a",
+          "behavior": "New only: the print page shows the A4 pages of the Workbooks template in a sandboxed frame. Print is disabled with \"Loading the pictures...\" until the pictures load, then the gold \"Print\" button is on. At 375 px the pages fit the frame width with no sideways scroll.",
+          "network": "print-fonts/.*\\.woff2"
+        },
+        {
+          "id": "PRT-A2-b",
+          "behavior": "New only: \"Print\" opens the browser print dialog. In Chrome the pages are A4 and the 13 workbook steps break as in the Workbooks print. Manual step; save as PDF for check A3."
+        }
+      ]
+    },
+    {
+      "id": "PRT-A3",
+      "rows": ["TCH-01"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "checks": [
+        {
+          "id": "PRT-A3-a",
+          "behavior": "Manual compare, no capture: ~/Desktop/print-ready/lessons/Origins-3.2/Primary-Advantage-Origins-3.2-Lesson-05-At-the-Market.pdf (Workbooks, 15 pages with the answer key) against the saved PDF of PRT-A2-b (14 pages, no answer key). Page by page: same steps, same question order. Pre-check result: measure/tracks/primary_parity_print_lesson_20261011/print-check/README.md."
+        }
+      ]
+    },
+    {
+      "id": "PRT-A4",
+      "rows": ["TCH-01"],
+      "role": "STUDENT",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "checks": [
+        {
+          "id": "PRT-A4-a",
+          "behavior": "A student (and a teacher of another class) who opens .../books/<classBook>/lessons/5/print gets the same refusal (not found) as the lesson page. The proxy page here is the class page as a student; the direct refusal of getPrintLesson is covered by the domain tests."
+        }
+      ]
+    }
+  ]
+}

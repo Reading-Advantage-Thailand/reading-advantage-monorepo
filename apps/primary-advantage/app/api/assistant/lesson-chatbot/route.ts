@@ -1,22 +1,22 @@
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import z from "zod";
-import { openai, openaiModel } from "@/utils/openai";
-import { streamText } from "@reading-advantage/ai/internal-sdk";
+import { chatbotClient, loggedAiCall } from "@/lib/ai/models";
+import { logger } from "@/lib/observability/logger";
 import { currentUser } from "@/lib/session";
 
 const createLessonChatbotQuestionSchema = z.object({
   messages: z.array(
     z.object({
-      text: z.string(),
+      text: z.string().max(4000),
       sender: z.enum(["user", "bot"]),
     }),
-  ),
-  title: z.string(),
-  passage: z.string(),
-  summary: z.string(),
-  image_description: z.string(),
-  blacklistedQuestions: z.array(z.string()).optional().default([]),
+  ).max(60),
+  title: z.string().max(500),
+  passage: z.string().max(20000),
+  summary: z.string().max(5000),
+  image_description: z.string().max(2000),
+  blacklistedQuestions: z.array(z.string().max(1000)).max(100).optional().default([]),
   isInitial: z.boolean().optional().default(false),
 });
 
@@ -46,9 +46,7 @@ export async function POST(request: NextRequest) {
         ? `\n\nBlacklisted Questions (DO NOT answer these):\n${blacklistedQuestions.map((q, index) => `${index + 1}. ${q}`).join("\n")}`
         : "";
 
-    const systemMessage = {
-      role: "system" as const,
-      content: isInitial
+    const system = isInitial
         ? `You are a helpful and friendly AI English language tutor. Start the conversation by asking the user one engaging, open-ended question related to the following article to encourage reflection or discussion. Do not answer anything yet.
     
     **IMPORTANT RULES:**
@@ -99,32 +97,33 @@ export async function POST(request: NextRequest) {
     Title: "${title}"
     Summary: "${summary}"
     Passage: "${passage}"
-    Image Description: "${image_description}"${blacklistedQuestionsText}`,
-    };
+    Image Description: "${image_description}"${blacklistedQuestionsText}`;
 
 
     // แปลงข้อความทั้งหมดจาก frontend เป็น messages สำหรับ OpenAI
-    const chatMessages = messages.map((msg) => ({
-      role: msg.sender === "user" ? ("user" as const) : ("assistant" as const),
-      content: msg.text,
-    }));
+    // The opening call (isInitial) has no messages yet, and the model refuses an empty list
+    // ("messages must not be empty"): one user turn asks the bot to start.
+    const chatMessages = messages.length
+      ? messages.map((msg) => ({
+          role: msg.sender === "user" ? ("user" as const) : ("assistant" as const),
+          content: msg.text,
+        }))
+      : [{ role: "user" as const, content: "Please start." }];
 
 
-    // ส่ง prompt เข้า OpenAI พร้อมประวัติ
-    const { textStream } = await streamText({
-      model: openai(openaiModel),
-      messages: [systemMessage, ...chatMessages],
-    });
-
-    const streamChunks: string[] = [];
-
-    for await (const chunk of textStream) {
-      if (chunk && chunk !== "{" && chunk !== "}") {
-        streamChunks.push(chunk);
+    const fullMessage = await loggedAiCall("chatbot.stream", async () => {
+      const { textStream } = await chatbotClient().streamText({
+        system,
+        messages: chatMessages,
+      });
+      const streamChunks: string[] = [];
+      for await (const chunk of textStream) {
+        if (chunk && chunk !== "{" && chunk !== "}") {
+          streamChunks.push(chunk);
+        }
       }
-    }
-
-    const fullMessage = streamChunks.join("").trim();
+      return streamChunks.join("").trim();
+    });
 
 
     return NextResponse.json(
@@ -137,11 +136,11 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("Validation Error:", error.errors);
+      logger.error("lesson_chatbot_validation_error", { issues: error.errors });
       return NextResponse.json({ errors: error.errors }, { status: 400 });
     }
 
-    console.error("ChatBot API Error:", error);
+    logger.error("lesson_chatbot_error", { error });
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

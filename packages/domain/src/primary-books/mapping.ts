@@ -4,6 +4,7 @@
  */
 import { resolveObjective } from "../primary-mastery/objective-key.js";
 import type { LessonPackage } from "./package-schema.js";
+import type { PrintLesson } from "./print/contracts.js";
 
 /** The book keys of the printed books and their names. Names always carry the product name. */
 export const BOOKS: Record<string, { seriesKey: string; seriesName: string; name: string }> = {
@@ -303,9 +304,10 @@ export function toFlashcardRow(pkg: LessonPackage, articleId: string): Flashcard
  * The package parts the teacher screens need (answer keys, print set, activities, glossary).
  * Media, approvals, and database ids stay out.
  * @param pkg The package.
- * @returns The JSON stored on the lesson row.
+ * @param printLesson The validated print data of the lesson, or null when Workbooks has none.
+ * @returns The JSON stored on the lesson row. It has `printLesson` only when print data exists.
  */
-export function toLessonPackageJson(pkg: LessonPackage): Record<string, unknown> {
+export function toLessonPackageJson(pkg: LessonPackage, printLesson: PrintLesson | null = null): Record<string, unknown> {
   return {
     glossary: pkg.glossary,
     bank: pkg.bank,
@@ -315,5 +317,6 @@ export function toLessonPackageJson(pkg: LessonPackage): Record<string, unknown>
     thaiSummary: pkg.thai?.summary ?? null,
     tags: pkg.tags ?? null,
     images: pkg.images.map((image) => ({ position: image.position ?? null, caption: image.caption ?? null })),
+    ...(printLesson ? { printLesson } : {}),
   };
 }

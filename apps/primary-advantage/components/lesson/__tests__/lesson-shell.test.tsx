@@ -22,6 +22,7 @@ vi.mock("../task", () => {
     TaskShortAnswer: stub("sa"),
     TaskVocabularyFlashcards: stub("vocab-cards"),
     TaskVocabularyMatching: stub("vocab-matching"),
+    TaskVocabularyGame: stub("vocab-game"),
     TaskSentenceFlashcards: stub("sentence-cards"),
     TaskSentenceActivities: stub("sentence-activities"),
     TaskLanguageQuestions: stub("language"),

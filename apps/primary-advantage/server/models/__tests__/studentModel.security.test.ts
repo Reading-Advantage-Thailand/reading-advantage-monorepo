@@ -148,6 +148,18 @@ describe("createStudent fails closed without a school (M2)", () => {
   });
 });
 
+describe("createStudent on a migrated database with no roles rows", () => {
+  it("creates a STUDENT user and no user_roles row", async () => {
+    await harness.db.execute(sql`DELETE FROM roles`);
+    const result = await createStudent({
+      name: "fresh", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin,
+    });
+    expect(result.success).toBe(true);
+    const rows = await harness.db.execute(sql`SELECT role FROM users WHERE id = ${result.student!.id}`);
+    expect((rows.rows[0] as { role: string }).role).toBe("STUDENT");
+  });
+});
+
 describe("password write events (M1)", () => {
   it("records an audit event for a new student without revoking", async () => {
     const result = await createStudent({

@@ -1,8 +1,8 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Header } from "@/components/header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RpgButton, Sign } from "@/components/rpg/chrome";
 import { Progress } from "@/components/ui/progress";
 import { Separator, Label } from "@reading-advantage/ui";
 import {
@@ -476,6 +476,7 @@ export function SentenceClozeGame({
 
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
   const { refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   const activeAudioRef = useRef<HTMLAudioElement | null>(null);
   const hintAudioStopRef = useRef<(() => void) | null>(null);
@@ -890,7 +891,8 @@ export function SentenceClozeGame({
       toggleAudioHints();
     } else {
       setGameComplete(true);
-      await config.finishGame({ t, articleId, deckId, score, timer });
+      if (isPreview) notSaved();
+      else await config.finishGame({ t, articleId, deckId, score, timer });
       setIsPlaying(false);
       await refresh();
     }
@@ -905,6 +907,8 @@ export function SentenceClozeGame({
     timer,
     refresh,
     toggleAudioHints,
+    isPreview,
+    notSaved,
   ]);
 
   const handleRestart = useCallback(() => {
@@ -1136,14 +1140,16 @@ export function SentenceClozeGame({
                   disabled={isCompleted}
                 >
                   <SelectTrigger
-                    className={cn("inline-flex h-8 min-w-[120px]", {
-                      "border-green-500 bg-green-50 dark:bg-green-950/20":
+                    className={cn("inline-flex h-8 min-w-[120px] border-2", {
+                      "border-[#2f6b35] bg-[#dfeccd] text-[#1f4a23] dark:bg-[#dfeccd]":
                         userAnswer?.isCorrect && (isCompleted || hintsEnabled),
-                      "border-red-500 bg-red-50 dark:bg-red-950/20":
+                      "border-[#8f2424] bg-[#f3d6cc] text-[#6b1717] dark:bg-[#f3d6cc]":
                         userAnswer &&
                         !userAnswer.isCorrect &&
                         (isCompleted || hintsEnabled),
-                      "border-muted-foreground/50": !userAnswer,
+                      "border-[var(--cq-gold-dark)] bg-[rgba(232,181,52,0.25)] dark:bg-[rgba(232,181,52,0.25)]":
+                        userAnswer && !(isCompleted || hintsEnabled),
+                      "border-[var(--cq-wood-dark)] bg-white/50 dark:bg-white/50": !userAnswer,
                     })}
                   >
                     <SelectValue placeholder={t(labels.placeholder)} />
@@ -1176,8 +1182,8 @@ export function SentenceClozeGame({
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="space-y-4 text-center">
-          <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
+        <div className="cq-panel space-y-4 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[var(--cq-wood-dark)]" />
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">{t(labels.loadingTitle)}</h3>
             <p className="text-muted-foreground text-sm">
@@ -1195,77 +1201,78 @@ export function SentenceClozeGame({
 
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="space-y-8 text-center">
+        <div className="cq-panel space-y-8 text-center">
           {/* Trophy Animation */}
           <div className="relative">
             <div className="animate-bounce">
-              <Trophy className="mx-auto h-24 w-24 text-yellow-500" />
+              <span className="lf-medal mx-auto size-28">
+                <Trophy className="h-16 w-16 text-[var(--cq-wood-dark)]" />
+              </span>
             </div>
-            <div className="bg-primary absolute -top-2 -right-2 h-6 w-6 animate-ping rounded-full" />
+            <div className="absolute -top-2 -right-2 h-6 w-6 animate-ping rounded-full bg-[var(--cq-gold)]" />
           </div>
 
           {/* Results Header */}
           <div className="space-y-4">
-            <h1 className="gradient-text text-4xl font-bold md:text-5xl">
+            <h1 className="text-4xl font-bold text-[var(--cq-wood-dark)] md:text-5xl">
               {t(labels.completeTitle)}
             </h1>
-            <p className="text-muted-foreground text-xl">
+            <p className="cq-muted text-xl">
               {t(labels.completeSubtitle, { count: activeSentences.length })}
             </p>
           </div>
 
           {/* Stats Grid */}
           <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-3">
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Target className="mx-auto mb-3 h-8 w-8 text-blue-500" />
-                <div className="text-3xl font-bold text-blue-600">{score}</div>
-                <p className="text-muted-foreground text-sm">
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <div>
+                <Target className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+                <div className="text-3xl font-bold">{score}</div>
+                <p className="text-sm">
                   {t(labels.completeStatsPerfect)}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Zap className="mx-auto mb-3 h-8 w-8 text-green-500" />
-                <div className="text-3xl font-bold text-green-600">
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <div>
+                <Zap className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+                <div className="text-3xl font-bold">
                   {accuracy}%
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm">
                   {t(labels.completeStatsAccuracy)}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Clock className="mx-auto mb-3 h-8 w-8 text-purple-500" />
-                <div className="text-3xl font-bold text-purple-600">
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <div>
+                <Clock className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+                <div className="text-3xl font-bold">
                   {formatTime(timer)}
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm">
                   {t(labels.completeStatsTime)}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Action Buttons */}
           <div className="mx-auto flex max-w-md flex-col gap-4 sm:flex-row">
-            <Button
+            <RpgButton
               onClick={handleBack}
-              size="lg"
-              variant="outline"
+              tone="iron"
               className="flex-1"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" />
               {t(labels.completeBack)}
-            </Button>
-            <Button onClick={handleRestartGame} size="lg" className="flex-1">
-              <RotateCcw className="mr-2 h-4 w-4" />
+            </RpgButton>
+            <RpgButton onClick={handleRestartGame} tone="gold" className="flex-1">
+              <RotateCcw className="h-4 w-4" />
               {t(labels.completePlayAgain)}
-            </Button>
+            </RpgButton>
           </div>
         </div>
       </div>
@@ -1277,24 +1284,26 @@ export function SentenceClozeGame({
     return (
       <div className="container mx-auto max-w-4xl space-y-8 px-4">
         {config.chrome.headerOnStart && (
-          <Header
-            heading={t(config.chrome.headerTitle)}
-            text={t(config.chrome.headerDescriptionLong)}
-          />
+          <div className="cq-panel">
+            <Header
+              heading={t(config.chrome.headerTitle)}
+              text={t(config.chrome.headerDescriptionLong)}
+            />
+          </div>
         )}
 
-        <Card className="mx-auto max-w-2xl">
-          <CardHeader className="pb-6 text-center">
-            <CardTitle className="text-2xl">{t(labels.startTitle)}</CardTitle>
-            <p className="text-muted-foreground">{t(labels.startSubtitle)}</p>
-          </CardHeader>
+        <div className="cq-panel mx-auto flex max-w-2xl flex-col gap-6 py-6">
+          <div className="flex flex-col items-center gap-2 px-6 pb-6 text-center">
+            <Sign className="text-2xl">{t(labels.startTitle)}</Sign>
+            <p className="cq-muted">{t(labels.startSubtitle)}</p>
+          </div>
 
-          <CardContent className="space-y-8">
+          <div className="space-y-8 px-6">
             {/* Game Stats */}
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-2 text-center">
-                <div className="bg-primary/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
-                  <span className="text-primary text-2xl font-bold">
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <span className="text-2xl font-bold">
                     {activeSentences.length}
                   </span>
                 </div>
@@ -1307,8 +1316,8 @@ export function SentenceClozeGame({
               </div>
 
               <div className="space-y-2 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500/10">
-                  <Target className="h-6 w-6 text-green-600" />
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <Target className="h-6 w-6" />
                 </div>
                 <p className="text-sm font-medium">
                   {t(labels.startStatsFillBlanks)}
@@ -1319,8 +1328,8 @@ export function SentenceClozeGame({
               </div>
 
               <div className="space-y-2 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10">
-                  <Clock className="h-6 w-6 text-purple-600" />
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <Clock className="h-6 w-6" />
                 </div>
                 <p className="text-sm font-medium">
                   {labels.renderEstimatedTime(t, selectedDifficulty)}
@@ -1334,14 +1343,14 @@ export function SentenceClozeGame({
             <Separator />
 
             {/* Game Instructions */}
-            <div className="bg-muted/50 space-y-3 rounded-lg p-6">
+            <div className="lf-well space-y-3 p-6">
               <div className="flex items-center gap-2">
-                <div className="bg-primary h-2 w-2 rounded-full" />
+                <div className="lf-stud" />
                 <p className="text-sm font-medium">
                   {t(labels.instructionsTitle)}
                 </p>
               </div>
-              <ul className="text-muted-foreground ml-4 space-y-2 text-sm">
+              <ul className="cq-muted ml-4 space-y-2 text-sm">
                 <li>• {t(labels.instructionsItem1)}</li>
                 <li>• {t(labels.instructionsItem2)}</li>
                 <li>• {t(labels.instructionsItem3)}</li>
@@ -1363,7 +1372,7 @@ export function SentenceClozeGame({
                     setActiveSentences([]);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full border-2 border-[var(--cq-parchment-edge)] bg-white/40 dark:bg-white/40">
                     <SelectValue
                       placeholder={t(labels.difficultySelect) as string}
                     />
@@ -1371,19 +1380,19 @@ export function SentenceClozeGame({
                   <SelectContent>
                     <SelectItem value="easy">
                       <div className="flex items-center gap-2">
-                        <span className="text-green-600">🟢</span>
+                        <span>🟢</span>
                         <span>{t(labels.difficultyEasy)}</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="medium">
                       <div className="flex items-center gap-2">
-                        <span className="text-yellow-600">🟡</span>
+                        <span>🟡</span>
                         <span>{t(labels.difficultyMedium)}</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="hard">
                       <div className="flex items-center gap-2">
-                        <span className="text-red-600">🔴</span>
+                        <span>🔴</span>
                         <span>{t(labels.difficultyHard)}</span>
                       </div>
                     </SelectItem>
@@ -1392,20 +1401,20 @@ export function SentenceClozeGame({
               </div>
 
               {/* Difficulty Description */}
-              <div className="bg-muted/50 rounded-lg p-4">
+              <div className="lf-well p-4">
                 <div className="mb-2 flex items-center gap-2">
                   {selectedDifficulty === "easy" && (
-                    <span className="text-green-600">🟢</span>
+                    <span>🟢</span>
                   )}
                   {selectedDifficulty === "medium" && (
-                    <span className="text-yellow-600">🟡</span>
+                    <span>🟡</span>
                   )}
                   {selectedDifficulty === "hard" && (
-                    <span className="text-red-600">🔴</span>
+                    <span>🔴</span>
                   )}
                   {labels.renderDifficultyMode(t, selectedDifficulty)}
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="cq-muted text-sm">
                   {selectedDifficulty === "easy" &&
                     t(labels.difficultyDescEasy)}
                   {selectedDifficulty === "medium" &&
@@ -1416,7 +1425,7 @@ export function SentenceClozeGame({
               </div>
             </div>
 
-            <Button
+            <RpgButton
               onClick={() => {
                 if (activeSentences.length === 0) {
                   loadSentences();
@@ -1424,24 +1433,24 @@ export function SentenceClozeGame({
                   handleStartGame();
                 }
               }}
-              size="lg"
+              tone="gold"
               className="h-12 w-full"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   {labels.startButtonLoading(t, selectedDifficulty)}
                 </>
               ) : (
                 <>
-                  <Play className="mr-2 h-5 w-5" />
+                  <Play className="h-5 w-5" />
                   {labels.startButton(t, selectedDifficulty)}
                 </>
               )}
-            </Button>
-          </CardContent>
-        </Card>
+            </RpgButton>
+          </div>
+        </div>
       </div>
     );
   }
@@ -1449,9 +1458,9 @@ export function SentenceClozeGame({
   if (!currentSentence) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="space-y-4 text-center">
-          <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
-          <p className="text-muted-foreground">
+        <div className="cq-panel space-y-4 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[var(--cq-wood-dark)]" />
+          <p className="cq-muted">
             {t(labels.loadingNextChallenge)}
           </p>
         </div>
@@ -1462,15 +1471,17 @@ export function SentenceClozeGame({
   return (
     <div className="container mx-auto max-w-4xl space-y-4 px-4">
       {config.chrome.headerOnPlaying && (
-        <Header
-          heading={t(config.chrome.headerTitle)}
-          text={t(config.chrome.headerDescriptionShort)}
-        />
+        <div className="cq-panel">
+          <Header
+            heading={t(config.chrome.headerTitle)}
+            text={t(config.chrome.headerDescriptionShort)}
+          />
+        </div>
       )}
 
       {/* Progress Bar */}
-      <div className="space-y-2">
-        <div className="text-muted-foreground flex items-center justify-between text-sm">
+      <div className="cq-panel space-y-2">
+        <div className="cq-muted flex items-center justify-between text-sm">
           <span>
             {labels.progressPosition(t, currentIndex + 1, activeSentences.length)}
           </span>
@@ -1487,89 +1498,86 @@ export function SentenceClozeGame({
             </span>
           </div>
         </div>
-        <Progress value={progress} className="h-1" />
+        <Progress value={progress} className="h-3 border-2 border-[var(--cq-wood-dark)] bg-[#2a1d12] [&>[data-slot=progress-indicator]]:bg-[var(--cq-gold)]" />
       </div>
 
       {/* Game Card */}
-      <Card>
-        <CardHeader>
+      <div className="cq-panel flex flex-col gap-6 py-6">
+        <div className="px-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="space-y-3">
-              <CardTitle className="text-xl">
+            <div className="flex flex-col items-start gap-3">
+              <Sign className="text-xl">
                 {labels.renderArticleTitle(t, currentSentence.articleTitle)}
-              </CardTitle>
-              <p className="text-muted-foreground text-sm">
+              </Sign>
+              <p className="cq-muted text-sm">
                 {t(labels.gameSubtitle)}
               </p>
             </div>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent className="space-y-6">
+        <div className="space-y-6 px-6">
           {/* Hint Controls */}
-          <div className="bg-muted/30 flex flex-wrap items-center gap-3 rounded-lg border p-4">
+          <div className="lf-well flex flex-wrap items-center gap-3 p-4">
             <div className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-yellow-500" />
+              <Lightbulb className="h-4 w-4 text-[var(--cq-gold-dark)]" />
               <span className="text-sm font-medium">{t(labels.hintsLabel)}</span>
             </div>
 
             {/* Audio Toggle */}
             <div className="flex items-center gap-2">
-              <Button
+              <RpgButton
                 onClick={toggleAudioHints}
-                variant={audioHintsEnabled ? "default" : "outline"}
-                size="sm"
-                className="h-8"
+                tone={audioHintsEnabled ? "gold" : "wood"}
+                small
               >
-                <Volume2 className="mr-1 h-3 w-3" />
+                <Volume2 className="h-3 w-3" />
                 {t(labels.hintsAudio)}
-              </Button>
+              </RpgButton>
             </div>
 
             {/* Audio Play Button - Only show when audio hints are enabled */}
             {audioHintsEnabled && (
               <>
                 <Separator orientation="vertical" className="h-6" />
-                <Button
+                <RpgButton
                   onClick={playAudio}
-                  variant="outline"
-                  size="sm"
-                  className="h-8"
+                  small
                   disabled={isPlayingAudio}
                 >
                   {isPlayingAudio ? (
                     <>
-                      <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                      <Loader2 className="h-3 w-3 animate-spin" />
                       {t(labels.hintsPlaying)}
                     </>
                   ) : (
                     <>
-                      <Play className="mr-2 h-3 w-3" />
+                      <Play className="h-3 w-3" />
                       {t(labels.hintsPlay)}
                     </>
                   )}
-                </Button>
+                </RpgButton>
               </>
             )}
           </div>
 
           {/* Sentence with Blanks */}
-          <Card className="border-muted-foreground/25 bg-muted/10 border-2">
-            <CardContent className="p-6">
+          <div className="lf-well">
+            <div className="p-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <Target className="text-primary h-5 w-5" />
+                  <Target className="h-5 w-5 text-[var(--cq-wood-dark)]" />
                   <p className="text-sm font-medium">
                     {t(labels.sentenceInstructions)}
                   </p>
                 </div>
 
-                <div className="bg-card rounded-lg border p-4">
+                <div className="lf-well p-4">
                   {renderSentenceWithBlanks()}
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Progress indicator for current sentence */}
           <div className="flex items-center justify-between text-sm">
@@ -1593,22 +1601,22 @@ export function SentenceClozeGame({
 
           {/* Result Display */}
           {showResult && (
-            <Card
+            <div
               aria-live="polite"
               className={cn(
-                "border-2",
+                "rounded-xl border-2",
                 userAnswers.every((a) => a.isCorrect)
-                  ? "border-green-500 bg-green-50 dark:bg-green-950/20"
-                  : "border-red-500 bg-red-50 dark:bg-red-950/20",
+                  ? "lf-good"
+                  : "lf-bad",
               )}
             >
-              <CardContent className="p-6">
+              <div className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-3">
                     {userAnswers.every((a) => a.isCorrect) ? (
-                      <CheckCircle className="h-6 w-6 text-green-600" />
+                      <CheckCircle className="lf-text-good h-6 w-6" />
                     ) : (
-                      <XCircle className="h-6 w-6 text-red-600" />
+                      <XCircle className="lf-text-bad h-6 w-6" />
                     )}
                     <h3 className="text-lg font-semibold">
                       {userAnswers.every((a) => a.isCorrect)
@@ -1623,7 +1631,7 @@ export function SentenceClozeGame({
 
                   {!userAnswers.every((a) => a.isCorrect) &&
                     showCorrectAnswers && (
-                      <div className="space-y-3">
+                      <div className="space-y-3 text-[var(--cq-ink)]">
                         <Separator />
                         <div>
                           <h4 className="mb-3 font-medium">
@@ -1635,7 +1643,7 @@ export function SentenceClozeGame({
                                 key={blank.id}
                                 className="flex gap-3 text-sm"
                               >
-                                <span className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--cq-wood-dark)] text-xs font-bold text-[#fff4dc]">
                                   {index + 1}
                                 </span>
                                 <p className="flex-1">
@@ -1655,58 +1663,54 @@ export function SentenceClozeGame({
                       </div>
                     )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
+            <RpgButton
               onClick={handleRestart}
-              variant="outline"
-              size="sm"
               className="sm:w-auto"
             >
-              <RotateCcw className="mr-2 h-4 w-4" />
+              <RotateCcw className="h-4 w-4" />
               {t(labels.buttonsReset)}
-            </Button>
+            </RpgButton>
 
             {!isCompleted && userAnswers.length > 0 && (
-              <Button
+              <RpgButton
                 onClick={handleCheckAnswer}
-                variant="outline"
-                size="sm"
+                tone="gold"
                 className="sm:w-auto"
               >
-                <CheckCircle className="mr-2 h-4 w-4" />
+                <CheckCircle className="h-4 w-4" />
                 {t(labels.buttonsCheck)}
-              </Button>
+              </RpgButton>
             )}
 
             {isCompleted &&
               !userAnswers.every((a) => a.isCorrect) &&
               !showCorrectAnswers && (
-                <Button
+                <RpgButton
                   onClick={handleShowAnswers}
-                  variant="secondary"
-                  size="sm"
+                  tone="iron"
                   className="sm:w-auto"
                 >
-                  <Eye className="mr-2 h-4 w-4" />
+                  <Eye className="h-4 w-4" />
                   {t(labels.buttonsShowAnswers)}
-                </Button>
+                </RpgButton>
               )}
 
             {isCompleted && (
-              <Button onClick={handleNext} className="flex-1">
+              <RpgButton onClick={handleNext} tone="gold" className="flex-1">
                 {currentIndex < activeSentences.length - 1
                   ? t(labels.buttonsNext)
                   : t(labels.buttonsFinish)}
-              </Button>
+              </RpgButton>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { useStudentChallengeRun, useStudentRpg } from "@reading-advantage/advant
 import { RpgRewardDisclosure, RpgUnlockNotice } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { Link, useRouter } from "@/i18n/navigation";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { answerAudioControllerOf, fetchAnswerAudio, offersAnswerAudio } from "@/lib/games/answer-audio";
 import { gameFor, practiceLocaleOf } from "@/lib/games/catalog";
 import { rewardIconUrls } from "@/lib/rpg/places";
@@ -19,6 +20,15 @@ import { canRunChallenge, hostCompletionInput } from "@/lib/games/completion";
 /** The saved completion numbers (Class Quest FR-8): the battle page posts them as its heartbeat. */
 export interface CompletionSummary {
   challengeRunId?: string;
+  correctAnswers: number;
+  totalAttempts: number;
+  victory: boolean;
+  /** The XP that the server awarded for this run (absent when the response has none). */
+  xpEarned?: number;
+}
+
+/** The end of a run, given to the page whether or not the run saves. */
+export interface RunResult {
   correctAnswers: number;
   totalAttempts: number;
   victory: boolean;
@@ -42,9 +52,17 @@ export interface GameHostProps {
   readonly setting?: RendererSetting;
   /** Post the completion (default). False is the demo mode: the run saves nothing. */
   readonly save?: boolean;
+  /** The lesson article of a lesson game: the saved completion carries it in its metadata. */
+  readonly articleId?: string;
+  /** Show the answer hint in the game (the teacher's projector run); default off. */
+  readonly helper?: boolean;
   readonly className?: string;
   /** Receives the saved completion numbers. */
   readonly onCompleted?: (summary: CompletionSummary) => void;
+  /** Receives the end of each run at once, also when `save` is false. */
+  readonly onResult?: (result: RunResult) => void;
+  /** Called once when the game or its items fail to load, so the page can offer a fallback. */
+  readonly onLoadError?: () => void;
   /** Back from the briefing or done from the results; absent: the games catalog. */
   readonly onExit?: () => void;
 }
@@ -62,7 +80,7 @@ type LoadError = "game" | "load" | "unauthenticated";
  * @param props The game, the identity, the content source, and the callbacks.
  * @returns The game surface with its load, lock, and save states.
  */
-export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, className, onCompleted, onExit }: GameHostProps) {
+export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, articleId, helper = false, className, onCompleted, onResult, onLoadError, onExit }: GameHostProps) {
   const t = useTranslations("ApkHost");
   const tStory = useTranslations("StoryGames");
   const router = useRouter();
@@ -80,7 +98,9 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
   const launch = challengeId ? challengeRun.launch : null;
   const rpg = useStudentRpg({ endpoint: "/api/v1/apk/rpg", ownerKey: ownerKey ?? "", enabled: Boolean(ownerKey) });
   const exit = onExit ?? (() => router.push("/student/games"));
-  const offersAudio = Boolean(game && !challengeId && offersAnswerAudio(game));
+  // The audio mode swaps the input for the saved words and saves a plain game type with no article:
+  // a lesson run (`articleId`) and a demo run (`save` false) must keep the lesson words and save nothing else.
+  const offersAudio = Boolean(game && !challengeId && !articleId && save && offersAnswerAudio(game));
   const audioMode = offersAudio && mode === "answer-audio";
 
   useEffect(() => {
@@ -134,21 +154,31 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
     }
   }, [rpg]);
 
+  useEffect(() => {
+    if (error === "game" || error === "load") onLoadError?.();
+    // The callback is read at the error edge only: a new function identity must not call it again.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
   const onComplete = useCallback((result: GameResults, outcome: string, evidence: StoryGameEvidence, answerEvidence?: ReadToSelectAudioEvidence) => {
     if (!game) return;
     const victory = outcome !== "defeat";
-    const body = hostCompletionInput(game, launch, result, evidence, { startedAt: startedAt.current, now: Date.now(), victory, idempotencyKey: crypto.randomUUID() }, answerEvidence);
+    const body = hostCompletionInput(game, launch, result, evidence, { startedAt: startedAt.current, now: Date.now(), victory, idempotencyKey: crypto.randomUUID(), ...(articleId ? { articleId } : {}) }, answerEvidence);
+    onResult?.({ correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory });
     if (!save) return;
     setSaveState("saving");
     fetch("/api/v1/apk/complete", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
-      .then((res) => {
+      .then(async (res) => {
         setSaveState(res.ok ? "saved" : "error");
         if (!res.ok) return;
         if (ownerKey) void rpg.refreshAfterSavedCompletion().catch(() => undefined);
-        onCompleted?.({ ...(body.challengeRunId ? { challengeRunId: body.challengeRunId } : {}), correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory });
+        // The server owns the XP: read it from the response, never from the client result.
+        const saved: unknown = await res.json().catch(() => null);
+        const xp = typeof saved === "object" && saved !== null && "xpEarned" in saved && typeof saved.xpEarned === "number" ? saved.xpEarned : undefined;
+        onCompleted?.({ ...(body.challengeRunId ? { challengeRunId: body.challengeRunId } : {}), correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory, ...(xp === undefined ? {} : { xpEarned: xp }) });
       })
       .catch(() => setSaveState("error"));
-  }, [game, launch, save, ownerKey, rpg, onCompleted]);
+  }, [game, launch, save, ownerKey, rpg, articleId, onCompleted, onResult]);
 
   const signIn = (
     <Link className="underline" href={`/auth/signin?redirect=${encodeURIComponent(`/${locale}/student/games/apk/${gameId}${challengeId ? `?challengeId=${challengeId}` : ""}`)}`}>
@@ -204,6 +234,26 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
           <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
         </div>
       ) : null}
+      {/* The games have no exit of their own (Forge): the host bar ends a game early, after a confirm. */}
+      {ready && phase === "playing" ? (
+        <div className="flex shrink-0 justify-end p-2">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button type="button" className="min-h-12 rounded-lg border border-border bg-background px-4 py-2 font-semibold text-foreground">{t("exitGame")}</button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("exitTitle")}</AlertDialogTitle>
+                <AlertDialogDescription>{t("exitBody")}</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{t("exitCancel")}</AlertDialogCancel>
+                <AlertDialogAction onClick={exit}>{t("exitConfirm")}</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      ) : null}
       {ready && game && cartridge && run ? (
         <div className="relative min-h-0 flex-1">
           <StoryGameHost
@@ -213,7 +263,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
             replay={!launch}
             icon={game.icon}
             assetBase="/"
-            helper={false}
+            helper={helper}
             avatar={avatar}
             setting={setting}
             catalogs={[hostStrings]}

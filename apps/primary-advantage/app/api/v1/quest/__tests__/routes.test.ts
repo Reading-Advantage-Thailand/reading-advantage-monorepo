@@ -71,10 +71,13 @@ describe("quest routes", () => {
     expect(none.status).toBe(200);
     expect(await none.json()).toEqual({ state: null });
     mocks.postQuestHeartbeat.mockResolvedValue(undefined);
+    const teacherSession = mocks.session;
+    mocks.session = { user: { id: "s1", role: "STUDENT", schoolId: "school-1" } };
     const beat = { questId: QUEST, runId: null, answered: 0, correct: 0, hp: 5, damage: 0, powerUpsUsed: [] };
     const stored = await heartbeat(new NextRequest("http://localhost/api/v1/quest/heartbeat", { method: "POST", body: JSON.stringify(beat), headers: { "content-type": "application/json" } }));
     expect(stored.status).toBe(204);
     expect(mocks.postQuestHeartbeat).toHaveBeenCalledWith(mocks.session!.user, beat);
+    mocks.session = teacherSession;
     mocks.questDashboard.mockResolvedValue({ committed: 10 });
     const dash = await state(new NextRequest(`http://localhost/api/v1/quest/${QUEST}/state`), { params: Promise.resolve({ questId: QUEST }) });
     expect(await dash.json()).toEqual({ committed: 10 });

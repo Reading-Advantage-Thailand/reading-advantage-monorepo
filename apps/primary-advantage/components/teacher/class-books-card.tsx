@@ -1,50 +1,110 @@
 import { getTranslations } from "next-intl/server";
-import { BookMarkedIcon } from "lucide-react";
+import { BookMarkedIcon, TriangleAlertIcon } from "lucide-react";
 import type { CatalogueBook, ClassBook } from "@reading-advantage/domain/primary-books";
-import { Link } from "@/i18n/navigation";
-import { buttonVariants } from "@/components/ui/button";
+import { WORKBOOK_STEPS } from "@reading-advantage/domain/primary-books/step-map";
+import { Meter, Panel, Plaque, RpgLink } from "@/components/rpg/chrome";
+import { ART } from "@/lib/rpg/places";
 import { cn } from "@/lib/utils";
 import { AssignBookForm } from "./assign-book-form";
-import { TEACHER_ACTION, TEACHER_CARD } from "./teacher-shell";
 
 /**
- * The class book card of the class page (FR-1, FR-3): the assigned books with the lesson pointer
- * and the taught count, a link to each lesson plan, and the assign form.
+ * The class book card of the class page (FR-1, FR-3), first card after the class heading (anchor
+ * `#class-book`). Each assigned book shows plaques for the lesson and the taught count, the lesson
+ * title, a meter of the workbook steps, the next step with its period, an "Open lesson" button,
+ * and a link to the lesson plan. The assign form follows. When the books fail to load it shows the
+ * load error with a retry link instead.
  * @param props.classroomId The class.
  * @param props.books The books assigned to the class.
  * @param props.catalogue The books a teacher can assign.
+ * @param props.failed True when the page could not load the books; the card shows the error state.
  * @param props.className Extra classes.
  * @returns The card.
  */
-export async function ClassBooksCard({ classroomId, books, catalogue, className }: { classroomId: string; books: ClassBook[]; catalogue: CatalogueBook[]; className?: string }) {
+export async function ClassBooksCard({ classroomId, books, catalogue, failed, className }: { classroomId: string; books: ClassBook[]; catalogue: CatalogueBook[]; failed?: boolean; className?: string }) {
   const t = await getTranslations("TeacherUi.classBook");
   const headingId = `class-books-${classroomId}`;
   return (
-    <section aria-labelledby={headingId} data-class-book-slot={classroomId} className={cn(TEACHER_CARD, className)}>
-      <h2 id={headingId} className="flex items-center gap-2 text-lg font-semibold">
-        <BookMarkedIcon className="text-primary size-5" aria-hidden="true" />
+    <Panel id="class-book" aria-labelledby={headingId} className={cn("scroll-mt-20", className)} data-class-book-slot={classroomId}>
+      <h2 id={headingId} className="flex items-center gap-2 text-xl font-bold">
+        <BookMarkedIcon className="size-6" aria-hidden="true" />
         {t("title")}
       </h2>
-      {books.length ? (
-        <ul className="flex flex-col gap-2">
-          {books.map((book) => (
-            <li key={book.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border p-3">
-              <div className="flex min-w-0 flex-col">
-                <span className="font-semibold">{book.bookName}</span>
-                <span className="text-muted-foreground text-sm">
-                  {t("pointer", { current: book.currentLesson, total: book.lessonCount })} · {t("taughtCount", { count: book.taughtCount })}
-                </span>
-              </div>
-              <Link href={`/teacher/class-roster/${classroomId}/books/${book.id}`} className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION)}>
-                {t("pacing")}
-              </Link>
-            </li>
-          ))}
-        </ul>
+      {failed ? (
+        <>
+          <div role="alert" className="flex items-start gap-3">
+            <TriangleAlertIcon className="mt-1 size-6 shrink-0" style={{ color: "var(--cq-red)" }} aria-hidden="true" />
+            <div className="flex flex-col gap-1">
+              <p className="text-base font-bold">{t("loadErrorTitle")}</p>
+              <p className="text-base">{t("loadErrorBody")}</p>
+            </div>
+          </div>
+          <div>
+            <RpgLink href={`/teacher/class-roster/${classroomId}`} tone="iron" className="w-full sm:w-auto">
+              {t("retry")}
+            </RpgLink>
+          </div>
+        </>
       ) : (
-        <p className="text-muted-foreground text-sm">{t("none")}</p>
+        <>
+          {books.length ? (
+            <ul className="flex flex-col gap-4">
+              {books.map((book, index) => {
+                const next = book.nextStep ? WORKBOOK_STEPS.find((step) => step.step === book.nextStep) : null;
+                const base = `/teacher/class-roster/${classroomId}/books/${book.id}`;
+                return (
+                  <li key={book.id} className="flex flex-col gap-3">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="cq-muted text-sm font-bold tracking-wide uppercase">{t("nowInClass")}</p>
+                        <p className="text-2xl font-bold break-words">{book.bookName}</p>
+                      </div>
+                      <div className="grid w-full grid-cols-2 gap-2 sm:w-64">
+                        <Plaque icon={ART.noticeBoard} label={t("pointer", { current: book.currentLesson, total: book.lessonCount })}>
+                          {book.currentLesson}/{book.lessonCount}
+                        </Plaque>
+                        <Plaque icon={ART.banner} label={t("taughtLabel")}>
+                          {book.taughtCount}
+                        </Plaque>
+                      </div>
+                    </div>
+                    {book.lessonTitle ? <p className="text-lg font-bold break-words">{t("lessonTitle", { number: book.currentLesson, title: book.lessonTitle })}</p> : null}
+                    <Meter value={book.stepsDoneCount ?? 0} max={WORKBOOK_STEPS.length} label={t("stepsMeter")} tone="green" thin />
+                    <p className="text-base">
+                      <span className="cq-muted font-bold">{t("nextStep")}</span>
+                      {" · "}
+                      {next ? (
+                        <>
+                          {t("nextStepValue", { step: next.step, title: next.title })} · <span className="font-bold">{t("period", { period: next.period })}</span>
+                        </>
+                      ) : (
+                        t("allStepsDone")
+                      )}
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <RpgLink href={`${base}/lessons/${book.currentLesson}`} tone={index === 0 ? "gold" : "wood"} className="w-full sm:w-auto">
+                        {t("openLesson")}
+                      </RpgLink>
+                      <RpgLink href={base} tone="wood" className="w-full sm:w-auto">
+                        {t("pacing")}
+                      </RpgLink>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : catalogue.length ? (
+            <p className="text-base">{t("none")}</p>
+          ) : null}
+          {books.length && catalogue.length ? (
+            <details>
+              <summary className="min-h-12 cursor-pointer py-3 text-base font-bold">{t("assignAnother")}</summary>
+              <AssignBookForm classroomId={classroomId} catalogue={catalogue} />
+            </details>
+          ) : (
+            <AssignBookForm classroomId={classroomId} catalogue={catalogue} />
+          )}
+        </>
       )}
-      <AssignBookForm classroomId={classroomId} catalogue={catalogue} />
-    </section>
+    </Panel>
   );
 }

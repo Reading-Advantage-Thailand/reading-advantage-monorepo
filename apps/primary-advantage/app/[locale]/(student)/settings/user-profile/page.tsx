@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChangeUsernameForm } from "@/components/change-username-form";
-import { UpdateUserLicenseForm } from "@/components/update-user-license";
 import { BadgeCheck } from "lucide-react";
 import { Panel, RpgLink } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
@@ -12,6 +11,7 @@ import ChangeRole from "@/components/shared/change-role";
 import { getCurrentUser } from "@/lib/session";
 import { Role } from "@/types/enum";
 import { getTranslations } from "next-intl/server";
+import { roleHomeFor, studentViewModeFor } from "@/lib/student-view";
 
 export default async function UserProfileSettingsPage({
   params,
@@ -21,11 +21,16 @@ export default async function UserProfileSettingsPage({
   const { locale } = await params;
   const user = await getCurrentUser();
   const t = await getTranslations("Settings.userProfile");
+  const tView = await getTranslations("StudentView");
 
   // check if user is not logged in and redirect to signin page
   if (!user) {
     return redirect({ href: "/auth/signin", locale });
   }
+
+  // Staff go back to the role home. The proxy sends a staff member from a student page to the student view.
+  const staff = studentViewModeFor(user.role) === "preview";
+  const backHref = staff ? roleHomeFor(user.role) : "/student/read";
 
   // The hero's room at the inn: profile fields on parchment, the avatar link is the hero's chest
   // (docs/primary-rpg-skin.md §4).
@@ -42,8 +47,8 @@ export default async function UserProfileSettingsPage({
             {t("avatar")}
           </RpgLink>
         ) : null}
-        <RpgLink href="/student/read" tone="iron">
-          {t("backToReading")}
+        <RpgLink href={backHref} tone="iron">
+          {staff ? tView("backHome") : t("backToReading")}
         </RpgLink>
       </div>
       <Panel className="md:flex-row md:gap-4">
@@ -53,14 +58,12 @@ export default async function UserProfileSettingsPage({
             userId={user.id}
           />
           <DisplaySettingInfo
-            title={t("username")}
+            title={t("signInUsername")}
+            desc={t("signInUsernameDescription")}
             data={user.username}
             resetPassword
           />
-          <UpdateUserLicenseForm
-            username={user.name || ""}
-            userId={user.id}
-          />
+          {/* The license key form waits for STU-19 (license redeem, after the cutover). */}
         </div>
         {process.env.NODE_ENV === "development" && (
           <ChangeRole

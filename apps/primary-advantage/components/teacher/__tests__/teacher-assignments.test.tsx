@@ -155,6 +155,14 @@ describe("teacher assignment list", () => {
     await flush();
     expect(screen.getByText(ta.noClasses)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: ta.goToClasses })).toHaveAttribute("href", "/teacher/my-classes");
+    expect(screen.queryByRole("link", { name: ta.newAssignment })).not.toBeInTheDocument();
+  });
+
+  it("starts a new assignment from the story library, where the story page has the Assign dialog (T10)", async () => {
+    renderWithMessages(<Assignments />);
+    await flush();
+    expect(screen.getByRole("link", { name: ta.newAssignment })).toHaveAttribute("href", "/student/read");
+    expect(screen.getByText(ta.newAssignmentHint)).toBeInTheDocument();
   });
 });
 

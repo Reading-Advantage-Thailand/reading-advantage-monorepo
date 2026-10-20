@@ -13,13 +13,12 @@ import {
   users,
   xpLogs,
   leaderboards,
-  userRoles,
-  roles,
   classroomStudents,
   classrooms,
   schoolAdmins,
   licenses,
 } from '@reading-advantage/db';
+import { roleSql } from "@/server/utils/role-sql";
 
 /** A ranked student entry in a school leaderboard. */
 export interface LeaderboardResult {
@@ -37,17 +36,17 @@ export interface SchoolLeaderboardData {
 }
 
 /**
- * Look up the role id for "student" once and reuse it for the leaderboard
- * aggregation. The Prisma model kept the role name as a string, so this
- * helper bridges to the new Drizzle roles/userRoles tables.
+ * Lists the student user ids of one school.
+ * `users.role` is the truth; a legacy `user_roles` row also counts.
+ * @param schoolId The school to read.
+ * @returns The ids of the students of the school.
  */
-async function getStudentRoleId(): Promise<string | null> {
-  const [role] = await db
-    .select({ id: roles.id })
-    .from(roles)
-    .where(eq(roles.name, "student"))
-    .limit(1);
-  return role?.id ?? null;
+async function getSchoolStudentIds(schoolId: string): Promise<string[]> {
+  const rows = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(and(eq(users.schoolId, schoolId), roleSql("student")));
+  return rows.map((row) => row.id);
 }
 
 /** License detail shown on the school profile settings page. */
@@ -93,11 +92,15 @@ export interface SchoolProfile {
 
 /**
  * Loads a school with its admins, owner, license, and member counts.
+ * The admins are the `school_admins` rows and the ADMIN accounts of the school; each entry id is the user id.
  * @param schoolId The school identifier.
+ * @param options.withLicense True for a school admin: the license (with its key) is read. Default false.
+ * @param options.hideStaffEmails True for a STUDENT caller: the admin and owner emails are blank. Default false.
  * @returns The school detail, or null when the school does not exist.
  */
 export async function getSchoolDetail(
   schoolId: string,
+  options: { withLicense?: boolean; hideStaffEmails?: boolean } = {},
 ): Promise<SchoolProfile | null> {
   const [school] = await db
     .select()
@@ -119,16 +122,27 @@ export async function getSchoolDetail(
     .innerJoin(users, eq(users.id, schoolAdmins.userId))
     .where(eq(schoolAdmins.schoolId, school.id));
 
-  const admins = adminRows.map((a) => ({
+  // Migrated schools hold their admins as users.role ADMIN with no school_admins row.
+  // canManageSchool accepts both, so the list and the count show both.
+  const roleAdminRows = await db
+    .select({ userId: users.id, userName: users.name, userEmail: users.email })
+    .from(users)
+    .where(and(eq(users.schoolId, school.id), eq(users.role, "ADMIN")));
+  const rowAdminIds = new Set(adminRows.map((a) => a.userId));
+
+  const admins = [
+    ...adminRows,
+    ...roleAdminRows.filter((a) => !rowAdminIds.has(a.userId)),
+  ].map((a) => ({
     id: a.userId,
     user: {
       id: a.userId,
       name: a.userName ?? "",
-      email: a.userEmail ?? "",
+      email: options.hideStaffEmails ? "" : (a.userEmail ?? ""),
     },
   }));
 
-  const schoolLicenses = await db
+  const schoolLicenses = !options.withLicense ? [] : await db
     .select({
       id: licenses.id,
       key: licenses.key,
@@ -175,7 +189,7 @@ export async function getSchoolDetail(
       ? {
           id: owner.id,
           name: owner.name ?? "",
-          email: owner.email ?? "",
+          email: options.hideStaffEmails ? "" : (owner.email ?? ""),
         }
       : undefined,
     license: license
@@ -211,28 +225,10 @@ export const updateSchoolRankingModel = async () => {
     // Fetch all schools
     const schoolsRows = await db.select({ id: schools.id, name: schools.name }).from(schools);
 
-    const studentRoleId = await getStudentRoleId();
-
     // Process each school
     const leaderboardUpdates = await Promise.all(
       schoolsRows.map(async (school) => {
-        // Build a set of student user ids for this school via the
-        // M:N userRoles table + users.schoolId filter. We do this in two
-        // queries because the Drizzle relations API is not in use yet.
-        let studentUserIds: string[] = [];
-        if (studentRoleId) {
-          const studentRows = await db
-            .select({ id: users.id })
-            .from(users)
-            .innerJoin(userRoles, eq(userRoles.userId, users.id))
-            .where(
-              and(
-                eq(users.schoolId, school.id),
-                eq(userRoles.roleId, studentRoleId),
-              ),
-            );
-          studentUserIds = studentRows.map((row) => row.id);
-        }
+        const studentUserIds = await getSchoolStudentIds(school.id);
 
         // Get XP logs for current month for students in this school
         const xpLogRows = studentUserIds.length
@@ -427,23 +423,7 @@ export const getSchoolLeaderboardModel = async (
           999,
         );
 
-        // Build student ids list for this school (same query as above, cached
-        // would be nicer — for parity with the original we re-query).
-        const studentRoleId = await getStudentRoleId();
-        let studentUserIds: string[] = [];
-        if (studentRoleId) {
-          const studentRows = await db
-            .select({ id: users.id })
-            .from(users)
-            .innerJoin(userRoles, eq(userRoles.userId, users.id))
-            .where(
-              and(
-                eq(users.schoolId, schoolId as string),
-                eq(userRoles.roleId, studentRoleId),
-              ),
-            );
-          studentUserIds = studentRows.map((row) => row.id);
-        }
+        const studentUserIds = await getSchoolStudentIds(schoolId as string);
 
         // Get all students' XP for current month in this school
         const xpLogRows = studentUserIds.length

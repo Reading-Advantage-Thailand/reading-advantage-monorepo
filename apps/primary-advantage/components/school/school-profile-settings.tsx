@@ -9,20 +9,28 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import type { SchoolProfile } from "@/server/models/schoolModel";
+import type { licenses } from "@reading-advantage/domain";
 
 /**
  * Interactive school profile settings. Renders the server-fetched school and
  * refreshes from the API only after user actions (edit, create, delete).
  * @param initialSchool The school fetched on the server page, or null.
+ * @param initialLicenseView The license view for a school admin, or null.
+ * @param canManageAdmins True when the caller may add and remove the school admins.
  * @returns The school profile settings UI.
  */
 export default function SchoolProfileSettings({
   initialSchool,
+  initialLicenseView = null,
+  canManageAdmins = false,
 }: {
   initialSchool: SchoolProfile | null;
+  initialLicenseView?: licenses.SchoolLicenseViewOutput | null;
+  canManageAdmins?: boolean;
 }) {
   const t = useTranslations("Settings.schoolProfile");
   const [school, setSchool] = useState<SchoolProfile | null>(initialSchool);
+  const [licenseView, setLicenseView] = useState(initialLicenseView);
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -32,6 +40,7 @@ export default function SchoolProfileSettings({
       if (response.ok) {
         const data = await response.json();
         setSchool(data.school ?? null);
+        setLicenseView(data.licenseView ?? null);
       } else if (response.status === 404) {
         setSchool(null);
       } else {
@@ -96,6 +105,8 @@ export default function SchoolProfileSettings({
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onRefresh={fetchSchool}
+                licenseView={licenseView}
+                canManageAdmins={canManageAdmins}
               />
             )}
           </>

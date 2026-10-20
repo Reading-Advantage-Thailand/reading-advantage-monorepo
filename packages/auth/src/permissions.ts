@@ -51,6 +51,7 @@ export const PERMISSIONS = {
   "class:archive": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "class:join": [ROLES.STUDENT],
   "class:roster": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "class:teachers:assign": [ROLES.ADMIN, ROLES.SYSTEM],
 
   // Students
   "student:list": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
@@ -136,6 +137,7 @@ export const PERMISSIONS = {
 
   // Teachers (science)
   "teachers:read:own": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "teacher:school:move": [ROLES.SYSTEM],
 
   // Curriculum (science)
   "curriculum:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],

@@ -1,0 +1,17 @@
+{
+  "track_id": "primary_parity_acceptance_20261011",
+  "type": "chore",
+  "status": "completed",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-12T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)",
+  "estimated_tasks": 24,
+  "actual_tasks": 64,
+  "deviation_notes": "Phase 3 added a smoke run on a real backup; findings are in plan-review.md. Phase 4 added three Low fixes (each role option of accounts.ts works alone, no staff email in the console hint, runbook note on the handout overwrite refusal), several --pairs in capture.ts, and a runbook Batch run section. Doctor fails only on A13, which this track does not cause.",
+  "depends_on": [],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 1,
+    "depends_on": []
+  }
+}

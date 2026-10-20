@@ -1,0 +1,81 @@
+{
+  "member": "primary_parity_class_books_20261011",
+  "pairs": [
+    {
+      "id": "CB-A1",
+      "rows": ["TCH-01"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-class-book-slot]" },
+      "checks": [
+        {
+          "id": "CB-A1-a",
+          "behavior": "New: the class book card is the first card after the class heading, above the sign-in panel (#class-login). Legacy has no book card (a new feature, difference on purpose)."
+        },
+        {
+          "id": "CB-A1-b",
+          "behavior": "New: the assign form lists the five books: Origins 1, Origins 2, Origins 3.1, Origins 3.2, and Quest 4. Run the S2/S6 browser check first so that a book is assigned."
+        }
+      ]
+    },
+    {
+      "id": "CB-A2",
+      "rows": ["TCH-01"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "steps": "./acceptance-steps-class-book.ts",
+      "waitFor": { "new": "[data-class-book-slot]" },
+      "checks": [
+        {
+          "id": "CB-A2-a",
+          "behavior": "New: the steps open lesson 1 from the card. The page shows the lesson title, 13 guide steps, the projector link, and the answer key. The text \"This lesson is not linked to an article yet.\" does not show."
+        }
+      ]
+    },
+    {
+      "id": "CB-A3",
+      "rows": ["TCH-02"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-class-book-slot]" },
+      "checks": [
+        {
+          "id": "CB-A3-a",
+          "behavior": "New: the book slot shows the class book, \"Lesson 1 of 14\", the lesson title, and the next workbook step with its period. Legacy has no book slot (difference on purpose). The S6 check makes lesson 1 current again after \"Mark taught\"."
+        }
+      ]
+    },
+    {
+      "id": "CB-A4",
+      "rows": ["TCH-01"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/b/o3-2/1",
+      "checks": [
+        {
+          "id": "CB-A4-a",
+          "behavior": "The printed Origins 3.2 lesson 1 link opens the reading of the same article. New: the student lands in /student/lesson/<article> (the lesson flow), not on \"not found\". The lock shows only the steps that the teacher marked."
+        }
+      ]
+    },
+    {
+      "id": "CB-A5",
+      "rows": ["TCH-01"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/manual",
+      "newPath": "/en/teacher/manual",
+      "colorSchemes": ["light", "dark"],
+      "checks": [
+        {
+          "id": "CB-A5-a",
+          "behavior": "New: the how-to list has 5 steps and The 13 steps shows the imported guide, not \"The teacher guide is not imported yet.\". Legacy has no teacher manual (difference on purpose). The 5 steps pass in the S6 browser check (names start with \"manual howTo\")."
+        }
+      ]
+    }
+  ]
+}

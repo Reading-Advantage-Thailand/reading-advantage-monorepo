@@ -319,6 +319,7 @@ import {
   storyAssignments,
   lessonRecords,
   primaryClassBookLessons,
+  primaryLessonAttempts,
   primaryStudentLessonSteps,
   assignmentNotifications,
   raCefrMappings,
@@ -415,6 +416,8 @@ register(lessonRecords, "REFERENTIAL");
 // Class book state and progress (primary_teacher_books_lesson_support_20261003): scoped via primary_class_books.school_id.
 register(primaryClassBookLessons, "REFERENTIAL");
 register(primaryStudentLessonSteps, "REFERENTIAL");
+// Closed lesson attempts (primary_parity_lesson_repeat_20261011): school_id on the row.
+register(primaryLessonAttempts, "FLAT");
 register(assignmentNotifications, "REFERENTIAL");
 register(raCefrMappings, "REFERENTIAL");
 register(genreAdjacencies, "REFERENTIAL");

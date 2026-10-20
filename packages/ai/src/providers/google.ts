@@ -5,6 +5,7 @@ import { generateText as aiGenerateText } from "ai";
 import { streamText as aiStreamText } from "ai";
 import type {
   AIClientWithProvenance,
+  AIProvider,
   GenerateImageInput,
   GenerateObjectFromMediaInput,
   GenerateObjectInput,
@@ -19,11 +20,20 @@ import { AIClientError } from "../errors.js";
 import { createGenerationProvenance } from "../provenance.js";
 
 /**
+ * Minimal model factory shape shared by the Google and Vertex SDK clients.
+ */
+export type GoogleModelFactory = ReturnType<typeof createGoogleGenerativeAI>;
+
+/**
  * Configuration for the Google (Gemini) provider.
  */
 export interface GoogleProviderConfig {
   /** Google AI API key. Must be provided explicitly — never read from process.env. */
-  apiKey: string;
+  apiKey?: string;
+  /** Model factory that replaces the API-key client (used by the Vertex provider). */
+  client?: GoogleModelFactory;
+  /** Provider id recorded in provenance. Defaults to "google". */
+  providerId?: AIProvider;
   /** Default model for text/object generation. */
   model?: string;
   /** Default model for image generation. */
@@ -35,12 +45,15 @@ export interface GoogleProviderConfig {
  * The API key is passed through the constructor — no process.env reads.
  */
 export class GoogleProvider implements AIClientWithProvenance {
-  private readonly client: ReturnType<typeof createGoogleGenerativeAI>;
+  private readonly client: GoogleModelFactory;
+  private readonly providerId: AIProvider;
   private readonly defaultModel: string;
   private readonly defaultImageModel: string;
 
   constructor(config: GoogleProviderConfig) {
-    this.client = createGoogleGenerativeAI({ apiKey: config.apiKey });
+    this.client =
+      config.client ?? createGoogleGenerativeAI({ apiKey: config.apiKey });
+    this.providerId = config.providerId ?? "google";
     this.defaultModel = config.model ?? "gemini-2.5-flash";
     this.defaultImageModel = config.imageModel ?? "gemini-2.0-flash-preview-image-generation";
   }
@@ -51,6 +64,7 @@ export class GoogleProvider implements AIClientWithProvenance {
         model: this.client(input.model ?? this.defaultModel),
         schema: input.schema,
         prompt: input.prompt,
+        ...(input.system ? { system: input.system } : {}),
         ...(input.temperature !== undefined
           ? { temperature: input.temperature }
           : {}),
@@ -85,6 +99,7 @@ export class GoogleProvider implements AIClientWithProvenance {
         model: this.client(requestedModel),
         schema: input.schema,
         prompt: input.prompt,
+        ...(input.system ? { system: input.system } : {}),
         ...(input.temperature !== undefined
           ? { temperature: input.temperature }
           : {}),
@@ -97,7 +112,7 @@ export class GoogleProvider implements AIClientWithProvenance {
       return {
         object: result.object,
         provenance: createGenerationProvenance({
-          provider: "google",
+          provider: this.providerId,
           requestedModel,
           startedAtMs,
           result,

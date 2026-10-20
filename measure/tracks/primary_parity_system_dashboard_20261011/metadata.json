@@ -1,0 +1,21 @@
+{
+  "track_id": "primary_parity_system_dashboard_20261011",
+  "type": "feature",
+  "status": "complete-pending-batch-capture",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-12T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)",
+  "estimated_tasks": 19,
+  "actual_tasks": 19,
+  "deviation_notes": "Template group 'dashboards'. Extends the shared module with counts grouped by school. A row opens the SYS-03 school choice of the admin dashboard. No schema change. Phase 4 prepared 2026-10-12: 6 acceptance pairs, steps module for the row tap (env PARITY_SCHOOL_ID), gates green. Defaults used: quiet rule 7 days; strip 'Seats used' counts schools with an active license that has seats; order quiet first then name. Page captures, kit run, and owner look check wait for the batch (orchestrator).",
+  "depends_on": [
+    "primary_parity_admin_dashboard_20261011"
+  ],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 5,
+    "depends_on": [
+      "primary_parity_admin_dashboard_20261011"
+    ]
+  }
+}

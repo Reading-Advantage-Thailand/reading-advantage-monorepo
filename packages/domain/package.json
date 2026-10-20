@@ -8,6 +8,14 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./stories": {
+      "types": "./dist/stories/index.d.ts",
+      "import": "./dist/stories/index.js"
+    },
+    "./stories/contracts": {
+      "types": "./dist/stories/contracts.d.ts",
+      "import": "./dist/stories/contracts.js"
+    },
     "./articles": {
       "types": "./dist/articles/index.d.ts",
       "import": "./dist/articles/index.js"
@@ -23,6 +31,10 @@
     "./calendar-day": {
       "types": "./dist/calendar-day.d.ts",
       "import": "./dist/calendar-day.js"
+    },
+    "./teacher-class-csv": {
+      "types": "./dist/primary-home/teacher-class-csv.d.ts",
+      "import": "./dist/primary-home/teacher-class-csv.js"
     },
     "./classes": {
       "types": "./dist/classes/index.d.ts",
@@ -44,9 +56,17 @@
       "types": "./dist/primary-home/streak.d.ts",
       "import": "./dist/primary-home/streak.js"
     },
+    "./primary-dashboards": {
+      "types": "./dist/primary-dashboards/index.d.ts",
+      "import": "./dist/primary-dashboards/index.js"
+    },
     "./primary-books": {
       "types": "./dist/primary-books/index.d.ts",
       "import": "./dist/primary-books/index.js"
+    },
+    "./primary-books/print": {
+      "types": "./dist/primary-books/print/render.d.ts",
+      "import": "./dist/primary-books/print/render.js"
     },
     "./primary-books/step-map": {
       "types": "./dist/primary-books/step-map.d.ts",
@@ -152,6 +172,10 @@
       "types": "./dist/primary-avatar/index.d.ts",
       "import": "./dist/primary-avatar/index.js"
     },
+    "./primary-lesson-attempts": {
+      "types": "./dist/primary-lesson-attempts/index.d.ts",
+      "import": "./dist/primary-lesson-attempts/index.js"
+    },
     "./primary-quest": {
       "types": "./dist/primary-quest/index.d.ts",
       "import": "./dist/primary-quest/index.js"
@@ -172,6 +196,7 @@
     "import-lesson-packages": "tsx scripts/import-lesson-packages.ts",
     "import-lesson-guides": "tsx scripts/import-lesson-guides.ts",
     "backfill-primary-tags": "tsx scripts/backfill-primary-tags.ts",
+    "sync-print-kit": "tsx scripts/sync-print-kit.ts",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
   },
@@ -189,12 +214,15 @@
     "@reading-advantage/srs-engine": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "drizzle-orm": "^0.45.0",
+    "handlebars": "^4.7.9",
+    "qrcode": "^1.5.4",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@electric-sql/pglite": "catalog:",
     "@reading-advantage/config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/qrcode": "^1.5.6",
     "typescript": "5.9.3",
     "vitest": "4.1.8"
   }

@@ -7,13 +7,13 @@
  * (`/assets/apk/primary-chibi-2d/v1`) and records its version in its `pack.json`.
  */
 export const PACK_VERSIONS: Readonly<Record<string, string>> = {
-  'dungeon-monsters': '1.0.1',
+  'dungeon-monsters': '1.1.0',
   'flight-land': '1.0.0',
   folk: '1.0.1',
   heroes: '1.0.1',
-  mounts: '1.0.1',
+  mounts: '1.0.2',
   'outdoor-props': '1.0.0',
   'potion-shop': '1.0.0',
-  'primary-chibi-2d': '1.1.0',
+  'primary-chibi-2d': '1.2.0',
   'sunken-vault': '1.0.0',
 };

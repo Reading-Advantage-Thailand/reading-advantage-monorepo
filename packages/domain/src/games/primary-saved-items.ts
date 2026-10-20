@@ -1,4 +1,5 @@
 import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import type { DB } from "@reading-advantage/db";
 import { assertCan, type Tenant, type UserContext } from "@reading-advantage/auth";
 import {
   articles,
@@ -18,6 +19,8 @@ import { z } from "zod";
 import type { TenantDB } from "../db-contract.js";
 import { selectTranslation, wordRecordSchema } from "./learning-content.js";
 import {
+  PRACTICE_SENTENCE_LIMIT,
+  PRACTICE_WORD_LIMIT,
   buildPracticeInput,
   gamePracticeInputRequestSchema,
   practiceLevelOf,
@@ -416,4 +419,63 @@ export async function listPrimaryArticleCards({
     .orderBy(asc(flashcardCards.id));
   const content = await articleContentOf(rawDb, cards);
   return cards.map((card) => viewOf(card, type, content.get(articleId)));
+}
+
+/**
+ * Builds the cards of one article for a staff member in Preview mode (the lesson rehearsal):
+ * every word or sentence that lesson step 7 saves for a student. It reads no row of any user
+ * and writes nothing. Articles are global, so it needs no school.
+ * @param args The database and the article and card type.
+ * @returns The card views in article order, with "preview-" ids; empty when the article has no row.
+ */
+export async function listPrimaryArticlePreviewCards({
+  db,
+  input,
+}: {
+  db: DB;
+  input: z.input<typeof primaryArticleCardsRequestSchema>;
+}): Promise<PrimaryFlashcardView[]> {
+  const { articleId, type } = primaryArticleCardsRequestSchema.parse(input);
+  const content = (await articleContentOf(db, [{ id: "", front: "", sourceId: articleId }])).get(articleId);
+  const fronts = type === "VOCABULARY"
+    ? (content?.words ?? []).map((word) => word.vocabulary)
+    : (content?.listSentences ?? []).map((line) => line.sentence);
+  const createdAt = new Date(0);
+  return fronts.map((front, index) =>
+    viewOf({ id: `preview-${type.toLowerCase()}-${index + 1}`, deckId: "preview", front, sourceId: articleId, createdAt }, type, content));
+}
+
+/** The id of the sample practice input that staff get in Preview mode. */
+export const SAMPLE_PRACTICE_INPUT_ID = "sample";
+
+/** Published articles read for the sample set. */
+const SAMPLE_ARTICLE_LIMIT = 8;
+
+/**
+ * Builds a read-only sample practice input for a staff member in Preview mode, from the
+ * vocabulary and sentences of the newest published articles. It reads no row of any user and
+ * writes nothing. Articles are global, so it needs no school.
+ * @param args The database and the translation locale.
+ * @returns A validated practice input with the id "sample"; empty when no article has vocabulary.
+ */
+export async function listPrimarySamplePracticeInput({ db, input }: { db: DB; input: GamePracticeInputRequest }): Promise<PracticeInput> {
+  const { locale } = gamePracticeInputRequestSchema.parse(input);
+  const rows = await db
+    .select({ articleId: sentencsAndWordsForFlashcards.articleId, words: sentencsAndWordsForFlashcards.words, sentence: sentencsAndWordsForFlashcards.sentence })
+    .from(sentencsAndWordsForFlashcards)
+    .innerJoin(articles, eq(articles.id, sentencsAndWordsForFlashcards.articleId))
+    .where(eq(articles.isPublished, true))
+    .orderBy(desc(articles.createdAt))
+    .limit(SAMPLE_ARTICLE_LIMIT);
+  const words: SavedWordRow[] = [];
+  const sentences: SavedSentenceRow[] = [];
+  for (const row of rows) {
+    for (const word of rowsOf(articleWordSchema, row.words)) {
+      if (words.length < PRACTICE_WORD_LIMIT * 4) words.push({ id: `sample-word-${words.length + 1}`, word });
+    }
+    for (const line of rowsOf(listSentenceSchema, row.sentence)) {
+      if (sentences.length < PRACTICE_SENTENCE_LIMIT * 4) sentences.push({ id: `sample-sentence-${sentences.length + 1}`, sentence: line.sentence, translation: textsOf(line.translation) });
+    }
+  }
+  return { ...buildPracticeInput(words, sentences, locale, "A1"), id: SAMPLE_PRACTICE_INPUT_ID };
 }

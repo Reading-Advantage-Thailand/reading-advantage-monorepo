@@ -43,7 +43,8 @@ export async function getArticleForLesson(articleId: string) {
 
     return {
       ...article,
-      sentencsAndWordsForFlashcard: sentences[0] ?? null,
+      // The lesson tasks read `[0]` of this list (the Prisma include shape); a row is not a list.
+      sentencsAndWordsForFlashcard: sentences,
       multipleChoiceQuestions: studentQuestionSet(mcqs, STUDENT_MCQ_COUNT),
       shortAnswerQuestions: studentQuestionSet(saqs, STUDENT_SAQ_COUNT),
       longAnswerQuestions: laqs,

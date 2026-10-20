@@ -1,0 +1,99 @@
+import { z } from "zod";
+
+/** The ranges (in calendar days) that a dashboard offers. */
+export const DASHBOARD_RANGES = [7, 30, 90] as const;
+/** The range that the dashboards use when the value is missing or unknown. */
+export const DEFAULT_DASHBOARD_RANGE = 30;
+
+/** One dashboard range in days: 7, 30, or 90. */
+export type DashboardRange = (typeof DASHBOARD_RANGES)[number];
+
+/**
+ * Reads a range value. A number or a numeric string of 7, 30, or 90 passes. Every other value,
+ * including a missing value, gives 30. The schema never fails.
+ */
+export const dashboardRangeSchema = z.preprocess(
+  (value) => {
+    const days = typeof value === "string" ? Number(value.trim() === "" ? Number.NaN : value) : value;
+    return (DASHBOARD_RANGES as readonly unknown[]).includes(days) ? days : DEFAULT_DASHBOARD_RANGE;
+  },
+  z.union([z.literal(7), z.literal(30), z.literal(90)]),
+);
+
+/** The scope of all STUDENT users of one school. */
+export const schoolScopeSchema = z.object({
+  kind: z.literal("school"),
+  schoolId: z.string().uuid(),
+});
+
+/**
+ * The scope of the STUDENT users of a school who are in the listed classes. A student in two
+ * classes counts one time in the totals and one time in each class.
+ */
+export const classesScopeSchema = z.object({
+  kind: z.literal("classes"),
+  schoolId: z.string().uuid(),
+  /** The class ids. The caller picks them from the classes of its own school. */
+  classIds: z.array(z.string().uuid()),
+});
+
+/** The scope of all STUDENT users who have a school (the system dashboard). */
+export const platformScopeSchema = z.object({ kind: z.literal("platform") });
+
+/**
+ * The set of students that a count covers. `school` covers all STUDENT users of one school,
+ * `classes` covers the students of some classes of one school, and `platform` covers all
+ * STUDENT users who have a school.
+ */
+export const activityScopeSchema = z.discriminatedUnion("kind", [schoolScopeSchema, classesScopeSchema, platformScopeSchema]);
+
+/** The set of students that a count covers. */
+export type ActivityScope = z.infer<typeof activityScopeSchema>;
+
+/** A scope that belongs to one school: it has a `schoolId`. */
+export type SchoolBoundScope = Exclude<ActivityScope, { kind: "platform" }>;
+
+/** The scope of the students of some classes. */
+export type ClassesScope = z.infer<typeof classesScopeSchema>;
+
+/** A window of Bangkok calendar days: the last N days, today included. */
+export const dashboardWindowSchema = z.object({
+  /** The number of calendar days. */
+  days: z.number().int().positive(),
+  /** The first day as "YYYY-MM-DD" (Asia/Bangkok). */
+  startDay: z.string(),
+  /** The last day (today) as "YYYY-MM-DD" (Asia/Bangkok). */
+  endDay: z.string(),
+  /** Every day of the window, first to last. */
+  dayKeys: z.array(z.string()),
+  /** The start of the first day, as an instant (inclusive). */
+  start: z.date(),
+  /** The start of the day after the last day, as an instant (exclusive). */
+  end: z.date(),
+});
+
+/** A window of Bangkok calendar days. */
+export type DashboardWindow = z.infer<typeof dashboardWindowSchema>;
+
+/** Active students of a scope in a window. */
+export const activeStudentsCountSchema = z.object({
+  /** Students with at least one activity event in the window. */
+  active: z.number().int().nonnegative(),
+  /** All students of the scope. */
+  total: z.number().int().nonnegative(),
+  /** Whole percent of active in total. Null when the scope has no students. */
+  percent: z.number().int().min(0).max(100).nullable(),
+});
+
+/** Active students of a scope in a window. */
+export type ActiveStudentsCount = z.infer<typeof activeStudentsCountSchema>;
+
+/** The number of distinct active students on one Bangkok day. */
+export const activeStudentsDaySchema = z.object({
+  /** The day as "YYYY-MM-DD" (Asia/Bangkok). */
+  day: z.string(),
+  activeStudents: z.number().int().nonnegative(),
+});
+
+/** The number of distinct active students on one Bangkok day. */
+export type ActiveStudentsDay = z.infer<typeof activeStudentsDaySchema>;

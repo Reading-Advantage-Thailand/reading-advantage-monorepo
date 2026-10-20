@@ -15,14 +15,21 @@ import { createTenantDB } from "../db-contract.js";
 import {
   assignClassBookInput,
   markLessonTaughtInput,
+  parseEarlierRuns,
   markStepDoneInput,
   setCurrentLessonInput,
   type AssignClassBookInput,
   type CatalogueBook,
   type ClassBook,
   type ClassBookPacing,
+  type ManagedClassBookItem,
+  type PreviewBook,
+  previewBookSchema,
+  teacherBookSlotSchema,
+  managedClassBookSchema,
   type StudentBook,
   type StudentClassBook,
+  type TeacherBookSlot,
 } from "./class-book-contracts.js";
 import { APP_STEP_COUNT, WORKBOOK_STEPS, isAppStepUnlocked } from "./step-map.js";
 
@@ -98,21 +105,34 @@ export async function managedClassBook(ctx: Ctx, classBookId: string): Promise<C
 }
 
 /**
- * Counts the taught lessons of class books.
+ * Tells if a lesson was taught in the open run or in an earlier run, so the taught count of a class
+ * book keeps a lesson after Teach again (manual test T5).
+ * @param state The lesson state row.
+ * @returns True when the lesson has a taught time now or in an earlier run.
+ */
+const wasTaught = (state: { taughtAt: Date | null; earlierRuns?: unknown }): boolean =>
+  Boolean(state.taughtAt) || parseEarlierRuns(state.earlierRuns).some((run) => run.taughtAt);
+
+/**
+ * Reads the lesson state rows (taught time, steps done, and earlier runs) of class books.
  * @param ctx The database and the user.
  * @param classBookIds The class books.
- * @returns Taught lesson count by class book id.
+ * @returns The state rows by class book id.
  */
-async function taughtCounts(ctx: Ctx, classBookIds: string[]): Promise<Map<string, number>> {
-  if (!classBookIds.length) return new Map();
+async function lessonStates(ctx: Ctx, classBookIds: string[]): Promise<Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[]; earlierRuns: unknown }[]>> {
+  const byBook = new Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[]; earlierRuns: unknown }[]>();
+  if (!classBookIds.length) return byBook;
   const raw = createTenantDB(ctx.db, { schoolId: ctx.user.schoolId }).unscoped(UNSCOPED_REASON);
   const rows = await raw
-    .select({ classBookId: primaryClassBookLessons.classBookId, taughtAt: primaryClassBookLessons.taughtAt })
+    .select({ classBookId: primaryClassBookLessons.classBookId, lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone, earlierRuns: primaryClassBookLessons.earlierRuns })
     .from(primaryClassBookLessons)
     .where(inArray(primaryClassBookLessons.classBookId, classBookIds));
-  const counts = new Map<string, number>();
-  for (const row of rows) if (row.taughtAt) counts.set(row.classBookId, (counts.get(row.classBookId) ?? 0) + 1);
-  return counts;
+  for (const row of rows) {
+    const list = byBook.get(row.classBookId) ?? [];
+    list.push({ lessonNumber: row.lessonNumber, taughtAt: row.taughtAt, stepsDone: (row.stepsDone as number[] | null) ?? [], earlierRuns: row.earlierRuns });
+    byBook.set(row.classBookId, list);
+  }
+  return byBook;
 }
 
 export const toClassBook = (row: ClassBookRow, taughtCount: number): ClassBook => ({
@@ -150,7 +170,8 @@ export async function assignClassBook(params: Ctx & { input: AssignClassBookInpu
 }
 
 /**
- * Lists the books of a class with the pointer and the taught count (teacher view).
+ * Lists the books of a class with the pointer, the taught count, the current lesson title, and
+ * the next workbook step with its period (teacher view).
  * @param params The database, the user, and the class.
  * @returns The class books, oldest first.
  * @throws {AuthError} FORBIDDEN when the user may not manage the class.
@@ -165,8 +186,92 @@ export async function listClassBooks(params: Ctx & { classroomId: string }): Pro
     .innerJoin(primaryBooks, eq(primaryBooks.id, primaryClassBooks.bookId))
     .where(eq(primaryClassBooks.classroomId, params.classroomId))
     .orderBy(asc(primaryClassBooks.createdAt))) as ClassBookRow[];
-  const taught = await taughtCounts(params, rows.map((row) => row.id));
-  return rows.map((row) => toClassBook(row, taught.get(row.id) ?? 0));
+  const states = await lessonStates(params, rows.map((row) => row.id));
+  const titles = await currentLessonTitles(raw, rows);
+  return rows.map((row) => ({
+    ...toClassBook(row, (states.get(row.id) ?? []).filter(wasTaught).length),
+    ...currentLessonProgress(row, states.get(row.id) ?? [], titles),
+  }));
+}
+
+/** The raw (unscoped) database handle of the class book reads. */
+type RawDb = ReturnType<ReturnType<typeof createTenantDB>["unscoped"]>;
+
+/**
+ * Reads the titles of the current lessons of class books.
+ * @param raw The unscoped database handle.
+ * @param rows The class books.
+ * @returns The lesson titles with their book and number.
+ */
+async function currentLessonTitles(raw: RawDb, rows: ClassBookRow[]): Promise<{ bookId: string; number: number; title: string }[]> {
+  if (!rows.length) return [];
+  return raw
+    .select({ bookId: primaryBookLessons.bookId, number: primaryBookLessons.number, title: primaryBookLessons.title })
+    .from(primaryBookLessons)
+    .where(or(...rows.map((row) => and(eq(primaryBookLessons.bookId, row.bookId), eq(primaryBookLessons.number, row.currentLesson)))));
+}
+
+/**
+ * Works out the current lesson title and the next workbook step of a class book.
+ * @param row The class book.
+ * @param own The lesson state rows of the class book.
+ * @param titles The titles of the current lessons.
+ * @returns The title, the count of steps done, and the next step with its period.
+ */
+function currentLessonProgress(row: ClassBookRow, own: { lessonNumber: number; stepsDone: number[] }[], titles: { bookId: string; number: number; title: string }[]) {
+  const done = new Set(own.find((state) => state.lessonNumber === row.currentLesson)?.stepsDone ?? []);
+  const next = WORKBOOK_STEPS.find((step) => !done.has(step.step));
+  return {
+    lessonTitle: titles.find((lesson) => lesson.bookId === row.bookId && lesson.number === row.currentLesson)?.title ?? null,
+    stepsDoneCount: done.size,
+    nextStep: next?.step ?? null,
+    nextStepPeriod: next?.period ?? null,
+  };
+}
+
+/**
+ * Lists one slot row for each class book of the teacher's classes and one row for each class
+ * without a book (the teacher dashboard). The class rule is the rule of `getTeacherHome`: classes
+ * the teacher owns or co-teaches in the school, not archived, ordered by name.
+ * @param params The database and the teacher.
+ * @returns The slot rows, grouped by class.
+ * @throws {AuthError} FORBIDDEN when the user cannot list classes (for example a student).
+ */
+export async function getTeacherBookSlots(params: Ctx): Promise<TeacherBookSlot[]> {
+  const { user } = params;
+  assertCan(user, "class:list", { schoolId: user.schoolId });
+  if (!user.schoolId) return [];
+  const raw = createTenantDB(params.db, { schoolId: user.schoolId }).unscoped(UNSCOPED_REASON);
+  const coTaughtIds = (await raw.select({ classroomId: classroomTeachers.classroomId }).from(classroomTeachers).where(eq(classroomTeachers.teacherId, user.id))).map((row) => row.classroomId);
+  const classRows = await raw
+    .select({ id: classrooms.id, name: classrooms.name })
+    .from(classrooms)
+    .where(
+      and(
+        eq(classrooms.schoolId, user.schoolId),
+        eq(classrooms.archived, false),
+        coTaughtIds.length ? or(eq(classrooms.teacherId, user.id), inArray(classrooms.id, coTaughtIds)) : eq(classrooms.teacherId, user.id),
+      ),
+    )
+    .orderBy(asc(classrooms.name));
+  if (!classRows.length) return [];
+  const bookRows = (await raw
+    .select(classBookSelect)
+    .from(primaryClassBooks)
+    .innerJoin(primaryBooks, eq(primaryBooks.id, primaryClassBooks.bookId))
+    .where(inArray(primaryClassBooks.classroomId, classRows.map((row) => row.id)))
+    .orderBy(asc(primaryClassBooks.createdAt))) as ClassBookRow[];
+  const states = await lessonStates(params, bookRows.map((row) => row.id));
+  const titles = await currentLessonTitles(raw, bookRows);
+  const slots = classRows.flatMap((cls): TeacherBookSlot[] => {
+    const own = bookRows.filter((row) => row.classroomId === cls.id);
+    if (!own.length) return [{ classroomId: cls.id, classroomName: cls.name, classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null }];
+    return own.map((row) => {
+      const progress = currentLessonProgress(row, states.get(row.id) ?? [], titles);
+      return { classroomId: cls.id, classroomName: cls.name, classBookId: row.id, bookName: row.bookName, currentLesson: row.currentLesson, lessonCount: row.lessonCount, lessonTitle: progress.lessonTitle, nextStep: progress.nextStep, nextStepPeriod: progress.nextStepPeriod };
+    });
+  });
+  return teacherBookSlotSchema.array().parse(slots);
 }
 
 /**
@@ -252,7 +357,7 @@ export async function getClassBookPacing(params: Ctx & { classBookId: string }):
       .where(eq(primaryBookLessons.bookId, book.bookId))
       .orderBy(asc(primaryBookLessons.number)),
     raw
-      .select({ lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone })
+      .select({ lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone, runNumber: primaryClassBookLessons.runNumber, earlierRuns: primaryClassBookLessons.earlierRuns })
       .from(primaryClassBookLessons)
       .where(eq(primaryClassBookLessons.classBookId, params.classBookId)),
   ]);
@@ -267,13 +372,15 @@ export async function getClassBookPacing(params: Ctx & { classBookId: string }):
       approved: lesson.approved,
       taughtAt: state?.taughtAt ?? null,
       stepsDone: ((state?.stepsDone as number[] | undefined) ?? []).slice().sort((a, b) => a - b),
+      runNumber: state?.runNumber ?? 1,
+      earlierRuns: parseEarlierRuns(state?.earlierRuns),
       current: lesson.number === book.currentLesson,
     };
   });
   const currentState = stateBy.get(book.currentLesson);
   const done = new Set((currentState?.stepsDone as number[] | undefined) ?? []);
   const next = WORKBOOK_STEPS.find((step) => !done.has(step.step));
-  const taught = states.filter((state) => state.taughtAt).length;
+  const taught = states.filter(wasTaught).length;
   return { classBook: toClassBook(book, taught), lessons: rows, nextStep: next?.step ?? null, plannedPeriod: next?.period ?? null };
 }
 
@@ -379,4 +486,71 @@ export async function getStudentBook(params: Ctx & { classBookId: string }): Pro
       taught: taught.has(lesson.number),
     })),
   };
+}
+
+/**
+ * The book view of a staff member in Preview mode: a class book the user manages, with every
+ * published lesson open and no progress. It reads only; the teacher state is not part of it.
+ * @param params The database, the staff member, and the class book.
+ * @returns The class book with its lessons, in the shape of the student book.
+ * @throws {AuthError} FORBIDDEN when the class book is unknown, in another school, or not managed by the user.
+ */
+export async function getPreviewBook(params: Ctx & { classBookId: string }): Promise<PreviewBook> {
+  const book = await managedClassBook(params, params.classBookId);
+  const raw = createTenantDB(params.db, { schoolId: params.user.schoolId }).unscoped(UNSCOPED_REASON);
+  const lessons = await raw
+    .select({ number: primaryBookLessons.number, title: primaryBookLessons.title, key: primaryBookLessons.key, articleId: primaryBookLessons.articleId, approved: primaryBookLessons.approved })
+    .from(primaryBookLessons)
+    .where(eq(primaryBookLessons.bookId, book.bookId))
+    .orderBy(asc(primaryBookLessons.number));
+  const current = lessons.find((lesson) => lesson.number === book.currentLesson);
+  return previewBookSchema.parse({
+    classBookId: book.id,
+    classroomId: book.classroomId,
+    bookKey: book.bookKey,
+    bookName: book.bookName,
+    mode: "independent",
+    currentLesson: book.currentLesson,
+    lessonCount: book.lessonCount,
+    lesson: current
+      ? { number: current.number, title: current.title, key: current.key, articleId: current.approved ? current.articleId : null, unlockedAppSteps: Array.from({ length: APP_STEP_COUNT }, (_, index) => index + 1) }
+      : null,
+    lessons: lessons.map((lesson) => ({ number: lesson.number, title: lesson.title, articleId: lesson.approved ? lesson.articleId : null, current: lesson.number === book.currentLesson, taught: false })),
+  });
+}
+
+/**
+ * Lists the class books that a staff member manages, for the preview home notices. A teacher
+ * sees the classes they own or co-teach; a school admin or SYSTEM user sees every class of the school.
+ * @param params The database and the staff member.
+ * @returns The class books by class name; none when the user has no school.
+ * @throws {AuthError} FORBIDDEN when the user is not a teacher, admin, or SYSTEM user.
+ */
+export async function listManagedClassBooks(params: Ctx): Promise<ManagedClassBookItem[]> {
+  const { user } = params;
+  if (user.role !== "TEACHER" && user.role !== "ADMIN" && user.role !== "SYSTEM") throw new AuthError("Only staff manage class books", "FORBIDDEN");
+  if (!user.schoolId) return [];
+  const raw = createTenantDB(params.db, { schoolId: user.schoolId }).unscoped(UNSCOPED_REASON);
+  let ownership;
+  if (user.role === "TEACHER") {
+    const coTaughtIds = (await raw.select({ classroomId: classroomTeachers.classroomId }).from(classroomTeachers).where(eq(classroomTeachers.teacherId, user.id))).map((row) => row.classroomId);
+    ownership = coTaughtIds.length ? or(eq(classrooms.teacherId, user.id), inArray(classrooms.id, coTaughtIds)) : eq(classrooms.teacherId, user.id);
+  }
+  const classRows = await raw
+    .select({ id: classrooms.id, name: classrooms.name })
+    .from(classrooms)
+    .where(and(eq(classrooms.schoolId, user.schoolId), eq(classrooms.archived, false), ownership))
+    .orderBy(asc(classrooms.name));
+  if (!classRows.length) return [];
+  const bookRows = (await raw
+    .select(classBookSelect)
+    .from(primaryClassBooks)
+    .innerJoin(primaryBooks, eq(primaryBooks.id, primaryClassBooks.bookId))
+    .where(inArray(primaryClassBooks.classroomId, classRows.map((row) => row.id)))
+    .orderBy(asc(primaryClassBooks.createdAt))) as ClassBookRow[];
+  return classRows.flatMap((cls) =>
+    bookRows
+      .filter((row) => row.classroomId === cls.id)
+      .map((row) => managedClassBookSchema.parse({ classBookId: row.id, classroomId: cls.id, classroomName: cls.name, bookName: row.bookName, currentLesson: row.currentLesson, lessonCount: row.lessonCount })),
+  );
 }

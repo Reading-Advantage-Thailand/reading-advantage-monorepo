@@ -1,10 +1,9 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Header } from "@/components/header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { RpgButton, Sign } from "@/components/rpg/chrome";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@reading-advantage/ui";
 import {
@@ -199,6 +198,7 @@ function OrderWordGameBody({
   );
 
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   const activeAudioRef = useRef<HTMLAudioElement | null>(null);
   const hintAudioStopRef = useRef<(() => void) | null>(null);
@@ -385,7 +385,9 @@ function OrderWordGameBody({
       setCurrentIndex((prev) => prev + 1);
     } else {
       setGameComplete(true);
-      if (!isDeck) {
+      if (isPreview) {
+        notSaved();
+      } else if (!isDeck) {
         await updateUserActivity(
           articleId as string,
           ActivityType.SENTENCE_WORD_ORDERING,
@@ -406,7 +408,7 @@ function OrderWordGameBody({
       setIsPlaying(false);
       await refresh();
     }
-  }, [currentIndex, activeSentences.length]);
+  }, [currentIndex, activeSentences.length, isPreview]);
 
   const handleRestart = useCallback(() => {
     if (currentSentence?.words) {
@@ -648,8 +650,8 @@ function OrderWordGameBody({
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="space-y-4 text-center">
-          <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
+        <div className="cq-panel space-y-4 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[var(--cq-wood-dark)]" />
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">{t("loading.title")}</h3>
             <p className="text-muted-foreground text-sm">
@@ -667,24 +669,26 @@ function OrderWordGameBody({
 
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="space-y-8 text-center">
+        <div className="cq-panel space-y-8 text-center">
           {/* Trophy Animation */}
           <div className="relative">
             <div className="animate-bounce">
-              <Trophy className="mx-auto h-24 w-24 text-yellow-500" />
+              <span className="lf-medal mx-auto size-28">
+                <Trophy className="h-16 w-16 text-[var(--cq-wood-dark)]" />
+              </span>
             </div>
-            <div className="bg-primary absolute -top-2 -right-2 h-6 w-6 animate-ping rounded-full" />
+            <div className="absolute -top-2 -right-2 h-6 w-6 animate-ping rounded-full bg-[var(--cq-gold)]" />
           </div>
 
           {/* Results Header */}
           <div className="space-y-4">
-            <h1 className="gradient-text text-4xl font-bold md:text-5xl">
+            <h1 className="text-4xl font-bold text-[var(--cq-wood-dark)] md:text-5xl">
               {t("complete.title")}
             </h1>
-            <p className="text-muted-foreground text-xl">
+            <p className="cq-muted text-xl">
               {t("complete.subtitle", { count: activeSentences.length })}
             </p>
-            <p className="text-muted-foreground text-sm">
+            <p className="cq-muted text-sm">
               {t("complete.usingTranslations", {
                 language: labels.languageName(selectedLanguage),
               })}
@@ -693,56 +697,55 @@ function OrderWordGameBody({
 
           {/* Stats Grid */}
           <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-3">
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Target className="mx-auto mb-3 h-8 w-8 text-blue-500" />
-                <div className="text-3xl font-bold text-blue-600">{score}</div>
-                <p className="text-muted-foreground text-sm">
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <div>
+                <Target className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+                <div className="text-3xl font-bold">{score}</div>
+                <p className="text-sm">
                   {t("complete.stats.correctAnswers")}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Zap className="mx-auto mb-3 h-8 w-8 text-green-500" />
-                <div className="text-3xl font-bold text-green-600">
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <div>
+                <Zap className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+                <div className="text-3xl font-bold">
                   {accuracy}%
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm">
                   {t("complete.stats.accuracy")}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="relative overflow-hidden">
-              <CardContent className="p-6 text-center">
-                <Clock className="mx-auto mb-3 h-8 w-8 text-purple-500" />
-                <div className="text-3xl font-bold text-purple-600">
+            <div className="cq-plaque relative overflow-hidden p-6">
+              <div>
+                <Clock className="mx-auto mb-3 h-8 w-8 text-[var(--cq-gold)]" />
+                <div className="text-3xl font-bold">
                   {formatTime(timer)}
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm">
                   {t("complete.stats.totalTime")}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Action Buttons */}
           <div className="mx-auto flex max-w-md flex-col gap-4 sm:flex-row">
-            <Button
+            <RpgButton
               onClick={handleBack}
-              size="lg"
-              variant="outline"
+              tone="iron"
               className="flex-1"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" />
               {labels.backToMenu}
-            </Button>
-            <Button onClick={handleRestartGame} size="lg" className="flex-1">
-              <RotateCcw className="mr-2 h-4 w-4" />
+            </RpgButton>
+            <RpgButton onClick={handleRestartGame} tone="gold" className="flex-1">
+              <RotateCcw className="h-4 w-4" />
               {labels.playAgain}
-            </Button>
+            </RpgButton>
           </div>
         </div>
       </div>
@@ -754,21 +757,23 @@ function OrderWordGameBody({
     return (
       <div className="container mx-auto max-w-4xl space-y-8 px-4">
         {labels.showHeader && (
-          <Header heading={t("title")} text={t("descriptionShort")} />
+          <div className="cq-panel">
+            <Header heading={t("title")} text={t("descriptionShort")} />
+          </div>
         )}
 
-        <Card className="mx-auto max-w-2xl">
-          <CardHeader className="pb-6 text-center">
-            <CardTitle className="text-2xl">{t("startScreen.title")}</CardTitle>
-            <p className="text-muted-foreground">{t("startScreen.subtitle")}</p>
-          </CardHeader>
+        <div className="cq-panel mx-auto flex max-w-2xl flex-col gap-6 py-6">
+          <div className="flex flex-col items-center gap-2 px-6 pb-6 text-center">
+            <Sign className="text-2xl">{t("startScreen.title")}</Sign>
+            <p className="cq-muted">{t("startScreen.subtitle")}</p>
+          </div>
 
-          <CardContent className="space-y-8">
+          <div className="space-y-8 px-6">
             {/* Game Stats */}
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-2 text-center">
-                <div className="bg-primary/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
-                  <span className="text-primary text-2xl font-bold">
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <span className="text-2xl font-bold">
                     {activeSentences.length}
                   </span>
                 </div>
@@ -781,8 +786,8 @@ function OrderWordGameBody({
               </div>
 
               <div className="space-y-2 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500/10">
-                  <Type className="h-6 w-6 text-green-600" />
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <Type className="h-6 w-6" />
                 </div>
                 <p className="text-sm font-medium">
                   {t("startScreen.stats.clickToOrder")}
@@ -793,8 +798,8 @@ function OrderWordGameBody({
               </div>
 
               <div className="space-y-2 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10">
-                  <Clock className="h-6 w-6 text-purple-600" />
+                <div className="lf-medal mx-auto h-12 w-12">
+                  <Clock className="h-6 w-6" />
                 </div>
                 <p className="text-sm font-medium">
                   {t("startScreen.stats.estimatedTime", { time: 10 })}
@@ -808,14 +813,14 @@ function OrderWordGameBody({
             <Separator />
 
             {/* Game Instructions */}
-            <div className="bg-muted/50 space-y-3 rounded-lg p-6">
+            <div className="lf-well space-y-3 p-6">
               <div className="flex items-center gap-2">
-                <div className="bg-primary h-2 w-2 rounded-full" />
+                <div className="lf-stud" />
                 <p className="text-sm font-medium">
                   {t("startScreen.howToPlay")}
                 </p>
               </div>
-              <ul className="text-muted-foreground ml-4 space-y-2 text-sm">
+              <ul className="cq-muted ml-4 space-y-2 text-sm">
                 <li>• {t("startScreen.instructions.step1")}</li>
                 <li>• {t("startScreen.instructions.step2")}</li>
                 <li>• {t("startScreen.instructions.step3")}</li>
@@ -829,7 +834,7 @@ function OrderWordGameBody({
             {/* Language Selection */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Languages className="h-5 w-5 text-blue-500" />
+                <Languages className="h-5 w-5 text-[var(--cq-wood-dark)]" />
                 <h3 className="font-semibold">
                   {t("startScreen.language.title")}
                 </h3>
@@ -838,7 +843,7 @@ function OrderWordGameBody({
                 value={selectedLanguage}
                 onValueChange={handleLanguageChange}
               >
-                <SelectTrigger className="h-12">
+                <SelectTrigger className="h-12 border-2 border-[var(--cq-parchment-edge)] bg-white/40 dark:bg-white/40">
                   <div className="flex items-center gap-3">
                     <Languages className="h-4 w-4" />
                     <SelectValue
@@ -856,7 +861,7 @@ function OrderWordGameBody({
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-muted-foreground text-sm">
+              <p className="cq-muted text-sm">
                 {t("startScreen.language.description", {
                   language: labels.languageName(selectedLanguage),
                 })}
@@ -865,21 +870,21 @@ function OrderWordGameBody({
 
             <Separator />
 
-            <Button
+            <RpgButton
               onClick={handleStartGame}
-              size="lg"
+              tone="gold"
               className="h-12 w-full"
               disabled={activeSentences.length === 0}
             >
-              <Play className="mr-2 h-5 w-5" />
+              <Play className="h-5 w-5" />
               {activeSentences.length === 0
                 ? t("startScreen.noSentences")
                 : t("startScreen.startButton", {
                     language: labels.languageName(selectedLanguage),
                   })}
-            </Button>
-          </CardContent>
-        </Card>
+            </RpgButton>
+          </div>
+        </div>
       </div>
     );
   }
@@ -887,9 +892,9 @@ function OrderWordGameBody({
   if (!currentSentence) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="space-y-4 text-center">
-          <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
-          <p className="text-muted-foreground">{labels.loadingNextChallenge}</p>
+        <div className="cq-panel space-y-4 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[var(--cq-wood-dark)]" />
+          <p className="cq-muted">{labels.loadingNextChallenge}</p>
         </div>
       </div>
     );
@@ -898,17 +903,19 @@ function OrderWordGameBody({
   return (
     <div className="container mx-auto max-w-4xl space-y-4 px-4">
       {labels.showHeader && (
-        <Header
-          heading={t("gameplay.title")}
-          text={t("gameplay.instruction", {
-            language: labels.languageName(selectedLanguage),
-          })}
-        />
+        <div className="cq-panel">
+          <Header
+            heading={t("gameplay.title")}
+            text={t("gameplay.instruction", {
+              language: labels.languageName(selectedLanguage),
+            })}
+          />
+        </div>
       )}
 
       {/* Progress Bar */}
-      <div className="space-y-2">
-        <div className="text-muted-foreground flex items-center justify-between text-sm">
+      <div className="cq-panel space-y-2">
+        <div className="cq-muted flex items-center justify-between text-sm">
           <span>
             {t("gameplay.progress", {
               current: currentIndex + 1,
@@ -925,29 +932,29 @@ function OrderWordGameBody({
             </span>
           </div>
         </div>
-        <Progress value={progress} className="h-1" />
+        <Progress value={progress} className="h-3 border-2 border-[var(--cq-wood-dark)] bg-[#2a1d12] [&>[data-slot=progress-indicator]]:bg-[var(--cq-gold)]" />
       </div>
 
       {/* Game Card */}
-      <Card>
-        <CardHeader>
+      <div className="cq-panel flex flex-col gap-6 py-6">
+        <div className="px-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="space-y-3">
-              <CardTitle className="text-xl">
+            <div className="flex flex-col items-start gap-3">
+              <Sign className="text-xl">
                 {t("gameplay.articleFrom", {
                   title: currentSentence.articleTitle,
                 })}
-              </CardTitle>
-              <p className="text-muted-foreground text-sm">
+              </Sign>
+              <p className="cq-muted text-sm">
                 {t("gameplay.subtitle")}
               </p>
             </div>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent className="space-y-6">
+        <div className="space-y-6 px-6">
           {/* Sentence Formation Area */}
-          <div className="min-h-[120px] rounded-lg border-2 border-dashed border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:border-blue-800 dark:from-blue-950/20 dark:to-purple-950/20">
+          <div className="min-h-[120px] rounded-lg border-2 border-dashed border-[var(--cq-gold-dark)] bg-[rgba(232,181,52,0.12)] p-4">
             <div className="space-y-4">
               {/* <div className="flex items-center gap-2">
                 <Type className="h-4 w-4 text-blue-600" />
@@ -958,15 +965,15 @@ function OrderWordGameBody({
               </div> */}
 
               <div className="flex items-center gap-2">
-                <Type className="h-4 w-4 text-blue-600" />
-                <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                <Type className="h-4 w-4 text-[var(--cq-wood-dark)]" />
+                <p className="text-sm font-medium">
                   {t("gameplay.yourSentence")}
                 </p>
               </div>
 
               {selectedWords.length === 0 ? (
                 <div className="flex min-h-[80px] items-center justify-center">
-                  <p className="text-muted-foreground text-center italic">
+                  <p className="cq-muted text-center italic">
                     {t("gameplay.startByClicking")}
                   </p>
                 </div>
@@ -985,23 +992,22 @@ function OrderWordGameBody({
                           <button
                             onClick={() => handleSelectedWordClick(word, index)}
                             className={cn(
-                              "group relative flex items-center gap-2 rounded-lg border-2 bg-white px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md dark:bg-gray-900",
+                              "lf-well group relative flex min-h-12 items-center gap-2 px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md",
                               "cursor-pointer select-none",
                               {
                                 // Normal state
-                                "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600":
+                                "hover:bg-white/60":
                                   !isInCorrectPos,
 
-                                // Correct position highlighting
-                                "border-green-400 bg-green-50 text-green-800 dark:bg-green-950/30 dark:text-green-200":
-                                  highlightHintsEnabled &&
-                                  isInCorrectPos &&
-                                  !isCompleted,
+                                // Correct position highlighting, and the completed right state
+                                "lf-good":
+                                  (highlightHintsEnabled &&
+                                    isInCorrectPos &&
+                                    !isCompleted) ||
+                                  (isCompleted && isCorrect),
 
-                                // Completed states
-                                "border-green-500 bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-300":
-                                  isCompleted && isCorrect,
-                                "border-red-500 bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-300":
+                                // Completed wrong state
+                                "lf-bad":
                                   isCompleted && !isCorrect,
                               },
                             )}
@@ -1015,10 +1021,10 @@ function OrderWordGameBody({
                   </div>
 
                   {/* Formed sentence and its translation */}
-                  <div className="space-y-3 border-t border-blue-200 pt-3 dark:border-blue-800">
+                  <div className="space-y-3 border-t border-[var(--cq-parchment-edge)] pt-3">
                     {/* English sentence */}
                     <div>
-                      <p className="text-lg font-medium text-blue-900 dark:text-blue-100">
+                      <p className="text-lg font-medium">
                         &quot;{formedSentence}&quot;{isCompleted && isCorrect && " ✓"}
                       </p>
                     </div>
@@ -1027,16 +1033,16 @@ function OrderWordGameBody({
               )}
               {/* Sentence translation */}
 
-              <div className="rounded-lg border border-green-200 bg-white/50 p-3 dark:border-green-800 dark:bg-gray-800/50">
+              <div className="lf-well p-3">
                 <div className="mb-2 flex items-center gap-2">
-                  <Languages className="h-4 w-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                  <Languages className="h-4 w-4 text-[var(--cq-wood-dark)]" />
+                  <span className="text-sm font-medium">
                     {t("gameplay.translationLabel", {
                       language: labels.languageName(selectedLanguage),
                     })}
                   </span>
                 </div>
-                <p className="font-medium text-green-700 dark:text-green-300">
+                <p className="font-medium">
                   &quot;{getSentenceTranslation()}&quot;
                 </p>
               </div>
@@ -1044,9 +1050,9 @@ function OrderWordGameBody({
           </div>
 
           {/* Hint Controls */}
-          <div className="bg-muted/30 flex flex-wrap items-center gap-3 rounded-lg border p-4">
+          <div className="lf-well flex flex-wrap items-center gap-3 p-4">
             <div className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-yellow-500" />
+              <Lightbulb className="h-4 w-4 text-[var(--cq-gold-dark)]" />
               <span className="text-sm font-medium">{t("hints.title")}</span>
             </div>
 
@@ -1060,38 +1066,35 @@ function OrderWordGameBody({
               Highlight
             </Button> */}
 
-            <Button
+            <RpgButton
               onClick={toggleAudioHints}
-              variant={audioHintsEnabled ? "default" : "outline"}
-              size="sm"
-              className="h-8"
+              tone={audioHintsEnabled ? "gold" : "wood"}
+              small
             >
-              <Volume2 className="mr-1 h-3 w-3" />
+              <Volume2 className="h-3 w-3" />
               {t("hints.audio")}
-            </Button>
+            </RpgButton>
 
             {audioHintsEnabled && (
               <>
                 <Separator orientation="vertical" className="h-6" />
-                <Button
+                <RpgButton
                   onClick={playHintAudio}
-                  variant="outline"
-                  size="sm"
-                  className="h-8"
+                  small
                   disabled={isPlayingHintAudio}
                 >
                   {isPlayingHintAudio ? (
                     <>
-                      <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                      <Loader2 className="h-3 w-3 animate-spin" />
                       {t("hints.playing")}
                     </>
                   ) : (
                     <>
-                      <Play className="mr-2 h-3 w-3" />
+                      <Play className="h-3 w-3" />
                       {t("hints.playOrder")}
                     </>
                   )}
-                </Button>
+                </RpgButton>
               </>
             )}
           </div>
@@ -1106,10 +1109,10 @@ function OrderWordGameBody({
               </p>
             </div>
 
-            <div className="bg-muted/30 min-h-[140px] rounded-lg border-2 border-dashed p-4">
+            <div className="min-h-[140px] rounded-lg border-2 border-dashed border-[var(--cq-parchment-edge)] bg-[rgba(107,84,56,0.08)] p-4">
               {availableWords.length === 0 ? (
                 <div className="flex h-full min-h-[100px] items-center justify-center">
-                  <p className="text-muted-foreground">
+                  <p className="cq-muted">
                     {t("gameplay.allWordsUsed")}{" "}
                     {selectedWords.length === currentSentence.words.length
                       ? t("gameplay.checkSentence")
@@ -1126,15 +1129,15 @@ function OrderWordGameBody({
                         <button
                           onClick={() => handleWordClick(word)}
                           className={cn(
-                            "group relative flex items-center gap-2 rounded-lg border-2 bg-white px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md dark:bg-gray-900",
+                            "lf-well group relative flex min-h-12 items-center gap-2 px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md",
                             "cursor-pointer select-none",
                             {
                               // Normal state
-                              "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600":
+                              "hover:bg-white/60":
                                 !shouldHighlight,
 
                               // Next word highlighting
-                              "border-blue-400 bg-blue-50 text-blue-800 shadow-md ring-2 ring-blue-200 dark:bg-blue-950/30 dark:text-blue-200 dark:ring-blue-800":
+                              "lf-well--gold shadow-md":
                                 shouldHighlight,
                             },
                           )}
@@ -1150,12 +1153,9 @@ function OrderWordGameBody({
                           )} */}
 
                           {shouldHighlight && (
-                            <Badge
-                              variant="secondary"
-                              className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                            >
+                            <span className="lg-chip inline-flex items-center gap-1 px-2 py-0 text-xs">
                               Next
-                            </Badge>
+                            </span>
                           )}
                         </button>
                       </div>
@@ -1168,22 +1168,22 @@ function OrderWordGameBody({
 
           {/* Result Display */}
           {showResult && (
-            <Card
+            <div
               aria-live="polite"
               className={cn(
-                "border-2",
+                "rounded-xl border-2",
                 isCorrect
-                  ? "border-green-500 bg-green-50 dark:bg-green-950/20"
-                  : "border-red-500 bg-red-50 dark:bg-red-950/20",
+                  ? "lf-good"
+                  : "lf-bad",
               )}
             >
-              <CardContent className="p-6">
+              <div className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-3">
                     {isCorrect ? (
-                      <CheckCircle className="h-6 w-6 text-green-600" />
+                      <CheckCircle className="lf-text-good h-6 w-6" />
                     ) : (
-                      <XCircle className="h-6 w-6 text-red-600" />
+                      <XCircle className="lf-text-bad h-6 w-6" />
                     )}
                     <h3 className="text-lg font-semibold">
                       {isCorrect
@@ -1193,7 +1193,7 @@ function OrderWordGameBody({
                   </div>
 
                   {!isCorrect && showCorrectOrder && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 text-[var(--cq-ink)]">
                       <Separator />
                       <div>
                         <h4 className="mb-3 font-medium">
@@ -1206,62 +1206,58 @@ function OrderWordGameBody({
                     </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
+            <RpgButton
               onClick={handleRestart}
-              variant="outline"
-              size="sm"
               className="sm:w-auto"
             >
               {showCorrectOrder || isCompleted ? (
-                <RotateCcw className="mr-2 h-4 w-4" />
+                <RotateCcw className="h-4 w-4" />
               ) : (
-                <Shuffle className="mr-2 h-4 w-4" />
+                <Shuffle className="h-4 w-4" />
               )}
               {showCorrectOrder || isCompleted
                 ? t("buttons.tryAgain")
                 : t("buttons.shuffleWords")}
-            </Button>
+            </RpgButton>
 
             {!isCompleted && selectedWords.length > 0 && (
-              <Button
+              <RpgButton
                 onClick={handleCheckAnswer}
-                variant="outline"
-                size="sm"
+                tone="gold"
                 className="sm:w-auto"
               >
-                <CheckCircle className="mr-2 h-4 w-4" />
+                <CheckCircle className="h-4 w-4" />
                 {t("buttons.checkAnswer")}
-              </Button>
+              </RpgButton>
             )}
 
             {isCompleted && !isCorrect && !showCorrectOrder && (
-              <Button
+              <RpgButton
                 onClick={handleShowAnswer}
-                variant="secondary"
-                size="sm"
+                tone="iron"
                 className="sm:w-auto"
               >
-                <XCircle className="mr-2 h-4 w-4" />
+                <XCircle className="h-4 w-4" />
                 {t("buttons.showAnswer")}
-              </Button>
+              </RpgButton>
             )}
 
             {isCompleted && (
-              <Button onClick={handleNext} className="flex-1">
+              <RpgButton onClick={handleNext} tone="gold" className="flex-1">
                 {currentIndex < activeSentences.length - 1
                   ? t("buttons.nextSentence")
                   : t("buttons.finishGame")}
-              </Button>
+              </RpgButton>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

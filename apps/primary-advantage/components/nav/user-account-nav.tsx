@@ -17,6 +17,7 @@ import { Badge } from "../ui/badge";
 import { type AuthUser } from "@reading-advantage/auth-client";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useTranslations } from "next-intl";
+import { studentViewModeFor } from "@/lib/student-view";
 
 interface UserAccountNavProps {
   user: AuthUser;
@@ -34,6 +35,7 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
   const router = useRouter();
   const t = useTranslations("MainNav.usernav");
   const tShell = useTranslations("AppShell");
+  const tView = useTranslations("StudentView");
   const tr = useTranslations("Overall.roles");
 
   const roles = {
@@ -123,6 +125,13 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
             </Link>
           </DropdownMenuItem>
         )} */}
+        {studentViewModeFor(user.role) === "preview" && (
+          <DropdownMenuItem asChild>
+            <Link href={STUDENT_HOME} className="flex items-center">
+              <span>{tView("menuItem")}</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
         {(user.role === "TEACHER" ||
           user.role === "ADMIN" ||
           user.role === "SYSTEM") && (

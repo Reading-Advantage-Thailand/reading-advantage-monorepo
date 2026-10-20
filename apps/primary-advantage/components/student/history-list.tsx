@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { BookOpenIcon, HistoryIcon, RotateCcwIcon, SearchIcon } from "lucide-react";
 import { EmptyState, ErrorState, ShimmerSkeleton, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
 import { Link } from "@/i18n/navigation";
@@ -23,6 +24,8 @@ interface HistoryRecord {
   updated_at: string;
   rated: number;
   status: string;
+  /** The latest lesson attempt of the story; 2 or more shows the tag. */
+  attemptNumber?: number;
 }
 
 const ACTION = "min-h-12 rounded-xl px-5 text-base";
@@ -211,7 +214,7 @@ export function HistoryList({ variant }: { variant: HistoryListVariant }) {
  */
 function RecordCard({ record, reminder }: { record: HistoryRecord; reminder: boolean }) {
   const t = useTranslations("StudentHistory");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const statusKey = `status.${record.status}`;
   const status = t.has(statusKey) ? t(statusKey) : null;
   const tone = record.status.startsWith("COMPLETED") ? "success" : record.status === "READ" ? "info" : "neutral";
@@ -230,6 +233,7 @@ function RecordCard({ record, reminder }: { record: HistoryRecord; reminder: boo
       <span className="font-article text-lg leading-snug font-semibold">{record.title}</span>
       <span className="flex flex-wrap items-center gap-2 text-sm">
         {status ? <StatusChip tone={tone}>{status}</StatusChip> : null}
+        {record.attemptNumber !== undefined && record.attemptNumber > 1 ? <StatusChip tone="info">{t("attemptTag", { number: record.attemptNumber })}</StatusChip> : null}
         {score ? <span className="font-semibold">{t("score", { score })}</span> : null}
         {Number.isNaN(date.getTime()) ? null : (
           <span className="text-muted-foreground">

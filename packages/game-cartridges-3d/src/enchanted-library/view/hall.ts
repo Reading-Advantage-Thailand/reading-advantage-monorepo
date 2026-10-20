@@ -10,7 +10,7 @@ import { HALL, HERO_START } from '../core/index.js';
 
 /** Every model the hall names (scenery and the spirits); the heroes come from the session. */
 export const HALL_MODELS = [
-  'wood-floor', 'plaster-wall', 'plaster-wall-window', 'shelf', 'candle-cluster', 'chandelier', 'lantern', 'skeleton',
+  'wood-floor', 'plaster-wall', 'plaster-wall-window', 'shelf', 'candle-cluster', 'chandelier', 'lantern', 'ghost',
 ];
 
 /** The cover colors of the books, by slot. */

@@ -1,0 +1,369 @@
+{
+  "seriesName": "Origins 3.2",
+  "seriesLevel": "A0+",
+  "lessonNumber": 5,
+  "packageKey": "o3-2/5",
+  "lesson": {
+    "lesson_number": "5",
+    "lesson_title": "At the Market",
+    "level_name": "Level 3",
+    "cefr_level": "CEFR A0+",
+    "article_type": "story: shopping dialogue",
+    "genre": "Food & Drink",
+    "vocabulary": [
+      {
+        "word": "shop",
+        "definition": "A place where you get things.",
+        "thai_definition": "ร้านค้า"
+      },
+      {
+        "word": "fruit",
+        "definition": "A sweet food from a tree or a plant, like an apple.",
+        "thai_definition": "ผลไม้"
+      },
+      {
+        "word": "mango",
+        "definition": "A big, sweet, yellow fruit.",
+        "thai_definition": "มะม่วง"
+      },
+      {
+        "word": "banana",
+        "definition": "A long yellow fruit.",
+        "thai_definition": "กล้วย"
+      },
+      {
+        "word": "coconut",
+        "definition": "A big brown fruit with white food and water inside.",
+        "thai_definition": "มะพร้าว"
+      },
+      {
+        "word": "egg",
+        "definition": "A small round food from a chicken.",
+        "thai_definition": "ไข่"
+      },
+      {
+        "word": "bread",
+        "definition": "A food that you make from flour.",
+        "thai_definition": "ขนมปัง"
+      },
+      {
+        "word": "lime",
+        "definition": "A small green fruit with a sour taste.",
+        "thai_definition": "มะนาว"
+      },
+      {
+        "word": "how many",
+        "definition": "Words you use to ask about a number.",
+        "thai_definition": "กี่ (ถามจำนวน)"
+      },
+      {
+        "word": "apple",
+        "definition": "A round red or green fruit.",
+        "thai_definition": "แอปเปิล"
+      },
+      {
+        "word": "lemon",
+        "definition": "A yellow fruit with a sour taste.",
+        "thai_definition": "เลมอน"
+      },
+      {
+        "word": "thirteen",
+        "definition": "The number 13.",
+        "thai_definition": "สิบสาม"
+      }
+    ],
+    "article_url": "https://primary.reading-advantage.com/b/o3-2/5",
+    "article_images": [
+      {
+        "url": "https://storage.googleapis.com/primary-app-storage/images/cmu8inbrd0000s601jd8umt0y_1.png",
+        "caption": "Grandma, Tom, and Pip go to the market.",
+        "image_prompt": "Grandma, Tom, and Pip walk in a busy fresh market with colorful stalls on both sides. Grandma holds a big bag. Pip walks next to Tom. Morning light shines on the stalls.",
+        "position": "hero"
+      },
+      {
+        "url": "https://storage.googleapis.com/primary-app-storage/images/cmu8inbrd0000s601jd8umt0y_2.png",
+        "caption": "Six mangoes, please.",
+        "image_prompt": "A fruit shop with mangoes, bananas, coconuts, limes, lemons, and apples in neat piles. A woman in a yellow apron gives a bag of mangoes to Grandma. Tom stands next to Grandma and holds a bag.",
+        "position": "inline-para-2"
+      },
+      {
+        "url": "https://storage.googleapis.com/primary-app-storage/images/cmu8inbrd0000s601jd8umt0y_3.png",
+        "caption": "Eleven, twelve, thirteen!",
+        "image_prompt": "At an egg shop, Tom counts a tray of eggs and points at them. Grandma smiles next to him. Pip looks up at the eggs from the floor.",
+        "position": "inline-para-3"
+      }
+    ],
+    "article_paragraphs": [
+      {
+        "number": 1,
+        "text": "Grandma has a big bag. It is morning. Grandma, Tom, and Pip walk to the market. There are a lot of shops. Pip walks next to Tom. \"Look at the fruit shop!\" says Tom. \"How many mangoes do you want?\" asks the woman. \"Six mangoes, please,\" says Grandma. \"Here you are.\" \"Thank you!\" says Grandma."
+      },
+      {
+        "number": 2,
+        "text": "Grandma wants bananas, limes, and lemons, too. She wants apples and one big coconut. Tom holds the bag. Now they go to the egg shop. \"Twelve eggs, please,\" says Grandma. The woman gives thirteen eggs! \"Is that twelve?\" asks Tom. Tom counts the eggs. \"Eleven, twelve, thirteen!\" \"One egg is for you!\" says the woman. \"Thank you!\" says Grandma."
+      },
+      {
+        "number": 3,
+        "text": "Then they go to the bread shop. Grandma gives the bread to Tom. Tom holds it. \"How many bananas have we got?\" asks Grandma. \"Five bananas!\" says Tom. Pip looks at the bread. He wants the bread! Grandma and Tom smile. They have a good day at the market."
+      }
+    ],
+    "comprehension_questions": [
+      {
+        "number": 1,
+        "question": "How many eggs does Grandma get?",
+        "options": [
+          "eleven",
+          "thirteen",
+          "twelve"
+        ]
+      },
+      {
+        "number": 2,
+        "question": "What does Grandma say at the egg shop?",
+        "options": [
+          "\"Five eggs, please.\"",
+          "\"Thirteen eggs, please.\"",
+          "\"Twelve eggs, please.\""
+        ]
+      },
+      {
+        "number": 3,
+        "question": "Which one is a fruit?",
+        "options": [
+          "a mango",
+          "an egg",
+          "bread"
+        ]
+      },
+      {
+        "number": 4,
+        "question": "Where are Grandma and Tom?",
+        "options": [
+          "at the market",
+          "at home",
+          "at school"
+        ]
+      }
+    ],
+    "mc_answers": [
+      {
+        "number": 1,
+        "letter": "b",
+        "text": "thirteen"
+      },
+      {
+        "number": 2,
+        "letter": "c",
+        "text": "\"Twelve eggs, please.\""
+      },
+      {
+        "number": 3,
+        "letter": "a",
+        "text": "a mango"
+      },
+      {
+        "number": 4,
+        "letter": "a",
+        "text": "at the market"
+      }
+    ],
+    "short_answer_question": "How many people are in your family?",
+    "short_answer_hint": "___ people are in my family.",
+    "sentence_starters": [
+      "Grandma wants ...",
+      "I like ...",
+      "At the market, I see ..."
+    ],
+    "vocab_match": [
+      {
+        "number": 1,
+        "word": "shop",
+        "letter": "a",
+        "definition": "The number 13.",
+        "thai_definition": "สิบสาม"
+      },
+      {
+        "number": 2,
+        "word": "fruit",
+        "letter": "b",
+        "definition": "A small round food from a chicken.",
+        "thai_definition": "ไข่"
+      },
+      {
+        "number": 3,
+        "word": "mango",
+        "letter": "c",
+        "definition": "A yellow fruit with a sour taste.",
+        "thai_definition": "เลมอน"
+      },
+      {
+        "number": 4,
+        "word": "banana",
+        "letter": "d",
+        "definition": "A big, sweet, yellow fruit.",
+        "thai_definition": "มะม่วง"
+      },
+      {
+        "number": 5,
+        "word": "coconut",
+        "letter": "e",
+        "definition": "A round red or green fruit.",
+        "thai_definition": "แอปเปิล"
+      },
+      {
+        "number": 6,
+        "word": "egg",
+        "letter": "f",
+        "definition": "A food that you make from flour.",
+        "thai_definition": "ขนมปัง"
+      },
+      {
+        "number": 7,
+        "word": "bread",
+        "letter": "g",
+        "definition": "A long yellow fruit.",
+        "thai_definition": "กล้วย"
+      },
+      {
+        "number": 8,
+        "word": "lime",
+        "letter": "h",
+        "definition": "A sweet food from a tree or a plant, like an apple.",
+        "thai_definition": "ผลไม้"
+      },
+      {
+        "number": 9,
+        "word": "how many",
+        "letter": "i",
+        "definition": "A place where you get things.",
+        "thai_definition": "ร้านค้า"
+      },
+      {
+        "number": 10,
+        "word": "apple",
+        "letter": "j",
+        "definition": "A big brown fruit with white food and water inside.",
+        "thai_definition": "มะพร้าว"
+      },
+      {
+        "number": 11,
+        "word": "lemon",
+        "letter": "k",
+        "definition": "Words you use to ask about a number.",
+        "thai_definition": "กี่ (ถามจำนวน)"
+      },
+      {
+        "number": 12,
+        "word": "thirteen",
+        "letter": "l",
+        "definition": "A small green fruit with a sour taste.",
+        "thai_definition": "มะนาว"
+      }
+    ],
+    "vocab_match_answer_string": "1. i, 2. h, 3. d, 4. g, 5. j, 6. b, 7. f, 8. l, 9. k, 10. e, 11. c, 12. a",
+    "vocab_fill": [
+      {
+        "number": 1,
+        "sentence": "\"Six <span class=\"blank\"></span>, please,\" says Grandma."
+      },
+      {
+        "number": 2,
+        "sentence": "The woman gives <span class=\"blank\"></span> eggs."
+      },
+      {
+        "number": 3,
+        "sentence": "Grandma and Tom go to the <span class=\"blank\"></span> shop."
+      },
+      {
+        "number": 4,
+        "sentence": "Tom <span class=\"blank\"></span> the eggs."
+      }
+    ],
+    "vocab_word_bank": [
+      "apple",
+      "banana",
+      "bread",
+      "coconut",
+      "counts",
+      "egg",
+      "fruit",
+      "how many",
+      "lemon",
+      "lime",
+      "mango",
+      "mangoes",
+      "shop",
+      "thirteen"
+    ],
+    "vocab_fill_answer_string": "1. mangoes, 2. thirteen, 3. bread, 4. counts",
+    "sentence_order_questions": [
+      {
+        "words": [
+          "they",
+          "go",
+          "egg",
+          "the",
+          "Now",
+          "to",
+          "shop"
+        ]
+      },
+      {
+        "words": [
+          "Then",
+          "the",
+          "they",
+          "go",
+          "to",
+          "shop",
+          "bread"
+        ]
+      }
+    ],
+    "sentence_order_answers": [
+      {
+        "number": 1,
+        "sentence": "Now they go to the egg shop."
+      },
+      {
+        "number": 2,
+        "sentence": "Then they go to the bread shop."
+      }
+    ],
+    "sentence_completion_prompts": [
+      {
+        "number": 1,
+        "prompt": "At the market, I ..."
+      },
+      {
+        "number": 2,
+        "prompt": "My favorite fruit is ..."
+      },
+      {
+        "number": 3,
+        "prompt": "I want ... bananas"
+      }
+    ],
+    "writing_prompt": "Write a shopping list. Use number words.",
+    "writing_sentence_frames": [
+      "___ mangoes, please.",
+      "___ eggs, please.",
+      "___ bananas, please."
+    ],
+    "writing_practice_url": "https://primary.reading-advantage.com/b/o3-2/5/writing",
+    "translation_paragraphs": [
+      {
+        "label": "Paragraph 1",
+        "text": "คุณยายมีกระเป๋าใบใหญ่ เป็นตอนเช้า คุณยาย ทอม และปิ๊ปเดินไปตลาด มีร้านค้ามากมาย ปิ๊ปเดินข้างทอม \"ดูร้านผลไม้สิ!\" ทอมพูด \"คุณอยากได้มะม่วงกี่ลูกคะ\" แม่ค้าถาม \"มะม่วงหกลูกค่ะ\" คุณยายตอบ \"นี่ค่ะ\" \"ขอบใจจ้ะ!\" คุณยายพูด"
+      },
+      {
+        "label": "Paragraph 2",
+        "text": "คุณยายอยากได้กล้วย มะนาว และเลมอนด้วย เธออยากได้แอปเปิลและมะพร้าวลูกใหญ่หนึ่งลูก ทอมถือกระเป๋า ตอนนี้พวกเขาไปที่ร้านไข่ \"ไข่สิบสองฟองค่ะ\" คุณยายพูด แม่ค้าให้ไข่สิบสามฟอง! \"นี่สิบสองไหม\" ทอมถาม ทอมนับไข่ \"สิบเอ็ด สิบสอง สิบสาม!\" \"ไข่ฟองนี้แถมให้หนูนะ\" แม่ค้าพูด \"ขอบใจจ้ะ!\" คุณยายพูด"
+      },
+      {
+        "label": "Paragraph 3",
+        "text": "แล้วพวกเขาก็ไปที่ร้านขนมปัง คุณยายให้ขนมปังกับทอม ทอมถือมันไว้ \"เรามีกล้วยกี่ลูก\" คุณยายถาม \"กล้วยห้าลูก!\" ทอมตอบ ปิ๊ปมองขนมปัง เขาอยากได้ขนมปัง! คุณยายกับทอมยิ้ม พวกเขามีวันที่ดีที่ตลาด"
+      }
+    ]
+  }
+}

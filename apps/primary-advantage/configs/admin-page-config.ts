@@ -34,29 +34,6 @@ export const adminPageConfig: PageConfig = {
       href: "/admin/dashboard",
       icon: "LayoutDashboardIcon",
       requiredPermissions: ["ADMIN_ACCESS"],
-      // hideWhenNoPermission: true,
-      items: [
-        {
-          title: "admin",
-          href: "/admin/dashboard",
-          icon: "ChevronRightIcon",
-          requiredPermissions: ["ADMIN_ACCESS"],
-        },
-        {
-          title: "teachers",
-          href: "/admin/dashboard/teachers",
-          icon: "ChevronRightIcon",
-          requiredPermissions: ["SYSTEM_ACCESS"],
-          hideWhenNoPermission: true,
-        },
-        {
-          title: "students",
-          href: "/admin/dashboard/students",
-          icon: "ChevronRightIcon",
-          requiredPermissions: ["SYSTEM_ACCESS"],
-          hideWhenNoPermission: true,
-        },
-      ],
     },
     {
       title: "teachers",
@@ -111,10 +88,10 @@ export const adminPageConfig: PageConfig = {
       requiredPermissions: ["IMPORT_DATA"],
     },
     {
-      title: "articlecreation",
-      href: "/admin/article-creation",
-      icon: "FileTextIcon",
-      requiredPermissions: ["SYSTEM_ACCESS"],
+      title: "schoollicense",
+      href: "/settings/school-profile#license",
+      icon: "KeyIcon",
+      requiredPermissions: ["SCHOOL_ADMIN_ACCESS"],
     },
   ],
 };

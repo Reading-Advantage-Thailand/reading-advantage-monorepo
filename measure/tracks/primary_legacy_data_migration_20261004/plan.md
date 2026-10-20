@@ -36,7 +36,7 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] Rehearsal 1, cloud part (2026-10-08): `primary_v2` on Cloud SQL, `PRIMARY_V2_DATABASE_URL`, ETL over the proxy (owner), deploy without traffic (revision 00128-pac, tag `rehearsal1`), browser check 25 of 25 at the tag URL
 - [x] Rehearsal 2 (2026-10-08 to 2026-10-09 06:05 Bangkok): pass. Cloud ETL 2 min 22 s, Tutor read check MATCH 625, sample 5/5; browser check C10 form 18/18 and real school 25/25 on the cutover image `00129-xin`; local copy for graph and Workbooks ([rehearsal-2-20261010.md](./rehearsal-2-20261010.md))
 - [x] Outside review of the command sheet (2026-10-10, integration 7d2d51fd9): C7 secret-version gate, C10 `BASE`, legacy trigger off in C2, C13 QR scans, rollback data loss; spec 1.10. Rehearsal UUID checks of the dev handoff (Cloud Run, Tutor repo, this repo): none in a setting, a script, or code
-- [ ] Run into the cutover target (2026-10-11)
+- [b] Run into the cutover target (2026-10-11): stopped after C10; the build lacks legacy behavior. See [primary_parity_20261011](../../sets/primary_parity_20261011.md)
 
 ## Phase 3: Old article links (FR-4)
 - [x] Legacy ID resolver and redirect on `student/read/[articleId]` and `/writing` (owner: allowed in the feature freeze, 2026-10-07): `resolveLegacyArticleId` (domain articles) and the read page redirect; `/writing` opens the article page. Defect fixed on the way: a student sign-in ignored `callbackUrl`, so a signed-out QR scan opened the home page; it now opens the `/student/...` callback

@@ -33,6 +33,8 @@ import { useTranslations } from "next-intl";
 import { useSession } from "@reading-advantage/auth-client";
 import { useAuth } from "@reading-advantage/auth-client";
 import { shuffle } from "@/lib/shuffle";
+import { usePreviewSave } from "@/components/student/student-view-provider";
+import { isPreviewResult } from "@/lib/student-view";
 
 /**
  * The evidence keys of a finished quiz (track primary_mastery_evidence_20261006): one entry
@@ -168,6 +170,8 @@ function MCQuestionContentView({
   const { user } = useSession();
   const t = useTranslations("Question");
   const tc = useTranslations("Components");
+  const { isPreview, notSaved, noteText } = usePreviewSave();
+  const [previewScore, setPreviewScore] = useState<number | null>(null);
 
   const handleNextQuestion = () => {
     if (currentIndex < questions.length - 1) {
@@ -189,10 +193,20 @@ function MCQuestionContentView({
       ...evidenceKeys(questions, progress, "independent"),
     };
 
+    if (isPreview) {
+      // Preview mode: show the score here and save nothing.
+      setPreviewScore(data.score);
+      notSaved();
+      return;
+    }
+
     startTransition(async () => {
       await finishQuiz(articleId, data, ActivityType.MC_QUESTION).then(
         (res) => {
-          if (res.success) {
+          if (isPreviewResult(res)) {
+            setPreviewScore(data.score);
+            notSaved();
+          } else if (res.success) {
             toast("Quiz finished successfully", {
               style: {
                 background: `var(--success)`,
@@ -306,6 +320,11 @@ function MCQuestionContentView({
           <span className="flex items-center gap-2">{tc("finishButton")}</span>
         )}
       </Button>
+      {previewScore !== null && (
+        <p role="status" className="mt-2 font-semibold">
+          {previewScore}/{questions.length} - {noteText}
+        </p>
+      )}
     </CardContent>
   );
 }
@@ -331,6 +350,7 @@ function LessonMCQContentView({ article }: { article: Article }) {
     handleActiveQuestion,
   } = useMCQEngine(questions);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   useEffect(() => {
     if (article.multipleChoiceQuestions) {
@@ -355,7 +375,7 @@ function LessonMCQContentView({ article }: { article: Article }) {
   const handleRetake = async () => {
     setState(QuestionState.LOADING);
 
-    await retakeQuiz(article.id, ActivityType.MC_QUESTION);
+    if (!isPreview) await retakeQuiz(article.id, ActivityType.MC_QUESTION);
     setState(QuestionState.INCOMPLETE);
     setProgress(Array(5).fill(AnswerStatus.UNANSWERED));
     setCurrentIndex(0);
@@ -375,10 +395,20 @@ function LessonMCQContentView({ article }: { article: Article }) {
       ...evidenceKeys(questions, progress, "teacher_led"),
     };
 
+    if (isPreview) {
+      // Preview mode: finish the quiz on screen and save nothing.
+      notSaved();
+      setState(QuestionState.COMPLETED);
+      return;
+    }
+
     startTransition(async () => {
       await finishQuiz(article.id, data, ActivityType.MC_QUESTION).then(
         async (res) => {
-          if (res.success) {
+          if (isPreviewResult(res)) {
+            notSaved();
+            setState(QuestionState.COMPLETED);
+          } else if (res.success) {
             setState(QuestionState.COMPLETED);
             await refresh();
           }

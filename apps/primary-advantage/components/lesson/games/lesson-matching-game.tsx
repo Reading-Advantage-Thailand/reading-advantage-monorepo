@@ -1,4 +1,5 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import {
   ActivityType,
   FlashcardType,
@@ -7,7 +8,6 @@ import {
 } from "@/types/enum";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   GraduationCap,
   Languages,
@@ -23,7 +23,7 @@ import {
   Play,
   Loader2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { RpgButton } from "@/components/rpg/chrome";
 import {
   SENTENCE_LANGUAGES,
   VOCABULARY_LANGUAGES,
@@ -198,6 +198,7 @@ function MatchingGameBody({
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   // Helper states
   const [score, setScore] = useState(0);
@@ -323,6 +324,10 @@ function MatchingGameBody({
   // Auto-complete check
   useEffect(() => {
     const handleComplete = async () => {
+      if (isPreview) {
+        notSaved();
+        return;
+      }
       await updateUserActivity(articleId, config.activityType, 0, {
         score: config.activityScore,
       });
@@ -361,22 +366,20 @@ function MatchingGameBody({
   if (gameState === GameState.Loading) {
     return (
       <div className="space-y-6">
-        <Card>
-          <CardContent className="p-8">
-            <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6">
-              <div className="relative">
-                <div className="h-16 w-16 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600 dark:border-emerald-800 dark:border-t-emerald-400"></div>
-                <GraduationCap className="absolute inset-0 m-auto h-8 w-8 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div className="space-y-2 text-center">
-                <h3 className="text-lg font-semibold">{t("loading.title")}</h3>
-                <p className="text-muted-foreground">
-                  {t("loading.description")}
-                </p>
-              </div>
+        <div className="cq-panel p-8">
+          <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6">
+            <div className="relative">
+              <div className="h-16 w-16 animate-spin rounded-full border-4 border-[var(--cq-parchment-edge)] border-t-[var(--cq-wood-dark)]"></div>
+              <GraduationCap className="absolute inset-0 m-auto h-8 w-8 text-[var(--cq-wood-dark)]" />
             </div>
-          </CardContent>
-        </Card>
+            <div className="space-y-2 text-center">
+              <h3 className="text-lg font-semibold">{t("loading.title")}</h3>
+              <p className="cq-muted">
+                {t("loading.description")}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -385,19 +388,17 @@ function MatchingGameBody({
   if (gameState === GameState.NoCards) {
     return (
       <div className="space-y-6">
-        <Card>
-          <CardContent className="p-8">
-            <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6">
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900/20">
-                <GraduationCap className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <div className="space-y-2 text-center">
-                <h3 className="text-lg font-semibold">{labels.noCardsTitle}</h3>
-                <p className="text-muted-foreground">{labels.noCardsDescription}</p>
-              </div>
+        <div className="cq-panel p-8">
+          <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6">
+            <span className="lf-medal mx-auto grid size-24">
+              <GraduationCap className="h-12 w-12 text-[var(--cq-wood-dark)]" />
+            </span>
+            <div className="space-y-2 text-center">
+              <h3 className="text-lg font-semibold">{labels.noCardsTitle}</h3>
+              <p className="cq-muted">{labels.noCardsDescription}</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -406,33 +407,30 @@ function MatchingGameBody({
   if (gameState === GameState.Error) {
     return (
       <div className="space-y-6">
-        <Card>
-          <CardContent className="p-8">
-            <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6">
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
-                <XCircle className="h-12 w-12 text-red-600 dark:text-red-400" />
-              </div>
-              <div className="space-y-2 text-center">
-                <h3 className="text-lg font-semibold">
-                  {labels.errorTitle}
-                </h3>
-                <p className="text-muted-foreground">
-                  {labels.errorDescription}
-                </p>
-              </div>
-              <Button
-                onClick={() => {
-                  setGameState(GameState.Starting);
-                  setVocabularyPairs([]);
-                }}
-                variant="outline"
-              >
-                <RotateCcw className="mr-2 h-4 w-4" />
-                {t("buttons.tryAgain")}
-              </Button>
+        <div className="cq-panel p-8">
+          <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6">
+            <span className="lf-bad mx-auto flex h-24 w-24 items-center justify-center rounded-full border-2">
+              <XCircle className="h-12 w-12" />
+            </span>
+            <div className="space-y-2 text-center">
+              <h3 className="text-lg font-semibold">
+                {labels.errorTitle}
+              </h3>
+              <p className="cq-muted">
+                {labels.errorDescription}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+            <RpgButton
+              onClick={() => {
+                setGameState(GameState.Starting);
+                setVocabularyPairs([]);
+              }}
+            >
+              <RotateCcw className="h-4 w-4" />
+              {t("buttons.tryAgain")}
+            </RpgButton>
+          </div>
+        </div>
       </div>
     );
   }
@@ -440,102 +438,100 @@ function MatchingGameBody({
   if (gameState === GameState.Starting) {
     return (
       <div className="space-y-6">
-        <Card>
-          <CardContent className="p-8 text-center">
-            <div className="space-y-6">
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/20">
-                <GraduationCap className="h-12 w-12 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold">
-                  {labels.startTitle}
-                </h3>
-                <p className="text-muted-foreground">
-                  {labels.startSubtitle}
-                </p>
-                <div className="flex flex-col items-center justify-center gap-4">
-                  <div className="w-full max-w-md space-y-4">
-                    <div className="flex items-center justify-center gap-2">
-                      <Languages className="h-5 w-5 text-indigo-500" />
-                      <Label className="text-base font-semibold">
-                        {labels.languageTitle}
-                      </Label>
-                    </div>
-                    <Select
-                      value={selectedLanguage}
-                      onValueChange={(value) => {
-                        setSelectedLanguage(value);
-                        // Reset vocabulary to force re-fetch with new language
-                        setVocabularyPairs([]);
-                        setShuffledDefinitions([]);
-                      }}
-                    >
-                      <SelectTrigger className="h-12 w-full">
-                        <SelectValue>
-                          {selectedLanguage && (
-                            <div className="flex items-center gap-3">
-                              <span className="text-lg">
+        <div className="cq-panel p-8 text-center">
+          <div className="space-y-6">
+            <span className="lf-medal mx-auto grid size-24">
+              <GraduationCap className="h-12 w-12 text-[var(--cq-wood-dark)]" />
+            </span>
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold">
+                {labels.startTitle}
+              </h3>
+              <p className="cq-muted">
+                {labels.startSubtitle}
+              </p>
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div className="w-full max-w-md space-y-4">
+                  <div className="flex items-center justify-center gap-2">
+                    <Languages className="h-5 w-5 text-[var(--cq-wood-dark)]" />
+                    <Label className="text-base font-semibold">
+                      {labels.languageTitle}
+                    </Label>
+                  </div>
+                  <Select
+                    value={selectedLanguage}
+                    onValueChange={(value) => {
+                      setSelectedLanguage(value);
+                      // Reset vocabulary to force re-fetch with new language
+                      setVocabularyPairs([]);
+                      setShuffledDefinitions([]);
+                    }}
+                  >
+                    <SelectTrigger className="h-12 w-full border-2 border-[var(--cq-parchment-edge)] bg-white/40 dark:bg-white/40 dark:hover:bg-white/50">
+                      <SelectValue>
+                        {selectedLanguage && (
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">
+                              {
+                                languageOptions[
+                                  selectedLanguage as keyof typeof languageOptions
+                                ]?.flag
+                              }
+                            </span>
+                            <div className="flex flex-col text-left">
+                              <span className="font-medium">
                                 {
                                   languageOptions[
                                     selectedLanguage as keyof typeof languageOptions
-                                  ]?.flag
+                                  ]?.name
                                 }
                               </span>
-                              <div className="flex flex-col text-left">
-                                <span className="font-medium">
-                                  {
-                                    languageOptions[
-                                      selectedLanguage as keyof typeof languageOptions
-                                    ]?.name
-                                  }
-                                </span>
-                                <span className="text-muted-foreground text-xs">
-                                  {
-                                    languageOptions[
-                                      selectedLanguage as keyof typeof languageOptions
-                                    ]?.nativeName
-                                  }
-                                </span>
-                              </div>
+                              <span className="text-muted-foreground text-xs">
+                                {
+                                  languageOptions[
+                                    selectedLanguage as keyof typeof languageOptions
+                                  ]?.nativeName
+                                }
+                              </span>
                             </div>
-                          )}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.values(languageOptions).map((language) => (
-                          <SelectItem key={language.code} value={language.code}>
-                            <div className="flex items-center gap-3">
-                              <span className="text-lg">{language.flag}</span>
-                              <div className="flex flex-col">
-                                <span className="font-medium">
-                                  {language.name}
-                                </span>
-                                <span className="text-muted-foreground text-xs">
-                                  {language.nativeName}
-                                </span>
-                              </div>
+                          </div>
+                        )}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(languageOptions).map((language) => (
+                        <SelectItem key={language.code} value={language.code}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">{language.flag}</span>
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {language.name}
+                              </span>
+                              <span className="text-muted-foreground text-xs">
+                                {language.nativeName}
+                              </span>
                             </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <p className="text-muted-foreground text-center text-xs">
-                      {labels.translationsHint}
-                    </p>
-                  </div>
-                  <Button
-                    onClick={() => setGameState(GameState.Playing)}
-                    size="lg"
-                    className="w-full max-w-md"
-                  >
-                    <Play className="mr-2 h-4 w-4" />
-                    {labels.startButton}
-                  </Button>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="cq-muted text-center text-xs">
+                    {labels.translationsHint}
+                  </p>
                 </div>
+                <RpgButton
+                  tone="gold"
+                  onClick={() => setGameState(GameState.Playing)}
+                  className="w-full max-w-md"
+                >
+                  <Play className="h-4 w-4" />
+                  {labels.startButton}
+                </RpgButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -543,66 +539,69 @@ function MatchingGameBody({
   if (gameState === GameState.Completed) {
     return (
       <div className="space-y-6">
-        <Card className="overflow-hidden border-emerald-200 bg-gradient-to-br from-emerald-50 via-emerald-50 to-emerald-100 pb-14 dark:border-emerald-800 dark:from-emerald-950/20 dark:via-emerald-950/20 dark:to-emerald-950/30">
-          <CardContent className="p-8 text-center">
-            <div className="space-y-6">
-              {/* Trophy and celebration */}
-              <div className="space-y-4">
-                <div className="relative">
-                  <Trophy className="mx-auto h-20 w-20 text-yellow-500 drop-shadow-lg" />
-                  <div className="absolute -top-2 -right-2">
-                    <Sparkles className="h-8 w-8 animate-pulse text-yellow-400" />
-                  </div>
-                  <div className="absolute -bottom-2 -left-2">
-                    <Star className="h-6 w-6 animate-pulse text-yellow-400" />
-                  </div>
+        <div className="cq-panel overflow-hidden p-8 pb-14 text-center">
+          <div className="space-y-6">
+            {/* Trophy and celebration */}
+            <div className="space-y-4">
+              <div className="relative mx-auto w-fit">
+                <span className="lf-medal grid size-24">
+                  <Trophy className="h-12 w-12 text-[var(--cq-wood-dark)]" />
+                </span>
+                <div className="absolute -top-2 -right-2">
+                  <Sparkles className="h-8 w-8 animate-pulse text-[var(--cq-gold-dark)]" />
                 </div>
-                <div className="space-y-2">
-                  <h2 className="bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-3xl font-bold text-transparent">
-                    {labels.completeTitle}
-                  </h2>
-                  <p className="text-lg text-gray-600 dark:text-gray-400">
-                    {labels.completeSubtitle}
-                  </p>
+                <div className="absolute -bottom-2 -left-2">
+                  <Star className="h-6 w-6 animate-pulse text-[var(--cq-gold-dark)]" />
                 </div>
               </div>
-
-              <Separator className="bg-emerald-200 dark:bg-emerald-800" />
-
-              {/* Stats Grid */}
-              <div className="flex items-center justify-center gap-4">
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                    20
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {labels.xpEarned}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                    5/5
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {labels.completedLabel}
-                  </div>
-                </div>
+              <div className="flex flex-col items-center space-y-2">
+                <h2 className="cq-sign text-2xl md:text-3xl">
+                  {labels.completeTitle}
+                </h2>
+                <p className="cq-muted text-lg">
+                  {labels.completeSubtitle}
+                </p>
               </div>
-
-              <Separator className="bg-emerald-200 dark:bg-emerald-800" />
             </div>
-          </CardContent>
-        </Card>
+
+            <Separator className="bg-[var(--cq-parchment-edge)]" />
+
+            {/* Stats Grid */}
+            <div className="flex items-center justify-center gap-4">
+              <div className="space-y-2">
+                <div className="lf-text-gold text-2xl font-bold">
+                  {config.activityScore}
+                </div>
+                <div className="cq-muted text-sm">
+                  {labels.xpEarned}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-2xl font-bold">
+                  {userMatches.filter((match) => match.isCorrect).length}/{vocabularyPairs.length}
+                </div>
+                <div className="cq-muted text-sm">
+                  {labels.completedLabel}
+                </div>
+              </div>
+            </div>
+
+            <Separator className="bg-[var(--cq-parchment-edge)]" />
+          </div>
+        </div>
       </div>
     );
   }
+
+  // The look of a matching choice: a parchment well, gold when chosen, deep green or red with an icon after the round.
+  const choiceClass = "lf-well flex h-auto min-h-[3rem] w-full items-start justify-start p-4 text-left whitespace-normal transition-all hover:brightness-105 focus-visible:ring-2 focus-visible:ring-[var(--cq-gold-dark)] focus-visible:outline-none";
 
   // Playing state - Main game UI
   return (
     <div className="container mx-auto max-w-6xl space-y-4 px-4">
       {/* Progress bar */}
-      <div className="space-y-2">
-        <div className="text-muted-foreground flex items-center justify-between text-sm">
+      <div className="cq-panel space-y-2 py-3">
+        <div className="cq-muted flex items-center justify-between text-sm">
           <span>
             {labels.pairsProgress(
               userMatches.length,
@@ -616,29 +615,27 @@ function MatchingGameBody({
             )}
           </span>
         </div>
-        <Progress value={progress} className="h-2" />
+        <Progress value={progress} className="h-3 border-2 border-[var(--cq-wood-dark)] bg-[#2a1d12] [&>[data-slot=progress-indicator]]:bg-[var(--cq-green)]" />
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="space-y-3">
-              <CardTitle className="text-xl">{labels.gameTitle}</CardTitle>
-              <p className="text-muted-foreground text-sm">
-                {labels.gameInstruction}
-              </p>
-            </div>
+      <div className="cq-panel p-6">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="space-y-3">
+            <p className="text-xl font-semibold">{labels.gameTitle}</p>
+            <p className="cq-muted text-sm">
+              {labels.gameInstruction}
+            </p>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent className="space-y-6">
+        <div className="mt-6 space-y-6">
           {/* Matching game grid */}
-          <div className="bg-muted/10 border-muted-foreground/25 rounded-lg border-2">
+          <div className="rounded-lg border-2 border-dashed border-[var(--cq-parchment-edge)]">
             <div className="grid grid-cols-1 gap-6 p-6 lg:grid-cols-2">
               {/* Left column - Words */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-blue-500" />
+                  <div className="lf-stud" />
                   <h3 className="font-medium">{labels.leftColumn}</h3>
                 </div>
                 <div className="space-y-2">
@@ -651,37 +648,37 @@ function MatchingGameBody({
                     const isCorrect = userMatch?.isCorrect;
 
                     return (
-                      <Button
+                      <button
+                        type="button"
                         key={pair.id}
                         onClick={() => handleLeftItemClick(pair.id)}
-                        variant="outline"
                         className={cn(
-                          "h-auto min-h-[3rem] w-full justify-start p-4 text-left whitespace-normal transition-all",
-                          isSelected && "ring-primary border-primary ring-2",
+                          choiceClass,
+                          isSelected && "lf-well--gold",
                           isMatched &&
                             isCorrect &&
                             isCompleted &&
-                            "border-green-500 bg-green-50 dark:bg-green-950/20",
+                            "lf-good",
                           isMatched &&
                             !isCorrect &&
                             isCompleted &&
-                            "border-red-500 bg-red-50 dark:bg-red-950/20",
+                            "lf-bad",
                           isCompleted && "cursor-default",
                         )}
                         disabled={isCompleted}
                       >
                         <div className="flex w-full items-start gap-2">
                           {isMatched && isCorrect && (
-                            <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-600" />
+                            <CheckCircle className="lf-text-good h-4 w-4 flex-shrink-0" />
                           )}
                           {isMatched && !isCorrect && (
-                            <XCircle className="h-4 w-4 flex-shrink-0 text-red-600" />
+                            <XCircle className="lf-text-bad h-4 w-4 flex-shrink-0" />
                           )}
                           <span className="text-base leading-relaxed font-semibold break-words">
                             {pair.front}
                           </span>
                         </div>
-                      </Button>
+                      </button>
                     );
                   })}
                 </div>
@@ -691,7 +688,7 @@ function MatchingGameBody({
               <div className="space-y-3 lg:col-start-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="flex items-center gap-2">
-                    <div className="h-3 w-3 flex-shrink-0 rounded-full bg-green-500" />
+                    <div className="lf-stud" />
                     <h3 className="font-medium">
                       {labels.rightColumn}
                     </h3>
@@ -700,7 +697,7 @@ function MatchingGameBody({
                     languageOptions[
                       selectedLanguage as keyof typeof languageOptions
                     ] && (
-                      <span className="text-muted-foreground text-xs font-normal">
+                      <span className="cq-muted text-xs font-normal">
                         (
                         {
                           languageOptions[
@@ -725,37 +722,37 @@ function MatchingGameBody({
                     const isCorrect = userMatch?.isCorrect;
 
                     return (
-                      <Button
+                      <button
+                        type="button"
                         key={pair.id}
                         onClick={() => handleRightItemClick(pair.id)}
-                        variant="outline"
                         className={cn(
-                          "h-auto min-h-[3rem] w-full justify-start p-4 text-left whitespace-normal transition-all",
-                          !selectedLeft && "cursor-not-allowed opacity-50",
+                          choiceClass,
+                          !selectedLeft && !isCompleted && "cursor-not-allowed opacity-50",
                           isMatched &&
                             isCorrect &&
                             isCompleted &&
-                            "border-green-500 bg-green-50 dark:bg-green-950/20",
+                            "lf-good",
                           isMatched &&
                             !isCorrect &&
                             isCompleted &&
-                            "border-red-500 bg-red-50 dark:bg-red-950/20",
+                            "lf-bad",
                           isCompleted && "cursor-default",
                         )}
                         disabled={!selectedLeft || isCompleted}
                       >
                         <div className="flex w-full items-start gap-2">
                           {isMatched && isCorrect && (
-                            <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-600" />
+                            <CheckCircle className="lf-text-good h-4 w-4 flex-shrink-0" />
                           )}
                           {isMatched && !isCorrect && (
-                            <XCircle className="h-4 w-4 flex-shrink-0 text-red-600" />
+                            <XCircle className="lf-text-bad h-4 w-4 flex-shrink-0" />
                           )}
                           <span className="text-sm leading-relaxed break-words">
                             {pair.back}
                           </span>
                         </div>
-                      </Button>
+                      </button>
                     );
                   })}
                 </div>
@@ -765,66 +762,64 @@ function MatchingGameBody({
 
           {/* Result card */}
           {showResult && (
-            <Card
+            <div
               aria-live="polite"
               className={cn(
-                "border-2",
+                "rounded-xl border-2 p-6",
                 userMatches.every((m) => m.isCorrect)
-                  ? "border-green-500 bg-green-50 dark:bg-green-950/20"
-                  : "border-red-500 bg-red-50 dark:bg-red-950/20",
+                  ? "lf-good"
+                  : "lf-bad",
               )}
             >
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-center gap-3">
-                    {userMatches.every((m) => m.isCorrect) ? (
-                      <CheckCircle className="h-6 w-6 text-green-600" />
-                    ) : (
-                      <XCircle className="h-6 w-6 text-red-600" />
-                    )}
-                    <h3 className="text-lg font-semibold">
-                      {userMatches.every((m) => m.isCorrect)
-                        ? labels.resultAllCorrect
-                        : t("results.partialCorrect", {
-                            correct: userMatches.filter((m) => m.isCorrect)
-                              .length,
-                            total: vocabularyPairs.length,
-                          })}
-                    </h3>
-                  </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-center gap-3">
+                  {userMatches.every((m) => m.isCorrect) ? (
+                    <CheckCircle className="lf-text-good h-6 w-6" />
+                  ) : (
+                    <XCircle className="lf-text-bad h-6 w-6" />
+                  )}
+                  <h3 className="text-lg font-semibold">
+                    {userMatches.every((m) => m.isCorrect)
+                      ? labels.resultAllCorrect
+                      : t("results.partialCorrect", {
+                          correct: userMatches.filter((m) => m.isCorrect)
+                            .length,
+                          total: vocabularyPairs.length,
+                        })}
+                  </h3>
+                </div>
 
-                  {!userMatches.every((m) => m.isCorrect) &&
-                    showCorrectAnswers && (
-                      <div className="space-y-3">
-                        <Separator />
-                        <div>
-                          <h4 className="mb-3 font-medium">
-                            {t("results.correctMatches")}
-                          </h4>
-                          <div className="space-y-2">
-                            {vocabularyPairs.map((pair, index) => (
-                              <div key={pair.id} className="flex gap-3 text-sm">
-                                <span className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
-                                  {index + 1}
+                {!userMatches.every((m) => m.isCorrect) &&
+                  showCorrectAnswers && (
+                    <div className="space-y-3">
+                      <Separator className="bg-[var(--cq-parchment-edge)]" />
+                      <div>
+                        <h4 className="mb-3 font-medium">
+                          {t("results.correctMatches")}
+                        </h4>
+                        <div className="space-y-2">
+                          {vocabularyPairs.map((pair, index) => (
+                            <div key={pair.id} className="flex gap-3 text-sm">
+                              <span className="lf-medal size-6 shrink-0 text-xs font-bold">
+                                {index + 1}
+                              </span>
+                              <p className="flex-1">
+                                <span className="font-semibold">
+                                  {pair.front}
                                 </span>
-                                <p className="flex-1">
-                                  <span className="font-semibold">
-                                    {pair.front}
-                                  </span>
-                                  <span className="text-muted-foreground mx-2">
-                                    →
-                                  </span>
-                                  <span>{pair.back}</span>
-                                </p>
-                              </div>
-                            ))}
-                          </div>
+                                <span className="mx-2 opacity-70">
+                                  →
+                                </span>
+                                <span>{pair.back}</span>
+                              </p>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    )}
-                </div>
-              </CardContent>
-            </Card>
+                    </div>
+                  )}
+              </div>
+            </div>
           )}
 
           {/* Action buttons */}
@@ -832,25 +827,25 @@ function MatchingGameBody({
             {isCompleted &&
               !userMatches.every((m) => m.isCorrect) &&
               !showCorrectAnswers && (
-                <Button
+                <RpgButton
+                  tone="iron"
+                  small
                   onClick={handleShowAnswers}
-                  variant="secondary"
-                  size="sm"
                   className="sm:w-auto"
                 >
-                  <Eye className="mr-2 h-4 w-4" />
+                  <Eye className="h-4 w-4" />
                   {t("buttons.showAnswers")}
-                </Button>
+                </RpgButton>
               )}
 
             {isCompleted && userMatches.every((m) => m.isCorrect) && (
-              <Button onClick={handleComplete} className="flex-1">
+              <RpgButton tone="gold" onClick={handleComplete} className="flex-1">
                 {labels.finishButton}
-              </Button>
+              </RpgButton>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

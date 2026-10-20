@@ -1,0 +1,23 @@
+import { chromium } from "playwright-core";
+import http from "node:http"; import fs from "node:fs";
+const H = process.cwd(), PUB = "/home/daniebo/Desktop/rama-worktrees/integration/apps/primary-advantage/public";
+const OUT = process.env.HOME + "/Desktop/primary-parity-progress/captures/lesson_repeat/phaseD-design";
+fs.mkdirSync(OUT, { recursive: true });
+const srv = http.createServer((q, s) => { const f = q.url.startsWith("/rpg") ? PUB + q.url.split("?")[0] : H + "/out" + q.url.split("?")[0]; fs.readFile(f, (e, d) => { if (e) { s.statusCode = 404; s.end(); } else { s.setHeader("content-type", f.endsWith(".html") ? "text/html" : f.endsWith(".webp") ? "image/webp" : "image/png"); s.end(d); } }); }).listen(0);
+const port = srv.address().port;
+const b = await chromium.launch({ executablePath: "/usr/bin/google-chrome", args: ["--no-sandbox"] });
+const names = fs.readdirSync(H + "/out/html").map((f) => f.replace(".html", ""));
+const out = [];
+for (const [vn, w, h] of [["375", 375, 812], ["1280", 1280, 900]]) for (const mode of ["day", "night"]) {
+  const ctx = await b.newContext({ viewport: { width: w, height: h }, colorScheme: mode === "night" ? "dark" : "light" });
+  for (const n of names) {
+    const p = await ctx.newPage(); await p.goto(`http://localhost:${port}/html/${n}.html`);
+    await p.evaluate((m) => document.documentElement.classList.toggle("dark", m === "night"), mode);
+    await p.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {})))); await p.waitForTimeout(150);
+    const small = await p.evaluate(() => [...document.querySelectorAll(".cq-btn")].filter((e) => e.getBoundingClientRect().height < 47.5).length);
+    const over = await p.evaluate(() => document.documentElement.scrollWidth > innerWidth);
+    const file = `${OUT}/${n}-${vn}-${mode}.png`; await p.screenshot({ path: file, fullPage: true }); out.push(`${file} | small-buttons=${small} | h-scroll=${over}`); await p.close();
+  }
+  await ctx.close();
+}
+await b.close(); srv.close(); console.log(out.join("\n"));

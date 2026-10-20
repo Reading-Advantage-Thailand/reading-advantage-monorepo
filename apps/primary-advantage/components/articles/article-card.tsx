@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { StatusChip } from "@reading-advantage/ui";
 import { Article } from "@/types";
-import { AlertCircle, BookCheck } from "lucide-react";
+import { AlertCircle, BookCheck, BookX } from "lucide-react";
 import ArticleContent from "./article-content";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getArticleImageUrl } from "@/lib/storage-config";
@@ -18,9 +18,17 @@ import { getArticleImageUrl } from "@/lib/storage-config";
 type Props = {
   article: Article & { articleActivityLog: any[] };
   userId?: string;
+  /** The saved state of the signed-in student (`getArticleCardState`); false when not given. */
+  saved?: boolean;
 };
 
-export default async function ArticleCard({ article }: Props) {
+/**
+ * The article page card: title, level, the student's own "saved" chip, summary, and text.
+ * @param props.article The article with the logs of the signed-in user only.
+ * @param props.saved Whether this student saved the cards of the article.
+ * @returns The card.
+ */
+export default async function ArticleCard({ article, saved = false }: Props) {
   const locale = await getLocale();
   const t = await getTranslations();
   const getLocalizedSummary = () => {
@@ -37,10 +45,6 @@ export default async function ArticleCard({ article }: Props) {
   const imageUrl = getArticleImageUrl(article, 1);
   // const imageUrl = `/nopic.png`;
 
-  const isSaved = article.articleActivityLog.some(
-    (activity) => activity.isSentenceAndWordsSaved === true,
-  );
-
   return (
     <div className="min-w-0 xl:basis-3/5">
       <Card className="rounded-2xl">
@@ -51,12 +55,23 @@ export default async function ArticleCard({ article }: Props) {
           <div className="flex flex-wrap gap-2">
             {/* One level system for students: CEFR (the read list cards show the same). */}
             {article.cefrLevel ? <StatusChip tone="success">{article.cefrLevel}</StatusChip> : null}
-            {isSaved ? (
-              <StatusChip tone="info">
+            {/* Ink on parchment with fixed colors: the StatusChip tones do not read at night (plan-review L-1). */}
+            <span
+              data-testid="saved-chip"
+              data-saved={saved ? "true" : "false"}
+              className={
+                saved
+                  ? "inline-flex items-center gap-1 rounded-full border-2 border-[#2f5d9e] bg-[#dbe8fa] px-3 py-1 text-xs font-bold text-[#17365f]"
+                  : "inline-flex items-center gap-1 rounded-full border-2 border-[#9a7a3c] bg-[#f3e6c4] px-3 py-1 text-xs font-bold text-[#4a3515]"
+              }
+            >
+              {saved ? (
                 <BookCheck className="size-3.5" aria-hidden="true" />
-                {t("Article.saveToFlashcard")}
-              </StatusChip>
-            ) : null}
+              ) : (
+                <BookX className="size-3.5" aria-hidden="true" />
+              )}
+              {saved ? t("Article.saveToFlashcard") : t("Article.notSaved")}
+            </span>
           </div>
           <CardDescription className="font-article text-lg md:text-xl">
             {getLocalizedSummary()}

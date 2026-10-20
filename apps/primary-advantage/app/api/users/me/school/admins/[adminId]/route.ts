@@ -4,6 +4,10 @@ import { eq } from 'drizzle-orm';
 import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
+import { normalizeRole } from "@/lib/authorization";
+import { setUserRole } from "@/server/utils/role-sql";
+import { canManageSchool } from "@/server/utils/school-access";
+import { logger } from "@/lib/observability/logger";
 
 // DELETE /api/users/me/school/admins/[adminId] - Remove a school admin
 export async function DELETE(
@@ -63,57 +67,61 @@ export async function DELETE(
       );
     }
 
-    // Check if current user is the school owner
-    if (userSchool.ownerId !== currentUser.id) {
+    // The owner, an ADMIN of the school, or SYSTEM may manage the admins
+    if (!canManageSchool(currentUser, userSchool)) {
       return NextResponse.json(
-        { error: "Only the school owner can remove admins" },
+        { error: "Only the school owner or a school admin can remove admins" },
         { status: 403 },
       );
     }
 
-    // Find the admin record (replaces Prisma `schoolAdmins.findUnique({ include: user })`).
-    // TenantDB scopes the lookup to the owner's school.
-    const [adminRecord] = await tenantDb.select({
-      admin: schoolAdmins,
-      adminUser: users,
-    })
-      .from(schoolAdmins)
-      .innerJoin(users, eq(users.id, schoolAdmins.userId))
-      .where(eq(schoolAdmins.id, adminId))
+    // The admins list sends the user id (getSchoolDetail). A migrated admin has
+    // users.role ADMIN and no school_admins row. TenantDB scopes both lookups to
+    // the caller's school.
+    const [adminUser] = await tenantDb.select().from(users)
+      .where(eq(users.id, adminId))
       .limit(1);
+    const adminRows = adminUser
+      ? await tenantDb.select().from(schoolAdmins).where(eq(schoolAdmins.userId, adminUser.id))
+      : [];
 
-    if (!adminRecord) {
+    if (!adminUser || (adminRows.length === 0 && normalizeRole(adminUser.role) !== "ADMIN")) {
       return NextResponse.json(
         { error: "Admin record not found" },
         { status: 404 },
       );
     }
 
-    // Check if the admin belongs to the current user's school
-    if (adminRecord.admin.schoolId !== userSchool.id) {
+    // Only the owner or SYSTEM may remove the owner from the admins.
+    if (
+      userSchool.ownerId &&
+      adminUser.id === userSchool.ownerId &&
+      currentUser.id !== userSchool.ownerId &&
+      normalizeRole(currentUser.role) !== "SYSTEM"
+    ) {
       return NextResponse.json(
-        { error: "Admin does not belong to your school" },
+        { error: "Only the school owner can remove the owner as admin" },
         { status: 403 },
       );
     }
 
     // Prevent owner from removing themselves
-    if (adminRecord.admin.userId === currentUser.id) {
+    if (adminUser.id === currentUser.id) {
       return NextResponse.json(
         { error: "School owner cannot remove themselves as admin" },
         { status: 400 },
       );
     }
 
-    // Remove the admin record (replaces Prisma `schoolAdmins.delete`).
+    // Remove the admin rows of this school (replaces Prisma `schoolAdmins.delete`).
     await tenantDb.delete(schoolAdmins)
-      .where(eq(schoolAdmins.id, adminId));
+      .where(eq(schoolAdmins.userId, adminUser.id));
 
     // Check if the user has any other school admin roles (across all schools).
     const otherAdminRoles = await tenantDb
       .unscoped("schoolAdmins role check spans all schools before downgrade")
       .select().from(schoolAdmins)
-      .where(eq(schoolAdmins.userId, adminRecord.admin.userId));
+      .where(eq(schoolAdmins.userId, adminUser.id));
 
     // If user has no other admin roles, optionally downgrade their role
     if (otherAdminRoles.length === 0) {
@@ -126,68 +134,31 @@ export async function DELETE(
       })
         .from(userRoles)
         .innerJoin(roles, eq(roles.id, userRoles.roleId))
-        .where(eq(userRoles.userId, adminRecord.admin.userId));
+        .where(eq(userRoles.userId, adminUser.id));
 
-      const hasAdminRole = userRoleRows.some(
-        (ur) => ur.roleName === "admin",
-      );
+      // users.role is the truth; legacy user_roles rows are additive.
+      const hasAdminRole =
+        normalizeRole(adminUser.role) === "ADMIN" ||
+        userRoleRows.some((ur) => ur.roleName === "admin");
 
       // Only downgrade if they only have Admin role and no other admin responsibilities
-      if (hasAdminRole && userRoleRows.length === 1) {
-        // Find or create Teacher role as default
-        const [existingTeacherRole] = await tenantDb
-          .unscoped("roles is EXEMPT; looked up by name")
-          .select().from(roles)
-          .where(eq(roles.name, "teacher"))
-          .limit(1);
-
-        let teacherRole = existingTeacherRole;
-        if (!teacherRole) {
-          const [created] = await tenantDb
-            .unscoped("roles is EXEMPT; created by name")
-            .insert(roles).values({ name: "teacher" }).returning();
-          teacherRole = created;
-        }
-
-        // Remove all roles and set Teacher role
-        await tenantDb
-          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-          .delete(userRoles)
-          .where(eq(userRoles.userId, adminRecord.admin.userId));
-
-        await tenantDb
-          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-          .insert(userRoles).values({
-          userId: adminRecord.admin.userId,
-          roleId: teacherRole.id,
-        });
+      if (hasAdminRole && userRoleRows.length <= 1) {
+        await setUserRole(
+          tenantDb.unscoped("userRoles is REFERENTIAL; scoped via users.schoolId"),
+          adminUser.id,
+          "teacher",
+        );
       }
     }
 
-    // Remove user's association with the school if they have no other roles
-    const remainingSchoolRoles = await tenantDb
-      .unscoped("schoolAdmins role check spans all schools before removal")
-      .select().from(schoolAdmins)
-      .where(
-        eq(schoolAdmins.userId, adminRecord.admin.userId),
-      );
-
-    const stillInThisSchool = remainingSchoolRoles.some(
-      (r) => r.schoolId === userSchool!.id,
-    );
-
-    if (!stillInThisSchool) {
-      await tenantDb.update(users)
-        .set({ schoolId: null })
-        .where(eq(users.id, adminRecord.admin.userId));
-    }
-
+    // The account stays in the school as a TEACHER: users.school_id keeps its classes
+    // and its (school_id, id) foreign keys.
     return NextResponse.json({
       message: "Admin removed successfully",
-      removedUserId: adminRecord.admin.userId,
+      removedUserId: adminUser.id,
     });
   } catch (error) {
-    console.error("Error removing school admin:", error);
+    logger.error("school_admin_remove_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

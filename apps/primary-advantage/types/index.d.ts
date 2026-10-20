@@ -4,7 +4,6 @@ import { licenses } from "@reading-advantage/db";
 
 export type SiteConfig = {
   name: string;
-  description: string;
   url: string;
   ogImage: string;
   link: {
@@ -18,7 +17,7 @@ export type SiteConfig = {
 };
 
 export type MainNavItem = {
-  title: "home" | "about" | "contact" | "authors";
+  title: "home" | "about" | "contact" | "books";
   href: string;
   disabled?: boolean;
   icon?: string;
@@ -330,6 +329,10 @@ export interface UserActivityLog {
   details: any;
   completed: boolean;
   createdAt: Date;
+  /** The lesson attempt of the row (1 for the first); set by the report read. */
+  attemptNumber?: number;
+  /** True for a row that a closed lesson attempt moved into the history. */
+  moved?: boolean;
 }
 
 export interface UserXpLog {
@@ -382,6 +385,8 @@ export interface CreateTeacherRequest {
   cefrLevel?: string;
   classroomIds?: string[];
   password?: string;
+  /** Target school; honored only for a SYSTEM caller. */
+  schoolId?: string;
 }
 
 export interface UpdateTeacherRequest {

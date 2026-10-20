@@ -267,59 +267,6 @@ export const checkAdminPermissions = async (
   }
 };
 
-// Check if user has teacher permissions
-export const checkTeacherPermissions = async (
-  userWithRoles: UserWithRoles,
-): Promise<boolean> => {
-  try {
-    // Check if user has teacher role or higher
-    const isTeacher = userWithRoles.roles.some(
-      (userRole) =>
-        userRole.role.name === "teacher" ||
-        userRole.role.name === "admin" ||
-        userRole.role.name === "system",
-    );
-
-    // Check if user is a school admin (can also manage teachers/students)
-    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
-
-    const hasPermission = isTeacher || isSchoolAdmin;
-
-    return hasPermission;
-  } catch (error) {
-    console.error("Auth Utils: Error checking teacher permissions:", error);
-    return false;
-  }
-};
-
-// Check if user has student permissions
-export const checkStudentPermissions = async (
-  userWithRoles: UserWithRoles,
-): Promise<boolean> => {
-  try {
-    // Students can only access their own data, but admins and teachers can access student data
-    const hasHigherPermissions = userWithRoles.roles.some(
-      (userRole) =>
-        userRole.role.name === "teacher" ||
-        userRole.role.name === "admin" ||
-        userRole.role.name === "system",
-    );
-
-    const isStudent = userWithRoles.roles.some(
-      (userRole) => userRole.role.name === "student",
-    );
-
-    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
-
-    const hasPermission = hasHigherPermissions || isStudent || isSchoolAdmin;
-
-    return hasPermission;
-  } catch (error) {
-    console.error("Auth Utils: Error checking student permissions:", error);
-    return false;
-  }
-};
-
 // Get user's accessible school IDs
 export const getUserSchoolIds = async (
   userWithRoles: UserWithRoles,
@@ -366,22 +313,4 @@ export const canAccessSchool = async (
     console.error("Auth Utils: Error checking school access:", error);
     return false;
   }
-};
-
-export const getUserRoles = async (userId: string): Promise<string[]> => {
-  const userRows = await db.select({ id: users.id })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
-
-  if (!userRows[0]) {
-    return [];
-  }
-
-  const roleRows = await db.select({ name: roles.name })
-    .from(userRoles)
-    .innerJoin(roles, eq(roles.id, userRoles.roleId))
-    .where(eq(userRoles.userId, userId));
-
-  return roleRows.map((row) => row.name);
 };

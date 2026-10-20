@@ -1,9 +1,8 @@
 "use client";
 
-import { Article, SAQuestion, SAQFeedback } from "@/types";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Clock, Loader2, MessageSquare, CheckCircle } from "lucide-react";
+import { usePreviewSave } from "@/components/student/student-view-provider";
+import { Article, QuestionResponse, SAQuestion } from "@/types";
+import { Clock, Loader2, MessageSquare } from "lucide-react";
 import React, { useContext, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +11,6 @@ import { toast } from "sonner";
 import { ActivityType, QuestionState } from "@/types/enum";
 import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import TextareaAutosize from "react-textarea-autosize";
-import { Button } from "@/components/ui/button";
 import { finishQuiz, getFeedback } from "@/actions/question";
 import { Skeleton } from "@reading-advantage/ui";
 import {
@@ -24,6 +22,8 @@ import {
 } from "@/components/ui/form";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@reading-advantage/auth-client";
+import { Panel, Plaque, RpgButton, Sign } from "@/components/rpg/chrome";
+import { ART } from "@/lib/rpg/places";
 
 interface LessonSAQProps {
   article: Article;
@@ -37,13 +37,50 @@ function LessonSAQContent({ article }: { article: Article }) {
   const [feedback, setFeedback] = useState<any>(null);
   const [questions, setQuestions] = useState<SAQuestion | null>(null);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
   useEffect(() => {
-    if (article.shortAnswerQuestions) {
+    let isMounted = true;
+
+    const initializeQuestion = async () => {
+      // A saved answer comes back first, so a student who returns to this task sees it again.
+      try {
+        const params = new URLSearchParams({
+          articleId: article.id,
+          questionType: ActivityType.SA_QUESTION,
+        });
+        const response = await fetch(
+          `/api/articles/questions/${article.id}?${params.toString()}`,
+          { cache: "no-store" },
+        );
+        if (response.ok) {
+          const questionResponse = (await response.json()) as QuestionResponse;
+          if (
+            questionResponse.questionStatus === QuestionState.COMPLETED &&
+            questionResponse.result?.completed
+          ) {
+            if (!isMounted) return;
+            setFeedback({ ...questionResponse.result.details });
+            setState(QuestionState.COMPLETED);
+            setPaused(true);
+            return;
+          }
+        }
+      } catch {
+        // A failed read shows the empty form, as legacy does.
+      }
+
+      if (!isMounted || !article.shortAnswerQuestions?.length) return;
       // The server already picked the student question (the first one, in bank order).
       setQuestions({ ...article.shortAnswerQuestions[0] });
       setState(QuestionState.INCOMPLETE);
-    }
-  }, [article]);
+    };
+
+    void initializeQuestion();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [article, setPaused]);
 
   const formSchema = z.object({
     answer: z
@@ -90,7 +127,8 @@ function LessonSAQContent({ article }: { article: Article }) {
 
           setFeedback(data);
 
-          await finishQuiz(article.id, data, ActivityType.SA_QUESTION);
+          if (isPreview) notSaved();
+          else await finishQuiz(article.id, data, ActivityType.SA_QUESTION);
         })
         .finally(async () => {
           setState(QuestionState.COMPLETED);
@@ -103,8 +141,8 @@ function LessonSAQContent({ article }: { article: Article }) {
     return (
       <div className="mx-auto w-full max-w-4xl space-y-6">
         <div className="mb-6 flex items-center gap-3">
-          <div className="rounded-lg bg-blue-100 p-2 dark:bg-blue-900">
-            <MessageSquare className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          <div className="lf-medal p-2">
+            <MessageSquare className="h-6 w-6" />
           </div>
           <div>
             <Skeleton className="mb-2 h-7 w-48" />
@@ -112,18 +150,16 @@ function LessonSAQContent({ article }: { article: Article }) {
           </div>
         </div>
 
-        <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg dark:from-blue-950 dark:to-indigo-950">
-          <CardContent className="p-8">
-            <div className="space-y-6">
-              <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-32 w-full" />
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-10 w-24" />
-              </div>
+        <div className="cq-panel p-8">
+          <div className="space-y-6">
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-32 w-full" />
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-10 w-24" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -131,77 +167,44 @@ function LessonSAQContent({ article }: { article: Article }) {
   if (state === QuestionState.COMPLETED) {
     return (
       <div className="mx-auto w-full max-w-4xl space-y-6">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="rounded-lg bg-green-100 p-2 dark:bg-green-900">
-            <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
-          </div>
-          <div>
-            <p className="font-medium text-green-600 dark:text-green-400">
-              {t("completed.title")}
-            </p>
-          </div>
-        </div>
-
-        <Card className="border-0 bg-gradient-to-br from-green-50 to-emerald-50 shadow-lg dark:from-green-950 dark:to-emerald-950">
-          <CardContent className="space-y-6 p-8">
-            {feedback && (
-              <>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.question")}
-                  </h3>
-                  <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                    {feedback?.question}
-                  </p>
+        <Sign>{t("completed.title")}</Sign>
+        <Panel>
+          {feedback && (
+            <>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.question")}</h3>
+                <p className="leading-relaxed">{feedback?.question}</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.yourAnswer")}</h3>
+                <div className="lf-well border-l-6 border-l-[#2f6b35] p-4">
+                  <p className="font-medium">{feedback?.yourAnswer}</p>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.yourAnswer")}
-                  </h3>
-                  <div className="rounded-lg border-l-4 border-green-500 bg-white p-4 dark:bg-gray-800">
-                    <p className="font-medium text-green-700 dark:text-green-300">
-                      {feedback?.yourAnswer}
-                    </p>
-                  </div>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.suggestedAnswer")}</h3>
+                <div className="lf-well border-l-6 border-l-[var(--cq-wood)] p-4">
+                  <p>{feedback?.suggestedAnswer}</p>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.suggestedAnswer")}
-                  </h3>
-                  <div className="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 dark:bg-blue-900">
-                    <p className="text-blue-700 dark:text-blue-300">
-                      {feedback?.suggestedAnswer}
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.feedback")}
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {feedback?.feedback}
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.score")}
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {feedback?.score}
-                  </p>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.feedback")}</h3>
+                <p>{feedback?.feedback}</p>
+              </div>
+              <Plaque icon={ART.gem} label={t("labels.score")}>
+                {feedback?.score}
+              </Plaque>
+            </>
+          )}
+        </Panel>
       </div>
     );
   }
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
-      <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg dark:from-blue-950 dark:to-indigo-950">
-        <CardContent className="p-8">
+      <div className="cq-panel p-6 sm:p-8">
+        <div>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmitted)}
@@ -209,18 +212,15 @@ function LessonSAQContent({ article }: { article: Article }) {
             >
               {/* Timer Badge */}
               <div className="flex items-center justify-between">
-                <Badge
-                  variant="destructive"
-                  className="flex items-center gap-2"
-                >
+                <span className="lg-chip inline-flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   {t("timer.elapsed", { time: timer })}
-                </Badge>
+                </span>
               </div>
 
               {/* Question */}
               <div className="space-y-3">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                <h3 className="text-xl font-semibold">
                   {questions?.question}
                 </h3>
               </div>
@@ -237,7 +237,7 @@ function LessonSAQContent({ article }: { article: Article }) {
                           autoFocus
                           id="short-answer"
                           placeholder={t("form.placeholder.answer")}
-                          className="min-h-[120px] w-full resize-none appearance-none overflow-hidden rounded-xl border-2 border-gray-200 bg-white p-4 text-gray-900 transition-all duration-200 placeholder:text-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-400 dark:focus:border-blue-400 dark:focus:ring-blue-800"
+                          className="min-h-[120px] w-full resize-none appearance-none overflow-hidden rounded-xl border-2 border-[var(--cq-parchment-edge)] bg-[#fffaf0] p-4 text-[var(--cq-ink)] transition-all duration-200 placeholder:text-[var(--cq-ink-soft)] focus:border-[var(--cq-gold-dark)] focus:ring-2 focus:ring-[rgba(232,181,52,0.45)] focus:outline-none"
                           {...field}
                         />
                       </FormControl>
@@ -247,20 +247,20 @@ function LessonSAQContent({ article }: { article: Article }) {
                 />
 
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500 dark:text-gray-400">
+                  <span className="cq-muted">
                     {t("form.help.detailedResponse")}
                   </span>
-                  <span className="font-medium text-blue-600 dark:text-blue-400">
+                  <span className="lf-text-gold font-medium">
                     {/* {t("wordCount", { count: wordCount })} */}
                   </span>
                 </div>
               </div>
 
               <div className="flex justify-end">
-                <Button
+                <RpgButton
                   type="submit"
-                  size="lg"
-                  className="transform rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-3 font-medium text-white shadow-lg transition-all duration-200 hover:scale-105 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl"
+                  tone="gold"
+                  className="px-8"
                 >
                   {isPanding ? (
                     <>
@@ -270,12 +270,12 @@ function LessonSAQContent({ article }: { article: Article }) {
                   ) : (
                     t("actions.submit")
                   )}
-                </Button>
+                </RpgButton>
               </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

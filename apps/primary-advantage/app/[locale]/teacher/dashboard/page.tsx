@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
-import { getFormatter, getLocale, getTranslations } from "next-intl/server";
-import { ClipboardCheckIcon, LifeBuoyIcon, PlayIcon, SchoolIcon, SmileIcon, UsersIcon } from "lucide-react";
+import { getLocale, getTranslations } from "next-intl/server";
+import { ClipboardCheckIcon, SmileIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getTeacherHome, TEACHER_HOME_INACTIVE_DAYS } from "@reading-advantage/domain/primary-home";
+import { getTeacherBookSlots } from "@reading-advantage/domain/primary-books";
+import { logger } from "@/lib/observability/logger";
 import { calendarDayNumber } from "@reading-advantage/domain/calendar-day";
 import { EmptyState, StatusChip } from "@reading-advantage/ui";
+import { intlFormatter } from "@/lib/intl-locale";
 import { currentUser } from "@/lib/session";
 import { Link, redirect } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Scene } from "@/components/rpg/scene";
+import { Panel, RpgLink } from "@/components/rpg/chrome";
+import { TeacherClassTable } from "@/components/teacher/teacher-class-table";
+import { TeacherSummaryStrip } from "@/components/teacher/teacher-summary-strip";
 import { ClassBookSlot } from "@/components/teacher/class-book-slot";
 import { getTeacherQuestCard } from "@reading-advantage/domain/primary-quest";
 import { TeacherQuestCard } from "@/components/quest/teacher-quest-card";
 import { DueChip } from "@/components/teacher/due-chip";
-import { TEACHER_ACTION, TEACHER_CARD, TeacherPageHeader } from "@/components/teacher/teacher-shell";
+import { TEACHER_ACTION } from "@/components/teacher/teacher-shell";
 
 /** A text link inside a list row: 44 px tall so it is easy to tap. */
 const ROW_LINK = cn(TEACHER_ACTION, "inline-flex items-center font-semibold break-words underline-offset-4 hover:underline");
@@ -30,89 +36,59 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Teacher dashboard (Lane C Phase 3, audit T1): the summary numbers; my classes with student
- * counts, a link to each class, and "Start class" (it opens the class page at the class sign-in
- * panel); the class book slot (Lane D+E); the open assignments with Bangkok due chips; and the
- * students who need help (overdue work, or no activity for 7 days). A load failure goes to the
- * route error boundary (error.tsx), which offers a retry.
+ * Teacher dashboard (guild hall scene): the summary strip of eight numbers; the class table with
+ * search, sort, CSV, a link to each class, and "Start class"; the class book slot; one Class Quest
+ * panel for each class; the open assignments with Bangkok due chips; and the students who need
+ * help (overdue work, or no activity for 7 days). A load failure goes to the route error
+ * boundary (error.tsx), which offers a retry.
  * @returns The dashboard page.
  */
 export default async function TeacherDashboardPage() {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
-  const [home, t, tUi, format] = await Promise.all([
-    getTeacherHome({ db, user }),
+  const [home, t, format] = await Promise.all([
+    getTeacherHome({ db, user }).catch((error: unknown) => {
+      logger.error("teacher_home.load_failed", { userId: user.id, error });
+      throw error;
+    }),
     getTranslations("TeacherHome"),
-    getTranslations("TeacherUi"),
-    getFormatter(),
+    getLocale().then(intlFormatter),
   ]);
-  const quests = await Promise.all(home.classes.map((cls) => getTeacherQuestCard({ db, user }, cls.id).catch(() => null)));
+  const quests = await Promise.all(
+    home.classes.map((cls) =>
+      getTeacherQuestCard({ db, user }, cls.id).catch((error: unknown) => {
+        logger.warn("teacher_home.quest_failed", { userId: user.id, classroomId: cls.id, error });
+        return null;
+      }),
+    ),
+  );
+  const bookSlots = await getTeacherBookSlots({ db, user }).catch((error: unknown) => {
+    logger.error("class_books.slot_failed", { userId: user.id, error });
+    return null;
+  });
   const today = calendarDayNumber(new Date());
   const moreHelp = home.needsHelpCount - home.needsHelp.length;
 
   return (
-    <div className="flex flex-col gap-6">
-      <TeacherPageHeader title={t("greeting", { name: user.name ?? user.username })} description={t("subtitle")} />
+    <Scene place="guild-hall" contained className="px-1 py-4 sm:px-3">
+      <header className="cq-on-scene flex flex-col gap-1">
+        <h1 className="text-3xl font-bold break-words">{t("greeting", { name: user.name ?? user.username })}</h1>
+        <p className="text-lg">{t("subtitle")}</p>
+      </header>
 
-      <section aria-label={t("summary")} className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile icon={<SchoolIcon />} label={t("stats.classes")} value={home.classes.length} />
-        <StatTile icon={<UsersIcon />} label={t("stats.students")} value={home.studentCount} />
-        <StatTile icon={<ClipboardCheckIcon />} label={t("stats.openAssignments")} value={home.openAssignmentCount} />
-        <StatTile icon={<LifeBuoyIcon />} label={t("stats.needsHelp")} value={home.needsHelpCount} />
-      </section>
+      <TeacherSummaryStrip home={home} />
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <section aria-labelledby="home-classes" className={cn(TEACHER_CARD, "lg:col-span-2")}>
-          <h2 id="home-classes" className="text-lg font-semibold">
-            {t("classes.heading")}
-          </h2>
-          {home.classes.length ? (
-            <ul className="grid gap-3 md:grid-cols-2">
-              {home.classes.map((cls) => (
-                <li key={cls.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border px-3 py-2">
-                  <div className="flex min-w-0 flex-col">
-                    <Link href={`/teacher/class-roster/${cls.id}`} className={ROW_LINK}>
-                      {cls.name}
-                    </Link>
-                    <p className="text-muted-foreground flex flex-wrap gap-x-2 text-sm">
-                      <span>{t("classes.students", { count: cls.studentCount })}</span>
-                      {cls.grade !== null ? <span>{t("classes.grade", { grade: cls.grade })}</span> : null}
-                    </p>
-                  </div>
-                  <Link
-                    href={`/teacher/class-roster/${cls.id}#class-login`}
-                    aria-label={tUi("startClassFor", { name: cls.name })}
-                    className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "px-4")}
-                  >
-                    <PlayIcon aria-hidden="true" />
-                    {tUi("startClass")}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <EmptyState
-              className="py-4"
-              icon={<SchoolIcon />}
-              title={t("classes.empty")}
-              description={t("classes.emptyHint")}
-              action={
-                <Link href="/teacher/my-classes" className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "px-5")}>
-                  {t("classes.goToClasses")}
-                </Link>
-              }
-            />
-          )}
-        </section>
+        <TeacherClassTable rows={home.classRows} className="lg:col-span-2" />
 
-        <ClassBookSlot className="lg:col-span-2" />
+        <ClassBookSlot slots={bookSlots ?? undefined} failed={bookSlots === null} className="lg:col-span-2" />
         {home.classes.map((cls, i) => (
-          <TeacherQuestCard key={cls.id} classroomId={cls.id} card={quests[i] ?? null} heading={`${t("quest")} · ${cls.name}`} />
+          <TeacherQuestCard key={cls.id} panel classroomId={cls.id} card={quests[i] ?? null} heading={`${t("quest")} · ${cls.name}`} />
         ))}
 
-        <section aria-labelledby="home-assignments" className={TEACHER_CARD}>
-          <h2 id="home-assignments" className="text-lg font-semibold">
+        <Panel aria-labelledby="home-assignments">
+          <h2 id="home-assignments" className="text-xl font-bold">
             {t("assignments.heading")}
           </h2>
           {home.openAssignments.length ? (
@@ -135,14 +111,16 @@ export default async function TeacherDashboardPage() {
           ) : (
             <EmptyState className="py-4" icon={<ClipboardCheckIcon />} title={t("assignments.empty")} description={t("assignments.emptyHint")} />
           )}
-          <Link href="/teacher/assignments" className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION, "mt-auto self-start px-5")}>
-            {t("assignments.all")}
-          </Link>
-        </section>
+          <div className="mt-auto">
+            <RpgLink small href="/teacher/assignments" tone="wood">
+              {t("assignments.all")}
+            </RpgLink>
+          </div>
+        </Panel>
 
-        <section aria-labelledby="home-help" className={TEACHER_CARD}>
+        <Panel aria-labelledby="home-help">
           <div className="flex flex-col gap-1">
-            <h2 id="home-help" className="text-lg font-semibold">
+            <h2 id="home-help" className="text-xl font-bold">
               {t("help.heading")}
             </h2>
             <p className="text-muted-foreground text-sm">{t("help.hint", { days: TEACHER_HOME_INACTIVE_DAYS })}</p>
@@ -176,29 +154,14 @@ export default async function TeacherDashboardPage() {
             <EmptyState className="py-4" icon={<SmileIcon />} title={t("help.empty")} description={t("help.emptyHint")} />
           )}
           {moreHelp > 0 ? (
-            <Link href="/teacher/reports" className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION, "mt-auto self-start px-5")}>
-              {t("help.more", { count: moreHelp })}
-            </Link>
+            <div className="mt-auto">
+              <RpgLink small href="/teacher/reports" tone="wood">
+                {t("help.more", { count: moreHelp })}
+              </RpgLink>
+            </div>
           ) : null}
-        </section>
+        </Panel>
       </div>
-    </div>
-  );
-}
-
-/**
- * One summary number with its icon and label.
- * @param props The icon, the label, and the value.
- * @returns The tile.
- */
-function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
-  return (
-    <div className="bg-card flex flex-col items-center gap-1 rounded-2xl border p-3 text-center shadow-sm">
-      <span aria-hidden="true" className="bg-brand-100 text-brand-700 dark:text-brand-300 flex size-9 items-center justify-center rounded-full [&>svg]:size-5">
-        {icon}
-      </span>
-      <span className="text-xl leading-tight font-bold">{value}</span>
-      <span className="text-muted-foreground text-xs">{label}</span>
-    </div>
+    </Scene>
   );
 }

@@ -488,9 +488,16 @@ export default `/*
   word-break: keep-all;
   overflow-wrap: normal;
 }
-/* The word fits its tile: \`--tile\` is the tile width and \`--em\` the word's width in em (board.ts). */
+/*
+ * The label fits its tile (board.ts): \`--tile\` is the tile width, \`--em\` the width in em of the
+ * longest line, and \`--lines\` the number of lines (a phrase can take two).
+ */
 .board .rune span {
-  font-size: min(clamp(12px, 3.6vw, 18px), calc((var(--tile, 60px) - 12px) / var(--em, 3)));
+  font-size: min(
+    clamp(12px, 3.6vw, 18px),
+    calc((var(--tile, 60px) - 12px) / var(--em, 3)),
+    calc((var(--tile, 60px) - 12px) / (1.1 * var(--lines, 1)))
+  );
   white-space: nowrap;
 }
 .board .rune.glow {

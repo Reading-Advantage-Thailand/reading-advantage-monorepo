@@ -59,6 +59,26 @@ describe("loadPrimaryEvidenceEvent (FR-5, FR-6)", () => {
     expect(loaded?.legacyUnmatched).toBeUndefined();
   });
 
+  it("reads a quiz row that moved into a closed lesson attempt and makes the same event as the live row", async () => {
+    const details = { score: 1, responses: [], mode: "independent", audioPlayed: true, questions: [{ questionId: Q1, questionType: "mcq", correct: true, firstTry: true }] };
+    const live = await loadPrimaryEvidenceEvent({
+      db: db([{ id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "MC_QUESTION", targetId: ARTICLE, createdAt: AT, details }]),
+      payload: { sourceTable: "user_activity", rowId: ROW },
+    });
+    const moved = await loadPrimaryEvidenceEvent({
+      db: createMockDb({ selectSequence: [[], [{ schoolId: SCHOOL, activities: [{ id: "other", activityType: "MC_QUESTION" }, { id: ROW, userId: STUDENT, activityType: "MC_QUESTION", targetId: ARTICLE, createdAt: AT.toISOString(), details }] }]] }) as unknown as DB,
+      payload: { sourceTable: "user_activity", rowId: ROW },
+    });
+    expect(moved).not.toBeNull();
+    expect(moved).toEqual(live);
+  });
+
+  it("returns null when the id is in neither user_activity nor a closed attempt", async () => {
+    const empty = createMockDb({ selectSequence: [[], [{ schoolId: SCHOOL, activities: [{ id: "other", userId: STUDENT, activityType: "MC_QUESTION", targetId: ARTICLE }] }]] }) as unknown as DB;
+    expect(await loadPrimaryEvidenceEvent({ db: empty, payload: { sourceTable: "user_activity", rowId: ROW } })).toBeNull();
+    expect(await loadPrimaryEvidenceEvent({ db: createMockDb({ selectSequence: [[], []] }) as unknown as DB, payload: { sourceTable: "user_activity", rowId: ROW } })).toBeNull();
+  });
+
   it("returns null for a user_activity row that is not a quiz", async () => {
     expect(await loadPrimaryEvidenceEvent({ db: db([{ id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "VOCABULARY_FLASHCARDS", targetId: ARTICLE, createdAt: AT, details: {} }]), payload: { sourceTable: "user_activity", rowId: ROW } })).toBeNull();
   });

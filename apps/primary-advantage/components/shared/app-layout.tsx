@@ -6,11 +6,13 @@ import { SoundProvider } from "@/hooks/use-sound";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { SkipLink } from "@/components/shared/skip-link";
 import { getCurrentUser } from "@/lib/session";
+import { withSchoolAdminRows } from "@/server/utils/school-admin-rows";
 import { redirect } from "@/i18n/navigation";
 import { areaForRole, type NavArea } from "@/lib/nav-area";
 import { getLocale } from "next-intl/server";
 import { Signpost, Toolbar } from "@/components/rpg/toolbar";
 import { StudentHud } from "@/components/rpg/hud";
+import { OfflineSign } from "@/components/pwa/offline-sign";
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -36,13 +38,16 @@ export default async function AppLayout({
   area,
   settings = false,
 }: AppLayoutProps) {
-  const user = await getCurrentUser();
+  const sessionUser = await getCurrentUser();
   const locale = await getLocale();
 
   // Redirect to sign in page if user is not logged in
-  if (!user) {
+  if (!sessionUser) {
     return redirect({ href: "/auth/signin", locale });
   }
+
+  // A TEACHER with a school_admins row sees the school links too (the session has no row list).
+  const user = await withSchoolAdminRows(sessionUser);
 
   const navArea = area ?? areaForRole(user.role);
 
@@ -70,6 +75,7 @@ export default async function AppLayout({
               </div>
             </div>
           </header>
+          <OfflineSign />
           <div className="container flex flex-1 gap-8 pt-5">
             <div className="relative z-10 hidden lg:block lg:w-[230px] lg:shrink-0">
               <div className="sticky top-22">
@@ -88,11 +94,13 @@ export default async function AppLayout({
     );
   }
 
+  // The staff shell: the wooden header and the signpost menu of the student shell, on a parchment
+  // ground (owner look check 2026-10-14, option B).
   return (
     <SoundProvider userId={user.id}>
-    <div className="flex min-h-screen flex-col">
+    <div className="cq-staff flex min-h-screen flex-col">
       <SkipLink />
-      <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
+      <header className="cq-header sticky top-0 z-40">
         <div className="container flex h-16 items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <MobileMenu area={navArea} user={user} settings={settings} />
@@ -106,6 +114,7 @@ export default async function AppLayout({
           </div>
         </div>
       </header>
+      <OfflineSign />
       <div className="container flex flex-1 gap-8 pt-6">
         <div className="hidden lg:block lg:w-[230px] lg:shrink-0">
           <div className="sticky top-22">

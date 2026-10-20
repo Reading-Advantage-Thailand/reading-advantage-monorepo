@@ -9,6 +9,19 @@ import enMessages from "../../../../../messages/en.json";
 
 vi.mock("@/components/header", () => ({ Header: () => null }));
 
+const session = vi.hoisted(() => ({ user: { role: "ADMIN" } as { role: string } | null }));
+vi.mock("@reading-advantage/auth-client", () => ({ useSession: () => session }));
+// A plain select stands in for the Radix select; it shows for SYSTEM only, like the real one.
+vi.mock("@/components/admin/school-select", () => ({
+  SchoolSelect: ({ value, onChange }: { value: string; onChange: (id: string) => void }) =>
+    session.user?.role === "SYSTEM" ? (
+      <select aria-label="School" value={value} onChange={(e) => onChange(e.target.value)}>
+        <option value="">-</option>
+        <option value="school-x">School X</option>
+      </select>
+    ) : null,
+}));
+
 import ImportDataPage from "../page";
 
 const fetchMock = vi.fn();
@@ -35,6 +48,7 @@ async function importFile(tab: string | null, fileName: string) {
 
 describe("ImportDataPage upload routing", () => {
   beforeEach(() => {
+    session.user = { role: "ADMIN" };
     fetchMock.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -67,5 +81,35 @@ describe("ImportDataPage upload routing", () => {
     await importFile("classes", "classes.csv");
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
     expect(fetchMock.mock.calls[0][0]).toBe("/api/upload/classes");
+  });
+
+  it("shows no school selector to an ADMIN and sends no schoolId", async () => {
+    await importFile(null, "students.csv");
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    expect(screen.queryByLabelText("School")).toBeNull();
+    expect((fetchMock.mock.calls[0][1].body as FormData).has("schoolId")).toBe(false);
+  });
+
+  it("disables the upload for SYSTEM until a school is chosen, then sends schoolId", async () => {
+    session.user = { role: "SYSTEM" };
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ImportDataPage />
+      </NextIntlClientProvider>,
+    );
+    const file = new File(["name,email,role,classroom_name\n"], "students.csv", { type: "text/csv" });
+    fireEvent.change(document.getElementById("file-upload") as HTMLInputElement, {
+      target: { files: [file] },
+    });
+    await screen.findByText(enMessages.ImportData.upload.fileSelected.title);
+    const button = screen.getByRole("button", { name: enMessages.ImportData.upload.importButton });
+    expect(screen.getByText(enMessages.ImportData.upload.chooseSchool)).toBeInTheDocument();
+    expect(button).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText("School"), { target: { value: "school-x" } });
+    expect(button).toBeEnabled();
+    fireEvent.click(button);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    expect((fetchMock.mock.calls[0][1].body as FormData).get("schoolId")).toBe("school-x");
   });
 });

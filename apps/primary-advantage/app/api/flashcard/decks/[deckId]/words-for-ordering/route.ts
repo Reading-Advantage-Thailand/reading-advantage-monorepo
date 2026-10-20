@@ -1,7 +1,6 @@
-import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and, desc, sql } from 'drizzle-orm';
-import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db/schema';
+import { flashcardDecks, flashcardCards, cardReviews, articles, users } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { currentUser } from "@/lib/session";
@@ -9,6 +8,8 @@ import { resolveFlashcardGameXpAward } from "@/lib/authorization";
 import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
 import { shuffle } from "@/lib/shuffle";
+import { guardStudentRoute } from "@/lib/student-view";
+import { parseDeckGameSubmit, recordDeckGame } from "@/server/utils/flashcard-game-submit";
 
 // Helper function to tokenize a sentence into words
 function tokenizeSentence(sentence: string) {
@@ -354,6 +355,8 @@ export async function POST(
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const preview = guardStudentRoute(user, "flashcard_game_word_order");
+  if (preview) return preview;
 
   // Authorization decision via the central policy. Flashcard study serves
   // any authenticated user; article:read is the matching low-privilege
@@ -368,11 +371,15 @@ export async function POST(
   }
 
   const { deckId } = await params;
-  const { score, timer } = await request.json();
 
   const tenantDb = getTenantDB({ schoolId: user.schoolId });
   // userActivity and xpLogs are REFERENTIAL; users is FLAT (tenant-scoped).
   const flashDb = getUnscopedDB("userActivity and xpLogs have no schoolId; scoped via caller userId and deck targetId");
+
+  // The body must be valid and the deck must belong to the caller.
+  const submitted = await parseDeckGameSubmit(request, flashDb, deckId, user.id as string);
+  if (submitted instanceof NextResponse) return submitted;
+  const { score, timer } = submitted;
 
   // The score counts correct items; clamp it to the deck size server-side
   // so callers cannot mint XP beyond what the deck contains.
@@ -381,27 +388,15 @@ export async function POST(
     .where(eq(flashcardCards.deckId, deckId));
   const xpEarned = resolveFlashcardGameXpAward(score, cardRows.length);
 
-  // Record user activity (replaces Prisma `userActivity.create`).
-  const [userActivityRow] = await flashDb.insert(userActivity).values({
+  // One activity row per user, game, and deck; each play pays its XP (legacy behavior).
+  await recordDeckGame(flashDb, {
     userId: user.id as string,
+    schoolId: user.schoolId ?? null,
     activityType: ActivityType.SENTENCE_WORD_ORDERING,
-    targetId: deckId,
-    timer: timer,
-    details: {
-      timer: timer,
-      xp: xpEarned,
-    },
-    completed: true,
-  } as any).returning();
-
-  // Create XP log entry (replaces Prisma `xPLogs.create`).
-  await flashDb.insert(xpLogs).values({
-    userId: user.id as string,
-    xpEarned: xpEarned,
-    activityId: userActivityRow.id,
-    activityType: ActivityType.SENTENCE_WORD_ORDERING,
+    deckId,
+    timer,
+    xpEarned,
   });
-  await grantGpForXp({ tx: flashDb, schoolId: user.schoolId ?? null, userId: user.id as string, sourceKey: `xp:${userActivityRow.id}`, activityType: ActivityType.SENTENCE_WORD_ORDERING, xpEarned });
 
   // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
   // users is FLAT; TenantDB scopes the increment to the caller's school.

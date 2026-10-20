@@ -78,7 +78,7 @@ interface AllowlistEntry {
 
 const ALLOWLIST: AllowlistEntry[] = [
   {
-    pattern: /^packages\/ai\/src\/providers\/(openai|google|openrouter)\.ts$/,
+    pattern: /^packages\/ai\/src\/providers\/(openai|google|vertex|openrouter)\.ts$/,
     reason: "AI adapter provider implementation",
   },
   {

@@ -9,6 +9,7 @@ import {
 
 import { enqueuePrimaryEvidenceJob } from "@/lib/primary-evidence-queue";
 import { getCurrentUser } from "@/lib/session";
+import { guardStudentRoute } from "@/lib/student-view";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,6 +27,8 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
   }
+  const preview = guardStudentRoute(user, "apk_complete");
+  if (preview) return preview;
   if (user.role !== "STUDENT") {
     return NextResponse.json(
       { error: { code: "FORBIDDEN", message: "A student account is required" } },
@@ -62,6 +65,8 @@ export async function POST(request: NextRequest) {
     user,
     tenant: { schoolId: user.schoolId },
     input: parsed.data,
+    // Primary shows `users.xp` on the home page and the header; Reading Advantage keeps the default.
+    options: { addToUserXp: true },
   });
   const validated = gameCompletionResultSchema.safeParse(result);
   if (!validated.success) {

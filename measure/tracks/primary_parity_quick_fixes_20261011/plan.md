@@ -1,0 +1,216 @@
+# Plan — Primary parity quick fixes
+
+Work on `primary-parity-integration` (or a lane branch from it), except FR-12: FR-12 goes on
+`primary/public-pages` (spec FR-12). App root: `apps/primary-advantage` (paths below are relative to
+it unless they start with `packages/`). Tests: `pnpm --filter primary-advantage test` and
+`pnpm --filter @reading-advantage/domain test`; run one test file with `npx vitest run <file>` in the
+package. Commit subjects: `fix(primary): <subject> (track_id: primary_parity_quick_fixes_20261011)`,
+100 characters or less. Machine rules: one heavy job at a time (tsc, build, browser run); no run with
+25 students.
+
+The phases follow the areas of the spec (admin, teacher, student, public), as the set asks. Each FR
+task keeps the Contract-First order inside it: the contract (when the FR has one), then the failing
+test (red), then the fix (green). The last phase holds the docs and doctor steps.
+
+## Phase 1: Design [checkpoint: 94d2f47c6]
+
+- [x] Task: Ask the owner the member questions
+    - [x] Ask Q1 (FR-1, the "Student password" field) and Q2 (FR-13, old class code links) of spec "Member questions"
+    - [x] Record the answers and the date under this task
+    - Q1: default used (owner decision 2026-10-12: no stop). Default text: remove the "Student password" field from the admin class dialog, because no sign-in path reads `classrooms.password_students`. `updateClassroomBodySchema` has no `passwordStudents`.
+    - Q2: default used (owner decision 2026-10-12: no stop). Default text: keep the prefill for new 6-character codes, and show the note `StudentSignIn.code.oldLink` for an old link.
+- [x] Task: Design the changed student pieces in the RPG skin
+    - [x] Reuse `components/rpg/chrome.tsx` (`Panel`, `RpgButton`, `Sign`) and the `cq-` tokens (`styles/rpg.css`); draw no new frame (`docs/primary-rpg-skin.md` rule 2)
+    - [x] Settings at the inn (FR-8): "Display name" field with its help text, the read-only "Sign-in username" below it, the error message for a code-only session
+    - [x] Article page (FR-9, FR-11): the text in 3 blocks with a picture each; the chip in its two states ("Saved", "Not saved")
+    - [x] Lesson task 8 (FR-7): the saved answer view
+    - [x] Sign-in (FR-13): the code step with a prefilled code, and the note for an old link
+    - [x] Make a static mock or a prototype capture of each piece at 375 px and 1280 px, day and night; the PNG files are outside the repository (run rule); the paths are in `captures.md` of this folder
+    - Design decisions for the build phases:
+        - FR-8: the form sits in one `Panel` at the inn. The label "Display name" uses the new keys `Settings.userProfile.displayName` and `displayNameDescription`. The read-only field uses `signInUsername` and a help line. The 403 message for a `code_only` session shows in a red notice inside the panel (new key `Settings.userProfile.codeOnlyError`) and as an error toast. The submit button is `RpgButton` gold, 48 px.
+        - FR-9: the article text is a `Panel` with 3 blocks. Each block has a picture and its sentences. The reading column has no extra decoration (skin rule 4).
+        - FR-11: the chip is an ink-on-parchment chip in both day and night (blue for "Saved", sand for "Not saved"), with an icon and text. The `StatusChip` dark tones do not read well on parchment at night, so the build phase uses the fixed colors of the capture. Keys stay `Article.saveToFlashcard` and `Article.notSaved`.
+        - FR-7: the completed view uses a `Sign` title, one `Panel`, green and blue left-border blocks, and a `Plaque` for the score. The build keeps the existing `LessonSAQ.*` keys.
+        - FR-13: the sign-in code step is a `Panel` in the gatehouse. The prefilled code shows in the input with the gold button in the "Checking..." state. The old-link note is a gold notice with the scroll icon above the input, and the input stays empty and active.
+- [x] Task: Design the changed staff pieces in the staff shell
+    - [x] Admin class dialog (FR-1): name, the grade select of the create dialog, and the result of Q1 for the password field
+    - [x] Reports tiles (FR-3): the fourth tile with the percent and "n of m students"; the four tiles on one row at 1280 px and two rows at 375 px
+    - [x] Admin students toasts (FR-2): the success and error toasts with the title and the description
+    - [x] Captures at 375 px and 1280 px in the same folder
+    - Design decisions: the edit dialog shows name, a grade select (grades 3 to 12, as the create dialog), and the class code read-only. The reports tiles use `grid-cols-2 lg:grid-cols-4`; the fourth tile has a detail line "n of m students". The toasts use the real `sonner` Toaster: the title is the translated message, the description is the server `error` text.
+- [x] Task: Owner look check of the design
+    - [x] Send the captures to the owner; record the answer and the date here; change the design until the owner accepts it
+    - look check pending (owner, async). The capture list is in `captures.md`.
+- [x] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) Open each PNG listed in `captures.md`. (2) Check that student pieces use the wood, gold, and parchment look in day and night. (3) Check that no text is cut off at 375 px. (4) Check that each button is 48 px high. (5) Check that the staff pieces look like the existing staff shell. (6) Write the owner answer under "Owner look check" above.
+
+## Phase 2: Admin [checkpoint: e5c036c9f]
+
+- [x] Task: FR-1 (ADM-02) — the admin can edit a class again
+    - [x] Contract: `updateClassroomBodySchema` in `lib/zod.ts` (`classroomName` trimmed 1 to 100; `grade` optional, "1" to "12"; `passwordStudents` only if Q1 keeps the field), with JSDoc
+    - [x] Red: in `server/controllers/__tests__/classroomController.authorization.test.ts`, add: the PATCH body of the admin dialog gives 200 and calls `updateClassroom` with the name and the grade; an empty name gives 400 with the field error; a grade "13" gives 400
+    - [x] Red: new `components/admin/__tests__/classrooms-table-edit.test.tsx` (jsdom): the edit dialog sends `classroomName` and `grade`; the grade control is a select
+    - [x] Green: `server/controllers/classroomController.ts:141-187` parses with the schema; `components/admin/classrooms-table.tsx:178-213` and `:490-545` send and show the new fields; the result of Q1 in the dialog and, if kept, in `server/models/classroomModel.ts:528-597`
+    - [x] Check that `components/teacher/my-classes.tsx` still saves (one new controller case with the teacher body `{classroomName, grade}` in `classroomController.authorization.test.ts`)
+    - Q1 default used (owner decision 2026-10-12: no stop): the "Student password" field is removed; the contract has no `passwordStudents`; `updateClassroom` is unchanged. The edit dialog shows the class code read-only.
+    - Commit 8ce321d69. The grade select lists 3 to 12 (as the create dialog), plus the current grade when it is outside that range.
+- [x] Task: FR-2 (ADM-06) — the students page shows the result of each change
+    - [x] Red: in `app/[locale]/admin/__tests__/students-crud-live-calls.test.tsx`, mock `sonner` and assert a success toast for add, edit, and delete, and an error toast with the server `error` text for a failed call of each
+    - [x] Red: a key parity check for `AdminStudents.toasts.*` in the five locales (extend the existing i18n parity test, `components/__tests__/structural-alignment-i18n.test.tsx`, or add one case)
+    - [x] Green: add the toasts in `app/[locale]/admin/students/page.tsx:250-360`; add the seven keys to `messages/{en,th,cn,tw,vi}.json` from the legacy files
+    - Commit e5c036c9f. The parity check is one case in `students-crud-live-calls.test.tsx` (it compares the key sets of the five locales).
+- [x] Task: Measure - User Manual Verification 'Phase 2: Admin' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As ADMIN open `/en/admin/students/classrooms`, choose Edit on a class. (2) Check that the dialog shows name, a grade select, and a read-only class code, and no student password. (3) Change the name and the grade, press Update, and check that the list shows the new values with a success toast. (4) Clear the name and check that the update fails with an error toast. (5) Open `/en/admin/students`; add, edit, and delete a test student; check one toast for each. (6) Make a failing call (for example a name that the server refuses) and check that the error toast shows the server text.
+
+## Phase 3: Teacher [checkpoint: 949863f0d]
+
+- [x] Task: FR-3 (TCH-05) — the "Active this week" tile
+    - [x] Red: new `server/models/__tests__/classroomModel.last-activity.test.ts`: the three student-list reads return `lastActivity` as the newest `created_at` of `user_activity` and `xp_logs`, `null` for a student with no row, and one grouped query for the list
+    - [x] Red: in `components/teacher/__tests__/teacher-progress-reports.test.tsx`, add: four tiles; with 2 of 4 students active in 7 days the tile shows 50 % and "2 of 4 students"; the class filter changes the count
+    - [x] Green: `server/models/classroomModel.ts:678-900` (three reads and one shared helper); `components/teacher/teacher-progress-reports.tsx:147-160` and `:291-295`
+    - The model test uses the PGlite helper (a real Postgres), not the mock helper. The tile shows `n%` and the existing key `activeThisWeekDescription`. Active means `lastActivity` at most 7 days before the page render.
+- [x] Task: FR-4 (TCH-08) — the class page "Settings" link opens the edit dialog
+    - [x] Red: in `components/teacher/__tests__/my-classes.test.tsx`, add: with `?edit=<id of a listed class>` the edit dialog opens with its name and grade; with an unknown id no dialog opens; a close removes `edit` from the URL
+    - [x] Green: `components/teacher/my-classes.tsx:92-120` reads `useSearchParams` after the list loads and opens the dialog; `router.replace` on close
+    - A ref guard opens the dialog once for each `edit` id. The save button also removes `edit` from the URL.
+- [x] Task: Measure - User Manual Verification 'Phase 3: Teacher' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As TEACHER open `/en/teacher/reports`. (2) Check four tiles: total, average XP, common level, and active this week. (3) Check the fourth tile shows a percent and "n of m students". (4) Pick a class and type a name in the search; check that the fourth tile changes. (5) Open a class page, press Settings. (6) Check that `/teacher/my-classes` opens the edit dialog with the name and grade of that class. (7) Close the dialog; check that `edit` leaves the URL. (8) Open `/teacher/my-classes?edit=nope`; check that no dialog opens.
+
+## Phase 4: Student — lessons and quizzes [checkpoint: a6fffbe01]
+
+- [x] Task: FR-5 (STU-02) — a lesson resumes on the saved task
+    - [x] Red: new `lib/__tests__/lesson-progress.test.ts`: `getLessonTaskFromProgress` gives 1 for 0, -5, and NaN; 2 for 7 and 14; 13 for 93; 14 for 100 and 150; `getLessonProgressForTask` gives 0 for 1, 14 for 2, 93 for 13, 100 for 14; a round trip of each task gives the same task
+    - [x] Red: new `components/lesson/__tests__/lesson-progress-bar-resume.test.tsx`: a progress response of 93 opens task 13 with its Next button; 0 on an assignment opens task 1; 100 opens the summary and pauses the timer
+    - [x] Green: new `lib/lesson-progress.ts` (pure, with JSDoc); `components/lesson/lesson-progress-bar.tsx:157-171`, `:229`, `:317`
+- [x] Task: FR-6 (STU-03) — a quiz finishes when a row exists
+    - [x] Red: new `actions/__tests__/finish-quiz-existing-row.test.ts`: a `completed = false` row becomes complete and gets one XP log; a second call for a complete row returns success and writes no XP log and no XP; a new article inserts a row; all writes run in one transaction
+    - [x] Green: `actions/question.ts:60-182` (upsert on the unique key with `onConflictDoUpdate` where `completed = false`, one `db.transaction`, the evidence job only when the row changed); keep `actions/__tests__/finish-quiz-evidence.test.ts` green
+- [x] Task: FR-7 (STU-17) — lesson task 8 shows the saved short answer
+    - [x] Red: new `components/lesson/practice/__tests__/lesson-task-saq-completed.test.tsx`: a `COMPLETED` response shows the saved question, answer, suggested answer, feedback, and score, and pauses the timer; a failed read shows the empty form; an `INCOMPLETE` response shows the form
+    - [x] Green: `components/lesson/practice/lesson-task-saq.tsx:38-46` reads `/api/articles/questions/<id>?articleId=<id>&questionType=SA_QUESTION` (`cache: "no-store"`) before the form
+- [x] Task: Measure - User Manual Verification 'Phase 4: Student — lessons and quizzes' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As a student open an assignment lesson with progress 93; check that task 13 opens with a Next button. (2) Open a new assignment (progress 0); check that task 1 opens with the start button. (3) Open a lesson with progress 100; check that the summary shows and the timer stays still. (4) Finish a quiz twice in a row (double click); check that XP rises one time. (5) Answer task 8, go to task 9, go back; check that the saved question, answer, suggested answer, feedback, and score show.
+
+## Phase 5: Student — reading, saved words, profile, and XP [checkpoint: ac426c945]
+
+- [x] Task: FR-8 (STU-06) — the student changes the display name
+    - [x] Contract: `updateOwnDisplayNameBodySchema` in `lib/zod.ts` (`name` trimmed, 2 to 40 characters), with JSDoc
+    - [x] Red: new `app/api/users/me/__tests__/route.test.ts`: a full student session changes its own `name` through `updateUser`; a `code_only` session gets 403; no session gets 401; a body with `id`, `username`, or `role` changes nothing else (the schema strips it); a name of 1 or 41 characters gives 400
+    - [x] Red: new `components/__tests__/change-display-name-form.test.tsx`: the form sends PATCH `/api/users/me`; a failure shows the error toast; the labels are "Display name" and "Sign-in username"
+    - [x] Green: new `app/api/users/me/route.ts` (PATCH; `getTenantDB`; `logger.error` on a failure); `components/change-username-form.tsx`; `app/[locale]/(student)/settings/user-profile/page.tsx:51-58`; new keys `Settings.userProfile.displayName`, `displayNameDescription`, `signInUsername` in the five locales
+    - Commit db67372ad. No member question. The route `PATCH /api/users/me` calls `users.updateUser` of the domain; a user without a school uses `getUnscopedDB`. The form file keeps its name `change-username-form.tsx`.
+- [x] Task: FR-9 (STU-07) — the article text shows every sentence
+    - [x] Red: new `lib/__tests__/paragraph-utils.test.ts`, ported from legacy `lib/paragraph-utils.test.ts` (bucket sizes 7 → 3, 2, 2; 8 → 3, 3, 2; 10 → 4, 3, 3; 0, 1, and 2 items; order and identity kept; the passage split)
+    - [x] Red: new `components/articles/__tests__/article-content-paragraphs.test.tsx` and one case in `components/lesson/task/__tests__/task-reading-highlight.behavior.test.tsx`: a sentence that no passage paragraph contains shows; a short sentence that two paragraphs contain shows one time; the blocks are 3
+    - [x] Green: new `lib/paragraph-utils.ts`; `components/articles/article-content.tsx:414-416` and `:945-986`; `components/lesson/task/task-reading.tsx:53` and `:393-420`
+    - [x] Tell the read-along session (`primary_parity_read_along_20261011`) the commit, because it changes the same file
+    - Commit 8036a121c. The no-sentences fallback shows the passage in 3 blocks of sentences (no pictures). The read-along session edits the same two files and needs this commit sha.
+- [x] Task: FR-10 (STU-08) — game XP goes into the student's XP
+    - [x] Red: in `packages/domain/src/__tests__/games.test.ts`, add: with `addToUserXp: true` a new completion adds `xpEarned` to `users.xp` in the same transaction; a duplicate adds nothing; without the option `users` gets no update; the client schema still refuses an `xp` field
+    - [x] Red: in the Primary complete route test (`app/api/v1/apk/__tests__/`), assert that the route passes `addToUserXp: true`
+    - [x] Green: `packages/domain/src/games/mutations.ts:66-200` (the `options` parameter, the SQL increment of `users.xp` after the saved completion); `app/api/v1/apk/complete/route.ts:60-65`
+    - [x] Check that `apps/reading-advantage/app/api/v1/apk/routes.test.ts` and the Advantage Games completion tests stay green
+    - Commit dbd4fbadd. `apps/reading-advantage` route tests did not run here (alias error `@/lib/apk/...`, not caused by this change; the option is off by default).
+- [x] Task: FR-11 (STU-16) — the chip shows the student's own state; the legacy save rule
+    - [x] Contract: in new `packages/domain/src/games/primary-article-cards.ts`, Zod schemas `saveArticleCardsInputSchema` (`articleId` uuid), `saveArticleCardsOutputSchema` (`wordsCreated`, `sentencesCreated`, `alreadySaved`), and `articleCardStateOutputSchema` (`saved`); export them from `packages/domain/src/games/index.ts`
+    - [x] Red: new `packages/domain/src/__tests__/primary-article-cards.test.ts` (mock DB): no save before all three quizzes; 3 to 5 words with a fixed random function; words already in the vocabulary deck (any case, any article) are left out; all sentences; nothing when both kinds exist; the log is marked saved; a TEACHER gets an auth error; each query filters `user_id`
+    - [x] Red: new `components/articles/__tests__/article-card-saved-chip.test.tsx`: the chip shows "Not saved" when another user saved the article and this user did not; "Saved" for this user's log or cards
+    - [x] Red: a test for `getArticleById(articleId, userId)` in `server/models/__tests__/articleModel.questions.test.ts` or a new file: only the logs of `userId`; no log without a user
+    - [x] Green: `packages/domain/src/games/primary-article-cards.ts`; `server/models/articleModel.ts:436-460`; `server/controllers/articleController.ts:112-120` (no user, no log); `app/[locale]/(student)/student/read/[articleId]/page.tsx:114-135`; `components/articles/article-card.tsx:18-60`
+    - [x] Check that `actions/__tests__/flashcard-dashboard-data.test.ts` and the lesson task 7 path still pass
+- [x] Task: Measure - User Manual Verification 'Phase 5: Student — reading, saved words, profile, and XP' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As a STUDENT with a full sign-in open `/en/settings/user-profile`; check the labels "Display name" and "Sign-in username". (2) Change the display name; check the success toast and the new name in the header; check that the sign-in username is the same. (3) Sign in with a class code (code-only session), repeat; check the red notice and the error toast. (4) Open an article page with at least 7 sentences; check 3 blocks with one picture each and every sentence once. (5) Open the same article as a student who did not finish the quizzes; check the chip "Flashcard: Not Saved" even when a classmate saved it. (6) Finish the MCQ, SAQ, and LAQ, reload; check the chip "Flashcard: Saved" and 3 to 5 new words and all sentences in the decks. (7) Play one game; check that the home XP and the header gem rise by the earned XP.
+
+## Phase 6: Public [checkpoint: 8312d44d2]
+
+- [x] Task: FR-12 (PUB-04) — the footer Support link and email (on `primary/public-pages`)
+    - [x] Tell the owner of `primary_public_pages_20261007` (the PR session) before the commit; work in `/home/daniebo/Desktop/rama-worktrees/public-pages` (orchestrator allowed the single change; the orchestrator owns the PR session contact)
+    - [x] Red: new `components/index/__tests__/footer.test.tsx` on the branch: "Support" links to `/contact`; the email link is `CONTACT_CHANNELS.email.href` (`mailto:support@reading-advantage.com`); no Google Form URL
+    - [x] Green: `components/index/footer.tsx` on the branch (the "Support" href only)
+    - [x] Record the branch commit here. Integration gets no change of `components/index/footer.tsx`
+    - Branch commit on `primary/public-pages`: `c7228ab74` (footer.tsx Support href to `/contact`; new `footer.test.tsx`, 2 tests; the email link test passed before the fix, as the branch already used `CONTACT_CHANNELS.email`)
+- [x] Task: FR-13 (PUB-05) — `?classroom_code=` fills the class code step
+    - [x] Red: in `components/__tests__/student-code-sign-in.test.tsx`, add: `?classroom_code=ab c12d` sends `ABC12D` one time and opens the name step; a wrong 6-character code shows "codeInvalid"; an 8-character code is not sent and shows the note; no query keeps today's flow
+    - [x] Green: `components/student-login/code-sign-in.tsx:80-145` (`useSearchParams`, a ref guard, the normalize rule of `submitCode`); new key `StudentSignIn.code.oldLink` in the five locales (or the result of Q2)
+    - Commit `2c9e4327c`. Q2: default used (prefill for new 6-character codes, note `StudentSignIn.code.oldLink` for other lengths; the note clears when the student types). Icon `size-14 object-contain` (L-3). 4 new tests, file 17 pass; 16 related files 117 pass; app tsc clean.
+- [x] Task: Measure - User Manual Verification 'Phase 6: Public' (Protocol in workflow.md)
+
+    - look check pending (owner, async). Manual verification steps: (1) Open the `/en` footer; click "Support"; check that `/contact` opens. Check the email link `mailto:support@reading-advantage.com`. (2) Open `/en/auth/signin?classroom_code=<new 6-character code>`; check that the name list opens. (3) Use a wrong 6-character code; check the message "This code does not work". (4) Use an 8-character code; check the note and an empty input. (5) Type in the input; check that the note goes away. Captures: design in `/home/daniebo/Desktop/primary-parity-progress/captures/quick_fixes/phase1-design/student-fr13-*`.
+
+## Phase 7: Acceptance, Docs & Doctor [checkpoint: 581535c5d]
+
+- [x] Task: Run the gates, one at a time
+    - [x] `pnpm --filter primary-advantage test`, `pnpm --filter @reading-advantage/domain test`
+    - [x] `pnpm --filter primary-advantage check-types`, then `pnpm --filter @reading-advantage/domain check-types`
+    - [x] `pnpm --filter primary-advantage lint` and the domain lint on the changed files
+    - Results (2026-10-12, lock + nice, one at a time, vitest/tsc/eslint binaries from the root `node_modules/.bin`): app test 235 files, 1422 tests; 1 failure at first (`teacher-reports.test.tsx` expected no fourth tile; caused by FR-3), fixed in 4d8117c3d, file now 6 pass. Domain test 151 files pass, 4 skipped; 1 suite failed (`mastery-persistence-public-api.test.ts` runs `tsc` on the domain project, which fails on the old `src/codecamp` errors; not from this track). App `tsc --noEmit` exit 0. Domain `tsc --noEmit`: only `src/codecamp` errors (`@reading-advantage/integrations-github`, old). Eslint on the 44 changed app files: 1 error caused by this track (`code-sign-in.tsx` disable comment for the undefined rule `@next/next/no-img-element`), fixed in 4d8117c3d; 0 errors after, warnings are old. Domain eslint on `src/games`: exit 0. Known closeout tests on the line caps of `measure/tech-debt.md` and `lessons-learned.md`: not in the failed list of this run.
+- [~] Task: Side-by-side acceptance on the rehearsal copy
+    - [x] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance-pairs.json` with the rows AC-1 to AC-13 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
+    - [x] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-3, FR-5, FR-6, and FR-11
+    - [x] Run the kit on the matched copies with a production build of each app (one app at a time) - done 2026-10-12 in batch capture 1 at commit 0c9356701; results in `acceptance.md`
+    - [x] Run the data checks of the spec table "Migrated data" (read only on `primary_parity_20261011`; SQL in `migrated-data-checks.sql`, results in `acceptance.md`)
+    - [x] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance.md` (the kit template); keep the captures in the private folder
+- [x] Task: Owner look check of the built pages
+    - [x] Send the report and the new captures (375 px and 1280 px, day and night for the student pages); record the answer here - look check pending (owner, async): report at `~/Desktop/primary-parity-acceptance/captures/primary_parity_quick_fixes_20261011/report.html`
+- [x] Task: Record the found items
+    - [x] Show the owner E-8 (`/api/articles/[articleId]` GET with no session check) and the level rule of `calculateLevelAndCefrLevel`; on a yes, add the rows to `measure/tech-debt.md` (the file has more than 50 lines, so ask the owner to prune it first, `measure/workflow.md` step 8)
+    - No stop (owner decision 2026-10-12). E-8 and the level rule are findings F-1 and F-2 in `plan-review.md`; `tech-debt.md` stays unchanged. The orchestrator adds the rows after the owner answer. The three dependent members are named in the Phase 7 report for the orchestrator to tell.
+    - [x] Tell `primary_parity_school_management_20261011`, `primary_parity_read_along_20261011`, and `primary_parity_lesson_repeat_20261011` that their dependency is complete
+- [x] Task: Generate Docs & Doctor
+    - [x] Run `measure/generate.sh`; stage the files that it changes
+    - [x] Run `measure/doctor.sh`; fix each failure that names a file of this track
+    - Doctor: only A13 (stale archived directory `agents_md_audit_science_advantage_20260603`, known, not this track).
+    - [x] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>` (skipped by instruction)
+- [x] Task: Measure - User Manual Verification 'Phase 7: Acceptance, Docs & Doctor' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual steps: (1) Read `acceptance.md` and the batch report. (2) Check each pair of AC-1 to AC-13 in the report. (3) Merge `primary/public-pages` before AC-12. (4) Set `PARITY_NEW_CLASS_CODE` and `PARITY_OLD_CLASS_CODE` for AC-13. (5) Do the manual steps in the pair notes on the clone (toasts, quiz finish, game, code-only session).
+
+## Task: Authorization of the assignment routes (added 2026-10-12, orchestrator)
+
+- [x] Task: Authorization of the assignment routes (found by staff_student_view S2) - commit 40804468c
+    - Rules: POST and GET list: TEACHER of the class, ADMIN of the class school, or SYSTEM (403 otherwise, 400 for a bad body or a student outside the class). GET by id: the same staff, or the assigned student. Student POST progress: the assigned student only. Student assignments GET: the student, SYSTEM, or staff of a class of the student. Progress and activity GET read the session user's own record.
+    - Red 19 of 21 failed; green 30 pass in 4 files; app tsc exit 0. The assign form body already passes the new Zod schema.
+    - Deviation: a TEACHER now reads only the assignments of a class that the teacher teaches (legacy: any teacher of the school).
+    - Gap: the progress POST does not check that the body articleId is the article of the assignment.
+
+## Task: School and admin authorization fixes from the API audit (added 2026-10-12, orchestrator)
+
+- [x] Task: School and admin authorization fixes from the API audit (findings in `api-audit-20261012.md`)
+    - Rules: school create = TEACHER or ADMIN without a school, or SYSTEM (STUDENT 403; TEACHER becomes ADMIN). School PATCH and admin add/remove = owner, ADMIN of the school (`users.role` + `users.school_id`), or SYSTEM (`server/utils/school-access.ts`). New admin target = TEACHER or ADMIN (400 otherwise). School GET and profile page blank staff emails for a STUDENT. `getAllStudentsByAdmin` scopes by the authorized school id. The `/api/classrooms` gate drops the wrong `user_roles` query.
+    - Gap: DELETE of the school stays owner-only; an ownerless school has no delete path for its ADMIN. A TEACHER with only a `school_admins` row cannot rename the school.
+
+## Task: API authorization fixes, cluster 2 (added 2026-10-12, orchestrator)
+
+- [x] Task: API authorization fixes, cluster 2 (nine findings; notes per finding below)
+    - Finding 5 (licenses), DEFAULT for the owner to confirm: POST, PUT, and DELETE on `/api/licenses` and `/api/licenses/[id]` are SYSTEM only (403 for ADMIN). GET (list and by id) stays for ADMIN (own school, tenant scope) and SYSTEM. ADMIN flows that the UI uses and that stay: the school license panel at `/settings/school-profile#license` (server read through `getLicenseViewForCaller`, no API call) and `/api/users/me/school`. The create, edit, and delete forms and the license table sit under `/system/licenses` (SYSTEM pages), so they keep working. `components/update-user-license.tsx` sends PATCH to `/api/licenses/<userId>`; no PATCH handler exists, so that flow already fails with 405 (not changed here; a key activation flow needs its own owner decision).
+    - 1 ranking (2a100f15c): GET ignores `?schoolId` unless SYSTEM, else the session school (404 with none). POST compares the key with `timingSafeEqual` on equal-length buffers; no `ACCESS_KEY` gives 401. Red 3 of 8.
+    - 2, 3 flashcard actions (96dd4fa81): `getUserFlashcardDecks()` has no parameter (no caller used one); the `articleActivityLogs` update filters by id and `userId`. Red 3 of 3.
+    - 4 register (43255d514): ADMIN and TEACHER name only the own school (403); SYSTEM may name any school (SYSTEM got 403 before). Red 2 of 23. The app uses the `packages/api` dist; dist rebuilt with the direct tsc (exit 0).
+    - 5 licenses (a936e586f): see the default above. Red 5 of 15.
+    - 6 chatbot (b128c8eda): passage 20000, summary 5000, title 500, image description 2000, 60 messages of 4000 characters (the client sends the full history, so 30 would break long chats), blacklist 100 of 1000. 400 on failure. Red 7 of 11.
+    - 7 article questions (524b08a66): GET 401 without a session, 400 for a bad `questionType`; POST body Zod (`activityType` enum, `data.responses`, `data.progress`, `data.timer`); the preview guard stays first. Red 7 of 11.
+    - 8 deck games (5916d58ef): shared `server/utils/flashcard-game-submit.ts` (Zod `score` 0-1000, `timer` 0-86400000; owner check gives 403). Four routes use it. Red 24 of 32.
+    - 9 teachers and students (e46507fdf): Zod on teacher create, student create, student update (unknown fields such as `role` are dropped). Teacher PUT already had Zod. The audit claim "teacher by id uses an inner join on `user_roles`" is NOT true: `getTeacherById`, `updateTeacher`, and delete use `roleSql` (`users.role`), fixed earlier in `5cf2dcb91`. No change needed.
+    - Type check: `apps/primary-advantage` `tsc --noEmit` exit 0 under the lock.
+    - Gaps: `components/update-user-license.tsx` sends PATCH to `/api/licenses/<userId>` and no PATCH handler exists (405; key activation needs an owner decision). Other `console.error` calls in the touched controllers stay (not changed lines).
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: H-1 class edit accepts a number grade (PATCH schema, teacher dialog sends a string); the create route has no Zod schema and its model already parses the grade with `parseInt`, so no change there ea4dcebde
+- [x] Task: L-13 teacher edit dialog lists grades 1 to 12 ea4dcebde
+- [x] Task: Low: the edit dialog does not open again after a save while the URL still has `edit` ea4dcebde
+- [x] Task: M-6 only the school owner or SYSTEM removes the owner from the admins bec40ee84
+- [x] Task: Low: PATCH /api/users/[id] refuses ADMIN or SYSTEM for a STUDENT target, and returns `[users.role]` as roles 901a79102
+- [x] Task: Low: school DELETE sets the owner to TEACHER, and an ADMIN of a school with no owner may delete it 12ecd72c6
+- [x] Task: Low: a TEACHER with a school_admins row renames the school (`canManageSchool` takes `hasSchoolAdminRow`); the menu loads the row for a TEACHER dc0503bf6
+- [x] Task: License key form removed from the user profile page until STU-19 (default; redeem not ported); the dead component is deleted c1d853021
+- [x] Task: M-21 a second deck game result gives 200: one activity row per user, game, and deck (upsert); each play pays its XP as in legacy bfea121; the 4 deck game routes use `recordDeckGame` aa1bcfa8a
+- [x] Task: XP race: `awardQuestionXp` adds the XP in SQL, no absolute write ad96d4124
+- [x] Task: Assignment POST: ids are checked as uuid text (400), the 500 message is generic 79355d27d (route fixtures 05c7e2f35)
+- [x] Task: Progress POST: 400 when the body article is not the assignment article; 400 for an assignment id that is not a uuid 79355d27d
+- [x] Task: F-1 GET /api/articles/[articleId] needs a session (default; no client caller found by grep) 394a5f4d1 (guard fix 29ad079d8)
+- [x] Task: Logger: `console.error` replaced in `app/api/upload/csv` and `app/api/upload/classes` 3faa192de
+- [x] Task: From A2 `articleModel.logs-of-user` failed alone too: the test DDL lacked `chapter_id` (test defect) f2702ced3
+- [x] Task: M-7 old: the RA jest config (jest, not vitest) lacked the `avatar-kit` mapper; `app/api/v1/apk` 21 tests green 88fedb924
+
+## Phase: Manual Test Fixes 2026-10-19
+- [x] Task: P5 unknown paths answer HTTP 404: the catch-all calls `notFound()`, the page text moves to `app/[locale]/not-found.tsx` 5f7326b73

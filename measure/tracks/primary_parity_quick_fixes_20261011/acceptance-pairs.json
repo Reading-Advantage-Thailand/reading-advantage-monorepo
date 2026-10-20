@@ -1,0 +1,276 @@
+{
+  "member": "primary_parity_quick_fixes_20261011",
+  "pairs": [
+    {
+      "id": "AC-1",
+      "rows": [
+        "ADM-02"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/students/classrooms",
+      "newPath": "/en/admin/students/classrooms",
+      "checks": [
+        {
+          "id": "AC-1-a",
+          "behavior": "The edit dialog saves a new name and grade of a migrated class. The list shows them. No 400. The new dialog has no \"Student password\" field (Q1 default, difference on purpose)."
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "rows": [
+        "ADM-06"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/students",
+      "newPath": "/en/admin/students",
+      "checks": [
+        {
+          "id": "AC-2-a",
+          "behavior": "Add, edit, and delete each show a success toast. A failed call shows an error toast. A page capture shows the list only; the toasts need the manual steps."
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "rows": [
+        "TCH-05"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/reports",
+      "newPath": "/en/teacher/reports",
+      "checks": [
+        {
+          "id": "AC-3-a",
+          "behavior": "Four tiles. The new fourth tile shows the percent and \"n of m students\" active in 7 days. Legacy shows 0 percent (E-3), a difference on purpose."
+        },
+        {
+          "id": "AC-3-b",
+          "behavior": "Compare the new tile with the SQL count of migrated-data-checks.sql (FR-3). Make one activity in both apps first."
+        }
+      ]
+    },
+    {
+      "id": "AC-4",
+      "rows": [
+        "TCH-08"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhmfagyv0001t7mk3nq28w01",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhmfagyv0001t7mk3nq28w01}",
+      "checks": [
+        {
+          "id": "AC-4-a",
+          "behavior": "Settings opens the edit dialog of that class in the new app. Legacy opens the list only (difference on purpose). Capture the page; the Settings click is a manual step."
+        }
+      ]
+    },
+    {
+      "id": "AC-5",
+      "rows": [
+        "STU-02"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/c0mupcv00j0001wqzrvvgqb2y?type=article",
+      "newPath": "/en/student/lesson/{map:article:c0mupcv00j0001wqzrvvgqb2y}?type=article",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-5-a",
+          "behavior": "A migrated lesson with progress above 0 opens the same task in both apps with a Next button. Progress 0 opens task 1. Use the progress values of migrated-data-checks.sql (FR-5)."
+        }
+      ]
+    },
+    {
+      "id": "AC-6",
+      "rows": [
+        "STU-03"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/c0mupcv00j0001wqzrvvgqb2y",
+      "newPath": "/en/student/read/{map:article:c0mupcv00j0001wqzrvvgqb2y}",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-6-a",
+          "behavior": "A quiz with a migrated completed = false row finishes in the new app. A double click gives XP one time. Legacy gives a second row and XP two times (E-4, difference on purpose). The finish is a manual step on the clone."
+        }
+      ]
+    },
+    {
+      "id": "AC-7",
+      "rows": [
+        "STU-17"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/c0mupcv00j0001wqzrvvgqb2y?type=article",
+      "newPath": "/en/student/lesson/{map:article:c0mupcv00j0001wqzrvvgqb2y}?type=article",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-7-a",
+          "behavior": "Task 8 of a finished SAQ shows the saved answer, the feedback, and the score in both apps. Pick an article with an SA_QUESTION row that has details."
+        }
+      ]
+    },
+    {
+      "id": "AC-8",
+      "rows": [
+        "STU-06"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/settings/user-profile",
+      "newPath": "/en/settings/user-profile",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-8-a",
+          "behavior": "The student changes the display name. The header shows it. The sign-in username does not change."
+        },
+        {
+          "id": "AC-8-b",
+          "behavior": "A code-only session gets an error message (manual step with a class-code session)."
+        }
+      ]
+    },
+    {
+      "id": "AC-9",
+      "rows": [
+        "STU-07"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/c0muwmdfvd00bpgphrs7vxjdm",
+      "newPath": "/en/student/read/{map:article:c0muwmdfvd00bpgphrs7vxjdm}",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-9-a",
+          "behavior": "Every sentence of the article shows one time, in order, in 3 blocks. Compare the text files of both captures."
+        }
+      ]
+    },
+    {
+      "id": "AC-9b",
+      "rows": [
+        "STU-07"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/c0muwmgj7p00cbseb2lz3simq",
+      "newPath": "/en/student/read/{map:article:c0muwmgj7p00cbseb2lz3simq}",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-9b-a",
+          "behavior": "Second article: every sentence shows one time, in order, in 3 blocks."
+        }
+      ]
+    },
+    {
+      "id": "AC-10",
+      "rows": [
+        "STU-08"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/games/vocabulary/rune-match",
+      "newPath": "/en/student/games/apk/rune-match",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-10-a",
+          "behavior": "After one completion, the home XP and the header gem rise by the xpEarned of the completion. Read users.xp before and after on the clone (SQL, FR-10). The game play is a manual step."
+        }
+      ]
+    },
+    {
+      "id": "AC-11",
+      "rows": [
+        "STU-16"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/c0mupcv00j0001wqzrvvgqb2y",
+      "newPath": "/en/student/read/{map:article:c0mupcv00j0001wqzrvvgqb2y}",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-11-a",
+          "behavior": "The chip shows the state of this student only, for a saved and for an unsaved article."
+        },
+        {
+          "id": "AC-11-b",
+          "behavior": "After the three quizzes, 3 to 5 new words and all sentences are in the decks (SQL on flashcard_decks and flashcard_cards)."
+        }
+      ]
+    },
+    {
+      "id": "AC-12",
+      "rows": [
+        "PUB-04"
+      ],
+      "role": "PUBLIC",
+      "legacyPath": "/en",
+      "newPath": "/en",
+      "checks": [
+        {
+          "id": "AC-12-a",
+          "behavior": "The footer link \"Support\" opens /contact. The email link is mailto:support@reading-advantage.com. NOTE: needs primary/public-pages merge. The change is on branch primary/public-pages (c7228ab74), not on this build until the merge."
+        }
+      ]
+    },
+    {
+      "id": "AC-13a",
+      "rows": [
+        "PUB-05"
+      ],
+      "role": "PUBLIC",
+      "legacyPath": "/en/auth/signin",
+      "newPath": "/en/auth/signin",
+      "steps": "./acceptance-steps-fr13-new.ts",
+      "checks": [
+        {
+          "id": "AC-13a-a",
+          "behavior": "A new 6-character class code in the query opens the name step. The code comes from the environment variable PARITY_NEW_CLASS_CODE inside the steps module (no code in this file). Legacy takes only the old 8-character code, a difference on purpose."
+        }
+      ]
+    },
+    {
+      "id": "AC-13b",
+      "rows": [
+        "PUB-05"
+      ],
+      "role": "PUBLIC",
+      "legacyPath": "/en/auth/signin",
+      "newPath": "/en/auth/signin",
+      "steps": "./acceptance-steps-fr13-old.ts",
+      "checks": [
+        {
+          "id": "AC-13b-a",
+          "behavior": "An old 8-character migrated code in the query shows the note \"This link has an old class code\" in the new app. The code comes from PARITY_OLD_CLASS_CODE inside the steps module. Legacy signs in with this code."
+        }
+      ]
+    }
+  ]
+}

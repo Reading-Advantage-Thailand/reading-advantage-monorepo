@@ -1,3 +1,5 @@
+import { PgDialect } from "drizzle-orm/pg-core";
+import type { SQL } from "drizzle-orm";
 import { beforeEach, describe, it, expect, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
 import {
@@ -31,6 +33,7 @@ vi.mock("../challenges/contributions.js", () => ({
 // The GP grant beside the XP row is covered by primary-avatar/__tests__/gp.test.ts.
 vi.mock("../primary-avatar/gp.js", () => ({ grantGpForXp: vi.fn().mockResolvedValue(0) }));
 vi.mock("@reading-advantage/db/schema", () => ({
+  users: { [Symbol.for("drizzle:Name")]: "users", id: "id", xp: "xp", schoolId: "school_id" },
   xpLogs: {
     userId: "user_id",
     xpEarned: "xp_earned",
@@ -395,6 +398,53 @@ describe("recordGameCompletion (Group 3C)", () => {
     expect(result.xpEarned).toBe(7);
     expect(result.status).toBe(200);
     expect(mockRecordChallengeContribution).not.toHaveBeenCalled();
+  });
+
+  it("adds the earned XP to users.xp in the transaction when addToUserXp is true", async () => {
+    const db = createMockDb({ selectResults: [] });
+    const result = await recordGameCompletion({
+      db: createTenantDB(db as unknown as DB, mockTenant),
+      user: mockUser,
+      tenant: mockTenant,
+      input: makeValidInput(),
+      options: { addToUserXp: true },
+    });
+    expect(result.xpEarned).toBe(7);
+    expect(db.update).toHaveBeenCalledTimes(1);
+    const set = (db.update.mock.results[0].value as { set: ReturnType<typeof vi.fn> }).set;
+    expect(set).toHaveBeenCalledWith(expect.objectContaining({ xp: expect.anything() }));
+    // The value is the SQL expression `users.xp + xpEarned`: the mocked column is the string "xp".
+    const [{ xp }] = set.mock.calls[0] as [{ xp: SQL }];
+    const built = new PgDialect().sqlToQuery(xp);
+    expect(built.sql).toBe("$1 + $2");
+    expect(built.params).toEqual(["xp", 7]);
+  });
+
+  it("does not update users without the option", async () => {
+    const db = createMockDb({ selectResults: [] });
+    await recordGameCompletion({
+      db: createTenantDB(db as unknown as DB, mockTenant),
+      user: mockUser,
+      tenant: mockTenant,
+      input: makeValidInput(),
+    });
+    expect(db.update).not.toHaveBeenCalled();
+  });
+
+  it("adds nothing to users.xp for a duplicate completion", async () => {
+    const input = makeValidInput();
+    const db = createMockDb({
+      selectResults: [{ activityId: `game:haunted-library:${input.idempotencyKey}` }],
+    });
+    const result = await recordGameCompletion({
+      db: createTenantDB(db as unknown as DB, mockTenant),
+      user: mockUser,
+      tenant: mockTenant,
+      input,
+      options: { addToUserXp: true },
+    });
+    expect(result.duplicate).toBe(true);
+    expect(db.update).not.toHaveBeenCalled();
   });
 
   it("ties a supplied run to the newly saved completion row", async () => {

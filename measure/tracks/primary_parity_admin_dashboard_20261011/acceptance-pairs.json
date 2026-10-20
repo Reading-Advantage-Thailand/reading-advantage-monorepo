@@ -1,0 +1,302 @@
+{
+  "member": "primary_parity_admin_dashboard_20261011",
+  "pairs": [
+    {
+      "id": "AC-1-admin",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-1-admin-a",
+          "behavior": "Each legacy widget (7 KPI cards, adoption, alerts, teacher effectiveness, heatmap) maps to a new block or to its reason in the behavior contract section 5."
+        },
+        {
+          "id": "AC-1-admin-b",
+          "behavior": "The new page has six key numbers, alerts, adoption with CEFR and grade signs, a teachers table, and activity by day, in this order."
+        },
+        {
+          "id": "AC-1-admin-c",
+          "behavior": "The page has no System Health card and no AI insights."
+        }
+      ]
+    },
+    {
+      "id": "AC-1-system",
+      "rows": [
+        "ADM-01",
+        "SYS-03"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-1-system-a",
+          "behavior": "Legacy shows the data of a license picker. The new page shows the school selector and the Choose a school panel, and no other panel."
+        }
+      ]
+    },
+    {
+      "id": "AC-2-admin",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard?range=30",
+      "checks": [
+        {
+          "id": "AC-2-admin-a",
+          "behavior": "Each number of FR-3 (active students, active teachers, active classes, articles opened, XP earned, new students) equals the reference SQL Q3a to Q3f for the school and the 30-day window."
+        }
+      ]
+    },
+    {
+      "id": "AC-2-adoption",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard?range=30&by=grade",
+      "checks": [
+        {
+          "id": "AC-2-adoption-a",
+          "behavior": "Adoption by class grade equals Q5. The CEFR signs equal Q4. The teachers table equals Q8."
+        }
+      ]
+    },
+    {
+      "id": "AC-2-alerts",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "checks": [
+        {
+          "id": "AC-2-alerts-a",
+          "behavior": "The alerts equal Q6a and Q6b (low activity, license ends soon, license ended, seats nearly full). The clone needs one active license and one teacher sign-in event for the check."
+        }
+      ]
+    },
+    {
+      "id": "AC-2-system",
+      "rows": [
+        "SYS-03"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard?range=30",
+      "steps": "./acceptance-steps-school.ts",
+      "checks": [
+        {
+          "id": "AC-2-system-a",
+          "behavior": "After PARITY_SCHOOL_ID is chosen, the numbers equal those of the ADMIN of that school (pair AC-2-admin)."
+        }
+      ]
+    },
+    {
+      "id": "AC-3-admin",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "steps": "./acceptance-steps-other-school.ts",
+      "checks": [
+        {
+          "id": "AC-3-admin-a",
+          "behavior": "With school=<other school id> (PARITY_OTHER_SCHOOL_ID) in the query, the page shows the own school of the ADMIN, not the other school. The numbers equal the capture without the query value."
+        }
+      ]
+    },
+    {
+      "id": "AC-3-system",
+      "rows": [
+        "SYS-03"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "steps": "./acceptance-steps-school.ts",
+      "checks": [
+        {
+          "id": "AC-3-system-a",
+          "behavior": "SYSTEM with school=<id> (PARITY_SCHOOL_ID) in the query shows that school. The URL keeps school=<id>."
+        }
+      ]
+    },
+    {
+      "id": "AC-4-system-empty",
+      "rows": [
+        "SYS-03"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "checks": [
+        {
+          "id": "AC-4-system-empty-a",
+          "behavior": "The School selector shows and Choose a school shows. No number shows."
+        },
+        {
+          "id": "AC-4-system-empty-b",
+          "behavior": "The selector lists the same schools as the legacy picker."
+        }
+      ]
+    },
+    {
+      "id": "AC-4-system-chosen",
+      "rows": [
+        "SYS-03"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "steps": "./acceptance-steps-school.ts",
+      "checks": [
+        {
+          "id": "AC-4-system-chosen-a",
+          "behavior": "After the school is chosen, the URL has school=<id> and the numbers equal those of the ADMIN of that school."
+        }
+      ]
+    },
+    {
+      "id": "AC-4-admin",
+      "rows": [
+        "SYS-03"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "checks": [
+        {
+          "id": "AC-4-admin-a",
+          "behavior": "The ADMIN sees no school selector and sees the numbers of the own school at once."
+        }
+      ]
+    },
+    {
+      "id": "AC-5-admin",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "checks": [
+        {
+          "id": "AC-5-admin-a",
+          "behavior": "The page has no Data unavailable text and no sample number. GET /api/admin/recent-activity returns 404 (probe in acceptance.md)."
+        }
+      ]
+    },
+    {
+      "id": "AC-5-system",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "steps": "./acceptance-steps-school.ts",
+      "checks": [
+        {
+          "id": "AC-5-system-a",
+          "behavior": "With a school chosen, the page has no Data unavailable text and no sample number."
+        }
+      ]
+    },
+    {
+      "id": "AC-6-system",
+      "rows": [
+        "ADM-13"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "checks": [
+        {
+          "id": "AC-6-system-a",
+          "behavior": "The nav has no link to /admin/dashboard/students or /admin/dashboard/teachers. Those two paths return the not-found page in the new app."
+        }
+      ]
+    },
+    {
+      "id": "AC-6-admin",
+      "rows": [
+        "ADM-13"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "checks": [
+        {
+          "id": "AC-6-admin-a",
+          "behavior": "The nav has no link to /admin/dashboard/students or /admin/dashboard/teachers."
+        }
+      ]
+    },
+    {
+      "id": "AC-7-admin-7",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard?range=7",
+      "checks": [
+        {
+          "id": "AC-7-admin-7-a",
+          "behavior": "All numbers match Q3a to Q3f with n=7 except the low activity alert, which uses 30 days. Activity by day shows 7 cells and the last cell is today in Bangkok."
+        }
+      ]
+    },
+    {
+      "id": "AC-7-admin-90",
+      "rows": [
+        "ADM-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard?range=90",
+      "checks": [
+        {
+          "id": "AC-7-admin-90-a",
+          "behavior": "All numbers match Q3a to Q3f with n=90. Activity by day shows 90 cells (13 to 14 rows) and the last cell is today in Bangkok."
+        }
+      ]
+    },
+    {
+      "id": "AC-7-system-7",
+      "rows": [
+        "SYS-03"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard?range=7",
+      "steps": "./acceptance-steps-school.ts",
+      "checks": [
+        {
+          "id": "AC-7-system-7-a",
+          "behavior": "With PARITY_SCHOOL_ID chosen, a range change keeps school=<id> in the URL and the numbers equal those of the ADMIN."
+        }
+      ]
+    }
+  ]
+}

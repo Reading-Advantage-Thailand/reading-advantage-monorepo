@@ -96,6 +96,30 @@ CREATE TABLE IF NOT EXISTS sessions (
   user_agent text
 );
 
+CREATE TABLE IF NOT EXISTS primary_lesson_attempts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  school_id uuid NOT NULL,
+  student_id text NOT NULL,
+  article_id uuid NOT NULL,
+  assignment_id uuid,
+  class_book_id uuid,
+  lesson_number integer,
+  attempt_number integer NOT NULL,
+  started_at timestamp,
+  closed_at timestamp NOT NULL DEFAULT now(),
+  closed_by_user_id text,
+  close_reason text NOT NULL,
+  progress integer NOT NULL DEFAULT 0,
+  time_spent integer NOT NULL DEFAULT 0,
+  completed boolean NOT NULL DEFAULT false,
+  completed_at timestamp,
+  score integer,
+  xp_earned integer NOT NULL DEFAULT 0,
+  activities jsonb NOT NULL DEFAULT '[]'::jsonb,
+  steps jsonb NOT NULL DEFAULT '[]'::jsonb,
+  UNIQUE (student_id, article_id, attempt_number)
+);
+
 CREATE TABLE IF NOT EXISTS user_activity (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -340,6 +364,7 @@ const TABLES = [
   "classrooms",
   "school_admins",
   "sessions",
+  "primary_lesson_attempts",
   "user_activity",
   "xp_logs",
   "user_roles",

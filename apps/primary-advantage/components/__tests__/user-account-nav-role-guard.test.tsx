@@ -109,6 +109,25 @@ describe("UserAccountNav student dashboard role guard", () => {
   });
 });
 
+describe("UserAccountNav student view item", () => {
+  it.each(["TEACHER", "ADMIN", "SYSTEM"] as const)("shows Student view to %s", (role) => {
+    renderOpenAccountMenu(role);
+    expect(
+      screen.getByRole("menuitem", { name: en.StudentView.menuItem }),
+    ).toHaveAttribute("href", "/student/home");
+  });
+
+  it("keeps the student item for a STUDENT and adds no Student view item", () => {
+    renderOpenAccountMenu("STUDENT");
+    expect(
+      screen.queryByRole("menuitem", { name: en.StudentView.menuItem }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("menuitem", { name: userNavCopy.studentDashboard }),
+    ).toBeInTheDocument();
+  });
+});
+
 describe("UserAccountNav trigger (axe aria-allowed-attr, keyboard sign-out)", () => {
   it.each(["en", "th"] as const)("is a real button with a %s accessible name", (locale) => {
     renderWithMessages(<UserAccountNav user={createSessionUser("STUDENT")} />, { locale });

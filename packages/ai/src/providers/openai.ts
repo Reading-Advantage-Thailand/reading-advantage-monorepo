@@ -56,6 +56,7 @@ export class OpenAIProvider implements AIClientWithProvenance {
         model: this.client(input.model ?? this.defaultModel),
         schema: input.schema,
         prompt: input.prompt,
+        ...(input.system ? { system: input.system } : {}),
         ...(input.temperature !== undefined
           ? { temperature: input.temperature }
           : {}),
@@ -90,6 +91,7 @@ export class OpenAIProvider implements AIClientWithProvenance {
         model: this.client(requestedModel),
         schema: input.schema,
         prompt: input.prompt,
+        ...(input.system ? { system: input.system } : {}),
         ...(input.temperature !== undefined
           ? { temperature: input.temperature }
           : {}),

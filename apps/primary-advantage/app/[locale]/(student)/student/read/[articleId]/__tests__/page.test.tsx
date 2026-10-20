@@ -11,7 +11,8 @@ import { testMessages } from "@/components/__tests__/helpers/render-with-message
 const mocks = vi.hoisted(() => ({
   getArticleById: vi.fn(),
   resolveLegacyArticleId: vi.fn(),
-  saveArticleToFlashcard: vi.fn(),
+  saveArticleCardsAfterQuiz: vi.fn(),
+  getArticleCardState: vi.fn(),
   user: { id: "s1", role: "STUDENT" } as Record<string, unknown> | null,
 }));
 
@@ -23,7 +24,10 @@ vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain", () => ({ createTenantDB: vi.fn(() => ({})) }));
 vi.mock("@reading-advantage/domain/articles", () => ({ resolveLegacyArticleId: mocks.resolveLegacyArticleId }));
-vi.mock("@/actions/flashcard", () => ({ saveArticleToFlashcard: mocks.saveArticleToFlashcard }));
+vi.mock("@reading-advantage/domain/games", () => ({
+  saveArticleCardsAfterQuiz: mocks.saveArticleCardsAfterQuiz,
+  getArticleCardState: mocks.getArticleCardState,
+}));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
   return {
@@ -39,7 +43,9 @@ vi.mock("@/i18n/navigation", () => ({
     </a>
   ),
 }));
-vi.mock("@/components/articles/article-card", () => ({ default: () => <article data-testid="article-card" /> }));
+vi.mock("@/components/articles/article-card", () => ({
+  default: ({ saved }: { saved?: boolean }) => <article data-testid="article-card" data-saved={String(saved)} />,
+}));
 vi.mock("@/components/articles/word-list", () => ({ default: () => <div data-testid="word-list" /> }));
 vi.mock("@/components/articles/sentence", () => ({ default: () => <div data-testid="sentences" /> }));
 vi.mock("@/components/teacher/assign-button", () => ({ default: () => <div data-testid="assign" /> }));
@@ -58,11 +64,39 @@ const LEGACY_ID = "cmgqx8v6602p3t79btatvfjuw";
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.saveArticleCardsAfterQuiz.mockResolvedValue({ wordsCreated: 0, sentencesCreated: 0, alreadySaved: false });
+  mocks.getArticleCardState.mockResolvedValue({ saved: false });
+  mocks.user = { id: "s1", role: "STUDENT", schoolId: "sc1" };
   mocks.getArticleById.mockResolvedValue({
     article: { id: "a1", title: "The Moon", summary: "", sentencsAndWordsForFlashcard: null, articleActivityLog: [] },
   });
 });
 afterEach(cleanup);
+
+describe("article view saved state (FR-11)", () => {
+  it("saves by the legacy rule and passes the student's own state to the card", async () => {
+    mocks.getArticleCardState.mockResolvedValue({ saved: true });
+    render((await ArticleQuizPage({ params })) as React.ReactElement);
+    expect(mocks.saveArticleCardsAfterQuiz).toHaveBeenCalledWith(
+      expect.objectContaining({ input: { articleId: ARTICLE_ID } }),
+    );
+    expect(screen.getByTestId("article-card")).toHaveAttribute("data-saved", "true");
+    expect(mocks.getArticleById).toHaveBeenCalledWith(ARTICLE_ID, "s1");
+  });
+
+  it.each(["TEACHER", "ADMIN", "SYSTEM"])("saves nothing for the %s staff view", async (role) => {
+    mocks.user = { id: "t1", role, schoolId: "sc1" };
+    render((await ArticleQuizPage({ params })) as React.ReactElement);
+    expect(mocks.saveArticleCardsAfterQuiz).not.toHaveBeenCalled();
+    expect(screen.getByTestId("article-card")).toHaveAttribute("data-saved", "false");
+  });
+
+  it("still shows the article when the save fails", async () => {
+    mocks.saveArticleCardsAfterQuiz.mockRejectedValue(new Error("db down"));
+    render((await ArticleQuizPage({ params })) as React.ReactElement);
+    expect(screen.getByTestId("article-card")).toHaveAttribute("data-saved", "false");
+  });
+});
 
 describe("article view", () => {
   it("renders the article, its tools, the lesson link, and the question cards", async () => {

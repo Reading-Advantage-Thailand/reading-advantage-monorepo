@@ -45,6 +45,13 @@ function emWidth(text: string, family: string): number {
   return em;
 }
 
+/** The tile font families of hud.css, for a tile that has no computed style yet. */
+const FAMILIES = { latin: "'Fredoka', 'Mitr', system-ui, sans-serif", thai: "'Mitr', 'Noto Sans Thai', system-ui, sans-serif" };
+/** The tile padding and border in CSS pixels (hud.css: 2 + 2 on each side, and a margin). */
+const INSET = 12;
+/** The line height of the tile font (hud.css). */
+const LINE = 1.1;
+
 export class Board {
   readonly el: HTMLElement;
   private readonly tiles = new Map<string, Tile>();
@@ -55,6 +62,13 @@ export class Board {
   private readonly resized: ResizeObserver | null;
   /** The tile font family, Latin and Thai (the Thai tiles use their own font list). */
   private readonly families = new Map<boolean, string>();
+  /** The tile width in CSS pixels (`--tile`); the label lines depend on it. */
+  private tileSize = 60;
+  /** Fits every label again (a resize, or a font that loaded after the first measure). */
+  private readonly refit = (): void => {
+    widths.clear();
+    for (const t of this.tiles.values()) this.paint(t);
+  };
 
   constructor(
     parent: HTMLElement,
@@ -71,13 +85,12 @@ export class Board {
     this.el.addEventListener('pointerup', () => this.release());
     this.el.addEventListener('pointercancel', () => (this.dragFrom = null));
     // The tile size in CSS pixels, for the font fit in the CSS (`--tile`, and `--em` per tile).
-    this.resized = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => this.el.style.setProperty('--tile', `${this.el.clientWidth / this.cols - 6}px`));
+    this.resized = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => this.resize());
     this.resized?.observe(this.el);
     // Measured before the theme fonts loaded, the widths are the fallback font's: measure again.
-    void document.fonts?.ready.then(() => {
-      widths.clear();
-      for (const t of this.tiles.values()) this.paint(t);
-    });
+    // A font loads when a tile first uses it, which can be after `ready`, so each load counts.
+    document.fonts?.addEventListener?.('loadingdone', this.refit);
+    void document.fonts?.ready.then(this.refit);
   }
 
   /** Every tile's center (CSS pixels) with its cell and id. */
@@ -160,6 +173,7 @@ export class Board {
 
   destroy(): void {
     this.resized?.disconnect();
+    document.fonts?.removeEventListener?.('loadingdone', this.refit);
     this.el.remove();
     this.tiles.clear();
   }
@@ -177,16 +191,25 @@ export class Board {
     el.style.width = `calc(${100 / this.cols}% - 6px)`;
     el.style.height = `calc(${100 / this.rows}% - 6px)`;
     const t: Tile = { el, cell, row, col };
-    this.place(t, { row, col });
-    this.paint(t);
     el.addEventListener('pointerdown', (e) => {
       if (!this.enabled) return;
       this.el.setPointerCapture?.(e.pointerId);
       this.dragFrom = { tile: t, x: e.clientX, y: e.clientY };
     });
+    // In the page first: a detached tile has no computed font, and the fit measures in that font.
     this.el.append(el);
+    this.place(t, { row, col });
+    this.paint(t);
     this.tiles.set(cell.id, t);
     return t;
+  }
+
+  private resize(): void {
+    const size = this.el.clientWidth / this.cols - 6;
+    if (size <= 0 || Math.abs(size - this.tileSize) < 0.5) return;
+    this.tileSize = size;
+    this.el.style.setProperty('--tile', `${size}px`);
+    this.refit();
   }
 
   private place(t: Tile, cell: Cell): void {
@@ -202,10 +225,31 @@ export class Board {
     t.el.classList.toggle('glow', !!t.cell.glow);
     const th = hasThai(text);
     t.el.classList.toggle('th', th);
-    t.el.innerHTML = `<span>${esc(text)}</span>`;
+    const style = t.el.isConnected ? getComputedStyle(t.el) : null;
     let family = this.families.get(th);
-    if (family === undefined) this.families.set(th, (family = getComputedStyle(t.el).fontFamily));
-    t.el.style.setProperty('--em', emWidth(text, family).toFixed(3));
+    if (!family && style?.fontFamily) this.families.set(th, (family = style.fontFamily));
+    family ||= th ? FAMILIES.thai : FAMILIES.latin;
+    const lines = this.linesOf(text, family, parseFloat(style?.fontSize ?? '') || 18);
+    t.el.innerHTML = `<span>${lines.map(esc).join('<br>')}</span>`;
+    t.el.style.setProperty('--em', Math.max(...lines.map((l) => emWidth(l, family))).toFixed(3));
+    t.el.style.setProperty('--lines', String(lines.length));
+  }
+
+  /**
+   * The lines of a label. A word never breaks: it shrinks to fit the tile (CSS). A phrase takes two
+   * lines at the space that gives the largest font, but only when one line would have to shrink.
+   */
+  private linesOf(text: string, family: string, base: number): string[] {
+    const words = text.split(' ').filter(Boolean);
+    if (words.length < 2) return [text];
+    const room = this.tileSize - INSET;
+    const fontOf = (lines: string[]): number => Math.min(base, room / Math.max(...lines.map((l) => emWidth(l, family))), room / (LINE * lines.length));
+    let best = [words.join(' ')];
+    for (let i = 1; i < words.length; i++) {
+      const two = [words.slice(0, i).join(' '), words.slice(i).join(' ')];
+      if (fontOf(two) > fontOf(best) + 0.25) best = two;
+    }
+    return best;
   }
 
   // ---------------------------------------------------------------- input: drag or tap-then-tap

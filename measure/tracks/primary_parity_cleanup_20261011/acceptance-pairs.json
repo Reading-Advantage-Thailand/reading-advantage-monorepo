@@ -1,0 +1,207 @@
+{
+  "member": "primary_parity_cleanup_20261011",
+  "pairs": [
+    {
+      "id": "AC-1",
+      "rows": [
+        "FR-2"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/system/test",
+      "newPath": "/en/system/test",
+      "checks": [
+        {
+          "id": "AC-1-1",
+          "behavior": "The new app shows the not-found page."
+        },
+        {
+          "id": "AC-1-2",
+          "behavior": "The SYSTEM nav has no \"Testing\" item."
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "rows": [
+        "FR-3"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/article-creation",
+      "newPath": "/en/admin/article-creation",
+      "checks": [
+        {
+          "id": "AC-2-1",
+          "behavior": "The new app shows the not-found page."
+        },
+        {
+          "id": "AC-2-2",
+          "behavior": "The admin nav has no \"Article Creation\" item."
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "rows": [
+        "FR-3",
+        "FR-4"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/article-creation",
+      "newPath": "/en/admin/article-creation",
+      "checks": [
+        {
+          "id": "AC-3-1",
+          "behavior": "A request to POST /api/articles/generate gives 404 in the new app."
+        },
+        {
+          "id": "AC-3-2",
+          "behavior": "A request to /api/articles/generate/custom-generate (GET and POST), /save, and /approve gives 404. No AI call starts."
+        }
+      ]
+    },
+    {
+      "id": "AC-4",
+      "rows": [
+        "FR-6"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/games",
+      "newPath": "/en/student/games",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-4-1",
+          "behavior": "The challenge panel shows the skin frame (parchment, ink text, gold button)."
+        },
+        {
+          "id": "AC-4-2",
+          "behavior": "The network log has no request to /assets/apk/standard-pack-qc/.",
+          "network": "standard-pack-qc"
+        }
+      ]
+    },
+    {
+      "id": "AC-5",
+      "rows": [
+        "FR-6"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/game-challenges",
+      "newPath": "/en/teacher/game-challenges",
+      "checks": [
+        {
+          "id": "AC-5-1",
+          "behavior": "The panel shows the staff frame of the design."
+        },
+        {
+          "id": "AC-5-2",
+          "behavior": "The network log has no request to /assets/apk/standard-pack-qc/.",
+          "network": "standard-pack-qc"
+        }
+      ]
+    },
+    {
+      "id": "AC-6",
+      "rows": [
+        "FR-7"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/host-proof/games",
+      "newPath": "/en/student/host-proof/games",
+      "checks": [
+        {
+          "id": "AC-6-1",
+          "behavior": "The page gives 404 in the new app."
+        },
+        {
+          "id": "AC-6-2",
+          "behavior": "POST /api/host-proof/games/completions gives 404."
+        }
+      ]
+    },
+    {
+      "id": "AC-7",
+      "rows": [
+        "FR-9"
+      ],
+      "role": "PUBLIC",
+      "legacyPath": "/en/",
+      "newPath": "/en/",
+      "checks": [
+        {
+          "id": "AC-7-1",
+          "behavior": "GET /assets/apk/standard-pack-qc/apk-ui-panel-square.png gives 404 in the new app."
+        },
+        {
+          "id": "AC-7-2",
+          "behavior": "The build output check finds no ElvGames file in the Primary image layout."
+        }
+      ]
+    },
+    {
+      "id": "AC-8",
+      "rows": [
+        "FR-10"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/games/vocabulary/rune-match",
+      "newPath": "/en/student/games/vocabulary/rune-match",
+      "checks": [
+        {
+          "id": "AC-8-1",
+          "behavior": "Each of the five old URLs (vocabulary: dragon-rider, enchanted-library, rpg-battle, rune-match; sentences: potion-rush) redirects (308) to /en/student/games/apk/<id> and the 3D game loads."
+        },
+        {
+          "id": "AC-8-2",
+          "behavior": "The /th/... URL keeps the th locale."
+        },
+        {
+          "id": "AC-8-3",
+          "behavior": "An unknown id gives 404."
+        }
+      ]
+    },
+    {
+      "id": "AC-9",
+      "rows": [
+        "FR-12",
+        "FR-13"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmhmg00n10009t7mktirfpce7",
+      "newPath": "/en/student/lesson/{map:assignments:cmhmg00n10009t7mktirfpce7}",
+      "checks": [
+        {
+          "id": "AC-9-1",
+          "behavior": "The SAQ and LAQ feedback and the score show (AI keys are off in the kit: check the page loads, and check the ai_call log line in the server log)."
+        },
+        {
+          "id": "AC-9-2",
+          "behavior": "The ai_call log line names the provider vertex and the model of the live legacy row (gemini-3-flash-preview)."
+        }
+      ]
+    },
+    {
+      "id": "AC-10",
+      "rows": [
+        "FR-13"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmhmg00n10009t7mktirfpce7",
+      "newPath": "/en/student/lesson/{map:assignments:cmhmg00n10009t7mktirfpce7}",
+      "checks": [
+        {
+          "id": "AC-10-1",
+          "behavior": "The lesson chatbot opens and a message gets an answer (AI keys are off in the kit: check that the chatbot panel opens)."
+        },
+        {
+          "id": "AC-10-2",
+          "behavior": "The ai_call log line names openai and the live model (gpt-4o-mini)."
+        }
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurrentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ getClassBookPacing: mocks.getClassBookPacing }));
-vi.mock("@/actions/class-books", () => ({ setCurrentLessonAction: vi.fn(), markLessonTaughtAction: vi.fn(), markStepDoneAction: vi.fn() }));
+vi.mock("@/actions/class-books", () => ({ setCurrentLessonAction: vi.fn(), markLessonTaughtAction: vi.fn(), markStepDoneAction: vi.fn(), teachLessonAgainAction: vi.fn() }));
 vi.mock("next/navigation", () => ({
   notFound: () => {
     throw new Error("NOT_FOUND");
@@ -46,7 +46,7 @@ import ClassBookPacingPage from "../page";
 const C1 = "c1c1c1c1-0000-4000-8000-000000000001";
 const CB = "cbcbcbcb-0000-4000-8000-000000000001";
 const classBook = { id: CB, classroomId: C1, bookId: "b1", bookKey: "o3-2", bookName: "Primary Advantage Origins 3.2", lessonCount: 14, mode: "teacher_led", startDate: null, currentLesson: 3, taughtCount: 1 };
-const lesson = (number: number, extra: Record<string, unknown> = {}) => ({ number, title: `Story ${number}`, key: `o3-2/${number}`, articleId: `a${number}`, approved: true, taughtAt: null, stepsDone: [], current: false, ...extra });
+const lesson = (number: number, extra: Record<string, unknown> = {}) => ({ number, title: `Story ${number}`, key: `o3-2/${number}`, articleId: `a${number}`, approved: true, taughtAt: null, stepsDone: [], runNumber: 1, earlierRuns: [], current: false, ...extra });
 const pacing = {
   classBook,
   lessons: [lesson(1, { taughtAt: new Date("2026-10-01T03:00:00Z"), stepsDone: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }), lesson(2), lesson(3, { current: true, stepsDone: [1, 2, 3, 4, 5, 6] }), lesson(4, { approved: false, articleId: null })],
@@ -71,6 +71,12 @@ afterEach(cleanup);
 
 describe("class book lesson plan (FR-3)", () => {
   const en = testMessages.en.TeacherUi.classBook;
+
+  it("makes the back to class link 48 px high (NFR)", async () => {
+    await renderPage();
+    expect(screen.getByRole("link", { name: en.backToClass })).toHaveClass("min-h-12");
+    expect(screen.getByRole("link", { name: en.backToClass })).not.toHaveClass("min-h-11");
+  });
 
   it("shows the pointer, the next step with its period, and the 13 step toggles of the current lesson", async () => {
     await renderPage();
@@ -101,6 +107,32 @@ describe("class book lesson plan (FR-3)", () => {
     expect(within(rows[2]).queryByRole("button", { name: en.setCurrent })).not.toBeInTheDocument();
     expect(within(rows[2]).getByRole("button", { name: en.markTaught })).toBeInTheDocument();
     expect(within(rows[3]).getByText(/Not published yet/)).toBeInTheDocument();
+  });
+
+  it("shows Teach again, the run chip, Taught 2 times, and the earlier runs of a lesson taught twice", async () => {
+    const earlier = { runNumber: 1, taughtAt: new Date("2026-10-06T03:00:00Z"), stepsDone: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], closedAt: new Date("2026-10-12T03:00:00Z"), closedByUserId: "t1" };
+    mocks.getClassBookPacing.mockResolvedValueOnce({
+      ...pacing,
+      lessons: [lesson(1, { taughtAt: new Date("2026-10-13T03:00:00Z"), stepsDone: [1, 2], runNumber: 2, earlierRuns: [earlier] }), lesson(2), lesson(3, { current: true })],
+    });
+    await renderPage();
+    const rows = within(screen.getByRole("region", { name: en.lessons })).getAllByRole("listitem");
+    expect(within(rows[0]).getByRole("button", { name: en.teachAgain })).toBeInTheDocument();
+    expect(within(rows[0]).getByText("Run 2")).toBeInTheDocument();
+    expect(within(rows[0]).getByText(/Taught 2 times/)).toBeInTheDocument();
+    expect(within(rows[0]).getByText("Earlier runs (1)")).toBeInTheDocument();
+    expect(within(rows[0]).getByText(/Run 1 · taught (6 Oct|Oct 6) · 13 of 13 steps done/)).toBeInTheDocument();
+    expect(within(rows[1]).queryByRole("button", { name: en.teachAgain })).not.toBeInTheDocument();
+    expect(within(rows[1]).queryByText("Run 2")).not.toBeInTheDocument();
+  });
+
+  it("shows Taught 1 time on a lesson that was taught once and then taught again (A4)", async () => {
+    const earlier = { runNumber: 1, taughtAt: new Date("2026-10-06T03:00:00Z"), stepsDone: [1, 2, 3], closedAt: new Date("2026-10-12T03:00:00Z"), closedByUserId: "t1" };
+    mocks.getClassBookPacing.mockResolvedValueOnce({ ...pacing, lessons: [lesson(1, { runNumber: 2, earlierRuns: [earlier] }), lesson(2), lesson(3, { current: true })] });
+    await renderPage();
+    const rows = within(screen.getByRole("region", { name: en.lessons })).getAllByRole("listitem");
+    expect(within(rows[0]).getByText(/Taught 1 time/)).toBeInTheDocument();
+    expect(within(rows[1]).queryByText(/Taught 1 time/)).not.toBeInTheDocument();
   });
 
   it("says all steps are done when there is no next step", async () => {

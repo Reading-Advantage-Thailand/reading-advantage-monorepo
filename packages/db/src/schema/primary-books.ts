@@ -121,6 +121,10 @@ export const primaryClassBookLessons = pgTable(
     taughtAt: timestamp("taught_at"),
     /** Workbook steps (1-13) the teacher marked done, as a JSON array of integers. */
     stepsDone: jsonb("steps_done").default([]).notNull(),
+    /** 1 for the first time the class is taught the lesson; "Teach again" adds 1. */
+    runNumber: integer("run_number").default(1).notNull(),
+    /** The closed runs: taught time, steps done, close time, and teacher. */
+    earlierRuns: jsonb("earlier_runs").default([]).notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (t) => [unique("primary_class_book_lessons_unique").on(t.classBookId, t.lessonNumber)],

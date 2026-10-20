@@ -1,0 +1,121 @@
+{
+  "member": "primary_parity_system_dashboard_20261011",
+  "pairs": [
+    {
+      "id": "AC-1-system",
+      "rows": [
+        "SYS-01"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/system/dashboard",
+      "newPath": "/en/system/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-1-system-a",
+          "behavior": "Each legacy number, tab, and control (behavior contract section 2) maps to a new total or column, or to its reason in section 5."
+        },
+        {
+          "id": "AC-1-system-b",
+          "behavior": "The new page has the totals strip with six totals, then the schools table, and no tab, no range control, no Export, no Refresh, no AI insights."
+        },
+        {
+          "id": "AC-1-system-c",
+          "behavior": "The page has no System Dashboard Description text."
+        }
+      ]
+    },
+    {
+      "id": "AC-2-totals",
+      "rows": [
+        "SYS-01"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/system/dashboard",
+      "newPath": "/en/system/dashboard",
+      "checks": [
+        {
+          "id": "AC-2-totals-a",
+          "behavior": "Schools, students, teachers, active students this week, articles opened this week, and seats used of seats equal Q-A. The note for students without a school shows only when Q-C is more than 0."
+        }
+      ]
+    },
+    {
+      "id": "AC-2-rows",
+      "rows": [
+        "SYS-01"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/system/dashboard",
+      "newPath": "/en/system/dashboard",
+      "checks": [
+        {
+          "id": "AC-2-rows-a",
+          "behavior": "Each school row (students, active students and percent, articles opened, seats or No license, last activity day in Bangkok, status) equals Q-B."
+        }
+      ]
+    },
+    {
+      "id": "AC-3-quiet",
+      "rows": [
+        "SYS-01"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/system/dashboard",
+      "newPath": "/en/system/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "AC-3-quiet-a",
+          "behavior": "Each school with students and no activity event in the last 7 Bangkok days shows Quiet (a mark and the word) and sits in the first rows."
+        },
+        {
+          "id": "AC-3-quiet-b",
+          "behavior": "A school without students shows No students and not Quiet."
+        }
+      ]
+    },
+    {
+      "id": "AC-4-open",
+      "rows": [
+        "SYS-01",
+        "SYS-03"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/system/dashboard",
+      "newPath": "/en/system/dashboard",
+      "steps": "./acceptance-steps-open-school.ts",
+      "checks": [
+        {
+          "id": "AC-4-open-a",
+          "behavior": "A tap on the row of PARITY_SCHOOL_ID opens /admin/dashboard?school=<id> and the URL keeps school=<id>."
+        },
+        {
+          "id": "AC-4-open-b",
+          "behavior": "The admin dashboard shows the school selector set to that school, and its student total equals the students of that row in Q-B."
+        }
+      ]
+    },
+    {
+      "id": "AC-5-admin",
+      "rows": [
+        "SYS-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/system/dashboard",
+      "newPath": "/en/system/dashboard",
+      "checks": [
+        {
+          "id": "AC-5-admin-a",
+          "behavior": "The school ADMIN gets no dashboard. The proxy sends the user to the unauthorized page in the new build, as legacy refuses access."
+        }
+      ]
+    }
+  ]
+}

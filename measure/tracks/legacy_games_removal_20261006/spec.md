@@ -29,8 +29,10 @@ Monster Encounters stays out (a later teacher-led lesson game).
   challenges and the quest battle, reward pieces, asset sync).
 - M3 (after the cutover): Reading Advantage and Advantage Games get a practice input source, the
   new game pages, and teacher challenge pages on the Primary model.
-- M4 (after the cutover): old links redirect; `game-cartridges`, the legacy-only host code, the
-  host-proof and QC pages, and the ElvGames assets go.
+- M4: moved to `primary_parity_cleanup_20261011` by the owner follow-up decision of 2026-10-11, before
+  the cutover, after the copy of the ElvGames assets (with the slicing work) to `~/Desktop/Asset Packs`.
+  Old links redirect; `game-cartridges`, the legacy-only host code, the host-proof and QC pages, and the
+  ElvGames assets go.
 
 ## Out of scope
 

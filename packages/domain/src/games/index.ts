@@ -30,23 +30,50 @@ export type {
   GameLearningContentResult,
 } from "./learning-content.js";
 export {
+  LESSON_PRACTICE_INPUT_PREFIX,
   PRACTICE_SENTENCE_LIMIT,
   PRACTICE_WORD_LIMIT,
   SAVED_PRACTICE_INPUT_ID,
   gamePracticeInputRequestSchema,
+  getLessonPracticeInput,
+  getLessonPreviewPracticeInput,
+  lessonPracticeInputRequestSchema,
   listGamePracticeInput,
   practiceLevelOf,
 } from "./practice-input.js";
-export type { GamePracticeInputRequest } from "./practice-input.js";
+export type { GamePracticeInputRequest, LessonPracticeInputRequest } from "./practice-input.js";
+export {
+  getLessonGameResults,
+  lessonGameResultSchema,
+  lessonGameResultsRequestSchema,
+  lessonGameResultsSchema,
+} from "./lesson-results.js";
+export type { LessonGameResult, LessonGameResults, LessonGameResultsRequest } from "./lesson-results.js";
 export {
   listPrimaryAnswerAudioContent,
   listPrimaryArticleCards,
+  listPrimaryArticlePreviewCards,
   listPrimaryDeckCards,
   listPrimaryPracticeInput,
+  listPrimarySamplePracticeInput,
+  SAMPLE_PRACTICE_INPUT_ID,
   primaryArticleCardsRequestSchema,
   primaryDeckCardsRequestSchema,
   primaryFlashcardViewSchema,
 } from "./primary-saved-items.js";
+export {
+  articleCardStateInputSchema,
+  articleCardStateOutputSchema,
+  getArticleCardState,
+  saveArticleCardsAfterQuiz,
+  saveArticleCardsInputSchema,
+  saveArticleCardsOutputSchema,
+} from "./primary-article-cards.js";
+export type {
+  ArticleCardState,
+  SaveArticleCardsInput,
+  SaveArticleCardsOutput,
+} from "./primary-article-cards.js";
 export type { PrimaryFlashcardView, PrimarySavedWord, PrimaryWordAudio } from "./primary-saved-items.js";
 export {
   GameSpeechPreparationError,

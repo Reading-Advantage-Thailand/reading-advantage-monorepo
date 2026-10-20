@@ -1,0 +1,35 @@
+{
+  "member": "primary_parity_acceptance_20261011",
+  "pairs": [
+    {
+      "id": "SYS-01",
+      "rows": ["SYS-01"],
+      "role": "SYSTEM",
+      "legacyPath": "/en/system/dashboard",
+      "newPath": "/en/system/dashboard",
+      "checks": [
+        { "id": "SYS-01-a", "behavior": "Legacy shows metric cards; the new page shows the heading and the text \"System Dashboard Description\" only." }
+      ]
+    },
+    {
+      "id": "ADM-01",
+      "rows": ["ADM-01"],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/dashboard",
+      "newPath": "/en/admin/dashboard",
+      "checks": [
+        { "id": "ADM-01-a", "behavior": "Legacy shows KPI cards; the new page shows three \"Data unavailable\" cards." }
+      ]
+    },
+    {
+      "id": "STU-05",
+      "rows": ["STU-05"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmirl4sc5000ts60d7zuiqpjb",
+      "newPath": "/en/student/lesson/{map:assignments:cmirl4sc5000ts60d7zuiqpjb}",
+      "checks": [
+        { "id": "STU-05-a", "behavior": "The summary of a finished lesson: legacy has a restart button; the new page has no restart button." }
+      ]
+    }
+  ]
+}

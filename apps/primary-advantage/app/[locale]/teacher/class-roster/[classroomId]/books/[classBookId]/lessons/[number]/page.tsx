@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { ArrowLeftIcon, PresentationIcon, UserRoundIcon } from "lucide-react";
+import { ArrowLeftIcon, PresentationIcon, PrinterIcon, UserRoundIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getLessonGuide, getTeacherLesson, type TeacherLesson } from "@reading-advantage/domain/primary-books";
 import { currentUser } from "@/lib/session";
@@ -57,7 +57,7 @@ function KeyBlock({ heading, children }: { heading: string; children: React.Reac
 /**
  * The teacher lesson page (FR-8, FR-9, FR-12, FR-13): the live guide, the 13 steps in the four
  * periods in the guide language of the locale, the answer key (teachers only), and the lesson
- * summary; links to the projector and the rehearsal.
+ * summary; links to the projector, the rehearsal, and the print page.
  * @param props.params The class, the class book, and the lesson number.
  * @returns The page.
  */
@@ -71,6 +71,7 @@ export default async function TeacherLessonPage({ params }: { params: Params }) 
   if (!lesson) notFound();
   const base = `/teacher/class-roster/${classroomId}/books/${classBookId}`;
   const here = `${base}/lessons/${number}`;
+  const projectorGames = lesson.lesson.articleId ? `${here}/projector#projector-games` : undefined;
   const { bank, activities } = lesson;
   const hasKey = bank.mcq.length > 0 || bank.saq.length > 0 || bank.laq.length > 0 || activities !== null;
 
@@ -97,18 +98,25 @@ export default async function TeacherLessonPage({ params }: { params: Params }) 
                 {t("lesson.rehearsal")}
               </Link>
             ) : null}
+            {lesson.hasPrint ? (
+              <Link href={`${here}/print`} className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION)}>
+                <PrinterIcon aria-hidden="true" />
+                {t("lesson.print")}
+              </Link>
+            ) : null}
           </>
         }
       />
+      {lesson.hasPrint ? null : <p className="text-muted-foreground text-sm">{t("lesson.printNotReady")}</p>}
       {lesson.lesson.articleId ? null : <p className="text-muted-foreground text-sm">{t("lesson.noArticle")}</p>}
 
-      <GuideOverlay classBookId={classBookId} lessonNumber={number} steps={guide.flatMap((group) => group.steps)} stepsDone={lesson.stepsDone} />
+      <GuideOverlay classBookId={classBookId} lessonNumber={number} steps={guide.flatMap((group) => group.steps)} stepsDone={lesson.stepsDone} projectorHref={projectorGames} />
 
       <section aria-labelledby="lesson-guide" className={TEACHER_CARD}>
         <h2 id="lesson-guide" className="text-lg font-semibold">
           {t("guide.title")}
         </h2>
-        <GuideSteps guide={guide} stepsDone={lesson.stepsDone} t={t} />
+        <GuideSteps guide={guide} stepsDone={lesson.stepsDone} projectorHref={projectorGames} t={t} />
       </section>
 
       <section aria-labelledby="answer-key" className={TEACHER_CARD}>

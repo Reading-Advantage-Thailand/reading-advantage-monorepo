@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { StudentFormData } from "@/types";
 
@@ -159,6 +160,7 @@ export default function StudentsPage() {
       setPagination(data.pagination);
     } catch (error) {
       console.error("Error fetching students:", error);
+      toast.error(t("toasts.fetchError"));
     } finally {
       setIsLoading(false);
     }
@@ -247,13 +249,22 @@ export default function StudentsPage() {
     });
   };
 
+  // Shows the error toast; the description is the server `error` text when the answer has one.
+  const toastWriteError = async (title: string, response?: Response) => {
+    let description: string | undefined;
+    try {
+      const body = (await response?.json()) as { error?: unknown } | undefined;
+      if (typeof body?.error === "string") description = body.error;
+    } catch {
+      // The answer has no JSON body: the toast shows the title only.
+    }
+    toast.error(title, { description });
+  };
+
   // Handle add student
   const handleAddStudent = async () => {
     try {
-      // Persist the new student via the backend API. We reconcile the
-      // server response into local state instead of mutating locally and
-      // re-fetching, so the admin UI reflects the authoritative row id
-      // and any server-side defaults (timestamps, ids, etc.).
+      // Persist the new student via the backend API.
       const response = await fetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -265,22 +276,20 @@ export default function StudentsPage() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Failed to add student:", errorText);
+        console.error("Failed to add student:", response.status);
+        await toastWriteError(t("toasts.addError"), response);
         return;
       }
 
-      const payload = (await response.json()) as { student?: Student };
-      if (payload.student) {
-        setStudents((prev) => [...prev, payload.student as Student]);
-      } else {
-        await fetchStudents();
-      }
+      // Reload the list, so the totals and the page count follow the add (manual test A6).
+      await fetchStudents();
 
       setIsAddDialogOpen(false);
       resetForm();
+      toast.success(t("toasts.addSuccess"));
     } catch (error) {
       console.error("Error adding student:", error);
+      await toastWriteError(t("toasts.addError"));
     }
   };
 
@@ -314,8 +323,8 @@ export default function StudentsPage() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Failed to update student:", errorText);
+        console.error("Failed to update student:", response.status);
+        await toastWriteError(t("toasts.updateError"), response);
         return;
       }
 
@@ -333,8 +342,10 @@ export default function StudentsPage() {
       setIsEditDialogOpen(false);
       setEditingStudent(null);
       resetForm();
+      toast.success(t("toasts.updateSuccess"));
     } catch (error) {
       console.error("Error updating student:", error);
+      await toastWriteError(t("toasts.updateError"));
     }
   };
 
@@ -348,14 +359,17 @@ export default function StudentsPage() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Failed to delete student:", errorText);
+        console.error("Failed to delete student:", response.status);
+        await toastWriteError(t("toasts.deleteError"), response);
         return;
       }
 
-      setStudents((prev) => prev.filter((student) => student.id !== id));
+      // Reload the list, so the totals and the page count follow the delete (manual test A6).
+      await fetchStudents();
+      toast.success(t("toasts.deleteSuccess"));
     } catch (error) {
       console.error("Error deleting student:", error);
+      await toastWriteError(t("toasts.deleteError"));
     }
   };
 

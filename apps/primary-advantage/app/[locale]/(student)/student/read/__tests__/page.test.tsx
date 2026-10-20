@@ -25,6 +25,9 @@ vi.mock("next-intl/server", async () => {
 vi.mock("@/components/articles/article-select", () => ({
   default: ({ total }: { total: number }) => <div data-testid="article-select">{total}</div>,
 }));
+vi.mock("@/components/stories/read-tabs", () => ({
+  ReadTabs: ({ active }: { active: string }) => <nav data-testid="read-tabs" data-active={active} />,
+}));
 vi.mock("@/components/go-to-top", () => ({ GoToTop: () => null }));
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ children, href, ...rest }: { children?: ReactNode; href: string }) => (
@@ -57,6 +60,7 @@ describe("read list page", () => {
     await renderPage();
     expect(screen.getByRole("heading", { level: 1, name: en.ReadList.title })).toBeInTheDocument();
     expect(screen.getByText("Your level: A1-")).toBeInTheDocument();
+    expect(screen.getByTestId("read-tabs")).toHaveAttribute("data-active", "articles");
     expect(screen.queryByText(/Your level is/)).not.toBeInTheDocument();
     const filters = screen.getByRole("navigation", { name: en.ReadList.filters });
     expect(within(filters).getByText(en.ReadList.chooseType)).toBeInTheDocument();
@@ -64,6 +68,13 @@ describe("read list page", () => {
     expect(fiction).toHaveAttribute("href", "/student/read?type=fiction");
     expect(fiction).toHaveClass("min-h-12");
     expect(screen.getByTestId("article-select")).toHaveTextContent("7");
+  });
+
+  it("shows no level to staff, whose list has every level", async () => {
+    mocks.user = { id: "t1", role: "TEACHER", level: 1, cefrLevel: "A0-" };
+    await renderPage();
+    expect(screen.queryByText(/Your level/)).not.toBeInTheDocument();
+    mocks.user = { id: "s1", role: "STUDENT", level: 3, cefrLevel: "A1-" };
   });
 
   it("marks the chosen type and offers its genres and a reset", async () => {

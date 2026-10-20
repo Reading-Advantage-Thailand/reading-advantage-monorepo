@@ -4,6 +4,7 @@ import { db } from "@reading-advantage/db";
 import { getAvatarState, listAvatarShop, type AvatarShopItem, type AvatarState } from "@reading-advantage/domain/primary-avatar";
 import { ErrorState } from "@reading-advantage/ui";
 import { currentUser } from "@/lib/session";
+import { isStudentWriter, previewHeroProfile } from "@/lib/student-view";
 import { redirect } from "@/i18n/navigation";
 import { AvatarShop } from "@/components/avatar/avatar-shop";
 import { RpgLink } from "@/components/rpg/chrome";
@@ -28,10 +29,11 @@ export default async function AvatarShopPage() {
   const locale = await getLocale();
   if (!user) return redirect({ href: "/auth/signin", locale });
   const t = await getTranslations("Avatar");
-  let state: AvatarState | null = null;
+  let state: Pick<AvatarState, "profile" | "gp" | "loadout"> | null = null;
   let items: AvatarShopItem[] = [];
   try {
-    state = await getAvatarState({ db, user });
+    // Preview mode (staff): the default hero, zero coins, nothing worn; no row of the staff member.
+    state = isStudentWriter(user) ? await getAvatarState({ db, user }) : { profile: previewHeroProfile(), gp: 0, loadout: {} };
     items = await listAvatarShop({ db, user });
   } catch {
     state = null;

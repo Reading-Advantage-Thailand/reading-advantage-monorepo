@@ -25,7 +25,7 @@
  *   state on the same article id.
  */
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import viMessages from "../../messages/vi.json";
@@ -107,21 +107,6 @@ vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
   },
 }));
 
-vi.mock("@reading-advantage/game-cartridges", () => ({
-  cartridgeLoaders: {
-    "test-game": async () => ({
-      manifest: {
-        id: "test-game",
-        inputMode: "vocabulary",
-        requiredAssetBindings: [],
-      },
-      standardExperience: {},
-    }),
-  },
-  CARTRIDGE_CHALLENGE_CAPABILITIES: {},
-  createCatalogStandardEdition: () => ({}),
-}));
-
 vi.mock("../articles/article-showcase-card", async () => {
   const React = await import("react");
   return {
@@ -144,20 +129,16 @@ vi.mock("../articles/article-showcase-card", async () => {
   };
 });
 
-import { StudentCartridgeHost } from "../apk/StudentCartridgeHost";
 import ChangeRole from "../shared/change-role";
 import Sentence from "../articles/sentence";
 import TaskVocabularyCollection from "../lesson/task/task-vocabulary-collection";
 import { TaskReading } from "../lesson/task/task-reading";
-import { AdminStatsCards } from "../admin/admin-stats-cards";
-import { AdminRecentActivity } from "../admin/admin-recent-activity";
 import ArticleSelect from "../articles/article-select";
 import type { Article } from "@/types";
 import { Role } from "@/types/enum";
-import { renderWithMessages, testMessages, withMessages } from "./helpers/render-with-messages";
+import { renderWithMessages, withMessages } from "./helpers/render-with-messages";
 
 /** Real English copy used for user-facing assertions. */
-const en = testMessages.en;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -170,53 +151,6 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
-});
-
-/**
- * Props shared by the cartridge host renders below.
- */
-function hostProps(mode?: "demo" | "briefing") {
-  return {
-    cartridgeId: "test-game",
-    title: "Test Game",
-    description: "desc",
-    inputMode: "vocabulary" as const,
-    locale: "en",
-    ...(mode ? { mode } : {}),
-  };
-}
-
-describe("FR-3 student cartridge launch phase", () => {
-  it("renders the loading phase without reading window.location.search", async () => {
-    searchParamsMock.mockImplementation(() => {
-      throw new Error("search params must not be read during render");
-    });
-    renderWithMessages(<StudentCartridgeHost {...hostProps()} />);
-    expect(screen.getByText("Loading student content...")).toBeInTheDocument();
-    expect(
-      await screen.findByRole("button", { name: "Retry" }),
-    ).toBeInTheDocument();
-    expect(searchParamsMock).not.toHaveBeenCalled();
-  });
-
-  it("derives demo and briefing phases from the mode prop", async () => {
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        content: [{ term: "cat", translation: "แมว" }],
-      }),
-    });
-    const { unmount } = renderWithMessages(
-      <StudentCartridgeHost {...hostProps("demo")} />,
-    );
-    await waitFor(() => expect(launchPhaseProbe.phase).toBe("demo"));
-    unmount();
-    cleanup();
-
-    launchPhaseProbe.phase = "";
-    renderWithMessages(<StudentCartridgeHost {...hostProps()} />);
-    await waitFor(() => expect(launchPhaseProbe.phase).toBe("briefing"));
-  });
 });
 
 describe("FR-8 change-role static colour classes", () => {
@@ -323,47 +257,13 @@ describe("FR-7 locale-aware content lookups", () => {
     unmount();
     cleanup();
 
+    // An English page has no translation language of its own: it shows the Thai translation, as the
+    // article page does (toTranslationLanguage, 48c9099b3).
     renderWithMessages(<TaskReading article={article} enableTranslation />);
     fireEvent.click(screen.getByRole("button", { name: /Translation Off/ }));
     fireEvent.click(screen.getByText("Alpha"));
-    expect(await screen.findByText("EN translation.")).toBeInTheDocument();
-  });
-});
-
-describe("FR-11 admin error states instead of fabricated fallbacks", () => {
-  it("renders an error without mock activity names when the fetch fails", async () => {
-    fetchMock.mockRejectedValue(new Error("activity down"));
-    renderWithMessages(<AdminRecentActivity />);
-    expect(await screen.findByRole("alert")).toBeInTheDocument();
-    expect(
-      await screen.findByText(en.AdminDashboard.recentActivity.loadError),
-    ).toBeInTheDocument();
-    expect(screen.queryByText("Sarah Johnson")).not.toBeInTheDocument();
-  });
-
-  it("renders live stats counts with an em dash for growth", async () => {
-    fetchMock.mockImplementation((url: string) => {
-      if (String(url).includes("/api/teachers"))
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({ pagination: { total: 7 } }),
-        });
-      if (String(url).includes("/api/students"))
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({ pagination: { total: 42 } }),
-        });
-      return Promise.resolve({
-        ok: true,
-        json: async () => ({ totalArticles: 13 }),
-      });
-    });
-    renderWithMessages(<AdminStatsCards />);
-    expect(await screen.findByText("7")).toBeInTheDocument();
-    expect(await screen.findByText("42")).toBeInTheDocument();
-    expect(await screen.findByText("13")).toBeInTheDocument();
-    expect(await screen.findByText("—")).toBeInTheDocument();
-    expect(screen.queryByText("12.5%")).not.toBeInTheDocument();
+    expect(await screen.findByText("คำแปลภาษาไทย.")).toBeInTheDocument();
+    expect(screen.queryByText("EN translation.")).toBeNull();
   });
 });
 

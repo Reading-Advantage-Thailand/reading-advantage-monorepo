@@ -3,6 +3,9 @@ import AuthErrorPage from "@/app/[locale]/auth/error/page";
 import SchoolProfileSettings from "@/components/school/school-profile-settings";
 import { getCurrentUser } from "@/lib/session";
 import { getSchoolDetail } from "@/server/models/schoolModel";
+import { normalizeRole } from "@/lib/authorization";
+import { getLicenseViewForCaller } from "@/server/models/schoolLicenseView";
+import { canManageSchool } from "@/server/utils/school-access";
 
 /**
  * Fetches the current user's school on the server and renders the settings.
@@ -15,11 +18,31 @@ async function SchoolProfileData() {
     return <AuthErrorPage />;
   }
 
+  // The license view and the license key go to a school admin only.
+  const licenseView = await getLicenseViewForCaller(user);
   const initialSchool = user.schoolId
-    ? await getSchoolDetail(user.schoolId)
+    ? await getSchoolDetail(user.schoolId, {
+        withLicense: licenseView !== null,
+        hideStaffEmails: normalizeRole(user.role) === "STUDENT",
+      })
     : null;
 
-  return <SchoolProfileSettings initialSchool={initialSchool} />;
+  // The admin buttons follow the server rule of the admins routes. The admins list holds the
+  // school_admins row holders, so it tells whether the caller has a row.
+  const canManageAdmins = initialSchool
+    ? canManageSchool(
+        { ...user, hasSchoolAdminRow: initialSchool.admins.some((a) => a.user.id === user.id) },
+        { id: initialSchool.id, ownerId: initialSchool.ownerId },
+      )
+    : false;
+
+  return (
+    <SchoolProfileSettings
+      initialSchool={initialSchool}
+      initialLicenseView={licenseView}
+      canManageAdmins={canManageAdmins}
+    />
+  );
 }
 
 /**

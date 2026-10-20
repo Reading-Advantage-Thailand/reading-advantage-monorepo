@@ -58,4 +58,12 @@ describe("roleDefaultRedirects / protectedRoutes pairing contract", () => {
       }
     }
   });
+
+  it("admits STUDENT, TEACHER, ADMIN, and SYSTEM to /student and sends INTERN away", () => {
+    const required = requiredRolesFor("/student/home") ?? [];
+    for (const role of [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM]) {
+      expect(required).toContain(role);
+    }
+    expect(required).not.toContain(ROLES.INTERN);
+  });
 });

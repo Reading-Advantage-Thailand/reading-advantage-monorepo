@@ -14,8 +14,12 @@ players see for the world is Chibi Quest.
 ## 2. Rules
 
 1. **Assets come from `advantage-forge` only.** Scenes, heroes, enemies, NPCs, props, item views,
-   sprite strips, and fonts (Fredoka, Mitr). No ElvGames asset anywhere in the app. The licensed
-   APK standard library is legacy; see the audit track `apk_elvgames_audit_20261006`.
+   sprite strips, and fonts (Fredoka, Mitr). No ElvGames asset anywhere in the app. This rule is true
+   since `primary_parity_cleanup_20261011`: Primary ships no ElvGames file. The licensed APK standard
+   library stays in the repository for other apps; see the audit track `apk_elvgames_audit_20261006`.
+   The shared class challenge panels of the play kit read the variables `--apk-arcade-panel-image`,
+   `--apk-arcade-button-primary-image`, and `--apk-arcade-button-secondary-image`. Primary sets them to
+   `none` (in `.cq-world` and on `/teacher/game-challenges`), so the panels show the skin and no frame image.
 2. **Chrome is owned SVG/CSS.** Panels, signs, banners, meters, hearts, buttons, the toolbar, and
    the 2D effects live in one stylesheet (`phase0/kit/chrome/kit.css`, class prefix `cq-`).
    Anything pictorial is a Forge render. Nobody draws a new frame per page.
@@ -37,6 +41,9 @@ players see for the world is Chibi Quest.
    floating damage number, coins flying on a purchase. No motion for decoration alone.
 7. **Dark mode is night.** The same scene with the lanterns lit; the chrome does not change.
 8. **The owner sees captures before a page is called done**, at 375 px and 1280 px.
+9. **Staff pages share the frame.** The TEACHER, ADMIN, and SYSTEM shell has the wooden header and
+   the signpost menu of the student shell on a parchment ground (`.cq-staff`; night in the dark theme),
+   so the staff scenes and the plain staff tables sit in one frame (owner choice 2026-10-14, option B).
 
 ## 3. The places
 

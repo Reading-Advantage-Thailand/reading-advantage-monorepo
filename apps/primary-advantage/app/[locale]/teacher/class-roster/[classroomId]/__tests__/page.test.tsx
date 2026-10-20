@@ -12,8 +12,11 @@ const mocks = vi.hoisted(() => ({
   user: { id: "t1", username: "kru.ann", name: "Kru Ann", role: "TEACHER", schoolId: "school-1", xp: 0, level: 1, cefrLevel: null } as Record<string, unknown> | null,
   listClassBooks: vi.fn(),
   listCatalogueBooks: vi.fn(),
+  logError: vi.fn(),
+  logWarn: vi.fn(),
 }));
 
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: mocks.logWarn, info: vi.fn() } }));
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurrentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
@@ -44,7 +47,7 @@ import ClassroomDetailPage from "../page";
 const C1 = "c1c1c1c1-0000-4000-8000-000000000001";
 const CB = "cbcbcbcb-0000-4000-8000-000000000001";
 const BOOK = "b0b0b0b0-0000-4000-8000-000000000001";
-const classBook = { id: CB, classroomId: C1, bookId: BOOK, bookKey: "o3-2", bookName: "Primary Advantage Origins 3.2", lessonCount: 14, mode: "teacher_led", startDate: null, currentLesson: 3, taughtCount: 1 };
+const classBook = { id: CB, classroomId: C1, bookId: BOOK, bookKey: "o3-2", bookName: "Primary Advantage Origins 3.2", lessonCount: 14, mode: "teacher_led", startDate: null, currentLesson: 3, taughtCount: 1, lessonTitle: "A Day at the Sea Park", stepsDoneCount: 4, nextStep: 5, nextStepPeriod: 2 };
 const catalogue = [
   { id: BOOK, key: "o3-2", name: "Primary Advantage Origins 3.2", seriesName: "Primary Advantage Origins", lessonCount: 14 },
   { id: "b0b0b0b0-0000-4000-8000-000000000002", key: "q4", name: "Primary Advantage Quest 4", seriesName: "Primary Advantage Quest", lessonCount: 14 },
@@ -76,8 +79,14 @@ describe("teacher class page class books (FR-1)", () => {
   it("lists the assigned book with its pointer, taught count, and lesson plan link, plus the assign form", async () => {
     await renderPage();
     const card = screen.getByRole("region", { name: en.title });
-    expect(within(card).getByText("Primary Advantage Origins 3.2", { selector: "span" })).toBeInTheDocument();
-    expect(within(card).getByText("Lesson 3 of 14 · 1 lesson taught")).toBeInTheDocument();
+    expect(card).toHaveAttribute("id", "class-book");
+    expect(within(card).getByText("Primary Advantage Origins 3.2", { selector: "p" })).toBeInTheDocument();
+    expect(within(card).getByText("3/14")).toBeInTheDocument();
+    expect(within(card).getByText("Lesson 3: A Day at the Sea Park")).toBeInTheDocument();
+    expect(within(card).getByRole("progressbar", { name: en.stepsMeter })).toHaveAttribute("aria-valuenow", "4");
+    expect(within(card).getByText(/Step 5: Deep Reading Notes/)).toBeInTheDocument();
+    expect(within(card).getByText("Period 2")).toBeInTheDocument();
+    expect(within(card).getByRole("link", { name: en.openLesson })).toHaveAttribute("href", `/teacher/class-roster/${C1}/books/${CB}/lessons/3`);
     expect(within(card).getByRole("link", { name: en.pacing })).toHaveAttribute("href", `/teacher/class-roster/${C1}/books/${CB}`);
     const form = within(card).getByRole("form", { name: en.assign });
     expect(within(form).getByRole("combobox", { name: en.book })).toBeInTheDocument();
@@ -89,25 +98,59 @@ describe("teacher class page class books (FR-1)", () => {
     expect(mocks.listClassBooks).toHaveBeenCalledWith(expect.objectContaining({ classroomId: C1, user: mocks.user }));
   });
 
-  it("says when the class has no book and when the catalogue is empty", async () => {
+  it("shows only the empty-catalogue note when the class has no book and the catalogue is empty", async () => {
     mocks.listClassBooks.mockResolvedValueOnce([]);
     mocks.listCatalogueBooks.mockResolvedValueOnce([]);
     await renderPage();
     const card = screen.getByRole("region", { name: en.title });
-    expect(within(card).getByText(en.none)).toBeInTheDocument();
-    expect(within(card).getByText(en.noCatalogue)).toBeInTheDocument();
+    expect(within(card).queryByText(en.none)).not.toBeInTheDocument();
+    expect(within(card).getByText(en.emptyCatalogueTitle)).toBeInTheDocument();
+    expect(within(card).getByText(en.emptyCatalogueBody)).toBeInTheDocument();
+    expect(card).toHaveAttribute("id", "class-book");
     expect(within(card).queryByRole("form")).not.toBeInTheDocument();
   });
 
   it("renders the Thai card", async () => {
     await renderPage("th");
     expect(screen.getByRole("region", { name: testMessages.th.TeacherUi.classBook.title })).toBeInTheDocument();
-    expect(screen.getByText("บทที่ 3 จาก 14 · สอนแล้ว 1 บท")).toBeInTheDocument();
+    expect(screen.getByText(testMessages.th.TeacherUi.classBook.openLesson)).toBeInTheDocument();
+    expect(screen.getByText("บทที่ 3: A Day at the Sea Park")).toBeInTheDocument();
   });
 
-  it("falls back to the placeholder slot when the class books cannot be read", async () => {
+  it("shows the load error with a retry link and logs once when the class books cannot be read", async () => {
     mocks.listClassBooks.mockRejectedValueOnce(new Error("down"));
     await renderPage();
-    expect(screen.getByText("placeholder slot")).toBeInTheDocument();
+    const card = screen.getByRole("region", { name: en.title });
+    expect(within(card).getByRole("alert")).toHaveTextContent(en.loadErrorTitle);
+    expect(within(card).getByText(en.loadErrorBody)).toBeInTheDocument();
+    expect(within(card).getByRole("link", { name: en.retry })).toHaveAttribute("href", `/teacher/class-roster/${C1}`);
+    expect(within(card).queryByText(en.none)).not.toBeInTheDocument();
+    expect(within(card).queryByRole("form")).not.toBeInTheDocument();
+    expect(mocks.logError).toHaveBeenCalledTimes(1);
+    expect(mocks.logError).toHaveBeenCalledWith("class_books.load_failed", expect.objectContaining({ classroomId: C1, userId: "t1" }));
+    expect(screen.queryByText("placeholder slot")).not.toBeInTheDocument();
+  });
+
+  it("logs a FORBIDDEN read at warn level and still shows the error state", async () => {
+    mocks.listClassBooks.mockRejectedValueOnce(Object.assign(new Error("no access"), { code: "FORBIDDEN" }));
+    await renderPage();
+    expect(within(screen.getByRole("region", { name: en.title })).getByRole("alert")).toHaveTextContent(en.loadErrorTitle);
+    expect(mocks.logWarn).toHaveBeenCalledWith("class_books.load_failed", expect.objectContaining({ classroomId: C1 }));
+    expect(mocks.logError).not.toHaveBeenCalled();
+  });
+
+  it("shows the load error when only the catalogue fails", async () => {
+    mocks.listCatalogueBooks.mockRejectedValueOnce(new Error("down"));
+    await renderPage();
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(mocks.logError).toHaveBeenCalledTimes(1);
+  });
+
+  it("says no book is assigned and points to the form when the catalogue has books", async () => {
+    mocks.listClassBooks.mockResolvedValueOnce([]);
+    await renderPage();
+    const card = screen.getByRole("region", { name: en.title });
+    expect(within(card).getByText(en.none)).toBeInTheDocument();
+    expect(within(card).getByRole("form", { name: en.assign })).toBeInTheDocument();
   });
 });

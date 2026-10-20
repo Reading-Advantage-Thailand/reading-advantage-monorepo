@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useParams } from "next/navigation";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { MoreVertical, RotateCcw, Search, TrendingUp, TriangleAlert, Users } from "lucide-react";
 import { toast } from "sonner";
 import { calendarDayNumber } from "@reading-advantage/domain/calendar-day";
@@ -100,7 +101,7 @@ export default function EnhancedClassRoster({ classroomId: classroomIdProp, clas
   const tc = useTranslations("TeacherClass");
   const te = useTranslations("Error");
   const tLogin = useTranslations("ClassLogin");
-  const format = useFormatter();
+  const format = useIntlFormatter();
 
   const [state, setState] = useState<LoadState>("loading");
   const [classroom, setClassroom] = useState<ClassroomData | null>(null);
@@ -294,6 +295,8 @@ export default function EnhancedClassRoster({ classroomId: classroomIdProp, clas
         </div>
       )}
 
+      {classBook ?? <ClassBookSlot classroomId={classroomId} />}
+
       <ClassLoginPanel
         classroomId={classroomId}
         renderStudentExtras={extras}
@@ -304,7 +307,6 @@ export default function EnhancedClassRoster({ classroomId: classroomIdProp, clas
         rosterVersion={rosterVersion}
       />
 
-      {classBook ?? <ClassBookSlot classroomId={classroomId} />}
       {classQuest}
 
       <AlertDialog open={resetStudentId !== ""} onOpenChange={(open) => !open && setResetStudentId("")}>

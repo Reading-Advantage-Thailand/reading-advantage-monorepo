@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
     unknown
   > | null,
   getStudentHome: vi.fn(),
+  awardPowerUps: vi.fn(async (): Promise<unknown[]> => []),
   getStudentClassBooks: vi.fn(async (): Promise<unknown[]> => []),
   getAvatarProfile: vi.fn(async (): Promise<unknown> => null),
   getStudentQuestCard: vi.fn(async (): Promise<unknown> => null),
@@ -34,7 +35,7 @@ vi.mock("@reading-advantage/domain/primary-avatar", () => ({
     return { profile, gp: 0, level: 1, catalogVersion: "1.0.0", inventory: [], loadout: {} };
   },
 }));
-vi.mock("@reading-advantage/domain/primary-quest", () => ({ awardPowerUps: async () => [], getStudentQuestCard: mocks.getStudentQuestCard }));
+vi.mock("@reading-advantage/domain/primary-quest", () => ({ awardPowerUps: mocks.awardPowerUps, getStudentQuestCard: mocks.getStudentQuestCard }));
 vi.mock("@reading-advantage/domain/primary-voice", () => ({ getVoiceEntitlement: mocks.getVoiceEntitlement, voiceConfigFromEnv: () => ({}) }));
 vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: mocks.leaderboard }));
 vi.mock("next-intl/server", async () => {
@@ -263,5 +264,20 @@ describe("student home Reedy meter (reedy FR-9)", () => {
     mocks.locale = "en";
     renderWithMessages(await StudentHomePage(), { locale: "en" });
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  });
+});
+
+describe("student home page-load writes (Preview mode)", () => {
+  it("awards the power-ups of a student", async () => {
+    mocks.awardPowerUps.mockClear();
+    await renderHome();
+    expect(mocks.awardPowerUps).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(["TEACHER", "ADMIN", "SYSTEM"])("awards no power-up for %s", async (role) => {
+    mocks.awardPowerUps.mockClear();
+    mocks.user = { id: "t1", username: "t", name: "Teach", role, schoolId: "school-1", xp: 0, level: 1, cefrLevel: "A1" };
+    await renderHome().catch(() => undefined);
+    expect(mocks.awardPowerUps).not.toHaveBeenCalled();
   });
 });

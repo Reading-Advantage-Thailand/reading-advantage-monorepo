@@ -14,6 +14,7 @@ vi.mock("next/navigation", async (importOriginal) => ({ ...(await importOriginal
 vi.mock("@reading-advantage/avatar-kit", () => ({ AVATAR_CATALOG: {}, AVATAR_BASE: { slots: {} }, TINT_SLOTS: [] }));
 
 import { AvatarShop, tryOnPieces } from "../avatar-shop";
+import { StudentViewProvider } from "@/components/student/student-view-provider";
 
 const item = (id: string, over: Partial<AvatarShopItem> = {}): AvatarShopItem => ({ id, slot: "head", tier: 1, levelRequired: 1, price: 50, twoHanded: false, dyes: [], owned: false, ownedDyes: [], unlocked: true, ...over });
 const profile: AvatarProfile = { classId: "knight", tints: { skin: "fair", hair: "brown", eyes: "blue", cloth: "sky" }, catalogVersion: "1.0.0", updatedAt: "2026-10-05T00:00:00.000Z" };
@@ -90,5 +91,25 @@ describe("AvatarShop", () => {
     expect(JSON.parse(within(card).getByTestId("portrait").getAttribute("data-pieces")!)).toEqual([{ itemId: "cloak", dye: "blue" }]);
     await user.click(within(card).getByRole("button", { name: "Buy the blue dye for 45 GP" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Not enough GP");
+  });
+});
+
+describe("AvatarShop in Preview mode", () => {
+  it("lets staff try a piece on but turns Buy off and says nothing is saved", async () => {
+    const user = userEvent.setup();
+    renderWithMessages(
+      <StudentViewProvider mode="preview">
+        <AvatarShop items={stock()} gp={0} profile={profile} loadout={{}} />
+      </StudentViewProvider>,
+      { locale: "en" },
+    );
+    await user.click(screen.getByRole("button", { name: /Hat 3/ }));
+    const card = screen.getByRole("region", { name: "Try it on" });
+    expect(within(card).getByTestId("portrait")).toBeInTheDocument();
+    const buy = within(card).getByRole("button", { name: "Buy for 50 GP" });
+    expect(buy).toBeDisabled();
+    expect(buy).toHaveAccessibleDescription("Preview: not saved");
+    await user.click(buy);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

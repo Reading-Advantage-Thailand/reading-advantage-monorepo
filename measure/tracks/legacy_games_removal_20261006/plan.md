@@ -45,9 +45,9 @@ Defect found 2026-10-07: the Primary reader saves words and sentences in `flashc
 - [x] Domain `gameTypeEnum` accepts the 3D ids and the `<id>-story` runs — defect found: the completion route rejected every story run before this (no word adventure was ever saved)
 - [x] Games catalog page and teacher challenge page list the 3D registry; seed-demo resolves the capability from the manifests
 
-## Phase 3: M3 and M4 (after the cutover)
+## Phase 3: M3 (after the cutover)
 - [ ] Reading Advantage and Advantage Games: practice input, new game pages, teacher challenge pages
-- [ ] Remove game-cartridges, the legacy-only host code, host-proof and QC pages, the ElvGames assets
+- M4 (removal of game-cartridges, the host code, host-proof and QC pages, and the ElvGames assets): owner is `primary_parity_cleanup_20261011` (before the cutover).
 
 ## Gates
 - [x] Tests, tsc, ESLint green (2026-10-07 on integration: Primary 224 files / 1335 tests, domain 151 files /

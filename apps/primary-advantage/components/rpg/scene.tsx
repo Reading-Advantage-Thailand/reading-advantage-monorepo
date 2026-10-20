@@ -8,14 +8,15 @@ import { cn } from "@/lib/utils";
  * darkens the backdrop through the stylesheet.
  * @param props.place The Forge scene.
  * @param props.dim True blurs and darkens the backdrop, for a reading page.
+ * @param props.contained True clips the backdrop to the scene box, for a page inside the staff shell.
  * @param props.className Extra classes for the content wrapper.
  * @param props.children The page content.
  * @returns The scene.
  */
-export function Scene({ place, dim, className, children }: { place: Place; dim?: boolean; className?: string; children: ReactNode }) {
+export function Scene({ place, dim, contained, className, children }: { place: Place; dim?: boolean; contained?: boolean; className?: string; children: ReactNode }) {
   const files = backdropFiles(place);
   return (
-    <div className="cq" data-place={place}>
+    <div className={cn("cq", contained && "cq-scene--staff")} data-place={place}>
       <div className={cn("cq-backdrop", dim && "cq-backdrop--dim")} aria-hidden="true">
         <picture>
           <source media="(min-width: 900px)" srcSet={files.desktop} type="image/webp" />

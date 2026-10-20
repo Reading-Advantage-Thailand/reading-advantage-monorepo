@@ -18,7 +18,8 @@ export function UserAvatar({ user, ...props }: UserAvatarProps) {
       ) : (
         <AvatarFallback>
           <span className="sr-only">{user.name}</span>
-          <IconUser className="h-4 w-4" />
+          {/* The fallback circle is light on the wooden header: the icon takes the text color. */}
+          <IconUser className="text-foreground h-4 w-4" />
         </AvatarFallback>
       )}
     </Avatar>

@@ -8,8 +8,6 @@ vi.mock("@reading-advantage/db", async (importOriginal) => ({
 
 import {
   checkAdminPermissions,
-  checkStudentPermissions,
-  checkTeacherPermissions,
   effectiveCallerRole,
   getUserSchoolIds,
   type UserWithRoles,
@@ -37,13 +35,6 @@ describe("caller checks count only an own-school school_admins row", () => {
   it("admits an own-school row and rejects a foreign row for admin checks", async () => {
     await expect(checkAdminPermissions(own)).resolves.toBe(true);
     await expect(checkAdminPermissions(foreign)).resolves.toBe(false);
-  });
-
-  it("applies the same rule to the teacher and student checks", async () => {
-    const bare = { ...foreign, role: null };
-    await expect(checkTeacherPermissions(bare)).resolves.toBe(false);
-    await expect(checkStudentPermissions(bare)).resolves.toBe(false);
-    await expect(checkTeacherPermissions({ ...own, role: null })).resolves.toBe(true);
   });
 
   it("ranks a foreign row as no admin in effectiveCallerRole", () => {

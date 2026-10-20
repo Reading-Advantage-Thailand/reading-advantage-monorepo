@@ -56,7 +56,8 @@ describe("teacher manual (FR-15)", () => {
     const steps = screen.getByRole("region", { name: en.stepsTitle });
     expect(within(steps).getByText("Step 1: Before You Read")).toBeInTheDocument();
     expect(within(steps).getByText("Greet the class")).toBeInTheDocument();
-    expect(within(steps).getByRole("link", { name: testMessages.en.TeacherUi.classBook.guide.games })).toHaveAttribute("href", "/teacher/game-challenges");
+    // the games link only the practice steps 9 and 10, not step 1
+    expect(within(steps).queryByRole("link", { name: testMessages.en.TeacherUi.classBook.guide.games })).toBeNull();
   });
 
   it("asks for the Thai guide in Thai and says when the guide is missing", async () => {

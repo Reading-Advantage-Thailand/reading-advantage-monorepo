@@ -3,6 +3,7 @@
 Version: 0.1 (draft)
 Date: 2026-10-03
 Status: In progress. Lanes A, M (Phase 1), B, and C Phases 0-2 are merged into `primary-parity-integration`. Mastery graph: T1 (objective tags) merged; T2 (evidence pipeline) implemented on lane-h and verified on the production copy on 2026-10-06 (1361 evidence rows from 1065 legacy quiz rows), waiting for the owner's phase checks and the merge.
+Update 2026-10-12: the cutover stopped after C10 (2026-10-11). The set [primary_parity_20261011](./sets/primary_parity_20261011.md) closes the gaps first.
 Owner: Daniel Bo
 Gap list: `advantage-pr/12-operations/primary-tutor-parity-gap-list.md` (v0.2)
 
@@ -71,6 +72,8 @@ before go-live.
    integration branch so those changes are never mixed in or lost.
 8. **Reviewers are separate agents.** The agent that writes a change does not review it.
 9. **Report outcomes honestly.** A failing test or an unfinished task is reported as such.
+10. **Behavior is the evidence.** Compare page content and behavior with legacy HEAD (`bfea121`).
+    A route name is not evidence. Every removal needs a recorded owner decision.
 
 ## Subagent method
 

@@ -14,8 +14,8 @@ import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor2D, Arena2D, banner, button, COLORS, depthOf, fitGameSize, Joystick2D, popup, recolorTag, registerSheetAnimations, StatusBar2D, tag, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
-import { HERO_START, createEnchantedLibrary, evidenceOf, scoreOf, targetBookOf, type LibraryCommand, type LibraryEvent, type LibraryState } from '../core/index.js';
-import { FILES_2D, HERO_CLIPS_2D, HEROES_2D, SPIRIT_CLIPS_2D } from '../manifest.js';
+import { HERO_START, createEnchantedLibrary, evidenceOf, hintBookOf, scoreOf, type LibraryCommand, type LibraryEvent, type LibraryState } from '../core/index.js';
+import { FILES_2D, HERO_CLIPS_2D, HEROES_2D, SPIRIT_CLIPS_2D, SPIRIT_LOOKS, SPIRIT_MODEL, spiritModel2D } from '../manifest.js';
 import { nextCommand } from '../qc/bot.js';
 import strings from '../strings.en.js';
 import { GROUND_FILE, makeGround, PROJECTION } from './ground.js';
@@ -150,7 +150,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       ev.books.forEach((spawn, slot) => {
         const gfx = scene.add.graphics().setDepth(depthOf(spawn.z, 0.3));
         arena.world.add(gfx);
-        const label = tag(scene, spawn.term, 20, 0x3b2a66, 0xc9b8ff).setDepth(15_100);
+        const label = tag(scene, spawn.term, 17, 0x3b2a66, 0xc9b8ff).setDepth(15_100);
         label.setInteractive({ useHandCursor: true });
         label.on('pointerdown', () => loop.dispatch({ type: 'goto', bookId: spawn.id }));
         books.set(spawn.id, { gfx, tag: label, x: spawn.x, z: spawn.z, slot, appear: 0, gone: false, state: '' });
@@ -160,23 +160,26 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       drawHud();
     }
 
+    let spiritCount = 0;
     function addSpirit(id: string, x: number, z: number): void {
-      if (!edition.bindings['skeleton.idle']) return;
-      const actor = new Actor2D(scene, edition, 'skeleton', PROJECTION, { dirs: 4, clips: clips('skeleton', SPIRIT_CLIPS_2D.skeleton!), walk: 'walk', stiffness: 10 }, arena.world);
+      // The spirits take the ghost's looks in turn; a look without sheets falls back to the default ghost.
+      const look = spiritModel2D(SPIRIT_LOOKS[spiritCount++ % SPIRIT_LOOKS.length]!);
+      const model = edition.bindings[`${look}.idle`] ? look : SPIRIT_MODEL;
+      if (!edition.bindings[`${model}.idle`]) return;
+      const actor = new Actor2D(scene, edition, model, PROJECTION, { dirs: 4, clips: clips(model, SPIRIT_CLIPS_2D), walk: 'walk', stiffness: 10 }, arena.world);
       actor.placeAt(x, z);
       actor.face(1, 1);
-      actor.tint(0xbfe3ff);
-      actor.sprite.setAlpha(0.62);
+      actor.sprite.setAlpha(0.8);
       spirits.set(id, actor);
     }
 
     function drawHud(): void {
       const s = sim.state;
-      const right = targetBookOf(s);
+      const hint = hintBookOf(s);
       for (const b of s.books) {
         const v = books.get(b.id);
         if (!v) continue;
-        const state = b.spent ? 'spent' : s.helper && right?.id === b.id ? 'next' : 'idle';
+        const state = b.spent ? 'spent' : hint?.id === b.id ? 'next' : 'idle';
         if (state === v.state) continue;
         v.state = state;
         recolorTag(v.tag, state === 'spent' ? 0x4a4a58 : state === 'next' ? 0x4a2f8f : 0x3b2a66, state === 'next' ? COLORS.gold : 0xc9b8ff);
@@ -282,6 +285,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       audio.music('calm');
       audio.play('victory');
       void hero.play('victory', 1, true);
+      // The prompt panel and the last tags would cover the banner.
+      panel.hide();
+      for (const b of books.values()) b.tag.setVisible(false);
       await banner(scene, t('done.title'), t('done.text'), 2.2);
       const evidence = evidenceOf(sim.state, story, seed, Math.round(performance.now() - startedAt));
       ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
@@ -310,14 +316,15 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         a.moveTo(z.x, z.z);
         a.update(dt);
       }
-      const right = targetBookOf(s);
+      const hint = hintBookOf(s);
       for (const b of s.books) {
         const v = books.get(b.id);
         if (!v) continue;
         v.appear = v.gone || b.spent ? Math.max(0, v.appear - dt * 3) : Math.min(1, v.appear + dt * 3);
         const bob = Math.sin(time / 600 + v.slot * 1.7) * 0.05;
-        drawBook(v, bob, s.helper && right?.id === b.id);
-        if (!v.gone && !b.spent) arena.pin(v.tag, v.x, BOOK_TOP + 0.3 + bob, v.z, 40 * arena.scale);
+        drawBook(v, bob, hint?.id === b.id);
+        // The tag stands on its own book, so it does not cover the books behind it (owner test, 2026-10-14).
+        if (!v.gone && !b.spent && !finished) arena.pin(v.tag, v.x, BOOK_TOP - 0.1 + bob, v.z, v.tag.height / 2 + 2);
       }
       shield.setVisible(s.hero.shieldMs > 0);
       if (s.hero.shieldMs > 0) {

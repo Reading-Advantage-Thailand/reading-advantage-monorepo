@@ -128,4 +128,14 @@ describe("PrimaryApkGamePage", () => {
     })).rejects.toThrow("NEXT_NOT_FOUND");
     expect(mocks.getCurrentUser).not.toHaveBeenCalled();
   });
+
+  it.each(["TEACHER", "ADMIN", "SYSTEM"])("saves nothing for %s in Preview mode, with no avatar read", async (role) => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "t1", role, schoolId: "school-1" });
+    render(await PrimaryApkGamePage({
+      params: Promise.resolve({ locale: "en", cartridgeId: "rune-match" }),
+      searchParams: Promise.resolve({}),
+    }));
+    expect(screen.getByTestId("student-cartridge-host")).toHaveTextContent("rune-match:owner=none:challenge=none:avatar=none:save=false");
+    expect(mocks.getAvatarState).not.toHaveBeenCalled();
+  });
 });

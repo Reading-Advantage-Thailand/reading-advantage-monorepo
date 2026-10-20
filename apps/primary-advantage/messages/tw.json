@@ -1,7 +1,7 @@
 {
   "LocaleSwitcher": {
     "label": "改變語言",
-    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 中文} cn {🇨🇳 台灣} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
+    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 繁體中文} cn {🇨🇳 简体中文} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
   },
   "NotFound": {
     "title": "頁面未找到",
@@ -22,7 +22,7 @@
     "home": "主頁",
     "about": "關於",
     "contact": "聯繫",
-    "authors": "作者",
+    "books": "我們的書",
     "login": "登錄",
     "menu": "菜單",
     "usernav": {
@@ -38,11 +38,11 @@
     }
   },
   "Sidebar": {
-    "manual": "Teacher manual",
-    "home": "Home",
-    "me": "Me",
-    "noPermissionSection": "You don't have permission to open this section",
-    "noPermissionPage": "You don't have permission to open this page",
+    "manual": "教師手冊",
+    "home": "首頁",
+    "me": "我的",
+    "noPermissionSection": "你沒有權限開啟這個區塊",
+    "noPermissionPage": "你沒有權限開啟這個頁面",
     "read": "閱讀",
     "games": "遊戲",
     "stories": "故事",
@@ -50,8 +50,6 @@
     "history": "歷史",
     "sentences": "句子",
     "vocabulary": "單字",
-    "games": "遊戲",
-    "testing": "測試",
     "systemdashboard": "系統儀表板",
     "licenses": "許可證儀表板",
     "schools": "學校儀表板",
@@ -68,7 +66,6 @@
     "userProfile": "用戶資料",
     "schoolProfile": "學校資料",
     "studentsandclasses": "學生和班級",
-    "articlecreation": "文章創建",
     "back": "返回",
     "subItem": {
       "admin": "管理員",
@@ -84,7 +81,8 @@
       "overviewReports": "概覽報告",
       "performanceAnalytics": "效能分析",
       "progressTracking": "進度追蹤"
-    }
+    },
+    "schoollicense": "學校授權"
   },
   "Leaderboard": {
     "title": "排行榜",
@@ -96,7 +94,7 @@
     "noDataAvailable": "本月沒有可用數據"
   },
   "Question": {
-    "descriptionEmpty": "This story has no questions of this kind yet.",
+    "descriptionEmpty": "這個故事還沒有這種題目。",
     "SAQuestion": {
       "title": "短答題",
       "description": "用幾個字回答問題",
@@ -165,9 +163,9 @@
   },
   "Admin": {
     "SchoolSelect": {
-      "label": "School",
-      "placeholder": "Select a school",
-      "required": "Please select a school"
+      "label": "學校",
+      "placeholder": "選擇學校",
+      "required": "請選擇學校"
     },
     "Classrooms": {
       "classrooms": "教室",
@@ -211,7 +209,16 @@
         "updateFailed": "更新教室失敗",
         "updateSuccess": "更新教室成功",
         "deleteSuccess": "教室刪除成功",
-        "deleteFailed": "刪除教室失敗"
+        "deleteFailed": "刪除教室失敗",
+        "teachersRefused": "教師未變更。有教師屬於其他學校。"
+      },
+      "picker": {
+        "hint": "勾選教這個班級的教師。",
+        "owner": "班主任",
+        "loading": "正在載入教師...",
+        "loadFailed": "教師清單載入失敗。",
+        "empty": "這所學校沒有教師。",
+        "selected": "{count, plural, other {已選擇 # 位教師}}。班主任會留在班級中。"
       }
     },
     "Students": {
@@ -254,6 +261,7 @@
       "maxSize": "最大大小：5MB",
       "browse": "瀏覽",
       "supportedFormat": "支援格式：僅 CSV 檔，最大 5MB",
+      "chooseSchool": "匯入前請先選擇學校。",
       "fileSelected": {
         "title": "已選擇檔案",
         "name": "名稱",
@@ -263,6 +271,7 @@
       "failedTitle": "上傳失敗",
       "successTitle": "上傳成功",
       "success": {
+        "school": "學校",
         "file": "檔案",
         "size": "大小",
         "savedAs": "另存為",
@@ -367,79 +376,148 @@
     }
   },
   "AdminDashboard": {
-    "title": "管理員儀表板",
-    "subtitle": "管理您的學校教育平台",
-    "actions": {
-      "importData": "匯入資料",
-      "addTeacher": "新增教師"
-    },
-    "stats": {
-      "teachers": "教師",
-      "teachersDesc": "您的學校中的活躍教師",
-      "students": "學生",
-      "studentsDesc": "註冊學生",
-      "articles": "文章",
-      "articlesDesc": "可用的閱讀材料",
-      "growth": "每月增長",
-      "growthDesc": "學生入學增長",
-      "loadError": "載入統計資料失敗"
-    },
-    "quickActions": {
-      "title": "快速操作",
-      "addTeacher": "新增教師",
-      "addTeacherDesc": "註冊新的教師帳戶",
-      "addStudent": "新增學生",
-      "addStudentDesc": "建立新的學生資料",
-      "createArticle": "建立文章",
-      "createArticleDesc": "生成新的閱讀內容",
-      "importData": "匯入資料",
-      "importDataDesc": "批量導入用戶和內容",
-      "viewReports": "查看報告",
-      "viewReportsDesc": "訪問分析和洞察",
-      "reedyCosts": "Reedy 費用",
-      "reedyCostsDesc": "按學校和月份的分鐘、費用與故障",
-      "manageClassrooms": "管理教室",
-      "manageClassroomsDesc": "組織班級和作業"
-    },
-    "recentActivity": {
-      "title": "最近活動",
-      "empty": "沒有最近的活动要显示",
-      "viewAll": "查看所有活动",
-      "loadError": "載入最近活動失敗"
-    },
-    "systemStatus": {
-      "title": "系統狀態",
-      "serverHealth": "伺服器健康",
-      "database": "資料庫",
-      "aiServices": "AI 服務",
-      "healthy": "健康",
-      "connected": "連接",
-      "operational": "運行中"
+    "title": "學校儀表板",
+    "period": "{start} 至 {end}",
+    "rangeLabel": "時間範圍",
+    "days": "{count} 天",
+    "chooseSchool": "選擇學校",
+    "chooseSchoolHint": "選擇學校以查看其數據。",
+    "keyNumbers": {
+      "heading": "關鍵數據",
+      "activeStudents": "活躍學生",
+      "activeTeachers": "活躍教師",
+      "classes": "有活動的班級",
+      "articles": "開啟的文章",
+      "xp": "獲得的 XP",
+      "newStudents": "新增學生",
+      "activeStudentsSub": "共 {total} 名學生（{percent}%）",
+      "activeTeachersSub": "共 {total} 名教師已登入",
+      "classesSub": "共 {total} 個班級",
+      "articlesSub": "由學生完成",
+      "xpSub": "由學生獲得",
+      "newStudentsSub": "在此時間範圍內新增",
+      "empty": "這所學校還沒有學生。新增第一名學生後會顯示數據。"
     },
     "alerts": {
-      "title": "系統警報",
-      "lowStorage": {
-        "title": "儲存空間低",
-        "description": "考慮升級您的存儲計劃"
+      "heading": "提醒",
+      "none": "沒有提醒。所有檢查均通過。",
+      "noneEmpty": "學生登入後才會出現提醒。",
+      "severity": {
+        "critical": "嚴重",
+        "high": "高",
+        "medium": "中"
       },
-      "newRegistrations": {
-        "title": "新教師註冊",
-        "description": "5 教師等待批准"
+      "lowActivity": "最近 30 天只有 {percent}% 的學生活躍",
+      "lowActivityHint": "最近 30 天，{total} 名學生中有 {active} 名有活動。",
+      "licenseEndsSoon": "授權將在 {days, plural, =0 {不到一天} other {# 天}}後到期",
+      "licenseEndsSoonHint": "請在到期前續訂授權。",
+      "licenseEnded": "這所學校的授權已到期",
+      "licenseEndedHint": "沒有有效的授權。請聯絡 Reading Advantage 續訂。",
+      "seatsNearlyFull": "名額快滿了：已用 {seatsUsed}/{seats}（{percent}%）",
+      "seatsNearlyFullHint": "學生佔用授權的名額。名額用完前請申請增加。"
+    },
+    "adoption": {
+      "heading": "使用情況",
+      "byCefr": "CEFR 等級",
+      "byGrade": "班級年級",
+      "level": "等級",
+      "grade": "年級",
+      "noGrade": "無年級",
+      "students": "學生",
+      "active": "活躍",
+      "share": "活躍佔比",
+      "averageXp": "平均 XP",
+      "note": "活躍指最近 {days} 天內至少有一次活動。平均 XP 按該列所有學生計算。",
+      "empty": "這所學校還沒有學生。"
+    },
+    "teachers": {
+      "heading": "教師",
+      "teacher": "教師",
+      "classes": "班級",
+      "activeOfStudents": "活躍 / 學生",
+      "engagement": "參與度",
+      "noStudents": "沒有學生",
+      "classCount": "{count, plural, =0 {沒有班級} other {# 個班級}}",
+      "empty": "這所學校還沒有教師。",
+      "unnamed": "未命名的教師"
+    },
+    "activity": {
+      "heading": "每日活動",
+      "empty": "學生開始使用後會顯示活動。",
+      "events": "活動事件",
+      "peak": "最活躍的一天（學生）",
+      "average": "日均（學生）",
+      "aria": "{count} 天，每天的活躍學生數",
+      "cell": "{day}：{count} 名活躍學生",
+      "weekdays": {
+        "mon": "週一",
+        "tue": "週二",
+        "wed": "週三",
+        "thu": "週四",
+        "fri": "週五",
+        "sat": "週六",
+        "sun": "週日"
       }
     },
-    "charts": {
-      "title": "分析概览",
-      "userGrowth": "用戶增長",
-      "topArticles": "最受歡迎的文章",
-      "activityByLevel": "CEFR 等級活動",
-      "performance": "性能指標"
-    }
+    "loadError": "學校儀表板載入失敗",
+    "loadErrorHint": "請重試。如果問題仍在，請告知 Reading Advantage。",
+    "back": "前往教師頁面"
   },
-  "AdminArticleCreationPage": {
-    "header": {
-      "heading": "文章建立與管理",
-      "text": "為 Primary Advantage 建立、以 AI 生成並審核文章"
-    }
+  "SystemDashboard": {
+    "title": "系統儀表板",
+    "week": "本週：{start} 至 {end}",
+    "totals": {
+      "heading": "平台總數",
+      "schools": "學校",
+      "students": "學生",
+      "teachers": "教師",
+      "active": "本週活躍學生",
+      "activeSub": "{total} 名中的 {active} 名（{percent}%）",
+      "articles": "本週開啟的文章",
+      "seatsUsed": "已用席位",
+      "seatsOf": "共 {seats} 個席位",
+      "noLicense": "無授權",
+      "withoutSchool": "{count, plural, other {# 名學生沒有學校，不在表格中。}}請在「使用者」頁面指定學校。"
+    },
+    "table": {
+      "heading": "學校",
+      "search": "依學校名稱搜尋",
+      "searchLabel": "搜尋學校",
+      "sortBy": "排序方式",
+      "sortDefault": "不活躍優先",
+      "sortAsc": "由低到高",
+      "sortDesc": "由高到低",
+      "sortDirection": "變更排序順序",
+      "noMatch": "沒有學校符合「{query}」。",
+      "empty": "尚無學校",
+      "emptyHint": "請在「學校」頁面新增第一所學校。",
+      "goToSchools": "前往學校頁面",
+      "columns": {
+        "name": "學校",
+        "active": "活躍學生",
+        "articles": "開啟的文章",
+        "seats": "席位",
+        "last": "最近活動",
+        "status": "狀態"
+      },
+      "activeOf": "{students} 名中的 {active} 名（{percent}%）",
+      "seatsOf": "{total} 個中已用 {used} 個",
+      "noLicense": "無授權",
+      "none": "無",
+      "open": "開啟",
+      "openFor": "開啟{name}的儀表板",
+      "openCard": "開啟儀表板",
+      "actions": "操作",
+      "footnote": "本週指最近 7 天，包括今天。不活躍指有學生但本週沒有活動的學校。席位只計算學生。"
+    },
+    "status": {
+      "quiet": "不活躍",
+      "active": "活躍",
+      "noStudents": "沒有學生"
+    },
+    "loadError": "系統儀表板載入失敗",
+    "loadErrorHint": "請重試。如果問題持續，請聯絡支援團隊。",
+    "back": "前往學校頁面"
   },
   "Components": {
     "translationLanguage": "翻譯語言",
@@ -460,6 +538,12 @@
     "seekBack": "後退",
     "seekForward": "前進",
     "playbackSpeed": "播放速度",
+    "previousSentence": "上一句",
+    "replaySentence": "重播這一句",
+    "nextSentence": "下一句",
+    "changeSpeed": "速度 {speed} 倍，點按更改速度",
+    "closeAudio": "關閉音訊",
+    "readAlongHint": "點按一個單字，從該字開始聽。點按一行，聽整句。",
     "openActionsMenu": "開啟操作選單",
     "showNotifications": "顯示通知",
     "toggleDetails": "切換詳情",
@@ -473,131 +557,7 @@
     "confirmRetake": "確認重新測試",
     "areYouSureYouWantToRetakeThisQuiz": "您確定要重新測試嗎？您的答案將被清除。",
     "loadError": "載入失敗",
-    "emptyList": "還沒有句子",
-    "AdminArticleCreation": {
-      "tabs": {
-        "createArticle": "建立文章",
-        "previewEdit": "預覽與編輯",
-        "manageArticles": "管理文章"
-      },
-      "aiArticleGenerator": "AI 文章產生器",
-      "aiArticleGeneratorDesc": "使用 AI 根據您的設定產生高品質文章",
-      "articleType": "文章類型",
-      "fiction": "小說",
-      "nonFiction": "非小說",
-      "genre": "類型",
-      "subgenre": "子類型",
-      "cefrLevel": "CEFR 等級",
-      "articleTopic": "文章主題",
-      "placeholder": {
-        "genre": "選擇類型",
-        "subgenre": "選擇子類型",
-        "cefr": "選擇 CEFR 等級",
-        "topic": "描述主題、主旨或重點"
-      },
-      "cefrLevels": {
-        "A1": "A1",
-        "A2": "A2",
-        "B1": "B1",
-        "B2": "B2",
-        "C1": "C1",
-        "C2": "C2"
-      },
-      "error": "錯誤",
-      "generateWithAI": "以 AI 生成",
-      "dialog": {
-        "approval": {
-          "title": "確認核准",
-          "description": "你確定要核准並發布此文章嗎？此動作將會把文章發布到平台。"
-        },
-        "backToCreate": {
-          "title": "返回建立?",
-          "description": "如果返回建立，變更將會遺失。",
-          "warning": "此動作會將文章重設為初始狀態。"
-        },
-        "common": {
-          "cancel": "取消",
-          "confirm": "確認",
-          "ok": "確定"
-        }
-      },
-      "loading": {
-        "titles": {
-          "generate": "正在產生文章",
-          "save": "正在儲存草稿",
-          "approve": "正在核准並發布"
-        },
-        "descriptions": {
-          "generate": "請稍候，AI 正在建立內容...",
-          "save": "正在將變更儲存為草稿...",
-          "approve": "正在將文章發布到平台..."
-        }
-      },
-      "preview": {
-        "title": "文章預覽",
-        "description": "查看文章內容（唯讀）"
-      },
-      "editor": {
-        "title": "文章編輯器",
-        "description": "在核准前檢視並編輯內容"
-      },
-      "modified": "已修改",
-      "badges": {
-        "type": "類型",
-        "genre": "類型",
-        "subgenre": "子類型",
-        "cefrLevel": "CEFR 等級"
-      },
-      "fields": {
-        "title": "文章標題",
-        "content": "文章內容",
-        "summary": "文章摘要"
-      },
-      "placeholders": {
-        "title": "輸入文章標題...",
-        "content": "輸入文章主要內容...",
-        "summary": "輸入文章摘要..."
-      },
-      "buttons": {
-        "backToCreate": "返回建立",
-        "approveAndPublish": "核准並發布",
-        "saveAsDraft": "儲存為草稿",
-        "backToManage": "返回管理",
-        "switchToEdit": "切換到編輯",
-        "refresh": "重新整理",
-        "preview": "預覽",
-        "edit": "編輯",
-        "delete": "刪除",
-        "deleting": "刪除中..."
-      },
-      "manage": {
-        "title": "文章管理",
-        "description": "管理你的文章",
-        "loading": "載入文章中...",
-        "empty": "沒有找到文章"
-      },
-      "status": {
-        "draft": "草稿",
-        "published": "已發布"
-      },
-      "list": {
-        "topic": "主題",
-        "cefr": "CEFR",
-        "rating": "評分",
-        "created": "建立時間"
-      },
-      "toasts": {
-        "fetchFailed": "取得文章失敗",
-        "generateSuccess": "產生文章成功！",
-        "saveSuccess": "已成功儲存為草稿！",
-        "saveFailed": "儲存文章失敗",
-        "approveSuccess": "核准並發布成功！",
-        "approveFailed": "核准文章失敗",
-        "deleteSuccess": "刪除文章成功",
-        "deleteFailed": "刪除文章失敗",
-        "deleteError": "刪除文章時發生錯誤"
-      }
-    }
+    "emptyList": "還沒有句子"
   },
   "WordList": {
     "title": "單字列表",
@@ -749,6 +709,7 @@
     "description": "查看學生進度和教室分析",
     "activityprogress": "活動進度",
     "recentactivity": "最近活動",
+    "attemptTag": "第 {number} 次",
     "activityheatmap": "活動熱圖",
     "xpoverall": "XP 總體",
     "readingstatschart": "閱讀統計圖",
@@ -760,20 +721,23 @@
       "MC_QUESTION": "多選問題",
       "SA_QUESTION": "短答問題",
       "LA_QUESTION": "長答問題",
+      "STORIES_MC_QUESTION": "故事選擇題",
+      "STORIES_SA_QUESTION": "故事簡答題",
+      "STORIES_LA_QUESTION": "故事長答題",
       "ARTICLE_READ": "文章閱讀",
-      "ARTICLE_RATING": "Story rating",
-      "STORIES_RATING": "Story series rating",
-      "STORIES_READ": "Story series read",
-      "CHAPTER_RATING": "Chapter rating",
-      "CHAPTER_READ": "Chapter read",
-      "LEVEL_TEST": "Level test",
-      "SENTENCE_FLASHCARDS": "Sentence flashcards",
-      "SENTENCE_MATCHING": "Sentence matching",
-      "SENTENCE_ORDERING": "Sentence ordering",
-      "SENTENCE_WORD_ORDERING": "Word ordering",
-      "SENTENCE_CLOZE_TEST": "Fill in the blank",
-      "VOCABULARY_FLASHCARDS": "Word flashcards",
-      "VOCABULARY_MATCHING": "Word matching"
+      "ARTICLE_RATING": "故事評分",
+      "STORIES_RATING": "故事系列評分",
+      "STORIES_READ": "閱讀故事系列",
+      "CHAPTER_RATING": "章節評分",
+      "CHAPTER_READ": "已讀章節",
+      "LEVEL_TEST": "等級測驗",
+      "SENTENCE_FLASHCARDS": "句子抽認卡",
+      "SENTENCE_MATCHING": "句子配對",
+      "SENTENCE_ORDERING": "句子排序",
+      "SENTENCE_WORD_ORDERING": "單字排序",
+      "SENTENCE_CLOZE_TEST": "填空",
+      "VOCABULARY_FLASHCARDS": "單字抽認卡",
+      "VOCABULARY_MATCHING": "單字配對"
     },
     "level": {
       "title": "CEFR 等級",
@@ -796,8 +760,8 @@
         "C1": "您可以阅读长而具有挑战性的文本并理解大部分发生的事情。您喜欢让您思考的故事和文章，并且可以使用良好的词汇谈论它们，而无需太费力地查找正确的单词。",
         "C1+": "您是一个超级读者，可以处理具有挑战性的文本并理解不同的写作风格。您非常擅长弄清楚故事和文章中不太明显的部分，并且通常知道单词的意思，而无需查找它们。",
         "C2": "您可以阅读和理解几乎任何事情。您可以理解复杂文本的主要观点，并且喜欢阅读更具挑战性的书籍和文章。您可以谈论几乎任何事情，并且使用语言充满信心。",
-        "A0-": "You are starting to learn English. You know some letters and a few words, especially with pictures.",
-        "A0+": "You know more simple words and names. You can understand very short phrases with pictures, like signs and labels."
+        "A0-": "你剛開始學英文。你認得一些字母和幾個單字，尤其是有圖片的單字。",
+        "A0+": "你認得更多簡單的單字和名字。你看得懂有圖片的很短詞句，例如標誌和標籤。"
       }
     },
     "progress": {
@@ -818,20 +782,20 @@
       "studentList": "學生列表",
       "xpLabel": "{xp} XP"
     },
-    "loadError": "We could not load your reports.",
-    "loadErrorHint": "Check the internet connection and try again.",
-    "noActivity": "No activity yet",
-    "noActivityHint": "Read a story or play a game, and your activity shows here.",
-    "showAllActivity": "Show all activity",
-    "noXp": "No XP on these days",
-    "noXpHint": "Read and practice to earn XP.",
-    "noXpOverall": "No XP yet",
-    "noReading": "No stories read yet",
-    "noReadingHint": "Read a story to see your reading stats.",
-    "groupBy": "Group by",
-    "groupType": "Type",
-    "groupGenre": "Genre",
-    "groupSubgenre": "Topic"
+    "loadError": "無法載入你的報告。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "noActivity": "還沒有活動",
+    "noActivityHint": "讀一則故事或玩一個遊戲，你的活動就會顯示在這裡。",
+    "showAllActivity": "顯示所有活動",
+    "noXp": "這幾天沒有 XP",
+    "noXpHint": "閱讀和練習就能獲得 XP。",
+    "noXpOverall": "還沒有 XP",
+    "noReading": "還沒有讀過故事",
+    "noReadingHint": "讀一則故事，就能看到你的閱讀統計。",
+    "groupBy": "分組方式",
+    "groupType": "類型",
+    "groupGenre": "體裁",
+    "groupSubgenre": "主題"
   },
   "Overall": {
     "roles": {
@@ -889,7 +853,7 @@
   },
   "Assignment": {
     "title": "建立作業",
-    "saved": "Assignment saved",
+    "saved": "作業已儲存",
     "description": "建立作業給您的學生",
     "assignForm": {
       "classroom": "教室",
@@ -1385,115 +1349,6 @@
     "description": "使用間隔重複法複習詞彙並擴展語言技能",
     "translationLanguageDescription": "定義將以此語言顯示"
   },
-  "HomePage": {
-    "hero": {
-      "title": "透過AI驅動的樂趣幫助年輕學生成為出色的讀者！",
-      "subtitle": "專為8-12歲（3-6年級）量身定製的閱讀冒險。",
-      "getStarted": "立即開始！"
-    },
-    "features": {
-      "title": "酷炫功能",
-      "description": "探索Primary Advantage如何讓閱讀變得有趣並幫助您學習！",
-      "funStory": {
-        "title": "有趣的故事冒險",
-        "description": "發現專為您年齡段的孩子準備的精彩故事和文章，總有新內容可讀！"
-      },
-      "understand": {
-        "title": "理解故事",
-        "description": "回答有關您所讀內容的有趣問題，幫助您記憶和更好地理解。"
-      },
-      "readingLevels": {
-        "title": "恰到好處的閱讀水平",
-        "description": "閱讀適合您閱讀方式的故事，使其既簡單又愉快。"
-      },
-      "learnWords": {
-        "title": "學習新詞",
-        "description": "在故事中找到新的有趣詞彙，並透過有趣的工具學習它們的意思。"
-      },
-      "listenAlong": {
-        "title": "一起聽",
-        "description": "聆聽為您朗讀的故事，非常適合聽和跟隨。"
-      },
-      "seeProgress": {
-        "title": "看看你的成長",
-        "description": "查看您的閱讀進度，看看您正在學習的所有酷炫內容！"
-      },
-      "makeYours": {
-        "title": "讓它成為您的",
-        "description": "選擇您喜歡的故事並設定閱讀目標，創建您自己的閱讀冒險。"
-      },
-      "helpTeachers": {
-        "title": "幫助教師",
-        "description": "教師工具，用於查看課堂表現並幫助每個人學習。"
-      }
-    },
-    "benefits": {
-      "title": "為什麼學校喜歡Primary Advantage",
-      "description": "看看Primary Advantage如何幫助學校的教師和學生！",
-      "superReader": {
-        "title": "成為超級讀者",
-        "description": "閱讀大量精彩故事並玩遊戲來提升您的閱讀技能！"
-      },
-      "ownPath": {
-        "title": "您自己的閱讀路徑",
-        "description": "閱讀與您的閱讀水平和興趣相匹配的故事，專為您量身定製。"
-      },
-      "storiesLove": {
-        "title": "你會喜歡的故事",
-        "description": "享受不同類型的故事，配有圖片和聲音，讓閱讀變得有趣。"
-      },
-      "watchGrow": {
-        "title": "觀察您的閱讀能力增長",
-        "description": "看看您的進步以及您每天如何成為更好的讀者。"
-      },
-      "learnWords": {
-        "title": "學習大量新詞",
-        "description": "在故事中發現有趣的詞彙，並透過酷炫的活動記住它們。"
-      },
-      "easyUse": {
-        "title": "隨時隨地輕鬆使用",
-        "description": "在學校或家裡閱讀和學習，隨時隨地！"
-      },
-      "greatSchools": {
-        "title": "非常適合學校",
-        "description": "學校幫助所有學生成為出色讀者的明智方式。"
-      },
-      "moreTime": {
-        "title": "更多教學樂趣的時間",
-        "description": "我們的工具幫助教師輕鬆找到優秀的故事並查看學生進度。"
-      }
-    },
-    "contact": {
-      "title": "讓我們保持聯繫",
-      "description": "有問題或需要更多資訊？今天聯繫我們以了解更多關於我們平台的資訊。",
-      "formTitle": "聯繫我們",
-      "formDescription": "與我們聯繫以了解更多關於我們平台的資訊",
-      "name": "姓名",
-      "namePlaceholder": "張三",
-      "institution": "機構",
-      "institutionPlaceholder": "示例大學",
-      "email": "電子郵件",
-      "emailPlaceholder": "m@example.com",
-      "inquiry": "諮詢",
-      "inquiryPlaceholder": "選擇一個選項",
-      "inquiryOptions": {
-        "sales": "銷售",
-        "support": "支援",
-        "partnerships": "合作夥伴關係"
-      },
-      "message": "訊息",
-      "messagePlaceholder": "在此輸入您的訊息。",
-      "sendMessage": "發送訊息"
-    },
-    "cta": {
-      "title": "準備好開始主要冒險了嗎？",
-      "description": "開始免費試用，看看使用Primary Advantage閱讀有多有趣！非常適合8-12歲的學生。"
-    }
-  },
-  "AboutPage": {
-    "title": "關於我們",
-    "description": "了解更多關於Primary Advantage和我們的使命"
-  },
   "AuthPage": {
     "signin": {
       "title": "登錄",
@@ -1521,6 +1376,13 @@
       "avatar": "我的頭像",
       "username": "用戶名",
       "usernameDescription": "用戶名用於代表自己在平台上的身份。",
+      "displayName": "顯示名稱",
+      "displayNameDescription": "顯示名稱在平台上顯示你的名字。你可以更改它。",
+      "signInUsername": "登入用戶名",
+      "signInUsernameDescription": "你用這個名稱登入。它不會改變。",
+      "codeOnlyError": "使用班級代碼登入時不能更改個人資料。請用用戶名和密碼登入。",
+      "updateSuccess": "顯示名稱已更新。",
+      "updateError": "無法更新顯示名稱。請重試。",
       "email": "電子郵件",
       "level": "Primary Advantage 等級",
       "xp": "Primary Advantage 經驗值",
@@ -1531,9 +1393,7 @@
       "resendVerification": "重新發送驗證郵件",
       "unknown": "未知",
       "update": "更新",
-      "activate": "激活",
-      "license": "许可证",
-      "licenseDescription": "输入新的许可证用户"
+      "activate": "激活"
     },
     "schoolProfile": {
       "title": "學校資料",
@@ -1592,21 +1452,58 @@
         "title": "沒有學校關聯",
         "description": "您還沒有與您的帳戶關聯的學校。創建一個以開始並獲得管理學校功能的管理員訪問權限。",
         "createSchool": "創建學校"
+      },
+      "licensePanel": {
+        "title": "授權",
+        "viewOnly": "僅供檢視。如需變更授權，請聯絡 Reading Advantage。",
+        "overChip": "已超額",
+        "overTitle": "學生人數超出限額 {count} 人。",
+        "overBody": "學校有 {used} 名學生和 {seats} 個席位。學生仍可使用。請在下學期前申請更多席位。",
+        "noneChip": "沒有有效授權",
+        "noneTitle": "學校目前沒有席位。",
+        "noneBody": "有 {used} 名學生使用本應用程式。請申請授權。",
+        "seatsTitle": "席位",
+        "seatsUsed": "已用席位",
+        "seatsFree": "空閒席位",
+        "seatsTotal": "席位總數",
+        "seatsNote": "席位按今天有效的授權計算。已用席位按學校的學生人數計算。教師和管理員不佔用席位。",
+        "licensesTitle": "授權",
+        "noLicense": "這所學校沒有授權。",
+        "seatsCount": "{count} 個席位",
+        "dateRange": "{start} 至 {end}",
+        "noEnd": "無結束日期",
+        "state": {
+          "active": "有效",
+          "ended": "已結束",
+          "inactive": "未啟用"
+        },
+        "holdersTitle": "席位使用者",
+        "holdersRange": "第 {from} 至 {to} 名學生，共 {total} 名",
+        "holdersEmpty": "學校沒有學生。",
+        "holdersError": "席位使用者載入失敗。",
+        "colName": "姓名",
+        "colUsername": "使用者名稱",
+        "colClasses": "班級",
+        "colJoined": "加入日期",
+        "noClass": "無班級",
+        "previous": "上一頁",
+        "next": "下一頁",
+        "pageOf": "第 {page} 頁，共 {pages} 頁"
       }
     }
   },
   "Lesson": {
-    "lockedStep": "Your teacher opens step {step} in class. Keep going with the steps that are open.",
+    "lockedStep": "你的老師會在課堂上開啟第 {step} 步。請先繼續做已開放的步驟。",
     "rail": {
-      "stepName": "Step {step} of {total}: {name}",
-      "showSteps": "Show all steps",
-      "hideSteps": "Hide steps",
-      "done": "done"
+      "stepName": "第 {step} 步，共 {total} 步：{name}",
+      "showSteps": "顯示所有步驟",
+      "hideSteps": "隱藏步驟",
+      "done": "完成"
     },
-    "saveError": "We could not save your progress.",
-    "saveErrorHint": "Check the internet connection and try again.",
-    "notFound": "We could not find this lesson",
-    "notFoundHint": "Pick a story to read instead.",
+    "saveError": "無法儲存你的進度。",
+    "saveErrorHint": "請檢查網路連線，然後再試一次。",
+    "notFound": "找不到這堂課",
+    "notFoundHint": "改選一則故事來讀吧。",
     "Reading": {
       "firstTitle": "首次閱讀",
       "deepTitle": "深度閱讀",
@@ -1770,11 +1667,24 @@
         "more": "+{count} 句已保存"
       },
       "actions": {
-        "backToRead": "返回閱讀頁面"
+        "backToRead": "返回閱讀頁面",
+        "startAgain": "重新開始",
+        "restarting": "正在重新開始..."
       },
       "toast": {
         "failed": "無法載入課程總結"
-      }
+      },
+      "restart": {
+        "title": "要重新開始這堂課嗎？",
+        "body1": "你在這堂課的作業會儲存到你的歷史記錄中。",
+        "body2": "你會保留你的 XP，還可以再次獲得 XP。",
+        "cancel": "取消",
+        "error": "我們無法重新開始這堂課。請重試。"
+      },
+      "attempt": "第 {number} 次",
+      "attemptXp": "第 {number} 次獲得的 XP",
+      "historyNote": "你之前的嘗試已儲存在歷史記錄中。你的 XP 保持不變。",
+      "previewNote": "預覽：不會儲存任何內容。"
     },
     "VocabularyFlashcards": {
       "loading": {
@@ -1898,6 +1808,43 @@
       "understandMainIdeas": "理解重點：",
       "learnVocabulary": "學習詞彙：",
       "improveComprehension": "提升閱讀理解："
+    }
+  },
+  "LessonGames": {
+    "title": "詞彙遊戲",
+    "subtitle": "用本課的單字來玩。",
+    "choose": "選擇一個遊戲",
+    "wordsReady": "{count, plural, other {已備好 # 個單字}}",
+    "sentencesReady": "{count, plural, other {已備好 # 個句子}}",
+    "play": "開始",
+    "playAgain": "再玩一次",
+    "locked": "已鎖定",
+    "newTag": "新",
+    "notPlayed": "新：還沒玩過",
+    "last": "上次：答對 {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {需要 # 個單字}}",
+    "needSentences": "{count, plural, other {需要 # 個句子}}",
+    "lockedLesson": "暫時鎖定",
+    "simpleHint": "手機太慢，或是遊戲打不開？",
+    "simpleGame": "簡單遊戲",
+    "backToGames": "返回遊戲",
+    "loading": "正在準備本課的單字…",
+    "inputFailed": "無法取得本課的單字。請玩簡單遊戲。",
+    "noGames": "本課還沒有合適的遊戲。請玩簡單遊戲。",
+    "loadFailed": "遊戲沒有啟動。請改玩簡單遊戲。",
+    "sentenceTitle": "句子遊戲",
+    "sentenceInputFailed": "無法取得本課的句子。請玩下面四個活動之一。",
+    "sentenceLoadFailed": "遊戲沒有啟動。請玩下面四個活動之一。",
+    "runLine": "你答對了 {correct}/{total}。",
+    "runLineXp": "你答對了 {correct}/{total}。+{xp} XP",
+    "pitch": {
+      "rpg-battle": "選出正確的詞義，打敗哥布林王。",
+      "rune-match": "把每個單字和它的符文配成一對。",
+      "dragon-rider": "用正確的單字飛過大門。",
+      "enchanted-library": "接住正確的書，躲開錯誤的書。",
+      "castle-defense": "把單字排成正確的順序，守住城牆。",
+      "potion-rush": "在藥水煮沸之前拼好句子。"
     }
   },
   "LessonLanguageQuestion": {
@@ -2323,7 +2270,7 @@
           "actions": "操作",
           "details": "詳細"
         },
-        "noDueDate": "No due date"
+        "noDueDate": "無截止日期"
       },
       "empty": {
         "noAssignments": "未找到作業",
@@ -2417,6 +2364,7 @@
     "ClassroomNavigation": {
       "nav": {
         "classRoster": "班級名冊",
+        "classBook": "班級用書",
         "reports": "報告",
         "reedy": "Reedy",
         "avatars": "頭像",
@@ -2529,44 +2477,44 @@
         "subtitle": "管理學生在此班級的註冊："
       },
       "search": {
-        "placeholder": "Search students by name or email"
+        "placeholder": "以姓名或電子郵件搜尋學生"
       },
-      "enrollButton": "Enroll student",
+      "enrollButton": "加入學生",
       "dialog": {
-        "title": "Enroll students",
-        "description": "Select students to enroll in {classroom}"
+        "title": "加入學生",
+        "description": "選擇要加入 {classroom} 的學生"
       },
       "emptyAvailable": {
-        "noMatch": "No available students match your search",
-        "none": "No students available for enrollment"
+        "noMatch": "沒有符合搜尋條件的可加入學生",
+        "none": "沒有可加入的學生"
       },
-      "enrolledHeading": "Enrolled students ({count})",
+      "enrolledHeading": "已加入的學生（{count}）",
       "empty": {
-        "noMatch": "No students match your search",
-        "none": "No students enrolled yet"
+        "noMatch": "沒有符合搜尋條件的學生",
+        "none": "還沒有學生加入"
       },
-      "noName": "No name",
-      "levelShort": "Lvl {level}",
+      "noName": "無姓名",
+      "levelShort": "等級 {level}",
       "toasts": {
-        "loadAvailableError": "Failed to load available students",
-        "enrollError": "Failed to enroll student",
-        "enrolled": "{name} has been enrolled",
-        "unenrollError": "Failed to unenroll student",
-        "unenrolled": "{name} has been unenrolled"
+        "loadAvailableError": "無法載入可加入的學生",
+        "enrollError": "無法加入學生",
+        "enrolled": "{name} 已加入",
+        "unenrollError": "無法將學生移出班級",
+        "unenrolled": "{name} 已移出班級"
       },
       "unenroll": {
-        "button": "Unenroll",
-        "title": "Unenroll student",
-        "question": "Are you sure you want to unenroll <student></student> from <classroom></classroom>?",
-        "loses": "The student leaves the class and loses access to:",
-        "item1": "Class assignments and activities",
-        "item2": "Progress tracking for this class",
-        "item3": "Class content and materials",
-        "cannotUndo": "This action cannot be undone.",
-        "cancel": "Cancel",
-        "confirm": "Unenroll student",
-        "working": "Unenrolling...",
-        "unknownStudent": "Unknown student"
+        "button": "移出班級",
+        "title": "將學生移出班級",
+        "question": "您確定要將<student></student>移出<classroom></classroom>嗎？",
+        "loses": "學生會離開班級，並失去以下內容的存取權：",
+        "item1": "班級作業和活動",
+        "item2": "這個班級的進度追蹤",
+        "item3": "班級內容和教材",
+        "cannotUndo": "此操作無法復原。",
+        "cancel": "取消",
+        "confirm": "移出學生",
+        "working": "正在移出...",
+        "unknownStudent": "未知的學生"
       }
     },
     "AssignmentDashboard": {
@@ -2588,7 +2536,7 @@
       "cancel": "取消",
       "edit": "編輯",
       "noStudentsInSelectedStatus": "所選狀態下沒有學生",
-      "noDueDate": "No due date"
+      "noDueDate": "無截止日期"
     }
   },
   "AdminTeachers": {
@@ -2711,7 +2659,8 @@
         "students": "學生",
         "classes": "班級",
         "joined": "加入日期",
-        "actions": "操作"
+        "actions": "操作",
+        "school": "學校"
       },
       "loading": "正在載入教師...",
       "empty": {
@@ -2726,10 +2675,31 @@
         "createError": "無法建立教師",
         "updateError": "無法更新教師",
         "deleteError": "無法刪除教師"
+      },
+      "schoolManage": {
+        "school": "學校",
+        "noSchool": "無學校",
+        "filterLabel": "依學校篩選",
+        "filterAll": "所有學校",
+        "notice": "儲存後，教師將轉到 {school}。請在下方選擇該學校的班級。",
+        "moved": "教師已轉到新學校",
+        "refusedTitle": "暫時無法轉校",
+        "refusedDescription": "{name} 是以下班級的擁有者。請先把每個班級交給其他擁有者，然後重試。",
+        "refusedClose": "關閉",
+        "moveFailed": "轉校失敗"
       }
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "已成功新增學生",
+      "addError": "新增學生失敗",
+      "updateSuccess": "已成功更新學生",
+      "updateError": "更新學生失敗",
+      "deleteSuccess": "已成功刪除學生",
+      "deleteError": "刪除學生失敗",
+      "fetchError": "無法載入學生清單"
+    },
     "header": {
       "title": "學生管理",
       "subtitle": "管理學生及其學習進度"
@@ -2824,47 +2794,51 @@
     "listenMode": "聽英語",
     "signInToPlayChallenge": "登入以參與此挑戰",
     "signInToPlayGame": "登入以玩此遊戲",
-    "loadError": "The game could not load.",
-    "loadingGame": "Loading the game…",
-    "loadingChallenge": "Loading the challenge…",
-    "challengeMismatch": "This game cannot run this challenge.",
-    "retry": "Try again"
+    "loadError": "無法載入遊戲。",
+    "loadingGame": "正在載入遊戲…",
+    "loadingChallenge": "正在載入挑戰…",
+    "challengeMismatch": "這個遊戲無法進行這個挑戰。",
+    "retry": "再試一次",
+    "exitGame": "退出遊戲",
+    "exitTitle": "要離開遊戲嗎？",
+    "exitBody": "這局遊戲不計分。你可以之後再玩。",
+    "exitCancel": "繼續玩",
+    "exitConfirm": "離開"
   },
   "StudentGames": {
     "rewardInInventory": "已放入你的背包。到頭像頁面穿戴它。",
     "title": "學生遊戲",
-    "description": "Play games with the words and sentences you learn.",
-    "wordGames": "Word games",
-    "wordGamesHint": "Practice the words you know.",
-    "sentenceGames": "Sentence games",
-    "sentenceGamesHint": "Put words in order to make sentences.",
-    "empty": "No games yet",
-    "emptyHint": "Ask your teacher when the games are ready.",
-    "loadError": "We could not load the games.",
-    "loadErrorHint": "Check the internet connection and try again.",
-    "storyLink": "Word adventures",
-    "storyLinkDescription": "Play 3D games with the words you saved from your reading."
+    "description": "用你學到的單字和句子玩遊戲。",
+    "wordGames": "單字遊戲",
+    "wordGamesHint": "練習你會的單字。",
+    "sentenceGames": "句子遊戲",
+    "sentenceGamesHint": "把單字排好順序，組成句子。",
+    "empty": "還沒有遊戲",
+    "emptyHint": "遊戲準備好時，請問你的老師。",
+    "loadError": "無法載入遊戲。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "storyLink": "單字大冒險",
+    "storyLinkDescription": "用你從閱讀中收藏的單字玩 3D 遊戲。"
   },
   "StoryGames": {
-    "title": "Word adventures",
-    "description": "Play 3D games with the words and sentences you saved from your reading. Older phones play the 2D version.",
-    "chooseGame": "Choose a game",
-    "loading": "Loading your saved words…",
-    "loadError": "Could not load your saved words. Try again later.",
-    "saved": "This practice set has {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}} from your reading.",
-    "needWords": "{count, plural, one {Save # more word to play.} other {Save # more words to play.}}",
-    "needSentences": "{count, plural, one {Save # more sentence to play.} other {Save # more sentences to play.}}",
-    "readMore": "Read and save more words",
-    "flat": "2D mode (older phones)",
+    "title": "單字大冒險",
+    "description": "用你從閱讀中收藏的單字和句子玩 3D 遊戲。較舊的手機會玩 2D 版本。",
+    "chooseGame": "選擇遊戲",
+    "loading": "正在載入你收藏的單字…",
+    "loadError": "無法載入你收藏的單字。請稍後再試。",
+    "saved": "這個練習組有你從閱讀中收藏的 {words, plural, other {# 個單字}}和 {sentences, plural, other {# 個句子}}。",
+    "needWords": "{count, plural, other {再收藏 # 個單字才能玩。}}",
+    "needSentences": "{count, plural, other {再收藏 # 個句子才能玩。}}",
+    "readMore": "閱讀並收藏更多單字",
+    "flat": "2D 模式（較舊的手機）",
     "save": {
-      "saving": "Saving your result…",
-      "saved": "Result saved",
-      "error": "Could not save your result"
+      "saving": "正在儲存你的成績…",
+      "saved": "成績已儲存",
+      "error": "無法儲存你的成績"
     },
-    "link": "Word adventures"
+    "link": "單字大冒險"
   },
   "Footer": {
-    "tagline": "提供最佳英語學習體驗。",
     "about": "關於",
     "aboutUs": "關於我們",
     "features": "功能",
@@ -2934,199 +2908,201 @@
     "fallbackError": "發生未預期的錯誤。"
   },
   "ClassLogin": {
-    "title": "Class sign-in",
-    "loading": "Loading class sign-in…",
+    "title": "班級登入",
+    "loading": "正在載入班級登入…",
     "errors": {
-      "signedOut": "Your sign-in has ended. Sign in again.",
-      "forbidden": "You cannot manage this class.",
-      "notFound": "We cannot find this class or student.",
-      "rateLimited": "Too many tries. Wait a few minutes and try again.",
-      "unavailable": "No free code right now. Try again.",
-      "generic": "Something went wrong. Try again."
+      "signedOut": "你的登入已結束。請重新登入。",
+      "forbidden": "你無法管理這個班級。",
+      "notFound": "找不到這個班級或學生。",
+      "rateLimited": "嘗試次數過多。請等幾分鐘後再試。",
+      "unavailable": "目前沒有可用的代碼。請再試一次。",
+      "generic": "發生錯誤。請再試一次。"
     },
     "session": {
-      "start": "Start class",
-      "startHelp": "Start the class to show a sign-in code for your students.",
-      "codeLabel": "Class code",
-      "codeAria": "Class code {code}",
-      "openUntil": "Open until {time}",
-      "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
-      "newCode": "New code",
-      "end": "End class"
+      "start": "開始上課",
+      "startHelp": "開始上課後，會顯示讓學生登入的代碼。",
+      "codeLabel": "班級代碼",
+      "codeAria": "班級代碼 {code}",
+      "openUntil": "開放至 {time}",
+      "openNoCode": "班級開放至 {time}。代碼只會顯示一次。按「新代碼」即可顯示代碼。",
+      "newCode": "新代碼",
+      "end": "結束上課"
     },
-    "backToClass": "Back to class",
+    "backToClass": "返回班級",
     "links": {
-      "classSheet": "Class sheet",
-      "qrCards": "QR cards"
+      "classSheet": "班級名單",
+      "qrCards": "QR 卡"
     },
     "sheet": {
-      "title": "Class sheet",
-      "intro": "The class sheet lists each student's username and a new password, for signing in away from the classroom.",
-      "warning": "Making the sheet sets a new password for every student in this class and signs them out. Old passwords stop working.",
-      "make": "Make class sheet",
-      "confirmTitle": "Set new passwords for the whole class?",
-      "confirm": "Set new passwords",
-      "cancel": "Cancel",
-      "print": "Print",
-      "once": "The passwords show only now. Print the sheet before you leave this page.",
-      "signInAt": "Sign in at",
-      "name": "Name",
-      "username": "Username",
-      "password": "Password",
-      "failed": "These students kept their old password: {names}. Try again."
+      "title": "班級名單",
+      "intro": "班級名單列出每位學生的使用者名稱和新密碼，供學生在教室以外登入。",
+      "warning": "製作名單會為這個班級的每位學生設定新密碼，並讓他們登出。舊密碼將失效。",
+      "make": "製作班級名單",
+      "confirmTitle": "要為整個班級設定新密碼嗎？",
+      "confirm": "設定新密碼",
+      "cancel": "取消",
+      "print": "列印",
+      "once": "密碼只會顯示這一次。離開此頁面前請先列印名單。",
+      "signInAt": "登入網址",
+      "name": "姓名",
+      "username": "使用者名稱",
+      "password": "密碼",
+      "failed": "這些學生的舊密碼仍然有效：{names}。請再試一次。"
     },
     "qrPage": {
-      "title": "QR login cards",
-      "intro": "Each card signs one student in with one scan. A card shows only once, so print it now.",
-      "issue": "Make cards for {count, plural, one {# student} other {# students}} without a card",
-      "allHaveCards": "Every student has a card. To print a card again, make a new card for that student.",
-      "toPrint": "{count, plural, one {# card} other {# cards}} to print",
-      "madeBefore": "Cards made before",
-      "madeBeforeHelp": "The server does not keep these cards. Make a new card to print one again. The old card then stops working.",
-      "print": "Print"
+      "title": "QR 登入卡",
+      "intro": "每張卡掃描一次就能讓一位學生登入。卡片只會顯示一次，請現在列印。",
+      "issue": "為{count, plural, other {# 位}}沒有卡片的學生製作卡片",
+      "allHaveCards": "每位學生都有卡片。若要再次列印卡片，請為該學生製作新卡。",
+      "toPrint": "{count, plural, other {# 張卡片}}待列印",
+      "madeBefore": "先前製作的卡片",
+      "madeBeforeHelp": "伺服器不會保存這些卡片。若要再次列印，請製作新卡。舊卡會隨即失效。",
+      "print": "列印"
     },
     "setting": {
-      "label": "Picture password",
-      "on": "Students tap their 3 pictures after they choose their name.",
-      "off": "Students sign in with the class code and their name only. Some features, such as Reedy, need a full sign-in."
+      "label": "圖片密碼",
+      "on": "學生選好自己的名字後，點選他們的 3 張圖片。",
+      "off": "學生只用班級代碼和名字登入。部分功能（例如 Reedy）需要完整登入。"
     },
     "roster": {
-      "heading": "Students",
-      "summary": "{signedIn} of {total} signed in",
-      "student": "Student",
-      "status": "Status",
-      "actions": "Actions",
-      "signedIn": "Signed in",
-      "notSignedIn": "Not signed in",
-      "seen": "Seen {time}",
-      "lastSeen": "Last seen {time}",
-      "locked": "Locked, {minutes} min left",
-      "noPicture": "No picture password",
-      "resetPicture": "Reset pictures",
-      "resetPictureFor": "Reset picture password for {name}",
-      "setPicture": "Set pictures",
-      "setPictureFor": "Set picture password for {name}",
-      "newCard": "New card",
-      "newCardFor": "New card for {name}",
-      "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
-      "empty": "No students in this class yet."
+      "heading": "學生",
+      "summary": "{total} 位中有 {signedIn} 位已登入",
+      "student": "學生",
+      "status": "狀態",
+      "actions": "操作",
+      "signedIn": "已登入",
+      "notSignedIn": "未登入",
+      "seen": "{time}上線",
+      "lastSeen": "最後上線：{time}",
+      "locked": "已鎖定，剩餘 {minutes} 分鐘",
+      "noPicture": "沒有圖片密碼",
+      "resetPicture": "重設圖片",
+      "resetPictureFor": "重設 {name} 的圖片密碼",
+      "setPicture": "設定圖片",
+      "setPictureFor": "設定 {name} 的圖片密碼",
+      "newCard": "新卡片",
+      "newCardFor": "{name} 的新卡片",
+      "assignMissing": "為 {count, plural, other {# 位學生}}設定圖片密碼",
+      "empty": "這個班級還沒有學生。"
     },
     "pictures": {
-      "title": "New picture password",
-      "description": "Show this to the student now. It does not show again.",
-      "print": "Print",
-      "close": "Close"
+      "title": "新的圖片密碼",
+      "description": "現在給學生看。之後不會再顯示。",
+      "print": "列印",
+      "close": "關閉"
     },
     "rotate": {
-      "title": "Make a new card for {name}?",
-      "description": "The old card stops working now, and {name} is signed out.",
-      "confirm": "Make new card",
-      "cancel": "Cancel"
+      "title": "要為 {name} 製作新卡片嗎？",
+      "description": "舊卡片會立即失效，{name} 也會登出。",
+      "confirm": "製作新卡片",
+      "cancel": "取消"
     },
     "cards": {
-      "title": "New QR card",
-      "description": "Print this card now. It does not show again.",
-      "qrLabel": "Sign-in QR code for {name}",
-      "scanHint": "Scan to sign in",
-      "print": "Print",
-      "close": "Close"
+      "title": "新的 QR 卡",
+      "description": "請現在列印這張卡片。之後不會再顯示。",
+      "qrLabel": "{name} 的登入 QR 碼",
+      "scanHint": "掃描即可登入",
+      "print": "列印",
+      "close": "關閉"
     }
   },
   "StudentPictures": {
-    "redCircle": "red circle",
-    "blueSquare": "blue square",
-    "greenTriangle": "green triangle",
-    "yellowStar": "yellow star",
-    "pinkHeart": "pink heart",
-    "orangeDiamond": "orange diamond",
-    "purpleMoon": "purple moon",
-    "grayCloud": "gray cloud",
-    "skyDrop": "light blue drop",
-    "blackBolt": "black lightning",
-    "brownHexagon": "brown hexagon",
-    "tealFlower": "teal flower"
+    "redCircle": "紅色圓形",
+    "blueSquare": "藍色正方形",
+    "greenTriangle": "綠色三角形",
+    "yellowStar": "黃色星星",
+    "pinkHeart": "粉紅色愛心",
+    "orangeDiamond": "橘色菱形",
+    "purpleMoon": "紫色月亮",
+    "grayCloud": "灰色雲朵",
+    "skyDrop": "淺藍色水滴",
+    "blackBolt": "黑色閃電",
+    "brownHexagon": "咖啡色六邊形",
+    "tealFlower": "藍綠色花朵"
   },
   "StudentSignIn": {
     "code": {
-      "title": "Hello! Let's sign in",
-      "label": "Class code",
-      "help": "Type the code your teacher shows you.",
-      "next": "Next",
-      "checking": "Checking…"
+      "title": "哈囉！我們來登入吧",
+      "label": "班級代碼",
+      "help": "輸入老師給你看的代碼。",
+      "next": "下一步",
+      "checking": "檢查中…",
+      "oldLink": "這個連結裡的班級代碼是舊的。請輸入老師顯示的代碼。"
     },
     "names": {
-      "title": "Who are you?",
-      "help": "Tap your name.",
-      "empty": "There are no names in this class yet. Ask your teacher.",
-      "back": "Back"
+      "title": "你是誰？",
+      "help": "點選你的名字。",
+      "empty": "這個班級還沒有名字。請問你的老師。",
+      "back": "返回"
     },
     "pictures": {
-      "title": "Hi, {name}!",
-      "help": "Tap your 3 pictures in order.",
-      "progress": "{count} of 3 pictures",
-      "undo": "Undo",
-      "clear": "Start again",
-      "back": "Not you? Go back",
-      "signingIn": "Signing in…"
+      "title": "嗨，{name}！",
+      "help": "依序點選你的 3 張圖片。",
+      "progress": "第 {count} 張，共 3 張圖片",
+      "undo": "復原",
+      "clear": "重新開始",
+      "back": "不是你嗎？返回",
+      "signingIn": "登入中…"
     },
     "card": {
-      "title": "QR card sign-in",
-      "signingIn": "Signing you in…",
-      "useCode": "Sign in with the class code"
+      "title": "QR 卡登入",
+      "signingIn": "正在讓你登入…",
+      "useCode": "用班級代碼登入"
     },
     "password": {
-      "title": "Sign in with your username",
-      "help": "Use the username and password your teacher gave you.",
-      "username": "Username",
-      "password": "Password",
-      "submit": "Sign in",
-      "signingIn": "Signing in…"
+      "title": "用你的使用者名稱登入",
+      "help": "請使用老師給你的使用者名稱和密碼。",
+      "username": "使用者名稱",
+      "password": "密碼",
+      "submit": "登入",
+      "signingIn": "登入中…"
     },
     "switch": {
-      "usePassword": "Sign in with username and password",
-      "useCode": "Sign in with the class code"
+      "usePassword": "用使用者名稱和密碼登入",
+      "useCode": "用班級代碼登入"
     },
     "errors": {
-      "codeFormat": "The code has 6 letters and numbers.",
-      "codeInvalid": "This code does not work. Check the code or ask your teacher.",
-      "wrongPictures": "Those pictures are not right. Try again.",
-      "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
-      "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
-      "wrongPassword": "Wrong username or password. Try again.",
-      "cardInvalid": "This card does not work now. Cards work only in class. Ask your teacher.",
-      "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
-      "generic": "Something went wrong. Try again."
+      "codeFormat": "代碼有 6 個字母和數字。",
+      "codeInvalid": "這個代碼無法使用。請檢查代碼，或問你的老師。",
+      "wrongPictures": "圖片不對。請再試一次。",
+      "locked": "錯誤次數過多。請等待{minutes, plural, other { # 分鐘}}，或問你的老師。",
+      "rateLimited": "嘗試次數過多。請等待{minutes, plural, other { # 分鐘}}後再試。",
+      "wrongPassword": "使用者名稱或密碼錯誤。請再試一次。",
+      "cardInvalid": "這張卡片現在無法使用。卡片只能在課堂上使用。請問你的老師。",
+      "cardMissing": "無法讀取這張卡片。請再掃描一次，或問你的老師。",
+      "generic": "發生錯誤。請再試一次。"
     }
   },
   "AppShell": {
-    "skipToContent": "Skip to main content",
-    "accountMenu": "Account menu",
-    "toggleTheme": "Switch light or dark theme",
-    "soundOff": "Turn sound off",
-    "soundOn": "Turn sound on",
-    "mainNavigation": "Main navigation",
-    "publicNavigation": "Site navigation",
-    "openMenu": "Open menu",
-    "menu": "Menu",
+    "skipToContent": "跳到主要內容",
+    "accountMenu": "帳號選單",
+    "toggleTheme": "切換淺色或深色主題",
+    "soundOff": "關閉聲音",
+    "soundOn": "開啟聲音",
+    "mainNavigation": "主導覽",
+    "publicNavigation": "網站導覽",
+    "openMenu": "開啟選單",
+    "menu": "選單",
     "tabs": {
-      "home": "Home",
-      "read": "Read",
-      "games": "Games",
-      "me": "Me",
-      "classes": "Classes",
-      "assignments": "Assignments",
-      "reports": "Reports",
-      "dashboard": "Dashboard",
-      "teachers": "Teachers",
-      "students": "Students",
-      "import": "Import",
-      "schools": "Schools",
-      "licenses": "Licenses"
+      "home": "首頁",
+      "read": "閱讀",
+      "games": "遊戲",
+      "me": "我的",
+      "classes": "班級",
+      "assignments": "作業",
+      "reports": "報告",
+      "dashboard": "儀表板",
+      "teachers": "教師",
+      "students": "學生",
+      "import": "匯入",
+      "schools": "學校",
+      "licenses": "授權"
     },
     "gp": "{gp} GP",
     "xp": "{xp} XP"
   },
   "Quest": {
+    "noHero": "還沒有英雄",
     "title": "班級任務",
     "subtitle": "全班一起對抗一個頭目。",
     "boss": "頭目：{name}",
@@ -3354,7 +3330,7 @@
   "Reedy": {
     "title": "Reedy",
     "preview": "預覽",
-    "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
+    "explainEn": "Reedy 是口說教練。你可以用英文和中文聊聊你的故事。Reedy 還很新，可能會犯錯。",
     "explainTh": "รีดี้คือโค้ชฝึกพูด คุยเรื่องนิทานของคุณเป็นภาษาอังกฤษและภาษาไทยได้ รีดี้ยังใหม่ อาจทำผิดพลาดได้บ้าง",
     "meterLabel": "Reedy 分鐘",
     "minutesLeft": "本月剩餘 {time}",
@@ -3435,408 +3411,790 @@
     "noCostsHint": "第一次通話結束後會顯示費用。"
   },
   "StudentHome": {
-    "title": "Home",
-    "greeting": "Hi, {name}!",
-    "subtitle": "Ready to read today?",
-    "progress": "My progress",
-    "streak": "Day streak",
-    "streakValue": "{count, plural, =0 {No streak yet} one {# day} other {# days}}",
+    "title": "首頁",
+    "greeting": "嗨，{name}！",
+    "subtitle": "今天準備好閱讀了嗎？",
+    "progress": "我的進度",
+    "streak": "連續天數",
+    "streakValue": "{count, plural, =0 {還沒有連續紀錄} other {# 天}}",
     "xp": "XP",
-    "level": "Level",
-    "todayLesson": "Today's lesson",
-    "dueDate": "Due {date}",
-    "noDueDate": "No due date",
-    "overdue": "Late",
-    "startLesson": "Start lesson",
-    "continueLesson": "Continue lesson",
-    "continueReading": "Continue reading",
-    "keepReading": "Keep reading",
-    "noReading": "No story in progress",
-    "noReadingHint": "Pick a story and start reading.",
-    "findStory": "Find a story",
-    "games": "Games",
-    "gamesHint": "Play word games and earn XP.",
-    "playGames": "Play games",
-    "classBook": "Your class book",
-    "classBookLesson": "Lesson {number}: {title}",
-    "classBookNoLesson": "Your teacher will open the next lesson soon.",
-    "classBookLocked": "Your teacher opens this lesson in class.",
-    "readLesson": "Read the lesson",
-    "seeBook": "See the book",
+    "level": "等級",
+    "todayLesson": "今天的課程",
+    "dueDate": "截止日期：{date}",
+    "noDueDate": "無截止日期",
+    "overdue": "已逾期",
+    "startLesson": "開始上課",
+    "continueLesson": "繼續上課",
+    "continueReading": "繼續閱讀",
+    "keepReading": "繼續閱讀",
+    "noReading": "沒有進行中的故事",
+    "noReadingHint": "選一則故事開始閱讀吧。",
+    "findStory": "找故事",
+    "games": "遊戲",
+    "gamesHint": "玩單字遊戲，賺取 XP。",
+    "playGames": "玩遊戲",
+    "classBook": "你的班級課本",
+    "classBookLesson": "第 {number} 課：{title}",
+    "classBookNoLesson": "你的老師很快就會開放下一課。",
+    "classBookLocked": "你的老師會在課堂上開放這一課。",
+    "readLesson": "閱讀這一課",
+    "seeBook": "查看課本",
     "book": {
-      "back": "Back to home",
-      "lessons": "Lessons",
-      "lesson": "Lesson {number}",
-      "current": "Now in class",
-      "taught": "Taught",
-      "read": "Read",
-      "notYet": "Coming soon",
-      "progress": "Lesson {current} of {total}"
+      "back": "返回首頁",
+      "lessons": "課程",
+      "lesson": "第 {number} 課",
+      "current": "正在上課",
+      "taught": "已教過",
+      "read": "閱讀",
+      "notYet": "即將推出",
+      "progress": "第 {current} 課，共 {total} 課"
     },
     "yourHero": "你的英雄",
     "arena": "競技場",
     "arenaHint": "單字和句子遊戲。班級挑戰就在競技場的牆上。"
   },
   "ReadList": {
-    "title": "Read",
-    "subtitle": "Pick a story at your level.",
-    "yourLevel": "Your level: {level}",
-    "filters": "Story filters",
-    "chooseType": "Choose a type",
-    "chooseGenre": "Choose a genre",
-    "chooseSubgenre": "Choose a topic",
-    "stories": "Stories",
-    "empty": "No stories here yet",
-    "emptyHint": "Try another genre or topic.",
-    "loadingMore": "Loading more...",
-    "scrollMore": "Scroll down to load more",
-    "loadMoreError": "We could not load more stories.",
-    "loadError": "We could not load the stories.",
-    "loadErrorHint": "Check the internet connection and try again.",
-    "started": "Started",
-    "completed": "Completed",
-    "approved": "Approved",
-    "lesson": "Study as a lesson",
-    "lessonLabel": "Study {title} as a lesson",
-    "notFound": "We could not find this story",
-    "notFoundHint": "It may have been removed. Pick another story.",
-    "backToStories": "Back to stories",
-    "articleError": "We could not open this story.",
-    "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
+    "title": "閱讀",
+    "subtitle": "選一則適合你程度的故事。",
+    "yourLevel": "你的等級：{level}",
+    "filters": "故事篩選",
+    "chooseType": "選擇類型",
+    "chooseGenre": "選擇體裁",
+    "chooseSubgenre": "選擇主題",
+    "stories": "故事",
+    "empty": "這裡還沒有故事",
+    "emptyHint": "試試其他體裁或主題。",
+    "loadingMore": "載入更多...",
+    "scrollMore": "向下捲動載入更多",
+    "loadMoreError": "無法載入更多故事。",
+    "loadError": "無法載入故事。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "started": "已開始",
+    "completed": "已完成",
+    "approved": "已通過",
+    "lesson": "當作課程學習",
+    "lessonLabel": "把 {title} 當作課程學習",
+    "notFound": "找不到這則故事",
+    "notFoundHint": "它可能已被移除。請選另一則故事。",
+    "backToStories": "返回故事",
+    "articleError": "無法開啟這則故事。",
+    "disclaimer": "這則故事、圖片和音訊是電腦為學習英文而製作的。用在學校作業之前，請先用其他資料來源查證事實。"
   },
   "StudentAssignments": {
-    "title": "My assignments",
-    "subtitle": "Lessons from your teacher.",
-    "filters": "Assignment filters",
-    "search": "Search assignments",
-    "searchPlaceholder": "Search by name",
-    "searching": "Searching...",
-    "status": "Show",
-    "statusAll": "All",
-    "statusNotStarted": "To do",
-    "statusInProgress": "Started",
-    "statusCompleted": "Done",
-    "due": "Due date",
-    "dueAll": "Any date",
-    "dueOverdue": "Late",
-    "dueToday": "Due today",
-    "dueUpcoming": "Coming up",
-    "noDueDate": "No due date",
-    "dueOn": "Due {date}",
-    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
-    "late": "Late",
-    "from": "From {teacher}",
-    "start": "Start lesson",
-    "continue": "Continue",
-    "review": "Look again",
-    "empty": "No assignments yet",
-    "emptyHint": "When your teacher gives you a lesson, it shows here.",
-    "findStory": "Find a story",
-    "noMatch": "No assignments match",
-    "noMatchHint": "Try another filter.",
-    "showAll": "Show all",
-    "loadError": "We could not load your assignments.",
-    "loadErrorHint": "Check the internet connection and try again.",
-    "loading": "Loading assignments",
-    "pages": "Assignment pages",
-    "page": "Page {page} of {total}",
-    "previous": "Previous",
-    "next": "Next"
+    "title": "我的作業",
+    "subtitle": "老師給你的課程。",
+    "filters": "作業篩選",
+    "search": "搜尋作業",
+    "searchPlaceholder": "以名稱搜尋",
+    "searching": "搜尋中...",
+    "status": "顯示",
+    "statusAll": "全部",
+    "statusNotStarted": "待完成",
+    "statusInProgress": "已開始",
+    "statusCompleted": "已完成",
+    "due": "截止日期",
+    "dueAll": "任何日期",
+    "dueOverdue": "已逾期",
+    "dueToday": "今天截止",
+    "dueUpcoming": "即將到期",
+    "noDueDate": "無截止日期",
+    "dueOn": "截止日期：{date}",
+    "daysLeft": "{days, plural, other {還剩 # 天}}",
+    "late": "已逾期",
+    "from": "來自 {teacher}",
+    "start": "開始上課",
+    "continue": "繼續",
+    "review": "再看一次",
+    "empty": "還沒有作業",
+    "emptyHint": "老師給你課程時，會顯示在這裡。",
+    "findStory": "找故事",
+    "noMatch": "沒有符合的作業",
+    "noMatchHint": "試試其他篩選條件。",
+    "showAll": "顯示全部",
+    "loadError": "無法載入你的作業。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "loading": "正在載入作業",
+    "pages": "作業頁數",
+    "page": "第 {page} 頁，共 {total} 頁",
+    "previous": "上一頁",
+    "next": "下一頁"
   },
   "Flashcards": {
-    "vocabularyTitle": "My words",
-    "vocabularySubtitle": "Practice the words you saved from stories.",
-    "sentencesTitle": "My sentences",
-    "sentencesSubtitle": "Practice the sentences you saved from stories.",
-    "practiceTabs": "Practice type",
-    "loadError": "We could not load your cards.",
-    "loadErrorHint": "Check the internet connection and try again.",
-    "vocabularyEmpty": "No words saved yet",
-    "vocabularyEmptyHint": "Read a story and save new words. They show here for practice.",
-    "sentencesEmpty": "No sentences saved yet",
-    "sentencesEmptyHint": "Read a story and save sentences. They show here for practice.",
-    "findStory": "Find a story"
+    "vocabularyTitle": "我的單字",
+    "vocabularySubtitle": "練習你從故事中收藏的單字。",
+    "sentencesTitle": "我的句子",
+    "sentencesSubtitle": "練習你從故事中收藏的句子。",
+    "practiceTabs": "練習類型",
+    "loadError": "無法載入你的卡片。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "vocabularyEmpty": "還沒有收藏單字",
+    "vocabularyEmptyHint": "讀一則故事並收藏新單字。它們會顯示在這裡供你練習。",
+    "sentencesEmpty": "還沒有收藏句子",
+    "sentencesEmptyHint": "讀一則故事並收藏句子。它們會顯示在這裡供你練習。",
+    "findStory": "找故事"
   },
   "StudentHistory": {
-    "title": "My reading",
-    "subtitle": "Stories you read, and stories to read again.",
-    "readAgain": "Read again",
-    "readAgainHint": "Reading these stories again can help you do better.",
-    "readAgainAction": "Read again",
-    "records": "Stories I read",
-    "recordsHint": "Every story you opened, newest first.",
-    "search": "Search stories",
-    "searchPlaceholder": "Search by title",
-    "searching": "Searching...",
-    "score": "Score {score}",
-    "readOn": "Read {date}",
+    "title": "我的閱讀",
+    "subtitle": "你讀過的故事，以及可以再讀一次的故事。",
+    "readAgain": "再讀一次",
+    "readAgainHint": "再讀一次這些故事，可以幫助你做得更好。",
+    "readAgainAction": "再讀一次",
+    "records": "我讀過的故事",
+    "recordsHint": "你開啟過的每則故事，最新的在最前面。",
+    "search": "搜尋故事",
+    "searchPlaceholder": "以標題搜尋",
+    "searching": "搜尋中...",
+    "score": "分數 {score}",
+    "readOn": "閱讀日期：{date}",
+    "attemptTag": "第 {number} 次",
     "status": {
-      "READ": "Read",
-      "UNRATED": "Not rated yet",
-      "COMPLETED_MCQ": "Quiz done",
-      "COMPLETED_SAQ": "Short answers done",
-      "COMPLETED_LAQ": "Writing done"
+      "READ": "已讀",
+      "UNRATED": "尚未評分",
+      "COMPLETED_MCQ": "已完成測驗",
+      "COMPLETED_SAQ": "已完成簡答題",
+      "COMPLETED_LAQ": "已完成寫作"
     },
-    "noReadAgain": "Nothing to read again",
-    "noReadAgainHint": "Great work! Keep reading new stories.",
-    "noRecords": "No stories read yet",
-    "noRecordsHint": "Pick a story and start reading.",
-    "findStory": "Find a story",
-    "noMatch": "No stories match",
-    "noMatchHint": "Try another word.",
-    "showAll": "Show all",
-    "loadError": "We could not load your reading history.",
-    "loadErrorHint": "Check the internet connection and try again.",
-    "loading": "Loading stories",
-    "pages": "Story pages",
-    "page": "Page {page} of {total}",
-    "previous": "Previous",
-    "next": "Next"
+    "noReadAgain": "沒有需要再讀的故事",
+    "noReadAgainHint": "做得好！繼續閱讀新的故事吧。",
+    "noRecords": "還沒有讀過故事",
+    "noRecordsHint": "選一則故事開始閱讀吧。",
+    "findStory": "找故事",
+    "noMatch": "沒有符合的故事",
+    "noMatchHint": "試試其他關鍵字。",
+    "showAll": "顯示全部",
+    "loadError": "無法載入你的閱讀紀錄。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "loading": "正在載入故事",
+    "pages": "故事頁數",
+    "page": "第 {page} 頁，共 {total} 頁",
+    "previous": "上一頁",
+    "next": "下一頁"
   },
   "TeacherHome": {
     "quest": "班級任務",
-    "title": "Home",
-    "greeting": "Hello, {name}",
-    "subtitle": "Your classes and students at a glance.",
-    "summary": "Summary",
+    "title": "首頁",
+    "greeting": "你好，{name}",
+    "subtitle": "一眼掌握你的班級和學生。",
+    "summary": "概覽",
     "stats": {
-      "classes": "Classes",
-      "students": "Students",
-      "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "classes": "班級",
+      "students": "學生",
+      "openAssignments": "未完成的作業",
+      "needsHelp": "需要幫助",
+      "activeStudents": "活躍學生（30 天）",
+      "activeStudentsOf": "{active} / {total}（{percent}%）",
+      "noStudentsYet": "還沒有學生",
+      "averageLevel": "平均等級",
+      "averageLevelHint": "Primary 等級 1 至 15",
+      "activeToday": "今日活躍",
+      "activeTodayOf": "共 {count} 位學生",
+      "completedToday": "今日完成",
+      "completedTodayHint": "已完成的作業",
+      "needsHelpHint": "見下方名單"
     },
     "classes": {
-      "heading": "My classes",
-      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
-      "grade": "Grade {grade}",
-      "empty": "No classes yet",
-      "emptyHint": "Create a class on My Classes, then add your students.",
-      "goToClasses": "Go to My Classes",
-      "all": "All classes"
+      "heading": "我的班級",
+      "grade": "年級 {grade}",
+      "empty": "還沒有班級",
+      "emptyHint": "請先在「我的班級」中建立班級，然後新增學生。",
+      "goToClasses": "前往我的班級"
     },
     "assignments": {
-      "heading": "Open assignments",
-      "progress": "{completed} of {assigned} done",
-      "empty": "No open assignments",
-      "emptyHint": "Every student has finished the assigned work.",
-      "all": "All assignments"
+      "heading": "未完成的作業",
+      "progress": "已完成 {completed}/{assigned}",
+      "empty": "沒有未完成的作業",
+      "emptyHint": "每位學生都已完成指派的作業。",
+      "all": "全部作業"
     },
     "help": {
-      "heading": "Who needs help",
-      "hint": "Students with overdue work or no activity for {days} days.",
-      "late": "{count} overdue",
-      "neverActive": "No activity yet",
-      "inactive": "Last active {date}",
-      "empty": "Everyone is on track",
-      "emptyHint": "No student has overdue work or a long break.",
-      "more": "{count, plural, one {# more student} other {# more students}}"
+      "heading": "誰需要幫助",
+      "hint": "作業逾期或 {days} 天沒有活動的學生。",
+      "late": "逾期 {count} 項",
+      "neverActive": "還沒有活動",
+      "inactive": "上次活動 {date}",
+      "empty": "大家都在軌道上",
+      "emptyHint": "沒有學生作業逾期或長時間沒有學習。",
+      "more": "還有 {count} 位學生"
     },
-    "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadError": "無法載入你的首頁。",
+    "loadErrorHint": "請檢查網路連線後再試一次。",
+    "table": {
+      "search": "依班級名稱搜尋",
+      "searchLabel": "搜尋班級",
+      "sortBy": "排序方式",
+      "sortAsc": "升序",
+      "sortDesc": "降序",
+      "sortDirection": "變更排序順序",
+      "csv": "下載 CSV",
+      "csvLabel": "下載 CSV：顯示的班級",
+      "noMatch": "沒有班級符合「{query}」。",
+      "legend": "活躍指 7 天內至少有一次活動。XP 趨勢與前 7 天比較（上升或下降超過 5%）。",
+      "activeOf": "{active} / {students}（{percent}%）",
+      "actions": "操作",
+      "columns": {
+        "name": "班級",
+        "students": "學生",
+        "active": "活躍（7 天）",
+        "level": "平均等級",
+        "xp": "XP（7 天）",
+        "trend": "趨勢",
+        "status": "狀態"
+      },
+      "trend": {
+        "up": "上升",
+        "flat": "持平",
+        "down": "下降"
+      },
+      "status": {
+        "onTrack": "達標",
+        "someQuiet": "部分安靜",
+        "needsAttention": "需要關注",
+        "noStudents": "沒有學生"
+      }
+    }
   },
   "TeacherUi": {
-    "startClass": "Start class",
-    "startClassFor": "Start class {name}",
+    "startClass": "開始上課",
+    "startClassFor": "開始上課 {name}",
     "due": {
-      "none": "No due date",
-      "overdue": "Overdue",
-      "today": "Due today",
-      "soon": "{days, plural, one {Due tomorrow} other {Due in # days}}",
-      "upcoming": "Due in {days} days",
-      "on": "Due {date}"
+      "none": "無截止日期",
+      "overdue": "已逾期",
+      "today": "今天截止",
+      "soon": "{days, plural, other {# 天後截止}}",
+      "upcoming": "{days} 天後截止",
+      "on": "截止日期：{date}"
     },
     "classBook": {
-      "title": "Class book",
-      "hint": "The book and the lesson plan for this class will show here.",
-      "none": "No book is assigned to this class yet.",
-      "noCatalogue": "No books are in the catalogue yet.",
-      "assign": "Assign a book",
-      "book": "Book",
-      "chooseBook": "Choose a book",
-      "mode": "Mode",
-      "modeTeacherLed": "Teacher-led (workbook first)",
-      "modeIndependent": "Independent",
-      "startDate": "Start date",
-      "assignButton": "Assign",
-      "assigned": "Book assigned.",
-      "assignError": "Could not assign the book. Try again.",
-      "pointer": "Lesson {current} of {total}",
-      "taughtCount": "{count, plural, =0 {No lessons taught yet} one {# lesson taught} other {# lessons taught}}",
-      "pacing": "Lesson plan",
-      "backToClass": "Back to class",
-      "nextStep": "Next step",
-      "nextStepValue": "Step {step}: {title}",
-      "period": "Period {period}",
-      "allStepsDone": "All 13 steps are done. Mark the lesson taught.",
-      "noLessons": "This book has no lessons in the catalogue yet.",
-      "lessons": "Lessons",
-      "lessonNumber": "Lesson {number}",
-      "current": "Current",
-      "taughtOn": "Taught {date}",
-      "notTaught": "Not taught",
-      "draft": "Not published yet",
-      "setCurrent": "Make current",
-      "markTaught": "Mark taught",
-      "steps": "Workbook steps done in class",
-      "stepLabel": "Step {step}: {title}",
-      "actionError": "The change was not saved. Try again.",
+      "title": "班級課本",
+      "hint": "這個班級的課本和課程計畫會顯示在這裡。",
+      "slotTitle": "班級用書",
+      "slotEmpty": "還沒有班級選擇書本。請開啟一個班級來指派書本。",
+      "slotNoClass": "你還沒有班級。請先建立班級，再為班級選擇書本。",
+      "slotError": "我們無法載入班級用書。請重新整理頁面再試一次。",
+      "assignRow": "指派一本書",
+      "slotNext": "下一課",
+      "goToClasses": "前往我的班級",
+      "none": "這個班級還沒有指派書本。請在下方選擇一本書開始。",
+      "emptyCatalogueTitle": "書單還沒有準備好。",
+      "emptyCatalogueBody": "請告訴你的學校管理員，讓管理員請 Reading Advantage 載入這些書。",
+      "loadErrorTitle": "我們無法載入班級用書。",
+      "loadErrorBody": "請檢查網路連線，然後重試。",
+      "retry": "重試",
+      "assign": "指派課本",
+      "book": "課本",
+      "chooseBook": "選擇課本",
+      "mode": "模式",
+      "modeTeacherLed": "教師主導（先用練習本）",
+      "modeIndependent": "自主學習",
+      "startDate": "開始日期",
+      "assignButton": "指派",
+      "assigned": "已指派課本。",
+      "assignError": "無法指派課本。請再試一次。",
+      "pointer": "第 {current} 課，共 {total} 課",
+      "taughtCount": "{count, plural, =0 {還沒有教過任何課程} other {已教過 # 堂課}}",
+      "pacing": "課程計畫",
+      "nowInClass": "正在上課",
+      "openLesson": "開啟課程",
+      "lessonTitle": "第 {number} 課：{title}",
+      "taughtLabel": "已教的課程",
+      "stepsMeter": "已完成的練習冊步驟",
+      "assignAnother": "指派另一本書",
+      "backToClass": "返回班級",
+      "nextStep": "下一步",
+      "nextStepValue": "第 {step} 步：{title}",
+      "period": "第 {period} 節",
+      "allStepsDone": "13 個步驟全部完成。請將這堂課標示為已教過。",
+      "noLessons": "這本課本在目錄中還沒有課程。",
+      "lessons": "課程",
+      "lessonNumber": "第 {number} 課",
+      "current": "目前",
+      "taughtOn": "教學日期：{date}",
+      "notTaught": "尚未教",
+      "draft": "尚未發布",
+      "setCurrent": "設為目前課程",
+      "markTaught": "標示為已教過",
+      "steps": "課堂上完成的練習本步驟",
+      "stepLabel": "第 {step} 步：{title}",
+      "actionError": "變更未儲存。請再試一次。",
+      "teachAgain": "再教一次",
+      "teachAgainTitle": "要再教一次第 {number} 課嗎？",
+      "teachAgainBody1": "全班將重新開始第 {number} 課。這堂課會成為目前課程。",
+      "teachAgainBody2": "每位學生的作業會儲存到歷史記錄中。XP 保持不變。",
+      "teachAgainCancel": "取消",
+      "taughtTimes": "{count, plural, one {已教 # 次} other {已教 # 次}}",
+      "runChip": "第 {number} 輪",
+      "earlierRuns": "之前的輪次 ({count})",
+      "earlierRun": "第 {number} 輪 · 教學日期 {date} · 已完成 {done}/{total} 個步驟",
+      "earlierRunNoDate": "第 {number} 輪 · 未標記為已教 · 已完成 {done}/{total} 個步驟",
       "lesson": {
-        "projector": "Projector",
-        "rehearsal": "Rehearsal (student view)",
-        "answerKey": "Answer key",
-        "teachersOnly": "Teachers only. Students never see this section.",
-        "mcq": "Comprehension check (multiple choice)",
-        "saq": "Guided response (short answers)",
-        "laq": "Writing prompts",
-        "vocabFill": "Fill in the words",
-        "sentenceOrder": "Sentence order",
-        "sentenceCompletion": "Sentence completion",
-        "sentenceStarters": "Sentence starters",
-        "writingPrompt": "Guided writing",
-        "writingFrames": "Writing frames",
-        "rubric": "Writing rubric",
-        "rubric1": "Ideas: the writing answers the prompt with 3 or more details.",
-        "rubric2": "Sentences: each sentence has a capital letter and a full stop.",
-        "rubric3": "Words: the writing uses 3 or more words from the lesson.",
-        "noKey": "This lesson has no answer key in the catalogue yet.",
-        "summary": "Lesson summary",
-        "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
-        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
-        "backToLesson": "Back to the lesson",
-        "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
-        "vocabulary": "Vocabulary",
-        "questions": "Questions",
-        "showAnswer": "Show answer",
-        "hideAnswer": "Hide answer",
-        "showAll": "Show all paragraphs",
-        "previous": "Previous",
-        "next": "Next",
-        "paragraph": "Paragraph {number} of {total}"
+        "projector": "投影模式",
+        "projectorGames": {
+          "title": "全班遊戲",
+          "hint": "選擇一個遊戲投到投影機上。答案提示已開啟，不會儲存任何內容。",
+          "loading": "正在取得這堂課的單字和句子…",
+          "inputFailed": "我們無法取得這堂課的單字。請稍後再試。"
+        },
+        "rehearsal": "預演（學生視角）",
+        "answerKey": "解答",
+        "teachersOnly": "僅限教師。學生看不到這個區塊。",
+        "mcq": "理解檢核（選擇題）",
+        "saq": "引導式回答（簡答題）",
+        "laq": "寫作提示",
+        "vocabFill": "填入單字",
+        "sentenceOrder": "句子排序",
+        "sentenceCompletion": "句子完成",
+        "sentenceStarters": "句子開頭",
+        "writingPrompt": "引導式寫作",
+        "writingFrames": "寫作框架",
+        "rubric": "寫作評分標準",
+        "rubric1": "想法：文章以 3 個或更多細節回應題目。",
+        "rubric2": "句子：每個句子都有大寫字母和句號。",
+        "rubric3": "單字：文章使用 3 個或更多本課的單字。",
+        "noKey": "這堂課在目錄中還沒有解答。",
+        "summary": "課程摘要",
+        "noArticle": "這堂課尚未連結到文章。連結後，才能開啟投影模式和預演。",
+        "rehearsalHint": "你以學生的視角查看這堂課。你在這裡做的任何操作都不會儲存。",
+        "backToLesson": "返回課程",
+        "projectorHint": "點選段落即可聚焦。目前尚無法統計答題結果。",
+        "vocabulary": "單字",
+        "questions": "問題",
+        "showAnswer": "顯示答案",
+        "hideAnswer": "隱藏答案",
+        "showAll": "顯示所有段落",
+        "previous": "上一個",
+        "next": "下一個",
+        "paragraph": "第 {number} 段，共 {total} 段",
+        "print": "列印這堂課",
+        "printNow": "列印",
+        "printLoading": "正在載入圖片...",
+        "printNotReady": "這堂課的列印版還沒有準備好。",
+        "printHint": "請選擇 A4 紙。在列印視窗中關閉「頁首和頁尾」。",
+        "printFrameTitle": "課程列印預覽",
+        "printBubbleWait": "請稍等...",
+        "printBubbleReady": "準備好了！",
+        "printBubbleNotYet": "還沒好！",
+        "printNotReadyTitle": "列印版還沒有準備好",
+        "printNotReadyBody": "這堂課還沒有列印版。請使用投影機或課程指南。"
       },
       "guide": {
-        "title": "Teacher guide",
-        "open": "Guide",
-        "empty": "The teacher guide is not imported yet.",
-        "teacherActions": "Teacher actions",
-        "teacherLanguage": "Teacher language",
-        "studentActions": "Student actions",
-        "watchFor": "Watch for",
-        "script": "Full script",
-        "done": "Done in class",
-        "live": "Live guide",
-        "tip": "Tip",
-        "markDone": "Mark step done",
-        "undo": "Undo",
-        "games": "Open the games",
-        "stepOf": "Step {step} of {total}",
-        "allDone": "Every step of this lesson is done."
+        "title": "教師指南",
+        "open": "指南",
+        "empty": "尚未匯入教師指南。",
+        "teacherActions": "教師動作",
+        "teacherLanguage": "教師用語",
+        "studentActions": "學生動作",
+        "watchFor": "觀察重點",
+        "script": "完整腳本",
+        "done": "課堂上已完成",
+        "live": "即時指南",
+        "tip": "小提醒",
+        "markDone": "標示此步驟完成",
+        "undo": "復原",
+        "games": "開啟遊戲",
+        "stepOf": "第 {step} 步，共 {total} 步",
+        "allDone": "這堂課的每個步驟都已完成。"
       },
       "manual": {
-        "title": "Teacher manual",
-        "intro": "How a teacher-led lesson runs in Primary Advantage, step by step.",
-        "howTo": "First lesson: how to",
-        "howTo1": "Assign the book to your class on the class page.",
-        "howTo2": "Open the lesson plan and mark each workbook step as the class does it. The app opens the matching student step.",
-        "howTo3": "Open the lesson guide for the teacher actions, the teacher language, and the full script.",
-        "howTo4": "Use the projector view for whole-class reading and the answer reveal.",
-        "howTo5": "Check the class progress grid after the lesson and mark the lesson taught.",
-        "stepsTitle": "The 13 steps"
+        "title": "教師手冊",
+        "intro": "教師主導的課程在 Primary Advantage 中如何進行，一步一步說明。",
+        "howTo": "第一堂課：操作方式",
+        "howTo1": "在班級頁面把課本指派給你的班級。",
+        "howTo2": "開啟課程計畫，並在班級完成每個練習本步驟時標示該步驟。應用程式會開啟對應的學生步驟。",
+        "howTo3": "開啟課程指南，查看教師動作、教師用語和完整腳本。",
+        "howTo4": "使用投影模式進行全班閱讀和揭曉答案。",
+        "howTo5": "課後查看班級進度表，並將這堂課標示為已教過。",
+        "stepsTitle": "13 個步驟"
       },
       "progress": {
-        "title": "Class progress",
-        "backToPlan": "Back to the lesson plan",
-        "open": "Class progress",
-        "csv": "Download CSV",
-        "filters": "Filters",
+        "title": "班級進度",
+        "backToPlan": "返回課程計畫",
+        "open": "班級進度",
+        "csv": "下載 CSV",
+        "filters": "篩選",
         "filter": {
-          "all": "All students",
-          "late": "Late",
-          "stuck": "Stuck",
-          "not_started": "Not started"
+          "all": "所有學生",
+          "late": "落後",
+          "stuck": "卡關",
+          "not_started": "未開始"
         },
-        "grid": "Students by lesson",
-        "gridCaption": "App steps done out of 14, one cell per student and lesson",
-        "student": "Student",
-        "lessonShort": "L{number}",
-        "cell": "{student}, lesson {lesson}: {status}, {done} of 14 steps",
+        "grid": "依課程顯示學生",
+        "gridCaption": "14 個應用程式步驟中已完成的數量，每位學生每堂課一格",
+        "student": "學生",
+        "lessonShort": "第 {number} 課",
+        "cell": "{student}，第 {lesson} 課：{status}，已完成 14 步中的 {done} 步",
         "status": {
-          "not_started": "Not started",
-          "in_progress": "In progress",
-          "done": "Done"
+          "not_started": "未開始",
+          "in_progress": "進行中",
+          "done": "已完成"
         },
-        "legend": "Green: done. Blue: in progress. Grey: not started. Red ring: the class taught the lesson and the student has not finished.",
-        "empty": "No students match this filter.",
-        "noStudents": "This class has no students yet.",
-        "steps": "{done} of 14 steps",
-        "minutes": "{minutes} min",
-        "taughtOn": "Taught {date}",
-        "notTaught": "Not taught yet",
-        "openedBeforeTaught": "Opened before taught",
-        "stepLabel": "Step {step}: {status}",
-        "backToGrid": "Back to class progress",
-        "studentTitle": "{name}"
+        "legend": "綠色：已完成。藍色：進行中。灰色：未開始。紅圈：班級已教過這堂課，但學生尚未完成。",
+        "empty": "沒有學生符合這個篩選條件。",
+        "noStudents": "這個班級還沒有學生。",
+        "steps": "14 步中的 {done} 步",
+        "minutes": "{minutes} 分鐘",
+        "taughtOn": "教學日期：{date}",
+        "notTaught": "尚未教",
+        "openedBeforeTaught": "在教學前已開啟",
+        "stepLabel": "第 {step} 步：{status}",
+        "backToGrid": "返回班級進度",
+        "studentTitle": "{name}",
+        "attemptCurrent": "第 {number} 次（目前）",
+        "earlierAttempts": "之前的嘗試 ({count})",
+        "attemptNumber": "第 {number} 次",
+        "closedOn": "結束於 {date}",
+        "reason": {
+          "student_restart": "學生重新開始",
+          "teacher_teach_again": "老師再教了一次",
+          "legacy_import": "從舊系統遷移"
+        },
+        "attemptSummary": "14 個步驟中完成 {done} 個 · {minutes} 分鐘 · {xp} XP",
+        "attemptsLabel": "第 {number} 次",
+        "attemptsLegend": "金色圓點：學生正在進行較新的嘗試。數字是第幾次。"
       }
     }
   },
   "TeacherClass": {
-    "challenges": "Class challenges",
-    "backToClasses": "Back to classes",
-    "loadError": "We could not load this class.",
-    "loadClassesError": "We could not load your classes.",
-    "loadErrorHint": "Check your connection and try again.",
-    "searchClasses": "Search classes",
-    "classActionsFor": "Actions for {name}",
-    "openClass": "Open class",
-    "openClassFor": "Open class {name}",
-    "searchStudents": "Search students",
-    "noMatch": "No student matches your search.",
-    "progress": "Progress",
-    "progressFor": "Progress of {name}",
-    "removeFor": "Remove {name} from the class",
-    "moreFor": "More actions for {name}",
-    "lastActive": "Last active: {when}",
-    "level": "Level {level}",
+    "challenges": "班級挑戰",
+    "backToClasses": "返回班級列表",
+    "loadError": "無法載入這個班級。",
+    "loadClassesError": "無法載入你的班級。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "searchClasses": "搜尋班級",
+    "classActionsFor": "{name} 的操作",
+    "openClass": "開啟班級",
+    "openClassFor": "開啟班級 {name}",
+    "searchStudents": "搜尋學生",
+    "noMatch": "沒有符合搜尋條件的學生。",
+    "progress": "進度",
+    "progressFor": "{name} 的進度",
+    "removeFor": "將 {name} 移出班級",
+    "moreFor": "{name} 的更多操作",
+    "lastActive": "最近活動：{when}",
+    "level": "等級 {level}",
     "xp": "{xp} XP",
-    "qrPrintHint": "Make the cards first. Then you can print them."
+    "qrPrintHint": "請先製作卡片，然後才能列印。"
   },
   "TeacherAssignments": {
-    "backToAssignments": "Back to assignments",
-    "story": "Story",
-    "classLabel": "Class",
-    "searchLabel": "Search assignments",
-    "loadError": "We could not load the assignments.",
-    "loadOneError": "We could not load this assignment.",
-    "loadErrorHint": "Check your connection and try again.",
-    "noClasses": "You have no classes yet.",
-    "noClassesHint": "Create a class on My Classes first.",
-    "goToClasses": "Go to My Classes",
-    "statusFilter": "Show students by status",
-    "selectStudentFor": "Select {name}",
-    "progressLabel": "{percent}% done"
+    "backToAssignments": "返回作業列表",
+    "story": "故事",
+    "classLabel": "班級",
+    "searchLabel": "搜尋作業",
+    "loadError": "無法載入作業。",
+    "loadOneError": "無法載入這項作業。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "noClasses": "你還沒有班級。",
+    "noClassesHint": "請先到「我的班級」建立班級。",
+    "goToClasses": "前往「我的班級」",
+    "statusFilter": "依狀態顯示學生",
+    "selectStudentFor": "選擇 {name}",
+    "progressLabel": "已完成 {percent}%",
+    "newAssignment": "新增作業",
+    "newAssignmentHint": "選擇一篇故事，然後在故事頁面點選「作業」。"
   },
   "TeacherStudents": {
-    "classLabel": "Class",
-    "searchLabel": "Search students",
-    "nameColumn": "Name",
-    "classesColumn": "Classes",
-    "levelColumn": "Level",
+    "classLabel": "班級",
+    "searchLabel": "搜尋學生",
+    "nameColumn": "姓名",
+    "classesColumn": "班級",
+    "levelColumn": "等級",
     "xpColumn": "XP",
-    "sortBy": "Sort by {column}",
-    "noClass": "No class",
-    "pageOf": "Page {page} of {totalPages}",
-    "noStudents": "You have no students yet.",
-    "noStudentsHint": "Add students to a class on My Classes.",
-    "noStudentsInClass": "This class has no students yet.",
-    "goToClasses": "Go to My Classes",
-    "loadError": "We could not load your students.",
-    "reportsLoadError": "We could not load the reports.",
-    "activityLoadError": "We could not load the activity of this student.",
-    "loadErrorHint": "Check your connection and try again.",
-    "progressHeading": "Progress for {name}",
-    "progressTitle": "Student progress",
-    "backToReports": "Back to reports",
-    "backToClass": "Back to class",
-    "studentLevel": "Level: {level}",
-    "challengesHint": "Make a word challenge for a class game."
+    "sortBy": "依{column}排序",
+    "noClass": "沒有班級",
+    "pageOf": "第 {page} 頁，共 {totalPages} 頁",
+    "noStudents": "你還沒有學生。",
+    "noStudentsHint": "請到「我的班級」把學生加入班級。",
+    "noStudentsInClass": "這個班級還沒有學生。",
+    "goToClasses": "前往「我的班級」",
+    "loadError": "無法載入你的學生。",
+    "reportsLoadError": "無法載入報告。",
+    "activityLoadError": "無法載入這位學生的活動。",
+    "loadErrorHint": "請檢查網路連線，然後再試一次。",
+    "progressHeading": "{name} 的進度",
+    "progressTitle": "學生進度",
+    "backToReports": "返回報告",
+    "backToClass": "返回班級",
+    "studentLevel": "等級：{level}",
+    "challengesHint": "為班級遊戲製作單字挑戰。"
+  },
+  "BookLink": {
+    "bubbleRead": "準備好閱讀了嗎？",
+    "bubbleWrite": "該寫作了！",
+    "landingQuestion": "你使用哪個應用程式？",
+    "lessonLine": "第 {number} 課：{title}",
+    "writingTask": "寫作任務",
+    "choiceSchool": "我的學校使用 Primary Advantage",
+    "choiceSchoolHint": "用班級代碼登入",
+    "choiceTutor": "我透過 Tutor Advantage 學習",
+    "choiceTutorHint": "在 LINE 中開啟課程",
+    "bubbleOhNo": "哎呀！",
+    "bubbleOops": "糟糕！",
+    "bubbleNotYet": "還沒好！",
+    "unknownBookTitle": "我們不認識這本書",
+    "unknownBookBody": "這個連結中的書不在 Primary Advantage 裡。請檢查你書頁上的代碼。",
+    "noLessonTitle": "書中沒有這堂課",
+    "noLessonBody": "{book} 有第 1 到第 {count} 課。請檢查你書頁上的編號。",
+    "notReadyTitle": "這堂課還沒有準備好",
+    "notReadyBody": "請詢問你的老師。",
+    "noClassTitle": "沒有班級使用這本書",
+    "noClassBody": "{book} 還沒有指派給你的任何班級。請開啟一個班級，然後在班級頁面指派這本書。",
+    "teacherOnlyTitle": "這個連結是給班級老師的",
+    "teacherOnlyBody": "請以班級老師的身分登入，才能開啟這堂課。",
+    "wrongAccountTitle": "這個連結不適用於此帳號",
+    "wrongAccountBody": "請用學生或老師帳號登入，才能開啟這堂課。",
+    "unknownAddressTitle": "我們不認識這個網址",
+    "unknownAddressBody": "請重新掃描你書頁上的 QR 碼。如果仍然失敗，請詢問你的老師。",
+    "retryTitle": "我們無法開啟這堂課",
+    "retryBody": "請檢查網路連線，然後重試。",
+    "toHome": "前往我的首頁",
+    "toClasses": "前往我的班級",
+    "toStart": "前往起始頁",
+    "retry": "重試"
+  },
+  "StudentView": {
+    "bannerTitle": "學生預覽",
+    "bannerNote": "你看到的是學生看到的內容。這裡的學生答案不會儲存。",
+    "exit": "退出預覽",
+    "menuItem": "學生檢視",
+    "notSaved": "預覽：不儲存",
+    "backHome": "返回首頁",
+    "emptyTitle": "暫時沒有內容",
+    "homeHeroTitle": "你好，同學",
+    "homeHeroLine": "這是學生看到的首頁。英雄、XP 和金幣都從零開始。",
+    "emptyLesson": "學生會在這裡看到今天的課程。",
+    "emptyBooks": "學生會在這裡看到班級用書。",
+    "emptyReading": "學生會在這裡看到可以繼續閱讀的故事。",
+    "emptyQuest": "學生會在這裡看到班級任務。",
+    "emptyHistory": "學生會在這裡看到自己讀過的故事。",
+    "emptyReports": "學生會在這裡看到 XP 圖表和活動。",
+    "emptySentences": "學生會在這裡看到已儲存的句子和練習。",
+    "emptyVocabulary": "學生會在這裡看到已儲存的單字。",
+    "questNoClass": "不在任何班級",
+    "reedyStudentsOnly": "只有學生可以和 Reedy 說話",
+    "reedyStudentsOnlyLine": "Reedy 會用到語音分鐘數，所以要由學生帳號開始對話。",
+    "gameSampleWords": "這個遊戲使用示範單字。不會儲存任何內容。"
+  },
+  "Stories": {
+    "tabsLabel": "閱讀",
+    "tabArticles": "文章",
+    "tabStories": "故事",
+    "title": "故事",
+    "subtitle": "從書架上挑一本書。每個故事都有多個章節。",
+    "yourLevel": "你的等級：{cefr} · {from} 到 {to} 級的故事",
+    "search": "搜尋故事",
+    "searchPlaceholder": "依標題或主題搜尋",
+    "searchButton": "搜尋",
+    "genres": "類型",
+    "allGenres": "全部",
+    "shelf": "故事",
+    "level": "{level} 級",
+    "pages": "頁碼",
+    "pageOf": "第 {page} 頁，共 {pages} 頁",
+    "back": "返回",
+    "next": "翻頁",
+    "empty": "沒有符合的故事。",
+    "emptyHint": "試試其他類型，或清除搜尋。",
+    "clearFilters": "清除篩選",
+    "loadError": "我們無法載入故事。",
+    "loadErrorHint": "請檢查網路連線，然後重試。",
+    "backToShelf": "返回書架",
+    "cefr": "CEFR {level}",
+    "chapterCount": "{count, plural, one {# 個章節} other {# 個章節}}",
+    "storyParts": "故事部分",
+    "chaptersSign": "章節",
+    "charactersSign": "角色",
+    "chapterNumber": "第 {n} 章",
+    "chapterDone": "已完成",
+    "startChapter": "開始第 {n} 章",
+    "readAgain": "再讀一遍",
+    "noChapters": "這個故事還沒有章節。",
+    "noCharacters": "這個故事還沒有角色。",
+    "background": "背景：",
+    "chapterNav": "章節導覽",
+    "chapterNext": "下一章",
+    "chapterToStory": "返回故事",
+    "chapterOf": "第 {n} 章，共 {total} 章",
+    "chapterPicture": "章節插圖",
+    "chapterLoadError": "我們無法開啟這個章節。",
+    "chapterLoadErrorHint": "請檢查網路連線，然後重試。",
+    "quizTitle": "問題",
+    "mcTitle": "選擇題",
+    "saTitle": "簡答題",
+    "laTitle": "長答題",
+    "mcDone": "完成：{score}/{total}",
+    "xpEarned": "+{xp} XP",
+    "noXpLeft": "僅練習：這個章節沒有剩餘 XP",
+    "answerAll": "請回答全部 {total} 個問題。",
+    "submitQuiz": "提交",
+    "retakeQuiz": "重做",
+    "yourAnswer": "你的答案",
+    "answerPlaceholder": "在這裡寫下你的答案。",
+    "getFeedback": "取得回饋",
+    "feedbackTitle": "回饋",
+    "scoreLabel": "得分：{score}",
+    "tooShort": "請至少寫 {min} 個字元。",
+    "alreadySubmitted": "已經提交過了。",
+    "submitAnswer": "提交答案",
+    "doneLabel": "已完成",
+    "triesLeft": "{n, plural, one {還剩 # 次機會} other {還剩 # 次機會}}"
+  },
+  "PwaInstall": {
+    "title": "將 Primary Advantage 加入主畫面",
+    "iosShare": "點按 Safari 中的「分享」按鈕。",
+    "iosAdd": "點按「加入主畫面」。",
+    "iosConfirm": "點按「加入」。",
+    "install": "安裝",
+    "dismiss": "以後再說",
+    "offlineSign": "你已離線。應用程式需要網路連線。"
+  },
+  "PublicSite": {
+    "tagline": "Printed English workbooks and a reading app for grades 3–6",
+    "trialCta": "Contact us for a free trial",
+    "signIn": "Sign in"
+  },
+  "PublicHome": {
+    "meta": {
+      "title": "Primary Advantage | English workbooks and a reading app for grades 3–6",
+      "description": "Primary Advantage pairs printed English workbooks with a reading app for grades 3–6. CEFR-aligned levels, a game world around the reading, and tools for Thai teachers."
+    },
+    "hero": {
+      "title": "Primary Advantage",
+      "tagline": "Read the book in class. Continue the adventure in the app.",
+      "forSchools": "For schools",
+      "phoneAlt": "The Primary Advantage home page on a phone: the student's hero in the guild hall, with the day streak, XP, and level signs and the Class Quest banner"
+    },
+    "book": {
+      "title": "The book and the app",
+      "body": "Each Primary Advantage workbook has 14 lessons. The app has the same lessons, with audio, pictures, and practice. Students read the printed book in class and continue in the app.",
+      "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook",
+      "classBookAlt": "The class book on a phone: Primary Advantage Origins 2, with lesson 1 marked \"Now in class\"",
+      "classBookCaption": "In the app: the class book for Primary Advantage Origins 2"
+    },
+    "inside": {
+      "title": "Inside the app",
+      "intro": "Every page of the app is a place in Chibi Quest, a picture-book game world. The story page stays plain, so the reading comes first.",
+      "hero": {
+        "title": "Choose a hero",
+        "body": "Each student chooses a hero, then picks its skin, hair, eye, and clothes colors.",
+        "alt": "The hero shrine on desktop: the hero classes stand on stones, each with a name sign"
+      },
+      "shop": {
+        "title": "Earn GP, choose gear",
+        "body": "Students earn Guild Points (GP) when they read and practice. They spend GP on gear for their hero in the shop. GP cannot be bought with money.",
+        "alt": "The avatar shop on a phone: gear with GP prices, and the bracers marked \"Owned\" after the student buys them"
+      },
+      "quest": {
+        "title": "Class Quest: one boss, the whole class",
+        "body": "During the week, students meet reading goals to earn power-ups. Then the whole class fights one boss together on the classroom projector. There is no leaderboard and no ranking.",
+        "alt": "Class Quest on a phone: the Goblin King, the class damage meter, and the student's hero with five hearts"
+      },
+      "reedy": {
+        "title": "Reedy Preview: speaking practice",
+        "body": "After a lesson, students talk about the story with Reedy, a speaking coach, in English and Thai. Reedy is new, so it can make mistakes. Each student has a monthly time limit.",
+        "alt": "Reedy Preview on a phone: the student's Wizard hero at the campfire, the minutes meter, and the Preview label"
+      },
+      "wordAdventures": {
+        "title": "Word adventures",
+        "body": "Games that use the words and sentences each student saved from their reading. A 2D mode runs on older phones.",
+        "alt": "Word adventures on desktop: game cards for Rune Match, Labyrinth of the Goblin King, Potion Rush, and Dragon Flight"
+      }
+    },
+    "teachers": {
+      "title": "For teachers",
+      "body": "Designed for Thai teachers. Each lesson has a step-by-step plan in the Teacher manual, so you always know what to do next.",
+      "points": [
+        "Open each lesson for the class when you teach it from the workbook.",
+        "Show the lesson and the Class Quest battle on the classroom projector.",
+        "See each student's progress, lesson by lesson, and who needs help."
+      ],
+      "alt": "The class progress page on desktop: each student's lessons, with a mark on the students who need help"
+    },
+    "levels": {
+      "title": "Levels",
+      "body": "Primary Advantage is CEFR-aligned, with 15 levels from Pre-A1 (A0) to B2. Each CEFR band has three levels, so students move up in small steps."
+    },
+    "families": {
+      "title": "For families",
+      "body": "Children can also learn with the same books outside school. In Tutor Advantage, a local tutor teaches the class, and one class package uses one workbook.",
+      "link": "Find out about Tutor Advantage"
+    },
+    "contact": {
+      "title": "Talk to us",
+      "body": "Schools: ask us for a free trial or a demo. Families: ask us about Tutor Advantage classes.",
+      "line": "LINE Official Account",
+      "lineQrAlt": "QR code for the Reading Advantage LINE Official Account",
+      "facebook": "Facebook",
+      "phone": "Phone",
+      "email": "Email"
+    }
+  },
+  "PublicAbout": {
+    "meta": {
+      "title": "About us | Primary Advantage",
+      "description": "Reading Advantage (Thailand) is a curriculum publisher in Khon Kaen. We make Primary Advantage: printed English workbooks and a reading app for grades 3–6."
+    },
+    "title": "About us",
+    "who": {
+      "title": "Who we are",
+      "body": "Reading Advantage (Thailand) is a curriculum publisher in Khon Kaen. Phikul Phookathin and Daniel Bo started the company in January 2024. We make printed English workbooks and matching apps for Thai schools and families."
+    },
+    "product": {
+      "title": "What Primary Advantage is",
+      "body": "Primary Advantage is English reading for grades 3–6 (ages 8–11). Each workbook has 14 lessons with stories and informational texts, new words, questions, and writing, and the app has the same lessons. Every article, question, and word is being tagged to Mastery Advantage, our map of English skills. The method is extensive reading. Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)."
+    },
+    "schools": {
+      "title": "For schools: Blended Learning",
+      "body": "Schools use Primary Advantage through Blended Learning: printed workbooks and the app, with teacher training and step-by-step lesson plans. The lesson plans assume the teacher is a fluent Thai speaker, not a native English teacher."
+    },
+    "families": {
+      "title": "For families: Tutor Advantage",
+      "body": "Families can learn with the same books through Tutor Advantage. A local tutor teaches the class, and one class package uses one workbook.",
+      "link": "Find out about Tutor Advantage"
+    }
+  },
+  "PublicContact": {
+    "meta": {
+      "title": "Contact us | Primary Advantage",
+      "description": "Contact Reading Advantage about Primary Advantage: a free trial or a demo for your school, or Tutor Advantage classes for your child."
+    },
+    "title": "Contact us",
+    "intro": "Schools can ask for a free trial or a demo. Families can ask about Tutor Advantage classes. Send us a message on LINE or Facebook, call us, or send an email.",
+    "line": "LINE Official Account",
+    "lineQrAlt": "QR code for the Reading Advantage LINE Official Account",
+    "facebook": "Facebook",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "PublicBooks": {
+    "meta": {
+      "title": "Our books | Primary Advantage",
+      "description": "The Primary Advantage workbook series: Origins, Quest, and Adventure. Written and edited by the Reading Advantage team in Khon Kaen."
+    },
+    "title": "Our books",
+    "intro": "Primary Advantage is a series of printed English workbooks for grades 3–6. Each book has 14 lessons, and the app has the same lessons. The series follows the CEFR levels.",
+    "series": {
+      "origins": {
+        "title": "Primary Advantage Origins",
+        "body": "Pre-A1 (A0). First stories and short informational texts about school, family, friends, and the world around them. Primary Advantage Origins 2 and Primary Advantage Origins 3.1 are in print. Primary Advantage Origins 3.2 is next."
+      },
+      "quest": {
+        "title": "Primary Advantage Quest",
+        "body": "A1. Longer stories and texts, with new words in each lesson, for students who can read simple English. Primary Advantage Quest 4 is the first Quest book in preparation."
+      },
+      "adventure": {
+        "title": "Primary Advantage Adventure",
+        "body": "A2. Stories and informational texts for students who read with more confidence. The Adventure books are planned."
+      }
+    },
+    "team": {
+      "title": "Who makes the books",
+      "body": "The Reading Advantage team in Khon Kaen writes and edits every book. The founders lead the team: Phikul Phookathin (President; M.Ed., Educational Leadership) and Daniel Bo (Product Manager). Together they have 40 years of teaching experience."
+    },
+    "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook",
+    "covers": {
+      "origins2": "The cover of the Primary Advantage Origins 2 workbook",
+      "origins31": "The cover of the Primary Advantage Origins 3.1 workbook",
+      "origins32": "The cover of the Primary Advantage Origins 3.2 workbook",
+      "quest4": "The cover of the Primary Advantage Quest 4 workbook"
+    }
   }
 }

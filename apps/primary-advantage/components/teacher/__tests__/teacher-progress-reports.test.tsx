@@ -83,3 +83,54 @@ describe("TeacherProgressReports per-student view", () => {
     expect(screen.getByTestId("heatmap")).toHaveTextContent("dates");
   });
 });
+
+describe("TeacherProgressReports overview tiles (FR-3)", () => {
+  const NOW = new Date("2026-10-12T10:00:00.000Z");
+  const day = 24 * 60 * 60 * 1000;
+  const classrooms = [
+    { id: "c1", name: "Class A", classCode: "AAA111" },
+    { id: "c2", name: "Class B", classCode: "BBB222" },
+  ];
+  // The server sends `lastActivity` as an ISO string (JSON), or null for no activity.
+  const students = [
+    { id: "s1", display_name: "Ann", email: "", xp: 10, lastActivity: new Date(NOW.getTime() - 1 * day).toISOString(), classrooms: [{ id: "c1", name: "Class A" }] },
+    { id: "s2", display_name: "Ben", email: "", xp: 20, lastActivity: new Date(NOW.getTime() - 6 * day).toISOString(), classrooms: [{ id: "c1", name: "Class A" }] },
+    { id: "s3", display_name: "Cat", email: "", xp: 30, lastActivity: new Date(NOW.getTime() - 20 * day).toISOString(), classrooms: [{ id: "c2", name: "Class B" }] },
+    { id: "s4", display_name: "Dan", email: "", xp: 40, lastActivity: null, classrooms: [{ id: "c2", name: "Class B" }] },
+  ];
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(NOW);
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("shows four tiles with the active percent and the count", () => {
+    renderWithMessages(<TeacherProgressReports classrooms={classrooms} students={students as never} currentUser={{ id: "t1" } as never} />);
+
+    expect(screen.getAllByRole("listitem").filter((li) => li.className.includes("rounded-2xl"))).toHaveLength(4);
+    expect(screen.getByText(t.progress.activeThisWeek)).toBeInTheDocument();
+    expect(screen.getByText("50%")).toBeInTheDocument();
+    expect(screen.getByText("2 of 4 students")).toBeInTheDocument();
+  });
+
+  it("follows the search filter", () => {
+    renderWithMessages(<TeacherProgressReports classrooms={classrooms} students={students as never} currentUser={{ id: "t1" } as never} />);
+
+    fireEvent.change(screen.getByRole("searchbox"), { target: { value: "ann" } });
+
+    expect(screen.getByText("100%")).toBeInTheDocument();
+    expect(screen.getByText("1 of 1 students")).toBeInTheDocument();
+  });
+
+  it("follows the class filter", () => {
+    renderWithMessages(
+      <TeacherProgressReports classrooms={classrooms} students={students as never} currentUser={{ id: "t1" } as never} initialClassroomId="c2" />,
+    );
+
+    expect(screen.getByText("0%")).toBeInTheDocument();
+    expect(screen.getByText("0 of 2 students")).toBeInTheDocument();
+  });
+});

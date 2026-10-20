@@ -27,9 +27,10 @@ const isOpen = (card: GameCard): boolean => card.missing.vocabulary === 0 && car
  * and links to the reading page. The shared game host plays the chosen game and saves the run.
  * @param props.avatar The student's avatar from the server (null when the student has none); the host passes it to every game.
  * @param props.ownerKey The student's identity for the RPG rewards; absent for a guest.
+ * @param props.save False in Preview mode (staff): the run saves nothing.
  * @returns The game list, or the player while a game runs.
  */
-export function StoryGamesClient({ avatar = null, ownerKey }: { avatar?: LaunchAvatar | null; ownerKey?: string }) {
+export function StoryGamesClient({ avatar = null, ownerKey, save = true }: { avatar?: LaunchAvatar | null; ownerKey?: string; save?: boolean }) {
   const t = useTranslations("StoryGames");
   const locale = useLocale();
   const [input, setInput] = useState<PracticeInput | null>(null);
@@ -65,6 +66,7 @@ export function StoryGamesClient({ avatar = null, ownerKey }: { avatar?: LaunchA
             locale={locale}
             ownerKey={ownerKey}
             input={input}
+            save={save}
             avatar={avatar}
             setting={flat ? "phaser" : "auto"}
             className="flex h-full w-full flex-col"

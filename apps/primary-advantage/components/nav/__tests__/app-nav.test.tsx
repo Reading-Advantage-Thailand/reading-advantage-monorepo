@@ -69,13 +69,12 @@ describe("nav item lists per role", () => {
       "teachers",
       "studentsandclasses",
       "importdata",
-      "articlecreation",
+      "schoollicense",
     ]);
     expect(areaConfigs.system.sidebarNav?.map((item) => item.title)).toEqual([
       "systemdashboard",
       "schools",
       "licenses",
-      "testing",
     ]);
   });
 
@@ -177,5 +176,13 @@ describe("AppSidebar", () => {
     const sidebar = screen.getByRole("navigation", { name: en.AppShell.mainNavigation });
     expect(within(sidebar).getByRole("link", { name: en.Sidebar.userProfile })).toHaveAttribute("aria-current", "page");
     expect(within(sidebar).queryByRole("link", { name: en.Sidebar.schoolProfile })).not.toBeInTheDocument();
+  });
+
+  it("draws the staff menu as the wooden signpost, with no color utilities on the links", () => {
+    nav.pathname = "/teacher/dashboard";
+    renderWithMessages(<AppSidebar area="teacher" user={teacher} />);
+    const sidebar = screen.getByRole("navigation", { name: en.AppShell.mainNavigation });
+    expect(sidebar).toHaveClass("cq-signpost");
+    for (const link of within(sidebar).getAllByRole("link")) expect(link.className).not.toMatch(/text-muted-foreground|bg-sidebar-accent/);
   });
 });

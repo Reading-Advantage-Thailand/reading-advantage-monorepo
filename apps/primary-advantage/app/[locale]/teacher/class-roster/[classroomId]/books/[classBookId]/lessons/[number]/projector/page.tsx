@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ArrowLeftIcon } from "lucide-react";
 import { currentUser } from "@/lib/session";
 import { Link, redirect } from "@/i18n/navigation";
+import { ProjectorGamePanel } from "@/components/teacher/projector-game-panel";
 import { ProjectorView } from "@/components/teacher/projector-view";
 import { TEACHER_BACK_LINK } from "@/components/teacher/teacher-shell";
 import { loadTeacherLesson } from "../page";
@@ -21,7 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * Projector mode of a lesson (FR-11): the article in large type with paragraph focus, the
- * vocabulary, and the questions with an answer reveal.
+ * vocabulary, and the questions with an answer reveal, and the game panel for the lesson
+ * article. A teacher who does not manage the class book gets not found.
  * @param props.params The class, the class book, and the lesson number.
  * @returns The page.
  */
@@ -41,6 +43,7 @@ export default async function ProjectorPage({ params }: { params: Params }) {
         {t("lesson.backToLesson")}
       </Link>
       <h1 className="text-3xl font-bold md:text-4xl">{lesson.article?.title ?? `${t("lessonNumber", { number })} · ${lesson.lesson.title}`}</h1>
+      {lesson.lesson.articleId ? <ProjectorGamePanel articleId={lesson.lesson.articleId} classBookId={classBookId} lessonNumber={number} /> : null}
       <ProjectorView lesson={lesson} showThai={locale === "th"} />
     </div>
   );

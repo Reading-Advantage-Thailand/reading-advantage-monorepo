@@ -35,6 +35,8 @@ import { useAuth } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { SchoolAdmin } from "@/types";
+import type { licenses as licenseDomain } from "@reading-advantage/domain";
+import { LicensePanel } from "./license-panel";
 
 interface License {
   id: string;
@@ -74,6 +76,10 @@ interface SchoolDetailProps {
   onEdit: () => void;
   onDelete: () => void;
   onRefresh: () => void;
+  /** The license view for a school admin. Null or absent: no license part and no key. */
+  licenseView?: licenseDomain.SchoolLicenseViewOutput | null;
+  /** True when the caller may add and remove admins (`canManageSchool`: owner, school ADMIN, SYSTEM). */
+  canManageAdmins?: boolean;
 }
 
 export function SchoolDetail({
@@ -81,6 +87,8 @@ export function SchoolDetail({
   onEdit,
   onDelete,
   onRefresh,
+  licenseView,
+  canManageAdmins = false,
 }: SchoolDetailProps) {
   const currentUser = useCurrentUser();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -130,7 +138,7 @@ export function SchoolDetail({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to remove admin");
+        throw new Error(errorData.error || errorData.message || "Failed to remove admin");
       }
 
       toast.success(`${adminName} removed as admin successfully!`);
@@ -292,6 +300,8 @@ export function SchoolDetail({
         </CardContent>
       </Card>
 
+      {licenseView ? (
+      <>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -445,6 +455,9 @@ export function SchoolDetail({
           </CardContent>
         )}
       </Card>
+      <LicensePanel view={licenseView} />
+      </>
+      ) : null}
 
       {school.admins && school.admins.length > 0 && (
         <Card>
@@ -456,7 +469,7 @@ export function SchoolDetail({
               </CardTitle>
               <CardDescription>{t("schoolAdminDescription")}</CardDescription>
             </div>
-            {isOwner && (
+            {canManageAdmins && (
               <AddAdminDialog schoolId={school.id} onAdminAdded={onRefresh} />
             )}
           </CardHeader>
@@ -480,10 +493,10 @@ export function SchoolDetail({
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">Admin</Badge>
-                    {isOwner && admin.user.id === currentUser?.id && (
+                    {admin.user.id === school.ownerId && (
                       <Badge>Owner</Badge>
                     )}
-                    {isOwner && admin.user.id !== currentUser?.id && (
+                    {canManageAdmins && admin.user.id !== currentUser?.id && (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button

@@ -34,7 +34,7 @@ vi.mock("bcryptjs", () => ({
   hashSync: vi.fn().mockReturnValue("hashed"),
 }));
 
-import { getStudents } from "../studentModel";
+import { getStudents, getStudentStatistics } from "../studentModel";
 
 const systemAdmin = {
   id: "admin1",
@@ -134,5 +134,25 @@ describe("getStudents — distinct-student pagination (PGlite)", () => {
 
     expect(totalCount).toBe(3);
     expect(students).toHaveLength(3);
+  });
+
+  it("lists and counts migrated students that have no user_roles row (session role STUDENT)", async () => {
+    await h.db.execute(sql`INSERT INTO users (id, username, display_username, name, email, role, cefr_level, created_at)
+      VALUES ('m1','m1','m1','Migrated 1','m1@x.com','STUDENT','A1', now()),
+             ('m2','m2','m2','Migrated 2','m2@x.com','STUDENT','A1', now())`);
+
+    const { students, totalCount } = await getStudents({
+      page: 1, limit: 10, search: "", classroomId: "", cefrLevel: "", userWithRoles: systemAdmin,
+    });
+    expect(totalCount).toBe(2);
+    expect(students).toHaveLength(2);
+    const stats = await getStudentStatistics(systemAdmin);
+    expect(stats.totalStudents).toBe(2);
+    expect(stats.mostCommonLevel).toBe("A1");
+  });
+
+  it("returns zero statistics with the default level when the scope has no students", async () => {
+    const stats = await getStudentStatistics(systemAdmin);
+    expect(stats).toMatchObject({ totalStudents: 0, averageXp: 0, mostCommonLevel: "A0-" });
   });
 });

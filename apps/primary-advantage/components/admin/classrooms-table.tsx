@@ -53,17 +53,20 @@ import {
 import { cn } from "@/lib/utils";
 import { generateRandomClassCode } from "@/lib/utils";
 import { fetchJsonList } from "@/lib/fetch-json";
+import { ClassroomTeacherPicker } from "@/components/admin/classroom-teacher-picker";
 
 interface Classroom {
   id: string;
   name: string;
-  grade?: string;
+  /** The API returns the integer column; older rows can hold a string. */
+  grade?: string | number;
   classCode?: string;
   passwordStudents?: string;
   codeExpiresAt?: string;
   createdAt: string;
   updatedAt: string;
   schoolId?: string;
+  ownerId?: string;
   school?: {
     id: string;
     name: string;
@@ -76,14 +79,24 @@ interface Classroom {
       email: string;
     };
   }>;
+  /** Flat teacher rows as `getAllClassrooms` returns them. */
   teachers?: Array<{
     id: string;
-    user: {
-      id: string;
-      name: string;
-      email: string;
-    };
+    name: string;
+    email: string;
   }>;
+}
+
+/**
+ * Lists the grades of the grade select: 3 to 12, plus the current grade when it is outside that range.
+ * @param current The grade value that the class has now.
+ * @returns The grade numbers in ascending order.
+ */
+function gradeOptions(current: string): number[] {
+  const grades = Array.from({ length: 10 }, (_, i) => i + 3);
+  const n = Number(current);
+  if (Number.isInteger(n) && n >= 1 && n <= 12 && !grades.includes(n)) grades.unshift(n);
+  return grades.sort((x, y) => x - y);
 }
 
 export function ClassroomsTable() {
@@ -98,6 +111,11 @@ export function ClassroomsTable() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  const [teacherIds, setTeacherIds] = useState<string[]>([]);
+  const [initialTeacherIds, setInitialTeacherIds] = useState<string[]>([]);
+  const teacherIdsChanged =
+    teacherIds.length !== initialTeacherIds.length || teacherIds.some((id) => !initialTeacherIds.includes(id));
 
   // Form states
   const [formData, setFormData] = useState({
@@ -137,7 +155,7 @@ export function ClassroomsTable() {
     ? classrooms.filter(
         (classroom) =>
           classroom.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          classroom.grade?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          String(classroom.grade ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
           classroom.classCode?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : [];
@@ -148,7 +166,7 @@ export function ClassroomsTable() {
       const response = await fetch("/api/classroom", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ name: formData.name, grade: formData.grade, classCode: formData.classCode }),
       });
 
       if (!response.ok) {
@@ -183,12 +201,19 @@ export function ClassroomsTable() {
       const response = await fetch(`/api/classroom/${selectedClassroom.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          classroomName: formData.name,
+          grade: formData.grade || undefined,
+          // Send the teachers only after a change: an unchanged list can hold ids that the school rule refuses.
+          ...(teacherIdsChanged ? { teacherIds } : {}),
+        }),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to update classroom");
+        const failure = new Error(errorData.error || "Failed to update classroom") as Error & { code?: string };
+        failure.code = errorData.code;
+        throw failure;
       }
 
       setIsEditDialogOpen(false);
@@ -205,7 +230,8 @@ export function ClassroomsTable() {
       });
     } catch (error) {
       console.error("Error updating classroom:", error);
-      toast.error(t("toast.updateFailed"));
+      const refused = ["CROSS_SCHOOL_TEACHER", "NOT_A_TEACHER"].includes((error as { code?: string }).code ?? "");
+      toast.error(t(refused ? "toast.teachersRefused" : "toast.updateFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -243,10 +269,13 @@ export function ClassroomsTable() {
     setSelectedClassroom(classroom);
     setFormData({
       name: classroom.name,
-      grade: classroom.grade || "",
+      grade: classroom.grade ? String(classroom.grade) : "",
       classCode: classroom.classCode || "",
       passwordStudents: classroom.passwordStudents || "",
     });
+    const ids = classroom.teachers?.map((row) => row.id) ?? [];
+    setTeacherIds(ids);
+    setInitialTeacherIds(ids);
     setIsEditDialogOpen(true);
   };
 
@@ -512,26 +541,45 @@ export function ClassroomsTable() {
             </div>
             <div>
               <Label htmlFor="edit-grade">{t("grade")}</Label>
-              <Input
-                id="edit-grade"
+              <Select
                 value={formData.grade}
-                onChange={(e) =>
-                  setFormData({ ...formData, grade: e.target.value })
+                onValueChange={(value) =>
+                  setFormData({ ...formData, grade: value })
                 }
-                placeholder={t("gradePlaceholder")}
-              />
+              >
+                <SelectTrigger id="edit-grade" className="w-full">
+                  <SelectValue placeholder={t("selectGrade")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {gradeOptions(formData.grade).map((grade) => (
+                    <SelectItem key={grade} value={String(grade)}>
+                      {tc("fields.gradeItem", { grade })}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
-              <Label htmlFor="edit-passwordStudents">
-                {t("studentPassword")}
-              </Label>
+              <Label>{t("teachers")}</Label>
+              {selectedClassroom && (
+                <ClassroomTeacherPicker
+                  schoolId={selectedClassroom.schoolId}
+                  ownerId={selectedClassroom.ownerId}
+                  ownerName={selectedClassroom.teachers?.find((row) => row.id === selectedClassroom.ownerId)?.name}
+                  ownerEmail={selectedClassroom.teachers?.find((row) => row.id === selectedClassroom.ownerId)?.email}
+                  currentTeachers={selectedClassroom.teachers}
+                  selectedIds={teacherIds}
+                  onChange={setTeacherIds}
+                />
+              )}
+            </div>
+            <div>
+              <Label htmlFor="edit-classCode">{t("classCode")}</Label>
               <Input
-                id="edit-passwordStudents"
-                value={formData.passwordStudents}
-                onChange={(e) =>
-                  setFormData({ ...formData, passwordStudents: e.target.value })
-                }
-                placeholder={t("studentPasswordPlaceholder")}
+                id="edit-classCode"
+                value={formData.classCode}
+                disabled
+                readOnly
               />
             </div>
           </div>

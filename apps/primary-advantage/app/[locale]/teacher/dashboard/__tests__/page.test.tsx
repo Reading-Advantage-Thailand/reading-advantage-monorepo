@@ -5,26 +5,32 @@ import type { ReactNode } from "react";
 import { createFormatter, createTranslator } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithMessages, testMessages, type TestLocale } from "@/components/__tests__/helpers/render-with-messages";
+import { renderWithMessages, testMessages, type AnyTestLocale } from "@/components/__tests__/helpers/render-with-messages";
 
 const mocks = vi.hoisted(() => ({
-  locale: "en" as "en" | "th",
+  locale: "en" as AnyTestLocale,
   user: null as Record<string, unknown> | null,
   getTeacherHome: vi.fn(),
   redirect: vi.fn(),
+  getTeacherBookSlots: vi.fn(),
+  logError: vi.fn(),
+  logWarn: vi.fn(),
+  getTeacherQuestCard: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
-vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
+vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: mocks.getTeacherQuestCard }));
+vi.mock("@reading-advantage/domain/primary-books", () => ({ getTeacherBookSlots: mocks.getTeacherBookSlots }));
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: mocks.logWarn, info: vi.fn() } }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getTeacherHome: mocks.getTeacherHome, TEACHER_HOME_INACTIVE_DAYS: 7 }));
 vi.mock("next-intl/server", async () => {
-  const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
+  const { allMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
   return {
     getLocale: async () => mocks.locale,
     getTranslations: async (namespace?: string) =>
-      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale as TestLocale], namespace: namespace as never }),
-    getFormatter: async () => createFormatter({ locale: mocks.locale, timeZone: "Asia/Bangkok" }),
+      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale], namespace: namespace as never }),
+    getFormatter: async (opts?: { locale?: string }) => createFormatter({ locale: opts?.locale ?? mocks.locale, timeZone: "Asia/Bangkok" }),
   };
 });
 vi.mock("@/i18n/navigation", () => ({
@@ -63,13 +69,22 @@ const fullHome = {
     { studentId: "s3", name: "Cy", username: "p3a3", classroomId: C1, classroomName: "P3A", overdueCount: 0, lastActiveAt: new Date("2026-09-20T03:00:00Z") },
   ],
   needsHelpCount: 3,
+  activeStudents30d: 2,
+  engagementRate30d: 100,
+  averageLevel: 4.5,
+  activeToday: 1,
+  completedToday: 4,
+  classRows: [
+    { id: C1, name: "P3A", grade: 3, students: 2, active7d: 2, activeRate7d: 100, averageLevel: 4.5, xp7d: 300, xpPrevious7d: 200, trend: "up", status: "onTrack" },
+    { id: C2, name: "P4B", grade: null, students: 0, active7d: 0, activeRate7d: 0, averageLevel: null, xp7d: 0, xpPrevious7d: 0, trend: "flat", status: "noStudents" },
+  ],
 };
 
 /**
  * Renders the dashboard through the real message tree.
  * @param locale The UI locale.
  */
-async function renderDashboard(locale: TestLocale = "en") {
+async function renderDashboard(locale: AnyTestLocale = "en") {
   mocks.locale = locale;
   renderWithMessages((await TeacherDashboardPage()) as React.ReactElement, { locale });
 }
@@ -80,6 +95,11 @@ beforeEach(() => {
   vi.setSystemTime(NOW);
   mocks.user = { ...teacher };
   mocks.getTeacherHome.mockResolvedValue(fullHome);
+  mocks.getTeacherQuestCard.mockResolvedValue(null);
+  mocks.getTeacherBookSlots.mockResolvedValue([
+    { classroomId: C1, classroomName: "P3A", classBookId: "cb1", bookName: "Origins 3.2", currentLesson: 3, lessonCount: 14, lessonTitle: "Sea Park", nextStep: 5, nextStepPeriod: 2 },
+    { classroomId: C2, classroomName: "P4B", classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null },
+  ]);
 });
 afterEach(() => {
   cleanup();
@@ -90,22 +110,72 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
   const en = testMessages.en.TeacherHome;
   const ui = testMessages.en.TeacherUi;
 
-  it("shows the summary numbers and every class with its student count and links", async () => {
+  it("logs a load failure and rethrows it for the error boundary", async () => {
+    const failure = new Error("db down");
+    mocks.getTeacherHome.mockRejectedValue(failure);
+    await expect(TeacherDashboardPage()).rejects.toBe(failure);
+    expect(mocks.logError).toHaveBeenCalledWith("teacher_home.load_failed", { userId: "t1", error: failure });
+  });
+
+  it("logs a warning when a quest card fails and still shows the page", async () => {
+    const failure = new Error("quest down");
+    mocks.getTeacherQuestCard.mockRejectedValue(failure);
+    await renderDashboard();
+    expect(mocks.logWarn).toHaveBeenCalledWith("teacher_home.quest_failed", { userId: "t1", classroomId: C1, error: failure });
+    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+
+  it("writes the last active date in the Chinese format for cn", async () => {
+    await renderDashboard("cn");
+    expect(screen.getByText(/9月20日/)).toBeInTheDocument();
+  });
+
+  it("shows eight numbers with their labels in the summary", async () => {
     await renderDashboard();
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Kru Ann");
     const summary = screen.getByRole("region", { name: en.summary });
-    expect(within(summary).getByText(en.stats.classes).parentElement).toHaveTextContent("2");
-    expect(within(summary).getByText(en.stats.openAssignments).parentElement).toHaveTextContent("3");
-    expect(within(summary).getByText(en.stats.needsHelp).parentElement).toHaveTextContent("3");
+    const value = (label: string) => within(summary).getByText(label).parentElement;
+    expect(value(en.stats.classes)).toHaveTextContent("2");
+    expect(value(en.stats.students)).toHaveTextContent("2");
+    expect(value(en.stats.activeStudents)).toHaveTextContent("2");
+    expect(value(en.stats.averageLevel)).toHaveTextContent("4.5");
+    expect(value(en.stats.activeToday)).toHaveTextContent("1");
+    expect(value(en.stats.completedToday)).toHaveTextContent("4");
+    expect(value(en.stats.openAssignments)).toHaveTextContent("3");
+    expect(value(en.stats.needsHelp)).toHaveTextContent("3");
+  });
 
+  it("writes the active number as n of m (p %)", async () => {
+    mocks.getTeacherHome.mockResolvedValue({ ...fullHome, studentCount: 24, activeStudents30d: 21, engagementRate30d: 88 });
+    await renderDashboard();
+    expect(within(screen.getByRole("region", { name: en.summary })).getByText("21 of 24 (88%)")).toBeInTheDocument();
+  });
+
+  it("labels the average level as Average level, never CEFR", async () => {
+    await renderDashboard();
+    const summary = screen.getByRole("region", { name: en.summary });
+    expect(within(summary).getByText("Average level")).toBeInTheDocument();
+    expect(summary).not.toHaveTextContent(/CEFR/i);
+  });
+
+  it("shows a dash for the average level and a hint when there is no student", async () => {
+    mocks.getTeacherHome.mockResolvedValue({ ...fullHome, studentCount: 0, activeStudents30d: 0, engagementRate30d: 0, averageLevel: null, activeToday: 0 });
+    await renderDashboard();
+    const summary = screen.getByRole("region", { name: en.summary });
+    expect(within(summary).getByText(en.stats.averageLevel).parentElement).toHaveTextContent("—");
+    expect(within(summary).getAllByText(en.stats.noStudentsYet).length).toBeGreaterThan(0);
+  });
+
+  it("shows every class once in the class table, with links and Start class", async () => {
+    await renderDashboard();
     const classes = screen.getByRole("region", { name: en.classes.heading });
-    expect(within(classes).getByRole("link", { name: "P3A" })).toHaveAttribute("href", `/teacher/class-roster/${C1}`);
-    expect(within(classes).getByText("2 students")).toBeInTheDocument();
-    expect(within(classes).getByText("Grade 3")).toBeInTheDocument();
-    expect(within(classes).getByText("No students")).toBeInTheDocument();
-    // "Start class" opens the class page at the class sign-in panel (Lane B owns the start logic).
-    expect(within(classes).getByRole("link", { name: "Start class P3A" })).toHaveAttribute("href", `/teacher/class-roster/${C1}#class-login`);
-    expect(within(classes).getByRole("link", { name: "Start class P4B" })).toHaveAttribute("href", `/teacher/class-roster/${C2}#class-login`);
+    const table = within(classes).getByRole("table", { hidden: true });
+    expect(within(table).getByRole("link", { name: "P3A", hidden: true })).toHaveAttribute("href", `/teacher/class-roster/${C1}`);
+    expect(within(table).getByRole("link", { name: "Start class P3A", hidden: true })).toHaveAttribute("href", `/teacher/class-roster/${C1}#class-login`);
+    expect(within(table).getByRole("link", { name: "Start class P4B", hidden: true })).toHaveAttribute("href", `/teacher/class-roster/${C2}#class-login`);
+    // One class list only: the card list of the old home is gone (FR-12).
+    expect(screen.getAllByRole("region", { name: en.classes.heading })).toHaveLength(1);
+    expect(within(classes).getAllByRole("list", { hidden: true })).toHaveLength(1);
   });
 
   it("lists open assignments with Bangkok due chips and progress", async () => {
@@ -131,10 +201,20 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
     expect(within(help).getByText(/Last active Sep 20/)).toBeInTheDocument();
   });
 
-  it("leaves the class book slot for the teacher-books track", async () => {
+  it("shows the class book slot with the next lesson and an Assign a book row", async () => {
     await renderDashboard();
-    const book = screen.getByRole("region", { name: ui.classBook.title });
-    expect(within(book).getByText(ui.classBook.hint)).toBeInTheDocument();
+    const book = screen.getByRole("region", { name: ui.classBook.slotTitle });
+    expect(within(book).getByRole("link", { name: /Origins 3.2/ })).toHaveAttribute("href", `/teacher/class-roster/${C1}/books/cb1/lessons/3`);
+    expect(within(book).getByRole("link", { name: new RegExp(ui.classBook.assignRow) })).toHaveAttribute("href", `/teacher/class-roster/${C2}#class-book`);
+  });
+
+  it("shows the slot error and logs once when the slots fail to load", async () => {
+    mocks.getTeacherBookSlots.mockRejectedValue(new Error("db down"));
+    await renderDashboard();
+    const book = screen.getByRole("region", { name: ui.classBook.slotTitle });
+    expect(within(book).getByRole("alert")).toHaveTextContent(ui.classBook.slotError);
+    expect(mocks.logError).toHaveBeenCalledTimes(1);
+    expect(mocks.logError).toHaveBeenCalledWith("class_books.slot_failed", expect.objectContaining({ userId: "t1" }));
   });
 
   it("shows empty states with a next step", async () => {
@@ -145,6 +225,12 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
       openAssignmentCount: 0,
       needsHelp: [],
       needsHelpCount: 0,
+      activeStudents30d: 0,
+      engagementRate30d: 0,
+      averageLevel: null,
+      activeToday: 0,
+      completedToday: 0,
+      classRows: [],
     });
     await renderDashboard();
     const classes = screen.getByRole("region", { name: en.classes.heading });
@@ -165,15 +251,17 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
     await renderDashboard("th");
     const th = testMessages.th.TeacherHome;
     expect(screen.getByRole("region", { name: th.classes.heading })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "เริ่มชั้นเรียน P3A" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "เริ่มชั้นเรียน P3A", hidden: true }).length).toBeGreaterThan(0);
     expect(screen.getByText(testMessages.th.TeacherUi.due.overdue)).toBeInTheDocument();
   });
 
   it("gives every action a tap target of at least 44 px", async () => {
     await renderDashboard();
-    for (const name of ["Start class P3A", en.assignments.all, "Frogs", "Ann", "P3A"]) {
-      expect(screen.getByRole("link", { name })).toHaveClass("min-h-11");
+    for (const name of [en.assignments.all, "Frogs", "Ann"]) {
+      expect(screen.getByRole("link", { name }).className).toMatch(/min-h-1[12]\b/);
     }
+    const classes = screen.getByRole("region", { name: en.classes.heading });
+    expect(within(classes).getAllByRole("link", { name: "P3A", hidden: true })[0]).toHaveClass("min-h-12");
   });
 
   it("reads the dashboard for the signed-in teacher", async () => {

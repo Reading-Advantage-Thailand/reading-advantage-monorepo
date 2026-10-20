@@ -70,6 +70,7 @@ export async function GET(request: NextRequest) {
       id: users.id,
       name: users.name,
       email: users.email,
+      role: users.role,
     })
       .from(users)
       .where(and(...scopeClauses))
@@ -94,9 +95,10 @@ export async function GET(request: NextRequest) {
       rolesByUserId.get(ur.userId)!.push({ role: { name: ur.roleName } });
     }
 
-    const usersWithRoles = matchedUsers.map((u) => ({
+    // Migrated users have no user_roles rows; users.role is the truth then.
+    const usersWithRoles = matchedUsers.map(({ role, ...u }) => ({
       ...u,
-      roles: rolesByUserId.get(u.id) || [],
+      roles: rolesByUserId.get(u.id) ?? [{ role: { name: String(role).toLowerCase() } }],
     }));
 
     return NextResponse.json(usersWithRoles);

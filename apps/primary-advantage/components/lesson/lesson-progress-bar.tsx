@@ -7,7 +7,7 @@ import {
   useCallback,
   useContext,
 } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { RpgButton, rpgButton } from "@/components/rpg/chrome";
 import { ArrowLeft, MicIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
@@ -23,7 +23,7 @@ import {
   TaskMultipleChoice,
   TaskShortAnswer,
   TaskVocabularyFlashcards,
-  TaskVocabularyMatching,
+  TaskVocabularyGame,
   TaskSentenceFlashcards,
   TaskSentenceActivities,
   TaskLanguageQuestions,
@@ -32,6 +32,11 @@ import {
 
 import { Article, AssignmentStudent, Classroom } from "@/types";
 import { saveArticleToFlashcard } from "@/actions/flashcard";
+import { usePreviewSave } from "@/components/student/student-view-provider";
+import {
+  getLessonProgressForTask,
+  getLessonTaskFromProgress,
+} from "@/lib/lesson-progress";
 
 export interface LessonAssignmentProps {
   id: string;
@@ -99,6 +104,8 @@ export default function LessonProgressBar({
   const t = useTranslations("Lesson");
   const tReedy = useTranslations("Reedy");
   const tError = useTranslations("Error");
+  // Preview mode (staff) reads no progress row and writes nothing; the steps move on screen only.
+  const { isPreview } = usePreviewSave();
   const article = (
     source === "assignment" ? assignment?.article : articleProp
   ) as Article | null;
@@ -113,6 +120,8 @@ export default function LessonProgressBar({
   const [saveError, setSaveError] = useState<"start" | number | null>(null);
   // The step the student tried to open while the class had not reached it yet.
   const [lockedStep, setLockedStep] = useState<number | null>(null);
+  // The attempt number of this session: 1 until the student starts the lesson again from the summary.
+  const [attemptNumber, setAttemptNumber] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [nextPhaseContent, setNextPhaseContent] = useState<number | null>(null);
@@ -153,17 +162,13 @@ export default function LessonProgressBar({
         if (response.ok) {
           const data = await response.json();
 
-          // Ensure we get a valid phase number
-          const taskWidth = 100 / 14;
-          const taskNumber = Math.ceil(
-            data.userLessonProgress.progress / taskWidth,
+          const taskNumber = getLessonTaskFromProgress(
+            data.userLessonProgress.progress,
           );
 
           // Update phase on initial load
           if (isMounted) {
-            setCurrentTask(
-              source === "article" && taskNumber === 0 ? 1 : taskNumber,
-            );
+            setCurrentTask(taskNumber);
             setTimer(data.userLessonProgress.timeSpent as number);
             // Pause timer if on lesson summary
             if (taskNumber === 14) {
@@ -192,7 +197,10 @@ export default function LessonProgressBar({
     };
 
     // Only fetch on initial load - don't refetch after transitions
-    if (!initialLoadComplete) {
+    if (!initialLoadComplete && isPreview) {
+      setCurrentTask(1);
+      setInitialLoadComplete(true);
+    } else if (!initialLoadComplete) {
       timeoutId = setTimeout(() => {
         fetchCurrentPhase();
       }, 100); // Quick initial load
@@ -202,7 +210,7 @@ export default function LessonProgressBar({
       isMounted = false;
       clearTimeout(timeoutId);
     };
-  }, [initialLoadComplete, progressBase, setTimer, setPaused, source]);
+  }, [initialLoadComplete, progressBase, setTimer, setPaused, source, isPreview]);
 
   const startLesson = async () => {
     try {
@@ -221,15 +229,17 @@ export default function LessonProgressBar({
 
       setPhaseLoading(true);
 
-      const response = await fetch(`${progressBase}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          articleId: resolvedArticleId,
-          progress: Math.round((1 / 14) * 100),
-          timeSpent: 0,
-        }),
-      });
+      const response = isPreview
+        ? ({ ok: true } as Response)
+        : await fetch(`${progressBase}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              articleId: resolvedArticleId,
+              progress: getLessonProgressForTask(2),
+              timeSpent: 0,
+            }),
+          });
 
       // Only update local state if API call succeeds
       if (response.ok) {
@@ -301,7 +311,7 @@ export default function LessonProgressBar({
 
       setPhaseLoading(true);
 
-      if (newTask === 7) {
+      if (newTask === 7 && !isPreview) {
         await saveArticleToFlashcard(resolvedArticleId as string);
       }
 
@@ -309,15 +319,17 @@ export default function LessonProgressBar({
         setPaused(true);
       }
 
-      const response = await fetch(`${progressBase}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          articleId: resolvedArticleId,
-          progress: Math.round((newTask / 14) * 100),
-          timeSpent: timer,
-        }),
-      });
+      const response = isPreview
+        ? ({ ok: true } as Response)
+        : await fetch(`${progressBase}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              articleId: resolvedArticleId,
+              progress: getLessonProgressForTask(newTask),
+              timeSpent: timer,
+            }),
+          });
 
       if (response.ok) {
         setCurrentTask(newTask);
@@ -424,7 +436,7 @@ export default function LessonProgressBar({
         );
       case 10:
         return (
-          <TaskVocabularyMatching articleId={resolvedArticleId as string} />
+          <TaskVocabularyGame articleId={resolvedArticleId as string} save={!isPreview} />
         );
       case 11:
         return (
@@ -432,7 +444,7 @@ export default function LessonProgressBar({
         );
       case 12:
         return (
-          <TaskSentenceActivities articleId={resolvedArticleId as string} />
+          <TaskSentenceActivities articleId={resolvedArticleId as string} save={!isPreview} />
         );
       case 13:
         return (
@@ -444,12 +456,15 @@ export default function LessonProgressBar({
             <TaskLessonSummary
               article={article as Article}
               timerSpent={timer}
+              assignmentId={source === "assignment" ? (assignment?.id ?? null) : null}
+              attemptNumber={attemptNumber}
+              onRestarted={onRestarted}
             />
             {/* Reedy entry at the end of the flow (reedy FR-4). */}
             <Link
               href={`/student/reedy?articleId=${resolvedArticleId}`}
               data-testid="reedy-entry"
-              className={cn(buttonVariants({ variant: "outline" }), "mt-4 min-h-12 w-full rounded-xl text-base")}
+              className={cn(rpgButton("wood"), "mt-4 min-h-12 w-full")}
             >
               <MicIcon aria-hidden="true" className="size-5" />
               {tReedy("lessonEntry")}
@@ -508,6 +523,16 @@ export default function LessonProgressBar({
     }
   };
 
+  /** Opens task 1 with a fresh timer after the student started the lesson again. */
+  const onRestarted = (newAttempt: number | null) => {
+    if (newAttempt !== null) setAttemptNumber(newAttempt);
+    setSaveError(null);
+    setLockedStep(null);
+    setTimer(0);
+    setPaused(false);
+    setCurrentTask(1);
+  };
+
   const skipTask = async (Task: number) => {
     setCurrentTask(Task + 1);
   };
@@ -538,7 +563,7 @@ export default function LessonProgressBar({
       {/* Main Content Area */}
       <div className="min-w-0 xl:col-span-3">
         {phaseLoading && !fadeOut ? (
-          <div aria-busy="true" className="bg-card flex flex-col gap-4 rounded-2xl border p-6 shadow-sm">
+          <div aria-busy="true" className="cq-panel flex flex-col gap-4 p-6">
             <ShimmerSkeleton className="h-8 w-1/2" />
             <ShimmerSkeleton className="h-4 w-full" />
             <ShimmerSkeleton className="h-4 w-3/4" />
@@ -557,19 +582,19 @@ export default function LessonProgressBar({
             </div>
 
             {lockedStep !== null ? (
-              <p role="status" className="bg-muted text-muted-foreground rounded-xl border px-4 py-3 text-sm">
+              <p role="status" className="cq-panel px-4 py-3 text-sm font-semibold">
                 {t("lockedStep", { step: lockedStep })}
               </p>
             ) : null}
             {saveError !== null ? (
               <ErrorState
-                className="bg-card border"
+                className="cq-panel"
                 title={t("saveError")}
                 description={t("saveErrorHint")}
                 action={
-                  <Button type="button" className="min-h-12 px-6" onClick={retrySave}>
+                  <RpgButton tone="gold" className="px-6" onClick={retrySave}>
                     {tError("retry")}
-                  </Button>
+                  </RpgButton>
                 }
               />
             ) : null}
@@ -577,10 +602,10 @@ export default function LessonProgressBar({
             {/* Navigation Buttons */}
             <div className={cn("transition-opacity duration-300", fadeOut ? "pointer-events-none opacity-50" : "opacity-100")}>
               {currentTask === 1 && (
-                <div className="bg-card rounded-2xl border p-4 shadow-sm">
-                  <Button
-                    size="lg"
-                    className="min-h-12 w-full rounded-xl text-base font-semibold"
+                <div className="cq-panel p-4">
+                  <RpgButton
+                    tone="gold"
+                    className="w-full"
                     onClick={startLesson}
                     disabled={busy}
                   >
@@ -595,31 +620,27 @@ export default function LessonProgressBar({
                         <ArrowLeft className="size-5 rotate-180" aria-hidden="true" />
                       </>
                     )}
-                  </Button>
+                  </RpgButton>
                 </div>
               )}
 
               {currentTask < 14 && currentTask > 1 && (
-                <div className="bg-card flex gap-3 rounded-2xl border p-4 shadow-sm">
+                <div className="cq-panel flex flex-row gap-3 p-4">
                   {/* Back Button - Only show if phase > 2 */}
                   {currentTask > 2 && (
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="min-h-12 flex-1 rounded-xl text-base font-semibold"
+                    <RpgButton
+                      className="flex-1"
                       onClick={previousTask}
                       disabled={busy}
                     >
                       <ArrowLeft className="size-5" aria-hidden="true" />
                       {t("actions.previousTask")}
-                    </Button>
+                    </RpgButton>
                   )}
 
                   {/* Next Button */}
-                  <Button
-                    size="lg"
+                  <RpgButton
                     className={cn(
-                      "min-h-12 rounded-xl text-base font-semibold",
                       currentTask > 2 ? "flex-1" : "w-full",
                       shakeButton && "animate-shake",
                     )}
@@ -637,7 +658,7 @@ export default function LessonProgressBar({
                         <ArrowLeft className="size-5 rotate-180" aria-hidden="true" />
                       </>
                     )}
-                  </Button>
+                  </RpgButton>
                 </div>
               )}
             </div>

@@ -1,4 +1,5 @@
 import { STAFF_ROLES } from "@/lib/permissions";
+import { roleSql } from "@/server/utils/role-sql";
 import {
   db,
   eq,
@@ -7,6 +8,7 @@ import {
   asc,
   inArray,
   or,
+  max,
 } from '@reading-advantage/db';
 import {
   classrooms,
@@ -16,8 +18,8 @@ import {
   userRoles,
   roles,
   schools,
-  schoolAdmins,
   userActivity,
+  xpLogs,
 } from '@reading-advantage/db';
 import { NextResponse } from "next/server";
 import { addDays } from "date-fns";
@@ -457,6 +459,7 @@ export const getAllClassrooms = async (actor: ClassroomActor) => {
       createdAt: classrooms.createdAt,
       updatedAt: classrooms.updatedAt,
       schoolId: classrooms.schoolId,
+      ownerId: classrooms.teacherId,
       schoolName: schools.name,
     })
       .from(classrooms)
@@ -493,6 +496,7 @@ export const getAllClassrooms = async (actor: ClassroomActor) => {
           createdAt: classroom.createdAt,
           updatedAt: classroom.updatedAt,
           schoolId: classroom.schoolId,
+          ownerId: classroom.ownerId,
           school: {
             id: classroom.schoolId,
             name: classroom.schoolName,
@@ -523,6 +527,7 @@ export const getAllClassrooms = async (actor: ClassroomActor) => {
  * @param id The classroom identifier.
  * @param data The classroom changes.
  * @param actor The authenticated actor.
+ * @param executor The database or a transaction handle (default: the database).
  * @returns The updated classroom, or null when access is denied.
  */
 export const updateClassroom = async (
@@ -533,12 +538,13 @@ export const updateClassroom = async (
     description?: string;
   },
   actor: ClassroomActor,
+  executor: Pick<typeof db, "select" | "update"> = db,
 ) => {
   try {
     const accessibleClassroom = await getAccessibleClassroom(id, actor);
     if (!accessibleClassroom) return null;
 
-    const [updatedClassroom] = await db.update(classrooms)
+    const [updatedClassroom] = await executor.update(classrooms)
       .set({
         name: data.name,
         grade: data.grade ? parseInt(data.grade) : undefined,
@@ -559,7 +565,7 @@ export const updateClassroom = async (
     }
 
     // Stitch teachers + students for the include shape.
-    const teacherRows = await db.select({
+    const teacherRows = await executor.select({
       id: classroomTeachers.id,
       userId: users.id,
       name: users.name,
@@ -569,7 +575,7 @@ export const updateClassroom = async (
       .innerJoin(users, eq(users.id, classroomTeachers.teacherId))
       .where(eq(classroomTeachers.classroomId, id));
 
-    const studentRows = await db.select({
+    const studentRows = await executor.select({
       id: classroomStudents.id,
       studentId: users.id,
       name: users.name,
@@ -669,6 +675,54 @@ export const deleteClassroom = async (
   }
 };
 
+/** Student ids in one `IN (...)` list of the last-activity queries. */
+const ACTIVITY_ID_CHUNK = 5000;
+
+/**
+ * Finds the newest activity time of each student: the newest `created_at` of the student's
+ * `user_activity` and `xp_logs` rows. Uses one grouped query for each table and each chunk of 5000 ids.
+ * @param studentIds The ids of the students of one list.
+ * @returns A map from student id to the newest time. A student with no row has no entry.
+ */
+export const getLastActivityByStudent = async (
+  studentIds: string[],
+): Promise<Map<string, Date>> => {
+  const latest = new Map<string, Date>();
+  // Each query gets at most ACTIVITY_ID_CHUNK ids, so a big system stays under the Postgres
+  // limit of 65535 bind parameters.
+  for (let start = 0; start < studentIds.length; start += ACTIVITY_ID_CHUNK) {
+    const ids = studentIds.slice(start, start + ACTIVITY_ID_CHUNK);
+    const [activityRows, xpRows] = await Promise.all([
+      db.select({ userId: userActivity.userId, last: max(userActivity.createdAt) })
+        .from(userActivity)
+        .where(inArray(userActivity.userId, ids))
+        .groupBy(userActivity.userId),
+      db.select({ userId: xpLogs.userId, last: max(xpLogs.createdAt) })
+        .from(xpLogs)
+        .where(inArray(xpLogs.userId, ids))
+        .groupBy(xpLogs.userId),
+    ]);
+    for (const row of [...activityRows, ...xpRows]) {
+      if (!row.last) continue;
+      const current = latest.get(row.userId);
+      if (!current || row.last > current) latest.set(row.userId, row.last);
+    }
+  }
+  return latest;
+};
+
+/**
+ * Adds `lastActivity` to each student of a list.
+ * @param students The students, each with an `id`.
+ * @returns The same students with `lastActivity` (a date, or null when the student has no activity).
+ */
+const withLastActivity = async <T extends { id: string }>(
+  students: T[],
+): Promise<Array<T & { lastActivity: Date | null }>> => {
+  const latest = await getLastActivityByStudent(students.map((student) => student.id));
+  return students.map((student) => ({ ...student, lastActivity: latest.get(student.id) ?? null }));
+};
+
 /**
  * Gets students from a teacher's classrooms in one school.
  * @param teacherId The teacher identifier.
@@ -732,9 +786,7 @@ export const getAllStudentsByTeacher = async (
     });
 
     // Convert map to array
-    const students = Array.from(studentMap.values());
-
-    return students;
+    return await withLastActivity(Array.from(studentMap.values()));
   } catch (error) {
     console.error("Error fetching students by teacher:", error);
     throw new Error("Failed to fetch students");
@@ -743,7 +795,8 @@ export const getAllStudentsByTeacher = async (
 
 /**
  * Gets students for a school admin in the authorized school.
- * @param adminId The admin identifier.
+ * The caller (controller) checks the ADMIN role and the school. A `school_admins` row is not needed.
+ * @param adminId The admin identifier (kept for the call signature).
  * @param schoolId The authorized school identifier.
  * @returns The school's students.
  */
@@ -752,20 +805,6 @@ export const getAllStudentsByAdmin = async (
   schoolId: string,
 ) => {
   try {
-    const [schoolAdmin] = await db.select({ schoolId: schoolAdmins.schoolId })
-      .from(schoolAdmins)
-      .where(
-        and(
-          eq(schoolAdmins.userId, adminId),
-          eq(schoolAdmins.schoolId, schoolId),
-        ),
-      )
-      .limit(1);
-
-    if (!schoolAdmin) {
-      return [];
-    }
-
     // Get all classrooms for the school
     const adminClassrooms = await db.select({
       classroomId: classrooms.id,
@@ -782,7 +821,7 @@ export const getAllStudentsByAdmin = async (
       .from(classrooms)
       .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
       .leftJoin(users, eq(users.id, classroomStudents.studentId))
-      .where(eq(classrooms.schoolId, schoolAdmin.schoolId));
+      .where(eq(classrooms.schoolId, schoolId));
 
     // Extract unique students across all classrooms
     const studentMap = new Map();
@@ -811,9 +850,7 @@ export const getAllStudentsByAdmin = async (
     });
 
     // Convert map to array
-    const students = Array.from(studentMap.values());
-
-    return students;
+    return await withLastActivity(Array.from(studentMap.values()));
   } catch (error) {
     console.error("Error fetching students by teacher:", error);
     throw new Error("Failed to fetch students");
@@ -838,11 +875,9 @@ export const getAllStudentsInSystem = async () => {
       classroomName: classrooms.name,
     })
       .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .leftJoin(classroomStudents, eq(classroomStudents.studentId, users.id))
       .leftJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
-      .where(eq(roles.name, "student"))
+      .where(roleSql("student"))
       .orderBy(desc(users.createdAt));
 
     // For each (student, classroom) row, fetch the classroom's teachers.
@@ -904,7 +939,7 @@ export const getAllStudentsInSystem = async () => {
       }
     }
 
-    return Array.from(groupedByStudent.values());
+    return await withLastActivity(Array.from(groupedByStudent.values()));
   } catch (error) {
     console.error("Error fetching all students in system:", error);
     throw new Error("Failed to fetch students");

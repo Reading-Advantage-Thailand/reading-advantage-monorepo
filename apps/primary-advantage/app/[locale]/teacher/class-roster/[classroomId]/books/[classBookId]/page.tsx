@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { intlFormatter } from "@/lib/intl-locale";
 import { ArrowLeftIcon, BarChart3Icon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getClassBookPacing, type ClassBookPacing } from "@reading-advantage/domain/primary-books";
@@ -12,6 +13,13 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { LessonActions, StepChecklist } from "@/components/teacher/class-book-pacing-controls";
 import { TEACHER_ACTION, TEACHER_BACK_LINK, TEACHER_CARD, TeacherPageHeader } from "@/components/teacher/teacher-shell";
+
+/**
+ * Counts the runs of a lesson that were taught: the earlier runs with a taught time, and the current run when taught.
+ * @param lesson The pacing lesson.
+ * @returns The count.
+ */
+const taughtTimes = (lesson: ClassBookPacing["lessons"][number]): number => lesson.earlierRuns.filter((run) => run.taughtAt).length + (lesson.taughtAt ? 1 : 0);
 
 type Params = Promise<{ classroomId: string; classBookId: string }>;
 
@@ -50,7 +58,7 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
   const pacing = await loadPacing(user, classBookId);
   if (!pacing) notFound();
-  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook"), getFormatter()]);
+  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook"), getLocale().then(intlFormatter)]);
   const { classBook, lessons } = pacing;
   const current = lessons.find((lesson) => lesson.current);
   const next = pacing.nextStep ? WORKBOOK_STEPS.find((step) => step.step === pacing.nextStep) : null;
@@ -61,7 +69,7 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
         title={classBook.bookName}
         description={`${t("pointer", { current: classBook.currentLesson, total: classBook.lessonCount })} · ${t("taughtCount", { count: classBook.taughtCount })}`}
         back={
-          <Link href={`/teacher/class-roster/${classroomId}`} className={TEACHER_BACK_LINK}>
+          <Link href={`/teacher/class-roster/${classroomId}`} className={cn(TEACHER_BACK_LINK, "min-h-12")}>
             <ArrowLeftIcon aria-hidden="true" />
             {t("backToClass")}
           </Link>
@@ -110,15 +118,31 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
                   </span>
                   <span className="text-muted-foreground text-sm">
                     {lesson.taughtAt ? t("taughtOn", { date: format.dateTime(lesson.taughtAt, { day: "numeric", month: "short" }) }) : t("notTaught")}
+                    {lesson.earlierRuns.length > 0 && taughtTimes(lesson) >= 1 ? ` · ${t("taughtTimes", { count: taughtTimes(lesson) })}` : ""}
                     {lesson.approved ? "" : ` · ${t("draft")}`}
                   </span>
+                  {lesson.earlierRuns.length ? (
+                    <details className="text-muted-foreground mt-1 text-sm">
+                      <summary className="cursor-pointer">{t("earlierRuns", { count: lesson.earlierRuns.length })}</summary>
+                      <ul className="mt-1 flex flex-col gap-0.5">
+                        {lesson.earlierRuns.map((run) => (
+                          <li key={run.runNumber}>
+                            {run.taughtAt
+                              ? t("earlierRun", { number: run.runNumber, date: format.dateTime(run.taughtAt, { day: "numeric", month: "short" }), done: run.stepsDone.length, total: WORKBOOK_STEPS.length })
+                              : t("earlierRunNoDate", { number: run.runNumber, done: run.stepsDone.length, total: WORKBOOK_STEPS.length })}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   {lesson.current ? <StatusChip tone="info">{t("current")}</StatusChip> : null}
+                  {lesson.runNumber >= 2 ? <StatusChip tone="warning">{t("runChip", { number: lesson.runNumber })}</StatusChip> : null}
                   <Link href={`/teacher/class-roster/${classroomId}/books/${classBookId}/lessons/${lesson.number}`} className={cn(buttonVariants({ variant: "ghost", size: "sm" }), TEACHER_ACTION)}>
                     {t("guide.open")}
                   </Link>
-                  <LessonActions classBookId={classBook.id} lessonNumber={lesson.number} current={lesson.current} taught={lesson.taughtAt !== null} />
+                  <LessonActions classBookId={classBook.id} lessonNumber={lesson.number} current={lesson.current} taught={lesson.taughtAt !== null} canTeachAgain={lesson.taughtAt !== null || lesson.stepsDone.length > 0 || lesson.earlierRuns.length > 0} />
                 </div>
               </li>
             ))}

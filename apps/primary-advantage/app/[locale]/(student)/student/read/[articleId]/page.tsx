@@ -11,7 +11,6 @@ import Sentence, {
 } from "@/components/articles/sentence";
 import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
-import { saveArticleToFlashcard } from "@/actions/flashcard";
 import AssignButton from "@/components/teacher/assign-button";
 import { getTranslations } from "next-intl/server";
 import { BookXIcon, FileTextIcon } from "lucide-react";
@@ -21,7 +20,9 @@ import { Scene } from "@/components/rpg/scene";
 import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import { resolveLegacyArticleId } from "@reading-advantage/domain/articles";
+import { getArticleCardState, saveArticleCardsAfterQuiz } from "@reading-advantage/domain/games";
 import { z } from "zod";
+import { logger } from "@/lib/observability/logger";
 
 /**
  * Page title for the article view.
@@ -45,13 +46,15 @@ export async function generateMetadata({
 type Params = Promise<{ locale: string; articleId: string }>;
 
 /**
- * Loads an article, or null when it does not exist. Other errors go to `error.tsx` (retry).
+ * Loads an article with the logs of one user, or null when it does not exist.
+ * Other errors go to `error.tsx` (retry).
  * @param articleId The article.
+ * @param userId The signed-in user; the article carries only this user's logs.
  * @returns The article, or null.
  */
-async function loadArticle(articleId: string) {
+async function loadArticle(articleId: string, userId: string) {
   try {
-    return (await getArticleById(articleId)).article;
+    return (await getArticleById(articleId, userId)).article;
   } catch (error) {
     if (error instanceof ArticleNotFoundError) return null;
     throw error;
@@ -84,7 +87,7 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
   }
   const t = await getTranslations("Article");
   const tRead = await getTranslations("ReadList");
-  const article = isUuid ? await loadArticle(articleId) : null;
+  const article = isUuid ? await loadArticle(articleId, user.id) : null;
 
   if (!article) {
     return (
@@ -110,21 +113,18 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
   const isAtLeastTeacher = (role: string) =>
     role === "TEACHER" || role === "ADMIN" || role === "SYSTEM";
 
-  const isSaved = article.articleActivityLog.some(
-    (activity) =>
-      activity.userId === user.id && activity.isSentenceAndWordsSaved === true,
-  );
-
-  if (!isSaved) {
-    const completedActivity = article.articleActivityLog.find(
-      (activity) =>
-        activity.userId === user.id &&
-        activity.isLongAnswerQuestionCompleted === true &&
-        activity.isShortAnswerQuestionCompleted === true &&
-        activity.isMultipleChoiceQuestionCompleted === true,
-    );
-    if (completedActivity) {
-      await saveArticleToFlashcard(articleId, completedActivity.id);
+  // The legacy save rule: after the MCQ, SAQ, and LAQ are complete, save 3 to 5 words and all sentences.
+  // The staff view saves nothing (the function refuses a user who is not a STUDENT).
+  let saved = false;
+  if (user.role === "STUDENT") {
+    const tenant = { schoolId: user.schoolId };
+    const tenantDb = createTenantDB(db, tenant);
+    const input = { articleId };
+    try {
+      await saveArticleCardsAfterQuiz({ db: tenantDb, user, tenant, input });
+      saved = (await getArticleCardState({ db: tenantDb, user, tenant, input })).saved;
+    } catch (error) {
+      logger.error("article_cards_save_failed", { error, articleId });
     }
   }
 
@@ -132,6 +132,7 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
   return (
     <Scene place="library" dim className="xl:flex-row xl:items-start">
       <ArticleCard
+        saved={saved}
         article={article as unknown as Article & { articleActivityLog: any[] }}
       />
       <div className="flex min-w-0 flex-col gap-4 xl:basis-2/5">

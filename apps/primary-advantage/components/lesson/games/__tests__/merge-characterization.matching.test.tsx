@@ -237,9 +237,9 @@ describe("sentence matching variant (characterization)", () => {
     fireEvent.click(finish);
 
     await screen.findByText("complete.title");
-    // Quirk: the completion screen stats are hardcoded, not derived.
-    expect(screen.getByText("20")).toBeInTheDocument();
-    expect(screen.getByText("5/5")).toBeInTheDocument();
+    // The completion screen shows the real XP of the variant and the real count of correct pairs.
+    expect(screen.getByText(String(UserXpEarned.SENTENCE_MATCHING))).toBeInTheDocument();
+    expect(screen.getByText("2/2")).toBeInTheDocument();
     expect(screen.getByText("xpEarned")).toBeInTheDocument();
     expect(screen.getByText("completed")).toBeInTheDocument();
   });
@@ -381,9 +381,9 @@ describe("vocabulary matching variant (characterization)", () => {
     );
 
     await screen.findByText("completed.title");
-    // Quirk: the completion screen stats are hardcoded, not derived.
-    expect(screen.getByText("20")).toBeInTheDocument();
-    expect(screen.getByText("5/5")).toBeInTheDocument();
+    // The completion screen shows the real XP of the variant and the real count of correct pairs.
+    expect(screen.getByText(String(UserXpEarned.VOCABULARY_MATCHING))).toBeInTheDocument();
+    expect(screen.getByText("2/2")).toBeInTheDocument();
     expect(screen.getByText("completed.xpEarned")).toBeInTheDocument();
     expect(screen.getByText("completed.completed")).toBeInTheDocument();
   });

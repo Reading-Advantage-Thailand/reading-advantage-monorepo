@@ -7,3 +7,22 @@ export {
   createLicenseInputSchema,
   type CreateLicenseInput,
 } from "./contracts.js";
+export {
+  getSchoolSeatUsage,
+  getSchoolLicenseTiming,
+  schoolSeatUsageSchema,
+  schoolLicenseTimingSchema,
+  type SchoolSeatUsage,
+  type SchoolLicenseTiming,
+} from "./usage.js";
+export { getSchoolLicenseView, listSeatHolders } from "./license-view.js";
+export {
+  schoolLicenseRowSchema,
+  schoolLicenseViewOutputSchema,
+  seatHoldersInputSchema,
+  seatHoldersOutputSchema,
+  SEAT_HOLDERS_PAGE_SIZE,
+  type SchoolLicenseViewOutput,
+  type SeatHoldersInput,
+  type SeatHoldersOutput,
+} from "./contracts.js";

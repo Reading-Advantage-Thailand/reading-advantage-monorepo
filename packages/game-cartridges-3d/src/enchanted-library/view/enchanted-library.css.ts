@@ -28,10 +28,10 @@ export default `/* Enchanted Library 3D: the prompt card, the book tags (buttons
 .apk3d-hud .arena-tag.lib-tag {
   pointer-events: auto;
   cursor: pointer;
-  padding: 9px 15px;
+  padding: 6px 12px;
   background: #3b2a66;
   border-color: #c9b8ff;
-  font-size: 20px;
+  font-size: 17px;
   touch-action: manipulation;
 }
 .apk3d-hud .arena-tag.lib-tag.next {

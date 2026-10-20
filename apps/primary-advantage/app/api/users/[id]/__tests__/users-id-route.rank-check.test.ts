@@ -114,6 +114,7 @@ function queueRoleUpdate(role: string) {
         xp: 10,
         level: 3,
         cefrLevel: "B1",
+        role: role.toUpperCase(),
       },
     ],
     // The stitched-role rows query is awaited directly, so this entry is
@@ -151,7 +152,29 @@ describe("PATCH /api/users/[id] role rank check", () => {
     expect(mocks.transaction).not.toHaveBeenCalled();
   });
 
-  it.each(["TEACHER", "STUDENT", "ADMIN"])(
+  it.each(["ADMIN", "SYSTEM"])(
+    "refuses to make a STUDENT target %s (Low)",
+    async (role) => {
+      mocks.currentUser.mockResolvedValue(systemCaller);
+      selectQueue = [[{ id: "student-1", schoolId: "school-a", role: "STUDENT" }]];
+      const { request, context } = patchRequest("student-1", { role });
+      const response = await PATCH(request, context);
+      expect(response.status).toBe(403);
+      expect(mocks.transaction).not.toHaveBeenCalled();
+    },
+  );
+
+  it("returns the users.role as roles when the user has no user_roles row (Low)", async () => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    queueRoleUpdate("TEACHER");
+    selectQueue[3] = [];
+    const { request, context } = patchRequest("student-1", { role: "TEACHER" });
+    const response = await PATCH(request, context);
+    expect(response.status).toBe(200);
+    expect((await response.json()).user.roles).toEqual(["TEACHER"]);
+  });
+
+  it.each(["TEACHER", "STUDENT"])(
     "lets an ADMIN assign %s: not blocked by the rank check and reaches the transaction",
     async (role) => {
       mocks.currentUser.mockResolvedValue(adminCaller);
@@ -176,6 +199,27 @@ describe("PATCH /api/users/[id] role rank check", () => {
       });
     },
   );
+
+  it("writes users.role when the roles table is empty (migrated database)", async () => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    const set = vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) });
+    mocks.update.mockReturnValue({ set });
+    selectQueue = [
+      [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
+      [], // roles lookup finds no row
+      [{ id: "student-1", name: "N", email: "e@x.test", xp: 1, level: 1, cefrLevel: "A1" }],
+      [],
+    ];
+
+    const { request, context } = patchRequest("student-1", { role: "TEACHER" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(200);
+    expect(set).toHaveBeenCalledWith({ role: "TEACHER" });
+    // the old user_roles rows and the school_admins rows go; no row is inserted
+    expect(mocks.delete).toHaveBeenCalledTimes(2);
+    expect(mocks.insert).not.toHaveBeenCalled();
+  });
 
   it("refuses to demote a co-admin whose legacy admin row hides its rank (M-1)", async () => {
     mocks.currentUser.mockResolvedValue(adminCaller);
@@ -226,7 +270,7 @@ describe("PATCH /api/users/[id] role rank check", () => {
   it("lets a SYSTEM caller assign SYSTEM", async () => {
     mocks.currentUser.mockResolvedValue(systemCaller);
     selectQueue = [
-      [{ id: "student-1", schoolId: null, role: "STUDENT" }],
+      [{ id: "student-1", schoolId: null, role: "TEACHER" }],
       [{ id: "role-1", name: "SYSTEM" }],
       [
         {
@@ -236,6 +280,7 @@ describe("PATCH /api/users/[id] role rank check", () => {
           xp: 10,
           level: 3,
           cefrLevel: "B1",
+          role: "SYSTEM",
         },
       ],
       [{ roleId: "role-1", roleName: "SYSTEM" }],

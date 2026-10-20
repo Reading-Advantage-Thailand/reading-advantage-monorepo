@@ -60,6 +60,18 @@ const screens: [string, ReactElement][] = [
     />,
   ],
   ["class book slot", <ClassBookSlot key="b" classroomId="c1" />],
+  [
+    "class book slot with rows",
+    <ClassBookSlot
+      key="b2"
+      slots={[
+        { classroomId: "c1", classroomName: "P3A", classBookId: "cb1", bookName: "Origins 3.2", currentLesson: 3, lessonCount: 14, lessonTitle: "Sea Park", nextStep: 5, nextStepPeriod: 2 },
+        { classroomId: "c2", classroomName: "P4B", classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null },
+      ]}
+    />,
+  ],
+  ["class book slot empty", <ClassBookSlot key="b3" slots={[]} />],
+  ["class book slot error", <ClassBookSlot key="b4" failed />],
   ["due chip", <DueChip key="d" dueDate={null} />],
   ["lesson step rail", <LessonStepRail key="r" steps={["Introduction", "First Reading", "Quiz"]} current={2} />],
   ["sound toggle", <SoundToggle key="s" />],

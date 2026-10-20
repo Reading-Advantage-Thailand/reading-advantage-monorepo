@@ -8,6 +8,7 @@ export {
   TOUCH,
   TUNING,
   createEnchantedLibrary,
+  hintBookOf,
   targetBookOf,
   type EnchantedLibraryOptions,
   type EnchantedLibrarySimulation,

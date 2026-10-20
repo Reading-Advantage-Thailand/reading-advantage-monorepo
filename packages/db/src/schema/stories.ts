@@ -21,6 +21,8 @@ export const stories = pgTable("stories", {
   averageRating: real("average_rating"),
   authorId: text("author_id"),
   imageDescription: text("image_description"),
+  /** The picture key; the legacy cuid for migrated stories (null: the row id). */
+  image: text("image"),
   storyBible: jsonb("story_bible"),
   isPublic: boolean("is_public").default(false).notNull(),
   translatedSummary: jsonb("translated_summary"),
@@ -45,6 +47,8 @@ export const chapters = pgTable("chapters", {
   sentences: jsonb("sentences"),
   words: jsonb("words"),
   imageDescription: text("image_description"),
+  /** The picture key; the legacy cuid for migrated chapters (null: the row id). */
+  image: text("image"),
   audioWordUrl: text("audio_word_url"),
   authorId: text("author_id"),
   cefrLevel: text("cefr_level"),

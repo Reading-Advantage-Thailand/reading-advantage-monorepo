@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { passwordSchema } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
 import {
@@ -97,6 +98,23 @@ export const getStudentsController = async (
   }
 };
 
+/** The fields a student create accepts; unknown fields (such as `role`) are dropped. */
+const createStudentBodySchema = z.object({
+  name: z.string().min(1).max(200),
+  cefrLevel: z.string().max(20).optional(),
+  classroomId: z.string().min(1).max(100).optional(),
+  password: z.string().max(128).optional(),
+  schoolId: z.string().uuid().optional(),
+});
+
+/** The fields a student update accepts; unknown fields (such as `role`) are dropped. */
+const updateStudentBodySchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+  cefrLevel: z.string().max(20).optional(),
+  classroomId: z.string().min(1).max(100).optional(),
+  password: z.string().max(128).optional(),
+});
+
 // POST Controller - Create student
 export const createStudentController = async (
   request: NextRequest,
@@ -127,10 +145,12 @@ export const createStudentController = async (
       );
     }
 
-    const body = await request.json();
+    const parsedBody = createStudentBodySchema.safeParse(await request.json().catch(() => null));
+    if (!parsedBody.success) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
     // Students have no email (owner decision 2026-10-08).
-    const { name, cefrLevel, classroomId, password, schoolId } =
-      body as CreateStudentInput;
+    const { name, cefrLevel, classroomId, password, schoolId }: CreateStudentInput = parsedBody.data;
 
     if (password !== undefined && !passwordSchema.safeParse(password).success) {
       return NextResponse.json({ error: "Invalid password" }, { status: 400 });
@@ -252,8 +272,11 @@ export const updateStudentController = async (
       );
     }
 
-    const body = await request.json();
-    const updateData = body as UpdateStudentInput;
+    const parsedBody = updateStudentBodySchema.safeParse(await request.json().catch(() => null));
+    if (!parsedBody.success) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
+    const updateData: UpdateStudentInput = parsedBody.data;
     if (updateData.password !== undefined && !passwordSchema.safeParse(updateData.password).success) {
       return NextResponse.json({ error: "Invalid password" }, { status: 400 });
     }

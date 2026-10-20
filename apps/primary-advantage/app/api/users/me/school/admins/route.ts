@@ -5,6 +5,10 @@ import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advanta
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { z } from "zod";
+import { normalizeRole } from "@/lib/authorization";
+import { setUserRole } from "@/server/utils/role-sql";
+import { canManageSchool } from "@/server/utils/school-access";
+import { logger } from "@/lib/observability/logger";
 
 const addAdminSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
@@ -65,10 +69,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if current user is the school owner
-    if (userSchool.ownerId !== currentUser.id) {
+    // The owner, an ADMIN of the school, or SYSTEM may manage the admins
+    if (!canManageSchool(currentUser, userSchool)) {
       return NextResponse.json(
-        { error: "Only the school owner can add admins" },
+        { error: "Only the school owner or a school admin can add admins" },
         { status: 403 },
       );
     }
@@ -83,6 +87,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Target user not found" },
         { status: 404 },
+      );
+    }
+
+    // Only a TEACHER or ADMIN of the school may become a school admin.
+    const targetRole = normalizeRole(targetUser.role);
+    if (targetRole !== "TEACHER" && targetRole !== "ADMIN") {
+      return NextResponse.json(
+        { error: "Only a teacher or admin of the school can become a school admin" },
+        { status: 400 },
       );
     }
 
@@ -120,45 +133,25 @@ export async function POST(request: NextRequest) {
       userId: userId,
     });
 
-    // Check if user needs Admin role upgrade
-    const hasAdminRole = targetRoleRows.some(
-      (r) => r.roleName === "admin",
-    );
+    // Check if user needs Admin role upgrade. users.role is the truth; legacy rows are additive.
+    const targetSessionRole = normalizeRole(targetUser.role);
+    const hasAdminRole =
+      targetSessionRole === "ADMIN" ||
+      targetSessionRole === "SYSTEM" ||
+      targetRoleRows.some((r) => r.roleName === "admin");
 
-    let roleUpgraded = false;
-    if (!hasAdminRole) {
-      const currentRoles = targetRoleRows.map((r) => r.roleName);
-      if (currentRoles.includes("user") || currentRoles.includes("teacher")) {
-        // Find or create Admin role
-        const [existingAdminRole] = await tenantDb
-          .unscoped("roles is EXEMPT; looked up by name")
-          .select().from(roles)
-          .where(eq(roles.name, "admin"))
-          .limit(1);
-
-        let adminRole = existingAdminRole;
-        if (!adminRole) {
-          const [created] = await tenantDb
-            .unscoped("roles is EXEMPT; created by name")
-            .insert(roles).values({ name: "admin" }).returning();
-          adminRole = created;
-        }
-
-        // Remove all existing roles and set Admin role only
-        await tenantDb
-          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-          .delete(userRoles)
-          .where(eq(userRoles.userId, userId));
-
-        // Create new Admin role for user
-        await tenantDb
-          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-          .insert(userRoles).values({
-          userId: userId,
-          roleId: adminRole.id,
-        });
-        roleUpgraded = true;
-      }
+    const currentRoles = targetRoleRows.map((r) => r.roleName);
+    const roleUpgraded =
+      !hasAdminRole &&
+      (targetSessionRole === "TEACHER" ||
+        currentRoles.includes("user") ||
+        currentRoles.includes("teacher"));
+    if (roleUpgraded) {
+      await setUserRole(
+        tenantDb.unscoped("userRoles is REFERENTIAL; scoped via users.schoolId"),
+        userId,
+        "admin",
+      );
     }
 
     // Associate user with the school if not already associated
@@ -171,14 +164,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: "User added as school admin successfully",
       adminAdded: true,
-      roleUpgraded:
-        !hasAdminRole &&
-        targetRoleRows.some(
-          (r) => r.roleName === "user" || r.roleName === "teacher",
-        ),
+      roleUpgraded,
     });
   } catch (error) {
-    console.error("Error adding school admin:", error);
+    logger.error("school_admin_add_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

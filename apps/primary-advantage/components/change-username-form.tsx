@@ -22,19 +22,22 @@ import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 const FormSchema = z.object({
-  name: z.string().min(5, {
-    message: "Username must be at least 5 characters.",
-  }),
+  name: z.string().trim().min(2).max(40),
 });
 
+/**
+ * Form that changes the display name of the signed-in user through PATCH /api/users/me.
+ * The sign-in username never changes here.
+ * @param props.username The current display name.
+ */
 export function ChangeUsernameForm({
   username,
-  userId,
 }: {
   username: string;
-  userId: string;
+  userId?: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -46,32 +49,25 @@ export function ChangeUsernameForm({
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setIsLoading(true);
-      // Update the user's username
-      const response = await fetch(`/api/users/${userId}`, {
+      setErrorMessage(null);
+      const response = await fetch("/api/users/me", {
         method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update username.");
+        const message = response.status === 403 ? t("codeOnlyError") : t("updateError");
+        setErrorMessage(message);
+        toast.error(message);
+        return;
       }
-      if (response.status === 200) {
-        // Reset the form
-        form.reset({ name: data.name });
-
-        // refresh the page
-        router.refresh();
-
-        toast("Username updated.", {
-          description: `Changed username to ${data.name}.`,
-        });
-      }
-    } catch (error) {
-      //   toast({
-      //     title: "An error occurred.",
-      //     description: "Please try again later.",
-      //     variant: "destructive",
-      //   });
+      form.reset({ name: data.name.trim() });
+      router.refresh();
+      toast.success(t("updateSuccess"), { description: data.name.trim() });
+    } catch {
+      setErrorMessage(t("updateError"));
+      toast.error(t("updateError"));
     } finally {
       setIsLoading(false);
     }
@@ -85,8 +81,8 @@ export function ChangeUsernameForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("username")}</FormLabel>
-              <FormDescription>{t("usernameDescription")}</FormDescription>
+              <FormLabel>{t("displayName")}</FormLabel>
+              <FormDescription>{t("displayNameDescription")}</FormDescription>
               <FormControl>
                 <Input type="text" placeholder={username} {...field} />
               </FormControl>
@@ -94,6 +90,11 @@ export function ChangeUsernameForm({
             </FormItem>
           )}
         />
+        {errorMessage ? (
+          <p role="alert" className="rounded-md border border-red-700 bg-red-100 px-3 py-2 text-sm text-red-900">
+            {errorMessage}
+          </p>
+        ) : null}
         <Button
           type="submit"
           variant="secondary"

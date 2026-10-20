@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/form";
 import { Icons } from "@/components/icons";
 import { finishQuiz, getFeedback } from "@/actions/question";
+import { usePreviewSave } from "@/components/student/student-view-provider";
+import { isPreviewResult } from "@/lib/student-view";
 import { useLocale, useTranslations } from "next-intl";
 import { convertLocaleFull } from "@/lib/utils";
 import { useSession } from "@reading-advantage/auth-client";
@@ -233,6 +235,7 @@ function WrittenQuestionView({
   const t = useTranslations("Question");
   const tc = useTranslations("Components");
   const tfq = useTranslations("Question.LAQuestion.feedbackModal");
+  const { isPreview, notSaved } = usePreviewSave();
 
   const level = (user?.level as number) ?? 0;
 
@@ -298,10 +301,20 @@ function WrittenQuestionView({
       timer: timer,
     });
 
+    if (isPreview) {
+      // Preview mode: the feedback stays on screen and nothing saves.
+      notSaved();
+      setOpenModal(false);
+      return;
+    }
+
     startTransition(async () => {
       await finishQuiz(articleId, data, config.activityType).then(
         async (res) => {
-          if (res.success) {
+          if (isPreviewResult(res)) {
+            notSaved();
+            setOpenModal(false);
+          } else if (res.success) {
             if (config.useRichColors) {
               toast.success(config.successMessage(t), { richColors: true });
             } else {

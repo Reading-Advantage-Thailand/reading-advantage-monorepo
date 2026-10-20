@@ -1,0 +1,184 @@
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Banner, Coins, Gem, Meter, Panel, Plaque, RpgButton, RpgLink, Sign, Bubble } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
+import { Sprite } from "@/components/rpg/sprite";
+import { ART, slotArt } from "@/lib/rpg/places";
+
+/* Mock of the Preview mode (track primary_parity_staff_student_view_20261011, Phase 0).
+   Demo data only. English demo text; the real keys are proposed in design/design.md. */
+
+const NPC = (n: string) => `/rpg/kit/npc/${n}-idle-strip.png`;
+
+/** The banner: a blue hanging cloth, the way out, and the note. No bar: it reads on any scene. */
+function PreviewBanner() {
+  return (
+    <div role="status" data-preview-banner className="relative z-10 flex flex-col gap-1 pb-1">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <Banner blue className="!px-4 !pb-5 !pt-2 !text-base"><span className="whitespace-nowrap">Student preview</span></Banner>
+        <RpgLink tone="iron" small href="/teacher/my-classes" className="min-h-12">Exit preview</RpgLink>
+      </div>
+      <p className="cq-on-scene text-sm">You see what a student sees. Nothing here is saved.</p>
+    </div>
+  );
+}
+
+/** The note on a switched-off write control. */
+const NotSaved = () => <span className="cq-muted text-xs font-semibold" data-not-saved>Preview: not saved</span>;
+
+/** The header of the student shell (stand-in). */
+function Header() {
+  return (
+    <header className="cq-header sticky top-0 z-40">
+      <div className="container mx-auto flex h-16 items-center justify-between gap-2 px-4">
+        <span className="cq-brand">Primary Advantage</span>
+        <div className="flex items-center gap-2"><Gem xp={0} label="XP" /><Coins gp={0} label="Coins" /><span className="cq-brand text-sm">Ms Demo</span></div>
+      </div>
+    </header>
+  );
+}
+
+function Page({ place, banner = true, children }: { place: any; banner?: boolean; children: React.ReactNode }) {
+  return (
+    <div className="cq-world flex min-h-screen flex-col" data-page>
+      <Header />
+      <main className="container mx-auto flex flex-1 flex-col gap-3 px-4 py-3">
+        {banner ? <PreviewBanner /> : null}
+        <Scene place={place} className="!p-0">{children}</Scene>
+      </main>
+    </div>
+  );
+}
+
+const Title = ({ children, sub }: { children: React.ReactNode; sub?: string }) => (
+  <header className="flex flex-col gap-1"><h1 className="cq-on-scene text-2xl font-bold md:text-3xl">{children}</h1>{sub ? <p className="cq-on-scene text-sm opacity-90">{sub}</p> : null}</header>
+);
+
+/** One empty-state panel: icon, line of what a student sees, preview note. */
+function Empty({ icon = ART.scroll, title, line }: { icon?: string; title: string; line: string }) {
+  return (
+    <Panel pinned role="status" className="grid grid-cols-[48px_1fr] items-center gap-3">
+      <img src={icon} alt="" className="cq-shadowed w-12" />
+      <div className="flex flex-col"><span className="font-semibold">{title}</span><span className="cq-muted text-sm">{line}</span></div>
+    </Panel>
+  );
+}
+
+const Home = () => (
+  <Page place="guild-hall">
+    <Title sub="This is the guild hall of your students.">Hello, Student</Title>
+    <div className="grid grid-cols-[112px_1fr] items-end gap-3">
+      <img src="/rpg/kit/heroes/no-hero.webp" alt="" className="cq-shadowed cq-bob w-28" />
+      <section className="grid grid-cols-3 gap-2">
+        <Plaque icon={ART.campfire} label="Streak">0 days</Plaque><Plaque icon={ART.gem} label="XP">0</Plaque><Plaque icon={ART.shield} label="Level">1</Plaque>
+      </section>
+    </div>
+    <Empty icon={ART.banner} title="Pick a hero" line="A student picks a hero here first." />
+    <div className="grid gap-4 md:grid-cols-2">
+      <Empty title="Today's lesson" line="A student sees the lesson of the class here, with a due date." />
+      <Empty icon={ART.chest} title="Class books" line="Your class books show here, open, with no progress." />
+      <Empty title="Continue reading" line="A student sees the article in progress here." />
+      <Empty icon={ART.noticeBoard} title="Class Quest" line="A student sees the quest of the class here." />
+    </div>
+    <Panel><h2 className="text-lg font-semibold">Hall of fame</h2>
+      {["Mali", "Somchai", "Nok"].map((n, i) => <div key={n} className="flex items-center justify-between border-t border-[rgba(92,57,26,0.25)] pt-2 text-sm"><span>{i + 1}. {n}</span><span className="tabular-nums">{1200 - i * 180} XP</span></div>)}
+    </Panel>
+  </Page>
+);
+
+const HEROES = ["knight", "wizard", "ranger", "cleric", "rogue", "bard"];
+const Avatar = () => (
+  <Page place="shrine">
+    <Title sub="Choose a hero. Try it on.">Hero shrine</Title>
+    <Panel>
+      <div className="grid grid-cols-3 gap-2 md:grid-cols-6">
+        {HEROES.map((h, i) => <button key={h} type="button" className={`cq-btn min-h-12 flex-col ${i === 0 ? "cq-btn--gold" : ""}`}><img src={`/rpg/kit/heroes/${h}.webp`} alt="" className="h-16" /><span className="capitalize">{h}</span></button>)}
+      </div>
+      <div className="flex flex-wrap items-center gap-3"><RpgButton tone="gold" disabled aria-disabled>Save hero</RpgButton><NotSaved /></div>
+    </Panel>
+  </Page>
+);
+
+const Shop = () => (
+  <Page place="armory">
+    <Title sub="Pieces and prices. You can try them on.">Armory</Title>
+    <Panel>
+      <div className="flex items-center justify-between"><Sign small>Head</Sign><Coins gp={0} label="Coins" /></div>
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+        {["Leather cap", "Iron helm", "Mage hat", "Crown"].map((n, i) => (
+          <div key={n} className="flex flex-col items-center gap-1 rounded-lg border-2 border-[rgba(92,57,26,0.3)] p-2">
+            <img src={slotArt("head")} alt="" className="size-12" /><span className="text-sm font-semibold">{n}</span>
+            <Coins gp={40 + i * 60} label="Price" />
+            <RpgButton small disabled aria-disabled>Buy</RpgButton>
+          </div>))}
+      </div>
+      <div className="flex flex-wrap items-center gap-2"><RpgButton small>Try on</RpgButton><NotSaved /></div>
+    </Panel>
+  </Page>
+);
+
+const Plain = ({ place, title, sub, icon, head, line }: any) => (
+  <Page place={place}><Title sub={sub}>{title}</Title><Empty icon={icon} title={head} line={line} /></Page>
+);
+const History = () => <Plain place="archive" title="My history" sub="Articles and lessons you finished." icon={ART.scroll} head="No history yet" line="A student sees the finished articles and lessons here." />;
+const Reports = () => <Plain place="observatory" title="My reports" sub="Your XP and your levels." icon={ART.gem} head="No report yet" line="A student sees the XP, the streak, and the level chart here." />;
+const Sentences = () => <Plain place="library" title="My sentences" sub="Sentences you saved." icon={ART.scroll} head="No saved sentences" line="A student sees the saved sentences here, with practice games." />;
+const Vocab = () => <Plain place="library" title="My words" sub="Words you saved." icon={ART.scroll} head="No saved words" line="A student sees the saved words here, with practice games." />;
+
+const Quest = () => (
+  <Page place="boss-arena">
+    <Title sub="The class fights the boss together.">Class Quest</Title>
+    <Empty icon={ART.banner} title="Not in a class" line="A student sees the boss, the class meter, and the weekly goals here." />
+  </Page>
+);
+
+const Reedy = () => (
+  <Page place="clearing">
+    <header className="cq-on-scene flex flex-col gap-1">
+      <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">Reedy<Sign small className="text-xs uppercase">Preview</Sign></h1>
+      <p lang="en" className="text-sm">Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.</p>
+    </header>
+    <Empty icon={ART.campfire} title="Only students talk to Reedy" line="A student sees the minutes left and a Start talking button here." />
+  </Page>
+);
+
+const GameEnd = () => (
+  <Page place="arena">
+    <Title>Word Match</Title>
+    <Panel className="items-center text-center">
+      <div className="flex items-center gap-3"><Sprite src={NPC("quest-giver")} size={72} /><Bubble>Well done!</Bubble></div>
+      <p className="text-3xl font-bold">8 / 10</p>
+      <p className="cq-muted text-sm">Sample words. A student gets XP and coins here.</p>
+      <NotSaved />
+      <div className="flex flex-wrap justify-center gap-2"><RpgButton tone="gold">Play again</RpgButton><RpgLink tone="iron" href="/student/games">Back to games</RpgLink></div>
+    </Panel>
+  </Page>
+);
+
+const QuizEnd = () => (
+  <Page place="library">
+    <Title>Quiz result</Title>
+    <Panel className="items-center text-center">
+      <p className="text-3xl font-bold">4 / 5</p>
+      <p className="cq-muted text-sm">A student earns XP for this quiz.</p>
+      <NotSaved />
+      <RpgLink tone="gold" href="/student/read">Back to reading</RpgLink>
+    </Panel>
+  </Page>
+);
+
+const BannerOnly = () => (
+  <div className="cq-world min-h-screen"><Header /><main className="container mx-auto flex flex-col gap-4 px-4 py-3" data-page>
+    <PreviewBanner />
+    <p className="cq-on-scene">Banner on a bare page (for the shape).</p>
+    <h1 className="flex items-center gap-2 text-2xl font-bold text-[#fff4dc]">Reedy<Sign small className="text-xs uppercase">Preview</Sign></h1>
+    <p className="cq-on-scene text-sm">Above: the Reedy product label, for comparison.</p>
+  </main></div>
+);
+
+export const states: Record<string, React.ReactNode> = {
+  banner: <BannerOnly />, home: <Home />, avatar: <Avatar />, shop: <Shop />, history: <History />, reports: <Reports />,
+  sentences: <Sentences />, vocabulary: <Vocab />, quest: <Quest />, reedy: <Reedy />, "game-end": <GameEnd />, "quiz-end": <QuizEnd />,
+};
+export async function init() {}
+export const render = (k: string) => renderToStaticMarkup(<div>{states[k]}</div>);

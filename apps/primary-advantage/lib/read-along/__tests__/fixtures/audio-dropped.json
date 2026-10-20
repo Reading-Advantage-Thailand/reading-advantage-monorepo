@@ -1,0 +1,24 @@
+[
+  {
+    "words": [
+      {
+        "end": 46.7,
+        "word": "is",
+        "start": 46.52500000000001
+      },
+      {
+        "end": 46.825,
+        "word": "a",
+        "start": 46.7
+      },
+      {
+        "end": 47.375,
+        "word": "friend",
+        "start": 46.825
+      }
+    ],
+    "endTime": 47.375,
+    "sentence": "The ball is a friend.",
+    "startTime": 46.52500000000001
+  }
+]

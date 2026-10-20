@@ -103,10 +103,17 @@ describe("generateRandomClassCode", () => {
 });
 
 describe("calculateLevelAndCefrLevel", () => {
-  it("calculates level for XP in range", () => {
+  it("takes the level from the new XP total, not from the award (F-2)", () => {
     const result = calculateLevelAndCefrLevel(100, 5000);
     expect(result.newXp).toBe(5100);
-    expect(result.cefrLevel).toBe("A0-");
+    expect(result.cefrLevel).toBe("A0");
+    expect(result.raLevel).toBe(2);
+  });
+
+  it("keeps the top level for a total above the last range", () => {
+    const result = calculateLevelAndCefrLevel(0, 200000);
+    expect(result.cefrLevel).toBe("B2+");
+    expect(result.raLevel).toBe(15);
   });
 
   it("returns default values when XP is out of range", () => {

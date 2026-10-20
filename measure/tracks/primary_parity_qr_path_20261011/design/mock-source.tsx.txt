@@ -1,0 +1,85 @@
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Panel, Sign, RpgLink, Bubble } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
+import { Sprite } from "@/components/rpg/sprite";
+const HOST = "/rpg/kit/npc/quest-giver-idle-strip.png";
+
+/* Mock of the /b/<book>/<n> pages. Demo data only. S4 and S2 port this markup into
+   components/book-link/*. The strings are English demo text; the real keys live under BookLink. */
+
+/** Shared frame: library scene, brand line, one parchment panel with the host NPC. */
+function Shell({ bubble, children }: { bubble: string; children: React.ReactNode }) {
+  return (
+    <Scene place="library" className="min-h-screen px-4 py-6">
+      <div className="flex items-center justify-between gap-2">
+        <span className="cq-on-scene text-lg font-bold">Primary Advantage</span>
+        <span className="cq-on-scene text-sm">EN</span>
+      </div>
+      <div className="flex flex-1 items-center justify-center">
+        <Panel className="w-full max-w-md" data-book-link>
+          <div className="flex items-center gap-3">
+            <Sprite src={HOST} size={72} className="shrink-0" />
+            <Bubble>{bubble}</Bubble>
+          </div>
+          {children}
+        </Panel>
+      </div>
+    </Scene>
+  );
+}
+
+function Case({ title, text, actions, note }: { title: string; text: string; actions: React.ReactNode; note?: string }) {
+  return (
+    <Shell bubble={note ?? "Oh no!"}>
+      <div className="flex flex-col gap-3" data-case>
+        <h1 className="text-xl font-bold" role="alert">{title}</h1>
+        <p className="text-base">{text}</p>
+        <div className="flex flex-col gap-2">{actions}</div>
+      </div>
+    </Shell>
+  );
+}
+
+function Landing({ tutor = true, writing }: { tutor?: boolean; writing?: boolean }) {
+  return (
+    <Shell bubble={writing ? "Time to write!" : "Ready to read?"}>
+      <div className="flex flex-col gap-3" data-landing>
+        <div className="flex flex-col gap-1">
+          <Sign small>Primary Advantage Origins 3.2</Sign>
+          <h1 className="text-xl font-bold">Lesson 5: A Day at the Sea Park</h1>
+          {writing && <p className="text-sm">Writing task</p>}
+        </div>
+        <p className="text-base font-semibold">Which app do you use?</p>
+        <div className="flex flex-col gap-2">
+          <RpgLink tone="gold" href="/auth/signin?callbackUrl=/en/b/o3-2/5" className="flex-col items-start !h-auto py-2 text-left">
+            <span className="font-bold">My school uses Primary Advantage</span>
+            <span className="text-sm font-normal">Sign in with your class code</span>
+          </RpgLink>
+          {tutor && (
+            <RpgLink tone="wood" href="https://liff.line.me/demo/b/o3-2/5" className="flex-col items-start !h-auto py-2 text-left">
+              <span className="font-bold">I study with Tutor Advantage</span>
+              <span className="text-sm font-normal">Open the lesson in LINE</span>
+            </RpgLink>
+          )}
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+export const states: Record<string, React.ReactNode> = {
+  "landing": <Landing />,
+  "landing-school-only": <Landing tutor={false} />,
+  "landing-writing": <Landing writing />,
+  "unknown-book": <Case title="We do not know this book" text="The book in this link is not in Primary Advantage. Check the code on your page." actions={<RpgLink tone="iron" href="/student/home">Go to my home</RpgLink>} />,
+  "no-lesson": <Case title="This lesson is not in the book" text="Primary Advantage Origins 3.2 has Lessons 1 to 14. Check the number on your page." actions={<RpgLink tone="iron" href="/student/home">Go to my home</RpgLink>} />,
+  "not-ready": <Case title="This lesson is not ready yet" text="Ask your teacher." actions={<RpgLink tone="iron" href="/student/home">Go to my home</RpgLink>} note="Not yet!" />,
+  "no-class": <Case title="No class uses this book" text="Primary Advantage Origins 3.2 is not assigned to any of your classes. Open a class, then assign the book on the class page." actions={<RpgLink tone="gold" href="/teacher/my-classes">Go to my classes</RpgLink>} />,
+  "teacher-only": <Case title="This link is for a class teacher" text="Sign in as a teacher of a class to open this lesson." actions={<RpgLink tone="iron" href="/">Go to my home</RpgLink>} />,
+  "wrong-account": <Case title="This link is not for this account" text="Sign in with a student or teacher account to open this lesson." actions={<RpgLink tone="iron" href="/">Go to my home</RpgLink>} />,
+  "unknown-address": <Case title="We do not know this address" text="Scan the code on your page again. If it still fails, ask your teacher." actions={<RpgLink tone="iron" href="/">Go to the start page</RpgLink>} />,
+  "retry": <Case title="We could not open the lesson" text="Check the internet connection and try again." actions={<RpgLink tone="gold" href="/b/o3-2/5">Try again</RpgLink>} note="Oops!" />,
+};
+export async function init() {}
+export const render = (k: string) => renderToStaticMarkup(<div className="cq">{states[k]}</div>);

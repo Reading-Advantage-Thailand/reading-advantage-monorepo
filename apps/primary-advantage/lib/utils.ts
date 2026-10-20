@@ -50,8 +50,10 @@ export function generateRandomClassCode() {
 
 export function calculateLevelAndCefrLevel(xpEarned: number, userXp: number) {
   const newXp = userXp + xpEarned;
-  const level = LEVELS_XP.find(
-    (level) => xpEarned >= level.min && xpEarned <= level.max,
+  // The level follows the XP total (F-2: legacy matched the award, so a student never left level 1).
+  const top = LEVELS_XP[LEVELS_XP.length - 1]!;
+  const level = newXp > top.max ? top : LEVELS_XP.find(
+    (level) => newXp >= level.min && newXp <= level.max,
   );
   const cefrLevel = level?.cefrLevel || "A0-";
   const raLevel = level?.raLevel || 1;

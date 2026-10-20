@@ -5,20 +5,22 @@ import type { NextRequest } from "next/server";
 const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
   streamText: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({
   currentUser: mocks.currentUser,
   getCurrentUser: mocks.currentUser,
 }));
-vi.mock("@/utils/openai", () => ({
-  openai: vi.fn(() => ({})),
-  openaiModel: "test-model",
+vi.mock("@reading-advantage/ai", () => ({
+  createAIClient: vi.fn(() => ({ streamText: mocks.streamText })),
 }));
-vi.mock("@reading-advantage/ai/internal-sdk", () => ({
-  streamText: mocks.streamText,
+vi.mock("@/lib/observability/logger", () => ({
+  logger: { info: mocks.info, warn: vi.fn(), error: mocks.error },
 }));
 
+import { resetPrimaryAiClients } from "@/lib/ai/models";
 import { POST } from "../route";
 
 const validBody = {
@@ -64,6 +66,61 @@ describe("POST /api/assistant/lesson-chatbot authorization", () => {
     const response = await POST(postRequest(validBody));
 
     expect(response.status).toBe(201);
-    expect(mocks.streamText).toHaveBeenCalled();
+    expect(await response.json()).toEqual({ messages: "success", sender: "bot", text: "hi" });
+    const input = mocks.streamText.mock.calls[0][0];
+    expect(input.system).toContain("Title: \"Title\"");
+    expect(input.messages).toEqual([{ role: "user", content: "hello" }]);
+    expect(mocks.info).toHaveBeenCalledWith("ai_call", {
+      task: "chatbot.stream",
+      provider: "openai",
+      model: "gpt-6-luna",
+      durationMs: expect.any(Number),
+    });
+  });
+
+  it("starts the conversation with one user turn when the opening call has no messages", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
+    async function* chunks() {
+      yield "What did you like?";
+    }
+    mocks.streamText.mockResolvedValue({ textStream: chunks() });
+    const response = await POST(postRequest({ ...validBody, messages: [], isInitial: true }));
+    expect(response.status).toBe(201);
+    const input = mocks.streamText.mock.calls[0][0];
+    expect(input.system).toContain("Start the conversation");
+    expect(input.messages).toEqual([{ role: "user", content: "Please start." }]);
+  });
+
+  it("returns 400 and logs through the logger for a bad body", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
+    const response = await POST(postRequest({ title: 1 }));
+    expect(response.status).toBe(400);
+    expect(mocks.error).toHaveBeenCalledWith("lesson_chatbot_validation_error", expect.anything());
+  });
+
+  it("returns 500 and logs when the model call fails", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
+    mocks.streamText.mockRejectedValue(new Error("boom"));
+    const response = await POST(postRequest(validBody));
+    expect(response.status).toBe(500);
+    expect(mocks.error).toHaveBeenCalledWith("lesson_chatbot_error", expect.anything());
+  });
+
+  describe("body size limits", () => {
+    beforeEach(() => mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" }));
+
+    it.each([
+      ["passage", { passage: "p".repeat(20_001) }],
+      ["summary", { summary: "s".repeat(5_001) }],
+      ["title", { title: "t".repeat(501) }],
+      ["image_description", { image_description: "i".repeat(2_001) }],
+      ["messages count", { messages: Array.from({ length: 61 }, () => ({ text: "x", sender: "user" })) }],
+      ["message text", { messages: [{ text: "x".repeat(4_001), sender: "user" }] }],
+      ["blacklist count", { blacklistedQuestions: Array.from({ length: 101 }, () => "q") }],
+    ])("returns 400 for an oversized %s", async (_name, patch) => {
+      const response = await POST(postRequest({ ...validBody, ...patch }));
+      expect(response.status).toBe(400);
+      expect(mocks.streamText).not.toHaveBeenCalled();
+    });
   });
 });

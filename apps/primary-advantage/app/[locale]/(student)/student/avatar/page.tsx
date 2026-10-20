@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
 import { getAvatarProfile, getAvatarState, type AvatarProfile, type AvatarState } from "@reading-advantage/domain/primary-avatar";
 import { currentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
 import { redirect } from "@/i18n/navigation";
 import { AvatarPicker } from "@/components/avatar/avatar-picker";
 import { AvatarHome } from "@/components/avatar/avatar-home";
@@ -56,7 +57,7 @@ async function loadState(user: NonNullable<Awaited<ReturnType<typeof currentUser
 export default async function AvatarPage({ searchParams }: { searchParams: Promise<{ from?: string }> }) {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
-  const [{ from }, profile, t] = await Promise.all([searchParams, loadProfile(user), getTranslations("Avatar")]);
+  const [{ from }, profile, t] = await Promise.all([searchParams, isStudentWriter(user) ? loadProfile(user) : null, getTranslations("Avatar")]);
   const state = profile && from === undefined ? await loadState(user) : null;
   // The inventory is the treasure vault; the picker is the shrine (docs/primary-rpg-skin.md §4).
   return (

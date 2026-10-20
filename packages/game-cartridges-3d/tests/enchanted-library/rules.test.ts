@@ -13,6 +13,7 @@ import {
   createEnchantedLibrary,
   decoysOf,
   evidenceOf,
+  hintBookOf,
   resultsOf,
   scoreOf,
   targetBookOf,
@@ -146,6 +147,20 @@ describe('the round', () => {
     const before = sim.state.books.map((b) => `${b.term}@${b.x.toFixed(2)},${b.z.toFixed(2)}`);
     clearRound(sim);
     expect(sim.state.books.map((b) => `${b.term}@${b.x.toFixed(2)},${b.z.toFixed(2)}`)).not.toEqual(before);
+  });
+
+  it('Helper mode marks the right book only after a wrong book in the round', () => {
+    const sim = create(5, true);
+    sim.tick();
+    expect(hintBookOf(sim.state)).toBeNull();
+    touch(sim, wrongBook(sim));
+    expect(hintBookOf(sim.state)?.id).toBe(targetBookOf(sim.state)!.id);
+    clearRound(sim);
+    expect(hintBookOf(sim.state)).toBeNull();
+    const plain = create(5, false);
+    plain.tick();
+    touch(plain, wrongBook(plain));
+    expect(hintBookOf(plain.state)).toBeNull();
   });
 });
 
