@@ -1366,6 +1366,34 @@
     },
     "signup": {
       "title": "Sign Up"
+    },
+    "staff": {
+      "help": "Type your username. Teachers from the old app type their e-mail address.",
+      "username": "Username",
+      "password": "Password",
+      "forgot": "Forgot your password?",
+      "submit": "Sign in",
+      "signingIn": "Signing in…",
+      "invalid": "The username or the password is not correct.",
+      "tooMany": "Too many tries. Wait a few minutes, then try again.",
+      "failed": "Sign-in failed. Try again."
+    },
+    "temporary": {
+      "title": "Set a new password",
+      "help": "You signed in with a temporary password. Set your own password to continue.",
+      "newPassword": "New password",
+      "confirm": "Type the new password again",
+      "save": "Save and sign in",
+      "saving": "Saving…",
+      "tooShort": "Use at least {min} characters.",
+      "mismatch": "The two passwords are not the same.",
+      "sameAsTemporary": "Use a password that is not the temporary password.",
+      "notChanged": "The password was not changed."
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "help": "Ask your school admin to set a new password for you. School admins: ask Primary Advantage support.",
+      "back": "Back to sign in"
     }
   },
   "Settings": {

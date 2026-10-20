@@ -45,7 +45,7 @@ describe("staff sign-in form", () => {
   async function submit() {
     fireEvent.change(screen.getByLabelText("Username"), { target: { value: "qa-system" } });
     fireEvent.change(screen.getByLabelText(/^Password/), { target: { value: "long-enough-1" } });
-    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
     await waitFor(() => expect(loginMock).toHaveBeenCalled());
   }
 
@@ -68,7 +68,7 @@ describe("staff sign-in form", () => {
     renderWithMessages(<TeacherSignInForm />);
     fireEvent.change(screen.getByLabelText("Username"), { target: { value: "qa-system" } });
     fireEvent.change(screen.getByLabelText(/^Password/), { target: { value: "long-enough-1" } });
-    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
     await waitFor(() => expect(loginMock).toHaveBeenCalledWith("qa-system", "long-enough-1"));
     // The proxy sends a signed-in user from the sign-in page to the role's home page.
     expect(replaceMock).toHaveBeenCalledWith("/auth/signin");
@@ -153,14 +153,41 @@ describe("staff sign-in form", () => {
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    it("shows the server message when the change fails", async () => {
+    it("shows the translated text, not the English server text, when the change fails", async () => {
       fetchMock.mockResolvedValue(new Response(JSON.stringify({ message: "Invalid username or password" }), { status: 401 }));
       renderWithMessages(<TeacherSignInForm />);
       await submit();
       await screen.findByRole("heading", { name: "Set a new password" });
       setNewPassword("my-own-pass-9");
-      expect(await screen.findByText("Invalid username or password")).toBeInTheDocument();
+      expect(await screen.findByText("The password was not changed.")).toBeInTheDocument();
+      expect(screen.queryByText("Invalid username or password")).not.toBeInTheDocument();
       expect(loginMock).toHaveBeenCalledTimes(1);
     });
+
+    it("shows the new-password step in Thai on /th", async () => {
+      renderWithMessages(<TeacherSignInForm />, { locale: "th" });
+      fireEvent.change(screen.getByLabelText("ชื่อผู้ใช้"), { target: { value: "qa-system" } });
+      fireEvent.change(screen.getByLabelText(/^รหัสผ่าน/), { target: { value: "long-enough-1" } });
+      fireEvent.click(screen.getByRole("button", { name: "เข้าสู่ระบบ" }));
+      expect(await screen.findByRole("heading", { name: "ตั้งรหัสผ่านใหม่" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "บันทึกและเข้าสู่ระบบ" })).toBeInTheDocument();
+    });
+  });
+
+  it("shows the sign-in form in Thai on /th (defect 2, 2026-10-20)", () => {
+    renderWithMessages(<TeacherSignInForm />, { locale: "th" });
+    expect(screen.getByRole("heading", { name: "ยินดีต้อนรับสู่ Primary Advantage" })).toBeInTheDocument();
+    expect(screen.getByLabelText("ชื่อผู้ใช้")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "ลืมรหัสผ่าน?" })).toHaveAttribute("href", "/auth/forgot-password");
+    expect(screen.getByRole("button", { name: "เข้าสู่ระบบ" })).toBeInTheDocument();
+  });
+
+  it("shows a translated text for a wrong username or password, not the server text", async () => {
+    loginMock.mockRejectedValueOnce(Object.assign(new Error("Invalid username or password"), { status: 401 }));
+    renderWithMessages(<TeacherSignInForm />, { locale: "th" });
+    fireEvent.change(screen.getByLabelText("ชื่อผู้ใช้"), { target: { value: "qa-system" } });
+    fireEvent.change(screen.getByLabelText(/^รหัสผ่าน/), { target: { value: "wrong-pass-1" } });
+    fireEvent.click(screen.getByRole("button", { name: "เข้าสู่ระบบ" }));
+    expect(await screen.findByText("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง")).toBeInTheDocument();
   });
 });

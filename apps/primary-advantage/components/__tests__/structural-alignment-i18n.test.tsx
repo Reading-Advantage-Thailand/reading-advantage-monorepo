@@ -256,7 +256,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: "secret123" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
 
     await waitFor(() =>
       expect(mocks.login).toHaveBeenCalledWith("teacher-a", "secret123"),

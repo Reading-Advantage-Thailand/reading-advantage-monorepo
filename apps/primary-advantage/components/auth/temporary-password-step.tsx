@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@reading-advantage/ui";
 import { FormError } from "../form-error";
+import { useTranslations } from "next-intl";
 
 /** Shortest new password, as the server's password rule. */
 const MIN_LENGTH = 8;
@@ -30,13 +31,14 @@ export function TemporaryPasswordStep({
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | undefined>();
   const [isSaving, setIsSaving] = useState(false);
+  const t = useTranslations("AuthPage.temporary");
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(undefined);
-    if (newPassword.length < MIN_LENGTH) return setError(`Use at least ${MIN_LENGTH} characters.`);
-    if (newPassword !== confirm) return setError("The two passwords are not the same.");
-    if (newPassword === temporaryPassword) return setError("Use a password that is not the temporary password.");
+    if (newPassword.length < MIN_LENGTH) return setError(t("tooShort", { min: MIN_LENGTH }));
+    if (newPassword !== confirm) return setError(t("mismatch"));
+    if (newPassword === temporaryPassword) return setError(t("sameAsTemporary"));
     setIsSaving(true);
     try {
       const res = await fetch("/api/auth/temporary-password", {
@@ -44,13 +46,11 @@ export function TemporaryPasswordStep({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password: temporaryPassword, newPassword }),
       });
-      if (!res.ok) {
-        const body = (await res.json().catch(() => ({}))) as { message?: string };
-        throw new Error(body.message ?? "The password was not changed.");
-      }
+      // The server text is English: show the translated text (defect 2, 2026-10-20).
+      if (!res.ok) return setError(t("notChanged"));
       await onChanged(newPassword);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "The password was not changed.");
+    } catch {
+      setError(t("notChanged"));
     } finally {
       setIsSaving(false);
     }
@@ -59,22 +59,20 @@ export function TemporaryPasswordStep({
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Set a new password</h1>
-        <p className="text-muted-foreground text-sm text-balance">
-          You signed in with a temporary password. Set your own password to continue.
-        </p>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <p className="text-muted-foreground text-sm text-balance">{t("help")}</p>
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="new-password">New password</Label>
+        <Label htmlFor="new-password">{t("newPassword")}</Label>
         <Input id="new-password" type="password" autoComplete="new-password" value={newPassword} disabled={isSaving} onChange={(e) => setNewPassword(e.target.value)} />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="confirm-password">Type the new password again</Label>
+        <Label htmlFor="confirm-password">{t("confirm")}</Label>
         <Input id="confirm-password" type="password" autoComplete="new-password" value={confirm} disabled={isSaving} onChange={(e) => setConfirm(e.target.value)} />
       </div>
       <FormError message={error} />
       <Button type="submit" className="w-full" disabled={isSaving}>
-        {isSaving ? "Saving..." : "Save and sign in"}
+        {isSaving ? t("saving") : t("save")}
       </Button>
     </form>
   );

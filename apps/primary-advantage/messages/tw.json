@@ -1366,6 +1366,34 @@
     },
     "signup": {
       "title": "註冊"
+    },
+    "staff": {
+      "help": "請輸入您的使用者名稱。從舊系統移轉過來的老師請輸入自己的電子郵件。",
+      "username": "使用者名稱",
+      "password": "密碼",
+      "forgot": "忘記密碼？",
+      "submit": "登入",
+      "signingIn": "正在登入…",
+      "invalid": "使用者名稱或密碼不正確。",
+      "tooMany": "嘗試次數過多。請等幾分鐘後再試。",
+      "failed": "登入失敗。請再試一次。"
+    },
+    "temporary": {
+      "title": "設定新密碼",
+      "help": "您使用臨時密碼登入。請設定您自己的密碼以繼續。",
+      "newPassword": "新密碼",
+      "confirm": "再次輸入新密碼",
+      "save": "儲存並登入",
+      "saving": "正在儲存…",
+      "tooShort": "請至少使用 {min} 個字元。",
+      "mismatch": "兩次輸入的密碼不一致。",
+      "sameAsTemporary": "請使用與臨時密碼不同的密碼。",
+      "notChanged": "密碼未變更。"
+    },
+    "forgot": {
+      "title": "忘記密碼？",
+      "help": "請學校管理員為您設定新密碼。學校管理員：請聯絡 Primary Advantage 支援團隊。",
+      "back": "返回登入"
     }
   },
   "Settings": {

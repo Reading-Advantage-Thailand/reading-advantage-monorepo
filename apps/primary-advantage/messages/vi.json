@@ -1366,6 +1366,34 @@
     },
     "signup": {
       "title": "Đăng ký"
+    },
+    "staff": {
+      "help": "Nhập tên người dùng của bạn. Giáo viên chuyển từ hệ thống cũ hãy nhập địa chỉ email của mình.",
+      "username": "Tên người dùng",
+      "password": "Mật khẩu",
+      "forgot": "Quên mật khẩu?",
+      "submit": "Đăng nhập",
+      "signingIn": "Đang đăng nhập…",
+      "invalid": "Tên người dùng hoặc mật khẩu không đúng.",
+      "tooMany": "Bạn đã thử quá nhiều lần. Hãy đợi vài phút rồi thử lại.",
+      "failed": "Đăng nhập không thành công. Hãy thử lại."
+    },
+    "temporary": {
+      "title": "Đặt mật khẩu mới",
+      "help": "Bạn đã đăng nhập bằng mật khẩu tạm thời. Hãy đặt mật khẩu của riêng bạn để tiếp tục.",
+      "newPassword": "Mật khẩu mới",
+      "confirm": "Nhập lại mật khẩu mới",
+      "save": "Lưu và đăng nhập",
+      "saving": "Đang lưu…",
+      "tooShort": "Dùng ít nhất {min} ký tự.",
+      "mismatch": "Hai mật khẩu không giống nhau.",
+      "sameAsTemporary": "Dùng mật khẩu khác với mật khẩu tạm thời.",
+      "notChanged": "Mật khẩu chưa được thay đổi."
+    },
+    "forgot": {
+      "title": "Quên mật khẩu?",
+      "help": "Hãy nhờ quản trị viên của trường đặt mật khẩu mới cho bạn. Quản trị viên của trường: hãy liên hệ bộ phận hỗ trợ của Primary Advantage.",
+      "back": "Quay lại trang đăng nhập"
     }
   },
   "Settings": {

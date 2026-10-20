@@ -1,94 +1,30 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
+import { KeyRound } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
-import { Label } from "@reading-advantage/ui";
-import { Input } from "../ui/input";
-import { ShieldCheck } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
+/**
+ * The forgot-password page. The app sends no e-mail: the old form said "The email has been sent!"
+ * and sent nothing (PR review 2026-10-20, defect 1). A school admin sets a new teacher password on
+ * the Teachers page, and Primary Advantage support helps a school admin.
+ * @param props.className Extra classes.
+ * @returns The page body.
+ */
 export function UserResetPassForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string>("");
-
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
-    setError("");
-    const target = event.target as typeof event.target & {
-      email: { value: string };
-    };
-    const email = target.email.value;
-    try {
-      // const response = await fetch("/api/send", {
-      //   method: "POST",
-      //   body: JSON.stringify({ email }),
-      // });
-      // if (!response.ok) {
-      //   throw new Error("Failed to send email");
-      // }
-      setIsEmailSent(true);
-      setIsLoading(false);
-    } catch (error) {
-      setError("Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const t = useTranslations("AuthPage.forgot");
   return (
-    <>
-      {!isEmailSent ? (
-        <>
-          <div className="mb-2 flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Forgot your password?
-            </h1>
-            <p className="text-muted-foreground text-sm">
-              Enter your email and we’ll send you a link to reset your password.
-            </p>
-          </div>
-          <div className={cn("grid gap-6", className)} {...props}>
-            <form onSubmit={onSubmit}>
-              <div className="grid gap-2">
-                <div className="grid gap-1">
-                  <Label className="sr-only" htmlFor="email">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    placeholder="name@example.com"
-                    type="email"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    autoCorrect="off"
-                    disabled={isLoading}
-                    required
-                  />
-                </div>
-                {error && <div className="text-sm text-red-500">{error}</div>}
-                <Button disabled={isLoading}>
-                  {isLoading && (
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  Send Forgot Password Email
-                </Button>
-              </div>
-            </form>
-          </div>
-        </>
-      ) : (
-        <div className="flex flex-col items-center justify-center space-y-2 text-center">
-          <ShieldCheck width={88} height={88} className="stroke-[#73f79c]" />
-          <h1 className="text-2xl font-semibold tracking-tight text-green-300">
-            The email has been sent!. Please check your email to reset your
-            password.
-          </h1>
-        </div>
-      )}
-    </>
+    <div className={cn("flex flex-col items-center gap-4 text-center", className)} {...props}>
+      <KeyRound className="h-12 w-12" aria-hidden="true" />
+      <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+      <p className="text-muted-foreground text-sm text-balance">{t("help")}</p>
+      <Link href="/auth/signin" className="text-sm underline underline-offset-4">
+        {t("back")}
+      </Link>
+    </div>
   );
 }

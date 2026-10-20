@@ -1366,6 +1366,34 @@
     },
     "signup": {
       "title": "注册"
+    },
+    "staff": {
+      "help": "请输入您的用户名。从旧系统迁移过来的老师请输入自己的电子邮箱。",
+      "username": "用户名",
+      "password": "密码",
+      "forgot": "忘记密码？",
+      "submit": "登录",
+      "signingIn": "正在登录…",
+      "invalid": "用户名或密码不正确。",
+      "tooMany": "尝试次数过多。请等几分钟后再试。",
+      "failed": "登录失败。请再试一次。"
+    },
+    "temporary": {
+      "title": "设置新密码",
+      "help": "您使用临时密码登录。请设置您自己的密码以继续。",
+      "newPassword": "新密码",
+      "confirm": "再次输入新密码",
+      "save": "保存并登录",
+      "saving": "正在保存…",
+      "tooShort": "请至少使用 {min} 个字符。",
+      "mismatch": "两次输入的密码不一致。",
+      "sameAsTemporary": "请使用与临时密码不同的密码。",
+      "notChanged": "密码未更改。"
+    },
+    "forgot": {
+      "title": "忘记密码？",
+      "help": "请学校管理员为您设置新密码。学校管理员：请联系 Primary Advantage 支持团队。",
+      "back": "返回登录"
     }
   },
   "Settings": {
