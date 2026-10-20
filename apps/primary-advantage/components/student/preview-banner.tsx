@@ -19,7 +19,8 @@ export function PreviewBanner({ exitHref }: { exitHref: string }) {
           {t("exit")}
         </RpgLink>
       </div>
-      <p className="cq-on-scene text-sm">{t("bannerNote")}</p>
+      {/* A dark backing: the light text was hard to read on the day sky (owner look check 2026-10-19). */}
+      <p className="cq-on-scene self-start rounded-md bg-black/55 px-2 py-1 text-sm">{t("bannerNote")}</p>
     </div>
   );
 }

@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { rpgButton } from "@/components/rpg/chrome";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { finishQuiz, retakeQuiz } from "@/actions/question";
@@ -569,13 +570,14 @@ function LessonMCQContentView({ article }: { article: Article }) {
   return (
     <div className="w-full space-y-4">
       {/* Progress Header */}
-      <div className="rounded-lg border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 dark:border-blue-800 dark:from-blue-950/50 dark:to-indigo-950/50">
+      {/* The chibi quest skin (owner look check 2026-10-19, V7): a parchment well, not the old blue box. */}
+      <div className="lf-well p-4">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-              <Brain className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            <div className="lf-medal h-8 w-8">
+              <Brain className="h-4 w-4" />
             </div>
-            <span className="font-semibold text-blue-900 dark:text-blue-100">
+            <span className="font-semibold text-[var(--cq-ink)]">
               {t("header.title")}
             </span>
           </div>
@@ -587,7 +589,7 @@ function LessonMCQContentView({ article }: { article: Article }) {
 
         {/* Progress Bar */}
         <div className="space-y-2">
-          <div className="flex justify-between text-sm text-blue-700 dark:text-blue-300">
+          <div className="lf-text-gold flex justify-between text-sm">
             <span>
               {t("header.questionOf", {
                 current: currentIndex + 1,
@@ -611,7 +613,7 @@ function LessonMCQContentView({ article }: { article: Article }) {
                 questions.length) *
               100
             }
-            className="h-2 bg-blue-100 dark:bg-blue-900"
+            className="h-2 bg-black/10"
           />
         </div>
 
@@ -620,15 +622,15 @@ function LessonMCQContentView({ article }: { article: Article }) {
           {progress.map((status, idx) => {
             if (status === AnswerStatus.CORRECT) {
               return (
-                <CheckCircle key={idx} className="h-5 w-5 text-green-500" />
+                <CheckCircle key={idx} className="lf-text-good h-5 w-5" />
               );
             } else if (status === AnswerStatus.INCORRECT) {
-              return <XCircle key={idx} className="h-5 w-5 text-red-500" />;
+              return <XCircle key={idx} className="lf-text-bad h-5 w-5" />;
             }
             return (
               <Circle
                 key={idx}
-                className="h-5 w-5 text-gray-300 dark:text-gray-600"
+                className="h-5 w-5 text-[var(--cq-parchment-edge)]"
               />
             );
           })}
@@ -637,9 +639,9 @@ function LessonMCQContentView({ article }: { article: Article }) {
 
       {/* Question Card - Only show if there's a current question */}
       {currentQuestion && (
-        <Card className="border-0 bg-white shadow-sm dark:bg-gray-900">
+        <Card className="lf-well shadow-none">
           <CardHeader className="pb-4">
-            <CardTitle className="text-lg leading-relaxed font-bold text-gray-900 dark:text-gray-100">
+            <CardTitle className="text-lg leading-relaxed font-bold text-[var(--cq-ink)]">
               {currentQuestion.question}
             </CardTitle>
           </CardHeader>
@@ -662,14 +664,11 @@ function LessonMCQContentView({ article }: { article: Article }) {
                     variant="outline"
                     className={cn(
                       "h-auto w-full justify-start border-2 p-4 text-left transition-all duration-200",
-                      !activeQuestion &&
-                        "border-gray-200 hover:border-blue-300 dark:border-gray-700 dark:hover:border-blue-600",
-                      shouldShowAsCorrect &&
-                        "border-green-300 bg-green-50 text-green-900 dark:border-green-700 dark:bg-green-950/30 dark:text-green-100",
-                      shouldShowAsIncorrect &&
-                        "border-red-300 bg-red-50 text-red-900 dark:border-red-700 dark:bg-red-950/30 dark:text-red-100",
-                      shouldHighlightCorrect &&
-                        "border-green-300 bg-green-50 text-green-900 dark:border-green-700 dark:bg-green-950/30 dark:text-green-100",
+                      "lf-well",
+                      !activeQuestion && "hover:border-[var(--cq-gold-dark)]",
+                      shouldShowAsCorrect && "lf-good",
+                      shouldShowAsIncorrect && "lf-bad",
+                      shouldHighlightCorrect && "lf-good",
                     )}
                     onClick={() => {
                       if (!activeQuestion) {
@@ -681,12 +680,9 @@ function LessonMCQContentView({ article }: { article: Article }) {
                       <div className="flex items-center space-x-2">
                         <div
                           className={cn(
-                            "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 text-sm font-bold transition-colors",
-                            shouldShowAsCorrect ||
-                              (shouldHighlightCorrect &&
-                                "border-green-500 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"),
-                            shouldShowAsIncorrect &&
-                              "border-red-500 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+                            "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-[var(--cq-wood-dark)] text-sm font-bold transition-colors",
+                            (shouldShowAsCorrect || shouldHighlightCorrect) && "lf-good",
+                            shouldShowAsIncorrect && "lf-bad",
                           )}
                         >
                           {String.fromCharCode(65 + i)}
@@ -694,12 +690,12 @@ function LessonMCQContentView({ article }: { article: Article }) {
                         <span className="flex-1 text-left">{option}</span>
                         {isSelectedOption &&
                           (correctAnswer ? (
-                            <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-500" />
+                            <CheckCircle className="lf-text-good h-5 w-5 flex-shrink-0" />
                           ) : (
-                            <XCircle className="h-5 w-5 flex-shrink-0 text-red-500" />
+                            <XCircle className="lf-text-bad h-5 w-5 flex-shrink-0" />
                           ))}
                         {shouldHighlightCorrect && (
-                          <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-500" />
+                          <CheckCircle className="lf-text-good h-5 w-5 flex-shrink-0" />
                         )}
                       </div>
                     </p>
@@ -713,7 +709,7 @@ function LessonMCQContentView({ article }: { article: Article }) {
               <div className="flex justify-end pt-4">
                 <Button
                   size={"lg"}
-                  className="min-w-32 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+                  className={cn(rpgButton("gold"), "min-w-32")}
                   disabled={isPanding}
                   onClick={() => {
                     if (currentIndex < questions.length - 1) {

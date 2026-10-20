@@ -26,6 +26,7 @@ export default function TaskVocabularyCollection({
   article: Article;
 }) {
   const t = useTranslations("Lesson.PreviewVocabulary");
+  const tTasks = useTranslations("Lesson.tasks");
   const locale = useLocale();
   const [loading, setLoading] = useState(true);
   const [wordList, setWordList] = useState<WordList[]>([]);
@@ -65,7 +66,8 @@ export default function TaskVocabularyCollection({
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <TaskHeader icon={<BookmarkIcon />} title={t("title")} subtitle={t("subtitle")} />
+      {/* The step name, as on the step rail: the title of step 2 ("Preview Vocabulary") was shown here. */}
+      <TaskHeader icon={<BookmarkIcon />} title={tTasks("vocabularyCollection")} subtitle={t("subtitle")} />
 
       {/* Vocabulary Cards */}
       <div className="cq-panel overflow-hidden p-4 sm:p-6">
