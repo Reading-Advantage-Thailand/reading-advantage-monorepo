@@ -2,8 +2,8 @@
 // start kit captures (local test copy, demo teacher, light scheme). Do not edit by hand: run the script again.
 
 /**
- * A numbered mark on a manual picture, in percent of the picture. `n` is the step number. `at: "top"` puts the
- * number above the middle of the box (default: outside the top-right corner).
+ * A numbered mark on a manual picture, in percent of the picture. `n` is the step number. `at` puts the number
+ * above the middle of the box (`top`) or left of the box (`left`); the default is outside the top-right corner.
  */
 export interface ManualMark {
   n?: number;
@@ -11,7 +11,7 @@ export interface ManualMark {
   y: number;
   w: number;
   h: number;
-  at?: "top";
+  at?: "top" | "left";
 }
 
 /** A picture of the in-app teacher manual with its marks. */
@@ -32,7 +32,7 @@ export const MANUAL_FIGURES = {
   classStarted: { src: "/manual/classStarted.webp", width: 1455, height: 750, marks: [{ n: 2, x: 2.58, y: 11.76, w: 94.02, h: 40.8 }, { n: 4, x: 13.4, y: 55.76, w: 11.55, h: 9.6 }] },
   roster: { src: "/manual/roster.webp", width: 1455, height: 390, marks: [{ x: 48.45, y: 33.92, w: 14.33, h: 18.46 }, { x: 50.72, y: 74.0, w: 12.06, h: 18.46 }] },
   assignBook: { src: "/manual/assignBook.webp", width: 1455, height: 480, marks: [{ n: 2, x: 2.37, y: 31.19, w: 94.43, h: 15.0 }, { n: 3, x: 2.37, y: 57.44, w: 46.6, h: 15.0, at: "top" }, { n: 4, x: 50.21, y: 57.44, w: 46.6, h: 15.0 }, { n: 4, x: 2.37, y: 76.19, w: 9.9, h: 15.0 }] },
-  classBook: { src: "/manual/classBook.webp", width: 1455, height: 510, marks: [{ n: 1, x: 2.37, y: 76.29, w: 13.4, h: 14.12 }] },
+  classBook: { src: "/manual/classBook.webp", width: 1491, height: 510, marks: [{ n: 1, x: 4.73, y: 76.29, w: 13.08, h: 14.12, at: "left" }] },
   lessonGuide: { src: "/manual/lessonGuide.webp", width: 1470, height: 810, marks: [{ n: 2, x: 1.43, y: 22.19, w: 97.35, h: 73.63 }, { n: 3, x: 23.78, y: 83.7, w: 19.69, h: 8.15 }, { n: 4, x: 50.0, y: 9.59, w: 12.45, h: 8.15 }] },
   projector: { src: "/manual/projector.webp", width: 1470, height: 840, marks: [] },
   lessonPlan: { src: "/manual/lessonPlan.webp", width: 1455, height: 510, marks: [{ n: 1, x: 78.56, y: 16.41, w: 20.21, h: 12.94 }] },

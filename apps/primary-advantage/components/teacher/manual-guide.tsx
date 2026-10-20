@@ -24,7 +24,7 @@ function UiLabel({ children }: { children?: ReactNode }) {
 
 /**
  * A manual picture with its numbered marks, in the print style: a black stroke with a white outline
- * outside the control, and the number in a circle outside the top-right corner (or above the middle).
+ * outside the control, and the number in a circle outside the top-right corner (or above the middle, or left).
  * @param props.id The picture.
  * @param props.caption What the picture shows; also its alternative text.
  * @param props.testData The note that the picture holds test data.
@@ -48,8 +48,8 @@ function ManualPicture({ id, caption, testData }: { id: ManualFigureId; caption:
             {mark.n && (
               <span
                 className={cn(
-                  "absolute -top-4 grid size-6 place-items-center rounded-full bg-black text-xs font-bold text-white shadow-[0_0_0_2px_white]",
-                  mark.at === "top" ? "left-1/2 -translate-x-1/2" : "-right-4",
+                  "absolute grid size-6 place-items-center rounded-full bg-black text-xs font-bold text-white shadow-[0_0_0_2px_white]",
+                  mark.at === "top" ? "-top-4 left-1/2 -translate-x-1/2" : mark.at === "left" ? "top-1/2 -left-8 -translate-y-1/2" : "-top-4 -right-4",
                 )}
               >
                 {mark.n}
