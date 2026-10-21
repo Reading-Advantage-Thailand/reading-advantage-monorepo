@@ -538,11 +538,14 @@ export async function getAssignmentActivityById(id: string, userId: string) {
       )
       .limit(1);
 
-    if (!assignmentActivity) {
-      throw new Error("Assignment activity not found");
-    }
-
-    return assignmentActivity;
+    // No row yet means no sentence activity is done (as getArticleActivity in lessonModel). A
+    // lesson whose progress row has no activity row showed a load error at step 12 (PR, J6, 2026-10-21).
+    return assignmentActivity ?? {
+      isSentenceMatchingCompleted: false,
+      isSentenceOrderingCompleted: false,
+      isSentenceWordOrderingCompleted: false,
+      isSentenceClozeTestCompleted: false,
+    };
   } catch (error) {
     console.error("Model Error - getAssignmentActivityById:", error);
     if (error instanceof Error) {
