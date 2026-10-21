@@ -30,6 +30,7 @@
 - [Subject Programs 2027 Capacity Check](./subject-programs-2027-capacity.md)
 - [Subject Programs Open Decisions](./subject-programs-open-decisions.md)
 - [Primary Mastery Graph Program](./primary-mastery-graph-program.md)
+- [Storytime Advantage Program](./storytime-advantage-program.md)
 - [Chibi Quest in Primary Program](./chibi-quest-primary-program.md)
 
 ## Audit Reports
