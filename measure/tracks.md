@@ -20,7 +20,7 @@ This file tracks all major tracks for the project.
 - [ ] **Track: Storytime Advantage Program** — *created 2026-10-21*
   *Link: [./tracks/storytime_advantage_program_20261021/](./tracks/storytime_advantage_program_20261021/)*
   *Status: proposed; design complete, decisions S1 to S14 open; planning only, no code, no public date | Priority: MEDIUM | Owner fixed the shape and approved Chibi Sprouts 2026-10-21*
-  *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin); MVP is Levels 1 and 2 in print. Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
+  *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin); release 1 on 2026-12-01 is Level 2 weeks 1 to 8 in print and by QR, then Level 2 and Level 1 complete for May 2027. Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
 
 - [ ] **Track: Real Advantage logos on the www site** — *created 2026-10-08*
   *Link: [./tracks/www_real_logos_20261008/](./tracks/www_real_logos_20261008/)*

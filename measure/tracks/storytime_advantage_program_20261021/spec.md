@@ -59,8 +59,8 @@ The program serves the Thai Basic Education Core Curriculum B.E. 2551 Foreign La
 
 ### FR-6 Content production
 - All content is made in the Workbooks repo under the Primary production rules: Claude writes every asset, Daniel checks the Thai, the injector writes the database, the app has no generator.
-- Decodable books per design §6.1 (84; 8 story pages; decodability gate; cumulative rule; the "Sounds in this book" page; the Pip world drawn young, names decodable at the week). Read-along books per §6.2 (112; the same library re-cut as the leveled class sets aa to C; no separate leveled series for MVP). Songs per §6.3 (112; fixed verse-chorus structure carrying the frame; 24 named gestures; a karaoke cut).
-- Phoneme audio: a test of mmx speech on the 44 sounds in month 2; a recorded human phoneme bank if fewer than 40 pass (design §6.4, S5).
+- Decodable books per design §6.1 (84; 8 story pages; decodability gate; cumulative rule; the "Sounds in this book" page; the Pip world drawn young, names decodable at the week). Read-along books per §6.2 (112; the same library re-cut as the leveled class sets aa to C; no separate leveled series for MVP). Songs per §6.3 (112; fixed verse-chorus structure carrying the frame; 24 named gestures; a karaoke cut; one picture per lyric line to drive comprehension, Daniel 2026-10-22). The read-along class sets carry the band names Seed, Sprout, Leaf, Bud, Flower (S15).
+- Song audio comes from a licensed scriptable source chosen in S16 (mmx music is closed to new users since 2026-08-20). Phoneme audio: a test of mmx speech on the 44 sounds by 2026-10-29; a recorded human phoneme bank if fewer than 40 pass (design §6.4, S5).
 - The Workbooks lesson package gains `meta.program = "storytime"` and `meta.shape = "storytime-week"`; a package is one week; the injector key is `(program, level, week)` (design §6.6).
 
 ### FR-7 Assessment and placement
@@ -81,7 +81,7 @@ The program serves the Thai Basic Education Core Curriculum B.E. 2551 Foreign La
 - Platform contracts (§10.6): `programSchema` gains `storytime` (requested from the Science track now, S8); `objectiveSkillSchema`, `shortIdSchema`, `evidence-policy.ts`, and `record-evidence.ts` gain Phonics, Speaking, and Writing (one task); hosting in the shared container under a storytime hostname with amber brand tokens.
 
 ### FR-11 MVP and milestones
-- MVP = Option B in design §11: Levels 1 and 2 print-first, songs and books by QR, benchmarks, training, no app. Option A (Level 2 only) is the stop-rule fallback. Milestones are relative (months 1 to 8) until Daniel sets dates. Capacity and Daniel's hours in §11.3; stop rules in §11.4.
+- MVP = Option B in design §11: Levels 1 and 2 print-first, songs and books by QR, benchmarks, training, no app. Release 1 (Daniel, 2026-10-22, S17): 2026-12-01 with Level 2 weeks 1 to 8 in print and by QR plus the sales pack; Level 2 complete by 2027-02-15; Level 1 by 2027-04-15; first school from May 2027. Stop rules in plan.md and design §11.4.
 
 ## Non-Functional Requirements
 
@@ -103,7 +103,7 @@ The program serves the Thai Basic Education Core Curriculum B.E. 2551 Foreign La
 
 1. The phonics graph passes the shared validation gate and the Storytime rules; the Graph session has reviewed it.
 2. `wordWall()` and `decodability()` pass their tests, and every Level 2 decodable passes the 0.90 gate with zero untaught words.
-3. Level 2 week 1 exists as one Workbooks package with the five scripts, the decodable, the read-along, the song with video and karaoke cut, the review strips, the check sheet, and the home card; Daniel's Thai check is recorded.
+3. (Release 1) Level 2 weeks 1 to 8 exist as Workbooks packages, week 1 first, with the five scripts, the decodable, the read-along, the song with video and karaoke cut, the review strips, the check sheet, and the home card; Daniel's Thai check is recorded.
 4. All 28 Level 2 weeks and all 28 Level 1 weeks are in the canonical store with node ids on every row.
 5. The teacher book for each level builds from the manual generator with the four headings and the three variant lines on every step.
 6. The song and read-along of any week open from the home card QR in the read-along player without a login.
