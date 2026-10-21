@@ -27,6 +27,8 @@ export const DRAWER_PAGE = 8;
  */
 export function AvatarHome({ state }: { state: AvatarState & { profile: NonNullable<AvatarState["profile"]> } }) {
   const t = useTranslations("Avatar");
+  // A dye the messages do not name yet (a new Forge pack) shows its catalog id.
+  const dyeName = (dye: string) => (t.has(`dyeNames.${dye}`) ? t(`dyeNames.${dye}`) : dye);
   const [loadout, setLoadout] = useState<AvatarLoadout>(state.loadout);
   const [slot, setSlot] = useState<AvatarSlot | null>(null);
   const [page, setPage] = useState(0);
@@ -116,7 +118,7 @@ export function AvatarHome({ state }: { state: AvatarState & { profile: NonNulla
                       <ItemIcon itemId={item.itemId} slot={slot} />
                       <span className="cq-item-name">
                         {pieceName(item.itemId)}
-                        {item.dye ? ` · ${item.dye}` : ""}
+                        {item.dye ? ` · ${dyeName(item.dye)}` : ""}
                       </span>
                       {color ? <span className="cq-pot" style={{ backgroundColor: color }} aria-hidden="true" /> : null}
                       {isWorn ? <span className="cq-item-lock">{t("shop.wornBadge")}</span> : null}
@@ -146,7 +148,8 @@ export function AvatarHome({ state }: { state: AvatarState & { profile: NonNulla
           <img src={ART.chest} alt="" />
           {t("shop.shopLink")}
         </RpgLink>
-        <RpgLink href="/student/avatar?from=me" tone="iron">
+        {/* Any `from` opens the picker; "home" has no return entry, so Save comes back to the avatar home. */}
+        <RpgLink href="/student/avatar?from=home" tone="iron">
           {t("shop.changeHero")}
         </RpgLink>
       </div>

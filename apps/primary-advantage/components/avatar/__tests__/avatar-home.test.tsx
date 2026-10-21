@@ -74,6 +74,15 @@ describe("AvatarHome", () => {
     expect(within(drawer).getByRole("button", { name: "Take off" })).toBeInTheDocument();
   });
 
+  it("names a dye in the student's language and keeps an unnamed dye as its id (F2/F4, 2026-10-21)", async () => {
+    const user = userEvent.setup();
+    const dyed = { ...state(), inventory: [owned("cloak"), owned("cloak", "teal"), owned("cloak", "glow")] };
+    renderWithMessages(<AvatarHome state={dyed} />, { locale: "th" });
+    await user.click(screen.getByRole("button", { name: "หลัง" }));
+    expect(screen.getByText("Cloak · เขียวหัวเป็ด")).toBeInTheDocument();
+    expect(screen.getByText("Cloak · glow")).toBeInTheDocument();
+  });
+
   it("shows the error when the server refuses and keeps the shop and hero links", async () => {
     const user = userEvent.setup();
     fetchMock.mockResolvedValue({ ok: false, json: async () => ({}) });
@@ -82,6 +91,6 @@ describe("AvatarHome", () => {
     await user.click(screen.getByRole("button", { name: "ถอด" }));
     expect(await screen.findByRole("alert")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /ไปที่ร้านค้า/ })).toHaveAttribute("href", "/student/avatar/shop");
-    expect(screen.getByRole("link", { name: "เปลี่ยนฮีโร่หรือสี" })).toHaveAttribute("href", "/student/avatar?from=me");
+    expect(screen.getByRole("link", { name: "เปลี่ยนฮีโร่หรือสี" })).toHaveAttribute("href", "/student/avatar?from=home");
   });
 });

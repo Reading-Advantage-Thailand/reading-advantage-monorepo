@@ -55,6 +55,23 @@ describe("TeacherChallengePanel", () => {
     expect(button?.style.borderImageSource).toMatch(/^var\(--apk-arcade-button-(primary|secondary)-image, url\("\/games\/assets\/apk\/standard-pack-qc\/apk-ui-button-(primary|secondary)\.png"\)\)$/);
   });
 
+  it("shows the host's labels for the fields, the word legend, and a failure (Thai UI, 2026-10-21)", async () => {
+    fetchMock
+      .mockResolvedValueOnce(response({ error: "unavailable" }, 503))
+      .mockResolvedValueOnce(response({ classes: [{ id: classId, name: "Class A" }], hasMore: false }));
+    render(<TeacherChallengePanel ownerKey="school-1:teacher-1" games={{ "wizard-vs-zombie": { title: "Wizard", version: "2026-09-09.1" } }}
+      labels={{ title: "สร้างชาเลนจ์ของชั้นเรียน", classesError: "โหลดชั้นเรียนไม่ได้", tryAgain: "ลองอีกครั้ง", challengeTitle: "ชื่อชาเลนจ์", word: "คำที่ {n}" }} />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("โหลดชั้นเรียนไม่ได้");
+    fireEvent.click(screen.getByRole("button", { name: "ลองอีกครั้ง" }));
+    await screen.findByRole("option", { name: "Class A" });
+    expect(screen.getByRole("region", { name: "สร้างชาเลนจ์ของชั้นเรียน" })).toBeInTheDocument();
+    expect(screen.getByLabelText("ชื่อชาเลนจ์")).toBeInTheDocument();
+    expect(screen.getByText("คำที่ 1")).toBeInTheDocument();
+    expect(screen.getByLabelText("English answer")).toBeInTheDocument();
+    expect(screen.queryByText("Create class challenge")).not.toBeInTheDocument();
+  });
+
   it("creates a fixed Thai-to-English reading challenge", async () => {
     fetchMock
       .mockResolvedValueOnce(response({ classes: [{ id: classId, name: "Class A" }], hasMore: false }))

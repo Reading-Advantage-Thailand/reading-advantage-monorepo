@@ -70,6 +70,8 @@ export function AvatarShop({
   loadout: AvatarLoadout;
 }) {
   const t = useTranslations("Avatar");
+  // A dye the messages do not name yet (a new Forge pack) shows its catalog id.
+  const dyeName = (dye: string) => (t.has(`dyeNames.${dye}`) ? t(`dyeNames.${dye}`) : dye);
   const { isPreview, noteText } = usePreviewSave();
   const [items, setItems] = useState(initial);
   const [gp, setGp] = useState(initialGp);
@@ -311,8 +313,8 @@ export function AvatarShop({
                       aria-checked={dye === d}
                       aria-label={
                         selected.ownedDyes.includes(d)
-                          ? `${d} · ${t("shop.owned")}`
-                          : d
+                          ? `${dyeName(d)} · ${t("shop.owned")}`
+                          : dyeName(d)
                       }
                       onClick={() => setDye(d)}
                       className="cq-pot !h-10 !w-10"
@@ -347,7 +349,7 @@ export function AvatarShop({
                     {price === 0
                       ? t("shop.free")
                       : dye
-                        ? t("shop.buyDye", { dye, gp: price })
+                        ? t("shop.buyDye", { dye: dyeName(dye), gp: price })
                         : t("shop.buy", { gp: price })}
                   </RpgButton>
                 ) : (

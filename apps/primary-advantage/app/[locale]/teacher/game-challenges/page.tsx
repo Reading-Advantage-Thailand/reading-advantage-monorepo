@@ -69,7 +69,7 @@ export default async function TeacherGameChallengesPage({ params }: { params: Pr
         description={ts("challengesHint")}
       />
       <div className={FIELD_FRAME} style={PANEL_FRAME_STYLE}>
-        <TeacherChallengePanel ownerKey={`${user.schoolId}:${user.id}`} games={games} endpoint="/api/v1/apk/challenges" classesEndpoint="/api/v1/apk/challenges/teacher-classes" />
+        <TeacherChallengePanel ownerKey={`${user.schoolId}:${user.id}`} games={games} endpoint="/api/v1/apk/challenges" classesEndpoint="/api/v1/apk/challenges/teacher-classes" labels={t.raw("challengePanel")} />
       </div>
     </div>
   );

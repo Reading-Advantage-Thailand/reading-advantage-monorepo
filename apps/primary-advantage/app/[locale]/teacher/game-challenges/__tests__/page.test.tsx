@@ -21,7 +21,7 @@ it("authorizes a teacher and passes the challenge configuration", async () => {
   mocks.locale = "zh";
   mocks.user.mockResolvedValue({ id: "teacher-1", schoolId: "school-1", role: "TEACHER" });
   render(await Page({ params: Promise.resolve({ locale: "zh" }) }));
-  expect(JSON.parse(screen.getByTestId("panel").getAttribute("data-props") ?? "{}")).toMatchObject({ ownerKey: "school-1:teacher-1", games: { dragon: { title: "Dragon", version: "v1" } } });
+  expect(JSON.parse(screen.getByTestId("panel").getAttribute("data-props") ?? "{}")).toMatchObject({ ownerKey: "school-1:teacher-1", games: { dragon: { title: "Dragon", version: "v1" } }, labels: en.TeacherClass.challengePanel });
   expect(screen.getByRole("link", { name: en.TeacherClass.backToClasses })).toHaveAttribute("href", "/zh/teacher/my-classes");
 });
 it("puts the panel in the teacher shell with a heading, a 44 px back link, and visible fields (audit T13)", async () => {
