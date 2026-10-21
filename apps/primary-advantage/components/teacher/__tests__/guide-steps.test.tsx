@@ -14,6 +14,7 @@ vi.mock("@/i18n/navigation", () => ({
 vi.mock("@/actions/class-books", () => ({ markStepDoneAction: vi.fn() }));
 
 import { GuideOverlay } from "../guide-overlay";
+import { scriptWithoutPictures } from "../guide-script";
 import { GuideSteps } from "../guide-steps";
 
 const step = (n: number, period: number) => ({ step: n, title: `Step ${n}`, period, teacherActions: [], teacherLanguage: [], studentActions: [], watchFor: [], scriptMd: null });
@@ -35,6 +36,52 @@ describe("GuideSteps games link", () => {
     render(<GuideSteps guide={guide} t={t} />);
     const links = screen.getAllByRole("link", { name: en.guide.games });
     expect(links.map((a) => a.getAttribute("href"))).toEqual(["/teacher/game-challenges", "/teacher/game-challenges"]);
+  });
+});
+
+// The start of the Workbooks step 1 script (Teacher guide/step-1.md), with its two picture lines.
+const SCRIPT = [
+  "# Step 1: Introduction (Interest & Orientation)",
+  "",
+  "---",
+  "",
+  "## What teachers project on screen:",
+  "",
+  "![App screenshot showing the introduction screen with title, image, and star rating](app step 1.png)",
+  "",
+  "## What students see in their workbook:",
+  "",
+  "![Workbook page showing Before You Read section with star rating](WB 1 - before you read.png)",
+  "",
+  "---",
+  "",
+  "## 1. What the teacher says",
+  "",
+  "> “Everyone, look at the screen.”",
+  "",
+  "The teacher reads the title **slowly and clearly**, once.",
+  "",
+  "- Point to the stars.",
+].join("\n");
+
+describe("GuideSteps full script (PR defect 2026-10-21: raw Markdown)", () => {
+  it("removes the pictures, their headings, and the double rule", () => {
+    const out = scriptWithoutPictures(SCRIPT);
+    expect(out).not.toMatch(/!\[|\.png|What teachers project|What students see/);
+    expect(out.match(/^---$/gm)).toHaveLength(1);
+    expect(out).toContain("## 1. What the teacher says");
+  });
+
+  it("renders the script as headings, a quote, bold text, and a list", () => {
+    render(<GuideSteps guide={[{ period: 1, steps: [{ ...step(1, 1), scriptMd: SCRIPT }] }]} t={t} />);
+    const script = document.querySelector("[data-guide-script]")!;
+    expect(script.querySelector("h5")).toHaveTextContent("Step 1: Introduction (Interest & Orientation)");
+    expect(script.querySelector("h6")).toHaveTextContent("1. What the teacher says");
+    expect(script.querySelector("blockquote")).toHaveTextContent("“Everyone, look at the screen.”");
+    expect(script.querySelector("strong")).toHaveTextContent("slowly and clearly");
+    expect(script.querySelector("li")).toHaveTextContent("Point to the stars.");
+    expect(script.querySelector("img")).toBeNull();
+    expect(script.textContent).not.toMatch(/##|\*\*|\[App screenshot/);
   });
 });
 

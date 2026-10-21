@@ -119,7 +119,7 @@ describe("teacher lesson page (FR-8, FR-9, FR-12, FR-13)", () => {
     expect(within(guideRegion).getByRole("region", { name: "Period 1" })).toBeInTheDocument();
     expect(within(guideRegion).getByRole("region", { name: "Period 3" })).toBeInTheDocument();
     expect(within(guideRegion).getAllByText(en.guide.done)).toHaveLength(2);
-    expect(within(guideRegion).getByText("# Step 1 script")).toBeInTheDocument();
+    expect(within(guideRegion).getByRole("heading", { level: 5, name: "Step 1 script" })).toBeInTheDocument();
     // only the practice step 9 links the games: the projector games of the lesson
     expect(within(guideRegion).getAllByRole("link", { name: en.guide.games }).map((a) => a.getAttribute("href"))).toEqual([`${HERE}/projector#projector-games`]);
   });
