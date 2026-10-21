@@ -34,8 +34,10 @@ Forge sends the full text of `scripts/monorepo-handoff.ts --target <branch>`.
 5. Check the commit: the subject is `chore(game-cartridges-3d): sync from Forge <sha> (track_id: apk3d_games_port_20261003)`.
    Read `git show --stat HEAD`.
 6. When the handoff has a skin sync step (the RPG skin or the avatar pack changed), run it in the same
-   delivery, before the app rebuild: `monorepo-sync.ts --skin <target checkout> --check`, then without
-   `--check`, then commit the app files. Else the avatars answer 404. Step 4 then also checks
+   delivery, before the app rebuild. From the Forge root, run
+   `node --import tsx scripts/monorepo-sync.ts --skin <path to a monorepo checkout on the target branch> --check`,
+   then the same without `--check`. It writes `apps/primary-advantage/public/rpg/` and
+   `public/packs/avatar/` below that path. Commit those app files. Else the avatars answer 404. Step 4 then also checks
    `packs/avatar/<version>/pack.json` and `rpg/skin.json`.
 
 ## 3. Merge into the target
