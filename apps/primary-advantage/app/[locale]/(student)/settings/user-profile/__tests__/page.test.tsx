@@ -34,4 +34,11 @@ describe("user profile page", () => {
     expect(screen.queryByText(/licen/i)).toBeNull();
     expect(document.querySelector('input[name="license"]')).toBeNull();
   });
+
+  it("links a student to the avatar home, not the picker (PR found no way back to the vault, 2026-10-21)", async () => {
+    mocks.user = { ...mocks.user, role: "STUDENT" };
+    const ui = await UserProfileSettingsPage({ params: Promise.resolve({ locale: "en" }) });
+    renderWithMessages(ui as React.ReactElement);
+    expect(screen.getByRole("link", { name: "avatar" })).toHaveAttribute("href", "/student/avatar");
+  });
 });

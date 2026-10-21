@@ -41,8 +41,9 @@ export default async function UserProfileSettingsPage({
         <p>{t("subtitle")}</p>
       </header>
       <div className="flex flex-wrap gap-3">
+        {/* The avatar home (pieces, vault, shop); the page opens the picker for a student with no hero. */}
         {user.role === "STUDENT" ? (
-          <RpgLink href="/student/avatar?from=me" tone="gold">
+          <RpgLink href="/student/avatar" tone="gold">
             <img src={ART.chest} alt="" />
             {t("avatar")}
           </RpgLink>
