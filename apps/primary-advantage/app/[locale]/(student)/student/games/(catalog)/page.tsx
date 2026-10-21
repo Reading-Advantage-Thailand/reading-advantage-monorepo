@@ -41,6 +41,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "StudentGames" });
   const tGames = await getTranslations({ locale, namespace: "LessonGames" });
+  const tRoot = await getTranslations({ locale });
   const user = await getCurrentUser();
   const ownerKey = user?.role === "STUDENT" && user.schoolId
     ? `${user.schoolId}:${user.id}`
@@ -55,7 +56,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
         <p>{t("description")}</p>
       </header>
       <div className="flex flex-col gap-4 empty:hidden">
-        <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} assetUrls={rewardIconUrls} credit={null} />
+        <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} assetUrls={rewardIconUrls} credit={null} labels={tRoot.raw("RpgRewards")} />
         <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames()} labels={t.raw("challengePanel")} />
       </div>
       {/* The 3D story games (APK 3D port) as the first banner on the arena wall. */}

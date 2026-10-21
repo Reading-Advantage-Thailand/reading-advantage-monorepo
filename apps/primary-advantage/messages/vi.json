@@ -4310,5 +4310,27 @@
       "assignDue": "The Create assignment window: the due date and the Submit button"
     },
     "testData": "Picture from the app, test data"
+  },
+  "RpgRewards": {
+    "heading": "Phần thưởng Hero vs. Zombie",
+    "newHeading": "Phần thưởng mới của Hero vs. Zombie",
+    "loading": "Đang tải phần thưởng…",
+    "tryAgain": "Thử lại",
+    "unlocked": "Đã mở khóa",
+    "locked": "Chưa mở khóa: {requirement}",
+    "lockedFallback": "Hoàn thành nhiệm vụ liên quan.",
+    "equip": "Trang bị",
+    "equipping": "Đang trang bị…",
+    "equipped": "Đã trang bị",
+    "equipAria": "Trang bị {name}",
+    "equippingAria": "Đang trang bị {name}",
+    "equippedAria": "Đã trang bị {name}",
+    "loadFailed": "Không tải được phần thưởng. Hãy thử lại.",
+    "equipFailed": "Không trang bị được phần thưởng. Hãy thử lại.",
+    "quests": {
+      "first-ward": "Chơi hết Hero vs. Zombie sau khi trả lời ít nhất một lần.",
+      "complete-the-ward": "Thắng Hero vs. Zombie sau khi trả lời ít nhất một lần.",
+      "perfect-english-audio": "Thắng Hero vs. Zombie với gợi ý dịch tiếng Thái và trả lời bằng âm thanh từ tiếng Anh. Trả lời đúng mọi câu ngay lần đầu."
+    }
   }
 }

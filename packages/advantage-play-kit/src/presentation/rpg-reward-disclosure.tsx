@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactElement } from "react";
+import { rpgRewardText } from "./rpg-reward-labels.js";
 import { RpgRewardPanel, type RpgRewardPanelProps } from "./rpg-reward-panel.js";
 
 /** Confirmed reward panel options for a compact briefing or catalog section. */
@@ -8,7 +9,7 @@ export type RpgRewardDisclosureProps = RpgRewardPanelProps;
 
 /**
  * Keeps reward details collapsed until the student opens them.
- * @param props Confirmed state, reviewed icons, and equipment actions.
+ * @param props Confirmed state, reviewed icons, equipment actions, and the panel text.
  * @returns A compact native disclosure containing the reward panel.
  */
 export function RpgRewardDisclosure(props: RpgRewardDisclosureProps): ReactElement {
@@ -27,7 +28,7 @@ export function RpgRewardDisclosure(props: RpgRewardDisclosureProps): ReactEleme
         fontFamily: "var(--apk-reward-body-font, Tahoma, sans-serif)",
         overflowWrap: "anywhere",
       }}>
-        {props.heading ?? "Wizard rewards"} · {unlockedCount}/{props.state.cosmetics.length}
+        {props.heading ?? rpgRewardText(props.labels).heading} · {unlockedCount}/{props.state.cosmetics.length}
       </summary>
       <RpgRewardPanel {...props} />
     </details>

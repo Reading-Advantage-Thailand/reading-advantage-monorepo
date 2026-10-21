@@ -4461,5 +4461,27 @@
       "assignDue": "The Create assignment window: the due date and the Submit button"
     },
     "testData": "Picture from the app, test data"
+  },
+  "RpgRewards": {
+    "heading": "Hero vs. Zombie 獎勵",
+    "newHeading": "新的 Hero vs. Zombie 獎勵",
+    "loading": "正在載入獎勵…",
+    "tryAgain": "重試",
+    "unlocked": "已解鎖",
+    "locked": "未解鎖：{requirement}",
+    "lockedFallback": "完成相關任務。",
+    "equip": "裝備",
+    "equipping": "正在裝備…",
+    "equipped": "已裝備",
+    "equipAria": "裝備 {name}",
+    "equippingAria": "正在裝備 {name}",
+    "equippedAria": "已裝備 {name}",
+    "loadFailed": "無法載入獎勵。請重試。",
+    "equipFailed": "無法裝備獎勵。請重試。",
+    "quests": {
+      "first-ward": "至少作答一次後完成 Hero vs. Zombie。",
+      "complete-the-ward": "至少作答一次後贏得 Hero vs. Zombie。",
+      "perfect-english-audio": "在泰文翻譯提示和英文單字語音作答模式下贏得 Hero vs. Zombie，且每一題第一次就答對。"
+    }
   }
 }

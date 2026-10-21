@@ -84,6 +84,7 @@ type LoadError = "game" | "load" | "unauthenticated";
 export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, articleId, helper = false, className, onCompleted, onResult, onLoadError, onExit }: GameHostProps) {
   const t = useTranslations("ApkHost");
   const tStory = useTranslations("StoryGames");
+  const tRoot = useTranslations();
   const router = useRouter();
   const game = useMemo(() => gameFor(gameId), [gameId]);
   const [cartridge, setCartridge] = useState<Cartridge | null>(null);
@@ -230,7 +231,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
       {ready && phase === "briefing" && ownerKey ? (
         rpg.state ? (
           <div className="shrink-0 overflow-y-auto p-2">
-            <RpgRewardDisclosure state={rpg.state} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
+            <RpgRewardDisclosure state={rpg.state} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} labels={tRoot.raw("RpgRewards")} />
           </div>
         ) : rpg.failureMessage ? (
           <div role="alert" className="shrink-0 p-2 text-sm"><p>{rpg.failureMessage}</p><button type="button" className="min-h-12 underline" onClick={() => void rpg.retry()}>{t("retry")}</button></div>
@@ -238,7 +239,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
       ) : null}
       {ready && phase === "results" && ownerKey && (rpg.failureMessage || rpg.newlyUnlockedCosmetics.length > 0) ? (
         <div className="shrink-0 overflow-y-auto p-2">
-          <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
+          <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} labels={tRoot.raw("RpgRewards")} />
         </div>
       ) : null}
       {/* The games have no exit of their own (Forge): the host bar ends a game early, after a confirm. */}

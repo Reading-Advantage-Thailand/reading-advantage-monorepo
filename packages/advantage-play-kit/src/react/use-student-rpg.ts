@@ -9,6 +9,7 @@ import {
   type RpgCosmeticId,
   type StudentRpgState,
 } from "@reading-advantage/game-contracts";
+import { RPG_EQUIP_FAILED, RPG_LOAD_FAILED } from "../presentation/rpg-reward-labels.js";
 
 /** Configuration for one authenticated RPG state owner. */
 export interface UseStudentRpgOptions {
@@ -99,7 +100,7 @@ export function useStudentRpg({
         credentials: "same-origin",
         signal: controller.signal,
       });
-      if (!response.ok) throw new Error("Rewards could not be loaded. Try again.");
+      if (!response.ok) throw new Error(RPG_LOAD_FAILED);
       const nextState = studentRpgStateSchema.parse(await response.json());
       if (generation !== generationRef.current || controller.signal.aborted) return null;
       setConfirmed({ scope, value: nextState });
@@ -108,7 +109,7 @@ export function useStudentRpg({
     } catch (error) {
       if (generation !== generationRef.current || controller.signal.aborted || isAbortError(error)) return null;
       retryActionRef.current = action;
-      setFailureMessage("Rewards could not be loaded. Try again.");
+      setFailureMessage(RPG_LOAD_FAILED);
       return null;
     } finally {
       if (readRequest === readRequestRef.current) readPendingRef.current = false;
@@ -145,7 +146,7 @@ export function useStudentRpg({
         body: JSON.stringify(input),
         signal: controller.signal,
       });
-      if (!response.ok) throw new Error("Reward could not be equipped. Try again.");
+      if (!response.ok) throw new Error(RPG_EQUIP_FAILED);
       equipRpgCosmeticResultSchema.parse(await response.json());
       if (generation !== generationRef.current || controller.signal.aborted) return;
       retryActionRef.current = null;
@@ -153,7 +154,7 @@ export function useStudentRpg({
     } catch (error) {
       if (generation !== generationRef.current || controller.signal.aborted || isAbortError(error)) return;
       retryActionRef.current = { kind: "equip", cosmeticId };
-      setFailureMessage("Reward could not be equipped. Try again.");
+      setFailureMessage(RPG_EQUIP_FAILED);
     } finally {
       if (generation === generationRef.current && equipRequest === equipRequestRef.current) {
         setPendingCosmeticId(null);

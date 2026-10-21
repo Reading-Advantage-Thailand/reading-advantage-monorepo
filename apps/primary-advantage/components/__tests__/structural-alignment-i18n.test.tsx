@@ -183,8 +183,8 @@ beforeEach(() => {
     async (arg: string | { locale?: string; namespace: string }) => {
       const namespace = typeof arg === "string" ? arg : arg.namespace;
       const t = (key: string) => {
-        const tree = namespace
-          .split(".")
+        // No namespace (the root translator) reads from the top of the messages.
+        const tree = (namespace ? namespace.split(".") : [])
           .reduce<unknown>(
             (node, part) => (node as Record<string, unknown>)?.[part],
             enMessages as unknown,
@@ -425,10 +425,9 @@ describe("FR-5 footer, games, licence, and school strings", () => {
   it("translates the games catalogue heading", async () => {
     mocks.getCurrentUser.mockResolvedValue(null);
     mocks.getTranslations.mockImplementation(
-      async ({ locale, namespace }: { locale: string; namespace: string }) => {
+      async ({ locale, namespace }: { locale: string; namespace?: string }) => {
         const messages = locale === "th" ? thMessages : enMessages;
-        const tree = namespace
-          .split(".")
+        const tree = (namespace ? namespace.split(".") : [])
           .reduce<unknown>(
             (node, part) => (node as Record<string, unknown>)?.[part],
             messages as unknown,

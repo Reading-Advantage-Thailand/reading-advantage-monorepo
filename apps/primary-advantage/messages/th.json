@@ -4461,5 +4461,27 @@
       "assignDue": "หน้าต่างสร้างงานที่กำหนด: วันที่กำหนดและปุ่มส่ง"
     },
     "testData": "ภาพจากแอป ข้อมูลทดสอบ"
+  },
+  "RpgRewards": {
+    "heading": "รางวัลเกม Hero vs. Zombie",
+    "newHeading": "รางวัลใหม่จากเกม Hero vs. Zombie",
+    "loading": "กำลังโหลดรางวัล…",
+    "tryAgain": "ลองอีกครั้ง",
+    "unlocked": "ปลดล็อกแล้ว",
+    "locked": "ยังล็อกอยู่: {requirement}",
+    "lockedFallback": "ทำภารกิจที่เกี่ยวข้องให้สำเร็จ",
+    "equip": "สวมใส่",
+    "equipping": "กำลังสวมใส่…",
+    "equipped": "สวมใส่อยู่",
+    "equipAria": "สวมใส่ {name}",
+    "equippingAria": "กำลังสวมใส่ {name}",
+    "equippedAria": "สวมใส่ {name} อยู่",
+    "loadFailed": "โหลดรางวัลไม่สำเร็จ ลองอีกครั้ง",
+    "equipFailed": "สวมใส่รางวัลไม่สำเร็จ ลองอีกครั้ง",
+    "quests": {
+      "first-ward": "เล่นเกม Hero vs. Zombie ให้จบ โดยตอบอย่างน้อยหนึ่งครั้ง",
+      "complete-the-ward": "ชนะเกม Hero vs. Zombie โดยตอบอย่างน้อยหนึ่งครั้ง",
+      "perfect-english-audio": "ชนะเกม Hero vs. Zombie ในโหมดที่โจทย์เป็นคำแปลภาษาไทยและเลือกคำตอบจากเสียงคำศัพท์ภาษาอังกฤษ โดยตอบถูกทุกข้อตั้งแต่ครั้งแรก"
+    }
   }
 }

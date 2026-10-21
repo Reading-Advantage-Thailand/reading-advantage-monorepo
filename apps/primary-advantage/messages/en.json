@@ -4461,5 +4461,27 @@
       "assignDue": "The Create assignment window: the due date and the Submit button"
     },
     "testData": "Picture from the app, test data"
+  },
+  "RpgRewards": {
+    "heading": "Hero vs. Zombie rewards",
+    "newHeading": "New Hero vs. Zombie rewards",
+    "loading": "Loading Hero vs. Zombie rewards…",
+    "tryAgain": "Try again",
+    "unlocked": "Unlocked",
+    "locked": "Locked: {requirement}",
+    "lockedFallback": "Complete the linked quest.",
+    "equip": "Equip",
+    "equipping": "Equipping…",
+    "equipped": "Equipped",
+    "equipAria": "Equip {name}",
+    "equippingAria": "Equipping {name}",
+    "equippedAria": "Equipped {name}",
+    "loadFailed": "Rewards could not be loaded. Try again.",
+    "equipFailed": "Reward could not be equipped. Try again.",
+    "quests": {
+      "first-ward": "Finish Hero vs. Zombie after making at least one answer attempt.",
+      "complete-the-ward": "Win Hero vs. Zombie after making at least one answer attempt.",
+      "perfect-english-audio": "Win Hero vs. Zombie with Thai translation prompts and English term audio answers. Complete every item correctly on the first attempt."
+    }
   }
 }

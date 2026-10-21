@@ -36,10 +36,10 @@ vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
   useStudentChallengeRun: () => ({ launch: mocks.launch, loading: false, failureMessage: mocks.failureMessage, retry: mocks.retry }),
   useStudentRpg: () => mocks.rpg,
 }));
-type RewardPanelProps = { assetUrls: Record<string, string>; credit?: string | null };
+type RewardPanelProps = { assetUrls: Record<string, string>; credit?: string | null; labels?: { heading?: string } };
 vi.mock("@reading-advantage/advantage-play-kit/presentation", () => ({
-  RpgRewardDisclosure: ({ assetUrls, credit }: RewardPanelProps) => <div data-testid="rpg-disclosure" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} />,
-  RpgUnlockNotice: ({ assetUrls, credit }: RewardPanelProps) => <div data-testid="rpg-unlock" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} />,
+  RpgRewardDisclosure: ({ assetUrls, credit, labels }: RewardPanelProps) => <div data-testid="rpg-disclosure" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} data-heading={labels?.heading} />,
+  RpgUnlockNotice: ({ assetUrls, credit, labels }: RewardPanelProps) => <div data-testid="rpg-unlock" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} data-heading={labels?.heading} />,
 }));
 // The prepared clips: the route has its own tests; the host only needs the content and the session.
 vi.mock("@/lib/games/answer-audio", async (importOriginal) => ({
@@ -298,12 +298,14 @@ describe("GameHost", () => {
     // The Forge reward icons, with no ElvGames credit line.
     expect(screen.getByTestId("rpg-disclosure")).toHaveAttribute("data-icon", "/rpg/items/echo-staff.webp");
     expect(screen.getByTestId("rpg-disclosure")).toHaveAttribute("data-credit", "null");
+    expect(screen.getByTestId("rpg-disclosure")).toHaveAttribute("data-heading", testMessages.en.RpgRewards.heading);
     fireEvent.click(screen.getByText("start"));
     expect(screen.queryByTestId("rpg-disclosure")).toBeNull();
     mocks.rpg.newlyUnlockedCosmetics = [{ id: "apprentice-wand" }];
     fireEvent.click(screen.getByText("results"));
     expect(await screen.findByTestId("rpg-unlock")).toHaveAttribute("data-icon", "/rpg/items/echo-staff.webp");
     expect(screen.getByTestId("rpg-unlock")).toHaveAttribute("data-credit", "null");
+    expect(screen.getByTestId("rpg-unlock")).toHaveAttribute("data-heading", testMessages.en.RpgRewards.heading);
     mocks.rpg.newlyUnlockedCosmetics = [];
   });
 

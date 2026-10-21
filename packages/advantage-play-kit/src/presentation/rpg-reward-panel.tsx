@@ -3,7 +3,6 @@
 import type { ComponentProps, CSSProperties } from "react";
 import type {
   RpgCosmeticId,
-  RpgQuestId,
   StudentRpgState,
 } from "@reading-advantage/game-contracts";
 
@@ -11,6 +10,7 @@ import {
   getRetroArcadeButtonStyle,
   RETRO_ARCADE_PANEL_STYLE,
 } from "./retro-arcade-theme.js";
+import { rpgFailureText, rpgRewardText, type RpgRewardLabelsInput } from "./rpg-reward-labels.js";
 import { STANDARD_GAME_REQUIRED_CREDIT } from "./standard-game-experience.js";
 
 /** Asset URLs for the reviewed staff icons. */
@@ -32,17 +32,13 @@ export type RpgRewardPanelProps = Omit<ComponentProps<"section">, "children"> & 
   readonly onEquip?: (cosmeticId: RpgCosmeticId) => void;
   /** Shown under an unlocked reward in place of the equip action, on hosts where a reward is an avatar piece in the inventory. */
   readonly inventoryNote?: string;
-  /** Visible panel heading. */
+  /** Visible panel heading (default: the `heading` label). */
   readonly heading?: string;
+  /** The panel text in the host language; each missing label stays English. */
+  readonly labels?: RpgRewardLabelsInput;
   /** Asset credit under the list (default: the ElvGames credit of the reviewed icons); null when the host icons need none. */
   readonly credit?: string | null;
 };
-
-const QUEST_REQUIREMENTS: Readonly<Record<RpgQuestId, string>> = Object.freeze({
-  "first-ward": "Finish Wizard vs. Zombie after making at least one answer attempt.",
-  "complete-the-ward": "Win Wizard vs. Zombie after making at least one answer attempt.",
-  "perfect-english-audio": "Win Wizard vs. Zombie with Thai translation prompts and English term audio answers. Complete every item correctly on the first attempt.",
-});
 
 const rewardCardStyle: CSSProperties = {
   display: "grid",
@@ -57,7 +53,7 @@ const rewardCardStyle: CSSProperties = {
 
 /**
  * Renders confirmed cosmetic unlocks, quest requirements, and equipment actions.
- * @param props Confirmed RPG state, reviewed icon URLs, request state, and host callbacks.
+ * @param props Confirmed RPG state, reviewed icon URLs, request state, host callbacks, and the panel text.
  * @returns A host-neutral reward panel for entry and result screens.
  */
 export function RpgRewardPanel({
@@ -68,15 +64,19 @@ export function RpgRewardPanel({
   onRetry,
   onEquip,
   inventoryNote,
-  heading = "Wizard rewards",
+  heading,
+  labels,
   credit = STANDARD_GAME_REQUIRED_CREDIT,
   style,
   ...sectionProps
 }: RpgRewardPanelProps): import("react").ReactElement {
+  const text = rpgRewardText(labels);
+  const title = heading ?? text.heading;
+  const failure = rpgFailureText(failureMessage, text);
   return (
     <section
       {...sectionProps}
-      aria-label={heading}
+      aria-label={title}
       data-apk-presentation="rpg-rewards"
       data-apk-region="progression"
       style={{
@@ -92,16 +92,16 @@ export function RpgRewardPanel({
     >
       <header>
         <h2 style={{ margin: 0, fontFamily: "var(--apk-reward-display-font, 'Courier New', monospace)" }}>
-          {heading}
+          {title}
         </h2>
       </header>
 
-      {failureMessage ? (
+      {failure ? (
         <div role="alert" style={{ border: "2px solid #f87171", padding: "0.75rem" }}>
-          <p style={{ margin: 0 }}>{failureMessage}</p>
+          <p style={{ margin: 0 }}>{failure}</p>
           {onRetry ? (
             <button type="button" onClick={onRetry} style={{ ...getRetroArcadeButtonStyle("secondary"), marginBlockStart: "0.75rem" }}>
-              Try again
+              {text.tryAgain}
             </button>
           ) : null}
         </div>
@@ -138,10 +138,10 @@ export function RpgRewardPanel({
                 <div>
                   <h3 style={{ margin: 0 }}>{cosmetic.name}</h3>
                   {unlocked ? (
-                    <p style={{ margin: "0.25rem 0 0", color: "var(--apk-reward-accent, #67e8f9)" }}>Unlocked</p>
+                    <p style={{ margin: "0.25rem 0 0", color: "var(--apk-reward-accent, #67e8f9)" }}>{text.unlocked}</p>
                   ) : (
                     <p style={{ margin: "0.25rem 0 0", color: "var(--apk-reward-muted, #b9c9bf)" }}>
-                      Locked: {quest ? QUEST_REQUIREMENTS[quest.id] : "Complete the linked quest."}
+                      {text.locked.replace("{requirement}", quest ? text.quests[quest.id] : text.lockedFallback)}
                     </p>
                   )}
                 </div>
@@ -150,14 +150,14 @@ export function RpgRewardPanel({
                 ) : unlocked && onEquip ? (
                   <button
                     type="button"
-                    aria-label={`${equipped ? "Equipped" : pending ? "Equipping" : "Equip"} ${cosmetic.name}`}
+                    aria-label={(equipped ? text.equippedAria : pending ? text.equippingAria : text.equipAria).replace("{name}", cosmetic.name)}
                     aria-pressed={equipped}
                     aria-busy={pending || undefined}
                     disabled={equipped || pending || pendingCosmeticId !== null}
                     onClick={() => onEquip(cosmetic.id)}
                     style={getRetroArcadeButtonStyle(equipped ? "secondary" : "primary")}
                   >
-                    {equipped ? "Equipped" : pending ? "Equipping…" : "Equip"}
+                    {equipped ? text.equipped : pending ? text.equipping : text.equip}
                   </button>
                 ) : null}
               </div>
