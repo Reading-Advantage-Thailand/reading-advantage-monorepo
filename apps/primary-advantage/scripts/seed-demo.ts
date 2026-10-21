@@ -162,7 +162,8 @@ async function seedDemo(): Promise<void> {
   await setCurrentLesson({ db, user: teacherCtx, input: { classBookId: classBook.id, lessonNumber: 3 } });
   const lessonRows = await db.select({ number: primaryBookLessons.number, articleId: primaryBookLessons.articleId }).from(primaryBookLessons).where(eq(primaryBookLessons.bookId, book.id));
   const lessonArticle = new Map(lessonRows.filter((row) => row.articleId).map((row) => [row.number, row.articleId as string]));
-  const pool = (await db.select({ id: articles.id }).from(articles).limit(6)).map((row) => row.id);
+  const poolRows = await db.select({ id: articles.id, type: articles.type, genre: articles.genre, subGenre: articles.subGenre }).from(articles).limit(6);
+  const pool = poolRows.map((row) => row.id);
   if (!pool.length) throw new Error("no articles in this database; import content first");
 
   // Lesson progress (the class progress grid): done, in progress, not started, and one red ring (Ton, lesson 1 taught and not started).
@@ -196,13 +197,15 @@ async function seedDemo(): Promise<void> {
     if (s.spec.termXp > 0) xpRows.push({ userId: s.id, xpEarned: s.spec.termXp, activityId: "demo:last-term", activityType: "LEVEL_TEST", createdAt: at(90, 9), updatedAt: at(90, 9) });
     s.spec.days.forEach((daysAgo, index) => {
       const articleId = pool[index % pool.length];
+      // The reading chart groups ARTICLE_READ rows by these fields, as getArticleActivity writes them.
+      const { type, genre, subGenre } = poolRows[index % poolRows.length];
       const readAt = at(daysAgo, 16);
       const answers = 4;
       const correct = Math.round(answers * s.spec.accuracy);
       const responses = Array.from({ length: answers }, (_, i) => ({ answer: i < correct ? 1 : 2, isCorrect: 1 }));
       const readXp = 10;
       const mcXp = correct * 2;
-      activityRows.push({ userId: s.id, activityType: "ARTICLE_READ", targetId: `${articleId}:${daysAgo}`, xpEarned: readXp, completed: true, details: { articleId }, createdAt: readAt, updatedAt: readAt });
+      activityRows.push({ userId: s.id, activityType: "ARTICLE_READ", targetId: `${articleId}:${daysAgo}`, xpEarned: readXp, completed: true, details: { articleId, type, genre, subGenre }, createdAt: readAt, updatedAt: readAt });
       activityRows.push({ userId: s.id, activityType: "MC_QUESTION", targetId: `${articleId}:${daysAgo}`, xpEarned: mcXp, completed: true, details: { articleId, responses }, createdAt: new Date(readAt.getTime() + 600_000), updatedAt: new Date(readAt.getTime() + 600_000) });
       xpRows.push({ userId: s.id, xpEarned: readXp, activityId: `demo:read:${articleId}:${daysAgo}`, activityType: "ARTICLE_READ", createdAt: readAt, updatedAt: readAt });
       xpRows.push({ userId: s.id, xpEarned: mcXp, activityId: `demo:mc:${articleId}:${daysAgo}`, activityType: "MC_QUESTION", createdAt: new Date(readAt.getTime() + 600_000), updatedAt: new Date(readAt.getTime() + 600_000) });
