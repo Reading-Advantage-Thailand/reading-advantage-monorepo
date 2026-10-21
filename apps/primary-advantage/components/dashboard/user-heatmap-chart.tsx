@@ -58,11 +58,12 @@ export default function UserActivityHeatMap({ data }: UserActiviryChartProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex items-center justify-center">
+        {/* One class per bucket of formatDataHeatmap: more activity gives a darker green. */}
         <CalendarHeatmap
           variantClassnames={[
-            "text-white hover:text-white bg-green-400 hover:bg-green-400",
-            "text-white hover:text-white bg-green-500 hover:bg-green-500",
             "text-white hover:text-white bg-green-700 hover:bg-green-700",
+            "text-green-950 hover:text-green-950 bg-green-400 hover:bg-green-400",
+            "text-green-900 hover:text-green-900 bg-green-200 hover:bg-green-200",
           ]}
           datesPerVariant={formattedData}
           locale={dateFnsLocale(locale)}
