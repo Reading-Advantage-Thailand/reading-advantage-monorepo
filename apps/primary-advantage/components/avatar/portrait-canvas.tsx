@@ -29,25 +29,51 @@ function pixelsOf(file: string): Promise<Uint8ClampedArray> {
  * and stacked in draw order.
  * @param classId The hero class.
  * @param tints The color choice.
+ * @param signal Stops the work of a portrait that the page no longer shows.
  * @returns The RGBA pixels of the portrait.
+ * @throws When the signal aborts before the portrait is done.
  */
-export async function composePortrait(classId: string, tints: Partial<AvatarTints>): Promise<Uint8ClampedArray> {
-  return composeFiles(portraitFiles(starterLoadout(classId, tints)));
+export async function composePortrait(classId: string, tints: Partial<AvatarTints>, signal?: AbortSignal): Promise<Uint8ClampedArray> {
+  return composeFiles(portraitFiles(starterLoadout(classId, tints)), signal);
 }
 
 /**
  * Composes the portrait of worn pieces in the given colors (the shop loadout).
  * @param pieces The worn pieces.
  * @param tints The color choice.
+ * @param signal Stops the work of a portrait that the page no longer shows.
  * @returns The RGBA pixels of the portrait.
+ * @throws When the signal aborts before the portrait is done.
  */
-export async function composeWornPortrait(pieces: readonly AvatarLoadoutPiece[], tints: Partial<AvatarTints>): Promise<Uint8ClampedArray> {
-  return composeFiles(portraitFiles(wornLoadout(pieces, tints)));
+export async function composeWornPortrait(pieces: readonly AvatarLoadoutPiece[], tints: Partial<AvatarTints>, signal?: AbortSignal): Promise<Uint8ClampedArray> {
+  return composeFiles(portraitFiles(wornLoadout(pieces, tints)), signal);
 }
 
-async function composeFiles(files: ReturnType<typeof portraitFiles>): Promise<Uint8ClampedArray> {
-  const layers = await Promise.all(files.map(async ({ color, mask, scales }) => recolorLayer(await pixelsOf(color), await pixelsOf(mask), scales)));
-  return stackLayers(layers);
+/** Resolves in a new task, so the page can paint and take taps between two pieces of pixel work. */
+function nextTask(): Promise<void> {
+  const scheduler = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler;
+  return scheduler?.yield ? scheduler.yield() : new Promise((resolve) => setTimeout(resolve));
+}
+
+let turn: Promise<unknown> = Promise.resolve();
+
+// One portrait after the other, one layer per task: the 15 picker cards fill one by one and the
+// page takes taps meanwhile (all at once, they blocked a slow tablet for seconds).
+async function composeFiles(files: ReturnType<typeof portraitFiles>, signal?: AbortSignal): Promise<Uint8ClampedArray> {
+  const sources = await Promise.all(files.map(async ({ color, mask, scales }) => ({ color: await pixelsOf(color), mask: await pixelsOf(mask), scales })));
+  const run = turn.then(async () => {
+    const layers: Uint8ClampedArray[] = [];
+    for (const { color, mask, scales } of sources) {
+      await nextTask();
+      signal?.throwIfAborted();
+      layers.push(recolorLayer(color, mask, scales));
+    }
+    await nextTask();
+    signal?.throwIfAborted();
+    return stackLayers(layers);
+  });
+  turn = run.catch(() => undefined);
+  return run;
 }
 
 /**
@@ -65,19 +91,17 @@ export function AvatarPortrait({ classId, pieces, tints = {}, alt, className }: 
   const key = `${classId}|${pieces ? pieces.map((p) => `${p.itemId}:${p.dye ?? ""}`).join(",") : "-"}|${tints.skin ?? ""}|${tints.hair ?? ""}|${tints.eyes ?? ""}|${tints.cloth ?? ""}`;
 
   useEffect(() => {
-    let live = true;
+    const work = new AbortController();
     setStatus("loading");
-    (pieces ? composeWornPortrait(pieces, tints) : composePortrait(classId, tints))
+    (pieces ? composeWornPortrait(pieces, tints, work.signal) : composePortrait(classId, tints, work.signal))
       .then((pixels) => {
         const canvas = canvasRef.current;
-        if (!live || !canvas) return;
+        if (work.signal.aborted || !canvas) return;
         canvas.getContext("2d")?.putImageData(new ImageData(pixels as Uint8ClampedArray<ArrayBuffer>, PORTRAIT_SIZE, PORTRAIT_SIZE), 0, 0);
         setStatus("ready");
       })
-      .catch(() => live && setStatus("failed"));
-    return () => {
-      live = false;
-    };
+      .catch(() => !work.signal.aborted && setStatus("failed"));
+    return () => work.abort();
     // The key holds every input of the portrait.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
