@@ -33,12 +33,14 @@ export async function generateMetadata({
 /**
  * Student games catalog: the class challenges and rewards panels, then the 3D games in two
  * groups (word games and sentence games) as cards that link to the game. An empty catalog shows
- * an empty state. The game internals and the play-kit panels are unchanged.
+ * an empty state. The panel text and the game descriptions come from the messages (the manifest
+ * description is the English fallback); the game internals are unchanged.
  * @returns The games page.
  */
 export default async function PrimaryStudentGamesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "StudentGames" });
+  const tGames = await getTranslations({ locale, namespace: "LessonGames" });
   const user = await getCurrentUser();
   const ownerKey = user?.role === "STUDENT" && user.schoolId
     ? `${user.schoolId}:${user.id}`
@@ -54,7 +56,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
       </header>
       <div className="flex flex-col gap-4 empty:hidden">
         <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} assetUrls={rewardIconUrls} credit={null} />
-        <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames()} />
+        <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames()} labels={t.raw("challengePanel")} />
       </div>
       {/* The 3D story games (APK 3D port) as the first banner on the arena wall. */}
       <GameCard href="/student/games/story" icon={ART.banner} title={t("storyLink")} description={t("storyLinkDescription")} />
@@ -78,7 +80,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
               <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {members.map((game) => (
                   <li key={game.id}>
-                    <GameCard href={`/student/games/apk/${game.id}`} icon={group.icon} title={game.manifest.title} description={game.manifest.description} />
+                    <GameCard href={`/student/games/apk/${game.id}`} icon={group.icon} title={game.manifest.title} description={tGames.has(`pitch.${game.id}`) ? tGames(`pitch.${game.id}`) : game.manifest.description} />
                   </li>
                 ))}
               </ul>

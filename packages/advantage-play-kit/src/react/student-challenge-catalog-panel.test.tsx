@@ -76,6 +76,25 @@ describe("StudentChallengeCatalogPanel", () => {
     expect(screen.queryByText("wizard-vs-zombie")).not.toBeInTheDocument();
   });
 
+  it("shows the host's labels and keeps the English status for the styles (Thai UI, 2026-10-21)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-15T00:00:00.000Z"));
+    fetchMock
+      .mockResolvedValueOnce(response({ classes: [{ id: classOne, name: "Class A" }], hasMore: false }))
+      .mockResolvedValueOnce(response({ challenges: [challenge()] }));
+    render(<StudentChallengeCatalogPanel ownerKey="school-1:student-1" locale="th"
+      games={{ "wizard-vs-zombie": { title: "Wizard vs. Zombie", version: "2026-09-09.1" } }}
+      labels={{ title: "ชาเลนจ์ของชั้นเรียน", classLabel: "ชั้นเรียน", classProgress: "ความก้าวหน้าของชั้นเรียน: {count}/{target}", active: "เปิดอยู่", playChallenge: "เล่นชาเลนจ์" }} />);
+
+    await screen.findByRole("link", { name: "เล่นชาเลนจ์" });
+    expect(screen.getByRole("region", { name: "ชาเลนจ์ของชั้นเรียน" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "ชาเลนจ์ของชั้นเรียน" })).toBeInTheDocument();
+    expect(screen.getByLabelText("ชั้นเรียน")).toHaveClass("apk-challenge-select");
+    expect(screen.getByText("ความก้าวหน้าของชั้นเรียน: 3/10")).toBeInTheDocument();
+    expect(screen.getByText("เปิดอยู่")).toHaveAttribute("data-status", "Active");
+    expect(screen.queryByText("Class challenges")).not.toBeInTheDocument();
+  });
+
   it("reads the host frame variables with the standard pack as the fallback (FR-6)", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-09-15T00:00:00.000Z"));

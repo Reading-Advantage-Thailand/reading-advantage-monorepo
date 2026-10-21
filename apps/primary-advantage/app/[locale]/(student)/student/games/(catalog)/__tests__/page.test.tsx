@@ -21,7 +21,11 @@ vi.mock("@/i18n/navigation", () => ({
 }));
 
 vi.mock("next-intl/server", () => ({
-  getTranslations: async () => (key: string) => key,
+  // Identity keys; only castle-defense has a pitch, so dragon-flight shows the manifest text.
+  getTranslations: async () => Object.assign((key: string) => key, {
+    raw: (key: string) => ({ raw: key }),
+    has: (key: string) => key === "pitch.castle-defense",
+  }),
 }));
 
 vi.mock("@/lib/games/catalog", () => ({
@@ -67,6 +71,7 @@ describe("Primary student games catalog", () => {
     expect(screen.getByTestId("rpg-catalog")).toHaveAttribute("data-owner-key", "school-1:student-7");
     expect(JSON.parse(screen.getByTestId("challenge-catalog").getAttribute("data-props") ?? "{}")).toMatchObject({
       ownerKey: "school-1:student-7", locale: "th", games: { "dragon-flight": { title: "Dragon Flight", version: "v1" } },
+      labels: { raw: "challengePanel" },
     });
   });
 
@@ -78,6 +83,8 @@ describe("Primary student games catalog", () => {
     const sentences = screen.getByRole("region", { name: "sentenceGames" });
     expect(within(words).getByRole("link", { name: /Dragon Flight/ })).toHaveAttribute("href", "/student/games/apk/dragon-flight");
     expect(within(sentences).getByRole("link", { name: /Castle Defense/ })).toHaveAttribute("href", "/student/games/apk/castle-defense");
+    expect(within(sentences).getByText("pitch.castle-defense")).toBeInTheDocument();
+    expect(within(words).getByText("Fly through gates.")).toBeInTheDocument();
     expect(screen.queryByText(/Advantage Play Kit|APK route/)).not.toBeInTheDocument();
   });
 

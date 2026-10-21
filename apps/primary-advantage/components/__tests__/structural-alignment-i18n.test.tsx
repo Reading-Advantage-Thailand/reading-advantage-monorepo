@@ -182,7 +182,7 @@ beforeEach(() => {
   mocks.getTranslations.mockImplementation(
     async (arg: string | { locale?: string; namespace: string }) => {
       const namespace = typeof arg === "string" ? arg : arg.namespace;
-      return (key: string) => {
+      const t = (key: string) => {
         const tree = namespace
           .split(".")
           .reduce<unknown>(
@@ -196,6 +196,7 @@ beforeEach(() => {
             tree,
           ) as string;
       };
+      return Object.assign(t, { raw: t, has: (key: string) => t(key) !== undefined });
     },
   );
 });
@@ -432,13 +433,14 @@ describe("FR-5 footer, games, licence, and school strings", () => {
             (node, part) => (node as Record<string, unknown>)?.[part],
             messages as unknown,
           );
-        return (key: string) =>
+        const t = (key: string) =>
           key
             .split(".")
             .reduce<unknown>(
               (node, part) => (node as Record<string, unknown>)?.[part],
               tree,
             ) as string;
+        return Object.assign(t, { raw: t, has: (key: string) => t(key) !== undefined });
       },
     );
     const games = await PrimaryStudentGamesPage({
@@ -448,6 +450,9 @@ describe("FR-5 footer, games, licence, and school strings", () => {
     expect(
       screen.getByRole("heading", { name: thMessages.StudentGames.title }),
     ).toBeInTheDocument();
+    // The game cards show the Thai pitch, not the English manifest text (2026-10-21).
+    expect(screen.getByText(thMessages.LessonGames.pitch["abyssal-well"])).toBeInTheDocument();
+    expect(screen.queryByText(/Shoot the creatures that climb out of the well/)).not.toBeInTheDocument();
   });
 
   it("translates licence form labels", async () => {
