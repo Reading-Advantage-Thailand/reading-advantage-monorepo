@@ -31,25 +31,25 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 - [x] Task: Peers briefed: PR (S12 edits, sales pack), Monorepo (QR page, `storytime` enum in its own change), Graph (review in November), Workbooks (package v1, week 1), Forge (brief v1, d70d52718).
 - [x] Task: Forge brief v1 with the cast of 5, 24 named gestures, scenes and props for weeks 1 to 8, output formats (PNG sequences 1024 px, 12 fps, 24-frame loops, straight alpha), Workbooks edits the videos.
 - [x] Task: QR page spec draft for Monorepo (`qr-page-spec.md`); Monorepo reviews.
-- [ ] Task: Music source (S16): Daniel gives an ElevenLabs Music key and a Google Lyria 3 key; two test songs each from the week 1 lyric; Daniel rates; record the choice, price, and licence by 2026-10-29. MiniMax music is closed to new users (checked 2026-10-22 on platform.minimax.cn).
-- [ ] Task: Phoneme audio test plan (44 sounds, two raters, pass mark 40) and the test run with mmx speech by 2026-10-29 (S5); the human bank decision.
+- [~] Task: Music source (S16, S20): MiniMax-Music3 Space test rated "really good" by Daniel 2026-10-22; Lyria 3 Pro works through Vertex AI (global location) from Thailand, one 78 s song on the page (G1); the Gemini API path is location-blocked; rented-GPU batch estimate USD 25 to 46 for the program. Choice recorded when Daniel answers S20 and G1.
+- [~] Task: Phoneme audio test (S5): mmx speech run 2026-10-22, Daniel rejected 44 of 45; Google Cloud TTS IPA set on the page for rating; the human bank decision is S22.
 - [ ] Task: Confirm the Thai F1.1 Gr1 to Gr3 indicator wording against the OBEC original and file it with the standard node sources.
 
 ## Phase 1: Phonics graph and package (2026-10-22 to 2026-11-07)
 
-- [ ] Task: Node id patterns and metadata schema for `english.phonics.*` (design §5.1); the standard node `english.phonics.standard.storytime-v1` with its sources; tests.
-- [ ] Task: Phonemic awareness taxonomy, 12 modules and 41 skills, including the Thai-contrast module (design §5.2); tests.
-- [ ] Task: Letter, phoneme, GPC, pattern, and tricky-word nodes for all four levels (design §5.3); tests.
-- [ ] Task: Edges: logical `prerequisite_for`, `supports` and `equivalent_to` to the GSE Young Learner nodes from the Graph list, `aligned_to_standard` to the standard node; the shared validation gate passes; tests. Target: v0 by 2026-11-03.
-- [ ] Task: Graph session review of graph v0 by 2026-11-07; record the findings and fix.
+- [x] Task (v1 2026-10-22, Graph passed): Node id patterns and metadata schema for `english.phonics.*` (design §5.1); the standard node `english.phonics.standard.storytime-v1` with its sources; tests.
+- [x] Task (v1): Phonemic awareness taxonomy, 12 modules and 45 skills, including the Thai-contrast module (design §5.2); tests.
+- [x] Task (v1): Letter, phoneme, GPC, pattern, and tricky-word nodes for all four levels (design §5.3); tests.
+- [x] Task (v1, 0 errors alone and merged): Edges: logical `prerequisite_for`, `supports` and `equivalent_to` to the GSE Young Learner nodes from the Graph list, `aligned_to_standard` to the standard node; the shared validation gate passes; tests. Target: v0 by 2026-11-03.
+- [x] Task: Graph session review: v0 reviewed and v1 re-checked 2026-10-22, items 1, 2, 4, 5, 6, 7, 9 pass; commit waits for S21 (Reading A-Z numbers in the public repo).
 - [ ] Task: Lexicon of about 2,000 words with grapheme parses, built by script from the Starters list, the Reading A-Z word lists, and the Jolly word bank, then hand-checked; tests on 50 parses. Level 2 subset first, by 2026-10-28, for the week 1 gate.
 - [ ] Task: `wordWall()` and `decodability()` pure functions with tests (design §5.6); the decodable gate at 0.90 and zero untaught words; by 2026-10-28.
 - [ ] Task: `packages/phonics-knowledge` from the `science-knowledge` pattern: domain adapter, objective key with `P`, `S`, `W` short ids; tests.
-- [ ] Task: Level map `storytime/storytime-levels.csv` with the band names Seed, Sprout, Leaf, Bud, Flower (S15) and `mastery-advantage/storytime/README.md` updated from the placeholder; tests.
+- [x] Task (v1, written by the build): Level map `storytime/storytime-levels.csv` with the band names Seed, Sprout, Leaf, Bud, Flower (S15) and `mastery-advantage/storytime/README.md` updated from the placeholder; tests.
 
 ## Phase 2: Content model and tooling (2026-10-22 to 2026-11-05)
 
-- [~] Task: Workbooks package `storytime-week` v1 in `dashboard/lib/storytime/` (schema.ts, checks.ts, manual.ts, i18n.ts), `meta.program = "storytime"`, injector key `(program, level, week)`, files `content/storytime/l<level>/w<nn>.json`, URL key `st<level>/<week>` (Workbooks session, started 2026-10-22); the checks list from design §3 and §6.
+- [x] Task: Workbooks package `storytime-week` v1 in `dashboard/lib/storytime/` (Workbooks master 6fe46cc, 2026-10-22) (schema.ts, checks.ts, manual.ts, i18n.ts), `meta.program = "storytime"`, injector key `(program, level, week)`, files `content/storytime/l<level>/w<nn>.json`, URL key `st<level>/<week>` (Workbooks session, started 2026-10-22); the checks list from design §3 and §6.
 - [ ] Task: The 128-week sequence from `gen_sequence.py` as data in the Workbooks content plan; a test that every week's element has its prerequisites in earlier weeks.
 - [ ] Task: Teacher manual compiler for Storytime on the Primary print wrapper: the week header page, one day per page, the opening routine, the strip of the day, the moved steps, the four headings and the three variant lines; Storytime labels in their own i18n file; Daniel checks the Thai labels.
 - [ ] Task: Review strip generator from the sequence and the expanding schedule (design §4), capped at 18 cards; tests.
@@ -58,7 +58,7 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 
 ## Phase 3: Level 2 week 1 (2026-10-23 to 2026-10-31)
 
-- [ ] Task: Author Level 2 week 1 (element n; frame "Hello, I am ___."; Names and greetings): the five scripts, the decodable, the read-along, the song lyric with a gesture and a picture per line, the strips, the check, the home card (Workbooks session, from the rows sent 2026-10-22).
+- [~] Task: Author Level 2 week 1 (element n; frame "Hello, I am ___."; Names and greetings): the five scripts, the decodable, the read-along, the song lyric with a gesture and a picture per line, the strips, the check, the home card (Workbooks session) — draft delivered 2026-10-22 (Workbooks 4ad4b32, w01.json, EN and TH teacher book drafts); Storytime review in progress; Thai pass next.
 - [ ] Task: Storytime review of week 1 against the graph and the decodability gate; the cut list of props to Forge.
 - [ ] Task: Week 1 pictures, book audio at 0.75 and 1.0 with word times, and the song audio from the chosen source; record the time and cost per week.
 - [ ] Task: Daniel's Thai check of week 1 by 2026-10-31; the style decisions recorded as the Storytime production rules in Workbooks.

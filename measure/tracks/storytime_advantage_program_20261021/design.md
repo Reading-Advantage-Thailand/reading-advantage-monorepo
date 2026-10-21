@@ -244,9 +244,15 @@ Mapping summary: Level 2 weeks 1-7, 9-15, 17-23, 25-31 hold Reading A-Z elements
 
 ## 3. The five daily scripts
 
+Amended 2026-10-22 after the Level 2 week 1 build (six changes, marked [W1]).
+
 ### 3.1 Format
 
 Every script step uses the four headings of the Primary teacher manual generator (`Workbooks/dashboard/lib/teacher-manual/i18n/th.ts`): what the teacher does (สิ่งที่ครูทำ), the English the teacher says (ภาษาที่ครูใช้), what the students do (สิ่งที่นักเรียนทำ), what to watch (สิ่งที่ต้องสังเกต). The English is written in full. Daniel adds the Thai. Every step ends with three fixed lines: Easier (a confidence builder), Harder (an extension), Group (the pair or small-group form), after the Developing Sound Sense pattern. The teacher reads the lines; the teacher never chooses an activity.
+
+Each sound has one action. The action for n is a nod: "nod your head slowly and hum nnn". A head shake is only for "no" in yes/no games. [W1]
+
+Scripts write the sound in triple letters ("nnn") and the letter as "the letter n", never a bare letter, because a non-native teacher reads "n" as "en". [W1]
 
 Every period opens with the same routine. Nothing in the routine changes across the year, so the routine itself is the classroom management.
 
@@ -277,7 +283,7 @@ Every period opens with the same routine. Nothing in the routine changes across 
 | A5 Word wall | 5 | The week's word wall card (computed from the graph, section 5.6). The class reads the wall; the teacher adds the new words. |
 | A6 New tricky words | 5 | One to three cards. Read, find the tricky part (marked in the book), spell by letter name, write in the air. |
 | A7 Read it | 5 | The practice sheet: new words, review words, tricky words, two phrases, one sentence. |
-| A8 Home card | 2 | The child takes the weekly home card (section 9). The teacher says the one Thai line on it. |
+| A8 Home card | 0 (home time) | The teacher puts the weekly home card (section 9) in the bags after class and says the one Thai line on it at pick-up. [W1] |
 
 **Script B, Story Lesson (read-along book)**
 
@@ -323,13 +329,13 @@ Every period opens with the same routine. Nothing in the routine changes across 
 | E3 Centers, rotation 2 | 10 | Child 3 and 4. |
 | E4 Game | 10 | One whole-class game from the week's card (Concentration with word cards, Sound Bingo, Swat the Word). |
 | E5 Check | 5 | A two-minute written check: circle the picture for the sound; write two words. Collected. |
-| E6 Song show | 3 | The song with full choreography, filmed by the teacher on the class tablet if the school allows. |
+| E6 Song show | 0 (in the opening) | Merged into the day 5 opening (D6): the song with full choreography, filmed by the teacher on the class tablet if the school allows. [W1] |
 
 In a review week, Script A becomes the benchmark (section 7), Scripts B to D re-read the block's four books, and Script E completes the reading records for the children not yet heard.
 
 ### 3.3 Level 2 at 30 minutes (Anuban 3)
 
-The same five scripts, compressed: opening 6 minutes; each script keeps its first five steps with the minutes scaled to 24; the last steps (A7 to A8, B6 to B7, C6 to C7, D5 to D6, E5 to E6) move to the next day's opening as a one-minute recall, except the sticker (C7), which stays. Movement every 6 minutes: the opening song, A2 actions, B6 acting, C2 pushing cards, E4 game.
+The same five scripts, compressed: opening 6 minutes; each script keeps its first five steps with the minutes scaled to 24. [W1] The Friday check E5 stays on day 5 at 3 minutes; E2 and E3 are 7 minutes and E4 is 5 minutes. [W1] The check does not move to Monday: it updates the next week's strips, and 30 children cannot be checked in 1 minute. [W1] Song steps are item 3 of the opening routine ("song of the week") and add no minutes to the main steps: the day 3 opening plays the karaoke video (B7), the day 5 opening is the song show (D6), E6 is merged into D6, and no song step moves to the next week. [W1] Step A8 (home card) is a home-time task: the teacher puts the perforated card in the bags after class, and it takes no class minutes. [W1] The other last steps (A7, B6, C6, D5) move to the next day's opening as a one-minute recall, except the sticker (C7), which stays. Movement every 6 minutes: the opening song, A2 actions, B6 acting, C2 pushing cards, E4 game.
 
 ### 3.4 Level 1 at 30 minutes (Anuban 2)
 
@@ -452,6 +458,8 @@ All content is made in the Workbooks repo under the Primary production rules: Cl
 | Pictures | One picture per page in the printed picture-book style, race-unmarked prompts (hair and clothes, never skin or ethnicity), through the Workbooks image pipeline |
 | Audio | Whole-text read-along audio at 0.75 and 1.0 speed, word-aligned for the read-along player |
 
+Week 1 of Level 2 teaches n with no vowel, so its decodable is a sound book (soundBook: true, 'a ___' pages with n-initial picture words and the tricky words a, and, can); the 90 percent rule applies from week 2 [W1].
+
 ### 6.2 Read-along book and leveled readers
 
 | Level | Read-along book (weekly, 28 a level) | Pattern |
@@ -528,7 +536,7 @@ Scope: a 16-week module for a P3 class that enters Origins 1 without decoding, r
 
 ## 8. Teacher kit and training
 
-**Printed kit per level (one per classroom):** the teacher book (the 160 scripts and the review strips, generated by the Primary manual generator with a Storytime template); the big book of the 28 read-along books (A3) or a tablet for the board; the sound and symbol cards (44, A5); picture cards (about 300 Starters pictures, A6, the same set for all levels); letter cards (a class set of 26 lower and 26 upper, plus ck, sh, ch, th, ng, qu, and 10 vowel-team cards from Level 4); tricky-word cards (92, A6); word-family cards (Level 2-3); workmats (class set); the alphabet frieze (Level 1-2); the song choreography sheets (28); the record sheets (reading records, checks, speaking rubric); the four benchmark packs. Decodables and read-alongs in class sets of 8 (pairs).
+**Printed kit per level (one per classroom):** the teacher book (the 160 scripts and the review strips, generated by the Primary manual generator with a Storytime template); the big book of the 28 read-along books (A3) or a tablet for the board; the sound and symbol cards (44, A5); picture cards (about 300 Starters pictures, A6, the same set for all levels); sound picture cards (one set per element: 6 to 8 pictures of words starting with the sound, e.g. nest, net, nut for n; they are not Starters picture words) [W1]; letter cards (a class set of 26 lower and 26 upper, plus ck, sh, ch, th, ng, qu, and 10 vowel-team cards from Level 4); tricky-word cards (92, A6); word-family cards (Level 2-3); workmats (class set); the alphabet frieze (Level 1-2); the song choreography sheets (28); the record sheets (reading records, checks, speaking rubric); the four benchmark packs. Decodables and read-alongs in class sets of 8 (pairs).
 
 **Student book per level:** one A4 book: a weekly spread with the letter formation box, the practice sheet, the frame sentence lines, the picture-sound page for the Friday check, and the book map for stickers; the home card perforated per week.
 
