@@ -8,7 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { UserActivityLog, UserActiviryChartProps } from "@/types";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { dateFnsLocale } from "@/lib/intl-locale";
 import { cn } from "@/lib/utils";
 
 function formatDataHeatmap(article: UserActivityLog[]) {
@@ -47,6 +48,7 @@ function formatDataHeatmap(article: UserActivityLog[]) {
 export default function UserActivityHeatMap({ data }: UserActiviryChartProps) {
   const formattedData = formatDataHeatmap(data);
   const t = useTranslations("Reports");
+  const locale = useLocale();
 
   return (
     <Card className="md:col-span-1">
@@ -63,6 +65,7 @@ export default function UserActivityHeatMap({ data }: UserActiviryChartProps) {
             "text-white hover:text-white bg-green-700 hover:bg-green-700",
           ]}
           datesPerVariant={formattedData}
+          locale={dateFnsLocale(locale)}
         />
       </CardContent>
     </Card>

@@ -36,6 +36,7 @@ import {
 import { CalendarIcon, StarIcon } from "lucide-react";
 import { EmptyState } from "@reading-advantage/ui";
 import { cn } from "@/lib/utils";
+import { dateFnsLocale } from "@/lib/intl-locale";
 import {
   Select,
   SelectContent,
@@ -138,11 +139,11 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
                     {date?.from ? (
                       date.to ? (
                         <>
-                          {format(date.from, "LLL dd, y")} -{" "}
-                          {format(date.to, "LLL dd, y")}
+                          {format(date.from, "LLL dd, y", { locale: dateFnsLocale(locale) })} -{" "}
+                          {format(date.to, "LLL dd, y", { locale: dateFnsLocale(locale) })}
                         </>
                       ) : (
-                        format(date.from, "LLL dd, y")
+                        format(date.from, "LLL dd, y", { locale: dateFnsLocale(locale) })
                       )
                     ) : (
                       <span>{tTime("selectPeriod")}</span>
@@ -212,6 +213,7 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
                   <Calendar
                     initialFocus
                     mode="range"
+                    locale={dateFnsLocale(locale)}
                     defaultMonth={date?.from}
                     selected={date}
                     onSelect={setDate}

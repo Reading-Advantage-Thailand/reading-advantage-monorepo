@@ -32,6 +32,7 @@ const isOpen = (card: GameCard): boolean => card.missing.vocabulary === 0 && car
  */
 export function StoryGamesClient({ avatar = null, ownerKey, save = true }: { avatar?: LaunchAvatar | null; ownerKey?: string; save?: boolean }) {
   const t = useTranslations("StoryGames");
+  const tGames = useTranslations("LessonGames");
   const locale = useLocale();
   const [input, setInput] = useState<PracticeInput | null>(null);
   const [error, setError] = useState(false);
@@ -101,7 +102,7 @@ export function StoryGamesClient({ avatar = null, ownerKey, save = true }: { ava
                 className="cq-panel cq-pin w-full text-left transition-transform hover:-translate-y-0.5"
               >
                 <span className="block text-lg font-semibold">{card.game.icon} {card.game.manifest.title}</span>
-                <span className="cq-muted mt-1 block text-sm">{card.game.manifest.description}</span>
+                <span className="cq-muted mt-1 block text-sm">{tGames.has(`pitch.${card.game.id}`) ? tGames(`pitch.${card.game.id}`) : card.game.manifest.description}</span>
               </button>
             ) : (
               <div className="cq-panel opacity-80" data-testid={`locked-${card.game.id}`}>

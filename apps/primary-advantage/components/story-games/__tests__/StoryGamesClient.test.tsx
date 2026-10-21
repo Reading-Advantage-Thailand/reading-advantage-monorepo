@@ -6,8 +6,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("next-intl", () => ({
   useLocale: () => "en",
-  useTranslations: () => (key: string, values?: Record<string, unknown>) =>
-    values ? `${key} ${JSON.stringify(values)}` : key,
+  // Only rune-match has a pitch here, so the other cards show the manifest text.
+  useTranslations: () => Object.assign(
+    (key: string, values?: Record<string, unknown>) => (values ? `${key} ${JSON.stringify(values)}` : key),
+    { has: (key: string) => key === "pitch.rune-match" },
+  ),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -71,6 +74,9 @@ describe("StoryGamesClient", () => {
     render(<StoryGamesClient avatar={avatar as never} ownerKey="school-1:student-7" />);
     expect(await screen.findByText(/^saved /)).toHaveTextContent('saved {"words":10,"sentences":8}');
     expect(fetchMock).toHaveBeenCalledWith("/api/v1/apk/practice?locale=th");
+    // The card shows the translated pitch (Thai on the Thai page, 2026-10-21), else the manifest text.
+    expect(screen.getByText("pitch.rune-match")).toBeInTheDocument();
+    expect(screen.getByText("Shoot the creatures that climb out of the well in the order of the sentence.")).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("button").find((b) => b.textContent?.includes("Rune Match"))!);
     const host = await screen.findByTestId("host");
     expect(host).toHaveAttribute("data-input", "saved");

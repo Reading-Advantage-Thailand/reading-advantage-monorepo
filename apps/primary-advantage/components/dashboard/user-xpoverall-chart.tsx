@@ -21,7 +21,9 @@ import {
 } from "@/components/ui/chart";
 import { useTheme } from "next-themes";
 import { UserActivityLog, UserXpLog } from "@/types";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { format } from "date-fns";
+import { dateFnsLocale } from "@/lib/intl-locale";
 import { StarIcon } from "lucide-react";
 import { EmptyState } from "@reading-advantage/ui";
 
@@ -30,32 +32,20 @@ import { EmptyState } from "@reading-advantage/ui";
 // It returns an array of objects with the day of the week and the total number of articles read on that day
 // Example: [{ day: "Sun 1", total: 5 }, { day: "Mon 2", total: 10 }, ...]
 
-function formatDataForDays(articles: UserXpLog[], lastmonth: number) {
+function formatDataForDays(articles: UserXpLog[], lastmonth: number, locale: string) {
   const endDate = new Date();
   const startDate = new Date();
   startDate.setMonth(startDate.getMonth() - lastmonth);
 
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  // The month label is in the page language (it showed "April 2026" on the Thai page, 2026-10-21).
+  const monthLabel = (date: Date) => format(date, "LLLL y", { locale: dateFnsLocale(locale) });
 
   const totalXp: { [key: string]: number } = {};
 
   // Initialize all months in the range with 0 XP
   const currentDate = new Date(startDate);
   while (currentDate <= endDate) {
-    const month = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    const month = monthLabel(currentDate);
     totalXp[month] = 0;
     currentDate.setMonth(currentDate.getMonth() + 1);
   }
@@ -66,7 +56,7 @@ function formatDataForDays(articles: UserXpLog[], lastmonth: number) {
 
     // Check if article date is within our range
     if (articleDate >= startDate && articleDate <= endDate) {
-      const month = `${monthNames[articleDate.getMonth()]} ${articleDate.getFullYear()}`;
+      const month = monthLabel(articleDate);
       if (totalXp[month] !== undefined) {
         totalXp[month] += article.xpEarned; // Sum instead of taking max
       }
@@ -156,7 +146,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function UserXpOverAllChart({ data }: UserActiviryChartProps) {
-  const formattedData = formatDataForDays(data, 6);
+  const locale = useLocale();
+  const formattedData = formatDataForDays(data, 6, locale);
   const hasXp = formattedData.some((point) => point.xpoverall > 0);
 
   const cardDescriptionText = `${formattedData[0]?.month} - ${formattedData[formattedData.length - 1]?.month}`;

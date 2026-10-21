@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { createFormatter, useLocale } from "next-intl";
-import { enUS, th, vi, zhCN, zhTW, type Locale } from "date-fns/locale";
+import type { Locale } from "date-fns";
+// The DayPicker locales are date-fns locales plus the translated calendar labels ("Go to the Previous Month").
+import { enUS, th, vi, zhCN, zhTW } from "react-day-picker/locale";
 import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 
 /** App locale codes that are not BCP 47 tags. Intl falls back to English for them. */

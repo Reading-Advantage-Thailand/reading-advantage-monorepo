@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { intlFormatter, intlLocale } from "../intl-locale";
+import { format } from "date-fns";
+import { dateFnsLocale, intlFormatter, intlLocale } from "../intl-locale";
 
 describe("intlLocale", () => {
   it("maps the app codes cn and tw to BCP 47 tags and keeps the others", () => {
@@ -21,5 +22,14 @@ describe("intlLocale", () => {
     expect(fmt("cn")).toBe("10月13日");
     expect(fmt("tw")).toBe("10月13日");
     expect(fmt("en")).toBe("Oct 13");
+  });
+});
+
+describe("dateFnsLocale", () => {
+  it("gives Thai month names and Thai calendar labels on the Thai reports page (2026-10-21)", () => {
+    const th = dateFnsLocale("th") as ReturnType<typeof dateFnsLocale> & { labels?: Record<string, unknown> };
+    expect(format(new Date(2026, 9, 21), "LLLL y", { locale: th })).toBe("ตุลาคม 2026");
+    expect(th.labels?.labelPrevious).toBeDefined();
+    expect(format(new Date(2026, 9, 21), "LLL dd, y", { locale: dateFnsLocale("xx") })).toBe("Oct 21, 2026");
   });
 });
