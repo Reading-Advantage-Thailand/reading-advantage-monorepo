@@ -66,20 +66,12 @@ export async function GET(
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
     }
 
-    // Fetch cards for the deck (shared-partial `due` filter and `articleId.not` filter
-    // applied via raw SQL since they're shared-partial columns).
-    const now = new Date();
+    // Card rows carry only front, back, and sourceId (the article id): the table has no due,
+    // type, or articleId column (the raw `due` filter failed with 42703, 2026-10-21). Every card
+    // with a source joins the game, as in the cloze route; the type comes from the deck.
     const cardRows = await flashDb.select().from(flashcardCards)
-      .where(
-        and(
-          eq(flashcardCards.deckId, deck.id),
-          isNotNull(sql`${flashcardCards.sourceId}`),
-          sql`${flashcardCards.id} IN (SELECT id FROM flashcard_cards WHERE deck_id = ${deck.id} AND due <= ${now.toISOString()} AND source_id IS NOT NULL)`,
-        ),
-      );
-    const cardsWithDue = (cardRows as any[]).filter(
-      (c) => c.due && new Date(c.due) <= now && c.articleId != null,
-    );
+      .where(and(eq(flashcardCards.deckId, deck.id), isNotNull(flashcardCards.sourceId)));
+    const cardsWithDue = cardRows.map((c) => ({ ...c, type: deck.type, sentence: c.front, articleId: c.sourceId }));
 
     // Fetch most-recent review per card.
     const cardIds = cardsWithDue.map((c) => c.id);
@@ -385,8 +377,8 @@ async function createTranslationPairs(
       articleId: article.id,
       articleTitle: article.title,
       audioUrl: article.audioUrl ? getAudioUrl(article.audioUrl) : undefined,
-      startTime: card.startTime,
-      endTime: card.endTime,
+      startTime: articleSentences[sentenceIndex].startTime,
+      endTime: articleSentences[sentenceIndex].endTime,
     });
   }
 
