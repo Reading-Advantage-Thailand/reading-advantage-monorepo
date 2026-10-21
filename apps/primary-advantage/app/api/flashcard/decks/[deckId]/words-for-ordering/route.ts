@@ -177,18 +177,12 @@ export async function GET(
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
     }
 
-    // Fetch cards for the deck. Shared-partial filters (type, due, articleId)
-    // are applied client-side since those columns aren't on the shared schema yet.
+    // Card rows carry only front, back, and sourceId (the article id): the table has no type, due,
+    // or articleId column, so the old due filter dropped every card (2026-10-21). Every card with a
+    // source joins the game, as in the cloze route; the deck query already keeps SENTENCE decks.
     const cardRows = await flashDb.select().from(flashcardCards)
       .where(eq(flashcardCards.deckId, deck.id));
-    const now = new Date();
-    const sentenceCards = (cardRows as any[]).filter(
-      (c) =>
-        (c.type === undefined || c.type === "SENTENCE") &&
-        c.due &&
-        new Date(c.due) <= now &&
-        c.articleId != null,
-    );
+    const sentenceCards = (cardRows as any[]).filter((c) => c.sourceId != null);
 
     // Fetch most-recent review per card.
     const cardIds = sentenceCards.map((c) => c.id);
