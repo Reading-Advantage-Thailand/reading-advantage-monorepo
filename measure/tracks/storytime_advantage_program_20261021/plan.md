@@ -31,8 +31,8 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 - [x] Task: Peers briefed: PR (S12 edits, sales pack), Monorepo (QR page, `storytime` enum in its own change), Graph (review in November), Workbooks (package v1, week 1), Forge (brief v1, d70d52718).
 - [x] Task: Forge brief v1 with the cast of 5, 24 named gestures, scenes and props for weeks 1 to 8, output formats (PNG sequences 1024 px, 12 fps, 24-frame loops, straight alpha), Workbooks edits the videos.
 - [x] Task: QR page spec draft for Monorepo (`qr-page-spec.md`); Monorepo reviews.
-- [~] Task: Music source (S16, S20): MiniMax-Music3 Space test rated "really good" by Daniel 2026-10-22; Lyria 3 Pro works through Vertex AI (global location) from Thailand, one 78 s song on the page (G1); the Gemini API path is location-blocked; rented-GPU batch estimate USD 25 to 46 for the program. Choice recorded when Daniel answers S20 and G1.
-- [~] Task: Phoneme audio test (S5): mmx speech run 2026-10-22, Daniel rejected 44 of 45; Google Cloud TTS IPA set on the page for rating; the human bank decision is S22.
+- [x] Task: Music source (S16): Lyria 3 Pro through Vertex AI (global location), USD 0.08 a song, three candidates a slot; Daniel chose week 1 candidate 1 (backup 3) on 2026-10-22; karaoke by vocal separation. The MiniMax GPU batch (S20) is optional.
+- [~] Task: Phoneme audio (S5, S22): mmx speech rejected 44 of 45 and Google Cloud TTS IPA rejected (2026-10-22); no open commercial set exists; recommendation = record our own with two or more American speakers; Daniel answers S22.
 - [ ] Task: Confirm the Thai F1.1 Gr1 to Gr3 indicator wording against the OBEC original and file it with the standard node sources.
 
 ## Phase 1: Phonics graph and package (2026-10-22 to 2026-11-07)
@@ -58,10 +58,10 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 
 ## Phase 3: Level 2 week 1 (2026-10-23 to 2026-10-31)
 
-- [~] Task: Author Level 2 week 1 (element n; frame "Hello, I am ___."; Names and greetings): the five scripts, the decodable, the read-along, the song lyric with a gesture and a picture per line, the strips, the check, the home card (Workbooks session) — draft delivered 2026-10-22 (Workbooks 4ad4b32, w01.json, EN and TH teacher book drafts); Storytime review in progress; Thai pass next.
-- [ ] Task: Storytime review of week 1 against the graph and the decodability gate; the cut list of props to Forge.
-- [ ] Task: Week 1 pictures, book audio at 0.75 and 1.0 with word times, and the song audio from the chosen source; record the time and cost per week.
-- [ ] Task: Daniel's Thai check of week 1 by 2026-10-31; the style decisions recorded as the Storytime production rules in Workbooks.
+- [x] Task: Author Level 2 week 1 (element n; frame "Hello, I am ___."; Names and greetings): the five scripts, the decodable, the read-along, the song lyric with a gesture and a picture per line, the strips, the check, the home card (Workbooks session) — delivered 2026-10-22 (Workbooks bb641c8 + 66abc7f, w01.json, EN and TH teacher book drafts with Thai proofread).
+- [~] Task: Storytime review of week 1 against the graph and the decodability gate — 21 findings applied 2026-10-22 (Workbooks 539298a); Pip and the week 1 gesture list sent to Forge; the prop cut list after the lyric sheets of weeks 2 to 8.
+- [~] Task: Week 1 pictures, book audio at 0.75 and 1.0 with word times, and the song audio from the chosen source; record the time and cost per week — song audio done 2026-10-22 (Lyria candidate 1, 78 s, USD 0.28 for three candidates; 15 line times by faster-whisper); karaoke cut, pictures, and book audio open.
+- [~] Task: Daniel's Thai check of week 1 by 2026-10-31 (22 pages on the live page, section I, since 2026-10-22); the style decisions recorded as the Storytime production rules in Workbooks.
 - [ ] Task: Import week 1; the checks pass; the teacher book and student book build; captures on a live review page.
 
 ## Phase 4: Forge release-1 pack (2026-10-22 to 2026-11-15)
@@ -71,7 +71,7 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 
 ## Phase 5: Level 2 weeks 2 to 8 (2026-10-29 to 2026-11-22)
 
-- [ ] Task: Weeks 2 to 4 authored, reviewed, checked by Daniel, and imported by 2026-11-08.
+- [~] Task: Weeks 2 to 4 authored, reviewed, checked by Daniel, and imported by 2026-11-08 — week 2 reviewed and fixed 2026-10-22 (Workbooks 3c8d3d7, design [W2]); week 3 reviewed 2026-10-22 (3 must-fix sent); weeks 2 and 3 Thai pages on the live page (sections J, K); week 4 Thai next.
 - [ ] Task: Weeks 5 to 7 authored, reviewed, checked by Daniel, and imported by 2026-11-15.
 - [ ] Task: Week 8 review week: the medley, the re-reads, the reading record sheets, benchmark 1 (letter-sound and phonemic awareness Form A) with script, forms, and pass marks; by 2026-11-18.
 - [ ] Task: The 8 song videos and karaoke cuts composited from the Forge pack; Daniel's look check; by 2026-11-22.
