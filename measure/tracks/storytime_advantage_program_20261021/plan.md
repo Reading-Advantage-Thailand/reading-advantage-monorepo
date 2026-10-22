@@ -41,7 +41,7 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 - [x] Task (v1): Phonemic awareness taxonomy, 12 modules and 45 skills, including the Thai-contrast module (design §5.2); tests.
 - [x] Task (v1): Letter, phoneme, GPC, pattern, and tricky-word nodes for all four levels (design §5.3); tests.
 - [x] Task (v1, 0 errors alone and merged): Edges: logical `prerequisite_for`, `supports` and `equivalent_to` to the GSE Young Learner nodes from the Graph list, `aligned_to_standard` to the standard node; the shared validation gate passes; tests. Target: v0 by 2026-11-03.
-- [x] Task: Graph session review: v0 reviewed and v1 re-checked 2026-10-22, items 1, 2, 4, 5, 6, 7, 9 pass; commit waits for S21 (Reading A-Z numbers in the public repo).
+- [x] Task: Graph session review: v0 reviewed and v1 re-checked 2026-10-22, items 1, 2, 4, 5, 6, 7, 9 pass; S21 approved 2026-10-22 (Reading A-Z numbers and citations stripped, order kept); committed mastery-advantage ceb728d; Graph checks the commit before the push.
 - [ ] Task: Lexicon of about 2,000 words with grapheme parses, built by script from the Starters list, the Reading A-Z word lists, and the Jolly word bank, then hand-checked; tests on 50 parses. Level 2 subset first, by 2026-10-28, for the week 1 gate.
 - [ ] Task: `wordWall()` and `decodability()` pure functions with tests (design §5.6); the decodable gate at 0.90 and zero untaught words; by 2026-10-28.
 - [ ] Task: `packages/phonics-knowledge` from the `science-knowledge` pattern: domain adapter, objective key with `P`, `S`, `W` short ids; tests.
@@ -77,7 +77,7 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 - [ ] Task: The 8 song videos and karaoke cuts composited from the Forge pack; Daniel's look check; by 2026-11-22.
 - [ ] Task: The QR page `/st<level>/<week>` in Primary without a login, with `storytime` in `programSchema` in the same change (Monorepo session, `qr-page-spec.md`); tests; by 2026-11-20.
 - [ ] Task: The weeks 1 to 8 card kit files: sound and symbol cards, picture cards, letter cards, tricky-word cards, workmats, the classroom language card; the class reader sets with the Seed and Sprout band labels.
-- [ ] Task: The home cards for weeks 1 to 8 with the QR codes to the live page; the parent line in Thai checked.
+- [~] Task: The home cards for weeks 1 to 8 with the QR codes to the live page; the parent line in Thai checked — host https://storytime.reading-advantage.com (S23, Workbooks 8ad998c); บุตรหลาน in all weeks (S24, 041017a); Daniel's check of page 2 of each week open (page section X2).
 
 ## Phase 6: Print, sales pack, release (2026-11-21 to 2026-12-01)
 
