@@ -58,7 +58,7 @@ The videos exist. The PR session made them for the "What's New" series (PR repo 
 | B4 | teacher | `/teacher/class-roster/[classroomId]/class-sheet`, `/teacher/class-roster/[classroomId]/qr-cards`, `/teacher/class-roster/[classroomId]` | |
 | D2 | teacher | `/teacher/class-roster/[classroomId]`, `/teacher/class-roster/[classroomId]/books/[classBookId]` | |
 | D3 | teacher | `/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]` | |
-| D4 | teacher | `.../lessons/[number]/projector` (hold: the plan says the Oct 11 merge changed the screen) | |
+| D4 | teacher | `.../lessons/[number]/projector` | |
 | D5 | teacher | `.../lessons/[number]/rehearsal` | |
 | J4 | teacher | `.../lessons/[number]/print`, `.../lessons/[number]` | |
 | D6 | teacher | `/teacher/class-roster/[classroomId]/books/[classBookId]/progress` and `/progress/[studentId]` | |
@@ -77,12 +77,18 @@ All built videos are approved (section 6), so the registry maps the other 75 in 
 3. Sign-in help: yes ("Absolutely"). See section 2 and plan task 3.3.
 4. Plays log: yes, shown in the system role. See FR-11 and FR-12.
 
-## 7. Hold notes (from the PR track)
+## 7. Hold notes (PR check of 2026-10-23 against integration 923f87e91)
 
-- D4 (projector view): the screen changed after the recording. Hold until a retake.
-- G3 (Reedy for teachers): it was recorded before G1, so the demo shows 0:00. It can stay live; G1 is not built.
-- C2, F1, F2, F3 were retaken on 2026-10-22 (a sign-in name was visible). Use only the retake files.
-- A screen that changes after a recording needs a new look check before its video is enabled.
+PR compared the build of each recording with the current code and looked at the recorded frames.
+
+- Hold (main content changed, PR retakes them on 3005):
+  - C11: the story games page showed English game descriptions; `6915fb2ce` made them Thai.
+  - E5: the class and student reports showed English dates and calendar labels, and the old charts; `6915fb2ce`, `d8913133f`, and `6efeb7a5c` changed them.
+- Daniel decides: B1, B2, B5, A2 (the sign-in page). Only the footer line changed: it was English ("Printed English workbooks and a reading app for grades 3–6"), and `def50dcf6` made it Thai. The rest of the page is the same. These four are live on YouTube. PR's default: no hold.
+- No hold: D4 (projector view). The old note came from a name clash with open decision D4 in the PR plan; no projector file changed after the recording (2026-10-21 15:04, build `12996ea7d`).
+- No hold: A4, F1, F2, F3, C2, F5, H4, H5, J6, I1 to I28, and all other videos (no change in the recorded frames).
+- Retake files confirmed: C2, F1, F2, F3 (on `61b21d82b`, with the name cover), C6 and E4 (on `7cdf7b7b7`), C8 (on `7cdf7b7b7`). A1 was built again from the retakes.
+- Rule for later: a screen that changes after a recording needs a new look check before its video stays enabled.
 
 ## 8. Acceptance
 

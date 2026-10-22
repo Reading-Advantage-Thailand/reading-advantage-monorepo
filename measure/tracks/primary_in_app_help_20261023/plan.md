@@ -7,7 +7,8 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 ## Phase 0: Owner decisions
 
 - [x] 0.1 Daniel answered spec section 6 (2026-10-23): both hosts (teacher YouTube when uploaded, student own file), all videos approved, sign-in help yes, plays log in the system role.
-- [ ] 0.2 PR confirms the hold list (spec section 7: screens that changed after the recording) and the retake files.
+- [x] 0.2 PR confirmed the hold list and the retake files (2026-10-23, spec section 7): hold C11 and E5 until PR's retakes; D4 has no hold.
+- [ ] 0.3 Daniel decides B1, B2, B5, A2 (only the sign-in footer line changed to Thai after the recording). PR's default: no hold.
 
 ## Phase 1: Registry and matcher
 
