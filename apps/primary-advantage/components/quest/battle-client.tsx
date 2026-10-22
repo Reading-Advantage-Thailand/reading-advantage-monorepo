@@ -200,6 +200,12 @@ export function BattleClient({
     };
   }, [state.quest.id, status]);
 
+  // The battle GP posts when the quest enters result; the header purse is server-rendered, so
+  // refresh it then, and again at done in case the poll saw result before the GP rows.
+  useEffect(() => {
+    if (status === "result" || status === "done") router.refresh();
+  }, [status, router]);
+
   const onCompleted = (result: {
     challengeRunId?: string;
     correctAnswers: number;
