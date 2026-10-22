@@ -1,6 +1,6 @@
 # Spec: Primary in-app help with the What's New videos
 
-Track: `primary_in_app_help_20261023` · Owner request 2026-10-23 · Status: draft, waits for the owner decisions in section 6.
+Track: `primary_in_app_help_20261023` · Owner request 2026-10-23 · Status: owner decisions recorded 2026-10-23 (section 6); plan ready for approval.
 
 ## 1. Goal
 
@@ -25,22 +25,26 @@ The videos exist. The PR session made them for the "What's New" series (PR repo 
 
 - FR-1 Help button. Every teacher and student page shows a help button (question mark icon, `h-8 w-8` ghost button, accessible name from the `Help` namespace). It uses the `SoundToggle` pattern (client component in the server `AppLayout`).
 - FR-2 Context match. The button opens a help panel. The panel lists the videos for the current page first, then the general videos of the area. The match uses the current path from `usePathname` (`@/i18n/navigation`, without the locale) against route patterns in the registry. A more specific pattern ranks higher.
-- FR-3 Player. The panel plays the selected video in the app: native `<video controls playsInline preload="none" poster>`. A 9:16 video plays in a portrait box, and a 16:9 video plays in a landscape box. The video starts only after a tap. Closing the panel stops the video.
+- FR-3 Player. The panel plays the selected video in the app. A 9:16 video plays in a portrait box, and a 16:9 video plays in a landscape box. The panel first shows the poster with a play button; the video loads only after a tap. Closing the panel stops the video.
+  - Teacher panel: when the video has a `youtubeId`, the tap loads the `youtube-nocookie` embed (autoplay after the tap), so the play counts on the channel. A small "Play without YouTube" button switches to our own file (for school networks that block YouTube). When the video has no `youtubeId` yet, the panel plays our own file.
+  - Student panel: always our own file in the native `<video controls playsInline>`. No YouTube element on student screens.
 - FR-4 Fallback. When no video matches the page, the panel shows the general videos (teacher: A2 overview and E7 manual; student: C2 "where are the buttons" and C1 home). A teacher panel also links to `/teacher/manual`.
 - FR-5 Registry. One typed registry (`lib/help/videos.ts`) holds every video: `id`, `audience` (teacher | student | parent), `format` (9x16 | 16x9), `routes` (route patterns in the app's folder form, for example `/teacher/class-roster/[classroomId]/qr-cards`), `general` (true for the area fallback), `title` ({ th, en }), `media` (storage keys of the mp4 and the poster), `youtubeId` (optional), `durationSec`, and `enabled`.
-- FR-6 Only approved videos show. An entry shows only when `enabled` is true. A video is enabled when Daniel uploaded it (it has a `youtubeId` in PR's JSON) and no hold note applies (section 7).
+- FR-6 Every built video can show. Daniel approved all 91 videos (2026-10-23); the YouTube upload limit does not hold them back. An entry is `enabled` unless a hold note applies (section 7: the screen changed after the recording). The `youtubeId` only chooses the teacher player source (FR-3).
 - FR-7 Languages. The videos are Thai. The panel titles come from the registry (th, en). In the vi, cn, and tw interfaces, the panel uses the English titles and shows the note "Thai narration".
-- FR-8 Media receiving step. A Monorepo script copies the enabled videos and posters from the PR folder to the bucket under `help/whats-new/<id>.mp4` and `<id>.jpg`. It checks each file with ffprobe (H.264 and AAC, `moov` before `mdat`; if not, it re-muxes with `-movflags +faststart` and no re-encode). A runbook `docs/runbooks/help-video-sync.md` describes the step. The app reads the URLs from `getStorageUrl` (`lib/storage-config.ts`).
+- FR-8 Media receiving step. A Monorepo script copies the enabled videos and posters from the PR folder to the bucket under `help/whats-new/<id>.mp4` and `<id>.jpg`. It checks each file with ffprobe (H.264 and AAC, `moov` before `mdat`; if not, it re-muxes with `-movflags +faststart` and no re-encode). It also writes `lib/help/youtube-ids.json` ({ id: youtubeId }) from PR's links JSON, so each upload day changes one data file. A runbook `docs/runbooks/help-video-sync.md` describes the step. The app reads the URLs from `getStorageUrl` (`lib/storage-config.ts`).
 - FR-9 Help index. `/teacher/help` lists all enabled teacher videos by area (sign-in, class roster, class book and lessons, reports, games and challenges, avatars, Class Quest, manual). The student panel has an "All videos" view inside the panel (no new student page).
 - FR-10 Manual link. Each `/teacher/manual` section shows a "Watch the video" link when a registry video has the same route as the section.
+- FR-11 Help events. The panel records two events: `open` (the route pattern and the number of matched videos) and `play` (the video id, the route pattern, the source `youtube` or `file`). One row has `school_id`, the role, the event, the video id, the route pattern, the source, and the time. It has no user id (children's data stays out). A backend function in `packages/domain` with Zod input and output writes the row; the route `POST /api/v1/help/events` is thin and checks the video id against the registry.
+- FR-12 System report. `/system/help` (system role only) shows, for the last 7 and 30 days: plays per video (teacher and student), opens per page, and the pages where users opened help with no matching video. Optional filter by school.
 
 ## 4. Non-functional requirements
 
 - NFR-1 No sound and no download before a tap (`preload="none"`; the poster is a small JPG).
-- NFR-2 The student never leaves the app from help. No YouTube links on student screens.
-- NFR-3 No new third-party request on page load. The help panel loads its media only when it opens.
+- NFR-2 The student never leaves the app from help. No YouTube element or link on student screens.
+- NFR-3 No new third-party request on page load or on panel open. The YouTube embed loads only after a teacher taps play.
 - NFR-4 Accessibility: the panel is a shadcn `Dialog` (focus trap, Escape closes). Touch targets are 44 px or more on student screens.
-- NFR-5 No database table and no migration in release 1. The registry is static code.
+- NFR-5 The registry is static code. One new table for the help events (FR-11), with a Drizzle migration and the FLAT class (it has `school_id`) in `packages/domain/src/tenant-registry.ts`.
 - NFR-6 The service worker does not cache the videos (no change to `public/serwist/sw.js`).
 
 ## 5. First route map (the 16 live videos)
@@ -64,14 +68,14 @@ The videos exist. The PR session made them for the "What's New" series (PR repo 
 | C1 | student | `/student/home` | yes |
 | C2 | student | (every student page) | yes |
 
-The not-uploaded videos get their routes when they go live. Their routes in the PR plan are notes, not checked paths. Main groups: student pages C3 to C11 (read, lesson, assignments, vocabulary, sentences, history, reports, profile), teacher pages E1 to E6 (dashboard, my classes, enrollment, assignments, reports, game challenges), avatars F1 to F5, Class Quest H1 to H9, games I0 to I28 (one per game, `/student/games/...`).
+All built videos are approved (section 6), so the registry maps the other 75 in plan task 1.4. Their routes in the PR plan are notes, not checked paths: each one is checked against the route tree (AC-4). Main groups: student pages C3 to C11 (read, lesson, assignments, vocabulary, sentences, history, reports, profile), teacher pages E1 to E6 (dashboard, my classes, enrollment, assignments, reports, game challenges), avatars F1 to F5, Class Quest H1 to H9, games I0 to I28 (one per game, `/student/games/...`).
 
-## 6. Owner decisions (with the recommendation)
+## 6. Owner decisions (Daniel, 2026-10-23)
 
-1. Hosting. Recommendation: (a) our own bucket. The app plays the mp4 files from Google Storage with the native player. All 91 files are ready now, with no wait for the uploads. No YouTube suggestions, logos, or links reach children. The app works where a school network blocks YouTube. Cost: about 0.6 GB of storage and about USD 0.12 for each GB of traffic (2,000 plays a month is about 13 GB, about USD 1.6). (b) YouTube embeds (`youtube-nocookie`, from PR's JSON): no hosting, but only the uploaded videos work, YouTube can show other videos at the end, and some school networks block YouTube. Teachers can still get an "Open on YouTube" link in (a).
-2. Which videos show. Recommendation: the upload rule of FR-6 (Daniel's upload is the approval), plus the hold notes. Alternative: enable every built video after a PR currency check.
-3. Sign-in help. Recommendation: yes, one link on the sign-in pages (B5, B1, B2), because sign-in is the first problem for a new class.
-4. Plays log. Recommendation: no log in release 1. A later release can count plays per video to show which features confuse users.
+1. Hosting: both. Daniel accepted the bucket for its reasons, and he wants the help to bring views to the YouTube channel. So the teacher panel plays the YouTube embed when the video is on YouTube, and our own file when it is not yet uploaded or when YouTube is blocked. The student panel always plays our own file (no YouTube for children). See FR-3.
+2. Approval: Daniel approved all videos. YouTube limits his uploads, so the upload is not the approval. Every built video is enabled, except a video with a hold note (section 7). See FR-6.
+3. Sign-in help: yes ("Absolutely"). See section 2 and plan task 3.3.
+4. Plays log: yes, shown in the system role. See FR-11 and FR-12.
 
 ## 7. Hold notes (from the PR track)
 
@@ -87,4 +91,6 @@ The not-uploaded videos get their routes when they go live. Their routes in the 
 - AC-3 On a page with no video (for example `/teacher/my-students`), the panel shows A2 and E7 and the manual link.
 - AC-4 Each route pattern in the registry matches a real `page.tsx` folder (a unit test reads the route tree).
 - AC-5 Each enabled entry has its mp4 and poster in the bucket (the receiving step reports 0 missing).
-- AC-6 No request for a video or poster happens before the panel opens (network log in the browser check).
+- AC-6 No request for a video or poster happens before the panel opens, and no YouTube request happens before a teacher taps play (network log in the browser check).
+- AC-7 On a student page, the panel has no YouTube element. On a teacher page, a video with a `youtubeId` loads the `youtube-nocookie` embed after the tap, and "Play without YouTube" plays our file.
+- AC-8 One play on a teacher page and one on a student page each add one `play` row with the right role and source, and no user id. `/system/help` shows both; a teacher account gets no access to `/system/help`.
