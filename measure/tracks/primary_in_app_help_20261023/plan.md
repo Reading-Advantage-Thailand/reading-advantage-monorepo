@@ -2,6 +2,8 @@
 
 Track: `primary_in_app_help_20261023` · Spec: [spec.md](./spec.md) · Branch: a new branch from master after the Boonyathat deploy (not primary-parity-integration).
 
+Plan APPROVED by Daniel on 2026-10-23 ("Approve the help system plan").
+
 Paths are under `apps/primary-advantage/` unless they start with `packages/`, `docs/`, or `measure/`. Each task follows `measure/workflow.md` (red, green, refactor, commit, SHA in this file). Heavy jobs (tsc, vitest, browser) run under `~/Desktop/primary-parity-progress/heavy.lock`.
 
 ## Phase 0: Owner decisions
