@@ -9,15 +9,15 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 ## Phase 0: Owner decisions
 
 - [x] 0.1 Daniel answered spec section 6 (2026-10-23): both hosts (teacher YouTube when uploaded, student own file), all videos approved, sign-in help yes, plays log in the system role.
-- [x] 0.2 PR confirmed the hold list and the retake files (2026-10-23, spec section 7): hold C11 and E5 until PR's retakes; D4 has no hold.
+- [x] 0.2 PR confirmed the hold list and the retake files (2026-10-23, spec section 7); D4 has no hold; C11 and E5 retaken (PR `309b529`).
 - [ ] 0.3 Daniel decides B1, B2, B5, A2 (only the sign-in footer line changed to Thai after the recording). PR's default: no hold.
 
 ## Phase 1: Registry and matcher
 
-- [ ] 1.1 `lib/help/videos.ts`: the Zod schema of an entry (FR-5) and the 16 live videos (spec section 5). Test: unique ids, every enabled entry has a title in th and en, a 9x16 entry is a student or parent video.
-- [ ] 1.2 `lib/help/match.ts`: `helpVideosFor(pathname, audience)` gives the matched videos (more specific pattern first) and then the general videos. Test: AC-1 and AC-3 paths, a dynamic segment, a path with a query, the student fallback.
-- [ ] 1.3 Route check test: every route pattern in the registry matches a `page.tsx` folder under `app/[locale]/` (AC-4).
-- [ ] 1.4 The other 75 built videos: routes from the PR plan, checked by 1.3; English titles; hold flags from 0.2.
+- [x] 1.1 `lib/help/videos.ts`: the Zod schema of an entry (FR-5) and the 16 live videos (spec section 5). Test: unique ids, every enabled entry has a title in th and en, a 9x16 entry is a student or parent video.
+- [x] 1.2 `lib/help/match.ts`: `helpVideosFor(pathname, audience)` gives the matched videos (more specific pattern first) and then the general videos. Test: AC-1 and AC-3 paths, a dynamic segment, a path with a query, the student fallback.
+- [x] 1.3 Route check test: every route pattern in the registry matches a `page.tsx` folder under `app/[locale]/` (AC-4).
+- [x] 1.4 The other built videos (72; G1 and G4 have no file): routes checked by 1.3; each game video points at its own game (`/student/games/apk/<id>`); trailers, boss shorts, the parent video, F6, and D7 have no page (they show in "All videos" only); English titles. `44fcd02` (1.1 to 1.4 in one commit, because the route check uses the matcher)
 
 ## Phase 2: Media receiving step
 
