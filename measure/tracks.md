@@ -17,6 +17,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: Primary In-App Help (What's New videos)** — *created 2026-10-23*
+  *Link: [./tracks/primary_in_app_help_20261023/](./tracks/primary_in_app_help_20261023/)*
+  *Status: new, waits for the owner decisions in spec section 6 | Priority: after the Boonyathat deploy*
+  *Note: contextual help button in the teacher and student shells; plays PR's tutorial video for the current page*
+
 - [ ] **Track: Storytime Advantage Program** — *created 2026-10-21*
   *Link: [./tracks/storytime_advantage_program_20261021/](./tracks/storytime_advantage_program_20261021/)*
   *Status: proposed; design complete, decisions S1 to S14 open; planning only, no code, no public date | Priority: MEDIUM | Owner fixed the shape and approved Chibi Sprouts 2026-10-21*
