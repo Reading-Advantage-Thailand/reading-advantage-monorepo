@@ -512,6 +512,8 @@ The vocabulary family of the week has 6 to 8 picture words; the numbers family a
 - Words: animals and sound words bounce, and a speech bubble with the sung word pops at its word time; the text comes from the line words, never from the render.
 - Two cuts per song, both with the English line text and word-by-word highlight, no Thai: `song.mp4` (vocals) and `song-karaoke.mp4` (the instrumental from vocal separation, S16). The karaoke cut exists only when the instrumental exists.
 - Files per song (Monorepo's QR page requests, 2026-10-22): `song.mp4` 1080p for the classroom screen; `song-phone.mp4` 720p (H.264 CRF about 28, AAC 96k, 15 to 25 MB) for the QR page on mobile data; `song.poster` JPG 1280x720 (first frame, shown before the tap); every mp4 with faststart. Schema: `song.audio` required; `song.video`, `song.videoPhone`, `song.poster`, `song.karaoke` optional; without a video the page plays the audio in the read-along player.
+- Start and end screens (Daniel, 2026-10-22, Y1): every song video opens with about 3 s of silence showing the song title and the context (Storytime Advantage, Level 2, week, theme) and closes with about 4 s showing the Storytime Advantage logo and the Reading Advantage contact line, with a pop-in motion and a pop sound or "Reading Advantage" from the jingle. Package times stay song-relative; the compositor offsets them.
+- Look check of the week 1 placeholder cut passed 2026-10-22 (method, text size, yellow sung words, 1.2 s cue, slide speed, inset).
 - Dates: placeholder-art week 1 cut for the QR page test (Monorepo, by 2026-11-20); final cuts with Forge art by 2026-11-25.
 
 ### 6.4 Audio: phonemes
