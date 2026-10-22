@@ -71,9 +71,9 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 
 ## Phase 5: Level 2 weeks 2 to 8 (2026-10-29 to 2026-11-22)
 
-- [~] Task: Weeks 2 to 4 authored, reviewed, checked by Daniel, and imported by 2026-11-08 — week 2 reviewed and fixed 2026-10-22 (Workbooks 3c8d3d7, design [W2]); week 3 reviewed 2026-10-22 (3 must-fix sent); weeks 2 and 3 Thai pages on the live page (sections J, K); week 4 Thai next.
-- [ ] Task: Weeks 5 to 7 authored, reviewed, checked by Daniel, and imported by 2026-11-15.
-- [ ] Task: Week 8 review week: the medley, the re-reads, the reading record sheets, benchmark 1 (letter-sound and phonemic awareness Form A) with script, forms, and pass marks; by 2026-11-18.
+- [~] Task: Weeks 2 to 4 authored, reviewed, checked by Daniel, and imported by 2026-11-08 — authored with Thai and reviewed 2026-10-22 (Workbooks 3c8d3d7, da2f054, 80885fd; design [W2], [W4]); Thai pages on the live page (sections J, K, L); Daniel's check and the import open.
+- [~] Task: Weeks 5 to 7 authored, reviewed, checked by Daniel, and imported by 2026-11-15 — authored with Thai and reviewed 2026-10-22 (Workbooks 76df7d8, a7e2c44, dd8f10a; design [W6]); Thai pages on the live page (sections M, N, O); Daniel's check and the import open.
+- [~] Task: Week 8 review week: the medley, the re-reads, the reading record sheets, benchmark 1 (letter-sound and phonemic awareness Form A) with script, forms, and pass marks; by 2026-11-18 — design 3.5 [W8] written 2026-10-22; Workbooks review-week code fa42433, d86987f; content with Thai bc95eaa, reviewed; Thai pages on the live page (section P); Daniel's check and the import open.
 - [ ] Task: The 8 song videos and karaoke cuts composited from the Forge pack; Daniel's look check; by 2026-11-22.
 - [ ] Task: The QR page `/st<level>/<week>` in Primary without a login, with `storytime` in `programSchema` in the same change (Monorepo session, `qr-page-spec.md`); tests; by 2026-11-20.
 - [ ] Task: The weeks 1 to 8 card kit files: sound and symbol cards, picture cards, letter cards, tricky-word cards, workmats, the classroom language card; the class reader sets with the Seed and Sprout band labels.
