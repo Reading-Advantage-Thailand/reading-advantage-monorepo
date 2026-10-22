@@ -469,7 +469,7 @@ All content is made in the Workbooks repo under the Primary production rules: Cl
 | Cumulative rule | Element n's book uses elements 1 to n only. The function in 5.6 gates it. |
 | "Sounds in this book" page | New element, words with the new element, new tricky words (the Reading A-Z elements page) |
 | Pattern | A repeated frame with substitution, one change per page; a small twist on the last page |
-| Cast | The Pip world where the name is decodable at that week: Sam (week 5), Pat (6), Dan (8), Pam, Ben (17), Pip (18), Kim (27), Max (33), May (Level 4). Pip the puppy is the mascot from Level 2 week 18. Other names from the Starters name list, decodable at the week. |
+| Cast | The Pip world where the name is decodable at that week: Sam (week 5), Pat (6), Dan (8), Pam, Ben (17), Pip (18), Kim (27), Max (33), May (Level 4). Pip the puppy is the mascot from Level 2 week 1 (S7, the week 1 song); before week 18 Pip can be a listed name (`names`) that the teacher reads for the class [W6]. Other names from the Starters name list, decodable at the week. |
 | Pictures | One picture per page in the printed picture-book style, race-unmarked prompts (hair and clothes, never skin or ethnicity), through the Workbooks image pipeline |
 | Audio | Whole-text read-along audio at 0.75 and 1.0 speed, word-aligned for the read-along player |
 
@@ -480,7 +480,7 @@ Week 1 of Level 2 teaches n with no vowel, so its decodable is a sound book (sou
 | Level | Read-along book (weekly, 28 a level) | Pattern |
 |---|---|---|
 | 1 | 8 pages, one word or two-word phrase per page, one picture; the frame on the last page | "A cat. A dog. A big dog! My dog." |
-| 2 | 8 pages, one sentence per page, the frame repeated with one substitution; 20-35 words | "I can see a red ball. I can see a blue ball. ... I can see Pip!" |
+| 2 | 8 pages, one sentence per page, the frame repeated with one substitution; 20-35 words, or 39-40 words with a 5-word frame [W6] | "I can see a red ball. I can see a blue ball. ... I can see Pip!" |
 | 3 | 8 pages, two sentences per page, question and answer; 50-70 words | "Where is Pip? Pip is in the garden." |
 | 4 | 8-12 pages, a story of 60-100 words with dialogue, two questions; opens "This is ___." in at least half the books | the Origins form |
 
