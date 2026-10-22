@@ -258,10 +258,9 @@ Every period opens with the same routine. Nothing in the routine changes across 
 
 **Opening routine (8 minutes in primary, 6 in Anuban)**
 1. Greeting song and the class call-and-response (1 min). "Hello, Sprouts!" "Hello, Teacher ___!"
-2. Calendar: day, weather, one child points (1 min). Level 1 points at pictures; Level 4 reads the words.
+2. Sound game, 1 min, every day [W2]: days 1 to 2 the sound of the week (first-sound and last-sound identify with picture cards; week 2 the middle sound); days 3 to 5 blend three sounds by ear ("/p/ - /a/ - nnn. What is the word? Pan!"). The week package gives one teacher line per day (opening.pa[day]). In the 6-minute Anuban opening it replaces the calendar. The 8-minute primary opening keeps the calendar as item 3 (one child points; Level 4 reads the words).
 3. Song of the week with the choreography, from the video (2 min). Monday the teacher models; by Wednesday the class leads.
 4. Review deck (3 to 4 min). The printed cards for the day (section 4). Sound cards, word cards, then one frame card.
-5. Phonemic awareness, 1 min, every day: days 1 to 2 the sound of the week (first-sound and last-sound identify with picture cards); days 3 to 5 blend three sounds ("mmm - /a/ - nnn: man"). The week package gives one line of teacher language per day (opening.pa[day]). On a day with a recall of moved steps, the review deck gives up one minute (section 3.3). [W2]
 
 ### 3.2 Levels 2 to 4, 49 minutes
 
