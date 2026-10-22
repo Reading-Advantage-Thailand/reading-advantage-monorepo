@@ -61,7 +61,7 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 - [x] Task: Author Level 2 week 1 (element n; frame "Hello, I am ___."; Names and greetings): the five scripts, the decodable, the read-along, the song lyric with a gesture and a picture per line, the strips, the check, the home card (Workbooks session) — delivered 2026-10-22 (Workbooks bb641c8 + 66abc7f, w01.json, EN and TH teacher book drafts with Thai proofread).
 - [~] Task: Storytime review of week 1 against the graph and the decodability gate — 21 findings applied 2026-10-22 (Workbooks 539298a); Pip and the week 1 gesture list sent to Forge; the prop cut list after the lyric sheets of weeks 2 to 8.
 - [~] Task: Week 1 pictures, book audio at 0.75 and 1.0 with word times, and the song audio from the chosen source; record the time and cost per week — song audio done 2026-10-22 (Lyria candidate 1, 78 s, USD 0.28 for three candidates; 15 line times by faster-whisper); karaoke cut, pictures, and book audio open.
-- [~] Task: Daniel's Thai check of week 1 by 2026-10-31 (22 pages on the live page, section I, since 2026-10-22); the style decisions recorded as the Storytime production rules in Workbooks.
+- [x] Task: Daniel's Thai check of week 1 by 2026-10-31 — passed 2026-10-22 (23 pages, section I, no corrections); the style decisions are the Storytime production rules in Workbooks.
 - [ ] Task: Import week 1; the checks pass; the teacher book and student book build; captures on a live review page.
 
 ## Phase 4: Forge release-1 pack (2026-10-22 to 2026-11-15)
@@ -71,9 +71,9 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 
 ## Phase 5: Level 2 weeks 2 to 8 (2026-10-29 to 2026-11-22)
 
-- [~] Task: Weeks 2 to 4 authored, reviewed, checked by Daniel, and imported by 2026-11-08 — authored with Thai and reviewed 2026-10-22 (Workbooks 3c8d3d7, da2f054, 80885fd; design [W2], [W4]); Thai pages on the live page (sections J, K, L); Daniel's check and the import open.
-- [~] Task: Weeks 5 to 7 authored, reviewed, checked by Daniel, and imported by 2026-11-15 — authored with Thai and reviewed 2026-10-22 (Workbooks 76df7d8, a7e2c44, dd8f10a; design [W6]); Thai pages on the live page (sections M, N, O); Daniel's check and the import open.
-- [~] Task: Week 8 review week: the medley, the re-reads, the reading record sheets, benchmark 1 (letter-sound and phonemic awareness Form A) with script, forms, and pass marks; by 2026-11-18 — design 3.5 [W8] written 2026-10-22; Workbooks review-week code fa42433, d86987f; content with Thai bc95eaa, reviewed; Thai pages on the live page (section P); Daniel's check and the import open.
+- [~] Task: Weeks 2 to 4 authored, reviewed, checked by Daniel, and imported by 2026-11-08 — authored with Thai and reviewed 2026-10-22 (Workbooks 3c8d3d7, da2f054, 80885fd; design [W2], [W4]); Daniel's Thai check passed 2026-10-22 (sections J, K, L, no corrections); the import open.
+- [~] Task: Weeks 5 to 7 authored, reviewed, checked by Daniel, and imported by 2026-11-15 — authored with Thai and reviewed 2026-10-22 (Workbooks 76df7d8, a7e2c44, dd8f10a; design [W6]); Daniel's Thai check passed 2026-10-22 (sections M, N, O, no corrections); the import open.
+- [~] Task: Week 8 review week: the medley, the re-reads, the reading record sheets, benchmark 1 (letter-sound and phonemic awareness Form A) with script, forms, and pass marks; by 2026-11-18 — design 3.5 [W8] written 2026-10-22; Workbooks review-week code fa42433, d86987f; content with Thai bc95eaa, reviewed; Daniel's Thai check passed 2026-10-22 (section P, no corrections); the import open.
 - [ ] Task: The 8 song videos and karaoke cuts composited from the Forge pack; Daniel's look check; by 2026-11-22.
 - [ ] Task: The QR page `/st<level>/<week>` in Primary without a login, with `storytime` in `programSchema` in the same change (Monorepo session, `qr-page-spec.md`); tests; by 2026-11-20.
 - [ ] Task: The weeks 1 to 8 card kit files: sound and symbol cards, picture cards, letter cards, tricky-word cards, workmats, the classroom language card; the class reader sets with the Seed and Sprout band labels.
@@ -130,7 +130,7 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 | Item | Hours | When |
 |---|---|---|
 | Week 1 Thai check and style decisions | 3 | by 2026-10-31 |
-| Weeks 2 to 8 Thai checks (about 1.5 h a week) | 11 | 2026-11-01 to 2026-11-18 |
+| Weeks 2 to 8 Thai checks (about 1.5 h a week) | 11 | done 2026-10-22 (all eight weeks passed) |
 | Music test rating, phoneme audio rating | 2 | by 2026-10-29 |
 | Forge look check, song video look check | 2 | 2026-11-10 to 2026-11-22 |
 | Print proof | 3 | by 2026-11-24 |
