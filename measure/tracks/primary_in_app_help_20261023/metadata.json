@@ -3,9 +3,9 @@
   "type": "feature",
   "status": "new",
   "created_at": "2026-10-23T00:00:00Z",
-  "updated_at": "2026-10-23T00:00:00Z",
+  "updated_at": "2026-10-23T06:00:00Z",
   "description": "Primary in-app help: a contextual help button in the teacher and student shells that plays the PR What's New tutorial video for the current page",
-  "estimated_tasks": 17,
+  "estimated_tasks": 23,
   "actual_tasks": 0,
   "deviation_notes": ""
 }
