@@ -67,6 +67,8 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 ## Phase 4: Forge release-1 pack (2026-10-22 to 2026-11-15)
 
 - [~] Task: Forge track for Chibi Sprouts release 1 on brief v1 (Forge session; started after S18): the age-5 base, the cast of 5 (sprout-adventurer, sprout-wizard, sprout-druid, sprout-knight, sprout-pip), the 24 gesture loops plus idle, Pip's six clips, 8 scene backgrounds, the 15 new and 19 reused props.
+- [~] Task: Week 1 render set first (Forge, 2026-10-22, recorded in Forge f9879c55): folder out/chibi-sprouts/r1/week1/; order = age-5 base and soft-edge render option, Pip, Nan, Pat, May, Sam, Mia, Ben, the Adventurer with 6 gestures and idle, the classroom and the rug, then the manifest with the foot point. Target 2026-10-29; a fresh Forge build session confirms the date after the age-5 base. Then Workbooks swaps the placeholders and Daniel's look check of the test video.
+- [ ] Task: Daniel answers S26 (cast of 13 against the S18 cap of 8) after the week 1 look check; Forge risks: the adults and Tom (other proportions) and the 30 props unless many reuse Forge assets.
 - [ ] Task: Receive and check the pack through the Forge sync runbook (Monorepo runs the sync); delivery notes carry the baseline row and centre column as numbers; captures for Daniel's look check.
 
 ## Phase 5: Level 2 weeks 2 to 8 (2026-10-29 to 2026-11-22)
