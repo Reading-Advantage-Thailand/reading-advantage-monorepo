@@ -492,7 +492,7 @@ The parallel leveled readers are the same books, re-cut into class sets by level
 |---|---|
 | Count | 112: 28 a level |
 | Length | 60-90 seconds; Level 1 60 seconds |
-| Sung letters | Never a sung letter name: write a repeated onset syllable, not "A-a-apples". Vowels and continuous consonants sing the sound long ("Ap, ap, apples!", "Mmm, mmm, my family!", "Sss, sss"); stops take the vowel of the week ("Pa, pa, paint!", "Ta, ta") [W2] [W4] |
+| Sung letters | No sung letter name and no sung onset syllable (not "A-a-apples", not "Ap, ap, apples!", not "Pa, pa, paint!"). A generated voice does not sing an isolated sound reliably: Daniel heard none that made the sound clear (2026-10-22, S25). The hook of a song carries whole words of the week ("Apples, apples! Count with me!"); the sound of the week is taught by the sound game, the cards, and the teacher, never by the song [S25]. Replaces the onset rule of [W2] [W4]. |
 | Prompt rule | The style text never says "children" or "five-year-olds" (the Lyria 3 Pro filter rejects them); write "kindergarten English classroom, young learners" [W2] |
 | Source | Lyria 3 Pro through Vertex AI (global location), three candidates a song, Daniel rates on the live page; karaoke by vocal separation of the chosen take [W2] |
 | Structure | Verse 1 (the frame with family word 1 and 2), chorus (the frame as a hook, 2 lines, repeated), verse 2 (family word 3 and 4), chorus, verse 3 (words 5 and 6, Level 3-4 adds a question line), chorus twice. The frame appears at least 8 times. Level 2-4 songs include the sound of the week in the chorus (Level 2 "s-s-s, Sam sees a sun"). |
