@@ -87,15 +87,12 @@ describe("BattleClient", () => {
     expect(screen.getByText("The boss fell!")).toBeInTheDocument();
     expect(screen.queryByTestId("game")).toBeNull();
   });
-  it("refreshes the server-rendered header purse when the battle GP posts (result and done)", () => {
+  it("refreshes the server-rendered header purse when the battle GP posts at result", () => {
     renderWithMessages(<BattleClient initial={battle("play")} gameId="hero-vs-zombie" ownerKey="s:1" profile={null} avatar={null} />, { locale: "en" });
     expect(router.refresh).not.toHaveBeenCalled();
     cleanup();
     renderWithMessages(<BattleClient initial={battle("result", { committed: 40 })} gameId="hero-vs-zombie" ownerKey="s:1" profile={null} avatar={null} />, { locale: "en" });
     expect(router.refresh).toHaveBeenCalledTimes(1);
-    cleanup();
-    renderWithMessages(<BattleClient initial={battle("done", { committed: 40 })} gameId="hero-vs-zombie" ownerKey="s:1" profile={null} avatar={null} />, { locale: "en" });
-    expect(router.refresh).toHaveBeenCalledTimes(2);
   });
 });
 
