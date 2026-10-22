@@ -4483,5 +4483,19 @@
       "complete-the-ward": "至少作答一次後贏得 Hero vs. Zombie。",
       "perfect-english-audio": "在泰文翻譯提示和英文單字語音作答模式下贏得 Hero vs. Zombie，且每一題第一次就答對。"
     }
+  },
+  "Help": {
+    "open": "Help videos",
+    "title": "Help videos",
+    "description": "Short videos that show how to use this page.",
+    "forThisPage": "For this page",
+    "more": "More help",
+    "none": "There is no video for this page yet.",
+    "manual": "Open the teacher manual",
+    "back": "Back to the list",
+    "play": "Play {title}",
+    "noYouTube": "Play without YouTube",
+    "thaiNarration": "Thai narration",
+    "signInHelp": "How do I sign in?"
   }
 }

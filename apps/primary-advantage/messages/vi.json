@@ -4332,5 +4332,19 @@
       "complete-the-ward": "Thắng Hero vs. Zombie sau khi trả lời ít nhất một lần.",
       "perfect-english-audio": "Thắng Hero vs. Zombie với gợi ý dịch tiếng Thái và trả lời bằng âm thanh từ tiếng Anh. Trả lời đúng mọi câu ngay lần đầu."
     }
+  },
+  "Help": {
+    "open": "Help videos",
+    "title": "Help videos",
+    "description": "Short videos that show how to use this page.",
+    "forThisPage": "For this page",
+    "more": "More help",
+    "none": "There is no video for this page yet.",
+    "manual": "Open the teacher manual",
+    "back": "Back to the list",
+    "play": "Play {title}",
+    "noYouTube": "Play without YouTube",
+    "thaiNarration": "Thai narration",
+    "signInHelp": "How do I sign in?"
   }
 }

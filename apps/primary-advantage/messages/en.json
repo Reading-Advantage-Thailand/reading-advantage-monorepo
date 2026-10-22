@@ -4483,5 +4483,19 @@
       "complete-the-ward": "Win Hero vs. Zombie after making at least one answer attempt.",
       "perfect-english-audio": "Win Hero vs. Zombie with Thai translation prompts and English term audio answers. Complete every item correctly on the first attempt."
     }
+  },
+  "Help": {
+    "open": "Help videos",
+    "title": "Help videos",
+    "description": "Short videos that show how to use this page.",
+    "forThisPage": "For this page",
+    "more": "More help",
+    "none": "There is no video for this page yet.",
+    "manual": "Open the teacher manual",
+    "back": "Back to the list",
+    "play": "Play {title}",
+    "noYouTube": "Play without YouTube",
+    "thaiNarration": "Thai narration",
+    "signInHelp": "How do I sign in?"
   }
 }

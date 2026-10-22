@@ -2,6 +2,7 @@ import { UserAccountNav } from "@/components/nav/user-account-nav";
 import { AppBrand, AppSidebar, BottomNav, MobileMenu } from "@/components/nav/app-nav";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
 import { SoundToggle } from "@/components/switchers/sound-toggle";
+import { HelpButton } from "@/components/help/help-button";
 import { SoundProvider } from "@/hooks/use-sound";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { SkipLink } from "@/components/shared/skip-link";
@@ -70,6 +71,7 @@ export default async function AppLayout({
                 <StudentHud user={user} />
                 <LocaleSwitcher />
                 <SoundToggle />
+                <HelpButton audience="student" />
                 <ThemeToggle />
                 <UserAccountNav user={user} />
               </div>
@@ -109,6 +111,7 @@ export default async function AppLayout({
           <div className="flex items-center justify-center gap-2">
             <LocaleSwitcher />
             <SoundToggle />
+            {navArea === "teacher" && <HelpButton audience="teacher" />}
             <ThemeToggle />
             <UserAccountNav user={user} />
           </div>

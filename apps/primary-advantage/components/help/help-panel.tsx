@@ -1,0 +1,155 @@
+"use client";
+
+import { ArrowLeftIcon, PlayIcon } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Link } from "@/i18n/navigation";
+import { helpVideosFor } from "@/lib/help/match";
+import type { HelpAudience, HelpVideo } from "@/lib/help/videos";
+import youtubeIds from "@/lib/help/youtube-ids.json";
+import { getStorageUrl } from "@/lib/storage-config";
+import { cn } from "@/lib/utils";
+
+const YOUTUBE: Readonly<Record<string, string>> = youtubeIds;
+
+/** The bucket URL of a help video file (`mp4`) or its poster (`jpg`), staged by scripts/help. */
+const mediaUrl = (id: string, kind: "mp4" | "jpg") => getStorageUrl(`help/whats-new/${id}.${kind}`);
+
+/** The length of a video as m:ss. */
+const length = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+
+/**
+ * The help panel (track primary_in_app_help_20261023, spec FR-2 to FR-4, FR-7): the videos of the
+ * current page, then the general videos, and a player. Nothing loads before a tap; a teacher plays a
+ * video from YouTube when it is there (with "Play without YouTube"), and a student always plays our
+ * own file. Closing the panel unmounts the player, so the video stops.
+ * @param props.open Whether the panel is open.
+ * @param props.onOpenChange Called with the new open state.
+ * @param props.pathname The current path without the locale.
+ * @param props.audience Teacher or student.
+ * @returns The panel.
+ */
+export function HelpPanel({
+  open,
+  onOpenChange,
+  pathname,
+  audience,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  pathname: string;
+  audience: HelpAudience;
+}) {
+  const t = useTranslations("Help");
+  const [selected, setSelected] = useState<HelpVideo | null>(null);
+  const change = (next: boolean) => {
+    if (!next) setSelected(null);
+    onOpenChange(next);
+  };
+  const { matched, general } = helpVideosFor(pathname, audience);
+  return (
+    <Dialog open={open} onOpenChange={change}>
+      <DialogContent className={cn("max-h-[90svh] overflow-y-auto", audience === "teacher" ? "sm:max-w-3xl" : "sm:max-w-md")}>
+        <DialogHeader>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
+        </DialogHeader>
+        {selected ? (
+          <HelpPlayer key={selected.id} video={selected} audience={audience} onBack={() => setSelected(null)} />
+        ) : (
+          <div className="flex flex-col gap-4">
+            <section aria-label={t("forThisPage")} className="flex flex-col gap-2">
+              <h3 className="text-sm font-semibold">{t("forThisPage")}</h3>
+              {matched.length ? (
+                matched.map((video) => <HelpItem key={video.id} video={video} onSelect={setSelected} />)
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  <span>{t("none")}</span>{" "}
+                  {audience === "teacher" && (
+                    <Link href="/teacher/manual" className="underline" onClick={() => change(false)}>
+                      {t("manual")}
+                    </Link>
+                  )}
+                </p>
+              )}
+            </section>
+            {general.length > 0 && (
+              <section aria-label={t("more")} className="flex flex-col gap-2">
+                <h3 className="text-sm font-semibold">{t("more")}</h3>
+                {general.map((video) => <HelpItem key={video.id} video={video} onSelect={setSelected} />)}
+              </section>
+            )}
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/** One row of the list: the poster, the title, and the length (a 44 px or taller tap target). */
+function HelpItem({ video, onSelect }: { video: HelpVideo; onSelect: (video: HelpVideo) => void }) {
+  const t = useTranslations("Help");
+  const locale = useLocale();
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(video)}
+      className="hover:bg-accent flex min-h-11 cursor-pointer items-center gap-3 rounded-md border p-2 text-left"
+    >
+      <img src={mediaUrl(video.id, "jpg")} alt="" loading="lazy" className={cn("shrink-0 rounded object-cover", video.format === "9x16" ? "h-16 w-9" : "h-12 w-20")} />
+      <span className="flex flex-col">
+        <span className="font-medium">{locale === "th" ? video.title.th : video.title.en}</span>
+        <span className="text-muted-foreground text-xs">
+          {length(video.durationSec)}
+          {locale !== "th" && ` · ${t("thaiNarration")}`}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+/** The player: the poster and a play button first; after the tap, YouTube (teacher) or our own file. */
+function HelpPlayer({ video, audience, onBack }: { video: HelpVideo; audience: HelpAudience; onBack: () => void }) {
+  const t = useTranslations("Help");
+  const locale = useLocale();
+  const [playing, setPlaying] = useState(false);
+  const [ownFile, setOwnFile] = useState(false);
+  const title = locale === "th" ? video.title.th : video.title.en;
+  const youtubeId = audience === "teacher" && !ownFile ? YOUTUBE[video.id] : undefined;
+  return (
+    <div className="flex flex-col gap-3">
+      <Button variant="ghost" className="w-fit cursor-pointer" onClick={onBack}>
+        <ArrowLeftIcon aria-hidden="true" />
+        {t("back")}
+      </Button>
+      <p className="font-medium">{title}</p>
+      <div data-format={video.format} className={cn("relative overflow-hidden rounded-md bg-black", video.format === "9x16" ? "mx-auto aspect-[9/16] max-h-[70svh]" : "aspect-video w-full")}>
+        {!playing ? (
+          <button type="button" onClick={() => setPlaying(true)} aria-label={t("play", { title })} className="group absolute inset-0 cursor-pointer">
+            <img src={mediaUrl(video.id, "jpg")} alt="" className="h-full w-full object-cover" />
+            <span className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/60 text-white group-hover:bg-black/80">
+              <PlayIcon aria-hidden="true" className="h-8 w-8" />
+            </span>
+          </button>
+        ) : youtubeId ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0&playsinline=1`}
+            title={title}
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+            className="h-full w-full"
+          />
+        ) : (
+          <video src={mediaUrl(video.id, "mp4")} poster={mediaUrl(video.id, "jpg")} controls playsInline autoPlay className="h-full w-full" />
+        )}
+      </div>
+      {playing && youtubeId && (
+        <Button variant="outline" className="w-fit cursor-pointer" onClick={() => setOwnFile(true)}>
+          {t("noYouTube")}
+        </Button>
+      )}
+    </div>
+  );
+}
