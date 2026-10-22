@@ -47,4 +47,9 @@ describe("youtubeIds", () => {
     const links = { videos: [{ id: "B4", youtubeId: "-3UpVH9Xp50" }, { id: "Z9", youtubeId: "x" }, { id: "C3", youtubeId: null }] };
     expect(youtubeIds(links, ["B4", "C3", "E1"])).toEqual({ B4: "-3UpVH9Xp50" });
   });
+
+  it("drops an id that is not an 11-character YouTube id", () => {
+    const links = { videos: [{ id: "B4", youtubeId: "-3UpVH9Xp50" }, { id: "B5", youtubeId: "abc\" onload=\"x" }, { id: "E1", youtubeId: "https://youtu.be/-3UpVH9Xp50" }] };
+    expect(youtubeIds(links, ["B4", "B5", "E1"])).toEqual({ B4: "-3UpVH9Xp50" });
+  });
 });

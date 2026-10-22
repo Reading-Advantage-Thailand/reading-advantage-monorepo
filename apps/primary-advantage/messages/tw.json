@@ -4485,17 +4485,18 @@
     }
   },
   "Help": {
-    "open": "Help videos",
-    "title": "Help videos",
-    "description": "Short videos that show how to use this page.",
-    "forThisPage": "For this page",
-    "more": "More help",
-    "none": "There is no video for this page yet.",
-    "manual": "Open the teacher manual",
-    "back": "Back to the list",
-    "play": "Play {title}",
-    "noYouTube": "Play without YouTube",
-    "thaiNarration": "Thai narration",
-    "signInHelp": "How do I sign in?"
+    "open": "說明影片",
+    "title": "說明影片",
+    "description": "介紹本頁面使用方法的短片。",
+    "forThisPage": "本頁面",
+    "more": "更多說明",
+    "none": "本頁面暫時沒有影片。",
+    "manual": "開啟教師手冊",
+    "back": "返回列表",
+    "play": "播放 {title}",
+    "noYouTube": "不使用 YouTube 播放",
+    "thaiNarration": "泰語旁白",
+    "signInHelp": "如何登入？",
+    "videoError": "影片無法載入。請返回列表，稍後再試。"
   }
 }

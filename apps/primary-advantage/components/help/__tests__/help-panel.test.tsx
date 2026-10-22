@@ -58,11 +58,22 @@ describe("HelpPanel (spec FR-2 to FR-4, FR-7)", () => {
     expect(screen.queryByRole("button", { name: "Play without YouTube" })).toBeNull();
   });
 
-  it("goes back from the player to the list", () => {
+  it("goes back from the player to the list, with the focus on the video's row", () => {
     panel("/student/home", "student");
     fireEvent.click(screen.getByRole("button", { name: /My new home page/ }));
     fireEvent.click(screen.getByRole("button", { name: "Back to the list" }));
     expect(screen.getByRole("region", { name: "For this page" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /My new home page/ })).toHaveFocus();
+  });
+
+  it("says so when our own video file does not load", () => {
+    panel("/student/home", "student");
+    fireEvent.click(screen.getByRole("button", { name: /My new home page/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Play My new home page" }));
+    fireEvent.error(document.querySelector("video") as HTMLVideoElement);
+    expect(document.querySelector("video")).toBeNull();
+    expect(screen.getByRole("alert")).toHaveTextContent("The video did not load. Go back and try again later.");
+    expect(screen.getByRole("button", { name: "Back to the list" })).toBeInTheDocument();
   });
 
   it("says that a page has no video yet and links the teacher manual (AC-3)", () => {
@@ -80,7 +91,8 @@ describe("HelpPanel (spec FR-2 to FR-4, FR-7)", () => {
   it("shows the English titles and the Thai narration note in another language", () => {
     panel("/student/home", "student", "vi");
     expect(screen.getByRole("button", { name: /My new home page/ })).toBeInTheDocument();
-    expect(screen.getAllByText(/Thai narration/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Thuyết minh tiếng Thái/).length).toBeGreaterThan(0);
+    expect(screen.getByRole("region", { name: "Cho trang này" })).toBeInTheDocument();
   });
 
   it("stops the video when the panel closes", () => {

@@ -44,8 +44,17 @@ export function HelpPanel({
 }) {
   const t = useTranslations("Help");
   const [selected, setSelected] = useState<HelpVideo | null>(null);
+  // The id of the last video played, so that "Back" returns the focus to its row.
+  const [last, setLast] = useState<string | null>(null);
+  const select = (video: HelpVideo) => {
+    setLast(video.id);
+    setSelected(video);
+  };
   const change = (next: boolean) => {
-    if (!next) setSelected(null);
+    if (!next) {
+      setSelected(null);
+      setLast(null);
+    }
     onOpenChange(next);
   };
   const { matched, general } = helpVideosFor(pathname, audience);
@@ -63,7 +72,7 @@ export function HelpPanel({
             <section aria-label={t("forThisPage")} className="flex flex-col gap-2">
               <h3 className="text-sm font-semibold">{t("forThisPage")}</h3>
               {matched.length ? (
-                matched.map((video) => <HelpItem key={video.id} video={video} onSelect={setSelected} />)
+                matched.map((video) => <HelpItem key={video.id} video={video} focus={video.id === last} onSelect={select} />)
               ) : (
                 <p className="text-muted-foreground text-sm">
                   <span>{t("none")}</span>{" "}
@@ -78,7 +87,7 @@ export function HelpPanel({
             {general.length > 0 && (
               <section aria-label={t("more")} className="flex flex-col gap-2">
                 <h3 className="text-sm font-semibold">{t("more")}</h3>
-                {general.map((video) => <HelpItem key={video.id} video={video} onSelect={setSelected} />)}
+                {general.map((video) => <HelpItem key={video.id} video={video} focus={video.id === last} onSelect={select} />)}
               </section>
             )}
           </div>
@@ -89,12 +98,13 @@ export function HelpPanel({
 }
 
 /** One row of the list: the poster, the title, and the length (a 44 px or taller tap target). */
-function HelpItem({ video, onSelect }: { video: HelpVideo; onSelect: (video: HelpVideo) => void }) {
+function HelpItem({ video, focus, onSelect }: { video: HelpVideo; focus: boolean; onSelect: (video: HelpVideo) => void }) {
   const t = useTranslations("Help");
   const locale = useLocale();
   return (
     <button
       type="button"
+      autoFocus={focus}
       onClick={() => onSelect(video)}
       className="hover:bg-accent flex min-h-11 cursor-pointer items-center gap-3 rounded-md border p-2 text-left"
     >
@@ -110,12 +120,16 @@ function HelpItem({ video, onSelect }: { video: HelpVideo; onSelect: (video: Hel
   );
 }
 
-/** The player: the poster and a play button first; after the tap, YouTube (teacher) or our own file. */
+/**
+ * The player: the poster and a play button first; after the tap, YouTube (teacher) or our own file.
+ * When our file does not load, a short message replaces the black box.
+ */
 function HelpPlayer({ video, audience, onBack }: { video: HelpVideo; audience: HelpAudience; onBack: () => void }) {
   const t = useTranslations("Help");
   const locale = useLocale();
   const [playing, setPlaying] = useState(false);
   const [ownFile, setOwnFile] = useState(false);
+  const [failed, setFailed] = useState(false);
   const title = locale === "th" ? video.title.th : video.title.en;
   const youtubeId = audience === "teacher" && !ownFile ? YOUTUBE[video.id] : undefined;
   return (
@@ -141,8 +155,20 @@ function HelpPlayer({ video, audience, onBack }: { video: HelpVideo; audience: H
             allowFullScreen
             className="h-full w-full"
           />
+        ) : failed ? (
+          <p role="alert" className="absolute inset-0 flex items-center justify-center p-4 text-center text-sm text-white">
+            {t("videoError")}
+          </p>
         ) : (
-          <video src={mediaUrl(video.id, "mp4")} poster={mediaUrl(video.id, "jpg")} controls playsInline autoPlay className="h-full w-full" />
+          <video
+            src={mediaUrl(video.id, "mp4")}
+            poster={mediaUrl(video.id, "jpg")}
+            controls
+            playsInline
+            autoPlay
+            onError={() => setFailed(true)}
+            className="h-full w-full"
+          />
         )}
       </div>
       {playing && youtubeId && (

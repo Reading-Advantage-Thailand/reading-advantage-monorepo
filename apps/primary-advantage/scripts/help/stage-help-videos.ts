@@ -28,7 +28,9 @@ const place = (from: string, to: string) => {
 
 const problems: string[] = [];
 const enabled = HELP_VIDEOS.filter((v) => v.enabled);
+let staged = 0;
 for (const video of enabled) {
+  const before = problems.length;
   const file = videoFileFor(video.id, files);
   if (!file) { problems.push(`${video.id}: no mp4 file`); continue; }
   const mp4 = join(root, file);
@@ -45,13 +47,20 @@ for (const video of enabled) {
   if (codecs !== "aac+h264") problems.push(`${video.id}: codecs ${codecs || "unknown"}, expected aac+h264`);
   const seconds = Math.round(Number(info.format?.duration ?? 0));
   if (Math.abs(seconds - video.durationSec) > 2) problems.push(`${video.id}: ${seconds} s, the registry says ${video.durationSec} s (a new take? update the registry)`);
+  if (problems.length > before) continue; // a bad file never reaches the stage folder
   place(mp4, join(target, `${video.id}.mp4`));
-  if (existsSync(jpg)) place(jpg, join(target, `${video.id}.jpg`));
+  place(jpg, join(target, `${video.id}.jpg`));
+  staged += 1;
 }
 
-const ids = youtubeIds(links, enabled.map((v) => v.id));
-writeFileSync(new URL("../../lib/help/youtube-ids.json", import.meta.url), `${JSON.stringify(ids, null, 2)}\n`);
-console.log(`staged ${enabled.length} videos in ${target}; ${Object.keys(ids).length} are on YouTube (lib/help/youtube-ids.json)`);
+console.log(`staged ${staged} of ${enabled.length} videos in ${target}`);
 for (const p of problems) console.log(`PROBLEM ${p}`);
-console.log(`upload (production bucket, owner go):\n  gcloud storage rsync ${target} gs://primary-app-storage/help/whats-new --predefined-acl=publicRead --cache-control="public, max-age=3600"`);
-process.exitCode = problems.length ? 1 : 0;
+if (problems.length) {
+  console.log("fix the problems (or set enabled: false in lib/help/videos.ts), then run again; nothing to upload yet");
+  process.exitCode = 1;
+} else {
+  const ids = youtubeIds(links, enabled.map((v) => v.id));
+  writeFileSync(new URL("../../lib/help/youtube-ids.json", import.meta.url), `${JSON.stringify(ids, null, 2)}\n`);
+  console.log(`${Object.keys(ids).length} are on YouTube (lib/help/youtube-ids.json)`);
+  console.log(`upload (production bucket, owner go):\n  gcloud storage rsync ${target} gs://primary-app-storage/help/whats-new --predefined-acl=publicRead --cache-control="public, max-age=3600"`);
+}

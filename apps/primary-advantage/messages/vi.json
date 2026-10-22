@@ -4334,17 +4334,18 @@
     }
   },
   "Help": {
-    "open": "Help videos",
-    "title": "Help videos",
-    "description": "Short videos that show how to use this page.",
-    "forThisPage": "For this page",
-    "more": "More help",
-    "none": "There is no video for this page yet.",
-    "manual": "Open the teacher manual",
-    "back": "Back to the list",
-    "play": "Play {title}",
-    "noYouTube": "Play without YouTube",
-    "thaiNarration": "Thai narration",
-    "signInHelp": "How do I sign in?"
+    "open": "Video hướng dẫn",
+    "title": "Video hướng dẫn",
+    "description": "Video ngắn hướng dẫn cách dùng trang này.",
+    "forThisPage": "Cho trang này",
+    "more": "Thêm hướng dẫn",
+    "none": "Trang này chưa có video.",
+    "manual": "Mở sổ tay giáo viên",
+    "back": "Quay lại danh sách",
+    "play": "Phát {title}",
+    "noYouTube": "Phát không qua YouTube",
+    "thaiNarration": "Thuyết minh tiếng Thái",
+    "signInHelp": "Đăng nhập như thế nào?",
+    "videoError": "Không tải được video. Hãy quay lại danh sách và thử lại sau."
   }
 }

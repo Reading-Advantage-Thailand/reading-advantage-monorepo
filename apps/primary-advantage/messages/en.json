@@ -4496,6 +4496,7 @@
     "play": "Play {title}",
     "noYouTube": "Play without YouTube",
     "thaiNarration": "Thai narration",
-    "signInHelp": "How do I sign in?"
+    "signInHelp": "How do I sign in?",
+    "videoError": "The video did not load. Go back and try again later."
   }
 }
