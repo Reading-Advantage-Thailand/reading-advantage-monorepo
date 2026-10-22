@@ -504,6 +504,15 @@ The parallel leveled readers are the same books, re-cut into class sets by level
 
 The vocabulary family of the week has 6 to 8 picture words; the numbers family alone has 10 (one to ten), by exception [W2].
 
+### 6.3a Song video spec (decided 2026-10-22 with Daniel) [V1]
+
+- Method: cut-out animation built by a script (Remotion at Workbooks) from the line specs in the week package and the word times; every run gives the same video. Forge delivers transparent PNG renders only (cast at age 5, gesture key frames, scenes, props and animals); no animation clips. Inventory: `forge-inventory.md`.
+- Frame: 1920x1080, 30 fps, H.264 with AAC. Scene background plus the picture of the line as cut-outs; when the scene stays, the actors slide out and in at the line start; a hard cut only when the background changes.
+- Gesture: one Chibi Sprout in a lower-right inset (about 30 percent of the frame height), mirrored so its right is the children's right, holds the gesture of the line for the whole line. A moving gesture alternates two key frames on the beat (60 / bpm); a hold gesture uses one; a whole-body gesture (hop, turn, sway) is moved by the compositor.
+- Words: animals and sound words bounce, and a speech bubble with the sung word pops at its word time; the text comes from the line words, never from the render.
+- Two cuts per song, both with the English line text and word-by-word highlight, no Thai: `song.mp4` (vocals) and `song-karaoke.mp4` (the instrumental from vocal separation, S16). The karaoke cut exists only when the instrumental exists.
+- Dates: placeholder-art week 1 cut for the QR page test (Monorepo, by 2026-11-20); final cuts with Forge art by 2026-11-25.
+
 ### 6.4 Audio: phonemes
 
 Pure phonemes (/s/ not "suh") are the base of every sound card and app item. Text-to-speech systems add a vowel to stops and often mispronounce isolated sounds. Recommendation: record the 44 phonemes once with a human American voice (one adult female), three takes each, plus the 26 letter names; store as the phoneme sound bank; every card, app item, and video uses the bank. Test before the decision: generate the 44 sounds with mmx speech, have Daniel and one native speaker rate each as pure or not; if fewer than 40 pass, record. Words, sentences, books, and songs use mmx TTS as Primary does.

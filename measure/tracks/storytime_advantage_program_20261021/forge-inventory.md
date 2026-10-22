@@ -13,7 +13,7 @@ The videos are cut-out animation built by a script (Remotion at Workbooks) from 
 | Scenes | one 16:9 background each | section 4 |
 | Props and animals | one render each, the colour and state the prompt fixes; a mouth-open second render for the animals is optional | 30 items (section 5) |
 
-Rules: no letters, words, or numbers inside any render; the compositor adds speech bubbles and karaoke text. Items that differ between weeks (ducks yellow in W2 and white in W6; birds blue in W2 and yellow in W6; one kite and two kites) are separate renders.
+Rules: no letters, words, or numbers inside any render; the compositor adds speech bubbles and karaoke text. Items that differ between weeks (one kite and two kites; the colourful balls of W2 and the red-and-yellow ball of W7) are separate renders. Ducks and birds have one look across weeks since Workbooks b32ffed.
 
 Source: `/home/daniebo/Desktop/Workbooks/content/storytime/l2/w01.json` to `w07.json`. Week 7 is **provisional** (its song lines are about to be replaced).
 
@@ -197,14 +197,14 @@ Lines = lines that show the item, counting reuse lines (own-prompt lines in brac
 |---|---|---|---|
 | apple | 2, 3 | 7 (3) | W2: one red apple held by each of three children (line 3); pile of red apples (line 4). W3: one big shiny red apple |
 | ball | 2, 7 | 2 (2) | W2: five colorful balls in a row, bouncing on green grass. W7: one red-and-yellow ball bouncing |
-| bird | 2, 6 | 2 (2) | W2: four small blue birds in a row on a branch. W6: small yellow bird on a branch, beak open |
+| bird | 2, 6 | 2 (2) | blue in both weeks since Workbooks b32ffed (one render; W2: four in a row on a branch; W6: one, beak open) |
 | branch | 2, 6 | 2 (2) | W2: bird branch. W6: branch of a low tree |
 | cat | 6 | 4 (2) | gray; W6 line 1 sits on a wooden fence, mouth wide open; line 4 in meadow |
 | cloud | 3 | 1 (1) | one small white cloud |
 | dog | 6 | 1 (1) | brown; runs on green grass, mouth open, tail up |
 | doll | 7 | 1 (1) | small, yellow yarn hair, red dress, sits on wooden floor |
 | drumstick | 7 | 1 (1) | two, with the red toy drum |
-| duck | 2, 6 | 5 (3) | W2: three yellow ducks walking in a row. W6: white duck (line 4 with gray cat and green frog; line 10 on grass by a pond) |
+| duck | 2, 6 | 5 (3) | white with an orange beak in both weeks since Workbooks b32ffed (one render; W2: three walking in a row; W6: one by a pond, one with the cat and frog) |
 | fence | 6 | 1 (1) | wooden |
 | fish | 6 | 1 (1) | orange; swims in clear blue water |
 | flower | 3 | 1 (1) | one big pink flower |
