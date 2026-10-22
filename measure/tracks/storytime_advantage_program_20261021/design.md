@@ -511,6 +511,7 @@ The vocabulary family of the week has 6 to 8 picture words; the numbers family a
 - Gesture: one Chibi Sprout in a lower-right inset (about 30 percent of the frame height), mirrored so its right is the children's right, holds the gesture of the line for the whole line. A moving gesture alternates two key frames on the beat (60 / bpm); a hold gesture uses one; a whole-body gesture (hop, turn, sway) is moved by the compositor.
 - Words: animals and sound words bounce, and a speech bubble with the sung word pops at its word time; the text comes from the line words, never from the render.
 - Two cuts per song, both with the English line text and word-by-word highlight, no Thai: `song.mp4` (vocals) and `song-karaoke.mp4` (the instrumental from vocal separation, S16). The karaoke cut exists only when the instrumental exists.
+- Files per song (Monorepo's QR page requests, 2026-10-22): `song.mp4` 1080p for the classroom screen; `song-phone.mp4` 720p (H.264 CRF about 28, AAC 96k, 15 to 25 MB) for the QR page on mobile data; `song.poster` JPG 1280x720 (first frame, shown before the tap); every mp4 with faststart. Schema: `song.audio` required; `song.video`, `song.videoPhone`, `song.poster`, `song.karaoke` optional; without a video the page plays the audio in the read-along player.
 - Dates: placeholder-art week 1 cut for the QR page test (Monorepo, by 2026-11-20); final cuts with Forge art by 2026-11-25.
 
 ### 6.4 Audio: phonemes
