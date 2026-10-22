@@ -7,9 +7,10 @@ import { createTenantDB } from "../db-contract.js";
 import { authorizeClassroom } from "./access.js";
 import { auditStudentLogin } from "./audit.js";
 import type { RequestMeta } from "./class-session.js";
-import type { ResetClassPasswordsInput, ResetClassPasswordsOutput } from "./contracts.js";
+import type { ResetClassPasswordsInput, ResetClassPasswordsOutput, ResetStudentPasswordInput, ResetStudentPasswordOutput } from "./contracts.js";
 import { ensureStudentCredentials } from "./credentials.js";
-import { guardClassPasswordReset } from "./rate-limits.js";
+import { StudentLoginError } from "./errors.js";
+import { guardClassPasswordReset, guardStudentPasswordReset } from "./rate-limits.js";
 
 /** Number of characters in a generated initial password. */
 export const INITIAL_PASSWORD_LENGTH = 8;
@@ -223,4 +224,60 @@ export async function resetClassPasswords(params: {
   const byName = (a: { name: string; userId: string }, b: { name: string; userId: string }) =>
     a.name.localeCompare(b.name) || a.userId.localeCompare(b.userId);
   return { classroomName: classroom.name, students: students.sort(byName), failed: failed.sort(byName) };
+}
+
+/**
+ * Sets a new random password for one student of a class and returns it once (PR review
+ * 2026-10-20: a student who lost the class sheet). The new password and the end of the
+ * student's sessions are written in one transaction; the other students keep their passwords
+ * and sessions. One audit entry records the student. Resets are limited per class, in a bucket
+ * apart from the class sheet.
+ * @param params.db Database client.
+ * @param params.store Shared rate-limit store.
+ * @param params.user The teacher of the class, or an admin of its school.
+ * @param params.meta Client IP and user agent for the audit entry.
+ * @param params.input The class and the student.
+ * @returns The student's name, username, and new plain password.
+ * @throws {StudentLoginError} `forbidden`, `not_found` (the student is not in the class), or
+ * `rate_limited`.
+ */
+export async function resetStudentPassword(params: {
+  db: DB;
+  store: RateLimitStore;
+  user: UserContext;
+  meta: RequestMeta;
+  input: ResetStudentPasswordInput;
+}): Promise<ResetStudentPasswordOutput> {
+  const { db, store, user, meta, input } = params;
+  const { classroom, tenantDb } = await authorizeClassroom(db, user, input.classroomId);
+  await guardStudentPasswordReset(store, classroom.id);
+  const [row] = await tenantDb
+    .unscoped("classroomStudents has no schoolId, scoped via classroom id and users.schoolId")
+    .select({ userId: users.id, name: users.name, username: users.username })
+    .from(classroomStudents)
+    .innerJoin(users, eq(users.id, classroomStudents.studentId))
+    .where(
+      and(
+        eq(classroomStudents.classroomId, classroom.id),
+        eq(users.id, input.studentUserId),
+        eq(users.schoolId, classroom.schoolId),
+        eq(users.role, "STUDENT"),
+      ),
+    )
+    .limit(1);
+  if (!row) throw new StudentLoginError("not_found", "Student not found.");
+  const password = generateInitialPassword();
+  const hash = await hashPassword(password);
+  // The new password and the end of the old sessions are stored together or not at all.
+  await tenantDb.transaction(async (tx) => {
+    await upsertCredentialPassword(tx, row.userId, hash);
+    await tx.delete(sessions).where(eq(sessions.userId, row.userId));
+  });
+  await auditStudentLogin(
+    { userId: user.id, role: user.role, ip: meta.ip, userAgent: meta.userAgent },
+    "student_login:student_password_reset",
+    { type: "user", id: row.userId },
+    { classroomId: classroom.id },
+  );
+  return { userId: row.userId, name: row.name?.trim() || row.username, username: row.username, password };
 }

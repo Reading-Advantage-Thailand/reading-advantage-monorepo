@@ -1,9 +1,9 @@
 import { assertStudentRecordWriter } from "./permissions.js";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
-import { primaryAvatarProfile } from "@reading-advantage/db/schema";
+import { primaryAvatarInventory, primaryAvatarLoadout, primaryAvatarProfile } from "@reading-advantage/db/schema";
 import { AuthError, type UserContext } from "@reading-advantage/auth";
-import { AVATAR_BASE, AVATAR_PACK_VERSION, starterSet } from "@reading-advantage/avatar-kit";
+import { AVATAR_BASE, AVATAR_CATALOG, AVATAR_PACK_VERSION, starterSet } from "@reading-advantage/avatar-kit";
 import { avatarProfileSchema, setAvatarProfileInputSchema, type AvatarProfile, type SetAvatarProfileInput } from "@reading-advantage/game-contracts";
 import { createTenantDB } from "../db-contract.js";
 
@@ -14,9 +14,10 @@ export interface AvatarCtx {
   now?: Date;
 }
 
-const UNSCOPED_REASON = "primary_avatar_profile rows are read and written with an explicit school_id and user_id pair (the user's own row)";
+const UNSCOPED_REASON = "primary_avatar_profile, loadout, and inventory rows are read and written with an explicit school_id and user_id pair (the user's own rows)";
 
 type Row = typeof primaryAvatarProfile.$inferSelect;
+type Raw = ReturnType<ReturnType<typeof createTenantDB>["unscoped"]>;
 
 /**
  * Maps a profile row to the contract shape.
@@ -57,7 +58,8 @@ export async function getAvatarProfile(ctx: AvatarCtx): Promise<AvatarProfile | 
 
 /**
  * Saves the avatar of the signed-in user: a hero class with a color per slot (FR-10a). Changes
- * are free until the shop exists. Only the user's own row changes.
+ * are free until the shop exists. Only the user's own rows change. A new profile puts on the owned
+ * starter pieces of the class when the student wears nothing (the state after a teacher reset).
  * @param ctx The database, the user, and the clock.
  * @param input The class and the tints.
  * @returns The saved profile.
@@ -75,6 +77,11 @@ export async function setAvatarProfile(ctx: AvatarCtx & { input: SetAvatarProfil
   }
   const now = ctx.now ?? new Date();
   const raw = createTenantDB(ctx.db, { schoolId }).unscoped(UNSCOPED_REASON);
+  const [existing] = await raw
+    .select({ userId: primaryAvatarProfile.userId })
+    .from(primaryAvatarProfile)
+    .where(and(eq(primaryAvatarProfile.schoolId, schoolId), eq(primaryAvatarProfile.userId, ctx.user.id)))
+    .limit(1);
   const [row] = await raw
     .insert(primaryAvatarProfile)
     .values({ schoolId, userId: ctx.user.id, classPreset: input.classId, tints: input.tints, catalogVersion: AVATAR_PACK_VERSION, createdAt: now, updatedAt: now })
@@ -84,5 +91,41 @@ export async function setAvatarProfile(ctx: AvatarCtx & { input: SetAvatarProfil
     })
     .returning();
   if (!row) throw new Error("The avatar was not saved");
+  if (!existing) await wearOwnedStarterSet(raw, schoolId, ctx.user.id, input.classId, now);
   return toProfile(row);
+}
+
+/**
+ * Puts on the owned starter pieces of the class when the student wears nothing. A teacher reset
+ * removes the profile and the loadout but keeps the inventory, so the first-visit grant has no new
+ * piece to dress (PR finding F5, 2026-10-21). On a first pick the student owns nothing yet, and the
+ * avatar page visit grants and dresses the set as before.
+ * @param raw The unscoped handle.
+ * @param schoolId The school.
+ * @param userId The student.
+ * @param classId The hero class of the new profile.
+ * @param now The clock.
+ */
+async function wearOwnedStarterSet(raw: Raw, schoolId: string, userId: string, classId: string, now: Date): Promise<void> {
+  const pieces = starterSet(classId)?.pieces ?? [];
+  const [worn] = await raw
+    .select({ slot: primaryAvatarLoadout.slot })
+    .from(primaryAvatarLoadout)
+    .where(and(eq(primaryAvatarLoadout.schoolId, schoolId), eq(primaryAvatarLoadout.userId, userId)))
+    .limit(1);
+  if (worn || !pieces.length) return;
+  const owned = await raw
+    .select({ id: primaryAvatarInventory.id, itemId: primaryAvatarInventory.itemId })
+    .from(primaryAvatarInventory)
+    .where(and(
+      eq(primaryAvatarInventory.schoolId, schoolId),
+      eq(primaryAvatarInventory.userId, userId),
+      inArray(primaryAvatarInventory.itemId, [...pieces]),
+      isNull(primaryAvatarInventory.dye),
+    ));
+  if (!owned.length) return;
+  await raw
+    .insert(primaryAvatarLoadout)
+    .values(owned.map((piece) => ({ schoolId, userId, slot: AVATAR_CATALOG[piece.itemId]!.slot, inventoryId: piece.id, updatedAt: now })))
+    .onConflictDoNothing();
 }

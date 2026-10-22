@@ -27,6 +27,51 @@ export interface StudentChallengeCatalogGame {
   readonly version: string;
 }
 
+/** Text of the student challenge catalog panel; the host passes its own language. */
+export interface StudentChallengeCatalogLabels {
+  readonly title: string;
+  readonly tryAgain: string;
+  readonly loadingClasses: string;
+  readonly classLabel: string;
+  readonly moreClasses: string;
+  readonly noClasses: string;
+  readonly classesError: string;
+  readonly loadingChallenges: string;
+  readonly noChallenges: string;
+  readonly challengesError: string;
+  readonly gameUnavailable: string;
+  /** Class progress line; `{count}` and `{target}` are replaced. */
+  readonly classProgress: string;
+  readonly upcoming: string;
+  readonly expired: string;
+  readonly active: string;
+  readonly unavailable: string;
+  readonly playChallenge: string;
+  readonly moreChallenges: string;
+}
+
+/** The English text of the panel, used for each label that the host does not pass. */
+export const STUDENT_CHALLENGE_CATALOG_LABELS: StudentChallengeCatalogLabels = {
+  title: "Class challenges",
+  tryAgain: "Try again",
+  loadingClasses: "Loading classes…",
+  classLabel: "Class",
+  moreClasses: "More classes",
+  noClasses: "No classes are available.",
+  classesError: "Classes could not be loaded.",
+  loadingChallenges: "Loading challenges…",
+  noChallenges: "No challenges are available.",
+  challengesError: "Challenges could not be loaded.",
+  gameUnavailable: "Game unavailable",
+  classProgress: "Class progress: {count}/{target}",
+  upcoming: "Upcoming",
+  expired: "Expired",
+  active: "Active",
+  unavailable: "Unavailable",
+  playChallenge: "Play challenge",
+  moreChallenges: "More challenges",
+};
+
 /** Props for the shared student challenge catalog panel. */
 export interface StudentChallengeCatalogPanelProps {
   /** Stable authenticated owner scope. */
@@ -41,9 +86,11 @@ export interface StudentChallengeCatalogPanelProps {
   readonly challengesEndpoint?: string;
   /** Host path prefix used in game links. */
   readonly basePath?: string;
+  /** The panel text in the host language; each missing label stays English. */
+  readonly labels?: Partial<StudentChallengeCatalogLabels>;
 }
 
-type LoadState = { readonly scope: string; readonly message: string | null; readonly loading: boolean };
+type LoadState = { readonly scope: string; readonly failed: boolean; readonly loading: boolean };
 
 /** Joins a host prefix and one absolute application path. */
 function withBasePath(basePath: string, path: string): string {
@@ -60,7 +107,7 @@ function buttonStyle(emphasis: "primary" | "secondary", basePath: string): CSSPr
 
 /**
  * Shows server-safe class challenge summaries for one authenticated student.
- * @param props Owner scope, locale, routes, path prefix, and installed games.
+ * @param props Owner scope, locale, routes, path prefix, installed games, and the panel text.
  * @returns A compact challenge catalog or no content without an owner.
  */
 export function StudentChallengeCatalogPanel({
@@ -70,7 +117,11 @@ export function StudentChallengeCatalogPanel({
   classesEndpoint = "/api/v1/apk/challenges/classes",
   challengesEndpoint = "/api/v1/apk/challenges",
   basePath = "",
+  labels,
 }: StudentChallengeCatalogPanelProps): ReactElement | null {
+  const text = { ...STUDENT_CHALLENGE_CATALOG_LABELS, ...labels };
+  // The status stays English in `data-status` (the host styles read it); only the shown word is translated.
+  const statusText = { Upcoming: text.upcoming, Expired: text.expired, Active: text.active, Unavailable: text.unavailable };
   const enabled = Boolean(ownerKey);
   const scope = useMemo(() => JSON.stringify([ownerKey, classesEndpoint, challengesEndpoint]), [ownerKey, classesEndpoint, challengesEndpoint]);
   const generationRef = useRef(0);
@@ -98,7 +149,7 @@ export function StudentChallengeCatalogPanel({
     const generation = generationRef.current;
     const controller = new AbortController();
     controllersRef.current.push(controller);
-    setClassStatus({ scope, loading: true, message: null });
+    setClassStatus({ scope, loading: true, failed: false });
     try {
       const payload = classesResponseSchema.parse(await request(`${classesEndpoint}?limit=${PAGE_SIZE}&offset=${offset}`, controller));
       if (generation !== generationRef.current || controller.signal.aborted) return;
@@ -106,10 +157,10 @@ export function StudentChallengeCatalogPanel({
       setClassesScope(scope);
       setClassesHasMore(payload.hasMore && payload.classes.length > 0);
       if (offset === 0) setSelectedClassId(payload.classes[0]?.id);
-      setClassStatus({ scope, loading: false, message: null });
+      setClassStatus({ scope, loading: false, failed: false });
     } catch {
       if (generation !== generationRef.current || controller.signal.aborted) return;
-      setClassStatus({ scope, loading: false, message: "Classes could not be loaded." });
+      setClassStatus({ scope, loading: false, failed: true });
     } finally {
       controllersRef.current = controllersRef.current.filter((item) => item !== controller);
     }
@@ -123,7 +174,7 @@ export function StudentChallengeCatalogPanel({
     challengeControllerRef.current = controller;
     controllersRef.current.push(controller);
     const selectedScope = `${scope}\u0000${classId}`;
-    setChallengeStatus({ scope: selectedScope, loading: true, message: null });
+    setChallengeStatus({ scope: selectedScope, loading: true, failed: false });
     try {
       const query = `?classId=${encodeURIComponent(classId)}&limit=${PAGE_SIZE}&offset=${offset}`;
       const payload = challengesResponseSchema.parse(await request(`${challengesEndpoint}${query}`, controller));
@@ -132,10 +183,10 @@ export function StudentChallengeCatalogPanel({
       setChallenges((current) => offset === 0 ? payload.challenges : [...current, ...payload.challenges]);
       setChallengesScope(selectedScope);
       setChallengeHasMore(payload.challenges.length === PAGE_SIZE);
-      setChallengeStatus({ scope: selectedScope, loading: false, message: null });
+      setChallengeStatus({ scope: selectedScope, loading: false, failed: false });
     } catch {
       if (generation !== generationRef.current || challengeGeneration !== challengeGenerationRef.current || controller.signal.aborted) return;
-      setChallengeStatus({ scope: selectedScope, loading: false, message: "Challenges could not be loaded." });
+      setChallengeStatus({ scope: selectedScope, loading: false, failed: true });
     } finally {
       controllersRef.current = controllersRef.current.filter((item) => item !== controller);
     }
@@ -150,7 +201,7 @@ export function StudentChallengeCatalogPanel({
     setSelectedClassId(undefined);
     setChallenges([]);
     setChallengesScope(undefined);
-    setClassStatus(enabled ? { scope, loading: true, message: null } : null);
+    setClassStatus(enabled ? { scope, loading: true, failed: false } : null);
     setChallengeStatus(null);
     if (enabled) void loadClasses(0);
     return () => {
@@ -165,7 +216,7 @@ export function StudentChallengeCatalogPanel({
     setChallenges([]);
     setChallengesScope(undefined);
     setChallengeHasMore(false);
-    setChallengeStatus(selectedClassId ? { scope: `${scope}\u0000${selectedClassId}`, loading: true, message: null } : null);
+    setChallengeStatus(selectedClassId ? { scope: `${scope}\u0000${selectedClassId}`, loading: true, failed: false } : null);
     if (enabled && selectedClassId) void loadChallenges(selectedClassId, 0);
   }, [enabled, loadChallenges, scope, selectedClassId]);
 
@@ -178,25 +229,25 @@ export function StudentChallengeCatalogPanel({
   const now = Date.now();
 
   return (
-    <section aria-label="Class challenges" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `var(--apk-arcade-panel-image, url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}"))`, padding: 12, background: "var(--apk-arcade-panel-surface, #0f172a)", color: "var(--apk-arcade-panel-text, #f8fafc)", maxWidth: "100%" }}>
-      <h2 style={{ margin: 0 }}>Class challenges</h2>
-      {visibleClassStatus?.message ? <div role="alert"><p>{visibleClassStatus.message}</p><button style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadClasses(0)}>Try again</button></div> : null}
-      {visibleClassStatus?.loading && visibleClasses.length === 0 ? <p role="status">Loading classes…</p> : null}
-      {visibleClasses.length > 0 ? <label>Class <select className="apk-challenge-select" style={{ minHeight: 44, maxWidth: "100%" }} value={selectedClassId} onChange={(event) => setSelectedClassId(event.target.value)}>{visibleClasses.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label> : null}
-      {classesHasMore && classesScope === scope ? <button disabled={visibleClassStatus?.loading} style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadClasses(visibleClasses.length)}>More classes</button> : null}
-      {!visibleClassStatus?.loading && !visibleClassStatus?.message && visibleClasses.length === 0 ? <p>No classes are available.</p> : null}
-      {visibleChallengeStatus?.message ? <div role="alert"><p>{visibleChallengeStatus.message}</p><button style={buttonStyle("secondary", basePath)} type="button" onClick={() => selectedClassId && void loadChallenges(selectedClassId, 0)}>Try again</button></div> : null}
-      {visibleChallengeStatus?.loading && visibleChallenges.length === 0 ? <p role="status">Loading challenges…</p> : null}
-      {!visibleChallengeStatus?.loading && !visibleChallengeStatus?.message && selectedClassId && visibleChallenges.length === 0 ? <p>No challenges are available.</p> : null}
+    <section aria-label={text.title} style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `var(--apk-arcade-panel-image, url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}"))`, padding: 12, background: "var(--apk-arcade-panel-surface, #0f172a)", color: "var(--apk-arcade-panel-text, #f8fafc)", maxWidth: "100%" }}>
+      <h2 style={{ margin: 0 }}>{text.title}</h2>
+      {visibleClassStatus?.failed ? <div role="alert"><p>{text.classesError}</p><button style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadClasses(0)}>{text.tryAgain}</button></div> : null}
+      {visibleClassStatus?.loading && visibleClasses.length === 0 ? <p role="status">{text.loadingClasses}</p> : null}
+      {visibleClasses.length > 0 ? <label>{text.classLabel} <select className="apk-challenge-select" style={{ minHeight: 44, maxWidth: "100%" }} value={selectedClassId} onChange={(event) => setSelectedClassId(event.target.value)}>{visibleClasses.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label> : null}
+      {classesHasMore && classesScope === scope ? <button disabled={visibleClassStatus?.loading} style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadClasses(visibleClasses.length)}>{text.moreClasses}</button> : null}
+      {!visibleClassStatus?.loading && !visibleClassStatus?.failed && visibleClasses.length === 0 ? <p>{text.noClasses}</p> : null}
+      {visibleChallengeStatus?.failed ? <div role="alert"><p>{text.challengesError}</p><button style={buttonStyle("secondary", basePath)} type="button" onClick={() => selectedClassId && void loadChallenges(selectedClassId, 0)}>{text.tryAgain}</button></div> : null}
+      {visibleChallengeStatus?.loading && visibleChallenges.length === 0 ? <p role="status">{text.loadingChallenges}</p> : null}
+      {!visibleChallengeStatus?.loading && !visibleChallengeStatus?.failed && selectedClassId && visibleChallenges.length === 0 ? <p>{text.noChallenges}</p> : null}
       <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>{visibleChallenges.map((challenge) => {
         const installed = games[challenge.gameId];
         const active = Date.parse(challenge.startsAt) <= now && now < Date.parse(challenge.expiresAt);
         const supported = Boolean(installed && installed.version === challenge.gameVersion && challenge.difficulty === "medium" && challenge.modality.modality === "reading");
         const status = !active ? (now < Date.parse(challenge.startsAt) ? "Upcoming" : "Expired") : supported ? "Active" : "Unavailable";
         const href = withBasePath(basePath, `/${locale}/student/games/apk/${challenge.gameId}?challengeId=${challenge.id}`);
-        return <li key={challenge.id} style={{ borderTop: "1px solid var(--apk-arcade-panel-divider, #475569)", paddingBlock: 10, overflowWrap: "anywhere" }}><strong>{challenge.title}</strong><div>{installed?.title ?? "Game unavailable"}</div><div>Class progress: {challenge.contributionCount}/{challenge.target}</div><div className="apk-challenge-status" data-status={status}>{status}</div><time dateTime={challenge.startsAt}>{new Date(challenge.startsAt).toLocaleDateString()}</time> – <time dateTime={challenge.expiresAt}>{new Date(challenge.expiresAt).toLocaleDateString()}</time>{active && supported ? <div><a style={{ ...buttonStyle("primary", basePath), display: "inline-flex", padding: "0.5rem 1rem", textDecoration: "none", fontWeight: 700, alignItems: "center" }} href={href}>Play challenge</a></div> : null}</li>;
+        return <li key={challenge.id} style={{ borderTop: "1px solid var(--apk-arcade-panel-divider, #475569)", paddingBlock: 10, overflowWrap: "anywhere" }}><strong>{challenge.title}</strong><div>{installed?.title ?? text.gameUnavailable}</div><div>{text.classProgress.replace("{count}", String(challenge.contributionCount)).replace("{target}", String(challenge.target))}</div><div className="apk-challenge-status" data-status={status}>{statusText[status]}</div><time dateTime={challenge.startsAt}>{new Date(challenge.startsAt).toLocaleDateString()}</time> – <time dateTime={challenge.expiresAt}>{new Date(challenge.expiresAt).toLocaleDateString()}</time>{active && supported ? <div><a style={{ ...buttonStyle("primary", basePath), display: "inline-flex", padding: "0.5rem 1rem", textDecoration: "none", fontWeight: 700, alignItems: "center" }} href={href}>{text.playChallenge}</a></div> : null}</li>;
       })}</ul>
-      {challengeHasMore && challengesScope === selectedChallengeScope && selectedClassId ? <button disabled={visibleChallengeStatus?.loading} style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadChallenges(selectedClassId, visibleChallenges.length)}>More challenges</button> : null}
+      {challengeHasMore && challengesScope === selectedChallengeScope && selectedClassId ? <button disabled={visibleChallengeStatus?.loading} style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadChallenges(selectedClassId, visibleChallenges.length)}>{text.moreChallenges}</button> : null}
     </section>
   );
 }

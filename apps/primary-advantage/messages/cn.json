@@ -1366,6 +1366,34 @@
     },
     "signup": {
       "title": "注册"
+    },
+    "staff": {
+      "help": "请输入您的用户名。从旧系统迁移过来的老师请输入自己的电子邮箱。",
+      "username": "用户名",
+      "password": "密码",
+      "forgot": "忘记密码？",
+      "submit": "登录",
+      "signingIn": "正在登录…",
+      "invalid": "用户名或密码不正确。",
+      "tooMany": "尝试次数过多。请等几分钟后再试。",
+      "failed": "登录失败。请再试一次。"
+    },
+    "temporary": {
+      "title": "设置新密码",
+      "help": "您使用临时密码登录。请设置您自己的密码以继续。",
+      "newPassword": "新密码",
+      "confirm": "再次输入新密码",
+      "save": "保存并登录",
+      "saving": "正在保存…",
+      "tooShort": "请至少使用 {min} 个字符。",
+      "mismatch": "两次输入的密码不一致。",
+      "sameAsTemporary": "请使用与临时密码不同的密码。",
+      "notChanged": "密码未更改。"
+    },
+    "forgot": {
+      "title": "忘记密码？",
+      "help": "请学校管理员为您设置新密码。学校管理员：请联系 Primary Advantage 支持团队。",
+      "back": "返回登录"
     }
   },
   "Settings": {
@@ -1802,12 +1830,12 @@
       "phase1Description": "在本课中，您将阅读一篇关于「{title}」的文章",
       "cefrLevel": "CEFR 等级：{level}",
       "raLevel": "RA 等级：{level}",
-      "estimatedReadTime": "预计阅读时间：{time}",
+      "estimatedReadTime": "预计阅读时间：{time} 分钟",
       "articleSummary": "文章摘要",
       "learningObjectives": "学习目标",
-      "understandMainIdeas": "理解主要思想：",
-      "learnVocabulary": "学习词汇：",
-      "improveComprehension": "提高阅读理解："
+      "understandMainIdeas": "理解主要思想",
+      "learnVocabulary": "学习词汇",
+      "improveComprehension": "提高阅读理解"
     }
   },
   "LessonGames": {
@@ -1844,7 +1872,29 @@
       "dragon-rider": "用正确的单词飞过大门。",
       "enchanted-library": "接住正确的书，躲开错误的书。",
       "castle-defense": "把单词排成正确的顺序，守住城墙。",
-      "potion-rush": "在药水煮沸之前拼好句子。"
+      "potion-rush": "在药水煮沸之前拼好句子。",
+      "abyssal-well": "按句子中单词的顺序，射击从井里爬出来的怪物。",
+      "alchemists-synthesis": "读配方卡上的词义，选出写着对应单词的瓶子，倒进大锅里。",
+      "archers-revenge": "读词义，然后射击盾牌上写着正确单词的敌人。",
+      "astral-mage": "按句子中单词的顺序向单词水晶发射魔法弹，用星星组成每个咒语。",
+      "devourer-slime": "按顺序吃掉每个句子的单词泡泡；每吃对一个单词就长大一点，然后吞掉守卫。",
+      "dragon-flight": "骑着火龙飞过词义正确的大门：每过一扇正确的门，龙群就多一条龙，一起对付首领。",
+      "dungeon-liberator": "按句子中单词的顺序救出沉没地窖里的村民，再带着队伍从大门出去。",
+      "griffin-riders-escape": "驾驶狮鹫飞过写着句子下一个单词的大门，绕开蝙蝠群，完成整个句子。",
+      "griffin-sky-joust": "骑着狮鹫飞行，按顺序从上方攻击拿着句子下一个单词的骑士。",
+      "gryphon-patrol": "骑着狮鹫飞过森林，射击拿着句子下一个单词的蝙蝠并拿走这个单词，完成整个句子。",
+      "haunted-library": "爬上旧图书馆的四层楼，按句子中单词的顺序打开门，躲开幽灵和蝙蝠。",
+      "hero-vs-zombie": "跑向写着你的单词词义的光球，为冲击波充能，在天亮前打倒墓地里的僵尸。",
+      "labyrinth": "走进石头迷宫，按句子顺序拿到单词光球，躲开哥布林。",
+      "magic-defense": "每颗飞弹上有一个词义：在它撞上城堡之前，施放正确的英语单词把它打碎。",
+      "paladins-twin-soul": "找到拿着对应单词的幽影，解救圣骑士的双生灵魂。",
+      "realm-carver": "按顺序从荒野中挖出每个句子里发光的单词，别让怪物挡住你的路。",
+      "rune-forge-chamber": "按句子中单词的顺序敲击环绕飞行的单词符文，锻造每一把剑。",
+      "shadow-gate-dungeon": "按句子中单词的顺序收集单词水晶，跑在黑影前面，然后穿过大门。",
+      "sorcerer-ziggurat": "按每个句子中单词的顺序，一块一块踩着符文方块爬上阶梯金字塔，点亮塔顶的水晶。",
+      "spellweavers-run": "在魔法之路上奔跑，按顺序选出写着句子下一个单词的发光球，念完整个句子的咒语。",
+      "storm-castle-tower": "爬上城堡塔楼，按句子中单词的顺序打开单词窗户，避开落下的热油和石头。",
+      "village-guardian": "按句子中单词的顺序呼唤村民，保护他们不被强盗和哥布林抓走，再带他们进谷仓。"
     }
   },
   "LessonLanguageQuestion": {
@@ -2818,7 +2868,27 @@
     "loadError": "我们无法加载游戏。",
     "loadErrorHint": "请检查网络连接，然后再试一次。",
     "storyLink": "单词冒险",
-    "storyLinkDescription": "用你在阅读中保存的单词玩 3D 游戏。"
+    "storyLinkDescription": "用你在阅读中保存的单词玩 3D 游戏。",
+    "challengePanel": {
+      "title": "班级挑战",
+      "tryAgain": "重试",
+      "loadingClasses": "正在加载班级…",
+      "classLabel": "班级",
+      "moreClasses": "更多班级",
+      "noClasses": "暂无班级。",
+      "classesError": "无法加载班级。",
+      "loadingChallenges": "正在加载挑战…",
+      "noChallenges": "暂无挑战。",
+      "challengesError": "无法加载挑战。",
+      "gameUnavailable": "游戏不可用",
+      "classProgress": "班级进度：{count}/{target}",
+      "upcoming": "即将开始",
+      "expired": "已结束",
+      "active": "进行中",
+      "unavailable": "不可用",
+      "playChallenge": "开始挑战",
+      "moreChallenges": "更多挑战"
+    }
   },
   "StoryGames": {
     "title": "单词冒险",
@@ -2931,7 +3001,9 @@
     "backToClass": "返回班级",
     "links": {
       "classSheet": "班级表",
-      "qrCards": "QR 卡片"
+      "qrCards": "QR 卡片",
+      "note": "Before you press: “{classSheet}” sets new passwords for every student and signs everyone out. “{qrCards}” show only once.",
+      "noteLink": "Read the teacher manual, section 6."
     },
     "sheet": {
       "title": "班级表",
@@ -2982,6 +3054,8 @@
       "setPictureFor": "为 {name} 设置图片密码",
       "newCard": "新卡片",
       "newCardFor": "为 {name} 生成新卡片",
+      "newPassword": "新密码",
+      "newPasswordFor": "为 {name} 设置新密码",
       "assignMissing": "为 {count, plural, other {# 位学生}}分配图片密码",
       "empty": "这个班级还没有学生。"
     },
@@ -2996,6 +3070,16 @@
       "description": "旧卡片现在就会失效，{name} 也会退出登录。",
       "confirm": "生成新卡片",
       "cancel": "取消"
+    },
+    "password": {
+      "title": "要为 {name} 设置新密码吗？",
+      "description": "{name} 的旧密码现在就会失效，{name} 也会退出登录。",
+      "confirm": "设置新密码",
+      "cancel": "取消",
+      "resultTitle": "新密码",
+      "resultHelp": "请让学生现在就记下来。这些信息不会再显示。",
+      "print": "打印",
+      "close": "关闭"
     },
     "cards": {
       "title": "新的 QR 卡片",
@@ -3325,6 +3409,29 @@
         "rose": "玫瑰",
         "slate": "石板灰"
       }
+    },
+    "dyeNames": {
+      "black": "黑色",
+      "blue": "蓝色",
+      "brass": "黄铜",
+      "bronze": "青铜",
+      "copper": "铜色",
+      "crimson": "深红",
+      "forest": "森林绿",
+      "green": "绿色",
+      "iron": "铁灰",
+      "khaki": "卡其",
+      "mustard": "芥末黄",
+      "olive": "橄榄绿",
+      "orange": "橙色",
+      "plum": "梅紫",
+      "purple": "紫色",
+      "red": "红色",
+      "royal": "宝蓝",
+      "rusted": "锈色",
+      "slate": "石板灰",
+      "teal": "青色",
+      "violet": "深紫"
     }
   },
   "Reedy": {
@@ -3797,12 +3904,6 @@
       "manual": {
         "title": "教师手册",
         "intro": "在 Primary Advantage 中，教师主导的课程如何一步一步进行。",
-        "howTo": "第一节课：怎么做",
-        "howTo1": "在班级页面把这本书分配给你的班级。",
-        "howTo2": "打开课程计划，班级每完成一个练习册步骤就标记一次。应用会打开对应的学生步骤。",
-        "howTo3": "打开课程指南，查看教师行动、教师用语和完整脚本。",
-        "howTo4": "使用投影视图进行全班阅读和揭晓答案。",
-        "howTo5": "课后查看班级进度表，并将这节课标记为已讲。",
         "stepsTitle": "13 个步骤"
       },
       "progress": {
@@ -3872,7 +3973,42 @@
     "lastActive": "上次活跃：{when}",
     "level": "等级 {level}",
     "xp": "{xp} XP",
-    "qrPrintHint": "请先生成卡片，然后才能打印。"
+    "qrPrintHint": "请先生成卡片，然后才能打印。",
+    "challengePanel": {
+      "title": "创建班级挑战",
+      "loadingClasses": "正在加载班级…",
+      "noClasses": "暂无您的班级。",
+      "tryAgain": "重试",
+      "classLabel": "班级",
+      "challengeTitle": "挑战名称",
+      "game": "游戏",
+      "word": "第 {n} 个单词",
+      "englishAnswer": "英文答案",
+      "thaiPrompt": "泰文提示",
+      "removeWord": "删除单词",
+      "addWord": "添加单词",
+      "starts": "开始",
+      "ends": "结束",
+      "targetPlayers": "目标人数",
+      "saving": "正在保存…",
+      "createChallenge": "创建挑战",
+      "moreClasses": "更多班级",
+      "saved": "挑战已保存：{title}",
+      "createAnother": "再创建一个挑战",
+      "existingRegion": "班级现有挑战",
+      "existingTitle": "现有挑战",
+      "loadingExisting": "正在加载现有挑战…",
+      "noExisting": "暂无现有挑战。",
+      "existingError": "无法加载现有挑战。",
+      "refreshExisting": "刷新现有挑战",
+      "classesError": "无法加载班级。",
+      "checkForm": "请检查班级、单词、日期和目标。",
+      "conflict": "此创建请求与现有请求冲突。",
+      "saveError": "无法保存挑战。",
+      "receiptMismatch": "保存的挑战与表单不一致。",
+      "responseInvalid": "挑战的返回数据无效。",
+      "unconfirmed": "无法确认是否已创建。请先查看此班级，再创建新的挑战。"
+    }
   },
   "TeacherAssignments": {
     "backToAssignments": "返回作业列表",
@@ -4195,6 +4331,157 @@
       "origins31": "The cover of the Primary Advantage Origins 3.1 workbook",
       "origins32": "The cover of the Primary Advantage Origins 3.2 workbook",
       "quest4": "The cover of the Primary Advantage Quest 4 workbook"
+    }
+  },
+  "TeacherManual": {
+    "tocTitle": "In this manual",
+    "openPage": "Open this page",
+    "help": "Help: <line>LINE ReadingAdvantage</line> · support@reading-advantage.com · 099-005-8038",
+    "signin": {
+      "title": "Sign in",
+      "lead": "Teachers sign in with an e-mail address and a password. The Google button is gone.",
+      "step1": "Open primary.reading-advantage.com.",
+      "step2": "Press the <ui>{teacherTab}</ui> tab. The sign-in page always opens on the <ui>{studentTab}</ui> tab.",
+      "step3": "In the <ui>{username}</ui> field, type your e-mail address. In the <ui>{password}</ui> field, type your password. Then press <ui>{signIn}</ui>.",
+      "oldSystem": "Teachers from the old system: the screen says “{staffHelp}”",
+      "firstTitle": "First sign-in",
+      "step4": "Use the temporary password from the school. The app shows the page <ui>{setNewPassword}</ui>.",
+      "step5": "Type a new password in <ui>{newPassword}</ui>. Type it again in <ui>{confirmPassword}</ui>. Then press <ui>{saveAndSignIn}</ui>.",
+      "rule": "The new password has 8 characters or more and is not the temporary password. After this, the temporary password stops working.",
+      "forgot": "Forgot the password: ask the school's administrator for a new password."
+    },
+    "class": {
+      "title": "Find your class",
+      "lead": "After sign-in, the app opens the teacher's <ui>{home}</ui>.",
+      "step1": "In the menu at the left, press <ui>{myClasses}</ui>.",
+      "step2": "Press the class name in the table. The app opens the class page.",
+      "phone": "On a phone: press the menu button ☰ at the top of the screen to open the full menu, with <ui>{manual}</ui>.",
+      "shortcut": "Shortcut: in the class table on the home page, the <ui>{startClassLink}</ui> link opens the class page, but it does not start the class. On the class page, press <ui>{startClass}</ui> again (section 3).",
+      "menuTitle": "The teacher menu",
+      "menu": "<ui>{home}</ui> <ui>{myClasses}</ui> <ui>{myStudents}</ui> <ui>{reports}</ui> <ui>{assignments}</ui> <ui>{manual}</ui>"
+    },
+    "startClass": {
+      "title": "Open the class for student sign-in",
+      "lead": "Students sign in with a 6-character code and 3 pictures only while the teacher's class is open.",
+      "step1": "On the class page, in the <ui>{classCard}</ui> card, press <ui>{startClass}</ui>.",
+      "step2": "Write the 6-character code under <ui>{classCode}</ui> on the board. The code shows only once. The student screen calls this code <ui>{studentCode}</ui>.",
+      "step3": "The students sign in with the “Student sign-in” sheet. The teacher sees the count at <ui>{signedInCount}</ui>.",
+      "step4": "At the end of the period, press <ui>{endClass}</ui>. The class also closes by itself after 3 hours.",
+      "newCode": "To see a code again, press <ui>{newCode}</ui>. The app shows a new code, and the old code stops working.",
+      "pictureSetting": "You can turn off <ui>{pictureSetting}</ui>. Then students sign in with the code and the name only. Some features, such as Reedy, need a full sign-in.",
+      "helpTitle": "One student cannot sign in",
+      "help1": "5 wrong taps: the app locks that student for 5 minutes. Wait, then try again.",
+      "help2": "Forgot the pictures: in the <ui>{students}</ui> list, press <ui>{resetPictures}</ui> on that student's row, and show the new pictures to the student at once, because they show only once. This button asks no question, and it signs that student out.",
+      "help3": "No pictures yet: press <ui>{setPictures}</ui> on that student's row."
+    },
+    "assignBook": {
+      "title": "Assign the book to the class (once)",
+      "lead": "Do this once for each class, before the first lesson.",
+      "step1": "On the class page, go down to the book part. A new class shows the text “{noBook}”.",
+      "step2": "At <ui>{book}</ui>, choose the book of the class.",
+      "step3": "At <ui>{mode}</ui>, choose <ui>{teacherLed}</ui>.",
+      "step4": "At <ui>{startDate}</ui>, choose the day of the first lesson. Then press <ui>{assignBook}</ui>. The app shows “{bookAssigned}”.",
+      "modeNote": "<ui>{teacherLed}</ui>: a student opens an app step only after the teacher marks that workbook step (4.2). <ui>{independent}</ui>: the student opens every step.",
+      "emptyNote": "No book in the list: the screen shows “{emptyCatalogue}”. Contact us (top of this page)."
+    },
+    "lesson": {
+      "title": "Teach the lesson",
+      "lead": "The teacher teaches from the workbook and presses in the app one step at a time. The app opens the same step for the students.",
+      "step1": "On the class page, in the <ui>{nowInClass}</ui> card, press <ui>{openLesson}</ui>. The card shows the current lesson and the <ui>{nextStep}</ui>.",
+      "step2": "The <ui>{live}</ui> box on the lesson page shows the first step that the class has not done: the teacher actions, the teacher's words, and a <ui>{tip}</ui>. Below it, the 13-step guide shows all steps with <ui>{teacherActions}</ui>, <ui>{teacherLanguage}</ui>, <ui>{studentActions}</ui>, <ui>{watchFor}</ui>, and <ui>{script}</ui>.",
+      "step3": "When the class finishes the step in the workbook, press <ui>{markDone}</ui>. The app opens the same step for the students, and the button changes to <ui>{undo}</ui>. Then press <ui>{next}</ui> to go to the next step. A wrong press: press <ui>{undo}</ui>.",
+      "step4": "Whole-class reading: press <ui>{projector}</ui>. Click a paragraph to focus it. Press <ui>{showAnswer}</ui> to reveal the answers.",
+      "markAll": "Mark every step. A student opens an app step only after the teacher presses <ui>{markDone}</ui>. Until then, the student sees “{lockedText}”.",
+      "steps13": "The workbook has 13 steps. The student app has 14 steps. The app matches the steps."
+    },
+    "afterLesson": {
+      "title": "After the lesson",
+      "step1": "On the class page, press <ui>{lessonPlan}</ui>, then <ui>{classProgress}</ui>. The table shows the app steps that each student did, of 14.",
+      "step2": "Go back to <ui>{lessonPlan}</ui> and press <ui>{markTaught}</ui> on that lesson. This button marks all 13 steps done, so the students can open every app step. If it is the current lesson, the class moves to the next lesson. Press it only after the lesson ends.",
+      "colors": "Colors in the table: {legend}",
+      "buttonsTitle": "Useful buttons on the lesson page",
+      "rehearsal": "<ui>{rehearsal}</ui>: see the lesson as a student sees it. Nothing saves.",
+      "print": "<ui>{printLesson}</ui>: in the print window, choose A4 and turn off “Headers and footers”.",
+      "teachAgain": "<ui>{teachAgain}</ui> (in the <ui>{lessonPlan}</ui>): starts the lesson again. Each student's work stays in the history, and the XP stays."
+    },
+    "homework": {
+      "title": "Give homework",
+      "lead": "Homework is one reading story. The teacher chooses a story and gives it to the whole class or to some students.",
+      "step1": "In the menu, press <ui>{assignments}</ui>, then <ui>{newAssignment}</ui>. The app opens the story list.",
+      "step2": "Choose a story and open it.",
+      "step3": "On the story page, press the <ui>{assignButton}</ui> button.",
+      "step4": "In the <ui>{createAssignment}</ui> window: choose the <ui>{classroom}</ui>, type the <ui>{assignmentName}</ui> and the <ui>{assignmentDescription}</ui>, choose the <ui>{studentsField}</ui> or <ui>{selectAll}</ui>, choose the <ui>{dueDate}</ui>, then press <ui>{submit}</ui>. The app shows “{saved}”.",
+      "step5": "See the results: in the menu <ui>{assignments}</ui>, choose the class, then press the assignment name to see the progress of each student.",
+      "studentsSee": "Where students see the homework: on the student home, in the <ui>{todayLesson}</ui> card (the assignment with the nearest due date), and in the menu <ui>{assignments}</ui>, on the page <ui>{myWork}</ui>.",
+      "atHome": "Homework at home needs the username and password. The code, the pictures, and the QR card work only while the teacher's class is open. At home, students sign in with the username and password from the <ui>{classSheet}</ui> (section 6)."
+    },
+    "classSheet": {
+      "title": "Class sheet and QR cards: read before you press",
+      "lead": "Both buttons are on the class page, in the <ui>{classCard}</ui> card: <ui>{classSheet}</ui> and <ui>{qrCards}</ui>.",
+      "versionATitle": "If the team gave your class its sheet",
+      "versionA": "The team already gave your class its class sheet. Use that sheet and keep one copy. Press <ui>{makeSheet}</ui> only when the whole sheet is lost.",
+      "versionBTitle": "If your class has no sheet yet",
+      "versionB": "Make the class sheet once, before the first lesson, outside class time. Then print it with the steps below.",
+      "sheetIntro": "The class sheet shows each student's username and password, for sign-in away from the classroom, for example homework at home.",
+      "warning": "When you press <ui>{makeSheet}</ui>: the app sets a new password for every student in this class. Every student is signed out. The old sheet stops working. The new passwords show only once. Make the sheet outside class time, and print it at once.",
+      "oneStudent": "One student forgot the password: use the <ui>{studentNewPassword}</ui> button on that student's row (below).",
+      "step1": "Press <ui>{classSheet}</ui>, then <ui>{makeSheet}</ui>.",
+      "step2": "In the window <ui>{sheetConfirmTitle}</ui>, press <ui>{sheetConfirm}</ui>.",
+      "step3": "Press <ui>{print}</ui> at once, before you leave the page. Cut the sheet and give each student only the part with the student's name.",
+      "forgotTitle": "A student forgets the password",
+      "forgot": "In the <ui>{students}</ui> list, press <ui>{studentNewPassword}</ui> on that student's row. In the window <ui>{passwordConfirmTitle}</ui>, press <ui>{passwordConfirm}</ui>. The app sets a new password for that student only, and signs that student out. The other students keep their passwords. The new password shows only once: the student writes it down at once, or you press <ui>{passwordPrint}</ui>.",
+      "qrTitle": "QR cards: read before you press",
+      "qrLead": "One QR card signs one student in with one scan. It works only while the teacher's class is open.",
+      "step4": "Press <ui>{qrCards}</ui>, then <ui>{issueCards}</ui>. The app makes cards only for students without a card.",
+      "step5": "Press <ui>{printCards}</ui> at once: a card shows only once.",
+      "lostCard": "Lost card: in the <ui>{students}</ui> list, press <ui>{newCard}</ui> on that student's row and confirm. The old card stops at once, and that student is signed out. A QR card works only while the teacher's class is open."
+    },
+    "figures": {
+      "signin": "The sign-in page, Teacher tab",
+      "newPassword": "The Set a new password page",
+      "menu": "The teacher menu",
+      "myClasses": "My classes",
+      "classCard": "The class sign-in card before the class starts",
+      "classStarted": "After Start class: the class code (a test code, hidden)",
+      "roster": "The student list: the picture password buttons",
+      "assignBook": "The book form",
+      "classBook": "The class book card on the class page",
+      "lessonGuide": "The lesson page: the live guide and the Projector button",
+      "projector": "The projector view",
+      "lessonPlan": "The lesson plan: the Class progress button",
+      "progressGrid": "The class progress table",
+      "markTaught": "The lesson plan: the Mark taught button",
+      "assignments": "The Assignments page",
+      "articleAssign": "The story page: the Assignments button",
+      "assignForm": "The Create assignment window",
+      "classSheet": "The class sheet page",
+      "classSheetConfirm": "The class sheet confirmation",
+      "qrCards": "The QR cards page",
+      "newCardConfirm": "The new card confirmation",
+      "assignDue": "The Create assignment window: the due date and the Submit button"
+    },
+    "testData": "Picture from the app, test data"
+  },
+  "RpgRewards": {
+    "heading": "Hero vs. Zombie 奖励",
+    "newHeading": "新的 Hero vs. Zombie 奖励",
+    "loading": "正在加载奖励…",
+    "tryAgain": "重试",
+    "unlocked": "已解锁",
+    "locked": "未解锁：{requirement}",
+    "lockedFallback": "完成相关任务。",
+    "equip": "装备",
+    "equipping": "正在装备…",
+    "equipped": "已装备",
+    "equipAria": "装备 {name}",
+    "equippingAria": "正在装备 {name}",
+    "equippedAria": "已装备 {name}",
+    "loadFailed": "无法加载奖励。请重试。",
+    "equipFailed": "无法装备奖励。请重试。",
+    "quests": {
+      "first-ward": "至少作答一次后完成 Hero vs. Zombie。",
+      "complete-the-ward": "至少作答一次后赢得 Hero vs. Zombie。",
+      "perfect-english-audio": "在泰文翻译提示和英文单词语音作答模式下赢得 Hero vs. Zombie，且每一题第一次就答对。"
     }
   }
 }

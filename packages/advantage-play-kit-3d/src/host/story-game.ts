@@ -49,7 +49,7 @@ import { sheetBindings } from '../view2d/sheets.js';
 import { renderBriefing } from './briefing.js';
 import hostCss from './host.css.js';
 import themeCss from '../hud/theme.css.js';
-import { renderGate } from './gate-screen.js';
+import { renderGate, renderLoadError } from './gate-screen.js';
 import { renderResults } from './results.js';
 
 /** The one 2D sprite pack every game's 2D edition binds from. */
@@ -91,8 +91,11 @@ export interface StoryGameOptions {
    * "again" makes a new one. Absent: the game plays without answer audio.
    */
   answerAudio?(): AnswerChoiceAudioController;
-  /** Once per run; `answerEvidence` comes from the `answerAudio` controller, the app saves it as the learning evidence. */
-  onComplete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence, answerEvidence?: ReadToSelectAudioEvidence): void;
+  /**
+   * Once per run; `answerEvidence` comes from the `answerAudio` controller, the app saves it as the learning evidence.
+   * Return the save as a promise of the XP that the server awarded: the results card shows that number. No promise: the card shows no XP.
+   */
+  onComplete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence, answerEvidence?: ReadToSelectAudioEvidence): void | Promise<number | undefined>;
   onExit(): void;
   onDiagnostic?(event: unknown): void;
   /** The screen the host shows: the app places its own panels (rewards, notices) around it. */
@@ -225,8 +228,8 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
           },
         },
         complete: (result, outcome, evidence, answerEvidence) => {
-          options.onComplete(result, outcome, evidence, answerEvidence);
-          renderResults(screen, { ...run, result, evidence }, t);
+          const awarded = options.onComplete(result, outcome, evidence, answerEvidence);
+          renderResults(screen, { ...run, result, evidence }, t, awarded instanceof Promise ? awarded : undefined);
           if (options.replay === false) screen.querySelector('[data-again]')?.remove();
           else screen.querySelector('[data-again]')?.addEventListener('click', () => void again());
           screen.querySelector('[data-done]')?.addEventListener('click', () => options.onExit());
@@ -238,8 +241,10 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
       options.onPhase?.('playing');
     } catch (err) {
       report({ level: 'error', code: 'apk3d/start-failed', message: String(err) });
-      renderGate(screen, undefined, t);
+      // The device check passed above, so this is a load or start fault, not the device.
+      renderLoadError(screen, t);
       screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
+      screen.querySelector('[data-retry]')?.addEventListener('click', () => void stopGame().then(start));
       show();
     } finally {
       starting = false;

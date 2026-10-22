@@ -34,7 +34,8 @@ describe("GuideOverlay (FR-9)", () => {
     fireEvent.click(screen.getByRole("button", { name: en.lesson.previous }));
     expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent("Step 1: Before You Read");
     expect(screen.getByRole("button", { name: en.guide.undo })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("link", { name: en.guide.games })).toHaveAttribute("href", "/teacher/game-challenges");
+    // Step 1 has no games link: the games are on the practice steps 9 and 10 (owner, 2026-10-14).
+    expect(screen.queryByRole("link", { name: en.guide.games })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: en.lesson.next }));
     fireEvent.click(screen.getByRole("button", { name: en.guide.markDone }));
     await waitFor(() => expect(mocks.markStepDoneAction).toHaveBeenCalledWith("cb", 2, 2, true));

@@ -200,6 +200,12 @@ export function BattleClient({
     };
   }, [state.quest.id, status]);
 
+  // The battle GP posts when the quest enters result; the header purse is server-rendered, so
+  // refresh it then. (The poll never sees done: the battle API returns no quest after it.)
+  useEffect(() => {
+    if (status === "result") router.refresh();
+  }, [status, router]);
+
   const onCompleted = (result: {
     challengeRunId?: string;
     correctAnswers: number;

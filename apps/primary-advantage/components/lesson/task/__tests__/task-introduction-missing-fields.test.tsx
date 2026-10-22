@@ -52,6 +52,15 @@ describe("article views with null passage", () => {
     );
     expect(screen.getAllByText("Missing Fields Story").length).toBeGreaterThan(0);
   });
+  it("TaskIntroduction shows the read time with its unit and no empty colons (captures 2026-10-20)", () => {
+    renderWithMessages(
+      <TaskIntroduction article={{ ...base, passage: Array.from({ length: 170 }, () => "word").join(" ") } as never} onCompleteChange={() => {}} />,
+      { locale: "th" },
+    );
+    expect(screen.getByText("เวลาอ่านโดยประมาณ: 9 นาที")).toBeInTheDocument();
+    expect(screen.getByText("ทำความเข้าใจแนวคิดหลัก")).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/\s:\s*$|:\s*(?=เรียนรู้|พัฒนา)/m);
+  });
   it("TaskReading renders", () => {
     renderWithMessages(
       <TaskReading article={base as never} enableTranslation={false} />,

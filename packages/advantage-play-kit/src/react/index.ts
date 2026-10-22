@@ -30,16 +30,17 @@ export type {
 } from "./use-student-challenge-run.js";
 
 /** Shared authenticated class challenge catalog panel. */
-export { StudentChallengeCatalogPanel } from "./student-challenge-catalog-panel.js";
+export { StudentChallengeCatalogPanel, STUDENT_CHALLENGE_CATALOG_LABELS } from "./student-challenge-catalog-panel.js";
 
 /** Public class challenge catalog panel contracts. */
 export type {
   StudentChallengeCatalogGame,
+  StudentChallengeCatalogLabels,
   StudentChallengeCatalogPanelProps,
 } from "./student-challenge-catalog-panel.js";
 
 /** Shared teacher class challenge form. */
-export { TeacherChallengePanel } from "./teacher-challenge-panel.js";
+export { TeacherChallengePanel, TEACHER_CHALLENGE_PANEL_LABELS } from "./teacher-challenge-panel.js";
 
 /** Public teacher challenge form contracts. */
-export type { TeacherChallengeGame, TeacherChallengePanelProps } from "./teacher-challenge-panel.js";
+export type { TeacherChallengeGame, TeacherChallengePanelLabels, TeacherChallengePanelProps } from "./teacher-challenge-panel.js";

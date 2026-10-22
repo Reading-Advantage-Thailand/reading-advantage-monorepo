@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 /**
  * Live sign-in roster (primary_student_login_20261003, Phase 3 task 2, FR-3/FR-4/FR-5):
- * who is signed in, who is locked, last seen, one-tap picture-password reset, and card rotate.
+ * who is signed in, who is locked, last seen, one-tap picture-password reset, card rotate, and a
+ * new password for one student (PR review 2026-10-20).
  */
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, screen, within } from "@testing-library/react";
@@ -121,6 +122,61 @@ describe("LiveRoster", () => {
     fireEvent.click(screen.getByRole("button", { name: "Reset picture password for Ann Smith" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("We cannot find this class or student.");
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("sets a new password for one student after a confirmation and shows it once with Print", async () => {
+    fetchMock.mockReturnValue(respond(200, { userId: "u2", name: "Bo Jones", username: "p3a2", password: "abcd2345" }));
+    const print = vi.spyOn(window, "print").mockImplementation(() => {});
+    const onChange = renderRoster();
+    fireEvent.click(screen.getByRole("button", { name: "Set a new password for Bo Jones" }));
+    const confirm = await screen.findByRole("alertdialog", { name: "Set a new password for Bo Jones?" });
+    expect(confirm).toHaveTextContent("The old password of Bo Jones stops working at once, and Bo Jones is signed out.");
+    expect(fetchMock).not.toHaveBeenCalled();
+    fireEvent.click(within(confirm).getByRole("button", { name: "Set new password" }));
+    const dialog = await screen.findByRole("dialog", { name: "New password" });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/auth/student/student-password/reset",
+      expect.objectContaining({ method: "POST", body: JSON.stringify({ classroomId: CLASS_ID, studentUserId: "u2" }) }),
+    );
+    expect(dialog).toHaveTextContent("Bo Jones");
+    expect(dialog).toHaveTextContent("p3a2");
+    expect(dialog).toHaveTextContent("abcd2345");
+    expect(dialog).toHaveTextContent(`${window.location.origin}/auth/signin`);
+    expect(onChange).toHaveBeenCalled();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Print" }));
+    expect(print).toHaveBeenCalled();
+    // Shown once: after Close the password is gone from the page.
+    // The footer Close (the dialog also has the corner close button with the same name).
+    fireEvent.click(within(dialog).getAllByRole("button", { name: "Close" })[0]!);
+    await vi.waitFor(() => expect(screen.queryByText("abcd2345")).not.toBeInTheDocument());
+  });
+
+  it("sends nothing when the teacher cancels the new password", async () => {
+    renderRoster();
+    fireEvent.click(screen.getByRole("button", { name: "Set a new password for Ann Smith" }));
+    const confirm = await screen.findByRole("alertdialog");
+    fireEvent.click(within(confirm).getByRole("button", { name: "Cancel" }));
+    await vi.waitFor(() => expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument());
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("announces a teacher of another class (403) on a new password", async () => {
+    fetchMock.mockReturnValue(respond(403, { code: "forbidden" }));
+    renderRoster();
+    fireEvent.click(screen.getByRole("button", { name: "Set a new password for Ann Smith" }));
+    fireEvent.click(within(await screen.findByRole("alertdialog")).getByRole("button", { name: "Set new password" }));
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "New password" })).not.toBeInTheDocument();
+  });
+
+  it("shows the new password button and its confirm text in Thai", async () => {
+    renderRoster(undefined, "th");
+    const button = within(row("Ann Smith")).getByRole("button", { name: "ตั้งรหัสผ่านใหม่ให้ Ann Smith" });
+    expect(button).toHaveTextContent("รหัสผ่านใหม่");
+    fireEvent.click(button);
+    expect(await screen.findByRole("alertdialog", { name: "ตั้งรหัสผ่านใหม่ให้ Ann Smith ใช่ไหม" })).toHaveTextContent(
+      "รหัสผ่านเดิมของ Ann Smith จะใช้ไม่ได้ทันที และ Ann Smith จะถูกออกจากระบบ",
+    );
   });
 
   it("shows Thai copy", () => {

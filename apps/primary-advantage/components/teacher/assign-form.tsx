@@ -12,9 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { Card } from "../ui/card";
 import { Calendar } from "../ui/calendar";
 import { Checkbox } from "@reading-advantage/ui";
 import {
@@ -24,9 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { format } from "date-fns";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { dateFnsLocale, useIntlFormatter } from "@/lib/intl-locale";
 
 const formSchema = z.object({
   classroomId: z.string().min(1, "Classroom is required"),
@@ -62,6 +60,8 @@ export default function AssignForm({
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [availableStudents, setAvailableStudents] = useState<Student[]>([]);
   const t = useTranslations("Assignment.assignForm");
+  const locale = useLocale();
+  const formatter = useIntlFormatter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -274,12 +274,13 @@ export default function AssignForm({
               <FormDescription className="text-sm">
                 {t("selectedDueDate")}
                 <span className="font-medium text-green-500">
-                  {format(new Date(field.value), "PPP")}
+                  {formatter.dateTime(new Date(field.value), { dateStyle: "long" })}
                 </span>
               </FormDescription>
               <FormControl>
                 <Calendar
                   mode="single"
+                  locale={dateFnsLocale(locale)}
                   className="w-full rounded-md border p-3"
                   selected={field.value}
                   onSelect={field.onChange}

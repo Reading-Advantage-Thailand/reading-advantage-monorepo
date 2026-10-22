@@ -2,6 +2,7 @@ import type { getTranslations } from "next-intl/server";
 import { StatusChip } from "@reading-advantage/ui";
 import type { LessonGuidePeriod, LessonGuideStep } from "@reading-advantage/domain/primary-books";
 import { Link } from "@/i18n/navigation";
+import { GuideScript } from "@/components/teacher/guide-script";
 import { cn } from "@/lib/utils";
 
 /** Workbook steps that use the games: the practice steps (9, 10). FR-13; the owner moved the games out of step 1 (2026-10-14). */
@@ -97,7 +98,7 @@ function GuideStepItem({ step, done, gamesHref, labels }: { step: LessonGuideSte
       {step.scriptMd ? (
         <details className="rounded-lg border">
           <summary className="min-h-11 cursor-pointer px-3 py-2 text-sm font-medium">{labels.script}</summary>
-          <pre className="font-sans whitespace-pre-wrap px-3 pb-3 text-sm">{step.scriptMd}</pre>
+          <GuideScript md={step.scriptMd} />
         </details>
       ) : null}
       {GAME_STEPS.includes(step.step) ? (

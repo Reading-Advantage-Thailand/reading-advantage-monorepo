@@ -61,6 +61,19 @@ describe("ClassLoginPanel", () => {
     expect(screen.getByRole("link", { name: "QR cards" }).getAttribute("href")).toMatch(new RegExp(`/teacher/class-roster/${CLASS_ID}/qr-cards$`));
   });
 
+  it("warns above the class sheet and QR buttons and links to section 6 of the manual (S5 request B)", async () => {
+    renderWithMessages(<ClassLoginPanel classroomId={CLASS_ID} />, { locale: "th" });
+    await flush();
+    const note = document.querySelector("[data-class-login-note]")!;
+    expect(note).toHaveTextContent(
+      "ก่อนกด: “ใบรายชื่อชั้นเรียน” ตั้งรหัสผ่านใหม่ให้นักเรียนทุกคนและนำทุกคนออกจากระบบ บัตร QR แสดงเพียงครั้งเดียว อ่านคู่มือครู ข้อ 6",
+    );
+    expect(screen.getByRole("link", { name: "อ่านคู่มือครู ข้อ 6" }).getAttribute("href")).toMatch(/\/teacher\/manual#class-sheet$/);
+    // The note stands above the two buttons.
+    const sheetLink = screen.getByRole("link", { name: "ใบรายชื่อชั้นเรียน" });
+    expect(note.compareDocumentPosition(sheetLink) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it("polls every 10 seconds while the page is visible and stops while it is hidden", async () => {
     renderWithMessages(<ClassLoginPanel classroomId={CLASS_ID} />);
     await flush();

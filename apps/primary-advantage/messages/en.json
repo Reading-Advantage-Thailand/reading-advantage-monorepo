@@ -1366,6 +1366,34 @@
     },
     "signup": {
       "title": "Sign Up"
+    },
+    "staff": {
+      "help": "Type your username. Teachers from the old app type their e-mail address.",
+      "username": "Username",
+      "password": "Password",
+      "forgot": "Forgot your password?",
+      "submit": "Sign in",
+      "signingIn": "Signing in…",
+      "invalid": "The username or the password is not correct.",
+      "tooMany": "Too many tries. Wait a few minutes, then try again.",
+      "failed": "Sign-in failed. Try again."
+    },
+    "temporary": {
+      "title": "Set a new password",
+      "help": "You signed in with a temporary password. Set your own password to continue.",
+      "newPassword": "New password",
+      "confirm": "Type the new password again",
+      "save": "Save and sign in",
+      "saving": "Saving…",
+      "tooShort": "Use at least {min} characters.",
+      "mismatch": "The two passwords are not the same.",
+      "sameAsTemporary": "Use a password that is not the temporary password.",
+      "notChanged": "The password was not changed."
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "help": "Ask your school admin to set a new password for you. School admins: ask Primary Advantage support.",
+      "back": "Back to sign in"
     }
   },
   "Settings": {
@@ -1694,12 +1722,12 @@
       "phase1Description": "In this lesson, you will read an article about: {title}",
       "cefrLevel": "CEFR Level : {level}",
       "raLevel": "RA Level : {level}",
-      "estimatedReadTime": "Estimated Read Time : {time}",
+      "estimatedReadTime": "Estimated reading time: {time} min",
       "articleSummary": "Article Summary",
       "learningObjectives": "Learning Objectives",
-      "understandMainIdeas": "Understand Main Ideas :",
-      "learnVocabulary": "Learn Vocabulary :",
-      "improveComprehension": "Improve Comprehension :"
+      "understandMainIdeas": "Understand Main Ideas",
+      "learnVocabulary": "Learn Vocabulary",
+      "improveComprehension": "Improve Comprehension"
     },
     "PreviewVocabulary": {
       "title": "Preview Vocabulary",
@@ -1844,7 +1872,29 @@
       "dragon-rider": "Fly through the gate with the right word.",
       "enchanted-library": "Catch the right book, dodge the wrong one.",
       "castle-defense": "Put the words in order to hold the wall.",
-      "potion-rush": "Build the sentence before the potion boils."
+      "potion-rush": "Build the sentence before the potion boils.",
+      "abyssal-well": "Shoot the creatures that climb out of the well in the order of the sentence.",
+      "alchemists-synthesis": "Read the meaning on the recipe card, pick the jar with the matching word, and pour it into the cauldron.",
+      "archers-revenge": "Read the meaning, then shoot the enemy whose shield shows the right word.",
+      "astral-mage": "Cast bolts at the word crystals in the order of the sentence, and build each spell from the stars.",
+      "devourer-slime": "Eat the word bubbles of each sentence in order; grow with every right word and swallow the guards.",
+      "dragon-flight": "Ride the fire dragon through the gate with the right meaning: every right gate adds a dragon to the flock for the boss.",
+      "dungeon-liberator": "Free the villagers of the Sunken Vault in the order of the sentence, then lead the line out through the gate.",
+      "griffin-riders-escape": "Steer the griffin over the land through the gate that carries the next word of the sentence, and fly around the bat storms, to finish the whole sentence.",
+      "griffin-sky-joust": "Fly a griffin and strike from above the rider that carries the next word of the sentence, in order.",
+      "gryphon-patrol": "Fly the gryphon over the forest and shoot the bat that carries the next word of the sentence, then take the word, to finish the whole sentence.",
+      "haunted-library": "Climb the four floors of the old library, open the doors in the order of the sentence, and keep away from ghosts and bats.",
+      "hero-vs-zombie": "Run to the orb with the meaning of your word, charge your Blast, and knock the churchyard zombies flat until dawn.",
+      "labyrinth": "Walk the stone maze, take the word orbs in sentence order, and keep away from the goblins.",
+      "magic-defense": "A missile shows a meaning: cast the right English word to break it before it hits the castle.",
+      "paladins-twin-soul": "Find the shade that holds the matching word and free the paladin’s twin soul.",
+      "realm-carver": "Carve the glowing words of each sentence out of the wild in order, and keep your path safe from the monsters.",
+      "rune-forge-chamber": "Strike the orbiting word runes in the order of the sentence, and forge each blade.",
+      "shadow-gate-dungeon": "Collect word crystals in the order of the sentence, keep ahead of the shadow, and walk through the gate.",
+      "sorcerer-ziggurat": "Climb the ziggurat one rune cube at a time, in the order of each sentence, and light the crystal at the top.",
+      "spellweavers-run": "Run the spell road and pick the glowing orb with the next word of the sentence, in order, to cast the whole sentence.",
+      "storm-castle-tower": "Climb the castle tower, open the word windows in the order of the sentence, and step away from falling oil and rocks.",
+      "village-guardian": "Call the villagers in the order of the sentence, keep them away from bandits and goblins, and lead them into the barn."
     }
   },
   "LessonLanguageQuestion": {
@@ -2818,7 +2868,27 @@
     "loadError": "We could not load the games.",
     "loadErrorHint": "Check the internet connection and try again.",
     "storyLink": "Word adventures",
-    "storyLinkDescription": "Play 3D games with the words you saved from your reading."
+    "storyLinkDescription": "Play 3D games with the words you saved from your reading.",
+    "challengePanel": {
+      "title": "Class challenges",
+      "tryAgain": "Try again",
+      "loadingClasses": "Loading classes…",
+      "classLabel": "Class",
+      "moreClasses": "More classes",
+      "noClasses": "No classes are available.",
+      "classesError": "Classes could not be loaded.",
+      "loadingChallenges": "Loading challenges…",
+      "noChallenges": "No challenges are available.",
+      "challengesError": "Challenges could not be loaded.",
+      "gameUnavailable": "Game unavailable",
+      "classProgress": "Class progress: {count}/{target}",
+      "upcoming": "Upcoming",
+      "expired": "Expired",
+      "active": "Active",
+      "unavailable": "Unavailable",
+      "playChallenge": "Play challenge",
+      "moreChallenges": "More challenges"
+    }
   },
   "StoryGames": {
     "title": "Word adventures",
@@ -2931,7 +3001,9 @@
     "backToClass": "Back to class",
     "links": {
       "classSheet": "Class sheet",
-      "qrCards": "QR cards"
+      "qrCards": "QR cards",
+      "note": "Before you press: “{classSheet}” sets new passwords for every student and signs everyone out. “{qrCards}” show only once.",
+      "noteLink": "Read the teacher manual, section 6."
     },
     "sheet": {
       "title": "Class sheet",
@@ -2982,6 +3054,8 @@
       "setPictureFor": "Set picture password for {name}",
       "newCard": "New card",
       "newCardFor": "New card for {name}",
+      "newPassword": "New password",
+      "newPasswordFor": "Set a new password for {name}",
       "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
       "empty": "No students in this class yet."
     },
@@ -2996,6 +3070,16 @@
       "description": "The old card stops working now, and {name} is signed out.",
       "confirm": "Make new card",
       "cancel": "Cancel"
+    },
+    "password": {
+      "title": "Set a new password for {name}?",
+      "description": "The old password of {name} stops working at once, and {name} is signed out.",
+      "confirm": "Set new password",
+      "cancel": "Cancel",
+      "resultTitle": "New password",
+      "resultHelp": "Have the student write it down now. It will not show again.",
+      "print": "Print",
+      "close": "Close"
     },
     "cards": {
       "title": "New QR card",
@@ -3325,6 +3409,29 @@
         "rose": "Rose",
         "slate": "Slate"
       }
+    },
+    "dyeNames": {
+      "black": "black",
+      "blue": "blue",
+      "brass": "brass",
+      "bronze": "bronze",
+      "copper": "copper",
+      "crimson": "crimson",
+      "forest": "forest",
+      "green": "green",
+      "iron": "iron",
+      "khaki": "khaki",
+      "mustard": "mustard",
+      "olive": "olive",
+      "orange": "orange",
+      "plum": "plum",
+      "purple": "purple",
+      "red": "red",
+      "royal": "royal",
+      "rusted": "rusted",
+      "slate": "slate",
+      "teal": "teal",
+      "violet": "violet"
     }
   },
   "Reedy": {
@@ -3797,12 +3904,6 @@
       "manual": {
         "title": "Teacher manual",
         "intro": "How a teacher-led lesson runs in Primary Advantage, step by step.",
-        "howTo": "First lesson: how to",
-        "howTo1": "Assign the book to your class on the class page.",
-        "howTo2": "Open the lesson plan and mark each workbook step as the class does it. The app opens the matching student step.",
-        "howTo3": "Open the lesson guide for the teacher actions, the teacher language, and the full script.",
-        "howTo4": "Use the projector view for whole-class reading and the answer reveal.",
-        "howTo5": "Check the class progress grid after the lesson and mark the lesson taught.",
         "stepsTitle": "The 13 steps"
       },
       "progress": {
@@ -3872,7 +3973,42 @@
     "lastActive": "Last active: {when}",
     "level": "Level {level}",
     "xp": "{xp} XP",
-    "qrPrintHint": "Make the cards first. Then you can print them."
+    "qrPrintHint": "Make the cards first. Then you can print them.",
+    "challengePanel": {
+      "title": "Create class challenge",
+      "loadingClasses": "Loading classes…",
+      "noClasses": "No owned classes are available.",
+      "tryAgain": "Try again",
+      "classLabel": "Class",
+      "challengeTitle": "Challenge title",
+      "game": "Game",
+      "word": "Word {n}",
+      "englishAnswer": "English answer",
+      "thaiPrompt": "Thai prompt",
+      "removeWord": "Remove word",
+      "addWord": "Add word",
+      "starts": "Starts",
+      "ends": "Ends",
+      "targetPlayers": "Target players",
+      "saving": "Saving…",
+      "createChallenge": "Create challenge",
+      "moreClasses": "More classes",
+      "saved": "Challenge saved: {title}",
+      "createAnother": "Create another challenge",
+      "existingRegion": "Existing class challenges",
+      "existingTitle": "Existing challenges",
+      "loadingExisting": "Loading existing challenges…",
+      "noExisting": "No existing challenges were found.",
+      "existingError": "Existing challenges could not be loaded.",
+      "refreshExisting": "Refresh existing challenges",
+      "classesError": "Classes could not be loaded.",
+      "checkForm": "Check the class, words, dates, and target.",
+      "conflict": "This creation request conflicts with an existing request.",
+      "saveError": "Challenge could not be saved.",
+      "receiptMismatch": "The saved challenge receipt did not match the form.",
+      "responseInvalid": "The challenge response was invalid.",
+      "unconfirmed": "Creation could not be confirmed. Review this class before creating another challenge."
+    }
   },
   "TeacherAssignments": {
     "backToAssignments": "Back to assignments",
@@ -4195,6 +4331,157 @@
       "origins31": "The cover of the Primary Advantage Origins 3.1 workbook",
       "origins32": "The cover of the Primary Advantage Origins 3.2 workbook",
       "quest4": "The cover of the Primary Advantage Quest 4 workbook"
+    }
+  },
+  "TeacherManual": {
+    "tocTitle": "In this manual",
+    "openPage": "Open this page",
+    "help": "Help: <line>LINE ReadingAdvantage</line> · support@reading-advantage.com · 099-005-8038",
+    "signin": {
+      "title": "Sign in",
+      "lead": "Teachers sign in with an e-mail address and a password. The Google button is gone.",
+      "step1": "Open primary.reading-advantage.com.",
+      "step2": "Press the <ui>{teacherTab}</ui> tab. The sign-in page always opens on the <ui>{studentTab}</ui> tab.",
+      "step3": "In the <ui>{username}</ui> field, type your e-mail address. In the <ui>{password}</ui> field, type your password. Then press <ui>{signIn}</ui>.",
+      "oldSystem": "Teachers from the old system: the screen says “{staffHelp}”",
+      "firstTitle": "First sign-in",
+      "step4": "Use the temporary password from the school. The app shows the page <ui>{setNewPassword}</ui>.",
+      "step5": "Type a new password in <ui>{newPassword}</ui>. Type it again in <ui>{confirmPassword}</ui>. Then press <ui>{saveAndSignIn}</ui>.",
+      "rule": "The new password has 8 characters or more and is not the temporary password. After this, the temporary password stops working.",
+      "forgot": "Forgot the password: ask the school's administrator for a new password."
+    },
+    "class": {
+      "title": "Find your class",
+      "lead": "After sign-in, the app opens the teacher's <ui>{home}</ui>.",
+      "step1": "In the menu at the left, press <ui>{myClasses}</ui>.",
+      "step2": "Press the class name in the table. The app opens the class page.",
+      "phone": "On a phone: press the menu button ☰ at the top of the screen to open the full menu, with <ui>{manual}</ui>.",
+      "shortcut": "Shortcut: in the class table on the home page, the <ui>{startClassLink}</ui> link opens the class page, but it does not start the class. On the class page, press <ui>{startClass}</ui> again (section 3).",
+      "menuTitle": "The teacher menu",
+      "menu": "<ui>{home}</ui> <ui>{myClasses}</ui> <ui>{myStudents}</ui> <ui>{reports}</ui> <ui>{assignments}</ui> <ui>{manual}</ui>"
+    },
+    "startClass": {
+      "title": "Open the class for student sign-in",
+      "lead": "Students sign in with a 6-character code and 3 pictures only while the teacher's class is open.",
+      "step1": "On the class page, in the <ui>{classCard}</ui> card, press <ui>{startClass}</ui>.",
+      "step2": "Write the 6-character code under <ui>{classCode}</ui> on the board. The code shows only once. The student screen calls this code <ui>{studentCode}</ui>.",
+      "step3": "The students sign in with the “Student sign-in” sheet. The teacher sees the count at <ui>{signedInCount}</ui>.",
+      "step4": "At the end of the period, press <ui>{endClass}</ui>. The class also closes by itself after 3 hours.",
+      "newCode": "To see a code again, press <ui>{newCode}</ui>. The app shows a new code, and the old code stops working.",
+      "pictureSetting": "You can turn off <ui>{pictureSetting}</ui>. Then students sign in with the code and the name only. Some features, such as Reedy, need a full sign-in.",
+      "helpTitle": "One student cannot sign in",
+      "help1": "5 wrong taps: the app locks that student for 5 minutes. Wait, then try again.",
+      "help2": "Forgot the pictures: in the <ui>{students}</ui> list, press <ui>{resetPictures}</ui> on that student's row, and show the new pictures to the student at once, because they show only once. This button asks no question, and it signs that student out.",
+      "help3": "No pictures yet: press <ui>{setPictures}</ui> on that student's row."
+    },
+    "assignBook": {
+      "title": "Assign the book to the class (once)",
+      "lead": "Do this once for each class, before the first lesson.",
+      "step1": "On the class page, go down to the book part. A new class shows the text “{noBook}”.",
+      "step2": "At <ui>{book}</ui>, choose the book of the class.",
+      "step3": "At <ui>{mode}</ui>, choose <ui>{teacherLed}</ui>.",
+      "step4": "At <ui>{startDate}</ui>, choose the day of the first lesson. Then press <ui>{assignBook}</ui>. The app shows “{bookAssigned}”.",
+      "modeNote": "<ui>{teacherLed}</ui>: a student opens an app step only after the teacher marks that workbook step (4.2). <ui>{independent}</ui>: the student opens every step.",
+      "emptyNote": "No book in the list: the screen shows “{emptyCatalogue}”. Contact us (top of this page)."
+    },
+    "lesson": {
+      "title": "Teach the lesson",
+      "lead": "The teacher teaches from the workbook and presses in the app one step at a time. The app opens the same step for the students.",
+      "step1": "On the class page, in the <ui>{nowInClass}</ui> card, press <ui>{openLesson}</ui>. The card shows the current lesson and the <ui>{nextStep}</ui>.",
+      "step2": "The <ui>{live}</ui> box on the lesson page shows the first step that the class has not done: the teacher actions, the teacher's words, and a <ui>{tip}</ui>. Below it, the 13-step guide shows all steps with <ui>{teacherActions}</ui>, <ui>{teacherLanguage}</ui>, <ui>{studentActions}</ui>, <ui>{watchFor}</ui>, and <ui>{script}</ui>.",
+      "step3": "When the class finishes the step in the workbook, press <ui>{markDone}</ui>. The app opens the same step for the students, and the button changes to <ui>{undo}</ui>. Then press <ui>{next}</ui> to go to the next step. A wrong press: press <ui>{undo}</ui>.",
+      "step4": "Whole-class reading: press <ui>{projector}</ui>. Click a paragraph to focus it. Press <ui>{showAnswer}</ui> to reveal the answers.",
+      "markAll": "Mark every step. A student opens an app step only after the teacher presses <ui>{markDone}</ui>. Until then, the student sees “{lockedText}”.",
+      "steps13": "The workbook has 13 steps. The student app has 14 steps. The app matches the steps."
+    },
+    "afterLesson": {
+      "title": "After the lesson",
+      "step1": "On the class page, press <ui>{lessonPlan}</ui>, then <ui>{classProgress}</ui>. The table shows the app steps that each student did, of 14.",
+      "step2": "Go back to <ui>{lessonPlan}</ui> and press <ui>{markTaught}</ui> on that lesson. This button marks all 13 steps done, so the students can open every app step. If it is the current lesson, the class moves to the next lesson. Press it only after the lesson ends.",
+      "colors": "Colors in the table: {legend}",
+      "buttonsTitle": "Useful buttons on the lesson page",
+      "rehearsal": "<ui>{rehearsal}</ui>: see the lesson as a student sees it. Nothing saves.",
+      "print": "<ui>{printLesson}</ui>: in the print window, choose A4 and turn off “Headers and footers”.",
+      "teachAgain": "<ui>{teachAgain}</ui> (in the <ui>{lessonPlan}</ui>): starts the lesson again. Each student's work stays in the history, and the XP stays."
+    },
+    "homework": {
+      "title": "Give homework",
+      "lead": "Homework is one reading story. The teacher chooses a story and gives it to the whole class or to some students.",
+      "step1": "In the menu, press <ui>{assignments}</ui>, then <ui>{newAssignment}</ui>. The app opens the story list.",
+      "step2": "Choose a story and open it.",
+      "step3": "On the story page, press the <ui>{assignButton}</ui> button.",
+      "step4": "In the <ui>{createAssignment}</ui> window: choose the <ui>{classroom}</ui>, type the <ui>{assignmentName}</ui> and the <ui>{assignmentDescription}</ui>, choose the <ui>{studentsField}</ui> or <ui>{selectAll}</ui>, choose the <ui>{dueDate}</ui>, then press <ui>{submit}</ui>. The app shows “{saved}”.",
+      "step5": "See the results: in the menu <ui>{assignments}</ui>, choose the class, then press the assignment name to see the progress of each student.",
+      "studentsSee": "Where students see the homework: on the student home, in the <ui>{todayLesson}</ui> card (the assignment with the nearest due date), and in the menu <ui>{assignments}</ui>, on the page <ui>{myWork}</ui>.",
+      "atHome": "Homework at home needs the username and password. The code, the pictures, and the QR card work only while the teacher's class is open. At home, students sign in with the username and password from the <ui>{classSheet}</ui> (section 6)."
+    },
+    "classSheet": {
+      "title": "Class sheet and QR cards: read before you press",
+      "lead": "Both buttons are on the class page, in the <ui>{classCard}</ui> card: <ui>{classSheet}</ui> and <ui>{qrCards}</ui>.",
+      "versionATitle": "If the team gave your class its sheet",
+      "versionA": "The team already gave your class its class sheet. Use that sheet and keep one copy. Press <ui>{makeSheet}</ui> only when the whole sheet is lost.",
+      "versionBTitle": "If your class has no sheet yet",
+      "versionB": "Make the class sheet once, before the first lesson, outside class time. Then print it with the steps below.",
+      "sheetIntro": "The class sheet shows each student's username and password, for sign-in away from the classroom, for example homework at home.",
+      "warning": "When you press <ui>{makeSheet}</ui>: the app sets a new password for every student in this class. Every student is signed out. The old sheet stops working. The new passwords show only once. Make the sheet outside class time, and print it at once.",
+      "oneStudent": "One student forgot the password: use the <ui>{studentNewPassword}</ui> button on that student's row (below).",
+      "step1": "Press <ui>{classSheet}</ui>, then <ui>{makeSheet}</ui>.",
+      "step2": "In the window <ui>{sheetConfirmTitle}</ui>, press <ui>{sheetConfirm}</ui>.",
+      "step3": "Press <ui>{print}</ui> at once, before you leave the page. Cut the sheet and give each student only the part with the student's name.",
+      "forgotTitle": "A student forgets the password",
+      "forgot": "In the <ui>{students}</ui> list, press <ui>{studentNewPassword}</ui> on that student's row. In the window <ui>{passwordConfirmTitle}</ui>, press <ui>{passwordConfirm}</ui>. The app sets a new password for that student only, and signs that student out. The other students keep their passwords. The new password shows only once: the student writes it down at once, or you press <ui>{passwordPrint}</ui>.",
+      "qrTitle": "QR cards: read before you press",
+      "qrLead": "One QR card signs one student in with one scan. It works only while the teacher's class is open.",
+      "step4": "Press <ui>{qrCards}</ui>, then <ui>{issueCards}</ui>. The app makes cards only for students without a card.",
+      "step5": "Press <ui>{printCards}</ui> at once: a card shows only once.",
+      "lostCard": "Lost card: in the <ui>{students}</ui> list, press <ui>{newCard}</ui> on that student's row and confirm. The old card stops at once, and that student is signed out. A QR card works only while the teacher's class is open."
+    },
+    "figures": {
+      "signin": "The sign-in page, Teacher tab",
+      "newPassword": "The Set a new password page",
+      "menu": "The teacher menu",
+      "myClasses": "My classes",
+      "classCard": "The class sign-in card before the class starts",
+      "classStarted": "After Start class: the class code (a test code, hidden)",
+      "roster": "The student list: the picture password buttons",
+      "assignBook": "The book form",
+      "classBook": "The class book card on the class page",
+      "lessonGuide": "The lesson page: the live guide and the Projector button",
+      "projector": "The projector view",
+      "lessonPlan": "The lesson plan: the Class progress button",
+      "progressGrid": "The class progress table",
+      "markTaught": "The lesson plan: the Mark taught button",
+      "assignments": "The Assignments page",
+      "articleAssign": "The story page: the Assignments button",
+      "assignForm": "The Create assignment window",
+      "classSheet": "The class sheet page",
+      "classSheetConfirm": "The class sheet confirmation",
+      "qrCards": "The QR cards page",
+      "newCardConfirm": "The new card confirmation",
+      "assignDue": "The Create assignment window: the due date and the Submit button"
+    },
+    "testData": "Picture from the app, test data"
+  },
+  "RpgRewards": {
+    "heading": "Hero vs. Zombie rewards",
+    "newHeading": "New Hero vs. Zombie rewards",
+    "loading": "Loading Hero vs. Zombie rewards…",
+    "tryAgain": "Try again",
+    "unlocked": "Unlocked",
+    "locked": "Locked: {requirement}",
+    "lockedFallback": "Complete the linked quest.",
+    "equip": "Equip",
+    "equipping": "Equipping…",
+    "equipped": "Equipped",
+    "equipAria": "Equip {name}",
+    "equippingAria": "Equipping {name}",
+    "equippedAria": "Equipped {name}",
+    "loadFailed": "Rewards could not be loaded. Try again.",
+    "equipFailed": "Reward could not be equipped. Try again.",
+    "quests": {
+      "first-ward": "Finish Hero vs. Zombie after making at least one answer attempt.",
+      "complete-the-ward": "Win Hero vs. Zombie after making at least one answer attempt.",
+      "perfect-english-audio": "Win Hero vs. Zombie with Thai translation prompts and English term audio answers. Complete every item correctly on the first attempt."
     }
   }
 }

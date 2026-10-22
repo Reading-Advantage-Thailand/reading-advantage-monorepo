@@ -20,11 +20,14 @@ export const worldX = (px: number): number => (px - ARENA.width / 2) / PX_PER_M;
 /** World y of an arena y (up is positive). */
 export const worldY = (py: number): number => (ARENA.height - py) / PX_PER_M;
 
-/** Ground props along the bottom: model, world x, depth behind the stage, scale. */
+/**
+ * Ground props along the bottom: model, world x, depth behind the stage, scale. The trees are about
+ * 3.5 m tall (scale 0.7 of the 5 m model), so the 2 m griffin does not look like a toy beside them.
+ */
 const PLAN: [string, number, number, number][] = [
-  ['pine-tree', -10.5, 3.2, 1.5], ['oak-tree', -8.2, 4.5, 1.4], ['rock-cluster', -6.4, 2.6, 1.1], ['bush', -4.6, 2.2, 1.0],
-  ['pine-tree', -2.2, 5.0, 1.6], ['oak-tree', 0.8, 4.0, 1.5], ['bush', 2.6, 2.4, 1.0], ['rock-cluster', 4.2, 3.4, 1.3],
-  ['pine-tree', 6.4, 3.0, 1.5], ['oak-tree', 8.6, 5.0, 1.4], ['bush', 10.4, 2.4, 1.0], ['pine-tree', 11.6, 4.0, 1.4],
+  ['pine-tree', -10.5, 3.2, 1.05], ['oak-tree', -8.2, 4.5, 1.0], ['rock-cluster', -6.4, 2.6, 1.1], ['bush', -4.6, 2.2, 1.0],
+  ['pine-tree', -2.2, 5.0, 1.1], ['oak-tree', 0.8, 4.0, 1.05], ['bush', 2.6, 2.4, 1.0], ['rock-cluster', 4.2, 3.4, 1.3],
+  ['pine-tree', 6.4, 3.0, 1.05], ['oak-tree', 8.6, 5.0, 1.0], ['bush', 10.4, 2.4, 1.0], ['pine-tree', 11.6, 4.0, 1.0],
 ];
 
 export interface Sky {

@@ -3,6 +3,8 @@ import {
   db,
   eq,
   and,
+  or,
+  isNull,
   desc,
   count,
 } from '@reading-advantage/db';
@@ -95,6 +97,7 @@ export async function createAssignment(data: createAssignmentData) {
         const studentAssignmentsData = students.map((studentId: string) => ({
           assignmentId: assignment.id,
           studentId,
+          status: "NOT_STARTED",
         }));
 
         await tx.insert(studentAssignments).values(studentAssignmentsData);
@@ -132,7 +135,8 @@ export async function getStudentAssignments(
     if (status && status !== "all") {
       const statusValue = parseInt(status);
       if (statusValue === 0) {
-        whereConditions.push(eq(studentAssignments.status, "NOT_STARTED"));
+        // Rows made by the app before 2026-10-21 have no status; they are not started.
+        whereConditions.push(or(eq(studentAssignments.status, "NOT_STARTED"), isNull(studentAssignments.status)));
       } else if (statusValue === 1) {
         whereConditions.push(eq(studentAssignments.status, "IN_PROGRESS"));
       } else if (statusValue === 2) {
@@ -534,11 +538,14 @@ export async function getAssignmentActivityById(id: string, userId: string) {
       )
       .limit(1);
 
-    if (!assignmentActivity) {
-      throw new Error("Assignment activity not found");
-    }
-
-    return assignmentActivity;
+    // No row yet means no sentence activity is done (as getArticleActivity in lessonModel). A
+    // lesson whose progress row has no activity row showed a load error at step 12 (PR, J6, 2026-10-21).
+    return assignmentActivity ?? {
+      isSentenceMatchingCompleted: false,
+      isSentenceOrderingCompleted: false,
+      isSentenceWordOrderingCompleted: false,
+      isSentenceClozeTestCompleted: false,
+    };
   } catch (error) {
     console.error("Model Error - getAssignmentActivityById:", error);
     if (error instanceof Error) {

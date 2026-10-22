@@ -14,6 +14,7 @@ import {
   classrooms,
   classroomStudents,
   studentAssignments,
+  users,
 } from '@reading-advantage/db';
 import { recordLessonStep } from "./classBookController";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,6 +35,28 @@ import {
   isAssignmentManager,
 } from "../utils/assignment-access";
 import { CreateAssignmentBodySchema, LessonProgressBodySchema, uuidText } from "./assignment-schemas";
+
+/**
+ * Maps one joined student-assignment row to the student entry of the assignment dashboard.
+ * A missing status (rows made by the app before 2026-10-21) counts as not started.
+ * @param row The row with the student assignment id, student id, status, name, and username.
+ * @returns The entry with the status code (0 not started, 1 in progress, 2 completed) and the name.
+ */
+export function toAssignmentStudent(row: {
+  studentAssignmentId: string | null;
+  studentAssignmentStudentId: string | null;
+  studentAssignmentStatus: string | null;
+  studentName: string | null;
+  studentUsername: string | null;
+}) {
+  const status = row.studentAssignmentStatus === "IN_PROGRESS" ? 1 : row.studentAssignmentStatus === "COMPLETED" ? 2 : 0;
+  return {
+    id: row.studentAssignmentId,
+    studentId: row.studentAssignmentStudentId,
+    status,
+    displayName: row.studentName || row.studentUsername || undefined,
+  };
+}
 
 const unauthorized = () => NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 const forbidden = () => NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -98,7 +121,8 @@ export async function fetchAssignments(req: NextRequest) {
         studentAssignmentId: studentAssignments.id,
         studentAssignmentStudentId: studentAssignments.studentId,
         studentAssignmentStatus: studentAssignments.status,
-        studentName: studentAssignments.studentId,
+        studentName: users.name,
+        studentUsername: users.displayUsername,
       })
         .from(assignments)
         .leftJoin(articles, eq(articles.id, assignments.articleId))
@@ -107,6 +131,7 @@ export async function fetchAssignments(req: NextRequest) {
           studentAssignments,
           eq(studentAssignments.assignmentId, assignments.id),
         )
+        .leftJoin(users, eq(users.id, studentAssignments.studentId))
         .where(conditions.length ? and(...conditions) : undefined)
         .orderBy(desc(assignments.createdAt));
 
@@ -128,22 +153,10 @@ export async function fetchAssignments(req: NextRequest) {
         articleTitle: first.articleTitle,
       };
 
-      // Stitch AssignmentStudent rows (with studentId → user mapping deferred).
+      // Stitch AssignmentStudent rows with the student name.
       const students = assignmentRows
         .filter((row) => row.studentAssignmentId)
-        .map((sa) => ({
-          id: sa.studentAssignmentId,
-          studentId: sa.studentAssignmentStudentId,
-          status:
-            sa.studentAssignmentStatus === "NOT_STARTED"
-              ? 0
-              : sa.studentAssignmentStatus === "IN_PROGRESS"
-                ? 1
-                : sa.studentAssignmentStatus === "COMPLETED"
-                  ? 2
-                  : 0,
-          displayName: undefined as string | undefined,
-        }));
+        .map(toAssignmentStudent);
 
       return NextResponse.json({ meta, students }, { status: 200 });
     } else {
@@ -174,7 +187,8 @@ export async function fetchAssignments(req: NextRequest) {
         studentAssignmentId: studentAssignments.id,
         studentAssignmentStudentId: studentAssignments.studentId,
         studentAssignmentStatus: studentAssignments.status,
-        studentName: studentAssignments.studentId,
+        studentName: users.name,
+        studentUsername: users.displayUsername,
       })
         .from(assignments)
         .leftJoin(articles, eq(articles.id, assignments.articleId))
@@ -182,6 +196,7 @@ export async function fetchAssignments(req: NextRequest) {
           studentAssignments,
           eq(studentAssignments.assignmentId, assignments.id),
         )
+        .leftJoin(users, eq(users.id, studentAssignments.studentId))
         .where(whereConditions.length ? and(...whereConditions) : undefined)
         .orderBy(desc(assignments.createdAt))
         .limit(limit)
@@ -224,19 +239,7 @@ export async function fetchAssignments(req: NextRequest) {
             createdAt: row.createdAt,
             articleTitle: row.articleTitle,
           },
-          students: rows.map((sa) => ({
-            id: sa.studentAssignmentId,
-            studentId: sa.studentAssignmentStudentId,
-            status:
-              sa.studentAssignmentStatus === "NOT_STARTED"
-                ? 0
-                : sa.studentAssignmentStatus === "IN_PROGRESS"
-                  ? 1
-                  : sa.studentAssignmentStatus === "COMPLETED"
-                    ? 2
-                    : 0,
-            displayName: undefined as string | undefined,
-          })),
+          students: rows.map(toAssignmentStudent),
           article: {
             id: row.articleId,
             title: row.articleTitle,

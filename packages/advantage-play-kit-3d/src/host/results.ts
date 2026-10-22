@@ -13,7 +13,17 @@ export interface Run {
   evidence: StoryGameEvidence;
 }
 
-export function renderResults(el: HTMLElement, run: Run, t: Translate): void {
+/**
+ * Shows the results card of a run.
+ * @param el The screen element.
+ * @param run The run: its game, input, result, and evidence.
+ * @param t The host catalog.
+ * @param awarded The XP that the server awarded, when the app saves the run. The card shows the
+ *   saving text until it settles, then that number, or the not-saved text when the save fails or
+ *   gives no number. Absent (the app saves nothing): the card shows no XP.
+ *   The card never shows `run.result.xp`, the game's own number (it differed from the server).
+ */
+export function renderResults(el: HTMLElement, run: Run, t: Translate, awarded?: Promise<number | undefined>): void {
   const stars = starsOf(run.evidence);
   const pct = Math.round(firstTryAccuracy(run.evidence.items) * 100);
   const answers = run.evidence.items.map((i) => `<span class="chip ${i.correctFirstTry ? 'ok' : ''}">${esc(i.label)}</span>`).join('');
@@ -22,7 +32,7 @@ export function renderResults(el: HTMLElement, run: Run, t: Translate): void {
     <div class="panel">
       <h2>${esc(t('host.results.title'))}</h2>
       <div class="stars" aria-label="${stars} / 3">${[1, 2, 3].map((n) => `<span class="${n <= stars ? 'lit' : ''}">★</span>`).join('')}</div>
-      <div class="xp">${esc(t('host.results.xp', { xp: run.result.xp }))}<small>${esc(t('host.results.xpNote', { pct }))}</small></div>
+      <div class="xp"><span data-xp>${awarded ? esc(t('host.results.xpSaving')) : ''}</span><small>${esc(t('host.results.xpNote', { pct }))}</small></div>
       ${answers ? `<h3>${esc(t('host.results.storyWords'))}</h3><div class="chips">${answers}</div>` : ''}
       ${practice ? `<h3>${esc(t('host.results.practice'))}</h3><div class="chips">${practice}</div>` : ''}
       <div class="actions">
@@ -30,4 +40,10 @@ export function renderResults(el: HTMLElement, run: Run, t: Translate): void {
         <button class="btn gold" data-done>${esc(t('host.results.done'))}</button>
       </div>
     </div>`;
+  // The node of this card: a later card ("again") is not changed by a late answer.
+  const xpEl = el.querySelector('[data-xp]');
+  const showXp = (xp: number | undefined) => {
+    if (xpEl) xpEl.textContent = t(typeof xp === 'number' ? 'host.results.xp' : 'host.results.xpNotSaved', { xp: xp ?? 0 });
+  };
+  awarded?.then(showXp, () => showXp(undefined));
 }

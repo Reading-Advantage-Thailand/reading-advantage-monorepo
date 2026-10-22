@@ -93,6 +93,7 @@ export async function createAssignment({
         input.studentIds.map((studentId) => ({
           assignmentId: assignment.id,
           studentId,
+          status: "NOT_STARTED",
         }))
       );
     }

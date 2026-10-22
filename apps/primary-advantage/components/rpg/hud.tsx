@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
 import { gpBalance } from "@reading-advantage/domain/primary-avatar";
-import { Coins, Gem } from "./chrome";
+import { Coins } from "./chrome";
+import { LiveGem } from "./live-gem";
 
 /**
  * The header HUD of a student: the coin purse (GP) and the XP gem. A failed GP read hides the
@@ -22,7 +23,7 @@ export async function StudentHud({ user }: { user: { id: string; schoolId?: stri
   return (
     <div className="flex items-center gap-2" data-student-hud>
       {gp !== null ? <Coins gp={gp} label={t("gp", { gp })} /> : null}
-      <Gem xp={user.xp ?? 0} label={t("xp", { xp: user.xp ?? 0 })} className="hidden sm:inline-flex" />
+      <LiveGem xp={user.xp ?? 0} className="hidden sm:inline-flex" />
     </div>
   );
 }

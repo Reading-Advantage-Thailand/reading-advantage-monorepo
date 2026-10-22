@@ -13,6 +13,11 @@ export const STUDENT_LOGIN_LIMITS = {
   cardMiss: { windowMs: 10 * 60 * 1000, maxAttempts: 30 } satisfies RateLimitConfig,
   /** Class password resets (class sheet) for one class. Each reset hashes a password per student. */
   classPasswordReset: { windowMs: 10 * 60 * 1000, maxAttempts: 5 } satisfies RateLimitConfig,
+  /**
+   * One-student password resets for one class. Its own bucket, so that a teacher can help several
+   * students on the first day without the class sheet limit.
+   */
+  studentPasswordReset: { windowMs: 10 * 60 * 1000, maxAttempts: 30 } satisfies RateLimitConfig,
 } as const;
 
 /**
@@ -105,5 +110,17 @@ export async function recordCardMiss(store: RateLimitStore, ip: string | null): 
  */
 export async function guardClassPasswordReset(store: RateLimitStore, classroomId: string): Promise<void> {
   const result = await consumeRateLimit(store, `student-class-password-reset:${classroomId}`, STUDENT_LOGIN_LIMITS.classPasswordReset);
+  if (!result.allowed) throw limited(result.retriesAfter);
+}
+
+/**
+ * Charges one one-student password reset to the class bucket.
+ * @param store Shared rate-limit store.
+ * @param classroomId The class of the student.
+ * @returns Resolves when the reset may go on.
+ * @throws {StudentLoginError} With code `rate_limited` when the bucket is full.
+ */
+export async function guardStudentPasswordReset(store: RateLimitStore, classroomId: string): Promise<void> {
+  const result = await consumeRateLimit(store, `student-password-reset:${classroomId}`, STUDENT_LOGIN_LIMITS.studentPasswordReset);
   if (!result.allowed) throw limited(result.retriesAfter);
 }

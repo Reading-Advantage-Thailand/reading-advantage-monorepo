@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 
+import en from "../../../messages/en.json";
+import th from "../../../messages/th.json";
+import cn from "../../../messages/cn.json";
+import tw from "../../../messages/tw.json";
+import vi from "../../../messages/vi.json";
 import { challengeCapabilityOf, challengeGames, gameFor, isSentenceGame, LEGACY_GAME_IDS, OLD_GAME_PATHS, oldGameTarget, playableGames, practiceLocaleOf } from "../catalog";
 
 describe("gameFor", () => {
@@ -70,5 +75,14 @@ describe("oldGameTarget", () => {
     expect(oldGameTarget("vocabulary", "potion-rush")).toBeUndefined();
     expect(oldGameTarget("sentences", "rune-match")).toBeUndefined();
     expect(oldGameTarget("toString", "x")).toBeUndefined();
+  });
+});
+
+describe("catalog descriptions", () => {
+  it("has a pitch for every playable game in each locale (Thai student catalog, 2026-10-21)", () => {
+    for (const messages of [en, th, cn, tw, vi]) {
+      const pitch = messages.LessonGames.pitch as Record<string, string>;
+      for (const game of playableGames()) expect(pitch[game.id], game.id).toBeTruthy();
+    }
   });
 });

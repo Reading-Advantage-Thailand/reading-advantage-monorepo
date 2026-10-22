@@ -92,6 +92,22 @@ describe('startStoryGame', () => {
     await session.destroy();
   });
 
+  it('shows the load error, not the device message, when a pack file gives 404, and tries again', async () => {
+    const fetchMock = vi.fn(async () => new Response('not found', { status: 404 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const catalog = { host: { ...hostCatalog.host, gate: { title: 'This device is not supported for this game' }, loadError: { title: 'The game could not start', retry: 'Try again' } } };
+    const twoViews = { ...cartridge, manifest: { ...cartridge.manifest, renderers: ['three', 'phaser'] } } as unknown as Cartridge;
+    const { container, session } = setup({ cartridge: twoViews, setting: 'phaser', catalogs: [catalog] });
+    (container.querySelector('[data-start]') as HTMLElement).click();
+    await vi.waitFor(() => expect(container.querySelector('.gate h2')?.textContent).toBe('The game could not start'));
+    expect(container.textContent).not.toContain('not supported');
+    const calls = fetchMock.mock.calls.length;
+    (container.querySelector('[data-retry]') as HTMLElement).click();
+    await vi.waitFor(() => expect(fetchMock.mock.calls.length).toBeGreaterThan(calls));
+    await session.destroy();
+    vi.unstubAllGlobals();
+  });
+
   it('calls onExit from Back and clears the page on destroy', async () => {
     const { container, onExit, session } = setup();
     (container.querySelector('[data-back]') as HTMLElement).click();

@@ -9,6 +9,8 @@ import { GameHost } from "../game-host";
 
 const mocks = vi.hoisted(() => ({
   push: vi.fn(),
+  /** What the app's onComplete returned to the kit: the promise of the saved XP, or nothing. */
+  awarded: undefined as unknown,
   launch: null as unknown,
   failureMessage: null as string | null,
   retry: vi.fn(),
@@ -34,10 +36,10 @@ vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
   useStudentChallengeRun: () => ({ launch: mocks.launch, loading: false, failureMessage: mocks.failureMessage, retry: mocks.retry }),
   useStudentRpg: () => mocks.rpg,
 }));
-type RewardPanelProps = { assetUrls: Record<string, string>; credit?: string | null };
+type RewardPanelProps = { assetUrls: Record<string, string>; credit?: string | null; labels?: { heading?: string } };
 vi.mock("@reading-advantage/advantage-play-kit/presentation", () => ({
-  RpgRewardDisclosure: ({ assetUrls, credit }: RewardPanelProps) => <div data-testid="rpg-disclosure" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} />,
-  RpgUnlockNotice: ({ assetUrls, credit }: RewardPanelProps) => <div data-testid="rpg-unlock" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} />,
+  RpgRewardDisclosure: ({ assetUrls, credit, labels }: RewardPanelProps) => <div data-testid="rpg-disclosure" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} data-heading={labels?.heading} />,
+  RpgUnlockNotice: ({ assetUrls, credit, labels }: RewardPanelProps) => <div data-testid="rpg-unlock" data-icon={assetUrls["echo-staff"]} data-credit={String(credit)} data-heading={labels?.heading} />,
 }));
 // The prepared clips: the route has its own tests; the host only needs the content and the session.
 vi.mock("@/lib/games/answer-audio", async (importOriginal) => ({
@@ -54,12 +56,12 @@ vi.mock("@reading-advantage/game-cartridges-3d", async (importOriginal) => {
 vi.mock("@reading-advantage/advantage-play-kit-3d/react", () => ({
   StoryGameHost: (props: {
     input: { id: string } | unknown[]; seed?: number; replay?: boolean; cartridge: { manifest: { id: string } };
-    onPhase?: (phase: string) => void; onComplete: (result: unknown, outcome: string, evidence: unknown, answerEvidence?: unknown) => void; onExit: () => void;
+    onPhase?: (phase: string) => void; onComplete: (result: unknown, outcome: string, evidence: unknown, answerEvidence?: unknown) => unknown; onExit: () => void;
     answerAudio?: () => unknown; helper?: boolean;
   }) => (
     <div data-testid="kit" data-input={Array.isArray(props.input) ? `apk:${props.input.length}` : props.input.id} data-seed={props.seed ?? "random"} data-replay={String(props.replay)} data-game={props.cartridge.manifest.id} data-audio={String(Boolean(props.answerAudio))} data-helper={String(props.helper)}>
       <button type="button" onClick={() => props.onPhase?.("playing")}>start</button>
-      <button type="button" onClick={() => props.onComplete(props.answerAudio ? { accuracy: 0.67, xp: 10, score: 200, correctAnswers: 2, totalAttempts: 3 } : { accuracy: 0.8, xp: 40, score: 800, correctAnswers: 8, totalAttempts: 10 }, "victory", evidence(props.cartridge.manifest.id), props.answerAudio ? answerEvidence : undefined)}>finish</button>
+      <button type="button" onClick={() => (mocks.awarded = props.onComplete(props.answerAudio ? { accuracy: 0.67, xp: 10, score: 200, correctAnswers: 2, totalAttempts: 3 } : { accuracy: 0.8, xp: 40, score: 800, correctAnswers: 8, totalAttempts: 10 }, "victory", evidence(props.cartridge.manifest.id), props.answerAudio ? answerEvidence : undefined))}>finish</button>
       <button type="button" onClick={() => props.onPhase?.("results")}>results</button>
       <button type="button" onClick={props.onExit}>exit</button>
     </div>
@@ -146,6 +148,20 @@ describe("GameHost", () => {
     expect(onCompleted).toHaveBeenCalledWith({ correctAnswers: 8, totalAttempts: 10, victory: true, xpEarned: 40 });
   });
 
+  it("gives the kit end card the saved XP, not the game's own number, and tells the header gem", async () => {
+    const heard: unknown[] = [];
+    const listen = (event: Event) => heard.push((event as CustomEvent).detail);
+    window.addEventListener("primary:xp-awarded", listen);
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" ownerKey="s:1" input={practice(10, 8)} />, { locale: "en" });
+    await screen.findByTestId("kit", {}, { timeout: 5000 });
+    // The server awards 7; the game's own result says 40. The next fetch is the completion post.
+    fetchMock.mockImplementationOnce(async () => new Response(JSON.stringify({ xpEarned: 7, activityId: "a1", duplicate: false, status: 200 }), { status: 200 }));
+    fireEvent.click(screen.getByText("finish"));
+    await expect(mocks.awarded).resolves.toBe(7);
+    expect(heard).toEqual([7]);
+    window.removeEventListener("primary:xp-awarded", listen);
+  });
+
   it("puts the article id of a lesson run in the saved completion", async () => {
     renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} articleId="11111111-1111-4111-8111-111111111111" />, { locale: "en" });
     await screen.findByTestId("kit", {}, { timeout: 5000 });
@@ -161,6 +177,8 @@ describe("GameHost", () => {
     fireEvent.click(screen.getByText("finish"));
     expect(onResult).toHaveBeenCalledWith({ correctAnswers: 8, totalAttempts: 10, victory: true });
     expect(fetchMock).not.toHaveBeenCalledWith("/api/v1/apk/complete", expect.anything());
+    // No save, no XP: the end card shows no number.
+    expect(mocks.awarded).toBeUndefined();
   });
 
   it("calls the fallback callback when the game cannot load", async () => {
@@ -280,12 +298,14 @@ describe("GameHost", () => {
     // The Forge reward icons, with no ElvGames credit line.
     expect(screen.getByTestId("rpg-disclosure")).toHaveAttribute("data-icon", "/rpg/items/echo-staff.webp");
     expect(screen.getByTestId("rpg-disclosure")).toHaveAttribute("data-credit", "null");
+    expect(screen.getByTestId("rpg-disclosure")).toHaveAttribute("data-heading", testMessages.en.RpgRewards.heading);
     fireEvent.click(screen.getByText("start"));
     expect(screen.queryByTestId("rpg-disclosure")).toBeNull();
     mocks.rpg.newlyUnlockedCosmetics = [{ id: "apprentice-wand" }];
     fireEvent.click(screen.getByText("results"));
     expect(await screen.findByTestId("rpg-unlock")).toHaveAttribute("data-icon", "/rpg/items/echo-staff.webp");
     expect(screen.getByTestId("rpg-unlock")).toHaveAttribute("data-credit", "null");
+    expect(screen.getByTestId("rpg-unlock")).toHaveAttribute("data-heading", testMessages.en.RpgRewards.heading);
     mocks.rpg.newlyUnlockedCosmetics = [];
   });
 

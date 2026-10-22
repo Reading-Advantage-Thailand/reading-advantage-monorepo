@@ -32,6 +32,11 @@ describe("PreviewBanner", () => {
     expect(screen.getByRole("status").className).toContain("relative");
     expect(screen.getByRole("status").className).toContain("z-10");
   });
+
+  it("puts the note on a dark backing, so it reads on the day sky", () => {
+    renderWithMessages(<PreviewBanner exitHref="/teacher/dashboard" />);
+    expect(screen.getByText(testMessages.en.StudentView.bannerNote).className).toContain("bg-black/55");
+  });
 });
 
 describe("StudentViewProvider", () => {

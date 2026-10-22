@@ -52,7 +52,8 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - Fixed after the captures (2026-10-06): the header purse refreshes after a purchase; a student with no hero shows the Forge silhouette on the projector (skin 1.1.0, `kit/heroes/no-hero.webp`). Still from live play at the rehearsal: the slash frame of shot 4 and the coin rain of shot 5.
 
 ## Look acceptance for public use
-- [x] Owner accepted the look of Phases 2–5 for public use, 2026-10-07 (Daniel, via the PR session). Phase 1 has no captures in the curated set and no mark.
+- [x] Owner accepted the look of Phases 2–5 for public use, 2026-10-07 (Daniel, via the PR session).
+- [x] Owner accepted the look of Phase 1 (the shell and the home page, 546d45376) for public use, 2026-10-21 (Daniel, via the PR session, D10: "accept D10, the home page look is fine"; PR record advantage-pr e7cba0f).
 
 ## Open defects (owner, 2026-10-06)
 - [x] The side menu draws over the full-screen story game player at desktop widths (seen on the Labyrinth briefing at 1024 px). Fix the stacking, then open all 28 games at desktop width and confirm the briefing, the play screen, and the results are clear of the menu. Recapture the Phase 5 frames after the fix.

@@ -5,6 +5,7 @@ import type { ReactElement } from "react";
 import { RpgRewardDisclosure } from "../presentation/rpg-reward-disclosure.js";
 import { resolveRpgRewardAssetUrls } from "../presentation/rpg-reward-assets.js";
 import type { RpgRewardAssetUrls } from "../presentation/rpg-reward-panel.js";
+import { rpgFailureText, rpgRewardText, type RpgRewardLabelsInput } from "../presentation/rpg-reward-labels.js";
 import { getRetroArcadeButtonStyle } from "../presentation/retro-arcade-theme.js";
 import { useStudentRpg } from "./use-student-rpg.js";
 
@@ -22,11 +23,13 @@ export interface StudentRpgCatalogPanelProps {
   readonly assetUrls?: RpgRewardAssetUrls;
   /** Asset credit under the list; null when the host icons need none. */
   readonly credit?: string | null;
+  /** The reward text in the host language; each missing label stays English. */
+  readonly labels?: RpgRewardLabelsInput;
 }
 
 /**
  * Shows confirmed RPG rewards on an authenticated student catalog.
- * @param props Validated owner identity and optional host paths.
+ * @param props Validated owner identity, optional host paths, and the reward text.
  * @returns The catalog reward disclosure or no content without an owner.
  */
 export function StudentRpgCatalogPanel({
@@ -36,12 +39,14 @@ export function StudentRpgCatalogPanel({
   inventoryNote,
   assetUrls,
   credit,
+  labels,
 }: StudentRpgCatalogPanelProps): ReactElement | null {
+  const text = rpgRewardText(labels);
   const enabled = Boolean(ownerKey);
   const rpg = useStudentRpg({ endpoint, ownerKey: ownerKey ?? "", enabled });
 
   if (!enabled) return null;
-  if (rpg.loading && rpg.state === null) return <p role="status">Loading Wizard rewards…</p>;
+  if (rpg.loading && rpg.state === null) return <p role="status">{text.loading}</p>;
   if (rpg.state) {
     return (
       <RpgRewardDisclosure
@@ -53,20 +58,21 @@ export function StudentRpgCatalogPanel({
         onEquip={(cosmeticId) => void rpg.equip(cosmeticId)}
         inventoryNote={inventoryNote}
         credit={credit}
+        labels={labels}
       />
     );
   }
   if (!rpg.failureMessage) return null;
 
   return (
-    <section aria-label="Wizard rewards" role="alert" style={{ border: "2px solid #f87171", padding: "0.75rem" }}>
-      <p style={{ margin: 0 }}>{rpg.failureMessage}</p>
+    <section aria-label={text.heading} role="alert" style={{ border: "2px solid #f87171", padding: "0.75rem" }}>
+      <p style={{ margin: 0 }}>{rpgFailureText(rpg.failureMessage, text)}</p>
       <button
         type="button"
         onClick={() => void rpg.retry()}
         style={{ ...getRetroArcadeButtonStyle("secondary"), marginBlockStart: "0.75rem" }}
       >
-        Try again
+        {text.tryAgain}
       </button>
     </section>
   );

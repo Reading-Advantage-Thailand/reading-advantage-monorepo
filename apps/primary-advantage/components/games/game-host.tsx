@@ -15,6 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { answerAudioControllerOf, fetchAnswerAudio, offersAnswerAudio } from "@/lib/games/answer-audio";
 import { gameFor, practiceLocaleOf } from "@/lib/games/catalog";
 import { rewardIconUrls } from "@/lib/rpg/places";
+import { announceXp } from "@/components/rpg/live-gem";
 import { canRunChallenge, hostCompletionInput } from "@/lib/games/completion";
 
 /** The saved completion numbers (Class Quest FR-8): the battle page posts them as its heartbeat. */
@@ -83,6 +84,7 @@ type LoadError = "game" | "load" | "unauthenticated";
 export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, articleId, helper = false, className, onCompleted, onResult, onLoadError, onExit }: GameHostProps) {
   const t = useTranslations("ApkHost");
   const tStory = useTranslations("StoryGames");
+  const tRoot = useTranslations();
   const router = useRouter();
   const game = useMemo(() => gameFor(gameId), [gameId]);
   const [cartridge, setCartridge] = useState<Cartridge | null>(null);
@@ -167,17 +169,23 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
     onResult?.({ correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory });
     if (!save) return;
     setSaveState("saving");
-    fetch("/api/v1/apk/complete", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+    // The promise gives the end card the saved XP (tech debt 2026-10-20: the card showed the game's own number).
+    return fetch("/api/v1/apk/complete", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
       .then(async (res) => {
         setSaveState(res.ok ? "saved" : "error");
-        if (!res.ok) return;
+        if (!res.ok) return undefined;
         if (ownerKey) void rpg.refreshAfterSavedCompletion().catch(() => undefined);
         // The server owns the XP: read it from the response, never from the client result.
         const saved: unknown = await res.json().catch(() => null);
         const xp = typeof saved === "object" && saved !== null && "xpEarned" in saved && typeof saved.xpEarned === "number" ? saved.xpEarned : undefined;
+        if (xp !== undefined) announceXp(xp);
         onCompleted?.({ ...(body.challengeRunId ? { challengeRunId: body.challengeRunId } : {}), correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory, ...(xp === undefined ? {} : { xpEarned: xp }) });
+        return xp;
       })
-      .catch(() => setSaveState("error"));
+      .catch(() => {
+        setSaveState("error");
+        return undefined;
+      });
   }, [game, launch, save, ownerKey, rpg, articleId, onCompleted, onResult]);
 
   const signIn = (
@@ -223,7 +231,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
       {ready && phase === "briefing" && ownerKey ? (
         rpg.state ? (
           <div className="shrink-0 overflow-y-auto p-2">
-            <RpgRewardDisclosure state={rpg.state} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
+            <RpgRewardDisclosure state={rpg.state} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} labels={tRoot.raw("RpgRewards")} />
           </div>
         ) : rpg.failureMessage ? (
           <div role="alert" className="shrink-0 p-2 text-sm"><p>{rpg.failureMessage}</p><button type="button" className="min-h-12 underline" onClick={() => void rpg.retry()}>{t("retry")}</button></div>
@@ -231,7 +239,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
       ) : null}
       {ready && phase === "results" && ownerKey && (rpg.failureMessage || rpg.newlyUnlockedCosmetics.length > 0) ? (
         <div className="shrink-0 overflow-y-auto p-2">
-          <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
+          <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} labels={tRoot.raw("RpgRewards")} />
         </div>
       ) : null}
       {/* The games have no exit of their own (Forge): the host bar ends a game early, after a confirm. */}

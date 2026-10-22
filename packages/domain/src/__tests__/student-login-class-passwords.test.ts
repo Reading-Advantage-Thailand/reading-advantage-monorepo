@@ -3,9 +3,9 @@ import type { DB } from "@reading-advantage/db";
 import { verifyPassword } from "@reading-advantage/auth";
 import { createMockDb } from "./mock-db.js";
 import { makeStore } from "./student-login-helpers.js";
-import { resetClassPasswordsOutput } from "../student-login/contracts.js";
+import { resetClassPasswordsOutput, resetStudentPasswordOutput } from "../student-login/contracts.js";
 import { STUDENT_LOGIN_LIMITS } from "../student-login/rate-limits.js";
-import { INITIAL_PASSWORD_LENGTH, resetClassPasswords } from "../student-login/usernames.js";
+import { INITIAL_PASSWORD_LENGTH, resetClassPasswords, resetStudentPassword } from "../student-login/usernames.js";
 
 const recordAuditEvent = vi.hoisted(() => vi.fn());
 vi.mock("@reading-advantage/auth", async (orig) => ({
@@ -114,5 +114,74 @@ describe("resetClassPasswords", () => {
     expect(await run(db)).toEqual({ classroomName: "P3A", students: [], failed: [] });
     expect(db.insert).not.toHaveBeenCalled();
     expect(recordAuditEvent).not.toHaveBeenCalled();
+  });
+});
+
+describe("resetStudentPassword (one student, PR review 2026-10-20)", () => {
+  const ann = { userId: "u1", name: "Ann Smith", username: "p3a1" };
+  const runOne = (db: ReturnType<typeof createMockDb>, user = teacher, store = makeStore(), studentUserId = "u1") =>
+    resetStudentPassword({ db: asDb(db), store, user, meta, input: { classroomId: CLASS_ID, studentUserId } });
+
+  it("sets a new password for the one student only, ends only that student's sessions, and audits", async () => {
+    const db = createMockDb({ selectSequence: [[classRow], [ann]] });
+    const out = await runOne(db);
+
+    expect(out).toMatchObject({ userId: "u1", name: "Ann Smith", username: "p3a1" });
+    expect(out.password).toMatch(new RegExp(`^[a-hjkmnp-z2-9]{${INITIAL_PASSWORD_LENGTH}}$`));
+    expect(() => resetStudentPasswordOutput.parse(out)).not.toThrow();
+
+    // One credential write and one session delete, both for the one student, in one transaction.
+    const values = insertedValues(db);
+    expect(values).toHaveLength(1);
+    expect(values[0]).toMatchObject({ id: "u1_credential", userId: "u1", providerId: "credential" });
+    expect(await verifyPassword(out.password, values[0]!.password as string)).toBe(true);
+    expect(db.transaction).toHaveBeenCalledTimes(1);
+    expect(db.delete).toHaveBeenCalledTimes(1);
+
+    expect(recordAuditEvent).toHaveBeenCalledTimes(1);
+    expect(recordAuditEvent.mock.calls[0]![1]).toMatchObject({
+      action: "student_login:student_password_reset",
+      targetType: "user",
+      targetId: "u1",
+      metadata: { classroomId: CLASS_ID },
+    });
+    expect(JSON.stringify(recordAuditEvent.mock.calls)).not.toContain(out.password);
+  });
+
+  it("lets a school admin reset a student of the class", async () => {
+    const db = createMockDb({ selectSequence: [[{ ...classRow, teacherId: "other" }], [ann]] });
+    expect((await runOne(db, admin)).username).toBe("p3a1");
+  });
+
+  it("rejects a student who is not in the class without writing", async () => {
+    const db = createMockDb({ selectSequence: [[classRow], []] });
+    await expect(runOne(db, teacher, makeStore(), "someone-else")).rejects.toMatchObject({ code: "not_found" });
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.delete).not.toHaveBeenCalled();
+    expect(recordAuditEvent).not.toHaveBeenCalled();
+  });
+
+  it("rejects a teacher of another class and a student without writing", async () => {
+    const otherTeacher = createMockDb({ selectSequence: [[{ ...classRow, teacherId: "other" }], []] });
+    await expect(runOne(otherTeacher)).rejects.toMatchObject({ code: "forbidden" });
+    const asStudent = createMockDb({ selectSequence: [[classRow], [ann]] });
+    await expect(runOne(asStudent, student)).rejects.toMatchObject({ code: "forbidden" });
+    expect(otherTeacher.insert).not.toHaveBeenCalled();
+    expect(asStudent.insert).not.toHaveBeenCalled();
+  });
+
+  it("limits resets per class in its own bucket, apart from the class sheet", async () => {
+    const store = makeStore();
+    for (let i = 0; i < STUDENT_LOGIN_LIMITS.classPasswordReset.maxAttempts; i++) {
+      await run(createMockDb({ selectSequence: [[classRow], []] }), teacher, store);
+    }
+    // The class sheet bucket is full, and a one-student reset still works.
+    await expect(runOne(createMockDb({ selectSequence: [[classRow], [ann]] }), teacher, store)).resolves.toMatchObject({ userId: "u1" });
+    for (let i = 1; i < STUDENT_LOGIN_LIMITS.studentPasswordReset.maxAttempts; i++) {
+      await runOne(createMockDb({ selectSequence: [[classRow], [ann]] }), teacher, store);
+    }
+    const db = createMockDb({ selectSequence: [[classRow], [ann]] });
+    await expect(runOne(db, teacher, store)).rejects.toMatchObject({ code: "rate_limited" });
+    expect(db.insert).not.toHaveBeenCalled();
   });
 });

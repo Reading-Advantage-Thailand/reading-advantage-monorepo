@@ -12,6 +12,7 @@ import {
 } from "./retro-arcade-theme.js";
 import type { RpgRewardAssetUrls } from "./rpg-reward-panel.js";
 import { RPG_REWARD_REQUIRED_CREDIT } from "./rpg-reward-assets.js";
+import { rpgFailureText, rpgRewardText, type RpgRewardLabelsInput } from "./rpg-reward-labels.js";
 
 /** Props for the confirmed RPG unlock notice. */
 export type RpgUnlockNoticeProps = Omit<ComponentProps<"section">, "children"> & {
@@ -31,6 +32,8 @@ export type RpgUnlockNoticeProps = Omit<ComponentProps<"section">, "children"> &
   readonly onRetry?: () => void;
   /** Asset credit under the list (default: the ElvGames credit of the reviewed icons); null when the host icons need none. */
   readonly credit?: string | null;
+  /** The notice text in the host language; each missing label stays English. */
+  readonly labels?: RpgRewardLabelsInput;
 };
 
 const rewardStyle: CSSProperties = {
@@ -45,7 +48,7 @@ const rewardStyle: CSSProperties = {
 
 /**
  * Renders only cosmetic unlocks confirmed after a saved completion.
- * @param props Confirmed cosmetics, reviewed icons, request state, and RPG actions.
+ * @param props Confirmed cosmetics, reviewed icons, request state, RPG actions, and the notice text.
  * @returns A compact arcade result notice with equipment and retry controls.
  */
 export function RpgUnlockNotice({
@@ -57,10 +60,13 @@ export function RpgUnlockNotice({
   inventoryNote,
   onRetry,
   credit = RPG_REWARD_REQUIRED_CREDIT,
+  labels,
   style,
   ...sectionProps
 }: RpgUnlockNoticeProps): import("react").ReactElement {
-  const heading = cosmetics.length > 0 ? "New Wizard rewards" : "Wizard rewards";
+  const text = rpgRewardText(labels);
+  const heading = cosmetics.length > 0 ? text.newHeading : text.heading;
+  const failure = rpgFailureText(failureMessage, text);
   return (
     <section
       {...sectionProps}
@@ -79,12 +85,12 @@ export function RpgUnlockNotice({
       }}
     >
       <h2 style={{ margin: 0, fontFamily: "var(--apk-reward-display-font, 'Courier New', monospace)" }}>{heading}</h2>
-      {failureMessage ? (
+      {failure ? (
         <div role="alert" style={{ border: "2px solid #f87171", padding: "0.75rem" }}>
-          <p style={{ margin: 0 }}>{failureMessage}</p>
+          <p style={{ margin: 0 }}>{failure}</p>
           {onRetry ? (
             <button type="button" onClick={onRetry} style={{ ...getRetroArcadeButtonStyle("secondary"), marginBlockStart: "0.75rem" }}>
-              Try again
+              {text.tryAgain}
             </button>
           ) : null}
         </div>
@@ -103,7 +109,7 @@ export function RpgUnlockNotice({
               />
               <div style={{ minInlineSize: 0 }}>
                 <h3 style={{ margin: 0 }}>{cosmetic.name}</h3>
-                <p style={{ margin: "0.25rem 0", color: "var(--apk-reward-accent, #67e8f9)" }}>Unlocked</p>
+                <p style={{ margin: "0.25rem 0", color: "var(--apk-reward-accent, #67e8f9)" }}>{text.unlocked}</p>
                 {inventoryNote ? (
                   <p data-rpg-in-inventory={cosmetic.id} style={{ margin: 0, color: "var(--apk-reward-muted, #b9c9bf)" }}>{inventoryNote}</p>
                 ) : onEquip ? (
@@ -111,12 +117,12 @@ export function RpgUnlockNotice({
                   type="button"
                   disabled={cosmetic.equipped || pending || pendingCosmeticId !== null}
                   aria-pressed={cosmetic.equipped}
-                  aria-label={`${cosmetic.equipped ? "Equipped" : pending ? "Equipping" : "Equip"} ${cosmetic.name}`}
+                  aria-label={(cosmetic.equipped ? text.equippedAria : pending ? text.equippingAria : text.equipAria).replace("{name}", cosmetic.name)}
                   aria-busy={pending || undefined}
                   onClick={() => onEquip(cosmetic.id)}
                   style={getRetroArcadeButtonStyle(cosmetic.equipped ? "secondary" : "primary")}
                 >
-                  {cosmetic.equipped ? "Equipped" : pending ? "Equipping…" : "Equip"}
+                  {cosmetic.equipped ? text.equipped : pending ? text.equipping : text.equip}
                 </button>
                 ) : null}
               </div>

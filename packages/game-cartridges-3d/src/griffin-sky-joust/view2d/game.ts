@@ -21,14 +21,25 @@ import { nextCommand } from '../qc/bot.js';
 import strings from '../strings.en.js';
 import { PromptPanel2D } from './prompt.js';
 
-/** On-screen sizes in arena pixels (before the fit scale): the sprites read larger than the hit circles. */
-const GRIFFIN_PX = 112;
-const RIDER_PX = 96;
-const HERO_PX = 52;
+/**
+ * Sheet frame widths on screen, in arena pixels (before the fit scale). The side rows fill part of
+ * a frame: the griffin 88 by 72 of 188 px, a bat 33 by 51 of 112 px. So the griffin's body fills
+ * about its hit circle (radius 24) with its wings and tail past it, and a bat fills about its circle
+ * (radius 28). Until 2026-10-20 both were drawn smaller than their circles (owner: the griffin was
+ * very small, and the words covered the bats).
+ */
+const GRIFFIN_PX = 170;
+const RIDER_PX = 154;
+const HERO_PX = 79;
+/** The sprite origins of the fliers: the middle of the drawn body in the side rows, on the hit circle's centre. */
+const GRIFFIN_ORIGIN = { x: 0.5, y: 0.44 } as const;
+const RIDER_ORIGIN = { x: 0.5, y: 0.4 } as const;
+/** The drawn height of a bat, in arena pixels: its word hangs just above it. */
+const RIDER_DRAWN_H = (RIDER_PX * 51) / 112;
 /** The frame width of a hero sheet in pixels (the student's figure takes the same scale). */
 const HERO_FRAME = 120;
-/** The hero's seat on the griffin's back, in arena pixels from the griffin's center. */
-const SEAT = { x: 0, y: -26 };
+/** The hero's feet, in arena pixels from the griffin's origin (the middle of its body): the back hides them. */
+const SEAT = { x: 0, y: 0 };
 const GROUND_PROPS = ['pine-tree', 'oak-tree', 'rock-cluster', 'bush', 'pine-tree', 'oak-tree', 'bush', 'rock-cluster', 'pine-tree', 'oak-tree'] as const;
 
 interface Rider2D {
@@ -107,7 +118,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       const key = animationKeyOf(edition, fileId, `${clip}.${dir}`);
       if (sprite.anims.currentAnim?.key !== key) sprite.play(key);
     };
-    const griffin = spriteOf('griffin.fly', GRIFFIN_PX).setDepth(500);
+    const griffin = spriteOf('griffin.fly', GRIFFIN_PX).setOrigin(GRIFFIN_ORIGIN.x, GRIFFIN_ORIGIN.y).setDepth(500);
     const heroFigure = figure ? new Figure2D(scene, figure, SPRITE_PPM) : null;
     const hero = (heroFigure ? heroFigure.sprite.setScale((HERO_PX * s) / HERO_FRAME) : spriteOf(`${heroId}.idle`, HERO_PX)).setDepth(501);
     let facing: 'e' | 'w' = 'e';
@@ -139,7 +150,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const riders = new Map<string, Rider2D>();
     const struck = new Set<string>();
     function addRider(r: JoustState['riders'][number]): void {
-      const sprite = spriteOf('giant-bat.fly', RIDER_PX).setDepth(400);
+      const sprite = spriteOf('giant-bat.fly', RIDER_PX).setOrigin(RIDER_ORIGIN.x, RIDER_ORIGIN.y).setDepth(400);
       const label = tag(scene, r.text, 18).setDepth(16_000);
       const dir = r.vx > 0 ? 'e' : 'w';
       play(sprite, 'giant-bat.fly', 'fly', dir);
@@ -188,7 +199,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
 
     // ---------------------------------------------------------------- events
     let finished = false;
-    const griffinTop = () => ({ x: griffin.x, y: griffin.y - 70 * s });
+    const griffinTop = () => ({ x: griffin.x, y: griffin.y - 62 * s });
     function burst(x: number, y: number, color: number, n: number): void {
       for (let i = 0; i < n; i++) {
         const a = (i / n) * Math.PI * 2 + Math.random() * 0.5;
@@ -247,7 +258,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         }
         case 'sentenceDone':
           audio.play('cast');
-          burst(griffin.x, griffin.y - 30 * s, 0xc9a7ff, 24);
+          burst(griffin.x, griffin.y, 0xc9a7ff, 24);
           void banner(scene, t('done.title'), t('done.text'), 1.1);
           break;
         case 'joustComplete':
@@ -264,7 +275,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       loop.stop();
       audio.music('calm');
       audio.play('victory');
-      burst(griffin.x, griffin.y - 30 * s, 0xffe27a, 30);
+      burst(griffin.x, griffin.y, 0xffe27a, 30);
       await banner(scene, t('finish.title'), t('finish.text'), 2.2);
       const evidence = evidenceOf(sim.state, story, seed, Math.round(performance.now() - startedAt));
       ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
@@ -308,7 +319,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
           play(view.sprite, 'giant-bat.fly', 'fly', dir);
         }
         view.sprite.setPosition(sx(view.x), sy(view.y));
-        view.tag.setPosition(sx(view.x), sy(view.y) - (RIDER_PX * 0.5 + 6) * s - 14);
+        view.tag.setPosition(sx(view.x), sy(view.y) - (RIDER_DRAWN_H / 2 + 4) * s - view.tag.height / 2);
         view.tag.setScale(st.helper && isTarget(st, r) ? 1.15 : 1);
       }
       for (const { c, speed } of clouds) {
@@ -331,6 +342,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       },
       /** Game-pixel points of the riders (for real taps and screenshots). */
       points: () => ({ gates: [...riders.values()].map((v) => ({ x: v.sprite.x, y: v.sprite.y })) }),
+      /** Game-pixel boxes of the word tags (centered), so a check can count overlaps. */
+      tags: () => [...riders.values()].map((v) => ({ x: v.tag.x, y: v.tag.y, w: v.tag.width * v.tag.scaleX, h: v.tag.height * v.tag.scaleY })),
       size: () => ({ width: W, height: H }),
     };
     const qc = window as unknown as { __apk3dView2d?: typeof hook };

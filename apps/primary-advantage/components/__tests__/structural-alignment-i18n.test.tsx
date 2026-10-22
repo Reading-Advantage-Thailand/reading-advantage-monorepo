@@ -182,9 +182,9 @@ beforeEach(() => {
   mocks.getTranslations.mockImplementation(
     async (arg: string | { locale?: string; namespace: string }) => {
       const namespace = typeof arg === "string" ? arg : arg.namespace;
-      return (key: string) => {
-        const tree = namespace
-          .split(".")
+      const t = (key: string) => {
+        // No namespace (the root translator) reads from the top of the messages.
+        const tree = (namespace ? namespace.split(".") : [])
           .reduce<unknown>(
             (node, part) => (node as Record<string, unknown>)?.[part],
             enMessages as unknown,
@@ -196,6 +196,7 @@ beforeEach(() => {
             tree,
           ) as string;
       };
+      return Object.assign(t, { raw: t, has: (key: string) => t(key) !== undefined });
     },
   );
 });
@@ -256,7 +257,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: "secret123" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
 
     await waitFor(() =>
       expect(mocks.login).toHaveBeenCalledWith("teacher-a", "secret123"),
@@ -424,21 +425,21 @@ describe("FR-5 footer, games, licence, and school strings", () => {
   it("translates the games catalogue heading", async () => {
     mocks.getCurrentUser.mockResolvedValue(null);
     mocks.getTranslations.mockImplementation(
-      async ({ locale, namespace }: { locale: string; namespace: string }) => {
+      async ({ locale, namespace }: { locale: string; namespace?: string }) => {
         const messages = locale === "th" ? thMessages : enMessages;
-        const tree = namespace
-          .split(".")
+        const tree = (namespace ? namespace.split(".") : [])
           .reduce<unknown>(
             (node, part) => (node as Record<string, unknown>)?.[part],
             messages as unknown,
           );
-        return (key: string) =>
+        const t = (key: string) =>
           key
             .split(".")
             .reduce<unknown>(
               (node, part) => (node as Record<string, unknown>)?.[part],
               tree,
             ) as string;
+        return Object.assign(t, { raw: t, has: (key: string) => t(key) !== undefined });
       },
     );
     const games = await PrimaryStudentGamesPage({
@@ -448,6 +449,9 @@ describe("FR-5 footer, games, licence, and school strings", () => {
     expect(
       screen.getByRole("heading", { name: thMessages.StudentGames.title }),
     ).toBeInTheDocument();
+    // The game cards show the Thai pitch, not the English manifest text (2026-10-21).
+    expect(screen.getByText(thMessages.LessonGames.pitch["abyssal-well"])).toBeInTheDocument();
+    expect(screen.queryByText(/Shoot the creatures that climb out of the well/)).not.toBeInTheDocument();
   });
 
   it("translates licence form labels", async () => {

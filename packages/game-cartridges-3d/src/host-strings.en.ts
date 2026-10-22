@@ -48,6 +48,8 @@ export default {
     results: {
       title: 'Well done!',
       xp: '+{xp} XP',
+      xpSaving: 'Saving your XP…',
+      xpNotSaved: 'XP not saved.',
       xpNote: 'Stars show how many you knew on the first try: {pct}%.',
       storyWords: 'Your answers',
       practice: 'Practice these again',
@@ -70,6 +72,11 @@ export default {
       you: 'You',
       note: 'An example class. In the app, the whole class shares one boss, and every student can help. There is no ranking.',
       home: 'Read another story',
+    },
+    loadError: {
+      title: 'The game could not start',
+      body: 'A game file did not load. Check the internet connection, then try again.',
+      retry: 'Try again',
     },
     gate: {
       title: 'This device is not supported for this game',

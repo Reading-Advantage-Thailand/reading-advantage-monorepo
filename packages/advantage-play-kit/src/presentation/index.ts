@@ -41,6 +41,12 @@ export { RpgRewardDisclosure } from "./rpg-reward-disclosure.js";
 /** Public RPG reward disclosure props. */
 export type { RpgRewardDisclosureProps } from "./rpg-reward-disclosure.js";
 
+/** The text of the RPG reward components, with English defaults. */
+export { RPG_REWARD_LABELS } from "./rpg-reward-labels.js";
+
+/** Public RPG reward label types. */
+export type { RpgRewardLabels, RpgRewardLabelsInput } from "./rpg-reward-labels.js";
+
 /** Shared result notice for newly confirmed RPG rewards. */
 export { RpgUnlockNotice } from "./rpg-unlock-notice.js";
 

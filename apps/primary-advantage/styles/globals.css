@@ -144,8 +144,9 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
   /* Mobile bottom bar (below 1024 px): tab row height, and the full height with the safe area.
-     The bar, the content bottom padding, the go-to-top button, and toasts use --bottom-nav-h. */
-  --bottom-nav-row: 3.5rem;
+     The bar, the content bottom padding, the go-to-top button, and toasts use --bottom-nav-h.
+     4rem: the student toolbar (32 px icon and a Thai label) was cut at 3.5rem (captures 2026-10-20). */
+  --bottom-nav-row: 4rem;
   --bottom-nav-h: calc(var(--bottom-nav-row) + var(--safe-bottom));
   --toast-offset-bottom: calc(var(--bottom-nav-h) + 1rem);
 

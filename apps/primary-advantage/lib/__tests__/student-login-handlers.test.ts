@@ -12,6 +12,7 @@ const domain = vi.hoisted(() => ({
   issueClassCardTokens: vi.fn(),
   getClassLoginRoster: vi.fn(),
   resetClassPasswords: vi.fn(),
+  resetStudentPassword: vi.fn(),
 }));
 
 vi.mock("@reading-advantage/db", async (orig) => ({ ...(await orig<typeof import("@reading-advantage/db")>()), db: {} }));
@@ -27,7 +28,7 @@ vi.mock("@reading-advantage/domain", async (orig) => {
 });
 
 import { studentLogin } from "@reading-advantage/domain";
-import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards, readRoster, resetPasswords } from "../student-login/handlers";
+import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards, readRoster, resetPasswords, resetStudentPassword } from "../student-login/handlers";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
 const SESSION_ID = "33333333-3333-4333-8333-333333333333";
@@ -256,5 +257,46 @@ describe("class password reset handler", () => {
     const res = await resetPasswords(post("/reset", { classroomId: CLASS_ID }));
     expect(res.status).toBe(429);
     expect(res.headers.get("Retry-After")).toBe("120");
+  });
+});
+
+describe("one-student password reset handler", () => {
+  const body = { classroomId: CLASS_ID, studentUserId: "u1" };
+
+  it("returns 401 without a session, 403 for a session that is not full, and 400 without a student", async () => {
+    getCurrentSession.mockResolvedValue(null);
+    expect((await resetStudentPassword(post("/one", body))).status).toBe(401);
+    getCurrentSession.mockResolvedValue({ ...teacherSession, authStrength: "code_only" });
+    expect((await resetStudentPassword(post("/one", body))).status).toBe(403);
+    getCurrentSession.mockResolvedValue(teacherSession);
+    expect((await resetStudentPassword(post("/one", { classroomId: CLASS_ID }))).status).toBe(400);
+    expect(domain.resetStudentPassword).not.toHaveBeenCalled();
+  });
+
+  it("passes the user, the meta, the store, and the student to the use-case and returns the slip", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.resetStudentPassword.mockResolvedValue({ userId: "u1", name: "Ann", username: "p3a1", password: "abcd2345" });
+    const res = await resetStudentPassword(post("/one", body));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ userId: "u1", name: "Ann", username: "p3a1", password: "abcd2345" });
+    expect(domain.resetStudentPassword).toHaveBeenCalledWith(
+      expect.objectContaining({ user: teacherSession.user, meta: { ip: "1.2.3.4", userAgent: null }, store: expect.anything(), input: body }),
+    );
+  });
+
+  it("returns 403 for a teacher of another class and 404 for a student who is not in the class", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.resetStudentPassword.mockRejectedValueOnce(new studentLogin.StudentLoginError("forbidden", "No."));
+    expect((await resetStudentPassword(post("/one", body))).status).toBe(403);
+    domain.resetStudentPassword.mockRejectedValueOnce(new studentLogin.StudentLoginError("not_found", "No."));
+    expect((await resetStudentPassword(post("/one", body))).status).toBe(404);
+  });
+
+  it("never returns a field outside its contract", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.resetStudentPassword.mockResolvedValue({ userId: "u1", name: "Ann", username: "p3a1", password: "abcd2345", passwordHash: "leak" });
+    const res = await resetStudentPassword(post("/one", body));
+    expect(res.status).toBe(500);
+    expect(await res.text()).not.toContain("leak");
   });
 });

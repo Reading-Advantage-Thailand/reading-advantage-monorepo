@@ -22,6 +22,85 @@ export interface TeacherChallengeGame {
   readonly version: string;
 }
 
+/** Text of the teacher challenge panel; the host passes its own language. */
+export interface TeacherChallengePanelLabels {
+  readonly title: string;
+  readonly loadingClasses: string;
+  readonly noClasses: string;
+  readonly tryAgain: string;
+  readonly classLabel: string;
+  readonly challengeTitle: string;
+  readonly game: string;
+  /** Legend of one word row; `{n}` is replaced with the row number. */
+  readonly word: string;
+  readonly englishAnswer: string;
+  readonly thaiPrompt: string;
+  readonly removeWord: string;
+  readonly addWord: string;
+  readonly starts: string;
+  readonly ends: string;
+  readonly targetPlayers: string;
+  readonly saving: string;
+  readonly createChallenge: string;
+  readonly moreClasses: string;
+  /** Saved line; `{title}` is replaced with the challenge title. */
+  readonly saved: string;
+  readonly createAnother: string;
+  readonly existingRegion: string;
+  readonly existingTitle: string;
+  readonly loadingExisting: string;
+  readonly noExisting: string;
+  readonly existingError: string;
+  readonly refreshExisting: string;
+  readonly classesError: string;
+  readonly checkForm: string;
+  readonly conflict: string;
+  readonly saveError: string;
+  readonly receiptMismatch: string;
+  readonly responseInvalid: string;
+  readonly unconfirmed: string;
+}
+
+/** The English text of the panel, used for each label that the host does not pass. */
+export const TEACHER_CHALLENGE_PANEL_LABELS: TeacherChallengePanelLabels = {
+  title: "Create class challenge",
+  loadingClasses: "Loading classes…",
+  noClasses: "No owned classes are available.",
+  tryAgain: "Try again",
+  classLabel: "Class",
+  challengeTitle: "Challenge title",
+  game: "Game",
+  word: "Word {n}",
+  englishAnswer: "English answer",
+  thaiPrompt: "Thai prompt",
+  removeWord: "Remove word",
+  addWord: "Add word",
+  starts: "Starts",
+  ends: "Ends",
+  targetPlayers: "Target players",
+  saving: "Saving…",
+  createChallenge: "Create challenge",
+  moreClasses: "More classes",
+  saved: "Challenge saved: {title}",
+  createAnother: "Create another challenge",
+  existingRegion: "Existing class challenges",
+  existingTitle: "Existing challenges",
+  loadingExisting: "Loading existing challenges…",
+  noExisting: "No existing challenges were found.",
+  existingError: "Existing challenges could not be loaded.",
+  refreshExisting: "Refresh existing challenges",
+  classesError: "Classes could not be loaded.",
+  checkForm: "Check the class, words, dates, and target.",
+  conflict: "This creation request conflicts with an existing request.",
+  saveError: "Challenge could not be saved.",
+  receiptMismatch: "The saved challenge receipt did not match the form.",
+  responseInvalid: "The challenge response was invalid.",
+  unconfirmed: "Creation could not be confirmed. Review this class before creating another challenge.",
+};
+
+/** The labels that name a form failure; the state keeps the key, so a label change needs no reload. */
+type FailureKey = "classesError" | "checkForm" | "conflict" | "saveError" | "receiptMismatch" | "responseInvalid" | "unconfirmed";
+
 /** Props for the shared teacher challenge form. */
 export interface TeacherChallengePanelProps {
   /** Stable authenticated teacher scope. */
@@ -34,6 +113,8 @@ export interface TeacherChallengePanelProps {
   readonly endpoint?: string;
   /** Host path prefix used for arcade images. */
   readonly basePath?: string;
+  /** The panel text in the host language; each missing label stays English. */
+  readonly labels?: Partial<TeacherChallengePanelLabels>;
 }
 
 type Row = { term: string; translation: string };
@@ -66,7 +147,7 @@ function toIso(value: string): string | null {
 
 /**
  * Creates fixed Thai-to-English reading challenges for an owned class.
- * @param props Owner scope, installed games, routes, and asset path prefix.
+ * @param props Owner scope, installed games, routes, asset path prefix, and the panel text.
  * @returns The teacher form or no content without an owner.
  */
 export function TeacherChallengePanel({
@@ -75,7 +156,9 @@ export function TeacherChallengePanel({
   classesEndpoint = "/api/v1/apk/challenges/teacher-classes",
   endpoint = "/api/v1/apk/challenges",
   basePath = "",
+  labels,
 }: TeacherChallengePanelProps): ReactElement | null {
+  const text = { ...TEACHER_CHALLENGE_PANEL_LABELS, ...labels };
   const gamesKey = JSON.stringify(Object.entries(games).sort(([left], [right]) => left.localeCompare(right)));
   const gameEntries = Object.entries(games);
   const scope = JSON.stringify([ownerKey, classesEndpoint, endpoint, gamesKey]);
@@ -97,16 +180,16 @@ export function TeacherChallengePanel({
   const [target, setTarget] = useState("1");
   const [loadingClasses, setLoadingClasses] = useState(false);
   const [pending, setPending] = useState(false);
-  const [failure, setFailure] = useState<string | null>(null);
+  const [failure, setFailure] = useState<FailureKey | null>(null);
   const [saved, setSaved] = useState<ClassChallengePublicSummary | null>(null);
   const [reviewScope, setReviewScope] = useState<string>();
   const [reviewChallenges, setReviewChallenges] = useState<readonly ClassChallengePublicSummary[]>([]);
   const [reviewLoading, setReviewLoading] = useState(false);
-  const [reviewFailure, setReviewFailure] = useState<string | null>(null);
+  const [reviewFailure, setReviewFailure] = useState(false);
 
   const loadExistingChallenges = useCallback(async (capturedClassId: string, generation = generationRef.current) => {
     const capturedScope = `${scope}\u0000${capturedClassId}`;
-    setReviewScope(capturedScope); setReviewLoading(true); setReviewFailure(null);
+    setReviewScope(capturedScope); setReviewLoading(true); setReviewFailure(false);
     try {
       const query = `?classId=${encodeURIComponent(capturedClassId)}&limit=25&offset=0`;
       const response = await fetch(`${endpoint}${query}`, { credentials: "same-origin", cache: "no-store" });
@@ -117,7 +200,7 @@ export function TeacherChallengePanel({
       setReviewChallenges(page.challenges); setReviewLoading(false);
     } catch {
       if (generation !== generationRef.current) return;
-      setReviewChallenges([]); setReviewFailure("Existing challenges could not be loaded."); setReviewLoading(false);
+      setReviewChallenges([]); setReviewFailure(true); setReviewLoading(false);
     }
   }, [endpoint, scope]);
 
@@ -137,7 +220,7 @@ export function TeacherChallengePanel({
       setLoadingClasses(false);
     } catch {
       if (generation !== generationRef.current || controller.signal.aborted) return;
-      setFailure("Classes could not be loaded."); setLoadingClasses(false);
+      setFailure("classesError"); setLoadingClasses(false);
     }
   }, [classesEndpoint, ownerKey]);
 
@@ -150,7 +233,7 @@ export function TeacherChallengePanel({
     setClasses([]); setClassId(""); setTitle(""); setRows([{ term: "", translation: "" }]);
     setClassesHasMore(false);
     setStartsAt(""); setExpiresAt(""); setTarget("1"); setFailure(null); setSaved(null); setPending(false);
-    setReviewScope(undefined); setReviewChallenges([]); setReviewLoading(false); setReviewFailure(null);
+    setReviewScope(undefined); setReviewChallenges([]); setReviewLoading(false); setReviewFailure(false);
     submissionRef.current = null;
     setGameId(gameEntries[0]?.[0] ?? "");
     if (!ownerKey) { setLoadingClasses(false); return; }
@@ -167,7 +250,7 @@ export function TeacherChallengePanel({
     const content = challengeContentSchema.safeParse({ mode: "vocabulary", items: rows });
     const targetValue = Number(target);
     if (!classes.some((item) => item.id === classId) || !title.trim() || !game || !start || !expiry || Date.parse(start) >= Date.parse(expiry) || !content.success || !Number.isSafeInteger(targetValue) || targetValue < 1 || targetValue > 1_000_000) {
-      setFailure("Check the class, words, dates, and target."); return;
+      setFailure("checkForm"); return;
     }
     const normalizedBody = {
       classId, title, gameId, gameVersion: game.version, contentLocale: "th" as const,
@@ -190,19 +273,17 @@ export function TeacherChallengePanel({
       const response = await fetch(endpoint, { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: controller.signal });
       responseReceived = true;
       if (generation !== generationRef.current || controller.signal.aborted) return;
-      if (response.status === 409) { setFailure("This creation request conflicts with an existing request."); return; }
-      if (!response.ok) { setFailure("Challenge could not be saved."); return; }
+      if (response.status === 409) { setFailure("conflict"); return; }
+      if (!response.ok) { setFailure("saveError"); return; }
       const receipt = classChallengePublicSummarySchema.parse(await response.json());
       if (generation !== generationRef.current || controller.signal.aborted) return;
       if (receipt.classId !== normalizedBody.classId || receipt.gameId !== normalizedBody.gameId || receipt.gameVersion !== normalizedBody.gameVersion) {
-        setFailure("The saved challenge receipt did not match the form."); return;
+        setFailure("receiptMismatch"); return;
       }
       setSaved(receipt);
     } catch {
       if (generation !== generationRef.current || controller.signal.aborted) return;
-      setFailure(responseReceived
-        ? "The challenge response was invalid."
-        : "Creation could not be confirmed. Review this class before creating another challenge.");
+      setFailure(responseReceived ? "responseInvalid" : "unconfirmed");
       if (!responseReceived) await loadExistingChallenges(normalizedBody.classId, generation);
     } finally {
       if (generation === generationRef.current && !controller.signal.aborted) setPending(false);
@@ -210,35 +291,35 @@ export function TeacherChallengePanel({
   };
 
   if (!ownerKey) return null;
-  if (formScope !== scope) return <section aria-label="Create class challenge" role="status">Loading classes…</section>;
+  if (formScope !== scope) return <section aria-label={text.title} role="status">{text.loadingClasses}</section>;
   const formLocked = pending || saved !== null;
   const fieldStyle: CSSProperties = { display: "block", minHeight: 44, maxWidth: "100%", width: "100%", boxSizing: "border-box" };
-  return <section aria-label="Create class challenge" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `var(--apk-arcade-panel-image, url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}"))`, padding: 12, background: "var(--apk-arcade-panel-surface, #0f172a)", color: "var(--apk-arcade-panel-text, #f8fafc)" }}>
-    <h2>Create class challenge</h2>
-    {loadingClasses ? <p role="status">Loading classes…</p> : null}
-    {!loadingClasses && !failure && classes.length === 0 ? <p>No owned classes are available.</p> : null}
-    {failure === "Classes could not be loaded." ? <button type="button" style={buttonStyle("secondary", basePath)} onClick={() => void loadClasses(0)}>Try again</button> : null}
+  return <section aria-label={text.title} style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `var(--apk-arcade-panel-image, url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}"))`, padding: 12, background: "var(--apk-arcade-panel-surface, #0f172a)", color: "var(--apk-arcade-panel-text, #f8fafc)" }}>
+    <h2>{text.title}</h2>
+    {loadingClasses ? <p role="status">{text.loadingClasses}</p> : null}
+    {!loadingClasses && !failure && classes.length === 0 ? <p>{text.noClasses}</p> : null}
+    {failure === "classesError" ? <button type="button" style={buttonStyle("secondary", basePath)} onClick={() => void loadClasses(0)}>{text.tryAgain}</button> : null}
     <form style={{ display: "grid", gap: 8 }} onSubmit={(event) => void submit(event)}>
-      <label>Class<select aria-label="Class" disabled={formLocked} required value={classId} onChange={(event) => setClassId(event.target.value)} style={fieldStyle}>{classes.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
-      <label>Challenge title<input disabled={formLocked} required maxLength={100} value={title} onChange={(event) => setTitle(event.target.value)} style={fieldStyle} /></label>
-      <label>Game<select aria-label="Game" disabled={formLocked} required value={gameId} onChange={(event) => setGameId(event.target.value)} style={fieldStyle}>{gameEntries.map(([id, game]) => <option key={id} value={id}>{game.title}</option>)}</select></label>
-      {rows.map((row, index) => <fieldset disabled={formLocked} key={index}><legend>Word {index + 1}</legend><label>English answer<input required value={row.term} onChange={(event) => setRows((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, term: event.target.value } : item))} style={fieldStyle} /></label><label>Thai prompt<input required value={row.translation} onChange={(event) => setRows((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, translation: event.target.value } : item))} style={fieldStyle} /></label>{rows.length > 1 ? <button type="button" style={buttonStyle("secondary", basePath)} onClick={() => setRows((current) => current.filter((_, itemIndex) => itemIndex !== index))}>Remove word</button> : null}</fieldset>)}
-      {rows.length < 50 ? <button disabled={formLocked} type="button" style={buttonStyle("secondary", basePath)} onClick={() => setRows((current) => [...current, { term: "", translation: "" }])}>Add word</button> : null}
-      <label>Starts<input aria-label="Starts" disabled={formLocked} required type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} style={fieldStyle} /></label>
-      <label>Ends<input aria-label="Ends" disabled={formLocked} required type="datetime-local" value={expiresAt} onChange={(event) => setExpiresAt(event.target.value)} style={fieldStyle} /></label>
-      <label>Target players<input aria-label="Target players" disabled={formLocked} required type="number" min={1} max={1_000_000} value={target} onChange={(event) => setTarget(event.target.value)} style={fieldStyle} /></label>
-      <button disabled={formLocked || loadingClasses || !classId || !gameId} type="submit" style={buttonStyle("primary", basePath)}>{pending ? "Saving…" : "Create challenge"}</button>
+      <label>{text.classLabel}<select aria-label={text.classLabel} disabled={formLocked} required value={classId} onChange={(event) => setClassId(event.target.value)} style={fieldStyle}>{classes.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+      <label>{text.challengeTitle}<input disabled={formLocked} required maxLength={100} value={title} onChange={(event) => setTitle(event.target.value)} style={fieldStyle} /></label>
+      <label>{text.game}<select aria-label={text.game} disabled={formLocked} required value={gameId} onChange={(event) => setGameId(event.target.value)} style={fieldStyle}>{gameEntries.map(([id, game]) => <option key={id} value={id}>{game.title}</option>)}</select></label>
+      {rows.map((row, index) => <fieldset disabled={formLocked} key={index}><legend>{text.word.replace("{n}", String(index + 1))}</legend><label>{text.englishAnswer}<input required value={row.term} onChange={(event) => setRows((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, term: event.target.value } : item))} style={fieldStyle} /></label><label>{text.thaiPrompt}<input required value={row.translation} onChange={(event) => setRows((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, translation: event.target.value } : item))} style={fieldStyle} /></label>{rows.length > 1 ? <button type="button" style={buttonStyle("secondary", basePath)} onClick={() => setRows((current) => current.filter((_, itemIndex) => itemIndex !== index))}>{text.removeWord}</button> : null}</fieldset>)}
+      {rows.length < 50 ? <button disabled={formLocked} type="button" style={buttonStyle("secondary", basePath)} onClick={() => setRows((current) => [...current, { term: "", translation: "" }])}>{text.addWord}</button> : null}
+      <label>{text.starts}<input aria-label={text.starts} disabled={formLocked} required type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} style={fieldStyle} /></label>
+      <label>{text.ends}<input aria-label={text.ends} disabled={formLocked} required type="datetime-local" value={expiresAt} onChange={(event) => setExpiresAt(event.target.value)} style={fieldStyle} /></label>
+      <label>{text.targetPlayers}<input aria-label={text.targetPlayers} disabled={formLocked} required type="number" min={1} max={1_000_000} value={target} onChange={(event) => setTarget(event.target.value)} style={fieldStyle} /></label>
+      <button disabled={formLocked || loadingClasses || !classId || !gameId} type="submit" style={buttonStyle("primary", basePath)}>{pending ? text.saving : text.createChallenge}</button>
     </form>
-    {classesHasMore ? <button disabled={loadingClasses || pending} type="button" style={buttonStyle("secondary", basePath)} onClick={() => void loadClasses(classes.length)}>More classes</button> : null}
-    {failure ? <p role="alert">{failure}</p> : null}
-    {saved ? <div><p role="status">Challenge saved: {saved.title}</p><button type="button" style={buttonStyle("secondary", basePath)} onClick={() => { seedRef.current = generateSeed(); submissionRef.current = null; setSaved(null); setTitle(""); }}>Create another challenge</button></div> : null}
-    {reviewScope === `${scope}\u0000${classId}` ? <section aria-label="Existing class challenges">
-      <h3>Existing challenges</h3>
-      {reviewLoading ? <p role="status">Loading existing challenges…</p> : null}
-      {reviewFailure ? <p role="alert">{reviewFailure}</p> : null}
-      {!reviewLoading && !reviewFailure && reviewChallenges.length === 0 ? <p>No existing challenges were found.</p> : null}
+    {classesHasMore ? <button disabled={loadingClasses || pending} type="button" style={buttonStyle("secondary", basePath)} onClick={() => void loadClasses(classes.length)}>{text.moreClasses}</button> : null}
+    {failure ? <p role="alert">{text[failure]}</p> : null}
+    {saved ? <div><p role="status">{text.saved.replace("{title}", saved.title)}</p><button type="button" style={buttonStyle("secondary", basePath)} onClick={() => { seedRef.current = generateSeed(); submissionRef.current = null; setSaved(null); setTitle(""); }}>{text.createAnother}</button></div> : null}
+    {reviewScope === `${scope}\u0000${classId}` ? <section aria-label={text.existingRegion}>
+      <h3>{text.existingTitle}</h3>
+      {reviewLoading ? <p role="status">{text.loadingExisting}</p> : null}
+      {reviewFailure ? <p role="alert">{text.existingError}</p> : null}
+      {!reviewLoading && !reviewFailure && reviewChallenges.length === 0 ? <p>{text.noExisting}</p> : null}
       <ul>{reviewChallenges.map((challenge) => <li key={challenge.id}><strong>{challenge.title}</strong> <time dateTime={challenge.startsAt}>{new Date(challenge.startsAt).toLocaleDateString()}</time> – <time dateTime={challenge.expiresAt}>{new Date(challenge.expiresAt).toLocaleDateString()}</time></li>)}</ul>
-      <button disabled={reviewLoading} type="button" style={buttonStyle("secondary", basePath)} onClick={() => void loadExistingChallenges(classId)}>Refresh existing challenges</button>
+      <button disabled={reviewLoading} type="button" style={buttonStyle("secondary", basePath)} onClick={() => void loadExistingChallenges(classId)}>{text.refreshExisting}</button>
     </section> : null}
   </section>;
 }

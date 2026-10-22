@@ -39,7 +39,7 @@ export function Toolbar({ user }: { user?: UserForPermissions | null }) {
       <ul className="mx-auto grid h-full max-w-lg auto-cols-fr grid-flow-col">
         {tabs.map((tab) => (
           <li key={tab.key} className="h-full">
-            <Link href={tab.href} aria-current={tab.key === current ? "page" : undefined} className="flex h-full flex-col items-center justify-center gap-0.5 px-1 py-1">
+            <Link href={tab.href} aria-current={tab.key === current ? "page" : undefined} className="flex h-full flex-col items-center justify-center gap-0.5 px-1 py-0.5">
               <img src={NAV_ART[tab.key] ?? ART.scroll} alt="" />
               <span className="max-w-full truncate">{t(`tabs.${tab.key}`)}</span>
             </Link>

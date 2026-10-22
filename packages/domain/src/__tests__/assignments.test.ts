@@ -118,6 +118,12 @@ describe("createAssignment", () => {
 
     expect(result).toEqual({ id: "a1", title: "Assignment" });
     expect(tx.insert).toHaveBeenCalledTimes(2);
+    // The student rows start as NOT_STARTED, so the student "not started" filter finds them (2026-10-21).
+    const values = tx.insert.mock.results[1].value.values as ReturnType<typeof vi.fn>;
+    expect(values).toHaveBeenLastCalledWith([
+      { assignmentId: "a1", studentId: "st1", status: "NOT_STARTED" },
+      { assignmentId: "a1", studentId: "st2", status: "NOT_STARTED" },
+    ]);
   });
 });
 
