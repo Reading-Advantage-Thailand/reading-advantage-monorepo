@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { CardSignIn } from "@/components/student-login/card-sign-in";
+import { HelpLink } from "@/components/help/help-link";
 
 /**
  * Localizes the QR card sign-in page metadata.
@@ -18,5 +19,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
  * @returns The page.
  */
 export default function CardSignInPage() {
-  return <CardSignIn />;
+  return (
+    <>
+      <CardSignIn />
+      <HelpLink pathname="/auth/card" audience="student" />
+    </>
+  );
 }

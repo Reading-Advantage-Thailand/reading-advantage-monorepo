@@ -1,5 +1,6 @@
 import { StudentSignIn } from "@/components/student-login/student-sign-in";
 import { TeacherSignInForm } from "@/components/auth/teacher-signin-form";
+import { HelpLink } from "@/components/help/help-link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookTextIcon, SchoolIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -41,9 +42,11 @@ export default async function SignInPage() {
       </TabsList>
       <TabsContent value="student">
         <StudentSignIn />
+        <HelpLink pathname="/auth/signin" audience="student" />
       </TabsContent>
       <TabsContent value="teacher">
         <TeacherSignInForm />
+        <HelpLink pathname="/auth/signin" audience="teacher" />
       </TabsContent>
     </Tabs>
   );
