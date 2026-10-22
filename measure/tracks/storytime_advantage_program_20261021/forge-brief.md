@@ -29,7 +29,7 @@ proportions to age 5 (larger head, shorter limbs). Keep the colours and the silh
 | 2 | Sprout Wizard | wizard (P0), `advantage-forge/assets/wizard.ts` | Counts numbers. Asks "Is it a ___?". | 2 |
 | 3 | Sprout Druid | druid (P0), `advantage-forge/assets/druid.ts` | Keeps the class garden. Shows colours. Pet helper. | 3 |
 | 4 | Sprout Knight | knight (P0), `advantage-forge/assets/knight.ts` | Family and body-and-face helper. Carries no shield. | 4 |
-| 5 | Pip the puppy | No Chibi Quest origin. The mascot is named in `design.md` section 6.1 and decision S7 (the Pip world). Model base: `advantage-forge/assets/dog.ts`. | Mascot and pet. Appears from week 6. | 6 |
+| 5 | Pip the puppy | No Chibi Quest origin. The mascot is named in `design.md` section 6.1 and decision S7 (the Pip world). Model base: `advantage-forge/assets/dog.ts`. | Mascot and pet. Sings in the week 1 song "Hello, I Am Pip" and appears in every book. | 1 |
 
 Release 1 uses these 5 only. The Cleric, Archer, and Rogue come with the app (post-release), so the
 window holds 4 new age-5 bases plus the puppy. Weeks 5 to 7 reuse the four Sprouts.
@@ -111,7 +111,7 @@ delivers assets only. Forge does not render a song video.
 ## 7. Order of work
 
 1. The age-5 base (`avatar-base` at age-5 proportions) and its skeleton check.
-2. The cast, in order of first use: Adventurer, Wizard, Druid, Knight, Pip.
+2. The cast, in order of first use: Adventurer, Pip, Wizard, Druid, Knight.
 3. The 24 gesture poses. Start with the 10 named poses.
 4. The 8 scenes and their props, in week order.
 
