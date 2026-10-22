@@ -450,6 +450,7 @@ All content is made in the Workbooks repo under the Primary production rules: Cl
 | Count | 84: Level 2 28, Level 3 28 (23 elements + 5 Thai contrast texts), Level 4 28 (17 elements + 11 cumulative texts) |
 | Pages | 8 story pages (4 spreads) plus cover, "Sounds in this book" page, and a back-cover word list |
 | Words per page | Level 2: 2-5 words, one sentence. Level 3: 6-12 words, one or two sentences. Level 4: 12-20 words, two or three sentences, dialogue allowed |
+| Word shape | Level 2: VC and CVC words only, no consonant blends; blends start at element 36 (Level 3) [W2] |
 | Decodability | ≥ 90 percent of running words decodable with the elements taught to date; untaught words 0 except names; tricky words only from the taught set, at most 3 new in the book |
 | Cumulative rule | Element n's book uses elements 1 to n only. The function in 5.6 gates it. |
 | "Sounds in this book" page | New element, words with the new element, new tricky words (the Reading A-Z elements page) |
@@ -477,12 +478,17 @@ The parallel leveled readers are the same books, re-cut into class sets by level
 |---|---|
 | Count | 112: 28 a level |
 | Length | 60-90 seconds; Level 1 60 seconds |
+| Sung letters | Never a sung letter name: write a repeated onset syllable ("Ap, ap, apples!"), not "A-a-apples" [W2] |
+| Prompt rule | The style text never says "children" or "five-year-olds" (the Lyria 3 Pro filter rejects them); write "kindergarten English classroom, young learners" [W2] |
+| Source | Lyria 3 Pro through Vertex AI (global location), three candidates a song, Daniel rates on the live page; karaoke by vocal separation of the chosen take [W2] |
 | Structure | Verse 1 (the frame with family word 1 and 2), chorus (the frame as a hook, 2 lines, repeated), verse 2 (family word 3 and 4), chorus, verse 3 (words 5 and 6, Level 3-4 adds a question line), chorus twice. The frame appears at least 8 times. Level 2-4 songs include the sound of the week in the chorus (Level 2 "s-s-s, Sam sees a sun"). |
 | Tempo and key | 92-108 bpm Level 1-2, 100-116 Level 3-4; child vocal range C4-C5 |
 | Production | Music by the `create-music-mmx` pipeline from a lyric sheet and a style brief (ukulele, hand claps, glockenspiel; no heavy drums); a vocal by the standard American mmx female voice; a child-chorus layer if the pipeline allows |
 | Video | 2D animation of the Chibi Sprouts cast in the family's scene from the Forge pack, through the `create-video-mmx` pipeline or Remotion with Forge sprites; the frame text on screen for the karaoke cut |
 | Choreography | A description sheet per song: one movement per line, each movement a named gesture from a fixed set of 24 (clap, stamp, point up, point to self, wave, reach, hop, turn, sway, hands on head, ...). The teacher learns 24 gestures once. The video shows a Sprout doing them. |
 | Karaoke | A second cut of the video with the lyric line highlighted word by word; timing from `mmx speech --subtitles` on the vocal track or the lyric sheet timings |
+
+The vocabulary family of the week has 6 to 8 picture words; the numbers family alone has 10 (one to ten), by exception [W2].
 
 ### 6.4 Audio: phonemes
 
