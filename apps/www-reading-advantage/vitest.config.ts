@@ -14,6 +14,10 @@ export default defineConfig({
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     exclude: ["scripts/__tests__/**", "node_modules/**", ".opencode/**"],
     passWithNoTests: true,
+    server: {
+      // next-intl imports "next/server" without an extension; let vite resolve it.
+      deps: { inline: ["next-intl"] },
+    },
   },
   resolve: {
     alias: {
