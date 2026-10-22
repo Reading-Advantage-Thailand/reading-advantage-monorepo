@@ -6,6 +6,6 @@
   "updated_at": "2026-10-23T06:00:00Z",
   "description": "Primary in-app help: a contextual help button in the teacher and student shells that plays the PR What's New tutorial video for the current page",
   "estimated_tasks": 23,
-  "actual_tasks": 4,
-  "deviation_notes": ""
+  "actual_tasks": 6,
+  "deviation_notes": "1.1-1.4 in one commit (the route check uses the matcher). 2.1 stages and the runbook uploads with gcloud storage rsync instead of packages/storage (the Primary bucket uses a Google service account)."
 }

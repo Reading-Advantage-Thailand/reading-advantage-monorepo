@@ -21,8 +21,8 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 
 ## Phase 2: Media receiving step
 
-- [ ] 2.1 `scripts/help/sync-help-videos.ts`: reads PR's links JSON and the local files, keeps the enabled ids, checks each mp4 with ffprobe (H.264, AAC, `moov` before `mdat`; re-mux with faststart if necessary), uploads `help/whats-new/<id>.mp4` and `<id>.jpg` through `packages/storage`, and writes `lib/help/youtube-ids.json`. Dry-run mode prints the plan. Test: the selection, the check logic, and the JSON output, with a mocked storage driver.
-- [ ] 2.2 `docs/runbooks/help-video-sync.md`: when to run (after each upload day), the command, the check of the result (AC-5).
+- [x] 2.1 `scripts/help/stage-help-videos.ts`: reads the registry and PR's folder, checks each enabled video (mp4 and poster exist, `moov` before `mdat`, H.264 + AAC, length within 2 s), hard-links the files into `<out>/help/whats-new/<id>.mp4|jpg`, and writes `lib/help/youtube-ids.json`. It uploads nothing: the runbook's `gcloud storage rsync` uploads (the Primary bucket uses a Google service account, not the S3 adapter of `packages/storage`; all 91 PR files already had `moov` first, so no re-mux step). Tests: `scripts/help/__tests__/stage-lib.test.ts` (7). First run: 88 staged, 0 problems, 16 on YouTube. `c443fcb`
+- [x] 2.2 `docs/runbooks/help-video-sync.md`: when to run (after each upload day), the command, the check of the result (AC-5). `c443fcb`
 - [ ] 2.3 First run: all enabled videos (about 0.6 GB) to the production bucket (owner go, because it writes to production storage).
 
 ## Phase 3: Help button and panel
