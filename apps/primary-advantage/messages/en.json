@@ -82,7 +82,8 @@
       "performanceAnalytics": "Performance Analytics",
       "progressTracking": "Progress Tracking"
     },
-    "schoollicense": "School license"
+    "schoollicense": "School license",
+    "helpreport": "Help video report"
   },
   "Leaderboard": {
     "title": "Leaderboard",
@@ -4498,5 +4499,23 @@
     "thaiNarration": "Thai narration",
     "signInHelp": "How do I sign in?",
     "videoError": "The video did not load. Go back and try again later."
+  },
+  "SystemHelp": {
+    "title": "Help video report",
+    "intro": "How often teachers and students open the help panel and play each video, for the last 7 and 30 days.",
+    "school": "School",
+    "allSchools": "All schools",
+    "show": "Show",
+    "plays": "Plays per video",
+    "opens": "Opens per page",
+    "unmatched": "Pages with no video",
+    "video": "Video",
+    "role": "Role",
+    "page": "Page",
+    "last7": "7 days",
+    "last30": "30 days",
+    "roleName": "{role, select, TEACHER {Teacher} STUDENT {Student} ADMIN {Admin} other {{role}}}",
+    "empty": "No events yet.",
+    "emptyUnmatched": "Every page where help opened has a video."
   }
 }

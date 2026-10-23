@@ -82,7 +82,8 @@
       "performanceAnalytics": "效能分析",
       "progressTracking": "進度追蹤"
     },
-    "schoollicense": "學校授權"
+    "schoollicense": "學校授權",
+    "helpreport": "說明影片報告"
   },
   "Leaderboard": {
     "title": "排行榜",
@@ -4498,5 +4499,23 @@
     "thaiNarration": "泰語旁白",
     "signInHelp": "如何登入？",
     "videoError": "影片無法載入。請返回列表，稍後再試。"
+  },
+  "SystemHelp": {
+    "title": "說明影片報告",
+    "intro": "教師和學生開啟說明面板、播放各部影片的次數，統計最近 7 天和 30 天。",
+    "school": "學校",
+    "allSchools": "所有學校",
+    "show": "顯示",
+    "plays": "各影片播放次數",
+    "opens": "各頁面開啟次數",
+    "unmatched": "沒有影片的頁面",
+    "video": "影片",
+    "role": "角色",
+    "page": "頁面",
+    "last7": "7 天",
+    "last30": "30 天",
+    "roleName": "{role, select, TEACHER {教師} STUDENT {學生} ADMIN {管理員} other {{role}}}",
+    "empty": "尚無資料。",
+    "emptyUnmatched": "所有開啟過說明的頁面都有影片。"
   }
 }

@@ -82,7 +82,8 @@
       "performanceAnalytics": "Phân tích hiệu suất",
       "progressTracking": "Theo dõi tiến độ"
     },
-    "schoollicense": "Giấy phép trường"
+    "schoollicense": "Giấy phép trường",
+    "helpreport": "Báo cáo video hướng dẫn"
   },
   "Leaderboard": {
     "title": "Bảng xếp hạng",
@@ -4347,5 +4348,23 @@
     "thaiNarration": "Thuyết minh tiếng Thái",
     "signInHelp": "Đăng nhập như thế nào?",
     "videoError": "Không tải được video. Hãy quay lại danh sách và thử lại sau."
+  },
+  "SystemHelp": {
+    "title": "Báo cáo video hướng dẫn",
+    "intro": "Số lần giáo viên và học sinh mở bảng hướng dẫn và phát từng video, trong 7 và 30 ngày gần nhất.",
+    "school": "Trường",
+    "allSchools": "Tất cả các trường",
+    "show": "Hiển thị",
+    "plays": "Lượt phát theo video",
+    "opens": "Lượt mở theo trang",
+    "unmatched": "Trang chưa có video",
+    "video": "Video",
+    "role": "Vai trò",
+    "page": "Trang",
+    "last7": "7 ngày",
+    "last30": "30 ngày",
+    "roleName": "{role, select, TEACHER {Giáo viên} STUDENT {Học sinh} ADMIN {Quản trị} other {{role}}}",
+    "empty": "Chưa có dữ liệu.",
+    "emptyUnmatched": "Mọi trang đã mở hướng dẫn đều có video."
   }
 }

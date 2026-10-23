@@ -23,5 +23,10 @@ export const systemPageConfig: PageConfig = {
       href: "/system/licenses",
       icon: "KeyIcon",
     },
+    {
+      title: "helpreport",
+      href: "/system/help",
+      icon: "CircleHelpIcon",
+    },
   ],
 };

@@ -82,7 +82,8 @@
       "performanceAnalytics": "性能分析",
       "progressTracking": "进度跟踪"
     },
-    "schoollicense": "学校许可证"
+    "schoollicense": "学校许可证",
+    "helpreport": "帮助视频报告"
   },
   "Leaderboard": {
     "title": "排行榜",
@@ -4498,5 +4499,23 @@
     "thaiNarration": "泰语旁白",
     "signInHelp": "如何登录？",
     "videoError": "视频无法加载。请返回列表，稍后再试。"
+  },
+  "SystemHelp": {
+    "title": "帮助视频报告",
+    "intro": "教师和学生打开帮助面板、播放各个视频的次数，统计最近 7 天和 30 天。",
+    "school": "学校",
+    "allSchools": "所有学校",
+    "show": "显示",
+    "plays": "各视频播放次数",
+    "opens": "各页面打开次数",
+    "unmatched": "没有视频的页面",
+    "video": "视频",
+    "role": "角色",
+    "page": "页面",
+    "last7": "7 天",
+    "last30": "30 天",
+    "roleName": "{role, select, TEACHER {教师} STUDENT {学生} ADMIN {管理员} other {{role}}}",
+    "empty": "暂无数据。",
+    "emptyUnmatched": "所有打开过帮助的页面都有视频。"
   }
 }
