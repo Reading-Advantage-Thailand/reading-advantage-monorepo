@@ -44,8 +44,8 @@ export function helpVideosFor(
   return { matched, general: own.filter((video) => video.general && !matched.includes(video)) };
 }
 
-/** A path segment that names a record (a number, a uuid, a long id) or has other characters. */
-const isId = (segment: string) => /^\d+$/.test(segment) || (/\d/.test(segment) && segment.length >= 8) || /[^A-Za-z0-9.-]/.test(segment);
+/** A path segment that names a record (it has a digit: an id, a number, a username) or has other characters. */
+const isId = (segment: string) => /\d/.test(segment) || /[^A-Za-z0-9.-]/.test(segment);
 
 /**
  * The page path for the help events (FR-11): ids become `[id]`, so the report counts one row per page.

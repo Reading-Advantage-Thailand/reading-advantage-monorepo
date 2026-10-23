@@ -39,7 +39,7 @@ function ReportTable({ heading, columns, rows, empty }: { heading: string; colum
             </thead>
             <tbody>
               {rows.map(([first, ...rest]) => (
-                <tr key={`${first}|${rest[0]}`} className="border-t border-[rgba(107,84,56,0.35)]">
+                <tr key={[first, ...rest.slice(0, -2)].join("|")} className="border-t border-[rgba(107,84,56,0.35)]">
                   <th scope="row" className="py-2 pr-2 font-bold break-all">
                     {first}
                   </th>
@@ -61,7 +61,7 @@ function ReportTable({ heading, columns, rows, empty }: { heading: string; colum
 }
 
 /**
- * System help report (track primary_in_app_help_20261023, FR-12): plays per video and role, opens
+ * System help report (track primary_in_app_help_20261023, FR-12): plays per video, role, and source, opens
  * per page, and the pages where users opened help with no video, for 7 and 30 days, with a school
  * filter. SYSTEM only: the proxy refuses other roles, and `helpEventReport` checks the permission again.
  * @param props.searchParams `school`: an optional school id.
@@ -113,8 +113,8 @@ export default async function SystemHelpPage({ searchParams }: { searchParams: P
       </form>
       <ReportTable
         heading={t("plays")}
-        columns={[t("video"), t("role"), t("last7"), t("last30")]}
-        rows={report.plays.map((row) => [title(row.videoId), t("roleName", { role: row.role }), row.last7, row.last30])}
+        columns={[t("video"), t("role"), t("source"), t("last7"), t("last30")]}
+        rows={report.plays.map((row) => [title(row.videoId), t("roleName", { role: row.role }), t("sourceName", { source: row.source }), row.last7, row.last30])}
         empty={t("empty")}
       />
       <ReportTable heading={t("opens")} columns={[t("page"), t("last7"), t("last30")]} rows={pages(report.opens)} empty={t("empty")} />

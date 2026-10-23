@@ -47,7 +47,7 @@ export async function recordHelpEvent(params: { db: DB; user: UserContext; input
 }
 
 /**
- * Builds the system help report for the last 7 and 30 days (FR-12): plays per video and role,
+ * Builds the system help report for the last 7 and 30 days (FR-12): plays per video, role, and source,
  * opens per page, the pages where the panel opened with no video, and the schools with events.
  * @param params.db The database.
  * @param params.user The signed-in user (SYSTEM).
@@ -69,7 +69,12 @@ export async function helpEventReport(params: { db: DB; user: UserContext; now?:
   const last7 = sql<number>`(count(*) filter (where ${gte(t.createdAt, new Date(now - 7 * DAY_MS))}))::int`;
   const last30 = sql<number>`count(*)::int`;
   const [plays, opens, unmatched, schoolRows] = await Promise.all([
-    db.select({ videoId: t.videoId, role: t.role, last7, last30 }).from(t).where(inWindow("play")).groupBy(t.videoId, t.role).orderBy(desc(last30)),
+    db
+      .select({ videoId: t.videoId, role: t.role, source: t.source, last7, last30 })
+      .from(t)
+      .where(inWindow("play"))
+      .groupBy(t.videoId, t.role, t.source)
+      .orderBy(desc(last30)),
     db.select({ routePattern: t.routePattern, last7, last30 }).from(t).where(inWindow("open")).groupBy(t.routePattern).orderBy(desc(last30)).limit(HELP_REPORT_PAGE_LIMIT),
     db
       .select({ routePattern: t.routePattern, last7, last30 })

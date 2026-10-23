@@ -4511,10 +4511,12 @@
     "unmatched": "没有视频的页面",
     "video": "视频",
     "role": "角色",
+    "source": "来源",
     "page": "页面",
     "last7": "7 天",
     "last30": "30 天",
     "roleName": "{role, select, TEACHER {教师} STUDENT {学生} ADMIN {管理员} other {{role}}}",
+    "sourceName": "{source, select, youtube {YouTube} file {我们的服务器} other {{source}}}",
     "empty": "暂无数据。",
     "emptyUnmatched": "所有打开过帮助的页面都有视频。"
   }

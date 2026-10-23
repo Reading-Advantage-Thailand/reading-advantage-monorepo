@@ -4360,10 +4360,12 @@
     "unmatched": "Trang chưa có video",
     "video": "Video",
     "role": "Vai trò",
+    "source": "Nguồn",
     "page": "Trang",
     "last7": "7 ngày",
     "last30": "30 ngày",
     "roleName": "{role, select, TEACHER {Giáo viên} STUDENT {Học sinh} ADMIN {Quản trị} other {{role}}}",
+    "sourceName": "{source, select, youtube {YouTube} file {Máy chủ của chúng tôi} other {{source}}}",
     "empty": "Chưa có dữ liệu.",
     "emptyUnmatched": "Mọi trang đã mở hướng dẫn đều có video."
   }

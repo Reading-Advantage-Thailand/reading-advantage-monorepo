@@ -33,7 +33,7 @@ import SystemHelpPage from "../page";
 const SCHOOL = "11111111-1111-4111-8111-111111111111";
 const system = { id: "u2", username: "root", name: "Root", role: "SYSTEM", schoolId: null };
 const report = {
-  plays: [{ videoId: "B4", role: "TEACHER", last7: 2, last30: 5 }],
+  plays: [{ videoId: "B4", role: "TEACHER", source: "youtube", last7: 2, last30: 5 }],
   opens: [{ routePattern: "/teacher/class-roster/[id]", last7: 3, last30: 9 }],
   unmatched: [],
   schools: [{ id: SCHOOL, name: "Boonyathat" }],
@@ -59,7 +59,7 @@ describe("system help report page (FR-12)", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Help video report" })).toBeInTheDocument();
     const plays = screen.getByRole("region", { name: "Plays per video" });
     expect(within(plays).getByRole("rowheader")).toHaveTextContent("B4 · Print the class sheet and QR cards");
-    expect(within(plays).getAllByRole("cell").map((c) => c.textContent)).toEqual(["Teacher", "2", "5"]);
+    expect(within(plays).getAllByRole("cell").map((c) => c.textContent)).toEqual(["Teacher", "YouTube", "2", "5"]);
     expect(within(screen.getByRole("region", { name: "Opens per page" })).getByRole("rowheader")).toHaveTextContent("/teacher/class-roster/[id]");
     expect(within(screen.getByRole("region", { name: "Pages with no video" })).getByText("Every page where help opened has a video.")).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Boonyathat" })).toHaveValue(SCHOOL);

@@ -25,6 +25,12 @@ describe("recordHelpEventInput (FR-11)", () => {
     expect(() => recordHelpEventInput.parse({ event: "open", routePattern: "/student/<script>", matched: 0 })).toThrow();
     expect(() => recordHelpEventInput.parse({ event: "open", routePattern: "/student/home" })).toThrow();
   });
+
+  it("turns a segment with a digit into [id], so no id or username is stored", () => {
+    const open = recordHelpEventInput.parse({ event: "open", routePattern: "/teacher/class-roster/830b7de6-7b63/lessons/3/bluetiger47", matched: 0 });
+    expect(open.routePattern).toBe("/teacher/class-roster/[id]/lessons/[id]/[id]");
+    expect(recordHelpEventInput.parse({ event: "open", routePattern: "/teacher/class-roster/[id]", matched: 1 }).routePattern).toBe("/teacher/class-roster/[id]");
+  });
 });
 
 describe("recordHelpEvent (FR-11)", () => {
@@ -33,6 +39,7 @@ describe("recordHelpEvent (FR-11)", () => {
     const out = await recordHelpEvent({ db: mock as unknown as DB, user: student, input: { event: "play", routePattern: "/student/home", videoId: "C1", source: "file" } });
     expect(out).toEqual({ recorded: true });
     expect(inserted(mock)).toEqual({ schoolId: SCHOOL, role: "STUDENT", event: "play", routePattern: "/student/home", videoId: "C1", source: "file", matched: null });
+    expect(inserted(mock)).not.toHaveProperty("userId");
   });
 
   it("writes an open with the number of matched videos", async () => {
@@ -56,7 +63,7 @@ describe("recordHelpEvent (FR-11)", () => {
 });
 
 describe("helpEventReport (FR-12)", () => {
-  const plays = [{ videoId: "B4", role: "TEACHER", last7: 2, last30: 5 }];
+  const plays = [{ videoId: "B4", role: "TEACHER", source: "youtube", last7: 2, last30: 5 }];
   const opens = [{ routePattern: "/teacher/class-roster/[id]", last7: 3, last30: 9 }];
   const unmatched = [{ routePattern: "/teacher/my-students", last7: 1, last30: 1 }];
   const schools = [{ id: SCHOOL, name: "Boonyathat" }];

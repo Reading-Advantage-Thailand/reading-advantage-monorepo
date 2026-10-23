@@ -1,7 +1,15 @@
 import { z } from "zod";
 
-/** A page path with ids replaced by `[id]`, as the help panel sends it (spec FR-11). */
-const routePattern = z.string().min(1).max(200).regex(/^\/[A-Za-z0-9\-/[\].]*$/);
+/**
+ * A page path as the help panel sends it (spec FR-11). A segment with a digit (a record id, a
+ * lesson number, a username) becomes `[id]` here too, so a changed client cannot store an id.
+ */
+const routePattern = z
+  .string()
+  .min(1)
+  .max(200)
+  .regex(/^\/[A-Za-z0-9\-/[\].]*$/)
+  .transform((path) => path.replace(/[^/]*\d[^/]*/g, "[id]"));
 
 /** A help video id of the app registry, for example `B4`. The route checks that the id is in the registry. */
 export const helpVideoIdSchema = z.string().regex(/^[A-J][0-9]{1,2}$/);
@@ -28,11 +36,12 @@ const counts = { last7: z.number().int().min(0), last30: z.number().int().min(0)
 const pageRow = z.object({ routePattern: z.string(), ...counts });
 
 /**
- * The system help report (FR-12): plays per video and role, opens per page, opens with no video,
+ * The system help report (FR-12): plays per video, role, and source (a switch from YouTube to our
+ * file counts once in each source), opens per page, opens with no video,
  * and the schools with events in the last 30 days (for the school filter).
  */
 export const helpEventReportOutput = z.object({
-  plays: z.array(z.object({ videoId: z.string(), role: z.string(), ...counts })),
+  plays: z.array(z.object({ videoId: z.string(), role: z.string(), source: z.string(), ...counts })),
   opens: z.array(pageRow),
   unmatched: z.array(pageRow),
   schools: z.array(z.object({ id: z.string(), name: z.string() })),

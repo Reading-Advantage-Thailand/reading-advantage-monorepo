@@ -4511,10 +4511,12 @@
     "unmatched": "沒有影片的頁面",
     "video": "影片",
     "role": "角色",
+    "source": "來源",
     "page": "頁面",
     "last7": "7 天",
     "last30": "30 天",
     "roleName": "{role, select, TEACHER {教師} STUDENT {學生} ADMIN {管理員} other {{role}}}",
+    "sourceName": "{source, select, youtube {YouTube} file {我們的伺服器} other {{source}}}",
     "empty": "尚無資料。",
     "emptyUnmatched": "所有開啟過說明的頁面都有影片。"
   }

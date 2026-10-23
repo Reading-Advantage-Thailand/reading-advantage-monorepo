@@ -12,13 +12,17 @@ vi.mock("@reading-advantage/domain/primary-help", () => ({ recordHelpEvent: mock
 
 import { POST } from "../route";
 
-const post = (body: unknown, origin = "http://localhost") =>
-  POST(new NextRequest("http://localhost/api/v1/help/events", { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json", origin } }));
+/** Posts from a page of the app (Sec-Fetch-Site: same-origin) unless other headers are given. */
+const post = (body: unknown, headers: Record<string, string> = { "sec-fetch-site": "same-origin" }, url = "http://localhost/api/v1/help/events") =>
+  POST(new NextRequest(url, { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json", ...headers } }));
+let user = 0;
 const play = { event: "play", routePattern: "/teacher/class-roster/[id]", videoId: "B4", source: "youtube" };
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mocks.session = { user: { id: "t1", role: "TEACHER", schoolId: "school-1" } };
+  // A new user id for each test, so the rate limit of one test does not reach the next.
+  user += 1;
+  mocks.session = { user: { id: `t${user}`, role: "TEACHER", schoolId: "school-1" } };
   mocks.recordHelpEvent.mockResolvedValue({ recorded: true });
 });
 
@@ -30,8 +34,21 @@ describe("POST /api/v1/help/events (FR-11)", () => {
   });
 
   it("refuses another origin", async () => {
-    expect((await post(play, "https://evil.example")).status).toBe(403);
+    expect((await post(play, { "sec-fetch-site": "cross-site", origin: "https://evil.example" })).status).toBe(403);
+    expect((await post(play, { origin: "https://evil.example", host: "primary.reading-advantage.com" })).status).toBe(403);
+    expect((await post(play, {})).status).toBe(403);
     expect(mocks.recordHelpEvent).not.toHaveBeenCalled();
+  });
+
+  it("accepts an older browser on Cloud Run by the forwarded host, not the container URL", async () => {
+    const headers = { origin: "https://primary.reading-advantage.com", host: "0.0.0.0:8080", "x-forwarded-host": "primary.reading-advantage.com" };
+    expect((await post(play, headers, "http://0.0.0.0:8080/api/v1/help/events")).status).toBe(204);
+  });
+
+  it("stops one user after 30 events in a minute", async () => {
+    for (let i = 0; i < 30; i += 1) expect((await post(play)).status).toBe(204);
+    expect((await post(play)).status).toBe(429);
+    expect(mocks.recordHelpEvent).toHaveBeenCalledTimes(30);
   });
 
   it("refuses a signed-out request", async () => {

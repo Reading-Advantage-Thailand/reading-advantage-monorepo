@@ -4511,10 +4511,12 @@
     "unmatched": "หน้าที่ยังไม่มีวิดีโอ",
     "video": "วิดีโอ",
     "role": "บทบาท",
+    "source": "แหล่งที่เล่น",
     "page": "หน้า",
     "last7": "7 วัน",
     "last30": "30 วัน",
     "roleName": "{role, select, TEACHER {ครู} STUDENT {นักเรียน} ADMIN {ผู้ดูแล} other {{role}}}",
+    "sourceName": "{source, select, youtube {YouTube} file {เซิร์ฟเวอร์ของเรา} other {{source}}}",
     "empty": "ยังไม่มีข้อมูล",
     "emptyUnmatched": "ทุกหน้าที่มีการเปิดแผงช่วยเหลือมีวิดีโอแล้ว"
   }

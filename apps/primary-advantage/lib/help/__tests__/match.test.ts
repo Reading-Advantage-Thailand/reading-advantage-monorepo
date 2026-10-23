@@ -85,6 +85,7 @@ describe("pagePattern (FR-11)", () => {
     );
     expect(pagePattern("/student/games/apk/potion-rush?x=1")).toBe("/student/games/apk/potion-rush");
     expect(pagePattern("/student/read/%E0%B8%81")).toBe("/student/read/[id]");
+    expect(pagePattern("/teacher/students/tiger47")).toBe("/teacher/students/[id]");
     expect(pagePattern("/")).toBe("/");
   });
 });
