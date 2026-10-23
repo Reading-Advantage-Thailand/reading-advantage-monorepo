@@ -26,40 +26,351 @@
       "cover": {},
       "pages": [
         {
-          "text": "Hello, I am Pat.",
+          "text": "Hello, hello, I am Pip",
           "image": {}
         },
         {
-          "text": "Hello, I am May.",
+          "text": "Hello, hello, I am Nan",
           "image": {}
         },
         {
-          "text": "Hello, I am Sam.",
+          "text": "Wave your hand and say it too",
           "image": {}
         },
         {
-          "text": "Hello, I am Mia.",
+          "text": "Hello, I am you",
           "image": {}
         },
         {
-          "text": "Hello, I am Nan.",
+          "text": "Hello, I am Pip (Hello, I am Pip!)",
           "image": {}
         },
         {
-          "text": "Hello, I am Ben.",
+          "text": "Hello, I am Nan (Hello, I am Nan!)",
           "image": {}
         },
         {
-          "text": "Hello, I am your teacher.",
+          "text": "Hello, who are you? (Hello, who are you?)",
           "image": {}
         },
         {
-          "text": "Hello, I am Pip!",
+          "text": "Hello, who are you?",
           "image": {}
         }
       ],
       "audio": {
-        "sentences": []
+        "file": "l2/media/w01/song.mp3",
+        "sentences": [
+          {
+            "sentence": "Hello, hello, I am Pip",
+            "startTime": 11.4,
+            "endTime": 15.14,
+            "words": [
+              {
+                "word": "Hello,",
+                "start": 11.4,
+                "end": 11.62
+              },
+              {
+                "word": "hello,",
+                "start": 12.18,
+                "end": 12.86
+              },
+              {
+                "word": "I",
+                "start": 13.42,
+                "end": 14.2
+              },
+              {
+                "word": "am",
+                "start": 14.2,
+                "end": 14.74
+              },
+              {
+                "word": "Pip",
+                "start": 14.74,
+                "end": 15.14
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Hello, hello, I am Nan",
+            "startTime": 15.14,
+            "endTime": 19.8,
+            "words": [
+              {
+                "word": "Hello,",
+                "start": 15.14,
+                "end": 16.28
+              },
+              {
+                "word": "hello,",
+                "start": 16.76,
+                "end": 17.44
+              },
+              {
+                "word": "I",
+                "start": 18.38,
+                "end": 18.84
+              },
+              {
+                "word": "am",
+                "start": 18.84,
+                "end": 19.34
+              },
+              {
+                "word": "Nan",
+                "start": 19.34,
+                "end": 19.8
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Wave your hand and say it too",
+            "startTime": 19.8,
+            "endTime": 24.4,
+            "words": [
+              {
+                "word": "Wave",
+                "start": 19.8,
+                "end": 20.84
+              },
+              {
+                "word": "your",
+                "start": 20.84,
+                "end": 21.52
+              },
+              {
+                "word": "hand",
+                "start": 21.52,
+                "end": 22.32
+              },
+              {
+                "word": "and",
+                "start": 22.32,
+                "end": 22.72
+              },
+              {
+                "word": "say",
+                "start": 22.72,
+                "end": 23.22
+              },
+              {
+                "word": "it",
+                "start": 23.22,
+                "end": 23.96
+              },
+              {
+                "word": "too",
+                "start": 23.96,
+                "end": 24.4
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Hello, I am you",
+            "startTime": 24.4,
+            "endTime": 27.8,
+            "words": [
+              {
+                "word": "Hello,",
+                "start": 24.4,
+                "end": 25.3
+              },
+              {
+                "word": "I",
+                "start": 26.04,
+                "end": 26.88
+              },
+              {
+                "word": "am",
+                "start": 26.88,
+                "end": 27.42
+              },
+              {
+                "word": "you",
+                "start": 27.42,
+                "end": 27.8
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Hello, I am Pip (Hello, I am Pip!)",
+            "startTime": 29.16,
+            "endTime": 33.44,
+            "words": [
+              {
+                "word": "Hello,",
+                "start": 29.16,
+                "end": 29.96
+              },
+              {
+                "word": "I",
+                "start": 30.28,
+                "end": 30.6
+              },
+              {
+                "word": "am",
+                "start": 30.6,
+                "end": 30.88
+              },
+              {
+                "word": "Pip",
+                "start": 30.88,
+                "end": 31.16
+              },
+              {
+                "word": "Hello,",
+                "start": 31.48,
+                "end": 32.28
+              },
+              {
+                "word": "I",
+                "start": 32.6,
+                "end": 32.94
+              },
+              {
+                "word": "am",
+                "start": 32.94,
+                "end": 33.16
+              },
+              {
+                "word": "Pip!",
+                "start": 33.16,
+                "end": 33.44
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Hello, I am Nan (Hello, I am Nan!)",
+            "startTime": 33.72,
+            "endTime": 38.54,
+            "words": [
+              {
+                "word": "Hello,",
+                "start": 33.72,
+                "end": 34.5
+              },
+              {
+                "word": "I",
+                "start": 35.04,
+                "end": 35.18
+              },
+              {
+                "word": "am",
+                "start": 35.18,
+                "end": 35.42
+              },
+              {
+                "word": "Nan",
+                "start": 35.42,
+                "end": 35.74
+              },
+              {
+                "word": "Hello,",
+                "start": 36.22,
+                "end": 36.72
+              },
+              {
+                "word": "I",
+                "start": 37.02,
+                "end": 37.2
+              },
+              {
+                "word": "am",
+                "start": 37.2,
+                "end": 37.5
+              },
+              {
+                "word": "Nan!",
+                "start": 37.5,
+                "end": 38.54
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Hello, who are you? (Hello, who are you?)",
+            "startTime": 38.54,
+            "endTime": 42.6,
+            "words": [
+              {
+                "word": "Hello,",
+                "start": 38.54,
+                "end": 39.52
+              },
+              {
+                "word": "who",
+                "start": 39.52,
+                "end": 39.68
+              },
+              {
+                "word": "are",
+                "start": 39.68,
+                "end": 40
+              },
+              {
+                "word": "you?",
+                "start": 40,
+                "end": 40.9
+              },
+              {
+                "word": "Hello,",
+                "start": 40.9,
+                "end": 41.48
+              },
+              {
+                "word": "who",
+                "start": 41.48,
+                "end": 41.7
+              },
+              {
+                "word": "are",
+                "start": 41.7,
+                "end": 42.2
+              },
+              {
+                "word": "you?",
+                "start": 42.2,
+                "end": 42.6
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Hello, who are you?",
+            "startTime": 43.12,
+            "endTime": 44.9,
+            "words": [
+              {
+                "word": "Hello,",
+                "start": 43.12,
+                "end": 43.76
+              },
+              {
+                "word": "who",
+                "start": 43.76,
+                "end": 43.96
+              },
+              {
+                "word": "are",
+                "start": 43.96,
+                "end": 44.5
+              },
+              {
+                "word": "you?",
+                "start": 44.5,
+                "end": 44.9
+              }
+            ],
+            "page": 8
+          }
+        ]
       }
     },
     {
