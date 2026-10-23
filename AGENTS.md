@@ -136,6 +136,22 @@ program's host, and never shares its deploy or its traffic with another program.
 program inside another app is wrong at the spec stage; stop and change the shape before any code
 (owner rule, 2026-10-23, from the Storytime QR page that was built inside primary-advantage).
 
+### Clean up after a merge
+
+Owner rule, 2026-10-23: "They either get merged into main / master in whole or in part, or they get
+deprecated and pruned." Each worktree and each branch other than the default branch has one of two
+ends: it merges into the default branch, in whole or in part, or it is deprecated and pruned.
+
+- After a merge, remove the worktree in the same turn: `git worktree remove <path>`, then
+  `git worktree prune`.
+- Delete the merged branch with `git branch -d <branch>`. Delete its remote branch too.
+- When the owner accepts the work, delete its build outputs and temp files (renders, frames,
+  sprites, bench runs). Keep only the delivered files.
+- If a permission check blocks a delete, give the owner the path and the command. Do not ask
+  another session to do it.
+- Before a work session ends, run `git worktree list` and `git branch -a`. Report each item that is
+  not the default branch, with its plan.
+
 ---
 
 ## Package Responsibilities
