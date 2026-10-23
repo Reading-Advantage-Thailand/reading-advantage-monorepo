@@ -176,6 +176,10 @@
       "types": "./dist/primary-lesson-attempts/index.d.ts",
       "import": "./dist/primary-lesson-attempts/index.js"
     },
+    "./primary-help": {
+      "types": "./dist/primary-help/index.d.ts",
+      "import": "./dist/primary-help/index.js"
+    },
     "./primary-quest": {
       "types": "./dist/primary-quest/index.d.ts",
       "import": "./dist/primary-quest/index.js"
