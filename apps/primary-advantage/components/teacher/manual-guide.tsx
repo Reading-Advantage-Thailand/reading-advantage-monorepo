@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PlayIcon } from "lucide-react";
 import { Fragment, type ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -74,7 +75,12 @@ function ManualPicture({ id, caption, testData }: { id: ManualFigureId; caption:
  * @returns The table of contents and the sections.
  */
 export async function renderManualGuide(classPath: string | null): Promise<ReactNode> {
-  const [root, t, tb] = await Promise.all([getTranslations(), getTranslations("TeacherManual"), getTranslations("TeacherUi.classBook")]);
+  const [root, t, tb, help] = await Promise.all([
+    getTranslations(),
+    getTranslations("TeacherManual"),
+    getTranslations("TeacherUi.classBook"),
+    getTranslations("Help"),
+  ]);
   const labels = Object.fromEntries(
     Object.entries(MANUAL_LABELS).map(([name, label]) => {
       const text = root(label.key as never, ("values" in label ? label.values : undefined) as never);
@@ -176,11 +182,19 @@ export async function renderManualGuide(classPath: string | null): Promise<React
               <span className="grid min-w-9 place-items-center rounded-md bg-black px-2 py-1 text-white">{section.number}</span>
               {t(`${section.key}.title` as never)}
             </h2>
-            {section.link && (
-              <Link href={href(section.link)} className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION)}>
-                {t("openPage")}
-              </Link>
-            )}
+            <div className="flex flex-wrap gap-2">
+              {section.video && (
+                <Link href={`/teacher/help?play=${section.video}`} className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION)}>
+                  <PlayIcon aria-hidden="true" />
+                  {help("watchVideo")}
+                </Link>
+              )}
+              {section.link && (
+                <Link href={href(section.link)} className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION)}>
+                  {t("openPage")}
+                </Link>
+              )}
+            </div>
           </div>
           {section.lead && <p>{rich(`${section.key}.lead`)}</p>}
           {section.blocks.map((item, index) => block(section.key, item, index))}

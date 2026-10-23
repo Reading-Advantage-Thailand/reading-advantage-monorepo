@@ -114,6 +114,8 @@ export interface ManualSection {
   number: string;
   lead?: boolean;
   link?: ManualLink;
+  /** The registry id of the help video for the section; "Watch the video" opens it (FR-10). */
+  video?: string;
   blocks: ManualBlock[];
 }
 
@@ -128,6 +130,7 @@ export const CLASS_SHEET_CASE: "A" | "B" | "both" = "B";
 export const MANUAL_SECTIONS: ManualSection[] = [
   {
     id: "signin",
+    video: "B5",
     key: "signin",
     number: "1",
     lead: true,
@@ -141,6 +144,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "class",
+    video: "E2",
     key: "class",
     number: "2",
     lead: true,
@@ -153,6 +157,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "start-class",
+    video: "B3",
     key: "startClass",
     number: "3",
     lead: true,
@@ -170,6 +175,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "assign-book",
+    video: "D2",
     key: "assignBook",
     number: "4.1",
     lead: true,
@@ -182,6 +188,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "lesson",
+    video: "D3",
     key: "lesson",
     number: "4.2",
     lead: true,
@@ -198,6 +205,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "after-lesson",
+    video: "D6",
     key: "afterLesson",
     number: "4.3",
     blocks: [
@@ -208,6 +216,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "homework",
+    video: "E4",
     key: "homework",
     number: "5",
     lead: true,
@@ -224,6 +233,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "class-sheet",
+    video: "B4",
     key: "classSheet",
     number: "6",
     lead: true,

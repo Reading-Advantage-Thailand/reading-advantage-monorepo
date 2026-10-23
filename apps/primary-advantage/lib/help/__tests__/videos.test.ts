@@ -69,3 +69,13 @@ describe("help video registry (spec FR-5)", () => {
     expect(general("student")).toEqual(["C1", "C2"]);
   });
 });
+
+describe("manual videos (FR-10)", () => {
+  it("names an enabled teacher video for each manual section that has one", async () => {
+    const { MANUAL_SECTIONS } = await import("@/lib/teacher-manual-guide");
+    for (const section of MANUAL_SECTIONS.filter((s) => s.video)) {
+      const video = HELP_VIDEOS.find((v) => v.id === section.video);
+      expect(video, section.id).toMatchObject({ audience: "teacher", enabled: true });
+    }
+  });
+});
