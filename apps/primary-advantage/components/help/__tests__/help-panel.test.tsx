@@ -148,6 +148,14 @@ describe("HelpPanel (spec FR-2 to FR-4, FR-7)", () => {
     expect(screen.getByRole("link", { name: "All help videos" })).toHaveAttribute("href", "/teacher/help");
   });
 
+  it("hides a poster that does not load, so no broken-image icon shows (PR P1)", () => {
+    panel("/student/home", "student");
+    const poster = screen.getByRole("button", { name: /My new home page/ }).querySelector("img") as HTMLImageElement;
+    fireEvent.error(poster);
+    expect(poster.style.visibility).toBe("hidden");
+    expect(poster.parentElement).toHaveClass("bg-muted");
+  });
+
   it("stops the video when the panel closes", () => {
     const onOpenChange = vi.fn();
     const { rerender } = panel("/student/home", "student", "en", onOpenChange);

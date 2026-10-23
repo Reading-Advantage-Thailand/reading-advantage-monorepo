@@ -2,7 +2,7 @@
 
 import { ArrowLeftIcon, PlayIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type SyntheticEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Link } from "@/i18n/navigation";
@@ -19,6 +19,11 @@ const studentVideos = HELP_VIDEOS.filter((video) => video.enabled && video.audie
 
 /** The bucket URL of a help video file (`mp4`) or its poster (`jpg`), staged by scripts/help. */
 const mediaUrl = (id: string, kind: "mp4" | "jpg") => getStorageUrl(`help/whats-new/${id}.${kind}`);
+
+/** Hides a poster that did not load, so the grey box behind it shows instead of the broken-image icon. */
+const hideOnError = (event: SyntheticEvent<HTMLImageElement>) => {
+  event.currentTarget.style.visibility = "hidden";
+};
 
 /** The length of a video as m:ss. */
 const length = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
@@ -154,7 +159,9 @@ export function HelpItem({ video, focus, onSelect }: { video: HelpVideo; focus: 
       onClick={() => onSelect(video)}
       className="hover:bg-accent flex min-h-11 cursor-pointer items-center gap-3 rounded-md border p-2 text-left"
     >
-      <img src={mediaUrl(video.id, "jpg")} alt="" loading="lazy" className={cn("bg-muted shrink-0 rounded object-cover text-[0px]", video.format === "9x16" ? "h-16 w-9" : "h-12 w-20")} />
+      <span className={cn("bg-muted shrink-0 overflow-hidden rounded", video.format === "9x16" ? "h-16 w-9" : "h-12 w-20")}>
+        <img src={mediaUrl(video.id, "jpg")} alt="" loading="lazy" onError={hideOnError} className="h-full w-full object-cover" />
+      </span>
       <span className="flex flex-col">
         <span className="font-medium">{locale === "th" ? video.title.th : video.title.en}</span>
         <span className="text-muted-foreground text-xs">
@@ -209,7 +216,7 @@ export function HelpPlayer({
               onPlay(video, youtubeId ? "youtube" : "file");
             }}
             aria-label={t("play", { title })} className="group absolute inset-0 cursor-pointer">
-            <img src={mediaUrl(video.id, "jpg")} alt="" className="h-full w-full object-cover" />
+            <img src={mediaUrl(video.id, "jpg")} alt="" onError={hideOnError} className="h-full w-full object-cover" />
             <span className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/60 text-white group-hover:bg-black/80">
               <PlayIcon aria-hidden="true" className="h-8 w-8" />
             </span>
