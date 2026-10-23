@@ -6,6 +6,7 @@ import { currentUser } from "./lib/session";
 import { normalizeRole } from "./lib/authorization";
 import { protectedRoutes, roleDefaultRedirects } from "./lib/route-policies";
 import { safeCallbackPath } from "./lib/safe-callback-path";
+import { storytimeHostRedirect } from "./lib/storytime/host";
 
 // Create the intl middleware
 const intlMiddleware = createIntlMiddleware(routing);
@@ -14,6 +15,9 @@ export default async function middleware(request: NextRequest) {
   // Get the pathname without locale
 
   const pathname = request.nextUrl.pathname;
+  // The Storytime host serves only the week pages; nextUrl names the container on Cloud Run, so read the header.
+  const primary = storytimeHostRedirect(request.headers.get("host"), pathname);
+  if (primary) return NextResponse.redirect(new URL(`${primary}${request.nextUrl.search}`));
   const locale = request.nextUrl.pathname.split("/")[1];
   const pathWithoutLocale = pathname.replace(`/${locale}`, "") || "/";
 
