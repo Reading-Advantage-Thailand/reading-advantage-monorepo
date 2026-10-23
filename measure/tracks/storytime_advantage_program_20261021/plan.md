@@ -98,6 +98,7 @@ Stop rule for release 1: if Daniel has not approved week 1 by 2026-11-05, releas
 - [ ] Task: Sales pack with PR: battle card, sample pages, the week 1 song video as the demo video, the hand-off statement (S12); by 2026-11-28.
 - [ ] Task: Browser and print look check of every page type on a live review page.
 - [ ] Task: Release 1 on 2026-12-01: the printed unit in hand or at the printer with the date confirmed, the QR page live, the sales pack sent; retro entry in `lessons-learned.md`.
+  Live preview 2026-10-23 20:35 Bangkok (Daniel's order): https://storytime.reading-advantage.com/th/st/2/1 (week 1 published, Workbooks 4d78b21; receive 4e3aa8fe8). Cloud Run primary-advantage-app revision 00134-z27 (build 36195cd2, tag deploy5) at 100%; rollback 00133-wqf; domain mapping created, certificate valid to 2027-01-21; the 11 week 1 media files in the bucket. Weeks 2 to 7 flip to published on Daniel's go per week. Monorepo's help1 build (release/deploy4 18023f378) replaces this revision next; no traffic move back after it.
 
 ## Phase 7: Level 2 weeks 9 to 32 (2026-12-01 to 2027-02-15)
 
