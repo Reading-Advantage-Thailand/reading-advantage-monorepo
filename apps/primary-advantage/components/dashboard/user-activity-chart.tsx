@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useTheme } from "next-themes";
 import { UserActivityLog, UserXpLog } from "@/types";
 import { DateRange } from "react-day-picker";
-import { addDays, format } from "date-fns";
+import { addDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -36,7 +36,7 @@ import {
 import { CalendarIcon, StarIcon } from "lucide-react";
 import { EmptyState } from "@reading-advantage/ui";
 import { cn } from "@/lib/utils";
-import { dateFnsLocale } from "@/lib/intl-locale";
+import { dateFnsLocale, intlLocale } from "@/lib/intl-locale";
 import {
   Select,
   SelectContent,
@@ -80,6 +80,10 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
     from: new Date(new Date().setDate(new Date().getDate() - 6)),
     to: addDays(new Date(), 0),
   });
+
+  // The app date format: Thai shows day first and the Buddhist year ("1 ต.ค. 2569"), as the reading history.
+  const rangeDay = (day: Date) =>
+    day.toLocaleDateString(intlLocale(locale), { day: "numeric", month: "short", year: "numeric" });
 
   const formattedData = formatCumulativeXpForDays(xpLogs, date);
   // Cumulative XP: all zero means the student has no XP up to the end of the chosen days.
@@ -139,11 +143,10 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
                     {date?.from ? (
                       date.to ? (
                         <>
-                          {format(date.from, "LLL dd, y", { locale: dateFnsLocale(locale) })} -{" "}
-                          {format(date.to, "LLL dd, y", { locale: dateFnsLocale(locale) })}
+                          {rangeDay(date.from)} - {rangeDay(date.to)}
                         </>
                       ) : (
-                        format(date.from, "LLL dd, y", { locale: dateFnsLocale(locale) })
+                        rangeDay(date.from)
                       )
                     ) : (
                       <span>{tTime("selectPeriod")}</span>
