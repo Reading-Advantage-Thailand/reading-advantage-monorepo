@@ -1,0 +1,11 @@
+l2/media/w01/song-lines/clap.jpg
+l2/media/w01/song-lines/hands-out.jpg
+l2/media/w01/song-lines/nod.jpg
+l2/media/w01/song-lines/point-forward.jpg
+l2/media/w01/song-lines/point-to-self.jpg
+l2/media/w01/song-lines/wave.jpg
+l2/media/w01/song-phone.mp4
+l2/media/w01/song-poster.jpg
+l2/media/w01/song.mp3
+l2/media/w01/song.mp4
+phonemes/daniel/04-n.mp3
