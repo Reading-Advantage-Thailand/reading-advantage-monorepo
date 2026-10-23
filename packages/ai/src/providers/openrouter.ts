@@ -2,6 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject as aiGenerateObject } from "ai";
 import { generateText as aiGenerateText } from "ai";
 import { streamText as aiStreamText } from "ai";
+import { zodSchema } from "ai";
 import type {
   AIClientWithProvenance,
   GenerateImageInput,
@@ -9,26 +10,51 @@ import type {
   GenerateObjectInput,
   GenerateObjectWithProvenanceResult,
   GenerateTextInput,
+  MediaInput,
   StreamTextInput,
   StreamTextResult,
   TranscribeAudioInput,
   TranscribeAudioResult,
 } from "../types.js";
-import { AIClientError } from "../errors.js";
+import {
+  AIClientError,
+  SchemaValidationError,
+  UnsupportedError,
+} from "../errors.js";
 import { createGenerationProvenance } from "../provenance.js";
 
 const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 const OPENROUTER_PREFIX = "openrouter/";
 
 /**
- * Default multimodal model used by `generateObjectFromMedia` when no model is
- * supplied per-call. NVIDIA Nemotron 3 Nano Omni is a free, open multimodal
- * model on OpenRouter that accepts audio input and reasons over it.
+ * Default audio model for `generateObjectFromMedia` when no model is supplied
+ * per call. It hears Thai and English speech and accepts WebM (tested
+ * 2026-10-15).
  */
-const DEFAULT_MEDIA_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
+const DEFAULT_MEDIA_MODEL = "qwen/qwen3.8-omni-flash";
 
-/** Default ASR model for transcribeAudio (OpenRouter, $0.0015/min). */
-const DEFAULT_ASR_MODEL = "nvidia/parakeet-tdt-0.6b-v3";
+/**
+ * Default model for `transcribeAudio`. An audio chat model, because OpenRouter
+ * serves its speech-to-text models only on a separate transcription endpoint.
+ */
+const DEFAULT_ASR_MODEL = "google/gemini-2.5-flash-lite";
+
+/**
+ * Time limit for one audio request. A main and a backup request fit in the 300 s route limit.
+ * Qwen 3.8 Omni Flash often needs more on Thai speech (2026-10-15).
+ */
+const MEDIA_TIMEOUT_MS = 120_000;
+
+/** OpenRouter `input_audio` format for each accepted audio MIME type. */
+const AUDIO_FORMATS: Record<string, string> = {
+  "audio/webm": "webm",
+  "audio/ogg": "ogg",
+  "audio/wav": "wav",
+  "audio/mpeg": "mp3",
+  "audio/mp3": "mp3",
+  // Safari records AAC in MP4; both default models accept it as m4a (2026-10-15).
+  "audio/mp4": "m4a",
+};
 
 /**
  * Configuration for the OpenRouter provider.
@@ -65,8 +91,11 @@ export function stripOpenRouterPrefix(modelId: string): string {
 export class OpenRouterProvider implements AIClientWithProvenance {
   private readonly client: ReturnType<typeof createOpenAI>;
   private readonly defaultModel: string;
+  // ES private field: the key never appears in the object's keys or JSON.
+  readonly #apiKey: string;
 
   constructor(config: OpenRouterProviderConfig) {
+    this.#apiKey = config.apiKey;
     this.client = createOpenAI({
       apiKey: config.apiKey,
       baseURL: OPENROUTER_BASE_URL,
@@ -150,40 +179,132 @@ export class OpenRouterProvider implements AIClientWithProvenance {
     );
   }
 
+  /**
+   * Scores or reads one audio clip and returns an object that matches the schema.
+   * @param input The schema, prompt, audio clip, optional model, and temperature.
+   * @returns The parsed object.
+   * @throws UnsupportedError When the audio type has no OpenRouter format.
+   * @throws SchemaValidationError When the reply is not JSON or does not match the schema.
+   * @throws AIClientError With code `PROVIDER_ERROR` when the request fails.
+   */
   async generateObjectFromMedia<T>(
     input: GenerateObjectFromMediaInput<T>
   ): Promise<T> {
+    const content = await this.chatWithAudio("generateObjectFromMedia", {
+      media: input.media,
+      text: input.prompt,
+      model: input.model ?? DEFAULT_MEDIA_MODEL,
+      temperature: input.temperature,
+      reasoningEffort: input.reasoningEffort,
+      responseFormat: {
+        type: "json_schema",
+        json_schema: {
+          name: "response",
+          strict: false,
+          schema: zodSchema(input.schema).jsonSchema,
+        },
+      },
+    });
+    let parsed: unknown;
     try {
-      const modelId = input.model ?? DEFAULT_MEDIA_MODEL;
-      const { object } = await aiGenerateObject({
-        model: this.client(stripOpenRouterPrefix(modelId)),
-        schema: input.schema,
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "file",
-                data: input.media.buffer.toString("base64"),
-                mediaType: input.media.mimeType,
-              },
-              { type: "text", text: input.prompt },
-            ],
-          },
-        ],
-        ...(input.temperature !== undefined
-          ? { temperature: input.temperature }
-          : {}),
-        maxRetries: 1,
+      parsed = JSON.parse(
+        content.replace(/^\s*```(?:json)?\s*/, "").replace(/\s*```\s*$/, "")
+      );
+    } catch (error) {
+      throw new SchemaValidationError("generateObjectFromMedia", error);
+    }
+    const result = input.schema.safeParse(parsed);
+    if (!result.success) {
+      throw new SchemaValidationError("generateObjectFromMedia", result.error.issues);
+    }
+    return result.data;
+  }
+
+  /**
+   * Sends one audio clip and one text instruction to OpenRouter chat
+   * completions as `input_audio`. The AI SDK cannot send WebM audio (its chat
+   * converter takes only WAV and MP3, and the Responses format takes no audio),
+   * so this call builds the request itself.
+   * @param operation The public method name, used in error messages.
+   * @param input The audio clip, instruction, model, and optional request settings.
+   * @returns The text content of the first choice.
+   * @throws UnsupportedError When the audio type has no OpenRouter format.
+   * @throws AIClientError With code `PROVIDER_ERROR` for a failed request, an HTTP or provider error, or a reply without content.
+   */
+  private async chatWithAudio(
+    operation: string,
+    input: {
+      media: MediaInput;
+      text: string;
+      model: string;
+      temperature?: number;
+      reasoningEffort?: GenerateObjectFromMediaInput<unknown>["reasoningEffort"];
+      responseFormat?: Record<string, unknown>;
+    }
+  ): Promise<string> {
+    const mimeType = input.media.mimeType.split(";")[0]!.trim().toLowerCase();
+    const format = AUDIO_FORMATS[mimeType];
+    if (!format) {
+      throw new UnsupportedError(
+        `OpenRouter ${operation} cannot send audio of type '${input.media.mimeType}'`
+      );
+    }
+    let response: Response;
+    try {
+      response = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.#apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: stripOpenRouterPrefix(input.model),
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "input_audio",
+                  input_audio: { data: input.media.buffer.toString("base64"), format },
+                },
+                { type: "text", text: input.text },
+              ],
+            },
+          ],
+          ...(input.temperature !== undefined ? { temperature: input.temperature } : {}),
+          ...(input.reasoningEffort ? { reasoning: { effort: input.reasoningEffort } } : {}),
+          ...(input.responseFormat ? { response_format: input.responseFormat } : {}),
+        }),
+        signal: AbortSignal.timeout(MEDIA_TIMEOUT_MS),
       });
-      return object;
     } catch (error) {
       throw new AIClientError(
-        `OpenRouter generateObjectFromMedia failed: ${error instanceof Error ? error.message : "unknown"}`,
+        `OpenRouter ${operation} failed: ${error instanceof Error ? error.message : "unknown"}`,
         "PROVIDER_ERROR",
         error
       );
     }
+    // OpenRouter sends the headers at once and the body when the model ends, so a slow
+    // model can time out here, while the body is read.
+    let readError: unknown;
+    const body = (await response.json().catch((error: unknown) => {
+      readError = error;
+      return null;
+    })) as {
+      error?: { message?: string };
+      choices?: Array<{ message?: { content?: unknown } }>;
+    } | null;
+    const content = body?.choices?.[0]?.message?.content;
+    if (!response.ok || body?.error || typeof content !== "string" || !content) {
+      const reason =
+        body?.error?.message ?? (readError instanceof Error ? readError.message : undefined);
+      throw new AIClientError(
+        `OpenRouter ${operation} failed: HTTP ${response.status}${reason ? ` ${reason}` : ""}`,
+        "PROVIDER_ERROR",
+        body ?? readError
+      );
+    }
+    return content;
   }
 
   async generateText(input: GenerateTextInput): Promise<string> {
@@ -239,40 +360,23 @@ export class OpenRouterProvider implements AIClientWithProvenance {
     }
   }
 
+  /**
+   * Transcribes one audio clip with an audio chat model.
+   * @param input The audio clip, optional model, and optional language hint.
+   * @returns The transcript text.
+   * @throws UnsupportedError When the audio type has no OpenRouter format.
+   * @throws AIClientError With code `PROVIDER_ERROR` when the request fails.
+   */
   async transcribeAudio(
     input: TranscribeAudioInput
   ): Promise<TranscribeAudioResult> {
-    try {
-      const modelId = input.model ?? DEFAULT_ASR_MODEL;
-      const { text } = await aiGenerateText({
-        model: this.client(stripOpenRouterPrefix(modelId)),
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "file",
-                data: input.media.buffer.toString("base64"),
-                mediaType: input.media.mimeType,
-              },
-              {
-                type: "text",
-                text: input.language
-                  ? `Transcribe this audio to text. Language: ${input.language}`
-                  : "Transcribe this audio to text.",
-              },
-            ],
-          },
-        ],
-        maxRetries: 1,
-      });
-      return { text };
-    } catch (error) {
-      throw new AIClientError(
-        `OpenRouter transcribeAudio failed: ${error instanceof Error ? error.message : "unknown"}`,
-        "PROVIDER_ERROR",
-        error
-      );
-    }
+    const text = await this.chatWithAudio("transcribeAudio", {
+      media: input.media,
+      model: input.model ?? DEFAULT_ASR_MODEL,
+      text: input.language
+        ? `Transcribe this audio verbatim. Language: ${input.language}. Return only the transcript.`
+        : "Transcribe this audio verbatim in its original language. Return only the transcript.",
+    });
+    return { text };
   }
 }

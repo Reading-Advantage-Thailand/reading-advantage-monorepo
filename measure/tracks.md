@@ -56,6 +56,11 @@ This file tracks all major tracks for the project.
   *Status: proposed; design complete, decisions S1 to S14 open; planning only, no code, no public date | Priority: MEDIUM | Owner fixed the shape and approved Chibi Sprouts 2026-10-21*
   *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin); release 1 on 2026-12-01 is Level 2 weeks 1 to 8 in print and by QR, then Level 2 and Level 1 complete for May 2027. Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
 
+- [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
+  *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
+  *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*
+  *Note: roleplay scoring fails in production for every recording (Responses format rejects audio); models: qwen/qwen3.8-omni-flash, backup google/gemini-2.5-flash-lite.*
+
 - [ ] **Track: Real Advantage logos on the www site** — *created 2026-10-08*
   *Link: [./tracks/www_real_logos_20261008/](./tracks/www_real_logos_20261008/)*
   *Status: queued; starts after the Primary cutover blockers | Priority: MEDIUM | Requested by PR (logos approved by Daniel 2026-10-08)*

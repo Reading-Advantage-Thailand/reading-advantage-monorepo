@@ -22,7 +22,9 @@ import {
 } from "@/lib/company-oidc";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Two audio model calls, each with a 120 s limit (main model up to ~80 s in the
+// 2026-10-15 test). Cloud Run applies its own 300 s request timeout.
+export const maxDuration = 300;
 
 /**
  * Server-defined retention window for a roleplay audio upload. Matches

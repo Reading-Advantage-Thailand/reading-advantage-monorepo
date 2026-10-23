@@ -1,0 +1,157 @@
+{
+ "title": "Sales Advantage: production review (2026-10-16)",
+ "intro": "<p>This page reviews the Sales Advantage app in production today: <code>https://sales.reading-advantage.com</code>. Sign in with your company account.</p><p>Production has the 2026 course (6 modules, English text). The 2027 course (7 modules, 44 lessons, Thai first) and the roleplay scoring fix are on the branch <code>sales/training-2027</code>. They deploy after the Primary cutover.</p><p>Use <b>Pass</b> when an item is correct. Use <b>Fail</b> with a comment when you want a change. Click <b>Send</b> after each section. The lessons and modules open in order, so do section 2 from top to bottom.</p>",
+ "base_url": "https://sales.reading-advantage.com",
+ "utc_offset_hours": 7,
+ "sections": [
+  {
+   "title": "1. Sign-in and the dashboard",
+   "intro": "Use a desktop browser for sections 1 to 4. Section 5 is for a phone.",
+   "checks": [
+    {
+     "id": "A1",
+     "area": "Sign-in",
+     "steps": "Open <code>/en</code>. Sign in with your company account.",
+     "expect": "The company sign-in opens. After the sign-in, you see \"Your Dashboard\"."
+    },
+    {
+     "id": "A2",
+     "area": "Dashboard",
+     "steps": "Look at the module list on the dashboard.",
+     "expect": "Each module shows its title and \"x of y lessons complete\". A module after an incomplete module shows \"Complete &lt;module&gt; first\"."
+    },
+    {
+     "id": "A3",
+     "area": "Thai",
+     "steps": "Open <code>/th</code>. Use the language switcher in the header to go between EN and TH.",
+     "expect": "The buttons, labels, and messages are in Thai. The module titles and the lesson text stay in English: the 2026 course has no Thai text."
+    },
+    {
+     "id": "A4",
+     "area": "Header",
+     "steps": "Look at the header. Click <b>Logout</b> at the end of your review, not now.",
+     "expect": "The header shows Dashboard, Admin (for you), the language switcher, and Logout."
+    }
+   ]
+  },
+  {
+   "title": "2. Module 1 and its lessons",
+   "intro": "Module 1 is <code>/en/module/foundations-discovery</code>. A lesson opens when you complete the lesson before it.",
+   "checks": [
+    {
+     "id": "B1",
+     "area": "Module page",
+     "steps": "Open <code>/en/module/foundations-discovery</code>.",
+     "expect": "5 lessons: Why Discovery Beats Pitching; Active Listening, Mirroring, and Labeling; Open Questions, Closed Questions, and When to Use Each; Universal Discovery Quiz; Discovery Roleplay: First Call with a Skeptical Director. Each lesson shows its type (Theory, Quiz, Roleplay). A locked lesson says \"Complete the earlier lessons in order to unlock this lesson.\""
+    },
+    {
+     "id": "B2",
+     "area": "Theory lesson",
+     "steps": "Open lesson 1, \"Why Discovery Beats Pitching\". Read it. Click <b>Mark Complete</b>.",
+     "expect": "The headings, lists, tables, and example lines are easy to read. After Mark Complete, the lesson shows \"Completed\" and lesson 2 opens."
+    },
+    {
+     "id": "B3",
+     "area": "Sales Coach AI",
+     "steps": "Under any lesson, find the \"Sales Coach AI\" chat. Ask: \"How many questions should I ask before I describe the product?\"",
+     "expect": "A short, correct answer that uses the lesson. Tell me if the answer is wrong, too long, or gives a fact that we do not approve."
+    },
+    {
+     "id": "B4",
+     "area": "Quiz",
+     "steps": "Complete lessons 2 and 3 with <b>Mark Complete</b>. Open lesson 4, \"Universal Discovery Quiz\". Answer the questions and click <b>Submit</b>.",
+     "expect": "You see the score, \"Passed!\" or \"Not passed. Try again.\", and an explanation for each question."
+    },
+    {
+     "id": "B5",
+     "area": "Roleplay",
+     "steps": "Open lesson 5, \"Discovery Roleplay\". Read the scenario. Tick the consent box. Click <b>Start Recording</b>, speak for about 30 seconds, and click <b>Stop</b>. Click <b>Listen Back</b>, then <b>Submit for Evaluation</b>.",
+     "expect": "Correct result: a score, Passed or Failed, the criteria, strengths, areas to improve, and the transcript.<br><b>Known fault:</b> production gives \"Evaluation failed. Try again.\" for every recording (found 2026-10-15). The fix is on the branch and deploys after the Primary cutover. Write in the comment what you saw."
+    }
+   ]
+  },
+  {
+   "title": "3. The course content in production",
+   "intro": "These checks are about the 2026 course text that trainees can read today. The 2027 course replaces all of it.",
+   "checks": [
+    {
+     "id": "C1",
+     "area": "Module list",
+     "steps": "Compare the dashboard with this list: (1) Sales Foundations: Discovery &amp; Listening; (2) Framing Value in the Buyer's Language; (3) Handling Resistance &amp; Objections (Universal); (4) Reading Advantage: Product Knowledge (Applied); (5) Applied: RA Objections &amp; Demo Conversations; (6) Pricing, Negotiation &amp; Closing.",
+     "expect": "The dashboard shows these 6 modules. All of them are about school sales. There is no Tutor Advantage family sale and no tutor recruitment."
+    },
+    {
+     "id": "C2",
+     "area": "Old facts",
+     "steps": "Open module 4, lesson \"The 9-Product Suite and 3 Service Tiers\" (it opens after modules 1 to 3).",
+     "expect": "The 2026 lesson says \"Tutor Advantage — beta 2026\". Today, Tutor Advantage is the company focus (from 3,000 baht for each class package). Pass if production can keep this text until the 2027 course deploys. Fail if a trainee must not see it now."
+    },
+    {
+     "id": "C3",
+     "area": "Numbers without a source",
+     "steps": "Read lesson 1 again, and the start of \"Asking for the Order: The Direct Close\" (module 6).",
+     "expect": "The 2026 text gives numbers without a source: \"Top performers talk 20% of the time\" and \"80% of reps lose the deal at the moment they need to ask\". The 2027 course does not have these numbers. Pass if production can keep them until the 2027 course deploys."
+    }
+   ]
+  },
+  {
+   "title": "4. Admin",
+   "intro": "<b>Caution:</b> the <b>Approve</b> buttons on the curriculum page change production data. Look only, unless you want to approve a 2026 lesson or rubric.",
+   "checks": [
+    {
+     "id": "D1",
+     "area": "Cohort",
+     "steps": "Open <code>/en/admin</code>.",
+     "expect": "A table of the sales reps: modules completed, average quiz score, average roleplay score, attempts, and last active. Tell me if a rep or a number is wrong."
+    },
+    {
+     "id": "D2",
+     "area": "Rep detail",
+     "steps": "Click one rep in the table.",
+     "expect": "The rep page shows that person's progress and attempts."
+    },
+    {
+     "id": "D3",
+     "area": "New rep",
+     "steps": "Open <code>/en/admin/create-rep</code>.",
+     "expect": "The page sends you to the Accounts app to make the account (\"Open Accounts\"). Sales Advantage does not make accounts itself. Note: tutors need the CONTRACTOR role, which comes after the Primary cutover."
+    },
+    {
+     "id": "D4",
+     "area": "Curriculum",
+     "steps": "Open <code>/en/admin/curriculum</code>. Look at the lists. Do not click Approve.",
+     "expect": "One card for each module, with each lesson by name and type, and one card with the roleplay rubrics by name. Each row shows \"Approved\" or an Approve button. The page does not show the rubric criteria."
+    }
+   ]
+  },
+  {
+   "title": "5. On a phone",
+   "intro": "Tutors use phones. Use an iPhone if you have one.",
+   "checks": [
+    {
+     "id": "E1",
+     "area": "Phone layout",
+     "steps": "On the phone, open <code>https://sales.reading-advantage.com/th</code>. Sign in. Open the dashboard and one lesson.",
+     "expect": "The text is easy to read. The page does not scroll to the side. The buttons are easy to tap."
+    },
+    {
+     "id": "E2",
+     "area": "Phone roleplay",
+     "steps": "On the phone, open the module 1 roleplay. Record about 10 seconds and submit.",
+     "expect": "Correct result: a score and the criteria.<br><b>Known fault:</b> scoring fails in production (see B5). An iPhone records a file type that production does not accept; the branch fix covers this too. Write in the comment what you saw."
+    }
+   ]
+  },
+  {
+   "title": "6. Anything else",
+   "checks": [
+    {
+     "id": "F1",
+     "area": "Other comments",
+     "steps": "Write anything else that you want changed in the app.",
+     "expect": "Pass if you have nothing more. Fail with a comment to ask for a change."
+    }
+   ]
+  }
+ ]
+}

@@ -23,6 +23,7 @@ describe("RoleplayRecorder recording type", () => {
   const revokeObjectURL = vi.fn();
   const stopTrack = vi.fn();
   let lastOnStop: (() => void) | null = null;
+  let recorderMimeType = "audio/webm;codecs=opus";
   const stream = {
     getTracks: vi.fn(() => [{ readyState: "live", stop: stopTrack }]),
   } as unknown as MediaStream;
@@ -38,6 +39,7 @@ describe("RoleplayRecorder recording type", () => {
     revokeObjectURL.mockReset();
     stopTrack.mockReset();
     lastOnStop = null;
+    recorderMimeType = "audio/webm;codecs=opus";
     Object.defineProperty(URL, "createObjectURL", {
       configurable: true,
       value: createObjectURL,
@@ -55,6 +57,9 @@ describe("RoleplayRecorder recording type", () => {
       class MockMediaRecorder {
         static isTypeSupported = vi.fn(() => true);
         state = "recording";
+        get mimeType() {
+          return recorderMimeType;
+        }
         ondataavailable: ((event: BlobEvent) => void) | null = null;
 
         set onstop(handler: (() => void) | null) {
@@ -97,6 +102,32 @@ describe("RoleplayRecorder recording type", () => {
     await waitFor(() => expect(start).toHaveBeenCalled());
     expect(MediaRecorder.isTypeSupported).toHaveBeenCalledWith("audio/webm");
     expect(recorderConstructor).toHaveBeenCalledWith(stream);
+  });
+
+  it.each([
+    ["audio/webm;codecs=opus", "audio/webm", "attempt.webm"],
+    ["audio/mp4", "audio/mp4", "attempt.mp4"],
+  ])("uploads a %s recording as %s", async (recorded, uploadedType, fileName) => {
+    recorderMimeType = recorded;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ attemptId: "attempt-1", evaluation: null }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<RoleplayRecorder scenario={scenario} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "record" }));
+    await waitFor(() => expect(start).toHaveBeenCalled());
+    act(() => lastOnStop?.());
+    fireEvent.click(screen.getByRole("checkbox", { name: "consentLabel" }));
+    fireEvent.click(screen.getByRole("button", { name: "submit" }));
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    const file = (fetchMock.mock.calls[0]![1] as RequestInit).body as FormData;
+    const audio = file.get("audio") as File;
+    expect(audio.type).toBe(uploadedType);
+    expect(audio.name).toBe(fileName);
   });
 
   it("shows the permission error when microphone access is denied", async () => {

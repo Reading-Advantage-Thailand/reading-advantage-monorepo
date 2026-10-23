@@ -96,6 +96,8 @@ export interface GenerateObjectFromMediaInput<T> {
   model?: string;
   /** Sampling temperature (0–2). */
   temperature?: number;
+  /** Reasoning effort for a model that reasons before it answers; a provider without this setting ignores it. */
+  reasoningEffort?: "low" | "medium" | "high";
 }
 
 /**

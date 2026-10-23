@@ -45,10 +45,15 @@ const audio = { buffer: Buffer.from("audio"), mimeType: "audio/webm" };
 function makeClient(overrides?: Partial<AIClientLike>): AIClientLike {
   return {
     generateObjectFromMedia: vi.fn().mockResolvedValue(goodResult),
-    generateObject: vi.fn().mockResolvedValue(goodResult),
-    transcribeAudio: vi.fn().mockResolvedValue({ text: "[mock transcript]" }),
     ...overrides,
   };
+}
+
+/** Returns the model of each generateObjectFromMedia call, in order. */
+function calledModels(client: AIClientLike): string[] {
+  return (client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls.map(
+    (call) => call[0].model,
+  );
 }
 
 describe("buildEvaluationPrompt", () => {
@@ -65,11 +70,43 @@ describe("buildEvaluationPrompt", () => {
   });
 });
 
-describe("buildEvaluationPrompt with transcript", () => {
-  it("includes the transcript and notes text-only evaluation limitation", () => {
-    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts, "Rep said hello...");
-    expect(prompt).toContain("Rep said hello...");
-    expect(prompt).toContain("only text is available");
+describe("buildEvaluationPrompt language", () => {
+  it("tells the model that the recording can be in Thai or English", () => {
+    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
+    expect(prompt).toContain("Thai or English");
+    expect(prompt).toContain("language spoken");
+    expect(prompt).toContain("one criteria entry for each rubric criterion");
+    expect(prompt).toContain("copy each criterion text exactly");
+  });
+});
+
+describe("buildEvaluationPrompt transcript source", () => {
+  // S5 live check 2026-10-15: with model answers in the lesson excerpts, the model copied
+  // prompt lines into the "transcript" and passed a recording that broke the claims rule.
+  it("marks the scenario, rubric, and excerpts as reference text, not the recording", () => {
+    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
+    const reference = prompt.slice(prompt.indexOf("<reference>"), prompt.indexOf("</reference>"));
+    expect(reference).toContain("It is not part of the recording.");
+    expect(reference).toContain("Director Somchai");
+    expect(reference).toContain("Cold Call Rubric");
+    expect(reference).toContain("Never claim guaranteed outcomes");
+  });
+
+  it("takes the transcript from the recording first, then scores only from it", () => {
+    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
+    expect(prompt).toContain(
+      "Take the transcript excerpt only from the words spoken in the recording. Do not copy or translate any text from this prompt.",
+    );
+    expect(prompt).toContain("quote the words from your transcript that meet or break the criterion");
+    expect(prompt).toContain("If the transcript has no words that meet a criterion, the score is 20 or less.");
+    expect(prompt).toContain("When a criterion applies only if something happens, and it did not happen in the recording, the score is 100.");
+    expect(prompt).toContain("A claims criterion scores 0 when the transcript contains any one of the claims that it lists.");
+  });
+
+  it("asks the model for the transcript before the scores", () => {
+    expect(Object.keys(roleplayEvaluationResultSchema.shape)[0]).toBe("transcriptExcerpt");
+    const criterion = roleplayEvaluationResultSchema.shape.criteria.element;
+    expect(Object.keys(criterion.shape)).toEqual(["criterion", "feedback", "score"]);
   });
 });
 
@@ -79,40 +116,34 @@ describe("aiClientToEvaluateRoleplay", () => {
     const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
     const result = await evaluate(audio, scenario, rubric, excerpts);
     expect(result.overallScore).toBe(85);
-    expect(client.generateObjectFromMedia).toHaveBeenCalledTimes(1);
+    expect(calledModels(client)).toEqual(["google/gemini-3.8-flash"]);
     const call = (client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls[0][0];
     expect(call.media).toEqual(audio);
-    expect(call.model).toBe("nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free");
     expect(call.prompt).toContain("Director Somchai");
+    // Low reasoning keeps a score under $0.01 (2026-10-15 model comparison).
+    expect(call.reasoningEffort).toBe("low");
   });
 
-  it("falls back to STT → text-eval when the primary call fails", async () => {
+  it("sends the same audio to the backup model when the primary call fails", async () => {
     const client = makeClient({
       generateObjectFromMedia: vi
         .fn()
-        .mockRejectedValueOnce(new Error("primary rate limited")),
-      transcribeAudio: vi.fn().mockResolvedValue({ text: "Rep introduced herself professionally" }),
-      generateObject: vi.fn().mockResolvedValue(goodResult),
+        .mockRejectedValueOnce(new Error("primary rate limited"))
+        .mockResolvedValueOnce(goodResult),
     });
     const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
     const result = await evaluate(audio, scenario, rubric, excerpts);
     expect(result.overallScore).toBe(85);
-    expect(client.generateObjectFromMedia).toHaveBeenCalledTimes(1);
-    expect(client.transcribeAudio).toHaveBeenCalledTimes(1);
-    expect((client.transcribeAudio as ReturnType<typeof vi.fn>).mock.calls[0][0].model).toBe(
-      "nvidia/parakeet-tdt-0.6b-v3",
-    );
-    expect(client.generateObject).toHaveBeenCalledTimes(1);
-    const evalCall = (client.generateObject as ReturnType<typeof vi.fn>).mock.calls[0][0];
-    expect(evalCall.model).toBe("nvidia/nemotron-3-nano-30b-a3b:free");
-    expect(evalCall.prompt).toContain("Director Somchai");
-    expect(evalCall.prompt).toContain("Rep introduced herself professionally");
+    expect(calledModels(client)).toEqual(["google/gemini-3.8-flash", "qwen/qwen3.8-omni-flash"]);
+    const backupCall = (client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls[1][0];
+    expect(backupCall.media).toEqual(audio);
+    expect(backupCall.prompt).toContain("Director Somchai");
+    expect(backupCall.reasoningEffort).toBe("low");
   });
 
   it("throws SalesError when both primary and fallback fail", async () => {
     const client = makeClient({
-      generateObjectFromMedia: vi.fn().mockRejectedValue(new Error("primary down")),
-      transcribeAudio: vi.fn().mockRejectedValue(new Error("STT failed")),
+      generateObjectFromMedia: vi.fn().mockRejectedValue(new Error("model down")),
     });
     const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
     await expect(evaluate(audio, scenario, rubric, excerpts)).rejects.toThrow(
@@ -120,53 +151,18 @@ describe("aiClientToEvaluateRoleplay", () => {
     );
   });
 
-  it("respects SALES_AUDIO_EVAL_MODEL env override for primary", async () => {
-    vi.stubEnv("SALES_AUDIO_EVAL_MODEL", "custom/model");
-    const client = makeClient();
-    const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
-    await evaluate(audio, scenario, rubric, excerpts);
-    expect((client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls[0][0].model).toBe(
-      "custom/model",
-    );
-    vi.unstubAllEnvs();
-  });
-
-  it("respects SALES_AUDIO_EVAL_FALLBACK_STT_MODEL env override", async () => {
-    vi.stubEnv("SALES_AUDIO_EVAL_FALLBACK_STT_MODEL", "custom/stt");
-    vi.stubEnv("SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL", "custom/eval");
+  it("respects the SALES_AUDIO_EVAL_MODEL and SALES_AUDIO_EVAL_FALLBACK_MODEL overrides", async () => {
+    vi.stubEnv("SALES_AUDIO_EVAL_MODEL", "custom/main");
+    vi.stubEnv("SALES_AUDIO_EVAL_FALLBACK_MODEL", "custom/backup");
     const client = makeClient({
-      generateObjectFromMedia: vi.fn().mockRejectedValue(new Error("primary fail")),
-      transcribeAudio: vi.fn().mockResolvedValue({ text: "transcript" }),
-      generateObject: vi.fn().mockResolvedValue(goodResult),
+      generateObjectFromMedia: vi
+        .fn()
+        .mockRejectedValueOnce(new Error("primary fail"))
+        .mockResolvedValueOnce(goodResult),
     });
     const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
     await evaluate(audio, scenario, rubric, excerpts);
-    expect((client.transcribeAudio as ReturnType<typeof vi.fn>).mock.calls[0][0].model).toBe(
-      "custom/stt",
-    );
-    expect((client.generateObject as ReturnType<typeof vi.fn>).mock.calls[0][0].model).toBe(
-      "custom/eval",
-    );
+    expect(calledModels(client)).toEqual(["custom/main", "custom/backup"]);
     vi.unstubAllEnvs();
-  });
-
-  it("populates transcriptExcerpt from transcript when the eval model omits it", async () => {
-    const resultNoExcerpt = { ...goodResult, transcriptExcerpt: undefined };
-    const client = makeClient({
-      generateObjectFromMedia: vi.fn().mockRejectedValue(new Error("primary fail")),
-      transcribeAudio: vi.fn().mockResolvedValue({ text: "A".repeat(1000) }),
-      generateObject: vi.fn().mockResolvedValue(resultNoExcerpt),
-    });
-    const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
-    const result = await evaluate(audio, scenario, rubric, excerpts);
-    expect(result.transcriptExcerpt).toBe("A".repeat(600));
-  });
-
-  it("never calls transcribeAudio when primary succeeds", async () => {
-    const client = makeClient();
-    const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
-    await evaluate(audio, scenario, rubric, excerpts);
-    expect(client.transcribeAudio).not.toHaveBeenCalled();
-    expect(client.generateObject).not.toHaveBeenCalled();
   });
 });

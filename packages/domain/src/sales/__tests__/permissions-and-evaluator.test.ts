@@ -15,7 +15,10 @@ vi.mock("@reading-advantage/auth", () => ({
 }));
 
 import { SALES_PERMISSIONS, registerSalesPermissions } from "../permissions.js";
-import { aiClientToEvaluateRoleplay } from "../roleplay-evaluator.js";
+import {
+  aiClientToEvaluateRoleplay,
+  scoreRoleplayEvaluation,
+} from "../roleplay-evaluator.js";
 
 describe("permissions.ts — FR-6 single source of truth", () => {
   it("derives the registerDomainModulePermissions keys from SALES_PERMISSIONS (no duplicate literal)", () => {
@@ -50,12 +53,13 @@ describe("permissions.ts — FR-6 single source of truth", () => {
 describe("roleplay-evaluator.ts — FR-5 error cause propagation", () => {
   it("EVALUATION_FAILED carries the primary and fallback error causes when both paths reject", async () => {
     const primaryError = new Error("primary model 504 gateway timeout");
-    const fallbackError = new Error("fallback STT 401 unauthorized");
+    const fallbackError = new Error("fallback model 401 unauthorized");
 
     const aiClient = {
-      generateObjectFromMedia: vi.fn().mockRejectedValue(primaryError),
-      transcribeAudio: vi.fn().mockRejectedValue(fallbackError),
-      generateObject: vi.fn(),
+      generateObjectFromMedia: vi
+        .fn()
+        .mockRejectedValueOnce(primaryError)
+        .mockRejectedValueOnce(fallbackError),
     };
 
     const evaluate = aiClientToEvaluateRoleplay(aiClient);
@@ -101,5 +105,171 @@ describe("roleplay-evaluator.ts — FR-5 error cause propagation", () => {
     const cause = salesError.cause as { primaryError?: unknown; fallbackError?: unknown };
     expect(cause.primaryError).toBe(primaryError);
     expect(cause.fallbackError).toBe(fallbackError);
+  });
+});
+describe("roleplay-evaluator.ts — overall score and pass computed from the rubric", () => {
+  const rubricCriteria = [
+    { criterion: "Asked discovery questions", weight: 0.3, passingScore: 70, sourceRef: "s1" },
+    { criterion: "Listened actively", weight: 0.25, passingScore: 70, sourceRef: "s2" },
+    { criterion: "Did not pitch early", weight: 0.25, passingScore: 80, sourceRef: "s3" },
+    { criterion: "Asked for a next step", weight: 0.2, passingScore: 70, sourceRef: "s4" },
+  ];
+  /** Builds a model evaluation with the given criterion scores and model-claimed totals. */
+  const modelResult = (
+    criteria: Array<{ criterion: string; score: number }>,
+    claimed = { overallScore: 80, passed: true },
+  ) => ({
+    ...claimed,
+    criteria: criteria.map((c) => ({ ...c, feedback: `feedback for ${c.criterion}` })),
+    summary: "summary",
+    strengths: [],
+    weaknesses: [],
+    suggestedNextAction: "next",
+    transcriptExcerpt: "excerpt",
+  });
+  const scenario = {
+    id: "s1",
+    lessonId: "l1",
+    personaName: "Parent",
+    personaRole: "Parent",
+    situation: "Placement result",
+    objective: "Recommend a book",
+    prospectContextJson: {},
+    rubricId: "r1",
+    order: 1,
+    createdAt: new Date(),
+  };
+  const rubric = {
+    id: "r1",
+    name: "Rubric",
+    criteriaJson: rubricCriteria,
+    reviewStatus: "approved" as const,
+    createdAt: new Date(),
+  };
+
+  it("replaces the model's overall score and pass with the weighted mean and per-criterion gates", () => {
+    // Observed 2026-10-15: the model claimed 80 and a pass for criteria 0, 75, 45, 60.
+    const result = scoreRoleplayEvaluation(
+      modelResult(rubricCriteria.map((c, i) => ({ criterion: c.criterion, score: [0, 75, 45, 60][i]! }))),
+      rubricCriteria,
+    );
+    expect(result.overallScore).toBe(42); // 0×0.3 + 75×0.25 + 45×0.25 + 60×0.2 = 42
+    expect(result.passed).toBe(false);
+  });
+
+  it("fails when one criterion is under its passing score even if the overall score is high", () => {
+    const result = scoreRoleplayEvaluation(
+      modelResult(rubricCriteria.map((c, i) => ({ criterion: c.criterion, score: [100, 90, 79, 100][i]! }))),
+      rubricCriteria,
+    );
+    expect(result.overallScore).toBe(92);
+    expect(result.passed).toBe(false);
+  });
+
+  it("passes when every criterion meets its passing score", () => {
+    const result = scoreRoleplayEvaluation(
+      modelResult(rubricCriteria.map((c) => ({ criterion: c.criterion, score: 80 })), { overallScore: 10, passed: false }),
+      rubricCriteria,
+    );
+    expect(result.overallScore).toBe(80);
+    expect(result.passed).toBe(true);
+  });
+
+  it("matches criteria by name in rubric order and scores a missing criterion as 0", () => {
+    const result = scoreRoleplayEvaluation(
+      modelResult([
+        { criterion: "  asked for a NEXT step ", score: 90 },
+        { criterion: "Asked discovery questions", score: 100 },
+        { criterion: "Listened actively", score: 80 },
+      ]),
+      rubricCriteria,
+    );
+    expect(result.criteria.map((c) => [c.criterion, c.score])).toEqual([
+      ["Asked discovery questions", 100],
+      ["Listened actively", 80],
+      ["Did not pitch early", 0],
+      ["Asked for a next step", 90],
+    ]);
+    expect(result.criteria[2]!.feedback).toBe("Not evaluated.");
+    expect(result.overallScore).toBe(68); // 30 + 20 + 0 + 18
+    expect(result.passed).toBe(false);
+  });
+
+  it("gives unmatched rubric criteria the unused model entries in order, never one entry twice", () => {
+    const result = scoreRoleplayEvaluation(
+      modelResult([
+        { criterion: "Asked for a next step", score: 90 },
+        { criterion: "Asked discovery questions", score: 100 },
+        { criterion: "Paraphrased the parent", score: 80 },
+        { criterion: "No early pitch", score: 60 },
+      ]),
+      rubricCriteria,
+    );
+    expect(result.criteria.map((c) => c.score)).toEqual([100, 80, 60, 90]);
+    expect(result.overallScore).toBe(83); // 30 + 20 + 15 + 18
+    expect(result.passed).toBe(false); // 60 is under the 80 passing score
+  });
+
+  it("gives two rubric criteria with the same name two different model entries", () => {
+    const twin = [
+      { criterion: "Same", weight: 0.5, passingScore: 70, sourceRef: "s" },
+      { criterion: "Same", weight: 0.5, passingScore: 70, sourceRef: "s" },
+    ];
+    const result = scoreRoleplayEvaluation(
+      modelResult([{ criterion: "Same", score: 100 }, { criterion: "Same", score: 40 }]),
+      twin,
+    );
+    expect(result.criteria.map((c) => c.score)).toEqual([100, 40]);
+    expect(result).toMatchObject({ overallScore: 70, passed: false });
+  });
+
+  it("uses equal weights and a 70 pass mark when the rubric has no criteria", () => {
+    expect(
+      scoreRoleplayEvaluation(modelResult([{ criterion: "a", score: 90 }, { criterion: "b", score: 70 }]), []),
+    ).toMatchObject({ overallScore: 80, passed: true });
+    expect(scoreRoleplayEvaluation(modelResult([]), [])).toMatchObject({ overallScore: 0, passed: false });
+  });
+
+  it("applies the computed score on the primary and the fallback path", async () => {
+    const claimed = modelResult(rubricCriteria.map((c) => ({ criterion: c.criterion, score: 50 })));
+    const primary = aiClientToEvaluateRoleplay({
+      generateObjectFromMedia: vi.fn().mockResolvedValue(claimed),
+    });
+    const fallback = aiClientToEvaluateRoleplay({
+      generateObjectFromMedia: vi
+        .fn()
+        .mockRejectedValueOnce(new Error("primary down"))
+        .mockResolvedValueOnce(claimed),
+    });
+    const audio = { buffer: Buffer.from("a"), mimeType: "audio/webm" };
+
+    await expect(primary(audio, scenario, rubric, [])).resolves.toMatchObject({ overallScore: 50, passed: false });
+    await expect(fallback(audio, scenario, rubric, [])).resolves.toMatchObject({ overallScore: 50, passed: false });
+  });
+
+  it("does not start the backup model when scoring itself fails", async () => {
+    const generateObjectFromMedia = vi.fn().mockResolvedValue(modelResult([{ criterion: "a", score: 90 }]));
+    const evaluate = aiClientToEvaluateRoleplay({ generateObjectFromMedia });
+    const broken = { ...rubric, criteriaJson: [{ weight: 1, passingScore: 70, sourceRef: "s" }] } as unknown as typeof rubric;
+
+    await expect(
+      evaluate({ buffer: Buffer.from("a"), mimeType: "audio/webm" }, scenario, broken, []),
+    ).rejects.toBeInstanceOf(TypeError);
+    expect(generateObjectFromMedia).toHaveBeenCalledTimes(1);
+  });
+
+  it("logs only the model and the error message when both models fail", async () => {
+    const errorLog = vi.spyOn(console, "error").mockImplementation(() => {});
+    const evaluate = aiClientToEvaluateRoleplay({
+      generateObjectFromMedia: vi.fn().mockRejectedValue(new SyntaxError("Unexpected token in model reply")),
+    });
+
+    await expect(
+      evaluate({ buffer: Buffer.from("a"), mimeType: "audio/webm" }, scenario, rubric, []),
+    ).rejects.toBeInstanceOf(SalesError);
+    const loggedArgs = errorLog.mock.calls.flat();
+    expect(loggedArgs.some((arg) => arg instanceof Error)).toBe(false);
+    expect(loggedArgs.join(" ")).toContain("Unexpected token in model reply");
+    errorLog.mockRestore();
   });
 });

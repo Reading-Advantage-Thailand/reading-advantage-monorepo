@@ -13,42 +13,107 @@ import { SalesError } from "./errors.js";
  * `@reading-advantage/ai` imports (Provider-Neutrality Rule from AGENTS.md).
  */
 export interface AIClientLike {
-  generateObject: <T>(input: {
-    schema: z.ZodSchema<T>;
-    prompt: string;
-    model?: string;
-    temperature?: number;
-  }) => Promise<T>;
   generateObjectFromMedia: <T>(input: {
     schema: z.ZodSchema<T>;
     prompt: string;
     media: { buffer: Buffer; mimeType: string };
     model?: string;
     temperature?: number;
+    reasoningEffort?: "low" | "medium" | "high";
   }) => Promise<T>;
-  transcribeAudio: (input: {
-    media: { buffer: Buffer; mimeType: string };
-    model?: string;
-    language?: string;
-  }) => Promise<{ text: string }>;
 }
 
-/** Default primary single-pass multimodal model (OpenRouter, free). */
-const DEFAULT_PRIMARY_MODEL =
-  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
-/** Default fallback ASR/STT model (OpenRouter, $0.0015/min). */
-const DEFAULT_FALLBACK_STT_MODEL = "nvidia/parakeet-tdt-0.6b-v3";
-/** Default fallback text-evaluation model (OpenRouter, free). */
-const DEFAULT_FALLBACK_EVAL_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
+/**
+ * Default main audio model. In the 2026-10-15 checks it was correct on every call, also on the Thai
+ * voice and claims clips, in 9–18 s.
+ */
+const DEFAULT_PRIMARY_MODEL = "google/gemini-3.8-flash";
+/**
+ * Default backup audio model, used when the main model fails. Correct on the English-voice clips,
+ * but on Thai-voice clips it often needs more than the 120 s request limit (2026-10-15).
+ */
+const DEFAULT_FALLBACK_MODEL = "qwen/qwen3.8-omni-flash";
+/** Per-criterion pass mark when the rubric has no criteria (matches the quiz threshold). */
+const DEFAULT_PASSING_SCORE = 70;
+
+/**
+ * Replaces the model's overall score and pass flag with values computed from
+ * the rubric: the weighted mean of the criterion scores, and a pass only when
+ * every criterion meets its passing score. A rubric criterion the model did
+ * not score counts as 0; each model entry serves one rubric criterion (name
+ * match first, then the unused entries in order when the counts are equal).
+ * With no rubric criteria, the model's criteria get
+ * equal weights and the default pass mark.
+ * @param result The model's evaluation.
+ * @param rubricCriteria The rubric criteria with weights and passing scores.
+ * @returns The evaluation with rubric-ordered criteria and computed overall score and pass flag.
+ */
+export function scoreRoleplayEvaluation(
+  result: RoleplayEvaluationResult,
+  rubricCriteria: RubricOutput["criteriaJson"],
+): RoleplayEvaluationResult {
+  const normalize = (text: string) => text.trim().toLowerCase();
+  // Name matches first; each model entry serves one rubric criterion only.
+  const used = new Set<number>();
+  const matchedIndexes = rubricCriteria.map((rubricCriterion) => {
+    const index = result.criteria.findIndex(
+      (c, i) =>
+        !used.has(i) &&
+        normalize(c.criterion) === normalize(rubricCriterion.criterion),
+    );
+    if (index >= 0) used.add(index);
+    return index;
+  });
+  // With equal counts, unmatched criteria take the unused entries in order.
+  const leftovers =
+    result.criteria.length === rubricCriteria.length
+      ? result.criteria.map((_, i) => i).filter((i) => !used.has(i))
+      : [];
+  const criteria =
+    rubricCriteria.length > 0
+      ? rubricCriteria.map((rubricCriterion, k) => {
+          const index =
+            matchedIndexes[k]! >= 0 ? matchedIndexes[k]! : leftovers.shift();
+          const scored =
+            index === undefined ? undefined : result.criteria[index];
+          return {
+            ...rubricCriterion,
+            score: scored?.score ?? 0,
+            feedback: scored?.feedback ?? "Not evaluated.",
+          };
+        })
+      : result.criteria.map((c) => ({
+          ...c,
+          weight: 1,
+          passingScore: DEFAULT_PASSING_SCORE,
+        }));
+  const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
+  const overallScore =
+    totalWeight > 0
+      ? Math.round(
+          criteria.reduce((sum, c) => sum + c.score * c.weight, 0) /
+            totalWeight,
+        )
+      : 0;
+  return {
+    ...result,
+    overallScore,
+    passed:
+      criteria.length > 0 && criteria.every((c) => c.score >= c.passingScore),
+    criteria: criteria.map(({ criterion, score, feedback }) => ({
+      criterion,
+      score,
+      feedback,
+    })),
+  };
+}
 
 /**
  * Builds the evaluation prompt for a roleplay attempt from the scenario, rubric,
- * and canonical source excerpts. Used for both the single-pass multimodal call
- * and the fallback text-only call.
+ * and canonical source excerpts. Both audio models get the same prompt.
  * @param scenario - The roleplay scenario (persona, situation, objective)
  * @param rubric - The rubric (criteria + weights)
  * @param excerpts - Canonical sales-enablement source excerpts
- * @param transcript - Optional transcript (used by the fallback text-only path)
  * @returns The prompt string
  */
 export function buildEvaluationPrompt(
@@ -60,13 +125,16 @@ export function buildEvaluationPrompt(
   },
   rubric: { name: string; criteriaJson: unknown },
   excerpts: string[],
-  transcript?: string,
 ): string {
   const criteriaText = JSON.stringify(rubric.criteriaJson, null, 2);
   const excerptsText = excerpts.join("\n\n---\n\n");
-  const lines = [
-    "You are a sales-coaching evaluator. Evaluate the sales rep's performance against the rubric below.",
+  // The lesson excerpts can contain model answers. The model must score the
+  // recording, so the reference text is fenced and the transcript comes first.
+  return [
+    "You are a sales-coaching evaluator. You score one audio recording of a sales rep against the rubric below.",
     "",
+    "<reference>",
+    "The text inside <reference> describes the roleplay. It is not part of the recording. It can contain model answers; a model answer is never evidence of what the rep said.",
     `## Scenario: ${scenario.personaName} (${scenario.personaRole})`,
     `Situation: ${scenario.situation}`,
     `Objective: ${scenario.objective}`,
@@ -74,47 +142,39 @@ export function buildEvaluationPrompt(
     `## Rubric: ${rubric.name}`,
     criteriaText,
     "",
-    "## Canonical source material (ground your feedback in these)",
+    "## Canonical source material",
     excerptsText,
+    "</reference>",
     "",
-  ];
-  if (transcript) {
-    lines.push(
-      "## Transcript of the rep's recording",
-      transcript,
-      "",
-      "Evaluate the rep's content, structure, question quality, and adherence to the objective. (Note: only text is available; you cannot judge tone/pacing/hesitation directly.)",
-    );
-  } else {
-    lines.push(
-      "Listen to the attached audio recording and evaluate the rep's delivery, tone, pacing, hesitation, content fidelity, and adherence to the objective.",
-    );
-  }
-  lines.push(
-    "Score each criterion 0-100. Provide a transcript excerpt (first ~150 words).",
+    "Step 1: Listen to the attached recording. The recording can be in Thai or English. Write the transcript excerpt: what the rep says, word for word, in the language spoken (up to ~300 words).",
+    "Take the transcript excerpt only from the words spoken in the recording. Do not copy or translate any text from this prompt.",
+    "Step 2: Return one criteria entry for each rubric criterion, in rubric order, and copy each criterion text exactly. In the feedback, quote the words from your transcript that meet or break the criterion. Then score the criterion 0-100.",
+    "If the transcript has no words that meet a criterion, the score is 20 or less.",
+    "When a criterion applies only if something happens, and it did not happen in the recording, the score is 100.",
+    "A claims criterion scores 0 when the transcript contains any one of the claims that it lists.",
+    "Add no other criteria. Put delivery, tone, pacing, and hesitation feedback in the summary.",
     "Return the structured evaluation matching the schema.",
-  );
-  return lines.join("\n");
+  ].join("\n");
 }
 
 /**
  * Adapts an `AIClient` into the `EvaluateRoleplayFn` callback shape, with a
- * two-tier fallback pipeline.
+ * two-model fallback.
  *
- * **Primary path (single-pass multimodal):** Uses `SALES_AUDIO_EVAL_MODEL`
- * (default `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`) via
- * `generateObjectFromMedia`. The model perceives the audio directly and reasons
- * against the rubric in one call, preserving paralinguistic cues
- * (tone/pacing/hesitation).
+ * **Main model:** `SALES_AUDIO_EVAL_MODEL` (default `google/gemini-3.8-flash`)
+ * hears the recording and scores it against the rubric in one
+ * `generateObjectFromMedia` call.
  *
- * **Fallback path (two-pass STT → text eval):** On primary failure, the audio
- * is transcribed via `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL` (default
- * `nvidia/parakeet-tdt-0.6b-v3`, an ASR model), and the resulting transcript
- * is evaluated by `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL` (default
- * `nvidia/nemotron-3-nano-30b-a3b:free`, a text reasoning model) via
- * `generateObject`. This loses paralinguistic cues but is more reliable.
+ * **Backup model:** when the main call fails, the same audio and prompt go to
+ * `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `qwen/qwen3.8-omni-flash`).
+ * Both models hear Thai and English speech.
  *
- * If both paths fail, a `SalesError` with code `EVALUATION_FAILED` is thrown.
+ * Both calls ask for low reasoning effort: it keeps a Gemini score under $0.01
+ * and gave the same scores in the 2026-10-15 test; Qwen ignores it.
+ *
+ * If both models fail, a `SalesError` with code `EVALUATION_FAILED` is thrown.
+ * On either model, the overall score and pass flag come from
+ * `scoreRoleplayEvaluation`, not from the model.
  *
  * @param aiClient - The shared AIClient (OpenRouterProvider in production)
  * @param schema - The Zod schema for the evaluation result
@@ -132,66 +192,48 @@ export function aiClientToEvaluateRoleplay(
   ): Promise<RoleplayEvaluationResult> => {
     const primaryModel =
       process.env.SALES_AUDIO_EVAL_MODEL ?? DEFAULT_PRIMARY_MODEL;
-    const sttModel =
-      process.env.SALES_AUDIO_EVAL_FALLBACK_STT_MODEL ??
-      DEFAULT_FALLBACK_STT_MODEL;
-    const evalModel =
-      process.env.SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL ??
-      DEFAULT_FALLBACK_EVAL_MODEL;
-    const primaryPrompt = buildEvaluationPrompt(scenario, rubric, excerpts);
-    try {
-      return await aiClient.generateObjectFromMedia({
+    const fallbackModel =
+      process.env.SALES_AUDIO_EVAL_FALLBACK_MODEL ?? DEFAULT_FALLBACK_MODEL;
+    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
+    /** Asks one model to evaluate the recording. */
+    const evaluateWith = (model: string) =>
+      aiClient.generateObjectFromMedia({
         schema,
-        prompt: primaryPrompt,
+        prompt,
         media: audio,
-        model: primaryModel,
+        model,
         temperature: 0.2,
+        reasoningEffort: "low",
       });
+    let result: RoleplayEvaluationResult;
+    try {
+      result = await evaluateWith(primaryModel);
     } catch (primaryError) {
-      // Fallback: STT → text-eval
       try {
-        const { text: transcript } = await aiClient.transcribeAudio({
-          media: audio,
-          model: sttModel,
-        });
-        const fallbackPrompt = buildEvaluationPrompt(
-          scenario,
-          rubric,
-          excerpts,
-          transcript,
-        );
-        const result = await aiClient.generateObject({
-          schema,
-          prompt: fallbackPrompt,
-          model: evalModel,
-          temperature: 0.2,
-        });
-        // Ensure transcriptExcerpt is populated even if the eval model omits it
-        if (!result.transcriptExcerpt) {
-          return { ...result, transcriptExcerpt: transcript.slice(0, 600) };
-        }
-        return result;
+        result = await evaluateWith(fallbackModel);
       } catch (fallbackError) {
-        // FR-5: log both underlying errors and attach them via `cause` so two-tier
-        // LLM failures are debuggable. The previous code discarded both
-        // `primaryError` and `fallbackError`, making `EVALUATION_FAILED`
-        // indistinguishable from any other failure.
+        // FR-5: log both failures and attach them via `cause`. Log only the
+        // message: a parse error can quote model output with trainee speech.
+        const message = (error: unknown) =>
+          error instanceof Error ? error.message : String(error);
         console.error(
           "[roleplay-evaluator] Primary model failed:",
           primaryModel,
-          primaryError,
+          message(primaryError),
         );
         console.error(
-          "[roleplay-evaluator] Fallback STT→eval pipeline failed:",
-          `STT=${sttModel}, eval=${evalModel}`,
-          fallbackError,
+          "[roleplay-evaluator] Fallback model failed:",
+          fallbackModel,
+          message(fallbackError),
         );
         throw new SalesError(
-          `Roleplay evaluation failed on both primary (${primaryModel}) and fallback (STT ${sttModel} → eval ${evalModel}) paths`,
+          `Roleplay evaluation failed on both primary (${primaryModel}) and fallback (${fallbackModel}) models`,
           "EVALUATION_FAILED",
           { cause: { primaryError, fallbackError } },
         );
       }
     }
+    // Outside the model fallback: a scoring error is not a model failure.
+    return scoreRoleplayEvaluation(result, rubric.criteriaJson);
   };
 }
