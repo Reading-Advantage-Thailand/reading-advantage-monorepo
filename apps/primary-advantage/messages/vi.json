@@ -83,7 +83,8 @@
       "progressTracking": "Theo dõi tiến độ"
     },
     "schoollicense": "Giấy phép trường",
-    "helpreport": "Báo cáo video hướng dẫn"
+    "helpreport": "Báo cáo video hướng dẫn",
+    "helpvideos": "Video hướng dẫn"
   },
   "Leaderboard": {
     "title": "Bảng xếp hạng",
@@ -4347,7 +4348,20 @@
     "noYouTube": "Phát không qua YouTube",
     "thaiNarration": "Thuyết minh tiếng Thái",
     "signInHelp": "Đăng nhập như thế nào?",
-    "videoError": "Không tải được video. Hãy quay lại danh sách và thử lại sau."
+    "videoError": "Không tải được video. Hãy quay lại danh sách và thử lại sau.",
+    "allVideos": "Tất cả video hướng dẫn",
+    "indexIntro": "Video ngắn hướng dẫn cách dùng Primary Advantage, có thuyết minh tiếng Thái.",
+    "watchVideo": "Xem video",
+    "areas": {
+      "start": "Bắt đầu tại đây",
+      "signin": "Đăng nhập",
+      "roster": "Trang lớp và học sinh",
+      "books": "Sách của lớp và bài học",
+      "reports": "Báo cáo và bài tập",
+      "games": "Trò chơi và thử thách",
+      "avatars": "Hình đại diện",
+      "quest": "Class Quest"
+    }
   },
   "SystemHelp": {
     "title": "Báo cáo video hướng dẫn",

@@ -83,7 +83,8 @@
       "progressTracking": "Progress Tracking"
     },
     "schoollicense": "School license",
-    "helpreport": "Help video report"
+    "helpreport": "Help video report",
+    "helpvideos": "Help videos"
   },
   "Leaderboard": {
     "title": "Leaderboard",
@@ -4498,7 +4499,20 @@
     "noYouTube": "Play without YouTube",
     "thaiNarration": "Thai narration",
     "signInHelp": "How do I sign in?",
-    "videoError": "The video did not load. Go back and try again later."
+    "videoError": "The video did not load. Go back and try again later.",
+    "allVideos": "All help videos",
+    "indexIntro": "Short videos that show how to use Primary Advantage, with Thai narration.",
+    "watchVideo": "Watch the video",
+    "areas": {
+      "start": "Start here",
+      "signin": "Sign in",
+      "roster": "Class page and students",
+      "books": "Class books and lessons",
+      "reports": "Reports and assignments",
+      "games": "Games and challenges",
+      "avatars": "Avatars",
+      "quest": "Class Quest"
+    }
   },
   "SystemHelp": {
     "title": "Help video report",

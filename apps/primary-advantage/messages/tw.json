@@ -83,7 +83,8 @@
       "progressTracking": "進度追蹤"
     },
     "schoollicense": "學校授權",
-    "helpreport": "說明影片報告"
+    "helpreport": "說明影片報告",
+    "helpvideos": "說明影片"
   },
   "Leaderboard": {
     "title": "排行榜",
@@ -4498,7 +4499,20 @@
     "noYouTube": "不使用 YouTube 播放",
     "thaiNarration": "泰語旁白",
     "signInHelp": "如何登入？",
-    "videoError": "影片無法載入。請返回列表，稍後再試。"
+    "videoError": "影片無法載入。請返回列表，稍後再試。",
+    "allVideos": "全部說明影片",
+    "indexIntro": "介紹 Primary Advantage 使用方法的短片，配有泰語旁白。",
+    "watchVideo": "觀看影片",
+    "areas": {
+      "start": "從這裡開始",
+      "signin": "登入",
+      "roster": "班級頁面和學生",
+      "books": "班級圖書和課程",
+      "reports": "報告和作業",
+      "games": "遊戲和挑戰",
+      "avatars": "頭像",
+      "quest": "Class Quest"
+    }
   },
   "SystemHelp": {
     "title": "說明影片報告",

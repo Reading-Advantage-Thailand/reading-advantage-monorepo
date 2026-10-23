@@ -8,12 +8,14 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Link } from "@/i18n/navigation";
 import { sendHelpEvent } from "@/lib/help/events";
 import { helpVideosFor, pagePattern } from "@/lib/help/match";
-import type { HelpAudience, HelpVideo } from "@/lib/help/videos";
+import { HELP_VIDEOS, type HelpAudience, type HelpVideo } from "@/lib/help/videos";
 import youtubeIds from "@/lib/help/youtube-ids.json";
 import { getStorageUrl } from "@/lib/storage-config";
 import { cn } from "@/lib/utils";
 
 const YOUTUBE: Readonly<Record<string, string>> = youtubeIds;
+/** Every enabled student video, for the "All videos" view. */
+const studentVideos = HELP_VIDEOS.filter((video) => video.enabled && video.audience === "student");
 
 /** The bucket URL of a help video file (`mp4`) or its poster (`jpg`), staged by scripts/help. */
 const mediaUrl = (id: string, kind: "mp4" | "jpg") => getStorageUrl(`help/whats-new/${id}.${kind}`);
@@ -51,6 +53,8 @@ export function HelpPanel({
   const [selected, setSelected] = useState<HelpVideo | null>(null);
   // The id of the last video played, so that "Back" returns the focus to its row.
   const [last, setLast] = useState<string | null>(null);
+  // The student "All videos" view (FR-9): every student video, inside the panel.
+  const [all, setAll] = useState(false);
   const select = (video: HelpVideo) => {
     setLast(video.id);
     setSelected(video);
@@ -59,6 +63,7 @@ export function HelpPanel({
     if (!next) {
       setSelected(null);
       setLast(null);
+      setAll(false);
     }
     onOpenChange(next);
   };
@@ -79,6 +84,19 @@ export function HelpPanel({
         </DialogHeader>
         {selected ? (
           <HelpPlayer key={selected.id} video={selected} audience={audience} onPlay={played} onBack={() => setSelected(null)} />
+        ) : all ? (
+          <div className="flex flex-col gap-2">
+            <Button variant="ghost" className="w-fit cursor-pointer" onClick={() => setAll(false)}>
+              <ArrowLeftIcon aria-hidden="true" />
+              {t("back")}
+            </Button>
+            <section aria-label={t("allVideos")} className="flex flex-col gap-2">
+              <h3 className="text-sm font-semibold">{t("allVideos")}</h3>
+              {studentVideos.map((video) => (
+                <HelpItem key={video.id} video={video} focus={video.id === last} onSelect={select} />
+              ))}
+            </section>
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             <section aria-label={t("forThisPage")} className="flex flex-col gap-2">
@@ -102,6 +120,15 @@ export function HelpPanel({
                 {general.map((video) => <HelpItem key={video.id} video={video} focus={video.id === last} onSelect={select} />)}
               </section>
             )}
+            {audience === "student" ? (
+              <Button variant="outline" className="min-h-11 w-fit cursor-pointer" onClick={() => setAll(true)}>
+                {t("allVideos")}
+              </Button>
+            ) : (
+              <Link href="/teacher/help" className="min-h-11 w-fit content-center text-sm underline" onClick={() => change(false)}>
+                {t("allVideos")}
+              </Link>
+            )}
           </div>
         )}
       </DialogContent>
@@ -109,8 +136,14 @@ export function HelpPanel({
   );
 }
 
-/** One row of the list: the poster, the title, and the length (a 44 px or taller tap target). */
-function HelpItem({ video, focus, onSelect }: { video: HelpVideo; focus: boolean; onSelect: (video: HelpVideo) => void }) {
+/**
+ * One row of the list: the poster, the title, and the length (a 44 px or taller tap target).
+ * @param props.video The video.
+ * @param props.focus True to take the focus on mount (the row of the video that was played last).
+ * @param props.onSelect Called with the video on a tap.
+ * @returns The row.
+ */
+export function HelpItem({ video, focus, onSelect }: { video: HelpVideo; focus: boolean; onSelect: (video: HelpVideo) => void }) {
   const t = useTranslations("Help");
   const locale = useLocale();
   return (
@@ -135,8 +168,13 @@ function HelpItem({ video, focus, onSelect }: { video: HelpVideo; focus: boolean
 /**
  * The player: the poster and a play button first; after the tap, YouTube (teacher) or our own file.
  * When our file does not load, a short message replaces the black box.
+ * @param props.video The video.
+ * @param props.audience Teacher (YouTube when the video is there) or student (our file only).
+ * @param props.onPlay Called with the video and the source at each play.
+ * @param props.onBack Called by the back button.
+ * @returns The player.
  */
-function HelpPlayer({
+export function HelpPlayer({
   video,
   audience,
   onPlay,

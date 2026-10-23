@@ -83,5 +83,11 @@ export const teacherPageConfig: PageConfig = {
       icon: "BookOpenIcon",
       requiredPermissions: ["TEACHER_ACCESS"],
     },
+    {
+      title: "helpvideos",
+      href: "/teacher/help",
+      icon: "CircleHelpIcon",
+      requiredPermissions: ["TEACHER_ACCESS"],
+    },
   ],
 };

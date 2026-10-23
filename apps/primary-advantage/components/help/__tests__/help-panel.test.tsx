@@ -132,6 +132,22 @@ describe("HelpPanel (spec FR-2 to FR-4, FR-7)", () => {
     expect(events().map((e) => e.event)).toEqual(["open", "play"]);
   });
 
+  it("gives a student an All videos view inside the panel (FR-9)", () => {
+    panel("/student/home", "student");
+    expect(screen.queryByRole("link", { name: "All help videos" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "All help videos" }));
+    const all = screen.getByRole("region", { name: "All help videos" });
+    expect(within(all).getAllByRole("button").length).toBeGreaterThan(20);
+    expect(within(all).getByRole("button", { name: /Choose your hero/ })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Back to the list" }));
+    expect(screen.getByRole("region", { name: "For this page" })).toBeInTheDocument();
+  });
+
+  it("links a teacher to the help index (FR-9)", () => {
+    panel("/teacher/dashboard", "teacher");
+    expect(screen.getByRole("link", { name: "All help videos" })).toHaveAttribute("href", "/teacher/help");
+  });
+
   it("stops the video when the panel closes", () => {
     const onOpenChange = vi.fn();
     const { rerender } = panel("/student/home", "student", "en", onOpenChange);
