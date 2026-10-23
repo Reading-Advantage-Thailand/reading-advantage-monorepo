@@ -9,6 +9,7 @@ import { HelpPanel } from "./help-panel";
 /**
  * The "How do I sign in?" link of the sign-in pages (track primary_in_app_help_20261023, plan 3.3).
  * These pages have no app header, so the link opens the help panel for the page and the audience.
+ * The visitor is signed out, so the panel sends no help events.
  * @param props.pathname The page path without the locale, for example `/auth/signin`.
  * @param props.audience The audience of the tab: student or teacher.
  * @returns The link and its panel.
@@ -22,7 +23,7 @@ export function HelpLink({ pathname, audience }: { pathname: string; audience: H
         <CircleHelpIcon aria-hidden="true" className="h-4 w-4" />
         {t("signInHelp")}
       </button>
-      <HelpPanel open={open} onOpenChange={setOpen} pathname={pathname} audience={audience} />
+      <HelpPanel open={open} onOpenChange={setOpen} pathname={pathname} audience={audience} record={false} />
     </>
   );
 }

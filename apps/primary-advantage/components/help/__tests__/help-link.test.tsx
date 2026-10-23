@@ -15,6 +15,15 @@ afterEach(cleanup);
 const firstVideo = () => within(screen.getByRole("region", { name: "For this page" })).getAllByRole("button")[0].textContent;
 
 describe("HelpLink (plan 3.3)", () => {
+  it("sends no help event from the signed-out sign-in page", () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    renderWithMessages(<HelpLink pathname="/auth/signin" audience="student" />);
+    fireEvent.click(screen.getByRole("button", { name: "How do I sign in?" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+
   it("opens the student sign-in video on the student tab", () => {
     renderWithMessages(<HelpLink pathname="/auth/signin" audience="student" />);
     fireEvent.click(screen.getByRole("button", { name: "How do I sign in?" }));

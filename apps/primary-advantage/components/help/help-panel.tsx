@@ -2,11 +2,12 @@
 
 import { ArrowLeftIcon, PlayIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Link } from "@/i18n/navigation";
-import { helpVideosFor } from "@/lib/help/match";
+import { sendHelpEvent } from "@/lib/help/events";
+import { helpVideosFor, pagePattern } from "@/lib/help/match";
 import type { HelpAudience, HelpVideo } from "@/lib/help/videos";
 import youtubeIds from "@/lib/help/youtube-ids.json";
 import { getStorageUrl } from "@/lib/storage-config";
@@ -24,11 +25,13 @@ const length = (seconds: number) => `${Math.floor(seconds / 60)}:${String(second
  * The help panel (track primary_in_app_help_20261023, spec FR-2 to FR-4, FR-7): the videos of the
  * current page, then the general videos, and a player. Nothing loads before a tap; a teacher plays a
  * video from YouTube when it is there (with "Play without YouTube"), and a student always plays our
- * own file. Closing the panel unmounts the player, so the video stops.
+ * own file. Closing the panel unmounts the player, so the video stops. Each open and each play
+ * sends a help event (FR-11) unless `record` is false.
  * @param props.open Whether the panel is open.
  * @param props.onOpenChange Called with the new open state.
  * @param props.pathname The current path without the locale.
  * @param props.audience Teacher or student.
+ * @param props.record False on the signed-out sign-in pages, which send no events.
  * @returns The panel.
  */
 export function HelpPanel({
@@ -36,11 +39,13 @@ export function HelpPanel({
   onOpenChange,
   pathname,
   audience,
+  record = true,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   pathname: string;
   audience: HelpAudience;
+  record?: boolean;
 }) {
   const t = useTranslations("Help");
   const [selected, setSelected] = useState<HelpVideo | null>(null);
@@ -58,6 +63,13 @@ export function HelpPanel({
     onOpenChange(next);
   };
   const { matched, general } = helpVideosFor(pathname, audience);
+  const routePattern = pagePattern(pathname);
+  useEffect(() => {
+    if (open && record) sendHelpEvent({ event: "open", routePattern, matched: matched.length });
+  }, [open, record, routePattern, matched.length]);
+  const played = (video: HelpVideo, source: "youtube" | "file") => {
+    if (record) sendHelpEvent({ event: "play", routePattern, videoId: video.id, source });
+  };
   return (
     <Dialog open={open} onOpenChange={change}>
       <DialogContent className={cn("max-h-[90svh] overflow-y-auto", audience === "teacher" ? "sm:max-w-3xl" : "sm:max-w-md")}>
@@ -66,7 +78,7 @@ export function HelpPanel({
           <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
         {selected ? (
-          <HelpPlayer key={selected.id} video={selected} audience={audience} onBack={() => setSelected(null)} />
+          <HelpPlayer key={selected.id} video={selected} audience={audience} onPlay={played} onBack={() => setSelected(null)} />
         ) : (
           <div className="flex flex-col gap-4">
             <section aria-label={t("forThisPage")} className="flex flex-col gap-2">
@@ -124,7 +136,17 @@ function HelpItem({ video, focus, onSelect }: { video: HelpVideo; focus: boolean
  * The player: the poster and a play button first; after the tap, YouTube (teacher) or our own file.
  * When our file does not load, a short message replaces the black box.
  */
-function HelpPlayer({ video, audience, onBack }: { video: HelpVideo; audience: HelpAudience; onBack: () => void }) {
+function HelpPlayer({
+  video,
+  audience,
+  onPlay,
+  onBack,
+}: {
+  video: HelpVideo;
+  audience: HelpAudience;
+  onPlay: (video: HelpVideo, source: "youtube" | "file") => void;
+  onBack: () => void;
+}) {
   const t = useTranslations("Help");
   const locale = useLocale();
   const [playing, setPlaying] = useState(false);
@@ -141,7 +163,13 @@ function HelpPlayer({ video, audience, onBack }: { video: HelpVideo; audience: H
       <p className="font-medium">{title}</p>
       <div data-format={video.format} className={cn("relative overflow-hidden rounded-md bg-black", video.format === "9x16" ? "mx-auto aspect-[9/16] w-[min(100%,calc(70svh*9/16))]" : "aspect-video w-full")}>
         {!playing ? (
-          <button type="button" onClick={() => setPlaying(true)} aria-label={t("play", { title })} className="group absolute inset-0 cursor-pointer">
+          <button
+            type="button"
+            onClick={() => {
+              setPlaying(true);
+              onPlay(video, youtubeId ? "youtube" : "file");
+            }}
+            aria-label={t("play", { title })} className="group absolute inset-0 cursor-pointer">
             <img src={mediaUrl(video.id, "jpg")} alt="" className="h-full w-full object-cover" />
             <span className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/60 text-white group-hover:bg-black/80">
               <PlayIcon aria-hidden="true" className="h-8 w-8" />
@@ -172,7 +200,14 @@ function HelpPlayer({ video, audience, onBack }: { video: HelpVideo; audience: H
         )}
       </div>
       {playing && youtubeId && (
-        <Button variant="outline" className="w-fit cursor-pointer" onClick={() => setOwnFile(true)}>
+        <Button
+          variant="outline"
+          className="w-fit cursor-pointer"
+          onClick={() => {
+            setOwnFile(true);
+            onPlay(video, "file");
+          }}
+        >
           {t("noYouTube")}
         </Button>
       )}

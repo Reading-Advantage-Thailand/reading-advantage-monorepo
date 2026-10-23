@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { helpVideosFor, routeScore } from "../match";
+import { helpVideosFor, pagePattern, routeScore } from "../match";
 import type { HelpVideo } from "../videos";
 
 const ids = (videos: readonly HelpVideo[]) => videos.map((v) => v.id);
@@ -75,5 +75,16 @@ describe("helpVideosFor (spec FR-2, FR-4)", () => {
       { id: "Z1", audience: "student", format: "9x16", routes: ["/student/home"], general: false, title: { th: "ก", en: "A" }, durationSec: 10, enabled: false },
     ];
     expect(helpVideosFor("/student/home", "student", videos).matched).toEqual([]);
+  });
+});
+
+describe("pagePattern (FR-11)", () => {
+  it("replaces ids and keeps the page names", () => {
+    expect(pagePattern("/teacher/class-roster/830b7de6-7b63-486f-8050-25b6c027b0c3/books/clx1a2b3c4d5e6f7g8h9/lessons/3")).toBe(
+      "/teacher/class-roster/[id]/books/[id]/lessons/[id]",
+    );
+    expect(pagePattern("/student/games/apk/potion-rush?x=1")).toBe("/student/games/apk/potion-rush");
+    expect(pagePattern("/student/read/%E0%B8%81")).toBe("/student/read/[id]");
+    expect(pagePattern("/")).toBe("/");
   });
 });

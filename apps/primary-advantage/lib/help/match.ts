@@ -43,3 +43,17 @@ export function helpVideosFor(
     .map((m) => m.video);
   return { matched, general: own.filter((video) => video.general && !matched.includes(video)) };
 }
+
+/** A path segment that names a record (a number, a uuid, a long id) or has other characters. */
+const isId = (segment: string) => /^\d+$/.test(segment) || (/\d/.test(segment) && segment.length >= 8) || /[^A-Za-z0-9.-]/.test(segment);
+
+/**
+ * The page path for the help events (FR-11): ids become `[id]`, so the report counts one row per page.
+ * @param pathname The path without the locale, for example `/teacher/class-roster/abc-123-uuid`.
+ * @returns The pattern, for example `/teacher/class-roster/[id]`, at most 200 characters.
+ * @example pagePattern("/teacher/class-roster/830b7de6-7b63-486f-8050-25b6c027b0c3/qr-cards") // "/teacher/class-roster/[id]/qr-cards"
+ */
+export function pagePattern(pathname: string): string {
+  const segments = pathname.split(/[?#]/)[0].split("/").filter(Boolean);
+  return `/${segments.map((segment) => (isId(segment) ? "[id]" : segment)).join("/")}`.slice(0, 200);
+}

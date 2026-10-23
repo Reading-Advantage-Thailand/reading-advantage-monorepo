@@ -2,7 +2,7 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, fireEvent, screen, within } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithMessages, withMessages } from "@/components/__tests__/helpers/render-with-messages";
 import { HelpPanel } from "../help-panel";
 
@@ -10,7 +10,17 @@ vi.mock("@/i18n/navigation", () => ({
   Link: ({ children, href, ...rest }: { children?: ReactNode; href: string }) => <a href={href} {...rest}>{children}</a>,
 }));
 
-afterEach(cleanup);
+const fetchMock = vi.fn(() => Promise.resolve(new Response(null, { status: 204 })));
+beforeEach(() => {
+  fetchMock.mockClear();
+  vi.stubGlobal("fetch", fetchMock);
+});
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
+/** The bodies of the help events that the panel sent. */
+const events = () => (fetchMock.mock.calls as unknown as [string, RequestInit][]).map(([url, init]) => ({ url, ...JSON.parse(String(init.body)) }));
 
 const panel = (pathname: string, audience: "teacher" | "student", locale: "en" | "th" | "vi" = "en", onOpenChange = vi.fn()) =>
   renderWithMessages(<HelpPanel open pathname={pathname} audience={audience} onOpenChange={onOpenChange} />, { locale });
@@ -93,6 +103,33 @@ describe("HelpPanel (spec FR-2 to FR-4, FR-7)", () => {
     expect(screen.getByRole("button", { name: /My new home page/ })).toBeInTheDocument();
     expect(screen.getAllByText(/Thuyết minh tiếng Thái/).length).toBeGreaterThan(0);
     expect(screen.getByRole("region", { name: "Cho trang này" })).toBeInTheDocument();
+  });
+
+  it("sends an open event with the page pattern and a play event with the source (FR-11)", () => {
+    panel("/teacher/class-roster/830b7de6-7b63-486f-8050-25b6c027b0c3/qr-cards", "teacher");
+    expect(events()).toEqual([{ url: "/api/v1/help/events", event: "open", routePattern: "/teacher/class-roster/[id]/qr-cards", matched: 1 }]);
+    fireEvent.click(screen.getByRole("button", { name: /Print the class sheet and QR cards/ }));
+    expect(events()).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Play Print the class sheet and QR cards" }));
+    fireEvent.click(screen.getByRole("button", { name: "Play without YouTube" }));
+    expect(events().slice(1)).toEqual([
+      { url: "/api/v1/help/events", event: "play", routePattern: "/teacher/class-roster/[id]/qr-cards", videoId: "B4", source: "youtube" },
+      { url: "/api/v1/help/events", event: "play", routePattern: "/teacher/class-roster/[id]/qr-cards", videoId: "B4", source: "file" },
+    ]);
+  });
+
+  it("sends no event when record is false, and plays even when the event fails", () => {
+    fetchMock.mockImplementation(() => Promise.reject(new Error("offline")));
+    renderWithMessages(<HelpPanel open pathname="/student/home" audience="student" onOpenChange={vi.fn()} record={false} />);
+    fireEvent.click(screen.getByRole("button", { name: /My new home page/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Play My new home page" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    cleanup();
+    panel("/student/home", "student");
+    fireEvent.click(screen.getByRole("button", { name: /My new home page/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Play My new home page" }));
+    expect(document.querySelector("video")).not.toBeNull();
+    expect(events().map((e) => e.event)).toEqual(["open", "play"]);
   });
 
   it("stops the video when the panel closes", () => {
