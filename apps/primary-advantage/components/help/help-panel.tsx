@@ -153,7 +153,7 @@ export function HelpItem({ video, focus, onSelect }: { video: HelpVideo; focus: 
       onClick={() => onSelect(video)}
       className="hover:bg-accent flex min-h-11 cursor-pointer items-center gap-3 rounded-md border p-2 text-left"
     >
-      <img src={mediaUrl(video.id, "jpg")} alt="" loading="lazy" className={cn("shrink-0 rounded object-cover", video.format === "9x16" ? "h-16 w-9" : "h-12 w-20")} />
+      <img src={mediaUrl(video.id, "jpg")} alt="" loading="lazy" className={cn("bg-muted shrink-0 rounded object-cover text-[0px]", video.format === "9x16" ? "h-16 w-9" : "h-12 w-20")} />
       <span className="flex flex-col">
         <span className="font-medium">{locale === "th" ? video.title.th : video.title.en}</span>
         <span className="text-muted-foreground text-xs">
