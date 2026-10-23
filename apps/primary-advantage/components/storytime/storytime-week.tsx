@@ -66,10 +66,13 @@ export function StorytimeWeekView({ week, part }: { week: StorytimeWeek; part: S
         </div>
       </div>
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <div className="flex flex-col items-center gap-1 text-center">
-          <Sign small>{t("levelWeek", { level: week.level, week: week.week })}</Sign>
-          <h1 className="cq-on-scene text-3xl font-bold">{week.title}</h1>
-        </div>
+        {/* An open part keeps the screen for the book: the week heading shows with the tiles only. */}
+        {!open && (
+          <div className="flex flex-col items-center gap-1 text-center">
+            <Sign small>{t("levelWeek", { level: week.level, week: week.week })}</Sign>
+            <h1 className="cq-on-scene text-3xl font-bold">{week.title}</h1>
+          </div>
+        )}
         {open ? (
           <>
             <button type="button" onClick={close} className={cn(rpgButton("wood"), "min-h-16 self-start px-4 text-lg")}>

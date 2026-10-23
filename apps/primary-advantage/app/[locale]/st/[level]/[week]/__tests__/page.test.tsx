@@ -38,7 +38,7 @@ describe("/st/<level>/<week> (qr-page-spec section 2)", () => {
 
   it("names the week in the title and keeps the page out of search engines", async () => {
     mocks.loadStorytimeWeek.mockResolvedValue({ title: "Hello!" });
-    expect(await generateMetadata({ params: params() })).toEqual({ title: "Hello!", robots: { index: false, follow: false }, manifest: null });
+    expect(await generateMetadata({ params: params() })).toEqual({ title: { absolute: "Hello! | Storytime Advantage" }, robots: { index: false, follow: false }, manifest: null });
     mocks.loadStorytimeWeek.mockResolvedValue(null);
     expect(await generateMetadata({ params: params("2", "99") })).toEqual({ robots: { index: false, follow: false }, manifest: null });
   });

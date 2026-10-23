@@ -21,6 +21,9 @@ export function speak(text: string, lang: string): boolean {
 /** The speech language of an app locale. */
 export const SPEECH_LANG: Readonly<Record<string, string>> = { th: "th-TH", en: "en-US", vi: "vi-VN", cn: "zh-CN", tw: "zh-TW" };
 
+/** The aligner ends a word on its last sound, so the stop waits this much longer (seconds). */
+const WORD_TAIL = 0.08;
+
 /**
  * Plays one stretch of an audio element and stops at its end: a word in "my turn" mode. A timer
  * stops it on time; the `timeupdate` check (4 times a second) is the fallback.
@@ -32,7 +35,7 @@ export const SPEECH_LANG: Readonly<Record<string, string>> = { th: "th-TH", en: 
 export function playStretch(audio: HTMLAudioElement, start: number, end: number): () => void {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const check = () => {
-    if (audio.currentTime >= end) stop();
+    if (audio.currentTime >= end + WORD_TAIL) stop();
   };
   const stop = () => {
     clearTimeout(timer);
@@ -42,7 +45,7 @@ export function playStretch(audio: HTMLAudioElement, start: number, end: number)
   audio.addEventListener("timeupdate", check);
   seekOrWait(audio, start);
   audio.play().then(() => {
-    timer = setTimeout(stop, ((end - start) / (audio.playbackRate || 1)) * 1000);
+    timer = setTimeout(stop, ((end + WORD_TAIL - start) / (audio.playbackRate || 1)) * 1000);
   }, stop);
   return stop;
 }

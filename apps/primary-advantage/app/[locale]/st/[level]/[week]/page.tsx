@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { level, week } = await params;
   const data = await loadStorytimeWeek(level, week);
   // No manifest: the QR page is not the installable app (plan Q7).
-  return { ...(data && { title: data.title }), robots: { index: false, follow: false }, manifest: null };
+  return { ...(data && { title: { absolute: `${data.title} | Storytime Advantage` } }), robots: { index: false, follow: false }, manifest: null };
 }
 
 /**

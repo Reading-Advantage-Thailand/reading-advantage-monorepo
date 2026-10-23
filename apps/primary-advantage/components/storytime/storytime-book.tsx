@@ -179,15 +179,15 @@ export function StorytimeBook({ book, element, mediaBase }: StorytimeBookProps) 
       )}
       {book.audio && <audio ref={audioRef} src={book.audio} preload="none" />}
       <div
-        className="flex flex-col items-center gap-3"
+        className="relative flex flex-col items-center gap-3"
         onTouchStart={(event) => {
           touchX.current = event.touches[0].clientX;
         }}
         onTouchEnd={onTouchEnd}
       >
         {bookPage < 0 && sounds ? (
-          <div className="flex flex-col items-center gap-3">
-            <h3 className="text-xl font-bold">{t("soundsTitle")}</h3>
+          <div className="flex min-h-48 flex-col items-center gap-3 px-16">
+            <h3 className="text-center text-xl font-bold">{t("soundsTitle")}</h3>
             {element && (
               <button
                 type="button"
@@ -204,69 +204,75 @@ export function StorytimeBook({ book, element, mediaBase }: StorytimeBookProps) 
                 {element.graphemes.join(" ")}
               </button>
             )}
-            <p className="flex flex-wrap justify-center gap-2 text-2xl">
+            <p className="flex flex-wrap justify-center gap-2">
               {sounds.words.map((word) => (
-                <button key={word} type="button" onClick={() => tapWord(`s:${word}`, word, -1)} className="min-h-16 rounded px-3">
+                <button key={word} type="button" onClick={() => tapWord(`s:${word}`, word, -1)} className={cn(rpgButton("wood"), "min-h-16 px-4 text-2xl")}>
                   {wordFace(`s:${word}`, word)}
                 </button>
               ))}
             </p>
             {sounds.tricky.length > 0 && (
-              <p className="text-lg">
+              <p className="text-center text-lg">
                 {t("trickyWords")}: {sounds.tricky.join(", ")}
               </p>
             )}
           </div>
+        ) : book.pages[bookPage].picture ? (
+          <img
+            src={book.pages[bookPage].picture ?? undefined}
+            alt=""
+            className="aspect-[4/3] max-h-[40svh] w-full max-w-md rounded-md object-cover"
+          />
         ) : (
-          <>
-            {book.pages[bookPage].picture ? (
-              <img src={book.pages[bookPage].picture ?? undefined} alt="" className="aspect-[4/3] w-full max-w-md rounded-md object-cover" />
-            ) : (
-              <div className="bg-muted flex aspect-[4/3] w-full max-w-md items-center justify-center rounded-md">
-                <BookOpenIcon aria-hidden="true" className="size-16 opacity-40" />
-              </div>
-            )}
-            <p className="text-center text-3xl leading-relaxed font-semibold">
-              {display.words.map((word) => {
-                const key = `${bookPage}:${word.index}`;
-                const lit = word.index === marked;
-                return (
-                  <span key={word.index}>
-                    {word.lead}
-                    {mode === "turn" ? (
-                      <button
-                        type="button"
-                        onClick={() => tapWord(key, word.text, maps?.displayToAudio[word.index] ?? -1)}
-                        className={cn("min-h-16 rounded px-1", lit && HIGHLIGHT_CLASSES.currentWord)}
-                      >
-                        {wordFace(key, word.text)}
-                      </button>
-                    ) : (
-                      <span className={cn("rounded px-1", lit && HIGHLIGHT_CLASSES.currentWord)}>{word.text}</span>
-                    )}
-                  </span>
-                );
-              })}
-              {display.tail}
-            </p>
-          </>
+          <div className="bg-muted flex aspect-[4/3] max-h-[40svh] w-full max-w-md items-center justify-center rounded-md">
+            <BookOpenIcon aria-hidden="true" className="size-16 opacity-40" />
+          </div>
         )}
-        <div className="flex w-full items-center justify-between gap-2">
-          <button type="button" aria-label={t("prevPage")} disabled={page === 0} onClick={() => go(page - 1)} className={cn(rpgButton("wood"), BIG)}>
-            <ChevronLeftIcon aria-hidden="true" className="size-8" />
-          </button>
-          <span className="text-lg tabular-nums">{t("pageOf", { page: page + 1, count })}</span>
-          <button
-            type="button"
-            aria-label={t("nextPage")}
-            disabled={page === count - 1}
-            onClick={() => go(page + 1)}
-            className={cn(rpgButton("wood"), BIG)}
-          >
-            <ChevronRightIcon aria-hidden="true" className="size-8" />
-          </button>
-        </div>
+        <button
+          type="button"
+          aria-label={t("prevPage")}
+          disabled={page === 0}
+          onClick={() => go(page - 1)}
+          className={cn(rpgButton("wood"), BIG, "absolute top-1/2 left-0 -translate-y-1/2 disabled:opacity-40")}
+        >
+          <ChevronLeftIcon aria-hidden="true" className="size-8" />
+        </button>
+        <button
+          type="button"
+          aria-label={t("nextPage")}
+          disabled={page === count - 1}
+          onClick={() => go(page + 1)}
+          className={cn(rpgButton("wood"), BIG, "absolute top-1/2 right-0 -translate-y-1/2 disabled:opacity-40")}
+        >
+          <ChevronRightIcon aria-hidden="true" className="size-8" />
+        </button>
       </div>
+      <span className="text-center text-lg tabular-nums">{t("pageOf", { page: page + 1, count })}</span>
+      {bookPage >= 0 && (
+        <p className="text-center text-3xl leading-relaxed font-semibold">
+          {display.words.map((word) => {
+            const key = `${bookPage}:${word.index}`;
+            const lit = word.index === marked;
+            return (
+              <span key={word.index}>
+                {word.lead}
+                {mode === "turn" ? (
+                  <button
+                    type="button"
+                    onClick={() => tapWord(key, word.text, maps?.displayToAudio[word.index] ?? -1)}
+                    className={cn("min-h-16 rounded px-0.5", lit && HIGHLIGHT_CLASSES.currentWord)}
+                  >
+                    {wordFace(key, word.text)}
+                  </button>
+                ) : (
+                  <span className={cn("rounded px-0.5", lit && HIGHLIGHT_CLASSES.currentWord)}>{word.text}</span>
+                )}
+              </span>
+            );
+          })}
+          {display.tail}
+        </p>
+      )}
       {mode === "turn" && bookPage >= 0 && (
         <p className="flex items-center justify-center gap-2 text-center">
           <Volume2Icon aria-hidden="true" className="size-5" />
