@@ -68,6 +68,20 @@ describe("ReadAlongPlayer", () => {
     expect(button).toHaveTextContent("1×");
   });
 
+  it("uses only the speeds it gets: the Storytime page passes 0.75 and 1", () => {
+    expect(nextSpeed(0.75, [0.75, 1])).toBe(1);
+    expect(nextSpeed(1, [0.75, 1])).toBe(0.75);
+    expect(nextSpeed(1.25, [0.75, 1])).toBe(1);
+    const { onSpeedChange } = setup({ speed: 1, speeds: [0.75, 1] });
+    fireEvent.click(screen.getByRole("button", { name: "Speed 1 times. Change speed" }));
+    expect(onSpeedChange).toHaveBeenCalledWith(0.75);
+  });
+
+  it("takes a class name that places it on a page with no bottom bar", () => {
+    setup({ className: "bottom-0" });
+    expect(document.querySelector("[data-player]")).toHaveClass("bottom-0");
+  });
+
   it("gives every control a 48 px target (56 px for play)", () => {
     setup();
     for (const name of ["Previous sentence", "Replay this sentence", "Next sentence"]) {
