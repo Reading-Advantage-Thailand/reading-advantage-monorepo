@@ -14,6 +14,7 @@
 - [Version Policy](#version-policy)
 - [Monorepo Structure](#monorepo-structure)
   - [One program, one app, one container](#one-program-one-app-one-container)
+  - [Clean up after a merge](#clean-up-after-a-merge)
 - [Package Responsibilities](#package-responsibilities)
   - [Database Package](#database-package)
   - [Backend Package](#backend-package)
