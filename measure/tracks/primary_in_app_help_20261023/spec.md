@@ -82,7 +82,7 @@ All built videos are approved (section 6), so the registry maps the other 75 in 
 PR compared the build of each recording with the current code and looked at the recorded frames.
 
 - Retaken, no hold (PR `309b529`, 2026-10-23): C11 (`wave2/c11-me-night-2d-th.mp4`, 44.1 s: Thai game descriptions on the story games page) and E5 (`wave2/e5-reports-th.mp4`, 44.6 s: Thai report dates and calendar, the new heatmap greens, the chart height). The first takes showed the English text of before `6915fb2ce`, `d8913133f`, and `6efeb7a5c`.
-- Daniel decides: B1, B2, B5, A2 (the sign-in page). Only the footer line changed: it was English ("Printed English workbooks and a reading app for grades 3–6"), and `def50dcf6` made it Thai. The rest of the page is the same. These four are live on YouTube. PR's default: no hold.
+- No hold, Daniel's decision (2026-10-23, PR record advantage-pr `985499f`): B1, B2, B5, A2 (the sign-in page) stay as they are, with no retake. Only the footer line changed: it was English ("Printed English workbooks and a reading app for grades 3–6"), and `def50dcf6` made it Thai. The rest of the page is the same. These four are live on YouTube.
 - No hold: D4 (projector view). The old note came from a name clash with open decision D4 in the PR plan; no projector file changed after the recording (2026-10-21 15:04, build `12996ea7d`).
 - No hold: A4, F1, F2, F3, C2, F5, H4, H5, J6, I1 to I28, and all other videos (no change in the recorded frames).
 - Retake files confirmed: C2, F1, F2, F3 (on `61b21d82b`, with the name cover), C6 and E4 (on `7cdf7b7b7`), C8 (on `7cdf7b7b7`). A1 was built again from the retakes.

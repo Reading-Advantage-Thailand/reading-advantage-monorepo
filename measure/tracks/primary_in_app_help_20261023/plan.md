@@ -10,7 +10,7 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 
 - [x] 0.1 Daniel answered spec section 6 (2026-10-23): both hosts (teacher YouTube when uploaded, student own file), all videos approved, sign-in help yes, plays log in the system role.
 - [x] 0.2 PR confirmed the hold list and the retake files (2026-10-23, spec section 7); D4 has no hold; C11 and E5 retaken (PR `309b529`).
-- [ ] 0.3 Daniel decides B1, B2, B5, A2 (only the sign-in footer line changed to Thai after the recording). PR's default: no hold.
+- [x] 0.3 Daniel decided (2026-10-23, advantage-pr `985499f`): B1, B2, B5, A2 stay as they are; no hold, no retake.
 
 ## Phase 1: Registry and matcher
 
