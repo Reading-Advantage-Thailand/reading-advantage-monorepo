@@ -23,7 +23,7 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 
 - [x] 2.1 `scripts/help/stage-help-videos.ts`: reads the registry and PR's folder, checks each enabled video (mp4 and poster exist, `moov` before `mdat`, H.264 + AAC, length within 2 s), hard-links the files into `<out>/help/whats-new/<id>.mp4|jpg`, and writes `lib/help/youtube-ids.json`. It uploads nothing: the runbook's `gcloud storage rsync` uploads (the Primary bucket uses a Google service account, not the S3 adapter of `packages/storage`; all 91 PR files already had `moov` first, so no re-mux step). Tests: `scripts/help/__tests__/stage-lib.test.ts` (7). First run: 88 staged, 0 problems, 16 on YouTube. `c443fcb`
 - [x] 2.2 `docs/runbooks/help-video-sync.md`: when to run (after each upload day), the command, the check of the result (AC-5). `c443fcb`
-- [ ] 2.3 First run: all enabled videos (about 0.6 GB) to the production bucket (owner go, because it writes to production storage).
+- [x] 2.3 First run: all enabled videos (about 0.6 GB) to the production bucket (owner go, because it writes to production storage). Daniel's go D1 (2026-10-23 15:19 Bangkok); 88 videos and 88 posters uploaded, all 176 answer 200; help check 24/24 on 3005.
 
 ## Phase 3: Help button and panel
 
@@ -49,7 +49,7 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 
 - [x] 6.1 Browser check on the local server (3005): AC-1, AC-2, AC-3, AC-6, AC-7, AC-8 on desktop 1280 px and phone 390 px, in th and en. Done 2026-10-23 on 3005 (branch head ee2d9d710): `run2/help-check-23.mjs` 24/24 (with a 360x640 phone), `help-events-check-23.mjs` 11/11, `help-index-check-23.mjs` 9/9.
 - [x] 6.2 PR look check of the button and the panel (captures on the live review page). PR findings `help-pr-look-check-23-findings.md` (routes M1 to M7, order, Thai T1 to T4, look L1 to L4); PR defaults applied in `ee2d9d710`; Daniel's Thai check is L1 to L3 on the review page.
-- [ ] 6.3 Daniel's look check, then the deploy with the next Primary deploy (the migration runs in the build's migrate step).
+- [~] 6.3 Daniel's look check, then the deploy with the next Primary deploy (the migration runs in the build's migrate step). Look check passed 2026-10-23 (T, S, G, Y, L all pass); D2a keep B1/B2/B5/A2 on; D4 date format done in ac59e3c0c (browser check passed); D3 deploy go, steps in help-deploy-steps-20261023.md; D5 (YouTube for students) open.
 - [ ] 6.4 After each upload day: PR refreshes the links JSON; Monorepo runs the receiving step (new `youtube-ids.json`), and the teacher panel moves that video to YouTube with the next deploy.
 
 ## Size
