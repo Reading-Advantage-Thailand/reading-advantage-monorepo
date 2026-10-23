@@ -1,0 +1,826 @@
+{
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "level": 2,
+    "week": 1,
+    "title": "Hello!",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "graphemes": [
+        "n"
+      ],
+      "sound": "/n/",
+      "audio": "phonemes/daniel/04-n.mp3"
+    },
+    "frame": "Hello, I am ___."
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "soundBook": false,
+      "title": "Hello!",
+      "cover": {},
+      "pages": [
+        {
+          "text": "Hello, I am Pat.",
+          "image": {}
+        },
+        {
+          "text": "Hello, I am May.",
+          "image": {}
+        },
+        {
+          "text": "Hello, I am Sam.",
+          "image": {}
+        },
+        {
+          "text": "Hello, I am Mia.",
+          "image": {}
+        },
+        {
+          "text": "Hello, I am Nan.",
+          "image": {}
+        },
+        {
+          "text": "Hello, I am Ben.",
+          "image": {}
+        },
+        {
+          "text": "Hello, I am your teacher.",
+          "image": {}
+        },
+        {
+          "text": "Hello, I am Pip!",
+          "image": {}
+        }
+      ],
+      "audio": {
+        "sentences": []
+      }
+    },
+    {
+      "kind": "decodable",
+      "soundBook": true,
+      "title": "Nan Can Nod",
+      "cover": {},
+      "pages": [
+        {
+          "text": "A nest.",
+          "image": {}
+        },
+        {
+          "text": "A net.",
+          "image": {}
+        },
+        {
+          "text": "A nut.",
+          "image": {}
+        },
+        {
+          "text": "A nose.",
+          "image": {}
+        },
+        {
+          "text": "A neck.",
+          "image": {}
+        },
+        {
+          "text": "A nurse.",
+          "image": {}
+        },
+        {
+          "text": "A nest and a nut.",
+          "image": {}
+        },
+        {
+          "text": "Nan can nod!",
+          "image": {}
+        }
+      ],
+      "soundsPage": {
+        "element": "n",
+        "words": [
+          "nest",
+          "net",
+          "nut",
+          "nose",
+          "neck",
+          "nurse",
+          "nod"
+        ],
+        "tricky": [
+          "a",
+          "and",
+          "can"
+        ]
+      },
+      "audio": {
+        "sentences": []
+      }
+    }
+  ],
+  "song": {
+    "title": "Hello, I Am Pip",
+    "lines": [
+      {
+        "text": "Hello, hello, I am Pip",
+        "part": "verse",
+        "gesture": "point to self",
+        "image": {}
+      },
+      {
+        "text": "Hello, hello, I am Nan",
+        "part": "verse",
+        "gesture": "point to self",
+        "image": {}
+      },
+      {
+        "text": "Wave your hand and say it too",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {}
+      },
+      {
+        "text": "Hello, I am you",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {}
+      },
+      {
+        "text": "Hello, I am Pip (Hello, I am Pip!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {}
+      },
+      {
+        "text": "Hello, I am Nan (Hello, I am Nan!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {}
+      },
+      {
+        "text": "Hello, who are you? (Hello, who are you?)",
+        "part": "chorus",
+        "gesture": "hands out",
+        "image": {}
+      },
+      {
+        "text": "Hello, who are you?",
+        "part": "chorus",
+        "gesture": "hands out",
+        "imageOf": 6
+      },
+      {
+        "text": "Point to me, I am Pip",
+        "part": "verse",
+        "gesture": "point to self",
+        "image": {}
+      },
+      {
+        "text": "Point to you, you are Nan",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {}
+      },
+      {
+        "text": "Nod your head and say it too",
+        "part": "verse",
+        "gesture": "nod",
+        "image": {}
+      },
+      {
+        "text": "Hello, I am you",
+        "part": "verse",
+        "gesture": "point forward",
+        "imageOf": 3
+      },
+      {
+        "text": "Hello, I am Pip (Hello, I am Pip!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 4
+      },
+      {
+        "text": "Hello, I am Nan (Hello, I am Nan!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      },
+      {
+        "text": "Hello, who are you? (Hello, who are you?)",
+        "part": "chorus",
+        "gesture": "hands out",
+        "imageOf": 6
+      }
+    ],
+    "audio": "l2/media/w01/song.mp3",
+    "video": "l2/media/w01/song.mp4",
+    "videoPhone": "l2/media/w01/song-phone.mp4",
+    "poster": "l2/media/w01/song-poster.jpg",
+    "times": [
+      {
+        "sentence": "Hello, hello, I am Pip",
+        "startTime": 11.4,
+        "endTime": 15.14,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 11.4,
+            "end": 11.62
+          },
+          {
+            "word": "hello,",
+            "start": 12.18,
+            "end": 12.86
+          },
+          {
+            "word": "I",
+            "start": 13.42,
+            "end": 14.2
+          },
+          {
+            "word": "am",
+            "start": 14.2,
+            "end": 14.74
+          },
+          {
+            "word": "Pip",
+            "start": 14.74,
+            "end": 15.14
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, hello, I am Nan",
+        "startTime": 15.14,
+        "endTime": 19.8,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 15.14,
+            "end": 16.28
+          },
+          {
+            "word": "hello,",
+            "start": 16.76,
+            "end": 17.44
+          },
+          {
+            "word": "I",
+            "start": 18.38,
+            "end": 18.84
+          },
+          {
+            "word": "am",
+            "start": 18.84,
+            "end": 19.34
+          },
+          {
+            "word": "Nan",
+            "start": 19.34,
+            "end": 19.8
+          }
+        ]
+      },
+      {
+        "sentence": "Wave your hand and say it too",
+        "startTime": 19.8,
+        "endTime": 24.4,
+        "words": [
+          {
+            "word": "Wave",
+            "start": 19.8,
+            "end": 20.84
+          },
+          {
+            "word": "your",
+            "start": 20.84,
+            "end": 21.52
+          },
+          {
+            "word": "hand",
+            "start": 21.52,
+            "end": 22.32
+          },
+          {
+            "word": "and",
+            "start": 22.32,
+            "end": 22.72
+          },
+          {
+            "word": "say",
+            "start": 22.72,
+            "end": 23.22
+          },
+          {
+            "word": "it",
+            "start": 23.22,
+            "end": 23.96
+          },
+          {
+            "word": "too",
+            "start": 23.96,
+            "end": 24.4
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am you",
+        "startTime": 24.4,
+        "endTime": 27.8,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 24.4,
+            "end": 25.3
+          },
+          {
+            "word": "I",
+            "start": 26.04,
+            "end": 26.88
+          },
+          {
+            "word": "am",
+            "start": 26.88,
+            "end": 27.42
+          },
+          {
+            "word": "you",
+            "start": 27.42,
+            "end": 27.8
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Pip (Hello, I am Pip!)",
+        "startTime": 29.16,
+        "endTime": 33.44,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 29.16,
+            "end": 29.96
+          },
+          {
+            "word": "I",
+            "start": 30.28,
+            "end": 30.6
+          },
+          {
+            "word": "am",
+            "start": 30.6,
+            "end": 30.88
+          },
+          {
+            "word": "Pip",
+            "start": 30.88,
+            "end": 31.16
+          },
+          {
+            "word": "Hello,",
+            "start": 31.48,
+            "end": 32.28
+          },
+          {
+            "word": "I",
+            "start": 32.6,
+            "end": 32.94
+          },
+          {
+            "word": "am",
+            "start": 32.94,
+            "end": 33.16
+          },
+          {
+            "word": "Pip!",
+            "start": 33.16,
+            "end": 33.44
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Nan (Hello, I am Nan!)",
+        "startTime": 33.72,
+        "endTime": 38.54,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 33.72,
+            "end": 34.5
+          },
+          {
+            "word": "I",
+            "start": 35.04,
+            "end": 35.18
+          },
+          {
+            "word": "am",
+            "start": 35.18,
+            "end": 35.42
+          },
+          {
+            "word": "Nan",
+            "start": 35.42,
+            "end": 35.74
+          },
+          {
+            "word": "Hello,",
+            "start": 36.22,
+            "end": 36.72
+          },
+          {
+            "word": "I",
+            "start": 37.02,
+            "end": 37.2
+          },
+          {
+            "word": "am",
+            "start": 37.2,
+            "end": 37.5
+          },
+          {
+            "word": "Nan!",
+            "start": 37.5,
+            "end": 38.54
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, who are you? (Hello, who are you?)",
+        "startTime": 38.54,
+        "endTime": 42.6,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 38.54,
+            "end": 39.52
+          },
+          {
+            "word": "who",
+            "start": 39.52,
+            "end": 39.68
+          },
+          {
+            "word": "are",
+            "start": 39.68,
+            "end": 40
+          },
+          {
+            "word": "you?",
+            "start": 40,
+            "end": 40.9
+          },
+          {
+            "word": "Hello,",
+            "start": 40.9,
+            "end": 41.48
+          },
+          {
+            "word": "who",
+            "start": 41.48,
+            "end": 41.7
+          },
+          {
+            "word": "are",
+            "start": 41.7,
+            "end": 42.2
+          },
+          {
+            "word": "you?",
+            "start": 42.2,
+            "end": 42.6
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, who are you?",
+        "startTime": 43.12,
+        "endTime": 44.9,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 43.12,
+            "end": 43.76
+          },
+          {
+            "word": "who",
+            "start": 43.76,
+            "end": 43.96
+          },
+          {
+            "word": "are",
+            "start": 43.96,
+            "end": 44.5
+          },
+          {
+            "word": "you?",
+            "start": 44.5,
+            "end": 44.9
+          }
+        ]
+      },
+      {
+        "sentence": "Point to me, I am Pip",
+        "startTime": 45.64,
+        "endTime": 49.44,
+        "words": [
+          {
+            "word": "Point",
+            "start": 45.64,
+            "end": 46.06
+          },
+          {
+            "word": "to",
+            "start": 46.06,
+            "end": 46.78
+          },
+          {
+            "word": "me,",
+            "start": 46.78,
+            "end": 47.18
+          },
+          {
+            "word": "I",
+            "start": 48,
+            "end": 48.46
+          },
+          {
+            "word": "am",
+            "start": 48.46,
+            "end": 49.06
+          },
+          {
+            "word": "Pip",
+            "start": 49.06,
+            "end": 49.44
+          }
+        ]
+      },
+      {
+        "sentence": "Point to you, you are Nan",
+        "startTime": 50,
+        "endTime": 54.12,
+        "words": [
+          {
+            "word": "Point",
+            "start": 50,
+            "end": 50.68
+          },
+          {
+            "word": "to",
+            "start": 50.68,
+            "end": 51.4
+          },
+          {
+            "word": "you,",
+            "start": 51.4,
+            "end": 51.94
+          },
+          {
+            "word": "you",
+            "start": 52.64,
+            "end": 52.94
+          },
+          {
+            "word": "are",
+            "start": 52.94,
+            "end": 53.62
+          },
+          {
+            "word": "Nan",
+            "start": 53.62,
+            "end": 54.12
+          }
+        ]
+      },
+      {
+        "sentence": "Nod your head and say it too",
+        "startTime": 54.12,
+        "endTime": 58.78,
+        "words": [
+          {
+            "word": "Nod",
+            "start": 54.12,
+            "end": 55.36
+          },
+          {
+            "word": "your",
+            "start": 55.36,
+            "end": 55.74
+          },
+          {
+            "word": "head",
+            "start": 55.74,
+            "end": 56.52
+          },
+          {
+            "word": "and",
+            "start": 56.52,
+            "end": 57.02
+          },
+          {
+            "word": "say",
+            "start": 57.02,
+            "end": 57.68
+          },
+          {
+            "word": "it",
+            "start": 57.68,
+            "end": 58.22
+          },
+          {
+            "word": "too",
+            "start": 58.22,
+            "end": 58.78
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am you",
+        "startTime": 58.78,
+        "endTime": 62.08,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 58.78,
+            "end": 59.58
+          },
+          {
+            "word": "I",
+            "start": 60.6,
+            "end": 61.14
+          },
+          {
+            "word": "am",
+            "start": 61.14,
+            "end": 61.72
+          },
+          {
+            "word": "you",
+            "start": 61.72,
+            "end": 62.08
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Pip (Hello, I am Pip!)",
+        "startTime": 63.48,
+        "endTime": 67.68,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 63.48,
+            "end": 64.16
+          },
+          {
+            "word": "I",
+            "start": 64.56,
+            "end": 64.9
+          },
+          {
+            "word": "am",
+            "start": 64.9,
+            "end": 65.12
+          },
+          {
+            "word": "Pip",
+            "start": 65.12,
+            "end": 65.44
+          },
+          {
+            "word": "Hello,",
+            "start": 66.52,
+            "end": 66.52
+          },
+          {
+            "word": "I",
+            "start": 66.86,
+            "end": 67.2
+          },
+          {
+            "word": "am",
+            "start": 67.2,
+            "end": 67.44
+          },
+          {
+            "word": "Pip!",
+            "start": 67.44,
+            "end": 67.68
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Nan (Hello, I am Nan!)",
+        "startTime": 68.26,
+        "endTime": 72.06,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 68.26,
+            "end": 68.76
+          },
+          {
+            "word": "I",
+            "start": 69.26,
+            "end": 69.48
+          },
+          {
+            "word": "am",
+            "start": 69.48,
+            "end": 69.7
+          },
+          {
+            "word": "Nan",
+            "start": 69.7,
+            "end": 70.02
+          },
+          {
+            "word": "Hello,",
+            "start": 70.56,
+            "end": 70.98
+          },
+          {
+            "word": "I",
+            "start": 71.26,
+            "end": 71.5
+          },
+          {
+            "word": "am",
+            "start": 71.5,
+            "end": 71.78
+          },
+          {
+            "word": "Nan!",
+            "start": 71.78,
+            "end": 72.06
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, who are you? (Hello, who are you?)",
+        "startTime": 72.78,
+        "endTime": 76.92,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 72.78,
+            "end": 73.82
+          },
+          {
+            "word": "who",
+            "start": 73.82,
+            "end": 73.98
+          },
+          {
+            "word": "are",
+            "start": 73.98,
+            "end": 74.28
+          },
+          {
+            "word": "you,",
+            "start": 74.28,
+            "end": 75.12
+          },
+          {
+            "word": "Hello,",
+            "start": 75.12,
+            "end": 75.8
+          },
+          {
+            "word": "who",
+            "start": 75.8,
+            "end": 75.98
+          },
+          {
+            "word": "are",
+            "start": 75.98,
+            "end": 76.52
+          },
+          {
+            "word": "you?",
+            "start": 76.52,
+            "end": 76.92
+          }
+        ]
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "net",
+      "nut",
+      "nose"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"nnn\" (not the letter name \"en\"), as in \"nose\". Your child also learns to say \"Hello, I am ___.\" in English.",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"nnn\" (ไม่ใช่ชื่อตัวอักษร \"en\") เหมือนในคำว่า \"nose\" และบุตรหลานยังได้ฝึกพูด \"Hello, I am ___.\" เป็นภาษาอังกฤษด้วย"
+    },
+    "activity": {
+      "en": "Say \"Hello!\" to your child in English. Your child answers \"Hello, I am ___.\" with his or her name. Then point to your nose and say \"nnnose\". Find a nut and say \"nnnut\".",
+      "th": "พูด \"Hello!\" กับบุตรหลานเป็นภาษาอังกฤษ ให้บุตรหลานตอบว่า \"Hello, I am ___.\" โดยเติมชื่อของบุตรหลานเอง จากนั้นชี้ที่จมูกของตัวเองแล้วพูดว่า \"nnnose\" หาถั่ว 1 เม็ดแล้วพูดว่า \"nnnut\""
+    }
+  }
+}

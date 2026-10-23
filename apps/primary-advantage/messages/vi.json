@@ -4332,5 +4332,31 @@
       "complete-the-ward": "Thắng Hero vs. Zombie sau khi trả lời ít nhất một lần.",
       "perfect-english-audio": "Thắng Hero vs. Zombie với gợi ý dịch tiếng Thái và trả lời bằng âm thanh từ tiếng Anh. Trả lời đúng mọi câu ngay lần đầu."
     }
+  },
+  "Storytime": {
+    "brand": "Storytime Advantage",
+    "levelWeek": "Cấp {level} · Tuần {week}",
+    "parentHow": "Ngồi cùng con. Chạm vào hình để mở. Chạm vào loa để nghe tên.",
+    "tileBook": "Sách truyện",
+    "tileDecodable": "Sách tập đọc",
+    "tileSong": "Bài hát",
+    "sayLabel": "Nghe \"{label}\"",
+    "back": "Quay lại",
+    "readToMe": "Đọc cho con nghe",
+    "myTurn": "Con tự đọc",
+    "myTurnHint": "Chạm vào một từ để nghe.",
+    "blendHint": "Chạm vào một từ để nghe từng âm, rồi cả từ.",
+    "audioSoon": "Giọng đọc của phần này sẽ có sớm. Chạm vào một từ để nghe.",
+    "soundsTitle": "Âm của tuần",
+    "playSound": "Phát âm {sound}",
+    "trickyWords": "Từ cần nhớ",
+    "prevPage": "Trang trước",
+    "nextPage": "Trang sau",
+    "pageOf": "{page} / {count}",
+    "singAlong": "Hát theo",
+    "pause": "Tạm dừng",
+    "replay": "Phát lại bài hát",
+    "homeTitle": "Ở nhà",
+    "activityTitle": "Hoạt động 5 phút"
   }
 }

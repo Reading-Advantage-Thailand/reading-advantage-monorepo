@@ -1,0 +1,801 @@
+{
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "level": 2,
+    "week": 7,
+    "title": "Is It a Ball?",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "graphemes": [
+        "o"
+      ],
+      "sound": "/o/",
+      "audio": "phonemes/daniel/29-o-short.mp3"
+    },
+    "frame": "Is it a ___? Yes/No."
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "soundBook": false,
+      "title": "Is It a Ball?",
+      "cover": {},
+      "pages": [
+        {
+          "text": "Is it a ball? No!",
+          "image": {}
+        },
+        {
+          "text": "Is it a doll? No!",
+          "image": {}
+        },
+        {
+          "text": "Is it a car? No!",
+          "image": {}
+        },
+        {
+          "text": "Is it a kite? No!",
+          "image": {}
+        },
+        {
+          "text": "Is it a drum? No!",
+          "image": {}
+        },
+        {
+          "text": "Is it a train? No!",
+          "image": {}
+        },
+        {
+          "text": "Is it a teddy? No!",
+          "image": {}
+        },
+        {
+          "text": "Is it Pip? Yes!",
+          "image": {}
+        }
+      ],
+      "audio": {
+        "sentences": []
+      }
+    },
+    {
+      "kind": "decodable",
+      "soundBook": false,
+      "title": "The Top",
+      "cover": {},
+      "pages": [
+        {
+          "text": "Tom can see a top.",
+          "image": {}
+        },
+        {
+          "text": "Tom can get the top.",
+          "image": {}
+        },
+        {
+          "text": "The top on a mat.",
+          "image": {}
+        },
+        {
+          "text": "The top on a pot!",
+          "image": {}
+        },
+        {
+          "text": "The top is on Mom!",
+          "image": {}
+        },
+        {
+          "text": "Run, Tom, run!",
+          "image": {}
+        },
+        {
+          "text": "Can Tom see the top?",
+          "image": {}
+        },
+        {
+          "text": "The top is on Pip!",
+          "image": {}
+        }
+      ],
+      "soundsPage": {
+        "element": "o",
+        "words": [
+          "Tom",
+          "top",
+          "pot",
+          "Mom",
+          "on"
+        ],
+        "tricky": [
+          "run"
+        ]
+      },
+      "audio": {
+        "sentences": []
+      }
+    }
+  ],
+  "song": {
+    "title": "What Is in the Box?",
+    "lines": [
+      {
+        "text": "Look in the box! Knock, knock, knock!",
+        "part": "chorus",
+        "gesture": "look",
+        "image": {}
+      },
+      {
+        "text": "Is it a toy? Yes, yes, yes!",
+        "part": "chorus",
+        "gesture": "nod",
+        "image": {}
+      },
+      {
+        "text": "Is it a ball? No, no, no!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {}
+      },
+      {
+        "text": "Is it a doll? No, no, no!",
+        "part": "verse",
+        "gesture": "hug self",
+        "image": {}
+      },
+      {
+        "text": "Look in the box! Knock, knock, knock!",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 0
+      },
+      {
+        "text": "Is it a toy? Yes, yes, yes!",
+        "part": "chorus",
+        "gesture": "nod",
+        "imageOf": 1
+      },
+      {
+        "text": "Is it a car? No, no, no!",
+        "part": "verse",
+        "gesture": "turn",
+        "image": {}
+      },
+      {
+        "text": "Is it a kite? No, no, no!",
+        "part": "verse",
+        "gesture": "reach",
+        "image": {}
+      },
+      {
+        "text": "Look in the box! Knock, knock, knock!",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 0
+      },
+      {
+        "text": "Is it a toy? Yes, yes, yes!",
+        "part": "chorus",
+        "gesture": "nod",
+        "imageOf": 1
+      },
+      {
+        "text": "Is it a drum? No, no, no!",
+        "part": "verse",
+        "gesture": "stamp",
+        "image": {}
+      },
+      {
+        "text": "Is it a train? No, no, no!",
+        "part": "verse",
+        "gesture": "march",
+        "image": {}
+      },
+      {
+        "text": "Is it a top? Yes, yes, yes!",
+        "part": "verse",
+        "gesture": "turn",
+        "image": {}
+      },
+      {
+        "text": "Top in the box!",
+        "part": "verse",
+        "gesture": "clap",
+        "image": {}
+      }
+    ],
+    "audio": "l2/media/w07/song.mp3",
+    "times": [
+      {
+        "sentence": "Look in the box! Knock, knock, knock!",
+        "startTime": 8.62,
+        "endTime": 12.98,
+        "words": [
+          {
+            "word": "Look",
+            "start": 8.62,
+            "end": 9.02
+          },
+          {
+            "word": "in",
+            "start": 9.02,
+            "end": 9.8
+          },
+          {
+            "word": "the",
+            "start": 9.8,
+            "end": 9.98
+          },
+          {
+            "word": "box!",
+            "start": 9.98,
+            "end": 10.62
+          },
+          {
+            "word": "Knock,",
+            "start": 10.96,
+            "end": 11.74
+          },
+          {
+            "word": "knock,",
+            "start": 12.02,
+            "end": 12.34
+          },
+          {
+            "word": "knock!",
+            "start": 12.5,
+            "end": 12.98
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a toy? Yes, yes, yes!",
+        "startTime": 13.52,
+        "endTime": 17.52,
+        "words": [
+          {
+            "word": "Is",
+            "start": 13.52,
+            "end": 14.08
+          },
+          {
+            "word": "it",
+            "start": 14.08,
+            "end": 14.38
+          },
+          {
+            "word": "a",
+            "start": 14.38,
+            "end": 14.64
+          },
+          {
+            "word": "toy?",
+            "start": 14.64,
+            "end": 15
+          },
+          {
+            "word": "Yes,",
+            "start": 15.78,
+            "end": 16.36
+          },
+          {
+            "word": "yes,",
+            "start": 16.62,
+            "end": 16.9
+          },
+          {
+            "word": "yes!",
+            "start": 17.12,
+            "end": 17.52
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a ball? No, no, no!",
+        "startTime": 18.2,
+        "endTime": 22.12,
+        "words": [
+          {
+            "word": "Is",
+            "start": 18.2,
+            "end": 18.66
+          },
+          {
+            "word": "it",
+            "start": 18.66,
+            "end": 18.96
+          },
+          {
+            "word": "a",
+            "start": 18.96,
+            "end": 19.24
+          },
+          {
+            "word": "ball?",
+            "start": 19.24,
+            "end": 19.58
+          },
+          {
+            "word": "No,",
+            "start": 20.52,
+            "end": 21.02
+          },
+          {
+            "word": "no,",
+            "start": 21.22,
+            "end": 21.54
+          },
+          {
+            "word": "no!",
+            "start": 21.7,
+            "end": 22.12
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a doll? No, no, no!",
+        "startTime": 22.62,
+        "endTime": 26.66,
+        "words": [
+          {
+            "word": "Is",
+            "start": 22.62,
+            "end": 23.22
+          },
+          {
+            "word": "it",
+            "start": 23.22,
+            "end": 23.52
+          },
+          {
+            "word": "a",
+            "start": 23.52,
+            "end": 23.78
+          },
+          {
+            "word": "doll?",
+            "start": 23.78,
+            "end": 24.18
+          },
+          {
+            "word": "No,",
+            "start": 24.18,
+            "end": 25.5
+          },
+          {
+            "word": "no,",
+            "start": 25.76,
+            "end": 26.06
+          },
+          {
+            "word": "no!",
+            "start": 26.16,
+            "end": 26.66
+          }
+        ]
+      },
+      {
+        "sentence": "Look in the box! Knock, knock, knock!",
+        "startTime": 27,
+        "endTime": 31.28,
+        "words": [
+          {
+            "word": "Look",
+            "start": 27,
+            "end": 27.64
+          },
+          {
+            "word": "in",
+            "start": 27.64,
+            "end": 28.08
+          },
+          {
+            "word": "the",
+            "start": 28.08,
+            "end": 28.24
+          },
+          {
+            "word": "box!",
+            "start": 28.24,
+            "end": 28.98
+          },
+          {
+            "word": "Knock,",
+            "start": 28.98,
+            "end": 30.08
+          },
+          {
+            "word": "knock,",
+            "start": 30.72,
+            "end": 30.72
+          },
+          {
+            "word": "knock!",
+            "start": 30.88,
+            "end": 31.28
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a toy? Yes, yes, yes!",
+        "startTime": 31.98,
+        "endTime": 35.96,
+        "words": [
+          {
+            "word": "Is",
+            "start": 31.98,
+            "end": 32.36
+          },
+          {
+            "word": "it",
+            "start": 32.36,
+            "end": 32.7
+          },
+          {
+            "word": "a",
+            "start": 32.7,
+            "end": 32.94
+          },
+          {
+            "word": "toy?",
+            "start": 32.94,
+            "end": 33.28
+          },
+          {
+            "word": "Yes,",
+            "start": 34.2,
+            "end": 34.74
+          },
+          {
+            "word": "yes,",
+            "start": 34.92,
+            "end": 35.3
+          },
+          {
+            "word": "yes!",
+            "start": 35.46,
+            "end": 35.96
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a car? No, no, no!",
+        "startTime": 36.34,
+        "endTime": 40.36,
+        "words": [
+          {
+            "word": "Is",
+            "start": 36.34,
+            "end": 36.96
+          },
+          {
+            "word": "it",
+            "start": 36.96,
+            "end": 37.26
+          },
+          {
+            "word": "a",
+            "start": 37.26,
+            "end": 37.44
+          },
+          {
+            "word": "car?",
+            "start": 37.44,
+            "end": 38.04
+          },
+          {
+            "word": "No,",
+            "start": 38.82,
+            "end": 39.32
+          },
+          {
+            "word": "no,",
+            "start": 39.5,
+            "end": 39.8
+          },
+          {
+            "word": "no!",
+            "start": 40.04,
+            "end": 40.36
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a kite? No, no, no!",
+        "startTime": 41.14,
+        "endTime": 45.02,
+        "words": [
+          {
+            "word": "Is",
+            "start": 41.14,
+            "end": 41.52
+          },
+          {
+            "word": "it",
+            "start": 41.52,
+            "end": 41.82
+          },
+          {
+            "word": "a",
+            "start": 41.82,
+            "end": 42.06
+          },
+          {
+            "word": "kite?",
+            "start": 42.06,
+            "end": 42.44
+          },
+          {
+            "word": "No,",
+            "start": 43.36,
+            "end": 43.84
+          },
+          {
+            "word": "no,",
+            "start": 44.08,
+            "end": 44.4
+          },
+          {
+            "word": "no!",
+            "start": 44.4,
+            "end": 45.02
+          }
+        ]
+      },
+      {
+        "sentence": "Look in the box! Knock, knock, knock!",
+        "startTime": 45.7,
+        "endTime": 49.72,
+        "words": [
+          {
+            "word": "Look",
+            "start": 45.7,
+            "end": 45.96
+          },
+          {
+            "word": "in",
+            "start": 45.96,
+            "end": 46.36
+          },
+          {
+            "word": "the",
+            "start": 46.36,
+            "end": 46.52
+          },
+          {
+            "word": "box!",
+            "start": 46.52,
+            "end": 47.34
+          },
+          {
+            "word": "Knock,",
+            "start": 47.34,
+            "end": 48.34
+          },
+          {
+            "word": "knock,",
+            "start": 48.68,
+            "end": 48.92
+          },
+          {
+            "word": "knock!",
+            "start": 49.24,
+            "end": 49.72
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a toy? Yes, yes, yes!",
+        "startTime": 50.4,
+        "endTime": 54.22,
+        "words": [
+          {
+            "word": "Is",
+            "start": 50.4,
+            "end": 50.64
+          },
+          {
+            "word": "it",
+            "start": 50.64,
+            "end": 50.96
+          },
+          {
+            "word": "a",
+            "start": 50.96,
+            "end": 51.22
+          },
+          {
+            "word": "toy?",
+            "start": 51.22,
+            "end": 51.6
+          },
+          {
+            "word": "Yes,",
+            "start": 52.32,
+            "end": 52.92
+          },
+          {
+            "word": "yes,",
+            "start": 53.22,
+            "end": 53.54
+          },
+          {
+            "word": "yes!",
+            "start": 53.74,
+            "end": 54.22
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a drum? No, no, no!",
+        "startTime": 54.28,
+        "endTime": 58.68,
+        "words": [
+          {
+            "word": "Is",
+            "start": 54.28,
+            "end": 55.24
+          },
+          {
+            "word": "it",
+            "start": 55.24,
+            "end": 55.52
+          },
+          {
+            "word": "a",
+            "start": 55.52,
+            "end": 55.68
+          },
+          {
+            "word": "drum?",
+            "start": 55.68,
+            "end": 56.16
+          },
+          {
+            "word": "No,",
+            "start": 57.36,
+            "end": 57.54
+          },
+          {
+            "word": "no,",
+            "start": 57.8,
+            "end": 58.08
+          },
+          {
+            "word": "no!",
+            "start": 58.32,
+            "end": 58.68
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a train? No, no, no!",
+        "startTime": 58.98,
+        "endTime": 63.2,
+        "words": [
+          {
+            "word": "Is",
+            "start": 58.98,
+            "end": 59.8
+          },
+          {
+            "word": "it",
+            "start": 59.8,
+            "end": 60.1
+          },
+          {
+            "word": "a",
+            "start": 60.1,
+            "end": 60.28
+          },
+          {
+            "word": "train?",
+            "start": 60.28,
+            "end": 60.74
+          },
+          {
+            "word": "No,",
+            "start": 61.96,
+            "end": 62.16
+          },
+          {
+            "word": "no,",
+            "start": 62.42,
+            "end": 62.66
+          },
+          {
+            "word": "no!",
+            "start": 62.96,
+            "end": 63.2
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a top? Yes, yes, yes!",
+        "startTime": 64.02,
+        "endTime": 67.88,
+        "words": [
+          {
+            "word": "Is",
+            "start": 64.02,
+            "end": 64.36
+          },
+          {
+            "word": "it",
+            "start": 64.36,
+            "end": 64.68
+          },
+          {
+            "word": "a",
+            "start": 64.68,
+            "end": 64.92
+          },
+          {
+            "word": "top?",
+            "start": 64.92,
+            "end": 65.3
+          },
+          {
+            "word": "Yes,",
+            "start": 66.12,
+            "end": 66.64
+          },
+          {
+            "word": "yes,",
+            "start": 66.94,
+            "end": 67.18
+          },
+          {
+            "word": "yes!",
+            "start": 67.52,
+            "end": 67.88
+          }
+        ]
+      },
+      {
+        "sentence": "Top in the box!",
+        "startTime": 68.54,
+        "endTime": 70.12,
+        "words": [
+          {
+            "word": "Top",
+            "start": 68.54,
+            "end": 68.82
+          },
+          {
+            "word": "in",
+            "start": 68.82,
+            "end": 69.24
+          },
+          {
+            "word": "the",
+            "start": 69.24,
+            "end": 69.38
+          },
+          {
+            "word": "box!",
+            "start": 69.38,
+            "end": 70.12
+          }
+        ]
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "octopus",
+      "ox",
+      "ostrich"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound /o/, as in \"octopus\". It is short, with the mouth wide open, close to the Thai vowel เอาะ, and it is not the letter name \"oh\". Your child also learns to ask \"Is it a ___?\" in English and to answer \"Yes!\" or \"No!\", for example \"Is it a ball? No!\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง /o/ เหมือนในคำว่า \"octopus\" เป็นเสียงสั้นที่อ้าปากกว้าง ใกล้กับเสียงสระ เอาะ ในภาษาไทย และไม่ใช่ชื่อตัวอักษร \"oh\" (โอ) และบุตรหลานยังได้ฝึกถามเป็นภาษาอังกฤษว่า \"Is it a ___?\" (เป็น ___ ใช่ไหม) และตอบว่า \"Yes!\" (ใช่) หรือ \"No!\" (ไม่ใช่) เช่น \"Is it a ball? No!\" (เป็นลูกบอลใช่ไหม ไม่ใช่!)"
+    },
+    "activity": {
+      "en": "Put a toy or a small thing in a bag or under a blanket. Your child asks in English: \"Is it a ball? Is it a car?\" Say \"Yes!\" or \"No!\" until your child finds the answer. Then your child hides a toy, and you ask. Say \"/o/, /o/, octopus\" and wave your arms like an octopus.",
+      "th": "ใส่ของเล่นหรือของชิ้นเล็ก 1 ชิ้นไว้ในถุงหรือใต้ผ้าห่ม ให้บุตรหลานถามเป็นภาษาอังกฤษว่า \"Is it a ball? Is it a car?\" (เป็นลูกบอลใช่ไหม เป็นรถใช่ไหม) ตอบว่า \"Yes!\" (ใช่) หรือ \"No!\" (ไม่ใช่) จนกว่าบุตรหลานจะทายถูก จากนั้นให้บุตรหลานซ่อนของเล่น และผู้ปกครองเป็นฝ่ายถาม พูด \"/o/, /o/, octopus\" และโบกแขนไปมาเหมือนปลาหมึกยักษ์"
+    }
+  }
+}

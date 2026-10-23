@@ -1,0 +1,825 @@
+{
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "level": 2,
+    "week": 6,
+    "title": "I Can See",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "graphemes": [
+        "t"
+      ],
+      "sound": "/t/",
+      "audio": "phonemes/daniel/02-t.mp3"
+    },
+    "frame": "I can see a ___."
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "soundBook": false,
+      "title": "I Can See",
+      "cover": {},
+      "pages": [
+        {
+          "text": "I can see a cat.",
+          "image": {}
+        },
+        {
+          "text": "I can see a dog.",
+          "image": {}
+        },
+        {
+          "text": "I can see a bird.",
+          "image": {}
+        },
+        {
+          "text": "I can see a fish.",
+          "image": {}
+        },
+        {
+          "text": "I can see a frog.",
+          "image": {}
+        },
+        {
+          "text": "I can see a duck.",
+          "image": {}
+        },
+        {
+          "text": "I can see a horse.",
+          "image": {}
+        },
+        {
+          "text": "I can see Pip!",
+          "image": {}
+        }
+      ],
+      "audio": {
+        "sentences": []
+      }
+    },
+    {
+      "kind": "decodable",
+      "soundBook": false,
+      "title": "Tap, Tap!",
+      "cover": {},
+      "pages": [
+        {
+          "text": "Pat sat on a mat.",
+          "image": {}
+        },
+        {
+          "text": "Sam sat on a mat.",
+          "image": {}
+        },
+        {
+          "text": "Tap, tap, tap!",
+          "image": {}
+        },
+        {
+          "text": "Pat can see a map.",
+          "image": {}
+        },
+        {
+          "text": "Sam can see a pan.",
+          "image": {}
+        },
+        {
+          "text": "Tap, tap, tap!",
+          "image": {}
+        },
+        {
+          "text": "He can see Pip!",
+          "image": {}
+        },
+        {
+          "text": "Pip sat on the mat!",
+          "image": {}
+        }
+      ],
+      "soundsPage": {
+        "element": "t",
+        "words": [
+          "Pat",
+          "sat",
+          "mat",
+          "tap"
+        ],
+        "tricky": [
+          "he",
+          "see"
+        ]
+      },
+      "audio": {
+        "sentences": []
+      }
+    }
+  ],
+  "song": {
+    "title": "I Can See a Cat",
+    "lines": [
+      {
+        "text": "I can see a cat. Meow, meow!",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {}
+      },
+      {
+        "text": "I can see a dog. Woof, woof!",
+        "part": "verse",
+        "gesture": "look",
+        "image": {}
+      },
+      {
+        "text": "Tap, tap, tap! Look and see!",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {}
+      },
+      {
+        "text": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "part": "chorus",
+        "gesture": "look",
+        "image": {}
+      },
+      {
+        "text": "I can see a bird. Tweet, tweet!",
+        "part": "verse",
+        "gesture": "stretch up",
+        "image": {}
+      },
+      {
+        "text": "I can see a fish. Swim, swim!",
+        "part": "verse",
+        "gesture": "sway",
+        "image": {}
+      },
+      {
+        "text": "Tap, tap, tap! Look and see!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 2
+      },
+      {
+        "text": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 3
+      },
+      {
+        "text": "I can see a frog. Hop, hop!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {}
+      },
+      {
+        "text": "I can see a duck. Quack, quack!",
+        "part": "verse",
+        "gesture": "march",
+        "image": {}
+      },
+      {
+        "text": "Tap, tap, tap! Look and see!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 2
+      },
+      {
+        "text": "What can you see? I can see an animal!",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 3
+      }
+    ],
+    "audio": "l2/media/w06/song.mp3",
+    "times": [
+      {
+        "sentence": "I can see a cat. Meow, meow!",
+        "startTime": 0,
+        "endTime": 6.42,
+        "words": [
+          {
+            "word": "I",
+            "start": 0,
+            "end": 0.48
+          },
+          {
+            "word": "can",
+            "start": 0.48,
+            "end": 0.94
+          },
+          {
+            "word": "see",
+            "start": 0.94,
+            "end": 1.56
+          },
+          {
+            "word": "a",
+            "start": 1.56,
+            "end": 2.26
+          },
+          {
+            "word": "cat.",
+            "start": 2.26,
+            "end": 2.98
+          },
+          {
+            "word": "Meow,",
+            "start": 4.54,
+            "end": 5.32
+          },
+          {
+            "word": "meow!",
+            "start": 6.02,
+            "end": 6.42
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a dog. Woof, woof!",
+        "startTime": 8.78,
+        "endTime": 13.9,
+        "words": [
+          {
+            "word": "I",
+            "start": 8.78,
+            "end": 9.86
+          },
+          {
+            "word": "can",
+            "start": 9.86,
+            "end": 10.12
+          },
+          {
+            "word": "see",
+            "start": 10.12,
+            "end": 10.52
+          },
+          {
+            "word": "a",
+            "start": 10.52,
+            "end": 10.8
+          },
+          {
+            "word": "dog.",
+            "start": 10.8,
+            "end": 11.24
+          },
+          {
+            "word": "Woof,",
+            "start": 12.06,
+            "end": 12.66
+          },
+          {
+            "word": "woof!",
+            "start": 12.96,
+            "end": 13.9
+          }
+        ]
+      },
+      {
+        "sentence": "Tap, tap, tap! Look and see!",
+        "startTime": 14.5,
+        "endTime": 18.36,
+        "words": [
+          {
+            "word": "Tap,",
+            "start": 14.5,
+            "end": 14.76
+          },
+          {
+            "word": "tap,",
+            "start": 15.08,
+            "end": 15.32
+          },
+          {
+            "word": "tap!",
+            "start": 15.6,
+            "end": 16.04
+          },
+          {
+            "word": "Look",
+            "start": 16.58,
+            "end": 17.12
+          },
+          {
+            "word": "and",
+            "start": 17.12,
+            "end": 17.82
+          },
+          {
+            "word": "see!",
+            "start": 17.82,
+            "end": 18.36
+          }
+        ]
+      },
+      {
+        "sentence": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "startTime": 19.02,
+        "endTime": 27.42,
+        "words": [
+          {
+            "word": "What",
+            "start": 19.02,
+            "end": 19.56
+          },
+          {
+            "word": "can",
+            "start": 19.56,
+            "end": 20.08
+          },
+          {
+            "word": "you",
+            "start": 20.08,
+            "end": 20.32
+          },
+          {
+            "word": "see?",
+            "start": 20.32,
+            "end": 20.76
+          },
+          {
+            "word": "I",
+            "start": 21.44,
+            "end": 21.88
+          },
+          {
+            "word": "can",
+            "start": 21.88,
+            "end": 22.12
+          },
+          {
+            "word": "see",
+            "start": 22.12,
+            "end": 22.52
+          },
+          {
+            "word": "an",
+            "start": 22.52,
+            "end": 22.82
+          },
+          {
+            "word": "animal!",
+            "start": 22.82,
+            "end": 23.5
+          },
+          {
+            "word": "What",
+            "start": 23.5,
+            "end": 24.3
+          },
+          {
+            "word": "can",
+            "start": 24.3,
+            "end": 24.88
+          },
+          {
+            "word": "you",
+            "start": 24.88,
+            "end": 25.12
+          },
+          {
+            "word": "see?",
+            "start": 25.12,
+            "end": 25.48
+          },
+          {
+            "word": "I",
+            "start": 25.66,
+            "end": 25.68
+          },
+          {
+            "word": "can",
+            "start": 25.68,
+            "end": 25.8
+          },
+          {
+            "word": "see",
+            "start": 25.8,
+            "end": 26.08
+          },
+          {
+            "word": "an",
+            "start": 26.08,
+            "end": 26.4
+          },
+          {
+            "word": "animal",
+            "start": 26.4,
+            "end": 27.42
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a bird. Tweet, tweet!",
+        "startTime": 28.5,
+        "endTime": 32.7,
+        "words": [
+          {
+            "word": "I",
+            "start": 28.5,
+            "end": 29.2
+          },
+          {
+            "word": "can",
+            "start": 29.2,
+            "end": 29.72
+          },
+          {
+            "word": "see",
+            "start": 29.72,
+            "end": 30.38
+          },
+          {
+            "word": "a",
+            "start": 30.38,
+            "end": 31.04
+          },
+          {
+            "word": "bird.",
+            "start": 31.04,
+            "end": 31.58
+          },
+          {
+            "word": "Tweet,",
+            "start": 31.58,
+            "end": 32.08
+          },
+          {
+            "word": "tweet!",
+            "start": 32.08,
+            "end": 32.7
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a fish. Swim, swim!",
+        "startTime": 33.5,
+        "endTime": 37.56,
+        "words": [
+          {
+            "word": "I",
+            "start": 33.5,
+            "end": 34.06
+          },
+          {
+            "word": "can",
+            "start": 34.06,
+            "end": 34.54
+          },
+          {
+            "word": "see",
+            "start": 34.54,
+            "end": 35.2
+          },
+          {
+            "word": "a",
+            "start": 35.2,
+            "end": 35.82
+          },
+          {
+            "word": "fish.",
+            "start": 35.82,
+            "end": 36.34
+          },
+          {
+            "word": "Swim,",
+            "start": 36.34,
+            "end": 36.98
+          },
+          {
+            "word": "swim!",
+            "start": 36.98,
+            "end": 37.56
+          }
+        ]
+      },
+      {
+        "sentence": "Tap, tap, tap! Look and see!",
+        "startTime": 38.2,
+        "endTime": 42.36,
+        "words": [
+          {
+            "word": "Tap,",
+            "start": 38.2,
+            "end": 38.72
+          },
+          {
+            "word": "tap,",
+            "start": 38.72,
+            "end": 39.44
+          },
+          {
+            "word": "tap!",
+            "start": 39.44,
+            "end": 39.94
+          },
+          {
+            "word": "Look",
+            "start": 40.24,
+            "end": 41.14
+          },
+          {
+            "word": "and",
+            "start": 41.14,
+            "end": 41.82
+          },
+          {
+            "word": "see!",
+            "start": 41.82,
+            "end": 42.36
+          }
+        ]
+      },
+      {
+        "sentence": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "startTime": 42.36,
+        "endTime": 51.44,
+        "words": [
+          {
+            "word": "What",
+            "start": 42.36,
+            "end": 43.52
+          },
+          {
+            "word": "can",
+            "start": 43.52,
+            "end": 44.08
+          },
+          {
+            "word": "you",
+            "start": 44.08,
+            "end": 44.32
+          },
+          {
+            "word": "see?",
+            "start": 44.32,
+            "end": 44.82
+          },
+          {
+            "word": "I",
+            "start": 45.46,
+            "end": 45.88
+          },
+          {
+            "word": "can",
+            "start": 45.88,
+            "end": 46.14
+          },
+          {
+            "word": "see",
+            "start": 46.14,
+            "end": 46.54
+          },
+          {
+            "word": "an",
+            "start": 46.54,
+            "end": 46.82
+          },
+          {
+            "word": "animal",
+            "start": 46.82,
+            "end": 47.64
+          },
+          {
+            "word": "What",
+            "start": 47.64,
+            "end": 48.3
+          },
+          {
+            "word": "can",
+            "start": 48.3,
+            "end": 48.86
+          },
+          {
+            "word": "you",
+            "start": 48.86,
+            "end": 49.12
+          },
+          {
+            "word": "see?",
+            "start": 49.12,
+            "end": 49.46
+          },
+          {
+            "word": "I",
+            "start": 49.64,
+            "end": 49.68
+          },
+          {
+            "word": "can",
+            "start": 49.68,
+            "end": 49.82
+          },
+          {
+            "word": "see",
+            "start": 49.82,
+            "end": 50.08
+          },
+          {
+            "word": "an",
+            "start": 50.08,
+            "end": 50.4
+          },
+          {
+            "word": "animal",
+            "start": 50.4,
+            "end": 51.44
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a frog. Hop, hop!",
+        "startTime": 51.44,
+        "endTime": 56.76,
+        "words": [
+          {
+            "word": "I",
+            "start": 51.44,
+            "end": 53.28
+          },
+          {
+            "word": "can",
+            "start": 53.28,
+            "end": 53.7
+          },
+          {
+            "word": "see",
+            "start": 53.7,
+            "end": 54.4
+          },
+          {
+            "word": "a",
+            "start": 54.4,
+            "end": 55.04
+          },
+          {
+            "word": "frog.",
+            "start": 55.04,
+            "end": 55.52
+          },
+          {
+            "word": "Hop,",
+            "start": 55.52,
+            "end": 56.12
+          },
+          {
+            "word": "hop!",
+            "start": 56.12,
+            "end": 56.76
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a duck. Quack, quack!",
+        "startTime": 56.76,
+        "endTime": 61.62,
+        "words": [
+          {
+            "word": "I",
+            "start": 56.76,
+            "end": 58.04
+          },
+          {
+            "word": "can",
+            "start": 58.04,
+            "end": 58.54
+          },
+          {
+            "word": "see",
+            "start": 58.54,
+            "end": 59.32
+          },
+          {
+            "word": "a",
+            "start": 59.32,
+            "end": 59.88
+          },
+          {
+            "word": "duck.",
+            "start": 59.88,
+            "end": 60.32
+          },
+          {
+            "word": "Quack,",
+            "start": 60.32,
+            "end": 61.02
+          },
+          {
+            "word": "quack!",
+            "start": 61.02,
+            "end": 61.62
+          }
+        ]
+      },
+      {
+        "sentence": "Tap, tap, tap! Look and see!",
+        "startTime": 61.96,
+        "endTime": 66.4,
+        "words": [
+          {
+            "word": "Tap,",
+            "start": 61.96,
+            "end": 62.72
+          },
+          {
+            "word": "tap,",
+            "start": 62.72,
+            "end": 63.42
+          },
+          {
+            "word": "tap!",
+            "start": 63.42,
+            "end": 64.02
+          },
+          {
+            "word": "Look",
+            "start": 63.98,
+            "end": 65.08
+          },
+          {
+            "word": "and",
+            "start": 65.08,
+            "end": 65.8
+          },
+          {
+            "word": "see!",
+            "start": 65.8,
+            "end": 66.4
+          }
+        ]
+      },
+      {
+        "sentence": "What can you see? I can see an animal!",
+        "startTime": 66.4,
+        "endTime": 71.48,
+        "words": [
+          {
+            "word": "What",
+            "start": 66.4,
+            "end": 67.56
+          },
+          {
+            "word": "can",
+            "start": 67.56,
+            "end": 68.08
+          },
+          {
+            "word": "you",
+            "start": 68.08,
+            "end": 68.32
+          },
+          {
+            "word": "see?",
+            "start": 68.32,
+            "end": 68.92
+          },
+          {
+            "word": "I",
+            "start": 69.38,
+            "end": 69.86
+          },
+          {
+            "word": "can",
+            "start": 69.86,
+            "end": 70.14
+          },
+          {
+            "word": "see",
+            "start": 70.14,
+            "end": 70.52
+          },
+          {
+            "word": "an",
+            "start": 70.52,
+            "end": 70.8
+          },
+          {
+            "word": "animal!",
+            "start": 70.8,
+            "end": 71.48
+          }
+        ]
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "tiger",
+      "ten",
+      "table"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound /t/, as in \"tiger\". It is a short tap of the tongue with a small puff of air, close to the Thai letter ท, with no \"uh\" after it. Your child also learns to say \"I can see a ___.\" in English, for example \"I can see a cat.\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง /t/ เหมือนในคำว่า \"tiger\" เป็นเสียงที่ใช้ปลายลิ้นแตะสั้น ๆ โดยมีลมพ่นออกมาเล็กน้อย ใกล้กับเสียง ท ในภาษาไทย โดยไม่มีเสียง \"uh\" (เออะ) ตามหลัง และบุตรหลานยังได้ฝึกพูดเป็นภาษาอังกฤษว่า \"I can see a ___.\" (ฉันมองเห็น ___) เช่น \"I can see a cat.\" (ฉันมองเห็นแมว)"
+    },
+    "activity": {
+      "en": "Look out of the window or walk outside with your child. Say \"I can see a ___.\" in English for the animals and the things that you see: \"I can see a bird!\" Then say \"/t/, /t/, ten\" and count to ten together in English.",
+      "th": "มองออกไปนอกหน้าต่างกับบุตรหลาน หรือพาบุตรหลานเดินเล่นนอกบ้าน แล้วพูดเป็นภาษาอังกฤษว่า \"I can see a ___.\" สำหรับสัตว์และสิ่งของที่เห็น เช่น \"I can see a bird!\" (ฉันมองเห็นนก) จากนั้นพูด \"/t/, /t/, ten\" แล้วนับเลข 1 ถึง 10 เป็นภาษาอังกฤษพร้อมกับบุตรหลาน"
+    }
+  }
+}

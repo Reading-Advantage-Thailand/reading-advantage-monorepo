@@ -4483,5 +4483,31 @@
       "complete-the-ward": "ชนะเกม Hero vs. Zombie โดยตอบอย่างน้อยหนึ่งครั้ง",
       "perfect-english-audio": "ชนะเกม Hero vs. Zombie ในโหมดที่โจทย์เป็นคำแปลภาษาไทยและเลือกคำตอบจากเสียงคำศัพท์ภาษาอังกฤษ โดยตอบถูกทุกข้อตั้งแต่ครั้งแรก"
     }
+  },
+  "Storytime": {
+    "brand": "Storytime Advantage",
+    "levelWeek": "ระดับ {level} · สัปดาห์ที่ {week}",
+    "parentHow": "นั่งข้างบุตรหลาน แตะรูปเพื่อเปิด แตะลำโพงเพื่อฟังชื่อ",
+    "tileBook": "หนังสือนิทาน",
+    "tileDecodable": "หนังสือฝึกอ่าน",
+    "tileSong": "เพลง",
+    "sayLabel": "ฟังคำว่า \"{label}\"",
+    "back": "กลับ",
+    "readToMe": "อ่านให้ฟัง",
+    "myTurn": "ฉันอ่านเอง",
+    "myTurnHint": "แตะคำเพื่อฟังเสียง",
+    "blendHint": "แตะคำเพื่อฟังทีละเสียง แล้วฟังทั้งคำ",
+    "audioSoon": "เสียงอ่านของส่วนนี้จะมาเร็ว ๆ นี้ แตะคำเพื่อฟังเสียง",
+    "soundsTitle": "เสียงประจำสัปดาห์",
+    "playSound": "ฟังเสียง {sound}",
+    "trickyWords": "คำที่ต้องจำ",
+    "prevPage": "หน้าก่อน",
+    "nextPage": "หน้าถัดไป",
+    "pageOf": "{page} / {count}",
+    "singAlong": "ร้องตาม",
+    "pause": "หยุดชั่วคราว",
+    "replay": "เล่นเพลงอีกครั้ง",
+    "homeTitle": "ทำที่บ้าน",
+    "activityTitle": "กิจกรรม 5 นาที"
   }
 }

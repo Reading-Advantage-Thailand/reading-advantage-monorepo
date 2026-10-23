@@ -4483,5 +4483,31 @@
       "complete-the-ward": "Win Hero vs. Zombie after making at least one answer attempt.",
       "perfect-english-audio": "Win Hero vs. Zombie with Thai translation prompts and English term audio answers. Complete every item correctly on the first attempt."
     }
+  },
+  "Storytime": {
+    "brand": "Storytime Advantage",
+    "levelWeek": "Level {level} · Week {week}",
+    "parentHow": "Sit with your child. Tap a picture to open it. Tap the speaker to hear its name.",
+    "tileBook": "Story book",
+    "tileDecodable": "My reading book",
+    "tileSong": "Song",
+    "sayLabel": "Say \"{label}\"",
+    "back": "Back",
+    "readToMe": "Read it to me",
+    "myTurn": "My turn",
+    "myTurnHint": "Tap a word to hear it.",
+    "blendHint": "Tap a word to hear its sounds, then the word.",
+    "audioSoon": "The voice for this part comes soon. Tap a word to hear it.",
+    "soundsTitle": "The sound of the week",
+    "playSound": "Play the sound {sound}",
+    "trickyWords": "Tricky words",
+    "prevPage": "Previous page",
+    "nextPage": "Next page",
+    "pageOf": "{page} / {count}",
+    "singAlong": "Sing along",
+    "pause": "Pause",
+    "replay": "Play the song again",
+    "homeTitle": "At home",
+    "activityTitle": "5-minute activity"
   }
 }

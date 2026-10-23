@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "level": 2,
+    "week": 4,
+    "title": "My Family",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "graphemes": [
+        "m"
+      ],
+      "sound": "/m/",
+      "audio": "phonemes/daniel/05-m.mp3"
+    },
+    "frame": "This is my ___."
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "soundBook": false,
+      "title": "My Family",
+      "cover": {},
+      "pages": [
+        {
+          "text": "This is my mom.",
+          "image": {}
+        },
+        {
+          "text": "This is my dad.",
+          "image": {}
+        },
+        {
+          "text": "This is my brother.",
+          "image": {}
+        },
+        {
+          "text": "This is my grandma.",
+          "image": {}
+        },
+        {
+          "text": "This is my grandpa.",
+          "image": {}
+        },
+        {
+          "text": "This is my house.",
+          "image": {}
+        },
+        {
+          "text": "This is my family.",
+          "image": {}
+        },
+        {
+          "text": "This is my dog, Pip!",
+          "image": {}
+        }
+      ],
+      "audio": {
+        "sentences": []
+      }
+    },
+    {
+      "kind": "decodable",
+      "soundBook": false,
+      "title": "Pam",
+      "cover": {},
+      "pages": [
+        {
+          "text": "This is Pam.",
+          "image": {}
+        },
+        {
+          "text": "Pam can nap.",
+          "image": {}
+        },
+        {
+          "text": "Pam is in a pan.",
+          "image": {}
+        },
+        {
+          "text": "Pam is on a map.",
+          "image": {}
+        },
+        {
+          "text": "Pam is on a man!",
+          "image": {}
+        },
+        {
+          "text": "Is this Pam?",
+          "image": {}
+        },
+        {
+          "text": "This is the man!",
+          "image": {}
+        },
+        {
+          "text": "Nan and Pam nap.",
+          "image": {}
+        }
+      ],
+      "soundsPage": {
+        "element": "m",
+        "words": [
+          "Pam",
+          "map",
+          "man"
+        ],
+        "tricky": [
+          "is",
+          "this"
+        ]
+      },
+      "audio": {
+        "sentences": []
+      }
+    }
+  ],
+  "song": {
+    "title": "This Is My Family",
+    "lines": [
+      {
+        "text": "This is my mom. Hello, Mom!",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {}
+      },
+      {
+        "text": "This is my dad. Hello, Dad!",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {}
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "image": {}
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "image": {}
+      },
+      {
+        "text": "This is my sister. Hello!",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {}
+      },
+      {
+        "text": "This is my brother. Hello!",
+        "part": "verse",
+        "gesture": "clap",
+        "image": {}
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "imageOf": 2
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 3
+      },
+      {
+        "text": "This is my grandma. Hello!",
+        "part": "verse",
+        "gesture": "bow",
+        "image": {}
+      },
+      {
+        "text": "This is my grandpa. Hello!",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {}
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "imageOf": 2
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 3
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "imageOf": 2
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 3
+      }
+    ],
+    "audio": "l2/media/w04/song.mp3",
+    "times": [
+      {
+        "sentence": "This is my mom. Hello, Mom!",
+        "startTime": 0,
+        "endTime": 3.36,
+        "words": [
+          {
+            "word": "This",
+            "start": 0,
+            "end": 0.62
+          },
+          {
+            "word": "is",
+            "start": 0.62,
+            "end": 1.02
+          },
+          {
+            "word": "my",
+            "start": 1.02,
+            "end": 1.32
+          },
+          {
+            "word": "mom.",
+            "start": 1.32,
+            "end": 1.76
+          },
+          {
+            "word": "Hello,",
+            "start": 2.26,
+            "end": 2.74
+          },
+          {
+            "word": "Mom!",
+            "start": 3.16,
+            "end": 3.36
+          }
+        ]
+      },
+      {
+        "sentence": "This is my dad. Hello, Dad!",
+        "startTime": 5.12,
+        "endTime": 8.74,
+        "words": [
+          {
+            "word": "This",
+            "start": 5.12,
+            "end": 5.76
+          },
+          {
+            "word": "is",
+            "start": 5.76,
+            "end": 6.34
+          },
+          {
+            "word": "my",
+            "start": 6.34,
+            "end": 6.64
+          },
+          {
+            "word": "dad.",
+            "start": 6.64,
+            "end": 7.04
+          },
+          {
+            "word": "Hello,",
+            "start": 7.84,
+            "end": 8.1
+          },
+          {
+            "word": "Dad!",
+            "start": 8.4,
+            "end": 8.74
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 10.38,
+        "endTime": 12.84,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 10.38,
+            "end": 11.18
+          },
+          {
+            "word": "Dad,",
+            "start": 11.48,
+            "end": 11.66
+          },
+          {
+            "word": "my",
+            "start": 11.78,
+            "end": 11.98
+          },
+          {
+            "word": "family!",
+            "start": 11.98,
+            "end": 12.84
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 14.14,
+        "endTime": 19.12,
+        "words": [
+          {
+            "word": "This",
+            "start": 14.14,
+            "end": 15.06
+          },
+          {
+            "word": "is",
+            "start": 15.06,
+            "end": 15.54
+          },
+          {
+            "word": "my",
+            "start": 15.54,
+            "end": 15.9
+          },
+          {
+            "word": "family,",
+            "start": 15.9,
+            "end": 16.66
+          },
+          {
+            "word": "my",
+            "start": 17.1,
+            "end": 17.28
+          },
+          {
+            "word": "family",
+            "start": 17.28,
+            "end": 17.9
+          },
+          {
+            "word": "and",
+            "start": 17.9,
+            "end": 18.68
+          },
+          {
+            "word": "me!",
+            "start": 18.68,
+            "end": 19.12
+          }
+        ]
+      },
+      {
+        "sentence": "This is my sister. Hello!",
+        "startTime": 21.02,
+        "endTime": 24.1,
+        "words": [
+          {
+            "word": "This",
+            "start": 21.02,
+            "end": 21.94
+          },
+          {
+            "word": "is",
+            "start": 21.94,
+            "end": 22.36
+          },
+          {
+            "word": "my",
+            "start": 22.36,
+            "end": 22.6
+          },
+          {
+            "word": "sister.",
+            "start": 22.6,
+            "end": 23.12
+          },
+          {
+            "word": "Hello!",
+            "start": 23.86,
+            "end": 24.1
+          }
+        ]
+      },
+      {
+        "sentence": "This is my brother. Hello!",
+        "startTime": 25.94,
+        "endTime": 29.44,
+        "words": [
+          {
+            "word": "This",
+            "start": 25.94,
+            "end": 27.06
+          },
+          {
+            "word": "is",
+            "start": 27.06,
+            "end": 27.66
+          },
+          {
+            "word": "my",
+            "start": 27.66,
+            "end": 27.94
+          },
+          {
+            "word": "brother.",
+            "start": 27.94,
+            "end": 28.5
+          },
+          {
+            "word": "Hello!",
+            "start": 28.86,
+            "end": 29.44
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 31.32,
+        "endTime": 34.2,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 31.32,
+            "end": 32.44
+          },
+          {
+            "word": "Dad,",
+            "start": 32.78,
+            "end": 33
+          },
+          {
+            "word": "my",
+            "start": 33.08,
+            "end": 33.3
+          },
+          {
+            "word": "family!",
+            "start": 33.3,
+            "end": 34.2
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 35.1,
+        "endTime": 40.62,
+        "words": [
+          {
+            "word": "This",
+            "start": 35.1,
+            "end": 36.42
+          },
+          {
+            "word": "is",
+            "start": 36.42,
+            "end": 36.86
+          },
+          {
+            "word": "my",
+            "start": 36.86,
+            "end": 37.22
+          },
+          {
+            "word": "family,",
+            "start": 37.22,
+            "end": 38
+          },
+          {
+            "word": "my",
+            "start": 38.12,
+            "end": 38.6
+          },
+          {
+            "word": "family",
+            "start": 38.6,
+            "end": 39.32
+          },
+          {
+            "word": "and",
+            "start": 39.32,
+            "end": 40
+          },
+          {
+            "word": "me!",
+            "start": 40,
+            "end": 40.62
+          }
+        ]
+      },
+      {
+        "sentence": "This is my grandma. Hello!",
+        "startTime": 41.94,
+        "endTime": 45.68,
+        "words": [
+          {
+            "word": "This",
+            "start": 41.94,
+            "end": 43.06
+          },
+          {
+            "word": "is",
+            "start": 43.06,
+            "end": 43.7
+          },
+          {
+            "word": "my",
+            "start": 43.7,
+            "end": 43.98
+          },
+          {
+            "word": "grandma.",
+            "start": 43.98,
+            "end": 44.5
+          },
+          {
+            "word": "Hello!",
+            "start": 44.94,
+            "end": 45.68
+          }
+        ]
+      },
+      {
+        "sentence": "This is my grandpa. Hello!",
+        "startTime": 47.2,
+        "endTime": 50.94,
+        "words": [
+          {
+            "word": "This",
+            "start": 47.2,
+            "end": 48.32
+          },
+          {
+            "word": "is",
+            "start": 48.32,
+            "end": 48.94
+          },
+          {
+            "word": "my",
+            "start": 48.94,
+            "end": 49.26
+          },
+          {
+            "word": "grandpa.",
+            "start": 49.26,
+            "end": 49.82
+          },
+          {
+            "word": "Hello!",
+            "start": 50.36,
+            "end": 50.94
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 52.9,
+        "endTime": 55.52,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 52.9,
+            "end": 53.8
+          },
+          {
+            "word": "Dad,",
+            "start": 54.12,
+            "end": 54.32
+          },
+          {
+            "word": "my",
+            "start": 54.42,
+            "end": 54.62
+          },
+          {
+            "word": "family!",
+            "start": 54.62,
+            "end": 55.52
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 55.52,
+        "endTime": 61.78,
+        "words": [
+          {
+            "word": "This",
+            "start": 55.52,
+            "end": 57.72
+          },
+          {
+            "word": "is",
+            "start": 57.72,
+            "end": 58.18
+          },
+          {
+            "word": "my",
+            "start": 58.18,
+            "end": 58.58
+          },
+          {
+            "word": "family,",
+            "start": 58.58,
+            "end": 59.42
+          },
+          {
+            "word": "my",
+            "start": 59.66,
+            "end": 59.96
+          },
+          {
+            "word": "family",
+            "start": 59.96,
+            "end": 60.66
+          },
+          {
+            "word": "and",
+            "start": 60.66,
+            "end": 61.34
+          },
+          {
+            "word": "me!",
+            "start": 61.34,
+            "end": 61.78
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 63.52,
+        "endTime": 66.24,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 63.52,
+            "end": 64.42
+          },
+          {
+            "word": "Dad,",
+            "start": 64.76,
+            "end": 65
+          },
+          {
+            "word": "my",
+            "start": 65.14,
+            "end": 65.3
+          },
+          {
+            "word": "family!",
+            "start": 65.3,
+            "end": 66.24
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 66.24,
+        "endTime": 72.5,
+        "words": [
+          {
+            "word": "This",
+            "start": 66.24,
+            "end": 68.36
+          },
+          {
+            "word": "is",
+            "start": 68.36,
+            "end": 68.86
+          },
+          {
+            "word": "my",
+            "start": 68.86,
+            "end": 69.22
+          },
+          {
+            "word": "family,",
+            "start": 69.22,
+            "end": 70.06
+          },
+          {
+            "word": "my",
+            "start": 70.44,
+            "end": 70.62
+          },
+          {
+            "word": "family",
+            "start": 70.62,
+            "end": 71.32
+          },
+          {
+            "word": "and",
+            "start": 71.32,
+            "end": 72.02
+          },
+          {
+            "word": "me!",
+            "start": 72.02,
+            "end": 72.5
+          }
+        ]
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "monkey",
+      "milk",
+      "mango"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"mmm\" (lips together, a hum, not \"muh\"), as in \"milk\". Your child also learns to say \"This is my ___.\" in English, for example \"This is my grandma.\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"mmm\" เหมือนในคำว่า \"milk\" โดยประกบริมฝีปากเข้าหากันแล้วฮัมเสียง ไม่ใช่ \"muh\" (เมอะ) และบุตรหลานยังได้ฝึกพูด \"This is my ___.\" (นี่คือ ___ ของฉัน) เป็นภาษาอังกฤษ เช่น \"This is my grandma.\" (นี่คือย่าหรือยายของฉัน)"
+    },
+    "activity": {
+      "en": "Look at family photos together. Point to a person; your child says \"This is my ___.\" in English. Then hum \"mmm\" together and say \"mmmilk\" and \"mmmango\".",
+      "th": "ดูรูปถ่ายครอบครัวด้วยกัน ชี้ที่คนคนหนึ่งในรูป ให้บุตรหลานพูดเป็นภาษาอังกฤษว่า \"This is my ___.\" (นี่คือ ___ ของฉัน) จากนั้นฮัมเสียง \"mmm\" พร้อมกับบุตรหลาน แล้วพูด \"mmmilk\" (นม) และ \"mmmango\" (มะม่วง)"
+    }
+  }
+}

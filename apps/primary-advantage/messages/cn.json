@@ -4483,5 +4483,31 @@
       "complete-the-ward": "至少作答一次后赢得 Hero vs. Zombie。",
       "perfect-english-audio": "在泰文翻译提示和英文单词语音作答模式下赢得 Hero vs. Zombie，且每一题第一次就答对。"
     }
+  },
+  "Storytime": {
+    "brand": "Storytime Advantage",
+    "levelWeek": "第 {level} 级 · 第 {week} 周",
+    "parentHow": "请和孩子坐在一起。点图片打开，点喇叭听名称。",
+    "tileBook": "故事书",
+    "tileDecodable": "我的阅读书",
+    "tileSong": "歌曲",
+    "sayLabel": "听“{label}”",
+    "back": "返回",
+    "readToMe": "读给我听",
+    "myTurn": "我自己读",
+    "myTurnHint": "点一个单词听发音。",
+    "blendHint": "点一个单词，先听每个音，再听整个单词。",
+    "audioSoon": "这一部分的朗读音频即将推出。点一个单词听发音。",
+    "soundsTitle": "本周的音",
+    "playSound": "播放 {sound} 的发音",
+    "trickyWords": "需要记住的词",
+    "prevPage": "上一页",
+    "nextPage": "下一页",
+    "pageOf": "{page} / {count}",
+    "singAlong": "跟着唱",
+    "pause": "暂停",
+    "replay": "再放一遍",
+    "homeTitle": "在家练习",
+    "activityTitle": "5 分钟活动"
   }
 }
