@@ -1,5 +1,28 @@
 # Measure Anti-Patterns Catalog (Canonical)
 
+## Contents
+
+- [Catalog Summary](#catalog-summary)
+- [A1 — Substring-as-structured-signal in supervisor](#a1--substring-as-structured-signal-in-supervisor)
+- [A2 — Consent-blind publish gate](#a2--consent-blind-publish-gate)
+- [A3 — Digit-only as a "labeled count"](#a3--digit-only-as-a-labeled-count)
+- [A4 — Vacuous-pass on nothing-done](#a4--vacuous-pass-on-nothing-done)
+- [A5 — False-claim text vs test reality](#a5--false-claim-text-vs-test-reality)
+- [A6 — Registry-note overstatement](#a6--registry-note-overstatement)
+- [A7 — Over-broad filter swallowing real hits](#a7--over-broad-filter-swallowing-real-hits)
+- [A8 — `[ ]` (space) marker ambiguity (legacy)](#a8----space-marker-ambiguity-legacy)
+- [A9 — Pre-existing test references archived track paths](#a9--pre-existing-test-references-archived-track-paths)
+- [A10 — Generated-facts drift after structural change](#a10--generated-facts-drift-after-structural-change)
+- [A11 — Executed review track left fully blocked](#a11--executed-review-track-left-fully-blocked)
+- [A12 — Dangling catalog guard-references (unguarded anti-patterns)](#a12--dangling-catalog-guard-references-unguarded-anti-patterns)
+- [A13 — Stale track directory left in `measure/tracks/` after archive move](#a13--stale-track-directory-left-in-measuretracks-after-archive-move)
+- [A14 — Invalid ripgrep option makes detectors non-executable](#a14--invalid-ripgrep-option-makes-detectors-non-executable)
+- [A15 — Stale role-receipt hashes after reviewed fixes](#a15--stale-role-receipt-hashes-after-reviewed-fixes)
+- [A16 — NO WORKTREES: one shared master tree only](#a16--no-worktrees-one-shared-master-tree-only)
+- [How projects extend this catalog](#how-projects-extend-this-catalog)
+- [Cross-project propagation](#cross-project-propagation)
+
+
 > This project catalog was initialized from the Measure Orchestrator starter catalog on
 > 2026-06-26. Extend it with project-specific entries when new orchestrator failure
 > classes are caught.

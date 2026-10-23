@@ -1,5 +1,34 @@
 # Project Tracks
 
+## Contents
+
+- [Active Tracks (created 2026-09-19)](#active-tracks-created-2026-09-19)
+- [Current Focus (owner-confirmed 2026-08-10)](#current-focus-owner-confirmed-2026-08-10)
+- [Small-Company Operations Program (created 2026-07-22)](#small-company-operations-program-created-2026-07-22)
+- [Backend Platform Program (created 2026-07-13)](#backend-platform-program-created-2026-07-13)
+- [Monorepo Feature Review Program (created 2026-06-26)](#monorepo-feature-review-program-created-2026-06-26)
+  - [Monorepo Review Remediation Waves (created 2026-06-28)](#monorepo-review-remediation-waves-created-2026-06-28)
+- [Advantage Play Kit Program (created 2026-07-10)](#advantage-play-kit-program-created-2026-07-10)
+- [Codecamp Mastery Learning Platform Program (created 2026-07-10)](#codecamp-mastery-learning-platform-program-created-2026-07-10)
+- [Versioned Workbook Content Program (created 2026-07-11)](#versioned-workbook-content-program-created-2026-07-11)
+- [App Go-Live / MVP Completion (created 2026-07-01)](#app-go-live--mvp-completion-created-2026-07-01)
+- [Reading Advantage UX Refactor Program (created 2026-09-11)](#reading-advantage-ux-refactor-program-created-2026-09-11)
+- [Reading Advantage QA P0 Program (created 2026-09-18)](#reading-advantage-qa-p0-program-created-2026-09-18)
+- [Reading QA Follow-Up Program (created 2026-09-18)](#reading-qa-follow-up-program-created-2026-09-18)
+- [Student-Route Memory Optimization Program (created 2026-09-18)](#student-route-memory-optimization-program-created-2026-09-18)
+  - [Queued (planned — spec on pickup)](#queued-planned--spec-on-pickup)
+- [Primary Advantage UX and Security Refactor Program (created 2026-09-12)](#primary-advantage-ux-and-security-refactor-program-created-2026-09-12)
+- [Archived Tracks](#archived-tracks)
+  - [Migration Queue](#migration-queue)
+  - [Infrastructure & Backend](#infrastructure--backend)
+  - [Pending Tracks](#pending-tracks)
+  - [www-reading-advantage Website Updates (Based on Real Implementation)](#www-reading-advantage-website-updates-based-on-real-implementation)
+  - [sales-advantage (new app — planned 2026-06-22)](#sales-advantage-new-app--planned-2026-06-22)
+  - [Infrastructure & Shared Packages](#infrastructure--shared-packages)
+  - [Prisma → Drizzle Migration Program (4 tracks)](#prisma--drizzle-migration-program-4-tracks)
+  - [Review Remediation](#review-remediation)
+
+
 This file tracks all major tracks for the project.
 
 > **Feature freeze (owner, 2026-10-07) until the Primary deployment (master merge 2026-10-11).** Only bug fixes, tests, browser checks, and the cutover steps of `docs/deployment/primary-cutover-migration-spec.md`: the ETL run into the cutover target, the old article link redirect (FR-4), and the temporary passwords with the forced change (FR-5/6). No new features until the cutover passes.

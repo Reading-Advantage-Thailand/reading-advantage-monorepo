@@ -1,5 +1,28 @@
 # AGENTS.md Compliance Audit Protocol
 
+## Contents
+
+- [Changelog](#changelog)
+- [How to Use This Protocol](#how-to-use-this-protocol)
+- [Audit Output](#audit-output)
+- [Severity Scheme](#severity-scheme)
+- [Per-Rule Pass/Fail Convention](#per-rule-passfail-convention)
+- [1. Provider Neutrality & Adapters](#1-provider-neutrality--adapters)
+- [2. Package Boundaries & Architecture](#2-package-boundaries--architecture)
+- [3. Backend-as-Code Model](#3-backend-as-code-model)
+- [4. Authentication & Authorization](#4-authentication--authorization)
+- [5. Database & Multi-Tenancy](#5-database--multi-tenancy)
+- [6. Validation & Contracts](#6-validation--contracts)
+- [7. Transport Independence](#7-transport-independence)
+- [8. Storage, AI, Workers](#8-storage-ai-workers)
+- [9. Observability](#9-observability)
+- [10. Testing](#10-testing)
+- [11. Documentation](#11-documentation)
+- [12. Monorepo Hygiene](#12-monorepo-hygiene)
+- [13. Workflow & Tooling](#13-workflow--tooling)
+- [14. Pre-audit Preconditions](#14-pre-audit-preconditions)
+
+
 > **Purpose.** A repeatable, agent-runnable protocol for auditing apps in this monorepo against the architectural requirements in `AGENTS.md`. Produces a per-rule pass/fail checklist, classified findings, and a list of migration tracks required to reach compliance.
 >
 > **Scope.** All apps under `apps/*` plus the shared `packages/*`. Out of scope: third-party dependencies and CI infrastructure (covered by separate review tracks).

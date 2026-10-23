@@ -1,5 +1,19 @@
 # AGENTS.md — primary-advantage
 
+## Contents
+
+- [Stack](#stack)
+- [Database Access](#database-access)
+  - [Importing the client](#importing-the-client)
+  - [Schema layout](#schema-layout)
+  - [Migrations](#migrations)
+  - [Query patterns](#query-patterns)
+- [Forbidden Patterns](#forbidden-patterns)
+- [Project Layout](#project-layout)
+- [Testing](#testing)
+- [Migration History](#migration-history)
+
+
 Instructions for AI coding agents working on the `primary-advantage` Next.js app.
 
 This app is part of the Reading Advantage monorepo. The monorepo root

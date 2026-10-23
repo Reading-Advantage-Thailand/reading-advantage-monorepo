@@ -1,5 +1,38 @@
 # Project Workflow
 
+## Contents
+
+- [Guiding Principles](#guiding-principles)
+- [Task Workflow](#task-workflow)
+  - [Standard Task Workflow](#standard-task-workflow)
+  - [Phase Completion Verification and Checkpointing Protocol](#phase-completion-verification-and-checkpointing-protocol)
+  - [Quality Gates](#quality-gates)
+- [Development Commands](#development-commands)
+  - [Setup](#setup)
+  - [Daily Development](#daily-development)
+  - [Before Committing](#before-committing)
+- [Testing Requirements](#testing-requirements)
+  - [Unit Testing](#unit-testing)
+  - [Integration Testing](#integration-testing)
+  - [Mobile Testing](#mobile-testing)
+- [Code Review Process](#code-review-process)
+  - [Self-Review Checklist](#self-review-checklist)
+- [Commit Guidelines](#commit-guidelines)
+  - [Message Format](#message-format)
+  - [Types](#types)
+  - [Examples](#examples)
+- [Definition of Done](#definition-of-done)
+- [Emergency Procedures](#emergency-procedures)
+  - [Critical Bug in Production](#critical-bug-in-production)
+  - [Data Loss](#data-loss)
+  - [Security Breach](#security-breach)
+- [Deployment Workflow](#deployment-workflow)
+  - [Pre-Deployment Checklist](#pre-deployment-checklist)
+  - [Deployment Steps](#deployment-steps)
+  - [Post-Deployment](#post-deployment)
+- [Continuous Improvement](#continuous-improvement)
+
+
 ## Guiding Principles
 
 1. **The Plan is the Source of Truth:** All work must be tracked in `plan.md`

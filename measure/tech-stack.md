@@ -1,5 +1,22 @@
 # Tech Stack
 
+## Contents
+
+- [Monorepo Orchestration](#monorepo-orchestration)
+- [Selected Shared Versions (post dependency_upgrade_hardening_20260607)](#selected-shared-versions-post-dependency_upgrade_hardening_20260607)
+- [Core Technologies](#core-technologies)
+  - [Advantage Play Kit](#advantage-play-kit)
+- [Backend & Data](#backend--data)
+- [Testing](#testing)
+- [DevOps](#devops)
+- [Workspace Structure](#workspace-structure)
+- [Database Connections](#database-connections)
+  - [Local topology](#local-topology)
+  - [Client tuning (`packages/db/src/connection-options.ts`)](#client-tuning-packagesdbsrcconnection-optionsts)
+  - [Production deployment status (as of 2026-05-25)](#production-deployment-status-as-of-2026-05-25)
+  - [Verified concurrency bound](#verified-concurrency-bound)
+
+
 ## Monorepo Orchestration
 
 - **Package Manager:** pnpm@11.8.0 (with `pnpm-workspace.yaml`) — selected in `pnpm11_major_migration` (post-migration state; pre-migration baseline was `pnpm@8.15.8`)

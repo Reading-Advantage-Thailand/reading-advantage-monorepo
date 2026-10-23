@@ -1,5 +1,29 @@
 # Backend Platform Architecture Specification
 
+## Contents
+
+- [1. Purpose](#1-purpose)
+- [2. Runtime and Target Hosts](#2-runtime-and-target-hosts)
+  - [2.1 Non-goals](#21-non-goals)
+- [3. Capability Model](#3-capability-model)
+  - [3.1 Descriptor](#31-descriptor)
+  - [3.2 Executor](#32-executor)
+  - [3.3 Contracts and errors](#33-contracts-and-errors)
+  - [3.4 Auth and tenancy](#34-auth-and-tenancy)
+  - [3.5 Transactions, audit, and idempotency](#35-transactions-audit-and-idempotency)
+- [4. Adapter Boundaries](#4-adapter-boundaries)
+- [5. Catalog and Route Bindings](#5-catalog-and-route-bindings)
+  - [5.1 Generated capability catalog](#51-generated-capability-catalog)
+  - [5.2 Generated bindings](#52-generated-bindings)
+- [6. Boundary Enforcement and Ratchets](#6-boundary-enforcement-and-ratchets)
+- [7. Durable Jobs and Worker Service](#7-durable-jobs-and-worker-service)
+  - [7.1 Existing `review_jobs` is the reference behavior](#71-existing-review_jobs-is-the-reference-behavior)
+- [8. Package and Service Ownership](#8-package-and-service-ownership)
+- [9. Staged Application Migration](#9-staged-application-migration)
+- [10. Acceptance Invariants](#10-acceptance-invariants)
+- [11. Program Tracks](#11-program-tracks)
+
+
 **Status:** Canonical target architecture
 **Program:** Backend Platform Program
 **Date:** 2026-07-13
