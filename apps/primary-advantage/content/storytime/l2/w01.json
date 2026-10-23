@@ -130,43 +130,57 @@
         "text": "Hello, hello, I am Pip",
         "part": "verse",
         "gesture": "point to self",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/point-to-self.jpg"
+        }
       },
       {
         "text": "Hello, hello, I am Nan",
         "part": "verse",
         "gesture": "point to self",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/point-to-self.jpg"
+        }
       },
       {
         "text": "Wave your hand and say it too",
         "part": "verse",
         "gesture": "wave",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/wave.jpg"
+        }
       },
       {
         "text": "Hello, I am you",
         "part": "verse",
         "gesture": "point forward",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/point-forward.jpg"
+        }
       },
       {
         "text": "Hello, I am Pip (Hello, I am Pip!)",
         "part": "chorus",
         "gesture": "clap",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/clap.jpg"
+        }
       },
       {
         "text": "Hello, I am Nan (Hello, I am Nan!)",
         "part": "chorus",
         "gesture": "clap",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/clap.jpg"
+        }
       },
       {
         "text": "Hello, who are you? (Hello, who are you?)",
         "part": "chorus",
         "gesture": "hands out",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/hands-out.jpg"
+        }
       },
       {
         "text": "Hello, who are you?",
@@ -178,19 +192,25 @@
         "text": "Point to me, I am Pip",
         "part": "verse",
         "gesture": "point to self",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/point-to-self.jpg"
+        }
       },
       {
         "text": "Point to you, you are Nan",
         "part": "verse",
         "gesture": "point forward",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/point-forward.jpg"
+        }
       },
       {
         "text": "Nod your head and say it too",
         "part": "verse",
         "gesture": "nod",
-        "image": {}
+        "image": {
+          "file": "l2/media/w01/song-lines/nod.jpg"
+        }
       },
       {
         "text": "Hello, I am you",
