@@ -33,8 +33,8 @@ describe("proxy route policies", () => {
     expect(protectedRoutes["/student"]).not.toContain(ROLES.INTERN);
   });
 
-  it("leaves the sign-in and QR card pages open to a signed-out user", () => {
-    for (const path of ["/auth/signin", "/auth/card"]) {
+  it("leaves the sign-in, QR card, and Storytime QR pages open to a signed-out user", () => {
+    for (const path of ["/auth/signin", "/auth/card", "/st/2/1"]) {
       const guard = Object.keys(protectedRoutes).find((route) => path.startsWith(route));
       expect(guard, `${path} is behind ${guard}`).toBeUndefined();
     }

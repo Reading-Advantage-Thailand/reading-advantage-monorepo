@@ -4382,5 +4382,31 @@
     "sourceName": "{source, select, youtube {YouTube} file {Máy chủ của chúng tôi} other {{source}}}",
     "empty": "Chưa có dữ liệu.",
     "emptyUnmatched": "Mọi trang đã mở hướng dẫn đều có video."
+  },
+  "Storytime": {
+    "brand": "Storytime Advantage",
+    "levelWeek": "Cấp {level} · Tuần {week}",
+    "parentHow": "Ngồi cùng con. Chạm vào hình để mở. Chạm vào loa để nghe tên.",
+    "tileBook": "Sách truyện",
+    "tileDecodable": "Sách tập đọc",
+    "tileSong": "Bài hát",
+    "sayLabel": "Nghe \"{label}\"",
+    "back": "Quay lại",
+    "readToMe": "Đọc cho con nghe",
+    "myTurn": "Con tự đọc",
+    "myTurnHint": "Chạm vào một từ để nghe.",
+    "blendHint": "Chạm vào một từ để nghe từng âm, rồi cả từ.",
+    "audioSoon": "Giọng đọc của phần này sẽ có sớm. Chạm vào một từ để nghe.",
+    "soundsTitle": "Âm của tuần",
+    "playSound": "Phát âm {sound}",
+    "trickyWords": "Từ cần nhớ",
+    "prevPage": "Trang trước",
+    "nextPage": "Trang sau",
+    "pageOf": "{page} / {count}",
+    "singAlong": "Hát theo",
+    "pause": "Tạm dừng",
+    "replay": "Phát lại bài hát",
+    "homeTitle": "Ở nhà",
+    "activityTitle": "Hoạt động 5 phút"
   }
 }

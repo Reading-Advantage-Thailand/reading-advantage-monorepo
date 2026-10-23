@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { isStorytimeHost } from "@/lib/storytime/host";
 import { SERVICE_WORKER_SCOPE, SERVICE_WORKER_TYPE, SERVICE_WORKER_URL } from "@/lib/pwa/constants";
 
 /**
@@ -10,7 +11,8 @@ import { SERVICE_WORKER_SCOPE, SERVICE_WORKER_TYPE, SERVICE_WORKER_URL } from "@
  */
 export function ServiceWorkerRegister(): null {
   useEffect(() => {
-    if (!("serviceWorker" in navigator)) return;
+    // The Storytime QR host is a public page, not the app: no worker, so no install prompt.
+    if (!("serviceWorker" in navigator) || isStorytimeHost(window.location.host)) return;
     navigator.serviceWorker
       .register(SERVICE_WORKER_URL, { scope: SERVICE_WORKER_SCOPE, type: SERVICE_WORKER_TYPE })
       .catch(() => undefined);

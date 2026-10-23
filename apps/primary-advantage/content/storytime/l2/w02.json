@@ -1,0 +1,667 @@
+{
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "level": 2,
+    "week": 2,
+    "kind": "teach",
+    "title": "How Many?",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "graphemes": [
+        "a"
+      ],
+      "sound": "/a/",
+      "audio": "phonemes/daniel/26-a-short.mp3"
+    },
+    "frame": "How many? One, two..."
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "soundBook": false,
+      "title": "How Many?",
+      "cover": {},
+      "pages": [
+        {
+          "text": "How many suns? One!",
+          "image": {}
+        },
+        {
+          "text": "How many kites? Two!",
+          "image": {}
+        },
+        {
+          "text": "How many ducks? Three!",
+          "image": {}
+        },
+        {
+          "text": "How many birds? Four!",
+          "image": {}
+        },
+        {
+          "text": "How many balls? Five!",
+          "image": {}
+        },
+        {
+          "text": "How many friends? Six!",
+          "image": {}
+        },
+        {
+          "text": "How many cakes? Seven!",
+          "image": {}
+        },
+        {
+          "text": "How many cakes? Oh no, Pip!",
+          "image": {}
+        }
+      ],
+      "audio": {
+        "sentences": []
+      }
+    },
+    {
+      "kind": "decodable",
+      "soundBook": false,
+      "title": "Can I?",
+      "cover": {},
+      "pages": [
+        {
+          "text": "Nan can.",
+          "image": {}
+        },
+        {
+          "text": "Can I?",
+          "image": {}
+        },
+        {
+          "text": "I can!",
+          "image": {}
+        },
+        {
+          "text": "Nan can.",
+          "image": {}
+        },
+        {
+          "text": "Can I?",
+          "image": {}
+        },
+        {
+          "text": "I can!",
+          "image": {}
+        },
+        {
+          "text": "Can Nan?",
+          "image": {}
+        },
+        {
+          "text": "Nan and I can!",
+          "image": {}
+        }
+      ],
+      "soundsPage": {
+        "element": "a",
+        "words": [
+          "Nan"
+        ],
+        "tricky": [
+          "I"
+        ]
+      },
+      "audio": {
+        "sentences": []
+      }
+    }
+  ],
+  "song": {
+    "title": "How Many? One, Two!",
+    "lines": [
+      {
+        "text": "How many suns? One sun!",
+        "part": "verse",
+        "gesture": "point up",
+        "image": {}
+      },
+      {
+        "text": "How many kites? Two kites!",
+        "part": "verse",
+        "gesture": "reach",
+        "image": {}
+      },
+      {
+        "text": "How many? How many? One, two, three!",
+        "part": "chorus",
+        "gesture": "count fingers",
+        "image": {}
+      },
+      {
+        "text": "Red, red apples! Count with me!",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {}
+      },
+      {
+        "text": "How many ducks? Three ducks!",
+        "part": "verse",
+        "gesture": "sway",
+        "image": {}
+      },
+      {
+        "text": "How many birds? Four birds!",
+        "part": "verse",
+        "gesture": "look",
+        "image": {}
+      },
+      {
+        "text": "How many? How many? One, two, three!",
+        "part": "chorus",
+        "gesture": "count fingers",
+        "imageOf": 2
+      },
+      {
+        "text": "Red, red apples! Count with me!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 3
+      },
+      {
+        "text": "How many balls? Five balls!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {}
+      },
+      {
+        "text": "How many friends? Six friends! (How many friends? Six friends!)",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {}
+      },
+      {
+        "text": "How many? How many? One, two, three!",
+        "part": "chorus",
+        "gesture": "count fingers",
+        "imageOf": 2
+      },
+      {
+        "text": "Red, red apples! Count with me!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 3
+      }
+    ],
+    "audio": "l2/media/w02/song.mp3",
+    "times": [
+      {
+        "sentence": "How many suns? One sun!",
+        "startTime": 0,
+        "endTime": 3.98,
+        "words": [
+          {
+            "word": "How",
+            "start": 0,
+            "end": 0.48
+          },
+          {
+            "word": "many",
+            "start": 0.48,
+            "end": 1.12
+          },
+          {
+            "word": "suns?",
+            "start": 1.12,
+            "end": 2.14
+          },
+          {
+            "word": "One",
+            "start": 2.62,
+            "end": 2.88
+          },
+          {
+            "word": "sun!",
+            "start": 2.88,
+            "end": 3.98
+          }
+        ]
+      },
+      {
+        "sentence": "How many kites? Two kites!",
+        "startTime": 9.49,
+        "endTime": 13.34,
+        "words": [
+          {
+            "word": "How",
+            "start": 9.49,
+            "end": 10.04
+          },
+          {
+            "word": "many",
+            "start": 10.04,
+            "end": 10.72
+          },
+          {
+            "word": "kites?",
+            "start": 10.72,
+            "end": 11.28
+          },
+          {
+            "word": "Two",
+            "start": 12.06,
+            "end": 12.42
+          },
+          {
+            "word": "kites!",
+            "start": 12.42,
+            "end": 13.34
+          }
+        ]
+      },
+      {
+        "sentence": "How many? How many? One, two, three!",
+        "startTime": 14.28,
+        "endTime": 18.34,
+        "words": [
+          {
+            "word": "How",
+            "start": 14.28,
+            "end": 14.94
+          },
+          {
+            "word": "many?",
+            "start": 14.94,
+            "end": 15.54
+          },
+          {
+            "word": "How",
+            "start": 15.86,
+            "end": 16.08
+          },
+          {
+            "word": "many?",
+            "start": 16.08,
+            "end": 16.72
+          },
+          {
+            "word": "One,",
+            "start": 17.04,
+            "end": 17.26
+          },
+          {
+            "word": "two,",
+            "start": 17.44,
+            "end": 17.8
+          },
+          {
+            "word": "three!",
+            "start": 17.96,
+            "end": 18.34
+          }
+        ]
+      },
+      {
+        "sentence": "Red, red apples! Count with me!",
+        "startTime": 19.24,
+        "endTime": 23.14,
+        "words": [
+          {
+            "word": "Red,",
+            "start": 19.24,
+            "end": 19.78
+          },
+          {
+            "word": "red",
+            "start": 19.98,
+            "end": 20.3
+          },
+          {
+            "word": "apples!",
+            "start": 20.3,
+            "end": 21.08
+          },
+          {
+            "word": "Count",
+            "start": 21.58,
+            "end": 22.04
+          },
+          {
+            "word": "with",
+            "start": 22.04,
+            "end": 22.62
+          },
+          {
+            "word": "me!",
+            "start": 22.62,
+            "end": 23.14
+          }
+        ]
+      },
+      {
+        "sentence": "How many ducks? Three ducks!",
+        "startTime": 24.04,
+        "endTime": 27.42,
+        "words": [
+          {
+            "word": "How",
+            "start": 24.04,
+            "end": 24.48
+          },
+          {
+            "word": "many",
+            "start": 24.48,
+            "end": 25.14
+          },
+          {
+            "word": "ducks?",
+            "start": 25.14,
+            "end": 25.6
+          },
+          {
+            "word": "Three",
+            "start": 26.42,
+            "end": 26.8
+          },
+          {
+            "word": "ducks!",
+            "start": 26.8,
+            "end": 27.42
+          }
+        ]
+      },
+      {
+        "sentence": "How many birds? Four birds!",
+        "startTime": 32.8,
+        "endTime": 37.42,
+        "words": [
+          {
+            "word": "How",
+            "start": 32.8,
+            "end": 34.08
+          },
+          {
+            "word": "many",
+            "start": 34.08,
+            "end": 34.72
+          },
+          {
+            "word": "birds?",
+            "start": 34.72,
+            "end": 35.52
+          },
+          {
+            "word": "Four",
+            "start": 35.88,
+            "end": 36.5
+          },
+          {
+            "word": "birds!",
+            "start": 36.5,
+            "end": 37.42
+          }
+        ]
+      },
+      {
+        "sentence": "How many? How many? One, two, three!",
+        "startTime": 37.42,
+        "endTime": 42.5,
+        "words": [
+          {
+            "word": "How",
+            "start": 37.42,
+            "end": 38.84
+          },
+          {
+            "word": "many?",
+            "start": 38.84,
+            "end": 39.56
+          },
+          {
+            "word": "How",
+            "start": 39.68,
+            "end": 40.12
+          },
+          {
+            "word": "many?",
+            "start": 40.12,
+            "end": 40.74
+          },
+          {
+            "word": "One,",
+            "start": 41.02,
+            "end": 41.32
+          },
+          {
+            "word": "two,",
+            "start": 41.4,
+            "end": 41.84
+          },
+          {
+            "word": "three!",
+            "start": 41.94,
+            "end": 42.5
+          }
+        ]
+      },
+      {
+        "sentence": "Red, red apples! Count with me!",
+        "startTime": 43.14,
+        "endTime": 47.34,
+        "words": [
+          {
+            "word": "Red,",
+            "start": 43.14,
+            "end": 43.78
+          },
+          {
+            "word": "red",
+            "start": 44.14,
+            "end": 44.34
+          },
+          {
+            "word": "apples!",
+            "start": 44.34,
+            "end": 45.14
+          },
+          {
+            "word": "Count",
+            "start": 45.14,
+            "end": 45.98
+          },
+          {
+            "word": "with",
+            "start": 45.98,
+            "end": 46.68
+          },
+          {
+            "word": "me!",
+            "start": 46.68,
+            "end": 47.34
+          }
+        ]
+      },
+      {
+        "sentence": "How many balls? Five balls!",
+        "startTime": 47.34,
+        "endTime": 51.7,
+        "words": [
+          {
+            "word": "How",
+            "start": 47.34,
+            "end": 48.46
+          },
+          {
+            "word": "many",
+            "start": 48.46,
+            "end": 49.14
+          },
+          {
+            "word": "balls?",
+            "start": 49.14,
+            "end": 49.78
+          },
+          {
+            "word": "Five",
+            "start": 50.52,
+            "end": 50.86
+          },
+          {
+            "word": "balls!",
+            "start": 50.86,
+            "end": 51.7
+          }
+        ]
+      },
+      {
+        "sentence": "How many friends? Six friends! (How many friends? Six friends!)",
+        "startTime": 51.7,
+        "endTime": 61.26,
+        "words": [
+          {
+            "word": "How",
+            "start": 51.7,
+            "end": 53.2
+          },
+          {
+            "word": "many",
+            "start": 53.2,
+            "end": 53.88
+          },
+          {
+            "word": "friends?",
+            "start": 53.88,
+            "end": 54.64
+          },
+          {
+            "word": "Six",
+            "start": 55.3,
+            "end": 55.58
+          },
+          {
+            "word": "friends!",
+            "start": 55.58,
+            "end": 56.52
+          },
+          {
+            "word": "How",
+            "start": 56.9,
+            "end": 58.08
+          },
+          {
+            "word": "many",
+            "start": 58.08,
+            "end": 58.7
+          },
+          {
+            "word": "friends,",
+            "start": 58.7,
+            "end": 59.46
+          },
+          {
+            "word": "six",
+            "start": 59.94,
+            "end": 60.36
+          },
+          {
+            "word": "friends?",
+            "start": 60.36,
+            "end": 61.26
+          }
+        ]
+      },
+      {
+        "sentence": "How many? How many? One, two, three!",
+        "startTime": 62.5,
+        "endTime": 66.48,
+        "words": [
+          {
+            "word": "How",
+            "start": 62.5,
+            "end": 62.92
+          },
+          {
+            "word": "many?",
+            "start": 62.92,
+            "end": 63.52
+          },
+          {
+            "word": "How",
+            "start": 63.76,
+            "end": 64.08
+          },
+          {
+            "word": "many?",
+            "start": 64.08,
+            "end": 64.74
+          },
+          {
+            "word": "One,",
+            "start": 65.08,
+            "end": 65.32
+          },
+          {
+            "word": "two,",
+            "start": 65.38,
+            "end": 65.8
+          },
+          {
+            "word": "three!",
+            "start": 65.88,
+            "end": 66.48
+          }
+        ]
+      },
+      {
+        "sentence": "Red, red apples! Count with me!",
+        "startTime": 66.48,
+        "endTime": 71.34,
+        "words": [
+          {
+            "word": "Red,",
+            "start": 66.48,
+            "end": 67.72
+          },
+          {
+            "word": "red",
+            "start": 67.86,
+            "end": 68.32
+          },
+          {
+            "word": "apples!",
+            "start": 68.32,
+            "end": 69.12
+          },
+          {
+            "word": "Count",
+            "start": 69.38,
+            "end": 70.08
+          },
+          {
+            "word": "with",
+            "start": 70.08,
+            "end": 70.66
+          },
+          {
+            "word": "me!",
+            "start": 70.66,
+            "end": 71.34
+          }
+        ]
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "apple",
+      "ant",
+      "axe"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"a\" as in \"apple\" (not the letter name \"ay\"). Your child also learns to count in English: \"How many? One, two, three!\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"a\" เหมือนในคำว่า \"apple\" (เสียงสั้น ใกล้กับเสียงสระ แอะ ไม่ใช่ชื่อตัวอักษร \"เอ\") และบุตรหลานยังได้ฝึกนับเลขเป็นภาษาอังกฤษ: \"How many? One, two, three!\""
+    },
+    "activity": {
+      "en": "Put some spoons or toys on the table and ask \"How many?\" in English. Your child counts in English: \"One, two, three. Three!\" Then say \"ap, ap, apple\" and \"an, an, ant\" together.",
+      "th": "วางช้อนหรือของเล่นจำนวนหนึ่งบนโต๊ะ แล้วถามบุตรหลานเป็นภาษาอังกฤษว่า \"How many?\" ให้บุตรหลานนับเป็นภาษาอังกฤษ: \"One, two, three. Three!\" จากนั้นพูด \"ap, ap, apple\" และ \"an, an, ant\" พร้อมกับบุตรหลาน (ออกเสียง /a/ สั้น ๆ ใกล้กับเสียงสระ แอะ ไม่ใช่ชื่อตัวอักษร \"เอ\")"
+    }
+  }
+}

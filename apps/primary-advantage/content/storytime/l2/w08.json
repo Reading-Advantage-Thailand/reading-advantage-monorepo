@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "level": 2,
+    "week": 8,
+    "kind": "review",
+    "title": "Unit 1 Review",
+    "status": "draft"
+  },
+  "focus": {
+    "frame": "Hello, I am ___. / How many? One, two... / It is ___. / This is my ___. / I have two ___. / I can see a ___. / Is it a ___? Yes/No."
+  },
+  "books": [],
+  "home": {
+    "words": [],
+    "line": {
+      "en": "Unit 1 is done. Sing the seven songs and read the seven read-alongs with the QR code.",
+      "th": "บุตรหลานเรียนหน่วยที่ 1 จบแล้ว ใช้คิวอาร์โค้ดเพื่อร้องเพลงทั้ง 7 เพลง และอ่านหนังสืออ่านตามทั้ง 7 เล่มกับบุตรหลาน"
+    },
+    "activity": {
+      "en": "Sing one song of unit 1 with your child, with the gestures. Then your child reads one book to you.",
+      "th": "ร้องเพลง 1 เพลงของหน่วยที่ 1 กับบุตรหลาน พร้อมทำท่าประกอบเพลง จากนั้นให้บุตรหลานอ่านหนังสือ 1 เล่มให้ฟัง"
+    }
+  }
+}

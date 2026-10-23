@@ -15,11 +15,12 @@ export const READ_ALONG_SPEEDS = [0.75, 1, 1.25] as const;
 /**
  * Gives the speed that follows a speed in the list.
  * @param speed The current speed.
+ * @param speeds The speeds of the player (the default is `READ_ALONG_SPEEDS`).
  * @returns The next speed; the list wraps around, and an unknown speed gives 1.
  */
-export function nextSpeed(speed: number): number {
-  const i = READ_ALONG_SPEEDS.indexOf(speed as (typeof READ_ALONG_SPEEDS)[number]);
-  return i === -1 ? 1 : READ_ALONG_SPEEDS[(i + 1) % READ_ALONG_SPEEDS.length];
+export function nextSpeed(speed: number, speeds: readonly number[] = READ_ALONG_SPEEDS): number {
+  const i = speeds.indexOf(speed);
+  return i === -1 ? 1 : speeds[(i + 1) % speeds.length];
 }
 
 /** Props of the player. */
@@ -38,6 +39,8 @@ export interface ReadAlongPlayerProps {
   onPlaySentence: (sentenceIndex: number) => void;
   /** The speed that the student picked. */
   onSpeedChange: (speed: number) => void;
+  /** The speeds of the speed sign (the default is `READ_ALONG_SPEEDS`; the Storytime page passes 0.75 and 1). */
+  speeds?: readonly number[];
   /** Content above the buttons, for example the translation of the sentence. */
   children?: ReactNode;
   className?: string;
@@ -58,6 +61,7 @@ export function ReadAlongPlayer({
   onPlayPause,
   onPlaySentence,
   onSpeedChange,
+  speeds = READ_ALONG_SPEEDS,
   children,
   className,
 }: ReadAlongPlayerProps) {
@@ -112,7 +116,7 @@ export function ReadAlongPlayer({
         <button
           type="button"
           aria-label={t("changeSpeed", { speed: String(speed) })}
-          onClick={() => onSpeedChange(nextSpeed(speed))}
+          onClick={() => onSpeedChange(nextSpeed(speed, speeds))}
           className="inline-flex min-h-12 min-w-14 items-center justify-center"
         >
           <Sign small className="px-3 text-base">

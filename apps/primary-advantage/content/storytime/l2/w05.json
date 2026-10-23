@@ -1,0 +1,921 @@
+{
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "level": 2,
+    "week": 5,
+    "kind": "teach",
+    "title": "I Have Two",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "graphemes": [
+        "s"
+      ],
+      "sound": "/s/",
+      "audio": "phonemes/daniel/01-s.mp3"
+    },
+    "frame": "I have two ___."
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "soundBook": false,
+      "title": "I Have Two",
+      "cover": {},
+      "pages": [
+        {
+          "text": "I have two eyes.",
+          "image": {}
+        },
+        {
+          "text": "I have two ears.",
+          "image": {}
+        },
+        {
+          "text": "I have two hands.",
+          "image": {}
+        },
+        {
+          "text": "I have two arms.",
+          "image": {}
+        },
+        {
+          "text": "I have two legs.",
+          "image": {}
+        },
+        {
+          "text": "I have two feet.",
+          "image": {}
+        },
+        {
+          "text": "I have one nose.",
+          "image": {}
+        },
+        {
+          "text": "I have four legs!",
+          "image": {}
+        }
+      ],
+      "audio": {
+        "sentences": []
+      }
+    },
+    {
+      "kind": "decodable",
+      "soundBook": false,
+      "title": "Sam and Pam",
+      "cover": {},
+      "pages": [
+        {
+          "text": "Sam saw Pam.",
+          "image": {}
+        },
+        {
+          "text": "Sam can get Pam.",
+          "image": {}
+        },
+        {
+          "text": "Sam is with Pam.",
+          "image": {}
+        },
+        {
+          "text": "Pam is in a pan!",
+          "image": {}
+        },
+        {
+          "text": "Pam is on a map!",
+          "image": {}
+        },
+        {
+          "text": "Pam is on Sam!",
+          "image": {}
+        },
+        {
+          "text": "Pam is off Sam!",
+          "image": {}
+        },
+        {
+          "text": "Sam, Nan, and Pam nap.",
+          "image": {}
+        }
+      ],
+      "soundsPage": {
+        "element": "s",
+        "words": [
+          "Sam"
+        ],
+        "tricky": [
+          "saw",
+          "off",
+          "with"
+        ]
+      },
+      "audio": {
+        "sentences": []
+      }
+    }
+  ],
+  "song": {
+    "title": "I Have Two",
+    "lines": [
+      {
+        "text": "I have two eyes. Look, look, look!",
+        "part": "verse",
+        "gesture": "look",
+        "image": {}
+      },
+      {
+        "text": "I have two ears. Listen, listen!",
+        "part": "verse",
+        "gesture": "listen",
+        "image": {}
+      },
+      {
+        "text": "I have two eyes. Look, look, look!",
+        "part": "verse",
+        "gesture": "look",
+        "imageOf": 0
+      },
+      {
+        "text": "I have two ears. Listen, listen!",
+        "part": "verse",
+        "gesture": "listen",
+        "imageOf": 1
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "image": {}
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {}
+      },
+      {
+        "text": "I have two hands. Clap, clap, clap!",
+        "part": "verse",
+        "gesture": "clap",
+        "image": {}
+      },
+      {
+        "text": "I have two feet. Stamp, stamp, stamp!",
+        "part": "verse",
+        "gesture": "stamp",
+        "image": {}
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 4
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      },
+      {
+        "text": "I have two arms. Reach up high!",
+        "part": "verse",
+        "gesture": "reach",
+        "image": {}
+      },
+      {
+        "text": "I have two legs. Hop, hop, hop!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {}
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 4
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 4
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      }
+    ],
+    "audio": "l2/media/w05/song.mp3",
+    "times": [
+      {
+        "sentence": "I have two eyes. Look, look, look!",
+        "startTime": 0,
+        "endTime": 3.82,
+        "words": [
+          {
+            "word": "I",
+            "start": 0,
+            "end": 0.52
+          },
+          {
+            "word": "have",
+            "start": 0.52,
+            "end": 0.82
+          },
+          {
+            "word": "two",
+            "start": 0.82,
+            "end": 1.1
+          },
+          {
+            "word": "eyes.",
+            "start": 1.1,
+            "end": 1.76
+          },
+          {
+            "word": "Look,",
+            "start": 2.16,
+            "end": 2.6
+          },
+          {
+            "word": "look,",
+            "start": 2.84,
+            "end": 3.14
+          },
+          {
+            "word": "look!",
+            "start": 3.42,
+            "end": 3.82
+          }
+        ]
+      },
+      {
+        "sentence": "I have two ears. Listen, listen!",
+        "startTime": 4.54,
+        "endTime": 8.54,
+        "words": [
+          {
+            "word": "I",
+            "start": 4.54,
+            "end": 5.02
+          },
+          {
+            "word": "have",
+            "start": 5.02,
+            "end": 5.38
+          },
+          {
+            "word": "two",
+            "start": 5.38,
+            "end": 5.7
+          },
+          {
+            "word": "ears.",
+            "start": 5.7,
+            "end": 6.32
+          },
+          {
+            "word": "Listen,",
+            "start": 6.8,
+            "end": 7.56
+          },
+          {
+            "word": "listen!",
+            "start": 8,
+            "end": 8.54
+          }
+        ]
+      },
+      {
+        "sentence": "I have two eyes. Look, look, look!",
+        "startTime": 9.36,
+        "endTime": 12.88,
+        "words": [
+          {
+            "word": "I",
+            "start": 9.36,
+            "end": 9.64
+          },
+          {
+            "word": "have",
+            "start": 9.64,
+            "end": 9.96
+          },
+          {
+            "word": "two",
+            "start": 9.96,
+            "end": 10.22
+          },
+          {
+            "word": "eyes.",
+            "start": 10.22,
+            "end": 10.9
+          },
+          {
+            "word": "Look,",
+            "start": 11.26,
+            "end": 11.74
+          },
+          {
+            "word": "look,",
+            "start": 12.06,
+            "end": 12.28
+          },
+          {
+            "word": "look!",
+            "start": 12.6,
+            "end": 12.88
+          }
+        ]
+      },
+      {
+        "sentence": "I have two ears. Listen, listen!",
+        "startTime": 13.86,
+        "endTime": 17.66,
+        "words": [
+          {
+            "word": "I",
+            "start": 13.86,
+            "end": 14.16
+          },
+          {
+            "word": "have",
+            "start": 14.16,
+            "end": 14.54
+          },
+          {
+            "word": "two",
+            "start": 14.54,
+            "end": 14.82
+          },
+          {
+            "word": "ears.",
+            "start": 14.82,
+            "end": 15.48
+          },
+          {
+            "word": "Listen,",
+            "start": 15.94,
+            "end": 16.7
+          },
+          {
+            "word": "listen!",
+            "start": 17.14,
+            "end": 17.66
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 18.42,
+        "endTime": 21.8,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 18.42,
+            "end": 18.66
+          },
+          {
+            "word": "Sam,",
+            "start": 18.94,
+            "end": 19.22
+          },
+          {
+            "word": "Sam!",
+            "start": 19.46,
+            "end": 19.84
+          },
+          {
+            "word": "Look",
+            "start": 20.52,
+            "end": 20.9
+          },
+          {
+            "word": "at",
+            "start": 20.9,
+            "end": 21.42
+          },
+          {
+            "word": "me!",
+            "start": 21.42,
+            "end": 21.8
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 21.8,
+        "endTime": 26.62,
+        "words": [
+          {
+            "word": "I",
+            "start": 21.8,
+            "end": 23.34
+          },
+          {
+            "word": "have",
+            "start": 23.34,
+            "end": 23.68
+          },
+          {
+            "word": "two",
+            "start": 23.68,
+            "end": 23.96
+          },
+          {
+            "word": "hands",
+            "start": 23.96,
+            "end": 24.52
+          },
+          {
+            "word": "and",
+            "start": 24.52,
+            "end": 24.92
+          },
+          {
+            "word": "I",
+            "start": 24.92,
+            "end": 25.16
+          },
+          {
+            "word": "have",
+            "start": 25.16,
+            "end": 25.58
+          },
+          {
+            "word": "two",
+            "start": 25.58,
+            "end": 26
+          },
+          {
+            "word": "feet!",
+            "start": 26,
+            "end": 26.62
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands. Clap, clap, clap!",
+        "startTime": 26.62,
+        "endTime": 31.18,
+        "words": [
+          {
+            "word": "I",
+            "start": 26.62,
+            "end": 27.72
+          },
+          {
+            "word": "have",
+            "start": 27.72,
+            "end": 28.22
+          },
+          {
+            "word": "two",
+            "start": 28.22,
+            "end": 28.52
+          },
+          {
+            "word": "hands.",
+            "start": 28.52,
+            "end": 29.24
+          },
+          {
+            "word": "Clap,",
+            "start": 29.48,
+            "end": 29.98
+          },
+          {
+            "word": "clap,",
+            "start": 30.32,
+            "end": 30.52
+          },
+          {
+            "word": "clap!",
+            "start": 30.78,
+            "end": 31.18
+          }
+        ]
+      },
+      {
+        "sentence": "I have two feet. Stamp, stamp, stamp!",
+        "startTime": 31.18,
+        "endTime": 35.92,
+        "words": [
+          {
+            "word": "I",
+            "start": 31.18,
+            "end": 32.46
+          },
+          {
+            "word": "have",
+            "start": 32.46,
+            "end": 32.82
+          },
+          {
+            "word": "two",
+            "start": 32.82,
+            "end": 33.06
+          },
+          {
+            "word": "feet.",
+            "start": 33.06,
+            "end": 33.7
+          },
+          {
+            "word": "Stamp,",
+            "start": 33.78,
+            "end": 34.62
+          },
+          {
+            "word": "stamp,",
+            "start": 34.9,
+            "end": 35.22
+          },
+          {
+            "word": "stamp!",
+            "start": 35.42,
+            "end": 35.92
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 35.92,
+        "endTime": 40.12,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 35.92,
+            "end": 36.92
+          },
+          {
+            "word": "Sam,",
+            "start": 37.24,
+            "end": 37.46
+          },
+          {
+            "word": "Sam!",
+            "start": 37.76,
+            "end": 38.14
+          },
+          {
+            "word": "Look",
+            "start": 38.56,
+            "end": 39.2
+          },
+          {
+            "word": "at",
+            "start": 39.2,
+            "end": 39.72
+          },
+          {
+            "word": "me!",
+            "start": 39.72,
+            "end": 40.12
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 40.12,
+        "endTime": 44.96,
+        "words": [
+          {
+            "word": "I",
+            "start": 40.12,
+            "end": 41.64
+          },
+          {
+            "word": "have",
+            "start": 41.64,
+            "end": 41.98
+          },
+          {
+            "word": "two",
+            "start": 41.98,
+            "end": 42.24
+          },
+          {
+            "word": "hands",
+            "start": 42.24,
+            "end": 42.82
+          },
+          {
+            "word": "and",
+            "start": 42.82,
+            "end": 43.22
+          },
+          {
+            "word": "I",
+            "start": 43.22,
+            "end": 43.48
+          },
+          {
+            "word": "have",
+            "start": 43.48,
+            "end": 43.94
+          },
+          {
+            "word": "two",
+            "start": 43.94,
+            "end": 44.34
+          },
+          {
+            "word": "feet!",
+            "start": 44.34,
+            "end": 44.96
+          }
+        ]
+      },
+      {
+        "sentence": "I have two arms. Reach up high!",
+        "startTime": 44.96,
+        "endTime": 49.62,
+        "words": [
+          {
+            "word": "I",
+            "start": 44.96,
+            "end": 46.2
+          },
+          {
+            "word": "have",
+            "start": 46.2,
+            "end": 46.52
+          },
+          {
+            "word": "two",
+            "start": 46.52,
+            "end": 46.8
+          },
+          {
+            "word": "arms.",
+            "start": 46.8,
+            "end": 47.52
+          },
+          {
+            "word": "Reach",
+            "start": 47.82,
+            "end": 48.32
+          },
+          {
+            "word": "up",
+            "start": 48.32,
+            "end": 48.96
+          },
+          {
+            "word": "high!",
+            "start": 48.96,
+            "end": 49.62
+          }
+        ]
+      },
+      {
+        "sentence": "I have two legs. Hop, hop, hop!",
+        "startTime": 49.62,
+        "endTime": 54.12,
+        "words": [
+          {
+            "word": "I",
+            "start": 49.62,
+            "end": 50.74
+          },
+          {
+            "word": "have",
+            "start": 50.74,
+            "end": 51.1
+          },
+          {
+            "word": "two",
+            "start": 51.1,
+            "end": 51.36
+          },
+          {
+            "word": "legs.",
+            "start": 51.36,
+            "end": 52.04
+          },
+          {
+            "word": "Hop,",
+            "start": 52.54,
+            "end": 52.9
+          },
+          {
+            "word": "hop,",
+            "start": 53.52,
+            "end": 53.52
+          },
+          {
+            "word": "hop!",
+            "start": 53.72,
+            "end": 54.12
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 54.96,
+        "endTime": 58.4,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 54.96,
+            "end": 55.28
+          },
+          {
+            "word": "Sam,",
+            "start": 55.46,
+            "end": 55.8
+          },
+          {
+            "word": "Sam!",
+            "start": 56.02,
+            "end": 56.4
+          },
+          {
+            "word": "Look",
+            "start": 56.94,
+            "end": 57.48
+          },
+          {
+            "word": "at",
+            "start": 57.48,
+            "end": 58
+          },
+          {
+            "word": "me!",
+            "start": 58,
+            "end": 58.4
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 59.2,
+        "endTime": 63.18,
+        "words": [
+          {
+            "word": "I",
+            "start": 59.2,
+            "end": 59.94
+          },
+          {
+            "word": "have",
+            "start": 59.94,
+            "end": 60.26
+          },
+          {
+            "word": "two",
+            "start": 60.26,
+            "end": 60.54
+          },
+          {
+            "word": "hands",
+            "start": 60.54,
+            "end": 61.06
+          },
+          {
+            "word": "and",
+            "start": 61.06,
+            "end": 61.52
+          },
+          {
+            "word": "I",
+            "start": 61.52,
+            "end": 61.76
+          },
+          {
+            "word": "have",
+            "start": 61.76,
+            "end": 62.22
+          },
+          {
+            "word": "two",
+            "start": 62.22,
+            "end": 62.62
+          },
+          {
+            "word": "feet!",
+            "start": 62.62,
+            "end": 63.18
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 63.78,
+        "endTime": 67.6,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 63.78,
+            "end": 64.4
+          },
+          {
+            "word": "Sam,",
+            "start": 64.66,
+            "end": 64.9
+          },
+          {
+            "word": "Sam!",
+            "start": 65.2,
+            "end": 65.5
+          },
+          {
+            "word": "Look",
+            "start": 66.22,
+            "end": 66.64
+          },
+          {
+            "word": "at",
+            "start": 66.64,
+            "end": 67.14
+          },
+          {
+            "word": "me!",
+            "start": 67.14,
+            "end": 67.6
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 68.42,
+        "endTime": 72.34,
+        "words": [
+          {
+            "word": "I",
+            "start": 68.42,
+            "end": 69.1
+          },
+          {
+            "word": "have",
+            "start": 69.1,
+            "end": 69.4
+          },
+          {
+            "word": "two",
+            "start": 69.4,
+            "end": 69.66
+          },
+          {
+            "word": "hands",
+            "start": 69.66,
+            "end": 70.18
+          },
+          {
+            "word": "and",
+            "start": 70.18,
+            "end": 70.64
+          },
+          {
+            "word": "I",
+            "start": 70.64,
+            "end": 70.9
+          },
+          {
+            "word": "have",
+            "start": 70.9,
+            "end": 71.28
+          },
+          {
+            "word": "two",
+            "start": 71.28,
+            "end": 71.78
+          },
+          {
+            "word": "feet!",
+            "start": 71.78,
+            "end": 72.34
+          }
+        ]
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "sun",
+      "sock",
+      "sofa"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"sss\", as in \"sun\". It is a long hiss, close to the Thai letter ส, with no \"uh\" after it. Your child also learns to say \"I have two hands.\" in English.",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"sss\" เหมือนในคำว่า \"sun\" เป็นเสียงลมลอดฟันยาว ๆ ใกล้กับเสียง ส ในภาษาไทย โดยไม่มีเสียง \"uh\" (เออะ) ตามหลัง และบุตรหลานยังได้ฝึกพูดเป็นภาษาอังกฤษว่า \"I have two hands.\" (ฉันมีมือ 2 ข้าง)"
+    },
+    "activity": {
+      "en": "Play \"Touch your nose!\" in English: say a body word (nose, ears, eyes, hands, feet), and your child touches it. Then your child shows two hands and says \"I have two hands.\" Find socks at home and say \"sssock\" together.",
+      "th": "เล่นเกม \"Touch your nose!\" (แตะจมูก) เป็นภาษาอังกฤษ: พูดคำศัพท์ส่วนของร่างกาย 1 คำ (nose จมูก, ears หู, eyes ตา, hands มือ, feet เท้า) แล้วให้บุตรหลานแตะส่วนนั้นของร่างกาย จากนั้นให้บุตรหลานชูมือ 2 ข้างและพูดว่า \"I have two hands.\" (ฉันมีมือ 2 ข้าง) แล้วหาถุงเท้าในบ้าน และพูด \"sssock\" พร้อมกับบุตรหลาน"
+    }
+  }
+}

@@ -4,8 +4,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { SERVICE_WORKER_SCOPE, SERVICE_WORKER_URL } from "@/lib/pwa/constants";
 import { ServiceWorkerRegister } from "../service-worker-register";
 
+const host = vi.hoisted(() => ({ storytime: false }));
+vi.mock("@/lib/storytime/host", () => ({ isStorytimeHost: () => host.storytime }));
+
 afterEach(() => {
   cleanup();
+  host.storytime = false;
   vi.unstubAllGlobals();
   Reflect.deleteProperty(navigator, "serviceWorker");
 });
@@ -18,6 +22,14 @@ describe("ServiceWorkerRegister", () => {
     rerender(<ServiceWorkerRegister />);
     expect(register).toHaveBeenCalledTimes(1);
     expect(register).toHaveBeenCalledWith(SERVICE_WORKER_URL, { scope: SERVICE_WORKER_SCOPE, type: "module" });
+  });
+
+  it("registers no worker on the Storytime QR host, so the phone offers no install", () => {
+    const register = vi.fn(() => Promise.resolve({}));
+    Object.defineProperty(navigator, "serviceWorker", { value: { register }, configurable: true });
+    host.storytime = true;
+    render(<ServiceWorkerRegister />);
+    expect(register).not.toHaveBeenCalled();
   });
 
   it("does nothing when navigator.serviceWorker is missing", () => {

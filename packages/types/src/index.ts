@@ -287,6 +287,18 @@ export const ExternalLessonId = z
   .brand<"ExternalLessonId">();
 export type ExternalLessonId = z.infer<typeof ExternalLessonId>;
 
+// ─── Program Types ────────────────────────────────────────
+
+/**
+ * The subject programs: the five of the subject program tracks (2026-10-06) and Storytime
+ * (track storytime_advantage_program_20261021, QR page spec). The Storytime content key is
+ * (program, level, week).
+ */
+export const programSchema = z.enum(["primary", "reading", "science", "math", "zhongwen", "storytime"]);
+
+/** One subject program. */
+export type Program = z.infer<typeof programSchema>;
+
 // ─── Codecamp Types ───────────────────────────────────────
 
 export * from "./codecamp.js";
