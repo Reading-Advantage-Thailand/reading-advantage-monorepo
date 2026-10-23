@@ -200,9 +200,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Replace Contact Us `mailto:` and no-op commercial CTAs with validated,
   attributable, spam-resistant CRM intake and operator notification. Depends on
   the accepted lead contract from the customer/licensing track and owns Wave 5 T1.
-- [ ] **Track: www bare-domain redirect to 0.0.0.0** *Link: [./tracks/www_bare_domain_redirect_20261022/](./tracks/www_bare_domain_redirect_20261022/)*
-  Repair the www locale redirect that sends `https://www.reading-advantage.com/` to
-  `https://0.0.0.0/en` on Cloud Run; use the forwarded public host in `src/proxy.ts`.
+- [x] **Track: www bare-domain redirect to 0.0.0.0** *Link: [./archive/www_bare_domain_redirect_20261022/](./archive/www_bare_domain_redirect_20261022/)*
+  Closed 2026-10-23. The www locale redirect used the container host `0.0.0.0`; `src/proxy.ts`
+  now uses the forwarded public host. Deployed from master d1caf393b; live check passed.
 - [ ] **Track: Reading License Control-Plane Migration** *Link: [./tracks/reading_license_control_plane_migration_20260722/](./tracks/reading_license_control_plane_migration_20260722/)*
   Prove production truth, import expired history without reactivation, and make
   Company Admin the sole writer for new/renewed Reading demos, school trials,
