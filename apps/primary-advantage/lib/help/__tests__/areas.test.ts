@@ -10,11 +10,12 @@ const video = (id: string) => {
 
 describe("helpArea (FR-9)", () => {
   it("puts each teacher video in its area", () => {
-    expect(Object.fromEntries(["B5", "B3", "B4", "E2", "D2", "D3", "D6", "E4", "E5", "E6", "F5", "H1", "A2", "E7", "E1"].map((id) => [id, helpArea(video(id))]))).toEqual({
+    expect(Object.fromEntries(["B5", "B3", "B4", "E2", "E3", "D2", "D3", "D6", "E4", "E5", "E6", "F5", "H1", "A2", "E7", "E1", "J5", "A4"].map((id) => [id, helpArea(video(id))]))).toEqual({
       B5: "signin",
       B3: "roster",
       B4: "roster",
       E2: "roster",
+      E3: "roster",
       D2: "books",
       D3: "books",
       D6: "books",
@@ -26,16 +27,25 @@ describe("helpArea (FR-9)", () => {
       A2: "start",
       E7: "start",
       E1: "start",
+      J5: "start",
+      A4: "start",
     });
   });
 });
 
 describe("teacherHelpIndex (FR-9)", () => {
-  it("lists every enabled teacher video once, by area, in page order", () => {
+  it("lists every enabled teacher and parent video once, by area, in page order", () => {
     const index = teacherHelpIndex();
     const ids = index.flatMap((group) => group.videos.map((v) => v.id));
-    expect(ids.sort()).toEqual(HELP_VIDEOS.filter((v) => v.enabled && v.audience === "teacher").map((v) => v.id).sort());
+    expect(ids.sort()).toEqual(HELP_VIDEOS.filter((v) => v.enabled && v.audience !== "student").map((v) => v.id).sort());
     expect(index.map((group) => group.area)).toEqual(["start", "signin", "roster", "books", "reports", "games", "avatars", "quest"]);
+  });
+
+  it("keeps PR's work order inside the class page and books areas (look check 2026-10-23)", () => {
+    const area = (name: string) => teacherHelpIndex().find((group) => group.area === name)?.videos.map((v) => v.id);
+    expect(area("roster")).toEqual(["E2", "B3", "B4", "E3", "G3"]);
+    expect(area("books")).toEqual(["D2", "D3", "D5", "D4", "J4", "D6", "J3"]);
+    expect(area("start")).toEqual(["A2", "E7", "E1", "J5", "A4"]);
   });
 
   it("leaves out a disabled video and an empty area", () => {

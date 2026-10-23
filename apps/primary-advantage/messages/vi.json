@@ -4357,10 +4357,10 @@
       "signin": "Đăng nhập",
       "roster": "Trang lớp và học sinh",
       "books": "Sách của lớp và bài học",
-      "reports": "Báo cáo và bài tập",
-      "games": "Trò chơi và thử thách",
+      "reports": "Bài tập và báo cáo",
+      "games": "Thử thách của lớp",
       "avatars": "Hình đại diện",
-      "quest": "Class Quest"
+      "quest": "Nhiệm vụ lớp"
     }
   },
   "SystemHelp": {

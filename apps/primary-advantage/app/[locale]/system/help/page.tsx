@@ -98,7 +98,7 @@ export default async function SystemHelpPage({ searchParams }: { searchParams: P
       <form method="get" className="cq-on-scene flex flex-wrap items-end gap-2">
         <label className="flex flex-col gap-1">
           <span>{t("school")}</span>
-          <select name="school" defaultValue={schoolId ?? ""} className="bg-background min-h-11 rounded-md border px-2">
+          <select name="school" defaultValue={schoolId ?? ""} className="bg-background text-foreground min-h-11 rounded-md border px-2">
             <option value="">{t("allSchools")}</option>
             {report.schools.map((s) => (
               <option key={s.id} value={s.id}>

@@ -80,7 +80,8 @@ export function HelpPanel({
       <DialogContent className={cn("max-h-[90svh] overflow-y-auto", audience === "teacher" ? "sm:max-w-3xl" : "sm:max-w-md")}>
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
-          <DialogDescription>{t("description")}</DialogDescription>
+          {/* In the player the line is for screen readers only: a short phone needs the room for the video. */}
+          <DialogDescription className={cn(selected && "sr-only")}>{all ? t("indexIntro") : t("description")}</DialogDescription>
         </DialogHeader>
         {selected ? (
           <HelpPlayer key={selected.id} video={selected} audience={audience} onPlay={played} onBack={() => setSelected(null)} />
@@ -199,7 +200,7 @@ export function HelpPlayer({
         {t("back")}
       </Button>
       <p className="font-medium">{title}</p>
-      <div data-format={video.format} className={cn("relative overflow-hidden rounded-md bg-black", video.format === "9x16" ? "mx-auto aspect-[9/16] w-[min(100%,calc(70svh*9/16))]" : "aspect-video w-full")}>
+      <div data-format={video.format} className={cn("relative overflow-hidden rounded-md bg-black", video.format === "9x16" ? "mx-auto aspect-[9/16] w-[min(100%,calc((100svh-15rem)*9/16))]" : "aspect-video w-full")}>
         {!playing ? (
           <button
             type="button"

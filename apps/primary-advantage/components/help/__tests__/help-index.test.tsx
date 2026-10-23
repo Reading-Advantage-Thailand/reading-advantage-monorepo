@@ -28,8 +28,8 @@ describe("HelpIndex (FR-9)", () => {
       "Sign in",
       "Class page and students",
       "Class books and lessons",
-      "Reports and assignments",
-      "Games and challenges",
+      "Assignments and reports",
+      "Class challenges",
       "Avatars",
       "Class Quest",
     ]);

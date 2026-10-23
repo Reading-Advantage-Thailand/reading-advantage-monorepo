@@ -26,11 +26,12 @@ export function helpArea(video: HelpVideo): HelpArea {
 }
 
 /**
- * The enabled teacher videos by area, for `/teacher/help` (FR-9). Empty areas are left out.
+ * The enabled teacher videos by area, for `/teacher/help` (FR-9), and the parent videos in "start" (a
+ * teacher shows them at a parent meeting; PR look check M3). Empty areas are left out.
  * @param videos The registry (the default is HELP_VIDEOS).
  * @returns The areas in page order, each with its videos in registry order.
  */
 export function teacherHelpIndex(videos: readonly HelpVideo[] = HELP_VIDEOS): { area: HelpArea; videos: HelpVideo[] }[] {
-  const teacher = videos.filter((video) => video.enabled && video.audience === "teacher");
+  const teacher = videos.filter((video) => video.enabled && video.audience !== "student");
   return HELP_AREAS.map((area) => ({ area, videos: teacher.filter((video) => helpArea(video) === area) })).filter((group) => group.videos.length > 0);
 }

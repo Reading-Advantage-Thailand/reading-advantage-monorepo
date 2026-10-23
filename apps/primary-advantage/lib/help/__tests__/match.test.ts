@@ -33,12 +33,12 @@ describe("helpVideosFor (spec FR-2, FR-4)", () => {
   });
 
   it("keeps the registry order for videos of the same page", () => {
-    expect(ids(helpVideosFor("/teacher/class-roster/abc", "teacher").matched)).toEqual(["B3", "D2", "B4", "E2", "E5"]);
+    expect(ids(helpVideosFor("/teacher/class-roster/abc", "teacher").matched)).toEqual(["E2", "B3", "B4", "E3", "D2", "E5"]);
   });
 
   it("puts the more specific page first", () => {
     const lesson = "/teacher/class-roster/c/books/b/lessons/3";
-    expect(ids(helpVideosFor(lesson, "teacher").matched)).toEqual(["D3", "J4", "J5"]);
+    expect(ids(helpVideosFor(lesson, "teacher").matched)).toEqual(["D3", "J4"]);
     expect(ids(helpVideosFor(`${lesson}/print`, "teacher").matched)).toEqual(["J4"]);
   });
 
@@ -50,19 +50,19 @@ describe("helpVideosFor (spec FR-2, FR-4)", () => {
 
   it("does not repeat a matched general video in the general list", () => {
     const { matched, general } = helpVideosFor("/student/home", "student");
-    expect(ids(matched)).toEqual(["C1", "F3", "G2", "J1"]);
+    expect(ids(matched)).toEqual(["C1", "J1", "F3", "G2"]);
     expect(ids(general)).toEqual(["C2"]);
   });
 
   it("gives the teacher home its own video, with the overview as a general video", () => {
     const { matched, general } = helpVideosFor("/teacher/dashboard", "teacher");
-    expect(ids(matched)).toEqual(["E1"]);
+    expect(ids(matched)).toEqual(["E1", "J5"]);
     expect(ids(general)).toEqual(["A2", "E7"]);
   });
 
-  it("gives a game page only the video of that game", () => {
+  it("gives a game page only the video of that game, and the games page the new games and the games home", () => {
     expect(ids(helpVideosFor("/student/games/apk/potion-rush", "student").matched)).toEqual(["I1"]);
-    expect(ids(helpVideosFor("/student/games", "student").matched)).toEqual(["I0"]);
+    expect(ids(helpVideosFor("/student/games", "student").matched)).toEqual(["A3", "I0"]);
   });
 
   it("keeps teacher and student videos apart on the sign-in page", () => {

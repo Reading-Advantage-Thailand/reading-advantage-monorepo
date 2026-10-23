@@ -4508,10 +4508,10 @@
       "signin": "登入",
       "roster": "班級頁面和學生",
       "books": "班級圖書和課程",
-      "reports": "報告和作業",
-      "games": "遊戲和挑戰",
+      "reports": "作業和報告",
+      "games": "班級挑戰",
       "avatars": "頭像",
-      "quest": "Class Quest"
+      "quest": "班級任務"
     }
   },
   "SystemHelp": {

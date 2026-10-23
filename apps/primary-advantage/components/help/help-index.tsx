@@ -18,7 +18,7 @@ import { HelpItem, HelpPlayer } from "./help-panel";
 export function HelpIndex({ initial }: { initial?: string }) {
   const t = useTranslations("Help");
   const [selected, setSelected] = useState<HelpVideo | null>(
-    () => HELP_VIDEOS.find((video) => video.id === initial && video.enabled && video.audience === "teacher") ?? null,
+    () => HELP_VIDEOS.find((video) => video.id === initial && video.enabled && video.audience !== "student") ?? null,
   );
   return (
     <>
@@ -38,7 +38,7 @@ export function HelpIndex({ initial }: { initial?: string }) {
         <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>{t("title")}</DialogTitle>
-            <DialogDescription>{t("description")}</DialogDescription>
+            <DialogDescription className="sr-only">{t("indexIntro")}</DialogDescription>
           </DialogHeader>
           {selected && (
             <HelpPlayer
