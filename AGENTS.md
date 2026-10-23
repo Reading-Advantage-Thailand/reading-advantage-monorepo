@@ -127,6 +127,15 @@ Current package layout (migrating toward target):
 
 Dependency order: `db` → `auth` → `types` → `domain` → `api` / `webhooks`
 
+### One program, one app, one container
+
+Every program (reading, primary, science, www, storytime, and the next ones) is its own app under
+`/apps` with its own Dockerfile, image, Cloud Run service, and domain. Shared code goes into
+`/packages`. An app never hosts another program's pages, never proxies or redirects for another
+program's host, and never shares its deploy or its traffic with another program. A spec that puts a
+program inside another app is wrong at the spec stage; stop and change the shape before any code
+(owner rule, 2026-10-23, from the Storytime QR page that was built inside primary-advantage).
+
 ---
 
 ## Package Responsibilities

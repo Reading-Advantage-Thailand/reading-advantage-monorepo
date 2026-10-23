@@ -19,7 +19,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Primary In-App Help (What's New videos)** — *created 2026-10-23*
   *Link: [./tracks/primary_in_app_help_20261023/](./tracks/primary_in_app_help_20261023/)*
-  *Status: in progress on branch primary/in-app-help (Phase 1 done 2026-10-23); plan approved 2026-10-23; owner decisions recorded (both hosts, all videos approved, sign-in help, plays log in the system role) | Priority: next, after the Boonyathat deploy*
+  *Status: live 2026-10-23 on revision 00141-nuh (in master); D5 open; plan approved 2026-10-23; owner decisions recorded (both hosts, all videos approved, sign-in help, plays log in the system role) | Priority: next, after the Boonyathat deploy*
   *Note: contextual help button in the teacher and student shells; plays PR's tutorial video for the current page*
 
 - [ ] **Track: Storytime Advantage Program** — *created 2026-10-21*
