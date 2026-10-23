@@ -30,20 +30,20 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 - [x] 3.1 `components/help/help-button.tsx` (client): the icon button in both header clusters of `components/shared/app-layout.tsx`. It reads the path and the area. Messages: a new `Help` namespace in `messages/th.json` and `messages/en.json`; vi, cn, tw use the English text. `351d9a833` (review fix `71aec455d`: vi, cn, tw translated, because their other namespaces are translated)
 - [x] 3.2 `components/help/help-panel.tsx`: the shadcn `Dialog` with the list (title, length, poster) and the player (FR-3): the poster and a play button first; after the tap, the teacher gets the `youtube-nocookie` embed when a `youtubeId` exists (with "Play without YouTube"), else the native player; the student always gets the native player. Portrait box for 9x16, landscape box for 16x9, stop on close. Empty state (FR-4). Test: the list order, the box shape, no media or iframe before a tap, no iframe on a student panel, pause on close. `351d9a833` (review fix `71aec455d`: an error message when our file does not load, focus back to the row)
 - [x] 3.3 Sign-in links: "How do I sign in?" on `/auth/signin` (by tab) and `/auth/card`, which open the same panel with B5, B1, or B2 (native player on these public pages). `6b698f1c7` (deviation: the teacher tab uses the teacher audience, so B1 can play from YouTube after a tap)
-- [ ] 3.4 Phase check: tsc, the changed tests, the change-quality review, and the owner's manual check plan.
+- [x] 3.4 Phase check: tsc, the changed tests, the change-quality review, and the owner's manual check plan. Review fixes `71aec455d`; the browser check on 3005 found a portrait box with no width, fixed in `8921dc6c8`; then `run2/help-check-23.mjs` 23/23.
 
 ## Phase 4: Help events and the system report
 
-- [ ] 4.1 Schema: `primary_help_events` (`id`, `school_id`, `role`, `event` open|play, `video_id`, `route_pattern`, `source` youtube|file|null, `matched`, `created_at`; no user id) in `packages/db`, a Drizzle migration, and the FLAT class in `packages/domain/src/tenant-registry.ts` (the coverage test must pass).
-- [ ] 4.2 `packages/domain`: `recordHelpEvent` (Zod input and output, any signed-in role, the school from the session, the video id from the registry list) and `helpEventReport` (system role only; 7 and 30 day counts per video and role, opens per page, opens with no match; optional school filter). Tests with the mock DB.
-- [ ] 4.3 Route `POST /api/v1/help/events` (thin, same-origin check) and the panel calls (fire and forget; a failure never blocks the video). Tests.
-- [ ] 4.4 `app/[locale]/system/help/page.tsx` and a system sidebar entry. Test: the system role sees the report; a teacher gets no access (AC-8).
+- [x] 4.1 Schema: `primary_help_events` (`id`, `school_id`, `role`, `event` open|play, `video_id`, `route_pattern`, `source` youtube|file|null, `matched`, `created_at`; no user id) in `packages/db`, a Drizzle migration, and the FLAT class in `packages/domain/src/tenant-registry.ts` (the coverage test must pass). `7f657f0a2` (migration 0074, sentinel, Cloud Build doctor requires 0074)
+- [x] 4.2 `packages/domain`: `recordHelpEvent` (Zod input and output, any signed-in role, the school from the session, the video id from the registry list) and `helpEventReport` (system role only; 7 and 30 day counts per video and role, opens per page, opens with no match; optional school filter). Tests with the mock DB. `2b591da3e`, review fixes `4acb2a42c` (the server turns a segment with a digit into [id]; plays per source)
+- [x] 4.3 Route `POST /api/v1/help/events` (thin, same-origin check) and the panel calls (fire and forget; a failure never blocks the video). Tests. `a7a794c23`, review fixes `4acb2a42c` (Sec-Fetch-Site, else the forwarded host; 30 events a minute per user)
+- [x] 4.4 `app/[locale]/system/help/page.tsx` and a system sidebar entry. Test: the system role sees the report; a teacher gets no access (AC-8). `fe8bae268`. Browser check `run2/help-events-check-23.mjs` 11/11 on the local test copy with 0074.
 
 ## Phase 5: Help index and manual links
 
-- [ ] 5.1 `app/[locale]/teacher/help/page.tsx`: all enabled teacher videos by area (FR-9). Sidebar entry under the manual. Test.
-- [ ] 5.2 The student "All videos" view inside the panel.
-- [ ] 5.3 `/teacher/manual`: a "Watch the video" link on each section with a matching video (FR-10). Test.
+- [x] 5.1 `app/[locale]/teacher/help/page.tsx`: all enabled teacher videos by area (FR-9). Sidebar entry under the manual. Test. `0673e70db` (areas from the routes, `lib/help/areas.ts`; `?play=<id>` opens a video)
+- [x] 5.2 The student "All videos" view inside the panel. `0673e70db`
+- [x] 5.3 `/teacher/manual`: a "Watch the video" link on each section with a matching video (FR-10). Test. `53d1b76fc` (one video id per section in `lib/teacher-manual-guide.ts`)
 
 ## Phase 6: Verification and release
 

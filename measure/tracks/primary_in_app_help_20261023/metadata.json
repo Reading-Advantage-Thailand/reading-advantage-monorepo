@@ -3,9 +3,9 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-10-23T00:00:00Z",
-  "updated_at": "2026-10-23T08:00:00Z",
+  "updated_at": "2026-10-23T09:00:00Z",
   "description": "Primary in-app help: a contextual help button in the teacher and student shells that plays the PR What's New tutorial video for the current page",
   "estimated_tasks": 23,
-  "actual_tasks": 9,
-  "deviation_notes": "1.1-1.4 in one commit (the route check uses the matcher). 2.1 stages and the runbook uploads with gcloud storage rsync instead of packages/storage (the Primary bucket uses a Google service account). 3.1 vi, cn, tw translated after the review (their other namespaces are translated). 3.3 the teacher sign-in tab uses the teacher audience (YouTube after a tap)."
+  "actual_tasks": 17,
+  "deviation_notes": "1.1-1.4 in one commit (the route check uses the matcher). 2.1 stages and the runbook uploads with gcloud storage rsync instead of packages/storage (the Primary bucket uses a Google service account). 3.1 vi, cn, tw translated after the review (their other namespaces are translated). 3.3 the teacher sign-in tab uses the teacher audience (YouTube after a tap). 4.x: the server also masks ids in the page pattern; the report splits plays by source; the route checks Sec-Fetch-Site (Cloud Run gives request.nextUrl the container URL) and limits one user to 30 events a minute (in-memory, per instance). 5.1: areas come from the routes, not a registry field. 5.3: the manual names one video per section instead of a route match."
 }
