@@ -139,7 +139,7 @@ function HelpPlayer({ video, audience, onBack }: { video: HelpVideo; audience: H
         {t("back")}
       </Button>
       <p className="font-medium">{title}</p>
-      <div data-format={video.format} className={cn("relative overflow-hidden rounded-md bg-black", video.format === "9x16" ? "mx-auto aspect-[9/16] max-h-[70svh]" : "aspect-video w-full")}>
+      <div data-format={video.format} className={cn("relative overflow-hidden rounded-md bg-black", video.format === "9x16" ? "mx-auto aspect-[9/16] w-[min(100%,calc(70svh*9/16))]" : "aspect-video w-full")}>
         {!playing ? (
           <button type="button" onClick={() => setPlaying(true)} aria-label={t("play", { title })} className="group absolute inset-0 cursor-pointer">
             <img src={mediaUrl(video.id, "jpg")} alt="" className="h-full w-full object-cover" />
