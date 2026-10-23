@@ -21,6 +21,7 @@ export * from "./primary-avatar.js";
 export * from "./primary-class-quest.js";
 export * from "./primary-mastery.js";
 export * from "./primary-voice.js";
+export * from "./primary-help.js";
 export * from "./mastery.js";
 export * from "./activity.js";
 export * from "./capability-idempotency.js";

@@ -682,4 +682,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0073_primary_lesson_attempts", kind: "column", target: "primary_class_book_lessons.earlier_runs" },
     ],
   },
+  "0074_primary_help_events": {
+    tag: "0074_primary_help_events",
+    kind: "table",
+    target: "primary_help_events",
+  },
 };

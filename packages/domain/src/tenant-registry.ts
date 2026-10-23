@@ -320,6 +320,7 @@ import {
   lessonRecords,
   primaryClassBookLessons,
   primaryLessonAttempts,
+  primaryHelpEvents,
   primaryStudentLessonSteps,
   assignmentNotifications,
   raCefrMappings,
@@ -418,6 +419,8 @@ register(primaryClassBookLessons, "REFERENTIAL");
 register(primaryStudentLessonSteps, "REFERENTIAL");
 // Closed lesson attempts (primary_parity_lesson_repeat_20261011): school_id on the row.
 register(primaryLessonAttempts, "FLAT");
+// Help panel events (primary_in_app_help_20261023): school_id on the row, no user id.
+register(primaryHelpEvents, "FLAT");
 register(assignmentNotifications, "REFERENTIAL");
 register(raCefrMappings, "REFERENTIAL");
 register(genreAdjacencies, "REFERENTIAL");
