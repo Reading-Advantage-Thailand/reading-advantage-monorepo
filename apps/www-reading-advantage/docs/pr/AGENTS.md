@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Contents
+
+- [Repository Overview](#repository-overview)
+- [Repository Purpose](#repository-purpose)
+- [Key Documents](#key-documents)
+- [Product Structure](#product-structure)
+- [Evidence-Based Messaging](#evidence-based-messaging)
+- [Strategic Positioning](#strategic-positioning)
+- [Working with Marketing Documents](#working-with-marketing-documents)
+- [Document Formats and Standards](#document-formats-and-standards)
+- [Key Strategic Principles](#key-strategic-principles)
+- [Success Metrics](#success-metrics)
+- [File Naming Conventions](#file-naming-conventions)
+- [Distribution and Collaboration](#distribution-and-collaboration)
+- [Important Terminology](#important-terminology)
+- [Contact and Approval Process](#contact-and-approval-process)
+
 ## Repository Overview
 
 This is a **marketing and PR documentation repository** for Reading Advantage and Primary Advantage, AI-powered extensive reading platforms targeting private Thai schools. This repository contains strategic marketing documents, not code.
@@ -56,7 +73,7 @@ The repository serves as the central location for:
 
 ---
 
-## Product Structure and Timeline
+## Product Structure
 
 ### The Three Products
 
@@ -88,7 +105,7 @@ The workbooks don't need to prove they're more effective than extensive reading 
 ### Product Development Status
 
 - **App:** Deployed for 1 year, 10,000+ AI-curated articles across 15 CEFR levels (A1-C1)
-- **Workbooks:** 15 levels developed (A1-C1), printing being finalized, samples available late January 2026
+- **Workbooks:** 15 levels developed (A1-C1), printing being finalized
 - **Teacher Training:** 2-day comprehensive onboarding program
 
 ### Thai School Calendar Context
@@ -96,7 +113,6 @@ The workbooks don't need to prove they're more effective than extensive reading 
 - School year ends: February
 - New school year begins: May
 - Schools will not implement new programs mid-year
-- Q1 2026 is for sales/demos; implementation starts May 2026
 
 ---
 
@@ -249,50 +265,9 @@ Critical messaging: AI enhances teachers, doesn't replace them:
 
 ---
 
-## Campaign Timeline (2026-2027)
-
-### Q1 2026 (January - March): Foundation
-- Distributor partnership finalization
-- Sample workbooks available (late January)
-- Campaign 1 launch: "The Teacher You Always Have"
-- School demos and pilot program recruitment (target: 10 schools)
-
-### Q2 2026 (April - June): Blended Learning Launch
-- **Blended Learning official launch (May 2026)** — App + Workbooks
-- Thai school year begins (May)
-- Campaign 2 launch: "Better Reading in 40 Weeks"
-- Pilot school progress tracking and case study development
-
-### Q3 2026 (July - September): Scale and Prove
-- Pilot program results publication
-- Conference participation and thought leadership
-- Expansion to additional schools
-
-### Q4 2026 (October - December): Comprehensive Solution
-- Campaign 3 launch: "Complete Your English Program"
-- Multi-product bundle introduction
-- Year-end impact report and 2027 planning
-- Begin Managed Service pilot preparation
-
-### Q2 2027 (May): Managed Service Launch
-- **Managed Service launches** — We provide contractor teachers
-- Full "White Glove" offering available
-
----
-
 ## Success Metrics
 
-### Business Growth (2026 Targets)
-- Schools: 2 → 20+ schools
-- Students: <500 → 2,000+ students
-- Revenue: 300% YoY growth
-- Retention: 90%+ school renewal rate
-
-### Marketing Performance
-- 200+ qualified school leads in 2026
-- 50+ demo requests per quarter
-- 10+ media mentions in 2026
-- 10,000+ monthly website visits by Q4
+Campaign timeline and business targets: see `marketing-foundation-document.md` (Implementation Roadmap, Success Metrics and KPIs).
 
 ### Educational Outcomes (For PR Use)
 - Evidence-backed reading gains validated by Aka 2019 research methodology
