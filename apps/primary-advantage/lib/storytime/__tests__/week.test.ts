@@ -61,6 +61,8 @@ describe("publishedWeek (qr-page-spec section 8)", () => {
 
   it("gives null for a draft week, another week than the URL, or a bad package", () => {
     expect(publishedWeek(week({ meta: { ...week().meta, status: "draft" } }), 2, 1)).toBeNull();
+    // A review week (Level 2 week 8) has no books and no song: 404, not an error.
+    expect(publishedWeek(week({ meta: { ...week().meta, week: 8, kind: "review" }, books: [], song: undefined }), 2, 8)).toBeNull();
     expect(publishedWeek(week(), 2, 2)).toBeNull();
     expect(publishedWeek({ version: 2 }, 2, 1)).toBeNull();
     expect(publishedWeek(week({ song: { title: "x", lines: [] } }), 2, 1)).toBeNull();

@@ -4,6 +4,7 @@
     "program": "storytime",
     "level": 2,
     "week": 1,
+    "kind": "teach",
     "title": "Hello!",
     "status": "draft"
   },

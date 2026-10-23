@@ -26,11 +26,12 @@ for (const levelDir of readdirSync(source).filter((d) => /^l[1-4]$/.test(d)).sor
       problems.push(`${levelDir}/${file}: ${parsed.error.issues.map((i) => `${i.path.join(".")} ${i.message}`).join("; ")}`);
       continue;
     }
-    const { level, week, status } = parsed.data.meta;
+    const { level, week, status, kind } = parsed.data.meta;
     mkdirSync(join(target, levelDir), { recursive: true });
     writeFileSync(join(target, levelDir, file), `${JSON.stringify(parsed.data, null, 2)}\n`);
     index.push(`  "${level}/${week}": () => import("./${levelDir}/${file}").then((m) => m.default),`);
-    if (status !== "published") continue;
+    // A review week has no page in release 1 (no books, no song), so it lists no media.
+    if (status !== "published" || kind === "review") continue;
     if (!publishedWeek(parsed.data, level, week)) problems.push(`${levelDir}/${file}: published, but not exactly one book of each kind`);
     // Every media path of a published week must exist in Workbooks before the bucket upload.
     const paths = (JSON.stringify(parsed.data).match(/"(?:file|audio|video|videoPhone|poster|posterPhone|karaoke)":"([^"]+)"/g) ?? []).map(

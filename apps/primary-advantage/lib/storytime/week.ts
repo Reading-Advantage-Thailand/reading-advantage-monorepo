@@ -51,6 +51,8 @@ export const storytimeWeekSchema = z.object({
     program: z.literal("storytime"),
     level: z.number().int().min(1).max(4),
     week: z.number().int().min(1).max(32),
+    /** A review week (Level 2 week 8) has no books and no song; release 1 has no page for it. */
+    kind: z.enum(["teach", "review"]).default("teach"),
     title: z.string().min(1),
     status: z.enum(["draft", "published"]).default("draft"),
   }),
@@ -123,8 +125,8 @@ function toBook(book: z.infer<typeof bookSchema>): StorytimeBook {
 
 /**
  * Turns a raw week package into the client week, or null when the page must give 404: a bad
- * package, a week that is not published, another level or week than the URL, or not exactly one
- * book of each kind (qr-page-spec section 8).
+ * package, a week that is not published, a review week, another level or week than the URL, or
+ * not exactly one book of each kind (qr-page-spec section 8).
  * @param raw The week JSON.
  * @param level The level of the URL.
  * @param week The week of the URL.
@@ -134,7 +136,7 @@ export function publishedWeek(raw: unknown, level: number, week: number): Storyt
   const parsed = storytimeWeekSchema.safeParse(raw);
   if (!parsed.success) return null;
   const { meta, books, song, home, focus } = parsed.data;
-  if (meta.status !== "published" || meta.level !== level || meta.week !== week) return null;
+  if (meta.status !== "published" || meta.kind === "review" || meta.level !== level || meta.week !== week) return null;
   const readalong = books.filter((book) => book.kind === "readalong");
   const decodable = books.filter((book) => book.kind === "decodable");
   if (readalong.length !== 1 || decodable.length !== 1) return null;
