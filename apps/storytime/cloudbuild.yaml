@@ -1,0 +1,44 @@
+# Cloud Build config of the Storytime app (spec FR-1, plan task 1.3).
+#
+# The build creates the storytime-app image and deploys the storytime-app Cloud Run service
+# in asia-southeast1. The deploy always uses --no-traffic with a revision tag: a traffic move
+# is a separate runbook step on Daniel's go (docs/runbooks/storytime-deploy.md).
+#
+# Milestone 1 needs no database and no secrets. Do not add a secret, a Cloud SQL instance,
+# or an update-traffic step here.
+steps:
+  # Step 1: Build the Docker image from the monorepo root context.
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-image"
+    args:
+      - "build"
+      - "-f"
+      - "apps/storytime/Dockerfile"
+      - "-t"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID"
+      - "."
+
+  # Step 2: Push the image.
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push-image"
+    args:
+      - "push"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID"
+
+  # Step 3: Deploy the new revision with no traffic and a revision tag for the tagged check.
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-cloudrun"
+    args:
+      - "run"
+      - "deploy"
+      - "storytime-app"
+      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID"
+      - "--project=primary-advantage"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--no-traffic"
+      - "--tag=st-$BUILD_ID"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
