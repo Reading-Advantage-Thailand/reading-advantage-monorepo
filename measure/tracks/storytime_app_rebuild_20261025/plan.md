@@ -21,12 +21,31 @@
 
 ## Phase 1: App scaffold and service config
 
-- [ ] 1.1 Scaffold `apps/storytime`: Next.js App Router, `output: "standalone"`, `outputFileTracingRoot` at the monorepo root, next-intl with `th` (default) and `en` and the prefix "always", Tailwind with `@source` for each shared package, and Vitest. The at-home route answers 404 for every week until Phase 3. Test: AC-1.1.
-- [ ] 1.2 `apps/storytime/Dockerfile` on the Primary pattern: monorepo root as the context, `pnpm turbo run build --filter=storytime`, the standalone runner on port 8080. Check that `.dockerignore` keeps the image small. Test: AC-1.4 (local image build under the heavy lock).
-- [ ] 1.3 `apps/storytime/cloudbuild.yaml`: image `primary-advantage-repo/storytime-app`, service `storytime-app`, `asia-southeast1`, project `primary-advantage`, `--no-traffic` with a revision tag, no database, no secrets. Test: AC-1.2.
-- [ ] 1.4 Boundary test: no import from `apps/primary-advantage` in `apps/storytime`, and the reverse. Test: AC-1.3.
-- [ ] 1.5 Runbook `docs/runbooks/storytime-deploy.md`: the archive of the commit, `gcloud builds submit --region asia-southeast1 --config apps/storytime/cloudbuild.yaml`, the check on the tagged URL, the traffic step, and the rollback to a named revision. Each step names Daniel's go.
-- [ ] 1.6 Phase check: `tsc`, lint, the changed tests, and a change-quality review.
+- [~] 1.1 Scaffold `apps/storytime`: Next.js App Router, `output: "standalone"`, `outputFileTracingRoot` at the monorepo root, next-intl with `th` (default) and `en` and the prefix "always", Tailwind with `@source` for each shared package, and Vitest. The at-home route answers 404 for every week until Phase 3. Test: AC-1.1.
+- [~] 1.2 `apps/storytime/Dockerfile` on the Primary pattern: monorepo root as the context, `pnpm turbo run build --filter=storytime`, the standalone runner on port 8080. Check that `.dockerignore` keeps the image small. Test: AC-1.4 (local image build under the heavy lock).
+- [~] 1.3 `apps/storytime/cloudbuild.yaml`: image `primary-advantage-repo/storytime-app`, service `storytime-app`, `asia-southeast1`, project `primary-advantage`, `--no-traffic` with a revision tag, no database, no secrets. Test: AC-1.2.
+- [~] 1.4 Boundary test: no import from `apps/primary-advantage` in `apps/storytime`, and the reverse. Test: AC-1.3.
+- [~] 1.5 Runbook `docs/runbooks/storytime-deploy.md`: the archive of the commit, `gcloud builds submit --region asia-southeast1 --config apps/storytime/cloudbuild.yaml`, the check on the tagged URL, the traffic step, and the rollback to a named revision. Each step names Daniel's go.
+- [~] 1.6 Phase check: `tsc`, lint, the changed tests, and a change-quality review.
+
+### Phase 1 Red evidence
+
+- Mid-Red started at `3504b8d7a948bfd488fad53ad4c8f0a2c84816ba`. Both supplied bases resolve to this commit.
+- The track has no `test-strategy.md`. The supplied Red command and the Phase 1 criteria define the tests.
+- Red writes tests only. Tasks stay open until Green and the phase checks pass. The phase heading has no completion checkpoint.
+- Automated Red command: `cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 apps/storytime`. The heavy lock wrapped this command.
+- Result: exit 1; 3 failed files; 10 failed tests; 1 passed test. Each acceptance test fails on a missing artifact.
+- Task 1.1 fails on the missing package, Next.js config, locale config, CSS, layout, and week route. The route test expects `notFound` before Phase 3.
+- Tasks 1.2 and 1.3 fail on the missing Dockerfile and Cloud Build file. Task 1.5 fails on the missing deploy runbook.
+- Task 1.4 fails on the missing app manifest. The scanner self-test passes for static imports, exports, dynamic imports, and CommonJS imports.
+- Automated Docker command: `bash apps/storytime/__tests__/phase1-docker-smoke.sh`. It takes the heavy lock itself. Result: exit 1; PASS=0, FAIL=3. The missing Dockerfile prevents the build and HTTP check.
+- Automated test type check: `pnpm exec tsc --noEmit --strict --skipLibCheck --esModuleInterop --module esnext --moduleResolution bundler --target es2022 apps/storytime/__tests__/phase1-{scaffold,service,boundary}.test.ts`. Result: exit 0 under the heavy lock.
+- Automated syntax check: `bash -n apps/storytime/__tests__/phase1-docker-smoke.sh`. Result: exit 0. `git diff --check` also exits 0.
+- The full AC-1.1 command stays with Green: `pnpm turbo run build check-types lint test --filter=storytime`. Vitest must not invoke this command recursively.
+- Automated quality command: `bash apps/storytime/__tests__/phase1-quality-gates.sh`. It takes the heavy lock itself. Result: exit 1; PASS=0, FAIL=2. The missing package prevents the full command. Its shell syntax check exits 0.
+- AC-1.4 expects a week page after Phase 3. This Phase 1 Docker test expects HTTP 404, as task 1.1 requires.
+- The boundary test scans tracked Primary files and all non-ignored Storytime source files. It excludes the unrelated untracked Primary work.
+- Reports: `measure/runs/storytime_app_rebuild_20261025/mid-red-3504b8d7a.log` and `.json`. These local reports use the existing ignore rule.
 
 ## Phase 2: Shared data contracts
 
