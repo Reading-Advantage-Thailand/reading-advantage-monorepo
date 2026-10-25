@@ -30,7 +30,8 @@ echo "=== AC-1.4 image builds from the monorepo root ==="
 # inside the container pnpm install, so the limit bounds a stuck fetch, not a base pull.
 BUILD_RC=0
 if [ "$FAILED" -eq 0 ]; then
-  timeout 20m docker build -f "$ROOT/apps/storytime/Dockerfile" -t "$IMAGE" "$ROOT"
+  # PM 2026-10-26: the local build uses the host network; the container network path failed DNS (EAI_AGAIN). Cloud Build does not use this script.
+  timeout 20m docker build --network=host -f "$ROOT/apps/storytime/Dockerfile" -t "$IMAGE" "$ROOT"
   BUILD_RC=$?
   if [ "$BUILD_RC" -eq 0 ]; then
     pass "The local image builds"
