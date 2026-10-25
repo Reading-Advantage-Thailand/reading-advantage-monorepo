@@ -1,0 +1,38 @@
+{
+  "track_id": "storytime_app_rebuild_20261025",
+  "type": "feature",
+  "status": "active",
+  "created_at": "2026-10-25T00:00:00Z",
+  "updated_at": "2026-10-25T00:00:00Z",
+  "opened": "2026-10-25",
+  "description": "Rebuild Storytime Advantage as its own app (apps/storytime) inside reading-advantage-monorepo, with its own Cloud Run service and container (S30) and native package sharing with primary-advantage: a teacher app and an at-home app. Milestone 1 is one week end to end: the teacher app, the at-home app, one read-along, one decodable, and one song at Daniel's quality bar.",
+  "owner_chain": [
+    "Daniel (owner; milestone judgment; hard gates: paid generation, deploys, deletions, public dates)",
+    "Monorepo orchestrator (track owner; implementation, review, integration, verification)",
+    "PM orchestrator (cross-project hand-offs to Workbooks and Forge)"
+  ],
+  "architecture": "Storytime is an app in the monorepo (Daniel, 2026-10-25): apps/storytime in reading-advantage-monorepo, own Cloud Run service and container, shared packages through the pnpm workspace. The repository ~/Desktop/storytime-advantage is retired and unused.",
+  "milestone": {
+    "id": "M1",
+    "scope": "One week end to end: teacher app, at-home app, one read-along, one decodable, one song",
+    "judge": "Daniel, at the milestone (not per phase)",
+    "default_week": "Level 2 week 1 (/th/st/2/1), unless Daniel names another week"
+  },
+  "release_goal": {
+    "date": "2026-12-01",
+    "kind": "internal release 1 (no public date)",
+    "scope_decision": "S17 (weeks 1 to 8 in print and by QR) stays open; Daniel can reopen it after milestone 1"
+  },
+  "constraints": [
+    "Printed QR codes ship about 2026-11-22: https://storytime.reading-advantage.com/th/st/<level>/<week> must keep working",
+    "One program, one app, one container (AGENTS.md)",
+    "No stop-and-ask between phases (Daniel, 2026-10-25); the four hard gates stay"
+  ],
+  "related_tracks": [
+    "storytime_advantage_program_20261021 (rolled back 2026-10-25; record of decisions S1 to S30 and the content state)"
+  ],
+  "open_decisions": ["S17", "S26", "S28"],
+  "estimated_tasks": 47,
+  "actual_tasks": null,
+  "deviation_notes": "Opened 2026-10-25 by the planning model on the Monorepo orchestrator's order, after Daniel's rollback of the first Storytime app build and his architecture correction (Storytime is an app in the monorepo). The survival report of S1 to S28 is docs/s1-s28-survival.md, corrected for the architecture."
+}
