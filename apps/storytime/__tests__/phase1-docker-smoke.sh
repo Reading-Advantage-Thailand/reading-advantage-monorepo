@@ -3,8 +3,10 @@ set -uo pipefail
 
 # Run this local image check separately from Vitest and Turbo.
 # Phase 1 serves 404. Phase 3 replaces this check with the week page check.
+# Without --locked the script re-enters through heavy-run.sh (PM 2026-10-26), which takes
+# the heavy lock and runs the pre-flight. Callers run the script plain, with no flock.
 if [ "${1:-}" != "--locked" ]; then
-  exec flock "$HOME/Desktop/primary-parity-progress/heavy.lock" bash "$0" --locked
+  exec bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "bash '$0' --locked"
 fi
 
 FAILED=0; PASS_COUNT=0; FAIL_COUNT=0; RESULTS=()
@@ -24,8 +26,20 @@ else
 fi
 
 echo "=== AC-1.4 image builds from the monorepo root ==="
-if [ "$FAILED" -eq 0 ] && docker build -f "$ROOT/apps/storytime/Dockerfile" -t "$IMAGE" "$ROOT"; then
-  pass "The local image builds"
+# PM 2026-10-26: the local build gets a 20-minute limit. The 2026-10-25 run spent its time
+# inside the container pnpm install, so the limit bounds a stuck fetch, not a base pull.
+BUILD_RC=0
+if [ "$FAILED" -eq 0 ]; then
+  timeout 20m docker build -f "$ROOT/apps/storytime/Dockerfile" -t "$IMAGE" "$ROOT"
+  BUILD_RC=$?
+  if [ "$BUILD_RC" -eq 0 ]; then
+    pass "The local image builds"
+  elif [ "$BUILD_RC" -eq 124 ]; then
+    echo "DOCKER SMOKE FAIL: the build hit the 20m time limit"
+    fail "DOCKER SMOKE FAIL: the build hit the 20m time limit"
+  else
+    fail "The local image cannot build (exit $BUILD_RC)"
+  fi
 else
   fail "The local image cannot build"
 fi

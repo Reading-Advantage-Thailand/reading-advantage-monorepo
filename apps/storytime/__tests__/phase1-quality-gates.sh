@@ -2,8 +2,10 @@
 set -uo pipefail
 
 # Run the full acceptance command outside Vitest to prevent recursive test runs.
+# Without --locked the script re-enters through heavy-run.sh (PM 2026-10-26), which takes
+# the heavy lock and runs the pre-flight. Callers run the script plain, with no flock.
 if [ "${1:-}" != "--locked" ]; then
-  exec flock "$HOME/Desktop/primary-parity-progress/heavy.lock" bash "$0" --locked
+  exec bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "bash '$0' --locked"
 fi
 
 FAILED=0; PASS_COUNT=0; FAIL_COUNT=0; RESULTS=()
