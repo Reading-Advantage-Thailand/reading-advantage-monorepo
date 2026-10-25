@@ -6,7 +6,7 @@ FROM node:22-alpine AS base
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-# The image installs only the storytime closure and the root (as apps/marketing/Dockerfile does) because the full-workspace fetch timed out twice; the ENVs below tolerate a slow registry.
+# The image install fetches the whole workspace fresh; tolerate a slow registry response.
 ENV npm_config_fetch_retries=5
 ENV npm_config_fetch_timeout=300000
 RUN corepack enable && corepack prepare pnpm@11.8.0 --activate
@@ -16,7 +16,7 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .pnpmfile.cjs ./
 COPY apps ./apps
 COPY packages ./packages
-RUN pnpm install --frozen-lockfile --filter "storytime..." --filter reading-advantage-monorepo
+RUN pnpm install --frozen-lockfile
 
 FROM deps AS builder
 ENV NODE_ENV=production
