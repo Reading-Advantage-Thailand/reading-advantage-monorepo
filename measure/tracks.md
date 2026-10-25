@@ -53,8 +53,8 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: Storytime Advantage Program** — *created 2026-10-21*
   *Link: [./tracks/storytime_advantage_program_20261021/](./tracks/storytime_advantage_program_20261021/)*
-  *Status: proposed; design complete, decisions S1 to S14 open; planning only, no code, no public date | Priority: MEDIUM | Owner fixed the shape and approved Chibi Sprouts 2026-10-21*
-  *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin); release 1 on 2026-12-01 is Level 2 weeks 1 to 8 in print and by QR, then Level 2 and Level 1 complete for May 2027. Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
+  *Status: ROLLED BACK 2026-10-25 per Daniel — the app build sat colocated with Primary and the multimedia missed his bar; the app code is void; not active work in this monorepo; superseded by the new repo `~/Desktop/storytime-advantage`, whose build track starts on Daniel's word after he reads `docs/s1-s28-survival.md` there | Priority: paused | Survivors: Forge models, songs as material, phonics graph v1 (mastery-advantage ceb728d), phoneme bank (Workbooks 9478e1f)*
+  *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin). The release-1 goal of 2026-12-01 stands (reaffirmed 2026-10-25). Print content in Workbooks survives in place; S1–S28 verdicts are in the survival report in the new repo. Track stays open (no closeout, no archive). Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
 
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
