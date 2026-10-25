@@ -71,6 +71,7 @@ This is a recommendation, not an order.
 ## Decisions that still need Daniel's answer
 
 - **S17**: release-1 scope. Does 2026-12-01 still mean all of weeks 1 to 8 in print and by QR? Does it now include the teacher app? We suggest that you answer after the first milestone.
+- **S17 correction (2026-10-25, Daniel about 21:25 ICT, via the PM):** Daniel set the unit 1 counts: "7 stories and decodables +1 review". Release 1, unit 1 holds 7 read-alongs, 7 decodables, and 1 review week. Week 8 is the review week: kind "review", no new book, no new song. The songs stay as the week files have them: 7, plus a medley in week 8. This corrects the S17 count "8 decodables, 8 read-alongs, 8 songs". Daniel also set the print format, which Workbooks owns: one black-and-white student workbook with cut-fold-staple readers, and color PDFs of the readers for teachers to print on A3. The app shows the color pictures; Forge renders the color and the line art from the same 3D scenes. Plan task 8.1 stays deferred for the rest of the scope.
 - **S26**: cast size, all 13 or the S18 cap of 8. The weeks 2 to 7 videos wait for it.
 - **S28**: karaoke in release 1, and whether song audio may go to a hosted separation service.
 - **This report**: the new build track starts after you read it and say go.
