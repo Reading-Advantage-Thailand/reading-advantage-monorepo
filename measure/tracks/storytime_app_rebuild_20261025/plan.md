@@ -46,6 +46,7 @@
 - AC-1.4 expects a week page after Phase 3. This Phase 1 Docker test expects HTTP 404, as task 1.1 requires.
 - The boundary test scans tracked Primary files and all non-ignored Storytime source files. It excludes the unrelated untracked Primary work.
 - Reports: `measure/runs/storytime_app_rebuild_20261025/mid-red-3504b8d7a.log` and `.json`. These local reports use the existing ignore rule.
+- Red checkpoint: `a01d2998d` commits the tests and the command evidence. This checkpoint does not complete Phase 1.
 
 ## Phase 2: Shared data contracts
 
