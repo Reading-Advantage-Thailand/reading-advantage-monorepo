@@ -59,6 +59,7 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
 ## Phase S2: The curriculum uses the new PR source set
 _Story ref: spec.md#story-s2-the-curriculum-uses-the-new-pr-source-set_
 _Start gate: the PR source-set commit exists (done: advantage-pr `e6f7cc22e`, 2026-10-15; see spec.md S2). Owner decision 2026-10-15 ("draft now, ship later"): S2–S7 are drafted on the branch only during the freeze; merge, deploy, and database work wait for the freeze end._
+_Pin update (PM relay, 2026-10-26): the source set moved to advantage-pr ec63bc4 (local, not pushed). Five files in 09-sales-enablement/ changed: battle-cards/vs-tutor.md v1.3, tutor-family-sales-playbook.md v1.4, line-trial-facilitator-script.md v1.7, facilitator-recruitment-kit.md v1.5, sales-training-scope-2027.md v1.3. Only the date line changed: "about 2026-11-08" became "about 2026-11-22" (the in-hand date of Primary Advantage Origins 3.2 and Quest 4). The start-gate pin above stays as written._
 _Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/sales-curriculum-production.test.ts` (cardinalities and pinned digest), `scripts/sales-curriculum-reconciliation.test.ts` (approved digest `ccba54…`), `scripts/production-readiness.test.ts` (approved candidate), and 8 tests in `packages/sales-knowledge` (approved coordinates)._
 
 - [x] Task: Contract — the new document list `84b151b7f`

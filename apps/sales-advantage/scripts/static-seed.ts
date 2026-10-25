@@ -52,7 +52,7 @@ type RubricCriterion = {
 export const SALES_CURRICULUM_EXPIRING_FACTS = Object.freeze([
   {
     fact: "Primary Advantage Origins 3.2 and Quest 4 on sale in Tutor Advantage",
-    text: "on sale from about 2026-11-08",
+    text: "on sale from about 2026-11-22",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
   {
@@ -1007,14 +1007,14 @@ Children use Primary Advantage books. Secondary students use Reading Advantage b
 |---|---|---|---|---|
 | 1 | Primary Advantage Origins 1: not printed → offer **Primary Advantage Origins 2** | Pre-A1 | Reading Advantage Origins 1: not printed → offer **Reading Advantage Origins 2** | A1 |
 | 2 | **Primary Advantage Origins 2**: printed | Pre-A1 | **Reading Advantage Origins 2**: printed | A1 |
-| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale from about 2026-11-08 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |
-| 4 | Primary Advantage Quest 4: on sale from about 2026-11-08. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |
+| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale from about 2026-11-22 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |
+| 4 | Primary Advantage Quest 4: on sale from about 2026-11-22. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |
 
 A placement above book level 4 does not exist in the training. A tutor never offers a book that is not printed and never names a level above A2.
 
 ## Facts that expire
 
-The print status, the "on sale" dates, and the open decisions change. These lessons mark them: the books on sale from about 2026-11-08, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the coming programs. Before each sales week, ask Daniel or Phikul which of these facts changed.`,
+The print status, the "on sale" dates, and the open decisions change. These lessons mark them: the books on sale from about 2026-11-22, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the coming programs. Before each sales week, ask Daniel or Phikul which of these facts changed.`,
         order: 1,
       },
       {
@@ -1215,7 +1215,7 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
 - **Price:** from 3,000 baht per class package. The price adapts to the market.
 - **The app:** the LINE student app that matches the book: the lesson, flashcards, vocabulary games, progress, and class chat.
 - **Reedy:** Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
-- The books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2. Primary Advantage Origins 3.2 and Quest 4 go on sale from about 2026-11-08. Children use Primary Advantage books. Secondary students use Reading Advantage books.
+- The books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2. Primary Advantage Origins 3.2 and Quest 4 go on sale from about 2026-11-22. Children use Primary Advantage books. Secondary students use Reading Advantage books.
 
 Tutor Advantage is a tutor-led class network. It is not an AI tutor.
 
@@ -1267,8 +1267,8 @@ Never talk about tutor commission with a parent. Before you use any photo or vid
 |---|---|---|
 | 1 | Primary Advantage Origins 1 (Pre-A1): not printed → **Primary Advantage Origins 2** | Reading Advantage Origins 1 (A1): not printed → **Reading Advantage Origins 2** |
 | 2 | **Primary Advantage Origins 2** (Pre-A1): printed | **Reading Advantage Origins 2** (A1): printed |
-| 3 | **Primary Advantage Origins 3.1** (Pre-A1): printed. Primary Advantage Origins 3.2: on sale from about 2026-11-08 | Reading Advantage Origins 3.1 and 3.2 (A1): not printed → **Reading Advantage Origins 2** |
-| 4 | Primary Advantage Quest 4 (A1): on sale from about 2026-11-08. Until then → **Primary Advantage Origins 3.1** | Reading Advantage Quest 4 (A2): not printed → **Reading Advantage Origins 2** |
+| 3 | **Primary Advantage Origins 3.1** (Pre-A1): printed. Primary Advantage Origins 3.2: on sale from about 2026-11-22 | Reading Advantage Origins 3.1 and 3.2 (A1): not printed → **Reading Advantage Origins 2** |
+| 4 | Primary Advantage Quest 4 (A1): on sale from about 2026-11-22. Until then → **Primary Advantage Origins 3.1** | Reading Advantage Quest 4 (A2): not printed → **Reading Advantage Origins 2** |
 
 Check the print status before each trial. It changes when a new book is printed.
 
@@ -1394,8 +1394,8 @@ Never give a print date to a parent.
 | The child finishes | The next printed book | If the next book is not printed |
 |---|---|---|
 | Primary Advantage Origins 2 | Primary Advantage Origins 3.1 | — |
-| Primary Advantage Origins 3.1 | Primary Advantage Origins 3.2 (on sale from about 2026-11-08) | Before that date: tell the parent that you will send a LINE message when it is ready |
-| Primary Advantage Origins 3.2 | Primary Advantage Quest 4 (on sale from about 2026-11-08) | — |
+| Primary Advantage Origins 3.1 | Primary Advantage Origins 3.2 (on sale from about 2026-11-22) | Before that date: tell the parent that you will send a LINE message when it is ready |
+| Primary Advantage Origins 3.2 | Primary Advantage Quest 4 (on sale from about 2026-11-22) | — |
 | Primary Advantage Quest 4 | Primary Advantage Quest 5: not printed | Tell the parent that you will send a LINE message when it is ready |
 | Reading Advantage Origins 2 | Reading Advantage Origins 3.1: not printed (Q-WB-11) | Tell the parent that you will send a LINE message when it is ready |
 
@@ -1816,7 +1816,7 @@ What you do not do: write lesson plans, design the curriculum, or mark every dig
 | The LINE student app, online payment (PromptPay or card) | Read Along with Reedy (in development, not available) |
 | Reedy voice practice for students with an active class package, on lessons they completed | Automatic progress reports for parents |
 | Printed books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2 | More books, and book lines for the coming programs (no dates) |
-| Primary Advantage Origins 3.2 and Quest 4: on sale from about 2026-11-08 | |
+| Primary Advantage Origins 3.2 and Quest 4: on sale from about 2026-11-22 | |
 | Monthly commission settlement | |
 
 ## What we provide

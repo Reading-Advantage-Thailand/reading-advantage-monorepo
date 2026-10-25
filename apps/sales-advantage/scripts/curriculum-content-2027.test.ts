@@ -257,8 +257,8 @@ describe("S4 — product knowledge matches strategy v1.8", () => {
     for (const row of [
       "| 1 | Primary Advantage Origins 1: not printed → offer **Primary Advantage Origins 2** | Pre-A1 | Reading Advantage Origins 1: not printed → offer **Reading Advantage Origins 2** | A1 |",
       "| 2 | **Primary Advantage Origins 2**: printed | Pre-A1 | **Reading Advantage Origins 2**: printed | A1 |",
-      "| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale from about 2026-11-08 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |",
-      "| 4 | Primary Advantage Quest 4: on sale from about 2026-11-08. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |",
+      "| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale from about 2026-11-22 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |",
+      "| 4 | Primary Advantage Quest 4: on sale from about 2026-11-22. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |",
     ]) {
       expect(productLesson()).toContain(row);
     }
@@ -299,7 +299,7 @@ describe("S5 — the Tutor family sale", () => {
     const text = teachingText("family-sale");
     for (const line of [
       "Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.",
-      "The books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2. Primary Advantage Origins 3.2 and Quest 4 go on sale from about 2026-11-08.",
+      "The books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2. Primary Advantage Origins 3.2 and Quest 4 go on sale from about 2026-11-22.",
       "Tutor Advantage is a tutor-led class network. It is not an AI tutor.",
     ]) {
       expect(text).toContain(line);

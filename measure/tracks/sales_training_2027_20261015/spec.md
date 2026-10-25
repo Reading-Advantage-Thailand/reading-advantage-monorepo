@@ -134,6 +134,8 @@ with the version on its line 3:
 
 **Pin update (PR, 2026-10-16, tone pass):** advantage-pr `7ed5a4ba2d27132ee0c343625bd41987641cc4e9` (after `919d1c1`). Changed pinned documents since `c211d1c`: `facilitator-recruitment-kit.md` 1.3 (the objection "I am not a teacher" removed; one label for the commission example; §9 "Good practice"), `line-trial-facilitator-script.md` 1.5 and `tutor-family-sales-playbook.md` 1.1 ("a small class with a local teacher" in place of "a tutor who follows the lesson plan"). The other 17 documents did not change. Daniel's rule (2026-10-16): the claims rule is a gate, not a theme; lessons teach the strong positive answer (`review/tone-pass-proposal.md`, PR result: accept with changes).
 
+**Pin update (PM relay, 2026-10-26):** the source set moved to advantage-pr ec63bc4 (local, not pushed). Five files in 09-sales-enablement/ changed: battle-cards/vs-tutor.md 1.3, tutor-family-sales-playbook.md 1.4, line-trial-facilitator-script.md 1.7, facilitator-recruitment-kit.md 1.5, sales-training-scope-2027.md 1.3. Only the date line changed: "about 2026-11-08" became "about 2026-11-22" (the in-hand date of Primary Advantage Origins 3.2 and Quest 4). The seed text and its content test use the new date; the pins above stay as written.
+
 **PR notes for the seed (2026-10-15):**
 1. The 3 school-sale roleplays (`role-play-scenarios.md`, English) have checklist criteria. The seed turns each into 3–5 weighted criteria plus the claims criterion; PR checks them in the claims review.
 2. The lessons must not settle these open items: Q-SV-05 (pilot paid or free), Q-PR-24 (no date for Science, Math, Zhongwen Advantage), Q-SE-12 (no placement trial tool), Q-SE-13 (the Tutor app shows ฿2,500 and the landing statistics; never show them).
