@@ -6,9 +6,10 @@ FROM node:22-alpine AS base
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-# The image install fetches the whole workspace fresh; tolerate a slow registry response.
-ENV npm_config_fetch_retries=5
-ENV npm_config_fetch_timeout=300000
+# pnpm 11 reads only pnpm_config_* env (npm_config_* is ignored). The local link resets under the default 64 parallel downloads, so the install uses 16 and more retries.
+ENV pnpm_config_fetch_retries=5
+ENV pnpm_config_fetch_timeout=300000
+ENV pnpm_config_network_concurrency=16
 RUN corepack enable && corepack prepare pnpm@11.8.0 --activate
 WORKDIR /app
 
