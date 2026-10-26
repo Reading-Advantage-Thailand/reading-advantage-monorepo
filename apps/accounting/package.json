@@ -23,9 +23,9 @@
     "@reading-advantage/types": "workspace:*",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
-    "next": "16.2.9",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
+    "next": "16.4.1",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
     "tw-animate-css": "catalog:",
     "zod": "catalog:"
   },

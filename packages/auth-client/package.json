@@ -31,12 +31,12 @@
     "@types/node": "catalog:",
     "@types/react": "19.2.2",
     "jsdom": "catalog:",
-    "react": "19.2.7",
+    "react": "19.2.9",
     "tsup": "catalog:",
     "typescript": "5.9.3",
     "vitest": "4.1.8"
   },
   "peerDependencies": {
-    "react": "19.2.7"
+    "react": "19.2.9"
   }
 }

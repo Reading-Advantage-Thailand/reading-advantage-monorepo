@@ -91,7 +91,7 @@ catalog:
   remark-gfm: ^4.0.1
   resend: ^4.6.0
   sentence-tokenizer: ^1.0.1
-  sharp: ^0.34.5
+  sharp: ^0.35.5
   sonner: ^2.0.7
   superjson: ^2.2.2
   tailwind-merge: ^3.2.0
@@ -109,17 +109,24 @@ catalog:
   zod: ^3.25.76
   zustand: ^5.0.9
 
+# security_upgrade_20261026: exact parent pins hold vulnerable versions.
+# serve@14.2.6 pins compression 1.8.1; vinext@0.2.0 pins image-size 2.0.2;
+# speech-rule-engine@4.1.4 pins @xmldom/xmldom 0.9.10. speech-rule-engine
+# 4.1.5 is blocked by pnpm's supply-chain policy: published 2026-10-26.
 overrides:
   drizzle-orm: 0.45.2
-  next: 16.2.9
-  react: 19.2.7
-  react-dom: 19.2.7
+  next: 16.4.1
+  react: 19.2.9
+  react-dom: 19.2.9
   vitest: 4.1.8
-  vite: 8.1.0
+  vite: 8.1.6
   typescript: 5.9.3
   "@types/react": 19.2.2
   "@types/react-dom": 19.2.2
   "@vitejs/plugin-react": 6.0.3
+  compression: 1.8.2
+  image-size: 2.0.3
+  "@xmldom/xmldom": 0.9.12
 
 peerDependencyRules:
   ignoreMissing: []

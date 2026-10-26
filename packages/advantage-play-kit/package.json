@@ -86,13 +86,13 @@
     "@types/react-dom": "19.2.2",
     "@vitest/coverage-v8": "catalog:",
     "jsdom": "catalog:",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
     "typescript": "5.9.3",
     "vitest": "4.1.8"
   },
   "peerDependencies": {
-    "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react": "19.2.9",
+    "react-dom": "19.2.9"
   }
 }

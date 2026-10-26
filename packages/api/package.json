@@ -64,7 +64,7 @@
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
     "@types/node": "catalog:",
-    "next": "16.2.9",
+    "next": "16.4.1",
     "typescript": "5.9.3",
     "tsx": "catalog:",
     "vitest": "4.1.8"

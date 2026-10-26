@@ -19,8 +19,8 @@
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/storage": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
     "vinext": "0.2.0",
     "zod": "catalog:"
   },

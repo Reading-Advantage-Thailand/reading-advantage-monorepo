@@ -141,9 +141,9 @@
     "typescript": "5.9.3",
     "vitest": "4.1.8",
     "@types/react": "19.2.2",
-    "react": "19.2.7"
+    "react": "19.2.9"
   },
   "peerDependencies": {
-    "react": "19.2.7"
+    "react": "19.2.9"
   }
 }
