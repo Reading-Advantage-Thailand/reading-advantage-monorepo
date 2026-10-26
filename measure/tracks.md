@@ -1215,6 +1215,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: The Guild Hall, Milestones, Bestiary, Familiars (wave 3, semester 2)** *Link: [./tracks/primary_guild_hall_20261005/](./tracks/primary_guild_hall_20261005/)*
   Guild milestones replace the school leaderboard; guild hall; class bestiary; familiars. After Class Quest. Created 2026-10-05.
+  *Status: parked 2026-10-26 (Daniel): the guild lives in the Chibi Quest expansion (advantage-mmorpg); Primary wave 3 drops the guild parts. Daniel: "Keep this information for history. We may want to expand PA further for next school year."*
 
 - [x] **Track: Primary Class Quest (semester 2)** (started and delivered 2026-10-06; the walk-through passed; the 25-student week test waits for the rehearsal environment) *Link: [./tracks/primary_class_quest_20261005/](./tracks/primary_class_quest_20261005/)*
   Guild Mode as Class Quest: weekly quest from a fixed list, power-ups from goals, 8-minute cooperative boss battle with a polling projector dashboard. After the avatar shop track. Created 2026-10-05.

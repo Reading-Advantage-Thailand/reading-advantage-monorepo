@@ -1,5 +1,9 @@
 # Spec — The Guild Hall, Milestones, Bestiary, Familiars (wave 3, semester 2)
 
+> Parked 2026-10-26 (Daniel, decision C4): the guild lives in the Chibi Quest expansion
+> (advantage-mmorpg); Primary wave 3 drops the guild parts. Daniel: "Keep this information for
+> history. We may want to expand PA further for next school year."
+
 Track ID: `primary_guild_hall_20261005`
 Type: feature
 Program: [chibi-quest-primary-program](../../chibi-quest-primary-program.md)
