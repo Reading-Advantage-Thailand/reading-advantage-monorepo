@@ -6,10 +6,11 @@ FROM node:22-alpine AS base
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-# pnpm 11 reads only pnpm_config_* env (npm_config_* is ignored). The local link resets under the default 64 parallel downloads, so the install uses 16 and more retries.
+# pnpm 11 reads only pnpm_config_* env (npm_config_* is ignored). The local link resets under the default 64 parallel downloads, so the install uses 16 and more retries. The cache mount keeps downloaded packages between builds, so a retry continues; the lockfile check does not change.
 ENV pnpm_config_fetch_retries=5
 ENV pnpm_config_fetch_timeout=300000
 ENV pnpm_config_network_concurrency=16
+ENV pnpm_config_store_dir=/pnpm/store
 RUN corepack enable && corepack prepare pnpm@11.8.0 --activate
 WORKDIR /app
 
@@ -17,7 +18,7 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .pnpmfile.cjs ./
 COPY apps ./apps
 COPY packages ./packages
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM deps AS builder
 ENV NODE_ENV=production
