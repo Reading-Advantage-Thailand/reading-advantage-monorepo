@@ -39,11 +39,11 @@ const YOUTUBE_ID = /^[\w-]{11}$/;
  * Maps registry ids to their YouTube ids.
  * @param links PR's links JSON (`primary-whats-new-youtube-links.json`).
  * @param ids The registry ids.
- * @returns `{ id: youtubeId }` for each registry id that is on YouTube with a well-formed id.
+ * @returns `{ id: youtubeId }` for each registry id that is on YouTube with a well-formed id on a main-file row (a row with no `file` is main).
  */
 export function youtubeIds(
-  links: { videos: readonly { id: string; youtubeId?: string | null }[] },
+  links: { videos: readonly { id: string; file?: string; youtubeId?: string | null }[] },
   ids: readonly string[],
 ): Record<string, string> {
-  return Object.fromEntries(links.videos.filter((v) => YOUTUBE_ID.test(v.youtubeId ?? "") && ids.includes(v.id)).map((v) => [v.id, v.youtubeId as string]));
+  return Object.fromEntries(links.videos.filter((v) => (!v.file || videoFileFor(v.id, [v.file]) === v.file) && YOUTUBE_ID.test(v.youtubeId ?? "") && ids.includes(v.id)).map((v) => [v.id, v.youtubeId as string]));
 }
