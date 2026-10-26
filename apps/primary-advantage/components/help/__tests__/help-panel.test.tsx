@@ -10,6 +10,11 @@ vi.mock("@/i18n/navigation", () => ({
   Link: ({ children, href, ...rest }: { children?: ReactNode; href: string }) => <a href={href} {...rest}>{children}</a>,
 }));
 
+// The ids are fixed, so the tests do not depend on upload days (task 6.4 repeats after each upload day).
+vi.mock("@/lib/help/youtube-ids.json", () => ({
+  default: { B4: "-3UpVH9Xp50", C1: "c7799Fx9vrU" },
+}));
+
 const fetchMock = vi.fn(() => Promise.resolve(new Response(null, { status: 204 })));
 beforeEach(() => {
   fetchMock.mockClear();
