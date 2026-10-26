@@ -3,6 +3,7 @@
 Track `primary_knowledge_state_20261007` | Type: feature | Spec mode: story | Created 2026-10-07 |
 Owner decision D8 (2026-10-07): write the spec and plan now; build after the freeze, in a
 migration window the owner picks (2026-11-09 or 2026-12-14); shadow mode first.
+Owner decision C1 (2026-10-26): the move window is 2026-12-14, not 2026-11-09.
 
 The program table names this track `primary_knowledge_state_20261006`; it gets the creation date.
 
@@ -142,7 +143,7 @@ reader saves words through `actions/flashcard.ts` into the flashcard tables).
   follow-up job needs the same worker.
 - The ETL rerun on `primary_legacy_20261007` into `primary_etl_20261007`, then the tags backfill and
   the evidence backfill, for the verification data.
-- A migration window after the freeze, chosen by the owner.
+- A migration window after the freeze, chosen by the owner. Decision C1 (2026-10-26): 2026-12-14.
 
 ## Out of Scope
 

@@ -1245,7 +1245,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Primary YLE-format Starters Tasks** (created 2026-10-07 after the owner approved the spec and plan; lane-h; starts after the 2026-10-11 deploy; migration in the 2026-11-09 window) *Link: [./tracks/primary_yle_starters_20261007/](./tracks/primary_yle_starters_20261007/)*
   The five Starters reading and writing task models: item contract and JSON Schema, practice and secure importers, exact-key matcher, task screens, after-reading lesson step, level bank sets, secure test sittings, and evidence from every answer. Catalog: `measure/primary-yle-task-models.md`.
 
-- [ ] **Track: Primary Knowledge State (T3 of the Primary Mastery Graph Program)** (created 2026-10-07 on owner decision D8; lane-h; build after the freeze, shadow mode first) *Link: [./tracks/primary_knowledge_state_20261007/](./tracks/primary_knowledge_state_20261007/)*
+- [ ] **Track: Primary Knowledge State (T3 of the Primary Mastery Graph Program)** (created 2026-10-07 on owner decision D8; lane-h; build after the freeze, shadow mode first; move window 2026-12-14 per owner decision C1 2026-10-26) *Link: [./tracks/primary_knowledge_state_20261007/](./tracks/primary_knowledge_state_20261007/)*
   Graph slice, `getStudentKnowledgeState` over `buildKstState`, cold-start seed, shadow log after each evidence job, level test readiness signal, projections for T5, and a SYSTEM-only admin view. No student, teacher, or parent screen changes.
 
 - [ ] **Track: Monorepo Continuous Deployment** (created 2026-10-09; spec only; code after the Primary cutover and the end of the freeze) *Link: [./tracks/monorepo_cd_20261009/](./tracks/monorepo_cd_20261009/)*

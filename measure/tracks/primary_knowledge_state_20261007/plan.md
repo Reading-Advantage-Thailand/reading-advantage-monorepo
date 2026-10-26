@@ -3,6 +3,8 @@
 Track `primary_knowledge_state_20261007`. Spec: [spec.md](./spec.md). Build after the freeze, on
 lane-h, with no deploy before the migration window that the owner picks.
 
+Owner decision C1 (2026-10-26): the move window is 2026-12-14, not 2026-11-09.
+
 Order: S1 → S2 → S3 → S4 → S5 → S6 → S7.
 
 ## Phase S1: Graph slice
