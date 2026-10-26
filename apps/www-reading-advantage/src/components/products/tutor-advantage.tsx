@@ -3,6 +3,7 @@ import { Link } from "@/locales/navigation";
 import Image from "next/image";
 import { Network, Brain, GraduationCap, Clock, ArrowRight } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { siteLogos } from "@/lib/site-assets";
 
 export default async function TutorAdvantage() {
   const t = await getScopedI18n("components.products.tutorAdvantage");
@@ -45,7 +46,7 @@ export default async function TutorAdvantage() {
               <div className="relative w-40 h-40">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-3xl blur-2xl" />
                 <Image
-                  src="/tutor-advantage.png"
+                  src={siteLogos.tutor.square}
                   alt="Tutor Advantage"
                   fill
                   sizes="10rem"

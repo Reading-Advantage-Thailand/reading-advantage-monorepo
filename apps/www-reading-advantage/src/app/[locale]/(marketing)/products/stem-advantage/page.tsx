@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { siteLogos } from "@/lib/site-assets";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { StepFlow } from "@/components/ui/step-flow";
 import { Card } from "@/components/ui/card";
@@ -92,7 +93,7 @@ export default async function StemAdvantage({
             </div>
             <div className="lg:col-span-5 flex justify-center">
               <Image
-                src="/stem-advantage.png"
+                src={siteLogos.stem.square}
                 alt="STEM Advantage"
                 width={400}
                 height={400}

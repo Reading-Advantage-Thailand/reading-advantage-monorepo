@@ -423,7 +423,9 @@ describe("Phase 3 Group B locale contracts", () => {
       sentinelFor("products.readingAdvantage.title"),
     );
     expect(productsEvidence.hrefs).toContain("/products/reading-advantage");
-    expect(productsEvidence.imageSources).toContain("/reading-advantage.jpg");
+    expect(productsEvidence.imageSources).toContain(
+      "/media/brand/logos/vector/square/reading-advantage.svg",
+    );
     expect(productsEvidence.imageAlts).toContain(
       sentinelFor("products.readingAdvantage.title"),
     );

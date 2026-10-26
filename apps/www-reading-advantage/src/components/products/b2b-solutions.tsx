@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { siteLogos } from "@/lib/site-assets";
 import { ArrowRight } from "lucide-react";
 
 type ProductKey =
@@ -57,7 +58,7 @@ const productConfigs: ProductConfigList = [
     key: "readingAdvantage",
     href: "/products/reading-advantage",
     bgColor: "from-sky-50 to-sky-100",
-    logo: "/reading-advantage.jpg",
+    logo: siteLogos.reading.square,
     icon: BookOpen,
     layout: "feature",
     badgeKey: "products.readingAdvantage.badge",
@@ -69,7 +70,7 @@ const productConfigs: ProductConfigList = [
     key: "primaryAdvantage",
     href: "/products/primary-advantage",
     bgColor: "from-sky-50 to-sky-100",
-    logo: "/primary-advantage logo.png",
+    logo: siteLogos.primary.square,
     layout: "standard",
     badgeType: "new",
     gradientFrom: "from-sky-300",
@@ -80,7 +81,7 @@ const productConfigs: ProductConfigList = [
     key: "scienceAdvantage",
     href: "/products/science-advantage",
     bgColor: "from-rose-50 to-rose-100",
-    logo: "/science-advantage.png",
+    logo: siteLogos.science.square,
     icon: Beaker,
     badgeKey: "products.scienceAdvantage.badge",
     gradientFrom: "from-rose-400",
@@ -91,7 +92,7 @@ const productConfigs: ProductConfigList = [
     key: "mathAdvantage",
     href: "/products/math-advantage",
     bgColor: "from-orange-50 to-orange-100",
-    logo: "/math-advantage.png",
+    logo: siteLogos.math.square,
     icon: Calculator,
     badgeKey: "products.mathAdvantage.badge",
     gradientFrom: "from-orange-400",
@@ -102,7 +103,7 @@ const productConfigs: ProductConfigList = [
     key: "zhongwenAdvantage",
     href: "/products/zhongwen-advantage",
     bgColor: "from-fuchsia-50 to-purple-50",
-    logo: "/zhongwen-advantage.png",
+    logo: siteLogos.zhongwen.square,
     icon: Languages,
     badgeKey: "products.zhongwenAdvantage.badge",
     gradientFrom: "from-fuchsia-400",
@@ -113,7 +114,7 @@ const productConfigs: ProductConfigList = [
     key: "storytimeAdvantage",
     href: "/products/storytime-advantage",
     bgColor: "from-amber-50 to-amber-100",
-    logo: "/storytime-advantage.svg",
+    logo: siteLogos.storytime.square,
     icon: BookMarked,
     badgeKey: "products.storytimeAdvantage.badge",
     gradientFrom: "from-amber-400",
@@ -124,7 +125,7 @@ const productConfigs: ProductConfigList = [
     key: "stemAdvantage",
     href: "/products/stem-advantage",
     bgColor: "from-indigo-50 to-indigo-100",
-    logo: "/stem-advantage.png",
+    logo: siteLogos.stem.square,
     icon: Bot,
     badgeKey: "products.stemAdvantage.badge",
     gradientFrom: "from-indigo-400",

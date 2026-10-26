@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { siteLogos } from "@/lib/site-assets";
 import { LargeImageBreak } from "@/components/ui/large-image-break";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
@@ -152,7 +153,7 @@ export default async function ZhongwenAdvantage({
             </div>
             <div className="lg:col-span-5 flex justify-center">
               <Image
-                src="/zhongwen-advantage.png"
+                src={siteLogos.zhongwen.square}
                 alt="Zhongwen Advantage"
                 width={400}
                 height={400}

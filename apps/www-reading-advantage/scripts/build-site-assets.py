@@ -2,8 +2,9 @@
 """Build web-sized site assets from the PR repo into public/media.
 
 Usage: python3 scripts/build-site-assets.py [path-to-advantage-pr]
-Writes public/media/** and src/lib/site-assets.ts. Image optimization is off in
-next.config.ts, so each image ships at 800 and 1600 pixels wide.
+Writes public/media/**, the two favicon.ico files, and src/lib/site-assets.ts.
+Image optimization is off in next.config.ts, so each image ships at 800 and 1600
+pixels wide.
 """
 import os
 import shutil
@@ -57,7 +58,19 @@ IMAGES = {
 }
 
 PRODUCTS = ["codecamp", "mastery", "math", "primary", "reading", "science", "stem", "storytime", "tutor", "zhongwen"]
-LOGO_SETS = {"svg": "{p}-advantage.svg", "reversed": "{p}-advantage-reversed.svg", "lockups": "{p}-advantage-thai-lockup.svg"}
+# Manifest field: (source kind under assets/logos/, file name pattern per product id).
+# `square` feeds the product cards and pages (FR-2); the other three are FR-1/FR-4.
+LOGO_SETS = {
+    "color": ("vector/horizontal", "{p}-advantage.svg"),
+    "reversed": ("vector/horizontal-dark-inverse", "{p}-advantage.svg"),
+    "thaiLockup": ("vector/lockup-thai", "{p}-advantage.svg"),
+    "square": ("vector/square", "{p}-advantage.svg"),
+}
+# Copy-only logo kinds: approved Thai lockup variants with no manifest consumer yet (FR-4).
+LOGO_EXTRA_SETS = ["vector/lockup-thai-dark", "vector/lockup-thai-dark-inverse"]
+# FR-3: the www favicon is the Reading Advantage company logo.
+FAVICON_SRC = os.path.join("logos", "png", "favicon", "reading-advantage.ico")
+FAVICON_DESTS = [os.path.join("public", "favicon.ico"), os.path.join("src", "app", "[locale]", "favicon.ico")]
 
 # key: (source, output name, max width, crf). The 2026-08-15 explainer is excluded: it says "our quality guarantee" and "Retain longer, review less".
 VIDEOS = {
@@ -97,14 +110,26 @@ def build_images():
 
 def build_logos():
     out = {}
-    for kind, pattern in LOGO_SETS.items():
+    for kind in LOGO_EXTRA_SETS:
+        d = os.path.join(OUT, "brand", "logos", kind)
+        os.makedirs(d, exist_ok=True)
+        for p in PRODUCTS:
+            name = "{p}-advantage.svg".format(p=p)
+            shutil.copy(os.path.join(ASSETS, "logos", kind, name), os.path.join(d, name))
+    for field, (kind, pattern) in LOGO_SETS.items():
         d = os.path.join(OUT, "brand", "logos", kind)
         os.makedirs(d, exist_ok=True)
         for p in PRODUCTS:
             name = pattern.format(p=p)
             shutil.copy(os.path.join(ASSETS, "logos", kind, name), os.path.join(d, name))
-            out.setdefault(p, {})[kind] = f"/media/brand/logos/{kind}/{name}"
+            out.setdefault(p, {})[field] = f"/media/brand/logos/{kind}/{name}"
     return out
+
+
+def copy_favicon():
+    src = os.path.join(ASSETS, FAVICON_SRC)
+    for rel in FAVICON_DESTS:
+        shutil.copy(src, os.path.join(ROOT, rel))
 
 
 def build_videos():
@@ -148,7 +173,8 @@ def write_manifest(images, logos, videos):
         lines.append(f'  {k}: {{ sm: "{v["sm"]}", lg: "{v["lg"]}", width: {v["width"]}, height: {v["height"]}, tags: [{tags}] }},')
     lines += ["} as const satisfies Record<string, SiteImage>;", "", "export const siteLogos = {"]
     for p, v in logos.items():
-        lines.append(f'  {p}: {{ color: "{v["svg"]}", reversed: "{v["reversed"]}", thaiLockup: "{v["lockups"]}" }},')
+        fields = ", ".join(f'{field}: "{v[field]}"' for field in LOGO_SETS)
+        lines.append(f"  {p}: {{ {fields} }},")
     lines += ["} as const;", "", "export const siteVideos = {"]
     for k, v in videos.items():
         lines.append(f'  {k}: {{ src: "{v["src"]}", poster: "{v["poster"]}" }},')
@@ -158,4 +184,5 @@ def write_manifest(images, logos, videos):
 
 
 if __name__ == "__main__":
+    copy_favicon()
     write_manifest(build_images(), build_logos(), build_videos())
