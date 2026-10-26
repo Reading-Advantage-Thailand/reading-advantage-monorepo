@@ -1208,7 +1208,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05.
 
 - [ ] **Track: Chibi Quest Reskins (wave 1, semester 2)** *Link: [./tracks/primary_quest_reskins_20261005/](./tracks/primary_quest_reskins_20261005/)*
-  RPG frame on daily activities, no schema. Program: measure/chibi-quest-primary-program.md. Created 2026-10-05.
+  RPG frame on daily activities, no schema. Program: measure/chibi-quest-primary-program.md. Created 2026-10-05. Re-dated 2026-10-26 (C5): after Storytime release 1 (2026-12-01).
 
 - [ ] **Track: The Expedition Loop and the World Map (wave 2, semester 2)** *Link: [./tracks/primary_expedition_loop_20261005/](./tracks/primary_expedition_loop_20261005/)*
   Monster Encounters port as the expedition after every article; world map with 14 regions by Primary level; class spell; campaign certificate. After the APK 3D port merge. Created 2026-10-05. Re-dated 2026-10-26 (C5): after Storytime release 1 (2026-12-01).

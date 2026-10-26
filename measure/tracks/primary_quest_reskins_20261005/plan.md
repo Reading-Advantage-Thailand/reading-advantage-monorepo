@@ -1,5 +1,7 @@
 # Plan — Chibi Quest Reskins (wave 1)
 
+> Re-dated 2026-10-26 (Daniel, decision C5): runs after Storytime release 1 (2026-12-01).
+
 Runs after Lane G. No schema. One commit per task; a separate agent reviews each phase.
 
 ## Phase 0: Art and copy
