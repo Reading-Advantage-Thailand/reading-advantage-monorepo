@@ -1506,7 +1506,7 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 - [ ] **Track: The Guild Hall, Milestones, Bestiary, Familiars (wave 3, semester 2)** *Link: [./tracks/primary_guild_hall_20261005/](./tracks/primary_guild_hall_20261005/)*
   Guild milestones replace the school leaderboard; guild hall; class bestiary; familiars. After Class Quest. Created 2026-10-05.
-  *Status: parked 2026-10-26 (Daniel): the guild lives in the Chibi Quest expansion (advantage-mmorpg); Primary wave 3 drops the guild parts. Daniel: "Keep this information for history. We may want to expand PA further for next school year."*
+  *Status: parked 2026-10-26 (Daniel): the guild lives in the 3D browser game Chibi Quest (advantage-mmorpg, a separate app on its own subdomain), not in the Chibi Quest Expansion Pack of Primary Advantage; Primary wave 3 drops the guild parts. Daniel: "Keep this information for history. We may want to expand PA further for next school year." Corrected 2026-10-27 (Daniel, answer B4): the Expansion Pack is the deep visual refresh of Primary Advantage (avatars, games, GP); the 3D game is a separate app.*
 
 
 
