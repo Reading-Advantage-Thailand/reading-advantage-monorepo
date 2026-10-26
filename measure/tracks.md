@@ -46,6 +46,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
+  *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
+  *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*
+  *Note: Daniel 2026-10-26: "Somebad CVEs came out on NePM this week. We need an audit and update with redeploy ASAP." `pnpm audit --json` reports 8 critical and 93 high advisories over 32 packages. Targets: next 16.4.1, react and react-dom 19.2.9, sharp 0.35.5 or later, plus every patch and minor fix. The audit file is [audit-2026-10-26.md](./tracks/security_upgrade_20261026/audit-2026-10-26.md). The supply chain check found no hit. Push and deploy stay with Daniel's team.*
+
 - [~] **Track: Primary In-App Help (What's New videos)** — *created 2026-10-23*
   *Link: [./tracks/primary_in_app_help_20261023/](./tracks/primary_in_app_help_20261023/)*
   *Status: live 2026-10-23 on revision 00141-nuh (in master); D5 open; plan approved 2026-10-23; owner decisions recorded (both hosts, all videos approved, sign-in help, plays log in the system role) | Priority: next, after the Boonyathat deploy*
