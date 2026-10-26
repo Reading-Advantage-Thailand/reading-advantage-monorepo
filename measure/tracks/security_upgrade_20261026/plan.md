@@ -29,8 +29,8 @@
 
 ## Phase 1: Version guard and upgrade
 
-- [~] 1.1 Write the failing version-guard test. It reads `pnpm-lock.yaml` as data and checks the locked version of each package in the guard list. The guard list holds the advisory ID, the package name and the fixed version. The failure message names the advisory, the locked version and the fixed version. The test does not run `pnpm audit`. Test: AC-1.
-- [~] 1.2 Run the version-guard test against the current lockfile. Record the failure list: `next` 16.2.9, `react` 19.2.7, `react-dom` 19.2.7, `sharp` 0.34.5, `handlebars` 4.7.9, `@sentry/nextjs` 10.59.0, `vite` 8.1.0, `axios` 1.18.0, `nanoid` 5.1.15, `postcss` 8.5.15 and 8.4.31, `undici` 7.28.0, `zod` 4.4.3. The test must fail with a non-zero exit. Test: AC-1.
+- [x] 1.1 Write the failing version-guard test. It reads `pnpm-lock.yaml` as data and checks the locked version of each package in the guard list. The guard list holds the advisory ID, the package name and the fixed version. The failure message names the advisory, the locked version and the fixed version. The test does not run `pnpm audit`. Test: AC-1. (fbe6c9e1d, 944dbca07, 44da1f87a, b5245779c)
+- [x] 1.2 Run the version-guard test against the current lockfile. Record the failure list: `next` 16.2.9, `react` 19.2.7, `react-dom` 19.2.7, `sharp` 0.34.5, `handlebars` 4.7.9, `@sentry/nextjs` 10.59.0, `vite` 8.1.0, `axios` 1.18.0, `nanoid` 5.1.15, `postcss` 8.5.15 and 8.4.31, `undici` 7.28.0, `zod` 4.4.3. The test must fail with a non-zero exit. Test: AC-1. (fbe6c9e1d, 944dbca07, 44da1f87a, b5245779c)
 
   Evidence — Red run, exit_code=1. Command: `pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts` through `heavy-run.sh`. phase_base_sha=24471e25a. The version-guard test failed on 35 advisory floors. The minimum set that the test strategy names is present. The overrides and catalog assertions failed as they must. The parser refutation fixtures and the guard-list checks passed (16 passed, 3 failed, total 19). This is not a pass. Full list, locked → fixed:
     - next 16.2.9 → 16.4.1
@@ -71,21 +71,21 @@
   Overrides assertion failed: next 16.2.9 → 16.4.1, react 19.2.7 → 19.2.9, react-dom 19.2.7 → 19.2.9, vite 8.1.0 → 8.1.6. Catalog assertion failed: sharp ^0.34.5 → ^0.35.5.
 
   Amendment r2: two OpenTelemetry entries moved out of the floor list. `@opentelemetry/sdk-node` and `@opentelemetry/exporter-prometheus` were floored at 0.217.0 as a MINOR, but 0.57.2 → 0.217.0 is a MAJOR (the OpenTelemetry 2 migration). `apps/science-advantage/package.json:50` declares `@opentelemetry/sdk-node` `^0.57.0`; 0.217.0 sits outside that 0.x caret range. This is the same migration as `@opentelemetry/propagator-jaeger` 1.30.1 → 2.9.0, which spec §6 already keeps open. Both entries now live in `OPEN_MAJORS` (advisory GHSA-q7rr-3cgh-j5r3, locked 0.57.2, fixed 0.217.0, reason "OpenTelemetry 2 migration, spec §6"). No other floor has this defect: `sharp` 0.34.5 → 0.35.5 uses the catalog range change of plan 1.5, not a parent major, and every other floor is a patch or a same-major minor. New floor count: 33 (was 35). The RED run still exits non-zero.
-- [x] 1.3 Create the branch `chore/security-upgrade-2026-10` from `master`. Test: the branch exists and starts from the current `master` commit.
+- [x] 1.3 Create the branch `chore/security-upgrade-2026-10` from `master`. Test: the branch exists and starts from the current `master` commit. (7387c4876)
 
   Evidence — command: `git branch --show-current && git merge-base master HEAD`; exit_code=0. Branch: `chore/security-upgrade-2026-10`. Branch base: `a64616a4d0a71497cfcdedfee1d55d21146833b4`. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
-- [x] 1.4 Change the `overrides` block of `pnpm-workspace.yaml`: `next` 16.2.9 to 16.4.1, `react` 19.2.7 to 19.2.9, `react-dom` 19.2.7 to 19.2.9, `vite` 8.1.0 to 8.1.6. Test: AC-2.
+- [x] 1.4 Change the `overrides` block of `pnpm-workspace.yaml`: `next` 16.2.9 to 16.4.1, `react` 19.2.7 to 19.2.9, `react-dom` 19.2.7 to 19.2.9, `vite` 8.1.0 to 8.1.6. Test: AC-2. (7387c4876)
 
   Evidence — command: GREEN_CMD in task 1.8; exit_code=0. The four override values match the contract. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
-- [x] 1.5 Change the `catalog` block of `pnpm-workspace.yaml`: `sharp` `^0.34.5` to `^0.35.5`. Test: AC-2.
+- [x] 1.5 Change the `catalog` block of `pnpm-workspace.yaml`: `sharp` `^0.34.5` to `^0.35.5`. Test: AC-2. (7387c4876)
 
   Evidence — command: GREEN_CMD in task 1.8; exit_code=0. The catalog holds `sharp: ^0.35.5`. No other catalog range changed. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
-- [x] 1.6 Change the `next`, `react` and `react-dom` entries in each `package.json` that declares them directly. The list of files follows. Test: AC-2.
+- [x] 1.6 Change the `next`, `react` and `react-dom` entries in each `package.json` that declares them directly. The list of files follows. Test: AC-2. (7387c4876)
 
   `apps/accounting`, `apps/accounts`, `apps/activity-vinext-fixture`, `apps/advantage-games`, `apps/codecamp-advantage`, `apps/marketing`, `apps/primary-advantage`, `apps/reading-advantage`, `apps/sales-advantage`, `apps/science-advantage`, `apps/storytime`, `apps/workbooks`, `apps/www-reading-advantage`, `packages/activity-react`, `packages/activity-runtime`, `packages/activity-tutorial`, `packages/advantage-play-kit`, `packages/advantage-play-kit-3d`, `packages/api`, `packages/auth-client`, `packages/ui`, `packages/utils`.
 
   Evidence — command: GREEN_CMD in task 1.8; exit_code=0. Every discovered direct declaration matches its override. `activity-runtime` and `activity-tutorial` declare none of these packages. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
-- [x] 1.7 Refresh the lockfile so every transitive package in section 10.2 of the audit reaches its fixed version. The `overrides` block, the `catalog` block, `nodeLinker: hoisted` and `minimumReleaseAgeExclude` stay unchanged. Test: AC-2, AC-3.
+- [x] 1.7 Refresh the lockfile so every transitive package in section 10.2 of the audit reaches its fixed version. The `overrides` block, the `catalog` block, `nodeLinker: hoisted` and `minimumReleaseAgeExclude` stay unchanged. Test: AC-2, AC-3. (7387c4876)
 
   Evidence — command: GREEN_CMD in task 1.8; exit_code=0. Every published floor passes. Red r4 moved the two unpublished floors to `NO_FIX_AVAILABLE`. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
 
@@ -96,12 +96,12 @@
   Install deviation: the first run completed `pnpm install --no-frozen-lockfile` in 4m 33.9s. The pnpm process then hung, and the orchestrator killed it. The first run restored `@next/swc-linux-x64-gnu` 16.4.1 after its retry.
 
   Update deviation: `pnpm update extract-zip url-regex` exited 1 after a Puppeteer `ECONNRESET`. It kept both versions. The later install attempt rejected the unpublished `extract-zip` 2.0.2. Red r4 corrected both no-fix contracts. The invalid override lines were removed.
-- [x] 1.8 Run the version-guard test again. It must pass. Test: AC-1, AC-2, AC-3.
+- [x] 1.8 Run the version-guard test again. It must pass. Test: AC-1, AC-2, AC-3. (7387c4876)
 
   Evidence — GREEN_CMD: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 900 pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'`; exit_code=0. Result: 30 passed, 0 failed. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
 
   Model deviation: the first Green model stopped on a quota error before a commit. Green continued on `kimi-code-plan-cn/k3.1-pro`. Red r3 and r4 used `xai/grok-4.7`. The orchestrator kept this Kimi session for context. `ra-quota pick green` listed `coding-plan/glm-5.3-flash` first, but Kimi was a valid route.
-- [x] 1.9 Run `pnpm audit --json` again. The report must hold zero critical advisories and zero high advisories for the packages in scope. The report names the MAJOR bumps of spec section 6. Record the report in the plan. Test: AC-4.
+- [x] 1.9 Run `pnpm audit --json` again. The report must hold zero critical advisories and zero high advisories for the packages in scope. The report names the MAJOR bumps of spec section 6. Record the report in the plan. Test: AC-4. (7387c4876)
 
   Evidence — command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 600 pnpm audit --json > /tmp/opencode/audit-after.json; echo AUDIT_EXIT=$?'`; AUDIT_EXIT=1. The exit code records the remaining advisories. Totals: critical=0, high=15, moderate=45, low=5, info=0. in_scope_critical=0, in_scope_high=0. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
 
@@ -112,8 +112,23 @@
   No fix available: `extract-zip` GHSA-7pqw-9j4j-h8q3 and GHSA-jmr9-qjv8-65gv; `url-regex` GHSA-v4rh-8p82-6h5w. Their first patched versions are null. Release-age blocked findings: none in this report. Unclassified critical or high findings: none.
 
   Open-major register: Zod 3.x, `nodemailer`, `next-mdx-remote`, `vinext`, `@opentelemetry/propagator-jaeger`, `@faker-js/faker`, `basic-ftp`, `@opentelemetry/sdk-node`, and `@opentelemetry/exporter-prometheus`. The `js-yaml` lines moved to 3.15.2 and 4.3.2.
-- [ ] 1.10 Check that the refreshed lockfile holds no package version that a public list of malicious releases names. The list set is the one in audit section 5.1. Test: spec section 7.
-- [ ] 1.11 Phase check. Run the version-guard test, the changed tests, the type check and the lint of the changed packages. Then run a change-quality review of the branch diff. Record the findings. Test: AC-1, AC-2, AC-3, AC-4.
+- [x] 1.10 Check that the refreshed lockfile holds no package version that a public list of malicious releases names. The list set is the one in audit section 5.1. Test: spec section 7. (7387c4876)
+
+  Evidence — compared `24471e25a:pnpm-lock.yaml` with `7387c4876:pnpm-lock.yaml`. changed_name_version_pairs=185. Command: `python3 /tmp/opencode/security-supply-chain-20261027/check.py`; exit_code=0. supply_chain_hits=0. All eight sources were reachable. Results: `/tmp/opencode/security-supply-chain-20261027/results.txt`.
+
+  GitHub Advisory Database npm malware: NO_HIT. Cursor pagination fetched 868 advisories for 2026-10-01 through 2026-10-31. Socket TensorLake: NO_HIT. Socket npm author Qix: NO_HIT. eSentire Axios compromise: NO_HIT.
+
+  Socket OpenAPI React Query Codegen: NO_HIT. Socket keyv and cacheable: NO_HIT. Unit 42 npm threat landscape: NO_HIT. Socket Mastra packages and `easy-day-js`: NO_HIT. The check compared exact names and versions. The Mastra check also covered the scope.
+- [x] 1.11 Phase check. Run the version-guard test, the changed tests, the type check and the lint of the changed packages. Then run a change-quality review of the branch diff. Record the findings. Test: AC-1, AC-2, AC-3, AC-4. (0ffadb991)
+
+  Evidence — GREEN_CMD in task 1.8 ran at `0ffadb991`; exit_code=0. Result: 30 passed, 0 failed. The phase-check scope covers the four changed packages outside Phase 2. This is the orchestrator-default scope deviation.
+
+  Phase check — `PUPPETEER_SKIP_DOWNLOAD=true timeout 1800 pnpm turbo run check-types lint --concurrency=1` with the four package filters; PHASE_CHECK_EXIT=2. A second run added `--continue`; PHASE_CHECK_CONTINUE_EXIT=2. `activity-react` and `auth-client` passed check-types and lint. Both play-kit packages passed lint with warnings. Their check-types commands exited 2. Dependency `activity-runtime` also exited 2. Base comparison: not compared.
+
+  Environment deviation — the first setup attempt exited 1 on Puppeteer `ECONNRESET`. The retry exited 124 after downloading Chrome. A later attempt waited on the shared lock. `PUPPETEER_SKIP_DOWNLOAD=true` completed dependency setup. The unrelated browser download was not a type-check input.
+
+  Review — `git diff --check 24471e25a..HEAD` exited 0. The manifests, three added overrides, and lockfile match the approved scope. No Dockerfile, Cloud Build, or `.github` file changed.
+  Review finding — the two play-kit type failures are not compared with the base. This review does not classify them as pre-existing. Reviews A and B remain independent. Task 2.14 holds the whole-branch change-quality review.
 
 ## Phase 2: Verification of the deployed apps
 
