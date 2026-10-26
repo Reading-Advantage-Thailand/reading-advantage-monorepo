@@ -1,5 +1,9 @@
 # Plan — Primary Core Interaction Quality
 
+> Re-dated 2026-10-26 (Daniel, decision C5): Phases 1-4 (the quality fixes) run after Storytime
+> release 1 (2026-12-01). Phase 0 (verify the September tracks) is not re-dated; it runs now
+> (decision C6, a browser check on a cheap model).
+
 Owner lane: G. Works in its own worktree (`rama-worktrees/lane-g`, branch
 `primary/lane-g-core-interaction`) off `primary-parity-integration`. Lanes run one at a time on
 the 7 GB machine (owner rule 2026-10-04). Default order, owner to confirm: Phase 0 right after

@@ -1205,7 +1205,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
 
 - [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
-  Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05.
+  Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05. Re-dated 2026-10-26 (C5): Phases 1-4 after Storytime release 1 (2026-12-01); Phase 0 runs now (C6).
 
 - [ ] **Track: Chibi Quest Reskins (wave 1, semester 2)** *Link: [./tracks/primary_quest_reskins_20261005/](./tracks/primary_quest_reskins_20261005/)*
   RPG frame on daily activities, no schema. Program: measure/chibi-quest-primary-program.md. Created 2026-10-05. Re-dated 2026-10-26 (C5): after Storytime release 1 (2026-12-01).
