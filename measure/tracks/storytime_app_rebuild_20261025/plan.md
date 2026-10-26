@@ -48,6 +48,11 @@
 - Reports: `measure/runs/storytime_app_rebuild_20261025/mid-red-3504b8d7a.log` and `.json`. These local reports use the existing ignore rule.
 - Red checkpoint: `a01d2998d` commits the tests and the command evidence. This checkpoint does not complete Phase 1.
 
+### Phase 1 Green evidence
+
+- Smoke attempt 5 (2026-10-25 20:22-20:42 ICT, HEAD 26f02bbd0): `DOCKER SMOKE FAIL: the build hit the 20m time limit`, PASS=1, FAIL=2. The install reached 2071 of 2075 packages under registry faults; every try started from zero.
+- r7: the pnpm store moves into a build cache mount (`1990bb1a7`); attempt 6 follows.
+
 ## Phase 2: Shared data contracts
 
 - [ ] 2.1 Record the Workbooks commit that this track reads (the weeks `l2/w01` to `l2/w08`, the schema, and the phoneme bank), as handed off through the PM orchestrator.
