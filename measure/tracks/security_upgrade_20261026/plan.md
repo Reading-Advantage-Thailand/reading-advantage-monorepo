@@ -29,8 +29,46 @@
 
 ## Phase 1: Version guard and upgrade
 
-- [ ] 1.1 Write the failing version-guard test. It reads `pnpm-lock.yaml` as data and checks the locked version of each package in the guard list. The guard list holds the advisory ID, the package name and the fixed version. The failure message names the advisory, the locked version and the fixed version. The test does not run `pnpm audit`. Test: AC-1.
-- [ ] 1.2 Run the version-guard test against the current lockfile. Record the failure list: `next` 16.2.9, `react` 19.2.7, `react-dom` 19.2.7, `sharp` 0.34.5, `handlebars` 4.7.9, `@sentry/nextjs` 10.59.0, `vite` 8.1.0, `axios` 1.18.0, `nanoid` 5.1.15, `postcss` 8.5.15 and 8.4.31, `undici` 7.28.0, `zod` 4.4.3. The test must fail with a non-zero exit. Test: AC-1.
+- [~] 1.1 Write the failing version-guard test. It reads `pnpm-lock.yaml` as data and checks the locked version of each package in the guard list. The guard list holds the advisory ID, the package name and the fixed version. The failure message names the advisory, the locked version and the fixed version. The test does not run `pnpm audit`. Test: AC-1.
+- [~] 1.2 Run the version-guard test against the current lockfile. Record the failure list: `next` 16.2.9, `react` 19.2.7, `react-dom` 19.2.7, `sharp` 0.34.5, `handlebars` 4.7.9, `@sentry/nextjs` 10.59.0, `vite` 8.1.0, `axios` 1.18.0, `nanoid` 5.1.15, `postcss` 8.5.15 and 8.4.31, `undici` 7.28.0, `zod` 4.4.3. The test must fail with a non-zero exit. Test: AC-1.
+
+  Evidence — Red run, exit_code=1. Command: `pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts` through `heavy-run.sh`. phase_base_sha=24471e25a. The version-guard test failed on 35 advisory floors. The minimum set that the test strategy names is present. The overrides and catalog assertions failed as they must. The parser refutation fixtures and the guard-list checks passed (16 passed, 3 failed, total 19). This is not a pass. Full list, locked → fixed:
+    - next 16.2.9 → 16.4.1
+    - react 19.2.7 → 19.2.9
+    - react-dom 19.2.7 → 19.2.9
+    - sharp 0.34.5 → 0.35.5
+    - handlebars 4.7.9 → 4.7.10
+    - @sentry/nextjs 10.59.0 → 10.75.2
+    - vite 8.1.0 → 8.1.6
+    - axios 1.18.0 → 1.20.0
+    - nanoid 5.1.15 → 5.1.16
+    - nanoid 3.3.14 → 3.3.18
+    - postcss 8.4.31 → 8.5.18
+    - postcss 8.5.15 → 8.5.18
+    - undici 7.28.0 → 7.30.1
+    - zod 4.4.3 → 4.6.6
+    - @fastify/busboy 3.2.0 → 3.2.1
+    - @grpc/grpc-js 1.14.4 → 1.14.5
+    - @opentelemetry/exporter-prometheus 0.57.2 → 0.217.0
+    - @opentelemetry/sdk-node 0.57.2 → 0.217.0
+    - @xmldom/xmldom 0.9.10 → 0.9.12
+    - brace-expansion 1.1.15 → 1.1.20
+    - brace-expansion 2.1.1 → 2.1.6
+    - brace-expansion 5.0.6 → 5.0.11
+    - browserslist 4.28.2 → 4.28.7
+    - compression 1.8.1 → 1.8.2
+    - extract-zip 2.0.1 → 2.0.2
+    - fast-uri 3.1.2 → 3.1.7
+    - fast-xml-parser 5.7.3 → 5.10.1
+    - fast-xml-parser 5.9.3 → 5.10.1
+    - follow-redirects 1.16.0 → 1.16.1
+    - image-size 2.0.2 → 2.0.3
+    - ip-address 10.2.0 → 10.3.1
+    - js-yaml 3.14.2 → 3.15.2
+    - js-yaml 4.2.0 → 4.3.2
+    - source-map-js 1.2.1 → 1.2.2
+    - url-regex 5.0.0 → 5.0.1
+  Overrides assertion failed: next 16.2.9 → 16.4.1, react 19.2.7 → 19.2.9, react-dom 19.2.7 → 19.2.9, vite 8.1.0 → 8.1.6. Catalog assertion failed: sharp ^0.34.5 → ^0.35.5.
 - [ ] 1.3 Create the branch `chore/security-upgrade-2026-10` from `master`. Test: the branch exists and starts from the current `master` commit.
 - [ ] 1.4 Change the `overrides` block of `pnpm-workspace.yaml`: `next` 16.2.9 to 16.4.1, `react` 19.2.7 to 19.2.9, `react-dom` 19.2.7 to 19.2.9, `vite` 8.1.0 to 8.1.6. Test: AC-2.
 - [ ] 1.5 Change the `catalog` block of `pnpm-workspace.yaml`: `sharp` `^0.34.5` to `^0.35.5`. Test: AC-2.
