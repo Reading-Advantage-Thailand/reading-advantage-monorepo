@@ -9,12 +9,19 @@
  * The added value must be an exact version at or above that floor.
  * The added value must stay on the same major as the floored line.
  * A 0.x floor must stay on the same minor.
+ *
+ * Red r4 note for track security_upgrade_20261026.
+ * extract-zip and url-regex have no patched release.
+ * The audit rows invented the fixed versions 2.0.2 and 5.0.1.
+ * Both packages now live in NO_FIX_AVAILABLE.
+ * The audit file holds the 2026-10-27 correction.
+ * This edit is a track document change, not a production change.
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative, join } from "node:path";
-import { GUARD_ENTRIES, OPEN_MAJORS, type GuardEntry } from "./security-upgrade-guard-list";
+import { GUARD_ENTRIES, NO_FIX_AVAILABLE, OPEN_MAJORS, type GuardEntry } from "./security-upgrade-guard-list";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -215,6 +222,18 @@ function evaluateOverrideContract(
 }
 
 /**
+ * Rejects a no-fix entry that names a patched version.
+ * A real no-fix entry has a null fixed version.
+ * Each failure names the package.
+ */
+function inventedFixFailures(entry: { packageName: string; fixedVersion: string | null }): string[] {
+  if (entry.fixedVersion !== null) {
+    return [`key=${entry.packageName} has an invented fixed version`];
+  }
+  return [];
+}
+
+/**
  * Recursively discovers every `package.json` under `root`, skipping vendored trees.
  */
 function findPackageJsonFiles(root: string): string[] {
@@ -359,10 +378,31 @@ describe("refutation fixtures", () => {
       compression: "1.8.2",
       "image-size": "2.0.3",
       "@xmldom/xmldom": "0.9.12",
-      "extract-zip": "2.0.2",
-      "url-regex": "5.0.1",
     };
     expect(evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES)).toEqual([]);
+  });
+
+  it("an added pin of an invented no-fix version fails and names the key", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, "extract-zip": "2.0.2", "url-regex": "5.0.1" };
+    const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(msg).toContain("key=extract-zip");
+    expect(msg).toContain("key=url-regex");
+    expect(msg).toContain("is not in the guard floor list");
+  });
+
+  it("an entry with an invented fixed version fails and names the package", () => {
+    const invented = [
+      { packageName: "extract-zip", fixedVersion: "2.0.2" as string | null },
+      { packageName: "url-regex", fixedVersion: "5.0.1" as string | null },
+    ];
+    for (const entry of invented) {
+      const msg = inventedFixFailures(entry).join("\n");
+      expect(msg).toContain(`key=${entry.packageName}`);
+      expect(msg).toContain("invented fixed version");
+    }
+    for (const entry of NO_FIX_AVAILABLE) {
+      expect(inventedFixFailures(entry)).toEqual([]);
+    }
   });
 });
 
@@ -373,6 +413,18 @@ describe("guard list", () => {
 
   it("requires presence on every row", () => {
     for (const e of GUARD_ENTRIES) expect(e.requirePresent).toBe(true);
+  });
+
+  it("does not floor a package with no patched release", () => {
+    expect(NO_FIX_AVAILABLE.length).toBeGreaterThan(0);
+    for (const entry of NO_FIX_AVAILABLE) {
+      expect(entry.fixedVersion).toBeNull();
+      expect(entry.vulnerableRange.length).toBeGreaterThan(0);
+      expect(entry.consumer.length).toBeGreaterThan(0);
+      expect(entry.directParent.length).toBeGreaterThan(0);
+      expect(entry.advisoryIds.length).toBeGreaterThan(0);
+      expect(GUARD_ENTRIES.filter((row) => row.packageName === entry.packageName)).toEqual([]);
+    }
   });
 
   it("does not require the out-of-scope major packages", () => {

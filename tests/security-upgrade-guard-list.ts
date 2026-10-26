@@ -8,6 +8,7 @@
  *
  * Version bumps stay patch or minor only. The MAJOR bumps of the spec stay out
  * of scope and must not appear here (the test asserts that).
+ * A package with no patched release lives in NO_FIX_AVAILABLE, not here.
  */
 export interface GuardEntry {
   /** The GitHub advisory IDs this row guards. Each id appears in the failure message. */
@@ -203,13 +204,6 @@ export const GUARD_ENTRIES: GuardEntry[] = [
     requirePresent: true,
   },
   {
-    advisoryIds: ["GHSA-7pqw-9j4j-h8q3", "GHSA-jmr9-qjv8-65gv"],
-    packageName: "extract-zip",
-    linePrefix: "2.",
-    fixedVersion: "2.0.2",
-    requirePresent: true,
-  },
-  {
     advisoryIds: ["GHSA-4c8g-83qw-93j6", "GHSA-7p8r-x3mc-p8w7", "GHSA-f65p-4m7j-42xc", "GHSA-fph4-wmhf-6fwf", "GHSA-jqff-g426-hqxp", "GHSA-qw65-cvwx-89v3", "GHSA-v2hh-gcrm-f6hx"],
     packageName: "fast-uri",
     linePrefix: "3.",
@@ -265,12 +259,45 @@ export const GUARD_ENTRIES: GuardEntry[] = [
     fixedVersion: "1.2.2",
     requirePresent: true,
   },
+];
+
+/**
+ * Advisories with no patched release. The floor list must not name these
+ * packages. `fixedVersion` is null. The range is the vulnerable range.
+ * `directParent` is the lockfile package that depends on the vulnerable package.
+ * `consumer` is the workspace package at the top of that chain.
+ */
+export interface NoFixAvailable {
+  /** The GitHub advisory IDs for this package. */
+  advisoryIds: string[];
+  /** The package name exactly as written in the lockfile key. */
+  packageName: string;
+  /** The vulnerable range. No patched release exists above this range. */
+  vulnerableRange: string;
+  /** No patched version exists. This value stays null. */
+  fixedVersion: null;
+  /** The lockfile package that depends on the vulnerable package. */
+  directParent: string;
+  /** The workspace package at the top of the lockfile chain. */
+  consumer: string;
+}
+
+export const NO_FIX_AVAILABLE: NoFixAvailable[] = [
+  {
+    advisoryIds: ["GHSA-7pqw-9j4j-h8q3", "GHSA-jmr9-qjv8-65gv"],
+    packageName: "extract-zip",
+    vulnerableRange: "<= 2.0.1",
+    fixedVersion: null,
+    directParent: "@puppeteer/browsers@2.6.1",
+    consumer: "apps/www-reading-advantage through @revideo/renderer@0.10.4 and puppeteer@23.11.1",
+  },
   {
     advisoryIds: ["GHSA-v4rh-8p82-6h5w"],
     packageName: "url-regex",
-    linePrefix: "5.",
-    fixedVersion: "5.0.1",
-    requirePresent: true,
+    vulnerableRange: "<= 5.0.0",
+    fixedVersion: null,
+    directParent: "text-preprocessor@1.1.1",
+    consumer: "packages/reading-advantage-scripts through vocabulary-level-grader@1.1.0 and extract-lemmatized-nonstop-words@1.0.19",
   },
 ];
 
