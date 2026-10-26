@@ -149,20 +149,6 @@ export const GUARD_ENTRIES: GuardEntry[] = [
     requirePresent: true,
   },
   {
-    advisoryIds: ["GHSA-q7rr-3cgh-j5r3"],
-    packageName: "@opentelemetry/exporter-prometheus",
-    linePrefix: "0.",
-    fixedVersion: "0.217.0",
-    requirePresent: true,
-  },
-  {
-    advisoryIds: ["GHSA-q7rr-3cgh-j5r3"],
-    packageName: "@opentelemetry/sdk-node",
-    linePrefix: "0.",
-    fixedVersion: "0.217.0",
-    requirePresent: true,
-  },
-  {
     advisoryIds: [
       "GHSA-27p8-2357-5qqv",
       "GHSA-3px3-54cx-rmw9",
@@ -285,5 +271,41 @@ export const GUARD_ENTRIES: GuardEntry[] = [
     linePrefix: "5.",
     fixedVersion: "5.0.1",
     requirePresent: true,
+  },
+];
+
+/**
+ * Open majors that stay out of scope. The floor test never asserts them. Each
+ * entry records the advisory, the locked and fixed versions, and why the major
+ * stays open. A 0.x jump to a new line (for example the OpenTelemetry 2
+ * migration) is a major, not a patch or minor.
+ */
+export interface OpenMajor {
+  /** The GitHub advisory IDs that name this package. */
+  advisoryIds: string[];
+  /** The package name exactly as written in the lockfile key. */
+  packageName: string;
+  /** The locked version in the current lockfile. */
+  lockedVersion: string;
+  /** The fixed version that is out of scope because it is a major. */
+  fixedVersion: string;
+  /** Why the major stays open. */
+  reason: string;
+}
+
+export const OPEN_MAJORS: OpenMajor[] = [
+  {
+    advisoryIds: ["GHSA-q7rr-3cgh-j5r3"],
+    packageName: "@opentelemetry/sdk-node",
+    lockedVersion: "0.57.2",
+    fixedVersion: "0.217.0",
+    reason: "OpenTelemetry 2 migration, spec §6",
+  },
+  {
+    advisoryIds: ["GHSA-q7rr-3cgh-j5r3"],
+    packageName: "@opentelemetry/exporter-prometheus",
+    lockedVersion: "0.57.2",
+    fixedVersion: "0.217.0",
+    reason: "OpenTelemetry 2 migration, spec §6",
   },
 ];

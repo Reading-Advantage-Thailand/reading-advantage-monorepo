@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative, join } from "node:path";
-import { GUARD_ENTRIES, type GuardEntry } from "./security-upgrade-guard-list";
+import { GUARD_ENTRIES, OPEN_MAJORS, type GuardEntry } from "./security-upgrade-guard-list";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -246,8 +246,20 @@ describe("guard list", () => {
 
   it("does not require the out-of-scope major packages", () => {
     const banned = ["nodemailer", "next-mdx-remote", "vinext", "@opentelemetry/propagator-jaeger", "@faker-js/faker", "basic-ftp"];
-    for (const b of banned) {
+    const allBanned = [...banned, ...OPEN_MAJORS.map((e) => e.packageName)];
+    for (const b of allBanned) {
       expect(GUARD_ENTRIES.filter((e) => e.packageName === b).map((e) => e.packageName)).toEqual([]);
+    }
+  });
+
+  it("the open majors list is non-empty and records an advisory, versions, and a reason", () => {
+    expect(OPEN_MAJORS.length).toBeGreaterThan(0);
+    for (const m of OPEN_MAJORS) {
+      expect(m.advisoryIds.length).toBeGreaterThan(0);
+      expect(m.packageName.length).toBeGreaterThan(0);
+      expect(m.lockedVersion.length).toBeGreaterThan(0);
+      expect(m.fixedVersion.length).toBeGreaterThan(0);
+      expect(m.reason.length).toBeGreaterThan(0);
     }
   });
 
