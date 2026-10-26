@@ -1083,6 +1083,17 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin). The release-1 goal of 2026-12-01 stands (reaffirmed 2026-10-25). Print content in Workbooks survives in place; S1–S28 verdicts are in the survival report of the rebuild track. Track stays open (no closeout, no archive); it is the record of decisions S1–S30. Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
   Closed and archived 2026-10-26 (Daniel, check D4). Superseded by `storytime_app_rebuild_20261025`; the decision record and the feature list moved to `measure/tracks/storytime_app_rebuild_20261025/docs/program-decisions-and-features.md`.
 
+**Check E8 — the July www tracks.**
+
+- [x] **Track: Refresh Product Pages with Real Features** *Link: [./archive/www_product_features_refresh_20260517/](./archive/www_product_features_refresh_20260517/)*
+  Update Reading Advantage and Primary Advantage pages with accurate feature lists (AI content generation, 12-level system, FSRS flashcards, workbook generator, read-along audio, school rankings). Add actual app screenshots and feature comparison matrix.
+  Closed and archived 2026-10-26 (Daniel, check E8). Closed unbuilt by Daniel's decision E8 on 2026-10-26; the standing track www_change_list_20261027 replaces it.
+
+- [x] **Track: Create Unified App Directory Page** *Link: [./archive/www_app_directory_20260517/](./archive/www_app_directory_20260517/)*
+  Create central app directory (/apps) showcasing all 5 products with role-based filtering (Student, Teacher, Admin, Parent, Intern), helping users navigate the ecosystem and choose the right platform.
+  Closed and archived 2026-10-26 (Daniel, check E8). Closed unbuilt by Daniel's decision E8 on 2026-10-26; the standing track www_change_list_20261027 replaces it.
+
+
 ---
 
 
@@ -1215,12 +1226,6 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 - [x] **Track: Create Advantage Games Showcase Page** *Link: [./archive/www_games_showcase_20260517/](./archive/www_games_showcase_20260517/)*
   Create dedicated games showcase page highlighting all 27 implemented educational games with XP system, leaderboard, adaptive difficulty, and cross-platform integration info.
-
-- [ ] **Track: Refresh Product Pages with Real Features** *Link: [./tracks/www_product_features_refresh_20260517/](./tracks/www_product_features_refresh_20260517/)*
-  Update Reading Advantage and Primary Advantage pages with accurate feature lists (AI content generation, 12-level system, FSRS flashcards, workbook generator, read-along audio, school rankings). Add actual app screenshots and feature comparison matrix.
-
-- [ ] **Track: Create Unified App Directory Page** *Link: [./tracks/www_app_directory_20260517/](./tracks/www_app_directory_20260517/)*
-  Create central app directory (/apps) showcasing all 5 products with role-based filtering (Student, Teacher, Admin, Parent, Intern), helping users navigate the ecosystem and choose the right platform.
 
 - [x] **Track: www-reading-advantage i18n/l10n Remediation** (6/6 phases) *Link: [./archive/www_i18n_l10n_remediation_20260527/](./archive/www_i18n_l10n_remediation_20260527/)*
   Remedy 12 missing translation keys (header nav) and 183 hardcoded English strings across 19 page/component files. *Status: COMPLETE — All 6 phases done. Audit gate passes: 0 missing keys, 0 hardcoded strings. Build passes. 1198 tests pass (11 test files have pre-existing next-intl module resolution failures). ESLint clean.*
