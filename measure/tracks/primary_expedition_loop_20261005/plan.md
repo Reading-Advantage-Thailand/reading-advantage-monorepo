@@ -1,5 +1,7 @@
 # Plan — The Expedition Loop and the World Map (wave 2)
 
+> Re-dated 2026-10-26 (Daniel, decision C5): runs after Storytime release 1 (2026-12-01).
+
 Runs after the APK 3D port merge, Lane F, and the avatar shop. One commit per task; a separate
 agent reviews each phase.
 
