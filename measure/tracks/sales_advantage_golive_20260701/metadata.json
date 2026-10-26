@@ -3,7 +3,7 @@
   "type": "feature",
   "status": "in-progress",
   "created_at": "2026-07-01T00:00:00Z",
-  "updated_at": "2026-08-15T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
   "description": "Close authenticated production QA for the deployed Sales Advantage course. The deterministic curriculum, Cloud SQL database, and Cloud Run service are deployed. Accounts owns employee provisioning. Authenticated SALES_REP end-to-end QA remains open. The successor track sales_mastery_consumer_20260810 owns shared Mastery KST/SRS. This track does not claim shared-Mastery completion.",
   "estimated_tasks": 24,
   "actual_tasks": null,

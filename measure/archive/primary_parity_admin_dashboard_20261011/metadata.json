@@ -1,0 +1,22 @@
+{
+  "track_id": "primary_parity_admin_dashboard_20261011",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: School admin dashboard with real data (ADM-01, SYS-03, ADM-13)",
+  "estimated_tasks": 23,
+  "actual_tasks": 26,
+  "deviation_notes": "Template group 'dashboards' (sample member). Builds the shared module packages/domain/src/primary-dashboards/ and packages/domain/src/licenses/usage.ts. No schema change. Phase 2: tests use PGlite with real migrations, not a recording DB; code before tests. Phase 3: the new AdminDashboard strings replace the old namespace; Scene gets a contained option. Phase 4: domain numbers checked against the reference SQL on a clone through psql in the container (no host DB password); the page captures, the page time, and AC-8 wait for the batch capture (orchestrator). Fixed licenses.test.ts (drizzle-orm mock without sql). docs/primary-whats-moved.md rows updated. Closed 2026-10-26 (Daniel, check D2).",
+  "depends_on": [
+    "primary_parity_acceptance_20261011"
+  ],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 4,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  },
+  "completed": "2026-10-26"
+}

@@ -1,0 +1,10 @@
+{
+  "track_id": "primary_dockerfile_modernization_hotfix_20260925",
+  "type": "chore",
+  "status": "done",
+  "created": "2026-09-25",
+  "app": "apps/primary-advantage",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "completed": "2026-10-26",
+  "deviation_notes": "Closed 2026-10-26 (Daniel, check D1)."
+}

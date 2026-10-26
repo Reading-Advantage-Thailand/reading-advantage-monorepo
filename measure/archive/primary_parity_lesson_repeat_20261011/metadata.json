@@ -1,0 +1,54 @@
+{
+  "track_id": "primary_parity_lesson_repeat_20261011",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Teach a lesson again and start a lesson again",
+  "estimated_tasks": 29,
+  "actual_tasks": null,
+  "deviation_notes": "Closed 2026-10-26 (Daniel, check D2).",
+  "sprint": {
+    "goal": "A teacher teaches lesson 1 again, the students do it again, and the progress pages show attempt 2 and keep attempt 1.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Keep each closed attempt in a history",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "The student starts a lesson again",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "The teacher teaches a lesson again",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "The reports show the latest and the earlier attempts",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  },
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 7,
+    "depends_on": [
+      "primary_parity_quick_fixes_20261011"
+    ]
+  },
+  "completed": "2026-10-26"
+}

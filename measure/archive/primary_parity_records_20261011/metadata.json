@@ -1,0 +1,18 @@
+{
+  "track_id": "primary_parity_records_20261011",
+  "type": "chore",
+  "status": "done",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover",
+  "estimated_tasks": 18,
+  "actual_tasks": 18,
+  "deviation_notes": "Docs only. Phase 2 found 2 more limit tests than spec E-6 (audit-phase2 13.3, phase-14 test 13). Phase 3 removed 7 old lessons-learned entries (restore from 169928b98) to meet the 50-line limit. Many closeout tests stay red on tech-debt.md (106 lines) and graph.db age; doctor A13 failure is outside this track. Peer messages left to the orchestrator. Closed 2026-10-26 (Daniel, check D1).",
+  "depends_on": [],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 1,
+    "depends_on": []
+  },
+  "completed": "2026-10-26"
+}

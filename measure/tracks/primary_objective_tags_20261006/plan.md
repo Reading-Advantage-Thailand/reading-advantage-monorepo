@@ -27,7 +27,7 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
     - [x] Register the three tables `EXEMPT` in `packages/domain/src/tenant-registry.ts`
     - [x] `drizzle-kit generate` -> `0070_primary_objective_tags`; review the SQL; add it to `MIGRATION_LEDGER.md`; bump `--required-migration` in `apps/primary-advantage/cloudbuild.yaml`
     - [x] Package schema: `tags` parsed with the `TagsSchema` shape in `package-schema.ts` (FR-4)
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Contract and Schema Definition' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract and Schema Definition' (Protocol in workflow.md) — owner manual verification passed 2026-10-26 21:15 (checks T1-P1 to T1-P4, first page version); evidence: measure/tracks/primary_objective_tags_20261006/mastery-hand-checks-20261026.submissions.log
 
 ## Phase 2: Test
 - [x] Task: Contract tests (08cc9e9)
@@ -46,7 +46,7 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
     - [x] `coverage.test.ts`: objectives with no article, articles with no tags, words with no node
     - [x] `queries.test.ts`: the three read functions return node ids with short ids
 - [x] Task: Tenant coverage: `tenant-coverage.test.ts` passes with the three tables classified (d6ee8fd)
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) — owner manual verification passed 2026-10-26 21:15 (checks T1-P1 to T1-P4, first page version); evidence: measure/tracks/primary_objective_tags_20261006/mastery-hand-checks-20261026.submissions.log
 
 ## Phase 3: Implement
 - [x] Task: Importer writes the links (FR-4) (266d249, with its tests)
@@ -60,7 +60,7 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [x] Task: Read functions (FR-7) in `primary-mastery/queries.ts` (d6ee8fd)
 - [x] Task: Phase gate: type check, lint, and the domain and db test suites once; commit
   - 2026-10-06 on the integration base: domain targeted suites 109 passed; tsc and eslint clean for domain and db. The db suite has 3 failures that also fail on `primary-parity-integration` (missing 0068/0069 sentinel probes; the adversarial migration allowlist stops at 0057). Not from this track; recorded in tech-debt.
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — owner manual verification passed 2026-10-26 21:15 (checks T1-P1 to T1-P4, first page version); evidence: measure/tracks/primary_objective_tags_20261006/mastery-hand-checks-20261026.submissions.log
 
 ## Phase 4: Generate Docs and Doctor
 - [x] Task: Apply migration 0070 locally; run the db doctor with the new required migration
@@ -82,4 +82,4 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [x] Task: Update `measure/tracks.md`, this plan, `lessons-learned.md`, and `tech-debt.md` (the 28 printed packages without vocabulary nodes if Workbooks does not tag them)
   - Workbooks tagged the vocabulary of every package (250 of 250 carry word nodes), so that item is closed. Tech-debt records the pre-existing db test failures, the `o1` book key, the `glossaryWord` request, and the rerun rule.
   - 2026-10-06 later: Workbooks re-exported (341d5e7) with `glossaryWord` on every vocabulary entry (string or null); the strict contract rejected it, so `tagsVocabularySchema` now accepts the field. Dry run against the new export: same counts (14 matched, 280 of 280 questions). With a temporary id-map row for `o2/1` the legacy-id path matched 15 articles on the real database; the row was removed. Merged into `primary-parity-integration` (bcc0ddbdc) after the monorepo session's go-ahead; the mediation plan (production load, re-export, snapshot `primary_legacy_20261006`, ETL, backfill) is in the cutover spec §6.
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs and Doctor' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs and Doctor' (Protocol in workflow.md) — owner manual verification passed 2026-10-26 21:15 (checks T1-P1 to T1-P4, first page version); evidence: measure/tracks/primary_objective_tags_20261006/mastery-hand-checks-20261026.submissions.log

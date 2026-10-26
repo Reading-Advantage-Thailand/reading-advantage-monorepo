@@ -79,5 +79,5 @@ The owner authorized the reset, merge, push, deployment, and traffic switch afte
    stays off and the five scheduler jobs stay paused.
 6. The triage and the next steps: the owner triage files are in `~/Desktop/primary-parity-triage/`.
    See the set overview `measure/sets/primary_parity_20261011.md`, the decisions in
-   `measure/tracks/primary_parity_records_20261011/triage-decisions.md`, and rehearsal 3
+   `measure/archive/primary_parity_records_20261011/triage-decisions.md`, and rehearsal 3
    (`primary_parity_rehearsal3_20261011`).

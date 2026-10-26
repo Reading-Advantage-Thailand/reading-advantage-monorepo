@@ -136,7 +136,7 @@
 >   that reads `pnpm-lock.yaml`).
 > - `?? apps/marketing/next-env.d.ts` — untracked file in a different app.
 >   **Unrelated user work; preserve.**
-> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/` —
+> - `?? measure/archive/agents_md_audit_science_advantage_20260603/` —
 >   untracked fixtures dir for a different track (the
 >   `agents_md_audit_science_advantage_20260603` audit track, not this one).
 >   **Unrelated; preserve.**
@@ -301,7 +301,7 @@
 > HEAD in commit `d401e40b` (Phase 1 mid-attempt-3 lockfile restore). The
 > remaining unrelated dirty paths carried into this worktree
 > (`measure/automation-supervisor.py`, `apps/marketing/next-env.d.ts`,
-> `measure/tracks/agents_md_audit_science_advantage_20260603/`) are
+> `measure/archive/agents_md_audit_science_advantage_20260603/`) are
 > preserved per the MID scope rule. This MID commit touches only the two
 > new test files plus `measure/tracks/observability_stack_20260603/plan.md`
 > (a Measure doc, allowed by the MID scope rule). No overlap with the
@@ -369,7 +369,7 @@
 >
 > **Worktree hygiene at MID start (2026-06-19 this pass):**
 > `git status --porcelain` showed one untracked path:
-> `measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/`
+> `measure/archive/agents_md_audit_science_advantage_20260603/fixtures/`
 > — the untracked fixtures dir for a different track (the
 > `agents_md_audit_science_advantage_20260603` audit track, not this
 > one). **Unrelated; preserve.** No overlap with this track's commit.
@@ -459,7 +459,7 @@
 >
 > **Worktree hygiene at MID start (2026-06-19 this pass):**
 > `git status --porcelain` shows one untracked path:
-> `measure/tracks/agents_md_audit_science_advantage_20260603/` — the
+> `measure/archive/agents_md_audit_science_advantage_20260603/` — the
 > untracked fixtures dir for a different track (the
 > `agents_md_audit_science_advantage_20260603` audit track, not this
 > one). **Unrelated; preserve.** No overlap with this track's commit.
@@ -575,7 +575,7 @@ Files (in priority order):
 >
 > **Worktree hygiene at MID start (2026-06-19 this pass):**
 > `git status --porcelain` shows one untracked path:
-> `measure/tracks/agents_md_audit_science_advantage_20260603/` —
+> `measure/archive/agents_md_audit_science_advantage_20260603/` —
 > the untracked fixtures dir for a different track. **Unrelated;
 > preserve.** No overlap with this track's commit. This MID commit
 > touches only the 5 new test files plus
@@ -689,7 +689,7 @@ Files (in priority order):
 >
 > **Worktree hygiene at MID start (2026-06-19 this pass):**
 > `git status --porcelain` shows one untracked path:
-> `measure/tracks/agents_md_audit_science_advantage_20260603/` — the
+> `measure/archive/agents_md_audit_science_advantage_20260603/` — the
 > untracked fixtures dir for a different track (the
 > `agents_md_audit_science_advantage_20260603` audit track, not this
 > one). **Unrelated; preserve.** No overlap with this track's commit.
@@ -733,7 +733,7 @@ Files (in priority order):
 >
 > **Worktree hygiene at MID start (2026-06-19 this pass):**
 > `git status --porcelain` shows one untracked path:
-> `measure/tracks/agents_md_audit_science_advantage_20260603/` —
+> `measure/archive/agents_md_audit_science_advantage_20260603/` —
 > the untracked fixtures dir for a different track. **Unrelated;
 > preserve.** No overlap with this track's commit. This MID commit
 > touches only the new test file, the new shared fixture, and
@@ -833,7 +833,7 @@ Files (in priority order):
 >   disk under `/tmp/opencode/` for the Green role to reference
 >   (e.g., to recover the partial `startSpan` pattern, the
 >   `spanTraceId` capture, or the fallback span structure).
-> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+> - `?? measure/archive/agents_md_audit_science_advantage_20260603/`
 >   — **unrelated; preserve.** Untracked fixtures dir for a
 >   different track.
 >
@@ -958,7 +958,7 @@ Files (in priority order):
 >   **related to this track, Measure doc, allowed.** This file is
 >   edited by MID to mark the Phase 7 tasks as `[~]` and to record
 >   the Red evidence.
-> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+> - `?? measure/archive/agents_md_audit_science_advantage_20260603/`
 >   — **unrelated; preserve.** Untracked fixtures dir for a
 >   different track.
 >
@@ -1033,7 +1033,7 @@ Files (in priority order):
 > **Worktree hygiene at MID start (2026-06-20 this pass):**
 > `git status --porcelain` showed two untracked paths. Classification:
 > - `?? apps/marketing/next-env.d.ts` — **unrelated; preserve.**
-> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+> - `?? measure/archive/agents_md_audit_science_advantage_20260603/`
 >   — **unrelated; preserve.** Untracked fixtures dir for a different
 >   track.
 >
@@ -1293,7 +1293,7 @@ For each site (Phase 8a–8e):
 >   **related, owned by this commit.** The new Phase 8e Red test.
 > - `?? apps/marketing/next-env.d.ts` — **unrelated; preserve.**
 >   Different app's auto-generated Next.js types file.
-> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/` —
+> - `?? measure/archive/agents_md_audit_science_advantage_20260603/` —
 >   **unrelated; preserve.** Untracked fixtures dir for a
 >   different track.
 > - `?? packages/db/src/__tests__/phase-2-insert-roundtrip.test.ts` —
@@ -1684,7 +1684,7 @@ For each site (Phase 8a–8e):
 >   — `video_pipeline_20260613` Phase 3 marketing adversarial test.
 > - `?? apps/marketing/next-env.d.ts` — auto-generated Next.js
 >   types file in the marketing app.
-> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+> - `?? measure/archive/agents_md_audit_science_advantage_20260603/`
 >   — untracked fixtures dir for the `agents_md_audit_science_advantage_20260603`
 >   audit track.
 > - `?? measure/tracks/housekeeping_batch_20260603/` — untracked

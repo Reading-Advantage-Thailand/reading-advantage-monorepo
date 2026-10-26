@@ -1,0 +1,10 @@
+{
+  "track_id": "game_cartridges_build_hotfix_20260925",
+  "type": "bug",
+  "status": "done",
+  "created": "2026-09-25",
+  "app": "packages/game-cartridges",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "completed": "2026-10-26",
+  "deviation_notes": "Closed 2026-10-26 (Daniel, check D1)."
+}

@@ -1,0 +1,12 @@
+{
+  "track_id": "marketing_broken_ux_fixes_20260919",
+  "type": "bug",
+  "status": "done",
+  "created_at": "2026-09-19T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "description": "Repair the broken ux items identified by the Marketing user-experience refactor plan.",
+  "estimated_tasks": 10,
+  "actual_tasks": 10,
+  "deviation_notes": "Closed 2026-10-26 (Daniel, check D1).",
+  "completed": "2026-10-26"
+}
