@@ -1,3 +1,15 @@
+/**
+ * Red r3 note for track security_upgrade_20261026.
+ * Red r1 and r2 used volcengine-agent-plan/deepseek-v4-pro.
+ * That plan has no quota, so Red r3 uses xai/grok-4.7.
+ * plan.md already holds Green edits, so this note is not in plan.md.
+ *
+ * The ten existing override pins stay exact.
+ * An added override key must name a package in the guard floor list.
+ * The added value must be an exact version at or above that floor.
+ * The added value must stay on the same major as the floored line.
+ * A 0.x floor must stay on the same minor.
+ */
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -138,6 +150,70 @@ function parseFlatBlock(src: string, blockName: string): Record<string, string> 
   return out;
 }
 
+/** The ten override pins that must stay exact. An added key is not in this map. */
+const REQUIRED_OVERRIDE_PINS: Record<string, string> = {
+  "drizzle-orm": "0.45.2",
+  next: "16.4.1",
+  react: "19.2.9",
+  "react-dom": "19.2.9",
+  vitest: "4.1.8",
+  vite: "8.1.6",
+  typescript: "5.9.3",
+  "@types/react": "19.2.2",
+  "@types/react-dom": "19.2.2",
+  "@vitejs/plugin-react": "6.0.3",
+};
+
+/**
+ * Checks override pins against the guard floors.
+ * A required key must keep its exact value.
+ * An added key must name a package in the guard floor list.
+ * The added value must be an exact version at or above that floor.
+ * The added value must stay on the same major as the floored line.
+ * A 0.x floor must stay on the same minor.
+ * Each failure names the key.
+ */
+function evaluateOverrideContract(
+  actual: Record<string, string>,
+  required: Record<string, string>,
+  entries: GuardEntry[],
+): string[] {
+  const failures: string[] = [];
+  const isExactVersion = (value: string): boolean => /^\d+(\.\d+)+$/.test(value);
+  const sameFlooredLine = (fixedVersion: string, value: string): boolean => {
+    const fixed = fixedVersion.split(".");
+    const got = value.split(".");
+    if (fixed[0] === "0") return got[0] === "0" && got[1] === fixed[1];
+    return got[0] === fixed[0];
+  };
+  for (const key of Object.keys(required)) {
+    if (actual[key] !== required[key]) {
+      failures.push(`key=${key} expected=${required[key]} actual=${actual[key] ?? "missing"}`);
+    }
+  }
+  for (const key of Object.keys(actual)) {
+    if (Object.prototype.hasOwnProperty.call(required, key)) continue;
+    const floors = entries.filter((entry) => entry.packageName === key);
+    if (floors.length === 0) {
+      failures.push(`key=${key} is not in the guard floor list`);
+      continue;
+    }
+    const value = actual[key];
+    if (!isExactVersion(value)) {
+      failures.push(`key=${key} is not an exact version`);
+      continue;
+    }
+    const onLine = floors.filter((entry) => sameFlooredLine(entry.fixedVersion, value));
+    if (onLine.length === 0) {
+      failures.push(`key=${key} crosses a major`);
+      continue;
+    }
+    const met = onLine.some((entry) => compareVersions(value, entry.fixedVersion) >= 0);
+    if (!met) failures.push(`key=${key} is below the fixed version`);
+  }
+  return failures;
+}
+
 /**
  * Recursively discovers every `package.json` under `root`, skipping vendored trees.
  */
@@ -233,6 +309,61 @@ describe("refutation fixtures", () => {
     expect(msg).toContain("package=@sentry/nextjs");
     expect(msg).toContain("locked=10.59.0");
   });
+
+  it("an added override key for a package outside the guard list fails and names the key", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, vinext: "1.3.1" };
+    const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(msg).toContain("key=vinext");
+    expect(msg).toContain("is not in the guard floor list");
+  });
+
+  it("an added override value below the fixed version fails and names the key", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, compression: "1.8.1" };
+    const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(msg).toContain("key=compression");
+    expect(msg).toContain("is below the fixed version");
+  });
+
+  it("an added override value across a major fails and names the key", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, compression: "2.0.0" };
+    const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(msg).toContain("key=compression");
+    expect(msg).toContain("crosses a major");
+  });
+
+  it("an added 0.x override that leaves the floored minor fails and names the key", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, "@xmldom/xmldom": "0.10.0" };
+    const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(msg).toContain("key=@xmldom/xmldom");
+    expect(msg).toContain("crosses a major");
+  });
+
+  it("an added override range fails and names the key", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, compression: "^1.8.2" };
+    const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(msg).toContain("key=compression");
+    expect(msg).toContain("is not an exact version");
+  });
+
+  it("a changed required override pin fails and names the key", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, next: "16.2.9" };
+    const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(msg).toContain("key=next");
+    expect(msg).toContain("expected=16.4.1");
+    expect(msg).toContain("actual=16.2.9");
+  });
+
+  it("a correct added override key on the floored line passes", () => {
+    const actual = {
+      ...REQUIRED_OVERRIDE_PINS,
+      compression: "1.8.2",
+      "image-size": "2.0.3",
+      "@xmldom/xmldom": "0.9.12",
+      "extract-zip": "2.0.2",
+      "url-regex": "5.0.1",
+    };
+    expect(evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES)).toEqual([]);
+  });
 });
 
 describe("guard list", () => {
@@ -293,18 +424,7 @@ describe("live version guard", () => {
 describe("workspace contract", () => {
   const ws = readFileSync(resolve(ROOT, "pnpm-workspace.yaml"), "utf8");
 
-  const OVERRIDES_EXPECTED = {
-    "drizzle-orm": "0.45.2",
-    next: "16.4.1",
-    react: "19.2.9",
-    "react-dom": "19.2.9",
-    vitest: "4.1.8",
-    vite: "8.1.6",
-    typescript: "5.9.3",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
-    "@vitejs/plugin-react": "6.0.3",
-  };
+  const OVERRIDES_EXPECTED = REQUIRED_OVERRIDE_PINS;
 
   const CATALOG_EXPECTED = {
     "@ai-sdk/google": "^2.0.36",
@@ -412,9 +532,10 @@ describe("workspace contract", () => {
     zustand: "^5.0.9",
   };
 
-  it("the overrides keys move next/react/react-dom/vite and no other override value changes", () => {
+  it("keeps the ten override pins exact and allows only a same-line floor pin", () => {
     const overrides = parseFlatBlock(ws, "overrides");
-    expect(overrides).toEqual(OVERRIDES_EXPECTED);
+    const failures = evaluateOverrideContract(overrides, OVERRIDES_EXPECTED, GUARD_ENTRIES);
+    if (failures.length > 0) throw new Error(`override contract:\n${failures.join("\n")}`);
   });
 
   it("the catalog sharp range is ^0.35.5 and no other catalog range changes", () => {
