@@ -52,6 +52,8 @@
 
 - Smoke attempt 5 (2026-10-25 20:22-20:42 ICT, HEAD 26f02bbd0): `DOCKER SMOKE FAIL: the build hit the 20m time limit`, PASS=1, FAIL=2. The install reached 2071 of 2075 packages under registry faults; every try started from zero.
 - r7: the pnpm store moves into a build cache mount (`1990bb1a7`); attempt 6 follows.
+- Smoke attempts 6 (2026-10-26 21:19-21:41 ICT, HEAD 649ddca75) and 7 (2026-10-26 22:32-22:52 ICT, HEAD 13f0f137a): both hit the 20m time limit. Attempt 7 shows the store cache works (`reused 784`), but the install still makes one metadata (packument) request per package, for example `Request took 23805ms: https://registry.npmjs.org/react`: pnpm 11 fetches that metadata again every attempt for its supply-chain release-age check ("Verifying lockfile against supply-chain policies (2289 entries)"), and the metadata cache is not in the store.
+- r8: the pnpm metadata cache moves into a second cache mount (`b154b10e2`); attempt 8 follows.
 
 ## Phase 2: Shared data contracts
 
