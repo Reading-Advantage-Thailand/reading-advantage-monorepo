@@ -52,4 +52,16 @@ describe("youtubeIds", () => {
     const links = { videos: [{ id: "B4", youtubeId: "-3UpVH9Xp50" }, { id: "B5", youtubeId: "abc\" onload=\"x" }, { id: "E1", youtubeId: "https://youtu.be/-3UpVH9Xp50" }] };
     expect(youtubeIds(links, ["B4", "B5", "E1"])).toEqual({ B4: "-3UpVH9Xp50" });
   });
+
+  it("uses the main file row for a duplicate id in either row order", () => {
+    const main = { id: "A1", file: "a1-welcome-new-primary-th.mp4", playlist: "students", youtubeId: "GFqxN3rIdQc" };
+    const variant = { id: "A1", file: "a1-welcome-new-primary-th-16x9.mp4", playlist: "teachers", youtubeId: "613UdETsOp4" };
+    expect(youtubeIds({ videos: [main, variant] }, ["A1"])).toEqual({ A1: "GFqxN3rIdQc" });
+    expect(youtubeIds({ videos: [variant, main] }, ["A1"])).toEqual({ A1: "GFqxN3rIdQc" });
+  });
+
+  it("drops an id whose only row is the 16:9 variant", () => {
+    const links = { videos: [{ id: "A1", file: "a1-welcome-new-primary-th-16x9.mp4", playlist: "teachers", youtubeId: "613UdETsOp4" }] };
+    expect(youtubeIds(links, ["A1"])).toEqual({});
+  });
 });
