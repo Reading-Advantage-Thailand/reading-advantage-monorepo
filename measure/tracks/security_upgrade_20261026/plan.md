@@ -152,7 +152,7 @@
 
 > Each command below runs through `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'`. The commands run one at a time.
 
-- [ ] 2.1 `apps/accounting`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
+- [~] 2.1 `apps/accounting`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
 
   Phase 2 Red evidence — the ledger contract. The Red role wrote `tests/security-upgrade-verification-ledger.test.ts`. The Red role wrote no other file. The ledger file `measure/tracks/security_upgrade_20261026/verification-ledger.json` is absent. The Red run exits with code 1. Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 900 pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-verification-ledger.test.ts'`. phase_base_sha=9ee8505883cec92e87daa31f00ff71ced052dead. role_base_sha=70de5bea8f4931dcda9180c4908f20a5d5fd6987. Result: `Test Files 1 failed (1)`, `Tests 1 failed | 26 passed (27)`, exit_code=1. The one failure is the live ledger test. Its message reads `reason=ledger_file_absent searched=measure/archive/security_upgrade_20261026/verification-ledger.json measure/tracks/security_upgrade_20261026/verification-ledger.json`. The 26 fixture self-tests pass. The run holds no import error and no config error. The full output is in `measure/runs/security_upgrade_20261026/mid-red-70de5bea8.vitest.log`. This is not a pass.
 
