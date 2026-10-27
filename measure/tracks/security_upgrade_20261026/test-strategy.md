@@ -503,16 +503,18 @@ The test reads `docs/deployment/security-upgrade-2026-10.md`. That path stays af
 The test fails when:
 
 - The file is missing or empty (A4).
-- Any of the ten service names is missing: `accounting`, `accounts`, `codecamp-advantage`, `marketing`, `primary-advantage-app`, `reading-advantage-web`, `sales-advantage`, `storytime-app`, `workbooks`, `www-reading-advantage`.
-- An entry lacks `app=`, `commit=`, `order=`, or `check=`.
-- `order=` values are not the integers 1 through 10, each once. Parse the integer after the label (A3).
-- `reading-advantage-web` and `primary-advantage-app` are not the two highest orders.
+- Any of the nine covered service names is missing: `accounting`, `accounts`, `codecamp-advantage`, `marketing`, `primary-advantage-app`, `sales-advantage`, `storytime-app`, `workbooks`, `www-reading-advantage`.
+- A covered entry lacks `app=`, `commit=`, `order=`, or `check=`.
+- Covered `order=` values are not the integers 1 through 9, each once. Parse the integer after the label (A3).
+- `primary-advantage-app` does not have the highest covered order.
+- The `reading-advantage-web` entry lacks the exact mark `NOT COVERED by this commit`, its reason, the live image source `web/Dockerfile` line 2 (`FROM node:20.18`) in the legacy repository, or the owner of its patch.
+- The `reading-advantage-web` entry contains `app=apps/reading-advantage`, `commit=`, `order=`, or `check=`.
 - The file lacks `node:22-alpine` or `node:20.18`.
 - The file contains `git push` or `gcloud builds submit`.
-- `commit=` is `HEAD`, `latest`, or shorter than 7 hex digits.
+- A covered `commit=` is `HEAD`, `latest`, or shorter than 7 hex digits.
 - `git merge-base --is-ancestor <commit> HEAD` fails, or that commit does not touch `pnpm-lock.yaml`.
 
-Suggested order, lowest load first. Task 3.3 may swap the last two. Both stay last.
+Suggested order for the nine covered services, lowest load first. Task 3.3 may adjust the order, but `primary-advantage-app` stays last.
 
 | order | service | app |
 | --- | --- | --- |
@@ -524,12 +526,11 @@ Suggested order, lowest load first. Task 3.3 may swap the last two. Both stay la
 | 6 | `marketing` | `apps/marketing` |
 | 7 | `codecamp-advantage` | `apps/codecamp-advantage` |
 | 8 | `www-reading-advantage` | `apps/www-reading-advantage` |
-| 9 | `reading-advantage-web` | `apps/reading-advantage` |
-| 10 | `primary-advantage-app` | `apps/primary-advantage` |
+| 9 | `primary-advantage-app` | `apps/primary-advantage` |
 
-Each `check=` is one HTTP GET of a path the app already serves. A check that only says "deploy succeeded" fails Review A. For `primary-advantage-app` and `reading-advantage-web`, the check requests one `next/image` URL and requires status 200. Daniel's team runs the check. This track does not.
+Each covered `check=` is one HTTP GET of a path the app already serves. A check that only says "deploy succeeded" fails Review A. The `primary-advantage-app` check requests one `next/image` URL and requires status 200. Daniel's team runs the check. This track does not. `reading-advantage-web` is not covered by this commit and has no deploy check here.
 
-The runtime note in the file must say: `node:22-alpine` needs no tag change; a rebuild pulls Node `22.23.4`. `apps/reading-advantage/Dockerfile` stays on `node:20.18` until Daniel decides.
+The runtime note in the file must say: `node:22-alpine` needs no tag change; a rebuild pulls Node `22.23.4`. `apps/reading-advantage/Dockerfile` stays on `node:20.18` until Daniel decides. The separate live service `reading-advantage-web` uses `node:20.18` from the legacy repository's `web/Dockerfile` line 2; identify the patch owner in its not-covered entry.
 
 **RED_TEST_COMMAND:**
 
@@ -548,12 +549,14 @@ bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/d
 
 ### Closeout gate
 
-The Green gate, then the local merge of `chore/security-upgrade-2026-10` into local `master`. Do not push. The merge stops when a P1 or P2 check is red. After the merge, `git merge-base --is-ancestor <upgrade-commit> master` exits 0. The PM report names the merge SHA, the advisory table, `supply_chain_hits`, the open majors, and the ten services. It does not say the deploy is done.
+The Green gate, then the local merge of `chore/security-upgrade-2026-10` into local `master`. Do not push. The merge stops when a P1 or P2 check is red. After the merge, `git merge-base --is-ancestor <upgrade-commit> master` exits 0. The PM report names the merge SHA, the advisory table, `supply_chain_hits`, the open majors, and the nine covered services. It does not say the deploy is done.
 
 ### Fixtures and live proof
 
 - The redeploy test reads the real doc. It does not mock the file.
-- A fixture string that omits one service must fail.
+- A fixture that omits one of the nine covered services or the `reading-advantage-web` not-covered entry must fail.
+- A fixture that omits the not-covered mark, reason, legacy image source, or patch owner must fail.
+- A fixture that adds `app=apps/reading-advantage`, `commit=`, `order=`, or `check=` to `reading-advantage-web` must fail.
 - A fixture with `order=2026` must fail (A3).
 - The merge check is a live Git command. It is not a deploy.
 
@@ -567,7 +570,7 @@ The Green gate, then the local merge of `chore/security-upgrade-2026-10` into lo
 
 ### Review applicability
 
-- Review A: yes. The ten services, the order, the commit, and one real check each.
+- Review A: yes. The nine covered services, the order, the commit, and one real check each. Verify that `reading-advantage-web` is marked not covered and has no commit, order, or check.
 - Review B: yes, narrow. The doc must not push, must not submit Cloud Build, and must keep the `node:20.18` gap visible. A missing service is an unpatched production gap.
 - Review C: no. The phase adds no UI and no API.
 - Adversarial: no. The artifact test already fails on a missing service, a bad order, and a commit that does not touch the lockfile. There is no new runtime to attack.
@@ -575,7 +578,7 @@ The Green gate, then the local merge of `chore/security-upgrade-2026-10` into lo
 
 ### Phase acceptance checks
 
-- AC-6: the doc test exits 0, and the file names all ten services.
+- AC-6: the doc test exits 0, and the file names all ten Cloud Run services: nine covered entries and the not-covered `reading-advantage-web` entry.
 - AC-7: the branch is merged into local `master`. The remote is unchanged.
 - No push, no deploy, and no `gcloud` command in the phase log.
 - The version-guard test still exits 0 on the merge commit.
