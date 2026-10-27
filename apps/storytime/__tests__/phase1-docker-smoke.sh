@@ -15,6 +15,25 @@ fail() { RESULTS+=("FAIL: $1"); FAIL_COUNT=$((FAIL_COUNT + 1)); FAILED=1; }
 ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 IMAGE="storytime-phase1-local:$(git -C "$ROOT" rev-parse --short HEAD)"
 CONTAINER=""
+EXTERNAL_BEFORE=""
+# PM 2026-10-27 15:32: a stopped image build leaves its buildah working containers behind, and
+# podman --force-rm does not remove them after the timeout kill. This removes only the working
+# containers that this build made, and it keeps the containers that existed before the build.
+remove_build_containers() {
+  local id name
+  podman ps -a --external --format '{{.ID}} {{.Names}}' 2>/dev/null | while read -r id name; do
+    case "$name" in
+      *-working-container) ;;
+      *) continue ;;
+    esac
+    if printf '%s\n' "$EXTERNAL_BEFORE" | grep -qx "$id"; then continue; fi
+    if buildah rm "$id" >/dev/null 2>&1; then
+      echo "Removed the build container $id ($name)"
+    else
+      echo "Cannot remove the build container $id ($name)"
+    fi
+  done
+}
 cleanup() { if [ -n "$CONTAINER" ]; then docker rm -f "$CONTAINER" >/dev/null; fi; }
 trap cleanup EXIT
 
@@ -30,9 +49,13 @@ echo "=== AC-1.4 image builds from the monorepo root ==="
 # inside the container pnpm install, so the limit bounds a stuck fetch, not a base pull.
 BUILD_RC=0
 if [ "$FAILED" -eq 0 ]; then
-  # PM 2026-10-26: the local build uses the host network; the container network path failed DNS (EAI_AGAIN). Cloud Build does not use this script.
-  timeout 20m docker build --network=host -f "$ROOT/apps/storytime/Dockerfile" -t "$IMAGE" "$ROOT"
+  # PM 2026-10-27 15:32: record the containers that exist before the build, so the cleanup
+  # keeps them. PM 2026-10-26: the local build uses the host network; the container network
+  # path failed DNS (EAI_AGAIN). Cloud Build does not use this script.
+  EXTERNAL_BEFORE="$(podman ps -a --external --format '{{.ID}}' 2>/dev/null | sort)"
+  timeout 20m docker build --force-rm --network=host -f "$ROOT/apps/storytime/Dockerfile" -t "$IMAGE" "$ROOT"
   BUILD_RC=$?
+  if [ "$BUILD_RC" -ne 0 ]; then remove_build_containers; fi
   if [ "$BUILD_RC" -eq 0 ]; then
     pass "The local image builds"
   elif [ "$BUILD_RC" -eq 124 ]; then
