@@ -10,6 +10,9 @@ steps:
   # Step 1: Build the Docker image from the monorepo root context.
   - name: "gcr.io/cloud-builders/docker"
     id: "build-image"
+    # The Dockerfile uses the cache mount syntax of BuildKit (RUN --mount=type=cache).
+    # This builder does not use BuildKit by default, so this step turns it on.
+    env: ["DOCKER_BUILDKIT=1"]
     args:
       - "build"
       - "-f"
