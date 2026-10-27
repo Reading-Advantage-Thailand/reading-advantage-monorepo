@@ -111,12 +111,11 @@ A command that fails on a change in this track fails the task. A command that fa
 `docs/deployment/security-upgrade-2026-10.md` names, for each Cloud Run service:
 
 1. The service name.
-2. The app folder.
-3. The commit that holds the upgrade.
-4. The order of the deploy.
-5. One check to run after the deploy.
+2. For a covered service: the app folder, the commit that holds the upgrade, the order of the deploy, and one check to run after the deploy.
 
-The file gives the order of the deploys. The lowest-traffic services go first. `reading-advantage-web` and `primary-advantage-app` go last, because they carry the most traffic.
+A service that this commit does not cover carries the mark "NOT COVERED by this commit". Its entry gives the reason, the source of its live image, and the owner of its patch. Its entry gives no commit, no order, and no check.
+
+The file gives the order of the deploys. The lowest-traffic covered services go first. `primary-advantage-app` goes last among the covered services, because it carries the most traffic.
 
 ### FR-9: The runtime line of `apps/reading-advantage`
 
@@ -135,7 +134,7 @@ The branch merges into the local `master` after the tests and the reviews pass. 
 | AC-3 | Every package in FR-5 and every transitive package in section 10.2 of the audit sits at its fixed version in the lockfile. |
 | AC-4 | `pnpm audit --json` reports zero critical advisories and zero high advisories for the packages in scope. The MAJOR bumps of section 6 stay open and the report names them. |
 | AC-5 | Each of the ten deployed apps passes `check-types`, `lint`, `test` and `build`. |
-| AC-6 | `docs/deployment/security-upgrade-2026-10.md` names all ten Cloud Run services with the app, the commit, the order and one check each. |
+| AC-6 | `docs/deployment/security-upgrade-2026-10.md` names all ten Cloud Run services. Each covered service has the app, the commit, the order and one check. A not-covered service has the "NOT COVERED by this commit" mark, the reason, the live image source and the patch owner. |
 | AC-7 | The branch merges into the local `master`. The push and the deploy stay with Daniel's team. |
 
 ## 6. The MAJOR bumps that stay open
