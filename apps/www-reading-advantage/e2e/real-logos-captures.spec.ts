@@ -42,8 +42,17 @@ const FAVICON_PATHS = [
   "/zh/favicon.ico",
 ] as const;
 
+/** One named capture. The scroll, footer, and dark keys are optional. */
+type Capture = {
+  name: string;
+  path: string;
+  scroll?: "homeCards" | "b2bGrid";
+  footer?: boolean;
+  dark?: boolean;
+};
+
 /** Named captures. The order matches the Red test file. */
-const CAPTURES = [
+const CAPTURES: Capture[] = [
   { name: "en-home-light.png", path: "/en", scroll: "homeCards" },
   { name: "en-home-footer-light.png", path: "/en", footer: true },
   { name: "en-products-light.png", path: "/en/products", scroll: "b2bGrid" },
@@ -57,26 +66,30 @@ const CAPTURES = [
   { name: "en-tutor-light.png", path: "/en/products/tutor-advantage" },
   { name: "th-home-light.png", path: "/th" },
   { name: "th-primary-light.png", path: "/th/products/primary-advantage" },
-  { name: "en-home-dark.png", path: "/en", dark: true },
+  { name: "en-home-dark.png", path: "/en", scroll: "homeCards", dark: true },
   { name: "en-tutor-dark.png", path: "/en/products/tutor-advantage", dark: true },
-] as const;
+];
 
 /**
- * Records image responses that answer 404 while the page loads.
+ * Records every observed image response while the page loads and scrolls.
  * @param page The Playwright page to listen on.
- * @returns The array that collects offending image URLs.
+ * @returns The image URL list and the list that collects offending 404 URLs.
  */
-function collectNotFoundImages(page: Page): string[] {
+function collectImageResponses(page: Page): {
+  urls: string[];
+  notFound: string[];
+} {
+  const urls: string[] = [];
   const notFound: string[] = [];
   page.on("response", (response) => {
-    if (
-      response.request().resourceType() === "image" &&
-      response.status() === 404
-    ) {
-      notFound.push(response.url());
+    if (response.request().resourceType() === "image") {
+      urls.push(response.url());
+      if (response.status() === 404) {
+        notFound.push(response.url());
+      }
     }
   });
-  return notFound;
+  return { urls, notFound };
 }
 
 test.beforeAll(() => {
@@ -107,7 +120,8 @@ test("serves the new 6507-byte favicon at root and per locale", async ({
 
 for (const capture of CAPTURES) {
   test(`captures ${capture.name}`, async ({ page }) => {
-    const notFoundImages = collectNotFoundImages(page);
+    const { urls: imageUrls, notFound: notFoundImages } =
+      collectImageResponses(page);
     await page.setViewportSize(VIEWPORT);
     if (capture.dark) {
       await page.emulateMedia({ colorScheme: "dark" });
@@ -136,6 +150,13 @@ for (const capture of CAPTURES) {
       }
       await page.waitForTimeout(300);
     }
+    // Lazy images can answer 404 only after the scroll. Wait for the network
+    // to settle, then assert on the observed image responses.
+    await page.waitForLoadState("networkidle");
+    expect(
+      imageUrls.length,
+      `no image response observed on ${capture.path}`,
+    ).toBeGreaterThan(0);
     expect(
       notFoundImages,
       `404 images on ${capture.path}: ${notFoundImages.join(", ")}`,
