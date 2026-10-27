@@ -95,12 +95,14 @@ The lockfile keeps its current format. The workspace `pnpm-workspace.yaml` keeps
 
 ### FR-7: The verification of each deployed app
 
-Each app in section 9 of the audit passes four commands:
+Each app folder of the Phase 2 matrix passes four commands:
 
 1. `check-types`
 2. `lint`
 3. `test` with `vitest --maxWorkers=1`
 4. `build`
+
+The matrix holds ten app folders. `apps/reading-advantage` is one of them. The live Reading service stays outside this requirement. Plan task 1.9 holds the coverage boundary.
 
 Each command runs through `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'`. The heavy script takes the shared lock, so one heavy job runs at a time.
 
@@ -132,14 +134,14 @@ The branch merges into the local `master` after the tests and the reviews pass. 
 | AC-1 | The version-guard test fails on the pre-upgrade lockfile and passes on the post-upgrade lockfile. The failure message names the advisory, the locked version and the fixed version. |
 | AC-2 | `pnpm-lock.yaml` holds `next` 16.4.1, `react` 19.2.9, `react-dom` 19.2.9 and `sharp` 0.35.5 or later. |
 | AC-3 | Every package in FR-5 and every transitive package in section 10.2 of the audit sits at its fixed version in the lockfile. |
-| AC-4 | `pnpm audit --json` reports zero critical advisories and zero high advisories for the packages in scope. The MAJOR bumps of section 6 stay open and the report names them. |
-| AC-5 | Each of the ten deployed apps passes `check-types`, `lint`, `test` and `build`. |
+| AC-4 | `pnpm audit --json` reports zero critical advisories and zero high advisories for the packages in scope. The nine MAJOR bumps of section 6 and the two no-fix packages stay open. The report names them. |
+| AC-5 | Each of the ten app folders of the Phase 2 matrix passes `check-types`, `lint`, `test` and `build`. The live Reading service stays outside this criterion. Plan task 1.9 holds the coverage boundary. |
 | AC-6 | `docs/deployment/security-upgrade-2026-10.md` names all ten Cloud Run services. Each covered service has the app, the commit, the order and one check. A not-covered service has the "NOT COVERED by this commit" mark, the reason, the live image source and the patch owner. |
 | AC-7 | The branch merges into the local `master`. The push and the deploy stay with Daniel's team. |
 
 ## 6. The MAJOR bumps that stay open
 
-The audit lists eight. They stay out of scope.
+The plan register of task 1.9 names nine. They stay out of scope. This section is the register for the audit pass rule of AC-4.
 
 | Package | Locked | Fixed | Reason |
 | --- | --- | --- | --- |
@@ -148,9 +150,16 @@ The audit lists eight. They stay out of scope.
 | `next-mdx-remote` | 5.0.0 | 6.0.0 | The major release changes the MDX render path of the www site. |
 | `vinext` | 0.2.0 | 1.3.1 | The jump crosses from 0.x to 1.x. It changes the runtime of marketing. |
 | `@opentelemetry/propagator-jaeger` | 1.30.1 | 2.9.0 | The Sentry chain of `apps/science-advantage` changes. |
+| `@opentelemetry/sdk-node` | 0.57.2 | 0.217.0 | The jump crosses to the OpenTelemetry 2 line. It changes the Sentry chain of `apps/science-advantage`. |
+| `@opentelemetry/exporter-prometheus` | 0.57.2 | 0.217.0 | The jump crosses to the OpenTelemetry 2 line. It changes the metrics chain of `apps/science-advantage`. |
 | `@faker-js/faker` | 9.9.0 | 10.4.1 | The test seed data changes. |
 | `basic-ftp` | 5.3.1 | 6.2.1 | The www video pipeline changes. |
-| `js-yaml` (the 4.x line) | 4.2.0 | 4.3.2 | The 4.x copy moves as a minor bump. The 3.x copy needs the major bump to 4.x. |
+
+The `js-yaml` entry left this list. The lockfile holds `js-yaml` 3.15.2 and 4.3.2. Those are the guard floors of plan task 1.2.
+
+Two packages have no patched release. They stay open for a different reason. `extract-zip` 2.0.1 and `url-regex` 5.0.0 have no patched release above the vulnerable range. Plan task 1.9 holds the registry evidence. They are not in the table above, because they are not MAJOR bumps.
+
+The guard file `tests/security-upgrade-guard-list.ts` holds the two OpenTelemetry rows in `OPEN_MAJORS`. It holds the two no-fix rows in `NO_FIX_AVAILABLE`. The floor list holds neither.
 
 ## 7. The supply chain result
 

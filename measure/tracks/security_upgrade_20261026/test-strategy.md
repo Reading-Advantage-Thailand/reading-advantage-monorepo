@@ -2,10 +2,10 @@
 
 > **Track:** `security_upgrade_20261026` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md) · **Audit:** [audit-2026-10-26.md](./audit-2026-10-26.md)
 > **Branch:** `chore/security-upgrade-2026-10` in `/home/daniebo/Desktop/rama-worktrees/security-upgrade`
-> **role_base_sha:** `a64616a4d` (branch start). This SHA is not `phase_base_sha`.
-> **Model deviation:** The role table pins `claude-code/claude-opus-5-5[1m]#high`. Claude is at 83% of its weekly window. Daniel's model table (2026-10-26 21:29) sets `xai/grok-4.7#high` for Strategy and Review A tonight.
+> **role_base_sha:** `a64616a4d` (the branch start). The P1 Green gate uses it. The Phase 2 role base is `9ee850588`, the accepted Phase 1 HEAD. Neither SHA is `phase_base_sha`.
+> **Model deviation:** The role table pins `claude-code/claude-opus-5-5[1m]#high`. The Phase 1 strategy ran on `xai/grok-4.7#high`. The Phase 2 strategy runs on `minimax-cn-coding-plan/MiniMax-M3#high`. Grok has no quota.
 
-The audit is the source for every version. Spec section 6 names `js-yaml` in the major list. The audit table does not. Both `js-yaml` lines move as a minor bump (`3.14.2` to `3.15.2`, `4.2.0` to `4.3.2`). The guard includes both lines. The guard does not require `3.x` to become `4.x`.
+The audit is the source for every version. Spec section 6 names the nine open majors. It no longer names `js-yaml`. Both `js-yaml` lines move as a minor bump (`3.14.2` to `3.15.2`, `4.2.0` to `4.3.2`). The guard includes both lines. The guard does not require `3.x` to become `4.x`.
 
 `graph.db` is present. This track changes versions and adds tests. It changes no exported product symbol. A caller check is not a phase gate.
 
@@ -20,40 +20,44 @@ The worktree has no `node_modules`. Install before the first Vitest run.
 - Vitest uses `--maxWorkers=1`. Jest uses `--runInBand`.
 - Do not run `pnpm turbo run test`, `pnpm turbo run build`, or `pnpm turbo run lint` on the whole monorepo.
 - A turbo call that this file allows uses `--concurrency=1`. The default concurrency can exhaust 7 GB.
+- One heavy job runs at a time. The next heavy job starts after the previous one ends.
+- Every heavy command carries a `timeout` inside the `heavy-run.sh` string. A command without a bound holds the lock forever.
 - Do not push, deploy, run Cloud Build, or run `gcloud`.
 - Do not change a Dockerfile or a Cloud Build file.
 
 Install before the lockfile changes (Phase 1 Red):
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm install --frozen-lockfile --offline'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 3600 pnpm install --frozen-lockfile --offline'
 ```
 
 If the store lacks a package, run the online command once:
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm install --frozen-lockfile'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 3600 pnpm install --frozen-lockfile'
 ```
 
 Install after the lockfile changes. Do not use `--offline`. The new tarballs are not in the store.
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm install --frozen-lockfile'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 3600 pnpm install --frozen-lockfile'
 ```
 
 Retry the online command one time on `ECONNRESET`, `ETIMEDOUT`, or `ENOTFOUND`. A second failure is class `not-run`. Do not drop `--frozen-lockfile`.
 
 ### 1.2 Capture of `phase_base_sha`
 
-The orchestrator captures `phase_base_sha` after the commit of this file, and before Phase 1 Red starts.
+The orchestrator captures `phase_base_sha` before the Red run of a phase starts.
 
 1. Run `git rev-parse HEAD` in this worktree.
-2. Record that SHA in the Phase 1 Red evidence in `plan.md`.
-3. Do not change the SHA after capture.
+2. Record that SHA in the Red evidence of that phase in `plan.md`.
+3. Do not change the SHA after the capture.
 
-This file does not contain `phase_base_sha`. A SHA from before this commit is not valid.
+This file does not contain `phase_base_sha`. A SHA that predates the committed strategy of that phase is not valid.
 
-Phase 2 and Phase 3 each get a new capture. Capture it after the previous phase checkpoint, and before that phase's Red. Do not reuse the Phase 1 SHA.
+- Phase 1: the base was the commit that held the strategy, before the Phase 1 Red run of 2026-10-27.
+- Phase 2: the base must be the commit that holds this strategy, the spec fix and the audit fix. The capture happens after that commit and before the Phase 2 Red run. The Red evidence of task 2.1 records it.
+- Phase 3: the base is the commit that holds the Phase 3 strategy, before the Phase 3 Red run. Do not reuse the Phase 2 SHA.
 
 ### 1.3 Evidence classes
 
@@ -158,6 +162,10 @@ Each advisory id on the entry appears in the message. A non-empty message is not
 
 `requirePresent` is true for every row. Absence fails closed.
 
+The list has three registers. The floor register holds 29 rows. The file `tests/security-upgrade-guard-list.ts` holds the same 29 rows in `GUARD_ENTRIES`. The open-major register holds 2 rows. The no-fix register holds 2 rows. The two registers hold no floor. The floor test never asserts them.
+
+#### Floor register (29 rows)
+
 | Package | Line prefix | Floor | Advisory ids (audit table) |
 | --- | --- | --- | --- |
 | `next` |  | `16.4.1` | `GHSA-673q-mjm6-r5xr` `GHSA-2464-fhr4-w9xw` `GHSA-p3m5-59mp-jv5r` and the other Next.js ids in audit §2 |
@@ -175,15 +183,12 @@ Each advisory id on the entry appears in the message. A non-empty message is not
 | `zod` | `4.` | `4.6.6` | `GHSA-mrhx-c7xc-m3w5` |
 | `@fastify/busboy` | `3.` | `3.2.1` | the busboy ids in audit §2 |
 | `@grpc/grpc-js` | `1.` | `1.14.5` | `GHSA-m9gg-hp2v-232j` |
-| `@opentelemetry/exporter-prometheus` | `0.` | `0.217.0` | `GHSA-q7rr-3cgh-j5r3` |
-| `@opentelemetry/sdk-node` | `0.` | `0.217.0` | `GHSA-q7rr-3cgh-j5r3` |
 | `@xmldom/xmldom` | `0.9.` | `0.9.12` | the xmldom ids in audit §2 |
 | `brace-expansion` | `1.` | `1.1.20` | the brace-expansion ids in audit §2 |
 | `brace-expansion` | `2.` | `2.1.6` | same brace-expansion ids |
 | `brace-expansion` | `5.` | `5.0.11` | same brace-expansion ids |
 | `browserslist` | `4.` | `4.28.7` | `GHSA-73wf-gq98-2v4g` `GHSA-c83g-rgw3-j3cx` |
 | `compression` | `1.` | `1.8.2` | `GHSA-vc2v-76pw-4v95` |
-| `extract-zip` | `2.` | `2.0.2` | the extract-zip ids in audit §2 |
 | `fast-uri` | `3.` | `3.1.7` | the fast-uri ids in audit §2 |
 | `fast-xml-parser` | `5.` | `5.10.1` | `GHSA-8r6m-32jq-jx6q` |
 | `follow-redirects` | `1.` | `1.16.1` | `GHSA-8r9p-f939-6h3c` `GHSA-q3jh-wrc6-jgq8` |
@@ -192,15 +197,34 @@ Each advisory id on the entry appears in the message. A non-empty message is not
 | `js-yaml` | `3.` | `3.15.2` | the js-yaml ids in audit §2 |
 | `js-yaml` | `4.` | `4.3.2` | same js-yaml ids |
 | `source-map-js` | `1.` | `1.2.2` | `GHSA-68fv-2mgg-jv7q` |
-| `url-regex` | `5.` | `5.0.1` | `GHSA-v4rh-8p82-6h5w` |
 
 Do not add `react-server-dom-*` unless a `packages:` key exists. The `next` floor is the control for those advisories.
 
+#### Open-major register (2 rows)
+
+These rows carry no floor. The guard file holds them in `OPEN_MAJORS`. The reason of each row names spec section 6.
+
+| Package | Locked | Fixed | Advisory ids | Reason |
+| --- | --- | --- | --- | --- |
+| `@opentelemetry/sdk-node` | 0.57.2 | 0.217.0 | `GHSA-q7rr-3cgh-j5r3` | OpenTelemetry 2 migration, spec §6. |
+| `@opentelemetry/exporter-prometheus` | 0.57.2 | 0.217.0 | `GHSA-q7rr-3cgh-j5r3` | OpenTelemetry 2 migration, spec §6. |
+
+#### No-fix register (2 rows)
+
+These rows carry no floor. The guard file holds them in `NO_FIX_AVAILABLE`. The `fixedVersion` of each row stays null. Plan task 1.9 holds the registry evidence.
+
+| Package | Vulnerable range | Fixed | Advisory ids | Direct parent |
+| --- | --- | --- | --- | --- |
+| `extract-zip` | `<= 2.0.1` | none | `GHSA-7pqw-9j4j-h8q3` `GHSA-jmr9-qjv8-65gv` | `@puppeteer/browsers@2.6.1` |
+| `url-regex` | `<= 5.0.0` | none | `GHSA-v4rh-8p82-6h5w` | `text-preprocessor@1.1.1` |
+
+The other seven open majors stay out of the guard file. Their reason is in spec section 6. The names are `zod` on the 3. line, `nodemailer`, `next-mdx-remote`, `vinext`, `@opentelemetry/propagator-jaeger`, `@faker-js/faker` and `basic-ftp`.
+
 ### Packages the guard must not require
 
-A dedicated test reads the guard list. These names must not appear as entries:
+A dedicated test reads the guard list. These names must not appear as floor rows:
 
-`nodemailer`, `next-mdx-remote`, `vinext`, `@opentelemetry/propagator-jaeger`, `@faker-js/faker`, `basic-ftp`.
+`nodemailer`, `next-mdx-remote`, `vinext`, `@opentelemetry/propagator-jaeger`, `@opentelemetry/sdk-node`, `@opentelemetry/exporter-prometheus`, `@faker-js/faker`, `basic-ftp`, `extract-zip`, `url-regex`.
 
 `zod` may appear only with prefix `4.`. `js-yaml` may appear only with floors `3.15.2` and `4.3.2`.
 
@@ -243,7 +267,7 @@ Extra in-scope lines must also fail. A missing name from this minimum set means 
 **RED_TEST_COMMAND:**
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 900 pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'
 ```
 
 **GREEN_TEST_COMMAND:** the same command. It must exit 0.
@@ -252,7 +276,15 @@ bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/d
 
 Task 1.9 saves `pnpm audit --json`. Run it through `heavy-run.sh`. Retry once on the network errors in section 1.1. Do not put this command inside the version-guard test.
 
-The pass rule is not the top-level count. Read each vulnerability name and severity. A remaining critical or high advisory is allowed only for the major set below. The set is `nodemailer`, `next-mdx-remote`, `vinext`, `@opentelemetry/propagator-jaeger`, `@faker-js/faker`, and `basic-ftp`. Zod findings on the `3.` line are also allowed. `js-yaml` is not in that set. A missing `vulnerabilities` key fails closed. Record `in_scope_critical=<n>` and `in_scope_high=<n>`. Both must be 0. The report names the eight open majors from spec section 6. Apply the `js-yaml` correction above.
+The pass rule is not the top-level count. Read each vulnerability name and severity. A remaining critical or high advisory is allowed only in one of two classes.
+
+**Class `open-major`.** The package name is one of the nine names of spec section 6: `zod`, `nodemailer`, `next-mdx-remote`, `vinext`, `@opentelemetry/propagator-jaeger`, `@opentelemetry/sdk-node`, `@opentelemetry/exporter-prometheus`, `@faker-js/faker`, `basic-ftp`. A `zod` finding is in this class only when the locked version starts with `3.`. A `zod` finding on another line is in scope.
+
+**Class `no-fix`.** The package name is `extract-zip` or `url-regex`. The advisory id is one of the ids of `NO_FIX_AVAILABLE` in `tests/security-upgrade-guard-list.ts`: `GHSA-7pqw-9j4j-h8q3`, `GHSA-jmr9-qjv8-65gv`, `GHSA-v4rh-8p82-6h5w`. Plan task 1.9 holds the registry evidence that no patched release exists. A finding of another id for these two names is in scope.
+
+A critical or high advisory outside these two classes is in scope. A missing `vulnerabilities` key fails closed. Record `in_scope_critical=<n>` and `in_scope_high=<n>`. Both must be 0. The report names the nine open majors of spec section 6 and the two no-fix packages. `js-yaml` is in neither class. The `js-yaml` lines moved to 3.15.2 and 4.3.2, so a `js-yaml` finding in a later report is in scope.
+
+The two classes are name lists. They do not use a word filter. A package outside both lists fails the gate.
 
 Task 1.10 repeats the name-and-version match from audit §5.1. A failed fetch is `not-run`. It is not "no hit". Record `supply_chain_hits=<n>` only after a completed match.
 
@@ -260,7 +292,7 @@ Task 1.10 repeats the name-and-version match from audit §5.1. A failed fetch is
 
 1. `GREEN_TEST_COMMAND` exits 0.
 2. The minimum Red list is gone from the failure output. The plan quotes both runs.
-3. The audit summary has `in_scope_critical=0` and `in_scope_high=0`, and it names the open majors.
+3. The audit summary has `in_scope_critical=0` and `in_scope_high=0`. It names the nine open majors and the two no-fix packages.
 4. `git diff --name-only a64616a4d -- '**/Dockerfile' '**/cloudbuild*.yaml'` is empty. `a64616a4d` is `role_base_sha`, not `phase_base_sha`.
 
 ### Closeout gate
@@ -283,12 +315,14 @@ The Green gate, then Review A, then Review B. Adversarial runs after those revie
 
 ### Anti-pattern coverage
 
-- A1: the parser reads keys, not a substring.
-- A3: versions use labels.
-- A4: an empty section fails, and an empty list fails.
-- A5: the plan quotes exit codes.
-- A7: the major exclusion is an explicit name list. Scoped names stay.
-- A9: this test does not read the track directory.
+| ID | Defense in this phase | Falsification condition |
+| --- | --- | --- |
+| A1 | The parser reads package keys, not a substring. | A comment-only fixture fails the `next` floor, or a key `next@16.2.9:` passes. |
+| A3 | Versions use labels. The check parses the value after the label. | The check passes on any digit, a date, or a year. |
+| A4 | An empty `packages:` section fails, and an empty guard list fails. | An empty `packages:` section passes, or a guard list of length 0 passes. |
+| A5 | A `pass` row needs `exit_code=0` and a log that holds that code. | The plan says "all checks pass" while a cited command exits non-zero. |
+| A7 | The major exclusion is an explicit name list. Scoped names stay. | A filter drops `@sentry/nextjs` or a real `brace-expansion` line. |
+| A9 | The version-guard test reads repo files only. | The version-guard test fails after the track moves to `measure/archive/`. |
 
 ### Review applicability
 
@@ -311,6 +345,8 @@ The Green gate, then Review A, then Review B. Adversarial runs after those revie
 
 **Risk:** high. `next` `16.2.9` to `16.4.1` and `sharp` `0.34.5` to `0.35.5` can break image optimization and the `vinext` build. The phase does not deploy. A local pass does not prove `node:20.18` or the Alpine binary.
 
+**Scope.** AC-5 names the ten app folders of the matrix below. It does not name the ten Cloud Run services. Nine folders map to a covered service. The live Reading service stays outside this criterion. Plan task 1.9 holds the coverage boundary.
+
 ### Runtime note (image optimization)
 
 `next@16.4.1` fixes flaws in the image optimizer. It requires `sharp` `^0.35.5`. The `sharp` bump changes libvips, libheif, and librsvg. A bad native binary fails at request time. It may still pass `next build`.
@@ -322,13 +358,36 @@ A browser check of one or two apps is not worth its cost here.
 - The machine has 7 GB. The builds already fill it.
 - A local server uses the workstation binary, not the Alpine image.
 - `reading-advantage` still ships `node:20.18`. A local pass does not prove that image.
-- The redeploy list carries one HTTP check per service. Daniel's team runs it after deploy.
+- The redeploy list carries one HTTP check per covered service. Each check names one path that the service already serves. Daniel's team runs it after the deploy.
+
+### Memory safety on this machine
+
+The machine has 7 GB of RAM. At 19:10 ICT on 2026-10-27 the memory guard killed every session. One heavy job next to another heavy job can take the machine down. The rules below apply to every command of this phase.
+
+- Every `check-types`, `lint`, `test` and `build` command runs through `heavy-run.sh`. No command runs outside it.
+- One heavy job runs at a time. The next command starts after the previous command ends.
+- A turbo call uses `--concurrency=1`. The default concurrency can exhaust 7 GB.
+- Every command carries a `timeout` inside the `heavy-run.sh` string. A command without a bound holds the lock forever.
+- The root `pnpm turbo run test`, `pnpm turbo run build` and `pnpm turbo run lint` do not run. They fan out over the whole monorepo.
+- A build does not start with less than 2 GB of free memory.
+
+| Command | Bound in seconds |
+| --- | --- |
+| `check-types` | 1800 |
+| `lint` | 1200 |
+| `test` | 1800 |
+| `build` | 2400 |
+| The full Jest suite of `reading-advantage` | 720 |
+| The shared turbo call of the five light apps | 3600 |
+| The install | 3600 |
+
+A command that reaches its bound exits 124. Class the row `not-run` with `source=timeout`. A command that the kernel kills exits 137. Class the row `not-run` with `source=machine_heap`. A `not-run` row blocks AC-5.
 
 ### What Red writes
 
 Red writes `tests/security-upgrade-verification-ledger.test.ts`. The ledger file is absent, so the test fails. That fail is the Red result.
 
-Ledger path: `measure/tracks/security_upgrade_20261026/verification-ledger.json`.
+Ledger path: `measure/tracks/security_upgrade_20261026/verification-ledger.json`. Green writes that file. The test reads the ledger. It never writes it.
 
 The test resolves `measure/archive/security_upgrade_20261026/` first when that directory exists (A9).
 
@@ -344,12 +403,12 @@ The test fails when:
 - `class` is `predates-track` and `evidence` has no `source=` label (A3).
 - `class` is `script-absent` for any pair except `check-types` of `@reading-advantage/ui` and `@reading-advantage/utils`.
 
-The ledger test does not run the app builds. It is an artifact test. AC-5 stays open until the live logs exist.
+The ledger test does not run the app builds. It is an artifact test. AC-5 stays open until the live logs exist. A green ledger test alone does not close AC-5. The matrix rows are live behavior tests. The proof of AC-5 is the live log of each command.
 
 **RED_TEST_COMMAND:**
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-verification-ledger.test.ts'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 900 pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-verification-ledger.test.ts'
 ```
 
 **GREEN_TEST_COMMAND:** the same command, after the matrix below has logs. It must exit 0. An `upgrade-defect` row or a `not-run` row keeps it red.
@@ -382,7 +441,7 @@ App order (light first, then the compatibility risk, then the large heaps):
 One shared call is allowed. It is check-types and lint for the five light apps only:
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm exec turbo run check-types lint --concurrency=1 --filter=accounting --filter=accounts --filter=workbooks --filter=sales-advantage --filter=storytime'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 3600 pnpm exec turbo run check-types lint --concurrency=1 --filter=accounting --filter=accounts --filter=workbooks --filter=sales-advantage --filter=storytime'
 ```
 
 Do not add `marketing`, `codecamp-advantage`, `www-reading-advantage`, `primary-advantage`, or `reading-advantage` to that call. Do not put `build` or `test` in a turbo call. `turbo` `test` depends on `^build` and can build the graph.
@@ -390,16 +449,16 @@ Do not add `marketing`, `codecamp-advantage`, `www-reading-advantage`, `primary-
 Every other check is one `heavy-run.sh` call:
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm --filter <name> run <script>'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 1800 pnpm --filter <name> run check-types'
 ```
+
+Replace `<name>` with the package name of the matrix row. Use the script name from `package.json`. Do not invent a script.
 
 Vitest scripts get `--maxWorkers=1` by a direct exec when the package script does not set it:
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm --filter <name> exec vitest run --maxWorkers=1'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 1800 pnpm --filter <name> exec vitest run --maxWorkers=1'
 ```
-
-Use the package script name from `package.json`. Do not invent a script.
 
 | Package | check-types | lint | test | build |
 | --- | --- | --- | --- | --- |
@@ -416,16 +475,72 @@ Use the package script name from `package.json`. Do not invent a script.
 
 `reading-advantage` `check-types` is the type gate. `next build` sets `ignoreBuildErrors: true`. Do not record a green build as a type pass.
 
-### reading-advantage Jest and the 8192 heap
+### The packages outside the app matrix
 
-The build script requests `--max-old-space-size=8192`. The machine has 7 GB. Run that build alone. Do not change the script.
+Task 1.11 ran a phase check on four packages outside this matrix. It recorded `PHASE_CHECK_EXIT=2`. The check-types command of both play-kit packages exited 2. The dependency `activity-runtime` also exited 2. No new run of the `activity-runtime` check-types script exists.
 
-If the kernel kills the process, class the row `not-run` with `source=machine_heap`. Do not class it `predates-track`. Do not class it `pass`. Retry one time only after every other heavy job has stopped. A second kill stays `not-run` and blocks AC-5.
+These five packages are not app folders. They are not in AC-5. Phase 2 records one check-types run for each of them. The plan names the exit code of every run.
 
-Do not run the full Jest suite as the gate. Tech-debt records a hang above 10 minutes. Start the package `test` script with a 12-minute bound. If no suite summary appears, stop it. Class that hang `predates-track` with `source=measure/tech-debt.md:2026-05-23`. Then run one targeted file so the runner proof is not empty:
+| Package | Reason for the row | Order |
+| --- | --- | --- |
+| `@reading-advantage/activity-runtime` | Task 1.11 recorded exit 2 for its check-types script. The script runs `pnpm build` first. | first |
+| `@reading-advantage/advantage-play-kit` | Task 1.11 recorded exit 2 for its check-types command. | after `game-contracts` builds |
+| `@reading-advantage/advantage-play-kit-3d` | Task 1.11 recorded exit 2 for its check-types command. | after `game-contracts` builds |
+| `@reading-advantage/activity-react` | The package changed in Phase 1. Task 1.11 recorded a pass. | after the two play-kit rows |
+| `@reading-advantage/auth-client` | The package changed in Phase 1. Task 1.11 recorded a pass. | after the two play-kit rows |
+
+Build the workspace dependencies before the check-types rows. The task 1.11 evidence names the cause: `packages/game-contracts` points its `types` at `./dist/index.d.ts`, and the fresh worktree had no `dist`. Run this command first:
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm --filter reading-advantage exec jest --runInBand --forceExit --watchAll=false --testTimeout=20000 lib/games/xp.test.ts'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 1800 pnpm --filter @reading-advantage/game-contracts run build'
+```
+
+A row that is still red after the dependency build is an `upgrade-defect`. It blocks the Green gate of this phase. It does not change the AC-5 count, which names the ten app folders. A row with no run is `not-run` with `source=not-run`. It blocks the Green gate. The plan states the class and the base comparison.
+
+### reading-advantage Jest and the 8192 heap
+
+The build script requests `--max-old-space-size=8192`. The machine has 7 GB. The value 8192 MB is above the physical memory of the machine. The script stays as it is. Do not change it.
+
+Run that build alone. No other heavy job runs at the same time.
+
+The script sets `NODE_OPTIONS` itself through `cross-env`. An outer `NODE_OPTIONS` does not reach the build. The fallback runs the same build command with a lower heap.
+
+Step 1 runs the package script as declared:
+
+```bash
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 2400 pnpm --filter reading-advantage run build'
+```
+
+Step 2 is the fallback. The safe heap value is 3072 MB. A lower cap is a stricter condition. A build that passes with 3072 MB passes with 8192 MB.
+
+```bash
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && NODE_OPTIONS=--max-old-space-size=3072 timeout 2400 pnpm --filter reading-advantage exec next build'
+```
+
+Step 3 runs the same command with 4096 MB. Use it only when step 2 stops with a JavaScript heap message.
+
+```bash
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && NODE_OPTIONS=--max-old-space-size=4096 timeout 2400 pnpm --filter reading-advantage exec next build'
+```
+
+Green records the heap values in the log and in the ledger row: `script_heap=8192`, `run_heap=<n>`. The `command` field of the row names the command that ran. A row that used a fallback names `exec next build` in that field. Do not record the package script name for a fallback run.
+
+If the kernel kills the build, the row is `not-run` with `source=machine_heap` and `exit_code=137`. Do not class it `predates-track`. Do not class it `pass`. Retry one time only, after every other heavy job has stopped. The retry starts at step 2. A second kill stays `not-run` and blocks AC-5.
+
+A build that stops with a JavaScript heap message at 3072 MB and again at 4096 MB is `not-run` with `source=machine_heap`. It blocks AC-5.
+
+The same rule applies to the `primary-advantage` build, which requests 4096, and to its check-types, which requests 6144. The fallback for each is the same command with `NODE_OPTIONS=--max-old-space-size=3072` and `pnpm --filter primary-advantage exec`.
+
+Do not run the full Jest suite as the gate. Tech-debt records a hang above 10 minutes. Start the Jest runner with a 12-minute bound and one worker:
+
+```bash
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 720 pnpm --filter reading-advantage exec jest --runInBand --forceExit --watchAll=false --testTimeout=20000'
+```
+
+If no suite summary appears, stop it. Class that hang `predates-track` with `source=measure/tech-debt.md:2026-05-23`. Then run one targeted file so the runner proof is not empty:
+
+```bash
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 720 pnpm --filter reading-advantage exec jest --runInBand --forceExit --watchAll=false --testTimeout=20000 lib/games/xp.test.ts'
 ```
 
 A failure of that file follows the predates rule below. The full suite is not a pass.
@@ -445,14 +560,39 @@ An `upgrade-defect` blocks the phase. Green fixes it, or the phase stays open. A
 
 `packages/db` failures are `upgrade-defect` until the failing test name appears in tech-debt or in a baseline log. Do not use the "about 40" sentence as a blanket pass.
 
+### Intentionally red aggregate suites
+
+The root `pnpm turbo run test` is not a gate of this phase. It is red for faults that predate this track. Do not claim that it passes. Do not quote its exit code as a phase result.
+
+The full Jest suite of `reading-advantage` is not a gate. Its hang is a known tech-debt row. The targeted file run above is the runner proof.
+
+The `packages/db` test suite is not a gate. Its failures are `upgrade-defect` until a name list proves otherwise.
+
+### Architecture guardrails
+
+- The `overrides` block is the resolution contract for `next`, `react`, `react-dom` and `vite`. Every app of the matrix must resolve `next` 16.4.1.
+- The catalog is the only `sharp` range. Every app that uses `next` must resolve `sharp` 0.35.5 or later.
+- `apps/marketing` keeps `vinext` 0.2.0. Its build is the live proof of the `vinext` with `next` 16.4.1 pair.
+- `apps/reading-advantage` keeps `node:20.18` in its Dockerfile. The phase changes no Dockerfile and no Cloud Build file.
+- The live Reading service stays outside the matrix. Plan task 1.9 holds the boundary.
+- A package that resolves a `next` below 16.4.1 is an `upgrade-defect`. The version-guard test reads the lockfile keys and names the package.
+
+### Changed-contract risks
+
+- The lockfile refresh crossed four transitive majors: `@nodable/entities` 2.2.0 to 3.1.0, `ajv-formats` 2.1.1 to 3.0.1, `dotenv` 16.6.1 to 17.4.2, and `is-unsafe` 1.0.1 to 2.0.2. It crossed 19 zero-point minors of the `sharp` family.
+- A build that ignores type errors is not a type pass. `apps/reading-advantage` sets `ignoreBuildErrors: true`. Its `check-types` row is the type gate.
+- A manifest range can disagree with the lockfile. The version-guard test reads the lockfile keys.
+- The peer range of `packages/api` admits `next` 15.x. The override forces `next` 16.4.1. The phase records the range as a known risk. A peer range change stays out of scope for this track.
+
 ### Green gate
 
 1. `GREEN_TEST_COMMAND` exits 0.
 2. Every matrix pair has one row.
-3. `upgrade_defect=0` and `not_run=0`.
+3. `upgrade_defect=0` and `not_run=0`. The five rows outside the app matrix count in these two numbers.
 4. Each `pass` row has a log under `measure/runs/security_upgrade_20261026/`.
 5. The version-guard command still exits 0.
-6. `pnpm audit --json` still meets the P1 pass rule. Retry once on the network errors.
+6. `pnpm audit --json` still meets the P1 pass rule. It has two allowed classes. Retry once on the network errors.
+7. The five rows outside the app matrix hold a run and a class. Their exit codes are in the plan.
 
 ### Closeout gate
 
@@ -464,35 +604,65 @@ The Green gate, then Review A, then Review B, then the adversarial pass on the g
 - The ledger test reads the ledger and the logs. It does not stub them.
 - A refutation ledger in memory must fail when `class` is `pass` and `exit_code` is 1.
 - A refutation ledger with zero rows must fail.
+- A refutation ledger with a `not-run` row and `source=machine_heap` must fail.
+- A refutation ledger with a `pass` row and no log file must fail.
+- The heap fallback runs the real build. It is not a mock.
 
 ### Anti-pattern coverage
 
-- A3: exit codes and `source=` use labels.
-- A4: an empty ledger fails.
-- A5: `pass` requires exit 0 and a log.
-- A7: do not drop a red app with an English word filter.
-- A1: the class is an enum. Do not search for the substring "deferred" or "pre-existing".
+| ID | Defense in this phase | Falsification condition |
+| --- | --- | --- |
+| A1 | The class is an enum. The test does not search for the substring "deferred" or "pre-existing". | A ledger row with a free-text class passes the test. |
+| A3 | Exit codes, counts and heap values use labels: `exit_code=`, `pass=`, `predates=`, `upgrade_defect=`, `not_run=`, `script_heap=`, `run_heap=`, `source=`. | The test passes on any digit, a date, or a year. |
+| A4 | An empty ledger fails. A missing row for a matrix pair fails. | A ledger with zero rows passes, or a matrix pair without a row passes. |
+| A5 | A `pass` row needs `exit_code=0` and a log that holds that code. | A row says `pass` while its log holds a non-zero code. |
+| A6 | The registry must not say the upgrade is done before AC-4 and AC-5 are recorded. | `measure/tracks.md` says the CVEs are resolved while a row is red. |
+| A7 | The red apps are an explicit name list. The scan does not use the words "never" or "do not". | A filter drops `reading-advantage` or `primary-advantage`. |
+| A8 | Plan notes use `[ ]`, `[~]`, `[x]`, or `[b]`. This role does not edit `plan.md`. | A new task uses a space inside the marker. |
+| A9 | The ledger test resolves `measure/archive/security_upgrade_20261026/` first. | The test fails after the track moves to `measure/archive/`. |
+| A10 | The phase adds no exported product symbol. Do not run `measure/generate.sh`. | A phase adds an exported function and skips the graph update. |
+| A15 | The ledger holds no hash field. Provenance is a Git commit. | A new SHA-256 field appears in the ledger. |
+| A16 | The phase runs in the assigned worktree. Section 1.5 holds the rule. | A role creates a second worktree for this track. |
 
 ### Review applicability
 
-- Review A: yes. The ledger must match the logs. A green build must not be recorded as a type pass for `reading-advantage`.
-- Review B: yes, narrow. Confirm the audit still has zero in-scope critical and high advisories. Confirm no `upgrade-defect` was relabeled `predates-track`.
-- Review C: no. No handler, schema, or response shape changes. Image behavior is a post-deploy HTTP check, not an API review.
-- Adversarial: yes, bounded. Attack the ledger classes and the guard false-pass cases. Do not reproduce a CVE. Plan task 2.14 means this pass, not a pentest.
-- Browser review: no. See the runtime note. The cost is high. The Alpine proof is absent. The post-deploy check belongs in P3.
+| Review | Applies | Reason |
+| --- | --- | --- |
+| Review A (security) | yes | The ledger must match the logs. A green build must not be a type pass for `reading-advantage`. |
+| Review B (security, narrow) | yes | The audit must keep zero in-scope critical and high advisories. No `upgrade-defect` may be relabeled `predates-track`. |
+| Review C (UX and API) | no | The phase changes no handler, no schema, and no response shape. Image behavior is a post-deploy HTTP check. |
+| Adversarial | yes, bounded | The phase attacks the ledger classes and the guard false-pass cases. Plan task 2.14 holds this pass. It must not reproduce a CVE. |
+| Browser review | no | The machine has 7 GB and the builds fill it. A local page does not prove the Alpine image. The post-deploy check belongs in P3. |
 
 ### Phase acceptance checks
 
-- AC-5: every deployed app has live logs for check-types, lint, test, and build, classified by the rules above.
+- AC-5: the ten app folders of the matrix have live logs for check-types, lint, test, and build, classified by the rules above. The shared package rows have live logs too.
 - `reading-advantage` type evidence is `check-types`, not the build.
 - `marketing` build log shows `vinext build` completed.
 - No row is `not-run` or `upgrade-defect`.
+- The five rows outside the app matrix hold a run and a class.
 - The version-guard test still exits 0.
+- The audit report still meets the P1 pass rule with its two allowed classes.
 - Review A and Review B record no open critical or high defect.
 
 ## P3: Redeploy list and merge
 
 **Risk:** medium. A wrong list can leave a service unpatched. The phase adds a document and a local merge. It does not deploy.
+
+### Inputs from the Phase 1 and Phase 2 audits
+
+The Phase 3 strategy applies these items before the Phase 3 Red writes the redeploy test.
+
+- Review A finding 1: name the label for the reason of the not-covered entry and the label for the owner of the patch. Use `reason=` and `owner=`.
+- Review A finding 2: name the literal that the not-covered entry holds for the source of its live image. Plan task 3.2 gives `web/Dockerfile` line 2.
+- Review A finding 3: the not-covered entry holds the mark `NOT COVERED by this commit`. The test checks for that substring.
+- Review A finding 4: name the entry delimiter. Use one table row per service. The entry starts with the service name.
+- BSEC-10: each covered `check=` names one path that the service already serves. One generic check per service is not enough.
+
+Two items stay open until the merge. The closeout log names both.
+
+- Adversarial finding 1: the version guard has no CI step. `.github/workflows/ci.yml` runs five Vitest files under `packages/`. `turbo run test` has no task for the root package. A later lockfile downgrade meets no failing gate. This track changes no CI file. The gap needs an owner before the merge.
+- Adversarial finding 3: the peer range of `packages/api` admits `next` 15.x. The override forces `next` 16.4.1. Peer ranges stay out of scope for this track. The closeout log names the range as a known risk.
 
 ### What Red writes
 
@@ -535,7 +705,7 @@ The runtime note in the file must say: `node:22-alpine` needs no tag change; a r
 **RED_TEST_COMMAND:**
 
 ```bash
-bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-redeploy-list.test.ts'
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 900 pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-redeploy-list.test.ts'
 ```
 
 **GREEN_TEST_COMMAND:** the same command. It must exit 0. The merge is not part of this command.
@@ -549,7 +719,7 @@ bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/d
 
 ### Closeout gate
 
-The Green gate, then the local merge of `chore/security-upgrade-2026-10` into local `master`. Do not push. The merge stops when a P1 or P2 check is red. After the merge, `git merge-base --is-ancestor <upgrade-commit> master` exits 0. The PM report names the merge SHA, the advisory table, `supply_chain_hits`, the open majors, and the nine covered services. It does not say the deploy is done.
+The Green gate, then the local merge of `chore/security-upgrade-2026-10` into local `master`. Do not push. The merge stops when a P1 or P2 check is red. After the merge, `git merge-base --is-ancestor <upgrade-commit> master` exits 0. The PM report names the merge SHA, the advisory table, `supply_chain_hits`, the open majors, and the nine covered services. It does not say the deploy is done. The closeout log names the two open items of the audit inputs above.
 
 ### Fixtures and live proof
 
@@ -562,11 +732,13 @@ The Green gate, then the local merge of `chore/security-upgrade-2026-10` into lo
 
 ### Anti-pattern coverage
 
-- A3: parse the integer after `order=`.
-- A4: an empty doc fails.
-- A5: the plan quotes the test exit code. It does not say the services are deployed.
-- A6: the registry must not say "redeployed".
-- A7: search for the exact forbidden commands. Do not filter on the word "never".
+| ID | Defense in this phase | Falsification condition |
+| --- | --- | --- |
+| A3 | The check parses the integer after `order=`. | A fixture with `order=2026` passes. |
+| A4 | An empty doc fails. | A missing doc passes. |
+| A5 | The plan quotes the test exit code. It does not say the services are deployed. | The plan says "redeployed" while the test exits non-zero. |
+| A6 | The registry must not say "redeployed". | `measure/tracks.md` says the deploy is done before the merge. |
+| A7 | The scan searches for the exact forbidden commands. It does not filter on the word "never". | A doc with `gcloud builds submit` passes. |
 
 ### Review applicability
 
