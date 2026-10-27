@@ -71,6 +71,8 @@
   Overrides assertion failed: next 16.2.9 → 16.4.1, react 19.2.7 → 19.2.9, react-dom 19.2.7 → 19.2.9, vite 8.1.0 → 8.1.6. Catalog assertion failed: sharp ^0.34.5 → ^0.35.5.
 
   Amendment r2: two OpenTelemetry entries moved out of the floor list. `@opentelemetry/sdk-node` and `@opentelemetry/exporter-prometheus` were floored at 0.217.0 as a MINOR, but 0.57.2 → 0.217.0 is a MAJOR (the OpenTelemetry 2 migration). `apps/science-advantage/package.json:50` declares `@opentelemetry/sdk-node` `^0.57.0`; 0.217.0 sits outside that 0.x caret range. This is the same migration as `@opentelemetry/propagator-jaeger` 1.30.1 → 2.9.0, which spec §6 already keeps open. Both entries now live in `OPEN_MAJORS` (advisory GHSA-q7rr-3cgh-j5r3, locked 0.57.2, fixed 0.217.0, reason "OpenTelemetry 2 migration, spec §6"). No other floor has this defect: `sharp` 0.34.5 → 0.35.5 uses the catalog range change of plan 1.5, not a parent major, and every other floor is a patch or a same-major minor. New floor count: 33 (was 35). The RED run still exits non-zero.
+
+  Amendment r3/r4: r3 (44da1f87a) allowed same-line exact override pins. r4 (b5245779c) moved `extract-zip` and `url-regex` to NO_FIX_AVAILABLE. The floor count is now 31 (35 at r1, 33 after r2). The "35" figure above is the r1 run.
 - [x] 1.3 Create the branch `chore/security-upgrade-2026-10` from `master`. Test: the branch exists and starts from the current `master` commit. (7387c4876)
 
   Evidence — command: `git branch --show-current && git merge-base master HEAD`; exit_code=0. Branch: `chore/security-upgrade-2026-10`. Branch base: `a64616a4d0a71497cfcdedfee1d55d21146833b4`. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
@@ -96,6 +98,8 @@
   Install deviation: the first run completed `pnpm install --no-frozen-lockfile` in 4m 33.9s. The pnpm process then hung, and the orchestrator killed it. The first run restored `@next/swc-linux-x64-gnu` 16.4.1 after its retry.
 
   Update deviation: `pnpm update extract-zip url-regex` exited 1 after a Puppeteer `ECONNRESET`. It kept both versions. The later install attempt rejected the unpublished `extract-zip` 2.0.2. Red r4 corrected both no-fix contracts. The invalid override lines were removed.
+
+  Transitive major crossings of the lockfile refresh: `@nodable/entities` 2.2.0 → 3.1.0, `ajv-formats` 2.1.1 → 3.0.1, `dotenv` 16.6.1 → 17.4.2, `is-unsafe` 1.0.1 → 2.0.2, plus 19 0.x-minor crossings (sharp family and transitive). No manifest edit caused them. Phase 2 builds and tests cover them. Source: `git diff 24471e25a..ab48652f5 -- pnpm-lock.yaml`, read only, verified 2026-10-27. All four versions match that diff.
 - [x] 1.8 Run the version-guard test again. It must pass. Test: AC-1, AC-2, AC-3. (7387c4876)
 
   Evidence — GREEN_CMD: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 900 pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'`; exit_code=0. Result: 30 passed, 0 failed. implementation_sha=7387c4876076c2d5338a611ffd62ef1184f7a001.
@@ -110,6 +114,8 @@
   Open majors in the report: `nodemailer` GHSA-2x7j-588g-ccc2, GHSA-p6gq-j5cr-w38f, GHSA-r7g4-qg5f-qqm2, GHSA-rcmh-qjqh-p98v, and GHSA-v53p-9fqp-m79j.
 
   No fix available: `extract-zip` GHSA-7pqw-9j4j-h8q3 and GHSA-jmr9-qjv8-65gv; `url-regex` GHSA-v4rh-8p82-6h5w. Their first patched versions are null. Release-age blocked findings: none in this report. Unclassified critical or high findings: none.
+
+  Registry evidence for the no-fix class: `pnpm audit --json` still prints patched_versions ">=2.0.2" for `extract-zip` and ">=5.0.1" for `url-regex`. No such release exists. The GitHub advisory API (read 2026-10-27) gives first_patched_version null for GHSA-7pqw-9j4j-h8q3 and GHSA-jmr9-qjv8-65gv (`<= 2.0.1`) and for GHSA-v4rh-8p82-6h5w (`<= 5.0.0`). The npm registry latest is extract-zip 2.0.1 (2020-06-10) and url-regex 5.0.0 (2019-04-21).
 
   Open-major register: Zod 3.x, `nodemailer`, `next-mdx-remote`, `vinext`, `@opentelemetry/propagator-jaeger`, `@faker-js/faker`, `basic-ftp`, `@opentelemetry/sdk-node`, and `@opentelemetry/exporter-prometheus`. The `js-yaml` lines moved to 3.15.2 and 4.3.2.
 - [x] 1.10 Check that the refreshed lockfile holds no package version that a public list of malicious releases names. The list set is the one in audit section 5.1. Test: spec section 7. (7387c4876)
@@ -129,6 +135,8 @@
 
   Review — `git diff --check 24471e25a..HEAD` exited 0. The manifests, three added overrides, and lockfile match the approved scope. No Dockerfile, Cloud Build, or `.github` file changed.
   Review finding — the two play-kit type failures are not compared with the base. This review does not classify them as pre-existing. Reviews A and B remain independent. Task 2.14 holds the whole-branch change-quality review.
+
+  Play-kit type failure — cause (orchestrator evidence, 2026-10-27, about 08:30 CST). Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 1200 pnpm turbo run build --concurrency=1 --filter="@reading-advantage/advantage-play-kit^..." --filter="@reading-advantage/advantage-play-kit-3d^..." ...; tsc --noEmit -p tsconfig.json in packages/advantage-play-kit and packages/advantage-play-kit-3d'`. Result: DEPS_BUILD_EXIT=0. game-contracts and advantage-play-kit built; turbo reported "2 successful". advantage-play-kit TSC_EXIT=0 with 0 errors. advantage-play-kit-3d TSC_EXIT=0 with 0 errors. Before the build, the errors were TS2307 "Cannot find module '@reading-advantage/game-contracts'": packages/game-contracts/package.json points `types` at ./dist/index.d.ts and the fresh worktree had no dist. Base check (master checkout, old dependency versions, dist built): advantage-play-kit tsc shows 0 errors. Cause: an unbuilt workspace dependency in the fresh worktree, not the upgrade. `activity-runtime` failed only as a dependency of that task.
 
 ## Phase 2: Verification of the deployed apps
 
