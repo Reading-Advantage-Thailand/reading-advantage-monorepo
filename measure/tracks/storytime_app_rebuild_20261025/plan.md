@@ -54,6 +54,8 @@
 - r7: the pnpm store moves into a build cache mount (`1990bb1a7`); attempt 6 follows.
 - Smoke attempts 6 (2026-10-26 21:19-21:41 ICT, HEAD 649ddca75) and 7 (2026-10-26 22:32-22:52 ICT, HEAD 13f0f137a): both hit the 20m time limit. Attempt 7 shows the store cache works (`reused 784`), but the install still makes one metadata (packument) request per package, for example `Request took 23805ms: https://registry.npmjs.org/react`: pnpm 11 fetches that metadata again every attempt for its supply-chain release-age check ("Verifying lockfile against supply-chain policies (2289 entries)"), and the metadata cache is not in the store.
 - r8: the pnpm metadata cache moves into a second cache mount (`b154b10e2`); attempt 8 follows.
+- Smoke attempts 8 (2026-10-27 07:25-08:13 CST, HEAD 14947f7ab) and 9 (2026-10-27 08:14-09:09 CST, HEAD 14947f7ab): both hit the 20m time limit (DOCKER SMOKE FAIL; PASS=1, FAIL=2). Attempt 8 had a cold metadata cache: "Lockfile passes supply-chain policies (2289 entries in 6m 37.2s)"; reused 884, downloaded 1097, added 1975 of 2075 under registry faults (ECONNRESET, ETIMEDOUT, EAI_AGAIN, error 23). Attempt 9 had warm caches: "Lockfile passes supply-chain policies (verified 42m ago)"; reused 1981, downloaded 2, added 2075. The last line before the limit was "node_modules/puppeteer postinstall: **INFO** Skipping Firefox download as instructed." The puppeteer postinstall downloads Chrome and held the build to the limit.
+- r9 (xai/grok-4.7; GLM quota empty; Red was openai/gpt-6.1-sol): the base stage sets `PUPPETEER_SKIP_DOWNLOAD=true` (`7de638664`); attempt 10 follows.
 
 ## Phase 2: Shared data contracts
 
