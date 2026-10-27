@@ -53,10 +53,8 @@ const RED_TEST_PATH = join(
 );
 const CAPTURE_SPEC_PATH = join(APP_ROOT, "e2e/real-logos-captures.spec.ts");
 const APP_SOURCE_DIR = join(APP_ROOT, "src");
-const HORIZONTAL_LOGO_DIR = join(
-  APP_ROOT,
-  "public/media/brand/logos/vector/horizontal",
-);
+const LOGO_DIR = join(APP_ROOT, "public/media/brand/logos/vector");
+const HORIZONTAL_LOGO_DIR = join(LOGO_DIR, "horizontal");
 
 /**
  * The 15 named captures, in the order the Red test, the capture spec and the plan
@@ -154,6 +152,73 @@ const PRODUCT_IDS = [
 
 const ICO_LENGTH = 6507;
 const ICO_MAGIC = Buffer.from([0x00, 0x00, 0x01, 0x00]);
+
+/**
+ * The ink that each product page capture must hold. The colour is the artwork
+ * colour of the logo file that the page must show. The last value is the least
+ * number of pixels that still proves the artwork renders.
+ */
+const PRODUCT_PAGE_INK: [string, string, string, number][] = [
+  ["en-math-light.png", "square/math-advantage.svg", "#9a3412", 1000],
+  ["en-primary-light.png", "square/primary-advantage.svg", "#155e75", 1000],
+  ["th-primary-light.png", "square/primary-advantage.svg", "#155e75", 1000],
+  ["en-reading-light.png", "square/reading-advantage.svg", "#2f3192", 1000],
+  ["en-science-light.png", "square/science-advantage.svg", "#9f1239", 1000],
+  ["en-stem-light.png", "square/stem-advantage.svg", "#3730a3", 1000],
+  [
+    "en-storytime-light.png",
+    "square/storytime-advantage.svg",
+    "#92400e",
+    1000,
+  ],
+  ["en-zhongwen-light.png", "square/zhongwen-advantage.svg", "#86198f", 1000],
+  [
+    "en-tutor-light.png",
+    "horizontal-dark-inverse/tutor-advantage.svg",
+    "#6ee7b7",
+    1000,
+  ],
+];
+
+/**
+ * The artwork colour of every product logo. The colours differ per product, so a
+ * capture of the wrong page holds another colour.
+ */
+const PRODUCT_ARTWORK_COLOURS: [string, string][] = [
+  ["codecamp", "#3f6212"],
+  ["mastery", "#1e293b"],
+  ["math", "#9a3412"],
+  ["primary", "#155e75"],
+  ["reading", "#2f3192"],
+  ["science", "#9f1239"],
+  ["stem", "#3730a3"],
+  ["storytime", "#92400e"],
+  ["tutor", "#065f46"],
+  ["zhongwen", "#86198f"],
+];
+
+/**
+ * The artwork colour that each single product page capture must show. The other
+ * product pages hold no other product colour.
+ */
+const CAPTURE_OWN_INK: [string, string][] = [
+  ["en-math-light.png", "#9a3412"],
+  ["en-primary-light.png", "#155e75"],
+  ["en-reading-light.png", "#2f3192"],
+  ["en-science-light.png", "#9f1239"],
+  ["en-stem-light.png", "#3730a3"],
+  ["en-storytime-light.png", "#92400e"],
+  ["en-zhongwen-light.png", "#86198f"],
+  ["en-tutor-light.png", "#065f46"],
+  ["th-primary-light.png", "#155e75"],
+];
+
+/**
+ * A single product page must hold less of another product colour than this
+ * count. The home page and the products page show many product logos, so the
+ * rule does not apply to them.
+ */
+const MAX_FOREIGN_INK = 1000;
 
 interface PngHeader {
   width: number;
@@ -1231,6 +1296,40 @@ describe("the captures show the real logo artwork", () => {
       matches,
       `en-home-dark.png holds ${matches} pixels of ${HORIZONTAL_LOCKUP_COLOUR}`,
     ).toBeGreaterThanOrEqual(100);
+  });
+});
+
+describe("every product page capture holds the ink of its own logo", () => {
+  it.each(PRODUCT_PAGE_INK)(
+    "%s holds the ink of %s",
+    (capture, logoFile, hex, least) => {
+      const source = readFileSync(join(LOGO_DIR, logoFile), "utf8");
+      expect(
+        source.toLowerCase().includes(hex),
+        `${logoFile} does not hold the ink ${hex}`,
+      ).toBe(true);
+      const matches = countPixelsOfColour(loadCapture(capture), hex);
+      expect(
+        matches,
+        `${capture} holds ${matches} pixels of ${hex}`,
+      ).toBeGreaterThanOrEqual(least);
+    },
+  );
+});
+
+describe("no single product page holds the ink of another product", () => {
+  it.each(CAPTURE_OWN_INK)("%s holds no foreign logo ink", (capture, own) => {
+    const image = loadCapture(capture);
+    for (const [product, hex] of PRODUCT_ARTWORK_COLOURS) {
+      if (hex === own) {
+        continue;
+      }
+      const matches = countPixelsOfColour(image, hex);
+      expect(
+        matches,
+        `${capture} holds ${matches} pixels of the ${product} logo ${hex}`,
+      ).toBeLessThan(MAX_FOREIGN_INK);
+    }
   });
 });
 
