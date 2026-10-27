@@ -12,6 +12,8 @@ ENV pnpm_config_fetch_timeout=300000
 ENV pnpm_config_network_concurrency=16
 ENV pnpm_config_store_dir=/pnpm/store
 ENV pnpm_config_cache_dir=/pnpm/cache
+# Storytime does not use a browser; the puppeteer postinstall downloads Chrome during the install.
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 RUN corepack enable && corepack prepare pnpm@11.8.0 --activate
 WORKDIR /app
 
