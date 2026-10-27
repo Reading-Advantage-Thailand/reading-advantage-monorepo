@@ -13,28 +13,23 @@ FAILED=0; PASS_COUNT=0; FAIL_COUNT=0; RESULTS=()
 pass() { RESULTS+=("PASS: $1"); PASS_COUNT=$((PASS_COUNT + 1)); }
 fail() { RESULTS+=("FAIL: $1"); FAIL_COUNT=$((FAIL_COUNT + 1)); FAILED=1; }
 ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 IMAGE="storytime-phase1-local:$(git -C "$ROOT" rev-parse --short HEAD)"
 CONTAINER=""
 EXTERNAL_BEFORE=""
-# PM 2026-10-27 15:32: a stopped image build leaves its buildah working containers behind, and
-# podman --force-rm does not remove them after the timeout kill. This removes only the working
-# containers that this build made, and it keeps the containers that existed before the build.
-remove_build_containers() {
-  local id name
-  podman ps -a --external --format '{{.ID}} {{.Names}}' 2>/dev/null | while read -r id name; do
-    case "$name" in
-      *-working-container) ;;
-      *) continue ;;
-    esac
-    if printf '%s\n' "$EXTERNAL_BEFORE" | grep -qx "$id"; then continue; fi
-    if buildah rm "$id" >/dev/null 2>&1; then
-      echo "Removed the build container $id ($name)"
-    else
-      echo "Cannot remove the build container $id ($name)"
-    fi
-  done
+BUILD_OUTPUT_FILE=""
+BUILD_START_EPOCH=""
+# PM 2026-10-27 15:32: a stopped image build leaves its buildah working containers behind,
+# and podman --force-rm does not remove them after the timeout kill.
+# Review B blocker (2026-10-28): the cleanup removes only the working containers that this
+# build made, so it never removes a container that another build created. The heavy lock is
+# the first guard against concurrent builds; the ownership check in the lib is the second.
+# shellcheck source=phase1-smoke-cleanup.sh
+source "$SCRIPT_DIR/phase1-smoke-cleanup.sh"
+cleanup() {
+  if [ -n "$CONTAINER" ]; then docker rm -f "$CONTAINER" >/dev/null; fi
+  if [ -n "$BUILD_OUTPUT_FILE" ] && [ -f "$BUILD_OUTPUT_FILE" ]; then rm -f "$BUILD_OUTPUT_FILE"; fi
 }
-cleanup() { if [ -n "$CONTAINER" ]; then docker rm -f "$CONTAINER" >/dev/null; fi; }
 trap cleanup EXIT
 
 echo "=== AC-1.4 Dockerfile exists ==="
@@ -49,11 +44,15 @@ echo "=== AC-1.4 image builds from the monorepo root ==="
 # inside the container pnpm install, so the limit bounds a stuck fetch, not a base pull.
 BUILD_RC=0
 if [ "$FAILED" -eq 0 ]; then
-  # PM 2026-10-27 15:32: record the containers that exist before the build, so the cleanup
-  # keeps them. PM 2026-10-26: the local build uses the host network; the container network
+  # PM 2026-10-26: the local build uses the host network; the container network
   # path failed DNS (EAI_AGAIN). Cloud Build does not use this script.
+  # PM 2026-10-28 (Review B): the build start time and the pre-build container snapshot
+  # feed the ownership check, and tee keeps this build's output for the layer IDs.
+  DOCKERFILE="$ROOT/apps/storytime/Dockerfile"
+  BUILD_OUTPUT_FILE="$(mktemp "${TMPDIR:-/tmp}/storytime-smoke-build.XXXXXX")"
+  BUILD_START_EPOCH="$(date +%s)"
   EXTERNAL_BEFORE="$(podman ps -a --external --format '{{.ID}}' 2>/dev/null | sort)"
-  timeout 20m docker build --force-rm --network=host -f "$ROOT/apps/storytime/Dockerfile" -t "$IMAGE" "$ROOT"
+  timeout 20m docker build --force-rm --network=host -f "$DOCKERFILE" -t "$IMAGE" "$ROOT" 2>&1 | tee "$BUILD_OUTPUT_FILE"
   BUILD_RC=$?
   if [ "$BUILD_RC" -ne 0 ]; then remove_build_containers; fi
   if [ "$BUILD_RC" -eq 0 ]; then
