@@ -10,6 +10,10 @@
  * Also asserts the served favicon is the new 6507-byte ICO at the root and
  * per locale (en, th, zh), and that no <img> on a captured page returns 404.
  * No hash (repo policy).
+ *
+ * Note: this spec writes the committed PNGs under
+ * measure/tracks/www_real_logos_20261008/captures/. A later `pnpm test:e2e`
+ * run rewrites those tracked files.
  */
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -40,9 +44,9 @@ const FAVICON_PATHS = [
 
 /** Named captures. The order matches the Red test file. */
 const CAPTURES = [
-  { name: "en-home-light.png", path: "/en" },
+  { name: "en-home-light.png", path: "/en", scroll: "homeCards" },
   { name: "en-home-footer-light.png", path: "/en", footer: true },
-  { name: "en-products-light.png", path: "/en/products" },
+  { name: "en-products-light.png", path: "/en/products", scroll: "b2bGrid" },
   { name: "en-math-light.png", path: "/en/products/math-advantage" },
   { name: "en-primary-light.png", path: "/en/products/primary-advantage" },
   { name: "en-reading-light.png", path: "/en/products/reading-advantage" },
@@ -109,6 +113,18 @@ for (const capture of CAPTURES) {
       await page.emulateMedia({ colorScheme: "dark" });
     }
     await page.goto(capture.path, { waitUntil: "networkidle" });
+    if (capture.scroll === "homeCards") {
+      // The home product card grid holds the FR-1 color horizontal lockups.
+      await page
+        .locator('[data-testid^="home-live-"]')
+        .first()
+        .scrollIntoViewIfNeeded();
+    } else if (capture.scroll === "b2bGrid") {
+      // The /products b2b card grid holds the FR-2 square logos.
+      await page
+        .getByRole("heading", { name: "Printed Workbooks and a Digital Twin" })
+        .scrollIntoViewIfNeeded();
+    }
     if (capture.footer) {
       const footer = page.locator("footer").first();
       if ((await footer.count()) > 0) {
