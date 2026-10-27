@@ -21,12 +21,12 @@
 
 ## Phase 1: App scaffold and service config
 
-- [~] 1.1 Scaffold `apps/storytime`: Next.js App Router, `output: "standalone"`, `outputFileTracingRoot` at the monorepo root, next-intl with `th` (default) and `en` and the prefix "always", Tailwind with `@source` for each shared package, and Vitest. The at-home route answers 404 for every week until Phase 3. Test: AC-1.1.
-- [~] 1.2 `apps/storytime/Dockerfile` on the Primary pattern: monorepo root as the context, `pnpm turbo run build --filter=storytime`, the standalone runner on port 8080. Check that `.dockerignore` keeps the image small. Test: AC-1.4 (local image build under the heavy lock).
-- [~] 1.3 `apps/storytime/cloudbuild.yaml`: image `primary-advantage-repo/storytime-app`, service `storytime-app`, `asia-southeast1`, project `primary-advantage`, `--no-traffic` with a revision tag, no database, no secrets. Test: AC-1.2.
-- [~] 1.4 Boundary test: no import from `apps/primary-advantage` in `apps/storytime`, and the reverse. Test: AC-1.3.
-- [~] 1.5 Runbook `docs/runbooks/storytime-deploy.md`: the archive of the commit, `gcloud builds submit --region asia-southeast1 --config apps/storytime/cloudbuild.yaml`, the check on the tagged URL, the traffic step, and the rollback to a named revision. Each step names Daniel's go.
-- [~] 1.6 Phase check: `tsc`, lint, the changed tests, and a change-quality review.
+- [x] 1.1 Scaffold `apps/storytime`: Next.js App Router, `output: "standalone"`, `outputFileTracingRoot` at the monorepo root, next-intl with `th` (default) and `en` and the prefix "always", Tailwind with `@source` for each shared package, and Vitest. The at-home route answers 404 for every week until Phase 3. Test: AC-1.1. Done: `2c69dc328`. Automated: 3 files and 11 tests exit 0 at `87497180d`.
+- [x] 1.2 `apps/storytime/Dockerfile` on the Primary pattern: monorepo root as the context, `pnpm turbo run build --filter=storytime`, the standalone runner on port 8080. Check that `.dockerignore` keeps the image small. Test: AC-1.4 (local image build under the heavy lock). Done: `87497180d`. Automated: the smoke exits 0 with PASS=3, and the build takes 8m 14s.
+- [x] 1.3 `apps/storytime/cloudbuild.yaml`: image `primary-advantage-repo/storytime-app`, service `storytime-app`, `asia-southeast1`, project `primary-advantage`, `--no-traffic` with a revision tag, no database, no secrets. Test: AC-1.2. Done: `a21470244`. Automated: `phase1-service.test.ts`.
+- [x] 1.4 Boundary test: no import from `apps/primary-advantage` in `apps/storytime`, and the reverse. Test: AC-1.3. Done: `2c69dc328` with the scanner test of `a01d2998d`. Automated: `phase1-boundary.test.ts`.
+- [x] 1.5 Runbook `docs/runbooks/storytime-deploy.md`: the archive of the commit, `gcloud builds submit --region asia-southeast1 --config apps/storytime/cloudbuild.yaml`, the check on the tagged URL, the traffic step, and the rollback to a named revision. Each step names Daniel's go. Done: `c605b8fb3`. Automated: the runbook test of `phase1-service.test.ts`.
+- [x] 1.6 Phase check: `tsc`, lint, the changed tests, and a change-quality review. Done: `87497180d`. Automated: `phase1-quality-gates.sh` exits 0 with PASS=2 (4 of 4 turbo tasks). The change-quality review goes to the review role.
 
 ### Phase 1 Red evidence
 
@@ -56,6 +56,15 @@
 - r8: the pnpm metadata cache moves into a second cache mount (`b154b10e2`); attempt 8 follows.
 - Smoke attempts 8 (2026-10-27 07:25-08:13 CST, HEAD 14947f7ab) and 9 (2026-10-27 08:14-09:09 CST, HEAD 14947f7ab): both hit the 20m time limit (DOCKER SMOKE FAIL; PASS=1, FAIL=2). Attempt 8 had a cold metadata cache: "Lockfile passes supply-chain policies (2289 entries in 6m 37.2s)"; reused 884, downloaded 1097, added 1975 of 2075 under registry faults (ECONNRESET, ETIMEDOUT, EAI_AGAIN, error 23). Attempt 9 had warm caches: "Lockfile passes supply-chain policies (verified 42m ago)"; reused 1981, downloaded 2, added 2075. The last line before the limit was "node_modules/puppeteer postinstall: **INFO** Skipping Firefox download as instructed." The puppeteer postinstall downloads Chrome and held the build to the limit.
 - r9 (xai/grok-4.7; GLM quota empty; Red was openai/gpt-6.1-sol): the base stage sets `PUPPETEER_SKIP_DOWNLOAD=true` (`7de638664`); attempt 10 follows.
+- Attempt 10 (2026-10-27): the build did not run, because the disk was full.
+- Smoke attempt 11 (2026-10-27 15:33-15:53 ICT, HEAD `fb3db2a9a`): the build hit the 20m time limit. COPY apps took about 8 minutes, and COPY packages took about 6 minutes. The base stage changed in `7de638664`, so every later layer rebuilt. The install reached 1610 of 2075 added (reused 1983) at the limit. The supply-chain check was fast ("verified 8h ago").
+- Smoke attempt 12 (2026-10-27 15:57-16:17 ICT, HEAD `fb3db2a9a`): every COPY layer came from cache. The install added 612 of 2075 packages in 20 minutes ("Scope: all 46 workspace projects"). The machine load average was about 8.
+- Attempts 11 and 12 left 15 buildah working containers each. The orchestrator removed them by hand. PM rule (2026-10-27 15:32): the smoke build uses `--force-rm`, and it removes the build containers when a build stops.
+- r10 (deepseek/deepseek-flash#high; the GLM quota is empty until 00:47 ICT; openai is the Red family): the PM fix. Host pre-check: `turbo prune storytime --docker` writes a 663-entry pruned lockfile (the full lockfile has 2289 entries). `pnpm install --frozen-lockfile` accepts the pruned lockfile and writes 532 packages. The Dockerfile adds a pruner stage that copies only the Storytime closure: `apps/storytime` and `packages/config`. Commit `87497180d`.
+- Smoke attempt 13 (2026-10-27 23:33-23:41 CST, 22:33-22:41 ICT; HEAD `d482d0281`; commit `87497180d`): exit 0, PASS=3, FAIL=0. The build took 8m 14s. The install took 1m 37s: 532 packages, reused 529, downloaded 0. The supply-chain check read 663 entries in 1m 33.3s. The Next.js build took 39.8s. The container answers `/th/st/2/1` with HTTP 404.
+- No build container remains after attempt 13. `podman ps -a --external` lists only `reading-advantage-postgres`.
+- Green gates at `87497180d`: the targeted Vitest command exits 0 with 3 files and 11 tests. The smoke exits 0 with PASS=3, FAIL=0. `phase1-quality-gates.sh` exits 0 with PASS=2, FAIL=0 (4 of 4 turbo tasks).
+- Note for Phase 2: add one COPY line for `packages/read-along` to the pruner stage when the app depends on it. No structural TypeScript file changed in this round, so `build-graph` needs no update.
 
 ## Phase 2: Shared data contracts
 
