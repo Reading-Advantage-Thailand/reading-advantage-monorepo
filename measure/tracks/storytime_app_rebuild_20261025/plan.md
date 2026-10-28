@@ -19,10 +19,10 @@
 - The void build on `master-next` and `storytime/own-app` is a reference to read. This track does not merge it.
 - Graph probe: skipped at the opening, because `graph.db` is older than 24 hours (2026-10-23). The first implementation session runs `build-graph update` before Phase 2.
 
-## Phase 1: App scaffold and service config
+## Phase 1: App scaffold and service config [checkpoint: 598c876a5]
 
 - [x] 1.1 Scaffold `apps/storytime`: Next.js App Router, `output: "standalone"`, `outputFileTracingRoot` at the monorepo root, next-intl with `th` (default) and `en` and the prefix "always", Tailwind with `@source` for each shared package, and Vitest. The at-home route answers 404 for every week until Phase 3. Test: AC-1.1. Done: `2c69dc328`. Automated: 3 files and 11 tests exit 0 at `87497180d`.
-- [x] 1.2 `apps/storytime/Dockerfile` on the Primary pattern: monorepo root as the context, `pnpm turbo run build --filter=storytime`, the standalone runner on port 8080. Check that `.dockerignore` keeps the image small. Test: AC-1.4 (local image build under the heavy lock). Done: `87497180d`, cleanup fix r12 `f7558395e`, store fix r13 `ec76d7627`. Automated: the smoke exits 0 with PASS=3, and the build takes 8m 14s.
+- [x] 1.2 `apps/storytime/Dockerfile` on the Primary pattern: monorepo root as the context, `pnpm turbo run build --filter=storytime`, the standalone runner on port 8080. Check that `.dockerignore` keeps the image small. Test: AC-1.4 (local image build under the heavy lock). Done: `87497180d`, cleanup fix r12 `f7558395e`, store fix r13 `ec76d7627`. Automated: the smoke exits 0 with PASS=3, and the build at `87497180d` takes 8m 14s.
 - [x] 1.3 `apps/storytime/cloudbuild.yaml`: image `primary-advantage-repo/storytime-app`, service `storytime-app`, `asia-southeast1`, project `primary-advantage`, `--no-traffic` with a revision tag, no database, no secrets. Test: AC-1.2. Done: `a21470244`; BuildKit env `58fae8445`. Automated: `phase1-service.test.ts`.
 - [x] 1.4 Boundary test: no import from `apps/primary-advantage` in `apps/storytime`, and the reverse. Test: AC-1.3. Done: `2c69dc328` with the scanner test of `a01d2998d`. Automated: `phase1-boundary.test.ts`.
 - [x] 1.5 Runbook `docs/runbooks/storytime-deploy.md`: the archive of the commit, `gcloud builds submit --region asia-southeast1 --config apps/storytime/cloudbuild.yaml`, the check on the tagged URL, the traffic step, and the rollback to a named revision. Each step names Daniel's go. Done: `c605b8fb3`. Automated: the runbook test of `phase1-service.test.ts`.
@@ -77,6 +77,7 @@
 - The local smoke proof of AC-1.4 runs under Podman 5.7.0 with buildah. It does not prove the Cloud Build path. A real Cloud Build run is Daniel's deploy gate (runbook step 3), and it is the first proof of the env line.
 - Phase 1 tests at `58fae8445`: exit 0, 3 files, 11 tests (automated).
 - Note for Phase 2: add one COPY line for `packages/read-along` to the pruner stage when the app depends on it. No structural TypeScript file changed in this round, so `build-graph` needs no update.
+- Acceptance quality gates at `598c876a5`: `phase1-quality-gates.sh` exits 0 with PASS=2, FAIL=0, and 4 of 4 turbo tasks, none from cache. The Phase 1 vitest command exits 0 with 3 files and 11 tests. The smoke result of r13 at `ec76d7627` applies at `598c876a5` by tree identity, because `git diff --stat ec76d7627 598c876a5 -- apps/storytime` is empty.
 
 ## Phase 2: Shared data contracts
 

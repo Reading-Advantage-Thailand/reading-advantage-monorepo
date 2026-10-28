@@ -3,6 +3,7 @@
 > **Track:** `storytime_app_rebuild_20261025` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
 > **Scope:** Phases 1 to 8 (P1 to P8). Written 2026-10-26 at `21c764edc`.
 > **Phase 1 note:** Phase 1 Red ran before this file existed (`phase_base_sha` `3504b8d7a`). The P1 section records the gates that apply now. It does not move that SHA.
+> **Revision 2026-10-28:** the Phase 1 checkpoint refresh. It records the acceptance at `598c876a5`, the 45-minute smoke limit, and the P2 follow-ups. The role table names claude-code/claude-opus-5-5[1m]#high. This revision ran on minimax-cn-coding-plan/MiniMax-M3#high, the route that ra-quota picked.
 
 ## 1. Rules for every phase
 
@@ -88,12 +89,12 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 **Green gate:**
 
 1. The targeted Vitest command above exits 0 with 3 files and 11 tests.
-2. `bash apps/storytime/__tests__/phase1-docker-smoke.sh` exits 0 with `PASS=3, FAIL=0`. The script builds with `--network=host` and a 20-minute limit. Cloud Build does not use the script.
+2. `bash apps/storytime/__tests__/phase1-docker-smoke.sh` exits 0 with `PASS=3, FAIL=0`. The script builds with `--network=host` and a 45-minute limit, because the first run against a new private store pulls the base image (plan.md, the r13 build limit). PM question open 2026-10-28; this text is the default and a PM answer can replace it. Cloud Build does not use the script.
 3. `bash apps/storytime/__tests__/phase1-quality-gates.sh` exits 0 with `PASS=2, FAIL=0`. It runs AC-1.1: `pnpm turbo run build check-types lint test --filter=storytime`.
 
 **Closeout gate:** the Green gate, then `build-graph update` for the new app files, then the change-quality review (task 1.6), then the Review B record. The orchestrator appends `[checkpoint: <sha>]` only after all three scripts exit 0 at one commit.
 
-**Current state:** the Docker smoke failed three times on the `pnpm install` fetch inside the image build (log `jr-green-129bd1748.log`). Commit `21c764edc` adds the host network. The next smoke run waits for the lock window. The P1 checkpoint waits for a smoke pass.
+**Current state:** the smoke builds in the private store `~/.local/share/storytime-smoke/storage` (Green r13, `ec76d7627`) and passed with PASS=3, FAIL=0. Review A passed at `598c876a5`. Review B passed at `598c876a5`. Phase 1 passed acceptance at `598c876a5`.
 
 **Fixtures and live proof:**
 
@@ -145,6 +146,40 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 - These tests never use `it.skip`, `it.todo`, or a condition that skips when the file is missing.
 - Task 2.3 (the package copy) needs no shipped week. Its Green can proceed before the hand-off. The phase checkpoint waits for the hand-off.
 - Red records each intentionally red test in the P2 Red evidence (section 1.4).
+
+### P2.3 Follow-ups from the Phase 1 acceptance and the reviews
+
+The Phase 1 acceptance at `598c876a5`, Review A r3, and Review B r3 left follow-ups. P2 Red and P2 Green act on them.
+
+**P2 Red must act:**
+
+- The Tailwind `@source` test must assert that its set of shared packages is not empty, before it checks each `@source` line (A4). Today the test loops over the `@reading-advantage` dependencies and never counts them. The falsification condition: the test passes when the app has no shared package dependency.
+- A test must fail when the app depends on `packages/read-along` and `apps/storytime/app/globals.css` has no `@source` line for it. The falsification condition: the dependency exists, the CSS line is missing, and the test passes.
+- The P2 Red test set reads the app manifest for its shared packages. It never reads a `measure/tracks/` path (A9).
+
+**P2 Green must act:**
+
+- P2 Green adds one `@source` line for `packages/read-along` to `apps/storytime/app/globals.css`, next to the line for `packages/config`.
+- P2 Green adds one `COPY packages/read-along ./packages/read-along` line to the pruner stage of `apps/storytime/Dockerfile`. The Dockerfile comment at line 26 asks for this line.
+- P2 Green runs `build-graph update ./graph.db <changed files>` after the first structural edit of the phase (A10). `graph.db` already indexes the P1 TypeScript files, and the acceptance at `598c876a5` found no drift.
+
+**Smoke store follow-ups (owner: Green, in P2 or later):**
+
+- The smoke store grows with every run, and no step removes an older `storytime-phase1-local:<sha>` tag. The store held 978 MB after the r13 run, and the machine had a full disk on 2026-10-21. Green adds a prune step that removes the older storytime tags at the end of a run.
+- `SMOKE_STORE_ROOT` and `SMOKE_STORE_RUNROOT` come from the environment with no check. A value equal to the default store path gives the cleanup the Review B r2 risk. The cleanup must reject that value, or only the self-test may set it.
+- The smoke script skips the heavy lock when the caller passes `--locked`, and `heavy-run.sh` also runs without the lock when the lock folder is missing. Two such runs share the smoke store. The effect stays inside the smoke store. The script must record the run mode, or it must refuse the lock bypass.
+
+**Fixtures and live proof in P2:**
+
+- The P2 tests are artifact and function tests. They read the shipped week files, the app manifest, the CSS, and the Dockerfile. They make no container and no request.
+- The live proof of AC-6.1 and AC-7.1 arrives in P3, where the player and the decodable page render in a browser.
+
+**Items from the Phase 1 reviews with a later owner:**
+
+- The app tsconfig must extend `@reading-advantage/config/tsconfig` (owner: Green, in the round that touches the tsconfig).
+- The Cloud Build file needs a `timeout` of 3600s if the first Cloud Build build stops (owner: Daniel, deploy gate task 6.3).
+- The deploy runbook must upload the commit archive as a tgz file and must print the tagged URL (owner: Green, in the next runbook edit).
+- The `phase1-service.test.ts` parse must read the env key of the build-image step (owner: P2 Red, or the phase that edits the Cloud Build test).
 
 **Targeted Red command:**
 
