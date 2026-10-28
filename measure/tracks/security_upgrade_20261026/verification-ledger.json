@@ -441,6 +441,24 @@
       "exit_code": 0,
       "class": "pass",
       "log": "measure/runs/security_upgrade_20261026/p2/auth-client-check-types.log"
+    },
+    {
+      "package": "codecamp-advantage",
+      "check": "test",
+      "command": "pnpm --filter codecamp-advantage exec vitest run --maxWorkers=1",
+      "exit_code": 1,
+      "class": "predates-track",
+      "log": "measure/runs/security_upgrade_20261026/p2/codecamp-advantage-test-r4.log",
+      "evidence": "source=test-strategy.md:1.5 source=git:24471e25a"
+    },
+    {
+      "package": "@reading-advantage/db",
+      "check": "test",
+      "command": "pnpm --filter @reading-advantage/db exec vitest run --maxWorkers=1",
+      "exit_code": 1,
+      "class": "predates-track",
+      "log": "measure/runs/security_upgrade_20261026/p2/db-test-r4.log",
+      "evidence": "source=measure/tech-debt.md:31"
     }
   ]
 }

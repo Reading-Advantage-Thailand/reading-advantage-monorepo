@@ -172,6 +172,8 @@
 - [ ] 2.12 `packages/domain`, `packages/db`, `packages/auth`, `packages/backend`, `packages/ui`, `packages/utils`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
 - [ ] 2.13 Record every failure with its cause. A failure from this upgrade is a defect to fix. A failure that predates the track is recorded with the evidence and stays open. Test: AC-5.
 
+  Green evidence — `codecamp-advantage` test exits 1 in `codecamp-advantage-test-r4.log`. The unchanged app and session sources at track base `24471e25a` show the failing contract is pre-existing. The worktree-root assertion also conflicts with test-strategy section 1.5. The row remains open. `packages/db` test exits 1 in `db-test-r4.log`. Its migration-count and missing PostgreSQL environment failures match the documented pre-existing database test debt in `measure/tech-debt.md` (2026-10-04). The row remains open.
+
   Phase 2 inputs (Review B, nonblocking findings):
   - BSEC-05: `apps/www-reading-advantage/Dockerfile:9` prepares pnpm 8.15.8. The root manifest requests pnpm 11.8.0, and the lockfile uses format 9. Corepack can select the manifest version. Phase 2 must establish the effective installer before a redeploy claim for `www-reading-advantage`.
   - BSEC-03: the `zod` 3.25.76 runtime exposure stays with the zod 4 migration track. Phase 2 does not close GHSA-mrhx-c7xc-m3w5.
