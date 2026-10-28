@@ -502,6 +502,15 @@
       "class": "predates-track",
       "log": "measure/runs/security_upgrade_20261026/p2/api-test-r4.log",
       "evidence": "source=git:24471e25a"
+    },
+    {
+      "package": "sales-advantage",
+      "check": "test",
+      "command": "pnpm --filter sales-advantage exec vitest run --maxWorkers=1",
+      "exit_code": 1,
+      "class": "predates-track",
+      "log": "measure/runs/security_upgrade_20261026/p2/sales-advantage-test-r4.log",
+      "evidence": "source=git:24471e25a"
     }
   ]
 }
