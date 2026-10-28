@@ -1,0 +1,34 @@
+[
+  {
+    "words": [
+      {
+        "end": 74.2125,
+        "word": "I",
+        "start": 74.05
+      },
+      {
+        "end": 74.5125,
+        "word": "found",
+        "start": 74.2125
+      },
+      {
+        "end": 74.5875,
+        "word": "a",
+        "start": 74.5125
+      },
+      {
+        "end": 75.05,
+        "word": "baby",
+        "start": 74.5875
+      },
+      {
+        "end": 75.525,
+        "word": "seal",
+        "start": 75.05
+      }
+    ],
+    "endTime": 75.525,
+    "sentence": "“I found a baby seal!",
+    "startTime": 74.05
+  }
+]
