@@ -178,6 +178,8 @@
 
   Backend `check-types` exits 2 on the pre-existing lowercase `usd` fixture against the `USD` union. Backend tests exit 1 on absent PostgreSQL test credentials and unchanged test contracts. API tests exit 1 on an unchanged router SQL assertion and a source scan timeout. The backend and API package sources and tests are unchanged from track base `24471e25a`; the API manifest is the only changed file in that package. Ledger rows cite that base and remain open. Ledger commit: 6c342fb65.
 
+  Sales test exits 1 on pre-existing curriculum approval metadata, cardinality, and graph-digest assertions. The app source and tests are unchanged from track base `24471e25a`; its manifest is the only changed file. Ledger commit: 62ca1913f. The row remains open.
+
   Phase 2 inputs (Review B, nonblocking findings):
   - BSEC-05: `apps/www-reading-advantage/Dockerfile:9` prepares pnpm 8.15.8. The root manifest requests pnpm 11.8.0, and the lockfile uses format 9. Corepack can select the manifest version. Phase 2 must establish the effective installer before a redeploy claim for `www-reading-advantage`.
   - BSEC-03: the `zod` 3.25.76 runtime exposure stays with the zod 4 migration track. Phase 2 does not close GHSA-mrhx-c7xc-m3w5.
