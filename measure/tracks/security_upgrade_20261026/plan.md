@@ -180,6 +180,8 @@
 
   Sales test exits 1 on pre-existing curriculum approval metadata, cardinality, and graph-digest assertions. The app source and tests are unchanged from track base `24471e25a`; its manifest is the only changed file. Ledger commit: 62ca1913f. The row remains open.
 
+  Workbooks test exits 1 because `packages/sales-knowledge/dist/data/evidence/release-candidate.json` is absent. Building that dependency exits 0 but does not create the expected file. The workbooks app sources and tests are unchanged from track base `24471e25a`. Ledger commit: fe711bb6b. The row remains open.
+
   Phase 2 inputs (Review B, nonblocking findings):
   - BSEC-05: `apps/www-reading-advantage/Dockerfile:9` prepares pnpm 8.15.8. The root manifest requests pnpm 11.8.0, and the lockfile uses format 9. Corepack can select the manifest version. Phase 2 must establish the effective installer before a redeploy claim for `www-reading-advantage`.
   - BSEC-03: the `zod` 3.25.76 runtime exposure stays with the zod 4 migration track. Phase 2 does not close GHSA-mrhx-c7xc-m3w5.
