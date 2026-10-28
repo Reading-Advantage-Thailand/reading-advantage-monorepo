@@ -475,6 +475,33 @@
       "exit_code": 0,
       "class": "pass",
       "log": "measure/runs/security_upgrade_20261026/p2/domain-test-r4.log"
+    },
+    {
+      "package": "@reading-advantage/backend",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/backend run check-types",
+      "exit_code": 2,
+      "class": "predates-track",
+      "log": "measure/runs/security_upgrade_20261026/p2/backend-check-types-r4.log",
+      "evidence": "source=git:24471e25a"
+    },
+    {
+      "package": "@reading-advantage/backend",
+      "check": "test",
+      "command": "pnpm --filter @reading-advantage/backend exec vitest run --maxWorkers=1",
+      "exit_code": 1,
+      "class": "predates-track",
+      "log": "measure/runs/security_upgrade_20261026/p2/backend-test-r4.log",
+      "evidence": "source=git:24471e25a"
+    },
+    {
+      "package": "@reading-advantage/api",
+      "check": "test",
+      "command": "pnpm --filter @reading-advantage/api exec vitest run --maxWorkers=1",
+      "exit_code": 1,
+      "class": "predates-track",
+      "log": "measure/runs/security_upgrade_20261026/p2/api-test-r4.log",
+      "evidence": "source=git:24471e25a"
     }
   ]
 }
