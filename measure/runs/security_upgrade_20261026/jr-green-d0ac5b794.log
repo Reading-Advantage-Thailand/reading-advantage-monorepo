@@ -5,11 +5,11 @@ track: security_upgrade_20261026
 phase: P2
 phase_base_sha: 9ee8505883cec92e87daa31f00ff71ced052dead
 role_base_sha: d0ac5b79472e6aa169a444251e182fc1c5b1b42c
-commits: 2f4cc036b (partial ledger); 96d7be61e (initial plan evidence); aa886380c (codecamp and db failure evidence)
-tests_run: Targeted ledger test exited 1 with 1 failed and 26 passed; it reported 18 missing rows. Reran codecamp-advantage test and db test. Both exited 1 and now have predates-track rows. DB failures match the documented migration-count and missing-PostgreSQL test debt. Codecamp failures include a worktree-root assertion and an unchanged session expiry contract.
+commits: 2f4cc036b; 96d7be61e; aa886380c; d700789cd; 25e0ba300 (domain ledger); 5226ed942 (domain plan evidence)
+tests_run: Targeted ledger test exited 1 with 1 failed and 26 passed; it reported 18 missing rows. Codecamp-advantage test exited 1 with pre-existing worktree-root and session-expiry failures. DB test exited 1; its migration-count and missing-PostgreSQL failures match documented debt. Domain build and test exited 0 after the build completed.
 files_changed: `measure/tracks/security_upgrade_20261026/verification-ledger.json`; `measure/tracks/security_upgrade_20261026/plan.md`; this result log. Four generated `next-env.d.ts` changes were restored.
-plan_updates: Tasks 2.1, 2.2 and 2.4 remain [x]. Added pre-existing failure evidence for codecamp-advantage and db. Tasks 2.3 and 2.5-2.14 remain open. Task 2.14 remains reserved for review.
-known_failures: The ledger still lacks 16 rows: workbooks/test, sales-advantage/test, www-reading-advantage/lint, all four primary-advantage checks, all four reading-advantage checks, backend/check-types, backend/test, domain/test, domain/build, and api/test. The new codecamp and db rows record predates-track failures. No production defect has been established.
-handoff: Continue with domain build and test, backend check-types and test, then api test. Record every failure cause and source evidence. Keep tasks 2.3 and 2.12 open because the failed checks do not satisfy AC-5. Do not claim AC-5 passes. Model deviation: this session used openai/gpt-6-luna#high because GLM coding-plan quota was empty; the role table names volcengine-agent-plan/glm-5.3-flash.
-final_head: aa886380ccdeba2a016407878ad4b09068868855
+plan_updates: Tasks 2.1, 2.2 and 2.4 remain [x]. Added codecamp and db failure causes. Added successful domain build and test evidence under task 2.13. Tasks 2.3 and 2.5-2.14 remain open. Task 2.14 remains reserved for review.
+known_failures: Ledger rows still need codecamp check-types/lint/build, backend check-types/test, api test, sales-advantage test, workbooks test, www-reading-advantage lint, all primary-advantage checks, and all reading-advantage checks. Codecamp test and DB test have predates-track rows. No production defect is established.
+handoff: Continue with backend check-types and test, then api test. Commit evidence after each package. Keep task 2.3 open because codecamp test fails. Do not claim AC-5 passes. Model deviation: this session used openai/gpt-6-luna#high because GLM coding-plan quota was empty; the role table names volcengine-agent-plan/glm-5.3-flash.
+final_head: 5226ed9426931953213f8b2c44dac7b495d7e65b
 END_MEASURE_AGENT_RESULT
