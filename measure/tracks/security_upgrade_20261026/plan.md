@@ -231,12 +231,12 @@
   Doctor note — `measure/doctor.sh` exits 1 because `measure/automation-supervisor.py` is absent. Commit `49d6aeaa4` removed it before `phase_base_sha=f44e9bc56`, and master also lacks it. This is pre-existing and does not block this track.
 - [x] 3.4 Merge the branch `chore/security-upgrade-2026-10` into the local `master`. The merge needs no push. Test: AC-7. (90e1d385a)
 
-  Merge evidence — local master fast-forwarded on 2026-10-29 at 05:38 ICT to `90e1d385ac1f608b55b36a2cefec4447ba5047d9`. `git rev-parse master` exited 0 and returned that SHA. `git merge-base --is-ancestor 3a10dd68ca6cb36301f1a9246b22c7e9685a7040 master` exited 0. `git merge-base --is-ancestor 7387c4876076c2d5338a611ffd62ef1184f7a001 master` exited 0. `git diff --quiet 863912dc1 master -- docs/deployment/security-upgrade-2026-10.md` exited 0. `git status --short --untracked-files=no` exited 0 with empty output.
+  Merge evidence — local master first fast-forwarded on 2026-10-29 at 05:36:30 ICT to `90e1d385ac1f608b55b36a2cefec4447ba5047d9`. `git rev-parse master` exited 0 and returned that SHA. `git merge-base --is-ancestor 3a10dd68ca6cb36301f1a9246b22c7e9685a7040 master` exited 0. `git merge-base --is-ancestor 7387c4876076c2d5338a611ffd62ef1184f7a001 master` exited 0. `git diff --quiet 863912dc1 master -- docs/deployment/security-upgrade-2026-10.md` exited 0. `git status --short --untracked-files=no` exited 0 with empty output.
 
   The stray main-checkout draft moved to `measure/runs/security_upgrade_20261026/p3/stray-main-checkout-draft.md`; the move exited 0. The main checkout used the offline frozen install through `heavy-run.sh`; it exited 0 without `pnpm fetch`. Root Next is 16.4.1. No push or deploy occurred.
 - [x] 3.5 Report to the PM orchestrator. Give the commit SHA of the merge, the advisory table, the supply chain result, the MAJOR list and the deployed app list. The deployed app list covers the nine covered services only. Add the legacy Reading patch as a separate assignment. That assignment carries the verified list of legacy versions below the guard floors (the Legacy clone evidence paragraph of task 1.9). Test: AC-7. (803e6f156)
 
-  PM report evidence — `measure/tracks/security_upgrade_20261026/pm-report-20261029.md` committed as `803e6f156b44c081dee106e3fee71b0c5ac25811`. The Monorepo orchestrator sends it to the PM. The report names the nine covered services in order and gives Daniel both open questions with defaults. It states that no service is deployed.
+  PM report evidence — `measure/tracks/security_upgrade_20261026/pm-report-20261029.md` committed as `bedbbcda3e56015cf0416c0e53615e523f6c68d1`. The Monorepo orchestrator sends it to the PM. The report names the nine covered services in order and gives Daniel both open questions with defaults. It states that no service is deployed.
 
 ### Phase 3 merge rule
 
