@@ -1,0 +1,446 @@
+{
+  "track": "security_upgrade_20261026",
+  "phase": "phase-2",
+  "rows": [
+    {
+      "package": "accounting",
+      "check": "check-types",
+      "command": "pnpm --filter accounting run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounting-check-types.log"
+    },
+    {
+      "package": "accounting",
+      "check": "lint",
+      "command": "pnpm --filter accounting run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounting-lint.log"
+    },
+    {
+      "package": "accounting",
+      "check": "test",
+      "command": "pnpm --filter accounting run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounting-test.log"
+    },
+    {
+      "package": "accounting",
+      "check": "build",
+      "command": "pnpm --filter accounting run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounting-build.log"
+    },
+    {
+      "package": "accounts",
+      "check": "check-types",
+      "command": "pnpm --filter accounts run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounts-check-types.log"
+    },
+    {
+      "package": "accounts",
+      "check": "lint",
+      "command": "pnpm --filter accounts run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounts-lint.log"
+    },
+    {
+      "package": "accounts",
+      "check": "test",
+      "command": "pnpm --filter accounts run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounts-test.log"
+    },
+    {
+      "package": "accounts",
+      "check": "build",
+      "command": "pnpm --filter accounts run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/accounts-build.log"
+    },
+    {
+      "package": "workbooks",
+      "check": "check-types",
+      "command": "pnpm --filter workbooks run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/workbooks-check-types.log"
+    },
+    {
+      "package": "workbooks",
+      "check": "lint",
+      "command": "pnpm --filter workbooks run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/workbooks-lint.log"
+    },
+    {
+      "package": "workbooks",
+      "check": "build",
+      "command": "pnpm --filter workbooks run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/workbooks-build.log"
+    },
+    {
+      "package": "sales-advantage",
+      "check": "check-types",
+      "command": "pnpm --filter sales-advantage run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/sales-advantage-check-types.log"
+    },
+    {
+      "package": "sales-advantage",
+      "check": "lint",
+      "command": "pnpm --filter sales-advantage run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/sales-advantage-lint.log"
+    },
+    {
+      "package": "sales-advantage",
+      "check": "build",
+      "command": "pnpm --filter sales-advantage run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/sales-advantage-build.log"
+    },
+    {
+      "package": "storytime",
+      "check": "check-types",
+      "command": "pnpm --filter storytime run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/storytime-check-types.log"
+    },
+    {
+      "package": "storytime",
+      "check": "lint",
+      "command": "pnpm --filter storytime run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/storytime-lint.log"
+    },
+    {
+      "package": "storytime",
+      "check": "test",
+      "command": "pnpm --filter storytime run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/storytime-test.log"
+    },
+    {
+      "package": "storytime",
+      "check": "build",
+      "command": "pnpm --filter storytime run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/storytime-build.log"
+    },
+    {
+      "package": "marketing",
+      "check": "check-types",
+      "command": "pnpm --filter marketing run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/marketing-check-types.log"
+    },
+    {
+      "package": "marketing",
+      "check": "lint",
+      "command": "pnpm --filter marketing run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/marketing-lint.log"
+    },
+    {
+      "package": "marketing",
+      "check": "test",
+      "command": "pnpm --filter marketing run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/marketing-test.log"
+    },
+    {
+      "package": "marketing",
+      "check": "build",
+      "command": "pnpm --filter marketing run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/marketing-build.log"
+    },
+    {
+      "package": "codecamp-advantage",
+      "check": "check-types",
+      "command": "pnpm --filter codecamp-advantage run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/codecamp-advantage-check-types.log"
+    },
+    {
+      "package": "codecamp-advantage",
+      "check": "lint",
+      "command": "pnpm --filter codecamp-advantage run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/codecamp-advantage-lint.log"
+    },
+    {
+      "package": "codecamp-advantage",
+      "check": "build",
+      "command": "pnpm --filter codecamp-advantage run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/codecamp-advantage-build.log"
+    },
+    {
+      "package": "www-reading-advantage",
+      "check": "check-types",
+      "command": "pnpm --filter www-reading-advantage run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/www-reading-advantage-check-types.log"
+    },
+    {
+      "package": "www-reading-advantage",
+      "check": "test",
+      "command": "pnpm --filter www-reading-advantage run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/www-reading-advantage-test.log"
+    },
+    {
+      "package": "www-reading-advantage",
+      "check": "build",
+      "command": "pnpm --filter www-reading-advantage run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/www-reading-advantage-build.log"
+    },
+    {
+      "package": "@reading-advantage/api",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/api run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/api-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/api",
+      "check": "lint",
+      "command": "pnpm --filter @reading-advantage/api run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/api-lint.log"
+    },
+    {
+      "package": "@reading-advantage/api",
+      "check": "build",
+      "command": "pnpm --filter @reading-advantage/api run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/api-build.log"
+    },
+    {
+      "package": "@reading-advantage/domain",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/domain run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/domain-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/domain",
+      "check": "lint",
+      "command": "pnpm --filter @reading-advantage/domain run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/domain-lint.log"
+    },
+    {
+      "package": "@reading-advantage/db",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/db run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/db-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/db",
+      "check": "lint",
+      "command": "pnpm --filter @reading-advantage/db run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/db-lint.log"
+    },
+    {
+      "package": "@reading-advantage/db",
+      "check": "build",
+      "command": "pnpm --filter @reading-advantage/db run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/db-build.log"
+    },
+    {
+      "package": "@reading-advantage/auth",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/auth run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/auth-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/auth",
+      "check": "lint",
+      "command": "pnpm --filter @reading-advantage/auth run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/auth-lint.log"
+    },
+    {
+      "package": "@reading-advantage/auth",
+      "check": "test",
+      "command": "pnpm --filter @reading-advantage/auth run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/auth-test.log"
+    },
+    {
+      "package": "@reading-advantage/auth",
+      "check": "build",
+      "command": "pnpm --filter @reading-advantage/auth run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/auth-build.log"
+    },
+    {
+      "package": "@reading-advantage/backend",
+      "check": "lint",
+      "command": "pnpm --filter @reading-advantage/backend run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/backend-lint.log"
+    },
+    {
+      "package": "@reading-advantage/backend",
+      "check": "build",
+      "command": "pnpm --filter @reading-advantage/backend run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/backend-build.log"
+    },
+    {
+      "package": "@reading-advantage/ui",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/ui run check-types",
+      "exit_code": null,
+      "class": "script-absent",
+      "log": null
+    },
+    {
+      "package": "@reading-advantage/ui",
+      "check": "lint",
+      "command": "pnpm --filter @reading-advantage/ui run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/ui-lint.log"
+    },
+    {
+      "package": "@reading-advantage/ui",
+      "check": "test",
+      "command": "pnpm --filter @reading-advantage/ui run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/ui-test.log"
+    },
+    {
+      "package": "@reading-advantage/ui",
+      "check": "build",
+      "command": "pnpm --filter @reading-advantage/ui run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/ui-build.log"
+    },
+    {
+      "package": "@reading-advantage/utils",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/utils run check-types",
+      "exit_code": null,
+      "class": "script-absent",
+      "log": null
+    },
+    {
+      "package": "@reading-advantage/utils",
+      "check": "lint",
+      "command": "pnpm --filter @reading-advantage/utils run lint",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/utils-lint.log"
+    },
+    {
+      "package": "@reading-advantage/utils",
+      "check": "test",
+      "command": "pnpm --filter @reading-advantage/utils run test",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/utils-test.log"
+    },
+    {
+      "package": "@reading-advantage/utils",
+      "check": "build",
+      "command": "pnpm --filter @reading-advantage/utils run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/utils-build.log"
+    },
+    {
+      "package": "@reading-advantage/activity-runtime",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/activity-runtime run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/activity-runtime-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/advantage-play-kit",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/advantage-play-kit-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/advantage-play-kit-3d",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit-3d run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/advantage-play-kit-3d-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/activity-react",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/activity-react run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/activity-react-check-types.log"
+    },
+    {
+      "package": "@reading-advantage/auth-client",
+      "check": "check-types",
+      "command": "pnpm --filter @reading-advantage/auth-client run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/auth-client-check-types.log"
+    }
+  ]
+}
