@@ -74,8 +74,12 @@ describe("Phase 1 scaffold prerequisites for AC-1.1", () => {
     const sources = [...css.matchAll(/@source\s+["']([^"']+)["']/g)].map(
       ([, path]) => resolve(dirname(cssPath), path),
     );
-    for (const name of Object.keys({ ...pkg.dependencies, ...pkg.devDependencies })) {
-      if (!name.startsWith("@reading-advantage/")) continue;
+    const shared = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies }).filter((name) =>
+      name.startsWith("@reading-advantage/"),
+    );
+    // The scan must read a real set of packages. An empty set would pass the loop below (A4).
+    expect(shared.length, "The app depends on no shared workspace package").toBeGreaterThan(0);
+    for (const name of shared) {
       const packageDirectory = readdirSync(resolve(root, "packages")).find((entry) => {
         const manifest = resolve(root, "packages", entry, "package.json");
         return existsSync(manifest) && JSON.parse(readFileSync(manifest, "utf8")).name === name;
