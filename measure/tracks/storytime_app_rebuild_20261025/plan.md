@@ -138,6 +138,13 @@
 - The media list test asserts a non-empty list and names the file, the kind, and the rule of each item (A4).
 - The source record test asserts a full commit and no hash field (A15).
 
+### Phase 2 Green evidence (partial)
+
+- Package copy and timing implementation: `c2690a4f8666041b7acd0a9a09c87e5e42821388`. Automated: the package-copy test and the three copied core suites exit 0 with 4 files and 68 tests.
+- The first `build-graph update` ran after the structural package edit. `graph.db` is included in the implementation commit.
+- `pnpm install --prefer-offline --ignore-scripts` timed out with exit 124 after the 2700-second command limit. It updated `pnpm-lock.yaml`, which is included in the implementation commit.
+- Tasks 2.1 to 2.7 remain `[~]`. The package wiring, week-backed behavior, receive script, and phase gates are not complete.
+
 
 ## Phase 3: At-home app
 
