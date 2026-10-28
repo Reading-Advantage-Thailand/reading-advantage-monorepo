@@ -1,0 +1,12 @@
+{
+  "track_id": "accounting_duplication_removal_20260919",
+  "type": "bug",
+  "status": "done",
+  "created_at": "2026-09-19T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "description": "Repair the duplication removal items identified by the Accounting user-experience refactor plan.",
+  "estimated_tasks": 2,
+  "actual_tasks": 2,
+  "deviation_notes": "Closed 2026-10-26 (Daniel, check D1).",
+  "completed": "2026-10-26"
+}

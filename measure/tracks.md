@@ -19,6 +19,7 @@
   - [Queued (planned — spec on pickup)](#queued-planned--spec-on-pickup)
 - [Primary Advantage UX and Security Refactor Program (created 2026-09-12)](#primary-advantage-ux-and-security-refactor-program-created-2026-09-12)
 - [Archived Tracks](#archived-tracks)
+  - [Closed by the decisions of 2026-10-26](#closed-by-the-decisions-of-2026-10-26)
   - [Migration Queue](#migration-queue)
   - [Infrastructure & Backend](#infrastructure--backend)
   - [Pending Tracks](#pending-tracks)
@@ -35,14 +36,11 @@ This file tracks all major tracks for the project.
 
 ---
 
-- [x] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)* — SUPERSEDED by primary_cutover_blockers_20261003
-  Fix the eight defects found by the 2026-09-15 parallel browser QA sweep (sign-in crash, article crash, dead sidebar links, i18n key, admin 403, Realm Carver cap, locale toggle, Import Data routing).
 
 - [~] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
   Plan the complete game rebuild, shared arcade experience, listening, progression, and social play. Sol medium handoff is complete; implementation remains planned.
+  *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
 
-- [x] **Track: Architectural Priorities** *Link: [./tracks/architecture_priorities_20260908/](./tracks/architecture_priorities_20260908/)*
-  Reduce repeated verification, narrow Domain imports, and consolidate shared authentication behavior.
 
 ## Active Tracks (created 2026-09-19)
 
@@ -61,15 +59,12 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-10-25; Phase 1 (app scaffold and service config) next | Owner: Monorepo orchestrator | Milestone 1: one week end to end (teacher app, at-home app, one read-along, one decodable, one song) at Daniel's quality bar | Release goal: internal release 1 on 2026-12-01 (S17 scope open until after milestone 1)*
   *Note: Daniel 2026-10-25: "Storytime is an APP in the MONOREPO." `apps/storytime` with its own Cloud Run service and container (`storytime-app`, S30), sharing packages with primary-advantage. Printed QR paths `/th/st/<level>/<week>` must answer before about 2026-11-22. S1–S28 survival report: [docs/s1-s28-survival.md](./tracks/storytime_app_rebuild_20261025/docs/s1-s28-survival.md).*
 
-- [ ] **Track: Storytime Advantage Program** — *created 2026-10-21*
-  *Link: [./tracks/storytime_advantage_program_20261021/](./tracks/storytime_advantage_program_20261021/)*
-  *Status: ROLLED BACK 2026-10-25 per Daniel — the multimedia missed his bar; the app code is void; superseded by the in-monorepo build track [storytime_app_rebuild_20261025](./tracks/storytime_app_rebuild_20261025/) (Daniel 2026-10-25: "Storytime is an APP in the MONOREPO."; the repository `~/Desktop/storytime-advantage` is retired and unused) | Priority: paused | Survivors: Forge models, songs as material, phonics graph v1 (mastery-advantage ceb728d), phoneme bank (Workbooks 9478e1f)*
-  *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin). The release-1 goal of 2026-12-01 stands (reaffirmed 2026-10-25). Print content in Workbooks survives in place; S1–S28 verdicts are in the survival report of the rebuild track. Track stays open (no closeout, no archive); it is the record of decisions S1–S30. Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
 
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
   *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*
   *Note: roleplay scoring fails in production for every recording (Responses format rejects audio); models: qwen/qwen3.8-omni-flash, backup google/gemini-2.5-flash-lite.*
+  *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
 
 - [ ] **Track: Real Advantage logos on the www site** — *created 2026-10-08*
   *Link: [./tracks/www_real_logos_20261008/](./tracks/www_real_logos_20261008/)*
@@ -86,64 +81,18 @@ This file tracks all major tracks for the project.
   *Status: Phase 0 approved 2026-10-06; Phases 1 to 3 (shell, home, picker, inventory, shop, battle, dashboard) done 2026-10-06, reports `phase1/`, `phase2/`, `phase3/index.html`; Phase 4 (remaining pages) next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
   *Note: Forge assets only (no ElvGames). 3D avatar approved; every 3D interaction has a 2D fallback through the games' selector. Owner gate after Phase 0 on the look.*
 
-- [~] **Track: Legacy games removal (Primary first)** — *created 2026-10-06*
-  *Link: [./tracks/legacy_games_removal_20261006/](./tracks/legacy_games_removal_20261006/)*
-  *Status: owner approved 2026-10-06; M1 host and M2 ids done on lane-g (`primary/lane-g-new-game-host`), browser check and merge open | Priority: HIGH | Owner direction 2026-10-06: no old games in the repo; Tutor out of scope*
-  *Note: M1 host and M2 ids before the cutover; M3 (other apps) after. M4 (removal) moved to `primary_parity_cleanup_20261011`, before the cutover (owner follow-up 2026-10-11).*
 
-- [ ] **Track: Reward emblems become avatar pieces (M1 to M4)** — *created 2026-10-06*
-  *Link: [./tracks/primary_reward_pieces_20261006/](./tracks/primary_reward_pieces_20261006/)*
-  *Status: M1 to M4 done 2026-10-06 on pack 1.1.0 (Forge track avatar_reward_pieces_20261006); browser check of a granted staff open | Priority: HIGH | Owner approved plan A 2026-10-06*
-  *Note: the three reward cosmetics become mainhand avatar pieces granted into the inventory (source `reward`); the shop leaves reward items out.*
 
 - [ ] **Track: ElvGames asset audit and removal (APK and the apps)** — *created 2026-10-06*
   *Link: [./tracks/apk_elvgames_audit_20261006/](./tracks/apk_elvgames_audit_20261006/)*
   *Status: upcoming | Priority: HIGH (license) | Owner rule 2026-10-06: Forge assets only*
   *Note: Inventory every ElvGames file and reference (APK standard library, `standard-pack-qc`, the cartridges, `StudentCartridgeHost`), show the interim credit line, switch the cartridges to Forge packs, remove the files, add a CI gate. Tech-debt row 2026-10-06.*
 
-- [x] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
-  Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
-  Separate anonymous sessions from forbidden Sales identities in the session contract. **Implemented 2026-09-20 (4/4 tasks, 272 tests green on branch, merged to master); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
-  Repair recording cleanup, upload errors, loading states, and request cancellation. **Implemented 2026-09-20 (10/10 tasks, 42 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
-  Remove duplicated helpers, tests, dependencies, messages, and unused theme code. **Implemented 2026-09-20 (6/6 tasks, 49 scoped tests green, tsc and eslint clean); lockfile regenerated 2026-09-24 via container workaround (`d6c56ad9f`, validated with `pnpm install --frozen-lockfile --lockfile-only`); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
   Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation. **Implemented 2026-09-20 (5/6 tasks, 35 scoped tests green, tsc and eslint clean). Task 1 (shared `packages/auth` helper move) deferred — needs a dedicated cross-app track, registered in tech-debt; Task 6 recorded as tech-debt (App Router layout constraint); owner manual verification PASSED 2026-09-22.**
 
-- [x] **Track: Accounts Broken UX Fixes** *Link: [./tracks/accounts_broken_ux_fixes_20260919/](./tracks/accounts_broken_ux_fixes_20260919/)*
-  Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures. **Implemented 2026-09-20 (8/8 tasks, 93 tests green); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
-  Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates. **Implemented 2026-09-20 (5/5 tasks); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounts Loading State Correctness** *Link: [./tracks/accounts_loading_state_correctness_20260919/](./tracks/accounts_loading_state_correctness_20260919/)*
-  Distinguish directory loading, empty, failed, malformed-input, and readiness states. **Implemented 2026-09-20 (5/5 tasks, 34 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounts Duplication Removal** *Link: [./tracks/accounts_duplication_removal_20260919/](./tracks/accounts_duplication_removal_20260919/)*
-  Share safe-path, JSON-body, and route-handler boundary helpers without hiding capabilities. **Implemented 2026-09-20 (4/4 tasks, 65 scoped tests green, tsc clean in both apps); cross-app helper imports from `apps/accounts` into `apps/accounting` were introduced per plan; owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounts Structural Alignment** *Link: [./tracks/accounts_structural_alignment_20260919/](./tracks/accounts_structural_alignment_20260919/)*
-  Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage. **Implemented 2026-09-20 (6/6 tasks, 56 scoped tests green, admin routes at 100% coverage, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 
-- [x] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
-  Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects. **Implemented 2026-09-20 (9/9 tasks, 245 tests green, one pre-existing auth-import timeout); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounting Money Correctness** *Link: [./tracks/accounting_money_correctness_20260919/](./tracks/accounting_money_correctness_20260919/)*
-  Correct currency exponents, date zones, minor-unit display, and major-unit previews. **Implemented 2026-09-20 (6/6 tasks); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounting Loading State Correctness** *Link: [./tracks/accounting_loading_state_correctness_20260919/](./tracks/accounting_loading_state_correctness_20260919/)*
-  Add error recovery, server-side pending filtering, and export date controls. **Implemented 2026-09-20 (3/3 tasks, 18 scoped tests green); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounting Duplication Removal** *Link: [./tracks/accounting_duplication_removal_20260919/](./tracks/accounting_duplication_removal_20260919/)*
-  Consolidate repeated route helpers and library test locations. **Implemented 2026-09-20 (2/2 tasks, 78 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Accounting Structural Alignment** *Link: [./tracks/accounting_structural_alignment_20260919/](./tracks/accounting_structural_alignment_20260919/)*
-  Align origin checks, security headers, history views, and settled-currency validation. **Implemented 2026-09-20 (4/4 tasks, 92 app + 52 backend scoped tests green, tsc clean); `currencySchema` narrowed to THB/USD/JPY in `packages/backend` — confirm the allowlist; owner manual verification PASSED 2026-09-22.**
 
-- [x] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
-  Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
-  Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating. **Implemented 2026-09-20 (5/5 tasks, 535 tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
-  Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior. **Implemented 2026-09-20 (10/10 tasks, 34 scoped tests green, tsc clean); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
-  Remove duplicated authentication, application, campaign, AI, health, status, and navigation code. **Implemented 2026-09-20 (10/10 tasks, 151 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
-- [x] **Track: Marketing Structural Alignment** *Link: [./tracks/marketing_structural_alignment_20260919/](./tracks/marketing_structural_alignment_20260919/)*
-  Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts. **Implemented 2026-09-20 (6/6 tasks, 80 scoped tests green, tsc and eslint clean); settings POST contract narrowed to four writable keys (legacy keys now 400); CI must build `packages/auth` before marketing tests; owner manual verification PASSED 2026-09-22.**
 
 ## Current Focus (owner-confirmed 2026-08-10)
 
@@ -180,11 +129,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Normalize authenticated Primary role keys before access checks and keep the proxy on the Node runtime.
 - [~] **Track: Reading Remote Font Removal** *Link: [./tracks/reading_remote_font_removal_20260728/](./tracks/reading_remote_font_removal_20260728/)*
   Remove external book-font imports from Reading’s global stylesheet for locally deterministic rendering.
-- [~] **Track: Codecamp Duplicate Exercise/Quiz Lesson Hotfix** *Link: [./tracks/codecamp_duplicate_lesson_hotfix_20260810/](./tracks/codecamp_duplicate_lesson_hotfix_20260810/)*
-  Repair the production seed corruption that made required standalone exercises
-  and quizzes appear as duplicate lessons in 14 modules. Preserve every learner
-  progress identity, restore distinct exercise/quiz semantics, prevent recurrence,
-  and verify the deployed production data without granting unearned completion.
 
 ---
 
@@ -198,43 +142,38 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > in the MVP. Finance Operations is a separate P0 operational subledger and
 > evidence product.
 
+- [ ] **Track: Company Finance Operations Foundation (first draft)** *Link: [./tracks/company_finance_operations_20260729/](./tracks/company_finance_operations_20260729/)*
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
+
 - [~] **Track: Company Finance Operations Foundation** *Link: [./tracks/company_finance_operations_20260810/](./tracks/company_finance_operations_20260810/)*
   Define the distinct `apps/accounting` product through policy-neutral contracts,
   ports, schema, and Red tests for money, idempotency, immutable history,
   authorization, audit, provenance, and source-system isolation. THB valuation
   policy decided by the owner 2026-08-20 (settlement-derived rate, 2dp half-up);
   close/accountant policy list and pilot data remain pending.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
-- [x] **Track: APK Common Look and Enforcement — COMPLETED** *Link: [./tracks/apk_common_look_enforcement_20260822/](./tracks/apk_common_look_enforcement_20260822/)*
-  Bind standard-pack art to gameplay actors across all 18 wallpaper titles, make
-  `mountCartridge` enforce the cartridge manifest, repair the tutorial runtime so
-  demonstrations advance and show motion, and remove the unenforced version
-  numbers. Recorded retroactively at owner direction. Completed 2026-08-22.
 - [ ] **Track: Accounting App Foundation** *Link: [./tracks/accounting_app_foundation_20260820/](./tracks/accounting_app_foundation_20260820/)*
   Build `apps/accounting` on the Finance Operations foundation: Accounts SSO
   sign-in, staff expense/bill submission with evidence, owner approval with
   immutable audit, full double-entry ledger on a standard Thai SME chart of
   accounts, Thai statutory support (VAT, WHT, tax invoices), and accountant
   export. Story-shaped spec, 8 phases (S1–S8).
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
-- [x] **Track: Accounting Product Simplification** *Link: [./tracks/accounting_product_simplification_20260822/](./tracks/accounting_product_simplification_20260822/)*
-  Fix the two live finance-operations defects, cut the module to its
-  consumed symbols, collapse the accounting database, and add audit-backed
-  approval. Ledger/VAT/WHT cut pending the accountant tool decision. **Completed 2026-08-22**
 
-- [x] **Track: Accounting Minimum Product** *Link: [./tracks/accounting_minimum_product_20260822/](./tracks/accounting_minimum_product_20260822/)*
-  Owner review & approve/reject UI, derived-rate display, and CSV export
-  of approved submissions for the external accountant. **Completed 2026-08-22**
 
 - [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
   Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited
   administrator access to Marketing, Sales, Codecamp, and future internal apps,
   while ordinary employees retain explicit app roles.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 - [b] **Track: Business Operations Graph Baseline Remediation** *Link: [./tracks/business_operations_graph_baseline_remediation_20260730/](./tracks/business_operations_graph_baseline_remediation_20260730/)*
   Historical/incomplete remediation of the failed full-repository graph gate.
   Deferred for resource safety on 2026-08-10; it is not a successor delivery
   prerequisite and does not unblock Admin S1 or CRM. See the dated resource-
   safety disposition in the track.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 - [b] **Track: Customer, Licensing, and Minimal CRM Control Plane** *Link: [./tracks/customer_licensing_crm_20260722/](./tracks/customer_licensing_crm_20260722/)*
   Add leads, customers, contacts, school sites, sales ownership, shared demos,
   school trials, subscriptions, provisioning ports, and future revenue/commission
@@ -265,19 +204,18 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > program does not authorize a big-bang rewrite or Cloudflare Workers as a
 > backend runtime.
 
-- [x] **Track: Backend Architecture Enforcement** *Link: [./archive/backend_architecture_enforcement_20260713/](./archive/backend_architecture_enforcement_20260713/)*
-  Add AST database/provider boundary rules, counterexample fixtures, reviewed
-  ratcheting baselines, and shared CI/doctor enforcement. **Program Gate 1.**
 - [~] **Track: Backend Capability Kernel** *Link: [./tracks/backend_capability_kernel_20260713/](./tracks/backend_capability_kernel_20260713/)*
   Build capability descriptors, the policy executor, deterministic catalog and
   generated route bindings, then prove one bounded small/new-app slice. **Depends
   on Backend Architecture Enforcement.**
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 - [~] **Track: Durable Job Worker Platform** *Link: [./tracks/durable_job_worker_platform_20260713/](./tracks/durable_job_worker_platform_20260713/)*
   Generalize the proven Postgres `review_jobs` behavior into a durable job port
   and `services/worker`. Contract/test work under `packages/backend/src/jobs`
   depends on enforcement plus the accepted Kernel Task 1 package scaffold; it
   may then run alongside the remaining kernel work. Capability-bound handlers
   depend on full kernel acceptance.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 - [~] **Track: Company Employee Identity and SSO** *Link: [./tracks/company_identity_sso_20260715/](./tracks/company_identity_sso_20260715/)*
   Create a separate employee identity database and first-party Accounts app,
   provide shared SSO and app-scoped roles for Marketing, Sales Advantage, and
@@ -286,6 +224,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   `small_company_admin_privileges_20260722` deliberately supersedes the
   identity-only `COMPANY_ADMIN` product-access policy for this small company.
   *Status: ARCHIVE-PENDING — remaining graph, documentation, legacy-auth retirement, final-review, and Kimi WebBridge acceptance tasks are tracked in the plan.*
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
 ---
 
@@ -299,29 +238,18 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Reviews the oldest and largest legacy app, including direct DB/domain-bypass risk,
   Firebase remnants, student/teacher/admin workflows, AI/content/audio/flashcard flows,
   and migration-track proposals. Supersets the existing AGENTS.md audit stub. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
-- [ ] **Track: Science Advantage Review** *Link: [./tracks/science_advantage_review_20260626/](./tracks/science_advantage_review_20260626/)*
-  Reviews the new architecture-baseline app and verifies prior audit remediation held. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
-- [ ] **Track: CodeCamp Advantage Review** *Link: [./tracks/codecamp_advantage_review_20260626/](./tracks/codecamp_advantage_review_20260626/)*
-  Reviews intern training, curriculum progression, GitHub workflows, webhooks, AI PR review,
-  admin reporting, and production readiness. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
-- [b] **Track: Sales Advantage Review** *Link: [./tracks/sales_advantage_review_20260626/](./tracks/sales_advantage_review_20260626/)*
-  Published review artifacts cover 110 files through six batches and define 139
-  finding IDs. Graph freshness, targeted quality gates, and phase acceptance remain
-  blocked. Successor waves own product remediation. This row makes no Sales app
-  readiness claim.
-- [ ] **Track: Advantage Games Review** *Link: [./tracks/advantage_games_review_20260626/](./tracks/advantage_games_review_20260626/)*
-  Reviews the reusable game inventory, shared runtime, scoring/XP/leaderboards,
-  mobile/accessibility, and import readiness for Reading/Primary. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
-### Monorepo Review Remediation Waves (created 2026-06-28)
 
 > Detailed implementation tracks spawned from `monorepo_review_roadmap_20260626`. Each track includes evidence references back to the line-review artifacts and should be executed in wave order unless a dependency note explicitly allows parallel work.
 
 - [ ] **Track: Wave 4 — App Security & Correctness Backlog (Medium+)** *Link: [./tracks/wave4_app_security_correctness_backlog_20260628/](./tracks/wave4_app_security_correctness_backlog_20260628/)*
   Close remaining Medium+ security/tenant/authz/correctness tracks not in Wave 1. Evidence: Science ST-1/ST-2/ST-4; Reading SEC-6..10 / PB-4..8; CodeCamp MT-8..11/13/14; Sales T5/T8/T9; Primary M7/M9; www T9.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 - [ ] **Track: Wave 5 — Public Surface Completion** *Link: [./tracks/wave5_public_surface_completion_20260628/](./tracks/wave5_public_surface_completion_20260628/)*
   Finish non-claims public-surface defects: www forms/SEO/assets/i18n/a11y/comparison/nav/contact/test-hygiene, marketing schema/UX/i18n, Science de-Prisma deploy. Evidence: www T1/T2/T3/T6/T8/T11..T17; marketing schema/UX/i18n; Science ST-6.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 - [ ] **Track: Wave 6 — Quality, i18n, Accessibility, Adapters & Docs Completion** *Link: [./tracks/wave6_quality_i18n_accessibility_completion_20260628/](./tracks/wave6_quality_i18n_accessibility_completion_20260628/)*
   Close remaining Medium maintainability/adapter/i18n/a11y/test-quality/curriculum/docs tracks. Evidence: M-SF-6; Primary M10/M12/M13; Sales T10/T11; Science ST-5/ST-7/ST-8/SP-2; CodeCamp MT-C1..C4/MT-X1; Games T5-T10; marketing test backfill.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
 > **Coverage of record:** `audit-reports/monorepo-review-roadmap_20260626/medium-plus-coverage-matrix.md` maps every Medium-and-above migration track to exactly one wave (W0–W6). Low-severity items are listed there as explicitly deferred.
 
@@ -337,6 +265,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > No successor implementation may begin until the independent acceptance track
 > publishes post-review, post-approval hashes. Required subagent roles, evidence
 > receipts, stop-loss gates, and a three-game pilot are mandatory.
+
+- [ ] **Track: APK Multiplayer Platform Capability** *Link: [./tracks/apk_multiplayer_platform_capability_20260804/](./tracks/apk_multiplayer_platform_capability_20260804/)*
+  *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
 
 - [x] **Track: APK Cross-Game Requirements and Capability Ontology — FAILED/SUPERSEDED, DO NOT CONSUME** *Link: [./archive/apk_cross_game_asset_ontology_20260712/](./archive/apk_cross_game_asset_ontology_20260712/)*
   Failed after structural tests and generated assumptions were incorrectly treated as source-grounded completion. All hashes are revoked; artifacts remain only as negative/failure evidence.
@@ -399,14 +330,11 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   absent Reading/Primary consumers, representative-device FPS proof, and manual
   owner browser inspection remain explicitly open.
 
-- [x] **Track: APK Product Simplification** *Link: [./tracks/apk_product_simplification_20260820/](./tracks/apk_product_simplification_20260820/)*
-  Collapse remaining APK process tracks into catalog completion, live standard-pack art, and real Reading/Primary student game routes.
 
-- [x] **Track: APK Catalog UX Remediation** *Link: [./tracks/apk_catalog_ux_remediation_20260820/](./tracks/apk_catalog_ux_remediation_20260820/)*
-  Catalog UX waves W1–W4, music, leftover Konva page deletion, and old-URL redirects to `/student/games/apk/{id}` are complete.
 
 - [~] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
   Briefing, guided tutorial, and class demonstration are in the live host. S4 debrief and S5 intern workflow stay dropped. S2 owner browser verification remains for later.
+  *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
 
 - [x] **Track: APK Legacy Catalog Completion** *Link: [./archive/apk_legacy_catalog_completion_20260818/](./archive/apk_legacy_catalog_completion_20260818/)*
   Refactored the exact 20 remaining legacy catalog games into standard APK
@@ -416,7 +344,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   the implementation for Action, Defense, and Puzzle titles.
 
 - [x] **Track: APK Legacy Catalog Manual Browser Evidence — SUPERSEDED** *Link: [./archive/apk_legacy_catalog_manual_browser_evidence_20260819/](./archive/apk_legacy_catalog_manual_browser_evidence_20260819/)*
-  Standing Fail report retired. Recapture belongs to `apk_product_simplification_20260820` after art loads on the authenticated catalog route.
+  Standing Fail report retired. Recapture belongs to the APK Product Simplification track (archived 2026-10-26) after art loads on the authenticated catalog route.
 
 - [x] **Track: APK Standard Asset Library Contract and Production** *Link: [./archive/apk_dual_theme_asset_production_20260712/](./archive/apk_dual_theme_asset_production_20260712/)*
   Accepted release `2026.07.23`: 43,075 receipt-bound assets, catalog digest
@@ -430,10 +358,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   and cartridge presentation behavior. It makes animation and selected-union
   metadata descriptor-driven without reopening T10/T11 or authorizing migration.
 
-- [x] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./tracks/apk_standard_pack_suitability_ingestion_20260728/](./tracks/apk_standard_pack_suitability_ingestion_20260728/)*
-  Evidence-only contract and Existing Core dossiers are complete. Live catalog
-  player and enemy roles reuse pack `2026.07.23` through `createCatalogStandardEdition`.
-  Real legacy-asset ingestion remains unauthorized.
 
 - [x] **Track: APK Durable Successor Registry and Release Admission** *Link: [./archive/apk_durable_successor_registry_20260730/](./archive/apk_durable_successor_registry_20260730/)*
   Replaces process-local APK successor reservations with a transaction-safe,
@@ -450,14 +374,10 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   cutover, deletion, historical rebuild, and completeness claims remain cohort-gated.
   - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./archive/apk_denominator_readiness_t11_integrity_20260727/](./archive/apk_denominator_readiness_t11_integrity_20260727/)*
     Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
-- [x] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
-    Five core titles play as APK cartridges on Advantage Games, Reading, and Primary. Leftover Konva pages redirect to `/student/games/apk/{id}`. Task 6 keeps the 32 inventory PNG paths. Hidden host-proof pages stay frozen.
   - [x] **Track: APK Existing Action Cartridge Revalidation and Cutover — SUPERSEDED** *Link: [./archive/apk_existing_action_cutover_20260727/](./archive/apk_existing_action_cutover_20260727/)*
     Superseded by catalog completion. Do not rebuild Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, or Realm Carver as a new cutover program.
   - [x] **Track: APK Legacy Defense Rebuild and Cutover — SUPERSEDED** *Link: [./archive/apk_legacy_defense_cutover_20260727/](./archive/apk_legacy_defense_cutover_20260727/)*
     Superseded by catalog completion. Do not rebuild Castle Defense, Wizard vs Zombie, Village Guardian, or Storm the Castle Tower as a new cutover program.
-  - [x] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
-    Five traversal titles play as APK cartridges on Advantage Games, Reading, and Primary. Leftover Konva pages redirect to `/student/games/apk/{id}`. Hidden host-proof pages stay frozen.
   - [x] **Track: APK Legacy Puzzle Rebuild and Cutover — SUPERSEDED** *Link: [./archive/apk_legacy_puzzle_cutover_20260727/](./archive/apk_legacy_puzzle_cutover_20260727/)*
     Superseded by catalog completion. Do not rebuild Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, or Rune Forge Chamber as a new cutover program.
   - [x] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./archive/apk_historical_identity_disposition_20260727/](./archive/apk_historical_identity_disposition_20260727/)*
@@ -492,14 +412,17 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Build the React/Next/Vinext-compatible I Do and We Do runtime for YouTube/hosted video, diagrams, timestamped questions, tutorial repositories, deterministic step checks, and `practice.v1` evidence. Archived 2026-07-12.
 - [~] **Track: Codecamp Targeted Intervention Tutor** *Link: [./tracks/codecamp_intervention_tutor_20260710/](./tracks/codecamp_intervention_tutor_20260710/)*
   Replace general chat with a MiMo-V2.5 intervention coach grounded in the current objective, activity step, test failure, misconceptions, hint history, and curated lesson/video/repository resources.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 - [~] **Track: Codecamp PR Review as Mastery Evidence** *Link: [./tracks/codecamp_pr_mastery_evaluation_20260710/](./tracks/codecamp_pr_mastery_evaluation_20260710/)*
   Route PR review explicitly to OpenRouter `~x-ai/grok-latest`, expand the structured Zod result into graph-linked rubric evidence, preserve advisory review semantics, and feed validated results into KST+SRS without equating one approval with permanent mastery.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
 - [~] **Track: Sales Advantage Shared Mastery Consumer** *Link: [./tracks/sales_mastery_consumer_20260810/](./tracks/sales_mastery_consumer_20260810/)*
   Bind the approved Sales course to stable objectives and variants, map each
   verified company organization to an isolated Mastery tenant, and project
   eligible quiz and roleplay evidence into the shared KST/SRS runtime. Sales
   remains a course and never owns CRM, licensing, invoice, or commission data.
+  *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
 
 ---
 
@@ -509,9 +432,13 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > preserving an immutable, reproducible release snapshot. This program establishes the
 > versioning foundation before the standalone workbook dashboard is imported.
 
+- [ ] **Track: Workbooks SSO Onboarding** *Link: [./tracks/workbooks_sso_onboarding_20260803/](./tracks/workbooks_sso_onboarding_20260803/)*
+  *Status: parked 2026-10-26 (Daniel, check E9): no work since July and September*
+
 - [ ] **Track: Versioned Workbook Content and Editions** *Link: [./tracks/workbook_content_versioning_20260711/](./tracks/workbook_content_versioning_20260711/)*
   Define the shared article-and-asset catalog contract, publish immutable workbook editions,
   and retain the provenance needed to reproduce every rendered workbook artifact.
+  *Status: parked 2026-10-26 (Daniel, check E9): no work since July and September*
 
 ---
 
@@ -529,6 +456,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   seeds + human-approves real curriculum, adds Docker/cloudbuild, provisions the cloud
   `sales_advantage` DB, deploys to Cloud Run, and runs end-to-end QA. Successor to
   `sales_advantage_mvp_20260622` Phase 8.
+  *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
 
 - [x] **Track: Marketing Go-Live** *Link: [./archive/marketing_golive_20260701/](./archive/marketing_golive_20260701/)*
   Take `apps/marketing` (the video-production pipeline; FR-1..FR-6 met, 151 tests green in the
@@ -545,54 +473,41 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [~] **Track: CodeCamp Interactive Media and Diagrams Integration** *Link: [./tracks/codecamp_interactive_media_diagrams_20260709/](./tracks/codecamp_interactive_media_diagrams_20260709/)*
   Introduce curated YouTube tutorial embeds and 16 unit-level visual diagrams/illustrations across the CodeCamp curriculum, adapting database seed data and frontend rendering components.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
 - [~] **Track: Codecamp PR Review Recovery** *Link: [./tracks/codecamp_pr_review_recovery_20260820/](./tracks/codecamp_pr_review_recovery_20260820/)*
   Stop Codecamp PR reviews from dying permanently on the first contract failure. Strip generated artifacts instead of killing the review, make model-shape violations retryable with a repair prompt, widen the retry budget, and show the learner the true review state instead of a permanent "pending". Code complete and verified 2026-08-20 (baseline recorded, phases 1-4 checkpointed); production deploy and live verification pending owner timing.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
 - [~] **Track: Codecamp SSO Redirect Repair** *Link: [./tracks/codecamp_sso_redirect_repair_20260820/](./tracks/codecamp_sso_redirect_repair_20260820/)*
   Repair the company SSO redirect chain: carry the destination through sign-in, stop overwriting the learner's language cookie, honor the Cloud Run forwarding hop in every auth route, and surface sign-in errors.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
-- [~] **Track: SSO Dev Cookie Prefix Hotfix** *Link: [./tracks/sso_dev_cookie_prefix_hotfix_20260922/](./tracks/sso_dev_cookie_prefix_hotfix_20260922/)*
-  Real browsers reject the `__Host-` OIDC cookies without `Secure`, so local plain-HTTP SSO sign-in cannot complete for accounting, sales, marketing, or codecamp. Found by owner manual verification S2.1 on 2026-09-22; blocks local sessions S2–S4.
 
-- [x] **Track: Reading Article List UUID Cast Hotfix** *Link: [./tracks/reading_article_list_uuid_cast_hotfix_20260923/](./tracks/reading_article_list_uuid_cast_hotfix_20260923/)*
-  The read-page article list joined `userActivity.targetId` (text) to `articles.id` (uuid) without a cast, so the list was empty for signed-in students. Found by owner manual verification S5.1 on 2026-09-23; fixed with an `::text` cast and live-verified.
 
-- [x] **Track: Matching Word Payload Shape Hotfix** *Link: [./tracks/matching_word_shape_hotfix_20260923/](./tracks/matching_word_shape_hotfix_20260923/)*
-  The vocabulary Matching tab rendered empty cards for legacy `{ word, translation }` word payloads; the fetcher read only the canonical shape. Same bug class as reading_qa_vocab_flashcards_20260918. Found by owner manual verification S5.3 on 2026-09-23; fixed with shape normalization and live-verified.
 
-- [x] **Track: Chatbot Question Store Hotfix** *Link: [./tracks/chatbot_question_store_hotfix_20260923/](./tracks/chatbot_question_store_hotfix_20260923/)*
-  The floating chatbot could not send on article read pages: a poisoned question store made `mcQuestion.results.map` throw, then `blacklistedQuestions` serialized undefined entries as null and failed the API schema. Found by owner manual verification S5.5 on 2026-09-23; fixed with defensive chaining and payload filtering, live-verified.
 
-- [x] **Track: Goals and Signin i18n Hotfix** *Link: [./tracks/goals_signin_i18n_hotfix_20260923/](./tracks/goals_signin_i18n_hotfix_20260923/)*
-  The student goals page and signin labels kept hardcoded English after the structural track's FR-6. Added the `pages.student.goalsPage` scope and signin label keys in all five locales. Found by owner manual verification S5.19 on 2026-09-23; live-verified in Thai.
 
-- [x] **Track: Primary Dockerfile Modernization Hotfix** *Link: [./tracks/primary_dockerfile_modernization_hotfix_20260925/](./tracks/primary_dockerfile_modernization_hotfix_20260925/)*
-  The primary production deploy used a pre-monorepo Dockerfile (npm, prisma, app-dir context) that could not build the current app. Rewrote it to the pnpm/standalone pattern and fixed the cloudbuild deploy step; deployed 2026-09-25.
 
-- [x] **Track: Game Cartridges Build Hotfix** *Link: [./tracks/game_cartridges_build_hotfix_20260925/](./tracks/game_cartridges_build_hotfix_20260925/)*
-  `tsc -p tsconfig.build.json` for `@reading-advantage/game-cartridges` failed with 25 errors on master (Object.freeze contextual-typing loss, one outcome widening), blocking the primary deploy. Fixed with type-level annotations only; deployed 2026-09-25.
 
-- [x] **Track: Backend Auth Dependency Hotfix** *Link: [./tracks/backend_auth_dependency_hotfix_20260924/](./tracks/backend_auth_dependency_hotfix_20260924/)*
-  `packages/backend` imported `@reading-advantage/auth/company-identity` without declaring the dependency, so turbo raced auth/backend builds and the accounts image build failed (TS2307). Found during the 2026-09-24 production redeploy; fixed by declaring the workspace dependency and syncing the lockfile.
 
-- [x] **Track: System Metrics Classroom Join Hotfix** *Link: [./tracks/system_metrics_classroom_join_hotfix_20260923/](./tracks/system_metrics_classroom_join_hotfix_20260923/)*
-  The system dashboard showed 'No data available': the system metrics query selected `classroomStudents.id` without joining the table. Found by owner manual verification S5.14 on 2026-09-23; fixed and live-verified.
 
-- [~] **Track: Marketing Shortfall Count Hotfix** *Link: [./tracks/marketing_shortfall_count_hotfix_20260922/](./tracks/marketing_shortfall_count_hotfix_20260922/)*
-  The 422 topic-shortfall response carries the count but the client only reads 400 bodies. Found by owner manual verification S3.10 on 2026-09-22.
 
 - [ ] **Track: Sales and Marketing SSO Parity and Demo Accounts** *Link: [./tracks/sales_marketing_sso_parity_20260829/](./tracks/sales_marketing_sso_parity_20260829/)*
   Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny   no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).
+  *Status: parked 2026-10-26 (Daniel, check E11b): the marketing service stays up and the code stays; no work*
 
 - [ ] **Track: Accounting Dedicated Database Launch** *Link: [./tracks/accounting_dedicated_db_launch_20260830/](./tracks/accounting_dedicated_db_launch_20260830/)*
   Take `apps/accounting`, the only one of the five company apps with no Cloud Run deployment, to production on its own dedicated database: a separate `accounting` database on the shared Cloud SQL instance following the company-identity layout (own drizzle journal, runtime client, migration/runtime roles, secrets), SSO origin-approval and redirect parity with the Sales repair, a candidate no-traffic Cloud Build pipeline with a manual acceptance-gated promotion script, and DNS for accounting.reading-advantage.com. Status: Draft 2026-08-30.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
 - [ ] **Track: Codecamp Tutor Consolidation** *Link: [./tracks/codecamp_tutor_consolidation_20260820/](./tracks/codecamp_tutor_consolidation_20260820/)*
   Retire the stateless /api/chat route and extend the intervention tutor with an ask mode, so all 88 lessons gain conversation memory, lesson-content grounding, curated resources, and support telemetry.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
 - [ ] **Track: Codecamp Mastery Evidence Projection** *Link: [./tracks/codecamp_mastery_evidence_projection_20260820/](./tracks/codecamp_mastery_evidence_projection_20260820/)*
   Make Codecamp learner evidence trustworthy (stored exercise submissions, recorded quiz attempts, earned theory completion), then open the knowledge-space projection for every module instead of only Unit 20.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
 ---
 
@@ -606,14 +521,19 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [~] **Track: Reading Broken UX Fixes** *Link: [./tracks/broken_ux_fixes_20260911/](./tracks/broken_ux_fixes_20260911/)*
   Fix 404 links, broken client directives, crash-risk imports, audio leaks, and visual typos from the UX audit. One-line and small fixes only. **FR-1..9 implemented 2026-09-11 (9 commits, 13/13 static tests); FR-10 games auth policy resolved; owner manual verification PASSED 2026-09-23 (session S5.1-S5.6; three live defects hotfixed). Phase 4 docs/doctor tasks remain open.**
+  *Status: parked 2026-10-26 (Daniel, check E10): no work since 2026-09-23; the Lane G browser check shows which fixes still matter*
 - [~] **Track: Reading Audio and Highlighting Correctness** *Link: [./tracks/audio_highlight_correctness_20260911/](./tracks/audio_highlight_correctness_20260911/)*
   Consolidate four audio/highlight implementations into one shared hook; fix speed-switch restarts, double-advance race, timer leaks, and highlight color semantics. **Implemented 2026-09-11 (11 commits, 12/12 new tests); owner manual verification PASSED 2026-09-23 (session S5.7-S5.11). Phase 4 docs/doctor tasks remain open.**
+  *Status: parked 2026-10-26 (Daniel, check E10): no work since 2026-09-23; the Lane G browser check shows which fixes still matter*
 - [~] **Track: Reading Loading and State Correctness** *Link: [./tracks/loading_state_correctness_20260911/](./tracks/loading_state_correctness_20260911/)*
   Fix double pagination, infinite-scroll race, stuck skeletons, translate request storm, render-phase side effects, and wrong KPI labels. **Implemented 2026-09-11 (11 commits, 14/14 new tests); owner manual verification PASSED 2026-09-23 (session S5.12-S5.15; translate creds gap noted). Phase 4 docs/doctor tasks remain open.**
+  *Status: parked 2026-10-26 (Daniel, check E10): no work since 2026-09-23; the Lane G browser check shows which fixes still matter*
 - [~] **Track: Reading Component Deduplication** *Link: [./tracks/component_deduplication_20260911/](./tracks/component_deduplication_20260911/)*
   Merge ten forked component pairs (~2,200 duplicated quiz-card lines included), extract shared helpers, delete dead code. **Implemented 2026-09-11 in two parallel parts (18+ commits; ~1,990 forked quiz lines deleted; `system-articles.tsx` retained — two real importers); owner manual verification PASSED 2026-09-23 (session S5). Phase 4 docs/doctor tasks remain open.**
+  *Status: parked 2026-10-26 (Daniel, check E10): no work since 2026-09-23; the Lane G browser check shows which fixes still matter*
 - [~] **Track: Reading Structural UX Alignment** *Link: [./tracks/structural_ux_alignment_20260911/](./tracks/structural_ux_alignment_20260911/)*
   Server-side dashboard/goals data, remove internal self-HTTP fetches, student-progress role check, server-owned level-test XP, i18n and a11y passes, shell cleanup. **Implemented 2026-09-11 (12 commits, 984 tests green); games-catalog card a11y deferred behind APK track's uncommitted files; owner manual verification PASSED 2026-09-23 (session S5.16-S5.20; i18n gap hotfixed as 3f85a13a4; sidebar/timeline client fetches filed as findings). Phase 4 docs/doctor tasks remain open.**
+  *Status: parked 2026-10-26 (Daniel, check E10): no work since 2026-09-23; the Lane G browser check shows which fixes still matter*
 
 ---
 
@@ -625,20 +545,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > The two list-endpoint text=uuid join fixes from the same QA session sit
 > uncommitted in the working tree and stay outside these tracks.
 
-- [x] **Track: Reading QA — Article Detail 400** *Link: [./tracks/reading_qa_article_detail_20260918/](./tracks/reading_qa_article_detail_20260918/)*
-  Fix the HTTP 400 on `GET /api/v1/articles/{uuid}`: the detail guard rejects
-  schema-nullable `type` and `imageDescription`, so no article can be opened.
-  *Implemented 2026-09-18 (commit `10c74f1`, live 200 verified); independent review compliant, no findings; owner manual verification PASSED 2026-09-23 (session S5.21).*
 
-- [x] **Track: Reading QA — Vocabulary Flashcard Content** *Link: [./tracks/reading_qa_vocab_flashcards_20260918/](./tracks/reading_qa_vocab_flashcards_20260918/)*
-  Fix empty vocabulary flashcards: the study-card payload uses a legacy key shape
-  the reader does not recognize, so cards render "No word" / "No translation".
-  *Implemented 2026-09-18 (commit `3ec4216`, live card content verified); review compliant with two Low findings recorded in metadata; owner manual verification PASSED 2026-09-23 (session S5.22).*
 
-- [x] **Track: Reading QA — SRS Review Persistence** *Link: [./tracks/reading_qa_srs_persistence_20260918/](./tracks/reading_qa_srs_persistence_20260918/)*
-  Fix review persistence: rated sessions do not advance FSRS fields, due
-  counters, the activity log, or XP.
-  *Implemented 2026-09-18 (commit `191b546`, live persistence verified); review found one High — `targetId` acceptance widens tech-debt F-D5 fake-target XP farming (registry row amended, follow-up owed); owner manual verification PASSED 2026-09-23 (session S5.23).*
 
 ---
 
@@ -735,14 +643,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Delete nine dead files first (including `class-roster.tsx` and `reports.tsx`), then merge nine fork pairs (6,082 identical lines). About 13,900 lines are removable.
 - [ ] **Track: Primary Structural Alignment (optional)** *Link: [./tracks/primary_structural_alignment_20260912/](./tracks/primary_structural_alignment_20260912/)*
   Long tail: migrate 33 API routes onto `createTenantDB` and `assertCan`, add `error.tsx` per route group, and close remaining i18n and a11y gaps. Optional. Run after track 5.
-- [x] **Track: Primary Test Hygiene and Upload Fixes** *Link: [./tracks/primary_test_hygiene_upload_fixes_20260914/](./tracks/primary_test_hygiene_upload_fixes_20260914/)*
-  Close the three deferred items from the repair-wave "Known limitations": convert the 97 static source-grep tests to behavioral tests in per-domain batches (old assertions stay green alongside until replacements pass), make upload writes session-authoritative for school scoping, and make `upload/csv` deduplicate emails with conflict-safe inserts instead of a 500. **Implemented 2026-09-14 (orchestrated, 17/17 tasks): true count was 149 cases, all resolved; upload routes session-authoritative with validated dedupe summary; suite 571/571 exit 0, tsc 17 pre-existing, ESLint 0 errors; owner manual verification PASSED 2026-09-23 (session S6.1-S6.3; cross-school classroom probe clean).**
 
 ---
 
-- [ ] **Track: Standard Play Maps** *Link: [./tracks/apk_standard_play_maps_20260910/](./tracks/apk_standard_play_maps_20260910/)*
-  Generalize the existing Wizard graveyard map into one shared typed layout contract, then author nine top-down play maps (PNG plus typed layout) for the Advantage games. Rebuild Wizard vs. Zombie from scratch as the reference map. Keep collision rules stable and leave composed art outside the pinned standard pack.
-  *Status: Implementation complete 2026-09-10 — shared `StandardPlayMap` contract, nine typed layouts, nine composed PNGs, and focused tests (48 map tests + 64 Wizard engine tests green). Documented deviation: only Wizard renders its authored map in-engine; the other eight cartridges keep procedural layouts pending a wiring follow-up. 53 pre-existing check-types errors remain in untouched files.*
 
 ---
 
@@ -799,6 +702,401 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
 
+### Closed by the decisions of 2026-10-26
+
+Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's decisions of his tracks page.
+
+**Check D1 — the 53 finished tracks.**
+
+- [x] **Track: Architectural Priorities** *Link: [./archive/architecture_priorities_20260908/](./archive/architecture_priorities_20260908/)*
+  Reduce repeated verification, narrow Domain imports, and consolidate shared authentication behavior.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Reward emblems become avatar pieces (M1 to M4)** — *created 2026-10-06*
+  *Link: [./archive/primary_reward_pieces_20261006/](./archive/primary_reward_pieces_20261006/)*
+  *Status: M1 to M4 done 2026-10-06 on pack 1.1.0 (Forge track avatar_reward_pieces_20261006); browser check of a granted staff open | Priority: HIGH | Owner approved plan A 2026-10-06*
+  *Note: the three reward cosmetics become mainhand avatar pieces granted into the inventory (source `reward`); the shop leaves reward items out.*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Sales Advantage Broken UX Fixes** *Link: [./archive/sales_broken_ux_fixes_20260919/](./archive/sales_broken_ux_fixes_20260919/)*
+  Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Sales Advantage Session Contract Correctness** *Link: [./archive/sales_session_contract_correctness_20260919/](./archive/sales_session_contract_correctness_20260919/)*
+  Separate anonymous sessions from forbidden Sales identities in the session contract. **Implemented 2026-09-20 (4/4 tasks, 272 tests green on branch, merged to master); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./archive/sales_recording_loading_correctness_20260919/](./archive/sales_recording_loading_correctness_20260919/)*
+  Repair recording cleanup, upload errors, loading states, and request cancellation. **Implemented 2026-09-20 (10/10 tasks, 42 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Sales Advantage Duplication Removal** *Link: [./archive/sales_duplication_removal_20260919/](./archive/sales_duplication_removal_20260919/)*
+  Remove duplicated helpers, tests, dependencies, messages, and unused theme code. **Implemented 2026-09-20 (6/6 tasks, 49 scoped tests green, tsc and eslint clean); lockfile regenerated 2026-09-24 via container workaround (`d6c56ad9f`, validated with `pnpm install --frozen-lockfile --lockfile-only`); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounts Broken UX Fixes** *Link: [./archive/accounts_broken_ux_fixes_20260919/](./archive/accounts_broken_ux_fixes_20260919/)*
+  Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures. **Implemented 2026-09-20 (8/8 tasks, 93 tests green); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounts Console Write Correctness** *Link: [./archive/accounts_console_write_correctness_20260919/](./archive/accounts_console_write_correctness_20260919/)*
+  Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates. **Implemented 2026-09-20 (5/5 tasks); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounts Loading State Correctness** *Link: [./archive/accounts_loading_state_correctness_20260919/](./archive/accounts_loading_state_correctness_20260919/)*
+  Distinguish directory loading, empty, failed, malformed-input, and readiness states. **Implemented 2026-09-20 (5/5 tasks, 34 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounts Duplication Removal** *Link: [./archive/accounts_duplication_removal_20260919/](./archive/accounts_duplication_removal_20260919/)*
+  Share safe-path, JSON-body, and route-handler boundary helpers without hiding capabilities. **Implemented 2026-09-20 (4/4 tasks, 65 scoped tests green, tsc clean in both apps); cross-app helper imports from `apps/accounts` into `apps/accounting` were introduced per plan; owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounts Structural Alignment** *Link: [./archive/accounts_structural_alignment_20260919/](./archive/accounts_structural_alignment_20260919/)*
+  Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage. **Implemented 2026-09-20 (6/6 tasks, 56 scoped tests green, admin routes at 100% coverage, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounting Broken UX Fixes** *Link: [./archive/accounting_broken_ux_fixes_20260919/](./archive/accounting_broken_ux_fixes_20260919/)*
+  Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects. **Implemented 2026-09-20 (9/9 tasks, 245 tests green, one pre-existing auth-import timeout); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounting Money Correctness** *Link: [./archive/accounting_money_correctness_20260919/](./archive/accounting_money_correctness_20260919/)*
+  Correct currency exponents, date zones, minor-unit display, and major-unit previews. **Implemented 2026-09-20 (6/6 tasks); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounting Loading State Correctness** *Link: [./archive/accounting_loading_state_correctness_20260919/](./archive/accounting_loading_state_correctness_20260919/)*
+  Add error recovery, server-side pending filtering, and export date controls. **Implemented 2026-09-20 (3/3 tasks, 18 scoped tests green); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounting Duplication Removal** *Link: [./archive/accounting_duplication_removal_20260919/](./archive/accounting_duplication_removal_20260919/)*
+  Consolidate repeated route helpers and library test locations. **Implemented 2026-09-20 (2/2 tasks, 78 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounting Structural Alignment** *Link: [./archive/accounting_structural_alignment_20260919/](./archive/accounting_structural_alignment_20260919/)*
+  Align origin checks, security headers, history views, and settled-currency validation. **Implemented 2026-09-20 (4/4 tasks, 92 app + 52 backend scoped tests green, tsc clean); `currencySchema` narrowed to THB/USD/JPY in `packages/backend` — confirm the allowlist; owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Marketing Broken UX Fixes** *Link: [./archive/marketing_broken_ux_fixes_20260919/](./archive/marketing_broken_ux_fixes_20260919/)*
+  Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Marketing Runtime Header Correctness** *Link: [./archive/marketing_runtime_header_correctness_20260919/](./archive/marketing_runtime_header_correctness_20260919/)*
+  Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating. **Implemented 2026-09-20 (5/5 tasks, 535 tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Marketing Loading State Correctness** *Link: [./archive/marketing_loading_state_correctness_20260919/](./archive/marketing_loading_state_correctness_20260919/)*
+  Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior. **Implemented 2026-09-20 (10/10 tasks, 34 scoped tests green, tsc clean); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Marketing Duplication Removal** *Link: [./archive/marketing_duplication_removal_20260919/](./archive/marketing_duplication_removal_20260919/)*
+  Remove duplicated authentication, application, campaign, AI, health, status, and navigation code. **Implemented 2026-09-20 (10/10 tasks, 151 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Marketing Structural Alignment** *Link: [./archive/marketing_structural_alignment_20260919/](./archive/marketing_structural_alignment_20260919/)*
+  Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts. **Implemented 2026-09-20 (6/6 tasks, 80 scoped tests green, tsc and eslint clean); settings POST contract narrowed to four writable keys (legacy keys now 400); CI must build `packages/auth` before marketing tests; owner manual verification PASSED 2026-09-22.**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Codecamp Duplicate Exercise/Quiz Lesson Hotfix** *Link: [./archive/codecamp_duplicate_lesson_hotfix_20260810/](./archive/codecamp_duplicate_lesson_hotfix_20260810/)*
+  Repair the production seed corruption that made required standalone exercises
+  and quizzes appear as duplicate lessons in 14 modules. Preserve every learner
+  progress identity, restore distinct exercise/quiz semantics, prevent recurrence,
+  and verify the deployed production data without granting unearned completion.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: APK Common Look and Enforcement — COMPLETED** *Link: [./archive/apk_common_look_enforcement_20260822/](./archive/apk_common_look_enforcement_20260822/)*
+  Bind standard-pack art to gameplay actors across all 18 wallpaper titles, make
+  `mountCartridge` enforce the cartridge manifest, repair the tutorial runtime so
+  demonstrations advance and show motion, and remove the unenforced version
+  numbers. Recorded retroactively at owner direction. Completed 2026-08-22.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounting Product Simplification** *Link: [./archive/accounting_product_simplification_20260822/](./archive/accounting_product_simplification_20260822/)*
+  Fix the two live finance-operations defects, cut the module to its
+  consumed symbols, collapse the accounting database, and add audit-backed
+  approval. Ledger/VAT/WHT cut pending the accountant tool decision. **Completed 2026-08-22**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Accounting Minimum Product** *Link: [./archive/accounting_minimum_product_20260822/](./archive/accounting_minimum_product_20260822/)*
+  Owner review & approve/reject UI, derived-rate display, and CSV export
+  of approved submissions for the external accountant. **Completed 2026-08-22**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Backend Architecture Enforcement** *Link: [./archive/backend_architecture_enforcement_20260713/](./archive/backend_architecture_enforcement_20260713/)*
+  Add AST database/provider boundary rules, counterexample fixtures, reviewed
+  ratcheting baselines, and shared CI/doctor enforcement. **Program Gate 1.**
+  Closed 2026-10-26 (Daniel, check D1). The track was already archived on 2026-07-18; the stale link left in measure/tracks/ was removed on 2026-10-26.
+
+- [x] **Track: APK Product Simplification** *Link: [./archive/apk_product_simplification_20260820/](./archive/apk_product_simplification_20260820/)*
+  Collapse remaining APK process tracks into catalog completion, live standard-pack art, and real Reading/Primary student game routes.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: APK Catalog UX Remediation** *Link: [./archive/apk_catalog_ux_remediation_20260820/](./archive/apk_catalog_ux_remediation_20260820/)*
+  Catalog UX waves W1–W4, music, leftover Konva page deletion, and old-URL redirects to `/student/games/apk/{id}` are complete.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./archive/apk_standard_pack_suitability_ingestion_20260728/](./archive/apk_standard_pack_suitability_ingestion_20260728/)*
+  Evidence-only contract and Existing Core dossiers are complete. Live catalog
+  player and enemy roles reuse pack `2026.07.23` through `createCatalogStandardEdition`.
+  Real legacy-asset ingestion remains unauthorized.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./archive/apk_existing_core_cutover_20260727/](./archive/apk_existing_core_cutover_20260727/)*
+    Five core titles play as APK cartridges on Advantage Games, Reading, and Primary. Leftover Konva pages redirect to `/student/games/apk/{id}`. Task 6 keeps the 32 inventory PNG paths. Hidden host-proof pages stay frozen.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+  - [x] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./archive/apk_legacy_traversal_cutover_20260727/](./archive/apk_legacy_traversal_cutover_20260727/)*
+    Five traversal titles play as APK cartridges on Advantage Games, Reading, and Primary. Leftover Konva pages redirect to `/student/games/apk/{id}`. Hidden host-proof pages stay frozen.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: SSO Dev Cookie Prefix Hotfix** *Link: [./archive/sso_dev_cookie_prefix_hotfix_20260922/](./archive/sso_dev_cookie_prefix_hotfix_20260922/)*
+  Real browsers reject the `__Host-` OIDC cookies without `Secure`, so local plain-HTTP SSO sign-in cannot complete for accounting, sales, marketing, or codecamp. Found by owner manual verification S2.1 on 2026-09-22; blocks local sessions S2–S4.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Reading Article List UUID Cast Hotfix** *Link: [./archive/reading_article_list_uuid_cast_hotfix_20260923/](./archive/reading_article_list_uuid_cast_hotfix_20260923/)*
+  The read-page article list joined `userActivity.targetId` (text) to `articles.id` (uuid) without a cast, so the list was empty for signed-in students. Found by owner manual verification S5.1 on 2026-09-23; fixed with an `::text` cast and live-verified.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Matching Word Payload Shape Hotfix** *Link: [./archive/matching_word_shape_hotfix_20260923/](./archive/matching_word_shape_hotfix_20260923/)*
+  The vocabulary Matching tab rendered empty cards for legacy `{ word, translation }` word payloads; the fetcher read only the canonical shape. Same bug class as reading_qa_vocab_flashcards_20260918. Found by owner manual verification S5.3 on 2026-09-23; fixed with shape normalization and live-verified.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Chatbot Question Store Hotfix** *Link: [./archive/chatbot_question_store_hotfix_20260923/](./archive/chatbot_question_store_hotfix_20260923/)*
+  The floating chatbot could not send on article read pages: a poisoned question store made `mcQuestion.results.map` throw, then `blacklistedQuestions` serialized undefined entries as null and failed the API schema. Found by owner manual verification S5.5 on 2026-09-23; fixed with defensive chaining and payload filtering, live-verified.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Goals and Signin i18n Hotfix** *Link: [./archive/goals_signin_i18n_hotfix_20260923/](./archive/goals_signin_i18n_hotfix_20260923/)*
+  The student goals page and signin labels kept hardcoded English after the structural track's FR-6. Added the `pages.student.goalsPage` scope and signin label keys in all five locales. Found by owner manual verification S5.19 on 2026-09-23; live-verified in Thai.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Primary Dockerfile Modernization Hotfix** *Link: [./archive/primary_dockerfile_modernization_hotfix_20260925/](./archive/primary_dockerfile_modernization_hotfix_20260925/)*
+  The primary production deploy used a pre-monorepo Dockerfile (npm, prisma, app-dir context) that could not build the current app. Rewrote it to the pnpm/standalone pattern and fixed the cloudbuild deploy step; deployed 2026-09-25.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Game Cartridges Build Hotfix** *Link: [./archive/game_cartridges_build_hotfix_20260925/](./archive/game_cartridges_build_hotfix_20260925/)*
+  `tsc -p tsconfig.build.json` for `@reading-advantage/game-cartridges` failed with 25 errors on master (Object.freeze contextual-typing loss, one outcome widening), blocking the primary deploy. Fixed with type-level annotations only; deployed 2026-09-25.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Backend Auth Dependency Hotfix** *Link: [./archive/backend_auth_dependency_hotfix_20260924/](./archive/backend_auth_dependency_hotfix_20260924/)*
+  `packages/backend` imported `@reading-advantage/auth/company-identity` without declaring the dependency, so turbo raced auth/backend builds and the accounts image build failed (TS2307). Found during the 2026-09-24 production redeploy; fixed by declaring the workspace dependency and syncing the lockfile.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: System Metrics Classroom Join Hotfix** *Link: [./archive/system_metrics_classroom_join_hotfix_20260923/](./archive/system_metrics_classroom_join_hotfix_20260923/)*
+  The system dashboard showed 'No data available': the system metrics query selected `classroomStudents.id` without joining the table. Found by owner manual verification S5.14 on 2026-09-23; fixed and live-verified.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Marketing Shortfall Count Hotfix** *Link: [./archive/marketing_shortfall_count_hotfix_20260922/](./archive/marketing_shortfall_count_hotfix_20260922/)*
+  The 422 topic-shortfall response carries the count but the client only reads 400 bodies. Found by owner manual verification S3.10 on 2026-09-22.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Reading QA — Article Detail 400** *Link: [./archive/reading_qa_article_detail_20260918/](./archive/reading_qa_article_detail_20260918/)*
+  Fix the HTTP 400 on `GET /api/v1/articles/{uuid}`: the detail guard rejects
+  schema-nullable `type` and `imageDescription`, so no article can be opened.
+  *Implemented 2026-09-18 (commit `10c74f1`, live 200 verified); independent review compliant, no findings; owner manual verification PASSED 2026-09-23 (session S5.21).*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Reading QA — Vocabulary Flashcard Content** *Link: [./archive/reading_qa_vocab_flashcards_20260918/](./archive/reading_qa_vocab_flashcards_20260918/)*
+  Fix empty vocabulary flashcards: the study-card payload uses a legacy key shape
+  the reader does not recognize, so cards render "No word" / "No translation".
+  *Implemented 2026-09-18 (commit `3ec4216`, live card content verified); review compliant with two Low findings recorded in metadata; owner manual verification PASSED 2026-09-23 (session S5.22).*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Reading QA — SRS Review Persistence** *Link: [./archive/reading_qa_srs_persistence_20260918/](./archive/reading_qa_srs_persistence_20260918/)*
+  Fix review persistence: rated sessions do not advance FSRS fields, due
+  counters, the activity log, or XP.
+  *Implemented 2026-09-18 (commit `191b546`, live persistence verified); review found one High — `targetId` acceptance widens tech-debt F-D5 fake-target XP farming (registry row amended, follow-up owed); owner manual verification PASSED 2026-09-23 (session S5.23).*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Primary Test Hygiene and Upload Fixes** *Link: [./archive/primary_test_hygiene_upload_fixes_20260914/](./archive/primary_test_hygiene_upload_fixes_20260914/)*
+  Close the three deferred items from the repair-wave "Known limitations": convert the 97 static source-grep tests to behavioral tests in per-domain batches (old assertions stay green alongside until replacements pass), make upload writes session-authoritative for school scoping, and make `upload/csv` deduplicate emails with conflict-safe inserts instead of a 500. **Implemented 2026-09-14 (orchestrated, 17/17 tasks): true count was 149 cases, all resolved; upload routes session-authoritative with validated dedupe summary; suite 571/571 exit 0, tsc 17 pre-existing, ESLint 0 errors; owner manual verification PASSED 2026-09-23 (session S6.1-S6.3; cross-school classroom probe clean).**
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Standard Play Maps** *Link: [./archive/apk_standard_play_maps_20260910/](./archive/apk_standard_play_maps_20260910/)*
+  Generalize the existing Wizard graveyard map into one shared typed layout contract, then author nine top-down play maps (PNG plus typed layout) for the Advantage games. Rebuild Wizard vs. Zombie from scratch as the reference map. Keep collision rules stable and leave composed art outside the pinned standard pack.
+  *Status: Implementation complete 2026-09-10 — shared `StandardPlayMap` contract, nine typed layouts, nine composed PNGs, and focused tests (48 map tests + 64 Wizard engine tests green). Documented deviation: only Wizard renders its authored map in-engine; the other eight cartridges keep procedural layouts pending a wiring follow-up. 53 pre-existing check-types errors remain in untouched files.*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Monorepo Package Review**
+  *Link: [./archive/monorepo_package_review_20260907/](./archive/monorepo_package_review_20260907/)*
+  Evaluate all workspace units and repair confirmed defects under the Ponytail Rules.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: APK Named Asset Cuts** *Link: [./archive/apk_named_asset_cuts_20260907/](./archive/apk_named_asset_cuts_20260907/)*
+  Prepare several sheets per review batch and process approved cuts.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Primary Cutover Blockers** *Link: [./archive/primary_cutover_blockers_20261003/](./archive/primary_cutover_blockers_20261003/)*
+  Type gate, authorization, argon2, migration gate, Tutor read test, Sept 15 QA defects. Absorbs primary_browser_qa_fixes_20260915.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Primary UX Rework** (phases 0-4 and gates done 2026-10-05; final merge to integration pending) *Link: [./archive/primary_ux_rework_20261003/](./archive/primary_ux_rework_20261003/)*
+  Brand tokens, one navigation, student home, redesigned screens, accessibility. Phases 0-2 merged early into primary-parity-integration at e849f6208 (2026-10-05); Phase 3-4 and gates in progress on primary/lane-c-ux-rework.
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover**
+  *Link: [./archive/primary_parity_records_20261011/](./archive/primary_parity_records_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)**
+  *Link: [./archive/primary_parity_acceptance_20261011/](./archive/primary_parity_acceptance_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+- [x] **Track: APK Audio Cohort Release Acceptance** *Link: [./archive/apk_audio_cohort_release_acceptance_20260804/](./archive/apk_audio_cohort_release_acceptance_20260804/)*
+  Closed and archived 2026-10-26 (Daniel, check D1). Every plan task was done before the decision.
+
+**Check D6 — the June reviews and the empty AGENTS.md audits.**
+
+- [x] **Track: Science Advantage Review** *Link: [./archive/science_advantage_review_20260626/](./archive/science_advantage_review_20260626/)*
+  Reviews the new architecture-baseline app and verifies prior audit remediation held. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
+  Closed and archived 2026-10-26 (Daniel, check D6). Blocked or empty since June.
+
+- [x] **Track: CodeCamp Advantage Review** *Link: [./archive/codecamp_advantage_review_20260626/](./archive/codecamp_advantage_review_20260626/)*
+  Reviews intern training, curriculum progression, GitHub workflows, webhooks, AI PR review,
+  admin reporting, and production readiness. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
+  Closed and archived 2026-10-26 (Daniel, check D6). Blocked or empty since June.
+
+- [x] **Track: Sales Advantage Review** *Link: [./archive/sales_advantage_review_20260626/](./archive/sales_advantage_review_20260626/)*
+  Published review artifacts cover 110 files through six batches and define 139
+  finding IDs. Graph freshness, targeted quality gates, and phase acceptance remain
+  blocked. Successor waves own product remediation. This row makes no Sales app
+  readiness claim.
+  Closed and archived 2026-10-26 (Daniel, check D6). Blocked or empty since June.
+
+- [x] **Track: Advantage Games Review** *Link: [./archive/advantage_games_review_20260626/](./archive/advantage_games_review_20260626/)*
+  Reviews the reusable game inventory, shared runtime, scoring/XP/leaderboards,
+  mobile/accessibility, and import readiness for Reading/Primary. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
+### Monorepo Review Remediation Waves (created 2026-06-28)
+  Closed and archived 2026-10-26 (Daniel, check D6). Blocked or empty since June.
+
+- [x] **Track: AGENTS.md Compliance Audit — science-advantage (pilot)** *Link: [./archive/agents_md_audit_science_advantage_20260603/](./archive/agents_md_audit_science_advantage_20260603/)*
+  Pilot run of the audit protocol. Produces baseline checklist, findings classified by severity, and migration track proposals. Refines the protocol for the next-app rollout. *Status: COMPLETE — pilot finished, artifacts in `measure/audit-reports/science-advantage_20260603/`. Archived 2026-06-18.*
+  Closed and archived 2026-10-26 (Daniel, check D6). Blocked or empty since June.
+
+- [x] **Track: AGENTS.md Compliance Audit — primary-advantage** *Link: [./archive/primary_advantage_agents_md_audit_20260610/](./archive/primary_advantage_agents_md_audit_20260610/)*
+  **STUB — scheduled 2026-06-10.** Known blocker: Prisma is **still fully active** (15 files import `@prisma/client`; schema/migrations/`lib/prisma.ts` present; deps intact) — the migration was **incorrectly recorded as complete**. Audit verifies migration state first, then runs the 13-section protocol; coordinates with Prisma→Drizzle Track 4.
+  Closed and archived 2026-10-26 (Daniel, check D6). Blocked or empty since June.
+
+**Check D2 — the 14 cutover tracks.**
+
+- [x] **Track: Primary Parity Before the Cutover: Class books ready at the cutover**
+  *Link: [./archive/primary_parity_class_books_20261011/](./archive/primary_parity_class_books_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Staff student view (Preview mode)**
+  *Link: [./archive/primary_parity_staff_student_view_20261011/](./archive/primary_parity_staff_student_view_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: School admin dashboard with real data (ADM-01, SYS-03, ADM-13)**
+  *Link: [./archive/primary_parity_admin_dashboard_20261011/](./archive/primary_parity_admin_dashboard_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Teacher home numbers and class table with CSV (TCH-03)**
+  *Link: [./archive/primary_parity_teacher_home_20261011/](./archive/primary_parity_teacher_home_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: QR code path for printed books (/b/<book>/<n>)**
+  *Link: [./archive/primary_parity_qr_path_20261011/](./archive/primary_parity_qr_path_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)**
+  *Link: [./archive/primary_parity_system_dashboard_20261011/](./archive/primary_parity_system_dashboard_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: School management for admins and SYSTEM (ADM-03, ADM-04, SYS-05, school license view)**
+  *Link: [./archive/primary_parity_school_management_20261011/](./archive/primary_parity_school_management_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Stories in Read**
+  *Link: [./archive/primary_parity_stories_20261011/](./archive/primary_parity_stories_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Read-along that follows the voice**
+  *Link: [./archive/primary_parity_read_along_20261011/](./archive/primary_parity_read_along_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Teach a lesson again and start a lesson again**
+  *Link: [./archive/primary_parity_lesson_repeat_20261011/](./archive/primary_parity_lesson_repeat_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Chibi Quest games in the vocabulary step and the sentence step of the lesson**
+  *Link: [./archive/primary_parity_lesson_games_20261011/](./archive/primary_parity_lesson_games_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Print one lesson with the Workbooks primary template**
+  *Link: [./archive/primary_parity_print_lesson_20261011/](./archive/primary_parity_print_lesson_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: Installable app and a worker that replaces the legacy worker**
+  *Link: [./archive/primary_parity_pwa_20261011/](./archive/primary_parity_pwa_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Parity Before the Cutover: member ETL and runbook changes, PUB-03 contact export, full side-by-side acceptance, rehearsal 3, and the next cutover command sheet**
+  *Link: [./archive/primary_parity_rehearsal3_20261011/](./archive/primary_parity_rehearsal3_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 9*
+  Closed and archived 2026-10-26 (Daniel, check D2). The cutover is live since 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+**Check D3 — the 6 tracks that shipped with the cutover.**
+
+- [x] **Track: Primary Browser QA Fixes** *Link: [./archive/primary_browser_qa_fixes_20260915/](./archive/primary_browser_qa_fixes_20260915/)* — SUPERSEDED by primary_cutover_blockers_20261003
+  Fix the eight defects found by the 2026-09-15 parallel browser QA sweep (sign-in crash, article crash, dead sidebar links, i18n key, admin 403, Realm Carver cap, locale toggle, Import Data routing).
+  Closed and archived 2026-10-26 (Daniel, check D3). The feature shipped with the cutover on 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Legacy games removal (Primary first)** — *created 2026-10-06*
+  *Link: [./archive/legacy_games_removal_20261006/](./archive/legacy_games_removal_20261006/)*
+  *Status: owner approved 2026-10-06; M1 host and M2 ids done on lane-g (`primary/lane-g-new-game-host`), browser check and merge open | Priority: HIGH | Owner direction 2026-10-06: no old games in the repo; Tutor out of scope*
+  *Note: M1 host and M2 ids before the cutover; M3 (other apps) after. M4 (removal) moved to `primary_parity_cleanup_20261011`, before the cutover (owner follow-up 2026-10-11).*
+  Closed and archived 2026-10-26 (Daniel, check D3). The feature shipped with the cutover on 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Reedy Preview** (phases 0-4 done 2026-10-05; the Phase 5 live-session gate passed 2026-10-06; calibration and the rehearsal remain) *Link: [./archive/primary_reedy_preview_20261003/](./archive/primary_reedy_preview_20261003/)*
+  Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
+  Closed and archived 2026-10-26 (Daniel, check D3). The feature shipped with the cutover on 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Class Quest (semester 2)** (started and delivered 2026-10-06; the walk-through passed; the 25-student week test waits for the rehearsal environment) *Link: [./archive/primary_class_quest_20261005/](./archive/primary_class_quest_20261005/)*
+  Guild Mode as Class Quest: weekly quest from a fixed list, power-ups from goals, 8-minute cooperative boss battle with a polling projector dashboard. After the avatar shop track. Created 2026-10-05.
+  Closed and archived 2026-10-26 (Daniel, check D3). The feature shipped with the cutover on 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: Primary Avatar Shop, GP, Inventory, Loadout** (started 2026-10-06 on the owner's instruction; delivered 2026-10-06; the browser walk-through passed; the separate-agent review was skipped by the owner's no-subagent rule) *Link: [./archive/primary_avatar_shop_20261005/](./archive/primary_avatar_shop_20261005/)*
+  Avatar Phase 2 in the monorepo after the cutover: GP ledger, inventory, loadout, purchase, shop, avatar page, teacher class avatars, avatar in the game launch context. Created 2026-10-05.
+  Closed and archived 2026-10-26 (Daniel, check D3). The feature shipped with the cutover on 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+- [x] **Track: APK 3D Games Port** *Link: [./archive/apk3d_games_port_20261003/](./archive/apk3d_games_port_20261003/)*
+  Port the dual-renderer story games into the monorepo and offer them in Primary Advantage.
+  Closed and archived 2026-10-26 (Daniel, check D3). The feature shipped with the cutover on 2026-10-20; evidence: `measure/archive/primary_parity_rehearsal3_20261011/cutover-20261020.md` and the master merge `beb904102`.
+
+**Check D4 — the old Storytime program track.**
+
+- [x] **Track: Storytime Advantage Program** — *created 2026-10-21*
+  *Link: [./archive/storytime_advantage_program_20261021/](./archive/storytime_advantage_program_20261021/)*
+  *Status: ROLLED BACK 2026-10-25 per Daniel — the multimedia missed his bar; the app code is void; superseded by the in-monorepo build track [storytime_app_rebuild_20261025](./tracks/storytime_app_rebuild_20261025/) (Daniel 2026-10-25: "Storytime is an APP in the MONOREPO."; the repository `~/Desktop/storytime-advantage` is retired and unused) | Priority: paused | Survivors: Forge models, songs as material, phonics graph v1 (mastery-advantage ceb728d), phoneme bank (Workbooks 9478e1f)*
+  *Note: the English program for Anuban 2 to P2 (four levels, five scripted daily lessons, phonics graph under the English domain, Chibi Sprouts twin). The release-1 goal of 2026-12-01 stands (reaffirmed 2026-10-25). Print content in Workbooks survives in place; S1–S28 verdicts are in the survival report of the rebuild track. Track stays open (no closeout, no archive); it is the record of decisions S1–S30. Program overview: [storytime-advantage-program.md](./storytime-advantage-program.md).*
+  Closed and archived 2026-10-26 (Daniel, check D4). Superseded by `storytime_app_rebuild_20261025`; the decision record and the feature list moved to `measure/tracks/storytime_app_rebuild_20261025/docs/program-decisions-and-features.md`.
+
+**Check E8 — the July www tracks.**
+
+- [x] **Track: Refresh Product Pages with Real Features** *Link: [./archive/www_product_features_refresh_20260517/](./archive/www_product_features_refresh_20260517/)*
+  Update Reading Advantage and Primary Advantage pages with accurate feature lists (AI content generation, 12-level system, FSRS flashcards, workbook generator, read-along audio, school rankings). Add actual app screenshots and feature comparison matrix.
+  Closed and archived 2026-10-26 (Daniel, check E8). Closed unbuilt by Daniel's decision E8 on 2026-10-26; the standing track www_change_list_20261027 replaces it.
+
+- [x] **Track: Create Unified App Directory Page** *Link: [./archive/www_app_directory_20260517/](./archive/www_app_directory_20260517/)*
+  Create central app directory (/apps) showcasing all 5 products with role-based filtering (Student, Teacher, Admin, Parent, Intern), helping users navigate the ecosystem and choose the right platform.
+  Closed and archived 2026-10-26 (Daniel, check E8). Closed unbuilt by Daniel's decision E8 on 2026-10-26; the standing track www_change_list_20261027 replaces it.
+
+
+---
+
+
 ---
 
 ### Migration Queue
@@ -841,8 +1139,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ### Pending Tracks
 
-- [x] **Track: AGENTS.md Compliance Audit — science-advantage (pilot)** *Link: [./archive/agents_md_audit_science_advantage_20260603/](./archive/agents_md_audit_science_advantage_20260603/)*
-  Pilot run of the audit protocol. Produces baseline checklist, findings classified by severity, and migration track proposals. Refines the protocol for the next-app rollout. *Status: COMPLETE — pilot finished, artifacts in `measure/audit-reports/science-advantage_20260603/`. Archived 2026-06-18.*
 
 #### Pending Tracks — Audit Findings (science-advantage, 2026-06-03)
 
@@ -881,6 +1177,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: Observability Stack: Sentry + Request Context + Tracing** *Link: [./tracks/observability_stack_20260603/](./tracks/observability_stack_20260603/)*
   Add `@sentry/nextjs`; create `sentry.client.config.ts` and `sentry.server.config.ts`. Add `instrumentation.ts` registering Sentry + `@opentelemetry/sdk-node` + `@opentelemetry/exporter-trace-otlp-http`. Introduce `AsyncLocalStorage<RequestContext>` to auto-attach `requestId`/`userId`/`latencyMs` to every log. Migrate 5 largest `route.ts` files' catch blocks from `console.error` to `logger.error`. Wrap `generateObject` calls in real OTel spans. Resolves F-902, F-903, F-904, F-905, F-906. 1 week. **Medium.** **Track 9.**
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
 - [x] **Track: Postgres-Backed Rate Limiter v2** *Link: [./archive/rate_limiter_v2_20260603/](./archive/rate_limiter_v2_20260603/)*
   Add `login_attempts` table in `packages/db/src/schema/auth.ts` (username, failed_count, window_start, last_attempt_at). Replace in-memory `Map` in `packages/auth/src/rate-limit.ts:9` with `SELECT ... FOR UPDATE` upsert. Add per-IP rate limit (30/15 min) alongside per-username (5/15 min). Add periodic cleanup job. Keep the in-memory `Map` as a dev-only fast-path. Resolves F-403, F-407. 1 week. **Medium.** **Track 10.** *Archived 2026-07-03. 36 of 39 tasks completed (3 deferred:infra for DB-backed integration tests pending INFRA-2). Full spec implemented: Postgres-backed store, per-IP + per-username throttling, cleanup job, captcha trigger hook, dev fast-path with dual gate. Unit + adversarial suites green (207 tests). Captcha follow-up started as separate track placeholder.***
@@ -903,8 +1200,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: AGENTS.md Compliance Audit — reading-advantage** *Link: [./tracks/reading_advantage_agents_md_audit_20260610/](./tracks/reading_advantage_agents_md_audit_20260610/)*
   **STUB — scheduled 2026-06-10.** Largest known gap: **209** `app/**/route.ts` files import `db` directly, **0** route through `@reading-advantage/domain`/`assertCan`/`TenantDB` (~8× the science pilot's F-305 surface). Produces the audit artifact set + proposed migration tracks; reconciles `audit_20260526`.
 
-- [ ] **Track: AGENTS.md Compliance Audit — primary-advantage** *Link: [./tracks/primary_advantage_agents_md_audit_20260610/](./tracks/primary_advantage_agents_md_audit_20260610/)*
-  **STUB — scheduled 2026-06-10.** Known blocker: Prisma is **still fully active** (15 files import `@prisma/client`; schema/migrations/`lib/prisma.ts` present; deps intact) — the migration was **incorrectly recorded as complete**. Audit verifies migration state first, then runs the 13-section protocol; coordinates with Prisma→Drizzle Track 4.
 
 - [x] **Track: Tech Debt Resolution** *Link: [./archive/tech_debt_resolution_20260503/](./archive/tech_debt_resolution_20260503/)*
   Resolve 16 open tech-debt items not covered by other tracks. Phases: critical infra (Prisma→Drizzle, auth migration SQL), build config cleanup (ignoreBuildErrors removal), schema integrity, app-specific fixes, shared tooling.
@@ -923,6 +1218,11 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ### www-reading-advantage Website Updates (Based on Real Implementation)
 
+- [~] **Track: www change list (standing)** — *created 2026-10-27*
+  *Link: [./tracks/www_change_list_20261027/](./tracks/www_change_list_20261027/)*
+  *Status: active, standing (no end date); Phase 0 open | Priority: MEDIUM | Requested by Daniel 2026-10-26 (tracks page, row E8)*
+  *Note: PR keeps one www change list in its repository. Each Monday the PM orchestrator sends the new entries to Monorepo. This standing track builds them weekly. It replaces the two archived July www tracks.*
+
 - [x] **Track: Update Science Advantage Product Page** *Link: [./archive/www_science_product_update_20260517/](./archive/www_science_product_update_20260517/)*
   Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs. *Status: COMPLETE — Page updated with Early Access badge, student features (join classes, interactive lessons, progress tracking, AI recommendations), teacher features (intervention alerts, class analytics, student progress, assignments), and platform features. All 7 tests passing, lint clean. Commit: 1c384a1*
 
@@ -931,12 +1231,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [x] **Track: Create Advantage Games Showcase Page** *Link: [./archive/www_games_showcase_20260517/](./archive/www_games_showcase_20260517/)*
   Create dedicated games showcase page highlighting all 27 implemented educational games with XP system, leaderboard, adaptive difficulty, and cross-platform integration info.
-
-- [ ] **Track: Refresh Product Pages with Real Features** *Link: [./tracks/www_product_features_refresh_20260517/](./tracks/www_product_features_refresh_20260517/)*
-  Update Reading Advantage and Primary Advantage pages with accurate feature lists (AI content generation, 12-level system, FSRS flashcards, workbook generator, read-along audio, school rankings). Add actual app screenshots and feature comparison matrix.
-
-- [ ] **Track: Create Unified App Directory Page** *Link: [./tracks/www_app_directory_20260517/](./tracks/www_app_directory_20260517/)*
-  Create central app directory (/apps) showcasing all 5 products with role-based filtering (Student, Teacher, Admin, Parent, Intern), helping users navigate the ecosystem and choose the right platform.
 
 - [x] **Track: www-reading-advantage i18n/l10n Remediation** (6/6 phases) *Link: [./archive/www_i18n_l10n_remediation_20260527/](./archive/www_i18n_l10n_remediation_20260527/)*
   Remedy 12 missing translation keys (header nav) and 183 hardcoded English strings across 19 page/component files. *Status: COMPLETE — All 6 phases done. Audit gate passes: 0 missing keys, 0 hardcoded strings. Build passes. 1198 tests pass (11 test files have pre-existing next-intl module resolution failures). ESLint clean.*
@@ -982,10 +1276,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: codecamp-advantage — Cloud Run Cold-Start Fix**
   *Link: [./tracks/codecamp_infra_cold_start_20260608/](./tracks/codecamp_infra_cold_start_20260608/)*
   Fix Cloud Run cold-start time exceeding the 5-second P0 budget.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
 - [ ] **Track: codecamp-advantage — Warm Dashboard Performance**
   *Link: [./tracks/codecamp_perf_warm_dashboard_20260608/](./tracks/codecamp_perf_warm_dashboard_20260608/)*
   Bring the warm-dashboard page load under the 1000ms P1 budget.
+  *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
 - [x] **Track: codecamp-advantage — AI Review Visibility**
   *Link: [./archive/codecamp_ai_review_visibility_20260518/](./archive/codecamp_ai_review_visibility_20260518/)*
@@ -1149,6 +1445,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   integration gates in CI. Signed GET and private-by-default uploads are complete.
   Sales, Accounting, and Reading now consume the adapter. Legacy Reading and
   Primary GCS cutovers remain deferred under the portfolio hold policy.
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
 - [x] **Track: DB Migration Ledger Integrity + Hardening** ⚠️ **Critical**
   *Link: [./archive/db_migration_ledger_20260611/](./archive/db_migration_ledger_20260611/)*
@@ -1187,27 +1484,16 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   *Link: [./archive/review_findings_followup_20260626/](./archive/review_findings_followup_20260626/)*
   Closes the gaps from the 2026-06-26 in-depth review of `review_findings_remediation_20260624`: (FR-1) paginate `getStudents` by distinct student not joined row; (FR-2) PGlite in-process Postgres harness + real behavioral tests for migrated primary-advantage models; (FR-3) caller-level await guard for `generateArticleNew`; (FR-4) unit tests for `extractCanonicalSourceExcerpts` / `getRoleplayEvaluationContext`. Prior track marked AC-2/AC-12 ✓ but evidence did not support them; deferred real-test-DB work encoded here per the no-deferring-blockers rule.
 
-- [x] **Track: Monorepo Package Review**
-  *Link: [./tracks/monorepo_package_review_20260907/](./tracks/monorepo_package_review_20260907/)*
-  Evaluate all workspace units and repair confirmed defects under the Ponytail Rules.
 
-- [x] **Track: APK Named Asset Cuts** *Link: [./tracks/apk_named_asset_cuts_20260907/](./tracks/apk_named_asset_cuts_20260907/)*
-  Prepare several sheets per review batch and process approved cuts.
 
-- [ ] **Track: Primary Cutover Blockers** *Link: [./tracks/primary_cutover_blockers_20261003/](./tracks/primary_cutover_blockers_20261003/)*
-  Type gate, authorization, argon2, migration gate, Tutor read test, Sept 15 QA defects. Absorbs primary_browser_qa_fixes_20260915.
 
 - [x] **Track: Primary Student Login** *Link: [./tracks/primary_student_login_20261003/](./tracks/primary_student_login_20261003/)*
   Teacher-started code, name list, picture password, QR card, username/password, auth strength. Merged into primary-parity-integration at 0c26f7fb6 (2026-10-05). Blocked: 25-student browser run (low memory; owner go-ahead), QA timing check.
 
-- [x] **Track: Primary UX Rework** (phases 0-4 and gates done 2026-10-05; final merge to integration pending) *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
-  Brand tokens, one navigation, student home, redesigned screens, accessibility. Phases 0-2 merged early into primary-parity-integration at e849f6208 (2026-10-05); Phase 3-4 and gates in progress on primary/lane-c-ux-rework.
 
 - [x] **Track: Primary Class Books and Teacher Lesson Support** (phases 0-5 done; merge to integration pending) *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
   Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys. Phases 0-5 done on primary/lane-de-teacher-books (2026-10-05, head 437eafe5f); open: browser walk-through, teaching-game demo ports. Merge after the Lane C gates.
 
-- [~] **Track: Primary Reedy Preview** (phases 0-4 done 2026-10-05; the Phase 5 live-session gate passed 2026-10-06; calibration and the rehearsal remain) *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
-  Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
 
 - [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
   Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05. Re-dated 2026-10-26 (C5): Phases 1-4 after Storytime release 1 (2026-12-01); Phase 0 runs now (C6).
@@ -1220,18 +1506,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: The Guild Hall, Milestones, Bestiary, Familiars (wave 3, semester 2)** *Link: [./tracks/primary_guild_hall_20261005/](./tracks/primary_guild_hall_20261005/)*
   Guild milestones replace the school leaderboard; guild hall; class bestiary; familiars. After Class Quest. Created 2026-10-05.
-  *Status: parked 2026-10-26 (Daniel): the guild lives in the Chibi Quest expansion (advantage-mmorpg); Primary wave 3 drops the guild parts. Daniel: "Keep this information for history. We may want to expand PA further for next school year."*
+  *Status: parked 2026-10-26 (Daniel): the guild lives in the 3D browser game Chibi Quest (advantage-mmorpg, a separate app on its own subdomain), not in the Chibi Quest Expansion Pack of Primary Advantage; Primary wave 3 drops the guild parts. Daniel: "Keep this information for history. We may want to expand PA further for next school year." Corrected 2026-10-27 (Daniel, answer B4): the Expansion Pack is the deep visual refresh of Primary Advantage (avatars, games, GP); the 3D game is a separate app.*
 
-- [x] **Track: Primary Class Quest (semester 2)** (started and delivered 2026-10-06; the walk-through passed; the 25-student week test waits for the rehearsal environment) *Link: [./tracks/primary_class_quest_20261005/](./tracks/primary_class_quest_20261005/)*
-  Guild Mode as Class Quest: weekly quest from a fixed list, power-ups from goals, 8-minute cooperative boss battle with a polling projector dashboard. After the avatar shop track. Created 2026-10-05.
 
-- [x] **Track: Primary Avatar Shop, GP, Inventory, Loadout** (started 2026-10-06 on the owner's instruction; delivered 2026-10-06; the browser walk-through passed; the separate-agent review was skipped by the owner's no-subagent rule) *Link: [./tracks/primary_avatar_shop_20261005/](./tracks/primary_avatar_shop_20261005/)*
-  Avatar Phase 2 in the monorepo after the cutover: GP ledger, inventory, loadout, purchase, shop, avatar page, teacher class avatars, avatar in the game launch context. Created 2026-10-05.
 
 - [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
   ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.
-- [ ] **Track: APK 3D Games Port** *Link: [./tracks/apk3d_games_port_20261003/](./tracks/apk3d_games_port_20261003/)*
-  Port the dual-renderer story games into the monorepo and offer them in Primary Advantage.
 
 - [~] **Track: Primary Objective Tags (T1 of the Primary Mastery Graph Program)** (created 2026-10-06 after the owner approved the program decisions; branch `primary/lane-h-objective-tags`) *Link: [./tracks/primary_objective_tags_20261006/](./tracks/primary_objective_tags_20261006/)*
   Objective key in code, three additive `primary_` link tables, the importer writes the links, a backfill from the Workbooks `tags.json` export, a coverage report, and read functions for the evidence pipeline. 2026-10-06: rebased onto `primary-parity-integration` (migration `0070`); phases 0-4 implemented and verified on the local database; merged into integration (bcc0ddbdc, 5227d53b5); the owner's manual verification per phase is open.
@@ -1262,15 +1542,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [x] **Track: Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover**
-  *Link: [./tracks/primary_parity_records_20261011/](./tracks/primary_parity_records_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
 
 ---
 
-- [x] **Track: Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)**
-  *Link: [./tracks/primary_parity_acceptance_20261011/](./tracks/primary_parity_acceptance_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
 
 ---
 
@@ -1286,84 +1560,42 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Class books ready at the cutover**
-  *Link: [./tracks/primary_parity_class_books_20261011/](./tracks/primary_parity_class_books_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Staff student view (Preview mode)**
-  *Link: [./tracks/primary_parity_staff_student_view_20261011/](./tracks/primary_parity_staff_student_view_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: School admin dashboard with real data (ADM-01, SYS-03, ADM-13)**
-  *Link: [./tracks/primary_parity_admin_dashboard_20261011/](./tracks/primary_parity_admin_dashboard_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Teacher home numbers and class table with CSV (TCH-03)**
-  *Link: [./tracks/primary_parity_teacher_home_20261011/](./tracks/primary_parity_teacher_home_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: QR code path for printed books (/b/<book>/<n>)**
-  *Link: [./tracks/primary_parity_qr_path_20261011/](./tracks/primary_parity_qr_path_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)**
-  *Link: [./tracks/primary_parity_system_dashboard_20261011/](./tracks/primary_parity_system_dashboard_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: School management for admins and SYSTEM (ADM-03, ADM-04, SYS-05, school license view)**
-  *Link: [./tracks/primary_parity_school_management_20261011/](./tracks/primary_parity_school_management_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Stories in Read**
-  *Link: [./tracks/primary_parity_stories_20261011/](./tracks/primary_parity_stories_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Read-along that follows the voice**
-  *Link: [./tracks/primary_parity_read_along_20261011/](./tracks/primary_parity_read_along_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Teach a lesson again and start a lesson again**
-  *Link: [./tracks/primary_parity_lesson_repeat_20261011/](./tracks/primary_parity_lesson_repeat_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Chibi Quest games in the vocabulary step and the sentence step of the lesson**
-  *Link: [./tracks/primary_parity_lesson_games_20261011/](./tracks/primary_parity_lesson_games_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Print one lesson with the Workbooks primary template**
-  *Link: [./tracks/primary_parity_print_lesson_20261011/](./tracks/primary_parity_print_lesson_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: Installable app and a worker that replaces the legacy worker**
-  *Link: [./tracks/primary_parity_pwa_20261011/](./tracks/primary_parity_pwa_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: member ETL and runbook changes, PUB-03 contact export, full side-by-side acceptance, rehearsal 3, and the next cutover command sheet**
-  *Link: [./tracks/primary_parity_rehearsal3_20261011/](./tracks/primary_parity_rehearsal3_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 9*

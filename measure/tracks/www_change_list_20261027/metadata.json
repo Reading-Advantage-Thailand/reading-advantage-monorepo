@@ -1,0 +1,36 @@
+{
+  "track_id": "www_change_list_20261027",
+  "type": "chore",
+  "status": "active",
+  "standing": true,
+  "created": "2026-10-27",
+  "created_at": "2026-10-27T00:00:00Z",
+  "updated_at": "2026-10-27T00:00:00Z",
+  "priority": "medium",
+  "description": "A standing track to build the weekly copy changes that PR sends for the www-reading-advantage pages. PR owns the claims and the copy. Monorepo owns the build. Each weekly batch is one phase and one branch from master, with tests, gates, a live approval page, and a merge after Daniel passes.",
+  "owner_chain": [
+    "Daniel (owner; approval-page gate; deploy gate)",
+    "PM orchestrator (sends the weekly entries; takes the out-of-scope requests back to PR)",
+    "Monorepo orchestrator (track owner; build, review, merge to local master)"
+  ],
+  "requested_by": "Daniel, 2026-10-26, tracks page row E8: \"This needs to be continuous. Help me think of how to just have changes go to PR, and then PR plans changes to the www pages.\"",
+  "pm_reply": "PR keeps one www change list in its repository and adds each changed fact with the new copy. In my Monday pass I send the new entries to Monorepo. One standing Monorepo track builds them. You check the changed pages on one approval page each week; then your team deploys.",
+  "replaces": [
+    "www_product_features_refresh_20260517",
+    "www_app_directory_20260517"
+  ],
+  "replaces_archive_commit": "b7745061f",
+  "branch_prefix": "www/changes-",
+  "worktree_root": "/home/daniebo/Desktop/rama-worktrees/",
+  "locales": ["en", "th", "zh"],
+  "default_locale": "en",
+  "constraints": [
+    "Records only. This opening writes no app code, no test and no build.",
+    "No push and no deploy. The push to origin/master is Daniel's gate.",
+    "Pathspec commits only. No git add -A, no git commit -a, no stash, no reset.",
+    "Every heavy command runs through /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'.",
+    "Monorepo never writes in PR's repository."
+  ],
+  "estimated_tasks": null,
+  "deviation_notes": "Opened 2026-10-27 by the Monorepo orchestrator as a standing track with no end date. It replaces the two July www tracks, archived at commit b7745061f."
+}

@@ -1,0 +1,75 @@
+{
+  "track_id": "primary_parity_stories_20261011",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Stories in Read",
+  "estimated_tasks": 45,
+  "actual_tasks": null,
+  "deviation_notes": "Closed 2026-10-26 (Daniel, check D2).",
+  "sprint": {
+    "goal": "A student opens Read, selects the Stories tab, reads a chapter with the audio, and answers its questions, with the migrated legacy stories and the legacy XP amounts.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "The ETL brings the stories, chapters, and chapter questions",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Stories tab in Read",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Story page",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "Chapter page with read-along",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S5",
+        "title": "Chapter questions with XP",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S6",
+        "title": "Chapter flashcards",
+        "size": "M",
+        "priority": "Should",
+        "status": "pending"
+      },
+      {
+        "id": "S7",
+        "title": "Old story URLs open the new pages",
+        "size": "S",
+        "priority": "Should",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  },
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 6,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  },
+  "completed": "2026-10-26"
+}

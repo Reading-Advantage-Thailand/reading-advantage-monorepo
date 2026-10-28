@@ -73,7 +73,7 @@ The Rogue Adventure license receipt is `packages/advantage-play-kit/assets/stand
 The Fantasy Dreamland license receipt is `packages/advantage-play-kit/assets/standard/licenses/fantasy-dreamland-world/license-source-626bc5e1cdba.txt`.
 The subagent reported commercial use and modification permissions with required ElvGames credit.
 The receipts prohibit resale and AI training use.
-The crypt cut approval record is `measure/tracks/apk_named_asset_cuts_20260907/batch-12-review.md`.
+The crypt cut approval record is `measure/archive/apk_named_asset_cuts_20260907/batch-12-review.md`.
 These findings support further scene review. They do not establish final product acceptance.
 
 

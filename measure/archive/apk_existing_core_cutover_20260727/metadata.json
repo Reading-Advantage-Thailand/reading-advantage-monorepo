@@ -1,16 +1,16 @@
 {
   "track_id": "apk_existing_core_cutover_20260727",
   "type": "feature",
-  "status": "complete",
+  "status": "done",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-08-03T03:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
   "description": "Vertical revalidation and cutover of five already-built core APK cartridges.",
   "estimated_tasks": 7,
   "actual_tasks": 4,
   "depends_on": [
     "apk_denominator_readiness_t11_integrity_20260727"
   ],
-  "deviation_notes": "Tasks 1-4 retain their accepted readiness, semantic-adoption, and Advantage Games QC preparation evidence. Plan-truth recovery quarantines the shared 24-title candidate, its root-wrapper observation, and its 193/193 reports as historical non-consumable records with live-source drift. Task 5 is reopened for the Dragon Flight-only signed-attempt/runtime corrective phase; Task 6 is blocked until a title-specific production proof is accepted. No current Reading/Primary host acceptance, retirement completion, cutover, deployment, cohort closeout, or broader APK authority is claimed. Task 5 historical authorization facts are preserved only under historical_authorization; top-level fields and current_authorization are superseded-non-consumable and deny Task 5 consumption and Task 6 begin authorization. | 2026-08-02 Grok technical: DF dual-host unit/API green; MD+DL loaders; historical source-blocked; retirement candidates-only; owner formal Task5 open",
+  "deviation_notes": "Tasks 1-4 retain their accepted readiness, semantic-adoption, and Advantage Games QC preparation evidence. Plan-truth recovery quarantines the shared 24-title candidate, its root-wrapper observation, and its 193/193 reports as historical non-consumable records with live-source drift. Task 5 is reopened for the Dragon Flight-only signed-attempt/runtime corrective phase; Task 6 is blocked until a title-specific production proof is accepted. No current Reading/Primary host acceptance, retirement completion, cutover, deployment, cohort closeout, or broader APK authority is claimed. Task 5 historical authorization facts are preserved only under historical_authorization; top-level fields and current_authorization are superseded-non-consumable and deny Task 5 consumption and Task 6 begin authorization. | 2026-08-02 Grok technical: DF dual-host unit/API green; MD+DL loaders; historical source-blocked; retirement candidates-only; owner formal Task5 open Closed 2026-10-26 (Daniel, check D1).",
   "reviews": [
     {
       "reviewed_at": "2026-07-27T18:55:00Z",
@@ -258,5 +258,6 @@
     "disclosed_as_external_blocker": false,
     "live_deletion_authorized": true,
     "production_catalog_exposure_authorized": true
-  }
+  },
+  "completed": "2026-10-26"
 }

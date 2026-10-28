@@ -2,7 +2,7 @@
   "id": "agents_md_audit_science_advantage_20260603",
   "type": "chore",
   "title": "AGENTS.md Compliance Audit — science-advantage (pilot)",
-  "status": "complete",
+  "status": "done",
   "created": "2026-06-03",
   "owner": "audit-protocol",
   "spec": "./spec.md",
@@ -10,5 +10,8 @@
   "references": [
     "../../agents-md-audit-protocol.md",
     "../tech-debt.md#audit_20260526"
-  ]
+  ],
+  "updated_at": "2026-10-26T00:00:00Z",
+  "completed": "2026-10-26",
+  "deviation_notes": "Closed 2026-10-26 (Daniel, check D6)."
 }

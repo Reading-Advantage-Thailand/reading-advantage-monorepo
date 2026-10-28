@@ -1,11 +1,11 @@
 {
   "track_id": "durable_job_worker_platform_20260713",
   "type": "feature",
-  "status": "in_progress",
+  "status": "parked",
   "created_at": "2026-07-13T00:00:00Z",
-  "updated_at": "2026-08-13T23:08:49Z",
+  "updated_at": "2026-10-26T00:00:00Z",
   "description": "Generalize the proven Postgres review_jobs reliability model into a portable durable-job port and services/worker runtime while preserving Codecamp review behavior; bind handlers to capabilities only after the kernel is accepted.",
   "estimated_tasks": 20,
   "actual_tasks": 7,
-  "deviation_notes": "Phase 1 accepted Tasks 1-5. Tasks 6 and 7 passed independent review on 2026-08-14. Task 6 adds executable PostgreSQL 16 Red constraints and catalog proofs. Task 7 adds isolated connections, fail-closed URLs, collision safety, and bounded signal cleanup. The fresh Task 7 live suite passed 30 tests and left zero scratch databases. The Task 6 live run stopped only at the absent Task 11 migration, as designed. Tasks 8, 9, and 10 are active. The production schema, adapter, concurrency behavior, and worker composition remain future work."
+  "deviation_notes": "Phase 1 accepted Tasks 1-5. Tasks 6 and 7 passed independent review on 2026-08-14. Task 6 adds executable PostgreSQL 16 Red constraints and catalog proofs. Task 7 adds isolated connections, fail-closed URLs, collision safety, and bounded signal cleanup. The fresh Task 7 live suite passed 30 tests and left zero scratch databases. The Task 6 live run stopped only at the absent Task 11 migration, as designed. Tasks 8, 9, and 10 are active. The production schema, adapter, concurrency behavior, and worker composition remain future work. Parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus."
 }

@@ -116,7 +116,7 @@ Use this mismatch as a baseline problem for the new asset comparison.
 Do not treat a larger or newer image as automatically better.
 
 The named asset track records approved crypt, remastered Halloween, and dark-castle cut batches.
-See `measure/tracks/apk_named_asset_cuts_20260907/plan.md`, including batches 6, 12, and 14.
+See `measure/archive/apk_named_asset_cuts_20260907/plan.md`, including batches 6, 12, and 14.
 Batch processing approval establishes availability; gameplay suitability still requires visual comparison.
 
 The preliminary shortlist includes these collections:

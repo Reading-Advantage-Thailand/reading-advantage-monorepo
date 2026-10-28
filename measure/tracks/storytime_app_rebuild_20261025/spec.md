@@ -5,7 +5,7 @@
 **Status:** active. Opened 2026-10-25.
 **Owner chain:** Daniel (owner, milestone judge, hard gates) → Monorepo orchestrator (track owner: build, review, integration, verification) → PM orchestrator (hand-offs to Workbooks and Forge).
 **Plan:** [plan.md](./plan.md) · **Survival report S1 to S28:** [docs/s1-s28-survival.md](./docs/s1-s28-survival.md)
-**Record of decisions:** S1 to S30 and the content state are in the rolled-back track [`storytime_advantage_program_20261021`](../storytime_advantage_program_20261021/): [decisions.md](../storytime_advantage_program_20261021/decisions.md), [design.md](../storytime_advantage_program_20261021/design.md), [spec.md](../storytime_advantage_program_20261021/spec.md). This track uses those decisions. It does not copy the old plan.
+**Record of decisions:** S1 to S30 and the feature list, with the reuse verdict for each item, are in [docs/program-decisions-and-features.md](./docs/program-decisions-and-features.md); the old track is archived at [../archive/storytime_advantage_program_20261021/](../archive/storytime_advantage_program_20261021/) and keeps its full design. This track uses those decisions. It does not copy the old plan.
 
 ## 1. Architecture (Daniel, 2026-10-25)
 

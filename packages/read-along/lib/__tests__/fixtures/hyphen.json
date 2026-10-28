@@ -1,0 +1,29 @@
+[
+  {
+    "words": [
+      {
+        "end": 65.896,
+        "word": "The",
+        "start": 65.559
+      },
+      {
+        "end": 66.654,
+        "word": "grown-ups",
+        "start": 65.896
+      },
+      {
+        "end": 66.907,
+        "word": "go",
+        "start": 66.654
+      },
+      {
+        "end": 67.412,
+        "word": "first.",
+        "start": 66.907
+      }
+    ],
+    "endTime": 67.472,
+    "sentence": "The grown-ups go first.",
+    "startTime": 65.499
+  }
+]

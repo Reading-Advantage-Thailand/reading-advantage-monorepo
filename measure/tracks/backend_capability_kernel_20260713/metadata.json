@@ -1,11 +1,11 @@
 {
   "track_id": "backend_capability_kernel_20260713",
   "type": "feature",
-  "status": "in_progress",
+  "status": "parked",
   "created_at": "2026-07-13T00:00:00Z",
-  "updated_at": "2026-08-14T00:00:00Z",
+  "updated_at": "2026-10-26T00:00:00Z",
   "description": "Build the portable capability descriptor, policy executor, deterministic catalog, and generated transport binding kernel, then prove it on a bounded small/new-app slice.",
   "estimated_tasks": 19,
   "actual_tasks": null,
-  "deviation_notes": "Phase 3 reconciliation closed R1, R2, R5, and R7 for kernel acceptance. The database and domain counts are recorded, but R3 and R4 need exact failing-file dispositions. The live repository package, architecture, and doctor gates remain red. R6 awaits the Company Identity owner decision."
+  "deviation_notes": "Phase 3 reconciliation closed R1, R2, R5, and R7 for kernel acceptance. The database and domain counts are recorded, but R3 and R4 need exact failing-file dispositions. The live repository package, architecture, and doctor gates remain red. R6 awaits the Company Identity owner decision. Parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus."
 }

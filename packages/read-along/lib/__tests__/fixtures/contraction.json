@@ -1,0 +1,29 @@
+[
+  {
+    "words": [
+      {
+        "end": 45.957,
+        "word": "It",
+        "start": 45.55
+      },
+      {
+        "end": 46.637,
+        "word": "says:",
+        "start": 45.957
+      },
+      {
+        "end": 47.316,
+        "word": "\"Don't",
+        "start": 46.637
+      },
+      {
+        "end": 47.859,
+        "word": "run.\"",
+        "start": 47.316
+      }
+    ],
+    "endTime": 47.919,
+    "sentence": "It says: \"Don't run.\"",
+    "startTime": 45.49
+  }
+]
