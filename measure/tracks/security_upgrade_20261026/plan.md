@@ -152,14 +152,16 @@
 
 > Each command below runs through `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'`. The commands run one at a time.
 
-- [~] 2.1 `apps/accounting`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
+- [x] 2.1 `apps/accounting`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. (2f4cc036b)
 
   Phase 2 Red evidence — the ledger contract. The Red role wrote `tests/security-upgrade-verification-ledger.test.ts`. The Red role wrote no other file. The ledger file `measure/tracks/security_upgrade_20261026/verification-ledger.json` is absent. The Red run exits with code 1. Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-upgrade && timeout 900 pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-verification-ledger.test.ts'`. phase_base_sha=9ee8505883cec92e87daa31f00ff71ced052dead. role_base_sha=70de5bea8f4931dcda9180c4908f20a5d5fd6987. Result: `Test Files 1 failed (1)`, `Tests 1 failed | 26 passed (27)`, exit_code=1. The one failure is the live ledger test. Its message reads `reason=ledger_file_absent searched=measure/archive/security_upgrade_20261026/verification-ledger.json measure/tracks/security_upgrade_20261026/verification-ledger.json`. The 26 fixture self-tests pass. The run holds no import error and no config error. The full output is in `measure/runs/security_upgrade_20261026/mid-red-70de5bea8.vitest.log`. This is not a pass.
 
   The test contract for Green. Each row holds `package`, `command`, `exit_code`, `class` and `log`. A row holds `check` when its `command` names the run and not the matrix check. A row holds `evidence` with a `source=` label when the class is not `pass`. A row holds `script_heap` and `run_heap` when the package script sets a heap. The classes are `pass`, `predates-track`, `upgrade-defect`, `not-run` and `script-absent`. The ledger must hold one row for each of the 73 matrix pairs. The count holds 40 app pairs, 28 shared package pairs and 5 check-types pairs for the packages outside the app matrix. The `script-absent` class is allowed only for the `check-types` pair of `@reading-advantage/ui` and of `@reading-advantage/utils`. Every `pass` row holds `exit_code=0` and a log under `measure/runs/security_upgrade_20261026/`. The log holds the label `exit_code=0`. A `not-run` row holds `source=timeout` with `exit_code=124`, or `source=machine_heap` with `exit_code=137`, or `source=not-run`. The heap pairs are `primary-advantage` `check-types` with `script_heap=6144`, `primary-advantage` `build` with `script_heap=4096` and `reading-advantage` `build` with `script_heap=8192`. A green ledger test does not close AC-5. The live logs close AC-5.
-- [ ] 2.2 `apps/accounts`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
+- [x] 2.2 `apps/accounts`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. (2f4cc036b)
 - [ ] 2.3 `apps/codecamp-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
-- [ ] 2.4 `apps/marketing`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. The build runs `vinext build`. Test: AC-5.
+- [x] 2.4 `apps/marketing`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. The build runs `vinext build`. Test: AC-5. (2f4cc036b)
+
+  Evidence — all four commands for `accounting`, `accounts` and `marketing` have `exit_code=0` in `measure/runs/security_upgrade_20261026/p2/`. The ledger commit `2f4cc036b` records these rows.
 - [ ] 2.5 `apps/primary-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
 - [ ] 2.6 `apps/reading-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. The app runs Jest for its unit tests. Test: AC-5.
 - [ ] 2.7 `apps/sales-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
