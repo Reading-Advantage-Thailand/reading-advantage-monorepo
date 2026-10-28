@@ -1,15 +1,28 @@
 MEASURE_AGENT_RESULT
 role: measure-jr-green
-status: in_progress
+status: green
 track: security_upgrade_20261026
 phase: P2
 phase_base_sha: 9ee8505883cec92e87daa31f00ff71ced052dead
 role_base_sha: d0ac5b79472e6aa169a444251e182fc1c5b1b42c
-commits: 2f4cc036b; 96d7be61e; aa886380c; d700789cd; 25e0ba300; 5226ed942; 69f52dd98; 6c342fb65; 2859aa2ea; 0ef82c7db; 62ca1913f; d1322c419; 9e260e05c; fe711bb6b; 391cdd30c; 5f70a9d22; bb85af874 (primary partial results)
-tests_run: Targeted ledger test exited 1 with 1 failed and 26 passed before recent rows. Domain build and test exited 0. Primary check-types and build exited 0 with correct heap labels; primary lint exited 1 with 13 errors and 864 warnings; primary test exited 1 with six failing files. Earlier package failures and their logs are recorded in the ledger.
-files_changed: `measure/tracks/security_upgrade_20261026/verification-ledger.json`; `measure/tracks/security_upgrade_20261026/plan.md`; this result log. Four generated `next-env.d.ts` changes were restored.
-plan_updates: Tasks 2.1, 2.2 and 2.4 remain [x]. Added causes for codecamp, db, backend and api failures. Domain build and test pass evidence is recorded. Tasks 2.3 and 2.5-2.14 remain open. Task 2.14 remains reserved for review.
-known_failures: Ledger rows still need codecamp check-types/lint/build, www-reading-advantage lint, and all primary-advantage and reading-advantage checks. Backend check-types/test, API test, codecamp test, DB test, sales test and workbooks test have predates-track rows. No production defect is established.
-handoff: The main checkout lockfile is now clean. Compare the seven predates-track rows and www lint there before accepting those classes. Primary check-types and build pass with heap labels; primary lint and test need comparison before classification. Reading checks remain. Do not claim AC-5 passes. Model deviation: this session used openai/gpt-6-luna#high because GLM coding-plan quota was empty; the role table names volcengine-agent-plan/glm-5.3-flash.
-final_head: bb85af87488cc404f543e5f105e0ea380cf7aeee
+commits: 2f4cc036b; 96d7be61e; 376288835; aa886380c; d700789cd; 25e0ba300; 5226ed942; 69f52dd98; 6c342fb65; 2859aa2ea; 0ef82c7db; 62ca1913f; d1322c419; 9e260e05c; fe711bb6b; 391cdd30c; 5f70a9d22; bb85af874; 6e96347cf; 7ca3e7b7e; 362b64056; 47d69acea
+tests_run: GREEN_TEST_COMMAND exited 0. Vitest reported 1 test file passed and 27 tests passed. The Doctor check reported A13 stale archived directory `agents_md_audit_science_advantage_20260603`. App failures have master comparison logs.
+files_changed: `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-13-production-readiness-report.test.ts`; `measure/tracks/security_upgrade_20261026/verification-ledger.json`; `measure/tracks/security_upgrade_20261026/plan.md`; this result log. P2 run logs are ignored by `.gitignore` and remain local.
+plan_updates: Tasks 2.1, 2.2, 2.4, and 2.13 are [x] with SHA evidence. Task 2.3 remains [~] after fix 7ca3e7b7e. Task 2.14 remains open. AC-5 remains open because app checks fail.
+known_failures:
+- `codecamp-advantage` test: Phase 10 session-expiry assertions fail; the same tests fail on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `@reading-advantage/db` test: migration and schema-map assertions fail; the same tests fail on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `@reading-advantage/backend` check-types: TS2820 rejects lowercase `usd`; the same error occurs on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `@reading-advantage/backend` test: package scaffold and PostgreSQL credential failures; the same tests fail on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `@reading-advantage/api` test: router SQL assertion count is 1; the same test fails on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `sales-advantage` test: approval metadata, curriculum counts, and graph digest assertions fail; the same tests fail on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `workbooks` test: `release-candidate.json` is absent; the same suites fail on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `primary-advantage` lint: 13 errors and 864 warnings; master has the same error count at SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `primary-advantage` test: six failing files include missing sales evidence, direct DB import, preview guard, navigation, and image assertions; the same files fail on master SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `www-reading-advantage` lint: 146 errors and 19,212 warnings; master has the same error count at SHA 280388e205815ce0fcb5a9a72e6e561519843b8d.
+- `reading-advantage` check-types: exits 134 on the JavaScript heap limit; master has the same failure at SHA 98ff25fe4f111302be5aa85a8d8ecf0c7dd0449c.
+- `reading-advantage` lint: one missing `@next/next/no-img-element` rule and 2,154 warnings; master has the same error at SHA 98ff25fe4f111302be5aa85a8d8ecf0c7dd0449c.
+- `reading-advantage` test: two suites and three tests fail; the same suites fail on master SHA 98ff25fe4f111302be5aa85a8d8ecf0c7dd0449c.
+handoff: Review the Codecamp worktree-root fix at 7ca3e7b7e. Review Reading check-types exit 134 and its master comparison at SHA 98ff25fe4f111302be5aa85a8d8ecf0c7dd0449c. Doctor reports A13 stale archived directory `agents_md_audit_science_advantage_20260603`. Keep AC-5 open. Task 2.14 stays with review roles.
+final_head: 47d69aceab27d720fd4a5b39dc1136083fa34ea3
 END_MEASURE_AGENT_RESULT
