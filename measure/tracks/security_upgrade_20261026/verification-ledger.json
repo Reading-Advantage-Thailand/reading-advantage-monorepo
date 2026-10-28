@@ -520,6 +520,26 @@
       "class": "predates-track",
       "log": "measure/runs/security_upgrade_20261026/p2/workbooks-test-r4.log",
       "evidence": "source=git:24471e25a"
+    },
+    {
+      "package": "primary-advantage",
+      "check": "check-types",
+      "command": "pnpm --filter primary-advantage run check-types",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/primary-advantage-check-types-r4.log",
+      "script_heap": 6144,
+      "run_heap": 6144
+    },
+    {
+      "package": "primary-advantage",
+      "check": "build",
+      "command": "pnpm --filter primary-advantage run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/primary-advantage-build-r4.log",
+      "script_heap": 4096,
+      "run_heap": 4096
     }
   ]
 }

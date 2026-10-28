@@ -182,6 +182,8 @@
 
   Workbooks test exits 1 because `packages/sales-knowledge/dist/data/evidence/release-candidate.json` is absent. Building that dependency exits 0 but does not create the expected file. The workbooks app sources and tests are unchanged from track base `24471e25a`. Ledger commit: fe711bb6b. The row remains open.
 
+  Primary check-types and build exit 0 with the required script and run heap labels. Primary lint exits 1 with 13 errors and 864 warnings. Primary tests exit 1: six files fail, including missing sales evidence, direct database imports, preview guards, navigation expectations, and an image URL expectation. These two failed rows await comparison against the main checkout before classification. The app build side effects were restored.
+
   Phase 2 inputs (Review B, nonblocking findings):
   - BSEC-05: `apps/www-reading-advantage/Dockerfile:9` prepares pnpm 8.15.8. The root manifest requests pnpm 11.8.0, and the lockfile uses format 9. Corepack can select the manifest version. Phase 2 must establish the effective installer before a redeploy claim for `www-reading-advantage`.
   - BSEC-03: the `zod` 3.25.76 runtime exposure stays with the zod 4 migration track. Phase 2 does not close GHSA-mrhx-c7xc-m3w5.
