@@ -459,6 +459,22 @@
       "class": "predates-track",
       "log": "measure/runs/security_upgrade_20261026/p2/db-test-r4.log",
       "evidence": "source=measure/tech-debt.md:31"
+    },
+    {
+      "package": "@reading-advantage/domain",
+      "check": "build",
+      "command": "pnpm --filter @reading-advantage/domain run build",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/domain-build-r4.log"
+    },
+    {
+      "package": "@reading-advantage/domain",
+      "check": "test",
+      "command": "pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1",
+      "exit_code": 0,
+      "class": "pass",
+      "log": "measure/runs/security_upgrade_20261026/p2/domain-test-r4.log"
     }
   ]
 }
