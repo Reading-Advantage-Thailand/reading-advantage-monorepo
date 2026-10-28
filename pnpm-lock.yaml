@@ -2072,6 +2072,9 @@ importers:
 
   apps/storytime:
     dependencies:
+      '@reading-advantage/read-along':
+        specifier: workspace:*
+        version: link:../../packages/read-along
       next:
         specifier: 16.2.9
         version: 16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2084,6 +2087,9 @@ importers:
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@reading-advantage/config':
         specifier: workspace:*

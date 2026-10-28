@@ -27,6 +27,7 @@ FROM base AS pruner
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .pnpmfile.cjs ./
 COPY apps/storytime ./apps/storytime
 COPY packages/config ./packages/config
+COPY packages/read-along ./packages/read-along
 # The turbo version is the version resolved in pnpm-lock.yaml. The two cache mounts hold the
 # turbo tarball and its metadata between builds, as the install below does.
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store --mount=type=cache,id=pnpm-cache,target=/pnpm/cache pnpm dlx turbo@2.9.18 prune storytime --docker

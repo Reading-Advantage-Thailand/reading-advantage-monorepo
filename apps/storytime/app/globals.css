@@ -3,3 +3,4 @@
 @import "tailwindcss";
 
 @source "../../../packages/config";
+@source "../../../packages/read-along";
