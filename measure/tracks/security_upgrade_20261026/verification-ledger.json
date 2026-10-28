@@ -501,7 +501,7 @@
       "exit_code": 1,
       "class": "predates-track",
       "log": "measure/runs/security_upgrade_20261026/p2/api-test-r4.log",
-      "evidence": "source=measure/runs/security_upgrade_20261026/p2/api-test-master.log test=src/__tests__/wave0-phase4-router-test-quality.test.ts first_error=Router test SQL assertion violation count 1 same_failure_on_master; signup scan timeout passed on targeted branch recheck master_sha=280388e205815ce0fcb5a9a72e6e561519843b8d"
+      "evidence": "source=measure/runs/security_upgrade_20261026/p2/api-test-master.log recheck_log=measure/runs/security_upgrade_20261026/p2/api-timeout-recheck-r4.log test=src/__tests__/wave0-phase4-router-test-quality.test.ts first_error=Router test SQL assertion violation count 1 same_failure_on_master; signup scan timeout passed on targeted branch recheck master_sha=280388e205815ce0fcb5a9a72e6e561519843b8d"
     },
     {
       "package": "sales-advantage",

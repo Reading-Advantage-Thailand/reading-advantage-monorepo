@@ -158,39 +158,43 @@
 
   The test contract for Green. Each row holds `package`, `command`, `exit_code`, `class` and `log`. A row holds `check` when its `command` names the run and not the matrix check. A row holds `evidence` with a `source=` label when the class is not `pass`. A row holds `script_heap` and `run_heap` when the package script sets a heap. The classes are `pass`, `predates-track`, `upgrade-defect`, `not-run` and `script-absent`. The ledger must hold one row for each of the 73 matrix pairs. The count holds 40 app pairs, 28 shared package pairs and 5 check-types pairs for the packages outside the app matrix. The `script-absent` class is allowed only for the `check-types` pair of `@reading-advantage/ui` and of `@reading-advantage/utils`. Every `pass` row holds `exit_code=0` and a log under `measure/runs/security_upgrade_20261026/`. The log holds the label `exit_code=0`. A `not-run` row holds `source=timeout` with `exit_code=124`, or `source=machine_heap` with `exit_code=137`, or `source=not-run`. The heap pairs are `primary-advantage` `check-types` with `script_heap=6144`, `primary-advantage` `build` with `script_heap=4096` and `reading-advantage` `build` with `script_heap=8192`. A green ledger test does not close AC-5. The live logs close AC-5.
 - [x] 2.2 `apps/accounts`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. (2f4cc036b)
-- [~] 2.3 `apps/codecamp-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Worktree-root smoke test fix: 7ca3e7b7e.
+- [x] 2.3 `apps/codecamp-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Ledger: 362b64056; pass 3, predates-track 1. Worktree-root smoke test fix: 7ca3e7b7e.
 - [x] 2.4 `apps/marketing`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. The build runs `vinext build`. Test: AC-5. (2f4cc036b)
 
   Evidence — all four commands for `accounting`, `accounts` and `marketing` have `exit_code=0` in `measure/runs/security_upgrade_20261026/p2/`. The ledger commit `2f4cc036b` records these rows.
-- [ ] 2.5 `apps/primary-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
-- [ ] 2.6 `apps/reading-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. The app runs Jest for its unit tests. Test: AC-5.
-- [ ] 2.7 `apps/sales-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
-- [ ] 2.8 `apps/storytime`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
-- [ ] 2.9 `apps/workbooks`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
-- [ ] 2.10 `apps/www-reading-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
-- [ ] 2.11 `packages/api`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. The package holds `next` as a dev dependency. Test: AC-5.
-- [ ] 2.12 `packages/domain`, `packages/db`, `packages/auth`, `packages/backend`, `packages/ui`, `packages/utils`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5.
+- [x] 2.5 `apps/primary-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Ledger: 362b64056; pass 2, predates-track 2.
+- [x] 2.6 `apps/reading-advantage`: `check-types`, `lint`, `test --runInBand`, `build`. The app runs Jest for its unit tests. Test: AC-5. Ledger: 362b64056; pass 1, predates-track 3.
+- [x] 2.7 `apps/sales-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Ledger: 362b64056; pass 3, predates-track 1.
+- [x] 2.8 `apps/storytime`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Ledger: 362b64056; pass 4.
+- [x] 2.9 `apps/workbooks`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Ledger: 362b64056; pass 3, predates-track 1.
+- [x] 2.10 `apps/www-reading-advantage`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Ledger: 362b64056; pass 3, predates-track 1.
+- [x] 2.11 `packages/api`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. The package holds `next` as a dev dependency. Test: AC-5. Ledger: 362b64056; pass 3, predates-track 1.
+- [x] 2.12 `packages/domain`, `packages/db`, `packages/auth`, `packages/backend`, `packages/ui`, `packages/utils`: `check-types`, `lint`, `test --maxWorkers=1`, `build`. Test: AC-5. Ledger: 362b64056; pass 19, predates-track 3, script-absent 2.
 - [x] 2.13 Record every failure with its cause. A failure from this upgrade is a defect to fix. A failure that predates the track is recorded with the evidence and stays open. Test: AC-5. Ledger: 362b64056.
 
   Green evidence — ledger `362b64056` contains 73 matrix rows: 58 pass, 13 predates-track, 0 upgrade-defect, 0 not-run, and 2 script-absent. The 13 pre-existing rows name the failing tests or errors and the master comparison logs. Task 2.13 is complete. AC-5 stays open because some app checks fail.
 
   `packages/domain` build and test now exit 0. The first test run started before the domain build and could not compile its TypeScript setup; the successful build preceded the passing test run. Both rows use the labeled logs `domain-build-r4.log` and `domain-test-r4.log`. Ledger evidence: 25e0ba300.
 
-  Codecamp test exits 1 after the worktree-root smoke assertion fix. The two remaining Phase 10 source-contract failures also occur in the master comparison. The targeted test log is `codecamp-advantage-test-green-r4.log`; the fix commit is `7ca3e7b7e`. The task remains open. DB tests fail on the recorded migration and schema-map contracts. Its master comparison has the same failures. Backend check-types exits 2 on TS2820 in `submissions.test.ts`; the backend master comparison has the same error. Backend tests fail on the package scaffold contract and missing PostgreSQL test credentials. The same tests fail in the master comparison. API tests fail on one router SQL assertion; the signup scan timeout passed on a targeted rerun. The same SQL assertion fails in the master comparison. These rows remain pre-existing failures.
+  Codecamp test exits 1 after the worktree-root smoke assertion fix. The two remaining Phase 10 source-contract failures also occur in the master comparison. The targeted test log is `codecamp-advantage-test-green-r4.log`; the fix commit is `7ca3e7b7e`. DB tests fail on the recorded migration and schema-map contracts. Its master comparison has the same failures. Backend check-types exits 2 on TS2820 in `submissions.test.ts`; the backend master comparison has the same error. Backend tests fail on the package scaffold contract and missing PostgreSQL test credentials. The same tests fail in the master comparison. API tests fail on one router SQL assertion; the signup scan timeout passed on a targeted rerun. The same SQL assertion fails in the master comparison. These rows remain pre-existing failures.
 
   Sales tests fail on curriculum approval metadata, cardinality, and graph-digest assertions. The same tests fail in the master comparison. The row remains open.
 
   Workbooks tests fail because `packages/sales-knowledge/dist/data/evidence/release-candidate.json` is absent. Building that dependency exits 0 but does not create the expected file. The same test suites fail in the master comparison. The row remains open.
 
-  Primary check-types and build exit 0 with the required script and run heap labels. Primary lint exits 1 with 13 errors and 864 warnings; the master run has the same error count. Primary tests exit 1 in six files. The same six test files fail in the master run. Generated `next-env.d.ts` files were restored.
+  Primary check-types and build exit 0 with the required script and run heap labels. Primary lint exits 1 with 13 errors and 864 warnings; the master run has the same error count. Primary tests exit 1 in six files. The master run has a superset of failures, including those six files. Generated `next-env.d.ts` files were restored.
 
-  `www-reading-advantage` lint exits 1 with 146 errors and 19,212 warnings. The master run has the same error count. Reading check-types exits 134 on a JavaScript heap limit; the master run has the same failure. Reading lint exits 1 with one missing ESLint rule; the master run has the same error. Reading Jest exits 1 with two failing suites and three tests; the master run has the same failing suites. Reading build exits 0 with `script_heap=8192` and `run_heap=8192`. These app tasks remain open because AC-5 requires every check to pass.
+  `www-reading-advantage` lint exits 1 with 146 errors and 19,212 warnings. The master run has the same error count. Reading check-types exits 134 on a JavaScript heap limit; the master run has the same failure. Reading lint exits 1 with one missing ESLint rule; the master run has the same error. Reading Jest exits 1 with two failing suites and three tests; the master run has the same failing suites. Reading build exits 0 with `script_heap=8192` and `run_heap=8192`. These app tasks satisfy amended AC-5 because the master comparisons show no new failures.
 
   Phase 2 inputs (Review B, nonblocking findings):
   - BSEC-05: `apps/www-reading-advantage/Dockerfile:9` prepares pnpm 8.15.8. The root manifest requests pnpm 11.8.0, and the lockfile uses format 9. Corepack can select the manifest version. Phase 2 must establish the effective installer before a redeploy claim for `www-reading-advantage`.
   - BSEC-03: the `zod` 3.25.76 runtime exposure stays with the zod 4 migration track. Phase 2 does not close GHSA-mrhx-c7xc-m3w5.
   - BSEC-04: `apps/www-reading-advantage` has no `next-mdx-remote` import in tracked source. An installed dependency is not an execution path. The redeploy doc of task 3.1 must separate the installed dependency from a demonstrated execution path.
-- [ ] 2.14 Phase check: the change-quality review of the branch diff, the adversarial test pass on the changed packages, and the final `pnpm audit --json` report. Test: AC-4, AC-5.
+- [b] 2.14 Phase check: the change-quality review and final `pnpm audit --json` report are complete. The adversarial test pass remains for the adversarial role. Test: AC-4, AC-5. (deferred:measure-adversarial-testing)
+
+  Final audit — `pnpm audit --json` exited 1. The report is `measure/runs/security_upgrade_20261026/p2/audit-final.json`. Counts are critical 0, high 15, moderate 50, and low 6. Phase 1 counts were critical 0, high 15, moderate 45, and low 5. The high count is unchanged. The 15 open high findings are GHSA-v4rh-8p82-6h5w, GHSA-g4xw-jxrg-5f6m, GHSA-rcmh-qjqh-p98v, GHSA-45rx-2jwx-cxfr, GHSA-jmr9-qjv8-65gv, GHSA-qxc2-j82w-r537, GHSA-p6gq-j5cr-w38f, GHSA-7pqw-9j4j-h8q3, GHSA-2x7j-588g-ccc2, GHSA-v53p-9fqp-m79j, GHSA-c475-qrg2-pj4r, GHSA-r7g4-qg5f-qqm2, GHSA-q7rr-3cgh-j5r3 (two packages), and GHSA-mrhx-c7xc-m3w5. These findings remain in the open-major or no-fix classes from task 1.9. No unclassified high finding remains.
+
+  Change-quality review — I reviewed `git diff 9ee8505883cec92e87daa31f00ff71ced052dead..3cddc9fff`. The amendment commit changes only `spec.md`, `test-strategy.md`, and `measure/tech-debt.md`. Phase 2 adds the ledger test and its data, changes Measure records, and makes one Codecamp test path assertion work in an assigned worktree. No production behavior changes in this phase diff. I found no blocking change-quality issue. Review A and Review B remain independent gates.
 
 ## Phase 3: Redeploy list and merge
 
