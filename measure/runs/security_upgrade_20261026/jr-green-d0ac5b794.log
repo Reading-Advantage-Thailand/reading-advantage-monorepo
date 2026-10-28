@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: in_progress
+track: security_upgrade_20261026
+phase: P2
+phase_base_sha: 9ee8505883cec92e87daa31f00ff71ced052dead
+role_base_sha: d0ac5b79472e6aa169a444251e182fc1c5b1b42c
+commits: 2f4cc036b (partial verification ledger); 96d7be61e (plan evidence)
+tests_run: `pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-verification-ledger.test.ts` via heavy-run.sh; exit_code=1, 1 failed and 26 passed. The live test found 18 missing rows. The partial ledger summary is pass=53 predates=0 upgrade_defect=0 not_run=0 script_absent=2 rows=55.
+files_changed: `measure/tracks/security_upgrade_20261026/verification-ledger.json` (new); `measure/tracks/security_upgrade_20261026/plan.md`; this result log. Four generated `next-env.d.ts` files remain uncommitted and must be restored after the final build.
+plan_updates: Tasks 2.1, 2.2 and 2.4 marked [x] with ledger SHA 2f4cc036b. Their recorded check-types, lint, test and build logs have exit_code=0. Tasks 2.3 and 2.5-2.14 remain open. Task 2.14 remains reserved for review.
+known_failures: The ledger test reports missing rows for workbooks/test, sales-advantage/test, codecamp-advantage/test, www-reading-advantage/lint, all four primary-advantage checks, all four reading-advantage checks, db/test, backend/check-types, backend/test, domain/test, domain/build, and api/test. Existing logs show failures or incomplete runs for these rows. Causes are not yet classified. No production defect has been established.
+handoff: Green verification is incomplete. Do not claim AC-5 passes. Continue by reviewing the listed logs, rerunning open checks through the shared heavy lock, classifying causes with source= evidence, updating the ledger in task groups, and rerunning the ledger test. Preserve the four generated files as unrelated build side effects; restore them before finalizing. Model deviation: this session used openai/gpt-6-luna#high because GLM coding-plan quota was empty; the role table names volcengine-agent-plan/glm-5.3-flash.
+final_head: 96d7be61e0dfde014f07c45390390ac83404da92
+END_MEASURE_AGENT_RESULT
