@@ -81,13 +81,63 @@
 
 ## Phase 2: Shared data contracts
 
-- [ ] 2.1 Record the Workbooks commit that this track reads (the weeks `l2/w01` to `l2/w08`, the schema, and the phoneme bank), as handed off through the PM orchestrator.
-- [ ] 2.2 Week contract in `apps/storytime/lib/contracts/`. Write Zod from Workbooks `StorytimeWeekSchema` version 1 for the fields that the app reads, and allow extra keys. A published week needs one book of each kind and a picture file on every page. `programSchema` keeps `storytime` with its test. Tests: AC-3.1, AC-3.2.
-- [ ] 2.3 New package `packages/read-along`: start from a copy of Primary's `lib/read-along/` (align, position, seek, profile), `hooks/use-read-along.ts`, and `components/read-along/`. Primary keeps its own copy (spec section 9, choice 4). Add a tech-debt row for the copy. Tests move with the code.
-- [ ] 2.4 Timing functions in `packages/read-along`: all sentences of a page (rule 10.3), the word at a time, and the bounds of a word cut. A cut starts 30 ms before the word and ends at its measured end (rule 10.2). Tests on a shipped two-sentence page: AC-6.1.
-- [ ] 2.5 Blend function for the decodable: the taught graphemes, the tricky words, and the sound-book flag decide whether a word plays sound by sound or whole. Tests on shipped weeks: AC-7.1.
-- [ ] 2.6 Receiving step `apps/storytime/scripts/receive-weeks.ts`: validate, write `apps/storytime/content/l<level>/w<nn>.json`, list the media of each week with its rule, keep `meta.status` from the source. New runbook `docs/runbooks/storytime-app-week-sync.md`. The old runbook `storytime-week-sync.md` stays until task 7.1. Tests: AC-4.1, AC-4.2.
-- [ ] 2.7 Phase check: `tsc`, lint, the changed tests, and a change-quality review.
+- [~] 2.1 Record the Workbooks commit that this track reads (the weeks `l2/w01` to `l2/w08`, the schema, and the phoneme bank), as handed off through the PM orchestrator.
+- [~] 2.2 Week contract in `apps/storytime/lib/contracts/`. Write Zod from Workbooks `StorytimeWeekSchema` version 1 for the fields that the app reads, and allow extra keys. A published week needs one book of each kind and a picture file on every page. `programSchema` keeps `storytime` with its test. Tests: AC-3.1, AC-3.2.
+- [~] 2.3 New package `packages/read-along`: start from a copy of Primary's `lib/read-along/` (align, position, seek, profile), `hooks/use-read-along.ts`, and `components/read-along/`. Primary keeps its own copy (spec section 9, choice 4). Add a tech-debt row for the copy. Tests move with the code.
+- [~] 2.4 Timing functions in `packages/read-along`: all sentences of a page (rule 10.3), the word at a time, and the bounds of a word cut. A cut starts 30 ms before the word and ends at its measured end (rule 10.2). Tests on a shipped two-sentence page: AC-6.1.
+- [~] 2.5 Blend function for the decodable: the taught graphemes, the tricky words, and the sound-book flag decide whether a word plays sound by sound or whole. Tests on shipped weeks: AC-7.1.
+- [~] 2.6 Receiving step `apps/storytime/scripts/receive-weeks.ts`: validate, write `apps/storytime/content/l<level>/w<nn>.json`, list the media of each week with its rule, keep `meta.status` from the source. New runbook `docs/runbooks/storytime-app-week-sync.md`. The old runbook `storytime-week-sync.md` stays until task 7.1. Tests: AC-4.1, AC-4.2.
+- [~] 2.7 Phase check: `tsc`, lint, the changed tests, and a change-quality review.
+
+### Phase 2 Red evidence
+
+- Red started at `04a029f29d0cb21eca6b37fa1190bec15f4c9d99`. Both supplied bases resolve to this commit, and HEAD matched it.
+- The Workbooks hand-off for task 2.1 has not arrived. Every test that needs a shipped week fails with the named message `Missing handed-off week: apps/storytime/content/l2/w01.json (task 2.1)`. No test skips.
+- Red wrote seven test files and changed one Phase 1 test file. It created no contract, no package source, no script, no content file, and no manifest change.
+- Model deviation: the role table names `openai/gpt-6.1-sol#high`. This role ran on `minimax-cn-coding-plan/MiniMax-M3#high`. The P2 Green role must not use the MiniMax family.
+- Automated Red command: `bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase2-*.test.ts packages/read-along'`. Result: exit 1; 6 failed files, 1 passed file; 28 failed tests, 5 passed tests; 33 tests in all.
+- Automated test type check: `pnpm exec tsc --noEmit --strict --skipLibCheck --esModuleInterop --module esnext --moduleResolution bundler --target es2022` over the seven new test files and `phase1-scaffold.test.ts`. Result: exit 0 under the heavy lock.
+- Automated Phase 1 check: `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase1-*.test.ts`. Result: exit 0 with 3 files and 11 tests. The A4 guard of the Tailwind test passes with the shared package `@reading-advantage/config`.
+- The five passing tests are guards that already hold at this commit. The `programSchema` guard reads the source of `packages/types/src/index.ts`; the package test of `packages/types/src/__tests__/program.test.ts` already proves the same guard at runtime.
+- The intentionally red tests follow. Each line names the test, the cause, and the task that turns it green.
+
+| Test | Cause | Task |
+|---|---|---|
+| `phase2-blend` plays every word of the sound book whole | The shipped week 1 is missing | 2.1, 2.5 |
+| `phase2-blend` plays the CVC words of a later week in grapheme order | The shipped week 2 is missing | 2.1, 2.5 |
+| `phase2-blend` plays every tricky word whole | The shipped week 2 is missing | 2.1, 2.5 |
+| `phase2-content` records the repository, the commit, and the week files | `apps/storytime/content/source.json` is missing | 2.1 |
+| `phase2-content` holds no hash in the source record | `apps/storytime/content/source.json` is missing | 2.1 |
+| `phase2-content` lists the media of a shipped week by name | The shipped week 1 is missing | 2.1, 2.6 |
+| `phase2-content` writes the eight shipped weeks with the status of the source | The shipped week 1 is missing | 2.1 |
+| `phase2-content` keeps a draft week a draft and a published week published | `apps/storytime/scripts/receive-weeks.ts` is missing | 2.6 |
+| `phase2-content` names the receiving step and the commit | `docs/runbooks/storytime-app-week-sync.md` is missing | 2.6 |
+| `phase2-contract` parses every shipped week from l2/w01 to l2/w08 | The shipped week 1 is missing | 2.1, 2.2 |
+| `phase2-contract` accepts a week with a key that the app does not read | The shipped week 1 is missing | 2.1, 2.2 |
+| `phase2-contract` keeps the published week of the milestone | The shipped week 1 is missing | 2.1 |
+| `phase2-contract` rejects a published week without a book of each kind | The shipped week 1 is missing | 2.1, 2.2 |
+| `phase2-contract` rejects a published week with two read-along books | The shipped week 1 is missing | 2.1, 2.2 |
+| `phase2-contract` rejects a published week with a page without a picture file | The shipped week 1 is missing | 2.1, 2.2 |
+| `phase2-contract` rejects a week whose times are out of order | The shipped week 1 is missing | 2.1, 2.2 |
+| `phase2-contract` rejects a week whose version is not 1 | The shipped week 1 is missing | 2.1, 2.2 |
+| `phase2-shared-package` names the shared read-along package in the app manifest | The app manifest has no `@reading-advantage/read-along` | 2.3 |
+| `phase2-shared-package` scans the shared read-along package in Tailwind | The app manifest has no `@reading-advantage/read-along` | 2.3 |
+| `phase2-shared-package` copies the shared read-along package in the Docker pruner stage | The app manifest has no `@reading-advantage/read-along` | 2.3 |
+| `phase2-shared-package` holds source files and imports nothing from an app | The shared package holds no source file | 2.3 |
+| `phase2-package-copy` names the package @reading-advantage/read-along | `packages/read-along/package.json` is missing | 2.3 |
+| `phase2-package-copy` holds the copied player modules | The shared package holds no copied module | 2.3 |
+| `phase2-package-copy` exports the copied player functions | The shared package holds no source file | 2.3 |
+| `phase2-package-copy` holds the moved Primary tests and their fixtures | The shared package holds no moved test | 2.3 |
+| `phase2-timing` finds a shipped page with two sentences | The shipped week 1 is missing | 2.1 |
+| `phase2-timing` seeks to each sentence of the page and lights it up | The shipped week 1 is missing | 2.1, 2.4 |
+| `phase2-timing` starts 30 ms before the word and ends at its measured end | The shipped week 1 is missing | 2.1, 2.4 |
+
+- The Green gate command is the same targeted Red command. It must exit 0 after the hand-off.
+- The P2 tests read no `measure/tracks/` path (A9). They read no file outside this repository.
+- The broken copies are deep clones of a shipped week made inside the test. No week fixture file exists under `__tests__/` (A7, rule 11.1).
+- The media list test asserts a non-empty list and names the file, the kind, and the rule of each item (A4).
+- The source record test asserts a full commit and no hash field (A15).
+
 
 ## Phase 3: At-home app
 
