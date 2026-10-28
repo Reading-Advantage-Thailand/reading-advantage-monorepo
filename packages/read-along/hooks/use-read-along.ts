@@ -4,8 +4,8 @@
  * One requestAnimationFrame callback for each frame while the audio plays, none while it is paused.
  */
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
-import type { ReadAlongSentence } from "@/lib/read-along/align";
-import { findPosition, NO_POSITION, type ReadAlongPosition } from "@/lib/read-along/position";
+import type { ReadAlongSentence } from "../lib/align";
+import { findPosition, NO_POSITION, type ReadAlongPosition } from "../lib/position";
 
 /** What the hook gives back. */
 export interface ReadAlongState {

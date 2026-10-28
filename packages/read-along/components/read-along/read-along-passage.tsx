@@ -1,21 +1,15 @@
 "use client";
 import { memo, useMemo, type KeyboardEvent, type MouseEvent, type ReactNode, type Ref } from "react";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
-import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
+import { HIGHLIGHT_CLASSES } from "../../lib/highlight";
 import {
   bucketItems,
   bucketSentencesIntoParagraphs,
   splitPassageIntoSentences,
   TARGET_PARAGRAPH_COUNT,
-} from "@/lib/paragraph-utils";
-import { buildWordMaps, splitDisplayWords, type ReadAlongSentence, type WordMaps, type DisplaySentence } from "@/lib/read-along/align";
-import type { ReadAlongPosition } from "@/lib/read-along/position";
-import { cn } from "@/lib/utils";
+} from "../../lib/paragraph";
+import { buildWordMaps, splitDisplayWords, type ReadAlongSentence, type WordMaps, type DisplaySentence } from "../../lib/align";
+import type { ReadAlongPosition } from "../../lib/position";
+import { cn } from "../../lib/cn";
 
 /** Props of the read-along passage; the host owns the audio element and the player. */
 export interface ReadAlongPassageProps {
@@ -33,10 +27,19 @@ export interface ReadAlongPassageProps {
   renderBlockMedia?: (blockIndex: number) => ReactNode;
   /** Called with the sentence and the audio word of a tapped word; -1 when the sentence has no timing. */
   onWordTap?: (sentenceIndex: number, audioWordIndex: number) => void;
-  /** Called from the sentence menu; the menu shows only when this prop is set. */
+  /** Called from the sentence menu that the host renders. */
   onTranslate?: (sentenceIndex: number) => void;
-  translateLabel?: string;
-  translateDisabled?: boolean;
+  /**
+   * The sentence menu slot: the host wraps one sentence with its own menu.
+   *
+   * The package holds no menu and no app design. The menu shows only when the host passes both this
+   * slot and `onTranslate`.
+   */
+  renderSentenceMenu?: (
+    sentenceIndex: number,
+    sentence: ReactNode,
+    onTranslate: () => void,
+  ) => ReactNode;
 }
 
 interface SentenceViewProps {
@@ -127,8 +130,7 @@ export function ReadAlongPassage({
   renderBlockMedia,
   onWordTap,
   onTranslate,
-  translateLabel,
-  translateDisabled,
+  renderSentenceMenu,
 }: ReadAlongPassageProps): ReactNode {
   const aligned = useMemo(
     () =>
@@ -177,18 +179,9 @@ export function ReadAlongPassage({
           );
           return (
             <span key={i}>
-              {onTranslate ? (
-                <ContextMenu>
-                  <ContextMenuTrigger>{view}</ContextMenuTrigger>
-                  <ContextMenuContent className="w-50">
-                    <ContextMenuItem inset disabled={translateDisabled} onClick={() => onTranslate(i)}>
-                      {translateLabel}
-                    </ContextMenuItem>
-                  </ContextMenuContent>
-                </ContextMenu>
-              ) : (
-                view
-              )}{" "}
+              {renderSentenceMenu && onTranslate
+                ? renderSentenceMenu(i, view, () => onTranslate(i))
+                : view}{" "}
             </span>
           );
         })}

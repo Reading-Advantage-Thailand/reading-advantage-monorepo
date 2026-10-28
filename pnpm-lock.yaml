@@ -3144,19 +3144,37 @@ importers:
 
   packages/read-along:
     dependencies:
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.562.0(react@19.2.7)
       react:
         specifier: 19.2.7
         version: 19.2.7
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
+      tailwind-merge:
+        specifier: 'catalog:'
+        version: 3.6.0
       zod:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@testing-library/jest-dom':
+        specifier: 'catalog:'
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@types/react':
         specifier: 19.2.2
         version: 19.2.2
+      jsdom:
+        specifier: 'catalog:'
+        version: 29.1.1(@noble/hashes@1.8.0)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
