@@ -142,6 +142,7 @@
 
 - Package copy and timing implementation: `c2690a4f8666041b7acd0a9a09c87e5e42821388`. Automated: the package-copy test and the three copied core suites exit 0 with 4 files and 68 tests.
 - Storytime dependency, Tailwind source, and Docker pruner wiring: `5dbcd4c33eb3c0d9370d987d86e734a4413a8082`. The targeted P2 command reports 6 passing files and 77 passing tests. Its 20 failures include 19 tests blocked by task 2.1 and the task 2.6 runbook test.
+- Week-sync runbook: `c53625e0cddb5e9d02444589b2a2ab08cb3abbd7`. Automated: `phase2-content.test.ts` reports the runbook test passing; the other five tests still require the hand-off or receive script.
 - The first `build-graph update` ran after the structural package edit. `graph.db` is included in the implementation commit.
 - `pnpm install --prefer-offline --ignore-scripts` timed out with exit 124 after the 2700-second command limit. It updated `pnpm-lock.yaml`, which is included in the implementation commit.
 - Tasks 2.1 to 2.7 remain `[~]`. The package wiring, week-backed behavior, receive script, and phase gates are not complete.
