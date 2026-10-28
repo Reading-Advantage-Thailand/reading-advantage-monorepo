@@ -3,7 +3,7 @@
 > **Track:** `security_upgrade_20261026` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md) · **Audit:** [audit-2026-10-26.md](./audit-2026-10-26.md)
 > **Branch:** `chore/security-upgrade-2026-10` in `/home/daniebo/Desktop/rama-worktrees/security-upgrade`
 > **role_base_sha:** `a64616a4d` (the branch start). The P1 Green gate uses it. The Phase 2 role base is `9ee850588`, the accepted Phase 1 HEAD. Neither SHA is `phase_base_sha`.
-> **Model deviation:** The role table pins `claude-code/claude-opus-5-5[1m]#high`. The Phase 1 strategy ran on `xai/grok-4.7#high`. The Phase 2 strategy runs on `minimax-cn-coding-plan/MiniMax-M3#high`. Grok has no quota.
+> **Model deviation:** The role table pins `claude-code/claude-opus-5-5[1m]#high`. The Phase 1 strategy ran on `xai/grok-4.7#high`. The Phase 2 strategy and the AC-5 amendment of 2026-10-28 run on `minimax-cn-coding-plan/MiniMax-M3#high`. The quota route picked MiniMax. Grok has no quota.
 
 The audit is the source for every version. Spec section 6 names the nine open majors. It no longer names `js-yaml`. Both `js-yaml` lines move as a minor bump (`3.14.2` to `3.15.2`, `4.2.0` to `4.3.2`). The guard includes both lines. The guard does not require `3.x` to become `4.x`.
 
@@ -57,12 +57,14 @@ This file does not contain `phase_base_sha`. A SHA that predates the committed s
 
 - Phase 1: the base was the commit that held the strategy, before the Phase 1 Red run of 2026-10-27.
 - Phase 2: the base must be the commit that holds this strategy, the spec fix and the audit fix. The capture happens after that commit and before the Phase 2 Red run. The Red evidence of task 2.1 records it.
+- Phase 2 amendment (AC-5, 2026-10-28): the orchestrator captures `phase_base_sha` right after the commit that holds this amended strategy, the amended AC-5 and the tech-debt entry. The capture happens before the task 2.14 phase check and before the adversarial pass. This file names no SHA for that capture. The Phase 2 Red base stays immutable.
 - Phase 3: the base is the commit that holds the Phase 3 strategy, before the Phase 3 Red run. Do not reuse the Phase 2 SHA.
 
 ### 1.3 Evidence classes
 
 - **Artifact test:** reads a file and checks its text. The redeploy-list test is an artifact test. The ledger test is an artifact test.
 - **Live behavior test:** runs a command and reads its exit code. The version-guard test is live. It reads the real `pnpm-lock.yaml`. Each app `build` is live.
+- **Master comparison log:** a live behavior log from a base commit. It holds `master_sha=<commit>`. It shows that a failure predates the track. It does not close AC-5 by itself.
 - An artifact test does not close AC-5. AC-5 needs the live command logs.
 - A plan note that says "pass" must quote the exit code of the command it cites.
 
@@ -80,6 +82,8 @@ Known baselines, from `AGENTS.md` and `measure/tech-debt.md`:
 | `reading-advantage` build | `ignoreBuildErrors: true`. A green build is not a type pass. |
 
 These baselines are not a pass. Section P2 states how Green records them.
+
+The measured lint counts of 2026-10-28 differ from the `AGENTS.md` baseline. `primary-advantage` shows 13 errors and 864 warnings on both sides of the master comparison. `www-reading-advantage` shows 146 errors. `reading-advantage` shows 1 error. The master comparison holds the count for this track. The 49-error baseline stays the older record.
 
 The new Vitest files have no `## skip-aggregate:` header. Do not add them to `measure/test-all.sh`.
 
@@ -343,7 +347,7 @@ The Green gate, then Review A, then Review B. Adversarial runs after those revie
 
 ## P2: Verification of the deployed apps
 
-**Risk:** high. `next` `16.2.9` to `16.4.1` and `sharp` `0.34.5` to `0.35.5` can break image optimization and the `vinext` build. The phase does not deploy. A local pass does not prove `node:20.18` or the Alpine binary.
+**Risk:** high. `next` `16.2.9` to `16.4.1` and `sharp` `0.34.5` to `0.35.5` can break image optimization and the `vinext` build. The phase does not deploy. A local pass does not prove `node:20.18` or the Alpine binary. The amendment of 2026-10-28 does not lower the risk. A new failure that takes the class `predates-track` stays a high-risk defect.
 
 **Scope.** AC-5 names the ten app folders of the matrix below. It does not name the ten Cloud Run services. Nine folders map to a covered service. The live Reading service stays outside this criterion. Plan task 1.9 holds the coverage boundary.
 
@@ -550,15 +554,34 @@ A failure of that file follows the predates rule below. The full suite is not a 
 A failure predates the track only when all of these hold:
 
 1. The error text does not name a version this track changed (`16.4.1`, `19.2.9`, `0.35`, `8.1.6`, `10.75.2`, `4.6.6`) unless the baseline evidence contains that same text.
-2. The evidence has a `source=` label. The source is a tech-debt row that names the same test, or a log from `role_base_sha`.
+2. The evidence has a `source=` label. The source is a tech-debt row that names the same test, a log from `role_base_sha`, or a master-comparison log. A master log holds `master_sha=<commit>`. That commit must hold the pre-upgrade versions, so `next` stays `16.2.9` and `sharp` stays `0.34.5` in its lockfile.
 3. The failing test name is in that source. A count alone is not evidence (A3). "About 40" is not a name list.
 4. Green writes the row in the ledger and quotes `pass=<n>, predates=<n>, upgrade_defect=<n>, not_run=<n>` in plan task 2.13.
 
 An `upgrade-defect` blocks the phase. Green fixes it, or the phase stays open. A `not-run` row also blocks the phase. Green does not write "all checks pass".
 
-`primary-advantage` lint may be `predates-track` only in two cases. The error set is the known 49. Or every new file is absent from this track's diff, and the message does not name a bumped type. Record `eslint_error_count=<n>`. A count other than 49 is not an automatic upgrade defect. It needs the file list.
+`primary-advantage` lint may be `predates-track` in three cases. The error set is the known 49. Or every new file is absent from this track's diff, and the message does not name a bumped type. Or the master log holds the same error count as the branch. Record `eslint_error_count=<n>`. The row of 2026-10-28 uses the third case. It holds 13 errors and 864 warnings on both sides. A count that differs on one side needs the file list.
 
-`packages/db` failures are `upgrade-defect` until the failing test name appears in tech-debt or in a baseline log. Do not use the "about 40" sentence as a blanket pass.
+`packages/db` failures are `upgrade-defect` until the failing test name appears in tech-debt or in a baseline log. Do not use the "about 40" sentence as a blanket pass. The row of 2026-10-28 names three test files. Its master log holds 40 failing tests on both sides.
+
+### The AC-5 rule for a check that predates the track (amended 2026-10-28)
+
+AC-5 now passes when each check of the ten app folders meets one of two conditions. The check exits 0, or the check fails in the same way on `master` before the upgrade. A failing check needs four things:
+
+1. A ledger row with the class `predates-track` and a non-zero `exit_code`.
+2. A master-comparison log under `measure/runs/security_upgrade_20261026/p2/`. The log holds `master_sha=<commit>`.
+3. The same failing tests, or the same error count, in the master log. A count needs a label, such as `eslint_error_count=13` (A3).
+4. An owner for the row in `measure/tech-debt.md`.
+
+The upgrade adds no new failure. A check that fails on the branch and passes on `master` is an `upgrade-defect`. The phase stays open until Green fixes it.
+
+Each of the 13 rows of the ledger `362b64056` holds a master log with the named failing tests. Three lint rows hold the same error count on both sides: `primary-advantage` 13 errors, `www-reading-advantage` 146 errors, and `reading-advantage` 1 error. The master log of the `primary-advantage` test holds a larger failure set than the branch log. A superset on `master` does not weaken the rule, because the named tests fail on both sides.
+
+The `api` test row needs the targeted recheck log `api-timeout-recheck-r4.log`. That log shows the signup scan timeout passes on the branch. The branch failure set then matches the master set.
+
+The Red test contract does not change. The test accepts a `predates-track` row with a `source=` label. The Green receipt records the ledger test with 27 tests passed and exit code 0. The master log content and the tech-debt owner are review duties. No test file changes in this amendment.
+
+The spec carries the note "Amended 2026-10-28; PM question open; a PM answer can replace this text." A PM answer can replace this rule.
 
 ### Intentionally red aggregate suites
 
@@ -583,6 +606,7 @@ The `packages/db` test suite is not a gate. Its failures are `upgrade-defect` un
 - A build that ignores type errors is not a type pass. `apps/reading-advantage` sets `ignoreBuildErrors: true`. Its `check-types` row is the type gate.
 - A manifest range can disagree with the lockfile. The version-guard test reads the lockfile keys.
 - The peer range of `packages/api` admits `next` 15.x. The override forces `next` 16.4.1. The phase records the range as a known risk. A peer range change stays out of scope for this track.
+- The amendment of 2026-10-28 changes the acceptance contract of the phase. It changes no product code, no ledger schema, and no test file. A review must confirm that the amendment commit touches only `spec.md`, `test-strategy.md`, and `measure/tech-debt.md`.
 
 ### Green gate
 
@@ -593,6 +617,9 @@ The `packages/db` test suite is not a gate. Its failures are `upgrade-defect` un
 5. The version-guard command still exits 0.
 6. `pnpm audit --json` still meets the P1 pass rule. It has two allowed classes. Retry once on the network errors.
 7. The five rows outside the app matrix hold a run and a class. Their exit codes are in the plan.
+8. Each `predates-track` row names a master-comparison log. The log holds the same failing tests or the same error count (A3).
+9. Each `predates-track` row has an owner in `measure/tech-debt.md`.
+10. The plan names the class counts of task 2.13. The claim is "no new failure". The plan does not say "all checks pass" (A5).
 
 ### Closeout gate
 
@@ -602,41 +629,58 @@ The Green gate, then Review A, then Review B, then the adversarial pass on the g
 
 - No mock of `next build`. The build log is the live proof.
 - The ledger test reads the ledger and the logs. It does not stub them.
+- A master comparison log is a live behavior log from the base commit. It is not a mock and not an artifact test.
+- The ledger test does not open the master logs. Review A reads them.
 - A refutation ledger in memory must fail when `class` is `pass` and `exit_code` is 1.
 - A refutation ledger with zero rows must fail.
 - A refutation ledger with a `not-run` row and `source=machine_heap` must fail.
 - A refutation ledger with a `pass` row and no log file must fail.
 - The heap fallback runs the real build. It is not a mock.
+- A `predates-track` row that names a master log of a different failure must fail Review A.
+- A `predates-track` row that gives a bare error count without a label must fail Review A (A3).
+- A `predates-track` row whose master log lacks the named failing tests must fail Review A.
+- A `predates-track` row with no owner in `measure/tech-debt.md` must fail phase acceptance.
 
 ### Anti-pattern coverage
 
 | ID | Defense in this phase | Falsification condition |
 | --- | --- | --- |
-| A1 | The class is an enum. The test does not search for the substring "deferred" or "pre-existing". | A ledger row with a free-text class passes the test. |
-| A3 | Exit codes, counts and heap values use labels: `exit_code=`, `pass=`, `predates=`, `upgrade_defect=`, `not_run=`, `script_heap=`, `run_heap=`, `source=`. | The test passes on any digit, a date, or a year. |
-| A4 | An empty ledger fails. A missing row for a matrix pair fails. | A ledger with zero rows passes, or a matrix pair without a row passes. |
-| A5 | A `pass` row needs `exit_code=0` and a log that holds that code. | A row says `pass` while its log holds a non-zero code. |
-| A6 | The registry must not say the upgrade is done before AC-4 and AC-5 are recorded. | `measure/tracks.md` says the CVEs are resolved while a row is red. |
-| A7 | The red apps are an explicit name list. The scan does not use the words "never" or "do not". | A filter drops `reading-advantage` or `primary-advantage`. |
+| A1 | The class is an enum. The test does not search for the substring "deferred" or "pre-existing". The amendment adds no free-text class. | A ledger row with a free-text class passes the test. |
+| A3 | Exit codes, counts and heap values use labels: `exit_code=`, `pass=`, `predates=`, `upgrade_defect=`, `not_run=`, `script_heap=`, `run_heap=`, `source=`. The master comparison uses the labels `eslint_error_count=`, `warnings=`, `master_sha=`, `same_error_count_on_master`. | The test passes on any digit, a date, or a year. |
+| A4 | An empty ledger fails. A missing row for a matrix pair fails. A check without any row does not pass AC-5. | A ledger with zero rows passes, or a matrix pair without a row passes. |
+| A5 | A `pass` row needs `exit_code=0` and a log that holds that code. The plan says "no new failure". It does not say "all checks pass" while 13 rows are open. | A row says `pass` while its log holds a non-zero code. |
+| A6 | The registry must not say the upgrade is done before AC-4 and AC-5 are recorded. The master comparisons must be recorded too. | `measure/tracks.md` says the CVEs are resolved while a row is red. |
+| A7 | The red apps are an explicit name list. The scan does not use the words "never" or "do not". The master comparison names the failing test files from the ledger evidence. | A filter drops `reading-advantage` or `primary-advantage`. |
 | A8 | Plan notes use `[ ]`, `[~]`, `[x]`, or `[b]`. This role does not edit `plan.md`. | A new task uses a space inside the marker. |
 | A9 | The ledger test resolves `measure/archive/security_upgrade_20261026/` first. | The test fails after the track moves to `measure/archive/`. |
 | A10 | The phase adds no exported product symbol. Do not run `measure/generate.sh`. | A phase adds an exported function and skips the graph update. |
-| A15 | The ledger holds no hash field. Provenance is a Git commit. | A new SHA-256 field appears in the ledger. |
+| A15 | The ledger holds no hash field. Provenance is a Git commit. The `master_sha=` label holds a commit identity, not a content hash. | A new SHA-256 field appears in the ledger. |
 | A16 | The phase runs in the assigned worktree. Section 1.5 holds the rule. | A role creates a second worktree for this track. |
 
 ### Review applicability
 
 | Review | Applies | Reason |
 | --- | --- | --- |
-| Review A (security) | yes | The ledger must match the logs. A green build must not be a type pass for `reading-advantage`. |
+| Review A (security) | yes | The ledger must match the logs. A green build must not be a type pass for `reading-advantage`. Each `predates-track` row needs a master log with the same failing tests or the same error count, and a tech-debt owner. |
 | Review B (security, narrow) | yes | The audit must keep zero in-scope critical and high advisories. No `upgrade-defect` may be relabeled `predates-track`. |
 | Review C (UX and API) | no | The phase changes no handler, no schema, and no response shape. Image behavior is a post-deploy HTTP check. |
-| Adversarial | yes, bounded | The phase attacks the ledger classes and the guard false-pass cases. Plan task 2.14 holds this pass. It must not reproduce a CVE. |
+| Adversarial | yes, bounded | The phase attacks the ledger classes and the guard false-pass cases. The amendment adds one attack. A new failure must not take the class `predates-track`. Plan task 2.14 holds this pass. It must not reproduce a CVE. |
 | Browser review | no | The machine has 7 GB and the builds fill it. A local page does not prove the Alpine image. The post-deploy check belongs in P3. |
+
+Review A, the adversarial role, and phase acceptance check the same three things for every `predates-track` row:
+
+1. The row names a master-comparison log. The log holds `master_sha=<commit>` and the pre-upgrade versions.
+2. The master log shows the same failing tests, or the same error count. A count carries a label (A3).
+3. The row has an owner in `measure/tech-debt.md`.
+
+A row whose failure is absent on `master` is an `upgrade-defect`. Review A records it as an open defect. The phase stays open until Green fixes it.
 
 ### Phase acceptance checks
 
-- AC-5: the ten app folders of the matrix have live logs for check-types, lint, test, and build, classified by the rules above. The shared package rows have live logs too.
+- AC-5: each check of the ten app folders exits 0 or holds a `predates-track` row with a master log and a tech-debt owner. The upgrade adds no new failure.
+- Each `predates-track` row: the master log names the same failing tests or the same error count. A row whose failure is absent on `master` is an `upgrade-defect`.
+- Each `predates-track` row has an owner in `measure/tech-debt.md`. The PM routes that owner.
+- The shared package rows have live logs too.
 - `reading-advantage` type evidence is `check-types`, not the build.
 - `marketing` build log shows `vinext build` completed.
 - No row is `not-run` or `upgrade-defect`.
