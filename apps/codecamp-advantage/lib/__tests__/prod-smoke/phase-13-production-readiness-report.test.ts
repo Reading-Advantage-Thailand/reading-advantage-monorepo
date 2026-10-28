@@ -526,8 +526,10 @@ export function listTrackDirs(root: string): string[] {
 
 describe("Phase 13 — Report artifacts (filesystem regression detectors)", () => {
   beforeAll(() => {
-    expect(MONOREPO_ROOT, "MONOREPO_ROOT must resolve to /home/.../reading-advantage-monorepo")
-      .toMatch(/reading-advantage-monorepo$/);
+    expect(
+      existsSync(resolve(MONOREPO_ROOT, "pnpm-workspace.yaml")),
+      "MONOREPO_ROOT must resolve to a pnpm workspace root",
+    ).toBe(true);
   });
 
   it("`report.md` exists at `measure/tracks/codecamp_qa_prod_20260517/report.md`", () => {
