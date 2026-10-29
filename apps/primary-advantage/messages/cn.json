@@ -3958,6 +3958,7 @@
   },
   "TeacherClass": {
     "challenges": "班级挑战",
+    "challengesOwnerNotice": "班级挑战属于某位老师的班级。若要设置挑战，请使用本校教师账号登录。",
     "backToClasses": "返回班级列表",
     "loadError": "我们无法加载这个班级。",
     "loadClassesError": "我们无法加载你的班级。",

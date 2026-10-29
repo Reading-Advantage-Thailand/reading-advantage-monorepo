@@ -5,6 +5,10 @@ import type { ReactNode } from "react";
 import { createTranslator } from "next-intl";
 import { vi, it, expect } from "vitest";
 import { testMessages } from "@/components/__tests__/helpers/render-with-messages";
+import thMessages from "../../../../../messages/th.json";
+import cnMessages from "../../../../../messages/cn.json";
+import twMessages from "../../../../../messages/tw.json";
+import viMessages from "../../../../../messages/vi.json";
 const mocks = vi.hoisted(() => ({ user: vi.fn(), locale: "en" }));
 vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("NEXT_NOT_FOUND"); } }));
 vi.mock("next-intl/server", async () => {
@@ -17,6 +21,18 @@ vi.mock("@reading-advantage/advantage-play-kit/react", () => ({ TeacherChallenge
 vi.mock("@/i18n/navigation", () => ({ Link: ({ href, children, ...rest }: { href: string; children: ReactNode }) => <a href={`/${mocks.locale}${href}`} {...rest}>{children}</a> }));
 import Page from "../page";
 const en = testMessages.en;
+/** Accounts that own a class and may open the challenge panel. */
+const OWNERS = [
+  ["TEACHER", "school-1"],
+  ["ADMIN", "school-1"],
+] as const;
+/** Accounts that own no class and get the explanation instead of the panel. */
+const NON_OWNERS = [
+  ["SYSTEM", "school-1"],
+  ["SYSTEM", null],
+  ["TEACHER", null],
+  ["ADMIN", null],
+] as const;
 it("authorizes a teacher and passes the challenge configuration", async () => {
   mocks.locale = "zh";
   mocks.user.mockResolvedValue({ id: "teacher-1", schoolId: "school-1", role: "TEACHER" });
@@ -50,7 +66,41 @@ it("switches off the pack frames and uses the staff tokens (FR-6)", async () => 
   expect(frame.style.getPropertyValue("--apk-arcade-primary-fallback")).toBe("var(--primary)");
   expect(frame.style.getPropertyValue("--apk-arcade-panel-border-width")).toBe("2px");
 });
-it("rejects a user without a school", async () => {
+it.each(OWNERS)("shows the challenge panel to the %s of a school", async (role, schoolId) => {
+  mocks.user.mockResolvedValue({ id: "user-1", schoolId, role });
+  const view = await Page({ params: Promise.resolve({ locale: "en" }) });
+  expect(view).toBeTruthy();
+  render(view);
+  expect(screen.getByTestId("panel")).toBeInTheDocument();
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
+});
+it.each(NON_OWNERS)("explains the class challenges to the %s that owns no class", async (role, schoolId) => {
+  mocks.user.mockResolvedValue({ id: "user-1", schoolId, role });
+  const view = await Page({ params: Promise.resolve({ locale: "en" }) });
+  expect(view).toBeTruthy();
+  render(view);
+  expect(screen.getByRole("status")).toHaveTextContent(en.TeacherClass.challengesOwnerNotice);
+  expect(screen.queryByTestId("panel")).not.toBeInTheDocument();
+});
+it("explains the class challenges to a teacher without a school", async () => {
   mocks.user.mockResolvedValue({ id: "teacher-1", schoolId: null, role: "TEACHER" });
+  render(await Page({ params: Promise.resolve({ locale: "en" }) }));
+  expect(screen.getByRole("status")).toHaveTextContent(en.TeacherClass.challengesOwnerNotice);
+  expect(screen.queryByTestId("panel")).not.toBeInTheDocument();
+});
+it("keeps the page shell for an account that owns no class", async () => {
+  mocks.locale = "en";
+  mocks.user.mockResolvedValue({ id: "sys-1", schoolId: "school-1", role: "SYSTEM" });
+  render(await Page({ params: Promise.resolve({ locale: "en" }) }));
+  expect(screen.getByRole("heading", { level: 1, name: en.TeacherClass.challenges })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: en.TeacherClass.backToClasses })).toHaveAttribute("href", "/en/teacher/my-classes");
+});
+it("shows the not-found page when no user is signed in", async () => {
+  mocks.user.mockResolvedValue(null);
   await expect(Page({ params: Promise.resolve({ locale: "en" }) })).rejects.toThrow("NEXT_NOT_FOUND");
+});
+it("keeps the TeacherClass keys in parity across the locales", () => {
+  for (const messages of [thMessages, cnMessages, twMessages, viMessages]) {
+    expect(Object.keys(messages.TeacherClass)).toEqual(Object.keys(en.TeacherClass));
+  }
 });

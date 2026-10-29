@@ -3958,6 +3958,7 @@
   },
   "TeacherClass": {
     "challenges": "班級挑戰",
+    "challengesOwnerNotice": "班級挑戰屬於某位老師的班級。若要設定挑戰，請使用本校教師帳號登入。",
     "backToClasses": "返回班級列表",
     "loadError": "無法載入這個班級。",
     "loadClassesError": "無法載入你的班級。",

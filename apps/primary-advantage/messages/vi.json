@@ -3958,6 +3958,7 @@
   },
   "TeacherClass": {
     "challenges": "Thử thách của lớp",
+    "challengesOwnerNotice": "Thử thách của lớp thuộc về lớp của một giáo viên. Để đặt thử thách, hãy đăng nhập bằng tài khoản giáo viên của trường.",
     "backToClasses": "Quay lại các lớp",
     "loadError": "Chúng tôi không tải được lớp này.",
     "loadClassesError": "Chúng tôi không tải được các lớp của bạn.",

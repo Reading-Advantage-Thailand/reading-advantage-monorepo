@@ -151,6 +151,21 @@ export function canAccessSchoolResource(
 }
 
 /**
+ * Checks whether a session user may own class challenges and class quests.
+ * A challenge belongs to one teacher in one school, so only a teacher or an
+ * admin of that school may set one. This matches the challenge API rule.
+ * @param user The session user, or null for anonymous callers.
+ * @returns True for a TEACHER or ADMIN with a school.
+ */
+export function canOwnClassChallenges<T extends { role?: unknown; schoolId?: unknown }>(
+  user: T | null | undefined,
+): user is T & { schoolId: string } {
+  const role = normalizeRole(user?.role);
+  if (role !== "TEACHER" && role !== "ADMIN") return false;
+  return typeof user?.schoolId === "string" && user.schoolId.trim().length > 0;
+}
+
+/**
  * Server-authoritative XP award per activity type.
  * Mirrors the UserXpEarned table; question activities share one award.
  */

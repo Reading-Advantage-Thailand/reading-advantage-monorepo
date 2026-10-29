@@ -3958,6 +3958,7 @@
   },
   "TeacherClass": {
     "challenges": "Class challenges",
+    "challengesOwnerNotice": "Class challenges belong to the classes of one teacher. To set a challenge, sign in with a teacher account of the school.",
     "backToClasses": "Back to classes",
     "loadError": "We could not load this class.",
     "loadClassesError": "We could not load your classes.",

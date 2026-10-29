@@ -8,6 +8,7 @@ import {
   isAdminOrSystem,
   canRunContentTooling,
   canReadUserResource,
+  canOwnClassChallenges,
   XP_AWARD_BY_ACTIVITY,
   resolveXpAward,
   isPlainBasename,
@@ -141,6 +142,26 @@ describe("canSetPasswordFor", () => {
     ["ADMIN", undefined, false],
   ])("actor %s target %s -> %s", (actor, target, expected) => {
     expect(canSetPasswordFor(actor, target)).toBe(expected);
+  });
+});
+
+describe("canOwnClassChallenges", () => {
+  it("admits a teacher or an admin of a school", () => {
+    expect(canOwnClassChallenges({ role: "TEACHER", schoolId: "school-1" })).toBe(true);
+    expect(canOwnClassChallenges({ role: "ADMIN", schoolId: "school-1" })).toBe(true);
+    expect(canOwnClassChallenges({ role: "teacher", schoolId: "school-1" })).toBe(true);
+  });
+
+  it("refuses every account that owns no class", () => {
+    expect(canOwnClassChallenges({ role: "TEACHER", schoolId: null })).toBe(false);
+    expect(canOwnClassChallenges({ role: "ADMIN", schoolId: null })).toBe(false);
+    expect(canOwnClassChallenges({ role: "TEACHER", schoolId: "" })).toBe(false);
+    expect(canOwnClassChallenges({ role: "ADMIN", schoolId: "   " })).toBe(false);
+    expect(canOwnClassChallenges({ role: "SYSTEM", schoolId: "school-1" })).toBe(false);
+    expect(canOwnClassChallenges({ role: "SYSTEM", schoolId: null })).toBe(false);
+    expect(canOwnClassChallenges({ role: "STUDENT", schoolId: "school-1" })).toBe(false);
+    expect(canOwnClassChallenges(null)).toBe(false);
+    expect(canOwnClassChallenges(undefined)).toBe(false);
   });
 });
 

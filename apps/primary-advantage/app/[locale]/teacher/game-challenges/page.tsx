@@ -5,7 +5,9 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { challengeGames } from "@/lib/games/catalog";
+import { canOwnClassChallenges } from "@/lib/authorization";
 import { getCurrentUser } from "@/lib/session";
+import { ClassChallengesNotice } from "@/components/teacher/class-challenges-notice";
 import { TEACHER_BACK_LINK, TeacherPageHeader } from "@/components/teacher/teacher-shell";
 
 /**
@@ -45,29 +47,41 @@ const PANEL_FRAME_STYLE = {
 
 /**
  * Renders the Primary teacher challenge manager in the teacher shell: a back link to My Classes,
- * the page heading, and the shared panel with visible fields.
+ * the page heading, and the shared panel with visible fields. An account that owns no class gets
+ * the page shell and a short explanation instead of the panel.
  * @param props The locale route parameters.
- * @returns The authorized challenge manager.
+ * @returns The authorized challenge manager, or the explanation for an account with no class.
  */
 export default async function TeacherGameChallengesPage({ params }: { params: Promise<{ locale: string }> }) {
   await params;
   const user = await getCurrentUser();
-  if (!user || !user.schoolId || (user.role !== "TEACHER" && user.role !== "ADMIN")) notFound();
+  if (!user) notFound();
   const t = await getTranslations("TeacherClass");
   const ts = await getTranslations("TeacherStudents");
+  const header = (
+    <TeacherPageHeader
+      back={
+        <Link href="/teacher/my-classes" className={TEACHER_BACK_LINK}>
+          <ArrowLeft aria-hidden="true" />
+          {t("backToClasses")}
+        </Link>
+      }
+      title={t("challenges")}
+      description={ts("challengesHint")}
+    />
+  );
+  if (!canOwnClassChallenges(user)) {
+    return (
+      <div className="flex flex-col gap-6">
+        {header}
+        <ClassChallengesNotice message={t("challengesOwnerNotice")} />
+      </div>
+    );
+  }
   const games = challengeGames();
   return (
     <div className="flex flex-col gap-6">
-      <TeacherPageHeader
-        back={
-          <Link href="/teacher/my-classes" className={TEACHER_BACK_LINK}>
-            <ArrowLeft aria-hidden="true" />
-            {t("backToClasses")}
-          </Link>
-        }
-        title={t("challenges")}
-        description={ts("challengesHint")}
-      />
+      {header}
       <div className={FIELD_FRAME} style={PANEL_FRAME_STYLE}>
         <TeacherChallengePanel ownerKey={`${user.schoolId}:${user.id}`} games={games} endpoint="/api/v1/apk/challenges" classesEndpoint="/api/v1/apk/challenges/teacher-classes" labels={t.raw("challengePanel")} />
       </div>
