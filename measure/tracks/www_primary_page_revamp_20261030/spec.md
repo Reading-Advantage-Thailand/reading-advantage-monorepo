@@ -202,6 +202,7 @@ The page keeps no Reading Advantage screen and no old image. The live page uses 
 - The page names only features that `03-products/primary-advantage.md` (v1.23) calls live.
 - Game names stay in English in the Thai copy: RPG Battle, Rune Match, Dragon Rider, Enchanted Library.
 - Every string lives in the locale message files (`apps/www-reading-advantage/src/locales/`). The page reads them through `getScopedI18n("pages.products.primaryAdvantage")`. The Thai year stays "2027" as the brief writes it.
+- The zh locale file holds the English copy of the new page strings until the PR session sends Chinese copy. The zh page shows no old string and no old image.
 - Each crop changes no pixel of a screen. Crop and scale only. Output is lossless (lossless WebP or PNG) at the output size the list gives.
 - The build verifies each source SHA-256 before the crop. It adds no hash field to any file. The typed manifest `apps/www-reading-advantage/src/lib/site-assets.ts` holds no hash field today, and the track keeps it that way.
 - The build decodes the QR code of image 16 and checks that it opens the LINE Official account in `01-company/contact-and-locations.md` v2.1: **ReadingAdvantage**, `https://line.me/ti/p/Pf7_EF98Pv`.
@@ -224,6 +225,7 @@ The page keeps no Reading Advantage screen and no old image. The live page uses 
 | AC-10 | Preview captures show desktop and phone, in `en` and in `th`, under `/home/daniebo/Desktop/a34-www-primary-captures/`. |
 | AC-11 | Daniel passes the look check and the Thai check. |
 | AC-12 | The branch merges into local `master` only after Daniel's pass. Daniel pushes and deploys. |
+| AC-13 | The page in zh shows the English copy of the new strings. It shows none of the old strings, the six Reading Advantage screens, or the four old images. |
 
 ## 9. Out of scope
 
