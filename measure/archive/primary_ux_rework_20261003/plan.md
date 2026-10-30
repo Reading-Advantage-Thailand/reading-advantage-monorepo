@@ -155,3 +155,11 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
   cyan) are not in the spec. All wait for an owner decision (spec "Owner decisions").
 - FR-2 moved 6 of 33 local UI files; 27 stay local because their API differs. The rest belongs
   to the semester-2 `primary_package_alignment` track.
+
+### A-35 fix after the archive (2026-10-30)
+- Commit `724b63d66` on branch `fix/primary-challenges-staff-404` shows SYSTEM and schoolless
+  staff accounts a short explanation on `/teacher/game-challenges` and `/teacher/quest` instead
+  of a 404.
+- Thai sentence: `ภารกิจเกมของชั้นเรียนผูกกับชั้นเรียนของครูแต่ละท่าน หากต้องการตั้งภารกิจ กรุณาเข้าสู่ระบบด้วยบัญชีครูของโรงเรียน`
+- Daniel approved the Thai sentence on 2026-10-30 at about 05:27 ICT (Google Tasks: "Thai passes").
+- The merge into master and the deploy wait for the team.
