@@ -199,7 +199,7 @@ describe("auth route handlers", () => {
     mockDb.select.mockReturnValueOnce(selectResult([])).mockReturnValueOnce(selectResult([]));
     const response = await handleRegister(registerRequest("550e8400-e29b-41d4-a716-446655440002"));
     expect(response.status).toBe(400);
-    expect(mockDb.select).toHaveBeenCalledTimes(2);
+    expect(await response.json()).toEqual({ message: "Invalid school" });
   });
 
   it("rejects registration when schoolId field is missing", async () => {
