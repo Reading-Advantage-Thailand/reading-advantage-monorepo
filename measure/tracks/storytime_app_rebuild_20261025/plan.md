@@ -184,6 +184,7 @@
 
 ### Phase 2 Green evidence (round 5, the Review A findings)
 
+- Owner decision F2 (Daniel, 2026-11-02 18:53 ICT, Google Tasks NlRDWElnWW84bTFKRTF4Rg): "Yes" (option A). The spec wording of FR-3 and AC-3.2 now says picture entry.
 - Source: Review A FAIL at `245a09e5a` (`review-a-245a09e5a.json`). Role: `coding-plan/glm-5.3-flash#high` (no Claude and no MiniMax model used; no coder delegated).
 - Test first: every fix landed behind a test that failed before the fix. Evidence of the failing runs: the three new vitest suites reported 9 failed tests (`sentencesOfPage` missing, `resolveCommit` missing, the missing-picture items absent) and the smoke self-test reported 4 failed checks (F1 real re-entry, F8 inside-default, F8 trap prune, F8 success guard) before the fixes.
 - **F1 (lock guard), FIX.** The re-entry of the smoke now passes the hint: `heavy-run.sh -c "HEAVY_LOCK_HELD=1 bash '$0' --locked"` (`4ac2e814f`), so the normal run passes `require_heavy_lock` and only a direct `--locked` call stays refused. The self-test scenario F extracts the real re-entry string from the smoke script, replaces `$0` with a stub that sources the cleanup helpers and calls `require_heavy_lock`, and runs it through the real `heavy-run.sh`; it failed before the fix and passes after.
@@ -202,7 +203,7 @@
 
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
-- [ ] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. Tests: AC-2.1, AC-5.1.
+- [ ] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4.
 - [ ] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. Test: AC-5.2.
 - [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.

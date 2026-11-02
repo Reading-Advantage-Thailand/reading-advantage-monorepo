@@ -7,6 +7,8 @@
 **Plan:** [plan.md](./plan.md) · **Survival report S1 to S28:** [docs/s1-s28-survival.md](./docs/s1-s28-survival.md)
 **Record of decisions:** S1 to S30 and the feature list, with the reuse verdict for each item, are in [docs/program-decisions-and-features.md](./docs/program-decisions-and-features.md); the old track is archived at [../archive/storytime_advantage_program_20261021/](../archive/storytime_advantage_program_20261021/) and keeps its full design. This track uses those decisions. It does not copy the old plan.
 
+Decision: Daniel, 2026-11-02 18:53 ICT, Google Tasks NlRDWElnWW84bTFKRTF4Rg (reply to Wmw1Z2hGUjhrd2tuLWFmQw), on the question "may a week enter the app before its pictures?": "Yes". FR-3, FR-4, and FR-5 carry it.
+
 ## 1. Architecture (Daniel, 2026-10-25)
 
 Daniel: "Storytime is an APP in the MONOREPO."
@@ -107,18 +109,20 @@ Acceptance:
 - The week contract is a Zod schema in `apps/storytime/lib/contracts/`. It follows Workbooks `StorytimeWeekSchema` version 1 for the fields that the app reads. It accepts extra keys.
 - The fields are `meta`, `focus`, `opening`, `books[]`, `song`, `scripts[]`, `review[]`, `check`, `home`, and `tags`.
 - The sentence timing has the Primary `SentenceTimepointSchema` shape (sentence, startTime, endTime, words) with an optional 1-based `page`.
-- A published week must have exactly one book of each kind (`readalong`, `decodable`) and a picture file on every book page.
+- A published week must have exactly one book of each kind (`readalong`, `decodable`) and a picture entry on every book page.
+- The picture file may arrive later. Until then the receiving step lists it as missing (FR-4), and the at-home page does not show the week (FR-5).
 - The contract moves to `packages/types` when a second app reads weeks. Until then it stays in the app.
 
 Acceptance:
 
 - AC-3.1 (automated) The contract parses the shipped Workbooks weeks `l2/w01` to `l2/w08` at the handed-off commit. Tests load the shipped files, not hand-made fixtures (rule 11.3).
-- AC-3.2 (automated) Each broken copy fails with the field path (rule 11.1). The copies have a missing book, a page with no picture file, times out of order, and a version other than 1.
+- AC-3.2 (automated) Each broken copy fails with the field path (rule 11.1). The copies have a missing book, a page with no picture entry, times out of order, and a version other than 1.
 
 ### FR-4 Content receiving
 
 - A script (`apps/storytime/scripts/receive-weeks.ts`) reads the Workbooks week files at a commit that the PM orchestrator hands off. It validates each week and writes it to `apps/storytime/content/l<level>/w<nn>.json`.
 - The script lists every media file that each week needs, with its kind and the rule that checks it.
+- The list names each book page picture that has an entry but no file as a missing item, with its book kind and page number.
 - The script never changes `meta.status`. Approval lives in the source repository (rule 12.1).
 - A changed media file gets a new file name (rule 12.2). The upload to the production bucket goes with a deploy, on Daniel's go, and is checked file by file (rule 12.4).
 
@@ -130,6 +134,7 @@ Acceptance:
 ### FR-5 At-home app: entry and home card
 
 - The entry page needs no login. It writes no cookie, records no evidence, and has `noindex`.
+- A published week with a book page picture that has no file answers like a week that is not published (404). The page never shows that week to a child.
 - The page shows three tiles: read-along, decodable, and song. Each tile has a picture and a speaker control.
 - A tap on the speaker plays the recorded label. The phone voice is never a fallback for content audio (rule 10.5). A label without a recording shows no speaker.
 - Below the tiles, the home card shows the Thai parent line, the three words with recorded audio, the frame, and the activity.
@@ -141,6 +146,7 @@ Acceptance:
 - AC-5.1 (automated) Tests show that the route is public, has `noindex`, and sends no `Set-Cookie` header.
 - AC-5.2 (automated) A browser check measures each tap target at 64 px or more in portrait and in landscape.
 - AC-5.3 (automated) A browser check records the network log. The log shows at most 300 KB before the first tap. It shows no media request before a part opens.
+- AC-5.4 (automated) A route test shows that a published week with a book page picture without a file answers 404.
 
 ### FR-6 Read-along player
 
