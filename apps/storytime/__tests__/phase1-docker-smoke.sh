@@ -6,7 +6,7 @@ set -uo pipefail
 # Without --locked the script re-enters through heavy-run.sh (PM 2026-10-26), which takes
 # the heavy lock and runs the pre-flight. Callers run the script plain, with no flock.
 if [ "${1:-}" != "--locked" ]; then
-  exec bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "bash '$0' --locked"
+  exec bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "HEAVY_LOCK_HELD=1 bash '$0' --locked"
 fi
 
 FAILED=0; PASS_COUNT=0; FAIL_COUNT=0; RESULTS=()
@@ -35,8 +35,6 @@ printf 'locked\t%s\t%s\n' "$(date -u +%FT%TZ)" "$IMAGE" >> "$SMOKE_STORE_ROOT/ru
 echo "=== Smoke container store: $SMOKE_STORE_ROOT ==="
 cleanup() {
   if [ -n "$CONTAINER" ]; then "${SMOKE_PODMAN[@]}" rm -f "$CONTAINER" >/dev/null; fi
-  # P2.3 smoke-store follow-up: the older storytime tags leave the store at the end of a run.
-  prune_old_image_tags "$IMAGE"
 }
 trap cleanup EXIT
 
@@ -87,6 +85,12 @@ if [ -n "$CONTAINER" ]; then
   if [ "$STATUS" = "404" ]; then pass "The printed route returns HTTP 404"; else fail "Expected HTTP 404; got $STATUS"; fi
 else
   fail "No container serves the printed route"
+fi
+
+if [ "$FAILED" -eq 0 ]; then
+  # Review A F8: the older storytime tags leave the store only after a successful run,
+  # so a failed build keeps the last good tag.
+  prune_old_image_tags "$IMAGE"
 fi
 
 printf '%s\n' "${RESULTS[@]}"

@@ -281,6 +281,53 @@ for pruned in "storytime-phase1-local:cb4d8c1f0" "storytime-phase1-local:0bb10b6
 done
 if grep -qF "other-image" "$E/rmi.log"; then fail "E: an image of another repository survives the prune"; else pass "E: an image of another repository survives the prune"; fi
 
+# Scenario F: the real re-entry, the inside-default guard, and the prune timing (Review A
+# findings F1 and F8, round 5).
+# F1: the re-entry string of the smoke script passes the lock hint through heavy-run.sh, so the
+# normal run passes require_heavy_lock. A stub stands in place of the build.
+F="$WORK/f"; mkdir -p "$F"
+cat > "$F/smoke-stub" <<EOF
+#!/usr/bin/env bash
+HERE="$HERE"
+source "\$HERE/phase1-smoke-cleanup.sh" || exit 1
+require_heavy_lock
+EOF
+chmod +x "$F/smoke-stub"
+REENTRY="$(sed -n 's/^[[:space:]]*exec bash "\$HOME\/Desktop\/advantage-pr\/scripts\/jobs\/heavy-run\.sh" -c "\(.*\)"$/\1/p' "$HERE/phase1-docker-smoke.sh")"
+if [ -z "$REENTRY" ]; then
+  fail "F1: the smoke script holds no re-entry line to test"
+else
+  if bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "${REENTRY//\$0/$F/smoke-stub}" >/dev/null 2>&1; then
+    if [ "${HEAVY_LOCK_HELD:-}" = "1" ]; then
+      echo "NOTE: F1 ran nested in heavy-run.sh; the ancestor branch exports the hint itself"
+    fi
+    pass "F1: the real re-entry passes the lock hint (heavy-run.sh)"
+  else
+    fail "F1: the real re-entry passes the lock hint (heavy-run.sh)"
+  fi
+fi
+# F8a: a store root inside the default podman store is rejected.
+DEFAULT_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/containers/storage"
+if (
+  SMOKE_STORE_ROOT="$DEFAULT_ROOT/inline" SMOKE_STORE_RUNROOT="$SMOKE_STORE_RUNROOT" \
+    bash -c 'source "$1"' _ "$HERE/phase1-smoke-cleanup.sh"
+) >/dev/null 2>&1; then
+  fail "F8: a store root inside the default podman store is rejected"
+else
+  pass "F8: a store root inside the default podman store is rejected"
+fi
+# F8b: the prune runs only after a successful run, never in the EXIT trap.
+CLEANUP_BLOCK="$(sed -n '/^cleanup() {/,/^}/p' "$HERE/phase1-docker-smoke.sh")"
+case "$CLEANUP_BLOCK" in
+  *prune_old_image_tags*) fail "F8: the EXIT trap does not prune" ;;
+  *) pass "F8: the EXIT trap does not prune" ;;
+esac
+if grep -B3 'prune_old_image_tags "$IMAGE"' "$HERE/phase1-docker-smoke.sh" | grep -q 'FAILED" -eq 0'; then
+  pass "F8: the prune runs only when the run passed"
+else
+  fail "F8: the prune runs only when the run passed"
+fi
+
 rm -rf "$WORK"
 
 echo "=== Total: $TESTS checks (PASS=$((TESTS - FAILS)), FAIL=$FAILS) ==="

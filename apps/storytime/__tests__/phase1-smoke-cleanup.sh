@@ -20,11 +20,12 @@
 #   SMOKE_STORE_ROOT     storage root of the smoke store
 #   SMOKE_STORE_RUNROOT  runroot of the smoke store
 #
-# P2.3 smoke-store follow-ups (test-strategy P2.3, Review B r2):
-#   - check_store_paths rejects a store path that equals the default podman store path,
-#     so a caller-set value can never point the cleanup at the shared default store.
-#   - require_heavy_lock refuses a direct `--locked` call that skipped heavy-run.sh.
-#   - prune_old_image_tags removes the older storytime image tags at the end of a run,
+# P2.3 smoke-store follow-ups (test-strategy P2.3, Review B r2; Review A r5 F1, F8):
+#   - check_store_paths rejects a store path that is the default podman store path or lies
+#     inside it, so a caller-set value can never point the cleanup at the shared default store.
+#   - require_heavy_lock refuses a direct `--locked` call that skipped heavy-run.sh; the smoke
+#     passes the hint itself in its re-entry, so the normal run passes.
+#   - prune_old_image_tags removes the older storytime image tags after a successful run,
 #     so the smoke store does not grow with every run.
 : "${SMOKE_STORE_ROOT:=${XDG_DATA_HOME:-$HOME/.local/share}/storytime-smoke/storage}"
 : "${SMOKE_STORE_RUNROOT:=/run/user/$(id -u)/storytime-smoke}"
@@ -33,20 +34,24 @@
 DEFAULT_PODMAN_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/containers/storage"
 DEFAULT_PODMAN_RUNROOT="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/containers"
 
-# Rejects a smoke store path that points at the default podman store.
-# @returns 1 with a message on stderr when a path equals the default podman store path.
+# Rejects a smoke store path that is the default podman store or lies inside it.
+# @returns 1 with a message on stderr when a path is the default podman store path or inside it.
 check_store_paths() {
   local root runroot
-  root="$(readlink -m "$SMOKE_STORE_ROOT")"
-  runroot="$(readlink -m "$SMOKE_STORE_RUNROOT")"
-  if [ "$root" = "$(readlink -m "$DEFAULT_PODMAN_ROOT")" ]; then
-    echo "SMOKE_STORE_ROOT points at the default podman store ($root); refusing" >&2
-    return 1
-  fi
-  if [ "$runroot" = "$(readlink -m "$DEFAULT_PODMAN_RUNROOT")" ]; then
-    echo "SMOKE_STORE_RUNROOT points at the default podman runroot ($runroot); refusing" >&2
-    return 1
-  fi
+  root="$(realpath -m "$SMOKE_STORE_ROOT")"
+  runroot="$(realpath -m "$SMOKE_STORE_RUNROOT")"
+  case "$root" in
+    "$(realpath -m "$DEFAULT_PODMAN_ROOT")" | "$(realpath -m "$DEFAULT_PODMAN_ROOT")"/*)
+      echo "SMOKE_STORE_ROOT is the default podman store or lies inside it ($root); refusing" >&2
+      return 1
+      ;;
+  esac
+  case "$runroot" in
+    "$(realpath -m "$DEFAULT_PODMAN_RUNROOT")" | "$(realpath -m "$DEFAULT_PODMAN_RUNROOT")"/*)
+      echo "SMOKE_STORE_RUNROOT is the default podman runroot or lies inside it ($runroot); refusing" >&2
+      return 1
+      ;;
+  esac
 }
 check_store_paths || exit 1
 
