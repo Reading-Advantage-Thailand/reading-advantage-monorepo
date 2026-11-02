@@ -230,7 +230,7 @@ describe("AC-3.2 each broken copy fails with its field path", () => {
     ).toBe(true);
   });
 
-  it("rejects a published week with a page without a picture file", async () => {
+  it("rejects a published week with a page without an image entry", async () => {
     const week = publishedWeek();
     const page = week.books[0]?.pages[0];
     expect(page, "The published week must have a book page (task 2.1)").toBeDefined();
@@ -238,7 +238,7 @@ describe("AC-3.2 each broken copy fails with its field path", () => {
     const schema = await loadWeekSchema();
     const paths = expectRejected(
       schema.safeParse(week),
-      "a published week with a page without a picture file",
+      "a published week with a page without an image entry",
     );
     expect(
       paths.some((path) => /book|page/i.test(path)),

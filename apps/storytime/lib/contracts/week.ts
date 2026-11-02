@@ -443,10 +443,13 @@ export type StorytimeSentence = z.infer<typeof sentenceTimepointSchema>;
 
 /** One media file that a week needs. */
 export interface WeekMedia {
-  /** The file, relative to the content folder. */
+  /** The file, relative to the content folder. For a missing picture, the field path of the
+   * image inside the week, not a file name. */
   file: string;
   /** The kind of media. */
   kind: string;
   /** The generation rule that checks this kind. */
   rule: string;
+  /** Set when the picture has no file yet; names the book kind and the page number. */
+  missing?: string;
 }

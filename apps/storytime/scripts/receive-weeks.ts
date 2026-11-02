@@ -1,8 +1,9 @@
 /**
  * The receiving step of a Storytime week (plan task 2.6, spec FR-4).
  *
- * It reads the Workbooks week files at a handed-off commit, validates each week with the app
- * contract, and writes the week to `apps/storytime/content/l<level>/w<nn>.json`. It writes the
+ * It reads the Workbooks week files at a handed-off commit, resolves the commit to the full id,
+ * validates each week with the app contract, and writes the week to
+ * `apps/storytime/content/l<level>/w<nn>.json`. It writes the
  * source text unchanged, so a second run of the same commit makes no difference. It never changes
  * `meta.status`, because approval lives in the source repository (generation rule 12.1). It lists
  * every media file that each week names, with its kind and the generation rule that checks it.
@@ -51,7 +52,9 @@ export function weekPath(level: number, week: number): string {
  * Lists the media files that a week names.
  *
  * The app never invents a file name: it lists the files that the week holds. A picture without a
- * file is a picture that production has not made yet, and the week still parses.
+ * file is a picture that production has not made yet, and the week still parses. A page picture
+ * with an image entry and no file is listed as a missing item, with its book kind and page number
+ * (Review A F2); its `file` holds the field path of the image inside the week.
  * @param week The parsed week.
  * @returns One entry per file, with its kind and its rule; a repeated file counts once.
  */
@@ -62,12 +65,26 @@ export function mediaOf(week: StorytimeWeek): WeekMedia[] {
     media.set(file, { file, kind, rule });
   };
 
-  for (const book of week.books) {
+  week.books.forEach((book, bookIndex) => {
     add(book.audio.file, "book-audio", MEDIA_RULES.bookAudio);
     add(book.audio.slowFile, "book-audio-slow", MEDIA_RULES.bookAudio);
     add(book.cover?.file, "book-cover", MEDIA_RULES.bookPicture);
-    for (const page of book.pages) add(page.image?.file, "book-page-picture", MEDIA_RULES.bookPicture);
-  }
+    book.pages.forEach((page, pageIndex) => {
+      if (page.image?.file) {
+        add(page.image.file, "book-page-picture", MEDIA_RULES.bookPicture);
+      } else if (page.image) {
+        const field = `books.${bookIndex}.pages.${pageIndex}.image`;
+        if (!media.has(field)) {
+          media.set(field, {
+            file: field,
+            kind: "book-page-picture",
+            rule: MEDIA_RULES.bookPicture,
+            missing: `page ${pageIndex + 1} of the ${book.kind} book`,
+          });
+        }
+      }
+    });
+  });
 
   add(week.focus.element?.audio, "phoneme", MEDIA_RULES.phoneme);
   for (const word of week.focus.family?.words ?? []) {
@@ -120,6 +137,24 @@ export function receiveWeek(week: unknown, source: { text?: string } = {}): Rece
     throw new Error(`The written week ${path} does not keep the status of its source`);
   }
   return { path, contents, media: mediaOf(data) };
+}
+
+/**
+ * Resolves a commit reference to the full commit id of the source repository.
+ *
+ * The step records the full 40-hex id, so a run with a short commit and a run with the full id
+ * write the same `source.json` (Review A F5).
+ * @param directory The source repository directory.
+ * @param reference The `--commit` value (`ccf3d95c` or the full id).
+ * @returns The full commit id.
+ * @throws When the reference names no commit in the source repository.
+ */
+export function resolveCommit(directory: string, reference: string): string {
+  return execFileSync(
+    "git",
+    ["-C", directory, "rev-parse", "--verify", `${reference}^{commit}`],
+    { encoding: "utf8" },
+  ).trim();
 }
 
 /** The options of one run. */
@@ -186,6 +221,22 @@ function parseOptions(argv: string[]): RunOptions {
 }
 
 /**
+ * Resolves the commit of one run to the full id before the step reads any file.
+ * @param options The parsed options.
+ * @returns The options with the full commit id.
+ * @throws When the commit names no commit in the source repository.
+ */
+function withResolvedCommit(options: RunOptions): RunOptions {
+  try {
+    return { ...options, commit: resolveCommit(options.sourceDirectory, options.commit) };
+  } catch (error) {
+    throw new Error(
+      `Cannot resolve the commit ${options.commit} in ${options.sourceDirectory}: ${(error as Error).message}`,
+    );
+  }
+}
+
+/**
  * Gives the name of the source repository for the source record.
  * @param directory The repository directory.
  * @returns The origin URL, or the directory name.
@@ -208,7 +259,7 @@ function repositoryOf(directory: string): string {
 function main(argv: string[]): number {
   let options: RunOptions;
   try {
-    options = parseOptions(argv);
+    options = withResolvedCommit(parseOptions(argv));
   } catch (error) {
     console.error((error as Error).message);
     return 64;
