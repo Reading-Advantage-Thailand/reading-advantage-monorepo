@@ -347,7 +347,7 @@ describe("AuthenticatedCartridgeHost", () => {
     const lifecycle = mockAPKGameHost.mock.calls.at(-1)?.[0].onLifecycleTransition;
     act(() => {
       lifecycle?.({ from: "briefing", event: "start", to: "playing" });
-      lifecycle?.({ from: "paused", event: "resume", to: "playing" });
+      lifecycle?.({ from: "playing", event: "game-complete", to: "results" });
       lifecycle?.({ from: "results", event: "replay", to: "briefing" });
     });
     expect(mockRpgBeginSession).toHaveBeenCalledTimes(2);

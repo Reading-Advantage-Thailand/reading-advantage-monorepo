@@ -569,8 +569,7 @@ export function AuthenticatedCartridgeHost({
               onMutedChange={muteMusic}
               onLifecycleTransition={(transition) => {
                 if (transition.to === "playing") startedAtRef.current = Date.now();
-                if (transition.event === "replay"
-                  || (transition.to === "playing" && transition.from !== "paused")) {
+                if (transition.event === "replay" || transition.to === "playing") {
                   rpg.beginSession();
                 }
                 if (transition.event === "start" || transition.to === "playing") {
