@@ -25,3 +25,21 @@ describe("the week sync runbook command", () => {
     expect(text).toMatch(/\.orig-/);
   });
 });
+
+describe("the recovery steps of the runbook", () => {
+  const section = text.slice(text.indexOf("## Recover from a failed run"));
+
+  it("deletes no recovery copy before the operator compares and decides", () => {
+    expect(section).not.toMatch(/git restore apps\/storytime\/content`\. Then delete/);
+    expect(section).toMatch(/Do not delete any file/i);
+    expect(section).toContain("git diff --no-index");
+    expect(section).toMatch(/explicit decision/i);
+    expect(section).toMatch(/does not prove/i);
+  });
+
+  it("states that a leftover file stops the next run, and why", () => {
+    expect(text).toMatch(/leftover/i);
+    expect(text).toMatch(/exits with code 1 before it reads or writes/i);
+  });
+});
+

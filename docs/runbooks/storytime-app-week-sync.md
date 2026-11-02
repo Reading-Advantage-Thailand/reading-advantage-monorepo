@@ -51,6 +51,12 @@ refuses any other item, for example `abc`, `3-1`, or `0`.
    code 64 and changes nothing. Run all weeks again.
 5. **Merge at the recorded commit.** A run at the commit that `source.json` records adds its
    weeks to the file list. The list keeps the other weeks.
+6. **Stop at a leftover file.** The receiver looks in the content folder for a file with a name
+   that holds `.tmp-` or `.orig-`. A failed run can leave such a file. The receiver prints the
+   exact path of each leftover file and exits with code 1 before it reads or writes anything.
+   The reason: a `.orig-` file can hold the only copy of an original, and
+   a new run must not hide it. A warning is not enough, because the operator can miss it.
+   Follow "Recover from a failed run", then run the receiver again.
 
 ### Exit codes
 
@@ -58,7 +64,7 @@ refuses any other item, for example `abc`, `3-1`, or `0`.
 | --- | --- |
 | 0 | The receiver wrote all files. |
 | 64 | The request is wrong: a bad argument, a commit that does not exist, or a subset run at a new commit. Nothing changed. |
-| 1 | Another failure: a source file is missing, a week breaks the contract, or a write failed. The content folder is as it was before the run, unless the message says that it is not fully restored. |
+| 1 | Another failure: a source file is missing, a week breaks the contract, a leftover file stands in the content folder, or a write failed. The content folder is as it was before the run, unless the message says that it is not fully restored. |
 
 ## Verify the output
 
@@ -80,11 +86,24 @@ A failed run leaves the content folder as it was. If you suspect a change, run
 `git status apps/storytime/content`. To discard an unwanted change, run
 `git restore apps/storytime/content`. Then correct the cause and run the receiver again.
 
-If the message says that the folder is not fully restored, do these steps:
+If the message says that the folder is not fully restored, or if the receiver stops at a leftover
+file, do these steps. Do not delete any file and do not run `git restore` before step 4.
 
-1. Read the message. It names each file that is not restored.
+1. Read the message. It names each file that is not restored, each `.orig-` copy, and each
+   leftover `.tmp-` file.
 2. A file with a name that holds `.orig-` is a copy of an original that the receiver could not put
-   back. Keep this copy until you finish step 3.
-3. Run `git restore apps/storytime/content`. Then delete each file with a name that holds `.tmp-`
-   or `.orig-` in the content folder.
-4. Run `git status apps/storytime/content`. The status must show no change.
+   back. It can hold the only copy of an uncommitted original. A `.tmp-` file holds new text that
+   the receiver did not finish. Keep all of them.
+3. For each `.orig-` copy, compare it with its target and with Git:
+   `git diff --no-index <copy> <target>`, then `git diff -- <target>`. If the copy differs from the
+   committed file, the copy holds bytes that Git does not hold.
+4. Make a decision for each target, and write it down:
+   - To keep the original: copy the `.orig-` file over the target (`cp <copy> <target>`). Then run
+     `git diff -- <target>` and check that it shows the changes you expect.
+   - To use the committed file: run `git restore <target>`. Do this only when the copy holds
+     nothing that you need.
+5. After each target holds the bytes you chose, delete the `.orig-` copy and the `.tmp-` files for
+   that target. This is an explicit decision. A clean `git status` does not prove that the
+   original came back, because `git restore` also discards uncommitted changes.
+6. Run `git status apps/storytime/content`. Check that no `.tmp-` or `.orig-` file stands in the
+   content folder. Then run the receiver again.
