@@ -24,12 +24,19 @@ CONTAINER=""
 # store only and never touches the shared default store.
 # shellcheck source=phase1-smoke-cleanup.sh
 source "$SCRIPT_DIR/phase1-smoke-cleanup.sh"
+# P2.3 smoke-store follow-up: refuse a direct --locked call that skipped the heavy lock.
+require_heavy_lock || exit 64
+echo "=== Run mode: locked (heavy-run.sh) ==="
 # The store path is fixed and outside the repository, so a run reuses the store of the
 # previous run. Only this smoke writes it.
 (umask 077 && mkdir -p "$SMOKE_STORE_ROOT" "$SMOKE_STORE_RUNROOT")
+# P2.3 smoke-store follow-up: record the run mode, so a lock bypass is visible in the store.
+printf 'locked\t%s\t%s\n' "$(date -u +%FT%TZ)" "$IMAGE" >> "$SMOKE_STORE_ROOT/run-mode.log"
 echo "=== Smoke container store: $SMOKE_STORE_ROOT ==="
 cleanup() {
   if [ -n "$CONTAINER" ]; then "${SMOKE_PODMAN[@]}" rm -f "$CONTAINER" >/dev/null; fi
+  # P2.3 smoke-store follow-up: the older storytime tags leave the store at the end of a run.
+  prune_old_image_tags "$IMAGE"
 }
 trap cleanup EXIT
 

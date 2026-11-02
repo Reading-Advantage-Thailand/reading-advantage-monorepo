@@ -119,6 +119,44 @@ expect_removed_here() {
   if grep -qxF "$SMOKE_STORE_ROOT|$id" "$dir/removed.log"; then pass "$label"; else fail "$label (id $id not removed)"; fi
 }
 
+# make_prune_stubs <dir> writes a stub podman for the prune test. Inputs in <dir>:
+#   images   rows "<repository>:<tag>" in the smoke store
+# Outputs in <dir>:
+#   calls.log       one row per stub call, with the store flags that it carried
+#   violations.log  one row per call that did not carry this smoke's flags
+#   rmi.log         one row per image that the stub rmi saw
+make_prune_stubs() {
+  local dir="$1"
+  mkdir -p "$dir"
+  : > "$dir/calls.log"
+  : > "$dir/violations.log"
+  : > "$dir/rmi.log"
+  cat > "$dir/podman" <<EOF
+#!/usr/bin/env bash
+dir="$dir"
+smoke_root="$SMOKE_STORE_ROOT"
+smoke_runroot="$SMOKE_STORE_RUNROOT"
+root=""; runroot=""; sub=""
+while [ "\$#" -gt 0 ]; do
+  case "\$1" in
+    --root) root="\${2:-}"; shift 2 ;;
+    --runroot) runroot="\${2:-}"; shift 2 ;;
+    *) sub="\$1"; shift; break ;;
+  esac
+done
+echo "podman \$sub root=\$root runroot=\$runroot" >> "\$dir/calls.log"
+if [ "\$root" != "\$smoke_root" ] || [ "\$runroot" != "\$smoke_runroot" ]; then
+  echo "podman \$sub root=\$root runroot=\$runroot" >> "\$dir/violations.log"
+fi
+case "\$sub" in
+  images) shift; cat "\$dir/images" ;;
+  rmi) echo "\${1:-}" >> "\$dir/rmi.log" ;;
+  *) echo "stub podman: unexpected command \$sub" >&2; exit 64 ;;
+esac
+EOF
+  chmod +x "$dir/podman"
+}
+
 expect_never_removed() {
   local dir="$1" id="$2" label="$3"
   if grep -qF "|$id" "$dir/removed.log"; then fail "$label (id $id was removed)"; else pass "$label"; fi
@@ -179,6 +217,69 @@ EOF
 run_cleanup "$C"
 expect_never_removed "$C" "abcdef123456" "C: the smoke's run container survives"
 expect_no_violations "$C" "C: every call carried this smoke's --root and --runroot"
+
+# Scenario D: the lock bypass and the store path guards (P2.3 smoke-store follow-ups).
+# D1: a direct --locked call without the heavy-run lock hint is refused.
+if ( unset HEAVY_LOCK_HELD; require_heavy_lock ) >/dev/null 2>&1; then
+  fail "D1: require_heavy_lock refuses a call without the heavy lock hint"
+else
+  pass "D1: require_heavy_lock refuses a call without the heavy lock hint"
+fi
+# D2: the hint from heavy-run.sh lets the call through.
+if ( HEAVY_LOCK_HELD=1 require_heavy_lock ) >/dev/null 2>&1; then
+  pass "D2: require_heavy_lock accepts the call that heavy-run.sh locked"
+else
+  fail "D2: require_heavy_lock accepts the call that heavy-run.sh locked"
+fi
+# D3: a store root that equals the default podman store is rejected at source time.
+DEFAULT_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/containers/storage"
+if (
+  SMOKE_STORE_ROOT="$DEFAULT_ROOT" SMOKE_STORE_RUNROOT="$SMOKE_STORE_RUNROOT" \
+    bash -c 'source "$1"' _ "$HERE/phase1-smoke-cleanup.sh"
+) >/dev/null 2>&1; then
+  fail "D3: a store root that equals the default podman store is rejected"
+else
+  pass "D3: a store root that equals the default podman store is rejected"
+fi
+# D4: a runroot that equals the default podman runroot is rejected at source time.
+DEFAULT_RUNROOT="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/containers"
+if (
+  SMOKE_STORE_ROOT="$SMOKE_STORE_ROOT" SMOKE_STORE_RUNROOT="$DEFAULT_RUNROOT" \
+    bash -c 'source "$1"' _ "$HERE/phase1-smoke-cleanup.sh"
+) >/dev/null 2>&1; then
+  fail "D4: a runroot that equals the default podman runroot is rejected"
+else
+  pass "D4: a runroot that equals the default podman runroot is rejected"
+fi
+# D5: the paths of this test are not the default store, so the source at the top passed.
+pass "D5: the source at the top accepted this test's store paths"
+if [ "$DEFAULT_ROOT" = "$SMOKE_STORE_ROOT" ]; then
+  fail "D5: the source at the top accepted this test's store paths (test paths equal the default)"
+fi
+
+# Scenario E: the prune keeps the current tag and removes the older storytime tags.
+E="$WORK/e"; make_prune_stubs "$E"
+cat > "$E/images" <<'EOF'
+storytime-phase1-local:a24059d3
+localhost/storytime-phase1-local:a24059d3
+storytime-phase1-local:cb4d8c1f0
+storytime-phase1-local:0bb10b6d1
+localhost/storytime-phase1-local:d28597d87
+other-image:v1
+EOF
+(
+  PATH="$E:$PATH"
+  export PATH
+  prune_old_image_tags "storytime-phase1-local:a24059d3"
+) > "$E/output.txt" 2>&1
+expect_no_violations "$E" "E: every podman call of the prune carried this smoke's --root and --runroot"
+for kept in "storytime-phase1-local:a24059d3" "localhost/storytime-phase1-local:a24059d3"; do
+  if grep -qxF "$kept" "$E/rmi.log"; then fail "E: the current tag $kept survives the prune"; else pass "E: the current tag $kept survives the prune"; fi
+done
+for pruned in "storytime-phase1-local:cb4d8c1f0" "storytime-phase1-local:0bb10b6d1" "localhost/storytime-phase1-local:d28597d87"; do
+  if grep -qxF "$pruned" "$E/rmi.log"; then pass "E: the older tag $pruned is pruned"; else fail "E: the older tag $pruned is pruned"; fi
+done
+if grep -qF "other-image" "$E/rmi.log"; then fail "E: an image of another repository survives the prune"; else pass "E: an image of another repository survives the prune"; fi
 
 rm -rf "$WORK"
 

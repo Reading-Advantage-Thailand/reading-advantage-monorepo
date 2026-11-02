@@ -19,8 +19,36 @@
 # the second. The caller may set these two paths before this file is sourced:
 #   SMOKE_STORE_ROOT     storage root of the smoke store
 #   SMOKE_STORE_RUNROOT  runroot of the smoke store
+#
+# P2.3 smoke-store follow-ups (test-strategy P2.3, Review B r2):
+#   - check_store_paths rejects a store path that equals the default podman store path,
+#     so a caller-set value can never point the cleanup at the shared default store.
+#   - require_heavy_lock refuses a direct `--locked` call that skipped heavy-run.sh.
+#   - prune_old_image_tags removes the older storytime image tags at the end of a run,
+#     so the smoke store does not grow with every run.
 : "${SMOKE_STORE_ROOT:=${XDG_DATA_HOME:-$HOME/.local/share}/storytime-smoke/storage}"
 : "${SMOKE_STORE_RUNROOT:=/run/user/$(id -u)/storytime-smoke}"
+
+# The default podman store paths of this user (podman rootless defaults).
+DEFAULT_PODMAN_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/containers/storage"
+DEFAULT_PODMAN_RUNROOT="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/containers"
+
+# Rejects a smoke store path that points at the default podman store.
+# @returns 1 with a message on stderr when a path equals the default podman store path.
+check_store_paths() {
+  local root runroot
+  root="$(readlink -m "$SMOKE_STORE_ROOT")"
+  runroot="$(readlink -m "$SMOKE_STORE_RUNROOT")"
+  if [ "$root" = "$(readlink -m "$DEFAULT_PODMAN_ROOT")" ]; then
+    echo "SMOKE_STORE_ROOT points at the default podman store ($root); refusing" >&2
+    return 1
+  fi
+  if [ "$runroot" = "$(readlink -m "$DEFAULT_PODMAN_RUNROOT")" ]; then
+    echo "SMOKE_STORE_RUNROOT points at the default podman runroot ($runroot); refusing" >&2
+    return 1
+  fi
+}
+check_store_paths || exit 1
 
 # Every podman and buildah call of the smoke carries both store flags, so the default
 # store is unreachable from this script.
@@ -40,6 +68,47 @@ remove_build_containers() {
       echo "Removed the build container $id ($name)"
     else
       echo "Cannot remove the build container $id ($name)"
+    fi
+  done
+}
+
+# Refuse a direct `--locked` call that skipped heavy-run.sh (P2.3 smoke-store follow-up).
+# heavy-run.sh exports HEAVY_LOCK_HELD=1 to the command it locks; a caller that passes
+# --locked directly does not hold the heavy lock and shares the smoke store with a
+# concurrent run. The smoke refuses that call.
+# @returns 1 with a message on stderr when the heavy lock is not held.
+require_heavy_lock() {
+  if [ "${HEAVY_LOCK_HELD:-}" != "1" ]; then
+    echo "The --locked call must re-enter through heavy-run.sh; refusing the lock bypass" >&2
+    return 1
+  fi
+}
+
+# Remove every storytime image tag of the smoke store except the current run's tag
+# (P2.3 smoke-store follow-up). The store keeps one image per run otherwise and grows
+# with every run. The match covers the bare and the qualified name (`localhost/...`),
+# because podman prints the qualified repository.
+# @param current The image of this run (`storytime-phase1-local:<sha>`).
+prune_old_image_tags() {
+  local current="${1:-}" repo tag image name
+  [ -n "$current" ] || return 0
+  repo="${current%:*}"
+  tag="${current##*:}"
+  "${SMOKE_PODMAN[@]}" images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null |
+  while read -r image; do
+    name="${image##*/}"
+    case "$name" in
+      "$repo:"*) ;;
+      *) continue ;;
+    esac
+    case "$name" in
+      *:\<none\>) continue ;;
+    esac
+    [ "${name##*:}" = "$tag" ] && continue
+    if "${SMOKE_PODMAN[@]}" rmi "$image" >/dev/null 2>&1; then
+      echo "Pruned the older image tag $image"
+    else
+      echo "Cannot prune the older image tag $image"
     fi
   done
 }
