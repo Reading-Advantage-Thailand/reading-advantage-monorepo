@@ -13,6 +13,7 @@
  * The runbook `docs/runbooks/storytime-app-week-sync.md` records the command.
  */
 import { execFileSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
@@ -342,20 +343,62 @@ export interface StagedFile {
   text: string;
 }
 
+/** The file operations of `writeStaged`; a test replaces one to make it fail. */
+export interface StagedOps {
+  rename: (from: string, to: string) => void;
+  /** Writes a file; the flag `wx` fails when the file exists. */
+  write: (path: string, data: string | Buffer, flag: "w" | "wx") => void;
+  remove: (path: string, recursive: boolean) => void;
+}
+
+const defaultOps: StagedOps = {
+  rename: renameSync,
+  write: (path, data, flag) => writeFileSync(path, data, { flag }),
+  remove: (path, recursive) => rmSync(path, { force: true, recursive }),
+};
+
+/** The rollback of a failed write did not finish; the message names what is still wrong. */
+export class RollbackIncompleteError extends Error {
+  /** What the rollback could not do, one entry for each file or folder. */
+  readonly problems: string[];
+
+  /**
+   * @param first The first error of the write.
+   * @param problems What the rollback could not do.
+   */
+  constructor(first: Error, problems: string[]) {
+    super(`${first.message}; the content folder is not fully restored: ${problems.join("; ")}`, {
+      cause: first,
+    });
+    this.name = "RollbackIncompleteError";
+    this.problems = problems;
+  }
+}
+
 /**
- * Writes all files or none of them (adversarial F29).
- *
- * It reads the original bytes of each target, writes every new text to a temporary name in the
- * same folder, and then renames the temporary files onto the targets. On any error it puts the
- * original bytes back, deletes the new files, the temporary files, and the folders it created,
- * and throws the error again.
- * @param files The files to write; the last file is written last.
- * @param rename The rename function; a test replaces it to make a write fail.
- * @throws The first error of the write, after the rollback.
+ * Gives a random suffix for a stage or recovery name.
+ * @returns Twelve hexadecimal digits.
  */
-export function writeStaged(files: StagedFile[], rename: (from: string, to: string) => void = renameSync): void {
+function suffix(): string {
+  return randomBytes(6).toString("hex");
+}
+
+/**
+ * Writes all files or none of them (adversarial F29, Review A F32, Review B F40 and F41).
+ *
+ * It reads the original bytes of each target, writes every new text to an exclusive file with a
+ * random name in the same folder, and then renames the stage files onto the targets. On any
+ * error it tries every restore step and every cleanup step on its own: it puts the original bytes
+ * back, deletes the new files, the stage files, and the folders it created. It keeps the first
+ * error. If an original cannot be put back, it saves a copy next to the target and names both.
+ * @param files The files to write; the last file is written last.
+ * @param overrides File operations to replace; a test uses this to make a step fail.
+ * @throws The first error when the rollback finished, or a `RollbackIncompleteError`.
+ */
+export function writeStaged(files: StagedFile[], overrides: Partial<StagedOps> = {}): void {
+  const ops = { ...defaultOps, ...overrides };
   const originals = new Map<string, Buffer | null>();
-  const temporary: string[] = [];
+  const stages: string[] = [];
   const created: string[] = [];
   const replaced: string[] = [];
   try {
@@ -363,25 +406,70 @@ export function writeStaged(files: StagedFile[], rename: (from: string, to: stri
     for (const { path, text } of files) {
       const folder = mkdirSync(dirname(path), { recursive: true });
       if (folder) created.push(folder);
-      const stage = `${path}.tmp-${process.pid}`;
-      temporary.push(stage);
-      writeFileSync(stage, text);
+      const stage = `${path}.tmp-${suffix()}`;
+      try {
+        ops.write(stage, text, "wx");
+      } catch (error) {
+        // A file that already stands at the stage name is not ours: keep it.
+        if ((error as NodeJS.ErrnoException).code !== "EEXIST") stages.push(stage);
+        throw error;
+      }
+      stages.push(stage);
     }
     files.forEach(({ path }, index) => {
-      rename(temporary[index]!, path);
+      ops.rename(stages[index]!, path);
       replaced.push(path);
     });
-  } catch (error) {
+  } catch (first) {
+    const problems: string[] = [];
     for (const path of replaced) {
-      const original = originals.get(path);
-      if (original) writeFileSync(path, original);
-      else rmSync(path, { force: true });
+      const original = originals.get(path) ?? null;
+      try {
+        if (original) ops.write(path, original, "w");
+        else ops.remove(path, false);
+      } catch (error) {
+        let note = "its new text stays";
+        if (original) {
+          const copy = `${path}.orig-${suffix()}`;
+          try {
+            ops.write(copy, original, "wx");
+            note = `its original is kept in ${copy}`;
+          } catch {
+            note = "its original could not be kept";
+          }
+        }
+        problems.push(`${path} is not restored (${(error as Error).message}); ${note}`);
+      }
     }
-    for (const stage of temporary) rmSync(stage, { force: true });
-    for (const folder of created) rmSync(folder, { recursive: true, force: true });
-    throw error;
+    for (const stage of stages) {
+      try {
+        ops.remove(stage, false);
+      } catch (error) {
+        problems.push(`${stage} is not removed (${(error as Error).message})`);
+      }
+    }
+    for (const folder of created) {
+      try {
+        ops.remove(folder, true);
+      } catch (error) {
+        problems.push(`${folder} is not removed (${(error as Error).message})`);
+      }
+    }
+    if (problems.length > 0) throw new RollbackIncompleteError(first as Error, problems);
+    throw first;
   }
 }
+
+/** The help text of `--help`. */
+const USAGE = [
+  "Usage: node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit <sha> [options]",
+  "  --commit <sha>   The handed-off Workbooks commit, 7 to 40 lower-case hexadecimal digits (required).",
+  "  --level <n>      The Storytime level, 1 to 4 (default 2).",
+  "  --weeks <list>   Week numbers 1 to 32, for example 1-8 or 1,3,5-7 (default 1-8).",
+  "  --source <dir>   The Workbooks repository (default $WORKBOOKS_DIR or ~/Desktop/Workbooks).",
+  "  --help           Print this text and exit 0.",
+  "Exit codes: 0 success; 64 wrong request, nothing changed; 1 other failure, content folder restored.",
+].join("\n");
 
 /** The repository root that holds `apps/storytime`, found from this file. */
 const defaultRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -422,6 +510,10 @@ function mergedFiles(recordPath: string, commit: string, files: string[]): strin
  * @returns The exit code: 0 for success, 1 for a source or contract failure, 64 for a bad request.
  */
 export function receiveMain(argv: string[], root: string = defaultRoot): number {
+  if (argv.includes("--help")) {
+    console.log(USAGE);
+    return 0;
+  }
   let options: RunOptions;
   try {
     options = withResolvedCommit(parseOptions(argv));
@@ -480,7 +572,11 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
       { path: sourcePath, text: `${JSON.stringify(sourceRecord, null, 2)}\n` },
     ]);
   } catch (error) {
-    console.error(`The write failed and the content folder is restored: ${(error as Error).message}`);
+    console.error(
+      error instanceof RollbackIncompleteError
+        ? `The write failed: ${error.message}`
+        : `The write failed and the content folder is restored: ${(error as Error).message}`,
+    );
     return 1;
   }
 
@@ -496,7 +592,7 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
     }
   }
   console.log(
-    `Wrote apps/storytime/content/source.json (${files.length} weeks, ${mediaCount} media files, ${missingCount} missing pictures)`,
+    `Wrote apps/storytime/content/source.json (record ${files.length} weeks; this run ${received.length} weeks, ${mediaCount} media files, ${missingCount} missing pictures)`,
   );
   return 0;
 }

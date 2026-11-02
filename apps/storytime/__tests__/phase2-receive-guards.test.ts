@@ -19,7 +19,13 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
-import { receiveMain, receiveWeek, receiveWeeks, writeStaged } from "../scripts/receive-weeks";
+import {
+  receiveMain,
+  receiveWeek,
+  receiveWeeks,
+  RollbackIncompleteError,
+  writeStaged,
+} from "../scripts/receive-weeks";
 
 const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const shippedDirectory = resolve(app, "content", "l2");
@@ -246,7 +252,7 @@ describe("F29 a failed write restores every file", () => {
     expect(() =>
       writeStaged(
         names.map((name) => ({ path: join(folder, name), text: `new ${name}\n` })),
-        failing,
+        { rename: failing },
       ),
     ).toThrow(/rename failed/);
     const after = snapshot(folder);
@@ -258,8 +264,10 @@ describe("F29 a failed write restores every file", () => {
     const folder = join(work, "f29-created");
     const target = join(folder, "l2", "w01.json");
     expect(() =>
-      writeStaged([{ path: target, text: "new\n" }], () => {
-        throw new Error("rename failed");
+      writeStaged([{ path: target, text: "new\n" }], {
+        rename: () => {
+          throw new Error("rename failed");
+        },
       }),
     ).toThrow(/rename failed/);
     expect(existsSync(folder)).toBe(false);
@@ -275,5 +283,253 @@ describe("F29 a failed write restores every file", () => {
       ["/x/a.json", "a\n"],
       ["/x/b.json", "b\n"],
     ]);
+  });
+});
+
+describe("F32 and F41 the rollback tries every step", () => {
+  const names = ["a.json", "b.json", "c.json", "d.json", "e.json"];
+
+  /**
+   * Builds a folder with three old files; the entries write five files.
+   * @param label The folder name.
+   * @returns The folder, the entries, and the snapshot before the write.
+   */
+  function fixture(label: string): {
+    folder: string;
+    entries: Array<{ path: string; text: string }>;
+    before: Map<string, string>;
+  } {
+    const folder = join(work, `f32-${label}`);
+    mkdirSync(folder, { recursive: true });
+    for (const name of names.slice(0, 3)) writeFileSync(join(folder, name), `old ${name}\n`);
+    return {
+      folder,
+      entries: names.map((name) => ({ path: join(folder, name), text: `new ${name}\n` })),
+      before: snapshot(folder),
+    };
+  }
+
+  /**
+   * Checks that a folder holds the same files and texts as a snapshot.
+   * @param folder The folder.
+   * @param before The snapshot.
+   */
+  function expectSame(folder: string, before: Map<string, string>): void {
+    const after = snapshot(folder);
+    expect([...after.keys()].sort()).toEqual([...before.keys()].sort());
+    for (const [path, text] of before) expect(after.get(path), path).toBe(text);
+  }
+
+  it("restores everything for a rename fault at each position", () => {
+    for (let position = 1; position <= names.length; position += 1) {
+      const { folder, entries, before } = fixture(`rename-${position}`);
+      let calls = 0;
+      expect(
+        () =>
+          writeStaged(entries, {
+            rename: (from, to) => {
+              calls += 1;
+              if (calls === position) throw new Error("rename failed");
+              renameSync(from, to);
+            },
+          }),
+        `position ${position}`,
+      ).toThrow(/^rename failed$/);
+      expectSame(folder, before);
+    }
+  });
+
+  it("restores everything for a fault during staging, with or without a file left behind", () => {
+    for (const leaveFile of [false, true]) {
+      for (let position = 1; position <= names.length; position += 1) {
+        const { folder, entries, before } = fixture(`stage-${leaveFile}-${position}`);
+        let calls = 0;
+        expect(
+          () =>
+            writeStaged(entries, {
+              write: (path, data, flag) => {
+                calls += 1;
+                if (calls === position) {
+                  if (leaveFile) writeFileSync(path, "half", { flag });
+                  throw new Error("stage failed");
+                }
+                writeFileSync(path, data, { flag });
+              },
+            }),
+          `position ${position}`,
+        ).toThrow(/^stage failed$/);
+        expectSame(folder, before);
+      }
+    }
+  });
+
+  it("tries every restore, keeps the first error, and names the file it cannot restore", () => {
+    const { folder, entries, before } = fixture("restore");
+    let renames = 0;
+    let error: unknown;
+    try {
+      writeStaged(entries, {
+        rename: (from, to) => {
+          renames += 1;
+          if (renames === 5) throw new Error("rename failed");
+          renameSync(from, to);
+        },
+        write: (path, data, flag) => {
+          if (flag === "w" && path === join(folder, "b.json")) throw new Error("restore failed");
+          writeFileSync(path, data, { flag });
+        },
+      });
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(RollbackIncompleteError);
+    const failure = error as RollbackIncompleteError;
+    expect(failure.message).toMatch(/rename failed/);
+    expect(failure.message).toMatch(/not fully restored/);
+    expect(failure.message).toMatch(/b\.json is not restored/);
+    expect((failure.cause as Error).message).toBe("rename failed");
+    expect(readFileSync(join(folder, "a.json"), "utf8")).toBe("old a.json\n");
+    expect(readFileSync(join(folder, "c.json"), "utf8")).toBe("old c.json\n");
+    expect(existsSync(join(folder, "d.json"))).toBe(false);
+    expect(existsSync(join(folder, "e.json"))).toBe(false);
+    const recovery = [...snapshot(folder).entries()].filter(([path]) => /b\.json\.orig-/.test(path));
+    expect(recovery).toHaveLength(1);
+    expect(recovery[0]![1]).toBe(before.get("/b.json"));
+    expect(failure.message).toContain(recovery[0]![0].slice(1));
+    expect([...snapshot(folder).keys()].filter((path) => /\.tmp-/.test(path))).toEqual([]);
+  });
+
+  it("names the original that no copy can keep", () => {
+    const { folder, entries } = fixture("no-recovery");
+    let renames = 0;
+    let error: unknown;
+    try {
+      writeStaged(entries, {
+        rename: (from, to) => {
+          renames += 1;
+          if (renames === 5) throw new Error("rename failed");
+          renameSync(from, to);
+        },
+        write: (path, data, flag) => {
+          if (path === join(folder, "a.json") || /a\.json\.orig-/.test(path)) throw new Error("disk gone");
+          writeFileSync(path, data, { flag });
+        },
+      });
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(RollbackIncompleteError);
+    expect((error as Error).message).toMatch(/a\.json is not restored/);
+    expect((error as Error).message).toMatch(/original could not be kept/);
+  });
+
+  it("tries every cleanup step and names a leftover", () => {
+    const { folder, entries, before } = fixture("cleanup");
+    let renames = 0;
+    let error: unknown;
+    try {
+      writeStaged(entries, {
+        rename: (from, to) => {
+          renames += 1;
+          if (renames === 3) throw new Error("rename failed");
+          renameSync(from, to);
+        },
+        remove: (path, recursive) => {
+          if (/d\.json\.tmp-/.test(path)) throw new Error("remove failed");
+          rmSync(path, { force: true, recursive });
+        },
+      });
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(RollbackIncompleteError);
+    expect((error as Error).message).toMatch(/d\.json\.tmp-\w+ is not removed/);
+    const left = [...snapshot(folder).keys()].filter((path) => /\.tmp-/.test(path));
+    expect(left).toHaveLength(1);
+    expect(left[0]).toMatch(/d\.json\.tmp-/);
+    for (const [path, text] of before) expect(readFileSync(join(folder, path), "utf8"), path).toBe(text);
+    expect(existsSync(join(folder, "e.json.tmp-x"))).toBe(false);
+  });
+
+  it("removes a created folder even when an earlier cleanup step fails", () => {
+    const folder = join(work, "f32-created");
+    const target = join(folder, "l2", "w01.json");
+    let error: unknown;
+    try {
+      writeStaged([{ path: target, text: "new\n" }], {
+        rename: () => {
+          throw new Error("rename failed");
+        },
+        remove: (path, recursive) => {
+          if (/w01\.json\.tmp-/.test(path)) throw new Error("remove failed");
+          rmSync(path, { force: true, recursive });
+        },
+      });
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(RollbackIncompleteError);
+    expect(existsSync(folder)).toBe(false);
+  });
+});
+
+describe("F40 the stage name is unpredictable and exclusive", () => {
+  it("writes each stage file with the wx flag under a random name", () => {
+    const folder = join(work, "f40");
+    const seen: Array<{ path: string; flag: string }> = [];
+    for (let round = 0; round < 2; round += 1) {
+      writeStaged([{ path: join(folder, "w.json"), text: `n${round}\n` }], {
+        write: (path, data, flag) => {
+          seen.push({ path, flag });
+          writeFileSync(path, data, { flag });
+        },
+      });
+    }
+    expect(seen).toHaveLength(2);
+    for (const entry of seen) {
+      expect(entry.flag).toBe("wx");
+      expect(entry.path).not.toBe(`${join(folder, "w.json")}.tmp-${process.pid}`);
+      expect(entry.path).toMatch(/w\.json\.tmp-[0-9a-f]{12}$/);
+    }
+    expect(seen[0]!.path).not.toBe(seen[1]!.path);
+  });
+
+  it("does not write through or delete a file that appears at the stage name first", () => {
+    const folder = join(work, "f40-planted");
+    mkdirSync(folder, { recursive: true });
+    let planted = "";
+    expect(() =>
+      writeStaged([{ path: join(folder, "w.json"), text: "new\n" }], {
+        write: (path, data, flag) => {
+          planted = path;
+          writeFileSync(path, "planted\n");
+          writeFileSync(path, data, { flag });
+        },
+      }),
+    ).toThrow(/EEXIST/);
+    expect(readFileSync(planted, "utf8")).toBe("planted\n");
+    expect(existsSync(join(folder, "w.json"))).toBe(false);
+  });
+});
+
+describe("F50 and F52 the summary and the help", () => {
+  it("prints the received weeks and the record weeks apart after a subset run", () => {
+    const root = freshRoot("f50-summary");
+    expect(run(root, "--commit", baseCommit)).toBe(0);
+    const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    expect(receiveMain(["--source", source, "--commit", baseCommit, "--weeks", "1-4"], root)).toBe(0);
+    const last = String(log.mock.calls.at(-1)?.[0]);
+    expect(last).toMatch(/record 8 weeks/);
+    expect(last).toMatch(/this run 4 weeks/);
+  });
+
+  it("prints the arguments and exits 0 for --help, and writes nothing", () => {
+    const root = freshRoot("f52-help");
+    const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    expect(receiveMain(["--help"], root)).toBe(0);
+    const text = log.mock.calls.map((call) => String(call[0])).join("\n");
+    for (const word of ["--commit", "--level", "--weeks", "--source", "64"]) expect(text).toContain(word);
+    expect(snapshot(join(root, "apps/storytime/content")).size).toBe(0);
   });
 });
