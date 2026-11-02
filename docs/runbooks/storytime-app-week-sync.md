@@ -10,8 +10,11 @@ Do not select a different commit during a sync.
 From the monorepo root, run the receiver with the handed-off commit:
 
 ```bash
-pnpm --filter storytime exec tsx scripts/receive-weeks.ts --commit <workbooks-commit>
+node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit <workbooks-commit>
 ```
+
+Do not run the receiver through `pnpm --filter storytime exec`. That form turns every exit code
+into 1, so you cannot see the code 64. Run `--help` to print the arguments.
 
 The receiver reads the weeks from `content/storytime/l<level>/w<nn>.json` in the Workbooks
 repository. It writes them to `apps/storytime/content/l<level>/w<nn>.json`. It also writes
@@ -25,6 +28,7 @@ repository. It writes them to `apps/storytime/content/l<level>/w<nn>.json`. It a
 | `--level` | The Storytime level, 1 to 4. | `2` |
 | `--weeks` | The weeks to receive. | `1-8` |
 | `--source` | The Workbooks repository directory. | `$WORKBOOKS_DIR`, or `~/Desktop/Workbooks` |
+| `--help` | Print the arguments and the exit codes, and exit with code 0. | None. |
 
 The `--weeks` value is a list that a comma separates. Each item is one week number or a rising
 range, for example `1-8`, `5`, or `1,3,5-7`. Each week number is from 1 to 32. The receiver
@@ -38,8 +42,10 @@ refuses any other item, for example `abc`, `3-1`, or `0`.
 2. **Keep the status.** The receiver writes the source text unchanged. It does not change
    `meta.status`.
 3. **Roll back a failed write.** The receiver writes all files, with `source.json` last, or none.
-   If a write fails, the receiver restores each original file and deletes each new file. The
-   receiver then exits with code 1. The content folder stays as it was.
+   If a write fails, the receiver tries every restore step and every cleanup step. It restores
+   each original file and deletes each new file and each stage file. The receiver then exits with
+   code 1. The content folder stays as it was. If a step also fails, the message says that the
+   folder is not fully restored and names each file that is not restored.
 4. **Cover the whole set at a new commit.** A run at a commit that differs from `source.json`
    must cover every file that `source.json` lists. A run that leaves a week out exits with
    code 64 and changes nothing. Run all weeks again.
@@ -52,12 +58,16 @@ refuses any other item, for example `abc`, `3-1`, or `0`.
 | --- | --- |
 | 0 | The receiver wrote all files. |
 | 64 | The request is wrong: a bad argument, a commit that does not exist, or a subset run at a new commit. Nothing changed. |
-| 1 | Another failure: a source file is missing, a week breaks the contract, or a write failed. The content folder is as it was before the run. |
+| 1 | Another failure: a source file is missing, a week breaks the contract, or a write failed. The content folder is as it was before the run, unless the message says that it is not fully restored. |
 
 ## Verify the output
 
 1. Read the receiver output. It lists each written week, its media files, and its missing
-   pictures. A missing picture shows the text `missing:` and the place of the picture.
+   pictures. A missing picture shows the text `missing:` and the place of the picture. The last
+   line gives the number of weeks in the record and the number of weeks in this run.
+   The receiver lists a missing page picture, cover, family-word picture, or song-line picture.
+   Only a missing page picture hides the week from the at-home page (spec FR-5). The other
+   missing pictures do not hide the week.
 2. Compare the commit in `apps/storytime/content/source.json` with the PM hand-off.
 3. Compare the received week names with the PM hand-off.
 4. Run the receiver a second time with the same commit. Then run
@@ -69,3 +79,12 @@ refuses any other item, for example `abc`, `3-1`, or `0`.
 A failed run leaves the content folder as it was. If you suspect a change, run
 `git status apps/storytime/content`. To discard an unwanted change, run
 `git restore apps/storytime/content`. Then correct the cause and run the receiver again.
+
+If the message says that the folder is not fully restored, do these steps:
+
+1. Read the message. It names each file that is not restored.
+2. A file with a name that holds `.orig-` is a copy of an original that the receiver could not put
+   back. Keep this copy until you finish step 3.
+3. Run `git restore apps/storytime/content`. Then delete each file with a name that holds `.tmp-`
+   or `.orig-` in the content folder.
+4. Run `git status apps/storytime/content`. The status must show no change.
