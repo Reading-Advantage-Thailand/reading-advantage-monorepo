@@ -146,7 +146,8 @@ describe('Haunted Library Logic', () => {
   })
 
   it('should stun ghost near door when opened', () => {
-    let state = createLibraryState(mockSentences)
+    // Use deterministic RNG so random ghost placement cannot block the stun check
+    let state = createLibraryState(mockSentences, { difficulty: 'medium' }, () => 0.5)
     const door = state.doors[0]
     const ghost = state.ghosts[0]
     state.ghosts = [ghost]
