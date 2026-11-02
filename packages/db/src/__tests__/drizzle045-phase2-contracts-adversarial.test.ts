@@ -155,6 +155,23 @@ const EXPECTED_MIGRATION_FILES = [
   "0055_eminent_nuke.sql",
   "0056_great_clint_barton.sql",
   "0057_complex_sleeper.sql",
+  "0058_acoustic_lady_deathstrike.sql",
+  "0059_game_challenges.sql",
+  "0060_primary_legacy_id_map.sql",
+  "0061_tutor_compat_views.sql",
+  "0062_primary_student_login.sql",
+  "0063_primary_student_login_settings.sql",
+  "0064_primary_student_session_policy.sql",
+  "0065_primary_class_books.sql",
+  "0066_primary_avatar_profile.sql",
+  "0067_primary_voice.sql",
+  "0068_primary_avatar_shop.sql",
+  "0069_primary_class_quest.sql",
+  "0070_primary_objective_tags.sql",
+  "0071_primary_temporary_password.sql",
+  "0072_primary_stories.sql",
+  "0073_primary_lesson_attempts.sql",
+  "0074_primary_help_events.sql",
 ] as const;
 
 const BARREL_EXPORT_EXCLUDED_FILES: ReadonlySet<string> = new Set([
