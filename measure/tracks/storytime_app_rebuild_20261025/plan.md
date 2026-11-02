@@ -87,7 +87,7 @@
 - [x] 2.4 Timing functions in `packages/read-along`: all sentences of a page (rule 10.3), the word at a time, and the bounds of a word cut. A cut starts 30 ms before the word and ends at its measured end (rule 10.2). Tests on a shipped two-sentence page: AC-6.1. (commit `c2690a4f8`; AC-6.1 green on shipped week 1)
 - [x] 2.5 Blend function for the decodable: the taught graphemes, the tricky words, and the sound-book flag decide whether a word plays sound by sound or whole. Tests on shipped weeks: AC-7.1. (commit `4acc565e8`; AC-7.1 green on shipped weeks 1 and 2)
 - [x] 2.6 Receiving step `apps/storytime/scripts/receive-weeks.ts`: validate, write `apps/storytime/content/l<level>/w<nn>.json`, list the media of each week with its rule, keep `meta.status` from the source. New runbook `docs/runbooks/storytime-app-week-sync.md`. The old runbook `storytime-week-sync.md` stays until task 7.1. Tests: AC-4.1, AC-4.2. (commit `d28597d87`; idempotent second run on `ccf3d95c` makes no diff)
-- [x] 2.7 Phase check: `tsc`, lint, the changed tests, and a change-quality review. (targeted command 122/122 exit 0; tsc exit 0; quality gates 4 of 4 turbo tasks; Phase 1 command 11/11; review in the Green evidence)
+- [x] 2.7 Phase check: `tsc`, lint, the changed tests, and a change-quality review. (commit `dbbedc1ec`; targeted command 122/122 exit 0; tsc exit 0; quality gates 4 of 4 turbo tasks; Phase 1 command 11/11; review in the Green evidence)
 
 ### Phase 2 Red evidence
 
