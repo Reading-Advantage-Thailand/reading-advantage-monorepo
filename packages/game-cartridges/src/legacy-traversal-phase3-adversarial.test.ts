@@ -29,10 +29,25 @@ type FixtureTitle = {
 type FixtureDocument = { readonly titles: readonly FixtureTitle[] };
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const FIXTURE_PATH = resolve(
-  REPO_ROOT,
-  "measure/tracks/apk_legacy_traversal_cutover_20260727/phase3-red-fixtures.json",
-);
+const FIXTURE_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "__fixtures__");
+const FIXTURE_PATH = resolve(FIXTURE_DIR, "legacy-traversal-phase3.json");
+
+const EVIDENCE_PREFIX =
+  "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/";
+
+/**
+ * Maps a fixture evidence artifact path to its package-local copy.
+ * @param artifact Evidence artifact path as recorded in the fixture.
+ * @returns Absolute path of the copied ledger under __fixtures__.
+ */
+function resolveEvidenceArtifact(artifact: string): string {
+  return resolve(
+    FIXTURE_DIR,
+    "legacy-traversal-evidence",
+    artifact.replace(EVIDENCE_PREFIX, ""),
+  );
+}
+
 const TITLE_IDS = [
   "dragon-rider",
   "spellweavers-run",
@@ -118,7 +133,7 @@ describe("legacy traversal Phase 3 adversarial contracts", () => {
       ];
       for (const evidence of evidenceContracts) {
         const artifact = JSON.parse(
-          readFileSync(resolve(REPO_ROOT, evidence.artifact), "utf8"),
+          readFileSync(resolveEvidenceArtifact(evidence.artifact), "utf8"),
         ) as unknown;
         const resolved = resolveJsonPointer(artifact, evidence.json_pointer);
         expect(

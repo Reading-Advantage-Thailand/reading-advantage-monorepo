@@ -38,11 +38,8 @@ type TitleFixture = {
 };
 type FixtureDocument = { readonly titles: readonly TitleFixture[] };
 
-const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const FIXTURE_PATH = resolve(
-  REPO_ROOT,
-  "measure/tracks/apk_legacy_traversal_cutover_20260727/phase3-red-fixtures.json",
-);
+const FIXTURE_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "__fixtures__");
+const FIXTURE_PATH = resolve(FIXTURE_DIR, "legacy-traversal-phase3.json");
 
 function loadFixture(titleId: string): TitleFixture {
   const document = JSON.parse(
