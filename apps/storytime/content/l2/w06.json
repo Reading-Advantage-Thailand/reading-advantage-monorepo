@@ -1,0 +1,4802 @@
+{
+  "approval": {
+    "text": {
+      "status": "approved",
+      "date": "2026-11-01",
+      "words": "3. Covers: Approved",
+      "source": "Owner answer relayed by the PM session, 2026-11-01 07:3x ICT. His item 3 answered section 3 of the PM message: the weeks 2 to 8 English text and the Level 2 Unit 1 cover version 3 look. Approved text file ~/Desktop/print-ready/storytime/text-review/Storytime-Advantage-L2-U1-weeks-2-8-English-text.pdf, SHA-256 57f30792532cdae33ae5e66f069fa822aab58df35cc6b6e2c393ca7fbdbba67c, built 2026-10-30."
+    },
+    "thai": {
+      "status": "approved",
+      "date": "2026-10-22",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82"
+    },
+    "images": {
+      "status": "draft"
+    },
+    "audio": {
+      "status": "draft"
+    },
+    "song": {
+      "status": "draft"
+    },
+    "scripts": {
+      "status": "draft"
+    }
+  },
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "shape": "storytime-week",
+    "level": 2,
+    "week": 6,
+    "unit": 1,
+    "key": "st2/6",
+    "kind": "teach",
+    "periodMinutes": 30,
+    "openingMinutes": 6,
+    "title": "I Can See",
+    "band": "Sprout",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "id": "english.phonics.gpc.t.t",
+      "graphemes": [
+        "t"
+      ],
+      "sound": "/t/",
+      "action": {
+        "en": "Tap one finger on the back of your other hand and say /t/, /t/, /t/.",
+        "th": "ใช้นิ้ว 1 นิ้วเคาะที่หลังมืออีกข้างหนึ่ง แล้วพูด /t/, /t/, /t/"
+      },
+      "audio": "phonemes/daniel/02-t.mp3"
+    },
+    "paSkill": {
+      "en": "the first sound /t/ and the last sound /t/; blend three sounds by ear",
+      "th": "ฟังเสียงแรก /t/ และเสียงสุดท้าย /t/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "trickyWords": [
+      "he",
+      "put",
+      "see"
+    ],
+    "frame": "I can see a ___.",
+    "family": {
+      "name": {
+        "en": "Animals",
+        "th": "สัตว์"
+      },
+      "words": [
+        {
+          "word": "cat",
+          "image": {
+            "prompt": "One gray cat sits and looks at the viewer, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "cat"
+          }
+        },
+        {
+          "word": "dog",
+          "image": {
+            "prompt": "One brown dog stands and wags its tail, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "dog"
+          }
+        },
+        {
+          "word": "bird",
+          "image": {
+            "prompt": "One small blue bird sits on a short branch. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "bird"
+          }
+        },
+        {
+          "word": "fish",
+          "image": {
+            "prompt": "One orange fish swims in a round glass fish bowl. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "fish"
+          }
+        },
+        {
+          "word": "frog",
+          "image": {
+            "prompt": "One green frog sits on a lily pad. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "frog"
+          }
+        },
+        {
+          "word": "duck",
+          "image": {
+            "prompt": "One white duck with an orange beak stands, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "duck"
+          }
+        },
+        {
+          "word": "horse",
+          "image": {
+            "prompt": "One brown horse stands, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "horse"
+          }
+        }
+      ]
+    },
+    "wordWall": [
+      "an",
+      "Nan",
+      "pan",
+      "nap",
+      "am",
+      "man",
+      "map",
+      "Pam",
+      "Sam",
+      "sat",
+      "mat",
+      "tap",
+      "Pat"
+    ]
+  },
+  "opening": {
+    "pa": [
+      {
+        "en": "\"Listen: tiger. What is the first sound? /t/! Listen: cat. What is the last sound? /t/!\"",
+        "th": "\"ฟัง: tiger เสียงแรกคือเสียงอะไร? /t/! ฟัง: cat เสียงสุดท้ายคือเสียงอะไร? /t/!\""
+      },
+      {
+        "en": "\"Listen: ten. What is the first sound? /t/! Listen: hat. What is the last sound? /t/!\"",
+        "th": "\"ฟัง: ten เสียงแรกคือเสียงอะไร? /t/! ฟัง: hat เสียงสุดท้ายคือเสียงอะไร? /t/!\""
+      },
+      {
+        "en": "\"Listen: /t/ - /a/ - /p/. What is the word? Tap! Listen: sss - /a/ - /t/. What is the word? Sat!\"",
+        "th": "\"ฟัง: /t/ - /a/ - /p/ คำนี้คือคำอะไร? Tap! ฟัง: sss - /a/ - /t/ คำนี้คือคำอะไร? Sat!\""
+      },
+      {
+        "en": "\"Listen: /t/ - /e/ - nnn. What is the word? Ten! Listen: mmm - /a/ - /t/. What is the word? Mat!\"",
+        "th": "\"ฟัง: /t/ - /e/ - nnn คำนี้คือคำอะไร? Ten! ฟัง: mmm - /a/ - /t/ คำนี้คือคำอะไร? Mat!\""
+      },
+      {
+        "en": "\"Listen: /t/ - /o/ - /p/. What is the word? Top! Listen: /h/ - /a/ - /t/. What is the word? Hat!\"",
+        "th": "\"ฟัง: /t/ - /o/ - /p/ คำนี้คือคำอะไร? Top! ฟัง: /h/ - /a/ - /t/ คำนี้คือคำอะไร? Hat!\""
+      }
+    ],
+    "audio": [
+      [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/27-e-short.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/10-h.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ]
+    ]
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "title": "I Can See",
+      "cover": {
+        "prompt": "Mia (drawn young, about five years old) stands in a sunny meadow with a wooden fence, a small pond, a low tree, and tall grass and looks around with one hand flat above her eyes; a gray cat sits on the fence, and a white duck swims on the pond. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Mia"
+        ],
+        "caption": "I Can See"
+      },
+      "pages": [
+        {
+          "text": "I can see a cat.",
+          "image": {
+            "prompt": "Mia (drawn young, about five years old) stands in a sunny meadow with a wooden fence, a small pond, a low tree, and tall grass and points at a gray cat that sits on the wooden fence. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can see a dog.",
+          "image": {
+            "prompt": "A black-and-white dog with a wagging tail runs on the grass in the same sunny meadow; Mia (drawn young, about five years old) points at it and smiles. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can see a bird.",
+          "image": {
+            "prompt": "A small blue bird sits on a branch of the low tree in the same sunny meadow; Mia (drawn young, about five years old) looks up and points at it. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can see a fish.",
+          "image": {
+            "prompt": "Mia (drawn young, about five years old) kneels at the edge of the small pond in the same sunny meadow and points at an orange fish in the clear water. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can see a frog.",
+          "image": {
+            "prompt": "A green frog sits on a lily pad in the small pond in the same sunny meadow; Mia (drawn young, about five years old) points at it and laughs. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can see a duck.",
+          "image": {
+            "prompt": "A white duck swims on the small pond in the same sunny meadow; Mia (drawn young, about five years old) waves at it. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can see a horse.",
+          "image": {
+            "prompt": "A white horse looks over the wooden fence in the same sunny meadow; Mia (drawn young, about five years old) points at it. In the tall grass at the front of the picture, the tip of a fluffy golden-brown tail sticks up. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can see Pip!",
+          "image": {
+            "prompt": "Pip the puppy jumps out of the tall grass in the same sunny meadow with a big happy face; Mia (drawn young, about five years old) laughs and opens her arms. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pip",
+              "Mia"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "backWords": [
+        "I",
+        "can",
+        "see",
+        "a",
+        "cat",
+        "dog",
+        "bird",
+        "fish",
+        "frog",
+        "duck",
+        "horse",
+        "Pip"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w06/books/1-i-can-see.mp3",
+        "sentences": [
+          {
+            "sentence": "I can see a cat.",
+            "startTime": 0,
+            "endTime": 1.377,
+            "words": [
+              {
+                "word": "I",
+                "start": 0,
+                "end": 0.16
+              },
+              {
+                "word": "can",
+                "start": 0.16,
+                "end": 0.32
+              },
+              {
+                "word": "see",
+                "start": 0.32,
+                "end": 0.54
+              },
+              {
+                "word": "a",
+                "start": 0.54,
+                "end": 0.66
+              },
+              {
+                "word": "cat",
+                "start": 0.66,
+                "end": 1.377
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "I can see a dog.",
+            "startTime": 2.577,
+            "endTime": 3.916,
+            "words": [
+              {
+                "word": "I",
+                "start": 2.577,
+                "end": 2.797
+              },
+              {
+                "word": "can",
+                "start": 2.797,
+                "end": 2.957
+              },
+              {
+                "word": "see",
+                "start": 2.957,
+                "end": 3.157
+              },
+              {
+                "word": "a",
+                "start": 3.157,
+                "end": 3.277
+              },
+              {
+                "word": "dog",
+                "start": 3.277,
+                "end": 3.916
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "I can see a bird.",
+            "startTime": 5.116,
+            "endTime": 6.225,
+            "words": [
+              {
+                "word": "I",
+                "start": 5.116,
+                "end": 5.256
+              },
+              {
+                "word": "can",
+                "start": 5.256,
+                "end": 5.376
+              },
+              {
+                "word": "see",
+                "start": 5.376,
+                "end": 5.576
+              },
+              {
+                "word": "a",
+                "start": 5.576,
+                "end": 5.676
+              },
+              {
+                "word": "bird",
+                "start": 5.676,
+                "end": 6.225
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "I can see a fish.",
+            "startTime": 7.425,
+            "endTime": 8.776,
+            "words": [
+              {
+                "word": "I",
+                "start": 7.425,
+                "end": 7.625
+              },
+              {
+                "word": "can",
+                "start": 7.625,
+                "end": 7.765
+              },
+              {
+                "word": "see",
+                "start": 7.765,
+                "end": 7.965
+              },
+              {
+                "word": "a",
+                "start": 7.965,
+                "end": 8.065
+              },
+              {
+                "word": "fish",
+                "start": 8.065,
+                "end": 8.776
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "I can see a frog.",
+            "startTime": 9.976,
+            "endTime": 11.391,
+            "words": [
+              {
+                "word": "I",
+                "start": 9.976,
+                "end": 10.176
+              },
+              {
+                "word": "can",
+                "start": 10.176,
+                "end": 10.356
+              },
+              {
+                "word": "see",
+                "start": 10.356,
+                "end": 10.596
+              },
+              {
+                "word": "a",
+                "start": 10.596,
+                "end": 10.736
+              },
+              {
+                "word": "frog",
+                "start": 10.736,
+                "end": 11.391
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "I can see a duck.",
+            "startTime": 12.591,
+            "endTime": 13.82,
+            "words": [
+              {
+                "word": "I",
+                "start": 12.591,
+                "end": 12.791
+              },
+              {
+                "word": "can",
+                "start": 12.791,
+                "end": 12.931
+              },
+              {
+                "word": "see",
+                "start": 12.931,
+                "end": 13.131
+              },
+              {
+                "word": "a",
+                "start": 13.131,
+                "end": 13.251
+              },
+              {
+                "word": "duck",
+                "start": 13.251,
+                "end": 13.82
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "I can see a horse.",
+            "startTime": 15.02,
+            "endTime": 16.363,
+            "words": [
+              {
+                "word": "I",
+                "start": 15.02,
+                "end": 15.18
+              },
+              {
+                "word": "can",
+                "start": 15.18,
+                "end": 15.34
+              },
+              {
+                "word": "see",
+                "start": 15.34,
+                "end": 15.56
+              },
+              {
+                "word": "a",
+                "start": 15.56,
+                "end": 15.7
+              },
+              {
+                "word": "horse",
+                "start": 15.7,
+                "end": 16.363
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "I can see Pip!",
+            "startTime": 17.563,
+            "endTime": 18.885,
+            "words": [
+              {
+                "word": "I",
+                "start": 17.563,
+                "end": 17.703
+              },
+              {
+                "word": "can",
+                "start": 17.703,
+                "end": 17.843
+              },
+              {
+                "word": "see",
+                "start": 17.843,
+                "end": 18.123
+              },
+              {
+                "word": "Pip",
+                "start": 18.243,
+                "end": 18.885
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w06/books/1-i-can-see-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "I can see a cat.",
+            "startTime": 0,
+            "endTime": 1.848,
+            "words": [
+              {
+                "word": "I",
+                "start": 0,
+                "end": 0.18
+              },
+              {
+                "word": "can",
+                "start": 0.18,
+                "end": 0.38
+              },
+              {
+                "word": "see",
+                "start": 0.38,
+                "end": 0.72
+              },
+              {
+                "word": "a",
+                "start": 0.72,
+                "end": 0.94
+              },
+              {
+                "word": "cat",
+                "start": 0.94,
+                "end": 1.848
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "I can see a dog.",
+            "startTime": 3.048,
+            "endTime": 4.643,
+            "words": [
+              {
+                "word": "I",
+                "start": 3.048,
+                "end": 3.308
+              },
+              {
+                "word": "can",
+                "start": 3.308,
+                "end": 3.508
+              },
+              {
+                "word": "see",
+                "start": 3.508,
+                "end": 3.808
+              },
+              {
+                "word": "a",
+                "start": 3.808,
+                "end": 3.968
+              },
+              {
+                "word": "dog",
+                "start": 3.968,
+                "end": 4.643
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "I can see a bird.",
+            "startTime": 5.843,
+            "endTime": 7.327,
+            "words": [
+              {
+                "word": "I",
+                "start": 5.843,
+                "end": 6.043
+              },
+              {
+                "word": "can",
+                "start": 6.043,
+                "end": 6.203
+              },
+              {
+                "word": "see",
+                "start": 6.203,
+                "end": 6.483
+              },
+              {
+                "word": "a",
+                "start": 6.483,
+                "end": 6.623
+              },
+              {
+                "word": "bird",
+                "start": 6.623,
+                "end": 7.327
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "I can see a fish.",
+            "startTime": 8.527,
+            "endTime": 10.429,
+            "words": [
+              {
+                "word": "I",
+                "start": 8.527,
+                "end": 8.767
+              },
+              {
+                "word": "can",
+                "start": 8.767,
+                "end": 8.967
+              },
+              {
+                "word": "see",
+                "start": 8.967,
+                "end": 9.287
+              },
+              {
+                "word": "a",
+                "start": 9.287,
+                "end": 9.487
+              },
+              {
+                "word": "fish",
+                "start": 9.487,
+                "end": 10.429
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "I can see a frog.",
+            "startTime": 11.629,
+            "endTime": 13.765,
+            "words": [
+              {
+                "word": "I",
+                "start": 11.629,
+                "end": 11.909
+              },
+              {
+                "word": "can",
+                "start": 11.909,
+                "end": 12.129
+              },
+              {
+                "word": "see",
+                "start": 12.129,
+                "end": 12.489
+              },
+              {
+                "word": "a",
+                "start": 12.489,
+                "end": 12.669
+              },
+              {
+                "word": "frog",
+                "start": 12.669,
+                "end": 13.765
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "I can see a duck.",
+            "startTime": 14.965,
+            "endTime": 16.646,
+            "words": [
+              {
+                "word": "I",
+                "start": 14.965,
+                "end": 15.145
+              },
+              {
+                "word": "can",
+                "start": 15.145,
+                "end": 15.325
+              },
+              {
+                "word": "see",
+                "start": 15.325,
+                "end": 15.625
+              },
+              {
+                "word": "a",
+                "start": 15.625,
+                "end": 15.785
+              },
+              {
+                "word": "duck",
+                "start": 15.785,
+                "end": 16.646
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "I can see a horse.",
+            "startTime": 17.846,
+            "endTime": 19.728,
+            "words": [
+              {
+                "word": "I",
+                "start": 17.846,
+                "end": 18.066
+              },
+              {
+                "word": "can",
+                "start": 18.066,
+                "end": 18.286
+              },
+              {
+                "word": "see",
+                "start": 18.286,
+                "end": 18.626
+              },
+              {
+                "word": "a",
+                "start": 18.626,
+                "end": 18.846
+              },
+              {
+                "word": "horse",
+                "start": 18.846,
+                "end": 19.728
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "I can see Pip!",
+            "startTime": 20.928,
+            "endTime": 22.556,
+            "words": [
+              {
+                "word": "I",
+                "start": 20.928,
+                "end": 21.148
+              },
+              {
+                "word": "can",
+                "start": 21.148,
+                "end": 21.348
+              },
+              {
+                "word": "see",
+                "start": 21.348,
+                "end": 21.628
+              },
+              {
+                "word": "Pip",
+                "start": 21.628,
+                "end": 22.556
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "decodable",
+      "title": "Tap, Tap!",
+      "cover": {
+        "prompt": "Pat (drawn young, about five years old) and Sam (drawn young, about five years old) sit on two soft green mats in the book corner of a bright kindergarten classroom and listen, each with one hand behind an ear. The book corner has a big basket of books, a big paper map on the wall, and a toy kitchen with a small red toy pan. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Pat",
+          "Sam"
+        ],
+        "caption": "Tap, Tap!"
+      },
+      "pages": [
+        {
+          "text": "Pat sat on a mat.",
+          "image": {
+            "prompt": "Pat (drawn young, about five years old) sits on one of two soft green mats in the book corner of a bright kindergarten classroom and smiles. The book corner has a big basket of books, a big paper map on the wall, and a toy kitchen with a small red toy pan. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pat"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Sam sat on a mat.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) sits down on the second soft green mat, next to Pat, in the same book corner. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam",
+              "Pat"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Tap, tap, tap!",
+          "image": {
+            "prompt": "Pat (drawn young, about five years old) and Sam (drawn young, about five years old) sit on their mats in the same book corner and look up with surprised faces. Behind the big basket of books, the tip of a fluffy golden-brown tail shows. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pat",
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pat can see a map.",
+          "image": {
+            "prompt": "Pat (drawn young, about five years old) lifts one corner of the big paper map on the wall of the same book corner and looks at the empty wall behind it. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pat"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Sam can see a pan.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) looks into the small red toy pan of the toy kitchen in the same book corner; it is empty. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Tap, tap, tap!",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) turns around in the same book corner and looks at the big basket of books; Pat (drawn young, about five years old) still looks at the big paper map. Behind the big basket of books, the tip of a fluffy golden-brown tail taps on the floor. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam",
+              "Pat"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "He can see Pip!",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) looks behind the big basket of books in the same book corner and points with a big smile: Pip the puppy lies there and wags his tail. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam",
+              "Pip"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pip sat on the mat!",
+          "image": {
+            "prompt": "Pip the puppy sits on a soft green mat in the same book corner, between Pat (drawn young, about five years old) and Sam (drawn young, about five years old); his tail taps the mat, and Pat and Sam laugh. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pip",
+              "Pat",
+              "Sam"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "soundsPage": {
+        "element": "t",
+        "words": [
+          "Pat",
+          "sat",
+          "mat",
+          "tap"
+        ],
+        "tricky": [
+          "he",
+          "see"
+        ]
+      },
+      "backWords": [
+        "Pat",
+        "Sam",
+        "sat",
+        "mat",
+        "tap",
+        "map",
+        "pan",
+        "he",
+        "see"
+      ],
+      "names": [
+        "Pip"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w06/books/2-tap-tap.mp3",
+        "sentences": [
+          {
+            "sentence": "Pat sat on a mat.",
+            "startTime": 0,
+            "endTime": 1.241,
+            "words": [
+              {
+                "word": "Pat",
+                "start": 0,
+                "end": 0.22
+              },
+              {
+                "word": "sat",
+                "start": 0.22,
+                "end": 0.46
+              },
+              {
+                "word": "on",
+                "start": 0.46,
+                "end": 0.64
+              },
+              {
+                "word": "a",
+                "start": 0.64,
+                "end": 0.72
+              },
+              {
+                "word": "mat",
+                "start": 0.72,
+                "end": 1.241
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Sam sat on a mat.",
+            "startTime": 2.441,
+            "endTime": 3.844,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 2.441,
+                "end": 2.861
+              },
+              {
+                "word": "sat",
+                "start": 2.861,
+                "end": 3.181
+              },
+              {
+                "word": "on",
+                "start": 3.181,
+                "end": 3.361
+              },
+              {
+                "word": "a",
+                "start": 3.361,
+                "end": 3.441
+              },
+              {
+                "word": "mat",
+                "start": 3.441,
+                "end": 3.844
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Tap, tap, tap!",
+            "startTime": 5.044,
+            "endTime": 6.79,
+            "words": [
+              {
+                "word": "Tap",
+                "start": 5.044,
+                "end": 5.364
+              },
+              {
+                "word": "tap",
+                "start": 5.644,
+                "end": 5.904
+              },
+              {
+                "word": "tap",
+                "start": 6.144,
+                "end": 6.79
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Pat can see a map.",
+            "startTime": 7.99,
+            "endTime": 9.494,
+            "words": [
+              {
+                "word": "Pat",
+                "start": 7.99,
+                "end": 8.27
+              },
+              {
+                "word": "can",
+                "start": 8.27,
+                "end": 8.61
+              },
+              {
+                "word": "see",
+                "start": 8.61,
+                "end": 8.83
+              },
+              {
+                "word": "a",
+                "start": 8.83,
+                "end": 8.93
+              },
+              {
+                "word": "map",
+                "start": 8.93,
+                "end": 9.494
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Sam can see a pan.",
+            "startTime": 10.694,
+            "endTime": 12.04,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 10.694,
+                "end": 11.014
+              },
+              {
+                "word": "can",
+                "start": 11.014,
+                "end": 11.274
+              },
+              {
+                "word": "see",
+                "start": 11.274,
+                "end": 11.474
+              },
+              {
+                "word": "a",
+                "start": 11.474,
+                "end": 11.554
+              },
+              {
+                "word": "pan",
+                "start": 11.554,
+                "end": 12.04
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Tap, tap, tap!",
+            "startTime": 13.24,
+            "endTime": 14.986,
+            "words": [
+              {
+                "word": "Tap",
+                "start": 13.24,
+                "end": 13.56
+              },
+              {
+                "word": "tap",
+                "start": 13.84,
+                "end": 14.1
+              },
+              {
+                "word": "tap",
+                "start": 14.34,
+                "end": 14.986
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "He can see Pip!",
+            "startTime": 16.186,
+            "endTime": 17.405,
+            "words": [
+              {
+                "word": "He",
+                "start": 16.186,
+                "end": 16.346
+              },
+              {
+                "word": "can",
+                "start": 16.346,
+                "end": 16.506
+              },
+              {
+                "word": "see",
+                "start": 16.506,
+                "end": 16.766
+              },
+              {
+                "word": "Pip",
+                "start": 16.766,
+                "end": 17.405
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Pip sat on the mat!",
+            "startTime": 18.605,
+            "endTime": 19.91,
+            "words": [
+              {
+                "word": "Pip",
+                "start": 18.605,
+                "end": 18.885
+              },
+              {
+                "word": "sat",
+                "start": 18.885,
+                "end": 19.125
+              },
+              {
+                "word": "on",
+                "start": 19.125,
+                "end": 19.325
+              },
+              {
+                "word": "the",
+                "start": 19.325,
+                "end": 19.425
+              },
+              {
+                "word": "mat",
+                "start": 19.425,
+                "end": 19.91
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w06/books/2-tap-tap-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "Pat sat on a mat.",
+            "startTime": 0,
+            "endTime": 1.75,
+            "words": [
+              {
+                "word": "Pat",
+                "start": 0,
+                "end": 0.28
+              },
+              {
+                "word": "sat",
+                "start": 0.28,
+                "end": 0.66
+              },
+              {
+                "word": "on",
+                "start": 0.66,
+                "end": 0.9
+              },
+              {
+                "word": "a",
+                "start": 0.9,
+                "end": 1
+              },
+              {
+                "word": "mat",
+                "start": 1,
+                "end": 1.75
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Sam sat on a mat.",
+            "startTime": 2.95,
+            "endTime": 4.744,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 2.95,
+                "end": 3.41
+              },
+              {
+                "word": "sat",
+                "start": 3.41,
+                "end": 3.75
+              },
+              {
+                "word": "on",
+                "start": 3.75,
+                "end": 4.03
+              },
+              {
+                "word": "a",
+                "start": 4.03,
+                "end": 4.13
+              },
+              {
+                "word": "mat",
+                "start": 4.13,
+                "end": 4.744
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Tap, tap, tap!",
+            "startTime": 5.944,
+            "endTime": 8.069,
+            "words": [
+              {
+                "word": "Tap",
+                "start": 5.944,
+                "end": 6.364
+              },
+              {
+                "word": "tap",
+                "start": 6.664,
+                "end": 6.984
+              },
+              {
+                "word": "tap",
+                "start": 7.364,
+                "end": 8.069
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Pat can see a map.",
+            "startTime": 9.269,
+            "endTime": 10.967,
+            "words": [
+              {
+                "word": "Pat",
+                "start": 9.269,
+                "end": 9.569
+              },
+              {
+                "word": "can",
+                "start": 9.569,
+                "end": 9.869
+              },
+              {
+                "word": "see",
+                "start": 9.869,
+                "end": 10.129
+              },
+              {
+                "word": "a",
+                "start": 10.129,
+                "end": 10.269
+              },
+              {
+                "word": "map",
+                "start": 10.269,
+                "end": 10.967
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Sam can see a pan.",
+            "startTime": 12.167,
+            "endTime": 14.044,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 12.167,
+                "end": 12.567
+              },
+              {
+                "word": "can",
+                "start": 12.567,
+                "end": 12.867
+              },
+              {
+                "word": "see",
+                "start": 12.867,
+                "end": 13.147
+              },
+              {
+                "word": "a",
+                "start": 13.147,
+                "end": 13.267
+              },
+              {
+                "word": "pan",
+                "start": 13.267,
+                "end": 14.044
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Tap, tap, tap!",
+            "startTime": 15.244,
+            "endTime": 17.369,
+            "words": [
+              {
+                "word": "Tap",
+                "start": 15.244,
+                "end": 15.664
+              },
+              {
+                "word": "tap",
+                "start": 15.964,
+                "end": 16.284
+              },
+              {
+                "word": "tap",
+                "start": 16.664,
+                "end": 17.369
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "He can see Pip!",
+            "startTime": 18.569,
+            "endTime": 20.334,
+            "words": [
+              {
+                "word": "He",
+                "start": 18.569,
+                "end": 18.789
+              },
+              {
+                "word": "can",
+                "start": 18.789,
+                "end": 19.049
+              },
+              {
+                "word": "see",
+                "start": 19.049,
+                "end": 19.429
+              },
+              {
+                "word": "Pip",
+                "start": 19.429,
+                "end": 20.334
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Pip sat on the mat!",
+            "startTime": 21.534,
+            "endTime": 23.395,
+            "words": [
+              {
+                "word": "Pip",
+                "start": 21.534,
+                "end": 21.874
+              },
+              {
+                "word": "sat",
+                "start": 21.874,
+                "end": 22.234
+              },
+              {
+                "word": "on",
+                "start": 22.234,
+                "end": 22.494
+              },
+              {
+                "word": "the",
+                "start": 22.494,
+                "end": 22.634
+              },
+              {
+                "word": "mat",
+                "start": 22.634,
+                "end": 23.395
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    }
+  ],
+  "song": {
+    "title": "I Can See a Cat",
+    "styleBrief": "Cheerful classroom animal song for a kindergarten English class, 100 bpm, C major, the melody between C4 and C5, playful and bouncy, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
+    "bpm": 100,
+    "lyricSheet": "[Verse]\nI can see a cat. Meow, meow!\nI can see a dog. Woof, woof!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!\n\n[Verse]\nI can see a bird. Tweet, tweet!\nI can see a fish. Swim, swim!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!\n\n[Verse]\nI can see a frog. Hop, hop!\nI can see a duck. Quack, quack!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!",
+    "lines": [
+      {
+        "text": "I can see a cat. Meow, meow!",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {
+          "prompt": "A gray cat sits on a wooden fence and opens its mouth wide. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/point-forward.jpg"
+        }
+      },
+      {
+        "text": "I can see a dog. Woof, woof!",
+        "part": "verse",
+        "gesture": "look",
+        "image": {
+          "prompt": "A brown dog runs on green grass with its mouth open and its tail up. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/look.jpg"
+        }
+      },
+      {
+        "text": "Tap, tap, tap! Look and see!",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {
+          "prompt": "Mia, Ben, and May (drawn young, about five years old) sit on the grass in a sunny meadow and clap their hands with big smiles. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Mia",
+            "Ben",
+            "May"
+          ],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/clap.jpg"
+        },
+        "note": {
+          "en": "Sing \"tap\" with a short /t/ and a small puff of air, with no \"uh\" after the /t/.",
+          "th": "ร้อง \"tap\" โดยออกเสียง /t/ สั้น ๆ และมีลมพ่นออกมาเล็กน้อย ไม่มี \"uh\" (เออะ) ตามหลังเสียง /t/"
+        }
+      },
+      {
+        "text": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "part": "chorus",
+        "gesture": "look",
+        "image": {
+          "prompt": "Mia (drawn young, about five years old) stands in a sunny meadow with one hand flat above her eyes and looks at a gray cat, a white duck, and a green frog. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Mia"
+          ],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/look.jpg"
+        }
+      },
+      {
+        "text": "I can see a bird. Tweet, tweet!",
+        "part": "verse",
+        "gesture": "stretch up",
+        "image": {
+          "prompt": "A small blue bird sits on a branch of a low tree with its beak open. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/stretch-up.jpg"
+        }
+      },
+      {
+        "text": "I can see a fish. Swim, swim!",
+        "part": "verse",
+        "gesture": "sway",
+        "image": {
+          "prompt": "An orange fish swims in clear blue water. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/sway.jpg"
+        }
+      },
+      {
+        "text": "Tap, tap, tap! Look and see!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 2
+      },
+      {
+        "text": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 3
+      },
+      {
+        "text": "I can see a frog. Hop, hop!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {
+          "prompt": "A green frog hops from a lily pad. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/hop.jpg"
+        }
+      },
+      {
+        "text": "I can see a duck. Quack, quack!",
+        "part": "verse",
+        "gesture": "march",
+        "image": {
+          "prompt": "A white duck walks on the grass by a pond. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w06/song-lines/march.jpg"
+        }
+      },
+      {
+        "text": "Tap, tap, tap! Look and see!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 2
+      },
+      {
+        "text": "What can you see? I can see an animal!",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 3
+      }
+    ],
+    "choreography": {
+      "outro": {
+        "en": "After the last line, the class taps one finger on the other hand: /t/, /t/, /t/ (the action of the letter t).",
+        "th": "หลังบรรทัดสุดท้าย ทั้งชั้นใช้นิ้ว 1 นิ้วเคาะที่หลังมืออีกข้างหนึ่ง: /t/, /t/, /t/ (ท่าประจำเสียง t)"
+      }
+    },
+    "times": [
+      {
+        "sentence": "I can see a cat. Meow, meow!",
+        "startTime": 0.0,
+        "endTime": 6.42,
+        "words": [
+          {
+            "word": "I",
+            "start": 0.0,
+            "end": 0.48
+          },
+          {
+            "word": "can",
+            "start": 0.48,
+            "end": 0.94
+          },
+          {
+            "word": "see",
+            "start": 0.94,
+            "end": 1.56
+          },
+          {
+            "word": "a",
+            "start": 1.56,
+            "end": 2.26
+          },
+          {
+            "word": "cat.",
+            "start": 2.26,
+            "end": 2.98
+          },
+          {
+            "word": "Meow,",
+            "start": 4.54,
+            "end": 5.32
+          },
+          {
+            "word": "meow!",
+            "start": 6.02,
+            "end": 6.42
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a dog. Woof, woof!",
+        "startTime": 8.78,
+        "endTime": 13.9,
+        "words": [
+          {
+            "word": "I",
+            "start": 8.78,
+            "end": 9.86
+          },
+          {
+            "word": "can",
+            "start": 9.86,
+            "end": 10.12
+          },
+          {
+            "word": "see",
+            "start": 10.12,
+            "end": 10.52
+          },
+          {
+            "word": "a",
+            "start": 10.52,
+            "end": 10.8
+          },
+          {
+            "word": "dog.",
+            "start": 10.8,
+            "end": 11.24
+          },
+          {
+            "word": "Woof,",
+            "start": 12.06,
+            "end": 12.66
+          },
+          {
+            "word": "woof!",
+            "start": 12.96,
+            "end": 13.9
+          }
+        ]
+      },
+      {
+        "sentence": "Tap, tap, tap! Look and see!",
+        "startTime": 14.5,
+        "endTime": 18.36,
+        "words": [
+          {
+            "word": "Tap,",
+            "start": 14.5,
+            "end": 14.76
+          },
+          {
+            "word": "tap,",
+            "start": 15.08,
+            "end": 15.32
+          },
+          {
+            "word": "tap!",
+            "start": 15.6,
+            "end": 16.04
+          },
+          {
+            "word": "Look",
+            "start": 16.58,
+            "end": 17.12
+          },
+          {
+            "word": "and",
+            "start": 17.12,
+            "end": 17.82
+          },
+          {
+            "word": "see!",
+            "start": 17.82,
+            "end": 18.36
+          }
+        ]
+      },
+      {
+        "sentence": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "startTime": 19.02,
+        "endTime": 27.42,
+        "words": [
+          {
+            "word": "What",
+            "start": 19.02,
+            "end": 19.56
+          },
+          {
+            "word": "can",
+            "start": 19.56,
+            "end": 20.08
+          },
+          {
+            "word": "you",
+            "start": 20.08,
+            "end": 20.32
+          },
+          {
+            "word": "see?",
+            "start": 20.32,
+            "end": 20.76
+          },
+          {
+            "word": "I",
+            "start": 21.44,
+            "end": 21.88
+          },
+          {
+            "word": "can",
+            "start": 21.88,
+            "end": 22.12
+          },
+          {
+            "word": "see",
+            "start": 22.12,
+            "end": 22.52
+          },
+          {
+            "word": "an",
+            "start": 22.52,
+            "end": 22.82
+          },
+          {
+            "word": "animal!",
+            "start": 22.82,
+            "end": 23.5
+          },
+          {
+            "word": "What",
+            "start": 23.5,
+            "end": 24.3
+          },
+          {
+            "word": "can",
+            "start": 24.3,
+            "end": 24.88
+          },
+          {
+            "word": "you",
+            "start": 24.88,
+            "end": 25.12
+          },
+          {
+            "word": "see?",
+            "start": 25.12,
+            "end": 25.48
+          },
+          {
+            "word": "I",
+            "start": 25.66,
+            "end": 25.68
+          },
+          {
+            "word": "can",
+            "start": 25.68,
+            "end": 25.8
+          },
+          {
+            "word": "see",
+            "start": 25.8,
+            "end": 26.08
+          },
+          {
+            "word": "an",
+            "start": 26.08,
+            "end": 26.4
+          },
+          {
+            "word": "animal",
+            "start": 26.4,
+            "end": 27.42
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a bird. Tweet, tweet!",
+        "startTime": 28.5,
+        "endTime": 32.7,
+        "words": [
+          {
+            "word": "I",
+            "start": 28.5,
+            "end": 29.2
+          },
+          {
+            "word": "can",
+            "start": 29.2,
+            "end": 29.72
+          },
+          {
+            "word": "see",
+            "start": 29.72,
+            "end": 30.38
+          },
+          {
+            "word": "a",
+            "start": 30.38,
+            "end": 31.04
+          },
+          {
+            "word": "bird.",
+            "start": 31.04,
+            "end": 31.58
+          },
+          {
+            "word": "Tweet,",
+            "start": 31.58,
+            "end": 32.08
+          },
+          {
+            "word": "tweet!",
+            "start": 32.08,
+            "end": 32.7
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a fish. Swim, swim!",
+        "startTime": 33.5,
+        "endTime": 37.56,
+        "words": [
+          {
+            "word": "I",
+            "start": 33.5,
+            "end": 34.06
+          },
+          {
+            "word": "can",
+            "start": 34.06,
+            "end": 34.54
+          },
+          {
+            "word": "see",
+            "start": 34.54,
+            "end": 35.2
+          },
+          {
+            "word": "a",
+            "start": 35.2,
+            "end": 35.82
+          },
+          {
+            "word": "fish.",
+            "start": 35.82,
+            "end": 36.34
+          },
+          {
+            "word": "Swim,",
+            "start": 36.34,
+            "end": 36.98
+          },
+          {
+            "word": "swim!",
+            "start": 36.98,
+            "end": 37.56
+          }
+        ]
+      },
+      {
+        "sentence": "Tap, tap, tap! Look and see!",
+        "startTime": 38.2,
+        "endTime": 42.36,
+        "words": [
+          {
+            "word": "Tap,",
+            "start": 38.2,
+            "end": 38.72
+          },
+          {
+            "word": "tap,",
+            "start": 38.72,
+            "end": 39.44
+          },
+          {
+            "word": "tap!",
+            "start": 39.44,
+            "end": 39.94
+          },
+          {
+            "word": "Look",
+            "start": 40.24,
+            "end": 41.14
+          },
+          {
+            "word": "and",
+            "start": 41.14,
+            "end": 41.82
+          },
+          {
+            "word": "see!",
+            "start": 41.82,
+            "end": 42.36
+          }
+        ]
+      },
+      {
+        "sentence": "What can you see? I can see an animal! (What can you see? I can see an animal!)",
+        "startTime": 42.36,
+        "endTime": 51.44,
+        "words": [
+          {
+            "word": "What",
+            "start": 42.36,
+            "end": 43.52
+          },
+          {
+            "word": "can",
+            "start": 43.52,
+            "end": 44.08
+          },
+          {
+            "word": "you",
+            "start": 44.08,
+            "end": 44.32
+          },
+          {
+            "word": "see?",
+            "start": 44.32,
+            "end": 44.82
+          },
+          {
+            "word": "I",
+            "start": 45.46,
+            "end": 45.88
+          },
+          {
+            "word": "can",
+            "start": 45.88,
+            "end": 46.14
+          },
+          {
+            "word": "see",
+            "start": 46.14,
+            "end": 46.54
+          },
+          {
+            "word": "an",
+            "start": 46.54,
+            "end": 46.82
+          },
+          {
+            "word": "animal",
+            "start": 46.82,
+            "end": 47.64
+          },
+          {
+            "word": "What",
+            "start": 47.64,
+            "end": 48.3
+          },
+          {
+            "word": "can",
+            "start": 48.3,
+            "end": 48.86
+          },
+          {
+            "word": "you",
+            "start": 48.86,
+            "end": 49.12
+          },
+          {
+            "word": "see?",
+            "start": 49.12,
+            "end": 49.46
+          },
+          {
+            "word": "I",
+            "start": 49.64,
+            "end": 49.68
+          },
+          {
+            "word": "can",
+            "start": 49.68,
+            "end": 49.82
+          },
+          {
+            "word": "see",
+            "start": 49.82,
+            "end": 50.08
+          },
+          {
+            "word": "an",
+            "start": 50.08,
+            "end": 50.4
+          },
+          {
+            "word": "animal",
+            "start": 50.4,
+            "end": 51.44
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a frog. Hop, hop!",
+        "startTime": 51.44,
+        "endTime": 56.76,
+        "words": [
+          {
+            "word": "I",
+            "start": 51.44,
+            "end": 53.28
+          },
+          {
+            "word": "can",
+            "start": 53.28,
+            "end": 53.7
+          },
+          {
+            "word": "see",
+            "start": 53.7,
+            "end": 54.4
+          },
+          {
+            "word": "a",
+            "start": 54.4,
+            "end": 55.04
+          },
+          {
+            "word": "frog.",
+            "start": 55.04,
+            "end": 55.52
+          },
+          {
+            "word": "Hop,",
+            "start": 55.52,
+            "end": 56.12
+          },
+          {
+            "word": "hop!",
+            "start": 56.12,
+            "end": 56.76
+          }
+        ]
+      },
+      {
+        "sentence": "I can see a duck. Quack, quack!",
+        "startTime": 56.76,
+        "endTime": 61.62,
+        "words": [
+          {
+            "word": "I",
+            "start": 56.76,
+            "end": 58.04
+          },
+          {
+            "word": "can",
+            "start": 58.04,
+            "end": 58.54
+          },
+          {
+            "word": "see",
+            "start": 58.54,
+            "end": 59.32
+          },
+          {
+            "word": "a",
+            "start": 59.32,
+            "end": 59.88
+          },
+          {
+            "word": "duck.",
+            "start": 59.88,
+            "end": 60.32
+          },
+          {
+            "word": "Quack,",
+            "start": 60.32,
+            "end": 61.02
+          },
+          {
+            "word": "quack!",
+            "start": 61.02,
+            "end": 61.62
+          }
+        ]
+      },
+      {
+        "sentence": "Tap, tap, tap! Look and see!",
+        "startTime": 61.96,
+        "endTime": 66.4,
+        "words": [
+          {
+            "word": "Tap,",
+            "start": 61.96,
+            "end": 62.72
+          },
+          {
+            "word": "tap,",
+            "start": 62.72,
+            "end": 63.42
+          },
+          {
+            "word": "tap!",
+            "start": 63.42,
+            "end": 64.02
+          },
+          {
+            "word": "Look",
+            "start": 63.98,
+            "end": 65.08
+          },
+          {
+            "word": "and",
+            "start": 65.08,
+            "end": 65.8
+          },
+          {
+            "word": "see!",
+            "start": 65.8,
+            "end": 66.4
+          }
+        ]
+      },
+      {
+        "sentence": "What can you see? I can see an animal!",
+        "startTime": 66.4,
+        "endTime": 71.48,
+        "words": [
+          {
+            "word": "What",
+            "start": 66.4,
+            "end": 67.56
+          },
+          {
+            "word": "can",
+            "start": 67.56,
+            "end": 68.08
+          },
+          {
+            "word": "you",
+            "start": 68.08,
+            "end": 68.32
+          },
+          {
+            "word": "see?",
+            "start": 68.32,
+            "end": 68.92
+          },
+          {
+            "word": "I",
+            "start": 69.38,
+            "end": 69.86
+          },
+          {
+            "word": "can",
+            "start": 69.86,
+            "end": 70.14
+          },
+          {
+            "word": "see",
+            "start": 70.14,
+            "end": 70.52
+          },
+          {
+            "word": "an",
+            "start": 70.52,
+            "end": 70.8
+          },
+          {
+            "word": "animal!",
+            "start": 70.8,
+            "end": 71.48
+          }
+        ]
+      }
+    ],
+    "audio": "l2/media/w06/song.mp3"
+  },
+  "scripts": [
+    {
+      "id": "A",
+      "day": 1,
+      "title": {
+        "en": "Sound Lesson",
+        "th": "บทเรียนเสียง"
+      },
+      "prep": [
+        {
+          "en": "Put the picture cards in order on your table: the /t/ cards and the other cards for A1, then cat, hat, and ten for A4. Put a pencil next to the tricky word cards for A6.",
+          "th": "เรียงบัตรภาพไว้บนโต๊ะครูตามลำดับ: บัตรภาพคำที่มีเสียง /t/ และบัตรภาพอื่นสำหรับ A1 แล้วตามด้วยบัตรภาพ cat, hat และ ten สำหรับ A4 วางดินสอ 1 แท่งไว้ข้างบัตรคำที่ต้องจำสำหรับ A6"
+        }
+      ],
+      "steps": [
+        {
+          "id": "A1",
+          "title": {
+            "en": "Hear it",
+            "th": "ฟังเสียง"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "When the script says /t/, say the sound: a short tap of the tongue, with a small puff of air and no \"uh\".",
+              "When the script says \"the letter t\", say the letter name \"tee\".",
+              "Hold up one picture card at a time and say the word slowly.",
+              "Say the first sound two times, short and quick: /t/, /t/, tiger.",
+              "Mix the /t/ words with other words. Then say three words with /t/ at the end: cat, hat, boat.",
+              "At the end of each word, let the tongue go with a small puff of air. A Thai final /t/, as in มด, has no puff, and the class cannot hear it."
+            ],
+            "teacherLanguage": [
+              "\"Listen. /t/, /t/, tiger. Tiger.\"",
+              "\"Is the first sound /t/? Thumbs up or thumbs down?\"",
+              "\"Yes! Tiger starts with /t/.\"",
+              "\"Listen. Sun. Does sun start with /t/? No!\"",
+              "\"Now listen to the end. Cat. Is /t/ at the end? Yes!\""
+            ],
+            "studentActions": [
+              "Children say each word after the teacher.",
+              "Children show thumbs up for a /t/ word and thumbs down for other words."
+            ],
+            "watchFor": [
+              "Children who say \"tuh\" or \"tor\": the sound is a short /t/, with no vowel after it.",
+              "Children who say a Thai ต for /t/: an English /t/ at the start of a word has a small puff of air, close to the Thai ท.",
+              "Children who stop a word with no release at the end (\"ca\" for \"cat\"): let the tongue go with a small puff of air at the end.",
+              "Children who copy a friend's thumbs: ask them alone with one more card."
+            ]
+          },
+          "easier": {
+            "en": "Use only four cards (tiger, ten, sun, dog) and say the first sound two times.",
+            "th": "ใช้บัตรเพียง 4 ใบ (tiger, ten, sun, dog) และพูดเสียงแรก 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word with /t/ at the end: \"Hat.\" Children say the last sound: \"/t/!\"",
+            "th": "พูดคำที่มี /t/ อยู่ท้ายคำ: \"Hat.\" (หมวก) เด็ก ๆ บอกเสียงสุดท้าย: \"/t/!\""
+          },
+          "group": {
+            "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 พูดคำ และคู่คนที่ 2 ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง"
+          },
+          "materials": [
+            "sound picture cards: tiger, ten, table, tomato",
+            "picture cards: sun, dog, pen",
+            "picture cards: cat, hat, boat"
+          ],
+          "th": {
+            "teacherActions": [
+              "เมื่อบทพูดเขียนว่า /t/ ให้ออกเสียงโดยใช้ปลายลิ้นแตะสั้น ๆ มีลมพ่นออกมาเล็กน้อย และไม่มี \"uh\" ตามหลัง",
+              "เมื่อบทพูดเขียนว่า \"the letter t\" ให้พูดชื่อตัวอักษร \"tee\" (ที)",
+              "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
+              "พูดเสียงแรก 2 ครั้ง สั้น ๆ และเร็ว ๆ: /t/, /t/, tiger",
+              "คละคำที่ขึ้นต้นด้วย /t/ กับคำอื่น จากนั้นพูดคำ 3 คำที่มี /t/ อยู่ท้ายคำ: cat, hat, boat",
+              "ที่ท้ายแต่ละคำ ให้ยกปลายลิ้นออกจากหลังฟันบน โดยมีลมพ่นออกมาเล็กน้อย เพราะเสียงตัวสะกดแม่กด (ต หรือ ด) ในภาษาไทย เช่นในคำว่า มด ปลายลิ้นแตะค้างไว้และไม่มีลมพ่นออก และทั้งชั้นจะไม่ได้ยินเสียงนี้"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง /t/, /t/, tiger, tiger (เสือ)\"",
+              "\"เสียงแรกคือ /t/ ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
+              "\"ใช่! Tiger ขึ้นต้นด้วย /t/\"",
+              "\"ฟัง sun คำว่า sun ขึ้นต้นด้วย /t/ ไหม? ไม่ใช่!\"",
+              "\"ทีนี้ฟังเสียงท้ายคำ Cat มี /t/ อยู่ท้ายคำไหม? ใช่!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู",
+              "เด็ก ๆ ยกนิ้วโป้งขึ้นสำหรับคำที่มีเสียง /t/ และคว่ำนิ้วโป้งลงสำหรับคำอื่น"
+            ],
+            "watchFor": [
+              "เด็กที่ออกเสียงเป็น \"tuh\" (เทอะ) หรือ \"tor\" (ทอ): เสียงที่ถูกคือ /t/ สั้น ๆ ไม่มีสระตามหลัง",
+              "เด็กที่ออกเสียง /t/ เป็นเสียง ต ในภาษาไทย: เสียง /t/ ที่ต้นคำในภาษาอังกฤษมีลมพ่นออกมาเล็กน้อย ใกล้กับเสียง ท ในภาษาไทย",
+              "เด็กที่หยุดเสียงท้ายคำโดยปลายลิ้นแตะค้างไว้ (\"ca\" แทน \"cat\"): ให้ยกปลายลิ้นออกจากหลังฟันบน โดยมีลมพ่นออกมาเล็กน้อยที่ท้ายคำ",
+              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
+            ]
+          }
+        },
+        {
+          "id": "A2",
+          "title": {
+            "en": "See it",
+            "th": "ดูตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the sound card for the letter t and point to the letter.",
+              "Say the pure sound: the tip of the tongue taps behind the top teeth, and a small puff of air comes out: /t/. Do not use your voice. It is close to the Thai letter ท, with no vowel after it.",
+              "Do the action of the letter t: tap one finger on the back of your other hand and say /t/, /t/, /t/."
+            ],
+            "teacherLanguage": [
+              "\"Look. This is the letter t. It says /t/.\"",
+              "\"Listen: /t/. Not 'tuh'. /t/.\"",
+              "\"Watch me: tap, tap, tap. /t/, /t/, /t/.\"",
+              "\"Your turn. Say it and do it. Three times.\""
+            ],
+            "studentActions": [
+              "Children say /t/, /t/, /t/ and tap one finger on the other hand, three times.",
+              "Children point to the letter t on the card."
+            ],
+            "watchFor": [
+              "A short sound with a small puff of air: not \"tuh\", and not the Thai ต.",
+              "Every child does the action, not only the front rows."
+            ]
+          },
+          "easier": {
+            "en": "Children hold one hand in front of the mouth and feel the small puff of air while they say /t/.",
+            "th": "เด็ก ๆ ยกมือ 1 ข้างไว้หน้าปาก แล้วรู้สึกถึงลมที่พ่นออกมาเล็กน้อยขณะพูด /t/"
+          },
+          "harder": {
+            "en": "Show the six sound cards in a mixed order. Children do the action of the card.",
+            "th": "ชูบัตรเสียงทั้ง 6 ใบแบบสลับลำดับ เด็ก ๆ ทำท่าประจำเสียงของบัตรนั้น"
+          },
+          "group": {
+            "en": "Two halves: one half says the sound, and the other half does the action. Then the halves change.",
+            "th": "แบ่งชั้นเป็น 2 ฝั่ง: ฝั่งหนึ่งออกเสียง อีกฝั่งหนึ่งทำท่า แล้วสลับกัน"
+          },
+          "materials": [
+            "sound cards: t, s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียง t และชี้ที่ตัวอักษร",
+              "ออกเสียงล้วน: ใช้ปลายลิ้นแตะที่หลังฟันบนเร็ว ๆ แล้วมีลมพ่นออกมาเล็กน้อย: /t/ ไม่ใช้เสียงจากลำคอ ใกล้กับเสียง ท ในภาษาไทย โดยไม่มีสระตามหลัง",
+              "ทำท่าประจำเสียง t: ใช้นิ้ว 1 นิ้วเคาะที่หลังมืออีกข้างหนึ่ง แล้วพูด /t/, /t/, /t/"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือตัวอักษร t ออกเสียงว่า /t/\"",
+              "\"ฟัง: /t/ ไม่ใช่ 'tuh' แต่เป็น /t/\"",
+              "\"ดูครู: เคาะ เคาะ เคาะ /t/, /t/, /t/\"",
+              "\"ถึงตาเด็ก ๆ แล้ว ออกเสียงและทำท่า 3 ครั้ง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด /t/, /t/, /t/ และใช้นิ้ว 1 นิ้วเคาะที่หลังมืออีกข้างหนึ่ง 3 ครั้ง",
+              "เด็ก ๆ ชี้ที่ตัวอักษร t บนบัตร"
+            ],
+            "watchFor": [
+              "เสียงสั้น ๆ ที่มีลมพ่นออกมาเล็กน้อย: ไม่ใช่ \"tuh\" (เทอะ) และไม่ใช่เสียง ต ในภาษาไทย",
+              "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า"
+            ]
+          }
+        },
+        {
+          "id": "A3",
+          "title": {
+            "en": "Form it",
+            "th": "เขียนตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Write the lower-case letter t large on the board, and say the formation words while you write.",
+              "Write the letter t in the air with your back to the class, so your hand moves the same way as theirs.",
+              "Children write the letter t in the air, then trace it in the book three times."
+            ],
+            "teacherLanguage": [
+              "\"Start at the dot. Down, with a little curve at the bottom. Then a short line across.\"",
+              "\"Fingers up. Write the letter t in the air with me.\"",
+              "\"Open your book. Find the letter t. Trace it three times. Start at the dot.\""
+            ],
+            "studentActions": [
+              "Children write the letter t in the air with one finger and say the formation words.",
+              "Children trace the letter t three times in the book, from the dot."
+            ],
+            "watchFor": [
+              "Children who make the line across first: take their hand, start at the dot, and go down first.",
+              "Children who make the line across too high or too long: show the short line across, on the middle line.",
+              "Children who start at the bottom: take their hand and start at the dot."
+            ]
+          },
+          "easier": {
+            "en": "Children trace the letter t in the book with a finger first. Then they trace it with the pencil.",
+            "th": "เด็ก ๆ ใช้นิ้วลากเส้นตามตัวอักษร t ในหนังสือก่อน แล้วจึงใช้ดินสอลากเส้นตาม"
+          },
+          "harder": {
+            "en": "Write the letter t two more times on the empty line, with no dots.",
+            "th": "เขียนตัวอักษร t อีก 2 ครั้งบนบรรทัดว่าง โดยไม่มีจุดนำ"
+          },
+          "group": {
+            "en": "Pairs: one child writes the letter t on the partner's back with a finger; the partner says /t/.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ใช้นิ้วเขียนตัวอักษร t บนหลังของคู่คนที่ 2 คู่คนที่ 2 พูด /t/"
+          },
+          "materials": [
+            "board",
+            "student book: letter box t"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียนตัวอักษร t ตัวพิมพ์เล็กขนาดใหญ่บนกระดาน และพูดคำบอกวิธีเขียนขณะเขียน",
+              "เขียนตัวอักษร t กลางอากาศโดยหันหลังให้เด็ก ๆ เพื่อให้มือของครูเคลื่อนไปทางเดียวกับมือของเด็ก ๆ",
+              "เด็ก ๆ เขียนตัวอักษร t กลางอากาศ แล้วลากเส้นตามตัวอักษร t ในหนังสือ 3 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"เริ่มที่จุด ลากลง แล้วโค้งเล็กน้อยที่ด้านล่าง จากนั้นลากเส้นขวางสั้น ๆ\"",
+              "\"ยกนิ้วขึ้น เขียนตัวอักษร t กลางอากาศพร้อมครู\"",
+              "\"เปิดหนังสือ หาตัวอักษร t ลากเส้นตาม 3 ครั้ง เริ่มที่จุด\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ใช้นิ้ว 1 นิ้วเขียนตัวอักษร t กลางอากาศ และพูดคำบอกวิธีเขียน",
+              "เด็ก ๆ ลากเส้นตามตัวอักษร t ในหนังสือ 3 ครั้ง โดยเริ่มที่จุด"
+            ],
+            "watchFor": [
+              "เด็กที่เขียนเส้นขวางก่อน: จับมือเด็ก เริ่มที่จุด แล้วลากลงก่อน",
+              "เด็กที่เขียนเส้นขวางสูงเกินไปหรือยาวเกินไป: แสดงให้ดูว่าเส้นขวางเป็นเส้นสั้น ๆ และอยู่บนเส้นกลาง",
+              "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด"
+            ]
+          }
+        },
+        {
+          "id": "A4",
+          "title": {
+            "en": "Blend it",
+            "th": "ผสมเสียง"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First by ear: keep the picture cards cat, hat, and ten face down.",
+              "Say the three sounds with a short stop between them, then say them fast. Show the picture after the class says the word.",
+              "Then with letters: show the word cards \"sat\", \"mat\", and \"tap\". Put your finger under each letter and say its sound, then slide under the whole word.",
+              "Show the word card \"Pat\". The big letter P at the start of a name says /p/, too.",
+              "Say the sounds, not the letter names: /k/ and /h/ with no \"uh\" after them, and a short /t/."
+            ],
+            "teacherLanguage": [
+              "\"Listen. /k/ - /a/ - /t/. What is the word? Cat!\"",
+              "\"Next one. /h/ - /a/ - /t/. Hat!\"",
+              "\"/t/ - /e/ - nnn. Ten!\"",
+              "\"Now look at the letters. Sss - /a/ - /t/. Sat! Mmm - /a/ - /t/. Mat!\"",
+              "\"Next word. /t/ - /a/ - /p/. Tap! And this one: /p/ - /a/ - /t/. Pat! It is a name.\""
+            ],
+            "studentActions": [
+              "Children listen to the three sounds and say the word.",
+              "Children say the sounds of \"sat\", \"mat\", \"tap\", and \"Pat\" with the teacher, then read the words alone."
+            ],
+            "watchFor": [
+              "Children who read \"tap\" and \"Pat\" the same way: point to the first letter and ask for its sound.",
+              "Children who say \"tuh - /a/ - /p/\": say /t/ as a short tap, with no \"uh\"."
+            ]
+          },
+          "easier": {
+            "en": "Read only \"sat\" and \"mat\" with the class, two times each.",
+            "th": "อ่านเฉพาะ \"sat\" และ \"mat\" พร้อมทั้งชั้น คำละ 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word; children say its three sounds: \"Mat.\" \"Mmm - /a/ - /t/.\"",
+            "th": "พูดคำ 1 คำ เด็ก ๆ พูด 3 เสียงของคำนั้น: \"Mat.\" \"Mmm - /a/ - /t/.\""
+          },
+          "group": {
+            "en": "Pairs: partner A points under the letters, partner B reads the word.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ใต้ตัวอักษร คู่คนที่ 2 อ่านคำ"
+          },
+          "materials": [
+            "picture cards: cat, hat, ten",
+            "word cards: sat, mat, tap, Pat"
+          ],
+          "th": {
+            "teacherActions": [
+              "ขั้นแรกฝึกด้วยการฟัง: คว่ำบัตรภาพ cat, hat และ ten ไว้",
+              "พูด 3 เสียงโดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
+              "จากนั้นฝึกด้วยตัวอักษร: ชูบัตรคำ \"sat\", \"mat\" และ \"tap\" วางนิ้วใต้ตัวอักษรทีละตัวและออกเสียงของตัวอักษรนั้น แล้วลากนิ้วผ่านใต้ทั้งคำ",
+              "ชูบัตรคำ \"Pat\" P ตัวพิมพ์ใหญ่ที่ต้นชื่อก็ออกเสียง /p/ เหมือนกัน",
+              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /k/ และ /h/ ไม่มี \"uh\" ตามหลัง และออกเสียง /t/ สั้น ๆ"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง /k/ - /a/ - /t/ คำนี้คือคำอะไร? Cat! (แมว)\"",
+              "\"คำต่อไป /h/ - /a/ - /t/ Hat! (หมวก)\"",
+              "\"/t/ - /e/ - nnn Ten! (สิบ)\"",
+              "\"ทีนี้ดูตัวอักษร Sss - /a/ - /t/ Sat! (นั่ง) Mmm - /a/ - /t/ Mat! (เสื่อ)\"",
+              "\"คำต่อไป /t/ - /a/ - /p/ Tap! (เคาะ) ส่วนคำนี้: /p/ - /a/ - /t/ Pat! คำนี้เป็นชื่อคน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟัง 3 เสียง แล้วพูดคำ",
+              "เด็ก ๆ ออกเสียงทีละเสียงในคำ \"sat\", \"mat\", \"tap\" และ \"Pat\" พร้อมครู แล้วอ่านคำเหล่านั้นด้วยตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"tap\" และ \"Pat\" เหมือนกัน: ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร",
+              "เด็กที่อ่านเป็น \"tuh - /a/ - /p/\": ออกเสียง /t/ โดยแตะลิ้นสั้น ๆ ไม่มี \"uh\" ตามหลัง"
+            ]
+          }
+        },
+        {
+          "id": "A5",
+          "title": {
+            "en": "Word wall",
+            "th": "ผนังคำศัพท์"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Put the card for the letter t on the word wall, next to the five sound cards.",
+              "Put the new words on the wall: \"sat\", \"mat\", \"tap\", and \"Pat\". The class reads the new words, then all the words on the wall."
+            ],
+            "teacherLanguage": [
+              "\"Here is the letter t. It says /t/.\"",
+              "\"Our new words! Read them with me: sat. Mat. Tap. Pat.\"",
+              "\"Now read all the words: an, Nan, pan, nap, am, man, map, Pam, Sam, sat, mat, tap, Pat.\""
+            ],
+            "studentActions": [
+              "Children say the sounds and read the words at the wall."
+            ],
+            "watchFor": [
+              "Children who read \"sat\" as \"Sam\": point to the last letter and ask for its sound."
+            ]
+          },
+          "easier": {
+            "en": "Read only the four new words with the class, two times.",
+            "th": "อ่านเฉพาะคำใหม่ 4 คำพร้อมทั้งชั้น 2 ครั้ง"
+          },
+          "harder": {
+            "en": "A child reads one word on the wall alone, then says its last sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงสุดท้ายของคำนั้น"
+          },
+          "group": {
+            "en": "Whole class: one child points, and the class reads.",
+            "th": "ทั้งชั้น: เด็กคนหนึ่งชี้ และทั้งชั้นอ่าน"
+          },
+          "materials": [
+            "word wall",
+            "sound cards: t",
+            "word cards: sat, mat, tap, Pat"
+          ],
+          "th": {
+            "teacherActions": [
+              "ติดบัตรตัวอักษร t บนผนังคำศัพท์ ข้างบัตรเสียงทั้ง 5 ใบ",
+              "ติดคำใหม่บนผนังคำศัพท์: \"sat\", \"mat\", \"tap\" และ \"Pat\" ทั้งชั้นอ่านคำใหม่ แล้วอ่านทุกคำบนผนังคำศัพท์"
+            ],
+            "teacherLanguage": [
+              "\"นี่คือตัวอักษร t ออกเสียงว่า /t/\"",
+              "\"คำใหม่ของเรา! อ่านพร้อมครู: sat, mat, tap, Pat\"",
+              "\"ทีนี้อ่านทุกคำ: an, Nan, pan, nap, am, man, map, Pam, Sam, sat, mat, tap, Pat\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและอ่านคำที่ผนังคำศัพท์"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"sat\" เป็น \"Sam\": ชี้ที่ตัวอักษรตัวสุดท้าย แล้วถามว่าออกเสียงอะไร"
+            ]
+          }
+        },
+        {
+          "id": "A6",
+          "title": {
+            "en": "New tricky words",
+            "th": "คำที่ต้องจำชุดใหม่"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the tricky word cards \"he\", \"put\", and \"see\". Show one card at a time.",
+              "Read the word. Show the letters that the class can sound out: the letter p and the letter t in \"put\", and the letter s in \"see\".",
+              "The other letters are tricky. In \"put\", the letter u says a short \"oo\", as in \"foot\". In \"he\", the letter h comes in a later week, and the letter e says a long eee. In \"see\", the two letters e say one long eee.",
+              "Spell each word with letter names, then write it in the air."
+            ],
+            "teacherLanguage": [
+              "\"Look at this card. Read it with me: he. He is Sam.\"",
+              "\"Next card. Read it with me: put. Put the pencil on the table.\"",
+              "\"Next card. Read it with me: see. I can see a cat.\"",
+              "\"This is a tricky word. We remember it. Say it with me.\""
+            ],
+            "studentActions": [
+              "Children read each card three times: loud, quiet, loud.",
+              "Children point to a boy and say \"he\"; they put a pencil on the table and say \"put\"; they point to their eyes and say \"see\"."
+            ],
+            "watchFor": [
+              "Children who read \"put\" like \"but\", with the sound in \"up\": say it again with a short \"oo\", as in \"foot\".",
+              "Children who mix up \"see\" and \"saw\": put the two cards side by side and read them slowly."
+            ]
+          },
+          "easier": {
+            "en": "Teach \"he\" and \"see\" today; \"put\" comes on the review strip tomorrow.",
+            "th": "สอน \"he\" และ \"see\" วันนี้ ส่วน \"put\" จะอยู่บนแถบทบทวนพรุ่งนี้"
+          },
+          "harder": {
+            "en": "Children say a sentence with two tricky words: \"He can see a cat.\"",
+            "th": "เด็ก ๆ พูดประโยคที่มีคำที่ต้องจำ 2 คำ: \"He can see a cat.\" (เขามองเห็นแมว)"
+          },
+          "group": {
+            "en": "Pairs: you show a card; partner A reads it to partner B. Then the partners change.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 อ่านให้คู่คนที่ 2 ฟัง แล้วสลับกัน"
+          },
+          "materials": [
+            "tricky word cards: he, put, see",
+            "a pencil"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรคำที่ต้องจำ \"he\", \"put\" และ \"see\" ทีละใบ",
+              "อ่านคำนั้น ชี้ให้ดูตัวอักษรที่ทั้งชั้นสะกดออกเสียงได้: ตัวอักษร p และตัวอักษร t ในคำ \"put\" และตัวอักษร s ในคำ \"see\"",
+              "ตัวอักษรอื่นเป็นส่วนที่ต้องจำ ในคำ \"put\" ตัวอักษร u ออกเสียง \"oo\" สั้น ๆ (อุ) เหมือนในคำ \"foot\" ในคำ \"he\" ตัวอักษร h จะได้เรียนในสัปดาห์ต่อ ๆ ไป และตัวอักษร e ออกเสียง eee ยาว (อี) ในคำ \"see\" ตัวอักษร e 2 ตัวออกเสียงเป็น eee ยาวเสียงเดียว",
+              "สะกดแต่ละคำด้วยชื่อตัวอักษร แล้วเขียนคำนั้นกลางอากาศ"
+            ],
+            "teacherLanguage": [
+              "\"ดูบัตรใบนี้ อ่านพร้อมครู: he (เขา) เช่น He is Sam. (เขาคือ Sam)\"",
+              "\"บัตรใบต่อไป อ่านพร้อมครู: put (วาง) เช่น Put the pencil on the table. (วางดินสอบนโต๊ะ)\"",
+              "\"บัตรใบต่อไป อ่านพร้อมครู: see (เห็น) เช่น I can see a cat. (ฉันมองเห็นแมว)\"",
+              "\"นี่คือคำที่ต้องจำ เราจำคำนี้ไว้ พูดพร้อมครู\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรแต่ละใบ 3 ครั้ง: ดัง เบา ดัง",
+              "เด็ก ๆ ชี้ที่เด็กผู้ชายแล้วพูด \"he\" วางดินสอบนโต๊ะแล้วพูด \"put\" และชี้ที่ตาของตัวเองแล้วพูด \"see\""
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"put\" เหมือน \"but\" คือใช้เสียงสระแบบในคำ \"up\" (อะ): พูดคำนี้อีกครั้งโดยใช้เสียง \"oo\" สั้น ๆ (อุ) เหมือนในคำ \"foot\"",
+              "เด็กที่สับสนระหว่าง \"see\" กับ \"saw\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
+            ]
+          }
+        },
+        {
+          "id": "A7",
+          "title": {
+            "en": "Read it",
+            "th": "อ่าน"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Open the practice sheet in the book and point to each line once."
+            ],
+            "teacherLanguage": [
+              "\"Read the sounds with me: /t/, sss, mmm, /p/, /a/, nnn.\"",
+              "\"Read the words: sat. Mat. Tap. Pat.\"",
+              "\"Read the sentences: Pat sat on a mat. He can see Sam.\""
+            ],
+            "studentActions": [
+              "Children read the lines and point to the tricky words \"he\" and \"see\"."
+            ],
+            "watchFor": [
+              "Children who look at the wrong line: show the picture at the start of the line."
+            ]
+          },
+          "easier": {
+            "en": "Read only the line of sounds.",
+            "th": "อ่านเฉพาะบรรทัดของเสียง"
+          },
+          "harder": {
+            "en": "Children read \"Pat sat on a mat.\" alone.",
+            "th": "เด็ก ๆ อ่าน \"Pat sat on a mat.\" ด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs point to the lines for each other.",
+            "th": "ทำเป็นคู่: ชี้บรรทัดให้กันและกัน"
+          },
+          "materials": [
+            "student book: practice sheet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "เปิดหน้าฝึกอ่านในหนังสือ และชี้แต่ละบรรทัด 1 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเสียงพร้อมครู: /t/, sss, mmm, /p/, /a/, nnn\"",
+              "\"อ่านคำ: sat, mat, tap, Pat\"",
+              "\"อ่านประโยค: Pat sat on a mat. (Pat นั่งบนเสื่อ) He can see Sam. (เขามองเห็น Sam)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละบรรทัด และชี้ที่คำที่ต้องจำ \"he\" และ \"see\""
+            ],
+            "watchFor": [
+              "เด็กที่ดูผิดบรรทัด: ชี้ภาพที่ต้นบรรทัดให้ดู"
+            ]
+          }
+        },
+        {
+          "id": "A8",
+          "title": {
+            "en": "Home card",
+            "th": "บัตรกิจกรรมที่บ้าน"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "Read the Thai line on the home card to the class.",
+              "After class on day 1: tear the week 6 home card out of each student book, and put one card in each child's bag."
+            ],
+            "teacherLanguage": [
+              "\"Your home card is in your bag. Show it to your family.\"",
+              "\"Look out of the window with your family. I can see a cat! I can see a bird!\""
+            ],
+            "studentActions": [
+              "Children find the home card in their bag."
+            ],
+            "watchFor": [
+              "A child with no card: give the child a card at home time on day 2."
+            ]
+          },
+          "easier": {
+            "en": "Show the card to the child.",
+            "th": "ชูบัตรให้เด็กดู"
+          },
+          "harder": {
+            "en": "A child shows the card to a friend and says: \"/t/, /t/, tiger. I can see a tiger!\"",
+            "th": "เด็กคนหนึ่งเอาบัตรให้เพื่อนดูและพูดว่า: \"/t/, /t/, tiger. I can see a tiger!\" (ฉันมองเห็นเสือ)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "student book: home card"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "อ่านข้อความภาษาไทยบนบัตรกิจกรรมที่บ้านให้ทั้งชั้นฟัง",
+              "หลังเลิกเรียนวันที่ 1: ฉีกบัตรกิจกรรมที่บ้านของสัปดาห์ที่ 6 ออกจากหนังสือนักเรียนของเด็กแต่ละคน แล้วใส่บัตรในกระเป๋าของเด็กคนละ 1 ใบ"
+            ],
+            "teacherLanguage": [
+              "\"บัตรกิจกรรมที่บ้านอยู่ในกระเป๋าของหนู ๆ แล้ว เอาให้ครอบครัวดูนะ\"",
+              "\"มองออกไปนอกหน้าต่างกับครอบครัว แล้วพูดว่า I can see a cat! (ฉันมองเห็นแมว) I can see a bird! (ฉันมองเห็นนก)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ หาบัตรกิจกรรมที่บ้านในกระเป๋าของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่มีบัตร: ให้บัตรแก่เด็กตอนกลับบ้านในวันที่ 2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "day": 2,
+      "title": {
+        "en": "Story Lesson",
+        "th": "บทเรียนนิทาน"
+      },
+      "prep": [
+        {
+          "en": "Get the book audio of \"I Can See\" ready on the tablet, or print its QR code (B3).",
+          "th": "เตรียมเสียงอ่านของหนังสือ \"I Can See\" บนแท็บเล็ต หรือพิมพ์คิวอาร์โค้ดของหนังสือไว้ (B3)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "B1",
+          "title": {
+            "en": "Family words",
+            "th": "คำศัพท์ประจำหมวด"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Show each family picture card and say the word two times.",
+              "Put the cards on the board. Say a word; the class says it and makes the sound or the move of the animal (a cat says meow, a frog hops).",
+              "Point to a card; the class says the word."
+            ],
+            "teacherLanguage": [
+              "\"Look. A cat. Say it: cat. Meow!\"",
+              "\"Point to the card with the frog! Hop like a frog!\"",
+              "\"What is this? A duck! Quack, quack!\""
+            ],
+            "studentActions": [
+              "Children say each word two times after the teacher.",
+              "Children point to the card and make the sound or the move of the animal."
+            ],
+            "watchFor": [
+              "Children who mix up \"bird\" and \"duck\": show the two cards side by side and say both words again.",
+              "Children who say the Thai word: say the English; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Use four cards: cat, dog, bird, fish.",
+            "th": "ใช้บัตร 4 ใบ: cat, dog, bird, fish"
+          },
+          "harder": {
+            "en": "A child makes the sound or the move of an animal; the class says the word.",
+            "th": "เด็กคนหนึ่งทำเสียงร้องหรือท่าทางของสัตว์ 1 ชนิด ทั้งชั้นพูดคำนั้น"
+          },
+          "group": {
+            "en": "Pairs: partner A points to a card, partner B says the word and makes the sound.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่บัตร คู่คนที่ 2 พูดคำนั้นและทำเสียงร้องของสัตว์ตัวนั้น"
+          },
+          "materials": [
+            "family picture cards: cat, dog, bird, fish, frog, duck, horse"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพคำศัพท์แต่ละใบ แล้วพูดคำนั้น 2 ครั้ง",
+              "ติดบัตรบนกระดาน ครูพูดคำ 1 คำ ทั้งชั้นพูดคำนั้นและทำเสียงร้องหรือท่าทางของสัตว์ตัวนั้น (แมวร้อง meow กบกระโดด)",
+              "ชี้ที่บัตร 1 ใบ ทั้งชั้นพูดคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"ดู A cat. (แมว) พูดตาม: cat. Meow! (เหมียว)\"",
+              "\"Point to the card with the frog! (ชี้ที่บัตรรูปกบ) Hop like a frog! (กระโดดเหมือนกบ)\"",
+              "\"What is this? (นี่คืออะไร) A duck! (เป็ด) Quack, quack! (ก้าบ ก้าบ)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู 2 ครั้ง",
+              "เด็ก ๆ ชี้ที่บัตร และทำเสียงร้องหรือท่าทางของสัตว์ตัวนั้น"
+            ],
+            "watchFor": [
+              "เด็กที่สับสนระหว่าง \"bird\" (นก) กับ \"duck\" (เป็ด): วางบัตร 2 ใบเคียงกันให้ดู แล้วพูดทั้ง 2 คำอีกครั้ง",
+              "เด็กที่พูดคำภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "B2",
+          "title": {
+            "en": "Picture walk",
+            "th": "ดูภาพก่อนอ่าน"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cover and pages 1 to 7 of \"I Can See\". Cover the words with your hand. Keep page 8 for later.",
+              "On each page, point to the animal and ask \"What is this?\" The class says the word.",
+              "On page 7, point to the tail in the tall grass and ask who it is."
+            ],
+            "teacherLanguage": [
+              "\"Look at the cover. Who is this? It is Mia!\"",
+              "\"Look. What is this? A cat! Meow!\"",
+              "\"Look at the grass. What is this? Who is it?\""
+            ],
+            "studentActions": [
+              "Children say what they can see, in Thai or English.",
+              "Children say the animal word on each page."
+            ],
+            "watchFor": [
+              "Children who answer in Thai: say the English; the child says it after you.",
+              "Do not open page 8 yet: keep the surprise for the reading."
+            ]
+          },
+          "easier": {
+            "en": "Say the animal word with the class on every page.",
+            "th": "พูดคำศัพท์ชื่อสัตว์พร้อมทั้งชั้นในทุกหน้า"
+          },
+          "harder": {
+            "en": "Before you turn the page, ask: \"What is next?\"",
+            "th": "ก่อนพลิกหน้า ถามว่า: \"What is next?\" (หน้าต่อไปเป็นอะไร)"
+          },
+          "group": {
+            "en": "Whole class: quiet children tell a partner first, then the class.",
+            "th": "ทั้งชั้น: เด็กที่ไม่ค่อยกล้าพูดบอกคู่ก่อน แล้วจึงบอกทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"I Can See\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกและหน้า 1 ถึง 7 ของ \"I Can See\" ใช้มือปิดคำไว้ เก็บหน้า 8 ไว้เปิดทีหลัง",
+              "ในแต่ละหน้า ชี้ที่สัตว์ในภาพ แล้วถามว่า \"What is this?\" (นี่คืออะไร) ทั้งชั้นพูดคำนั้น",
+              "ที่หน้า 7 ชี้ที่หางที่โผล่ขึ้นมาในพงหญ้าสูง แล้วถามว่าเป็นหางของใคร"
+            ],
+            "teacherLanguage": [
+              "\"ดูที่ปก นี่คือใคร? It is Mia!\"",
+              "\"ดู What is this? (นี่คืออะไร) A cat! (แมว) Meow! (เหมียว)\"",
+              "\"ดูที่พงหญ้า นี่คืออะไร? เป็นใคร?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ บอกสิ่งที่เห็น เป็นภาษาไทยหรือภาษาอังกฤษ",
+              "เด็ก ๆ พูดคำศัพท์ชื่อสัตว์ในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเป็นภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม",
+              "ยังไม่เปิดหน้า 8: เก็บเซอร์ไพรส์ไว้ตอนอ่าน"
+            ]
+          }
+        },
+        {
+          "id": "B3",
+          "title": {
+            "en": "Listen",
+            "th": "ฟัง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Play the audio of \"I Can See\" once, at 1.0 speed.",
+              "Point to the picture while the audio reads the page; turn the page with the audio."
+            ],
+            "teacherLanguage": [
+              "\"Now listen to the book. Eyes on the pictures.\"",
+              "\"Make the sound of the animal!\""
+            ],
+            "studentActions": [
+              "Children listen and look at the pictures.",
+              "Children make the sound of the animal on each page."
+            ],
+            "watchFor": [
+              "Children who do not look: hold the book closer to them."
+            ]
+          },
+          "easier": {
+            "en": "Play the audio at 0.75 speed.",
+            "th": "เปิดเสียงที่ความเร็ว 0.75"
+          },
+          "harder": {
+            "en": "Stop the audio before the animal word on a page; the class says the word.",
+            "th": "หยุดเสียงก่อนถึงคำศัพท์ชื่อสัตว์ในหน้านั้น ทั้งชั้นพูดคำนั้น"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "book audio, on the tablet or by the QR code: \"I Can See\""
+          ],
+          "th": {
+            "teacherActions": [
+              "เปิดเสียงอ่าน \"I Can See\" 1 รอบ ที่ความเร็ว 1.0",
+              "ชี้ที่ภาพขณะเสียงอ่านหน้านั้น และพลิกหน้าไปพร้อมกับเสียง"
+            ],
+            "teacherLanguage": [
+              "\"ทีนี้ฟังหนังสือ ตาดูที่ภาพ\"",
+              "\"ทำเสียงร้องของสัตว์ตัวนั้น!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังและดูภาพ",
+              "เด็ก ๆ ทำเสียงร้องของสัตว์ในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่ดูภาพ: ถือหนังสือให้ใกล้เด็กมากขึ้น"
+            ]
+          }
+        },
+        {
+          "id": "B4",
+          "title": {
+            "en": "Read with me",
+            "th": "อ่านกับครู"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First reading: read each page and point under each word. The class says the page after you.",
+              "Second reading: read \"I can see a\" and stop. The class says the animal word.",
+              "Point to \"I can see a\" on pages 1 to 7: it is the frame of the week. On page 8, show the change: \"I can see Pip!\" A name has no \"a\"."
+            ],
+            "teacherLanguage": [
+              "\"My turn: I can see a cat. Your turn!\"",
+              "\"Look at the words. I can see a ... ?\"",
+              "\"Read the last page with me: I can see Pip!\""
+            ],
+            "studentActions": [
+              "Children say each page after the teacher and point in the air.",
+              "Children say the animal word on each page."
+            ],
+            "watchFor": [
+              "Children who say the words but do not look: point under each word slowly.",
+              "On the last page, let the children laugh, then read it again together."
+            ]
+          },
+          "easier": {
+            "en": "Read pages 1 to 4 and page 8 only.",
+            "th": "อ่านเฉพาะหน้า 1 ถึง 4 และหน้า 8"
+          },
+          "harder": {
+            "en": "Children read \"I can see a\" alone; you say only the animal words.",
+            "th": "เด็ก ๆ อ่าน \"I can see a\" ด้วยตัวเอง ส่วนครูพูดเฉพาะคำศัพท์ชื่อสัตว์"
+          },
+          "group": {
+            "en": "Half the class reads one page, the other half reads the next.",
+            "th": "ครึ่งชั้นอ่าน 1 หน้า อีกครึ่งชั้นอ่านหน้าถัดไป"
+          },
+          "materials": [
+            "big book or screen: \"I Can See\""
+          ],
+          "th": {
+            "teacherActions": [
+              "อ่านรอบแรก: อ่านแต่ละหน้าและชี้ใต้แต่ละคำ ทั้งชั้นพูดหน้านั้นตาม",
+              "อ่านรอบที่สอง: อ่าน \"I can see a\" แล้วหยุด ทั้งชั้นพูดคำศัพท์ชื่อสัตว์",
+              "ชี้ที่ \"I can see a\" ในหน้า 1 ถึง 7: นี่คือกรอบประโยคของสัปดาห์ ที่หน้า 8 ชี้ให้ดูว่าประโยคเปลี่ยน: \"I can see Pip!\" ชื่อไม่มีคำว่า \"a\" นำหน้า"
+            ],
+            "teacherLanguage": [
+              "\"ตาครู: I can see a cat. ถึงตาเด็ก ๆ!\"",
+              "\"ดูที่คำ I can see a ... ?\"",
+              "\"อ่านหน้าสุดท้ายพร้อมครู: I can see Pip! (ฉันมองเห็น Pip)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละหน้าตามครู และชี้ในอากาศ",
+              "เด็ก ๆ พูดคำศัพท์ชื่อสัตว์ในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่พูดคำได้แต่ไม่ดูหนังสือ: ชี้ใต้แต่ละคำช้า ๆ",
+              "ที่หน้าสุดท้าย ปล่อยให้เด็ก ๆ หัวเราะ แล้วอ่านอีกครั้งพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B5",
+          "title": {
+            "en": "Frame practice",
+            "th": "ฝึกกรอบประโยค"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Write \"I can see a ___.\" on the board and point to each word. Show the full stop.",
+              "Hold a family picture card behind your back. Show it fast, then say \"I can see a cat.\"",
+              "Six children come to the front, one at a time. The child holds up a family picture card from B1 and says \"I can see a ___.\" Then pairs do it with things in the room."
+            ],
+            "teacherLanguage": [
+              "\"I can see a cat. Say it with me: I can see a cat.\"",
+              "\"Your turn. Hold up the card. Say: I can see a ...\"",
+              "\"Now with your partner. Look around the room. Say: I can see a ...\""
+            ],
+            "studentActions": [
+              "Six children say \"I can see a ___.\" with a family picture card.",
+              "Pairs: partner A points to a thing in the room and says \"I can see a ___.\"; partner B says it about another thing. Then they change."
+            ],
+            "watchFor": [
+              "Children who leave out \"a\": say the sentence again slowly and tap the table for each word.",
+              "Children who name a thing in Thai: say the English word; the child says the full sentence."
+            ]
+          },
+          "easier": {
+            "en": "The child says the sentence together with the teacher.",
+            "th": "เด็กพูดประโยคพร้อมกับครู"
+          },
+          "harder": {
+            "en": "The child says two sentences: \"I can see a cat. I can see a dog.\"",
+            "th": "เด็กพูด 2 ประโยค: \"I can see a cat. I can see a dog.\" (ฉันมองเห็นแมว ฉันมองเห็นสุนัข)"
+          },
+          "group": {
+            "en": "Pairs, then two pairs together: four children point and say.",
+            "th": "ทำเป็นคู่ แล้วรวม 2 คู่เข้าด้วยกัน: เด็ก 4 คนชี้และพูด"
+          },
+          "materials": [
+            "board",
+            "family picture cards: cat, dog, bird, fish, frog, duck, horse"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียน \"I can see a ___.\" บนกระดาน และชี้ที่แต่ละคำ ชี้ให้ดูจุด (full stop)",
+              "ถือบัตรภาพคำศัพท์ 1 ใบไว้ข้างหลัง ชูบัตรให้ดูอย่างรวดเร็ว แล้วพูดว่า \"I can see a cat.\" (ฉันมองเห็นแมว)",
+              "เด็ก 6 คนออกมาหน้าชั้นทีละคน เด็กชูบัตรภาพคำศัพท์ 1 ใบจาก B1 แล้วพูด \"I can see a ___.\" จากนั้นให้ทำเป็นคู่โดยใช้สิ่งของในห้อง"
+            ],
+            "teacherLanguage": [
+              "\"I can see a cat. (ฉันมองเห็นแมว) พูดพร้อมครู: I can see a cat.\"",
+              "\"ถึงตาหนูแล้ว ชูบัตรขึ้น พูดว่า: I can see a ...\"",
+              "\"ทีนี้ทำกับคู่ มองไปรอบ ๆ ห้อง พูดว่า: I can see a ...\""
+            ],
+            "studentActions": [
+              "เด็ก 6 คนชูบัตรภาพคำศัพท์และพูด \"I can see a ___.\"",
+              "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่สิ่งของ 1 อย่างในห้อง แล้วพูดว่า \"I can see a ___.\" คู่คนที่ 2 พูดประโยคแบบเดียวกันเกี่ยวกับสิ่งของอีกอย่างหนึ่ง แล้วสลับกัน"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่พูดคำว่า \"a\": พูดประโยคอีกครั้งช้า ๆ และเคาะโต๊ะ 1 ครั้งต่อ 1 คำ",
+              "เด็กที่บอกชื่อสิ่งของเป็นภาษาไทย: พูดคำนั้นเป็นภาษาอังกฤษ แล้วให้เด็กพูดประโยคเต็ม"
+            ]
+          }
+        },
+        {
+          "id": "B6",
+          "title": {
+            "en": "Act it",
+            "th": "แสดงตามเรื่อง"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "The whole class acts the book. Say each page; the class says it after you and makes the move of the animal.",
+              "On the last page, the class jumps up like Pip out of the grass and says: \"I can see Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"Say it with me: I can see a cat! Meow!\"",
+              "\"Jump like Pip! I can see Pip!\""
+            ],
+            "studentActions": [
+              "The class says each page and makes the move of the animal. On the last page, the children jump up."
+            ],
+            "watchFor": [
+              "Children who only watch: make the move with them and say the page together."
+            ]
+          },
+          "easier": {
+            "en": "The class says only the animal words; you say \"I can see a\".",
+            "th": "ทั้งชั้นพูดเฉพาะคำศัพท์ชื่อสัตว์ ส่วนครูพูด \"I can see a\""
+          },
+          "harder": {
+            "en": "Children say a new page: \"I can see a tiger!\"",
+            "th": "เด็ก ๆ พูดหน้าใหม่ที่คิดเอง: \"I can see a tiger!\" (ฉันมองเห็นเสือ)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"I Can See\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ทั้งชั้นแสดงตามหนังสือ พูดแต่ละหน้า ทั้งชั้นพูดตามและทำท่าทางของสัตว์ตัวนั้น",
+              "ที่หน้าสุดท้าย ทั้งชั้นกระโดดขึ้นเหมือน Pip ที่กระโดดออกมาจากพงหญ้า และพูดว่า: \"I can see Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"พูดพร้อมครู: I can see a cat! Meow!\"",
+              "\"กระโดดเหมือน Pip! I can see Pip! (ฉันมองเห็น Pip)\""
+            ],
+            "studentActions": [
+              "ทั้งชั้นพูดแต่ละหน้าและทำท่าทางของสัตว์ ที่หน้าสุดท้าย เด็ก ๆ กระโดดขึ้น"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ทำท่าพร้อมเด็กและพูดหน้านั้นด้วยกัน"
+            ]
+          }
+        },
+        {
+          "id": "B7",
+          "title": {
+            "en": "Sing it",
+            "th": "ร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the opening, play the karaoke video as the song of the week (item 3). The words are on the screen."
+            ],
+            "teacherLanguage": [
+              "\"Sing with the words on the screen. Point to the words!\""
+            ],
+            "studentActions": [
+              "Children sing and point to the words on the screen."
+            ],
+            "watchFor": [
+              "Children who only watch: give them the gesture to do (clap, hop)."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus)"
+          },
+          "harder": {
+            "en": "Children sing the verse without the video.",
+            "th": "เด็ก ๆ ร้องท่อนเวิร์ส (verse) โดยไม่ใช้วิดีโอ"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "karaoke videos: \"I Can See a Cat\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบ เปิดวิดีโอคาราโอเกะเป็นเพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เนื้อเพลงอยู่บนจอ"
+            ],
+            "teacherLanguage": [
+              "\"ร้องตามเนื้อเพลงบนจอ ชี้ที่คำ!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ร้องเพลงและชี้ที่คำบนจอ"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ให้เด็กทำท่าประกอบเพลง (ปรบมือ กระโดด)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "day": 3,
+      "title": {
+        "en": "Spell and Read",
+        "th": "สะกดและอ่าน"
+      },
+      "prep": [
+        {
+          "en": "Put one card for the letter t in each child's letter card set, with the five other letter cards.",
+          "th": "ใส่บัตรตัวอักษร t 1 ใบ ในชุดบัตรตัวอักษรของเด็กแต่ละคน รวมกับบัตรตัวอักษรอีก 5 ใบ"
+        }
+      ],
+      "steps": [
+        {
+          "id": "C1",
+          "title": {
+            "en": "Sound review",
+            "th": "ทบทวนเสียง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the six sound cards fast, in a mixed order.",
+              "Children say the sound and do the action of the card."
+            ],
+            "teacherLanguage": [
+              "\"What sound? /t/! Tap, tap!\"",
+              "\"What sound? Sss! Let the air out!\"",
+              "\"Mmm, /p/, /a/, nnn: say the sound and do the action of each card.\"",
+              "\"Again, faster!\""
+            ],
+            "studentActions": [
+              "Children say the sound and do the action."
+            ],
+            "watchFor": [
+              "A short /t/ with a small puff of air, not \"tuh\"."
+            ]
+          },
+          "easier": {
+            "en": "Show each card two times in the same order before the fast round.",
+            "th": "ชูบัตรแต่ละใบ 2 ครั้งตามลำดับเดิมก่อนรอบเร็ว"
+          },
+          "harder": {
+            "en": "Show a card for a short time only, then hide it.",
+            "th": "ชูบัตรเพียงช่วงสั้น ๆ แล้วซ่อน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: t, s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียงทั้ง 6 ใบอย่างรวดเร็ว แบบสลับลำดับ",
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียงของบัตรนั้น"
+            ],
+            "teacherLanguage": [
+              "\"เสียงอะไร? /t/! เคาะ เคาะ!\"",
+              "\"เสียงอะไร? Sss! ปล่อยลมออก!\"",
+              "\"Mmm, /p/, /a/, nnn: ออกเสียงและทำท่าประจำเสียงของบัตรแต่ละใบ\"",
+              "\"อีกครั้ง เร็วขึ้น!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียง"
+            ],
+            "watchFor": [
+              "เสียง /t/ สั้น ๆ ที่มีลมพ่นออกมาเล็กน้อย ไม่ใช่ \"tuh\" (เทอะ)"
+            ]
+          }
+        },
+        {
+          "id": "C2",
+          "title": {
+            "en": "Letter cards",
+            "th": "บัตรตัวอักษร"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Each child has a workmat and the six letter cards of the week.",
+              "Build a chain, one change at a time: the word at, then sat, then mat, then map, then tap.",
+              "Children push one card into a box for each sound and say the sound, then read the word."
+            ],
+            "teacherLanguage": [
+              "\"Make at. /a/ - /t/. Push the cards.\"",
+              "\"Put the letter s at the start. Sss - /a/ - /t/. Sat!\"",
+              "\"Change the letter s to the letter m. What is the word now? Mat!\"",
+              "\"Change the letter t to the letter p: map. Change the letter m to the letter t: tap!\""
+            ],
+            "studentActions": [
+              "Children push the cards, say the sounds, and read each word."
+            ],
+            "watchFor": [
+              "Children who change the wrong card: say the old word and the new word slowly, and ask which sound is new."
+            ]
+          },
+          "easier": {
+            "en": "Build only \"at\" and \"sat\", with the teacher.",
+            "th": "ต่อเฉพาะคำ \"at\" และ \"sat\" พร้อมครู"
+          },
+          "harder": {
+            "en": "The child builds \"mat\" and \"tap\" with no help, and reads both words.",
+            "th": "เด็กต่อคำ \"mat\" และ \"tap\" ด้วยตัวเอง และอ่านทั้ง 2 คำ"
+          },
+          "group": {
+            "en": "Pairs share one workmat and take turns to push the cards.",
+            "th": "ทำเป็นคู่: ใช้แผ่นรองกิจกรรมร่วมกัน 1 แผ่น และผลัดกันเลื่อนบัตร"
+          },
+          "materials": [
+            "workmats (class set)",
+            "letter cards (class set): t, s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็กแต่ละคนมีแผ่นรองกิจกรรม 1 แผ่น และบัตรตัวอักษร 6 ใบของสัปดาห์นี้",
+              "ต่อคำทีละขั้น โดยเพิ่มหรือเปลี่ยนบัตรครั้งละ 1 ใบ: คำ at แล้ว sat แล้ว mat แล้ว map แล้ว tap",
+              "เด็ก ๆ เลื่อนบัตรเข้าช่องทีละใบ ใบละ 1 เสียง และออกเสียงนั้น แล้วอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"ต่อคำ at /a/ - /t/ เลื่อนบัตร\"",
+              "\"วางบัตรตัวอักษร s ไว้ข้างหน้า Sss - /a/ - /t/ Sat!\"",
+              "\"เปลี่ยนตัวอักษร s เป็นตัวอักษร m ตอนนี้เป็นคำอะไร? Mat!\"",
+              "\"เปลี่ยนตัวอักษร t เป็นตัวอักษร p: map เปลี่ยนตัวอักษร m เป็นตัวอักษร t: tap!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เลื่อนบัตร ออกเสียง และอ่านแต่ละคำ"
+            ],
+            "watchFor": [
+              "เด็กที่เปลี่ยนบัตรผิดใบ: พูดคำเดิมและคำใหม่ช้า ๆ แล้วถามว่าเสียงไหนเป็นเสียงใหม่"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "title": {
+            "en": "Dictation",
+            "th": "เขียนตามคำบอก"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Say the sound /t/; children say it, then write the letter t in the book. Do it two times.",
+              "Say \"mat\". Children say the sounds on three fingers, then write the word in three boxes.",
+              "Then children trace the sentence \"Pat sat on a mat.\" on the line."
+            ],
+            "teacherLanguage": [
+              "\"When I say /t/, you write the letter t. Ready? /t/.\"",
+              "\"Listen: mat. Say the sounds on your fingers: mmm - /a/ - /t/. Write one letter in each box.\"",
+              "\"Now trace: Pat sat on a mat. A big letter P at the start. A full stop at the end.\""
+            ],
+            "studentActions": [
+              "Children write the letter t two times and the word \"mat\" in the book.",
+              "Children trace \"Pat sat on a mat.\""
+            ],
+            "watchFor": [
+              "Children who make the line across first: show the formation again: down with a little curve, then the short line across."
+            ]
+          },
+          "easier": {
+            "en": "Children trace \"mat\" before they write it.",
+            "th": "เด็ก ๆ ลากเส้นตาม \"mat\" ก่อนเขียนเอง"
+          },
+          "harder": {
+            "en": "Children write \"sat\" in three boxes, too.",
+            "th": "เด็ก ๆ เขียน \"sat\" ใน 3 ช่องด้วย"
+          },
+          "group": {
+            "en": "Pairs check each other's letter t: start at the dot, down with a little curve, then a short line across.",
+            "th": "ทำเป็นคู่: ตรวจตัวอักษร t ของกันและกัน (เริ่มที่จุด ลากลงแล้วโค้งเล็กน้อย จากนั้นลากเส้นขวางสั้น ๆ)"
+          },
+          "materials": [
+            "student book: dictation lines"
+          ],
+          "th": {
+            "teacherActions": [
+              "ออกเสียง /t/ เด็ก ๆ พูดตาม แล้วเขียนตัวอักษร t ในหนังสือ ทำ 2 ครั้ง",
+              "พูด \"mat\" เด็ก ๆ ออกเสียงทีละเสียงพร้อมชูนิ้วเสียงละ 1 นิ้ว แล้วเขียนคำลงใน 3 ช่อง",
+              "จากนั้นเด็ก ๆ ลากเส้นตามประโยค \"Pat sat on a mat.\" บนบรรทัด"
+            ],
+            "teacherLanguage": [
+              "\"เมื่อครูพูด /t/ ให้เด็ก ๆ เขียนตัวอักษร t พร้อมไหม? /t/\"",
+              "\"ฟัง: mat ออกเสียงทีละเสียงและชูนิ้วทีละนิ้ว: mmm - /a/ - /t/ เขียนตัวอักษรช่องละ 1 ตัว\"",
+              "\"ทีนี้ลากเส้นตาม: Pat sat on a mat. (Pat นั่งบนเสื่อ) P ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่จุดที่ท้ายประโยค\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เขียนตัวอักษร t 2 ครั้ง และเขียนคำ \"mat\" ในหนังสือ",
+              "เด็ก ๆ ลากเส้นตาม \"Pat sat on a mat.\""
+            ],
+            "watchFor": [
+              "เด็กที่เขียนเส้นขวางก่อน: แสดงวิธีเขียนให้ดูอีกครั้ง: ลากลงแล้วโค้งเล็กน้อย จากนั้นลากเส้นขวางสั้น ๆ"
+            ]
+          }
+        },
+        {
+          "id": "C4",
+          "title": {
+            "en": "Decodable: read together",
+            "th": "หนังสือฝึกสะกดอ่าน: อ่านด้วยกัน"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Show the cover of \"Tap, Tap!\". Read the title and ask what the book is about.",
+              "Show the \"Sounds in this book\" page: the class says /t/, sounds out \"Pat\", \"sat\", \"mat\", and \"tap\", and reads the tricky words \"he\" and \"see\". Show the word list on the back cover: these are the main words of the book.",
+              "Read page 1 with the class: sound out \"Pat\", \"sat\", and \"mat\" with your finger under the letters, and read \"on\" and \"a\" as tricky words.",
+              "Then pairs read: partner A reads a page, partner B reads the next."
+            ],
+            "teacherLanguage": [
+              "\"Look. Tap, Tap! What can you hear? Who taps?\"",
+              "\"Look at this page. These are the sounds and the words of the book. What sound? /t/!\"",
+              "\"Finger under the letters. /p/ - /a/ - /t/. Pat! Sss - /a/ - /t/. Sat!\"",
+              "\"Your turn with your partner. Partner A reads, partner B reads, partner A reads.\""
+            ],
+            "studentActions": [
+              "Children read each page with a finger under the words.",
+              "Pairs take turns, page by page."
+            ],
+            "watchFor": [
+              "Children who read \"tap\" as \"Pat\": point to the first letter and ask for its sound.",
+              "Children sound out \"Pat\", \"Sam\", \"sat\", \"mat\", \"tap\", \"map\", and \"pan\" with the letters. \"Pip\" is a name: read it for the class. The other words are tricky words: on, a, can, see, he, the."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher, page by page.",
+            "th": "เด็กอ่านพร้อมครูทีละหน้า"
+          },
+          "harder": {
+            "en": "The child reads the whole book alone to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher sits with one pair.",
+            "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
+          },
+          "materials": [
+            "books (one for each pair): \"Tap, Tap!\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกของ \"Tap, Tap!\" อ่านชื่อเรื่อง แล้วถามว่าหนังสือเล่มนี้เกี่ยวกับอะไร",
+              "ให้ดูหน้า \"Sounds in this book\" (เสียงในหนังสือเล่มนี้): ทั้งชั้นพูด /t/ สะกดออกเสียง \"Pat\", \"sat\", \"mat\" และ \"tap\" และอ่านคำที่ต้องจำ \"he\" และ \"see\" จากนั้นให้ดูรายการคำที่ปกหลัง: นี่คือคำหลักในหนังสือเล่มนี้",
+              "อ่านหน้า 1 พร้อมทั้งชั้น: สะกดออกเสียง \"Pat\", \"sat\" และ \"mat\" โดยวางนิ้วใต้ตัวอักษร และอ่าน \"on\" และ \"a\" เป็นคำที่ต้องจำ",
+              "จากนั้นให้อ่านเป็นคู่: คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป"
+            ],
+            "teacherLanguage": [
+              "\"ดู Tap, Tap! (เคาะ เคาะ!) หนูได้ยินเสียงอะไร? ใครเคาะ?\"",
+              "\"ดูหน้านี้ นี่คือเสียงและคำในหนังสือ เสียงอะไร? /t/!\"",
+              "\"วางนิ้วใต้ตัวอักษร /p/ - /a/ - /t/ Pat! Sss - /a/ - /t/ Sat!\"",
+              "\"ถึงตาเด็ก ๆ อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน คู่คนที่ 1 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
+              "คู่ผลัดกันอ่านทีละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"tap\" เป็น \"Pat\": ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร",
+              "เด็ก ๆ สะกดออกเสียง \"Pat\", \"Sam\", \"sat\", \"mat\", \"tap\", \"map\" และ \"pan\" ด้วยตัวอักษร \"Pip\" เป็นชื่อ: ครูอ่านคำนี้ให้ทั้งชั้นฟัง คำอื่นเป็นคำที่ต้องจำ: on, a, can, see, he, the"
+            ]
+          }
+        },
+        {
+          "id": "C5",
+          "title": {
+            "en": "Comprehension",
+            "th": "ตรวจความเข้าใจ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Ask two questions about the book, one with the frame of the week. Children answer with a short sentence."
+            ],
+            "teacherLanguage": [
+              "\"Look at page 5. What can Sam see? Sam can see a pan!\"",
+              "\"Look at page 8. What can you see? I can see Pip!\""
+            ],
+            "studentActions": [
+              "Children answer, then say the full answer with the teacher."
+            ],
+            "watchFor": [
+              "Children who answer with one word: say the full answer; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Ask only yes or no questions: \"Is Pip on the mat?\"",
+            "th": "ถามเฉพาะคำถามแบบใช่หรือไม่ใช่: \"Is Pip on the mat?\" (Pip อยู่บนเสื่อใช่ไหม)"
+          },
+          "harder": {
+            "en": "A child asks a question about a page: \"What can Pat see?\"",
+            "th": "เด็กคนหนึ่งถามคำถามเกี่ยวกับหน้าหนึ่ง: \"What can Pat see?\" (Pat มองเห็นอะไร)"
+          },
+          "group": {
+            "en": "Pairs ask each other one question.",
+            "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
+          },
+          "materials": [
+            "books (one for each pair): \"Tap, Tap!\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ถามคำถาม 2 ข้อเกี่ยวกับหนังสือ โดยให้ 1 ข้อใช้กรอบประโยคของสัปดาห์ เด็ก ๆ ตอบเป็นประโยคสั้น ๆ"
+            ],
+            "teacherLanguage": [
+              "\"ดูหน้า 5 What can Sam see? (Sam มองเห็นอะไร) Sam can see a pan! (Sam มองเห็นกระทะ)\"",
+              "\"ดูหน้า 8 What can you see? (หนูมองเห็นอะไร) I can see Pip! (ฉันมองเห็น Pip)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ตอบ แล้วพูดคำตอบเต็มพร้อมครู"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบด้วยคำเดียว: พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "C6",
+          "title": {
+            "en": "Favorite page",
+            "th": "หน้าที่ชอบ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask two or three children to read their favorite page of \"Tap, Tap!\"."
+            ],
+            "teacherLanguage": [
+              "\"Which page do you like? Read it to us.\""
+            ],
+            "studentActions": [
+              "Two or three children read one page each."
+            ],
+            "watchFor": [
+              "Children who are not sure: let them choose a page, then read it with them."
+            ]
+          },
+          "easier": {
+            "en": "The child points to the page; the class reads it.",
+            "th": "เด็กชี้ที่หน้านั้น ทั้งชั้นอ่าน"
+          },
+          "harder": {
+            "en": "The child reads the page and says why: \"I like Pip!\"",
+            "th": "เด็กอ่านหน้านั้นและบอกเหตุผล: \"I like Pip!\" (หนูชอบ Pip!)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "books (one for each pair): \"Tap, Tap!\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 2 หรือ 3 คนอ่านหน้าที่ชอบใน \"Tap, Tap!\""
+            ],
+            "teacherLanguage": [
+              "\"หนูชอบหน้าไหน? อ่านให้เราฟัง\""
+            ],
+            "studentActions": [
+              "เด็ก 2 หรือ 3 คนอ่านคนละ 1 หน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่แน่ใจ: ให้เด็กเลือกหน้า แล้วอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "C7",
+          "title": {
+            "en": "Sticker",
+            "th": "สติกเกอร์"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Give each child the sticker of \"Tap, Tap!\".",
+              "Children put it on number 6 of the book map in their book."
+            ],
+            "teacherLanguage": [
+              "\"You read the book! Here is your sticker.\"",
+              "\"Put it on the book map, on number 6.\""
+            ],
+            "studentActions": [
+              "Children put the sticker on the book map and say the book title."
+            ],
+            "watchFor": [
+              "Children who put the sticker in the wrong place: show number 6 on the map."
+            ]
+          },
+          "easier": {
+            "en": "Put the sticker on the map with the child.",
+            "th": "ติดสติกเกอร์บนแผนที่หนังสือพร้อมกับเด็ก"
+          },
+          "harder": {
+            "en": "The child says the title and reads one page from the book.",
+            "th": "เด็กพูดชื่อหนังสือและอ่าน 1 หน้าจากหนังสือ"
+          },
+          "group": {
+            "en": "The table leader gives out the stickers.",
+            "th": "หัวหน้าโต๊ะแจกสติกเกอร์"
+          },
+          "materials": [
+            "stickers: \"Tap, Tap!\"",
+            "student book: book map"
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกสติกเกอร์ \"Tap, Tap!\" ให้เด็กแต่ละคน",
+              "เด็ก ๆ ติดสติกเกอร์ที่หมายเลข 6 ของแผนที่หนังสือในหนังสือของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"เด็ก ๆ อ่านหนังสือจบแล้ว! นี่คือสติกเกอร์ของเด็ก ๆ\"",
+              "\"ติดที่แผนที่หนังสือ ที่หมายเลข 6\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ติดสติกเกอร์บนแผนที่หนังสือ และพูดชื่อหนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่ติดสติกเกอร์ผิดที่: ชี้หมายเลข 6 บนแผนที่หนังสือให้ดู"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "day": 4,
+      "title": {
+        "en": "Read and Write",
+        "th": "อ่านและเขียน"
+      },
+      "prep": [
+        {
+          "en": "Put crayons on each table, and mark the writing page in the student books (D4).",
+          "th": "วางสีเทียนไว้ทุกโต๊ะ และคั่นหน้ากิจกรรมเขียนในหนังสือนักเรียนไว้ (D4)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "D1",
+          "title": {
+            "en": "Re-read",
+            "th": "อ่านซ้ำ"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Children read \"Tap, Tap!\" again in pairs, with a finger under the words. Partner A reads a page, partner B reads the next.",
+              "Sit with one table and listen to each child read two pages."
+            ],
+            "teacherLanguage": [
+              "\"Read the book again. Finger under the words.\"",
+              "\"Read page 7 to me. Good! He can see Pip!\""
+            ],
+            "studentActions": [
+              "Children read the book in pairs, with a finger under each word."
+            ],
+            "watchFor": [
+              "Note on the record sheet the children who cannot yet sound out \"sat\", \"mat\", and \"tap\"."
+            ]
+          },
+          "easier": {
+            "en": "The child reads together with the partner.",
+            "th": "เด็กอ่านพร้อมกับคู่"
+          },
+          "harder": {
+            "en": "The child reads the book alone to the partner.",
+            "th": "เด็กอ่านหนังสือให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher listens to one table.",
+            "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
+          },
+          "materials": [
+            "books (one for each pair): \"Tap, Tap!\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ อ่าน \"Tap, Tap!\" อีกครั้งเป็นคู่ โดยวางนิ้วใต้คำ คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป",
+              "นั่งกับ 1 โต๊ะ และฟังเด็กแต่ละคนอ่าน 2 หน้า"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสืออีกครั้ง วางนิ้วใต้คำ\"",
+              "\"อ่านหน้า 7 ให้ครูฟัง เก่งมาก! He can see Pip! (เขามองเห็น Pip)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านหนังสือเป็นคู่ โดยวางนิ้วใต้แต่ละคำ"
+            ],
+            "watchFor": [
+              "จดในแบบบันทึกผล: เด็กที่ยังสะกดออกเสียง \"sat\", \"mat\" และ \"tap\" ไม่ได้"
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "title": {
+            "en": "Tricky words",
+            "th": "คำที่ต้องจำ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Show the cards a, and, can, I, in, on, the, get, is, this, saw, off, with, he, put, see fast.",
+              "Write \"see\" on the board, then erase one letter; children say the missing letter."
+            ],
+            "teacherLanguage": [
+              "\"Read it fast! He. Put. See. Saw. Off. With. This. Is. The. Get. I. In. On. Can. And. A.\"",
+              "\"Close your eyes. ... Open your eyes. What is missing?\""
+            ],
+            "studentActions": [
+              "Children read the cards fast.",
+              "Children say the missing letter name."
+            ],
+            "watchFor": [
+              "Read the tricky word card a as \"uh\", as in \"a cat\".",
+              "Children who mix up \"see\" and \"saw\": put the two cards side by side and read them slowly."
+            ]
+          },
+          "easier": {
+            "en": "Show only the new cards: he, put, see.",
+            "th": "ชูเฉพาะบัตรใหม่: he, put, see"
+          },
+          "harder": {
+            "en": "Erase two letters of \"put\".",
+            "th": "ลบตัวอักษร 2 ตัวของ \"put\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "tricky word cards: a, and, can, I, in, on, the, get, is, this, saw, off, with, he, put, see",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตร a, and, can, I, in, on, the, get, is, this, saw, off, with, he, put, see อย่างรวดเร็ว",
+              "เขียน \"see\" บนกระดาน แล้วลบตัวอักษร 1 ตัว เด็ก ๆ บอกตัวอักษรที่หายไป"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเร็ว ๆ! He, put, see, saw, off, with, this, is, the, get, I, in, on, can, and, a\"",
+              "\"หลับตา ... ลืมตา อะไรหายไป?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรอย่างรวดเร็ว",
+              "เด็ก ๆ บอกชื่อตัวอักษรที่หายไป"
+            ],
+            "watchFor": [
+              "อ่านบัตรคำที่ต้องจำ a ว่า \"uh\" (เออะ) แบบใน \"a cat\"",
+              "เด็กที่สับสนระหว่าง \"see\" กับ \"saw\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
+            ]
+          }
+        },
+        {
+          "id": "D3",
+          "title": {
+            "en": "Leveled reader",
+            "th": "หนังสืออ่านแบ่งระดับ"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "Give out the class set of \"I Can See\" (Sprout band).",
+              "Read it together once, then pairs read it page by page."
+            ],
+            "teacherLanguage": [
+              "\"Open your book. Read with me.\"",
+              "\"Now read it with your partner. Partner A reads, partner B reads.\""
+            ],
+            "studentActions": [
+              "Children read \"I Can See\" together, then in pairs."
+            ],
+            "watchFor": [
+              "Children who read an animal word wrong: point to the picture and make the sound of the animal."
+            ]
+          },
+          "easier": {
+            "en": "Pairs read only pages 1 to 4.",
+            "th": "คู่อ่านเฉพาะหน้า 1 ถึง 4"
+          },
+          "harder": {
+            "en": "The child reads the whole book to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟัง"
+          },
+          "group": {
+            "en": "Pairs.",
+            "th": "ทำเป็นคู่"
+          },
+          "materials": [
+            "books (one for each pair): \"I Can See\""
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกหนังสือ \"I Can See\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
+            ],
+            "teacherLanguage": [
+              "\"เปิดหนังสือ อ่านพร้อมครู\"",
+              "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่าน \"I Can See\" พร้อมกัน แล้วอ่านเป็นคู่"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านคำศัพท์ชื่อสัตว์ผิด: ชี้ที่ภาพ แล้วทำเสียงร้องของสัตว์ตัวนั้น"
+            ]
+          }
+        },
+        {
+          "id": "D4",
+          "title": {
+            "en": "Write it",
+            "th": "เขียน"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Part 1 (5 min): write \"I can see a ___.\" on the board. Show where the big letter and the full stop go. \"I\" is always a big letter.",
+              "Children trace \"I can see a cat.\" in the book. Then they color the cat above it.",
+              "Stand-and-move break (at minute 5): all children stand up.",
+              "Say an animal; the class makes its move (hop like a frog, flap like a bird) and says the frame with that animal (\"I can see a frog!\"). Do it three times, then sit down.",
+              "Part 2 (5 min): in the second box, children draw a dog, a fish, or a bird. They find the word under the box (dog, fish, bird) and trace it."
+            ],
+            "teacherLanguage": [
+              "\"A big letter I. A full stop at the end.\"",
+              "\"Trace the words: I can see a cat.\"",
+              "\"Color the cat.\"",
+              "\"Stand up! Hop like a frog! I can see a frog!\"",
+              "\"Now draw a dog, a fish, or a bird. Find the word and trace it.\""
+            ],
+            "studentActions": [
+              "Children trace the frame and color the cat.",
+              "Children stand, move like the animal, and say the frame in the break.",
+              "Children draw a second animal, then find and trace the animal word."
+            ],
+            "watchFor": [
+              "Children who trace the wrong animal word: point to the picture and ask: \"What is it?\""
+            ]
+          },
+          "easier": {
+            "en": "Draw with the child; the child traces the words.",
+            "th": "วาดภาพพร้อมกับเด็ก แล้วให้เด็กลากเส้นตามคำ"
+          },
+          "harder": {
+            "en": "The child traces the frame again on the second line with the word of the second picture: \"I can see a dog.\"",
+            "th": "เด็กลากเส้นตามกรอบประโยคอีกครั้งบนบรรทัดที่สอง โดยใช้คำของภาพที่สอง: \"I can see a dog.\" (ฉันมองเห็นสุนัข)"
+          },
+          "group": {
+            "en": "Alone; at the end, the children make pairs and show each other the page.",
+            "th": "ทำคนเดียว ตอนท้ายให้เด็กจับคู่และเปิดหน้านั้นให้กันดู"
+          },
+          "materials": [
+            "student book: writing page",
+            "crayons",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ส่วนที่ 1 (5 นาที): เขียน \"I can see a ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน \"I\" เป็นตัวพิมพ์ใหญ่เสมอ",
+              "เด็ก ๆ ลากเส้นตาม \"I can see a cat.\" ในหนังสือ จากนั้นระบายสีแมวที่อยู่เหนือประโยค",
+              "พักยืนขยับตัว (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น",
+              "ครูพูดชื่อสัตว์ 1 ชนิด ทั้งชั้นทำท่าทางของสัตว์ตัวนั้น (กระโดดเหมือนกบ กระพือแขนเหมือนนก) และพูดกรอบประโยคกับสัตว์ตัวนั้น (เช่น \"I can see a frog!\" (ฉันมองเห็นกบ)) ทำ 3 ครั้ง แล้วนั่งลง",
+              "ส่วนที่ 2 (5 นาที): ในช่องที่สอง เด็ก ๆ วาดสุนัข ปลา หรือนก แล้วหาคำใต้ช่องที่ตรงกับภาพ (dog, fish, bird) และลากเส้นตามคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"I ตัวพิมพ์ใหญ่ ใส่จุดที่ท้ายประโยค\"",
+              "\"ลากเส้นตามคำ: I can see a cat.\"",
+              "\"ระบายสีแมว\"",
+              "\"Stand up! (ยืนขึ้น) Hop like a frog! (กระโดดเหมือนกบ) I can see a frog! (ฉันมองเห็นกบ)\"",
+              "\"ทีนี้วาดสุนัข ปลา หรือนก หาคำนั้นแล้วลากเส้นตาม\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ลากเส้นตามกรอบประโยค และระบายสีแมว",
+              "เด็ก ๆ ยืน ทำท่าทางเหมือนสัตว์ และพูดกรอบประโยคในช่วงพัก",
+              "เด็ก ๆ วาดสัตว์ตัวที่สอง แล้วหาคำศัพท์ชื่อสัตว์และลากเส้นตาม"
+            ],
+            "watchFor": [
+              "เด็กที่ลากเส้นตามคำศัพท์ชื่อสัตว์ผิดคำ: ชี้ที่ภาพแล้วถามว่า: \"What is it?\" (นี่คืออะไร)"
+            ]
+          }
+        },
+        {
+          "id": "D5",
+          "title": {
+            "en": "Share",
+            "th": "นำเสนอ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask four children to read their page to the class."
+            ],
+            "teacherLanguage": [
+              "\"Read your page to us. Hold up your book.\""
+            ],
+            "studentActions": [
+              "Four children read \"I can see a ___.\" from their book."
+            ],
+            "watchFor": [
+              "Children who read too quietly: stand next to them and read with them."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher.",
+            "th": "เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "The child reads both lines and points to the pictures.",
+            "th": "เด็กอ่านทั้ง 2 บรรทัด และชี้ที่ภาพ"
+          },
+          "group": {
+            "en": "Whole class; the class makes the sound of the animal.",
+            "th": "ทั้งชั้น: ทั้งชั้นทำเสียงร้องของสัตว์ตัวนั้น"
+          },
+          "materials": [
+            "student book: writing page"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 4 คนอ่านหน้าของตัวเองให้ทั้งชั้นฟัง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหน้าของหนูให้เราฟัง ชูหนังสือขึ้น\""
+            ],
+            "studentActions": [
+              "เด็ก 4 คนอ่าน \"I can see a ___.\" จากหนังสือของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านเบาเกินไป: ยืนข้างเด็กและอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "D6",
+          "title": {
+            "en": "Sing it: song show",
+            "th": "ร้องเพลง: การแสดงร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the day 5 opening, the song of the week (item 3) is the song show. The class sings with all the gestures; one table leads.",
+              "If the school allows it, film the song on the class tablet."
+            ],
+            "teacherLanguage": [
+              "\"Table 2, you are the leaders today. Show us the gestures!\"",
+              "\"Show time! Sing it with all the gestures!\""
+            ],
+            "studentActions": [
+              "The leaders do the gestures in front; the class sings and copies."
+            ],
+            "watchFor": [
+              "Leaders who forget a gesture: point to the screen.",
+              "Children who are shy on the film: they can stand in the back row."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus with the gestures.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus) พร้อมท่าประกอบเพลง"
+          },
+          "harder": {
+            "en": "The leaders sing the verse alone.",
+            "th": "ผู้นำร้องท่อนเวิร์ส (verse) เอง"
+          },
+          "group": {
+            "en": "One table leads each week.",
+            "th": "โต๊ะหนึ่งเป็นผู้นำในแต่ละสัปดาห์"
+          },
+          "materials": [
+            "karaoke videos: \"I Can See a Cat\"",
+            "class tablet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบของวันที่ 5 เพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เป็นการแสดงร้องเพลง ทั้งชั้นร้องพร้อมทำท่าประกอบเพลงทุกท่า โต๊ะหนึ่งเป็นผู้นำ",
+              "ถ้าโรงเรียนอนุญาต ให้ถ่ายวิดีโอการร้องเพลงด้วยแท็บเล็ตของห้อง"
+            ],
+            "teacherLanguage": [
+              "\"โต๊ะ 2 วันนี้เป็นผู้นำ ทำท่าประกอบเพลงให้เพื่อน ๆ ดู!\"",
+              "\"ถึงเวลาแสดงแล้ว! ร้องพร้อมทำท่าประกอบเพลงทุกท่า!\""
+            ],
+            "studentActions": [
+              "ผู้นำทำท่าประกอบเพลงอยู่ด้านหน้า ทั้งชั้นร้องและทำท่าตาม"
+            ],
+            "watchFor": [
+              "ผู้นำที่ลืมท่า: ชี้ที่จอ",
+              "เด็กที่อายกล้อง: ให้ยืนแถวหลังได้"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "day": 5,
+      "title": {
+        "en": "Play and Check",
+        "th": "เล่นและตรวจสอบ"
+      },
+      "prep": [
+        {
+          "en": "Put the new cards and books of week 6 in the four centers. Make the word cards sat, mat, tap, Pat and the tricky word cards he, put, see for the game.",
+          "th": "นำบัตรและหนังสือชุดใหม่ของสัปดาห์ที่ 6 ไปวางที่มุมกิจกรรมทั้ง 4 มุม และทำบัตรคำ sat, mat, tap, Pat และบัตรคำที่ต้องจำ he, put, see สำหรับเกม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "E1",
+          "title": {
+            "en": "Centers set-up",
+            "th": "จัดมุมกิจกรรม"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the four centers and the group signs. Send each group to its first center.",
+              "Groups 1 and 2 start at the book corner and the letter cards; groups 3 and 4 at the picture sort and the karaoke corner.",
+              "Hold up each sound picture card and say the word with the class: tiger, ten, table, tomato. Then hold up cat, hat, and boat: /t/ is at the end."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, go to the book corner. Group 2, the letter cards.\"",
+              "\"Group 3, the picture sort. Group 4, the karaoke corner.\""
+            ],
+            "studentActions": [
+              "Children go to their center and sit down."
+            ],
+            "watchFor": [
+              "Groups that do not know where to go: point to the group sign at each center."
+            ]
+          },
+          "easier": {
+            "en": "Put a picture of each group on its center.",
+            "th": "ติดภาพของแต่ละกลุ่มไว้ที่มุมกิจกรรมของกลุ่มนั้น"
+          },
+          "harder": {
+            "en": "A group leader shows the center card to the group and does the first turn.",
+            "th": "หัวหน้ากลุ่มให้กลุ่มดูบัตรมุมกิจกรรม และเล่นเป็นคนแรก"
+          },
+          "group": {
+            "en": "Four groups.",
+            "th": "4 กลุ่ม"
+          },
+          "materials": [
+            "center cards",
+            "group signs",
+            "sound picture cards: tiger, ten, table, tomato",
+            "picture cards: cat, hat, boat"
+          ],
+          "th": {
+            "teacherActions": [
+              "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
+              "กลุ่ม 1 และ 2 เริ่มที่มุมหนังสือและมุมบัตรตัวอักษร กลุ่ม 3 และ 4 เริ่มที่มุมแยกภาพและมุมคาราโอเกะ",
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: tiger, ten, table, tomato จากนั้นชูบัตรภาพ cat, hat และ boat: เสียง /t/ อยู่ท้ายคำ"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปที่มุมหนังสือ กลุ่ม 2 ไปมุมบัตรตัวอักษร\"",
+              "\"กลุ่ม 3 ไปมุมแยกภาพ กลุ่ม 4 ไปที่มุมคาราโอเกะ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ไปที่มุมกิจกรรมของตัวเองและนั่งลง"
+            ],
+            "watchFor": [
+              "กลุ่มที่ไม่รู้ว่าต้องไปที่ไหน: ชี้ที่ป้ายกลุ่มของแต่ละมุมกิจกรรม"
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups work at their center. Picture sort: sort the picture cards into \"/t/ at the start or the end\" and \"no /t/\". Letter cards: build the words \"sat\" and \"tap\", and read them. Book corner: read the twelve books of weeks 1 to 6. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"Tap, Tap!\"; mark the record sheet."
+            ],
+            "teacherLanguage": [
+              "\"Read the book to me. Finger under the words.\"",
+              "\"Good! Sound it out: /t/ - /a/ - /p/. Tap!\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Note the children who guess the words from the picture and do not look at the letters."
+            ]
+          },
+          "easier": {
+            "en": "At the reading-record table, the child reads with the teacher.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "At the reading-record table, the child reads the whole book alone.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านทั้งเล่มด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "sorting mat: /t/ / no /t/",
+            "sound picture cards: tiger, ten, table, tomato",
+            "picture cards: cat, hat, boat",
+            "picture cards: sun, dog, pen",
+            "workmats (class set)",
+            "letter cards (class set): t, s, m, p, a, n",
+            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\", \"I Have Two\", \"Sam and Pam\", \"I Can See\", \"Tap, Tap!\"",
+            "class tablet",
+            "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\", \"This Is My Family\", \"I Have Two\", \"I Can See a Cat\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่มีเสียง /t/ ที่ต้นคำหรือท้ายคำ และกองที่ไม่มีเสียง /t/ มุมบัตรตัวอักษร: ต่อคำ \"sat\" และ \"tap\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 12 เล่มของสัปดาห์ที่ 1 ถึง 6 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"Tap, Tap!\" แล้วบันทึกในแบบบันทึกผล"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\"",
+              "\"เก่งมาก! สะกดออกเสียง: /t/ - /a/ - /p/ Tap!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "จดชื่อเด็กที่เดาคำจากภาพ โดยไม่ดูตัวอักษร"
+            ]
+          }
+        },
+        {
+          "id": "E3",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups change: 1 and 2 go to the karaoke corner and the picture sort; 3 and 4 go to the letter cards and the book corner.",
+              "Listen to two more children at the reading-record table."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the karaoke corner. Group 2, the picture sort. Group 3, the letter cards. Group 4, the book corner.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children change centers and work.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Groups that change slowly: count down from five."
+            ]
+          },
+          "easier": {
+            "en": "Keep the same center for a group that needs more time.",
+            "th": "ให้กลุ่มที่ต้องการเวลามากขึ้นอยู่ที่มุมเดิม"
+          },
+          "harder": {
+            "en": "Groups that finish early read the word wall words to each other.",
+            "th": "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มสลับมุม: กลุ่ม 1 และ 2 ไปที่มุมคาราโอเกะและมุมแยกภาพ กลุ่ม 3 และ 4 ไปที่มุมบัตรตัวอักษรและมุมหนังสือ",
+              "ฟังเด็กอีก 2 คนอ่านที่โต๊ะบันทึกการอ่าน"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมคาราโอเกะ กลุ่ม 2 ไปที่มุมแยกภาพ กลุ่ม 3 ไปที่มุมบัตรตัวอักษร กลุ่ม 4 ไปมุมหนังสือ\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เปลี่ยนมุมกิจกรรมและทำกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "กลุ่มที่เปลี่ยนมุมช้า: นับถอยหลังจาก 5"
+            ]
+          }
+        },
+        {
+          "id": "E4",
+          "title": {
+            "en": "Game",
+            "th": "เกม"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Play \"Swat the word\": put the word cards sat, mat, tap, Pat and the tricky word cards he, put, see on the board.",
+              "Say a word. Two children run to the board. The first child to touch the card reads it."
+            ],
+            "teacherLanguage": [
+              "\"Ready? See!\"",
+              "\"Touch the word. Read it: see!\"",
+              "\"Next two. Ready?\""
+            ],
+            "studentActions": [
+              "Two children at a time touch the card and read the word.",
+              "The class reads the word with them."
+            ],
+            "watchFor": [
+              "Fast children who always win: ask them to touch with the left hand, or hop to the board.",
+              "Children who touch \"Pat\" for \"tap\": read both words slowly, sound by sound."
+            ]
+          },
+          "easier": {
+            "en": "Put only four cards on the board: sat, tap, he, see.",
+            "th": "ติดบัตรเพียง 4 ใบบนกระดาน: sat, tap, he, see"
+          },
+          "harder": {
+            "en": "Say only the first sound, /t/; the child finds the word that starts with /t/.",
+            "th": "พูดเฉพาะเสียงแรก คือ /t/ เด็กหาคำที่ขึ้นต้นด้วย /t/"
+          },
+          "group": {
+            "en": "Two teams; one child from each team at a time.",
+            "th": "2 ทีม ทีมละ 1 คนในแต่ละครั้ง"
+          },
+          "materials": [
+            "word cards: sat, mat, tap, Pat",
+            "tricky word cards: he, put, see"
+          ],
+          "th": {
+            "teacherActions": [
+              "เล่นเกม \"Swat the word\": ติดบัตรคำ sat, mat, tap, Pat และบัตรคำที่ต้องจำ he, put, see บนกระดาน",
+              "พูดคำ 1 คำ เด็ก 2 คนวิ่งไปที่กระดาน เด็กคนแรกที่แตะบัตรนั้นอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"พร้อมไหม? see!\"",
+              "\"แตะคำนั้น อ่าน: see!\"",
+              "\"2 คนต่อไป พร้อมไหม?\""
+            ],
+            "studentActions": [
+              "เด็กครั้งละ 2 คนแตะบัตรและอ่านคำ",
+              "ทั้งชั้นอ่านคำนั้นพร้อมกับเด็ก 2 คนนั้น"
+            ],
+            "watchFor": [
+              "เด็กที่เร็วและชนะทุกครั้ง: ให้แตะด้วยมือซ้าย หรือกระโดดขาเดียวไปที่กระดาน",
+              "เด็กที่แตะ \"Pat\" แทน \"tap\": อ่านทั้ง 2 คำช้า ๆ ทีละเสียง"
+            ]
+          }
+        },
+        {
+          "id": "E5",
+          "title": {
+            "en": "Check",
+            "th": "ตรวจสอบ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Children do the check page: in rows 1 to 3, circle the picture that starts with /t/; in rows 4 and 5, circle the word that you say. Then they write the letter t and the word \"sat\".",
+              "Collect the books and mark the check."
+            ],
+            "teacherLanguage": [
+              "\"Row 1: tiger, sun, bag. Which one starts with /t/? Circle it.\"",
+              "\"Row 2: cup, ten, fish. Which one starts with /t/? Circle it.\"",
+              "\"Row 3: dog, pen, table. Which one starts with /t/? Circle it.\"",
+              "\"Row 4. Find the word tap. Circle it.\"",
+              "\"Row 5. Find the word see. Circle it.\"",
+              "\"Now write the letter t. Then write the word sat.\""
+            ],
+            "studentActions": [
+              "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter t, and write \"sat\"."
+            ],
+            "watchFor": [
+              "Children who circle every picture, or a wrong picture in two rows: mark /t/ as weak on the record sheet; it goes back on the review strip.",
+              "Children who circle a wrong word in row 4 or row 5: mark that word as weak; it goes back on the review strip."
+            ]
+          },
+          "easier": {
+            "en": "Sit next to the child and point to each picture while you say it.",
+            "th": "นั่งข้างเด็ก และชี้แต่ละภาพขณะพูดคำ"
+          },
+          "harder": {
+            "en": "The child writes \"mat\" too.",
+            "th": "เด็กเขียน \"mat\" ด้วย"
+          },
+          "group": {
+            "en": "Alone.",
+            "th": "ทำคนเดียว"
+          },
+          "materials": [
+            "student book: check page",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย /t/ แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร t และคำ \"sat\"",
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+            ],
+            "teacherLanguage": [
+              "\"แถว 1: tiger, sun, bag คำไหนขึ้นต้นด้วย /t/? วงกลมไว้\"",
+              "\"แถว 2: cup, ten, fish คำไหนขึ้นต้นด้วย /t/? วงกลมไว้\"",
+              "\"แถว 3: dog, pen, table คำไหนขึ้นต้นด้วย /t/? วงกลมไว้\"",
+              "\"แถว 4 หาคำว่า tap วงกลมไว้\"",
+              "\"แถว 5 หาคำว่า see วงกลมไว้\"",
+              "\"ทีนี้เขียนตัวอักษร t แล้วเขียนคำ sat\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร t และเขียน \"sat\""
+            ],
+            "watchFor": [
+              "เด็กที่วงกลมทุกภาพ หรือวงกลมภาพผิดใน 2 แถว: บันทึกในแบบบันทึกผลว่าเสียง /t/ ยังไม่แม่น แล้วเสียงนี้จะกลับไปอยู่บนแถบทบทวน",
+              "เด็กที่วงกลมคำผิดในแถว 4 หรือแถว 5: บันทึกว่าคำนั้นยังไม่แม่น แล้วคำนั้นจะกลับไปอยู่บนแถบทบทวน"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "review": [
+    {
+      "day": 1,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        }
+      ]
+    }
+  ],
+  "check": {
+    "items": [
+      {
+        "kind": "circle-picture",
+        "sound": "/t/",
+        "pictures": [
+          "tiger",
+          "sun",
+          "bag"
+        ],
+        "answer": "tiger"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/t/",
+        "pictures": [
+          "cup",
+          "ten",
+          "fish"
+        ],
+        "answer": "ten"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/t/",
+        "pictures": [
+          "dog",
+          "pen",
+          "table"
+        ],
+        "answer": "table"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "Pat",
+          "tap",
+          "map"
+        ],
+        "answer": "tap"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "saw",
+          "see",
+          "he"
+        ],
+        "answer": "see"
+      },
+      {
+        "kind": "write-letter",
+        "letter": "t"
+      },
+      {
+        "kind": "write-word",
+        "word": "sat"
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "tiger",
+      "ten",
+      "table"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound /t/, as in \"tiger\". It is a short tap of the tongue with a small puff of air, close to the Thai letter ท, with no \"uh\" after it. Your child also learns to say \"I can see a ___.\" in English, for example \"I can see a cat.\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง /t/ เหมือนในคำว่า \"tiger\" เป็นเสียงที่ใช้ปลายลิ้นแตะสั้น ๆ โดยมีลมพ่นออกมาเล็กน้อย ใกล้กับเสียง ท ในภาษาไทย โดยไม่มีเสียง \"uh\" (เออะ) ตามหลัง และบุตรหลานยังได้ฝึกพูดเป็นภาษาอังกฤษว่า \"I can see a ___.\" (ฉันมองเห็น ___) เช่น \"I can see a cat.\" (ฉันมองเห็นแมว)"
+    },
+    "activity": {
+      "en": "Look out of the window or walk outside with your child. Say \"I can see a ___.\" in English for the animals and the things that you see: \"I can see a bird!\" Then say \"/t/, /t/, ten\" and count to ten together in English.",
+      "th": "มองออกไปนอกหน้าต่างกับบุตรหลาน หรือพาบุตรหลานเดินเล่นนอกบ้าน แล้วพูดเป็นภาษาอังกฤษว่า \"I can see a ___.\" สำหรับสัตว์และสิ่งของที่เห็น เช่น \"I can see a bird!\" (ฉันมองเห็นนก) จากนั้นพูด \"/t/, /t/, ten\" แล้วนับเลข 1 ถึง 10 เป็นภาษาอังกฤษพร้อมกับบุตรหลาน"
+    },
+    "songUrl": "/th/st/2/6?part=song",
+    "readAlongUrl": "/th/st/2/6?part=book"
+  },
+  "tags": {
+    "graphVersion": "phonics-v1",
+    "taught": [
+      "english.phonics.gpc.t.t",
+      "english.phonics.phoneme.t",
+      "english.phonics.letter.t.sound",
+      "english.phonics.letter.t.name",
+      "english.phonics.letter.t.form-lower",
+      "english.phonics.tricky.he",
+      "english.phonics.tricky.put",
+      "english.phonics.tricky.see"
+    ],
+    "reviewed": [
+      "english.phonics.gpc.s.s",
+      "english.phonics.gpc.m.m",
+      "english.phonics.gpc.p.p",
+      "english.phonics.gpc.a.short-a",
+      "english.phonics.gpc.n.n",
+      "english.phonics.tricky.saw",
+      "english.phonics.tricky.off",
+      "english.phonics.tricky.with",
+      "english.phonics.tricky.is",
+      "english.phonics.tricky.this",
+      "english.phonics.tricky.i",
+      "english.phonics.tricky.in",
+      "english.phonics.tricky.on",
+      "english.phonics.tricky.a",
+      "english.phonics.tricky.and",
+      "english.phonics.tricky.can",
+      "english.phonics.tricky.the",
+      "english.phonics.tricky.get",
+      "english.phonics.pattern.cvc-short-a",
+      "english.phonics.pa.initial-sound.identify",
+      "english.phonics.pa.final-sound.identify",
+      "english.phonics.pa.phoneme.blend-2-3"
+    ]
+  }
+}

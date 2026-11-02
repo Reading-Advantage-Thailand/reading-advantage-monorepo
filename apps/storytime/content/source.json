@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/bodangren/advantage-workbooks.git",
+  "commit": "ccf3d95c92bb5b3970722946dffbed1de57f9df6",
+  "files": [
+    "apps/storytime/content/l2/w01.json",
+    "apps/storytime/content/l2/w02.json",
+    "apps/storytime/content/l2/w03.json",
+    "apps/storytime/content/l2/w04.json",
+    "apps/storytime/content/l2/w05.json",
+    "apps/storytime/content/l2/w06.json",
+    "apps/storytime/content/l2/w07.json",
+    "apps/storytime/content/l2/w08.json"
+  ]
+}

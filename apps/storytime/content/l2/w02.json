@@ -1,0 +1,4366 @@
+{
+  "approval": {
+    "text": {
+      "status": "approved",
+      "date": "2026-11-01",
+      "words": "3. Covers: Approved",
+      "source": "Owner answer relayed by the PM session, 2026-11-01 07:3x ICT. His item 3 answered section 3 of the PM message: the weeks 2 to 8 English text and the Level 2 Unit 1 cover version 3 look. Approved text file ~/Desktop/print-ready/storytime/text-review/Storytime-Advantage-L2-U1-weeks-2-8-English-text.pdf, SHA-256 57f30792532cdae33ae5e66f069fa822aab58df35cc6b6e2c393ca7fbdbba67c, built 2026-10-30."
+    },
+    "thai": {
+      "status": "approved",
+      "date": "2026-10-22",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80"
+    },
+    "images": {
+      "status": "draft"
+    },
+    "audio": {
+      "status": "draft"
+    },
+    "song": {
+      "status": "draft"
+    },
+    "scripts": {
+      "status": "draft"
+    }
+  },
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "shape": "storytime-week",
+    "level": 2,
+    "week": 2,
+    "unit": 1,
+    "key": "st2/2",
+    "kind": "teach",
+    "periodMinutes": 30,
+    "openingMinutes": 6,
+    "title": "How Many?",
+    "band": "Sprout",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "id": "english.phonics.gpc.a.short-a",
+      "graphemes": [
+        "a"
+      ],
+      "sound": "/a/",
+      "action": {
+        "en": "Hold a pretend apple, open your mouth wide for a big bite, and say /a/, /a/, /a/.",
+        "th": "ทำมือเหมือนถือแอปเปิล อ้าปากกว้างเหมือนจะกัดคำใหญ่ แล้วพูด /a/, /a/, /a/"
+      },
+      "audio": "phonemes/daniel/26-a-short.mp3"
+    },
+    "paSkill": {
+      "en": "the first sound /a/ and the middle sound /a/; blend three sounds by ear",
+      "th": "ฟังเสียงแรกและเสียงกลาง /a/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "trickyWords": [
+      "I",
+      "on",
+      "in"
+    ],
+    "frame": "How many? One, two...",
+    "family": {
+      "name": {
+        "en": "Numbers",
+        "th": "ตัวเลข"
+      },
+      "words": [
+        {
+          "word": "one",
+          "image": {
+            "prompt": "One red apple on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "one"
+          }
+        },
+        {
+          "word": "two",
+          "image": {
+            "prompt": "Two red apples side by side on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "two"
+          }
+        },
+        {
+          "word": "three",
+          "image": {
+            "prompt": "Three red apples in a row on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "three"
+          }
+        },
+        {
+          "word": "four",
+          "image": {
+            "prompt": "Four red apples in a row on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "four"
+          }
+        },
+        {
+          "word": "five",
+          "image": {
+            "prompt": "Five red apples in a row on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "five"
+          }
+        },
+        {
+          "word": "six",
+          "image": {
+            "prompt": "Six red apples in two rows of three on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "six"
+          }
+        },
+        {
+          "word": "seven",
+          "image": {
+            "prompt": "Seven red apples in two rows: four on top and three below on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "seven"
+          }
+        },
+        {
+          "word": "eight",
+          "image": {
+            "prompt": "Eight red apples in two rows of four on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "eight"
+          }
+        },
+        {
+          "word": "nine",
+          "image": {
+            "prompt": "Nine red apples in three rows of three on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "nine"
+          }
+        },
+        {
+          "word": "ten",
+          "image": {
+            "prompt": "Ten red apples in two rows of five on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "ten"
+          }
+        }
+      ],
+      "max": 10
+    },
+    "wordWall": [
+      "an",
+      "Nan"
+    ]
+  },
+  "opening": {
+    "pa": [
+      {
+        "en": "\"Listen: apple. What is the first sound? /a/! Listen: cat. What is the middle sound? /a/!\"",
+        "th": "\"ฟัง: apple เสียงแรกคือเสียงอะไร? /a/! ฟัง: cat เสียงกลางคำคือเสียงอะไร? /a/!\""
+      },
+      {
+        "en": "\"Listen: ant. What is the first sound? /a/! Listen: hat. What is the middle sound? /a/!\"",
+        "th": "\"ฟัง: ant เสียงแรกคือเสียงอะไร? /a/! ฟัง: hat เสียงกลางคำคือเสียงอะไร? /a/!\""
+      },
+      {
+        "en": "\"Listen: /k/ - /a/ - /t/. What is the word? Cat! Listen: /h/ - /a/ - /t/. What is the word? Hat!\"",
+        "th": "\"ฟัง: /k/ - /a/ - /t/ คำนี้คือคำอะไร? Cat! ฟัง: /h/ - /a/ - /t/ คำนี้คือคำอะไร? Hat!\""
+      },
+      {
+        "en": "\"Listen: fff - /a/ - nnn. What is the word? Fan! Listen: /b/ - /a/ - /g/. What is the word? Bag!\"",
+        "th": "\"ฟัง: fff - /a/ - nnn คำนี้คือคำอะไร? Fan! ฟัง: /b/ - /a/ - /g/ คำนี้คือคำอะไร? Bag!\""
+      },
+      {
+        "en": "\"Listen: mmm - /a/ - nnn. What is the word? Man! Listen: nnn - /a/ - /p/. What is the word? Nap!\"",
+        "th": "\"ฟัง: mmm - /a/ - nnn คำนี้คือคำอะไร? Man! ฟัง: nnn - /a/ - /p/ คำนี้คือคำอะไร? Nap!\""
+      }
+    ],
+    "audio": [
+      [
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/26-a-short.mp3"
+      ],
+      [
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/26-a-short.mp3"
+      ],
+      [
+        "phonemes/daniel/08-c-k.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/10-h.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/12-f.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/11-b.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/07-g.mp3"
+      ],
+      [
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/03-p.mp3"
+      ]
+    ]
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "title": "How Many?",
+      "cover": {
+        "prompt": "Pat, May, Sam, Mia, and Ben (drawn young, about five years old) and Nan count on their fingers on a picnic blanket in a sunny park with green grass, a small pond, and a low tree; Teacher Kim smiles behind them. Pat's school bag has a small round bump, as if something moves inside. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Pat",
+          "May",
+          "Sam",
+          "Mia",
+          "Ben",
+          "Teacher Kim",
+          "Nan"
+        ],
+        "caption": "How Many?"
+      },
+      "pages": [
+        {
+          "text": "How many suns? One!",
+          "image": {
+            "prompt": "Pat (drawn young, about five years old) and Teacher Kim carry a picnic basket into a sunny park with green grass, a small pond, and a low tree; Pat points up at the one bright sun in a blue sky. Pat's school bag has a small round bump, as if something moves inside. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pat",
+              "Teacher Kim"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "How many kites? Two!",
+          "image": {
+            "prompt": "Two kites, one red and one yellow, fly high over a sunny park with green grass, a small pond, and a low tree; May and Sam (drawn young, about five years old) hold the strings and look up. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "How many ducks? Three!",
+          "image": {
+            "prompt": "Three white ducks with orange beaks swim on the small pond in the park; Mia (drawn young, about five years old) kneels at the edge and points at them. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "How many birds? Four!",
+          "image": {
+            "prompt": "Four small blue birds sit in a row on a branch of the low tree in the park; Ben (drawn young, about five years old) looks up at them. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "How many balls? Five!",
+          "image": {
+            "prompt": "Five colorful balls lie in a row on the green grass of the park; Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, holds up one hand with five fingers. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "How many friends? Six!",
+          "image": {
+            "prompt": "Pat, May, Sam, Mia, and Ben (drawn young, about five years old) and Nan sit in a row on a big picnic blanket in the park and smile. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. Pat's school bag lies on the blanket. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pat",
+              "May",
+              "Sam",
+              "Mia",
+              "Ben",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "How many cakes? Seven!",
+          "image": {
+            "prompt": "Seven small cupcakes with white cream on a plate on the picnic blanket, in two rows: four at the back and three at the front; Teacher Kim counts them with one finger. The tip of a small black puppy nose peeks out of the open school bag next to the plate. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Teacher Kim"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "How many cakes? Oh no, Pip!",
+          "image": {
+            "prompt": "The plate is empty. Pip the puppy sits next to it with white cream on his nose and a happy face. Pat, May, Sam, Mia, Ben (drawn young, about five years old), Nan, and Teacher Kim laugh in surprise. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pip",
+              "Pat",
+              "May",
+              "Sam",
+              "Mia",
+              "Ben",
+              "Teacher Kim",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "backWords": [
+        "how",
+        "many",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w02/books/1-how-many.mp3",
+        "sentences": [
+          {
+            "sentence": "How many suns?",
+            "startTime": 0,
+            "endTime": 1.04,
+            "words": [
+              {
+                "word": "How",
+                "start": 0,
+                "end": 0.16
+              },
+              {
+                "word": "many",
+                "start": 0.16,
+                "end": 0.34
+              },
+              {
+                "word": "suns",
+                "start": 0.34,
+                "end": 1.04
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "One!",
+            "startTime": 1.54,
+            "endTime": 2.161,
+            "words": [
+              {
+                "word": "One",
+                "start": 1.54,
+                "end": 2.161
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "How many kites?",
+            "startTime": 3.361,
+            "endTime": 4.59,
+            "words": [
+              {
+                "word": "How",
+                "start": 3.361,
+                "end": 3.601
+              },
+              {
+                "word": "many",
+                "start": 3.601,
+                "end": 3.801
+              },
+              {
+                "word": "kites",
+                "start": 3.801,
+                "end": 4.59
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Two!",
+            "startTime": 5.09,
+            "endTime": 5.779,
+            "words": [
+              {
+                "word": "Two",
+                "start": 5.09,
+                "end": 5.779
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "How many ducks?",
+            "startTime": 6.979,
+            "endTime": 8.215,
+            "words": [
+              {
+                "word": "How",
+                "start": 6.979,
+                "end": 7.179
+              },
+              {
+                "word": "many",
+                "start": 7.179,
+                "end": 7.399
+              },
+              {
+                "word": "ducks",
+                "start": 7.399,
+                "end": 8.215
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Three!",
+            "startTime": 8.715,
+            "endTime": 9.365,
+            "words": [
+              {
+                "word": "Three",
+                "start": 8.715,
+                "end": 9.365
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "How many birds?",
+            "startTime": 10.565,
+            "endTime": 11.75,
+            "words": [
+              {
+                "word": "How",
+                "start": 10.565,
+                "end": 10.765
+              },
+              {
+                "word": "many",
+                "start": 10.765,
+                "end": 10.965
+              },
+              {
+                "word": "birds",
+                "start": 10.965,
+                "end": 11.75
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Four!",
+            "startTime": 12.25,
+            "endTime": 13.008,
+            "words": [
+              {
+                "word": "Four",
+                "start": 12.25,
+                "end": 13.008
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "How many balls?",
+            "startTime": 14.208,
+            "endTime": 15.261,
+            "words": [
+              {
+                "word": "How",
+                "start": 14.208,
+                "end": 14.388
+              },
+              {
+                "word": "many",
+                "start": 14.388,
+                "end": 14.548
+              },
+              {
+                "word": "balls",
+                "start": 14.548,
+                "end": 15.261
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Five!",
+            "startTime": 15.761,
+            "endTime": 16.422,
+            "words": [
+              {
+                "word": "Five",
+                "start": 15.761,
+                "end": 16.422
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "How many friends?",
+            "startTime": 17.622,
+            "endTime": 18.765,
+            "words": [
+              {
+                "word": "How",
+                "start": 17.622,
+                "end": 17.802
+              },
+              {
+                "word": "many",
+                "start": 17.802,
+                "end": 17.942
+              },
+              {
+                "word": "friends",
+                "start": 17.942,
+                "end": 18.765
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Six!",
+            "startTime": 19.265,
+            "endTime": 20.166,
+            "words": [
+              {
+                "word": "Six",
+                "start": 19.265,
+                "end": 20.166
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "How many cakes?",
+            "startTime": 21.366,
+            "endTime": 22.451,
+            "words": [
+              {
+                "word": "How",
+                "start": 21.366,
+                "end": 21.546
+              },
+              {
+                "word": "many",
+                "start": 21.546,
+                "end": 21.726
+              },
+              {
+                "word": "cakes",
+                "start": 21.726,
+                "end": 22.451
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Seven!",
+            "startTime": 22.951,
+            "endTime": 23.652,
+            "words": [
+              {
+                "word": "Seven",
+                "start": 22.951,
+                "end": 23.652
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "How many cakes?",
+            "startTime": 24.852,
+            "endTime": 25.937,
+            "words": [
+              {
+                "word": "How",
+                "start": 24.852,
+                "end": 25.032
+              },
+              {
+                "word": "many",
+                "start": 25.032,
+                "end": 25.212
+              },
+              {
+                "word": "cakes",
+                "start": 25.212,
+                "end": 25.937
+              }
+            ],
+            "page": 8
+          },
+          {
+            "sentence": "Oh no, Pip!",
+            "startTime": 26.437,
+            "endTime": 27.689,
+            "words": [
+              {
+                "word": "Oh",
+                "start": 26.437,
+                "end": 26.637
+              },
+              {
+                "word": "no",
+                "start": 26.797,
+                "end": 26.917
+              },
+              {
+                "word": "Pip",
+                "start": 27.037,
+                "end": 27.689
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w02/books/1-how-many-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "How many suns?",
+            "startTime": 0,
+            "endTime": 1.463,
+            "words": [
+              {
+                "word": "How",
+                "start": 0,
+                "end": 0.22
+              },
+              {
+                "word": "many",
+                "start": 0.22,
+                "end": 0.46
+              },
+              {
+                "word": "suns",
+                "start": 0.46,
+                "end": 1.463
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "One!",
+            "startTime": 1.963,
+            "endTime": 2.779,
+            "words": [
+              {
+                "word": "One",
+                "start": 1.963,
+                "end": 2.779
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "How many kites?",
+            "startTime": 3.979,
+            "endTime": 5.567,
+            "words": [
+              {
+                "word": "How",
+                "start": 3.979,
+                "end": 4.179
+              },
+              {
+                "word": "many",
+                "start": 4.179,
+                "end": 4.439
+              },
+              {
+                "word": "kites",
+                "start": 4.439,
+                "end": 5.567
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Two!",
+            "startTime": 6.067,
+            "endTime": 7.174,
+            "words": [
+              {
+                "word": "Two",
+                "start": 6.067,
+                "end": 7.174
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "How many ducks?",
+            "startTime": 8.374,
+            "endTime": 9.895,
+            "words": [
+              {
+                "word": "How",
+                "start": 8.374,
+                "end": 8.674
+              },
+              {
+                "word": "many",
+                "start": 8.674,
+                "end": 8.994
+              },
+              {
+                "word": "ducks",
+                "start": 8.994,
+                "end": 9.895
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Three!",
+            "startTime": 10.395,
+            "endTime": 11.34,
+            "words": [
+              {
+                "word": "Three",
+                "start": 10.395,
+                "end": 11.34
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "How many birds?",
+            "startTime": 12.54,
+            "endTime": 13.99,
+            "words": [
+              {
+                "word": "How",
+                "start": 12.54,
+                "end": 12.76
+              },
+              {
+                "word": "many",
+                "start": 12.76,
+                "end": 12.96
+              },
+              {
+                "word": "birds",
+                "start": 12.96,
+                "end": 13.99
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Four!",
+            "startTime": 14.49,
+            "endTime": 15.433,
+            "words": [
+              {
+                "word": "Four",
+                "start": 14.49,
+                "end": 15.433
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "How many balls?",
+            "startTime": 16.633,
+            "endTime": 18.003,
+            "words": [
+              {
+                "word": "How",
+                "start": 16.633,
+                "end": 16.893
+              },
+              {
+                "word": "many",
+                "start": 16.893,
+                "end": 17.073
+              },
+              {
+                "word": "balls",
+                "start": 17.073,
+                "end": 18.003
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Five!",
+            "startTime": 18.503,
+            "endTime": 19.653,
+            "words": [
+              {
+                "word": "Five",
+                "start": 18.503,
+                "end": 19.653
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "How many friends?",
+            "startTime": 20.853,
+            "endTime": 22.47,
+            "words": [
+              {
+                "word": "How",
+                "start": 20.853,
+                "end": 21.093
+              },
+              {
+                "word": "many",
+                "start": 21.093,
+                "end": 21.313
+              },
+              {
+                "word": "friends",
+                "start": 21.313,
+                "end": 22.47
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Six!",
+            "startTime": 22.97,
+            "endTime": 23.989,
+            "words": [
+              {
+                "word": "Six",
+                "start": 22.97,
+                "end": 23.989
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "How many cakes?",
+            "startTime": 25.189,
+            "endTime": 26.75,
+            "words": [
+              {
+                "word": "How",
+                "start": 25.189,
+                "end": 25.469
+              },
+              {
+                "word": "many",
+                "start": 25.469,
+                "end": 25.689
+              },
+              {
+                "word": "cakes",
+                "start": 25.689,
+                "end": 26.75
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Seven!",
+            "startTime": 27.25,
+            "endTime": 28.504,
+            "words": [
+              {
+                "word": "Seven",
+                "start": 27.25,
+                "end": 28.504
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "How many cakes?",
+            "startTime": 29.704,
+            "endTime": 31.266,
+            "words": [
+              {
+                "word": "How",
+                "start": 29.704,
+                "end": 29.984
+              },
+              {
+                "word": "many",
+                "start": 29.984,
+                "end": 30.204
+              },
+              {
+                "word": "cakes",
+                "start": 30.204,
+                "end": 31.266
+              }
+            ],
+            "page": 8
+          },
+          {
+            "sentence": "Oh no, Pip!",
+            "startTime": 31.766,
+            "endTime": 33.548,
+            "words": [
+              {
+                "word": "Oh",
+                "start": 31.766,
+                "end": 32.066
+              },
+              {
+                "word": "no",
+                "start": 32.066,
+                "end": 32.526
+              },
+              {
+                "word": "Pip",
+                "start": 32.686,
+                "end": 33.548
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "decodable",
+      "title": "Can I?",
+      "cover": {
+        "prompt": "Ben (drawn young, about five years old) and Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, stand at the bottom of the tall slide in a sunny playground with a low climbing frame, a low balance beam, and a tall slide and look up at it. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Ben",
+          "Nan"
+        ],
+        "caption": "Can I?"
+      },
+      "pages": [
+        {
+          "text": "Nan can.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, climbs to the top of a low climbing frame in a sunny playground with a low climbing frame, a low balance beam, and a tall slide and smiles. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Can I?",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) stands at the bottom of the low climbing frame and looks up with a worried face. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can!",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) sits at the top of the low climbing frame with a big proud smile. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Nan can.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, walks along a low balance beam with her arms out. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Can I?",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) puts one foot on the low balance beam and holds his arms out; he wobbles a little. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I can!",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) walks along the low balance beam with his arms out and a big smile. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Can Nan?",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, sits at the top of the tall slide and holds on tight; she looks scared. Ben (drawn young, about five years old) climbs the slide ladder behind her and holds out his hand. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Ben",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Nan and I can!",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) and Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, slide down the tall slide together, Ben behind Nan, both laughing with their arms up. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Ben",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "soundsPage": {
+        "element": "a",
+        "words": [
+          "Nan"
+        ],
+        "tricky": [
+          "I"
+        ]
+      },
+      "backWords": [
+        "Nan",
+        "can",
+        "I",
+        "and"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w02/books/2-can-i.mp3",
+        "sentences": [
+          {
+            "sentence": "Nan can.",
+            "startTime": 0,
+            "endTime": 0.959,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 0,
+                "end": 0.48
+              },
+              {
+                "word": "can",
+                "start": 0.48,
+                "end": 0.959
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Can I?",
+            "startTime": 2.159,
+            "endTime": 2.748,
+            "words": [
+              {
+                "word": "Can",
+                "start": 2.159,
+                "end": 2.339
+              },
+              {
+                "word": "I",
+                "start": 2.339,
+                "end": 2.748
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "I can!",
+            "startTime": 3.948,
+            "endTime": 4.791,
+            "words": [
+              {
+                "word": "I",
+                "start": 3.948,
+                "end": 4.168
+              },
+              {
+                "word": "can",
+                "start": 4.168,
+                "end": 4.791
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Nan can.",
+            "startTime": 5.991,
+            "endTime": 6.95,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 5.991,
+                "end": 6.47
+              },
+              {
+                "word": "can",
+                "start": 6.47,
+                "end": 6.95
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Can I?",
+            "startTime": 8.15,
+            "endTime": 8.738,
+            "words": [
+              {
+                "word": "Can",
+                "start": 8.15,
+                "end": 8.33
+              },
+              {
+                "word": "I",
+                "start": 8.33,
+                "end": 8.738
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "I can!",
+            "startTime": 9.938,
+            "endTime": 10.781,
+            "words": [
+              {
+                "word": "I",
+                "start": 9.938,
+                "end": 10.158
+              },
+              {
+                "word": "can",
+                "start": 10.158,
+                "end": 10.781
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Can Nan?",
+            "startTime": 11.981,
+            "endTime": 12.793,
+            "words": [
+              {
+                "word": "Can",
+                "start": 11.981,
+                "end": 12.181
+              },
+              {
+                "word": "Nan",
+                "start": 12.181,
+                "end": 12.793
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Nan and I can!",
+            "startTime": 13.993,
+            "endTime": 15.182,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 13.993,
+                "end": 14.333
+              },
+              {
+                "word": "and",
+                "start": 14.333,
+                "end": 14.473
+              },
+              {
+                "word": "I",
+                "start": 14.473,
+                "end": 14.653
+              },
+              {
+                "word": "can",
+                "start": 14.653,
+                "end": 15.182
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w02/books/2-can-i-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "Nan can.",
+            "startTime": 0,
+            "endTime": 1.261,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 0,
+                "end": 0.44
+              },
+              {
+                "word": "can",
+                "start": 0.44,
+                "end": 1.261
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Can I?",
+            "startTime": 2.461,
+            "endTime": 3.424,
+            "words": [
+              {
+                "word": "Can",
+                "start": 2.461,
+                "end": 2.861
+              },
+              {
+                "word": "I",
+                "start": 2.861,
+                "end": 3.424
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "I can!",
+            "startTime": 4.624,
+            "endTime": 5.661,
+            "words": [
+              {
+                "word": "I",
+                "start": 4.624,
+                "end": 4.804
+              },
+              {
+                "word": "can",
+                "start": 4.804,
+                "end": 5.661
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Nan can.",
+            "startTime": 6.861,
+            "endTime": 8.122,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 6.861,
+                "end": 7.301
+              },
+              {
+                "word": "can",
+                "start": 7.301,
+                "end": 8.122
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Can I?",
+            "startTime": 9.322,
+            "endTime": 10.285,
+            "words": [
+              {
+                "word": "Can",
+                "start": 9.322,
+                "end": 9.722
+              },
+              {
+                "word": "I",
+                "start": 9.722,
+                "end": 10.285
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "I can!",
+            "startTime": 11.485,
+            "endTime": 12.522,
+            "words": [
+              {
+                "word": "I",
+                "start": 11.485,
+                "end": 11.665
+              },
+              {
+                "word": "can",
+                "start": 11.665,
+                "end": 12.522
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Can Nan?",
+            "startTime": 13.722,
+            "endTime": 14.79,
+            "words": [
+              {
+                "word": "Can",
+                "start": 13.722,
+                "end": 14.042
+              },
+              {
+                "word": "Nan",
+                "start": 14.042,
+                "end": 14.79
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Nan and I can!",
+            "startTime": 15.99,
+            "endTime": 17.648,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 15.99,
+                "end": 16.45
+              },
+              {
+                "word": "and",
+                "start": 16.45,
+                "end": 16.69
+              },
+              {
+                "word": "I",
+                "start": 16.69,
+                "end": 16.87
+              },
+              {
+                "word": "can",
+                "start": 16.87,
+                "end": 17.648
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    }
+  ],
+  "song": {
+    "title": "How Many? One, Two!",
+    "styleBrief": "Bright classroom counting song for a kindergarten English class, 100 bpm, G major, playful and bouncy, the melody between C4 and C5, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
+    "bpm": 100,
+    "lyricSheet": "[Verse]\nHow many suns? One sun!\nHow many kites? Two kites!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Verse]\nHow many ducks? Three ducks!\nHow many birds? Four birds!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Verse]\nHow many balls? Five balls!\nHow many friends? Six friends!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!",
+    "lines": [
+      {
+        "text": "How many suns? One sun!",
+        "part": "verse",
+        "gesture": "point up",
+        "image": {
+          "prompt": "One big bright sun in a blue sky, with a happy face. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/point-up.jpg"
+        }
+      },
+      {
+        "text": "How many kites? Two kites!",
+        "part": "verse",
+        "gesture": "reach",
+        "image": {
+          "prompt": "Two kites, one red and one yellow, high in a blue sky. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/reach.jpg"
+        }
+      },
+      {
+        "text": "How many? How many? One, two, three!",
+        "part": "chorus",
+        "gesture": "count fingers",
+        "image": {
+          "prompt": "Pat, May, and Sam (drawn young, about five years old) sit on a rug and sing; each one holds up one red apple. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Pat",
+            "May",
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/count-fingers.jpg"
+        }
+      },
+      {
+        "text": "Red, red apples! Count with me!",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {
+          "prompt": "Pip the puppy claps his two front paws next to a pile of red apples. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Pip"
+          ],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/clap.jpg"
+        },
+        "note": {
+          "en": "Sing \"apples\" with the short sound /a/, as in \"apple\", not the letter name \"ay\".",
+          "th": "ร้อง \"apples\" ด้วยเสียงสั้น /a/ แบบใน \"apple\" (ใกล้กับเสียงสระ แอะ) ไม่ใช่ชื่อตัวอักษร \"ay\""
+        }
+      },
+      {
+        "text": "How many ducks? Three ducks!",
+        "part": "verse",
+        "gesture": "sway",
+        "image": {
+          "prompt": "Three white ducks with orange beaks walk in a row and sway from side to side. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/sway.jpg"
+        }
+      },
+      {
+        "text": "How many birds? Four birds!",
+        "part": "verse",
+        "gesture": "look",
+        "image": {
+          "prompt": "Four small blue birds sit in a row on a branch. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/look.jpg"
+        }
+      },
+      {
+        "text": "How many? How many? One, two, three!",
+        "part": "chorus",
+        "gesture": "count fingers",
+        "imageOf": 2
+      },
+      {
+        "text": "Red, red apples! Count with me!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 3
+      },
+      {
+        "text": "How many balls? Five balls!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {
+          "prompt": "Five colorful balls in a row bounce on green grass. No letters, words, or numbers anywhere.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/hop.jpg"
+        }
+      },
+      {
+        "text": "How many friends? Six friends! (How many friends? Six friends!)",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {
+          "prompt": "Pat, May, Sam, Mia, and Ben (drawn young, about five years old) and Nan wave together. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Pat",
+            "May",
+            "Sam",
+            "Mia",
+            "Ben",
+            "Nan"
+          ],
+          "caption": "",
+          "file": "l2/media/w02/song-lines/wave.jpg"
+        }
+      },
+      {
+        "text": "How many? How many? One, two, three!",
+        "part": "chorus",
+        "gesture": "count fingers",
+        "imageOf": 2
+      },
+      {
+        "text": "Red, red apples! Count with me!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 3
+      }
+    ],
+    "choreography": {
+      "outro": {
+        "en": "After the last line, the class counts to ten on the fingers: one, two, three, four, five, six, seven, eight, nine, ten!",
+        "th": "หลังบรรทัดสุดท้าย ทั้งชั้นนับนิ้วถึง 10: one, two, three, four, five, six, seven, eight, nine, ten!"
+      }
+    },
+    "times": [
+      {
+        "sentence": "How many suns? One sun!",
+        "startTime": 0.0,
+        "endTime": 3.98,
+        "words": [
+          {
+            "word": "How",
+            "start": 0.0,
+            "end": 0.48
+          },
+          {
+            "word": "many",
+            "start": 0.48,
+            "end": 1.12
+          },
+          {
+            "word": "suns?",
+            "start": 1.12,
+            "end": 2.14
+          },
+          {
+            "word": "One",
+            "start": 2.62,
+            "end": 2.88
+          },
+          {
+            "word": "sun!",
+            "start": 2.88,
+            "end": 3.98
+          }
+        ]
+      },
+      {
+        "sentence": "How many kites? Two kites!",
+        "startTime": 9.49,
+        "endTime": 13.34,
+        "words": [
+          {
+            "word": "How",
+            "start": 9.49,
+            "end": 10.04
+          },
+          {
+            "word": "many",
+            "start": 10.04,
+            "end": 10.72
+          },
+          {
+            "word": "kites?",
+            "start": 10.72,
+            "end": 11.28
+          },
+          {
+            "word": "Two",
+            "start": 12.06,
+            "end": 12.42
+          },
+          {
+            "word": "kites!",
+            "start": 12.42,
+            "end": 13.34
+          }
+        ]
+      },
+      {
+        "sentence": "How many? How many? One, two, three!",
+        "startTime": 14.28,
+        "endTime": 18.34,
+        "words": [
+          {
+            "word": "How",
+            "start": 14.28,
+            "end": 14.94
+          },
+          {
+            "word": "many?",
+            "start": 14.94,
+            "end": 15.54
+          },
+          {
+            "word": "How",
+            "start": 15.86,
+            "end": 16.08
+          },
+          {
+            "word": "many?",
+            "start": 16.08,
+            "end": 16.72
+          },
+          {
+            "word": "One,",
+            "start": 17.04,
+            "end": 17.26
+          },
+          {
+            "word": "two,",
+            "start": 17.44,
+            "end": 17.8
+          },
+          {
+            "word": "three!",
+            "start": 17.96,
+            "end": 18.34
+          }
+        ]
+      },
+      {
+        "sentence": "Red, red apples! Count with me!",
+        "startTime": 19.24,
+        "endTime": 23.14,
+        "words": [
+          {
+            "word": "Red,",
+            "start": 19.24,
+            "end": 19.78
+          },
+          {
+            "word": "red",
+            "start": 19.98,
+            "end": 20.3
+          },
+          {
+            "word": "apples!",
+            "start": 20.3,
+            "end": 21.08
+          },
+          {
+            "word": "Count",
+            "start": 21.58,
+            "end": 22.04
+          },
+          {
+            "word": "with",
+            "start": 22.04,
+            "end": 22.62
+          },
+          {
+            "word": "me!",
+            "start": 22.62,
+            "end": 23.14
+          }
+        ]
+      },
+      {
+        "sentence": "How many ducks? Three ducks!",
+        "startTime": 24.04,
+        "endTime": 27.42,
+        "words": [
+          {
+            "word": "How",
+            "start": 24.04,
+            "end": 24.48
+          },
+          {
+            "word": "many",
+            "start": 24.48,
+            "end": 25.14
+          },
+          {
+            "word": "ducks?",
+            "start": 25.14,
+            "end": 25.6
+          },
+          {
+            "word": "Three",
+            "start": 26.42,
+            "end": 26.8
+          },
+          {
+            "word": "ducks!",
+            "start": 26.8,
+            "end": 27.42
+          }
+        ]
+      },
+      {
+        "sentence": "How many birds? Four birds!",
+        "startTime": 32.8,
+        "endTime": 37.42,
+        "words": [
+          {
+            "word": "How",
+            "start": 32.8,
+            "end": 34.08
+          },
+          {
+            "word": "many",
+            "start": 34.08,
+            "end": 34.72
+          },
+          {
+            "word": "birds?",
+            "start": 34.72,
+            "end": 35.52
+          },
+          {
+            "word": "Four",
+            "start": 35.88,
+            "end": 36.5
+          },
+          {
+            "word": "birds!",
+            "start": 36.5,
+            "end": 37.42
+          }
+        ]
+      },
+      {
+        "sentence": "How many? How many? One, two, three!",
+        "startTime": 37.42,
+        "endTime": 42.5,
+        "words": [
+          {
+            "word": "How",
+            "start": 37.42,
+            "end": 38.84
+          },
+          {
+            "word": "many?",
+            "start": 38.84,
+            "end": 39.56
+          },
+          {
+            "word": "How",
+            "start": 39.68,
+            "end": 40.12
+          },
+          {
+            "word": "many?",
+            "start": 40.12,
+            "end": 40.74
+          },
+          {
+            "word": "One,",
+            "start": 41.02,
+            "end": 41.32
+          },
+          {
+            "word": "two,",
+            "start": 41.4,
+            "end": 41.84
+          },
+          {
+            "word": "three!",
+            "start": 41.94,
+            "end": 42.5
+          }
+        ]
+      },
+      {
+        "sentence": "Red, red apples! Count with me!",
+        "startTime": 43.14,
+        "endTime": 47.34,
+        "words": [
+          {
+            "word": "Red,",
+            "start": 43.14,
+            "end": 43.78
+          },
+          {
+            "word": "red",
+            "start": 44.14,
+            "end": 44.34
+          },
+          {
+            "word": "apples!",
+            "start": 44.34,
+            "end": 45.14
+          },
+          {
+            "word": "Count",
+            "start": 45.14,
+            "end": 45.98
+          },
+          {
+            "word": "with",
+            "start": 45.98,
+            "end": 46.68
+          },
+          {
+            "word": "me!",
+            "start": 46.68,
+            "end": 47.34
+          }
+        ]
+      },
+      {
+        "sentence": "How many balls? Five balls!",
+        "startTime": 47.34,
+        "endTime": 51.7,
+        "words": [
+          {
+            "word": "How",
+            "start": 47.34,
+            "end": 48.46
+          },
+          {
+            "word": "many",
+            "start": 48.46,
+            "end": 49.14
+          },
+          {
+            "word": "balls?",
+            "start": 49.14,
+            "end": 49.78
+          },
+          {
+            "word": "Five",
+            "start": 50.52,
+            "end": 50.86
+          },
+          {
+            "word": "balls!",
+            "start": 50.86,
+            "end": 51.7
+          }
+        ]
+      },
+      {
+        "sentence": "How many friends? Six friends! (How many friends? Six friends!)",
+        "startTime": 51.7,
+        "endTime": 61.26,
+        "words": [
+          {
+            "word": "How",
+            "start": 51.7,
+            "end": 53.2
+          },
+          {
+            "word": "many",
+            "start": 53.2,
+            "end": 53.88
+          },
+          {
+            "word": "friends?",
+            "start": 53.88,
+            "end": 54.64
+          },
+          {
+            "word": "Six",
+            "start": 55.3,
+            "end": 55.58
+          },
+          {
+            "word": "friends!",
+            "start": 55.58,
+            "end": 56.52
+          },
+          {
+            "word": "How",
+            "start": 56.9,
+            "end": 58.08
+          },
+          {
+            "word": "many",
+            "start": 58.08,
+            "end": 58.7
+          },
+          {
+            "word": "friends,",
+            "start": 58.7,
+            "end": 59.46
+          },
+          {
+            "word": "six",
+            "start": 59.94,
+            "end": 60.36
+          },
+          {
+            "word": "friends?",
+            "start": 60.36,
+            "end": 61.26
+          }
+        ]
+      },
+      {
+        "sentence": "How many? How many? One, two, three!",
+        "startTime": 62.5,
+        "endTime": 66.48,
+        "words": [
+          {
+            "word": "How",
+            "start": 62.5,
+            "end": 62.92
+          },
+          {
+            "word": "many?",
+            "start": 62.92,
+            "end": 63.52
+          },
+          {
+            "word": "How",
+            "start": 63.76,
+            "end": 64.08
+          },
+          {
+            "word": "many?",
+            "start": 64.08,
+            "end": 64.74
+          },
+          {
+            "word": "One,",
+            "start": 65.08,
+            "end": 65.32
+          },
+          {
+            "word": "two,",
+            "start": 65.38,
+            "end": 65.8
+          },
+          {
+            "word": "three!",
+            "start": 65.88,
+            "end": 66.48
+          }
+        ]
+      },
+      {
+        "sentence": "Red, red apples! Count with me!",
+        "startTime": 66.48,
+        "endTime": 71.34,
+        "words": [
+          {
+            "word": "Red,",
+            "start": 66.48,
+            "end": 67.72
+          },
+          {
+            "word": "red",
+            "start": 67.86,
+            "end": 68.32
+          },
+          {
+            "word": "apples!",
+            "start": 68.32,
+            "end": 69.12
+          },
+          {
+            "word": "Count",
+            "start": 69.38,
+            "end": 70.08
+          },
+          {
+            "word": "with",
+            "start": 70.08,
+            "end": 70.66
+          },
+          {
+            "word": "me!",
+            "start": 70.66,
+            "end": 71.34
+          }
+        ]
+      }
+    ],
+    "audio": "l2/media/w02/song.mp3"
+  },
+  "scripts": [
+    {
+      "id": "A",
+      "day": 1,
+      "title": {
+        "en": "Sound Lesson",
+        "th": "บทเรียนเสียง"
+      },
+      "prep": [
+        {
+          "en": "Put a small box and a pencil on your table for the tricky words \"in\" and \"on\" (A6).",
+          "th": "วางกล่องเล็ก 1 ใบและดินสอ 1 แท่งไว้บนโต๊ะครู สำหรับคำที่ต้องจำ \"in\" และ \"on\" (A6)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "A1",
+          "title": {
+            "en": "Hear it",
+            "th": "ฟังเสียง"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Hold up one picture card at a time and say the word slowly.",
+              "Say the first sound two times, short and quick: /a/, /a/, apple. Keep the sound short.",
+              "Mix the /a/ words with other words. Then say three words with /a/ in the middle: cat, hat, fan.",
+              "When the script says /a/, say the short sound, as in \"apple\" (close to แอะ). When it says \"the letter a\", say the letter name \"ay\". The word a (a tricky word) says \"uh\"."
+            ],
+            "teacherLanguage": [
+              "\"Listen. /a/, /a/, apple. Apple.\"",
+              "\"Is the first sound /a/? Thumbs up or thumbs down?\"",
+              "\"Yes! Apple starts with /a/.\"",
+              "\"Listen. Dog. Does dog start with /a/? No!\"",
+              "\"Now listen to the middle. /k/ - /a/ - /t/. Is /a/ in the middle? Yes!\""
+            ],
+            "studentActions": [
+              "Children say each word after the teacher.",
+              "Children show thumbs up for an /a/ word and thumbs down for other words."
+            ],
+            "watchFor": [
+              "Children who say the letter name \"ay\": the sound is /a/, as in \"apple\".",
+              "Children who copy a friend's thumbs: ask them alone with one more card."
+            ]
+          },
+          "easier": {
+            "en": "Use only four cards (apple, ant, dog, sun) and say the first sound two times.",
+            "th": "ใช้บัตรเพียง 4 ใบ (apple, ant, dog, sun) และพูดเสียงแรก 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word with /a/ in the middle: \"Hat.\" Children say the middle sound: \"/a/!\"",
+            "th": "พูดคำที่มี /a/ อยู่กลางคำ: \"Hat.\" เด็ก ๆ บอกเสียงกลาง: \"/a/!\""
+          },
+          "group": {
+            "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 พูดคำ และคู่คนที่ 2 ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง"
+          },
+          "materials": [
+            "sound picture cards: apple, ant, alligator, astronaut",
+            "picture cards: dog, sun, bus",
+            "picture cards: cat, hat, fan"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
+              "พูดเสียงแรก 2 ครั้ง สั้นและเร็ว: /a/, /a/, apple ออกเสียงให้สั้น",
+              "คละคำที่ขึ้นต้นด้วย /a/ กับคำอื่น จากนั้นพูดคำ 3 คำที่มี /a/ อยู่กลางคำ: cat, hat, fan",
+              "เมื่อบทพูดเขียนว่า /a/ ให้ออกเสียงสั้นแบบใน \"apple\" (ใกล้กับเสียงสระ แอะ) เมื่อบทพูดเขียนว่า \"the letter a\" ให้พูดชื่อตัวอักษร \"ay\" (เอ) ส่วนคำว่า a (คำที่ต้องจำ) ออกเสียงว่า \"uh\" (คล้ายเสียง เออะ)"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง /a/, /a/, apple. Apple.\"",
+              "\"เสียงแรกคือ /a/ ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
+              "\"ใช่! Apple ขึ้นต้นด้วย /a/\"",
+              "\"ฟัง dog คำว่า dog ขึ้นต้นด้วย /a/ ไหม? ไม่ใช่!\"",
+              "\"ทีนี้ฟังเสียงกลางคำ /k/ - /a/ - /t/ มี /a/ อยู่ตรงกลางไหม? ใช่!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู",
+              "เด็ก ๆ ยกนิ้วโป้งขึ้นสำหรับคำที่มีเสียง /a/ และคว่ำนิ้วโป้งลงสำหรับคำอื่น"
+            ],
+            "watchFor": [
+              "เด็กที่ออกเสียงเป็นชื่อตัวอักษร \"ay\": เสียงที่ถูกคือ /a/ แบบใน \"apple\"",
+              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
+            ]
+          }
+        },
+        {
+          "id": "A2",
+          "title": {
+            "en": "See it",
+            "th": "ดูตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the sound card for the letter a and point to the letter.",
+              "Say the pure sound: mouth open wide, jaw down, tongue low and flat. It is short and bright, as in \"apple\", and close to the Thai vowel แอะ. It is not the letter name \"ay\".",
+              "Do the action of the letter a: hold a pretend apple, open your mouth wide for a big bite, and say /a/, /a/, /a/."
+            ],
+            "teacherLanguage": [
+              "\"Look. This is the letter a. It says /a/.\"",
+              "\"Listen: /a/, /a/, /a/. Not 'ay'. /a/.\"",
+              "\"Watch me: a big apple bite. /a/, /a/, /a/.\"",
+              "\"Your turn. Say it and do it. Three times.\""
+            ],
+            "studentActions": [
+              "Children say /a/, /a/, /a/ and take a big pretend bite of an apple, three times.",
+              "Children point to the letter a on the card."
+            ],
+            "watchFor": [
+              "A short sound with the mouth open wide: not \"ay\", not \"ah\" (อา), and not \"uh\".",
+              "Every child does the action, not only the front rows.",
+              "Children who ask about the word a: the word a is a tricky word and says \"uh\". The letter a in a word like \"an\" says /a/."
+            ]
+          },
+          "easier": {
+            "en": "Children put a hand under the chin and feel the jaw drop while they say /a/.",
+            "th": "เด็ก ๆ วางมือใต้คาง แล้วรู้สึกว่าคางลดต่ำลงขณะพูด /a/"
+          },
+          "harder": {
+            "en": "Show the cards for the letters n and a in a mixed order. Children do the action of the card: the nod for n, the apple bite for a.",
+            "th": "ชูบัตรตัวอักษร n และ a แบบสลับลำดับ เด็ก ๆ ทำท่าประจำเสียงของบัตรนั้น: พยักหน้าสำหรับ n และกัดแอปเปิลสำหรับ a"
+          },
+          "group": {
+            "en": "Two halves: one half says the sound, and the other half does the action. Then the halves change.",
+            "th": "แบ่งชั้นเป็น 2 ฝั่ง: ฝั่งหนึ่งออกเสียง อีกฝั่งหนึ่งทำท่า แล้วสลับกัน"
+          },
+          "materials": [
+            "sound cards: a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียง a และชี้ที่ตัวอักษร",
+              "ออกเสียงล้วน: อ้าปากกว้าง คางลดต่ำลง ลิ้นวางราบอยู่ต่ำ เป็นเสียงสั้นและใส แบบใน \"apple\" ใกล้กับเสียงสระ แอะ ในภาษาไทย ไม่ใช่ชื่อตัวอักษร \"ay\"",
+              "ทำท่าประจำเสียง a: ทำมือเหมือนถือแอปเปิล อ้าปากกว้างเหมือนจะกัดคำใหญ่ แล้วพูด /a/, /a/, /a/"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือตัวอักษร a ออกเสียงว่า /a/\"",
+              "\"ฟัง: /a/, /a/, /a/ ไม่ใช่ 'ay' แต่เป็น /a/\"",
+              "\"ดูครู: กัดแอปเปิลคำใหญ่ /a/, /a/, /a/\"",
+              "\"ถึงตาเด็ก ๆ แล้ว ออกเสียงและทำท่า 3 ครั้ง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด /a/, /a/, /a/ และทำท่ากัดแอปเปิลคำใหญ่ 3 ครั้ง",
+              "เด็ก ๆ ชี้ที่ตัวอักษร a บนบัตร"
+            ],
+            "watchFor": [
+              "เสียงสั้นและอ้าปากกว้าง: ไม่ใช่ \"ay\" ไม่ใช่ \"ah\" (อา) และไม่ใช่ \"uh\"",
+              "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า",
+              "เด็กที่ถามเรื่องคำว่า a: คำว่า a เป็นคำที่ต้องจำ และออกเสียงว่า \"uh\" ส่วนตัวอักษร a ในคำเช่น \"an\" ออกเสียงว่า /a/"
+            ]
+          }
+        },
+        {
+          "id": "A3",
+          "title": {
+            "en": "Form it",
+            "th": "เขียนตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Write the letter a (the small letter a, not the big letter A) large on the board, and say the formation words while you write.",
+              "Write the letter a in the air with your back to the class, so your hand moves the same way as theirs.",
+              "Children write the letter a in the air, then trace it in the book three times."
+            ],
+            "teacherLanguage": [
+              "\"Start at the dot. Round to the left. Up to the top. Down.\"",
+              "\"Fingers up. Write the letter a in the air with me.\"",
+              "\"Open your book. Find the letter a. Trace it three times. Start at the dot.\""
+            ],
+            "studentActions": [
+              "Children write the letter a in the air with one finger and say the formation words.",
+              "Children trace the letter a three times in the book, from the dot."
+            ],
+            "watchFor": [
+              "Children who make a circle and a separate line: the pencil goes round, then up, then down, with no stop.",
+              "Children who start at the bottom: take their hand and start at the dot.",
+              "Children who go round to the right: take their hand, start at the dot, and go round to the left."
+            ]
+          },
+          "easier": {
+            "en": "Children trace the letter a in the book with a finger first. Then they trace it with the pencil.",
+            "th": "เด็ก ๆ ใช้นิ้วลากเส้นตามตัวอักษร a ในหนังสือก่อน แล้วจึงใช้ดินสอลากเส้นตาม"
+          },
+          "harder": {
+            "en": "Write the letter a two more times on the empty line, with no dots.",
+            "th": "เขียนตัวอักษร a อีก 2 ครั้งบนบรรทัดว่าง โดยไม่มีจุดนำ"
+          },
+          "group": {
+            "en": "Pairs: one child writes the letter a on the partner's back with a finger; the partner says /a/.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ใช้นิ้วเขียนตัวอักษร a บนหลังของคู่คนที่ 2 คู่คนที่ 2 พูด /a/"
+          },
+          "materials": [
+            "board",
+            "student book: letter box a"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียนตัวอักษร a ขนาดใหญ่บนกระดาน (a ตัวพิมพ์เล็ก ไม่ใช่ A ตัวพิมพ์ใหญ่) และพูดคำบอกวิธีเขียนขณะเขียน",
+              "เขียนตัวอักษร a กลางอากาศโดยหันหลังให้เด็ก ๆ เพื่อให้มือของครูเคลื่อนไปทางเดียวกับมือของเด็ก ๆ",
+              "เด็ก ๆ เขียนตัวอักษร a กลางอากาศ แล้วลากเส้นตามในหนังสือ 3 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"เริ่มที่จุด วนไปทางซ้าย ขึ้นไปด้านบน ลง\"",
+              "\"ยกนิ้วขึ้น เขียนตัวอักษร a กลางอากาศพร้อมครู\"",
+              "\"เปิดหนังสือ หาตัวอักษร a ลากเส้นตาม 3 ครั้ง เริ่มที่จุด\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ใช้นิ้ว 1 นิ้วเขียนตัวอักษร a กลางอากาศ และพูดคำบอกวิธีเขียน",
+              "เด็ก ๆ ลากเส้นตามตัวอักษร a ในหนังสือ 3 ครั้ง โดยเริ่มที่จุด"
+            ],
+            "watchFor": [
+              "เด็กที่เขียนวงกลมแล้วขีดเส้นแยกต่างหาก: ลากดินสอวนไป แล้วขึ้น แล้วลง ต่อเนื่องโดยไม่ยกดินสอ",
+              "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด",
+              "เด็กที่วนไปทางขวา: จับมือเด็ก เริ่มที่จุด แล้ววนไปทางซ้าย"
+            ]
+          }
+        },
+        {
+          "id": "A4",
+          "title": {
+            "en": "Blend it",
+            "th": "ผสมเสียง"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First by ear: keep the picture cards cat, hat, and fan face down. Say the three sounds with a short stop between them, then say them fast. Show the picture after the class says the word.",
+              "Then with letters, for the first time: show the word card \"an\". Put your finger under the letter a, then under the letter n, then slide under the whole word.",
+              "Show the word card \"Nan\". The big letter N at the start of a name says nnn, too. Hold the nnn sounds: nnn - /a/ - nnn.",
+              "Say the sounds, not the letter names: /k/ with no \"uh\" after it, /h/ as a soft breath, fff long."
+            ],
+            "teacherLanguage": [
+              "\"Listen. /k/ - /a/ - /t/. What is the word? Cat!\"",
+              "\"Next one. /h/ - /a/ - /t/.\" \"Fff - /a/ - nnn.\"",
+              "\"Now look at the letters. Finger under the letter a: /a/. Finger under the letter n: nnn. Fast: an! An apple!\"",
+              "\"This word is a name. Nnn - /a/ - nnn. Nan! Like Nan in our book.\""
+            ],
+            "studentActions": [
+              "Children listen to the three sounds and say the word.",
+              "Children say the sounds of \"an\" and \"Nan\" with the teacher, then read the two words alone."
+            ],
+            "watchFor": [
+              "Children who say only the first sound: say the sounds again, closer together.",
+              "Children who say \"ay-n\" or \"ah-n\" for \"an\": point to the letter a card, do the action, and read it again. Say a short /a/, as in \"apple\", with the mouth open."
+            ]
+          },
+          "easier": {
+            "en": "Say the sounds closer together, then say the word. Read \"an\" with the class two more times.",
+            "th": "พูดเสียงให้ชิดกันมากขึ้น แล้วพูดเป็นคำ อ่าน \"an\" พร้อมทั้งชั้นอีก 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word; children say its three sounds: \"Fan.\" \"Fff - /a/ - nnn.\"",
+            "th": "พูดคำ 1 คำ เด็ก ๆ พูด 3 เสียงของคำนั้น: \"Fan.\" \"Fff - /a/ - nnn.\""
+          },
+          "group": {
+            "en": "Pairs: partner A points under the letters, partner B reads the word.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ใต้ตัวอักษร คู่คนที่ 2 อ่านคำ"
+          },
+          "materials": [
+            "picture cards: cat, hat, fan",
+            "word cards: an, Nan"
+          ],
+          "th": {
+            "teacherActions": [
+              "ขั้นแรกฝึกด้วยการฟัง: คว่ำบัตรภาพ cat, hat และ fan ไว้ พูด 3 เสียงโดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
+              "จากนั้นฝึกด้วยตัวอักษรเป็นครั้งแรก: ชูบัตรคำ \"an\" วางนิ้วใต้ตัวอักษร a ต่อไปวางนิ้วใต้ตัวอักษร n แล้วลากนิ้วไปใต้คำทั้งคำ",
+              "ชูบัตรคำ \"Nan\" N ตัวพิมพ์ใหญ่ที่ต้นชื่อก็ออกเสียง nnn เหมือนกัน ลากเสียง nnn ไว้: nnn - /a/ - nnn",
+              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /k/ ไม่มี \"uh\" (เออะ) ตามหลัง ส่วน /h/ เป็นเสียงลมหายใจเบา ๆ และ fff ลากยาว"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง /k/ - /a/ - /t/ คำนี้คือคำอะไร? cat!\"",
+              "\"คำต่อไป /h/ - /a/ - /t/\" \"Fff - /a/ - nnn\"",
+              "\"ทีนี้ดูตัวอักษร วางนิ้วใต้ตัวอักษร a: /a/ วางนิ้วใต้ตัวอักษร n: nnn พูดเร็ว ๆ: an! An apple! (แอปเปิล 1 ผล)\"",
+              "\"คำนี้เป็นชื่อ Nnn - /a/ - nnn Nan! เหมือน Nan ในหนังสือของเรา\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟัง 3 เสียง แล้วพูดคำ",
+              "เด็ก ๆ ออกเสียงทีละเสียงในคำ \"an\" และ \"Nan\" พร้อมครู แล้วอ่านทั้ง 2 คำด้วยตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่พูดแค่เสียงแรก: พูดทุกเสียงอีกครั้ง ให้ชิดกันมากขึ้น",
+              "เด็กที่อ่าน \"an\" เป็น \"ay-n\" (เอน) หรือ \"ah-n\" (อาน): ชี้ที่บัตรตัวอักษร a ทำท่าประจำเสียง แล้วอ่านอีกครั้ง ออกเสียง /a/ สั้น ๆ แบบใน \"apple\" โดยอ้าปาก"
+            ]
+          }
+        },
+        {
+          "id": "A5",
+          "title": {
+            "en": "Word wall",
+            "th": "ผนังคำศัพท์"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Put the letter a card on the word wall, next to the letter n card.",
+              "Put the first two words on the wall: \"an\" and \"Nan\". The class reads the wall."
+            ],
+            "teacherLanguage": [
+              "\"Here is the letter a. It says /a/. Here is the letter n. It says nnn.\"",
+              "\"Our first words! Read them with me: an. Nan.\"",
+              "\"Every week, we put new words here.\""
+            ],
+            "studentActions": [
+              "Children say the sounds and read the two words at the wall."
+            ],
+            "watchFor": [
+              "Children who read \"Nan\" as a picture word: point under each letter and say the sounds."
+            ]
+          },
+          "easier": {
+            "en": "Read the wall with the class two times.",
+            "th": "อ่านคำบนผนังคำศัพท์พร้อมทั้งชั้น 2 ครั้ง"
+          },
+          "harder": {
+            "en": "A child reads one word on the wall alone, then says its first sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงแรกของคำนั้น"
+          },
+          "group": {
+            "en": "Whole class: one child points, and the class reads.",
+            "th": "ทั้งชั้น: เด็กคนหนึ่งชี้ และทั้งชั้นอ่าน"
+          },
+          "materials": [
+            "word wall",
+            "sound cards: a",
+            "word cards: an, Nan"
+          ],
+          "th": {
+            "teacherActions": [
+              "ติดบัตรตัวอักษร a บนผนังคำศัพท์ ข้างบัตรตัวอักษร n",
+              "ติดคำ 2 คำแรกบนผนังคำศัพท์: \"an\" และ \"Nan\" ทั้งชั้นอ่านคำบนผนังคำศัพท์"
+            ],
+            "teacherLanguage": [
+              "\"นี่คือตัวอักษร a ออกเสียงว่า /a/ นี่คือตัวอักษร n ออกเสียงว่า nnn\"",
+              "\"คำแรกของเรา! อ่านพร้อมครู: an, Nan\"",
+              "\"ทุกสัปดาห์ เราจะติดคำใหม่ที่นี่\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและอ่านคำ 2 คำที่ผนังคำศัพท์"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"Nan\" โดยจำทั้งคำ ไม่ได้สะกดออกเสียง: ชี้ใต้ตัวอักษรแต่ละตัวและออกเสียง"
+            ]
+          }
+        },
+        {
+          "id": "A6",
+          "title": {
+            "en": "New tricky words",
+            "th": "คำที่ต้องจำชุดใหม่"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cards I, in, and on. Show one card at a time.",
+              "Read the word. Show the letters that the class cannot sound out yet: all the letters except n. \"I\" is one letter. It says its letter name, and it is always a big letter.",
+              "Spell each word with letter names, then write it in the air."
+            ],
+            "teacherLanguage": [
+              "\"This word is I. It says its name: I. I am Teacher ___. It is always a big letter.\"",
+              "\"This word is in. The cat is in the bag.\"",
+              "\"This word is on. The cat is on the box.\"",
+              "\"This is a tricky word. We remember it. Say it with me.\""
+            ],
+            "studentActions": [
+              "Children read each card three times: loud, quiet, loud.",
+              "Children find the n in \"in\" and \"on\".",
+              "Children point to themselves and say \"I\"."
+            ],
+            "watchFor": [
+              "Children who read \"in\" and \"on\" the same way: say both words slowly, then show the first letter."
+            ]
+          },
+          "easier": {
+            "en": "Teach \"I\" and \"in\" today; \"on\" comes on the review strip tomorrow.",
+            "th": "สอน \"I\" และ \"in\" วันนี้ ส่วน \"on\" จะอยู่บนแถบทบทวนพรุ่งนี้"
+          },
+          "harder": {
+            "en": "Children put a pencil in a box or on a box and say: \"In!\" \"On!\"",
+            "th": "เด็ก ๆ วางดินสอในกล่องหรือบนกล่อง แล้วพูดว่า: \"In!\" \"On!\""
+          },
+          "group": {
+            "en": "Pairs: you show a card; partner A reads it to partner B. Then the partners change.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 อ่านให้คู่คนที่ 2 ฟัง แล้วสลับกัน"
+          },
+          "materials": [
+            "tricky word cards: I, in, on",
+            "a small box and a pencil"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรคำ I, in และ on ทีละใบ",
+              "อ่านคำนั้น แล้วชี้ตัวอักษรที่ทั้งชั้นยังสะกดออกเสียงไม่ได้: ทุกตัวยกเว้น n คำว่า \"I\" มีตัวอักษรตัวเดียว ออกเสียงเป็นชื่อตัวอักษร และเป็นตัวพิมพ์ใหญ่เสมอ",
+              "สะกดแต่ละคำด้วยชื่อตัวอักษร แล้วเขียนคำนั้นกลางอากาศ"
+            ],
+            "teacherLanguage": [
+              "\"คำนี้คือ I (ฉัน) ออกเสียงเป็นชื่อตัวอักษร: I เช่น I am Teacher ___ (ฉันคือครู ___) คำนี้เป็นตัวพิมพ์ใหญ่เสมอ\"",
+              "\"คำนี้คือ in (ใน) เช่น The cat is in the bag (แมวอยู่ในกระเป๋า)\"",
+              "\"คำนี้คือ on (บน) เช่น The cat is on the box (แมวอยู่บนกล่อง)\"",
+              "\"นี่คือคำที่ต้องจำ เราจำคำนี้ไว้ พูดพร้อมครู\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรแต่ละใบ 3 ครั้ง: ดัง เบา ดัง",
+              "เด็ก ๆ หาตัวอักษร n ในคำ \"in\" และ \"on\"",
+              "เด็ก ๆ ชี้ที่ตัวเองแล้วพูด \"I\""
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"in\" และ \"on\" เหมือนกัน: พูดทั้ง 2 คำช้า ๆ แล้วชี้ตัวอักษรตัวแรกให้ดู"
+            ]
+          }
+        },
+        {
+          "id": "A7",
+          "title": {
+            "en": "Read it",
+            "th": "อ่าน"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Open the practice sheet in the book and point to each line once."
+            ],
+            "teacherLanguage": [
+              "\"Read the sounds with me: /a/, /a/, /a/. Nnn, /a/, nnn.\"",
+              "\"Read the words: an. Nan.\"",
+              "\"Read the sentences: Nan can. I can.\""
+            ],
+            "studentActions": [
+              "Children read the lines and point to the tricky words \"I\" and \"can\"."
+            ],
+            "watchFor": [
+              "Children who look at the wrong line: show the picture at the start of the line."
+            ]
+          },
+          "easier": {
+            "en": "Read only the line of sounds.",
+            "th": "อ่านเฉพาะบรรทัดของเสียง"
+          },
+          "harder": {
+            "en": "Children read \"Nan can. I can.\" alone.",
+            "th": "เด็ก ๆ อ่าน \"Nan can. I can.\" ด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs point to the lines for each other.",
+            "th": "ทำเป็นคู่: ชี้บรรทัดให้กันและกัน"
+          },
+          "materials": [
+            "student book: practice sheet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "เปิดหน้าฝึกอ่านในหนังสือ และชี้แต่ละบรรทัด 1 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเสียงพร้อมครู: /a/, /a/, /a/ Nnn, /a/, nnn\"",
+              "\"อ่านคำ: an, Nan\"",
+              "\"อ่านประโยค: Nan can (Nan ทำได้) I can (ฉันทำได้)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละบรรทัด และชี้ที่คำที่ต้องจำ \"I\" และ \"can\""
+            ],
+            "watchFor": [
+              "เด็กที่ดูผิดบรรทัด: ชี้ภาพที่ต้นบรรทัดให้ดู"
+            ]
+          }
+        },
+        {
+          "id": "A8",
+          "title": {
+            "en": "Home card",
+            "th": "บัตรกิจกรรมที่บ้าน"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "Read the Thai line on the home card to the class.",
+              "After class on day 1: tear the week 2 home card out of each student book, and put one card in each child's bag."
+            ],
+            "teacherLanguage": [
+              "\"Your home card is in your bag. Show it to your family.\"",
+              "\"Count with your family in English. How many? One, two, three!\""
+            ],
+            "studentActions": [
+              "Children find the home card in their bag."
+            ],
+            "watchFor": [
+              "A child with no card: give the child a card at home time on day 2."
+            ]
+          },
+          "easier": {
+            "en": "Show the card to the child.",
+            "th": "ชูบัตรให้เด็กดู"
+          },
+          "harder": {
+            "en": "A child shows the card to a friend and says: \"Ap, ap, apple. How many? One, two, three!\"",
+            "th": "เด็กคนหนึ่งเอาบัตรให้เพื่อนดูและพูดว่า: \"Ap, ap, apple. How many? One, two, three!\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "student book: home card"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "อ่านข้อความภาษาไทยบนบัตรกิจกรรมที่บ้านให้ทั้งชั้นฟัง",
+              "หลังเลิกเรียนวันที่ 1: ฉีกบัตรกิจกรรมที่บ้านของสัปดาห์ที่ 2 ออกจากหนังสือนักเรียนของเด็กแต่ละคน แล้วใส่บัตรในกระเป๋าของเด็กคนละ 1 ใบ"
+            ],
+            "teacherLanguage": [
+              "\"บัตรกิจกรรมที่บ้านอยู่ในกระเป๋าของหนู ๆ แล้ว เอาให้ครอบครัวดูนะ\"",
+              "\"นับเลขเป็นภาษาอังกฤษกับครอบครัว How many? One, two, three!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ หาบัตรกิจกรรมที่บ้านในกระเป๋าของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่มีบัตร: ให้บัตรแก่เด็กตอนกลับบ้านในวันที่ 2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "day": 2,
+      "title": {
+        "en": "Story Lesson",
+        "th": "บทเรียนนิทาน"
+      },
+      "prep": [
+        {
+          "en": "Get the book audio of \"How Many?\" ready on the tablet, or print its QR code (B3).",
+          "th": "เตรียมเสียงอ่านของหนังสือ \"How Many?\" บนแท็บเล็ต หรือพิมพ์คิวอาร์โค้ดของหนังสือไว้ (B3)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "B1",
+          "title": {
+            "en": "Family words",
+            "th": "คำศัพท์ประจำหมวด"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Show each family picture card and count the apples with the class. Then say the number word two times.",
+              "Put the cards on the board in order, one to ten. Point to a card; the class says the number.",
+              "Hold up fingers; the class counts them and says the number."
+            ],
+            "teacherLanguage": [
+              "\"Look. How many apples? One, two, three. Three!\"",
+              "\"Say it: three.\"",
+              "\"Point to the card with five apples!\"",
+              "\"How many fingers? One, two, three, four. Four!\""
+            ],
+            "studentActions": [
+              "Children count the apples and say each number two times after the teacher.",
+              "Children point to the card that the teacher says.",
+              "Children count the teacher's fingers."
+            ],
+            "watchFor": [
+              "Children who count the same apple two times: touch each apple once, slowly, with them."
+            ]
+          },
+          "easier": {
+            "en": "Use the cards one to five.",
+            "th": "ใช้บัตร one ถึง five"
+          },
+          "harder": {
+            "en": "Count back from ten to one with the cards: the class says each number.",
+            "th": "นับถอยหลังจาก ten ถึง one ด้วยบัตร ทั้งชั้นพูดตัวเลขทีละตัว"
+          },
+          "group": {
+            "en": "Pairs: partner A points to a card, partner B says the number.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่บัตร คู่คนที่ 2 พูดตัวเลข"
+          },
+          "materials": [
+            "family picture cards: one, two, three, four, five, six, seven, eight, nine, ten"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพคำศัพท์แต่ละใบ และนับแอปเปิลพร้อมทั้งชั้น จากนั้นพูดคำศัพท์ตัวเลขนั้น 2 ครั้ง",
+              "ติดบัตรบนกระดานตามลำดับ จาก one ถึง ten ชี้ที่บัตร 1 ใบ ทั้งชั้นพูดตัวเลขนั้น",
+              "ชูนิ้ว ทั้งชั้นนับนิ้วและพูดตัวเลข"
+            ],
+            "teacherLanguage": [
+              "\"ดู How many apples? (มีแอปเปิลกี่ผล) One, two, three. Three!\"",
+              "\"พูดตาม: three\"",
+              "\"ชี้ที่บัตร five apples! (แอปเปิล 5 ผล)\"",
+              "\"How many fingers? (มีกี่นิ้ว) One, two, three, four. Four!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ นับแอปเปิล และพูดตัวเลขแต่ละตัวตามครู 2 ครั้ง",
+              "เด็ก ๆ ชี้ที่บัตรที่ครูพูด",
+              "เด็ก ๆ นับนิ้วของครู"
+            ],
+            "watchFor": [
+              "เด็กที่นับแอปเปิลผลเดียวกัน 2 ครั้ง: แตะแอปเปิลทีละผลช้า ๆ พร้อมเด็ก ผลละ 1 ครั้ง"
+            ]
+          }
+        },
+        {
+          "id": "B2",
+          "title": {
+            "en": "Picture walk",
+            "th": "ดูภาพก่อนอ่าน"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cover and pages 1 to 7 of \"How Many?\". Cover the words with your hand. Keep page 8 for later.",
+              "On each page, ask \"How many?\" The class counts the things in the picture.",
+              "On page 7, point to the open school bag and ask what is in it."
+            ],
+            "teacherLanguage": [
+              "\"Look at the cover. Where are they? In the park!\"",
+              "\"Look. Ducks! How many ducks? One, two, three!\"",
+              "\"Look at the bag. What is in the bag?\""
+            ],
+            "studentActions": [
+              "Children say what they can see, in Thai or English.",
+              "Children count the things on each page with a finger in the air."
+            ],
+            "watchFor": [
+              "Children who answer in Thai: say the English; the child says it after you.",
+              "Do not open page 8 yet: keep the surprise for the reading."
+            ]
+          },
+          "easier": {
+            "en": "Count with the class on every page.",
+            "th": "นับพร้อมทั้งชั้นในทุกหน้า"
+          },
+          "harder": {
+            "en": "Before you turn the page, ask: \"What is next? How many?\"",
+            "th": "ก่อนพลิกหน้า ถามว่า: \"What is next? How many?\" (หน้าต่อไปมีอะไร มีกี่อัน)"
+          },
+          "group": {
+            "en": "Whole class: quiet children tell a partner first, then the class.",
+            "th": "ทั้งชั้น: เด็กที่ไม่ค่อยกล้าพูดบอกคู่ก่อน แล้วจึงบอกทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"How Many?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกและหน้า 1 ถึง 7 ของ \"How Many?\" ใช้มือปิดคำไว้ เก็บหน้า 8 ไว้เปิดทีหลัง",
+              "ในแต่ละหน้า ถามว่า \"How many?\" (มีกี่อัน) ทั้งชั้นนับสิ่งของในภาพ",
+              "ที่หน้า 7 ชี้ที่กระเป๋านักเรียนที่เปิดอยู่ แล้วถามว่าในกระเป๋ามีอะไร"
+            ],
+            "teacherLanguage": [
+              "\"ดูที่ปก พวกเขาอยู่ที่ไหน? In the park! (ในสวนสาธารณะ)\"",
+              "\"ดู ducks! How many ducks? (มีเป็ดกี่ตัว) One, two, three!\"",
+              "\"ดูกระเป๋า ในกระเป๋ามีอะไร?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ บอกสิ่งที่เห็น เป็นภาษาไทยหรือภาษาอังกฤษ",
+              "เด็ก ๆ นับสิ่งของในแต่ละหน้า โดยชี้นิ้วในอากาศ"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเป็นภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม",
+              "ยังไม่เปิดหน้า 8: เก็บเซอร์ไพรส์ไว้ตอนอ่าน"
+            ]
+          }
+        },
+        {
+          "id": "B3",
+          "title": {
+            "en": "Listen",
+            "th": "ฟัง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Play the audio of \"How Many?\" once, at 1.0 speed.",
+              "Point to the picture while the audio reads the page; turn the page with the audio."
+            ],
+            "teacherLanguage": [
+              "\"Now listen to the book. Eyes on the pictures.\"",
+              "\"Show the number with your fingers!\""
+            ],
+            "studentActions": [
+              "Children listen and look at the pictures.",
+              "Children show the number on each page with their fingers."
+            ],
+            "watchFor": [
+              "Children who do not look: hold the book closer to them."
+            ]
+          },
+          "easier": {
+            "en": "Play the audio at 0.75 speed.",
+            "th": "เปิดเสียงที่ความเร็ว 0.75"
+          },
+          "harder": {
+            "en": "Stop the audio before the number on a page; the class says the number.",
+            "th": "หยุดเสียงก่อนถึงตัวเลขในหน้านั้น ทั้งชั้นพูดตัวเลข"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "book audio, on the tablet or by the QR code: \"How Many?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "เปิดเสียงอ่าน \"How Many?\" 1 รอบ ที่ความเร็ว 1.0",
+              "ชี้ที่ภาพขณะเสียงอ่านหน้านั้น และพลิกหน้าไปพร้อมกับเสียง"
+            ],
+            "teacherLanguage": [
+              "\"ทีนี้ฟังหนังสือ ตาดูที่ภาพ\"",
+              "\"ชูนิ้วบอกจำนวน!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังและดูภาพ",
+              "เด็ก ๆ ชูนิ้วบอกจำนวนในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่ดูภาพ: ถือหนังสือให้ใกล้เด็กมากขึ้น"
+            ]
+          }
+        },
+        {
+          "id": "B4",
+          "title": {
+            "en": "Read with me",
+            "th": "อ่านกับครู"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First reading: read each page and point under each word. The class says the page after you.",
+              "Second reading: read \"How many ducks?\" and stop. The class counts the picture and says the number.",
+              "Point to \"How many?\" on every page: it is the frame of the week."
+            ],
+            "teacherLanguage": [
+              "\"My turn: How many suns? One! Your turn!\"",
+              "\"How many ducks? Count with me: one, two, three. Three!\"",
+              "\"Read the last page with me: Oh no, Pip!\""
+            ],
+            "studentActions": [
+              "Children say each page after the teacher and point in the air.",
+              "Children count the pictures and say the number on each page."
+            ],
+            "watchFor": [
+              "Children who say the words but do not look: point under each word slowly.",
+              "On the last page, let the children laugh, then read it again together."
+            ]
+          },
+          "easier": {
+            "en": "Read pages 1 to 4 and page 8 only.",
+            "th": "อ่านเฉพาะหน้า 1 ถึง 4 และหน้า 8"
+          },
+          "harder": {
+            "en": "Children read \"How many\" alone; you say only the thing and the number.",
+            "th": "เด็ก ๆ อ่าน \"How many\" ด้วยตัวเอง ส่วนครูพูดเฉพาะสิ่งของและตัวเลข"
+          },
+          "group": {
+            "en": "Half the class reads one page, the other half reads the next.",
+            "th": "ครึ่งชั้นอ่าน 1 หน้า อีกครึ่งชั้นอ่านหน้าถัดไป"
+          },
+          "materials": [
+            "big book or screen: \"How Many?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "อ่านรอบแรก: อ่านแต่ละหน้าและชี้ใต้แต่ละคำ ทั้งชั้นพูดหน้านั้นตาม",
+              "อ่านรอบที่สอง: อ่าน \"How many ducks?\" แล้วหยุด ทั้งชั้นนับสิ่งของในภาพและพูดตัวเลข",
+              "ชี้ที่ \"How many?\" ในทุกหน้า: นี่คือกรอบประโยคของสัปดาห์"
+            ],
+            "teacherLanguage": [
+              "\"ตาครู: How many suns? One! ถึงตาเด็ก ๆ!\"",
+              "\"How many ducks? นับพร้อมครู: one, two, three. Three!\"",
+              "\"อ่านหน้าสุดท้ายพร้อมครู: Oh no, Pip!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละหน้าตามครู และชี้ในอากาศ",
+              "เด็ก ๆ นับสิ่งของในภาพ และพูดตัวเลขในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่พูดคำได้แต่ไม่ดูหนังสือ: ชี้ใต้แต่ละคำช้า ๆ",
+              "ที่หน้าสุดท้าย ปล่อยให้เด็ก ๆ หัวเราะ แล้วอ่านอีกครั้งพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B5",
+          "title": {
+            "en": "Frame practice",
+            "th": "ฝึกกรอบประโยค"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Write \"How many?\" on the board and point to each word. Show the question mark.",
+              "Hold some crayons in your hand. Ask \"How many?\" The class counts: \"One, two, three. Three!\"",
+              "Six children come to the front, one at a time. The child holds up a family picture card from B1 and asks \"How many?\"; the class counts and answers. Then pairs do it with their fingers."
+            ],
+            "teacherLanguage": [
+              "\"How many crayons? Count with me: one, two, three. Three!\"",
+              "\"Your turn. Hold up the card. Ask the class: How many?\"",
+              "\"Now with your partner. Show some fingers. Ask: How many?\""
+            ],
+            "studentActions": [
+              "Six children ask \"How many?\" with a family picture card; the class counts and answers.",
+              "Pairs: partner A shows fingers and asks \"How many?\"; partner B counts and answers. Then they change."
+            ],
+            "watchFor": [
+              "Children who answer with only the number: praise it, then count together: \"One, two, three. Three!\"",
+              "Children who show more than five fingers: count the fingers of both hands with them."
+            ]
+          },
+          "easier": {
+            "en": "The child counts together with the teacher.",
+            "th": "เด็กนับพร้อมกับครู"
+          },
+          "harder": {
+            "en": "The child asks about things in the room: \"How many windows?\"",
+            "th": "เด็กถามเกี่ยวกับสิ่งของในห้อง: \"How many windows?\" (มีหน้าต่างกี่บาน)"
+          },
+          "group": {
+            "en": "Pairs, then two pairs together: four children ask and count.",
+            "th": "ทำเป็นคู่ แล้วรวม 2 คู่เข้าด้วยกัน: เด็ก 4 คนถามและนับ"
+          },
+          "materials": [
+            "board",
+            "crayons",
+            "family picture cards: one, two, three, four, five, six, seven, eight, nine, ten"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียน \"How many?\" บนกระดาน และชี้ที่แต่ละคำ ชี้ให้ดูเครื่องหมายคำถาม (question mark)",
+              "ถือสีเทียนจำนวนหนึ่งไว้ในมือ ถามว่า \"How many?\" ทั้งชั้นนับ: \"One, two, three. Three!\"",
+              "เด็ก 6 คนออกมาหน้าชั้นทีละคน เด็กชูบัตรภาพคำศัพท์ 1 ใบจาก B1 แล้วถามว่า \"How many?\" ทั้งชั้นนับและตอบ จากนั้นให้ทำเป็นคู่โดยใช้นิ้ว"
+            ],
+            "teacherLanguage": [
+              "\"How many crayons? (มีสีเทียนกี่แท่ง) นับพร้อมครู: one, two, three. Three!\"",
+              "\"ถึงตาหนูแล้ว ชูบัตรขึ้น ถามทั้งชั้นว่า: How many?\"",
+              "\"ทีนี้ทำกับคู่ ชูนิ้ว แล้วถามว่า: How many?\""
+            ],
+            "studentActions": [
+              "เด็ก 6 คนชูบัตรภาพคำศัพท์และถามว่า \"How many?\" ทั้งชั้นนับและตอบ",
+              "ทำเป็นคู่: คู่คนที่ 1 ชูนิ้วและถามว่า \"How many?\" คู่คนที่ 2 นับและตอบ แล้วสลับกัน"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบแค่ตัวเลข: ชมก่อน แล้วนับพร้อมกัน: \"One, two, three. Three!\"",
+              "เด็กที่ชูนิ้วมากกว่า 5 นิ้ว: นับนิ้วของทั้ง 2 มือพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "B6",
+          "title": {
+            "en": "Act it",
+            "th": "แสดงตามเรื่อง"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "The whole class acts the book. Say each page; the class says it after you and shows the number with their fingers.",
+              "On the last page, the class licks their lips like Pip. Then the class points at Pip in the book and says: \"Oh no, Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"Say it with me: How many suns? One!\"",
+              "\"Lick the cream like Pip! Now point at Pip: Oh no, Pip!\""
+            ],
+            "studentActions": [
+              "The class says each page and shows the numbers. On the last page, the children act Pip."
+            ],
+            "watchFor": [
+              "Children who only watch: count with them on your fingers."
+            ]
+          },
+          "easier": {
+            "en": "The class says only the numbers; you say \"How many\".",
+            "th": "ทั้งชั้นพูดเฉพาะตัวเลข ส่วนครูพูด \"How many\""
+          },
+          "harder": {
+            "en": "Children say the pages with other things in the room: \"How many chairs?\"",
+            "th": "เด็ก ๆ พูดแต่ละหน้าโดยเปลี่ยนเป็นสิ่งของอื่นในห้อง: \"How many chairs?\" (มีเก้าอี้กี่ตัว)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"How Many?\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ทั้งชั้นแสดงตามหนังสือ พูดแต่ละหน้า ทั้งชั้นพูดตามและชูนิ้วบอกจำนวน",
+              "ที่หน้าสุดท้าย ทั้งชั้นเลียริมฝีปากเหมือน Pip จากนั้นทั้งชั้นชี้ที่ Pip ในหนังสือและพูดว่า: \"Oh no, Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"พูดพร้อมครู: How many suns? One!\"",
+              "\"เลียครีมเหมือน Pip! ทีนี้ชี้ที่ Pip: Oh no, Pip!\""
+            ],
+            "studentActions": [
+              "ทั้งชั้นพูดแต่ละหน้าและชูนิ้วบอกจำนวน ที่หน้าสุดท้าย เด็ก ๆ แสดงเป็น Pip"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: นับนิ้วพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "B7",
+          "title": {
+            "en": "Sing it",
+            "th": "ร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the opening, play the karaoke video as the song of the week (item 3). The words are on the screen."
+            ],
+            "teacherLanguage": [
+              "\"Sing with the words on the screen. Point to the words!\""
+            ],
+            "studentActions": [
+              "Children sing and point to the words on the screen."
+            ],
+            "watchFor": [
+              "Children who only watch: give them the gesture to do (count fingers, clap)."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus)"
+          },
+          "harder": {
+            "en": "Children sing the verse without the video.",
+            "th": "เด็ก ๆ ร้องท่อนเวิร์ส (verse) โดยไม่ใช้วิดีโอ"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "karaoke videos: \"How Many? One, Two!\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบ เปิดวิดีโอคาราโอเกะเป็นเพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เนื้อเพลงอยู่บนจอ"
+            ],
+            "teacherLanguage": [
+              "\"ร้องตามเนื้อเพลงบนจอ ชี้ที่คำ!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ร้องเพลงและชี้ที่คำบนจอ"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ให้เด็กทำท่าประกอบเพลง (นับนิ้ว ปรบมือ)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "day": 3,
+      "title": {
+        "en": "Spell and Read",
+        "th": "สะกดและอ่าน"
+      },
+      "prep": [
+        {
+          "en": "Put two cards for the letter n and one card for the letter a in each child's letter card set.",
+          "th": "ใส่บัตรตัวอักษร n 2 ใบ และบัตรตัวอักษร a 1 ใบ ในชุดบัตรตัวอักษรของเด็กแต่ละคน"
+        }
+      ],
+      "steps": [
+        {
+          "id": "C1",
+          "title": {
+            "en": "Sound review",
+            "th": "ทบทวนเสียง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the cards for the letters a and n fast, in a mixed order.",
+              "Children say the sound and do the action of the card."
+            ],
+            "teacherLanguage": [
+              "\"What sound? /a/! Apple bite!\"",
+              "\"What sound? Nnn! Nod!\"",
+              "\"Again, faster!\""
+            ],
+            "studentActions": [
+              "Children say /a/ or nnn and do the action."
+            ],
+            "watchFor": [
+              "A short /a/, as in \"apple\", not \"ay\"."
+            ]
+          },
+          "easier": {
+            "en": "Show each card two times in the same order before the fast round.",
+            "th": "ชูบัตรแต่ละใบ 2 ครั้งตามลำดับเดิมก่อนรอบเร็ว"
+          },
+          "harder": {
+            "en": "Show a card for a short time only, then hide it.",
+            "th": "ชูบัตรเพียงช่วงสั้น ๆ แล้วซ่อน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรตัวอักษร a และ n อย่างรวดเร็ว แบบสลับลำดับ",
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียงของบัตรนั้น"
+            ],
+            "teacherLanguage": [
+              "\"เสียงอะไร? /a/! กัดแอปเปิล!\"",
+              "\"เสียงอะไร? Nnn! พยักหน้า!\"",
+              "\"อีกครั้ง เร็วขึ้น!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด /a/ หรือ nnn และทำท่าประจำเสียง"
+            ],
+            "watchFor": [
+              "เสียง /a/ สั้น ๆ แบบใน \"apple\" ไม่ใช่ \"ay\""
+            ]
+          }
+        },
+        {
+          "id": "C2",
+          "title": {
+            "en": "Letter cards",
+            "th": "บัตรตัวอักษร"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Each child has a workmat and the letter cards a and n (two cards for the letter n).",
+              "Build a chain, one change at a time: the sound /a/, then the word an, then Nan, then an again.",
+              "Children push one card into a box for each sound and say the sound, then read the word."
+            ],
+            "teacherLanguage": [
+              "\"Push the letter a card into the first box. Say it: /a/.\"",
+              "\"Now make an. /a/ - nnn. Which card comes next? Push the letter n card.\"",
+              "\"Now make Nan. Put an n card at the start. Nnn - /a/ - nnn. Read it: Nan!\"",
+              "\"Take away the first n card. What is the word now? An!\""
+            ],
+            "studentActions": [
+              "Children push the cards, say the sounds, and read each word."
+            ],
+            "watchFor": [
+              "Children who put n first for \"an\": say the word slowly and ask: \"What is the first sound? /a/.\"",
+              "Children who read the cards with the letter names: point to the letter a card and do the action."
+            ]
+          },
+          "easier": {
+            "en": "Build only \"an\" and \"Nan\", with the teacher.",
+            "th": "ต่อเฉพาะคำ \"an\" และ \"Nan\" พร้อมครู"
+          },
+          "harder": {
+            "en": "The child builds \"Nan\" and then \"an\" with no help, and reads both words.",
+            "th": "เด็กต่อคำ \"Nan\" แล้วต่อคำ \"an\" ด้วยตัวเอง และอ่านทั้ง 2 คำ"
+          },
+          "group": {
+            "en": "Pairs share one workmat and take turns to push the cards.",
+            "th": "ทำเป็นคู่: ใช้แผ่นรองกิจกรรมร่วมกัน 1 แผ่น และผลัดกันเลื่อนบัตร"
+          },
+          "materials": [
+            "workmats (class set)",
+            "letter cards (class set): a, n, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็กแต่ละคนมีแผ่นรองกิจกรรม 1 แผ่น และบัตรตัวอักษร a และ n (บัตรตัวอักษร n 2 ใบ)",
+              "ต่อคำทีละขั้น โดยเพิ่มหรือเอาบัตรออกครั้งละ 1 ใบ: เสียง /a/ แล้วคำ an แล้ว Nan แล้วกลับเป็น an อีกครั้ง",
+              "เด็ก ๆ เลื่อนบัตรเข้าช่องทีละใบ ใบละ 1 เสียง และออกเสียงนั้น แล้วอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"เลื่อนบัตรตัวอักษร a ไปที่ช่องแรก พูดว่า: /a/\"",
+              "\"ทีนี้ต่อคำ an /a/ - nnn บัตรไหนมาต่อ? เลื่อนบัตรตัวอักษร n\"",
+              "\"ทีนี้ต่อคำ Nan วางบัตรตัวอักษร n ไว้ข้างหน้า Nnn - /a/ - nnn อ่าน: Nan!\"",
+              "\"เอาบัตรตัวอักษร n ใบแรกออก ตอนนี้เป็นคำอะไร? An!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เลื่อนบัตร ออกเสียง และอ่านแต่ละคำ"
+            ],
+            "watchFor": [
+              "เด็กที่วางบัตรตัวอักษร n ไว้ข้างหน้าสำหรับคำ \"an\": พูดคำนั้นช้า ๆ แล้วถามว่า: \"What is the first sound? /a/.\" (เสียงแรกคือเสียงอะไร? /a/)",
+              "เด็กที่อ่านบัตรเป็นชื่อตัวอักษร: ชี้ที่บัตรตัวอักษร a และทำท่าประจำเสียง"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "title": {
+            "en": "Dictation",
+            "th": "เขียนตามคำบอก"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Say the sound /a/; children say it, then write the letter a in the book. Do it two times.",
+              "Say \"an\". Children say the sounds on two fingers, then write the word in two boxes.",
+              "Then children trace the sentence \"I can.\" on the line."
+            ],
+            "teacherLanguage": [
+              "\"When I say /a/, you write the letter a. Ready? /a/.\"",
+              "\"Listen: an. Say the sounds on your fingers: /a/ - nnn. Write the letter a in the first box and the letter n in the next box.\"",
+              "\"Now trace: I can. A big letter I. A full stop at the end.\""
+            ],
+            "studentActions": [
+              "Children write the letter a two times and the word \"an\" in the book.",
+              "Children trace \"I can.\""
+            ],
+            "watchFor": [
+              "Children who write the letter a as a circle and a line with a gap: show the formation again: round to the left, up, down."
+            ]
+          },
+          "easier": {
+            "en": "Children trace \"an\" before they write it.",
+            "th": "เด็ก ๆ ลากเส้นตาม \"an\" ก่อนเขียนเอง"
+          },
+          "harder": {
+            "en": "Children write \"Nan\" in three boxes, with a big letter N.",
+            "th": "เด็ก ๆ เขียน \"Nan\" ใน 3 ช่อง โดยใช้ N ตัวพิมพ์ใหญ่"
+          },
+          "group": {
+            "en": "Pairs check each other's letter a: start at the dot, round to the left, up to the top, down.",
+            "th": "ทำเป็นคู่: ตรวจตัวอักษร a ของกันและกัน (เริ่มที่จุด วนไปทางซ้าย ขึ้นไปด้านบน ลง)"
+          },
+          "materials": [
+            "student book: dictation lines"
+          ],
+          "th": {
+            "teacherActions": [
+              "ออกเสียง /a/ เด็ก ๆ พูดตาม แล้วเขียนตัวอักษร a ในหนังสือ ทำ 2 ครั้ง",
+              "พูด \"an\" เด็ก ๆ ออกเสียงทีละเสียงพร้อมชูนิ้วเสียงละ 1 นิ้ว แล้วเขียนคำลงใน 2 ช่อง",
+              "จากนั้นเด็ก ๆ ลากเส้นตามประโยค \"I can.\" บนบรรทัด"
+            ],
+            "teacherLanguage": [
+              "\"เมื่อครูพูด /a/ ให้เด็ก ๆ เขียนตัวอักษร a พร้อมไหม? /a/\"",
+              "\"ฟัง: an ออกเสียงทีละเสียงและชูนิ้วทีละนิ้ว: /a/ - nnn เขียนตัวอักษร a ในช่องแรก และตัวอักษร n ในช่องถัดไป\"",
+              "\"ทีนี้ลากเส้นตาม: I can (ฉันทำได้) I ตัวพิมพ์ใหญ่ ใส่จุดที่ท้ายประโยค\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เขียนตัวอักษร a 2 ครั้ง และเขียนคำ \"an\" ในหนังสือ",
+              "เด็ก ๆ ลากเส้นตาม \"I can.\""
+            ],
+            "watchFor": [
+              "เด็กที่เขียนตัวอักษร a เป็นวงกลมกับเส้นที่แยกห่างกัน: แสดงวิธีเขียนอีกครั้ง: วนไปทางซ้าย ขึ้น ลง"
+            ]
+          }
+        },
+        {
+          "id": "C4",
+          "title": {
+            "en": "Decodable: read together",
+            "th": "หนังสือฝึกสะกดอ่าน: อ่านด้วยกัน"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Show the cover of \"Can I?\". Read the title and ask what the book is about.",
+              "Show the \"Sounds in this book\" page: the class says /a/, sounds out \"Nan\", and reads the tricky word \"I\". Show the word list on the back cover: these are the main words of the book.",
+              "Read page 1 with the class: sound out \"Nan\" with your finger under the letters, and read \"can\" as a tricky word.",
+              "Then pairs read: partner A reads a page, partner B reads the next."
+            ],
+            "teacherLanguage": [
+              "\"Look. Can I? Who is on the cover? What can they do?\"",
+              "\"Look at this page. These are the sounds and the words of the book. What sound? /a/!\"",
+              "\"Finger under the letters. Nnn - /a/ - nnn. Nan! And this word is tricky: can.\"",
+              "\"Your turn with your partner. Partner A reads, partner B reads, partner A reads.\""
+            ],
+            "studentActions": [
+              "Children read each page with a finger under the words.",
+              "Pairs take turns, page by page."
+            ],
+            "watchFor": [
+              "Children who guess \"Ben\" or another name: point under each letter of \"Nan\" and say the sounds.",
+              "This is the first book with words to sound out. Children sound out \"Nan\" with the letters n and a. The other words are tricky words: I, can, and."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher, page by page.",
+            "th": "เด็กอ่านพร้อมครูทีละหน้า"
+          },
+          "harder": {
+            "en": "The child reads the whole book alone to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher sits with one pair.",
+            "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
+          },
+          "materials": [
+            "books (one for each pair): \"Can I?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกของ \"Can I?\" อ่านชื่อเรื่อง แล้วถามว่าหนังสือเล่มนี้เกี่ยวกับอะไร",
+              "ให้ดูหน้า \"Sounds in this book\" (เสียงในหนังสือเล่มนี้): ทั้งชั้นพูด /a/ สะกดออกเสียง \"Nan\" และอ่านคำที่ต้องจำ \"I\" จากนั้นให้ดูรายการคำที่ปกหลัง: นี่คือคำหลักในหนังสือเล่มนี้",
+              "อ่านหน้า 1 พร้อมทั้งชั้น: สะกดออกเสียง \"Nan\" โดยวางนิ้วใต้ตัวอักษร และอ่าน \"can\" เป็นคำที่ต้องจำ",
+              "จากนั้นให้อ่านเป็นคู่: คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป"
+            ],
+            "teacherLanguage": [
+              "\"ดู Can I? (ฉันทำได้ไหม) ใครอยู่บนปก? เขาทำอะไรได้บ้าง?\"",
+              "\"ดูหน้านี้ นี่คือเสียงและคำในหนังสือ เสียงอะไร? /a/!\"",
+              "\"วางนิ้วใต้ตัวอักษร Nnn - /a/ - nnn Nan! ส่วนคำนี้เป็นคำที่ต้องจำ: can\"",
+              "\"ถึงตาเด็ก ๆ อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน คู่คนที่ 1 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
+              "คู่ผลัดกันอ่านทีละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่เดาว่าเป็น \"Ben\" หรือชื่ออื่น: ชี้ใต้ตัวอักษรแต่ละตัวของ \"Nan\" และออกเสียง",
+              "นี่คือหนังสือเล่มแรกที่มีคำให้สะกดออกเสียง เด็ก ๆ สะกดออกเสียง \"Nan\" ด้วยตัวอักษร n และ a คำอื่นเป็นคำที่ต้องจำ: I, can, and"
+            ]
+          }
+        },
+        {
+          "id": "C5",
+          "title": {
+            "en": "Comprehension",
+            "th": "ตรวจความเข้าใจ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Ask two questions about the book, one with the frame of the week. Children answer with a short sentence."
+            ],
+            "teacherLanguage": [
+              "\"Look at page 7. Is Nan happy? No! Nan is scared.\"",
+              "\"Look at page 8. How many children are on the slide? One, two. Two!\""
+            ],
+            "studentActions": [
+              "Children answer \"No\" or a number, then say the full answer with the teacher."
+            ],
+            "watchFor": [
+              "Children who answer with one word (\"No\" or a number): say the full answer; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Ask only yes or no questions.",
+            "th": "ถามเฉพาะคำถามแบบใช่หรือไม่ใช่"
+          },
+          "harder": {
+            "en": "A child asks a question about a page: \"How many children?\"",
+            "th": "เด็กคนหนึ่งถามคำถามเกี่ยวกับหน้าหนึ่ง: \"How many children?\" (มีเด็กกี่คน)"
+          },
+          "group": {
+            "en": "Pairs ask each other one question.",
+            "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
+          },
+          "materials": [
+            "books (one for each pair): \"Can I?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ถามคำถาม 2 ข้อเกี่ยวกับหนังสือ โดยให้ 1 ข้อใช้กรอบประโยคของสัปดาห์ เด็ก ๆ ตอบเป็นประโยคสั้น ๆ"
+            ],
+            "teacherLanguage": [
+              "\"ดูหน้า 7 Is Nan happy? (Nan ดีใจไหม) No! Nan is scared. (ไม่ใช่ Nan กลัว)\"",
+              "\"ดูหน้า 8 How many children are on the slide? (มีเด็กอยู่บนกระดานลื่นกี่คน) One, two. Two!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ตอบ \"No\" หรือตัวเลข แล้วพูดคำตอบเต็มพร้อมครู"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเพียงคำเดียว (\"No\" หรือตัวเลข): พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "C6",
+          "title": {
+            "en": "Favorite page",
+            "th": "หน้าที่ชอบ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask two or three children to read their favorite page of \"Can I?\"."
+            ],
+            "teacherLanguage": [
+              "\"Which page do you like? Read it to us.\""
+            ],
+            "studentActions": [
+              "Two or three children read one page each."
+            ],
+            "watchFor": [
+              "Children who are not sure: let them choose a page, then read it with them."
+            ]
+          },
+          "easier": {
+            "en": "The child points to the page; the class reads it.",
+            "th": "เด็กชี้ที่หน้านั้น ทั้งชั้นอ่าน"
+          },
+          "harder": {
+            "en": "The child reads the page and says why: \"I like the slide!\"",
+            "th": "เด็กอ่านหน้านั้นและบอกเหตุผล: \"I like the slide!\" (หนูชอบกระดานลื่น!)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "books (one for each pair): \"Can I?\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 2 หรือ 3 คนอ่านหน้าที่ชอบใน \"Can I?\""
+            ],
+            "teacherLanguage": [
+              "\"หนูชอบหน้าไหน? อ่านให้เราฟัง\""
+            ],
+            "studentActions": [
+              "เด็ก 2 หรือ 3 คนอ่านคนละ 1 หน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่แน่ใจ: ให้เด็กเลือกหน้า แล้วอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "C7",
+          "title": {
+            "en": "Sticker",
+            "th": "สติกเกอร์"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Give each child the sticker of \"Can I?\".",
+              "Children put it on number 2 of the book map in their book."
+            ],
+            "teacherLanguage": [
+              "\"You read the book! Here is your sticker.\"",
+              "\"Put it on the book map, on number 2.\""
+            ],
+            "studentActions": [
+              "Children put the sticker on the book map and say the book title."
+            ],
+            "watchFor": [
+              "Children who put the sticker in the wrong place: show number 2 on the map."
+            ]
+          },
+          "easier": {
+            "en": "Put the sticker on the map with the child.",
+            "th": "ติดสติกเกอร์บนแผนที่หนังสือพร้อมกับเด็ก"
+          },
+          "harder": {
+            "en": "The child says the title and reads one page from the book.",
+            "th": "เด็กพูดชื่อหนังสือและอ่าน 1 หน้าจากหนังสือ"
+          },
+          "group": {
+            "en": "The table leader gives out the stickers.",
+            "th": "หัวหน้าโต๊ะแจกสติกเกอร์"
+          },
+          "materials": [
+            "stickers: \"Can I?\"",
+            "student book: book map"
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกสติกเกอร์ \"Can I?\" ให้เด็กแต่ละคน",
+              "เด็ก ๆ ติดสติกเกอร์ที่หมายเลข 2 ของแผนที่หนังสือในหนังสือของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"เด็ก ๆ อ่านหนังสือจบแล้ว! นี่คือสติกเกอร์ของเด็ก ๆ\"",
+              "\"ติดที่แผนที่หนังสือ ที่หมายเลข 2\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ติดสติกเกอร์บนแผนที่หนังสือ และพูดชื่อหนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่ติดสติกเกอร์ผิดที่: ชี้หมายเลข 2 บนแผนที่หนังสือให้ดู"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "day": 4,
+      "title": {
+        "en": "Read and Write",
+        "th": "อ่านและเขียน"
+      },
+      "prep": [
+        {
+          "en": "Put crayons on each table, and mark the writing page in the student books (D4).",
+          "th": "วางสีเทียนไว้ทุกโต๊ะ และคั่นหน้ากิจกรรมเขียนในหนังสือนักเรียนไว้ (D4)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "D1",
+          "title": {
+            "en": "Re-read",
+            "th": "อ่านซ้ำ"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Children read \"Can I?\" again in pairs, with a finger under the words. Partner A reads a page, partner B reads the next.",
+              "Sit with one table and listen to each child read two pages."
+            ],
+            "teacherLanguage": [
+              "\"Read the book again. Finger under the words.\"",
+              "\"Read page 7 to me. Good! Can Nan?\""
+            ],
+            "studentActions": [
+              "Children read the book in pairs, with a finger under each word."
+            ],
+            "watchFor": [
+              "Note on the record sheet the children who cannot yet sound out \"Nan\"."
+            ]
+          },
+          "easier": {
+            "en": "The child reads together with the partner.",
+            "th": "เด็กอ่านพร้อมกับคู่"
+          },
+          "harder": {
+            "en": "The child reads the book alone to the partner.",
+            "th": "เด็กอ่านหนังสือให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher listens to one table.",
+            "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
+          },
+          "materials": [
+            "books (one for each pair): \"Can I?\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ อ่าน \"Can I?\" อีกครั้งเป็นคู่ โดยวางนิ้วใต้คำ คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป",
+              "นั่งกับ 1 โต๊ะ และฟังเด็กแต่ละคนอ่าน 2 หน้า"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสืออีกครั้ง วางนิ้วใต้คำ\"",
+              "\"อ่านหน้า 7 ให้ครูฟัง เก่งมาก! Can Nan? (Nan ทำได้ไหม)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านหนังสือเป็นคู่ โดยวางนิ้วใต้แต่ละคำ"
+            ],
+            "watchFor": [
+              "จดในแบบบันทึกผล: เด็กที่ยังสะกดออกเสียง \"Nan\" ไม่ได้"
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "title": {
+            "en": "Tricky words",
+            "th": "คำที่ต้องจำ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Show the cards a, and, can, I, in, on fast.",
+              "Write \"can\" on the board, then erase one letter; children say the missing letter."
+            ],
+            "teacherLanguage": [
+              "\"Read it fast! I. In. On. Can. And. A.\"",
+              "\"Close your eyes. ... Open your eyes. What is missing?\""
+            ],
+            "studentActions": [
+              "Children read the cards fast.",
+              "Children say the missing letter name."
+            ],
+            "watchFor": [
+              "Children who mix up \"in\" and \"on\": put the two cards side by side and read them slowly.",
+              "Read the word card a as \"uh\", as in \"a cat\". The sound card a says /a/, as in \"apple\".",
+              "Children who say the sound of the missing letter: accept it, then say the letter name. For the letter a, say: \"The name of the letter is ay. The sound is /a/.\""
+            ]
+          },
+          "easier": {
+            "en": "Show only the new cards: I, in, on.",
+            "th": "ชูเฉพาะบัตรใหม่: I, in, on"
+          },
+          "harder": {
+            "en": "Erase two letters of \"and\".",
+            "th": "ลบตัวอักษร 2 ตัวของ \"and\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "tricky word cards: a, and, can, I, in, on",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตร a, and, can, I, in, on อย่างรวดเร็ว",
+              "เขียน \"can\" บนกระดาน แล้วลบตัวอักษร 1 ตัว เด็ก ๆ บอกตัวอักษรที่หายไป"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเร็ว ๆ! I, in, on, can, and, a\"",
+              "\"หลับตา ... ลืมตา อะไรหายไป?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรอย่างรวดเร็ว",
+              "เด็ก ๆ บอกชื่อตัวอักษรที่หายไป"
+            ],
+            "watchFor": [
+              "เด็กที่สับสนระหว่าง \"in\" กับ \"on\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ",
+              "อ่านบัตรคำ a ว่า \"uh\" แบบใน \"a cat\" ส่วนบัตรเสียง a ออกเสียงว่า /a/ แบบใน \"apple\"",
+              "เด็กที่บอกเสียงของตัวอักษรที่หายไป: ยอมรับคำตอบนั้น แล้วพูดชื่อตัวอักษร สำหรับตัวอักษร a ให้พูดว่า: \"The name of the letter is ay. The sound is /a/.\" (ชื่อของตัวอักษรคือ เอ ส่วนเสียงคือ /a/)"
+            ]
+          }
+        },
+        {
+          "id": "D3",
+          "title": {
+            "en": "Leveled reader",
+            "th": "หนังสืออ่านแบ่งระดับ"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "Give out the class set of \"How Many?\" (Sprout band).",
+              "Read it together once, then pairs read it page by page."
+            ],
+            "teacherLanguage": [
+              "\"Open your book. Read with me.\"",
+              "\"Now read it with your partner. Partner A reads, partner B reads.\""
+            ],
+            "studentActions": [
+              "Children read \"How Many?\" together, then in pairs."
+            ],
+            "watchFor": [
+              "Children who read a number wrong: count the picture with them."
+            ]
+          },
+          "easier": {
+            "en": "Pairs read only pages 1 to 4.",
+            "th": "คู่อ่านเฉพาะหน้า 1 ถึง 4"
+          },
+          "harder": {
+            "en": "The child reads the whole book to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟัง"
+          },
+          "group": {
+            "en": "Pairs.",
+            "th": "ทำเป็นคู่"
+          },
+          "materials": [
+            "books (one for each pair): \"How Many?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกหนังสือ \"How Many?\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
+            ],
+            "teacherLanguage": [
+              "\"เปิดหนังสือ อ่านพร้อมครู\"",
+              "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่าน \"How Many?\" พร้อมกัน แล้วอ่านเป็นคู่"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านตัวเลขผิด: นับสิ่งของในภาพพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "D4",
+          "title": {
+            "en": "Write it",
+            "th": "เขียน"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Part 1 (5 min): write \"How many?\" on the board. Show where the big letter and the question mark go.",
+              "Children trace \"How many?\" in the book. Then they count the apples in the picture and trace the number word under it: three.",
+              "Stand-and-count break (at minute 5): all children stand up. Show some fingers and ask \"How many jumps?\" The class counts and jumps. Do it two times, then sit down.",
+              "Part 2 (5 min): children draw one, two, or three balls in the empty box. They find the number word under the box (one, two, three) and trace it."
+            ],
+            "teacherLanguage": [
+              "\"A big letter at the start. A question mark at the end of a question.\"",
+              "\"Trace the words: How many?\"",
+              "\"Count the apples. How many? Three! Trace the word three.\"",
+              "\"Stand up! How many jumps? One, two, three. Jump three times!\"",
+              "\"Now draw one, two, or three balls. How many balls? Find the word and trace it.\""
+            ],
+            "studentActions": [
+              "Children trace the frame and the number word.",
+              "Children stand, count, and jump in the break.",
+              "Children draw balls, then find and trace the number word."
+            ],
+            "watchFor": [
+              "Children who write a full stop after \"How many\": point to the question mark on the board."
+            ]
+          },
+          "easier": {
+            "en": "Draw two balls with the child; the child counts them and traces the word two.",
+            "th": "วาดลูกบอล 2 ลูกพร้อมกับเด็ก เด็กนับลูกบอลและลากเส้นตามคำ two"
+          },
+          "harder": {
+            "en": "The child writes a second line: \"How many balls? Four!\"",
+            "th": "เด็กเขียนบรรทัดที่สอง: \"How many balls? Four!\" (มีลูกบอลกี่ลูก 4 ลูก!)"
+          },
+          "group": {
+            "en": "Alone; at the end, the children make pairs and show each other the page.",
+            "th": "ทำคนเดียว ตอนท้ายให้เด็กจับคู่และเปิดหน้านั้นให้กันดู"
+          },
+          "materials": [
+            "student book: writing page",
+            "crayons",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ส่วนที่ 1 (5 นาที): เขียน \"How many?\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และเครื่องหมายคำถาม (question mark) อยู่ที่ไหน",
+              "เด็ก ๆ ลากเส้นตาม \"How many?\" ในหนังสือ จากนั้นนับแอปเปิลในภาพ และลากเส้นตามคำศัพท์ตัวเลขใต้ภาพ: three",
+              "พักยืนนับ (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น ครูชูนิ้วแล้วถามว่า \"How many jumps?\" (กระโดดกี่ครั้ง) ทั้งชั้นนับและกระโดด ทำ 2 รอบ แล้วนั่งลง",
+              "ส่วนที่ 2 (5 นาที): เด็ก ๆ วาดลูกบอล 1, 2 หรือ 3 ลูกในช่องว่าง แล้วหาคำศัพท์ตัวเลขที่ตรงกับจำนวนลูกบอลจากคำใต้ช่อง (one, two, three) และลากเส้นตามคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่เครื่องหมายคำถามที่ท้ายคำถาม\"",
+              "\"ลากเส้นตามคำ: How many?\"",
+              "\"นับแอปเปิล How many? Three! ลากเส้นตามคำ three\"",
+              "\"Stand up! (ยืนขึ้น) How many jumps? (กระโดดกี่ครั้ง) One, two, three. Jump three times! (กระโดด 3 ครั้ง)\"",
+              "\"ทีนี้วาดลูกบอล 1, 2 หรือ 3 ลูก How many balls? (มีลูกบอลกี่ลูก) หาคำนั้นแล้วลากเส้นตาม\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ลากเส้นตามกรอบประโยคและคำศัพท์ตัวเลข",
+              "เด็ก ๆ ยืน นับ และกระโดดในช่วงพัก",
+              "เด็ก ๆ วาดลูกบอล แล้วหาคำศัพท์ตัวเลขและลากเส้นตาม"
+            ],
+            "watchFor": [
+              "เด็กที่ใส่จุด (full stop) หลัง \"How many\": ชี้ที่เครื่องหมายคำถามบนกระดาน"
+            ]
+          }
+        },
+        {
+          "id": "D5",
+          "title": {
+            "en": "Share",
+            "th": "นำเสนอ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask four children to read their page to the class."
+            ],
+            "teacherLanguage": [
+              "\"Read your page to us. Hold up your book.\""
+            ],
+            "studentActions": [
+              "Four children read \"How many?\" and their number from the book."
+            ],
+            "watchFor": [
+              "Children who read too quietly: stand next to them and read with them."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher.",
+            "th": "เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "The child asks the class \"How many?\" and the class counts the balls in the picture.",
+            "th": "เด็กถามทั้งชั้นว่า \"How many?\" และทั้งชั้นนับลูกบอลในภาพ"
+          },
+          "group": {
+            "en": "Whole class; the class counts with the reader.",
+            "th": "ทั้งชั้น: ทั้งชั้นนับพร้อมกับเด็กที่อ่าน"
+          },
+          "materials": [
+            "student book: writing page"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 4 คนอ่านหน้าของตัวเองให้ทั้งชั้นฟัง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหน้าของหนูให้เราฟัง ชูหนังสือขึ้น\""
+            ],
+            "studentActions": [
+              "เด็ก 4 คนอ่าน \"How many?\" และตัวเลขของตัวเองจากหนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านเบาเกินไป: ยืนข้างเด็กและอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "D6",
+          "title": {
+            "en": "Sing it: song show",
+            "th": "ร้องเพลง: การแสดงร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the day 5 opening, the song of the week (item 3) is the song show. The class sings with all the gestures; one table leads.",
+              "If the school allows it, film the song on the class tablet."
+            ],
+            "teacherLanguage": [
+              "\"Table 2, you are the leaders today. Show us the gestures!\"",
+              "\"Show time! Sing it with all the gestures!\""
+            ],
+            "studentActions": [
+              "The leaders do the gestures in front; the class sings and copies."
+            ],
+            "watchFor": [
+              "Leaders who forget a gesture: point to the screen.",
+              "Children who are shy on the film: they can stand in the back row."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus with the gestures.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus) พร้อมท่าประกอบเพลง"
+          },
+          "harder": {
+            "en": "The leaders sing the verse alone.",
+            "th": "ผู้นำร้องท่อนเวิร์ส (verse) เอง"
+          },
+          "group": {
+            "en": "One table leads each week.",
+            "th": "โต๊ะหนึ่งเป็นผู้นำในแต่ละสัปดาห์"
+          },
+          "materials": [
+            "karaoke videos: \"How Many? One, Two!\"",
+            "class tablet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบของวันที่ 5 เพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เป็นการแสดงร้องเพลง ทั้งชั้นร้องพร้อมทำท่าประกอบเพลงทุกท่า โต๊ะหนึ่งเป็นผู้นำ",
+              "ถ้าโรงเรียนอนุญาต ให้ถ่ายวิดีโอการร้องเพลงด้วยแท็บเล็ตของห้อง"
+            ],
+            "teacherLanguage": [
+              "\"โต๊ะ 2 วันนี้เป็นผู้นำ ทำท่าประกอบเพลงให้เพื่อน ๆ ดู!\"",
+              "\"ถึงเวลาแสดงแล้ว! ร้องพร้อมทำท่าประกอบเพลงทุกท่า!\""
+            ],
+            "studentActions": [
+              "ผู้นำทำท่าประกอบเพลงอยู่ด้านหน้า ทั้งชั้นร้องและทำท่าตาม"
+            ],
+            "watchFor": [
+              "ผู้นำที่ลืมท่า: ชี้ที่จอ",
+              "เด็กที่อายกล้อง: ให้ยืนแถวหลังได้"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "day": 5,
+      "title": {
+        "en": "Play and Check",
+        "th": "เล่นและตรวจสอบ"
+      },
+      "prep": [
+        {
+          "en": "Put the new cards and books of week 2 in the four centers.",
+          "th": "นำบัตรและหนังสือชุดใหม่ของสัปดาห์ที่ 2 ไปวางที่มุมกิจกรรมทั้ง 4 มุม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "E1",
+          "title": {
+            "en": "Centers set-up",
+            "th": "จัดมุมกิจกรรม"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the four centers and the group signs. Send each group to its first center.",
+              "Groups 1 and 2 start at the letter cards and the picture sort; groups 3 and 4 at the karaoke corner and the book corner.",
+              "Hold up each sound picture card and say the word with the class: apple, ant, alligator, astronaut."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, go to the letter cards. Group 2, the picture sort.\"",
+              "\"Group 3, the karaoke corner. Group 4, the book corner.\""
+            ],
+            "studentActions": [
+              "Children go to their center and sit down."
+            ],
+            "watchFor": [
+              "Groups that do not know where to go: point to the group sign at each center."
+            ]
+          },
+          "easier": {
+            "en": "Put a picture of each group on its center.",
+            "th": "ติดภาพของแต่ละกลุ่มไว้ที่มุมกิจกรรมของกลุ่มนั้น"
+          },
+          "harder": {
+            "en": "A group leader shows the center card to the group and does the first turn.",
+            "th": "หัวหน้ากลุ่มให้กลุ่มดูบัตรมุมกิจกรรม และเล่นเป็นคนแรก"
+          },
+          "group": {
+            "en": "Four groups.",
+            "th": "4 กลุ่ม"
+          },
+          "materials": [
+            "center cards",
+            "group signs",
+            "sound picture cards: apple, ant, alligator, astronaut"
+          ],
+          "th": {
+            "teacherActions": [
+              "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
+              "กลุ่ม 1 และ 2 เริ่มที่มุมบัตรตัวอักษรและมุมแยกภาพ กลุ่ม 3 และ 4 เริ่มที่มุมคาราโอเกะและมุมหนังสือ",
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: apple, ant, alligator, astronaut"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปที่มุมบัตรตัวอักษร กลุ่ม 2 ไปที่มุมแยกภาพ\"",
+              "\"กลุ่ม 3 ไปมุมคาราโอเกะ กลุ่ม 4 ไปมุมหนังสือ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ไปที่มุมกิจกรรมของตัวเองและนั่งลง"
+            ],
+            "watchFor": [
+              "กลุ่มที่ไม่รู้ว่าต้องไปที่ไหน: ชี้ที่ป้ายกลุ่มของแต่ละมุมกิจกรรม"
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups work at their center. Picture sort: sort the picture cards into \"/a/ at the start\" and \"not /a/\". Letter cards: build the words \"an\" and \"Nan\", and read them. Book corner: read \"Hello!\", \"Nan Can Nod\", \"How Many?\", and \"Can I?\". Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"Can I?\"; mark the record sheet."
+            ],
+            "teacherLanguage": [
+              "\"Read the book to me. Finger under the words.\"",
+              "\"Good! Sound it out: nnn - /a/ - nnn. Nan!\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Note the children who guess \"Nan\" from the picture and do not look at the letters."
+            ]
+          },
+          "easier": {
+            "en": "At the reading table, the child reads with the teacher.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "At the reading table, the child reads the whole book alone.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านทั้งเล่มด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "sorting mat: /a/ / not /a/",
+            "sound picture cards: apple, ant, alligator, astronaut",
+            "picture cards: dog, sun, bus",
+            "workmats (class set)",
+            "letter cards (class set): a, n, n",
+            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\"",
+            "class tablet",
+            "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่ขึ้นต้นด้วย /a/ และกองที่ไม่ได้ขึ้นต้นด้วย /a/ มุมบัตรตัวอักษร: ต่อคำ \"an\" และ \"Nan\" แล้วอ่าน มุมหนังสือ: อ่าน \"Hello!\", \"Nan Can Nod\", \"How Many?\" และ \"Can I?\" มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"Can I?\" แล้วบันทึกในแบบบันทึกผล"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\"",
+              "\"เก่งมาก! สะกดออกเสียง: nnn - /a/ - nnn Nan!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "จดชื่อเด็กที่เดาคำ \"Nan\" จากภาพ โดยไม่ดูตัวอักษร"
+            ]
+          }
+        },
+        {
+          "id": "E3",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups change: 1 and 2 go to the karaoke corner and the book corner; 3 and 4 go to the letter cards and the picture sort.",
+              "Listen to two more children at the reading-record table."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the karaoke corner. Group 2, the book corner. Group 3, the letter cards. Group 4, the picture sort.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children change centers and work.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Groups that change slowly: count down from five."
+            ]
+          },
+          "easier": {
+            "en": "Keep the same center for a group that needs more time.",
+            "th": "ให้กลุ่มที่ต้องการเวลามากขึ้นอยู่ที่มุมเดิม"
+          },
+          "harder": {
+            "en": "Groups that finish early count the cards at their center: \"How many? One, two...\"",
+            "th": "กลุ่มที่ทำเสร็จเร็วนับบัตรที่มุมของตัวเอง: \"How many? One, two...\""
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มสลับมุม: กลุ่ม 1 และ 2 ไปที่มุมคาราโอเกะและมุมหนังสือ กลุ่ม 3 และ 4 ไปที่มุมบัตรตัวอักษรและมุมแยกภาพ",
+              "ฟังเด็กอีก 2 คนอ่านที่โต๊ะบันทึกการอ่าน"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมคาราโอเกะ กลุ่ม 2 ไปมุมหนังสือ กลุ่ม 3 ไปที่มุมบัตรตัวอักษร กลุ่ม 4 ไปที่มุมแยกภาพ\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เปลี่ยนมุมกิจกรรมและทำกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "กลุ่มที่เปลี่ยนมุมช้า: นับถอยหลังจาก 5"
+            ]
+          }
+        },
+        {
+          "id": "E4",
+          "title": {
+            "en": "Game",
+            "th": "เกม"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Play \"Swat the word\": put the tricky word cards a, and, can, I, in, on and the word cards an, Nan on the board.",
+              "Say a word. Two children run to the board. The first child to touch the card reads it."
+            ],
+            "teacherLanguage": [
+              "\"Ready? In!\"",
+              "\"Touch the word. Read it: in!\"",
+              "\"Next two. Ready?\""
+            ],
+            "studentActions": [
+              "Two children at a time touch the card and read the word.",
+              "The class reads the word with them."
+            ],
+            "watchFor": [
+              "Fast children who always win: ask them to touch with the left hand, or hop to the board.",
+              "For the word card a, say \"uh\"."
+            ]
+          },
+          "easier": {
+            "en": "Put only four cards on the board: I, in, an, Nan.",
+            "th": "ติดบัตรเพียง 4 ใบบนกระดาน: I, in, an, Nan"
+          },
+          "harder": {
+            "en": "Say a sentence: \"Nan can.\" The child touches both words in order.",
+            "th": "พูดประโยค: \"Nan can.\" (Nan ทำได้) เด็กแตะทั้ง 2 คำตามลำดับ"
+          },
+          "group": {
+            "en": "Two teams; one child from each team at a time.",
+            "th": "2 ทีม ทีมละ 1 คนในแต่ละครั้ง"
+          },
+          "materials": [
+            "word cards: an, Nan",
+            "tricky word cards: a, and, can, I, in, on"
+          ],
+          "th": {
+            "teacherActions": [
+              "เล่นเกม \"Swat the word\": ติดบัตรคำที่ต้องจำ a, and, can, I, in, on และบัตรคำ an, Nan บนกระดาน",
+              "พูดคำ 1 คำ เด็ก 2 คนวิ่งไปที่กระดาน เด็กคนแรกที่แตะบัตรนั้นอ่านคำบนบัตร"
+            ],
+            "teacherLanguage": [
+              "\"พร้อมไหม? in!\"",
+              "\"แตะคำ อ่าน: in!\"",
+              "\"2 คนต่อไป พร้อมไหม?\""
+            ],
+            "studentActions": [
+              "เด็กครั้งละ 2 คนแตะบัตรและอ่านคำ",
+              "ทั้งชั้นอ่านคำนั้นพร้อมกับเด็ก"
+            ],
+            "watchFor": [
+              "เด็กที่เร็วและชนะทุกครั้ง: ให้แตะด้วยมือซ้าย หรือกระโดดขาเดียวไปที่กระดาน",
+              "สำหรับบัตรคำ a ให้พูดว่า \"uh\""
+            ]
+          }
+        },
+        {
+          "id": "E5",
+          "title": {
+            "en": "Check",
+            "th": "ตรวจสอบ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Children do the check page: in rows 1 to 3, circle the picture that starts with /a/; in rows 4 and 5, circle the word that you say. Then they write the letter a and the word \"an\".",
+              "Collect the books and mark the check."
+            ],
+            "teacherLanguage": [
+              "\"Row 1: apple, dog, sun. Which one starts with /a/? Circle it.\"",
+              "\"Row 2: bus, ant, fish. Which one starts with /a/? Circle it.\"",
+              "\"Row 3: pig, bed, alligator. Which one starts with /a/? Circle it.\"",
+              "\"Row 4. Find the word Nan. Circle it.\"",
+              "\"Row 5. Find the word in. Circle it.\"",
+              "\"Now write the letter a. Then write the word an.\""
+            ],
+            "studentActions": [
+              "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter a, and write \"an\"."
+            ],
+            "watchFor": [
+              "Children who circle every picture, or a wrong picture in two rows: mark /a/ as weak on the record sheet; it goes back on the review strip.",
+              "Children who circle \"an\" for \"Nan\", or \"on\" for \"in\": mark the word as weak; it goes back on the review strip."
+            ]
+          },
+          "easier": {
+            "en": "Sit next to the child and point to each picture while you say it.",
+            "th": "นั่งข้างเด็ก และชี้แต่ละภาพขณะพูดคำ"
+          },
+          "harder": {
+            "en": "The child writes \"Nan\" too.",
+            "th": "เด็กเขียน \"Nan\" ด้วย"
+          },
+          "group": {
+            "en": "Alone.",
+            "th": "ทำคนเดียว"
+          },
+          "materials": [
+            "student book: check page",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย /a/ แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร a และคำ \"an\"",
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+            ],
+            "teacherLanguage": [
+              "\"แถว 1: apple, dog, sun คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
+              "\"แถว 2: bus, ant, fish คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
+              "\"แถว 3: pig, bed, alligator คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
+              "\"แถว 4 หาคำว่า Nan วงกลมไว้\"",
+              "\"แถว 5 หาคำว่า in วงกลมไว้\"",
+              "\"ทีนี้เขียนตัวอักษร a แล้วเขียนคำ an\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร a และเขียน \"an\""
+            ],
+            "watchFor": [
+              "เด็กที่วงกลมทุกภาพ หรือวงกลมภาพผิดใน 2 แถว: บันทึกในแบบบันทึกผลว่าเสียง /a/ ยังไม่แม่น แล้วเสียงนี้จะกลับไปอยู่บนแถบทบทวน",
+              "เด็กที่วงกลม \"an\" แทน \"Nan\" หรือ \"on\" แทน \"in\": บันทึกว่าคำนั้นยังไม่แม่น แล้วคำนั้นจะกลับไปอยู่บนแถบทบทวน"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "review": [
+    {
+      "day": 1,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "How many? One, two...",
+          "week": 2
+        },
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        }
+      ]
+    }
+  ],
+  "check": {
+    "items": [
+      {
+        "kind": "circle-picture",
+        "sound": "/a/",
+        "pictures": [
+          "apple",
+          "dog",
+          "sun"
+        ],
+        "answer": "apple"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/a/",
+        "pictures": [
+          "bus",
+          "ant",
+          "fish"
+        ],
+        "answer": "ant"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/a/",
+        "pictures": [
+          "pig",
+          "bed",
+          "alligator"
+        ],
+        "answer": "alligator"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "an",
+          "Nan",
+          "can"
+        ],
+        "answer": "Nan"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "on",
+          "I",
+          "in"
+        ],
+        "answer": "in"
+      },
+      {
+        "kind": "write-letter",
+        "letter": "a"
+      },
+      {
+        "kind": "write-word",
+        "word": "an"
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "apple",
+      "ant",
+      "axe"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"a\" as in \"apple\" (not the letter name \"ay\"). Your child also learns to count in English: \"How many? One, two, three!\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"a\" เหมือนในคำว่า \"apple\" (เสียงสั้น ใกล้กับเสียงสระ แอะ ไม่ใช่ชื่อตัวอักษร \"เอ\") และบุตรหลานยังได้ฝึกนับเลขเป็นภาษาอังกฤษ: \"How many? One, two, three!\""
+    },
+    "activity": {
+      "en": "Put some spoons or toys on the table and ask \"How many?\" in English. Your child counts in English: \"One, two, three. Three!\" Then say \"ap, ap, apple\" and \"an, an, ant\" together.",
+      "th": "วางช้อนหรือของเล่นจำนวนหนึ่งบนโต๊ะ แล้วถามบุตรหลานเป็นภาษาอังกฤษว่า \"How many?\" ให้บุตรหลานนับเป็นภาษาอังกฤษ: \"One, two, three. Three!\" จากนั้นพูด \"ap, ap, apple\" และ \"an, an, ant\" พร้อมกับบุตรหลาน (ออกเสียง /a/ สั้น ๆ ใกล้กับเสียงสระ แอะ ไม่ใช่ชื่อตัวอักษร \"เอ\")"
+    },
+    "songUrl": "/th/st/2/2?part=song",
+    "readAlongUrl": "/th/st/2/2?part=book"
+  },
+  "tags": {
+    "graphVersion": "phonics-v1",
+    "taught": [
+      "english.phonics.gpc.a.short-a",
+      "english.phonics.phoneme.short-a",
+      "english.phonics.letter.a.sound",
+      "english.phonics.letter.a.name",
+      "english.phonics.letter.a.form-lower",
+      "english.phonics.tricky.i",
+      "english.phonics.tricky.in",
+      "english.phonics.tricky.on",
+      "english.phonics.pa.medial-vowel.identify",
+      "english.phonics.pattern.cvc-short-a"
+    ],
+    "reviewed": [
+      "english.phonics.gpc.n.n",
+      "english.phonics.tricky.a",
+      "english.phonics.tricky.and",
+      "english.phonics.tricky.can",
+      "english.phonics.pa.initial-sound.identify",
+      "english.phonics.pa.phoneme.blend-2-3"
+    ]
+  }
+}

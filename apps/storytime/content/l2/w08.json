@@ -1,0 +1,2408 @@
+{
+  "approval": {
+    "text": {
+      "status": "approved",
+      "date": "2026-11-01",
+      "words": "3. Covers: Approved",
+      "source": "Owner answer relayed by the PM session, 2026-11-01 07:3x ICT. His item 3 answered section 3 of the PM message: the weeks 2 to 8 English text and the Level 2 Unit 1 cover version 3 look. Approved text file ~/Desktop/print-ready/storytime/text-review/Storytime-Advantage-L2-U1-weeks-2-8-English-text.pdf, SHA-256 57f30792532cdae33ae5e66f069fa822aab58df35cc6b6e2c393ca7fbdbba67c, built 2026-10-30."
+    },
+    "thai": {
+      "status": "approved",
+      "date": "2026-10-22",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 155"
+    },
+    "images": {
+      "status": "draft"
+    },
+    "audio": {
+      "status": "draft"
+    },
+    "song": {
+      "status": "draft"
+    },
+    "scripts": {
+      "status": "draft"
+    }
+  },
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "shape": "storytime-week",
+    "level": 2,
+    "week": 8,
+    "unit": 1,
+    "key": "st2/8",
+    "kind": "review",
+    "periodMinutes": 30,
+    "openingMinutes": 6,
+    "title": "Unit 1 Review",
+    "band": "Sprout",
+    "status": "draft"
+  },
+  "focus": {
+    "paSkill": {
+      "en": "the mixed sound game over the seven sounds: first sounds, last sounds, and blends by ear",
+      "th": "เกมเสียงแบบคละครบทั้ง 7 เสียง: เสียงแรก เสียงสุดท้าย และฟังแล้วผสมเสียงเป็นคำ"
+    },
+    "trickyWords": [],
+    "frame": "Hello, I am ___. / How many? One, two... / It is ___. / This is my ___. / I have two ___. / I can see a ___. / Is it a ___? Yes/No.",
+    "family": {
+      "name": {
+        "en": "The words of unit 1",
+        "th": "คำของหน่วยที่ 1"
+      },
+      "words": [
+        {
+          "word": "an"
+        },
+        {
+          "word": "Nan"
+        },
+        {
+          "word": "pan"
+        },
+        {
+          "word": "nap"
+        },
+        {
+          "word": "am"
+        },
+        {
+          "word": "man"
+        },
+        {
+          "word": "map"
+        },
+        {
+          "word": "Pam"
+        },
+        {
+          "word": "Sam"
+        },
+        {
+          "word": "sat"
+        },
+        {
+          "word": "mat"
+        },
+        {
+          "word": "tap"
+        },
+        {
+          "word": "Pat"
+        },
+        {
+          "word": "on"
+        },
+        {
+          "word": "top"
+        },
+        {
+          "word": "pot"
+        },
+        {
+          "word": "Tom"
+        },
+        {
+          "word": "Mom"
+        }
+      ]
+    },
+    "wordWall": [
+      "an",
+      "Nan",
+      "pan",
+      "nap",
+      "am",
+      "man",
+      "map",
+      "Pam",
+      "Sam",
+      "sat",
+      "mat",
+      "tap",
+      "Pat",
+      "on",
+      "top",
+      "pot",
+      "Tom",
+      "Mom"
+    ]
+  },
+  "opening": {
+    "pa": [
+      {
+        "en": "\"Listen: nose. What is the first sound? Nnn! Listen: nnn - /a/ - /p/. What is the word? Nap!\"",
+        "th": "\"ฟัง: nose เสียงแรกคือเสียงอะไร? Nnn! ฟัง: nnn - /a/ - /p/ คำนี้คือคำอะไร? Nap!\""
+      },
+      {
+        "en": "\"Listen: pen. What is the first sound? /p/! Listen: mmm - /a/ - /p/. What is the word? Map!\"",
+        "th": "\"ฟัง: pen เสียงแรกคือเสียงอะไร? /p/! ฟัง: mmm - /a/ - /p/ คำนี้คือคำอะไร? Map!\""
+      },
+      {
+        "en": "\"Listen: bus. What is the last sound? Sss! Listen: /t/ - /a/ - /p/. What is the word? Tap!\"",
+        "th": "\"ฟัง: bus เสียงสุดท้ายคือเสียงอะไร? Sss! ฟัง: /t/ - /a/ - /p/ คำนี้คือคำอะไร? Tap!\""
+      },
+      {
+        "en": "\"Listen: octopus. What is the first sound? /o/! Listen: /p/ - /o/ - /t/. What is the word? Pot!\"",
+        "th": "\"ฟัง: octopus เสียงแรกคือเสียงอะไร? /o/! ฟัง: /p/ - /o/ - /t/ คำนี้คือคำอะไร? Pot!\""
+      },
+      {
+        "en": "\"Listen: cat. What is the last sound? /t/! Listen: mmm - /o/ - mmm. What is the word? Mom!\"",
+        "th": "\"ฟัง: cat เสียงสุดท้ายคือเสียงอะไร? /t/! ฟัง: mmm - /o/ - mmm คำนี้คือคำอะไร? Mom!\""
+      }
+    ],
+    "audio": [
+      [
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/03-p.mp3"
+      ],
+      [
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/03-p.mp3"
+      ],
+      [
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/03-p.mp3"
+      ],
+      [
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/05-m.mp3"
+      ]
+    ]
+  },
+  "books": [],
+  "scripts": [
+    {
+      "id": "A",
+      "day": 1,
+      "title": {
+        "en": "Benchmark and Centers",
+        "th": "การประเมินและมุมกิจกรรม"
+      },
+      "prep": [
+        {
+          "en": "Print the class record sheet and one reading record form for each child. Choose the book for each child from the six decodables of weeks 2 to 7.",
+          "th": "พิมพ์แบบบันทึกผลทั้งชั้น และแบบบันทึกการอ่านสำหรับเด็กคนละ 1 แผ่น เลือกหนังสือให้เด็กแต่ละคนจากหนังสือฝึกสะกดอ่าน 6 เล่มของสัปดาห์ที่ 2 ถึง 7"
+        },
+        {
+          "en": "Put the letter strip, the seven sound cards, and the forms at the check table.",
+          "th": "วางแถบตัวอักษร บัตรเสียงทั้ง 7 ใบ และแบบบันทึกการอ่านไว้ที่โต๊ะประเมิน"
+        },
+        {
+          "en": "Write the order of the children on the record sheet list: three on day 1, then six a day. Children after number 27 on the list and any absent child go to the week 9 Script E slot.",
+          "th": "เขียนลำดับของเด็กในรายชื่อของแบบบันทึกผล: วันที่ 1 จำนวน 3 คน จากนั้นวันละ 6 คน เด็กที่อยู่หลังลำดับที่ 27 ในรายชื่อและเด็กที่ขาดเรียนรับการประเมินในช่วงบทสอน E ของสัปดาห์ที่ 9"
+        },
+        {
+          "en": "Put the books and the cards of the day plan in the four centers.",
+          "th": "วางหนังสือและบัตรตามแผนรายวันไว้ที่มุมกิจกรรมทั้ง 4 มุม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "A1",
+          "title": {
+            "en": "Benchmark: paper part",
+            "th": "การประเมิน: แบบทดสอบบนกระดาษ"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Children open the student book at the Benchmark 1 page. Each child works alone.",
+              "Rows 1 to 4: say the three pictures of the row two times, then the sound. Children circle the picture that starts with the sound.",
+              "Rows 5 to 8: say the three pictures of the row two times, then the sound. Children circle the picture that ends with the sound.",
+              "Boxes 9 to 15: say each sound two times. Children write its letter in the box. Say the sound, not the letter name.",
+              "Collect the books. After the lesson, mark the page and write the two scores in the class record sheet."
+            ],
+            "teacherLanguage": [
+              "\"Row 1: nest, cup, bed. Which one starts with nnn? Circle it.\"",
+              "\"Row 5: cat, sun, bed. Which one ends with /t/? Circle it.\"",
+              "\"Box 9. Listen: mmm, mmm. Write the letter for mmm.\"",
+              "\"Pencils down. Close your books.\""
+            ],
+            "studentActions": [
+              "Children circle one picture in each row and write one letter in each box."
+            ],
+            "watchFor": [
+              "Children who copy from a friend: move them to a seat alone, and say the row again.",
+              "Children who stop at a box: point to the box and say the sound one more time.",
+              "Do not help with the answers: this page shows what each child can do alone."
+            ]
+          },
+          "easier": {
+            "en": "Point to each picture while you say it.",
+            "th": "ชี้ที่ภาพแต่ละภาพขณะพูดชื่อภาพ"
+          },
+          "harder": {
+            "en": "Children who finish early color the pictures of the page.",
+            "th": "เด็กที่ทำเสร็จเร็วระบายสีภาพในหน้านั้น"
+          },
+          "group": {
+            "en": "Alone.",
+            "th": "ทำคนเดียว"
+          },
+          "materials": [
+            "student book: Benchmark 1 page",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ เปิดหนังสือนักเรียนที่หน้าการประเมินครั้งที่ 1 เด็กแต่ละคนทำคนเดียว",
+              "แถว 1 ถึง 4: พูดชื่อภาพทั้ง 3 ภาพของแถวนั้น 2 ครั้ง แล้วพูดเสียง เด็ก ๆ วงกลมภาพที่ขึ้นต้นด้วยเสียงนั้น",
+              "แถว 5 ถึง 8: พูดชื่อภาพทั้ง 3 ภาพของแถวนั้น 2 ครั้ง แล้วพูดเสียง เด็ก ๆ วงกลมภาพที่ลงท้ายด้วยเสียงนั้น",
+              "ช่อง 9 ถึง 15: ออกเสียงแต่ละเสียง 2 ครั้ง เด็ก ๆ เขียนตัวอักษรของเสียงนั้นในช่อง ให้ออกเสียง ไม่ใช่พูดชื่อตัวอักษร",
+              "เก็บหนังสือ แล้วหลังเลิกคาบ ให้ตรวจหน้านั้นและเขียนคะแนนทั้ง 2 ส่วนลงในแบบบันทึกผลทั้งชั้น"
+            ],
+            "teacherLanguage": [
+              "\"แถว 1: nest, cup, bed คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
+              "\"แถว 5: cat, sun, bed คำไหนลงท้ายด้วย /t/? วงกลมไว้\"",
+              "\"ช่อง 9 ฟัง: mmm, mmm เขียนตัวอักษรของเสียง mmm\"",
+              "\"วางดินสอ ปิดหนังสือ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพ และเขียนตัวอักษรช่องละ 1 ตัว"
+            ],
+            "watchFor": [
+              "เด็กที่ลอกคำตอบของเพื่อน: ย้ายเด็กไปนั่งคนเดียว แล้วพูดชื่อภาพในแถวนั้นอีกครั้ง",
+              "เด็กที่หยุดอยู่ที่ช่องใดช่องหนึ่ง: ชี้ที่ช่องนั้น แล้วออกเสียงอีก 1 ครั้ง",
+              "ไม่ช่วยบอกคำตอบ: หน้านี้แสดงสิ่งที่เด็กแต่ละคนทำได้ด้วยตัวเอง"
+            ]
+          }
+        },
+        {
+          "id": "A2",
+          "title": {
+            "en": "Centers",
+            "th": "มุมกิจกรรม"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups go to their center: group 1 to the big book center, group 2 to the decodables, group 3 to the workmats, and group 4 to the paper center. Today there is no rotation.",
+              "Big book: pairs echo read \"Hello!\" and \"How Many?\" on the class tablet from the QR page.",
+              "Decodables: pairs read \"Nan Can Nod\" and \"Can I?\", with a finger under the words.",
+              "Workmat: build and read the word cards an, Nan with the letter cards.",
+              "Paper: review page 1 in the student book.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, the big book. Group 2, the decodables.\"",
+              "\"Group 3, the workmats. Group 4, the paper center.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child builds a word, then covers the word card and reads the word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กต่อคำ แล้วปิดบัตรคำและอ่านคำนั้น"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "books (one for each pair): \"Hello!\", \"How Many?\", \"Nan Can Nod\", \"Can I?\"",
+            "class tablet",
+            "workmats (class set)",
+            "letter cards (class set): n, a",
+            "word cards: an, Nan",
+            "student book: review page 1",
+            "record sheet",
+            "letter strip",
+            "sound cards: n, a, p, m, s, t, o",
+            "reading record forms"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มไปที่มุมกิจกรรมของกลุ่ม: กลุ่ม 1 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 2 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 3 ไปมุมแผ่นรองกิจกรรม และกลุ่ม 4 ไปมุมใบงาน วันนี้ไม่มีการเปลี่ยนมุม",
+              "มุมหนังสือเล่มใหญ่: เด็กจับคู่กันอ่านตามหนังสือ \"Hello!\" และ \"How Many?\" บนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
+              "มุมหนังสือฝึกสะกดอ่าน: เด็กจับคู่กันอ่าน \"Nan Can Nod\" และ \"Can I?\" โดยวางนิ้วใต้คำ",
+              "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษรต่อคำตามบัตรคำ an, Nan แล้วอ่านคำ",
+              "มุมใบงาน: ทำหน้าทบทวน 1 ในหนังสือนักเรียน",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 2 ไปมุมหนังสือฝึกสะกดอ่าน\"",
+              "\"กลุ่ม 3 ไปมุมแผ่นรองกิจกรรม กลุ่ม 4 ไปมุมใบงาน\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "A3",
+          "title": {
+            "en": "Close",
+            "th": "ปิดคาบ"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Stop the centers. The groups tidy their center (2 min).",
+              "Chant of the day (2 min): the class says the sounds of weeks 1 and 2 with their actions, then the frames \"Hello, I am ___.\" and \"How many? One, two...\""
+            ],
+            "teacherLanguage": [
+              "\"Tidy up! Books in the basket, cards in the box.\"",
+              "\"Say it and do it: nnn, /a/!\""
+            ],
+            "studentActions": [
+              "Children tidy the center.",
+              "Children say the sounds with the actions and say the frames."
+            ],
+            "watchFor": [
+              "Groups that tidy slowly: count down from ten."
+            ]
+          },
+          "easier": {
+            "en": "Say the chant with the class, one line at a time.",
+            "th": "พูดบทท่องประจำวันพร้อมทั้งชั้นทีละบรรทัด"
+          },
+          "harder": {
+            "en": "A child leads the chant.",
+            "th": "เด็กคนหนึ่งเป็นผู้นำพูดบทท่องประจำวัน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: n, a"
+          ],
+          "th": {
+            "teacherActions": [
+              "หยุดกิจกรรมที่มุม แต่ละกลุ่มเก็บของที่มุมของตัวเอง (2 นาที)",
+              "บทท่องประจำวัน (2 นาที): ทั้งชั้นออกเสียงประจำสัปดาห์ที่ 1 และ 2 พร้อมทำท่าประจำเสียง แล้วพูดกรอบประโยค \"Hello, I am ___.\" และ \"How many? One, two...\""
+            ],
+            "teacherLanguage": [
+              "\"เก็บของ! หนังสือใส่ตะกร้า บัตรใส่กล่อง\"",
+              "\"ออกเสียงและทำท่า: nnn, /a/!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เก็บของที่มุมกิจกรรม",
+              "เด็ก ๆ ออกเสียงพร้อมทำท่าประจำเสียง และพูดกรอบประโยค"
+            ],
+            "watchFor": [
+              "กลุ่มที่เก็บของช้า: นับถอยหลังจาก 10"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "day": 2,
+      "title": {
+        "en": "Review Centers",
+        "th": "มุมกิจกรรมทบทวน"
+      },
+      "prep": [
+        {
+          "en": "Put the books and the cards of the day plan in the four centers.",
+          "th": "วางหนังสือและบัตรตามแผนรายวันไว้ที่มุมกิจกรรมทั้ง 4 มุม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "B1",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups go to their first center: group 1 to the decodables, group 2 to the workmats, group 3 to the paper center, and group 4 to the big book center.",
+              "Big book: pairs echo read \"Paint!\" and \"My Family\" on the class tablet from the QR page.",
+              "Decodables: pairs read \"The Pan\" and \"Pam\", with a finger under the words.",
+              "Workmat: build and read the word cards pan, nap, am, man, map, Pam with the letter cards.",
+              "Paper: review page 2 in the student book, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, the decodables. Group 2, the workmats.\"",
+              "\"Group 3, the paper center. Group 4, the big book.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "books (one for each pair): \"Paint!\", \"My Family\", \"The Pan\", \"Pam\"",
+            "class tablet",
+            "workmats (class set)",
+            "letter cards (class set): n, a, p, m",
+            "word cards: pan, nap, am, man, map, Pam",
+            "student book: review page 2",
+            "record sheet",
+            "letter strip",
+            "sound cards: n, a, p, m, s, t, o",
+            "reading record forms"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม: กลุ่ม 1 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 2 ไปมุมแผ่นรองกิจกรรม กลุ่ม 3 ไปมุมใบงาน และกลุ่ม 4 ไปมุมหนังสือเล่มใหญ่",
+              "มุมหนังสือเล่มใหญ่: เด็กจับคู่กันอ่านตามหนังสือ \"Paint!\" และ \"My Family\" บนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
+              "มุมหนังสือฝึกสะกดอ่าน: เด็กจับคู่กันอ่าน \"The Pan\" และ \"Pam\" โดยวางนิ้วใต้คำ",
+              "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษรต่อคำตามบัตรคำ pan, nap, am, man, map, Pam แล้วอ่านคำ",
+              "มุมใบงาน: ทำหน้าทบทวน 2 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 2 ไปมุมแผ่นรองกิจกรรม\"",
+              "\"กลุ่ม 3 ไปมุมใบงาน กลุ่ม 4 ไปมุมหนังสือเล่มใหญ่\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "B2",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups change: group 1 to the workmats, group 2 to the paper center, group 3 to the big book center, and group 4 to the decodables.",
+              "Paper: each child of the new group does review page 2, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the workmats. Group 2, the paper center.\"",
+              "\"Group 3, the big book. Group 4, the decodables.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มเปลี่ยนมุม: กลุ่ม 1 ไปมุมแผ่นรองกิจกรรม กลุ่ม 2 ไปมุมใบงาน กลุ่ม 3 ไปมุมหนังสือเล่มใหญ่ และกลุ่ม 4 ไปมุมหนังสือฝึกสะกดอ่าน",
+              "มุมใบงาน: เด็กแต่ละคนในกลุ่มใหม่ทำหน้าทบทวน 2 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมแผ่นรองกิจกรรม กลุ่ม 2 ไปมุมใบงาน\"",
+              "\"กลุ่ม 3 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 4 ไปมุมหนังสือฝึกสะกดอ่าน\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "B3",
+          "title": {
+            "en": "Close",
+            "th": "ปิดคาบ"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Stop the centers. The groups tidy their center (2 min).",
+              "Chant of the day (2 min): the class says the sounds of weeks 3 and 4 with their actions, then the frames \"It is ___.\" and \"This is my ___.\""
+            ],
+            "teacherLanguage": [
+              "\"Tidy up! Books in the basket, cards in the box.\"",
+              "\"Say it and do it: /p/, mmm!\""
+            ],
+            "studentActions": [
+              "Children tidy the center.",
+              "Children say the sounds with the actions and say the frames."
+            ],
+            "watchFor": [
+              "Groups that tidy slowly: count down from ten."
+            ]
+          },
+          "easier": {
+            "en": "Say the chant with the class, one line at a time.",
+            "th": "พูดบทท่องประจำวันพร้อมทั้งชั้นทีละบรรทัด"
+          },
+          "harder": {
+            "en": "A child leads the chant.",
+            "th": "เด็กคนหนึ่งเป็นผู้นำพูดบทท่องประจำวัน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: p, m"
+          ],
+          "th": {
+            "teacherActions": [
+              "หยุดกิจกรรมที่มุม แต่ละกลุ่มเก็บของที่มุมของตัวเอง (2 นาที)",
+              "บทท่องประจำวัน (2 นาที): ทั้งชั้นออกเสียงประจำสัปดาห์ที่ 3 และ 4 พร้อมทำท่าประจำเสียง แล้วพูดกรอบประโยค \"It is ___.\" และ \"This is my ___.\""
+            ],
+            "teacherLanguage": [
+              "\"เก็บของ! หนังสือใส่ตะกร้า บัตรใส่กล่อง\"",
+              "\"ออกเสียงและทำท่า: /p/, mmm!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เก็บของที่มุมกิจกรรม",
+              "เด็ก ๆ ออกเสียงพร้อมทำท่าประจำเสียง และพูดกรอบประโยค"
+            ],
+            "watchFor": [
+              "กลุ่มที่เก็บของช้า: นับถอยหลังจาก 10"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "day": 3,
+      "title": {
+        "en": "Review Centers",
+        "th": "มุมกิจกรรมทบทวน"
+      },
+      "prep": [
+        {
+          "en": "Put the books and the cards of the day plan in the four centers.",
+          "th": "วางหนังสือและบัตรตามแผนรายวันไว้ที่มุมกิจกรรมทั้ง 4 มุม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "C1",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups go to their first center: group 1 to the paper center, group 2 to the big book center, group 3 to the decodables, and group 4 to the workmats.",
+              "Big book: pairs echo read \"I Have Two\" and \"I Can See\" on the class tablet from the QR page.",
+              "Decodables: pairs read \"Sam and Pam\" and \"Tap, Tap!\", with a finger under the words.",
+              "Workmat: build and read the word cards Sam, sat, mat, tap, Pat with the letter cards.",
+              "Paper: review page 3 in the student book, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, the paper center. Group 2, the big book.\"",
+              "\"Group 3, the decodables. Group 4, the workmats.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "books (one for each pair): \"I Have Two\", \"I Can See\", \"Sam and Pam\", \"Tap, Tap!\"",
+            "class tablet",
+            "workmats (class set)",
+            "letter cards (class set): n, a, p, m, s, t",
+            "word cards: Sam, sat, mat, tap, Pat",
+            "student book: review page 3",
+            "record sheet",
+            "letter strip",
+            "sound cards: n, a, p, m, s, t, o",
+            "reading record forms"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม: กลุ่ม 1 ไปมุมใบงาน กลุ่ม 2 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 3 ไปมุมหนังสือฝึกสะกดอ่าน และกลุ่ม 4 ไปมุมแผ่นรองกิจกรรม",
+              "มุมหนังสือเล่มใหญ่: เด็กจับคู่กันอ่านตามหนังสือ \"I Have Two\" และ \"I Can See\" บนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
+              "มุมหนังสือฝึกสะกดอ่าน: เด็กจับคู่กันอ่าน \"Sam and Pam\" และ \"Tap, Tap!\" โดยวางนิ้วใต้คำ",
+              "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษรต่อคำตามบัตรคำ Sam, sat, mat, tap, Pat แล้วอ่านคำ",
+              "มุมใบงาน: ทำหน้าทบทวน 3 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปมุมใบงาน กลุ่ม 2 ไปมุมหนังสือเล่มใหญ่\"",
+              "\"กลุ่ม 3 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 4 ไปมุมแผ่นรองกิจกรรม\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "C2",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups change: group 1 to the big book center, group 2 to the decodables, group 3 to the workmats, and group 4 to the paper center.",
+              "Paper: each child of the new group does review page 3, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the big book. Group 2, the decodables.\"",
+              "\"Group 3, the workmats. Group 4, the paper center.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มเปลี่ยนมุม: กลุ่ม 1 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 2 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 3 ไปมุมแผ่นรองกิจกรรม และกลุ่ม 4 ไปมุมใบงาน",
+              "มุมใบงาน: เด็กแต่ละคนในกลุ่มใหม่ทำหน้าทบทวน 3 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 2 ไปมุมหนังสือฝึกสะกดอ่าน\"",
+              "\"กลุ่ม 3 ไปมุมแผ่นรองกิจกรรม กลุ่ม 4 ไปมุมใบงาน\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "title": {
+            "en": "Close",
+            "th": "ปิดคาบ"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Stop the centers. The groups tidy their center (2 min).",
+              "Chant of the day (2 min): the class says the sounds of weeks 5 and 6 with their actions, then the frames \"I have two ___.\" and \"I can see a ___.\""
+            ],
+            "teacherLanguage": [
+              "\"Tidy up! Books in the basket, cards in the box.\"",
+              "\"Say it and do it: sss, /t/!\""
+            ],
+            "studentActions": [
+              "Children tidy the center.",
+              "Children say the sounds with the actions and say the frames."
+            ],
+            "watchFor": [
+              "Groups that tidy slowly: count down from ten."
+            ]
+          },
+          "easier": {
+            "en": "Say the chant with the class, one line at a time.",
+            "th": "พูดบทท่องประจำวันพร้อมทั้งชั้นทีละบรรทัด"
+          },
+          "harder": {
+            "en": "A child leads the chant.",
+            "th": "เด็กคนหนึ่งเป็นผู้นำพูดบทท่องประจำวัน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: s, t"
+          ],
+          "th": {
+            "teacherActions": [
+              "หยุดกิจกรรมที่มุม แต่ละกลุ่มเก็บของที่มุมของตัวเอง (2 นาที)",
+              "บทท่องประจำวัน (2 นาที): ทั้งชั้นออกเสียงประจำสัปดาห์ที่ 5 และ 6 พร้อมทำท่าประจำเสียง แล้วพูดกรอบประโยค \"I have two ___.\" และ \"I can see a ___.\""
+            ],
+            "teacherLanguage": [
+              "\"เก็บของ! หนังสือใส่ตะกร้า บัตรใส่กล่อง\"",
+              "\"ออกเสียงและทำท่า: sss, /t/!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เก็บของที่มุมกิจกรรม",
+              "เด็ก ๆ ออกเสียงพร้อมทำท่าประจำเสียง และพูดกรอบประโยค"
+            ],
+            "watchFor": [
+              "กลุ่มที่เก็บของช้า: นับถอยหลังจาก 10"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "day": 4,
+      "title": {
+        "en": "Review Centers",
+        "th": "มุมกิจกรรมทบทวน"
+      },
+      "prep": [
+        {
+          "en": "Find the weakest week of the class in the Friday checks. Put its read-along, its decodable, and its word cards in the centers, with the books of week 7.",
+          "th": "ดูผลการตรวจสอบวันศุกร์ แล้วหาสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุด นำหนังสืออ่านตาม หนังสือฝึกสะกดอ่าน และบัตรคำของสัปดาห์นั้นไปวางที่มุมกิจกรรม พร้อมกับหนังสือของสัปดาห์ที่ 7"
+        }
+      ],
+      "steps": [
+        {
+          "id": "D1",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups go to their first center: group 1 to the decodables, group 2 to the workmats, group 3 to the paper center, and group 4 to the big book center.",
+              "Big book: pairs echo read \"Is It a Ball?\" and the read-along of the weakest week (from the Friday checks) on the class tablet from the QR page.",
+              "Decodables: pairs read \"The Top\" and the decodable of the weakest week, with a finger under the words.",
+              "Workmat: build and read the word cards on, top, pot, Tom, and the word cards of the weakest week, with the letter cards.",
+              "Paper: review page 4 in the student book, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, the decodables. Group 2, the workmats.\"",
+              "\"Group 3, the paper center. Group 4, the big book.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "books (one for each pair): \"Is It a Ball?\", \"The Top\"",
+            "class tablet",
+            "workmats (class set)",
+            "letter cards (class set): n, a, p, m, s, t, o",
+            "word cards: on, top, pot, Tom",
+            "student book: review page 4",
+            "record sheet",
+            "letter strip",
+            "sound cards: n, a, p, m, s, t, o",
+            "reading record forms",
+            "books of the weakest week",
+            "word cards of the weakest week"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม: กลุ่ม 1 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 2 ไปมุมแผ่นรองกิจกรรม กลุ่ม 3 ไปมุมใบงาน และกลุ่ม 4 ไปมุมหนังสือเล่มใหญ่",
+              "มุมหนังสือเล่มใหญ่: เด็กจับคู่กันอ่านตามหนังสือ \"Is It a Ball?\" และหนังสืออ่านตามของสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุด (จากการตรวจสอบวันศุกร์) บนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
+              "มุมหนังสือฝึกสะกดอ่าน: เด็กจับคู่กันอ่าน \"The Top\" และหนังสือฝึกสะกดอ่านของสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุด โดยวางนิ้วใต้คำ",
+              "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษรต่อคำตามบัตรคำ on, top, pot, Tom และบัตรคำของสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุด แล้วอ่านคำ",
+              "มุมใบงาน: ทำหน้าทบทวน 4 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 2 ไปมุมแผ่นรองกิจกรรม\"",
+              "\"กลุ่ม 3 ไปมุมใบงาน กลุ่ม 4 ไปมุมหนังสือเล่มใหญ่\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups change: group 1 to the workmats, group 2 to the paper center, group 3 to the big book center, and group 4 to the decodables.",
+              "Paper: each child of the new group does review page 4, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the workmats. Group 2, the paper center.\"",
+              "\"Group 3, the big book. Group 4, the decodables.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มเปลี่ยนมุม: กลุ่ม 1 ไปมุมแผ่นรองกิจกรรม กลุ่ม 2 ไปมุมใบงาน กลุ่ม 3 ไปมุมหนังสือเล่มใหญ่ และกลุ่ม 4 ไปมุมหนังสือฝึกสะกดอ่าน",
+              "มุมใบงาน: เด็กแต่ละคนในกลุ่มใหม่ทำหน้าทบทวน 4 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมแผ่นรองกิจกรรม กลุ่ม 2 ไปมุมใบงาน\"",
+              "\"กลุ่ม 3 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 4 ไปมุมหนังสือฝึกสะกดอ่าน\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "D3",
+          "title": {
+            "en": "Close",
+            "th": "ปิดคาบ"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Stop the centers. The groups tidy their center (2 min).",
+              "Chant of the day (2 min): the class says the sound of week 7 with its action, then the frame \"Is it a ___? Yes/No.\""
+            ],
+            "teacherLanguage": [
+              "\"Tidy up! Books in the basket, cards in the box.\"",
+              "\"Say it and do it: /o/!\""
+            ],
+            "studentActions": [
+              "Children tidy the center.",
+              "Children say the sound with the action and say the frame."
+            ],
+            "watchFor": [
+              "Groups that tidy slowly: count down from ten."
+            ]
+          },
+          "easier": {
+            "en": "Say the chant with the class, one line at a time.",
+            "th": "พูดบทท่องประจำวันพร้อมทั้งชั้นทีละบรรทัด"
+          },
+          "harder": {
+            "en": "A child leads the chant.",
+            "th": "เด็กคนหนึ่งเป็นผู้นำพูดบทท่องประจำวัน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: o"
+          ],
+          "th": {
+            "teacherActions": [
+              "หยุดกิจกรรมที่มุม แต่ละกลุ่มเก็บของที่มุมของตัวเอง (2 นาที)",
+              "บทท่องประจำวัน (2 นาที): ทั้งชั้นออกเสียงประจำสัปดาห์ที่ 7 พร้อมทำท่าประจำเสียง แล้วพูดกรอบประโยค \"Is it a ___? Yes/No.\""
+            ],
+            "teacherLanguage": [
+              "\"เก็บของ! หนังสือใส่ตะกร้า บัตรใส่กล่อง\"",
+              "\"ออกเสียงและทำท่า: /o/!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เก็บของที่มุมกิจกรรม",
+              "เด็ก ๆ ออกเสียงพร้อมทำท่าประจำเสียง และพูดกรอบประโยค"
+            ],
+            "watchFor": [
+              "กลุ่มที่เก็บของช้า: นับถอยหลังจาก 10"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "day": 5,
+      "title": {
+        "en": "Check Table and Song Show",
+        "th": "โต๊ะประเมินและการแสดงร้องเพลง"
+      },
+      "prep": [
+        {
+          "en": "Put all the books and cards of unit 1 in the centers. At the start of E3, the class votes for the song of the song show.",
+          "th": "วางหนังสือและบัตรทั้งหมดของหน่วยที่ 1 ไว้ที่มุมกิจกรรม ตอนเริ่ม E3 ทั้งชั้นโหวตเลือกเพลงสำหรับการแสดงร้องเพลง"
+        },
+        {
+          "en": "Put the unit 1 stickers on your table.",
+          "th": "วางสติกเกอร์หน่วยที่ 1 ไว้บนโต๊ะครู"
+        }
+      ],
+      "steps": [
+        {
+          "id": "E1",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups go to their first center: group 1 to the paper center, group 2 to the big book center, group 3 to the decodables, and group 4 to the workmats.",
+              "Big book: each pair chooses two read-alongs of unit 1 and echo reads them on the class tablet from the QR page.",
+              "Decodables: each pair chooses two decodables of unit 1 and reads them, with a finger under the words.",
+              "Workmat: build and read the word cards of unit 1 with the seven letter cards of the unit.",
+              "Paper: review page 5 in the student book, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, the paper center. Group 2, the big book.\"",
+              "\"Group 3, the decodables. Group 4, the workmats.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "books (one for each pair): \"Hello!\", \"How Many?\", \"Paint!\", \"My Family\", \"I Have Two\", \"I Can See\", \"Is It a Ball?\", \"Nan Can Nod\", \"Can I?\", \"The Pan\", \"Pam\", \"Sam and Pam\", \"Tap, Tap!\", \"The Top\"",
+            "class tablet",
+            "workmats (class set)",
+            "letter cards (class set): n, a, p, m, s, t, o",
+            "word cards: an, Nan, pan, nap, am, man, map, Pam, Sam, sat, mat, tap, Pat, on, top, pot, Tom",
+            "student book: review page 5",
+            "record sheet",
+            "letter strip",
+            "sound cards: n, a, p, m, s, t, o",
+            "reading record forms"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม: กลุ่ม 1 ไปมุมใบงาน กลุ่ม 2 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 3 ไปมุมหนังสือฝึกสะกดอ่าน และกลุ่ม 4 ไปมุมแผ่นรองกิจกรรม",
+              "มุมหนังสือเล่มใหญ่: แต่ละคู่เลือกหนังสืออ่านตาม 2 เล่มของหน่วยที่ 1 แล้วอ่านตามบนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
+              "มุมหนังสือฝึกสะกดอ่าน: แต่ละคู่เลือกหนังสือฝึกสะกดอ่าน 2 เล่มของหน่วยที่ 1 แล้วอ่าน โดยวางนิ้วใต้คำ",
+              "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษร 7 ใบของหน่วยนี้ต่อคำตามบัตรคำของหน่วยที่ 1 แล้วอ่านคำ",
+              "มุมใบงาน: ทำหน้าทบทวน 5 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปมุมใบงาน กลุ่ม 2 ไปมุมหนังสือเล่มใหญ่\"",
+              "\"กลุ่ม 3 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 4 ไปมุมแผ่นรองกิจกรรม\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Groups change: group 1 to the big book center, group 2 to the decodables, group 3 to the workmats, and group 4 to the paper center.",
+              "Paper: each child of the new group does review page 5, then one earlier review page that the child has not done.",
+              "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book).",
+              "At the end, the groups put the books in the basket and the cards in the box."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the big book. Group 2, the decodables.\"",
+              "\"Group 3, the workmats. Group 4, the paper center.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Three children come to the check table, one at a time."
+            ],
+            "watchFor": [
+              "Groups that finish early read the word wall words to each other.",
+              "Note on the record sheet the children who need help at a center."
+            ]
+          },
+          "easier": {
+            "en": "At the decodables, a pair reads one book two times.",
+            "th": "ที่มุมหนังสือฝึกสะกดอ่าน ให้เด็กอ่านหนังสือคู่ละ 1 เล่ม 2 ครั้ง"
+          },
+          "harder": {
+            "en": "At the workmat, the child changes one letter card, then reads the new word.",
+            "th": "ที่มุมแผ่นรองกิจกรรม เด็กเปลี่ยนบัตรตัวอักษร 1 ใบ แล้วอ่านคำใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with one child at a time.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็กทีละคน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มเปลี่ยนมุม: กลุ่ม 1 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 2 ไปมุมหนังสือฝึกสะกดอ่าน กลุ่ม 3 ไปมุมแผ่นรองกิจกรรม และกลุ่ม 4 ไปมุมใบงาน",
+              "มุมใบงาน: เด็กแต่ละคนในกลุ่มใหม่ทำหน้าทบทวน 5 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)",
+              "ตอนท้าย แต่ละกลุ่มเก็บหนังสือใส่ตะกร้า และเก็บบัตรใส่กล่อง"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมหนังสือเล่มใหญ่ กลุ่ม 2 ไปมุมหนังสือฝึกสะกดอ่าน\"",
+              "\"กลุ่ม 3 ไปมุมแผ่นรองกิจกรรม กลุ่ม 4 ไปมุมใบงาน\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 3 คนมาที่โต๊ะประเมินทีละคน"
+            ],
+            "watchFor": [
+              "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง",
+              "จดชื่อเด็กที่ต้องการความช่วยเหลือที่มุมกิจกรรมไว้ในแบบบันทึกผล"
+            ]
+          }
+        },
+        {
+          "id": "E3",
+          "title": {
+            "en": "Song show and unit sticker",
+            "th": "การแสดงร้องเพลงและสติกเกอร์หน่วยที่ 1"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Stop the centers. The class votes for one song of unit 1 (30 seconds): say each title, and the children put up their hands.",
+              "The class sings the song that it chose, with all the gestures. If the school allows it, film the song on the class tablet.",
+              "Give each child the unit 1 sticker. Children put it on the book map, after number 7."
+            ],
+            "teacherLanguage": [
+              "\"Which song? Hands up for ... !\"",
+              "\"Show time! Sing it with all the gestures!\"",
+              "\"Unit 1 is done! Here is your sticker.\""
+            ],
+            "studentActions": [
+              "Children sing with the gestures.",
+              "Children put the unit sticker on the book map."
+            ],
+            "watchFor": [
+              "Children who are shy on the film: they can stand in the back row."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus with the gestures.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus) พร้อมท่าประกอบเพลง"
+          },
+          "harder": {
+            "en": "One table leads the song.",
+            "th": "โต๊ะหนึ่งเป็นผู้นำร้องเพลง"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "karaoke videos: the song that the class chose",
+            "class tablet",
+            "stickers: unit 1",
+            "student book: book map"
+          ],
+          "th": {
+            "teacherActions": [
+              "หยุดกิจกรรมที่มุม ทั้งชั้นโหวตเลือกเพลง 1 เพลงของหน่วยที่ 1 (30 วินาที): พูดชื่อเพลงทีละเพลง แล้วเด็ก ๆ ยกมือเลือก",
+              "ทั้งชั้นร้องเพลงที่เลือกไว้ พร้อมทำท่าประกอบเพลงทุกท่า ถ้าโรงเรียนอนุญาต ให้ถ่ายวิดีโอการร้องเพลงด้วยแท็บเล็ตของห้อง",
+              "แจกสติกเกอร์หน่วยที่ 1 ให้เด็กแต่ละคน เด็ก ๆ ติดสติกเกอร์บนแผนที่หนังสือ ต่อจากหมายเลข 7"
+            ],
+            "teacherLanguage": [
+              "\"เพลงไหนดี? ใครเลือกเพลง ... ยกมือขึ้น!\"",
+              "\"ถึงเวลาแสดงแล้ว! ร้องพร้อมทำท่าประกอบเพลงทุกท่า!\"",
+              "\"หน่วยที่ 1 จบแล้ว! นี่คือสติกเกอร์ของหนู\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ร้องเพลงพร้อมทำท่าประกอบเพลง",
+              "เด็ก ๆ ติดสติกเกอร์หน่วยที่ 1 บนแผนที่หนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่อายกล้อง: ให้ยืนแถวหลังได้"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "review": [
+    {
+      "day": 1,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "How many? One, two...",
+          "week": 2
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "frame",
+          "text": "It is ___.",
+          "week": 3
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "o",
+          "week": 7,
+          "audio": "phonemes/daniel/29-o-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "from",
+          "week": 7
+        },
+        {
+          "kind": "tricky",
+          "text": "run",
+          "week": 7
+        },
+        {
+          "kind": "tricky",
+          "text": "up",
+          "week": 7
+        },
+        {
+          "kind": "frame",
+          "text": "Is it a ___? Yes/No.",
+          "week": 7
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "o",
+          "week": 7,
+          "audio": "phonemes/daniel/29-o-short.mp3"
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "How many? One, two...",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "It is ___.",
+          "week": 3
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        },
+        {
+          "kind": "frame",
+          "text": "Is it a ___? Yes/No.",
+          "week": 7
+        }
+      ]
+    }
+  ],
+  "block": {
+    "weeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "days": [
+      {
+        "day": 1,
+        "weeks": [
+          1,
+          2
+        ],
+        "medley": [
+          "Hello, I Am Pip",
+          "How Many? One, Two!"
+        ],
+        "paper": [
+          {
+            "kind": "circle-word",
+            "words": [
+              "an",
+              "in",
+              "on"
+            ],
+            "answer": "an"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "Nan",
+              "man",
+              "pan"
+            ],
+            "answer": "Nan"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "can",
+              "and",
+              "an"
+            ],
+            "answer": "can"
+          },
+          {
+            "kind": "picture-sort",
+            "groups": [
+              {
+                "sound": "/n/",
+                "pictures": [
+                  "nest",
+                  "nose",
+                  "net"
+                ]
+              },
+              {
+                "sound": "/a/",
+                "pictures": [
+                  "apple",
+                  "ant",
+                  "alligator"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "weeks": [
+          3,
+          4
+        ],
+        "medley": [
+          "It Is Red!",
+          "This Is My Family"
+        ],
+        "paper": [
+          {
+            "kind": "circle-word",
+            "words": [
+              "pan",
+              "nap",
+              "man"
+            ],
+            "answer": "nap"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "map",
+              "Pam",
+              "am"
+            ],
+            "answer": "map"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "man",
+              "am",
+              "pan"
+            ],
+            "answer": "man"
+          },
+          {
+            "kind": "picture-sort",
+            "groups": [
+              {
+                "sound": "/p/",
+                "pictures": [
+                  "pen",
+                  "pig",
+                  "pear"
+                ]
+              },
+              {
+                "sound": "/m/",
+                "pictures": [
+                  "moon",
+                  "milk",
+                  "mango"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "weeks": [
+          5,
+          6
+        ],
+        "medley": [
+          "I Have Two",
+          "I Can See a Cat"
+        ],
+        "paper": [
+          {
+            "kind": "circle-word",
+            "words": [
+              "sat",
+              "Sam",
+              "mat"
+            ],
+            "answer": "sat"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "tap",
+              "Pat",
+              "map"
+            ],
+            "answer": "Pat"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "mat",
+              "tap",
+              "man"
+            ],
+            "answer": "mat"
+          },
+          {
+            "kind": "picture-sort",
+            "groups": [
+              {
+                "sound": "/s/",
+                "pictures": [
+                  "sun",
+                  "sock",
+                  "sofa"
+                ]
+              },
+              {
+                "sound": "/t/",
+                "pictures": [
+                  "tiger",
+                  "ten",
+                  "table"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "day": 4,
+        "weeks": [
+          7
+        ],
+        "note": {
+          "en": "and the weakest week from the Friday checks",
+          "th": "และสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุดจากการตรวจสอบวันศุกร์"
+        },
+        "medley": [
+          "What Is in the Box?",
+          "I Can See a Cat"
+        ],
+        "paper": [
+          {
+            "kind": "circle-word",
+            "words": [
+              "top",
+              "pot",
+              "tap"
+            ],
+            "answer": "top"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "Mom",
+              "Tom",
+              "man"
+            ],
+            "answer": "Mom"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "on",
+              "an",
+              "in"
+            ],
+            "answer": "on"
+          },
+          {
+            "kind": "picture-sort",
+            "groups": [
+              {
+                "sound": "/o/",
+                "pictures": [
+                  "octopus",
+                  "ox",
+                  "ostrich"
+                ]
+              },
+              {
+                "sound": "/m/",
+                "pictures": [
+                  "moon",
+                  "milk",
+                  "mouse"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "day": 5,
+        "weeks": [],
+        "note": {
+          "en": "the child's choice",
+          "th": "เด็กเลือกเอง"
+        },
+        "medley": [
+          "Hello, I Am Pip",
+          "What Is in the Box?"
+        ],
+        "paper": [
+          {
+            "kind": "circle-word",
+            "words": [
+              "Pam",
+              "Sam",
+              "Tom"
+            ],
+            "answer": "Sam"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "pot",
+              "pan",
+              "top"
+            ],
+            "answer": "pan"
+          },
+          {
+            "kind": "circle-word",
+            "words": [
+              "nap",
+              "map",
+              "tap"
+            ],
+            "answer": "tap"
+          },
+          {
+            "kind": "picture-sort",
+            "groups": [
+              {
+                "sound": "nnn",
+                "pictures": [
+                  "nest"
+                ]
+              },
+              {
+                "sound": "/a/",
+                "pictures": [
+                  "apple"
+                ]
+              },
+              {
+                "sound": "/p/",
+                "pictures": [
+                  "pen"
+                ]
+              },
+              {
+                "sound": "mmm",
+                "pictures": [
+                  "moon"
+                ]
+              },
+              {
+                "sound": "sss",
+                "pictures": [
+                  "sun"
+                ]
+              },
+              {
+                "sound": "/t/",
+                "pictures": [
+                  "tiger"
+                ]
+              },
+              {
+                "sound": "/o/",
+                "pictures": [
+                  "octopus"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "benchmark": {
+    "title": {
+      "en": "Benchmark 1: sounds and letters",
+      "th": "การประเมินครั้งที่ 1: เสียงและตัวอักษร"
+    },
+    "paper": {
+      "minutes": 10,
+      "items": [
+        {
+          "kind": "circle-picture",
+          "sound": "/n/",
+          "pictures": [
+            "nest",
+            "cup",
+            "bed"
+          ],
+          "answer": "nest"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/p/",
+          "pictures": [
+            "sun",
+            "pen",
+            "fish"
+          ],
+          "answer": "pen"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/s/",
+          "pictures": [
+            "dog",
+            "hat",
+            "sock"
+          ],
+          "answer": "sock"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/o/",
+          "pictures": [
+            "octopus",
+            "bus",
+            "ten"
+          ],
+          "answer": "octopus"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/t/",
+          "position": "last",
+          "pictures": [
+            "cat",
+            "sun",
+            "bed"
+          ],
+          "answer": "cat"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/m/",
+          "position": "last",
+          "pictures": [
+            "drum",
+            "dog",
+            "bus"
+          ],
+          "answer": "drum"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/n/",
+          "position": "last",
+          "pictures": [
+            "sun",
+            "cup",
+            "hat"
+          ],
+          "answer": "sun"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/p/",
+          "position": "last",
+          "pictures": [
+            "cup",
+            "bed",
+            "fish"
+          ],
+          "answer": "cup"
+        },
+        {
+          "kind": "write-letter",
+          "letter": "m",
+          "sound": "mmm"
+        },
+        {
+          "kind": "write-letter",
+          "letter": "t",
+          "sound": "/t/"
+        },
+        {
+          "kind": "write-letter",
+          "letter": "a",
+          "sound": "/a/"
+        },
+        {
+          "kind": "write-letter",
+          "letter": "s",
+          "sound": "sss"
+        },
+        {
+          "kind": "write-letter",
+          "letter": "o",
+          "sound": "/o/"
+        },
+        {
+          "kind": "write-letter",
+          "letter": "n",
+          "sound": "nnn"
+        },
+        {
+          "kind": "write-letter",
+          "letter": "p",
+          "sound": "/p/"
+        }
+      ],
+      "pass": {
+        "en": "6 of 8 pictures and 5 of 7 letters",
+        "th": "ภาพถูก 6 จาก 8 ภาพ และตัวอักษรถูก 5 จาก 7 ตัว"
+      }
+    },
+    "oneToOne": {
+      "minutes": 2,
+      "letters": [
+        "m",
+        "s",
+        "a",
+        "t",
+        "d",
+        "n",
+        "o",
+        "b",
+        "p",
+        "g",
+        "c",
+        "e",
+        "i",
+        "r",
+        "h",
+        "f",
+        "l",
+        "u",
+        "k",
+        "w",
+        "y",
+        "j",
+        "v",
+        "x",
+        "q",
+        "z"
+      ],
+      "letterPass": 20,
+      "sounds": [
+        "t",
+        "m",
+        "o",
+        "s",
+        "a",
+        "p",
+        "n"
+      ],
+      "soundPass": 6,
+      "blend": [
+        {
+          "sounds": "mmm - /a/ - nnn",
+          "word": "man",
+          "audio": [
+            "phonemes/daniel/05-m.mp3",
+            "phonemes/daniel/26-a-short.mp3",
+            "phonemes/daniel/04-n.mp3"
+          ]
+        },
+        {
+          "sounds": "sss - /a/ - /t/",
+          "word": "sat",
+          "audio": [
+            "phonemes/daniel/01-s.mp3",
+            "phonemes/daniel/26-a-short.mp3",
+            "phonemes/daniel/02-t.mp3"
+          ]
+        },
+        {
+          "sounds": "/t/ - /o/ - /p/",
+          "word": "top",
+          "audio": [
+            "phonemes/daniel/02-t.mp3",
+            "phonemes/daniel/29-o-short.mp3",
+            "phonemes/daniel/03-p.mp3"
+          ]
+        },
+        {
+          "sounds": "/p/ - /a/ - nnn",
+          "word": "pan",
+          "audio": [
+            "phonemes/daniel/03-p.mp3",
+            "phonemes/daniel/26-a-short.mp3",
+            "phonemes/daniel/04-n.mp3"
+          ]
+        }
+      ],
+      "blendPass": 3,
+      "en": {
+        "teacherActions": [
+          "Sit at the check table with the class record sheet, the letter strip, the seven sound cards, and the reading record forms. One sitting is 3 minutes: 2 minutes one to one, then the 1-minute reading record.",
+          "Letter strip (1 min): point to each letter in order. The child says the letter name. Mark each letter that the child does not know. Stop after 1 minute.",
+          "Sound cards and blend (1 min): show the seven cards one at a time. The child says the sound of the letter.",
+          "Then blend: say the sounds of each word with a short stop between them. The child says the word. Show no picture.",
+          "Reading record (1 min): the child reads one decodable of the unit from page 1. Mark the form under each word. Stop after 1 minute.",
+          "Write the scores in the child's row of the class record sheet."
+        ],
+        "teacherLanguage": [
+          "\"Look at the letters. What is this letter? And this one?\"",
+          "\"What sound does this letter make?\"",
+          "\"Listen: mmm - /a/ - nnn. What is the word?\"",
+          "\"Read the book to me. Finger under the words.\"",
+          "\"Thank you! Good reading!\""
+        ],
+        "studentActions": [
+          "The child says the name of each letter on the strip.",
+          "The child says the sound of each card.",
+          "The child says the word after the sounds.",
+          "The child reads the book with a finger under the words."
+        ],
+        "watchFor": [
+          "Children who say the sound for a letter name on the strip (sss for \"ess\"): the answer is wrong on the strip. Write the sound on the record sheet.",
+          "Children who say the letter name for a sound card: say \"What sound?\" one time, then go on.",
+          "Children who stop for a long time: after 3 seconds, say \"Next one\" and go on.",
+          "Children who read from the pictures: point under the word, and count only what the child reads.",
+          "A child who is absent: write \"absent\" in the row. The child does the sitting in the week 9 Script E slot."
+        ]
+      },
+      "th": {
+        "teacherActions": [
+          "นั่งที่โต๊ะประเมิน พร้อมแบบบันทึกผลทั้งชั้น แถบตัวอักษร บัตรเสียงทั้ง 7 ใบ และแบบบันทึกการอ่าน การประเมินเด็ก 1 คนใช้เวลา 3 นาที: ประเมินรายบุคคล 2 นาที แล้วบันทึกการอ่าน 1 นาที",
+          "แถบตัวอักษร (1 นาที): ชี้ตัวอักษรทีละตัวตามลำดับ เด็กบอกชื่อตัวอักษร ทำเครื่องหมายตัวอักษรที่เด็กไม่รู้ หยุดเมื่อครบ 1 นาที",
+          "บัตรเสียงและผสมเสียง (1 นาที): ชูบัตรทั้ง 7 ใบทีละใบ เด็กออกเสียงของตัวอักษรนั้น",
+          "จากนั้นผสมเสียง: พูดเสียงของแต่ละคำ โดยหยุดสั้น ๆ ระหว่างเสียง เด็กบอกคำ ไม่ให้ดูภาพ",
+          "บันทึกการอ่าน (1 นาที): เด็กอ่านหนังสือฝึกสะกดอ่าน 1 เล่มของหน่วยนี้ เริ่มจากหน้า 1 ทำเครื่องหมายในแบบบันทึกการอ่านใต้แต่ละคำ หยุดเมื่อครบ 1 นาที",
+          "เขียนคะแนนลงในแถวของเด็กคนนั้นในแบบบันทึกผลทั้งชั้น"
+        ],
+        "teacherLanguage": [
+          "\"ดูตัวอักษร ตัวนี้คือตัวอักษรอะไร? แล้วตัวนี้ล่ะ?\"",
+          "\"ตัวอักษรนี้ออกเสียงว่าอะไร?\"",
+          "\"ฟัง: mmm - /a/ - nnn คำนี้คือคำอะไร?\"",
+          "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\"",
+          "\"ขอบคุณ! อ่านเก่งมาก!\""
+        ],
+        "studentActions": [
+          "เด็กบอกชื่อตัวอักษรแต่ละตัวบนแถบ",
+          "เด็กออกเสียงของบัตรแต่ละใบ",
+          "เด็กบอกคำหลังจากฟังเสียง",
+          "เด็กอ่านหนังสือ โดยวางนิ้วใต้คำ"
+        ],
+        "watchFor": [
+          "เด็กที่ออกเสียงแทนชื่อตัวอักษรบนแถบ (sss แทน \"ess\"): คำตอบนั้นผิดสำหรับแถบตัวอักษร เขียนเสียงที่เด็กพูดไว้ในแบบบันทึกผล",
+          "เด็กที่บอกชื่อตัวอักษรเมื่อเห็นบัตรเสียง: ถามว่า \"เสียงอะไร?\" 1 ครั้ง แล้วทำต่อ",
+          "เด็กที่หยุดนาน: เมื่อครบ 3 วินาที พูดว่า \"ต่อไป\" แล้วทำต่อ",
+          "เด็กที่อ่านจากภาพ: ชี้ใต้คำ และนับเฉพาะคำที่เด็กอ่านจากตัวอักษร",
+          "เด็กที่ขาดเรียน: เขียน \"ขาดเรียน\" ในแถวของเด็กคนนั้น เด็กรับการประเมินในช่วงบทสอน E ของสัปดาห์ที่ 9"
+        ]
+      },
+      "soundAudio": [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/04-n.mp3"
+      ]
+    },
+    "readingRecord": {
+      "minutes": 1,
+      "pass": 90,
+      "books": [
+        {
+          "title": "Can I?",
+          "week": 2,
+          "pages": [
+            "Nan can.",
+            "Can I?",
+            "I can!",
+            "Nan can.",
+            "Can I?",
+            "I can!",
+            "Can Nan?",
+            "Nan and I can!"
+          ]
+        },
+        {
+          "title": "The Pan",
+          "week": 3,
+          "pages": [
+            "Nan can get a pan.",
+            "I can get a pan.",
+            "A pan in a pan.",
+            "A pan on a pan.",
+            "A pan on Nan!",
+            "Can I get the pan?",
+            "I can get the pan!",
+            "A nap in the pan!"
+          ]
+        },
+        {
+          "title": "Pam",
+          "week": 4,
+          "pages": [
+            "This is Pam.",
+            "Pam can nap.",
+            "Pam is in a pan.",
+            "Pam is on a map.",
+            "Pam is on a man!",
+            "Is this Pam?",
+            "This is the man!",
+            "Nan and Pam nap."
+          ]
+        },
+        {
+          "title": "Sam and Pam",
+          "week": 5,
+          "pages": [
+            "Sam saw Pam.",
+            "Sam can get Pam.",
+            "Sam is with Pam.",
+            "Pam is in a pan!",
+            "Pam is on a map!",
+            "Pam is on Sam!",
+            "Pam is off Sam!",
+            "Sam, Nan, and Pam nap."
+          ]
+        },
+        {
+          "title": "Tap, Tap!",
+          "week": 6,
+          "pages": [
+            "Pat sat on a mat.",
+            "Sam sat on a mat.",
+            "Tap, tap, tap!",
+            "Pat can see a map.",
+            "Sam can see a pan.",
+            "Tap, tap, tap!",
+            "He can see Pip!",
+            "Pip sat on the mat!"
+          ]
+        },
+        {
+          "title": "The Top",
+          "week": 7,
+          "pages": [
+            "Tom can see a top.",
+            "Tom can get the top.",
+            "The top on a mat.",
+            "The top on a pot!",
+            "The top is on Mom!",
+            "Run, Tom, run!",
+            "Can Tom see the top?",
+            "The top is on Pip!"
+          ]
+        }
+      ]
+    }
+  },
+  "home": {
+    "words": [],
+    "line": {
+      "en": "Unit 1 is done. Sing the seven songs and read the seven read-alongs with the QR code.",
+      "th": "บุตรหลานเรียนหน่วยที่ 1 จบแล้ว ใช้คิวอาร์โค้ดเพื่อร้องเพลงทั้ง 7 เพลง และอ่านหนังสืออ่านตามทั้ง 7 เล่มกับบุตรหลาน"
+    },
+    "activity": {
+      "en": "Sing one song of unit 1 with your child, with the gestures. Then your child reads one book to you.",
+      "th": "ร้องเพลง 1 เพลงของหน่วยที่ 1 กับบุตรหลาน พร้อมทำท่าประกอบเพลง จากนั้นให้บุตรหลานอ่านหนังสือ 1 เล่มให้ฟัง"
+    },
+    "songUrl": "/th/st/2/8",
+    "readAlongUrl": "/th/st/2/8"
+  },
+  "tags": {
+    "graphVersion": "phonics-v1",
+    "taught": [],
+    "reviewed": [
+      "english.phonics.gpc.n.n",
+      "english.phonics.phoneme.n",
+      "english.phonics.letter.n.sound",
+      "english.phonics.letter.n.name",
+      "english.phonics.letter.n.form-lower",
+      "english.phonics.tricky.a",
+      "english.phonics.tricky.and",
+      "english.phonics.tricky.can",
+      "english.phonics.pa.initial-sound.identify",
+      "english.phonics.pa.final-sound.identify",
+      "english.phonics.pa.phoneme.blend-2-3",
+      "english.phonics.gpc.a.short-a",
+      "english.phonics.phoneme.short-a",
+      "english.phonics.letter.a.sound",
+      "english.phonics.letter.a.name",
+      "english.phonics.letter.a.form-lower",
+      "english.phonics.tricky.i",
+      "english.phonics.tricky.in",
+      "english.phonics.tricky.on",
+      "english.phonics.pa.medial-vowel.identify",
+      "english.phonics.pattern.cvc-short-a",
+      "english.phonics.gpc.p.p",
+      "english.phonics.phoneme.p",
+      "english.phonics.letter.p.sound",
+      "english.phonics.letter.p.name",
+      "english.phonics.letter.p.form-lower",
+      "english.phonics.tricky.the",
+      "english.phonics.tricky.get",
+      "english.phonics.gpc.m.m",
+      "english.phonics.phoneme.m",
+      "english.phonics.letter.m.sound",
+      "english.phonics.letter.m.name",
+      "english.phonics.letter.m.form-lower",
+      "english.phonics.tricky.is",
+      "english.phonics.tricky.this",
+      "english.phonics.gpc.s.s",
+      "english.phonics.phoneme.s",
+      "english.phonics.letter.s.sound",
+      "english.phonics.letter.s.name",
+      "english.phonics.letter.s.form-lower",
+      "english.phonics.tricky.off",
+      "english.phonics.tricky.saw",
+      "english.phonics.tricky.with",
+      "english.phonics.gpc.t.t",
+      "english.phonics.phoneme.t",
+      "english.phonics.letter.t.sound",
+      "english.phonics.letter.t.name",
+      "english.phonics.letter.t.form-lower",
+      "english.phonics.tricky.he",
+      "english.phonics.tricky.put",
+      "english.phonics.tricky.see",
+      "english.phonics.gpc.o.short-o",
+      "english.phonics.phoneme.short-o",
+      "english.phonics.letter.o.sound",
+      "english.phonics.letter.o.name",
+      "english.phonics.letter.o.form-lower",
+      "english.phonics.tricky.from",
+      "english.phonics.tricky.run",
+      "english.phonics.tricky.up",
+      "english.phonics.pattern.cvc-short-o"
+    ]
+  }
+}

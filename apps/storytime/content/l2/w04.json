@@ -1,0 +1,4504 @@
+{
+  "approval": {
+    "text": {
+      "status": "approved",
+      "date": "2026-11-01",
+      "words": "3. Covers: Approved",
+      "source": "Owner answer relayed by the PM session, 2026-11-01 07:3x ICT. His item 3 answered section 3 of the PM message: the weeks 2 to 8 English text and the Level 2 Unit 1 cover version 3 look. Approved text file ~/Desktop/print-ready/storytime/text-review/Storytime-Advantage-L2-U1-weeks-2-8-English-text.pdf, SHA-256 57f30792532cdae33ae5e66f069fa822aab58df35cc6b6e2c393ca7fbdbba67c, built 2026-10-30."
+    },
+    "thai": {
+      "status": "approved",
+      "date": "2026-10-22",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80"
+    },
+    "images": {
+      "status": "draft"
+    },
+    "audio": {
+      "status": "draft"
+    },
+    "song": {
+      "status": "draft"
+    },
+    "scripts": {
+      "status": "draft"
+    }
+  },
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "shape": "storytime-week",
+    "level": 2,
+    "week": 4,
+    "unit": 1,
+    "key": "st2/4",
+    "kind": "teach",
+    "periodMinutes": 30,
+    "openingMinutes": 6,
+    "title": "My Family",
+    "band": "Sprout",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "id": "english.phonics.gpc.m.m",
+      "graphemes": [
+        "m"
+      ],
+      "sound": "/m/",
+      "action": {
+        "en": "Draw two hills in the air with one finger and hum mmm.",
+        "th": "ใช้นิ้ว 1 นิ้ววาดเนิน 2 ลูกกลางอากาศ และฮัมเสียง mmm"
+      },
+      "audio": "phonemes/daniel/05-m.mp3"
+    },
+    "paSkill": {
+      "en": "the first sound mmm and the last sound mmm; blend three sounds by ear",
+      "th": "ฟังเสียงแรกและเสียงสุดท้าย mmm และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "trickyWords": [
+      "is",
+      "this"
+    ],
+    "frame": "This is my ___.",
+    "family": {
+      "name": {
+        "en": "Family",
+        "th": "ครอบครัว"
+      },
+      "words": [
+        {
+          "word": "mom",
+          "image": {
+            "prompt": "Mom smiles and waves, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mom"
+            ],
+            "caption": "mom"
+          }
+        },
+        {
+          "word": "dad",
+          "image": {
+            "prompt": "Dad smiles and waves, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Dad"
+            ],
+            "caption": "dad"
+          }
+        },
+        {
+          "word": "brother",
+          "image": {
+            "prompt": "Lily (drawn young, about five years old) points at Tom (drawn young, about eight years old), and Tom smiles, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom",
+              "Lily"
+            ],
+            "caption": "brother"
+          }
+        },
+        {
+          "word": "sister",
+          "image": {
+            "prompt": "Tom (drawn young, about eight years old) points at Lily (drawn young, about five years old), and Lily smiles, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily",
+              "Tom"
+            ],
+            "caption": "sister"
+          }
+        },
+        {
+          "word": "grandma",
+          "image": {
+            "prompt": "Grandma smiles, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Grandma"
+            ],
+            "caption": "grandma"
+          }
+        },
+        {
+          "word": "grandpa",
+          "image": {
+            "prompt": "Grandpa smiles, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Grandpa"
+            ],
+            "caption": "grandpa"
+          }
+        },
+        {
+          "word": "family",
+          "image": {
+            "prompt": "Mom, Dad, Grandma, Grandpa, Tom (drawn young, about eight years old), and Lily (drawn young, about five years old) stand together and smile. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mom",
+              "Dad",
+              "Grandma",
+              "Grandpa",
+              "Tom",
+              "Lily"
+            ],
+            "caption": "family"
+          }
+        }
+      ]
+    },
+    "wordWall": [
+      "an",
+      "Nan",
+      "pan",
+      "nap",
+      "am",
+      "man",
+      "map",
+      "Pam"
+    ]
+  },
+  "opening": {
+    "pa": [
+      {
+        "en": "\"Listen: milk. What is the first sound? Mmm! Listen: jam. What is the last sound? Mmm!\"",
+        "th": "\"ฟัง: milk เสียงแรกคือเสียงอะไร? Mmm! ฟัง: jam เสียงสุดท้ายคือเสียงอะไร? Mmm!\""
+      },
+      {
+        "en": "\"Listen: mango. What is the first sound? Mmm! Listen: arm. What is the last sound? Mmm!\"",
+        "th": "\"ฟัง: mango เสียงแรกคือเสียงอะไร? Mmm! ฟัง: arm เสียงสุดท้ายคือเสียงอะไร? Mmm!\""
+      },
+      {
+        "en": "\"Listen: mmm - /a/ - nnn. What is the word? Man! Listen: mmm - /a/ - /p/. What is the word? Map!\"",
+        "th": "\"ฟัง: mmm - /a/ - nnn คำนี้คือคำอะไร? Man! ฟัง: mmm - /a/ - /p/ คำนี้คือคำอะไร? Map!\""
+      },
+      {
+        "en": "\"Listen: /h/ - /a/ - mmm. What is the word? Ham! Listen: mmm - /o/ - /p/. What is the word? Mop!\"",
+        "th": "\"ฟัง: /h/ - /a/ - mmm คำนี้คือคำอะไร? Ham! ฟัง: mmm - /o/ - /p/ คำนี้คือคำอะไร? Mop!\""
+      },
+      {
+        "en": "\"Listen: /p/ - /a/ - mmm. What is the word? Pam! Listen: /j/ - /a/ - mmm. What is the word? Jam!\"",
+        "th": "\"ฟัง: /p/ - /a/ - mmm คำนี้คือคำอะไร? Pam! ฟัง: /j/ - /a/ - mmm คำนี้คือคำอะไร? Jam!\""
+      }
+    ],
+    "audio": [
+      [
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/05-m.mp3"
+      ],
+      [
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/05-m.mp3"
+      ],
+      [
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/03-p.mp3"
+      ],
+      [
+        "phonemes/daniel/10-h.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/03-p.mp3"
+      ],
+      [
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/14-j.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/05-m.mp3"
+      ]
+    ]
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "title": "My Family",
+      "cover": {
+        "prompt": "Lily (drawn young, about five years old) stands in front of Mom, Dad, Grandma, Grandpa, and Tom (drawn young, about eight years old) in a bright living room with a green sofa and a window, and waves. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Lily",
+          "Mom",
+          "Dad",
+          "Grandma",
+          "Grandpa",
+          "Tom"
+        ],
+        "caption": "My Family"
+      },
+      "pages": [
+        {
+          "text": "This is my mom.",
+          "image": {
+            "prompt": "Lily (drawn young, about five years old) stands next to Mom in a bright living room with a green sofa and a window and points at Mom with a big smile. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily",
+              "Mom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is my dad.",
+          "image": {
+            "prompt": "Lily (drawn young, about five years old) stands next to Dad in a bright living room with a green sofa and a window and points at him. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily",
+              "Dad"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is my brother.",
+          "image": {
+            "prompt": "Lily (drawn young, about five years old) stands next to Tom (drawn young, about eight years old) in a bright living room with a green sofa and a window and points at him; Tom waves. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily",
+              "Tom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is my grandma.",
+          "image": {
+            "prompt": "Lily (drawn young, about five years old) stands next to Grandma in a bright living room with a green sofa and a window and points at Grandma; Grandma holds a small cake. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily",
+              "Grandma"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is my grandpa.",
+          "image": {
+            "prompt": "Lily (drawn young, about five years old) stands next to Grandpa in a bright living room with a green sofa and a window and points at him; Grandpa holds a newspaper. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily",
+              "Grandpa"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is my house.",
+          "image": {
+            "prompt": "Lily (drawn young, about five years old) stands in front of a small white house with a red door and a green garden, and points at the house. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is my family.",
+          "image": {
+            "prompt": "Mom, Dad, Grandma, Grandpa, Tom (drawn young, about eight years old), and Lily (drawn young, about five years old) stand in a row in front of the small white house with the red door and smile at the viewer. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Lily",
+              "Mom",
+              "Dad",
+              "Grandma",
+              "Grandpa",
+              "Tom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is my dog, Pip!",
+          "image": {
+            "prompt": "Mom, Dad, Grandma, Grandpa, Tom (drawn young, about eight years old), and Lily (drawn young, about five years old) stand in a row in front of the small white house with the red door; Pip the puppy jumps into the middle of the row with a big happy face, and everyone laughs. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pip",
+              "Lily",
+              "Mom",
+              "Dad",
+              "Grandma",
+              "Grandpa",
+              "Tom"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "backWords": [
+        "this",
+        "is",
+        "my",
+        "mom",
+        "dad",
+        "brother",
+        "grandma",
+        "grandpa",
+        "house",
+        "family",
+        "dog"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w04/books/1-my-family.mp3",
+        "sentences": [
+          {
+            "sentence": "This is my mom.",
+            "startTime": 0,
+            "endTime": 0.983,
+            "words": [
+              {
+                "word": "This",
+                "start": 0,
+                "end": 0.22
+              },
+              {
+                "word": "is",
+                "start": 0.22,
+                "end": 0.36
+              },
+              {
+                "word": "my",
+                "start": 0.36,
+                "end": 0.5
+              },
+              {
+                "word": "mom",
+                "start": 0.5,
+                "end": 0.983
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "This is my dad.",
+            "startTime": 2.183,
+            "endTime": 3.513,
+            "words": [
+              {
+                "word": "This",
+                "start": 2.183,
+                "end": 2.503
+              },
+              {
+                "word": "is",
+                "start": 2.503,
+                "end": 2.723
+              },
+              {
+                "word": "my",
+                "start": 2.723,
+                "end": 2.903
+              },
+              {
+                "word": "dad",
+                "start": 2.903,
+                "end": 3.513
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "This is my brother.",
+            "startTime": 4.713,
+            "endTime": 5.836,
+            "words": [
+              {
+                "word": "This",
+                "start": 4.713,
+                "end": 4.973
+              },
+              {
+                "word": "is",
+                "start": 4.973,
+                "end": 5.133
+              },
+              {
+                "word": "my",
+                "start": 5.133,
+                "end": 5.293
+              },
+              {
+                "word": "brother",
+                "start": 5.293,
+                "end": 5.836
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "This is my grandma.",
+            "startTime": 7.036,
+            "endTime": 8.598,
+            "words": [
+              {
+                "word": "This",
+                "start": 7.036,
+                "end": 7.436
+              },
+              {
+                "word": "is",
+                "start": 7.436,
+                "end": 7.676
+              },
+              {
+                "word": "my",
+                "start": 7.676,
+                "end": 7.836
+              },
+              {
+                "word": "grandma",
+                "start": 7.836,
+                "end": 8.598
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "This is my grandpa.",
+            "startTime": 9.798,
+            "endTime": 11.229,
+            "words": [
+              {
+                "word": "This",
+                "start": 9.798,
+                "end": 10.098
+              },
+              {
+                "word": "is",
+                "start": 10.098,
+                "end": 10.298
+              },
+              {
+                "word": "my",
+                "start": 10.298,
+                "end": 10.458
+              },
+              {
+                "word": "grandpa",
+                "start": 10.458,
+                "end": 11.229
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "This is my house.",
+            "startTime": 12.429,
+            "endTime": 13.531,
+            "words": [
+              {
+                "word": "This",
+                "start": 12.429,
+                "end": 12.609
+              },
+              {
+                "word": "is",
+                "start": 12.609,
+                "end": 12.729
+              },
+              {
+                "word": "my",
+                "start": 12.729,
+                "end": 12.909
+              },
+              {
+                "word": "house",
+                "start": 12.909,
+                "end": 13.531
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "This is my family.",
+            "startTime": 14.731,
+            "endTime": 16.336,
+            "words": [
+              {
+                "word": "This",
+                "start": 14.731,
+                "end": 15.111
+              },
+              {
+                "word": "is",
+                "start": 15.111,
+                "end": 15.331
+              },
+              {
+                "word": "my",
+                "start": 15.331,
+                "end": 15.491
+              },
+              {
+                "word": "family",
+                "start": 15.491,
+                "end": 16.336
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "This is my dog, Pip!",
+            "startTime": 17.536,
+            "endTime": 18.991,
+            "words": [
+              {
+                "word": "This",
+                "start": 17.536,
+                "end": 17.736
+              },
+              {
+                "word": "is",
+                "start": 17.736,
+                "end": 17.876
+              },
+              {
+                "word": "my",
+                "start": 17.876,
+                "end": 18.036
+              },
+              {
+                "word": "dog",
+                "start": 18.036,
+                "end": 18.296
+              },
+              {
+                "word": "Pip",
+                "start": 18.296,
+                "end": 18.991
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w04/books/1-my-family-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "This is my mom.",
+            "startTime": 0,
+            "endTime": 1.581,
+            "words": [
+              {
+                "word": "This",
+                "start": 0,
+                "end": 0.32
+              },
+              {
+                "word": "is",
+                "start": 0.32,
+                "end": 0.52
+              },
+              {
+                "word": "my",
+                "start": 0.52,
+                "end": 0.74
+              },
+              {
+                "word": "mom",
+                "start": 0.74,
+                "end": 1.581
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "This is my dad.",
+            "startTime": 2.781,
+            "endTime": 4.402,
+            "words": [
+              {
+                "word": "This",
+                "start": 2.781,
+                "end": 3.101
+              },
+              {
+                "word": "is",
+                "start": 3.101,
+                "end": 3.261
+              },
+              {
+                "word": "my",
+                "start": 3.261,
+                "end": 3.521
+              },
+              {
+                "word": "dad",
+                "start": 3.521,
+                "end": 4.402
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "This is my brother.",
+            "startTime": 5.602,
+            "endTime": 6.993,
+            "words": [
+              {
+                "word": "This",
+                "start": 5.602,
+                "end": 5.922
+              },
+              {
+                "word": "is",
+                "start": 5.922,
+                "end": 6.122
+              },
+              {
+                "word": "my",
+                "start": 6.122,
+                "end": 6.302
+              },
+              {
+                "word": "brother",
+                "start": 6.302,
+                "end": 6.993
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "This is my grandma.",
+            "startTime": 8.193,
+            "endTime": 9.617,
+            "words": [
+              {
+                "word": "This",
+                "start": 8.193,
+                "end": 8.493
+              },
+              {
+                "word": "is",
+                "start": 8.493,
+                "end": 8.753
+              },
+              {
+                "word": "my",
+                "start": 8.753,
+                "end": 8.953
+              },
+              {
+                "word": "grandma",
+                "start": 8.953,
+                "end": 9.617
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "This is my grandpa.",
+            "startTime": 10.817,
+            "endTime": 13.173,
+            "words": [
+              {
+                "word": "This",
+                "start": 10.817,
+                "end": 11.297
+              },
+              {
+                "word": "is",
+                "start": 11.297,
+                "end": 11.817
+              },
+              {
+                "word": "my",
+                "start": 11.817,
+                "end": 12.057
+              },
+              {
+                "word": "grandpa",
+                "start": 12.057,
+                "end": 13.173
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "This is my house.",
+            "startTime": 14.373,
+            "endTime": 16.506,
+            "words": [
+              {
+                "word": "This",
+                "start": 14.373,
+                "end": 14.813
+              },
+              {
+                "word": "is",
+                "start": 14.813,
+                "end": 15.213
+              },
+              {
+                "word": "my",
+                "start": 15.213,
+                "end": 15.653
+              },
+              {
+                "word": "house",
+                "start": 15.653,
+                "end": 16.506
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "This is my family.",
+            "startTime": 17.706,
+            "endTime": 19.56,
+            "words": [
+              {
+                "word": "This",
+                "start": 17.706,
+                "end": 18.046
+              },
+              {
+                "word": "is",
+                "start": 18.046,
+                "end": 18.246
+              },
+              {
+                "word": "my",
+                "start": 18.246,
+                "end": 18.566
+              },
+              {
+                "word": "family",
+                "start": 18.566,
+                "end": 19.56
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "This is my dog, Pip!",
+            "startTime": 20.76,
+            "endTime": 22.86,
+            "words": [
+              {
+                "word": "This",
+                "start": 20.76,
+                "end": 21.08
+              },
+              {
+                "word": "is",
+                "start": 21.08,
+                "end": 21.28
+              },
+              {
+                "word": "my",
+                "start": 21.28,
+                "end": 21.5
+              },
+              {
+                "word": "dog",
+                "start": 21.5,
+                "end": 21.88
+              },
+              {
+                "word": "Pip",
+                "start": 22.14,
+                "end": 22.86
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "decodable",
+      "title": "Pam",
+      "cover": {
+        "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, hugs a small rag doll with yellow yarn hair and a red dress in a cozy living room with a blue sofa, a soft rug, and a toy box. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Nan"
+        ],
+        "caption": "Pam"
+      },
+      "pages": [
+        {
+          "text": "This is Pam.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, holds up a small rag doll with yellow yarn hair and a red dress in a cozy living room with a blue sofa, a soft rug, and a toy box and smiles. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam can nap.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, puts a small rag doll with yellow yarn hair and a red dress to bed in a small shoe box with a tiny blanket, on the soft rug of the cozy living room with the blue sofa. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam is in a pan.",
+          "image": {
+            "prompt": "A small rag doll with yellow yarn hair and a red dress sits in a big yellow toy pan on the rug; Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, laughs. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam is on a map.",
+          "image": {
+            "prompt": "A small rag doll with yellow yarn hair and a red dress lies on a big paper map that is open on the rug; Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, points at the doll. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam is on a man!",
+          "image": {
+            "prompt": "Nan's dad, a man of about thirty-five with short straight black hair, a blue T-shirt, gray shorts, and black sandals, lies on the blue sofa with his eyes closed; a small rag doll with yellow yarn hair and a red dress sits on his tummy. Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, laughs. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is this Pam?",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, points at a big round bump under a blanket on the blue sofa; the corner of a small red doll dress shows at the edge of the blanket. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "This is the man!",
+          "image": {
+            "prompt": "Nan's dad, a man of about thirty-five with short straight black hair, a blue T-shirt, gray shorts, and black sandals, pops out from under the blanket on the blue sofa with a small rag doll with yellow yarn hair and a red dress on his head, and laughs; Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, laughs too. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Nan and Pam nap.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, is asleep on the blue sofa under the blanket and hugs a small rag doll with yellow yarn hair and a red dress. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "soundsPage": {
+        "element": "m",
+        "words": [
+          "Pam",
+          "map",
+          "man"
+        ],
+        "tricky": [
+          "is",
+          "this"
+        ]
+      },
+      "backWords": [
+        "Pam",
+        "map",
+        "man",
+        "nap",
+        "pan",
+        "is",
+        "this"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w04/books/2-pam.mp3",
+        "sentences": [
+          {
+            "sentence": "This is Pam.",
+            "startTime": 0,
+            "endTime": 1.544,
+            "words": [
+              {
+                "word": "This",
+                "start": 0,
+                "end": 0.48
+              },
+              {
+                "word": "is",
+                "start": 0.48,
+                "end": 0.82
+              },
+              {
+                "word": "Pam",
+                "start": 0.82,
+                "end": 1.544
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Pam can nap.",
+            "startTime": 2.744,
+            "endTime": 3.941,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 2.744,
+                "end": 3.064
+              },
+              {
+                "word": "can",
+                "start": 3.064,
+                "end": 3.324
+              },
+              {
+                "word": "nap",
+                "start": 3.324,
+                "end": 3.941
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Pam is in a pan.",
+            "startTime": 5.141,
+            "endTime": 6.386,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 5.141,
+                "end": 5.381
+              },
+              {
+                "word": "is",
+                "start": 5.381,
+                "end": 5.541
+              },
+              {
+                "word": "in",
+                "start": 5.541,
+                "end": 5.661
+              },
+              {
+                "word": "a",
+                "start": 5.661,
+                "end": 5.741
+              },
+              {
+                "word": "pan",
+                "start": 5.741,
+                "end": 6.386
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Pam is on a map.",
+            "startTime": 7.586,
+            "endTime": 8.98,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 7.586,
+                "end": 7.846
+              },
+              {
+                "word": "is",
+                "start": 7.846,
+                "end": 8.226
+              },
+              {
+                "word": "on",
+                "start": 8.226,
+                "end": 8.386
+              },
+              {
+                "word": "a",
+                "start": 8.386,
+                "end": 8.466
+              },
+              {
+                "word": "map",
+                "start": 8.466,
+                "end": 8.98
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Pam is on a man!",
+            "startTime": 10.18,
+            "endTime": 11.315,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 10.18,
+                "end": 10.46
+              },
+              {
+                "word": "is",
+                "start": 10.46,
+                "end": 10.64
+              },
+              {
+                "word": "on",
+                "start": 10.64,
+                "end": 10.78
+              },
+              {
+                "word": "a",
+                "start": 10.78,
+                "end": 10.88
+              },
+              {
+                "word": "man",
+                "start": 10.88,
+                "end": 11.315
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Is this Pam?",
+            "startTime": 12.515,
+            "endTime": 13.436,
+            "words": [
+              {
+                "word": "Is",
+                "start": 12.515,
+                "end": 12.695
+              },
+              {
+                "word": "this",
+                "start": 12.695,
+                "end": 12.895
+              },
+              {
+                "word": "Pam",
+                "start": 12.895,
+                "end": 13.436
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "This is the man!",
+            "startTime": 14.636,
+            "endTime": 15.8,
+            "words": [
+              {
+                "word": "This",
+                "start": 14.636,
+                "end": 14.936
+              },
+              {
+                "word": "is",
+                "start": 14.936,
+                "end": 15.156
+              },
+              {
+                "word": "the",
+                "start": 15.156,
+                "end": 15.296
+              },
+              {
+                "word": "man",
+                "start": 15.296,
+                "end": 15.8
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Nan and Pam nap.",
+            "startTime": 17,
+            "endTime": 18.537,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 17,
+                "end": 17.36
+              },
+              {
+                "word": "and",
+                "start": 17.36,
+                "end": 17.54
+              },
+              {
+                "word": "Pam",
+                "start": 17.54,
+                "end": 17.8
+              },
+              {
+                "word": "nap",
+                "start": 17.8,
+                "end": 18.537
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w04/books/2-pam-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "This is Pam.",
+            "startTime": 0,
+            "endTime": 1.372,
+            "words": [
+              {
+                "word": "This",
+                "start": 0,
+                "end": 0.46
+              },
+              {
+                "word": "is",
+                "start": 0.46,
+                "end": 0.72
+              },
+              {
+                "word": "Pam",
+                "start": 0.72,
+                "end": 1.372
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Pam can nap.",
+            "startTime": 2.572,
+            "endTime": 4.145,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 2.572,
+                "end": 2.972
+              },
+              {
+                "word": "can",
+                "start": 2.972,
+                "end": 3.272
+              },
+              {
+                "word": "nap",
+                "start": 3.272,
+                "end": 4.145
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Pam is in a pan.",
+            "startTime": 5.345,
+            "endTime": 7.012,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 5.345,
+                "end": 5.665
+              },
+              {
+                "word": "is",
+                "start": 5.665,
+                "end": 5.985
+              },
+              {
+                "word": "in",
+                "start": 5.985,
+                "end": 6.145
+              },
+              {
+                "word": "a",
+                "start": 6.145,
+                "end": 6.245
+              },
+              {
+                "word": "pan",
+                "start": 6.245,
+                "end": 7.012
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Pam is on a map.",
+            "startTime": 8.212,
+            "endTime": 10.341,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 8.212,
+                "end": 8.632
+              },
+              {
+                "word": "is",
+                "start": 8.632,
+                "end": 9.172
+              },
+              {
+                "word": "on",
+                "start": 9.172,
+                "end": 9.372
+              },
+              {
+                "word": "a",
+                "start": 9.372,
+                "end": 9.492
+              },
+              {
+                "word": "map",
+                "start": 9.492,
+                "end": 10.341
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Pam is on a man!",
+            "startTime": 11.541,
+            "endTime": 13.376,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 11.541,
+                "end": 11.901
+              },
+              {
+                "word": "is",
+                "start": 11.901,
+                "end": 12.161
+              },
+              {
+                "word": "on",
+                "start": 12.161,
+                "end": 12.341
+              },
+              {
+                "word": "a",
+                "start": 12.341,
+                "end": 12.461
+              },
+              {
+                "word": "man",
+                "start": 12.461,
+                "end": 13.376
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Is this Pam?",
+            "startTime": 14.576,
+            "endTime": 15.597,
+            "words": [
+              {
+                "word": "Is",
+                "start": 14.576,
+                "end": 14.776
+              },
+              {
+                "word": "this",
+                "start": 14.776,
+                "end": 15.016
+              },
+              {
+                "word": "Pam",
+                "start": 15.016,
+                "end": 15.597
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "This is the man!",
+            "startTime": 16.797,
+            "endTime": 18.46,
+            "words": [
+              {
+                "word": "This",
+                "start": 16.797,
+                "end": 17.237
+              },
+              {
+                "word": "is",
+                "start": 17.237,
+                "end": 17.597
+              },
+              {
+                "word": "the",
+                "start": 17.597,
+                "end": 17.857
+              },
+              {
+                "word": "man",
+                "start": 17.857,
+                "end": 18.46
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Nan and Pam nap.",
+            "startTime": 19.66,
+            "endTime": 21.274,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 19.66,
+                "end": 20
+              },
+              {
+                "word": "and",
+                "start": 20,
+                "end": 20.18
+              },
+              {
+                "word": "Pam",
+                "start": 20.18,
+                "end": 20.46
+              },
+              {
+                "word": "nap",
+                "start": 20.46,
+                "end": 21.274
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    }
+  ],
+  "song": {
+    "title": "This Is My Family",
+    "styleBrief": "Warm classroom family song for a kindergarten English class, 92 bpm, C major, the melody between C4 and C5, gentle and happy, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, soft hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
+    "bpm": 92,
+    "lyricSheet": "[Verse]\nThis is my mom. Hello, Mom!\nThis is my dad. Hello, Dad!\n\n[Chorus]\nMom, Dad, my family!\nThis is my family, my family and me!\n\n[Verse]\nThis is my sister. Hello!\nThis is my brother. Hello!\n\n[Chorus]\nMom, Dad, my family!\nThis is my family, my family and me!\n\n[Verse]\nThis is my grandma. Hello!\nThis is my grandpa. Hello!\n\n[Chorus]\nMom, Dad, my family!\nThis is my family, my family and me!\n\n[Chorus]\nMom, Dad, my family!\nThis is my family, my family and me!",
+    "lines": [
+      {
+        "text": "This is my mom. Hello, Mom!",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {
+          "prompt": "Lily (drawn young, about five years old) waves at Mom. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Lily",
+            "Mom"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/wave.jpg"
+        }
+      },
+      {
+        "text": "This is my dad. Hello, Dad!",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {
+          "prompt": "Lily (drawn young, about five years old) points at Dad, who waves. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Lily",
+            "Dad"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/point-forward.jpg"
+        }
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "image": {
+          "prompt": "Lily (drawn young, about five years old) hugs herself with closed eyes and a happy smile. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Lily"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/hug-self.jpg"
+        },
+        "note": {
+          "en": "Sing \"Mom\" and \"my\" with the lips together at the start, with no \"uh\".",
+          "th": "ร้อง \"Mom\" และ \"my\" โดยประกบริมฝีปากเข้าหากันตอนต้นคำ ไม่มี \"uh\" (เออะ) ตามหลัง"
+        }
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "image": {
+          "prompt": "Mom, Dad, Grandma, Grandpa, Tom (drawn young, about eight years old), and Lily (drawn young, about five years old) stand together and smile. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Mom",
+            "Dad",
+            "Grandma",
+            "Grandpa",
+            "Tom",
+            "Lily"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/point-to-self.jpg"
+        }
+      },
+      {
+        "text": "This is my sister. Hello!",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {
+          "prompt": "Tom (drawn young, about eight years old) stands next to Lily (drawn young, about five years old) and points at her. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Tom",
+            "Lily"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/point-forward.jpg"
+        }
+      },
+      {
+        "text": "This is my brother. Hello!",
+        "part": "verse",
+        "gesture": "clap",
+        "image": {
+          "prompt": "Lily (drawn young, about five years old) stands next to Tom (drawn young, about eight years old) and claps. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Lily",
+            "Tom"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/clap.jpg"
+        }
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "imageOf": 2
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 3
+      },
+      {
+        "text": "This is my grandma. Hello!",
+        "part": "verse",
+        "gesture": "bow",
+        "image": {
+          "prompt": "Lily (drawn young, about five years old) bows to Grandma, who smiles. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Lily",
+            "Grandma"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/bow.jpg"
+        }
+      },
+      {
+        "text": "This is my grandpa. Hello!",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {
+          "prompt": "Lily (drawn young, about five years old) waves hello to Grandpa in a bright living room with a green sofa and a window, and Grandpa waves back and smiles. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Grandpa",
+            "Lily"
+          ],
+          "caption": "",
+          "file": "l2/media/w04/song-lines/wave.jpg"
+        }
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "imageOf": 2
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 3
+      },
+      {
+        "text": "Mom, Dad, my family!",
+        "part": "chorus",
+        "gesture": "hug self",
+        "imageOf": 2
+      },
+      {
+        "text": "This is my family, my family and me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 3
+      }
+    ],
+    "choreography": {
+      "outro": {
+        "en": "After the last line, the class draws two hills in the air and hums mmm (the action of m).",
+        "th": "หลังบรรทัดสุดท้าย ทั้งชั้นวาดเนิน 2 ลูกกลางอากาศ และฮัมเสียง mmm (ท่าประจำเสียง m)"
+      }
+    },
+    "times": [
+      {
+        "sentence": "This is my mom. Hello, Mom!",
+        "startTime": 0.0,
+        "endTime": 3.36,
+        "words": [
+          {
+            "word": "This",
+            "start": 0.0,
+            "end": 0.62
+          },
+          {
+            "word": "is",
+            "start": 0.62,
+            "end": 1.02
+          },
+          {
+            "word": "my",
+            "start": 1.02,
+            "end": 1.32
+          },
+          {
+            "word": "mom.",
+            "start": 1.32,
+            "end": 1.76
+          },
+          {
+            "word": "Hello,",
+            "start": 2.26,
+            "end": 2.74
+          },
+          {
+            "word": "Mom!",
+            "start": 3.16,
+            "end": 3.36
+          }
+        ]
+      },
+      {
+        "sentence": "This is my dad. Hello, Dad!",
+        "startTime": 5.12,
+        "endTime": 8.74,
+        "words": [
+          {
+            "word": "This",
+            "start": 5.12,
+            "end": 5.76
+          },
+          {
+            "word": "is",
+            "start": 5.76,
+            "end": 6.34
+          },
+          {
+            "word": "my",
+            "start": 6.34,
+            "end": 6.64
+          },
+          {
+            "word": "dad.",
+            "start": 6.64,
+            "end": 7.04
+          },
+          {
+            "word": "Hello,",
+            "start": 7.84,
+            "end": 8.1
+          },
+          {
+            "word": "Dad!",
+            "start": 8.4,
+            "end": 8.74
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 10.38,
+        "endTime": 12.84,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 10.38,
+            "end": 11.18
+          },
+          {
+            "word": "Dad,",
+            "start": 11.48,
+            "end": 11.66
+          },
+          {
+            "word": "my",
+            "start": 11.78,
+            "end": 11.98
+          },
+          {
+            "word": "family!",
+            "start": 11.98,
+            "end": 12.84
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 14.14,
+        "endTime": 19.12,
+        "words": [
+          {
+            "word": "This",
+            "start": 14.14,
+            "end": 15.06
+          },
+          {
+            "word": "is",
+            "start": 15.06,
+            "end": 15.54
+          },
+          {
+            "word": "my",
+            "start": 15.54,
+            "end": 15.9
+          },
+          {
+            "word": "family,",
+            "start": 15.9,
+            "end": 16.66
+          },
+          {
+            "word": "my",
+            "start": 17.1,
+            "end": 17.28
+          },
+          {
+            "word": "family",
+            "start": 17.28,
+            "end": 17.9
+          },
+          {
+            "word": "and",
+            "start": 17.9,
+            "end": 18.68
+          },
+          {
+            "word": "me!",
+            "start": 18.68,
+            "end": 19.12
+          }
+        ]
+      },
+      {
+        "sentence": "This is my sister. Hello!",
+        "startTime": 21.02,
+        "endTime": 24.1,
+        "words": [
+          {
+            "word": "This",
+            "start": 21.02,
+            "end": 21.94
+          },
+          {
+            "word": "is",
+            "start": 21.94,
+            "end": 22.36
+          },
+          {
+            "word": "my",
+            "start": 22.36,
+            "end": 22.6
+          },
+          {
+            "word": "sister.",
+            "start": 22.6,
+            "end": 23.12
+          },
+          {
+            "word": "Hello!",
+            "start": 23.86,
+            "end": 24.1
+          }
+        ]
+      },
+      {
+        "sentence": "This is my brother. Hello!",
+        "startTime": 25.94,
+        "endTime": 29.44,
+        "words": [
+          {
+            "word": "This",
+            "start": 25.94,
+            "end": 27.06
+          },
+          {
+            "word": "is",
+            "start": 27.06,
+            "end": 27.66
+          },
+          {
+            "word": "my",
+            "start": 27.66,
+            "end": 27.94
+          },
+          {
+            "word": "brother.",
+            "start": 27.94,
+            "end": 28.5
+          },
+          {
+            "word": "Hello!",
+            "start": 28.86,
+            "end": 29.44
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 31.32,
+        "endTime": 34.2,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 31.32,
+            "end": 32.44
+          },
+          {
+            "word": "Dad,",
+            "start": 32.78,
+            "end": 33.0
+          },
+          {
+            "word": "my",
+            "start": 33.08,
+            "end": 33.3
+          },
+          {
+            "word": "family!",
+            "start": 33.3,
+            "end": 34.2
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 35.1,
+        "endTime": 40.62,
+        "words": [
+          {
+            "word": "This",
+            "start": 35.1,
+            "end": 36.42
+          },
+          {
+            "word": "is",
+            "start": 36.42,
+            "end": 36.86
+          },
+          {
+            "word": "my",
+            "start": 36.86,
+            "end": 37.22
+          },
+          {
+            "word": "family,",
+            "start": 37.22,
+            "end": 38.0
+          },
+          {
+            "word": "my",
+            "start": 38.12,
+            "end": 38.6
+          },
+          {
+            "word": "family",
+            "start": 38.6,
+            "end": 39.32
+          },
+          {
+            "word": "and",
+            "start": 39.32,
+            "end": 40.0
+          },
+          {
+            "word": "me!",
+            "start": 40.0,
+            "end": 40.62
+          }
+        ]
+      },
+      {
+        "sentence": "This is my grandma. Hello!",
+        "startTime": 41.94,
+        "endTime": 45.68,
+        "words": [
+          {
+            "word": "This",
+            "start": 41.94,
+            "end": 43.06
+          },
+          {
+            "word": "is",
+            "start": 43.06,
+            "end": 43.7
+          },
+          {
+            "word": "my",
+            "start": 43.7,
+            "end": 43.98
+          },
+          {
+            "word": "grandma.",
+            "start": 43.98,
+            "end": 44.5
+          },
+          {
+            "word": "Hello!",
+            "start": 44.94,
+            "end": 45.68
+          }
+        ]
+      },
+      {
+        "sentence": "This is my grandpa. Hello!",
+        "startTime": 47.2,
+        "endTime": 50.94,
+        "words": [
+          {
+            "word": "This",
+            "start": 47.2,
+            "end": 48.32
+          },
+          {
+            "word": "is",
+            "start": 48.32,
+            "end": 48.94
+          },
+          {
+            "word": "my",
+            "start": 48.94,
+            "end": 49.26
+          },
+          {
+            "word": "grandpa.",
+            "start": 49.26,
+            "end": 49.82
+          },
+          {
+            "word": "Hello!",
+            "start": 50.36,
+            "end": 50.94
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 52.9,
+        "endTime": 55.52,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 52.9,
+            "end": 53.8
+          },
+          {
+            "word": "Dad,",
+            "start": 54.12,
+            "end": 54.32
+          },
+          {
+            "word": "my",
+            "start": 54.42,
+            "end": 54.62
+          },
+          {
+            "word": "family!",
+            "start": 54.62,
+            "end": 55.52
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 55.52,
+        "endTime": 61.78,
+        "words": [
+          {
+            "word": "This",
+            "start": 55.52,
+            "end": 57.72
+          },
+          {
+            "word": "is",
+            "start": 57.72,
+            "end": 58.18
+          },
+          {
+            "word": "my",
+            "start": 58.18,
+            "end": 58.58
+          },
+          {
+            "word": "family,",
+            "start": 58.58,
+            "end": 59.42
+          },
+          {
+            "word": "my",
+            "start": 59.66,
+            "end": 59.96
+          },
+          {
+            "word": "family",
+            "start": 59.96,
+            "end": 60.66
+          },
+          {
+            "word": "and",
+            "start": 60.66,
+            "end": 61.34
+          },
+          {
+            "word": "me!",
+            "start": 61.34,
+            "end": 61.78
+          }
+        ]
+      },
+      {
+        "sentence": "Mom, Dad, my family!",
+        "startTime": 63.52,
+        "endTime": 66.24,
+        "words": [
+          {
+            "word": "Mom,",
+            "start": 63.52,
+            "end": 64.42
+          },
+          {
+            "word": "Dad,",
+            "start": 64.76,
+            "end": 65.0
+          },
+          {
+            "word": "my",
+            "start": 65.14,
+            "end": 65.3
+          },
+          {
+            "word": "family!",
+            "start": 65.3,
+            "end": 66.24
+          }
+        ]
+      },
+      {
+        "sentence": "This is my family, my family and me!",
+        "startTime": 66.24,
+        "endTime": 72.5,
+        "words": [
+          {
+            "word": "This",
+            "start": 66.24,
+            "end": 68.36
+          },
+          {
+            "word": "is",
+            "start": 68.36,
+            "end": 68.86
+          },
+          {
+            "word": "my",
+            "start": 68.86,
+            "end": 69.22
+          },
+          {
+            "word": "family,",
+            "start": 69.22,
+            "end": 70.06
+          },
+          {
+            "word": "my",
+            "start": 70.44,
+            "end": 70.62
+          },
+          {
+            "word": "family",
+            "start": 70.62,
+            "end": 71.32
+          },
+          {
+            "word": "and",
+            "start": 71.32,
+            "end": 72.02
+          },
+          {
+            "word": "me!",
+            "start": 72.02,
+            "end": 72.5
+          }
+        ]
+      }
+    ],
+    "audio": "l2/media/w04/song.mp3"
+  },
+  "scripts": [
+    {
+      "id": "A",
+      "day": 1,
+      "title": {
+        "en": "Sound Lesson",
+        "th": "บทเรียนเสียง"
+      },
+      "prep": [
+        {
+          "en": "Put the picture cards in order on your table: the mmm cards and the other cards for A1, then jam, map, and ham for A4.",
+          "th": "เรียงบัตรภาพไว้บนโต๊ะครูตามลำดับ: บัตรภาพคำที่มีเสียง mmm และบัตรภาพอื่นสำหรับ A1 แล้วตามด้วยบัตรภาพ jam, map และ ham สำหรับ A4"
+        }
+      ],
+      "steps": [
+        {
+          "id": "A1",
+          "title": {
+            "en": "Hear it",
+            "th": "ฟังเสียง"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Hold up one picture card at a time and say the word slowly.",
+              "Stretch the first sound: mmmonkey.",
+              "Mix the mmm words with other words. Then say three words with mmm at the end: arm, jam, ham.",
+              "When the script says mmm, say the sound: lips together, hum. When it says \"the letter m\", say the letter name \"em\"."
+            ],
+            "teacherLanguage": [
+              "\"Listen. Mmmonkey. Monkey.\"",
+              "\"Is the first sound mmm? Thumbs up or thumbs down?\"",
+              "\"Yes! Mmmonkey starts with mmm.\"",
+              "\"Listen. Cat. Does cat start with mmm? No!\"",
+              "\"Now listen to the end. Jammm. Is mmm at the end? Yes!\""
+            ],
+            "studentActions": [
+              "Children say each word after the teacher.",
+              "Children show thumbs up for an mmm word and thumbs down for other words."
+            ],
+            "watchFor": [
+              "Children who say \"muh\": the sound is mmm, with no \"uh\" at the end.",
+              "Children who copy a friend's thumbs: ask them alone with one more card."
+            ]
+          },
+          "easier": {
+            "en": "Use only four cards (monkey, milk, cat, sun) and say the first sound two times.",
+            "th": "ใช้บัตรเพียง 4 ใบ (monkey, milk, cat, sun) และพูดเสียงแรก 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word with mmm at the end: \"Arm.\" Children say the last sound: \"Mmm!\"",
+            "th": "พูดคำที่มี mmm อยู่ท้ายคำ: \"Arm.\" (แขน) เด็ก ๆ บอกเสียงสุดท้าย: \"Mmm!\""
+          },
+          "group": {
+            "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 พูดคำ และคู่คนที่ 2 ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง"
+          },
+          "materials": [
+            "sound picture cards: monkey, mouse, mango, milk",
+            "picture cards: cat, sun, fish",
+            "picture cards: arm, jam, ham"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
+              "ลากเสียงแรกให้ยาว: mmmonkey",
+              "คละคำที่ขึ้นต้นด้วย mmm กับคำอื่น จากนั้นพูดคำ 3 คำที่มี mmm อยู่ท้ายคำ: arm, jam, ham",
+              "เมื่อบทพูดเขียนว่า mmm ให้ออกเสียง: ประกบริมฝีปากเข้าหากัน แล้วฮัมเสียง เมื่อบทพูดเขียนว่า \"the letter m\" ให้พูดชื่อตัวอักษร \"em\" (เอ็ม)"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง Mmmonkey monkey (ลิง)\"",
+              "\"เสียงแรกคือ mmm ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
+              "\"ใช่! Mmmonkey ขึ้นต้นด้วย mmm\"",
+              "\"ฟัง cat คำว่า cat ขึ้นต้นด้วย mmm ไหม? ไม่ใช่!\"",
+              "\"ทีนี้ฟังเสียงท้ายคำ Jammm มี mmm อยู่ท้ายคำไหม? ใช่!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู",
+              "เด็ก ๆ ยกนิ้วโป้งขึ้นสำหรับคำที่มีเสียง mmm และคว่ำนิ้วโป้งลงสำหรับคำอื่น"
+            ],
+            "watchFor": [
+              "เด็กที่ออกเสียงเป็น \"muh\" (เมอะ): เสียงที่ถูกคือ mmm ไม่มี \"uh\" ตามหลัง",
+              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
+            ]
+          }
+        },
+        {
+          "id": "A2",
+          "title": {
+            "en": "See it",
+            "th": "ดูตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the sound card for the letter m and point to the letter.",
+              "Say the pure sound: lips together, voice on, the air goes out through the nose: mmm. It is close to the Thai letter ม, with no vowel after it.",
+              "Do the action of the letter m: draw two hills in the air with one finger and hum mmm."
+            ],
+            "teacherLanguage": [
+              "\"Look. This is the letter m. It says mmm.\"",
+              "\"Listen: mmm. Not 'muh'. Mmm.\"",
+              "\"Watch me: two hills. Mmm.\"",
+              "\"Your turn. Say it and do it. Three times.\""
+            ],
+            "studentActions": [
+              "Children hum mmm and draw two hills in the air, three times.",
+              "Children point to the letter m on the card."
+            ],
+            "watchFor": [
+              "A pure sound: lips together, and no \"uh\" at the end.",
+              "Every child does the action, not only the front rows.",
+              "Children who mix up the letters m and n: m has two hills and n has one hill. For mmm the lips are together; for nnn the lips are open."
+            ]
+          },
+          "easier": {
+            "en": "Children put one finger on their lips and feel the hum while they say mmm.",
+            "th": "เด็ก ๆ ใช้นิ้ว 1 นิ้วแตะริมฝีปาก และรู้สึกถึงเสียงฮัมขณะพูด mmm"
+          },
+          "harder": {
+            "en": "Show the cards for the letters n, a, p, and m in a mixed order. Children do the action of the card.",
+            "th": "ชูบัตรตัวอักษร n, a, p และ m แบบสลับลำดับ เด็ก ๆ ทำท่าประจำเสียงของบัตรนั้น"
+          },
+          "group": {
+            "en": "Two halves: one half says the sound, and the other half does the action. Then the halves change.",
+            "th": "แบ่งชั้นเป็น 2 ฝั่ง: ฝั่งหนึ่งออกเสียง อีกฝั่งหนึ่งทำท่า แล้วสลับกัน"
+          },
+          "materials": [
+            "sound cards: m, n, a, p"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียง m และชี้ที่ตัวอักษร",
+              "ออกเสียงล้วน: ประกบริมฝีปากเข้าหากัน เปล่งเสียง และให้ลมออกทางจมูก: mmm ใกล้กับเสียง ม ในภาษาไทย โดยไม่มีสระตามหลัง",
+              "ทำท่าประจำเสียง m: ใช้นิ้ว 1 นิ้ววาดเนิน 2 ลูกกลางอากาศ และฮัมเสียง mmm"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือตัวอักษร m ออกเสียงว่า mmm\"",
+              "\"ฟัง: mmm ไม่ใช่ 'muh' แต่เป็น mmm\"",
+              "\"ดูครู: เนิน 2 ลูก mmm\"",
+              "\"ถึงตาเด็ก ๆ แล้ว ออกเสียงและทำท่า 3 ครั้ง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฮัมเสียง mmm และใช้นิ้ววาดเนิน 2 ลูกกลางอากาศ 3 ครั้ง",
+              "เด็ก ๆ ชี้ที่ตัวอักษร m บนบัตร"
+            ],
+            "watchFor": [
+              "เสียงล้วน: ประกบริมฝีปากเข้าหากัน และไม่มี \"uh\" ตามหลัง",
+              "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า",
+              "เด็กที่สับสนระหว่างตัวอักษร m กับ n: ตัวอักษร m มีเนิน 2 ลูก ส่วนตัวอักษร n มีเนิน 1 ลูก เมื่อออกเสียง mmm ริมฝีปากประกบกัน ส่วนเมื่อออกเสียง nnn ริมฝีปากเปิด"
+            ]
+          }
+        },
+        {
+          "id": "A3",
+          "title": {
+            "en": "Form it",
+            "th": "เขียนตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Write the letter m (the small letter m, not the big letter M) large on the board, and say the formation words while you write.",
+              "Write the letter m in the air with your back to the class, so your hand moves the same way as theirs.",
+              "Children write the letter m in the air, then trace it in the book three times."
+            ],
+            "teacherLanguage": [
+              "\"Start at the dot. Down. Up, over the hill, down. Up, over the hill, down.\"",
+              "\"Fingers up. Write the letter m in the air with me.\"",
+              "\"Open your book. Find the letter m. Trace it three times. Start at the dot.\""
+            ],
+            "studentActions": [
+              "Children write the letter m in the air with one finger and say the formation words.",
+              "Children trace the letter m three times in the book, from the dot."
+            ],
+            "watchFor": [
+              "Children who write only one hill: that is n. The letter m has two hills.",
+              "Children who start at the bottom: take their hand and start at the dot."
+            ]
+          },
+          "easier": {
+            "en": "Children trace the letter m in the book with a finger first. Then they trace it with the pencil.",
+            "th": "เด็ก ๆ ใช้นิ้วลากเส้นตามตัวอักษร m ในหนังสือก่อน แล้วจึงใช้ดินสอลากเส้นตาม"
+          },
+          "harder": {
+            "en": "Write the letter m two more times on the empty line, with no dots.",
+            "th": "เขียนตัวอักษร m อีก 2 ครั้งบนบรรทัดว่าง โดยไม่มีจุดนำ"
+          },
+          "group": {
+            "en": "Pairs: one child writes the letter m on the partner's back with a finger; the partner says mmm.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ใช้นิ้วเขียนตัวอักษร m บนหลังของคู่คนที่ 2 คู่คนที่ 2 พูด mmm"
+          },
+          "materials": [
+            "board",
+            "student book: letter box m"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียนตัวอักษร m ขนาดใหญ่บนกระดาน (m ตัวพิมพ์เล็ก ไม่ใช่ M ตัวพิมพ์ใหญ่) และพูดคำบอกวิธีเขียนขณะเขียน",
+              "เขียนตัวอักษร m กลางอากาศโดยหันหลังให้เด็ก ๆ เพื่อให้มือของครูเคลื่อนไปทางเดียวกับมือของเด็ก ๆ",
+              "เด็ก ๆ เขียนตัวอักษร m กลางอากาศ แล้วลากเส้นตามตัวอักษร m ในหนังสือ 3 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"เริ่มที่จุด ลง ขึ้น ข้ามเนิน ลง ขึ้น ข้ามเนิน ลง\"",
+              "\"ยกนิ้วขึ้น เขียนตัวอักษร m กลางอากาศพร้อมครู\"",
+              "\"เปิดหนังสือ หาตัวอักษร m ลากเส้นตาม 3 ครั้ง เริ่มที่จุด\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ใช้นิ้ว 1 นิ้วเขียนตัวอักษร m กลางอากาศ และพูดคำบอกวิธีเขียน",
+              "เด็ก ๆ ลากเส้นตามตัวอักษร m ในหนังสือ 3 ครั้ง โดยเริ่มที่จุด"
+            ],
+            "watchFor": [
+              "เด็กที่เขียนเนินเพียง 1 ลูก: นั่นคือตัวอักษร n ตัวอักษร m มีเนิน 2 ลูก",
+              "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด"
+            ]
+          }
+        },
+        {
+          "id": "A4",
+          "title": {
+            "en": "Blend it",
+            "th": "ผสมเสียง"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First by ear: keep the picture cards jam, map, and ham face down. Say the sounds with a short stop between them, then say them fast. Show the picture after the class says the word.",
+              "Then with letters: show the word cards \"am\", \"man\", and \"map\". Put your finger under each letter and say its sound, then slide under the whole word.",
+              "Show the word card \"Pam\". The big letter P at the start of a name says /p/, too.",
+              "Say the sounds, not the letter names: /j/ with no \"uh\" after it, /h/ as a soft breath with no \"uh\" after it."
+            ],
+            "teacherLanguage": [
+              "\"Listen. /j/ - /a/ - mmm. What is the word? Jam!\"",
+              "\"Next one. Mmm - /a/ - /p/. Map! And this one: /h/ - /a/ - mmm. Ham!\"",
+              "\"Now look at the letters. Finger under the letter a: /a/. Under the letter m: mmm. Fast: am! I am Teacher ___.\"",
+              "\"Next word. Mmm - /a/ - nnn. Man! And this one: /p/ - /a/ - mmm. Pam! It is a name.\""
+            ],
+            "studentActions": [
+              "Children listen to the sounds and say the word.",
+              "Children say the sounds of \"am\", \"man\", \"map\", and \"Pam\" with the teacher, then read the words alone."
+            ],
+            "watchFor": [
+              "Children who read \"man\" and \"map\" the same way: point to the last letter and ask for its sound.",
+              "Children who say \"muh - /a/ - nnn\": hold the mmm, with no \"uh\"."
+            ]
+          },
+          "easier": {
+            "en": "Read only \"am\" and \"man\" with the class, two times each.",
+            "th": "อ่านเฉพาะ \"am\" และ \"man\" พร้อมทั้งชั้น คำละ 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word; children say its three sounds: \"Man.\" \"Mmm - /a/ - nnn.\"",
+            "th": "พูดคำ 1 คำ เด็ก ๆ พูด 3 เสียงของคำนั้น: \"Man.\" \"Mmm - /a/ - nnn.\""
+          },
+          "group": {
+            "en": "Pairs: partner A points under the letters, partner B reads the word.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ใต้ตัวอักษร คู่คนที่ 2 อ่านคำ"
+          },
+          "materials": [
+            "picture cards: jam, map, ham",
+            "word cards: am, man, map, Pam"
+          ],
+          "th": {
+            "teacherActions": [
+              "ขั้นแรกฝึกด้วยการฟัง: คว่ำบัตรภาพ jam, map และ ham ไว้ พูดเสียงในคำทีละเสียงโดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
+              "จากนั้นฝึกด้วยตัวอักษร: ชูบัตรคำ \"am\", \"man\" และ \"map\" วางนิ้วใต้ตัวอักษรทีละตัวและออกเสียงของตัวอักษรนั้น แล้วลากนิ้วผ่านใต้ทั้งคำ",
+              "ชูบัตรคำ \"Pam\" P ตัวพิมพ์ใหญ่ที่ต้นชื่อก็ออกเสียง /p/ เหมือนกัน",
+              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /j/ ไม่มี \"uh\" ตามหลัง ส่วน /h/ เป็นเสียงลมหายใจเบา ๆ และไม่มี \"uh\" ตามหลัง"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง /j/ - /a/ - mmm คำนี้คือคำอะไร? Jam! (แยม)\"",
+              "\"คำต่อไป Mmm - /a/ - /p/ Map! (แผนที่) ส่วนคำนี้: /h/ - /a/ - mmm Ham! (แฮม)\"",
+              "\"ทีนี้ดูตัวอักษร วางนิ้วใต้ตัวอักษร a: /a/ ใต้ตัวอักษร m: mmm พูดเร็ว ๆ: am! I am Teacher ___ (ฉันคือครู ___)\"",
+              "\"คำต่อไป Mmm - /a/ - nnn Man! (ผู้ชาย) ส่วนคำนี้: /p/ - /a/ - mmm Pam! คำนี้เป็นชื่อ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังเสียง แล้วพูดคำ",
+              "เด็ก ๆ ออกเสียงทีละเสียงในคำ \"am\", \"man\", \"map\" และ \"Pam\" พร้อมครู แล้วอ่านคำเหล่านั้นด้วยตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"man\" และ \"map\" เหมือนกัน: ชี้ที่ตัวอักษรตัวสุดท้าย แล้วถามว่าออกเสียงอะไร",
+              "เด็กที่อ่านเป็น \"muh - /a/ - nnn\": ลากเสียง mmm ไว้ โดยไม่มี \"uh\" ตามหลัง"
+            ]
+          }
+        },
+        {
+          "id": "A5",
+          "title": {
+            "en": "Word wall",
+            "th": "ผนังคำศัพท์"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Put the letter m card on the word wall, next to the cards for the letters n, a, and p.",
+              "Put the new words on the wall: \"am\", \"man\", \"map\", and \"Pam\". The class reads the wall from the first word."
+            ],
+            "teacherLanguage": [
+              "\"Here is the letter m. It says mmm.\"",
+              "\"Our new words! Read them with me: am. Man. Map. Pam.\"",
+              "\"Now read all the words: an, Nan, pan, nap, am, man, map, Pam.\""
+            ],
+            "studentActions": [
+              "Children say the sounds and read the eight words at the wall."
+            ],
+            "watchFor": [
+              "Children who read \"man\" and \"Nan\" the same way: point to the first letter of each word."
+            ]
+          },
+          "easier": {
+            "en": "Read only the four new words with the class.",
+            "th": "อ่านเฉพาะคำใหม่ 4 คำพร้อมทั้งชั้น"
+          },
+          "harder": {
+            "en": "A child reads one word on the wall alone, then says its first sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงแรกของคำนั้น"
+          },
+          "group": {
+            "en": "Whole class: one child points, and the class reads.",
+            "th": "ทั้งชั้น: เด็กคนหนึ่งชี้ และทั้งชั้นอ่าน"
+          },
+          "materials": [
+            "word wall",
+            "sound cards: m",
+            "word cards: am, man, map, Pam"
+          ],
+          "th": {
+            "teacherActions": [
+              "ติดบัตรตัวอักษร m บนผนังคำศัพท์ ข้างบัตรตัวอักษร n, a และ p",
+              "ติดคำใหม่บนผนังคำศัพท์: \"am\", \"man\", \"map\" และ \"Pam\" ทั้งชั้นอ่านคำบนผนังคำศัพท์ตั้งแต่คำแรก"
+            ],
+            "teacherLanguage": [
+              "\"นี่คือตัวอักษร m ออกเสียงว่า mmm\"",
+              "\"คำใหม่ของเรา! อ่านพร้อมครู: am, man, map, Pam\"",
+              "\"ทีนี้อ่านทุกคำ: an, Nan, pan, nap, am, man, map, Pam\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและอ่านคำ 8 คำที่ผนังคำศัพท์"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"man\" และ \"Nan\" เหมือนกัน: ชี้ที่ตัวอักษรตัวแรกของแต่ละคำ"
+            ]
+          }
+        },
+        {
+          "id": "A6",
+          "title": {
+            "en": "New tricky words",
+            "th": "คำที่ต้องจำชุดใหม่"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the tricky word cards \"is\" and \"this\". Show one card at a time.",
+              "Read the word. The class cannot sound out any letter of these two words yet, so the class remembers the whole word. In \"is\", the letter s says zzz, like a bee. In \"this\", the letter s says sss, and the letters t and h say one sound, with the tongue between the teeth.",
+              "Spell each word with letter names, then write it in the air."
+            ],
+            "teacherLanguage": [
+              "\"Look at this card. Read it with me: is. Pip is in the bag.\"",
+              "\"Next card. Read it with me: this. This is my bag.\"",
+              "\"Tongue between your teeth: this.\"",
+              "\"This is a tricky word. We remember it. Say it with me.\""
+            ],
+            "studentActions": [
+              "Children read each card three times: loud, quiet, loud.",
+              "Children point to a friend and say: \"This is ___.\""
+            ],
+            "watchFor": [
+              "Children who say \"dis\" for \"this\": show the tongue between the teeth, as for \"the\".",
+              "Children who say \"it\" for \"is\": hum zzz like a bee at the end: izzz."
+            ]
+          },
+          "easier": {
+            "en": "Teach \"this\" today; \"is\" comes on the review strip tomorrow.",
+            "th": "สอน \"this\" วันนี้ ส่วน \"is\" จะอยู่บนแถบทบทวนพรุ่งนี้"
+          },
+          "harder": {
+            "en": "Children say a sentence with both words: \"This is my bag.\"",
+            "th": "เด็ก ๆ พูดประโยคที่มีทั้ง 2 คำ: \"This is my bag.\" (นี่คือกระเป๋าของฉัน)"
+          },
+          "group": {
+            "en": "Pairs: you show a card; partner A reads it to partner B. Then the partners change.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 อ่านให้คู่คนที่ 2 ฟัง แล้วสลับกัน"
+          },
+          "materials": [
+            "tricky word cards: is, this"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรคำที่ต้องจำ \"is\" และ \"this\" ทีละใบ",
+              "อ่านคำนั้น ทั้งชั้นยังสะกดออกเสียงตัวอักษรใดในคำ 2 คำนี้ไม่ได้เลย จึงต้องจำทั้งคำ ในคำ \"is\" ตัวอักษร s ออกเสียง zzz เหมือนเสียงผึ้ง ในคำ \"this\" ตัวอักษร s ออกเสียง sss และตัวอักษร t กับ h ออกเสียงรวมกันเป็นเสียงเดียว โดยวางปลายลิ้นไว้ระหว่างฟัน",
+              "สะกดแต่ละคำด้วยชื่อตัวอักษร แล้วเขียนคำนั้นกลางอากาศ"
+            ],
+            "teacherLanguage": [
+              "\"ดูบัตรนี้ อ่านพร้อมครู: is เช่น Pip is in the bag (Pip อยู่ในกระเป๋า)\"",
+              "\"บัตรต่อไป อ่านพร้อมครู: this เช่น This is my bag (นี่คือกระเป๋าของฉัน)\"",
+              "\"วางลิ้นไว้ระหว่างฟัน: this\"",
+              "\"นี่คือคำที่ต้องจำ เราจำคำนี้ไว้ พูดพร้อมครู\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรแต่ละใบ 3 ครั้ง: ดัง เบา ดัง",
+              "เด็ก ๆ ชี้ที่เพื่อน แล้วพูดว่า: \"This is ___.\" (นี่คือ ___)"
+            ],
+            "watchFor": [
+              "เด็กที่ออกเสียง \"this\" เป็น \"dis\" (ดิส): ให้เด็กดูลิ้นของครูที่วางไว้ระหว่างฟัน เหมือนตอนพูด \"the\"",
+              "เด็กที่ออกเสียง \"is\" เป็น \"it\": ให้ฮัมเสียง zzz ที่ท้ายคำ เหมือนเสียงผึ้ง: izzz"
+            ]
+          }
+        },
+        {
+          "id": "A7",
+          "title": {
+            "en": "Read it",
+            "th": "อ่าน"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Open the practice sheet in the book and point to each line once."
+            ],
+            "teacherLanguage": [
+              "\"Read the sounds with me: mmm, /a/, /p/, nnn.\"",
+              "\"Read the words: am. Man. Map. Pam.\"",
+              "\"Read the sentences: This is Pam. I am Nan.\""
+            ],
+            "studentActions": [
+              "Children read the lines and point to the tricky words \"this\" and \"is\"."
+            ],
+            "watchFor": [
+              "Children who look at the wrong line: show the picture at the start of the line."
+            ]
+          },
+          "easier": {
+            "en": "Read only the line of sounds.",
+            "th": "อ่านเฉพาะบรรทัดของเสียง"
+          },
+          "harder": {
+            "en": "Children read \"This is Pam.\" alone.",
+            "th": "เด็ก ๆ อ่าน \"This is Pam.\" ด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs point to the lines for each other.",
+            "th": "ทำเป็นคู่: ชี้บรรทัดให้กันและกัน"
+          },
+          "materials": [
+            "student book: practice sheet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "เปิดหน้าฝึกอ่านในหนังสือ และชี้แต่ละบรรทัด 1 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเสียงพร้อมครู: mmm, /a/, /p/, nnn\"",
+              "\"อ่านคำ: am, man, map, Pam\"",
+              "\"อ่านประโยค: This is Pam (นี่คือ Pam) I am Nan (ฉันคือ Nan)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละบรรทัด และชี้ที่คำที่ต้องจำ \"this\" และ \"is\""
+            ],
+            "watchFor": [
+              "เด็กที่ดูผิดบรรทัด: ชี้ภาพที่ต้นบรรทัดให้ดู"
+            ]
+          }
+        },
+        {
+          "id": "A8",
+          "title": {
+            "en": "Home card",
+            "th": "บัตรกิจกรรมที่บ้าน"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "Read the Thai line on the home card to the class.",
+              "After class on day 1: tear the week 4 home card out of each student book, and put one card in each child's bag."
+            ],
+            "teacherLanguage": [
+              "\"Your home card is in your bag. Show it to your family.\"",
+              "\"Point to a person and say: This is my ...!\""
+            ],
+            "studentActions": [
+              "Children find the home card in their bag."
+            ],
+            "watchFor": [
+              "A child with no card: give the child a card at home time on day 2."
+            ]
+          },
+          "easier": {
+            "en": "Show the card to the child.",
+            "th": "ชูบัตรให้เด็กดู"
+          },
+          "harder": {
+            "en": "A child shows the card to a friend and says: \"Mmm, milk! Mmm, mango!\"",
+            "th": "เด็กคนหนึ่งเอาบัตรให้เพื่อนดูและพูดว่า: \"Mmm, milk! Mmm, mango!\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "student book: home card"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "อ่านข้อความภาษาไทยบนบัตรกิจกรรมที่บ้านให้ทั้งชั้นฟัง",
+              "หลังเลิกเรียนวันที่ 1: ฉีกบัตรกิจกรรมที่บ้านของสัปดาห์ที่ 4 ออกจากหนังสือนักเรียนของเด็กแต่ละคน แล้วใส่บัตรในกระเป๋าของเด็กคนละ 1 ใบ"
+            ],
+            "teacherLanguage": [
+              "\"บัตรกิจกรรมที่บ้านอยู่ในกระเป๋าของหนู ๆ แล้ว เอาให้ครอบครัวดูนะ\"",
+              "\"ชี้ที่คนคนหนึ่ง แล้วพูดว่า: This is my ...! (นี่คือ ... ของฉัน)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ หาบัตรกิจกรรมที่บ้านในกระเป๋าของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่มีบัตร: ให้บัตรแก่เด็กตอนกลับบ้านในวันที่ 2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "day": 2,
+      "title": {
+        "en": "Story Lesson",
+        "th": "บทเรียนนิทาน"
+      },
+      "prep": [
+        {
+          "en": "Get the book audio of \"My Family\" ready on the tablet, or print its QR code (B3).",
+          "th": "เตรียมเสียงอ่านของหนังสือ \"My Family\" บนแท็บเล็ต หรือพิมพ์คิวอาร์โค้ดของหนังสือไว้ (B3)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "B1",
+          "title": {
+            "en": "Family words",
+            "th": "คำศัพท์ประจำหมวด"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Show each family picture card and say the word two times.",
+              "Put the cards on the board. Point to a card; the class says the word.",
+              "Ask \"Who is this?\" for each card."
+            ],
+            "teacherLanguage": [
+              "\"Look. Who is this? This is Mom. Say it: mom.\"",
+              "\"Point to the grandpa!\"",
+              "\"Who is this? This is Grandma!\""
+            ],
+            "studentActions": [
+              "Children say each word two times after the teacher.",
+              "Children point to the card that the teacher says."
+            ],
+            "watchFor": [
+              "Children who mix up brother and sister: say both words again with your hand on each card.",
+              "Some children live with one parent, with grandparents, or with other family. Say: \"Families are different. All families are good.\" Let each child choose the person for \"This is my ___.\""
+            ]
+          },
+          "easier": {
+            "en": "Use four cards: mom, dad, brother, sister.",
+            "th": "ใช้บัตร 4 ใบ: mom, dad, brother, sister"
+          },
+          "harder": {
+            "en": "A child points to a card and asks the class: \"Who is this?\"",
+            "th": "เด็กคนหนึ่งชี้ที่บัตร แล้วถามทั้งชั้นว่า: \"Who is this?\" (นี่คือใคร)"
+          },
+          "group": {
+            "en": "Pairs: partner A points to a card, partner B says the word.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่บัตร คู่คนที่ 2 พูดคำนั้น"
+          },
+          "materials": [
+            "family picture cards: mom, dad, brother, sister, grandma, grandpa, family"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพคำศัพท์แต่ละใบ แล้วพูดคำนั้น 2 ครั้ง",
+              "ติดบัตรบนกระดาน ชี้ที่บัตร 1 ใบ ทั้งชั้นพูดคำนั้น",
+              "ถามว่า \"Who is this?\" (นี่คือใคร) กับบัตรทุกใบ"
+            ],
+            "teacherLanguage": [
+              "\"ดู Who is this? (นี่คือใคร) This is Mom. (นี่คือแม่) พูดตาม: mom\"",
+              "\"ชี้ที่บัตร grandpa! (ปู่หรือตา)\"",
+              "\"Who is this? (นี่คือใคร) This is Grandma! (นี่คือย่าหรือยาย)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู 2 ครั้ง",
+              "เด็ก ๆ ชี้ที่บัตรที่ครูพูด"
+            ],
+            "watchFor": [
+              "เด็กที่สับสนระหว่าง brother (พี่ชายหรือน้องชาย) กับ sister (พี่สาวหรือน้องสาว): วางมือบนบัตรทีละใบ แล้วพูดทั้ง 2 คำอีกครั้ง",
+              "เด็กบางคนอยู่กับพ่อหรือแม่เพียงคนเดียว อยู่กับปู่ย่าตายาย หรืออยู่กับญาติคนอื่น ให้พูดว่า: \"Families are different. All families are good.\" (แต่ละครอบครัวไม่เหมือนกัน และทุกครอบครัวเป็นครอบครัวที่ดี) ให้เด็กแต่ละคนเลือกเองว่าจะพูดถึงใครใน \"This is my ___.\""
+            ]
+          }
+        },
+        {
+          "id": "B2",
+          "title": {
+            "en": "Picture walk",
+            "th": "ดูภาพก่อนอ่าน"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cover and pages 1 to 7 of \"My Family\". Cover the words with your hand. Keep page 8 for later.",
+              "On each page, ask \"Who is this?\" The class says the family word. On page 6, ask \"What is this?\" The class says \"house\".",
+              "On page 7, ask the class to count the people in the photo."
+            ],
+            "teacherLanguage": [
+              "\"Look at the cover. Who is this girl? It is Lily!\"",
+              "\"Look. Who is this? Her mom!\"",
+              "\"How many people? One, two, three, four, five, six!\""
+            ],
+            "studentActions": [
+              "Children say what they can see, in Thai or English.",
+              "Children say the family word on each page."
+            ],
+            "watchFor": [
+              "Children who answer in Thai: say the English; the child says it after you.",
+              "Do not open page 8 yet: keep the surprise for the reading."
+            ]
+          },
+          "easier": {
+            "en": "Say the family word with the class on every page.",
+            "th": "พูดคำศัพท์ครอบครัวพร้อมทั้งชั้นในทุกหน้า"
+          },
+          "harder": {
+            "en": "Before you turn the page, ask: \"Who is next?\"",
+            "th": "ก่อนพลิกหน้า ถามว่า: \"Who is next?\" (หน้าต่อไปเป็นใคร)"
+          },
+          "group": {
+            "en": "Whole class: quiet children tell a partner first, then the class.",
+            "th": "ทั้งชั้น: เด็กที่ไม่ค่อยกล้าพูดบอกคู่ก่อน แล้วจึงบอกทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"My Family\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกและหน้า 1 ถึง 7 ของ \"My Family\" ใช้มือปิดคำไว้ เก็บหน้า 8 ไว้เปิดทีหลัง",
+              "ในแต่ละหน้า ถามว่า \"Who is this?\" (นี่คือใคร) ทั้งชั้นพูดคำศัพท์ครอบครัว ที่หน้า 6 ถามว่า \"What is this?\" (นี่คืออะไร) ทั้งชั้นพูดว่า \"house\" (บ้าน)",
+              "ที่หน้า 7 ให้ทั้งชั้นนับคนในรูปถ่าย"
+            ],
+            "teacherLanguage": [
+              "\"ดูที่ปก เด็กผู้หญิงคนนี้คือใคร? It is Lily! (นี่คือ Lily)\"",
+              "\"ดู Who is this? (นี่คือใคร) Her mom! (แม่ของเธอ)\"",
+              "\"How many people? (มีกี่คน) One, two, three, four, five, six!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ บอกสิ่งที่เห็น เป็นภาษาไทยหรือภาษาอังกฤษ",
+              "เด็ก ๆ พูดคำศัพท์ครอบครัวในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเป็นภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม",
+              "ยังไม่เปิดหน้า 8: เก็บเซอร์ไพรส์ไว้ตอนอ่าน"
+            ]
+          }
+        },
+        {
+          "id": "B3",
+          "title": {
+            "en": "Listen",
+            "th": "ฟัง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Play the audio of \"My Family\" once, at 1.0 speed.",
+              "Point to the picture while the audio reads the page; turn the page with the audio."
+            ],
+            "teacherLanguage": [
+              "\"Now listen to the book. Eyes on the pictures.\"",
+              "\"Point to the person!\""
+            ],
+            "studentActions": [
+              "Children listen and look at the pictures.",
+              "Children point to the person in the picture on each page."
+            ],
+            "watchFor": [
+              "Children who do not look: hold the book closer to them."
+            ]
+          },
+          "easier": {
+            "en": "Play the audio at 0.75 speed.",
+            "th": "เปิดเสียงที่ความเร็ว 0.75"
+          },
+          "harder": {
+            "en": "Stop the audio before the family word on a page; the class says the word.",
+            "th": "หยุดเสียงก่อนถึงคำศัพท์ครอบครัวในหน้านั้น ทั้งชั้นพูดคำนั้น"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "book audio, on the tablet or by the QR code: \"My Family\""
+          ],
+          "th": {
+            "teacherActions": [
+              "เปิดเสียงอ่าน \"My Family\" 1 รอบ ที่ความเร็ว 1.0",
+              "ชี้ที่ภาพขณะเสียงอ่านหน้านั้น และพลิกหน้าไปพร้อมกับเสียง"
+            ],
+            "teacherLanguage": [
+              "\"ทีนี้ฟังหนังสือ ตาดูที่ภาพ\"",
+              "\"ชี้ที่คนในภาพ!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังและดูภาพ",
+              "เด็ก ๆ ชี้ที่คนในภาพในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่ดูภาพ: ถือหนังสือให้ใกล้เด็กมากขึ้น"
+            ]
+          }
+        },
+        {
+          "id": "B4",
+          "title": {
+            "en": "Read with me",
+            "th": "อ่านกับครู"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First reading: read each page and point under each word. The class says the page after you.",
+              "Second reading: read \"This is my\" and stop. The class says the family word.",
+              "Point to \"This is my\" on every page: it is the frame of the week."
+            ],
+            "teacherLanguage": [
+              "\"My turn: This is my mom. Your turn!\"",
+              "\"Look at the words. This is my ... ?\"",
+              "\"Read the last page with me: This is my dog, Pip!\""
+            ],
+            "studentActions": [
+              "Children say each page after the teacher and point in the air.",
+              "Children say the family word on each page."
+            ],
+            "watchFor": [
+              "Children who say the words but do not look: point under each word slowly.",
+              "On the last page, let the children laugh, then read it again together."
+            ]
+          },
+          "easier": {
+            "en": "Read pages 1 to 4 and page 8 only.",
+            "th": "อ่านเฉพาะหน้า 1 ถึง 4 และหน้า 8"
+          },
+          "harder": {
+            "en": "Children read \"This is my\" alone; you say only the family words.",
+            "th": "เด็ก ๆ อ่าน \"This is my\" ด้วยตัวเอง ส่วนครูพูดเฉพาะคำศัพท์ครอบครัว"
+          },
+          "group": {
+            "en": "Half the class reads one page, the other half reads the next.",
+            "th": "ครึ่งชั้นอ่าน 1 หน้า อีกครึ่งชั้นอ่านหน้าถัดไป"
+          },
+          "materials": [
+            "big book or screen: \"My Family\""
+          ],
+          "th": {
+            "teacherActions": [
+              "อ่านรอบแรก: อ่านแต่ละหน้าและชี้ใต้แต่ละคำ ทั้งชั้นพูดหน้านั้นตาม",
+              "อ่านรอบที่สอง: อ่าน \"This is my\" แล้วหยุด ทั้งชั้นพูดคำศัพท์ครอบครัว",
+              "ชี้ที่ \"This is my\" ในทุกหน้า: นี่คือกรอบประโยคของสัปดาห์"
+            ],
+            "teacherLanguage": [
+              "\"ตาครู: This is my mom. ถึงตาเด็ก ๆ!\"",
+              "\"ดูที่คำ This is my ... ?\"",
+              "\"อ่านหน้าสุดท้ายพร้อมครู: This is my dog, Pip! (นี่คือสุนัขของฉัน ชื่อ Pip)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละหน้าตามครู และชี้ในอากาศ",
+              "เด็ก ๆ พูดคำศัพท์ครอบครัวในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่พูดคำได้แต่ไม่ดูหนังสือ: ชี้ใต้แต่ละคำช้า ๆ",
+              "ที่หน้าสุดท้าย ปล่อยให้เด็ก ๆ หัวเราะ แล้วอ่านอีกครั้งพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B5",
+          "title": {
+            "en": "Frame practice",
+            "th": "ฝึกกรอบประโยค"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Write \"This is my ___.\" on the board and point to each word. Show the full stop.",
+              "Hold up the mom card and say \"This is my mom.\" Then point to your bag and say \"This is my bag.\"",
+              "Six children come to the front, one at a time. The child holds up a family picture card from B1 and says \"This is my ___.\" Then pairs do it with their own things: a pencil, a bag, a shoe."
+            ],
+            "teacherLanguage": [
+              "\"This is my mom. Say it with me: This is my mom.\"",
+              "\"Your turn. Hold up the card. Say: This is my ...\"",
+              "\"Now with your partner. Show your pencil. Say: This is my pencil.\""
+            ],
+            "studentActions": [
+              "Six children say \"This is my ___.\" with a family picture card.",
+              "Pairs: partner A shows a thing and says \"This is my ___.\"; partner B says it about a thing of their own. Then they change."
+            ],
+            "watchFor": [
+              "Children who say only the word: praise it, then say \"This is my\" with them; the child adds the word.",
+              "Children who say \"This my\": point to \"is\" on the board."
+            ]
+          },
+          "easier": {
+            "en": "The child says the sentence together with the teacher.",
+            "th": "เด็กพูดประโยคพร้อมกับครู"
+          },
+          "harder": {
+            "en": "The child adds a second sentence: \"This is my mom. She is nice.\"",
+            "th": "เด็กเพิ่มประโยคที่สอง: \"This is my mom. She is nice.\" (นี่คือแม่ของฉัน แม่ใจดี)"
+          },
+          "group": {
+            "en": "Pairs, then two pairs together: four children show and say.",
+            "th": "ทำเป็นคู่ แล้วรวม 2 คู่เข้าด้วยกัน: เด็ก 4 คนชูของและพูด"
+          },
+          "materials": [
+            "board",
+            "family picture cards: mom, dad, brother, sister, grandma, grandpa, family"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียน \"This is my ___.\" บนกระดาน และชี้ที่แต่ละคำ ชี้ให้ดูจุด (full stop)",
+              "ชูบัตร mom แล้วพูดว่า \"This is my mom.\" จากนั้นชี้ที่กระเป๋าของครู แล้วพูดว่า \"This is my bag.\"",
+              "เด็ก 6 คนออกมาหน้าชั้นทีละคน เด็กชูบัตรภาพคำศัพท์ 1 ใบจาก B1 แล้วพูด \"This is my ___.\" จากนั้นให้ทำเป็นคู่โดยใช้ของของตัวเอง เช่น pencil (ดินสอ), bag (กระเป๋า), shoe (รองเท้า)"
+            ],
+            "teacherLanguage": [
+              "\"This is my mom. (นี่คือแม่ของฉัน) พูดพร้อมครู: This is my mom.\"",
+              "\"ถึงตาหนูแล้ว ชูบัตรขึ้น พูดว่า: This is my ...\"",
+              "\"ทีนี้ทำกับคู่ ชูดินสอของหนู แล้วพูดว่า: This is my pencil. (นี่คือดินสอของฉัน)\""
+            ],
+            "studentActions": [
+              "เด็ก 6 คนชูบัตรภาพคำศัพท์และพูด \"This is my ___.\"",
+              "ทำเป็นคู่: คู่คนที่ 1 ชูของ 1 ชิ้นและพูด \"This is my ___.\" คู่คนที่ 2 พูดประโยคเดียวกันกับของของตัวเอง แล้วสลับกัน"
+            ],
+            "watchFor": [
+              "เด็กที่พูดแค่คำศัพท์: ชมก่อน แล้วพูด \"This is my\" พร้อมเด็ก แล้วให้เด็กเติมคำศัพท์",
+              "เด็กที่พูด \"This my\": ชี้ที่คำ \"is\" บนกระดาน"
+            ]
+          }
+        },
+        {
+          "id": "B6",
+          "title": {
+            "en": "Act it",
+            "th": "แสดงตามเรื่อง"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "The whole class acts the book. Say each page; the class says it after you and points to a pretend person.",
+              "On the last page, the class jumps like Pip into the photo and says: \"This is my dog, Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"Say it with me: This is my mom!\"",
+              "\"Jump into the photo! This is my dog, Pip!\""
+            ],
+            "studentActions": [
+              "The class says each page and points. On the last page, the children jump."
+            ],
+            "watchFor": [
+              "Children who only watch: point with them and say the page together."
+            ]
+          },
+          "easier": {
+            "en": "The class says only the family words; you say \"This is my\".",
+            "th": "ทั้งชั้นพูดเฉพาะคำศัพท์ครอบครัว ส่วนครูพูด \"This is my\""
+          },
+          "harder": {
+            "en": "Children point to a friend and say: \"This is my friend!\"",
+            "th": "เด็ก ๆ ชี้ที่เพื่อน แล้วพูดว่า: \"This is my friend!\" (นี่คือเพื่อนของฉัน)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"My Family\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ทั้งชั้นแสดงตามหนังสือ พูดแต่ละหน้า ทั้งชั้นพูดตามและชี้ไปที่คนสมมติ",
+              "ที่หน้าสุดท้าย ทั้งชั้นกระโดดเหมือน Pip ที่กระโดดเข้าไปในรูปถ่าย และพูดว่า: \"This is my dog, Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"พูดพร้อมครู: This is my mom!\"",
+              "\"กระโดดเข้าไปในรูปถ่าย! This is my dog, Pip!\""
+            ],
+            "studentActions": [
+              "ทั้งชั้นพูดแต่ละหน้าและชี้ ที่หน้าสุดท้าย เด็ก ๆ กระโดด"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ชี้พร้อมเด็ก และพูดหน้านั้นพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B7",
+          "title": {
+            "en": "Sing it",
+            "th": "ร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the opening, play the karaoke video as the song of the week (item 3). The words are on the screen."
+            ],
+            "teacherLanguage": [
+              "\"Sing with the words on the screen. Point to the words!\""
+            ],
+            "studentActions": [
+              "Children sing and point to the words on the screen."
+            ],
+            "watchFor": [
+              "Children who only watch: give them the gesture to do (wave, hug self)."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus)"
+          },
+          "harder": {
+            "en": "Children sing the verse without the video.",
+            "th": "เด็ก ๆ ร้องท่อนเวิร์ส (verse) โดยไม่ใช้วิดีโอ"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "karaoke videos: \"This Is My Family\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบ เปิดวิดีโอคาราโอเกะเป็นเพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เนื้อเพลงอยู่บนจอ"
+            ],
+            "teacherLanguage": [
+              "\"ร้องตามเนื้อเพลงบนจอ ชี้ที่คำ!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ร้องเพลงและชี้ที่คำบนจอ"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ให้เด็กทำท่าประกอบเพลง (โบกมือ กอดตัวเอง)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "day": 3,
+      "title": {
+        "en": "Spell and Read",
+        "th": "สะกดและอ่าน"
+      },
+      "prep": [
+        {
+          "en": "Put one card for the letter m in each child's letter card set (with the cards for the letters a, n, and p).",
+          "th": "ใส่บัตรตัวอักษร m 1 ใบ ในชุดบัตรตัวอักษรของเด็กแต่ละคน (รวมกับบัตรตัวอักษร a, n และ p)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "C1",
+          "title": {
+            "en": "Sound review",
+            "th": "ทบทวนเสียง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the cards for the letters m, n, a, and p fast, in a mixed order.",
+              "Children say the sound and do the action of the card."
+            ],
+            "teacherLanguage": [
+              "\"What sound? Mmm! Two hills!\"",
+              "\"What sound? Nnn! Nod!\"",
+              "\"Again, faster!\""
+            ],
+            "studentActions": [
+              "Children say the sound and do the action."
+            ],
+            "watchFor": [
+              "Children who mix up the letters m and n: count the hills of the letter with them."
+            ]
+          },
+          "easier": {
+            "en": "Show each card two times in the same order before the fast round.",
+            "th": "ชูบัตรแต่ละใบ 2 ครั้งตามลำดับเดิมก่อนรอบเร็ว"
+          },
+          "harder": {
+            "en": "Show a card for a short time only, then hide it.",
+            "th": "ชูบัตรเพียงช่วงสั้น ๆ แล้วซ่อน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: m, n, a, p"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรตัวอักษร m, n, a และ p อย่างรวดเร็ว แบบสลับลำดับ",
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียงของบัตรนั้น"
+            ],
+            "teacherLanguage": [
+              "\"เสียงอะไร? Mmm! เนิน 2 ลูก!\"",
+              "\"เสียงอะไร? Nnn! พยักหน้า!\"",
+              "\"อีกครั้ง เร็วขึ้น!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียง"
+            ],
+            "watchFor": [
+              "เด็กที่สับสนระหว่างตัวอักษร m กับ n: นับเนินของตัวอักษรพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "C2",
+          "title": {
+            "en": "Letter cards",
+            "th": "บัตรตัวอักษร"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Each child has a workmat and the letter cards m, a, n, p.",
+              "Build a chain, one change at a time: the word am, then an, then man, then map, then nap.",
+              "Children push one card into a box for each sound and say the sound, then read the word."
+            ],
+            "teacherLanguage": [
+              "\"Make am. /a/ - mmm. Push the cards.\"",
+              "\"Change the letter m to the letter n. What is the word now? An!\"",
+              "\"Put the letter m at the start. Mmm - /a/ - nnn. Man!\"",
+              "\"Change the letter n to the letter p. Mmm - /a/ - /p/. Map! Now change the letter m to the letter n. Nnn - /a/ - /p/. Nap!\""
+            ],
+            "studentActions": [
+              "Children push the cards, say the sounds, and read each word."
+            ],
+            "watchFor": [
+              "Children who change the wrong card: say the old word and the new word slowly, and ask which sound is new."
+            ]
+          },
+          "easier": {
+            "en": "Build only \"am\", \"an\", and \"man\", with the teacher.",
+            "th": "ต่อเฉพาะคำ \"am\", \"an\" และ \"man\" พร้อมครู"
+          },
+          "harder": {
+            "en": "The child builds \"map\" and \"nap\" with no help, and reads both words.",
+            "th": "เด็กต่อคำ \"map\" และ \"nap\" ด้วยตัวเอง และอ่านทั้ง 2 คำ"
+          },
+          "group": {
+            "en": "Pairs share one workmat and take turns to push the cards.",
+            "th": "ทำเป็นคู่: ใช้แผ่นรองกิจกรรมร่วมกัน 1 แผ่น และผลัดกันเลื่อนบัตร"
+          },
+          "materials": [
+            "workmats (class set)",
+            "letter cards (class set): m, a, n, p"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็กแต่ละคนมีแผ่นรองกิจกรรม 1 แผ่น และบัตรตัวอักษร m, a, n, p",
+              "ต่อคำทีละขั้น โดยเพิ่มหรือเปลี่ยนบัตรครั้งละ 1 ใบ: คำ am แล้ว an แล้ว man แล้ว map แล้ว nap",
+              "เด็ก ๆ เลื่อนบัตรเข้าช่องทีละใบ ใบละ 1 เสียง และออกเสียงนั้น แล้วอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"ต่อคำ am /a/ - mmm เลื่อนบัตร\"",
+              "\"เปลี่ยนตัวอักษร m เป็นตัวอักษร n ตอนนี้เป็นคำอะไร? An!\"",
+              "\"วางบัตรตัวอักษร m ไว้ข้างหน้า Mmm - /a/ - nnn Man!\"",
+              "\"เปลี่ยนตัวอักษร n เป็นตัวอักษร p Mmm - /a/ - /p/ Map! ทีนี้เปลี่ยนตัวอักษร m เป็นตัวอักษร n Nnn - /a/ - /p/ Nap!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เลื่อนบัตร ออกเสียง และอ่านแต่ละคำ"
+            ],
+            "watchFor": [
+              "เด็กที่เปลี่ยนบัตรผิดใบ: พูดคำเดิมและคำใหม่ช้า ๆ แล้วถามว่าเสียงไหนเป็นเสียงใหม่"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "title": {
+            "en": "Dictation",
+            "th": "เขียนตามคำบอก"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Say the sound mmm; children say it, then write the letter m in the book. Do it two times.",
+              "Say \"map\". Children say the sounds on three fingers, then write the word in three boxes.",
+              "Then children trace the sentence \"This is a map.\" on the line."
+            ],
+            "teacherLanguage": [
+              "\"When I say mmm, you write the letter m. Ready? Mmm.\"",
+              "\"Listen: map. Say the sounds on your fingers: mmm - /a/ - /p/. Write one letter in each box.\"",
+              "\"Now trace: This is a map. A big letter T. A full stop at the end.\""
+            ],
+            "studentActions": [
+              "Children write the letter m two times and the word \"map\" in the book.",
+              "Children trace \"This is a map.\""
+            ],
+            "watchFor": [
+              "Children who write the letter m with one hill: count the hills with them: one, two."
+            ]
+          },
+          "easier": {
+            "en": "Children trace \"map\" before they write it.",
+            "th": "เด็ก ๆ ลากเส้นตาม \"map\" ก่อนเขียนเอง"
+          },
+          "harder": {
+            "en": "Children write \"man\" in three boxes, too.",
+            "th": "เด็ก ๆ เขียน \"man\" ใน 3 ช่องด้วย"
+          },
+          "group": {
+            "en": "Pairs check each other's letter m: start at the dot, down, up, over the hill, down, up, over the hill, down.",
+            "th": "ทำเป็นคู่: ตรวจตัวอักษร m ของกันและกัน (เริ่มที่จุด ลง ขึ้น ข้ามเนิน ลง ขึ้น ข้ามเนิน ลง)"
+          },
+          "materials": [
+            "student book: dictation lines"
+          ],
+          "th": {
+            "teacherActions": [
+              "ออกเสียง mmm เด็ก ๆ พูดตาม แล้วเขียนตัวอักษร m ในหนังสือ ทำ 2 ครั้ง",
+              "พูด \"map\" เด็ก ๆ ออกเสียงทีละเสียงพร้อมชูนิ้วเสียงละ 1 นิ้ว แล้วเขียนคำลงใน 3 ช่อง",
+              "จากนั้นเด็ก ๆ ลากเส้นตามประโยค \"This is a map.\" บนบรรทัด"
+            ],
+            "teacherLanguage": [
+              "\"เมื่อครูพูด mmm ให้เด็ก ๆ เขียนตัวอักษร m พร้อมไหม? Mmm\"",
+              "\"ฟัง: map ออกเสียงทีละเสียงและชูนิ้วทีละนิ้ว: mmm - /a/ - /p/ เขียนตัวอักษรช่องละ 1 ตัว\"",
+              "\"ทีนี้ลากเส้นตาม: This is a map (นี่คือแผนที่) T ตัวพิมพ์ใหญ่ ใส่จุดที่ท้ายประโยค\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เขียนตัวอักษร m 2 ครั้ง และเขียนคำ \"map\" ในหนังสือ",
+              "เด็ก ๆ ลากเส้นตาม \"This is a map.\""
+            ],
+            "watchFor": [
+              "เด็กที่เขียนตัวอักษร m โดยมีเนินเพียง 1 ลูก: นับเนินพร้อมเด็ก: one, two"
+            ]
+          }
+        },
+        {
+          "id": "C4",
+          "title": {
+            "en": "Decodable: read together",
+            "th": "หนังสือฝึกสะกดอ่าน: อ่านด้วยกัน"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Show the cover of \"Pam\". Read the title and ask what the book is about.",
+              "Show the \"Sounds in this book\" page: the class says mmm, sounds out \"Pam\", \"map\", and \"man\", and reads the tricky words \"is\" and \"this\". Show the word list on the back cover: these are the main words of the book.",
+              "Read page 1 with the class: read \"This\" and \"is\" as tricky words, and sound out \"Pam\" with your finger under the letters.",
+              "Then pairs read: partner A reads a page, partner B reads the next."
+            ],
+            "teacherLanguage": [
+              "\"Look. Pam. Who is Pam? It is Nan's doll!\"",
+              "\"Look at this page. These are the sounds and the words of the book. What sound? Mmm!\"",
+              "\"This is ... Finger under the letters. /p/ - /a/ - mmm. Pam!\"",
+              "\"Your turn with your partner. Partner A reads, partner B reads, partner A reads.\""
+            ],
+            "studentActions": [
+              "Children read each page with a finger under the words.",
+              "Pairs take turns, page by page."
+            ],
+            "watchFor": [
+              "Children who read \"man\" as \"map\" on page 5: point to the last letter and ask for its sound.",
+              "Children sound out \"Pam\", \"nap\", \"pan\", \"map\", \"man\", and \"Nan\" with the letters. The other words are tricky words: this, is, can, in, on, a, the, and."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher, page by page.",
+            "th": "เด็กอ่านพร้อมครูทีละหน้า"
+          },
+          "harder": {
+            "en": "The child reads the whole book alone to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher sits with one pair.",
+            "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
+          },
+          "materials": [
+            "books (one for each pair): \"Pam\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกของ \"Pam\" อ่านชื่อเรื่อง แล้วถามว่าหนังสือเล่มนี้เกี่ยวกับอะไร",
+              "ให้ดูหน้า \"Sounds in this book\" (เสียงในหนังสือเล่มนี้): ทั้งชั้นพูด mmm สะกดออกเสียง \"Pam\", \"map\" และ \"man\" และอ่านคำที่ต้องจำ \"is\" และ \"this\" จากนั้นให้ดูรายการคำที่ปกหลัง: นี่คือคำหลักในหนังสือเล่มนี้",
+              "อ่านหน้า 1 พร้อมทั้งชั้น: อ่าน \"This\" และ \"is\" เป็นคำที่ต้องจำ และสะกดออกเสียง \"Pam\" โดยวางนิ้วใต้ตัวอักษร",
+              "จากนั้นให้อ่านเป็นคู่: คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือ Pam Who is Pam? (Pam คือใคร) It is Nan's doll! (Pam คือตุ๊กตาของ Nan)\"",
+              "\"ดูหน้านี้ นี่คือเสียงและคำในหนังสือ เสียงอะไร? Mmm!\"",
+              "\"This is ... วางนิ้วใต้ตัวอักษร /p/ - /a/ - mmm Pam!\"",
+              "\"ถึงตาเด็ก ๆ อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน คู่คนที่ 1 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
+              "คู่ผลัดกันอ่านทีละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"man\" เป็น \"map\" ในหน้า 5: ชี้ที่ตัวอักษรตัวสุดท้าย แล้วถามว่าออกเสียงอะไร",
+              "เด็ก ๆ สะกดออกเสียง \"Pam\", \"nap\", \"pan\", \"map\", \"man\" และ \"Nan\" ด้วยตัวอักษร คำอื่นเป็นคำที่ต้องจำ: this, is, can, in, on, a, the, and"
+            ]
+          }
+        },
+        {
+          "id": "C5",
+          "title": {
+            "en": "Comprehension",
+            "th": "ตรวจความเข้าใจ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Ask two questions about the book, one with the frame of the week. Children answer with a short sentence."
+            ],
+            "teacherLanguage": [
+              "\"Look at page 5. Who is the man? Nan says: This is my dad!\"",
+              "\"Look at page 3. Where is Pam? In the pan!\""
+            ],
+            "studentActions": [
+              "Children answer, then say the full answer with the teacher."
+            ],
+            "watchFor": [
+              "Children who answer with one word: say the full answer; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Ask only yes or no questions: \"Is Pam in the pan?\"",
+            "th": "ถามเฉพาะคำถามแบบใช่หรือไม่ใช่: \"Is Pam in the pan?\" (Pam อยู่ในกระทะใช่ไหม)"
+          },
+          "harder": {
+            "en": "A child asks a question about a page: \"Where is Pam?\"",
+            "th": "เด็กคนหนึ่งถามคำถามเกี่ยวกับหน้าหนึ่ง: \"Where is Pam?\" (Pam อยู่ที่ไหน)"
+          },
+          "group": {
+            "en": "Pairs ask each other one question.",
+            "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
+          },
+          "materials": [
+            "books (one for each pair): \"Pam\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ถามคำถาม 2 ข้อเกี่ยวกับหนังสือ โดยให้ 1 ข้อใช้กรอบประโยคของสัปดาห์ เด็ก ๆ ตอบเป็นประโยคสั้น ๆ"
+            ],
+            "teacherLanguage": [
+              "\"ดูหน้า 5 Who is the man? (ผู้ชายคนนี้คือใคร) Nan พูดว่า: This is my dad! (นี่คือพ่อของฉัน)\"",
+              "\"ดูหน้า 3 Where is Pam? (Pam อยู่ที่ไหน) In the pan! (อยู่ในกระทะ)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ตอบ แล้วพูดคำตอบเต็มพร้อมครู"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเพียงคำเดียว: พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "C6",
+          "title": {
+            "en": "Favorite page",
+            "th": "หน้าที่ชอบ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask two or three children to read their favorite page of \"Pam\"."
+            ],
+            "teacherLanguage": [
+              "\"Which page do you like? Read it to us.\""
+            ],
+            "studentActions": [
+              "Two or three children read one page each."
+            ],
+            "watchFor": [
+              "Children who are not sure: let them choose a page, then read it with them."
+            ]
+          },
+          "easier": {
+            "en": "The child points to the page; the class reads it.",
+            "th": "เด็กชี้ที่หน้านั้น ทั้งชั้นอ่าน"
+          },
+          "harder": {
+            "en": "The child reads the page and says why: \"I like the man!\"",
+            "th": "เด็กอ่านหน้านั้นและบอกเหตุผล: \"I like the man!\" (หนูชอบผู้ชายคนนั้น!)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "books (one for each pair): \"Pam\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 2 หรือ 3 คนอ่านหน้าที่ชอบใน \"Pam\""
+            ],
+            "teacherLanguage": [
+              "\"หนูชอบหน้าไหน? อ่านให้เราฟัง\""
+            ],
+            "studentActions": [
+              "เด็ก 2 หรือ 3 คนอ่านคนละ 1 หน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่แน่ใจ: ให้เด็กเลือกหน้า แล้วอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "C7",
+          "title": {
+            "en": "Sticker",
+            "th": "สติกเกอร์"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Give each child the sticker of \"Pam\".",
+              "Children put it on number 4 of the book map in their book."
+            ],
+            "teacherLanguage": [
+              "\"You read the book! Here is your sticker.\"",
+              "\"Put it on the book map, on number 4.\""
+            ],
+            "studentActions": [
+              "Children put the sticker on the book map and say the book title."
+            ],
+            "watchFor": [
+              "Children who put the sticker in the wrong place: show number 4 on the map."
+            ]
+          },
+          "easier": {
+            "en": "Put the sticker on the map with the child.",
+            "th": "ติดสติกเกอร์บนแผนที่หนังสือพร้อมกับเด็ก"
+          },
+          "harder": {
+            "en": "The child says the title and reads one page from the book.",
+            "th": "เด็กพูดชื่อหนังสือและอ่าน 1 หน้าจากหนังสือ"
+          },
+          "group": {
+            "en": "The table leader gives out the stickers.",
+            "th": "หัวหน้าโต๊ะแจกสติกเกอร์"
+          },
+          "materials": [
+            "stickers: \"Pam\"",
+            "student book: book map"
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกสติกเกอร์ \"Pam\" ให้เด็กแต่ละคน",
+              "เด็ก ๆ ติดสติกเกอร์ที่หมายเลข 4 ของแผนที่หนังสือในหนังสือของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"เด็ก ๆ อ่านหนังสือจบแล้ว! นี่คือสติกเกอร์ของเด็ก ๆ\"",
+              "\"ติดที่แผนที่หนังสือ ที่หมายเลข 4\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ติดสติกเกอร์บนแผนที่หนังสือ และพูดชื่อหนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่ติดสติกเกอร์ผิดที่: ชี้หมายเลข 4 บนแผนที่หนังสือให้ดู"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "day": 4,
+      "title": {
+        "en": "Read and Write",
+        "th": "อ่านและเขียน"
+      },
+      "prep": [
+        {
+          "en": "Put crayons on each table, and mark the writing page in the student books (D4).",
+          "th": "วางสีเทียนไว้ทุกโต๊ะ และคั่นหน้ากิจกรรมเขียนในหนังสือนักเรียนไว้ (D4)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "D1",
+          "title": {
+            "en": "Re-read",
+            "th": "อ่านซ้ำ"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Children read \"Pam\" again in pairs, with a finger under the words. Partner A reads a page, partner B reads the next.",
+              "Sit with one table and listen to each child read two pages."
+            ],
+            "teacherLanguage": [
+              "\"Read the book again. Finger under the words.\"",
+              "\"Read page 4 to me. Good! Pam is on a map.\""
+            ],
+            "studentActions": [
+              "Children read the book in pairs, with a finger under each word."
+            ],
+            "watchFor": [
+              "Note on the record sheet the children who cannot yet sound out \"map\" and \"man\"."
+            ]
+          },
+          "easier": {
+            "en": "The child reads together with the partner.",
+            "th": "เด็กอ่านพร้อมกับคู่"
+          },
+          "harder": {
+            "en": "The child reads the book alone to the partner.",
+            "th": "เด็กอ่านหนังสือให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher listens to one table.",
+            "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
+          },
+          "materials": [
+            "books (one for each pair): \"Pam\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ อ่าน \"Pam\" อีกครั้งเป็นคู่ โดยวางนิ้วใต้คำ คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป",
+              "นั่งกับ 1 โต๊ะ และฟังเด็กแต่ละคนอ่าน 2 หน้า"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสืออีกครั้ง วางนิ้วใต้คำ\"",
+              "\"อ่านหน้า 4 ให้ครูฟัง เก่งมาก! Pam is on a map. (Pam อยู่บนแผนที่)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านหนังสือเป็นคู่ โดยวางนิ้วใต้แต่ละคำ"
+            ],
+            "watchFor": [
+              "จดในแบบบันทึกผล: เด็กที่ยังสะกดออกเสียง \"map\" และ \"man\" ไม่ได้"
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "title": {
+            "en": "Tricky words",
+            "th": "คำที่ต้องจำ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Show the cards a, and, can, I, in, on, the, get, is, this fast.",
+              "Write \"this\" on the board, then erase one letter; children say the missing letter."
+            ],
+            "teacherLanguage": [
+              "\"Read it fast! This. Is. The. Get. I. In. On. Can. And. A.\"",
+              "\"Close your eyes. ... Open your eyes. What is missing?\""
+            ],
+            "studentActions": [
+              "Children read the cards fast.",
+              "Children say the missing letter name."
+            ],
+            "watchFor": [
+              "Read the word card a as \"uh\", as in \"a cat\".",
+              "Children who mix up \"is\" and \"in\": put the two cards side by side and read them slowly."
+            ]
+          },
+          "easier": {
+            "en": "Show only the new cards: is, this.",
+            "th": "ชูเฉพาะบัตรใหม่: is, this"
+          },
+          "harder": {
+            "en": "Erase two letters of \"this\".",
+            "th": "ลบตัวอักษร 2 ตัวของ \"this\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "tricky word cards: a, and, can, I, in, on, the, get, is, this",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตร a, and, can, I, in, on, the, get, is, this อย่างรวดเร็ว",
+              "เขียน \"this\" บนกระดาน แล้วลบตัวอักษร 1 ตัว เด็ก ๆ บอกตัวอักษรที่หายไป"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเร็ว ๆ! This, is, the, get, I, in, on, can, and, a\"",
+              "\"หลับตา ... ลืมตา อะไรหายไป?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรอย่างรวดเร็ว",
+              "เด็ก ๆ บอกชื่อตัวอักษรที่หายไป"
+            ],
+            "watchFor": [
+              "อ่านบัตรคำ a ว่า \"uh\" แบบใน \"a cat\"",
+              "เด็กที่สับสนระหว่าง \"is\" กับ \"in\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
+            ]
+          }
+        },
+        {
+          "id": "D3",
+          "title": {
+            "en": "Leveled reader",
+            "th": "หนังสืออ่านแบ่งระดับ"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "Give out the class set of \"My Family\" (Sprout band).",
+              "Read it together once, then pairs read it page by page."
+            ],
+            "teacherLanguage": [
+              "\"Open your book. Read with me.\"",
+              "\"Now read it with your partner. Partner A reads, partner B reads.\""
+            ],
+            "studentActions": [
+              "Children read \"My Family\" together, then in pairs."
+            ],
+            "watchFor": [
+              "Children who read a family word wrong: point to the person in the picture."
+            ]
+          },
+          "easier": {
+            "en": "Pairs read only pages 1 to 4.",
+            "th": "คู่อ่านเฉพาะหน้า 1 ถึง 4"
+          },
+          "harder": {
+            "en": "The child reads the whole book to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟัง"
+          },
+          "group": {
+            "en": "Pairs.",
+            "th": "ทำเป็นคู่"
+          },
+          "materials": [
+            "books (one for each pair): \"My Family\""
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกหนังสือ \"My Family\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
+            ],
+            "teacherLanguage": [
+              "\"เปิดหนังสือ อ่านพร้อมครู\"",
+              "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่าน \"My Family\" พร้อมกัน แล้วอ่านเป็นคู่"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านคำศัพท์ครอบครัวผิด: ชี้ที่คนในภาพ"
+            ]
+          }
+        },
+        {
+          "id": "D4",
+          "title": {
+            "en": "Write it",
+            "th": "เขียน"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Part 1 (5 min): write \"This is my ___.\" on the board. Show where the big letter and the full stop go.",
+              "Children trace \"This is my\" in the book. Then they choose one word under the box (mom, dad, brother, sister, grandma, grandpa, family), trace it, and draw that person in the box.",
+              "Stand-and-sing break (at minute 5): all children stand up and sing the chorus with the gestures: \"Mom, Dad, my family! This is my family, my family and me!\" Then they sit down.",
+              "Part 2 (5 min): in the second box, children draw one more person. They find the family word under the box (the same seven words) and trace it."
+            ],
+            "teacherLanguage": [
+              "\"A big letter at the start. A full stop at the end.\"",
+              "\"Trace the words: This is my ... Now find your word and trace it.\"",
+              "\"Draw the person in the box.\"",
+              "\"Stand up! Sing with me: Mom, Dad, my family!\"",
+              "\"Now draw one more person. Who is it? Find the word and trace it.\""
+            ],
+            "studentActions": [
+              "Children trace the frame, choose a family word, and draw that person.",
+              "Children stand and sing the chorus with the gestures in the break.",
+              "Children draw a second person, then find and trace the family word."
+            ],
+            "watchFor": [
+              "Children whose person is not under the box (an aunt, an uncle): let them trace \"family\" and draw that person."
+            ]
+          },
+          "easier": {
+            "en": "Draw with the child; the child traces the words.",
+            "th": "วาดภาพพร้อมกับเด็ก แล้วให้เด็กลากเส้นตามคำ"
+          },
+          "harder": {
+            "en": "The child traces a second line for the second picture: \"This is my ___.\" with the word from the box.",
+            "th": "เด็กลากเส้นตามบรรทัดที่สองสำหรับภาพที่สอง: \"This is my ___.\" แล้วเติมคำศัพท์จากใต้ช่องนั้น"
+          },
+          "group": {
+            "en": "Alone; at the end, the children make pairs and show each other the page.",
+            "th": "ทำคนเดียว ตอนท้ายให้เด็กจับคู่และเปิดหน้านั้นให้กันดู"
+          },
+          "materials": [
+            "student book: writing page",
+            "crayons",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ส่วนที่ 1 (5 นาที): เขียน \"This is my ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน",
+              "เด็ก ๆ ลากเส้นตาม \"This is my\" ในหนังสือ จากนั้นเลือกคำ 1 คำใต้ช่อง (mom, dad, brother, sister, grandma, grandpa, family) ลากเส้นตามคำนั้น และวาดภาพคนนั้นในช่อง",
+              "พักยืนร้องเพลง (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น และร้องท่อนฮุก (chorus) พร้อมทำท่าประกอบเพลง: \"Mom, Dad, my family! This is my family, my family and me!\" แล้วนั่งลง",
+              "ส่วนที่ 2 (5 นาที): เด็ก ๆ วาดคนเพิ่มอีก 1 คนในช่องที่สอง แล้วหาคำศัพท์ครอบครัวใต้ช่อง (คำ 7 คำชุดเดียวกัน) และลากเส้นตามคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่จุดที่ท้ายประโยค\"",
+              "\"ลากเส้นตามคำ: This is my ... ทีนี้หาคำของหนูแล้วลากเส้นตาม\"",
+              "\"วาดภาพคนนั้นในช่อง\"",
+              "\"Stand up! (ยืนขึ้น) ร้องพร้อมครู: Mom, Dad, my family!\"",
+              "\"ทีนี้วาดคนเพิ่มอีก 1 คน Who is it? (คนนี้คือใคร) หาคำนั้นแล้วลากเส้นตาม\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ลากเส้นตามกรอบประโยค เลือกคำศัพท์ครอบครัว และวาดภาพคนนั้น",
+              "เด็ก ๆ ยืนและร้องท่อนฮุกพร้อมทำท่าประกอบเพลงในช่วงพัก",
+              "เด็ก ๆ วาดคนที่สอง แล้วหาคำศัพท์ครอบครัวและลากเส้นตาม"
+            ],
+            "watchFor": [
+              "เด็กที่อยากวาดคนที่ไม่มีคำอยู่ใต้ช่อง (เช่น ลุง ป้า น้า หรืออา): ให้เด็กลากเส้นตามคำ \"family\" และวาดภาพคนนั้น"
+            ]
+          }
+        },
+        {
+          "id": "D5",
+          "title": {
+            "en": "Share",
+            "th": "นำเสนอ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask four children to read their page to the class."
+            ],
+            "teacherLanguage": [
+              "\"Read your page to us. Hold up your book.\""
+            ],
+            "studentActions": [
+              "Four children read \"This is my ___.\" from their book and show their picture."
+            ],
+            "watchFor": [
+              "Children who read too quietly: stand next to them and read with them."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher.",
+            "th": "เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "The child reads both lines and points to the people.",
+            "th": "เด็กอ่านทั้ง 2 บรรทัด และชี้ที่คนในภาพ"
+          },
+          "group": {
+            "en": "Whole class; the class waves at the picture.",
+            "th": "ทั้งชั้น: ทั้งชั้นโบกมือให้ภาพนั้น"
+          },
+          "materials": [
+            "student book: writing page"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 4 คนอ่านหน้าของตัวเองให้ทั้งชั้นฟัง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหน้าของหนูให้เราฟัง ชูหนังสือขึ้น\""
+            ],
+            "studentActions": [
+              "เด็ก 4 คนอ่าน \"This is my ___.\" จากหนังสือของตัวเอง และให้ทั้งชั้นดูภาพของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านเบาเกินไป: ยืนข้างเด็กและอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "D6",
+          "title": {
+            "en": "Sing it: song show",
+            "th": "ร้องเพลง: การแสดงร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the day 5 opening, the song of the week (item 3) is the song show. The class sings with all the gestures; one table leads.",
+              "If the school allows it, film the song on the class tablet."
+            ],
+            "teacherLanguage": [
+              "\"Table 4, you are the leaders today. Show us the gestures!\"",
+              "\"Show time! Sing it with all the gestures!\""
+            ],
+            "studentActions": [
+              "The leaders do the gestures in front; the class sings and copies."
+            ],
+            "watchFor": [
+              "Leaders who forget a gesture: point to the screen.",
+              "Children who are shy on the film: they can stand in the back row."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus with the gestures.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus) พร้อมท่าประกอบเพลง"
+          },
+          "harder": {
+            "en": "The leaders sing the verse alone.",
+            "th": "ผู้นำร้องท่อนเวิร์ส (verse) เอง"
+          },
+          "group": {
+            "en": "One table leads each week.",
+            "th": "โต๊ะหนึ่งเป็นผู้นำในแต่ละสัปดาห์"
+          },
+          "materials": [
+            "karaoke videos: \"This Is My Family\"",
+            "class tablet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบของวันที่ 5 เพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เป็นการแสดงร้องเพลง ทั้งชั้นร้องพร้อมทำท่าประกอบเพลงทุกท่า โต๊ะหนึ่งเป็นผู้นำ",
+              "ถ้าโรงเรียนอนุญาต ให้ถ่ายวิดีโอการร้องเพลงด้วยแท็บเล็ตของห้อง"
+            ],
+            "teacherLanguage": [
+              "\"โต๊ะ 4 วันนี้เป็นผู้นำ ทำท่าประกอบเพลงให้เพื่อน ๆ ดู!\"",
+              "\"ถึงเวลาแสดงแล้ว! ร้องพร้อมทำท่าประกอบเพลงทุกท่า!\""
+            ],
+            "studentActions": [
+              "ผู้นำทำท่าประกอบเพลงอยู่ด้านหน้า ทั้งชั้นร้องและทำท่าตาม"
+            ],
+            "watchFor": [
+              "ผู้นำที่ลืมท่า: ชี้ที่จอ",
+              "เด็กที่อายกล้อง: ให้ยืนแถวหลังได้"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "day": 5,
+      "title": {
+        "en": "Play and Check",
+        "th": "เล่นและตรวจสอบ"
+      },
+      "prep": [
+        {
+          "en": "Put the new cards and books of week 4 in the four centers. Make two word cards each of am, man, map, Pam, nap, and pan for the game.",
+          "th": "นำบัตรและหนังสือชุดใหม่ของสัปดาห์ที่ 4 ไปวางที่มุมกิจกรรมทั้ง 4 มุม และทำบัตรคำ am, man, map, Pam, nap และ pan คำละ 2 ใบสำหรับเกม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "E1",
+          "title": {
+            "en": "Centers set-up",
+            "th": "จัดมุมกิจกรรม"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the four centers and the group signs. Send each group to its first center.",
+              "Groups 1 and 2 start at the karaoke corner and the picture sort; groups 3 and 4 at the letter cards and the book corner.",
+              "Hold up each sound picture card and say the word with the class: monkey, mouse, mango, milk."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, go to the karaoke corner. Group 2, the picture sort.\"",
+              "\"Group 3, the letter cards. Group 4, the book corner.\""
+            ],
+            "studentActions": [
+              "Children go to their center and sit down."
+            ],
+            "watchFor": [
+              "Groups that do not know where to go: point to the group sign at each center."
+            ]
+          },
+          "easier": {
+            "en": "Put a picture of each group on its center.",
+            "th": "ติดภาพของแต่ละกลุ่มไว้ที่มุมกิจกรรมของกลุ่มนั้น"
+          },
+          "harder": {
+            "en": "A group leader shows the center card to the group and does the first turn.",
+            "th": "หัวหน้ากลุ่มให้กลุ่มดูบัตรมุมกิจกรรม และเล่นเป็นคนแรก"
+          },
+          "group": {
+            "en": "Four groups.",
+            "th": "4 กลุ่ม"
+          },
+          "materials": [
+            "center cards",
+            "group signs",
+            "sound picture cards: monkey, mouse, mango, milk"
+          ],
+          "th": {
+            "teacherActions": [
+              "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
+              "กลุ่ม 1 และ 2 เริ่มที่มุมคาราโอเกะและมุมแยกภาพ กลุ่ม 3 และ 4 เริ่มที่มุมบัตรตัวอักษรและมุมหนังสือ",
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: monkey, mouse, mango, milk"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปมุมคาราโอเกะ กลุ่ม 2 ไปที่มุมแยกภาพ\"",
+              "\"กลุ่ม 3 ไปที่มุมบัตรตัวอักษร กลุ่ม 4 ไปมุมหนังสือ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ไปที่มุมกิจกรรมของตัวเองและนั่งลง"
+            ],
+            "watchFor": [
+              "กลุ่มที่ไม่รู้ว่าต้องไปที่ไหน: ชี้ที่ป้ายกลุ่มของแต่ละมุมกิจกรรม"
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups work at their center. Picture sort: sort the picture cards into \"mmm at the start\" and \"not mmm\". Letter cards: build the words \"man\" and \"map\", and read them. Book corner: read the eight books of weeks 1 to 4. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"Pam\"; mark the record sheet."
+            ],
+            "teacherLanguage": [
+              "\"Read the book to me. Finger under the words.\"",
+              "\"Good! Sound it out: mmm - /a/ - /p/. Map!\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Note the children who guess the words from the picture and do not look at the letters."
+            ]
+          },
+          "easier": {
+            "en": "At the reading table, the child reads with the teacher.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "At the reading table, the child reads the whole book alone.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านทั้งเล่มด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "sorting mat: mmm / not mmm",
+            "sound picture cards: monkey, mouse, mango, milk",
+            "picture cards: cat, sun, fish",
+            "workmats (class set)",
+            "letter cards (class set): m, a, n, p",
+            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\"",
+            "class tablet",
+            "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\", \"This Is My Family\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่ขึ้นต้นด้วย mmm และกองที่ไม่ได้ขึ้นต้นด้วย mmm มุมบัตรตัวอักษร: ต่อคำ \"man\" และ \"map\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 8 เล่มของสัปดาห์ที่ 1 ถึง 4 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"Pam\" แล้วบันทึกในแบบบันทึกผล"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\"",
+              "\"เก่งมาก! สะกดออกเสียง: mmm - /a/ - /p/ Map!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "จดชื่อเด็กที่เดาคำจากภาพ โดยไม่ดูตัวอักษร"
+            ]
+          }
+        },
+        {
+          "id": "E3",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups change: 1 and 2 go to the picture sort and the karaoke corner; 3 and 4 go to the book corner and the letter cards.",
+              "Listen to two more children at the reading-record table."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the picture sort. Group 2, the karaoke corner. Group 3, the book corner. Group 4, the letter cards.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children change centers and work.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Groups that change slowly: count down from five."
+            ]
+          },
+          "easier": {
+            "en": "Keep the same center for a group that needs more time.",
+            "th": "ให้กลุ่มที่ต้องการเวลามากขึ้นอยู่ที่มุมเดิม"
+          },
+          "harder": {
+            "en": "Groups that finish early read the word wall words to each other.",
+            "th": "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มสลับมุม: กลุ่ม 1 และ 2 ไปที่มุมแยกภาพและมุมคาราโอเกะ กลุ่ม 3 และ 4 ไปที่มุมหนังสือและมุมบัตรตัวอักษร",
+              "ฟังเด็กอีก 2 คนอ่านที่โต๊ะบันทึกการอ่าน"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปที่มุมแยกภาพ กลุ่ม 2 ไปมุมคาราโอเกะ กลุ่ม 3 ไปมุมหนังสือ กลุ่ม 4 ไปที่มุมบัตรตัวอักษร\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เปลี่ยนมุมกิจกรรมและทำกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "กลุ่มที่เปลี่ยนมุมช้า: นับถอยหลังจาก 5"
+            ]
+          }
+        },
+        {
+          "id": "E4",
+          "title": {
+            "en": "Game",
+            "th": "เกม"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Play \"Match the words\": stick eight word cards face down on the board: two cards each of am, man, map, Pam.",
+              "A child turns over two cards and reads them. If the two words are the same, the child keeps them. If not, turn them face down again."
+            ],
+            "teacherLanguage": [
+              "\"Turn over a card. Read it: map!\"",
+              "\"Turn over one more. Man! Is it the same? No. Turn them back.\"",
+              "\"Next child. Ready?\""
+            ],
+            "studentActions": [
+              "One child at a time turns two cards and reads them.",
+              "The class reads each word with the child."
+            ],
+            "watchFor": [
+              "Children who forget where a card is: let the class point and help."
+            ]
+          },
+          "easier": {
+            "en": "Use only four cards: two cards each of am and man.",
+            "th": "ใช้บัตรเพียง 4 ใบ: am และ man คำละ 2 ใบ"
+          },
+          "harder": {
+            "en": "Add two cards each of nap and pan.",
+            "th": "เพิ่มบัตร nap และ pan คำละ 2 ใบ"
+          },
+          "group": {
+            "en": "Two teams; one child from each team at a time.",
+            "th": "2 ทีม ทีมละ 1 คนในแต่ละครั้ง"
+          },
+          "materials": [
+            "word cards (two of each): am, man, map, Pam, nap, pan"
+          ],
+          "th": {
+            "teacherActions": [
+              "เล่นเกม \"Match the words\" (จับคู่คำ): คว่ำบัตรคำ 8 ใบติดไว้บนกระดาน: am, man, map, Pam คำละ 2 ใบ",
+              "เด็กคนหนึ่งเปิดบัตร 2 ใบและอ่านคำ ถ้าคำทั้ง 2 คำเหมือนกัน เด็กเก็บบัตรไว้ ถ้าไม่เหมือนกัน ให้คว่ำบัตรกลับไว้เหมือนเดิม"
+            ],
+            "teacherLanguage": [
+              "\"เปิดบัตร 1 ใบ อ่าน: map!\"",
+              "\"เปิดอีก 1 ใบ Man! เหมือนกันไหม? ไม่เหมือน คว่ำบัตรกลับไว้\"",
+              "\"คนต่อไป พร้อมไหม?\""
+            ],
+            "studentActions": [
+              "เด็กทีละคนเปิดบัตร 2 ใบและอ่านคำ",
+              "ทั้งชั้นอ่านแต่ละคำพร้อมกับเด็ก"
+            ],
+            "watchFor": [
+              "เด็กที่จำไม่ได้ว่าบัตรอยู่ที่ไหน: ให้ทั้งชั้นช่วยชี้"
+            ]
+          }
+        },
+        {
+          "id": "E5",
+          "title": {
+            "en": "Check",
+            "th": "ตรวจสอบ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Children do the check page: in rows 1 to 3, circle the picture that starts with mmm; in rows 4 and 5, circle the word that you say. Then they write the letter m and the word \"map\".",
+              "Collect the books and mark the check."
+            ],
+            "teacherLanguage": [
+              "\"Row 1: monkey, cat, sun. Which one starts with mmm? Circle it.\"",
+              "\"Row 2: dog, mouse, bus. Which one starts with mmm? Circle it.\"",
+              "\"Row 3: fish, hat, milk. Which one starts with mmm? Circle it.\"",
+              "\"Row 4. Find the word man. Circle it.\"",
+              "\"Row 5. Find the word this. Circle it.\"",
+              "\"Now write the letter m. Then write the word map.\""
+            ],
+            "studentActions": [
+              "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter m, and write \"map\"."
+            ],
+            "watchFor": [
+              "Children who circle every picture, or a wrong picture in two rows: mark mmm as weak on the record sheet; it goes back on the review strip.",
+              "Children who circle a wrong word in row 4 or row 5: mark that word as weak; it goes back on the review strip."
+            ]
+          },
+          "easier": {
+            "en": "Sit next to the child and point to each picture while you say it.",
+            "th": "นั่งข้างเด็ก และชี้แต่ละภาพขณะพูดคำ"
+          },
+          "harder": {
+            "en": "The child writes \"man\" too.",
+            "th": "เด็กเขียน \"man\" ด้วย"
+          },
+          "group": {
+            "en": "Alone.",
+            "th": "ทำคนเดียว"
+          },
+          "materials": [
+            "student book: check page",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย mmm แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร m และคำ \"map\"",
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+            ],
+            "teacherLanguage": [
+              "\"แถว 1: monkey, cat, sun คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
+              "\"แถว 2: dog, mouse, bus คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
+              "\"แถว 3: fish, hat, milk คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
+              "\"แถว 4 หาคำว่า man วงกลมไว้\"",
+              "\"แถว 5 หาคำว่า this วงกลมไว้\"",
+              "\"ทีนี้เขียนตัวอักษร m แล้วเขียนคำ map\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร m และเขียน \"map\""
+            ],
+            "watchFor": [
+              "เด็กที่วงกลมทุกภาพ หรือวงกลมภาพผิดใน 2 แถว: บันทึกในแบบบันทึกผลว่าเสียง mmm ยังไม่แม่น แล้วเสียงนี้จะกลับไปอยู่บนแถบทบทวน",
+              "เด็กที่วงกลมคำผิดในแถว 4 หรือแถว 5: บันทึกว่าคำนั้นยังไม่แม่น แล้วคำนั้นจะกลับไปอยู่บนแถบทบทวน"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "review": [
+    {
+      "day": 1,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "It is ___.",
+          "week": 3
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "It is ___.",
+          "week": 3
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "It is ___.",
+          "week": 3
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "It is ___.",
+          "week": 3
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "a",
+          "week": 2,
+          "audio": "phonemes/daniel/26-a-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "I",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "in",
+          "week": 2
+        },
+        {
+          "kind": "tricky",
+          "text": "on",
+          "week": 2
+        },
+        {
+          "kind": "frame",
+          "text": "It is ___.",
+          "week": 3
+        }
+      ]
+    }
+  ],
+  "check": {
+    "items": [
+      {
+        "kind": "circle-picture",
+        "sound": "/m/",
+        "pictures": [
+          "monkey",
+          "cat",
+          "sun"
+        ],
+        "answer": "monkey"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/m/",
+        "pictures": [
+          "dog",
+          "mouse",
+          "bus"
+        ],
+        "answer": "mouse"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/m/",
+        "pictures": [
+          "fish",
+          "hat",
+          "milk"
+        ],
+        "answer": "milk"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "map",
+          "man",
+          "nap"
+        ],
+        "answer": "man"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "is",
+          "the",
+          "this"
+        ],
+        "answer": "this"
+      },
+      {
+        "kind": "write-letter",
+        "letter": "m"
+      },
+      {
+        "kind": "write-word",
+        "word": "map"
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "monkey",
+      "milk",
+      "mango"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"mmm\" (lips together, a hum, not \"muh\"), as in \"milk\". Your child also learns to say \"This is my ___.\" in English, for example \"This is my grandma.\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"mmm\" เหมือนในคำว่า \"milk\" โดยประกบริมฝีปากเข้าหากันแล้วฮัมเสียง ไม่ใช่ \"muh\" (เมอะ) และบุตรหลานยังได้ฝึกพูด \"This is my ___.\" (นี่คือ ___ ของฉัน) เป็นภาษาอังกฤษ เช่น \"This is my grandma.\" (นี่คือย่าหรือยายของฉัน)"
+    },
+    "activity": {
+      "en": "Look at family photos together. Point to a person; your child says \"This is my ___.\" in English. Then hum \"mmm\" together and say \"mmmilk\" and \"mmmango\".",
+      "th": "ดูรูปถ่ายครอบครัวด้วยกัน ชี้ที่คนคนหนึ่งในรูป ให้บุตรหลานพูดเป็นภาษาอังกฤษว่า \"This is my ___.\" (นี่คือ ___ ของฉัน) จากนั้นฮัมเสียง \"mmm\" พร้อมกับบุตรหลาน แล้วพูด \"mmmilk\" (นม) และ \"mmmango\" (มะม่วง)"
+    },
+    "songUrl": "/th/st/2/4?part=song",
+    "readAlongUrl": "/th/st/2/4?part=book"
+  },
+  "tags": {
+    "graphVersion": "phonics-v1",
+    "taught": [
+      "english.phonics.gpc.m.m",
+      "english.phonics.phoneme.m",
+      "english.phonics.letter.m.sound",
+      "english.phonics.letter.m.name",
+      "english.phonics.letter.m.form-lower",
+      "english.phonics.tricky.is",
+      "english.phonics.tricky.this"
+    ],
+    "reviewed": [
+      "english.phonics.gpc.p.p",
+      "english.phonics.gpc.a.short-a",
+      "english.phonics.tricky.the",
+      "english.phonics.tricky.get",
+      "english.phonics.tricky.i",
+      "english.phonics.tricky.in",
+      "english.phonics.tricky.on",
+      "english.phonics.pa.initial-sound.identify",
+      "english.phonics.pa.final-sound.identify",
+      "english.phonics.pa.phoneme.blend-2-3",
+      "english.phonics.pattern.cvc-short-a"
+    ]
+  }
+}

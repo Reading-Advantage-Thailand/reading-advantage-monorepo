@@ -1,0 +1,4780 @@
+{
+  "approval": {
+    "text": {
+      "status": "approved",
+      "date": "2026-11-01",
+      "words": "3. Covers: Approved",
+      "source": "Owner answer relayed by the PM session, 2026-11-01 07:3x ICT. His item 3 answered section 3 of the PM message: the weeks 2 to 8 English text and the Level 2 Unit 1 cover version 3 look. Approved text file ~/Desktop/print-ready/storytime/text-review/Storytime-Advantage-L2-U1-weeks-2-8-English-text.pdf, SHA-256 57f30792532cdae33ae5e66f069fa822aab58df35cc6b6e2c393ca7fbdbba67c, built 2026-10-30."
+    },
+    "thai": {
+      "status": "approved",
+      "date": "2026-10-22",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82"
+    },
+    "images": {
+      "status": "draft"
+    },
+    "audio": {
+      "status": "draft"
+    },
+    "song": {
+      "status": "draft"
+    },
+    "scripts": {
+      "status": "draft"
+    }
+  },
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "shape": "storytime-week",
+    "level": 2,
+    "week": 5,
+    "unit": 1,
+    "key": "st2/5",
+    "kind": "teach",
+    "periodMinutes": 30,
+    "openingMinutes": 6,
+    "title": "I Have Two",
+    "band": "Sprout",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "id": "english.phonics.gpc.s.s",
+      "graphemes": [
+        "s"
+      ],
+      "sound": "/s/",
+      "action": {
+        "en": "Hold your hands round like a balloon, press them slowly together, and let the air out: sss.",
+        "th": "ทำมือ 2 ข้างเป็นวงกลมเหมือนถือลูกโป่ง ค่อย ๆ บีบมือเข้าหากัน แล้วปล่อยลมออก: sss"
+      },
+      "audio": "phonemes/daniel/01-s.mp3"
+    },
+    "paSkill": {
+      "en": "the first sound sss and the last sound sss; blend three sounds by ear",
+      "th": "ฟังเสียงแรก sss และเสียงสุดท้าย sss และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "trickyWords": [
+      "off",
+      "saw",
+      "with"
+    ],
+    "frame": "I have two ___.",
+    "family": {
+      "name": {
+        "en": "Body and face",
+        "th": "ร่างกายและใบหน้า"
+      },
+      "words": [
+        {
+          "word": "eyes",
+          "image": {
+            "prompt": "A close-up of the happy face of Sam (drawn young, about five years old); he points at his two eyes. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": "eyes"
+          }
+        },
+        {
+          "word": "ears",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) points at his two ears with both hands. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": "ears"
+          }
+        },
+        {
+          "word": "nose",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) points at his nose with one finger. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": "nose"
+          }
+        },
+        {
+          "word": "hands",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) holds up his two open hands. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": "hands"
+          }
+        },
+        {
+          "word": "arms",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) holds his two arms out wide. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": "arms"
+          }
+        },
+        {
+          "word": "legs",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) stands and points at his two legs. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": "legs"
+          }
+        },
+        {
+          "word": "feet",
+          "image": {
+            "prompt": "Sam, a five-year-old boy with large dark-brown eyes and short neat dark-brown hair, in a red T-shirt with two white stripes across the chest and blue denim shorts, sits on the floor with bare feet; his blue sneakers with white soles stand next to him. He points at his two bare feet. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "feet"
+          }
+        }
+      ]
+    },
+    "wordWall": [
+      "an",
+      "Nan",
+      "pan",
+      "nap",
+      "am",
+      "man",
+      "map",
+      "Pam",
+      "Sam"
+    ]
+  },
+  "opening": {
+    "pa": [
+      {
+        "en": "\"Listen: sun. What is the first sound? Sss! Listen: bus. What is the last sound? Sss!\"",
+        "th": "\"ฟัง: sun เสียงแรกคือเสียงอะไร? Sss! ฟัง: bus เสียงสุดท้ายคือเสียงอะไร? Sss!\""
+      },
+      {
+        "en": "\"Listen: sock. What is the first sound? Sss! Listen: dress. What is the last sound? Sss!\"",
+        "th": "\"ฟัง: sock เสียงแรกคือเสียงอะไร? Sss! ฟัง: dress เสียงสุดท้ายคือเสียงอะไร? Sss!\""
+      },
+      {
+        "en": "\"Listen: sss - /a/ - mmm. What is the word? Sam! Listen: sss - /u/ - nnn. What is the word? Sun!\"",
+        "th": "\"ฟัง: sss - /a/ - mmm คำนี้คือคำอะไร? Sam! ฟัง: sss - /u/ - nnn คำนี้คือคำอะไร? Sun!\""
+      },
+      {
+        "en": "\"Listen: sss - /a/ - /d/. What is the word? Sad! Listen: sss - /i/ - /t/. What is the word? Sit!\"",
+        "th": "\"ฟัง: sss - /a/ - /d/ คำนี้คือคำอะไร? Sad! ฟัง: sss - /i/ - /t/ คำนี้คือคำอะไร? Sit!\""
+      },
+      {
+        "en": "\"Listen: /b/ - /u/ - sss. What is the word? Bus! Listen: sss - /o/ - /k/. What is the word? Sock!\"",
+        "th": "\"ฟัง: /b/ - /u/ - sss คำนี้คือคำอะไร? Bus! ฟัง: sss - /o/ - /k/ คำนี้คือคำอะไร? Sock!\""
+      }
+    ],
+    "audio": [
+      [
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/01-s.mp3"
+      ],
+      [
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/01-s.mp3"
+      ],
+      [
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/30-u-short.mp3",
+        "phonemes/daniel/04-n.mp3"
+      ],
+      [
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/06-d.mp3",
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/28-i-short.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/11-b.mp3",
+        "phonemes/daniel/30-u-short.mp3",
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/08-c-k.mp3"
+      ]
+    ]
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "title": "I Have Two",
+      "cover": {
+        "prompt": "Sam (drawn young, about five years old) stands in a sunny park with green grass and a low tree with his two arms out wide and a big smile. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Sam"
+        ],
+        "caption": "I Have Two"
+      },
+      "pages": [
+        {
+          "text": "I have two eyes.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) stands in a sunny park with green grass and a low tree and points at his two eyes with a big smile. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I have two ears.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) points at his two ears with both hands in the same sunny park with green grass and a low tree. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I have two hands.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) holds up his two open hands in the same sunny park with green grass and a low tree. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I have two arms.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) holds his two arms out wide in the same sunny park with green grass and a low tree. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I have two legs.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) stands on the grass and points at his two legs. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I have two feet.",
+          "image": {
+            "prompt": "Sam, a five-year-old boy with large dark-brown eyes and short neat dark-brown hair, in a red T-shirt with two white stripes across the chest and blue denim shorts, sits on the grass in the same sunny park with green grass and a low tree with bare feet; his blue sneakers with white soles stand next to him. He points at his two bare feet. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I have one nose.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) points at his nose with one finger and laughs in the same sunny park with green grass and a low tree. Behind the tree, the fluffy golden-brown tail of a small puppy sticks out. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "I have four legs!",
+          "image": {
+            "prompt": "Pip the puppy stands on all four legs on the grass in the same sunny park with green grass and a low tree, seen from the side so that all four legs show, with a happy face and an open mouth; Sam (drawn young, about five years old) kneels next to him, points at Pip's legs, and laughs. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pip",
+              "Sam"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "backWords": [
+        "I",
+        "have",
+        "two",
+        "eyes",
+        "ears",
+        "hands",
+        "arms",
+        "legs",
+        "feet",
+        "nose"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w05/books/1-i-have-two.mp3",
+        "sentences": [
+          {
+            "sentence": "I have two eyes.",
+            "startTime": 0,
+            "endTime": 1.205,
+            "words": [
+              {
+                "word": "I",
+                "start": 0,
+                "end": 0.16
+              },
+              {
+                "word": "have",
+                "start": 0.16,
+                "end": 0.36
+              },
+              {
+                "word": "two",
+                "start": 0.36,
+                "end": 0.64
+              },
+              {
+                "word": "eyes",
+                "start": 0.64,
+                "end": 1.205
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "I have two ears.",
+            "startTime": 2.405,
+            "endTime": 3.683,
+            "words": [
+              {
+                "word": "I",
+                "start": 2.405,
+                "end": 2.625
+              },
+              {
+                "word": "have",
+                "start": 2.625,
+                "end": 2.785
+              },
+              {
+                "word": "two",
+                "start": 2.785,
+                "end": 3.005
+              },
+              {
+                "word": "ears",
+                "start": 3.005,
+                "end": 3.683
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "I have two hands.",
+            "startTime": 4.883,
+            "endTime": 6.342,
+            "words": [
+              {
+                "word": "I",
+                "start": 4.883,
+                "end": 5.103
+              },
+              {
+                "word": "have",
+                "start": 5.103,
+                "end": 5.323
+              },
+              {
+                "word": "two",
+                "start": 5.323,
+                "end": 5.603
+              },
+              {
+                "word": "hands",
+                "start": 5.603,
+                "end": 6.342
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "I have two arms.",
+            "startTime": 7.542,
+            "endTime": 9.11,
+            "words": [
+              {
+                "word": "I",
+                "start": 7.542,
+                "end": 7.702
+              },
+              {
+                "word": "have",
+                "start": 7.702,
+                "end": 7.882
+              },
+              {
+                "word": "two",
+                "start": 7.882,
+                "end": 8.182
+              },
+              {
+                "word": "arms",
+                "start": 8.182,
+                "end": 9.11
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "I have two legs.",
+            "startTime": 10.31,
+            "endTime": 11.585,
+            "words": [
+              {
+                "word": "I",
+                "start": 10.31,
+                "end": 10.53
+              },
+              {
+                "word": "have",
+                "start": 10.53,
+                "end": 10.69
+              },
+              {
+                "word": "two",
+                "start": 10.69,
+                "end": 10.93
+              },
+              {
+                "word": "legs",
+                "start": 10.93,
+                "end": 11.585
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "I have two feet.",
+            "startTime": 12.785,
+            "endTime": 13.901,
+            "words": [
+              {
+                "word": "I",
+                "start": 12.785,
+                "end": 13.005
+              },
+              {
+                "word": "have",
+                "start": 13.005,
+                "end": 13.125
+              },
+              {
+                "word": "two",
+                "start": 13.125,
+                "end": 13.345
+              },
+              {
+                "word": "feet",
+                "start": 13.345,
+                "end": 13.901
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "I have one nose.",
+            "startTime": 15.101,
+            "endTime": 16.573,
+            "words": [
+              {
+                "word": "I",
+                "start": 15.101,
+                "end": 15.341
+              },
+              {
+                "word": "have",
+                "start": 15.341,
+                "end": 15.561
+              },
+              {
+                "word": "one",
+                "start": 15.561,
+                "end": 15.841
+              },
+              {
+                "word": "nose",
+                "start": 15.841,
+                "end": 16.573
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "I have four legs!",
+            "startTime": 17.773,
+            "endTime": 19.248,
+            "words": [
+              {
+                "word": "I",
+                "start": 17.773,
+                "end": 17.953
+              },
+              {
+                "word": "have",
+                "start": 17.953,
+                "end": 18.133
+              },
+              {
+                "word": "four",
+                "start": 18.133,
+                "end": 18.473
+              },
+              {
+                "word": "legs",
+                "start": 18.473,
+                "end": 19.248
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w05/books/1-i-have-two-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "I have two eyes.",
+            "startTime": 0,
+            "endTime": 2.035,
+            "words": [
+              {
+                "word": "I",
+                "start": 0,
+                "end": 0.28
+              },
+              {
+                "word": "have",
+                "start": 0.28,
+                "end": 0.6
+              },
+              {
+                "word": "two",
+                "start": 0.6,
+                "end": 1.06
+              },
+              {
+                "word": "eyes",
+                "start": 1.06,
+                "end": 2.035
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "I have two ears.",
+            "startTime": 3.235,
+            "endTime": 5.004,
+            "words": [
+              {
+                "word": "I",
+                "start": 3.235,
+                "end": 3.535
+              },
+              {
+                "word": "have",
+                "start": 3.535,
+                "end": 3.795
+              },
+              {
+                "word": "two",
+                "start": 3.795,
+                "end": 4.155
+              },
+              {
+                "word": "ears",
+                "start": 4.155,
+                "end": 5.004
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "I have two hands.",
+            "startTime": 6.204,
+            "endTime": 7.873,
+            "words": [
+              {
+                "word": "I",
+                "start": 6.204,
+                "end": 6.464
+              },
+              {
+                "word": "have",
+                "start": 6.464,
+                "end": 6.644
+              },
+              {
+                "word": "two",
+                "start": 6.644,
+                "end": 6.944
+              },
+              {
+                "word": "hands",
+                "start": 6.944,
+                "end": 7.873
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "I have two arms.",
+            "startTime": 9.073,
+            "endTime": 10.827,
+            "words": [
+              {
+                "word": "I",
+                "start": 9.073,
+                "end": 9.353
+              },
+              {
+                "word": "have",
+                "start": 9.353,
+                "end": 9.533
+              },
+              {
+                "word": "two",
+                "start": 9.533,
+                "end": 9.893
+              },
+              {
+                "word": "arms",
+                "start": 9.893,
+                "end": 10.827
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "I have two legs.",
+            "startTime": 12.027,
+            "endTime": 13.989,
+            "words": [
+              {
+                "word": "I",
+                "start": 12.027,
+                "end": 12.227
+              },
+              {
+                "word": "have",
+                "start": 12.227,
+                "end": 12.447
+              },
+              {
+                "word": "two",
+                "start": 12.447,
+                "end": 12.827
+              },
+              {
+                "word": "legs",
+                "start": 12.827,
+                "end": 13.989
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "I have two feet.",
+            "startTime": 15.189,
+            "endTime": 16.794,
+            "words": [
+              {
+                "word": "I",
+                "start": 15.189,
+                "end": 15.429
+              },
+              {
+                "word": "have",
+                "start": 15.429,
+                "end": 15.629
+              },
+              {
+                "word": "two",
+                "start": 15.629,
+                "end": 15.949
+              },
+              {
+                "word": "feet",
+                "start": 15.949,
+                "end": 16.794
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "I have one nose.",
+            "startTime": 17.994,
+            "endTime": 20.084,
+            "words": [
+              {
+                "word": "I",
+                "start": 17.994,
+                "end": 18.314
+              },
+              {
+                "word": "have",
+                "start": 18.314,
+                "end": 18.614
+              },
+              {
+                "word": "one",
+                "start": 18.614,
+                "end": 19.014
+              },
+              {
+                "word": "nose",
+                "start": 19.014,
+                "end": 20.084
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "I have four legs!",
+            "startTime": 21.284,
+            "endTime": 22.826,
+            "words": [
+              {
+                "word": "I",
+                "start": 21.284,
+                "end": 21.504
+              },
+              {
+                "word": "have",
+                "start": 21.504,
+                "end": 21.684
+              },
+              {
+                "word": "four",
+                "start": 21.684,
+                "end": 22.024
+              },
+              {
+                "word": "legs",
+                "start": 22.024,
+                "end": 22.826
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "decodable",
+      "title": "Sam and Pam",
+      "cover": {
+        "prompt": "Sam (drawn young, about five years old) sits on the soft rug of the cozy living room with a blue sofa, a soft rug, and a toy box and smiles at a small rag doll with yellow yarn hair and a red dress, who sits on top of the toy box. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Sam"
+        ],
+        "caption": "Sam and Pam"
+      },
+      "pages": [
+        {
+          "text": "Sam saw Pam.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) stands in the cozy living room with a blue sofa, a soft rug, and a toy box and points with a big smile at a small rag doll with yellow yarn hair and a red dress, who sits on top of the toy box. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Sam can get Pam.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) stands on his toes and lifts a small rag doll with yellow yarn hair and a red dress down from the top of the toy box in the same cozy living room. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Sam is with Pam.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) sits on the soft rug in the same cozy living room and holds a small rag doll with yellow yarn hair and a red dress on his lap with both hands; he smiles at her. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam is in a pan!",
+          "image": {
+            "prompt": "A small rag doll with yellow yarn hair and a red dress sits in a big yellow toy pan on the soft rug of the same cozy living room; Sam (drawn young, about five years old) kneels next to the pan and laughs. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam is on a map!",
+          "image": {
+            "prompt": "A small rag doll with yellow yarn hair and a red dress lies on a big paper map that is open on the soft rug of the same cozy living room; Sam (drawn young, about five years old) lies on his tummy next to the map and points at the doll. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam is on Sam!",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) lies on his back on the soft rug of the same cozy living room and laughs; a small rag doll with yellow yarn hair and a red dress sits on his tummy. At the edge of the picture, at the open door of the room, one small white sneaker and the leg of a girl in red shorts step in. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Pam is off Sam!",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, stands at the open door of the same cozy living room with her hands on her hips and a big surprised face; Sam (drawn young, about five years old) sits up fast on the soft rug, and a small rag doll with yellow yarn hair and a red dress falls off his tummy onto the rug. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Sam, Nan, and Pam nap.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) and Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, are asleep side by side on the soft rug of the same cozy living room under one blanket, with a small rag doll with yellow yarn hair and a red dress asleep between them. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Sam",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "soundsPage": {
+        "element": "s",
+        "words": [
+          "Sam"
+        ],
+        "tricky": [
+          "saw",
+          "off",
+          "with"
+        ]
+      },
+      "backWords": [
+        "Sam",
+        "Pam",
+        "Nan",
+        "pan",
+        "map",
+        "nap",
+        "saw",
+        "off",
+        "with"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w05/books/2-sam-and-pam.mp3",
+        "sentences": [
+          {
+            "sentence": "Sam saw Pam.",
+            "startTime": 0,
+            "endTime": 1.5,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 0,
+                "end": 0.38
+              },
+              {
+                "word": "saw",
+                "start": 0.38,
+                "end": 0.72
+              },
+              {
+                "word": "Pam",
+                "start": 0.72,
+                "end": 1.5
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Sam can get Pam.",
+            "startTime": 2.7,
+            "endTime": 4.308,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 2.7,
+                "end": 3.1
+              },
+              {
+                "word": "can",
+                "start": 3.1,
+                "end": 3.52
+              },
+              {
+                "word": "get",
+                "start": 3.52,
+                "end": 3.68
+              },
+              {
+                "word": "Pam",
+                "start": 3.68,
+                "end": 4.308
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Sam is with Pam.",
+            "startTime": 5.508,
+            "endTime": 6.669,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 5.508,
+                "end": 5.828
+              },
+              {
+                "word": "is",
+                "start": 5.828,
+                "end": 6.008
+              },
+              {
+                "word": "with",
+                "start": 6.008,
+                "end": 6.148
+              },
+              {
+                "word": "Pam",
+                "start": 6.148,
+                "end": 6.669
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Pam is in a pan!",
+            "startTime": 7.869,
+            "endTime": 9.46,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 7.869,
+                "end": 8.189
+              },
+              {
+                "word": "is",
+                "start": 8.189,
+                "end": 8.529
+              },
+              {
+                "word": "in",
+                "start": 8.529,
+                "end": 8.649
+              },
+              {
+                "word": "a",
+                "start": 8.649,
+                "end": 8.749
+              },
+              {
+                "word": "pan",
+                "start": 8.749,
+                "end": 9.46
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Pam is on a map!",
+            "startTime": 10.66,
+            "endTime": 11.927,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 10.66,
+                "end": 10.94
+              },
+              {
+                "word": "is",
+                "start": 10.94,
+                "end": 11.22
+              },
+              {
+                "word": "on",
+                "start": 11.22,
+                "end": 11.38
+              },
+              {
+                "word": "a",
+                "start": 11.38,
+                "end": 11.46
+              },
+              {
+                "word": "map",
+                "start": 11.46,
+                "end": 11.927
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Pam is on Sam!",
+            "startTime": 13.127,
+            "endTime": 14.687,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 13.127,
+                "end": 13.467
+              },
+              {
+                "word": "is",
+                "start": 13.467,
+                "end": 13.807
+              },
+              {
+                "word": "on",
+                "start": 13.807,
+                "end": 13.987
+              },
+              {
+                "word": "Sam",
+                "start": 13.987,
+                "end": 14.687
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Pam is off Sam!",
+            "startTime": 15.887,
+            "endTime": 17.219,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 15.887,
+                "end": 16.107
+              },
+              {
+                "word": "is",
+                "start": 16.107,
+                "end": 16.267
+              },
+              {
+                "word": "off",
+                "start": 16.267,
+                "end": 16.427
+              },
+              {
+                "word": "Sam",
+                "start": 16.427,
+                "end": 17.219
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Sam, Nan, and Pam nap.",
+            "startTime": 18.419,
+            "endTime": 21.002,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 18.419,
+                "end": 18.936
+              },
+              {
+                "word": "Nan",
+                "start": 18.936,
+                "end": 19.452
+              },
+              {
+                "word": "and",
+                "start": 19.452,
+                "end": 19.969
+              },
+              {
+                "word": "Pam",
+                "start": 19.969,
+                "end": 20.485
+              },
+              {
+                "word": "nap",
+                "start": 20.485,
+                "end": 21.002
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w05/books/2-sam-and-pam-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "Sam saw Pam.",
+            "startTime": 0,
+            "endTime": 1.6,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 0,
+                "end": 0.38
+              },
+              {
+                "word": "saw",
+                "start": 0.38,
+                "end": 0.72
+              },
+              {
+                "word": "Pam",
+                "start": 0.72,
+                "end": 1.6
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Sam can get Pam.",
+            "startTime": 2.8,
+            "endTime": 4.849,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 2.8,
+                "end": 3.26
+              },
+              {
+                "word": "can",
+                "start": 3.26,
+                "end": 3.64
+              },
+              {
+                "word": "get",
+                "start": 3.64,
+                "end": 3.9
+              },
+              {
+                "word": "Pam",
+                "start": 3.9,
+                "end": 4.849
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Sam is with Pam.",
+            "startTime": 6.049,
+            "endTime": 7.924,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 6.049,
+                "end": 6.569
+              },
+              {
+                "word": "is",
+                "start": 6.569,
+                "end": 7.009
+              },
+              {
+                "word": "with",
+                "start": 7.009,
+                "end": 7.209
+              },
+              {
+                "word": "Pam",
+                "start": 7.209,
+                "end": 7.924
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Pam is in a pan!",
+            "startTime": 9.124,
+            "endTime": 10.891,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 9.124,
+                "end": 9.504
+              },
+              {
+                "word": "is",
+                "start": 9.504,
+                "end": 9.884
+              },
+              {
+                "word": "in",
+                "start": 9.884,
+                "end": 10.024
+              },
+              {
+                "word": "a",
+                "start": 10.024,
+                "end": 10.144
+              },
+              {
+                "word": "pan",
+                "start": 10.144,
+                "end": 10.891
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Pam is on a map!",
+            "startTime": 12.091,
+            "endTime": 14.1,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 12.091,
+                "end": 12.451
+              },
+              {
+                "word": "is",
+                "start": 12.451,
+                "end": 12.731
+              },
+              {
+                "word": "on",
+                "start": 12.731,
+                "end": 12.931
+              },
+              {
+                "word": "a",
+                "start": 12.931,
+                "end": 13.051
+              },
+              {
+                "word": "map",
+                "start": 13.051,
+                "end": 14.1
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Pam is on Sam!",
+            "startTime": 15.3,
+            "endTime": 17.453,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 15.3,
+                "end": 15.66
+              },
+              {
+                "word": "is",
+                "start": 15.66,
+                "end": 15.96
+              },
+              {
+                "word": "on",
+                "start": 15.96,
+                "end": 16.26
+              },
+              {
+                "word": "Sam",
+                "start": 16.26,
+                "end": 17.453
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Pam is off Sam!",
+            "startTime": 18.653,
+            "endTime": 19.992,
+            "words": [
+              {
+                "word": "Pam",
+                "start": 18.653,
+                "end": 18.913
+              },
+              {
+                "word": "is",
+                "start": 18.913,
+                "end": 19.153
+              },
+              {
+                "word": "off",
+                "start": 19.153,
+                "end": 19.353
+              },
+              {
+                "word": "Sam",
+                "start": 19.513,
+                "end": 19.992
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Sam, Nan, and Pam nap.",
+            "startTime": 21.192,
+            "endTime": 24.849,
+            "words": [
+              {
+                "word": "Sam",
+                "start": 21.192,
+                "end": 21.923
+              },
+              {
+                "word": "Nan",
+                "start": 21.923,
+                "end": 22.655
+              },
+              {
+                "word": "and",
+                "start": 22.655,
+                "end": 23.386
+              },
+              {
+                "word": "Pam",
+                "start": 23.386,
+                "end": 24.118
+              },
+              {
+                "word": "nap",
+                "start": 24.118,
+                "end": 24.849
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    }
+  ],
+  "song": {
+    "title": "I Have Two",
+    "styleBrief": "Bouncy classroom action song for a kindergarten English class, 104 bpm, D major, the melody between C4 and C5, playful, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
+    "bpm": 104,
+    "lyricSheet": "[Verse]\nI have two eyes. Look, look, look!\nI have two ears. Listen, listen!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Verse]\nI have two hands. Clap, clap, clap!\nI have two feet. Stamp, stamp, stamp!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Verse]\nI have two arms. Reach up high!\nI have two legs. Hop, hop, hop!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!",
+    "lines": [
+      {
+        "text": "I have two eyes. Look, look, look!",
+        "part": "verse",
+        "gesture": "look",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) looks through his hands like binoculars. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/look.jpg"
+        }
+      },
+      {
+        "text": "I have two ears. Listen, listen!",
+        "part": "verse",
+        "gesture": "listen",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) cups one hand behind his ear and listens. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/listen.jpg"
+        }
+      },
+      {
+        "text": "I have two eyes. Look, look, look!",
+        "part": "verse",
+        "gesture": "look",
+        "imageOf": 0
+      },
+      {
+        "text": "I have two ears. Listen, listen!",
+        "part": "verse",
+        "gesture": "listen",
+        "imageOf": 1
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) points at himself with both thumbs and a big smile. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/point-to-self.jpg"
+        },
+        "note": {
+          "en": "Sing \"Sam\" with a clear hiss at the start, with no voice and no \"uh\".",
+          "th": "ร้อง \"Sam\" โดยขึ้นต้นด้วยเสียงลมลอดฟันชัด ๆ ไม่ใช้เสียงจากลำคอ และไม่มี \"uh\" (เออะ) ตามหลัง"
+        }
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) holds up his two hands and stands on his two feet. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/clap.jpg"
+        }
+      },
+      {
+        "text": "I have two hands. Clap, clap, clap!",
+        "part": "verse",
+        "gesture": "clap",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) claps his hands. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/clap.jpg"
+        }
+      },
+      {
+        "text": "I have two feet. Stamp, stamp, stamp!",
+        "part": "verse",
+        "gesture": "stamp",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) stamps his feet. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/stamp.jpg"
+        }
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 4
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      },
+      {
+        "text": "I have two arms. Reach up high!",
+        "part": "verse",
+        "gesture": "reach",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) reaches up high with both arms. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/reach.jpg"
+        }
+      },
+      {
+        "text": "I have two legs. Hop, hop, hop!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {
+          "prompt": "Sam (drawn young, about five years old) hops on the grass. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Sam"
+          ],
+          "caption": "",
+          "file": "l2/media/w05/song-lines/hop.jpg"
+        }
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 4
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      },
+      {
+        "text": "Sam, Sam, Sam! Look at me!",
+        "part": "chorus",
+        "gesture": "point to self",
+        "imageOf": 4
+      },
+      {
+        "text": "I have two hands and I have two feet!",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      }
+    ],
+    "choreography": {
+      "outro": {
+        "en": "After the last line, the class presses a pretend balloon and lets the air out: sss (the action of s).",
+        "th": "หลังบรรทัดสุดท้าย ทั้งชั้นทำท่าเหมือนบีบลูกโป่งและปล่อยลมออก: sss (ท่าประจำเสียง s)"
+      }
+    },
+    "times": [
+      {
+        "sentence": "I have two eyes. Look, look, look!",
+        "startTime": 0.0,
+        "endTime": 3.82,
+        "words": [
+          {
+            "word": "I",
+            "start": 0.0,
+            "end": 0.52
+          },
+          {
+            "word": "have",
+            "start": 0.52,
+            "end": 0.82
+          },
+          {
+            "word": "two",
+            "start": 0.82,
+            "end": 1.1
+          },
+          {
+            "word": "eyes.",
+            "start": 1.1,
+            "end": 1.76
+          },
+          {
+            "word": "Look,",
+            "start": 2.16,
+            "end": 2.6
+          },
+          {
+            "word": "look,",
+            "start": 2.84,
+            "end": 3.14
+          },
+          {
+            "word": "look!",
+            "start": 3.42,
+            "end": 3.82
+          }
+        ]
+      },
+      {
+        "sentence": "I have two ears. Listen, listen!",
+        "startTime": 4.54,
+        "endTime": 8.54,
+        "words": [
+          {
+            "word": "I",
+            "start": 4.54,
+            "end": 5.02
+          },
+          {
+            "word": "have",
+            "start": 5.02,
+            "end": 5.38
+          },
+          {
+            "word": "two",
+            "start": 5.38,
+            "end": 5.7
+          },
+          {
+            "word": "ears.",
+            "start": 5.7,
+            "end": 6.32
+          },
+          {
+            "word": "Listen,",
+            "start": 6.8,
+            "end": 7.56
+          },
+          {
+            "word": "listen!",
+            "start": 8.0,
+            "end": 8.54
+          }
+        ]
+      },
+      {
+        "sentence": "I have two eyes. Look, look, look!",
+        "startTime": 9.36,
+        "endTime": 12.88,
+        "words": [
+          {
+            "word": "I",
+            "start": 9.36,
+            "end": 9.64
+          },
+          {
+            "word": "have",
+            "start": 9.64,
+            "end": 9.96
+          },
+          {
+            "word": "two",
+            "start": 9.96,
+            "end": 10.22
+          },
+          {
+            "word": "eyes.",
+            "start": 10.22,
+            "end": 10.9
+          },
+          {
+            "word": "Look,",
+            "start": 11.26,
+            "end": 11.74
+          },
+          {
+            "word": "look,",
+            "start": 12.06,
+            "end": 12.28
+          },
+          {
+            "word": "look!",
+            "start": 12.6,
+            "end": 12.88
+          }
+        ]
+      },
+      {
+        "sentence": "I have two ears. Listen, listen!",
+        "startTime": 13.86,
+        "endTime": 17.66,
+        "words": [
+          {
+            "word": "I",
+            "start": 13.86,
+            "end": 14.16
+          },
+          {
+            "word": "have",
+            "start": 14.16,
+            "end": 14.54
+          },
+          {
+            "word": "two",
+            "start": 14.54,
+            "end": 14.82
+          },
+          {
+            "word": "ears.",
+            "start": 14.82,
+            "end": 15.48
+          },
+          {
+            "word": "Listen,",
+            "start": 15.94,
+            "end": 16.7
+          },
+          {
+            "word": "listen!",
+            "start": 17.14,
+            "end": 17.66
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 18.42,
+        "endTime": 21.8,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 18.42,
+            "end": 18.66
+          },
+          {
+            "word": "Sam,",
+            "start": 18.94,
+            "end": 19.22
+          },
+          {
+            "word": "Sam!",
+            "start": 19.46,
+            "end": 19.84
+          },
+          {
+            "word": "Look",
+            "start": 20.52,
+            "end": 20.9
+          },
+          {
+            "word": "at",
+            "start": 20.9,
+            "end": 21.42
+          },
+          {
+            "word": "me!",
+            "start": 21.42,
+            "end": 21.8
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 21.8,
+        "endTime": 26.62,
+        "words": [
+          {
+            "word": "I",
+            "start": 21.8,
+            "end": 23.34
+          },
+          {
+            "word": "have",
+            "start": 23.34,
+            "end": 23.68
+          },
+          {
+            "word": "two",
+            "start": 23.68,
+            "end": 23.96
+          },
+          {
+            "word": "hands",
+            "start": 23.96,
+            "end": 24.52
+          },
+          {
+            "word": "and",
+            "start": 24.52,
+            "end": 24.92
+          },
+          {
+            "word": "I",
+            "start": 24.92,
+            "end": 25.16
+          },
+          {
+            "word": "have",
+            "start": 25.16,
+            "end": 25.58
+          },
+          {
+            "word": "two",
+            "start": 25.58,
+            "end": 26.0
+          },
+          {
+            "word": "feet!",
+            "start": 26.0,
+            "end": 26.62
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands. Clap, clap, clap!",
+        "startTime": 26.62,
+        "endTime": 31.18,
+        "words": [
+          {
+            "word": "I",
+            "start": 26.62,
+            "end": 27.72
+          },
+          {
+            "word": "have",
+            "start": 27.72,
+            "end": 28.22
+          },
+          {
+            "word": "two",
+            "start": 28.22,
+            "end": 28.52
+          },
+          {
+            "word": "hands.",
+            "start": 28.52,
+            "end": 29.24
+          },
+          {
+            "word": "Clap,",
+            "start": 29.48,
+            "end": 29.98
+          },
+          {
+            "word": "clap,",
+            "start": 30.32,
+            "end": 30.52
+          },
+          {
+            "word": "clap!",
+            "start": 30.78,
+            "end": 31.18
+          }
+        ]
+      },
+      {
+        "sentence": "I have two feet. Stamp, stamp, stamp!",
+        "startTime": 31.18,
+        "endTime": 35.92,
+        "words": [
+          {
+            "word": "I",
+            "start": 31.18,
+            "end": 32.46
+          },
+          {
+            "word": "have",
+            "start": 32.46,
+            "end": 32.82
+          },
+          {
+            "word": "two",
+            "start": 32.82,
+            "end": 33.06
+          },
+          {
+            "word": "feet.",
+            "start": 33.06,
+            "end": 33.7
+          },
+          {
+            "word": "Stamp,",
+            "start": 33.78,
+            "end": 34.62
+          },
+          {
+            "word": "stamp,",
+            "start": 34.9,
+            "end": 35.22
+          },
+          {
+            "word": "stamp!",
+            "start": 35.42,
+            "end": 35.92
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 35.92,
+        "endTime": 40.12,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 35.92,
+            "end": 36.92
+          },
+          {
+            "word": "Sam,",
+            "start": 37.24,
+            "end": 37.46
+          },
+          {
+            "word": "Sam!",
+            "start": 37.76,
+            "end": 38.14
+          },
+          {
+            "word": "Look",
+            "start": 38.56,
+            "end": 39.2
+          },
+          {
+            "word": "at",
+            "start": 39.2,
+            "end": 39.72
+          },
+          {
+            "word": "me!",
+            "start": 39.72,
+            "end": 40.12
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 40.12,
+        "endTime": 44.96,
+        "words": [
+          {
+            "word": "I",
+            "start": 40.12,
+            "end": 41.64
+          },
+          {
+            "word": "have",
+            "start": 41.64,
+            "end": 41.98
+          },
+          {
+            "word": "two",
+            "start": 41.98,
+            "end": 42.24
+          },
+          {
+            "word": "hands",
+            "start": 42.24,
+            "end": 42.82
+          },
+          {
+            "word": "and",
+            "start": 42.82,
+            "end": 43.22
+          },
+          {
+            "word": "I",
+            "start": 43.22,
+            "end": 43.48
+          },
+          {
+            "word": "have",
+            "start": 43.48,
+            "end": 43.94
+          },
+          {
+            "word": "two",
+            "start": 43.94,
+            "end": 44.34
+          },
+          {
+            "word": "feet!",
+            "start": 44.34,
+            "end": 44.96
+          }
+        ]
+      },
+      {
+        "sentence": "I have two arms. Reach up high!",
+        "startTime": 44.96,
+        "endTime": 49.62,
+        "words": [
+          {
+            "word": "I",
+            "start": 44.96,
+            "end": 46.2
+          },
+          {
+            "word": "have",
+            "start": 46.2,
+            "end": 46.52
+          },
+          {
+            "word": "two",
+            "start": 46.52,
+            "end": 46.8
+          },
+          {
+            "word": "arms.",
+            "start": 46.8,
+            "end": 47.52
+          },
+          {
+            "word": "Reach",
+            "start": 47.82,
+            "end": 48.32
+          },
+          {
+            "word": "up",
+            "start": 48.32,
+            "end": 48.96
+          },
+          {
+            "word": "high!",
+            "start": 48.96,
+            "end": 49.62
+          }
+        ]
+      },
+      {
+        "sentence": "I have two legs. Hop, hop, hop!",
+        "startTime": 49.62,
+        "endTime": 54.12,
+        "words": [
+          {
+            "word": "I",
+            "start": 49.62,
+            "end": 50.74
+          },
+          {
+            "word": "have",
+            "start": 50.74,
+            "end": 51.1
+          },
+          {
+            "word": "two",
+            "start": 51.1,
+            "end": 51.36
+          },
+          {
+            "word": "legs.",
+            "start": 51.36,
+            "end": 52.04
+          },
+          {
+            "word": "Hop,",
+            "start": 52.54,
+            "end": 52.9
+          },
+          {
+            "word": "hop,",
+            "start": 53.52,
+            "end": 53.52
+          },
+          {
+            "word": "hop!",
+            "start": 53.72,
+            "end": 54.12
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 54.96,
+        "endTime": 58.4,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 54.96,
+            "end": 55.28
+          },
+          {
+            "word": "Sam,",
+            "start": 55.46,
+            "end": 55.8
+          },
+          {
+            "word": "Sam!",
+            "start": 56.02,
+            "end": 56.4
+          },
+          {
+            "word": "Look",
+            "start": 56.94,
+            "end": 57.48
+          },
+          {
+            "word": "at",
+            "start": 57.48,
+            "end": 58.0
+          },
+          {
+            "word": "me!",
+            "start": 58.0,
+            "end": 58.4
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 59.2,
+        "endTime": 63.18,
+        "words": [
+          {
+            "word": "I",
+            "start": 59.2,
+            "end": 59.94
+          },
+          {
+            "word": "have",
+            "start": 59.94,
+            "end": 60.26
+          },
+          {
+            "word": "two",
+            "start": 60.26,
+            "end": 60.54
+          },
+          {
+            "word": "hands",
+            "start": 60.54,
+            "end": 61.06
+          },
+          {
+            "word": "and",
+            "start": 61.06,
+            "end": 61.52
+          },
+          {
+            "word": "I",
+            "start": 61.52,
+            "end": 61.76
+          },
+          {
+            "word": "have",
+            "start": 61.76,
+            "end": 62.22
+          },
+          {
+            "word": "two",
+            "start": 62.22,
+            "end": 62.62
+          },
+          {
+            "word": "feet!",
+            "start": 62.62,
+            "end": 63.18
+          }
+        ]
+      },
+      {
+        "sentence": "Sam, Sam, Sam! Look at me!",
+        "startTime": 63.78,
+        "endTime": 67.6,
+        "words": [
+          {
+            "word": "Sam,",
+            "start": 63.78,
+            "end": 64.4
+          },
+          {
+            "word": "Sam,",
+            "start": 64.66,
+            "end": 64.9
+          },
+          {
+            "word": "Sam!",
+            "start": 65.2,
+            "end": 65.5
+          },
+          {
+            "word": "Look",
+            "start": 66.22,
+            "end": 66.64
+          },
+          {
+            "word": "at",
+            "start": 66.64,
+            "end": 67.14
+          },
+          {
+            "word": "me!",
+            "start": 67.14,
+            "end": 67.6
+          }
+        ]
+      },
+      {
+        "sentence": "I have two hands and I have two feet!",
+        "startTime": 68.42,
+        "endTime": 72.34,
+        "words": [
+          {
+            "word": "I",
+            "start": 68.42,
+            "end": 69.1
+          },
+          {
+            "word": "have",
+            "start": 69.1,
+            "end": 69.4
+          },
+          {
+            "word": "two",
+            "start": 69.4,
+            "end": 69.66
+          },
+          {
+            "word": "hands",
+            "start": 69.66,
+            "end": 70.18
+          },
+          {
+            "word": "and",
+            "start": 70.18,
+            "end": 70.64
+          },
+          {
+            "word": "I",
+            "start": 70.64,
+            "end": 70.9
+          },
+          {
+            "word": "have",
+            "start": 70.9,
+            "end": 71.28
+          },
+          {
+            "word": "two",
+            "start": 71.28,
+            "end": 71.78
+          },
+          {
+            "word": "feet!",
+            "start": 71.78,
+            "end": 72.34
+          }
+        ]
+      }
+    ],
+    "audio": "l2/media/w05/song.mp3"
+  },
+  "scripts": [
+    {
+      "id": "A",
+      "day": 1,
+      "title": {
+        "en": "Sound Lesson",
+        "th": "บทเรียนเสียง"
+      },
+      "prep": [
+        {
+          "en": "Put the picture cards in order on your table: the sss cards and the other cards for A1, then sad, bag, and cat for A4, with the word card \"am\" and the cards for the letters s and p.",
+          "th": "เรียงบัตรภาพไว้บนโต๊ะครูตามลำดับ: บัตรภาพคำที่มีเสียง sss และบัตรภาพอื่นสำหรับ A1 แล้วตามด้วยบัตรภาพ sad, bag และ cat สำหรับ A4 พร้อมบัตรคำ \"am\" และบัตรตัวอักษร s และ p"
+        }
+      ],
+      "steps": [
+        {
+          "id": "A1",
+          "title": {
+            "en": "Hear it",
+            "th": "ฟังเสียง"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "When the script says sss, say the sound: a long hiss. When it says \"the letter s\", say the letter name \"es\".",
+              "Hold up one picture card at a time and say the word slowly.",
+              "Stretch the first sound: sssun.",
+              "Mix the sss words with other words. Then say three words with sss at the end: bus, dress, horse."
+            ],
+            "teacherLanguage": [
+              "\"Listen. Sssun. Sun.\"",
+              "\"Is the first sound sss? Thumbs up or thumbs down?\"",
+              "\"Yes! Sssun starts with sss.\"",
+              "\"Listen. Cat. Does cat start with sss? No!\"",
+              "\"Now listen to the end. Busss. Is sss at the end? Yes!\""
+            ],
+            "studentActions": [
+              "Children say each word after the teacher.",
+              "Children show thumbs up for an sss word and thumbs down for other words."
+            ],
+            "watchFor": [
+              "Children who say \"suh\" or \"sa\": the sound is sss, with no vowel at the end.",
+              "Children who copy a friend's thumbs: ask them alone with one more card.",
+              "Children who say \"but\" for \"bus\": keep the hiss at the end: busss.",
+              "In Thai, ส at the end of a word sounds like /t/. In English, sss at the end of a word stays a hiss."
+            ]
+          },
+          "easier": {
+            "en": "Use only four cards (sun, sock, cat, dog) and say the first sound two times.",
+            "th": "ใช้บัตรเพียง 4 ใบ (sun, sock, cat, dog) และพูดเสียงแรก 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word with sss at the end: \"Bus.\" Children say the last sound: \"Sss!\"",
+            "th": "พูดคำที่มี sss อยู่ท้ายคำ: \"Bus.\" เด็ก ๆ บอกเสียงสุดท้าย: \"Sss!\""
+          },
+          "group": {
+            "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 พูดคำ และคู่คนที่ 2 ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง"
+          },
+          "materials": [
+            "sound picture cards: sun, sock, sofa, sandwich",
+            "picture cards: cat, dog, pen",
+            "picture cards: bus, dress, horse"
+          ],
+          "th": {
+            "teacherActions": [
+              "เมื่อบทพูดเขียนว่า sss ให้ออกเสียงลมลอดฟันยาว ๆ เมื่อบทพูดเขียนว่า \"the letter s\" ให้พูดชื่อตัวอักษร \"es\" (เอส)",
+              "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
+              "ลากเสียงแรกให้ยาว: sssun",
+              "คละคำที่ขึ้นต้นด้วย sss กับคำอื่น จากนั้นพูดคำ 3 คำที่มี sss อยู่ท้ายคำ: bus, dress, horse"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง Sssun, sun\"",
+              "\"เสียงแรกคือ sss ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
+              "\"ใช่! Sssun ขึ้นต้นด้วย sss\"",
+              "\"ฟัง cat คำว่า cat ขึ้นต้นด้วย sss ไหม? ไม่ใช่!\"",
+              "\"ทีนี้ฟังเสียงท้ายคำ Busss มี sss อยู่ท้ายคำไหม? ใช่!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู",
+              "เด็ก ๆ ยกนิ้วโป้งขึ้นสำหรับคำที่มีเสียง sss และคว่ำนิ้วโป้งลงสำหรับคำอื่น"
+            ],
+            "watchFor": [
+              "เด็กที่ออกเสียงเป็น \"suh\" (เซอะ) หรือ \"sa\" (ซะ): เสียงที่ถูกคือ sss ไม่มีสระตามหลัง",
+              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ",
+              "เด็กที่ออกเสียง \"bus\" เป็น \"but\": ให้คงเสียงลมลอดฟันไว้ที่ท้ายคำ: busss",
+              "ในภาษาไทย ส ที่เป็นตัวสะกดออกเสียงเหมือน /t/ (แม่กด) แต่ในภาษาอังกฤษ sss ที่ท้ายคำยังคงเป็นเสียงลมลอดฟัน"
+            ]
+          }
+        },
+        {
+          "id": "A2",
+          "title": {
+            "en": "See it",
+            "th": "ดูตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the sound card for the letter s and point to the letter.",
+              "Say the pure sound: teeth close together, the tongue behind the top teeth, and a long hiss of air: sss. Do not use your voice. It is close to the Thai letter ส, with no vowel after it.",
+              "Do the action of the letter s: hold your hands round like a balloon, press them slowly together, and let the air out: sss."
+            ],
+            "teacherLanguage": [
+              "\"Look. This is the letter s. It says sss.\"",
+              "\"Listen: sss. Not 'suh'. Sss.\"",
+              "\"Watch me: the air goes out of my balloon. Sss.\"",
+              "\"Your turn. Say it and do it. Three times.\""
+            ],
+            "studentActions": [
+              "Children say sss and press their pretend balloon, three times.",
+              "Children point to the letter s on the card."
+            ],
+            "watchFor": [
+              "A long hiss with no voice: not \"suh\" and not \"zzz\".",
+              "Every child does the action, not only the front rows."
+            ]
+          },
+          "easier": {
+            "en": "Children hold one hand in front of the mouth and feel the air while they say sss.",
+            "th": "เด็ก ๆ ยกมือ 1 ข้างไว้หน้าปาก แล้วรู้สึกถึงลมที่ออกมาขณะพูด sss"
+          },
+          "harder": {
+            "en": "Show the five sound cards in a mixed order. Children do the action of the card.",
+            "th": "ชูบัตรเสียงทั้ง 5 ใบแบบสลับลำดับ เด็ก ๆ ทำท่าประจำเสียงของบัตรนั้น"
+          },
+          "group": {
+            "en": "Two halves: one half says the sound, and the other half does the action. Then the halves change.",
+            "th": "แบ่งชั้นเป็น 2 ฝั่ง: ฝั่งหนึ่งออกเสียง อีกฝั่งหนึ่งทำท่า แล้วสลับกัน"
+          },
+          "materials": [
+            "sound cards: s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียง s และชี้ที่ตัวอักษร",
+              "ออกเสียงล้วน: ให้ฟันบนและฟันล่างชิดกัน วางลิ้นไว้หลังฟันบน แล้วปล่อยลมลอดฟันออกมายาว ๆ: sss ไม่ใช้เสียงจากลำคอ ใกล้กับเสียง ส ในภาษาไทย โดยไม่มีสระตามหลัง",
+              "ทำท่าประจำเสียง s: ทำมือ 2 ข้างเป็นวงกลมเหมือนถือลูกโป่ง ค่อย ๆ บีบมือเข้าหากัน แล้วปล่อยลมออก: sss"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือตัวอักษร s ออกเสียงว่า sss\"",
+              "\"ฟัง: sss ไม่ใช่ 'suh' แต่เป็น sss\"",
+              "\"ดูครู: ลมออกจากลูกโป่งของครู sss\"",
+              "\"ถึงตาเด็ก ๆ แล้ว ออกเสียงและทำท่า 3 ครั้ง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด sss และทำท่าเหมือนบีบลูกโป่งให้ลมออก 3 ครั้ง",
+              "เด็ก ๆ ชี้ที่ตัวอักษร s บนบัตร"
+            ],
+            "watchFor": [
+              "เสียงลมลอดฟันยาว ๆ และไม่ใช้เสียงจากลำคอ: ไม่ใช่ \"suh\" (เซอะ) และไม่ใช่ \"zzz\" (เสียงหึ่งเหมือนผึ้ง)",
+              "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า"
+            ]
+          }
+        },
+        {
+          "id": "A3",
+          "title": {
+            "en": "Form it",
+            "th": "เขียนตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Write the lower-case letter s large on the board, and say the formation words while you write.",
+              "Write the letter s in the air with your back to the class, so your hand moves the same way as theirs.",
+              "Children write the letter s in the air, then trace it in the book three times."
+            ],
+            "teacherLanguage": [
+              "\"Start at the dot. Round to the left. Then round to the right.\"",
+              "\"Fingers up. Write the letter s in the air with me.\"",
+              "\"Open your book. Find the letter s. Trace it three times. Start at the dot.\""
+            ],
+            "studentActions": [
+              "Children write the letter s in the air with one finger and say the formation words.",
+              "Children trace the letter s three times in the book, from the dot."
+            ],
+            "watchFor": [
+              "Children who write the letter s the wrong way round: take their hand, start at the dot, and go round to the left first.",
+              "Children who start at the bottom: take their hand and start at the dot."
+            ]
+          },
+          "easier": {
+            "en": "Children trace the letter s in the book with a finger first. Then they trace it with the pencil.",
+            "th": "เด็ก ๆ ใช้นิ้วลากเส้นตามตัวอักษร s ในหนังสือก่อน แล้วจึงใช้ดินสอลากเส้นตาม"
+          },
+          "harder": {
+            "en": "Write the letter s two more times on the empty line, with no dots.",
+            "th": "เขียนตัวอักษร s อีก 2 ครั้งบนบรรทัดว่าง โดยไม่มีจุดนำ"
+          },
+          "group": {
+            "en": "Pairs: one child writes the letter s on the partner's back with a finger; the partner says sss.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ใช้นิ้วเขียนตัวอักษร s บนหลังของคู่คนที่ 2 คู่คนที่ 2 พูด sss"
+          },
+          "materials": [
+            "board",
+            "student book: letter box s"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียนตัวอักษร s ตัวพิมพ์เล็กขนาดใหญ่บนกระดาน และพูดคำบอกวิธีเขียนขณะเขียน",
+              "เขียนตัวอักษร s กลางอากาศโดยหันหลังให้เด็ก ๆ เพื่อให้มือของครูเคลื่อนไปทางเดียวกับมือของเด็ก ๆ",
+              "เด็ก ๆ เขียนตัวอักษร s กลางอากาศ แล้วลากเส้นตามตัวอักษร s ในหนังสือ 3 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"เริ่มที่จุด วนไปทางซ้าย แล้ววนไปทางขวา\"",
+              "\"ยกนิ้วขึ้น เขียนตัวอักษร s กลางอากาศพร้อมครู\"",
+              "\"เปิดหนังสือ หาตัวอักษร s ลากเส้นตาม 3 ครั้ง เริ่มที่จุด\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ใช้นิ้ว 1 นิ้วเขียนตัวอักษร s กลางอากาศ และพูดคำบอกวิธีเขียน",
+              "เด็ก ๆ ลากเส้นตามตัวอักษร s ในหนังสือ 3 ครั้ง โดยเริ่มที่จุด"
+            ],
+            "watchFor": [
+              "เด็กที่เขียนตัวอักษร s กลับด้าน: จับมือเด็ก เริ่มที่จุด แล้ววนไปทางซ้ายก่อน",
+              "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด"
+            ]
+          }
+        },
+        {
+          "id": "A4",
+          "title": {
+            "en": "Blend it",
+            "th": "ผสมเสียง"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First by ear: keep the picture cards sad, bag, and cat face down. Say the three sounds with a short stop between them, then say them fast. Show the picture after the class says the word.",
+              "Then with letters: show the word card \"am\"; the class reads it. Put the letter card s in front of it: \"Sam\". Put your finger under each letter and say its sound, then slide under the whole word.",
+              "Hold sss at the start and slide into the rest: sss - /a/ - mmm. Sss is a long sound, so it joins easily.",
+              "Say the sounds, not the letter names: /b/, /g/, /d/, /k/, and /t/ with no \"uh\" after them."
+            ],
+            "teacherLanguage": [
+              "\"Listen. Sss - /a/ - /d/. What is the word? Sad!\"",
+              "\"Next one. /b/ - /a/ - /g/. Bag! /k/ - /a/ - /t/. Cat!\"",
+              "\"Now look at the letters. /a/ - mmm. Am! Now sss at the start: sss - /a/ - mmm. Sam! It is a name.\"",
+              "\"Change the letter s to the letter p. /p/ - /a/ - mmm. Pam! Now back to the letter s: Sam!\""
+            ],
+            "studentActions": [
+              "Children listen to the sounds and say the word.",
+              "Children say the sounds of \"am\", \"Sam\", and \"Pam\" with the teacher, then read the words alone."
+            ],
+            "watchFor": [
+              "Children who say \"suh - /a/ - mmm\": hold the sss, with no \"uh\".",
+              "Children who read \"Sam\" as \"Pam\": point to the first letter and ask for its sound."
+            ]
+          },
+          "easier": {
+            "en": "Read only \"am\" and \"Sam\" with the class, two times each.",
+            "th": "อ่านเฉพาะ \"am\" และ \"Sam\" พร้อมทั้งชั้น คำละ 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word; children say its sounds: \"Sam.\" \"Sss - /a/ - mmm.\"",
+            "th": "พูดคำ 1 คำ เด็ก ๆ พูดเสียงของคำนั้น: \"Sam.\" \"Sss - /a/ - mmm.\""
+          },
+          "group": {
+            "en": "Pairs: partner A points under the letters, partner B reads the word.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ใต้ตัวอักษร คู่คนที่ 2 อ่านคำ"
+          },
+          "materials": [
+            "picture cards: sad, bag, cat",
+            "word card: am",
+            "letter cards: s, p"
+          ],
+          "th": {
+            "teacherActions": [
+              "ขั้นแรกฝึกด้วยการฟัง: คว่ำบัตรภาพ sad, bag และ cat ไว้ พูด 3 เสียงโดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
+              "จากนั้นฝึกด้วยตัวอักษร: ชูบัตรคำ \"am\" ทั้งชั้นอ่านคำนี้ วางบัตรตัวอักษร s ไว้ข้างหน้า: \"Sam\" วางนิ้วใต้ตัวอักษรทีละตัวและออกเสียงของตัวอักษรนั้น แล้วลากนิ้วผ่านใต้ทั้งคำ",
+              "ลากเสียง sss ไว้ที่ต้นคำ แล้วต่อเข้ากับเสียงที่เหลือ: sss - /a/ - mmm เสียง sss เป็นเสียงยาว จึงต่อกับเสียงถัดไปได้ง่าย",
+              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /b/, /g/, /d/, /k/ และ /t/ ไม่มี \"uh\" ตามหลัง"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง Sss - /a/ - /d/ คำนี้คือคำอะไร? Sad! (เศร้า)\"",
+              "\"คำต่อไป /b/ - /a/ - /g/ Bag! (กระเป๋า) /k/ - /a/ - /t/ Cat! (แมว)\"",
+              "\"ทีนี้ดูตัวอักษร /a/ - mmm Am! ทีนี้เติม sss ไว้ข้างหน้า: sss - /a/ - mmm Sam! เป็นชื่อคน\"",
+              "\"เปลี่ยนตัวอักษร s เป็นตัวอักษร p /p/ - /a/ - mmm Pam! ทีนี้เปลี่ยนกลับเป็นตัวอักษร s: Sam!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังเสียง แล้วพูดคำ",
+              "เด็ก ๆ ออกเสียงทีละเสียงในคำ \"am\", \"Sam\" และ \"Pam\" พร้อมครู แล้วอ่านคำเหล่านั้นด้วยตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านเป็น \"suh - /a/ - mmm\": ลากเสียง sss ไว้ ไม่มี \"uh\" ตามหลัง",
+              "เด็กที่อ่าน \"Sam\" เป็น \"Pam\": ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร"
+            ]
+          }
+        },
+        {
+          "id": "A5",
+          "title": {
+            "en": "Word wall",
+            "th": "ผนังคำศัพท์"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Put the letter s card on the word wall, next to the cards for the letters n, a, p, and m.",
+              "Put the new word on the wall: \"Sam\". The class reads it, then reads all the words on the wall."
+            ],
+            "teacherLanguage": [
+              "\"Here is the letter s. It says sss.\"",
+              "\"Our new word! Read it with me: Sam. It is a name, so it starts with a big letter S.\"",
+              "\"Now read all the words: an, Nan, pan, nap, am, man, map, Pam, Sam.\""
+            ],
+            "studentActions": [
+              "Children say the sounds and read the words at the wall."
+            ],
+            "watchFor": [
+              "Children who read \"Sam\" as a picture word: point under each letter and say the sounds."
+            ]
+          },
+          "easier": {
+            "en": "Read the wall with the class two times.",
+            "th": "อ่านคำบนผนังคำศัพท์พร้อมทั้งชั้น 2 ครั้ง"
+          },
+          "harder": {
+            "en": "A child reads one word on the wall alone, then says its last sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงสุดท้ายของคำนั้น"
+          },
+          "group": {
+            "en": "Whole class: one child points, and the class reads.",
+            "th": "ทั้งชั้น: เด็กคนหนึ่งชี้ และทั้งชั้นอ่าน"
+          },
+          "materials": [
+            "word wall",
+            "sound cards: s",
+            "word cards: Sam"
+          ],
+          "th": {
+            "teacherActions": [
+              "ติดบัตรตัวอักษร s บนผนังคำศัพท์ ข้างบัตรตัวอักษร n, a, p และ m",
+              "ติดคำใหม่บนผนังคำศัพท์: \"Sam\" ทั้งชั้นอ่านคำนี้ แล้วอ่านทุกคำบนผนังคำศัพท์"
+            ],
+            "teacherLanguage": [
+              "\"นี่คือตัวอักษร s ออกเสียงว่า sss\"",
+              "\"คำใหม่ของเรา! อ่านพร้อมครู: Sam เป็นชื่อคน จึงขึ้นต้นด้วย S ตัวพิมพ์ใหญ่\"",
+              "\"ทีนี้อ่านทุกคำ: an, Nan, pan, nap, am, man, map, Pam, Sam\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและอ่านคำที่ผนังคำศัพท์"
+            ],
+            "watchFor": [
+              "เด็กที่จำคำ \"Sam\" ทั้งคำเหมือนจำภาพ โดยไม่สะกดออกเสียง: ชี้ใต้ตัวอักษรทีละตัวและออกเสียง"
+            ]
+          }
+        },
+        {
+          "id": "A6",
+          "title": {
+            "en": "New tricky words",
+            "th": "คำที่ต้องจำชุดใหม่"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cards saw, off, and with. Show one card at a time.",
+              "Read the word. Show the letters that the class can sound out: the letter s in \"saw\". The other letters are tricky.",
+              "Spell each word with letter names, then write it in the air."
+            ],
+            "teacherLanguage": [
+              "\"This word is saw. I saw a cat.\"",
+              "\"This word is off. Take your hat off.\"",
+              "\"This word is with. Come with me.\"",
+              "\"This is a tricky word. We remember it. Say it with me.\""
+            ],
+            "studentActions": [
+              "Children read each card three times: loud, quiet, loud.",
+              "Children find the letter s in \"saw\".",
+              "Children act \"off\": they take off a pretend hat."
+            ],
+            "watchFor": [
+              "Children who read \"saw\" as \"was\": point to the first letter, the letter s, and say sss."
+            ]
+          },
+          "easier": {
+            "en": "Teach \"saw\" and \"off\" today; \"with\" comes on the review strip tomorrow.",
+            "th": "สอน \"saw\" และ \"off\" วันนี้ ส่วน \"with\" จะอยู่บนแถบทบทวนพรุ่งนี้"
+          },
+          "harder": {
+            "en": "Children say a sentence with \"with\": \"I sit with Nan.\"",
+            "th": "เด็ก ๆ พูดประโยคที่มีคำ \"with\": \"I sit with Nan.\" (ฉันนั่งกับ Nan)"
+          },
+          "group": {
+            "en": "Pairs: you show a card; partner A reads it to partner B. Then the partners change.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 อ่านให้คู่คนที่ 2 ฟัง แล้วสลับกัน"
+          },
+          "materials": [
+            "tricky word cards: saw, off, with"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรคำ saw, off และ with ทีละใบ",
+              "อ่านคำนั้น ชี้ให้ดูตัวอักษรที่ทั้งชั้นสะกดออกเสียงได้: ตัวอักษร s ในคำ \"saw\" ตัวอักษรอื่นเป็นส่วนที่ต้องจำ",
+              "สะกดแต่ละคำด้วยชื่อตัวอักษร แล้วเขียนคำนั้นกลางอากาศ"
+            ],
+            "teacherLanguage": [
+              "\"คำนี้คือ saw (เห็น) เช่น I saw a cat. (ฉันเห็นแมว)\"",
+              "\"คำนี้คือ off (ออก) เช่น Take your hat off. (ถอดหมวกออก)\"",
+              "\"คำนี้คือ with (กับ) เช่น Come with me. (มากับครู)\"",
+              "\"นี่คือคำที่ต้องจำ เราจำคำนี้ไว้ พูดพร้อมครู\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรแต่ละใบ 3 ครั้ง: ดัง เบา ดัง",
+              "เด็ก ๆ หาตัวอักษร s ในคำ \"saw\"",
+              "เด็ก ๆ แสดงท่าทางคำ \"off\": ทำท่าเหมือนถอดหมวกออก"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"saw\" เป็น \"was\": ชี้ที่ตัวอักษรตัวแรก คือตัวอักษร s แล้วพูด sss"
+            ]
+          }
+        },
+        {
+          "id": "A7",
+          "title": {
+            "en": "Read it",
+            "th": "อ่าน"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Open the practice sheet in the book and point to each line once."
+            ],
+            "teacherLanguage": [
+              "\"Read the sounds with me: sss, mmm, /p/, /a/, nnn.\"",
+              "\"Read the words: Sam. Pam. Map. Nap.\"",
+              "\"Read the sentences: Sam saw Pam. I saw a man.\""
+            ],
+            "studentActions": [
+              "Children read the lines and point to the tricky word \"saw\"."
+            ],
+            "watchFor": [
+              "Children who look at the wrong line: show the picture at the start of the line."
+            ]
+          },
+          "easier": {
+            "en": "Read only the line of sounds.",
+            "th": "อ่านเฉพาะบรรทัดของเสียง"
+          },
+          "harder": {
+            "en": "Children read \"Sam saw Pam.\" alone.",
+            "th": "เด็ก ๆ อ่าน \"Sam saw Pam.\" ด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs point to the lines for each other.",
+            "th": "ทำเป็นคู่: ชี้บรรทัดให้กันและกัน"
+          },
+          "materials": [
+            "student book: practice sheet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "เปิดหน้าฝึกอ่านในหนังสือ และชี้แต่ละบรรทัด 1 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเสียงพร้อมครู: sss, mmm, /p/, /a/, nnn\"",
+              "\"อ่านคำ: Sam, Pam, map, nap\"",
+              "\"อ่านประโยค: Sam saw Pam. (Sam เห็น Pam) I saw a man. (ฉันเห็นผู้ชายคนหนึ่ง)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละบรรทัด และชี้ที่คำที่ต้องจำ \"saw\""
+            ],
+            "watchFor": [
+              "เด็กที่ดูผิดบรรทัด: ชี้ภาพที่ต้นบรรทัดให้ดู"
+            ]
+          }
+        },
+        {
+          "id": "A8",
+          "title": {
+            "en": "Home card",
+            "th": "บัตรกิจกรรมที่บ้าน"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "Read the Thai line on the home card to the class.",
+              "After class on day 1: tear the week 5 home card out of each student book, and put one card in each child's bag."
+            ],
+            "teacherLanguage": [
+              "\"Your home card is in your bag. Show it to your family.\"",
+              "\"Show your family: I have two eyes! I have two hands!\""
+            ],
+            "studentActions": [
+              "Children find the home card in their bag."
+            ],
+            "watchFor": [
+              "A child with no card: give the child a card at home time on day 2."
+            ]
+          },
+          "easier": {
+            "en": "Show the card to the child.",
+            "th": "ชูบัตรให้เด็กดู"
+          },
+          "harder": {
+            "en": "A child shows the card to a friend and says: \"Sss, sun. I have two hands!\"",
+            "th": "เด็กคนหนึ่งเอาบัตรให้เพื่อนดูและพูดว่า: \"Sss, sun. I have two hands!\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "student book: home card"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "อ่านข้อความภาษาไทยบนบัตรกิจกรรมที่บ้านให้ทั้งชั้นฟัง",
+              "หลังเลิกเรียนวันที่ 1: ฉีกบัตรกิจกรรมที่บ้านของสัปดาห์ที่ 5 ออกจากหนังสือนักเรียนของเด็กแต่ละคน แล้วใส่บัตรในกระเป๋าของเด็กคนละ 1 ใบ"
+            ],
+            "teacherLanguage": [
+              "\"บัตรกิจกรรมที่บ้านอยู่ในกระเป๋าของหนู ๆ แล้ว เอาให้ครอบครัวดูนะ\"",
+              "\"ทำให้ครอบครัวดู: I have two eyes! (ฉันมีตา 2 ข้าง) I have two hands! (ฉันมีมือ 2 ข้าง)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ หาบัตรกิจกรรมที่บ้านในกระเป๋าของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่มีบัตร: ให้บัตรแก่เด็กตอนกลับบ้านในวันที่ 2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "day": 2,
+      "title": {
+        "en": "Story Lesson",
+        "th": "บทเรียนนิทาน"
+      },
+      "prep": [
+        {
+          "en": "Get the book audio of \"I Have Two\" ready on the tablet, or print its QR code (B3).",
+          "th": "เตรียมเสียงอ่านของหนังสือ \"I Have Two\" บนแท็บเล็ต หรือพิมพ์คิวอาร์โค้ดของหนังสือไว้ (B3)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "B1",
+          "title": {
+            "en": "Family words",
+            "th": "คำศัพท์ประจำหมวด"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Show each family picture card and say the word two times.",
+              "Put the cards on the board. Point to a card; the class says the word and points to that part of the body.",
+              "Say a word; the class points to that part of their own body."
+            ],
+            "teacherLanguage": [
+              "\"Look. Eyes. Say it: eyes. Point to your eyes!\"",
+              "\"Point to the card with the feet!\"",
+              "\"Touch your nose! Touch your ears!\""
+            ],
+            "studentActions": [
+              "Children say each word two times after the teacher.",
+              "Children point to the card and to their own body."
+            ],
+            "watchFor": [
+              "Children who mix up arms and legs, or hands and feet: touch your own arm and leg, and say both words again."
+            ]
+          },
+          "easier": {
+            "en": "Use four cards: eyes, ears, nose, hands.",
+            "th": "ใช้บัตร 4 ใบ: eyes, ears, nose, hands"
+          },
+          "harder": {
+            "en": "A child says a word; the class touches that part of the body.",
+            "th": "เด็กคนหนึ่งพูดคำ 1 คำ ทั้งชั้นแตะส่วนนั้นของร่างกาย"
+          },
+          "group": {
+            "en": "Pairs: partner A points to a card, partner B says the word and touches it.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่บัตร คู่คนที่ 2 พูดคำนั้นและแตะส่วนนั้นของร่างกาย"
+          },
+          "materials": [
+            "family picture cards: eyes, ears, nose, hands, arms, legs, feet"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพคำศัพท์แต่ละใบ แล้วพูดคำนั้น 2 ครั้ง",
+              "ติดบัตรบนกระดาน ชี้ที่บัตร 1 ใบ ทั้งชั้นพูดคำนั้นและชี้ที่ส่วนนั้นของร่างกาย",
+              "ครูพูดคำ 1 คำ ทั้งชั้นชี้ที่ส่วนนั้นของร่างกายตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"ดู Eyes (ตา) พูดตาม: eyes. Point to your eyes! (ชี้ที่ตา)\"",
+              "\"Point to the card with the feet! (ชี้ที่บัตรรูปเท้า)\"",
+              "\"Touch your nose! (แตะจมูก) Touch your ears! (แตะหู)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู 2 ครั้ง",
+              "เด็ก ๆ ชี้ที่บัตร และชี้ที่ส่วนนั้นของร่างกายตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่สับสนระหว่าง arms (แขน) กับ legs (ขา) หรือ hands (มือ) กับ feet (เท้า): ครูแตะแขนและขาของตัวเอง แล้วพูดทั้ง 2 คำอีกครั้ง"
+            ]
+          }
+        },
+        {
+          "id": "B2",
+          "title": {
+            "en": "Picture walk",
+            "th": "ดูภาพก่อนอ่าน"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cover and pages 1 to 7 of \"I Have Two\". Cover the words with your hand. Keep page 8 for later.",
+              "On each page, point to the body part in the picture and ask \"What is this?\" The class says the word.",
+              "Ask \"How many?\" on each page. The class counts.",
+              "On page 7, point to the tail behind the tree and ask who it is."
+            ],
+            "teacherLanguage": [
+              "\"Look at the cover. Who is this? It is Sam!\"",
+              "\"Look. What is this? Eyes! How many eyes? Two!\"",
+              "\"What is next? Let's see!\"",
+              "\"Look at the tree. What is this? Who is it?\""
+            ],
+            "studentActions": [
+              "Children say what they can see, in Thai or English.",
+              "Children count the eyes, the ears, the hands, and the feet."
+            ],
+            "watchFor": [
+              "Children who answer in Thai: say the English; the child says it after you.",
+              "Do not open page 8 yet: keep the surprise for the reading."
+            ]
+          },
+          "easier": {
+            "en": "Say the body word with the class on every page.",
+            "th": "พูดคำศัพท์ส่วนของร่างกายพร้อมทั้งชั้นในทุกหน้า"
+          },
+          "harder": {
+            "en": "Before you turn the page, ask: \"What is next?\"",
+            "th": "ก่อนพลิกหน้า ถามว่า: \"What is next?\" (หน้าต่อไปเป็นอะไร)"
+          },
+          "group": {
+            "en": "Whole class: quiet children tell a partner first, then the class.",
+            "th": "ทั้งชั้น: เด็กที่ไม่ค่อยกล้าพูดบอกคู่ก่อน แล้วจึงบอกทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"I Have Two\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกและหน้า 1 ถึง 7 ของ \"I Have Two\" ใช้มือปิดคำไว้ เก็บหน้า 8 ไว้เปิดทีหลัง",
+              "ในแต่ละหน้า ชี้ที่ส่วนของร่างกายในภาพ แล้วถามว่า \"What is this?\" (นี่คืออะไร) ทั้งชั้นพูดคำนั้น",
+              "ถามว่า \"How many?\" (มีกี่ข้าง) ในแต่ละหน้า ทั้งชั้นนับ",
+              "ที่หน้า 7 ชี้ที่หางที่อยู่หลังต้นไม้ แล้วถามว่าเป็นหางของใคร"
+            ],
+            "teacherLanguage": [
+              "\"ดูที่ปก นี่คือใคร? It is Sam!\"",
+              "\"ดู What is this? (นี่คืออะไร) Eyes! (ตา) How many eyes? (ตามีกี่ข้าง) Two! (2 ข้าง)\"",
+              "\"What is next? (หน้าต่อไปเป็นอะไร) มาดูกัน!\"",
+              "\"ดูที่ต้นไม้ นี่คืออะไร? เป็นใคร?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ บอกสิ่งที่เห็น เป็นภาษาไทยหรือภาษาอังกฤษ",
+              "เด็ก ๆ นับตา หู มือ และเท้าในภาพ"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเป็นภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม",
+              "ยังไม่เปิดหน้า 8: เก็บเซอร์ไพรส์ไว้ตอนอ่าน"
+            ]
+          }
+        },
+        {
+          "id": "B3",
+          "title": {
+            "en": "Listen",
+            "th": "ฟัง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Play the audio of \"I Have Two\" once, at 1.0 speed.",
+              "Point to the picture while the audio reads the page; turn the page with the audio."
+            ],
+            "teacherLanguage": [
+              "\"Now listen to the book. Eyes on the pictures.\"",
+              "\"Point to your eyes, your ears ...\""
+            ],
+            "studentActions": [
+              "Children listen and look at the pictures.",
+              "Children point to the part of their own body on each page."
+            ],
+            "watchFor": [
+              "Children who do not look: hold the book closer to them."
+            ]
+          },
+          "easier": {
+            "en": "Play the audio at 0.75 speed.",
+            "th": "เปิดเสียงที่ความเร็ว 0.75"
+          },
+          "harder": {
+            "en": "Stop the audio before the body word on a page; the class says the word.",
+            "th": "หยุดเสียงก่อนถึงคำศัพท์ส่วนของร่างกายในหน้านั้น ทั้งชั้นพูดคำนั้น"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "book audio, on the tablet or by the QR code: \"I Have Two\""
+          ],
+          "th": {
+            "teacherActions": [
+              "เปิดเสียงอ่าน \"I Have Two\" 1 รอบ ที่ความเร็ว 1.0",
+              "ชี้ที่ภาพขณะเสียงอ่านหน้านั้น และพลิกหน้าไปพร้อมกับเสียง"
+            ],
+            "teacherLanguage": [
+              "\"ทีนี้ฟังหนังสือ ตาดูที่ภาพ\"",
+              "\"Point to your eyes, your ears ... (ชี้ที่ตา ที่หู ...)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังและดูภาพ",
+              "เด็ก ๆ ชี้ที่ส่วนของร่างกายตัวเองตามแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่ดูภาพ: ถือหนังสือให้ใกล้เด็กมากขึ้น"
+            ]
+          }
+        },
+        {
+          "id": "B4",
+          "title": {
+            "en": "Read with me",
+            "th": "อ่านกับครู"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First reading: read each page and point under each word. The class says the page after you.",
+              "Second reading: read \"I have two\" and stop. The class says the body word.",
+              "Point to \"I have two\" on pages 1 to 6: it is the frame of the week. On page 7, show the change: one nose."
+            ],
+            "teacherLanguage": [
+              "\"My turn: I have two eyes. Your turn!\"",
+              "\"Look at the words. I have two ... ?\"",
+              "\"Read the last page with me: I have four legs!\""
+            ],
+            "studentActions": [
+              "Children say each page after the teacher and point to the part of their own body.",
+              "Children say the body word on each page."
+            ],
+            "watchFor": [
+              "Children who say the words but do not look: point under each word slowly.",
+              "On the last page, let the children laugh (it is Pip!), then read it again together."
+            ]
+          },
+          "easier": {
+            "en": "Read pages 1 to 4 and page 8 only.",
+            "th": "อ่านเฉพาะหน้า 1 ถึง 4 และหน้า 8"
+          },
+          "harder": {
+            "en": "Children read \"I have two\" alone; you say only the body words.",
+            "th": "เด็ก ๆ อ่าน \"I have two\" ด้วยตัวเอง ส่วนครูพูดเฉพาะคำศัพท์ส่วนของร่างกาย"
+          },
+          "group": {
+            "en": "Half the class reads one page, the other half reads the next.",
+            "th": "ครึ่งชั้นอ่าน 1 หน้า อีกครึ่งชั้นอ่านหน้าถัดไป"
+          },
+          "materials": [
+            "big book or screen: \"I Have Two\""
+          ],
+          "th": {
+            "teacherActions": [
+              "อ่านรอบแรก: อ่านแต่ละหน้าและชี้ใต้แต่ละคำ ทั้งชั้นพูดหน้านั้นตาม",
+              "อ่านรอบที่สอง: อ่าน \"I have two\" แล้วหยุด ทั้งชั้นพูดคำศัพท์ส่วนของร่างกาย",
+              "ชี้ที่ \"I have two\" ในหน้า 1 ถึง 6: นี่คือกรอบประโยคของสัปดาห์ ที่หน้า 7 ชี้ให้ดูว่าประโยคเปลี่ยน: one nose (มีจมูกเดียว)"
+            ],
+            "teacherLanguage": [
+              "\"ตาครู: I have two eyes. ถึงตาเด็ก ๆ!\"",
+              "\"ดูที่คำ I have two ... ?\"",
+              "\"อ่านหน้าสุดท้ายพร้อมครู: I have four legs! (ฉันมีขา 4 ขา)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละหน้าตามครู และชี้ที่ส่วนนั้นของร่างกายตัวเอง",
+              "เด็ก ๆ พูดคำศัพท์ส่วนของร่างกายในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่พูดคำได้แต่ไม่ดูหนังสือ: ชี้ใต้แต่ละคำช้า ๆ",
+              "ที่หน้าสุดท้าย ปล่อยให้เด็ก ๆ หัวเราะ (เป็น Pip!) แล้วอ่านอีกครั้งพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B5",
+          "title": {
+            "en": "Frame practice",
+            "th": "ฝึกกรอบประโยค"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Write \"I have two ___.\" on the board and point to each word. Show the full stop.",
+              "Hold up your two hands and say \"I have two hands.\" Then touch your eyes and say \"I have two eyes.\"",
+              "Six children come to the front, one at a time. The child holds up one of the six cards with two (eyes, ears, hands, arms, legs, feet) and says \"I have two ___.\" Then pairs do it with their own body."
+            ],
+            "teacherLanguage": [
+              "\"I have two hands. Say it with me: I have two hands.\"",
+              "\"Your turn. Hold up the card. Say: I have two ...\"",
+              "\"Now with your partner. Point to your ears. Say: I have two ears.\""
+            ],
+            "studentActions": [
+              "Six children say \"I have two ___.\" with a family picture card.",
+              "Pairs: partner A points to both ears (or both eyes, hands, or feet) and says \"I have two ears.\"; partner B says it about another pair. Then they change."
+            ],
+            "watchFor": [
+              "Children who say \"I have two nose\": praise the try, then point to the nose: \"I have one nose.\"",
+              "Children who say \"two hand\": hold up two fingers and say \"two hands\" again, with a clear end sound."
+            ]
+          },
+          "easier": {
+            "en": "The child says the sentence together with the teacher.",
+            "th": "เด็กพูดประโยคพร้อมกับครู"
+          },
+          "harder": {
+            "en": "The child adds a sentence with one: \"I have one nose.\"",
+            "th": "เด็กเพิ่มประโยคที่มีคำว่า one: \"I have one nose.\" (ฉันมีจมูกเดียว)"
+          },
+          "group": {
+            "en": "Pairs, then two pairs together: four children point and say.",
+            "th": "ทำเป็นคู่ แล้วรวม 2 คู่เข้าด้วยกัน: เด็ก 4 คนชี้และพูด"
+          },
+          "materials": [
+            "board",
+            "family picture cards: eyes, ears, nose, hands, arms, legs, feet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียน \"I have two ___.\" บนกระดาน และชี้ที่แต่ละคำ ชี้ให้ดูจุด (full stop)",
+              "ชูมือทั้ง 2 ข้างแล้วพูดว่า \"I have two hands.\" จากนั้นแตะตาแล้วพูดว่า \"I have two eyes.\"",
+              "เด็ก 6 คนออกมาหน้าชั้นทีละคน เด็กชูบัตร 1 ใบจากบัตร 6 ใบที่เป็นส่วนของร่างกายซึ่งมี 2 ข้าง (eyes, ears, hands, arms, legs, feet) แล้วพูด \"I have two ___.\" จากนั้นให้ทำเป็นคู่โดยใช้ร่างกายของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"I have two hands. (ฉันมีมือ 2 ข้าง) พูดพร้อมครู: I have two hands.\"",
+              "\"ถึงตาหนูแล้ว ชูบัตรขึ้น พูดว่า: I have two ...\"",
+              "\"ทีนี้ทำกับคู่ Point to your ears. (ชี้ที่หู) พูดว่า: I have two ears.\""
+            ],
+            "studentActions": [
+              "เด็ก 6 คนชูบัตรภาพคำศัพท์และพูด \"I have two ___.\"",
+              "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่หูทั้ง 2 ข้าง (หรือตา มือ หรือเท้าทั้ง 2 ข้าง) แล้วพูดว่า \"I have two ears.\" คู่คนที่ 2 พูดประโยคแบบเดียวกันเกี่ยวกับส่วนของร่างกายอีกคู่หนึ่ง แล้วสลับกัน"
+            ],
+            "watchFor": [
+              "เด็กที่พูด \"I have two nose\": ชมที่พยายาม แล้วชี้ที่จมูก: \"I have one nose.\" (ฉันมีจมูกเดียว)",
+              "เด็กที่พูด \"two hand\": ชูนิ้ว 2 นิ้ว แล้วพูด \"two hands\" อีกครั้ง โดยออกเสียงท้ายคำให้ชัด"
+            ]
+          }
+        },
+        {
+          "id": "B6",
+          "title": {
+            "en": "Act it",
+            "th": "แสดงตามเรื่อง"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "The whole class acts the book. Say each page; the class says it after you and points to that part of the body.",
+              "On the last page, the class stands on hands and feet like Pip and says: \"I have four legs!\""
+            ],
+            "teacherLanguage": [
+              "\"Say it with me: I have two eyes!\"",
+              "\"Be Pip! Hands and feet on the floor. I have four legs!\""
+            ],
+            "studentActions": [
+              "The class says each page and points. On the last page, the children stand like a puppy."
+            ],
+            "watchFor": [
+              "Children who only watch: point with them and say the page together."
+            ]
+          },
+          "easier": {
+            "en": "The class says only the body words; you say \"I have two\".",
+            "th": "ทั้งชั้นพูดเฉพาะคำศัพท์ส่วนของร่างกาย ส่วนครูพูด \"I have two\""
+          },
+          "harder": {
+            "en": "Children say a new page: \"I have two shoes!\"",
+            "th": "เด็ก ๆ พูดหน้าใหม่ที่คิดเอง: \"I have two shoes!\" (ฉันมีรองเท้า 2 ข้าง)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"I Have Two\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ทั้งชั้นแสดงตามหนังสือ พูดแต่ละหน้า ทั้งชั้นพูดตามและชี้ที่ส่วนนั้นของร่างกาย",
+              "ที่หน้าสุดท้าย ทั้งชั้นใช้มือและเท้ายันพื้นเหมือน Pip และพูดว่า: \"I have four legs!\""
+            ],
+            "teacherLanguage": [
+              "\"พูดพร้อมครู: I have two eyes!\"",
+              "\"ทำตัวเป็น Pip! Hands and feet on the floor. (วางมือและเท้าบนพื้น) I have four legs!\""
+            ],
+            "studentActions": [
+              "ทั้งชั้นพูดแต่ละหน้าและชี้ ที่หน้าสุดท้าย เด็ก ๆ ยืน 4 ขาเหมือนลูกสุนัข"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ชี้พร้อมเด็กและพูดหน้านั้นด้วยกัน"
+            ]
+          }
+        },
+        {
+          "id": "B7",
+          "title": {
+            "en": "Sing it",
+            "th": "ร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the opening, play the karaoke video as the song of the week (item 3). The words are on the screen."
+            ],
+            "teacherLanguage": [
+              "\"Sing with the words on the screen. Point to the words!\""
+            ],
+            "studentActions": [
+              "Children sing and point to the words on the screen."
+            ],
+            "watchFor": [
+              "Children who only watch: give them the gesture to do (clap, stamp)."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus)"
+          },
+          "harder": {
+            "en": "Children sing the verse without the video.",
+            "th": "เด็ก ๆ ร้องท่อนเวิร์ส (verse) โดยไม่ใช้วิดีโอ"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "karaoke videos: \"I Have Two\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบ เปิดวิดีโอคาราโอเกะเป็นเพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เนื้อเพลงอยู่บนจอ"
+            ],
+            "teacherLanguage": [
+              "\"ร้องตามเนื้อเพลงบนจอ ชี้ที่คำ!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ร้องเพลงและชี้ที่คำบนจอ"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ให้เด็กทำท่าประกอบเพลง (ปรบมือ กระทืบเท้า)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "day": 3,
+      "title": {
+        "en": "Spell and Read",
+        "th": "สะกดและอ่าน"
+      },
+      "prep": [
+        {
+          "en": "Put one card for the letter s in each child's letter card set (with the cards for the letters n, a, p, and m).",
+          "th": "ใส่บัตรตัวอักษร s 1 ใบ ในชุดบัตรตัวอักษรของเด็กแต่ละคน (รวมกับบัตรตัวอักษร n, a, p และ m)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "C1",
+          "title": {
+            "en": "Sound review",
+            "th": "ทบทวนเสียง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the five sound cards fast, in a mixed order.",
+              "Children say the sound and do the action of the card."
+            ],
+            "teacherLanguage": [
+              "\"What sound? Sss! Let the air out!\"",
+              "\"What sound? Mmm! Two hills!\"",
+              "\"/p/, /a/, nnn: say the sound and do the action of each card.\"",
+              "\"Again, faster!\""
+            ],
+            "studentActions": [
+              "Children say the sound and do the action."
+            ],
+            "watchFor": [
+              "A long sss with no voice, not \"zzz\"."
+            ]
+          },
+          "easier": {
+            "en": "Show each card two times in the same order before the fast round.",
+            "th": "ชูบัตรแต่ละใบ 2 ครั้งตามลำดับเดิมก่อนรอบเร็ว"
+          },
+          "harder": {
+            "en": "Show a card for a short time only, then hide it.",
+            "th": "ชูบัตรเพียงช่วงสั้น ๆ แล้วซ่อน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียงทั้ง 5 ใบอย่างรวดเร็ว แบบสลับลำดับ",
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียงของบัตรนั้น"
+            ],
+            "teacherLanguage": [
+              "\"เสียงอะไร? Sss! ปล่อยลมออก!\"",
+              "\"เสียงอะไร? Mmm! เนิน 2 ลูก!\"",
+              "\"/p/, /a/, nnn: ออกเสียงและทำท่าประจำเสียงของบัตรแต่ละใบ\"",
+              "\"อีกครั้ง เร็วขึ้น!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียง"
+            ],
+            "watchFor": [
+              "เสียง sss ที่ยาวและไม่ใช้เสียงจากลำคอ ไม่ใช่ \"zzz\""
+            ]
+          }
+        },
+        {
+          "id": "C2",
+          "title": {
+            "en": "Letter cards",
+            "th": "บัตรตัวอักษร"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Each child has a workmat and the five letter cards of the week.",
+              "Build a chain, one change at a time: the word am, then Sam, then Pam, then pan, then man, then map.",
+              "Children push one card into a box for each sound and say the sound, then read the word."
+            ],
+            "teacherLanguage": [
+              "\"Make am. /a/ - mmm. Push the cards.\"",
+              "\"Put the letter s card at the start. Sss - /a/ - mmm. Sam!\"",
+              "\"Change the letter s to the letter p. What is the word now? Pam!\"",
+              "\"Change the letter m to the letter n: pan. Change the letter p to the letter m: man. Change the letter n to the letter p: map!\""
+            ],
+            "studentActions": [
+              "Children push the cards, say the sounds, and read each word."
+            ],
+            "watchFor": [
+              "Children who change the wrong card: say the old word and the new word slowly, and ask which sound is new."
+            ]
+          },
+          "easier": {
+            "en": "Build only \"am\" and \"Sam\", with the teacher.",
+            "th": "ต่อเฉพาะคำ \"am\" และ \"Sam\" พร้อมครู"
+          },
+          "harder": {
+            "en": "The child builds \"Sam\" and \"map\" with no help, and reads both words.",
+            "th": "เด็กต่อคำ \"Sam\" และ \"map\" ด้วยตัวเอง และอ่านทั้ง 2 คำ"
+          },
+          "group": {
+            "en": "Pairs share one workmat and take turns to push the cards.",
+            "th": "ทำเป็นคู่: ใช้แผ่นรองกิจกรรมร่วมกัน 1 แผ่น และผลัดกันเลื่อนบัตร"
+          },
+          "materials": [
+            "workmats (class set)",
+            "letter cards (class set): s, n, a, p, m"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็กแต่ละคนมีแผ่นรองกิจกรรม 1 แผ่น และบัตรตัวอักษร 5 ใบของสัปดาห์นี้",
+              "ต่อคำทีละขั้น โดยเพิ่มหรือเปลี่ยนบัตรครั้งละ 1 ใบ: คำ am แล้ว Sam แล้ว Pam แล้ว pan แล้ว man แล้ว map",
+              "เด็ก ๆ เลื่อนบัตรเข้าช่องทีละใบ ใบละ 1 เสียง และออกเสียงนั้น แล้วอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"ต่อคำ am /a/ - mmm เลื่อนบัตร\"",
+              "\"วางบัตรตัวอักษร s ไว้ข้างหน้า Sss - /a/ - mmm Sam!\"",
+              "\"เปลี่ยนตัวอักษร s เป็นตัวอักษร p ตอนนี้เป็นคำอะไร? Pam!\"",
+              "\"เปลี่ยนตัวอักษร m เป็นตัวอักษร n: pan เปลี่ยนตัวอักษร p เป็นตัวอักษร m: man เปลี่ยนตัวอักษร n เป็นตัวอักษร p: map!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เลื่อนบัตร ออกเสียง และอ่านแต่ละคำ"
+            ],
+            "watchFor": [
+              "เด็กที่เปลี่ยนบัตรผิดใบ: พูดคำเดิมและคำใหม่ช้า ๆ แล้วถามว่าเสียงไหนเป็นเสียงใหม่"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "title": {
+            "en": "Dictation",
+            "th": "เขียนตามคำบอก"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Say the sound sss; children say it, then write the letter s in the book. Do it two times.",
+              "Say \"Sam\". Children say the sounds on three fingers, then write the word in three boxes, with a big letter S.",
+              "Then children trace the sentence \"Sam saw Pam.\" on the line."
+            ],
+            "teacherLanguage": [
+              "\"When I say sss, you write the letter s. Ready? Sss.\"",
+              "\"Listen: Sam. Say the sounds on your fingers: sss - /a/ - mmm. Write one letter in each box. Sam is a name: a big letter S.\"",
+              "\"Now trace: Sam saw Pam. A big letter S at the start. A full stop at the end.\""
+            ],
+            "studentActions": [
+              "Children write the letter s two times and the word \"Sam\" in the book.",
+              "Children trace \"Sam saw Pam.\""
+            ],
+            "watchFor": [
+              "Children who write the letter s the wrong way round: show the formation again: round to the left, then round to the right."
+            ]
+          },
+          "easier": {
+            "en": "Children trace \"Sam\" before they write it.",
+            "th": "เด็ก ๆ ลากเส้นตาม \"Sam\" ก่อนเขียนเอง"
+          },
+          "harder": {
+            "en": "Children write \"map\" in three boxes, too.",
+            "th": "เด็ก ๆ เขียน \"map\" ใน 3 ช่องด้วย"
+          },
+          "group": {
+            "en": "Pairs check each other's letter s: start at the dot, round to the left, then round to the right.",
+            "th": "ทำเป็นคู่: ตรวจตัวอักษร s ของกันและกัน (เริ่มที่จุด วนไปทางซ้าย แล้ววนไปทางขวา)"
+          },
+          "materials": [
+            "student book: dictation lines"
+          ],
+          "th": {
+            "teacherActions": [
+              "ออกเสียง sss เด็ก ๆ พูดตาม แล้วเขียนตัวอักษร s ในหนังสือ ทำ 2 ครั้ง",
+              "พูด \"Sam\" เด็ก ๆ ออกเสียงทีละเสียงพร้อมชูนิ้วเสียงละ 1 นิ้ว แล้วเขียนคำลงใน 3 ช่อง โดยใช้ S ตัวพิมพ์ใหญ่",
+              "จากนั้นเด็ก ๆ ลากเส้นตามประโยค \"Sam saw Pam.\" บนบรรทัด"
+            ],
+            "teacherLanguage": [
+              "\"เมื่อครูพูด sss ให้เด็ก ๆ เขียนตัวอักษร s พร้อมไหม? Sss\"",
+              "\"ฟัง: Sam ออกเสียงทีละเสียงและชูนิ้วทีละนิ้ว: sss - /a/ - mmm เขียนตัวอักษรช่องละ 1 ตัว Sam เป็นชื่อคน: ใช้ S ตัวพิมพ์ใหญ่\"",
+              "\"ทีนี้ลากเส้นตาม: Sam saw Pam. (Sam เห็น Pam) S ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่จุดที่ท้ายประโยค\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เขียนตัวอักษร s 2 ครั้ง และเขียนคำ \"Sam\" ในหนังสือ",
+              "เด็ก ๆ ลากเส้นตาม \"Sam saw Pam.\""
+            ],
+            "watchFor": [
+              "เด็กที่เขียนตัวอักษร s กลับด้าน: แสดงวิธีเขียนให้ดูอีกครั้ง: วนไปทางซ้าย แล้ววนไปทางขวา"
+            ]
+          }
+        },
+        {
+          "id": "C4",
+          "title": {
+            "en": "Decodable: read together",
+            "th": "หนังสือฝึกสะกดอ่าน: อ่านด้วยกัน"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Show the cover of \"Sam and Pam\". Read the title and ask what the book is about.",
+              "Show the \"Sounds in this book\" page: the class says sss, sounds out \"Sam\", and reads the tricky words \"saw\", \"off\", and \"with\". Show the word list on the back cover: these are the main words of the book.",
+              "Read page 1 with the class: sound out \"Sam\" and \"Pam\" with your finger under the letters, and read \"saw\" as a tricky word.",
+              "Then pairs read: partner A reads a page, partner B reads the next."
+            ],
+            "teacherLanguage": [
+              "\"Look. Sam and Pam. Who is Pam? It is Nan's doll!\"",
+              "\"Look at this page. These are the sounds and the words of the book. What sound? Sss!\"",
+              "\"Finger under the letters. Sss - /a/ - mmm. Sam! And this word is tricky: saw.\"",
+              "\"Your turn with your partner. Partner A reads, partner B reads, partner A reads.\""
+            ],
+            "studentActions": [
+              "Children read each page with a finger under the words.",
+              "Pairs take turns, page by page."
+            ],
+            "watchFor": [
+              "Children who read \"saw\" as \"was\": point to the first letter and say sss.",
+              "Children sound out \"Sam\", \"Pam\", \"Nan\", \"pan\", \"map\", and \"nap\" with the letters. The other words are tricky words: saw, off, can, get, is, with, in, on, a, and."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher, page by page.",
+            "th": "เด็กอ่านพร้อมครูทีละหน้า"
+          },
+          "harder": {
+            "en": "The child reads the whole book alone to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher sits with one pair.",
+            "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
+          },
+          "materials": [
+            "books (one for each pair): \"Sam and Pam\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกของ \"Sam and Pam\" อ่านชื่อเรื่อง แล้วถามว่าหนังสือเล่มนี้เกี่ยวกับอะไร",
+              "ให้ดูหน้า \"Sounds in this book\" (เสียงในหนังสือเล่มนี้): ทั้งชั้นพูด sss สะกดออกเสียง \"Sam\" และอ่านคำที่ต้องจำ \"saw\", \"off\" และ \"with\" จากนั้นให้ดูรายการคำที่ปกหลัง: นี่คือคำหลักในหนังสือเล่มนี้",
+              "อ่านหน้า 1 พร้อมทั้งชั้น: สะกดออกเสียง \"Sam\" และ \"Pam\" โดยวางนิ้วใต้ตัวอักษร และอ่าน \"saw\" เป็นคำที่ต้องจำ",
+              "จากนั้นให้อ่านเป็นคู่: คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป"
+            ],
+            "teacherLanguage": [
+              "\"ดู Sam and Pam. Pam เป็นใคร? It is Nan's doll! (เป็นตุ๊กตาของ Nan)\"",
+              "\"ดูหน้านี้ นี่คือเสียงและคำในหนังสือ เสียงอะไร? Sss!\"",
+              "\"วางนิ้วใต้ตัวอักษร Sss - /a/ - mmm Sam! ส่วนคำนี้เป็นคำที่ต้องจำ: saw\"",
+              "\"ถึงตาเด็ก ๆ อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน คู่คนที่ 1 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
+              "คู่ผลัดกันอ่านทีละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"saw\" เป็น \"was\": ชี้ที่ตัวอักษรตัวแรก แล้วพูด sss",
+              "เด็ก ๆ สะกดออกเสียง \"Sam\", \"Pam\", \"Nan\", \"pan\", \"map\" และ \"nap\" ด้วยตัวอักษร คำอื่นเป็นคำที่ต้องจำ: saw, off, can, get, is, with, in, on, a, and"
+            ]
+          }
+        },
+        {
+          "id": "C5",
+          "title": {
+            "en": "Comprehension",
+            "th": "ตรวจความเข้าใจ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Ask two questions about the book, one with the frame of the week. Children answer with a short sentence."
+            ],
+            "teacherLanguage": [
+              "\"Look at page 7. Is Pam on Sam? No! Pam is off Sam!\"",
+              "\"Look at page 3. Sam holds Pam with his two hands. How many hands do you have? I have two hands!\""
+            ],
+            "studentActions": [
+              "Children answer, then say the full answer with the teacher."
+            ],
+            "watchFor": [
+              "Children who answer with one word: say the full answer; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Ask only yes or no questions: \"Is Pam in a pan?\"",
+            "th": "ถามเฉพาะคำถามแบบใช่หรือไม่ใช่: \"Is Pam in a pan?\" (Pam อยู่ในกระทะใช่ไหม)"
+          },
+          "harder": {
+            "en": "A child asks a question about a page: \"Who saw Sam?\"",
+            "th": "เด็กคนหนึ่งถามคำถามเกี่ยวกับหน้าหนึ่ง: \"Who saw Sam?\" (ใครเห็น Sam)"
+          },
+          "group": {
+            "en": "Pairs ask each other one question.",
+            "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
+          },
+          "materials": [
+            "books (one for each pair): \"Sam and Pam\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ถามคำถาม 2 ข้อเกี่ยวกับหนังสือ โดยให้ 1 ข้อใช้กรอบประโยคของสัปดาห์ เด็ก ๆ ตอบเป็นประโยคสั้น ๆ"
+            ],
+            "teacherLanguage": [
+              "\"ดูหน้า 7 Is Pam on Sam? (Pam อยู่บนตัว Sam ไหม) No! Pam is off Sam! (ไม่ใช่! Pam ตกลงจากตัว Sam แล้ว)\"",
+              "\"ดูหน้า 3 Sam อุ้ม Pam ไว้ด้วยมือทั้ง 2 ข้าง How many hands do you have? (หนูมีมือกี่ข้าง) I have two hands! (ฉันมีมือ 2 ข้าง)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ตอบ แล้วพูดคำตอบเต็มพร้อมครู"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบด้วยคำเดียว: พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "C6",
+          "title": {
+            "en": "Favorite page",
+            "th": "หน้าที่ชอบ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask two or three children to read their favorite page of \"Sam and Pam\"."
+            ],
+            "teacherLanguage": [
+              "\"Which page do you like? Read it to us.\""
+            ],
+            "studentActions": [
+              "Two or three children read one page each."
+            ],
+            "watchFor": [
+              "Children who are not sure: let them choose a page, then read it with them."
+            ]
+          },
+          "easier": {
+            "en": "The child points to the page; the class reads it.",
+            "th": "เด็กชี้ที่หน้านั้น ทั้งชั้นอ่าน"
+          },
+          "harder": {
+            "en": "The child reads the page and says why: \"I like Pam!\"",
+            "th": "เด็กอ่านหน้านั้นและบอกเหตุผล: \"I like Pam!\" (หนูชอบ Pam!)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "books (one for each pair): \"Sam and Pam\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 2 หรือ 3 คนอ่านหน้าที่ชอบใน \"Sam and Pam\""
+            ],
+            "teacherLanguage": [
+              "\"หนูชอบหน้าไหน? อ่านให้เราฟัง\""
+            ],
+            "studentActions": [
+              "เด็ก 2 หรือ 3 คนอ่านคนละ 1 หน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่แน่ใจ: ให้เด็กเลือกหน้า แล้วอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "C7",
+          "title": {
+            "en": "Sticker",
+            "th": "สติกเกอร์"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Give each child the sticker of \"Sam and Pam\".",
+              "Children put it on number 5 of the book map in their book."
+            ],
+            "teacherLanguage": [
+              "\"You read the book! Here is your sticker.\"",
+              "\"Put it on the book map, on number 5.\""
+            ],
+            "studentActions": [
+              "Children put the sticker on the book map and say the book title."
+            ],
+            "watchFor": [
+              "Children who put the sticker in the wrong place: show number 5 on the map."
+            ]
+          },
+          "easier": {
+            "en": "Put the sticker on the map with the child.",
+            "th": "ติดสติกเกอร์บนแผนที่หนังสือพร้อมกับเด็ก"
+          },
+          "harder": {
+            "en": "The child says the title and reads one page from the book.",
+            "th": "เด็กพูดชื่อหนังสือและอ่าน 1 หน้าจากหนังสือ"
+          },
+          "group": {
+            "en": "The table leader gives out the stickers.",
+            "th": "หัวหน้าโต๊ะแจกสติกเกอร์"
+          },
+          "materials": [
+            "stickers: \"Sam and Pam\"",
+            "student book: book map"
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกสติกเกอร์ \"Sam and Pam\" ให้เด็กแต่ละคน",
+              "เด็ก ๆ ติดสติกเกอร์ที่หมายเลข 5 ของแผนที่หนังสือในหนังสือของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"เด็ก ๆ อ่านหนังสือจบแล้ว! นี่คือสติกเกอร์ของเด็ก ๆ\"",
+              "\"ติดที่แผนที่หนังสือ ที่หมายเลข 5\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ติดสติกเกอร์บนแผนที่หนังสือ และพูดชื่อหนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่ติดสติกเกอร์ผิดที่: ชี้หมายเลข 5 บนแผนที่หนังสือให้ดู"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "day": 4,
+      "title": {
+        "en": "Read and Write",
+        "th": "อ่านและเขียน"
+      },
+      "prep": [
+        {
+          "en": "Put crayons on each table, and mark the writing page in the student books (D4).",
+          "th": "วางสีเทียนไว้ทุกโต๊ะ และคั่นหน้ากิจกรรมเขียนในหนังสือนักเรียนไว้ (D4)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "D1",
+          "title": {
+            "en": "Re-read",
+            "th": "อ่านซ้ำ"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Children read \"Sam and Pam\" again in pairs, with a finger under the words. Partner A reads a page, partner B reads the next.",
+              "Sit with one table and listen to each child read two pages."
+            ],
+            "teacherLanguage": [
+              "\"Read the book again. Finger under the words.\"",
+              "\"Read page 6 to me. Good! Pam is on Sam!\""
+            ],
+            "studentActions": [
+              "Children read the book in pairs, with a finger under each word."
+            ],
+            "watchFor": [
+              "Note on the record sheet the children who cannot yet sound out \"Sam\" and \"Pam\"."
+            ]
+          },
+          "easier": {
+            "en": "The child reads together with the partner.",
+            "th": "เด็กอ่านพร้อมกับคู่"
+          },
+          "harder": {
+            "en": "The child reads the book alone to the partner.",
+            "th": "เด็กอ่านหนังสือให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher listens to one table.",
+            "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
+          },
+          "materials": [
+            "books (one for each pair): \"Sam and Pam\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ อ่าน \"Sam and Pam\" อีกครั้งเป็นคู่ โดยวางนิ้วใต้คำ คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป",
+              "นั่งกับ 1 โต๊ะ และฟังเด็กแต่ละคนอ่าน 2 หน้า"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสืออีกครั้ง วางนิ้วใต้คำ\"",
+              "\"อ่านหน้า 6 ให้ครูฟัง เก่งมาก! Pam is on Sam! (Pam อยู่บนตัว Sam)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านหนังสือเป็นคู่ โดยวางนิ้วใต้แต่ละคำ"
+            ],
+            "watchFor": [
+              "จดในแบบบันทึกผล: เด็กที่ยังสะกดออกเสียง \"Sam\" และ \"Pam\" ไม่ได้"
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "title": {
+            "en": "Tricky words",
+            "th": "คำที่ต้องจำ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Show the cards a, and, can, I, in, on, the, get, is, this, saw, off, with fast.",
+              "Write \"saw\" on the board, then erase one letter; children say the missing letter."
+            ],
+            "teacherLanguage": [
+              "\"Read it fast! Saw. Off. With. This. Is. The. Get. I. In. On. Can. And. A.\"",
+              "\"Close your eyes. ... Open your eyes. What is missing?\""
+            ],
+            "studentActions": [
+              "Children read the cards fast.",
+              "Children say the missing letter name."
+            ],
+            "watchFor": [
+              "Read the tricky word card a as \"uh\", as in \"a cat\".",
+              "Children who mix up \"off\" and \"on\": put the two cards side by side and read them slowly."
+            ]
+          },
+          "easier": {
+            "en": "Show only the new cards: saw, off, with.",
+            "th": "ชูเฉพาะบัตรใหม่: saw, off, with"
+          },
+          "harder": {
+            "en": "Erase two letters of \"with\".",
+            "th": "ลบตัวอักษร 2 ตัวของ \"with\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "tricky word cards: a, and, can, I, in, on, the, get, is, this, saw, off, with",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตร a, and, can, I, in, on, the, get, is, this, saw, off, with อย่างรวดเร็ว",
+              "เขียน \"saw\" บนกระดาน แล้วลบตัวอักษร 1 ตัว เด็ก ๆ บอกตัวอักษรที่หายไป"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเร็ว ๆ! Saw, off, with, this, is, the, get, I, in, on, can, and, a\"",
+              "\"หลับตา ... ลืมตา อะไรหายไป?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรอย่างรวดเร็ว",
+              "เด็ก ๆ บอกชื่อตัวอักษรที่หายไป"
+            ],
+            "watchFor": [
+              "อ่านบัตรคำที่ต้องจำ a ว่า \"uh\" (เออะ) แบบใน \"a cat\"",
+              "เด็กที่สับสนระหว่าง \"off\" กับ \"on\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
+            ]
+          }
+        },
+        {
+          "id": "D3",
+          "title": {
+            "en": "Leveled reader",
+            "th": "หนังสืออ่านแบ่งระดับ"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "Give out the class set of \"I Have Two\" (Sprout band).",
+              "Read it together once, then pairs read it page by page."
+            ],
+            "teacherLanguage": [
+              "\"Open your book. Read with me.\"",
+              "\"Now read it with your partner. Partner A reads, partner B reads.\""
+            ],
+            "studentActions": [
+              "Children read \"I Have Two\" together, then in pairs."
+            ],
+            "watchFor": [
+              "Children who read a body word wrong: point to the picture, then to their own body."
+            ]
+          },
+          "easier": {
+            "en": "Pairs read only pages 1 to 4.",
+            "th": "คู่อ่านเฉพาะหน้า 1 ถึง 4"
+          },
+          "harder": {
+            "en": "The child reads the whole book to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟัง"
+          },
+          "group": {
+            "en": "Pairs.",
+            "th": "ทำเป็นคู่"
+          },
+          "materials": [
+            "books (one for each pair): \"I Have Two\""
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกหนังสือ \"I Have Two\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
+            ],
+            "teacherLanguage": [
+              "\"เปิดหนังสือ อ่านพร้อมครู\"",
+              "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่าน \"I Have Two\" พร้อมกัน แล้วอ่านเป็นคู่"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านคำศัพท์ส่วนของร่างกายผิด: ชี้ที่ภาพ แล้วชี้ที่ร่างกายของเด็กเอง"
+            ]
+          }
+        },
+        {
+          "id": "D4",
+          "title": {
+            "en": "Write it",
+            "th": "เขียน"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Part 1 (5 min): write \"I have two ___.\" on the board. Show where the big letter and the full stop go. \"I\" is always a big letter.",
+              "Children trace \"I have two eyes.\" in the book. Then they draw their two eyes in the face above it.",
+              "Stand-and-move break (at minute 5): all children stand up. Say \"Show me two hands!\", then \"Stamp two feet!\" The class does it and says \"I have two hands!\" and \"I have two feet!\" Then they sit down.",
+              "Part 2 (5 min): in the second box, children draw two hands, two ears, or two feet. They find the word under the box (hands, ears, feet) and trace it."
+            ],
+            "teacherLanguage": [
+              "\"A big letter I. A full stop at the end.\"",
+              "\"Trace the words: I have two eyes.\"",
+              "\"Draw your eyes in the face.\"",
+              "\"Stand up! Show me two hands! I have two hands!\"",
+              "\"Now draw two hands, two ears, or two feet. Find the word and trace it.\""
+            ],
+            "studentActions": [
+              "Children trace the frame and draw the eyes.",
+              "Children stand, move, and say the frame in the break.",
+              "Children draw a second picture, then find and trace the body word."
+            ],
+            "watchFor": [
+              "Children who trace the wrong body word: point to the picture and ask: \"What is it?\""
+            ]
+          },
+          "easier": {
+            "en": "Draw with the child; the child traces the words.",
+            "th": "วาดภาพพร้อมกับเด็ก แล้วให้เด็กลากเส้นตามคำ"
+          },
+          "harder": {
+            "en": "The child traces the frame again on the second line with the word of the second picture: \"I have two feet.\"",
+            "th": "เด็กลากเส้นตามกรอบประโยคอีกครั้งบนบรรทัดที่สอง โดยใช้คำของภาพที่สอง: \"I have two feet.\" (ฉันมีเท้า 2 ข้าง)"
+          },
+          "group": {
+            "en": "Alone; at the end, the children make pairs and show each other the page.",
+            "th": "ทำคนเดียว ตอนท้ายให้เด็กจับคู่และเปิดหน้านั้นให้กันดู"
+          },
+          "materials": [
+            "student book: writing page",
+            "crayons",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ส่วนที่ 1 (5 นาที): เขียน \"I have two ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน \"I\" เป็นตัวพิมพ์ใหญ่เสมอ",
+              "เด็ก ๆ ลากเส้นตาม \"I have two eyes.\" ในหนังสือ จากนั้นวาดตา 2 ข้างของตัวเองลงในใบหน้าที่อยู่เหนือประโยค",
+              "พักยืนขยับตัว (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น ครูพูดว่า \"Show me two hands!\" (ชูมือ 2 ข้าง) แล้วพูดว่า \"Stamp two feet!\" (กระทืบเท้า 2 ข้าง) ทั้งชั้นทำตามและพูดว่า \"I have two hands!\" และ \"I have two feet!\" แล้วนั่งลง",
+              "ส่วนที่ 2 (5 นาที): ในช่องที่สอง เด็ก ๆ วาดมือ 2 ข้าง หู 2 ข้าง หรือเท้า 2 ข้าง แล้วหาคำใต้ช่องที่ตรงกับภาพ (hands, ears, feet) และลากเส้นตามคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"I ตัวพิมพ์ใหญ่ ใส่จุดที่ท้ายประโยค\"",
+              "\"ลากเส้นตามคำ: I have two eyes.\"",
+              "\"วาดตาของหนูลงในใบหน้า\"",
+              "\"Stand up! (ยืนขึ้น) Show me two hands! (ชูมือ 2 ข้าง) I have two hands!\"",
+              "\"ทีนี้วาดมือ 2 ข้าง หู 2 ข้าง หรือเท้า 2 ข้าง หาคำนั้นแล้วลากเส้นตาม\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ลากเส้นตามกรอบประโยค และวาดตา",
+              "เด็ก ๆ ยืน ขยับตัว และพูดกรอบประโยคในช่วงพัก",
+              "เด็ก ๆ วาดภาพที่สอง แล้วหาคำศัพท์ส่วนของร่างกายและลากเส้นตาม"
+            ],
+            "watchFor": [
+              "เด็กที่ลากเส้นตามคำศัพท์ส่วนของร่างกายผิดคำ: ชี้ที่ภาพแล้วถามว่า: \"What is it?\" (นี่คืออะไร)"
+            ]
+          }
+        },
+        {
+          "id": "D5",
+          "title": {
+            "en": "Share",
+            "th": "นำเสนอ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask four children to read their page to the class."
+            ],
+            "teacherLanguage": [
+              "\"Read your page to us. Hold up your book.\""
+            ],
+            "studentActions": [
+              "Four children read \"I have two ___.\" from their book and point to their body."
+            ],
+            "watchFor": [
+              "Children who read too quietly: stand next to them and read with them."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher.",
+            "th": "เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "The child reads both lines and points to the pictures.",
+            "th": "เด็กอ่านทั้ง 2 บรรทัด และชี้ที่ภาพ"
+          },
+          "group": {
+            "en": "Whole class; the class points to the same part of the body.",
+            "th": "ทั้งชั้น: ทั้งชั้นชี้ที่ส่วนเดียวกันของร่างกาย"
+          },
+          "materials": [
+            "student book: writing page"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 4 คนอ่านหน้าของตัวเองให้ทั้งชั้นฟัง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหน้าของหนูให้เราฟัง ชูหนังสือขึ้น\""
+            ],
+            "studentActions": [
+              "เด็ก 4 คนอ่าน \"I have two ___.\" จากหนังสือของตัวเอง และชี้ที่ร่างกายของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านเบาเกินไป: ยืนข้างเด็กและอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "D6",
+          "title": {
+            "en": "Sing it: song show",
+            "th": "ร้องเพลง: การแสดงร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the day 5 opening, the song of the week (item 3) is the song show. The class sings with all the gestures; one table leads.",
+              "If the school allows it, film the song on the class tablet."
+            ],
+            "teacherLanguage": [
+              "\"Table 1, you are the leaders today. Show us the gestures!\"",
+              "\"Show time! Sing it with all the gestures!\""
+            ],
+            "studentActions": [
+              "The leaders do the gestures in front; the class sings and copies."
+            ],
+            "watchFor": [
+              "Leaders who forget a gesture: point to the screen.",
+              "Children who are shy on the film: they can stand in the back row."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus with the gestures.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus) พร้อมท่าประกอบเพลง"
+          },
+          "harder": {
+            "en": "The leaders sing the verse alone.",
+            "th": "ผู้นำร้องท่อนเวิร์ส (verse) เอง"
+          },
+          "group": {
+            "en": "One table leads each week.",
+            "th": "โต๊ะหนึ่งเป็นผู้นำในแต่ละสัปดาห์"
+          },
+          "materials": [
+            "karaoke videos: \"I Have Two\"",
+            "class tablet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบของวันที่ 5 เพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เป็นการแสดงร้องเพลง ทั้งชั้นร้องพร้อมทำท่าประกอบเพลงทุกท่า โต๊ะหนึ่งเป็นผู้นำ",
+              "ถ้าโรงเรียนอนุญาต ให้ถ่ายวิดีโอการร้องเพลงด้วยแท็บเล็ตของห้อง"
+            ],
+            "teacherLanguage": [
+              "\"โต๊ะ 1 วันนี้เป็นผู้นำ ทำท่าประกอบเพลงให้เพื่อน ๆ ดู!\"",
+              "\"ถึงเวลาแสดงแล้ว! ร้องพร้อมทำท่าประกอบเพลงทุกท่า!\""
+            ],
+            "studentActions": [
+              "ผู้นำทำท่าประกอบเพลงอยู่ด้านหน้า ทั้งชั้นร้องและทำท่าตาม"
+            ],
+            "watchFor": [
+              "ผู้นำที่ลืมท่า: ชี้ที่จอ",
+              "เด็กที่อายกล้อง: ให้ยืนแถวหลังได้"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "day": 5,
+      "title": {
+        "en": "Play and Check",
+        "th": "เล่นและตรวจสอบ"
+      },
+      "prep": [
+        {
+          "en": "Put the new cards and books of week 5 in the four centers. Make the word cards Sam, Pam, map, nap and the tricky word cards saw, off, with for the game.",
+          "th": "นำบัตรและหนังสือชุดใหม่ของสัปดาห์ที่ 5 ไปวางที่มุมกิจกรรมทั้ง 4 มุม และทำบัตรคำ Sam, Pam, map, nap และบัตรคำที่ต้องจำ saw, off, with สำหรับเกม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "E1",
+          "title": {
+            "en": "Centers set-up",
+            "th": "จัดมุมกิจกรรม"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the four centers and the group signs. Send each group to its first center.",
+              "Groups 1 and 2 start at the picture sort and the karaoke corner; groups 3 and 4 at the book corner and the letter cards.",
+              "Hold up each sound picture card and say the word with the class: sun, sock, sofa, sandwich, bus, dress."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, go to the picture sort. Group 2, the karaoke corner.\"",
+              "\"Group 3, the book corner. Group 4, the letter cards.\""
+            ],
+            "studentActions": [
+              "Children go to their center and sit down."
+            ],
+            "watchFor": [
+              "Groups that do not know where to go: point to the group sign at each center."
+            ]
+          },
+          "easier": {
+            "en": "Put a picture of each group on its center.",
+            "th": "ติดภาพของแต่ละกลุ่มไว้ที่มุมกิจกรรมของกลุ่มนั้น"
+          },
+          "harder": {
+            "en": "A group leader shows the center card to the group and does the first turn.",
+            "th": "หัวหน้ากลุ่มให้กลุ่มดูบัตรมุมกิจกรรม และเล่นเป็นคนแรก"
+          },
+          "group": {
+            "en": "Four groups.",
+            "th": "4 กลุ่ม"
+          },
+          "materials": [
+            "center cards",
+            "group signs",
+            "sound picture cards: sun, sock, sofa, sandwich, bus, dress"
+          ],
+          "th": {
+            "teacherActions": [
+              "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
+              "กลุ่ม 1 และ 2 เริ่มที่มุมแยกภาพและมุมคาราโอเกะ กลุ่ม 3 และ 4 เริ่มที่มุมหนังสือและมุมบัตรตัวอักษร",
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: sun, sock, sofa, sandwich, bus, dress"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปที่มุมแยกภาพ กลุ่ม 2 ไปมุมคาราโอเกะ\"",
+              "\"กลุ่ม 3 ไปมุมหนังสือ กลุ่ม 4 ไปที่มุมบัตรตัวอักษร\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ไปที่มุมกิจกรรมของตัวเองและนั่งลง"
+            ],
+            "watchFor": [
+              "กลุ่มที่ไม่รู้ว่าต้องไปที่ไหน: ชี้ที่ป้ายกลุ่มของแต่ละมุมกิจกรรม"
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups work at their center. Picture sort: sort the picture cards into \"sss at the start or the end\" and \"no sss\". Letter cards: build the words \"Sam\" and \"map\", and read them. Book corner: read the ten books of weeks 1 to 5. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"Sam and Pam\"; mark the record sheet."
+            ],
+            "teacherLanguage": [
+              "\"Read the book to me. Finger under the words.\"",
+              "\"Good! Sound it out: sss - /a/ - mmm. Sam!\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Note the children who guess the words from the picture and do not look at the letters."
+            ]
+          },
+          "easier": {
+            "en": "At the reading-record table, the child reads with the teacher.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "At the reading-record table, the child reads the whole book alone.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านทั้งเล่มด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "sorting mat: sss / no sss",
+            "sound picture cards: sun, sock, sofa, sandwich, bus, dress",
+            "picture cards: cat, dog, pen",
+            "workmats (class set)",
+            "letter cards (class set): s, n, a, p, m",
+            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\", \"I Have Two\", \"Sam and Pam\"",
+            "class tablet",
+            "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\", \"This Is My Family\", \"I Have Two\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่มีเสียง sss ที่ต้นคำหรือท้ายคำ และกองที่ไม่มีเสียง sss มุมบัตรตัวอักษร: ต่อคำ \"Sam\" และ \"map\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 10 เล่มของสัปดาห์ที่ 1 ถึง 5 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"Sam and Pam\" แล้วบันทึกในแบบบันทึกผล"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\"",
+              "\"เก่งมาก! สะกดออกเสียง: sss - /a/ - mmm Sam!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "จดชื่อเด็กที่เดาคำจากภาพ โดยไม่ดูตัวอักษร"
+            ]
+          }
+        },
+        {
+          "id": "E3",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups change: 1 and 2 go to the letter cards and the book corner; 3 and 4 go to the karaoke corner and the picture sort.",
+              "Listen to two more children at the reading-record table."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the letter cards. Group 2, the book corner. Group 3, the karaoke corner. Group 4, the picture sort.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children change centers and work.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Groups that change slowly: count down from five."
+            ]
+          },
+          "easier": {
+            "en": "Keep the same center for a group that needs more time.",
+            "th": "ให้กลุ่มที่ต้องการเวลามากขึ้นอยู่ที่มุมเดิม"
+          },
+          "harder": {
+            "en": "Groups that finish early read the word wall words to each other.",
+            "th": "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มสลับมุม: กลุ่ม 1 และ 2 ไปที่มุมบัตรตัวอักษรและมุมหนังสือ กลุ่ม 3 และ 4 ไปที่มุมคาราโอเกะและมุมแยกภาพ",
+              "ฟังเด็กอีก 2 คนอ่านที่โต๊ะบันทึกการอ่าน"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปที่มุมบัตรตัวอักษร กลุ่ม 2 ไปมุมหนังสือ กลุ่ม 3 ไปมุมคาราโอเกะ กลุ่ม 4 ไปที่มุมแยกภาพ\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เปลี่ยนมุมกิจกรรมและทำกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "กลุ่มที่เปลี่ยนมุมช้า: นับถอยหลังจาก 5"
+            ]
+          }
+        },
+        {
+          "id": "E4",
+          "title": {
+            "en": "Game",
+            "th": "เกม"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Play \"Swat the word\": put the word cards Sam, Pam, map, nap and the tricky word cards saw, off, with on the board.",
+              "Say a word. Two children run to the board. The first child to touch the card reads it."
+            ],
+            "teacherLanguage": [
+              "\"Ready? Saw!\"",
+              "\"Touch the word. Read it: saw!\"",
+              "\"Next two. Ready?\""
+            ],
+            "studentActions": [
+              "Two children at a time touch the card and read the word.",
+              "The class reads the word with them."
+            ],
+            "watchFor": [
+              "Fast children who always win: ask them to touch with the left hand, or hop to the board.",
+              "Children who touch \"Pam\" for \"map\": read both words slowly, sound by sound."
+            ]
+          },
+          "easier": {
+            "en": "Put only four cards on the board: Sam, Pam, saw, with.",
+            "th": "ติดบัตรเพียง 4 ใบบนกระดาน: Sam, Pam, saw, with"
+          },
+          "harder": {
+            "en": "Say only the first sound, sss; the child finds a word that starts with sss.",
+            "th": "พูดเฉพาะเสียงแรก คือ sss เด็กหาคำที่ขึ้นต้นด้วย sss"
+          },
+          "group": {
+            "en": "Two teams; one child from each team at a time.",
+            "th": "2 ทีม ทีมละ 1 คนในแต่ละครั้ง"
+          },
+          "materials": [
+            "word cards: Sam, Pam, map, nap",
+            "tricky word cards: saw, off, with"
+          ],
+          "th": {
+            "teacherActions": [
+              "เล่นเกม \"Swat the word\": ติดบัตรคำ Sam, Pam, map, nap และบัตรคำที่ต้องจำ saw, off, with บนกระดาน",
+              "พูดคำ 1 คำ เด็ก 2 คนวิ่งไปที่กระดาน เด็กคนแรกที่แตะบัตรนั้นอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"พร้อมไหม? saw!\"",
+              "\"แตะคำนั้น อ่าน: saw!\"",
+              "\"2 คนต่อไป พร้อมไหม?\""
+            ],
+            "studentActions": [
+              "เด็กครั้งละ 2 คนแตะบัตรและอ่านคำ",
+              "ทั้งชั้นอ่านคำนั้นพร้อมกับเด็ก 2 คนนั้น"
+            ],
+            "watchFor": [
+              "เด็กที่เร็วและชนะทุกครั้ง: ให้แตะด้วยมือซ้าย หรือกระโดดขาเดียวไปที่กระดาน",
+              "เด็กที่แตะ \"Pam\" แทน \"map\": อ่านทั้ง 2 คำช้า ๆ ทีละเสียง"
+            ]
+          }
+        },
+        {
+          "id": "E5",
+          "title": {
+            "en": "Check",
+            "th": "ตรวจสอบ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Children do the check page: in rows 1 to 3, circle the picture that starts with sss; in rows 4 and 5, circle the word that you say. Then they write the letter s and the word \"Sam\".",
+              "Collect the books and mark the check."
+            ],
+            "teacherLanguage": [
+              "\"Row 1: sun, cat, dog. Which one starts with sss? Circle it.\"",
+              "\"Row 2: pen, sock, bed. Which one starts with sss? Circle it.\"",
+              "\"Row 3: cup, hat, sofa. Which one starts with sss? Circle it.\"",
+              "\"Row 4. Find the word Sam. Circle it.\"",
+              "\"Row 5. Find the word saw. Circle it.\"",
+              "\"Now write the letter s. Then write the word Sam, with a big letter S.\""
+            ],
+            "studentActions": [
+              "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter s, and write \"Sam\"."
+            ],
+            "watchFor": [
+              "Children who circle every picture, or a wrong picture in two rows: mark sss as weak on the record sheet; it goes back on the review strip.",
+              "Children who circle a wrong word in row 4 or row 5: mark that word as weak; it goes back on the review strip."
+            ]
+          },
+          "easier": {
+            "en": "Sit next to the child and point to each picture while you say it.",
+            "th": "นั่งข้างเด็ก และชี้แต่ละภาพขณะพูดคำ"
+          },
+          "harder": {
+            "en": "The child writes \"map\" too.",
+            "th": "เด็กเขียน \"map\" ด้วย"
+          },
+          "group": {
+            "en": "Alone.",
+            "th": "ทำคนเดียว"
+          },
+          "materials": [
+            "student book: check page",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย sss แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร s และคำ \"Sam\"",
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+            ],
+            "teacherLanguage": [
+              "\"แถว 1: sun, cat, dog คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
+              "\"แถว 2: pen, sock, bed คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
+              "\"แถว 3: cup, hat, sofa คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
+              "\"แถว 4 หาคำว่า Sam วงกลมไว้\"",
+              "\"แถว 5 หาคำว่า saw วงกลมไว้\"",
+              "\"ทีนี้เขียนตัวอักษร s แล้วเขียนคำ Sam โดยใช้ S ตัวพิมพ์ใหญ่\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร s และเขียน \"Sam\""
+            ],
+            "watchFor": [
+              "เด็กที่วงกลมทุกภาพ หรือวงกลมภาพผิดใน 2 แถว: บันทึกในแบบบันทึกผลว่าเสียง sss ยังไม่แม่น แล้วเสียงนี้จะกลับไปอยู่บนแถบทบทวน",
+              "เด็กที่วงกลมคำผิดในแถว 4 หรือแถว 5: บันทึกว่าคำนั้นยังไม่แม่น แล้วคำนั้นจะกลับไปอยู่บนแถบทบทวน"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "review": [
+    {
+      "day": 1,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "frame",
+          "text": "I have two ___.",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "m",
+          "week": 4,
+          "audio": "phonemes/daniel/05-m.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "is",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "this",
+          "week": 4
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "This is my ___.",
+          "week": 4
+        }
+      ]
+    }
+  ],
+  "check": {
+    "items": [
+      {
+        "kind": "circle-picture",
+        "sound": "/s/",
+        "pictures": [
+          "sun",
+          "cat",
+          "dog"
+        ],
+        "answer": "sun"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/s/",
+        "pictures": [
+          "pen",
+          "sock",
+          "bed"
+        ],
+        "answer": "sock"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/s/",
+        "pictures": [
+          "cup",
+          "hat",
+          "sofa"
+        ],
+        "answer": "sofa"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "Pam",
+          "Sam",
+          "map"
+        ],
+        "answer": "Sam"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "with",
+          "saw",
+          "is"
+        ],
+        "answer": "saw"
+      },
+      {
+        "kind": "write-letter",
+        "letter": "s"
+      },
+      {
+        "kind": "write-word",
+        "word": "Sam"
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "sun",
+      "sock",
+      "sofa"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"sss\", as in \"sun\". It is a long hiss, close to the Thai letter ส, with no \"uh\" after it. Your child also learns to say \"I have two hands.\" in English.",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"sss\" เหมือนในคำว่า \"sun\" เป็นเสียงลมลอดฟันยาว ๆ ใกล้กับเสียง ส ในภาษาไทย โดยไม่มีเสียง \"uh\" (เออะ) ตามหลัง และบุตรหลานยังได้ฝึกพูดเป็นภาษาอังกฤษว่า \"I have two hands.\" (ฉันมีมือ 2 ข้าง)"
+    },
+    "activity": {
+      "en": "Play \"Touch your nose!\" in English: say a body word (nose, ears, eyes, hands, feet), and your child touches it. Then your child shows two hands and says \"I have two hands.\" Find socks at home and say \"sssock\" together.",
+      "th": "เล่นเกม \"Touch your nose!\" (แตะจมูก) เป็นภาษาอังกฤษ: พูดคำศัพท์ส่วนของร่างกาย 1 คำ (nose จมูก, ears หู, eyes ตา, hands มือ, feet เท้า) แล้วให้บุตรหลานแตะส่วนนั้นของร่างกาย จากนั้นให้บุตรหลานชูมือ 2 ข้างและพูดว่า \"I have two hands.\" (ฉันมีมือ 2 ข้าง) แล้วหาถุงเท้าในบ้าน และพูด \"sssock\" พร้อมกับบุตรหลาน"
+    },
+    "songUrl": "/th/st/2/5?part=song",
+    "readAlongUrl": "/th/st/2/5?part=book"
+  },
+  "tags": {
+    "graphVersion": "phonics-v1",
+    "taught": [
+      "english.phonics.gpc.s.s",
+      "english.phonics.phoneme.s",
+      "english.phonics.letter.s.sound",
+      "english.phonics.letter.s.name",
+      "english.phonics.letter.s.form-lower",
+      "english.phonics.tricky.off",
+      "english.phonics.tricky.saw",
+      "english.phonics.tricky.with"
+    ],
+    "reviewed": [
+      "english.phonics.gpc.m.m",
+      "english.phonics.gpc.p.p",
+      "english.phonics.gpc.n.n",
+      "english.phonics.tricky.is",
+      "english.phonics.tricky.this",
+      "english.phonics.tricky.the",
+      "english.phonics.tricky.get",
+      "english.phonics.tricky.a",
+      "english.phonics.tricky.and",
+      "english.phonics.tricky.can",
+      "english.phonics.pa.phoneme.blend-2-3",
+      "english.phonics.pattern.cvc-short-a",
+      "english.phonics.gpc.a.short-a",
+      "english.phonics.tricky.i",
+      "english.phonics.tricky.in",
+      "english.phonics.tricky.on",
+      "english.phonics.pa.initial-sound.identify",
+      "english.phonics.pa.final-sound.identify"
+    ]
+  }
+}

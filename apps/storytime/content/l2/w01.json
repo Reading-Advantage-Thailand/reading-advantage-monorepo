@@ -1,0 +1,4233 @@
+{
+  "approval": {
+    "text": {
+      "status": "approved",
+      "date": "2026-10-23",
+      "words": "publish week 1",
+      "source": "Workbooks commit 4d78b21 (decision S29)"
+    },
+    "thai": {
+      "status": "approved",
+      "date": "2026-10-22",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 67"
+    },
+    "images": {
+      "status": "draft"
+    },
+    "audio": {
+      "status": "draft"
+    },
+    "song": {
+      "status": "draft"
+    },
+    "scripts": {
+      "status": "approved",
+      "date": "2026-10-23",
+      "words": "publish week 1",
+      "source": "Workbooks commit 4d78b21 (decision S29)"
+    }
+  },
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "shape": "storytime-week",
+    "level": 2,
+    "week": 1,
+    "unit": 1,
+    "key": "st2/1",
+    "kind": "teach",
+    "periodMinutes": 30,
+    "openingMinutes": 6,
+    "title": "Hello!",
+    "band": "Sprout",
+    "status": "published"
+  },
+  "focus": {
+    "element": {
+      "id": "english.phonics.gpc.n.n",
+      "graphemes": [
+        "n"
+      ],
+      "sound": "/n/",
+      "action": {
+        "en": "Nod your head slowly, as for \"yes\", and hum nnn.",
+        "th": "พยักหน้าช้า ๆ เหมือนตอบว่า \"ใช่\" และฮัมเสียง nnn"
+      },
+      "audio": "phonemes/daniel/04-n.mp3"
+    },
+    "paSkill": {
+      "en": "the first and last sound n; blend three sounds by ear",
+      "th": "ฟังเสียงแรกและเสียงสุดท้าย n และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "trickyWords": [
+      "a",
+      "and",
+      "can"
+    ],
+    "frame": "Hello, I am ___.",
+    "family": {
+      "name": {
+        "en": "Names and greetings",
+        "th": "ชื่อและการทักทาย"
+      },
+      "words": [
+        {
+          "word": "hello",
+          "image": {
+            "prompt": "Pat (drawn young, about five years old) waves hello at the green classroom door in the morning sun. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Pat"
+            ],
+            "caption": "hello"
+          }
+        },
+        {
+          "word": "goodbye",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) waves goodbye at the school gate in the afternoon, his school bag on his back. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Ben"
+            ],
+            "caption": "goodbye"
+          }
+        },
+        {
+          "word": "boy",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) stands and smiles, full body. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": "boy"
+          }
+        },
+        {
+          "word": "girl",
+          "image": {
+            "prompt": "May (drawn young, about five years old) stands and smiles, full body. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "May"
+            ],
+            "caption": "girl"
+          }
+        },
+        {
+          "word": "friend",
+          "image": {
+            "prompt": "Mia (drawn young, about five years old) and Nan hold hands and smile at each other. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Mia",
+              "Nan"
+            ],
+            "caption": "friend"
+          }
+        },
+        {
+          "word": "teacher",
+          "image": {
+            "prompt": "Teacher Kim holds a big picture book and smiles, full body. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Teacher Kim"
+            ],
+            "caption": "teacher"
+          }
+        }
+      ]
+    },
+    "wordWall": []
+  },
+  "opening": {
+    "pa": [
+      {
+        "en": "\"Listen: nose. What is the first sound? Nnn! Listen: sun. What is the last sound? Nnn!\"",
+        "th": "\"ฟัง: nose เสียงแรกคือเสียงอะไร? Nnn! ฟัง: sun เสียงสุดท้ายคือเสียงอะไร? Nnn!\""
+      },
+      {
+        "en": "\"Listen: nest. What is the first sound? Nnn! Listen: pen. What is the last sound? Nnn!\"",
+        "th": "\"ฟัง: nest เสียงแรกคือเสียงอะไร? Nnn! ฟัง: pen เสียงสุดท้ายคือเสียงอะไร? Nnn!\""
+      },
+      {
+        "en": "\"Listen: nnn - /e/ - /t/. What is the word? Net! Listen: /p/ - /e/ - nnn. What is the word? Pen!\"",
+        "th": "\"ฟัง: nnn - /e/ - /t/ คำนี้คือคำอะไร? Net! ฟัง: /p/ - /e/ - nnn คำนี้คือคำอะไร? Pen!\""
+      },
+      {
+        "en": "\"Listen: nnn - /u/ - /t/. What is the word? Nut! Listen: sss - /u/ - nnn. What is the word? Sun!\"",
+        "th": "\"ฟัง: nnn - /u/ - /t/ คำนี้คือคำอะไร? Nut! ฟัง: sss - /u/ - nnn คำนี้คือคำอะไร? Sun!\""
+      },
+      {
+        "en": "\"Listen: /h/ - /e/ - nnn. What is the word? Hen! Listen: fff - /a/ - nnn. What is the word? Fan!\"",
+        "th": "\"ฟัง: /h/ - /e/ - nnn คำนี้คือคำอะไร? Hen! ฟัง: fff - /a/ - nnn คำนี้คือคำอะไร? Fan!\""
+      }
+    ],
+    "audio": [
+      [
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/04-n.mp3"
+      ],
+      [
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/04-n.mp3"
+      ],
+      [
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/27-e-short.mp3",
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/27-e-short.mp3",
+        "phonemes/daniel/04-n.mp3"
+      ],
+      [
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/30-u-short.mp3",
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/30-u-short.mp3",
+        "phonemes/daniel/04-n.mp3"
+      ],
+      [
+        "phonemes/daniel/10-h.mp3",
+        "phonemes/daniel/27-e-short.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/12-f.mp3",
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/04-n.mp3"
+      ]
+    ]
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "title": "Hello!",
+      "cover": {
+        "prompt": "Pat, May, Sam, Mia, and Ben (drawn young, about five years old) and Nan wave hello at the green door of a bright kindergarten classroom with low tables and a wall with big colorful animal pictures and no letters; Teacher Kim smiles behind them. Pat's school bag has a small round bump, as if something moves inside. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. No letters or words anywhere.",
+        "characters": [
+          "Pat",
+          "May",
+          "Sam",
+          "Mia",
+          "Ben",
+          "Teacher Kim",
+          "Nan"
+        ],
+        "caption": "Hello!"
+      },
+      "pages": [
+        {
+          "text": "Hello, I am Pat.",
+          "image": {
+            "prompt": "Pat (drawn young, about five years old) holds his small brown teddy bear and waves at the green door of a bright kindergarten classroom with low tables and a wall with big colorful animal pictures and no letters. The school bag on his back has a small round bump, as if something moves inside. No letters or words anywhere.",
+            "characters": [
+              "Pat"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Hello, I am May.",
+          "image": {
+            "prompt": "May (drawn young, about five years old) waves with both hands at a low table with a box of crayons, in a bright kindergarten classroom with a green door, low tables, and a wall with big colorful animal pictures and no letters. No letters or words anywhere.",
+            "characters": [
+              "May"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Hello, I am Sam.",
+          "image": {
+            "prompt": "Sam (drawn young, about five years old) sits in the reading corner with a picture book on his lap and waves.",
+            "characters": [
+              "Sam"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Hello, I am Mia.",
+          "image": {
+            "prompt": "Mia (drawn young, about five years old) waves next to a big box of colored blocks on the classroom rug.",
+            "characters": [
+              "Mia"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Hello, I am Nan.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, waves at the classroom window next to a small green plant in a pot.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Hello, I am Ben.",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) hangs his school bag on a hook and waves. Behind him, Pat's school bag sits on the floor and moves a little.",
+            "characters": [
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Hello, I am your teacher.",
+          "image": {
+            "prompt": "Teacher Kim kneels at the children's eye level and waves. Pat, May, Sam, Mia, Nan, and Ben (drawn young, about five years old) sit on a round rug and wave back. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers.",
+            "characters": [
+              "Teacher Kim",
+              "Pat",
+              "May",
+              "Sam",
+              "Mia",
+              "Ben",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Hello, I am Pip!",
+          "image": {
+            "prompt": "Pip the puppy pops his head out of Pat's open school bag with a big happy face. Pat, May, Sam, Mia, Nan, Ben (drawn young, about five years old), and Teacher Kim laugh in surprise. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+            "characters": [
+              "Pip",
+              "Pat",
+              "Teacher Kim",
+              "May",
+              "Sam",
+              "Mia",
+              "Ben",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "backWords": [
+        "hello",
+        "I",
+        "am",
+        "your",
+        "teacher"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w01/books/1-hello.mp3",
+        "sentences": [
+          {
+            "sentence": "Hello, I am Pat.",
+            "startTime": 0,
+            "endTime": 1.706,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 0,
+                "end": 0.34
+              },
+              {
+                "word": "I",
+                "start": 0.7,
+                "end": 0.86
+              },
+              {
+                "word": "am",
+                "start": 0.86,
+                "end": 0.96
+              },
+              {
+                "word": "Pat",
+                "start": 0.96,
+                "end": 1.706
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Hello, I am May.",
+            "startTime": 2.906,
+            "endTime": 4.734,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 2.906,
+                "end": 3.266
+              },
+              {
+                "word": "I",
+                "start": 3.706,
+                "end": 3.986
+              },
+              {
+                "word": "am",
+                "start": 3.986,
+                "end": 4.166
+              },
+              {
+                "word": "May",
+                "start": 4.166,
+                "end": 4.734
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Hello, I am Sam.",
+            "startTime": 5.934,
+            "endTime": 7.597,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 5.934,
+                "end": 6.274
+              },
+              {
+                "word": "I",
+                "start": 6.714,
+                "end": 6.954
+              },
+              {
+                "word": "am",
+                "start": 6.954,
+                "end": 7.094
+              },
+              {
+                "word": "Sam",
+                "start": 7.094,
+                "end": 7.597
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Hello, I am Mia.",
+            "startTime": 8.797,
+            "endTime": 10.112,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 8.797,
+                "end": 9.117
+              },
+              {
+                "word": "I",
+                "start": 9.377,
+                "end": 9.497
+              },
+              {
+                "word": "am",
+                "start": 9.497,
+                "end": 9.637
+              },
+              {
+                "word": "Mia",
+                "start": 9.637,
+                "end": 10.112
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Hello, I am Nan.",
+            "startTime": 11.312,
+            "endTime": 13.367,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 11.312,
+                "end": 11.612
+              },
+              {
+                "word": "I",
+                "start": 12.072,
+                "end": 12.472
+              },
+              {
+                "word": "am",
+                "start": 12.472,
+                "end": 12.712
+              },
+              {
+                "word": "Nan",
+                "start": 12.712,
+                "end": 13.367
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Hello, I am Ben.",
+            "startTime": 14.567,
+            "endTime": 16.541,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 14.567,
+                "end": 14.887
+              },
+              {
+                "word": "I",
+                "start": 15.427,
+                "end": 15.727
+              },
+              {
+                "word": "am",
+                "start": 15.727,
+                "end": 15.887
+              },
+              {
+                "word": "Ben",
+                "start": 15.887,
+                "end": 16.541
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Hello, I am your teacher.",
+            "startTime": 17.741,
+            "endTime": 19.511,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 17.741,
+                "end": 18.021
+              },
+              {
+                "word": "I",
+                "start": 18.501,
+                "end": 18.721
+              },
+              {
+                "word": "am",
+                "start": 18.721,
+                "end": 18.841
+              },
+              {
+                "word": "your",
+                "start": 18.841,
+                "end": 18.961
+              },
+              {
+                "word": "teacher",
+                "start": 18.961,
+                "end": 19.511
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Hello, I am Pip!",
+            "startTime": 20.711,
+            "endTime": 22.324,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 20.711,
+                "end": 21.051
+              },
+              {
+                "word": "I",
+                "start": 21.471,
+                "end": 21.631
+              },
+              {
+                "word": "am",
+                "start": 21.631,
+                "end": 21.791
+              },
+              {
+                "word": "Pip",
+                "start": 21.791,
+                "end": 22.324
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w01/books/1-hello-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "Hello, I am Pat.",
+            "startTime": 0,
+            "endTime": 1.842,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 0,
+                "end": 0.34
+              },
+              {
+                "word": "I",
+                "start": 0.86,
+                "end": 1.06
+              },
+              {
+                "word": "am",
+                "start": 1.06,
+                "end": 1.2
+              },
+              {
+                "word": "Pat",
+                "start": 1.2,
+                "end": 1.842
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Hello, I am May.",
+            "startTime": 3.042,
+            "endTime": 4.652,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 3.042,
+                "end": 3.382
+              },
+              {
+                "word": "I",
+                "start": 3.722,
+                "end": 3.902
+              },
+              {
+                "word": "am",
+                "start": 3.902,
+                "end": 4.082
+              },
+              {
+                "word": "May",
+                "start": 4.082,
+                "end": 4.652
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Hello, I am Sam.",
+            "startTime": 5.852,
+            "endTime": 8.34,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 5.852,
+                "end": 6.232
+              },
+              {
+                "word": "I",
+                "start": 6.772,
+                "end": 7.132
+              },
+              {
+                "word": "am",
+                "start": 7.132,
+                "end": 7.312
+              },
+              {
+                "word": "Sam",
+                "start": 7.312,
+                "end": 8.34
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Hello, I am Mia.",
+            "startTime": 9.54,
+            "endTime": 11.773,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 9.54,
+                "end": 9.98
+              },
+              {
+                "word": "I",
+                "start": 10.64,
+                "end": 10.96
+              },
+              {
+                "word": "am",
+                "start": 10.96,
+                "end": 11.16
+              },
+              {
+                "word": "Mia",
+                "start": 11.16,
+                "end": 11.773
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Hello, I am Nan.",
+            "startTime": 12.973,
+            "endTime": 15.187,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 12.973,
+                "end": 13.293
+              },
+              {
+                "word": "I",
+                "start": 13.853,
+                "end": 14.173
+              },
+              {
+                "word": "am",
+                "start": 14.173,
+                "end": 14.333
+              },
+              {
+                "word": "Nan",
+                "start": 14.333,
+                "end": 15.187
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Hello, I am Ben.",
+            "startTime": 16.387,
+            "endTime": 18.565,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 16.387,
+                "end": 16.747
+              },
+              {
+                "word": "I",
+                "start": 17.187,
+                "end": 17.487
+              },
+              {
+                "word": "am",
+                "start": 17.487,
+                "end": 17.687
+              },
+              {
+                "word": "Ben",
+                "start": 17.687,
+                "end": 18.565
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Hello, I am your teacher.",
+            "startTime": 19.765,
+            "endTime": 22.577,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 19.765,
+                "end": 20.145
+              },
+              {
+                "word": "I",
+                "start": 20.945,
+                "end": 21.305
+              },
+              {
+                "word": "am",
+                "start": 21.305,
+                "end": 21.465
+              },
+              {
+                "word": "your",
+                "start": 21.465,
+                "end": 21.605
+              },
+              {
+                "word": "teacher",
+                "start": 21.605,
+                "end": 22.577
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Hello, I am Pip!",
+            "startTime": 23.777,
+            "endTime": 26.072,
+            "words": [
+              {
+                "word": "Hello",
+                "start": 23.777,
+                "end": 24.177
+              },
+              {
+                "word": "I",
+                "start": 24.757,
+                "end": 25.117
+              },
+              {
+                "word": "am",
+                "start": 25.117,
+                "end": 25.317
+              },
+              {
+                "word": "Pip",
+                "start": 25.317,
+                "end": 26.072
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "decodable",
+      "soundBook": true,
+      "title": "Nan Can Nod",
+      "cover": {
+        "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, nods with a big smile in a garden with a low tree; Pip the puppy sits next to her. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+        "characters": [
+          "Pip",
+          "Nan"
+        ],
+        "caption": "Nan Can Nod"
+      },
+      "pages": [
+        {
+          "text": "A nest.",
+          "image": {
+            "prompt": "A small bird's nest with three light blue eggs on a low tree branch in a garden. Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, points at it. One clear picture, the main thing large in the middle, a simple garden background with soft colors.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "A net.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, holds up a green butterfly net in a garden. One clear picture, the main thing large in the middle, a simple garden background with soft colors.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "A nut.",
+          "image": {
+            "prompt": "One big brown nut in Nan's open hand, close up. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "A nose.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, touches her own nose with one finger and laughs. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "A neck.",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, lifts her chin and touches her own neck with both hands; close up of her head and neck. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [
+              "Nan"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "A nurse.",
+          "image": {
+            "prompt": "A school nurse, a woman of about thirty with short black hair, a white nurse's uniform, a small white nurse's cap, and white shoes, smiles and holds a small first-aid bag with no symbol on it. One clear picture, the main thing large in the middle, a plain light background.",
+            "characters": [],
+            "caption": ""
+          }
+        },
+        {
+          "text": "A nest and a nut.",
+          "image": {
+            "prompt": "Pip the puppy sniffs a big brown nut in the grass under a low tree. Above him, the bird's nest with three light blue eggs sits on a low branch. The nest and the nut are both large and clear. A simple garden with soft colors. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+            "characters": [
+              "Pip"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Nan can nod!",
+          "image": {
+            "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, nods yes with a big smile; Pip the puppy sits next to her and nods too. One clear picture, the main thing large in the middle, a plain light background. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+            "characters": [
+              "Pip",
+              "Nan"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "soundsPage": {
+        "element": "n",
+        "words": [
+          "nest",
+          "net",
+          "nut",
+          "nose",
+          "neck",
+          "nurse",
+          "nod"
+        ],
+        "tricky": [
+          "a",
+          "and",
+          "can"
+        ]
+      },
+      "backWords": [
+        "nest",
+        "net",
+        "nut",
+        "nose",
+        "neck",
+        "nurse",
+        "nod"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w01/books/2-nan-can-nod.mp3",
+        "sentences": [
+          {
+            "sentence": "A nest.",
+            "startTime": 0,
+            "endTime": 0.946,
+            "words": [
+              {
+                "word": "A",
+                "start": 0,
+                "end": 0.16
+              },
+              {
+                "word": "nest",
+                "start": 0.16,
+                "end": 0.946
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "A net.",
+            "startTime": 2.146,
+            "endTime": 2.997,
+            "words": [
+              {
+                "word": "A",
+                "start": 2.146,
+                "end": 2.326
+              },
+              {
+                "word": "net",
+                "start": 2.326,
+                "end": 2.997
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "A nut.",
+            "startTime": 4.197,
+            "endTime": 4.935,
+            "words": [
+              {
+                "word": "A",
+                "start": 4.197,
+                "end": 4.357
+              },
+              {
+                "word": "nut",
+                "start": 4.357,
+                "end": 4.935
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "A nose.",
+            "startTime": 6.135,
+            "endTime": 7.13,
+            "words": [
+              {
+                "word": "A",
+                "start": 6.135,
+                "end": 6.295
+              },
+              {
+                "word": "nose",
+                "start": 6.295,
+                "end": 7.13
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "A neck.",
+            "startTime": 8.33,
+            "endTime": 8.959,
+            "words": [
+              {
+                "word": "A",
+                "start": 8.33,
+                "end": 8.47
+              },
+              {
+                "word": "neck",
+                "start": 8.47,
+                "end": 8.959
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "A nurse.",
+            "startTime": 10.159,
+            "endTime": 10.883,
+            "words": [
+              {
+                "word": "A",
+                "start": 10.159,
+                "end": 10.359
+              },
+              {
+                "word": "nurse",
+                "start": 10.359,
+                "end": 10.883
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "A nest and a nut.",
+            "startTime": 12.083,
+            "endTime": 13.339,
+            "words": [
+              {
+                "word": "A",
+                "start": 12.083,
+                "end": 12.203
+              },
+              {
+                "word": "nest",
+                "start": 12.203,
+                "end": 12.503
+              },
+              {
+                "word": "and",
+                "start": 12.503,
+                "end": 12.703
+              },
+              {
+                "word": "a",
+                "start": 12.703,
+                "end": 12.783
+              },
+              {
+                "word": "nut",
+                "start": 12.783,
+                "end": 13.339
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Nan can nod!",
+            "startTime": 14.539,
+            "endTime": 15.614,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 14.539,
+                "end": 14.759
+              },
+              {
+                "word": "can",
+                "start": 14.759,
+                "end": 14.979
+              },
+              {
+                "word": "nod",
+                "start": 14.979,
+                "end": 15.614
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w01/books/2-nan-can-nod-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "A nest.",
+            "startTime": 0,
+            "endTime": 1.18,
+            "words": [
+              {
+                "word": "A",
+                "start": 0,
+                "end": 0.16
+              },
+              {
+                "word": "nest",
+                "start": 0.16,
+                "end": 1.18
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "A net.",
+            "startTime": 2.38,
+            "endTime": 3.266,
+            "words": [
+              {
+                "word": "A",
+                "start": 2.38,
+                "end": 2.56
+              },
+              {
+                "word": "net",
+                "start": 2.56,
+                "end": 3.266
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "A nut.",
+            "startTime": 4.466,
+            "endTime": 5.518,
+            "words": [
+              {
+                "word": "A",
+                "start": 4.466,
+                "end": 4.626
+              },
+              {
+                "word": "nut",
+                "start": 4.626,
+                "end": 5.518
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "A nose.",
+            "startTime": 6.718,
+            "endTime": 7.943,
+            "words": [
+              {
+                "word": "A",
+                "start": 6.718,
+                "end": 6.978
+              },
+              {
+                "word": "nose",
+                "start": 6.978,
+                "end": 7.943
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "A neck.",
+            "startTime": 9.143,
+            "endTime": 10.321,
+            "words": [
+              {
+                "word": "A",
+                "start": 9.143,
+                "end": 9.343
+              },
+              {
+                "word": "neck",
+                "start": 9.343,
+                "end": 10.321
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "A nurse.",
+            "startTime": 11.521,
+            "endTime": 12.706,
+            "words": [
+              {
+                "word": "A",
+                "start": 11.521,
+                "end": 11.701
+              },
+              {
+                "word": "nurse",
+                "start": 11.701,
+                "end": 12.706
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "A nest and a nut.",
+            "startTime": 13.906,
+            "endTime": 15.717,
+            "words": [
+              {
+                "word": "A",
+                "start": 13.906,
+                "end": 14.146
+              },
+              {
+                "word": "nest",
+                "start": 14.146,
+                "end": 14.566
+              },
+              {
+                "word": "and",
+                "start": 14.566,
+                "end": 14.886
+              },
+              {
+                "word": "a",
+                "start": 14.886,
+                "end": 15.006
+              },
+              {
+                "word": "nut",
+                "start": 15.006,
+                "end": 15.717
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Nan can nod!",
+            "startTime": 16.917,
+            "endTime": 18.552,
+            "words": [
+              {
+                "word": "Nan",
+                "start": 16.917,
+                "end": 17.237
+              },
+              {
+                "word": "can",
+                "start": 17.237,
+                "end": 17.557
+              },
+              {
+                "word": "nod",
+                "start": 17.557,
+                "end": 18.552
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    }
+  ],
+  "song": {
+    "title": "Hello, I Am Pip",
+    "styleBrief": "Children's classroom hello song for a kindergarten English classroom, young learners, 104 bpm, C major, bright and playful, one warm clear female lead with an American accent, every word slowly and clearly sung, call-and-response chorus where a small group of young singers echo the short lines, acoustic guitar, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 80 seconds long.",
+    "bpm": 104,
+    "lyricSheet": "[Verse]\nHello, hello, I am Pip\nHello, hello, I am Nan\nWave your hand and say it too\nHello, I am you\n\n[Chorus]\nHello, I am Pip (clap clap)\nHello, I am Nan (clap clap)\nHello, I am, hello, I am\nHello, who are you?\n\n[Verse]\nPoint to me, I am Pip\nPoint to you, you are Nan\nNod your head and say it too\nHello, I am you\n\n[Chorus]\nHello, I am Pip (clap clap)\nHello, I am Nan (clap clap)\nHello, I am, hello, I am\nHello, who are you?",
+    "lines": [
+      {
+        "text": "Hello, hello, I am Pip",
+        "part": "verse",
+        "gesture": "point to self",
+        "image": {
+          "prompt": "Pip the puppy sits up and points one front paw at his own chest, with a happy face. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+          "characters": [
+            "Pip"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/point-to-self.jpg"
+        }
+      },
+      {
+        "text": "Hello, hello, I am Nan",
+        "part": "verse",
+        "gesture": "point to self",
+        "image": {
+          "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, waves with one hand and points to herself with the other.",
+          "characters": [
+            "Nan"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/point-to-self.jpg"
+        }
+      },
+      {
+        "text": "Wave your hand and say it too",
+        "part": "verse",
+        "gesture": "wave",
+        "image": {
+          "prompt": "A class of children (drawn young, about five years old) on a rug wave their hands and sing.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/wave.jpg"
+        }
+      },
+      {
+        "text": "Hello, I am you",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {
+          "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, points at the viewer with a big friendly smile.",
+          "characters": [
+            "Nan"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/point-forward.jpg"
+        },
+        "note": {
+          "en": "The song's play on words; sing it as written.",
+          "th": "บรรทัดนี้เป็นการเล่นคำของเพลง ให้ร้องตามที่เขียนไว้"
+        }
+      },
+      {
+        "text": "Hello, I am Pip (Hello, I am Pip!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {
+          "prompt": "Pip the puppy claps his two front paws together. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+          "characters": [
+            "Pip"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/clap.jpg"
+        }
+      },
+      {
+        "text": "Hello, I am Nan (Hello, I am Nan!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "image": {
+          "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, claps her hands.",
+          "characters": [
+            "Nan"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/clap.jpg"
+        }
+      },
+      {
+        "text": "Hello, who are you? (Hello, who are you?)",
+        "part": "chorus",
+        "gesture": "hands out",
+        "image": {
+          "prompt": "Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers, holds her hands out, palms up, with a curious face, looking at the viewer.",
+          "characters": [
+            "Nan"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/hands-out.jpg"
+        }
+      },
+      {
+        "text": "Hello, who are you?",
+        "part": "chorus",
+        "gesture": "hands out",
+        "imageOf": 6
+      },
+      {
+        "text": "Point to me, I am Pip",
+        "part": "verse",
+        "gesture": "point to self",
+        "image": {
+          "prompt": "Pip the puppy points one front paw at his own chest. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+          "characters": [
+            "Pip"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/point-to-self.jpg"
+        }
+      },
+      {
+        "text": "Point to you, you are Nan",
+        "part": "verse",
+        "gesture": "point forward",
+        "image": {
+          "prompt": "Pip the puppy points one front paw at Nan; Nan smiles. Nan: Nan, a five-year-old girl with large dark-brown eyes, short black hair in two small bunches, an orange T-shirt with a white star, red shorts, and white sneakers. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag.",
+          "characters": [
+            "Pip",
+            "Nan"
+          ],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/point-forward.jpg"
+        }
+      },
+      {
+        "text": "Nod your head and say it too",
+        "part": "verse",
+        "gesture": "nod",
+        "image": {
+          "prompt": "A class of children (drawn young, about five years old) nod their heads and smile.",
+          "characters": [],
+          "caption": "",
+          "file": "l2/media/w01/song-lines/nod.jpg"
+        }
+      },
+      {
+        "text": "Hello, I am you",
+        "part": "verse",
+        "gesture": "point forward",
+        "note": {
+          "en": "The song's play on words; sing it as written.",
+          "th": "บรรทัดนี้เป็นการเล่นคำของเพลง ให้ร้องตามที่เขียนไว้"
+        },
+        "imageOf": 3
+      },
+      {
+        "text": "Hello, I am Pip (Hello, I am Pip!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 4
+      },
+      {
+        "text": "Hello, I am Nan (Hello, I am Nan!)",
+        "part": "chorus",
+        "gesture": "clap",
+        "imageOf": 5
+      },
+      {
+        "text": "Hello, who are you? (Hello, who are you?)",
+        "part": "chorus",
+        "gesture": "hands out",
+        "imageOf": 6
+      }
+    ],
+    "times": [
+      {
+        "sentence": "Hello, hello, I am Pip",
+        "startTime": 11.4,
+        "endTime": 15.14,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 11.4,
+            "end": 11.62
+          },
+          {
+            "word": "hello,",
+            "start": 12.18,
+            "end": 12.86
+          },
+          {
+            "word": "I",
+            "start": 13.42,
+            "end": 14.2
+          },
+          {
+            "word": "am",
+            "start": 14.2,
+            "end": 14.74
+          },
+          {
+            "word": "Pip",
+            "start": 14.74,
+            "end": 15.14
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, hello, I am Nan",
+        "startTime": 15.14,
+        "endTime": 19.8,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 15.14,
+            "end": 16.28
+          },
+          {
+            "word": "hello,",
+            "start": 16.76,
+            "end": 17.44
+          },
+          {
+            "word": "I",
+            "start": 18.38,
+            "end": 18.84
+          },
+          {
+            "word": "am",
+            "start": 18.84,
+            "end": 19.34
+          },
+          {
+            "word": "Nan",
+            "start": 19.34,
+            "end": 19.8
+          }
+        ]
+      },
+      {
+        "sentence": "Wave your hand and say it too",
+        "startTime": 19.8,
+        "endTime": 24.4,
+        "words": [
+          {
+            "word": "Wave",
+            "start": 19.8,
+            "end": 20.84
+          },
+          {
+            "word": "your",
+            "start": 20.84,
+            "end": 21.52
+          },
+          {
+            "word": "hand",
+            "start": 21.52,
+            "end": 22.32
+          },
+          {
+            "word": "and",
+            "start": 22.32,
+            "end": 22.72
+          },
+          {
+            "word": "say",
+            "start": 22.72,
+            "end": 23.22
+          },
+          {
+            "word": "it",
+            "start": 23.22,
+            "end": 23.96
+          },
+          {
+            "word": "too",
+            "start": 23.96,
+            "end": 24.4
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am you",
+        "startTime": 24.4,
+        "endTime": 27.8,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 24.4,
+            "end": 25.3
+          },
+          {
+            "word": "I",
+            "start": 26.04,
+            "end": 26.88
+          },
+          {
+            "word": "am",
+            "start": 26.88,
+            "end": 27.42
+          },
+          {
+            "word": "you",
+            "start": 27.42,
+            "end": 27.8
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Pip (Hello, I am Pip!)",
+        "startTime": 29.16,
+        "endTime": 33.44,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 29.16,
+            "end": 29.96
+          },
+          {
+            "word": "I",
+            "start": 30.28,
+            "end": 30.6
+          },
+          {
+            "word": "am",
+            "start": 30.6,
+            "end": 30.88
+          },
+          {
+            "word": "Pip",
+            "start": 30.88,
+            "end": 31.16
+          },
+          {
+            "word": "Hello,",
+            "start": 31.48,
+            "end": 32.28
+          },
+          {
+            "word": "I",
+            "start": 32.6,
+            "end": 32.94
+          },
+          {
+            "word": "am",
+            "start": 32.94,
+            "end": 33.16
+          },
+          {
+            "word": "Pip!",
+            "start": 33.16,
+            "end": 33.44
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Nan (Hello, I am Nan!)",
+        "startTime": 33.72,
+        "endTime": 38.54,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 33.72,
+            "end": 34.5
+          },
+          {
+            "word": "I",
+            "start": 35.04,
+            "end": 35.18
+          },
+          {
+            "word": "am",
+            "start": 35.18,
+            "end": 35.42
+          },
+          {
+            "word": "Nan",
+            "start": 35.42,
+            "end": 35.74
+          },
+          {
+            "word": "Hello,",
+            "start": 36.22,
+            "end": 36.72
+          },
+          {
+            "word": "I",
+            "start": 37.02,
+            "end": 37.2
+          },
+          {
+            "word": "am",
+            "start": 37.2,
+            "end": 37.5
+          },
+          {
+            "word": "Nan!",
+            "start": 37.5,
+            "end": 38.54
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, who are you? (Hello, who are you?)",
+        "startTime": 38.54,
+        "endTime": 42.6,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 38.54,
+            "end": 39.52
+          },
+          {
+            "word": "who",
+            "start": 39.52,
+            "end": 39.68
+          },
+          {
+            "word": "are",
+            "start": 39.68,
+            "end": 40.0
+          },
+          {
+            "word": "you?",
+            "start": 40.0,
+            "end": 40.9
+          },
+          {
+            "word": "Hello,",
+            "start": 40.9,
+            "end": 41.48
+          },
+          {
+            "word": "who",
+            "start": 41.48,
+            "end": 41.7
+          },
+          {
+            "word": "are",
+            "start": 41.7,
+            "end": 42.2
+          },
+          {
+            "word": "you?",
+            "start": 42.2,
+            "end": 42.6
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, who are you?",
+        "startTime": 43.12,
+        "endTime": 44.9,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 43.12,
+            "end": 43.76
+          },
+          {
+            "word": "who",
+            "start": 43.76,
+            "end": 43.96
+          },
+          {
+            "word": "are",
+            "start": 43.96,
+            "end": 44.5
+          },
+          {
+            "word": "you?",
+            "start": 44.5,
+            "end": 44.9
+          }
+        ]
+      },
+      {
+        "sentence": "Point to me, I am Pip",
+        "startTime": 45.64,
+        "endTime": 49.44,
+        "words": [
+          {
+            "word": "Point",
+            "start": 45.64,
+            "end": 46.06
+          },
+          {
+            "word": "to",
+            "start": 46.06,
+            "end": 46.78
+          },
+          {
+            "word": "me,",
+            "start": 46.78,
+            "end": 47.18
+          },
+          {
+            "word": "I",
+            "start": 48.0,
+            "end": 48.46
+          },
+          {
+            "word": "am",
+            "start": 48.46,
+            "end": 49.06
+          },
+          {
+            "word": "Pip",
+            "start": 49.06,
+            "end": 49.44
+          }
+        ]
+      },
+      {
+        "sentence": "Point to you, you are Nan",
+        "startTime": 50.0,
+        "endTime": 54.12,
+        "words": [
+          {
+            "word": "Point",
+            "start": 50.0,
+            "end": 50.68
+          },
+          {
+            "word": "to",
+            "start": 50.68,
+            "end": 51.4
+          },
+          {
+            "word": "you,",
+            "start": 51.4,
+            "end": 51.94
+          },
+          {
+            "word": "you",
+            "start": 52.64,
+            "end": 52.94
+          },
+          {
+            "word": "are",
+            "start": 52.94,
+            "end": 53.62
+          },
+          {
+            "word": "Nan",
+            "start": 53.62,
+            "end": 54.12
+          }
+        ]
+      },
+      {
+        "sentence": "Nod your head and say it too",
+        "startTime": 54.12,
+        "endTime": 58.78,
+        "words": [
+          {
+            "word": "Nod",
+            "start": 54.12,
+            "end": 55.36
+          },
+          {
+            "word": "your",
+            "start": 55.36,
+            "end": 55.74
+          },
+          {
+            "word": "head",
+            "start": 55.74,
+            "end": 56.52
+          },
+          {
+            "word": "and",
+            "start": 56.52,
+            "end": 57.02
+          },
+          {
+            "word": "say",
+            "start": 57.02,
+            "end": 57.68
+          },
+          {
+            "word": "it",
+            "start": 57.68,
+            "end": 58.22
+          },
+          {
+            "word": "too",
+            "start": 58.22,
+            "end": 58.78
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am you",
+        "startTime": 58.78,
+        "endTime": 62.08,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 58.78,
+            "end": 59.58
+          },
+          {
+            "word": "I",
+            "start": 60.6,
+            "end": 61.14
+          },
+          {
+            "word": "am",
+            "start": 61.14,
+            "end": 61.72
+          },
+          {
+            "word": "you",
+            "start": 61.72,
+            "end": 62.08
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Pip (Hello, I am Pip!)",
+        "startTime": 63.48,
+        "endTime": 67.68,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 63.48,
+            "end": 64.16
+          },
+          {
+            "word": "I",
+            "start": 64.56,
+            "end": 64.9
+          },
+          {
+            "word": "am",
+            "start": 64.9,
+            "end": 65.12
+          },
+          {
+            "word": "Pip",
+            "start": 65.12,
+            "end": 65.44
+          },
+          {
+            "word": "Hello,",
+            "start": 66.52,
+            "end": 66.52
+          },
+          {
+            "word": "I",
+            "start": 66.86,
+            "end": 67.2
+          },
+          {
+            "word": "am",
+            "start": 67.2,
+            "end": 67.44
+          },
+          {
+            "word": "Pip!",
+            "start": 67.44,
+            "end": 67.68
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, I am Nan (Hello, I am Nan!)",
+        "startTime": 68.26,
+        "endTime": 72.06,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 68.26,
+            "end": 68.76
+          },
+          {
+            "word": "I",
+            "start": 69.26,
+            "end": 69.48
+          },
+          {
+            "word": "am",
+            "start": 69.48,
+            "end": 69.7
+          },
+          {
+            "word": "Nan",
+            "start": 69.7,
+            "end": 70.02
+          },
+          {
+            "word": "Hello,",
+            "start": 70.56,
+            "end": 70.98
+          },
+          {
+            "word": "I",
+            "start": 71.26,
+            "end": 71.5
+          },
+          {
+            "word": "am",
+            "start": 71.5,
+            "end": 71.78
+          },
+          {
+            "word": "Nan!",
+            "start": 71.78,
+            "end": 72.06
+          }
+        ]
+      },
+      {
+        "sentence": "Hello, who are you? (Hello, who are you?)",
+        "startTime": 72.78,
+        "endTime": 76.92,
+        "words": [
+          {
+            "word": "Hello,",
+            "start": 72.78,
+            "end": 73.82
+          },
+          {
+            "word": "who",
+            "start": 73.82,
+            "end": 73.98
+          },
+          {
+            "word": "are",
+            "start": 73.98,
+            "end": 74.28
+          },
+          {
+            "word": "you,",
+            "start": 74.28,
+            "end": 75.12
+          },
+          {
+            "word": "Hello,",
+            "start": 75.12,
+            "end": 75.8
+          },
+          {
+            "word": "who",
+            "start": 75.8,
+            "end": 75.98
+          },
+          {
+            "word": "are",
+            "start": 75.98,
+            "end": 76.52
+          },
+          {
+            "word": "you?",
+            "start": 76.52,
+            "end": 76.92
+          }
+        ]
+      }
+    ],
+    "choreography": {
+      "outro": {
+        "en": "After the last line, the class nods slowly and hums nnn (the action of n).",
+        "th": "หลังบรรทัดสุดท้าย ทั้งชั้นพยักหน้าช้า ๆ และฮัมเสียง nnn (ท่าประจำเสียง n)"
+      }
+    },
+    "audio": "l2/media/w01/song.mp3",
+    "video": "l2/media/w01/song.mp4",
+    "videoPhone": "l2/media/w01/song-phone.mp4",
+    "poster": "l2/media/w01/song-poster.jpg",
+    "posterPhone": "l2/media/w01/song-phone-poster.jpg"
+  },
+  "scripts": [
+    {
+      "id": "A",
+      "day": 1,
+      "title": {
+        "en": "Sound Lesson",
+        "th": "บทเรียนเสียง"
+      },
+      "steps": [
+        {
+          "id": "A1",
+          "title": {
+            "en": "Hear it",
+            "th": "ฟังเสียง"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Hold up one picture card at a time and say the word slowly.",
+              "Stretch the first sound: nnnest.",
+              "Mix n words with other words.",
+              "When the script says nnn, say the sound. When it says \"the letter n\", say the letter name."
+            ],
+            "teacherLanguage": [
+              "\"Listen. Nnnest. Nest.\"",
+              "\"Is the first sound nnn? Thumbs up or thumbs down?\"",
+              "\"Yes! Nnnest starts with nnn.\"",
+              "\"Listen. Cat. Does cat start with nnn? No!\""
+            ],
+            "studentActions": [
+              "Children say each word after the teacher.",
+              "Children show thumbs up for an n word and thumbs down for other words."
+            ],
+            "watchFor": [
+              "Children who copy a friend's thumbs: ask them alone with one more card.",
+              "Children who say \"nuh\": the sound is n, with no \"uh\" at the end."
+            ]
+          },
+          "easier": {
+            "en": "Use only three cards (nest, nose, cat) and say the first sound two times.",
+            "th": "ใช้บัตรเพียง 3 ใบ (nest, nose, cat) และพูดเสียงแรก 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Ask about the last sound too: \"Sun. Does sun end with nnn?\"",
+            "th": "ถามเรื่องเสียงสุดท้ายด้วย: \"Sun. Does sun end with nnn?\" (sun ลงท้ายด้วย nnn ไหม)"
+          },
+          "group": {
+            "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 พูดคำ และคู่คนที่ 2 ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง"
+          },
+          "materials": [
+            "picture cards: nose, cat, sun, dog, bus",
+            "sound picture cards: nest, net, nut"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
+              "ลากเสียงแรกให้ยาว: nnnest",
+              "คละคำที่ขึ้นต้นด้วย n กับคำอื่น",
+              "เมื่อบทพูดเขียนว่า nnn ให้ออกเสียง เมื่อบทพูดเขียนว่า \"the letter n\" ให้พูดชื่อตัวอักษร"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง Nnnest nest\"",
+              "\"เสียงแรกคือ nnn ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
+              "\"ใช่! Nnnest ขึ้นต้นด้วย nnn\"",
+              "\"ฟัง cat คำว่า cat ขึ้นต้นด้วย nnn ไหม? ไม่ใช่!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู",
+              "เด็ก ๆ ยกนิ้วโป้งขึ้นสำหรับคำที่ขึ้นต้นด้วย n และคว่ำนิ้วโป้งลงสำหรับคำอื่น"
+            ],
+            "watchFor": [
+              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ",
+              "เด็กที่ออกเสียงเป็น \"nuh\": เสียงที่ถูกคือ n ไม่มี \"uh\" ต่อท้าย"
+            ]
+          }
+        },
+        {
+          "id": "A2",
+          "title": {
+            "en": "See it",
+            "th": "ดูตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the sound card for the letter n and point to the letter.",
+              "Say the pure sound: lips a little apart, the tip of the tongue on the bump behind the top teeth, voice on, air out through the nose. It is the sound of the Thai letter น (the n in \"nok\"), with no vowel after it.",
+              "Do the action of the letter n: nod your head slowly, as for \"yes\", and hum nnn."
+            ],
+            "teacherLanguage": [
+              "\"Look. This is the letter n. It says nnn.\"",
+              "\"Listen: nnn. Not 'nuh'. Nnn.\"",
+              "\"Watch me: nnn. Nod, nod, nod.\"",
+              "\"Your turn. Say it and do it. Three times.\""
+            ],
+            "studentActions": [
+              "Children say nnn and nod their heads slowly, three times.",
+              "Children point to the letter n on the card."
+            ],
+            "watchFor": [
+              "A pure sound: no \"uh\" at the end.",
+              "Every child does the action, not only the front rows."
+            ]
+          },
+          "easier": {
+            "en": "Children put one finger on the nose and feel the hum while they say nnn.",
+            "th": "เด็ก ๆ ใช้นิ้ว 1 นิ้วแตะจมูก และรู้สึกถึงเสียงฮัมขณะพูด nnn"
+          },
+          "harder": {
+            "en": "Show the cards for the letters n, m, and s in a mixed order. Children do the n action only for n.",
+            "th": "ชูบัตรตัวอักษร n, m และ s แบบสลับลำดับ เด็ก ๆ ทำท่าประจำเสียง n เฉพาะเมื่อเห็นบัตรตัวอักษร n"
+          },
+          "group": {
+            "en": "Two halves: one half says the sound, and the other half does the action. Then the halves change.",
+            "th": "แบ่งชั้นเป็น 2 ฝั่ง: ฝั่งหนึ่งออกเสียง อีกฝั่งหนึ่งทำท่า แล้วสลับกัน"
+          },
+          "materials": [
+            "sound cards: n, m, s"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียง n และชี้ที่ตัวอักษร",
+              "ออกเสียงล้วน: ริมฝีปากเปิดเล็กน้อย ปลายลิ้นแตะปุ่มเหงือกหลังฟันบน เปล่งเสียง ลมออกทางจมูก เป็นเสียงเดียวกับ น ในคำว่า \"นก\" โดยไม่มีสระตามหลัง",
+              "ทำท่าประจำเสียง n: พยักหน้าช้า ๆ เหมือนตอบว่า \"ใช่\" และฮัมเสียง nnn"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือตัวอักษร n ออกเสียงว่า nnn\"",
+              "\"ฟัง: nnn ไม่ใช่ 'nuh' แต่เป็น nnn\"",
+              "\"ดูครู: nnn พยักหน้า พยักหน้า พยักหน้า\"",
+              "\"ถึงตาเด็ก ๆ แล้ว ออกเสียงและทำท่า 3 ครั้ง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด nnn และพยักหน้าช้า ๆ 3 ครั้ง",
+              "เด็ก ๆ ชี้ที่ตัวอักษร n บนบัตร"
+            ],
+            "watchFor": [
+              "เสียงล้วน: ไม่มี \"uh\" ต่อท้าย",
+              "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า"
+            ]
+          }
+        },
+        {
+          "id": "A3",
+          "title": {
+            "en": "Form it",
+            "th": "เขียนตัวอักษร"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Write a large letter n on the board and say the formation words while you write.",
+              "Write the letter n in the air with your back to the class, so your hand moves the same way as theirs.",
+              "Children write the letter n in the air, then trace it in the book three times."
+            ],
+            "teacherLanguage": [
+              "\"Start at the top. Down. Up. Over the hill. Down.\"",
+              "\"Fingers up. Write the letter n in the air with me.\"",
+              "\"Open your book. Find the letter n. Trace it three times. Start at the dot.\""
+            ],
+            "studentActions": [
+              "Children write the letter n in the air with one finger and say the formation words.",
+              "Children trace the letter n three times in the book, from the dot."
+            ],
+            "watchFor": [
+              "Children who start at the bottom: take their hand and start at the dot.",
+              "Children who write a big letter N: show the small letter n on the card."
+            ]
+          },
+          "easier": {
+            "en": "Children trace the letter n in the book with a finger first. Then they trace it with the pencil.",
+            "th": "เด็ก ๆ ใช้นิ้วลากเส้นตามตัวอักษร n ในหนังสือก่อน แล้วจึงใช้ดินสอลากเส้นตาม"
+          },
+          "harder": {
+            "en": "Write the letter n two more times on the empty line, with no dots.",
+            "th": "เขียนตัวอักษร n อีก 2 ครั้งบนบรรทัดว่าง โดยไม่มีจุดนำ"
+          },
+          "group": {
+            "en": "Pairs: partner A writes n on partner B's back with a finger; partner B says nnn.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ใช้นิ้วเขียน n บนหลังของคู่คนที่ 2 คู่คนที่ 2 พูด nnn"
+          },
+          "materials": [
+            "board",
+            "student book: letter box n"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียนตัวอักษร n ตัวใหญ่บนกระดาน และพูดคำบอกวิธีเขียนขณะเขียน",
+              "เขียนตัวอักษร n กลางอากาศโดยหันหลังให้เด็ก ๆ เพื่อให้มือของครูเคลื่อนไปทางเดียวกับมือของเด็ก ๆ",
+              "เด็ก ๆ เขียนตัวอักษร n กลางอากาศ แล้วลากเส้นตามตัวอักษร n ในหนังสือ 3 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"เริ่มที่ด้านบน ลง ขึ้น ข้ามเนิน ลง\"",
+              "\"ยกนิ้วขึ้น เขียนตัวอักษร n กลางอากาศพร้อมครู\"",
+              "\"เปิดหนังสือ หาตัวอักษร n ลากเส้นตาม 3 ครั้ง เริ่มที่จุด\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ใช้นิ้ว 1 นิ้วเขียนตัวอักษร n กลางอากาศ และพูดคำบอกวิธีเขียน",
+              "เด็ก ๆ ลากเส้นตามตัวอักษร n ในหนังสือ 3 ครั้ง โดยเริ่มที่จุด"
+            ],
+            "watchFor": [
+              "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด",
+              "เด็กที่เขียน N ตัวพิมพ์ใหญ่: ชี้ให้ดู n ตัวพิมพ์เล็กบนบัตร"
+            ]
+          }
+        },
+        {
+          "id": "A4",
+          "title": {
+            "en": "Blend it",
+            "th": "ผสมเสียง"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Keep the picture cards net, nut, and nose face down.",
+              "Say the three sounds of a word with a short stop between them, then say them fast. Hold the n: nnn.",
+              "Show the picture after the class says the word.",
+              "Say the sounds, not the letter names: e as in \"egg\", u as in \"up\", o as in \"go\", t with no \"uh\" after it."
+            ],
+            "teacherLanguage": [
+              "\"Listen. Nnn - e - t. What is the word?\"",
+              "\"Say it fast: net!\"",
+              "\"Look. A net. Yes!\"",
+              "\"Next one. Nnn - u - t.\"",
+              "\"Last one. Nnn - o - zzz.\""
+            ],
+            "studentActions": [
+              "Children listen to the three sounds and say the word.",
+              "Children clap once for each sound, then say the word."
+            ],
+            "watchFor": [
+              "Children who say only the first sound: say the three sounds again, closer together.",
+              "This week the blending is by ear only; the letters come in the next weeks."
+            ]
+          },
+          "easier": {
+            "en": "Say the sounds closer together: nnne-t.",
+            "th": "พูดเสียงให้ชิดกันมากขึ้น: nnne-t"
+          },
+          "harder": {
+            "en": "Say a word; children say its three sounds: \"Nut.\" \"Nnn - u - t.\"",
+            "th": "พูดคำ 1 คำ เด็ก ๆ พูด 3 เสียงของคำนั้น: \"Nut.\" \"Nnn - u - t.\""
+          },
+          "group": {
+            "en": "Pairs: partner A says the word, partner B points to the picture.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 พูดคำ คู่คนที่ 2 ชี้ที่ภาพ"
+          },
+          "materials": [
+            "sound picture cards: net, nut",
+            "picture cards: nose"
+          ],
+          "th": {
+            "teacherActions": [
+              "คว่ำบัตรภาพ net, nut และ nose ไว้",
+              "พูด 3 เสียงของคำ โดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ ลากเสียง n ไว้: nnn",
+              "เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
+              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: e เหมือนใน \"egg\" u เหมือนใน \"up\" o เหมือนใน \"go\" t โดยไม่มี \"uh\" ตามหลัง"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง Nnn - e - t คำนี้คือคำอะไร?\"",
+              "\"พูดเร็ว ๆ: net!\"",
+              "\"ดู นี่คือ net ใช่แล้ว!\"",
+              "\"คำต่อไป Nnn - u - t\"",
+              "\"คำสุดท้าย Nnn - o - zzz\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟัง 3 เสียง แล้วพูดคำ",
+              "เด็ก ๆ ปรบมือ 1 ครั้งต่อ 1 เสียง แล้วพูดคำ"
+            ],
+            "watchFor": [
+              "เด็กที่พูดแค่เสียงแรก: พูด 3 เสียงอีกครั้ง ให้ชิดกันมากขึ้น",
+              "สัปดาห์นี้ฝึกผสมเสียงด้วยการฟังเท่านั้น จะเริ่มใช้ตัวอักษรในสัปดาห์ต่อ ๆ ไป"
+            ]
+          }
+        },
+        {
+          "id": "A5",
+          "title": {
+            "en": "Word wall",
+            "th": "ผนังคำศัพท์"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Put the letter n card on the word wall: it is the first card of the year.",
+              "Ask whose name starts with n. Those children stand and say their name."
+            ],
+            "teacherLanguage": [
+              "\"This is our word wall. Here is the letter n. It says nnn.\"",
+              "\"Whose name starts with nnn? Stand up!\"",
+              "\"Every week, we put new words here.\""
+            ],
+            "studentActions": [
+              "Children say nnn at the wall.",
+              "Children with an n name stand up and say their name."
+            ],
+            "watchFor": [
+              "Children who stand for a name with another first sound: say both names slowly and compare the first sounds."
+            ]
+          },
+          "easier": {
+            "en": "Point to the letter n card and say nnn together two times.",
+            "th": "ชี้ที่บัตรตัวอักษร n แล้วพูด nnn พร้อมกัน 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Children say a word for the wall that starts with n: nose, nest, nine.",
+            "th": "เด็ก ๆ บอกคำที่ขึ้นต้นด้วย n สำหรับผนังคำศัพท์: nose, nest, nine"
+          },
+          "group": {
+            "en": "Whole class: the children with an n name lead the sound.",
+            "th": "ทั้งชั้น: เด็กที่มีชื่อขึ้นต้นด้วย n เป็นผู้นำออกเสียง"
+          },
+          "materials": [
+            "word wall",
+            "sound cards: n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ติดบัตรตัวอักษร n บนผนังคำศัพท์: เป็นบัตรใบแรกของปี",
+              "ถามว่าชื่อใครขึ้นต้นด้วย n เด็กกลุ่มนั้นยืนขึ้นและพูดชื่อของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"นี่คือผนังคำศัพท์ของเรา นี่คือตัวอักษร n ออกเสียงว่า nnn\"",
+              "\"ชื่อใครขึ้นต้นด้วย nnn? ยืนขึ้น!\"",
+              "\"ทุกสัปดาห์ เราจะติดคำใหม่ที่นี่\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด nnn ที่ผนังคำศัพท์",
+              "เด็กที่มีชื่อขึ้นต้นด้วย n ยืนขึ้นและพูดชื่อของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่ยืนขึ้นทั้งที่ชื่อขึ้นต้นด้วยเสียงอื่น: พูดทั้ง 2 ชื่อช้า ๆ แล้วเปรียบเทียบเสียงแรก"
+            ]
+          }
+        },
+        {
+          "id": "A6",
+          "title": {
+            "en": "New tricky words",
+            "th": "คำที่ต้องจำชุดใหม่"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cards a, and, can, one at a time.",
+              "Read the word. Show the letters that the class cannot sound out yet: all the letters except n. For \"a\", that is the whole word.",
+              "Spell each word with letter names, then write it in the air.",
+              "Say a as in \"a cat\": the short \"uh\" sound (the schwa), not the letter name \"ay\". This is the only \"uh\" in the week."
+            ],
+            "teacherLanguage": [
+              "\"This word is a. A cat. A nest.\"",
+              "\"This word is and. Pat and May.\"",
+              "\"This word is can. I can jump!\"",
+              "\"This is a tricky word. We remember it. Say it with me.\""
+            ],
+            "studentActions": [
+              "Children read each card three times: loud, quiet, loud.",
+              "Children find the n in \"and\" and \"can\".",
+              "Children write \"a\" in the air."
+            ],
+            "watchFor": [
+              "Children who read \"and\" as \"an\": point to the d and read it again."
+            ]
+          },
+          "easier": {
+            "en": "Teach \"a\" and \"and\" today; \"can\" comes on the review strip tomorrow.",
+            "th": "สอน \"a\" และ \"and\" วันนี้ ส่วน \"can\" จะอยู่บนแถบทบทวนพรุ่งนี้"
+          },
+          "harder": {
+            "en": "Children say a sentence with \"can\": \"I can jump.\"",
+            "th": "เด็ก ๆ พูดประโยคที่มีคำ \"can\": \"I can jump.\" (ฉันกระโดดได้)"
+          },
+          "group": {
+            "en": "Pairs: you show a card; partner A reads it to partner B. Then the partners change.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 อ่านให้คู่คนที่ 2 ฟัง แล้วสลับกัน"
+          },
+          "materials": [
+            "tricky word cards: a, and, can"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรคำ a, and, can ทีละใบ",
+              "อ่านคำนั้น แล้วชี้ตัวอักษรที่ทั้งชั้นยังสะกดออกเสียงไม่ได้: ทุกตัวยกเว้น n ส่วนคำ \"a\" ให้ชี้ทั้งคำ",
+              "สะกดแต่ละคำด้วยชื่อตัวอักษร แล้วเขียนคำนั้นกลางอากาศ",
+              "ออกเสียง a แบบใน \"a cat\": เสียง \"uh\" สั้น ๆ (schwa) ไม่ใช่ชื่อตัวอักษร \"ay\" นี่คือเสียง \"uh\" เพียงเสียงเดียวในสัปดาห์นี้"
+            ],
+            "teacherLanguage": [
+              "\"คำนี้คือ a เช่น a cat (แมว 1 ตัว) a nest (รังนก 1 รัง)\"",
+              "\"คำนี้คือ and (และ) เช่น Pat and May (Pat และ May)\"",
+              "\"คำนี้คือ can (ทำได้) เช่น I can jump! (ฉันกระโดดได้!)\"",
+              "\"นี่คือคำที่ต้องจำ เราจำคำนี้ไว้ พูดพร้อมครู\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรแต่ละใบ 3 ครั้ง: ดัง เบา ดัง",
+              "เด็ก ๆ หาตัวอักษร n ในคำ \"and\" และ \"can\"",
+              "เด็ก ๆ เขียน \"a\" กลางอากาศ"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"and\" เป็น \"an\": ชี้ที่ตัวอักษร d แล้วให้อ่านอีกครั้ง"
+            ]
+          }
+        },
+        {
+          "id": "A7",
+          "title": {
+            "en": "Read it",
+            "th": "อ่าน"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Open the practice sheet in the book and point to each line once."
+            ],
+            "teacherLanguage": [
+              "\"Look at the page. Read the sounds with me: nnn, nnn, nnn.\"",
+              "\"A nest. A net.\"",
+              "\"Find the word and. Point!\""
+            ],
+            "studentActions": [
+              "Children read the line of n and point to the tricky word \"and\"."
+            ],
+            "watchFor": [
+              "Children who look at the wrong line: show the picture at the start of the line."
+            ]
+          },
+          "easier": {
+            "en": "Read only the line of n.",
+            "th": "อ่านเฉพาะบรรทัดของ n"
+          },
+          "harder": {
+            "en": "Children read \"A nest. A net.\" alone.",
+            "th": "เด็ก ๆ อ่าน \"A nest. A net.\" ด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs point to the lines for each other.",
+            "th": "ทำเป็นคู่: ชี้บรรทัดให้กันและกัน"
+          },
+          "materials": [
+            "student book: practice sheet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "เปิดหน้าฝึกอ่านในหนังสือ และชี้แต่ละบรรทัด 1 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"ดูหน้านี้ อ่านเสียงพร้อมครู: nnn, nnn, nnn\"",
+              "\"a nest (รังนก 1 รัง) a net (สวิง 1 อัน)\"",
+              "\"หาคำว่า and ชี้!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบรรทัดของ n และชี้ที่คำที่ต้องจำ \"and\""
+            ],
+            "watchFor": [
+              "เด็กที่ดูผิดบรรทัด: ชี้ภาพที่ต้นบรรทัดให้ดู"
+            ]
+          }
+        },
+        {
+          "id": "A8",
+          "title": {
+            "en": "Home card",
+            "th": "บัตรกิจกรรมที่บ้าน"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "Read the Thai line on the home card to the class.",
+              "After class on day 1: tear the week 1 home card out of each student book, and put one card in each child's bag."
+            ],
+            "teacherLanguage": [
+              "\"Your home card is in your bag. Show it to your family.\"",
+              "\"Sing the song at home!\""
+            ],
+            "studentActions": [
+              "Children find the home card in their bag."
+            ],
+            "watchFor": [
+              "A child with no card: give the child a card at home time on day 2."
+            ]
+          },
+          "easier": {
+            "en": "Show the card to the child.",
+            "th": "ชูบัตรให้เด็กดู"
+          },
+          "harder": {
+            "en": "A child shows the card to a friend and says: \"Nnn, nnn, nnn. Hello, I am ___.\"",
+            "th": "เด็กคนหนึ่งเอาบัตรให้เพื่อนดูและพูดว่า: \"Nnn, nnn, nnn. Hello, I am ___.\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "student book: home card"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "อ่านข้อความภาษาไทยบนบัตรกิจกรรมที่บ้านให้ทั้งชั้นฟัง",
+              "หลังเลิกเรียนวันที่ 1: ฉีกบัตรกิจกรรมที่บ้านของสัปดาห์ที่ 1 ออกจากหนังสือนักเรียนของเด็กแต่ละคน แล้วใส่บัตรในกระเป๋าของเด็กคนละ 1 ใบ"
+            ],
+            "teacherLanguage": [
+              "\"บัตรกิจกรรมที่บ้านอยู่ในกระเป๋าของหนู ๆ แล้ว เอาให้ครอบครัวดูนะ\"",
+              "\"ร้องเพลงที่บ้านด้วย!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ หาบัตรกิจกรรมที่บ้านในกระเป๋าของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่มีบัตร: ให้บัตรแก่เด็กตอนกลับบ้านในวันที่ 2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "day": 2,
+      "title": {
+        "en": "Story Lesson",
+        "th": "บทเรียนนิทาน"
+      },
+      "steps": [
+        {
+          "id": "B1",
+          "title": {
+            "en": "Family words",
+            "th": "คำศัพท์ประจำหมวด"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Show each picture card and say the word two times.",
+              "Put the cards on the board. Point to a card; the class says the word.",
+              "Ask \"Is it a boy or a girl?\" for the boy and girl cards."
+            ],
+            "teacherLanguage": [
+              "\"Look. A boy. Say it: boy.\"",
+              "\"Look. Is it a boy or a girl? It is a girl.\"",
+              "\"What do we say in the morning? Hello!\"",
+              "\"What do we say at home time? Goodbye!\"",
+              "\"Point to the teacher card!\""
+            ],
+            "studentActions": [
+              "Children say each word two times after the teacher.",
+              "Children point to the card that the teacher says.",
+              "Children wave for hello and for goodbye."
+            ],
+            "watchFor": [
+              "Children who mix up boy and girl: say both words again with your hand on each card."
+            ]
+          },
+          "easier": {
+            "en": "Use four cards: hello, goodbye, boy, girl.",
+            "th": "ใช้บัตร 4 ใบ: hello, goodbye, boy, girl"
+          },
+          "harder": {
+            "en": "A child points to the boy or girl card and asks the class: \"Is it a boy or a girl?\"",
+            "th": "เด็กคนหนึ่งชี้ที่บัตร boy หรือบัตร girl แล้วถามทั้งชั้นว่า: \"Is it a boy or a girl?\" (เป็นเด็กผู้ชายหรือเด็กผู้หญิง)"
+          },
+          "group": {
+            "en": "Pairs: partner A points to a card, partner B says the word.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่บัตร คู่คนที่ 2 พูดคำ"
+          },
+          "materials": [
+            "family picture cards: hello, goodbye, boy, girl, friend, teacher"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพคำศัพท์แต่ละใบ แล้วพูดคำ 2 ครั้ง",
+              "ติดบัตรบนกระดาน ชี้ที่บัตร 1 ใบ ทั้งชั้นพูดคำนั้น",
+              "ถามว่า \"Is it a boy or a girl?\" (เป็นเด็กผู้ชายหรือเด็กผู้หญิง) สำหรับบัตร boy และบัตร girl"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือ boy พูดตาม: boy\"",
+              "\"ดู เป็น boy หรือ girl? เป็น girl\"",
+              "\"ตอนเช้าเราพูดว่าอะไร? Hello!\"",
+              "\"ตอนกลับบ้านเราพูดว่าอะไร? Goodbye!\"",
+              "\"ชี้ที่บัตร teacher!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู 2 ครั้ง",
+              "เด็ก ๆ ชี้ที่บัตรที่ครูพูด",
+              "เด็ก ๆ โบกมือสำหรับ hello และ goodbye"
+            ],
+            "watchFor": [
+              "เด็กที่สับสนระหว่าง boy กับ girl: พูดทั้ง 2 คำอีกครั้ง โดยวางมือบนบัตรแต่ละใบ"
+            ]
+          }
+        },
+        {
+          "id": "B2",
+          "title": {
+            "en": "Picture walk",
+            "th": "ดูภาพก่อนอ่าน"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cover and pages 1 to 7 of \"Hello!\". Cover the words with your hand. Keep page 8 for later.",
+              "Ask what the children can see. They can answer in Thai; you say it in English."
+            ],
+            "teacherLanguage": [
+              "\"Look at the cover. What can you see?\"",
+              "\"A boy. He is waving.\"",
+              "\"Who is this? It is a teacher.\"",
+              "\"Look at the bag! What is in the bag?\""
+            ],
+            "studentActions": [
+              "Children say what they can see, in Thai or English.",
+              "Children wave when a child in the book waves."
+            ],
+            "watchFor": [
+              "Children who answer in Thai: say the English; the child says it after you.",
+              "Do not show the last page yet: keep the puppy as a surprise for the reading."
+            ]
+          },
+          "easier": {
+            "en": "Ask yes or no questions: \"Is it a girl?\"",
+            "th": "ถามคำถามแบบใช่หรือไม่ใช่: \"Is it a girl?\" (เป็นเด็กผู้หญิงไหม)"
+          },
+          "harder": {
+            "en": "Before you turn the page, ask: \"Who is next?\"",
+            "th": "ก่อนพลิกหน้า ถามว่า: \"Who is next?\" (ใครจะมาต่อไป)"
+          },
+          "group": {
+            "en": "Whole class; quiet children tell a partner first, then the class.",
+            "th": "ทั้งชั้น: เด็กที่ไม่ค่อยกล้าพูดบอกคู่ก่อน แล้วจึงบอกทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"Hello!\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกและหน้า 1 ถึง 7 ของ \"Hello!\" ใช้มือปิดคำไว้ เก็บหน้า 8 ไว้เปิดทีหลัง",
+              "ถามว่าเด็ก ๆ เห็นอะไร เด็ก ๆ ตอบเป็นภาษาไทยได้ จากนั้นพูดคำตอบนั้นเป็นภาษาอังกฤษให้เด็ก ๆ ฟัง"
+            ],
+            "teacherLanguage": [
+              "\"ดูที่ปก เด็ก ๆ เห็นอะไร?\"",
+              "\"boy คนหนึ่ง เขากำลังโบกมือ\"",
+              "\"นี่คือใคร? เป็น teacher\"",
+              "\"ดูกระเป๋า! ในกระเป๋ามีอะไร?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ บอกสิ่งที่เห็น เป็นภาษาไทยหรือภาษาอังกฤษ",
+              "เด็ก ๆ โบกมือเมื่อเด็กในหนังสือโบกมือ"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเป็นภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม",
+              "ยังไม่เปิดหน้าสุดท้าย: เก็บลูกสุนัขไว้เป็นเซอร์ไพรส์ตอนอ่าน"
+            ]
+          }
+        },
+        {
+          "id": "B3",
+          "title": {
+            "en": "Listen",
+            "th": "ฟัง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Play the audio of \"Hello!\" once, at 1.0 speed.",
+              "Point to the picture while the audio reads the page; turn the page with the audio."
+            ],
+            "teacherLanguage": [
+              "\"Now listen to the book. Eyes on the pictures.\"",
+              "\"Shh. Listen.\""
+            ],
+            "studentActions": [
+              "Children listen and look at the pictures.",
+              "Children wave on every \"Hello\"."
+            ],
+            "watchFor": [
+              "Children who do not look: hold the book closer to them."
+            ]
+          },
+          "easier": {
+            "en": "Play the audio at 0.75 speed.",
+            "th": "เปิดเสียงที่ความเร็ว 0.75"
+          },
+          "harder": {
+            "en": "Stop the audio before the name on a page; the class says the name.",
+            "th": "หยุดเสียงก่อนถึงชื่อในหน้านั้น ทั้งชั้นพูดชื่อ"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "book audio, on the tablet or by the QR code: \"Hello!\""
+          ],
+          "th": {
+            "teacherActions": [
+              "เปิดเสียงอ่าน \"Hello!\" 1 รอบ ที่ความเร็ว 1.0",
+              "ชี้ที่ภาพขณะเสียงอ่านหน้านั้น และพลิกหน้าไปพร้อมกับเสียง"
+            ],
+            "teacherLanguage": [
+              "\"ทีนี้ฟังหนังสือ ตาดูที่ภาพ\"",
+              "\"ชู่ว ฟัง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังและดูภาพ",
+              "เด็ก ๆ โบกมือทุกครั้งที่ได้ยิน \"Hello\""
+            ],
+            "watchFor": [
+              "เด็กที่ไม่ดูภาพ: ถือหนังสือให้ใกล้เด็กมากขึ้น"
+            ]
+          }
+        },
+        {
+          "id": "B4",
+          "title": {
+            "en": "Read with me",
+            "th": "อ่านกับครู"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First reading: read each page and point under each word. The class says the page after you.",
+              "Second reading: read \"Hello, I am\" and stop. The class says the name."
+            ],
+            "teacherLanguage": [
+              "\"My turn: Hello, I am Pat. Your turn!\"",
+              "\"Look at the words. Hello, I am ... ?\"",
+              "\"Read the last page with me: Hello, I am Pip!\""
+            ],
+            "studentActions": [
+              "Children say each page after the teacher and point in the air.",
+              "Children say the name on each page."
+            ],
+            "watchFor": [
+              "Children who say the words but do not look: point under each word slowly.",
+              "On the last page, let the children laugh, then read it again together."
+            ]
+          },
+          "easier": {
+            "en": "Read pages 1 to 4 and page 8 only.",
+            "th": "อ่านเฉพาะหน้า 1 ถึง 4 และหน้า 8"
+          },
+          "harder": {
+            "en": "Children read \"Hello, I am\" alone; you say only the names.",
+            "th": "เด็ก ๆ อ่าน \"Hello, I am\" ด้วยตัวเอง ส่วนครูพูดเฉพาะชื่อ"
+          },
+          "group": {
+            "en": "Half the class reads one page, the other half reads the next.",
+            "th": "ครึ่งชั้นอ่าน 1 หน้า อีกครึ่งชั้นอ่านหน้าถัดไป"
+          },
+          "materials": [
+            "big book or screen: \"Hello!\""
+          ],
+          "th": {
+            "teacherActions": [
+              "อ่านรอบแรก: อ่านแต่ละหน้าและชี้ใต้แต่ละคำ ทั้งชั้นพูดหน้านั้นตาม",
+              "อ่านรอบที่สอง: อ่าน \"Hello, I am\" แล้วหยุด ทั้งชั้นพูดชื่อ"
+            ],
+            "teacherLanguage": [
+              "\"ตาครู: Hello, I am Pat ถึงตาเด็ก ๆ!\"",
+              "\"ดูที่คำ Hello, I am ... ?\"",
+              "\"อ่านหน้าสุดท้ายพร้อมครู: Hello, I am Pip!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละหน้าตามครู และชี้ในอากาศ",
+              "เด็ก ๆ พูดชื่อในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่พูดคำได้แต่ไม่ดูหนังสือ: ชี้ใต้แต่ละคำช้า ๆ",
+              "ที่หน้าสุดท้าย ปล่อยให้เด็ก ๆ หัวเราะ แล้วอ่านอีกครั้งพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B5",
+          "title": {
+            "en": "Frame practice",
+            "th": "ฝึกกรอบประโยค"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Write \"Hello, I am ___.\" on the board and point to each word.",
+              "Say it with your own name. Then show the boy and girl cards; each child points to the card that is true for them.",
+              "Six children stand, one at a time, and say the frame with their own name. Then all children say it to a partner."
+            ],
+            "teacherLanguage": [
+              "\"Hello, I am Teacher ___.\"",
+              "\"Your turn. Hello, I am ... ?\"",
+              "\"Say 'Hello, I am' and your name. Then point to a card: a boy or a girl?\"",
+              "\"Good job! Say it to your partner.\""
+            ],
+            "studentActions": [
+              "Six children stand, wave, and say \"Hello, I am ___.\" with their own name.",
+              "All children stand and say \"Hello, I am ___.\" to a partner, with their own name."
+            ],
+            "watchFor": [
+              "Children who say only their name: say \"Hello, I am\" with them; the child adds the name.",
+              "Children who say \"I'm\": praise it, then ask for \"I am\", as in the book."
+            ]
+          },
+          "easier": {
+            "en": "The child says \"Hello\" and the name, together with the teacher.",
+            "th": "เด็กพูด \"Hello\" และชื่อของตัวเองพร้อมกับครู"
+          },
+          "harder": {
+            "en": "The child adds a second sentence: \"Hello, I am May. I am a girl.\"",
+            "th": "เด็กเพิ่มประโยคที่สอง: \"Hello, I am May. I am a girl.\" (สวัสดี ฉันชื่อ May ฉันเป็นเด็กผู้หญิง)"
+          },
+          "group": {
+            "en": "Pairs, then two pairs together: four children say hello to each other.",
+            "th": "ทำเป็นคู่ แล้วรวม 2 คู่เข้าด้วยกัน: เด็ก 4 คนพูด hello กัน"
+          },
+          "materials": [
+            "board",
+            "family picture cards: boy, girl"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียน \"Hello, I am ___.\" บนกระดาน และชี้ที่แต่ละคำ",
+              "พูดกรอบประโยคด้วยชื่อของตัวเอง จากนั้นชูบัตร boy และบัตร girl เด็กแต่ละคนชี้ที่บัตรที่ตรงกับตัวเอง",
+              "เด็ก 6 คนยืนขึ้นทีละคน และพูดกรอบประโยคด้วยชื่อของตัวเอง จากนั้นเด็กทุกคนพูดกับคู่"
+            ],
+            "teacherLanguage": [
+              "\"Hello, I am Teacher ___ (สวัสดี ฉันคือครู ___)\"",
+              "\"ถึงตาหนูแล้ว Hello, I am ... ?\"",
+              "\"พูด 'Hello, I am' แล้วตามด้วยชื่อของหนู จากนั้นชี้ที่บัตร: boy หรือ girl?\"",
+              "\"เก่งมาก! พูดกับคู่ของตัวเอง\""
+            ],
+            "studentActions": [
+              "เด็ก 6 คนยืนขึ้น โบกมือ และพูด \"Hello, I am ___.\" ด้วยชื่อของตัวเอง",
+              "เด็กทุกคนยืนขึ้นและพูด \"Hello, I am ___.\" กับคู่ ด้วยชื่อของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่พูดแค่ชื่อ: พูด \"Hello, I am\" พร้อมเด็ก แล้วให้เด็กเติมชื่อ",
+              "เด็กที่พูด \"I'm\": ชมก่อน แล้วขอให้พูด \"I am\" แบบในหนังสือ"
+            ]
+          }
+        },
+        {
+          "id": "B6",
+          "title": {
+            "en": "Act it",
+            "th": "แสดงตามเรื่อง"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "The whole class acts the book. Say each page; the class says it after you and waves.",
+              "On the last page, the class jumps up and says: \"Hello, I am Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"Say it with me: Hello, I am Pat!\"",
+              "\"Everybody is Pip. Jump up! Hello, I am Pip!\""
+            ],
+            "studentActions": [
+              "The class says each page and waves. On the last page, the children jump up."
+            ],
+            "watchFor": [
+              "Children who only watch: wave with them and say the name together."
+            ]
+          },
+          "easier": {
+            "en": "The class says only the names; you say \"Hello, I am\".",
+            "th": "ทั้งชั้นพูดเฉพาะชื่อ ส่วนครูพูด \"Hello, I am\""
+          },
+          "harder": {
+            "en": "Children act the book with their own names.",
+            "th": "เด็ก ๆ แสดงตามหนังสือโดยใช้ชื่อของตัวเอง"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"Hello!\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ทั้งชั้นแสดงตามหนังสือ พูดแต่ละหน้า ทั้งชั้นพูดตามและโบกมือ",
+              "ที่หน้าสุดท้าย ทั้งชั้นกระโดดขึ้นและพูดว่า: \"Hello, I am Pip!\""
+            ],
+            "teacherLanguage": [
+              "\"พูดพร้อมครู: Hello, I am Pat!\"",
+              "\"ทุกคนเป็น Pip กระโดดขึ้น! Hello, I am Pip!\""
+            ],
+            "studentActions": [
+              "ทั้งชั้นพูดแต่ละหน้าและโบกมือ ที่หน้าสุดท้าย เด็ก ๆ กระโดดขึ้น"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: โบกมือกับเด็กและพูดชื่อพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B7",
+          "title": {
+            "en": "Sing it",
+            "th": "ร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the opening, play the karaoke video as the song of the week (item 3). The words are on the screen."
+            ],
+            "teacherLanguage": [
+              "\"Sing with the words on the screen. Point to the words!\""
+            ],
+            "studentActions": [
+              "Children sing and point to the words on the screen."
+            ],
+            "watchFor": [
+              "Children who only watch: give them the gesture to do (wave, clap)."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus)"
+          },
+          "harder": {
+            "en": "Children sing the verse without the video.",
+            "th": "เด็ก ๆ ร้องท่อนเวิร์ส (verse) โดยไม่ใช้วิดีโอ"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "karaoke videos: \"Hello, I Am Pip\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบ เปิดวิดีโอคาราโอเกะเป็นเพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เนื้อเพลงอยู่บนจอ"
+            ],
+            "teacherLanguage": [
+              "\"ร้องตามเนื้อเพลงบนจอ ชี้ที่คำ!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ร้องเพลงและชี้ที่คำบนจอ"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ให้เด็กทำท่าประกอบเพลง (โบกมือ ปรบมือ)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "day": 3,
+      "title": {
+        "en": "Spell and Read",
+        "th": "สะกดและอ่าน"
+      },
+      "steps": [
+        {
+          "id": "C1",
+          "title": {
+            "en": "Sound review",
+            "th": "ทบทวนเสียง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the card for the letter n fast, hide it, and show it again.",
+              "Children say the sound and do the action."
+            ],
+            "teacherLanguage": [
+              "\"What sound? Nnn!\"",
+              "\"Again, faster!\""
+            ],
+            "studentActions": [
+              "Children say nnn and nod their heads slowly."
+            ],
+            "watchFor": [
+              "A pure sound with no \"uh\"."
+            ]
+          },
+          "easier": {
+            "en": "Say the sound with the class two times before the fast round.",
+            "th": "ออกเสียงพร้อมทั้งชั้น 2 ครั้งก่อนรอบเร็ว"
+          },
+          "harder": {
+            "en": "Mix the card for the letter n with the cards for the letters m and s. Children say the sound only for the letter n.",
+            "th": "คละบัตรตัวอักษร n กับบัตรตัวอักษร m และ s เด็ก ๆ ออกเสียงเฉพาะเมื่อเห็นบัตรตัวอักษร n"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: n, m, s"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรตัวอักษร n อย่างรวดเร็ว ซ่อน แล้วชูอีกครั้ง",
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียง"
+            ],
+            "teacherLanguage": [
+              "\"เสียงอะไร? Nnn!\"",
+              "\"อีกครั้ง เร็วขึ้น!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด nnn และพยักหน้าช้า ๆ"
+            ],
+            "watchFor": [
+              "เสียงล้วน ไม่มี \"uh\""
+            ]
+          }
+        },
+        {
+          "id": "C2",
+          "title": {
+            "en": "Letter cards",
+            "th": "บัตรตัวอักษร"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Each child has a workmat and an n letter card.",
+              "Say a word. Children push the card for the letter n into the first box if the word starts with nnn, and leave the box empty if not.",
+              "Four words: nest, cat, nose, dog."
+            ],
+            "teacherLanguage": [
+              "\"Listen: nest. Nnnest. Is the first sound nnn?\"",
+              "\"Yes? Push the letter n card into the first box. Say nnn.\"",
+              "\"Listen: cat. Is the first sound nnn? No. Leave the box empty.\""
+            ],
+            "studentActions": [
+              "Children listen, push the card for the letter n for an nnn word, and say the sound."
+            ],
+            "watchFor": [
+              "Children who push the card for every word: say the word again and stretch the first sound."
+            ]
+          },
+          "easier": {
+            "en": "Use only the words nest and cat, two times each.",
+            "th": "ใช้เฉพาะคำ nest และ cat คำละ 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Add a word with n at the end (sun): children push the card into the last box.",
+            "th": "เพิ่มคำที่มี n อยู่ท้ายคำ (sun): เด็ก ๆ เลื่อนบัตรไปที่ช่องสุดท้าย"
+          },
+          "group": {
+            "en": "Pairs share one workmat and take turns to push the card.",
+            "th": "ทำเป็นคู่: ใช้แผ่นรองกิจกรรมร่วมกัน 1 แผ่น และผลัดกันเลื่อนบัตร"
+          },
+          "materials": [
+            "workmats (class set)",
+            "letter cards (class set): n"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็กแต่ละคนมีแผ่นรองกิจกรรม 1 แผ่น และบัตรตัวอักษร n 1 ใบ",
+              "พูดคำ 1 คำ ถ้าคำขึ้นต้นด้วย n เด็ก ๆ เลื่อนบัตรตัวอักษร n ไปที่ช่องแรก ถ้าไม่ใช่ ให้ช่องนั้นว่างไว้",
+              "คำ 4 คำ: nest, cat, nose, dog"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง: nest Nnnest เสียงแรกคือ nnn ไหม?\"",
+              "\"ใช่ไหม? ถ้าใช่ เลื่อนบัตรตัวอักษร n ไปที่ช่องแรก แล้วพูด nnn\"",
+              "\"ฟัง: cat เสียงแรกคือ nnn ไหม? ไม่ใช่ ปล่อยช่องให้ว่าง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟัง เลื่อนบัตรตัวอักษร n เมื่อเป็นคำที่ขึ้นต้นด้วย n และออกเสียง"
+            ],
+            "watchFor": [
+              "เด็กที่เลื่อนบัตรทุกคำ: พูดคำนั้นอีกครั้งและลากเสียงแรกให้ยาว"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "title": {
+            "en": "Dictation",
+            "th": "เขียนตามคำบอก"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Say the sound n; children say it, then write the letter in the book.",
+              "Do it three times. Then children trace \"a\" on the line."
+            ],
+            "teacherLanguage": [
+              "\"When I say nnn, you write the letter. Ready? Nnn.\"",
+              "\"Listen: nnn. Write it again. Start at the top.\"",
+              "\"Now trace the word a. Start at the dot. Round, up, down.\""
+            ],
+            "studentActions": [
+              "Children say the sound and write the letter n three times in the book.",
+              "Children trace the tricky word \"a\"."
+            ],
+            "watchFor": [
+              "Children who write n from the bottom: show the start dot again."
+            ]
+          },
+          "easier": {
+            "en": "Children trace n before they write it.",
+            "th": "เด็ก ๆ ลากเส้นตามตัวอักษร n ก่อนเขียนเอง"
+          },
+          "harder": {
+            "en": "Children write the letter n with their eyes closed, then check it.",
+            "th": "เด็ก ๆ หลับตาเขียน n แล้วลืมตาตรวจดู"
+          },
+          "group": {
+            "en": "Pairs check each other's letter n: start at the top, down, up, over the hill, down.",
+            "th": "ทำเป็นคู่: ตรวจตัวอักษร n ของกันและกัน (เริ่มที่ด้านบน ลง ขึ้น ข้ามเนิน ลง)"
+          },
+          "materials": [
+            "student book: dictation lines"
+          ],
+          "th": {
+            "teacherActions": [
+              "ออกเสียง n เด็ก ๆ พูดตาม แล้วเขียนตัวอักษรในหนังสือ",
+              "ทำ 3 ครั้ง จากนั้นเด็ก ๆ ลากเส้นตามคำ \"a\" บนบรรทัด"
+            ],
+            "teacherLanguage": [
+              "\"เมื่อครูพูด nnn ให้เด็ก ๆ เขียนตัวอักษร พร้อมไหม? Nnn\"",
+              "\"ฟัง: nnn เขียนอีกครั้ง เริ่มที่ด้านบน\"",
+              "\"ทีนี้ลากเส้นตามคำ a เริ่มที่จุด วนกลม ขึ้น ลง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและเขียนตัวอักษร n 3 ครั้งในหนังสือ",
+              "เด็ก ๆ ลากเส้นตามคำที่ต้องจำ \"a\""
+            ],
+            "watchFor": [
+              "เด็กที่เขียนตัวอักษร n จากด้านล่าง: ชี้จุดเริ่มต้นให้ดูอีกครั้ง"
+            ]
+          }
+        },
+        {
+          "id": "C4",
+          "title": {
+            "en": "Decodable: read together",
+            "th": "หนังสือฝึกสะกดอ่าน: อ่านด้วยกัน"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Show the cover of \"Nan Can Nod\". Read the title and ask what the book is about.",
+              "Read page 1 with the class: point to \"A\" (a tricky word) and to the n at the start of the picture word.",
+              "Then pairs read: partner A reads a page, partner B reads the next."
+            ],
+            "teacherLanguage": [
+              "\"Look. Nan Can Nod. What can Nan do?\"",
+              "\"Point to the n. Nnnest. A nest!\"",
+              "\"Your turn with your partner. A reads, B reads, A reads.\""
+            ],
+            "studentActions": [
+              "Children read each page: \"A\" and the picture word with n.",
+              "Pairs take turns, page by page."
+            ],
+            "watchFor": [
+              "Children who name the picture with a different word (bird for nest): point to the n and stretch the first sound.",
+              "This book is a sound book. The child reads \"a\", then uses the first sound, nnn, to say the picture word."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher, page by page.",
+            "th": "เด็กอ่านพร้อมครูทีละหน้า"
+          },
+          "harder": {
+            "en": "The child reads two pages alone: \"a\", then the first sound, then the picture word.",
+            "th": "เด็กอ่าน 2 หน้าด้วยตัวเอง: \"a\" แล้วเสียงแรก แล้วคำที่ตรงกับภาพ"
+          },
+          "group": {
+            "en": "Pairs; the teacher sits with one pair.",
+            "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
+          },
+          "materials": [
+            "books (one for each pair): \"Nan Can Nod\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกของ \"Nan Can Nod\" อ่านชื่อเรื่อง แล้วถามว่าหนังสือเล่มนี้เกี่ยวกับอะไร",
+              "อ่านหน้า 1 พร้อมทั้งชั้น: ชี้ที่ \"A\" (คำที่ต้องจำ) และชี้ที่ n ต้นคำที่ตรงกับภาพ",
+              "จากนั้นให้อ่านเป็นคู่: คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป"
+            ],
+            "teacherLanguage": [
+              "\"ดู Nan Can Nod (Nan พยักหน้าได้) Nan ทำอะไรได้?\"",
+              "\"ชี้ที่ตัวอักษร n Nnnest a nest (รังนก)!\"",
+              "\"ถึงตาเด็ก ๆ อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน คู่คนที่ 1 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละหน้า: \"A\" และคำที่ตรงกับภาพซึ่งขึ้นต้นด้วย n",
+              "คู่ผลัดกันอ่านทีละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่เรียกภาพด้วยคำอื่น (bird แทน nest): ชี้ที่ n และลากเสียงแรกให้ยาว",
+              "หนังสือเล่มนี้เป็นหนังสือเสียง เด็กอ่าน \"a\" แล้วใช้เสียงแรก nnn เพื่อพูดคำที่ตรงกับภาพ"
+            ]
+          }
+        },
+        {
+          "id": "C5",
+          "title": {
+            "en": "Comprehension",
+            "th": "ตรวจความเข้าใจ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Ask two questions about the book. Children answer with a short sentence."
+            ],
+            "teacherLanguage": [
+              "\"Look at page 2. Is it a nut? No! It is a net.\"",
+              "\"Who can nod? Nan can nod!\""
+            ],
+            "studentActions": [
+              "Children answer \"Yes\" or \"No\", then the full sentence with the teacher."
+            ],
+            "watchFor": [
+              "Children who answer only \"yes\": say the full sentence; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Ask only yes or no questions.",
+            "th": "ถามเฉพาะคำถามแบบใช่หรือไม่ใช่"
+          },
+          "harder": {
+            "en": "A child asks a question about a page: \"Is it a nut?\"",
+            "th": "เด็กคนหนึ่งถามคำถามเกี่ยวกับหน้าหนึ่ง: \"Is it a nut?\" (นี่คือ nut ไหม)"
+          },
+          "group": {
+            "en": "Pairs ask each other one question.",
+            "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
+          },
+          "materials": [
+            "books (one for each pair): \"Nan Can Nod\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ถามคำถาม 2 ข้อเกี่ยวกับหนังสือ เด็ก ๆ ตอบเป็นประโยคสั้น ๆ"
+            ],
+            "teacherLanguage": [
+              "\"ดูหน้า 2 นี่คือ nut ไหม? ไม่ใช่! นี่คือ net\"",
+              "\"ใครพยักหน้าได้? Nan พยักหน้าได้!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ตอบ \"Yes\" หรือ \"No\" แล้วพูดประโยคเต็มพร้อมครู"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบแค่ \"yes\": พูดประโยคเต็ม แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "C6",
+          "title": {
+            "en": "Favorite page",
+            "th": "หน้าที่ชอบ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask two or three children to read their favorite page of \"Nan Can Nod\"."
+            ],
+            "teacherLanguage": [
+              "\"Which page do you like? Read it to us.\""
+            ],
+            "studentActions": [
+              "Two or three children read one page each."
+            ],
+            "watchFor": [
+              "Children who are not sure: let them choose a page, then read it with them."
+            ]
+          },
+          "easier": {
+            "en": "The child points to the page; the class reads it.",
+            "th": "เด็กชี้ที่หน้านั้น ทั้งชั้นอ่าน"
+          },
+          "harder": {
+            "en": "The child reads the page and says why: \"I like Pip!\"",
+            "th": "เด็กอ่านหน้านั้นและบอกเหตุผล: \"I like Pip!\" (หนูชอบ Pip!)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "books (one for each pair): \"Nan Can Nod\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 2 หรือ 3 คนอ่านหน้าที่ชอบใน \"Nan Can Nod\""
+            ],
+            "teacherLanguage": [
+              "\"หนูชอบหน้าไหน? อ่านให้เราฟัง\""
+            ],
+            "studentActions": [
+              "เด็ก 2 หรือ 3 คนอ่านคนละ 1 หน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่แน่ใจ: ให้เด็กเลือกหน้า แล้วอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "C7",
+          "title": {
+            "en": "Sticker",
+            "th": "สติกเกอร์"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Give each child the sticker of \"Nan Can Nod\".",
+              "Children put it on number 1 of the book map in their book."
+            ],
+            "teacherLanguage": [
+              "\"You read the book! Here is your sticker.\"",
+              "\"Put it on the book map, on number 1.\""
+            ],
+            "studentActions": [
+              "Children put the sticker on the book map and say the book title."
+            ],
+            "watchFor": [
+              "Children who put the sticker in the wrong place: show number 1 on the map."
+            ]
+          },
+          "easier": {
+            "en": "Put the sticker on the map with the child.",
+            "th": "ติดสติกเกอร์บนแผนที่หนังสือพร้อมกับเด็ก"
+          },
+          "harder": {
+            "en": "The child says the title and one word from the book.",
+            "th": "เด็กพูดชื่อหนังสือและคำ 1 คำจากหนังสือ"
+          },
+          "group": {
+            "en": "The table leader gives out the stickers.",
+            "th": "หัวหน้าโต๊ะแจกสติกเกอร์"
+          },
+          "materials": [
+            "stickers: \"Nan Can Nod\"",
+            "student book: book map"
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกสติกเกอร์ \"Nan Can Nod\" ให้เด็กแต่ละคน",
+              "เด็ก ๆ ติดสติกเกอร์ที่หมายเลข 1 ของแผนที่หนังสือในหนังสือของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"เด็ก ๆ อ่านหนังสือจบแล้ว! นี่คือสติกเกอร์ของเด็ก ๆ\"",
+              "\"ติดที่แผนที่หนังสือ ที่หมายเลข 1\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ติดสติกเกอร์บนแผนที่หนังสือ และพูดชื่อหนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่ติดสติกเกอร์ผิดที่: ชี้หมายเลข 1 บนแผนที่หนังสือให้ดู"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "day": 4,
+      "title": {
+        "en": "Read and Write",
+        "th": "อ่านและเขียน"
+      },
+      "steps": [
+        {
+          "id": "D1",
+          "title": {
+            "en": "Re-read",
+            "th": "อ่านซ้ำ"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Children read \"Nan Can Nod\" again in pairs, with a finger under the words. Partner A reads a page, partner B reads the next.",
+              "Sit with one table and listen to each child read two pages."
+            ],
+            "teacherLanguage": [
+              "\"Read the book again. Finger under the words.\"",
+              "\"Read page 3 to me. Good! A nut.\""
+            ],
+            "studentActions": [
+              "Children read the book in pairs, with a finger under each word."
+            ],
+            "watchFor": [
+              "Note on the record sheet the children who still name the pictures with a different first sound."
+            ]
+          },
+          "easier": {
+            "en": "The child reads together with the partner.",
+            "th": "เด็กอ่านพร้อมกับคู่"
+          },
+          "harder": {
+            "en": "The child reads the book alone to the partner: \"a\", the first sound, and the picture word on each page.",
+            "th": "เด็กอ่านหนังสือให้คู่ฟังด้วยตัวเอง: \"a\" เสียงแรก และคำที่ตรงกับภาพในแต่ละหน้า"
+          },
+          "group": {
+            "en": "Pairs; the teacher listens to one table.",
+            "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
+          },
+          "materials": [
+            "books (one for each pair): \"Nan Can Nod\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ อ่าน \"Nan Can Nod\" อีกครั้งเป็นคู่ โดยวางนิ้วใต้คำ คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป",
+              "นั่งกับ 1 โต๊ะ และฟังเด็กแต่ละคนอ่าน 2 หน้า"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสืออีกครั้ง วางนิ้วใต้คำ\"",
+              "\"อ่านหน้า 3 ให้ครูฟัง เก่งมาก! a nut (ถั่ว 1 เม็ด)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านหนังสือเป็นคู่ โดยวางนิ้วใต้แต่ละคำ"
+            ],
+            "watchFor": [
+              "จดในแบบบันทึกผล: เด็กที่ยังเรียกภาพด้วยคำที่มีเสียงแรกต่างไป"
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "title": {
+            "en": "Tricky words",
+            "th": "คำที่ต้องจำ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Show the cards a, and, can fast.",
+              "Write \"and\" on the board, then erase one letter; children say the missing letter."
+            ],
+            "teacherLanguage": [
+              "\"Read it fast! And. Can. A.\"",
+              "\"Close your eyes. ... Open your eyes. What is missing?\""
+            ],
+            "studentActions": [
+              "Children read the cards fast.",
+              "Children say the missing letter name."
+            ],
+            "watchFor": [
+              "Children who say the letter sound for the missing letter: accept it, then say the letter name."
+            ]
+          },
+          "easier": {
+            "en": "Show only \"a\" and \"and\".",
+            "th": "ชูเฉพาะ \"a\" และ \"and\""
+          },
+          "harder": {
+            "en": "Erase two letters of \"can\".",
+            "th": "ลบตัวอักษร 2 ตัวของ \"can\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "tricky word cards: a, and, can",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตร a, and, can อย่างรวดเร็ว",
+              "เขียน \"and\" บนกระดาน แล้วลบตัวอักษร 1 ตัว เด็ก ๆ บอกตัวอักษรที่หายไป"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเร็ว ๆ! and, can, a\"",
+              "\"หลับตา ... ลืมตา อะไรหายไป?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรอย่างรวดเร็ว",
+              "เด็ก ๆ บอกชื่อตัวอักษรที่หายไป"
+            ],
+            "watchFor": [
+              "เด็กที่บอกเสียงของตัวอักษรที่หายไป: ยอมรับคำตอบนั้น แล้วพูดชื่อตัวอักษร"
+            ]
+          }
+        },
+        {
+          "id": "D3",
+          "title": {
+            "en": "Leveled reader",
+            "th": "หนังสืออ่านแบ่งระดับ"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "Give out the class set of \"Hello!\" (Sprout band).",
+              "Read it together once, then pairs read it page by page."
+            ],
+            "teacherLanguage": [
+              "\"Open your book. Read with me.\"",
+              "\"Now read it with your partner. A reads, B reads.\""
+            ],
+            "studentActions": [
+              "Children read \"Hello!\" together, then in pairs."
+            ],
+            "watchFor": [
+              "Children who read a name wrong: point to the picture of the child on the page."
+            ]
+          },
+          "easier": {
+            "en": "Pairs read only pages 1 to 4.",
+            "th": "คู่อ่านเฉพาะหน้า 1 ถึง 4"
+          },
+          "harder": {
+            "en": "The child reads the whole book to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟัง"
+          },
+          "group": {
+            "en": "Pairs.",
+            "th": "ทำเป็นคู่"
+          },
+          "materials": [
+            "books (one for each pair): \"Hello!\""
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกหนังสือ \"Hello!\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
+            ],
+            "teacherLanguage": [
+              "\"เปิดหนังสือ อ่านพร้อมครู\"",
+              "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่าน \"Hello!\" พร้อมกัน แล้วอ่านเป็นคู่"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านชื่อผิด: ชี้ที่ภาพของเด็กในหน้านั้น"
+            ]
+          }
+        },
+        {
+          "id": "D4",
+          "title": {
+            "en": "Write it",
+            "th": "เขียน"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Children trace \"Hello, I am\" in the book.",
+              "Then they copy their name from their name card on the line.",
+              "Show where the capital letter and the full stop (period) go."
+            ],
+            "teacherLanguage": [
+              "\"Trace the words: Hello, I am.\"",
+              "\"Now write your name. Look at your name card.\"",
+              "\"A big letter at the start of your name. A full stop at the end.\"",
+              "\"Now draw a picture of you. Wave hello!\""
+            ],
+            "studentActions": [
+              "Children trace the frame and write their own name.",
+              "Children draw themselves waving in the picture box."
+            ],
+            "watchFor": [
+              "Children who write the name with no capital letter: point to the big letter on the name card."
+            ]
+          },
+          "easier": {
+            "en": "Write the child's name with a highlighter; the child traces it.",
+            "th": "เขียนชื่อเด็กด้วยปากกาเน้นข้อความ แล้วให้เด็กลากเส้นตาม"
+          },
+          "harder": {
+            "en": "The child traces a second line: \"I am a boy.\" or \"I am a girl.\"",
+            "th": "เด็กลากเส้นตามบรรทัดที่สอง: \"I am a boy.\" (ฉันเป็นเด็กผู้ชาย) หรือ \"I am a girl.\" (ฉันเป็นเด็กผู้หญิง)"
+          },
+          "group": {
+            "en": "Alone; pairs show each other the page at the end.",
+            "th": "ทำคนเดียว ตอนท้ายให้เด็กจับคู่และเปิดหน้านั้นให้กันดู"
+          },
+          "materials": [
+            "student book: writing page",
+            "name cards",
+            "crayons",
+            "highlighter"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ ลากเส้นตาม \"Hello, I am\" ในหนังสือ",
+              "จากนั้นเด็ก ๆ คัดชื่อของตัวเองจากบัตรชื่อลงบนบรรทัด",
+              "ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน"
+            ],
+            "teacherLanguage": [
+              "\"ลากเส้นตามคำ: Hello, I am\"",
+              "\"ทีนี้เขียนชื่อของหนู ดูที่บัตรชื่อ\"",
+              "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นชื่อ ใส่จุดที่ท้ายประโยค\"",
+              "\"ทีนี้วาดภาพตัวเอง โบกมือ hello!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ลากเส้นตามกรอบประโยค และเขียนชื่อของตัวเอง",
+              "เด็ก ๆ วาดภาพตัวเองกำลังโบกมือในช่องวาดภาพ"
+            ],
+            "watchFor": [
+              "เด็กที่เขียนชื่อโดยไม่มีตัวพิมพ์ใหญ่: ชี้ที่ตัวพิมพ์ใหญ่บนบัตรชื่อ"
+            ]
+          }
+        },
+        {
+          "id": "D5",
+          "title": {
+            "en": "Share",
+            "th": "นำเสนอ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask four children to read their sentence to the class."
+            ],
+            "teacherLanguage": [
+              "\"Read your sentence to us. Hold up your book.\""
+            ],
+            "studentActions": [
+              "Four children read \"Hello, I am ___.\" from their book."
+            ],
+            "watchFor": [
+              "Children who read too quietly: stand next to them and read with them."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher.",
+            "th": "เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "The child reads both lines.",
+            "th": "เด็กอ่านทั้ง 2 บรรทัด"
+          },
+          "group": {
+            "en": "Whole class; the class waves back.",
+            "th": "ทั้งชั้น: ทั้งชั้นโบกมือตอบ"
+          },
+          "materials": [
+            "student book: writing page"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 4 คนอ่านประโยคของตัวเองให้ทั้งชั้นฟัง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านประโยคของหนูให้เราฟัง ชูหนังสือขึ้น\""
+            ],
+            "studentActions": [
+              "เด็ก 4 คนอ่าน \"Hello, I am ___.\" จากหนังสือของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านเบาเกินไป: ยืนข้างเด็กและอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "D6",
+          "title": {
+            "en": "Sing it: song show",
+            "th": "ร้องเพลง: การแสดงร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the day 5 opening, the song of the week (item 3) is the song show. The class sings with all the gestures; one table leads.",
+              "If the school allows it, film the song on the class tablet."
+            ],
+            "teacherLanguage": [
+              "\"Table 1, you are the leaders today. Show us the actions!\"",
+              "\"Show time! Sing it with all the actions!\""
+            ],
+            "studentActions": [
+              "The leaders do the gestures in front; the class sings and copies."
+            ],
+            "watchFor": [
+              "Leaders who forget a gesture: point to the screen.",
+              "Children who are shy on the film: they can stand in the back row."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus with the gestures.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus) พร้อมท่าประกอบเพลง"
+          },
+          "harder": {
+            "en": "The leaders sing the verse alone.",
+            "th": "ผู้นำร้องท่อนเวิร์ส (verse) เอง"
+          },
+          "group": {
+            "en": "One table leads each week.",
+            "th": "โต๊ะหนึ่งเป็นผู้นำในแต่ละสัปดาห์"
+          },
+          "materials": [
+            "karaoke videos: \"Hello, I Am Pip\"",
+            "class tablet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบของวันที่ 5 เพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เป็นการแสดงร้องเพลง ทั้งชั้นร้องพร้อมทำท่าประกอบเพลงทุกท่า โต๊ะหนึ่งเป็นผู้นำ",
+              "ถ้าโรงเรียนอนุญาต ให้ถ่ายวิดีโอการร้องเพลงด้วยแท็บเล็ตของห้อง"
+            ],
+            "teacherLanguage": [
+              "\"โต๊ะ 1 วันนี้เป็นผู้นำ ทำท่าให้เพื่อน ๆ ดู!\"",
+              "\"ถึงเวลาแสดงแล้ว! ร้องพร้อมทำท่าทุกท่า!\""
+            ],
+            "studentActions": [
+              "ผู้นำทำท่าประกอบเพลงอยู่ด้านหน้า ทั้งชั้นร้องและทำท่าตาม"
+            ],
+            "watchFor": [
+              "ผู้นำที่ลืมท่า: ชี้ที่จอ",
+              "เด็กที่อายกล้อง: ให้ยืนแถวหลังได้"
+            ]
+          }
+        }
+      ],
+      "prep": [
+        {
+          "en": "Write each child's English name on a name card.",
+          "th": "เขียนชื่อภาษาอังกฤษของเด็กแต่ละคนบนบัตรชื่อ"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "day": 5,
+      "title": {
+        "en": "Play and Check",
+        "th": "เล่นและตรวจสอบ"
+      },
+      "steps": [
+        {
+          "id": "E1",
+          "title": {
+            "en": "Centers set-up",
+            "th": "จัดมุมกิจกรรม"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the four centers and the group signs. Send each group to its first center.",
+              "Groups 1 and 2 start at the picture sort and the letter cards; groups 3 and 4 at the book corner and the karaoke corner."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, go to the picture sort. Group 2, the letter cards.\"",
+              "\"Group 3, the book corner. Group 4, the karaoke corner.\""
+            ],
+            "studentActions": [
+              "Children go to their center and sit down."
+            ],
+            "watchFor": [
+              "Groups that do not know where to go: point to the group sign at each center."
+            ]
+          },
+          "easier": {
+            "en": "Put a picture of each group on its center.",
+            "th": "ติดภาพของแต่ละกลุ่มไว้ที่มุมกิจกรรมของกลุ่มนั้น"
+          },
+          "harder": {
+            "en": "A group leader shows the center card to the group and does the first turn.",
+            "th": "หัวหน้ากลุ่มให้กลุ่มดูบัตรมุมกิจกรรม และเล่นเป็นคนแรก"
+          },
+          "group": {
+            "en": "Four groups.",
+            "th": "4 กลุ่ม"
+          },
+          "materials": [
+            "center cards",
+            "group signs"
+          ],
+          "th": {
+            "teacherActions": [
+              "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
+              "กลุ่ม 1 และ 2 เริ่มที่มุมแยกภาพและมุมบัตรตัวอักษร กลุ่ม 3 และ 4 เริ่มที่มุมหนังสือและมุมคาราโอเกะ"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปที่มุมแยกภาพ กลุ่ม 2 ไปที่มุมบัตรตัวอักษร\"",
+              "\"กลุ่ม 3 ไปมุมหนังสือ กลุ่ม 4 ไปมุมคาราโอเกะ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ไปที่มุมกิจกรรมของตัวเองและนั่งลง"
+            ],
+            "watchFor": [
+              "กลุ่มที่ไม่รู้ว่าต้องไปที่ไหน: ชี้ที่ป้ายกลุ่มของแต่ละมุมกิจกรรม"
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups work at their center. Picture sort: sort the picture cards into \"nnn at the start\" and \"no nnn\". Letter cards: a child turns over a picture card and says the word; the group pushes the card for the letter n for an nnn word. Book corner: read \"Hello!\" and \"Nan Can Nod\". Karaoke corner: sing with the karaoke video on the tablet, with the sound low.",
+              "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"Nan Can Nod\"; mark the record sheet.",
+              "In week 1, walk between the centers for the first 3 minutes and show each group its task."
+            ],
+            "teacherLanguage": [
+              "\"Read the book to me. Finger under the words.\"",
+              "\"Good! What sound? Nnn.\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Note the pictures that each child names with the wrong first sound."
+            ]
+          },
+          "easier": {
+            "en": "At the reading table, the child reads with the teacher.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "At the reading table, the child says the first sound and the picture word alone on pages 1 to 6.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กพูดเสียงแรกและคำที่ตรงกับภาพด้วยตัวเองในหน้า 1 ถึง 6"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "sorting mat: nnn / no nnn",
+            "picture cards: nose, cat, sun, dog, bus",
+            "sound picture cards: nest, net, nut",
+            "a second set of the picture cards and the sound picture cards",
+            "workmats (class set)",
+            "letter cards (class set): n",
+            "books (one for each pair): \"Hello!\", \"Nan Can Nod\"",
+            "class tablet",
+            "karaoke videos: \"Hello, I Am Pip\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่ขึ้นต้นด้วย nnn และกองที่ไม่มี nnn มุมบัตรตัวอักษร: เด็กคนหนึ่งพลิกบัตรภาพและพูดคำ กลุ่มเลื่อนบัตรตัวอักษร n เมื่อเป็นคำที่ขึ้นต้นด้วย n มุมหนังสือ: อ่าน \"Hello!\" และ \"Nan Can Nod\" มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"Nan Can Nod\" แล้วบันทึกในแบบบันทึกผล",
+              "ในสัปดาห์ที่ 1 เดินไปมาระหว่างมุมกิจกรรมในช่วง 3 นาทีแรก และสาธิตงานให้แต่ละกลุ่มดู"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\"",
+              "\"เก่งมาก! เสียงอะไร? Nnn\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "จดภาพที่เด็กแต่ละคนเรียกด้วยเสียงแรกที่ผิด"
+            ]
+          }
+        },
+        {
+          "id": "E3",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups change: 1 and 2 go to the book corner and the karaoke corner; 3 and 4 go to the picture sort and the letter cards.",
+              "Listen to child 3 and child 4 at the reading-record table."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the book corner. Group 2, the karaoke corner. Group 3, the picture sort. Group 4, the letter cards.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children change centers and work.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Groups that change slowly: count down from five."
+            ]
+          },
+          "easier": {
+            "en": "Keep the same center for a group that needs more time.",
+            "th": "ให้กลุ่มที่ต้องการเวลามากขึ้นอยู่ที่มุมเดิม"
+          },
+          "harder": {
+            "en": "Groups that finish early make a new sort with the picture cards.",
+            "th": "กลุ่มที่ทำเสร็จเร็วแยกบัตรภาพแบบใหม่"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มสลับมุม: กลุ่ม 1 และ 2 ไปที่มุมหนังสือและมุมคาราโอเกะ กลุ่ม 3 และ 4 ไปที่มุมแยกภาพและมุมบัตรตัวอักษร",
+              "ฟังเด็กคนที่ 3 และคนที่ 4 อ่านที่โต๊ะบันทึกการอ่าน"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมหนังสือ กลุ่ม 2 ไปมุมคาราโอเกะ กลุ่ม 3 ไปที่มุมแยกภาพ กลุ่ม 4 ไปที่มุมบัตรตัวอักษร\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เปลี่ยนมุมกิจกรรมและทำกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "กลุ่มที่เปลี่ยนมุมช้า: นับถอยหลังจาก 5"
+            ]
+          }
+        },
+        {
+          "id": "E4",
+          "title": {
+            "en": "Game",
+            "th": "เกม"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Play \"Swat the n\": put six picture cards on the board.",
+              "Say the word of one picture. Two children run to the board. The first child to touch that picture says the word."
+            ],
+            "teacherLanguage": [
+              "\"Ready? Nose!\"",
+              "\"Touch the picture. Does it start with nnn? Yes! Nnnose.\"",
+              "\"Next two. Ready?\""
+            ],
+            "studentActions": [
+              "Two children at a time touch the picture and say the word.",
+              "The class says \"Nnn!\" for every n word."
+            ],
+            "watchFor": [
+              "Fast children who always win: ask them to touch with the left hand, or hop to the board."
+            ]
+          },
+          "easier": {
+            "en": "Put only three picture cards on the board.",
+            "th": "ติดบัตรภาพเพียง 3 ใบบนกระดาน"
+          },
+          "harder": {
+            "en": "Say only the first sound; the child finds a picture with that sound.",
+            "th": "พูดเฉพาะเสียงแรก เด็กหาภาพที่ขึ้นต้นด้วยเสียงนั้น"
+          },
+          "group": {
+            "en": "Two teams; one child from each team at a time.",
+            "th": "2 ทีม ทีมละ 1 คนในแต่ละครั้ง"
+          },
+          "materials": [
+            "picture cards: nose, cat, sun",
+            "sound picture cards: nest, net, nut"
+          ],
+          "th": {
+            "teacherActions": [
+              "เล่นเกม \"Swat the n\": ติดบัตรภาพ 6 ใบบนกระดาน",
+              "พูดคำของภาพ 1 ภาพ เด็ก 2 คนวิ่งไปที่กระดาน เด็กคนแรกที่แตะภาพนั้นพูดคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"พร้อมไหม? nose!\"",
+              "\"แตะภาพ คำนี้ขึ้นต้นด้วย nnn ไหม? ใช่! Nnnose\"",
+              "\"2 คนต่อไป พร้อมไหม?\""
+            ],
+            "studentActions": [
+              "เด็กครั้งละ 2 คนแตะภาพและพูดคำ",
+              "ทั้งชั้นพูด \"Nnn!\" ทุกครั้งที่เป็นคำที่ขึ้นต้นด้วย n"
+            ],
+            "watchFor": [
+              "เด็กที่เร็วและชนะทุกครั้ง: ให้แตะด้วยมือซ้าย หรือกระโดดขาเดียวไปที่กระดาน"
+            ]
+          }
+        },
+        {
+          "id": "E5",
+          "title": {
+            "en": "Check",
+            "th": "ตรวจสอบ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Children do the check page: circle the picture that starts with n in each row, and write the letter n.",
+              "Collect the books and mark the check."
+            ],
+            "teacherLanguage": [
+              "\"Row 1: nest, cat, fish. Which one starts with nnn? Circle it.\"",
+              "\"Row 2: dog, nose, bus. Which one starts with nnn? Circle it.\"",
+              "\"Row 3: hat, cup, net. Which one starts with nnn? Circle it.\"",
+              "\"Now write the letter n.\""
+            ],
+            "studentActions": [
+              "Children circle one picture in each row and write n."
+            ],
+            "watchFor": [
+              "Children who circle every picture: mark n as weak on the record sheet; it goes back on the review strip."
+            ]
+          },
+          "easier": {
+            "en": "Sit next to the child and point to each picture while you say it.",
+            "th": "นั่งข้างเด็ก และชี้แต่ละภาพขณะพูดคำ"
+          },
+          "harder": {
+            "en": "The child writes a second n with no dots.",
+            "th": "เด็กเขียน n ตัวที่สองโดยไม่มีจุดนำ"
+          },
+          "group": {
+            "en": "Alone.",
+            "th": "ทำคนเดียว"
+          },
+          "materials": [
+            "student book: check page",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ ทำหน้าตรวจสอบ: วงกลมภาพที่ขึ้นต้นด้วย n ในแต่ละแถว และเขียนตัวอักษร n",
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+            ],
+            "teacherLanguage": [
+              "\"แถว 1: nest, cat, fish คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
+              "\"แถว 2: dog, nose, bus คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
+              "\"แถว 3: hat, cup, net คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
+              "\"ทีนี้เขียนตัวอักษร n\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ วงกลมภาพ 1 ภาพในแต่ละแถว และเขียน n"
+            ],
+            "watchFor": [
+              "เด็กที่วงกลมทุกภาพ: บันทึกในแบบบันทึกผลว่า n ยังไม่แม่น แล้ว n จะกลับไปอยู่บนแถบทบทวน"
+            ]
+          }
+        }
+      ],
+      "prep": [
+        {
+          "en": "Set up the four centers: picture sort, letter cards, book corner, and karaoke corner. Use the same places every week.",
+          "th": "จัดมุมกิจกรรม 4 มุม: มุมแยกภาพ มุมบัตรตัวอักษร มุมหนังสือ และมุมคาราโอเกะ ใช้ที่เดิมทุกสัปดาห์"
+        },
+        {
+          "en": "Put the children in four groups. Make a group sign for each center.",
+          "th": "แบ่งเด็ก ๆ เป็น 4 กลุ่ม ทำป้ายกลุ่มสำหรับแต่ละมุมกิจกรรม"
+        }
+      ]
+    }
+  ],
+  "review": [
+    {
+      "day": 1,
+      "cards": []
+    },
+    {
+      "day": 2,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "n",
+          "week": 1,
+          "audio": "phonemes/daniel/04-n.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "a",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "and",
+          "week": 1
+        },
+        {
+          "kind": "tricky",
+          "text": "can",
+          "week": 1
+        },
+        {
+          "kind": "frame",
+          "text": "Hello, I am ___.",
+          "week": 1
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "cards": []
+    },
+    {
+      "day": 5,
+      "cards": []
+    }
+  ],
+  "check": {
+    "items": [
+      {
+        "kind": "circle-picture",
+        "sound": "/n/",
+        "pictures": [
+          "nest",
+          "cat",
+          "fish"
+        ],
+        "answer": "nest"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/n/",
+        "pictures": [
+          "dog",
+          "nose",
+          "bus"
+        ],
+        "answer": "nose"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/n/",
+        "pictures": [
+          "hat",
+          "cup",
+          "net"
+        ],
+        "answer": "net"
+      },
+      {
+        "kind": "write-letter",
+        "letter": "n"
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "net",
+      "nut",
+      "nose"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound \"nnn\" (not the letter name \"en\"), as in \"nose\". Your child also learns to say \"Hello, I am ___.\" in English.",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง \"nnn\" (ไม่ใช่ชื่อตัวอักษร \"en\") เหมือนในคำว่า \"nose\" และบุตรหลานยังได้ฝึกพูด \"Hello, I am ___.\" เป็นภาษาอังกฤษด้วย"
+    },
+    "activity": {
+      "en": "Say \"Hello!\" to your child in English. Your child answers \"Hello, I am ___.\" with his or her name. Then point to your nose and say \"nnnose\". Find a nut and say \"nnnut\".",
+      "th": "พูด \"Hello!\" กับบุตรหลานเป็นภาษาอังกฤษ ให้บุตรหลานตอบว่า \"Hello, I am ___.\" โดยเติมชื่อของบุตรหลานเอง จากนั้นชี้ที่จมูกของตัวเองแล้วพูดว่า \"nnnose\" หาถั่ว 1 เม็ดแล้วพูดว่า \"nnnut\""
+    },
+    "songUrl": "/th/st/2/1?part=song",
+    "readAlongUrl": "/th/st/2/1?part=book"
+  },
+  "print": {
+    "letterBox": {
+      "letter": "n",
+      "formationWords": "Start at the top. Down. Up. Over the hill. Down.",
+      "startPoint": "top"
+    },
+    "practice": [
+      {
+        "text": "n n n",
+        "pictureWord": "nose"
+      },
+      {
+        "text": "A nest. A net.",
+        "pictureWord": "nest"
+      },
+      {
+        "text": "and",
+        "pictureWord": "nut"
+      }
+    ],
+    "dictation": {
+      "letters": [
+        "n",
+        "n",
+        "n"
+      ],
+      "words": [
+        "a"
+      ]
+    },
+    "writing": {
+      "traceText": "Hello, I am",
+      "line": "name",
+      "pictureBox": true
+    }
+  },
+  "tags": {
+    "graphVersion": "phonics-v1",
+    "taught": [
+      "english.phonics.gpc.n.n",
+      "english.phonics.phoneme.n",
+      "english.phonics.letter.n.sound",
+      "english.phonics.letter.n.name",
+      "english.phonics.letter.n.form-lower",
+      "english.phonics.tricky.a",
+      "english.phonics.tricky.and",
+      "english.phonics.tricky.can",
+      "english.phonics.pa.initial-sound.identify",
+      "english.phonics.pa.final-sound.identify",
+      "english.phonics.pa.phoneme.blend-2-3"
+    ],
+    "reviewed": []
+  }
+}

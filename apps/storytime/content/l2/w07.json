@@ -1,0 +1,5007 @@
+{
+  "approval": {
+    "text": {
+      "status": "approved",
+      "date": "2026-11-01",
+      "words": "3. Covers: Approved",
+      "source": "Owner answer relayed by the PM session, 2026-11-01 07:3x ICT. His item 3 answered section 3 of the PM message: the weeks 2 to 8 English text and the Level 2 Unit 1 cover version 3 look. Approved text file ~/Desktop/print-ready/storytime/text-review/Storytime-Advantage-L2-U1-weeks-2-8-English-text.pdf, SHA-256 57f30792532cdae33ae5e66f069fa822aab58df35cc6b6e2c393ca7fbdbba67c, built 2026-10-30."
+    },
+    "thai": {
+      "status": "approved",
+      "date": "2026-10-22",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82"
+    },
+    "images": {
+      "status": "draft"
+    },
+    "audio": {
+      "status": "draft"
+    },
+    "song": {
+      "status": "draft"
+    },
+    "scripts": {
+      "status": "draft"
+    }
+  },
+  "version": 1,
+  "meta": {
+    "program": "storytime",
+    "shape": "storytime-week",
+    "level": 2,
+    "week": 7,
+    "unit": 1,
+    "key": "st2/7",
+    "kind": "teach",
+    "periodMinutes": 30,
+    "openingMinutes": 6,
+    "title": "Is It a Ball?",
+    "band": "Sprout",
+    "status": "draft"
+  },
+  "focus": {
+    "element": {
+      "id": "english.phonics.gpc.o.short-o",
+      "graphemes": [
+        "o"
+      ],
+      "sound": "/o/",
+      "action": {
+        "en": "Flick a pretend light switch on and off and say /o/, /o/, /o/. On starts with /o/.",
+        "th": "ทำมือเหมือนกดสวิตช์ไฟ เปิดแล้วปิด และพูด /o/, /o/, /o/ คำว่า on (เปิด) ขึ้นต้นด้วยเสียง /o/"
+      },
+      "audio": "phonemes/daniel/29-o-short.mp3"
+    },
+    "paSkill": {
+      "en": "the first sound /o/ and the middle sound /o/; blend three sounds by ear",
+      "th": "ฟังเสียงแรก /o/ และเสียงกลาง /o/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "trickyWords": [
+      "from",
+      "run",
+      "up"
+    ],
+    "frame": "Is it a ___? Yes/No.",
+    "family": {
+      "name": {
+        "en": "Toys",
+        "th": "ของเล่น"
+      },
+      "words": [
+        {
+          "word": "ball",
+          "image": {
+            "prompt": "One red-and-yellow ball. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "ball"
+          }
+        },
+        {
+          "word": "doll",
+          "image": {
+            "prompt": "One small doll with yellow yarn hair and a red dress, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "doll"
+          }
+        },
+        {
+          "word": "car",
+          "image": {
+            "prompt": "One small blue toy car, seen from the side. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "car"
+          }
+        },
+        {
+          "word": "kite",
+          "image": {
+            "prompt": "One red-and-yellow kite with a long tail. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "kite"
+          }
+        },
+        {
+          "word": "drum",
+          "image": {
+            "prompt": "One small red toy drum with two drumsticks. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "drum"
+          }
+        },
+        {
+          "word": "train",
+          "image": {
+            "prompt": "One small green toy train with three cars, seen from the side. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "train"
+          }
+        },
+        {
+          "word": "teddy",
+          "image": {
+            "prompt": "One white teddy bear with a blue bow sits, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
+            "characters": [],
+            "caption": "teddy"
+          }
+        }
+      ]
+    },
+    "wordWall": [
+      "an",
+      "Nan",
+      "pan",
+      "nap",
+      "am",
+      "man",
+      "map",
+      "Pam",
+      "Sam",
+      "sat",
+      "mat",
+      "tap",
+      "Pat",
+      "on",
+      "top",
+      "pot",
+      "Tom",
+      "Mom"
+    ]
+  },
+  "opening": {
+    "pa": [
+      {
+        "en": "\"Listen: octopus. What is the first sound? /o/! Listen: pot. What is the middle sound? /o/!\"",
+        "th": "\"ฟัง: octopus เสียงแรกคือเสียงอะไร? /o/! ฟัง: pot เสียงกลางคำคือเสียงอะไร? /o/!\""
+      },
+      {
+        "en": "\"Listen: ox. What is the first sound? /o/! Listen: sock. What is the middle sound? /o/!\"",
+        "th": "\"ฟัง: ox เสียงแรกคือเสียงอะไร? /o/! ฟัง: sock เสียงกลางคำคือเสียงอะไร? /o/!\""
+      },
+      {
+        "en": "\"Listen: /t/ - /o/ - /p/. What is the word? Top! Listen: /p/ - /o/ - /t/. What is the word? Pot!\"",
+        "th": "\"ฟัง: /t/ - /o/ - /p/ คำนี้คือคำอะไร? Top! ฟัง: /p/ - /o/ - /t/ คำนี้คือคำอะไร? Pot!\""
+      },
+      {
+        "en": "\"Listen: /h/ - /o/ - /t/. What is the word? Hot! Listen: mmm - /o/ - /p/. What is the word? Mop!\"",
+        "th": "\"ฟัง: /h/ - /o/ - /t/ คำนี้คือคำอะไร? Hot! ฟัง: mmm - /o/ - /p/ คำนี้คือคำอะไร? Mop!\""
+      },
+      {
+        "en": "\"Listen: /h/ - /o/ - /p/. What is the word? Hop! Listen: nnn - /o/ - /d/. What is the word? Nod!\"",
+        "th": "\"ฟัง: /h/ - /o/ - /p/ คำนี้คือคำอะไร? Hop! ฟัง: nnn - /o/ - /d/ คำนี้คือคำอะไร? Nod!\""
+      }
+    ],
+    "audio": [
+      [
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/29-o-short.mp3"
+      ],
+      [
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/29-o-short.mp3"
+      ],
+      [
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/02-t.mp3"
+      ],
+      [
+        "phonemes/daniel/10-h.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/03-p.mp3"
+      ],
+      [
+        "phonemes/daniel/10-h.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/29-o-short.mp3",
+        "phonemes/daniel/06-d.mp3"
+      ]
+    ]
+  },
+  "books": [
+    {
+      "kind": "readalong",
+      "title": "Is It a Ball?",
+      "cover": {
+        "prompt": "May (drawn young, about five years old) and Ben (drawn young, about five years old) sit on a soft blue rug next to a big red blanket over a small round bump, in the toy corner of a bright kindergarten classroom with a low toy shelf, and look at the bump under the blanket; May holds one finger on her chin. No letters, words, or numbers anywhere.",
+        "characters": [
+          "May",
+          "Ben"
+        ],
+        "caption": "Is It a Ball?"
+      },
+      "pages": [
+        {
+          "text": "Is it a ball? No!",
+          "image": {
+            "prompt": "May (drawn young, about five years old) kneels on a soft blue rug next to a big red blanket over a small round bump, in the toy corner of a bright kindergarten classroom with a low toy shelf, and points at the bump under the blanket; a thought bubble over her head shows a red-and-yellow ball. Ben (drawn young, about five years old) sits on the other side of the blanket, smiles, and shakes his head. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is it a doll? No!",
+          "image": {
+            "prompt": "May (drawn young, about five years old) kneels next to the big red blanket in the same toy corner and points at the bump under the blanket; a thought bubble over her head shows a small doll with yellow yarn hair and a red dress. Ben (drawn young, about five years old) sits on the other side of the blanket, smiles, and shakes his head. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is it a car? No!",
+          "image": {
+            "prompt": "May (drawn young, about five years old) kneels next to the big red blanket in the same toy corner and points at the bump under the blanket; a thought bubble over her head shows a small blue toy car. Ben (drawn young, about five years old) sits on the other side of the blanket, smiles, and shakes his head. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is it a kite? No!",
+          "image": {
+            "prompt": "May (drawn young, about five years old) kneels next to the big red blanket in the same toy corner and points at the bump under the blanket; a thought bubble over her head shows a red-and-yellow kite. Ben (drawn young, about five years old) sits on the other side of the blanket, smiles, and shakes his head. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is it a drum? No!",
+          "image": {
+            "prompt": "May (drawn young, about five years old) kneels next to the big red blanket in the same toy corner and points at the bump under the blanket; a thought bubble over her head shows a small red toy drum with two drumsticks. Ben (drawn young, about five years old) sits on the other side of the blanket, smiles, and shakes his head. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is it a train? No!",
+          "image": {
+            "prompt": "May (drawn young, about five years old) kneels next to the big red blanket in the same toy corner and points at the bump under the blanket; a thought bubble over her head shows a small green toy train. Ben (drawn young, about five years old) sits on the other side of the blanket, smiles, and shakes his head. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is it a teddy? No!",
+          "image": {
+            "prompt": "May (drawn young, about five years old) kneels next to the big red blanket in the same toy corner and looks up at a thought bubble over her head that shows a white teddy bear with a blue bow. Behind her, at the other edge of the blanket, the tip of a fluffy golden-brown tail sticks out. Ben (drawn young, about five years old) smiles and shakes his head. No letters, words, or numbers anywhere.",
+            "characters": [
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Is it Pip? Yes!",
+          "image": {
+            "prompt": "Ben (drawn young, about five years old) lifts the big red blanket in the same toy corner, and Pip the puppy jumps out with a big happy face; May (drawn young, about five years old) laughs and opens her arms. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Pip",
+              "May",
+              "Ben"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "backWords": [
+        "is",
+        "it",
+        "a",
+        "ball",
+        "doll",
+        "car",
+        "kite",
+        "drum",
+        "train",
+        "teddy",
+        "yes",
+        "no",
+        "Pip"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w07/books/1-is-it-a-ball.mp3",
+        "sentences": [
+          {
+            "sentence": "Is it a ball?",
+            "startTime": 0,
+            "endTime": 0.792,
+            "words": [
+              {
+                "word": "Is",
+                "start": 0,
+                "end": 0.18
+              },
+              {
+                "word": "it",
+                "start": 0.18,
+                "end": 0.3
+              },
+              {
+                "word": "a",
+                "start": 0.3,
+                "end": 0.38
+              },
+              {
+                "word": "ball",
+                "start": 0.38,
+                "end": 0.792
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "No!",
+            "startTime": 1.292,
+            "endTime": 2.206,
+            "words": [
+              {
+                "word": "No",
+                "start": 1.292,
+                "end": 2.206
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Is it a doll?",
+            "startTime": 3.406,
+            "endTime": 4.347,
+            "words": [
+              {
+                "word": "Is",
+                "start": 3.406,
+                "end": 3.586
+              },
+              {
+                "word": "it",
+                "start": 3.586,
+                "end": 3.686
+              },
+              {
+                "word": "a",
+                "start": 3.686,
+                "end": 3.766
+              },
+              {
+                "word": "doll",
+                "start": 3.766,
+                "end": 4.347
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "No!",
+            "startTime": 4.847,
+            "endTime": 5.761,
+            "words": [
+              {
+                "word": "No",
+                "start": 4.847,
+                "end": 5.761
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Is it a car?",
+            "startTime": 6.961,
+            "endTime": 7.907,
+            "words": [
+              {
+                "word": "Is",
+                "start": 6.961,
+                "end": 7.141
+              },
+              {
+                "word": "it",
+                "start": 7.141,
+                "end": 7.241
+              },
+              {
+                "word": "a",
+                "start": 7.241,
+                "end": 7.341
+              },
+              {
+                "word": "car",
+                "start": 7.341,
+                "end": 7.907
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "No!",
+            "startTime": 8.407,
+            "endTime": 9.322,
+            "words": [
+              {
+                "word": "No",
+                "start": 8.407,
+                "end": 9.322
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Is it a kite?",
+            "startTime": 10.522,
+            "endTime": 11.498,
+            "words": [
+              {
+                "word": "Is",
+                "start": 10.522,
+                "end": 10.682
+              },
+              {
+                "word": "it",
+                "start": 10.682,
+                "end": 10.762
+              },
+              {
+                "word": "a",
+                "start": 10.762,
+                "end": 10.862
+              },
+              {
+                "word": "kite",
+                "start": 10.862,
+                "end": 11.498
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "No!",
+            "startTime": 11.998,
+            "endTime": 12.913,
+            "words": [
+              {
+                "word": "No",
+                "start": 11.998,
+                "end": 12.913
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Is it a drum?",
+            "startTime": 14.113,
+            "endTime": 15.105,
+            "words": [
+              {
+                "word": "Is",
+                "start": 14.113,
+                "end": 14.293
+              },
+              {
+                "word": "it",
+                "start": 14.293,
+                "end": 14.393
+              },
+              {
+                "word": "a",
+                "start": 14.393,
+                "end": 14.493
+              },
+              {
+                "word": "drum",
+                "start": 14.493,
+                "end": 15.105
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "No!",
+            "startTime": 15.605,
+            "endTime": 16.519,
+            "words": [
+              {
+                "word": "No",
+                "start": 15.605,
+                "end": 16.519
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Is it a train?",
+            "startTime": 17.719,
+            "endTime": 18.771,
+            "words": [
+              {
+                "word": "Is",
+                "start": 17.719,
+                "end": 17.959
+              },
+              {
+                "word": "it",
+                "start": 17.959,
+                "end": 18.059
+              },
+              {
+                "word": "a",
+                "start": 18.059,
+                "end": 18.139
+              },
+              {
+                "word": "train",
+                "start": 18.139,
+                "end": 18.771
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "No!",
+            "startTime": 19.271,
+            "endTime": 20.185,
+            "words": [
+              {
+                "word": "No",
+                "start": 19.271,
+                "end": 20.185
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Is it a teddy?",
+            "startTime": 21.385,
+            "endTime": 22.258,
+            "words": [
+              {
+                "word": "Is",
+                "start": 21.385,
+                "end": 21.605
+              },
+              {
+                "word": "it",
+                "start": 21.605,
+                "end": 21.725
+              },
+              {
+                "word": "a",
+                "start": 21.725,
+                "end": 21.825
+              },
+              {
+                "word": "teddy",
+                "start": 21.825,
+                "end": 22.258
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "No!",
+            "startTime": 22.758,
+            "endTime": 23.672,
+            "words": [
+              {
+                "word": "No",
+                "start": 22.758,
+                "end": 23.672
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Is it Pip?",
+            "startTime": 24.872,
+            "endTime": 25.762,
+            "words": [
+              {
+                "word": "Is",
+                "start": 24.872,
+                "end": 25.072
+              },
+              {
+                "word": "it",
+                "start": 25.072,
+                "end": 25.192
+              },
+              {
+                "word": "Pip",
+                "start": 25.192,
+                "end": 25.762
+              }
+            ],
+            "page": 8
+          },
+          {
+            "sentence": "Yes!",
+            "startTime": 26.262,
+            "endTime": 27.177,
+            "words": [
+              {
+                "word": "Yes",
+                "start": 26.262,
+                "end": 27.177
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w07/books/1-is-it-a-ball-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "Is it a ball?",
+            "startTime": 0,
+            "endTime": 1.188,
+            "words": [
+              {
+                "word": "Is",
+                "start": 0,
+                "end": 0.3
+              },
+              {
+                "word": "it",
+                "start": 0.3,
+                "end": 0.42
+              },
+              {
+                "word": "a",
+                "start": 0.42,
+                "end": 0.54
+              },
+              {
+                "word": "ball",
+                "start": 0.54,
+                "end": 1.188
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "No!",
+            "startTime": 1.688,
+            "endTime": 2.755,
+            "words": [
+              {
+                "word": "No",
+                "start": 1.688,
+                "end": 2.755
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Is it a doll?",
+            "startTime": 3.955,
+            "endTime": 5.216,
+            "words": [
+              {
+                "word": "Is",
+                "start": 3.955,
+                "end": 4.155
+              },
+              {
+                "word": "it",
+                "start": 4.155,
+                "end": 4.295
+              },
+              {
+                "word": "a",
+                "start": 4.295,
+                "end": 4.395
+              },
+              {
+                "word": "doll",
+                "start": 4.395,
+                "end": 5.216
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "No!",
+            "startTime": 5.716,
+            "endTime": 6.783,
+            "words": [
+              {
+                "word": "No",
+                "start": 5.716,
+                "end": 6.783
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "Is it a car?",
+            "startTime": 7.983,
+            "endTime": 9.308,
+            "words": [
+              {
+                "word": "Is",
+                "start": 7.983,
+                "end": 8.263
+              },
+              {
+                "word": "it",
+                "start": 8.263,
+                "end": 8.383
+              },
+              {
+                "word": "a",
+                "start": 8.383,
+                "end": 8.483
+              },
+              {
+                "word": "car",
+                "start": 8.483,
+                "end": 9.308
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "No!",
+            "startTime": 9.808,
+            "endTime": 10.875,
+            "words": [
+              {
+                "word": "No",
+                "start": 9.808,
+                "end": 10.875
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "Is it a kite?",
+            "startTime": 12.075,
+            "endTime": 13.429,
+            "words": [
+              {
+                "word": "Is",
+                "start": 12.075,
+                "end": 12.335
+              },
+              {
+                "word": "it",
+                "start": 12.335,
+                "end": 12.475
+              },
+              {
+                "word": "a",
+                "start": 12.475,
+                "end": 12.595
+              },
+              {
+                "word": "kite",
+                "start": 12.595,
+                "end": 13.429
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "No!",
+            "startTime": 13.929,
+            "endTime": 14.996,
+            "words": [
+              {
+                "word": "No",
+                "start": 13.929,
+                "end": 14.996
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "Is it a drum?",
+            "startTime": 16.196,
+            "endTime": 17.691,
+            "words": [
+              {
+                "word": "Is",
+                "start": 16.196,
+                "end": 16.476
+              },
+              {
+                "word": "it",
+                "start": 16.476,
+                "end": 16.636
+              },
+              {
+                "word": "a",
+                "start": 16.636,
+                "end": 16.756
+              },
+              {
+                "word": "drum",
+                "start": 16.756,
+                "end": 17.691
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "No!",
+            "startTime": 18.191,
+            "endTime": 19.257,
+            "words": [
+              {
+                "word": "No",
+                "start": 18.191,
+                "end": 19.257
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Is it a train?",
+            "startTime": 20.457,
+            "endTime": 21.799,
+            "words": [
+              {
+                "word": "Is",
+                "start": 20.457,
+                "end": 20.737
+              },
+              {
+                "word": "it",
+                "start": 20.737,
+                "end": 20.897
+              },
+              {
+                "word": "a",
+                "start": 20.897,
+                "end": 21.017
+              },
+              {
+                "word": "train",
+                "start": 21.017,
+                "end": 21.799
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "No!",
+            "startTime": 22.299,
+            "endTime": 23.366,
+            "words": [
+              {
+                "word": "No",
+                "start": 22.299,
+                "end": 23.366
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Is it a teddy?",
+            "startTime": 24.566,
+            "endTime": 25.969,
+            "words": [
+              {
+                "word": "Is",
+                "start": 24.566,
+                "end": 24.826
+              },
+              {
+                "word": "it",
+                "start": 24.826,
+                "end": 24.966
+              },
+              {
+                "word": "a",
+                "start": 24.966,
+                "end": 25.086
+              },
+              {
+                "word": "teddy",
+                "start": 25.086,
+                "end": 25.969
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "No!",
+            "startTime": 26.469,
+            "endTime": 27.536,
+            "words": [
+              {
+                "word": "No",
+                "start": 26.469,
+                "end": 27.536
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "Is it Pip?",
+            "startTime": 28.736,
+            "endTime": 29.971,
+            "words": [
+              {
+                "word": "Is",
+                "start": 28.736,
+                "end": 28.976
+              },
+              {
+                "word": "it",
+                "start": 28.976,
+                "end": 29.116
+              },
+              {
+                "word": "Pip",
+                "start": 29.116,
+                "end": 29.971
+              }
+            ],
+            "page": 8
+          },
+          {
+            "sentence": "Yes!",
+            "startTime": 30.471,
+            "endTime": 31.311,
+            "words": [
+              {
+                "word": "Yes",
+                "start": 30.471,
+                "end": 31.311
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "decodable",
+      "title": "The Top",
+      "cover": {
+        "prompt": "Tom (drawn young, about eight years old) holds up a small red spinning top with a yellow stripe in the bright living room of Tom's home and smiles; Pip the puppy sits next to him and looks at the top. The living room has a green sofa, a window, a small brown rug under the window, an open toy box, a soft round blue mat on the floor, and a big silver pot on a low wooden table. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+        "characters": [
+          "Tom",
+          "Pip"
+        ],
+        "caption": "The Top"
+      },
+      "pages": [
+        {
+          "text": "Tom can see a top.",
+          "image": {
+            "prompt": "Tom (drawn young, about eight years old) kneels by the open toy box in the bright living room of Tom's home and looks at a small red spinning top with a yellow stripe on top of the toys. The living room has a green sofa, a window, a small brown rug under the window, an open toy box, a soft round blue mat on the floor, and a big silver pot on a low wooden table. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Tom can get the top.",
+          "image": {
+            "prompt": "Tom (drawn young, about eight years old) takes a small red spinning top with a yellow stripe out of the open toy box in the same living room and holds it up with a big smile. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "The top on a mat.",
+          "image": {
+            "prompt": "A small red spinning top with a yellow stripe spins on the soft round blue mat in the same living room; Tom (drawn young, about eight years old) kneels next to the mat and claps. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "The top on a pot!",
+          "image": {
+            "prompt": "Tom (drawn young, about eight years old) spins a small red spinning top with a yellow stripe on the lid of the big silver pot on the low wooden table in the same living room and laughs. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "The top is on Mom!",
+          "image": {
+            "prompt": "Mom sits on the green sofa in the same living room and laughs; Tom (drawn young, about eight years old) puts a small red spinning top with a yellow stripe on top of her head and laughs. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Mom",
+              "Tom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Run, Tom, run!",
+          "image": {
+            "prompt": "A small red spinning top with a yellow stripe falls from Mom's head and rolls fast across the floor in the same living room, toward the window; Tom (drawn young, about eight years old) runs after it, and Mom laughs on the green sofa. Pip the puppy sleeps on the small brown rug under the window. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom",
+              "Mom",
+              "Pip"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "Can Tom see the top?",
+          "image": {
+            "prompt": "Tom (drawn young, about eight years old) kneels and looks under the green sofa in the same living room; Mom sits on the green sofa. Behind him, Pip the puppy sleeps on the small brown rug under the window, and a small red spinning top with a yellow stripe sits on Pip's back. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom",
+              "Pip",
+              "Mom"
+            ],
+            "caption": ""
+          }
+        },
+        {
+          "text": "The top is on Pip!",
+          "image": {
+            "prompt": "Tom (drawn young, about eight years old) turns around and points at Pip with a big smile; Pip the puppy sleeps on the small brown rug under the window in the same living room, with a small red spinning top with a yellow stripe on his back. Mom smiles on the green sofa. Pip: a small puppy with golden-brown fur, a cream chest, a cream muzzle, a cream stripe on his forehead, floppy ears with darker tips, large dark-brown eyes, a black nose, a fluffy tail, and a red collar with a small round gold tag. No letters, words, or numbers anywhere.",
+            "characters": [
+              "Tom",
+              "Pip",
+              "Mom"
+            ],
+            "caption": ""
+          }
+        }
+      ],
+      "soundsPage": {
+        "element": "o",
+        "words": [
+          "Tom",
+          "top",
+          "pot",
+          "Mom",
+          "on"
+        ],
+        "tricky": [
+          "run"
+        ]
+      },
+      "backWords": [
+        "Tom",
+        "Mom",
+        "top",
+        "pot",
+        "mat",
+        "on",
+        "run"
+      ],
+      "names": [
+        "Pip"
+      ],
+      "audio": {
+        "voice": "English_captivating_female1",
+        "file": "l2/media/w07/books/2-the-top.mp3",
+        "sentences": [
+          {
+            "sentence": "Tom can see a top.",
+            "startTime": 0,
+            "endTime": 1.288,
+            "words": [
+              {
+                "word": "Tom",
+                "start": 0,
+                "end": 0.22
+              },
+              {
+                "word": "can",
+                "start": 0.22,
+                "end": 0.42
+              },
+              {
+                "word": "see",
+                "start": 0.42,
+                "end": 0.6
+              },
+              {
+                "word": "a",
+                "start": 0.6,
+                "end": 0.72
+              },
+              {
+                "word": "top",
+                "start": 0.72,
+                "end": 1.288
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Tom can get the top.",
+            "startTime": 2.488,
+            "endTime": 4.136,
+            "words": [
+              {
+                "word": "Tom",
+                "start": 2.488,
+                "end": 2.848
+              },
+              {
+                "word": "can",
+                "start": 2.848,
+                "end": 3.268
+              },
+              {
+                "word": "get",
+                "start": 3.268,
+                "end": 3.408
+              },
+              {
+                "word": "the",
+                "start": 3.408,
+                "end": 3.548
+              },
+              {
+                "word": "top",
+                "start": 3.548,
+                "end": 4.136
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "The top on a mat.",
+            "startTime": 5.336,
+            "endTime": 6.855,
+            "words": [
+              {
+                "word": "The",
+                "start": 5.336,
+                "end": 5.476
+              },
+              {
+                "word": "top",
+                "start": 5.476,
+                "end": 5.836
+              },
+              {
+                "word": "on",
+                "start": 5.836,
+                "end": 6.136
+              },
+              {
+                "word": "a",
+                "start": 6.136,
+                "end": 6.236
+              },
+              {
+                "word": "mat",
+                "start": 6.236,
+                "end": 6.855
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "The top on a pot!",
+            "startTime": 8.055,
+            "endTime": 9.417,
+            "words": [
+              {
+                "word": "The",
+                "start": 8.055,
+                "end": 8.195
+              },
+              {
+                "word": "top",
+                "start": 8.195,
+                "end": 8.455
+              },
+              {
+                "word": "on",
+                "start": 8.455,
+                "end": 8.635
+              },
+              {
+                "word": "a",
+                "start": 8.635,
+                "end": 8.735
+              },
+              {
+                "word": "pot",
+                "start": 8.735,
+                "end": 9.417
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "The top is on Mom!",
+            "startTime": 10.617,
+            "endTime": 11.963,
+            "words": [
+              {
+                "word": "The",
+                "start": 10.617,
+                "end": 10.737
+              },
+              {
+                "word": "top",
+                "start": 10.737,
+                "end": 11.017
+              },
+              {
+                "word": "is",
+                "start": 11.017,
+                "end": 11.217
+              },
+              {
+                "word": "on",
+                "start": 11.217,
+                "end": 11.397
+              },
+              {
+                "word": "Mom",
+                "start": 11.397,
+                "end": 11.963
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Run, Tom, run!",
+            "startTime": 13.163,
+            "endTime": 14.947,
+            "words": [
+              {
+                "word": "Run",
+                "start": 13.163,
+                "end": 13.443
+              },
+              {
+                "word": "Tom",
+                "start": 13.563,
+                "end": 13.783
+              },
+              {
+                "word": "run",
+                "start": 14.203,
+                "end": 14.947
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Can Tom see the top?",
+            "startTime": 16.147,
+            "endTime": 17.45,
+            "words": [
+              {
+                "word": "Can",
+                "start": 16.147,
+                "end": 16.367
+              },
+              {
+                "word": "Tom",
+                "start": 16.367,
+                "end": 16.567
+              },
+              {
+                "word": "see",
+                "start": 16.567,
+                "end": 16.787
+              },
+              {
+                "word": "the",
+                "start": 16.787,
+                "end": 16.927
+              },
+              {
+                "word": "top",
+                "start": 16.927,
+                "end": 17.45
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "The top is on Pip!",
+            "startTime": 18.65,
+            "endTime": 19.959,
+            "words": [
+              {
+                "word": "The",
+                "start": 18.65,
+                "end": 18.81
+              },
+              {
+                "word": "top",
+                "start": 18.81,
+                "end": 19.07
+              },
+              {
+                "word": "is",
+                "start": 19.07,
+                "end": 19.27
+              },
+              {
+                "word": "on",
+                "start": 19.27,
+                "end": 19.39
+              },
+              {
+                "word": "Pip",
+                "start": 19.39,
+                "end": 19.959
+              }
+            ],
+            "page": 8
+          }
+        ],
+        "slowFile": "l2/media/w07/books/2-the-top-slow.mp3",
+        "slowSentences": [
+          {
+            "sentence": "Tom can see a top.",
+            "startTime": 0,
+            "endTime": 1.641,
+            "words": [
+              {
+                "word": "Tom",
+                "start": 0,
+                "end": 0.3
+              },
+              {
+                "word": "can",
+                "start": 0.3,
+                "end": 0.6
+              },
+              {
+                "word": "see",
+                "start": 0.6,
+                "end": 0.86
+              },
+              {
+                "word": "a",
+                "start": 0.86,
+                "end": 0.98
+              },
+              {
+                "word": "top",
+                "start": 0.98,
+                "end": 1.641
+              }
+            ],
+            "page": 1
+          },
+          {
+            "sentence": "Tom can get the top.",
+            "startTime": 2.841,
+            "endTime": 4.315,
+            "words": [
+              {
+                "word": "Tom",
+                "start": 2.841,
+                "end": 3.101
+              },
+              {
+                "word": "can",
+                "start": 3.101,
+                "end": 3.361
+              },
+              {
+                "word": "get",
+                "start": 3.361,
+                "end": 3.541
+              },
+              {
+                "word": "the",
+                "start": 3.541,
+                "end": 3.701
+              },
+              {
+                "word": "top",
+                "start": 3.701,
+                "end": 4.315
+              }
+            ],
+            "page": 2
+          },
+          {
+            "sentence": "The top on a mat.",
+            "startTime": 5.515,
+            "endTime": 7.225,
+            "words": [
+              {
+                "word": "The",
+                "start": 5.515,
+                "end": 5.735
+              },
+              {
+                "word": "top",
+                "start": 5.735,
+                "end": 6.095
+              },
+              {
+                "word": "on",
+                "start": 6.095,
+                "end": 6.415
+              },
+              {
+                "word": "a",
+                "start": 6.415,
+                "end": 6.535
+              },
+              {
+                "word": "mat",
+                "start": 6.535,
+                "end": 7.225
+              }
+            ],
+            "page": 3
+          },
+          {
+            "sentence": "The top on a pot!",
+            "startTime": 8.425,
+            "endTime": 10.162,
+            "words": [
+              {
+                "word": "The",
+                "start": 8.425,
+                "end": 8.625
+              },
+              {
+                "word": "top",
+                "start": 8.625,
+                "end": 9.045
+              },
+              {
+                "word": "on",
+                "start": 9.045,
+                "end": 9.385
+              },
+              {
+                "word": "a",
+                "start": 9.385,
+                "end": 9.505
+              },
+              {
+                "word": "pot",
+                "start": 9.505,
+                "end": 10.162
+              }
+            ],
+            "page": 4
+          },
+          {
+            "sentence": "The top is on Mom!",
+            "startTime": 11.362,
+            "endTime": 13.268,
+            "words": [
+              {
+                "word": "The",
+                "start": 11.362,
+                "end": 11.542
+              },
+              {
+                "word": "top",
+                "start": 11.542,
+                "end": 11.862
+              },
+              {
+                "word": "is",
+                "start": 11.862,
+                "end": 12.122
+              },
+              {
+                "word": "on",
+                "start": 12.122,
+                "end": 12.302
+              },
+              {
+                "word": "Mom",
+                "start": 12.302,
+                "end": 13.268
+              }
+            ],
+            "page": 5
+          },
+          {
+            "sentence": "Run, Tom, run!",
+            "startTime": 14.468,
+            "endTime": 16.236,
+            "words": [
+              {
+                "word": "Run",
+                "start": 14.468,
+                "end": 14.848
+              },
+              {
+                "word": "Tom",
+                "start": 15.008,
+                "end": 15.288
+              },
+              {
+                "word": "run",
+                "start": 15.568,
+                "end": 16.236
+              }
+            ],
+            "page": 6
+          },
+          {
+            "sentence": "Can Tom see the top?",
+            "startTime": 17.436,
+            "endTime": 19.306,
+            "words": [
+              {
+                "word": "Can",
+                "start": 17.436,
+                "end": 17.696
+              },
+              {
+                "word": "Tom",
+                "start": 17.696,
+                "end": 18.016
+              },
+              {
+                "word": "see",
+                "start": 18.016,
+                "end": 18.336
+              },
+              {
+                "word": "the",
+                "start": 18.336,
+                "end": 18.516
+              },
+              {
+                "word": "top",
+                "start": 18.516,
+                "end": 19.306
+              }
+            ],
+            "page": 7
+          },
+          {
+            "sentence": "The top is on Pip!",
+            "startTime": 20.506,
+            "endTime": 22.161,
+            "words": [
+              {
+                "word": "The",
+                "start": 20.506,
+                "end": 20.726
+              },
+              {
+                "word": "top",
+                "start": 20.726,
+                "end": 21.046
+              },
+              {
+                "word": "is",
+                "start": 21.046,
+                "end": 21.246
+              },
+              {
+                "word": "on",
+                "start": 21.246,
+                "end": 21.466
+              },
+              {
+                "word": "Pip",
+                "start": 21.466,
+                "end": 22.161
+              }
+            ],
+            "page": 8
+          }
+        ]
+      }
+    }
+  ],
+  "song": {
+    "title": "What Is in the Box?",
+    "styleBrief": "Playful guessing-game song for a kindergarten English class, 104 bpm, F major, the melody between C4 and C5, call and response, one warm clear female lead with an American accent sings each question, every word slowly and clearly sung, a small group of young singers answers \"No, no, no!\" and \"Yes, yes, yes!\", marimba, acoustic guitar, light shaker, soft upright bass, dry and uncluttered. Every line uses the same short melody: a four-word question, then a three-word answer on three strong beats. The singing starts after a short instrumental intro. The song is about 75 seconds long.",
+    "bpm": 104,
+    "lyricSheet": "[Chorus]\nLook in the box! Knock, knock, knock!\nIs it a toy? Yes, yes, yes!\n\n[Verse]\nIs it a ball? No, no, no!\nIs it a doll? No, no, no!\n\n[Chorus]\nLook in the box! Knock, knock, knock!\nIs it a toy? Yes, yes, yes!\n\n[Verse]\nIs it a car? No, no, no!\nIs it a kite? No, no, no!\n\n[Chorus]\nLook in the box! Knock, knock, knock!\nIs it a toy? Yes, yes, yes!\n\n[Verse]\nIs it a drum? No, no, no!\nIs it a train? No, no, no!\n\n[Verse]\nIs it a top? Yes, yes, yes!\nTop in the box! Yes, yes, yes!",
+    "lines": [
+      {
+        "text": "Look in the box! Knock, knock, knock!",
+        "part": "chorus",
+        "gesture": "look",
+        "image": {
+          "prompt": "May and Ben (drawn young, about five years old) knock on the lid of a big closed toy box on the wooden floor of a bright playroom. No letters, words, or numbers anywhere.",
+          "characters": [
+            "May",
+            "Ben"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/look.jpg"
+        },
+        "note": {
+          "en": "Sing \"box\" and \"knock\" with the short /o/, as in \"octopus\": the mouth wide open, not \"oh\".",
+          "th": "ร้อง \"box\" และ \"knock\" ด้วยเสียง /o/ สั้น ๆ แบบใน \"octopus\": อ้าปากกว้าง ไม่ใช่ \"oh\" (โอ)"
+        }
+      },
+      {
+        "text": "Is it a toy? Yes, yes, yes!",
+        "part": "chorus",
+        "gesture": "nod",
+        "image": {
+          "prompt": "May and Ben (drawn young, about five years old) sit next to the big closed toy box in a bright playroom and nod with big smiles. No letters, words, or numbers anywhere.",
+          "characters": [
+            "May",
+            "Ben"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/nod.jpg"
+        }
+      },
+      {
+        "text": "Is it a ball? No, no, no!",
+        "part": "verse",
+        "gesture": "hop",
+        "image": {
+          "prompt": "May (drawn young, about five years old) sits next to the big closed toy box on the wooden floor of a bright playroom with one finger on the chin; a thought bubble above the head shows a red-and-yellow ball. No letters, words, or numbers anywhere.",
+          "characters": [
+            "May"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/hop.jpg"
+        },
+        "bubble": {
+          "kind": "thought",
+          "prop": "ball"
+        }
+      },
+      {
+        "text": "Is it a doll? No, no, no!",
+        "part": "verse",
+        "gesture": "hug self",
+        "image": {
+          "prompt": "Ben (drawn young, about five years old) sits next to the big closed toy box on the wooden floor of a bright playroom with one finger on the chin; a thought bubble above the head shows a small doll with yellow yarn hair and a red dress. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Ben"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/hug-self.jpg"
+        },
+        "bubble": {
+          "kind": "thought",
+          "prop": "doll"
+        }
+      },
+      {
+        "text": "Look in the box! Knock, knock, knock!",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 0
+      },
+      {
+        "text": "Is it a toy? Yes, yes, yes!",
+        "part": "chorus",
+        "gesture": "nod",
+        "imageOf": 1
+      },
+      {
+        "text": "Is it a car? No, no, no!",
+        "part": "verse",
+        "gesture": "turn",
+        "image": {
+          "prompt": "May (drawn young, about five years old) sits next to the big closed toy box on the wooden floor of a bright playroom with one finger on the chin; a thought bubble above the head shows a small blue toy car. No letters, words, or numbers anywhere.",
+          "characters": [
+            "May"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/turn.jpg"
+        },
+        "bubble": {
+          "kind": "thought",
+          "prop": "car"
+        }
+      },
+      {
+        "text": "Is it a kite? No, no, no!",
+        "part": "verse",
+        "gesture": "reach",
+        "image": {
+          "prompt": "Ben (drawn young, about five years old) sits next to the big closed toy box on the wooden floor of a bright playroom with one finger on the chin; a thought bubble above the head shows a red-and-yellow kite with a long tail. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Ben"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/reach.jpg"
+        },
+        "bubble": {
+          "kind": "thought",
+          "prop": "kite"
+        }
+      },
+      {
+        "text": "Look in the box! Knock, knock, knock!",
+        "part": "chorus",
+        "gesture": "look",
+        "imageOf": 0
+      },
+      {
+        "text": "Is it a toy? Yes, yes, yes!",
+        "part": "chorus",
+        "gesture": "nod",
+        "imageOf": 1
+      },
+      {
+        "text": "Is it a drum? No, no, no!",
+        "part": "verse",
+        "gesture": "stamp",
+        "image": {
+          "prompt": "May (drawn young, about five years old) sits next to the big closed toy box on the wooden floor of a bright playroom with one finger on the chin; a thought bubble above the head shows a small red toy drum with two drumsticks. No letters, words, or numbers anywhere.",
+          "characters": [
+            "May"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/stamp.jpg"
+        },
+        "bubble": {
+          "kind": "thought",
+          "prop": "drum"
+        }
+      },
+      {
+        "text": "Is it a train? No, no, no!",
+        "part": "verse",
+        "gesture": "march",
+        "image": {
+          "prompt": "Ben (drawn young, about five years old) sits next to the big closed toy box on the wooden floor of a bright playroom with one finger on the chin; a thought bubble above the head shows a small green toy train with three cars. No letters, words, or numbers anywhere.",
+          "characters": [
+            "Ben"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/march.jpg"
+        },
+        "bubble": {
+          "kind": "thought",
+          "prop": "train"
+        }
+      },
+      {
+        "text": "Is it a top? Yes, yes, yes!",
+        "part": "verse",
+        "gesture": "turn",
+        "image": {
+          "prompt": "The lid of the big toy box flies open on the wooden floor of a bright playroom, and a small red spinning top with a yellow stripe pops out; May and Ben (drawn young, about five years old) jump with big smiles. No letters, words, or numbers anywhere.",
+          "characters": [
+            "May",
+            "Ben"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/turn.jpg"
+        },
+        "pop": "top"
+      },
+      {
+        "text": "Top in the box!",
+        "part": "verse",
+        "gesture": "clap",
+        "image": {
+          "prompt": "May (drawn young, about five years old) holds up a small red spinning top with a yellow stripe next to the open toy box in a bright playroom, and Ben (drawn young, about five years old) claps. No letters, words, or numbers anywhere.",
+          "characters": [
+            "May",
+            "Ben"
+          ],
+          "caption": "",
+          "file": "l2/media/w07/song-lines/clap.jpg"
+        }
+      }
+    ],
+    "choreography": {
+      "outro": {
+        "en": "After the last line, the class flicks a pretend light switch: /o/, /o/, /o/ (the action of the letter o).",
+        "th": "หลังบรรทัดสุดท้าย ทั้งชั้นทำมือเหมือนกดสวิตช์ไฟ: /o/, /o/, /o/ (ท่าประจำเสียง o)"
+      }
+    },
+    "times": [
+      {
+        "sentence": "Look in the box! Knock, knock, knock!",
+        "startTime": 8.62,
+        "endTime": 12.98,
+        "words": [
+          {
+            "word": "Look",
+            "start": 8.62,
+            "end": 9.02
+          },
+          {
+            "word": "in",
+            "start": 9.02,
+            "end": 9.8
+          },
+          {
+            "word": "the",
+            "start": 9.8,
+            "end": 9.98
+          },
+          {
+            "word": "box!",
+            "start": 9.98,
+            "end": 10.62
+          },
+          {
+            "word": "Knock,",
+            "start": 10.96,
+            "end": 11.74
+          },
+          {
+            "word": "knock,",
+            "start": 12.02,
+            "end": 12.34
+          },
+          {
+            "word": "knock!",
+            "start": 12.5,
+            "end": 12.98
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a toy? Yes, yes, yes!",
+        "startTime": 13.52,
+        "endTime": 17.52,
+        "words": [
+          {
+            "word": "Is",
+            "start": 13.52,
+            "end": 14.08
+          },
+          {
+            "word": "it",
+            "start": 14.08,
+            "end": 14.38
+          },
+          {
+            "word": "a",
+            "start": 14.38,
+            "end": 14.64
+          },
+          {
+            "word": "toy?",
+            "start": 14.64,
+            "end": 15.0
+          },
+          {
+            "word": "Yes,",
+            "start": 15.78,
+            "end": 16.36
+          },
+          {
+            "word": "yes,",
+            "start": 16.62,
+            "end": 16.9
+          },
+          {
+            "word": "yes!",
+            "start": 17.12,
+            "end": 17.52
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a ball? No, no, no!",
+        "startTime": 18.2,
+        "endTime": 22.12,
+        "words": [
+          {
+            "word": "Is",
+            "start": 18.2,
+            "end": 18.66
+          },
+          {
+            "word": "it",
+            "start": 18.66,
+            "end": 18.96
+          },
+          {
+            "word": "a",
+            "start": 18.96,
+            "end": 19.24
+          },
+          {
+            "word": "ball?",
+            "start": 19.24,
+            "end": 19.58
+          },
+          {
+            "word": "No,",
+            "start": 20.52,
+            "end": 21.02
+          },
+          {
+            "word": "no,",
+            "start": 21.22,
+            "end": 21.54
+          },
+          {
+            "word": "no!",
+            "start": 21.7,
+            "end": 22.12
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a doll? No, no, no!",
+        "startTime": 22.62,
+        "endTime": 26.66,
+        "words": [
+          {
+            "word": "Is",
+            "start": 22.62,
+            "end": 23.22
+          },
+          {
+            "word": "it",
+            "start": 23.22,
+            "end": 23.52
+          },
+          {
+            "word": "a",
+            "start": 23.52,
+            "end": 23.78
+          },
+          {
+            "word": "doll?",
+            "start": 23.78,
+            "end": 24.18
+          },
+          {
+            "word": "No,",
+            "start": 24.18,
+            "end": 25.5
+          },
+          {
+            "word": "no,",
+            "start": 25.76,
+            "end": 26.06
+          },
+          {
+            "word": "no!",
+            "start": 26.16,
+            "end": 26.66
+          }
+        ]
+      },
+      {
+        "sentence": "Look in the box! Knock, knock, knock!",
+        "startTime": 27.0,
+        "endTime": 31.28,
+        "words": [
+          {
+            "word": "Look",
+            "start": 27.0,
+            "end": 27.64
+          },
+          {
+            "word": "in",
+            "start": 27.64,
+            "end": 28.08
+          },
+          {
+            "word": "the",
+            "start": 28.08,
+            "end": 28.24
+          },
+          {
+            "word": "box!",
+            "start": 28.24,
+            "end": 28.98
+          },
+          {
+            "word": "Knock,",
+            "start": 28.98,
+            "end": 30.08
+          },
+          {
+            "word": "knock,",
+            "start": 30.72,
+            "end": 30.72
+          },
+          {
+            "word": "knock!",
+            "start": 30.88,
+            "end": 31.28
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a toy? Yes, yes, yes!",
+        "startTime": 31.98,
+        "endTime": 35.96,
+        "words": [
+          {
+            "word": "Is",
+            "start": 31.98,
+            "end": 32.36
+          },
+          {
+            "word": "it",
+            "start": 32.36,
+            "end": 32.7
+          },
+          {
+            "word": "a",
+            "start": 32.7,
+            "end": 32.94
+          },
+          {
+            "word": "toy?",
+            "start": 32.94,
+            "end": 33.28
+          },
+          {
+            "word": "Yes,",
+            "start": 34.2,
+            "end": 34.74
+          },
+          {
+            "word": "yes,",
+            "start": 34.92,
+            "end": 35.3
+          },
+          {
+            "word": "yes!",
+            "start": 35.46,
+            "end": 35.96
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a car? No, no, no!",
+        "startTime": 36.34,
+        "endTime": 40.36,
+        "words": [
+          {
+            "word": "Is",
+            "start": 36.34,
+            "end": 36.96
+          },
+          {
+            "word": "it",
+            "start": 36.96,
+            "end": 37.26
+          },
+          {
+            "word": "a",
+            "start": 37.26,
+            "end": 37.44
+          },
+          {
+            "word": "car?",
+            "start": 37.44,
+            "end": 38.04
+          },
+          {
+            "word": "No,",
+            "start": 38.82,
+            "end": 39.32
+          },
+          {
+            "word": "no,",
+            "start": 39.5,
+            "end": 39.8
+          },
+          {
+            "word": "no!",
+            "start": 40.04,
+            "end": 40.36
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a kite? No, no, no!",
+        "startTime": 41.14,
+        "endTime": 45.02,
+        "words": [
+          {
+            "word": "Is",
+            "start": 41.14,
+            "end": 41.52
+          },
+          {
+            "word": "it",
+            "start": 41.52,
+            "end": 41.82
+          },
+          {
+            "word": "a",
+            "start": 41.82,
+            "end": 42.06
+          },
+          {
+            "word": "kite?",
+            "start": 42.06,
+            "end": 42.44
+          },
+          {
+            "word": "No,",
+            "start": 43.36,
+            "end": 43.84
+          },
+          {
+            "word": "no,",
+            "start": 44.08,
+            "end": 44.4
+          },
+          {
+            "word": "no!",
+            "start": 44.4,
+            "end": 45.02
+          }
+        ]
+      },
+      {
+        "sentence": "Look in the box! Knock, knock, knock!",
+        "startTime": 45.7,
+        "endTime": 49.72,
+        "words": [
+          {
+            "word": "Look",
+            "start": 45.7,
+            "end": 45.96
+          },
+          {
+            "word": "in",
+            "start": 45.96,
+            "end": 46.36
+          },
+          {
+            "word": "the",
+            "start": 46.36,
+            "end": 46.52
+          },
+          {
+            "word": "box!",
+            "start": 46.52,
+            "end": 47.34
+          },
+          {
+            "word": "Knock,",
+            "start": 47.34,
+            "end": 48.34
+          },
+          {
+            "word": "knock,",
+            "start": 48.68,
+            "end": 48.92
+          },
+          {
+            "word": "knock!",
+            "start": 49.24,
+            "end": 49.72
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a toy? Yes, yes, yes!",
+        "startTime": 50.4,
+        "endTime": 54.22,
+        "words": [
+          {
+            "word": "Is",
+            "start": 50.4,
+            "end": 50.64
+          },
+          {
+            "word": "it",
+            "start": 50.64,
+            "end": 50.96
+          },
+          {
+            "word": "a",
+            "start": 50.96,
+            "end": 51.22
+          },
+          {
+            "word": "toy?",
+            "start": 51.22,
+            "end": 51.6
+          },
+          {
+            "word": "Yes,",
+            "start": 52.32,
+            "end": 52.92
+          },
+          {
+            "word": "yes,",
+            "start": 53.22,
+            "end": 53.54
+          },
+          {
+            "word": "yes!",
+            "start": 53.74,
+            "end": 54.22
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a drum? No, no, no!",
+        "startTime": 54.28,
+        "endTime": 58.68,
+        "words": [
+          {
+            "word": "Is",
+            "start": 54.28,
+            "end": 55.24
+          },
+          {
+            "word": "it",
+            "start": 55.24,
+            "end": 55.52
+          },
+          {
+            "word": "a",
+            "start": 55.52,
+            "end": 55.68
+          },
+          {
+            "word": "drum?",
+            "start": 55.68,
+            "end": 56.16
+          },
+          {
+            "word": "No,",
+            "start": 57.36,
+            "end": 57.54
+          },
+          {
+            "word": "no,",
+            "start": 57.8,
+            "end": 58.08
+          },
+          {
+            "word": "no!",
+            "start": 58.32,
+            "end": 58.68
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a train? No, no, no!",
+        "startTime": 58.98,
+        "endTime": 63.2,
+        "words": [
+          {
+            "word": "Is",
+            "start": 58.98,
+            "end": 59.8
+          },
+          {
+            "word": "it",
+            "start": 59.8,
+            "end": 60.1
+          },
+          {
+            "word": "a",
+            "start": 60.1,
+            "end": 60.28
+          },
+          {
+            "word": "train?",
+            "start": 60.28,
+            "end": 60.74
+          },
+          {
+            "word": "No,",
+            "start": 61.96,
+            "end": 62.16
+          },
+          {
+            "word": "no,",
+            "start": 62.42,
+            "end": 62.66
+          },
+          {
+            "word": "no!",
+            "start": 62.96,
+            "end": 63.2
+          }
+        ]
+      },
+      {
+        "sentence": "Is it a top? Yes, yes, yes!",
+        "startTime": 64.02,
+        "endTime": 67.88,
+        "words": [
+          {
+            "word": "Is",
+            "start": 64.02,
+            "end": 64.36
+          },
+          {
+            "word": "it",
+            "start": 64.36,
+            "end": 64.68
+          },
+          {
+            "word": "a",
+            "start": 64.68,
+            "end": 64.92
+          },
+          {
+            "word": "top?",
+            "start": 64.92,
+            "end": 65.3
+          },
+          {
+            "word": "Yes,",
+            "start": 66.12,
+            "end": 66.64
+          },
+          {
+            "word": "yes,",
+            "start": 66.94,
+            "end": 67.18
+          },
+          {
+            "word": "yes!",
+            "start": 67.52,
+            "end": 67.88
+          }
+        ]
+      },
+      {
+        "sentence": "Top in the box!",
+        "startTime": 68.54,
+        "endTime": 70.12,
+        "words": [
+          {
+            "word": "Top",
+            "start": 68.54,
+            "end": 68.82
+          },
+          {
+            "word": "in",
+            "start": 68.82,
+            "end": 69.24
+          },
+          {
+            "word": "the",
+            "start": 69.24,
+            "end": 69.38
+          },
+          {
+            "word": "box!",
+            "start": 69.38,
+            "end": 70.12
+          }
+        ]
+      }
+    ],
+    "audio": "l2/media/w07/song.mp3"
+  },
+  "scripts": [
+    {
+      "id": "A",
+      "day": 1,
+      "title": {
+        "en": "Sound Lesson",
+        "th": "บทเรียนเสียง"
+      },
+      "prep": [
+        {
+          "en": "Put the picture cards in order on your table: the cards that start with /o/ and the other cards for A1, then pot, mop, and sock for A1 and A4. Put the word card \"on\" first in the pile of new word cards (A4).",
+          "th": "เรียงบัตรภาพไว้บนโต๊ะครูตามลำดับ: บัตรภาพคำที่ขึ้นต้นด้วยเสียง /o/ และบัตรภาพอื่นสำหรับ A1 แล้วตามด้วยบัตรภาพ pot, mop และ sock สำหรับ A1 และ A4 วางบัตรคำ \"on\" ไว้เป็นใบแรกในกองบัตรคำใหม่ (A4)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "A1",
+          "title": {
+            "en": "Hear it",
+            "th": "ฟังเสียง"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "When the script says /o/, say the short sound, as in \"octopus\": the mouth wide open, the jaw down, and the lips flat, not round, close to the Thai vowel เอาะ.",
+              "When the script says \"the letter o\", say the letter name \"oh\".",
+              "Hold up one picture card at a time and say the word slowly.",
+              "Say the first sound two times, short and quick: /o/, /o/, octopus. Keep the sound short.",
+              "Mix the /o/ words with other words. Then say three words with /o/ in the middle: pot, mop, sock."
+            ],
+            "teacherLanguage": [
+              "\"Listen. /o/, /o/, octopus. Octopus.\"",
+              "\"Is the first sound /o/? Thumbs up or thumbs down?\"",
+              "\"Yes! Octopus starts with /o/.\"",
+              "\"Listen. Sun. Does sun start with /o/? No!\"",
+              "\"Now listen to the middle. /p/ - /o/ - /t/. Is /o/ in the middle? Yes!\""
+            ],
+            "studentActions": [
+              "Children say each word after the teacher.",
+              "Children show thumbs up for an /o/ word and thumbs down for other words."
+            ],
+            "watchFor": [
+              "Children who say the letter name \"oh\" (โอ): the sound is a short /o/, as in \"octopus\".",
+              "Children who make the sound long, like ออ: keep it short, like เอาะ.",
+              "Children who copy a friend's thumbs: ask them alone with one more card."
+            ]
+          },
+          "easier": {
+            "en": "Use only four cards (octopus, ox, sun, pen) and say the first sound two times.",
+            "th": "ใช้บัตรเพียง 4 ใบ (octopus, ox, sun, pen) และพูดเสียงแรก 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word with /o/ in the middle: \"Pot.\" Children say the middle sound: \"/o/!\"",
+            "th": "พูดคำที่มี /o/ อยู่กลางคำ: \"Pot.\" (หม้อ) เด็ก ๆ บอกเสียงกลาง: \"/o/!\""
+          },
+          "group": {
+            "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 พูดคำ และคู่คนที่ 2 ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง"
+          },
+          "materials": [
+            "sound picture cards: octopus, ox, ostrich, otter",
+            "picture cards: sun, pen, cup",
+            "picture cards: pot, mop, sock"
+          ],
+          "th": {
+            "teacherActions": [
+              "เมื่อบทพูดเขียนว่า /o/ ให้ออกเสียงสั้นแบบใน \"octopus\": อ้าปากกว้าง คางลดต่ำลง ริมฝีปากแบน ไม่ห่อกลม ใกล้กับเสียงสระ เอาะ ในภาษาไทย",
+              "เมื่อบทพูดเขียนว่า \"the letter o\" ให้พูดชื่อตัวอักษร \"oh\" (โอ)",
+              "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
+              "พูดเสียงแรก 2 ครั้ง สั้น ๆ และเร็ว ๆ: /o/, /o/, octopus ออกเสียงให้สั้น",
+              "คละคำที่ขึ้นต้นด้วย /o/ กับคำอื่น จากนั้นพูดคำ 3 คำที่มี /o/ อยู่กลางคำ: pot, mop, sock"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง /o/, /o/, octopus, octopus (ปลาหมึกยักษ์)\"",
+              "\"เสียงแรกคือ /o/ ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
+              "\"ใช่! Octopus ขึ้นต้นด้วย /o/\"",
+              "\"ฟัง sun คำว่า sun ขึ้นต้นด้วย /o/ ไหม? ไม่ใช่!\"",
+              "\"ทีนี้ฟังเสียงกลางคำ /p/ - /o/ - /t/ มี /o/ อยู่ตรงกลางไหม? ใช่!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู",
+              "เด็ก ๆ ยกนิ้วโป้งขึ้นสำหรับคำที่มีเสียง /o/ และคว่ำนิ้วโป้งลงสำหรับคำอื่น"
+            ],
+            "watchFor": [
+              "เด็กที่ออกเสียงเป็นชื่อตัวอักษร \"oh\" (โอ): เสียงที่ถูกคือ /o/ สั้น ๆ แบบใน \"octopus\"",
+              "เด็กที่ออกเสียงยาวเหมือนเสียงสระ ออ: ให้ออกเสียงสั้น ๆ เหมือนเสียงสระ เอาะ",
+              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
+            ]
+          }
+        },
+        {
+          "id": "A2",
+          "title": {
+            "en": "See it",
+            "th": "ดูตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the sound card for the letter o and point to the letter.",
+              "Say the pure sound: open the mouth wide, drop the jaw, and keep the lips flat, not round: /o/. It is short, as in \"octopus\", and close to the Thai vowel เอาะ. It is not the letter name \"oh\".",
+              "Do the action of the letter o: flick a pretend light switch on and off, and say /o/, /o/, /o/. On starts with /o/."
+            ],
+            "teacherLanguage": [
+              "\"Look. This is the letter o. It says /o/.\"",
+              "\"Listen: /o/, /o/, /o/. Not 'oh'. /o/.\"",
+              "\"Watch me: on, off. /o/, /o/, /o/.\"",
+              "\"Your turn. Say it and do it. Three times.\""
+            ],
+            "studentActions": [
+              "Children say /o/, /o/, /o/ and flick a pretend light switch, three times.",
+              "Children point to the letter o on the card."
+            ],
+            "watchFor": [
+              "A short sound with the mouth wide open: not \"oh\" (โอ), and not a long ออ.",
+              "Every child does the action, not only the front rows."
+            ]
+          },
+          "easier": {
+            "en": "Children open the mouth wide with the teacher first, then say /o/.",
+            "th": "เด็ก ๆ อ้าปากกว้างพร้อมครูก่อน แล้วจึงพูด /o/"
+          },
+          "harder": {
+            "en": "Show the seven sound cards in a mixed order. Children do the action of the card.",
+            "th": "ชูบัตรเสียงทั้ง 7 ใบแบบสลับลำดับ เด็ก ๆ ทำท่าประจำเสียงของบัตรนั้น"
+          },
+          "group": {
+            "en": "Two halves: one half says the sound, and the other half does the action. Then the halves change.",
+            "th": "แบ่งชั้นเป็น 2 ฝั่ง: ฝั่งหนึ่งออกเสียง อีกฝั่งหนึ่งทำท่า แล้วสลับกัน"
+          },
+          "materials": [
+            "sound cards: o, t, s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียง o และชี้ที่ตัวอักษร",
+              "ออกเสียงล้วน: อ้าปากกว้าง ลดคางลง และให้ริมฝีปากแบน ไม่ห่อกลม: /o/ เป็นเสียงสั้น แบบใน \"octopus\" ใกล้กับเสียงสระ เอาะ ในภาษาไทย ไม่ใช่ชื่อตัวอักษร \"oh\" (โอ)",
+              "ทำท่าประจำเสียง o: ทำมือเหมือนกดสวิตช์ไฟ เปิดแล้วปิด แล้วพูด /o/, /o/, /o/ คำว่า on (เปิด) ขึ้นต้นด้วยเสียง /o/"
+            ],
+            "teacherLanguage": [
+              "\"ดู นี่คือตัวอักษร o ออกเสียงว่า /o/\"",
+              "\"ฟัง: /o/, /o/, /o/ ไม่ใช่ 'oh' แต่เป็น /o/\"",
+              "\"ดูครู: on, off (เปิด ปิด) /o/, /o/, /o/\"",
+              "\"ถึงตาเด็ก ๆ แล้ว ออกเสียงและทำท่า 3 ครั้ง\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูด /o/, /o/, /o/ และทำมือเหมือนกดสวิตช์ไฟ 3 ครั้ง",
+              "เด็ก ๆ ชี้ที่ตัวอักษร o บนบัตร"
+            ],
+            "watchFor": [
+              "เสียงสั้นและอ้าปากกว้าง: ไม่ใช่ \"oh\" (โอ) และไม่ใช่เสียงสระ ออ ที่ยาว",
+              "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า"
+            ]
+          }
+        },
+        {
+          "id": "A3",
+          "title": {
+            "en": "Form it",
+            "th": "เขียนตัวอักษร"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Write the lower-case letter o large on the board, and say the formation words while you write.",
+              "Write the letter o in the air with your back to the class, so your hand moves the same way as theirs.",
+              "Children write the letter o in the air, then trace it in the book three times."
+            ],
+            "teacherLanguage": [
+              "\"Start at the dot. Round to the left, all the way round, and back to the dot.\"",
+              "\"Fingers up. Write the letter o in the air with me.\"",
+              "\"Open your book. Find the letter o. Trace it three times. Start at the dot.\""
+            ],
+            "studentActions": [
+              "Children write the letter o in the air with one finger and say the formation words.",
+              "Children trace the letter o three times in the book, from the dot."
+            ],
+            "watchFor": [
+              "Children who go round to the right: take their hand, start at the dot, and go round to the left.",
+              "Children who start at the bottom: take their hand and start at the dot.",
+              "Children who leave a gap at the top: go all the way round, back to the dot."
+            ]
+          },
+          "easier": {
+            "en": "Children trace the letter o in the book with a finger first. Then they trace it with the pencil.",
+            "th": "เด็ก ๆ ใช้นิ้วลากเส้นตามตัวอักษร o ในหนังสือก่อน แล้วจึงใช้ดินสอลากเส้นตาม"
+          },
+          "harder": {
+            "en": "Write the letter o two more times on the empty line, with no dots.",
+            "th": "เขียนตัวอักษร o อีก 2 ครั้งบนบรรทัดว่าง โดยไม่มีจุดนำ"
+          },
+          "group": {
+            "en": "Pairs: one child writes the letter o on the partner's back with a finger; the partner says /o/.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ใช้นิ้วเขียนตัวอักษร o บนหลังของคู่คนที่ 2 คู่คนที่ 2 พูด /o/"
+          },
+          "materials": [
+            "board",
+            "student book: letter box o"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียนตัวอักษร o ตัวพิมพ์เล็กขนาดใหญ่บนกระดาน และพูดคำบอกวิธีเขียนขณะเขียน",
+              "เขียนตัวอักษร o กลางอากาศโดยหันหลังให้เด็ก ๆ เพื่อให้มือของครูเคลื่อนไปทางเดียวกับมือของเด็ก ๆ",
+              "เด็ก ๆ เขียนตัวอักษร o กลางอากาศ แล้วลากเส้นตามตัวอักษร o ในหนังสือ 3 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"เริ่มที่จุด วนไปทางซ้าย วนให้ครบรอบ แล้วกลับมาที่จุด\"",
+              "\"ยกนิ้วขึ้น เขียนตัวอักษร o กลางอากาศพร้อมครู\"",
+              "\"เปิดหนังสือ หาตัวอักษร o ลากเส้นตาม 3 ครั้ง เริ่มที่จุด\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ใช้นิ้ว 1 นิ้วเขียนตัวอักษร o กลางอากาศ และพูดคำบอกวิธีเขียน",
+              "เด็ก ๆ ลากเส้นตามตัวอักษร o ในหนังสือ 3 ครั้ง โดยเริ่มที่จุด"
+            ],
+            "watchFor": [
+              "เด็กที่วนไปทางขวา: จับมือเด็ก เริ่มที่จุด แล้ววนไปทางซ้าย",
+              "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด",
+              "เด็กที่เขียนแล้วเหลือช่องว่างที่ด้านบน: วนให้ครบรอบจนกลับมาที่จุด"
+            ]
+          }
+        },
+        {
+          "id": "A4",
+          "title": {
+            "en": "Blend it",
+            "th": "ผสมเสียง"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First by ear: keep the picture cards pot, mop, and sock face down.",
+              "Say the three sounds with a short stop between them, then say them fast. Show the picture after the class says the word.",
+              "Then with letters: show the word card \"on\". The class knows it as a tricky word; now the class can sound it out: /o/ - nnn.",
+              "Show the word cards \"top\" and \"pot\": the same letters in a new order. Put your finger under each letter and say its sound, then slide under the whole word.",
+              "Show the word cards \"Tom\" and \"Mom\". The big letter T and the big letter M at the start of a name say /t/ and mmm, too.",
+              "Say the sounds, not the letter names: /p/, /t/, and /k/ with no \"uh\" after them."
+            ],
+            "teacherLanguage": [
+              "\"Listen. /p/ - /o/ - /t/. What is the word? Pot!\"",
+              "\"Next one. Mmm - /o/ - /p/. Mop! Sss - /o/ - /k/. Sock!\"",
+              "\"Look at this word. We know it: on. Now we can sound it out! /o/ - nnn. On!\"",
+              "\"/t/ - /o/ - /p/. Top! Now the same letters in a new order: /p/ - /o/ - /t/. Pot!\"",
+              "\"/t/ - /o/ - mmm. Tom! It is a name. Mmm - /o/ - mmm. Mom!\""
+            ],
+            "studentActions": [
+              "Children listen to the three sounds and say the word.",
+              "Children say the sounds of \"on\", \"top\", \"pot\", \"Tom\", and \"Mom\" with the teacher, then read the words alone."
+            ],
+            "watchFor": [
+              "Children who read \"top\" and \"pot\" the same way: point to the first letter and ask for its sound.",
+              "Children who say \"oh\" in the middle: do the light-switch action and say a short /o/."
+            ]
+          },
+          "easier": {
+            "en": "Read only \"on\" and \"top\" with the class, two times each.",
+            "th": "อ่านเฉพาะ \"on\" และ \"top\" พร้อมทั้งชั้น คำละ 2 ครั้ง"
+          },
+          "harder": {
+            "en": "Say a word; children say its three sounds: \"Pot.\" \"/p/ - /o/ - /t/.\"",
+            "th": "พูดคำ 1 คำ เด็ก ๆ พูด 3 เสียงของคำนั้น: \"Pot.\" \"/p/ - /o/ - /t/.\""
+          },
+          "group": {
+            "en": "Pairs: partner A points under the letters, partner B reads the word.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ใต้ตัวอักษร คู่คนที่ 2 อ่านคำ"
+          },
+          "materials": [
+            "picture cards: pot, mop, sock",
+            "word cards: on, top, pot, Tom, Mom"
+          ],
+          "th": {
+            "teacherActions": [
+              "ขั้นแรกฝึกด้วยการฟัง: คว่ำบัตรภาพ pot, mop และ sock ไว้",
+              "พูด 3 เสียงโดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
+              "จากนั้นฝึกด้วยตัวอักษร: ชูบัตรคำ \"on\" ทั้งชั้นรู้จักคำนี้แล้วในฐานะคำที่ต้องจำ ตอนนี้ทั้งชั้นสะกดออกเสียงคำนี้ได้แล้ว: /o/ - nnn",
+              "ชูบัตรคำ \"top\" และ \"pot\": ตัวอักษรชุดเดียวกันแต่เรียงลำดับใหม่ วางนิ้วใต้ตัวอักษรทีละตัวและออกเสียงของตัวอักษรนั้น แล้วลากนิ้วผ่านใต้ทั้งคำ",
+              "ชูบัตรคำ \"Tom\" และ \"Mom\" ตัวอักษร T ตัวพิมพ์ใหญ่และตัวอักษร M ตัวพิมพ์ใหญ่ที่ต้นชื่อก็ออกเสียง /t/ และ mmm เหมือนกัน",
+              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /p/, /t/ และ /k/ ไม่มี \"uh\" (เออะ) ตามหลัง"
+            ],
+            "teacherLanguage": [
+              "\"ฟัง /p/ - /o/ - /t/ คำนี้คือคำอะไร? Pot! (หม้อ)\"",
+              "\"คำต่อไป Mmm - /o/ - /p/ Mop! (ไม้ถูพื้น) Sss - /o/ - /k/ Sock! (ถุงเท้า)\"",
+              "\"ดูคำนี้ เรารู้จักคำนี้แล้ว: on (บน) ตอนนี้เราสะกดออกเสียงได้แล้ว! /o/ - nnn On!\"",
+              "\"/t/ - /o/ - /p/ Top! (ลูกข่าง) ทีนี้ตัวอักษรชุดเดิมแต่เรียงลำดับใหม่: /p/ - /o/ - /t/ Pot! (หม้อ)\"",
+              "\"/t/ - /o/ - mmm Tom! คำนี้เป็นชื่อคน Mmm - /o/ - mmm Mom! (แม่)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟัง 3 เสียง แล้วพูดคำ",
+              "เด็ก ๆ ออกเสียงทีละเสียงในคำ \"on\", \"top\", \"pot\", \"Tom\" และ \"Mom\" พร้อมครู แล้วอ่านคำเหล่านั้นด้วยตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"top\" และ \"pot\" เหมือนกัน: ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร",
+              "เด็กที่ออกเสียง \"oh\" (โอ) ตรงกลางคำ: ทำท่ากดสวิตช์ไฟ แล้วออกเสียง /o/ สั้น ๆ"
+            ]
+          }
+        },
+        {
+          "id": "A5",
+          "title": {
+            "en": "Word wall",
+            "th": "ผนังคำศัพท์"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Put the card for the letter o on the word wall, next to the six sound cards.",
+              "Put the new words on the wall: \"on\", \"top\", \"pot\", \"Tom\", and \"Mom\". The class reads the new words, then all the words on the wall."
+            ],
+            "teacherLanguage": [
+              "\"Here is the letter o. It says /o/.\"",
+              "\"Our new words! Read them with me: on. Top. Pot. Tom. Mom.\"",
+              "\"Now read all the words: an, Nan, pan, nap, am, man, map, Pam, Sam, sat, mat, tap, Pat, on, top, pot, Tom, Mom.\""
+            ],
+            "studentActions": [
+              "Children say the sounds and read the words at the wall."
+            ],
+            "watchFor": [
+              "Children who read \"top\" as \"tap\": point to the middle letter and ask for its sound."
+            ]
+          },
+          "easier": {
+            "en": "Read only the five new words with the class, two times.",
+            "th": "อ่านเฉพาะคำใหม่ 5 คำพร้อมทั้งชั้น 2 ครั้ง"
+          },
+          "harder": {
+            "en": "A child reads one word on the wall alone, then says its middle sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงกลางของคำนั้น"
+          },
+          "group": {
+            "en": "Whole class: one child points, and the class reads.",
+            "th": "ทั้งชั้น: เด็กคนหนึ่งชี้ และทั้งชั้นอ่าน"
+          },
+          "materials": [
+            "word wall",
+            "sound cards: o",
+            "word cards: on, top, pot, Tom, Mom"
+          ],
+          "th": {
+            "teacherActions": [
+              "ติดบัตรตัวอักษร o บนผนังคำศัพท์ ข้างบัตรเสียงทั้ง 6 ใบ",
+              "ติดคำใหม่บนผนังคำศัพท์: \"on\", \"top\", \"pot\", \"Tom\" และ \"Mom\" ทั้งชั้นอ่านคำใหม่ แล้วอ่านทุกคำบนผนังคำศัพท์"
+            ],
+            "teacherLanguage": [
+              "\"นี่คือตัวอักษร o ออกเสียงว่า /o/\"",
+              "\"คำใหม่ของเรา! อ่านพร้อมครู: on, top, pot, Tom, Mom\"",
+              "\"ทีนี้อ่านทุกคำ: an, Nan, pan, nap, am, man, map, Pam, Sam, sat, mat, tap, Pat, on, top, pot, Tom, Mom\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและอ่านคำที่ผนังคำศัพท์"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"top\" เป็น \"tap\": ชี้ที่ตัวอักษรตัวกลาง แล้วถามว่าออกเสียงอะไร"
+            ]
+          }
+        },
+        {
+          "id": "A6",
+          "title": {
+            "en": "New tricky words",
+            "th": "คำที่ต้องจำชุดใหม่"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the tricky word cards \"from\", \"run\", and \"up\". Show one card at a time.",
+              "Read the word. Show the letters that the class can sound out: the letter m in \"from\", the letter n in \"run\", and the letter p in \"up\".",
+              "The other letters are tricky. The letter f, the letter r, and the letter u come in a later week. In \"from\", the letter o says a short \"uh\", not /o/: the same \"uh\" as the letter u in \"run\" and \"up\".",
+              "Spell each word with letter names, then write it in the air."
+            ],
+            "teacherLanguage": [
+              "\"Look at this card. Read it with me: from. I am from Thailand.\"",
+              "\"Next card. Read it with me: run. Run, Tom, run!\"",
+              "\"Next card. Read it with me: up. Stand up! Hands up!\"",
+              "\"This is a tricky word. We remember it. Say it with me.\""
+            ],
+            "studentActions": [
+              "Children read each card three times: loud, quiet, loud.",
+              "Children run in place and say \"run\"; they put their hands up and say \"up\"; they point to themselves and say \"I am from Thailand.\""
+            ],
+            "watchFor": [
+              "Children who read \"from\" with the /o/ of \"octopus\": say \"from\" again; the letter o in this word is tricky.",
+              "Children who mix up \"up\" and \"on\": put the two cards side by side and read them slowly."
+            ]
+          },
+          "easier": {
+            "en": "Teach \"run\" and \"up\" today; \"from\" comes on the review strip tomorrow.",
+            "th": "สอน \"run\" และ \"up\" วันนี้ ส่วน \"from\" จะอยู่บนแถบทบทวนพรุ่งนี้"
+          },
+          "harder": {
+            "en": "Children say a sentence with a tricky word: \"Run, Tom, run!\" or \"Stand up!\"",
+            "th": "เด็ก ๆ พูดประโยคที่มีคำที่ต้องจำ: \"Run, Tom, run!\" (วิ่ง Tom วิ่ง!) หรือ \"Stand up!\" (ยืนขึ้น!)"
+          },
+          "group": {
+            "en": "Pairs: you show a card; partner A reads it to partner B. Then the partners change.",
+            "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 อ่านให้คู่คนที่ 2 ฟัง แล้วสลับกัน"
+          },
+          "materials": [
+            "tricky word cards: from, run, up"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรคำที่ต้องจำ \"from\", \"run\" และ \"up\" ทีละใบ",
+              "อ่านคำนั้น ชี้ให้ดูตัวอักษรที่ทั้งชั้นสะกดออกเสียงได้: ตัวอักษร m ในคำ \"from\" ตัวอักษร n ในคำ \"run\" และตัวอักษร p ในคำ \"up\"",
+              "ตัวอักษรอื่นเป็นส่วนที่ต้องจำ ตัวอักษร f, r และ u จะได้เรียนในสัปดาห์ต่อ ๆ ไป ในคำ \"from\" ตัวอักษร o ออกเสียง \"uh\" สั้น ๆ (อะ) ไม่ใช่ /o/ เป็นเสียง \"uh\" เดียวกับตัวอักษร u ในคำ \"run\" และ \"up\"",
+              "สะกดแต่ละคำด้วยชื่อตัวอักษร แล้วเขียนคำนั้นกลางอากาศ"
+            ],
+            "teacherLanguage": [
+              "\"ดูบัตรใบนี้ อ่านพร้อมครู: from (จาก) เช่น I am from Thailand. (ฉันมาจากประเทศไทย)\"",
+              "\"บัตรใบต่อไป อ่านพร้อมครู: run (วิ่ง) เช่น Run, Tom, run! (วิ่ง Tom วิ่ง!)\"",
+              "\"บัตรใบต่อไป อ่านพร้อมครู: up (ขึ้น) เช่น Stand up! (ยืนขึ้น!) Hands up! (ยกมือขึ้น!)\"",
+              "\"นี่คือคำที่ต้องจำ เราจำคำนี้ไว้ พูดพร้อมครู\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรแต่ละใบ 3 ครั้ง: ดัง เบา ดัง",
+              "เด็ก ๆ วิ่งอยู่กับที่แล้วพูด \"run\" ยกมือขึ้นแล้วพูด \"up\" และชี้ที่ตัวเองแล้วพูด \"I am from Thailand.\" (ฉันมาจากประเทศไทย)"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"from\" โดยใช้เสียง /o/ แบบในคำ \"octopus\": พูดคำ \"from\" อีกครั้ง ตัวอักษร o ในคำนี้เป็นส่วนที่ต้องจำ",
+              "เด็กที่สับสนระหว่าง \"up\" กับ \"on\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
+            ]
+          }
+        },
+        {
+          "id": "A7",
+          "title": {
+            "en": "Read it",
+            "th": "อ่าน"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Open the practice sheet in the book and point to each line once."
+            ],
+            "teacherLanguage": [
+              "\"Read the sounds with me: /o/, /t/, sss, mmm, /p/, /a/, nnn.\"",
+              "\"Read the words: on. Top. Pot. Tom. Mom.\"",
+              "\"Read the sentences: Tom can see a top. Run, Tom, run!\""
+            ],
+            "studentActions": [
+              "Children read the lines and point to the tricky words \"see\" and \"run\"."
+            ],
+            "watchFor": [
+              "Children who look at the wrong line: show the picture at the start of the line."
+            ]
+          },
+          "easier": {
+            "en": "Read only the line of sounds.",
+            "th": "อ่านเฉพาะบรรทัดของเสียง"
+          },
+          "harder": {
+            "en": "Children read \"Tom can see a top.\" alone.",
+            "th": "เด็ก ๆ อ่าน \"Tom can see a top.\" ด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs point to the lines for each other.",
+            "th": "ทำเป็นคู่: ชี้บรรทัดให้กันและกัน"
+          },
+          "materials": [
+            "student book: practice sheet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "เปิดหน้าฝึกอ่านในหนังสือ และชี้แต่ละบรรทัด 1 ครั้ง"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเสียงพร้อมครู: /o/, /t/, sss, mmm, /p/, /a/, nnn\"",
+              "\"อ่านคำ: on, top, pot, Tom, Mom\"",
+              "\"อ่านประโยค: Tom can see a top. (Tom มองเห็นลูกข่าง) Run, Tom, run! (วิ่ง Tom วิ่ง!)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละบรรทัด และชี้ที่คำที่ต้องจำ \"see\" และ \"run\""
+            ],
+            "watchFor": [
+              "เด็กที่ดูผิดบรรทัด: ชี้ภาพที่ต้นบรรทัดให้ดู"
+            ]
+          }
+        },
+        {
+          "id": "A8",
+          "title": {
+            "en": "Home card",
+            "th": "บัตรกิจกรรมที่บ้าน"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "Read the Thai line on the home card to the class.",
+              "After class on day 1: tear the week 7 home card out of each student book, and put one card in each child's bag."
+            ],
+            "teacherLanguage": [
+              "\"Your home card is in your bag. Show it to your family.\"",
+              "\"Play a guessing game with your family. Is it a ball? No! Is it a car? Yes!\""
+            ],
+            "studentActions": [
+              "Children find the home card in their bag."
+            ],
+            "watchFor": [
+              "A child with no card: give the child a card at home time on day 2."
+            ]
+          },
+          "easier": {
+            "en": "Show the card to the child.",
+            "th": "ชูบัตรให้เด็กดู"
+          },
+          "harder": {
+            "en": "A child shows the card to a friend and says: \"/o/, /o/, octopus! Is it a ball? No! It is an octopus!\"",
+            "th": "เด็กคนหนึ่งเอาบัตรให้เพื่อนดูและพูดว่า: \"/o/, /o/, octopus! Is it a ball? No! It is an octopus!\" (เป็นลูกบอลใช่ไหม ไม่ใช่! เป็นปลาหมึกยักษ์!)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "student book: home card"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "อ่านข้อความภาษาไทยบนบัตรกิจกรรมที่บ้านให้ทั้งชั้นฟัง",
+              "หลังเลิกเรียนวันที่ 1: ฉีกบัตรกิจกรรมที่บ้านของสัปดาห์ที่ 7 ออกจากหนังสือนักเรียนของเด็กแต่ละคน แล้วใส่บัตรในกระเป๋าของเด็กคนละ 1 ใบ"
+            ],
+            "teacherLanguage": [
+              "\"บัตรกิจกรรมที่บ้านอยู่ในกระเป๋าของหนู ๆ แล้ว เอาให้ครอบครัวดูนะ\"",
+              "\"เล่นเกมทายของกับครอบครัว Is it a ball? (เป็นลูกบอลใช่ไหม) No! (ไม่ใช่) Is it a car? (เป็นรถใช่ไหม) Yes! (ใช่)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ หาบัตรกิจกรรมที่บ้านในกระเป๋าของตัวเอง"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่มีบัตร: ให้บัตรแก่เด็กตอนกลับบ้านในวันที่ 2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "day": 2,
+      "title": {
+        "en": "Story Lesson",
+        "th": "บทเรียนนิทาน"
+      },
+      "prep": [
+        {
+          "en": "Get the book audio of \"Is It a Ball?\" ready on the tablet, or print its QR code (B3).",
+          "th": "เตรียมเสียงอ่านของหนังสือ \"Is It a Ball?\" บนแท็บเล็ต หรือพิมพ์คิวอาร์โค้ดของหนังสือไว้ (B3)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "B1",
+          "title": {
+            "en": "Family words",
+            "th": "คำศัพท์ประจำหมวด"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Show each family picture card and say the word two times.",
+              "Put the cards on the board. Say a word; the class says it and acts the toy (bounce a ball, fly a kite, beat a drum, drive a car).",
+              "Point to a card; the class says the word."
+            ],
+            "teacherLanguage": [
+              "\"Look. A ball. Say it: ball. Bounce, bounce!\"",
+              "\"Point to the card with the drum! Beat the drum!\"",
+              "\"What is this? A train! Choo, choo!\""
+            ],
+            "studentActions": [
+              "Children say each word two times after the teacher.",
+              "Children point to the card and act the toy."
+            ],
+            "watchFor": [
+              "Children who mix up \"doll\" and \"teddy\": show the two cards side by side and say both words again.",
+              "Children who say the Thai word: say the English; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Use four cards: ball, doll, car, kite.",
+            "th": "ใช้บัตร 4 ใบ: ball, doll, car, kite"
+          },
+          "harder": {
+            "en": "A child acts a toy; the class says the word.",
+            "th": "เด็กคนหนึ่งทำท่าเล่นของเล่น 1 ชิ้น ทั้งชั้นพูดคำนั้น"
+          },
+          "group": {
+            "en": "Pairs: partner A points to a card, partner B says the word and acts the toy.",
+            "th": "ทำเป็นคู่: คู่คนที่ 1 ชี้ที่บัตร คู่คนที่ 2 พูดคำนั้นและทำท่าเล่นของเล่นชิ้นนั้น"
+          },
+          "materials": [
+            "family picture cards: ball, doll, car, kite, drum, train, teddy"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรภาพคำศัพท์แต่ละใบ แล้วพูดคำนั้น 2 ครั้ง",
+              "ติดบัตรบนกระดาน ครูพูดคำ 1 คำ ทั้งชั้นพูดคำนั้นและทำท่าเล่นของเล่นชิ้นนั้น (ตบลูกบอลให้เด้ง ชักว่าว ตีกลอง ขับรถ)",
+              "ชี้ที่บัตร 1 ใบ ทั้งชั้นพูดคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"ดู A ball. (ลูกบอล) พูดตาม: ball. Bounce, bounce! (เด้ง เด้ง!)\"",
+              "\"Point to the card with the drum! (ชี้ที่บัตรรูปกลอง) Beat the drum! (ตีกลอง!)\"",
+              "\"What is this? (นี่คืออะไร) A train! (รถไฟ) Choo, choo! (ปู๊น ปู๊น)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละคำตามครู 2 ครั้ง",
+              "เด็ก ๆ ชี้ที่บัตร และทำท่าเล่นของเล่นชิ้นนั้น"
+            ],
+            "watchFor": [
+              "เด็กที่สับสนระหว่าง \"doll\" (ตุ๊กตา) กับ \"teddy\" (ตุ๊กตาหมี): วางบัตร 2 ใบเคียงกันให้ดู แล้วพูดทั้ง 2 คำอีกครั้ง",
+              "เด็กที่พูดคำภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "B2",
+          "title": {
+            "en": "Picture walk",
+            "th": "ดูภาพก่อนอ่าน"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Show the cover and pages 1 to 7 of \"Is It a Ball?\". Cover the words with your hand. Keep page 8 for later.",
+              "On each page, point to the toy in the thought bubble over May and ask \"What is this?\" The class says the word.",
+              "On page 7, point to the tail at the edge of the blanket and ask who it is."
+            ],
+            "teacherLanguage": [
+              "\"Look at the cover. Who is this? It is May! And this is Ben.\"",
+              "\"Look at the bubble. What is this? A ball!\"",
+              "\"Look at the blanket. What is this? Who is it?\""
+            ],
+            "studentActions": [
+              "Children say what they can see, in Thai or English.",
+              "Children say the toy word on each page."
+            ],
+            "watchFor": [
+              "Children who answer in Thai: say the English; the child says it after you.",
+              "Do not open page 8 yet: keep the surprise for the reading."
+            ]
+          },
+          "easier": {
+            "en": "Say the toy word with the class on every page.",
+            "th": "พูดคำศัพท์ชื่อของเล่นพร้อมทั้งชั้นในทุกหน้า"
+          },
+          "harder": {
+            "en": "Before you turn the page, ask: \"What is next?\"",
+            "th": "ก่อนพลิกหน้า ถามว่า: \"What is next?\" (หน้าต่อไปเป็นอะไร)"
+          },
+          "group": {
+            "en": "Whole class: quiet children tell a partner first, then the class.",
+            "th": "ทั้งชั้น: เด็กที่ไม่ค่อยกล้าพูดบอกคู่ก่อน แล้วจึงบอกทั้งชั้น"
+          },
+          "materials": [
+            "big book or screen: \"Is It a Ball?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกและหน้า 1 ถึง 7 ของ \"Is It a Ball?\" ใช้มือปิดคำไว้ เก็บหน้า 8 ไว้เปิดทีหลัง",
+              "ในแต่ละหน้า ชี้ที่ของเล่นในบอลลูนความคิดเหนือหัวของ May แล้วถามว่า \"What is this?\" (นี่คืออะไร) ทั้งชั้นพูดคำนั้น",
+              "ที่หน้า 7 ชี้ที่หางที่โผล่ออกมาที่ขอบผ้าห่ม แล้วถามว่าเป็นหางของใคร"
+            ],
+            "teacherLanguage": [
+              "\"ดูที่ปก นี่คือใคร? It is May! (นี่คือ May) And this is Ben. (และนี่คือ Ben)\"",
+              "\"ดูที่บอลลูนความคิด What is this? (นี่คืออะไร) A ball! (ลูกบอล)\"",
+              "\"ดูที่ผ้าห่ม นี่คืออะไร? เป็นใคร?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ บอกสิ่งที่เห็น เป็นภาษาไทยหรือภาษาอังกฤษ",
+              "เด็ก ๆ พูดคำศัพท์ชื่อของเล่นในแต่ละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบเป็นภาษาไทย: พูดเป็นภาษาอังกฤษ แล้วให้เด็กพูดตาม",
+              "ยังไม่เปิดหน้า 8: เก็บเซอร์ไพรส์ไว้ตอนอ่าน"
+            ]
+          }
+        },
+        {
+          "id": "B3",
+          "title": {
+            "en": "Listen",
+            "th": "ฟัง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Play the audio of \"Is It a Ball?\" once, at 1.0 speed.",
+              "Point to the picture while the audio reads the page; turn the page with the audio."
+            ],
+            "teacherLanguage": [
+              "\"Now listen to the book. Eyes on the pictures.\"",
+              "\"Shake your head with Ben: No!\""
+            ],
+            "studentActions": [
+              "Children listen and look at the pictures.",
+              "Children shake their heads and say \"No!\" with Ben on pages 1 to 7."
+            ],
+            "watchFor": [
+              "Children who do not look: hold the book closer to them."
+            ]
+          },
+          "easier": {
+            "en": "Play the audio at 0.75 speed.",
+            "th": "เปิดเสียงที่ความเร็ว 0.75"
+          },
+          "harder": {
+            "en": "Stop the audio before the toy word on a page; the class says the word.",
+            "th": "หยุดเสียงก่อนถึงคำศัพท์ชื่อของเล่นในหน้านั้น ทั้งชั้นพูดคำนั้น"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "book audio, on the tablet or by the QR code: \"Is It a Ball?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "เปิดเสียงอ่าน \"Is It a Ball?\" 1 รอบ ที่ความเร็ว 1.0",
+              "ชี้ที่ภาพขณะเสียงอ่านหน้านั้น และพลิกหน้าไปพร้อมกับเสียง"
+            ],
+            "teacherLanguage": [
+              "\"ทีนี้ฟังหนังสือ ตาดูที่ภาพ\"",
+              "\"ส่ายหัวพร้อม Ben: No! (ไม่ใช่)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ฟังและดูภาพ",
+              "เด็ก ๆ ส่ายหัวและพูด \"No!\" พร้อม Ben ในหน้า 1 ถึง 7"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่ดูภาพ: ถือหนังสือให้ใกล้เด็กมากขึ้น"
+            ]
+          }
+        },
+        {
+          "id": "B4",
+          "title": {
+            "en": "Read with me",
+            "th": "อ่านกับครู"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "First reading: read each page and point under each word. The class says the page after you.",
+              "Second reading: read \"Is it a\" and stop. The class says the toy word, then shakes their heads and says \"No!\"",
+              "Point to \"Is it a\" on pages 1 to 7: it is the frame of the week. Show the question mark: the voice goes up at the end of a question. On page 8, show the change: \"Is it Pip? Yes!\" A name has no \"a\"."
+            ],
+            "teacherLanguage": [
+              "\"My turn: Is it a ball? No! Your turn!\"",
+              "\"Look at the words. Is it a ... ?\"",
+              "\"Read the last page with me: Is it Pip? Yes!\""
+            ],
+            "studentActions": [
+              "Children say each page after the teacher and point in the air.",
+              "Children say the toy word on each page and shake their heads for \"No!\""
+            ],
+            "watchFor": [
+              "Children who say the question flat: say it again with the voice up at the end.",
+              "On the last page, let the children laugh, then read it again together."
+            ]
+          },
+          "easier": {
+            "en": "Read pages 1 to 4 and page 8 only.",
+            "th": "อ่านเฉพาะหน้า 1 ถึง 4 และหน้า 8"
+          },
+          "harder": {
+            "en": "Children read \"Is it a\" alone; you say only the toy words.",
+            "th": "เด็ก ๆ อ่าน \"Is it a\" ด้วยตัวเอง ส่วนครูพูดเฉพาะคำศัพท์ชื่อของเล่น"
+          },
+          "group": {
+            "en": "Half the class reads the question (May), and the other half reads the answer (Ben).",
+            "th": "ครึ่งชั้นอ่านคำถาม (May) อีกครึ่งชั้นอ่านคำตอบ (Ben)"
+          },
+          "materials": [
+            "big book or screen: \"Is It a Ball?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "อ่านรอบแรก: อ่านแต่ละหน้าและชี้ใต้แต่ละคำ ทั้งชั้นพูดหน้านั้นตาม",
+              "อ่านรอบที่สอง: อ่าน \"Is it a\" แล้วหยุด ทั้งชั้นพูดคำศัพท์ชื่อของเล่น แล้วส่ายหัวและพูดว่า \"No!\"",
+              "ชี้ที่ \"Is it a\" ในหน้า 1 ถึง 7: นี่คือกรอบประโยคของสัปดาห์ ชี้ให้ดูเครื่องหมายคำถาม (question mark): เสียงจะสูงขึ้นที่ท้ายคำถาม ที่หน้า 8 ชี้ให้ดูว่าประโยคเปลี่ยน: \"Is it Pip? Yes!\" ชื่อไม่มีคำว่า \"a\" นำหน้า"
+            ],
+            "teacherLanguage": [
+              "\"ตาครู: Is it a ball? No! (เป็นลูกบอลใช่ไหม ไม่ใช่!) ถึงตาเด็ก ๆ!\"",
+              "\"ดูที่คำ Is it a ... ?\"",
+              "\"อ่านหน้าสุดท้ายพร้อมครู: Is it Pip? Yes! (เป็น Pip ใช่ไหม ใช่!)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ พูดแต่ละหน้าตามครู และชี้ในอากาศ",
+              "เด็ก ๆ พูดคำศัพท์ชื่อของเล่นในแต่ละหน้า และส่ายหัวตอนพูด \"No!\""
+            ],
+            "watchFor": [
+              "เด็กที่พูดคำถามด้วยเสียงระดับเดียว: พูดคำถามอีกครั้ง โดยให้เสียงสูงขึ้นที่ท้ายคำถาม",
+              "ที่หน้าสุดท้าย ปล่อยให้เด็ก ๆ หัวเราะ แล้วอ่านอีกครั้งพร้อมกัน"
+            ]
+          }
+        },
+        {
+          "id": "B5",
+          "title": {
+            "en": "Frame practice",
+            "th": "ฝึกกรอบประโยค"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Write \"Is it a ___?\" on the board and point to each word. Show the question mark. Write \"Yes!\" and \"No!\" under it.",
+              "Hold a family picture card behind your back. The class asks \"Is it a ball?\" Say \"Yes!\" or \"No!\", then show the card.",
+              "Six children come to the front, one at a time. The child holds a family picture card from B1 behind the back; the class asks \"Is it a ___?\", and the child says \"Yes!\" or \"No!\". Then pairs play with the family picture cards."
+            ],
+            "teacherLanguage": [
+              "\"Ask me: Is it a ball? ... No! Ask again!\"",
+              "\"Your turn. Hide the card. The class asks: Is it a ...?\"",
+              "\"Now with your partner. Hide a card. Ask: Is it a ...?\""
+            ],
+            "studentActions": [
+              "Six children hide a family picture card and answer \"Yes!\" or \"No!\".",
+              "Pairs: partner A hides a card; partner B asks \"Is it a ___?\" until the answer is \"Yes!\". Then they change."
+            ],
+            "watchFor": [
+              "Children who leave out \"a\": say the question again slowly and tap the table for each word.",
+              "Children who say \"Yes!\" to every question: show the card and ask again."
+            ]
+          },
+          "easier": {
+            "en": "The child asks the question together with the teacher.",
+            "th": "เด็กถามคำถามพร้อมกับครู"
+          },
+          "harder": {
+            "en": "The child answers with the toy word: \"No! It is a car!\"",
+            "th": "เด็กตอบโดยบอกคำศัพท์ชื่อของเล่น: \"No! It is a car!\" (ไม่ใช่! เป็นรถ!)"
+          },
+          "group": {
+            "en": "Pairs, then two pairs together: four children ask and answer.",
+            "th": "ทำเป็นคู่ แล้วรวม 2 คู่เข้าด้วยกัน: เด็ก 4 คนถามและตอบ"
+          },
+          "materials": [
+            "board",
+            "family picture cards: ball, doll, car, kite, drum, train, teddy"
+          ],
+          "th": {
+            "teacherActions": [
+              "เขียน \"Is it a ___?\" บนกระดาน และชี้ที่แต่ละคำ ชี้ให้ดูเครื่องหมายคำถาม (question mark) เขียน \"Yes!\" และ \"No!\" ไว้ข้างใต้",
+              "ถือบัตรภาพคำศัพท์ 1 ใบไว้ข้างหลัง ทั้งชั้นถามว่า \"Is it a ball?\" (เป็นลูกบอลใช่ไหม) ครูตอบ \"Yes!\" หรือ \"No!\" แล้วชูบัตรให้ดู",
+              "เด็ก 6 คนออกมาหน้าชั้นทีละคน เด็กถือบัตรภาพคำศัพท์ 1 ใบจาก B1 ไว้ข้างหลัง ทั้งชั้นถามว่า \"Is it a ___?\" และเด็กตอบ \"Yes!\" หรือ \"No!\" จากนั้นให้เล่นเป็นคู่โดยใช้บัตรภาพคำศัพท์"
+            ],
+            "teacherLanguage": [
+              "\"ถามครู: Is it a ball? ... No! (เป็นลูกบอลใช่ไหม ... ไม่ใช่!) ถามอีกครั้ง!\"",
+              "\"ถึงตาหนูแล้ว ซ่อนบัตรไว้ ทั้งชั้นถามว่า: Is it a ...?\"",
+              "\"ทีนี้ทำกับคู่ ซ่อนบัตร 1 ใบ ถามว่า: Is it a ...?\""
+            ],
+            "studentActions": [
+              "เด็ก 6 คนซ่อนบัตรภาพคำศัพท์ และตอบ \"Yes!\" หรือ \"No!\"",
+              "ทำเป็นคู่: คู่คนที่ 1 ซ่อนบัตร 1 ใบ คู่คนที่ 2 ถามว่า \"Is it a ___?\" จนกว่าคำตอบจะเป็น \"Yes!\" แล้วสลับกัน"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่พูดคำว่า \"a\": พูดคำถามอีกครั้งช้า ๆ และเคาะโต๊ะ 1 ครั้งต่อ 1 คำ",
+              "เด็กที่ตอบ \"Yes!\" ทุกคำถาม: ชูบัตรให้ดู แล้วถามอีกครั้ง"
+            ]
+          }
+        },
+        {
+          "id": "B6",
+          "title": {
+            "en": "Act it",
+            "th": "แสดงตามเรื่อง"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "The whole class acts the book. Half the class is May: they point and ask \"Is it a ball?\" The other half is Ben: they shake their heads and say \"No!\"",
+              "On the last page, the class jumps up like Pip out of the blanket and says: \"Is it Pip? Yes!\""
+            ],
+            "teacherLanguage": [
+              "\"May, ask! Is it a ball? Ben, answer! No!\"",
+              "\"Jump like Pip! Is it Pip? Yes!\""
+            ],
+            "studentActions": [
+              "The halves ask and answer each page. On the last page, the children jump up."
+            ],
+            "watchFor": [
+              "Children who only watch: ask the question with them."
+            ]
+          },
+          "easier": {
+            "en": "The class says only the toy words and \"No!\"; you say \"Is it a\".",
+            "th": "ทั้งชั้นพูดเฉพาะคำศัพท์ชื่อของเล่นและ \"No!\" ส่วนครูพูด \"Is it a\""
+          },
+          "harder": {
+            "en": "Children ask a new question: \"Is it a boat?\"",
+            "th": "เด็ก ๆ ถามคำถามใหม่ที่คิดเอง: \"Is it a boat?\" (เป็นเรือใช่ไหม)"
+          },
+          "group": {
+            "en": "Whole class, in two halves.",
+            "th": "ทั้งชั้น แบ่งเป็น 2 ฝั่ง"
+          },
+          "materials": [
+            "big book or screen: \"Is It a Ball?\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ทั้งชั้นแสดงตามหนังสือ ครึ่งชั้นเป็น May: ชี้แล้วถามว่า \"Is it a ball?\" อีกครึ่งชั้นเป็น Ben: ส่ายหัวแล้วพูดว่า \"No!\"",
+              "ที่หน้าสุดท้าย ทั้งชั้นกระโดดขึ้นเหมือน Pip ที่กระโดดออกมาจากใต้ผ้าห่ม และพูดว่า: \"Is it Pip? Yes!\""
+            ],
+            "teacherLanguage": [
+              "\"May ถาม! Is it a ball? (เป็นลูกบอลใช่ไหม) Ben ตอบ! No! (ไม่ใช่)\"",
+              "\"กระโดดเหมือน Pip! Is it Pip? Yes! (เป็น Pip ใช่ไหม ใช่!)\""
+            ],
+            "studentActions": [
+              "ทั้ง 2 ฝั่งถามและตอบทีละหน้า ที่หน้าสุดท้าย เด็ก ๆ กระโดดขึ้น"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ถามคำถามพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "B7",
+          "title": {
+            "en": "Sing it",
+            "th": "ร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the opening, play the karaoke video as the song of the week (item 3). The words are on the screen."
+            ],
+            "teacherLanguage": [
+              "\"Sing with the words on the screen. Point to the words!\""
+            ],
+            "studentActions": [
+              "Children sing and point to the words on the screen."
+            ],
+            "watchFor": [
+              "Children who only watch: give them the gesture to do (sway, nod)."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus)"
+          },
+          "harder": {
+            "en": "Children sing the verse without the video.",
+            "th": "เด็ก ๆ ร้องท่อนเวิร์ส (verse) โดยไม่ใช้วิดีโอ"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "karaoke videos: \"What Is in the Box?\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบ เปิดวิดีโอคาราโอเกะเป็นเพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เนื้อเพลงอยู่บนจอ"
+            ],
+            "teacherLanguage": [
+              "\"ร้องตามเนื้อเพลงบนจอ ชี้ที่คำ!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ร้องเพลงและชี้ที่คำบนจอ"
+            ],
+            "watchFor": [
+              "เด็กที่ดูอย่างเดียว: ให้เด็กทำท่าประกอบเพลง (โยกตัว พยักหน้า)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "day": 3,
+      "title": {
+        "en": "Spell and Read",
+        "th": "สะกดและอ่าน"
+      },
+      "prep": [
+        {
+          "en": "Put one card for the letter o in each child's letter card set, with the six other letter cards.",
+          "th": "ใส่บัตรตัวอักษร o 1 ใบ ในชุดบัตรตัวอักษรของเด็กแต่ละคน รวมกับบัตรตัวอักษรอีก 6 ใบ"
+        }
+      ],
+      "steps": [
+        {
+          "id": "C1",
+          "title": {
+            "en": "Sound review",
+            "th": "ทบทวนเสียง"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the seven sound cards fast, in a mixed order.",
+              "Children say the sound and do the action of the card."
+            ],
+            "teacherLanguage": [
+              "\"What sound? /o/! On, off!\"",
+              "\"What sound? /t/! Tap, tap!\"",
+              "\"Sss, mmm, /p/, /a/, nnn: say the sound and do the action of each card.\"",
+              "\"Again, faster!\""
+            ],
+            "studentActions": [
+              "Children say the sound and do the action."
+            ],
+            "watchFor": [
+              "A short /o/, as in \"octopus\", not \"oh\"."
+            ]
+          },
+          "easier": {
+            "en": "Show each card two times in the same order before the fast round.",
+            "th": "ชูบัตรแต่ละใบ 2 ครั้งตามลำดับเดิมก่อนรอบเร็ว"
+          },
+          "harder": {
+            "en": "Show a card for a short time only, then hide it.",
+            "th": "ชูบัตรเพียงช่วงสั้น ๆ แล้วซ่อน"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "sound cards: o, t, s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตรเสียงทั้ง 7 ใบอย่างรวดเร็ว แบบสลับลำดับ",
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียงของบัตรนั้น"
+            ],
+            "teacherLanguage": [
+              "\"เสียงอะไร? /o/! On, off! (เปิด ปิด!)\"",
+              "\"เสียงอะไร? /t/! เคาะ เคาะ!\"",
+              "\"Sss, mmm, /p/, /a/, nnn: ออกเสียงและทำท่าประจำเสียงของบัตรแต่ละใบ\"",
+              "\"อีกครั้ง เร็วขึ้น!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ออกเสียงและทำท่าประจำเสียง"
+            ],
+            "watchFor": [
+              "เสียง /o/ สั้น ๆ แบบใน \"octopus\" ไม่ใช่ \"oh\" (โอ)"
+            ]
+          }
+        },
+        {
+          "id": "C2",
+          "title": {
+            "en": "Letter cards",
+            "th": "บัตรตัวอักษร"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Each child has a workmat and the seven letter cards of the week.",
+              "Build a chain, one change at a time: the word map, then mop, then top. Then swap the first and the last card: pot.",
+              "Children push one card into a box for each sound and say the sound, then read the word."
+            ],
+            "teacherLanguage": [
+              "\"Make map. Mmm - /a/ - /p/. Push the cards.\"",
+              "\"Change the letter a to the letter o. What is the word now? Mop!\"",
+              "\"Change the letter m to the letter t. /t/ - /o/ - /p/. Top!\"",
+              "\"Now swap the first and the last card. /p/ - /o/ - /t/. Pot!\""
+            ],
+            "studentActions": [
+              "Children push the cards, say the sounds, and read each word."
+            ],
+            "watchFor": [
+              "Children who change the wrong card: say the old word and the new word slowly, and ask which sound is new."
+            ]
+          },
+          "easier": {
+            "en": "Build only \"map\" and \"mop\", with the teacher.",
+            "th": "ต่อเฉพาะคำ \"map\" และ \"mop\" พร้อมครู"
+          },
+          "harder": {
+            "en": "The child builds \"top\" and \"pot\" with no help, and reads both words.",
+            "th": "เด็กต่อคำ \"top\" และ \"pot\" ด้วยตัวเอง และอ่านทั้ง 2 คำ"
+          },
+          "group": {
+            "en": "Pairs share one workmat and take turns to push the cards.",
+            "th": "ทำเป็นคู่: ใช้แผ่นรองกิจกรรมร่วมกัน 1 แผ่น และผลัดกันเลื่อนบัตร"
+          },
+          "materials": [
+            "workmats (class set)",
+            "letter cards (class set): o, t, s, m, p, a, n"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็กแต่ละคนมีแผ่นรองกิจกรรม 1 แผ่น และบัตรตัวอักษร 7 ใบของสัปดาห์นี้",
+              "ต่อคำทีละขั้น โดยเปลี่ยนบัตรครั้งละ 1 ใบ: คำ map แล้ว mop แล้ว top จากนั้นสลับบัตรใบแรกกับใบสุดท้าย: pot",
+              "เด็ก ๆ เลื่อนบัตรเข้าช่องทีละใบ ใบละ 1 เสียง และออกเสียงนั้น แล้วอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"ต่อคำ map Mmm - /a/ - /p/ เลื่อนบัตร\"",
+              "\"เปลี่ยนตัวอักษร a เป็นตัวอักษร o ตอนนี้เป็นคำอะไร? Mop!\"",
+              "\"เปลี่ยนตัวอักษร m เป็นตัวอักษร t /t/ - /o/ - /p/ Top!\"",
+              "\"ทีนี้สลับบัตรใบแรกกับใบสุดท้าย /p/ - /o/ - /t/ Pot!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เลื่อนบัตร ออกเสียง และอ่านแต่ละคำ"
+            ],
+            "watchFor": [
+              "เด็กที่เปลี่ยนบัตรผิดใบ: พูดคำเดิมและคำใหม่ช้า ๆ แล้วถามว่าเสียงไหนเป็นเสียงใหม่"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "title": {
+            "en": "Dictation",
+            "th": "เขียนตามคำบอก"
+          },
+          "minutes": 4,
+          "en": {
+            "teacherActions": [
+              "Say the sound /o/; children say it, then write the letter o in the book. Do it two times.",
+              "Say \"top\". Children say the sounds on three fingers, then write the word in three boxes.",
+              "Then children trace the sentence \"Tom can see a top.\" on the line."
+            ],
+            "teacherLanguage": [
+              "\"When I say /o/, you write the letter o. Ready? /o/.\"",
+              "\"Listen: top. Say the sounds on your fingers: /t/ - /o/ - /p/. Write one letter in each box.\"",
+              "\"Now trace: Tom can see a top. A big letter T at the start. A full stop at the end.\""
+            ],
+            "studentActions": [
+              "Children write the letter o two times and the word \"top\" in the book.",
+              "Children trace \"Tom can see a top.\""
+            ],
+            "watchFor": [
+              "Children who start the letter o at the bottom, or go round to the right: show the formation again: start at the dot and go round to the left."
+            ]
+          },
+          "easier": {
+            "en": "Children trace \"top\" before they write it.",
+            "th": "เด็ก ๆ ลากเส้นตาม \"top\" ก่อนเขียนเอง"
+          },
+          "harder": {
+            "en": "Children write \"pot\" in three boxes, too.",
+            "th": "เด็ก ๆ เขียน \"pot\" ใน 3 ช่องด้วย"
+          },
+          "group": {
+            "en": "Pairs check each other's letter o: start at the dot, round to the left, and back to the dot.",
+            "th": "ทำเป็นคู่: ตรวจตัวอักษร o ของกันและกัน (เริ่มที่จุด วนไปทางซ้าย แล้วกลับมาที่จุด)"
+          },
+          "materials": [
+            "student book: dictation lines"
+          ],
+          "th": {
+            "teacherActions": [
+              "ออกเสียง /o/ เด็ก ๆ พูดตาม แล้วเขียนตัวอักษร o ในหนังสือ ทำ 2 ครั้ง",
+              "พูด \"top\" เด็ก ๆ ออกเสียงทีละเสียงพร้อมชูนิ้วเสียงละ 1 นิ้ว แล้วเขียนคำลงใน 3 ช่อง",
+              "จากนั้นเด็ก ๆ ลากเส้นตามประโยค \"Tom can see a top.\" บนบรรทัด"
+            ],
+            "teacherLanguage": [
+              "\"เมื่อครูพูด /o/ ให้เด็ก ๆ เขียนตัวอักษร o พร้อมไหม? /o/\"",
+              "\"ฟัง: top ออกเสียงทีละเสียงและชูนิ้วทีละนิ้ว: /t/ - /o/ - /p/ เขียนตัวอักษรช่องละ 1 ตัว\"",
+              "\"ทีนี้ลากเส้นตาม: Tom can see a top. (Tom มองเห็นลูกข่าง) ตัวอักษร T ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่จุดที่ท้ายประโยค\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เขียนตัวอักษร o 2 ครั้ง และเขียนคำ \"top\" ในหนังสือ",
+              "เด็ก ๆ ลากเส้นตาม \"Tom can see a top.\""
+            ],
+            "watchFor": [
+              "เด็กที่เริ่มเขียนตัวอักษร o จากด้านล่าง หรือวนไปทางขวา: แสดงวิธีเขียนให้ดูอีกครั้ง: เริ่มที่จุด แล้ววนไปทางซ้าย"
+            ]
+          }
+        },
+        {
+          "id": "C4",
+          "title": {
+            "en": "Decodable: read together",
+            "th": "หนังสือฝึกสะกดอ่าน: อ่านด้วยกัน"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Show the cover of \"The Top\". Read the title and ask what the book is about.",
+              "Show the \"Sounds in this book\" page: the class says /o/, sounds out \"Tom\", \"top\", \"pot\", \"Mom\", and \"on\", and reads the tricky word \"run\". Show the word list on the back cover: these are the main words of the book.",
+              "Read page 1 with the class: sound out \"Tom\" and \"top\" with your finger under the letters, and read \"can\", \"see\", and \"a\" as tricky words.",
+              "Then pairs read: partner A reads a page, partner B reads the next."
+            ],
+            "teacherLanguage": [
+              "\"Look. The Top. What is it? A top! Can a top spin?\"",
+              "\"Look at this page. These are the sounds and the words of the book. What sound? /o/!\"",
+              "\"Finger under the letters. /t/ - /o/ - mmm. Tom! /t/ - /o/ - /p/. Top!\"",
+              "\"Your turn with your partner. Partner A reads, partner B reads, partner A reads.\""
+            ],
+            "studentActions": [
+              "Children read each page with a finger under the words.",
+              "Pairs take turns, page by page."
+            ],
+            "watchFor": [
+              "Children who read \"top\" as \"pot\": point to the first letter and ask for its sound.",
+              "Children sound out \"Tom\", \"top\", \"mat\", \"pot\", \"Mom\", and \"on\" with the letters. \"Pip\" is a name: read it for the class. The other words are tricky words: can, see, a, get, the, is, run."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher, page by page.",
+            "th": "เด็กอ่านพร้อมครูทีละหน้า"
+          },
+          "harder": {
+            "en": "The child reads the whole book alone to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher sits with one pair.",
+            "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
+          },
+          "materials": [
+            "books (one for each pair): \"The Top\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ให้ดูปกของ \"The Top\" อ่านชื่อเรื่อง แล้วถามว่าหนังสือเล่มนี้เกี่ยวกับอะไร",
+              "ให้ดูหน้า \"Sounds in this book\" (เสียงในหนังสือเล่มนี้): ทั้งชั้นพูด /o/ สะกดออกเสียง \"Tom\", \"top\", \"pot\", \"Mom\" และ \"on\" และอ่านคำที่ต้องจำ \"run\" จากนั้นให้ดูรายการคำที่ปกหลัง: นี่คือคำหลักในหนังสือเล่มนี้",
+              "อ่านหน้า 1 พร้อมทั้งชั้น: สะกดออกเสียง \"Tom\" และ \"top\" โดยวางนิ้วใต้ตัวอักษร และอ่าน \"can\", \"see\" และ \"a\" เป็นคำที่ต้องจำ",
+              "จากนั้นให้อ่านเป็นคู่: คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป"
+            ],
+            "teacherLanguage": [
+              "\"ดู The Top (ลูกข่าง) นี่คืออะไร? A top! (ลูกข่าง) ลูกข่างหมุนได้ไหม?\"",
+              "\"ดูหน้านี้ นี่คือเสียงและคำในหนังสือ เสียงอะไร? /o/!\"",
+              "\"วางนิ้วใต้ตัวอักษร /t/ - /o/ - mmm Tom! /t/ - /o/ - /p/ Top!\"",
+              "\"ถึงตาเด็ก ๆ อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน คู่คนที่ 1 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
+              "คู่ผลัดกันอ่านทีละหน้า"
+            ],
+            "watchFor": [
+              "เด็กที่อ่าน \"top\" เป็น \"pot\": ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร",
+              "เด็ก ๆ สะกดออกเสียง \"Tom\", \"top\", \"mat\", \"pot\", \"Mom\" และ \"on\" ด้วยตัวอักษร \"Pip\" เป็นชื่อ: ครูอ่านคำนี้ให้ทั้งชั้นฟัง คำอื่นเป็นคำที่ต้องจำ: can, see, a, get, the, is, run"
+            ]
+          }
+        },
+        {
+          "id": "C5",
+          "title": {
+            "en": "Comprehension",
+            "th": "ตรวจความเข้าใจ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Ask two questions about the book, one with the frame of the week. Children answer with a short sentence."
+            ],
+            "teacherLanguage": [
+              "\"Look at page 4. Where is the top? The top on a pot!\"",
+              "\"Look at page 8. Who has the top? Is it Mom? No! Is it Pip? Yes!\""
+            ],
+            "studentActions": [
+              "Children answer, then say the full answer with the teacher."
+            ],
+            "watchFor": [
+              "Children who answer with one word: say the full answer; the child says it after you."
+            ]
+          },
+          "easier": {
+            "en": "Ask only yes or no questions: \"Is the top on Mom?\"",
+            "th": "ถามเฉพาะคำถามแบบใช่หรือไม่ใช่: \"Is the top on Mom?\" (ลูกข่างอยู่บนตัวแม่ใช่ไหม)"
+          },
+          "harder": {
+            "en": "A child asks a question about a page: \"Is the top on a mat?\"",
+            "th": "เด็กคนหนึ่งถามคำถามเกี่ยวกับหน้าหนึ่ง: \"Is the top on a mat?\" (ลูกข่างอยู่บนเสื่อใช่ไหม)"
+          },
+          "group": {
+            "en": "Pairs ask each other one question.",
+            "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
+          },
+          "materials": [
+            "books (one for each pair): \"The Top\""
+          ],
+          "th": {
+            "teacherActions": [
+              "ถามคำถาม 2 ข้อเกี่ยวกับหนังสือ โดยให้ 1 ข้อใช้กรอบประโยคของสัปดาห์ เด็ก ๆ ตอบเป็นประโยคสั้น ๆ"
+            ],
+            "teacherLanguage": [
+              "\"ดูหน้า 4 Where is the top? (ลูกข่างอยู่ที่ไหน) The top on a pot! (ลูกข่างบนหม้อ)\"",
+              "\"ดูหน้า 8 Who has the top? (ใครมีลูกข่าง) Is it Mom? (เป็นแม่ใช่ไหม) No! (ไม่ใช่) Is it Pip? (เป็น Pip ใช่ไหม) Yes! (ใช่)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ตอบ แล้วพูดคำตอบเต็มพร้อมครู"
+            ],
+            "watchFor": [
+              "เด็กที่ตอบด้วยคำเดียว: พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
+            ]
+          }
+        },
+        {
+          "id": "C6",
+          "title": {
+            "en": "Favorite page",
+            "th": "หน้าที่ชอบ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask two or three children to read their favorite page of \"The Top\"."
+            ],
+            "teacherLanguage": [
+              "\"Which page do you like? Read it to us.\""
+            ],
+            "studentActions": [
+              "Two or three children read one page each."
+            ],
+            "watchFor": [
+              "Children who are not sure: let them choose a page, then read it with them."
+            ]
+          },
+          "easier": {
+            "en": "The child points to the page; the class reads it.",
+            "th": "เด็กชี้ที่หน้านั้น ทั้งชั้นอ่าน"
+          },
+          "harder": {
+            "en": "The child reads the page and says why: \"I like Mom!\"",
+            "th": "เด็กอ่านหน้านั้นและบอกเหตุผล: \"I like Mom!\" (หนูชอบแม่!)"
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "books (one for each pair): \"The Top\""
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 2 หรือ 3 คนอ่านหน้าที่ชอบใน \"The Top\""
+            ],
+            "teacherLanguage": [
+              "\"หนูชอบหน้าไหน? อ่านให้เราฟัง\""
+            ],
+            "studentActions": [
+              "เด็ก 2 หรือ 3 คนอ่านคนละ 1 หน้า"
+            ],
+            "watchFor": [
+              "เด็กที่ไม่แน่ใจ: ให้เด็กเลือกหน้า แล้วอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "C7",
+          "title": {
+            "en": "Sticker",
+            "th": "สติกเกอร์"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Give each child the sticker of \"The Top\".",
+              "Children put it on number 7 of the book map in their book."
+            ],
+            "teacherLanguage": [
+              "\"You read the book! Here is your sticker.\"",
+              "\"Put it on the book map, on number 7.\""
+            ],
+            "studentActions": [
+              "Children put the sticker on the book map and say the book title."
+            ],
+            "watchFor": [
+              "Children who put the sticker in the wrong place: show number 7 on the map."
+            ]
+          },
+          "easier": {
+            "en": "Put the sticker on the map with the child.",
+            "th": "ติดสติกเกอร์บนแผนที่หนังสือพร้อมกับเด็ก"
+          },
+          "harder": {
+            "en": "The child says the title and reads one page from the book.",
+            "th": "เด็กพูดชื่อหนังสือและอ่าน 1 หน้าจากหนังสือ"
+          },
+          "group": {
+            "en": "The table leader gives out the stickers.",
+            "th": "หัวหน้าโต๊ะแจกสติกเกอร์"
+          },
+          "materials": [
+            "stickers: \"The Top\"",
+            "student book: book map"
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกสติกเกอร์ \"The Top\" ให้เด็กแต่ละคน",
+              "เด็ก ๆ ติดสติกเกอร์ที่หมายเลข 7 ของแผนที่หนังสือในหนังสือของตัวเอง"
+            ],
+            "teacherLanguage": [
+              "\"เด็ก ๆ อ่านหนังสือจบแล้ว! นี่คือสติกเกอร์ของเด็ก ๆ\"",
+              "\"ติดที่แผนที่หนังสือ ที่หมายเลข 7\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ติดสติกเกอร์บนแผนที่หนังสือ และพูดชื่อหนังสือ"
+            ],
+            "watchFor": [
+              "เด็กที่ติดสติกเกอร์ผิดที่: ชี้หมายเลข 7 บนแผนที่หนังสือให้ดู"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "day": 4,
+      "title": {
+        "en": "Read and Write",
+        "th": "อ่านและเขียน"
+      },
+      "prep": [
+        {
+          "en": "Put crayons on each table, and mark the writing page in the student books (D4).",
+          "th": "วางสีเทียนไว้ทุกโต๊ะ และคั่นหน้ากิจกรรมเขียนในหนังสือนักเรียนไว้ (D4)"
+        }
+      ],
+      "steps": [
+        {
+          "id": "D1",
+          "title": {
+            "en": "Re-read",
+            "th": "อ่านซ้ำ"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Children read \"The Top\" again in pairs, with a finger under the words. Partner A reads a page, partner B reads the next.",
+              "Sit with one table and listen to each child read two pages."
+            ],
+            "teacherLanguage": [
+              "\"Read the book again. Finger under the words.\"",
+              "\"Read page 6 to me. Good! Run, Tom, run!\""
+            ],
+            "studentActions": [
+              "Children read the book in pairs, with a finger under each word."
+            ],
+            "watchFor": [
+              "Note on the record sheet the children who cannot yet sound out \"top\", \"pot\", and \"Tom\"."
+            ]
+          },
+          "easier": {
+            "en": "The child reads together with the partner.",
+            "th": "เด็กอ่านพร้อมกับคู่"
+          },
+          "harder": {
+            "en": "The child reads the book alone to the partner.",
+            "th": "เด็กอ่านหนังสือให้คู่ฟังด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Pairs; the teacher listens to one table.",
+            "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
+          },
+          "materials": [
+            "books (one for each pair): \"The Top\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ อ่าน \"The Top\" อีกครั้งเป็นคู่ โดยวางนิ้วใต้คำ คู่คนที่ 1 อ่าน 1 หน้า คู่คนที่ 2 อ่านหน้าถัดไป",
+              "นั่งกับ 1 โต๊ะ และฟังเด็กแต่ละคนอ่าน 2 หน้า"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสืออีกครั้ง วางนิ้วใต้คำ\"",
+              "\"อ่านหน้า 6 ให้ครูฟัง เก่งมาก! Run, Tom, run! (วิ่ง Tom วิ่ง!)\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านหนังสือเป็นคู่ โดยวางนิ้วใต้แต่ละคำ"
+            ],
+            "watchFor": [
+              "จดในแบบบันทึกผล: เด็กที่ยังสะกดออกเสียง \"top\", \"pot\" และ \"Tom\" ไม่ได้"
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "title": {
+            "en": "Tricky words",
+            "th": "คำที่ต้องจำ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Show the cards a, and, can, I, in, on, the, get, is, this, saw, off, with, he, put, see, from, run, up fast.",
+              "Write \"from\" on the board, then erase one letter; children say the missing letter."
+            ],
+            "teacherLanguage": [
+              "\"Read it fast! From. Run. Up. He. Put. See. Saw. Off. With. This. Is. The. Get. I. In. On. Can. And. A.\"",
+              "\"Close your eyes. ... Open your eyes. What is missing?\""
+            ],
+            "studentActions": [
+              "Children read the cards fast.",
+              "Children say the missing letter name."
+            ],
+            "watchFor": [
+              "Read the tricky word card a as \"uh\", as in \"a cat\".",
+              "Children who sound out \"on\": good! The letter o in \"on\" says /o/, and the class can read it now."
+            ]
+          },
+          "easier": {
+            "en": "Show only the new cards: from, run, up.",
+            "th": "ชูเฉพาะบัตรใหม่: from, run, up"
+          },
+          "harder": {
+            "en": "Erase two letters of \"from\".",
+            "th": "ลบตัวอักษร 2 ตัวของ \"from\""
+          },
+          "group": {
+            "en": "Whole class.",
+            "th": "ทั้งชั้น"
+          },
+          "materials": [
+            "tricky word cards: a, and, can, I, in, on, the, get, is, this, saw, off, with, he, put, see, from, run, up",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ชูบัตร a, and, can, I, in, on, the, get, is, this, saw, off, with, he, put, see, from, run, up อย่างรวดเร็ว",
+              "เขียน \"from\" บนกระดาน แล้วลบตัวอักษร 1 ตัว เด็ก ๆ บอกตัวอักษรที่หายไป"
+            ],
+            "teacherLanguage": [
+              "\"อ่านเร็ว ๆ! From, run, up, he, put, see, saw, off, with, this, is, the, get, I, in, on, can, and, a\"",
+              "\"หลับตา ... ลืมตา อะไรหายไป?\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่านบัตรอย่างรวดเร็ว",
+              "เด็ก ๆ บอกชื่อตัวอักษรที่หายไป"
+            ],
+            "watchFor": [
+              "อ่านบัตรคำที่ต้องจำ a ว่า \"uh\" (เออะ) แบบใน \"a cat\"",
+              "เด็กที่สะกดออกเสียงคำ \"on\": ดีมาก! ตัวอักษร o ในคำ \"on\" ออกเสียง /o/ และตอนนี้ทั้งชั้นอ่านคำนี้ได้แล้ว"
+            ]
+          }
+        },
+        {
+          "id": "D3",
+          "title": {
+            "en": "Leveled reader",
+            "th": "หนังสืออ่านแบ่งระดับ"
+          },
+          "minutes": 6,
+          "en": {
+            "teacherActions": [
+              "Give out the class set of \"Is It a Ball?\" (Sprout band).",
+              "Read it together once, then pairs read it page by page."
+            ],
+            "teacherLanguage": [
+              "\"Open your book. Read with me.\"",
+              "\"Now read it with your partner. Partner A reads, partner B reads.\""
+            ],
+            "studentActions": [
+              "Children read \"Is It a Ball?\" together, then in pairs."
+            ],
+            "watchFor": [
+              "Children who read a toy word wrong: point to the picture in the thought bubble and ask: \"What is it?\""
+            ]
+          },
+          "easier": {
+            "en": "Pairs read only pages 1 to 4.",
+            "th": "คู่อ่านเฉพาะหน้า 1 ถึง 4"
+          },
+          "harder": {
+            "en": "The child reads the whole book to the partner.",
+            "th": "เด็กอ่านทั้งเล่มให้คู่ฟัง"
+          },
+          "group": {
+            "en": "Pairs.",
+            "th": "ทำเป็นคู่"
+          },
+          "materials": [
+            "books (one for each pair): \"Is It a Ball?\""
+          ],
+          "th": {
+            "teacherActions": [
+              "แจกหนังสือ \"Is It a Ball?\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
+            ],
+            "teacherLanguage": [
+              "\"เปิดหนังสือ อ่านพร้อมครู\"",
+              "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ อ่าน \"Is It a Ball?\" พร้อมกัน แล้วอ่านเป็นคู่"
+            ],
+            "watchFor": [
+              "เด็กที่อ่านคำศัพท์ชื่อของเล่นผิด: ชี้ที่ภาพในบอลลูนความคิด แล้วถามว่า: \"What is it?\" (นี่คืออะไร)"
+            ]
+          }
+        },
+        {
+          "id": "D4",
+          "title": {
+            "en": "Write it",
+            "th": "เขียน"
+          },
+          "minutes": 10,
+          "en": {
+            "teacherActions": [
+              "Part 1 (5 min): write \"Is it a ___?\" on the board. Show where the big letter and the question mark go.",
+              "Children trace \"Is it a ball?\" in the book. Then they color the ball above it.",
+              "Stand-and-move break (at minute 5): all children stand up.",
+              "Mime one toy with no word (bounce a ball, fly a kite, beat a drum). The class asks \"Is it a ___?\" Say \"Yes!\" or \"No!\". Do three rounds, then sit down.",
+              "Part 2 (5 min): in the second box, children draw a car, a kite, or a drum. They find the word under the box (car, kite, drum) and trace it."
+            ],
+            "teacherLanguage": [
+              "\"A big letter I at the start. A question mark at the end.\"",
+              "\"Trace the words: Is it a ball?\"",
+              "\"Color the ball.\"",
+              "\"Stand up! Look at me! Ask: Is it a ...?\"",
+              "\"Now draw a car, a kite, or a drum. Find the word and trace it.\""
+            ],
+            "studentActions": [
+              "Children trace the frame and color the ball.",
+              "Children stand, copy the action, and ask the question in the break.",
+              "Children draw a second toy, then find and trace the toy word."
+            ],
+            "watchFor": [
+              "Children who trace the wrong toy word: point to the picture and ask: \"What is it?\"",
+              "Children who put a full stop at the end: show the question mark on the board."
+            ]
+          },
+          "easier": {
+            "en": "Draw with the child; the child traces the words.",
+            "th": "วาดภาพพร้อมกับเด็ก แล้วให้เด็กลากเส้นตามคำ"
+          },
+          "harder": {
+            "en": "The child traces the frame again on the second line with the word of the second picture: \"Is it a car?\"",
+            "th": "เด็กลากเส้นตามกรอบประโยคอีกครั้งบนบรรทัดที่สอง โดยใช้คำของภาพที่สอง: \"Is it a car?\" (เป็นรถใช่ไหม)"
+          },
+          "group": {
+            "en": "Alone; at the end, the children make pairs, and the partner answers the question about the picture.",
+            "th": "ทำคนเดียว ตอนท้ายให้เด็กจับคู่ และคู่ตอบคำถามเกี่ยวกับภาพ"
+          },
+          "materials": [
+            "student book: writing page",
+            "crayons",
+            "board"
+          ],
+          "th": {
+            "teacherActions": [
+              "ส่วนที่ 1 (5 นาที): เขียน \"Is it a ___?\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และเครื่องหมายคำถาม (question mark) อยู่ที่ไหน",
+              "เด็ก ๆ ลากเส้นตาม \"Is it a ball?\" ในหนังสือ จากนั้นระบายสีลูกบอลที่อยู่เหนือประโยค",
+              "พักยืนขยับตัว (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น",
+              "ครูทำท่าเล่นของเล่น 1 ชิ้นโดยไม่พูด (ตบลูกบอลให้เด้ง ชักว่าว ตีกลอง) ทั้งชั้นถามว่า \"Is it a ___?\" ครูตอบ \"Yes!\" หรือ \"No!\" ทำ 3 รอบ แล้วนั่งลง",
+              "ส่วนที่ 2 (5 นาที): ในช่องที่สอง เด็ก ๆ วาดรถ ว่าว หรือกลอง แล้วหาคำใต้ช่องที่ตรงกับภาพ (car, kite, drum) และลากเส้นตามคำนั้น"
+            ],
+            "teacherLanguage": [
+              "\"ตัวอักษร I ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่เครื่องหมายคำถามที่ท้ายประโยค\"",
+              "\"ลากเส้นตามคำ: Is it a ball? (เป็นลูกบอลใช่ไหม)\"",
+              "\"ระบายสีลูกบอล\"",
+              "\"Stand up! (ยืนขึ้น) Look at me! (ดูครู) ถามว่า: Is it a ...? (เป็น ... ใช่ไหม)\"",
+              "\"ทีนี้วาดรถ ว่าว หรือกลอง หาคำนั้นแล้วลากเส้นตาม\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ลากเส้นตามกรอบประโยค และระบายสีลูกบอล",
+              "เด็ก ๆ ยืน ทำท่าตามครู และถามคำถามในช่วงพัก",
+              "เด็ก ๆ วาดของเล่นชิ้นที่สอง แล้วหาคำศัพท์ชื่อของเล่นและลากเส้นตาม"
+            ],
+            "watchFor": [
+              "เด็กที่ลากเส้นตามคำศัพท์ชื่อของเล่นผิดคำ: ชี้ที่ภาพแล้วถามว่า: \"What is it?\" (นี่คืออะไร)",
+              "เด็กที่ใส่จุด (full stop) ที่ท้ายประโยค: ชี้ให้ดูเครื่องหมายคำถามบนกระดาน"
+            ]
+          }
+        },
+        {
+          "id": "D5",
+          "title": {
+            "en": "Share",
+            "th": "นำเสนอ"
+          },
+          "minutes": 1,
+          "en": {
+            "teacherActions": [
+              "Ask four children to read their page to the class. The class answers each question."
+            ],
+            "teacherLanguage": [
+              "\"Read your page to us. Hold up your book.\""
+            ],
+            "studentActions": [
+              "Four children read \"Is it a ___?\" from their book, and the class answers \"Yes!\" or \"No!\"."
+            ],
+            "watchFor": [
+              "Children who read too quietly: stand next to them and read with them."
+            ]
+          },
+          "easier": {
+            "en": "The child reads with the teacher.",
+            "th": "เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "The child reads both lines and points to the pictures.",
+            "th": "เด็กอ่านทั้ง 2 บรรทัด และชี้ที่ภาพ"
+          },
+          "group": {
+            "en": "Whole class; the class answers each question.",
+            "th": "ทั้งชั้น: ทั้งชั้นตอบคำถามแต่ละข้อ"
+          },
+          "materials": [
+            "student book: writing page"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ให้เด็ก 4 คนอ่านหน้าของตัวเองให้ทั้งชั้นฟัง ทั้งชั้นตอบคำถามแต่ละข้อ"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหน้าของหนูให้เราฟัง ชูหนังสือขึ้น\""
+            ],
+            "studentActions": [
+              "เด็ก 4 คนอ่าน \"Is it a ___?\" จากหนังสือของตัวเอง และทั้งชั้นตอบ \"Yes!\" หรือ \"No!\""
+            ],
+            "watchFor": [
+              "เด็กที่อ่านเบาเกินไป: ยืนข้างเด็กและอ่านพร้อมเด็ก"
+            ]
+          }
+        },
+        {
+          "id": "D6",
+          "title": {
+            "en": "Sing it: song show",
+            "th": "ร้องเพลง: การแสดงร้องเพลง"
+          },
+          "minutes": 0,
+          "en": {
+            "teacherActions": [
+              "In the day 5 opening, the song of the week (item 3) is the song show. The class sings with all the gestures; one table leads.",
+              "If the school allows it, film the song on the class tablet."
+            ],
+            "teacherLanguage": [
+              "\"Table 3, you are the leaders today. Show us the gestures!\"",
+              "\"Show time! Sing it with all the gestures!\""
+            ],
+            "studentActions": [
+              "The leaders do the gestures in front; the class sings and copies."
+            ],
+            "watchFor": [
+              "Leaders who forget a gesture: point to the screen.",
+              "Children who are shy on the film: they can stand in the back row."
+            ]
+          },
+          "easier": {
+            "en": "Sing only the chorus with the gestures.",
+            "th": "ร้องเฉพาะท่อนฮุก (chorus) พร้อมท่าประกอบเพลง"
+          },
+          "harder": {
+            "en": "The leaders sing the verse alone.",
+            "th": "ผู้นำร้องท่อนเวิร์ส (verse) เอง"
+          },
+          "group": {
+            "en": "One table leads each week.",
+            "th": "โต๊ะหนึ่งเป็นผู้นำในแต่ละสัปดาห์"
+          },
+          "materials": [
+            "karaoke videos: \"What Is in the Box?\"",
+            "class tablet"
+          ],
+          "moved": "next-opening",
+          "th": {
+            "teacherActions": [
+              "ในช่วงเปิดคาบของวันที่ 5 เพลงประจำสัปดาห์ (ข้อ 3 ของกิจวัตรเปิดคาบ) เป็นการแสดงร้องเพลง ทั้งชั้นร้องพร้อมทำท่าประกอบเพลงทุกท่า โต๊ะหนึ่งเป็นผู้นำ",
+              "ถ้าโรงเรียนอนุญาต ให้ถ่ายวิดีโอการร้องเพลงด้วยแท็บเล็ตของห้อง"
+            ],
+            "teacherLanguage": [
+              "\"โต๊ะ 3 วันนี้เป็นผู้นำ ทำท่าประกอบเพลงให้เพื่อน ๆ ดู!\"",
+              "\"ถึงเวลาแสดงแล้ว! ร้องพร้อมทำท่าประกอบเพลงทุกท่า!\""
+            ],
+            "studentActions": [
+              "ผู้นำทำท่าประกอบเพลงอยู่ด้านหน้า ทั้งชั้นร้องและทำท่าตาม"
+            ],
+            "watchFor": [
+              "ผู้นำที่ลืมท่า: ชี้ที่จอ",
+              "เด็กที่อายกล้อง: ให้ยืนแถวหลังได้"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "day": 5,
+      "title": {
+        "en": "Play and Check",
+        "th": "เล่นและตรวจสอบ"
+      },
+      "prep": [
+        {
+          "en": "Put the new cards and books of week 7 in the four centers. Make the word cards top, pot, Tom, Mom, on and the tricky word cards from, run, up for the game.",
+          "th": "นำบัตรและหนังสือชุดใหม่ของสัปดาห์ที่ 7 ไปวางที่มุมกิจกรรมทั้ง 4 มุม และทำบัตรคำ top, pot, Tom, Mom, on และบัตรคำที่ต้องจำ from, run, up สำหรับเกม"
+        }
+      ],
+      "steps": [
+        {
+          "id": "E1",
+          "title": {
+            "en": "Centers set-up",
+            "th": "จัดมุมกิจกรรม"
+          },
+          "minutes": 2,
+          "en": {
+            "teacherActions": [
+              "Show the four centers and the group signs. Send each group to its first center.",
+              "Groups 1 and 2 start at the picture sort and the book corner; groups 3 and 4 at the karaoke corner and the letter cards.",
+              "Hold up each sound picture card and say the word with the class: octopus, ox, ostrich, otter. Then hold up pot, mop, and sock: /o/ is in the middle."
+            ],
+            "teacherLanguage": [
+              "\"Group 1, go to the picture sort. Group 2, the book corner.\"",
+              "\"Group 3, the karaoke corner. Group 4, the letter cards.\""
+            ],
+            "studentActions": [
+              "Children go to their center and sit down."
+            ],
+            "watchFor": [
+              "Groups that do not know where to go: point to the group sign at each center."
+            ]
+          },
+          "easier": {
+            "en": "Put a picture of each group on its center.",
+            "th": "ติดภาพของแต่ละกลุ่มไว้ที่มุมกิจกรรมของกลุ่มนั้น"
+          },
+          "harder": {
+            "en": "A group leader shows the center card to the group and does the first turn.",
+            "th": "หัวหน้ากลุ่มให้กลุ่มดูบัตรมุมกิจกรรม และเล่นเป็นคนแรก"
+          },
+          "group": {
+            "en": "Four groups.",
+            "th": "4 กลุ่ม"
+          },
+          "materials": [
+            "center cards",
+            "group signs",
+            "sound picture cards: octopus, ox, ostrich, otter",
+            "picture cards: pot, mop, sock"
+          ],
+          "th": {
+            "teacherActions": [
+              "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
+              "กลุ่ม 1 และ 2 เริ่มที่มุมแยกภาพและมุมหนังสือ กลุ่ม 3 และ 4 เริ่มที่มุมคาราโอเกะและมุมบัตรตัวอักษร",
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: octopus, ox, ostrich, otter จากนั้นชูบัตรภาพ pot, mop และ sock: เสียง /o/ อยู่กลางคำ"
+            ],
+            "teacherLanguage": [
+              "\"กลุ่ม 1 ไปมุมแยกภาพ กลุ่ม 2 ไปที่มุมหนังสือ\"",
+              "\"กลุ่ม 3 ไปที่มุมคาราโอเกะ กลุ่ม 4 ไปมุมบัตรตัวอักษร\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ไปที่มุมกิจกรรมของตัวเองและนั่งลง"
+            ],
+            "watchFor": [
+              "กลุ่มที่ไม่รู้ว่าต้องไปที่ไหน: ชี้ที่ป้ายกลุ่มของแต่ละมุมกิจกรรม"
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "title": {
+            "en": "Centers, rotation 1",
+            "th": "มุมกิจกรรม รอบที่ 1"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups work at their center. Picture sort: sort the picture cards into \"/o/ at the start or in the middle\" and \"no /o/\". Letter cards: build the words \"top\" and \"pot\", and read them. Book corner: read the fourteen books of weeks 1 to 7. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"The Top\"; mark the record sheet."
+            ],
+            "teacherLanguage": [
+              "\"Read the book to me. Finger under the words.\"",
+              "\"Good! Sound it out: /t/ - /o/ - /p/. Top!\""
+            ],
+            "studentActions": [
+              "Children work at the center.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Note the children who guess the words from the picture and do not look at the letters."
+            ]
+          },
+          "easier": {
+            "en": "At the reading-record table, the child reads with the teacher.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านพร้อมครู"
+          },
+          "harder": {
+            "en": "At the reading-record table, the child reads the whole book alone.",
+            "th": "ที่โต๊ะบันทึกการอ่าน เด็กอ่านทั้งเล่มด้วยตัวเอง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "sorting mat: /o/ / no /o/",
+            "sound picture cards: octopus, ox, ostrich, otter",
+            "picture cards: pot, mop, sock",
+            "picture cards: sun, pen, cup",
+            "workmats (class set)",
+            "letter cards (class set): o, t, s, m, p, a, n",
+            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\", \"I Have Two\", \"Sam and Pam\", \"I Can See\", \"Tap, Tap!\", \"Is It a Ball?\", \"The Top\"",
+            "class tablet",
+            "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\", \"This Is My Family\", \"I Have Two\", \"I Can See a Cat\", \"What Is in the Box?\"",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่มีเสียง /o/ ที่ต้นคำหรือกลางคำ และกองที่ไม่มีเสียง /o/ มุมบัตรตัวอักษร: ต่อคำ \"top\" และ \"pot\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 14 เล่มของสัปดาห์ที่ 1 ถึง 7 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"The Top\" แล้วบันทึกในแบบบันทึกผล"
+            ],
+            "teacherLanguage": [
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\"",
+              "\"เก่งมาก! สะกดออกเสียง: /t/ - /o/ - /p/ Top!\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ ทำกิจกรรมที่มุมกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "จดชื่อเด็กที่เดาคำจากภาพ โดยไม่ดูตัวอักษร"
+            ]
+          }
+        },
+        {
+          "id": "E3",
+          "title": {
+            "en": "Centers, rotation 2",
+            "th": "มุมกิจกรรม รอบที่ 2"
+          },
+          "minutes": 7,
+          "en": {
+            "teacherActions": [
+              "Groups change: 1 and 2 go to the letter cards and the karaoke corner; 3 and 4 go to the book corner and the picture sort.",
+              "Listen to two more children at the reading-record table."
+            ],
+            "teacherLanguage": [
+              "\"Change! Group 1, the letter cards. Group 2, the karaoke corner. Group 3, the book corner. Group 4, the picture sort.\"",
+              "\"Read the book to me. Finger under the words.\""
+            ],
+            "studentActions": [
+              "Children change centers and work.",
+              "Two children read to the teacher."
+            ],
+            "watchFor": [
+              "Groups that change slowly: count down from five."
+            ]
+          },
+          "easier": {
+            "en": "Keep the same center for a group that needs more time.",
+            "th": "ให้กลุ่มที่ต้องการเวลามากขึ้นอยู่ที่มุมเดิม"
+          },
+          "harder": {
+            "en": "Groups that finish early read the word wall words to each other.",
+            "th": "กลุ่มที่ทำเสร็จเร็วอ่านคำบนผนังคำศัพท์ให้กันและกันฟัง"
+          },
+          "group": {
+            "en": "Four groups; the teacher with two children.",
+            "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
+          },
+          "materials": [
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "กลุ่มสลับมุม: กลุ่ม 1 และ 2 ไปที่มุมบัตรตัวอักษรและมุมคาราโอเกะ กลุ่ม 3 และ 4 ไปที่มุมหนังสือและมุมแยกภาพ",
+              "ฟังเด็กอีก 2 คนอ่านที่โต๊ะบันทึกการอ่าน"
+            ],
+            "teacherLanguage": [
+              "\"เปลี่ยนมุม! กลุ่ม 1 ไปมุมบัตรตัวอักษร กลุ่ม 2 ไปที่มุมคาราโอเกะ กลุ่ม 3 ไปที่มุมหนังสือ กลุ่ม 4 ไปมุมแยกภาพ\"",
+              "\"อ่านหนังสือให้ครูฟัง วางนิ้วใต้คำ\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ เปลี่ยนมุมกิจกรรมและทำกิจกรรม",
+              "เด็ก 2 คนอ่านให้ครูฟัง"
+            ],
+            "watchFor": [
+              "กลุ่มที่เปลี่ยนมุมช้า: นับถอยหลังจาก 5"
+            ]
+          }
+        },
+        {
+          "id": "E4",
+          "title": {
+            "en": "Game",
+            "th": "เกม"
+          },
+          "minutes": 5,
+          "en": {
+            "teacherActions": [
+              "Play \"Swat the word\": put the word cards top, pot, Tom, Mom, on and the tricky word cards from, run, up on the board.",
+              "Say a word. Two children run to the board. The first child to touch the card reads it."
+            ],
+            "teacherLanguage": [
+              "\"Ready? Run!\"",
+              "\"Touch the word. Read it: run!\"",
+              "\"Next two. Ready?\""
+            ],
+            "studentActions": [
+              "Two children at a time touch the card and read the word.",
+              "The class reads the word with them."
+            ],
+            "watchFor": [
+              "Fast children who always win: ask them to touch with the left hand, or hop to the board.",
+              "Children who touch \"pot\" for \"top\": read both words slowly, sound by sound."
+            ]
+          },
+          "easier": {
+            "en": "Put only four cards on the board: top, pot, run, up.",
+            "th": "ติดบัตรเพียง 4 ใบบนกระดาน: top, pot, run, up"
+          },
+          "harder": {
+            "en": "Say only the first sound, /o/; the child finds the word that starts with /o/.",
+            "th": "พูดเฉพาะเสียงแรก คือ /o/ เด็กหาคำที่ขึ้นต้นด้วย /o/"
+          },
+          "group": {
+            "en": "Two teams; one child from each team at a time.",
+            "th": "2 ทีม ทีมละ 1 คนในแต่ละครั้ง"
+          },
+          "materials": [
+            "word cards: top, pot, Tom, Mom, on",
+            "tricky word cards: from, run, up"
+          ],
+          "th": {
+            "teacherActions": [
+              "เล่นเกม \"Swat the word\": ติดบัตรคำ top, pot, Tom, Mom, on และบัตรคำที่ต้องจำ from, run, up บนกระดาน",
+              "พูดคำ 1 คำ เด็ก 2 คนวิ่งไปที่กระดาน เด็กคนแรกที่แตะบัตรนั้นอ่านคำ"
+            ],
+            "teacherLanguage": [
+              "\"พร้อมไหม? run!\"",
+              "\"แตะคำนั้น อ่าน: run!\"",
+              "\"2 คนต่อไป พร้อมไหม?\""
+            ],
+            "studentActions": [
+              "เด็กครั้งละ 2 คนแตะบัตรและอ่านคำ",
+              "ทั้งชั้นอ่านคำนั้นพร้อมกับเด็ก 2 คนนั้น"
+            ],
+            "watchFor": [
+              "เด็กที่เร็วและชนะทุกครั้ง: ให้แตะด้วยมือซ้าย หรือกระโดดขาเดียวไปที่กระดาน",
+              "เด็กที่แตะ \"pot\" แทน \"top\": อ่านทั้ง 2 คำช้า ๆ ทีละเสียง"
+            ]
+          }
+        },
+        {
+          "id": "E5",
+          "title": {
+            "en": "Check",
+            "th": "ตรวจสอบ"
+          },
+          "minutes": 3,
+          "en": {
+            "teacherActions": [
+              "Children do the check page: in rows 1 to 3, circle the picture that starts with /o/; in rows 4 and 5, circle the word that you say. Then they write the letter o and the word \"top\".",
+              "Collect the books and mark the check."
+            ],
+            "teacherLanguage": [
+              "\"Row 1: octopus, sun, bed. Which one starts with /o/? Circle it.\"",
+              "\"Row 2: cat, ox, fish. Which one starts with /o/? Circle it.\"",
+              "\"Row 3: pen, bus, olive. Which one starts with /o/? Circle it.\"",
+              "\"Row 4. Find the word pot. Circle it.\"",
+              "\"Row 5. Find the word up. Circle it.\"",
+              "\"Now write the letter o. Then write the word top.\""
+            ],
+            "studentActions": [
+              "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter o, and write \"top\"."
+            ],
+            "watchFor": [
+              "Children who circle every picture, or a wrong picture in two rows: mark /o/ as weak on the record sheet; it goes back on the review strip.",
+              "Children who circle a wrong word in row 4 or row 5: mark that word as weak; it goes back on the review strip."
+            ]
+          },
+          "easier": {
+            "en": "Sit next to the child and point to each picture while you say it.",
+            "th": "นั่งข้างเด็ก และชี้แต่ละภาพขณะพูดคำ"
+          },
+          "harder": {
+            "en": "The child writes \"pot\" too.",
+            "th": "เด็กเขียน \"pot\" ด้วย"
+          },
+          "group": {
+            "en": "Alone.",
+            "th": "ทำคนเดียว"
+          },
+          "materials": [
+            "student book: check page",
+            "record sheet"
+          ],
+          "th": {
+            "teacherActions": [
+              "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย /o/ แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร o และคำ \"top\"",
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+            ],
+            "teacherLanguage": [
+              "\"แถว 1: octopus, sun, bed คำไหนขึ้นต้นด้วย /o/? วงกลมไว้\"",
+              "\"แถว 2: cat, ox, fish คำไหนขึ้นต้นด้วย /o/? วงกลมไว้\"",
+              "\"แถว 3: pen, bus, olive คำไหนขึ้นต้นด้วย /o/? วงกลมไว้\"",
+              "\"แถว 4 หาคำว่า pot วงกลมไว้\"",
+              "\"แถว 5 หาคำว่า up วงกลมไว้\"",
+              "\"ทีนี้เขียนตัวอักษร o แล้วเขียนคำ top\""
+            ],
+            "studentActions": [
+              "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร o และเขียน \"top\""
+            ],
+            "watchFor": [
+              "เด็กที่วงกลมทุกภาพ หรือวงกลมภาพผิดใน 2 แถว: บันทึกในแบบบันทึกผลว่าเสียง /o/ ยังไม่แม่น แล้วเสียงนี้จะกลับไปอยู่บนแถบทบทวน",
+              "เด็กที่วงกลมคำผิดในแถว 4 หรือแถว 5: บันทึกว่าคำนั้นยังไม่แม่น แล้วคำนั้นจะกลับไปอยู่บนแถบทบทวน"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "review": [
+    {
+      "day": 1,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "o",
+          "week": 7,
+          "audio": "phonemes/daniel/29-o-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "from",
+          "week": 7
+        },
+        {
+          "kind": "tricky",
+          "text": "run",
+          "week": 7
+        },
+        {
+          "kind": "tricky",
+          "text": "up",
+          "week": 7
+        },
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "o",
+          "week": 7,
+          "audio": "phonemes/daniel/29-o-short.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "from",
+          "week": 7
+        },
+        {
+          "kind": "tricky",
+          "text": "run",
+          "week": 7
+        },
+        {
+          "kind": "tricky",
+          "text": "up",
+          "week": 7
+        },
+        {
+          "kind": "frame",
+          "text": "Is it a ___? Yes/No.",
+          "week": 7
+        },
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "cards": [
+        {
+          "kind": "sound",
+          "text": "t",
+          "week": 6,
+          "audio": "phonemes/daniel/02-t.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "he",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "put",
+          "week": 6
+        },
+        {
+          "kind": "tricky",
+          "text": "see",
+          "week": 6
+        },
+        {
+          "kind": "sound",
+          "text": "s",
+          "week": 5,
+          "audio": "phonemes/daniel/01-s.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "saw",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "off",
+          "week": 5
+        },
+        {
+          "kind": "tricky",
+          "text": "with",
+          "week": 5
+        },
+        {
+          "kind": "sound",
+          "text": "p",
+          "week": 3,
+          "audio": "phonemes/daniel/03-p.mp3"
+        },
+        {
+          "kind": "tricky",
+          "text": "the",
+          "week": 3
+        },
+        {
+          "kind": "tricky",
+          "text": "get",
+          "week": 3
+        },
+        {
+          "kind": "frame",
+          "text": "I can see a ___.",
+          "week": 6
+        }
+      ]
+    }
+  ],
+  "check": {
+    "items": [
+      {
+        "kind": "circle-picture",
+        "sound": "/o/",
+        "pictures": [
+          "octopus",
+          "sun",
+          "bed"
+        ],
+        "answer": "octopus"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/o/",
+        "pictures": [
+          "cat",
+          "ox",
+          "fish"
+        ],
+        "answer": "ox"
+      },
+      {
+        "kind": "circle-picture",
+        "sound": "/o/",
+        "pictures": [
+          "pen",
+          "bus",
+          "olive"
+        ],
+        "answer": "olive"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "top",
+          "pot",
+          "tap"
+        ],
+        "answer": "pot"
+      },
+      {
+        "kind": "circle-word",
+        "words": [
+          "run",
+          "up",
+          "on"
+        ],
+        "answer": "up"
+      },
+      {
+        "kind": "write-letter",
+        "letter": "o"
+      },
+      {
+        "kind": "write-word",
+        "word": "top"
+      }
+    ]
+  },
+  "home": {
+    "words": [
+      "octopus",
+      "ox",
+      "ostrich"
+    ],
+    "line": {
+      "en": "This week, your child learns the sound /o/, as in \"octopus\". It is short, with the mouth wide open, close to the Thai vowel เอาะ, and it is not the letter name \"oh\". Your child also learns to ask \"Is it a ___?\" in English and to answer \"Yes!\" or \"No!\", for example \"Is it a ball? No!\"",
+      "th": "สัปดาห์นี้ บุตรหลานเรียนเสียง /o/ เหมือนในคำว่า \"octopus\" เป็นเสียงสั้นที่อ้าปากกว้าง ใกล้กับเสียงสระ เอาะ ในภาษาไทย และไม่ใช่ชื่อตัวอักษร \"oh\" (โอ) และบุตรหลานยังได้ฝึกถามเป็นภาษาอังกฤษว่า \"Is it a ___?\" (เป็น ___ ใช่ไหม) และตอบว่า \"Yes!\" (ใช่) หรือ \"No!\" (ไม่ใช่) เช่น \"Is it a ball? No!\" (เป็นลูกบอลใช่ไหม ไม่ใช่!)"
+    },
+    "activity": {
+      "en": "Put a toy or a small thing in a bag or under a blanket. Your child asks in English: \"Is it a ball? Is it a car?\" Say \"Yes!\" or \"No!\" until your child finds the answer. Then your child hides a toy, and you ask. Say \"/o/, /o/, octopus\" and wave your arms like an octopus.",
+      "th": "ใส่ของเล่นหรือของชิ้นเล็ก 1 ชิ้นไว้ในถุงหรือใต้ผ้าห่ม ให้บุตรหลานถามเป็นภาษาอังกฤษว่า \"Is it a ball? Is it a car?\" (เป็นลูกบอลใช่ไหม เป็นรถใช่ไหม) ตอบว่า \"Yes!\" (ใช่) หรือ \"No!\" (ไม่ใช่) จนกว่าบุตรหลานจะทายถูก จากนั้นให้บุตรหลานซ่อนของเล่น และผู้ปกครองเป็นฝ่ายถาม พูด \"/o/, /o/, octopus\" และโบกแขนไปมาเหมือนปลาหมึกยักษ์"
+    },
+    "songUrl": "/th/st/2/7?part=song",
+    "readAlongUrl": "/th/st/2/7?part=book"
+  },
+  "tags": {
+    "graphVersion": "phonics-v1",
+    "taught": [
+      "english.phonics.gpc.o.short-o",
+      "english.phonics.phoneme.short-o",
+      "english.phonics.letter.o.sound",
+      "english.phonics.letter.o.name",
+      "english.phonics.letter.o.form-lower",
+      "english.phonics.tricky.from",
+      "english.phonics.tricky.run",
+      "english.phonics.tricky.up",
+      "english.phonics.pattern.cvc-short-o"
+    ],
+    "reviewed": [
+      "english.phonics.gpc.t.t",
+      "english.phonics.gpc.s.s",
+      "english.phonics.gpc.p.p",
+      "english.phonics.gpc.m.m",
+      "english.phonics.gpc.n.n",
+      "english.phonics.gpc.a.short-a",
+      "english.phonics.tricky.he",
+      "english.phonics.tricky.put",
+      "english.phonics.tricky.see",
+      "english.phonics.tricky.saw",
+      "english.phonics.tricky.off",
+      "english.phonics.tricky.with",
+      "english.phonics.tricky.the",
+      "english.phonics.tricky.get",
+      "english.phonics.tricky.a",
+      "english.phonics.tricky.can",
+      "english.phonics.tricky.is",
+      "english.phonics.tricky.on",
+      "english.phonics.tricky.and",
+      "english.phonics.tricky.i",
+      "english.phonics.tricky.in",
+      "english.phonics.tricky.this",
+      "english.phonics.pattern.cvc-short-a",
+      "english.phonics.pa.initial-sound.identify",
+      "english.phonics.pa.medial-vowel.identify",
+      "english.phonics.pa.phoneme.blend-2-3"
+    ]
+  }
+}
