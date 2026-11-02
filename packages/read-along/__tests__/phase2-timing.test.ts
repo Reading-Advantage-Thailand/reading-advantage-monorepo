@@ -126,31 +126,20 @@ function readWeek(file: string): {
 }
 
 /**
- * Groups the sentences of a book by their page.
- * @param sentences The sentences of the book.
- * @returns The sentences of each page.
- */
-function sentencesByPage(sentences: SentenceTiming[]): Map<number, SentenceTiming[]> {
-  const pages = new Map<number, SentenceTiming[]>();
-  for (const sentence of sentences) {
-    const page = sentence.page ?? 1;
-    const group = pages.get(page) ?? [];
-    group.push(sentence);
-    pages.set(page, group);
-  }
-  return pages;
-}
-
-/**
  * Finds the first shipped page with two or more sentences.
  * @returns The page number, its sentences, and the week file.
  */
-function findTwoSentencePage(): { file: string; page: number; sentences: SentenceTiming[] } {
+async function findTwoSentencePage(): Promise<{ file: string; page: number; sentences: SentenceTiming[] }> {
+  const sentencesOfPage = await loadExport<
+    (sentences: SentenceTiming[], page: number) => SentenceTiming[]
+  >("sentencesOfPage");
   for (const file of WEEK_FILES) {
     const week = readWeek(file);
     for (const book of week.books) {
       const sentences = book.audio?.sentences ?? [];
-      for (const [page, group] of sentencesByPage(sentences)) {
+      const pages = new Set(sentences.map((sentence) => sentence.page ?? 1));
+      for (const page of pages) {
+        const group = sentencesOfPage(sentences, page);
         if (group.length >= 2) return { file, page, sentences: group };
       }
     }
@@ -159,15 +148,15 @@ function findTwoSentencePage(): { file: string; page: number; sentences: Sentenc
 }
 
 describe("AC-6.1 every sentence of a shipped page seeks and lights up", () => {
-  it("finds a shipped page with two sentences", () => {
+  it("finds a shipped page with two sentences", async () => {
     const weeks = WEEK_FILES.map((file) => readWeek(file));
     expect(weeks.length, "The test must read eight shipped weeks (A4)").toBe(8);
-    const found = findTwoSentencePage();
+    const found = await findTwoSentencePage();
     expect(found.sentences.length, "The shipped page holds no two sentences").toBeGreaterThan(1);
   });
 
   it("seeks to each sentence of the page and lights it up", async () => {
-    const found = findTwoSentencePage();
+    const found = await findTwoSentencePage();
     const seekTimeForSentence = await loadExport<(sentence: SentenceTiming) => number>(
       "seekTimeForSentence",
     );
@@ -207,7 +196,7 @@ describe("AC-6.1 every sentence of a shipped page seeks and lights up", () => {
 
 describe("rule 10.2 the bounds of a word cut", () => {
   it("starts 30 ms before the word and ends at its measured end", async () => {
-    const found = findTwoSentencePage();
+    const found = await findTwoSentencePage();
     const wordCutBounds = await loadExport<(word: WordTiming) => CutBounds>("wordCutBounds");
     let checked = 0;
     for (const sentence of found.sentences) {

@@ -64,3 +64,16 @@ export function seekTimeForWord(sentence: ReadAlongSentence, audioWordIndex: num
   const word = sentence.words[audioWordIndex];
   return word ? Math.max(0, word.start - SEEK_EPSILON) : seekTimeForSentence(sentence);
 }
+
+/**
+ * Gives every sentence of one page, in reading order (rule 10.3).
+ *
+ * The player lights every sentence of the page, so the page group, not the book list, drives the
+ * read-along. A sentence without a page number belongs to page 1.
+ * @param sentences The sentences of the book audio, in order.
+ * @param page The page number.
+ * @returns The sentences of the page, in order.
+ */
+export function sentencesOfPage<T extends { page?: number }>(sentences: T[], page: number): T[] {
+  return sentences.filter((sentence) => (sentence.page ?? 1) === page);
+}
