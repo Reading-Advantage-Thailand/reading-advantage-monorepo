@@ -20,6 +20,7 @@ import { fileURLToPath } from "node:url";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
+  findLeftovers,
   receiveMain,
   receiveWeek,
   receiveWeeks,
@@ -434,9 +435,9 @@ describe("F32 and F41 the rollback tries every step", () => {
           if (renames === 3) throw new Error("rename failed");
           renameSync(from, to);
         },
-        remove: (path, recursive) => {
+        remove: (path) => {
           if (/d\.json\.tmp-/.test(path)) throw new Error("remove failed");
-          rmSync(path, { force: true, recursive });
+          rmSync(path, { force: true });
         },
       });
     } catch (caught) {
@@ -451,7 +452,7 @@ describe("F32 and F41 the rollback tries every step", () => {
     expect(existsSync(join(folder, "e.json.tmp-x"))).toBe(false);
   });
 
-  it("removes a created folder even when an earlier cleanup step fails", () => {
+  it("keeps a created folder that still holds a file the run could not remove, and names it", () => {
     const folder = join(work, "f32-created");
     const target = join(folder, "l2", "w01.json");
     let error: unknown;
@@ -460,15 +461,72 @@ describe("F32 and F41 the rollback tries every step", () => {
         rename: () => {
           throw new Error("rename failed");
         },
-        remove: (path, recursive) => {
+        remove: (path) => {
           if (/w01\.json\.tmp-/.test(path)) throw new Error("remove failed");
-          rmSync(path, { force: true, recursive });
+          rmSync(path, { force: true });
         },
       });
     } catch (caught) {
       error = caught;
     }
     expect(error).toBeInstanceOf(RollbackIncompleteError);
+    expect((error as Error).message).toMatch(/w01\.json\.tmp-\w+ is not removed/);
+    expect((error as Error).message).toContain(`${join(folder, "l2")} is not removed`);
+  });
+});
+
+describe("F56 the cleanup removes only what the run owns", () => {
+  it("keeps a foreign file that stands at the stage name inside a folder the run created", () => {
+    const folder = join(work, "f56-collision");
+    const target = join(folder, "l2", "w01.json");
+    let foreign = "";
+    let error: unknown;
+    try {
+      writeStaged([{ path: target, text: "new\n" }], {
+        write: (path, data, flag) => {
+          foreign = path;
+          writeFileSync(path, "foreign\n");
+          writeFileSync(path, data, { flag });
+        },
+      });
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(RollbackIncompleteError);
+    expect((error as Error).message).toMatch(/EEXIST/);
+    expect((error as Error).message).toContain(`${join(folder, "l2")} is not removed`);
+    expect(readFileSync(foreign, "utf8")).toBe("foreign\n");
+    expect(existsSync(target)).toBe(false);
+  });
+
+  it("keeps a foreign file that appears in a created folder during the run, and removes the rest", () => {
+    const folder = join(work, "f56-foreign");
+    const target = join(folder, "l2", "w01.json");
+    let error: unknown;
+    try {
+      writeStaged([{ path: target, text: "new\n" }], {
+        rename: () => {
+          writeFileSync(join(folder, "l2", "notes.txt"), "mine\n");
+          throw new Error("rename failed");
+        },
+      });
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(RollbackIncompleteError);
+    expect(readFileSync(join(folder, "l2", "notes.txt"), "utf8")).toBe("mine\n");
+    expect([...snapshot(folder).keys()]).toEqual(["/l2/notes.txt"]);
+  });
+
+  it("removes a created folder chain when the run owns everything in it", () => {
+    const folder = join(work, "f56-chain");
+    expect(() =>
+      writeStaged([{ path: join(folder, "a", "b", "w.json"), text: "new\n" }], {
+        rename: () => {
+          throw new Error("rename failed");
+        },
+      }),
+    ).toThrow(/^rename failed$/);
     expect(existsSync(folder)).toBe(false);
   });
 });
@@ -530,6 +588,48 @@ describe("F50 and F52 the summary and the help", () => {
     expect(receiveMain(["--help"], root)).toBe(0);
     const text = log.mock.calls.map((call) => String(call[0])).join("\n");
     for (const word of ["--commit", "--level", "--weeks", "--source", "64"]) expect(text).toContain(word);
+    expect(text).toMatch(/not fully restored/);
+    expect(text).toMatch(/full commit/);
     expect(snapshot(join(root, "apps/storytime/content")).size).toBe(0);
+  });
+});
+
+describe("F57 a leftover recovery file stops the next run", () => {
+  it("finds .tmp- and .orig- files by exact path", () => {
+    const root = freshRoot("f57-find");
+    const content = join(root, "apps/storytime/content");
+    mkdirSync(join(content, "l2"), { recursive: true });
+    writeFileSync(join(content, "l2", "w05.json.orig-0123456789ab"), "x");
+    writeFileSync(join(content, "l2", "w05.json.tmp-0123456789ab"), "x");
+    writeFileSync(join(content, "l2", "w05.json"), "x");
+    expect(findLeftovers(content).sort()).toEqual([
+      join(content, "l2", "w05.json.orig-0123456789ab"),
+      join(content, "l2", "w05.json.tmp-0123456789ab"),
+    ]);
+  });
+
+  it("exits 1 before any write, names each leftover, and points to the runbook", () => {
+    const root = freshRoot("f57-run");
+    expect(run(root, "--commit", baseCommit)).toBe(0);
+    const content = join(root, "apps/storytime/content");
+    const orig = join(content, "l2", "w05.json.orig-0123456789ab");
+    const tmp = join(content, "l2", "w01.json.tmp-ba9876543210");
+    writeFileSync(orig, "only copy\n");
+    writeFileSync(tmp, "half\n");
+    const before = snapshot(content);
+    vi.spyOn(console, "log").mockImplementation(() => undefined);
+    const errors = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const next = commitWeeks();
+    expect(receiveMain(["--source", source, "--commit", next], root)).toBe(1);
+    const text = errors.mock.calls.map((call) => String(call[0])).join("\n");
+    expect(text).toContain(orig);
+    expect(text).toContain(tmp);
+    expect(text).toMatch(/storytime-app-week-sync\.md/);
+    const after = snapshot(content);
+    expect([...after.keys()].sort()).toEqual([...before.keys()].sort());
+    for (const [path, value] of before) expect(after.get(path), path).toBe(value);
+    rmSync(orig);
+    rmSync(tmp);
+    expect(run(root, "--commit", next)).toBe(0);
   });
 });

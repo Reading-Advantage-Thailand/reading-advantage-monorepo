@@ -14,7 +14,16 @@
  */
 import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  rmdirSync,
+  writeFileSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -348,13 +357,17 @@ export interface StagedOps {
   rename: (from: string, to: string) => void;
   /** Writes a file; the flag `wx` fails when the file exists. */
   write: (path: string, data: string | Buffer, flag: "w" | "wx") => void;
-  remove: (path: string, recursive: boolean) => void;
+  /** Removes one file; a missing file is not an error. */
+  remove: (path: string) => void;
+  /** Removes one folder only when it is empty. */
+  removeFolder: (path: string) => void;
 }
 
 const defaultOps: StagedOps = {
   rename: renameSync,
   write: (path, data, flag) => writeFileSync(path, data, { flag }),
-  remove: (path, recursive) => rmSync(path, { force: true, recursive }),
+  remove: (path) => rmSync(path, { force: true }),
+  removeFolder: (path) => rmdirSync(path),
 };
 
 /** The rollback of a failed write did not finish; the message names what is still wrong. */
@@ -389,8 +402,10 @@ function suffix(): string {
  * It reads the original bytes of each target, writes every new text to an exclusive file with a
  * random name in the same folder, and then renames the stage files onto the targets. On any
  * error it tries every restore step and every cleanup step on its own: it puts the original bytes
- * back, deletes the new files, the stage files, and the folders it created. It keeps the first
- * error. If an original cannot be put back, it saves a copy next to the target and names both.
+ * back, deletes the new files and the stage files, and removes the folders it created. It removes
+ * a created folder only when the folder is empty, so a file that the run does not own survives
+ * (Review A F56); a folder that stays is named. It keeps the first error. If an original cannot be
+ * put back, it saves a copy next to the target and names both.
  * @param files The files to write; the last file is written last.
  * @param overrides File operations to replace; a test uses this to make a step fail.
  * @throws The first error when the rollback finished, or a `RollbackIncompleteError`.
@@ -399,13 +414,17 @@ export function writeStaged(files: StagedFile[], overrides: Partial<StagedOps> =
   const ops = { ...defaultOps, ...overrides };
   const originals = new Map<string, Buffer | null>();
   const stages: string[] = [];
-  const created: string[] = [];
+  const created = new Set<string>();
   const replaced: string[] = [];
   try {
     for (const { path } of files) originals.set(path, existsSync(path) ? readFileSync(path) : null);
     for (const { path, text } of files) {
-      const folder = mkdirSync(dirname(path), { recursive: true });
-      if (folder) created.push(folder);
+      const top = mkdirSync(dirname(path), { recursive: true });
+      // `top` is the first folder that this call created; every folder from there down is new.
+      for (let folder = dirname(path); top; folder = dirname(folder)) {
+        created.add(folder);
+        if (folder === top || dirname(folder) === folder) break;
+      }
       const stage = `${path}.tmp-${suffix()}`;
       try {
         ops.write(stage, text, "wx");
@@ -426,7 +445,7 @@ export function writeStaged(files: StagedFile[], overrides: Partial<StagedOps> =
       const original = originals.get(path) ?? null;
       try {
         if (original) ops.write(path, original, "w");
-        else ops.remove(path, false);
+        else ops.remove(path);
       } catch (error) {
         let note = "its new text stays";
         if (original) {
@@ -443,14 +462,14 @@ export function writeStaged(files: StagedFile[], overrides: Partial<StagedOps> =
     }
     for (const stage of stages) {
       try {
-        ops.remove(stage, false);
+        ops.remove(stage);
       } catch (error) {
         problems.push(`${stage} is not removed (${(error as Error).message})`);
       }
     }
-    for (const folder of created) {
+    for (const folder of [...created].sort((a, b) => b.length - a.length)) {
       try {
-        ops.remove(folder, true);
+        ops.removeFolder(folder);
       } catch (error) {
         problems.push(`${folder} is not removed (${(error as Error).message})`);
       }
@@ -460,15 +479,37 @@ export function writeStaged(files: StagedFile[], overrides: Partial<StagedOps> =
   }
 }
 
+/** The name of a stage file or a recovery copy that a failed run can leave. */
+const LEFTOVER_NAME = /\.(tmp|orig)-\w+$/;
+
+/**
+ * Lists the stage files and recovery copies that a failed run left in a folder (Review A F57).
+ * @param directory The content folder.
+ * @returns The exact paths, in folder order.
+ */
+export function findLeftovers(directory: string): string[] {
+  const found: string[] = [];
+  if (!existsSync(directory)) return found;
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = resolve(directory, entry.name);
+    if (entry.isDirectory()) found.push(...findLeftovers(path));
+    else if (LEFTOVER_NAME.test(entry.name)) found.push(path);
+  }
+  return found;
+}
+
 /** The help text of `--help`. */
 const USAGE = [
   "Usage: node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit <sha> [options]",
   "  --commit <sha>   The handed-off Workbooks commit, 7 to 40 lower-case hexadecimal digits (required).",
+  "                   The receiver records the full commit in source.json.",
   "  --level <n>      The Storytime level, 1 to 4 (default 2).",
   "  --weeks <list>   Week numbers 1 to 32, for example 1-8 or 1,3,5-7 (default 1-8).",
   "  --source <dir>   The Workbooks repository (default $WORKBOOKS_DIR or ~/Desktop/Workbooks).",
   "  --help           Print this text and exit 0.",
-  "Exit codes: 0 success; 64 wrong request, nothing changed; 1 other failure, content folder restored.",
+  "Exit codes: 0 success; 64 wrong request, nothing changed; 1 other failure.",
+  "  After a code 1 the content folder is restored, unless the message says it is not fully restored.",
+  "  A leftover .tmp- or .orig- file in the content folder stops a run with code 1; see the runbook.",
 ].join("\n");
 
 /** The repository root that holds `apps/storytime`, found from this file. */
@@ -523,6 +564,18 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
   }
   const contentDirectory = resolve(root, "apps/storytime/content");
   const sourcePath = resolve(contentDirectory, "source.json");
+  const leftovers = findLeftovers(contentDirectory);
+  if (leftovers.length > 0) {
+    console.error(
+      [
+        `The content folder holds ${leftovers.length} leftover file(s) from a failed run:`,
+        ...leftovers.map((path) => `  ${path}`),
+        "Nothing was read or written. A .orig- file can hold the only copy of an original.",
+        'Follow "Recover from a failed run" in docs/runbooks/storytime-app-week-sync.md, then run again.',
+      ].join("\n"),
+    );
+    return 1;
+  }
 
   const sources: WeekSourceFile[] = [];
   for (const week of options.weeks) {
