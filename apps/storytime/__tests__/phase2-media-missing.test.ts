@@ -83,7 +83,9 @@ describe("Review A F2 the page pictures without a file are missing items", () =>
     const receiveWeek = await loadReceiveWeek();
     const week = readWeek("w01.json");
     const result = receiveWeek(week);
-    const missing = result.media.filter((item) => item.missing !== undefined);
+    const missing = result.media.filter(
+      (item) => item.missing !== undefined && item.kind === "book-page-picture",
+    );
     const expected = pagesWithImageNoFile(week);
     expect(
       missing.length,
@@ -117,5 +119,46 @@ describe("Review A F2 the page pictures without a file are missing items", () =>
     const item = result.media.find((entry) => entry.file === "l2/media/w01/pages/1.jpg");
     expect(item, "The page picture with a file is not in the media list").toBeDefined();
     expect(item!.missing, "The page picture with a file is marked missing").toBeUndefined();
+  });
+});
+
+describe("Round 6 F9 and F27 the missing list covers every picture entry", () => {
+  it("lists a cover and a family-word picture with an image entry and no file as missing", async () => {
+    const receiveWeek = await loadReceiveWeek();
+    const week = readWeek("w01.json") as unknown as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    week.books[0].cover = { prompt: "a cover" };
+    week.focus.family = { words: [{ word: "tap", image: { prompt: "a tap" } }], max: 8 };
+    const media = receiveWeek(week).media;
+    const cover = media.find((item) => item.kind === "book-cover");
+    expect(cover?.missing, "The cover without a file is not listed as missing").toMatch(/cover of the .+ book/);
+    expect(cover?.file).toBe("books.0.cover");
+    const family = media.find((item) => item.kind === "family-word-picture");
+    expect(family?.missing, "The family picture without a file is not listed as missing").toMatch(/tap/);
+    expect(family?.file).toBe("focus.family.words.0.image");
+  });
+
+  it("lists a cover and a family-word picture with a file as normal items", async () => {
+    const receiveWeek = await loadReceiveWeek();
+    const week = readWeek("w01.json") as unknown as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    week.books[0].cover = { file: "covers/one.png" };
+    week.focus.family = { words: [{ word: "tap", image: { file: "words/tap.png" } }], max: 8 };
+    const media = receiveWeek(week).media;
+    for (const file of ["covers/one.png", "words/tap.png"]) {
+      const item = media.find((entry) => entry.file === file);
+      expect(item, `${file} is not in the media list`).toBeDefined();
+      expect(item!.missing).toBeUndefined();
+    }
+  });
+
+  it("keeps a missing picture when a real file has the name of its field path (F27)", async () => {
+    const receiveWeek = await loadReceiveWeek();
+    const week = readWeek("w01.json") as unknown as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    week.books[0].cover = { file: "books.0.pages.0.image" };
+    week.books[0].pages[0].image = { prompt: "page one" };
+    const media = receiveWeek(week).media;
+    const same = media.filter((item) => item.file === "books.0.pages.0.image");
+    expect(same.map((item) => item.missing === undefined)).toEqual(expect.arrayContaining([true, false]));
+    expect(same.find((item) => item.missing)?.kind).toBe("book-page-picture");
+    expect(same.find((item) => !item.missing)?.kind).toBe("book-cover");
   });
 });

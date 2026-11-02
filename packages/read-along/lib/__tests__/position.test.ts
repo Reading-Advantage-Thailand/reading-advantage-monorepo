@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { ReadAlongSentence } from "../align";
 import { SEEK_EPSILON } from "../position";
-import { findPosition, NO_POSITION, seekTimeForSentence, seekTimeForWord } from "../position";
+import {
+  findPosition,
+  NO_POSITION,
+  seekTimeForSentence,
+  seekTimeForWord,
+  sentencesOfPage,
+} from "../position";
 
 const sentences: ReadAlongSentence[] = [
   {
@@ -104,5 +110,28 @@ describe("seek times", () => {
 
   it("seeks to the sentence start when the word index is -1", () => {
     expect(seekTimeForWord(sentences[0], -1)).toBeCloseTo(1 - SEEK_EPSILON);
+  });
+});
+
+describe("sentencesOfPage", () => {
+  const paged = [
+    { sentence: "One.", page: 1 },
+    { sentence: "Two.", page: 1 },
+    { sentence: "Three.", page: 2 },
+    { sentence: "Four." },
+  ];
+
+  it("keeps the sentences of the page in order and drops the sentences of other pages", () => {
+    expect(sentencesOfPage(paged, 2).map((entry) => entry.sentence)).toEqual(["Three."]);
+    expect(sentencesOfPage(paged, 1).map((entry) => entry.sentence)).toEqual(["One.", "Two.", "Four."]);
+  });
+
+  it("gives a sentence without a page to page 1", () => {
+    expect(sentencesOfPage([{ sentence: "Loose." }], 1)).toHaveLength(1);
+    expect(sentencesOfPage([{ sentence: "Loose." }], 2)).toHaveLength(0);
+  });
+
+  it("gives nothing for a page that has no sentence", () => {
+    expect(sentencesOfPage(paged, 3)).toEqual([]);
   });
 });

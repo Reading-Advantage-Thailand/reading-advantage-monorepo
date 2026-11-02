@@ -5,27 +5,39 @@
  * (`~/Desktop/Workbooks/dashboard/lib/storytime/schema.ts`) for the fields that the app reads.
  * Every object passes unknown keys through, because Workbooks owns the schema and the app must
  * accept a field that a later phase does not read yet. A published week needs one book of each
- * kind and a picture on every page. A wrong version, a time out of order, and a media path that
- * leaves the content folder fail with their field path.
+ * kind and an image entry on every page; the picture file may follow later. A wrong version, a
+ * time out of order, a key that does not match the level and week, and a media path that leaves
+ * the content folder fail with their field path.
  *
  * The print part, the approvals, and the database stamps stay `unknown`: production owns them and
  * the app never reads them. Tighten them only when an app page reads them.
  */
 import { z } from "zod";
 
+/** The longest media path that the contract accepts. */
+const MEDIA_PATH_MAX = 200;
+
 /**
  * A media path relative to the Storytime content folder.
  *
- * The path becomes a file path in a later phase, so an absolute path and a parent segment fail.
+ * The path becomes a file path or a URL in a later phase, so it is an allowlist: letters, digits,
+ * dot, dash, and underscore in segments that a slash separates. A URL, a drive, an absolute path,
+ * a backslash, a control byte, an empty segment, a `.` or `..` segment, and a long name fail.
  */
 const mediaPath = z
   .string()
   .min(1)
-  .refine((path) => !path.startsWith("/") && !path.includes("\\"), {
-    message: "a media path stays inside the content folder",
+  .refine((path) => path.length <= MEDIA_PATH_MAX, {
+    message: `a media path holds at most ${MEDIA_PATH_MAX} characters`,
+  })
+  .refine((path) => /^[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*$/.test(path), {
+    message: "a media path holds letters, digits, dot, dash, underscore, and slash between names",
   })
   .refine((path) => !path.split("/").includes(".."), {
     message: "a media path holds no parent segment",
+  })
+  .refine((path) => !path.split("/").includes("."), {
+    message: "a media path holds no current-directory segment",
   });
 
 /** English text with its Thai. An empty Thai string means "not yet". */
@@ -51,8 +63,8 @@ export const imageSchema = z
 export const wordTimingSchema = z
   .object({
     word: z.string(),
-    start: z.number().min(0),
-    end: z.number().min(0),
+    start: z.number().min(0).finite(),
+    end: z.number().min(0).finite(),
   })
   .passthrough();
 
@@ -60,8 +72,8 @@ export const wordTimingSchema = z
 export const sentenceTimepointSchema = z
   .object({
     sentence: z.string(),
-    startTime: z.number().min(0),
-    endTime: z.number().min(0),
+    startTime: z.number().min(0).finite(),
+    endTime: z.number().min(0).finite(),
     words: z.array(wordTimingSchema).default([]),
     page: z.number().int().min(1).optional(),
   })
@@ -156,7 +168,7 @@ export const focusSchema = z
 export const openingSchema = z
   .object({
     pa: z.array(biText).length(5),
-    audio: z.array(z.array(z.string().min(1))).length(5).optional(),
+    audio: z.array(z.array(mediaPath)).length(5).optional(),
   })
   .passthrough();
 
@@ -371,6 +383,64 @@ function checkTiming(
   });
 }
 
+/** The seconds that a word may reach past the time range of its sentence (rounding in the timing). */
+const WORD_RANGE_SLACK_SECONDS = 0.001;
+
+/**
+ * Reports the timings that the player cannot follow: a sentence that starts before the sentence
+ * before it, a word outside the time range of its sentence, and a page beyond the pages of the book.
+ * @param sentences The sentence timings of one audio.
+ * @param path The field path of the timings.
+ * @param ctx The refinement context.
+ * @param pageCount The number of pages of the book; absent for a song.
+ */
+function checkPlayerOrder(
+  sentences: Array<{
+    startTime: number;
+    endTime: number;
+    page?: number;
+    words: Array<{ start: number; end: number }>;
+  }>,
+  path: Array<string | number>,
+  ctx: z.RefinementCtx,
+  pageCount?: number,
+): void {
+  let previousStart = 0;
+  sentences.forEach((sentence, sentenceIndex) => {
+    if (sentence.startTime < previousStart) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [...path, sentenceIndex, "startTime"],
+        message: "the sentence starts before the sentence before it",
+      });
+    }
+    previousStart = Math.max(previousStart, sentence.startTime);
+    if (pageCount !== undefined && sentence.page !== undefined && sentence.page > pageCount) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [...path, sentenceIndex, "page"],
+        message: `the page ${sentence.page} is beyond the ${pageCount} pages of the book`,
+      });
+    }
+    sentence.words.forEach((word, wordIndex) => {
+      if (word.start < sentence.startTime - WORD_RANGE_SLACK_SECONDS) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [...path, sentenceIndex, "words", wordIndex, "start"],
+          message: "the word starts before its sentence",
+        });
+      }
+      if (word.end > sentence.endTime + WORD_RANGE_SLACK_SECONDS) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [...path, sentenceIndex, "words", wordIndex, "end"],
+          message: "the word ends after its sentence",
+        });
+      }
+    });
+  });
+}
+
 /**
  * Applies the rules that a published week must meet, and the time order that every week must meet.
  * @param week The parsed week.
@@ -382,7 +452,21 @@ function checkWeek(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): 
     checkTiming(book.audio.slowSentences, ["books", bookIndex, "audio", "slowSentences"], ctx);
   });
   if (week.song) checkTiming(week.song.times, ["song", "times"], ctx);
+  const key = `st${week.meta.level}/${week.meta.week}`;
+  if (week.meta.key !== key) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["meta", "key"],
+      message: `the key ${week.meta.key} does not match the level and week; it must be ${key}`,
+    });
+  }
   if (week.meta.status !== "published") return;
+  week.books.forEach((book, bookIndex) => {
+    const pageCount = book.pages.length;
+    checkPlayerOrder(book.audio.sentences, ["books", bookIndex, "audio", "sentences"], ctx, pageCount);
+    checkPlayerOrder(book.audio.slowSentences, ["books", bookIndex, "audio", "slowSentences"], ctx, pageCount);
+  });
+  if (week.song) checkPlayerOrder(week.song.times, ["song", "times"], ctx);
   for (const kind of PUBLISHED_BOOK_KINDS) {
     const count = week.books.filter((book) => book.kind === kind).length;
     if (count !== 1) {

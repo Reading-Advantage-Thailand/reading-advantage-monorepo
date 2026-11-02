@@ -3,7 +3,8 @@
  *
  * It reads the Workbooks week files at a handed-off commit, resolves the commit to the full id,
  * validates each week with the app contract, and writes the week to
- * `apps/storytime/content/l<level>/w<nn>.json`. It writes the
+ * `apps/storytime/content/l<level>/w<nn>.json`. It validates every requested week before it writes
+ * the first file, and a week must name the level and week that the run requested. It writes the
  * source text unchanged, so a second run of the same commit makes no difference. It never changes
  * `meta.status`, because approval lives in the source repository (generation rule 12.1). It lists
  * every media file that each week names, with its kind and the generation rule that checks it.
@@ -11,7 +12,7 @@
  * The runbook `docs/runbooks/storytime-app-week-sync.md` records the command.
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -52,44 +53,64 @@ export function weekPath(level: number, week: number): string {
  * Lists the media files that a week names.
  *
  * The app never invents a file name: it lists the files that the week holds. A picture without a
- * file is a picture that production has not made yet, and the week still parses. A page picture
- * with an image entry and no file is listed as a missing item, with its book kind and page number
- * (Review A F2); its `file` holds the field path of the image inside the week.
+ * file is a picture that production has not made yet, and the week still parses. A page picture,
+ * a cover, a family-word picture, or a song-line picture with an image entry and no file is listed
+ * as a missing item (Review A F2 and F9); its `file` holds the field path of the image inside the
+ * week and its `missing` text names the place. Files and missing items live in separate maps, so a
+ * file named like a field path cannot hide a missing item.
  * @param week The parsed week.
- * @returns One entry per file, with its kind and its rule; a repeated file counts once.
+ * @returns One entry per file, then one entry per missing picture; a repeated file counts once.
  */
 export function mediaOf(week: StorytimeWeek): WeekMedia[] {
-  const media = new Map<string, WeekMedia>();
+  const files = new Map<string, WeekMedia>();
+  const missing = new Map<string, WeekMedia>();
   const add = (file: string | undefined, kind: string, rule: string): void => {
-    if (!file || media.has(file)) return;
-    media.set(file, { file, kind, rule });
+    if (!file || files.has(file)) return;
+    files.set(file, { file, kind, rule });
+  };
+  const picture = (
+    image: { file?: string } | undefined,
+    field: string,
+    place: string,
+    kind: string,
+    rule: string,
+  ): void => {
+    if (!image) return;
+    if (image.file) add(image.file, kind, rule);
+    else missing.set(field, { file: field, kind, rule, missing: place });
   };
 
   week.books.forEach((book, bookIndex) => {
     add(book.audio.file, "book-audio", MEDIA_RULES.bookAudio);
     add(book.audio.slowFile, "book-audio-slow", MEDIA_RULES.bookAudio);
-    add(book.cover?.file, "book-cover", MEDIA_RULES.bookPicture);
+    picture(
+      book.cover,
+      `books.${bookIndex}.cover`,
+      `the cover of the ${book.kind} book`,
+      "book-cover",
+      MEDIA_RULES.bookPicture,
+    );
     book.pages.forEach((page, pageIndex) => {
-      if (page.image?.file) {
-        add(page.image.file, "book-page-picture", MEDIA_RULES.bookPicture);
-      } else if (page.image) {
-        const field = `books.${bookIndex}.pages.${pageIndex}.image`;
-        if (!media.has(field)) {
-          media.set(field, {
-            file: field,
-            kind: "book-page-picture",
-            rule: MEDIA_RULES.bookPicture,
-            missing: `page ${pageIndex + 1} of the ${book.kind} book`,
-          });
-        }
-      }
+      picture(
+        page.image,
+        `books.${bookIndex}.pages.${pageIndex}.image`,
+        `page ${pageIndex + 1} of the ${book.kind} book`,
+        "book-page-picture",
+        MEDIA_RULES.bookPicture,
+      );
     });
   });
 
   add(week.focus.element?.audio, "phoneme", MEDIA_RULES.phoneme);
-  for (const word of week.focus.family?.words ?? []) {
-    add(word.image?.file, "family-word-picture", MEDIA_RULES.bookPicture);
-  }
+  (week.focus.family?.words ?? []).forEach((word, wordIndex) => {
+    picture(
+      word.image,
+      `focus.family.words.${wordIndex}.image`,
+      `the picture of the family word ${word.word}`,
+      "family-word-picture",
+      MEDIA_RULES.bookPicture,
+    );
+  });
 
   for (const day of week.opening?.audio ?? []) {
     for (const file of day) add(file, "phoneme", MEDIA_RULES.phoneme);
@@ -102,26 +123,36 @@ export function mediaOf(week: StorytimeWeek): WeekMedia[] {
     add(week.song.poster, "song-poster", MEDIA_RULES.songPicture);
     add(week.song.posterPhone, "song-poster-phone", MEDIA_RULES.songPicture);
     add(week.song.karaoke, "song-karaoke", MEDIA_RULES.songVideo);
-    for (const line of week.song.lines) {
-      add(line.image?.file, "song-line-picture", MEDIA_RULES.songPicture);
-    }
+    week.song.lines.forEach((line, lineIndex) => {
+      picture(
+        line.image,
+        `song.lines.${lineIndex}.image`,
+        `the picture of song line ${lineIndex + 1}`,
+        "song-line-picture",
+        MEDIA_RULES.songPicture,
+      );
+    });
   }
 
   for (const strip of week.review) {
     for (const card of strip.cards) add(card.audio, "phoneme", MEDIA_RULES.phoneme);
   }
 
-  return [...media.values()];
+  return [...files.values(), ...missing.values()];
 }
 
 /**
  * Validates one week and gives the file that the step writes.
  * @param week The source week, parsed from JSON.
  * @param source.text The source text, when the step reads a file; it is written unchanged.
+ * @param source.expected The level and week that the run requested; the week must name them.
  * @returns The path, the text, and the media files.
- * @throws When the week breaks the contract; the message names each field path.
+ * @throws When the week breaks the contract, or names another level or week than the request.
  */
-export function receiveWeek(week: unknown, source: { text?: string } = {}): ReceivedWeek {
+export function receiveWeek(
+  week: unknown,
+  source: { text?: string; expected?: { level: number; week: number } } = {},
+): ReceivedWeek {
   const parsed = weekSchema.safeParse(week);
   if (!parsed.success) {
     const issues = parsed.error.issues
@@ -131,12 +162,62 @@ export function receiveWeek(week: unknown, source: { text?: string } = {}): Rece
   }
   const data = parsed.data;
   const path = weekPath(data.meta.level, data.meta.week);
+  const { expected } = source;
+  if (expected && (data.meta.level !== expected.level || data.meta.week !== expected.week)) {
+    throw new Error(
+      `The week names level ${data.meta.level} week ${data.meta.week}, and the run requested week ${expected.week} of level ${expected.level}`,
+    );
+  }
   const contents = source.text ?? `${JSON.stringify(data, null, 2)}\n`;
   const written = weekSchema.safeParse(JSON.parse(contents));
   if (!written.success || written.data.meta.status !== data.meta.status) {
     throw new Error(`The written week ${path} does not keep the status of its source`);
   }
   return { path, contents, media: mediaOf(data) };
+}
+
+/** One source file of a run: the week that the run requested and the text that Workbooks holds. */
+export interface WeekSourceFile {
+  level: number;
+  week: number;
+  /** The path in the source repository, for the messages. */
+  source: string;
+  text: string;
+}
+
+/**
+ * Validates every source file of a run before any file is written.
+ * @param files The source files, one per requested week.
+ * @returns The received weeks in the order of the files.
+ * @throws When a file holds no JSON, breaks the contract, names another week than requested, or
+ * shares its target path with another file; the message names the source file.
+ */
+export function receiveWeeks(files: WeekSourceFile[]): ReceivedWeek[] {
+  const received: ReceivedWeek[] = [];
+  const targets = new Set<string>();
+  for (const file of files) {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(file.text);
+    } catch (error) {
+      throw new Error(`The source file ${file.source} holds no JSON: ${(error as Error).message}`);
+    }
+    let week: ReceivedWeek;
+    try {
+      week = receiveWeek(parsed, {
+        text: file.text,
+        expected: { level: file.level, week: file.week },
+      });
+    } catch (error) {
+      throw new Error(`${file.source}: ${(error as Error).message}`);
+    }
+    if (targets.has(week.path)) {
+      throw new Error(`${file.source}: two weeks share the same target path ${week.path}`);
+    }
+    targets.add(week.path);
+    received.push(week);
+  }
+  return received;
 }
 
 /**
@@ -165,26 +246,27 @@ interface RunOptions {
   weeks: number[];
 }
 
+/** The highest week number of a level (the contract bound). */
+const WEEK_MAX = 32;
+
 /**
  * Reads the week numbers of the `--weeks` value.
- * @param value `1-8`, `1,3,5`, or one number.
+ * @param value `1-8`, `1,3,5`, or one number; each number is 1 to 32.
  * @returns The week numbers in order.
- * @throws When the value holds no week number.
+ * @throws When a token is not a week number or a rising range of week numbers.
  */
 function parseWeeks(value: string): number[] {
   const numbers = new Set<number>();
   for (const part of value.split(",")) {
-    const range = part.match(/^(\d+)-(\d+)$/);
-    if (range) {
-      const first = Number(range[1]);
-      const last = Number(range[2]);
-      for (let week = first; week <= last; week += 1) numbers.add(week);
-      continue;
+    const token = part.trim();
+    const range = token.match(/^(\d+)-(\d+)$/);
+    const first = Number(range ? range[1] : token);
+    const last = Number(range ? range[2] : token);
+    if (!(range || /^\d+$/.test(token)) || first < 1 || last > WEEK_MAX || first > last) {
+      throw new Error(`The --weeks value ${value} holds "${token}", which is no week from 1 to ${WEEK_MAX}`);
     }
-    const single = part.trim();
-    if (/^\d+$/.test(single)) numbers.add(Number(single));
+    for (let week = first; week <= last; week += 1) numbers.add(week);
   }
-  if (numbers.size === 0) throw new Error(`The --weeks value ${value} holds no week number`);
   return [...numbers].sort((a, b) => a - b);
 }
 
@@ -245,18 +327,52 @@ function repositoryOf(directory: string): string {
   try {
     return execFileSync("git", ["-C", directory, "remote", "get-url", "origin"], {
       encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
     }).trim();
   } catch {
     return basename(directory);
   }
 }
 
+/** The repository root that holds `apps/storytime`, found from this file. */
+const defaultRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+
+/**
+ * Decides the file list of `source.json` for a run.
+ *
+ * One commit must describe the whole set. A run at the commit of the record may add weeks to the
+ * list. A run at a new commit must cover every file of the record, because a week left out would
+ * stay on the old commit while the record names the new one (adversarial F26, Review C F15).
+ * @param recordPath The path of `source.json`.
+ * @param commit The full commit of this run.
+ * @param files The files this run writes, relative to the repository root.
+ * @returns The file list of the new record.
+ * @throws When the run is a subset at a new commit, or `source.json` holds no JSON.
+ */
+function mergedFiles(recordPath: string, commit: string, files: string[]): string[] {
+  if (!existsSync(recordPath)) return [...files].sort();
+  const record = JSON.parse(readFileSync(recordPath, "utf8")) as { commit?: string; files?: string[] };
+  const recorded = record.files ?? [];
+  if (record.commit === commit) return [...new Set([...recorded, ...files])].sort();
+  const left = recorded.filter((file) => !files.includes(file));
+  if (left.length > 0) {
+    throw new Error(
+      `A run at the commit ${commit} must cover every recorded week; it leaves ${left.join(", ")} on the commit ${record.commit}. Run all weeks`,
+    );
+  }
+  return [...files].sort();
+}
+
 /**
  * Runs the receiving step for every named week.
+ *
+ * The step reads, validates, and checks every week first. It writes the first file only when all
+ * weeks pass, so a failed run leaves the content folder as it was.
  * @param argv The arguments after the script name.
- * @returns The exit code.
+ * @param root The repository root; tests pass a temporary root.
+ * @returns The exit code: 0 for success, 1 for a source or contract failure, 64 for a bad request.
  */
-function main(argv: string[]): number {
+export function receiveMain(argv: string[], root: string = defaultRoot): number {
   let options: RunOptions;
   try {
     options = withResolvedCommit(parseOptions(argv));
@@ -264,63 +380,72 @@ function main(argv: string[]): number {
     console.error((error as Error).message);
     return 64;
   }
-  const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
   const contentDirectory = resolve(root, "apps/storytime/content");
-  const files: string[] = [];
-  let mediaCount = 0;
+  const sourcePath = resolve(contentDirectory, "source.json");
+
+  const sources: WeekSourceFile[] = [];
   for (const week of options.weeks) {
     const name = `w${String(week).padStart(2, "0")}.json`;
     const source = `content/storytime/l${options.level}/${name}`;
-    let text: string;
     try {
-      text = execFileSync("git", ["-C", options.sourceDirectory, "show", `${options.commit}:${source}`], {
+      const text = execFileSync("git", ["-C", options.sourceDirectory, "show", `${options.commit}:${source}`], {
         encoding: "utf8",
         maxBuffer: 64 * 1024 * 1024,
       });
+      sources.push({ level: options.level, week, source, text });
     } catch (error) {
       console.error(`Cannot read ${source} at ${options.commit}: ${(error as Error).message}`);
       return 1;
     }
-    const parsed = (() => {
-      try {
-        return JSON.parse(text) as unknown;
-      } catch (error) {
-        console.error(`The source file ${source} holds no JSON: ${(error as Error).message}`);
-        return undefined;
+  }
+
+  let received: ReceivedWeek[];
+  try {
+    received = receiveWeeks(sources);
+    for (const week of received) {
+      const inside = relative(contentDirectory, resolve(root, week.path));
+      if (inside.startsWith("..") || isAbsolute(inside)) {
+        throw new Error(`The week path ${week.path} leaves ${relative(root, contentDirectory)}`);
       }
-    })();
-    if (parsed === undefined) return 1;
-    let received: ReceivedWeek;
-    try {
-      received = receiveWeek(parsed, { text });
-    } catch (error) {
-      console.error(`${source}: ${(error as Error).message}`);
-      return 1;
     }
-    const target = resolve(root, received.path);
-    const inside = relative(contentDirectory, target);
-    if (inside.startsWith("..") || isAbsolute(inside)) {
-      console.error(`The week path ${received.path} leaves ${relative(root, contentDirectory)}`);
-      return 1;
-    }
+  } catch (error) {
+    console.error((error as Error).message);
+    return 1;
+  }
+  let files: string[];
+  try {
+    files = mergedFiles(sourcePath, options.commit, received.map((week) => week.path));
+  } catch (error) {
+    console.error((error as Error).message);
+    return 64;
+  }
+
+  let mediaCount = 0;
+  let missingCount = 0;
+  for (const week of received) {
+    const target = resolve(root, week.path);
     mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, received.contents);
-    files.push(received.path);
-    mediaCount += received.media.length;
-    console.log(`Wrote ${received.path} (${received.media.length} media files)`);
-    for (const item of received.media) console.log(`  ${item.kind}\t${item.rule}\t${item.file}`);
+    writeFileSync(target, week.contents);
+    const missing = week.media.filter((item) => item.missing !== undefined).length;
+    mediaCount += week.media.length - missing;
+    missingCount += missing;
+    console.log(`Wrote ${week.path} (${week.media.length - missing} media files, ${missing} missing pictures)`);
+    for (const item of week.media) {
+      console.log(`  ${item.kind}\t${item.rule}\t${item.file}${item.missing ? `\tmissing: ${item.missing}` : ""}`);
+    }
   }
   const sourceRecord = {
     repository: repositoryOf(options.sourceDirectory),
     commit: options.commit,
     files,
   };
-  const sourcePath = resolve(contentDirectory, "source.json");
   mkdirSync(dirname(sourcePath), { recursive: true });
   writeFileSync(sourcePath, `${JSON.stringify(sourceRecord, null, 2)}\n`);
-  console.log(`Wrote apps/storytime/content/source.json (${files.length} weeks, ${mediaCount} media files)`);
+  console.log(
+    `Wrote apps/storytime/content/source.json (${files.length} weeks, ${mediaCount} media files, ${missingCount} missing pictures)`,
+  );
   return 0;
 }
 
 const entry = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : "";
-if (entry && import.meta.url === entry) process.exit(main(process.argv.slice(2)));
+if (entry && import.meta.url === entry) process.exit(receiveMain(process.argv.slice(2)));
