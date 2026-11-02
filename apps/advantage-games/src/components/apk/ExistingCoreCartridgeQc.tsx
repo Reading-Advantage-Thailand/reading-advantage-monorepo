@@ -180,7 +180,7 @@ export function ExistingCoreCartridgeQc({ preview }: ExistingCoreCartridgeQcProp
   const geometryIssues = composition?.supported ? inspectCompositionGeometry(composition) : [];
   const content = useMemo(
     () => cartridge
-      ? validateNonEmptyContent(CONTENT_FIXTURES[fixture], cartridge.manifest.inputMode)
+      ? validateNonEmptyContent(CONTENT_FIXTURES[fixture], cartridge.manifest.inputMode === "sentence" ? "sentence" : "vocabulary")
       : undefined,
     [cartridge, fixture],
   );
