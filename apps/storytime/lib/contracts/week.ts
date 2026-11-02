@@ -383,12 +383,16 @@ function checkTiming(
   });
 }
 
-/** The seconds that a word may reach past the time range of its sentence (rounding in the timing). */
-const WORD_RANGE_SLACK_SECONDS = 0.001;
+/** The seconds of rounding that the timing order checks allow. */
+const TIMING_SLACK_SECONDS = 0.001;
 
 /**
  * Reports the timings that the player cannot follow: a sentence that starts before the sentence
- * before it, a word outside the time range of its sentence, and a page beyond the pages of the book.
+ * before it starts or ends, a word that starts before the word before it, a word outside the time
+ * range of its sentence, a page beyond the pages of the book, and a page with no sentence.
+ *
+ * A word may overlap the word before it: the player picks the last word whose start has passed,
+ * and a shipped week holds one such overlap of 0.04 s.
  * @param sentences The sentence timings of one audio.
  * @param path The field path of the timings.
  * @param ctx The refinement context.
@@ -406,6 +410,7 @@ function checkPlayerOrder(
   pageCount?: number,
 ): void {
   let previousStart = 0;
+  let previousEnd = 0;
   sentences.forEach((sentence, sentenceIndex) => {
     if (sentence.startTime < previousStart) {
       ctx.addIssue({
@@ -413,8 +418,15 @@ function checkPlayerOrder(
         path: [...path, sentenceIndex, "startTime"],
         message: "the sentence starts before the sentence before it",
       });
+    } else if (sentence.startTime < previousEnd - TIMING_SLACK_SECONDS) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [...path, sentenceIndex, "startTime"],
+        message: "the sentence starts before the sentence before it ends",
+      });
     }
     previousStart = Math.max(previousStart, sentence.startTime);
+    previousEnd = Math.max(previousEnd, sentence.endTime);
     if (pageCount !== undefined && sentence.page !== undefined && sentence.page > pageCount) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -422,15 +434,24 @@ function checkPlayerOrder(
         message: `the page ${sentence.page} is beyond the ${pageCount} pages of the book`,
       });
     }
+    let previousWordStart = 0;
     sentence.words.forEach((word, wordIndex) => {
-      if (word.start < sentence.startTime - WORD_RANGE_SLACK_SECONDS) {
+      if (word.start < previousWordStart - TIMING_SLACK_SECONDS) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [...path, sentenceIndex, "words", wordIndex, "start"],
+          message: "the word starts before the word before it",
+        });
+      }
+      previousWordStart = Math.max(previousWordStart, word.start);
+      if (word.start < sentence.startTime - TIMING_SLACK_SECONDS) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: [...path, sentenceIndex, "words", wordIndex, "start"],
           message: "the word starts before its sentence",
         });
       }
-      if (word.end > sentence.endTime + WORD_RANGE_SLACK_SECONDS) {
+      if (word.end > sentence.endTime + TIMING_SLACK_SECONDS) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: [...path, sentenceIndex, "words", wordIndex, "end"],
@@ -439,6 +460,17 @@ function checkPlayerOrder(
       }
     });
   });
+  if (pageCount !== undefined && sentences.some((sentence) => sentence.page !== undefined)) {
+    for (let page = 1; page <= pageCount; page += 1) {
+      if (!sentences.some((sentence) => (sentence.page ?? 1) === page)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path,
+          message: `the page ${page} has no sentence in the audio timings`,
+        });
+      }
+    }
+  }
 }
 
 /**

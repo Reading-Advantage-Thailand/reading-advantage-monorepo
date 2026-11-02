@@ -10,6 +10,7 @@ import {
   mkdtempSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -18,7 +19,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
-import { receiveMain, receiveWeek, receiveWeeks } from "../scripts/receive-weeks";
+import { receiveMain, receiveWeek, receiveWeeks, writeStaged } from "../scripts/receive-weeks";
 
 const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const shippedDirectory = resolve(app, "content", "l2");
@@ -205,5 +206,74 @@ describe("F15 and F26 a run keeps one commit for the whole set", () => {
       expect(run(root, "--commit", baseCommit, "--weeks", weeks), weeks).toBe(64);
       expect(snapshot(join(root, "apps/storytime/content")).size, weeks).toBe(0);
     }
+  });
+});
+
+describe("F29 a failed write restores every file", () => {
+  it("leaves the content folder as it was when a directory stands at the path of week 5", () => {
+    const root = freshRoot("f29-directory");
+    expect(run(root, "--commit", baseCommit)).toBe(0);
+    const edits: Record<string, string> = {};
+    for (const file of ["w01.json", "w02.json", "w03.json", "w04.json"]) {
+      const week = JSON.parse(shippedText(file)) as Json;
+      week.meta.title = `${week.meta.title}!`;
+      edits[file] = `${JSON.stringify(week, null, 2)}\n`;
+    }
+    const next = commitWeeks(edits);
+    const content = join(root, "apps/storytime/content");
+    rmSync(join(content, "l2/w05.json"));
+    mkdirSync(join(content, "l2/w05.json"));
+    writeFileSync(join(content, "l2/w05.json/keep.txt"), "keep\n");
+    const before = snapshot(content);
+    expect(run(root, "--commit", next)).not.toBe(0);
+    const after = snapshot(content);
+    expect([...after.keys()].sort()).toEqual([...before.keys()].sort());
+    for (const [path, text] of before) expect(after.get(path), path).toBe(text);
+  });
+
+  it("restores the replaced files, removes the new files, and leaves no temporary file", () => {
+    const folder = join(work, "f29-staged");
+    mkdirSync(folder, { recursive: true });
+    const names = ["a.json", "b.json", "c.json", "d.json", "e.json"];
+    for (const name of names.slice(0, 3)) writeFileSync(join(folder, name), `old ${name}\n`);
+    const before = snapshot(folder);
+    let calls = 0;
+    const failing = (from: string, to: string): void => {
+      calls += 1;
+      if (calls === 5) throw new Error("rename failed");
+      renameSync(from, to);
+    };
+    expect(() =>
+      writeStaged(
+        names.map((name) => ({ path: join(folder, name), text: `new ${name}\n` })),
+        failing,
+      ),
+    ).toThrow(/rename failed/);
+    const after = snapshot(folder);
+    expect([...after.keys()].sort()).toEqual([...before.keys()].sort());
+    for (const [path, text] of before) expect(after.get(path), path).toBe(text);
+  });
+
+  it("removes a folder that the failed run created", () => {
+    const folder = join(work, "f29-created");
+    const target = join(folder, "l2", "w01.json");
+    expect(() =>
+      writeStaged([{ path: target, text: "new\n" }], () => {
+        throw new Error("rename failed");
+      }),
+    ).toThrow(/rename failed/);
+    expect(existsSync(folder)).toBe(false);
+  });
+
+  it("writes every file when nothing fails", () => {
+    const folder = join(work, "f29-ok");
+    writeStaged([
+      { path: join(folder, "x/a.json"), text: "a\n" },
+      { path: join(folder, "x/b.json"), text: "b\n" },
+    ]);
+    expect([...snapshot(folder).entries()].sort()).toEqual([
+      ["/x/a.json", "a\n"],
+      ["/x/b.json", "b\n"],
+    ]);
   });
 });

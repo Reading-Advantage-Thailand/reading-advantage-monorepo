@@ -4,7 +4,8 @@
  * It reads the Workbooks week files at a handed-off commit, resolves the commit to the full id,
  * validates each week with the app contract, and writes the week to
  * `apps/storytime/content/l<level>/w<nn>.json`. It validates every requested week before it writes
- * the first file, and a week must name the level and week that the run requested. It writes the
+ * the first file, and a week must name the level and week that the run requested. A write that
+ * fails restores every file, so the content folder stays as it was. It writes the
  * source text unchanged, so a second run of the same commit makes no difference. It never changes
  * `meta.status`, because approval lives in the source repository (generation rule 12.1). It lists
  * every media file that each week names, with its kind and the generation rule that checks it.
@@ -12,7 +13,7 @@
  * The runbook `docs/runbooks/storytime-app-week-sync.md` records the command.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -234,7 +235,7 @@ export function resolveCommit(directory: string, reference: string): string {
   return execFileSync(
     "git",
     ["-C", directory, "rev-parse", "--verify", `${reference}^{commit}`],
-    { encoding: "utf8" },
+    { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
   ).trim();
 }
 
@@ -334,6 +335,54 @@ function repositoryOf(directory: string): string {
   }
 }
 
+/** One file that a run writes. */
+export interface StagedFile {
+  /** The absolute target path. */
+  path: string;
+  text: string;
+}
+
+/**
+ * Writes all files or none of them (adversarial F29).
+ *
+ * It reads the original bytes of each target, writes every new text to a temporary name in the
+ * same folder, and then renames the temporary files onto the targets. On any error it puts the
+ * original bytes back, deletes the new files, the temporary files, and the folders it created,
+ * and throws the error again.
+ * @param files The files to write; the last file is written last.
+ * @param rename The rename function; a test replaces it to make a write fail.
+ * @throws The first error of the write, after the rollback.
+ */
+export function writeStaged(files: StagedFile[], rename: (from: string, to: string) => void = renameSync): void {
+  const originals = new Map<string, Buffer | null>();
+  const temporary: string[] = [];
+  const created: string[] = [];
+  const replaced: string[] = [];
+  try {
+    for (const { path } of files) originals.set(path, existsSync(path) ? readFileSync(path) : null);
+    for (const { path, text } of files) {
+      const folder = mkdirSync(dirname(path), { recursive: true });
+      if (folder) created.push(folder);
+      const stage = `${path}.tmp-${process.pid}`;
+      temporary.push(stage);
+      writeFileSync(stage, text);
+    }
+    files.forEach(({ path }, index) => {
+      rename(temporary[index]!, path);
+      replaced.push(path);
+    });
+  } catch (error) {
+    for (const path of replaced) {
+      const original = originals.get(path);
+      if (original) writeFileSync(path, original);
+      else rmSync(path, { force: true });
+    }
+    for (const stage of temporary) rmSync(stage, { force: true });
+    for (const folder of created) rmSync(folder, { recursive: true, force: true });
+    throw error;
+  }
+}
+
 /** The repository root that holds `apps/storytime`, found from this file. */
 const defaultRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
@@ -420,12 +469,24 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
     return 64;
   }
 
+  const sourceRecord = {
+    repository: repositoryOf(options.sourceDirectory),
+    commit: options.commit,
+    files,
+  };
+  try {
+    writeStaged([
+      ...received.map((week) => ({ path: resolve(root, week.path), text: week.contents })),
+      { path: sourcePath, text: `${JSON.stringify(sourceRecord, null, 2)}\n` },
+    ]);
+  } catch (error) {
+    console.error(`The write failed and the content folder is restored: ${(error as Error).message}`);
+    return 1;
+  }
+
   let mediaCount = 0;
   let missingCount = 0;
   for (const week of received) {
-    const target = resolve(root, week.path);
-    mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, week.contents);
     const missing = week.media.filter((item) => item.missing !== undefined).length;
     mediaCount += week.media.length - missing;
     missingCount += missing;
@@ -434,13 +495,6 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
       console.log(`  ${item.kind}\t${item.rule}\t${item.file}${item.missing ? `\tmissing: ${item.missing}` : ""}`);
     }
   }
-  const sourceRecord = {
-    repository: repositoryOf(options.sourceDirectory),
-    commit: options.commit,
-    files,
-  };
-  mkdirSync(dirname(sourcePath), { recursive: true });
-  writeFileSync(sourcePath, `${JSON.stringify(sourceRecord, null, 2)}\n`);
   console.log(
     `Wrote apps/storytime/content/source.json (${files.length} weeks, ${mediaCount} media files, ${missingCount} missing pictures)`,
   );

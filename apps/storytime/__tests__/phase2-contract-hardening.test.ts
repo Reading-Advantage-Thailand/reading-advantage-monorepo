@@ -157,3 +157,49 @@ describe("F25 the timings hold the order that the player assumes", () => {
     for (const file of WEEK_FILES) expect(failPaths(shipped(file)), file).toBeNull();
   });
 });
+
+describe("F30 and F25 the remaining timing cases", () => {
+  it("rejects words that start out of order inside a sentence, for a book, a slow reading, and a song", () => {
+    const week = shipped("w01.json");
+    const swap = (words: Json[]): void => {
+      [words[0], words[1]] = [words[1], words[0]];
+    };
+    const sentence = (week.books[0].audio.sentences as Json[]).find((entry) => entry.words.length > 1)!;
+    const index = week.books[0].audio.sentences.indexOf(sentence);
+    swap(sentence.words);
+    expect(failPaths(week)).toContain(`books.0.audio.sentences.${index}.words.1.start`);
+
+    const slow = shipped("w01.json");
+    const slowSentence = (slow.books[0].audio.slowSentences as Json[]).find((entry) => entry.words.length > 1)!;
+    swap(slowSentence.words);
+    expect(failPaths(slow)).toContain(
+      `books.0.audio.slowSentences.${slow.books[0].audio.slowSentences.indexOf(slowSentence)}.words.1.start`,
+    );
+
+    const song = shipped("w01.json");
+    const line = (song.song.times as Json[]).find((entry) => entry.words.length > 1)!;
+    swap(line.words);
+    expect(failPaths(song)).toContain(`song.times.${song.song.times.indexOf(line)}.words.1.start`);
+  });
+
+  it("rejects a sentence that starts before the sentence before it ends", () => {
+    const week = shipped("w01.json");
+    const sentences = week.books[0].audio.sentences as Json[];
+    sentences[1].startTime = sentences[0].endTime - 0.5;
+    expect(failPaths(week)).toContain("books.0.audio.sentences.1.startTime");
+  });
+
+  it("rejects a paged book that has a page with no sentence", () => {
+    for (const key of ["sentences", "slowSentences"]) {
+      const week = shipped("w01.json");
+      const book = week.books[0];
+      book.audio[key] = (book.audio[key] as Json[]).filter((entry) => entry.page !== 3);
+      expect(book.audio[key].length, key).toBeGreaterThan(0);
+      expect(failPaths(week), key).toContain(`books.0.audio.${key}`);
+    }
+  });
+
+  it("keeps the shipped weeks", () => {
+    for (const file of WEEK_FILES) expect(failPaths(shipped(file)), file).toBeNull();
+  });
+});
