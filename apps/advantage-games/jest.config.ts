@@ -21,6 +21,7 @@ const config: Config = {
     '^@reading-advantage/game-contracts$': '<rootDir>/../../packages/game-contracts/dist/index.js',
     '^@reading-advantage/utils(/.*)?$': '<rootDir>/../../packages/utils/dist$1',
     '^@reading-advantage/ui(/.*)?$': '<rootDir>/../../packages/ui/dist$1',
+    '^@reading-advantage/avatar-kit$': '<rootDir>/../../packages/avatar-kit/dist/index.js',
     '^@reading-advantage/domain(/.*)?$': '<rootDir>/../../packages/domain/dist$1',
     '^@reading-advantage/api/routes/apk-challenges$': '<rootDir>/../../packages/api/dist/routes/apk-challenges/index.js',
     '^@reading-advantage/api/routes/auth$': '<rootDir>/../../packages/api/dist/routes/auth/index.js',
