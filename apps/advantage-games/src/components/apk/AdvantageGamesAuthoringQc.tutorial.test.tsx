@@ -4,6 +4,13 @@ import preview from "@/lib/apk/standard-pack-qc-preview.json";
 import { AdvantageGamesAuthoringQc } from "./AdvantageGamesAuthoringQc";
 import type { StandardPackQcPreview } from "./StandardPackQc";
 
+/** Returns the QC operator status line, not the tutorial screen's own narration status. */
+const qcStatus = (qc: HTMLElement) => {
+  const statuses = within(qc).getAllByRole("status").filter((el) => !el.hasAttribute("data-apk-tutorial-consequence"));
+  expect(statuses).toHaveLength(1);
+  return statuses[0];
+};
+
 describe("AdvantageGamesAuthoringQc guided tutorial preview", () => {
   it("provides an independent tutorial preview state with explicit QC fixtures", () => {
     render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
@@ -15,7 +22,7 @@ describe("AdvantageGamesAuthoringQc guided tutorial preview", () => {
     expect(within(qc).getByRole("button", { name: /compact/i })).toBeInTheDocument();
     expect(within(qc).getByRole("button", { name: /wide/i })).toBeInTheDocument();
     expect(within(qc).getByRole("button", { name: /reduced motion/i })).toBeInTheDocument();
-    expect(within(qc).getByRole("status")).toHaveTextContent(/tutorial.*ready/i);
+    expect(qcStatus(qc)).toHaveTextContent(/tutorial.*ready/i);
     expect(within(qc).queryByRole("region", { name: "Game result" })).not.toBeInTheDocument();
   });
 
@@ -56,13 +63,13 @@ describe("AdvantageGamesAuthoringQc guided tutorial preview", () => {
 
     const qc = screen.getByRole("region", { name: "Guided tutorial QC preview" });
     fireEvent.click(within(qc).getByRole("button", { name: /start tutorial/i }));
-    await waitFor(() => expect(within(qc).getByRole("status")).toHaveTextContent(/tutorial running/i));
+    await waitFor(() => expect(qcStatus(qc)).toHaveTextContent(/tutorial running/i));
     fireEvent.click(within(qc).getByRole("button", { name: /replay tutorial/i }));
-    await waitFor(() => expect(within(qc).getByRole("status")).toHaveTextContent(/clean after replay/i));
+    await waitFor(() => expect(qcStatus(qc)).toHaveTextContent(/clean after replay/i));
     fireEvent.click(within(qc).getByRole("button", { name: /interrupt tutorial/i }));
 
     await waitFor(() => {
-      expect(within(qc).getByRole("status")).toHaveTextContent(/interrupted|clean/i);
+      expect(qcStatus(qc)).toHaveTextContent(/interrupted|clean/i);
       expect(within(qc).getByText(/timers: 0/i)).toBeInTheDocument();
       expect(within(qc).getByText(/listeners: 0/i)).toBeInTheDocument();
       expect(within(qc).getByText(/phaser objects: 0/i)).toBeInTheDocument();
