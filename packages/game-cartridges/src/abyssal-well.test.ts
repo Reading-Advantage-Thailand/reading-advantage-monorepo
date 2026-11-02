@@ -65,7 +65,7 @@ function createInputController() {
 function createGraphics() {
   const graphics = {
     clear: vi.fn(() => graphics),
-    fillStyle: vi.fn(() => graphics),
+    fillStyle: vi.fn((_color: number, _alpha?: number) => graphics),
     fillRect: vi.fn(() => graphics),
     fillCircle: vi.fn(() => graphics),
     fillRoundedRect: vi.fn(() => graphics),

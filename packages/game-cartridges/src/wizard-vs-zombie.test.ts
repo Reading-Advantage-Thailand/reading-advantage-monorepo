@@ -121,7 +121,14 @@ function mockGraphics() {
     clear: vi.fn(function (this: unknown) { return this; }),
     fillCircle: vi.fn(function (this: unknown, _x: number, _y: number, _radius: number) { return this; }),
     fillRect: vi.fn(function (this: unknown, _x: number, _y: number, _width: number, _height: number) { return this; }),
-    fillRoundedRect: vi.fn(function (this: unknown) { return this; }),
+    fillRoundedRect: vi.fn(function (
+      this: unknown,
+      _x: number,
+      _y: number,
+      _width: number,
+      _height: number,
+      _radius?: number,
+    ) { return this; }),
     fillStyle: vi.fn(function (this: unknown) { return this; }),
     lineStyle: vi.fn(function (this: unknown) { return this; }),
     strokeRoundedRect: vi.fn(function (this: unknown) { return this; }),
@@ -166,8 +173,10 @@ function inputSnapshot(overrides: Partial<{
   keys: readonly string[];
   pressed: readonly string[];
   pointer: Partial<{
+    down: boolean;
     released: boolean;
     cancelled: boolean;
+    id: number | null;
     kind: "mouse" | "pen" | "touch" | null;
     startX: number;
     startY: number;

@@ -1028,7 +1028,7 @@ describe("Enchanted Library bespoke cartridge", () => {
     const input = createInputController();
     const cartridge = createEnchantedLibraryCartridge();
     const config = cartridge.createGameConfig({
-      input: VOCABULARY,
+      input: VOCABULARY.map((item) => ({ ...item })),
       edition: {
         id: "test-edition",
         title: "Test edition",

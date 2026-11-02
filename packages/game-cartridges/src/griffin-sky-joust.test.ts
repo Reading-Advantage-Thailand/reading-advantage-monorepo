@@ -145,15 +145,30 @@ function fakeInputController() {
   };
 }
 
+/**
+ * Creates a chainable Phaser text-object mock for the scene host.
+ * @returns A text mock whose setters return the mock itself.
+ */
+function createTextMock() {
+  return {
+    setPosition: vi.fn().mockReturnThis(),
+    setText: vi.fn().mockReturnThis(),
+    setFontSize: vi.fn().mockReturnThis(),
+    setBackgroundColor: vi.fn().mockReturnThis(),
+    setPadding: vi.fn().mockReturnThis(),
+    setOrigin: vi.fn().mockReturnThis(),
+    setVisible: vi.fn().mockReturnThis(),
+    setWordWrapWidth: vi.fn().mockReturnThis(),
+    getBounds: vi.fn(() => ({ width: 160 })),
+    destroy: vi.fn(),
+  };
+}
+
 function sceneHost(canvasWidth = 960, sceneSize = { width: 960, height: 540 }) {
   const events = new Map<string, () => void>();
   const tileKeys: string[] = [];
   const tileScales: number[] = [];
-  const texts: Array<{
-    setText: ReturnType<typeof vi.fn>;
-    setFontSize: ReturnType<typeof vi.fn>;
-    setBackgroundColor: ReturnType<typeof vi.fn>;
-  }> = [];
+  const texts: Array<ReturnType<typeof createTextMock>> = [];
   const graphics = {
     clear: vi.fn().mockReturnThis(),
     fillStyle: vi.fn().mockReturnThis(),
@@ -166,18 +181,7 @@ function sceneHost(canvasWidth = 960, sceneSize = { width: 960, height: 540 }) {
     destroy: vi.fn(),
   };
   function text() {
-    const value = {
-    setPosition: vi.fn().mockReturnThis(),
-    setText: vi.fn().mockReturnThis(),
-    setFontSize: vi.fn().mockReturnThis(),
-    setBackgroundColor: vi.fn().mockReturnThis(),
-    setPadding: vi.fn().mockReturnThis(),
-    setOrigin: vi.fn().mockReturnThis(),
-    setVisible: vi.fn().mockReturnThis(),
-    setWordWrapWidth: vi.fn().mockReturnThis(),
-    getBounds: vi.fn(() => ({ width: 160 })),
-    destroy: vi.fn(),
-    };
+    const value = createTextMock();
     texts.push(value);
     return value;
   }

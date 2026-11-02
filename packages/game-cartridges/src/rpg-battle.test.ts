@@ -78,7 +78,7 @@ function createMutableInputController(): APKInputController & {
 }
 
 function createSceneHost(
-  sceneSize = RPG_BATTLE_CANVAS,
+  sceneSize: { width: number; height: number } = RPG_BATTLE_CANVAS,
   canvasRect: { left: number; top: number; width: number; height: number } = { left: 0, top: 0, width: 960, height: 540 },
 ) {
   const graphics = {

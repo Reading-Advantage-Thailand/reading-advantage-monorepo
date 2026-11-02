@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gameResultsSchema } from "@reading-advantage/game-contracts";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, type MockResult } from "vitest";
 import { cartridgeLoaders } from "./catalog.js";
 import { DRAGON_FLIGHT_GATE_TRAVEL_MS, chooseGateFromPointer, createDragonFlightCartridge, createDragonFlightController, createDragonRiderCartridge } from "./dragon-flight.js";
 import { PHASE3_RUNTIME_EDITION } from "./legacy-traversal-phase3-test-helpers.js";
@@ -30,7 +30,7 @@ function fakeSceneHost(renderedWidth = 960, textHeights: readonly number[] = [],
   let textIndex = 0;
   const chain = () => {
     const object = {
-      setOrigin: vi.fn(), setDisplaySize: vi.fn(), setDepth: vi.fn(), setPosition: vi.fn(),
+      setOrigin: vi.fn(), setDisplaySize: vi.fn(), setDepth: vi.fn<(depth: number) => unknown>(), setPosition: vi.fn(),
       setAlpha: vi.fn(), setFrame: vi.fn(), setTilePosition: vi.fn(), setTileScale: vi.fn(), destroy: vi.fn(),
     };
     for (const method of Object.values(object)) method.mockReturnValue(object);
@@ -43,7 +43,7 @@ function fakeSceneHost(renderedWidth = 960, textHeights: readonly number[] = [],
   };
   for (const method of Object.values(graphics)) method.mockReturnValue(graphics);
   const text = () => {
-    const object = { height: textHeights[textIndex] ?? 0, setPosition: vi.fn(), setText: vi.fn(), setFontSize: vi.fn(), setWordWrapWidth: vi.fn(), setDepth: vi.fn(), destroy: vi.fn() };
+    const object = { height: textHeights[textIndex] ?? 0, setPosition: vi.fn(), setText: vi.fn<(text: string | string[]) => unknown>(), setFontSize: vi.fn(), setWordWrapWidth: vi.fn(), setDepth: vi.fn(), destroy: vi.fn() };
     textIndex += 1;
     for (const method of Object.values(object)) {
       if (typeof method === "function") method.mockReturnValue(object);
@@ -56,6 +56,19 @@ function fakeSceneHost(renderedWidth = 960, textHeights: readonly number[] = [],
     game: { canvas: { getBoundingClientRect: () => ({ left: 0, width: renderedWidth }) } },
     scale: { width: logicalWidth, height: logicalHeight },
   };
+}
+
+/**
+ * Unwraps the values a mock returned, failing if any call threw or never finished.
+ * @param results The mock's recorded results.
+ * @returns The returned value of each call, in call order.
+ * @throws When a recorded call did not return normally.
+ */
+function returnedValues<T>(results: readonly MockResult<T>[]): T[] {
+  return results.map((result) => {
+    if (result.type !== "return") throw new Error(`mock call did not return: ${result.type}`);
+    return result.value;
+  });
 }
 
 describe("Dragon Flight rules", () => {
@@ -232,7 +245,7 @@ describe("Dragon Flight public cartridges", () => {
     const initial = scene.extend.apkCaptureResponsiveState();
 
     expect(answerAudio.setQuestion).toHaveBeenCalledWith(0, [initial.gates.leftItemPosition, initial.gates.rightItemPosition]);
-    const rendered = host.add.text.mock.results.flatMap(({ value }) => value.setText.mock.calls.map(([text]) => text));
+    const rendered = returnedValues(host.add.text.mock.results).flatMap((value) => value.setText.mock.calls.map(([text]) => text));
     expect(rendered).toEqual(expect.arrayContaining([initial.prompt, "1", "2", "1 🔊", "2 🔊"]));
 
     input = { ...input, pointer: { ...input.pointer, released: true, x: 291, y: 178 } };
@@ -271,10 +284,10 @@ describe("Dragon Flight public cartridges", () => {
     const scene = config.scene as { create(this: unknown): void; update(this: unknown, time: number, delta: number): void };
     const host = fakeSceneHost();
     scene.create.call(host);
-    const imageDepths = [...host.add.image.mock.results, ...host.add.sprite.mock.results]
-      .flatMap(({ value }) => value.setDepth.mock.calls.map(([depth]) => Number(depth)));
+    const imageDepths = [...returnedValues(host.add.image.mock.results), ...returnedValues(host.add.sprite.mock.results)]
+      .flatMap((value) => value.setDepth.mock.calls.map(([depth]) => Number(depth)));
     expect(imageDepths.length).toBeGreaterThan(0);
-    const textObjects = host.add.text.mock.results.map(({ value }) => value);
+    const textObjects = returnedValues(host.add.text.mock.results);
     const prompt = textObjects.find((text) => text.setText.mock.calls.some(([value]) => value === "สะพาน"));
     const choices = textObjects.filter((text) => text.setText.mock.calls.some(([value]) => VOCABULARY.some(({ term }) => term === value)));
     expect(prompt).toBeDefined();
@@ -295,7 +308,7 @@ describe("Dragon Flight public cartridges", () => {
     const scene = config.scene as { create(this: unknown): void };
     const host = fakeSceneHost(336);
     scene.create.call(host);
-    const textObjects = host.add.text.mock.results.map(({ value }) => value);
+    const textObjects = returnedValues(host.add.text.mock.results);
     const prompt = textObjects.find((text) => text.setText.mock.calls.some(([value]) => value === "สะพาน"));
     const choices = textObjects.filter((text) => text.setText.mock.calls.some(([value]) => VOCABULARY.some(({ term }) => term === value)));
     expect(prompt?.setFontSize).toHaveBeenLastCalledWith(52);
@@ -309,7 +322,7 @@ describe("Dragon Flight public cartridges", () => {
     const scene = config.scene as { create(this: unknown): void };
     const host = fakeSceneHost();
     scene.create.call(host);
-    const textObjects = host.add.text.mock.results.map(({ value }) => value);
+    const textObjects = returnedValues(host.add.text.mock.results);
     const prompt = textObjects.find((text) => text.setText.mock.calls.some(([value]) => value === "สะพาน"));
     const choices = textObjects.filter((text) => text.setText.mock.calls.some(([value]) => VOCABULARY.some(({ term }) => term === value)));
     expect(prompt?.setFontSize).toHaveBeenLastCalledWith(44);
@@ -326,7 +339,7 @@ describe("Dragon Flight public cartridges", () => {
     const scene = config.scene as { create(this: unknown): void };
     const host = fakeSceneHost(336, [0, 60, 0, 138, 92]);
     scene.create.call(host);
-    const textObjects = host.add.text.mock.results.map(({ value }) => value);
+    const textObjects = returnedValues(host.add.text.mock.results);
     const prompt = textObjects.find((text) => text.setText.mock.calls.some(([value]) => value === longVocabulary[0]?.translation));
     const choices = textObjects.filter((text) => text.setText.mock.calls.some(([value]) => longVocabulary.some(({ term }) => term === value)));
     expect(prompt?.setWordWrapWidth).toHaveBeenLastCalledWith(896, true);
@@ -348,7 +361,7 @@ describe("Dragon Flight public cartridges", () => {
     const scene = config.scene as { create(this: unknown): void; update(this: unknown, time: number, delta: number): void };
     const host = fakeSceneHost(336, [0, 60, 0, 138, 92], 336, 733);
     scene.create.call(host);
-    const textObjects = host.add.text.mock.results.map(({ value }) => value);
+    const textObjects = returnedValues(host.add.text.mock.results);
     const prompt = textObjects.find((text) => text.setText.mock.calls.some(([value]) => value === longVocabulary[0]?.translation));
     const choices = textObjects.filter((text) => text.setText.mock.calls.some(([value]) => longVocabulary.some(({ term }) => term === value)));
     expect(prompt?.setFontSize).toHaveBeenLastCalledWith(22);
@@ -374,7 +387,7 @@ describe("Dragon Flight public cartridges", () => {
     const scene = config.scene as { create(this: unknown): void };
     const host = fakeSceneHost();
     scene.create.call(host);
-    const [, sky, clouds, landscape] = host.add.tileSprite.mock.results.map(({ value }) => value);
+    const [, sky, clouds, landscape] = returnedValues(host.add.tileSprite.mock.results);
     expect({
       landscapeDepth: landscape?.setDepth.mock.lastCall?.[0],
       landscapeAlpha: landscape?.setAlpha.mock.lastCall?.[0],
