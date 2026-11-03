@@ -52,7 +52,7 @@ export const TUNING = {
   bossFallMs: 2000,
 } as const;
 
-export interface DragonFlightOptions {
+interface DragonFlightOptions {
   seed: number;
   helper: boolean;
   /** Read to Select Audio (the host gave an answer audio controller). */
@@ -62,7 +62,7 @@ export interface DragonFlightOptions {
 export type DragonFlightSimulation = Simulation<DragonFlightState, DragonFlightCommand, DragonFlightEvent>;
 
 /** Gates per round for a mode. */
-export function gateCountFor(helper: boolean): number {
+function gateCountFor(helper: boolean): number {
   return helper ? TUNING.gatesHelper : TUNING.gates;
 }
 

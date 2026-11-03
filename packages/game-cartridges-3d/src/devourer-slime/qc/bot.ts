@@ -15,9 +15,9 @@ import {
 } from '../core/index.js';
 
 /** How far ahead the bot looks for guards and bubbles in the way. */
-export const LOOK_AHEAD = 2.2;
+const LOOK_AHEAD = 2.2;
 /** Guards are avoided where they will be this many seconds ahead. */
-export const PREDICT_S = 0.5;
+const PREDICT_S = 0.5;
 
 export function nextSteer(state: DevourerSlimeState): DevourerSlimeCommand | null {
   if (state.phase !== 'playing') return null;

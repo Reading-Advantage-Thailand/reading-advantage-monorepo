@@ -30,7 +30,7 @@ export const HALL: Rect = { minX: -5.6, maxX: 5.6, minZ: -3.8, maxZ: 3.8 };
 export const HERO_START: Vec2 = { x: 0, z: 2.6 };
 
 /** Where spirits come in (the hall corners and the middle of the side walls). */
-export const SPIRIT_DOORS: readonly Vec2[] = [
+const SPIRIT_DOORS: readonly Vec2[] = [
   { x: -5, z: -3.2 },
   { x: 5, z: -3.2 },
   { x: -5, z: 0 },
@@ -74,7 +74,7 @@ export const TUNING = {
 
 export type EnchantedLibrarySimulation = Simulation<LibraryState, LibraryCommand, LibraryEvent>;
 
-export interface EnchantedLibraryOptions {
+interface EnchantedLibraryOptions {
   seed: number;
   helper: boolean;
 }

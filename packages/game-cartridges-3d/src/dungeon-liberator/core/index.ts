@@ -2,13 +2,9 @@
 export * from './types.js';
 export {
   ROOM_WORDS,
-  isSentenceInput,
   roomSentencesOf,
   sentencesOf,
   shiftOf,
-  villagerKindsOf,
-  type DungeonLiberatorInput,
-  type ShiftSentence,
 } from './content.js';
 export {
   GATE,
@@ -19,15 +15,10 @@ export {
   nextVillagerOf,
   skeletonCountFor,
   skeletonSpeedFor,
-  type DungeonLiberatorOptions,
   type DungeonLiberatorSimulation,
 } from './sim.js';
 export {
-  DUNGEON_LIBERATOR_GAME_ID,
-  SCORE,
-  evidenceItemsOf,
   evidenceOf,
   resultsOf,
   scoreOf,
-  type EvidenceStory,
 } from './evidence.js';

@@ -11,12 +11,12 @@ import type { LibraryRound } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
 export type LibraryInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: LibraryInput): input is VocabularyInput {
+function isVocabularyInput(input: LibraryInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 
 /** A word as the visit needs it. */
-export interface LibraryWord {
+interface LibraryWord {
   id: string;
   term: string;
   translation: string;
@@ -26,7 +26,7 @@ export interface LibraryWord {
 export const DECOYS = 3;
 
 /** A term compared without case and edge spaces. */
-export const normalTerm = (term: string): string => term.trim().toLowerCase();
+const normalTerm = (term: string): string => term.trim().toLowerCase();
 
 /** The words of the input in the input's order. Words with an empty term or prompt are skipped; a repeated term counts once. */
 export function wordsOf(input: LibraryInput): LibraryWord[] {

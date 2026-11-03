@@ -7,7 +7,7 @@ import { correctGateOf, createDragonRider, type DragonRiderEvent, type DragonRid
 
 const STORIES_DIR = join(process.cwd(), 'tests', 'fixtures', 'stories');
 
-export const loadStory = (id: string): StoryInput =>
+const loadStory = (id: string): StoryInput =>
   parseStoryInput(JSON.parse(readFileSync(join(STORIES_DIR, id, 'story.json'), 'utf8')), id);
 
 /** 13 words (the ride caps at 8) and 5 words. */

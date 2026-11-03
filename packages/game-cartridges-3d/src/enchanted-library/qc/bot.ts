@@ -8,7 +8,7 @@ import { HALL, TOUCH, targetBookOf, type LibraryCommand, type LibraryState } fro
 import { distance, steerAround } from '@reading-advantage/advantage-play-kit-3d/sim';
 
 /** The bot raises the shield when a spirit is this close. */
-export const DANGER = 2;
+const DANGER = 2;
 /** The bot keeps this far from the middle of a decoy book. */
 const AVOID = TOUCH + 0.25;
 

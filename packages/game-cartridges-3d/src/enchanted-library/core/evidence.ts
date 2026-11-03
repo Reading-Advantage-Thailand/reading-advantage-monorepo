@@ -14,16 +14,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { LibraryState } from './types.js';
 
-export const ENCHANTED_LIBRARY_GAME_ID = 'enchanted-library';
+const ENCHANTED_LIBRARY_GAME_ID = 'enchanted-library';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per right book. */
 export const SCORE = { book: 100 } as const;
 
 /** One evidence item per round the student started or cleared, in visit order. */
-export function evidenceItemsOf(state: LibraryState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: LibraryState): StoryGameEvidenceItem[] {
   return state.rounds
     .filter((round) => round.started || round.cleared)
     .map((round) => ({

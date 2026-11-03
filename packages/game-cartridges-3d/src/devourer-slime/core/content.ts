@@ -11,12 +11,12 @@ import { GUARD_KINDS, type GuardKind, type ShiftSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type DevourerSlimeInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: DevourerSlimeInput): input is SentenceInput {
+function isSentenceInput(input: DevourerSlimeInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence before play: id, text, words, and the reading look-back paragraph. */
-export type SentenceSource = Pick<ShiftSentence, 'id' | 'text' | 'words' | 'translation' | 'paragraph'>;
+type SentenceSource = Pick<ShiftSentence, 'id' | 'text' | 'words' | 'translation' | 'paragraph'>;
 
 /** The words a round can hold: 3 to 7 bubbles. */
 export const ROUND_WORDS = { min: 3, max: 7 } as const;

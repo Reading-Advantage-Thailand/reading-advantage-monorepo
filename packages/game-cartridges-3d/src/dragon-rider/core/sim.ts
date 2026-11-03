@@ -40,7 +40,7 @@ export const TUNING = {
   minPower: 3,
 } as const;
 
-export interface DragonRiderOptions {
+interface DragonRiderOptions {
   seed: number;
   /** Read to Select Audio (the host gave an answer audio controller). */
   answerAudio?: boolean;

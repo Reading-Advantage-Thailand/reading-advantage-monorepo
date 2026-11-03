@@ -127,7 +127,7 @@ export type DragonFlightEvent =
   | { type: 'fireball'; index: number }
   | { type: 'flightComplete'; flock: number; coins: number };
 
-export type DragonFlightEventType = DragonFlightEvent['type'];
+type DragonFlightEventType = DragonFlightEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const DRAGON_FLIGHT_EVENT_TYPES: readonly DragonFlightEventType[] = [

@@ -5,23 +5,16 @@ export {
   flightWordsOf,
   decoysFor,
   gatesFor,
-  isVocabularyInput,
   type DragonFlightInput,
-  type WordSource,
 } from './content.js';
 export {
   TUNING,
   createDragonFlight,
-  gateCountFor,
   correctGateOf,
-  type DragonFlightOptions,
   type DragonFlightSimulation,
 } from './sim.js';
 export {
-  DRAGON_FLIGHT_GAME_ID,
-  evidenceItemsOf,
   evidenceOf,
   scoreOf,
   resultsOf,
-  type EvidenceStory,
 } from './evidence.js';

@@ -10,7 +10,7 @@ import type { Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 
 export const ROOM_MODELS = ['floor', 'floor-cracked', 'wall', 'wall-corner', 'arch', 'gate', 'pillar', 'cell-bars', 'hanging-cage', 'torch-sconce', 'bone-pile', 'chains', 'skeleton', 'villager', 'farmer', 'innkeeper', 'druid', 'guard'];
 
-export interface Room {
+interface Room {
   /** The portcullis (it rises when the gate opens). */
   portcullis: THREE.Object3D | null;
   /** The glow in the arch when the gate is open. */

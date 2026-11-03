@@ -154,7 +154,7 @@ export type DungeonLiberatorEvent =
   | { type: 'roomCleared'; roomId: string; sentenceId: string }
   | { type: 'shiftComplete'; rooms: number };
 
-export type DungeonLiberatorEventType = DungeonLiberatorEvent['type'];
+type DungeonLiberatorEventType = DungeonLiberatorEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const DUNGEON_LIBERATOR_EVENT_TYPES: readonly DungeonLiberatorEventType[] = [

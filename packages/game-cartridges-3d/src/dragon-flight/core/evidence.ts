@@ -15,13 +15,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { DragonFlightState } from './types.js';
 
-export const DRAGON_FLIGHT_GAME_ID = 'dragon-flight';
+const DRAGON_FLIGHT_GAME_ID = 'dragon-flight';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per word the student chose a gate for, in flight order. */
-export function evidenceItemsOf(state: DragonFlightState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: DragonFlightState): StoryGameEvidenceItem[] {
   return state.words
     .filter((word) => word.attempts > 0)
     .map((word) => ({
