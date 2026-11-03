@@ -45,11 +45,11 @@ export default async function StorytimeAdvantage({
     <main className="overflow-x-hidden bg-site-page text-site-body">
       <section
         data-testid="st-hero"
-        className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-700 text-white"
+        className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-600 text-white"
       >
         <div className="container mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-24">
           <div className="lg:col-span-6">
-            <span className="mb-6 inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-bold text-amber-900">
+            <span className="mb-6 inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-bold text-amber-800">
               {t("hero.comingSoon")}
             </span>
             <h1 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
@@ -98,7 +98,7 @@ export default async function StorytimeAdvantage({
         </div>
       </section>
 
-      <section data-testid="st-section-2" className="bg-amber-500 py-16 text-white lg:py-20">
+      <section data-testid="st-section-2" className="bg-amber-600 py-16 text-white lg:py-20">
         <div className="container mx-auto max-w-7xl px-4">
           <p className="mb-4 text-center text-sm font-semibold text-amber-50">{t("eyebrows.keyFeatures")}</p>
           <h2 className="mx-auto mb-10 max-w-3xl text-center text-3xl font-bold md:text-4xl">
@@ -113,7 +113,7 @@ export default async function StorytimeAdvantage({
                 <ul className="space-y-4">
                   {[0, 1, 2, 3].map((point) => (
                     <li key={point} className="flex gap-3 leading-relaxed">
-                      <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+                      <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 rounded-full bg-amber-400" />
                       {t(`keyFeatures.features.${group}.points.${point}`)}
                     </li>
                   ))}
@@ -136,7 +136,7 @@ export default async function StorytimeAdvantage({
           <h2 className="mb-10 max-w-4xl text-3xl font-bold text-site-navy md:text-4xl">{t("coreValue.heading")}</h2>
           <div className="mb-10 grid gap-6 md:grid-cols-3">
             {[0, 1, 2].map((feature) => (
-              <article key={feature} className="border-l-4 border-amber-500 pl-5">
+              <article key={feature} className="border-l-4 border-amber-400 pl-5">
                 <h3 className="mb-2 text-xl font-bold text-site-navy">{t(`coreValue.features.${feature}.title`)}</h3>
                 <p className="leading-relaxed">{t(`coreValue.features.${feature}.description`)}</p>
               </article>
@@ -180,7 +180,7 @@ export default async function StorytimeAdvantage({
           <div className="divide-y divide-site-border border-y border-site-border">
             {[0, 1, 2, 3, 4].map((item) => (
               <details key={item} className="py-5">
-                <summary className="cursor-pointer text-lg font-semibold text-site-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-700">
+                <summary className="cursor-pointer text-lg font-semibold text-site-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600">
                   {t(`faq.questions.${item}.question`)}
                 </summary>
                 <p className="pt-4 leading-relaxed">{t(`faq.questions.${item}.answer`)}</p>
@@ -190,15 +190,15 @@ export default async function StorytimeAdvantage({
         </div>
       </section>
 
-      <section data-testid="st-cta" className="bg-gradient-to-br from-amber-700 to-amber-800 py-16 text-center text-white lg:py-20">
+      <section data-testid="st-cta" className="bg-gradient-to-br from-amber-600 to-amber-800 py-16 text-center text-white lg:py-20">
         <div className="container mx-auto max-w-4xl px-4">
           <h2 className="mb-5 text-3xl font-bold md:text-4xl">{t("cta.heading")}</h2>
           <p className="mx-auto max-w-2xl text-lg leading-relaxed text-amber-50">{t("cta.description")}</p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-amber-900 hover:bg-amber-50">
+            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-amber-800 hover:bg-amber-50">
               {t("cta.buttons.joinWaitlist")}<ArrowRight aria-hidden="true" className="h-5 w-5" />
             </Link>
-            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center rounded-2xl border-2 border-white px-7 py-4 font-bold text-white hover:bg-white hover:text-amber-900">
+            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center rounded-2xl border-2 border-white px-7 py-4 font-bold text-white hover:bg-white hover:text-amber-800">
               {t("cta.buttons.learnMore")}
             </Link>
           </div>
