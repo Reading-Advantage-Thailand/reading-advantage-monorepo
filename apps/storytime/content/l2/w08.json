@@ -22,6 +22,9 @@
     },
     "scripts": {
       "status": "draft"
+    },
+    "loops": {
+      "status": "draft"
     }
   },
   "version": 1,
@@ -418,7 +421,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "a",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "and",
+            "week": 1
+          },
+          {
+            "kind": "frame",
+            "text": "Hello, I am ___.",
+            "week": 1
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "B",
@@ -632,7 +670,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "get",
+            "week": 3
+          },
+          {
+            "kind": "tricky",
+            "text": "is",
+            "week": 4
+          },
+          {
+            "kind": "frame",
+            "text": "This is my ___.",
+            "week": 4
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "C",
@@ -846,7 +919,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "t",
+            "week": 6,
+            "audio": "phonemes/daniel/02-t.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "with",
+            "week": 5
+          },
+          {
+            "kind": "tricky",
+            "text": "he",
+            "week": 6
+          },
+          {
+            "kind": "frame",
+            "text": "I have two ___.",
+            "week": 5
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "D",
@@ -1062,7 +1170,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "from",
+            "week": 7
+          },
+          {
+            "kind": "tricky",
+            "text": "run",
+            "week": 7
+          },
+          {
+            "kind": "frame",
+            "text": "Is it a ___? Yes/No.",
+            "week": 7
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "E",
@@ -1289,7 +1432,44 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "t",
+            "week": 6,
+            "audio": "phonemes/daniel/02-t.mp3"
+          },
+          {
+            "kind": "frame",
+            "text": "I have two ___.",
+            "week": 5
+          },
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     }
   ],
   "review": [

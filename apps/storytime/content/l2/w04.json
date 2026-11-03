@@ -22,6 +22,9 @@
     },
     "scripts": {
       "status": "draft"
+    },
+    "loops": {
+      "status": "draft"
     }
   },
   "version": 1,
@@ -808,7 +811,42 @@
             "page": 8
           }
         ]
-      }
+      },
+      "questions": [
+        {
+          "kind": "who",
+          "ask": {
+            "en": "Who is the dog? Point to the picture.",
+            "th": "ใครคือสุนัข? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 8,
+            "word": "Pip"
+          }
+        },
+        {
+          "kind": "what",
+          "ask": {
+            "en": "What do they live in? Point to the picture.",
+            "th": "พวกเขาอาศัยอยู่ในอะไร? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 6,
+            "word": "house"
+          }
+        },
+        {
+          "kind": "where",
+          "ask": {
+            "en": "Where is Grandma? Point to the picture.",
+            "th": "คุณยายอยู่ที่ไหน? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 4,
+            "word": "grandma"
+          }
+        }
+      ]
     },
     {
       "kind": "decodable",
@@ -2136,7 +2174,22 @@
               "เด็กที่ออกเสียงเป็น \"muh\" (เมอะ): เสียงที่ถูกคือ mmm ไม่มี \"uh\" ตามหลัง",
               "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Listen again: mmm. Mmmonkey starts with mmm.\"",
+              "th": "\"ฟังอีกครั้ง: mmm คำว่า Mmmonkey ขึ้นต้นด้วย mmm\""
+            },
+            "practise": {
+              "en": "\"Say it with me: mmm, mmm, mmm.\"",
+              "th": "\"พูดพร้อมครู: mmm, mmm, mmm\""
+            },
+            "retest": {
+              "en": "\"Thumbs up if it starts with mmm. Listen: mouse, cat, milk.\"",
+              "th": "\"ยกนิ้วโป้งขึ้นถ้าคำขึ้นต้นด้วย mmm: mouse, cat, milk\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A2",
@@ -2203,7 +2256,22 @@
               "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า",
               "เด็กที่สับสนระหว่างตัวอักษร m กับ n: ตัวอักษร m มีเนิน 2 ลูก ส่วนตัวอักษร n มีเนิน 1 ลูก เมื่อออกเสียง mmm ริมฝีปากประกบกัน ส่วนเมื่อออกเสียง nnn ริมฝีปากเปิด"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Look and listen: mmm. Not 'muh'. Mmm.\"",
+              "th": "\"ดูและฟัง: mmm ไม่ใช่ 'muh' แต่เป็น mmm\""
+            },
+            "practise": {
+              "en": "\"Point to the letter. Say mmm with me, three times.\"",
+              "th": "\"ชี้ที่ตัวอักษรและพูด mmm พร้อมครู 3 ครั้ง\""
+            },
+            "retest": {
+              "en": "\"Point to the letter m. What is its sound? Mmm!\"",
+              "th": "\"ชี้ที่ตัวอักษร m เสียงของตัวอักษรนี้คืออะไร? Mmm!\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A3",
@@ -2267,7 +2335,22 @@
               "เด็กที่เขียนเนินเพียง 1 ลูก: นั่นคือตัวอักษร n ตัวอักษร m มีเนิน 2 ลูก",
               "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Watch my hand again: down, up over the hill, down, up over the hill, down. It says mmm.\"",
+              "th": "\"ดูมือครูอีกครั้ง: ลง ขึ้นข้ามเนิน ลง ขึ้นข้ามเนิน ลง ตัวอักษรนี้ออกเสียง mmm\""
+            },
+            "practise": {
+              "en": "\"Write it in the air with me. Say mmm as you write.\"",
+              "th": "\"เขียนกลางอากาศพร้อมครู และพูด mmm ขณะเขียน\""
+            },
+            "retest": {
+              "en": "\"Write the letter m in your book. Say its sound: mmm.\"",
+              "th": "\"เขียนตัวอักษร m ในหนังสือ แล้วพูดเสียงของมัน: mmm\""
+            }
+          },
+          "loopMinutes": 4
         },
         {
           "id": "A4",
@@ -2335,7 +2418,81 @@
               "เด็กที่อ่าน \"man\" และ \"map\" เหมือนกัน: ชี้ที่ตัวอักษรตัวสุดท้าย แล้วถามว่าออกเสียงอะไร",
               "เด็กที่อ่านเป็น \"muh - /a/ - nnn\": ลากเสียง mmm ไว้ โดยไม่มี \"uh\" ตามหลัง"
             ]
-          }
+          },
+          "blendDrill": {
+            "words": [
+              {
+                "word": "jam",
+                "sounds": [
+                  "/j/",
+                  "/a/",
+                  "/m/"
+                ],
+                "audio": [
+                  "phonemes/daniel/14-j.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/05-m.mp3"
+                ]
+              },
+              {
+                "word": "map",
+                "sounds": [
+                  "/m/",
+                  "/a/",
+                  "/p/"
+                ],
+                "audio": [
+                  "phonemes/daniel/05-m.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/03-p.mp3"
+                ]
+              },
+              {
+                "word": "ham",
+                "sounds": [
+                  "/h/",
+                  "/a/",
+                  "/m/"
+                ],
+                "audio": [
+                  "phonemes/daniel/10-h.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/05-m.mp3"
+                ]
+              },
+              {
+                "word": "man",
+                "sounds": [
+                  "/m/",
+                  "/a/",
+                  "/n/"
+                ],
+                "audio": [
+                  "phonemes/daniel/05-m.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/04-n.mp3"
+                ]
+              }
+            ],
+            "model": {
+              "en": "\"Listen. I say the sounds, then the word: /j/ - /a/ - mmm. Jam!\"",
+              "th": "\"ฟัง ครูพูดทีละเสียง แล้วพูดเป็นคำ: /j/ - /a/ - mmm Jam!\""
+            },
+            "lead": {
+              "en": "\"Say it with me, three times: /j/ - /a/ - mmm. Jam!\"",
+              "th": "\"พูดตามครู 3 รอบ: /j/ - /a/ - mmm Jam!\""
+            },
+            "test": {
+              "en": "\"Your turn. Say the sounds, then the word.\"",
+              "th": "\"ถึงตาเด็ก ๆ พูดทีละเสียง แล้วพูดเป็นคำ\""
+            },
+            "repeats": 3,
+            "correction": {
+              "en": "\"Stop. Listen again: /j/ - /a/ - mmm. Say the sounds with me, then the word.\"",
+              "th": "\"หยุดก่อน ฟังอีกครั้ง: /j/ - /a/ - mmm พูดทีละเสียงพร้อมครู แล้วพูดเป็นคำ\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A5",
@@ -2459,7 +2616,23 @@
               "เด็กที่ออกเสียง \"this\" เป็น \"dis\" (ดิส): ให้เด็กดูลิ้นของครูที่วางไว้ระหว่างฟัน เหมือนตอนพูด \"the\"",
               "เด็กที่ออกเสียง \"is\" เป็น \"it\": ให้ฮัมเสียง zzz ที่ท้ายคำ เหมือนเสียงผึ้ง: izzz"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "is",
+              "this"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "A7",
@@ -2573,7 +2746,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "the",
+            "week": 3
+          },
+          {
+            "kind": "tricky",
+            "text": "get",
+            "week": 3
+          },
+          {
+            "kind": "frame",
+            "text": "It is ___.",
+            "week": 3
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "B",
@@ -3007,7 +3215,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "this",
+            "week": 4
+          },
+          {
+            "kind": "tricky",
+            "text": "the",
+            "week": 3
+          },
+          {
+            "kind": "frame",
+            "text": "It is ___.",
+            "week": 3
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "C",
@@ -3321,7 +3564,8 @@
             "watchFor": [
               "เด็กที่ตอบเพียงคำเดียว: พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
             ]
-          }
+          },
+          "loopMinutes": 3
         },
         {
           "id": "C6",
@@ -3431,7 +3675,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "the",
+            "week": 3
+          },
+          {
+            "kind": "tricky",
+            "text": "get",
+            "week": 3
+          },
+          {
+            "kind": "frame",
+            "text": "This is my ___.",
+            "week": 4
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "D",
@@ -3561,7 +3840,23 @@
               "อ่านบัตรคำ a ว่า \"uh\" แบบใน \"a cat\"",
               "เด็กที่สับสนระหว่าง \"is\" กับ \"in\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "is",
+              "this"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "D3",
@@ -3800,7 +4095,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "in",
+            "week": 2
+          },
+          {
+            "kind": "tricky",
+            "text": "on",
+            "week": 2
+          },
+          {
+            "kind": "frame",
+            "text": "It is ___.",
+            "week": 3
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "E",
@@ -4072,8 +4402,8 @@
               "\"Row 1: monkey, cat, sun. Which one starts with mmm? Circle it.\"",
               "\"Row 2: dog, mouse, bus. Which one starts with mmm? Circle it.\"",
               "\"Row 3: fish, hat, milk. Which one starts with mmm? Circle it.\"",
-              "\"Row 4. Find the word man. Circle it.\"",
-              "\"Row 5. Find the word this. Circle it.\"",
+              "\"Row 4: map, man, nap. Find the word man. Circle it.\"",
+              "\"Row 5: is, the, this. Find the word this. Circle it.\"",
               "\"Now write the letter m. Then write the word map.\""
             ],
             "studentActions": [
@@ -4109,8 +4439,8 @@
               "\"แถว 1: monkey, cat, sun คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
               "\"แถว 2: dog, mouse, bus คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
               "\"แถว 3: fish, hat, milk คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
-              "\"แถว 4 หาคำว่า man วงกลมไว้\"",
-              "\"แถว 5 หาคำว่า this วงกลมไว้\"",
+              "\"แถว 4: map, man, nap หาคำว่า man วงกลมไว้\"",
+              "\"แถว 5: is, the, this หาคำว่า this วงกลมไว้\"",
               "\"ทีนี้เขียนตัวอักษร m แล้วเขียนคำ map\""
             ],
             "studentActions": [
@@ -4122,7 +4452,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "on",
+            "week": 2
+          },
+          {
+            "kind": "tricky",
+            "text": "the",
+            "week": 3
+          },
+          {
+            "kind": "frame",
+            "text": "It is ___.",
+            "week": 3
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     }
   ],
   "review": [
@@ -4500,5 +4865,26 @@
       "english.phonics.pa.phoneme.blend-2-3",
       "english.phonics.pattern.cvc-short-a"
     ]
+  },
+  "print": {
+    "letterBox": {
+      "letter": "m",
+      "formationWords": "Start at the dot. Down. Up, over the hill, down. Up, over the hill, down.",
+      "startPoint": "dot"
+    },
+    "practice": [
+      { "text": "m m m", "pictureWord": "monkey" },
+      { "text": "am. Man. Map. Pam. This is Pam. I am Nan.", "pictureWord": "Pam" }
+    ],
+    "dictation": {
+      "letters": ["m", "m"],
+      "words": ["map"],
+      "traceSentence": "This is a map."
+    },
+    "writing": {
+      "traceText": "This is my ...",
+      "line": "word",
+      "pictureBox": true
+    }
   }
 }

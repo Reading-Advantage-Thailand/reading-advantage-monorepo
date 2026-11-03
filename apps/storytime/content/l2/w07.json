@@ -22,6 +22,9 @@
     },
     "scripts": {
       "status": "draft"
+    },
+    "loops": {
+      "status": "draft"
     }
   },
   "version": 1,
@@ -977,7 +980,42 @@
             "page": 8
           }
         ]
-      }
+      },
+      "questions": [
+        {
+          "kind": "who",
+          "ask": {
+            "en": "Who is it on the last page? Point to the picture.",
+            "th": "ในหน้าสุดท้ายคือใคร? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 8,
+            "word": "Pip"
+          }
+        },
+        {
+          "kind": "what",
+          "ask": {
+            "en": "What is the first thing? Point to the picture.",
+            "th": "สิ่งแรกคืออะไร? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 1,
+            "word": "ball"
+          }
+        },
+        {
+          "kind": "where",
+          "ask": {
+            "en": "Where is the drum? Point to the picture.",
+            "th": "กลองอยู่ที่ไหน? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 5,
+            "word": "drum"
+          }
+        }
+      ]
     },
     {
       "kind": "decodable",
@@ -2488,7 +2526,22 @@
               "เด็กที่ออกเสียงยาวเหมือนเสียงสระ ออ: ให้ออกเสียงสั้น ๆ เหมือนเสียงสระ เอาะ",
               "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Listen again: /o/. Octopus starts with /o/.\"",
+              "th": "\"ฟังอีกครั้ง: /o/ คำว่า Octopus ขึ้นต้นด้วย /o/\""
+            },
+            "practise": {
+              "en": "\"Say it with me: /o/, /o/, /o/.\"",
+              "th": "\"พูดพร้อมครู: /o/, /o/, /o/\""
+            },
+            "retest": {
+              "en": "\"Thumbs up if it starts with /o/. Listen: ox, sun, otter.\"",
+              "th": "\"ยกนิ้วโป้งขึ้นถ้าคำขึ้นต้นด้วย /o/: ox, sun, otter\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A2",
@@ -2553,7 +2606,22 @@
               "เสียงสั้นและอ้าปากกว้าง: ไม่ใช่ \"oh\" (โอ) และไม่ใช่เสียงสระ ออ ที่ยาว",
               "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Look and listen: /o/. Mouth wide, lips flat. /o/.\"",
+              "th": "\"ดูและฟัง: /o/ อ้าปากกว้าง ริมฝีปากแบน /o/\""
+            },
+            "practise": {
+              "en": "\"Point to the letter. Say /o/ with me, three times.\"",
+              "th": "\"ชี้ที่ตัวอักษรและพูด /o/ พร้อมครู 3 ครั้ง\""
+            },
+            "retest": {
+              "en": "\"Point to the letter o. What is its sound? /o/!\"",
+              "th": "\"ชี้ที่ตัวอักษร o เสียงของตัวอักษรนี้คืออะไร? /o/!\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A3",
@@ -2619,7 +2687,22 @@
               "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด",
               "เด็กที่เขียนแล้วเหลือช่องว่างที่ด้านบน: วนให้ครบรอบจนกลับมาที่จุด"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Watch my hand again: round to the left, all the way round. It says /o/.\"",
+              "th": "\"ดูมือครูอีกครั้ง: วนไปทางซ้ายจนครบรอบ ตัวอักษรนี้ออกเสียง /o/\""
+            },
+            "practise": {
+              "en": "\"Write it in the air with me. Say /o/ as you write.\"",
+              "th": "\"เขียนกลางอากาศพร้อมครู และพูด /o/ ขณะเขียน\""
+            },
+            "retest": {
+              "en": "\"Write the letter o in your book. Say its sound: /o/.\"",
+              "th": "\"เขียนตัวอักษร o ในหนังสือ แล้วพูดเสียงของมัน: /o/\""
+            }
+          },
+          "loopMinutes": 4
         },
         {
           "id": "A4",
@@ -2693,7 +2776,81 @@
               "เด็กที่อ่าน \"top\" และ \"pot\" เหมือนกัน: ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร",
               "เด็กที่ออกเสียง \"oh\" (โอ) ตรงกลางคำ: ทำท่ากดสวิตช์ไฟ แล้วออกเสียง /o/ สั้น ๆ"
             ]
-          }
+          },
+          "blendDrill": {
+            "words": [
+              {
+                "word": "pot",
+                "sounds": [
+                  "/p/",
+                  "/o/",
+                  "/t/"
+                ],
+                "audio": [
+                  "phonemes/daniel/03-p.mp3",
+                  "phonemes/daniel/29-o-short.mp3",
+                  "phonemes/daniel/02-t.mp3"
+                ]
+              },
+              {
+                "word": "mop",
+                "sounds": [
+                  "/m/",
+                  "/o/",
+                  "/p/"
+                ],
+                "audio": [
+                  "phonemes/daniel/05-m.mp3",
+                  "phonemes/daniel/29-o-short.mp3",
+                  "phonemes/daniel/03-p.mp3"
+                ]
+              },
+              {
+                "word": "top",
+                "sounds": [
+                  "/t/",
+                  "/o/",
+                  "/p/"
+                ],
+                "audio": [
+                  "phonemes/daniel/02-t.mp3",
+                  "phonemes/daniel/29-o-short.mp3",
+                  "phonemes/daniel/03-p.mp3"
+                ]
+              },
+              {
+                "word": "hot",
+                "sounds": [
+                  "/h/",
+                  "/o/",
+                  "/t/"
+                ],
+                "audio": [
+                  "phonemes/daniel/10-h.mp3",
+                  "phonemes/daniel/29-o-short.mp3",
+                  "phonemes/daniel/02-t.mp3"
+                ]
+              }
+            ],
+            "model": {
+              "en": "\"Listen. I say the sounds, then the word: /p/ - /o/ - /t/. Pot!\"",
+              "th": "\"ฟัง ครูพูดทีละเสียง แล้วพูดเป็นคำ: /p/ - /o/ - /t/ Pot!\""
+            },
+            "lead": {
+              "en": "\"Say it with me, three times: /p/ - /o/ - /t/. Pot!\"",
+              "th": "\"พูดตามครู 3 รอบ: /p/ - /o/ - /t/ Pot!\""
+            },
+            "test": {
+              "en": "\"Your turn. Say the sounds, then the word.\"",
+              "th": "\"ถึงตาเด็ก ๆ พูดทีละเสียง แล้วพูดเป็นคำ\""
+            },
+            "repeats": 3,
+            "correction": {
+              "en": "\"Stop. Listen again: /p/ - /o/ - /t/. Say the sounds with me, then the word.\"",
+              "th": "\"หยุดก่อน ฟังอีกครั้ง: /p/ - /o/ - /t/ พูดทีละเสียงพร้อมครู แล้วพูดเป็นคำ\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A5",
@@ -2819,7 +2976,24 @@
               "เด็กที่อ่าน \"from\" โดยใช้เสียง /o/ แบบในคำ \"octopus\": พูดคำ \"from\" อีกครั้ง ตัวอักษร o ในคำนี้เป็นส่วนที่ต้องจำ",
               "เด็กที่สับสนระหว่าง \"up\" กับ \"on\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "from",
+              "run",
+              "up"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "A7",
@@ -2933,7 +3107,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "t",
+            "week": 6,
+            "audio": "phonemes/daniel/02-t.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "he",
+            "week": 6
+          },
+          {
+            "kind": "tricky",
+            "text": "put",
+            "week": 6
+          },
+          {
+            "kind": "frame",
+            "text": "I can see a ___.",
+            "week": 6
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "B",
@@ -3367,7 +3576,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "t",
+            "week": 6,
+            "audio": "phonemes/daniel/02-t.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "run",
+            "week": 7
+          },
+          {
+            "kind": "tricky",
+            "text": "up",
+            "week": 7
+          },
+          {
+            "kind": "frame",
+            "text": "I can see a ___.",
+            "week": 6
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "C",
@@ -3683,7 +3927,8 @@
             "watchFor": [
               "เด็กที่ตอบด้วยคำเดียว: พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
             ]
-          }
+          },
+          "loopMinutes": 3
         },
         {
           "id": "C6",
@@ -3793,7 +4038,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "up",
+            "week": 7
+          },
+          {
+            "kind": "tricky",
+            "text": "he",
+            "week": 6
+          },
+          {
+            "kind": "frame",
+            "text": "Is it a ___? Yes/No.",
+            "week": 7
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "D",
@@ -3923,7 +4203,24 @@
               "อ่านบัตรคำที่ต้องจำ a ว่า \"uh\" (เออะ) แบบใน \"a cat\"",
               "เด็กที่สะกดออกเสียงคำ \"on\": ดีมาก! ตัวอักษร o ในคำ \"on\" ออกเสียง /o/ และตอนนี้ทั้งชั้นอ่านคำนี้ได้แล้ว"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "from",
+              "run",
+              "up"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "D3",
@@ -4166,7 +4463,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "t",
+            "week": 6,
+            "audio": "phonemes/daniel/02-t.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "saw",
+            "week": 5
+          },
+          {
+            "kind": "tricky",
+            "text": "off",
+            "week": 5
+          },
+          {
+            "kind": "frame",
+            "text": "I can see a ___.",
+            "week": 6
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "E",
@@ -4443,8 +4775,8 @@
               "\"Row 1: octopus, sun, bed. Which one starts with /o/? Circle it.\"",
               "\"Row 2: cat, ox, fish. Which one starts with /o/? Circle it.\"",
               "\"Row 3: pen, bus, olive. Which one starts with /o/? Circle it.\"",
-              "\"Row 4. Find the word pot. Circle it.\"",
-              "\"Row 5. Find the word up. Circle it.\"",
+              "\"Row 4: top, pot, tap. Find the word pot. Circle it.\"",
+              "\"Row 5: run, up, on. Find the word up. Circle it.\"",
               "\"Now write the letter o. Then write the word top.\""
             ],
             "studentActions": [
@@ -4480,8 +4812,8 @@
               "\"แถว 1: octopus, sun, bed คำไหนขึ้นต้นด้วย /o/? วงกลมไว้\"",
               "\"แถว 2: cat, ox, fish คำไหนขึ้นต้นด้วย /o/? วงกลมไว้\"",
               "\"แถว 3: pen, bus, olive คำไหนขึ้นต้นด้วย /o/? วงกลมไว้\"",
-              "\"แถว 4 หาคำว่า pot วงกลมไว้\"",
-              "\"แถว 5 หาคำว่า up วงกลมไว้\"",
+              "\"แถว 4: top, pot, tap หาคำว่า pot วงกลมไว้\"",
+              "\"แถว 5: run, up, on หาคำว่า up วงกลมไว้\"",
               "\"ทีนี้เขียนตัวอักษร o แล้วเขียนคำ top\""
             ],
             "studentActions": [
@@ -4493,7 +4825,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "off",
+            "week": 5
+          },
+          {
+            "kind": "tricky",
+            "text": "with",
+            "week": 5
+          },
+          {
+            "kind": "frame",
+            "text": "I can see a ___.",
+            "week": 6
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     }
   ],
   "review": [
@@ -5003,5 +5370,26 @@
       "english.phonics.pa.medial-vowel.identify",
       "english.phonics.pa.phoneme.blend-2-3"
     ]
+  },
+  "print": {
+    "letterBox": {
+      "letter": "o",
+      "formationWords": "Start at the dot. Round to the left, all the way round, and back to the dot.",
+      "startPoint": "dot"
+    },
+    "practice": [
+      { "text": "o o o", "pictureWord": "octopus" },
+      { "text": "on. Top. Pot. Tom. Mom. Tom can see a top. Run, Tom, run!", "pictureWord": "top" }
+    ],
+    "dictation": {
+      "letters": ["o", "o"],
+      "words": ["top"],
+      "traceSentence": "Tom can see a top."
+    },
+    "writing": {
+      "traceText": "Is it a ball?",
+      "line": "word",
+      "pictureBox": true
+    }
   }
 }

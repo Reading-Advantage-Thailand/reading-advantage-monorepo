@@ -22,6 +22,9 @@
     },
     "scripts": {
       "status": "draft"
+    },
+    "loops": {
+      "status": "draft"
     }
   },
   "version": 1,
@@ -942,7 +945,42 @@
             "page": 8
           }
         ]
-      }
+      },
+      "questions": [
+        {
+          "kind": "who",
+          "ask": {
+            "en": "Who is on the last page? Point to the picture.",
+            "th": "ใครอยู่ในหน้าสุดท้าย? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 8,
+            "word": "Pip"
+          }
+        },
+        {
+          "kind": "what",
+          "ask": {
+            "en": "What flies in the sky? Point to the picture.",
+            "th": "อะไรลอยอยู่บนท้องฟ้า? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 2,
+            "word": "kites"
+          }
+        },
+        {
+          "kind": "where",
+          "ask": {
+            "en": "Where are the six friends? Point to the picture.",
+            "th": "เพื่อน 6 คนอยู่ที่ไหน? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 6,
+            "word": "friends"
+          }
+        }
+      ]
     },
     {
       "kind": "decodable",
@@ -2057,7 +2095,22 @@
               "เด็กที่ออกเสียงเป็นชื่อตัวอักษร \"ay\": เสียงที่ถูกคือ /a/ แบบใน \"apple\"",
               "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Listen again: /a/. Apple starts with /a/.\"",
+              "th": "\"ฟังอีกครั้ง: /a/ คำว่า Apple ขึ้นต้นด้วย /a/\""
+            },
+            "practise": {
+              "en": "\"Say it with me: /a/, /a/, /a/.\"",
+              "th": "\"พูดพร้อมครู: /a/, /a/, /a/\""
+            },
+            "retest": {
+              "en": "\"Thumbs up if it starts with /a/. Listen: ant, dog, apple.\"",
+              "th": "\"ยกนิ้วโป้งขึ้นถ้าคำขึ้นต้นด้วย /a/: ant, dog, apple\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A2",
@@ -2124,7 +2177,22 @@
               "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า",
               "เด็กที่ถามเรื่องคำว่า a: คำว่า a เป็นคำที่ต้องจำ และออกเสียงว่า \"uh\" ส่วนตัวอักษร a ในคำเช่น \"an\" ออกเสียงว่า /a/"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Look and listen: /a/. Short and bright. /a/.\"",
+              "th": "\"ดูและฟัง: /a/ เสียงสั้นและสดใส /a/\""
+            },
+            "practise": {
+              "en": "\"Point to the letter. Say /a/ with me, three times.\"",
+              "th": "\"ชี้ที่ตัวอักษรและพูด /a/ พร้อมครู 3 ครั้ง\""
+            },
+            "retest": {
+              "en": "\"Point to the letter a. What is its sound? /a/!\"",
+              "th": "\"ชี้ที่ตัวอักษร a เสียงของตัวอักษรนี้คืออะไร? /a/!\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A3",
@@ -2190,7 +2258,22 @@
               "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด",
               "เด็กที่วนไปทางขวา: จับมือเด็ก เริ่มที่จุด แล้ววนไปทางซ้าย"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Watch my hand again: round to the left, up, down. It says /a/.\"",
+              "th": "\"ดูมือครูอีกครั้ง: วนไปทางซ้าย ขึ้น ลง ตัวอักษรนี้ออกเสียง /a/\""
+            },
+            "practise": {
+              "en": "\"Write it in the air with me. Say /a/ as you write.\"",
+              "th": "\"เขียนกลางอากาศพร้อมครู และพูด /a/ ขณะเขียน\""
+            },
+            "retest": {
+              "en": "\"Write the letter a in your book. Say its sound: /a/.\"",
+              "th": "\"เขียนตัวอักษร a ในหนังสือ แล้วพูดเสียงของมัน: /a/\""
+            }
+          },
+          "loopMinutes": 4
         },
         {
           "id": "A4",
@@ -2258,7 +2341,81 @@
               "เด็กที่พูดแค่เสียงแรก: พูดทุกเสียงอีกครั้ง ให้ชิดกันมากขึ้น",
               "เด็กที่อ่าน \"an\" เป็น \"ay-n\" (เอน) หรือ \"ah-n\" (อาน): ชี้ที่บัตรตัวอักษร a ทำท่าประจำเสียง แล้วอ่านอีกครั้ง ออกเสียง /a/ สั้น ๆ แบบใน \"apple\" โดยอ้าปาก"
             ]
-          }
+          },
+          "blendDrill": {
+            "words": [
+              {
+                "word": "cat",
+                "sounds": [
+                  "/k/",
+                  "/a/",
+                  "/t/"
+                ],
+                "audio": [
+                  "phonemes/daniel/08-c-k.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/02-t.mp3"
+                ]
+              },
+              {
+                "word": "hat",
+                "sounds": [
+                  "/h/",
+                  "/a/",
+                  "/t/"
+                ],
+                "audio": [
+                  "phonemes/daniel/10-h.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/02-t.mp3"
+                ]
+              },
+              {
+                "word": "fan",
+                "sounds": [
+                  "/f/",
+                  "/a/",
+                  "/n/"
+                ],
+                "audio": [
+                  "phonemes/daniel/12-f.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/04-n.mp3"
+                ]
+              },
+              {
+                "word": "man",
+                "sounds": [
+                  "/m/",
+                  "/a/",
+                  "/n/"
+                ],
+                "audio": [
+                  "phonemes/daniel/05-m.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/04-n.mp3"
+                ]
+              }
+            ],
+            "model": {
+              "en": "\"Listen. I say the sounds, then the word: /k/ - /a/ - /t/. Cat!\"",
+              "th": "\"ฟัง ครูพูดทีละเสียง แล้วพูดเป็นคำ: /k/ - /a/ - /t/ Cat!\""
+            },
+            "lead": {
+              "en": "\"Say it with me, three times: /k/ - /a/ - /t/. Cat!\"",
+              "th": "\"พูดตามครู 3 รอบ: /k/ - /a/ - /t/ Cat!\""
+            },
+            "test": {
+              "en": "\"Your turn. Say the sounds, then the word.\"",
+              "th": "\"ถึงตาเด็ก ๆ พูดทีละเสียง แล้วพูดเป็นคำ\""
+            },
+            "repeats": 3,
+            "correction": {
+              "en": "\"Stop. Listen again: /k/ - /a/ - /t/. Say the sounds with me, then the word.\"",
+              "th": "\"หยุดก่อน ฟังอีกครั้ง: /k/ - /a/ - /t/ พูดทีละเสียงพร้อมครู แล้วพูดเป็นคำ\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A5",
@@ -2383,7 +2540,24 @@
             "watchFor": [
               "เด็กที่อ่าน \"in\" และ \"on\" เหมือนกัน: พูดทั้ง 2 คำช้า ๆ แล้วชี้ตัวอักษรตัวแรกให้ดู"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "I",
+              "on",
+              "in"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "A7",
@@ -2497,7 +2671,41 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "a",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "and",
+            "week": 1
+          },
+          {
+            "kind": "frame",
+            "text": "Hello, I am ___.",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "can",
+            "week": 1
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "B",
@@ -2934,7 +3142,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "in",
+            "week": 2
+          },
+          {
+            "kind": "tricky",
+            "text": "on",
+            "week": 2
+          },
+          {
+            "kind": "frame",
+            "text": "Hello, I am ___.",
+            "week": 1
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "C",
@@ -3250,7 +3493,8 @@
             "watchFor": [
               "เด็กที่ตอบเพียงคำเดียว (\"No\" หรือตัวเลข): พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
             ]
-          }
+          },
+          "loopMinutes": 3
         },
         {
           "id": "C6",
@@ -3360,7 +3604,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "on",
+            "week": 2
+          },
+          {
+            "kind": "tricky",
+            "text": "a",
+            "week": 1
+          },
+          {
+            "kind": "frame",
+            "text": "How many? One, two...",
+            "week": 2
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "D",
@@ -3492,7 +3771,24 @@
               "อ่านบัตรคำ a ว่า \"uh\" แบบใน \"a cat\" ส่วนบัตรเสียง a ออกเสียงว่า /a/ แบบใน \"apple\"",
               "เด็กที่บอกเสียงของตัวอักษรที่หายไป: ยอมรับคำตอบนั้น แล้วพูดชื่อตัวอักษร สำหรับตัวอักษร a ให้พูดว่า: \"The name of the letter is ay. The sound is /a/.\" (ชื่อของตัวอักษรคือ เอ ส่วนเสียงคือ /a/)"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "I",
+              "on",
+              "in"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "D3",
@@ -3731,7 +4027,41 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "a",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "and",
+            "week": 1
+          },
+          {
+            "kind": "frame",
+            "text": "Hello, I am ___.",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "can",
+            "week": 1
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "E",
@@ -4006,8 +4336,8 @@
               "\"Row 1: apple, dog, sun. Which one starts with /a/? Circle it.\"",
               "\"Row 2: bus, ant, fish. Which one starts with /a/? Circle it.\"",
               "\"Row 3: pig, bed, alligator. Which one starts with /a/? Circle it.\"",
-              "\"Row 4. Find the word Nan. Circle it.\"",
-              "\"Row 5. Find the word in. Circle it.\"",
+              "\"Row 4: an, Nan, can. Find the word Nan. Circle it.\"",
+              "\"Row 5: on, I, in. Find the word in. Circle it.\"",
               "\"Now write the letter a. Then write the word an.\""
             ],
             "studentActions": [
@@ -4043,8 +4373,8 @@
               "\"แถว 1: apple, dog, sun คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
               "\"แถว 2: bus, ant, fish คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
               "\"แถว 3: pig, bed, alligator คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
-              "\"แถว 4 หาคำว่า Nan วงกลมไว้\"",
-              "\"แถว 5 หาคำว่า in วงกลมไว้\"",
+              "\"แถว 4: an, Nan, can หาคำว่า Nan วงกลมไว้\"",
+              "\"แถว 5: on, I, in หาคำว่า in วงกลมไว้\"",
               "\"ทีนี้เขียนตัวอักษร a แล้วเขียนคำ an\""
             ],
             "studentActions": [
@@ -4056,7 +4386,41 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "and",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "can",
+            "week": 1
+          },
+          {
+            "kind": "frame",
+            "text": "Hello, I am ___.",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "a",
+            "week": 1
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     }
   ],
   "review": [
@@ -4362,5 +4726,26 @@
       "english.phonics.pa.initial-sound.identify",
       "english.phonics.pa.phoneme.blend-2-3"
     ]
+  },
+  "print": {
+    "letterBox": {
+      "letter": "a",
+      "formationWords": "Start at the dot. Round to the left. Up to the top. Down.",
+      "startPoint": "dot"
+    },
+    "practice": [
+      { "text": "a a a", "pictureWord": "apple" },
+      { "text": "an. Nan. Nan can. I can.", "pictureWord": "Nan" }
+    ],
+    "dictation": {
+      "letters": ["a", "a"],
+      "words": ["an"],
+      "traceSentence": "I can."
+    },
+    "writing": {
+      "traceText": "How many?",
+      "line": "word",
+      "pictureBox": true
+    }
   }
 }

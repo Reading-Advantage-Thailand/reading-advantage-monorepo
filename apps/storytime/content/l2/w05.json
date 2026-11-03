@@ -22,6 +22,9 @@
     },
     "scripts": {
       "status": "draft"
+    },
+    "loops": {
+      "status": "draft"
     }
   },
   "version": 1,
@@ -768,7 +771,42 @@
             "page": 8
           }
         ]
-      }
+      },
+      "questions": [
+        {
+          "kind": "who",
+          "ask": {
+            "en": "Who has four legs? Point to the picture.",
+            "th": "ใครมีขา 4 ข้าง? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 8,
+            "word": "legs"
+          }
+        },
+        {
+          "kind": "what",
+          "ask": {
+            "en": "What do we have only one of? Point to the picture.",
+            "th": "เรามีอะไรเพียงอย่างเดียว? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 7,
+            "word": "nose"
+          }
+        },
+        {
+          "kind": "where",
+          "ask": {
+            "en": "Where are the two ears? Point to the picture.",
+            "th": "หูทั้งสองข้างอยู่ที่ไหน? ให้ชี้ที่ภาพ"
+          },
+          "answer": {
+            "page": 2,
+            "word": "ears"
+          }
+        }
+      ]
     },
     {
       "kind": "decodable",
@@ -2308,7 +2346,22 @@
               "เด็กที่ออกเสียง \"bus\" เป็น \"but\": ให้คงเสียงลมลอดฟันไว้ที่ท้ายคำ: busss",
               "ในภาษาไทย ส ที่เป็นตัวสะกดออกเสียงเหมือน /t/ (แม่กด) แต่ในภาษาอังกฤษ sss ที่ท้ายคำยังคงเป็นเสียงลมลอดฟัน"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Listen again: sss. Sssun starts with sss.\"",
+              "th": "\"ฟังอีกครั้ง: sss คำว่า Sssun ขึ้นต้นด้วย sss\""
+            },
+            "practise": {
+              "en": "\"Say it with me: sss, sss, sss.\"",
+              "th": "\"พูดพร้อมครู: sss, sss, sss\""
+            },
+            "retest": {
+              "en": "\"Thumbs up if it starts with sss. Listen: sock, dog, sun.\"",
+              "th": "\"ยกนิ้วโป้งขึ้นถ้าคำขึ้นต้นด้วย sss: sock, dog, sun\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A2",
@@ -2373,7 +2426,22 @@
               "เสียงลมลอดฟันยาว ๆ และไม่ใช้เสียงจากลำคอ: ไม่ใช่ \"suh\" (เซอะ) และไม่ใช่ \"zzz\" (เสียงหึ่งเหมือนผึ้ง)",
               "เด็กทุกคนทำท่า ไม่ใช่เฉพาะแถวหน้า"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Look and listen: sss. Not 'suh'. Sss.\"",
+              "th": "\"ดูและฟัง: sss ไม่ใช่ 'suh' แต่เป็น sss\""
+            },
+            "practise": {
+              "en": "\"Point to the letter. Say sss with me, three times.\"",
+              "th": "\"ชี้ที่ตัวอักษรและพูด sss พร้อมครู 3 ครั้ง\""
+            },
+            "retest": {
+              "en": "\"Point to the letter s. What is its sound? Sss!\"",
+              "th": "\"ชี้ที่ตัวอักษร s เสียงของตัวอักษรนี้คืออะไร? Sss!\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A3",
@@ -2437,7 +2505,22 @@
               "เด็กที่เขียนตัวอักษร s กลับด้าน: จับมือเด็ก เริ่มที่จุด แล้ววนไปทางซ้ายก่อน",
               "เด็กที่เริ่มเขียนจากด้านล่าง: จับมือเด็กแล้วเริ่มที่จุด"
             ]
-          }
+          },
+          "soundLoop": {
+            "correct": {
+              "en": "\"Watch my hand again: round to the left, then round to the right. It says sss.\"",
+              "th": "\"ดูมือครูอีกครั้ง: วนไปทางซ้าย แล้ววนไปทางขวา ตัวอักษรนี้ออกเสียง sss\""
+            },
+            "practise": {
+              "en": "\"Write it in the air with me. Say sss as you write.\"",
+              "th": "\"เขียนกลางอากาศพร้อมครู และพูด sss ขณะเขียน\""
+            },
+            "retest": {
+              "en": "\"Write the letter s in your book. Say its sound: sss.\"",
+              "th": "\"เขียนตัวอักษร s ในหนังสือ แล้วพูดเสียงของมัน: sss\""
+            }
+          },
+          "loopMinutes": 4
         },
         {
           "id": "A4",
@@ -2506,7 +2589,81 @@
               "เด็กที่อ่านเป็น \"suh - /a/ - mmm\": ลากเสียง sss ไว้ ไม่มี \"uh\" ตามหลัง",
               "เด็กที่อ่าน \"Sam\" เป็น \"Pam\": ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร"
             ]
-          }
+          },
+          "blendDrill": {
+            "words": [
+              {
+                "word": "sad",
+                "sounds": [
+                  "/s/",
+                  "/a/",
+                  "/d/"
+                ],
+                "audio": [
+                  "phonemes/daniel/01-s.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/06-d.mp3"
+                ]
+              },
+              {
+                "word": "Sam",
+                "sounds": [
+                  "/s/",
+                  "/a/",
+                  "/m/"
+                ],
+                "audio": [
+                  "phonemes/daniel/01-s.mp3",
+                  "phonemes/daniel/26-a-short.mp3",
+                  "phonemes/daniel/05-m.mp3"
+                ]
+              },
+              {
+                "word": "sit",
+                "sounds": [
+                  "/s/",
+                  "/i/",
+                  "/t/"
+                ],
+                "audio": [
+                  "phonemes/daniel/01-s.mp3",
+                  "phonemes/daniel/28-i-short.mp3",
+                  "phonemes/daniel/02-t.mp3"
+                ]
+              },
+              {
+                "word": "bus",
+                "sounds": [
+                  "/b/",
+                  "/u/",
+                  "/s/"
+                ],
+                "audio": [
+                  "phonemes/daniel/11-b.mp3",
+                  "phonemes/daniel/30-u-short.mp3",
+                  "phonemes/daniel/01-s.mp3"
+                ]
+              }
+            ],
+            "model": {
+              "en": "\"Listen. I say the sounds, then the word: sss - /a/ - /d/. Sad!\"",
+              "th": "\"ฟัง ครูพูดทีละเสียง แล้วพูดเป็นคำ: sss - /a/ - /d/ Sad!\""
+            },
+            "lead": {
+              "en": "\"Say it with me, three times: sss - /a/ - /d/. Sad!\"",
+              "th": "\"พูดตามครู 3 รอบ: sss - /a/ - /d/ Sad!\""
+            },
+            "test": {
+              "en": "\"Your turn. Say the sounds, then the word.\"",
+              "th": "\"ถึงตาเด็ก ๆ พูดทีละเสียง แล้วพูดเป็นคำ\""
+            },
+            "repeats": 3,
+            "correction": {
+              "en": "\"Stop. Listen again: sss - /a/ - /d/. Say the sounds with me, then the word.\"",
+              "th": "\"หยุดก่อน ฟังอีกครั้ง: sss - /a/ - /d/ พูดทีละเสียงพร้อมครู แล้วพูดเป็นคำ\""
+            }
+          },
+          "loopMinutes": 5
         },
         {
           "id": "A5",
@@ -2630,7 +2787,24 @@
             "watchFor": [
               "เด็กที่อ่าน \"saw\" เป็น \"was\": ชี้ที่ตัวอักษรตัวแรก คือตัวอักษร s แล้วพูด sss"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "off",
+              "saw",
+              "with"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "A7",
@@ -2744,7 +2918,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "is",
+            "week": 4
+          },
+          {
+            "kind": "tricky",
+            "text": "this",
+            "week": 4
+          },
+          {
+            "kind": "frame",
+            "text": "This is my ___.",
+            "week": 4
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "B",
@@ -3180,7 +3389,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "off",
+            "week": 5
+          },
+          {
+            "kind": "tricky",
+            "text": "with",
+            "week": 5
+          },
+          {
+            "kind": "frame",
+            "text": "This is my ___.",
+            "week": 4
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "C",
@@ -3496,7 +3740,8 @@
             "watchFor": [
               "เด็กที่ตอบด้วยคำเดียว: พูดคำตอบเต็ม แล้วให้เด็กพูดตาม"
             ]
-          }
+          },
+          "loopMinutes": 3
         },
         {
           "id": "C6",
@@ -3606,7 +3851,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "with",
+            "week": 5
+          },
+          {
+            "kind": "tricky",
+            "text": "is",
+            "week": 4
+          },
+          {
+            "kind": "frame",
+            "text": "I have two ___.",
+            "week": 5
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "D",
@@ -3736,7 +4016,24 @@
               "อ่านบัตรคำที่ต้องจำ a ว่า \"uh\" (เออะ) แบบใน \"a cat\"",
               "เด็กที่สับสนระหว่าง \"off\" กับ \"on\": วางบัตร 2 ใบเคียงกัน แล้วอ่านช้า ๆ"
             ]
-          }
+          },
+          "sightWords": {
+            "words": [
+              "off",
+              "saw",
+              "with"
+            ],
+            "slide": {
+              "en": "Slide a finger under the word. Say: \"Read it the fast way.\"",
+              "th": "ลากนิ้วใต้คำ แล้วพูดว่า \"Read it the fast way.\" (อ่านแบบเร็ว)"
+            },
+            "check": {
+              "en": "Show one word. The class reads it in 3 seconds.",
+              "th": "ชูคำทีละคำ ให้ทั้งชั้นอ่านภายใน 3 วินาที"
+            },
+            "seconds": 3
+          },
+          "loopMinutes": 3
         },
         {
           "id": "D3",
@@ -3975,7 +4272,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "get",
+            "week": 3
+          },
+          {
+            "kind": "tricky",
+            "text": "a",
+            "week": 1
+          },
+          {
+            "kind": "frame",
+            "text": "This is my ___.",
+            "week": 4
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     },
     {
       "id": "E",
@@ -4250,8 +4582,8 @@
               "\"Row 1: sun, cat, dog. Which one starts with sss? Circle it.\"",
               "\"Row 2: pen, sock, bed. Which one starts with sss? Circle it.\"",
               "\"Row 3: cup, hat, sofa. Which one starts with sss? Circle it.\"",
-              "\"Row 4. Find the word Sam. Circle it.\"",
-              "\"Row 5. Find the word saw. Circle it.\"",
+              "\"Row 4: Pam, Sam, map. Find the word Sam. Circle it.\"",
+              "\"Row 5: with, saw, is. Find the word saw. Circle it.\"",
               "\"Now write the letter s. Then write the word Sam, with a big letter S.\""
             ],
             "studentActions": [
@@ -4287,8 +4619,8 @@
               "\"แถว 1: sun, cat, dog คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
               "\"แถว 2: pen, sock, bed คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
               "\"แถว 3: cup, hat, sofa คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
-              "\"แถว 4 หาคำว่า Sam วงกลมไว้\"",
-              "\"แถว 5 หาคำว่า saw วงกลมไว้\"",
+              "\"แถว 4: Pam, Sam, map หาคำว่า Sam วงกลมไว้\"",
+              "\"แถว 5: with, saw, is หาคำว่า saw วงกลมไว้\"",
               "\"ทีนี้เขียนตัวอักษร s แล้วเขียนคำ Sam โดยใช้ S ตัวพิมพ์ใหญ่\""
             ],
             "studentActions": [
@@ -4300,7 +4632,42 @@
             ]
           }
         }
-      ]
+      ],
+      "recall": {
+        "items": [
+          {
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
+          },
+          {
+            "kind": "sound",
+            "text": "n",
+            "week": 1,
+            "audio": "phonemes/daniel/04-n.mp3"
+          },
+          {
+            "kind": "tricky",
+            "text": "a",
+            "week": 1
+          },
+          {
+            "kind": "tricky",
+            "text": "and",
+            "week": 1
+          },
+          {
+            "kind": "frame",
+            "text": "This is my ___.",
+            "week": 4
+          }
+        ],
+        "ask": {
+          "en": "Show the five cards. The class says each sound or word.",
+          "th": "ชูบัตร 5 ใบ ให้ทั้งชั้นพูดเสียงหรืออ่านคำทีละใบ"
+        }
+      }
     }
   ],
   "review": [
@@ -4776,5 +5143,26 @@
       "english.phonics.pa.initial-sound.identify",
       "english.phonics.pa.final-sound.identify"
     ]
+  },
+  "print": {
+    "letterBox": {
+      "letter": "s",
+      "formationWords": "Start at the dot. Round to the left. Then round to the right.",
+      "startPoint": "dot"
+    },
+    "practice": [
+      { "text": "s s s", "pictureWord": "sun" },
+      { "text": "Sam. Pam. Map. Nap. Sam saw Pam. I saw a man.", "pictureWord": "Sam" }
+    ],
+    "dictation": {
+      "letters": ["s", "s"],
+      "words": ["Sam"],
+      "traceSentence": "Sam saw Pam."
+    },
+    "writing": {
+      "traceText": "I have two eyes",
+      "line": "word",
+      "pictureBox": true
+    }
   }
 }
