@@ -58,8 +58,7 @@ describe('DefaultSrsToKstBridge.buildLearnerState', () => {
       { cardId: 'strong', objectiveId: 'o1', reps: 3, stability: 30, lastReviewedAt: NOW - DAY_MS },
       { cardId: 'weak', objectiveId: 'o1', reps: 1, stability: 2, lastReviewedAt: NOW - 10 * DAY_MS },
     ]).evidence;
-    expect(entry.stability).toBe(30);
-    expect(entry.lastReviewedAt).toBe(NOW - DAY_MS);
+    expect(entry).toMatchObject({ stability: 30, lastReviewedAt: NOW - DAY_MS });
     expect(entry.retention).toBe(stabilityToRetention(2, 10));
   });
 
@@ -68,7 +67,7 @@ describe('DefaultSrsToKstBridge.buildLearnerState', () => {
       { cardId: 'a', objectiveId: 'o1', reps: 1, stability: 4, lastReviewedAt: NOW },
       { cardId: 'b', objectiveId: 'o1', reps: 1, stability: 9, lastReviewedAt: NOW },
     ]).evidence;
-    expect(entry.stability).toBe(4);
+    expect(entry).toMatchObject({ stability: 4 });
   });
 
   it('clamps a future review time to zero elapsed days', () => {
@@ -108,7 +107,7 @@ describe('DefaultSrsToKstBridge.buildLearnerState', () => {
       [prof({ retentionStrength: 0.33 })],
     ).evidence;
     expect(entry.retention).toBe(0.33);
-    expect(entry.stability).toBeUndefined();
+    expect(entry).not.toHaveProperty('stability');
   });
 
   it('emits one entry per objective in first-seen order', () => {
