@@ -47,7 +47,8 @@ export type AwardQuestionXpInput = {
  * and the user XP, level, and CEFR. A migrated `completed = false` row becomes complete.
  * An already complete row (a double click) stays as it is and pays no second XP; with
  * `refreshDetails` its details are refreshed (a chapter MCQ retake resubmit shows the new
- * score) still with no second XP.
+ * score) still with no second XP. A row that already has its XP log (a resubmit after a
+ * retake) saves the new details and pays no second XP.
  * @param tx The drizzle transaction.
  * @param input The user, the activity, the details, and the server-side award.
  * @returns The saved activity row id, `already-complete` for an existing complete row, or
@@ -94,12 +95,16 @@ export async function awardQuestionXp(
   }
 
 
-  await tx.insert(xpLogs).values({
+  // One award for each user, type, and target: the activity row is unique on those three, and the
+  // XP log is unique on the user and that row. A retake keeps the row, so a resubmit pays nothing.
+  const [xpLog] = await tx.insert(xpLogs).values({
     userId: input.userId,
     xpEarned: input.xpEarned,
     activityId: userActivityRow.id,
     activityType: input.activityType,
-  });
+  }).onConflictDoNothing({ target: [xpLogs.userId, xpLogs.activityId] }).returning({ id: xpLogs.id });
+  if (!xpLog) return { status: "saved", activityId: userActivityRow.id };
+
   await grantGpForXp({ tx, schoolId: input.schoolId, userId: input.userId, sourceKey: `xp:${userActivityRow.id}`, activityType: input.activityType, xpEarned: input.xpEarned });
 
   // The XP total is added in SQL so a parallel award is not lost. The update locks the row, so

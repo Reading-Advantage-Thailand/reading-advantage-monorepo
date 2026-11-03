@@ -18,6 +18,7 @@ vi.mock("@reading-advantage/db", () => ({
   userActivity: { id: "userActivity.id", userId: "ua.userId", activityType: "ua.type", targetId: "ua.target", completed: "ua.completed" },
   articleActivityLogs: { id: "articleActivityLogs.id", articleId: "articleActivityLogs.articleId", userId: "articleActivityLogs.userId" },
   xpLogs: { id: "xpLogs.id" },
+  multipleChoiceQuestions: { question: "mcq.question", answer: "mcq.answer", options: "mcq.options", correctAnswer: "mcq.correctAnswer", articleId: "mcq.articleId" },
   eq: vi.fn(() => ({})),
   and: vi.fn(() => ({})),
   or: vi.fn(() => ({})),
@@ -36,7 +37,7 @@ const Q1 = "11111111-1111-4111-8111-111111111111";
 
 function chain<T>(value: T) {
   const stub: Record<string, (...args: unknown[]) => unknown> = {};
-  for (const method of ["from", "where", "limit", "values", "set", "returning", "onConflictDoUpdate"]) stub[method] = () => stub;
+  for (const method of ["from", "where", "limit", "values", "set", "returning", "onConflictDoUpdate", "onConflictDoNothing"]) stub[method] = () => stub;
   (stub as Record<string, unknown>).then = (resolve: (value: T) => unknown) => Promise.resolve(value).then(resolve);
   return stub;
 }
@@ -62,6 +63,12 @@ describe("finishQuiz evidence keys (track primary_mastery_evidence_20261006, FR-
   });
 
   it("stores the question ids, outcomes, and mode beside the legacy keys and enqueues one evidence job for the row", async () => {
+    // A submit with responses first reads the stored answer key.
+    mocks.select.mockReset();
+    mocks.select
+      .mockReturnValueOnce(chain([{ question: "What is in the box?", answer: "A puppy", options: ["A puppy"], correctAnswer: 0 }]))
+      .mockReturnValueOnce(chain([{ xp: 10 }]))
+      .mockReturnValueOnce(chain([{ id: "log-1" }]));
     const result = await finishQuiz(
       ARTICLE,
       { responses: [{ question: "What is in the box?", answer: "A puppy", isCorrect: "A puppy" }] as unknown as string[], score: 1, timer: 30, questions: [{ questionId: Q1, questionType: "mcq", correct: true, firstTry: true }], mode: "independent", audioPlayed: true },

@@ -21,6 +21,7 @@ function fakeTx(currentXp: number, totalAfter?: number) {
         const w: Record<string, unknown> = {
           returning: async () => [{ id: "act1" }],
           onConflictDoUpdate: () => w,
+          onConflictDoNothing: () => w,
         };
         w.then = (resolve: (v: unknown) => unknown) => Promise.resolve([]).then(resolve);
         return w;

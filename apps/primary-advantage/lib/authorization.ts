@@ -233,6 +233,31 @@ function clampSubmittedScore(score: unknown, max: number): number {
   return Math.min(Math.max(parsed, 0), max);
 }
 
+/** One stored multiple-choice question: its text and its answer key. */
+export type McAnswerKeyRow = { question: string; answer: string | null; options: unknown; correctAnswer: number };
+
+/**
+ * Grades multiple-choice responses against the stored answer key. Each response gets the
+ * key's answer as `isCorrect`; a response to an unknown question, or a second response to
+ * one question, is dropped. The client's own `isCorrect` is never trusted.
+ * @param responses The submitted `{ question, answer }` responses.
+ * @param keyRows The article's stored multiple-choice questions.
+ * @returns The responses graded by the server, at most one for each stored question.
+ */
+export function gradeMcResponses(responses: unknown, keyRows: McAnswerKeyRow[]) {
+  const key = new Map(keyRows.map((row) => [row.question, row.answer ?? (Array.isArray(row.options) ? row.options[row.correctAnswer] : undefined)]));
+  const seen = new Set<string>();
+  const graded: Array<{ question: string; answer: unknown; isCorrect: unknown }> = [];
+  for (const response of Array.isArray(responses) ? responses : []) {
+    if (response === null || typeof response !== "object") continue;
+    const { question, answer } = response as { question?: unknown; answer?: unknown };
+    if (typeof question !== "string" || !key.has(question) || seen.has(question)) continue;
+    seen.add(question);
+    graded.push({ question, answer, isCorrect: key.get(question) });
+  }
+  return graded;
+}
+
 /**
  * Derives the XP award for a question activity on the server. Amounts and
  * caps are server-side constants; callers cannot set XP.

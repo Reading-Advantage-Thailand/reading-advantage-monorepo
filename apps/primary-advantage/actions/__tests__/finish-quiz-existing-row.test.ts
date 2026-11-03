@@ -55,7 +55,7 @@ const conflictConfigs: unknown[] = [];
 
 function chain<T>(value: T) {
   const stub: Record<string, (...args: unknown[]) => unknown> = {};
-  for (const method of ["from", "where", "limit", "values", "set", "returning"]) stub[method] = () => stub;
+  for (const method of ["from", "where", "limit", "values", "set", "returning", "onConflictDoNothing"]) stub[method] = () => stub;
   stub.onConflictDoUpdate = (config: unknown) => {
     conflictConfigs.push(config);
     return stub;
@@ -73,7 +73,8 @@ function setup(upsertRows: Array<{ id: string }>) {
   mocks.insert.mockImplementation((table: unknown) => ({
     values: (row: unknown) => {
       inserts.push({ table, row });
-      return table === xpLogs || (table as { id?: string }).id === "al.id" ? chain(undefined) : chain(upsertRows);
+      if (table === xpLogs) return chain([{ id: "log-1" }]);
+      return (table as { id?: string }).id === "al.id" ? chain(undefined) : chain(upsertRows);
     },
   }));
   mocks.update.mockReturnValue(chain([{ xp: 10 }]));

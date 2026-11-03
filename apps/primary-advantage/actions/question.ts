@@ -10,14 +10,29 @@ import {
 import {
   userActivity,
   articleActivityLogs,
+  multipleChoiceQuestions,
 } from '@reading-advantage/db';
+import { z } from "zod";
 import { currentUser } from "@/lib/session";
 import { guardStudentAction } from "@/lib/student-view";
-import { resolveQuestionXpAward } from "@/lib/authorization";
+import { gradeMcResponses, resolveQuestionXpAward } from "@/lib/authorization";
 import { awardQuestionXp } from "@/server/xp/award-question-xp";
 import { getLaqFeedback, getSaqFeedback } from "@/server/utils/assistant";
 import { ActivityType } from "@/types/enum";
 
+/** A retake reopens one article quiz; other activity types have no retake. */
+const retakeSchema = z.object({
+  articleId: z.string().uuid(),
+  type: z.enum([ActivityType.MC_QUESTION, ActivityType.SA_QUESTION, ActivityType.LA_QUESTION]),
+});
+
+/**
+ * Reopens the caller's article quiz for a retake. The activity row stays (marked not complete),
+ * so its XP log stays tied to it and a resubmit pays no second XP.
+ * @param articleId The article id.
+ * @param type The quiz type: MC, SA, or LA.
+ * @returns Success; a preview refusal for staff; or an error.
+ */
 export async function retakeQuiz(articleId: string, type: ActivityType) {
   try {
     const user = await currentUser();
@@ -28,6 +43,10 @@ export async function retakeQuiz(articleId: string, type: ActivityType) {
 
     const preview = guardStudentAction(user, "retake_quiz");
     if (preview) return preview;
+
+    if (!retakeSchema.safeParse({ articleId, type }).success) {
+      return { error: "Invalid retake" };
+    }
 
     const [userActivityRow] = await db.select({ id: userActivity.id })
       .from(userActivity)
@@ -44,12 +63,13 @@ export async function retakeQuiz(articleId: string, type: ActivityType) {
       return { error: "User activity not found" };
     }
 
-    const deletedRows = await db.delete(userActivity)
+    const reopenedRows = await db.update(userActivity)
+      .set({ completed: false, updatedAt: new Date() })
       .where(eq(userActivity.id, userActivityRow.id))
-      .returning();
+      .returning({ id: userActivity.id });
 
-    if (!deletedRows.length) {
-      return { error: "Failed to delete user activity" };
+    if (!reopenedRows.length) {
+      return { error: "Failed to reopen user activity" };
     }
 
     return { success: true };
@@ -85,6 +105,20 @@ export async function finishQuiz(
 
   const preview = guardStudentAction(user, "finish_quiz");
   if (preview) return preview;
+
+  // MC answers are graded against the stored key; the client's own key is ignored.
+  if (type === ActivityType.MC_QUESTION && Array.isArray(data.responses) && data.responses.length) {
+    // A non-uuid id has no stored questions, so it grades against an empty key.
+    const keyRows = !z.string().uuid().safeParse(articleId).success ? [] : await db.select({
+      question: multipleChoiceQuestions.question,
+      answer: multipleChoiceQuestions.answer,
+      options: multipleChoiceQuestions.options,
+      correctAnswer: multipleChoiceQuestions.correctAnswer,
+    })
+      .from(multipleChoiceQuestions)
+      .where(eq(multipleChoiceQuestions.articleId, articleId));
+    data = { ...data, responses: gradeMcResponses(data.responses, keyRows) as unknown as string[] };
+  }
 
   // The award is derived server-side from the submission; callers cannot set XP.
   const xpEarned = resolveQuestionXpAward(type, data);
