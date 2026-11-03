@@ -151,7 +151,7 @@ export type PotionRushEvent =
   | { type: 'rushEnded' }
   | { type: 'shiftComplete'; served: number; coins: number };
 
-export type PotionRushEventType = PotionRushEvent['type'];
+type PotionRushEventType = PotionRushEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const POTION_RUSH_EVENT_TYPES: readonly PotionRushEventType[] = [

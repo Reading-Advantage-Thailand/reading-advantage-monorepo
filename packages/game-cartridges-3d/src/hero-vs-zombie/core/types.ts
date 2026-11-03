@@ -180,7 +180,7 @@ export type HeroVsZombieEvent =
   | { type: 'dawn' }
   | { type: 'nightComplete'; rounds: number; coins: number };
 
-export type HeroVsZombieEventType = HeroVsZombieEvent['type'];
+type HeroVsZombieEventType = HeroVsZombieEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const HERO_VS_ZOMBIE_EVENT_TYPES: readonly HeroVsZombieEventType[] = [

@@ -33,7 +33,7 @@ export const TUNING = {
   heroDamage: 1,
 } as const;
 
-export interface TwinSoulOptions {
+interface TwinSoulOptions {
   seed: number;
   helper: boolean;
 }

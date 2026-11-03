@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { MagicDefenseState } from './types.js';
 
-export const MAGIC_DEFENSE_GAME_ID = 'magic-defense';
+const MAGIC_DEFENSE_GAME_ID = 'magic-defense';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per word with at least one spell, in target order. */
-export function evidenceItemsOf(state: MagicDefenseState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: MagicDefenseState): StoryGameEvidenceItem[] {
   return state.targets
     .filter((word) => word.attempts > 0)
     .map((word) => ({
@@ -49,7 +49,7 @@ export function evidenceOf(state: MagicDefenseState, story: EvidenceStory, seed:
 }
 
 /** The game's own score: the coins of the run. */
-export const scoreOf = (state: MagicDefenseState): number => state.coins;
+const scoreOf = (state: MagicDefenseState): number => state.coins;
 
 /** Everything `complete()` takes: the evidence, the five-field results, and the outcome. */
 export function resultsOf(

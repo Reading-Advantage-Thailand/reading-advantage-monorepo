@@ -8,7 +8,7 @@
 import { nextWordOf, targetFor, type PotionRushCommand, type PotionRushState } from '../core/index.js';
 
 /** The cauldron to drag the item into: the one `targetFor` names, else the neediest of those that want the word. */
-export function cauldronFor(state: PotionRushState, itemId: string): number | null {
+function cauldronFor(state: PotionRushState, itemId: string): number | null {
   const tapped = targetFor(state, itemId);
   if (tapped !== null) return tapped;
   const item = state.belt.find((i) => i.id === itemId);

@@ -54,7 +54,7 @@ export interface Presentation {
   settle(): Promise<void>;
 }
 
-export interface PlayerOptions {
+interface PlayerOptions {
   sim: MagicDefenseSimulation;
   story: { id: string; level: StoryGameEvidence['level'] };
   seed: number;

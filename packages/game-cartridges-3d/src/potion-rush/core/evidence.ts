@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { PotionRushState } from './types.js';
 
-export const POTION_RUSH_GAME_ID = 'potion-rush';
+const POTION_RUSH_GAME_ID = 'potion-rush';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per order the student started or served, in shift order. */
-export function evidenceItemsOf(state: PotionRushState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: PotionRushState): StoryGameEvidenceItem[] {
   return state.orders
     .filter((order) => order.started || order.served)
     .map((order) => {

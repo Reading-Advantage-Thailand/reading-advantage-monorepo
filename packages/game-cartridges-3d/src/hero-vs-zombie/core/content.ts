@@ -10,15 +10,15 @@ import type { NightWord } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
 export type HeroVsZombieInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: HeroVsZombieInput): input is VocabularyInput {
+function isVocabularyInput(input: HeroVsZombieInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 
 /** A word as the night needs it before play: id, term, meaning, input position. */
-export type WordSource = Pick<NightWord, 'id' | 'term' | 'translation' | 'position'>;
+type WordSource = Pick<NightWord, 'id' | 'term' | 'translation' | 'position'>;
 
 /** The meaning an orb carries and the word it belongs to. */
-export interface OrbOption {
+interface OrbOption {
   wordId: string;
   /** The input position of that word. */
   position: number;

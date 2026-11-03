@@ -30,7 +30,6 @@ import type {
   Cell,
   Dir,
   Goblin,
-  Hero,
   LabyrinthCommand,
   LabyrinthEvent,
   LabyrinthState,
@@ -78,7 +77,7 @@ export const TUNING = {
   turnGrace: 0.5,
 } as const;
 
-export interface LabyrinthOptions {
+interface LabyrinthOptions {
   seed: number;
   helper: boolean;
   /** A maze id to force (tests and the QC driver); the default is a seeded choice. */

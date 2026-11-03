@@ -9,7 +9,7 @@ import type { Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 
 export const CHURCHYARD_MODELS = ['zombie', 'dirt-ground', 'sarcophagus', 'dead-tree', 'fence', 'lantern', 'boulder', 'rock-cluster', 'bush', 'tall-grass', 'bone-pile', 'candle-cluster', 'campfire-out'];
 
-export interface Churchyard {
+interface Churchyard {
   setDawn(u: number): void;
 }
 

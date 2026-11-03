@@ -10,12 +10,12 @@ import { CUSTOMER_KINDS, type CustomerKind, type Order } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type PotionRushInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: PotionRushInput): input is SentenceInput {
+function isSentenceInput(input: PotionRushInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the shift needs it: id, text, words, and the reading look-back paragraph. */
-export interface ShiftSentence {
+interface ShiftSentence {
   id: string;
   text: string;
   words: string[];
@@ -45,7 +45,7 @@ export function sentencesOf(input: PotionRushInput): ShiftSentence[] {
 }
 
 /** The customer kinds of a shift: the seeded list, cycled when the shift has more orders than kinds. */
-export function customerKindsOf(rng: Rng, count: number): CustomerKind[] {
+function customerKindsOf(rng: Rng, count: number): CustomerKind[] {
   const kinds: CustomerKind[] = [];
   while (kinds.length < count) kinds.push(...rng.shuffle(CUSTOMER_KINDS));
   return kinds.slice(0, count);

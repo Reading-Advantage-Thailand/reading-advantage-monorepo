@@ -58,7 +58,7 @@ export const TUNING = {
   rushMultiplier: 2,
 } as const;
 
-export interface PotionRushOptions {
+interface PotionRushOptions {
   seed: number;
   helper: boolean;
 }
@@ -109,19 +109,19 @@ export function targetFor(state: PotionRushState, itemId: string): number | null
 }
 
 /** The mood for a share of patience left. */
-export function moodFor(share: number): Mood {
+function moodFor(share: number): Mood {
   if (share <= TUNING.moodGrumpyAt) return 'grumpy';
   if (share <= TUNING.moodWaitingAt) return 'waiting';
   return 'happy';
 }
 
 /** Patience of the next customer after `served` orders. */
-export function patienceFor(served: number): number {
+function patienceFor(served: number): number {
   return Math.max(TUNING.patienceFloorMs, TUNING.patienceMs * TUNING.patienceShrinkPerOrder ** served);
 }
 
 /** Belt speed after `served` orders, as a fraction of the belt per second. */
-export function beltSpeedFor(served: number, helper: boolean): number {
+function beltSpeedFor(served: number, helper: boolean): number {
   const boost = Math.min(TUNING.speedUpMax, TUNING.speedUpPerOrder * served);
   return TUNING.beltSpeed * (1 + boost) * (helper ? TUNING.helperSpeedFactor : 1);
 }

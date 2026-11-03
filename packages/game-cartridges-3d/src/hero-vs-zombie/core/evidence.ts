@@ -15,13 +15,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { HeroVsZombieState } from './types.js';
 
-export const HERO_VS_ZOMBIE_GAME_ID = 'hero-vs-zombie';
+const HERO_VS_ZOMBIE_GAME_ID = 'hero-vs-zombie';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per word the student touched an orb for, in night order. */
-export function evidenceItemsOf(state: HeroVsZombieState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: HeroVsZombieState): StoryGameEvidenceItem[] {
   return state.words
     .filter((word) => word.attempts > 0)
     .map((word) => ({

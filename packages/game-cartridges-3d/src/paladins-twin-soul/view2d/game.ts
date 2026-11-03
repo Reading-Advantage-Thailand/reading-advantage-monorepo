@@ -20,7 +20,7 @@ import { BACKGROUND_FILE, PROJECTION } from './projection.gen.js';
 
 const SFX: Record<Sfx, string> = { reject: 'wrong', freed: 'correct', hit: 'hit', defeat: 'defeat', victory: 'victory', spawn: 'spawn' };
 
-export interface TwinSoul2DTest {
+interface TwinSoul2DTest {
   state(): unknown;
   /** The shades on the card and their centers in game pixels (the QC driver taps them). */
   card(): { awaiting: boolean; targets: { kind: string; id: string; x: number; y: number }[] };
