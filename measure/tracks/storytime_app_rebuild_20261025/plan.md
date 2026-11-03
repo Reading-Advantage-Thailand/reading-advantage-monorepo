@@ -421,7 +421,21 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
   - `tsc --noEmit` in `apps/storytime` at HEAD `ad8b13d84`: exit 0.
 - No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker file changed.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-ad8b13d.log`.
-- [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
+
+### Phase 3 task 3.4 Red evidence
+
+- Red started at role base `28014a3295654a312de31d88e71ad64a698115a6`. The phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Red added the two strategy test files only. It changed no production source or week content.
+- Targeted command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-decodable-ui.test.tsx apps/storytime/__tests__/phase3-phoneme-bank.test.ts && cd apps/storytime && ../../node_modules/.bin/tsc --noEmit'`.
+- Vitest exited 1: 2 files, 7 tests; 7 failed and 0 passed. Failures are assertions: the decodable UI module is missing (4 checks), the phoneme-bank module is missing (2 checks), and the 200,000-entry grapheme case throws `RangeError` (1 check). The `tsc` segment did not run because Vitest failed.
+- The failed checks cover the sounds page and tap, whole-word sound-book and tricky-word playback, CVC clip order, capital-word playback, the 45-clip G3 bank, taught-grapheme coverage, and F28.
+- Type check: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'` exited 0. It reported no errors in the two Red test files.
+- No row passed at Red. Each failed check reports the missing module or the F28 overflow.
+- Test commit: `9fba970a6` (`test(storytime): add red tests for the decodable ui (track_id: storytime_app_rebuild_20261025)`).
+- Report: `measure/runs/storytime_app_rebuild_20261025/red-28014a3.log`.
+- Task 3.4 stays `[~]`; Green owns the implementation.
+
+- [~] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.

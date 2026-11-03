@@ -1,0 +1,31 @@
+# Measure Red report: Storytime task 3.4
+
+- Role: Measure Mid Red; track `storytime_app_rebuild_20261025`; Phase 3 task 3.4.
+- phase_base_sha: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- role_base_sha: `28014a3295654a312de31d88e71ad64a698115a6`.
+- Starting HEAD: `28014a3295654a312de31d88e71ad64a698115a6`.
+- Dirty paths at start: generated and temporary outputs (`.generated/`, `.pnpm-store/`, `.qa-tmp/`, `.tmp*`, test-results) are generated/ignorable. Other untracked Primary, Science, docs, and root paths are unrelated user work. No dirty path is part of this task.
+- Task 3.4 was marked `[~]` before test work.
+
+## Evidence
+
+- Targeted command ran through `heavy-run.sh` as specified. Exit 1; 2 files; 7 tests; 7 failed, 0 passed.
+- All failures are expected assertion failures. Four UI checks fail because the decodable module is missing. Two bank checks fail because the bank module is missing. The F28 check fails because `blendPlanForWord` throws `RangeError` for 200,000 graphemes.
+- The final targeted run did not reach its chained `tsc` command. The separate Storytime `tsc --noEmit` command ran through `heavy-run.sh` and exited 0. No test-file errors were reported.
+- No row passed at HEAD. Green owns implementation of the missing UI and bank, and the F28 fix.
+- Test commit: `9fba970a6574672ff4363c72d28e0224618fbba9`.
+- Changed files: `apps/storytime/__tests__/phase3-decodable-ui.test.tsx`, `apps/storytime/__tests__/phase3-phoneme-bank.test.ts`, and this report. The plan contains the command evidence.
+
+## MEASURE_AGENT_RESULT
+role: Measure Mid Red
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.4 — Decodable UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 28014a3295654a312de31d88e71ad64a698115a6
+head: 9fba970a6574672ff4363c72d28e0224618fbba9 (test commit; evidence commit follows)
+commits: 9fba970a6574672ff4363c72d28e0224618fbba9; evidence commit pending
+tests: targeted Vitest exit 1 (2 files, 7 tests, 7 failed, 0 passed); tsc exit 0
+files: apps/storytime/__tests__/phase3-decodable-ui.test.tsx; apps/storytime/__tests__/phase3-phoneme-bank.test.ts; measure/tracks/storytime_app_rebuild_20261025/plan.md; this report
+remaining_failures: 4 missing decodable UI assertions; 2 missing phoneme bank assertions; F28 RangeError for 200,000 graphemes
+status: completed
+handoff: Green should implement the decodable module and 45-clip bank, then rerun these tests. Fix the F28 spread overflow.
