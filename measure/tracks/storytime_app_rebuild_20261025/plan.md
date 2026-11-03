@@ -357,17 +357,17 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 
 ### Phase 3 task 3.3 Red evidence
 
-- Mid-Red started with immutable phase base `7db52a49d20e195388fd91670cc7c022312b50c5`; role base `a9132167a0d741b32798b033000ded91d3c5924b`. Both resolve, and HEAD matched the role base before edits.
-- Pre-edit status contained unrelated untracked paths. I preserved them and did not stage them.
-- Red tests cover the task 3.3 strategy rows, including AC-6.1, my turn, slow mode, load failure, page turns and end, overlap, package accessibility, and package imports.
-- Targeted command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx'`.
-- Final command result: exit 1; 2 failed files; 11 failed tests; 0 passed tests. All reported failures were assertions, with no import or runtime errors.
-- Failures identify missing reader integration, read-along behaviors, package imports, sentence and word ARIA state, word keyboard operation, and duplicate player ids. The package a11y assertions fail because current passage spans lack the requested ARIA and keyboard support; the duplicate-id assertion fails on the repeated `playPauseButton`.
-- The first run exposed an incorrect lookup for page timings. The second run showed that the overlap is in w06 `song.times`, not the read-along book timings. The final run found that shipped 0.04-second overlap. It rendered the overlap through the package passage and found exactly one marked word. The parent UI assertion then failed because the route does not use the package position logic.
-- Red tests and report: `apps/storytime/__tests__/phase3-readalong-ui.test.tsx`, `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx`, and `measure/runs/storytime_app_rebuild_20261025/red-a913216.log`.
-- Test commit: `54c1de12a882c4675a0a59ef02dfa172ec07220b` (`test(storytime): add red tests for the read-along ui (track_id: storytime_app_rebuild_20261025)`).
-- Test correction commit: `b1dd21ab2b1e8aa6d7df0c5fbe8bf1de17db86fa` (`test(storytime): fix shipped overlap case (track_id: storytime_app_rebuild_20261025)`).
-- Plan evidence and report commit: `998d75dc54c8a42d995fe0329d9df12fccc20dfb` (`chore(storytime): finalize read-along red evidence`).
+- Retry started at Green HEAD `c9e2b25a00b396e3d0c519b995640bbb91f469d2`. Immutable phase base `7db52a49d20e195388fd91670cc7c022312b50c5` and role base `a9132167a0d741b32798b033000ded91d3c5924b` resolve.
+- Pre-edit status held unrelated untracked user paths. I preserved them and did not stage them.
+- The retry follows the orchestrator decisions: sentence remains one tab stop; arrows move focus to words with `tabindex="-1"`; Enter and Space activate a word. The server page stays thin and the client reader path is `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx`.
+- Tests cover AC-6.1, My turn, slow mode, localized load failure, page turns and end, page-end audio, the shipped overlap, package accessibility, and package specifiers.
+- The first shipped page with two timed sentences is in w02. The test scans shipped weeks and uses that page. It does not add or change a content fixture.
+- Final targeted command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx packages/read-along/components/read-along/__tests__/read-along-passage.test.tsx'`.
+- Final result: exit 1; 2 failed files; 11 failed tests; 17 passed tests. Failures are test assertions. The existing `read-along-passage.test.tsx` passes all 16 tests.
+- The overlap assertion passes: it finds the shipped 0.04-second overlap and checks for exactly one marked word. The app reader tests fail because the client reader does not exist yet; the server-page assertion fails because the route does not render it. Package assertions identify missing sentence ARIA, keyboard word access, and unique control IDs.
+- Test files: `apps/storytime/__tests__/phase3-readalong-ui.test.tsx`; `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx`. The run report is `measure/runs/storytime_app_rebuild_20261025/red-a913216.log`.
+- Retry test commit: `f65c56efa42ddd591aab2f22622cc77428a35a1f` (`test(storytime): retarget read-along red tests (track_id: storytime_app_rebuild_20261025)`).
+- Plan and report evidence are committed with this retry report.
 
 ### Phase 3 task 3.3 Green block
 
