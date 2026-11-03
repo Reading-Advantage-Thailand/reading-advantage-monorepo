@@ -12,7 +12,10 @@
       "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 67"
     },
     "images": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-03",
+      "words": "\"Both ok\" (2026-11-02 07:00 ICT); \"Looks good\" (2026-11-02 14:28 ICT); \"Yes\" (2026-11-03 11:54 ICT)",
+      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; print Phase 4 git note on 2e3272e9"
     },
     "audio": {
       "status": "draft"
@@ -209,7 +212,8 @@
           "Teacher Kim",
           "Nan"
         ],
-        "caption": "Hello!"
+        "caption": "Hello!",
+        "file": "l2/media/w01/books/1-hello/cover.jpg"
       },
       "pages": [
         {
@@ -219,7 +223,8 @@
             "characters": [
               "Pat"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p01.jpg"
           }
         },
         {
@@ -229,7 +234,8 @@
             "characters": [
               "May"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p02.jpg"
           }
         },
         {
@@ -239,7 +245,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p03.jpg"
           }
         },
         {
@@ -249,7 +256,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p04.jpg"
           }
         },
         {
@@ -259,7 +267,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p05.jpg"
           }
         },
         {
@@ -269,7 +278,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p06.jpg"
           }
         },
         {
@@ -285,7 +295,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p07.jpg"
           }
         },
         {
@@ -302,7 +313,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/1-hello/p08.jpg"
           }
         }
       ],
@@ -791,7 +803,8 @@
           "Pip",
           "Nan"
         ],
-        "caption": "Nan Can Nod"
+        "caption": "Nan Can Nod",
+        "file": "l2/media/w01/books/2-nan-can-nod/cover.jpg"
       },
       "pages": [
         {
@@ -801,7 +814,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p01.jpg"
           }
         },
         {
@@ -811,7 +825,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p02.jpg"
           }
         },
         {
@@ -821,7 +836,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p03.jpg"
           }
         },
         {
@@ -831,7 +847,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p04.jpg"
           }
         },
         {
@@ -841,7 +858,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p05.jpg"
           }
         },
         {
@@ -849,7 +867,8 @@
           "image": {
             "prompt": "A school nurse, a woman of about thirty with short black hair, a white nurse's uniform, a small white nurse's cap, and white shoes, smiles and holds a small first-aid bag with no symbol on it. One clear picture, the main thing large in the middle, a plain light background.",
             "characters": [],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p06.jpg"
           }
         },
         {
@@ -859,7 +878,8 @@
             "characters": [
               "Pip"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p07.jpg"
           }
         },
         {
@@ -870,7 +890,8 @@
               "Pip",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w01/books/2-nan-can-nod/p08.jpg"
           }
         }
       ],

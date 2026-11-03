@@ -8,8 +8,9 @@ const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const shippedPath = resolve(app, "content/l2/w01.json");
 
 describe("Phase 3 week readiness", () => {
-  it("rejects shipped published w01 because each page picture lacks a file", async () => {
+  it("rejects a week when a page picture lacks a file", async () => {
     const week = JSON.parse(readFileSync(shippedPath, "utf8"));
+    week.books[0].pages[0].image = { prompt: "a missing page picture" };
     const lib = resolve(app, "lib/readiness.ts");
     expect(() => readFileSync(lib, "utf8"), "Missing shared readiness module").not.toThrow();
     const modulePath = new URL(`file://${lib}`).href;

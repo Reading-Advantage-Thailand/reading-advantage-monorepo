@@ -129,7 +129,7 @@ describe("Round 6 F9 and F27 the missing list covers every picture entry", () =>
     week.books[0].cover = { prompt: "a cover" };
     week.focus.family = { words: [{ word: "tap", image: { prompt: "a tap" } }], max: 8 };
     const media = receiveWeek(week).media;
-    const cover = media.find((item) => item.kind === "book-cover");
+    const cover = media.find((item) => item.file === "books.0.cover");
     expect(cover?.missing, "The cover without a file is not listed as missing").toMatch(/cover of the .+ book/);
     expect(cover?.file).toBe("books.0.cover");
     const family = media.find((item) => item.kind === "family-word-picture");
