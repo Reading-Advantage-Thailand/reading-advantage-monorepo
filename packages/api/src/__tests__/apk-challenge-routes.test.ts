@@ -191,6 +191,14 @@ describe("teacher class discovery route", () => {
     expect(deps.listTeacherClasses).not.toHaveBeenCalled();
   });
 
+  it("rejects a teacherId query key with 400 so a caller cannot pick another teacher", async () => {
+    const deps = dependencies(teacher);
+    const response = await createApkChallengeTeacherClassesRoute(asDeps(deps)).GET(request("/api/v1/apk/challenges/teacher-classes?teacherId=teacher-2"));
+
+    expect(await errorCode(response)).toEqual({ status: 400, code: "INVALID_QUERY" });
+    expect(deps.listTeacherClasses).not.toHaveBeenCalled();
+  });
+
   it("maps a domain FORBIDDEN code to 403", async () => {
     const deps = dependencies(teacher);
     deps.listTeacherClasses.mockRejectedValue(Object.assign(new Error("nope"), { code: "FORBIDDEN" }));
