@@ -9,6 +9,10 @@
  *
  * Evidence refs: Reading PB-001 / C-RA-CRIT-06; Reading migration PB-1.
  *
+ * Uses ARTICLE_RATING because XP is server-owned since 89dda10d6
+ * (xpForActivityType): ARTICLE_READ awards no XP, so it cannot exercise
+ * the xp_log path.
+ *
  * @jest-environment node
  */
 
@@ -70,7 +74,7 @@ jest.mock("@reading-advantage/db", () => {
         {
           id: `activity-${activityCounter}`,
           userId: "user-1",
-          activityType: "ARTICLE_READ",
+          activityType: "ARTICLE_RATING",
           targetId: "article-1",
           completed: true,
           createdAt: new Date(),
@@ -152,7 +156,7 @@ describe("postActivityLog XP idempotency (Red)", () => {
 
   it("parallel completions for the same (userId, activityType, targetId) produce exactly one xpLogs row", async () => {
     const userId = "user-1";
-    const activityType = "ARTICLE_READ";
+    const activityType = "ARTICLE_RATING";
     const articleId = "article-1";
     const concurrentRequests = 5;
 
@@ -182,7 +186,7 @@ describe("postActivityLog XP idempotency (Red)", () => {
 
   it("reports the duplicate XP row count when idempotency is missing", async () => {
     const userId = "user-1";
-    const activityType = "ARTICLE_READ";
+    const activityType = "ARTICLE_RATING";
     const articleId = "article-1";
 
     await Promise.all([
