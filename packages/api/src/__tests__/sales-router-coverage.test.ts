@@ -9,7 +9,9 @@ import type { DB } from "@reading-advantage/db";
 
 vi.mock("@reading-advantage/domain/sales", () => {
   class SalesError extends Error {
-    code = "SALES_ERROR";
+    constructor(message: string, public readonly code = "SALES_ERROR") {
+      super(message);
+    }
   }
   return {
     getModules: vi.fn(),
@@ -53,7 +55,7 @@ vi.mock("@reading-advantage/domain/sales", () => {
     chatMessageOutputSchema: z.object({ id: z.string() }),
     salesCohortRepOutputSchema: z.object({ userId: z.string() }),
     salesRepDetailOutputSchema: z.object({ rep: z.object({ userId: z.string() }) }),
-    approveContentInputSchema: z.object({ kind: z.string(), id: z.string() }),
+    approveContentInputSchema: z.object({ lessonId: z.string().optional(), rubricId: z.string().optional() }),
     approveContentOutputSchema: z.object({ id: z.string(), approved: z.boolean() }),
     SalesError,
     SalesAuthError: class extends SalesError {},
@@ -149,7 +151,7 @@ describe("sales scope middleware", () => {
   it("rejects an admin without a verified scope", async () => {
     const caller = createCaller({ user: salesAdmin, tenant: { schoolId: null }, productScope: { kind: "company" } });
 
-    await expect(caller.sales.admin.approveContent({ kind: "lesson", id: "l1" })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(caller.sales.admin.approveContent({ lessonId })).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(sales.approveCurriculumContent).not.toHaveBeenCalled();
   });
 
@@ -227,31 +229,31 @@ describe("sales write procedures", () => {
   });
 
   it("admin.approveContent approves content for a SALES_ADMIN", async () => {
-    vi.mocked(sales.approveCurriculumContent).mockResolvedValue({ id: "l1", approved: true } as never);
+    vi.mocked(sales.approveCurriculumContent).mockResolvedValue({ id: lessonId, approved: true } as never);
 
-    await expect(adminCaller().sales.admin.approveContent({ kind: "lesson", id: "l1" })).resolves.toEqual({ id: "l1", approved: true });
+    await expect(adminCaller().sales.admin.approveContent({ lessonId })).resolves.toEqual({ id: lessonId, approved: true });
     expect(sales.approveCurriculumContent).toHaveBeenCalledWith(
       expect.objectContaining({ user: salesAdmin, scope: companyScope }),
-      { kind: "lesson", id: "l1" },
+      { lessonId },
     );
   });
 
   it("admin.approveContent forbids a sales rep and writes nothing", async () => {
-    await expect(repCaller().sales.admin.approveContent({ kind: "lesson", id: "l1" })).rejects.toMatchObject({ code: "FORBIDDEN", message: "Sales admin access required" });
+    await expect(repCaller().sales.admin.approveContent({ lessonId })).rejects.toMatchObject({ code: "FORBIDDEN", message: "Sales admin access required" });
     expect(sales.approveCurriculumContent).not.toHaveBeenCalled();
   });
 });
 
 describe("sales error mapping", () => {
   const cases: Array<[string, () => unknown, string, string]> = [
-    ["AuthError", () => new AuthError("no permission"), "FORBIDDEN", "Sales access denied"],
+    ["AuthError", () => new AuthError("no permission", "FORBIDDEN"), "FORBIDDEN", "Sales access denied"],
     ["SalesAuthError", () => new sales.SalesAuthError("other company"), "FORBIDDEN", "Sales resource unavailable"],
     ["ScenarioNotFoundError", () => new sales.ScenarioNotFoundError("gone"), "NOT_FOUND", "Scenario not found"],
     ["RubricNotApprovedError", () => new sales.RubricNotApprovedError("draft"), "BAD_REQUEST", "Sales curriculum prerequisite not met"],
     ["CurriculumNotApprovedError", () => new sales.CurriculumNotApprovedError("draft"), "BAD_REQUEST", "Sales curriculum prerequisite not met"],
-    ["LessonPrerequisiteNotMetError", () => new sales.LessonPrerequisiteNotMetError("locked"), "BAD_REQUEST", "Sales curriculum prerequisite not met"],
+    ["LessonPrerequisiteNotMetError", () => new sales.LessonPrerequisiteNotMetError(lessonId, scenarioId), "BAD_REQUEST", "Sales curriculum prerequisite not met"],
     ["AudioStorageError", () => new sales.AudioStorageError("bucket down"), "INTERNAL_SERVER_ERROR", "Sales service temporarily unavailable"],
-    ["a generic SalesError", () => new sales.SalesError("quota"), "BAD_REQUEST", "Sales request could not be completed"],
+    ["a generic SalesError", () => new sales.SalesError("quota", "QUOTA_EXCEEDED"), "BAD_REQUEST", "Sales request could not be completed"],
     ["a not found Error that is not typed", () => new Error("Database connection not found"), "INTERNAL_SERVER_ERROR", "Sales service temporarily unavailable"],
   ];
 
@@ -270,14 +272,14 @@ describe("sales error mapping", () => {
   });
 
   it("logs a structured event with the sales code", async () => {
-    vi.mocked(sales.markTheoryLessonComplete).mockRejectedValue(new sales.SalesError("quota"));
+    vi.mocked(sales.markTheoryLessonComplete).mockRejectedValue(new sales.SalesError("quota", "QUOTA_EXCEEDED"));
 
     await expect(repCaller().sales.markTheoryLessonComplete({ lessonId })).rejects.toMatchObject({ code: "BAD_REQUEST" });
     expect(JSON.parse(String(errorSpy.mock.calls[0][0]))).toEqual({
       level: "error",
       event: "sales_operation_failed",
       errorName: "Error",
-      salesCode: "SALES_ERROR",
+      salesCode: "QUOTA_EXCEEDED",
       detail: "quota",
     });
   });
@@ -298,7 +300,7 @@ describe("sales error mapping", () => {
   });
 
   it("maps errors from every rep procedure", async () => {
-    const rejectWith = new sales.ModulePrerequisiteNotMetError("locked");
+    const rejectWith = new sales.ModulePrerequisiteNotMetError("advanced", "basics");
     for (const fn of [sales.getModules, sales.getModuleBySlug, sales.getLesson, sales.getAttemptsForScenario, sales.getProgressForUser, sales.getDashboardData, sales.submitQuiz, sales.approveCurriculumContent]) {
       vi.mocked(fn).mockRejectedValue(rejectWith);
     }
@@ -312,6 +314,6 @@ describe("sales error mapping", () => {
     await expect(rep.sales.progress()).rejects.toMatchObject({ code: "BAD_REQUEST" });
     await expect(rep.sales.dashboard()).rejects.toMatchObject({ code: "BAD_REQUEST" });
     await expect(rep.sales.submitQuiz({ lessonId } as never)).rejects.toMatchObject({ code: "BAD_REQUEST" });
-    await expect(admin.sales.admin.approveContent({ kind: "lesson", id: "l1" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(admin.sales.admin.approveContent({ lessonId })).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 });
