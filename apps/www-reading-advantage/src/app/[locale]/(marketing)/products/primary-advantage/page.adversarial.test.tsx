@@ -206,9 +206,44 @@ function findStrict(text: string): string[] {
   return STRICT_TERMS.filter(({ re }) => re.test(scanned)).map(({ name }) => name);
 }
 
-/** Characters that a reader cannot see but that change an exact match or a line break. */
-const INVISIBLE =
-  /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f\u00a0\u00ad\u034f\u061c\u115f\u1160\u17b4\u17b5\u180e\u2000-\u200f\u2028-\u202f\u205f-\u206f\u3000\ufeff]/;
+/**
+ * Code point ranges that a reader cannot see but that change an exact match or a line break.
+ * The set has control characters (not tab, line feed, or carriage return), NBSP, soft hyphen,
+ * zero-width and joiner characters, bidi marks, wide and thin spaces, and the byte order mark.
+ */
+const INVISIBLE_RANGES: ReadonlyArray<readonly [number, number]> = [
+  [0x00, 0x08],
+  [0x0b, 0x0c],
+  [0x0e, 0x1f],
+  [0x7f, 0x7f],
+  [0xa0, 0xa0],
+  [0xad, 0xad],
+  [0x34f, 0x34f],
+  [0x61c, 0x61c],
+  [0x115f, 0x1160],
+  [0x17b4, 0x17b5],
+  [0x180e, 0x180e],
+  [0x2000, 0x200f],
+  [0x2028, 0x202f],
+  [0x205f, 0x206f],
+  [0x3000, 0x3000],
+  [0xfeff, 0xfeff],
+];
+
+/**
+ * Finds the first invisible character of a text.
+ * @param text The text to scan.
+ * @returns The code point of the first invisible character, or null.
+ */
+function findInvisible(text: string): number | null {
+  for (const character of text) {
+    const codePoint = character.codePointAt(0) ?? 0;
+    if (INVISIBLE_RANGES.some(([low, high]) => codePoint >= low && codePoint <= high)) {
+      return codePoint;
+    }
+  }
+  return null;
+}
 
 /**
  * Finds an invisible character, a tab, a line break, a double space, or an edge space.
@@ -217,9 +252,9 @@ const INVISIBLE =
  */
 function findSpacingProblems(text: string): string[] {
   const problems: string[] = [];
-  const invisible = INVISIBLE.exec(text);
-  if (invisible) {
-    problems.push(`invisible U+${invisible[0].charCodeAt(0).toString(16).padStart(4, "0")}`);
+  const invisible = findInvisible(text);
+  if (invisible !== null) {
+    problems.push(`invisible U+${invisible.toString(16).padStart(4, "0")}`);
   }
   if (/[\t\n\r]/.test(text)) problems.push("tab or line break");
   if (/ {2,}/.test(text)) problems.push("double space");
