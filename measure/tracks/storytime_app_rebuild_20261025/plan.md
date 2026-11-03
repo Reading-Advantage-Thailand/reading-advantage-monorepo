@@ -369,6 +369,16 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Retry test commit: `f65c56efa42ddd591aab2f22622cc77428a35a1f` (`test(storytime): retarget read-along red tests (track_id: storytime_app_rebuild_20261025)`).
 - Plan and report evidence are committed with this retry report.
 
+### Phase 3 task 3.3 Red follow-up
+
+- Follow-up started at Green HEAD `b6e9bb312c85e024fe10899a0cdeabc51b335b68`. The phase base and Red role base remain `7db52a49d20e195388fd91670cc7c022312b50c5` and `a9132167a0d741b32798b033000ded91d3c5924b`.
+- The My turn test now renders the shipped source returned by `shippedTwoSentencePage()` and taps its first sentence word. This keeps the rendered week and timing data aligned.
+- I checked each other Red test for a source mismatch. The two-sentence test uses its returned source; slow mode, errors, page turns, and page-end tests use w01 data with w01; overlap and package tests render their own timing data.
+- Required command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx'`.
+- Result: exit 1; 2 failed files; 11 failed tests; 1 passed test. Failures are assertions. The overlap check passes. The remaining failures concern the missing reader, route integration, passage accessibility, and duplicate player IDs.
+- Test commit: `530b539eeabf9c788612c530ca23783541d06447` (`test(storytime): render the source of the my turn word (track_id: storytime_app_rebuild_20261025)`).
+- Plan and Red report evidence are committed together for this follow-up.
+
 ### Phase 3 task 3.3 Green block
 
 - Green started at role base `c27beea26`. The targeted Red command exits 1 with 2 failed files and 11 failed tests, as Red recorded.
