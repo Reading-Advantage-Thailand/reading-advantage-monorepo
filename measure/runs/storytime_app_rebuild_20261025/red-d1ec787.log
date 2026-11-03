@@ -1,0 +1,29 @@
+# Measure Red report — Storytime task 3.6
+
+- Role: Measure Mid Red; model `openai/gpt-6-luna`.
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3, task 3.6.
+- `phase_base_sha`: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- `role_base_sha`: `d1ec787a9eb0e596bf5c1ab57720391c670d315b`.
+- Starting HEAD matched `role_base_sha`; both bases resolve, and `phase_base_sha` is an ancestor.
+- Dirty paths at start: unrelated untracked user work. Preserved and not staged.
+- Task 3.6 is `[~]` before test work.
+- Test commit: `a19040e66` (`test(storytime): add URL and browser gate red tests (track_id: storytime_app_rebuild_20261025)`). The exact requested subject was 102 characters; commitlint requires at most 100, so the accepted header uses `URL`.
+- AC-2.2 targeted command passed: 1 file, 1 test. The test covers 16 URL values from w01 to w08 and calls the app route with each URL's locale, level, week, and part. It prints `urls_checked=16`.
+- One initial test run failed before collection because Vitest could not resolve `@/i18n/routing`. Narrow mocks fixed test setup. The final run passed.
+- `tsc --noEmit` in `apps/storytime` passed under `heavy-run.sh`. `bash -n` passed for the browser gate.
+- The browser gate was not run, as the Red role must leave the single heavy browser run for Green. It contains the three self-tests, ready fixture, production build/server, first-load and media checks, tap-target checks, and AC-8.2 checks.
+- Plan evidence is in `measure/tracks/storytime_app_rebuild_20261025/plan.md` and will be committed separately.
+
+## MEASURE_AGENT_RESULT
+status: complete
+role: Measure Mid Red
+track: storytime_app_rebuild_20261025
+phase: Phase 3 — At-home app, task 3.6
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: d1ec787a9eb0e596bf5c1ab57720391c670d315b
+head: pending evidence commit
+commits: a19040e66 (Red tests); pending (plan and report evidence)
+tests: printed-URL Vitest passed (1 file, 1 test, urls_checked=16); app tsc passed; browser-gate bash -n passed
+files: apps/storytime/__tests__/phase3-printed-urls.test.ts, apps/storytime/__tests__/phase3-browser-gate.sh, measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/red-d1ec787.log
+remaining_failures: none observed; browser acceptance remains unverified because Red did not run the browser gate
+handoff: AC-2.2 is already satisfied at this HEAD. Green must run phase3-browser-gate.sh once and resolve any failing browser rows. Task 3.6 remains [~].

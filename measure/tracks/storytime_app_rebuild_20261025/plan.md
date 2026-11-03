@@ -520,7 +520,20 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Targeted Vitest command: exit 0; 1 file; 7 tests passed. App `tsc --noEmit`: exit 0; no diagnostics.
 - Plan evidence and updated Red report commit separately. The report is `measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log`.
 
-- [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
+### Phase 3 task 3.6 Red evidence
+
+- Mid-Red used `phase_base_sha` `7db52a49d20e195388fd91670cc7c022312b50c5` and `role_base_sha` `d1ec787a9eb0e596bf5c1ab57720391c670d315b`. Both resolve; the phase base is an ancestor of the role base. Starting HEAD matched the role base.
+- The starting tree held unrelated untracked user work. It remains unchanged and unstaged. No generated or task-related dirty path was present.
+- Red added `phase3-printed-urls.test.ts` and `phase3-browser-gate.sh`. No production source or shipped content changed.
+- Targeted command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-printed-urls.test.ts'`. Final result: exit 0; 1 file and 1 test passed. The test checks all eight shipped weeks and prints `urls_checked=16`. AC-2.2 already holds at this HEAD; Red did not create a false failure.
+- A first test attempt failed before collection because Vitest could not resolve the app alias `@/i18n/routing`. The test added narrow mocks for the route dependencies. The final targeted run passed.
+- App type check: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && HEAVY_PREFLIGHT_WAIT_S=3600 ../../node_modules/.bin/tsc --noEmit'`. Result: exit 0.
+- Browser gate syntax: `bash -n apps/storytime/__tests__/phase3-browser-gate.sh`. Result: exit 0. The browser gate itself was not run; its single heavy browser run belongs to Green.
+- Test commit: `a19040e66` (`test(storytime): add URL and browser gate red tests (track_id: storytime_app_rebuild_20261025)`). The requested full subject exceeded the 100-character header limit, so the header was shortened.
+- The exact remaining acceptance work is the unrun browser gate: first-load transfer, media timing, 64 px tile and speaker targets at 360x800 and 800x360, and AC-8.2 video box ratios. Task 3.6 remains `[~]`.
+- Report: `measure/runs/storytime_app_rebuild_20261025/red-d1ec787.log`.
+
+- [~] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.
 - [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
