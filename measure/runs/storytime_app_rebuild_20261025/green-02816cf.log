@@ -1,0 +1,58 @@
+# Measure Green report — Storytime task 3.6
+
+- Role: Measure Jr Green; model `deepseek/deepseek-v4.1-flash` (`opencode-go`).
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3, task 3.6.
+- Immutable `phase_base_sha`: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- `role_base_sha` / starting HEAD: `02816cfcbd5a2d38ab1d2c03a5abe995a5cdd85f`.
+- No coder was delegated. No Red file is changed. Unrelated untracked work preserved.
+
+## Work done
+
+- Confirmed with `git diff --stat` that the only uncommitted app change was `apps/storytime/app/globals.css` (2 lines added, 2 lines removed).
+- The phone song box now sets `width: min(100%, calc(75dvh * 9 / 16)); height: auto;`. The laptop 16:9 rule is unchanged.
+- App type check: `tsc --noEmit` in `apps/storytime` exits 0 through `heavy-run.sh`.
+- Implementation commit: `a5f856091` (`fix(storytime): size the phone song box (track_id: storytime_app_rebuild_20261025)`).
+
+## Browser gate
+
+- The final gate ran on this exact tree. Red ran it, per the orchestrator decision at 05:24 ICT, to save one heavy run. No gate script line changed in the CSS commit.
+- Result: Playwright `PASS=22, FAIL=0`; outer `PASS=4, FAIL=0`.
+- All three self-tests reject their bad pages.
+- Labeled lines:
+  - `transferred_bytes_first_load=223741`
+  - `media_requests_before_tap=0`
+  - `requests_total=23`
+  - `first_media_request_index=25`
+  - `tap_target_min_px_tiles_360x800=106`
+  - `tap_target_min_px_speakers_360x800=64`
+  - `tap_target_min_px_tiles_800x360=106`
+  - `tap_target_min_px_speakers_800x360=64`
+  - `video_box_ratio_x1000_phone=563`
+  - `video_box_height_pct_phone=69`
+  - `video_box_ratio_x1000_laptop=1778`
+- AC-5.3: `transferred_bytes_first_load=223741` is at most 300,000, and `media_requests_before_tap=0`.
+- AC-8.2: phone ratio 563 against 562 ± 5; phone height 69 percent against at most 75; laptop ratio 1778 against 1778 ± 5.
+- AC-5.2: tiles 106 px and speakers 64 px at both viewports.
+- Source of the full labeled rows: `measure/runs/storytime_app_rebuild_20261025/red-d1ec787.log`.
+
+## Other gates
+
+- Printed-URL test (AC-2.2): exit 0; 1 file; 1 test; 16 URLs.
+- `apps/storytime/app/globals.css` is not an ESLint target.
+- No TypeScript file changed, so `build-graph` needs no update.
+- Task 3.6 is `[x]`.
+
+## MEASURE_AGENT_RESULT
+status: complete
+role: Measure Jr Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 — At-home app, task 3.6
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 02816cfcbd5a2d38ab1d2c03a5abe995a5cdd85f
+head: pending evidence commit
+commits: a5f856091 (phone song box fix)
+tests: browser gate Playwright PASS=22, FAIL=0; outer PASS=4, FAIL=0; tsc --noEmit exit 0; printed-URL test exit 0 (1 file, 1 test, 16 URLs)
+files: apps/storytime/app/globals.css, measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/green-02816cf.log
+remaining_failures: none
+handoff: Task 3.6 is [x] with automated evidence. The gate ran on the committed tree, per the orchestrator decision at 05:24 ICT, to save a heavy run. Review scope for Phase 3 is unchanged.
+END_MEASURE_AGENT_RESULT
