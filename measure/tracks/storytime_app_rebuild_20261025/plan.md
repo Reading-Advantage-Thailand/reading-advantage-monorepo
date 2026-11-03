@@ -473,7 +473,22 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Test commits: `923ae6362` and `479842d27`. The second commit adds the case-insensitive button query found during final data review. Neither commit changes production source.
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-28014a3.log`.
 
-- [~] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
+### Phase 3 task 3.4 Green evidence
+
+- Implementation commit: `05fd90c46` (`feat(storytime): add the decodable ui (track_id: storytime_app_rebuild_20261025)`).
+- Files: `apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx` (new), `apps/storytime/lib/phoneme-bank.ts` (new), `apps/storytime/lib/blend.ts`, `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx`, and `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`.
+- The decodable part holds the sounds page with the element, its graphemes, and its sound; the bank clip on tap; the page word tap that follows the `blendPlanForWord` plan; the whole word from the book recording; the page turner; and the tricky-word list. No phone voice (rule 10.5).
+- The bank holds the 45 G3 clips and the labeled count `phoneme_clips=45`. F28: the longest-grapheme maximum uses a loop, and a capital word takes the lower-case plan.
+- The route renders the decodable part for `part === "decodable"`. The task 3.1a media gate, the task 3.2 tiles, and the task 3.3 read-along reader are unchanged.
+- Gates:
+  - Targeted Red command: exit 0; 2 files; 7 tests.
+  - Green gate: exit 0; 7 files; 39 tests.
+  - `tsc --noEmit` in `apps/storytime`: exit 0.
+  - ESLint on the five changed TypeScript files: exit 0.
+- No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker file changed.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-f7584ba.log`.
+
+- [x] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1. Done: `05fd90c46`.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.

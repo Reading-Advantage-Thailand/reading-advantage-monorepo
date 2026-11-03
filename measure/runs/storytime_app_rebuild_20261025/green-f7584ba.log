@@ -1,0 +1,55 @@
+# Measure Green report: Storytime task 3.4 (retry 2)
+
+- Role: Measure Green; track `storytime_app_rebuild_20261025`; Phase 3 task 3.4.
+- phase_base_sha: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- role_base_sha: `f7584ba8aa16b38984fbd4fa479a3e198f8f8668`.
+- Starting HEAD: `f7584ba8a`. The Red changes are inside `phase_base_sha..HEAD`.
+- Red model of this phase: `openai/gpt-6-luna`. No coder was delegated.
+- Dirty paths at start: generated and temporary outputs, and unrelated Primary, Science, docs, and
+  root files. No dirty path belongs to this task.
+- Task 3.4 was `[~]` in `plan.md` before the work.
+
+## Implementation
+
+- `apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx` (new): the client decodable part.
+  The sounds page shows the element, its graphemes, and its sound; a tap plays the bank clip. A page
+  word asks `blendPlanForWord` for its plan. A blend word plays its graphemes from the bank in
+  reading order, then the whole word from the book recording. A tricky word and a sound-book word
+  play whole. The page turner and the tricky-word list stay local. No phone voice (rule 10.5).
+- `apps/storytime/lib/phoneme-bank.ts` (new): the 45 G3 clips with the `grapheme` and `file` of each
+  one, plus the labeled count `phoneme_clips=45`.
+- `apps/storytime/lib/blend.ts`: F28. The longest-grapheme maximum uses a loop, not a spread, so a
+  200,000-entry list returns without `RangeError`. A capital word takes the lower-case plan.
+- `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx`: re-exports the decodable part from the
+  client reader path.
+- `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: renders the decodable part for
+  `part === "decodable"`. The task 3.1a media gate, the task 3.2 tiles, and the task 3.3 read-along
+  reader are unchanged.
+
+## Gates
+
+- Targeted Red command:
+  `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-decodable-ui.test.tsx apps/storytime/__tests__/phase3-phoneme-bank.test.ts'`.
+  Exit 0; 2 files; 7 tests; 7 passed.
+- GREEN_TEST_COMMAND: exit 0; 7 files; 39 tests; 39 passed.
+  - First run exited 1 on the read-along source check: the page import put `StorytimeDecodable`
+    first, and the check requires `StorytimeReader` first. The import order changed; the rerun passed.
+- `tsc --noEmit` in `apps/storytime`: exit 0.
+- ESLint on the five changed TypeScript files: exit 0.
+- No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker
+  file changed.
+
+## MEASURE_AGENT_RESULT
+role: Measure Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.4 — Decodable UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: f7584ba8aa16b38984fbd4fa479a3e198f8f8668
+head: 05fd90c46 (implementation); the plan-evidence commit follows
+commits: 05fd90c46 (`feat(storytime): add the decodable ui (track_id: storytime_app_rebuild_20261025)`)
+tests: targeted Vitest exit 0 (2 files, 7 tests, 7 passed); Green gate exit 0 (7 files, 39 tests, 39 passed); tsc exit 0; ESLint exit 0
+files: apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx (new); apps/storytime/lib/phoneme-bank.ts (new); apps/storytime/lib/blend.ts; apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx; apps/storytime/app/[locale]/st/[level]/[week]/page.tsx; measure/tracks/storytime_app_rebuild_20261025/plan.md; this report
+remaining_failures: none
+status: completed
+handoff: Task 3.4 is `[x]` with implementation `05fd90c46`. Reviewers should scope the diff to the five app files. The decodable part is at `part=decodable`; task 3.5 owns the song page and part 3.6 owns the budget.
+END_MEASURE_AGENT_RESULT
