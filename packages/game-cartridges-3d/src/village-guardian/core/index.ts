@@ -2,13 +2,9 @@
 export * from './types.js';
 export {
   VILLAGE_WORDS,
-  isSentenceInput,
   villageSentencesOf,
   sentencesOf,
   watchOf,
-  villagerKindsOf,
-  type VillageGuardianInput,
-  type WatchSentence,
 } from './content.js';
 export {
   BARN_DOOR,
@@ -20,15 +16,10 @@ export {
   nextVillagerOf,
   threatCountFor,
   threatSpeedFor,
-  type VillageGuardianOptions,
   type VillageGuardianSimulation,
 } from './sim.js';
 export {
-  VILLAGE_GUARDIAN_GAME_ID,
-  SCORE,
-  evidenceItemsOf,
   evidenceOf,
   resultsOf,
   scoreOf,
-  type EvidenceStory,
 } from './evidence.js';

@@ -13,13 +13,13 @@ export const PPM = 64;
 export const PROJECTION: Projection2D = { elevation: 0, ppm: PPM, uMin: 0, vMax: 0, width: 0, height: 0 };
 
 /** Same grid as the 3D tower: meters between columns and rows. */
-export const COLUMN_WIDTH = 1.7;
-export const ROW_HEIGHT = 1.5;
+const COLUMN_WIDTH = 1.7;
+const ROW_HEIGHT = 1.5;
 export const columnX = (col: number): number => (col - 1.5) * COLUMN_WIDTH;
 export const rowY = (row: number): number => row * ROW_HEIGHT;
 
 /** The half width of the wall in meters (the pillars stand just outside). */
-export const HALF_WALL = 4.2;
+const HALF_WALL = 4.2;
 
 /** Draws the wall, the ledges, the pillars, and the gate arch for a tower whose top is at `summitRow`. */
 export function drawTower(g: Phaser.GameObjects.Graphics, summitRow: number): void {

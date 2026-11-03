@@ -5,7 +5,7 @@
 import { createAnswerChoiceAudioController, type AnswerChoiceAudioController } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { readToSelectAudioEvidenceSchema, type GameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
 
-export const ANSWER_AUDIO_SESSION = {
+const ANSWER_AUDIO_SESSION = {
   modality: 'read-to-select-audio',
   promptLocale: 'th-TH',
   answerLocale: 'en-US',

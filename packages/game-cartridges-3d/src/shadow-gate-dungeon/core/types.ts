@@ -125,7 +125,7 @@ export type ShadowGateEvent =
   | { type: 'roomCleared'; roomId: string; sentenceId: string }
   | { type: 'delveComplete'; rooms: number };
 
-export type ShadowGateEventType = ShadowGateEvent['type'];
+type ShadowGateEventType = ShadowGateEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const SHADOW_GATE_EVENT_TYPES: readonly ShadowGateEventType[] = [

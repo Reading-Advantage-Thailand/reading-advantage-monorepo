@@ -12,12 +12,12 @@ import type { RoomSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type ShadowGateInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: ShadowGateInput): input is SentenceInput {
+function isSentenceInput(input: ShadowGateInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the delve needs it: id, text, words, and the reading look-back paragraph. */
-export interface DelveSentence {
+interface DelveSentence {
   id: string;
   text: string;
   words: string[];

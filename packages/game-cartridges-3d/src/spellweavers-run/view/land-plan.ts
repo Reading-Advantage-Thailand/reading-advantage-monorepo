@@ -8,9 +8,9 @@
 export const CHUNK = 30;
 
 /** Forest chunks and meadow chunks (chunk index modulo the pattern). */
-export const PATTERN = ['forest', 'forest', 'meadow', 'forest', 'meadow', 'meadow'] as const;
+const PATTERN = ['forest', 'forest', 'meadow', 'forest', 'meadow', 'meadow'] as const;
 
-export type Kind = (typeof PATTERN)[number];
+type Kind = (typeof PATTERN)[number];
 
 /** The kind of chunk `index` (0 is the first chunk ahead of the start). */
 export const kindOf = (index: number): Kind => PATTERN[((index % PATTERN.length) + PATTERN.length) % PATTERN.length]!;

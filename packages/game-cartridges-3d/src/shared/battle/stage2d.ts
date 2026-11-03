@@ -19,8 +19,8 @@ import type { BattleEnemy, EnemyKind, HeroId } from './types.js';
 export const HEROES: HeroId[] = ['knight', 'wizard', 'cleric'];
 
 /** The clips the 2D stage plays on the party and on each monster kind (files of `primary-chibi-2d`). */
-export const HERO_CLIPS_2D = ['idle', 'run', 'attack', 'attack2', 'hit', 'victory'] as const;
-export const ENEMY_CLIPS_2D: Readonly<Record<EnemyKind, readonly string[]>> = {
+const HERO_CLIPS_2D = ['idle', 'run', 'attack', 'attack2', 'hit', 'victory'] as const;
+const ENEMY_CLIPS_2D: Readonly<Record<EnemyKind, readonly string[]>> = {
   skeleton: ['idle', 'rise', 'attack', 'hit', 'death'],
   'giant-bat': ['idle', 'fly', 'screech', 'attack', 'hit', 'death'],
   mimic: ['idle', 'reveal', 'attack', 'hit', 'death'],
@@ -37,7 +37,7 @@ export function battleFiles2D(kinds: readonly EnemyKind[] = ['skeleton', 'giant-
 }
 
 /** The student in the party: the place of their role and their figure (its pixels also make the face icon). */
-export interface PartyPlayer2D {
+interface PartyPlayer2D {
   readonly place: HeroId;
   readonly figure: PortraitFigure;
 }

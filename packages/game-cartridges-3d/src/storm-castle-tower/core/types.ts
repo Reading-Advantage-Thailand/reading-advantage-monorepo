@@ -157,7 +157,7 @@ export type StormCastleTowerEvent =
   | { type: 'towerCleared'; towerId: string; sentenceId: string }
   | { type: 'climbComplete'; towers: number };
 
-export type StormCastleTowerEventType = StormCastleTowerEvent['type'];
+type StormCastleTowerEventType = StormCastleTowerEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const STORM_CASTLE_TOWER_EVENT_TYPES: readonly StormCastleTowerEventType[] = [

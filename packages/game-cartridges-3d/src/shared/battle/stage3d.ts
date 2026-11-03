@@ -18,14 +18,12 @@ const NOT_BUILT = new Set(['wall-alcove']);
 const LIGHT_ASSETS = ['torch-sconce', 'brazier', 'candle-cluster'];
 const DRAGON_SCALE = 2.1;
 
-import { FLOOR_Y, HALL, type StageDef } from './hall.js';
+import { HALL, type StageDef } from './hall.js';
 
-export type { StageDef } from './hall.js';
-
-export const STAGES: StageDef[] = [HALL, HALL, HALL, HALL];
+const STAGES: StageDef[] = [HALL, HALL, HALL, HALL];
 
 /** The vault map pieces the battle shows: every place but the characters and the unbuilt parts. */
-export const vaultPlaces = () => sunkenVaultPlaces().filter((p) => p.asset !== 'adventurer' && p.asset !== 'skeleton' && !NOT_BUILT.has(p.asset));
+const vaultPlaces = () => sunkenVaultPlaces().filter((p) => p.asset !== 'adventurer' && p.asset !== 'skeleton' && !NOT_BUILT.has(p.asset));
 
 /** Every model of the vault map. */
 export const vaultModels = (): string[] => [...new Set(vaultPlaces().map((p) => p.asset))];

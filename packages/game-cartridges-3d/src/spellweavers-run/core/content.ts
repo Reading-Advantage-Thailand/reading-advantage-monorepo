@@ -11,12 +11,12 @@ import type { Orb, RunSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type SpellweaversInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: SpellweaversInput): input is SentenceInput {
+function isSentenceInput(input: SpellweaversInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the run needs it before play. */
-export interface SourceSentence {
+interface SourceSentence {
   id: string;
   text: string;
   words: string[];
@@ -25,7 +25,7 @@ export interface SourceSentence {
 }
 
 /** The words a run sentence can hold: 3 to 8 orbs in a row. */
-export const SENTENCE_WORDS = { min: 3, max: 8 } as const;
+const SENTENCE_WORDS = { min: 3, max: 8 } as const;
 
 /** The sentences of the input, in the input's order. Sentences with fewer than 2 words are skipped. */
 export function sentencesOf(input: SpellweaversInput): SourceSentence[] {
@@ -49,7 +49,7 @@ export function sentencesOf(input: SpellweaversInput): SourceSentence[] {
 }
 
 /** The sentences a run can take: those of 3 to 8 words, or all of them when none fits. */
-export function runSentencesOf(input: SpellweaversInput): SourceSentence[] {
+function runSentencesOf(input: SpellweaversInput): SourceSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= SENTENCE_WORDS.min && s.words.length <= SENTENCE_WORDS.max);
   return fit.length > 0 ? fit : all;

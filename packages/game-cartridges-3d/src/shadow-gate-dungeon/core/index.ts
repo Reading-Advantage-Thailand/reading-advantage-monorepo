@@ -4,13 +4,10 @@ export {
   ROOM_WORDS,
   bareWord,
   distractorsOf,
-  isSentenceInput,
   roomSentencesOf,
   sentencesOf,
   shiftOf,
   wordKey,
-  type DelveSentence,
-  type ShadowGateInput,
 } from './content.js';
 export {
   GATE,
@@ -21,15 +18,10 @@ export {
   rightCrystalsOf,
   shadowCountFor,
   shadowSpeedFor,
-  type ShadowGateOptions,
   type ShadowGateSimulation,
 } from './sim.js';
 export {
-  SHADOW_GATE_GAME_ID,
-  SCORE,
-  evidenceItemsOf,
   evidenceOf,
   resultsOf,
   scoreOf,
-  type EvidenceStory,
 } from './evidence.js';

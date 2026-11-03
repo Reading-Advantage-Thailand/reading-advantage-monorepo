@@ -11,8 +11,8 @@ import type { Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 export const TOWER_MODELS = ['wall', 'arch', 'pillar', 'torch-sconce', 'chains', 'gate', 'barrel', 'boulder'];
 
 /** The meters between two columns, and two rows. */
-export const COLUMN_WIDTH = 1.7;
-export const ROW_HEIGHT = 1.5;
+const COLUMN_WIDTH = 1.7;
+const ROW_HEIGHT = 1.5;
 /** The wall face is at z = WALL_Z; the climber stands in front of it. */
 export const WALL_Z = -0.3;
 export const CLIMBER_Z = 0.55;
