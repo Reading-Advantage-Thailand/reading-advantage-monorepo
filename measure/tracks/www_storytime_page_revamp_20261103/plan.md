@@ -15,8 +15,8 @@
 
 ## Phase 1: Storytime Advantage page
 
-- [x] 1.0 Receive hand-off. Test: AC-1, AC-3, AC-5. PM hand-off at 19:06 ICT closes this task. Inputs: `/home/daniebo/Desktop/handoff/a45-storytime-www-images/` (10 PNG files and `MANIFEST.txt`; SHA-256 checked at source and copy), copy v0.4 from advantage-pr commit `9b5e1743`, Thai copy v0.1 from `4f8fcbde`, and image list v0.2 from `84b07643`. Image list contains 10 assets. The cast sheet is removed; the `classroomAlt` slot stays empty. Hand-off files are read-only.
-- [~] 1.1 Record image source checks and crops. Test: AC-3, AC-4. Before use, run `sha256sum` for all 10 files and compare with `MANIFEST.txt`. Stop on any mismatch. Use lossless WebP and record each crop box in source pixels plus output size below. Crop and scale only. No source PNG files enter the repository.
+- [x] 1.0 Receive hand-off. Test: AC-1, AC-3, AC-5. PM hand-off at 19:06 ICT closes this task. Track update committed as `2fad5973b`. Inputs: `/home/daniebo/Desktop/handoff/a45-storytime-www-images/` (10 PNG files and `MANIFEST.txt`; SHA-256 checked at source and copy), copy v0.4 from advantage-pr commit `9b5e1743`, Thai copy v0.1 from `4f8fcbde`, and image list v0.2 from `84b07643`. Image list contains 10 assets. The cast sheet is removed; the `classroomAlt` slot stays empty. Hand-off files are read-only.
+- [x] 1.1 Record image source checks and crops. Test: AC-3, AC-4. Done in commit `25ab29720`. `sha256sum` matched all 10 manifest entries. `../../node_modules/.bin/tsx scripts/crop-storytime-page-images.ts --manifest /home/daniebo/Desktop/handoff/a45-storytime-www-images/MANIFEST.txt` exited 0 and wrote 10 lossless WebP files at the sizes below. No source PNG files entered the repository.
 - [ ] 1.2 Build the page and locale strings from the source copy. Test: AC-1, AC-5, AC-6, AC-7, AC-12, AC-13, AC-15. Use copy v0.4, Thai v0.1, and English copy in `zh`. Set both CTA links to `/contact`. Keep no games or demo section. Remove the old roadmap strings and stock images.
 - [ ] 1.3 Add and update the requested tests. Test: AC-1, AC-6, AC-7, AC-12, AC-13, AC-14, AC-15. Add the content test, image test, and fixture. Update the page test, Storytime row of `phase-2-seo-remaining-static`, and `NONEXISTENT_APPS` in `phase-w3-claims`. Run only these test files.
 - [ ] 1.4 Run focused gates. Test: AC-8. Run ESLint on changed files and check-types for the www app through heavy-run.
@@ -31,16 +31,16 @@ Crop boxes use source pixels in `x, y, width, height` order. Output dimensions a
 
 | Source file | Crop box | Output size | Target |
 |---|---:|---:|---|
-| `week-01-hello-pip.png` | pending visual inspection | pending | `week-01-hello-pip.webp` |
-| `week-02-how-many-cakes.png` | pending visual inspection | pending | `week-02-how-many-cakes.webp` |
-| `week-03-it-is-red.png` | pending visual inspection | pending | `week-03-it-is-red.webp` |
-| `week-04-nan-and-pam-nap.png` | pending visual inspection | pending | `week-04-nan-and-pam-nap.webp` |
-| `week-05-two-ears.png` | pending visual inspection | pending | `week-05-two-ears.webp` |
-| `week-06-i-see-a-cat.png` | pending visual inspection | pending | `week-06-i-see-a-cat.webp` |
-| `week-07-top-on-a-pot.png` | pending visual inspection | pending | `week-07-top-on-a-pot.webp` |
-| `level-2-unit-1-cover-art.png` | pending visual inspection | pending | `level-2-unit-1-cover-art.webp` |
-| `week-01-reader-hello-cover.png` | pending visual inspection | pending | `week-01-reader-hello-cover.webp` |
-| `week-01-reader-nan-can-nod-cover.png` | pending visual inspection | pending | `week-01-reader-nan-can-nod-cover.webp` |
+| `week-01-hello-pip.png` | `0, 0, 4000, 3000` | `1200×900` | `week-01-hello-pip.webp` |
+| `week-02-how-many-cakes.png` | `0, 0, 4000, 3000` | `900×675` | `week-02-how-many-cakes.webp` |
+| `week-03-it-is-red.png` | `0, 0, 4000, 3000` | `900×675` | `week-03-it-is-red.webp` |
+| `week-04-nan-and-pam-nap.png` | `0, 0, 4000, 3000` | `900×675` | `week-04-nan-and-pam-nap.webp` |
+| `week-05-two-ears.png` | `0, 0, 4000, 3000` | `900×675` | `week-05-two-ears.webp` |
+| `week-06-i-see-a-cat.png` | `0, 0, 4000, 3000` | `900×675` | `week-06-i-see-a-cat.webp` |
+| `week-07-top-on-a-pot.png` | `0, 0, 4000, 3000` | `900×675` | `week-07-top-on-a-pot.webp` |
+| `level-2-unit-1-cover-art.png` | `0, 0, 4000, 3000` | `960×720` | `level-2-unit-1-cover-art.webp` |
+| `week-01-reader-hello-cover.png` | `0, 0, 4000, 3000` | `480×360` | `week-01-reader-hello-cover.webp` |
+| `week-01-reader-nan-can-nod-cover.png` | `0, 0, 4000, 3000` | `480×360` | `week-01-reader-nan-can-nod-cover.webp` |
 
 ## Handoff defaults
 
