@@ -12,12 +12,12 @@ import type { EscapeSentence, Gate } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type EscapeInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: EscapeInput): input is SentenceInput {
+function isSentenceInput(input: EscapeInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the escape needs it before play. */
-export interface SourceSentence {
+interface SourceSentence {
   id: string;
   text: string;
   words: string[];
@@ -26,7 +26,7 @@ export interface SourceSentence {
 }
 
 /** The words an escape sentence can hold. */
-export const SENTENCE_WORDS = { min: 3, max: 8 } as const;
+const SENTENCE_WORDS = { min: 3, max: 8 } as const;
 
 /** Lanes across the sky, and the distance between two lane centers, in meters. */
 export const LANES = { count: 3, gap: 3.6 } as const;
@@ -41,7 +41,7 @@ export function nearestLane(x: number): number {
 }
 
 /** The sentences of the input, in the input's order. Sentences with fewer than 2 words are skipped. */
-export function sentencesOf(input: EscapeInput): SourceSentence[] {
+function sentencesOf(input: EscapeInput): SourceSentence[] {
   if (isSentenceInput(input)) {
     return input
       .map((item, i) => {
@@ -62,7 +62,7 @@ export function sentencesOf(input: EscapeInput): SourceSentence[] {
 }
 
 /** The sentences an escape can take: those of 3 to 8 words, or all of them when none fits. */
-export function escapeSentencesOf(input: EscapeInput): SourceSentence[] {
+function escapeSentencesOf(input: EscapeInput): SourceSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= SENTENCE_WORDS.min && s.words.length <= SENTENCE_WORDS.max);
   return fit.length > 0 ? fit : all;

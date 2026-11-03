@@ -9,15 +9,15 @@
 export const CHUNK = 30;
 
 /** The kinds of chunk (chunk index modulo the pattern). */
-export const PATTERN = ['forest', 'meadow', 'village', 'forest', 'forest', 'meadow'] as const;
+const PATTERN = ['forest', 'meadow', 'village', 'forest', 'forest', 'meadow'] as const;
 
-export type Kind = (typeof PATTERN)[number];
+type Kind = (typeof PATTERN)[number];
 
 /** The kind of chunk `index` (0 is the first chunk ahead of the start). */
-export const kindOf = (index: number): Kind => PATTERN[((index % PATTERN.length) + PATTERN.length) % PATTERN.length]!;
+const kindOf = (index: number): Kind => PATTERN[((index % PATTERN.length) + PATTERN.length) % PATTERN.length]!;
 
 /** Models a chunk of each kind places, with their counts. */
-export const PROPS: Record<Kind, [string, number][]> = {
+const PROPS: Record<Kind, [string, number][]> = {
   forest: [['oak-tree', 6], ['pine-tree', 7], ['bush', 4], ['fern', 3], ['boulder', 2], ['rock-cluster', 1]],
   meadow: [['oak-tree', 2], ['bush', 3], ['wildflowers', 8], ['fern', 3], ['boulder', 2], ['pine-tree', 2]],
   village: [['cottage', 3], ['well', 1], ['hay-bale', 4], ['wildflowers', 5], ['oak-tree', 3], ['bush', 2]],
@@ -46,7 +46,7 @@ export function rng(seed: number): () => number {
 }
 
 /** One prop placed on the land: name, x across, z along the flight (negative ahead), scale, turn. */
-export interface Placed {
+interface Placed {
   name: string;
   x: number;
   z: number;

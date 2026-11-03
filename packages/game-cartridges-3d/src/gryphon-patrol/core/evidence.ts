@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { PatrolState } from './types.js';
 
-export const GRYPHON_PATROL_GAME_ID = 'gryphon-patrol';
+const GRYPHON_PATROL_GAME_ID = 'gryphon-patrol';
 
 /** What the evidence needs from the story; a plain `SentenceInput` patrol passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per sentence the student started or cleared, in patrol order. */
-export function evidenceItemsOf(state: PatrolState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: PatrolState): StoryGameEvidenceItem[] {
   return state.sentences
     .filter((sentence) => sentence.started || sentence.cleared)
     .map((sentence) => {

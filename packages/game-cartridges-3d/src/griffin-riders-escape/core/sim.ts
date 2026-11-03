@@ -43,17 +43,12 @@ export const TUNING = {
   finaleMs: 2600,
 } as const;
 
-export interface EscapeOptions {
+interface EscapeOptions {
   seed: number;
   helper: boolean;
 }
 
 export type EscapeSimulation = Simulation<EscapeState, EscapeCommand, EscapeEvent>;
-
-/** The nearest wave ahead, or null. */
-export function nextWaveOf(state: EscapeState): Wave | null {
-  return state.waves[0] ?? null;
-}
 
 /** The lane with the next word in the nearest row of gates ahead, or null when no gate row is ahead. */
 export function rightLaneOf(state: EscapeState): number | null {

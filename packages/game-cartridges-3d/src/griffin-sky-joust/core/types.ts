@@ -100,7 +100,7 @@ export type JoustEvent =
   | { type: 'sentenceDone'; sentence: number; id: string }
   | { type: 'joustComplete'; score: number };
 
-export type JoustEventType = JoustEvent['type'];
+type JoustEventType = JoustEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const JOUST_EVENT_TYPES: readonly JoustEventType[] = [

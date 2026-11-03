@@ -15,7 +15,7 @@ const CHUNKS = 5;
 const CLOUDS = 8;
 const CLOUD_SPAN = 180;
 
-export interface Land {
+interface Land {
   /** Keeps the chunks and clouds around the griffin at world z (negative ahead). */
   follow(z: number): void;
 }

@@ -66,7 +66,7 @@ export const TUNING = {
   restHurtMs: 1500,
 } as const;
 
-export interface HauntedLibraryOptions {
+interface HauntedLibraryOptions {
   seed: number;
   helper: boolean;
 }

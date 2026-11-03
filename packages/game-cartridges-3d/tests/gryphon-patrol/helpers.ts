@@ -12,7 +12,7 @@ import {
 
 const STORIES_DIR = join(process.cwd(), 'tests', 'fixtures', 'stories');
 
-export const loadStory = (id: string): StoryInput =>
+const loadStory = (id: string): StoryInput =>
   parseStoryInput(JSON.parse(readFileSync(join(STORIES_DIR, id, 'story.json'), 'utf8')), id);
 
 /** 12 sentences (the patrol caps at 4) and 6 longer sentences. */
@@ -46,7 +46,7 @@ export const tickN = (sim: PatrolSimulation, n: number): PatrolEvent[] => {
 };
 
 /** True while a round is open for a shot (no shot in flight, no rest). */
-export const aiming = (sim: PatrolSimulation): boolean =>
+const aiming = (sim: PatrolSimulation): boolean =>
   sim.state.phase === 'patrol' && sim.state.round !== null && sim.state.round.stage === 'aim' && sim.state.restMs === 0;
 
 /** Ticks until a round is open for a shot (the first tick opens round 1). */

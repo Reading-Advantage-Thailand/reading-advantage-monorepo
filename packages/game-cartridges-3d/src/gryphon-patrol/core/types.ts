@@ -161,7 +161,7 @@ export type PatrolEvent =
   | { type: 'sentenceCast'; sentence: number; id: string }
   | { type: 'patrolComplete'; score: number };
 
-export type PatrolEventType = PatrolEvent['type'];
+type PatrolEventType = PatrolEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const PATROL_EVENT_TYPES: readonly PatrolEventType[] = [

@@ -7,7 +7,7 @@
 import { type EscapeCommand, type EscapeState } from '../core/index.js';
 
 /** The lane the griffin should fly in now, or null with nothing ahead. */
-export function wantedLane(state: EscapeState): number | null {
+function wantedLane(state: EscapeState): number | null {
   const wave = state.waves[0];
   if (!wave) return null;
   const gates = state.waves.find((w) => w.kind === 'gates');

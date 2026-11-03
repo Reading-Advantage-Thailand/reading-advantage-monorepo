@@ -55,7 +55,7 @@ export const TUNING = {
   startY: ARENA.height - 120,
 } as const;
 
-export interface JoustOptions {
+interface JoustOptions {
   seed: number;
   helper: boolean;
 }
@@ -67,12 +67,12 @@ const STEP_S = STEP_MS / 1000;
 const DAMP = Math.pow(TUNING.damping, STEP_MS / 16.67);
 
 /** Rider speed for a mode, in pixels per second. */
-export function riderSpeedFor(helper: boolean): number {
+function riderSpeedFor(helper: boolean): number {
   return helper ? TUNING.riderSpeedHelper : TUNING.riderSpeed;
 }
 
 /** The word the griffin must strike now, or null when no sentence is open. */
-export function targetWordOf(state: JoustState): string | null {
+function targetWordOf(state: JoustState): string | null {
   if (state.riders.length === 0) return null;
   return state.sentences[state.sentence]?.words[state.word] ?? null;
 }
