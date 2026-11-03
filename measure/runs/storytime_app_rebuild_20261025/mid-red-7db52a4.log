@@ -1,0 +1,32 @@
+Role: measure-mid-red
+Model: openai/gpt-6-luna
+Track: storytime_app_rebuild_20261025
+Phase: P3, task 3.1
+phase_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+
+Dirty paths before edits were classified as generated or ignorable (`.generated/`, `.next`, test results, package store, temp paths) or unrelated user work (all other pre-existing untracked paths). None were staged.
+
+Red command:
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-entry-route.test.ts apps/storytime/__tests__/phase3-readiness.test.ts apps/storytime/__tests__/phase3-manifest.test.ts apps/storytime/__tests__/phase1-scaffold.test.ts apps/storytime/__tests__/phase1-boundary.test.ts'`
+
+Result: exit 1; 4 failed files, 9 failed assertions, 8 passed tests; 17 tests total. All failures were assertion failures. The expected missing route behavior and readiness behavior caused the failures. There were no module-load or runtime failures.
+
+Changed tests: `phase3-entry-route.test.ts`, `phase3-readiness.test.ts`, `phase3-manifest.test.ts`, `phase1-scaffold.test.ts`, and `phase1-boundary.test.ts`.
+
+Plan update: task 3.1 is `[~]` for Green. Other Phase 3 decisions remain outside this task. Workbooks uses `image.caption` for alt text; an empty caption renders `alt=""`. Picture files arrive in phases 5.5 and 5.6. Sarabun is the Thai reading font. The release target is 2026-11-20. Green should not add these to task 3.1 unless its tests require them.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: completed
+track: storytime_app_rebuild_20261025
+phase: P3 task 3.1
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+resulting_head: pending commit
+commits: pending
+tests_run: targeted P3.1 Vitest command; exit 1, 4 failed files, 9 failed assertions, 8 passed tests
+files_changed: apps/storytime/__tests__/phase3-entry-route.test.ts; apps/storytime/__tests__/phase3-readiness.test.ts; apps/storytime/__tests__/phase3-manifest.test.ts; apps/storytime/__tests__/phase1-scaffold.test.ts; apps/storytime/__tests__/phase1-boundary.test.ts; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/mid-red-7db52a4.log
+plan_updates: task 3.1 marked [~]; Red evidence and command result recorded
+known_failures: Phase 3 entry route and readiness implementation remain absent; manifest lacks the test tooling; locale redirect is absent.
+handoff: GREEN_TEST_COMMAND=bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-entry-route.test.ts apps/storytime/__tests__/phase3-readiness.test.ts apps/storytime/__tests__/phase3-manifest.test.ts apps/storytime/__tests__/phase1-scaffold.test.ts apps/storytime/__tests__/phase1-boundary.test.ts'; resolve readiness test module path with shared `lib` export and ensure the receiver imports that same function. Preserve user work. Green should use a different model family.
+END_MEASURE_AGENT_RESULT

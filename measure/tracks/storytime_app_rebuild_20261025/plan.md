@@ -263,7 +263,16 @@ Exception to the phase-order rule of line 11 for tasks 3.9, 3.10, and 4.6: these
 
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
-- [ ] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4.
+- [~] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4.
+
+### Phase 3 task 3.1 Red evidence
+
+- Mid-Red started at `7db52a49d20e195388fd91670cc7c022312b50c5`; both supplied base SHAs resolve, and HEAD matched `phase_base_sha`.
+- The test command exited 1 with 4 failed files, 9 failed tests, and 8 passed tests (17 total). All 9 failures are assertions. No import or runtime errors occurred.
+- Failed assertions identify the absent Phase 3 route behavior, readiness module and receiver hookup, manifest tooling, and locale redirect.
+- The readiness tests inspect shipped w01 and a deep in-memory clone. The mock does not decide readiness. No content file changed.
+- Model: `openai/gpt-6-luna` (Red).
+- The commit records the Red tests and plan evidence. Green must use a different model family.
 - [ ] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. Test: AC-5.2.
 - [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.

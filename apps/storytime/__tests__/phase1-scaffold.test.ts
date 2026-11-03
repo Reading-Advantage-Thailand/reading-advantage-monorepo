@@ -98,17 +98,10 @@ describe("Phase 1 scaffold prerequisites for AC-1.1", () => {
     }
   });
 
-  it("answers with notFound for every week before Phase 3", async () => {
+  it("replaces the pre-Phase-3 404 route with an at-home entry route", () => {
     const path = resolve(app, "app/[locale]/st/[level]/[week]/page.tsx");
-    readRequired(path);
-    const { default: Page } = await import(/* @vite-ignore */ path);
-    for (const locale of ["th", "en"]) {
-      for (const [level, week] of [["2", "1"], ["2", "8"], ["1", "1"], ["4", "52"], ["bad", "0"]]) {
-        await expect(Promise.resolve().then(() => Page({
-          params: Promise.resolve({ locale, level, week }),
-          searchParams: Promise.resolve({}),
-        }))).rejects.toMatchObject({ digest: "NEXT_HTTP_ERROR_FALLBACK;404" });
-      }
-    }
+    const source = readRequired(path);
+    expect(source, "The route still rejects every week").not.toMatch(/notFound\(\);\s*\}/);
+    expect(source).toMatch(/searchParams/);
   });
 });

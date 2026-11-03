@@ -59,6 +59,13 @@ describe("AC-1.3 bidirectional app boundary", () => {
     expect(inside(`${app}-other/page.tsx`, app)).toBe(false);
   });
 
+  it("detects bare and subpath app package names", () => {
+    const refs = imports('import a from "primary-advantage"; import b from "primary-advantage/lib/x";');
+    expect(refs).toEqual(["primary-advantage", "primary-advantage/lib/x"]);
+    expect(refs.every((specifier) => specifier === "primary-advantage"
+      || specifier.startsWith("primary-advantage/"))).toBe(true);
+  });
+
   it("has real app sources and no cross-app imports in either direction", () => {
     expect(existsSync(resolve(app, "package.json")), "Missing Storytime app; an empty scan cannot prove isolation").toBe(true);
     const violations: string[] = [];
