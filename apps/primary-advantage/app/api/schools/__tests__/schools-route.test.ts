@@ -74,7 +74,7 @@ describe("POST /api/schools", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await POST(post({ name: "School" }))).status).toBe(403);
     expect(mocks.inserted).toHaveLength(0);
@@ -125,7 +125,7 @@ describe("GET /api/schools", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await get()).status).toBe(403);
   });
