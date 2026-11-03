@@ -10,3 +10,32 @@
 @theme {
   --font-sans: var(--font-sarabun), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* The song stage (spec FR-8, AC-8.2). A laptop shows a 16:9 box that fills the column. A portrait
+   phone shows a 9:16 box at most 75 percent of the screen height, with the phone poster. The
+   browser gate of task 3.7 measures the ratios. */
+.song-stage {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.song-stage video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 1rem;
+  background: #000;
+  object-fit: cover;
+}
+
+.song-stage[data-phone="true"] video {
+  width: auto;
+  height: 75dvh;
+  max-width: 100%;
+  max-height: 75dvh;
+  aspect-ratio: 9 / 16;
+}
+
+.song-stage audio {
+  width: 100%;
+}

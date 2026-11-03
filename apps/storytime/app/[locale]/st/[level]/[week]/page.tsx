@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import { loadVisibleWeek } from "@/lib/content";
 import type { StorytimeWeek } from "@/lib/contracts/week";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
+import { StorytimeSong } from "./song";
 
 /**
  * The at-home entry route `/<locale>/st/<level>/<week>` (spec FR-5, AC-2.1, AC-5.2, AC-5.4).
@@ -23,8 +24,8 @@ import { StorytimeReader, StorytimeDecodable } from "./reader";
  * The home view holds the three entry tiles with their pictures, the recorded label audio, the Thai
  * parent line, the three home words, the frame, the activity, and the sound of the week. Playback
  * uses only recorded files, never the phone voice (rule 10.5). A label or word with no recording
- * shows no speaker control. Tasks 3.3 and 3.4 replace the part body with the reader and the
- * decodable.
+ * shows no speaker control. Tasks 3.3, 3.4, and 3.5 give the reader, the decodable, and the song
+ * their own client views.
  */
 
 /** The parts of a week that `?part=` may open. */
@@ -32,13 +33,6 @@ const PARTS = ["book", "decodable", "song"] as const;
 
 /** One part of a week. */
 type Part = (typeof PARTS)[number];
-
-/** The visible label of each part. */
-const PART_LABEL_KEYS: Record<Part, string> = {
-  book: "tileReadalong",
-  decodable: "tileDecodable",
-  song: "tileSong",
-};
 
 /** The recorded label audio of the entry tiles, keyed by tile id (finding F17). The table stays
  * empty until the production side delivers the files; a missing recording shows no speaker. */
@@ -170,16 +164,6 @@ function songPicture(week: StorytimeWeek): TilePicture | null {
   const file =
     song?.poster ?? song?.posterPhone ?? song?.lines.find((line) => line.image?.file)?.image?.file;
   return file ? { file, caption: "" } : null;
-}
-
-/**
- * Gives the visible label of a part.
- * @param translate The request translator.
- * @param part The part.
- * @returns The label.
- */
-function partLabel(translate: (key: string) => string, part: Part): string {
-  return translate(PART_LABEL_KEYS[part]);
 }
 
 /**
@@ -387,10 +371,14 @@ export default async function StorytimeWeekPage({
           ) : null}
         </section>
       ) : (
-        <section data-part={part} className="rounded-2xl border border-neutral-300 p-4">
-          <h2 className="text-lg font-semibold" lang="en">
-            {partLabel(t, part)}
-          </h2>
+        <section data-part={part}>
+          {week.song ? (
+            <StorytimeSong
+              song={week.song}
+              mediaBase={mediaBase}
+              labels={{ play: t("songPlay"), pause: t("songPause") }}
+            />
+          ) : null}
         </section>
       )}
     </main>

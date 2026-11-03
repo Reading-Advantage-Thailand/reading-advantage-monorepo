@@ -15,5 +15,7 @@
   "playerPreviousPage": "หน้าก่อนหน้า",
   "playerNextPage": "หน้าถัดไป",
   "playerAudioError": "เล่นเสียงไม่ได้",
-  "playerFinished": "จบเล่มแล้ว"
+  "playerFinished": "จบเล่มแล้ว",
+  "songPlay": "เล่น",
+  "songPause": "หยุด"
 }

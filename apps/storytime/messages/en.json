@@ -15,5 +15,7 @@
   "playerPreviousPage": "Previous page",
   "playerNextPage": "Next page",
   "playerAudioError": "Sound could not be played",
-  "playerFinished": "Book finished"
+  "playerFinished": "Book finished",
+  "songPlay": "Play",
+  "songPause": "Pause"
 }
