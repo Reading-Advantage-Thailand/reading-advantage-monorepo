@@ -234,6 +234,12 @@ describe("SubmissionSrsAdapter atomic save", () => {
     const result = await adapterWith(store, new InMemoryReviewLogStore()).processSubmission(input([]));
     expect(result).toEqual({ ok: false, skipped: false, error: "tx failed" });
   });
+
+  it.fails("leaves no new card behind when the atomic save fails", async () => {
+    const { store } = atomicStore(true);
+    await adapterWith(store, new InMemoryReviewLogStore()).processSubmission(input([]));
+    expect(await store.getCardsByStudent("student-a")).toEqual([]);
+  });
 });
 
 describe("InMemorySubmissionSrsAdapter stores", () => {
