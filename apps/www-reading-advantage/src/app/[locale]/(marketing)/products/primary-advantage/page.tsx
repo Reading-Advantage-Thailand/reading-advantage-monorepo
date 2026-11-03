@@ -1,11 +1,16 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import { Link } from "@/locales/navigation";
 import { getScopedI18n } from "@/locales/server";
 import { ArrowRight } from "lucide-react";
+import { ExperienceDemo } from "@/components/marketing/experience-demo";
 import { buildMarketingMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 const IMAGE_DIR = "/images/primary-advantage";
+
+/** The games demo section (spec section 7a) comes after the first five sections. */
+const DEMO_AFTER = 5;
 
 /** Page sections 1 to 7, in page order, with their screenshots and output sizes. */
 const SECTIONS = [
@@ -132,61 +137,93 @@ export default async function PrimaryAdvantage({
         </div>
       </section>
 
-      {SECTIONS.map((section, index) => (
-        <section
-          key={section.testId}
-          data-testid={section.testId}
-          className={`py-20 md:py-24 ${index % 2 === 0 ? "bg-white" : "bg-sky-50"}`}
-        >
-          <div className="container mx-auto px-4 max-w-7xl">
-            <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-              <div
-                className={`lg:col-span-5 lg:sticky lg:top-24 ${index % 2 === 1 ? "lg:order-2" : ""}`}
-              >
-                {section.key === "reedy" && (
-                  <span className="inline-block bg-cyan-50 text-cyan-800 border border-site-border px-4 py-1 rounded-full text-sm font-bold mb-4">
-                    {t("reedy.badge")}
-                  </span>
-                )}
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-                  {t(`${section.key}.headline`)}
-                </h2>
-                <p className="text-base md:text-lg leading-relaxed text-site-body">
-                  {t(`${section.key}.body`)}
-                </p>
-                {section.key === "students" && (
-                  <p className="mt-6 rounded-2xl bg-cyan-50 border border-site-border p-6 text-base leading-relaxed text-site-body">
-                    {t("students.features")}
-                  </p>
-                )}
-                {section.key === "blended" && (
-                  <div className="mt-8">
-                    <Link href="/pricing" className={SECTION_BUTTON}>
-                      {t("buttons.pricing")}
-                      <ArrowRight className="w-5 h-5" />
-                    </Link>
+      {SECTIONS.map((section, index) => {
+        // The demo section sits after section 5, so later sections shift one place in the
+        // background and side alternation.
+        const position = index < DEMO_AFTER ? index : index + 1;
+        return (
+          <Fragment key={section.testId}>
+            {index === DEMO_AFTER && (
+              <section data-testid="pa-demo" className="py-20 md:py-24 bg-sky-50">
+                <div className="container mx-auto px-4 max-w-6xl">
+                  <div className="text-center mb-12 max-w-3xl mx-auto">
+                    <span className="uppercase tracking-widest text-xs font-semibold text-cyan-800 mb-4 block">
+                      {t("experience.eyebrow")}
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                      {t("experience.heading")}
+                    </h2>
+                    <p className="text-base md:text-lg leading-relaxed text-site-body">
+                      {t("experience.description")}
+                    </p>
                   </div>
-                )}
-              </div>
-              <div
-                className={`lg:col-span-7 space-y-6 ${index % 2 === 1 ? "lg:order-1" : ""}`}
-              >
-                {section.images.map((image) => (
-                  <Image
-                    key={image.name}
-                    src={`${IMAGE_DIR}/${image.name}.webp`}
-                    alt={t(`images.${image.alt}`)}
-                    width={image.width}
-                    height={image.height}
-                    sizes="(max-width: 1024px) 100vw, 58vw"
-                    className={SCREENSHOT}
+                  <ExperienceDemo
+                    text={{
+                      play: t("experience.play"),
+                      fullscreen: t("experience.fullscreen"),
+                      hint: t("experience.hint"),
+                      frameTitle: t("experience.frameTitle"),
+                      posterAlt: t("experience.posterAlt"),
+                    }}
                   />
-                ))}
+                </div>
+              </section>
+            )}
+            <section
+              data-testid={section.testId}
+              className={`py-20 md:py-24 ${position % 2 === 0 ? "bg-white" : "bg-sky-50"}`}
+            >
+              <div className="container mx-auto px-4 max-w-7xl">
+                <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+                  <div
+                    className={`lg:col-span-5 lg:sticky lg:top-24 ${position % 2 === 1 ? "lg:order-2" : ""}`}
+                  >
+                    {section.key === "reedy" && (
+                      <span className="inline-block bg-cyan-50 text-cyan-800 border border-site-border px-4 py-1 rounded-full text-sm font-bold mb-4">
+                        {t("reedy.badge")}
+                      </span>
+                    )}
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                      {t(`${section.key}.headline`)}
+                    </h2>
+                    <p className="text-base md:text-lg leading-relaxed text-site-body">
+                      {t(`${section.key}.body`)}
+                    </p>
+                    {section.key === "students" && (
+                      <p className="mt-6 rounded-2xl bg-cyan-50 border border-site-border p-6 text-base leading-relaxed text-site-body">
+                        {t("students.features")}
+                      </p>
+                    )}
+                    {section.key === "blended" && (
+                      <div className="mt-8">
+                        <Link href="/pricing" className={SECTION_BUTTON}>
+                          {t("buttons.pricing")}
+                          <ArrowRight className="w-5 h-5" />
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className={`lg:col-span-7 space-y-6 ${position % 2 === 1 ? "lg:order-1" : ""}`}
+                  >
+                    {section.images.map((image) => (
+                      <Image
+                        key={image.name}
+                        src={`${IMAGE_DIR}/${image.name}.webp`}
+                        alt={t(`images.${image.alt}`)}
+                        width={image.width}
+                        height={image.height}
+                        sizes="(max-width: 1024px) 100vw, 58vw"
+                        className={SCREENSHOT}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
-      ))}
+            </section>
+          </Fragment>
+        );
+      })}
 
       <section data-testid="pa-section-8" className="py-20 md:py-24 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">

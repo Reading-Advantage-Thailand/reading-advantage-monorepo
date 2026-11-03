@@ -70,6 +70,16 @@ export const en = {
     teacherPrintLesson: "The print view of Lesson 5, At the Market, in Primary Advantage Origins 3.2, with the first two steps of the lesson.",
     contactChannels: "The ways to contact Reading Advantage (Thailand): LINE Official Account, Facebook, phone, and e-mail, with the LINE QR code.",
   },
+  experience: {
+    eyebrow: "Try it now",
+    heading: "Experience Primary Advantage",
+    description: "Read a short story, tap a word to see its Thai meaning, listen to the story read aloud, then play a game that uses the words. This demo has four sample stories, one for each level.",
+    play: "Play the demo",
+    fullscreen: "Open full screen",
+    hint: "Works best on a computer, tablet, or phone with sound on.",
+    frameTitle: "Primary Advantage game demo",
+    posterAlt: "Two children in a story picture from the Primary Advantage demo",
+  },
 } as const;
 
 export const th = {
@@ -141,6 +151,16 @@ export const th = {
     teacherProjectorGames: "ครูเลือกเกมคำศัพท์เพื่อแสดงบนโปรเจกเตอร์ให้ทั้งห้อง",
     teacherPrintLesson: "หน้าพิมพ์บทเรียนที่ 5 At the Market ของ Primary Advantage Origins 3.2 พร้อมสองขั้นตอนแรกของบทเรียน",
     contactChannels: "ช่องทางติดต่อ: LINE Official Account, Facebook, โทรศัพท์ และอีเมล พร้อมคิวอาร์โค้ด LINE",
+  },
+  experience: {
+    eyebrow: "ลองเล่นเลย",
+    heading: "สัมผัสประสบการณ์ Primary Advantage",
+    description: "อ่านเรื่องสั้น แตะคำเพื่อดูความหมายภาษาไทย ฟังเรื่องที่อ่านออกเสียงให้ แล้วเล่นเกมที่ใช้คำศัพท์จากเรื่อง เดโมนี้มีเรื่องตัวอย่าง 4 เรื่อง ระดับละ 1 เรื่อง",
+    play: "เล่นเดโม",
+    fullscreen: "เปิดเต็มหน้าจอ",
+    hint: "เล่นได้ดีที่สุดบนคอมพิวเตอร์ แท็บเล็ต หรือโทรศัพท์ โดยเปิดเสียง",
+    frameTitle: "เดโมเกม Primary Advantage",
+    posterAlt: "เด็กสองคนในภาพประกอบเรื่องจากเดโม Primary Advantage",
   },
 } as const;
 
