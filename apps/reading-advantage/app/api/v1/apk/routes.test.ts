@@ -142,8 +142,8 @@ describe("Reading APK routes", () => {
     const readResponse = await GET_RPG();
     const equipResponse = await PATCH_RPG(postRequest({ cosmeticId: "apprentice-wand" }));
 
-    expect(readResponse.status).toBe(200);
-    expect(equipResponse.status).toBe(200);
+    expect(readResponse?.status).toBe(200);
+    expect(equipResponse?.status).toBe(200);
     expect(mockGetMyRpgState).toHaveBeenCalledWith(expect.objectContaining({
       db: mockTenantDb,
       tenant: { schoolId: "school-1" },
