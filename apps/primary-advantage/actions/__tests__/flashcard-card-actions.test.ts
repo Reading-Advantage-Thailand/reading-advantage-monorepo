@@ -208,4 +208,18 @@ describe("reviewCard", () => {
     expect(mocks.txUpdates[0]).toMatchObject({ correctCount: 1, incorrectCount: 0 });
   });
 
+  // Defect: reviewCard seeds FSRS with state NEW and empty stability on every review
+  // (actions/flashcard.ts:811-823), so a card reviewed Good again never earns a longer interval.
+  it.fails("gives a longer interval after a second correct review than after the first", async () => {
+    mocks.selectRows = [[cardRow], []];
+    const first = (await reviewCard("card-1", Rating.Good)) as { nextReviewAt: Date; lastReviewedAt: Date };
+    const firstInterval = first.nextReviewAt.getTime() - first.lastReviewedAt.getTime();
+
+    const lastReviewedAt = new Date(Date.now() - firstInterval);
+    mocks.selectRows = [[cardRow], [{ id: "p1", correctCount: 1, incorrectCount: 0, nextReviewAt: new Date(), lastReviewedAt }]];
+    const second = (await reviewCard("card-1", Rating.Good)) as { nextReviewAt: Date; lastReviewedAt: Date };
+    const secondInterval = second.nextReviewAt.getTime() - second.lastReviewedAt.getTime();
+
+    expect(secondInterval).toBeGreaterThan(firstInterval * 1.5);
+  });
 });
