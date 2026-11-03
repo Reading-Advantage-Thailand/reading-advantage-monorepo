@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role: Measure Mid Red, GPT-6 Luna
+status: complete
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app; task 3.1a
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+resulting_head: c987947d806d1ab8adf410f0f5e4ef3e0c752b34 (Red test commit; plan-evidence commit follows)
+commits: c987947d806d1ab8adf410f0f5e4ef3e0c752b34 test; plan evidence and this report are staged for the separate plan-evidence commit
+ tests_run: Required RED_TEST_COMMAND; exit 1; 1 failed file; 6 failed, 3 passed, 9 total; all failures are assertions
+files_changed: apps/storytime/__tests__/phase3-media-gate.test.ts; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/red-6eff056.log
+plan_updates: Task 3.1a marked [~]; command, exit code, counts, passing deploy-file assertion, and failure causes recorded
+known_failures: Draft approval for images, audio, and song does not block readiness; absent approval does not block readiness; the draft switch does not enable draft media; the server environment switch name is absent
+handoff: Green must implement the server-side media approval gate and show draft media only when STORYTIME_SHOW_DRAFT_MEDIA=1. Keep unpublished weeks and weeks with missing pictures blocked. The deploy-file test already passes. The user-requested test commit header was 101 characters, so it was shortened to satisfy the 100-character hook.
+END_MEASURE_AGENT_RESULT
