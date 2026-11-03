@@ -61,18 +61,11 @@ export default async function StorytimeAdvantage({
             <p className="max-w-2xl text-lg leading-relaxed text-amber-50">
               {t("hero.description")}
             </p>
-            <Link
-              href="/contact"
-              className="mt-8 inline-flex min-h-12 items-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-amber-900 hover:bg-amber-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-            >
-              {t("cta.buttons.joinWaitlist")}
-              <ArrowRight aria-hidden="true" className="h-5 w-5" />
-            </Link>
           </div>
           <div className="lg:col-span-6">
             <Image
               src={`${IMAGE_DIR}/week-01-hello-pip.webp`}
-              alt={t("heroAlt")}
+              alt={t("images.week01HelloPip")}
               width={1200}
               height={900}
               priority
@@ -95,7 +88,7 @@ export default async function StorytimeAdvantage({
           <div className="lg:col-span-7">
             <Image
               src={`${IMAGE_DIR}/level-2-unit-1-cover-art.webp`}
-              alt={t("adaptiveEngine.alt")}
+              alt={t("images.level2Unit1CoverArt")}
               width={960}
               height={720}
               sizes="(max-width: 1024px) 100vw, 58vw"

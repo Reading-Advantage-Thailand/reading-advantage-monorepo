@@ -14,18 +14,18 @@ export const en = {
   heroAlt: "Pip in a Storytime Advantage week 1 story picture",
   adaptiveEngine: {
     eyebrow: "Mastery Advantage",
-    heading: "Print and QR for the First Unit",
+    heading: "Every Item on One Skill Map",
     description:
-      "The first unit pairs a printed student book and a Thai-only teacher book with QR-linked digital parts. The app build is being prepared and is not deployed.",
+      "Every sound, word, and sentence frame is tagged to the Mastery Advantage skill map, in the same English map as the Primary Advantage books. The printed review strips bring each item back on a fixed schedule.",
     alt: "The approved Level 2 cover artwork for Storytime Advantage",
   },
   keyFeatures: {
-    heading: "What Release 1 Includes",
+    heading: "What Is in the First Unit",
     features: [
       {
         title: "In Print",
         points: [
-          "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8, with tear-out readers of about A5 inside the bound book. Children fold, nest, and staple each reader; no scissors are needed",
+          "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out, fold them, and staple them. No scissors are needed.",
           "A Thai-only teacher book, with five lesson scripts a week",
           "Color reader files for the teacher to print on A3 and lead the class",
           "A review strip for each day",
@@ -58,7 +58,7 @@ export const en = {
       {
         title: "A Link to Home",
         description:
-          "A Thai home card each week, with QR codes for the song and books being prepared with the app.",
+          "A Thai home card each week, with QR codes that open the song and the books on a phone.",
       },
     ],
   },
@@ -74,14 +74,14 @@ export const en = {
     heading: "Frequently Asked Questions",
     questions: [
       {
-        question: "What does Storytime Advantage release 1 include?",
+        question: "What is in the first unit?",
         answer:
-          "The first unit is being prepared. It has one A4 student book for weeks 1 to 8, a Thai-only teacher book, and QR-linked digital parts. The app work is not deployed. Contact us to discuss the first unit.",
+          "One A4 student book for weeks 1 to 8, with small reader books inside it; a teacher book in Thai; color reader files the teacher prints on A3; and the song and books by QR code. Contact us to discuss the first unit.",
       },
       {
-        question: "How do the QR links work?",
+        question: "Do we need computers or an app?",
         answer:
-          "The QR code links to the digital parts being prepared with the app. The app work is not deployed yet.",
+          "No. The program is printed. The songs and the books open on a phone or a classroom screen by QR code, with no app and no login.",
       },
       {
         question: "Our kindergarten teachers are not English teachers. Can they teach it?",
@@ -112,6 +112,8 @@ export const en = {
     frequentlyAskedQuestions: "FREQUENTLY ASKED QUESTIONS",
   },
   images: {
+    week01HelloPip: "Pip appears in the week 1 story page, “Hello, I Am Pip.”",
+    level2Unit1CoverArt: "The cover picture of Storytime Advantage Level 2.",
     week02HowManyCakes: "The week 2 story page shows seven cakes.",
     week03ItIsRed: "A week 3 story page shows an object that is red.",
     week04NanAndPamNap: "Nan and Pam appear in a week 4 story page.",
@@ -139,18 +141,18 @@ export const th = {
   heroAlt: "Pip ในภาพประกอบเรื่องประจำสัปดาห์ที่ 1 ของ Storytime Advantage",
   adaptiveEngine: {
     eyebrow: "Mastery Advantage",
-    heading: "หนังสือฉบับพิมพ์และคิวอาร์โค้ดสำหรับหน่วยแรก",
+    heading: "ทุกรายการอยู่บนแผนผังทักษะเดียวกัน",
     description:
-      "หน่วยการเรียนรู้แรกมีหนังสือนักเรียนฉบับพิมพ์ คู่มือครูภาษาไทย และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด กำลังจัดเตรียมแอปและยังไม่ได้ติดตั้งใช้งาน",
+      "ทุกเสียง ทุกคำ และทุกรูปประโยค ผูกกับแผนผังทักษะ Mastery Advantage ในแผนผังภาษาอังกฤษเดียวกับหนังสือ Primary Advantage แถบทบทวนที่พิมพ์ไว้นำแต่ละรายการกลับมาทบทวนตามตารางที่กำหนด",
     alt: "ภาพปก Level 2 ของ Storytime Advantage ที่ได้รับอนุมัติ",
   },
   keyFeatures: {
-    heading: "สิ่งที่มีในหน่วยการเรียนรู้แรก",
+    heading: "สิ่งที่มีในหน่วยแรก",
     features: [
       {
         title: "ฉบับพิมพ์",
         points: [
-          "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านฉีกออกได้ขนาดประมาณ A5 อยู่ในเล่ม เด็กพับ ซ้อน และเย็บเล่มย่อยแต่ละเล่ม โดยไม่ต้องใช้กรรไกร",
+          "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออก พับ และเย็บเล่มย่อยแต่ละเล่มได้โดยไม่ต้องใช้กรรไกร",
           "คู่มือครูภาษาไทย พร้อมแผนการสอนสัปดาห์ละ 5 คาบ",
           "ไฟล์หนังสือฝึกอ่านสีสำหรับครูพิมพ์ลงกระดาษ A3 เพื่อใช้สอนในชั้นเรียน",
           "แถบทบทวนประจำวัน",
@@ -172,7 +174,7 @@ export const th = {
     features: [
       { title: "แผนการสอนครบทุกขั้นตอน", description: "หนังสือนักเรียนและคู่มือครูจัดเนื้อหาสำหรับการสอนแต่ละสัปดาห์" },
       { title: "ฝึกอ่านจากหนังสือ", description: "หนังสือหนึ่งเล่มมีเรื่องอ่านตามและหนังสือฝึกอ่านที่ใช้เสียงและคำตามบทเรียน" },
-      { title: "เชื่อมต่อกับบ้านด้วยคิวอาร์โค้ด", description: "บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดสำหรับเพลงและหนังสือที่กำลังจัดเตรียมพร้อมกับแอป" },
+      { title: "เชื่อมต่อกับบ้านด้วยคิวอาร์โค้ด", description: "บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดที่เปิดเพลงและหนังสือบนโทรศัพท์ได้" },
     ],
   },
   teacherTools: {
@@ -186,8 +188,8 @@ export const th = {
   faq: {
     heading: "คำถามที่พบบ่อย",
     questions: [
-      { question: "Storytime Advantage release 1 มีอะไรบ้าง", answer: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก ประกอบด้วยหนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 คู่มือครูภาษาไทย และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด งานแอปยังไม่ได้ติดตั้งใช้งาน ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยการเรียนรู้แรก" },
-      { question: "คิวอาร์โค้ดเชื่อมไปยังส่วนใด", answer: "คิวอาร์โค้ดเชื่อมไปยังส่วนดิจิทัลที่กำลังจัดเตรียมพร้อมกับแอป งานแอปยังไม่ได้ติดตั้งใช้งาน" },
+      { question: "ในหน่วยแรกมีอะไรบ้าง", answer: "หนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน คู่มือครูภาษาไทย ไฟล์หนังสือฝึกอ่านสีที่ครูพิมพ์ลงกระดาษ A3 และเพลงกับหนังสือที่เปิดด้วยคิวอาร์โค้ด ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยแรก" },
+      { question: "ต้องใช้คอมพิวเตอร์หรือแอปไหม", answer: "ไม่ต้องใช้ โปรแกรมเป็นสื่อสิ่งพิมพ์ เพลงและหนังสือเปิดได้บนโทรศัพท์หรือจอในห้องเรียนด้วยคิวอาร์โค้ด โดยไม่ต้องใช้แอปและไม่ต้องเข้าสู่ระบบ" },
       { question: "ครูอนุบาลที่ไม่ใช่ครูภาษาอังกฤษสอนได้ไหม", answer: "ได้ คู่มือครูมีแผนการสอนและข้อความภาษาอังกฤษที่ใช้สอน พร้อมความหมายภาษาไทยและสิ่งที่เด็กทำในแต่ละขั้นตอน" },
       { question: "Storytime Advantage เหมาะกับใคร", answer: "เด็กอนุบาล 2 ถึง ป.2 อายุประมาณ 4 ถึง 8 ปี และครูประจำชั้น ผู้ปกครองร่วมกิจกรรมที่บ้านได้ผ่านบัตรประจำสัปดาห์" },
       { question: "หลังจาก ป.2 แล้วเรียนอะไรต่อ", answer: "Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module." },
@@ -205,6 +207,8 @@ export const th = {
     frequentlyAskedQuestions: "คำถามที่พบบ่อย",
   },
   images: {
+    week01HelloPip: "Pip ปรากฏในหน้าหนังสือเรื่องประจำสัปดาห์ที่ 1 “Hello, I Am Pip”",
+    level2Unit1CoverArt: "ภาพปกของ Storytime Advantage Level 2",
     week02HowManyCakes: "หน้าหนังสือเรื่องประจำสัปดาห์ที่ 2 แสดงเค้กเจ็ดชิ้น",
     week03ItIsRed: "หน้าหนังสือเรื่องประจำสัปดาห์ที่ 3 แสดงสิ่งของสีแดง",
     week04NanAndPamNap: "Nan และ Pam ปรากฏในหน้าหนังสือเรื่องประจำสัปดาห์ที่ 4",

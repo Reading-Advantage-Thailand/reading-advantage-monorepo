@@ -99,15 +99,15 @@ The build copies the listed sources word for word. Daniel checks the Thai and th
 
 ### 1. Skill map (Mastery Advantage)
 
-**Purpose:** Show a director the print and QR parts of the first unit.
+**Purpose:** Explain the Mastery Advantage skill map.
 **Images (target names under `public/images/storytime-advantage/`):** `level-2-unit-1-cover-art.png`
 
 | Element | English | Thai |
 |---|---|---|
 | Eyebrow | Mastery Advantage | Mastery Advantage |
-| Headline | Print and QR for the First Unit | หนังสือฉบับพิมพ์และคิวอาร์โค้ดสำหรับหน่วยแรก |
-| Body | The first unit pairs a printed student book and a Thai-only teacher book with QR-linked digital parts. The app build is being prepared and is not deployed. | หน่วยการเรียนรู้แรกมีหนังสือนักเรียนฉบับพิมพ์ คู่มือครูภาษาไทย และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด กำลังจัดเตรียมแอปและยังไม่ได้ติดตั้งใช้งาน |
-| Image alt text (`adaptiveEngine.alt`) | The approved Level 2 cover artwork for Storytime Advantage | ภาพปก Level 2 ของ Storytime Advantage ที่ได้รับอนุมัติ |
+| Headline | Every Item on One Skill Map | ทุกรายการอยู่บนแผนผังทักษะเดียวกัน |
+| Body | Every sound, word, and sentence frame is tagged to the Mastery Advantage skill map, in the same English map as the Primary Advantage books. The printed review strips bring each item back on a fixed schedule. | ทุกเสียง ทุกคำ และทุกรูปประโยค ผูกกับแผนผังทักษะ Mastery Advantage ในแผนผังภาษาอังกฤษเดียวกับหนังสือ Primary Advantage แถบทบทวนที่พิมพ์ไว้นำแต่ละรายการกลับมาทบทวนตามตารางที่กำหนด |
+| Image alt text | The cover picture of Storytime Advantage Level 2 | ภาพปกของ Storytime Advantage Level 2 |
 
 ### 2. What release 1 includes
 
@@ -116,15 +116,17 @@ The build copies the listed sources word for word. Daniel checks the Thai and th
 
 | Element | English | Thai |
 |---|---|---|
-| Headline | What Release 1 Includes | สิ่งที่มีในหน่วยการเรียนรู้แรก |
+| Headline | What Is in the First Unit | สิ่งที่มีในหน่วยแรก |
 | Group 1 title | In Print | ฉบับพิมพ์ |
-| Group 1 point 1 | One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8, with tear-out readers of about A5 inside the bound book. Children fold, nest, and staple each reader; no scissors are needed | หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านฉีกออกได้ขนาดประมาณ A5 อยู่ในเล่ม เด็กพับ ซ้อน และเย็บเล่มย่อยแต่ละเล่ม โดยไม่ต้องใช้กรรไกร |
+| Group 1 point 1 | One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out, fold them, and staple them. No scissors are needed. | หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออก พับ และเย็บเล่มย่อยแต่ละเล่มได้โดยไม่ต้องใช้กรรไกร |
 | Group 1 point 2 | A Thai-only teacher book, with five lesson scripts a week | คู่มือครูภาษาไทย พร้อมแผนการสอนสัปดาห์ละ 5 คาบ |
 | Group 1 point 3 | Color reader files for the teacher to print on A3 and lead the class | ไฟล์หนังสือฝึกอ่านสีสำหรับครูพิมพ์ลงกระดาษ A3 เพื่อใช้สอนในชั้นเรียน |
 | Group 1 point 4 | A review strip for each day | แถบทบทวนประจำวัน |
-| Group 2 title | By QR Code, With No Login | ส่วนดิจิทัลผ่านคิวอาร์โค้ด |
-| Group 2 point 1 | QR-linked digital parts, being prepared with the app | ส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ดกำลังจัดเตรียมพร้อมกับแอป |
-| Group 2 point 2 | The app build contains lesson text for all eight weeks; it is not deployed | ในแอปมีข้อความบทเรียนครบทั้ง 8 สัปดาห์ แต่ยังไม่ได้ติดตั้งใช้งาน |
+| Group 2 title | By QR Code, With No Login | ผ่านคิวอาร์โค้ด ไม่ต้องเข้าสู่ระบบ |
+| Group 2 point 1 | The song of the week, with a video | เพลงประจำสัปดาห์พร้อมวิดีโอ |
+| Group 2 point 2 | The read-along book, with "read to me" and "I read" | หนังสืออ่านตามพร้อมโหมด "อ่านให้ฟัง" และ "ฉันอ่านเอง" |
+| Group 2 point 3 | The decodable book, with words to tap and hear | หนังสือฝึกอ่านที่แตะคำเพื่อฟังเสียงได้ |
+| Group 2 point 4 | A 5-minute home activity in Thai | กิจกรรมที่บ้านภาษาไทย ใช้เวลาห้านาที |
 
 ### 3. Curriculum scope (Anuban 2 to P2)
 
@@ -139,7 +141,7 @@ The build copies the listed sources word for word. Daniel checks the Thai and th
 | Feature 2 title | One Sound a Week | ฝึกอ่านจากหนังสือ |
 | Feature 2 body | Each week teaches one letter sound, with a recorded pure sound, a hand action, and words that start with the sound. | หนังสือหนึ่งเล่มมีเรื่องอ่านตามและหนังสือฝึกอ่านที่ใช้เสียงและคำตามบทเรียน |
 | Feature 3 title | A Link to Home | เชื่อมต่อกับบ้านด้วยคิวอาร์โค้ด |
-| Feature 3 body | A Thai home card each week, with QR codes for the song and books being prepared with the app. | บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดสำหรับเพลงและหนังสือที่กำลังจัดเตรียมพร้อมกับแอป |
+| Feature 3 body | A Thai home card each week, with QR codes that open the song and the books on a phone. | บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดที่เปิดเพลงและหนังสือบนโทรศัพท์ได้ |
 
 The Thai feature lines are Daniel's draft. They are not a literal translation of the English. Daniel checks them.
 
@@ -167,10 +169,10 @@ The Thai feature lines are Daniel's draft. They are not a literal translation of
 | Element | English | Thai |
 |---|---|---|
 | Headline | Frequently Asked Questions | คำถามที่พบบ่อย |
-| Q1 | What does Storytime Advantage release 1 include? | Storytime Advantage release 1 มีอะไรบ้าง |
-| A1 | The first unit is being prepared. It has one A4 student book for weeks 1 to 8, a Thai-only teacher book, and QR-linked digital parts. The app work is not deployed. Contact us to discuss the first unit. | กำลังจัดเตรียมหน่วยการเรียนรู้แรก ประกอบด้วยหนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 คู่มือครูภาษาไทย และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด งานแอปยังไม่ได้ติดตั้งใช้งาน ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยการเรียนรู้แรก |
-| Q2 | How do the QR links work? | คิวอาร์โค้ดเชื่อมไปยังส่วนใด |
-| A2 | The QR code links to the digital parts being prepared with the app. The app work is not deployed yet. | คิวอาร์โค้ดเชื่อมไปยังส่วนดิจิทัลที่กำลังจัดเตรียมพร้อมกับแอป งานแอปยังไม่ได้ติดตั้งใช้งาน |
+| Q1 | What is in the first unit? | ในหน่วยแรกมีอะไรบ้าง |
+| A1 | One A4 student book for weeks 1 to 8, with small reader books inside it; a teacher book in Thai; color reader files the teacher prints on A3; and the song and books by QR code. Contact us to discuss the first unit. | หนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน คู่มือครูภาษาไทย ไฟล์หนังสือฝึกอ่านสีที่ครูพิมพ์ลงกระดาษ A3 และเพลงกับหนังสือที่เปิดด้วยคิวอาร์โค้ด ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยแรก |
+| Q2 | Do we need computers or an app? | ต้องใช้คอมพิวเตอร์หรือแอปไหม |
+| A2 | No. The program is printed. The songs and the books open on a phone or a classroom screen by QR code, with no app and no login. | ไม่ต้องใช้ โปรแกรมเป็นสื่อสิ่งพิมพ์ เพลงและหนังสือเปิดได้บนโทรศัพท์หรือจอในห้องเรียนด้วยคิวอาร์โค้ด โดยไม่ต้องใช้แอปและไม่ต้องเข้าสู่ระบบ |
 | Q3 | Our kindergarten teachers are not English teachers. Can they teach it? | ครูอนุบาลที่ไม่ใช่ครูภาษาอังกฤษสอนได้ไหม |
 | A3 | Yes. Every lesson is printed in full: what the teacher does, the English the teacher says with the Thai beside it, what the children do, and what to watch. | ได้ คู่มือครูมีแผนการสอนและข้อความภาษาอังกฤษที่ใช้สอน พร้อมความหมายภาษาไทยและสิ่งที่เด็กทำในแต่ละขั้นตอน |
 | Q4 | Who is Storytime Advantage for? | Storytime Advantage เหมาะกับใคร |
