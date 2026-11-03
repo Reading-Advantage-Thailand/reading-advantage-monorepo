@@ -37,6 +37,8 @@ The prompt cited brief v0.1. The file on disk says Version 0.2. The copy below f
 
 Hero, sections 1 to 8, the closing call to action, and the meta text. Section 8 is optional; the closing section stays if Daniel drops it.
 
+Amendment 2026-11-03 (section 7a, FR-1): the games demo section goes directly after section 5. The page has 11 containers.
+
 ## 5. Page copy in English and in Thai (quoted exactly from the brief)
 
 ### Hero
@@ -209,6 +211,34 @@ The page keeps no Reading Advantage screen and no old image. The live page uses 
 - The page quotes no meter from the Reedy crop or the Thai student home crop.
 - Section 8 stays on the page. The hero keeps the site hero background and takes no new image.
 
+## 7a. FR-1: The games demo section (added 2026-11-03)
+
+**Owner decision (quoted exactly).** Daniel, task 1.8 look check, Google Tasks `OWxvNThxWGh0S0FlcUVpVg` under `Rm1wWlltM2M2RFRBWENzQw`, 2026-11-03 10:30 ICT: "In the old page, we have the games demo. I want that". PM decision on the place, 2026-11-03 10:4x ICT: the section goes directly after the "Games that practise the words of the lesson" section.
+
+The brief has no demo section. This section follows the owner decision. It overrides the page order of section 4, the F5 removal of `experience` and `ExperienceDemo` (test strategy section 1), and the "no other `href`" contract (test strategy section 1).
+
+- The page keeps the games demo of the old live page: the section "Experience Primary Advantage". It uses the existing component `apps/www-reading-advantage/src/components/marketing/experience-demo.tsx` (`ExperienceDemo`). The build reuses the component and does not change it.
+- The demo shows a poster picture with a Play button. The frame of `/experience/index.html` loads only after the tap (about 30 MB). The hint line and the "Open full screen" link stay.
+- Place: its own section directly after the games section (section 5). The container has `data-testid="pa-demo"`. The page order is: hero, sections 1 to 5, the demo, sections 6 to 8, the closing section. The page has 11 containers.
+- The demo is not an image of the image list and adds no claim. The page still shows 16 list images in the `pa-` containers. The poster of the component is the only other image, and it is inside `pa-demo`.
+- The demo adds one link: `/experience/index.html` ("Open full screen"), inside `pa-demo` only. The other link contracts stay.
+- The claims rules of section 7 stay: no price, no free trial, no date except the approved line.
+
+**Copy.** The strings are the old live strings, word for word, from `git show fc78b9dee:apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts`, key `experience`. The keys are `eyebrow`, `heading`, `description`, `play`, `fullscreen`, `hint`, `frameTitle`, and `posterAlt`.
+
+| Key | English | Thai |
+|---|---|---|
+| eyebrow | Try it now | ลองเล่นเลย |
+| heading | Experience Primary Advantage | สัมผัสประสบการณ์ Primary Advantage |
+| description | Read a short story, tap a word to see its Thai meaning, listen to the story read aloud, then play a game that uses the words. This demo has four sample stories, one for each level. | อ่านเรื่องสั้น แตะคำเพื่อดูความหมายภาษาไทย ฟังเรื่องที่อ่านออกเสียงให้ แล้วเล่นเกมที่ใช้คำศัพท์จากเรื่อง เดโมนี้มีเรื่องตัวอย่าง 4 เรื่อง ระดับละ 1 เรื่อง |
+| play | Play the demo | เล่นเดโม |
+| fullscreen | Open full screen | เปิดเต็มหน้าจอ |
+| hint | Works best on a computer, tablet, or phone with sound on. | เล่นได้ดีที่สุดบนคอมพิวเตอร์ แท็บเล็ต หรือโทรศัพท์ โดยเปิดเสียง |
+| frameTitle | Primary Advantage game demo | เดโมเกม Primary Advantage |
+| posterAlt | Two children in a story picture from the Primary Advantage demo | เด็กสองคนในภาพประกอบเรื่องจากเดโม Primary Advantage |
+
+zh: the page shows the English copy, by the page rule of section 7. This is the default, pending Daniel. The old Chinese strings exist in the same old file (`zh.experience`, for example heading "体验 Primary Advantage"). The PR session decides whether to use them.
+
 ## 8. Acceptance criteria
 
 | ID | Criterion |
@@ -222,10 +252,17 @@ The page keeps no Reading Advantage screen and no old image. The live page uses 
 | AC-7 | The page shows no price, no date except the approved section 3 line, no free trial, no free term, and no discount. The Thai copy keeps the game names in English. All strings live in the locale message files. No hash field is added to any file. |
 | AC-8 | None of the six Reading Advantage screens and none of the four old images appears on the new page. |
 | AC-9 | Lint, typecheck, the changed-file tests, and the www build pass, each through the heavy-run script. |
-| AC-10 | Preview captures show desktop and phone, in `en` and in `th`, under `/home/daniebo/Desktop/a34-www-primary-captures/`. |
+| AC-10 | Preview captures show desktop and phone, in `en` and in `th`, and desktop in `zh`. The v1 captures are under `/home/daniebo/Desktop/a34-www-primary-captures/`. The v2 captures, with the demo section, are under `/home/daniebo/Desktop/a34-www-primary-captures-v2/`. |
 | AC-11 | Daniel passes the look check and the Thai check. |
 | AC-12 | The branch merges into local `master` only after Daniel's pass. Daniel pushes and deploys. |
 | AC-13 | The page in zh shows the English copy of the new strings. It shows none of the old strings, the six Reading Advantage screens, or the four old images. |
+| AC-14 | Content tests find `pa-demo` directly after `pa-section-5` and before `pa-section-6`. The page has 11 containers. |
+| AC-15 | The `pa-demo` strings (section 7a) are found word for word in `en` and in `th`. |
+| AC-16 | The `pa-demo` strings in `zh` are the English strings. |
+| AC-17 | `pa-demo` holds a Play button with the `play` string. Before the tap, it holds no `iframe`. |
+| AC-18 | After the tap, `pa-demo` holds one `iframe` with `src` `/experience/index.html` and the `frameTitle` string. |
+| AC-19 | `pa-demo` holds the "Open full screen" link to `/experience/index.html`, and the hint line. |
+| AC-20 | `pa-demo` adds no price, no date, no free trial, and no image of the image list. The 16 list images stay in the `pa-` containers of sections 1 to 8. |
 
 ## 9. Out of scope
 
