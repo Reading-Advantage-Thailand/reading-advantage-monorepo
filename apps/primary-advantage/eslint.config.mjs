@@ -1,7 +1,8 @@
 import { baseConfig, ignores } from "@reading-advantage/config/eslint";
 
 const eslintConfig = [
-  { ignores: [...ignores, "public/"] },
+  // legacy-sw.js is a byte copy of the live legacy service worker (see tests/pwa/fixtures/README.md).
+  { ignores: [...ignores, "public/", "tests/pwa/fixtures/legacy-sw.js"] },
   ...baseConfig,
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
@@ -20,6 +21,11 @@ const eslintConfig = [
         },
       ],
     },
+  },
+  {
+    // The PWA fixture server runs in Node; the base config sets globals only for js/jsx/ts/tsx.
+    files: ["tests/pwa/**/*.mjs"],
+    languageOptions: { globals: { process: "readonly", URL: "readonly", console: "readonly" } },
   },
 ];
 
