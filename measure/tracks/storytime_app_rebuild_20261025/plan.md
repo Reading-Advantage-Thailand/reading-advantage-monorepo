@@ -291,7 +291,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - `apps/storytime/AGENTS.md` holds the agent block that `next dev` writes; the other apps commit theirs.
 - The full Storytime and `packages/read-along` suite ran once at this tree before the final manifest change: 26 files and 272 tests exit 0. The PM rule of 2026-11-03 then limits a small change to its own files. The phase-end run covers the full suite.
 - No structural TypeScript file changed after `build-graph update`, which ran at the pre-commit tree (6 files, 24 to 89 nodes). `graph.db` is ignored and not committed.
-- [~] 3.1a Media approval gate: the media approval rule of spec FR-5 and AC-5.5. A published week is ready only when `approval.images.status`, `approval.audio.status`, and `approval.song.status` are each `approved`. An absent key counts as draft, as `approval.loops` does. Otherwise the route answers 404, as it answers for a draft week. The log names each part that is not approved. The server-side switch `STORYTIME_SHOW_DRAFT_MEDIA` (value `1`) shows the draft parts on the review copy. Production never sets it, and it is never a `NEXT_PUBLIC_` variable. The switch never makes an unpublished week ready. It never makes a week with a missing picture ready. The receiver never changes `approval` (rule 12.1). Tests: AC-5.5. Target: 2026-11-06.
+- [x] 3.1a Media approval gate: the media approval rule of spec FR-5 and AC-5.5. A published week is ready only when `approval.images.status`, `approval.audio.status`, and `approval.song.status` are each `approved`. An absent key counts as draft, as `approval.loops` does. Otherwise the route answers 404, as it answers for a draft week. The log names each part that is not approved. The server-side switch `STORYTIME_SHOW_DRAFT_MEDIA` (value `1`) shows the draft parts on the review copy. Production never sets it, and it is never a `NEXT_PUBLIC_` variable. The switch never makes an unpublished week ready. It never makes a week with a missing picture ready. The receiver never changes `approval` (rule 12.1). Tests: AC-5.5. Done: `bbe7ff741`. Automated: the targeted command exits 0 with 5 files and 51 tests; `tsc --noEmit` exits 0; ESLint exits 0 on the three changed files. Target: 2026-11-06.
 
 ### Phase 3 media approval gate Red evidence
 
@@ -311,6 +311,17 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Test commit: `c9b4230b3` (`test(storytime): approve media in ready-week fixtures`). The plan evidence and retry report follow in a separate commit.
 - Retry report: `measure/runs/storytime_app_rebuild_20261025/red-9c96679.log`. No production source changed.
   - PM decision 2026-11-03: in the task 3.1 chain (spec line, Red test, Green); it must not move task 3.1 (2026-11-06) or the at-home release (2026-11-20).
+
+### Phase 3 media approval gate Green evidence
+
+- Implementation `bbe7ff741`. Role `measure-jr-green` on `opencode-go/deepseek-v4.1-flash`; Red ran on `openai/gpt-6-luna`. No coder was delegated. No committed test changed.
+- The first Green run blocked, because `phase3-readiness.test.ts` expected a draft-audio clone to be ready. The Mid Red retry `c9b4230b3` approved the ready-week fixtures and added a draft-audio case. Green then implemented the shared rule in one pass.
+- `lib/readiness.ts` adds `mediaPartsNotApproved` and the `media_not_approved` blocker. An absent part, or a part with no status text, counts as draft. The rule reads the three parts in the order images, audio, song, and changes no field.
+- `lib/content.ts` logs `media_not_approved` with each part that is not approved. `showDraftMedia` reads `STORYTIME_SHOW_DRAFT_MEDIA` and shows a draft-media week only when the value is exactly `1`. The value is server-side and never `NEXT_PUBLIC_`. The switch does not open an unpublished week and does not open a week with a missing picture.
+- The receiver keeps `isWeekReady` and changes no `approval` field. For shipped w01 it reports not ready, names the parts audio and song, and adds `content/l2/w01.json` to `Not ready for the at-home app`.
+- Automated at `bbe7ff741`: the targeted command exits 0 with 5 files and 51 tests. `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on `lib/readiness.ts`, `lib/content.ts`, and `scripts/receive-weeks.ts`. The deploy-file assertion passes, so no deploy file sets the switch.
+- `build-graph update` ran at the pre-commit tree: 3 files, 65 to 73 nodes, 67 to 74 edges. `graph.db` is ignored and not committed.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-f70b280.log`.
 - [ ] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. The Thai text uses the Sarabun font (Daniel, 2026-11-03 11:53 ICT, through the PM). Test: AC-5.2.
   - Workbooks answers (Q13 to Q15, through the PM, 2026-11-03): the picture alt text is `image.caption`. The audio fields are `focus.element.audio`, `StripCard.audio`, and `words[].audio`. The word tiles have no audio.
 - [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.

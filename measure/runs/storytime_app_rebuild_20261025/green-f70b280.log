@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: Measure Jr Green, DeepSeek V4.1 Flash (opencode-go/deepseek-v4.1-flash)
+status: complete
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app; task 3.1a Media approval gate
+phase_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: f70b28036de520c809066c01a9a9056be181ecbd
+resulting_head: bbe7ff741750c40db63da04041c99d23a67df656 (implementation commit; plan evidence follows)
+commits: bbe7ff741750c40db63da04041c99d23a67df656 feat; plan evidence and this report follow in a separate commit
+red_commits: c987947d8 (media gate tests), c9b4230b3 (readiness fixtures), 72ebf96d9 and f70b28036 (evidence)
+tests_run: GREEN_TEST_COMMAND; exit 0; 5 files, 51 tests
+files_changed: apps/storytime/lib/readiness.ts, apps/storytime/lib/content.ts, apps/storytime/scripts/receive-weeks.ts
+plan_updates: Task 3.1a marked [x] with Done bbe7ff741 and a Green evidence section
+known_failures: none
+handoff: The shared gate is live. Shipped w01 is not ready and the log names audio and song. The receiver reports not ready for w01 and adds content/l2/w01.json to "Not ready for the at-home app". The switch shows draft media only at value 1 and never opens a draft week or a week with a missing picture. No deploy file sets it. Next: task 3.2. The review roles audit bbe7ff741 in apps/storytime/lib/readiness.ts, apps/storytime/lib/content.ts, and one comment line in apps/storytime/scripts/receive-weeks.ts.
+END_MEASURE_AGENT_RESULT
