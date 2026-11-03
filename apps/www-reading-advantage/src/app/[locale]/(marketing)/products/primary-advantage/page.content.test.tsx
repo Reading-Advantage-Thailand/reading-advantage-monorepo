@@ -15,7 +15,7 @@ import {
   META,
   type ExpectedContainer,
   type PageLocale,
-} from "@/test/fixtures/primary-page-expected";
+} from "@/__tests__/fixtures/primary-page-expected";
 
 /*
  * Content tests for the Primary Advantage page (track www_primary_page_revamp_20261030).

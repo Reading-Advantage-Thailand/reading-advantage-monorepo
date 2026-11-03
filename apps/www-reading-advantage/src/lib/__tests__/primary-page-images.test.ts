@@ -10,7 +10,7 @@ import {
   CONTAINERS,
   IMAGES,
   META,
-} from "@/test/fixtures/primary-page-expected";
+} from "@/__tests__/fixtures/primary-page-expected";
 
 /*
  * Image tests for the Primary Advantage page (track www_primary_page_revamp_20261030).
