@@ -1,0 +1,373 @@
+"use client";
+
+/**
+ * The Storytime client reader (plan task 3.3, spec FR-6).
+ *
+ * The server page loads and gates the week, then passes the read-along book and the translated
+ * labels. The reader holds the audio element, the page turner, the modes, and the page-end stop.
+ * It never speaks with the phone voice (rule 10.5): every sound is a recorded file.
+ */
+import { useMemo, useRef, useState } from "react";
+import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
+import type { ReadAlongSentence } from "@reading-advantage/read-along/lib/align";
+import {
+  findPosition,
+  NO_POSITION,
+  sentencesOfPage,
+  type ReadAlongPosition,
+} from "@reading-advantage/read-along/lib/position";
+import { wordCutBounds } from "@reading-advantage/read-along/lib/seek";
+
+/** One timed sentence of a book audio, with its 1-based page. */
+type TimedSentence = ReadAlongSentence & { page?: number };
+
+/** One picture of a book page. */
+interface ReaderImage {
+  /** The file, relative to the media base. */
+  file?: string;
+  /** The alt text; an empty caption gives an empty alt. */
+  caption?: string;
+}
+
+/** One page of the read-along book. */
+interface ReaderPage {
+  /** The page text. */
+  text?: string;
+  /** The page picture. */
+  image?: ReaderImage;
+}
+
+/** The narration and the real slow reading of the book. */
+interface ReaderAudio {
+  /** The normal recording. */
+  file?: string;
+  /** The real slow recording (rule 10.1). */
+  slowFile?: string;
+  /** The sentence timings of the normal recording. */
+  sentences?: TimedSentence[];
+  /** The sentence timings of the slow recording. */
+  slowSentences?: TimedSentence[];
+}
+
+/** The read-along book that the server page passes. */
+interface ReaderBook {
+  /** The pages in order. */
+  pages: ReaderPage[];
+  /** The audio of the book. */
+  audio?: ReaderAudio;
+}
+
+/** The translated labels of the reader controls. */
+interface ReaderLabels {
+  /** "Read it to me". */
+  readToMe: string;
+  /** "My turn". */
+  myTurn: string;
+  /** The slow mode. */
+  slow: string;
+  /** The previous page arrow. */
+  previousPage: string;
+  /** The next page arrow. */
+  nextPage: string;
+  /** The message of a failed sound. */
+  audioError: string;
+  /** The message at the end of the book. */
+  finished: string;
+}
+
+/** The props of the client reader. */
+interface StorytimeReaderProps {
+  /** The read-along book of the week. */
+  book: ReaderBook;
+  /** The page language; it also names the language of the error message. */
+  locale: string;
+  /** The translated control labels. */
+  labels: ReaderLabels;
+  /** The media base URL; the default is `/media`. */
+  mediaBase?: string;
+}
+
+/** The Thai message of a failed sound, so the Thai page needs no Thai label from the caller. */
+const THAI_AUDIO_ERROR = "เล่นเสียงไม่ได้";
+
+/** The horizontal swipe distance, in pixels, that turns one page. */
+const SWIPE_MIN_PX = 50;
+
+/**
+ * Builds the URL of one recorded file.
+ * @param base The media base URL.
+ * @param file The file, relative to the base.
+ * @returns The URL, with one slash between the base and the file.
+ */
+function mediaUrl(base: string, file: string): string {
+  return `${base.replace(/\/+$/, "")}/${file.replace(/^\/+/, "")}`;
+}
+
+/**
+ * Renders one read-along book for a child (spec FR-6).
+ *
+ * "Read it to me" plays the page recording and lights the current word. "My turn" stays silent
+ * until a word tap, then plays the measured word cut. "Slow" plays the real slow recording at a
+ * normal rate. The arrows and a horizontal swipe move one page. The audio stops at the last
+ * sentence of the page and at the end of a word cut.
+ * @param props See `StorytimeReaderProps`.
+ * @returns The book page, the controls, and the audio element.
+ */
+export function StorytimeReader({
+  book,
+  locale,
+  labels,
+  mediaBase = "/media",
+}: StorytimeReaderProps) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [mode, setMode] = useState<"idle" | "listen" | "myTurn" | "slow">("idle");
+  const [position, setPosition] = useState<ReadAlongPosition>(NO_POSITION);
+  const [cutEnd, setCutEnd] = useState<number | null>(null);
+  const [audioFailed, setAudioFailed] = useState(false);
+  const [finished, setFinished] = useState(false);
+
+  const pageNumber = pageIndex + 1;
+  const normalSentences = useMemo(
+    () => sentencesOfPage(book.audio?.sentences ?? [], pageNumber),
+    [book.audio, pageNumber],
+  );
+  const slowSentences = useMemo(
+    () => sentencesOfPage(book.audio?.slowSentences ?? [], pageNumber),
+    [book.audio, pageNumber],
+  );
+  const timingSentences =
+    mode === "slow" && slowSentences.length > 0 ? slowSentences : normalSentences;
+  const page = book.pages[pageIndex];
+
+  /**
+   * Plays the audio element and reports a rejected playback as a failed sound.
+   * @param element The audio element.
+   */
+  function playAudio(element: HTMLAudioElement): void {
+    try {
+      const result = element.play();
+      if (result && typeof result.catch === "function") {
+        result.catch(() => setAudioFailed(true));
+      }
+    } catch {
+      setAudioFailed(true);
+    }
+  }
+
+  /**
+   * Stops the audio and clears the current mark.
+   */
+  function stopAudio(): void {
+    const element = audioRef.current;
+    if (!element) return;
+    element.pause();
+    element.currentTime = 0;
+    setCutEnd(null);
+    setPosition(NO_POSITION);
+  }
+
+  /**
+   * Resets the marks of the previous mode.
+   */
+  function resetMarks(): void {
+    setCutEnd(null);
+    setPosition(NO_POSITION);
+    setAudioFailed(false);
+    setFinished(false);
+  }
+
+  /**
+   * Starts the page recording from the first sentence of the page.
+   */
+  function startListen(): void {
+    resetMarks();
+    setMode("listen");
+    const element = audioRef.current;
+    if (!element || !book.audio?.file) return;
+    element.src = mediaUrl(mediaBase, book.audio.file);
+    element.playbackRate = 1;
+    const first = normalSentences[0];
+    element.currentTime = first ? Math.max(0, first.startTime - 0.05) : 0;
+    if (first) setPosition({ sentenceIndex: 0, wordIndex: -1 });
+    playAudio(element);
+  }
+
+  /**
+   * Starts "My turn": the reader stays silent until the child taps a word.
+   */
+  function startMyTurn(): void {
+    resetMarks();
+    setMode("myTurn");
+    const element = audioRef.current;
+    if (!element || !book.audio?.file) return;
+    element.src = mediaUrl(mediaBase, book.audio.file);
+    element.playbackRate = 1;
+    element.pause();
+  }
+
+  /**
+   * Starts the slow mode from the real slow recording at a normal playback rate (rule 10.1).
+   */
+  function startSlow(): void {
+    resetMarks();
+    setMode("slow");
+    const element = audioRef.current;
+    if (!element || !book.audio?.slowFile) return;
+    element.src = mediaUrl(mediaBase, book.audio.slowFile);
+    element.playbackRate = 1;
+    element.currentTime = 0;
+    playAudio(element);
+  }
+
+  /**
+   * Plays one word cut in "My turn" (rule 10.2).
+   * @param sentenceIndex Index of the sentence on the page.
+   * @param audioWordIndex Index of the audio word; -1 when the screen word has no timing.
+   */
+  function onWordTap(sentenceIndex: number, audioWordIndex: number): void {
+    if (mode !== "myTurn") return;
+    const element = audioRef.current;
+    const sentence = timingSentences[sentenceIndex] ?? normalSentences[sentenceIndex];
+    const word = sentence?.words[audioWordIndex];
+    if (!element || !word) return;
+    const bounds = wordCutBounds(word);
+    element.currentTime = bounds.start;
+    setCutEnd(bounds.end);
+    setPosition({ sentenceIndex, wordIndex: audioWordIndex });
+    playAudio(element);
+  }
+
+  /**
+   * Follows the playback and stops at the word cut end or at the last sentence of the page.
+   */
+  function onTimeUpdate(): void {
+    const element = audioRef.current;
+    if (!element) return;
+    if (cutEnd !== null && element.currentTime >= cutEnd) {
+      element.pause();
+      setCutEnd(null);
+      setPosition(NO_POSITION);
+      return;
+    }
+    if (mode !== "listen" && mode !== "slow") return;
+    setPosition(findPosition(timingSentences, element.currentTime, position));
+    const last = timingSentences[timingSentences.length - 1];
+    if (last && element.currentTime >= last.endTime) element.pause();
+  }
+
+  /**
+   * Moves to one page, or to the end view past the last page.
+   * @param next The next page index.
+   */
+  function goToPage(next: number): void {
+    stopAudio();
+    setMode("idle");
+    setFinished(false);
+    if (next < 0) return;
+    if (next >= book.pages.length) {
+      setFinished(true);
+      return;
+    }
+    setPageIndex(next);
+  }
+
+  const image = page?.image;
+
+  return (
+    <div
+      className="flex flex-col gap-4"
+      onTouchStart={(event) => {
+        const touch = event.touches[0];
+        if (touch) touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+      }}
+      onTouchEnd={(event) => {
+        const start = touchStartRef.current;
+        const touch = event.changedTouches[0];
+        touchStartRef.current = null;
+        if (!start || !touch) return;
+        const deltaX = touch.clientX - start.x;
+        const deltaY = touch.clientY - start.y;
+        if (Math.abs(deltaX) < SWIPE_MIN_PX || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+        goToPage(deltaX < 0 ? pageIndex + 1 : pageIndex - 1);
+      }}
+    >
+      {finished ? (
+        <p className="text-lg font-semibold">{labels.finished}</p>
+      ) : (
+        <>
+          <div data-page-content data-page-number={pageNumber} className="flex flex-col gap-3">
+            {image?.file ? (
+              <img
+                src={mediaUrl(mediaBase, image.file)}
+                alt={image.caption ?? ""}
+                loading="lazy"
+                decoding="async"
+                className="w-full rounded-2xl object-cover"
+              />
+            ) : null}
+            <ReadAlongPassage
+              sentences={normalSentences}
+              passage=""
+              position={position}
+              active={mode !== "idle"}
+              onWordTap={mode === "myTurn" ? onWordTap : undefined}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              aria-label={labels.previousPage}
+              disabled={pageIndex === 0}
+              onClick={() => goToPage(pageIndex - 1)}
+              className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              aria-label={labels.nextPage}
+              onClick={() => goToPage(pageIndex + 1)}
+              className="min-h-12 rounded-xl border border-neutral-300 px-4"
+            >
+              →
+            </button>
+            <button
+              type="button"
+              onClick={startListen}
+              className="min-h-12 rounded-xl border border-neutral-300 px-4"
+            >
+              {labels.readToMe}
+            </button>
+            <button
+              type="button"
+              onClick={startMyTurn}
+              className="min-h-12 rounded-xl border border-neutral-300 px-4"
+            >
+              {labels.myTurn}
+            </button>
+            <button
+              type="button"
+              onClick={startSlow}
+              className="min-h-12 rounded-xl border border-neutral-300 px-4"
+            >
+              {labels.slow}
+            </button>
+          </div>
+          <audio
+            ref={audioRef}
+            preload="metadata"
+            onError={() => setAudioFailed(true)}
+            onTimeUpdate={onTimeUpdate}
+          />
+          {audioFailed ? (
+            <p role="alert" lang={locale} className="text-red-700">
+              {locale === "th" ? THAI_AUDIO_ERROR : labels.audioError}
+            </p>
+          ) : null}
+        </>
+      )}
+    </div>
+  );
+}

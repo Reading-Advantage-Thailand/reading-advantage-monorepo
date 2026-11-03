@@ -175,7 +175,6 @@ export function ReadAlongPlayer({
           </button>
           <button
             type="button"
-            id="playPauseButton"
             aria-label={playing ? labels.stop : labels.play}
             onClick={onPlayPause}
             className={cn(chrome.buttonClassName("gold"), "inline-flex size-14 items-center justify-center p-0")}

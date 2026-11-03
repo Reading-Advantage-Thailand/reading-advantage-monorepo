@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { loadVisibleWeek } from "@/lib/content";
 import type { StorytimeWeek } from "@/lib/contracts/week";
+import { StorytimeReader } from "./reader";
 
 /**
  * The at-home entry route `/<locale>/st/<level>/<week>` (spec FR-5, AC-2.1, AC-5.2, AC-5.4).
@@ -251,6 +252,17 @@ export default async function StorytimeWeekPage({
   const week = loaded ?? notFound();
   const translate = await getTranslations({ locale });
   const t = (key: string) => translate(key);
+  const readerLabels = {
+    readToMe: t("playerReadToMe"),
+    myTurn: t("playerMyTurn"),
+    slow: t("playerSlow"),
+    previousPage: t("playerPreviousPage"),
+    nextPage: t("playerNextPage"),
+    audioError: t("playerAudioError"),
+    finished: t("playerFinished"),
+  };
+  const mediaBase = (process.env[MEDIA_BASE_ENV] || "/media").replace(/\/+$/, "");
+  const readAlongBook = week.books.find((entry) => entry.kind === "readalong");
 
   const home = week.home;
   const parentLine = home?.line ? home.line.th.trim() : "";
@@ -356,6 +368,17 @@ export default async function StorytimeWeekPage({
             ) : null}
           </section>
         </>
+      ) : part === "book" ? (
+        <section data-part={part}>
+          {readAlongBook ? (
+            <StorytimeReader
+              book={readAlongBook}
+              locale={locale}
+              labels={readerLabels}
+              mediaBase={mediaBase}
+            />
+          ) : null}
+        </section>
       ) : (
         <section data-part={part} className="rounded-2xl border border-neutral-300 p-4">
           <h2 className="text-lg font-semibold" lang="en">

@@ -8,5 +8,12 @@
   "homeSoundHeading": "เสียงประจำสัปดาห์",
   "homeWordsHeading": "คำศัพท์สัปดาห์นี้",
   "homeFrameHeading": "ประโยคตัวอย่าง",
-  "homeActivityHeading": "กิจกรรมที่บ้าน"
+  "homeActivityHeading": "กิจกรรมที่บ้าน",
+  "playerReadToMe": "อ่านให้ฟัง",
+  "playerMyTurn": "ตาฉัน",
+  "playerSlow": "ช้า ๆ",
+  "playerPreviousPage": "หน้าก่อนหน้า",
+  "playerNextPage": "หน้าถัดไป",
+  "playerAudioError": "เล่นเสียงไม่ได้",
+  "playerFinished": "จบเล่มแล้ว"
 }

@@ -70,6 +70,7 @@ const SentenceView = memo(function SentenceView({
     <span
       ref={isCurrent ? currentSentenceRef : undefined}
       data-sentence={index}
+      aria-current={active && isCurrent ? "true" : undefined}
       className={cn(
         "font-article rounded px-0.5 text-lg transition-all duration-200 md:text-xl",
         active && isCurrent && HIGHLIGHT_CLASSES.playingSentence,
@@ -82,9 +83,15 @@ const SentenceView = memo(function SentenceView({
             tabIndex: 0,
             onClick: () => onWordTap?.(index, -1),
             onKeyDown: (e: KeyboardEvent<HTMLSpanElement>) => {
-              if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+              if (e.target !== e.currentTarget) return;
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 onWordTap?.(index, -1);
+                return;
+              }
+              if (e.key === "ArrowRight") {
+                e.preventDefault();
+                e.currentTarget.querySelector<HTMLElement>("[data-word][tabindex]")?.focus();
               }
             },
           }
@@ -95,16 +102,36 @@ const SentenceView = memo(function SentenceView({
           e.stopPropagation();
           onWordTap?.(index, maps.displayToAudio[word.index] ?? -1);
         };
-      
+        const onKeyDown = (e: KeyboardEvent<HTMLSpanElement>) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            e.stopPropagation();
+            onWordTap?.(index, maps.displayToAudio[word.index] ?? -1);
+            return;
+          }
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          e.preventDefault();
+          const sentence = e.currentTarget.closest<HTMLElement>("[data-sentence]");
+          if (!sentence) return;
+          const words = [...sentence.querySelectorAll<HTMLElement>("[data-word][tabindex]")];
+          const next = words[words.indexOf(e.currentTarget) + (e.key === "ArrowRight" ? 1 : -1)];
+          next?.focus();
+        };
+
         return (
           <span key={word.index}>
             {word.lead}
             <span
+              data-word={word.index}
+              aria-current={active && word.index === markedWord ? "true" : undefined}
               className={cn(
                 "cursor-pointer rounded transition-colors duration-150",
                 active && word.index === markedWord ? HIGHLIGHT_CLASSES.currentWord : HIGHLIGHT_CLASSES.hoverWord,
+                interactive &&
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               )}
               onClick={tap}
+              {...(interactive ? { tabIndex: -1, onKeyDown } : {})}
             >
               {word.text}
             </span>

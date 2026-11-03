@@ -8,5 +8,12 @@
   "homeSoundHeading": "Sound of the week",
   "homeWordsHeading": "Words this week",
   "homeFrameHeading": "Sentence frame",
-  "homeActivityHeading": "At home"
+  "homeActivityHeading": "At home",
+  "playerReadToMe": "Read it to me",
+  "playerMyTurn": "My turn",
+  "playerSlow": "Slow",
+  "playerPreviousPage": "Previous page",
+  "playerNextPage": "Next page",
+  "playerAudioError": "Sound could not be played",
+  "playerFinished": "Book finished"
 }
