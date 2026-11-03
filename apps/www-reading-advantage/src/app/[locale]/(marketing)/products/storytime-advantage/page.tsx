@@ -1,28 +1,22 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { Link } from "@/locales/navigation";
-import {
-  BookOpen,
-  Scale,
-  Handshake,
-  FileText,
-  Users,
-  BarChart3,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { OverlappingSection } from "@/components/ui/overlapping-section";
-import { FAQAccordion } from "@/components/ui/faq-accordion";
-import { MarketingSvg } from "@/components/marketing/marketing-svg";
-import type { Locale } from "@/config/locale-config";
 
-/**
- * Builds metadata for the localized Storytime Advantage route.
- * @param params The locale route parameters.
- * @returns The localized route metadata.
- */
+const IMAGE_DIR = "/images/storytime-advantage";
+
+const STORY_IMAGES = [
+  { name: "week-02-how-many-cakes", alt: "week02HowManyCakes" },
+  { name: "week-03-it-is-red", alt: "week03ItIsRed" },
+  { name: "week-04-nan-and-pam-nap", alt: "week04NanAndPamNap" },
+  { name: "week-05-two-ears", alt: "week05TwoEars" },
+  { name: "week-06-i-see-a-cat", alt: "week06ISeeACat" },
+  { name: "week-07-top-on-a-pot", alt: "week07TopOnAPot" },
+] as const;
+
+/** Builds metadata for the localized Storytime Advantage route. */
 export async function generateMetadata({
   params,
 }: {
@@ -30,373 +24,183 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getScopedI18n("pages.products.storytimeAdvantage");
-  const title = t("hero.title");
-  const description = t("hero.description");
-
   return buildMarketingMetadata({
-    description,
+    description: t("metadata.description"),
     locale,
     path: "/products/storytime-advantage",
-    title,
+    title: t("metadata.title"),
   });
 }
 
-/**
- * Renders the localized Storytime Advantage marketing page.
- * @param params The locale route parameters.
- * @returns The localized Storytime Advantage page.
- */
+/** Renders the Storytime Advantage marketing page. */
 export default async function StorytimeAdvantage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  await params;
   const t = await getScopedI18n("pages.products.storytimeAdvantage");
 
-  const keyFeatures = [
-    {
-      icon: BookOpen,
-      title: t("keyFeatures.features.0.title"),
-      points: [
-        t("keyFeatures.features.0.points.0"),
-        t("keyFeatures.features.0.points.1"),
-        t("keyFeatures.features.0.points.2"),
-        t("keyFeatures.features.0.points.3"),
-      ],
-    },
-    {
-      icon: FileText,
-      title: t("keyFeatures.features.1.title"),
-      points: [
-        t("keyFeatures.features.1.points.0"),
-        t("keyFeatures.features.1.points.1"),
-        t("keyFeatures.features.1.points.2"),
-        t("keyFeatures.features.1.points.3"),
-      ],
-    },
-  ];
-
-  const teacherResources = [
-    {
-      icon: FileText,
-      title: t("teacherTools.tools.0.title"),
-      description: t("teacherTools.tools.0.description"),
-    },
-    {
-      icon: Users,
-      title: t("teacherTools.tools.1.title"),
-      description: t("teacherTools.tools.1.description"),
-    },
-    {
-      icon: BarChart3,
-      title: t("teacherTools.tools.2.title"),
-      description: t("teacherTools.tools.2.description"),
-    },
-  ];
-
-  const faqItems = [
-    {
-      question: t("faq.questions.0.question"),
-      answer: t("faq.questions.0.answer"),
-    },
-    {
-      question: t("faq.questions.1.question"),
-      answer: t("faq.questions.1.answer"),
-    },
-    {
-      question: t("faq.questions.2.question"),
-      answer: t("faq.questions.2.answer"),
-    },
-    {
-      question: t("faq.questions.3.question"),
-      answer: t("faq.questions.3.answer"),
-    },
-    {
-      question: t("faq.questions.4.question"),
-      answer: t("faq.questions.4.answer"),
-    },
-  ];
-
   return (
-    <main className="overflow-x-hidden">
-      {/* Hero Section - Inline with amber gradient */}
-      <section className="relative min-h-hero flex items-center overflow-hidden">
-        <Image
-          src="/images/hero-storytime-advantage.jpg"
-          alt={t("heroAlt")}
-          fill
-          sizes="100vw"
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-300 to-amber-800 opacity-90" />
-        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-        <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
-                <Sparkles className="w-4 h-4" />
-                {t("hero.comingSoon")}
-              </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                {t("hero.title")}
-              </h1>
-              <p className="text-xl md:text-2xl leading-relaxed mb-4 text-amber-50">
-                {t("hero.subtitle")}
-              </p>
-              <p className="text-lg md:text-xl leading-relaxed mb-8 text-amber-100">
-                {t("hero.description")}
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-amber-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-amber-50"
-              >
-                {t("cta.buttons.joinWaitlist")}
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-            <div className="lg:col-span-5 flex justify-center">
-              <Image
-                src="/storytime-advantage.png"
-                alt="Storytime Advantage"
-                width={400}
-                height={400}
-                className="w-full max-w-md rounded-2xl shadow-2xl"
-                priority
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Adaptive Learning Path — SVG Visualization */}
-      <section className="py-24 bg-white border-y border-site-border">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-4 block">
-                {t("adaptiveEngine.eyebrow")}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                {t("adaptiveEngine.heading")}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed text-site-body">
-                {t("adaptiveEngine.description")}
-              </p>
-            </div>
-            <div className="lg:col-span-7">
-              <div className="relative rounded-3xl overflow-hidden border border-site-border bg-white shadow-lg">
-                <MarketingSvg
-                  baseName="ra-marketing-storytime-advantage"
-                  locale={locale as Locale}
-                  className="w-full h-auto"
-                  alt={t("adaptiveEngine.alt")}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Full-Width Color Room (Amber) - Key Features */}
-      <section className="bg-gradient-to-br from-amber-400 via-amber-400 to-amber-600 py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <p className="uppercase tracking-widest text-xs font-semibold text-amber-100 mb-6 text-center">
-              {t("eyebrows.keyFeatures")}
-            </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
-              {t("keyFeatures.heading")}
-            </h2>
-            <div className="grid md:grid-cols-2 gap-0 max-w-5xl mx-auto">
-              {keyFeatures.map((feature, index) => (
-                <div
-                  key={feature.title}
-                  className={`bg-white rounded-3xl p-12 shadow-xl ${
-                    index === 0 ? "relative z-10" : "-ml-6 relative z-0"
-                  }`}
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
-                    <feature.icon
-                      className="w-7 h-7 text-white"
-                      strokeWidth={2}
-                    />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-6 text-slate-900">
-                    {feature.title}
-                  </h3>
-                  <ul className="space-y-4">
-                    {feature.points.map((point, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0" />
-                        <span className="text-site-body leading-relaxed">
-                          {point}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Asymmetric 7/5 - K-3 Curriculum */}
-      <section className="bg-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <p className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-6">
-              {t("eyebrows.k3Curriculum")}
-            </p>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              <div className="lg:col-span-7">
-                <h2 className="text-4xl md:text-5xl font-bold mb-8 text-slate-900">
-                  {t("coreValue.heading")}
-                </h2>
-                <div className="space-y-8">
-                  {[
-                    {
-                      icon: BookOpen,
-                      title: t("coreValue.features.0.title"),
-                      description: t("coreValue.features.0.description"),
-                    },
-                    {
-                      icon: Scale,
-                      title: t("coreValue.features.1.title"),
-                      description: t("coreValue.features.1.description"),
-                    },
-                    {
-                      icon: Handshake,
-                      title: t("coreValue.features.2.title"),
-                      description: t("coreValue.features.2.description"),
-                    },
-                  ].map((item) => (
-                    <div key={item.title} className="flex gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
-                        <item.icon
-                          className="w-6 h-6 text-white"
-                          strokeWidth={2}
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold mb-2 text-slate-900">
-                          {item.title}
-                        </h3>
-                        <p className="text-site-body leading-relaxed">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="lg:col-span-5">
-                <div
-                  data-testid="dashed-frame"
-                  className="border-2 border-dashed border-amber-400 rounded-3xl p-2"
-                >
-                  <Image
-                    src="/images/storytime-advantage-hero.jpg"
-                    alt={t("classroomAlt")}
-                    width={600}
-                    height={400}
-                    sizes="(max-width: 768px) 100vw, 40vw"
-                    className="rounded-2xl w-full h-auto object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Overlapping Section - Teacher Resources */}
-      <OverlappingSection
-        data-testid="overlapping-section"
-        background="bg-amber-50"
-        overlapAmount="-mt-20"
-        topRadius="rounded-t-[40px]"
+    <main className="overflow-x-hidden bg-site-page text-site-body">
+      <section
+        data-testid="st-hero"
+        className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-600 text-white"
       >
-        <div className="container mx-auto px-4 py-24">
-          <div className="max-w-6xl mx-auto">
-            <p className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-6 text-center">
-              {t("eyebrows.teacherResources")}
+        <div className="container mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-32 sm:px-6 sm:py-16 lg:grid-cols-12 lg:px-8 lg:py-24">
+          <div className="lg:col-span-6">
+            <span className="mb-6 inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-bold text-amber-800">
+              {t("hero.comingSoon")}
+            </span>
+            <h1 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+              {t("hero.title")}
+            </h1>
+            <p className="mb-4 text-xl leading-relaxed text-amber-50">
+              {t("hero.subtitle")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
-              {t("teacherTools.heading")}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {teacherResources.map((resource, index) => (
-                <div
-                  key={resource.title}
-                  data-testid="staggered-card"
-                  className={`bg-white rounded-3xl p-10 shadow-lg border border-amber-100 hover:border-amber-200 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 ${
-                    index === 1 ? "mt-5" : ""
-                  }`}
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-md mx-auto">
-                    <resource.icon
-                      className="w-7 h-7 text-white"
-                      strokeWidth={2}
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold mb-4 text-center text-slate-900">
-                    {resource.title}
-                  </h3>
-                  <p className="text-site-body leading-relaxed text-center">
-                    {resource.description}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <p className="max-w-2xl text-lg leading-relaxed text-amber-50">
+              {t("hero.description")}
+            </p>
           </div>
-        </div>
-      </OverlappingSection>
-
-      {/* FAQ Accordion */}
-      <section className="bg-white py-24">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <p className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-6 text-center">
-            {t("eyebrows.frequentlyAskedQuestions")}
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
-            {t("faq.heading")}
-          </h2>
-          <FAQAccordion
-            data-testid="faq-accordion"
-            variant="amber"
-            items={faqItems}
-          />
+          <div className="lg:col-span-6">
+            <Image
+              src={`${IMAGE_DIR}/week-01-hello-pip.webp`}
+              alt={t("images.week01HelloPip")}
+              width={1200}
+              height={900}
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="h-auto w-full rounded-3xl border border-white/40 shadow-xl"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="bg-gradient-to-br from-amber-600 via-amber-600 to-amber-600 text-white py-24">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6">
-              {t("cta.heading")}
+      <section data-testid="st-section-1" className="border-y border-site-border bg-white py-16 lg:py-20">
+        <div className="container mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <p className="mb-3 font-semibold text-amber-800">{t("adaptiveEngine.eyebrow")}</p>
+            <h2 className="mb-5 text-3xl font-bold text-site-navy md:text-4xl">
+              {t("adaptiveEngine.heading")}
             </h2>
-            <p className="text-2xl mb-12 text-amber-100 max-w-2xl mx-auto">
-              {t("cta.description")}
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-white text-amber-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
-              >
-                {t("cta.buttons.joinWaitlist")}
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-amber-800"
-              >
-                {t("cta.buttons.learnMore")}
-              </Link>
-            </div>
+            <p className="text-lg leading-relaxed">{t("adaptiveEngine.description")}</p>
+          </div>
+          <div className="lg:col-span-7">
+            <Image
+              src={`${IMAGE_DIR}/level-2-unit-1-cover-art.webp`}
+              alt={t("images.level2Unit1CoverArt")}
+              width={960}
+              height={720}
+              sizes="(max-width: 1024px) 100vw, 58vw"
+              className="h-auto w-full rounded-3xl border border-site-border shadow-lg"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section data-testid="st-section-2" className="bg-amber-600 py-16 text-white lg:py-20">
+        <div className="container mx-auto max-w-7xl px-4">
+          <p className="mb-4 text-center text-sm font-semibold text-amber-50">{t("eyebrows.keyFeatures")}</p>
+          <h2 className="mx-auto mb-10 max-w-3xl text-center text-3xl font-bold md:text-4xl">
+            {t("keyFeatures.heading")}
+          </h2>
+          <div className="grid items-start gap-8 lg:grid-cols-2">
+            {[0, 1].map((group) => (
+              <article key={group} className="rounded-3xl bg-white p-6 text-site-body shadow-lg sm:p-9">
+                <h3 className="mb-5 text-2xl font-bold text-site-navy">
+                  {t(`keyFeatures.features.${group}.title`)}
+                </h3>
+                <ul className="space-y-4">
+                  {[0, 1, 2, 3].map((point) => (
+                    <li key={point} className="flex gap-3 leading-relaxed">
+                      <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 rounded-full bg-amber-400" />
+                      {t(`keyFeatures.features.${group}.points.${point}`)}
+                    </li>
+                  ))}
+                </ul>
+                {group === 1 && (
+                  <div className="mt-7 grid grid-cols-2 gap-4">
+                    <Image src={`${IMAGE_DIR}/week-01-reader-hello-cover.webp`} alt={t("images.week01ReaderHelloCover")} width={480} height={360} sizes="(max-width: 640px) 45vw, 20vw" className="h-auto w-full rounded-xl border border-site-border" />
+                    <Image src={`${IMAGE_DIR}/week-01-reader-nan-can-nod-cover.webp`} alt={t("images.week01ReaderNanCanNodCover")} width={480} height={360} sizes="(max-width: 640px) 45vw, 20vw" className="h-auto w-full rounded-xl border border-site-border" />
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-testid="st-section-3" className="bg-white py-16 lg:py-20">
+        <div className="container mx-auto max-w-7xl px-4">
+          <p className="mb-4 text-sm font-semibold text-amber-800">{t("eyebrows.k3Curriculum")}</p>
+          <h2 className="mb-10 max-w-4xl text-3xl font-bold text-site-navy md:text-4xl">{t("coreValue.heading")}</h2>
+          <div className="mb-10 grid gap-6 md:grid-cols-3">
+            {[0, 1, 2].map((feature) => (
+              <article key={feature} className="border-l-4 border-amber-400 pl-5">
+                <h3 className="mb-2 text-xl font-bold text-site-navy">{t(`coreValue.features.${feature}.title`)}</h3>
+                <p className="leading-relaxed">{t(`coreValue.features.${feature}.description`)}</p>
+              </article>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {STORY_IMAGES.map((image) => (
+              <Image
+                key={image.name}
+                src={`${IMAGE_DIR}/${image.name}.webp`}
+                alt={t(`images.${image.alt}`)}
+                width={900}
+                height={675}
+                sizes="(max-width: 768px) 50vw, 33vw"
+                className="h-auto w-full rounded-2xl border border-site-border shadow-md"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-testid="st-section-4" className="bg-amber-50 py-16 lg:py-20">
+        <div className="container mx-auto max-w-6xl px-4">
+          <p className="mb-4 text-center text-sm font-semibold text-amber-800">{t("eyebrows.teacherResources")}</p>
+          <h2 className="mb-10 text-center text-3xl font-bold text-site-navy md:text-4xl">{t("teacherTools.heading")}</h2>
+          <div className="grid gap-5 md:grid-cols-3">
+            {[0, 1, 2].map((tool) => (
+              <article key={tool} className="rounded-2xl border border-amber-100 bg-white p-7 shadow-sm">
+                <h3 className="mb-3 text-xl font-bold text-site-navy">{t(`teacherTools.tools.${tool}.title`)}</h3>
+                <p className="leading-relaxed">{t(`teacherTools.tools.${tool}.description`)}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-testid="st-section-5" className="bg-white py-16 lg:py-20">
+        <div className="container mx-auto max-w-3xl px-4">
+          <p className="mb-4 text-center text-sm font-semibold text-amber-800">{t("eyebrows.frequentlyAskedQuestions")}</p>
+          <h2 className="mb-8 text-center text-3xl font-bold text-site-navy md:text-4xl">{t("faq.heading")}</h2>
+          <div className="divide-y divide-site-border border-y border-site-border">
+            {[0, 1, 2, 3, 4].map((item) => (
+              <details key={item} className="py-5">
+                <summary className="cursor-pointer text-lg font-semibold text-site-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600">
+                  {t(`faq.questions.${item}.question`)}
+                </summary>
+                <p className="pt-4 leading-relaxed">{t(`faq.questions.${item}.answer`)}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-testid="st-cta" className="bg-gradient-to-br from-amber-600 to-amber-800 py-16 text-center text-white lg:py-20">
+        <div className="container mx-auto max-w-4xl px-4">
+          <h2 className="mb-5 text-3xl font-bold md:text-4xl">{t("cta.heading")}</h2>
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-amber-50">{t("cta.description")}</p>
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-amber-800 hover:bg-amber-50">
+              {t("cta.buttons.joinWaitlist")}<ArrowRight aria-hidden="true" className="h-5 w-5" />
+            </Link>
+            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center rounded-2xl border-2 border-white px-7 py-4 font-bold text-white hover:bg-white hover:text-amber-800">
+              {t("cta.buttons.learnMore")}
+            </Link>
           </div>
         </div>
       </section>

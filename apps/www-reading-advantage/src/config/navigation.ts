@@ -40,7 +40,7 @@ export const navigation: NavItem[] = [
       {
         title: "Storytime Advantage",
         href: "/products/storytime-advantage",
-        description: "Interactive storytelling platform",
+        description: "English for Anuban 2 to P2; the first unit is being prepared",
       },
       {
         title: "CodeCamp Advantage",

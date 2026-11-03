@@ -23,7 +23,6 @@ const SRC_DIR = join(BASE, "src");
 const NONEXISTENT_APPS = [
   "math-advantage",
   "stem-advantage",
-  "storytime-advantage",
   "zhongwen-advantage",
 ];
 

@@ -54,3 +54,4 @@
 | 2026-11-03 | www_primary_page_revamp_20261030 | Live demo and keyboard checks not run (UX-N1) | Low | Open | Play click, keyboard focus ring, and new-tab behavior were supported by static evidence only. |
 | 2026-11-03 | www_primary_page_revamp_20261030 | Next-start log warnings (UX-N2) | Low | Open | Start log showed `ENVIRONMENT_FALLBACK` from the header and the standalone-output warning; all locales returned 200. |
 | 2026-11-03 | www_primary_page_revamp_20261030 | Crop script excluded from lint | Low | Open | ESLint ignores `scripts/crop-primary-page-images.ts`; lint passed with one warning and did not check this file. |
+| 2026-11-03 | www_storytime_page_revamp_20261103 | www: switch the illustrations of the Storytime and Primary product pages to lossy WebP at about quality 85 (today lossless, with images.unoptimized: true; Storytime 4.4 MB, Primary 3.8 MB). After A-45. PM decision 2026-11-03. | Low | Open | |
