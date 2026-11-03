@@ -1,0 +1,145 @@
+# Measure Green report — Storytime task 3.6
+
+- Role: Measure Jr Green; model `deepseek/deepseek-v4.1-flash` (`opencode-go`).
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3, task 3.6.
+- `phase_base_sha`: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- `role_base_sha`: `9ccd89c98a9b36c9f0f6f8b836a88d9b3feca130`.
+- Starting HEAD matched `role_base_sha`. The Red commits `a19040e66` and `9ccd89c98` are inside the range `phase_base_sha..HEAD`. The phase base is an ancestor.
+- Dirty paths at start: unrelated untracked user work. Preserved and not staged. No Red file changed.
+- No coder was delegated.
+
+## Printed-URL test (AC-2.2)
+
+- Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-printed-urls.test.ts'`.
+- Result: exit 0; 1 file passed; 1 test passed. The test reads 8 shipped weeks and 2 URLs each, so `urls_checked=16`.
+
+## Browser gate run 1 (AC-5.3, AC-5.2, AC-8.2)
+
+- Command: `bash apps/storytime/__tests__/phase3-browser-gate.sh`.
+- Result: exit 1; `PASS=3, FAIL=1`.
+- The Playwright step failed before any app row: `Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@playwright/test' imported from /tmp/storytime-browser-dfZ2iK/gate.mjs`.
+- Cause: the gate writes `gate.mjs` under `mktemp -d -t` in `/tmp`. Node resolves `@playwright/test` from that folder and finds no `node_modules` above it. The package exists at the repository root, so the app is not at fault.
+
+## Browser gate run 2 (the single app run)
+
+- Command: `TMPDIR="$PWD/.tmp" bash apps/storytime/__tests__/phase3-browser-gate.sh`. The `TMPDIR` value moves the temporary script inside the repository, so Node finds the root `node_modules`. No Red file changed.
+- Outer result: `PASS=3, FAIL=1` (the Playwright exit row).
+- Browser rows: `PASS=10, FAIL=4`.
+- Every labeled line:
+  - `transferred_bytes_first_load=642173`
+  - `media_requests_before_tap=3`
+  - `requests_total=19`
+  - `first_media_request_index=13`
+  - `tap_target_min_px_tiles_360x800=106`
+  - `tap_target_min_px_speakers_360x800=64`
+  - `tap_target_min_px_tiles_800x360=106`
+  - `tap_target_min_px_speakers_800x360=64`
+  - `video_box_ratio_x1000_phone=520`
+  - `video_box_height_pct_phone=75`
+  - `video_box_ratio_x1000_laptop=1778`
+- Self-test: all three bad pages fail their limit as required.
+  - `PASS: self-test rejects 30 px button`
+  - `PASS: self-test rejects 400 KB script`
+  - `PASS: self-test rejects white text on #3080ff`
+- Failing rows:
+  - `FAIL: AC-5.3 first-load transfer is at most 300000 bytes (transferred_bytes_first_load=642173)`
+  - `FAIL: AC-5.3 no media request occurs before tap (media_requests_before_tap=3)`
+  - `FAIL: first media request occurs after the tap (first_media_request_index=13)`
+  - `FAIL: AC-8.2 phone video box ratio (video_box_ratio_x1000_phone=520)`
+
+## Why each failing row needs a different owner
+
+1. **Decoded bytes, not transferred bytes.** The gate sums `(await response.body()).byteLength` (line 131 of `phase3-browser-gate.sh`). Playwright returns the decoded body. The whole Storytime build is 756 KB of static files; 642,173 is a decoded sum, so the row cannot reach 300,000 on a Next.js 16 page. AC-5.3 says "transferred", so Mid Red must measure the encoded size (`content-length` or CDP `encodedDataLength`).
+2. **Tile pictures are media.** The three tile pictures are content images with `image.caption` alt text (spec FR-5, task 3.2, `phase3-home-card.test.tsx`). Line 128 of the gate treats `resourceType === "image"` as media, so the first load cannot show a content tile picture and also report `media_requests_before_tap=0`. This is a conflict between the gate and FR-5/task 3.2. It needs a decision.
+3. **Phone song box is an app defect.** `.song-stage[data-phone="true"] video` sets `width: auto; height: 75dvh; max-width: 100%`. At 360x800 the content width is 312 px, the height is 600 px, and the ratio is 520. The correct rule drives the width and lets the height follow: `width: min(100%, calc(75dvh * 9 / 16)); height: auto;`. Measured result would be 312 by 554.7 (ratio 562, height 69 percent). This change stays uncommitted because the gate cannot end with FAIL=0 until Mid Red fixes the gate.
+
+## Other gates
+
+- `tsc --noEmit` in `apps/storytime`: exit 0, no diagnostics (same heavy-run command as the printed-URL test).
+- ESLint: no production file changed, so no file to lint.
+- No implementation commit. No production source changed. Task 3.6 stays `[~]`, because the gate does not end with `FAIL=0`.
+
+## Raw gate output (run 2)
+
+```
+=== Build Storytime production app ===
+▲ Next.js 16.4.1 (Turbopack)
+✓ Running next.config.ts took 64ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 578ms
+  Running TypeScript ...
+  Finished TypeScript in 5.6s
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/2) ...
+✓ Generating static pages (2/2) in 196ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+└ ƒ /[locale]/st/[level]/[week]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+=== Create ready review fixture from shipped w01 ===
+=== Fixture mode: STORYTIME_CONTENT_DIR points to a temporary ready review copy; draft-media switch is not set ===
+=== Start next start on a free 127.0.0.1 port ===
+=== Run Playwright with SYSTEM Chrome (channel: chrome); timeout 15m ===
+transferred_bytes_first_load=642173
+media_requests_before_tap=3
+requests_total=19
+first_media_request_index=13
+tap_target_min_px_tiles_360x800=106
+tap_target_min_px_speakers_360x800=64
+tap_target_min_px_tiles_800x360=106
+tap_target_min_px_speakers_800x360=64
+video_box_ratio_x1000_phone=520
+video_box_height_pct_phone=75
+video_box_ratio_x1000_laptop=1778
+PASS: self-test rejects 30 px button
+PASS: self-test rejects 400 KB script
+PASS: self-test rejects white text on #3080ff
+FAIL: AC-5.3 first-load transfer is at most 300000 bytes (transferred_bytes_first_load=642173)
+FAIL: AC-5.3 no media request occurs before tap (media_requests_before_tap=3)
+PASS: first-load request log is non-empty (requests_total=19)
+FAIL: first media request occurs after the tap (first_media_request_index=13)
+PASS: 64 px tiles at 360x800
+PASS: 64 px speakers at 360x800
+PASS: 64 px tiles at 800x360
+PASS: 64 px speakers at 800x360
+FAIL: AC-8.2 phone video box ratio (video_box_ratio_x1000_phone=520)
+PASS: AC-8.2 phone video height (video_box_height_pct_phone=75)
+PASS: AC-8.2 laptop video box ratio (video_box_ratio_x1000_laptop=1778)
+PASS=10, FAIL=4
+PASS: Production build exits 0
+PASS: Ready clone uses shipped w01 with approvals and placeholder media
+PASS: Built server answers HTTP 200
+FAIL: Playwright gate exits 1
+PASS=3, FAIL=1
+RC=1
+```
+
+## MEASURE_AGENT_RESULT
+status: blocked
+role: Measure Jr Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 — At-home app, task 3.6
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 9ccd89c98a9b36c9f0f6f8b836a88d9b3feca130
+head: pending evidence commit
+commits: pending (plan and report evidence only; no implementation commit)
+tests: printed-URL test exit 0 (1 file, 1 test, 16 URLs); app tsc exit 0; browser gate exit 1 with PASS=10, FAIL=4 (outer PASS=3, FAIL=1)
+files: measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/green-9ccd89c.log
+remaining_failures: decoded-byte budget row (gate defect), three tile-picture media rows (gate conflicts with FR-5/task 3.2), phone song box ratio 520 (app defect)
+handoff: Mid Red must retry `phase3-browser-gate.sh`. Question for the orchestrator is in the plan note and below. Task 3.6 stays [~].
+question: How should AC-5.3 treat the first load and the tile pictures?
+options:
+  A. Mid Red measures the encoded size and counts only audio/video as media before a tap. Default. It keeps FR-5 content tile pictures and changes only the gate.
+  B. Mid Red keeps the strict media rule and changes task 3.2 to app-owned inline tile illustrations. This needs a spec and plan amendment.
+  C. Daniel changes AC-5.3. This is a product decision.
+default: A, plus the gate script path fix and the song CSS fix.
+END_MEASURE_AGENT_RESULT

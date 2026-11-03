@@ -533,7 +533,32 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - The exact remaining acceptance work is the unrun browser gate: first-load transfer, media timing, 64 px tile and speaker targets at 360x800 and 800x360, and AC-8.2 video box ratios. Task 3.6 remains `[~]`.
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-d1ec787.log`.
 
-- [~] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
+### Phase 3 task 3.6 Green evidence
+
+- Green started at `9ccd89c98a9b36c9f0f6f8b836a88d9b3feca130`. The immutable phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`. The Red commits `a19040e66` and `9ccd89c98` are inside the phase range. No coder was delegated.
+- Printed-URL test (AC-2.2): exit 0; 1 file; 1 test. The test reads 8 shipped weeks and 2 URLs each, so `urls_checked=16`.
+- App type check: `tsc --noEmit` in `apps/storytime` exits 0 with no diagnostics.
+- Browser gate run 1: exit 1; `PASS=3, FAIL=1`. The Playwright step failed before an app row: `Cannot find package '@playwright/test' imported from /tmp/storytime-browser-dfZ2iK/gate.mjs`. The gate writes its script under `mktemp -d -t`, so Node resolves from `/tmp`, which has no `node_modules`.
+- Browser gate run 2 with `TMPDIR="$PWD/.tmp"`: no Red file changed. Result: browser `PASS=10, FAIL=4`; outer `PASS=3, FAIL=1`. The labeled lines:
+  - `transferred_bytes_first_load=642173`
+  - `media_requests_before_tap=3`
+  - `requests_total=19`
+  - `first_media_request_index=13`
+  - `tap_target_min_px_tiles_360x800=106`
+  - `tap_target_min_px_speakers_360x800=64`
+  - `tap_target_min_px_tiles_800x360=106`
+  - `tap_target_min_px_speakers_800x360=64`
+  - `video_box_ratio_x1000_phone=520`
+  - `video_box_height_pct_phone=75`
+  - `video_box_ratio_x1000_laptop=1778`
+- The three self-tests fail their bad pages as required: the 30 px button, the 400 KB script, and white text on `#3080ff`.
+- AC-5.3 byte row: the gate sums `(await response.body()).byteLength`, which is the decoded size. The whole Storytime static build is 756 KB, so 642,173 is a decoded sum. AC-5.3 says "transferred", so the row cannot reach 300,000. Mid Red must measure the encoded size.
+- AC-5.3 media rows: `media_requests_before_tap=3` and `first_media_request_index=13` are the three content tile pictures. Spec FR-5 and task 3.2 require a picture with `image.caption` alt text on each tile. Gate line 128 counts `resourceType === "image"` as media. The gate and FR-5/task 3.2 conflict.
+- AC-8.2 phone row: `video_box_ratio_x1000_phone=520` is an app defect. `.song-stage[data-phone="true"] video` sets `width: auto; height: 75dvh`, so the 312 px content width against the 600 px height gives 520. The fix drives the width: `width: min(100%, calc(75dvh * 9 / 16)); height: auto;`. The change is uncommitted, because the gate cannot end with FAIL=0 until Mid Red fixes the gate.
+- No production source changed, so there is no implementation commit and no ESLint target. Task 3.6 stays `[~]`, because the gate does not end with `FAIL=0`.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-9ccd89c.log`.
+
+- [~] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3). Blocked on a Mid Red retry of `phase3-browser-gate.sh`: the script path, the encoded-byte measurement, and the tile-picture media rule. The phone song box fix is ready and uncommitted.
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.
 - [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
