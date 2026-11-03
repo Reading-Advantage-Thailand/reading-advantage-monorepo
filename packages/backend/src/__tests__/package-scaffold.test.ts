@@ -23,6 +23,7 @@ describe("@reading-advantage/backend package scaffold", () => {
       "./company-identity/internal-route-adapter",
       "./finance-operations",
       "./jobs",
+      "./jobs/adapters/postgres",
       "./kernel",
     ]);
     expect(manifest.exports).toHaveProperty(".");
