@@ -250,7 +250,7 @@ describe("submitAccountingSubmission", () => {
       input: {
         ...thbExpenseInput,
         money: { amountMinor: "15000", currency: "usd" },
-      },
+      } as unknown as AccountingSubmissionInput,
     }).catch((caught: unknown) => caught);
 
     expect(error).toBeInstanceOf(AccountingSubmissionError);
