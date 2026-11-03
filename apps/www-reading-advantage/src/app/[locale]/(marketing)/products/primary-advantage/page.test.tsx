@@ -17,7 +17,7 @@ afterEach(() => {
   cleanup();
 });
 
-/** The ten containers of the page, in page order. */
+/** The eleven containers of the page, in page order (spec section 7a: pa-demo follows section 5). */
 const CONTAINER_IDS = [
   "pa-hero",
   "pa-section-1",
@@ -25,6 +25,7 @@ const CONTAINER_IDS = [
   "pa-section-3",
   "pa-section-4",
   "pa-section-5",
+  "pa-demo",
   "pa-section-6",
   "pa-section-7",
   "pa-section-8",
@@ -51,17 +52,17 @@ function findAll(testId: string): Element[] {
 }
 
 describe("PrimaryAdvantage", () => {
-  it("renders each of the 10 containers exactly once", async () => {
+  it("renders each of the 11 containers exactly once", async () => {
     await renderPage();
     const counts = Object.fromEntries(
       CONTAINER_IDS.map((id) => [id, findAll(id).length]),
     );
-    expect(counts, "containers: 10, each with count 1").toEqual(
+    expect(counts, "containers: 11, each with count 1").toEqual(
       Object.fromEntries(CONTAINER_IDS.map((id) => [id, 1])),
     );
   });
 
-  it("renders the containers in page order: hero, sections 1 to 8, closing", async () => {
+  it("renders the containers in page order: hero, sections 1 to 5, demo, sections 6 to 8, closing", async () => {
     await renderPage();
     const elements = CONTAINER_IDS.map((id) => findAll(id)[0]);
     expect(

@@ -166,3 +166,40 @@ export const APPROVED_DATE_SENTENCE = {
 
 /** The four game names. They stay in English in the Thai copy. */
 export const GAME_NAMES = ["RPG Battle", "Rune Match", "Dragon Rider", "Enchanted Library"] as const;
+
+/**
+ * The games demo section (spec section 7a, task 1.10).
+ * The strings are the old live strings, word for word, from the key `experience` of
+ * `git show fc78b9dee:apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts`.
+ * The page in zh shows the English strings.
+ */
+export const DEMO = {
+  testId: "pa-demo",
+  href: "/experience/index.html",
+  frameSrc: "/experience/index.html",
+  strings: {
+    eyebrow: { en: "Try it now", th: "ลองเล่นเลย" },
+    heading: { en: "Experience Primary Advantage", th: "สัมผัสประสบการณ์ Primary Advantage" },
+    description: { en: "Read a short story, tap a word to see its Thai meaning, listen to the story read aloud, then play a game that uses the words. This demo has four sample stories, one for each level.", th: "อ่านเรื่องสั้น แตะคำเพื่อดูความหมายภาษาไทย ฟังเรื่องที่อ่านออกเสียงให้ แล้วเล่นเกมที่ใช้คำศัพท์จากเรื่อง เดโมนี้มีเรื่องตัวอย่าง 4 เรื่อง ระดับละ 1 เรื่อง" },
+    play: { en: "Play the demo", th: "เล่นเดโม" },
+    fullscreen: { en: "Open full screen", th: "เปิดเต็มหน้าจอ" },
+    hint: { en: "Works best on a computer, tablet, or phone with sound on.", th: "เล่นได้ดีที่สุดบนคอมพิวเตอร์ แท็บเล็ต หรือโทรศัพท์ โดยเปิดเสียง" },
+    frameTitle: { en: "Primary Advantage game demo", th: "เดโมเกม Primary Advantage" },
+    posterAlt: { en: "Two children in a story picture from the Primary Advantage demo", th: "เด็กสองคนในภาพประกอบเรื่องจากเดโม Primary Advantage" },
+  },
+} as const;
+
+/** The eleven page containers in page order (spec section 7a): the demo follows section 5. */
+export const PAGE_CONTAINER_IDS: readonly string[] = [
+  "pa-hero",
+  "pa-section-1",
+  "pa-section-2",
+  "pa-section-3",
+  "pa-section-4",
+  "pa-section-5",
+  "pa-demo",
+  "pa-section-6",
+  "pa-section-7",
+  "pa-section-8",
+  "pa-closing",
+];

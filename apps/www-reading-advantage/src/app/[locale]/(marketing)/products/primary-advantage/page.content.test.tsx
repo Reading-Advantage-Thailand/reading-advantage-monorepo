@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, within } from "@testing-library/react";
 import PrimaryAdvantage, {
   generateMetadata,
 } from "@/app/[locale]/(marketing)/products/primary-advantage/page";
@@ -9,10 +9,12 @@ import zhMessages from "@/locales/zh";
 import {
   APPROVED_DATE_SENTENCE,
   CONTAINERS,
+  DEMO,
   GAME_NAMES,
   IMAGES,
   IMAGE_SECTION_COUNTS,
   META,
+  PAGE_CONTAINER_IDS,
   type ExpectedContainer,
   type PageLocale,
 } from "@/__tests__/fixtures/primary-page-expected";
@@ -76,6 +78,8 @@ function copyLocale(locale: Locale): PageLocale {
 }
 
 const ALLOWED_HREFS = ["/pricing", "/contact", "/products/tutor-advantage"];
+/** Spec section 7a: the demo adds one link, inside pa-demo only. */
+const DEMO_SELECTOR = `[data-testid="${DEMO.testId}"]`;
 const IMAGE_DIR = "/images/primary-advantage/";
 
 /** Paths and names of the old page (decision F4 of the test strategy). */
@@ -94,14 +98,16 @@ const OLD_REFERENCES = [
   "/images/reading-advantage/SRS-flashcard-activity.png",
 ] as const;
 
-/** Keys of the old page that decision F5 removes from the three locale files. */
+/**
+ * Keys of the old page that decision F5 removes from the three locale files.
+ * Spec section 7a keeps the key `experience` (the games demo), so it is not in this list.
+ */
 const OLD_KEYS = [
   "keyFeatures",
   "platformFeatures",
   "aiTechnology",
   "resultsSection",
   "adaptiveEngine",
-  "experience",
   "cefrLevels",
   "eyebrows",
   "support",
@@ -241,7 +247,7 @@ function getContainer(testId: string): HTMLElement {
   return element;
 }
 
-/** Fails with a clear message when one of the ten containers is missing. */
+/** Fails with a clear message when one of the ten brief containers is missing. */
 function expectContainers(): void {
   const missing = CONTAINERS.filter(
     ({ testId }) =>
@@ -451,8 +457,12 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
     await renderLocale(locale);
   });
 
-  it("renders all 10 containers and no missing message key", () => {
+  it("renders all 11 containers and no missing message key", () => {
     expectContainers();
+    expect(
+      document.querySelectorAll(DEMO_SELECTOR).length,
+      "containers: 11 (pa-demo included)",
+    ).toBe(1);
     const missing = Array.from(
       document.body.innerHTML.matchAll(/\[\[missing:([^\]]+)\]\]/g),
     ).map((match) => match[1]);
@@ -492,11 +502,13 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
     },
   );
 
-  it("has no link outside the containers and no other href (links: 8)", () => {
+  it("has no link outside the containers and no other href (links outside pa-demo: 8)", () => {
     expectContainers();
-    const anchors = Array.from(document.querySelectorAll("a"));
+    const anchors = Array.from(document.querySelectorAll("a")).filter(
+      (anchor) => anchor.closest(DEMO_SELECTOR) === null,
+    );
     const hrefs = anchors.map((anchor) => anchor.getAttribute("href") ?? "");
-    expect(hrefs.length, "links: 8").toBe(8);
+    expect(hrefs.length, "links outside pa-demo: 8").toBe(8);
     expect(hrefs.filter((href) => !ALLOWED_HREFS.includes(href))).toEqual([]);
     expect(hrefs.filter((href) => /^(mailto:|https?:)/.test(href))).toEqual([]);
   });
@@ -522,10 +534,10 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
 
   it("shows 16 images in total, all from the primary-advantage folder (images: 16)", () => {
     expectContainers();
-    const paths = Array.from(document.querySelectorAll("img")).map((image) =>
-      imagePath(image.getAttribute("src") ?? ""),
-    );
-    expect(paths.length, "images: 16").toBe(16);
+    const paths = Array.from(document.querySelectorAll("img"))
+      .filter((image) => image.closest(DEMO_SELECTOR) === null)
+      .map((image) => imagePath(image.getAttribute("src") ?? ""));
+    expect(paths.length, "list images outside pa-demo: 16").toBe(16);
     expect(paths.filter((path) => !path.startsWith(IMAGE_DIR))).toEqual([]);
   });
 
@@ -559,5 +571,118 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
     if (/\p{Script=Han}/u.test(text)) found.push("Han");
     if (locale !== "th" && /\p{Script=Thai}/u.test(text)) found.push("Thai");
     expect(found).toEqual([]);
+  });
+});
+
+/** Reads a string of the demo section for a copy language. */
+function demoText(key: keyof typeof DEMO.strings, copy: PageLocale): string {
+  return DEMO.strings[key][copy];
+}
+
+describe.each(LOCALES)("T6 games demo section in %s (spec section 7a)", (locale) => {
+  const copy = copyLocale(locale);
+
+  beforeEach(async () => {
+    await renderLocale(locale);
+  });
+
+  it("has the experience keys in the locale file, word for word (AC-15, AC-16)", () => {
+    const scope = (
+      MESSAGES[locale] as {
+        pages: { products: { primaryAdvantage: { experience?: Record<string, unknown> } } };
+      }
+    ).pages.products.primaryAdvantage;
+    const expected = Object.fromEntries(
+      Object.keys(DEMO.strings).map((key) => [
+        key,
+        demoText(key as keyof typeof DEMO.strings, copy),
+      ]),
+    );
+    expect(scope.experience).toEqual(expected);
+  });
+
+  it("puts pa-demo after pa-section-5 and before pa-section-6, 11 containers (AC-14)", () => {
+    const found = Array.from(
+      document.querySelectorAll('[data-testid^="pa-"]'),
+    ).map((element) => element.getAttribute("data-testid"));
+    expect(found, "containers: 11, pa-demo after pa-section-5").toEqual([
+      ...PAGE_CONTAINER_IDS,
+    ]);
+  });
+
+  it("shows the eyebrow, heading, description, hint, and Open full screen label word for word, once (AC-15)", () => {
+    const root = getContainer(DEMO.testId);
+    const keys = ["eyebrow", "heading", "description", "hint", "fullscreen"] as const;
+    const problems = keys
+      .map((key) => ({
+        key,
+        text: demoText(key, copy),
+        count: countExactText(root, demoText(key, copy)),
+      }))
+      .filter(({ count }) => count !== 1)
+      .map(({ key, text, count }) => `${key} (${count} matches): ${text}`);
+    expect(problems).toEqual([]);
+  });
+
+  it("shows the Play button with the play string and no iframe before the tap (AC-17)", () => {
+    const root = getContainer(DEMO.testId);
+    const buttons = within(root).getAllByRole("button");
+    expect(buttons, "buttons in pa-demo: 1").toHaveLength(1);
+    expect(buttons[0].getAttribute("aria-label")).toBe(demoText("play", copy));
+    expect(buttons[0].textContent).toContain(demoText("play", copy));
+    expect(root.querySelectorAll("iframe"), "iframes before the tap: 0").toHaveLength(0);
+    expect(document.querySelectorAll("iframe"), "iframes on the page: 0").toHaveLength(0);
+  });
+
+  it("shows one poster image with the posterAlt string, apart from the list images (AC-20)", () => {
+    const root = getContainer(DEMO.testId);
+    const images = Array.from(root.querySelectorAll("img"));
+    expect(images, "poster images in pa-demo: 1").toHaveLength(1);
+    expect(images[0].getAttribute("alt")).toBe(demoText("posterAlt", copy));
+    expect(imagePath(images[0].getAttribute("src") ?? "")).not.toContain(IMAGE_DIR);
+  });
+
+  it("loads one iframe with src /experience/index.html and the frameTitle after the tap (AC-18)", () => {
+    const root = getContainer(DEMO.testId);
+    fireEvent.click(within(root).getByRole("button"));
+    const frames = Array.from(root.querySelectorAll("iframe"));
+    expect(frames, "iframes after the tap: 1").toHaveLength(1);
+    expect(frames[0].getAttribute("src")).toBe(DEMO.frameSrc);
+    expect(frames[0].getAttribute("title")).toBe(demoText("frameTitle", copy));
+    expect(
+      document.querySelectorAll("iframe"),
+      "iframes on the whole page: 1",
+    ).toHaveLength(1);
+    expect(within(root).queryAllByRole("button"), "Play button after the tap: 0").toHaveLength(0);
+  });
+
+  it("holds the Open full screen link to /experience/index.html, and only that link (AC-19)", () => {
+    const root = getContainer(DEMO.testId);
+    const found = Array.from(root.querySelectorAll("a")).map(
+      (anchor) => `${anchor.getAttribute("href")} | ${anchor.textContent?.trim()}`,
+    );
+    expect(found).toEqual([`${DEMO.href} | ${demoText("fullscreen", copy)}`]);
+    const outside = Array.from(document.querySelectorAll("a"))
+      .filter((anchor) => anchor.closest(DEMO_SELECTOR) === null)
+      .filter((anchor) => anchor.getAttribute("href") === DEMO.href);
+    expect(outside, "demo link outside pa-demo: 0").toHaveLength(0);
+  });
+
+  it("adds no price, no date, no free term, and no list image to pa-demo (AC-20)", () => {
+    const root = getContainer(DEMO.testId);
+    const strings = [
+      root.textContent ?? "",
+      ...Array.from(root.querySelectorAll("[alt],[aria-label],[title]")).flatMap(
+        (element) => ["alt", "aria-label", "title"].map((a) => element.getAttribute(a) ?? ""),
+      ),
+    ];
+    expect(strings.join("\n").length, "pa-demo holds text").toBeGreaterThan(0);
+    expect(findForbiddenTerms(strings.join("\n"))).toEqual([]);
+    const listPaths = IMAGES.map((image) => `${IMAGE_DIR}${image.name}.webp`);
+    const demoPaths = Array.from(root.querySelectorAll("img")).map((image) =>
+      imagePath(image.getAttribute("src") ?? ""),
+    );
+    expect(demoPaths.filter((path) => listPaths.includes(path))).toEqual([]);
+    expect(findOldReferences(root.innerHTML)).toEqual([]);
   });
 });
