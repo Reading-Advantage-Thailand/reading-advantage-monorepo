@@ -1,127 +1,74 @@
+// Copy from the PR session: page brief v0.2 and image list v0.2 (2026-10-29).
+// Send each copy change to the PR session. Do not write new copy here.
 export const en = {
+  meta: {
+    title: "Primary Advantage | Reading Advantage",
+    description: "Primary Advantage is a printed English workbook for grades 3 to 6 and an app with the same lessons. Schools use it in Blended Learning.",
+  },
+  buttons: {
+    pricing: "See pricing",
+    contact: "Contact us",
+  },
   hero: {
-    title: "Primary Advantage",
-    subtitle: "English reading for young learners, Pre-A1 to A2.",
-    description: "An extensive reading app and printed workbooks for young learners, built on a CEFR-aligned curriculum. The active scope runs from Pre-A1 to A2."
+    headline: "Primary Advantage: English reading for grades 3 to 6",
+    body: "A printed workbook and an app, with the same 14 lessons in each. Thai teachers teach from a scripted lesson plan, and students read, listen, play, and write.",
   },
-  keyFeatures: {
-    heading: "Key Features",
-    features: [
-      {
-        title: "CEFR-Aligned Curriculum",
-        items: [
-          "Active scope from Pre-A1 to A2, with three sublevels in each CEFR band",
-          "Printed workbooks of 14 lessons, each with a digital twin in the app",
-          "Reading, vocabulary, and writing tasks in every lesson"
-        ]
-      },
-      {
-        title: "Age-Appropriate Design",
-        items: [
-          "Stories and activities written for young learners",
-          "A clear, simple interface for children",
-          "Builds a foundation for the next stage of English study"
-        ]
-      },
-      {
-        title: "AI-Assisted Learning",
-        items: [
-          "AI-assisted writing feedback",
-          "Content tagged to the Mastery Advantage knowledge graph",
-          "Spaced-repetition vocabulary review"
-        ]
-      }
-    ]
+  workbook: {
+    headline: "One book. One app. The same lessons.",
+    body: "Each Primary Advantage workbook has 14 lessons, and the app has the same 14. A QR code in the workbook opens the lesson on a phone or a tablet. Students sign in with the class code.",
   },
-  cefrSection: {
-    heading: "CEFR Alignment",
-    title: "CEFR Levels",
-    description: "Primary Advantage is CEFR-aligned. Students move through the levels from Pre-A1 to A2, with three sublevels in each band.",
-    levels: [
-      {
-        description: "Beginning readers building foundational vocabulary"
-      },
-      {
-        description: "Developing confidence with basic sentences"
-      },
-      {
-        description: "Independent readers with expanding comprehension"
-      },
-      {
-        description: "Proficient readers preparing for secondary level"
-      }
-    ]
+  blended: {
+    headline: "Blended Learning: workbooks and the app in one classroom",
+    body: "In Blended Learning, the class works in the printed workbook and in the app. The teacher assigns a book to the class and opens each lesson as the class reaches it. Students see the class book on their home page.",
   },
-  cefrLevels: {
-    grades: "Active levels",
-    aligned: "Aligned",
+  cefr: {
+    headline: "Books that follow the CEFR levels",
+    body: "Three series lead students from Pre-A1 to A2: Origins, Quest, and Adventure. Primary Advantage is CEFR-aligned. Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027.",
   },
-  support: "Support",
-  platformFeatures: {
-    heading: "Platform Features",
-    features: [
-      {
-        title: "Extensive Reading Library",
-        description: "Carefully curated articles and stories matched to reading levels and interests."
-      },
-      {
-        title: "Multi-Language Support",
-        description: "Available in English, Thai, and Chinese with seamless language switching."
-      },
-      {
-        title: "AI Reading Assistant",
-        description: "On-demand AI help with reading comprehension and vocabulary."
-      },
-      {
-        title: "Sentence Building Activities",
-        description: "Interactive exercises to reinforce grammar and sentence structure understanding."
-      },
-      {
-        title: "Vocabulary Practice",
-        description: "Engaging activities to build and reinforce word knowledge through context."
-      },
-      {
-        title: "Spaced Repetition System",
-        description: "A flashcard system that uses spaced repetition to support vocabulary retention."
-      }
-    ]
+  students: {
+    headline: "Students read, listen, ask, and write",
+    body: "Each lesson follows the workbook. Students read a story with pictures, and they can listen and read along.",
+    features: "Students can ask the Primary Advantage lesson chatbot questions about their passage. They also get AI feedback on their short and long written answers. The app interface is available in English, Thai, Vietnamese, Simplified Chinese, and Traditional Chinese.",
   },
-  aiTechnology: {
-    heading: "AI in Primary Advantage",
-    gemini: {
-      title: "Knowledge-Graph Practice",
-      description: "Content is tagged to the Mastery Advantage knowledge graph. Adaptive features are still in development."
-    },
-    writingFeedback: {
-      title: "AI-Assisted Writing Feedback",
-      description: "AI-assisted feedback on writing assignments helps students see what to improve."
-    }
+  games: {
+    headline: "Games that practise the words of the lesson",
+    body: "Each lesson has vocabulary games: RPG Battle, Rune Match, Dragon Rider, and Enchanted Library. Students play with the words of the lesson. The teacher can show a game on the projector for the whole class.",
   },
-  resultsSection: {
-    heading: "Evidence-Based Methodology",
-    title: "Built on Extensive Reading Research",
-    description: "Primary Advantage uses the extensive-reading methodology that controlled research has found effective. Results vary with implementation quality and reading volume, so we report outcomes school by school.",
-    stats: []
+  reedy: {
+    headline: "Reedy Preview: a voice coach for speaking",
+    badge: "Preview",
+    body: "Reedy is a voice coach. A student talks about the story in English or in Thai, and Reedy answers. We keep no recording. The voice goes to an AI service only so that Reedy can answer.",
   },
-  cta: {
-    heading: "Bring Primary Advantage to Your School",
-    description: "Primary Advantage is in use at one school today, Boonyathat in Kalasin. Contact us to talk about Blended Learning, which pairs printed workbooks with the app.",
-    buttons: {
-      signUp: "Contact Us",
-      freeTrial: "Learn More"
-    }
+  teacher: {
+    headline: "Tools for the teacher",
+    body: "The live guide takes the teacher through each step of the lesson, with the words to say. The teacher can show the lesson and the games on the projector, rehearse before class, and print a lesson from the class book. The teacher sees the progress of each student in each lesson.",
   },
-  adaptiveEngine: {
-    eyebrow: "Adaptive Engine",
-    heading: "Primary practice, tagged to the Mastery Advantage graph",
-    description: "Mastery Advantage is the KST + FSRS engine that maps skills and schedules practice. It is entering Primary Advantage through tagged content.",
-    alt: "Primary Advantage adaptive learning visualization",
+  nextStep: {
+    headline: "Bring Primary Advantage to your school",
+    body: "Tell us about your classes. We will talk with you about the books, the app, and how a Thai teacher teaches the lessons.",
   },
-  eyebrows: {
-    curriculumAlignment: "Curriculum Alignment",
-    keyFeatures: "Key Features",
-    platformInAction: "Platform in Action",
-    impact: "Impact",
+  closing: {
+    headline: "Start with a conversation",
+    body: "Schools use the books in Blended Learning. Families can reach the same books through Tutor Advantage.",
+    tutorLink: "Tutor Advantage for families",
+  },
+  images: {
+    workbookAndAppSeries: "The Primary Advantage Origins 3.2 workbook next to the text that says each book has 14 lessons and the app has the same lessons.",
+    workbookQrLinkLanding: "The page that opens when a student scans the QR code in the workbook: the book name, Lesson 1, and a button to sign in with the class code.",
+    blendedStudentClassBook: "The student home shows the class book, Primary Advantage Origins 3.2, Lesson 1, and the story to keep reading.",
+    blendedTeacherClassBook: "The teacher's class book page for Primary Advantage Origins 3.2 lists the 13 steps of Lesson 1 and the next step to teach.",
+    cefrBookSeries: "The three book series follow the CEFR levels: Origins at Pre-A1 (A0), Quest at A1, and Adventure at A2.",
+    studentStoryListen: "A reading page in the app shows the story \"Pip is Happy\" with its picture and a button to listen and read along.",
+    studentLanguageQuestionsAi: "The Language Questions step of a lesson, marked AI Powered, Interactive, and Ask Questions.",
+    studentLongAnswerFeedback: "The questions of a story chapter: a short answer marked done and a long-answer box with the Get feedback and Submit answer buttons.",
+    studentHomeThai: "The student home in Thai shows the class book, the story to continue, the games, and Reedy with a trial label.",
+    gamesVocabularyPicker: "A lesson step offers four vocabulary games: RPG Battle, Rune Match, Dragon Rider, and Enchanted Library.",
+    gameEnchantedLibrary: "In the Enchanted Library game, a student walks a hero between word books and picks the book that matches the Thai prompt.",
+    reedyPreview: "Reedy, the speaking coach, is marked Preview. A wizard avatar stands in a forest next to a Start talking button.",
+    teacherLiveGuide: "The teacher's live guide for Lesson 1, Step 1, with the buttons Projector, Rehearsal, and Print this lesson.",
+    teacherProjectorGames: "The teacher chooses a vocabulary game to show on the projector for the whole class.",
+    teacherPrintLesson: "The print view of Lesson 5, At the Market, in Primary Advantage Origins 3.2, with the first two steps of the lesson.",
+    contactChannels: "The ways to contact Reading Advantage (Thailand): LINE Official Account, Facebook, phone, and e-mail, with the LINE QR code.",
   },
   experience: {
     eyebrow: "Try it now",
@@ -136,129 +83,74 @@ export const en = {
 } as const;
 
 export const th = {
+  meta: {
+    title: "Primary Advantage | Reading Advantage",
+    description: "Primary Advantage คือแบบฝึกหัดภาษาอังกฤษฉบับพิมพ์สำหรับ ป.3 ถึง ป.6 และแอปที่มีบทเรียนเดียวกัน โรงเรียนใช้ผ่าน Blended Learning",
+  },
+  buttons: {
+    pricing: "ดูราคา",
+    contact: "ติดต่อเรา",
+  },
   hero: {
-    title: "Primary Advantage",
-    subtitle: "การอ่านภาษาอังกฤษสำหรับผู้เรียนวัยเด็ก ระดับ Pre-A1 ถึง A2",
-    description: "แอปการอ่านเชิงขยายและหนังสือแบบฝึกหัดฉบับพิมพ์สำหรับผู้เรียนวัยเด็ก สร้างบนหลักสูตรที่สอดคล้องกับ CEFR ขอบเขตที่ใช้งานอยู่คือ Pre-A1 ถึง A2"
+    headline: "Primary Advantage: การอ่านภาษาอังกฤษสำหรับ ป.3 ถึง ป.6",
+    body: "แบบฝึกหัดฉบับพิมพ์และแอปที่มี 14 บทเรียนเหมือนกัน ครูไทยสอนจากแผนการสอนที่เตรียมไว้ให้ ส่วนนักเรียนอ่าน ฟัง เล่นเกม และเขียน",
   },
-  keyFeatures: {
-    heading: "คุณสมบัติหลัก",
-    features: [
-      {
-        title: "หลักสูตรที่สอดคล้องกับ CEFR",
-        items: [
-          "ขอบเขตที่ใช้งานอยู่คือ Pre-A1 ถึง A2 โดยแต่ละระดับ CEFR มี 3 ระดับย่อย",
-          "หนังสือแบบฝึกหัดฉบับพิมพ์ 14 บทเรียน แต่ละเล่มมีฉบับดิจิทัลคู่กันในแอป",
-          "ทุกบทเรียนมีกิจกรรมการอ่าน คำศัพท์ และการเขียน"
-        ]
-      },
-      {
-        title: "การออกแบบที่เหมาะสมกับวัย",
-        items: [
-          "เรื่องและกิจกรรมที่เขียนขึ้นสำหรับผู้เรียนวัยเด็ก",
-          "หน้าจอที่ชัดเจนและใช้งานง่ายสำหรับเด็ก",
-          "สร้างพื้นฐานสำหรับการเรียนภาษาอังกฤษในขั้นต่อไป"
-        ]
-      },
-      {
-        title: "การเรียนรู้ที่มี AI ช่วย",
-        items: [
-          "AI ช่วยให้ข้อเสนอแนะงานเขียน",
-          "เนื้อหาที่ติดแท็กกับกราฟความรู้ของ Mastery Advantage",
-          "ทบทวนคำศัพท์ด้วยการทบทวนแบบเว้นช่วง"
-        ]
-      }
-    ]
+  workbook: {
+    headline: "หนึ่งเล่ม หนึ่งแอป บทเรียนเดียวกัน",
+    body: "แบบฝึกหัด Primary Advantage แต่ละเล่มมี 14 บทเรียน และแอปมี 14 บทเรียนเดียวกัน คิวอาร์โค้ดในแบบฝึกหัดเปิดบทเรียนนั้นบนโทรศัพท์หรือแท็บเล็ต นักเรียนเข้าสู่ระบบด้วยรหัสชั้นเรียน",
   },
-  cefrSection: {
-    heading: "การสอดคล้องกับ CEFR",
-    title: "ระดับ CEFR",
-    description: "Primary Advantage สอดคล้องกับ CEFR นักเรียนก้าวหน้าผ่านระดับตั้งแต่ Pre-A1 ถึง A2 โดยแต่ละระดับมี 3 ระดับย่อย",
-    levels: [
-      {
-        description: "ผู้อ่านเริ่มต้นที่สร้างคำศัพท์พื้นฐาน"
-      },
-      {
-        description: "ผู้เรียนที่พัฒนาความมั่นใจกับประโยคพื้นฐาน"
-      },
-      {
-        description: "ผู้อ่านที่เป็นอิสระพร้อมความเข้าใจที่ขยายตัว"
-      },
-      {
-        description: "ผู้อ่านที่ชำนาญเตรียมพร้อมสำหรับระดับมัธยมศึกษา"
-      }
-    ]
+  blended: {
+    headline: "Blended Learning: แบบฝึกหัดและแอปในห้องเรียนเดียวกัน",
+    body: "ใน Blended Learning ห้องเรียนใช้ทั้งแบบฝึกหัดฉบับพิมพ์และแอป ครูมอบหมายหนังสือให้ชั้นเรียนและเปิดแต่ละบทเรียนเมื่อชั้นเรียนเรียนถึง นักเรียนเห็นหนังสือเรียนของชั้นบนหน้าแรกของตนเอง",
   },
-  cefrLevels: {
-    grades: "ระดับที่ใช้งานอยู่",
-    aligned: "สอดคล้อง",
+  cefr: {
+    headline: "หนังสือที่เรียงตามระดับ CEFR",
+    body: "หนังสือสามชุด ได้แก่ Origins, Quest และ Adventure พานักเรียนจากระดับ Pre-A1 ถึง A2 Primary Advantage สอดคล้องกับ CEFR Primary Advantage Origins 3.2 และ Primary Advantage Quest 4 จะถึงโรงเรียนในเดือนพฤษภาคม 2027",
   },
-  support: "สนับสนุน",
-  platformFeatures: {
-    heading: "คุณสมบัติแพลตฟอร์ม",
-    features: [
-      {
-        title: "ห้องสมุดการอ่านเชิงขยาย",
-        description: "บทความและเรื่องราวที่คัดสรรมาอย่างดีซึ่งตรงกับระดับการอ่านและความสนใจ"
-      },
-      {
-        title: "การสนับสนุนหลายภาษา",
-        description: "มีให้ใช้งานในภาษาอังกฤษ ไทย และจีน พร้อมการสลับภาษาที่ราบรื่น"
-      },
-      {
-        title: "ผู้ช่วยการอ่านด้วย AI",
-        description: "ความช่วยเหลือจาก AI ตามต้องการสำหรับการอ่านเข้าใจและคำศัพท์"
-      },
-      {
-        title: "กิจกรรมสร้างประโยค",
-        description: "แบบฝึกหัดแบบโต้ตอบเพื่อเสริมความเข้าใจไวยากรณ์และโครงสร้างประโยค"
-      },
-      {
-        title: "การฝึกคำศัพท์",
-        description: "กิจกรรมที่น่าสนใจเพื่อสร้างและเสริมความรู้คำศัพท์ผ่านบริบท"
-      },
-      {
-        title: "ระบบการทบทวนด้วยช่วงเวลา",
-        description: "ระบบแฟลชการ์ดที่ใช้การทบทวนแบบเว้นช่วงเพื่อช่วยในการจดจำคำศัพท์"
-      }
-    ]
+  students: {
+    headline: "นักเรียนอ่าน ฟัง ถาม และเขียน",
+    body: "แต่ละบทเรียนเดินตามแบบฝึกหัด นักเรียนอ่านเรื่องที่มีภาพประกอบ และฟังเสียงพร้อมอ่านตามได้",
+    features: "นักเรียนสามารถถามคำถามเกี่ยวกับเนื้อเรื่องที่กำลังอ่านกับแชตบอตประจำบทเรียนของ Primary Advantage ได้ นักเรียนยังได้รับคำติชมจาก AI สำหรับคำตอบเขียนแบบสั้นและแบบยาว ส่วนหน้าจอของแอปรองรับภาษาอังกฤษ ไทย เวียดนาม จีนตัวย่อ และจีนตัวเต็ม",
   },
-  aiTechnology: {
-    heading: "AI ใน Primary Advantage",
-    gemini: {
-      title: "การฝึกตามกราฟความรู้",
-      description: "เนื้อหาติดแท็กกับกราฟความรู้ของ Mastery Advantage ส่วนฟีเจอร์แบบปรับตัวยังอยู่ระหว่างการพัฒนา"
-    },
-    writingFeedback: {
-      title: "ข้อเสนอแนะงานเขียนโดยมี AI ช่วย",
-      description: "AI ช่วยให้ข้อเสนอแนะงานเขียน เพื่อให้นักเรียนเห็นว่าควรปรับปรุงอะไร"
-    }
+  games: {
+    headline: "เกมที่ฝึกคำศัพท์ของบทเรียน",
+    body: "แต่ละบทเรียนมีเกมคำศัพท์ ได้แก่ RPG Battle, Rune Match, Dragon Rider และ Enchanted Library นักเรียนเล่นกับคำศัพท์ของบทเรียน ครูแสดงเกมบนโปรเจกเตอร์ให้ทั้งห้องดูได้",
   },
-  resultsSection: {
-    heading: "ระเบียบวิธีที่อิงหลักสูตร",
-    title: "สร้างบนงานวิจัยด้านการอ่านเชิงขยาย",
-    description: "Primary Advantage ใช้วิธีการอ่านเชิงขยายที่งานวิจัยแบบควบคุมพบว่ามีประสิทธิภาพ ผลลัพธ์ขึ้นอยู่กับคุณภาพการนำไปใช้และปริมาณการอ่าน เราจึงรายงานผลเป็นรายโรงเรียน",
-    stats: []
+  reedy: {
+    headline: "Reedy Preview: โค้ชฝึกพูด",
+    badge: "ทดลอง",
+    body: "รีดี้เป็นโค้ชฝึกพูด นักเรียนเล่าเรื่องที่อ่านเป็นภาษาอังกฤษหรือภาษาไทย แล้วรีดี้ตอบกลับ เราไม่เก็บเสียงบันทึก เสียงถูกส่งไปยังบริการ AI เพียงเพื่อให้รีดี้ตอบได้เท่านั้น",
   },
-  cta: {
-    heading: "นำ Primary Advantage ไปใช้ในโรงเรียนของคุณ",
-    description: "ปัจจุบันมีโรงเรียนหนึ่งแห่งที่ใช้ Primary Advantage คือโรงเรียนบุญยาทัตพลประสิทธิ์ จังหวัดกาฬสินธุ์ ติดต่อเราเพื่อพูดคุยเรื่อง Blended Learning ซึ่งใช้หนังสือแบบฝึกหัดฉบับพิมพ์ร่วมกับแอป",
-    buttons: {
-      signUp: "ติดต่อเรา",
-      freeTrial: "เรียนรู้เพิ่มเติม"
-    }
+  teacher: {
+    headline: "เครื่องมือสำหรับครู",
+    body: "คู่มือสอนสดพาครูผ่านแต่ละขั้นตอนของบทเรียน พร้อมคำพูดที่ใช้สอน ครูแสดงบทเรียนและเกมบนโปรเจกเตอร์ ซ้อมสอนก่อนเข้าชั้นเรียน และพิมพ์บทเรียนจากหนังสือเรียนของชั้นได้ ครูดูความก้าวหน้าของนักเรียนแต่ละคนในแต่ละบทเรียนได้",
   },
-  adaptiveEngine: {
-    eyebrow: "เครื่องยนต์ปรับตัว",
-    heading: "การฝึกระดับประถม ที่ติดแท็กกับกราฟ Mastery Advantage",
-    description: "Mastery Advantage คือเครื่องยนต์ KST + FSRS ที่จัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน กำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก",
-    alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Primary Advantage",
+  nextStep: {
+    headline: "นำ Primary Advantage ไปใช้ในโรงเรียนของคุณ",
+    body: "บอกเราเกี่ยวกับชั้นเรียนของคุณ เราจะคุยกับคุณเรื่องหนังสือ แอป และวิธีที่ครูไทยสอนบทเรียน",
   },
-  eyebrows: {
-    curriculumAlignment: "การสอดคล้องกับหลักสูตร",
-    keyFeatures: "คุณสมบัติหลัก",
-    platformInAction: "แพลตฟอร์มในการใช้งาน",
-    impact: "ผลกระทบ",
+  closing: {
+    headline: "เริ่มต้นด้วยการพูดคุยกับเรา",
+    body: "โรงเรียนใช้หนังสือผ่าน Blended Learning ครอบครัวเข้าถึงหนังสือเล่มเดียวกันได้ผ่าน Tutor Advantage",
+    tutorLink: "Tutor Advantage สำหรับครอบครัว",
+  },
+  images: {
+    workbookAndAppSeries: "แบบฝึกหัด Primary Advantage Origins 3.2 พร้อมข้อความที่บอกว่าแต่ละเล่มมี 14 บทเรียน และแอปมีบทเรียนชุดเดียวกัน",
+    workbookQrLinkLanding: "หน้าที่เปิดขึ้นเมื่อนักเรียนสแกนคิวอาร์โค้ดในแบบฝึกหัด แสดงชื่อหนังสือ บทที่ 1 และปุ่มเข้าสู่ระบบด้วยรหัสชั้นเรียน",
+    blendedStudentClassBook: "หน้าแรกของนักเรียนแสดงหนังสือเรียนของชั้น Primary Advantage Origins 3.2 บทที่ 1 และเรื่องที่อ่านต่อ",
+    blendedTeacherClassBook: "หน้าหนังสือเรียนของชั้นสำหรับครู Primary Advantage Origins 3.2 แสดง 13 ขั้นตอนของบทที่ 1 และขั้นตอนถัดไปที่ต้องสอน",
+    cefrBookSeries: "หนังสือสามชุดตามระดับ CEFR: Origins ระดับ Pre-A1 (A0), Quest ระดับ A1 และ Adventure ระดับ A2",
+    studentStoryListen: "หน้าอ่านในแอปแสดงเรื่อง Pip is Happy พร้อมภาพประกอบ และปุ่มฟังเสียงพร้อมอ่านตาม",
+    studentLanguageQuestionsAi: "ขั้นตอนคำถามด้านภาษาในบทเรียน มีป้าย AI Powered, Interactive และ Ask Questions",
+    studentLongAnswerFeedback: "คำถามท้ายตอนของเรื่อง: คำตอบสั้นที่ทำเสร็จแล้ว และช่องคำตอบยาวพร้อมปุ่มขอคำติชมและปุ่มส่งคำตอบ",
+    studentHomeThai: "หน้าแรกของนักเรียนเป็นภาษาไทย แสดงหนังสือเรียนของชั้น เรื่องที่อ่านต่อ เกม และรีดี้ที่มีป้ายทดลอง",
+    gamesVocabularyPicker: "ขั้นตอนของบทเรียนให้เลือกเกมคำศัพท์สี่เกม ได้แก่ RPG Battle, Rune Match, Dragon Rider และ Enchanted Library",
+    gameEnchantedLibrary: "ในเกม Enchanted Library นักเรียนบังคับฮีโร่ไปยังหนังสือคำศัพท์ และเลือกเล่มที่ตรงกับคำภาษาไทย",
+    reedyPreview: "รีดี้ โค้ชฝึกพูด มีป้ายทดลอง ตัวละครพ่อมดยืนอยู่ในป่าข้างปุ่มเริ่มพูดคุย",
+    teacherLiveGuide: "คู่มือสอนสดของครูสำหรับบทที่ 1 ขั้นตอนที่ 1 พร้อมปุ่มโปรเจกเตอร์ ซ้อมสอน และพิมพ์บทเรียน",
+    teacherProjectorGames: "ครูเลือกเกมคำศัพท์เพื่อแสดงบนโปรเจกเตอร์ให้ทั้งห้อง",
+    teacherPrintLesson: "หน้าพิมพ์บทเรียนที่ 5 At the Market ของ Primary Advantage Origins 3.2 พร้อมสองขั้นตอนแรกของบทเรียน",
+    contactChannels: "ช่องทางติดต่อ: LINE Official Account, Facebook, โทรศัพท์ และอีเมล พร้อมคิวอาร์โค้ด LINE",
   },
   experience: {
     eyebrow: "ลองเล่นเลย",
@@ -272,139 +164,5 @@ export const th = {
   },
 } as const;
 
-export const zh = {
-  hero: {
-    title: "Primary Advantage",
-    subtitle: "面向低龄学习者的英语阅读，Pre-A1 至 A2",
-    description: "面向低龄学习者的泛读应用和纸质练习册，基于与 CEFR 对齐的课程。当前主要范围为 Pre-A1 至 A2。"
-  },
-  keyFeatures: {
-    heading: "主要特点",
-    features: [
-      {
-        title: "CEFR 对齐课程",
-        items: [
-          "当前主要范围为 Pre-A1 至 A2，每个 CEFR 级别分三个子级",
-          "每册纸质练习册含 14 节课，应用内有对应的数字版本",
-          "每节课都包含阅读、词汇和写作任务"
-        ]
-      },
-      {
-        title: "适龄设计",
-        items: [
-          "为低龄学习者编写的故事和活动",
-          "清晰、简单的儿童界面",
-          "为下一阶段的英语学习打好基础"
-        ]
-      },
-      {
-        title: "AI 辅助学习",
-        items: [
-          "AI 辅助的写作反馈",
-          "内容已标记到 Mastery Advantage 知识图谱",
-          "间隔重复词汇复习"
-        ]
-      }
-    ]
-  },
-  cefrSection: {
-    heading: "CEFR 对齐",
-    title: "CEFR 级别",
-    description: "Primary Advantage 与 CEFR 对齐。学生从 Pre-A1 逐级学到 A2，每个级别分三个子级。",
-    levels: [
-      {
-        description: "建立基础词汇的初学者读者"
-      },
-      {
-        description: "通过基础句子建立信心的学习者"
-      },
-      {
-        description: "理解力不断扩展的独立读者"
-      },
-      {
-        description: "为中学水平做准备的熟练读者"
-      }
-    ]
-  },
-  cefrLevels: {
-    grades: "当前级别",
-    aligned: "对齐",
-  },
-  support: "支持",
-  platformFeatures: {
-    heading: "平台功能",
-    features: [
-      {
-        title: "泛读图书馆",
-        description: "精心策划的文章和故事，匹配阅读水平和兴趣。"
-      },
-      {
-        title: "多语言支持",
-        description: "提供英语、泰语和中文，支持无缝语言切换。"
-      },
-      {
-        title: "AI 阅读助手",
-        description: "按需提供 AI 帮助，辅助阅读理解和词汇学习。"
-      },
-      {
-        title: "句子构建活动",
-        description: "互动练习，加强语法和句子结构理解。"
-      },
-      {
-        title: "词汇练习",
-        description: "通过情境进行的有吸引力的活动，建立和加强词汇知识。"
-      },
-      {
-        title: "间隔重复系统",
-        description: "使用间隔重复帮助巩固词汇记忆的抽认卡系统。"
-      }
-    ]
-  },
-  aiTechnology: {
-    heading: "Primary Advantage 中的 AI",
-    gemini: {
-      title: "基于知识图谱的练习",
-      description: "内容已标记到 Mastery Advantage 知识图谱。自适应功能仍在开发中。"
-    },
-    writingFeedback: {
-      title: "AI 辅助写作反馈",
-      description: "AI 辅助的写作作业反馈，帮助学生看到需要改进的地方。"
-    }
-  },
-  resultsSection: {
-    heading: "基于课程的方法",
-    title: "建立在泛读研究之上",
-    description: "Primary Advantage 采用经对照研究证明有效的泛读方法。结果取决于实施质量和阅读量，因此我们按学校逐一报告成果。",
-    stats: []
-  },
-  cta: {
-    heading: "把 Primary Advantage 带到您的学校",
-    description: "目前有一所学校在使用 Primary Advantage，即加拉信府的 Boonyathat 学校。欢迎联系我们了解混合学习（Blended Learning），即纸质练习册与应用相结合。",
-    buttons: {
-      signUp: "联系我们",
-      freeTrial: "了解更多"
-    }
-  },
-  adaptiveEngine: {
-    eyebrow: "自适应引擎",
-    heading: "标记到 Mastery Advantage 图谱的小学练习",
-    description: "Mastery Advantage 是映射技能并安排练习的 KST + FSRS 引擎，正通过已标记的内容进入 Primary Advantage。",
-    alt: "Primary Advantage 自适应学习可视化",
-  },
-  eyebrows: {
-    curriculumAlignment: "课程对齐",
-    keyFeatures: "主要特点",
-    platformInAction: "平台实战",
-    impact: "影响力",
-  },
-  experience: {
-    eyebrow: "立即试玩",
-    heading: "体验 Primary Advantage",
-    description: "阅读一个短故事，点击单词查看泰语释义，听故事朗读，然后玩一个使用这些单词的游戏。此演示包含四个示例故事，每个级别一个。",
-    play: "开始演示",
-    fullscreen: "全屏打开",
-    hint: "在电脑、平板或手机上开启声音效果最佳。",
-    frameTitle: "Primary Advantage 游戏演示",
-    posterAlt: "Primary Advantage 演示中故事插图里的两个孩子",
-  },
-} as const;
+// The zh page shows the English copy until the PR session sends Chinese copy.
+export const zh = en;

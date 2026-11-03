@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { render, cleanup, screen } from "@testing-library/react";
+import { render, cleanup } from "@testing-library/react";
 import PrimaryAdvantage from "@/app/[locale]/(marketing)/products/primary-advantage/page";
 
 vi.mock("@/locales/server", () => ({
@@ -17,56 +17,72 @@ afterEach(() => {
   cleanup();
 });
 
+/** The eleven containers of the page, in page order (spec section 7a: pa-demo follows section 5). */
+const CONTAINER_IDS = [
+  "pa-hero",
+  "pa-section-1",
+  "pa-section-2",
+  "pa-section-3",
+  "pa-section-4",
+  "pa-section-5",
+  "pa-demo",
+  "pa-section-6",
+  "pa-section-7",
+  "pa-section-8",
+  "pa-closing",
+] as const;
+
+/** Test ids that only the old page used. */
+const OLD_TEST_IDS = [
+  "cefr-timeline",
+  "reversed-split",
+  "overlapping-section",
+  "stat-card",
+] as const;
+
+async function renderPage(): Promise<void> {
+  const element = await PrimaryAdvantage({
+    params: Promise.resolve({ locale: "en" }),
+  });
+  render(element);
+}
+
+function findAll(testId: string): Element[] {
+  return Array.from(document.querySelectorAll(`[data-testid="${testId}"]`));
+}
+
 describe("PrimaryAdvantage", () => {
-  it("renders timeline/step CEFR display", async () => {
-    const element = await PrimaryAdvantage({
-      params: Promise.resolve({ locale: "en" }),
-    });
-    render(element);
-    const timeline = document.querySelector("[data-testid='cefr-timeline']");
-    expect(timeline).toBeInTheDocument();
-  });
-
-  it("renders reversed 5/7 split", async () => {
-    const element = await PrimaryAdvantage({
-      params: Promise.resolve({ locale: "en" }),
-    });
-    render(element);
-    const split = document.querySelector("[data-testid='reversed-split']");
-    expect(split).toBeInTheDocument();
-  });
-
-  it("renders overlapping section", async () => {
-    const element = await PrimaryAdvantage({
-      params: Promise.resolve({ locale: "en" }),
-    });
-    render(element);
-    const overlap = document.querySelector(
-      "[data-testid='overlapping-section']",
+  it("renders each of the 11 containers exactly once", async () => {
+    await renderPage();
+    const counts = Object.fromEntries(
+      CONTAINER_IDS.map((id) => [id, findAll(id).length]),
     );
-    expect(overlap).toBeInTheDocument();
+    expect(counts, "containers: 11, each with count 1").toEqual(
+      Object.fromEntries(CONTAINER_IDS.map((id) => [id, 1])),
+    );
   });
 
-  it("renders the methodology note without unsourced statistics", async () => {
-    const element = await PrimaryAdvantage({
-      params: Promise.resolve({ locale: "en" }),
-    });
-    render(element);
-
-    expect(screen.queryAllByTestId("stat-card")).toHaveLength(0);
+  it("renders the containers in page order: hero, sections 1 to 5, demo, sections 6 to 8, closing", async () => {
+    await renderPage();
+    const elements = CONTAINER_IDS.map((id) => findAll(id)[0]);
     expect(
-      screen.getByText("pages.products.primaryAdvantage.resultsSection.description"),
-    ).toBeInTheDocument();
+      elements.every((el) => el !== undefined),
+      "Every container must exist before the order check.",
+    ).toBe(true);
+    for (let i = 1; i < elements.length; i++) {
+      const follows =
+        elements[i - 1].compareDocumentPosition(elements[i]) &
+        Node.DOCUMENT_POSITION_FOLLOWING;
+      expect(
+        follows,
+        `${CONTAINER_IDS[i]} must follow ${CONTAINER_IDS[i - 1]}`,
+      ).toBeTruthy();
+    }
   });
 
-  it("links the free trial CTA to contact", async () => {
-    const element = await PrimaryAdvantage({
-      params: Promise.resolve({ locale: "en" }),
-    });
-    render(element);
-    const contactLink = screen.getByRole("link", {
-      name: /pages\.products\.primaryAdvantage\.cta\.buttons\.freeTrial/i,
-    });
-    expect(contactLink).toHaveAttribute("href", "/contact");
+  it("renders no test id of the old page", async () => {
+    await renderPage();
+    const found = OLD_TEST_IDS.filter((id) => findAll(id).length > 0);
+    expect(found, "old data-testid values still on the page").toEqual([]);
   });
 });

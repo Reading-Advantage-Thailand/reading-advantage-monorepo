@@ -1223,6 +1223,10 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Status: active, standing (no end date); Phase 0 open | Priority: MEDIUM | Requested by Daniel 2026-10-26 (tracks page, row E8)*
   *Note: PR keeps one www change list in its repository. Each Monday the PM orchestrator sends the new entries to Monorepo. This standing track builds them weekly. It replaces the two archived July www tracks.*
 
+- [x] **Track: www Primary Advantage page revamp** — *created 2026-10-30*
+  *Link: [./archive/www_primary_page_revamp_20261030/](./archive/www_primary_page_revamp_20261030/)*
+  *Status: implementation accepted and archived 2026-11-03 at 5e719505257c6f7390d28c15a0dc7d09da15e643; final acceptance passed. Daniel approved Thai and v2 captures. Local-master merge, push, and deploy remain with Daniel under deferred:daniel-deploy. Carried findings are listed in tech-debt.md.*
+
 - [x] **Track: Update Science Advantage Product Page** *Link: [./archive/www_science_product_update_20260517/](./archive/www_science_product_update_20260517/)*
   Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs. *Status: COMPLETE — Page updated with Early Access badge, student features (join classes, interactive lessons, progress tracking, AI recommendations), teacher features (intervention alerts, class analytics, student progress, assignments), and platform features. All 7 tests passing, lint clean. Commit: 1c384a1*
 
@@ -1598,4 +1602,3 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 
 ---
-
