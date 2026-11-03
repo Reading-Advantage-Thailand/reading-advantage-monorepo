@@ -476,8 +476,10 @@ export function StudentCartridgeHost({
               onComplete={handleComplete}
               onLifecycleTransition={(transition) => {
                 if (transition.to === "playing") startedAtRef.current = Date.now();
+                // Defensive: a resume from pause is outside the lifecycle type
+                // but must never begin a new RPG session.
                 if (transition.event === "replay"
-                  || (transition.to === "playing" && transition.from !== "paused")) {
+                  || (transition.to === "playing" && (transition.from as string) !== "paused")) {
                   rpg.beginSession();
                 }
                 if (transition.from === "results" && transition.event === "replay") {
