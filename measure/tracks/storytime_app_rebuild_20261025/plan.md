@@ -489,7 +489,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-f7584ba.log`.
 
 - [x] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1. Done: `05fd90c46`.
-- [~] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
+- [x] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2. Done: `13b8bdc9b`. AC-8.2 stays with the browser gate of task 3.7.
 
 ### Phase 3 task 3.5 Red evidence
 
@@ -501,17 +501,16 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Files: `apps/storytime/__tests__/phase3-song-ui.test.tsx`, this plan section, and `measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log`. No production source changed. Dirty paths outside this task remain untouched.
 - Red report: `measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log`.
 
-### Phase 3 task 3.5 Green block: Red defect
+### Phase 3 task 3.5 Green evidence
 
-- Green started at role base `5d05e70c5d4f685724fb63c259a5fb725acbfff5`. The immutable phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`.
-- The implementation is complete and stays uncommitted in the tree: `app/[locale]/st/[level]/[week]/song.tsx`, the `?part=song` wiring in `page.tsx`, the `.song-stage` rules in `globals.css`, and the `songPlay` and `songPause` messages.
-- Targeted song test: 6 passed and 1 failed. The full Green gate: 5 test files pass and 1 fails, with 40 passed and 1 failed.
-- The failure is `apps/storytime/__tests__/phase3-song-ui.test.tsx:109`: `getByText(/point to self/i)` finds three lines. The shipped w01 uses that gesture on lines 0, 1, and 8.
-- Line 126 of the same test requires the gesture text of line 7 (`hands out`) inside its line element. Line 6 uses the same gesture. A rule that hides a repeated gesture text breaks line 126. A rule that shows each gesture text breaks line 109.
-- No component can pass both lines with the shipped w01 gestures. The fix belongs in the Red test. One-line fix: replace line 109 with `expect(screen.getAllByText(new RegExp(line.gesture, "i")).length).toBeGreaterThan(0);`.
+- Green started at role base `155a3058baa215935b6c1857a26b0a5e1e763c96`. The immutable phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- The first Green pass found a Red query that could not pass: `phase3-song-ui.test.tsx:109` called `getByText` for a gesture that shipped w01 repeats on three lines. Red scoped the query to its lyric line in `38bef548e` (evidence `95060acdc`, `155a3058b`). The retry ran the song test at this role base: exit 0; 7 tests passed.
+- Implementation commit: `13b8bdc9bcfc7c3b67a48cc594447aace0ce6bc9` (`feat(storytime): add the song page (track_id: storytime_app_rebuild_20261025)`).
+- Files: `app/[locale]/st/[level]/[week]/song.tsx`, the `?part=song` wiring in `page.tsx`, the `.song-stage` rules in `globals.css`, and the `songPlay` and `songPause` messages.
+- Automated Green gate: exit 0; 6 test files passed and 41 tests passed. AC-8.1 is covered by the unit test: no `play()` before a tap, the poster first, and the lines light from the 15 shipped w01 `song.times` rows.
 - Automated app type check: exit 0. ESLint on the two changed TypeScript files: exit 0.
-- No committed Red test changed. AC-8.2 stays with the browser gate of task 3.7.
-- Green report: `measure/runs/storytime_app_rebuild_20261025/green-5d05e70.log`.
+- AC-8.2 stays with the browser gate of task 3.7: `video_box_ratio_x1000_phone` is 562 ± 5, `video_box_height_pct_phone` is at most 75, and `video_box_ratio_x1000_laptop` is 1778 ± 5. jsdom does not measure layout.
+- No committed Red test changed by Green. Green report: `measure/runs/storytime_app_rebuild_20261025/green-155a305.log`.
 
 ### Phase 3 task 3.5 Red defect fix
 
