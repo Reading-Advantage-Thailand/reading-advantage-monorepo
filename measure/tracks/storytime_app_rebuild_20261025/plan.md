@@ -257,7 +257,7 @@
 
 ## Phase 3: At-home app
 
-Amendment A-42 (2026-11-03): tasks 3.8, 3.9, and 4.6 come from FR-13. The 11-20 release proof needs them.
+Amendment A-42 (2026-11-03): tasks 3.8, 3.9, and 4.6 come from FR-13. The 11-20 release proof (spec FR-13) needs them. Fallback (pending PM confirmation (PM Q7)): if 3.9 or 4.6 has no acceptance by 2026-11-19, the proof shows the received approved weeks and the 3.8 contract tests, and the two screens follow at the next proof.
 
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
@@ -268,7 +268,8 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target 2026-11-11.
-- [ ] 3.9 Read-along questions: after the last page of a read-along, the three who, what, and where questions with picture answers and the Thai prompt ask.th, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6. Target 2026-11-14.
+- [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, pending Daniel's look (PM Q5, 2026-11-03)) in `apps/storytime`. The choices are the pictures of the three answer pages, in book order. A right tap marks the picture and goes on. A wrong tap shows a gentle mark and stays, with no sound. A skip control ends the screen. It shows after the last page in every mode, with ask.th and ask.en as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Target 2026-11-14.
+- [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
 - [ ] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It also covers tasks 3.8 and 3.9.
 
 ## Phase 4: Teacher app
@@ -317,4 +318,4 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 
 ## Task count
 
-Estimated tasks: 47 (Phase 1: 6, Phase 2: 7, Phase 3: 7, Phase 4: 5, Phase 5: 7, Phase 6: 5, Phase 7: 4, Phase 8: 6).
+Estimated tasks: 51 (Phase 1: 6, Phase 2: 7, Phase 3: 10, Phase 4: 6, Phase 5: 7, Phase 6: 5, Phase 7: 4, Phase 8: 6).

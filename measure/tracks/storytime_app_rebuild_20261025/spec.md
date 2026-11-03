@@ -255,37 +255,42 @@ Daniel decided on 2026-11-02 06:22 ICT (Google Tasks V3ZDNmYtTlhDWnhpelc1Yg): "I
 Sources:
 
 - Workbooks hand-off 1, Workbooks commit `720fd34c`, `dashboard/lib/storytime/schema.ts`. The text is in `advantage-pr/measure/runs/pm-briefs/2026-11-03-a42-handoff-1.md`.
-- The Workbooks answers of 2026-11-03, through the PM. G3: every drill and recall clip path comes from the phoneme bank as `phonemes/daniel/<NN>-<label>.mp3`, and matches the app media-path rule. G4: `answer.page` and `audio.sentences[].page` both count `books[].pages` from 1 in the same read-along book. The printed cover does not count.
+- The Workbooks answers of 2026-11-03, through the PM. G3: every drill and recall clip path comes from the phoneme bank as `phonemes/daniel/<NN>-<label>.mp3`, and matches the app media-path rule. The exact pattern is `^phonemes/daniel/[0-9]{2}-[a-z]+(-[a-z]+)*\.mp3$`. Both shipped names fit it (`04-n.mp3` and `26-a-short.mp3`). The receiver checks it with the phoneme media rule (`MEDIA_RULES.phoneme`). G4: `answer.page` and `audio.sentences[].page` both count `books[].pages` from 1 in the same read-along book. The printed cover does not count.
 
 Fields. All seven are optional in the week JSON. Workbooks owns the strict schema. The app keeps passthrough and adds typed read schemas.
 
-- `steps[].blendDrill` (step A4): words, model, lead, test, repeats, and correction.
-- `steps[].soundLoop` (steps A1 to A3): correct, practise, and retest.
-- `steps[].sightWords` (steps A6 and D2): words, slide, check, and seconds.
-- `steps[].loopMinutes`: the step time when the loops show.
+- `steps[].blendDrill` (step A4): `words` (3 to 5 entries, each with `word`, `sounds` of 2 to 4 labels, and optional `audio`), `model`, `lead`, `test`, `repeats` (integer 2 to 5), and `correction`. When `audio` is present, it has the same length as `sounds`, in the order of the sounds.
+- `steps[].soundLoop` (steps A1 to A3): `correct`, `practise`, and `retest` (each BiText).
+- `steps[].sightWords` (steps A6 and D2): `words` (1 to 3 strings), `slide`, `check`, and `seconds` (integer 2 to 5).
+- `steps[].loopMinutes`: integer 0 to 20. It is the step time when the loops show.
 - `books[].questions` (read-along books): exactly 3 questions, kinds who, what, and where, each once. Each has `ask` (with the Thai prompt `ask.th`) and `answer` with `page` and `word`.
-- `scripts[].recall`: 5 cards a day, and none on week 1 day 1.
-- `approval.loops`: `status` is `draft` or `approved`. An absent key means draft. It never blocks the publication of a week.
+- `scripts[].recall`: `items` are strip cards (the app reuses `stripCardSchema`), and `ask` is BiText. There are 5 cards a day, and none on week 1 day 1.
+- `approval.loops`: `status` is `draft` or `approved`. An absent key means draft. It never blocks the publication of a week. An approved part needs a `date` and the exact approval words in `words`. An approved part without them fails.
+
+Rule for draft loops: the app checks the recall count (5 cards) and the question page and word check only when `approval.loops.status` is `approved`. For a draft, the app parses the field shapes only. A draft loop error must never stop the receipt of a week.
 
 App rule:
 
 - The app shows the routines only when `approval.loops.status` is `approved`, and only at levels 2 to 4.
-- The review week (w08) has only `recall` and `loopMinutes`.
-- The step time is `loopMinutes ?? minutes`.
+- Each loop field shows on the step that holds it. Workbooks checks own the placement. The app does not limit a field to the named steps.
+- The review week is the week whose `meta.kind` is `review` (w08). It has only `recall` and `loopMinutes`. The app ignores any other loop field in a review week.
+- When the loops show, the step time is `loopMinutes ?? minutes`. Otherwise it is `minutes`.
 - The receiver lists `blendDrill.words[].audio` and `recall.items[].audio` as media (FR-4). This closes Review C note F13 for these fields.
 - Question check: `books[].pages[answer.page - 1]` exists in the same read-along book, and the text of that page holds `answer.word`.
-- Adversarial note F99: a published book must not pass the page-audio coverage check when its sentences have no `page` field. Task 3.8 owns this rule.
+- Adversarial note F99 (source: adversarial r3, `measure/runs/storytime_app_rebuild_20261025/adversarial-testing-87bebcf5e.json`): in a published book, each sentence of `sentences` and of `slowSentences` needs a `page`. A sentence without `page` fails the page-audio coverage check. An empty list passes, because the media list owns missing audio. Task 3.8 owns this rule.
+- Question screen (Default A, pending Daniel's look (PM Q5, 2026-11-03)): the answer choices are the pictures of the three answer pages, in book order. A right tap marks the picture and goes to the next question. A wrong tap shows a gentle mark and stays, with no sound. A skip control ends the screen. The screen shows after the last page in every mode ("read it to me" and "my turn"). The questions show `ask.th` and `ask.en` as text only, with no speaker. The component lives in `apps/storytime`. `packages/read-along` and the Phase 7 Primary switch do not change.
+- The 11-20 release proof (pending PM confirmation (PM Q6)): Daniel's check of the review copy on 2026-11-20, with the loops of the weeks that are approved by then.
 
 Acceptance:
 
 - AC-13.1 (automated) The typed read schemas parse the shipped weeks `l2/w01` to `l2/w08` at the new Workbooks pin. Tests load the shipped files (rule 11.3).
-- AC-13.2 (automated) Each broken copy fails with the field path (rule 11.1). The copies have two questions, a repeated question kind, a recall of four cards, and an approval status other than `draft` or `approved`.
-- AC-13.3 (automated) A question whose `answer.page` has no page in the same book fails. A question whose `answer.word` is not in the text of that page fails.
-- AC-13.4 (automated) The receiver lists each `blendDrill.words[].audio` and `recall.items[].audio` clip as a media item, with the phoneme bank path rule. A clip outside the rule fails.
-- AC-13.5 (automated) A published book whose sentences have no `page` field fails the page-audio coverage check (F99).
-- AC-13.6 (automated) The at-home read-along asks the three questions after the last page, with picture answers and `ask.th`, only when `approval.loops.status` is `approved` and the level is 2 to 4.
-- AC-13.7 (automated) The teacher flow shows the recall cards (none on week 1 day 1), `soundLoop` on steps A1 to A3, `blendDrill` on step A4, `sightWords` on steps A6 and D2, and the step time `loopMinutes ?? minutes`. It shows none of them for a draft week or for level 1.
-- AC-13.8 (automated) A week with no loop field, or with `approval.loops` absent, shows the same lesson flow and read-along as before A-42.
+- AC-13.2 (automated) Each broken copy fails with the field path (rule 11.1). The copies have two questions, a repeated question kind, a recall of four cards (approved loops), an approval status other than `draft` or `approved`, and an approved loops part without a `date` or without the exact approval words. A draft copy with a recall of four cards, or with a bad question page or word, parses and does not stop the receipt of a week. The copies also break each limit of the Fields list (for example 2 words in a `blendDrill`, `repeats` 6, `loopMinutes` 21, and `audio` of a different length than `sounds`).
+- AC-13.3 (automated) With `approval.loops.status` approved, a question whose `answer.page` has no page in the same book fails. A question whose `answer.word` is not in the text of that page fails.
+- AC-13.4 (automated) The receiver lists each `blendDrill.words[].audio` and `recall.items[].audio` clip as a media item, with the phoneme bank path pattern. A clip outside the pattern fails, and the receiver run fails on a bad path.
+- AC-13.5 (automated) A published book whose sentences have no `page` field fails the page-audio coverage check (F99). One broken copy for each case fails: a `sentences` list where only some sentences have `page`, a `slowSentences` list where a sentence has no `page`, and a book with no `page` on any sentence. A published book with an empty `sentences` list passes this check.
+- AC-13.6 (automated) The at-home read-along shows the question screen defined above after the last page, with picture answers and text-only `ask.th` and `ask.en`, only when `approval.loops.status` is `approved` and the level is 2 to 4. A right tap, a wrong tap, and the skip control behave as defined.
+- AC-13.7 (automated) The teacher flow shows the recall cards (none on week 1 day 1), `soundLoop` on steps A1 to A3, `blendDrill` on step A4, `sightWords` on steps A6 and D2, and the step time `loopMinutes ?? minutes`. It shows none of them for a draft week or for level 1. A `blendDrill` on another step shows on that step. A copy of w08 with an extra `soundLoop` shows only `recall` and `loopMinutes`.
+- AC-13.8 (automated) A week with no loop field, with `approval.loops` absent, with `approval.loops` draft, or an approved week at level 1, shows: no question screen after the last page, no recall or loop panel, and a step time equal to `minutes`. The AC-6.1 and AC-9.2 tests pass unchanged on that week. The tests cover a draft week and an approved week at level 1.
 
 ## 5. Quality bar and hard gates
 
