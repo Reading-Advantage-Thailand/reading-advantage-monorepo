@@ -75,6 +75,7 @@ describe("nav item lists per role", () => {
       "systemdashboard",
       "schools",
       "licenses",
+      "helpreport",
     ]);
   });
 
