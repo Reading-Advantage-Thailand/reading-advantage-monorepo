@@ -362,8 +362,7 @@ describe("codecamp router", () => {
 
       const result = await caller.codecamp.updateProgress({
         lessonId: "550e8400-e29b-41d4-a716-446655440002",
-        status: "completed",
-        score: 100,
+        status: "in_progress",
       });
 
       expect(result.lessonId).toBe("550e8400-e29b-41d4-a716-446655440002");

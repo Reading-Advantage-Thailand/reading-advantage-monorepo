@@ -66,6 +66,16 @@ function mapDomainError(err: unknown): never {
   throw err;
 }
 
+/**
+ * Learner input for `updateProgress`. Only the server grading paths (quiz,
+ * PR approval, activity assessment) may complete a lesson or set a score,
+ * so the client may send neither (authz-codecamp-report.md finding 2).
+ */
+const learnerProgressUpdateSchema = progressUpdateSchema
+  .pick({ lessonId: true })
+  .extend({ status: z.enum(["not_started", "in_progress"]).optional() })
+  .strict();
+
 export const codecampRouter = router({
   modules: protectedProcedure
     .output(z.array(moduleResponseSchema))
@@ -251,7 +261,7 @@ export const codecampRouter = router({
     }),
 
   updateProgress: protectedProcedure
-    .input(progressUpdateSchema)
+    .input(learnerProgressUpdateSchema)
     .output(progressResponseSchema)
     .mutation(async ({ ctx, input }) => {
       try {
