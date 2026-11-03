@@ -37,8 +37,12 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
 
   const handleSubmitPr = async () => {
     if (!isValidPrUrl) return;
-    await createPrReview.mutateAsync({ exerciseRepoId, prUrl });
-    setSubmitted(true);
+    try {
+      await createPrReview.mutateAsync({ exerciseRepoId, prUrl });
+      setSubmitted(true);
+    } catch {
+      // createPrReview.error carries the reason; it renders below the input.
+    }
   };
 
   return (
@@ -133,6 +137,11 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
         {prUrl && !isValidPrUrl && (
           <p className="mt-2 text-xs text-red-600">
             {t("invalidPrUrl")}
+          </p>
+        )}
+        {createPrReview.error && (
+          <p role="alert" className="mt-2 text-xs text-red-600">
+            {createPrReview.error.message}
           </p>
         )}
 

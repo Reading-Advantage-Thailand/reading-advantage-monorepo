@@ -13,6 +13,7 @@ import { masteryCards } from "@reading-advantage/db/schema";
 import { DrizzleActivityPersistence, CODECAMP_MASTERY_SCHOOL_ID } from "../activity/drizzle-activity-persistence.js";
 import { apkPrEvaluationSchema, apkTrustedPrEvidenceSchema, type APKPrEvaluation } from "./review-exercise.js";
 import { assertCodecampModuleAssigned } from "./curriculum-assignments.js";
+import { assertCallerAuthoredPr, type PrAuthorLookup } from "./pr-author.js";
 import { recordTrustedPrReviewAttempt, resolveGraphBoundPrObjectives } from "./pr-review-attempts.js";
 import { derivePrReviewOperationalStatus, derivePrReviewFailureReason } from "./intern-accounts.js";
 import type { PrReviewOperationalStatus } from "@reading-advantage/types";
@@ -107,9 +108,11 @@ export async function getPrReviewsForUser({
  * index on `pr_url`.
  */
 export async function createPrReview({
-  db, user, tenant, input,
+  db, user, tenant, input, verifyPrAuthor,
 }: {
   db: TenantDB; user: UserContext; tenant: Tenant; input: { exerciseRepoId: string; prUrl: string };
+  /** Learner calls pass a GitHub author lookup; the caller must have opened the PR. The signed webhook omits it. */
+  verifyPrAuthor?: PrAuthorLookup;
 }) {
   assertCan(user, "codecamp:submit", tenant);
 
@@ -133,6 +136,9 @@ export async function createPrReview({
   if (prTargetUrl !== normalizedExerciseUrl) {
     const repoName = normalizedExerciseUrl.split("/").pop() ?? "the exercise repo";
     throw new Error(`PR URL must be for the ${repoName} repository`);
+  }
+  if (verifyPrAuthor) {
+    await assertCallerAuthoredPr(db, user.id, { owner: prPathParts[0]!, repo: prPathParts[1]!, pullNumber: Number(prPathParts[3]) }, verifyPrAuthor);
   }
 
   const [existing] = await rawDb.select({ id: codecampPrReviews.id }).from(codecampPrReviews)

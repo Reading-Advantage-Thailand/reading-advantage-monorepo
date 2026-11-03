@@ -374,6 +374,7 @@ export const codecampRouter = router({
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
           input,
+          verifyPrAuthor: codecamp.fetchGitHubPrAuthorLogin,
         });
       } catch (err) {
         throw mapDomainError(err);

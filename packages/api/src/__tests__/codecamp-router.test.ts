@@ -29,6 +29,7 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
   linkExerciseRepo: vi.fn(),
   getPrReviewsForUser: vi.fn(),
   createPrReview: vi.fn(),
+  fetchGitHubPrAuthorLogin: vi.fn(),
   updatePrReview: vi.fn(),
   getPrReviewByPrUrl: vi.fn(),
   getModulesByPhase: vi.fn(),
