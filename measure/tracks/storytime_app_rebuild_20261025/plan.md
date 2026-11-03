@@ -263,7 +263,7 @@ Exception to the phase-order rule of line 11 for tasks 3.9, 3.10, and 4.6: these
 
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
-- [~] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4.
+- [x] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4. Done: `0c42dde7a`. Automated: the targeted command exits 0 with 5 files and 17 tests; `tsc --noEmit` exits 0; `phase3-redirect-check.sh` exits 0 with PASS=6, FAIL=0.
 
 ### Phase 3 task 3.1 Red evidence
 
@@ -273,6 +273,19 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - The readiness tests inspect shipped w01 and a deep in-memory clone. The mock does not decide readiness. No content file changed.
 - Model: `openai/gpt-6-luna` (Red).
 - The commit records the Red tests and plan evidence. Green must use a different model family.
+
+### Phase 3 task 3.1 Green evidence
+
+- Implementation `0c42dde7a`. Role `measure-jr-green` on `opencode-go/deepseek-v4.1-flash`; Red ran on `openai/gpt-6-luna`. No coder was delegated. The Red tests did not change.
+- The rerun of the Red command at `3b182491c` exited 1 with 4 failed files and 9 failed assertions, as the Red log states.
+- Automated at `0c42dde7a`: the targeted command exits 0 with 5 files and 17 tests. `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on the six changed sources. `bash apps/storytime/__tests__/phase3-redirect-check.sh` exits 0 with PASS=6, FAIL=0.
+- The live check on the dev server: shipped w01 answers 404 and the log holds `st2/1 blocked: missing_picture`; a ready clone answers 200 with `noindex` and no `Set-Cookie`; `?part=song` opens the song part; an unknown part opens the home view; `01` and level `9` answer 404.
+- Redirect `Location` values: plain path `307 /th/st/2/1`; root `307 /th`; forged `Host` `307 /th/st/2/1`; forged `X-Forwarded-Host` `307 /th/st/2/1`; `//` path `308 /st/2/1`. Each value is relative, so no probe leaves the origin.
+- Falsification: a stub that answers `Location: https://evil.example/th/st/2/1` makes `phase3-redirect-check.sh` exit 1 with FAIL=5. The check can fail.
+- F53: `lib/readiness.ts` holds `isWeekReady`, and `scripts/receive-weeks.ts` imports it for its missing list and its readiness line. F70: the manifest declares `tsx`, `@playwright/test`, `jsdom`, and the three `@testing-library` packages at `catalog:`; `pnpm-lock.yaml` adds the six entries to the `apps/storytime` importer, and one `deprecated:` line on `@smithy/core@3.25.1` with no version change.
+- `apps/storytime/AGENTS.md` holds the agent block that `next dev` writes; the other apps commit theirs.
+- The full Storytime and `packages/read-along` suite ran once at this tree before the final manifest change: 26 files and 272 tests exit 0. The PM rule of 2026-11-03 then limits a small change to its own files. The phase-end run covers the full suite.
+- No structural TypeScript file changed after `build-graph update`, which ran at the pre-commit tree (6 files, 24 to 89 nodes). `graph.db` is ignored and not committed.
 - [ ] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. Test: AC-5.2.
 - [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
