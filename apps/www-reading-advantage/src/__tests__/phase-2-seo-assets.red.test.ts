@@ -120,8 +120,16 @@ const COMPLETED_ROUTE_METADATA = [
     load: () =>
       import("@/app/[locale]/(marketing)/products/primary-advantage/page"),
     expected: (messages: LocaleMessages) => ({
-      title: messages.pages.products.primaryAdvantage.hero.title,
-      description: messages.pages.products.primaryAdvantage.hero.description,
+      title: readLocaleMessage(
+        messages,
+        "pages.products.primaryAdvantage",
+        "meta.title",
+      ),
+      description: readLocaleMessage(
+        messages,
+        "pages.products.primaryAdvantage",
+        "meta.description",
+      ),
     }),
   },
   {

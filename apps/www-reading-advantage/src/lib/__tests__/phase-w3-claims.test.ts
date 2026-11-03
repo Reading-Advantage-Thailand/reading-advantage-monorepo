@@ -347,12 +347,10 @@ describe("1F — Duplicated efficacy stats", () => {
 
   it("positive control: at least one product page still presents results stats", async () => {
     const reading = await readSrcFile("locales/pages/products/reading-advantage.ts");
-    const primary = await readSrcFile("locales/pages/products/primary-advantage.ts");
     const readingStats = extractResultsStats(reading);
-    const primaryStats = extractResultsStats(primary);
     expect(
-      readingStats.length + primaryStats.length,
-      "Expected at least one product page to keep a resultsSection with stats.",
+      readingStats.length,
+      "Expected the Reading Advantage page to keep a resultsSection with stats.",
     ).toBeGreaterThan(0);
   });
 });
