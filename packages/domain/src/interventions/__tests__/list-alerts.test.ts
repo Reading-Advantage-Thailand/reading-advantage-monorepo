@@ -104,7 +104,7 @@ describe("listAlerts", () => {
     const deps = makeDeps();
     const result = await listAlerts({ user: teacher, tenant, input: { classId: CLASS_ID }, deps });
     expect(deps.detectAlerts).toHaveBeenCalledTimes(1);
-    const detectInput = deps.detectAlerts.mock.calls[0]![0];
+    const detectInput = vi.mocked(deps.detectAlerts).mock.calls[0]![0];
     expect(detectInput.classMeta).toEqual({ id: CLASS_ID, name: "Physics" });
     expect(detectInput.maxAlerts).toBe(50);
     expect(detectInput.students).toEqual(expect.arrayContaining([{ id: "student-1", name: "Student One", gradeLevel: 5 }, { id: "student-2", name: "", gradeLevel: null }]));
