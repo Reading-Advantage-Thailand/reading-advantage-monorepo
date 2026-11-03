@@ -148,7 +148,7 @@ export type CastleDefenseEvent =
   | { type: 'rejected'; command: string }
   | { type: 'victory' };
 
-export type CastleDefenseEventType = CastleDefenseEvent['type'];
+type CastleDefenseEventType = CastleDefenseEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const CASTLE_DEFENSE_EVENT_TYPES: readonly CastleDefenseEventType[] = [

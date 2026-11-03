@@ -16,7 +16,7 @@ export const LAB_MODELS = [
 
 type V3 = [number, number, number];
 
-export interface Lab {
+interface Lab {
   /** The alchemist, the student's hero. */
   alchemist: Actor;
   /** The brew material of the cauldron (its color and glow show the synthesis progress). */

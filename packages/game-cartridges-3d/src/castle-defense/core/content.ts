@@ -10,7 +10,7 @@ import { KIND_OF, type Attacker, type Choice, type EnemyType, type WaveSentence 
 
 export type CastleDefenseInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: CastleDefenseInput): input is SentenceInput {
+function isSentenceInput(input: CastleDefenseInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
@@ -25,9 +25,9 @@ export const WAVE_CONFIGS: readonly { count: number; type: EnemyType }[] = [
 export const HITS: Readonly<Record<EnemyType, number>> = { soldier: 2, tank: 3, boss: 4 };
 
 /** The words a sentence can hold: 3 to 8. */
-export const SENTENCE_WORDS = { min: 3, max: 8 } as const;
+const SENTENCE_WORDS = { min: 3, max: 8 } as const;
 
-export interface SourceSentence {
+interface SourceSentence {
   id: string;
   text: string;
   words: string[];
@@ -36,7 +36,7 @@ export interface SourceSentence {
 }
 
 /** The sentences of the input, in the input's order. Sentences with fewer than 2 words are skipped. */
-export function sentencesOf(input: CastleDefenseInput): SourceSentence[] {
+function sentencesOf(input: CastleDefenseInput): SourceSentence[] {
   if (isSentenceInput(input)) {
     return input
       .map((item, i) => {
@@ -57,7 +57,7 @@ export function sentencesOf(input: CastleDefenseInput): SourceSentence[] {
 }
 
 /** The sentences a wave can take: 3 to 8 words. When the input has none of that length, every sentence qualifies. */
-export function waveSentencesOf(input: CastleDefenseInput): SourceSentence[] {
+function waveSentencesOf(input: CastleDefenseInput): SourceSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= SENTENCE_WORDS.min && s.words.length <= SENTENCE_WORDS.max);
   return fit.length > 0 ? fit : all;
@@ -98,7 +98,7 @@ export function attackersOf(wave: number): Attacker[] {
  * sentence (the student sorts out the order), then words of the other sentences of the run.
  * Each word differs from the answer and from the others; the order is seeded.
  */
-export function distractorsOf(sentence: readonly string[], others: readonly string[], answer: string, rng: Rng, count: number): string[] {
+function distractorsOf(sentence: readonly string[], others: readonly string[], answer: string, rng: Rng, count: number): string[] {
   const taken = new Set<string>([wordKey(answer)]);
   const out: string[] = [];
   for (const pool of [sentence, others]) {

@@ -30,7 +30,7 @@ export const TUNING = {
 
 export type AlchemistsSynthesisSimulation = Simulation<AlchemistsSynthesisState, AlchemistsSynthesisCommand, AlchemistsSynthesisEvent>;
 
-export interface AlchemistsSynthesisOptions {
+interface AlchemistsSynthesisOptions {
   seed: number;
   helper: boolean;
 }
@@ -43,7 +43,7 @@ export function correctJarOf(state: AlchemistsSynthesisState): Jar | null {
 }
 
 /** True when a choice of this jar would be taken now. */
-export function choosable(state: AlchemistsSynthesisState, jar: Jar): boolean {
+function choosable(state: AlchemistsSynthesisState, jar: Jar): boolean {
   return state.phase === 'playing' && state.pour === null && jar.dimMs <= 0;
 }
 

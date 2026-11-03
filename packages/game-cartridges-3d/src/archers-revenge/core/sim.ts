@@ -32,7 +32,7 @@ export const TUNING = {
   restCourage: 3,
 } as const;
 
-export interface ArchersRevengeOptions {
+interface ArchersRevengeOptions {
   seed: number;
   helper: boolean;
 }

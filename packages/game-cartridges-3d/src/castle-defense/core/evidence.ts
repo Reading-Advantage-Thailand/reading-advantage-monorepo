@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { CastleDefenseState } from './types.js';
 
-export const CASTLE_DEFENSE_GAME_ID = 'castle-defense';
+const CASTLE_DEFENSE_GAME_ID = 'castle-defense';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per sentence the student started or cleared, in wave order. */
-export function evidenceItemsOf(state: CastleDefenseState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: CastleDefenseState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((s) => s.started || s.cleared)
     .map((s) => {
@@ -53,7 +53,7 @@ export function evidenceOf(state: CastleDefenseState, story: EvidenceStory, seed
 }
 
 /** The game's own score: the coins of the run. Speed never counts. */
-export const scoreOf = (state: CastleDefenseState): number => state.coins;
+const scoreOf = (state: CastleDefenseState): number => state.coins;
 
 /** Everything `complete()` takes: the evidence, the five-field results, and the outcome. */
 export function resultsOf(

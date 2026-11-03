@@ -124,7 +124,7 @@ export type AstralMageEvent =
   | { type: 'ritualCleared'; ritualId: string; sentenceId: string }
   | { type: 'castingComplete'; rituals: number };
 
-export type AstralMageEventType = AstralMageEvent['type'];
+type AstralMageEventType = AstralMageEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const ASTRAL_MAGE_EVENT_TYPES: readonly AstralMageEventType[] = [

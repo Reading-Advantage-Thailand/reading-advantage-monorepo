@@ -15,16 +15,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { AlchemistsSynthesisState } from './types.js';
 
-export const ALCHEMISTS_SYNTHESIS_GAME_ID = 'alchemists-synthesis';
+const ALCHEMISTS_SYNTHESIS_GAME_ID = 'alchemists-synthesis';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per right jar. */
-export const SCORE = { jar: 100 } as const;
+const SCORE = { jar: 100 } as const;
 
 /** One evidence item per formula the student started or solved, in synthesis order. */
-export function evidenceItemsOf(state: AlchemistsSynthesisState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: AlchemistsSynthesisState): StoryGameEvidenceItem[] {
   return state.words
     .filter((word) => word.started || word.solved)
     .map((word) => ({

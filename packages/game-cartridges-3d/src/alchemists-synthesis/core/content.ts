@@ -11,15 +11,15 @@ import { INGREDIENT_KINDS, type Formula, type IngredientKind } from './types.js'
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
 export type AlchemistsSynthesisInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: AlchemistsSynthesisInput): input is VocabularyInput {
+function isVocabularyInput(input: AlchemistsSynthesisInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 
 /** A word as the synthesis needs it before play: id, term, meaning. */
-export type WordSource = Pick<Formula, 'id' | 'term' | 'translation'>;
+type WordSource = Pick<Formula, 'id' | 'term' | 'translation'>;
 
 /** A jar before it gets an id: its term, its formula, and whether it is the right one. */
-export interface JarOption {
+interface JarOption {
   wordId: string;
   term: string;
   correct: boolean;

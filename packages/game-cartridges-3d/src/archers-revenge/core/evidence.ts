@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { ArchersRevengeState } from './types.js';
 
-export const ARCHERS_REVENGE_GAME_ID = 'archers-revenge';
+const ARCHERS_REVENGE_GAME_ID = 'archers-revenge';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per word with at least one arrow, in target order. */
-export function evidenceItemsOf(state: ArchersRevengeState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: ArchersRevengeState): StoryGameEvidenceItem[] {
   return state.targets
     .filter((word) => word.attempts > 0)
     .map((word) => ({
@@ -49,7 +49,7 @@ export function evidenceOf(state: ArchersRevengeState, story: EvidenceStory, see
 }
 
 /** The game's own score: the coins of the run. */
-export const scoreOf = (state: ArchersRevengeState): number => state.coins;
+const scoreOf = (state: ArchersRevengeState): number => state.coins;
 
 /** Everything `complete()` takes: the evidence, the five-field results, and the outcome. */
 export function resultsOf(

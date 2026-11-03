@@ -57,7 +57,7 @@ export const TUNING = {
 
 export type AstralMageSimulation = Simulation<AstralMageState, AstralMageCommand, AstralMageEvent>;
 
-export interface AstralMageOptions {
+interface AstralMageOptions {
   seed: number;
   helper: boolean;
 }
@@ -66,7 +66,7 @@ const DT = STEP_MS / 1000;
 const countDown = (ms: number): number => (ms - STEP_MS < 1e-6 ? 0 : ms - STEP_MS);
 
 /** The drifting place of a crystal at game time `timeMs` (a pure function of the anchor). */
-export function driftOf(crystal: Pick<Crystal, 'ax' | 'az' | 'phase'>, timeMs: number): Vec2 {
+function driftOf(crystal: Pick<Crystal, 'ax' | 'az' | 'phase'>, timeMs: number): Vec2 {
   const t = timeMs / 1000;
   return {
     x: crystal.ax + Math.cos(crystal.phase + t * TUNING.driftSpeedX) * TUNING.driftRadius,
@@ -85,7 +85,7 @@ export function liveCrystalsOf(state: AstralMageState): Crystal[] {
 }
 
 /** True when a bolt at this crystal would leave the staff now. */
-export function castable(state: AstralMageState, crystal: Crystal): boolean {
+function castable(state: AstralMageState, crystal: Crystal): boolean {
   return state.phase === 'playing' && state.bolt === null && !crystal.struck && crystal.dimMs <= 0;
 }
 

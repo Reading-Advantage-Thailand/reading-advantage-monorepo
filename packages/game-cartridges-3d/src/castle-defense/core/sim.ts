@@ -35,7 +35,7 @@ export const TUNING = {
   towerCoins: 20,
 } as const;
 
-export interface CastleDefenseOptions {
+interface CastleDefenseOptions {
   seed: number;
   helper: boolean;
 }

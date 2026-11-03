@@ -50,7 +50,7 @@ export interface Presentation {
   settle(): Promise<void>;
 }
 
-export interface PlayerOptions {
+interface PlayerOptions {
   sim: ArchersRevengeSimulation;
   story: { id: string; level: StoryGameEvidence['level'] };
   seed: number;

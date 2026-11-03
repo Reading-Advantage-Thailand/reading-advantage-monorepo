@@ -12,7 +12,7 @@ export const CIRCLE_MODELS = [
   'dirt-ground', 'crystal-cluster', 'candle-cluster', 'lantern', 'boulder', 'rock-cluster', 'dead-tree', 'pine-tree', 'mushroom-cluster',
 ];
 
-export interface Circle {
+interface Circle {
   /** The glowing ring on the floor; it pulses with the casting. */
   ring: THREE.Mesh<THREE.RingGeometry, THREE.MeshBasicMaterial>;
 }

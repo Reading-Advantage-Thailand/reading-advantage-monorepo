@@ -109,7 +109,7 @@ export type ArchersRevengeEvent =
   | { type: 'rejected'; command: string }
   | { type: 'victory' };
 
-export type ArchersRevengeEventType = ArchersRevengeEvent['type'];
+type ArchersRevengeEventType = ArchersRevengeEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const ARCHERS_REVENGE_EVENT_TYPES: readonly ArchersRevengeEventType[] = [

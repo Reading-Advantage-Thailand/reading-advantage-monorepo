@@ -14,16 +14,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { AstralMageState } from './types.js';
 
-export const ASTRAL_MAGE_GAME_ID = 'astral-mage';
+const ASTRAL_MAGE_GAME_ID = 'astral-mage';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per struck word and per cleared ritual. */
 export const SCORE = { struck: 10, ritual: 50 } as const;
 
 /** One evidence item per ritual the student started or cleared, in casting order. */
-export function evidenceItemsOf(state: AstralMageState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: AstralMageState): StoryGameEvidenceItem[] {
   return state.casting
     .filter((ritual) => ritual.started || ritual.cleared)
     .map((ritual) => {
