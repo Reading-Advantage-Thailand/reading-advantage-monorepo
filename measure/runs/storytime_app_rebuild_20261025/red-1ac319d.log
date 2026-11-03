@@ -31,7 +31,7 @@ Status: Red defect fix complete. This report records the supplied phase and role
 - Test commit: `cc3cfcfa58fa2e56d4571c2e5db9c54fde3755ae`.
 - Plan evidence commit: `5d05e70c5d4f685724fb63c259a5fb725acbfff5`.
 - Red defect fix commit: `38bef548e27645c7325f7df9e4389ab12d7aad24`.
-- Updated plan and report evidence commit: pending.
+- Updated plan and report evidence commit: `95060acdcda275bef451d5b16387f5878226813d`.
 - Test file: `apps/storytime/__tests__/phase3-song-ui.test.tsx`.
 - Plan file: `measure/tracks/storytime_app_rebuild_20261025/plan.md`.
 - This log is ignored by the existing `measure/runs/` rule and remains available at the requested path.
@@ -47,8 +47,8 @@ track: storytime_app_rebuild_20261025
 phase: Phase 3: At-home app — task 3.5 Song page
 baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
 role_base_sha: 1ac319d4f7b58481903259c7ea3b4c1449674c64
-resulting_head: pending
-commits: cc3cfcfa58fa2e56d4571c2e5db9c54fde3755ae; 5d05e70c5d4f685724fb63c259a5fb725acbfff5; 38bef548e27645c7325f7df9e4389ab12d7aad24; plan/report commit pending
+resulting_head: 95060acdcda275bef451d5b16387f5878226813d
+commits: cc3cfcfa58fa2e56d4571c2e5db9c54fde3755ae; 5d05e70c5d4f685724fb63c259a5fb725acbfff5; 38bef548e27645c7325f7df9e4389ab12d7aad24; 95060acdcda275bef451d5b16387f5878226813d
 tests: post-fix targeted Vitest exit 0 (1 file, 7 passed); app tsc exit 0
 files: apps/storytime/__tests__/phase3-song-ui.test.tsx; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log
 remaining_failures: none in targeted Vitest or tsc; AC-8.2 browser gate not run
