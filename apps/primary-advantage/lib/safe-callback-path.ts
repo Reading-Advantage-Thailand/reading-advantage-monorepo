@@ -3,7 +3,7 @@ import { routing } from "@/i18n/routing";
 const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`);
 
 /** True when the path is local: it starts with one slash and has no backslash or control character. */
-const isLocalPath = (path: string) => path.startsWith("/") && !path.startsWith("//") && !path.includes("\\") && !/[\u0000-\u001f\u007f]/.test(path);
+const isLocalPath = (path: string) => path.startsWith("/") && !path.startsWith("//") && !path.includes("\\") && ![...path].some((c) => c <= "\u001f" || c === "\u007f");
 
 /**
  * Keeps a callback only when it is a path on this site, without its locale.
