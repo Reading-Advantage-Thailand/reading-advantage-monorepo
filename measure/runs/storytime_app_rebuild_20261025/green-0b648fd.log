@@ -1,0 +1,118 @@
+# Measure Green retry report — Storytime task 3.6
+
+- Role: Measure Jr Green; model `deepseek/deepseek-v4.1-flash` (`opencode-go`).
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3, task 3.6.
+- Immutable `phase_base_sha`: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- `role_base_sha` / starting HEAD: `0b648fdfd16a86fabae25fbeadd08a44ee116e4f`.
+- Orchestrator answer: option A. Red retry commits `f30d055e0` and `0b648fdfd` are inside the phase range.
+- No coder was delegated. No Red file is changed.
+- Unrelated untracked work preserved and not staged.
+
+## Work done
+
+- `apps/storytime/app/globals.css`: the phone song box now sets `width: min(100%, calc(75dvh * 9 / 16)); height: auto;`. A 360x800 phone gives a 312 px width, a 554.67 px height, a ratio of 562, and a height of 69 percent. The laptop 16:9 rule is unchanged.
+- The fix stays uncommitted, because the gate cannot end with `FAIL=0` until Mid Red fixes the gate harness.
+
+## Browser gate runs
+
+- Run 1: `bash apps/storytime/__tests__/phase3-browser-gate.sh`. Exit 1; `PASS=3, FAIL=1`.
+- Run 2: the same command. Exit 1; `PASS=3, FAIL=1`.
+- Both runs end the same way before any app row:
+  - `PASS: Production build exits 0`
+  - `PASS: Ready clone uses shipped w01 with approvals and placeholder media`
+  - `PASS: Built server answers HTTP 200`
+  - `FAIL: Playwright gate exits 1`
+  - `PASS=3, FAIL=1`
+- The Playwright script crashes at once:
+  - `browserContext.newCDPSession: Protocol error (Target.attachToTarget): No target with given id found`
+  - `at watchNetwork (apps/storytime/.next/phase3-browser-gate-<pid>.mjs:24:30)`
+  - `at apps/storytime/.next/phase3-browser-gate-<pid>.mjs:62:27`
+- No labeled app line is printed, because the gate prints the result array at the end.
+
+## Root cause
+
+- `phase3-browser-gate.sh` line 107: `const cdp = page.context().newCDPSession(page);` inside `function watchNetwork(page)` at line 102.
+- `newCDPSession` returns a `Promise`. A local probe prints `constructor=Promise`, `typeof cdp.on=undefined`, `typeof cdp.send=undefined`.
+- Lines 109, 114, and 118 therefore call `.on` and `.send` on a Promise. Under `heavy-run.sh` the unhandled attach rejection crashes Node with the CDP error above. Outside `heavy-run.sh` the crash is `cdp.on is not a function`.
+- This is a harness defect in the Red retry. It is not an app defect.
+
+## Verified fix for Mid Red
+
+- Line 102: `async function watchNetwork(page) {`.
+- Line 107: `const cdp = await page.context().newCDPSession(page);`.
+- Proof: a probe of the same awaited call under `heavy-run.sh` attaches a CDP session and enables the Network domain 3 of 3 times, with the default 3G memory scope and `channel: 'chrome'`.
+
+## Other gates
+
+- No app row ran, so there is no `transferred_bytes_first_load` value for this round.
+- The CSS file is not linted by the repository ESLint config (it lints TypeScript and JavaScript), so no ESLint target changed.
+- `tsc --noEmit` is not meaningful for a CSS-only change and did not run again in this round. The prior round recorded exit 0.
+- Task 3.6 stays `[~]`.
+
+## Raw gate output (run 2)
+
+```
+=== Build Storytime production app ===
+▲ Next.js 16.4.1 (Turbopack)
+✓ Running next.config.ts took 1361ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.6s
+  Running TypeScript ...
+  Finished TypeScript in 9.9s
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/2) ...
+✓ Generating static pages (2/2) in 175ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+└ ƒ /[locale]/st/[level]/[week]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+=== Create ready review fixture from shipped w01 ===
+=== Fixture mode: STORYTIME_CONTENT_DIR points to a temporary ready review copy; draft-media switch is not set ===
+=== Start next start on a free 127.0.0.1 port ===
+=== Run Playwright with SYSTEM Chrome (channel: chrome); timeout 15m ===
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+browserContext.newCDPSession: Protocol error (Target.attachToTarget): No target with given id found
+    at watchNetwork (/home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime/.next/phase3-browser-gate-659831.mjs:24:30)
+    at /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime/.next/phase3-browser-gate-659831.mjs:62:27 {
+  log: [],
+  name: 'Error'
+}
+
+Node.js v24.19.0
+PASS: Production build exits 0
+PASS: Ready clone uses shipped w01 with approvals and placeholder media
+PASS: Built server answers HTTP 200
+FAIL: Playwright gate exits 1
+PASS=3, FAIL=1
+RC=1
+```
+
+## MEASURE_AGENT_RESULT
+status: blocked
+role: Measure Jr Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 — At-home app, task 3.6
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 0b648fdfd16a86fabae25fbeadd08a44ee116e4f
+head: pending evidence commit
+commits: pending (evidence only; the CSS fix stays uncommitted)
+tests: browser gate exit 1 twice, PASS=3, FAIL=1, before any app row; no transferred_bytes_first_load value this round
+files: apps/storytime/app/globals.css (uncommitted), measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/green-0b648fd.log
+remaining_failures: the gate harness calls `.on` and `.send` on the Promise from `newCDPSession`
+handoff: Mid Red must make `watchNetwork` async and await the session. Then Green runs the gate once. Task 3.6 stays [~].
+line: apps/storytime/__tests__/phase3-browser-gate.sh line 107 (`const cdp = page.context().newCDPSession(page);`) inside `function watchNetwork(page)` at line 102
+fix: line 102 `async function watchNetwork(page) {`; line 107 `const cdp = await page.context().newCDPSession(page);`
+evidence: `newCDPSession` returns a Promise (`constructor=Promise`, `.on` and `.send` undefined); the awaited call works under `heavy-run.sh` 3 of 3 times
+END_MEASURE_AGENT_RESULT
