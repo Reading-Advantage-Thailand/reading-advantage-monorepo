@@ -368,6 +368,13 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Test commit: `54c1de12a882c4675a0a59ef02dfa172ec07220b` (`test(storytime): add red tests for the read-along ui (track_id: storytime_app_rebuild_20261025)`).
 - Test correction commit: `b1dd21ab2b1e8aa6d7df0c5fbe8bf1de17db86fa` (`test(storytime): fix shipped overlap case (track_id: storytime_app_rebuild_20261025)`).
 - Plan evidence and report commit: `998d75dc54c8a42d995fe0329d9df12fccc20dfb` (`chore(storytime): finalize read-along red evidence`).
+
+### Phase 3 task 3.3 Green block
+
+- Green started at role base `c27beea26`. The targeted Red command exits 1 with 2 failed files and 11 failed tests, as Red recorded.
+- Block 1: the Red keyboard test needs `tabindex="0"` on a word span. The committed package test `read-along-passage.test.tsx` asserts exactly one `[tabindex='0']` element (the sentence) for the same props. Both tests cannot pass. Green may not edit a committed Red test, and the task requires every existing package test to pass.
+- Block 2: the Red route test reads `app/[locale]/st/[level]/[week]/page.tsx` and requires client-only code there: `play()`, `onError`, `playbackRate = 1`, and `touchStart`. That file is the server gate with `generateMetadata`, `force-dynamic`, and `notFound()`. The committed tests `phase3-entry-route.test.ts` and `phase3-home-card.test.tsx` also read that file for the server markers. One App Router page file cannot hold both.
+- Green requests a Mid Red retry. The report is `measure/runs/storytime_app_rebuild_20261025/green-c27beea.log`. Task 3.3 stays `[~]`. No production file changed. No implementation commit exists.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).

@@ -1,0 +1,84 @@
+# Phase 3 task 3.3 Green report
+
+- Role: Measure Green, `deepseek/deepseek-v4.1-flash` (OpenCode provider `opencode-go`).
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3 task 3.3.
+- Red model of this phase: `openai/gpt-6-luna`. No coder was delegated.
+- Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Role base: `c27beea26ff1752a4ba249f243038f87be2f3a01`.
+- Starting HEAD: `c27beea26ff1752a4ba249f243038f87be2f3a01`.
+- The phase base is an ancestor of HEAD. The two Red commits are inside `phase_base_sha..HEAD`: `54c1de12a` and `b1dd21ab2`.
+- `git status --short` before any edit held only unrelated untracked paths. Green did not touch or stage them.
+- Green made no production change. Two committed-test conflicts block the task.
+
+## Targeted Red command
+
+Command:
+
+```text
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx'
+```
+
+Result: exit 1; 2 failed files; 11 failed tests; 0 passed tests. All failures are assertions. No import or runtime error.
+
+- The package accessibility test fails on the absent `aria-current` attribute, the absent word `tabindex`, and the two duplicate `playPauseButton` ids.
+- The app route test fails on the absent route reader integration and the absent read-along behavior markers.
+- The overlap assertion passes: the shipped 0.04 s overlap renders exactly one marked word.
+
+## Block 1: two committed package tests cannot both pass
+
+The Red test `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx` line 45 asserts that a word span holds `tabindex="0"`:
+
+```tsx
+const word = getByText("small");
+expect(word).toHaveAttribute("tabindex", "0");
+```
+
+The committed package test `packages/read-along/components/read-along/__tests__/read-along-passage.test.tsx` line 190 asserts that the same render holds exactly one `[tabindex='0']` element, and that element is the sentence:
+
+```tsx
+expect(container.querySelectorAll("[tabindex='0']")).toHaveLength(1);
+expect(container.querySelectorAll("[role='button']")).toHaveLength(1);
+const stop = container.querySelector("[data-sentence='0']") as HTMLElement;
+expect(stop).toHaveAttribute("tabindex", "0");
+```
+
+Both tests render `ReadAlongPassage` with `active` and `onWordTap`. The Red test needs at least two focusable elements. The older test allows exactly one. No implementation can satisfy both. Green may not edit a committed Red test. The task brief also requires every existing package test to pass.
+
+The code graph shows the conflict sits in the package that Primary also ships. Primary keeps its own copy, so the older test is the package contract.
+
+## Block 2: the Red route test needs client code in the server page
+
+The Red app test `apps/storytime/__tests__/phase3-readalong-ui.test.tsx` reads only `app/[locale]/st/[level]/[week]/page.tsx` as text. It requires these client-only markers in that file:
+
+- `play()`.
+- `onError` or `addEventListener("error")`.
+- `playbackRate = 1`.
+- `touchStart` or `onTouchStart`.
+- `play()`, `pause()`, `ArrowLeft`, `ArrowRight`, `slowFile`, and `slowSentences`.
+
+That file is the server gate. It holds `export const dynamic = "force-dynamic"`, `generateMetadata()` with `noindex`, `loadVisibleWeek`, and `notFound()`. The committed tests `phase3-entry-route.test.ts` and `phase3-home-card.test.tsx` also read that file for those server markers. An App Router page file cannot be a client component and keep the server gate. Event handlers and refs in a server component fail the build.
+
+So the Red route test cannot pass without either a Mid Red retarget to a client component file, or source-only text that does not run. Green rejects the second option as fabrication.
+
+## Disposition
+
+- No implementation commit. No plan-evidence commit. Task 3.3 stays `[~]`.
+- Green requests a Mid Red retry for the two Red files.
+- No committed Red test and no week content changed by Green.
+
+```text
+MEASURE_AGENT_RESULT
+role: Measure Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.3 Read-along UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: c27beea26ff1752a4ba249f243038f87be2f3a01
+head: c27beea26ff1752a4ba249f243038f87be2f3a01
+commits: none
+tests: targeted Red command exit 1; 2 failed files; 11 failed tests; 0 passed; assertion failures only
+files: measure/runs/storytime_app_rebuild_20261025/green-c27beea.log; measure/tracks/storytime_app_rebuild_20261025/plan.md (block note only)
+remaining_failures: word tabindex conflicts with the committed one-tab-stop package test; route source test requires client playback code in the server page
+status: blocked
+handoff: Mid Red retry is needed. Q1: the Red word-keyboard test and the committed package test "makes each sentence one tab stop" cannot both pass. Option A (default): Mid Red updates the older package test to the new contract, so the sentence and each word are tab stops. Option B: Mid Red changes the a11y test to one tab stop per sentence, with another keyboard path to a word, and keeps the older test. Q2: the Red route test reads the server page and requires client-only playback code in it. Option A: Mid Red retargets the source checks to the new client reader file and keeps the server page thin. Option B (default, stronger): Mid Red renders the client reader with a shipped week and checks the behavior. Green makes no Green commit in this round.
+END_MEASURE_AGENT_RESULT
+```
