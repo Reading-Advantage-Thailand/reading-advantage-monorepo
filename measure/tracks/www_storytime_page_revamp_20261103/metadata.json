@@ -1,0 +1,54 @@
+{
+  "track_id": "www_storytime_page_revamp_20261103",
+  "type": "feature",
+  "status": "new",
+  "created": "2026-11-03",
+  "created_at": "2026-11-03T00:00:00Z",
+  "updated_at": "2026-11-03T00:00:00Z",
+  "completed": null,
+  "priority": "high",
+  "description": "Revamp the www Storytime Advantage page at /products/storytime-advantage in en and th: refreshed brief copy word for word, real product images cropped and scaled into public/images/storytime-advantage/, lossless WebP, links to /contact, and the English copy in zh. Daniel checks the Thai and the look, then pushes and deploys.",
+  "owner_chain": [
+    "Daniel (owner; Thai check; look check; deploy gate)",
+    "Monorepo orchestrator (track owner; tests, crops, page build, merge to local master)",
+    "PM orchestrator (assignment A-45; takes questions back to PR)"
+  ],
+  "requested_by": "Daniel, Google Tasks, 2026-11-03 16:38 ICT: \"Primary page is updated and live. Next is the storytime page\"",
+  "pm_assignment": "A-45, 2026-11-03 16:43 ICT; PR sends the brief, the image list, and the Thai file by 2026-11-04",
+  "sources": [
+    "09-sales-enablement/storytime-release-1/www-page-copy.md v0.4 (2026-11-03)",
+    "09-sales-enablement/storytime-release-1/www-page-copy-th.md v0.1 (2026-11-03)",
+    "09-sales-enablement/storytime-release-1/www-page-images.md v0.1 (2026-11-03)",
+    "09-sales-enablement/storytime-release-1/README.md v0.10 (2026-11-02)",
+    "03-products/storytime-advantage.md v1.16 (2026-11-03)",
+    "01-company/contact-and-locations.md v2.1 (2026-10-07)",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx at HEAD 3b182491c",
+    "apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts at HEAD 3b182491c"
+  ],
+  "pending_inputs": [
+    "PM hand-off of the accepted brief v0.4 or later, the Thai file v0.1 or later, and the image list v0.1 or later (published 2026-11-03 17:25-17:27 ICT; hand-off due 2026-11-04)",
+    "Crop box and output size for each image (absent from image list v0.1)",
+    "Daniel's acceptance of the brief and his check of every Thai line"
+  ],
+  "branch": "www/storytime-page-revamp",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/www-storytime-page",
+  "captures_dir": "/home/daniebo/Desktop/a45-www-storytime-captures/",
+  "locales": ["en", "th"],
+  "default_locale": "en",
+  "image_targets": "apps/www-reading-advantage/public/images/storytime-advantage/",
+  "constraints": [
+    "This opening writes only the track files. It builds no page, crops no image, and writes no test.",
+    "No date, no price, no outcome claim, no free trial, and no free term on the page.",
+    "Real product files only. No stock picture, no mock-up, and no generated picture.",
+    "No push and no deploy. The push to origin/master and the deploy stay with Daniel.",
+    "Pathspec commits only. No git add -A, no git commit -a, no stash, no reset.",
+    "Every heavy command runs through /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'.",
+    "Commit headers stay at 100 characters or less and carry the track id (track_id: www_storytime_page_revamp_20261103).",
+    "Verify each source SHA-256 before the crop. Add no hash field to any file.",
+    "The content test fixture lives under apps/www-reading-advantage/src/__tests__/fixtures/.",
+    "graph.db is never committed.",
+    "Monorepo never writes in /home/daniebo/Desktop/advantage-pr."
+  ],
+  "estimated_tasks": 9,
+  "deviation_notes": "Opened 2026-11-03 by the Monorepo build agent as track files only. The PM handed over the task at 16:43 ICT and said the inputs would come by 2026-11-04. The PR session published the copy v0.4, the Thai file v0.1, and the image list v0.1 at 17:25-17:27 ICT on 2026-11-03. The PM hand-off is still pending. The image list v0.1 gives no crop box and no output size. The track quotes v0.4 as provisional and waits for the accepted brief."
+}
