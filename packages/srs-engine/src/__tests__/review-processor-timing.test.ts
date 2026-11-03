@@ -45,21 +45,27 @@ function submission(extra: Partial<PracticeSubmissionEnvelope> = {}): PracticeSu
 
 const card = () => createCard({ studentId: "s1", objectiveId: "o1", now: NOW });
 
+function reasons(result: ReturnType<typeof processReview>): string[] {
+  const evidence = result.reviewLog.evidence;
+  if (!("reasons" in evidence)) throw new Error("expected rating evidence");
+  return evidence.reasons;
+}
+
 describe("processReview timing evidence", () => {
   it("prefixes timing_missing when the submission has no timing", () => {
     const result = processReview({ card: card(), submission: submission(), now: NOW });
-    expect(result.reviewLog.evidence.reasons[0]).toBe("timing_missing");
+    expect(reasons(result)[0]).toBe("timing_missing");
     expect(result.rating).toBe("Good");
   });
 
   it("omits timing_missing when timing has no baseline", () => {
     const result = processReview({ card: card(), submission: submission({ timing }), now: NOW });
-    expect(result.reviewLog.evidence.reasons).not.toContain("timing_missing");
+    expect(reasons(result)).not.toContain("timing_missing");
   });
 
   it("uses timing and baseline without timing_missing", () => {
     const result = processReview({ card: card(), submission: submission({ timing }), baseline, now: NOW });
-    expect(result.reviewLog.evidence.reasons).not.toContain("timing_missing");
+    expect(reasons(result)).not.toContain("timing_missing");
     expect(result.reviewLog.reviewedAt).toBe(NOW);
   });
 
