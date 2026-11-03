@@ -29,6 +29,7 @@ import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { weekSchema, type StorytimeWeek, type WeekMedia } from "../lib/contracts/week";
+import { isWeekReady } from "../lib/readiness";
 
 /** The result of the receiving step for one week. */
 export interface ReceivedWeek {
@@ -38,6 +39,8 @@ export interface ReceivedWeek {
   contents: string;
   /** The media files that the week names. */
   media: WeekMedia[];
+  /** Whether the week may reach a child (spec FR-5, AC-5.4); a shared rule with the route. */
+  ready: boolean;
 }
 
 /** The rule that checks each kind of media (generation rules, draft 2). */
@@ -184,7 +187,7 @@ export function receiveWeek(
   if (!written.success || written.data.meta.status !== data.meta.status) {
     throw new Error(`The written week ${path} does not keep the status of its source`);
   }
-  return { path, contents, media: mediaOf(data) };
+  return { path, contents, media: mediaOf(data), ready: isWeekReady(data) };
 }
 
 /** One source file of a run: the week that the run requested and the text that Workbooks holds. */
@@ -635,15 +638,21 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
 
   let mediaCount = 0;
   let missingCount = 0;
+  const blocked: string[] = [];
   for (const week of received) {
     const missing = week.media.filter((item) => item.missing !== undefined).length;
     mediaCount += week.media.length - missing;
     missingCount += missing;
-    console.log(`Wrote ${week.path} (${week.media.length - missing} media files, ${missing} missing pictures)`);
+    if (!week.ready) blocked.push(week.path);
+    console.log(
+      `Wrote ${week.path} (${week.media.length - missing} media files, ${missing} missing pictures; ${week.ready ? "ready" : "not ready"})`,
+    );
     for (const item of week.media) {
       console.log(`  ${item.kind}\t${item.rule}\t${item.file}${item.missing ? `\tmissing: ${item.missing}` : ""}`);
     }
   }
+  // The at-home route answers 404 for each blocked week, so the operator sees it here first.
+  if (blocked.length > 0) console.log(`Not ready for the at-home app: ${blocked.join(", ")}`);
   console.log(
     `Wrote apps/storytime/content/source.json (record ${files.length} weeks; this run ${received.length} weeks, ${mediaCount} media files, ${missingCount} missing pictures)`,
   );
