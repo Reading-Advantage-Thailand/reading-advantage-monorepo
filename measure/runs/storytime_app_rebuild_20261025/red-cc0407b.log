@@ -1,0 +1,70 @@
+# Measure Red report: Storytime Phase 3 task 3.2
+
+Role: Measure Mid Red (`openai/gpt-6-luna`).
+Track: `storytime_app_rebuild_20261025`.
+Phase: Phase 3, task 3.2, tiles and home card.
+Phase base SHA: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+Role base SHA: `cc0407b932ce83714f5a7784e796464c7e33e478`.
+Initial HEAD: `cc0407b932ce83714f5a7784e796464c7e33e478`.
+
+Dirty-path review before edits: `.agents/skills/game-mapping/`, `.antigravitycli/`,
+`.generated/`, `.opencode/goals/state.json.sessions/`, `.pnpm-store/`, `.qa-tmp/`,
+`.reasonix/`, `.tmp-playwright/`, `.tmp/`, `apps/advantage-games/test-results/`,
+`apps/primary-advantage/cloudbuild-backfill.yaml`,
+`apps/primary-advantage/qa-check-user.tmp.ts`,
+`apps/primary-advantage/scripts/seed-qa-users.ts`,
+`apps/science-advantage/lib/ci-gates/wave5-phase-8-de-prisma.test.ts`,
+`div.absolute.top-4.right-4.z-10`, `docs/deployment/tutor-switch-brief.md`,
+`listGameLearningContent`, `packages/db/scripts/seed-qa-users.ts`,
+`probe-tmp.mjs`, `t/`, and `test-results/` are unrelated user work or generated
+work. All remain untouched and unstaged.
+
+Task 3.2 is `[~]`. Tests were added and committed. The tests use the shipped w01
+as the checked content basis. The current implementation is checked as a source
+contract because the strategy's Vitest environment does not resolve app aliases.
+
+## Red command evidence
+
+Command:
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-home-card.test.tsx apps/storytime/__tests__/phase3-messages.test.ts'`
+
+Result: exit 1; 2 failed files; 9 failed assertions; 0 passed tests. All failures
+are assertion failures. The missing home-page implementation causes seven assertion
+failures. Empty locale messages cause two assertion failures. No test was skipped.
+
+The first command attempt had an alias-resolution failure. The tests were
+re-authored to avoid importing application modules. The final command above then
+produced assertion-only failures.
+
+## Commits
+
+- `704ff5957`: Red test files.
+- Plan evidence and this report are staged for a follow-up documentation commit.
+
+## MEASURE_AGENT_RESULT
+status: complete
+role: Measure Mid Red
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.2
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: cc0407b932ce83714f5a7784e796464c7e33e478
+head: `704ff5957` (Red test checkpoint; plan/report evidence follows)
+commits: `704ff5957` test commit; plan/report documentation commit follows
+tests: targeted Vitest command exited 1; 2 files failed; 9 assertion failures; 0 passed; no syntax/import/runtime failures
+files: `apps/storytime/__tests__/phase3-home-card.test.tsx`, `apps/storytime/__tests__/phase3-messages.test.ts`, `measure/tracks/storytime_app_rebuild_20261025/plan.md`, `measure/runs/storytime_app_rebuild_20261025/red-cc0407b.log`
+remaining_failures: 9 expected Red assertion failures; home tiles, audio behaviors, home-card content, karaoke conditional, tap targets, language tags, Sarabun, and locale messages
+handoff: Green must implement the tested task 3.2 behavior. The browser gate still owns measured 64 px targets in portrait and landscape. Shipped w01 contains pictures but is not route-ready because audio and song approvals remain draft. Tests use an approved deep clone made in test code.
+
+## MEASURE_AGENT_RESULT
+status: in_progress
+role: Measure Mid Red
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.2
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: cc0407b932ce83714f5a7784e796464c7e33e478
+head: pending
+commits: pending
+tests: pending
+files: `apps/storytime/__tests__/phase3-home-card.test.tsx`, `apps/storytime/__tests__/phase3-messages.test.ts`
+remaining_failures: pending
+handoff: none

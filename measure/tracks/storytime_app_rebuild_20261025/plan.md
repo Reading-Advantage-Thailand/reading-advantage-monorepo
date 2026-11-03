@@ -322,8 +322,17 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Automated at `bbe7ff741`: the targeted command exits 0 with 5 files and 51 tests. `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on `lib/readiness.ts`, `lib/content.ts`, and `scripts/receive-weeks.ts`. The deploy-file assertion passes, so no deploy file sets the switch.
 - `build-graph update` ran at the pre-commit tree: 3 files, 65 to 73 nodes, 67 to 74 edges. `graph.db` is ignored and not committed.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-f70b280.log`.
-- [ ] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. The Thai text uses the Sarabun font (Daniel, 2026-11-03 11:53 ICT, through the PM). Test: AC-5.2.
+- [~] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. The Thai text uses the Sarabun font (Daniel, 2026-11-03 11:53 ICT, through the PM). Test: AC-5.2.
   - Workbooks answers (Q13 to Q15, through the PM, 2026-11-03): the picture alt text is `image.caption`. The audio fields are `focus.element.audio`, `StripCard.audio`, and `words[].audio`. The word tiles have no audio.
+
+### Phase 3 task 3.2 Red evidence
+
+- Mid-Red started at `7db52a49d20e195388fd91670cc7c022312b50c5`; role base was `cc0407b932ce83714f5a7784e796464c7e33e478`. Both supplied commits resolve, and HEAD matched the role base before edits.
+- The Red command exited 1: 2 failed files, 9 failed assertions, and 0 passed tests. All failures are assertions; no syntax, import, or runtime error occurred.
+- The home-card checks fail because the route has no tile pictures or captions, audio controls, home data, conditional karaoke, 64 px target classes, Thai text language, or Sarabun styling. The message checks fail because both locale message files are empty.
+- Red test commit: `704ff5957` (`test(storytime): add red tests for tiles and home card (track_id: storytime_app_rebuild_20261025)`). Tests read shipped `w01.json`; no week fixture was added. The route test names its implemented behavior contract, and the messages test checks locale key parity and non-empty Thai strings.
+- Automated command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-home-card.test.tsx apps/storytime/__tests__/phase3-messages.test.ts'`.
+- Report: `measure/runs/storytime_app_rebuild_20261025/red-cc0407b.log`.
 - [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
