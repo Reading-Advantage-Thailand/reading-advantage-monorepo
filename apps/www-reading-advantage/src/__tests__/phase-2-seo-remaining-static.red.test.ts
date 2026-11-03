@@ -152,8 +152,8 @@ const REMAINING_STATIC_ROUTES = [
     load: () =>
       import("@/app/[locale]/(marketing)/products/storytime-advantage/page"),
     expected: (messages: LocaleMessages) => ({
-      title: messages.pages.products.storytimeAdvantage.hero.title,
-      description: messages.pages.products.storytimeAdvantage.hero.description,
+      title: messages.pages.products.storytimeAdvantage.metadata.title,
+      description: messages.pages.products.storytimeAdvantage.metadata.description,
     }),
   },
   {
