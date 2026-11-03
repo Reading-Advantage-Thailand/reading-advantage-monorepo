@@ -51,3 +51,33 @@ describe("isSafeReturnTo", () => {
     expect(isSafeReturnTo(longPath, "")).toBe(false);
   });
 });
+describe("isSafeReturnTo query and encoding edges", () => {
+  it("rejects a pathname that does not start with a slash", () => {
+    expect(isSafeReturnTo("https://evil.example.com", "")).toBe(false);
+    expect(isSafeReturnTo("evil.example.com", "")).toBe(false);
+    expect(isSafeReturnTo("", "")).toBe(false);
+  });
+
+  it("rejects a non-empty query without a leading question mark", () => {
+    expect(isSafeReturnTo("/page", "x=1")).toBe(false);
+  });
+
+  it("rejects a query with malformed percent encoding", () => {
+    expect(isSafeReturnTo("/page", "?x=%E0%A4%A")).toBe(false);
+    expect(isSafeReturnTo("/page", "?x=%zz")).toBe(false);
+  });
+
+  it("accepts a query with well-formed percent encoding", () => {
+    expect(isSafeReturnTo("/api/oidc/authorize", "?redirect_uri=https%3A%2F%2Flms.example.test")).toBe(true);
+  });
+
+  it("rejects a query carrying the delete control character", () => {
+    expect(isSafeReturnTo("/page", "?x=\u007f")).toBe(false);
+  });
+
+  it("counts the query toward the 2,048 character limit", () => {
+    const path = `/${"a".repeat(1_023)}`;
+    expect(isSafeReturnTo(path, `?${"b".repeat(1_023)}`)).toBe(true);
+    expect(isSafeReturnTo(path, `?${"b".repeat(1_024)}`)).toBe(false);
+  });
+});
