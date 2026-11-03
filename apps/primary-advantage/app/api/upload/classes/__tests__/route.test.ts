@@ -111,8 +111,8 @@ describe("combined classroom and user CSV upload", () => {
   it("imports a teacher with required account fields and a school-scoped role", async () => {
     const schoolId = "00000000-0000-0000-0000-000000000001";
     // The session school is the sole schoolId source for upload writes, so
-    // the session mock must carry it.
-    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId });
+    // the session mock must carry it. Teacher rows need ADMIN (finding 2 of authz-primary-report.md).
+    mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN", schoolId });
     mocks.parse.mockReturnValue([
       {
         name: "Teacher Two",
@@ -122,10 +122,12 @@ describe("combined classroom and user CSV upload", () => {
       },
     ]);
     const results = [
-      [{ id: "teacher-1", schoolId }],
+      [{ id: "admin-1", schoolId }],
       [{ id: schoolId, name: "School A" }],
       [],
-      [{ name: "Class A" }],
+      [{ id: "class-1", name: "Class A" }],
+      // canManageClassroom reads the class.
+      [{ id: "class-1", schoolId, teacherId: "teacher-9" }],
       [{ id: "role-teacher", name: "teacher" }],
       [{ id: "teacher-2", email: "teacher2@example.com" }],
       [{ id: "class-1", name: "Class A" }],

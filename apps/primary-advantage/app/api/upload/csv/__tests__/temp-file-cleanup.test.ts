@@ -93,6 +93,8 @@ describe("CSV upload temp file cleanup", () => {
   }
 
   it("deletes the temp file when row validation fails with 400", async () => {
+    // Teacher rows need ADMIN (finding 2 of authz-primary-report.md).
+    mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN", schoolId: SESSION_SCHOOL });
     mocks.parse.mockReturnValue([
       { name: "Teacher One", email: "not-an-email", role: "teacher", classroom_name: "Class A" },
     ]);

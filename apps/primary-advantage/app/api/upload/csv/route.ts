@@ -12,6 +12,8 @@ import { getCurrentUser } from "@/lib/session";
 import { CsvUploadSummary } from "./schema";
 import { logger } from "@/lib/observability/logger";
 import { recordSystemImportAudit, resolveImportSchool } from "@/server/utils/import-school";
+import { canManageClassroom } from "@/server/utils/assignment-access";
+import { isAdminOrSystem } from "@/lib/authorization";
 /**
  * CSV Upload API Route
  *
@@ -138,6 +140,14 @@ export async function POST(request: NextRequest) {
           allowedFiles: allowedFilenames,
         },
         { status: 400 },
+      );
+    }
+
+    // Teacher rows create TEACHER accounts, so they need ADMIN, as POST /api/teachers does.
+    if (filename !== "students.csv" && !isAdminOrSystem(authUser)) {
+      return NextResponse.json(
+        { error: "Insufficient permissions", details: ["Only Admin or System roles can import teachers"] },
+        { status: 403 },
       );
     }
 
@@ -383,6 +393,26 @@ export async function POST(request: NextRequest) {
         : !existingStudentKeys.has(studentKey(userData.name, classroomOf.get(userData.id) ?? "")),
     );
 
+    // Every existing class that a new row joins must be one the caller manages. This runs before any
+    // write, so a refused import writes nothing. classrooms is FLAT; TenantDB scopes the lookup.
+    const existingClassrooms = new Map<string, typeof classrooms.$inferSelect>();
+    const unmanagedClassrooms: string[] = [];
+    const insertIds = new Set(rowsToInsert.map((userData) => userData.id));
+    for (const classroomName of new Set(classroomAssignments.filter((a) => insertIds.has(a.userId)).map((a) => a.classroomName))) {
+      const [existingClassroom] = await staffDb.select().from(classrooms)
+        .where(eq(classrooms.name, classroomName))
+        .limit(1);
+      if (!existingClassroom) continue;
+      existingClassrooms.set(classroomName, existingClassroom);
+      if (!(await canManageClassroom(authUser, existingClassroom.id))) unmanagedClassrooms.push(classroomName);
+    }
+    if (unmanagedClassrooms.length > 0) {
+      return NextResponse.json(
+        { error: "Insufficient permissions", details: [`You do not manage these classes: ${unmanagedClassrooms.join(", ")}`] },
+        { status: 403 },
+      );
+    }
+
     // Process users in batches
     const max = 500;
     let batch: any[] = [];
@@ -467,16 +497,8 @@ export async function POST(request: NextRequest) {
 
       // Process each classroom
       for (const [classroomName, assignments] of classroomGroups) {
-        // Find or create classroom (replaces Prisma `classroom.findFirst`).
-        // classrooms is FLAT; TenantDB enforces the school scope, so the
-        // duplicate manual school check is removed.
-        const [existingClassroom] = await staffDb.select().from(classrooms)
-          .where(
-            eq(classrooms.name, classroomName),
-          )
-          .limit(1);
-
-        let classroom = existingClassroom;
+        // Find or create classroom: the existing class was read and checked before the user writes.
+        let classroom = existingClassrooms.get(classroomName);
 
         if (!classroom) {
           const ownerId =

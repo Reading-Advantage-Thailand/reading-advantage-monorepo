@@ -113,6 +113,8 @@ function queueSelects(results: unknown[][]) {
 }
 
 const teacherSession = () => mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId: SESSION_SCHOOL });
+// Teacher rows need ADMIN (finding 2 of authz-primary-report.md).
+const adminSession = () => mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN", schoolId: SESSION_SCHOOL });
 const sessionRows = [[{ id: "teacher-1", schoolId: SESSION_SCHOOL }], [{ id: SESSION_SCHOOL, name: "School A" }]];
 
 describe("CSV upload duplicates (students have no email)", () => {
@@ -178,13 +180,13 @@ describe("CSV upload duplicates (students have no email)", () => {
   });
 
   it("keeps the first row for a teacher email repeated in one file", async () => {
-    teacherSession();
+    adminSession();
     mocks.parse.mockReturnValue([
       { name: "First Teacher", email: "dup@example.com", role: "teacher", classroom_name: "Class A" },
       { name: "Second Teacher", email: "DUP@example.com", role: "teacher", classroom_name: "Class A" },
     ]);
-    // session, roles, existing emails, class A lookup, existing teacher link
-    queueSelects([...sessionRows, [{ id: "role-teacher", name: "teacher" }], [], [{ id: "class-1", name: "Class A" }], []]);
+    // session, roles, existing emails, class A lookup, the class read of canManageClassroom, existing teacher link
+    queueSelects([...sessionRows, [{ id: "role-teacher", name: "teacher" }], [], [{ id: "class-1", name: "Class A" }], [{ id: "class-1", schoolId: SESSION_SCHOOL, teacherId: "teacher-9" }], []]);
     const writes = recordingInserts();
 
     const response = await POST(uploadRequest("teachers.csv"));
@@ -200,7 +202,7 @@ describe("CSV upload duplicates (students have no email)", () => {
   });
 
   it("skips a teacher whose email already exists", async () => {
-    teacherSession();
+    adminSession();
     mocks.parse.mockReturnValue([{ name: "Existing Teacher", email: "existing@example.com", role: "teacher", classroom_name: "Class A" }]);
     queueSelects([...sessionRows, [{ id: "role-teacher", name: "teacher" }], [{ email: "existing@example.com" }]]);
     const writes = recordingInserts();

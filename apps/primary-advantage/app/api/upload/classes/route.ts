@@ -13,6 +13,8 @@ import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
 import { recordSystemImportAudit, resolveImportSchool } from "@/server/utils/import-school";
+import { canManageClassroom } from "@/server/utils/assignment-access";
+import { isAdminOrSystem } from "@/lib/authorization";
 
 // Zod validation schemas
 const classroomCsvRowSchema = z.object({
@@ -97,20 +99,20 @@ const validateClassroomNameFormat = (className: string): boolean => {
  * Validates classroom names exist using the caller's query handle.
  * @param classroomDb Scoped handle for school staff, global for SYSTEM actors.
  * @param classroomNames Classroom names to validate.
- * @returns The valid and invalid names.
+ * @returns The valid and invalid names, and the id and name of each existing class.
  */
 const validateClassroomNames = async (
   classroomDb: DB,
   classroomNames: string[],
-): Promise<{ valid: string[]; invalid: string[] }> => {
+): Promise<{ valid: string[]; invalid: string[]; rows: Array<{ id: string; name: string }> }> => {
   if (classroomNames.length === 0) {
-    return { valid: [], invalid: [] };
+    return { valid: [], invalid: [], rows: [] };
   }
 
   // Batch fetch all classrooms at once (replaces Prisma `classroom.findMany`).
   // classrooms is FLAT; the scoped handle enforces the school filter, so no
   // manual school check is needed here.
-  const existingClassroomRows = await classroomDb.select({ name: classrooms.name })
+  const existingClassroomRows = await classroomDb.select({ id: classrooms.id, name: classrooms.name })
     .from(classrooms)
     .where(inArray(classrooms.name, classroomNames));
 
@@ -127,7 +129,7 @@ const validateClassroomNames = async (
     }
   }
 
-  return { valid, invalid };
+  return { valid, invalid, rows: existingClassroomRows };
 };
 
 // Timing utility
@@ -258,6 +260,14 @@ export async function POST(request: NextRequest) {
     }
 
     const filename = file.name.toLowerCase();
+
+    // Teacher rows create TEACHER accounts, so they need ADMIN, as POST /api/teachers does.
+    if (filename !== "classes.csv" && !isAdminOrSystem(authUser)) {
+      return NextResponse.json(
+        { error: "Insufficient permissions", details: ["Only Admin or System roles can import teachers"] },
+        { status: 403 },
+      );
+    }
 
     // Create temp directory if it doesn't exist
     const tempDir = path.join(process.cwd(), "temp");
@@ -462,14 +472,27 @@ export async function POST(request: NextRequest) {
       }
 
       // Batch validate all classroom names at once
-      let classroomValidationResult: { valid: string[]; invalid: string[] } = {
+      let classroomValidationResult: { valid: string[]; invalid: string[]; rows: Array<{ id: string; name: string }> } = {
         valid: [],
         invalid: [],
+        rows: [],
       };
       if (allClassroomNames.size > 0) {
         classroomValidationResult = await validateClassroomNames(
           staffDb,
           Array.from(allClassroomNames),
+        );
+      }
+
+      // Every existing class that a row joins must be one the caller manages; refuse before any write.
+      const unmanagedClassrooms: string[] = [];
+      for (const classroom of classroomValidationResult.rows) {
+        if (!(await canManageClassroom(authUser, classroom.id))) unmanagedClassrooms.push(classroom.name);
+      }
+      if (unmanagedClassrooms.length > 0) {
+        return NextResponse.json(
+          { error: "Insufficient permissions", details: [`You do not manage these classes: ${unmanagedClassrooms.join(", ")}`] },
+          { status: 403 },
         );
       }
 

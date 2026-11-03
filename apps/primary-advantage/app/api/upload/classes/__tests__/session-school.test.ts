@@ -111,9 +111,10 @@ describe("classes upload session school scoping", () => {
   });
 
   it("stamps imported users with the session school when the stored row diverges", async () => {
+    // Teacher rows need ADMIN (finding 2 of authz-primary-report.md).
     mocks.currentUser.mockResolvedValue({
-      id: "teacher-1",
-      role: "TEACHER",
+      id: "admin-1",
+      role: "ADMIN",
       schoolId: SESSION_SCHOOL,
     });
     mocks.parse.mockReturnValue([
@@ -125,10 +126,12 @@ describe("classes upload session school scoping", () => {
       },
     ]);
     const results = [
-      [{ id: "teacher-1", schoolId: STORED_ROW_SCHOOL }],
+      [{ id: "admin-1", schoolId: STORED_ROW_SCHOOL }],
       [{ id: STORED_ROW_SCHOOL, name: "School B" }],
       [],
-      [{ name: "Class A" }],
+      [{ id: "class-1", name: "Class A" }],
+      // canManageClassroom reads the class.
+      [{ id: "class-1", schoolId: SESSION_SCHOOL, teacherId: "teacher-9" }],
       [{ id: "role-teacher", name: "teacher" }],
       [{ id: "user-1", email: "teacher2@example.com" }],
       [{ id: "class-1", name: "Class A" }],
