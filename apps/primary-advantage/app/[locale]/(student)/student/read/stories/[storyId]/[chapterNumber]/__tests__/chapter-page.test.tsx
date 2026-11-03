@@ -118,7 +118,8 @@ describe("chapter page", () => {
     expect(screen.getByRole("button", { name: "Listen and read along" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Chapter picture" })).toHaveAttribute(
       "src",
-      expect.stringContaining("images/story/cl123.png"),
+      // The picture goes through the Next.js resizer since 652777c75, so the bucket path is URL-encoded.
+      expect.stringContaining(encodeURIComponent("images/story/cl123.png")),
     );
   });
 
