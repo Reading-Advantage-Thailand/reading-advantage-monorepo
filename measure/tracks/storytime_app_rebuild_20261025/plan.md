@@ -367,7 +367,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Red tests and report: `apps/storytime/__tests__/phase3-readalong-ui.test.tsx`, `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx`, and `measure/runs/storytime_app_rebuild_20261025/red-a913216.log`.
 - Test commit: `54c1de12a882c4675a0a59ef02dfa172ec07220b` (`test(storytime): add red tests for the read-along ui (track_id: storytime_app_rebuild_20261025)`).
 - Test correction commit: `b1dd21ab2b1e8aa6d7df0c5fbe8bf1de17db86fa` (`test(storytime): fix shipped overlap case (track_id: storytime_app_rebuild_20261025)`).
-- Plan evidence and report commit: pending.
+- Plan evidence and report commit: `998d75dc54c8a42d995fe0329d9df12fccc20dfb` (`chore(storytime): finalize read-along red evidence`).
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
