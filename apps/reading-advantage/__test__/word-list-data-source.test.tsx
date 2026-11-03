@@ -25,7 +25,6 @@ jest.mock("@/locales/client", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => (
-    // eslint-disable-next-line @next/next/no-img-element
     <img {...props} alt={(props.alt as string) ?? ""} />
   ),
 }));
