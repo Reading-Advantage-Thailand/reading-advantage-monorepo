@@ -18,18 +18,18 @@ PM assignment A-45, 2026-11-03 16:43 ICT, gives the work to the Monorepo orchest
 | --- | --- | --- | --- |
 | `09-sales-enablement/storytime-release-1/www-page-copy.md` (page copy: English and facts) | 0.4 | 2026-11-03 | PR session |
 | `09-sales-enablement/storytime-release-1/www-page-copy-th.md` (Thai copy and alt text) | 0.1 | 2026-11-03 | PR session |
-| `09-sales-enablement/storytime-release-1/www-page-images.md` (real-image list) | 0.1 | 2026-11-03 | PR session |
+| `09-sales-enablement/storytime-release-1/www-page-images.md` (real-image list) | 0.2 (commit `84b07643`) | 2026-11-03 | PM hand-off |
 | `09-sales-enablement/storytime-release-1/README.md` (sales pack index and release 1 facts) | 0.10 | 2026-11-02 | PR session |
 | `03-products/storytime-advantage.md` (live-feature authority) | 1.16 | 2026-11-03 | PR session |
 | `01-company/contact-and-locations.md` (contact page authority) | 2.1 | 2026-10-07 | PR session |
 | `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx` (live page) | HEAD `3b182491c` | 2026-11-03 | Monorepo |
 | `apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts` (live strings) | HEAD `3b182491c` | 2026-11-03 | Monorepo |
 
-The PM brief of 16:43 said the inputs come by 2026-11-04. The PR session published the copy v0.4, the Thai file v0.1, and the image list v0.1 on 2026-11-03 between 17:25 and 17:30 ICT. The PM hand-off is still pending. The spec quotes these files and marks them provisional.
+The PM hand-off closed task 1.0 at 19:06 ICT on 2026-11-03. It supplied 10 PNG files and `MANIFEST.txt` in `/home/daniebo/Desktop/handoff/a45-storytime-www-images/`. The PM checked each SHA-256 at the source and in the copied folder.
 
-The PR session edited the copy and the Thai file during this opening. This spec quotes the files as they stood at 2026-11-03 17:30 ICT. The PM hand-off re-pins every string. The fixture is built from the accepted file, not from this snapshot.
+The build uses copy v0.4 from commit `9b5e1743` and Thai copy v0.1 from commit `4f8fcbde`, word for word. The fixture uses those source files.
 
-The copy v0.4 and the image list v0.1 replace the copy v0.3. The copy v0.4 reflects product file v1.16. The build uses v0.4 or a later PM hand-off, word for word.
+The copy v0.4 reflects product file v1.16. The image list v0.2 from commit `84b07643` is the image authority. The classroomAlt slot remains a gap. Do not use or add a cast sheet or classroom image.
 
 ## 3. Handoff rules from the brief (quoted exactly)
 
@@ -82,7 +82,7 @@ The live page has no games section and no demo section. The new page keeps none.
 
 ## 5. Page copy in English and in Thai (quoted exactly from brief v0.4 and Thai file v0.1)
 
-This copy is provisional. The PM hand-off and Daniel's acceptance replace it. The build copies the accepted brief word for word.
+The build copies the listed sources word for word. Daniel checks the Thai and the look.
 
 ### Hero
 
@@ -146,7 +146,7 @@ The Thai feature lines are Daniel's draft. They are not a literal translation of
 ### 4. For the teacher
 
 **Purpose:** Show a generalist teacher that the lesson is ready to teach.
-**Images (target names under `public/images/storytime-advantage/`):** `approved-story-cast.png`
+**Images:** none. The `classroomAlt` slot stays a gap. Do not fill it.
 
 | Element | English | Thai |
 |---|---|---|
@@ -157,7 +157,7 @@ The Thai feature lines are Daniel's draft. They are not a literal translation of
 | Tool 2 body | Each sound and word comes back on a fixed schedule, in 4 minutes or less a day. | แถบทบทวนช่วยให้ครูนำเสียงและคำกลับมาทบทวนตามแผน |
 | Tool 3 title | Friday Check | การตรวจประจำสัปดาห์ |
 | Tool 3 body | A 3-minute picture check tells the teacher which sounds and words to bring back. | การตรวจด้วยภาพช่วยให้ครูเห็นเสียงและคำที่ควรนำมาทบทวน |
-| Cast alt text (`classroomAlt`) | The approved Storytime Advantage cast | ภาพรวมตัวละคร Storytime Advantage ที่ได้รับอนุมัติ |
+| `classroomAlt` | No image or alt text. The image slot stays empty. | ไม่มีภาพหรือข้อความแทนภาพ ช่องภาพนี้เว้นว่างไว้ |
 
 ### 5. Frequently asked questions
 
@@ -178,7 +178,7 @@ The Thai feature lines are Daniel's draft. They are not a literal translation of
 | Q5 | What happens after P2? | หลังจาก ป.2 แล้วเรียนอะไรต่อ |
 | A5 | Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module. | Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module. |
 
-The hand-off statement in A5 is word for word from product file v1.16. The Thai file keeps it in English. Daniel must check whether he wants a Thai version before any Thai adaptation.
+The Thai page keeps the English hand-off statement word for word. The PM asks Daniel about it during the look check.
 
 ### 6. Closing call to action
 
@@ -221,9 +221,9 @@ The new copy keeps these headings: `faq.heading`, `cta.heading`, `cta.buttons.le
 
 `heroAlt` stays as a key and takes the new hero alt text. `classroomAlt` stays as a key and takes the cast alt text. `adaptiveEngine.alt` stays as a key and takes the cover alt text. Each other image gets a key under `images`, in camelCase from the list target name.
 
-## 6. Images: 11 files from the real-image list v0.1
+## 6. Images: 10 files from the real-image list v0.2
 
-The list gives the absolute source path, the SHA-256, the source pixels, the target name, the alt text in English and in Thai, and the approval record. This table quotes the slots, target names, pixels, and alt text. The build reads the path and the hash from the list at run time.
+The source paths and SHA-256 values are in `MANIFEST.txt`. The build checks all 10 hashes before use. Crop boxes and output sizes are selected from the page image slots and recorded in `plan.md`.
 
 | # | Slot | Target name under `public/images/storytime-advantage/` | Pixels | Alt text EN | Alt text TH |
 |---|---|---|---|---|---|
@@ -234,23 +234,22 @@ The list gives the absolute source path, the SHA-256, the source pixels, the tar
 | 5 | Story section: week 5 | `week-05-two-ears.png` | 4000×3000 | A week 5 story page shows two ears. | หน้าหนังสือเรื่องประจำสัปดาห์ที่ 5 แสดงหูสองข้าง |
 | 6 | Story section: week 6 | `week-06-i-see-a-cat.png` | 4000×3000 | A cat appears in a week 6 story page. | แมวปรากฏในหน้าหนังสือเรื่องประจำสัปดาห์ที่ 6 |
 | 7 | Story section: week 7 | `week-07-top-on-a-pot.png` | 4000×3000 | A top sits on a pot in a week 7 story page. | ลูกข่างวางอยู่บนหม้อในหน้าหนังสือเรื่องประจำสัปดาห์ที่ 7 |
-| 8 | Product cover | `level-2-unit-1-cover-art.png` | 4000×3000 | The approved Level 2 cover artwork. | ภาพปก Level 2 ที่ได้รับอนุมัติ |
-| 9 | FAQ or sample strip: week 1 reader cover | `week-01-reader-hello-cover.png` | 4000×3000 | The cover of the week 1 reader, “Hello!” | ปกหนังสือฝึกอ่านประจำสัปดาห์ที่ 1 “Hello!” |
-| 10 | FAQ or sample strip: week 1 reader cover | `week-01-reader-nan-can-nod-cover.png` | 4000×3000 | The cover of the week 1 reader, “Nan Can Nod.” | ปกหนังสือฝึกอ่านประจำสัปดาห์ที่ 1 “Nan Can Nod” |
-| 11 | Section: story characters | `approved-story-cast.png` | 2496×550 | The Chibi Sprouts cast sheet for the first unit. | ภาพรวมตัวละคร Chibi Sprouts สำหรับหน่วยการเรียนรู้แรก |
+| 8 | Product cover | `level-2-unit-1-cover-art.png` | 4000×3000 | The cover picture of Storytime Advantage Level 2. | ภาพปกของ Storytime Advantage Level 2 |
+| 9 | Reader cover | `week-01-reader-hello-cover.png` | 4000×3000 | The cover of the week 1 reader, “Hello!” | ปกหนังสือฝึกอ่านประจำสัปดาห์ที่ 1 “Hello!” |
+| 10 | Reader cover | `week-01-reader-nan-can-nod-cover.png` | 4000×3000 | The cover of the week 1 reader, “Nan Can Nod.” | ปกหนังสือฝึกอ่านประจำสัปดาห์ที่ 1 “Nan Can Nod” |
 
-The list has these gaps. No real photo of the printed student book exists. Daniel did not approve the week 1 print proof on 2026-11-03. The page uses no book mock-up and no print-page composite. No classroom photo has approval for this page. The teacher book cover is not in the list. The page uses none of these.
+No real photo of the printed student book exists. No classroom photo or approved cast sheet is in the list. The `classroomAlt` slot stays empty. Do not use a mock-up or a print-page composite.
 
-List v0.1 gives no crop box and no output size. The PM hand-off must add both for each image. The build does not choose a crop or an output size. Task 1.3 waits for the updated list.
+The maker selects crop boxes and output sizes from the page slots. The plan records each source, crop box, and output size.
 
 Rules for each image:
 
 - Read the absolute source path from the list. The source folders are read only. The Monorepo session never writes there.
 - Check the SHA-256 of each source file against the list before the first crop. One mismatch stops the run with zero files written.
-- Use the crop box in source pixels: x, y, width, height. Crop and scale only. Change no pixel of a screen.
+- Use the crop box recorded in the plan, in source pixels: x, y, width, height. Crop and scale only. Change no pixel of a screen.
 - Write each file under `apps/www-reading-advantage/public/images/storytime-advantage/` at the output size the list gives.
 - Use lossless WebP. Do not use a lossy setting.
-- Use the alt text of the list, in English and in Thai.
+- Use the alt text from list v0.2, in English and in Thai.
 - Add no hash field to any file. The typed manifest `apps/www-reading-advantage/src/lib/site-assets.ts` holds no hash field today, and the track keeps it that way.
 - Use real product files only. Use no stock picture, no mock-up, and no generated picture.
 

@@ -1,11 +1,13 @@
-# Spec Review: www_storytime_page_revamp_20261103
+# In-session self-review: www_storytime_page_revamp_20261103
+
+PM 2026-11-03: light lane. No independent spec review applies. The rounds below are retained as in-session self-review notes only.
 
 Author model: opencode-go/deepseek-v4.1-flash
 
 ## Round 1
 
 Date: 2026-11-03
-Reviewer: general subagent (harness default model)
+Reviewer: in-session self-review; not independent
 
 ### What this track proposes
 
@@ -38,7 +40,7 @@ The live page renders seven sections from `getScopedI18n("pages.products.storyti
 ## Round 2
 
 Date: 2026-11-03
-Reviewer: general subagent (harness default model)
+Reviewer: in-session self-review; not independent
 
 ### What this track proposes
 
@@ -64,7 +66,7 @@ The live page renders seven sections from `page.tsx` and the `en`, `th`, and `zh
 
 The author applied the Round 2 fixes after the re-review. The session has no question tool, so the author used the default of fixing every Blocker and Major. No finding is accepted as a risk.
 
-After Round 2, the PR session published the copy v0.4, the Thai file v0.1, and the image list v0.1. The author updated the quoted copy and the image section to those files. The findings and fixes stand.
+After Round 2, the PM hand-off supplied the copy v0.4, the Thai file v0.1, and image list v0.2. The spec now records these sources and the light-lane decisions.
 
 ## Accepted Risks
 
