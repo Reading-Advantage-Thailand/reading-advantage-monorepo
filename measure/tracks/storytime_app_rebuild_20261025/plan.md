@@ -353,7 +353,20 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
   - `build-graph update`: 2 files, 20 to 41 nodes, 27 to 51 edges. `graph.db` stays ignored and is not committed.
 - No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker file changed.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-11f2462.log`.
-- [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
+- [~] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
+
+### Phase 3 task 3.3 Red evidence
+
+- Mid-Red started with immutable phase base `7db52a49d20e195388fd91670cc7c022312b50c5`; role base `a9132167a0d741b32798b033000ded91d3c5924b`. Both resolve, and HEAD matched the role base before edits.
+- Pre-edit status contained unrelated untracked paths. I preserved them and did not stage them.
+- Red tests cover the task 3.3 strategy rows, including AC-6.1, my turn, slow mode, load failure, page turns and end, overlap, package accessibility, and package imports.
+- Targeted command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx'`.
+- Initial command result: exit 1; 2 failed files; 11 failed tests; 0 passed tests. All reported failures were assertions, with no import or runtime errors.
+- Failures identify missing reader integration, read-along behaviors, package imports, sentence and word ARIA state, word keyboard operation, and duplicate player ids. The package a11y assertions fail because current passage spans lack the requested ARIA and keyboard support; the duplicate-id assertion fails on the repeated `playPauseButton`.
+- The first run exposed an incorrect test lookup for page timings. I corrected the lookup to group the shipped book's `audio.sentences` by 1-based page. The specified command was run once, so the corrected overlap assertion has not been rerun. It checks the known 0.04-second shipped overlap before the missing player-position assertion.
+- Red tests and report: `apps/storytime/__tests__/phase3-readalong-ui.test.tsx`, `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx`, and `measure/runs/storytime_app_rebuild_20261025/red-a913216.log`.
+- Test commit: `54c1de12a882c4675a0a59ef02dfa172ec07220b` (`test(storytime): add red tests for the read-along ui (track_id: storytime_app_rebuild_20261025)`).
+- Plan evidence and report commit: pending.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
