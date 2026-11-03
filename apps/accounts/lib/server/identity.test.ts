@@ -169,6 +169,21 @@ describe("Accounts identity composition", () => {
     expect(mocks.createCompanyIdentityRuntimeClient).not.toHaveBeenCalled();
   });
 
+  // Defect: lib/server/identity.ts:73 caches a rejected composition promise.
+  // One transient database failure leaves every later call failing until restart,
+  // while /api/health keeps reporting the process as alive.
+  it.fails("retries composition after a transient database connection failure", async () => {
+    mocks.createCompanyIdentityRuntimeClient
+      .mockRejectedValueOnce(new Error("ECONNREFUSED"))
+      .mockResolvedValueOnce(mocks.sql);
+    const { getIdentityComposition } = await import("./identity");
+
+    await expect(getIdentityComposition()).rejects.toThrow("ECONNREFUSED");
+    await expect(getIdentityComposition()).resolves.toMatchObject({
+      issuerUrl: ISSUER.issuerUrl,
+    });
+  });
+
   it("fingerprints credential idempotency with the decoded identifier key", async () => {
     await loadComposition();
     const serviceInput = (mocks.createCompanyIdentityService.mock.calls[0] as unknown[])[0] as {
