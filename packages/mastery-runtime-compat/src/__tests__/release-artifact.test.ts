@@ -75,7 +75,7 @@ const TRUSTED_WORK_ROOT = resolve(
 const WORKSPACE_LEASE_STALE_AFTER_MS = 15 * 60 * 1_000;
 const RESOLVED_RUNTIME_VERSIONS = {
   gateZod: "3.25.76",
-  engineZod: "4.4.3",
+  engineZod: "4.6.7",
   tsFsrs: "5.4.1",
 } as const;
 
