@@ -138,6 +138,12 @@ nodeLinker: hoisted
 
 resolvePeersFromWorkspaceRoot: true
 
+# pnpm 11 sets enableGlobalVirtualStore to false under CI=true and leaves it
+# unset otherwise. The verify-deps-before-run check compares the two values,
+# sees a change, and starts a nested `pnpm install` before every `pnpm <cmd>`.
+# Pin the CI value so local and CI installs record the same setting.
+enableGlobalVirtualStore: false
+
 minimumReleaseAgeExclude:
   - vinext@0.2.0
   - phaser@4.2.1
