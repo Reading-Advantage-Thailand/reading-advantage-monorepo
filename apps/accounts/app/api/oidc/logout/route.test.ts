@@ -7,7 +7,7 @@ const { getIdentityComposition, localLogout } = vi.hoisted(() => ({
 
 vi.mock("@/lib/server/identity", () => ({ getIdentityComposition }));
 
-import { POST } from "./route";
+import { OPTIONS, POST } from "./route";
 
 const VALID_ACCESS_TOKEN = "abcdefghijklmnopqrstuvwxyABCDEF0123456789-_";
 
@@ -78,4 +78,36 @@ describe("Accounts OIDC local logout route", () => {
       await expect(response.json()).resolves.toEqual({ revoked });
     },
   );
+});
+
+describe("Accounts OIDC local logout failures", () => {
+  beforeEach(() => {
+    getIdentityComposition.mockReset();
+    localLogout.mockReset();
+    getIdentityComposition.mockResolvedValue({ service: { localLogout } });
+  });
+
+  it("hides an unexpected revocation failure behind INTERNAL_ERROR", async () => {
+    localLogout.mockRejectedValueOnce(new Error("database detail"));
+
+    const response = await POST(
+      new Request("https://accounts.example.test/api/oidc/logout", {
+        method: "POST",
+        headers: { authorization: `Bearer ${VALID_ACCESS_TOKEN}` },
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "INTERNAL_ERROR",
+      message: "The identity operation could not be completed.",
+    });
+  });
+
+  it("answers preflight with the POST allow list", () => {
+    const response = OPTIONS();
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get("Allow")).toBe("POST, OPTIONS");
+  });
 });
