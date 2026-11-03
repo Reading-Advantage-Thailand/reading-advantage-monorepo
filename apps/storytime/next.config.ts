@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   // Trace from the monorepo root so shared workspace packages land in the standalone bundle,
   // as apps/primary-advantage/next.config.ts does.
   outputFileTracingRoot: path.join(appDir, "../.."),
+  // No route imports content/ yet, so the tracer skips it; copy it into the standalone output.
+  outputFileTracingIncludes: { "/**": ["./content/**/*.json"] },
 };
 
 const withNextIntl = createNextIntlPlugin();
