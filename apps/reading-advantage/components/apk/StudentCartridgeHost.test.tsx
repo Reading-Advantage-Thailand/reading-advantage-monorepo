@@ -484,7 +484,10 @@ describe("StudentCartridgeHost", () => {
         json: jest.fn().mockResolvedValue({
           mode: "vocabulary",
           source: "student-flashcards",
-          content: [{ term: "river", translation: "river" }],
+          // dragon-flight requires Thai targets since 45becfb2c.
+          requestedTargetLocale: "th",
+          selectedTargetLocales: ["th"],
+          content: [{ term: "river", translation: "แม่น้ำ" }],
         }),
       });
 
