@@ -10,8 +10,9 @@ import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import {
   APPROVED_DATE_SENTENCE,
-  CONTAINERS,
+  DEMO,
   IMAGES,
+  PAGE_CONTAINER_IDS,
 } from "@/__tests__/fixtures/primary-page-expected";
 
 /*
@@ -164,6 +165,8 @@ const TH_MONTHS_SHORT = "ม\\.ค\\.|ก\\.พ\\.|มี\\.ค\\.|เม\\.ย\
  * It adds Buddhist years, Thai digits, short and upper-case months, more currency forms,
  * unit prices, percent signs, more free and discount words, and AI vendor names.
  * It does NOT flag the bare words "trial", "pricing", "ทดลอง", or "ดูราคา".
+ * The exact approved date sentences and the exact approved demo hints are exempt.
+ * The bare word "best" in any other sentence stays flagged.
  */
 const STRICT_TERMS: ReadonlyArray<{ name: string; re: RegExp }> = [
   { name: "year", re: /(?<!\d)(?:19|20|21)\d{2}(?!\d)/ },
@@ -186,7 +189,7 @@ const STRICT_TERMS: ReadonlyArray<{ name: string; re: RegExp }> = [
 ];
 
 /**
- * Finds the strict terms in a text. The two approved date sentences are removed first.
+ * Finds the strict terms in a text. The two approved date sentences and the two approved demo hints are removed first.
  * @param text The text to scan.
  * @returns The names of the terms that the text holds.
  */
@@ -195,6 +198,10 @@ function findStrict(text: string): string[] {
     .split(APPROVED_DATE_SENTENCE.en)
     .join(" ")
     .split(APPROVED_DATE_SENTENCE.th)
+    .join(" ")
+    .split(DEMO.strings.hint.en)
+    .join(" ")
+    .split(DEMO.strings.hint.th)
     .join(" ");
   return STRICT_TERMS.filter(({ re }) => re.test(scanned)).map(({ name }) => name);
 }
@@ -348,7 +355,7 @@ function mainChildrenProblems(): string[] {
   const main = document.querySelector("main");
   if (!main) return ["no main element"];
   const found = Array.from(main.children).map((child) => child.getAttribute("data-testid") ?? "");
-  const expected = CONTAINERS.map(({ testId }) => testId);
+  const expected = [...PAGE_CONTAINER_IDS];
   return JSON.stringify(found) === JSON.stringify(expected)
     ? []
     : [`main children: ${found.join(" ")}`];
@@ -401,9 +408,21 @@ describe("control: the strict scanners find an injected defect", () => {
       "ดูราคา",
       "Reedy with a trial label",
       "Primary Advantage Origins 3.2 and Primary Advantage Quest 4 are in preparation.",
+      DEMO.strings.hint.en,
+      DEMO.strings.hint.th,
     ];
     const flagged = allowed.filter((text) => findStrict(text).length > 0);
     expect(flagged).toEqual([]);
+  });
+
+  it("control: the approved demo hint is exempt, but the word best stays flagged elsewhere", () => {
+    expect(findStrict(DEMO.strings.hint.en)).toEqual([]);
+    expect(findStrict("It works best for schools.")).toEqual(["guarantee or superlative"]);
+    expect(findStrict("Works best on a computer.")).toEqual(["guarantee or superlative"]);
+    expect(findStrict(`${DEMO.strings.hint.en} The best program.`)).toEqual([
+      "guarantee or superlative",
+    ]);
+    expect(findStrict(`${DEMO.strings.hint.en} Free.`)).toEqual(["free term"]);
   });
 
   it("control: the approved sentence does not hide a second defect next to it", () => {
@@ -525,11 +544,20 @@ describe("control: the strict scanners find an injected defect", () => {
 describe.each(LOCALES)("adversarial guards on the page in %s", (locale) => {
   it("holds only the brief strings in each container (closed world)", async () => {
     await renderLocale(locale);
-    expect(CONTAINERS.length, "containers: 10 or more").toBeGreaterThanOrEqual(10);
+    expect(PAGE_CONTAINER_IDS.length, "containers: 11").toBe(11);
     expect(
-      CONTAINERS.flatMap(({ testId }) => extraTextProblems(testId, MESSAGES[locale])),
+      PAGE_CONTAINER_IDS.flatMap((testId) => extraTextProblems(testId, MESSAGES[locale])),
     ).toEqual([]);
     expect(mainChildrenProblems()).toEqual([]);
+  });
+
+  it("holds only the demo strings of the fixture in pa-demo (closed world)", async () => {
+    await renderLocale(locale);
+    const copy = locale === "th" ? "th" : "en";
+    let left = container(DEMO.testId).textContent ?? "";
+    for (const entry of Object.values(DEMO.strings)) left = left.split(entry[copy]).join("");
+    expect(left.trim(), "text of pa-demo that is not a demo string").toBe("");
+    expect(container(DEMO.testId).querySelector("iframe"), "iframe before the tap").toBeNull();
   });
 
   it("loads no file except the 16 images, and no tag except img loads one", async () => {
