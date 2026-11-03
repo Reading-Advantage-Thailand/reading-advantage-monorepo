@@ -17,7 +17,7 @@ export const en = {
     heading: "Every Item on One Skill Map",
     description:
       "Every sound, word, and sentence frame is tagged to the Mastery Advantage skill map, in the same English map as the Primary Advantage books. The printed review strips bring each item back on a fixed schedule.",
-    alt: "The approved Level 2 cover artwork for Storytime Advantage",
+    alt: "The cover picture of Storytime Advantage Level 2.",
   },
   keyFeatures: {
     heading: "What Is in the First Unit",
@@ -144,7 +144,7 @@ export const th = {
     heading: "ทุกรายการอยู่บนแผนผังทักษะเดียวกัน",
     description:
       "ทุกเสียง ทุกคำ และทุกรูปประโยค ผูกกับแผนผังทักษะ Mastery Advantage ในแผนผังภาษาอังกฤษเดียวกับหนังสือ Primary Advantage แถบทบทวนที่พิมพ์ไว้นำแต่ละรายการกลับมาทบทวนตามตารางที่กำหนด",
-    alt: "ภาพปก Level 2 ของ Storytime Advantage ที่ได้รับอนุมัติ",
+    alt: "ภาพปกของ Storytime Advantage Level 2",
   },
   keyFeatures: {
     heading: "สิ่งที่มีในหน่วยแรก",

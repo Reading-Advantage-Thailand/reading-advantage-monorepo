@@ -104,7 +104,7 @@ export default async function StorytimeAdvantage({
           <h2 className="mx-auto mb-10 max-w-3xl text-center text-3xl font-bold md:text-4xl">
             {t("keyFeatures.heading")}
           </h2>
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div className="grid items-start gap-8 lg:grid-cols-2">
             {[0, 1].map((group) => (
               <article key={group} className="rounded-3xl bg-white p-6 text-site-body shadow-lg sm:p-9">
                 <h3 className="mb-5 text-2xl font-bold text-site-navy">

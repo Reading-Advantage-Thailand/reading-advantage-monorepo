@@ -20,7 +20,7 @@ const CROPS = [
   { name: "week-05-two-ears.png", crop: [0, 0, 4000, 3000], width: 900, height: 675 },
   { name: "week-06-i-see-a-cat.png", crop: [0, 0, 4000, 3000], width: 900, height: 675 },
   { name: "week-07-top-on-a-pot.png", crop: [0, 0, 4000, 3000], width: 900, height: 675 },
-  { name: "level-2-unit-1-cover-art.png", crop: [0, 0, 4000, 3000], width: 960, height: 720 },
+  { name: "level-2-unit-1-cover-art.png", crop: [520, 840, 2880, 2160], width: 960, height: 720 },
   { name: "week-01-reader-hello-cover.png", crop: [0, 0, 4000, 3000], width: 480, height: 360 },
   { name: "week-01-reader-nan-can-nod-cover.png", crop: [0, 0, 4000, 3000], width: 480, height: 360 },
 ] as const;

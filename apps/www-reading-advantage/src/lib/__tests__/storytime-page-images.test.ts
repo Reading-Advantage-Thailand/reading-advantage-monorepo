@@ -8,8 +8,16 @@ import { describe, expect, it } from "vitest";
 import { STORYTIME_IMAGES } from "@/__tests__/fixtures/storytime-page-expected";
 
 const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const MANIFEST = "/home/daniebo/Desktop/handoff/a45-storytime-www-images/MANIFEST.txt";
+const SOURCE_ROOT = process.env.A45_STORYTIME_SOURCE_ROOT ?? "/home/daniebo/Desktop/handoff/a45-storytime-www-images";
+const MANIFEST = join(SOURCE_ROOT, "MANIFEST.txt");
 const OUTPUT_DIR = join(APP_ROOT, "public/images/storytime-advantage");
+const SOURCES_PRESENT = existsSync(MANIFEST);
+
+if (!SOURCES_PRESENT) {
+  console.warn(`storytime-page-images: source manifest missing under ${SOURCE_ROOT}; source-dependent tests skip.`);
+}
+
+const sourceTest = it.skipIf(!SOURCES_PRESENT);
 
 interface ManifestRow {
   readonly name: string;
@@ -36,7 +44,7 @@ function chunkNames(bytes: Buffer): string[] {
 }
 
 describe("Storytime Advantage page image assets", () => {
-  it("has 10 manifest entries and each source SHA-256 matches", () => {
+  sourceTest("has 10 manifest entries and each source SHA-256 matches", () => {
     const rows = manifestRows();
     expect(rows).toHaveLength(STORYTIME_IMAGES.length);
     const problems: string[] = [];
@@ -69,7 +77,7 @@ describe("Storytime Advantage page image assets", () => {
     expect(problems).toEqual([]);
   });
 
-  it("contains exactly the full-frame crop resized with Lanczos3", async () => {
+  sourceTest("contains exactly the selected crop resized with Lanczos3", async () => {
     const rows = manifestRows();
     const byName = new Map(rows.map((row) => [row.name.replace(/\.png$/, ""), row]));
     const problems: string[] = [];
@@ -79,8 +87,9 @@ describe("Storytime Advantage page image assets", () => {
         problems.push(`${image.name}: manifest row missing`);
         continue;
       }
+      const [left, top, width, height] = ("crop" in image ? image.crop : undefined) ?? [0, 0, 4000, 3000];
       const expected = await sharp(source.source)
-        .extract({ left: 0, top: 0, width: 4000, height: 3000 })
+        .extract({ left, top, width, height })
         .resize(image.width, image.height, { kernel: "lanczos3" })
         .ensureAlpha()
         .raw()
