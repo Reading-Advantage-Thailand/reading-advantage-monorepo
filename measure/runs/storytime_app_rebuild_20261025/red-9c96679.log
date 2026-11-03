@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role: Measure Mid Red retry, GPT-6 Luna
+status: complete
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app; task 3.1a
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+resulting_head: c9b4230b3e61967b1b42a1d758bc83f0da82f2c7 (Red test commit; plan-evidence commit follows)
+commits: c9b4230b3e61967b1b42a1d758bc83f0da82f2c7 (test); plan evidence and report in separate commit
+ tests_run: Required targeted command; exit 1; 2 failed files, 1 passed; 7 failed tests, 10 passed, 17 total; assertions only
+files_changed: apps/storytime/__tests__/phase3-readiness.test.ts; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/red-9c96679.log
+plan_updates: Added retry command evidence and findings. Task 3.1a remains [~].
+known_failures: The new draft-audio readiness test fails as expected. The six media-gate assertions fail as before. Readiness and entry-route tests pass otherwise.
+handoff: Ready-week fixtures now approve all three media parts. The missing-picture test removes one picture after completing the fixture. The media-gate test was not changed. Entry-route tests have no ready-week fixture to update.
+END_MEASURE_AGENT_RESULT
