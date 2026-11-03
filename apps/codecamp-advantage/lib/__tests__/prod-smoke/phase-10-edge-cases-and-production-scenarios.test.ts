@@ -490,7 +490,8 @@ describe("Phase 10 — Long-running sessions (production)", () => {
 
     it("auth session schema pins the DB session lifetime to 7 days — source-contract detector for server-side expiry parity", () => {
       // The server-side `createSession` writes `expiresAt` to
-      // `now + 7d` and `validateSession` compares against
+      // `now + 7d` by default (a caller may pass `opts.expiresAt`,
+      // e.g. the student policy, whose cookie matches it), and `validateSession` compares against
       // `new Date()`. The two must agree; if `createSession` is
       // changed to a 30-day lifetime without a corresponding
       // change to the cookie maxAge, the cookie expires before
@@ -498,7 +499,7 @@ describe("Phase 10 — Long-running sessions (production)", () => {
       // confusing "logged in but the session is gone" experience.
       const src = readSourceOrThrow(AUTH_SESSION_SOURCE, "auth/session.ts");
       const sevenDaysMatch = src.match(
-        /expiresAt\s*=\s*new\s*Date\(\s*Date\.now\(\)\s*\+\s*7\s*\*\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/,
+        /expiresAt\s*=\s*opts\?\.expiresAt\s*\?\?\s*new\s*Date\(\s*Date\.now\(\)\s*\+\s*7\s*\*\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/,
       );
       expect(
         sevenDaysMatch,
@@ -903,7 +904,7 @@ describe("Phase 10 — P2 launch gate (single hard assertion)", () => {
     //    parity with the cookie maxAge).
     const sessionSrc = readSourceOrThrow(AUTH_SESSION_SOURCE, "auth/session.ts");
     if (
-      !/expiresAt\s*=\s*new\s*Date\(\s*Date\.now\(\)\s*\+\s*7\s*\*\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/.test(
+      !/expiresAt\s*=\s*opts\?\.expiresAt\s*\?\?\s*new\s*Date\(\s*Date\.now\(\)\s*\+\s*7\s*\*\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/.test(
         sessionSrc,
       )
     ) {
