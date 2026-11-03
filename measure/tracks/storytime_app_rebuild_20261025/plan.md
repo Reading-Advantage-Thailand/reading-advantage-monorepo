@@ -375,6 +375,14 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Block 1: the Red keyboard test needs `tabindex="0"` on a word span. The committed package test `read-along-passage.test.tsx` asserts exactly one `[tabindex='0']` element (the sentence) for the same props. Both tests cannot pass. Green may not edit a committed Red test, and the task requires every existing package test to pass.
 - Block 2: the Red route test reads `app/[locale]/st/[level]/[week]/page.tsx` and requires client-only code there: `play()`, `onError`, `playbackRate = 1`, and `touchStart`. That file is the server gate with `generateMetadata`, `force-dynamic`, and `notFound()`. The committed tests `phase3-entry-route.test.ts` and `phase3-home-card.test.tsx` also read that file for the server markers. One App Router page file cannot hold both.
 - Green requests a Mid Red retry. The report is `measure/runs/storytime_app_rebuild_20261025/green-c27beea.log`. Task 3.3 stays `[~]`. No production file changed. No implementation commit exists.
+- Retry Red fixed both blocks at `f65c56efa` and `6a4e32277`.
+
+### Phase 3 task 3.3 Green block 2
+
+- Green restarted at role base `6a4e32277`. The targeted Red command exits 1 with 2 failed files, 11 failed tests, and 1 passed test (the overlap check).
+- Block: the test "keeps My turn silent until a word tap and plays the measured word cut" renders the default w01 book and taps the first word of `shippedTwoSentencePage()`. That helper returns w02 page 1 ("How many suns?"), because every w01 page has one sentence. The word is "How". The w01 reader shows "Hello, I am Pat." and has no "How" element, so `getByText` throws.
+- The other Red assertions are implementable. The reader must render the same source as the word lookup. Fix: `const { source, sentences } = shippedTwoSentencePage(); const { audio } = await renderReader(source);`.
+- Green requests a small Mid Red fix. The report is `measure/runs/storytime_app_rebuild_20261025/green-6a4e322.log`. Task 3.3 stays `[~]`. No production file changed.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).

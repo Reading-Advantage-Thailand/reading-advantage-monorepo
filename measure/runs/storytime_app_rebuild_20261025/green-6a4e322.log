@@ -1,0 +1,70 @@
+# Phase 3 task 3.3 Green report (retry)
+
+- Role: Measure Green, `deepseek/deepseek-v4.1-flash` (OpenCode provider `opencode-go`).
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3 task 3.3.
+- Red model of this phase: `openai/gpt-6-luna`. No coder was delegated.
+- Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Role base: `6a4e322772ed72b1c1af8580e37069c87f27f576`.
+- Starting HEAD: `6a4e322772ed72b1c1af8580e37069c87f27f576`.
+- The phase base is an ancestor of HEAD. The retry Red commits `f65c56efa` and `6a4e32277` are inside `phase_base_sha..HEAD`.
+- `git status --short` held only unrelated untracked paths. Green preserved them.
+- Green made no production change. One Red test cannot pass.
+
+## Targeted Red command
+
+```text
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx'
+```
+
+Result: exit 1; 2 failed files; 11 failed tests; 1 passed test. The passed test is the shipped overlap check. All failures are assertions.
+
+## Block: the My turn test renders one week and taps a word from another week
+
+`apps/storytime/__tests__/phase3-readalong-ui.test.tsx`, test "keeps My turn silent until a word tap and plays the measured word cut":
+
+```tsx
+const { audio } = await renderReader();          // default week: w01
+...
+const sentence = shippedTwoSentencePage().sentences[0];
+const word = sentence.words[0];                  // w02 page 1: "How"
+fireEvent.click(screen.getByText(new RegExp(`^${word.word...}`)));
+```
+
+`shippedTwoSentencePage()` scans the shipped weeks in folder order. The first page with two timed sentences is w02 page 1. Its sentences are "How many suns?" and "One!". Its first word is "How".
+
+Every w01 page holds one sentence. The default reader therefore shows w01 page 1: "Hello, I am Pat.". The reader has no element with the text "How", so `getByText(/^How/)` throws. No reader implementation can pass this test.
+
+The Red log confirms the w02 finding. The author did not see the mismatch, because the missing `reader.tsx` module stopped every app test at import time.
+
+Fix in the Red test: pass the same source to the reader and to the word lookup:
+
+```tsx
+const { source, sentences } = shippedTwoSentencePage();
+const { audio } = await renderReader(source);
+const sentence = sentences[0];
+```
+
+Green checked the other Red assertions. They are implementable: the reader path and props, the audio src, the sentence text, the word cut, slow mode, the error message, the page turner, the page end, and the package ARIA and keyboard contract. The unchanged package test keeps its one sentence tab stop.
+
+## Disposition
+
+- No implementation commit. No plan-evidence commit. Task 3.3 stays `[~]`.
+- Green requests a Mid Red fix of the one test above. No other blocker is known.
+- No committed Red test, week content, media gate, or tile file changed by Green.
+
+```text
+MEASURE_AGENT_RESULT
+role: Measure Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.3 Read-along UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 6a4e322772ed72b1c1af8580e37069c87f27f576
+head: 6a4e322772ed72b1c1af8580e37069c87f27f576
+commits: none
+tests: targeted Red command exit 1; 2 failed files; 11 failed tests; 1 passed; assertion failures only
+files: measure/runs/storytime_app_rebuild_20261025/green-6a4e322.log; measure/tracks/storytime_app_rebuild_20261025/plan.md (block note only)
+remaining_failures: My turn test renders the default w01 and taps the w02 word "How"
+status: blocked
+handoff: Mid Red must fix one line in apps/storytime/__tests__/phase3-readalong-ui.test.tsx. In the test "keeps My turn silent until a word tap and plays the measured word cut", render the source that the word comes from: `const { source, sentences } = shippedTwoSentencePage(); const { audio } = await renderReader(source);`. Default option: that two-line change. Alternative: take the word from the default week page 1 (`week.books...audio.sentences.filter(page 1)[0]`). The first two-sentence page is w02 page 1 ("How many suns?" / "One!"), and w01 has one sentence per page. No other blocker is known. Green makes no implementation commit in this round.
+END_MEASURE_AGENT_RESULT
+```
