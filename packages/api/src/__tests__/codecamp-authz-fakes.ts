@@ -8,10 +8,7 @@
  * a learner can reach through `/api/trpc`.
  */
 import { vi } from "vitest";
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
 import { getTableName, type Table } from "drizzle-orm";
-import { codecampRouter } from "../routers/codecamp.js";
 
 export const LESSON_ID = "550e8400-e29b-41d4-a716-446655440002";
 export const MODULE_ID = "550e8400-e29b-41d4-a716-446655440001";
@@ -62,24 +59,17 @@ export function createFakeDb(rowsByTable: Record<string, unknown[]>) {
   return { tenantDb, inserts };
 }
 
-const t = initTRPC.context<{
-  tenantDb: unknown;
-  auth: { user: { id: string; role: string; schoolId?: string | null }; tenant: { schoolId: string | null } } | null;
-}>().create({ transformer: superjson });
-
-const appRouter = t.router({ codecamp: codecampRouter });
-
 /**
- * Creates a tRPC caller signed in as a learner.
+ * Builds the tRPC context for a signed-in learner.
  * @param tenantDb The fake tenant DB for this test.
  * @param userId The signed-in learner id.
- * @returns A caller for the codecamp router.
+ * @returns The context the codecamp router reads.
  */
-export function learnerCaller(tenantDb: unknown, userId = "learner-a") {
-  return t.createCallerFactory(appRouter)({
+export function learnerContext(tenantDb: unknown, userId = "learner-a") {
+  return {
     tenantDb,
     auth: { user: { id: userId, role: "INTERN", schoolId: null }, tenant: { schoolId: null } },
-  } as never);
+  } as never;
 }
 
 /** Exercise repo row as `createPrReview` selects it. */

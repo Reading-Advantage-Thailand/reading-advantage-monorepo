@@ -5,12 +5,27 @@
  * The real router and domain run; only the database and GitHub are fakes.
  */
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { createFakeDb, learnerCaller, stubGitHubPrAuthor, exerciseRepo, REPO_ID, PR_URL } from "./codecamp-authz-fakes.js";
+import { createFakeDb, learnerContext, stubGitHubPrAuthor, exerciseRepo, REPO_ID, PR_URL } from "./codecamp-authz-fakes.js";
+import { initTRPC } from "@trpc/server";
+import superjson from "superjson";
+import { codecampRouter } from "../routers/codecamp.js";
 
 vi.mock("@reading-advantage/ai", () => ({
   getAIClient: vi.fn(() => ({ generateObject: vi.fn(), generateImage: vi.fn(), generateText: vi.fn() })),
   createAIClient: vi.fn(() => ({ generateObject: vi.fn(), generateImage: vi.fn(), generateText: vi.fn() })),
 }));
+
+const t = initTRPC.create({ transformer: superjson });
+const appRouter = t.router({ codecamp: codecampRouter });
+
+/**
+ * Creates a tRPC caller signed in as a learner.
+ * @param tenantDb The fake tenant DB for this test.
+ * @returns A caller for the codecamp router.
+ */
+function learnerCaller(tenantDb: unknown) {
+  return t.createCallerFactory(appRouter)(learnerContext(tenantDb));
+}
 
 describe("finding 1: codecamp.createPrReview checks the PR author", () => {
   afterEach(() => {
