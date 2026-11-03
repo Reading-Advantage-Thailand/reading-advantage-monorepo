@@ -53,26 +53,50 @@ for (const locale of ["en", "th"]) {
       page.setDefaultNavigationTimeout(60000);
       const response = await page.goto(`http://127.0.0.1:${port}/${locale}/products/storytime-advantage`, { waitUntil: "domcontentloaded", timeout: 60000 });
       if (response?.status() !== 200) throw new Error(`${locale}-${label}: HTTP ${response?.status()}`);
+      await page.evaluate(async () => {
+        const step = Math.max(Math.floor(window.innerHeight * 0.75), 240);
+        let scrollY = 0;
+        while (scrollY < document.documentElement.scrollHeight) {
+          window.scrollTo(0, scrollY);
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          scrollY += step;
+        }
+        window.scrollTo(0, document.documentElement.scrollHeight);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        window.scrollTo(0, 0);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      });
       await page.waitForFunction(() => {
         const images = Array.from(document.querySelectorAll("[data-testid^='st-'] img"));
         if (images.length !== 10) return false;
         for (const image of images) image.loading = "eager";
-        return images.every((image) => image.complete);
-      }, { timeout: 60000 });
+        return Promise.all(images.map(async (image) => {
+          try {
+            await image.decode();
+            return { src: image.currentSrc || image.src, decoded: true, naturalWidth: image.naturalWidth };
+          } catch {
+            return { src: image.currentSrc || image.src, decoded: false, naturalWidth: image.naturalWidth };
+          }
+        })).then((results) => {
+          window.__storytimeDecodeResults = results;
+          return true;
+        });
+      }, undefined, { timeout: 60000 });
       const report = await page.evaluate(() => ({
         document: document.documentElement.scrollWidth,
         body: document.body.scrollWidth,
         images: Array.from(document.querySelectorAll("[data-testid^='st-'] img"), (image) => ({
           src: image.currentSrc || image.src,
-          loaded: image.complete && image.naturalWidth > 0,
+          naturalWidth: image.naturalWidth,
         })),
+        decoded: window.__storytimeDecodeResults ?? [],
       }));
-      const failed = report.images.filter((image) => !image.loaded);
+      const failed = report.images.filter((image, index) => image.naturalWidth <= 0 || !report.decoded[index]?.decoded);
       if (report.document > width || report.body > width) {
         throw new Error(`${locale}-${label}: horizontal overflow ${report.document}/${report.body} at ${width}`);
       }
       if (report.images.length !== 10 || failed.length) {
-        throw new Error(`${locale}-${label}: found ${report.images.length} images and ${failed.length} broken image(s): ${failed.map(({ src }) => src).join(", ")}`);
+        throw new Error(`${locale}-${label}: ${report.images.length} images; ${failed.length} failed decode or natural-width check(s): ${failed.map(({ src }) => src).join(", ")}`);
       }
       await page.screenshot({ path, fullPage: true, animations: "disabled" });
       const file = statSync(path);

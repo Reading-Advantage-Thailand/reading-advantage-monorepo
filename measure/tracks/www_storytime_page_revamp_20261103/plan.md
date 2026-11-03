@@ -40,6 +40,10 @@
   - Typecheck command: `../../node_modules/.bin/tsc --noEmit` — exit 0.
   - Build command: `../../node_modules/.bin/next build` — exit 0; compile and typecheck passed. `../../node_modules/.bin/next start --port "$PORT"` started successfully. Capture command: `timeout 15m node scripts/capture-storytime-page.mjs` — exit 0; 10 captures written, HTTP 200 for all 10.
   - Cover image test confirms crop pixels, 960×720 output, and lossless encoding. The image was viewed once; the leftmost raised hand is not cut.
+- [x] 1.10 Fix lazy-image capture verification. Test: AC-9. The script now scrolls each Storytime page from top to bottom before capture. It awaits `decode()` for all 10 section images and requires `naturalWidth > 0`. The four Storytime captures were viewed; all 10 images show in each. The six BEFORE captures were also overwritten. `.next` matched the current app source, so the build was skipped.
+  - Heavy-run command: `../../node_modules/.bin/next start --port "$PORT"` — started successfully; `timeout 15m node scripts/capture-storytime-page.mjs` — exit 0; wrapper stopped the server by PID from `ss`.
+  - Result: 10 captures returned HTTP 200. Four Storytime captures passed 40 image decode and width checks total; no image failed. The six BEFORE capture files were also written. The final capture output directory contains all 10 expected PNG files.
+  - Visual check: `en-desktop.png`, `en-phone.png`, `th-desktop.png`, and `th-phone.png` each show the hero, cover, two reader covers, and all six week images.
 
 ## Crop decisions
 
