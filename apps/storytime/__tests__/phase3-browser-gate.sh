@@ -15,13 +15,14 @@ SERVER_PID=""
 TMP_DIR="$(mktemp -d -t storytime-browser-XXXXXX)"
 SERVER_LOG="$TMP_DIR/next-start.log"
 FIXTURE="$TMP_DIR/content"
-PLAYWRIGHT="$TMP_DIR/gate.mjs"
+PLAYWRIGHT="$APP/.next/phase3-browser-gate-$$.mjs"
 
 cleanup() {
   if [ -n "$SERVER_PID" ]; then
     kill "$SERVER_PID" 2>/dev/null || true
     wait "$SERVER_PID" 2>/dev/null || true
   fi
+  rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT INT TERM
@@ -81,6 +82,7 @@ if [ "$READY" -eq 1 ]; then pass "Built server answers HTTP $STATUS"; else fail 
 
 cat > "$PLAYWRIGHT" <<'NODE'
 import { chromium } from '@playwright/test';
+import http from 'node:http';
 const base = process.env.PROJECT_DEV_URL;
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 let pass = 0, fail = 0;
@@ -97,50 +99,80 @@ function ratio(fg, bg) {
   };
   const a = lum(fg), b = lum(bg); return (Math.max(a,b)+0.05)/(Math.min(a,b)+0.05);
 }
+function watchNetwork(page) {
+  const requests = [];
+  const transfers = [];
+  const byId = new Map();
+  let tapped = false;
+  const cdp = page.context().newCDPSession(page);
+  const mediaPath = url => /\.(mp3|m4a|aac|ogg|wav|flac|mp4|m4v|mov|webm|ogv)(?:\?|$)/i.test(new URL(url).pathname);
+  cdp.on('Network.requestWillBeSent', event => {
+    const item = { url: event.request.url, type: event.type, media: event.type === 'Media' || mediaPath(event.request.url), afterTap: tapped };
+    requests.push(item);
+    byId.set(event.requestId, item);
+  });
+  cdp.on('Network.loadingFinished', event => {
+    const item = byId.get(event.requestId);
+    if (item) transfers.push({ ...item, bytes: event.encodedDataLength });
+  });
+  return cdp.send('Network.enable').then(() => ({
+    requests,
+    transfers,
+    tap() { tapped = true; },
+    async close() { await cdp.detach(); },
+  }));
+}
 try {
+  const selfTestPages = new Map([
+    ['/button', '<!doctype html><button style="width:30px;height:30px">x</button>'],
+    ['/large-script', `<!doctype html><script>window.payload='${'x'.repeat(400000)}'</script>`],
+    ['/contrast', '<!doctype html><p style="color:white;background:#3080ff">x</p>'],
+  ]);
+  const selfTestServer = http.createServer((req, res) => {
+    const html = selfTestPages.get(new URL(req.url, 'http://127.0.0.1').pathname) ?? '';
+    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+    res.end(html);
+  });
+  await new Promise(resolve => selfTestServer.listen(0, '127.0.0.1', resolve));
+  const selfTestPort = selfTestServer.address().port;
   // The three deliberately bad inline pages must fail their respective limits before live checks.
   for (const [name, html, check] of [
-    ['30 px button', '<button style="width:30px;height:30px">x</button>', async p => (await p.locator('button').boundingBox()).width >= 64],
-    ['400 KB script', `<script>window.payload='${'x'.repeat(400000)}'</script>`, async p => p._payloadBytes <= 300000],
-    ['white text on #3080ff', '<p style="color:white;background:#3080ff">x</p>', async p => ratio(await p.locator('p').evaluate(e=>getComputedStyle(e).color), await p.locator('p').evaluate(e=>getComputedStyle(e).backgroundColor)) >= 4.5],
+    ['30 px button', '/button', async p => (await p.locator('button').boundingBox()).width >= 64],
+    ['400 KB script', '/large-script', async p => p._transferredBytes <= 300000],
+    ['white text on #3080ff', '/contrast', async p => ratio(await p.locator('p').evaluate(e=>getComputedStyle(e).color), await p.locator('p').evaluate(e=>getComputedStyle(e).backgroundColor)) >= 4.5],
   ]) {
     const p = await browser.newPage();
-    let bytes = 0;
-    p.on('response', async r => { try { bytes += (await r.body()).byteLength; } catch {} });
-    await p.setContent(`<!doctype html>${html}`);
-    await p.waitForLoadState('load');
-    p._payloadBytes = new TextEncoder().encode(await p.content()).byteLength;
+    const network = await watchNetwork(p);
+    await p.goto(`http://127.0.0.1:${selfTestPort}${html}`, { waitUntil: 'networkidle' });
+    p._transferredBytes = network.transfers.filter(r => !r.afterTap).reduce((sum, r) => sum + r.bytes, 0);
     const improperlyPassed = await check(p);
     record(`self-test rejects ${name}`, !improperlyPassed);
+    await network.close();
     await p.close();
   }
+  await new Promise(resolve => selfTestServer.close(resolve));
 
   const context = await browser.newContext({ viewport: { width: 360, height: 800 } });
   const page = await context.newPage();
-  const requests = [];
-  const responses = [];
-  let tapped = false;
-  const isMedia = r => /\.(mp3|wav|mp4|webm|png|jpe?g|webp|avif)(?:\?|$)/i.test(r.url()) || ['image','media'].includes(r.resourceType());
-  page.on('request', r => requests.push({ url: r.url(), media: isMedia(r), afterTap: tapped }));
-  page.on('response', async r => { try { responses.push({ url: r.url(), bytes: (await r.body()).byteLength }); } catch {} });
+  const network = await watchNetwork(page);
   await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
-  const firstLoadBytes = responses.reduce((sum, r) => sum + r.bytes, 0);
-  const beforeTapMedia = requests.filter(r => r.media).length;
+  const firstLoadBytes = network.transfers.filter(r => !r.afterTap).reduce((sum, r) => sum + r.bytes, 0);
+  const firstLoadRequests = network.requests.filter(r => !r.afterTap);
+  const beforeTapMedia = firstLoadRequests.filter(r => r.media).length;
   console.log(`transferred_bytes_first_load=${firstLoadBytes}`);
   console.log(`media_requests_before_tap=${beforeTapMedia}`);
-  console.log(`requests_total=${requests.length}`);
+  console.log(`requests_total=${firstLoadRequests.length}`);
   record('AC-5.3 first-load transfer is at most 300000 bytes', firstLoadBytes <= 300000, `transferred_bytes_first_load=${firstLoadBytes}`);
   record('AC-5.3 no media request occurs before tap', beforeTapMedia === 0, `media_requests_before_tap=${beforeTapMedia}`);
-  record('first-load request log is non-empty', requests.length >= 5, `requests_total=${requests.length}`);
+  record('first-load request log is non-empty', firstLoadRequests.length >= 5, `requests_total=${firstLoadRequests.length}`);
   const tile = page.locator('a[href*="part=book"]').first();
   await tile.waitFor();
-  const tilePath = await tile.getAttribute('href');
-  tapped = true;
+  network.tap();
   await tile.click();
   await page.waitForLoadState('networkidle');
-  const mediaAfterTap = requests.findIndex(r => r.media);
+  const mediaAfterTap = network.requests.findIndex(r => r.media);
   console.log(`first_media_request_index=${mediaAfterTap}`);
-  record('first media request occurs after the tap', mediaAfterTap >= 0 && requests[mediaAfterTap].afterTap, `first_media_request_index=${mediaAfterTap}`);
+  record('first media request occurs after the tap', mediaAfterTap >= 0 && network.requests[mediaAfterTap].afterTap, `first_media_request_index=${mediaAfterTap}`);
 
   for (const viewport of [{ width: 360, height: 800 }, { width: 800, height: 360 }]) {
     await page.setViewportSize(viewport);
@@ -171,6 +203,7 @@ try {
   record('AC-8.2 phone video height', phoneHeightPct<=75, `video_box_height_pct_phone=${phoneHeightPct}`);
   record('AC-8.2 laptop video box ratio', Math.abs(laptopRatio-1778)<=5, `video_box_ratio_x1000_laptop=${laptopRatio}`);
   await context.close();
+  await network.close();
 } catch (error) {
   record('Browser gate completed without runtime errors', false, String(error));
 } finally {
