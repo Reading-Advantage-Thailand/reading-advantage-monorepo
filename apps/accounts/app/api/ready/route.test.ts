@@ -9,7 +9,7 @@ vi.mock("@/lib/server/identity", () => ({
   getIdentityComposition: vi.fn(async () => ({ probeDatabase, logger: { warn } })),
 }));
 
-import { GET } from "./route";
+import { GET, HEAD, OPTIONS } from "./route";
 
 describe("Accounts readiness route", () => {
   beforeEach(() => {
@@ -46,5 +46,26 @@ describe("Accounts readiness route", () => {
     });
     expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(warn).toHaveBeenCalledWith("accounts.ready.unexpected_failure");
+  });
+});
+
+describe("Accounts readiness framework methods", () => {
+  beforeEach(() => {
+    probeDatabase.mockReset();
+  });
+
+  it("answers HEAD without running the database probe", () => {
+    const response = HEAD();
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+    expect(probeDatabase).not.toHaveBeenCalled();
+  });
+
+  it("answers preflight with the GET, HEAD, OPTIONS allow list", () => {
+    const response = OPTIONS();
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get("Allow")).toBe("GET, HEAD, OPTIONS");
   });
 });
