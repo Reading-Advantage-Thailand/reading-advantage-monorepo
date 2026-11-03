@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { consumeRateLimit, createInMemoryRateLimitStore } from "@reading-advantage/auth";
-import { db } from "@reading-advantage/db";
+import { getUnscopedDB } from "@reading-advantage/domain";
 import { recordHelpEvent } from "@reading-advantage/domain/primary-help";
 import { HELP_VIDEOS } from "@/lib/help/videos";
 import { logger } from "@/lib/observability/logger";
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "UNKNOWN_VIDEO" }, { status: 400 });
   }
   try {
-    await recordHelpEvent({ db, user: session.user, input: body as never });
+    await recordHelpEvent({ db: getUnscopedDB("recordHelpEvent scopes the insert to the user school itself"), user: session.user, input: body as never });
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     if ((error as { code?: string }).code === "FORBIDDEN") return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });

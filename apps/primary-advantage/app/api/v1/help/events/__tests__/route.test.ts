@@ -6,7 +6,7 @@ const mocks = vi.hoisted(() => ({
   session: { user: { id: "t1", role: "TEACHER", schoolId: "school-1" } } as Record<string, unknown> | null,
   recordHelpEvent: vi.fn(),
 }));
-vi.mock("@reading-advantage/db", () => ({ db: {} }));
+vi.mock("@reading-advantage/domain", () => ({ getUnscopedDB: () => ({}) }));
 vi.mock("@/lib/session", () => ({ getCurrentSession: async () => mocks.session }));
 vi.mock("@reading-advantage/domain/primary-help", () => ({ recordHelpEvent: mocks.recordHelpEvent }));
 
