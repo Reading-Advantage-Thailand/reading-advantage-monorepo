@@ -257,7 +257,7 @@
 
 ## Phase 3: At-home app
 
-Amendment A-42 (2026-11-03): tasks 3.8, 3.9, and 4.6 come from FR-13. The 11-20 release proof (spec FR-13) needs them. Fallback (pending PM confirmation (PM Q7)): if 3.9 or 4.6 has no acceptance by 2026-11-19, the proof shows the received approved weeks and the 3.8 contract tests, and the two screens follow at the next proof.
+Amendment A-42 (2026-11-03): tasks 3.8, 3.9, and 4.6 come from FR-13. The 11-20 release proof is a print proof (PM Q6, spec FR-13), so the app does not show the loops on 2026-11-20. Task 3.8 is done by about 2026-11-19, after the approved weeks land (PM Q7). Tasks 3.9 and 4.6 are done before the Storytime release 1 delivery of 2026-12-01 (internal). The Phase 3 strategy gives the real dates.
 
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
@@ -267,8 +267,8 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
-- [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target 2026-11-11.
-- [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, pending Daniel's look (PM Q5, 2026-11-03)) in `apps/storytime`. The choices are the pictures of the three answer pages, in book order. A right tap marks the picture and goes on. A wrong tap shows a gentle mark and stays, with no sound. A skip control ends the screen. It shows after the last page in every mode, with ask.th and ask.en as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Target 2026-11-14.
+- [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: done by about 2026-11-19, after the approved weeks land (task 3.10).
+- [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, pending Daniel's look (PM Q5, 2026-11-03)) in `apps/storytime`. The choices are the pictures of the three answer pages, in book order. A right tap marks the picture and goes on. A wrong tap shows a gentle mark and stays, with no sound. A skip control ends the screen. It shows after the last page in every mode, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
 - [ ] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It also covers tasks 3.8 and 3.9.
 
@@ -278,7 +278,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - [ ] 4.2 Week view `/<locale>/teacher/<level>/<week>`: the title, the element with its sound, the phonemic awareness skill, the tricky words, the frame, the family words with pictures, the five lessons by day, and the three materials. Test: AC-9.1.
 - [ ] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
 - [ ] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes.
-- [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. Tests: AC-13.7, AC-13.8. Target 2026-11-18.
+- [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It also covers task 4.6.
 
 ## Phase 5: Milestone week integration
