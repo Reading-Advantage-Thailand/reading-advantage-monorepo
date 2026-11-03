@@ -11,7 +11,7 @@ type LocaleProviderProps = {
 
 export function LocaleProvider({ locale, messages, children }: LocaleProviderProps) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Bangkok">
       {children}
     </NextIntlClientProvider>
   );
