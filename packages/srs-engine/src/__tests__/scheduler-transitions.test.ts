@@ -105,6 +105,16 @@ describe("reviewCard without fuzz", () => {
     expect(updated.scheduledDays).toBeLessThanOrEqual(2);
   });
 
+  it.fails("keeps every rating within maximumInterval", () => {
+    const card = reviewedCard();
+    for (const rating of ["Again", "Hard", "Good", "Easy"] as const) {
+      const updated = reviewCard(card, rating, card.dueDate, {
+        enableIntervalFuzz: false,
+        maximumInterval: 2,
+      });
+      expect(updated.scheduledDays).toBeLessThanOrEqual(2);
+    }
+  });
 
   it("schedules shorter intervals for higher-retention priorities", () => {
     const card = reviewedCard();
@@ -120,6 +130,11 @@ describe("reviewCard without fuzz", () => {
     ).toThrow(RangeError);
   });
 
+  it.fails("keeps createdAt after a review", () => {
+    const card = newCard();
+    const updated = reviewCard(card, "Good", "2026-11-10T00:00:00.000Z");
+    expect(updated.createdAt).toBe(card.createdAt);
+  });
 });
 
 describe("reviewCard with fuzz", () => {
