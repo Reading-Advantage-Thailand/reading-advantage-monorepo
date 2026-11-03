@@ -435,6 +435,15 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-28014a3.log`.
 - Task 3.4 stays `[~]`; Green owns the implementation.
 
+### Phase 3 task 3.4 Green block
+
+- Green started at role base `f538c156dbbbe5d7620a1cd9ba3c9182db08e0c9`. The phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Targeted Red command: exit 1; 2 failed files; 7 failed tests; 0 passed. The failures match the Red report.
+- Block: `apps/storytime/__tests__/phase3-decodable-ui.test.tsx` lines 90 to 93 assert that each played blend clip name, after the `NN-` prefix and `.mp3` suffix are removed, equals the plan grapheme. The plan graphemes are letters (`["p", "a", "n"]` for `pan`, because `phase2-blend.test.ts` asserts `graphemes.join("") === word.toLowerCase()`). The G3 bank clip for `a` is `phonemes/daniel/26-a-short.mp3`, so the stripped name is `a-short`. The shipped blend word holds `a`, so the test passes only when the UI plays a media path that has no file.
+- Fix: in line 92, allow the G3 variant suffix: `.replace(/^\d{2}-/, "").replace(/(-[a-z]+)?\.mp3$/, "")`. Compare against the bank file as an alternative.
+- No production file changed. No implementation commit exists. Task 3.4 stays `[~]`.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-f538c15.log`.
+
 - [~] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).

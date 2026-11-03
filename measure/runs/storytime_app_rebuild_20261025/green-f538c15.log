@@ -1,0 +1,62 @@
+# Measure Green report: Storytime task 3.4
+
+- Role: Measure Green; track `storytime_app_rebuild_20261025`; Phase 3 task 3.4.
+- phase_base_sha: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- role_base_sha: `f538c156dbbbe5d7620a1cd9ba3c9182db08e0c9`.
+- Starting HEAD: `f538c156d`. The committed Red change `9fba970a6` is inside `phase_base_sha..HEAD`.
+- Red model of this phase: `openai/gpt-6-luna`. No coder was delegated.
+- Dirty paths at start: generated and temporary outputs, and unrelated Primary, Science, docs, and root
+  files. No dirty path belongs to this task.
+- Task 3.4 is `[~]` in `plan.md` before this run.
+
+## Targeted Red run
+
+- Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-decodable-ui.test.tsx apps/storytime/__tests__/phase3-phoneme-bank.test.ts'`.
+- Result: exit 1; 2 files; 7 tests; 7 failed; 0 passed.
+- The failures match the Red report: the decodable module and the phoneme bank module are absent, and
+  the F28 case throws `RangeError`.
+
+## Block
+
+- No production file changed. No implementation commit exists.
+- This Green run stopped on the Rule "a committed Red test must not be edited; stop and return
+  blocked when a Red test contradicts the specification".
+- The block is in `apps/storytime/__tests__/phase3-decodable-ui.test.tsx` at lines 90 to 93:
+
+```ts
+const clips = played.filter((src) => src.includes("phonemes/daniel/"));
+expect(clips).toHaveLength(blendPlanForWord(word!, cvc).graphemes.length);
+expect(clips.map((src) => src.split("/").at(-1)?.replace(/^\d{2}-/, "").replace(/\.mp3$/, "")))
+  .toEqual(blendPlanForWord(word!, cvc).graphemes);
+```
+
+- The contract conflict: `blendPlanForWord` must give letter graphemes (`["p", "a", "n"]` for `pan`),
+  because the Phase 2 test asserts `plan.graphemes.join("") === word.toLowerCase()`. The phoneme
+  bank must hold the G3 names, so the `/a/` clip is `phonemes/daniel/26-a-short.mp3`. The test strips
+  only `NN-` and `.mp3`, so the clip name becomes `a-short`, and it cannot equal the grapheme `a`.
+- The first shipped blend word is `pan` in `w03` (`Nan` in `w02` also blends after the F28 case).
+  Both words hold the grapheme `a`. No real bank clip for `a` is named `NN-a.mp3`; only
+  `26-a-short.mp3` exists. The test passes only if the UI plays a media path that has no file.
+- One-line fix at line 92: compare against the bank file, or allow the G3 variant suffix:
+
+```ts
+expect(clips.map((src) => src.split("/").at(-1)?.replace(/^\d{2}-/, "").replace(/(-[a-z]+)?\.mp3$/, "")))
+```
+
+- With that fix the Green work is small. The planned implementation is ready: the `StorytimeDecodable`
+  client component, the 45-clip `PHONEME_BANK`, the `blendPlanForWord` F28 fix (loop maximum and
+  lower-case segmentation for a capital word), and the route wiring.
+
+## MEASURE_AGENT_RESULT
+role: Measure Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.4 — Decodable UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: f538c156dbbbe5d7620a1cd9ba3c9182db08e0c9
+head: f538c156d
+commits: no implementation commit; this report and the plan block are the evidence commit
+tests: targeted Vitest exit 1 (2 files, 7 tests, 7 failed, 0 passed)
+files: measure/runs/storytime_app_rebuild_20261025/green-f538c15.log; measure/tracks/storytime_app_rebuild_20261025/plan.md
+remaining_failures: all 7 Red checks; implementation blocked by the clip-name assertion
+status: blocked
+handoff: Mid Red retry. Fix line 92 of phase3-decodable-ui.test.tsx to strip the optional G3 variant suffix: replace `.replace(/\.mp3$/, "")` with `.replace(/(-[a-z]+)?\.mp3$/, "")`, or compare the clip to the bank file of each grapheme. Then Green can implement the decodable UI, the bank, and the F28 fix.
