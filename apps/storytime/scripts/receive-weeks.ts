@@ -39,7 +39,7 @@ export interface ReceivedWeek {
   contents: string;
   /** The media files that the week names. */
   media: WeekMedia[];
-  /** Whether the week may reach a child (spec FR-5, AC-5.4); a shared rule with the route. */
+  /** Whether the week may reach a child (spec FR-5, AC-5.4, AC-5.5); a shared rule with the route. */
   ready: boolean;
 }
 
