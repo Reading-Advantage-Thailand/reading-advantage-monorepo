@@ -84,6 +84,24 @@ export const LABEL_COPY = {
   },
 } as const;
 
+export const OVERVIEW_LABEL_COPY = {
+  en: {
+    gradeRange: "English for Anuban 2 to P2",
+    description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
+    ctaLabel: "Explore Storytime",
+  },
+  th: {
+    gradeRange: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
+    description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
+    ctaLabel: "สำรวจ Storytime",
+  },
+  zh: {
+    gradeRange: "面向 Anuban 2 至 P2 的英语课程",
+    description: "Storytime Advantage 是面向 Anuban 2 至 P2 的英语课程。每周有一个发音、一首歌和两本书，每节课都为班级教师提供完整的印刷教学脚本。第一个单元正在准备中。",
+    ctaLabel: "了解 Storytime",
+  },
+} as const;
+
 /** One rendered page string: its locale key, its English and Thai text, and the link target of a button. */
 export interface ExpectedCopy {
   readonly key: string;

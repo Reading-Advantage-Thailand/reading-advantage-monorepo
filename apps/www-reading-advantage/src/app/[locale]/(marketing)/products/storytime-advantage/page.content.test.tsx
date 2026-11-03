@@ -15,6 +15,7 @@ import {
   LABEL_COPY,
   OLD_ROADMAP_COPY,
   OLD_STOCK_REFERENCES,
+  OVERVIEW_LABEL_COPY,
   PAGE_COPY,
   STORYTIME_IMAGES,
   findClaimTerms,
@@ -141,6 +142,22 @@ function imagePath(src: string): string {
 afterEach(cleanup);
 
 describe("Storytime Advantage content", () => {
+  it.each(["en", "th"] as const)("uses the exact Storytime products overview handoff copy in %s", (locale) => {
+    state.messages = MESSAGES[locale];
+    const expected = OVERVIEW_LABEL_COPY[locale];
+    const overview = lookup("pages.products.overview.gradeBands.storytime") as {
+      gradeRange: string;
+      description: string;
+      ctaLabel: string;
+    };
+
+    expect(overview.gradeRange).toBe(expected.gradeRange);
+    expect(overview.description).toBe(expected.description);
+    expect(overview.ctaLabel).toBe(expected.ctaLabel);
+    expect(findClaimTerms(overview.gradeRange)).toEqual([]);
+    expect(findClaimTerms(overview.description)).toEqual([]);
+  });
+
   it.each(["en", "th", "zh"] as const)("uses the exact Storytime label handoff copy in %s", (locale) => {
     state.messages = MESSAGES[locale];
     const expected = LABEL_COPY[locale === "th" ? "th" : locale === "zh" ? "zh" : "en"];

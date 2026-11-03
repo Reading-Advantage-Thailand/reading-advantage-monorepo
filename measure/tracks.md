@@ -46,7 +46,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Storytime Advantage www page revamp** — *created 2026-11-03*
   *Link: [./tracks/www_storytime_page_revamp_20261103/](./tracks/www_storytime_page_revamp_20261103/)*
-  *Status: Round 2 labels, logo, mobile header fix, and captures in progress | Owner: Monorepo orchestrator | PM assignment A-45 | Priority: next after the Primary page*
+  *Status: Round 2 labels and final captures ready for Daniel's look and Thai check | Owner: Monorepo orchestrator | PM assignment A-45 | Priority: next after the Primary page*
   *Note: Daniel 2026-11-03 16:38 ICT: "Primary page is updated and live. Next is the storytime page". Same pipeline as the Primary page track. No date, no price, no outcome claim, and real product files only. Daniel checks the captures and the Thai. The deploy is Daniel's push of master.*
 
 - [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*

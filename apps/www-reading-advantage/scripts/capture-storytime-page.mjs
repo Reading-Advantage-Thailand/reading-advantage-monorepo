@@ -3,6 +3,8 @@ import { chromium } from "@playwright/test";
 
 const port = Number(process.env.PORT);
 const output = process.env.CAPTURE_DIR;
+const captureOverviewOnly = process.env.CAPTURE_OVERVIEW_ONLY === "1";
+const captureRound2Final = process.env.CAPTURE_ROUND2_FINAL === "1";
 if (!port || !output) throw new Error("PORT and CAPTURE_DIR are required");
 mkdirSync(output, { recursive: true });
 const captures = [];
@@ -89,7 +91,7 @@ async function capture(locale, label, url, width, height, locate, fileName = `${
   }
 }
 
-for (const locale of ["en", "th"]) {
+for (const locale of captureOverviewOnly && !captureRound2Final ? [] : ["en", "th"]) {
   for (const [label, width, height] of [["desktop", 1440, 900], ["phone", 390, 844]]) {
     const path = `${output}/${locale}-${label}.png`;
     console.log(`Capturing ${locale}-${label} at ${width}x${height} -> ${path}`);
@@ -105,7 +107,7 @@ for (const locale of ["en", "th"]) {
       const response = await page.goto(`http://127.0.0.1:${port}/${locale}/products/storytime-advantage`, { waitUntil: "domcontentloaded", timeout: 60000 });
       if (response?.status() !== 200) throw new Error(`${locale}-${label}: HTTP ${response?.status()}`);
       await page.evaluate(async () => {
-        const images = Array.from(document.querySelectorAll("[data-testid^='st-'] img"));
+        const images = Array.from(document.images);
         for (const image of images) image.loading = "eager";
         const step = Math.max(Math.floor(window.innerHeight * 0.75), 240);
         let scrollY = 0;
@@ -135,6 +137,15 @@ for (const locale of ["en", "th"]) {
           return true;
         });
       }, undefined, { timeout: 60000 });
+      await page.evaluate(async () => {
+        const images = Array.from(document.querySelectorAll("[data-testid^='st-'] img"));
+        for (const image of images) {
+          image.scrollIntoView({ block: "center" });
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        window.scrollTo(0, 0);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      });
       const report = await page.evaluate(() => ({
         document: document.documentElement.scrollWidth,
         body: document.body.scrollWidth,
@@ -143,15 +154,24 @@ for (const locale of ["en", "th"]) {
           naturalWidth: image.naturalWidth,
         })),
         decoded: window.__storytimeDecodeResults ?? [],
+        rendered: Array.from(document.querySelectorAll("[data-testid^='st-'] img"), (image) => {
+          const box = image.getBoundingClientRect();
+          return { src: image.currentSrc || image.src, width: box.width, height: box.height };
+        }),
       }));
       const failed = report.images.filter((image, index) => image.naturalWidth <= 0 || !report.decoded[index]?.decoded);
+      const unpainted = report.rendered.filter(({ width, height }) => width <= 0 || height <= 0);
       if (report.document > width || report.body > width) {
         throw new Error(`${locale}-${label}: horizontal overflow ${report.document}/${report.body} at ${width}`);
       }
       if (report.images.length !== 10 || failed.length) {
         throw new Error(`${locale}-${label}: ${report.images.length} images; ${failed.length} failed decode or natural-width check(s): ${failed.map(({ src }) => src).join(", ")}`);
       }
-      await page.waitForTimeout(700);
+      if (report.rendered.length !== 10 || unpainted.length) {
+        throw new Error(`${locale}-${label}: ${report.rendered.length} story image boxes; ${unpainted.length} have zero rendered size: ${unpainted.map(({ src }) => src).join(", ")}`);
+      }
+      await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await page.waitForTimeout(500);
       await page.screenshot({ path, fullPage: true, animations: "disabled" });
       const file = statSync(path);
       if (file.size === 0) throw new Error(`${locale}-${label}: screenshot file is empty`);
@@ -166,7 +186,7 @@ for (const locale of ["en", "th"]) {
   }
 }
 
-for (const locale of ["en", "th"]) {
+for (const locale of captureOverviewOnly || captureRound2Final ? [] : ["en", "th"]) {
   await capture(locale, "products", "/products", 1440, 1000, async (page) => {
     await page.getByRole("heading", { name: "Storytime Advantage" }).last().scrollIntoViewIfNeeded();
   }, `${locale}-products-desktop.png`);
@@ -184,6 +204,14 @@ for (const locale of ["en", "th"]) {
   }, `${locale}-home-desktop.png`);
   await capture(locale, "phone-top", "/products/storytime-advantage", 390, 844, async () => {}, `${locale}-phone-top.png`);
   await capture(locale, "phone-top-360", "/products/storytime-advantage", 360, 780, async () => {}, `${locale}-phone-top-360.png`);
+}
+
+for (const locale of captureOverviewOnly || captureRound2Final ? ["en", "th"] : []) {
+  for (const [device, width, height] of [["desktop", 1440, 900], ["phone", 390, 844]]) {
+    await capture(locale, `overview-${device}`, "/products", width, height, async (page) => {
+      await page.getByRole("heading", { name: "Storytime Advantage" }).last().scrollIntoViewIfNeeded();
+    }, `${locale}-overview-${device}.png`, true);
+  }
 }
 
 console.log(JSON.stringify(captures, null, 2));

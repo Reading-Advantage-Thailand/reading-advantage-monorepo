@@ -6,8 +6,8 @@ export const en = {
     gradeBands: {
         storytime: {
             title: "Storytime Advantage",
-            gradeRange: "K-2 literacy foundations",
-            description: "Build confidence with guided read-alouds, phonics play, and caregiver resources that make early reading joyful.",
+            gradeRange: "English for Anuban 2 to P2",
+            description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
             ctaLabel: "Explore Storytime",
         },
         primary: {
@@ -42,8 +42,8 @@ export const th = {
     gradeBands: {
         storytime: {
             title: "Storytime Advantage",
-            gradeRange: "ชั้นอนุบาล-ประถมต้น (K-2)",
-            description: "เสริมสร้างความมั่นใจผ่านการอ่านออกเสียงแบบมีผู้แนะนำ เกมโฟนิกส์ และสื่อประกอบสำหรับผู้ปกครอง",
+            gradeRange: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
+            description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
             ctaLabel: "สำรวจ Storytime",
         },
         primary: {
@@ -78,8 +78,8 @@ export const zh = {
     gradeBands: {
         storytime: {
             title: "Storytime Advantage",
-            gradeRange: "幼儿园至二年级",
-            description: "通过引导式朗读、语音游戏和家庭资源，帮助孩子在早期阅读阶段建立自信。",
+            gradeRange: "面向 Anuban 2 至 P2 的英语课程",
+            description: "Storytime Advantage 是面向 Anuban 2 至 P2 的英语课程。每周有一个发音、一首歌和两本书，每节课都为班级教师提供完整的印刷教学脚本。第一个单元正在准备中。",
             ctaLabel: "了解 Storytime",
         },
         primary: {
