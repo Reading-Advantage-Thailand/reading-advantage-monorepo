@@ -12,9 +12,12 @@ function makeEdition(overrides: Partial<WorkbookEdition> = {}): WorkbookEdition 
     title: "Tom & <Jerry>",
     cefrLevel: "B1",
     paragraphs: [{ order: 2, text: "Second" }, { order: 1, text: "First" }],
-    questions: [{ prompt: "Who's first?", choices: ["Tom", "\"Jerry\""] }, { prompt: "Open question" }],
+    questions: [
+      { questionId: "q1", questionType: "multiple_choice", prompt: "Who's first?", choices: ["Tom", "\"Jerry\""] },
+      { questionId: "q2", questionType: "open", prompt: "Open question" },
+    ],
     assets: [],
-  } as WorkbookNormalizedContent;
+  };
   const record: WorkbookSourceRecord = {
     identity: { sourceApp: "reading-advantage", sourceId: "src-1", sourceRevision: "rev-1", contentHash: "content-hash" },
     content,
