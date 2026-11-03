@@ -1,0 +1,68 @@
+# Phase 3 task 3.3 Green report (third run)
+
+- Role: Measure Green, `deepseek/deepseek-v4.1-flash` (OpenCode provider `opencode-go`).
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3 task 3.3.
+- Red model of this phase: `openai/gpt-6-luna`. No coder was delegated.
+- Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Role base: `48a17c21b05d70d85184358bba0d36d9b6df612a`.
+- Starting HEAD: `48a17c21b05d70d85184358bba0d36d9b6df612a`.
+- The phase base is an ancestor of HEAD. The Red commits `530b539ee` and `48a17c21b` are inside the range.
+- `git status --short` held only unrelated untracked paths before the work. Green preserved them.
+- The implementation is complete and the Red command passes. One committed Red test fails the app type check.
+
+## Implementation (uncommitted)
+
+- `packages/read-along/components/read-along/read-along-passage.tsx`: `aria-current` on the current sentence and the marked word; `data-word`; one sentence tab stop; words at `tabindex="-1"` with Left and Right arrow focus and Enter or Space tap.
+- `packages/read-along/components/read-along/read-along-player.tsx`: the duplicate `playPauseButton` id is removed.
+- `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx` (new): the client reader with the page turner, the horizontal swipe, "read it to me", "my turn", the slow recording at playback rate 1, the word cut from 30 ms before the start, the page-end stop, the end view, and the localized audio error.
+- `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: thin server page; renders `StorytimeReader` for `part === "book"`; keeps the 3.2 tiles, the media gate, and `generateMetadata`.
+- `apps/storytime/messages/en.json` and `th.json`: seven flat player keys with non-empty Thai values.
+
+## Gates
+
+- Targeted Red command (the two Red files): exit 0; 2 files; 12 tests.
+- Required Green command: exit 0; 10 files; 124 tests. This includes the unchanged `read-along-passage.test.tsx` and `read-along-player.test.tsx`.
+- `tsc --noEmit` in `packages/read-along`: exit 0.
+- ESLint on the four changed TypeScript files: exit 0.
+- `tsc --noEmit` in `apps/storytime`: exit 2. One error, in the committed Red test.
+
+## Block: the Red ready clone does not type check
+
+`apps/storytime/__tests__/phase3-readalong-ui.test.tsx` line 38:
+
+```ts
+copy.approval.images = { status: "approved" };
+```
+
+The JSON module type of w01 gives `approval.images` four required fields: `status`, `date`, `words`, and `source`. The object literal has one. TypeScript reports TS2739. The file is a committed Red test, so Green may not edit it.
+
+Fix in the Red test:
+
+```ts
+copy.approval.images = { ...copy.approval.images, status: "approved" };
+```
+
+The same spread keeps `audio` and `song` safe if their source shape grows.
+
+## Disposition
+
+- The implementation stays uncommitted. Task 3.3 stays `[~]`.
+- Green requests the one-line Red fix. After it lands, Green reruns the app type check and commits the implementation and the plan evidence.
+- No committed Red test, week content, media gate, or tile file changed by Green.
+
+```text
+MEASURE_AGENT_RESULT
+role: Measure Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.3 Read-along UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 48a17c21b05d70d85184358bba0d36d9b6df612a
+head: 48a17c21b05d70d85184358bba0d36d9b6df612a
+commits: none
+tests: targeted Red command exit 0 (12 tests); required Green command exit 0 (10 files, 124 tests); package tsc exit 0; ESLint exit 0; app tsc exit 2 with one Red-test error
+files: packages/read-along/components/read-along/read-along-passage.tsx; packages/read-along/components/read-along/read-along-player.tsx; apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx (new); apps/storytime/app/[locale]/st/[level]/[week]/page.tsx; apps/storytime/messages/en.json; apps/storytime/messages/th.json; measure/runs/storytime_app_rebuild_20261025/green-48a17c2.log; measure/tracks/storytime_app_rebuild_20261025/plan.md (block note only)
+remaining_failures: app tsc TS2739 at apps/storytime/__tests__/phase3-readalong-ui.test.tsx:38 (partial approval.images literal)
+status: blocked
+handoff: Mid Red fix is one line. In apps/storytime/__tests__/phase3-readalong-ui.test.tsx line 38, replace `copy.approval.images = { status: "approved" };` with `copy.approval.images = { ...copy.approval.images, status: "approved" };`. Default option: that spread. Why: the w01 JSON type requires date, words, and source on approval.images, so the partial literal fails TS2739. The same spread is safe for approval.audio and approval.song. Green keeps the complete implementation uncommitted: the Red command, the required Green command, the package type check, and ESLint all pass. After the fix lands, Green reruns the app tsc and commits the implementation and plan evidence.
+END_MEASURE_AGENT_RESULT
+```

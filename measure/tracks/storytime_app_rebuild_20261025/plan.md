@@ -393,6 +393,15 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Block: the test "keeps My turn silent until a word tap and plays the measured word cut" renders the default w01 book and taps the first word of `shippedTwoSentencePage()`. That helper returns w02 page 1 ("How many suns?"), because every w01 page has one sentence. The word is "How". The w01 reader shows "Hello, I am Pat." and has no "How" element, so `getByText` throws.
 - The other Red assertions are implementable. The reader must render the same source as the word lookup. Fix: `const { source, sentences } = shippedTwoSentencePage(); const { audio } = await renderReader(source);`.
 - Green requests a small Mid Red fix. The report is `measure/runs/storytime_app_rebuild_20261025/green-6a4e322.log`. Task 3.3 stays `[~]`. No production file changed.
+- Retry Red fixed the My turn source at `530b539ee` and `48a17c21b`.
+
+### Phase 3 task 3.3 Green block 3
+
+- Green ran at role base `48a17c21b`. The implementation is complete and uncommitted.
+- The Red command exits 0 with 12 tests. The required Green command exits 0 with 10 files and 124 tests. `tsc --noEmit` in `packages/read-along` exits 0, and ESLint exits 0 on the four changed TypeScript files.
+- Block: `tsc --noEmit` in `apps/storytime` exits 2 on the committed Red test. Line 38 of `phase3-readalong-ui.test.tsx` assigns `{ status: "approved" }` to `approval.images`, whose JSON type also needs `date`, `words`, and `source` (TS2739).
+- Fix: `copy.approval.images = { ...copy.approval.images, status: "approved" };`.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-48a17c2.log`. Task 3.3 stays `[~]`. No implementation commit exists yet.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
