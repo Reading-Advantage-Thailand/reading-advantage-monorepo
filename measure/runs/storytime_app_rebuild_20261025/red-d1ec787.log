@@ -12,7 +12,18 @@
 - One initial test run failed before collection because Vitest could not resolve `@/i18n/routing`. Narrow mocks fixed test setup. The final run passed.
 - `tsc --noEmit` in `apps/storytime` passed under `heavy-run.sh`. `bash -n` passed for the browser gate.
 - The browser gate was not run, as the Red role must leave the single heavy browser run for Green. It contains the three self-tests, ready fixture, production build/server, first-load and media checks, tap-target checks, and AC-8.2 checks.
-- Plan evidence is in `measure/tracks/storytime_app_rebuild_20261025/plan.md` and will be committed separately.
+- Initial plan evidence is in `measure/tracks/storytime_app_rebuild_20261025/plan.md`, commit `9ccd89c98`.
+
+## Red retry — browser gate corrections
+
+- Orchestrator retry started at `a2c4fd75e3e2000e26ff1e14f099602553019865`. This resolves the supplied HEAD and serves as the retry `role_base_sha`. The original `phase_base_sha` remains `7db52a49d20e195388fd91670cc7c022312b50c5`; both resolve and the phase base is an ancestor.
+- Daniel chose option A: count encoded transferred bytes for every first-load request. Count only audio and video as part media. Entry tile pictures remain on the page and are not part media.
+- `phase3-browser-gate.sh` now stores its generated Playwright script at `apps/storytime/.next/phase3-browser-gate-$$.mjs`. The EXIT cleanup removes it. No browser install runs; Playwright launches System Chrome with `channel: 'chrome'`.
+- CDP `Network.loadingFinished.encodedDataLength` now supplies `transferred_bytes_first_load`. CDP `Network.requestWillBeSent` supplies the request count and media classification. Media includes CDP type `Media` or audio/video file extensions. Image requests are excluded.
+- The 400 KB self-test page now loads from a local inline-page server. It uses the same CDP transfer measurement as the live page. The 30 px button and contrast self-tests remain.
+- `bash -n apps/storytime/__tests__/phase3-browser-gate.sh` exits 0. The browser gate was not run, per instruction; Green owns that run.
+- Test commit: `f30d055e0` (`test(storytime): measure transferred bytes (track_id: storytime_app_rebuild_20261025)`). The requested full subject exceeds the 100-character header limit, so the accepted subject is shortened.
+- Plan retry evidence is in `measure/tracks/storytime_app_rebuild_20261025/plan.md`. This evidence commit records the final role result.
 
 ## MEASURE_AGENT_RESULT
 status: complete
@@ -20,10 +31,10 @@ role: Measure Mid Red
 track: storytime_app_rebuild_20261025
 phase: Phase 3 — At-home app, task 3.6
 baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
-role_base_sha: d1ec787a9eb0e596bf5c1ab57720391c670d315b
-head: pending evidence commit
-commits: a19040e66 (Red tests); pending (plan and report evidence)
-tests: printed-URL Vitest passed (1 file, 1 test, urls_checked=16); app tsc passed; browser-gate bash -n passed
-files: apps/storytime/__tests__/phase3-printed-urls.test.ts, apps/storytime/__tests__/phase3-browser-gate.sh, measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/red-d1ec787.log
-remaining_failures: none observed; browser acceptance remains unverified because Red did not run the browser gate
-handoff: AC-2.2 is already satisfied at this HEAD. Green must run phase3-browser-gate.sh once and resolve any failing browser rows. Task 3.6 remains [~].
+role_base_sha: a2c4fd75e3e2000e26ff1e14f099602553019865
+head: f30d055e0 (test HEAD before the evidence-only commit)
+commits: a19040e66 (initial tests); 9ccd89c98 (initial evidence); f30d055e0 (browser gate retry); evidence commit includes retry plan and report
+tests: retry bash -n passed; browser gate intentionally not run
+files: apps/storytime/__tests__/phase3-browser-gate.sh, measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/red-d1ec787.log
+remaining_failures: browser rows unverified in this retry; Green's prior run recorded phone video ratio 520 and the gate corrections are not browser-tested
+handoff: Green must run phase3-browser-gate.sh once. Task 3.6 remains [~] until Green records the browser results.
