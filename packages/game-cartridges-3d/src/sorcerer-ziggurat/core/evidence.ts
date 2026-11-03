@@ -14,16 +14,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { ZigguratState } from './types.js';
 
-export const SORCERER_ZIGGURAT_GAME_ID = 'sorcerer-ziggurat';
+const SORCERER_ZIGGURAT_GAME_ID = 'sorcerer-ziggurat';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per tier climbed. */
 export const SCORE = { step: 100 } as const;
 
 /** One evidence item per ritual the student started or cleared, in climb order. */
-export function evidenceItemsOf(state: ZigguratState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: ZigguratState): StoryGameEvidenceItem[] {
   return state.climb
     .filter((ritual) => ritual.started || ritual.cleared)
     .map((ritual) => {

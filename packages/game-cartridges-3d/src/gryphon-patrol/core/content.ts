@@ -12,12 +12,12 @@ import type { Enemy, PatrolSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type PatrolInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: PatrolInput): input is SentenceInput {
+function isSentenceInput(input: PatrolInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the patrol needs it before play. */
-export interface SourceSentence {
+interface SourceSentence {
   id: string;
   text: string;
   words: string[];
@@ -26,7 +26,7 @@ export interface SourceSentence {
 }
 
 /** The words a patrol sentence can hold. */
-export const SENTENCE_WORDS = { min: 3, max: 8 } as const;
+const SENTENCE_WORDS = { min: 3, max: 8 } as const;
 
 /** The sky the enemies fly in, in meters (x across, y up). */
 export const SKY = { width: 16, height: 9, minY: 1.4, maxY: 8 } as const;
@@ -53,7 +53,7 @@ export function sentencesOf(input: PatrolInput): SourceSentence[] {
 }
 
 /** The sentences a patrol can take: those of 3 to 8 words, or all of them when none fits. */
-export function patrolSentencesOf(input: PatrolInput): SourceSentence[] {
+function patrolSentencesOf(input: PatrolInput): SourceSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= SENTENCE_WORDS.min && s.words.length <= SENTENCE_WORDS.max);
   return fit.length > 0 ? fit : all;

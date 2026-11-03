@@ -12,12 +12,12 @@ import type { RitualSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type AstralMageInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: AstralMageInput): input is SentenceInput {
+function isSentenceInput(input: AstralMageInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the casting needs it: id, text, words, and the reading look-back paragraph. */
-export interface CastingSentence {
+interface CastingSentence {
   id: string;
   text: string;
   words: string[];

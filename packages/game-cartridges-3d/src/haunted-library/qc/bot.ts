@@ -7,7 +7,7 @@
 import { TUNING, nextDoorOf, type LibraryCommand, type LibraryState } from '../core/index.js';
 
 /** The bot stops and opens a door when it stands this close (inside the core's open range). */
-export const REACH = TUNING.openRange * 0.8;
+const REACH = TUNING.openRange * 0.8;
 
 export function nextCommand(state: LibraryState): LibraryCommand | null {
   if (state.phase !== 'playing') return null;

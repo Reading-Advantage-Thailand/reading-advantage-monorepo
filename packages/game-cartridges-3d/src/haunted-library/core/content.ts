@@ -11,12 +11,12 @@ import type { LibraryRoom } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type LibraryInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: LibraryInput): input is SentenceInput {
+function isSentenceInput(input: LibraryInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the visit needs it. */
-export interface LibrarySentence {
+interface LibrarySentence {
   id: string;
   text: string;
   words: string[];
@@ -25,7 +25,7 @@ export interface LibrarySentence {
 }
 
 /** The words a room can hold: 3 to 7 doors. */
-export const ROOM_WORDS = { min: 3, max: 7 } as const;
+const ROOM_WORDS = { min: 3, max: 7 } as const;
 
 /** The sentences of the input, in the input's order. Sentences with fewer than 2 words are skipped. */
 export function sentencesOf(input: LibraryInput): LibrarySentence[] {
@@ -49,7 +49,7 @@ export function sentencesOf(input: LibraryInput): LibrarySentence[] {
 }
 
 /** The sentences a room can take: those of 3 to 7 words; when there are none, every sentence. */
-export function roomSentencesOf(input: LibraryInput): LibrarySentence[] {
+function roomSentencesOf(input: LibraryInput): LibrarySentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= ROOM_WORDS.min && s.words.length <= ROOM_WORDS.max);
   return fit.length > 0 ? fit : all;

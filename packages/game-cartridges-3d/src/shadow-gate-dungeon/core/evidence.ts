@@ -15,16 +15,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { ShadowGateState } from './types.js';
 
-export const SHADOW_GATE_GAME_ID = 'shadow-gate-dungeon';
+const SHADOW_GATE_GAME_ID = 'shadow-gate-dungeon';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per word crystal taken and per cleared room. */
-export const SCORE = { word: 10, room: 50 } as const;
+const SCORE = { word: 10, room: 50 } as const;
 
 /** One evidence item per room the student started or cleared, in delve order. */
-export function evidenceItemsOf(state: ShadowGateState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: ShadowGateState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((room) => room.started || room.cleared)
     .map((room) => {

@@ -15,16 +15,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { StormCastleTowerState } from './types.js';
 
-export const STORM_CASTLE_TOWER_GAME_ID = 'storm-castle-tower';
+const STORM_CASTLE_TOWER_GAME_ID = 'storm-castle-tower';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per right window. */
 export const SCORE = { word: 100 } as const;
 
 /** One evidence item per tower the student started or cleared, in climb order. */
-export function evidenceItemsOf(state: StormCastleTowerState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: StormCastleTowerState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((tower) => tower.started || tower.cleared)
     .map((tower) => {

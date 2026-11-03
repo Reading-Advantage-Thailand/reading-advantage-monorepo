@@ -12,12 +12,12 @@ import type { Descent } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type AbyssalWellInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: AbyssalWellInput): input is SentenceInput {
+function isSentenceInput(input: AbyssalWellInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the run needs it. */
-export interface WellSentence {
+interface WellSentence {
   id: string;
   text: string;
   words: string[];
@@ -50,7 +50,7 @@ export function sentencesOf(input: AbyssalWellInput): WellSentence[] {
 }
 
 /** The sentences a descent can take: those of 3 to 8 words, or all of them when none fits. */
-export function descentSentencesOf(input: AbyssalWellInput): WellSentence[] {
+function descentSentencesOf(input: AbyssalWellInput): WellSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= DESCENT_WORDS.min && s.words.length <= DESCENT_WORDS.max);
   return fit.length > 0 ? fit : all;

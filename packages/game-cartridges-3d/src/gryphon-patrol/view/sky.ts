@@ -10,7 +10,7 @@ import { groundLayout } from './sky-plan.js';
 /** The models the 3D view names (the hero comes from the session options). */
 export const SKY_MODELS = ['griffin', 'giant-bat', 'oak-tree', 'pine-tree', 'ancient-oak', 'bush', 'fern', 'wildflowers', 'boulder', 'rock-cluster', 'cottage', 'barn', 'well', 'hay-bale'];
 
-export interface Sky {
+interface Sky {
   /** Drifts the clouds; `seconds` is stage time. */
   drift(seconds: number): void;
 }

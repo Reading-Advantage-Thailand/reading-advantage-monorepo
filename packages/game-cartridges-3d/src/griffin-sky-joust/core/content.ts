@@ -11,12 +11,12 @@ import type { JoustSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type JoustInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: JoustInput): input is SentenceInput {
+function isSentenceInput(input: JoustInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the game needs it before play. */
-export interface SourceSentence {
+interface SourceSentence {
   id: string;
   text: string;
   words: string[];
@@ -25,7 +25,7 @@ export interface SourceSentence {
 }
 
 /** The words a game sentence can hold: 3 to 8 riders in the air. */
-export const SENTENCE_WORDS = { min: 3, max: 8 } as const;
+const SENTENCE_WORDS = { min: 3, max: 8 } as const;
 
 /** The sentences of the input, in the input's order. Sentences with fewer than 2 words are skipped. */
 export function sentencesOf(input: JoustInput): SourceSentence[] {
@@ -49,7 +49,7 @@ export function sentencesOf(input: JoustInput): SourceSentence[] {
 }
 
 /** The sentences a game can take: those of 3 to 8 words, or all of them when none fits. */
-export function joustSentencesOf(input: JoustInput): SourceSentence[] {
+function joustSentencesOf(input: JoustInput): SourceSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= SENTENCE_WORDS.min && s.words.length <= SENTENCE_WORDS.max);
   return fit.length > 0 ? fit : all;

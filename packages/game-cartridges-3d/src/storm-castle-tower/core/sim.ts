@@ -63,7 +63,7 @@ export const TUNING = {
 
 export type StormCastleTowerSimulation = Simulation<StormCastleTowerState, StormCastleTowerCommand, StormCastleTowerEvent>;
 
-export interface StormCastleTowerOptions {
+interface StormCastleTowerOptions {
   seed: number;
   helper: boolean;
 }

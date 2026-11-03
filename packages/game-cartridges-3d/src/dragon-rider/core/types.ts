@@ -116,20 +116,4 @@ export type DragonRiderEvent =
   | { type: 'rally'; active: number }
   | { type: 'rideComplete'; flock: number; coins: number };
 
-export type DragonRiderEventType = DragonRiderEvent['type'];
-
-/** Every event type the core emits; there is no game over. */
-export const DRAGON_RIDER_EVENT_TYPES: readonly DragonRiderEventType[] = [
-  'roundStarted',
-  'gateHeld',
-  'gateReached',
-  'waiting',
-  'gateChosen',
-  'flockGrew',
-  'flockShrank',
-  'wordReturns',
-  'bossAppeared',
-  'exchange',
-  'rally',
-  'rideComplete',
-];
+type DragonRiderEventType = DragonRiderEvent['type'];

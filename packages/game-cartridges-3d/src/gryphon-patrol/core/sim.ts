@@ -42,7 +42,7 @@ export const TUNING = {
   finaleMs: 2400,
 } as const;
 
-export interface PatrolOptions {
+interface PatrolOptions {
   seed: number;
   helper: boolean;
 }
@@ -50,7 +50,7 @@ export interface PatrolOptions {
 export type PatrolSimulation = Simulation<PatrolState, PatrolCommand, PatrolEvent>;
 
 /** Bats per round for a mode. */
-export function enemyCountFor(helper: boolean): number {
+function enemyCountFor(helper: boolean): number {
   return helper ? TUNING.enemiesHelper : TUNING.enemies;
 }
 

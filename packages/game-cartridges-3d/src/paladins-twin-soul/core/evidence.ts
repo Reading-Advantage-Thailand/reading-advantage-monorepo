@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { TwinSoulState } from './types.js';
 
-export const TWIN_SOUL_GAME_ID = 'paladins-twin-soul';
+const TWIN_SOUL_GAME_ID = 'paladins-twin-soul';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per target word with at least one attempt, in target order. */
-export function evidenceItemsOf(state: TwinSoulState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: TwinSoulState): StoryGameEvidenceItem[] {
   return state.targets
     .filter((word) => word.attempts > 0)
     .map((word) => ({
@@ -49,7 +49,7 @@ export function evidenceOf(state: TwinSoulState, story: EvidenceStory, seed: num
 }
 
 /** The game's own score: the points of the run. */
-export function scoreOf(state: TwinSoulState): number {
+function scoreOf(state: TwinSoulState): number {
   return state.score;
 }
 

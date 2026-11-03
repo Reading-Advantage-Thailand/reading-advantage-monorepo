@@ -13,11 +13,11 @@ import type { Lane } from '../core/index.js';
 export const GROUND_FILE = 'background.sorcerer-ziggurat';
 
 /** Meters: lane columns, cube width, climb and depth of one tier, and the z of the foot. */
-export const LANE_X: Readonly<Record<Lane, number>> = { left: -2, forward: 0, right: 2 };
+const LANE_X: Readonly<Record<Lane, number>> = { left: -2, forward: 0, right: 2 };
 export const CUBE_WIDTH = 1.7;
-export const STEP_Y = 0.8;
-export const STEP_Z = 2;
-export const FOOT_Z = 2;
+const STEP_Y = 0.8;
+const STEP_Z = 2;
+const FOOT_Z = 2;
 
 /** The world point of the top centre of a cube (tier 0 is the foot). */
 export function tierPoint(tier: number, lane: Lane): { x: number; y: number; z: number } {

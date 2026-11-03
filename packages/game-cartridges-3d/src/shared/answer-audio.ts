@@ -22,7 +22,7 @@ export type ChoiceAction =
   /** The sound is off: the view asks the student to turn it on. */
   | { kind: 'muted' };
 
-export interface AnswerAudioDriver {
+interface AnswerAudioDriver {
   /** Opens a question: its input position and the clip positions of its choices. */
   question(position: number, choices: readonly number[]): void;
   /** The open question's input position (a view acts only on the round it shows). */

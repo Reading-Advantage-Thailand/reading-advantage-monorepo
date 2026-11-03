@@ -13,7 +13,7 @@ export const RUN_MODELS = ['arch', 'gate', 'oak-tree', 'pine-tree', 'ancient-oak
 
 const CHUNKS = 5;
 
-export interface Land {
+interface Land {
   /** Keeps the chunks around the wizard at z (world z, negative ahead). */
   follow(z: number): void;
   /** The portal at the end of the road: a gate with a glowing disc. Returns the disc to fade in. */

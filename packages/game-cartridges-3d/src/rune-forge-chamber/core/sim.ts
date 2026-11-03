@@ -33,7 +33,7 @@ export const TUNING = {
 
 export type RuneForgeChamberSimulation = Simulation<RuneForgeChamberState, RuneForgeChamberCommand, RuneForgeChamberEvent>;
 
-export interface RuneForgeChamberOptions {
+interface RuneForgeChamberOptions {
   seed: number;
   helper: boolean;
 }
@@ -48,7 +48,7 @@ export function orbitPoint(baseAngle: number, rotation: number): { x: number; z:
 }
 
 /** The word the student must forge next, or null when the sentence is done. */
-export function answerOf(state: RuneForgeChamberState): string | null {
+function answerOf(state: RuneForgeChamberState): string | null {
   return state.forge[state.sentence]?.words[state.next] ?? null;
 }
 
@@ -64,7 +64,7 @@ export function rightRuneOf(state: RuneForgeChamberState): Rune | null {
 }
 
 /** True when a choice of this rune would be taken now. */
-export function choosable(state: RuneForgeChamberState, rune: Rune): boolean {
+function choosable(state: RuneForgeChamberState, rune: Rune): boolean {
   return state.phase === 'playing' && state.strike === null && rune.dimMs <= 0;
 }
 

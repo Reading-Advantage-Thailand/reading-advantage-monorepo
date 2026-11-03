@@ -9,11 +9,11 @@ import type { GateOption, RideWord } from './types.js';
 
 export type DragonRiderInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: DragonRiderInput): input is VocabularyInput {
+function isVocabularyInput(input: DragonRiderInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 
-export type WordSource = Pick<RideWord, 'id' | 'term' | 'translation' | 'position'>;
+type WordSource = Pick<RideWord, 'id' | 'term' | 'translation' | 'position'>;
 
 const norm = (text: string): string => text.trim().toLowerCase();
 
@@ -21,7 +21,7 @@ const norm = (text: string): string => text.trim().toLowerCase();
  * The words of the input, in the input's order, each with its input position. Words with an empty
  * term or meaning are skipped (their positions stay unused).
  */
-export function wordsOf(input: DragonRiderInput): WordSource[] {
+function wordsOf(input: DragonRiderInput): WordSource[] {
   if (isVocabularyInput(input)) {
     return input
       .map((item, i) => ({ id: `w-${i + 1}`, term: item.term.trim(), translation: item.translation.trim(), position: i }))
@@ -42,7 +42,7 @@ export function rideWordsOf(input: DragonRiderInput, rng: Rng, maxWords: number)
  * The meanings other words can lend as decoys: distinct from the word's meaning and each other.
  * With `distinctTerms` (answer audio, where a gate plays its term), the terms are distinct too.
  */
-export function decoysFor(word: WordSource, words: readonly WordSource[], distinctTerms = false): GateOption[] {
+function decoysFor(word: WordSource, words: readonly WordSource[], distinctTerms = false): GateOption[] {
   const seen = new Set<string>([norm(word.translation)]);
   const terms = new Set<string>([norm(word.term)]);
   const decoys: GateOption[] = [];

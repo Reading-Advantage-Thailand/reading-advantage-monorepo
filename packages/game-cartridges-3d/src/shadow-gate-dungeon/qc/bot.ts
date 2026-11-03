@@ -8,9 +8,9 @@ import { steerAround, type Circle } from '@reading-advantage/advantage-play-kit-
 import { GATE, ROOM, TUNING, rightCrystalsOf, type ShadowGateCommand, type ShadowGateState } from '../core/index.js';
 
 /** How far ahead the bot looks for shadows and crystals in the way. */
-export const LOOK_AHEAD = 2.2;
+const LOOK_AHEAD = 2.2;
 /** Shadows are avoided where they will be this many seconds ahead. */
-export const PREDICT_S = 0.4;
+const PREDICT_S = 0.4;
 
 export function nextSteer(state: ShadowGateState): ShadowGateCommand | null {
   if (state.phase !== 'playing') return null;

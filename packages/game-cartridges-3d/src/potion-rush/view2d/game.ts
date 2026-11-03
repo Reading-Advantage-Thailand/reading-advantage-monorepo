@@ -53,7 +53,7 @@ interface Layout2D {
   beltHalf: number;
 }
 
-export function layoutFor(width: number, height: number): Layout2D {
+function layoutFor(width: number, height: number): Layout2D {
   const portrait = height > width;
   const ppm = PROJECTION.ppm;
   // Portrait crops the shop to the three stations (about ±2 m, big characters for a phone; the
@@ -108,7 +108,7 @@ interface Station {
 }
 
 /** The test hook of the 2D view (`window.__apk3dView2d`): the QC driver reads and drives it. */
-export interface PotionRush2DTest {
+interface PotionRush2DTest {
   state(): PotionRushState;
   dispatch(command: PotionRushCommand): void;
   tick(steps: number): void;

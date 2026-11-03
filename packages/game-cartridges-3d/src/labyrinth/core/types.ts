@@ -10,8 +10,6 @@
 
 export type Dir = 'up' | 'down' | 'left' | 'right';
 
-export const DIRS: readonly Dir[] = ['up', 'down', 'left', 'right'];
-
 /** A cell: `col` grows to +X; `row` grows down the map (`up` is `row - 1`). */
 export interface Cell {
   col: number;
@@ -169,7 +167,7 @@ export type LabyrinthEvent =
   | { type: 'gateOpened'; cell: Cell }
   | { type: 'shiftComplete'; sentences: number };
 
-export type LabyrinthEventType = LabyrinthEvent['type'];
+type LabyrinthEventType = LabyrinthEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const LABYRINTH_EVENT_TYPES: readonly LabyrinthEventType[] = [

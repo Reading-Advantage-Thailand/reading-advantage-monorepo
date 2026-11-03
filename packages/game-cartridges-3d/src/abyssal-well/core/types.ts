@@ -114,7 +114,7 @@ export type AbyssalWellEvent =
   | { type: 'wellComplete'; descents: number }
   | { type: 'rejected'; command: string };
 
-export type AbyssalWellEventType = AbyssalWellEvent['type'];
+type AbyssalWellEventType = AbyssalWellEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const ABYSSAL_WELL_EVENT_TYPES: readonly AbyssalWellEventType[] = [

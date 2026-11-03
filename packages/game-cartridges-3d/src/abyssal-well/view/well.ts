@@ -14,7 +14,7 @@ export const WELL_MODELS: readonly string[] = [
   'dirt-ground', 'well', 'boulder', 'rock-cluster', 'crystal-cluster', 'candle-cluster', 'lantern', 'dead-tree', 'mushroom-cluster', ...CREATURES,
 ];
 
-export interface WellScene {
+interface WellScene {
   /** The glowing ring at the rim; it pulses. */
   ring: THREE.Mesh<THREE.RingGeometry, THREE.MeshBasicMaterial>;
 }

@@ -13,12 +13,12 @@ import type { Lane } from '../core/index.js';
 export const ZIGGURAT_MODELS = ['altar', 'brazier', 'candle-cluster', 'crystal-cluster', 'floor', 'floor-cracked', 'pillar'];
 
 /** Meters: the lane columns, the cube width, the climb of one tier, and the distance between tiers. */
-export const LANE_X: Readonly<Record<Lane, number>> = { left: -2.2, forward: 0, right: 2.2 };
-export const CUBE_WIDTH = 1.8;
-export const STEP_Y = 0.7;
-export const STEP_Z = 2.2;
+const LANE_X: Readonly<Record<Lane, number>> = { left: -2.2, forward: 0, right: 2.2 };
+const CUBE_WIDTH = 1.8;
+const STEP_Y = 0.7;
+const STEP_Z = 2.2;
 /** The z of the foot of the ziggurat (the hero starts here at tier 0). */
-export const FOOT_Z = 1.2;
+const FOOT_Z = 1.2;
 
 /** The top centre of the cube of `lane` at `tier` (tier 0 is the foot, lane `forward`). */
 export function tierPoint(tier: number, lane: Lane): THREE.Vector3 {

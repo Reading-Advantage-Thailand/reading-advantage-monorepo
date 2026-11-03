@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { SpellweaversState } from './types.js';
 
-export const SPELLWEAVERS_RUN_GAME_ID = 'spellweavers-run';
+const SPELLWEAVERS_RUN_GAME_ID = 'spellweavers-run';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per sentence the student started or cast, in run order. */
-export function evidenceItemsOf(state: SpellweaversState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: SpellweaversState): StoryGameEvidenceItem[] {
   return state.sentences
     .filter((sentence) => sentence.started || sentence.cleared)
     .map((sentence) => {

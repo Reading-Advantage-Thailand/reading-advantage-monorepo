@@ -13,7 +13,7 @@ export const VILLAGE_MODELS = [
   'villager', 'farmer', 'innkeeper', 'druid', 'guard', 'bandit', 'goblin-warrior',
 ];
 
-export interface Village {
+interface Village {
   /** The glowing disc on the ground at the barn door (it fades in when the barn opens). */
   door: THREE.Mesh<THREE.CircleGeometry, THREE.MeshBasicMaterial>;
   /** The warm light at the barn door. */

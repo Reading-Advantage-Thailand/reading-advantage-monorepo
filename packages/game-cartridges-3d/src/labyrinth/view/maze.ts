@@ -14,9 +14,9 @@ import { edgePoint, inwardYaw, piecesOf } from './geometry.js';
 export const MAZE_MODELS = ['floor', 'floor-cracked', 'wall', 'pillar', 'arch', 'gate', 'torch-sconce'];
 
 /** The wall models are built for this height (design section 4); pillars are scaled to match. */
-export const WALL_HEIGHT = 1.2;
+const WALL_HEIGHT = 1.2;
 
-export interface MazeSet {
+interface MazeSet {
   /** The portcullis in the gate (it rises when the gate opens); null in a bake. */
   portcullis: THREE.Object3D | null;
   /** The green glow of the open gate. */
@@ -25,7 +25,7 @@ export interface MazeSet {
   gateAt: { x: number; z: number };
 }
 
-export interface MazeOptions {
+interface MazeOptions {
   /** False in a bake: no portcullis (the 2D view draws the open gate itself). */
   dynamic?: boolean;
   /**

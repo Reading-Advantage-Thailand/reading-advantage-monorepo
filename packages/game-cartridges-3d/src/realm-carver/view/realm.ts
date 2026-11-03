@@ -15,7 +15,7 @@ export const REALM_MODELS = [
   'slime', 'goblin-warrior', 'bandit',
 ];
 
-export interface Realm {
+interface Realm {
   /** Shows the cells as the grid says. Call it every frame; it is cheap. */
   sync(grid: readonly (readonly CellState[])[], dt: number): void;
   /** Makes cells pop up from the ground, with a short delay by order. */

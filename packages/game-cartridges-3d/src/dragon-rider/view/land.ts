@@ -11,7 +11,7 @@ export const RIDER_MODELS = ['dragon-fire', 'pine-tree', 'oak-tree', 'rock-clust
 
 const CHUNKS = 5;
 
-export interface Land {
+interface Land {
   /** Keeps the chunks around the rider at world z (negative ahead). */
   follow(z: number): void;
 }

@@ -22,7 +22,7 @@ import { BACKGROUND_FILE, PROJECTION } from './projection.gen.js';
 
 const SFX: Record<Sfx, string> = { pick: 'tap', correct: 'correct', wrong: 'wrong', hit: 'hit', defeat: 'defeat', victory: 'victory', tower: 'spawn' };
 
-export interface CastleDefense2DTest {
+interface CastleDefense2DTest {
   state(): unknown;
   /** What the card waits for, and its tappable elements in game pixels (the QC driver taps them). */
   card(): { awaiting: 'step' | 'posts' | null; targets: unknown[] };

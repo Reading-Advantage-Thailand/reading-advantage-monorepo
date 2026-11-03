@@ -78,7 +78,7 @@ export const TUNING = {
 
 export type ShadowGateSimulation = Simulation<ShadowGateState, ShadowGateCommand, ShadowGateEvent>;
 
-export interface ShadowGateOptions {
+interface ShadowGateOptions {
   seed: number;
   helper: boolean;
 }

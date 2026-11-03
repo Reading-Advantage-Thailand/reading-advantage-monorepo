@@ -14,16 +14,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { RealmCarverState } from './types.js';
 
-export const REALM_CARVER_GAME_ID = 'realm-carver';
+const REALM_CARVER_GAME_ID = 'realm-carver';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per carved word and per cleared realm. */
-export const SCORE = { word: 10, realm: 50 } as const;
+const SCORE = { word: 10, realm: 50 } as const;
 
 /** One evidence item per realm the student started or cleared, in campaign order. */
-export function evidenceItemsOf(state: RealmCarverState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: RealmCarverState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((realm) => realm.started || realm.cleared)
     .map((realm) => {

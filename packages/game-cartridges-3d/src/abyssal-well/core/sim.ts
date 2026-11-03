@@ -43,7 +43,7 @@ export const TUNING = {
 
 export type AbyssalWellSimulation = Simulation<AbyssalWellState, AbyssalWellCommand, AbyssalWellEvent>;
 
-export interface AbyssalWellOptions {
+interface AbyssalWellOptions {
   seed: number;
   helper: boolean;
 }

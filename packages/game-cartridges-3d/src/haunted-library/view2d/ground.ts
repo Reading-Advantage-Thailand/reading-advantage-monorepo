@@ -20,7 +20,7 @@ export const laneZ = (floor: number): number => 4 - 3.2 * floor;
 /** The z of the wall behind a floor, where its doors stand. */
 export const wallZ = (floor: number): number => laneZ(floor) - 0.6;
 /** The height of the wall and of a door's top, in meters. */
-export const WALL_HEIGHT = 1.7;
+const WALL_HEIGHT = 1.7;
 export const DOOR_HEIGHT = 1.45;
 export const DOOR_HALF_WIDTH = 0.6;
 

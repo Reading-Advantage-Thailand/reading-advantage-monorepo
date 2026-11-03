@@ -10,12 +10,12 @@ import type { FlightWord, GateOption } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
 export type DragonFlightInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: DragonFlightInput): input is VocabularyInput {
+function isVocabularyInput(input: DragonFlightInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 
 /** A word as the flight needs it before play: id, term, meaning, input position. */
-export type WordSource = Pick<FlightWord, 'id' | 'term' | 'translation' | 'position'>;
+type WordSource = Pick<FlightWord, 'id' | 'term' | 'translation' | 'position'>;
 
 const norm = (text: string): string => text.trim().toLowerCase();
 

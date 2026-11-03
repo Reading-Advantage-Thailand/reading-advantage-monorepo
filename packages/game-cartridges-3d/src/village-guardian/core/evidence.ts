@@ -15,16 +15,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { VillageGuardianState } from './types.js';
 
-export const VILLAGE_GUARDIAN_GAME_ID = 'village-guardian';
+const VILLAGE_GUARDIAN_GAME_ID = 'village-guardian';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per rescued villager and per cleared village. */
-export const SCORE = { rescued: 10, village: 50 } as const;
+const SCORE = { rescued: 10, village: 50 } as const;
 
 /** One evidence item per village the student started or cleared, in watch order. */
-export function evidenceItemsOf(state: VillageGuardianState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: VillageGuardianState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((village) => village.started || village.cleared)
     .map((village) => {

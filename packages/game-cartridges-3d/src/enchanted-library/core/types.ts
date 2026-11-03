@@ -135,7 +135,7 @@ export type LibraryEvent =
   | { type: 'roundCleared'; roundId: string; itemId: string }
   | { type: 'visitComplete'; rounds: number };
 
-export type LibraryEventType = LibraryEvent['type'];
+type LibraryEventType = LibraryEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const LIBRARY_EVENT_TYPES: readonly LibraryEventType[] = [

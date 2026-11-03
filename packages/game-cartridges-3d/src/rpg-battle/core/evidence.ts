@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { RpgBattleState } from './types.js';
 
-export const RPG_BATTLE_GAME_ID = 'rpg-battle';
+const RPG_BATTLE_GAME_ID = 'rpg-battle';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per word with at least one answer, in target order. */
-export function evidenceItemsOf(state: RpgBattleState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: RpgBattleState): StoryGameEvidenceItem[] {
   return state.targets
     .filter((word) => word.attempts > 0)
     .map((word) => ({
@@ -49,7 +49,7 @@ export function evidenceOf(state: RpgBattleState, story: EvidenceStory, seed: nu
 }
 
 /** The game's own score: the coins of the run. */
-export const scoreOf = (state: RpgBattleState): number => state.coins;
+const scoreOf = (state: RpgBattleState): number => state.coins;
 
 /** Everything `complete()` takes: the evidence, the five-field results, and the outcome. */
 export function resultsOf(

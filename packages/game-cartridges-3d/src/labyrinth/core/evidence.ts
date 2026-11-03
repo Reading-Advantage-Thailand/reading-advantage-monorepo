@@ -15,16 +15,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { LabyrinthState } from './types.js';
 
-export const LABYRINTH_GAME_ID = 'labyrinth';
+const LABYRINTH_GAME_ID = 'labyrinth';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Coins per right word and per caught goblin. */
 export const COINS = { word: 10, goblin: 30 } as const;
 
 /** One evidence item per sentence the student started or built, in shift order. */
-export function evidenceItemsOf(state: LabyrinthState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: LabyrinthState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((s) => s.started || s.built)
     .map((s) => {

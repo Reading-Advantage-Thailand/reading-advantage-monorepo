@@ -33,7 +33,7 @@ export const ofType = <T extends CastleDefenseEvent['type']>(events: readonly Ca
 export const types = (events: readonly CastleDefenseEvent[]) => events.map((e) => e.type);
 
 /** The choice that carries the next word. */
-export const rightChoice = (sim: CastleDefenseSimulation): number => sim.state.step!.choices.find((c) => c.right)!.index;
+const rightChoice = (sim: CastleDefenseSimulation): number => sim.state.step!.choices.find((c) => c.right)!.index;
 
 /** A choice that is not the right one and not failed yet. */
 export function wrongChoice(sim: CastleDefenseSimulation): number {

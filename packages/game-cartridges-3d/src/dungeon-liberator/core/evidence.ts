@@ -15,16 +15,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { DungeonLiberatorState } from './types.js';
 
-export const DUNGEON_LIBERATOR_GAME_ID = 'dungeon-liberator';
+const DUNGEON_LIBERATOR_GAME_ID = 'dungeon-liberator';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per freed villager and per cleared room. */
-export const SCORE = { freed: 10, room: 50 } as const;
+const SCORE = { freed: 10, room: 50 } as const;
 
 /** One evidence item per room the student started or cleared, in shift order. */
-export function evidenceItemsOf(state: DungeonLiberatorState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: DungeonLiberatorState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((room) => room.started || room.cleared)
     .map((room) => {

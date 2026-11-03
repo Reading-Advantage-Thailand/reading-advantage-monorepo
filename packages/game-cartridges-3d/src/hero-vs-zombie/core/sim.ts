@@ -43,10 +43,10 @@ import type {
 
 /** The churchyard floor in meters. */
 export const YARD: Rect = { minX: -6, maxX: 6, minZ: -5, maxZ: 5 };
-export const HERO_START: Vec2 = { x: 0, z: 0 };
+const HERO_START: Vec2 = { x: 0, z: 0 };
 
 /** A grave: a zombie spawn point just inside an edge of the yard. */
-export interface Grave extends Vec2 {
+interface Grave extends Vec2 {
   id: string;
 }
 
@@ -111,7 +111,7 @@ export const TUNING = {
   listenShieldMs: 8000,
 } as const;
 
-export interface HeroVsZombieOptions {
+interface HeroVsZombieOptions {
   seed: number;
   helper: boolean;
   /** Read to Select Audio (the host gave an answer audio controller). */
@@ -121,7 +121,7 @@ export interface HeroVsZombieOptions {
 export type HeroVsZombieSimulation = Simulation<HeroVsZombieState, HeroVsZombieCommand, HeroVsZombieEvent>;
 
 /** Orbs per round for a mode. */
-export function orbCountFor(helper: boolean): number {
+function orbCountFor(helper: boolean): number {
   return helper ? TUNING.orbsHelper : TUNING.orbs;
 }
 

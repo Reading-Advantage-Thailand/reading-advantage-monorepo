@@ -12,12 +12,12 @@ import type { TowerSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type StormCastleTowerInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: StormCastleTowerInput): input is SentenceInput {
+function isSentenceInput(input: StormCastleTowerInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the climb needs it: id, text, words, and the reading look-back paragraph. */
-export interface ClimbSentence {
+interface ClimbSentence {
   id: string;
   text: string;
   words: string[];

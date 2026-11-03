@@ -147,19 +147,4 @@ export type LibraryEvent =
   | { type: 'roomCleared'; roomId: string; sentenceId: string }
   | { type: 'visitComplete'; rooms: number };
 
-export type LibraryEventType = LibraryEvent['type'];
-
-/** Every event type the core emits; there is no game over. */
-export const LIBRARY_EVENT_TYPES: readonly LibraryEventType[] = [
-  'roomStarted',
-  'doorOpened',
-  'doorWrong',
-  'bounced',
-  'dropped',
-  'landed',
-  'heroHit',
-  'courageChanged',
-  'teamRested',
-  'roomCleared',
-  'visitComplete',
-];
+type LibraryEventType = LibraryEvent['type'];

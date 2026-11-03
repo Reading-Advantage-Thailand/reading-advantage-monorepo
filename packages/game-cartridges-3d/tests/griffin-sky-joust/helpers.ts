@@ -13,7 +13,7 @@ import { nextCommand } from '../../src/griffin-sky-joust/qc/bot.js';
 
 const STORIES_DIR = join(process.cwd(), 'tests', 'fixtures', 'stories');
 
-export const loadStory = (id: string): StoryInput =>
+const loadStory = (id: string): StoryInput =>
   parseStoryInput(JSON.parse(readFileSync(join(STORIES_DIR, id, 'story.json'), 'utf8')), id);
 
 /** 12 sentences (the game caps at 4) and 6 longer sentences. */
@@ -32,7 +32,7 @@ export const tickN = (sim: JoustSimulation, n: number): JoustEvent[] => {
 };
 
 /** Ticks until `until` is true (checked after each tick) or `maxSteps` pass; returns all events. */
-export function runUntil(sim: JoustSimulation, until: () => boolean, maxSteps = 6000): { events: JoustEvent[]; hit: boolean } {
+function runUntil(sim: JoustSimulation, until: () => boolean, maxSteps = 6000): { events: JoustEvent[]; hit: boolean } {
   const events: JoustEvent[] = [];
   for (let steps = 0; steps < maxSteps; steps++) {
     if (until()) return { events, hit: true };

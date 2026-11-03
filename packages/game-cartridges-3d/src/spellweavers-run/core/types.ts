@@ -114,7 +114,7 @@ export type SpellweaversEvent =
   | { type: 'portalAppeared'; at: number }
   | { type: 'runComplete'; score: number };
 
-export type SpellweaversEventType = SpellweaversEvent['type'];
+type SpellweaversEventType = SpellweaversEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const SPELLWEAVERS_EVENT_TYPES: readonly SpellweaversEventType[] = [

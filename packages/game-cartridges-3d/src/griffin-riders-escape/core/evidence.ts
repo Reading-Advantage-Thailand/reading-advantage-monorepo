@@ -6,22 +6,18 @@
  */
 import {
   practiceOf,
-  toGameResults,
-  toOutcome,
-  type GameResults,
   type StoryGameEvidence,
   type StoryGameEvidenceItem,
-  type StoryGameOutcome,
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { EscapeState } from './types.js';
 
-export const GRIFFIN_RIDERS_ESCAPE_GAME_ID = 'griffin-riders-escape';
+const GRIFFIN_RIDERS_ESCAPE_GAME_ID = 'griffin-riders-escape';
 
 /** What the evidence needs from the story; a plain `SentenceInput` escape passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per sentence the student started or cleared, in escape order. */
-export function evidenceItemsOf(state: EscapeState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: EscapeState): StoryGameEvidenceItem[] {
   return state.sentences
     .filter((sentence) => sentence.started || sentence.cleared)
     .map((sentence) => {
@@ -56,19 +52,4 @@ export function evidenceOf(state: EscapeState, story: EvidenceStory, seed: numbe
 /** The game's own score. */
 export function scoreOf(state: EscapeState): number {
   return state.score;
-}
-
-/** Everything `complete()` takes: the evidence, the five-field results, and the outcome. */
-export function resultsOf(
-  state: EscapeState,
-  story: EvidenceStory,
-  seed: number,
-  durationMs: number,
-): { evidence: StoryGameEvidence; results: GameResults; outcome: StoryGameOutcome } {
-  const evidence = evidenceOf(state, story, seed, durationMs);
-  return {
-    evidence,
-    results: toGameResults(evidence, scoreOf(state)),
-    outcome: toOutcome(state.phase === 'complete'),
-  };
 }

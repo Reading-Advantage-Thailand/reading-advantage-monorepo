@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { DevourerSlimeState } from './types.js';
 
-export const DEVOURER_SLIME_GAME_ID = 'devourer-slime';
+const DEVOURER_SLIME_GAME_ID = 'devourer-slime';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per sentence the student started or completed, in shift order. */
-export function evidenceItemsOf(state: DevourerSlimeState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: DevourerSlimeState): StoryGameEvidenceItem[] {
   return state.shift
     .filter((s) => s.started || s.complete)
     .map((s) => {

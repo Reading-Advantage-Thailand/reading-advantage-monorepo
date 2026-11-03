@@ -108,7 +108,7 @@ export type TwinSoulEvent =
   | { type: 'strikeRejected'; shade: string }
   | { type: 'victory' };
 
-export type TwinSoulEventType = TwinSoulEvent['type'];
+type TwinSoulEventType = TwinSoulEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const TWIN_SOUL_EVENT_TYPES: readonly TwinSoulEventType[] = [

@@ -50,7 +50,7 @@ export const TUNING = {
   maxRebuilds: 8,
 } as const;
 
-export interface RuneMatchOptions {
+interface RuneMatchOptions {
   seed: number;
   helper: boolean;
 }
@@ -58,7 +58,7 @@ export interface RuneMatchOptions {
 export type RuneMatchSimulation = Simulation<RuneMatchState, RuneMatchCommand, RuneMatchEvent>;
 
 /** A line of 3 or more runes of one kind; `kind` is the word id, 'heal', or 'shield'. */
-export interface Line {
+interface Line {
   cells: Cell[];
   kind: string;
 }

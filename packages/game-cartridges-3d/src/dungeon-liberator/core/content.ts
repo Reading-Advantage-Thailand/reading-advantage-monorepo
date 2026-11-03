@@ -11,12 +11,12 @@ import { VILLAGER_KINDS, type RoomSentence, type VillagerKind } from './types.js
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type DungeonLiberatorInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: DungeonLiberatorInput): input is SentenceInput {
+function isSentenceInput(input: DungeonLiberatorInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the shift needs it: id, text, words, and the reading look-back paragraph. */
-export interface ShiftSentence {
+interface ShiftSentence {
   id: string;
   text: string;
   words: string[];

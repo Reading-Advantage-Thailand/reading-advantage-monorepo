@@ -16,12 +16,12 @@ import {
 } from '../core/index.js';
 
 /** How far ahead the bot looks for zombies and orbs in the way. */
-export const LOOK_AHEAD = 2.2;
+const LOOK_AHEAD = 2.2;
 /** Zombies are avoided where they will be this many seconds ahead. */
-export const PREDICT_S = 0.5;
+const PREDICT_S = 0.5;
 /** The Blast fires with this many walking zombies within this distance. */
-export const BLAST_RANGE = 3;
-export const BLAST_ZOMBIES = 2;
+const BLAST_RANGE = 3;
+const BLAST_ZOMBIES = 2;
 
 export function nextCommand(state: HeroVsZombieState): HeroVsZombieCommand | null {
   if (state.phase !== 'night') return null;

@@ -10,7 +10,7 @@ import { MONSTER_KINDS, type MonsterKind, type Round, type TargetWord, type Wave
 
 export type MagicDefenseInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: MagicDefenseInput): input is VocabularyInput {
+function isVocabularyInput(input: MagicDefenseInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 

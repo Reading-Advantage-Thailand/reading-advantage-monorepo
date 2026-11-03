@@ -10,7 +10,7 @@ import { MONSTER_KINDS, type Monster, type Shade, type TargetWord } from './type
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
 export type TwinSoulInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: TwinSoulInput): input is VocabularyInput {
+function isVocabularyInput(input: TwinSoulInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 

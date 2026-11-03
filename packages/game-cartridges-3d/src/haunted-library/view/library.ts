@@ -17,7 +17,7 @@ export const LIBRARY_MODELS = [
 /** Depth (z) of the things on a floor: doors in the back, the hero in front of them, the haunts nearest. */
 export const DEPTH = { door: -0.55, hero: 0.2, ghost: 0.5, bat: 0.45 } as const;
 /** The door model is scaled to fit a 3 m floor and 2.2 m of spacing. */
-export const DOOR_SCALE = 0.85;
+const DOOR_SCALE = 0.85;
 /** Height of a door's top above the floor, for the word tags. */
 export const DOOR_TOP = 2.28 * DOOR_SCALE + 0.15;
 
@@ -26,7 +26,7 @@ const HALF_PAD = 5.5 - TUNING.padX;
 
 export const floorY = (floor: number): number => floor * FLOOR_HEIGHT;
 
-export interface Library {
+interface Library {
   /** Moves the pads' arrows (call every frame with the stage time in seconds). */
   update(time: number): void;
 }

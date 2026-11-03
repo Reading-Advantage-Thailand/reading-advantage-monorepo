@@ -128,7 +128,7 @@ export type RuneMatchEvent =
   | { type: 'swapRejected'; a: Cell; b: Cell }
   | { type: 'victory' };
 
-export type RuneMatchEventType = RuneMatchEvent['type'];
+type RuneMatchEventType = RuneMatchEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const RUNE_MATCH_EVENT_TYPES: readonly RuneMatchEventType[] = [

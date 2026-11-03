@@ -10,7 +10,7 @@ import { MONSTER_KINDS, type Lane, type MonsterKind, type Round, type TargetWord
 
 export type ArchersRevengeInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: ArchersRevengeInput): input is VocabularyInput {
+function isVocabularyInput(input: ArchersRevengeInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 

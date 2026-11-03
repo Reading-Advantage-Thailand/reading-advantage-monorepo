@@ -15,13 +15,13 @@ import {
 import { TUNING } from './sim.js';
 import type { AbyssalWellState } from './types.js';
 
-export const ABYSSAL_WELL_GAME_ID = 'abyssal-well';
+const ABYSSAL_WELL_GAME_ID = 'abyssal-well';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per descent the student started or cleared, in run order. */
-export function evidenceItemsOf(state: AbyssalWellState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: AbyssalWellState): StoryGameEvidenceItem[] {
   return state.descents
     .filter((d) => d.started || d.cleared)
     .map((d) => {

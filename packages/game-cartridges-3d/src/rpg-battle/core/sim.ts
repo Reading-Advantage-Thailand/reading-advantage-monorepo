@@ -50,7 +50,7 @@ export const TUNING = {
   wordsPerMonster: 4,
 } as const;
 
-export interface RpgBattleOptions {
+interface RpgBattleOptions {
   seed: number;
   helper: boolean;
 }

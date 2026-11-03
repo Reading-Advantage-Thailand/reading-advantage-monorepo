@@ -14,9 +14,9 @@ export const HALL_MODELS = [
 ];
 
 /** The cover colors of the books, by slot. */
-export const BOOK_COLORS = [0x8b5cf6, 0x3b82f6, 0x22c55e, 0xf59e0b, 0xef4444, 0x14b8a6] as const;
+const BOOK_COLORS = [0x8b5cf6, 0x3b82f6, 0x22c55e, 0xf59e0b, 0xef4444, 0x14b8a6] as const;
 
-export interface Hall {
+interface Hall {
   /** The glowing ring on the floor; it pulses with the visit. */
   ring: THREE.Mesh<THREE.RingGeometry, THREE.MeshBasicMaterial>;
 }

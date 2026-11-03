@@ -26,9 +26,6 @@ export function archerPoint(angle: number): { x: number; z: number } {
   return { x: Math.sin(angle) * ARCHER_RADIUS, z: Math.cos(angle) * ARCHER_RADIUS };
 }
 
-/** The heading in degrees (0 faces +Z) of someone who looks along the direction (dx, dz). */
-export const headingOfDirection = (dx: number, dz: number): number => (Math.atan2(dx, dz) * 180) / Math.PI;
-
 /** The shortest signed difference between two angles in radians. */
 export function angleDelta(from: number, to: number): number {
   const full = Math.PI * 2;

@@ -20,7 +20,7 @@ type V3 = [number, number, number];
 
 export { LAYOUT, beltX } from './layout.js';
 
-export interface Shop {
+interface Shop {
   /** The alchemist, or null for a static bake (the 2D background has no characters). */
   alchemist: Actor | null;
   /** The brew material of each cauldron (its color and glow show the order's progress). */

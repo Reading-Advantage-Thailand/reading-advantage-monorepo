@@ -61,7 +61,7 @@ export const TUNING = {
   deadZone: 0.35,
 } as const;
 
-export interface RealmCarverOptions {
+interface RealmCarverOptions {
   seed: number;
   helper: boolean;
 }
@@ -100,7 +100,7 @@ export function wildCount(grid: readonly (readonly CellState[])[]): number {
 }
 
 /** Every cell of the board in row order. */
-export function cellsOf(): Cell[] {
+function cellsOf(): Cell[] {
   const cells: Cell[] = [];
   for (let row = 0; row < BOARD_SIZE; row++) for (let col = 0; col < BOARD_SIZE; col++) cells.push({ col, row });
   return cells;

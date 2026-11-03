@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { JoustState } from './types.js';
 
-export const GRIFFIN_SKY_JOUST_GAME_ID = 'griffin-sky-joust';
+const GRIFFIN_SKY_JOUST_GAME_ID = 'griffin-sky-joust';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per sentence the student struck a rider of, in game order. */
-export function evidenceItemsOf(state: JoustState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: JoustState): StoryGameEvidenceItem[] {
   return state.sentences
     .filter((sentence) => sentence.started || sentence.cleared)
     .map((sentence) => {

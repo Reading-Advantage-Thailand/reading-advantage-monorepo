@@ -133,18 +133,4 @@ export type EscapeEvent =
   | { type: 'sentenceCast'; sentence: number; id: string }
   | { type: 'escapeComplete'; score: number };
 
-export type EscapeEventType = EscapeEvent['type'];
-
-/** Every event type the core emits; there is no game over. */
-export const ESCAPE_EVENT_TYPES: readonly EscapeEventType[] = [
-  'waveMade',
-  'laneChanged',
-  'gatePassed',
-  'wordCollected',
-  'stormHit',
-  'stormDodged',
-  'courageLost',
-  'rested',
-  'sentenceCast',
-  'escapeComplete',
-];
+type EscapeEventType = EscapeEvent['type'];

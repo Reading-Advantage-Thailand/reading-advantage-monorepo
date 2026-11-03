@@ -99,7 +99,7 @@ export type AlchemistsSynthesisEvent =
   | { type: 'elixirBrewed'; round: number; wordId: string; brewed: number }
   | { type: 'synthesisComplete'; rounds: number };
 
-export type AlchemistsSynthesisEventType = AlchemistsSynthesisEvent['type'];
+type AlchemistsSynthesisEventType = AlchemistsSynthesisEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const ALCHEMISTS_SYNTHESIS_EVENT_TYPES: readonly AlchemistsSynthesisEventType[] = [

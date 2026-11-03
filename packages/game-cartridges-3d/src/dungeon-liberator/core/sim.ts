@@ -89,7 +89,7 @@ export const TUNING = {
   pathGap: 0.05,
 } as const;
 
-export interface DungeonLiberatorOptions {
+interface DungeonLiberatorOptions {
   seed: number;
   helper: boolean;
 }

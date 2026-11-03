@@ -75,7 +75,7 @@ export interface Presentation {
   settle(): Promise<void>;
 }
 
-export interface PlayerOptions {
+interface PlayerOptions {
   sim: CastleDefenseSimulation;
   story: { id: string; level: StoryGameEvidence['level'] };
   seed: number;

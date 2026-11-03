@@ -5,7 +5,7 @@
  */
 
 /** Props along the ground below the patrol: name, count, and the depth band (0 near, 1 far). */
-export const GROUND_PROPS: [string, number][] = [
+const GROUND_PROPS: [string, number][] = [
   ['oak-tree', 9], ['pine-tree', 10], ['ancient-oak', 2], ['bush', 8], ['boulder', 3], ['rock-cluster', 3],
   ['cottage', 2], ['well', 1], ['hay-bale', 3], ['wildflowers', 6], ['fern', 4], ['barn', 1],
 ];
@@ -18,7 +18,7 @@ export const SIZES = { gryphon: 3.6, bat: 2.4, rider: 1.5 } as const;
 export const BAT_COLORS = [0x9b6bff, 0x3ec6ff, 0xffc83e, 0xff7fb0] as const;
 
 /** A small seeded random (view only). */
-export function rng(seed: number): () => number {
+function rng(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;
@@ -30,7 +30,7 @@ export function rng(seed: number): () => number {
 }
 
 /** One prop placed on the ground: name, x across (core meters, centered on the sky), depth 0..1, scale, flip. */
-export interface Placed {
+interface Placed {
   name: string;
   x: number;
   depth: number;

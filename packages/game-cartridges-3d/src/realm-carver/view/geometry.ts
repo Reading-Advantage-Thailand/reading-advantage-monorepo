@@ -3,11 +3,11 @@
  * centered on the origin; one cell is `CELL_M` meters; `col` grows to +X and `row` grows to +Z
  * (toward the camera), so `up` on the board is away from the camera.
  */
-import { BOARD_SIZE, type Cell } from '../core/index.js';
+import { BOARD_SIZE } from '../core/index.js';
 
 export const CELL_M = 1;
 
-export interface Ground {
+interface Ground {
   x: number;
   z: number;
 }
@@ -17,12 +17,10 @@ export function worldOf(pos: { col: number; row: number }): Ground {
   return { x: (pos.col - (BOARD_SIZE - 1) / 2) * CELL_M, z: (pos.row - (BOARD_SIZE - 1) / 2) * CELL_M };
 }
 
-export const worldOfCell = (cell: Cell): Ground => worldOf(cell);
-
 /** Half the board size in meters. */
 export const HALF_M = (BOARD_SIZE * CELL_M) / 2;
 
-export interface CameraFit {
+interface CameraFit {
   /** Camera offset from the target, in meters. */
   offset: [number, number, number];
   /** The ground point the camera looks at (z is shifted so the board sits below the top HUD). */

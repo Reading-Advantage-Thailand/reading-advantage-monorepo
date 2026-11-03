@@ -163,7 +163,7 @@ export type VillageGuardianEvent =
   | { type: 'villageSaved'; villageId: string; sentenceId: string }
   | { type: 'watchComplete'; villages: number };
 
-export type VillageGuardianEventType = VillageGuardianEvent['type'];
+type VillageGuardianEventType = VillageGuardianEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const VILLAGE_GUARDIAN_EVENT_TYPES: readonly VillageGuardianEventType[] = [

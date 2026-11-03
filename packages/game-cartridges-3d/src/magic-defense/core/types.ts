@@ -125,7 +125,7 @@ export type MagicDefenseEvent =
   | { type: 'rejected'; command: string }
   | { type: 'victory' };
 
-export type MagicDefenseEventType = MagicDefenseEvent['type'];
+type MagicDefenseEventType = MagicDefenseEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const MAGIC_DEFENSE_EVENT_TYPES: readonly MagicDefenseEventType[] = [

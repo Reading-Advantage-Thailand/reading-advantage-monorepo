@@ -11,8 +11,8 @@ import type { Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 export const SCENE_MODELS = ['griffin', 'giant-bat', 'oak-tree', 'pine-tree', 'rock-cluster', 'bush'];
 
 /** Arena pixels per world meter. */
-export const PX_PER_M = 40;
-export const WORLD_W = ARENA.width / PX_PER_M;
+const PX_PER_M = 40;
+const WORLD_W = ARENA.width / PX_PER_M;
 export const WORLD_H = ARENA.height / PX_PER_M;
 
 /** World x of an arena x, centered on the stage. */
@@ -30,7 +30,7 @@ const PLAN: [string, number, number, number][] = [
   ['pine-tree', 6.4, 3.0, 1.05], ['oak-tree', 8.6, 5.0, 1.0], ['bush', 10.4, 2.4, 1.0], ['pine-tree', 11.6, 4.0, 1.0],
 ];
 
-export interface Sky {
+interface Sky {
   /** Drifts the clouds; `seconds` is the frame time. */
   update(seconds: number): void;
 }

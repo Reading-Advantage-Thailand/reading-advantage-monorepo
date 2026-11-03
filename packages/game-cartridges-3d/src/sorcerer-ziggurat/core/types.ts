@@ -102,7 +102,7 @@ export type ZigguratEvent =
   | { type: 'ritualCleared'; ritualId: string; sentenceId: string }
   | { type: 'climbComplete'; rituals: number };
 
-export type ZigguratEventType = ZigguratEvent['type'];
+type ZigguratEventType = ZigguratEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const ZIGGURAT_EVENT_TYPES: readonly ZigguratEventType[] = [

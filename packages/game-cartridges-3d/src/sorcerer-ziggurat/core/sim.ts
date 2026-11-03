@@ -20,7 +20,7 @@ export const TUNING = {
 
 export type ZigguratSimulation = Simulation<ZigguratState, ZigguratCommand, ZigguratEvent>;
 
-export interface ZigguratOptions {
+interface ZigguratOptions {
   seed: number;
   helper: boolean;
 }

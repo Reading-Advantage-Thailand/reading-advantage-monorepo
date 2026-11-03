@@ -14,7 +14,7 @@ import {
 
 const STORIES_DIR = join(process.cwd(), 'tests', 'fixtures', 'stories');
 
-export const loadStory = (id: string): StoryInput =>
+const loadStory = (id: string): StoryInput =>
   parseStoryInput(JSON.parse(readFileSync(join(STORIES_DIR, id, 'story.json'), 'utf8')), id);
 
 export const STORY = loadStory('pip-is-brave');

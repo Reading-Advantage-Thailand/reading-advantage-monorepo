@@ -11,7 +11,7 @@ import type { Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 
 export const DUNGEON_MODELS = ['floor', 'floor-cracked', 'wall', 'wall-corner', 'arch', 'gate', 'pillar', 'cell-bars', 'hanging-cage', 'torch-sconce', 'bone-pile', 'chains', 'skeleton', 'crystal-cluster'];
 
-export interface Dungeon {
+interface Dungeon {
   /** The gate (it rises when the sentence is built). */
   portcullis: THREE.Object3D | null;
   /** The glow in the arch when the gate is open. */

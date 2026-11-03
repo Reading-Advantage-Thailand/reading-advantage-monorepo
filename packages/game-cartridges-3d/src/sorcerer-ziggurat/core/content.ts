@@ -12,12 +12,12 @@ import { LANES, type Cube, type Lane, type Ritual } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type ZigguratInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: ZigguratInput): input is SentenceInput {
+function isSentenceInput(input: ZigguratInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the climb needs it. */
-export interface ClimbSentence {
+interface ClimbSentence {
   id: string;
   text: string;
   words: string[];
@@ -26,13 +26,13 @@ export interface ClimbSentence {
 }
 
 /** The words a ritual can hold: 3 to 8 tiers. */
-export const RITUAL_WORDS = { min: 3, max: 8 } as const;
+const RITUAL_WORDS = { min: 3, max: 8 } as const;
 
 /** The most decoy cubes on one tier. */
 export const DECOYS = 2;
 
 /** The sentences of the input, in the input's order. Sentences with fewer than 2 words are skipped. */
-export function sentencesOf(input: ZigguratInput): ClimbSentence[] {
+function sentencesOf(input: ZigguratInput): ClimbSentence[] {
   if (isSentenceInput(input)) {
     return input
       .map((item, i) => {
@@ -53,7 +53,7 @@ export function sentencesOf(input: ZigguratInput): ClimbSentence[] {
 }
 
 /** The sentences a ritual can take: those of 3 to 8 words, or all of them when none fits. */
-export function ritualSentencesOf(input: ZigguratInput): ClimbSentence[] {
+function ritualSentencesOf(input: ZigguratInput): ClimbSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= RITUAL_WORDS.min && s.words.length <= RITUAL_WORDS.max);
   return fit.length > 0 ? fit : all;

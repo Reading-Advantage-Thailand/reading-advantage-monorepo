@@ -13,12 +13,12 @@ import type { ShiftSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type LabyrinthInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: LabyrinthInput): input is SentenceInput {
+function isSentenceInput(input: LabyrinthInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the shift needs it, before its record. */
-export type StorySentence = Pick<ShiftSentence, 'id' | 'text' | 'words' | 'translation' | 'paragraph'>;
+type StorySentence = Pick<ShiftSentence, 'id' | 'text' | 'words' | 'translation' | 'paragraph'>;
 
 /** The words a sentence of the shift can have. */
 export const SENTENCE_WORDS = { min: 3, max: 7 } as const;

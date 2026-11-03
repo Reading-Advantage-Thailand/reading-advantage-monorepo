@@ -2,13 +2,10 @@
 export * from './types.js';
 export {
   SENTENCE_WORDS,
-  isSentenceInput,
   orbWordsOf,
   sentencesOf,
   shiftOf,
   shiftSentencesOf,
-  type LabyrinthInput,
-  type StorySentence,
 } from './content.js';
 export {
   MAZES,
@@ -17,7 +14,6 @@ export {
   canMove,
   cellIndex,
   cellsOf,
-  cloneMaze,
   distancesFrom,
   exitsOf,
   inBounds,
@@ -40,15 +36,11 @@ export {
   goblinSpeedFor,
   isLastSentence,
   rightOrbOf,
-  type LabyrinthOptions,
   type LabyrinthSimulation,
 } from './sim.js';
 export {
   COINS,
-  LABYRINTH_GAME_ID,
-  evidenceItemsOf,
   evidenceOf,
   resultsOf,
   scoreOf,
-  type EvidenceStory,
 } from './evidence.js';

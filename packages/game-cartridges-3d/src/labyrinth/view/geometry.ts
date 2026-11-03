@@ -5,7 +5,7 @@
  */
 import { CELL_M, wallEdgesOf, type Cell, type Dir, type Hero, type LabyrinthCommand, type Maze } from '../core/index.js';
 
-export interface Ground {
+interface Ground {
   x: number;
   z: number;
 }
@@ -18,14 +18,14 @@ export function worldOf(maze: Pick<Maze, 'cols' | 'rows'>, pos: { x: number; y: 
 export const worldOfCell = (maze: Pick<Maze, 'cols' | 'rows'>, cell: Cell): Ground => worldOf(maze, { x: cell.col, y: cell.row });
 
 /** Half the maze size in meters (the ground bounds of the 2D bake add a margin to these). */
-export const halfSize = (maze: Pick<Maze, 'cols' | 'rows'>): Ground => ({ x: (maze.cols * CELL_M) / 2, z: (maze.rows * CELL_M) / 2 });
+const halfSize = (maze: Pick<Maze, 'cols' | 'rows'>): Ground => ({ x: (maze.cols * CELL_M) / 2, z: (maze.rows * CELL_M) / 2 });
 
-export interface Piece extends Ground {
+interface Piece extends Ground {
   /** Degrees about +Y. */
   yaw: number;
 }
 
-export interface MazePieces {
+interface MazePieces {
   floors: Piece[];
   /** One wall model per wall edge: a wall between two cells (or on the border). */
   walls: Piece[];
@@ -97,7 +97,7 @@ export function heldTurn(held: Dir | null, hero: Pick<Hero, 'dir' | 'queued'>): 
   return { type: 'turn', dir: held };
 }
 
-export interface CameraFit {
+interface CameraFit {
   /** Camera offset from the target, in meters. */
   offset: [number, number, number];
   /** The ground point the camera looks at (z is shifted so the maze sits below the top HUD). */

@@ -16,7 +16,7 @@
  *   storm: stormCast, roundShown
  */
 import { createRng, type Rng, type Simulation } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { distinctTerms, formationOf, roundOf, standingCastles, targetsOf, type MagicDefenseInput } from './content.js';
+import { distinctTerms, formationOf, roundOf, targetsOf, type MagicDefenseInput } from './content.js';
 import type { MagicDefenseCommand, MagicDefenseEvent, MagicDefenseState, Round, TargetWord, WaveEnemy } from './types.js';
 
 /** Every tuning number of the game. */
@@ -39,7 +39,7 @@ export const TUNING = {
   maxMana: 100,
 } as const;
 
-export interface MagicDefenseOptions {
+interface MagicDefenseOptions {
   seed: number;
   helper: boolean;
 }

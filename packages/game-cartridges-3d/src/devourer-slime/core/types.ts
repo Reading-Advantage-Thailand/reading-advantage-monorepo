@@ -130,7 +130,7 @@ export type DevourerSlimeEvent =
   | { type: 'sentenceComplete'; sentenceId: string }
   | { type: 'shiftComplete'; sentences: number; size: number };
 
-export type DevourerSlimeEventType = DevourerSlimeEvent['type'];
+type DevourerSlimeEventType = DevourerSlimeEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const DEVOURER_SLIME_EVENT_TYPES: readonly DevourerSlimeEventType[] = [

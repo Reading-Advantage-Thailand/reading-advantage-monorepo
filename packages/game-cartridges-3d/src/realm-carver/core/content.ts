@@ -11,12 +11,12 @@ import { MONSTER_KINDS, type MonsterKind, type RealmSentence } from './types.js'
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type RealmCarverInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: RealmCarverInput): input is SentenceInput {
+function isSentenceInput(input: RealmCarverInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the campaign needs it. */
-export interface CampaignSentence {
+interface CampaignSentence {
   id: string;
   text: string;
   words: string[];

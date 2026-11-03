@@ -11,12 +11,12 @@ import { VILLAGER_KINDS, type VillageSentence, type VillagerKind } from './types
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type VillageGuardianInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: VillageGuardianInput): input is SentenceInput {
+function isSentenceInput(input: VillageGuardianInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the watch needs it: id, text, words, and the reading look-back paragraph. */
-export interface WatchSentence {
+interface WatchSentence {
   id: string;
   text: string;
   words: string[];

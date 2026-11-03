@@ -12,12 +12,12 @@ import type { ForgeSentence } from './types.js';
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
 export type RuneForgeChamberInput = PracticeInput | SentenceInput;
 
-export function isSentenceInput(input: RuneForgeChamberInput): input is SentenceInput {
+function isSentenceInput(input: RuneForgeChamberInput): input is SentenceInput {
   return Array.isArray(input);
 }
 
 /** A sentence as the forge needs it: id, text, words, and the reading look-back paragraph. */
-export interface SourceSentence {
+interface SourceSentence {
   id: string;
   text: string;
   words: string[];
@@ -26,7 +26,7 @@ export interface SourceSentence {
 }
 
 /** The words a blade can hold, and the runes in one wave. */
-export const BLADE_WORDS = { min: 3, max: 8 } as const;
+const BLADE_WORDS = { min: 3, max: 8 } as const;
 export const WAVE_RUNES = 4;
 
 /** A word compared without case and edge punctuation ("Pip," equals "pip"). */
@@ -56,7 +56,7 @@ export function sentencesOf(input: RuneForgeChamberInput): SourceSentence[] {
 }
 
 /** The sentences a blade can take: those of 3 to 8 words, or all of them when none fits. */
-export function bladeSentencesOf(input: RuneForgeChamberInput): SourceSentence[] {
+function bladeSentencesOf(input: RuneForgeChamberInput): SourceSentence[] {
   const all = sentencesOf(input);
   const fit = all.filter((s) => s.words.length >= BLADE_WORDS.min && s.words.length <= BLADE_WORDS.max);
   return fit.length > 0 ? fit : all;

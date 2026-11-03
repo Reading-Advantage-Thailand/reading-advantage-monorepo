@@ -39,7 +39,7 @@ export const TUNING = {
   portalHoldMs: 1800,
 } as const;
 
-export interface SpellweaversOptions {
+interface SpellweaversOptions {
   seed: number;
   helper: boolean;
 }
@@ -47,7 +47,7 @@ export interface SpellweaversOptions {
 export type SpellweaversSimulation = Simulation<SpellweaversState, SpellweaversCommand, SpellweaversEvent>;
 
 /** Orbs per row for a mode. */
-export function laneCountFor(helper: boolean): number {
+function laneCountFor(helper: boolean): number {
   return helper ? TUNING.lanesHelper : TUNING.lanes;
 }
 

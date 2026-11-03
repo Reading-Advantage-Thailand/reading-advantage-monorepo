@@ -14,7 +14,7 @@ import { CHUNK, FOREST, PATTERN, rng, VILLAGE, type Kind } from './land-plan.js'
 
 const CHUNKS = 5;
 
-export interface Land {
+interface Land {
   /** Keeps the chunks around the dragon at z (world z, negative ahead). */
   follow(z: number): void;
   /** A rocky hill for the dark dragon. */

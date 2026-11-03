@@ -89,7 +89,7 @@ export const SPAWN_POINTS: readonly Vec2[] = Array.from({ length: TUNING.spawnPo
   return { x: Math.cos(a) * TUNING.spawnRing, z: Math.sin(a) * TUNING.spawnRing };
 });
 
-export interface DevourerSlimeOptions {
+interface DevourerSlimeOptions {
   seed: number;
   helper: boolean;
 }
@@ -105,7 +105,7 @@ export function guardCountFor(helper: boolean): number {
 }
 
 /** The least distance between two bubbles for a slime of `size`: it must pass between them. */
-export function bubbleSpacingFor(size: number): number {
+function bubbleSpacingFor(size: number): number {
   return Math.max(TUNING.bubbleSpacing, 2 * radiusOf(size) + TUNING.bubbleGap);
 }
 
