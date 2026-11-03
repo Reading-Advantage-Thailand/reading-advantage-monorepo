@@ -8,6 +8,8 @@ export const QUIZ_PASS_THRESHOLD = 70;
 
 /**
  * Grades a set of quiz answers for a lesson and updates progress.
+ * A failed attempt returns `correctAnswer` only for the questions the
+ * learner answered right; other questions carry an empty string.
  */
 export async function submitQuizAnswers({
   db, user, tenant, input,
@@ -34,7 +36,10 @@ export async function submitQuizAnswers({
 
   await updateUserProgress({ db, user, tenant, input: { lessonId: input.lessonId, status: passed ? "completed" : "in_progress", score } });
 
-  return { lessonId: input.lessonId, score, passed, total: questions.length, correctCount, details };
+  // A failed attempt must not hand out the key: reveal only the answers the learner got right.
+  const visibleDetails = passed ? details : details.map((d) => (d.isCorrect ? d : { ...d, correctAnswer: "" }));
+
+  return { lessonId: input.lessonId, score, passed, total: questions.length, correctCount, details: visibleDetails };
 }
 
 /**
