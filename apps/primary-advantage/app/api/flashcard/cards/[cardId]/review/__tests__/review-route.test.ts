@@ -133,7 +133,7 @@ describe("POST /api/flashcard/cards/[cardId]/review", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await review({ rating: 3 })).status).toBe(403);
   });
