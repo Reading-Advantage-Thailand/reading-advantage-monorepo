@@ -137,7 +137,7 @@ describe("Phase 3 Storytime decodable UI", () => {
     expect(page, "a shipped CVC word must occur in a decodable page").toBeDefined();
     page!.text = page!.text!.replace(new RegExp(`\\b${word}\\b`, "i"), word[0].toUpperCase() + word.slice(1));
     const { audio } = await renderDecodable(week);
-    fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${word.toUpperCase()}$`) }));
+    fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${word.toUpperCase()}$`, "i") }));
     expect(audio.getAttribute("src")).toContain("phonemes/daniel/");
   });
 
