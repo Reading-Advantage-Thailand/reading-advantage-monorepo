@@ -51,11 +51,14 @@ refuses any other item, for example `abc`, `3-1`, or `0`.
    code 64 and changes nothing. Run all weeks again.
 5. **Merge at the recorded commit.** A run at the commit that `source.json` records adds its
    weeks to the file list. The list keeps the other weeks.
-6. **Stop at a leftover file.** The receiver looks in the content folder for a file with a name
-   that holds `.tmp-` or `.orig-`. A failed run can leave such a file. The receiver prints the
+6. **Stop at a leftover file.** The receiver looks in the content folder for a file whose name
+   ends with `.tmp-<suffix>` or `.orig-<suffix>`, where the suffix holds letters, digits, and
+   underscores. The pattern is `\.(tmp|orig)-\w+$`, and it is the same pattern as the code.
+   A failed run can leave such a file. The receiver prints the
    exact path of each leftover file and exits with code 1 before it reads or writes anything.
    The reason: a `.orig-` file can hold the only copy of an original, and
    a new run must not hide it. A warning is not enough, because the operator can miss it.
+   A match may also be an unrelated file that a user made, for example `operator.orig-notes`.
    Follow "Recover from a failed run", then run the receiver again.
 
 ### Exit codes
@@ -64,7 +67,7 @@ refuses any other item, for example `abc`, `3-1`, or `0`.
 | --- | --- |
 | 0 | The receiver wrote all files. |
 | 64 | The request is wrong: a bad argument, a commit that does not exist, or a subset run at a new commit. Nothing changed. |
-| 1 | Another failure: a source file is missing, a week breaks the contract, a leftover file stands in the content folder, or a write failed. The content folder is as it was before the run, unless the message says that it is not fully restored. |
+| 1 | Another failure: a source file is missing, a week breaks the contract, a leftover file or a link stands in the content folder, or a write failed. The content folder is as it was before the run, unless the message says that it is not fully restored. |
 
 ## Verify the output
 
@@ -102,6 +105,9 @@ file, do these steps. Do not delete any file and do not run `git restore` before
      `git diff -- <target>` and check that it shows the changes you expect.
    - To use the committed file: run `git restore <target>`. Do this only when the copy holds
      nothing that you need.
+   - To discard an untracked target: `git restore <target>` fails and `git diff -- <target>` shows
+     nothing, because Git does not track the file. Delete the target to discard it. Keep the copy
+     with `cp <copy> <target>` when the copy holds bytes that Git does not hold.
 5. After each target holds the bytes you chose, delete the `.orig-` copy and the `.tmp-` files for
    that target. This is an explicit decision. A clean `git status` does not prove that the
    original came back, because `git restore` also discards uncommitted changes.

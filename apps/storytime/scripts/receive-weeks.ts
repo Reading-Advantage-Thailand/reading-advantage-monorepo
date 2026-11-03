@@ -16,6 +16,7 @@ import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import {
   existsSync,
+  lstatSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -23,9 +24,10 @@ import {
   rmSync,
   rmdirSync,
   writeFileSync,
+  type Stats,
 } from "node:fs";
 import { homedir } from "node:os";
-import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { weekSchema, type StorytimeWeek, type WeekMedia } from "../lib/contracts/week";
@@ -44,7 +46,7 @@ export interface ReceivedWeek {
 }
 
 /** The rule that checks each kind of media (generation rules, draft 2). */
-const MEDIA_RULES = {
+export const MEDIA_RULES = {
   bookAudio: "10.1",
   bookPicture: "9.1",
   phoneme: "5.4",
@@ -152,7 +154,57 @@ export function mediaOf(week: StorytimeWeek): WeekMedia[] {
     for (const card of strip.cards) add(card.audio, "phoneme", MEDIA_RULES.phoneme);
   }
 
+  for (const script of week.scripts) {
+    for (const step of script.steps) {
+      for (const word of step.blendDrill?.words ?? []) {
+        for (const clip of word.audio ?? []) add(clip, "phoneme", MEDIA_RULES.phoneme);
+      }
+    }
+    for (const card of script.recall?.items ?? []) {
+      add(card.audio, "phoneme", MEDIA_RULES.phoneme);
+    }
+  }
+
   return [...files.values(), ...missing.values()];
+}
+
+/** One media path that a week names, with the field path that holds it. */
+export interface WeekMediaPath {
+  /** The field path inside the week, for example `books.0.pages.1.image.file`. */
+  path: string;
+  /** The file that the path holds. */
+  file: string;
+}
+
+/** The file extensions that a media path ends with. */
+const MEDIA_EXTENSION = /\.(mp3|wav|m4a|aac|ogg|opus|mp4|m4v|webm|mov|jpg|jpeg|png|webp|gif|svg|pdf)$/i;
+
+/**
+ * Lists every media path that a week names, with the field path that holds it (finding F13).
+ *
+ * The walk reads every string of the week, so a media path in a field that the media list does
+ * not read still shows up. The list of the media paths of a week is the proof that the media
+ * list covers them.
+ * @param week The week, or a value of another shape.
+ * @returns One entry per media path, in the order of the walk.
+ */
+export function mediaPathsOf(week: unknown): WeekMediaPath[] {
+  const found: WeekMediaPath[] = [];
+  const walk = (value: unknown, path: string[]): void => {
+    if (typeof value === "string") {
+      if (MEDIA_EXTENSION.test(value)) found.push({ path: path.join("."), file: value });
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach((entry, index) => walk(entry, [...path, String(index)]));
+      return;
+    }
+    if (value && typeof value === "object") {
+      for (const [key, entry] of Object.entries(value)) walk(entry, [...path, key]);
+    }
+  };
+  walk(week, []);
+  return found;
 }
 
 /**
@@ -408,7 +460,9 @@ function suffix(): string {
  * back, deletes the new files and the stage files, and removes the folders it created. It removes
  * a created folder only when the folder is empty, so a file that the run does not own survives
  * (Review A F56); a folder that stays is named. It keeps the first error. If an original cannot be
- * put back, it saves a copy next to the target and names both.
+ * put back, it saves a copy next to the target and names both. The copy is written to a stage
+ * name and renamed after the full write, so a fault in the middle of the copy leaves no partial
+ * copy; the error names the copy that it removed or that it kept (finding F98).
  * @param files The files to write; the last file is written last.
  * @param overrides File operations to replace; a test uses this to make a step fail.
  * @throws The first error when the rollback finished, or a `RollbackIncompleteError`.
@@ -453,11 +507,25 @@ export function writeStaged(files: StagedFile[], overrides: Partial<StagedOps> =
         let note = "its new text stays";
         if (original) {
           const copy = `${path}.orig-${suffix()}`;
+          const stage = `${path}.tmp-${suffix()}`;
+          let written = false;
           try {
-            ops.write(copy, original, "wx");
+            ops.write(stage, original, "wx");
+            written = true;
+            ops.rename(stage, copy);
             note = `its original is kept in ${copy}`;
-          } catch {
-            note = "its original could not be kept";
+          } catch (copyError) {
+            if (written) {
+              note = `its original could not be kept under its own name (${(copyError as Error).message}); the full copy stays in ${stage}`;
+            } else {
+              // A fault in the middle of the copy leaves a partial file. Remove it and name it.
+              try {
+                ops.remove(stage);
+                note = `its original could not be kept (${(copyError as Error).message}); the partial copy ${stage} was removed`;
+              } catch {
+                note = `its original could not be kept (${(copyError as Error).message}); the partial copy ${stage} stays`;
+              }
+            }
           }
         }
         problems.push(`${path} is not restored (${(error as Error).message}); ${note}`);
@@ -501,6 +569,53 @@ export function findLeftovers(directory: string): string[] {
   return found;
 }
 
+/**
+ * Lists the links of a folder tree, without following a link (finding F78).
+ *
+ * The leftover scanner reads the entries of a folder, and a link to a folder is not a folder
+ * entry. A link can send a week outside the content folder, so the receiver stops at one.
+ * @param directory The content folder.
+ * @returns The exact paths of the links, in folder order.
+ */
+export function findLinks(directory: string): string[] {
+  const found: string[] = [];
+  if (!existsSync(directory)) return found;
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = resolve(directory, entry.name);
+    if (entry.isSymbolicLink()) {
+      found.push(path);
+      continue;
+    }
+    if (entry.isDirectory()) found.push(...findLinks(path));
+  }
+  return found;
+}
+
+/**
+ * Gives the first link of a target path, from a root folder down (finding F84).
+ *
+ * The stage file of a write sits in the folder of the target, so a link at any folder of the
+ * way sends the write outside the content folder.
+ * @param root The content folder.
+ * @param target The absolute path of the target file.
+ * @returns The path of the link, or `null` when the path holds no link.
+ */
+export function linkInPath(root: string, target: string): string | null {
+  let current = root;
+  for (const part of relative(root, target).split(sep)) {
+    if (part.length === 0) continue;
+    current = resolve(current, part);
+    let stat: Stats;
+    try {
+      stat = lstatSync(current);
+    } catch {
+      return null;
+    }
+    if (stat.isSymbolicLink()) return current;
+  }
+  return null;
+}
+
 /** The help text of `--help`. */
 const USAGE = [
   "Usage: node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit <sha> [options]",
@@ -513,6 +628,7 @@ const USAGE = [
   "Exit codes: 0 success; 64 wrong request, nothing changed; 1 other failure.",
   "  After a code 1 the content folder is restored, unless the message says it is not fully restored.",
   "  A leftover .tmp- or .orig- file in the content folder stops a run with code 1; see the runbook.",
+  "  A link in the content folder stops a run with code 1; it can send a week outside the folder.",
 ].join("\n");
 
 /** The repository root that holds `apps/storytime`, found from this file. */
@@ -571,10 +687,22 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
   if (leftovers.length > 0) {
     console.error(
       [
-        `The content folder holds ${leftovers.length} leftover file(s) from a failed run:`,
+        `The content folder holds ${leftovers.length} possible recovery file(s):`,
         ...leftovers.map((path) => `  ${path}`),
-        "Nothing was read or written. A .orig- file can hold the only copy of an original.",
+        "Nothing was read or written. A match may be an unrelated file that a user made; a .orig- file can hold the only copy of an original.",
         'Follow "Recover from a failed run" in docs/runbooks/storytime-app-week-sync.md, then run again.',
+      ].join("\n"),
+    );
+    return 1;
+  }
+  const links = findLinks(contentDirectory);
+  if (links.length > 0) {
+    console.error(
+      [
+        `The content folder holds ${links.length} link(s):`,
+        ...links.map((path) => `  ${path}`),
+        "Nothing was read or written. A link can send a week outside the content folder.",
+        "Remove the link, then run the receiver again.",
       ].join("\n"),
     );
     return 1;
@@ -603,6 +731,12 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
       const inside = relative(contentDirectory, resolve(root, week.path));
       if (inside.startsWith("..") || isAbsolute(inside)) {
         throw new Error(`The week path ${week.path} leaves ${relative(root, contentDirectory)}`);
+      }
+      const link = linkInPath(contentDirectory, resolve(root, week.path));
+      if (link) {
+        throw new Error(
+          `The path of ${week.path} holds the link ${link}. A link can send a week outside the content folder.`,
+        );
       }
     }
   } catch (error) {

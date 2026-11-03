@@ -403,6 +403,7 @@ describe("F32 and F41 the rollback tries every step", () => {
   it("names the original that no copy can keep", () => {
     const { folder, entries } = fixture("no-recovery");
     let renames = 0;
+    let restoreFailed = false;
     let error: unknown;
     try {
       writeStaged(entries, {
@@ -412,7 +413,13 @@ describe("F32 and F41 the rollback tries every step", () => {
           renameSync(from, to);
         },
         write: (path, data, flag) => {
-          if (path === join(folder, "a.json") || /a\.json\.orig-/.test(path)) throw new Error("disk gone");
+          if (path === join(folder, "a.json")) {
+            restoreFailed = true;
+            throw new Error("disk gone");
+          }
+          // The recovery copy is written to a stage name and renamed after the full write
+          // (finding F98), so the fault of the copy hits the stage name.
+          if (restoreFailed && /a\.json\.tmp-/.test(path)) throw new Error("disk gone");
           writeFileSync(path, data, { flag });
         },
       });

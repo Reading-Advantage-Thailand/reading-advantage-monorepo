@@ -29,6 +29,9 @@ const WEEK_FILES = readdirSync(shippedDirectory)
 /** A week as plain JSON, for a broken copy. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
+/** One Storytime week, as the contract reads it. */
+type Week = ReturnType<typeof contract.weekSchema.parse>;
+
 /**
  * Reads an export of the receiving script.
  *
@@ -40,6 +43,20 @@ type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-ex
 function exportOf<T>(name: string): T {
   const value = (receiver as unknown as Record<string, unknown>)[name];
   expect(value, `The receiving script has no export ${name}`).toBeDefined();
+  return value as T;
+}
+
+/**
+ * Reads an export of the week contract.
+ *
+ * The test reads the export by name, so a missing export fails with a clear message and not
+ * with a load error.
+ * @param name The name of the export.
+ * @returns The export.
+ */
+function contractExportOf<T>(name: string): T {
+  const value = (contract as unknown as Record<string, unknown>)[name];
+  expect(value, `The week contract has no export ${name}`).toBeDefined();
   return value as T;
 }
 
@@ -176,15 +193,23 @@ beforeAll(() => {
 
 describe("AC-13.4 the clip pattern of the phoneme bank", () => {
   it("is one constant next to the media path rule", () => {
-    expect(exportOf<RegExp>("PHONEME_CLIP_PATTERN").source).toBe("^phonemes/daniel/[0-9]{2}-[a-z]+(-[a-z]+)*\\.mp3$");
+    const pattern = contractExportOf<RegExp>("PHONEME_CLIP_PATTERN");
+    expect(pattern.source.replace(/\\\//g, "/"), "The clip pattern is not the G3 pattern").toBe(
+      "^phonemes/daniel/[0-9]{2}-[a-z]+(-[a-z]+)*\\.mp3$",
+    );
+    const contractSource = readFileSync(resolve(app, "lib/contracts/week.ts"), "utf8");
+    expect(contractSource, "The week contract holds no media path rule").toContain("const mediaPath");
+    expect(contractSource, "The week contract holds no clip pattern").toContain(
+      "PHONEME_CLIP_PATTERN",
+    );
   });
 
   it("accepts the two names of the bank and refuses the other forms", () => {
-    expect(exportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/04-n.mp3")).toBe(true);
-    expect(exportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/26-a-short.mp3")).toBe(true);
-    expect(exportOf<RegExp>("PHONEME_CLIP_PATTERN").test("../x.mp3")).toBe(false);
-    expect(exportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/4-n.mp3")).toBe(false);
-    expect(exportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/04-N.mp3")).toBe(false);
+    expect(contractExportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/04-n.mp3")).toBe(true);
+    expect(contractExportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/26-a-short.mp3")).toBe(true);
+    expect(contractExportOf<RegExp>("PHONEME_CLIP_PATTERN").test("../x.mp3")).toBe(false);
+    expect(contractExportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/4-n.mp3")).toBe(false);
+    expect(contractExportOf<RegExp>("PHONEME_CLIP_PATTERN").test("phonemes/daniel/04-N.mp3")).toBe(false);
   });
 
   it("lists every drill clip and every recall clip as a phoneme of the bank", () => {
@@ -192,7 +217,7 @@ describe("AC-13.4 the clip pattern of the phoneme bank", () => {
       ["phonemes/daniel/04-n.mp3", "phonemes/daniel/27-e-short.mp3", "phonemes/daniel/02-t.mp3"],
       "phonemes/daniel/04-n.mp3",
     );
-    const media = receiver.mediaOf(week);
+    const media = receiver.mediaOf(week as unknown as Week);
     const clips = media.filter((item) => item.file.startsWith("phonemes/daniel/"));
     expect(clips.length, "The media list must hold the drill and recall clips (A4)").toBeGreaterThan(0);
     for (const clip of clips) {

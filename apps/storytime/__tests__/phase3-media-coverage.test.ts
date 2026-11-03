@@ -31,6 +31,9 @@ interface WeekMediaPath {
   file: string;
 }
 
+/** One Storytime week, as the contract reads it. */
+type Week = ReturnType<typeof contract.weekSchema.parse>;
+
 /**
  * The field paths that the media list does not hold, each with its reason.
  *
@@ -97,7 +100,7 @@ function isAllowed(path: string, allowed: string): boolean {
  * @returns The field path and the file of every uncovered media path.
  */
 function uncoveredOf(week: Json): WeekMediaPath[] {
-  const listed = new Set(receiver.mediaOf(week).map((item) => item.file));
+  const listed = new Set(receiver.mediaOf(week as unknown as Week).map((item) => item.file));
   const paths = exportOf<(week: unknown) => WeekMediaPath[]>("mediaPathsOf")(week);
   return paths.filter(
     (entry) =>

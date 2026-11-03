@@ -94,6 +94,9 @@ function freshRoot(name: string): string {
 
 /**
  * Lists every file of a folder with its text.
+ *
+ * A link is not read: the walk stops at a link, so the test can look at the folder of a run
+ * that holds a link.
  * @param directory The folder.
  * @returns A map of relative path to text.
  */
@@ -102,6 +105,7 @@ function snapshot(directory: string): Map<string, string> {
   const walk = (current: string): void => {
     for (const entry of readdirSync(current, { withFileTypes: true })) {
       const path = join(current, entry.name);
+      if (entry.isSymbolicLink()) continue;
       if (entry.isDirectory()) walk(path);
       else files.set(path.slice(directory.length), readFileSync(path, "utf8"));
     }

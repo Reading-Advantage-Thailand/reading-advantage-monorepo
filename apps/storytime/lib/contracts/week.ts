@@ -11,6 +11,11 @@
  *
  * The print part, the approvals, and the database stamps stay `unknown`: production owns them and
  * the app never reads them. Tighten them only when an app page reads them.
+ *
+ * The seven A-42 fields (spec FR-13) are read schemas: `blendDrill`, `soundLoop`, `sightWords`,
+ * `loopMinutes`, `questions`, `recall`, and the loops approval part. They keep the passthrough,
+ * and their limits are the limits of the Workbooks hand-off. The app checks the recall count and
+ * the question page and word only when the loops part is approved.
  */
 import { z } from "zod";
 
@@ -39,6 +44,24 @@ const mediaPath = z
   .refine((path) => !path.split("/").includes("."), {
     message: "a media path holds no current-directory segment",
   });
+
+/**
+ * The name of a recording of the phoneme bank (G3).
+ *
+ * Every drill clip and every recall clip is a recording of the bank. The name is
+ * `phonemes/daniel/<NN>-<label>.mp3`, and the label holds lower-case letters and dashes. The rule
+ * is one constant, next to the media path rule, and the receiver uses it for the media list.
+ */
+export const PHONEME_CLIP_PATTERN = /^phonemes\/daniel\/[0-9]{2}-[a-z]+(-[a-z]+)*\.mp3$/;
+
+/**
+ * A recording of the phoneme bank, relative to the content folder.
+ *
+ * The path must hold the media path rule and the name rule of the bank.
+ */
+const phonemeClipPath = mediaPath.refine((path) => PHONEME_CLIP_PATTERN.test(path), {
+  message: "a clip of the phoneme bank holds the name phonemes/daniel/<NN>-<label>.mp3",
+});
 
 /** English text with its Thai. An empty Thai string means "not yet". */
 const biText = z
@@ -107,6 +130,26 @@ export const soundsPageSchema = z
   })
   .passthrough();
 
+/** One question of a read-along book, with the page and the word of its answer. */
+export const bookQuestionSchema = z
+  .object({
+    /** The question word: who, what, or where. Each kind appears once. */
+    kind: z.enum(["who", "what", "where"]),
+    /** The question line. The Thai prompt is `ask.th`. */
+    ask: biText,
+    /** The 1-based reader page and the picture word on that page. */
+    answer: z.object({ page: z.number().int(), word: z.string().min(1) }).passthrough(),
+  })
+  .passthrough();
+
+/** The three questions of a read-along book, one of each kind. */
+const bookQuestionsSchema = z
+  .array(bookQuestionSchema)
+  .length(3)
+  .refine((questions) => new Set(questions.map((question) => question.kind)).size === 3, {
+    message: "each question kind appears once",
+  });
+
 /** One book of a week: the read-along and the decodable. */
 export const bookSchema = z
   .object({
@@ -121,6 +164,8 @@ export const bookSchema = z
     /** Names that the reader learns as whole words. */
     names: z.array(z.string().min(1)).default([]),
     audio: bookAudioSchema.default({ sentences: [], slowSentences: [] }),
+    /** The three comprehension questions of a read-along book (spec FR-13). */
+    questions: bookQuestionsSchema.optional(),
   })
   .passthrough();
 
@@ -214,6 +259,74 @@ export const noteSchema = z
   })
   .passthrough();
 
+/**
+ * One word of the oral blend drill of a step.
+ *
+ * The sound labels are the sounds of the bank in the form `/n/`. The recordings of the sounds,
+ * when the week holds them, come in the order of the sound list.
+ */
+export const blendDrillWordSchema = z
+  .object({
+    word: z.string().min(1),
+    /** 2 to 4 sound labels. */
+    sounds: z.array(z.string().min(1)).min(2).max(4),
+    /** The recordings of the sounds, in the order of `sounds`. */
+    audio: z.array(phonemeClipPath).optional(),
+  })
+  .passthrough()
+  .superRefine((word, ctx) => {
+    if (!word.audio || word.audio.length === word.sounds.length) return;
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["audio"],
+      message: `the clip list holds ${word.audio.length} clips and the sound list holds ${word.sounds.length}`,
+    });
+  });
+
+/** The oral blend drill of a step (spec FR-13). */
+export const blendDrillSchema = z
+  .object({
+    /** 3 to 5 drill words. */
+    words: z.array(blendDrillWordSchema).min(3).max(5),
+    /** The teacher models the word. */
+    model: biText,
+    /** The teacher leads the class. */
+    lead: biText,
+    /** The teacher tests the class. */
+    test: biText,
+    /** How many times the class says each word, 2 to 5. */
+    repeats: z.number().int().min(2).max(5),
+    /** What the teacher says when a child errs. */
+    correction: biText,
+  })
+  .passthrough();
+
+/** The correct, practise, and retest loop of a sound step (spec FR-13). */
+export const soundLoopSchema = z
+  .object({
+    /** The teacher models the sound again. */
+    correct: biText,
+    /** The class practises the sound. */
+    practise: biText,
+    /** The teacher retests the item. */
+    retest: biText,
+  })
+  .passthrough();
+
+/** The fast-way sight-word card of a step (spec FR-13). */
+export const sightWordsSchema = z
+  .object({
+    /** 1 to 3 words of the step. */
+    words: z.array(z.string().min(1)).min(1).max(3),
+    /** The slide-a-finger line. */
+    slide: biText,
+    /** The timed check line. */
+    check: biText,
+    /** The time that the child has for one word, 2 to 5 seconds. */
+    seconds: z.number().int().min(2).max(5),
+  })
+  .passthrough();
+
 /** One step of a lesson. */
 export const stepSchema = z
   .object({
@@ -227,6 +340,37 @@ export const stepSchema = z
     group: biText,
     materials: z.array(z.string().min(1)).default([]),
     moved: z.literal("next-opening").optional(),
+    /** The oral blend drill of the step. */
+    blendDrill: blendDrillSchema.optional(),
+    /** The correct, practise, and retest loop of the step. */
+    soundLoop: soundLoopSchema.optional(),
+    /** The fast-way sight-word card of the step. */
+    sightWords: sightWordsSchema.optional(),
+    /** The step minutes when the loops show, 0 to 20. */
+    loopMinutes: z.number().int().min(0).max(20).optional(),
+  })
+  .passthrough();
+
+/** One card of a review strip. */
+export const stripCardSchema = z
+  .object({
+    kind: z.enum(["sound", "tricky", "frame", "word"]),
+    text: z.string().min(1),
+    week: z.number().int().min(1),
+    audio: mediaPath.optional(),
+  })
+  .passthrough();
+
+/** One card of a recall. The card holds a recording of the phoneme bank. */
+export const recallCardSchema = stripCardSchema.extend({
+  audio: phonemeClipPath.optional(),
+});
+
+/** The recall cards of a day and the line that asks for them (spec FR-13). */
+export const recallSchema = z
+  .object({
+    items: z.array(recallCardSchema),
+    ask: biText,
   })
   .passthrough();
 
@@ -238,16 +382,8 @@ export const scriptSchema = z
     title: biText,
     prep: z.array(biText).default([]),
     steps: z.array(stepSchema).min(1),
-  })
-  .passthrough();
-
-/** One card of a review strip. */
-export const stripCardSchema = z
-  .object({
-    kind: z.enum(["sound", "tricky", "frame", "word"]),
-    text: z.string().min(1),
-    week: z.number().int().min(1),
-    audio: mediaPath.optional(),
+    /** The recall of the day, shown in the opening. */
+    recall: recallSchema.optional(),
   })
   .passthrough();
 
@@ -347,6 +483,82 @@ export const metaSchema = z
 
 /** The book kinds that a published week must each hold once (spec FR-3). */
 export const PUBLISHED_BOOK_KINDS = ["readalong", "decodable"] as const;
+
+/** The parts of a week that Daniel approves (spec FR-3). */
+export const STORYTIME_APPROVAL_PARTS = ["text", "thai", "images", "audio", "song", "scripts"] as const;
+
+/** The name of the loops approval part. It is not one of the six approval parts. */
+export const STORYTIME_LOOPS_PART = "loops";
+
+/**
+ * One approval part of a week.
+ *
+ * The part holds the status of the approval, and the date, the source, and the words of the
+ * approval when production records them. The app reads only the status of the three media parts.
+ */
+export const storytimeAppApprovalSchema = z
+  .object({
+    status: z.enum(["draft", "approved"]),
+    date: z.string().optional(),
+    source: z.string().min(1).optional(),
+    words: z.string().optional(),
+  })
+  .passthrough();
+
+/**
+ * Daniel's approval of the loops of a week (spec FR-13).
+ *
+ * An approved part needs the date of the approval and the exact words of the approval. A draft
+ * part needs neither. The part gates the routines in the app, not the publication of the week.
+ */
+export const storytimeLoopsApprovalSchema = storytimeAppApprovalSchema.superRefine((part, ctx) => {
+  if (part.status !== "approved") return;
+  if (!part.date) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["date"],
+      message: "an approved loops part needs the date of the approval",
+    });
+  }
+  if (part.words === undefined || part.words.trim() === "") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["words"],
+      message: "an approved loops part needs the exact words of the approval",
+    });
+  }
+});
+
+/** The approval parts of a week, with the loops part. */
+export const storytimeApprovalsSchema = z
+  .object({
+    text: storytimeAppApprovalSchema.optional(),
+    thai: storytimeAppApprovalSchema.optional(),
+    images: storytimeAppApprovalSchema.optional(),
+    audio: storytimeAppApprovalSchema.optional(),
+    song: storytimeAppApprovalSchema.optional(),
+    scripts: storytimeAppApprovalSchema.optional(),
+    /** The loops part. An absent part means a draft. */
+    loops: storytimeLoopsApprovalSchema.optional(),
+  })
+  .passthrough();
+
+/**
+ * Tells whether the loops of a week are approved (spec FR-13).
+ *
+ * An absent loops part counts as a draft, so the app shows no routine for it. The rule reads the
+ * week and never changes it.
+ * @param week The week, or a value of another shape.
+ * @returns `true` only when the loops part holds the status `approved`.
+ */
+export function loopsApproved(week: unknown): boolean {
+  if (!week || typeof week !== "object") return false;
+  const approval = (week as Record<string, unknown>).approval;
+  if (!approval || typeof approval !== "object") return false;
+  const loops = (approval as Record<string, unknown>)[STORYTIME_LOOPS_PART];
+  if (!loops || typeof loops !== "object") return false;
+  return (loops as Record<string, unknown>).status === "approved";
+}
 
 /**
  * Reports a sentence timing whose end comes before its start, and a word timing out of order.
@@ -474,6 +686,82 @@ function checkPlayerOrder(
 }
 
 /**
+ * Reports the sentences of a published book that hold no page (finding F99).
+ *
+ * A sentence without a page has no picture for the page-audio coverage. An empty list passes,
+ * because the media list owns the missing audio.
+ * @param book The book of the week.
+ * @param bookIndex The index of the book in the week.
+ * @param ctx The refinement context.
+ */
+function checkPageAudio(
+  book: z.infer<typeof bookSchema>,
+  bookIndex: number,
+  ctx: z.RefinementCtx,
+): void {
+  const lists: Array<[string, z.infer<typeof sentenceTimepointSchema>[]]> = [
+    ["sentences", book.audio.sentences],
+    ["slowSentences", book.audio.slowSentences],
+  ];
+  for (const [name, sentences] of lists) {
+    sentences.forEach((sentence, sentenceIndex) => {
+      if (sentence.page !== undefined) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["books", bookIndex, "audio", name, sentenceIndex, "page"],
+        message: "a published book needs a page on every sentence",
+      });
+    });
+  }
+}
+
+/** The number of cards of a recall (spec FR-13). */
+const RECALL_CARDS = 5;
+
+/**
+ * Reports the errors of the loops that the app checks (spec FR-13, AC-13.2, AC-13.3).
+ *
+ * The app checks the recall count and the question page and word only when the loops part is
+ * approved. A draft week holds the shapes only, so a draft error of the recall count or of the
+ * question check never stops the receipt of a week.
+ * @param week The parsed week.
+ * @param ctx The refinement context.
+ */
+function checkLoops(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): void {
+  if (!loopsApproved(week)) return;
+  week.scripts.forEach((script, scriptIndex) => {
+    const recall = script.recall;
+    if (!recall || recall.items.length === RECALL_CARDS) return;
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["scripts", scriptIndex, "recall", "items"],
+      message: `a recall holds ${RECALL_CARDS} cards, and it holds ${recall.items.length}`,
+    });
+  });
+  week.books.forEach((book, bookIndex) => {
+    (book.questions ?? []).forEach((question, questionIndex) => {
+      const page = book.pages[question.answer.page - 1];
+      if (!page) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["books", bookIndex, "questions", questionIndex, "answer", "page"],
+          message: `the page ${question.answer.page} is beyond the ${book.pages.length} pages of the book`,
+        });
+        return;
+      }
+      const text = page.text.toLowerCase();
+      if (!text.includes(question.answer.word.toLowerCase())) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["books", bookIndex, "questions", questionIndex, "answer", "word"],
+          message: `the page ${question.answer.page} does not hold the word ${question.answer.word}`,
+        });
+      }
+    });
+  });
+}
+
+/**
  * Applies the rules that a published week must meet, and the time order that every week must meet.
  * @param week The parsed week.
  * @param ctx The refinement context.
@@ -492,11 +780,13 @@ function checkWeek(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): 
       message: `the key ${week.meta.key} does not match the level and week; it must be ${key}`,
     });
   }
+  checkLoops(week, ctx);
   if (week.meta.status !== "published") return;
   week.books.forEach((book, bookIndex) => {
     const pageCount = book.pages.length;
     checkPlayerOrder(book.audio.sentences, ["books", bookIndex, "audio", "sentences"], ctx, pageCount);
     checkPlayerOrder(book.audio.slowSentences, ["books", bookIndex, "audio", "slowSentences"], ctx, pageCount);
+    checkPageAudio(book, bookIndex, ctx);
   });
   if (week.song) checkPlayerOrder(week.song.times, ["song", "times"], ctx);
   for (const kind of PUBLISHED_BOOK_KINDS) {
@@ -540,7 +830,9 @@ const weekBodySchema = z
     block: z.unknown().optional(),
     benchmark: z.unknown().optional(),
     print: z.unknown().optional(),
-    approval: z.unknown().optional(),
+    /** The approval parts of the week. The app reads the status of the media parts and of the
+     * loops part. */
+    approval: storytimeApprovalsSchema.optional(),
     db: z.unknown().optional(),
   })
   .passthrough();
