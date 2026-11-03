@@ -175,4 +175,12 @@ describe("POST /api/flashcard/cards/[cardId]/review", () => {
     expect((await review({ rating: 3 })).status).toBe(500);
     expect(mocks.enqueue).not.toHaveBeenCalled();
   });
+
+  // Defect: the route inserts user_activity and xp_logs with plain inserts keyed on the card
+  // (app/api/flashcard/cards/[cardId]/review/route.ts:129,145), so the unique keys
+  // (user, type, target) and (user, activity) refuse every later review of the same card.
+  it.fails("accepts a second review of the same card", async () => {
+    expect((await review({ rating: 3 })).status).toBe(200);
+    expect((await review({ rating: 4 })).status).toBe(200);
+  });
 });
