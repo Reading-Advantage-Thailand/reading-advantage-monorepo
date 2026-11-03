@@ -75,13 +75,13 @@ export const en = {
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "On our roadmap",
-            gradeRange: "Early literacy book line, planned",
+            badge: "First unit being prepared",
+            gradeRange: "English program for Anuban 2 to P2",
             features: {
-                0: "Planned to build early literacy foundations",
-                1: "Planned interactive stories alongside printed books",
-                2: "Planned guided phonics practice",
-                3: "Planned progress reports for teachers and parents",
+                0: "One sound, one song, and two books each week",
+                1: "Every lesson printed in full for the class teacher",
+                2: "A Storytime Advantage student book with small readers inside",
+                3: "QR links open the song and books",
             },
         },
         codecampAdvantage: {
@@ -174,13 +174,13 @@ export const th = {
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "อยู่ในแผนงาน",
-            gradeRange: "ชุดหนังสือการรู้หนังสือขั้นต้น วางแผนไว้",
+            badge: "กำลังจัดเตรียมหน่วยแรก",
+            gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
             features: {
-                0: "วางแผนวางรากฐานการรู้หนังสือขั้นต้น",
-                1: "วางแผนนิทานโต้ตอบคู่กับหนังสือเล่มพิมพ์",
-                2: "วางแผนฝึกโฟนิกส์แบบมีผู้แนะนำ",
-                3: "วางแผนรายงานความก้าวหน้าสำหรับครูและผู้ปกครอง",
+                0: "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มต่อสัปดาห์",
+                1: "ทุกคาบมีแผนการสอนครบ",
+                2: "หนังสือนักเรียน Storytime Advantage พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน",
+                3: "คิวอาร์โค้ดเปิดเพลงและหนังสือ",
             },
         },
         codecampAdvantage: {
@@ -274,13 +274,13 @@ export const zh = {
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "在我们的路线图上",
-            gradeRange: "早期识字图书系列，规划中",
+            badge: "首个单元准备中",
+            gradeRange: "面向 Anuban 2 至 P2 的英语课程",
             features: {
-                0: "计划建立早期识字基础",
-                1: "计划在纸质书之外提供互动故事",
-                2: "计划提供引导式语音练习",
-                3: "计划为教师与家长提供进度报告",
+                0: "每周一个发音、一首歌和两本书",
+                1: "每节课均有完整教学脚本",
+                2: "Storytime Advantage 学生用书内含小读本",
+                3: "二维码可打开歌曲和书籍",
             },
         },
         codecampAdvantage: {

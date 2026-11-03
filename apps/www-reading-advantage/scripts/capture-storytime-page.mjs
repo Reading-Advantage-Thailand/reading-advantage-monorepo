@@ -7,9 +7,49 @@ if (!port || !output) throw new Error("PORT and CAPTURE_DIR are required");
 mkdirSync(output, { recursive: true });
 const captures = [];
 
-async function capture(locale, label, url, width, height, locate) {
-  const path = `${output}/${locale}-${label}-desktop.png`;
-  console.log(`Capturing ${locale}-${label}-desktop at ${width}x${height} -> ${path}`);
+async function prepareImages(page, locale, label) {
+  let timer;
+  let result;
+  try {
+    result = await Promise.race([
+      page.evaluate(async () => {
+        const step = Math.max(Math.floor(window.innerHeight * 0.75), 240);
+        const maxScroll = document.documentElement.scrollHeight;
+        for (let scrollY = 0; scrollY < maxScroll; scrollY += step) {
+          window.scrollTo(0, scrollY);
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        window.scrollTo(0, maxScroll);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const images = Array.from(document.images);
+        for (const image of images) image.loading = "eager";
+        const decoded = await Promise.all(images.map(async (image) => {
+          try {
+            await image.decode();
+            return { src: image.currentSrc || image.src, naturalWidth: image.naturalWidth };
+          } catch {
+            return { src: image.currentSrc || image.src, naturalWidth: 0 };
+          }
+        }));
+        window.scrollTo(0, 0);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        return decoded;
+      }),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`${locale}-${label}: image preparation exceeded 60 seconds`)), 60000);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+  const failed = result.filter(({ naturalWidth }) => naturalWidth <= 0);
+  if (failed.length) throw new Error(`${locale}-${label}: ${failed.length} image(s) failed decode or width check: ${failed.map(({ src }) => src).join(", ")}`);
+  console.log(`${locale}-${label}: decoded ${result.length} images with naturalWidth > 0`);
+}
+
+async function capture(locale, label, url, width, height, locate, fileName = `${locale}-${label}-desktop.png`, fullPage = false) {
+  const path = `${output}/${fileName}`;
+  console.log(`Capturing ${locale}-${label} at ${width}x${height} -> ${path}`);
   const browser = await chromium.launch({
     channel: "chrome",
     headless: true,
@@ -24,8 +64,19 @@ async function capture(locale, label, url, width, height, locate) {
       timeout: 60000,
     });
     if (response?.status() !== 200) throw new Error(`${locale}-${label}: HTTP ${response?.status()}`);
+    await prepareImages(page, locale, label);
     await locate(page);
-    await page.screenshot({ path, fullPage: false, animations: "disabled", timeout: 60000 });
+    await page.evaluate(() => {
+      for (const animation of document.getAnimations()) {
+        try {
+          animation.finish();
+        } catch {
+          // Infinite ambient animations do not have a finish time.
+        }
+      }
+    });
+    await page.waitForTimeout(700);
+    await page.screenshot({ path, fullPage, animations: "disabled", timeout: 60000 });
     const file = statSync(path);
     if (file.size === 0) throw new Error(`${locale}-${label}: screenshot file is empty`);
     captures.push({ path, status: response.status(), width, size: file.size });
@@ -54,6 +105,8 @@ for (const locale of ["en", "th"]) {
       const response = await page.goto(`http://127.0.0.1:${port}/${locale}/products/storytime-advantage`, { waitUntil: "domcontentloaded", timeout: 60000 });
       if (response?.status() !== 200) throw new Error(`${locale}-${label}: HTTP ${response?.status()}`);
       await page.evaluate(async () => {
+        const images = Array.from(document.querySelectorAll("[data-testid^='st-'] img"));
+        for (const image of images) image.loading = "eager";
         const step = Math.max(Math.floor(window.innerHeight * 0.75), 240);
         let scrollY = 0;
         while (scrollY < document.documentElement.scrollHeight) {
@@ -98,6 +151,7 @@ for (const locale of ["en", "th"]) {
       if (report.images.length !== 10 || failed.length) {
         throw new Error(`${locale}-${label}: ${report.images.length} images; ${failed.length} failed decode or natural-width check(s): ${failed.map(({ src }) => src).join(", ")}`);
       }
+      await page.waitForTimeout(700);
       await page.screenshot({ path, fullPage: true, animations: "disabled" });
       const file = statSync(path);
       if (file.size === 0) throw new Error(`${locale}-${label}: screenshot file is empty`);
@@ -115,7 +169,7 @@ for (const locale of ["en", "th"]) {
 for (const locale of ["en", "th"]) {
   await capture(locale, "products", "/products", 1440, 1000, async (page) => {
     await page.getByRole("heading", { name: "Storytime Advantage" }).last().scrollIntoViewIfNeeded();
-  });
+  }, `${locale}-products-desktop.png`);
   await capture(locale, "nav", "/products", 1440, 1000, async (page) => {
     const productsNavLabel = locale === "en" ? "Products" : "ผลิตภัณฑ์";
     if (!(await page.locator("header nav").getByRole("link", { name: productsNavLabel }).isVisible())) {
@@ -124,10 +178,12 @@ for (const locale of ["en", "th"]) {
     const storytimeLink = page.locator('a[href*="storytime-advantage"]').last();
     await storytimeLink.scrollIntoViewIfNeeded();
     if (!(await storytimeLink.isVisible())) throw new Error(`${locale}-nav: Storytime navigation link is not visible`);
-  });
+  }, `${locale}-nav-desktop.png`);
   await capture(locale, "home", "", 1440, 1000, async (page) => {
     await page.locator('a[href*="storytime-advantage"]').last().scrollIntoViewIfNeeded();
-  });
+  }, `${locale}-home-desktop.png`);
+  await capture(locale, "phone-top", "/products/storytime-advantage", 390, 844, async () => {}, `${locale}-phone-top.png`);
+  await capture(locale, "phone-top-360", "/products/storytime-advantage", 360, 780, async () => {}, `${locale}-phone-top-360.png`);
 }
 
 console.log(JSON.stringify(captures, null, 2));

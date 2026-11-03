@@ -113,7 +113,7 @@ const productConfigs: ProductConfigList = [
     key: "storytimeAdvantage",
     href: "/products/storytime-advantage",
     bgColor: "from-amber-50 to-amber-100",
-    logo: "/storytime-advantage.png",
+    logo: "/storytime-advantage.svg",
     icon: BookMarked,
     badgeKey: "products.storytimeAdvantage.badge",
     gradientFrom: "from-amber-400",

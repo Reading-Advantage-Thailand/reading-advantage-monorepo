@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import StorytimeAdvantage, { generateMetadata } from "@/app/[locale]/(marketing)/products/storytime-advantage/page";
+import { navigation } from "@/config/navigation";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
@@ -11,6 +12,7 @@ import {
   EXPECTED_AUX_COPY,
   EXPECTED_META,
   IMAGE_ALT,
+  LABEL_COPY,
   OLD_ROADMAP_COPY,
   OLD_STOCK_REFERENCES,
   PAGE_COPY,
@@ -139,6 +141,36 @@ function imagePath(src: string): string {
 afterEach(cleanup);
 
 describe("Storytime Advantage content", () => {
+  it.each(["en", "th", "zh"] as const)("uses the exact Storytime label handoff copy in %s", (locale) => {
+    state.messages = MESSAGES[locale];
+    const expected = LABEL_COPY[locale === "th" ? "th" : locale === "zh" ? "zh" : "en"];
+    const card = lookup("components.products.b2bSolutions.products.storytimeAdvantage") as {
+      badge: string;
+      gradeRange: string;
+      features: Record<string, string>;
+    };
+    const cardCopy = [card.badge, card.gradeRange, ...Object.values(card.features)];
+    const navigation = lookup("components.common.navigation.itemsDescription.storytimeAdvantage");
+    const home = lookup("pages.home.suite.description");
+    const homeStatus = lookup("pages.home.v2.products.storytimePreparingLabel");
+    const allCopy = [...cardCopy, navigation, home];
+
+    expect(cardCopy).toEqual([expected.badge, expected.gradeRange, ...expected.features]);
+    expect(navigation).toBe(expected.navigation);
+    const staticNavigation = navigationConfigStorytimeDescription();
+    expect(staticNavigation).toBe(LABEL_COPY.en.navigation);
+    expect(home).toBe(expected.home);
+    expect(homeStatus).toBe(expected.badge);
+    expect([...allCopy, homeStatus].every((value) => typeof value === "string")).toBe(true);
+    for (const value of allCopy as string[]) expect(findClaimTerms(value)).toEqual([]);
+    expect(findClaimTerms(homeStatus as string)).toEqual([]);
+    expect(findClaimTerms(staticNavigation ?? "")).toEqual([]);
+    expect(cardCopy.join("\n")).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
+    expect(navigation).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
+    expect(home).not.toMatch(/Storytime Advantage.{0,80}(?:roadmap|planned|แผนงาน|วางแผน|路线图|规划中)/i);
+    expect(homeStatus).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
+  });
+
   it.each(["en", "th", "zh"] as const)("renders approved copy, links, and images in %s", async (locale) => {
     state.messages = MESSAGES[locale];
     const scope = lookup("pages.products.storytimeAdvantage");
@@ -227,3 +259,8 @@ describe("Storytime Advantage content", () => {
     }
   });
 });
+
+/** Returns the static product navigation description used by the header. */
+function navigationConfigStorytimeDescription(): string | undefined {
+  return navigation[0]?.items?.find((item) => item.href === "/products/storytime-advantage")?.description;
+}

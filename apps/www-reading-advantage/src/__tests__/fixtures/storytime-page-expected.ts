@@ -45,6 +45,45 @@ export const EXPECTED_AUX_COPY = {
   },
 } as const;
 
+export const LABEL_COPY = {
+  en: {
+    badge: "First unit being prepared",
+    gradeRange: "English program for Anuban 2 to P2",
+    features: [
+      "One sound, one song, and two books each week",
+      "Every lesson printed in full for the class teacher",
+      "A Storytime Advantage student book with small readers inside",
+      "QR links open the song and books",
+    ],
+    navigation: "English for Anuban 2 to P2; the first unit is being prepared",
+    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap, with no dates. The first Storytime Advantage unit is being prepared.",
+  },
+  th: {
+    badge: "กำลังจัดเตรียมหน่วยแรก",
+    gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
+    features: [
+      "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มต่อสัปดาห์",
+      "ทุกคาบมีแผนการสอนครบ",
+      "หนังสือนักเรียน Storytime Advantage พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน",
+      "คิวอาร์โค้ดเปิดเพลงและหนังสือ",
+    ],
+    navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
+    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน ยังไม่มีกำหนดวันเปิดตัว กำลังจัดเตรียมหน่วยการเรียนรู้แรกของ Storytime Advantage",
+  },
+  zh: {
+    badge: "首个单元准备中",
+    gradeRange: "面向 Anuban 2 至 P2 的英语课程",
+    features: [
+      "每周一个发音、一首歌和两本书",
+      "每节课均有完整教学脚本",
+      "Storytime Advantage 学生用书内含小读本",
+      "二维码可打开歌曲和书籍",
+    ],
+    navigation: "面向 Anuban 2 至 P2 的英语课程，正在准备第一个单元",
+    home: "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。Storytime Advantage 的第一个单元正在准备中。",
+  },
+} as const;
+
 /** One rendered page string: its locale key, its English and Thai text, and the link target of a button. */
 export interface ExpectedCopy {
   readonly key: string;

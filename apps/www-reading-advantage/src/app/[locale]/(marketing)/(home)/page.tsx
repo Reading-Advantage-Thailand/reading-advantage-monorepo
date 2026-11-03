@@ -93,7 +93,7 @@ export default async function Home({
     { key: "science-advantage", name: "Science Advantage", logo: siteLogos.science.color },
     { key: "math-advantage", name: "Math Advantage", logo: siteLogos.math.color },
     { key: "zhongwen-advantage", name: "Zhongwen Advantage", logo: siteLogos.zhongwen.color },
-    { key: "storytime-advantage", name: "Storytime Advantage", logo: siteLogos.storytime.color },
+    { key: "storytime-advantage", name: "Storytime Advantage", logo: siteLogos.storytime.color, tag: t("v2.products.storytimePreparingLabel") },
     { key: "stem-advantage", name: "STEM Advantage", logo: siteLogos.stem.color },
   ];
 
@@ -354,7 +354,7 @@ export default async function Home({
                 href={`/products/${product.key}`}
                 logo={product.logo}
                 name={product.name}
-                tag={t("v2.products.roadmapTag")}
+                tag={product.tag ?? t("v2.products.roadmapTag")}
               />
             ))}
           </div>

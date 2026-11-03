@@ -47,7 +47,7 @@ export default async function StorytimeAdvantage({
         data-testid="st-hero"
         className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-600 text-white"
       >
-        <div className="container mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-24">
+        <div className="container mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-32 sm:px-6 sm:py-16 lg:grid-cols-12 lg:px-8 lg:py-24">
           <div className="lg:col-span-6">
             <span className="mb-6 inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-bold text-amber-800">
               {t("hero.comingSoon")}
