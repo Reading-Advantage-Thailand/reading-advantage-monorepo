@@ -501,6 +501,18 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Files: `apps/storytime/__tests__/phase3-song-ui.test.tsx`, this plan section, and `measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log`. No production source changed. Dirty paths outside this task remain untouched.
 - Red report: `measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log`.
 
+### Phase 3 task 3.5 Green block: Red defect
+
+- Green started at role base `5d05e70c5d4f685724fb63c259a5fb725acbfff5`. The immutable phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- The implementation is complete and stays uncommitted in the tree: `app/[locale]/st/[level]/[week]/song.tsx`, the `?part=song` wiring in `page.tsx`, the `.song-stage` rules in `globals.css`, and the `songPlay` and `songPause` messages.
+- Targeted song test: 6 passed and 1 failed. The full Green gate: 5 test files pass and 1 fails, with 40 passed and 1 failed.
+- The failure is `apps/storytime/__tests__/phase3-song-ui.test.tsx:109`: `getByText(/point to self/i)` finds three lines. The shipped w01 uses that gesture on lines 0, 1, and 8.
+- Line 126 of the same test requires the gesture text of line 7 (`hands out`) inside its line element. Line 6 uses the same gesture. A rule that hides a repeated gesture text breaks line 126. A rule that shows each gesture text breaks line 109.
+- No component can pass both lines with the shipped w01 gestures. The fix belongs in the Red test. One-line fix: replace line 109 with `expect(screen.getAllByText(new RegExp(line.gesture, "i")).length).toBeGreaterThan(0);`.
+- Automated app type check: exit 0. ESLint on the two changed TypeScript files: exit 0.
+- No committed Red test changed. AC-8.2 stays with the browser gate of task 3.7.
+- Green report: `measure/runs/storytime_app_rebuild_20261025/green-5d05e70.log`.
+
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.
 - [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
