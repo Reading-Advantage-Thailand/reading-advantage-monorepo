@@ -89,8 +89,16 @@ describe("Phase 3 Storytime decodable UI", () => {
     expect(audio.getAttribute("src")).toContain("phonemes/daniel/");
     const clips = played.filter((src) => src.includes("phonemes/daniel/"));
     expect(clips).toHaveLength(blendPlanForWord(word!, cvc).graphemes.length);
-    expect(clips.map((src) => src.split("/").at(-1)?.replace(/^\d{2}-/, "").replace(/\.mp3$/, "")))
-      .toEqual(blendPlanForWord(word!, cvc).graphemes);
+    const g3ClipByGrapheme: Record<string, string> = {
+      p: "03-p.mp3",
+      a: "26-a-short.mp3",
+      n: "04-n.mp3",
+    };
+    const graphemes = blendPlanForWord(word!, cvc).graphemes;
+    expect(graphemes.every((grapheme) => g3ClipByGrapheme[grapheme])).toBe(true);
+    expect(clips.map((src) => src.split("/").at(-1))).toEqual(
+      graphemes.map((grapheme) => g3ClipByGrapheme[grapheme]),
+    );
     expect(played.at(-1)).not.toContain("phonemes/daniel/");
     expect(audio).toBeInTheDocument();
   });
