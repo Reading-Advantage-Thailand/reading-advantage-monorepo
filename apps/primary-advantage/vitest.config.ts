@@ -23,6 +23,10 @@ export default defineConfig({
         inline: [
           /[/\\]next-intl[/\\]dist[/\\]esm[/\\][^/\\]+[/\\](?:navigation|middleware)(?=[/\\.])/,
         ],
+        // sales-knowledge reads its evidence files with `new URL(..., import.meta.url)`. Inlined,
+        // Vite rewrites that URL to a `/@fs/` path that readFileSync cannot open; Node loads the
+        // built package with its real file URL.
+        external: [/[/\\]packages[/\\]sales-knowledge[/\\]dist[/\\]/],
       },
     },
   },
