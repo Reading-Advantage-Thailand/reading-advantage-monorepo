@@ -32,4 +32,29 @@ describe("derivedRate", () => {
   it("preserves trailing zeros in the fraction", () => {
     expect(derivedRate("100", "20000", "USD")).toBe("200.00");
   });
+  it("rounds just below .005 down at 2dp", () => {
+    // source 2000, settled 1009 → 0.5045 → half-up to 0.50
+    expect(derivedRate("2000", "1009", "USD")).toBe("0.50");
+  });
+  it("rounds a rate below half a hundredth to zero", () => {
+    expect(derivedRate("1000000", "1", "USD")).toBe("0.00");
+  });
+  it("keeps exact digits above the safe integer range", () => {
+    expect(derivedRate("100", "900719925474099199", "USD")).toBe(
+      "9007199254740991.99",
+    );
+  });
+  it("treats a leading-zero source amount as not positive", () => {
+    expect(derivedRate("0100", "100", "USD")).toBe("");
+  });
+  it("rejects leading-zero, negative, or decimal settled amounts", () => {
+    expect(() => derivedRate("100", "0100", "USD")).toThrow(
+      "settledThbMinor must be a positive integer string",
+    );
+    expect(() => derivedRate("100", "-100", "USD")).toThrow();
+    expect(() => derivedRate("100", "1.5", "USD")).toThrow();
+  });
+  it("rejects an invalid currency code", () => {
+    expect(() => derivedRate("100", "100", "US")).toThrow(RangeError);
+  });
 });
