@@ -25,16 +25,60 @@
 - Test commit: `f30d055e0` (`test(storytime): measure transferred bytes (track_id: storytime_app_rebuild_20261025)`). The requested full subject exceeds the 100-character header limit, so the accepted subject is shortened.
 - Plan retry evidence is in `measure/tracks/storytime_app_rebuild_20261025/plan.md`. This evidence commit records the final role result.
 
+## Red retry — awaited CDP and per-check failure handling
+
+- Orchestrator retry started at HEAD `484ecc9a9bff6c1a0f5e9b086f7ddd13309f0140`. This resolves the supplied HEAD and serves as retry `role_base_sha`. The immutable `phase_base_sha` remains `7db52a49d20e195388fd91670cc7c022312b50c5`; both resolve and the phase base is an ancestor.
+- The dirty `apps/storytime/app/globals.css` was Green's CSS fix. Red did not edit, stage, stash, or restore it. Unrelated user paths remain unstaged.
+- The first gate run after the CDP fix reached every row but exposed two further harness faults. It reported first media index `-1`, then failed on CDP cleanup after closing the browser context. Red fixed the media probe to tap the read-aloud control and closes CDP before the context.
+- Final commands: `bash -n apps/storytime/__tests__/phase3-browser-gate.sh` exits 0. `bash apps/storytime/__tests__/phase3-browser-gate.sh` exits 0. It builds the app, starts the ready review fixture, uses System Chrome with `channel: 'chrome'`, and runs no browser install.
+- Final Playwright result: `PASS=22, FAIL=0`. All three self-tests reject their bad pages. The outer gate result is `PASS=4, FAIL=0`.
+- Final labeled measurements: `transferred_bytes_first_load=223741`; `media_requests_before_tap=0`; `requests_total=23`; `first_media_request_index=25`; `tap_target_min_px_tiles_360x800=106`; `tap_target_min_px_speakers_360x800=64`; `tap_target_min_px_tiles_800x360=106`; `tap_target_min_px_speakers_800x360=64`; `video_box_ratio_x1000_phone=563`; `video_box_height_pct_phone=69`; `video_box_ratio_x1000_laptop=1778`.
+- Final labeled checks, in output order:
+
+```text
+PASS: Start inline self-test server
+PASS: self-test rejects 30 px button
+PASS: self-test rejects 400 KB script
+PASS: self-test rejects white text on #3080ff
+PASS: Stop inline self-test server
+PASS: Create live review browser context
+PASS: Open ready review page and capture first load
+PASS: AC-5.3 first-load transfer is at most 300000 bytes (transferred_bytes_first_load=223741)
+PASS: AC-5.3 no audio or video request occurs before tap (media_requests_before_tap=0)
+PASS: First-load request count is at least five (requests_total=23)
+PASS: First audio or video request occurs after the tap (first_media_request_index=25)
+PASS: Measure targets at 360x800
+PASS: 64 px tiles at 360x800
+PASS: 64 px speakers at 360x800
+PASS: Measure targets at 800x360
+PASS: 64 px tiles at 800x360
+PASS: 64 px speakers at 800x360
+PASS: AC-8.2 phone video box ratio (video_box_ratio_x1000_phone=563)
+PASS: AC-8.2 phone video height (video_box_height_pct_phone=69)
+PASS: AC-8.2 laptop video box ratio (video_box_ratio_x1000_laptop=1778)
+PASS: Close CDP session
+PASS: Close browser context
+PASS=22, FAIL=0
+PASS: Production build exits 0
+PASS: Ready clone uses shipped w01 with approvals and placeholder media
+PASS: Built server answers HTTP 200
+PASS: Playwright gate exits 0
+PASS=4, FAIL=0
+```
+
+- Gate-fix commit: `b983f3c3c` (`test(storytime): await CDP session (track_id: storytime_app_rebuild_20261025)`). The requested full subject was 101 characters, so the accepted subject was shortened.
+- Evidence commit: pending. The plan and this report record the result.
+
 ## MEASURE_AGENT_RESULT
 status: complete
 role: Measure Mid Red
 track: storytime_app_rebuild_20261025
 phase: Phase 3 — At-home app, task 3.6
 baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
-role_base_sha: a2c4fd75e3e2000e26ff1e14f099602553019865
-head: f30d055e0 (test HEAD before the evidence-only commit)
-commits: a19040e66 (initial tests); 9ccd89c98 (initial evidence); f30d055e0 (browser gate retry); evidence commit includes retry plan and report
-tests: retry bash -n passed; browser gate intentionally not run
+role_base_sha: 484ecc9a9bff6c1a0f5e9b086f7ddd13309f0140
+head: b983f3c3c (gate-fix test commit before the evidence-only commit)
+commits: a19040e66; 9ccd89c98; f30d055e0; b983f3c3c; evidence commit pending
+tests: bash -n passed; browser gate passed (Playwright PASS=22, FAIL=0; outer PASS=4, FAIL=0)
 files: apps/storytime/__tests__/phase3-browser-gate.sh, measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/red-d1ec787.log
-remaining_failures: browser rows unverified in this retry; Green's prior run recorded phone video ratio 520 and the gate corrections are not browser-tested
-handoff: Green must run phase3-browser-gate.sh once. Task 3.6 remains [~] until Green records the browser results.
+remaining_failures: none in the final browser-gate run; task 3.6 remains [~] for Green's phase gate and review
+handoff: The harness and measured browser rows pass. Green owns the phase gate and review. The uncommitted globals.css fix was preserved.
