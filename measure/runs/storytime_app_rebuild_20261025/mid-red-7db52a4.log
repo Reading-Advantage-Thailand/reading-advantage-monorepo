@@ -22,11 +22,11 @@ status: completed
 track: storytime_app_rebuild_20261025
 phase: P3 task 3.1
 baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
-resulting_head: pending commit
-commits: pending
+resulting_head: 0b54a4254
+commits: 0b54a4254 (Red tests and plan evidence)
 tests_run: targeted P3.1 Vitest command; exit 1, 4 failed files, 9 failed assertions, 8 passed tests
 files_changed: apps/storytime/__tests__/phase3-entry-route.test.ts; apps/storytime/__tests__/phase3-readiness.test.ts; apps/storytime/__tests__/phase3-manifest.test.ts; apps/storytime/__tests__/phase1-scaffold.test.ts; apps/storytime/__tests__/phase1-boundary.test.ts; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/mid-red-7db52a4.log
-plan_updates: task 3.1 marked [~]; Red evidence and command result recorded
+plan_updates: task 3.1 marked [~]; Red evidence and command result recorded in `0b54a4254`
 known_failures: Phase 3 entry route and readiness implementation remain absent; manifest lacks the test tooling; locale redirect is absent.
 handoff: GREEN_TEST_COMMAND=bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-entry-route.test.ts apps/storytime/__tests__/phase3-readiness.test.ts apps/storytime/__tests__/phase3-manifest.test.ts apps/storytime/__tests__/phase1-scaffold.test.ts apps/storytime/__tests__/phase1-boundary.test.ts'; resolve readiness test module path with shared `lib` export and ensure the receiver imports that same function. Preserve user work. Green should use a different model family.
 END_MEASURE_AGENT_RESULT
