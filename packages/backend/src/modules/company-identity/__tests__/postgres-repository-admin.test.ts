@@ -390,6 +390,21 @@ describe("PostgreSQL company identity repository role changes", () => {
     expect(count(db, "delete from company_role_assignments")).toBe(0);
   });
 
+  // Defect: the last-admin guard counts only ACTIVE admins but fires for a SUSPENDED
+  // target too, so removing the admin role from a suspended admin is blocked while
+  // another active admin remains (postgres-repository.ts:1200-1228).
+  it.fails("allows removing the admin role from a suspended admin while one active admin remains", async () => {
+    const db = world({
+      employeeStatus: "SUSPENDED",
+      companyRoles: ["COMPANY_ADMIN"],
+      activeAdmins: 1,
+      extra: [{ match: "select id, organization_id from company_organization_memberships", rows: [{ id: MEMBERSHIP, organization_id: ORG }] }],
+    });
+    const repository = createPostgresCompanyIdentityRepository(db.sql);
+
+    await expect(repository.setCompanyRoles({ ...base, roleKeys: ["EMPLOYEE"] })).resolves.toMatchObject({ id: TARGET });
+  });
+
   it("reports an employee with no active membership", async () => {
     const db = world();
     const repository = createPostgresCompanyIdentityRepository(db.sql);
