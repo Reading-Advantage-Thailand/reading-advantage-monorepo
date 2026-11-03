@@ -35,9 +35,9 @@ afterEach(() => {
 /** Creates a ready in-memory copy of the shipped week without changing its content file. */
 function readyWeek(source = week) {
   const copy = structuredClone(source);
-  copy.approval.images = { status: "approved" };
-  copy.approval.audio = { status: "approved" };
-  copy.approval.song = { status: "approved" };
+  copy.approval.images = { ...copy.approval.images, status: "approved" };
+  copy.approval.audio = { ...copy.approval.audio, status: "approved" };
+  copy.approval.song = { ...copy.approval.song, status: "approved" };
   for (const book of copy.books) {
     for (const [index, page] of book.pages.entries()) {
       page.image.file ??= `review/${book.kind}-${index + 1}.jpg`;
