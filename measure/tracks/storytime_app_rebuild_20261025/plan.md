@@ -353,7 +353,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
   - `build-graph update`: 2 files, 20 to 41 nodes, 27 to 51 edges. `graph.db` stays ignored and is not committed.
 - No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker file changed.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-11f2462.log`.
-- [~] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
+- [x] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1. Done: `654e09add`. Automated: the Green command exits 0 with 10 files and 124 tests; `tsc --noEmit` in `apps/storytime` and in `packages/read-along` exits 0; ESLint exits 0 on the four changed TypeScript files.
 
 ### Phase 3 task 3.3 Red evidence
 
@@ -405,6 +405,22 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Red applied the three approval spreads and committed them as `8c80e72f51f3911de498b4f8cc8d887cb953be8f` (`test(storytime): preserve approval fields (track_id: storytime_app_rebuild_20261025)`). The requested longer subject exceeded the 100-character commit limit, so commitlint rejected it.
 - Required app type check ran once through `heavy-run.sh`: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && HEAVY_PREFLIGHT_WAIT_S=3600 ../../node_modules/.bin/tsc --noEmit'`. Exit 0; no errors in either Red test file and no other errors were emitted. No Vitest command ran.
 - The Red type-fix report and plan evidence are committed together in the follow-up evidence commit.
+
+### Phase 3 task 3.3 Green evidence
+
+- Implementation commit: `654e09add` (`feat(storytime): add the read-along ui`). Files: `packages/read-along/components/read-along/read-along-passage.tsx`, `packages/read-along/components/read-along/read-along-player.tsx`, `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx` (new), `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`, `apps/storytime/messages/en.json`, and `apps/storytime/messages/th.json`.
+- Package accessibility: `aria-current` on the current sentence and the marked word; `data-word`; one sentence tab stop; words at `tabindex="-1"` with Left and Right arrow focus and Enter or Space tap. The duplicate `playPauseButton` id is removed.
+- Reader: the page turner with buttons and a horizontal swipe, "read it to me", "my turn", the slow recording from `slowFile` at playback rate 1, the word cut from 30 ms before the start to its measured end, the page-end stop, the end view, the page picture, and the localized audio error in `th` and `en`.
+- Route: `page.tsx` stays the server gate and renders `StorytimeReader` for `part === "book"`. The task 3.2 tiles, the home card, and the task 3.1a media gate are unchanged.
+- Messages: seven flat player keys with equal, non-empty Thai and English values.
+- Gates on this implementation:
+  - Targeted Red command: exit 0; 2 files; 12 tests.
+  - Green command: exit 0; 10 files; 124 tests. This includes the unchanged `read-along-passage.test.tsx` one-tab-stop test.
+  - `tsc --noEmit` in `packages/read-along`: exit 0.
+  - ESLint on the four changed TypeScript files: exit 0.
+  - `tsc --noEmit` in `apps/storytime` at HEAD `ad8b13d84`: exit 0.
+- No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker file changed.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-ad8b13d.log`.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).

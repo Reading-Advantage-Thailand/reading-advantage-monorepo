@@ -1,0 +1,57 @@
+# Phase 3 task 3.3 Green report (final)
+
+- Role: Measure Green, `deepseek/deepseek-v4.1-flash` (OpenCode provider `opencode-go`).
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3 task 3.3.
+- Red model of this phase: `openai/gpt-6-luna`. No coder was delegated.
+- Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Role base: `ad8b13d84d3fa1f14c421e3d0806819d011efb0c`.
+- Implementation commit: `654e09add`.
+- `git status --short` held only unrelated untracked paths. Green staged the six implementation files by path and no other path.
+
+## Implementation
+
+- `packages/read-along/components/read-along/read-along-passage.tsx`: `aria-current` on the current sentence and the marked word; `data-word`; one sentence tab stop; words at `tabindex="-1"` with Left and Right arrow focus and Enter or Space tap.
+- `packages/read-along/components/read-along/read-along-player.tsx`: the duplicate `playPauseButton` id is removed.
+- `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx` (new): the client reader with the page turner, the horizontal swipe, "read it to me", "my turn", the slow recording at playback rate 1, the word cut from 30 ms before the start, the page-end stop, the end view, and the localized audio error.
+- `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: thin server page; renders `StorytimeReader` for `part === "book"`; keeps the 3.2 tiles, the media gate, and `generateMetadata`.
+- `apps/storytime/messages/en.json` and `th.json`: seven flat player keys with equal, non-empty Thai and English values.
+
+## Gates
+
+Earlier runs on this same implementation:
+
+- Targeted Red command: exit 0; 2 files; 12 tests.
+- Required Green command: exit 0; 10 files; 124 tests. This includes the unchanged `read-along-passage.test.tsx` and `read-along-player.test.tsx`.
+- `tsc --noEmit` in `packages/read-along`, with explicit flags on the package sources: exit 0.
+- ESLint on the four changed TypeScript files, with the app config: exit 0.
+
+This round:
+
+- Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'`.
+- Result: exit 0. The app type check covers the committed Red test with the approval spread fix `8c80e72f5` and the implementation above.
+
+The Green command, the package type check, and ESLint were not rerun, because no code changed after their runs. The only later change was the committed Red test type fix.
+
+## Disposition
+
+- Task 3.3 is `[x]`. The implementation commit is `654e09add`.
+- The plan-evidence commit follows this report and holds `654e09add`.
+- No committed Red test, week content, contract, readiness, receiver, deploy, or Docker file changed.
+- The task 3.2 tiles, the home card, and the task 3.1a media gate are unchanged.
+
+```text
+MEASURE_AGENT_RESULT
+role: Measure Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.3 Read-along UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: ad8b13d84d3fa1f14c421e3d0806819d011efb0c
+head: 654e09add
+commits: 654e09add (implementation); plan-evidence commit follows
+tests: targeted Red command exit 0 (2 files, 12 tests); required Green command exit 0 (10 files, 124 tests); app tsc exit 0 at HEAD ad8b13d84; package tsc exit 0; ESLint exit 0
+files: packages/read-along/components/read-along/read-along-passage.tsx; packages/read-along/components/read-along/read-along-player.tsx; apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx (new); apps/storytime/app/[locale]/st/[level]/[week]/page.tsx; apps/storytime/messages/en.json; apps/storytime/messages/th.json; measure/runs/storytime_app_rebuild_20261025/green-ad8b13d.log; measure/tracks/storytime_app_rebuild_20261025/plan.md
+remaining_failures: none known for task 3.3
+status: complete
+handoff: Task 3.3 is complete. Task 3.4 is next. The reviews at the Phase 3 checkpoint see 654e09add. Keep the unchanged package one-tab-stop test and the Primary copy in scope for Review A and Review C.
+END_MEASURE_AGENT_RESULT
+```
