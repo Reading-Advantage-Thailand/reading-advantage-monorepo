@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -106,7 +106,11 @@ describe("Phase 3 Storytime song UI", () => {
     const { container } = await renderSong(week);
     const line = week.song!.lines[0];
     expect(screen.getByText(new RegExp(line.text, "i"))).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(line.gesture, "i"))).toBeInTheDocument();
+    const lineElement = container.querySelector('[data-line-index="0"]');
+    expect(lineElement).toBeInTheDocument();
+    expect(
+      within(lineElement as HTMLElement).getByText(new RegExp(line.gesture, "i")),
+    ).toBeInTheDocument();
     expect(container.querySelector(`img[src*="${line.image!.file!.split("/").at(-1)}"]`)).toBeInTheDocument();
     expect(container.querySelectorAll("img")).toHaveLength(week.song!.lines.filter((entry) => entry.image || entry.imageOf !== undefined).length);
   });
