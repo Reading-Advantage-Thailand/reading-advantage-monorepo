@@ -333,3 +333,40 @@ export const getArticleActivity = async (articleId: string) => {
     return { error: "Failed to track article access" };
   }
 };
+
+/** The article text and question list that the lesson chatbot puts in its system prompt. */
+export type LessonChatbotContext = {
+  title: string;
+  passage: string;
+  summary: string;
+  imageDescription: string;
+  /** The MC, SA, and LA question texts the bot must not answer. */
+  questions: string[];
+};
+
+/**
+ * Loads the lesson chatbot's article context on the server, so a client cannot write the prompt.
+ * @param articleId The article id (a uuid).
+ * @returns The title, passage, summary, image description, and question texts; null for a missing
+ * or draft article.
+ */
+export async function getLessonChatbotContext(articleId: string): Promise<LessonChatbotContext | null> {
+  const [article] = await db
+    .select({ title: articles.title, passage: articles.passage, summary: articles.summary, imageDescription: articles.imageDescription })
+    .from(articles)
+    .where(and(eq(articles.id, articleId), eq(articles.isDraft, false)))
+    .limit(1);
+  if (!article) return null;
+  const rows = await Promise.all([
+    db.select({ question: multipleChoiceQuestions.question }).from(multipleChoiceQuestions).where(eq(multipleChoiceQuestions.articleId, articleId)),
+    db.select({ question: shortAnswerQuestions.question }).from(shortAnswerQuestions).where(eq(shortAnswerQuestions.articleId, articleId)),
+    db.select({ question: longAnswerQuestions.question }).from(longAnswerQuestions).where(eq(longAnswerQuestions.articleId, articleId)),
+  ]);
+  return {
+    title: article.title,
+    passage: article.passage ?? "",
+    summary: article.summary ?? "",
+    imageDescription: article.imageDescription ?? "",
+    questions: rows.flat().map((row) => row.question),
+  };
+}

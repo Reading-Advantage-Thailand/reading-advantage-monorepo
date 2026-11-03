@@ -46,11 +46,8 @@ export default function LessonLanguageQuestion({
         const res = await fetch(`/api/assistant/lesson-chatbot`, {
           method: "POST",
           body: JSON.stringify({
+            articleId: article.id,
             messages: updatedMessages,
-            title: article.title,
-            passage: article.passage,
-            summary: article.summary,
-            image_description: article.imageDescription,
             isInitial: false,
           }),
         });
@@ -79,27 +76,12 @@ export default function LessonLanguageQuestion({
     const initBotMessage = async () => {
       setLoading(true);
       try {
-        const questionListMAQ =
-          article.multipleChoiceQuestions?.map((item) => item.question) || [];
-        const questionListSAQ =
-          article.shortAnswerQuestions?.map((item) => item.question) || [];
-        const questionListLAQ =
-          article.longAnswerQuestions?.map((item) => item.question) || [];
-        const blacklistedQuestions = [
-          ...questionListMAQ,
-          ...questionListSAQ,
-          ...questionListLAQ,
-        ];
-
+        // The server loads the article text and its question list from the id.
         const res = await fetch(`/api/assistant/lesson-chatbot`, {
           method: "POST",
           body: JSON.stringify({
+            articleId: article.id,
             messages: [],
-            title: article.title,
-            passage: article.passage,
-            summary: article.summary,
-            image_description: article.imageDescription,
-            blacklistedQuestions,
             isInitial: true,
           }),
         });

@@ -19,16 +19,23 @@ vi.mock("@reading-advantage/ai", () => ({
 vi.mock("@/lib/observability/logger", () => ({
   logger: { info: mocks.info, warn: vi.fn(), error: mocks.error },
 }));
+// The server loads the article text from the article id (finding 3 of authz-primary-report.md).
+vi.mock("@/server/models/articleModel", () => ({
+  getLessonChatbotContext: vi.fn(async () => ({
+    title: "Title",
+    passage: "Passage",
+    summary: "Summary",
+    imageDescription: "Image",
+    questions: [],
+  })),
+}));
 
 import { resetPrimaryAiClients } from "@/lib/ai/models";
 import { POST } from "../route";
 
 const validBody = {
+  articleId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
   messages: [{ text: "hello", sender: "user" }],
-  title: "Title",
-  passage: "Passage",
-  summary: "Summary",
-  image_description: "Image",
 };
 
 /**

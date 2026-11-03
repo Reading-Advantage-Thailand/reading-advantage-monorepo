@@ -1,25 +1,34 @@
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import z from "zod";
+import { consumeRateLimit, createInMemoryRateLimitStore } from "@reading-advantage/auth";
 import { chatbotClient, loggedAiCall } from "@/lib/ai/models";
 import { logger } from "@/lib/observability/logger";
 import { currentUser } from "@/lib/session";
+import { getLessonChatbotContext } from "@/server/models/articleModel";
 
+/** The client names the article; the server loads its text. Unknown keys are refused. */
 const createLessonChatbotQuestionSchema = z.object({
+  articleId: z.string().uuid(),
   messages: z.array(
     z.object({
       text: z.string().max(4000),
       sender: z.enum(["user", "bot"]),
     }),
   ).max(60),
-  title: z.string().max(500),
-  passage: z.string().max(20000),
-  summary: z.string().max(5000),
-  image_description: z.string().max(2000),
-  blacklistedQuestions: z.array(z.string().max(1000)).max(100).optional().default([]),
   isInitial: z.boolean().optional().default(false),
-});
+}).strict();
 
+/** At most 40 chatbot calls in 10 minutes for one user on one instance. */
+const LIMIT = { windowMs: 10 * 60_000, maxAttempts: 40 };
+const limits = createInMemoryRateLimitStore();
+
+/**
+ * Answers one lesson chatbot turn about a stored article.
+ * @param request A JSON body: the article id, the conversation so far, and the opening flag.
+ * @returns 201 with the bot text; 400 for a bad body; 401 when signed out; 404 for a missing or
+ * draft article; 429 after 40 calls in 10 minutes; 500 when the model call fails.
+ */
 export async function POST(request: NextRequest) {
   try {
     const user = await currentUser();
@@ -27,18 +36,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const param = await request.json();
-    const validatedData = createLessonChatbotQuestionSchema.parse(param);
+    if (!(await consumeRateLimit(limits, `lesson-chatbot:${user.id}`, LIMIT)).allowed) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
 
-    const {
-      messages,
-      title,
-      passage,
-      summary,
-      image_description,
-      blacklistedQuestions,
-      isInitial,
-    } = validatedData;
+    const param = await request.json();
+    const { articleId, messages, isInitial } = createLessonChatbotQuestionSchema.parse(param);
+
+    const article = await getLessonChatbotContext(articleId);
+    if (!article) {
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
+    }
+    const { title, passage, summary, imageDescription: image_description, questions: blacklistedQuestions } = article;
 
     // เตรียม system prompt ตามว่าเริ่มบทสนทนาใหม่หรือไม่
     const blacklistedQuestionsText =
