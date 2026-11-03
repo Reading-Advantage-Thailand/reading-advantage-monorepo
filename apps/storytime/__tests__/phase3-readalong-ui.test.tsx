@@ -1,12 +1,24 @@
 // @vitest-environment jsdom
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { cleanup, render } from "@testing-library/react";
+import { afterEach } from "vitest";
 import { describe, expect, it } from "vitest";
 import week from "../content/l2/w01.json";
+import type { ReadAlongSentence } from "@reading-advantage/read-along/lib/align";
+import { HIGHLIGHT_CLASSES } from "@reading-advantage/read-along/lib/highlight";
+import { findPosition, NO_POSITION } from "@reading-advantage/read-along/lib/position";
+import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
 
 const app = resolve(import.meta.dirname, "..");
 const route = readFileSync(resolve(app, "app/[locale]/st/[level]/[week]/page.tsx"), "utf8");
 const readAlongBook = week.books.find((book) => book.kind === "readalong");
+const contentDir = resolve(app, "content/l2");
+const shippedWeeks = readdirSync(contentDir)
+  .filter((file) => /^w[0-9]{2}\.json$/.test(file))
+  .map((file) => JSON.parse(readFileSync(resolve(contentDir, file), "utf8")) as typeof week);
+
+afterEach(cleanup);
 
 /** Returns a page with at least two timed sentences from the shipped milestone week. */
 function shippedTwoSentencePage() {
@@ -60,11 +72,25 @@ describe("Phase 3 Storytime read-along UI", () => {
   });
 
   it("marks one word during the shipped timing overlap", () => {
-    const allSentences = readAlongBook?.audio?.sentences ?? [];
-    expect(allSentences, "the shipped book must have timed sentences").not.toHaveLength(0);
-    const allWords = allSentences.flatMap((sentence) => sentence.words);
-    const overlaps = allWords.some((word, index) => allWords[index + 1]?.start < word.end);
-    expect(overlaps, "the shipped week scan must find its recorded overlap").toBe(true);
+    const candidates = shippedWeeks.flatMap((shippedWeek) => {
+      const sentences = (shippedWeek.song?.times ?? []) as ReadAlongSentence[];
+      return sentences.flatMap((sentence) =>
+        sentence.words.flatMap((word, index) => {
+          const next = sentence.words[index + 1];
+          return next && word.end > next.start
+            ? [{ sentence, time: (word.end + next.start) / 2 }]
+            : [];
+        }),
+      );
+    });
+    expect(candidates, "the shipped weeks must include a read-along word overlap").not.toHaveLength(0);
+    const { sentence, time } = candidates[0];
+    const position = findPosition([sentence], time, NO_POSITION);
+    const { container } = render(
+      <ReadAlongPassage sentences={[sentence]} passage="" position={position} active />,
+    );
+    const markedClass = HIGHLIGHT_CLASSES.currentWord.split(" ")[0];
+    expect(container.querySelectorAll(`.${markedClass}`)).toHaveLength(1);
     expect(route).toMatch(/findPosition|position/);
     expect(route).toMatch(/ReadAlongPassage/);
   });
