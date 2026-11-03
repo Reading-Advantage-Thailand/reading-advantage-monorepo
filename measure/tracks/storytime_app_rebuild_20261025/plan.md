@@ -444,6 +444,16 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - No production file changed. No implementation commit exists. Task 3.4 stays `[~]`.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-f538c15.log`.
 
+### Phase 3 task 3.4 Red retry
+
+- Red retry started from Green's blocked HEAD `eb2829b9963849c759aa1b8b99dba0ef7cedaf88`. The supplied phase base and original Red role base resolve and remain unchanged.
+- The test now compares each clip path with the G3 bank filename for its grapheme. It uses `03-p.mp3`, `26-a-short.mp3`, and `04-n.mp3`. It does not import or read Green's bank module.
+- The other assertions in both test files need no naming change. The sounds-page row compares the shipped `focus.element.audio` path. The bank test checks all 45 exact G3 paths. Capital playback checks the phoneme folder, and the other rows compare behavior or paths.
+- Targeted Vitest command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-decodable-ui.test.tsx apps/storytime/__tests__/phase3-phoneme-bank.test.ts'`. Exit 1; 2 files; 7 tests; 7 failed, 0 passed. Failures are assertions only: four missing-UI checks, two missing-bank checks, and the expected F28 `RangeError`.
+- Storytime type check: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'`. Exit 0; no errors.
+- Test-fix commit: `cf16eb0e3` (`test(storytime): match blend clips by bank name (track_id: storytime_app_rebuild_20261025)`). No production file changed.
+- Report: `measure/runs/storytime_app_rebuild_20261025/red-28014a3.log`.
+
 - [~] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
