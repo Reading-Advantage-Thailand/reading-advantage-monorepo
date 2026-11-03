@@ -101,6 +101,7 @@ function LessonSAQContent({ article }: { article: Article }) {
 
     if (!questions) return;
 
+    let refused = false;
     startTransition(async () => {
       await getFeedback({
         data: {
@@ -113,6 +114,12 @@ function LessonSAQContent({ article }: { article: Article }) {
         activityType: ActivityType.SA_QUESTION,
       })
         .then(async (res) => {
+          // A refused request (bad input or the rate limit) saves nothing and keeps the task open.
+          if (res && "error" in res && res.error) {
+            refused = true;
+            toast.error(res.error);
+            return;
+          }
           const score = (res as { score?: number }).score;
           const data = {
             ...res,
@@ -131,6 +138,10 @@ function LessonSAQContent({ article }: { article: Article }) {
           else await finishQuiz(article.id, data, ActivityType.SA_QUESTION);
         })
         .finally(async () => {
+          if (refused) {
+            setPaused(false);
+            return;
+          }
           setState(QuestionState.COMPLETED);
           await refresh();
         });

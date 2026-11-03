@@ -36,12 +36,15 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
+/** Length caps of AI feedback input: they bound the cost of one paid call. */
+export const FEEDBACK_CAPS = { language: 32, passage: 50_000, question: 1000, response: 2000 } as const;
+
 export const laqFeedbackInputSchema = z.object({
-  preferredLanguage: z.string(),
+  preferredLanguage: z.string().max(FEEDBACK_CAPS.language),
   targetCEFRLevel: z.enum(["A0", "A1", "A2", "B1", "B2", "C1", "C2"]),
-  readingPassage: z.string(),
-  writingPrompt: z.string(),
-  studentResponse: z.string(),
+  readingPassage: z.string().max(FEEDBACK_CAPS.passage),
+  writingPrompt: z.string().max(FEEDBACK_CAPS.question),
+  studentResponse: z.string().max(FEEDBACK_CAPS.response),
 });
 
 export const laqFeedbackOutputSchema = z.object({
@@ -92,12 +95,21 @@ export const laqFeedbackOutputSchema = z.object({
 });
 
 export const saqFeedbackInputSchema = z.object({
-  preferredLanguage: z.string(),
+  preferredLanguage: z.string().max(FEEDBACK_CAPS.language),
   targetCEFRLevel: z.enum(["A0", "A1", "A2", "B1", "B2", "C1", "C2"]),
-  article: z.string(),
-  question: z.string(),
-  suggestedResponse: z.string(),
-  studentResponse: z.string(),
+  article: z.string().max(FEEDBACK_CAPS.passage),
+  question: z.string().max(FEEDBACK_CAPS.question),
+  suggestedResponse: z.string().max(FEEDBACK_CAPS.response),
+  studentResponse: z.string().max(FEEDBACK_CAPS.response),
+});
+
+/** The client request of the `getFeedback` action, with the same caps as the AI input. */
+export const feedbackRequestSchema = z.object({
+  articleId: z.string().uuid(),
+  question: z.string().max(FEEDBACK_CAPS.question),
+  answer: z.string().max(FEEDBACK_CAPS.response),
+  suggestedResponse: z.string().max(FEEDBACK_CAPS.response).optional(),
+  preferredLanguage: z.string().max(FEEDBACK_CAPS.language),
 });
 
 export const saqFeedbackOutputSchema = z.object({

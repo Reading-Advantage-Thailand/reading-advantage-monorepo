@@ -13,12 +13,18 @@ import {
   multipleChoiceQuestions,
 } from '@reading-advantage/db';
 import { z } from "zod";
+import { consumeRateLimit, createInMemoryRateLimitStore } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
 import { guardStudentAction } from "@/lib/student-view";
 import { gradeMcResponses, resolveQuestionXpAward } from "@/lib/authorization";
 import { awardQuestionXp } from "@/server/xp/award-question-xp";
 import { getLaqFeedback, getSaqFeedback } from "@/server/utils/assistant";
 import { ActivityType } from "@/types/enum";
+import { feedbackRequestSchema } from "@/lib/zod";
+
+/** At most 20 AI feedback calls in 10 minutes for one user on one instance. */
+const FEEDBACK_LIMIT = { windowMs: 10 * 60_000, maxAttempts: 20 };
+const feedbackLimits = createInMemoryRateLimitStore();
 
 /** A retake reopens one article quiz; other activity types have no retake. */
 const retakeSchema = z.object({
@@ -205,6 +211,12 @@ export async function finishQuiz(
   return { success: true };
 }
 
+/**
+ * Asks the AI for SAQ or LAQ feedback on an article answer, without saving.
+ * @param value The answer request and its activity type.
+ * @returns The AI feedback; `{ error: "invalid" }` for a bad or oversized request;
+ * `{ error: "rate_limited" }` after 20 calls in 10 minutes; or an error when signed out.
+ */
 export async function getFeedback(value: {
   data: {
     articleId: string;
@@ -219,6 +231,14 @@ export async function getFeedback(value: {
 
   if (!user) {
     return { error: "User not found" };
+  }
+
+  if (!feedbackRequestSchema.safeParse(value?.data).success) {
+    return { error: "invalid" };
+  }
+
+  if (!(await consumeRateLimit(feedbackLimits, `feedback:${user.id}`, FEEDBACK_LIMIT)).allowed) {
+    return { error: "rate_limited" };
   }
 
   if (value.activityType === ActivityType.LA_QUESTION) {

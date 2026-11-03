@@ -284,6 +284,11 @@ function WrittenQuestionView({
         },
         activityType: config.activityType,
       }).then((res) => {
+        // A refused request (bad input or the rate limit) carries an error and no feedback.
+        if (res && "error" in res && res.error) {
+          toast.error(res.error);
+          return;
+        }
         setFeedback(res as unknown as FeedbackData & SAQFeedback);
         setOpenModal(true);
       });
