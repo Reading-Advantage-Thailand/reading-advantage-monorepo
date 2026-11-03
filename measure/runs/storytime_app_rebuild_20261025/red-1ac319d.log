@@ -1,0 +1,56 @@
+# Measure Mid Red report — Storytime task 3.5
+
+Status: Red defect fix complete. This report records the supplied phase and role bases.
+
+## Preflight
+
+- Role: Measure Mid Red, GPT-6 Luna (`openai/gpt-6-luna`).
+- Track: `storytime_app_rebuild_20261025`; Phase 3, task 3.5, Song page.
+- Supplied `phase_base_sha`: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Supplied `role_base_sha`: `1ac319d4f`; resolved full commit: `1ac319d4f7b58481903259c7ea3b4c1449674c64`.
+- HEAD before edits: `1ac319d4f7b58481903259c7ea3b4c1449674c64`.
+- Dirty paths before edits are unrelated user work. Generated or cache paths: `.generated/`, `.pnpm-store/`, `.qa-tmp/`, `.tmp-playwright/`, `.tmp/`, `.opencode/goals/state.json.sessions/`, `apps/advantage-games/test-results/`, and `test-results/`. Other untracked paths belong to other work and remain untouched. No dirty path is relevant to this task.
+- Task 3.5 is marked `[~]` before test work.
+- AC-8.2 box ratios remain a browser gate. This unit test does not measure layout.
+- The Red defect fix began at Green HEAD `1c5e422cb10e8db4a6d21d76d5d2a1152e5828be`. The phase and role bases remain unchanged.
+- Green's uncommitted implementation files are preserved. This role changed only the test and its evidence.
+
+## Test commands and results
+
+- Required targeted Vitest command: exit 1; 1 failed file; 6 failed tests and 1 passed test (7 total).
+- The six failures are assertion failures. Each targets the absent song client view at the documented song module path.
+- The karaoke route guard passes. It reads the real w01 clone with no `song.karaoke` field.
+- App type check through `heavy-run.sh`: exit 0; no diagnostics.
+- AC-8.2 remains a browser gate. The unit suite makes no layout claim.
+- Red defect fix: the line 0 gesture query now scopes to that lyric element. A full-file scan found no other global single-match query for repeated shipped gesture data.
+- Post-fix targeted Vitest command: exit 0; 1 file; 7 tests passed.
+- Post-fix app `tsc --noEmit`: exit 0; no diagnostics.
+
+## Commits and files
+
+- Test commit: `cc3cfcfa58fa2e56d4571c2e5db9c54fde3755ae`.
+- Plan evidence commit: `5d05e70c5d4f685724fb63c259a5fb725acbfff5`.
+- Red defect fix commit: `38bef548e27645c7325f7df9e4389ab12d7aad24`.
+- Updated plan and report evidence commit: pending.
+- Test file: `apps/storytime/__tests__/phase3-song-ui.test.tsx`.
+- Plan file: `measure/tracks/storytime_app_rebuild_20261025/plan.md`.
+- This log is ignored by the existing `measure/runs/` rule and remains available at the requested path.
+
+## Remaining failures
+
+- None in the post-fix targeted test or app type check. AC-8.2 remains untested because it needs the browser gate.
+
+## MEASURE_AGENT_RESULT
+
+role: Measure Mid Red
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app — task 3.5 Song page
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 1ac319d4f7b58481903259c7ea3b4c1449674c64
+resulting_head: pending
+commits: cc3cfcfa58fa2e56d4571c2e5db9c54fde3755ae; 5d05e70c5d4f685724fb63c259a5fb725acbfff5; 38bef548e27645c7325f7df9e4389ab12d7aad24; plan/report commit pending
+tests: post-fix targeted Vitest exit 0 (1 file, 7 passed); app tsc exit 0
+files: apps/storytime/__tests__/phase3-song-ui.test.tsx; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log
+remaining_failures: none in targeted Vitest or tsc; AC-8.2 browser gate not run
+status: complete
+handoff: AC-8.2 box ratios remain for the browser gate.

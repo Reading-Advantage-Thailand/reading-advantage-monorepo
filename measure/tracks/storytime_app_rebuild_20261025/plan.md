@@ -513,6 +513,14 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - No committed Red test changed. AC-8.2 stays with the browser gate of task 3.7.
 - Green report: `measure/runs/storytime_app_rebuild_20261025/green-5d05e70.log`.
 
+### Phase 3 task 3.5 Red defect fix
+
+- Red fix started at Green HEAD `1c5e422cb10e8db4a6d21d76d5d2a1152e5828be`. The phase base remains `7db52a49d20e195388fd91670cc7c022312b50c5`; the role base remains `1ac319d4f7b58481903259c7ea3b4c1449674c64`.
+- `phase3-song-ui.test.tsx` now scopes its gesture query to the matching line. The full-file check found no other global single-match query for repeated shipped gesture data. Line text is unique in w01; the later gesture assertion is already scoped to its line.
+- Red fix test commit: `38bef548e27645c7325f7df9e4389ab12d7aad24` (`test(storytime): query repeated song gestures safely (track_id: storytime_app_rebuild_20261025)`).
+- Targeted Vitest command: exit 0; 1 file; 7 tests passed. App `tsc --noEmit`: exit 0; no diagnostics.
+- Plan evidence and updated Red report commit separately. The report is `measure/runs/storytime_app_rebuild_20261025/red-1ac319d.log`.
+
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.
 - [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
