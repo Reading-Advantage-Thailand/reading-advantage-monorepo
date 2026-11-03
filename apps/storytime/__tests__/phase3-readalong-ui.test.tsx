@@ -105,10 +105,11 @@ describe("Phase 3 Storytime read-along UI", () => {
   it("keeps My turn silent until a word tap and plays the measured word cut", async () => {
     const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
-    const { audio } = await renderReader();
+    const { source, sentences } = shippedTwoSentencePage();
+    const { audio } = await renderReader(source);
     fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
     expect(play).not.toHaveBeenCalled();
-    const sentence = shippedTwoSentencePage().sentences[0];
+    const sentence = sentences[0];
     const word = sentence.words[0];
     fireEvent.click(screen.getByText(new RegExp(`^${word.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`)));
     expect(play).toHaveBeenCalledTimes(1);
