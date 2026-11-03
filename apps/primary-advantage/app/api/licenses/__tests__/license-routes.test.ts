@@ -152,7 +152,7 @@ describe("POST /api/licenses", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await POST(req("POST", "http://x/api/licenses", body))).status).toBe(403);
     expect(mocks.inserted).toHaveLength(0);
@@ -209,7 +209,7 @@ describe("GET /api/licenses", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await GET(req("GET", "http://x/api/licenses"))).status).toBe(403);
   });
@@ -276,7 +276,7 @@ describe("DELETE /api/licenses", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await DELETE(req("DELETE", "http://x/api/licenses?id=l1"))).status).toBe(403);
     expect(mocks.deletes).toBe(0);
@@ -302,7 +302,7 @@ describe("GET /api/licenses/[id]", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await GET_ID(req("GET", "http://x/api/licenses/l1"), params)).status).toBe(403);
   });
@@ -346,7 +346,7 @@ describe("PUT /api/licenses/[id]", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await put(body)).status).toBe(403);
   });
@@ -409,7 +409,7 @@ describe("DELETE /api/licenses/[id]", () => {
 
   it("answers 403 when the policy refuses", async () => {
     mocks.assertCan.mockImplementation(() => {
-      throw new AuthError("no");
+      throw new AuthError("no", "FORBIDDEN");
     });
     expect((await del()).status).toBe(403);
   });
