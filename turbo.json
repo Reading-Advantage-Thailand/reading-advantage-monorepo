@@ -31,7 +31,15 @@
       "persistent": true
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^check-types", "^build"]
+    },
+    "@reading-advantage/db#check-types": {
+      "dependsOn": [
+        "^check-types",
+        "^build",
+        "@reading-advantage/domain#build",
+        "@reading-advantage/sales-knowledge#build"
+      ]
     }
   }
 }
