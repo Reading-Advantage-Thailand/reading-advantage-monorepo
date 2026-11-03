@@ -7,7 +7,7 @@ const contentDir = resolve(appDir, "content/l2");
 const weeks = readdirSync(contentDir)
   .filter((file) => /^w[0-9]{2}\.json$/.test(file))
   .map((file) => JSON.parse(readFileSync(resolve(contentDir, file), "utf8")) as {
-    focus: { element: { graphemes: string[] } };
+    focus: { element?: { graphemes: string[] } };
   });
 const expectedFiles = [
   "01-s", "02-t", "03-p", "04-n", "05-m", "06-d", "07-g", "08-c-k", "09-r", "10-h",
@@ -43,7 +43,7 @@ describe("Phase 3 phoneme bank", () => {
 
   it("maps each grapheme taught by shipped weeks to one bank clip", async () => {
     const bank = await loadBank();
-    const taught = new Set(weeks.flatMap((week) => week.focus.element.graphemes));
+    const taught = new Set(weeks.flatMap((week) => week.focus.element?.graphemes ?? []));
     expect(weeks, "the shipped week set must not be empty").not.toHaveLength(0);
     expect(taught.size, "the shipped grapheme set must not be empty").toBeGreaterThan(0);
     for (const grapheme of taught) {

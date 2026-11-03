@@ -73,28 +73,30 @@ describe("Phase 3 Storytime decodable UI", () => {
   });
 
   it("plays a shipped CVC word's clips in grapheme order before its whole-word recording", async () => {
-    const cvc = shippedWeeks.find((week) => week.books.some((book) => book.kind === "decodable" &&
-      (book.soundsPage?.words ?? []).some((candidate) => blendPlanForWord(candidate, week).mode === "blend")))!;
-    const word = (cvc.books.find((book) => book.kind === "decodable")?.soundsPage?.words ?? [])
-      .find((candidate) => blendPlanForWord(candidate, cvc).mode === "blend");
+    const cvc = shippedWeeks.find((week) => week.meta.week === 3);
+    expect(cvc, "shipped week 3 must be present").toBeDefined();
+    const week = cvc!;
+    shippedCvcWords();
+    const word = (week.books.find((book) => book.kind === "decodable")?.soundsPage?.words ?? [])
+      .find((candidate) => blendPlanForWord(candidate, week).mode === "blend");
     expect(word, "a shipped CVC word must exist").toBeTruthy();
     const played: string[] = [];
     const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(function (this: HTMLMediaElement) {
       played.push(this.src);
       return Promise.resolve();
     });
-    const { audio } = await renderDecodable(cvc);
+    const { audio } = await renderDecodable(week);
     fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${word}$`, "i") }));
     expect(play).toHaveBeenCalled();
     expect(audio.getAttribute("src")).toContain("phonemes/daniel/");
     const clips = played.filter((src) => src.includes("phonemes/daniel/"));
-    expect(clips).toHaveLength(blendPlanForWord(word!, cvc).graphemes.length);
+    expect(clips).toHaveLength(blendPlanForWord(word!, week).graphemes.length);
     const g3ClipByGrapheme: Record<string, string> = {
       p: "03-p.mp3",
       a: "26-a-short.mp3",
       n: "04-n.mp3",
     };
-    const graphemes = blendPlanForWord(word!, cvc).graphemes;
+    const graphemes = blendPlanForWord(word!, week).graphemes;
     expect(graphemes.every((grapheme) => g3ClipByGrapheme[grapheme])).toBe(true);
     expect(clips.map((src) => src.split("/").at(-1))).toEqual(
       graphemes.map((grapheme) => g3ClipByGrapheme[grapheme]),
@@ -129,11 +131,9 @@ describe("Phase 3 Storytime decodable UI", () => {
   });
 
   it("treats a capital word like its lower-case form", async () => {
-    const source = shippedWeeks.find((entry) => entry.books.some((book) => book.kind === "decodable" &&
-      (book.soundsPage?.words ?? []).some((candidate) => blendPlanForWord(candidate, entry).mode === "blend")))!;
-    const word = shippedCvcWords()[0];
-    const week = cloneWeek(source);
-    const page = week.books.find((book) => book.kind === "decodable")!.pages.find((entry) => entry.text?.toLowerCase().includes(word));
+    const word = "pan";
+    const week = cloneWeek(shippedWeeks.find((entry) => entry.meta.week === 3)!);
+    const page = week.books.find((book) => book.kind === "decodable")!.pages.find((entry) => entry.text?.toLowerCase().includes(word.toLowerCase()));
     expect(page, "a shipped CVC word must occur in a decodable page").toBeDefined();
     page!.text = page!.text!.replace(new RegExp(`\\b${word}\\b`, "i"), word[0].toUpperCase() + word.slice(1));
     const { audio } = await renderDecodable(week);
