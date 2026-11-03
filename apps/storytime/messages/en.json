@@ -1,1 +1,12 @@
-{}
+{
+  "tileReadalong": "Read-along",
+  "tileDecodable": "Decodable",
+  "tileSong": "Song",
+  "tileKaraoke": "Karaoke",
+  "homeChoosePart": "Choose a part",
+  "homeParentHeading": "For parents",
+  "homeSoundHeading": "Sound of the week",
+  "homeWordsHeading": "Words this week",
+  "homeFrameHeading": "Sentence frame",
+  "homeActivityHeading": "At home"
+}

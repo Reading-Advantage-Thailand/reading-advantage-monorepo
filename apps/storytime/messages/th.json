@@ -1,1 +1,12 @@
-{}
+{
+  "tileReadalong": "อ่านตาม",
+  "tileDecodable": "อ่านคำ",
+  "tileSong": "เพลง",
+  "tileKaraoke": "คาราโอเกะ",
+  "homeChoosePart": "เลือกส่วนที่ต้องการ",
+  "homeParentHeading": "สำหรับผู้ปกครอง",
+  "homeSoundHeading": "เสียงประจำสัปดาห์",
+  "homeWordsHeading": "คำศัพท์สัปดาห์นี้",
+  "homeFrameHeading": "ประโยคตัวอย่าง",
+  "homeActivityHeading": "กิจกรรมที่บ้าน"
+}

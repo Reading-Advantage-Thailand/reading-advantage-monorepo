@@ -4,3 +4,9 @@
 
 @source "../../../packages/config";
 @source "../../../packages/read-along";
+
+/* Sarabun is the Thai-first app face (spec section 6). next/font in the locale layout self-hosts
+   it and exposes it as --font-sarabun, so the browser makes no request to a font provider. */
+@theme {
+  --font-sans: var(--font-sarabun), ui-sans-serif, system-ui, sans-serif;
+}
