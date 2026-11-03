@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "track_id": "www_primary_page_revamp_20261030",
+  "status": "closed",
+  "completion_date": "2026-11-03",
+  "pre_closeout_head": "5e719505257c6f7390d28c15a0dc7d09da15e643",
+  "acceptance": {
+    "phase": "measure/runs/www_primary_page_revamp_20261030/phase-acceptance-5e71950.json",
+    "final": "measure/runs/www_primary_page_revamp_20261030/final-acceptance-5e71950.json",
+    "audited_head_sha": "5e719505257c6f7390d28c15a0dc7d09da15e643",
+    "status": "pass"
+  },
+  "audits": {
+    "phase_acceptance": "pass",
+    "final_acceptance": "pass",
+    "review_a": "pass; F1 and F2 carried to tech debt",
+    "review_b": "pass; F1 to F3 carried to tech debt",
+    "adversarial": "pass; F1 to F4 and F6 to F8 carried to tech debt; F5 closed by owner decision",
+    "ux": "pass; UX-N1 and UX-N2 carried to tech debt"
+  },
+  "commands": [
+    "git rev-parse HEAD; git status --short --untracked-files=no",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/rama-worktrees/www-primary-page --track www_primary_page_revamp_20261030",
+    "rg -n 'measure/tracks/[a-z_0-9-]+/plan\\.md|www_primary_page_revamp_20261030' tests/*.sh"
+  ],
+  "retained_evidence": [
+    "measure/runs/www_primary_page_revamp_20261030/phase-acceptance-5e71950.json",
+    "measure/runs/www_primary_page_revamp_20261030/final-acceptance-5e71950.json",
+    "measure/runs/www_primary_page_revamp_20261030/review-a-correctness-5e71950.json",
+    "measure/runs/www_primary_page_revamp_20261030/review-b-security-5e71950.json",
+    "measure/runs/www_primary_page_revamp_20261030/adversarial-testing-5e71950.json",
+    "measure/runs/www_primary_page_revamp_20261030/ux-browser-review-5e71950.json",
+    "Daniel approval: Google Tasks RzJtV1Q1akJUQnplNVlsZg, 2026-11-03 13:38 ICT; captures /home/daniebo/Desktop/a34-www-primary-captures-v2/ at eea45ee13"
+  ],
+  "findings_recorded_in_tech_debt": [
+    "Review A F1-F2",
+    "Review B F1-F3",
+    "Adversarial F1-F4 and F6-F8",
+    "UX-N1 and UX-N2",
+    "scripts/crop-primary-page-images.ts ESLint ignore"
+  ],
+  "archive_path": "measure/archive/www_primary_page_revamp_20261030",
+  "test_reference_audit": "No test references this track's plan path. tests/codecamp_pr_release_approval_provenance.sh already defines track_dir_resolve() and checks archive first; no test update was required.",
+  "artifact_cleanup": "None. Acceptance and closeout evidence retained. No bulky artifacts were explicitly identified for deletion.",
+  "owner_gate": "Task 1.9 remains [b] deferred:daniel-deploy. Daniel owns local-master merge, push, and deployment."
+}
