@@ -142,7 +142,7 @@ function imagePath(src: string): string {
 afterEach(cleanup);
 
 describe("Storytime Advantage content", () => {
-  it.each(["en", "th"] as const)("uses the exact Storytime products overview handoff copy in %s", (locale) => {
+  it.each(["en", "th", "zh"] as const)("uses the exact Storytime products overview handoff copy in %s", (locale) => {
     state.messages = MESSAGES[locale];
     const expected = OVERVIEW_LABEL_COPY[locale];
     const overview = lookup("pages.products.overview.gradeBands.storytime") as {
