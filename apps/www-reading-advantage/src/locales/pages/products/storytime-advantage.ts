@@ -1,382 +1,219 @@
 export const en = {
   metadata: {
-    title: "Storytime Advantage - On Our Roadmap | Reading Advantage Thailand",
+    title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy book line with a printed workbook and a digital twin. No launch date.",
+      "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit is being prepared, with a printed student book and QR-linked digital parts.",
   },
   hero: {
-    title: "Early Literacy, Planned",
-    subtitle: "A Planned K-3 Literacy Book Line",
+    title: "Stories, Songs, and First Sounds",
+    subtitle: "English for Anuban 2 to P2 (ages 4 to 8)",
     description:
-      "Storytime Advantage is a K-3 literacy book line on our roadmap. It has no release date. It is planned to pair printed books with a digital twin.",
-    comingSoon: "On Our Roadmap",
+      "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
+    comingSoon: "In Preparation",
   },
-  heroAlt: "Digital storytelling experience",
-  classroomAlt: "Storytime Advantage Classroom",
-  coreValue: {
-    heading: "A Literacy Line in Print and Digital",
+  heroAlt: "Pip in a Storytime Advantage week 1 story picture",
+  adaptiveEngine: {
+    eyebrow: "Mastery Advantage",
+    heading: "Print and QR for the First Unit",
+    description:
+      "The first unit pairs a printed student book and a Thai-only teacher book with QR-linked digital parts. The app build is being prepared and is not deployed.",
+    alt: "The approved Level 2 cover artwork for Storytime Advantage",
+  },
+  keyFeatures: {
+    heading: "What Release 1 Includes",
     features: [
       {
-        title: "Structured Lessons",
-        description:
-          "A planned structured curriculum for early readers",
+        title: "In Print",
+        points: [
+          "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8, with tear-out readers of about A5 inside the bound book. Children fold, nest, and staple each reader; no scissors are needed",
+          "A Thai-only teacher book, with five lesson scripts a week",
+          "Color reader files for the teacher to print on A3 and lead the class",
+          "A review strip for each day",
+        ],
       },
       {
-        title: "Balanced Approach",
-        description:
-          "Printed materials and digital tools used together",
-      },
-      {
-        title: "Complete Support",
-        description:
-          "Resources planned for teachers and students",
+        title: "By QR Code, With No Login",
+        points: [
+          "The song of the week, with a video",
+          "The read-along book, with \"read to me\" and \"I read\"",
+          "The decodable book, with words to tap and hear",
+          "A 5-minute home activity in Thai",
+        ],
       },
     ],
   },
-  keyFeatures: {
-    heading: "Planned Features",
+  coreValue: {
+    heading: "One Sound, One Song, Two Books a Week",
     features: [
       {
-        title: "Digital Components",
-        points: [
-          "Interactive phonics lessons",
-          "Digital decodable texts",
-          "Progress tracking tools",
-          "Built-in assessments",
-        ],
+        title: "Lessons Printed in Full",
+        description:
+          "Five 30-minute lessons a week in Anuban. Each step gives what the teacher does and the English the teacher says, with the Thai beside it.",
       },
       {
-        title: "Physical Materials",
-        points: [
-          "Printable worksheets",
-          "Hands-on activities",
-          "Take-home resources",
-          "Classroom materials",
-        ],
+        title: "One Sound a Week",
+        description:
+          "Each week teaches one letter sound, with a recorded pure sound, a hand action, and words that start with the sound.",
+      },
+      {
+        title: "A Link to Home",
+        description:
+          "A Thai home card each week, with QR codes for the song and books being prepared with the app.",
       },
     ],
   },
   teacherTools: {
-    heading: "Planned Teacher Tools",
+    heading: "For the Teacher",
     tools: [
-      {
-        title: "Lesson Planning",
-        description: "Planning tools and resources",
-        icon: "📝",
-      },
-      {
-        title: "Class Management",
-        description: "Efficient tools for managing student progress",
-        icon: "👥",
-      },
-      {
-        title: "Assessment Tools",
-        description: "Built-in assessment and reporting features",
-        icon: "📊",
-      },
+      { title: "Printed Scripts", description: "The teacher reads the script. There is no lesson planning." },
+      { title: "Review Strips", description: "Each sound and word comes back on a fixed schedule, in 4 minutes or less a day." },
+      { title: "Friday Check", description: "A 3-minute picture check tells the teacher which sounds and words to bring back." },
     ],
   },
   faq: {
     heading: "Frequently Asked Questions",
     questions: [
       {
-        question: "When will Storytime Advantage launch?",
+        question: "What does Storytime Advantage release 1 include?",
         answer:
-          "Storytime Advantage is on our product roadmap. It has no release date. Tell us what you need.",
+          "The first unit is being prepared. It has one A4 student book for weeks 1 to 8, a Thai-only teacher book, and QR-linked digital parts. The app work is not deployed. Contact us to discuss the first unit.",
       },
       {
-        question: "What are the technical requirements?",
+        question: "How do the QR links work?",
         answer:
-          "Storytime Advantage is planned as printed books with a digital twin that runs in a web browser. Technical details will come when the product is closer to release.",
+          "The QR code links to the digital parts being prepared with the app. The app work is not deployed yet.",
       },
       {
-        question: "What will the Storytime Advantage curriculum include?",
+        question: "Our kindergarten teachers are not English teachers. Can they teach it?",
         answer:
-          "The planned curriculum will combine digital phonics lessons, decodable texts, printable activities, and classroom resources.",
+          "Yes. Every lesson is printed in full: what the teacher does, the English the teacher says with the Thai beside it, what the children do, and what to watch.",
       },
       {
-        question: "Who is Storytime Advantage designed for?",
+        question: "Who is Storytime Advantage for?",
         answer:
-          "The planned K-3 program is designed for young learners, teachers, and schools that want a balanced literacy approach.",
+          "Children from Anuban 2 to P2, about ages 4 to 8, and their class teachers. Parents join through the weekly home card.",
       },
       {
-        question: "How can I receive Storytime Advantage updates?",
+        question: "What happens after P2?",
         answer:
-          "Tell us you are interested and we will share news when we have it.",
+          "Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module.",
       },
     ],
   },
   cta: {
     heading: "Interested in Storytime Advantage?",
-    description:
-      "Storytime Advantage is on our roadmap. It has no release date. Tell us what you need.",
-    buttons: {
-      joinWaitlist: "Tell Us You Are Interested",
-      learnMore: "Learn More",
-    },
-  },
-  adaptiveEngine: {
-    eyebrow: "Adaptive Engine",
-    heading: "Early literacy paths built on mastery data",
-    description:
-      "Built on Mastery Advantage, the engine that uses Knowledge Space Theory and FSRS spaced repetition to map skills and schedule practice.",
-    alt: "Storytime Advantage adaptive learning visualization",
+    description: "The first unit is being prepared. Contact us to discuss Storytime Advantage.",
+    buttons: { joinWaitlist: "Contact Us", learnMore: "Learn More" },
   },
   eyebrows: {
-    keyFeatures: "KEY FEATURES",
-    k3Curriculum: "K-3 CURRICULUM",
-    teacherResources: "TEACHER RESOURCES",
+    keyFeatures: "WHAT IS IN THE PROGRAM",
+    k3Curriculum: "ANUBAN 2 TO P2",
+    teacherResources: "FOR THE TEACHER",
     frequentlyAskedQuestions: "FREQUENTLY ASKED QUESTIONS",
+  },
+  images: {
+    week02HowManyCakes: "The week 2 story page shows seven cakes.",
+    week03ItIsRed: "A week 3 story page shows an object that is red.",
+    week04NanAndPamNap: "Nan and Pam appear in a week 4 story page.",
+    week05TwoEars: "A week 5 story page shows two ears.",
+    week06ISeeACat: "A cat appears in a week 6 story page.",
+    week07TopOnAPot: "A top sits on a pot in a week 7 story page.",
+    week01ReaderHelloCover: "The cover of the week 1 reader, “Hello!”",
+    week01ReaderNanCanNodCover: "The cover of the week 1 reader, “Nan Can Nod.”",
   },
 };
 
 export const th = {
   metadata: {
-    title: "Storytime Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
+    title: "Storytime Advantage - ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ชุดหนังสือการรู้หนังสือ K-3 ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล ยังไม่มีกำหนดวันเปิดตัว",
+      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
   },
   hero: {
-    title: "การรู้หนังสือขั้นต้น ในแผนงาน",
-    subtitle: "ชุดหนังสือการรู้หนังสือ K-3 ที่วางแผนไว้",
+    title: "นิทาน เพลง และเสียงแรกของภาษาอังกฤษ",
+    subtitle: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)",
     description:
-      "Storytime Advantage เป็นชุดหนังสือการรู้หนังสือ K-3 ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว วางแผนให้หนังสือเล่มพิมพ์ทำงานคู่กับเวอร์ชันดิจิทัล",
-    comingSoon: "อยู่ในแผนงาน",
+      "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+    comingSoon: "กำลังจัดเตรียม",
   },
-  heroAlt: "ประสบการณ์การเล่าเรื่องดิจิทัล",
-  classroomAlt: "ห้องเรียน Storytime Advantage",
-  coreValue: {
-    heading: "ชุดการรู้หนังสือทั้งแบบพิมพ์และดิจิทัล",
+  heroAlt: "Pip ในภาพประกอบเรื่องประจำสัปดาห์ที่ 1 ของ Storytime Advantage",
+  adaptiveEngine: {
+    eyebrow: "Mastery Advantage",
+    heading: "หนังสือฉบับพิมพ์และคิวอาร์โค้ดสำหรับหน่วยแรก",
+    description:
+      "หน่วยการเรียนรู้แรกมีหนังสือนักเรียนฉบับพิมพ์ คู่มือครูภาษาไทย และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด กำลังจัดเตรียมแอปและยังไม่ได้ติดตั้งใช้งาน",
+    alt: "ภาพปก Level 2 ของ Storytime Advantage ที่ได้รับอนุมัติ",
+  },
+  keyFeatures: {
+    heading: "สิ่งที่มีในหน่วยการเรียนรู้แรก",
     features: [
       {
-        title: "บทเรียนที่มีโครงสร้าง",
-        description:
-          "หลักสูตรที่มีโครงสร้างสำหรับผู้เริ่มอ่านที่วางแผนไว้",
+        title: "ฉบับพิมพ์",
+        points: [
+          "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านฉีกออกได้ขนาดประมาณ A5 อยู่ในเล่ม เด็กพับ ซ้อน และเย็บเล่มย่อยแต่ละเล่ม โดยไม่ต้องใช้กรรไกร",
+          "คู่มือครูภาษาไทย พร้อมแผนการสอนสัปดาห์ละ 5 คาบ",
+          "ไฟล์หนังสือฝึกอ่านสีสำหรับครูพิมพ์ลงกระดาษ A3 เพื่อใช้สอนในชั้นเรียน",
+          "แถบทบทวนประจำวัน",
+        ],
       },
       {
-        title: "แนวทางที่สมดุล",
-        description:
-          "ใช้สื่อสิ่งพิมพ์และเครื่องมือดิจิทัลร่วมกัน",
-      },
-      {
-        title: "การสนับสนุนที่ครบถ้วน",
-        description: "ทรัพยากรที่วางแผนไว้สำหรับครูและนักเรียน",
+        title: "ผ่านคิวอาร์โค้ด ไม่ต้องเข้าสู่ระบบ",
+        points: [
+          "เพลงประจำสัปดาห์พร้อมวิดีโอ",
+          "หนังสืออ่านตามพร้อมโหมด \"อ่านให้ฟัง\" และ \"ฉันอ่านเอง\"",
+          "หนังสือฝึกอ่านที่แตะคำเพื่อฟังเสียงได้",
+          "กิจกรรมที่บ้านภาษาไทย ใช้เวลาห้านาที",
+        ],
       },
     ],
   },
-  keyFeatures: {
-    heading: "คุณสมบัติที่วางแผนไว้",
+  coreValue: {
+    heading: "หนึ่งเสียง หนึ่งเพลง หนังสือสองเล่ม ทุกสัปดาห์",
     features: [
-      {
-        title: "ส่วนประกอบดิจิทัล",
-        points: [
-          "บทเรียนโฟนิกส์เชิงโต้ตอบ",
-          "ข้อความที่สามารถถอดรหัสได้ในรูปแบบดิจิทัล",
-          "เครื่องมือติดตามความก้าวหน้า",
-          "การประเมินในตัว",
-        ],
-      },
-      {
-        title: "วัสดุทางกายภาพ",
-        points: [
-          "แผ่นงานที่พิมพ์ได้",
-          "กิจกรรมเชิงปฏิบัติ",
-          "ทรัพยากรที่นักเรียนสามารถนำกลับบ้าน",
-          "วัสดุสำหรับห้องเรียน",
-        ],
-      },
+      { title: "แผนการสอนครบทุกขั้นตอน", description: "หนังสือนักเรียนและคู่มือครูจัดเนื้อหาสำหรับการสอนแต่ละสัปดาห์" },
+      { title: "ฝึกอ่านจากหนังสือ", description: "หนังสือหนึ่งเล่มมีเรื่องอ่านตามและหนังสือฝึกอ่านที่ใช้เสียงและคำตามบทเรียน" },
+      { title: "เชื่อมต่อกับบ้านด้วยคิวอาร์โค้ด", description: "บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดสำหรับเพลงและหนังสือที่กำลังจัดเตรียมพร้อมกับแอป" },
     ],
   },
   teacherTools: {
-    heading: "เครื่องมือสำหรับครูที่วางแผนไว้",
+    heading: "สำหรับครู",
     tools: [
-      {
-        title: "การวางแผนบทเรียน",
-        description: "เครื่องมือและทรัพยากรสำหรับการวางแผน",
-        icon: "📝",
-      },
-      {
-        title: "การจัดการชั้นเรียน",
-        description:
-          "เครื่องมือที่มีประสิทธิภาพสำหรับการจัดการความก้าวหน้าของนักเรียน",
-        icon: "👥",
-      },
-      {
-        title: "เครื่องมือประเมินผล",
-        description: "คุณสมบัติการประเมินและรายงานในตัว",
-        icon: "📊",
-      },
+      { title: "คู่มือครูฉบับพิมพ์", description: "ครูอ่านตามแผนการสอนที่จัดเตรียมไว้" },
+      { title: "แถบทบทวน", description: "แถบทบทวนช่วยให้ครูนำเสียงและคำกลับมาทบทวนตามแผน" },
+      { title: "การตรวจประจำสัปดาห์", description: "การตรวจด้วยภาพช่วยให้ครูเห็นเสียงและคำที่ควรนำมาทบทวน" },
     ],
   },
   faq: {
     heading: "คำถามที่พบบ่อย",
     questions: [
-      {
-        question: "Storytime Advantage จะเปิดตัวเมื่อใด?",
-        answer:
-          "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
-      },
-      {
-        question: "ข้อกำหนดทางเทคนิคคืออะไร?",
-        answer:
-          "Storytime Advantage วางแผนเป็นหนังสือเล่มพิมพ์พร้อมเวอร์ชันดิจิทัลที่ใช้ผ่านเว็บเบราว์เซอร์ เราจะแจ้งรายละเอียดทางเทคนิคเมื่อใกล้เปิดตัว",
-      },
-      {
-        question: "หลักสูตร Storytime Advantage จะประกอบด้วยอะไรบ้าง?",
-        answer:
-          "หลักสูตรที่วางแผนไว้จะผสานบทเรียนโฟนิกส์ดิจิทัล ข้อความที่ถอดรหัสได้ กิจกรรมที่พิมพ์ได้ และทรัพยากรสำหรับห้องเรียน",
-      },
-      {
-        question: "Storytime Advantage ออกแบบมาสำหรับใคร?",
-        answer:
-          "โปรแกรม K-3 ที่วางแผนไว้ออกแบบสำหรับผู้เรียนรุ่นเยาว์ ครู และโรงเรียนที่ต้องการแนวทางการรู้หนังสือที่สมดุล",
-      },
-      {
-        question: "ฉันจะรับข่าวสารอัปเดตของ Storytime Advantage ได้อย่างไร?",
-        answer:
-          "บอกเราว่าคุณสนใจ แล้วเราจะแบ่งปันข่าวเมื่อมี",
-      },
+      { question: "Storytime Advantage release 1 มีอะไรบ้าง", answer: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก ประกอบด้วยหนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 คู่มือครูภาษาไทย และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด งานแอปยังไม่ได้ติดตั้งใช้งาน ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยการเรียนรู้แรก" },
+      { question: "คิวอาร์โค้ดเชื่อมไปยังส่วนใด", answer: "คิวอาร์โค้ดเชื่อมไปยังส่วนดิจิทัลที่กำลังจัดเตรียมพร้อมกับแอป งานแอปยังไม่ได้ติดตั้งใช้งาน" },
+      { question: "ครูอนุบาลที่ไม่ใช่ครูภาษาอังกฤษสอนได้ไหม", answer: "ได้ คู่มือครูมีแผนการสอนและข้อความภาษาอังกฤษที่ใช้สอน พร้อมความหมายภาษาไทยและสิ่งที่เด็กทำในแต่ละขั้นตอน" },
+      { question: "Storytime Advantage เหมาะกับใคร", answer: "เด็กอนุบาล 2 ถึง ป.2 อายุประมาณ 4 ถึง 8 ปี และครูประจำชั้น ผู้ปกครองร่วมกิจกรรมที่บ้านได้ผ่านบัตรประจำสัปดาห์" },
+      { question: "หลังจาก ป.2 แล้วเรียนอะไรต่อ", answer: "Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module." },
     ],
   },
   cta: {
-    heading: "สนใจ Storytime Advantage หรือไม่?",
-    description:
-      "Storytime Advantage อยู่ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
-    buttons: {
-      joinWaitlist: "บอกเราว่าคุณสนใจ",
-      learnMore: "เรียนรู้เพิ่มเติม",
-    },
-  },
-  adaptiveEngine: {
-    eyebrow: "เครื่องยนต์ปรับตัว",
-    heading: "เส้นทางการรู้หนังสือตอนต้นที่สร้างจากข้อมูลความเชี่ยวชาญ",
-    description:
-      "สร้างบน Mastery Advantage เครื่องยนต์ที่ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อจัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน",
-    alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Storytime Advantage",
+    heading: "สนใจ Storytime Advantage ไหม",
+    description: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage",
+    buttons: { joinWaitlist: "ติดต่อเรา", learnMore: "ดูข้อมูลเพิ่มเติม" },
   },
   eyebrows: {
-    keyFeatures: "คุณสมบัติหลัก",
-    k3Curriculum: "หลักสูตร K-3",
-    teacherResources: "ทรัพยากรสำหรับครู",
+    keyFeatures: "สิ่งที่มีในหลักสูตร",
+    k3Curriculum: "อนุบาล 2 ถึง ป.2",
+    teacherResources: "สำหรับครู",
     frequentlyAskedQuestions: "คำถามที่พบบ่อย",
+  },
+  images: {
+    week02HowManyCakes: "หน้าหนังสือเรื่องประจำสัปดาห์ที่ 2 แสดงเค้กเจ็ดชิ้น",
+    week03ItIsRed: "หน้าหนังสือเรื่องประจำสัปดาห์ที่ 3 แสดงสิ่งของสีแดง",
+    week04NanAndPamNap: "Nan และ Pam ปรากฏในหน้าหนังสือเรื่องประจำสัปดาห์ที่ 4",
+    week05TwoEars: "หน้าหนังสือเรื่องประจำสัปดาห์ที่ 5 แสดงหูสองข้าง",
+    week06ISeeACat: "แมวปรากฏในหน้าหนังสือเรื่องประจำสัปดาห์ที่ 6",
+    week07TopOnAPot: "ลูกข่างวางอยู่บนหม้อในหน้าหนังสือเรื่องประจำสัปดาห์ที่ 7",
+    week01ReaderHelloCover: "ปกหนังสือฝึกอ่านประจำสัปดาห์ที่ 1 “Hello!”",
+    week01ReaderNanCanNodCover: "ปกหนังสือฝึกอ่านประจำสัปดาห์ที่ 1 “Nan Can Nod”",
   },
 };
 
-export const zh = {
-  metadata: {
-    title: "Storytime Advantage - 我们路线图中 | 阅读优势泰国",
-    description:
-      "Storytime Advantage 在 Reading Advantage 产品路线图中 — 计划中的 K-3 早期识字图书系列，包含纸质练习册和数字版本。暂无发布日期。",
-  },
-  hero: {
-    title: "规划中的早期识字",
-    subtitle: "计划中的 K-3 识字图书系列",
-    description:
-      "Storytime Advantage 是我们路线图上的 K-3 识字图书系列，暂无发布日期。计划让纸质书与数字版本配合使用。",
-    comingSoon: "我们路线图中",
-  },
-  heroAlt: "数字故事叙述体验",
-  classroomAlt: "Storytime Advantage 教室",
-  coreValue: {
-    heading: "纸质与数字并行的识字系列",
-    features: [
-      {
-        title: "结构化课程",
-        description: "为早期读者计划的结构化课程",
-      },
-      {
-        title: "平衡的教学方法",
-        description: "纸质材料与数字工具配合使用",
-      },
-      {
-        title: "全面支持",
-        description: "为教师和学生计划的资源",
-      },
-    ],
-  },
-  keyFeatures: {
-    heading: "计划中的功能",
-    features: [
-      {
-        title: "数字组件",
-        points: ["互动语音课程", "数字可解码文本", "进度跟踪工具", "内置评估"],
-      },
-      {
-        title: "物理材料",
-        points: ["可打印工作表", "实践活动", "家庭资源", "课堂材料"],
-      },
-    ],
-  },
-  teacherTools: {
-    heading: "计划中的教师工具",
-    tools: [
-      {
-        title: "课程规划",
-        description: "规划工具和资源",
-        icon: "📝",
-      },
-      {
-        title: "班级管理",
-        description: "高效管理学生进度的工具",
-        icon: "👥",
-      },
-      {
-        title: "评估工具",
-        description: "内置的评估和报告功能",
-        icon: "📊",
-      },
-    ],
-  },
-  faq: {
-    heading: "常见问题",
-    questions: [
-      {
-        question: "Storytime Advantage 什么时候推出？",
-        answer:
-          "Storytime Advantage 在我们的产品路线图中。暂无发布日期，欢迎告诉我们您的需求。",
-      },
-      {
-        question: "技术要求是什么？",
-        answer:
-          "Storytime Advantage 计划做成纸质书加可在网页浏览器中使用的数字版本。技术细节将在临近发布时说明。",
-      },
-      {
-        question: "Storytime Advantage 课程包括哪些内容？",
-        answer:
-          "计划中的课程将结合数字语音课程、可解码文本、可打印活动和课堂资源。",
-      },
-      {
-        question: "Storytime Advantage 面向哪些人？",
-        answer:
-          "计划中的 K-3 课程面向儿童、教师以及希望采用平衡识字方法的学校。",
-      },
-      {
-        question: "如何获取 Storytime Advantage 的最新消息？",
-        answer:
-          "告诉我们您感兴趣，有消息时我们会与您分享。",
-      },
-    ],
-  },
-  cta: {
-    heading: "对 Storytime Advantage 感兴趣吗？",
-    description:
-      "Storytime Advantage 在我们的路线图中。暂无发布日期，欢迎告诉我们您的需求。",
-    buttons: {
-      joinWaitlist: "告诉我们您感兴趣",
-      learnMore: "了解更多",
-    },
-  },
-  adaptiveEngine: {
-    eyebrow: "自适应引擎",
-    heading: "基于掌握度数据的早期读写路径",
-    description:
-      "基于 Mastery Advantage，该引擎使用知识空间理论和 FSRS 间隔重复来映射技能并安排练习。",
-    alt: "Storytime Advantage 自适应学习可视化",
-  },
-  eyebrows: {
-    keyFeatures: "主要特点",
-    k3Curriculum: "K-3 课程",
-    teacherResources: "教师资源",
-    frequentlyAskedQuestions: "常见问题",
-  },
-};
+export const zh = en;

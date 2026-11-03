@@ -219,7 +219,7 @@ The old strings that claim a roadmap, a plan, or no release date leave all three
 
 The new copy keeps these headings: `faq.heading`, `cta.heading`, `cta.buttons.learnMore`, and `eyebrows.teacherResources`. They are not old roadmap strings.
 
-`heroAlt` stays as a key and takes the new hero alt text. `classroomAlt` stays as a key and takes the cast alt text. `adaptiveEngine.alt` stays as a key and takes the cover alt text. Each other image gets a key under `images`, in camelCase from the list target name.
+`heroAlt` stays as a key and takes the new hero alt text. Remove `classroomAlt` because its image slot stays empty. `adaptiveEngine.alt` takes the cover alt text. Each other image gets a key under `images`, in camelCase from the list target name.
 
 ## 6. Images: 10 files from the real-image list v0.2
 
