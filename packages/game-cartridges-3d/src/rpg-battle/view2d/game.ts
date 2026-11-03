@@ -30,7 +30,7 @@ const ACTION_LOOK: Record<ActionKind, { color: number; emoji: string }> = {
 
 const BACK = '__back';
 
-export interface RpgBattle2DTest {
+interface RpgBattle2DTest {
   state(): unknown;
   /** What the card waits for, and its tappable elements in game pixels (the QC driver taps them). */
   card(): { awaiting: 'hand' | 'question' | 'feedback' | null; targets: unknown[] };

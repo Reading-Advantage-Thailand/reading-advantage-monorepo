@@ -20,7 +20,7 @@ import { RuneMatchPlayer, type Presentation, type Sfx } from '../view/driver.js'
 
 const SFX: Record<Sfx, string> = { swap: 'tap', burst: 'correct', reject: 'wrong', heal: 'heal', shield: 'tap', hit: 'hit', defeat: 'defeat', victory: 'victory' };
 
-export interface RuneMatch2DTest {
+interface RuneMatch2DTest {
   state(): unknown;
   /** The board tiles and their centers in game pixels (the QC driver taps them). */
   board(): { id: string; row: number; col: number; text: string; x: number; y: number }[];

@@ -123,7 +123,7 @@ export type RpgBattleEvent =
   | { type: 'rejected'; command: string }
   | { type: 'victory' };
 
-export type RpgBattleEventType = RpgBattleEvent['type'];
+type RpgBattleEventType = RpgBattleEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const RPG_BATTLE_EVENT_TYPES: readonly RpgBattleEventType[] = [

@@ -15,7 +15,7 @@ export const FORGE_MODELS = [
 
 type V3 = [number, number, number];
 
-export interface Forge {
+interface Forge {
   /** The smith, the student's hero. */
   smith: Actor;
   /** The blade on the anvil; its length and heat show the sentence progress. */

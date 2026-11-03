@@ -72,7 +72,7 @@ export interface Presentation {
   settle(): Promise<void>;
 }
 
-export interface PlayerOptions {
+interface PlayerOptions {
   sim: RuneMatchSimulation;
   story: { id: string; level: StoryGameEvidence['level'] };
   seed: number;
@@ -83,9 +83,9 @@ export interface PlayerOptions {
 }
 
 /** Colors of the word runes, one per palette slot; the power runes have their own. */
-export const WORD_COLORS = [0xe8833a, 0x8b5cf6, 0x2fa56a, 0xc9a227, 0x0f9fae, 0xd4577f] as const;
-export const HEAL_COLOR = 0xe0455f;
-export const SHIELD_COLOR = 0x3f6fdc;
+const WORD_COLORS = [0xe8833a, 0x8b5cf6, 0x2fa56a, 0xc9a227, 0x0f9fae, 0xd4577f] as const;
+const HEAL_COLOR = 0xe0455f;
+const SHIELD_COLOR = 0x3f6fdc;
 const OLD_COLOR = 0x6b7280;
 
 export class RuneMatchPlayer {

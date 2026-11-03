@@ -105,7 +105,7 @@ export type RuneForgeChamberEvent =
   | { type: 'sentenceForged'; bladeId: string; sentenceId: string }
   | { type: 'forgeComplete'; sentences: number };
 
-export type RuneForgeChamberEventType = RuneForgeChamberEvent['type'];
+type RuneForgeChamberEventType = RuneForgeChamberEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const RUNE_FORGE_CHAMBER_EVENT_TYPES: readonly RuneForgeChamberEventType[] = [

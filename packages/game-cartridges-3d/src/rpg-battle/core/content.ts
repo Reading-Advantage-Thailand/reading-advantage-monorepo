@@ -9,7 +9,7 @@ import { ACTIONS, MONSTER_KINDS, type Monster, type QuestionOption, type TargetW
 
 export type RpgBattleInput = PracticeInput | VocabularyInput;
 
-export function isVocabularyInput(input: RpgBattleInput): input is VocabularyInput {
+function isVocabularyInput(input: RpgBattleInput): input is VocabularyInput {
   return Array.isArray(input);
 }
 

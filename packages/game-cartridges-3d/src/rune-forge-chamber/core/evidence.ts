@@ -15,16 +15,16 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { RuneForgeChamberState } from './types.js';
 
-export const RUNE_FORGE_CHAMBER_GAME_ID = 'rune-forge-chamber';
+const RUNE_FORGE_CHAMBER_GAME_ID = 'rune-forge-chamber';
 
 /** What the evidence needs from the story; a plain `SentenceInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** Score per forged word. */
-export const SCORE = { word: 100 } as const;
+const SCORE = { word: 100 } as const;
 
 /** One evidence item per blade the student started or forged, in forge order. */
-export function evidenceItemsOf(state: RuneForgeChamberState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: RuneForgeChamberState): StoryGameEvidenceItem[] {
   return state.forge
     .filter((blade) => blade.started || blade.forged)
     .map((blade) => {

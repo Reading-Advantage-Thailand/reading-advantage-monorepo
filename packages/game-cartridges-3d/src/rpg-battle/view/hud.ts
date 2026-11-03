@@ -8,14 +8,14 @@ import type { AudioBus } from '@reading-advantage/advantage-play-kit-3d/audio';
 import type { HostServices } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, feedback, hasThai, markChoice, pips, type HudRoot, type PopKind } from '@reading-advantage/advantage-play-kit-3d/hud';
 import type { BattleStage } from '../../shared/battle/stage3d.js';
-import type { ActionKind, Card, HeroId, Question } from '../core/index.js';
+import type { ActionKind, Card, Question } from '../core/index.js';
 import { HERO_OF } from '../core/index.js';
 import type { MonsterShown } from './driver.js';
 import rpg_battleCss from './rpg-battle.css.js';
 import { installCss } from '@reading-advantage/advantage-play-kit-3d/hud';
 installCss('rpg-battle', rpg_battleCss);
 
-export const ACTION_LOOK: Record<ActionKind, { color: string; emoji: string }> = {
+const ACTION_LOOK: Record<ActionKind, { color: string; emoji: string }> = {
   slash: { color: '#d9463b', emoji: '⚔️' },
   blaze: { color: '#6a3fd1', emoji: '🔥' },
   mend: { color: '#2f7fd8', emoji: '✨' },
@@ -174,5 +174,3 @@ export class RpgHud {
     this.root.card.hide();
   }
 }
-
-export type { HeroId };

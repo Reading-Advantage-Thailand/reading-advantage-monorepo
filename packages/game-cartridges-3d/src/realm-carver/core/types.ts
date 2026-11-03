@@ -170,7 +170,7 @@ export type RealmCarverEvent =
   | { type: 'realmCleared'; realmId: string; sentenceId: string }
   | { type: 'campaignComplete'; realms: number };
 
-export type RealmCarverEventType = RealmCarverEvent['type'];
+type RealmCarverEventType = RealmCarverEvent['type'];
 
 /** Every event type the core emits; there is no game over. */
 export const REALM_CARVER_EVENT_TYPES: readonly RealmCarverEventType[] = [

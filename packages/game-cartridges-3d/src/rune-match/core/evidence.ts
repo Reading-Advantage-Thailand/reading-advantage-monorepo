@@ -14,13 +14,13 @@ import {
 } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { RuneMatchState } from './types.js';
 
-export const RUNE_MATCH_GAME_ID = 'rune-match';
+const RUNE_MATCH_GAME_ID = 'rune-match';
 
 /** What the evidence needs from the story; a plain `VocabularyInput` run passes these by hand. */
-export type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
+type EvidenceStory = { id: string; level: StoryGameEvidence['level'] };
 
 /** One evidence item per target word with at least one attempt, in target order. */
-export function evidenceItemsOf(state: RuneMatchState): StoryGameEvidenceItem[] {
+function evidenceItemsOf(state: RuneMatchState): StoryGameEvidenceItem[] {
   return state.targets
     .filter((word) => word.attempts > 0)
     .map((word) => ({
@@ -54,7 +54,7 @@ export function evidenceOf(
 }
 
 /** The game's own score: the coins of the run. */
-export function scoreOf(state: RuneMatchState): number {
+function scoreOf(state: RuneMatchState): number {
   return state.coins;
 }
 
