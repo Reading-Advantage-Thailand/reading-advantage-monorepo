@@ -322,7 +322,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Automated at `bbe7ff741`: the targeted command exits 0 with 5 files and 51 tests. `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on `lib/readiness.ts`, `lib/content.ts`, and `scripts/receive-weeks.ts`. The deploy-file assertion passes, so no deploy file sets the switch.
 - `build-graph update` ran at the pre-commit tree: 3 files, 65 to 73 nodes, 67 to 74 edges. `graph.db` is ignored and not committed.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-f70b280.log`.
-- [~] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. The Thai text uses the Sarabun font (Daniel, 2026-11-03 11:53 ICT, through the PM). Test: AC-5.2.
+- [x] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. The Thai text uses the Sarabun font (Daniel, 2026-11-03 11:53 ICT, through the PM). Test: AC-5.2. Done: `d8cdd026c`. Automated: the Green command exits 0 with 5 files and 26 tests; `tsc --noEmit` in `apps/storytime` exits 0; ESLint exits 0 on the two changed TypeScript files. The measured browser part of AC-5.2 stays with the browser gate of task 3.7, because jsdom does not decide layout. Target: 2026-11-10.
   - Workbooks answers (Q13 to Q15, through the PM, 2026-11-03): the picture alt text is `image.caption`. The audio fields are `focus.element.audio`, `StripCard.audio`, and `words[].audio`. The word tiles have no audio.
 
 ### Phase 3 task 3.2 Red evidence
@@ -333,6 +333,26 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Red test commit: `704ff5957` (`test(storytime): add red tests for tiles and home card (track_id: storytime_app_rebuild_20261025)`). Tests read shipped `w01.json`; no week fixture was added. The route test names its implemented behavior contract, and the messages test checks locale key parity and non-empty Thai strings.
 - Automated command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-home-card.test.tsx apps/storytime/__tests__/phase3-messages.test.ts'`.
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-cc0407b.log`.
+
+### Phase 3 task 3.2 Green evidence
+
+- Green started at `11f2462f4d4100ceecd532d7e2fb8b04da1406b8`; the immutable phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`. The Red commits `704ff5957` and `11f2462f4` are inside the phase range, and HEAD matched the role base before edits. No coder was delegated.
+- Red confirmation: the targeted command exits 1 with 2 failed files and 9 failed tests. All failures are assertions, and 0 tests passed.
+- Implementation commit: `d8cdd026c` (`feat(storytime): add the tiles and the home card`). Files: `app/[locale]/st/[level]/[week]/page.tsx`, `app/[locale]/layout.tsx`, `app/globals.css`, `messages/en.json`, and `messages/th.json`.
+- Home view: the three tiles are read-along, decodable, and song. Each tile has a picture whose `alt` is `image.caption`. The song tile uses the poster, the phone poster, or the first song-line picture. A fourth karaoke tile shows only when `song.karaoke` exists.
+- Recorded audio only. A tile label plays from the app naming table `TILE_LABEL_AUDIO` (finding F17). A home word plays from `HOME_WORD_AUDIO`. The sound-of-the-week speaker plays `focus.element.audio`. Each table is empty until production delivers the files, so a missing recording hides the speaker control. The page never calls `speechSynthesis` and holds no `home.words` audio field.
+- Home card: `home.line.th` shows as Thai text and is omitted when empty. `home.words` shows as text with `lang="en"`. `focus.frame` shows with `lang="en"`. `home.activity` shows in the page language. Thai text carries `lang="th"`.
+- The shipped `home.words` are strings and the contract holds no word audio field. The words therefore show text only; a word speaker appears only when the F17 naming table gains a recording. This keeps the Red rule that forbids inventing `home.words[].audio`.
+- The tiles hold `min-h-16`, and the speaker controls hold `min-h-16 min-w-16` (64 px). The measured proof of AC-5.2 in portrait and landscape stays with the browser gate of task 3.7 (test strategy P3.6).
+- Sarabun loads through `next/font/google` in the locale layout. next/font self-hosts the font, so the browser makes no request to a font provider, and the app adds no dependency. `app/globals.css` sets `--font-sans` from `--font-sarabun`.
+- Messages: ten flat keys in `en.json` and `th.json`, with non-empty Thai values. Flat keys keep the Red message test able to read string values, and next-intl resolves the same keys.
+- Gates, all through `heavy-run.sh`:
+  - Green command: exit 0; 5 files; 26 tests; no skip.
+  - `tsc --noEmit` in `apps/storytime`: exit 0.
+  - ESLint on `page.tsx` and `layout.tsx`: exit 0.
+  - `build-graph update`: 2 files, 20 to 41 nodes, 27 to 51 edges. `graph.db` stays ignored and is not committed.
+- No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker file changed.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-11f2462.log`.
 - [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.

@@ -1,0 +1,84 @@
+# Phase 3 task 3.2 Green log
+
+Track: `storytime_app_rebuild_20261025`
+Task: 3.2 Tiles and the home card
+Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`
+Role base: `11f2462f4d4100ceecd532d7e2fb8b04da1406b8`
+Red commits: `704ff5957` (tests), `11f2462f4` (evidence)
+Red model: `openai/gpt-6-luna`
+Green model: `opencode-go/deepseek-v4.1-flash`
+No coder was delegated.
+
+## Red confirmation
+
+Command:
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-home-card.test.tsx apps/storytime/__tests__/phase3-messages.test.ts'`
+
+Result: exit 1; 2 failed files; 9 failed tests; 0 passed. All failures are assertions.
+The committed Red change is inside `phase_base_sha..HEAD` (`704ff5957`, `11f2462f4`).
+
+## Implementation
+
+Commit: `d8cdd026c1ab78a62d49f4ea5083d66e5d12766a`
+Header: `feat(storytime): add the tiles and the home card (track_id: storytime_app_rebuild_20261025)`
+
+Changed files:
+
+- `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`
+- `apps/storytime/app/[locale]/layout.tsx`
+- `apps/storytime/app/globals.css`
+- `apps/storytime/messages/en.json`
+- `apps/storytime/messages/th.json`
+
+Behavior:
+
+- The home view shows the read-along, decodable, and song tiles. Each tile has a picture
+  with `alt = image.caption`. A karaoke tile shows only when `song.karaoke` exists.
+- Only recorded files play. The tile labels and the home words read an app naming table
+  (`TILE_LABEL_AUDIO`, `HOME_WORD_AUDIO`). The sound of the week reads `focus.element.audio`.
+  The tables are empty until production delivers the files, so a missing recording shows no
+  speaker. The page never calls `speechSynthesis` and holds no `home.words` audio field.
+- The Thai parent line comes from `home.line.th` and is omitted when empty. The three home
+  words come from `home.words`. The frame comes from `focus.frame`. The activity comes from
+  `home.activity`. Thai text has `lang="th"`; English text has `lang="en"`.
+- Entry tiles have `min-h-16`. Speaker controls have `min-h-16 min-w-16` (64 px). The measured
+  browser part of AC-5.2 in portrait and landscape stays with the browser gate of task 3.7.
+- Sarabun loads through `next/font/google` in the locale layout. next/font self-hosts the font,
+  so the browser makes no request to a font provider, and the app adds no dependency.
+  `app/globals.css` sets `--font-sans` from `--font-sarabun`.
+- `en.json` and `th.json` hold the same ten flat keys, and every Thai value is non-empty.
+
+## Gates
+
+All commands ran through `heavy-run.sh`.
+
+- Green command: exit 0; 5 files; 26 tests; no skip.
+- `tsc --noEmit` in `apps/storytime`: exit 0.
+- ESLint on `page.tsx` and `layout.tsx`: exit 0.
+- `build-graph update`: 2 files, 20 to 41 nodes, 27 to 51 edges. `graph.db` is ignored and not
+  committed.
+
+No committed Red test changed. No week content, contract, readiness, receiver, deploy, or Docker
+file changed. No implementation file was added.
+
+## Handoff
+
+Task 3.2 is `[x]` at `d8cdd026c`. The browser measurement of AC-5.2 (portrait and landscape)
+belongs to the browser gate of task 3.7. Reviewers can scope the diff to the five files above.
+The home words show text only because the shipped data holds no word audio field; the F17 naming
+table gains an entry when production delivers a recording.
+
+## MEASURE_AGENT_RESULT
+status: complete
+role: Measure Jr Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.2
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: 11f2462f4d4100ceecd532d7e2fb8b04da1406b8
+head: d8cdd026c1ab78a62d49f4ea5083d66e5d12766a
+commits: d8cdd026c1ab78a62d49f4ea5083d66e5d12766a (implementation); plan-evidence commit follows
+tests: Green command exit 0, 5 files, 26 tests, no skip; tsc --noEmit exit 0; ESLint exit 0
+files: apps/storytime/app/[locale]/st/[level]/[week]/page.tsx; apps/storytime/app/[locale]/layout.tsx; apps/storytime/app/globals.css; apps/storytime/messages/en.json; apps/storytime/messages/th.json
+remaining_failures: none in the task gates; AC-5.2 browser measurement stays with task 3.7
+handoff: Task 3.2 is [x] at d8cdd026c. The three tiles show pictures with image.caption alt text. Recorded audio only; no phone voice. The Thai parent line, the three home words, the frame, the activity, the karaoke rule, 64 px targets, language tags, Sarabun, and th/en messages are in place. The browser measurement of AC-5.2 belongs to the browser gate of task 3.7. No Red test was edited.
+END_MEASURE_AGENT_RESULT
