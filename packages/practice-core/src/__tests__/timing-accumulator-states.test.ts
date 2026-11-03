@@ -226,6 +226,11 @@ describe('TimingAccumulator blur and focus', () => {
     expect(snap.activeMs).toBe(0);
   });
 
+  it.fails('records the same longestIdleMs for a gap closed by blur as by interaction', () => {
+    const viaInteraction = run([['interaction', 40000]]).getSnapshot();
+    const viaBlur = run([['blur', 40000]]).getSnapshot();
+    expect(viaBlur.longestIdleMs).toBe(viaInteraction.longestIdleMs);
+  });
 
   it('counts focus loss while paused without active time', () => {
     const snap = run([
@@ -394,4 +399,11 @@ describe('TimingAccumulator finalize', () => {
     expect(practiceTimingSummarySchema.safeParse(summary).success).toBe(true);
   });
 
+  it.fails('keeps active plus idle within wall-clock when an idle period is open at finalize', () => {
+    const summary = run([
+      ['interaction', 1000],
+      ['idle', 2000],
+    ]).finalize(100000);
+    expect(summary.activeMs + summary.idleMs).toBeLessThanOrEqual(summary.wallClockMs);
+  });
 });
