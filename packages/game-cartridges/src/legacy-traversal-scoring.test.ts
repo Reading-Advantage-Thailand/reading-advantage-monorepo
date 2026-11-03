@@ -286,3 +286,11 @@ describe("legacy traversal tutorial actions", () => {
     await expect(Promise.resolve(driver.execute({ step: { actionId: "action:select-correct" } } as never))).resolves.toBeUndefined();
   });
 });
+
+describe("legacy traversal restore validation defect", () => {
+  // Defect: legacy-traversal-cartridges.ts:229 range check lets NaN pass, so restore accepts it and snapshot() then crashes.
+  it.fails("rejects a non-numeric target index with the invalid progress error", () => {
+    const run = start(createDragonRiderCartridge(), VOCAB);
+    expect(() => run.scene.extend.apkRestoreResponsiveState({ ...run.state(), targetIndex: Number.NaN })).toThrow("Dragon Rider responsive state has invalid progress");
+  });
+});
