@@ -1,18 +1,18 @@
 # Phase 3 task 3.3 Red report
 
 - Role: Measure Red, `openai/gpt-6-luna`.
-- Track: `storytime_app_rebuild_20261025`; phase: Phase 3, task 3.3.
+- Track: `storytime_app_rebuild_20261025`; phase: Phase 3 task 3.3.
 - Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
 - Role base: `a9132167a0d741b32798b033000ded91d3c5924b`.
 - Starting HEAD: `a9132167a0d741b32798b033000ded91d3c5924b`.
 - Initial dirty paths were unrelated untracked user work. They remain untouched and unstaged.
-- The test commit is `54c1de12a882c4675a0a59ef02dfa172ec07220b`.
-- The plan and report commit is `edbbb290985a3e4935c7dae0943a47657ac52478`.
-- The required targeted command ran once. It exited 1 with 2 failed files, 11 failed assertions, and 0 passing tests.
-- Every initial failure was an assertion. There were no import or runtime failures.
-- The initial overlap test used an incorrect location for sentence timings. I corrected it to scan the shipped book's `audio.sentences` by page. The corrected test was not rerun because the brief says to run the command once.
-- Red failures identify absent read-along page integration, required controls and states, page end behavior, accessibility semantics, and duplicate player ids. No test has been established as already satisfied by this run.
-- No production source changed. No user-provided week fixture was added.
+- The required command ran three times through `heavy-run.sh`. The first two runs exposed test lookup faults. The final run used the shipped w06 `song.times` overlap.
+- Final command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx'`.
+- Final result: exit 1; 2 failed files; 11 failed tests; 0 passed tests. All failures were assertions. There were no import or runtime failures.
+- The corrected overlap check passed: it found the shipped 0.04-second overlap and the shared passage rendered exactly one marked word. The containing app test failed its separate route-position integration assertion.
+- Other failures identify missing route reader integration, required controls and states, page-end behavior, package imports, sentence and word ARIA state, word keyboard operation, and duplicate player IDs.
+- Test commits: `54c1de12a882c4675a0a59ef02dfa172ec07220b`; `b1dd21ab2b1e8aa6d7df0c5fbe8bf1de17db86fa`.
+- No production source changed. No week fixture was added.
 
 ```text
 MEASURE_AGENT_RESULT
@@ -21,11 +21,11 @@ track: storytime_app_rebuild_20261025
 phase: Phase 3 task 3.3 Read-along UI
 baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
 role_base_sha: a9132167a0d741b32798b033000ded91d3c5924b
-head: edbbb290985a3e4935c7dae0943a47657ac52478
-commits: 54c1de12a882c4675a0a59ef02dfa172ec07220b; edbbb290985a3e4935c7dae0943a47657ac52478
-tests: required command exit 1; 2 failed files; 11 failed tests; 0 passed tests; assertion failures only; corrected overlap assertion unverified
+head: b1dd21ab2b1e8aa6d7df0c5fbe8bf1de17db86fa
+commits: 54c1de12a882c4675a0a59ef02dfa172ec07220b; b1dd21ab2b1e8aa6d7df0c5fbe8bf1de17db86fa
+tests: final required command exit 1; 2 failed files; 11 failed tests; 0 passed tests; assertion failures only; overlap assertion passes for the exact-one-word condition
 files: apps/storytime/__tests__/phase3-readalong-ui.test.tsx; packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/red-a913216.log
-remaining_failures: initial run 11 assertion failures; the overlap fixture lookup failed due to test authoring and was corrected after the sole permitted run; corrected assertion result is unknown
-status: blocked
-handoff: May I rerun the exact targeted Vitest command once after correcting the shipped timing lookup? Options: yes (default, verify corrected Red tests); no (keep the unverified corrected test and proceed with this disclosure).
+remaining_failures: route lacks reader integration and related behavior; passage lacks aria-current and keyboard activation on words; duplicate player IDs remain
+status: complete
+handoff: Green can implement the missing behavior. Preserve Primary's package behavior and keep all existing package tests passing.
 ```
