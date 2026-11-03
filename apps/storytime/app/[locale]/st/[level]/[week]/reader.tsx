@@ -18,6 +18,9 @@ import {
 } from "@reading-advantage/read-along/lib/position";
 import { wordCutBounds } from "@reading-advantage/read-along/lib/seek";
 
+/** The decodable part of the client reader (plan task 3.4, spec FR-7). */
+export { StorytimeDecodable } from "./decodable";
+
 /** One timed sentence of a book audio, with its 1-based page. */
 type TimedSentence = ReadAlongSentence & { page?: number };
 

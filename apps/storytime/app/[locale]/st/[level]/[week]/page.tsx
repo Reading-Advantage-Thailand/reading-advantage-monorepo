@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { loadVisibleWeek } from "@/lib/content";
 import type { StorytimeWeek } from "@/lib/contracts/week";
-import { StorytimeReader } from "./reader";
+import { StorytimeReader, StorytimeDecodable } from "./reader";
 
 /**
  * The at-home entry route `/<locale>/st/<level>/<week>` (spec FR-5, AC-2.1, AC-5.2, AC-5.4).
@@ -23,8 +23,8 @@ import { StorytimeReader } from "./reader";
  * The home view holds the three entry tiles with their pictures, the recorded label audio, the Thai
  * parent line, the three home words, the frame, the activity, and the sound of the week. Playback
  * uses only recorded files, never the phone voice (rule 10.5). A label or word with no recording
- * shows no speaker control. Tasks 3.3 to 3.5 replace the part body with the reader, the decodable,
- * and the song.
+ * shows no speaker control. Tasks 3.3 and 3.4 replace the part body with the reader and the
+ * decodable.
  */
 
 /** The parts of a week that `?part=` may open. */
@@ -263,6 +263,7 @@ export default async function StorytimeWeekPage({
   };
   const mediaBase = (process.env[MEDIA_BASE_ENV] || "/media").replace(/\/+$/, "");
   const readAlongBook = week.books.find((entry) => entry.kind === "readalong");
+  const decodableBook = week.books.find((entry) => entry.kind === "decodable");
 
   const home = week.home;
   const parentLine = home?.line ? home.line.th.trim() : "";
@@ -377,6 +378,12 @@ export default async function StorytimeWeekPage({
               labels={readerLabels}
               mediaBase={mediaBase}
             />
+          ) : null}
+        </section>
+      ) : part === "decodable" ? (
+        <section data-part={part}>
+          {decodableBook ? (
+            <StorytimeDecodable week={week} locale={locale} mediaBase={mediaBase} />
           ) : null}
         </section>
       ) : (

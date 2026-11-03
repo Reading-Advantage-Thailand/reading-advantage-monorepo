@@ -1,0 +1,314 @@
+"use client";
+
+/**
+ * The decodable part of a Storytime week (plan task 3.4, spec FR-7).
+ *
+ * The sounds page shows the element, its graphemes, and its sound; a tap plays the recorded bank
+ * clip. A tap on a decodable word asks `blendPlanForWord` how the word plays. A blend word plays its
+ * graphemes from the phoneme bank in reading order, then the whole word from the book recording. A
+ * tricky word and every word of a sound book play whole. The component never uses the phone voice
+ * (rule 10.5): every sound is a recorded file.
+ */
+import { useMemo, useRef, useState } from "react";
+import { blendPlanForWord } from "../../../../../lib/blend";
+import type { StorytimeBook, StorytimeWeek } from "../../../../../lib/contracts/week";
+import { PHONEME_BANK, PHONEME_BANK_COUNT } from "../../../../../lib/phoneme-bank";
+
+/** The props of the decodable part. */
+interface StorytimeDecodableProps {
+  /** The week, with its decodable book. */
+  week: StorytimeWeek;
+  /** The page language; it selects the Thai control labels. */
+  locale: string;
+  /** The media base URL; the default is `/media`. */
+  mediaBase?: string;
+}
+
+/** The pattern of one word of a page; spaces and punctuation stay outside the match. */
+const WORD_PATTERN = /([\p{L}\p{N}][\p{L}\p{N}'’-]*)/u;
+
+/** The pattern of one token that is a whole word. */
+const WORD_TOKEN = /^[\p{L}\p{N}][\p{L}\p{N}'’-]*$/u;
+
+/** The first bank clip of each grapheme. */
+const CLIP_BY_GRAPHEME = new Map<string, string>();
+for (const clip of PHONEME_BANK) {
+  if (!CLIP_BY_GRAPHEME.has(clip.grapheme)) CLIP_BY_GRAPHEME.set(clip.grapheme, clip.file);
+}
+
+/**
+ * Builds the URL of one recorded file.
+ * @param base The media base URL.
+ * @param file The file, relative to the base.
+ * @returns The URL, with one slash between the base and the file.
+ */
+function mediaUrl(base: string, file: string): string {
+  return `${base.replace(/\/+$/, "")}/${file.replace(/^\/+/, "")}`;
+}
+
+/**
+ * Reports whether a token of the page text is a word.
+ * @param token One token of the split page text.
+ * @returns `true` for a word with no edge punctuation.
+ */
+function isWord(token: string): boolean {
+  return WORD_TOKEN.test(token);
+}
+
+/**
+ * Renders one decodable part for a child (spec FR-7).
+ * @param props See `StorytimeDecodableProps`.
+ * @returns The sounds page, the current book page, the tricky words, and the audio elements.
+ */
+export function StorytimeDecodable({
+  week,
+  locale,
+  mediaBase = "/media",
+}: StorytimeDecodableProps) {
+  const phonemeRef = useRef<HTMLAudioElement | null>(null);
+  const wholeRef = useRef<HTMLAudioElement | null>(null);
+  const wholeEndRef = useRef<number | null>(null);
+  const [phonemeSrc, setPhonemeSrc] = useState<string | null>(null);
+  const [wholeSrc, setWholeSrc] = useState<string | null>(null);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [failed, setFailed] = useState(false);
+
+  const decodable: StorytimeBook | undefined = week.books.find(
+    (book) => book.kind === "decodable",
+  );
+  const page = decodable?.pages[pageIndex];
+  const pageNumber = pageIndex + 1;
+  const element = week.focus?.element;
+  const soundsPage = decodable?.soundsPage;
+  const tricky = useMemo(() => {
+    const words = new Map<string, string>();
+    for (const word of week.focus?.trickyWords ?? []) {
+      if (!words.has(word.toLowerCase())) words.set(word.toLowerCase(), word);
+    }
+    for (const word of soundsPage?.tricky ?? []) {
+      if (!words.has(word.toLowerCase())) words.set(word.toLowerCase(), word);
+    }
+    return [...words.values()];
+  }, [week.focus?.trickyWords, soundsPage?.tricky]);
+
+  /**
+   * Plays one audio element and records a failed sound (rule 10.4).
+   * @param target The audio element.
+   */
+  function playElement(target: HTMLAudioElement | null): void {
+    if (!target) return;
+    try {
+      const result = target.play();
+      if (result && typeof result.catch === "function") {
+        result.catch(() => setFailed(true));
+      }
+    } catch {
+      setFailed(true);
+    }
+  }
+
+  /**
+   * Plays one recorded clip on the phoneme element.
+   * @param file The clip file, relative to the media base.
+   */
+  function playPhoneme(file: string): void {
+    const url = mediaUrl(mediaBase, file);
+    const target = phonemeRef.current;
+    if (target) {
+      target.src = url;
+      playElement(target);
+    }
+    setPhonemeSrc(url);
+    setFailed(false);
+  }
+
+  /**
+   * Plays the grapheme clips of a blend word in reading order.
+   * @param graphemes The graphemes of the word, in reading order.
+   * @returns `true` when every grapheme has a bank clip.
+   */
+  function playBlend(graphemes: string[]): boolean {
+    const target = phonemeRef.current;
+    const files = graphemes.map((grapheme) => CLIP_BY_GRAPHEME.get(grapheme));
+    if (!target || files.some((file) => !file)) return false;
+    for (const file of files) {
+      const url = mediaUrl(mediaBase, file!);
+      target.src = url;
+      playElement(target);
+    }
+    setPhonemeSrc(mediaUrl(mediaBase, files.at(-1)!));
+    setFailed(false);
+    return true;
+  }
+
+  /**
+   * Finds the recorded time range of one word on a page.
+   * @param word The word from the page.
+   * @param pageNumber The 1-based page number.
+   * @returns The start and end seconds, or `null` when the timing has no such word.
+   */
+  function wordBounds(word: string, pageNumber: number): { start: number; end: number } | null {
+    const sentences = decodable?.audio?.sentences ?? [];
+    const lower = word.toLowerCase();
+    const onPage = sentences.filter((sentence) => sentence.page === pageNumber);
+    for (const sentence of [...onPage, ...sentences]) {
+      const timing = sentence.words.find((entry) => entry.word.toLowerCase() === lower);
+      if (timing) return { start: timing.start, end: timing.end };
+    }
+    return null;
+  }
+
+  /**
+   * Plays one whole word from the book recording.
+   * @param word The word from the page or the tricky-word list.
+   */
+  function playWhole(word: string): void {
+    const file = decodable?.audio?.file;
+    const target = wholeRef.current;
+    if (!file || !target) {
+      setFailed(true);
+      return;
+    }
+    const bounds = wordBounds(word, pageNumber);
+    const url = mediaUrl(mediaBase, file);
+    target.src = url;
+    setWholeSrc(url);
+    target.currentTime = bounds ? bounds.start : 0;
+    wholeEndRef.current = bounds ? bounds.end : null;
+    playElement(target);
+    setFailed(false);
+  }
+
+  /**
+   * Stops the whole-word recording at the end of its measured word cut.
+   */
+  function onWholeTimeUpdate(): void {
+    const target = wholeRef.current;
+    const end = wholeEndRef.current;
+    if (!target || end === null) return;
+    if (target.currentTime >= end) {
+      target.pause();
+      wholeEndRef.current = null;
+    }
+  }
+
+  /**
+   * Plays one tapped word: its graphemes first, then the whole word.
+   * @param word The word from the page or the tricky-word list.
+   */
+  function onWordTap(word: string): void {
+    const plan = blendPlanForWord(word, week);
+    if (plan.mode === "blend") playBlend(plan.graphemes);
+    playWhole(word);
+  }
+
+  const thai = locale === "th";
+
+  return (
+    <div className="flex flex-col gap-4" data-phoneme-bank={PHONEME_BANK_COUNT}>
+      <audio ref={phonemeRef} preload="none" src={phonemeSrc ?? undefined} onError={() => setFailed(true)} />
+      <audio
+        ref={wholeRef}
+        preload="none"
+        src={wholeSrc ?? undefined}
+        onTimeUpdate={onWholeTimeUpdate}
+        onError={() => setFailed(true)}
+      />
+      {element ? (
+        <section aria-label={thai ? "เสียงของสัปดาห์" : "Sound of the week"} className="flex flex-col gap-2">
+          <p className="text-3xl font-semibold" lang="en">
+            {element.graphemes.join(" ")}
+          </p>
+          <p className="text-2xl" lang="en">
+            {element.sound}
+          </p>
+          {element.audio ? (
+            <button
+              type="button"
+              onClick={() => playPhoneme(element.audio!)}
+              className="min-h-12 rounded-xl border border-neutral-300 px-4"
+            >
+              {thai ? "เล่นเสียง" : "Play the sound"}
+            </button>
+          ) : null}
+        </section>
+      ) : null}
+      {page ? (
+        <section data-page-number={pageNumber} className="flex flex-col gap-3">
+          {page.image?.file ? (
+            <img
+              src={mediaUrl(mediaBase, page.image.file)}
+              alt={page.image.caption ?? ""}
+              loading="lazy"
+              decoding="async"
+              className="w-full rounded-2xl object-cover"
+            />
+          ) : null}
+          <p className="flex flex-wrap items-center gap-x-1 whitespace-pre-wrap text-2xl" lang="en">
+            {page.text.split(WORD_PATTERN).map((token, index) =>
+              isWord(token) ? (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => onWordTap(token)}
+                  className="rounded px-0.5 hover:bg-neutral-100"
+                >
+                  {token.toUpperCase()}
+                </button>
+              ) : (
+                <span key={index}>{token}</span>
+              ),
+            )}
+          </p>
+        </section>
+      ) : null}
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          aria-label={thai ? "หน้าก่อน" : "Previous page"}
+          disabled={pageIndex === 0}
+          onClick={() => setPageIndex((index) => Math.max(0, index - 1))}
+          className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+        >
+          ←
+        </button>
+        <button
+          type="button"
+          aria-label={thai ? "หน้าต่อไป" : "Next page"}
+          disabled={!decodable || pageIndex >= decodable.pages.length - 1}
+          onClick={() =>
+            setPageIndex((index) => Math.min((decodable?.pages.length ?? 1) - 1, index + 1))
+          }
+          className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+        >
+          →
+        </button>
+      </div>
+      {tricky.length > 0 ? (
+        <section aria-label={thai ? "คำที่จำทั้งคำ" : "Tricky words"} className="flex flex-col gap-2">
+          <h2 className="text-lg font-semibold" lang="en">
+            {thai ? "คำที่จำทั้งคำ" : "Tricky words"}
+          </h2>
+          <ul className="flex flex-wrap gap-2">
+            {tricky.map((word) => (
+              <li key={word}>
+                <button
+                  type="button"
+                  onClick={() => onWordTap(word)}
+                  className="min-h-12 rounded-full border border-neutral-300 px-4"
+                >
+                  {word.toUpperCase()}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+      {failed ? (
+        <p role="alert" lang={locale} className="text-red-700">
+          {thai ? "เล่นเสียงไม่ได้" : "The sound could not be played."}
+        </p>
+      ) : null}
+    </div>
+  );
+}

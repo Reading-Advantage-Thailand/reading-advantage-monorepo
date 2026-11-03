@@ -79,7 +79,10 @@ export function trickyWords(week: StorytimeWeek): Set<string> {
  * @returns The graphemes, or null when a letter is not taught.
  */
 function segment(word: string, taught: Set<string>): string[] | null {
-  const longest = Math.max(1, ...[...taught].map((grapheme) => grapheme.length));
+  let longest = 1;
+  for (const grapheme of taught) {
+    if (grapheme.length > longest) longest = grapheme.length;
+  }
   const parts: string[] = [];
   let index = 0;
   while (index < word.length) {
@@ -102,7 +105,8 @@ function segment(word: string, taught: Set<string>): string[] | null {
  * Gives the plan of one decodable word.
  *
  * A word plays whole in a sound book, when it is a tricky word, and when it is a name. A word plays
- * sound by sound when every grapheme is taught. Any other word plays whole.
+ * sound by sound when every grapheme is taught. Any other word plays whole. The case of the word
+ * does not change the plan (finding F28).
  * @param word The word from the decodable page, with or without edge punctuation.
  * @param week The week that the word comes from.
  * @returns The mode and the graphemes of the word.
@@ -111,7 +115,6 @@ export function blendPlanForWord(word: string, week: StorytimeWeek): BlendPlan {
   const bare = word.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
   const lower = bare.toLowerCase();
   if (!lower) return { mode: "whole", graphemes: [] };
-  if (bare !== lower) return { mode: "whole", graphemes: lettersOf(lower) };
   const decodable = week.books?.find((book) => book.kind === "decodable");
   if (decodable?.soundBook) return { mode: "whole", graphemes: lettersOf(lower) };
   if (trickyWords(week).has(lower)) return { mode: "whole", graphemes: lettersOf(lower) };
