@@ -104,7 +104,7 @@ type Routes = {
 
 /** Builds a client whose fetch routes can be overridden per endpoint. */
 function harness(routes: Routes = {}, nowMs = NOW_S * 1000) {
-  const request = vi.fn(async (url: string | URL | Request) => {
+  const request = vi.fn(async (url: string | URL | Request, _init?: RequestInit) => {
     const target = String(url);
     if (target.endsWith("/.well-known/openid-configuration")) {
       return (routes.discovery ?? (() => Response.json(discoveryDoc)))();

@@ -7,7 +7,12 @@ vi.mock("@reading-advantage/db", () => ({
 }));
 vi.mock("@reading-advantage/db/schema", () => ({ auditEvents: {} }));
 
-import { AuditEventError, recordAuditEvent } from "../audit.js";
+import { AuditEventError, recordAuditEvent, type AuditContext } from "../audit.js";
+
+/** Builds a context with only the actor id, as an untyped caller would send it. */
+function ctx(actorUserId: string | null): AuditContext {
+  return { actorUserId } as unknown as AuditContext;
+}
 
 beforeEach(() => {
   values.mockReset().mockResolvedValue(undefined);
@@ -15,7 +20,7 @@ beforeEach(() => {
 
 describe("recordAuditEvent optional fields and failures", () => {
   it("writes null for every optional context field that is missing", async () => {
-    await recordAuditEvent({ actorUserId: "u1" }, { action: "login" });
+    await recordAuditEvent(ctx("u1"), { action: "login" });
 
     expect(values).toHaveBeenCalledWith({
       actorUserId: "u1",
@@ -32,7 +37,7 @@ describe("recordAuditEvent optional fields and failures", () => {
   it("wraps a non-Error rejection as an unknown error and keeps the cause", async () => {
     values.mockRejectedValueOnce("socket closed");
 
-    const error = await recordAuditEvent({ actorUserId: null }, { action: "logout" }).catch(
+    const error = await recordAuditEvent(ctx(null), { action: "logout" }).catch(
       (e: unknown) => e,
     );
 
@@ -46,7 +51,7 @@ describe("recordAuditEvent optional fields and failures", () => {
     const dbError = new Error("connection refused");
     values.mockRejectedValueOnce(dbError);
 
-    const error = await recordAuditEvent({ actorUserId: null }, { action: "login" }).catch(
+    const error = await recordAuditEvent(ctx(null), { action: "login" }).catch(
       (e: unknown) => e,
     );
 
@@ -57,7 +62,7 @@ describe("recordAuditEvent optional fields and failures", () => {
   });
 
   it("does not write when the action is whitespace only", async () => {
-    await expect(recordAuditEvent({ actorUserId: null }, { action: "\t\n" })).rejects.toThrow(
+    await expect(recordAuditEvent(ctx(null), { action: "\t\n" })).rejects.toThrow(
       "audit action is required",
     );
     expect(values).not.toHaveBeenCalled();
