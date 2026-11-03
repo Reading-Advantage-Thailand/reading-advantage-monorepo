@@ -1,31 +1,28 @@
-# Phase 3 task 3.3 Red follow-up report
+# Phase 3 task 3.3 Red type-fix report
 
 - Role: Measure Red, `openai/gpt-6-luna`.
 - Track: `storytime_app_rebuild_20261025`; phase: Phase 3 task 3.3.
 - Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
 - Role base: `a9132167a0d741b32798b033000ded91d3c5924b`.
-- Follow-up started at Green HEAD `b6e9bb312c85e024fe10899a0cdeabc51b335b68`.
-- Pre-edit status had unrelated untracked user paths. I preserved them and did not stage them.
-- The My turn test renders the source returned by `shippedTwoSentencePage()`. It gets the tapped word from that same source.
-- I checked the other tests for week and page mismatches. Each test uses data from its rendered week, or renders the timing data it checks.
-- Required command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-readalong-ui.test.tsx packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx'`.
-- Result at test HEAD `530b539eeabf9c788612c530ca23783541d06447`: exit 1; 2 failed files; 11 failed tests; 1 passed test. All failures were assertions. The overlap check passed.
-- Remaining failures identify the missing client reader, missing route integration, missing sentence ARIA and word keyboard access, and duplicate player IDs.
-- Follow-up test commit: `530b539eeabf9c788612c530ca23783541d06447` (`test(storytime): render the source of the my turn word (track_id: storytime_app_rebuild_20261025)`).
-- No production source or week file changed.
+- Type-fix work started at Green HEAD `b62598ffad0a92d3112ce036b10cf1eca4845206`.
+- Green's implementation files were dirty. I did not edit, stage, stash, or restore them. Unrelated untracked work also remains untouched.
+- In `phase3-readalong-ui.test.tsx`, the images, audio, and song approval assignments now spread their existing fields before setting `status`. The other Red test has no approval assignments.
+- Required command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && HEAVY_PREFLIGHT_WAIT_S=3600 ../../node_modules/.bin/tsc --noEmit'`.
+- The command exited 0. It emitted no errors in either Red test file or elsewhere. No Vitest command ran.
+- Test commit: `8c80e72f51f3911de498b4f8cc8d887cb953be8f` (`test(storytime): preserve approval fields (track_id: storytime_app_rebuild_20261025)`). The requested longer subject exceeded commitlint's 100-character limit and was rejected.
 
 ```text
 MEASURE_AGENT_RESULT
 role: Measure Red
 track: storytime_app_rebuild_20261025
-phase: Phase 3 task 3.3 Read-along UI
+phase: Phase 3 task 3.3 type fix
 baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
 role_base_sha: a9132167a0d741b32798b033000ded91d3c5924b
-head: 530b539eeabf9c788612c530ca23783541d06447
-commits: 530b539eeabf9c788612c530ca23783541d06447; plan and report evidence commit follows
-tests: required command exit 1; 2 failed files; 11 failed tests; 1 passed test; assertion failures only; overlap assertion passes
+head: 8c80e72f51f3911de498b4f8cc8d887cb953be8f
+commits: 8c80e72f51f3911de498b4f8cc8d887cb953be8f; plan and report evidence commit follows
+tests: required tsc command exit 0; zero errors in both Red test files; zero other errors; no Vitest run
 files: apps/storytime/__tests__/phase3-readalong-ui.test.tsx; measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/red-a913216.log
-remaining_failures: reader component and route integration missing; passage sentence aria-current and keyboard word access missing; player control IDs duplicate
+remaining_failures: none in the Red test files or the reported app type check
 status: complete
-handoff: Green can implement the missing behavior at apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx. Keep page.tsx as a thin server page. Preserve Primary's sentence tab order and existing package tests.
+handoff: Green's implementation files remain untouched and unstaged. The app type check is clean.
 ```

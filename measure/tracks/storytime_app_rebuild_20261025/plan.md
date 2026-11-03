@@ -402,6 +402,9 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Block: `tsc --noEmit` in `apps/storytime` exits 2 on the committed Red test. Line 38 of `phase3-readalong-ui.test.tsx` assigns `{ status: "approved" }` to `approval.images`, whose JSON type also needs `date`, `words`, and `source` (TS2739).
 - Fix: `copy.approval.images = { ...copy.approval.images, status: "approved" };`.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-48a17c2.log`. Task 3.3 stays `[~]`. No implementation commit exists yet.
+- Red applied the three approval spreads and committed them as `8c80e72f51f3911de498b4f8cc8d887cb953be8f` (`test(storytime): preserve approval fields (track_id: storytime_app_rebuild_20261025)`). The requested longer subject exceeded the 100-character commit limit, so commitlint rejected it.
+- Required app type check ran once through `heavy-run.sh`: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && HEAVY_PREFLIGHT_WAIT_S=3600 ../../node_modules/.bin/tsc --noEmit'`. Exit 0; no errors in either Red test file and no other errors were emitted. No Vitest command ran.
+- The Red type-fix report and plan evidence are committed together in the follow-up evidence commit.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).
