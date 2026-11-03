@@ -607,8 +607,40 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-02816cf.log`.
 
 - [x] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3). Done: `a5f856091`. Automated: the printed-URL test exits 0 (1 file, 1 test, 16 URLs); the browser gate exits 0 with Playwright `PASS=22, FAIL=0` and outer `PASS=4, FAIL=0`; `transferred_bytes_first_load=223741`; `media_requests_before_tap=0`; `tsc --noEmit` exits 0. The gate ran on this tree, per the orchestrator decision at 05:24 ICT.
-- [~] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.
+- [x] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19. Done: `9c0e9f0d7` (the contract and the receiver), `804944378` (the receipt at the draft pin). Automated: the targeted command exits 0 with 22 files and 270 tests; `tsc --noEmit` exits 0; ESLint exits 0 on the 8 changed files. The take exits 0 with 8 weeks, 179 media files, and 159 missing pictures; the 26 hand-off hashes match; the 8 written weeks equal the hand-off files byte for byte; a second run makes no difference.
   - PM 2026-11-04: light lane for task 3.8 part 1 (one maker, one checker).
+
+### Phase 3 task 3.8 Red evidence
+
+- The light lane holds one maker and one checker. The maker wrote the tests first.
+- The test files are `phase3-loop-contract.test.ts`, `phase3-f99-page-audio.test.ts`, `phase3-loop-receiver.test.ts`, `phase3-media-coverage.test.ts`, and `phase3-receiver-hardening.test.ts`.
+- The command ran under `heavy-run.sh` with `--maxWorkers=1` and the five named files.
+- The result: exit 1, 5 failed files, 61 failed tests, and 31 passed tests (92 total).
+- Every failure is an assertion. No file failed to load, and no import error occurred.
+- The failed assertions name the missing rules: the loop fields, the limits of the hand-off, the question page and word check, the recall count, the F99 page coverage, the clip pattern, the media coverage scan, the link stop, the leftover message, the recovery copy, and the runbook text.
+- The test commit is `4913fe3f2` (`test(storytime): add the loop contract tests (track_id: storytime_app_rebuild_20261025)`).
+- The report is `measure/runs/storytime_app_rebuild_20261025/red-3.8-part1.log`.
+
+### Phase 3 task 3.8 Green evidence
+
+- The implementation commit is `9c0e9f0d7`. The receipt commit is `804944378`. No coder was delegated.
+- The contract holds the typed read schemas of the seven A-42 fields. Every one keeps the passthrough.
+- The limits are the limits of the hand-off: 3 to 5 drill words, 2 to 4 sounds, 2 to 5 repeats, 1 to 3 sight words, 2 to 5 seconds, and 0 to 20 loop minutes.
+- The loops approval part needs a date and the exact words when it is approved. An absent part means a draft. The part is not one of the six approval parts.
+- The question page and word check and the recall count run only when the loops part is approved.
+- The clip pattern `^phonemes/daniel/[0-9]{2}-[a-z]+(-[a-z]+)*\.mp3$` is one constant in `lib/contracts/week.ts`, next to `mediaPath`.
+- The receiver lists every drill clip and every recall clip with the kind `phoneme` and the rule `MEDIA_RULES.phoneme`. The receiver never changes `meta.status` or `approval`.
+- The F99 page coverage rule fails a published book whose sentences hold no page. An empty list passes.
+- The receiver hardening rows landed: F77 (the message says "possible recovery file"), F78 and F84 (a link in the content folder stops the run with code 1 and names the link), F91 (the runbook says "ends with" and gives the pattern of the code), F92 (the recovery steps name the untracked case), and F98 (the recovery copy is written to a stage name and renamed after the full write).
+- The F13 coverage test names three exact field paths with a reason: `print`, `benchmark.oneToOne.soundAudio.*`, and `benchmark.oneToOne.blend.*.audio.*`.
+- The take: the 26 hashes of `MANIFEST.txt` match. The command `sha256sum -c MANIFEST.txt` exits 0 and warns about 4 metadata lines. Each of the 8 week files equals `git show cad0307c:content/storytime/l2/w0N.json`.
+- The receiver command `node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit cad0307cad31a3131dc3a06e9e773537a1a6219b --weeks 1-8` exits 0. It writes 8 weeks, 179 media files, and 159 missing pictures. Each of the 8 weeks is not ready for the at-home app.
+- Each written week is byte for byte equal to the file of the hand-off folder. The second run at the same commit exits 0 and makes no difference.
+- The counts of the acceptance checks: `weeks_parsed=8`, and `phoneme_clips=45` from the bank of `lib/phoneme-bank.ts`.
+- The targeted command exits 0 with 22 files and 270 tests. The files are the 5 new files, `phase2-adversarial.test.ts`, `phase2-adversarial-r2.test.ts`, `phase2-adversarial-r3.test.ts`, `phase2-blend.test.ts`, `phase2-content.test.ts`, `phase2-contract-hardening.test.ts`, `phase2-contract.test.ts`, `phase2-media-missing.test.ts`, `phase2-receive-guards.test.ts`, `phase2-runbook.test.ts`, `phase3-decodable-ui.test.tsx`, `phase3-media-gate.test.ts`, `phase3-phoneme-bank.test.ts`, `phase3-printed-urls.test.ts`, `phase3-readalong-ui.test.tsx`, `phase3-readiness.test.ts`, and `phase3-song-ui.test.tsx`.
+- `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on the 8 changed files.
+- One changed expectation: `phase2-receive-guards.test.ts` names the original that no copy can keep. The old value was the fault path `/a\.json\.orig-/`. The new value is the fault path `/a\.json\.tmp-/`, because the copy is written to a stage name now. The rule stays: the error must say "original could not be kept". No other expectation changed.
+- The media gate of task 3.1a and every Phase 3 screen stay as they are. The routines stay hidden; task 3.9 builds the question screen.
 - [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
   - Hand-off of the w01 app package (PM accepted these defaults, 2026-11-03): Workbooks sends the package by 2026-11-06 in `/home/daniebo/Desktop/handoff/w01-storytime-app-package/`. The folder holds `MANIFEST.txt` with the line `workbooks-commit: <full sha>`. The media paths are relative to `content/storytime/`. The receiver runs at that commit. The received `w01.json` must equal the hand-off `w01.json` byte for byte. The media come from the folder after the SHA-256 check against `MANIFEST.txt`.
