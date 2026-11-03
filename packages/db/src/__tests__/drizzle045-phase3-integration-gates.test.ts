@@ -343,6 +343,23 @@ const EXPECTED_JOURNAL_TAGS = [
   "0055_eminent_nuke",
   "0056_great_clint_barton",
   "0057_complex_sleeper",
+  "0058_acoustic_lady_deathstrike",
+  "0059_game_challenges",
+  "0060_primary_legacy_id_map",
+  "0061_tutor_compat_views",
+  "0062_primary_student_login",
+  "0063_primary_student_login_settings",
+  "0064_primary_student_session_policy",
+  "0065_primary_class_books",
+  "0066_primary_avatar_profile",
+  "0067_primary_voice",
+  "0068_primary_avatar_shop",
+  "0069_primary_class_quest",
+  "0070_primary_objective_tags",
+  "0071_primary_temporary_password",
+  "0072_primary_stories",
+  "0073_primary_lesson_attempts",
+  "0074_primary_help_events",
 ] as const;
 
 describe("drizzle045-phase3-integration-gates — Journal entries for full migration apply (Task 5)", () => {
