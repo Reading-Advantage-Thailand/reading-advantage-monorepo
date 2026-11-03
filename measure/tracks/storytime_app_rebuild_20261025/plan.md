@@ -454,6 +454,15 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Test-fix commit: `cf16eb0e3` (`test(storytime): match blend clips by bank name (track_id: storytime_app_rebuild_20261025)`). No production file changed.
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-28014a3.log`.
 
+### Phase 3 task 3.4 Green block 2
+
+- Green started at role base `a23c4355866736ae024336eda31c14cb88d97930`. The phase base is `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Targeted Red command: exit 1; 2 failed files; 5 passed tests; 2 failed tests. The 5 passing checks cover the sounds page, the clip order, the whole words, the 45-clip bank, and F28.
+- Block 1: `phase3-phoneme-bank.test.ts` line 46 reads `week.focus.element.graphemes`; shipped `w08.json` is a review week with no element. Fix: `week.focus.element?.graphemes ?? []`.
+- Block 2: `phase3-decodable-ui.test.tsx` line 136 compares the capital word `Nan` against lower-case page text. Fix: `includes(word.toLowerCase())`. This fix lets the F28 case stay in the pure function.
+- The implementation was complete and then reverted. No production file changed. No implementation commit exists. Task 3.4 stays `[~]`.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-a23c435.log`.
+
 - [~] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
 - [ ] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3).

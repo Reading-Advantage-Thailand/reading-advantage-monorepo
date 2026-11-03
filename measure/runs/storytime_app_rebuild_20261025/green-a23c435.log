@@ -1,0 +1,52 @@
+# Measure Green report: Storytime task 3.4 (retry)
+
+- Role: Measure Green; track `storytime_app_rebuild_20261025`; Phase 3 task 3.4.
+- phase_base_sha: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- role_base_sha: `a23c4355866736ae024336eda31c14cb88d97930`.
+- Starting HEAD: `a23c43558`. The Red changes `9fba970a6` and `cf16eb0e3` are inside
+  `phase_base_sha..HEAD`.
+- Red model of this phase: `openai/gpt-6-luna`. No coder was delegated.
+- Dirty paths at start: generated and temporary outputs, and unrelated Primary, Science, docs, and
+  root files. No dirty path belongs to this task.
+- Task 3.4 is `[~]` in `plan.md` before this run.
+
+## Targeted Red run
+
+- Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-decodable-ui.test.tsx apps/storytime/__tests__/phase3-phoneme-bank.test.ts'`.
+- Result: exit 1; 2 files; 7 tests; 5 passed; 2 failed.
+- The 5 passing checks cover the sounds page and bank tap, the CVC clip order, the sound book and
+  tricky whole words, the 45-clip G3 bank, and the F28 `RangeError` case.
+- The implementation was complete when this run happened. I reverted it to keep the tree clean for
+  the retry.
+
+## Block
+
+- No production file changed. No implementation commit exists.
+- Block 1: `apps/storytime/__tests__/phase3-phoneme-bank.test.ts` line 46 reads
+  `week.focus.element.graphemes` for every shipped week. The shipped `w08.json` is a review week
+  (`meta.kind: "review"`) with no `focus.element`, so the test throws `TypeError` before it checks
+  the bank. No app change can add an element to a review week.
+  - One-line fix: `const taught = new Set(weeks.flatMap((week) => week.focus.element?.graphemes ?? []));`.
+- Block 2: `apps/storytime/__tests__/phase3-decodable-ui.test.tsx` line 136 searches a page with
+  `entry.text?.toLowerCase().includes(word)`. The F28 fix makes the capital word `Nan` of `w02`
+  the first blend word, so `word` is `"Nan"`. A lower-case page text never includes `"Nan"`, and the
+  test fails before it capitalizes the page word.
+  - One-line fix: `...includes(word.toLowerCase())`.
+  - This fix also lets `blendPlanForWord` treat a capital word like its lower-case form, as F28
+    requires. A workaround in the UI would hide the pure-function defect.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-a23c435.log`.
+
+## MEASURE_AGENT_RESULT
+role: Measure Green
+track: storytime_app_rebuild_20261025
+phase: Phase 3 task 3.4 — Decodable UI
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: a23c4355866736ae024336eda31c14cb88d97930
+head: a23c43558
+commits: no implementation commit; this report and the plan block are the evidence commit
+tests: targeted Vitest exit 1 (2 files, 7 tests, 5 passed, 2 failed)
+files: measure/tracks/storytime_app_rebuild_20261025/plan.md; measure/runs/storytime_app_rebuild_20261025/green-a23c435.log
+remaining_failures: phoneme-bank line 46 dereferences the absent element of review week w08; decodable-ui line 136 compares a capital word against lower-case page text
+status: blocked
+handoff: Mid Red retry. Fix two lines. In `phase3-phoneme-bank.test.ts` line 46, use `week.focus.element?.graphemes ?? []`. In `phase3-decodable-ui.test.tsx` line 136, use `includes(word.toLowerCase())`. The rest of the Red set passes with the decodable UI, the bank, and the F28 fix.
+END_MEASURE_AGENT_RESULT
