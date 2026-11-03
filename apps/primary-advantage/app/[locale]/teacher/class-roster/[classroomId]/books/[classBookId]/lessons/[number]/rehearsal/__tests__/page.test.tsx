@@ -18,7 +18,7 @@ vi.mock("@/components/teacher/teacher-shell", () => ({ TEACHER_BACK_LINK: "back"
 vi.mock("../../page", () => ({ loadTeacherLesson: mocks.loadTeacherLesson }));
 vi.mock("@/components/lesson/lesson-card", async () => {
   const { useStudentView } = await import("@/components/student/student-view-provider");
-  return { default: () => <div data-testid="lesson-card" data-mode={useStudentView().mode} /> };
+  return { default: function LessonCard() { return <div data-testid="lesson-card" data-mode={useStudentView().mode} />; } };
 });
 
 import RehearsalPage from "../page";
