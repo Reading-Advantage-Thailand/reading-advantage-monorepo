@@ -16,6 +16,7 @@
 - At the end of each phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
 - Paths start at the monorepo root. Heavy jobs run one at a time under `~/Desktop/primary-parity-progress/heavy.lock`. Vitest runs on changed files with `--maxWorkers=1`.
 - Files from Workbooks and Forge move by hand-off through the PM orchestrator. This track never writes in another repository.
+- The demo bundle stays unchanged. It is already built and public (Daniel, 2026-11-03 11:53 ICT, through the PM).
 - The void build on `master-next` and `storytime/own-app` is a reference to read. This track does not merge it.
 - Graph probe: skipped at the opening, because `graph.db` is older than 24 hours (2026-10-23). The first implementation session runs `build-graph update` before Phase 2.
 
@@ -261,6 +262,10 @@ Amendment A-42 (2026-11-03): tasks 3.8, 3.9, 3.10, and 4.6 come from FR-13. The 
 
 Exception to the phase-order rule of line 11 for tasks 3.9, 3.10, and 4.6: these three tasks do not hold the Phase 3 and Phase 4 checkpoints. Task 3.10 has the dates 2026-11-17 to 2026-11-19. Tasks 3.9 and 4.6 are done before the Storytime release 1 delivery of 2026-12-01 (internal). Each of the three tasks runs after its phase checkpoint, with its own phase check. The Phase 3 test strategy must give each of them a date.
 
+Amendment M-1 (2026-11-03, media approval gate): the PM decision of 2026-11-03 19:40 ICT adds the media approval rule and AC-5.5 to spec FR-5. Task 3.1a holds the work, in the task 3.1 chain.
+
+Amendment R-1 (2026-11-03, at-home release): the at-home deploy moves out of task 6.3 and into task 3.11 at the end of Phase 3. Task 3.11 follows the Phase 3 acceptance, with target 2026-11-20. Task 6.3 keeps the teacher-app deploy. No task number changes.
+
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
 - [x] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4. Done: `0c42dde7a`. Automated: the targeted command exits 0 with 5 files and 17 tests; `tsc --noEmit` exits 0; `phase3-redirect-check.sh` exits 0 with PASS=6, FAIL=0.
@@ -286,7 +291,10 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - `apps/storytime/AGENTS.md` holds the agent block that `next dev` writes; the other apps commit theirs.
 - The full Storytime and `packages/read-along` suite ran once at this tree before the final manifest change: 26 files and 272 tests exit 0. The PM rule of 2026-11-03 then limits a small change to its own files. The phase-end run covers the full suite.
 - No structural TypeScript file changed after `build-graph update`, which ran at the pre-commit tree (6 files, 24 to 89 nodes). `graph.db` is ignored and not committed.
-- [ ] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. Test: AC-5.2.
+- [ ] 3.1a Media approval gate: the media approval rule of spec FR-5 and AC-5.5. A published week is ready only when `approval.images.status`, `approval.audio.status`, and `approval.song.status` are each `approved`. An absent key counts as draft, as `approval.loops` does. Otherwise the route answers 404, as it answers for a draft week. The log names each part that is not approved. The server-side switch `STORYTIME_SHOW_DRAFT_MEDIA` (value `1`) shows the draft parts on the review copy. Production never sets it, and it is never a `NEXT_PUBLIC_` variable. The switch never makes an unpublished week ready. It never makes a week with a missing picture ready. The receiver never changes `approval` (rule 12.1). Tests: AC-5.5. Target: 2026-11-06.
+  - PM decision 2026-11-03: in the task 3.1 chain (spec line, Red test, Green); it must not move task 3.1 (2026-11-06) or the at-home release (2026-11-20).
+- [ ] 3.2 Tiles and the home card: three tiles with pictures, recorded label audio, the Thai parent line, the three words with recorded audio, the frame, and the activity. No phone voice (rule 10.5). Messages in `th` and `en`. The Thai text uses the Sarabun font (Daniel, 2026-11-03 11:53 ICT, through the PM). Test: AC-5.2.
+  - Workbooks answers (Q13 to Q15, through the PM, 2026-11-03): the picture alt text is `image.caption`. The audio fields are `focus.element.audio`, `StripCard.audio`, and `words[].audio`. The word tiles have no audio.
 - [ ] 3.3 Read-along UI on `packages/read-along`: the page turner, "read it to me", "my turn", the slow mode from `slowFile`, and a message when a sound fails. Tests: AC-6.1.
 - [ ] 3.4 Decodable UI: the sounds page with the phoneme bank, then the blend playback from task 2.5. Tests: AC-7.1.
 - [ ] 3.5 Song page: the poster, no sound before a tap, and the 9:16 phone box or the 16:9 box. The lyric lines light up with the gesture name and the line picture. Add the audio-only case. Show no karaoke tile without `song.karaoke`. Tests: AC-8.1, AC-8.2.
@@ -294,7 +302,9 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - [ ] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19.
 - [ ] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
+  - Hand-off of the w01 app package (PM accepted these defaults, 2026-11-03): Workbooks sends the package by 2026-11-06 in `/home/daniebo/Desktop/handoff/w01-storytime-app-package/`. The folder holds `MANIFEST.txt` with the line `workbooks-commit: <full sha>`. The media paths are relative to `content/storytime/`. The receiver runs at that commit. The received `w01.json` must equal the hand-off `w01.json` byte for byte. The media come from the folder after the SHA-256 check against `MANIFEST.txt`.
 - [ ] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line).
+- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
 ## Phase 4: Teacher app
 
@@ -308,18 +318,19 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 ## Phase 5: Milestone week integration
 
 - [ ] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step.
+  - The picture file arrives on `books[].cover` and `books[].pages[].image`. For w01 it arrives from 2026-11-06. For w02 to w07 it arrives by 2026-11-16. Source: Workbooks answers Q13 to Q15, through the PM, 2026-11-03. Daniel's picture approvals cover the app.
 - [b] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price. deferred:daniel
 - [ ] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1.
 - [ ] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
-- [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit.
+- [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
 - [ ] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
 
 ## Phase 6: Daniel's milestone judgment
 
 - [b] 6.1 Daniel judges the five items on the review page, with the sound and touch checks on a real iPhone and a low-cost Android phone. A section without an answer is open. AC-12.1. deferred:daniel
 - [ ] 6.2 Fix each finding from Daniel. Repeat stages 1 and 2 for each changed file. Put the changed items in a new page section.
-- [b] 6.3 Deploy the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. deferred:daniel
+- [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:daniel
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel
 - [ ] 6.5 Retro entry in `measure/lessons-learned.md`. Update the spec and the plan to the state at the milestone.
 
@@ -342,4 +353,4 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 
 ## Task count
 
-Estimated tasks: 51 (Phase 1: 6, Phase 2: 7, Phase 3: 10, Phase 4: 6, Phase 5: 7, Phase 6: 5, Phase 7: 4, Phase 8: 6).
+Estimated tasks: 53 (Phase 1: 6, Phase 2: 7, Phase 3: 12, Phase 4: 6, Phase 5: 7, Phase 6: 5, Phase 7: 4, Phase 8: 6).

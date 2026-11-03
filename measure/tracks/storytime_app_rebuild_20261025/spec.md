@@ -9,6 +9,10 @@
 
 Decision: Daniel, 2026-11-02 18:53 ICT, Google Tasks NlRDWElnWW84bTFKRTF4Rg (reply to Wmw1Z2hGUjhrd2tuLWFmQw), on the question "may a week enter the app before its pictures?": "Yes". FR-3, FR-4, and FR-5 carry it.
 
+Decision: Daniel, 2026-11-03 11:53 ICT, through the PM: "1. Demo is already built and in pubic as an asset, so no need to modify it. 2. However fast we can do it. 3. Match with sarabun". The demo bundle stays unchanged. The at-home release goes out as fast as possible. Its target is 2026-11-20. The Thai text of the app uses the Sarabun font. Section 6 carries the font. Plan task 3.11 carries the release date.
+
+Decision: PM, 2026-11-03 19:40 ICT, answer to the Monorepo question of 2026-11-03 19:39 ICT. A published week is ready only when the images, audio, and song parts of `approval` are each approved. FR-5 and AC-5.5 carry it. Plan task 3.1a holds the work.
+
 ## 1. Architecture (Daniel, 2026-10-25)
 
 Daniel: "Storytime is an APP in the MONOREPO."
@@ -111,6 +115,7 @@ Acceptance:
 - The sentence timing has the Primary `SentenceTimepointSchema` shape (sentence, startTime, endTime, words) with an optional 1-based `page`.
 - A published week must have exactly one book of each kind (`readalong`, `decodable`) and a picture entry on every book page.
 - The picture file may arrive later. Until then the receiving step lists it as missing (FR-4), and the at-home page does not show the week (FR-5).
+- The picture alt text is `image.caption`. The audio fields are `focus.element.audio`, `StripCard.audio`, and `words[].audio`. The word tiles have no audio. Source: Workbooks answers Q13 to Q15, through the PM, 2026-11-03.
 - The contract moves to `packages/types` when a second app reads weeks. Until then it stays in the app.
 
 Acceptance:
@@ -124,11 +129,13 @@ Acceptance:
 - The script lists every media file that each week needs, with its kind and the rule that checks it.
 - The list names each book page picture that has an entry but no file as a missing item, with its book kind and page number.
 - The script never changes `meta.status`. Approval lives in the source repository (rule 12.1).
+- The w01 app package arrives by 2026-11-06 in `/home/daniebo/Desktop/handoff/w01-storytime-app-package/` (PM accepted these defaults, 2026-11-03). The folder holds `MANIFEST.txt` with the line `workbooks-commit: <full sha>`. The media paths of the package are relative to `content/storytime/`.
+- The receiver runs at the commit of `MANIFEST.txt`. The received `w01.json` must equal the hand-off `w01.json` byte for byte. The media come from the package folder after the SHA-256 check against `MANIFEST.txt`.
 - A changed media file gets a new file name (rule 12.2). The upload to the production bucket goes with a deploy, on Daniel's go, and is checked file by file (rule 12.4).
 
 Acceptance:
 
-- AC-4.1 (automated) A run on the handed-off commit writes the weeks and lists the missing media by name.
+- AC-4.1 (automated) A run on the handed-off commit writes the weeks and lists the missing media by name. A run at the commit of `MANIFEST.txt` writes a `w01.json` that equals the hand-off file byte for byte.
 - AC-4.2 (automated) A test shows that the script keeps the status of the source file.
 
 ### FR-5 At-home app: entry and home card
@@ -141,12 +148,21 @@ Acceptance:
 - The page works in portrait and in landscape on a low-cost Android phone and an iPhone.
 - The first load is at most 300 KB transferred, without media. Media loads only when the child opens a part.
 
+Media approval gate (PM decision, 2026-11-03 19:40 ICT).
+
+- A published week is ready only when `approval.images.status`, `approval.audio.status`, and `approval.song.status` are each `approved`. An absent key counts as draft, as `approval.loops` does.
+- Otherwise the route answers 404, as it answers for a draft week. The log names each part that is not approved.
+- The review copy (task 5.6) sets a server-side switch that shows the draft parts. Production never sets it. The switch is a server-side environment variable, never a `NEXT_PUBLIC_` one. Its name is `STORYTIME_SHOW_DRAFT_MEDIA` and its value is `1`. The switch never makes an unpublished week ready. It never makes a week with a missing picture ready.
+- Daniel's picture approval covers the app (Workbooks answers, through the PM, 2026-11-03).
+- The receiver never changes `approval` (rule 12.1).
+
 Acceptance:
 
 - AC-5.1 (automated) Tests show that the route is public, has `noindex`, and sends no `Set-Cookie` header.
 - AC-5.2 (automated) A browser check measures each tap target at 64 px or more in portrait and in landscape.
 - AC-5.3 (automated) A browser check records the network log. The log shows at most 300 KB before the first tap. It shows no media request before a part opens.
 - AC-5.4 (automated) A route test shows that a published week with a book page picture without a file answers 404.
+- AC-5.5 (automated) A route or readiness test covers `approval.images`, `approval.audio`, and `approval.song` as draft, one part as absent, and all three as approved. Each draft case answers 404 and names the part in the log. The same test runs with `STORYTIME_SHOW_DRAFT_MEDIA` set and unset. With the switch set, the draft case answers 200, but an unpublished week and a week with a missing picture still answer 404. A test reads the deploy files of `apps/storytime`, the Dockerfile and the Cloud Build files. None of them sets the switch.
 
 ### FR-6 Read-along player
 
@@ -213,6 +229,7 @@ Acceptance:
 
 - The production side makes the media. Workbooks makes the book audio, the pictures, the lyric sheet, the video overlay, and the sound mix. Forge makes the option C renders from the 3D cast models. Daniel offered to do the phoneme noise step. Requests and files move through the PM orchestrator.
 - This track sends the exact media list (FR-4) and receives the files.
+- The picture file arrives on `books[].cover` and `books[].pages[].image`. For w01 it arrives from 2026-11-06. For w02 to w07 it arrives by 2026-11-16. Source: Workbooks answers Q13 to Q15, through the PM, 2026-11-03.
 - The song uses Lyria 3 Pro (S16) as the music source and option C (S27) as the video model. The milestone song is the first test of both. The current Lyria takes are material only.
 - The read-along audio is one recording of each page in context, at kindergarten speed, by a voice that Daniel chose (rule 10.1). Each page picture shows the named object in the stated count (rules 9.1, 9.2).
 - The decodable text passes the decodability gate (rule 8.3). The phoneme files come from Daniel's recordings after the noise step.
@@ -308,6 +325,7 @@ Acceptance:
 - Server code logs through a structured logger, not `console.error`. A bucket write from code uses `@reading-advantage/storage`.
 - Forge assets only. No ElvGames asset.
 - Thai and English text. Daniel or a Thai reader that he names checks the Thai (rule 8.5).
+- The Thai text of the app uses the Sarabun font (Daniel, 2026-11-03 11:53 ICT, through the PM).
 - No launch date appears in user-facing text.
 - Heavy jobs (build, Vitest, browser checks, Docker) run one at a time under `~/Desktop/primary-parity-progress/heavy.lock`. Vitest runs on changed files only, with `--maxWorkers=1`.
 - Commits follow Conventional Commits. The header is 100 characters or less, including `(track_id: storytime_app_rebuild_20261025)`.
