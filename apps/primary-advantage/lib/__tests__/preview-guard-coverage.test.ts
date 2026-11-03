@@ -21,6 +21,7 @@ export const STUDENT_API_FOLDERS = [
 
 /** A write route that needs no student guard, with the reason. Paths are relative to `app/api`. */
 export const EXEMPT: Record<string, string> = {
+  "articles/[articleId]/route.ts": "POST, PUT, PATCH, and DELETE only answer 404; they write nothing",
   "assignments/route.ts": "Teacher creates an assignment; writes no student record",
   "assistant/lesson-chatbot/route.ts": "AI reply only; writes no student record",
   "v1/apk/challenges/route.ts": "Teacher creates a challenge (challenges:create)",
