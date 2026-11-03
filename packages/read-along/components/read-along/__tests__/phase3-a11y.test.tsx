@@ -36,16 +36,30 @@ describe("read-along accessibility", () => {
     expect(container.querySelector('[data-word="1"]')).toHaveAttribute("aria-current", "true");
   });
 
-  it("reaches a word by keyboard and plays it with Enter and Space", () => {
+  it("keeps one sentence tab stop and reaches words with arrow keys", () => {
     const onWordTap = vi.fn();
-    const { getByText } = render(
+    const { container, getByText } = render(
       <ReadAlongPassage sentences={sentences} passage="" position={NO_POSITION} active onWordTap={onWordTap} />,
     );
-    const word = getByText("small");
-    expect(word).toHaveAttribute("tabindex", "0");
-    fireEvent.keyDown(word, { key: "Enter" });
-    fireEvent.keyDown(word, { key: " " });
-    expect(onWordTap.mock.calls).toEqual([[0, 1], [0, 1]]);
+    const sentence = container.querySelector('[data-sentence="0"]') as HTMLElement;
+    const one = getByText("One");
+    const small = getByText("small");
+    const cat = getByText("cat");
+    expect(container.querySelectorAll("[tabindex='0']")).toHaveLength(1);
+    expect(sentence).toHaveAttribute("tabindex", "0");
+    expect(one).toHaveAttribute("tabindex", "-1");
+    expect(small).toHaveAttribute("tabindex", "-1");
+    sentence.focus();
+    fireEvent.keyDown(sentence, { key: "ArrowRight" });
+    expect(one).toHaveFocus();
+    fireEvent.keyDown(one, { key: "ArrowRight" });
+    expect(small).toHaveFocus();
+    fireEvent.keyDown(small, { key: "Enter" });
+    expect(onWordTap).toHaveBeenCalledWith(0, 1);
+    fireEvent.keyDown(small, { key: "ArrowRight" });
+    expect(cat).toHaveFocus();
+    fireEvent.keyDown(cat, { key: " " });
+    expect(onWordTap).toHaveBeenLastCalledWith(0, 2);
   });
 
   it("does not render duplicate control ids when two players share a page", () => {
