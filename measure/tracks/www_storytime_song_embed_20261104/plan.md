@@ -28,7 +28,7 @@
   - ESLint command: `../../node_modules/.bin/eslint --no-warn-ignored src/components/products/storytime-song-player.tsx src/components/products/storytime-song-player.test.tsx "src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx" "src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx" src/locales/pages/products/storytime-advantage.ts src/__tests__/fixtures/storytime-page-expected.ts` — exit 0.
   - Typecheck command: `../../node_modules/.bin/tsc --noEmit` — exit 0.
   - The first ESLint run gave 3 errors: the theme token name did not match the CSS, and the outline offset used brackets. The corrected run gave 0 errors.
-- [x] 1.4 Build, start, and capture. Test: AC-13, AC-15. Done in commit `30df1746b`.
+- [x] 1.4 Build, start, and capture. Test: AC-13, AC-15. Done in commit `30df1746b`. The final capture script is in commit `a4df384b2`.
   - Build command: `../../node_modules/.bin/next build` — exit 0; the compile and the typecheck passed. The standalone output warning stays.
   - Server command: `../../node_modules/.bin/next start --port "$PORT"` — started on a free port. The wrapper stopped the server with the PID from `ss -ltnp` (PID 1180961 in the last run).
   - Capture command: `CAPTURE_DIR=/home/daniebo/Desktop/a46-www-storytime-song-captures PORT="$PORT" node scripts/capture-storytime-song.mjs` — exit 0; 10 PNG files written.
