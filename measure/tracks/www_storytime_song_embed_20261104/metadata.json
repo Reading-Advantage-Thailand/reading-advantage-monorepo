@@ -1,0 +1,49 @@
+{
+  "track_id": "www_storytime_song_embed_20261104",
+  "type": "feature",
+  "status": "active",
+  "created": "2026-11-04",
+  "created_at": "2026-11-04T00:00:00Z",
+  "updated_at": "2026-11-04T00:00:00Z",
+  "priority": "high",
+  "description": "Add a song section with a click-to-load YouTube player to the www Storytime Advantage page at /products/storytime-advantage: local poster before the tap, phone video below 768 px, desktop video from 768 px, and no request to any video host before the tap. The en, th, and zh strings come from hand-off v0.2. The Thai waits for Daniel's check. The zh song strings go live and a contracted Chinese speaker checks them after the push.",
+  "owner_chain": [
+    "Daniel (owner; Thai check; zh check after the push; look check; push gate)",
+    "Monorepo orchestrator (track owner; tests, component, page, captures)",
+    "PM orchestrator (assignment A-46; takes questions back to PR)"
+  ],
+  "requested_by": "Daniel, Google Tasks bms4Ujg2bEQ3TFNsNlVqYg, 2026-11-04: \"Storytime Advantage www page - add song embed\"",
+  "pm_assignment": "A-46, 2026-11-04; the PR session sent the song copy v0.2, the two posters, and the two video IDs",
+  "sources": [
+    "www-song-handoff.md v0.2 (2026-11-04); SHA-256 9ac0e73676aea7e080c9b146c6ba02d0c48c7b9b831b6d50cc280b18a7379fa7",
+    "l2/media/w01/song-poster.jpg (1280x720); SHA-256 abef5e066eceabbd3bebab1851f5bdf1c2ac08dc220fe8e524466d68bca28b50",
+    "l2/media/w01/song-phone-poster.jpg (720x1280); SHA-256 47365f3136529fc2e97da40d92d727c74bb549212b1505ebdc8aeb5d58fa0a18",
+    "measure/archive/www_storytime_page_revamp_20261103/spec.md",
+    "measure/archive/www_storytime_page_revamp_20261103/plan.md",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx at HEAD dd1c4133f",
+    "apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts at HEAD dd1c4133f"
+  ],
+  "pending_inputs": [],
+  "branch": "www/storytime-song-embed",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/www-storytime-song",
+  "captures_dir": "/home/daniebo/Desktop/a46-www-storytime-song-captures/",
+  "locales": ["en", "th", "zh"],
+  "default_locale": "en",
+  "image_targets": "apps/www-reading-advantage/public/images/storytime-advantage/",
+  "constraints": [
+    "This opening writes only the track files. It builds no component, copies no poster, and writes no test.",
+    "The page makes no request to any YouTube or Google host before the tap.",
+    "The play control is a real button with a focus ring. The poster image has an empty alt.",
+    "The page stays a server component. The player is one small client component.",
+    "No date, no price, no learning claim, and no free trial on the page.",
+    "The poster bytes stay unchanged. The build adds no hash field to any file.",
+    "No push and no deploy. The push and the merge stay with Daniel.",
+    "Pathspec commits only. No git add -A, no git commit -a, no stash, no reset.",
+    "Every heavy command runs through /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'.",
+    "Commit headers stay at 100 characters or less and carry the track id (track_id: www_storytime_song_embed_20261104).",
+    "graph.db is never committed.",
+    "Monorepo never writes in /home/daniebo/Desktop/advantage-pr."
+  ],
+  "estimated_tasks": 8,
+  "deviation_notes": "Opened 2026-11-04 by the Monorepo build agent as track files only. The lane is the light lane (PM 2026-11-03, rule 3): one maker, one checker later, then Daniel's look check. The PM brief of 2026-11-04 12:3x ICT replaces the zh rule of the first brief. The zh page now shows the PR zh draft strings for the four song keys, and every other zh key stays equal to en. The Thai strings are Daniel's draft and wait for his check. The zh strings go live with the push, and a contracted Chinese speaker checks them after the push."
+}
