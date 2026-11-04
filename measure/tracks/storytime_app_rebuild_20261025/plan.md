@@ -662,7 +662,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on the five changed TypeScript files.
 - No week file and no `source.json` changed. The receiver did not run at a new commit.
 - Commits: `f163d4692` (the test rows) and `aeffe6826` (the receiver and the runbook). The plan commit is the third one.
-- [x] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal). Done: `08ff84423`. Automated: the targeted command exits 0 with 3 files and 31 tests; the full phase 2 and phase 3 run exits 0 with 31 files and 327 tests; `tsc --noEmit` exits 0; ESLint exits 0 on the 6 changed TypeScript files.
+- [~] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal). Done: `08ff84423`. Automated: the targeted command exits 0 with 3 files and 31 tests; the full phase 2 and phase 3 run exits 0 with 31 files and 327 tests; `tsc --noEmit` exits 0; ESLint exits 0 on the 6 changed TypeScript files. Fix round 1 is open: the findings F1 and F4 of `measure/runs/storytime_app_rebuild_20261025/review-a-2d840ae.json`.
 
 ### Phase 3 task 3.9 Red evidence
 
@@ -697,6 +697,33 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - New message keys, drafts for Daniel's Thai check: `questionSkip` "ข้าม", `questionRight` "ใช่", `questionGentle` "ลองอีกครั้ง".
 - The first-load bytes and the browser gate did not run in Green. They belong to the task 3.7 phase check.
 - No committed Red test changed. No content file and no receiver file changed. Report: `measure/runs/storytime_app_rebuild_20261025/green-744e1fa.log`.
+
+### Phase 3 task 3.9 fix round 1 Red evidence
+
+- The checker result is `measure/runs/storytime_app_rebuild_20261025/review-a-2d840ae.json`. It holds one blocking finding (F1) and six other findings. F1 and F4 need Red tests. F2, F3, F5, F6, and F7 need no test change.
+- The command: `HEAVY_MIN_AVAIL_MB=2500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-question-screen.test.tsx __tests__/phase3-loops-off.test.tsx'`. Exit: 1. One failed file, 8 failed tests, and 19 passed tests of 27.
+- Every failure is an assertion. No file failed to load, and no import error occurred.
+- The failed assertions name the missing rules: the advance time, the right mark of question 1 on question 2, the gentle mark of question 1 on question 2, the shared answer page on question 2, the end of the last question, and the accessible name of the choices.
+- The wider run with `__tests__/phase3-readalong-ui.test.tsx` exits 1 with 8 failed tests and 28 passed tests of 36. The read-along file passes unchanged.
+- The type check `tsc --noEmit` in `apps/storytime` exits 0 through the heavy lock. ESLint exits 0 on the two changed test files.
+- The test commit is `7570a98ca`.
+- The report is `measure/runs/storytime_app_rebuild_20261025/red-2d840ae.log`.
+
+Changed expectations:
+
+- `phase3-question-screen.test.tsx`: the test "marks the right picture and goes to the next question on a right tap" is now "marks the right picture at once and goes to the next question after the advance time". Old: the next question shows at once. New: the mark shows at once, the screen stays on the question, and the next question shows after `QUESTION_ADVANCE_MS`. Reason: Review A F1 and the orchestrator rule of 2026-11-04.
+- `phase3-question-screen.test.tsx`: the test "ends the screen with the right tap on the third question" now uses the fake timers. Old: the screen ends at once. New: the screen stays on the last question and ends after `QUESTION_ADVANCE_MS`, and the end shows the three tiles. Reason: Review A F1 and the orchestrator rule of 2026-11-04.
+- `phase3-question-screen.test.tsx`: the test "shows a shared answer page one time and takes it as right for each question" now uses the fake timers and holds the marks. Old: the right tap goes to the next question at once. New: the next question shows after the advance time, the shared picture has no mark on question 2, and a tap marks it right again. Reason: Review A F1 and the case (a) of AC-13.6.
+- The new tests are "clears the right mark of question 1 when question 2 shows", "clears the gentle mark of question 1 when question 2 shows", "exports the advance time of the question screen", "gives every choice button a non-empty accessible name in English and Thai", and "holds the picture label in the English and Thai messages". Reason: Review A F1 and F4.
+
+Green builds to these rules:
+
+- The screen exports the constant `QUESTION_ADVANCE_MS` from `apps/storytime/app/[locale]/st/[level]/[week]/questions.tsx`. Its value is a positive number of milliseconds.
+- A right tap shows the right mark at once. The next question shows after `QUESTION_ADVANCE_MS`. The screen ends after the same time on the last question.
+- Each new question starts with no mark on any picture.
+- A wrong tap shows the gentle mark and stays. The gentle mark stays until the question changes.
+- The labels of the question screen gain a `picture` field with the template `{n}`. The week page passes the message `questionPicture` of the locale.
+- The messages `questionPicture` in `messages/en.json` and `messages/th.json` hold the position field `{n}`.
 - [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
   - Hand-off of the w01 app package (PM accepted these defaults, 2026-11-03): Workbooks sends the package by 2026-11-06 in `/home/daniebo/Desktop/handoff/w01-storytime-app-package/`. The folder holds `MANIFEST.txt` with the line `workbooks-commit: <full sha>`. The media paths are relative to `content/storytime/`. The receiver runs at that commit. The received `w01.json` must equal the hand-off `w01.json` byte for byte. The media come from the folder after the SHA-256 check against `MANIFEST.txt`.
   - Take recorded 2026-11-03 at Workbooks commit `cf30bb2eee55806bf8830b3a3e69e4f6044847e6`.
