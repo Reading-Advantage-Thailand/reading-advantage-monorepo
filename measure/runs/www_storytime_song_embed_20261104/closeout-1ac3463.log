@@ -1,0 +1,77 @@
+Measure closeout log
+Track: www_storytime_song_embed_20261104
+Pre-closeout HEAD: 1ac346337325d69d2d121e67913423935ad0f78f
+Lane: light lane (PM 2026-11-03, rule 3). One maker, one checker, then Daniel's look check. No final acceptance role.
+Checker audited head: 84b37333edf9f1d2695525e5644105297751fe32
+Initial tracked tree: clean apart from the closeout paths
+
+MEASURE_AGENT_RESULT
+role: measure-closeout
+status: complete
+track: www_storytime_song_embed_20261104
+phase: closeout
+commits: pending; the closeout commit carries this file. Pre-closeout HEAD is 1ac346337325d69d2d121e67913423935ad0f78f
+tests_run: closeout checker PASS; marker vocabulary guard PASS; A9 path scan found no stale reference; no test, build, or browser run by the closeout rule
+files_changed: archived track, registry, closeout manifest, closeout evidence
+plan_updates: task 1.6 marked complete with the look check evidence; task 1.7 marked complete with the push, merge, deploy, and live check evidence; the rules note and the out-of-scope list now match the completed push and merge; the copy decisions note records the accepted Thai
+known_failures: the CI step "Architecture boundary check" fails at f3611d47c, dd1c4133f, and 7db52a49d; track A-32 owns it
+handoff: Daniel owns the push and the merge gate, and it is closed. The CI failure in "Architecture boundary check" stays with track A-32. The zh song strings stay a PR draft for a contracted Chinese speaker, as in A-45. The capture folder stays on disk as Daniel's record.
+END_MEASURE_AGENT_RESULT
+
+Evidence read:
+- measure/index.md, measure/tracks.md, the track spec.md, plan.md, metadata.json
+- measure/anti-patterns.md, measure/lessons-learned.md, measure/tech-debt.md
+- The precedent closeout commit 16488f99c for the www Storytime page revamp
+
+Plan audit:
+- Tasks 1.0 to 1.8 are complete with commit SHA evidence.
+- Task 1.6 records Daniel's look check. Task 1.7 records the push, the merge, the deploy, and the live check.
+- No [~] task and no [ ] task remains.
+- The A5 scan found no false-claim text in the plan.
+- The plan scope note now matches the completed push, merge, and deploy.
+
+Registry audit:
+- The A-46 row moved out of the active section into the archived www section.
+- The archived row records the Review C pass, the two note fixes, the look check, the push, the merge, the deploy, the live check, and the A-32 CI failure.
+
+Archive path moved:
+measure/tracks/www_storytime_song_embed_20261104 -> measure/archive/www_storytime_song_embed_20261104
+
+Checker audit:
+- Review C ran in checker session ses_e5aca7f10ffeU6pBIMqbdjRQth at audited head 84b37333edf9f1d2695525e5644105297751fe32.
+- The verdict is pass, with 0 blocking findings and 2 notes (N1 the Space-key test, N2 the google string check). The retry recommendation is none.
+- The fix round 1 commit 309f0c9fa closed both notes. The orchestrator checked the diff and the captures. The evidence commit is f3611d47c.
+- DEVIATION: the checker result files review-c-ux-api-84b3733.json and review-c-ux-api-84b3733.log lived in the ignored measure/runs/ folder of the branch worktree. The worktree removal on 2026-11-04 deleted them. This log records the verdict from the PM relay text, with the checker session ID. The checker was not re-run.
+
+Merge, push, and deploy audit:
+- Command: git merge-base --is-ancestor d5a315686 HEAD -> exit 0.
+- Command: git merge-base --is-ancestor f3611d47c HEAD -> exit 0.
+- Command: git merge-base --is-ancestor 309f0c9fa HEAD -> exit 0.
+- The local merge is d5a315686, with parents ded3f2c66 and f3611d47c. The worktree rama-worktrees/www-storytime-song and the local branch www/storytime-song-embed are removed. No remote branch existed.
+- The PM ran git push origin f3611d47c:master at 15:04 ICT (dd1c4133f..f3611d47c), after a clean pre-push scan by the Monorepo orchestrator and by the PM.
+- Command: gh run view 41796713212 -> CD run, head f3611d47c, conclusion success, updated 2026-11-04T08:17:33Z (15:17:33 ICT on 2026-11-04).
+- Command: gh run view 41796713259 -> CI run, failure on the step "Architecture boundary check" only.
+- The live check at 15:2x ICT on 2026-11-04 passed for en, th, and zh: HTTP 200 on /products/storytime-advantage, one song heading and one button per locale, 0 YouTube strings before the tap, and both posters with HTTP 200.
+
+A9 audit:
+Command: rg -n 'www_storytime_song_embed_20261104' tests/ measure/ --glob '!measure/archive/**' --glob '!measure/tracks/www_storytime_song_embed_20261104/**'
+Result: no test references this track's plan path.
+Command: rg -n 'measure/tracks/[a-z_0-9-]+/plan\.md' tests/*.sh
+Result: no hardcoded track plan path in any test.
+Command: rg -ln 'track_dir_resolve' tests/
+Result: tests/orchestrator_marker_vocabulary.sh and tests/codecamp_pr_release_approval_provenance.sh use track_dir_resolve() with archive-first resolution. No fix was required.
+
+Marker guard:
+Command: bash tests/orchestrator_marker_vocabulary.sh
+Result: PASS.
+Command: bash tests/orchestrator_marker_vocabulary.sh --track www_storytime_song_embed_20261104
+Result: PASS.
+
+Closeout checker:
+Command: python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track www_storytime_song_embed_20261104
+Output: PASS: closeout checks passed
+
+Retained evidence: the closeout result and this log, the Review C verdict with the checker session ID, the fix round 1 commits 309f0c9fa and f3611d47c, the local merge d5a315686, the deploy run 41796713212, the CI run 41796713259, the live check, and Daniel's "Accepted".
+Cleanup: none. The orchestrator named no bulky artifact for deletion. The capture folder /home/daniebo/Desktop/a46-www-storytime-song-captures/ stays on disk as Daniel's record.
+
+Open item for the owner: the zh song strings are a PR draft. A contracted Chinese speaker checks them after the push, as in A-45. The Thai strings passed Daniel's look check on 2026-11-04.

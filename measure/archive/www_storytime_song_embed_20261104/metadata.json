@@ -1,10 +1,11 @@
 {
   "track_id": "www_storytime_song_embed_20261104",
   "type": "feature",
-  "status": "active",
+  "status": "done",
   "created": "2026-11-04",
   "created_at": "2026-11-04T00:00:00Z",
   "updated_at": "2026-11-04T00:00:00Z",
+  "completed": "2026-11-04",
   "priority": "high",
   "description": "Add a song section with a click-to-load YouTube player to the www Storytime Advantage page at /products/storytime-advantage: local poster before the tap, phone video below 768 px, desktop video from 768 px, and no request to any video host before the tap. The en, th, and zh strings come from hand-off v0.2. The Thai waits for Daniel's check. The zh song strings go live and a contracted Chinese speaker checks them after the push.",
   "owner_chain": [
@@ -45,5 +46,5 @@
     "Monorepo never writes in /home/daniebo/Desktop/advantage-pr."
   ],
   "estimated_tasks": 8,
-  "deviation_notes": "Opened 2026-11-04 by the Monorepo build agent as track files only. The lane is the light lane (PM 2026-11-03, rule 3): one maker, one checker later, then Daniel's look check. The PM brief of 2026-11-04 12:3x ICT replaces the zh rule of the first brief. The zh page now shows the PR zh draft strings for the four song keys, and every other zh key stays equal to en. The Thai strings are Daniel's draft and wait for his check. The zh strings go live with the push, and a contracted Chinese speaker checks them after the push."
+  "deviation_notes": "Opened 2026-11-04 by the Monorepo build agent as track files only. The lane is the light lane (PM 2026-11-03, rule 3): one maker, one checker later, then Daniel's look check. The PM brief of 2026-11-04 12:3x ICT replaces the zh rule of the first brief. The zh page now shows the PR zh draft strings for the four song keys, and every other zh key stays equal to en. The Thai strings are Daniel's draft and wait for his check. The zh strings go live with the push, and a contracted Chinese speaker checks them after the push. Closed 2026-11-04. The lane was the light lane (PM 2026-11-03, rule 3), so the track has one maker, one checker, and Daniel's look check, with no final acceptance role. Review C passed at audited head 84b37333edf9f1d2695525e5644105297751fe32 with 0 blocking findings and 2 notes. The fix round 1 commit 309f0c9fa closed both notes. Daniel accepted the look on 2026-11-04 at 14:51 ICT. The push to origin/master, the local merge d5a315686, the deploy run 41796713212, and the live check at 15:2x ICT on 2026-11-04 are complete. The CI run 41796713259 at f3611d47c failed only on the step \"Architecture boundary check\", which track A-32 owns. The zh song strings stay a draft for a contracted Chinese speaker. Deviation: the checker result files review-c-ux-api-84b3733.json and review-c-ux-api-84b3733.log lived in the ignored measure/runs/ folder of the branch worktree. The worktree removal on 2026-11-04 deleted them. The closeout records the checker verdict from the PM relay text, with the checker session ID ses_e5aca7f10ffeU6pBIMqbdjRQth. The checker was not re-run."
 }

@@ -44,11 +44,6 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
-- [~] **Track: Storytime Advantage www song section** — *created 2026-11-04*
-  *Link: [./tracks/www_storytime_song_embed_20261104/](./tracks/www_storytime_song_embed_20261104/)*
-  *Status: track files open; tests next | Owner: Monorepo orchestrator | PM assignment A-46 | Lane: light lane | Priority: next after the Storytime page revamp*
-  *Note: Daniel 2026-11-04, Google Tasks bms4Ujg2bEQ3TFNsNlVqYg: "Storytime Advantage www page - add song embed". One song section with a click-to-load player: a local poster before the tap, the phone video under 768 px, the desktop video from 768 px, and no request to any video host before the tap. The en, th, and zh strings come from hand-off v0.2. The Thai waits for Daniel's check. The zh song strings go live, and a contracted Chinese speaker checks them after the push. The push and the merge stay with Daniel.*
-
 - [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
   *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
   *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*
@@ -1236,6 +1231,11 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Link: [./archive/www_storytime_page_revamp_20261103/](./archive/www_storytime_page_revamp_20261103/)*
   *Status: implementation accepted and archived 2026-11-04 at a51f9a1c513db72114a1422a7ba4dc2cd3202711. The checker passed at 5b0dc59a2 and the last code commit db52712f8 closed the checker finding F12. Daniel approved the look and every Thai line on 2026-11-04. The merge dd1c4133f, the push to origin/master, the deploy run 41737286738, and the live check at 07:11:15 ICT on 2026-11-04 are complete. The CI run 41737286699 at dd1c4133f failed only on the step "Architecture boundary check", which track A-32 owns. The lossy WebP item stays in tech-debt.md.*
   *Note: Daniel 2026-11-03 16:38 ICT: "Primary page is updated and live. Next is the storytime page". Same pipeline as the Primary page track. No date, no price, no outcome claim, and real product files only. The Thai and zh copy stay drafts until their checks.*
+
+- [x] **Track: Storytime Advantage www song section** — *created 2026-11-04*
+  *Link: [./archive/www_storytime_song_embed_20261104/](./archive/www_storytime_song_embed_20261104/)*
+  *Status: implementation accepted and archived 2026-11-04 at 1ac346337325d69d2d121e67913423935ad0f78f. Review C passed at audited head 84b37333edf9f1d2695525e5644105297751fe32 with 0 blocking findings and 2 notes. The fix round 1 commit 309f0c9fa closed both notes, and the evidence commit is f3611d47c. Daniel accepted the look on 2026-11-04 at 14:51 ICT. The push to origin/master, the local merge d5a315686, the deploy run 41796713212, and the live check at 15:2x ICT on 2026-11-04 are complete. The CI run 41796713259 at f3611d47c failed only on the step "Architecture boundary check", which track A-32 owns. The zh song strings stay a draft for a contracted Chinese speaker.*
+  *Note: Daniel 2026-11-04, Google Tasks bms4Ujg2bEQ3TFNsNlVqYg: "Storytime Advantage www page - add song embed". One song section with a click-to-load player: a local poster before the tap, the phone video under 768 px, the desktop video from 768 px, and no request to any video host before the tap. The en, th, and zh strings come from hand-off v0.2. The Thai passed Daniel's look check. The zh song strings go live, and a contracted Chinese speaker checks them after the push.*
 
 - [x] **Track: Update Science Advantage Product Page** *Link: [./archive/www_science_product_update_20260517/](./archive/www_science_product_update_20260517/)*
   Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs. *Status: COMPLETE — Page updated with Early Access badge, student features (join classes, interactive lessons, progress tracking, AI recommendations), teacher features (intervention alerts, class analytics, student progress, assignments), and platform features. All 7 tests passing, lint clean. Commit: 1c384a1*

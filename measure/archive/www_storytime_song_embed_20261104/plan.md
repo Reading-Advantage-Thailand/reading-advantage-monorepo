@@ -1,7 +1,7 @@
 # Implementation Plan: www Storytime Advantage song section
 
 > **Track ID:** `www_storytime_song_embed_20261104` · **Spec:** [spec.md](./spec.md)
-> **Branch:** `www/storytime-song-embed` in `/home/daniebo/Desktop/rama-worktrees/www-storytime-song`.
+> **Branch:** `www/storytime-song-embed` in `/home/daniebo/Desktop/rama-worktrees/www-storytime-song`. The branch merged into master at `d5a315686`. The branch and the worktree were removed on 2026-11-04.
 
 ## Rules
 
@@ -11,7 +11,7 @@
 - Tests run only for files touched. Heavy commands use `HEAVY_PREFLIGHT_WAIT_S=3600` and `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'`.
 - Use `../../node_modules/.bin/<tool>` from `apps/www-reading-advantage`. Exit 75 or 201 means a wait: wait 5 minutes, then run the command again.
 - Run one heavy command at a time. Run vitest with `--maxWorkers=1`.
-- Commit by path. Do not use `git add -A`, do not commit `graph.db`, do not push, merge, or deploy.
+- Commit by path. Do not use `git add -A`, do not commit `graph.db`, do not push, merge, or deploy. The push, the merge, and the deploy of task 1.7 ran under Daniel's gate.
 - Commit headers are lower case, at most 100 characters, and include `(track_id: www_storytime_song_embed_20261104)`.
 - Check each source SHA-256 before the copy. Add no hash field to any file.
 
@@ -47,13 +47,13 @@
   - Build command: `../../node_modules/.bin/next build` — exit 0. The standalone output warning stays.
   - Capture command: `CAPTURE_DIR=/home/daniebo/Desktop/a46-www-storytime-song-captures PORT="$PORT" node scripts/capture-storytime-song.mjs` — exit 0; 10 PNG files written over the old ones. Every page returned HTTP 200. Every page made 0 requests to a host with "youtube" or "google" in its name before the tap. The right poster loaded at each width. The right video ID loaded after the tap. No page had horizontal overflow. The wrapper stopped the server with the PID from `ss -ltnp` (PID 1230060).
   - Heavy rule of the PM, 2026-11-04: an app-wide tsc, an app-wide lint, a test suite, and a build run only through `heavy-run.sh`. ESLint on the changed files and a single test file stay light. Exit 75 or 201 means a wait of 5 minutes and one more run.
-- [ ] 1.6 Daniel's look check. Test: AC-2, AC-13, AC-15. The Thai draft and the zh draft stay marked as drafts. Daniel checks the look and the Thai.
-- [ ] 1.7 Merge or push. Test: AC-15. The push and the merge stay with Daniel. No push and no merge happen in this track.
+- [x] 1.6 Daniel's look check. Test: AC-2, AC-13, AC-15. Done 2026-11-04 at 14:51 ICT. Daniel answered "Accepted" on the PM note. The PM read the word as his push word for A-46 only. The ten captures are in `/home/daniebo/Desktop/a46-www-storytime-song-captures/`. The Thai song strings were in the look and passed. The zh song strings stay a PR draft, and a contracted Chinese speaker checks them after the push. The look fix is commit `309f0c9fa`, and the fix round 1 evidence commit is `f3611d47c`.
+- [x] 1.7 Merge or push. Test: AC-15. Done 2026-11-04. The PM ran `git push origin f3611d47c:master` at 15:04 ICT (`dd1c4133f..f3611d47c`) after a clean pre-push scan by the Monorepo orchestrator and by the PM. The local merge is `d5a315686`, with parents `ded3f2c66` and `f3611d47c`. The worktree `rama-worktrees/www-storytime-song` and the local branch `www/storytime-song-embed` are removed. No remote branch existed. The deploy run `41796713212` ("CD — www-reading-advantage") at `f3611d47c` finished at 08:17:32Z, which is 15:17:32 ICT. The live commit is `f3611d47c`. The live check at 15:2x ICT passed for en, th, and zh: HTTP 200 on `/products/storytime-advantage`, one song heading and one button per locale, 0 YouTube strings before the tap, and both posters HTTP 200. The CI run `41796713259` at `f3611d47c` failed only on the step "Architecture boundary check". The same step failed at `dd1c4133f` and at `7db52a49d`. Track A-32 owns that step.
 
 ## Copy decisions
 
 - The en, th, and zh strings come from hand-off section (a), word for word. The song title "Hello, I am Pip" stays in English in all three locales.
-- The Thai strings are Daniel's draft. They wait for his check.
+- The Thai strings were Daniel's draft. He accepted them in the look check on 2026-11-04.
 - The zh strings are the PR draft from hand-off line 19. They go live with the push. A contracted Chinese speaker checks them after the push.
 - Every other zh key stays equal to en. The zh rule of A-45 stays for all other keys.
 - The copy gives no date and no price. The copy makes no learning claim.
@@ -100,6 +100,6 @@ The build copies the bytes. It does not re-encode them. It adds no hash field to
 
 - The weeks 2 to 8 songs.
 - Any change to the other page sections.
-- Any push, merge, or deploy.
+- Any further push, merge, or deploy after task 1.7.
 - A Storytime app build.
 - Any hash field in a new file.
