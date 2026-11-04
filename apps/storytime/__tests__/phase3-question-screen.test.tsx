@@ -1,20 +1,19 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import week from "../content/l2/w01.json";
 import { weekSchema } from "../lib/contracts/week";
 
 /**
  * The Red tests of the question screen of the at-home read-along (plan task 3.9, AC-13.6).
  *
- * The screen does not exist yet. The tests name the modules and the exports that Green adds:
- * the rule module `apps/storytime/lib/questions.ts` and the client component
- * `apps/storytime/app/[locale]/st/[level]/[week]/questions.tsx`. A test that needs the rule
- * module fails with the message that names the missing module. A test of the screen fails with
- * the message that names the missing screen.
+ * The fix round 1 adds the mark rules of the checker finding F1 and the accessible name of the
+ * finding F4. A right tap shows the right mark at once. The next question shows after the advance
+ * time of the screen. Each question starts with no mark. A wrong tap shows the gentle mark and
+ * stays. Every choice button has a non-empty accessible name, also when the caption is empty.
  *
  * The tests read the shipped week and never the words of the shipped questions. The week data
  * changes in a later fix batch, so every expectation comes from the data of the loaded week.
@@ -23,6 +22,16 @@ import { weekSchema } from "../lib/contracts/week";
 const app = resolve(import.meta.dirname, "..");
 const routePath = resolve(app, "app/[locale]/st/[level]/[week]/page.tsx");
 const route = readFileSync(routePath, "utf8");
+
+/** The English messages of the app. */
+const englishMessages = JSON.parse(
+  readFileSync(resolve(app, "messages/en.json"), "utf8"),
+) as Record<string, string>;
+
+/** The Thai messages of the app. */
+const thaiMessages = JSON.parse(
+  readFileSync(resolve(app, "messages/th.json"), "utf8"),
+) as Record<string, string>;
 
 /** One question of a read-along book, as the week data holds it. */
 interface Question {
@@ -67,7 +76,20 @@ const questionLabels = {
   skip: "Skip",
   right: "Yes",
   gentle: "Try again",
+  /** The label of a choice, with the picture position in place of `{n}`. */
+  picture: "Picture {n}",
 };
+
+/** The Thai labels of the question screen. */
+const thaiQuestionLabels = {
+  skip: "ข้าม",
+  right: "ใช่",
+  gentle: "ลองอีกครั้ง",
+  picture: thaiMessages.questionPicture ?? "รูป {n}",
+};
+
+/** The advance time that the tests use when the screen exports no constant. */
+const FALLBACK_ADVANCE_MS = 60_000;
 
 /** The date of an approved loops part in a test copy. */
 const approvalDate = "2026-11-04";
@@ -77,7 +99,12 @@ const approvalWords = '"Loops approved" (2026-11-04)';
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
+});
+
+beforeEach(() => {
+  vi.useFakeTimers();
 });
 
 /** Creates a copy of the shipped week and leaves the shipped file alone. */
@@ -156,6 +183,37 @@ async function loadRule() {
   }
 }
 
+/** Loads the client question screen module and reports a missing implementation as an assertion. */
+async function loadQuestionScreenModule(): Promise<Record<string, unknown>> {
+  const modulePath = "../app/[locale]/st/[level]/[week]/questions";
+  try {
+    return (await import(/* @vite-ignore */ modulePath)) as unknown as Record<string, unknown>;
+  } catch (error) {
+    expect(error, "Storytime must keep the client question screen at the documented path").toBeUndefined();
+    throw error;
+  }
+}
+
+/**
+ * Reads the advance time of the question screen.
+ * @param module The client question screen module.
+ * @returns The advance time in milliseconds, or a long time when the module exports no constant.
+ */
+function advanceMs(module: Record<string, unknown>): number {
+  const value = module.QUESTION_ADVANCE_MS;
+  return typeof value === "number" && value > 0 ? value : FALLBACK_ADVANCE_MS;
+}
+
+/**
+ * Moves the screen to the next question.
+ * @param module The client question screen module.
+ */
+async function advanceToNextQuestion(module: Record<string, unknown>): Promise<void> {
+  await act(async () => {
+    vi.advanceTimersByTime(advanceMs(module));
+  });
+}
+
 /** Loads the client reader and reports a missing implementation as an assertion. */
 async function loadReader() {
   const modulePath = "../app/[locale]/st/[level]/[week]/reader";
@@ -168,17 +226,22 @@ async function loadReader() {
 }
 
 /** Renders the client reader with the questions of a week copy. */
-async function renderReader(copy: WeekShape, questions: Question[]) {
+async function renderReader(
+  copy: WeekShape,
+  questions: Question[],
+  locale = "en",
+  labels = questionLabels,
+) {
   const Reader = await loadReader();
   const book = readAlongBook(copy);
   const result = render(
     <Reader
       book={book}
-      locale="en"
+      locale={locale}
       labels={readerLabels}
       questions={questions}
       tiles={buildTiles(copy)}
-      questionLabels={questionLabels}
+      questionLabels={labels}
     />,
   );
   return { ...result, book };
@@ -315,7 +378,8 @@ describe("Phase 3 Storytime question screen", () => {
     ).toBeNull();
   });
 
-  it("marks the right picture and goes to the next question on a right tap", async () => {
+  it("marks the right picture at once and goes to the next question after the advance time", async () => {
+    const module = await loadQuestionScreenModule();
     const copy = approvedWeek();
     const book = readAlongBook(copy);
     const questions = readAlongQuestions(copy);
@@ -323,10 +387,73 @@ describe("Phase 3 Storytime question screen", () => {
     goPastLastPage(book.pages.length);
     const rightPage = questions[0].answer.page;
     fireEvent.click(choice(container, rightPage));
+    const marked = choice(container, rightPage);
+    expect(marked.getAttribute("data-mark"), "the right tap must mark the picture at once").toBe("right");
+    expect(marked.getAttribute("aria-pressed"), "the right mark must show as an ARIA state").toBe("true");
+    expect(
+      container.textContent,
+      "the screen must stay on the question until the advance time",
+    ).toContain(questions[0].ask.en);
+    expect(
+      typeof module.QUESTION_ADVANCE_MS,
+      "the question screen must export QUESTION_ADVANCE_MS",
+    ).toBe("number");
+    await act(async () => {
+      vi.advanceTimersByTime(module.QUESTION_ADVANCE_MS as number);
+    });
+    expect(container.textContent, "the screen must show the next question after the advance time").toContain(
+      questions[1].ask.en,
+    );
+  });
+
+  it("clears the right mark of question 1 when question 2 shows", async () => {
+    const module = await loadQuestionScreenModule();
+    const copy = approvedWeek();
+    const book = readAlongBook(copy);
+    const questions = readAlongQuestions(copy);
+    const { container } = await renderReader(copy, questions);
+    goPastLastPage(book.pages.length);
+    const rightPage = questions[0].answer.page;
+    fireEvent.click(choice(container, rightPage));
+    await advanceToNextQuestion(module);
     expect(container.textContent, "the screen must show the next question").toContain(questions[1].ask.en);
     const marked = choice(container, rightPage);
-    expect(marked.getAttribute("data-mark"), "the right tap must mark the picture").toBe("right");
-    expect(marked.getAttribute("aria-pressed"), "the right mark must show as an ARIA state").toBe("true");
+    expect(marked.getAttribute("data-mark"), "the right mark of question 1 must be gone on question 2").toBeNull();
+    expect(
+      marked.getAttribute("aria-pressed"),
+      "the right mark of question 1 must be gone on question 2",
+    ).toBeNull();
+  });
+
+  it("clears the gentle mark of question 1 when question 2 shows", async () => {
+    const module = await loadQuestionScreenModule();
+    const copy = approvedWeek();
+    const book = readAlongBook(copy);
+    const questions = readAlongQuestions(copy);
+    const pages = answerPages(questions);
+    const gentlePage = pages.find((page) => page !== questions[0].answer.page);
+    expect(gentlePage, "the question must hold a picture that question 1 does not answer").toBeDefined();
+    book.questions = book.questions?.map((question, index) =>
+      index === 1 ? { ...question, answer: { page: gentlePage as number, word: question.answer.word } } : question,
+    );
+    const sharedQuestions = readAlongQuestions(copy);
+    const { container } = await renderReader(copy, sharedQuestions);
+    goPastLastPage(book.pages.length);
+    fireEvent.click(choice(container, gentlePage as number));
+    expect(
+      choice(container, gentlePage as number).getAttribute("data-mark"),
+      "the wrong tap must show the gentle mark",
+    ).toBe("gentle");
+    fireEvent.click(choice(container, sharedQuestions[0].answer.page));
+    await advanceToNextQuestion(module);
+    expect(container.textContent, "the screen must show the next question").toContain(
+      sharedQuestions[1].ask.en,
+    );
+    const marked = choice(container, gentlePage as number);
+    expect(
+      marked.getAttribute("data-mark"),
+      "the gentle mark of question 1 must be gone on question 2",
+    ).toBeNull();
   });
 
   it("shows a gentle mark on a wrong tap, stays on the question, and plays no sound", async () => {
@@ -371,21 +498,35 @@ describe("Phase 3 Storytime question screen", () => {
   });
 
   it("ends the screen with the right tap on the third question", async () => {
+    const module = await loadQuestionScreenModule();
     const copy = approvedWeek();
     const book = readAlongBook(copy);
     const questions = readAlongQuestions(copy);
     expect(questions.length, "the shipped week must hold the three questions").toBeGreaterThan(2);
     const { container } = await renderReader(copy, questions);
     goPastLastPage(book.pages.length);
-    for (const question of questions) {
+    for (const question of questions.slice(0, -1)) {
       const right = container.querySelector(`[data-choice-page="${question.answer.page}"]`);
       expect(right, "the screen must show the right choice of every question").not.toBeNull();
       fireEvent.click(right as HTMLElement);
+      await advanceToNextQuestion(module);
     }
+    const lastQuestion = questions[questions.length - 1];
+    fireEvent.click(choice(container, lastQuestion.answer.page));
+    expect(
+      container.textContent,
+      "the screen must stay on the last question until the advance time",
+    ).toContain(lastQuestion.ask.en);
+    await advanceToNextQuestion(module);
     expect(
       container.textContent,
       "the right tap on the last question must end the screen",
     ).not.toContain(questions[0].ask.en);
+    expect(linkHrefs(container), "the end must show the three tiles of the week page").toEqual([
+      "?part=book",
+      "?part=decodable",
+      "?part=song",
+    ]);
   });
 
   it("shows the three tiles of the week page at the end of the screen", async () => {
@@ -426,6 +567,7 @@ describe("Phase 3 Storytime question screen", () => {
   });
 
   it("shows a shared answer page one time and takes it as right for each question", async () => {
+    const module = await loadQuestionScreenModule();
     const copy = approvedWeek();
     const book = readAlongBook(copy);
     const questions = readAlongQuestions(copy);
@@ -449,13 +591,103 @@ describe("Phase 3 Storytime question screen", () => {
       "the choices must hold each distinct answer page one time",
     ).toBe(new Set(sharedQuestions.map((question) => question.answer.page)).size);
     fireEvent.click(choice(container, sharedPage));
+    await advanceToNextQuestion(module);
     expect(container.textContent, "the shared picture must be right for the first question").toContain(
       sharedQuestions[1].ask.en,
     );
+    const marked = choice(container, sharedPage);
+    expect(
+      marked.getAttribute("data-mark"),
+      "the shared picture must have no mark on question 2",
+    ).toBeNull();
+    expect(
+      marked.getAttribute("aria-pressed"),
+      "the shared picture must have no mark on question 2",
+    ).toBeNull();
     fireEvent.click(choice(container, sharedPage));
+    expect(
+      choice(container, sharedPage).getAttribute("data-mark"),
+      "the shared picture must be right again on question 2",
+    ).toBe("right");
+    await advanceToNextQuestion(module);
     expect(container.textContent, "the shared picture must be right for the second question").toContain(
       sharedQuestions[2].ask.en,
     );
+  });
+
+  it("exports the advance time of the question screen", async () => {
+    const module = await loadQuestionScreenModule();
+    expect(
+      typeof module.QUESTION_ADVANCE_MS,
+      "the question screen must export QUESTION_ADVANCE_MS",
+    ).toBe("number");
+    expect(module.QUESTION_ADVANCE_MS, "the advance time must be a positive number").toBeGreaterThan(0);
+  });
+
+  it("gives every choice button a non-empty accessible name in English and Thai", async () => {
+    const copy = approvedWeek();
+    const book = readAlongBook(copy);
+    const questions = readAlongQuestions(copy);
+    for (const page of book.pages) {
+      if (page.image) page.image.caption = "";
+    }
+    const names = async (locale: string, labels: typeof questionLabels) => {
+      const { unmount } = await renderReader(copy, questions, locale, labels);
+      goPastLastPage(book.pages.length);
+      const buttons = screen.getAllByRole("button");
+      const named = screen.queryAllByRole("button", { name: /\S/ });
+      const labelsFound = buttons
+        .filter((button) => button.hasAttribute("data-choice-page"))
+        .map((button) => button.getAttribute("aria-label") ?? button.textContent ?? "");
+      unmount();
+      return { buttons, named, labelsFound };
+    };
+    const english = await names("en", questionLabels);
+    expect(
+      english.buttons.length,
+      "the screen must show the choices and the skip control",
+    ).toBeGreaterThan(2);
+    expect(
+      english.named.length,
+      "every choice button must have a non-empty accessible name in English",
+    ).toBe(english.buttons.length);
+    expect(english.labelsFound.length, "the screen must show the choices").toBeGreaterThan(1);
+    for (const label of english.labelsFound) {
+      expect(label.trim(), "every choice button must have a non-empty accessible name").not.toBe("");
+      expect(label, "the accessible name must hold the picture position").toMatch(/[0-9]/);
+    }
+    const thai = await names("th", thaiQuestionLabels);
+    expect(
+      thai.named.length,
+      "every choice button must have a non-empty accessible name in Thai",
+    ).toBe(thai.buttons.length);
+    for (const label of thai.labelsFound) {
+      expect(label.trim(), "every choice button must have a non-empty accessible name").not.toBe("");
+      expect(label, "the accessible name must hold the picture position").toMatch(/[0-9]/);
+    }
+  });
+
+  it("holds the picture label in the English and Thai messages", () => {
+    expect(
+      englishMessages.questionPicture,
+      "the English messages must hold the picture label",
+    ).toBeTruthy();
+    expect(
+      englishMessages.questionPicture,
+      "the English picture label must hold the position field",
+    ).toContain("{n}");
+    expect(
+      thaiMessages.questionPicture,
+      "the Thai messages must hold the picture label",
+    ).toBeTruthy();
+    expect(
+      thaiMessages.questionPicture,
+      "the Thai picture label must hold the position field",
+    ).toContain("{n}");
+    expect(
+      thaiMessages.questionPicture,
+      "the Thai picture label must hold Thai text",
+    ).toMatch(/[\u0E00-\u0E7F]/);
   });
 
   it("passes the three tiles of the week page to the reader", () => {
