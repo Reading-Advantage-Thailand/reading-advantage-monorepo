@@ -25,6 +25,7 @@ import {
   STORYTIME_IMAGES,
   findClaimTerms,
   type ClaimTermName,
+  type ExpectedCopy,
 } from "@/__tests__/fixtures/storytime-page-expected";
 
 const state = vi.hoisted(() => ({ messages: {} as unknown }));
@@ -59,7 +60,7 @@ const copyLocale = (locale: Locale): "en" | "th" => locale === "th" ? "th" : "en
  * @param locale The locale of the page.
  * @returns The expected text.
  */
-function expectedText(entry: (typeof PAGE_COPY)[typeof CONTAINER_IDS][number], locale: Locale): string {
+function expectedText(entry: ExpectedCopy, locale: Locale): string {
   if (locale === "zh" && entry.zh) return entry.zh;
   return entry[copyLocale(locale)];
 }

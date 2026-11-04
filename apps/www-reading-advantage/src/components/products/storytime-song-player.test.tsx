@@ -101,7 +101,7 @@ describe("Storytime song player", () => {
     expect(frames).toHaveLength(1);
     expect(frames[0].getAttribute("src")).toContain(PHONE_VIDEO_ID);
     const box = playerBox(container);
-    expect(box.className).toContain("aspect-[9/16]");
+    expect(box.className).toContain("aspect-9/16");
     expect(box.className).not.toContain("aspect-video");
     expect(mediaQueries.filter((query) => query === PHONE_MEDIA)).toHaveLength(1);
   });
@@ -117,7 +117,7 @@ describe("Storytime song player", () => {
     expect(frames[0].getAttribute("src")).toContain(DESKTOP_VIDEO_ID);
     const box = playerBox(container);
     expect(box.className).toContain("aspect-video");
-    expect(box.className).not.toContain("aspect-[9/16]");
+    expect(box.className).not.toContain("aspect-9/16");
     expect(mediaQueries.filter((query) => query === PHONE_MEDIA)).toHaveLength(1);
   });
 

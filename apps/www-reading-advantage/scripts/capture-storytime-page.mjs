@@ -123,7 +123,7 @@ for (const locale of captureOverviewOnly && !captureRound2Final ? [] : ["en", "t
       });
       await page.waitForFunction(() => {
         const images = Array.from(document.querySelectorAll("[data-testid^='st-'] img"));
-        if (images.length !== 10) return false;
+        if (images.length !== 11) return false;
         for (const image of images) image.loading = "eager";
         return Promise.all(images.map(async (image) => {
           try {
@@ -164,10 +164,10 @@ for (const locale of captureOverviewOnly && !captureRound2Final ? [] : ["en", "t
       if (report.document > width || report.body > width) {
         throw new Error(`${locale}-${label}: horizontal overflow ${report.document}/${report.body} at ${width}`);
       }
-      if (report.images.length !== 10 || failed.length) {
+      if (report.images.length !== 11 || failed.length) {
         throw new Error(`${locale}-${label}: ${report.images.length} images; ${failed.length} failed decode or natural-width check(s): ${failed.map(({ src }) => src).join(", ")}`);
       }
-      if (report.rendered.length !== 10 || unpainted.length) {
+      if (report.rendered.length !== 11 || unpainted.length) {
         throw new Error(`${locale}-${label}: ${report.rendered.length} story image boxes; ${unpainted.length} have zero rendered size: ${unpainted.map(({ src }) => src).join(", ")}`);
       }
       await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
