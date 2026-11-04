@@ -19,6 +19,7 @@
   "questionSkip": "Skip",
   "questionRight": "Yes",
   "questionGentle": "Try again",
+  "questionPicture": "Picture {n}",
   "songPlay": "Play",
   "songPause": "Pause"
 }

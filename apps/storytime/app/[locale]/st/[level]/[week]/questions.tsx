@@ -8,8 +8,11 @@
  * control ends the screen. The end shows the three tiles of the week page.
  */
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { questionChoices, type BookQuestion, type QuestionPage } from "../../../../../lib/questions";
+
+/** The time, in milliseconds, that a right mark shows before the screen moves on. */
+export const QUESTION_ADVANCE_MS = 900;
 
 /** One entry tile of the week page, as the end of the question screen shows it. */
 export interface QuestionTile {
@@ -33,6 +36,8 @@ export interface QuestionLabels {
   right: string;
   /** The gentle mark of a wrong tap. */
   gentle: string;
+  /** The choice label, with the picture position in place of `{n}`. */
+  picture: string;
 }
 
 /** The props of the question screen. */
@@ -83,23 +88,47 @@ export function StorytimeQuestions({
   const [marks, setMarks] = useState<Record<number, QuestionMark>>({});
   const [ended, setEnded] = useState(false);
   const endedRef = useRef(false);
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const question = questions[index];
+
+  /**
+   * Clears the advance timer of a right tap.
+   */
+  function clearAdvance(): void {
+    if (advanceTimerRef.current === null) return;
+    clearTimeout(advanceTimerRef.current);
+    advanceTimerRef.current = null;
+  }
+
+  /**
+   * Clears the advance timer when the screen unmounts.
+   */
+  useEffect(
+    () => () => {
+      if (advanceTimerRef.current !== null) clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    },
+    [],
+  );
 
   /**
    * Ends the screen and shows the three tiles of the week page.
    */
   function endScreen(): void {
     if (endedRef.current) return;
+    clearAdvance();
     endedRef.current = true;
+    setMarks({});
     setEnded(true);
   }
 
   /**
-   * Marks one choice and moves to the next question after a right tap.
+   * Marks one choice. A right tap marks the picture at once and moves on after the advance time.
+   * A wrong tap shows the gentle mark and stays. A tap during the wait does nothing.
    * @param page The page of the tapped choice.
    */
   function choose(page: number): void {
-    if (endedRef.current) return;
+    if (endedRef.current || advanceTimerRef.current !== null) return;
     const current = questions[indexRef.current];
     if (!current) return;
     if (page !== current.answer.page) {
@@ -107,12 +136,16 @@ export function StorytimeQuestions({
       return;
     }
     setMarks((previous) => ({ ...previous, [page]: "right" }));
-    if (indexRef.current + 1 >= questions.length) {
-      endScreen();
-      return;
-    }
-    indexRef.current += 1;
-    setIndex(indexRef.current);
+    advanceTimerRef.current = setTimeout(() => {
+      advanceTimerRef.current = null;
+      if (indexRef.current + 1 >= questions.length) {
+        endScreen();
+        return;
+      }
+      indexRef.current += 1;
+      setMarks({});
+      setIndex(indexRef.current);
+    }, QUESTION_ADVANCE_MS);
   }
 
   if (ended) {
@@ -165,7 +198,7 @@ export function StorytimeQuestions({
         ) : null}
       </div>
       <div className="grid grid-cols-2 gap-3">
-        {choices.map((choice) => {
+        {choices.map((choice, position) => {
           const mark = marks[choice.page];
           return (
             <button
@@ -173,6 +206,7 @@ export function StorytimeQuestions({
               type="button"
               data-choice-page={choice.page}
               data-mark={mark}
+              aria-label={labels.picture.replace("{n}", String(position + 1))}
               aria-pressed={mark === "right" ? true : mark === "gentle" ? false : undefined}
               onClick={() => choose(choice.page)}
               className="flex min-h-16 min-w-16 flex-col items-center gap-2 rounded-2xl border border-neutral-300 p-2"

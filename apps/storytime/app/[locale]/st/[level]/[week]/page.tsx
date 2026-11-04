@@ -281,6 +281,7 @@ export default async function StorytimeWeekPage({
     skip: t("questionSkip"),
     right: t("questionRight"),
     gentle: t("questionGentle"),
+    picture: t("questionPicture"),
   };
 
   return (

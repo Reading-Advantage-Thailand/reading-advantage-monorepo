@@ -19,6 +19,7 @@
   "questionSkip": "ข้าม",
   "questionRight": "ใช่",
   "questionGentle": "ลองอีกครั้ง",
+  "questionPicture": "ภาพที่ {n}",
   "songPlay": "เล่น",
   "songPause": "หยุด"
 }
