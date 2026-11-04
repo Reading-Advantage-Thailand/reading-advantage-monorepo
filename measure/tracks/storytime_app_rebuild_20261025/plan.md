@@ -662,7 +662,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on the five changed TypeScript files.
 - No week file and no `source.json` changed. The receiver did not run at a new commit.
 - Commits: `f163d4692` (the test rows) and `aeffe6826` (the receiver and the runbook). The plan commit is the third one.
-- [~] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
+- [x] 3.9 Read-along questions: the question screen of spec FR-13 (Default A, Daniel's decision, 2026-11-03) in `apps/storytime`. The choices are the pictures of the distinct answer pages, each one time, in book order. One picture can be right for more than one question. A right tap marks the picture and goes to the next question. The right tap on the third question ends the screen, as the skip control does. A wrong tap shows a gentle mark and stays, with no sound. At the end, the screen shows the three tiles of the week page (task 3.2). It shows after the last page in every mode, the slow mode included, with the Thai prompt ask.th for the teacher next to the English prompt ask.en, both as text only, only when approval.loops.status is approved, at levels 2 to 4. Tests: AC-13.6, AC-13.8. Note: Daniel decided the base look and the F13 cases on 2026-11-03 (answer "Ok"). He sees the real screen in a later look check. Target: before the Storytime release 1 delivery of 2026-12-01 (internal). Done: `08ff84423`. Automated: the targeted command exits 0 with 3 files and 31 tests; the full phase 2 and phase 3 run exits 0 with 31 files and 327 tests; `tsc --noEmit` exits 0; ESLint exits 0 on the 6 changed TypeScript files.
 
 ### Phase 3 task 3.9 Red evidence
 
@@ -679,6 +679,24 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - ESLint exits 0 on the two changed test files.
 - The test commit is `d9119a8b5`.
 - The report is `measure/runs/storytime_app_rebuild_20261025/red-f045cfd.log`.
+
+### Phase 3 task 3.9 Green evidence
+
+- Implementation commit: `08ff84423`. No coder was delegated. The previous Green start on another model was stopped before it changed anything.
+- Green models: `opencode-go/deepseek-v4.1-flash` for the code, `kimi-code-plan-cn/kimi-for-coding#high` for the evidence (PM fallback). Red model: `minimax-cn-coding-plan/MiniMax-M3.1-Flash`.
+- Files: `apps/storytime/lib/questions.ts` (new; `readAlongQuestions`, `questionScreenShows`, `questionChoices`, and the types `BookQuestion`, `QuestionPage`, `QuestionChoice`), `apps/storytime/app/[locale]/st/[level]/[week]/questions.tsx` (new; `StorytimeQuestions` and the types `QuestionTile`, `QuestionLabels`), `reader.tsx` (the optional `questions`, `tiles`, and `questionLabels` props and the screen after the last page), `page.tsx` (the gate and the wiring), `lib/contracts/week.ts`, `lib/loops.ts` (new), and the two message files.
+- `loopsApproved` and `STORYTIME_LOOPS_PART` moved to `lib/loops.ts` and are re-exported from `lib/contracts/week.ts`. The client screen imports the small rule and loads no schema.
+- Targeted Green command: `cd apps/storytime && ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-question-screen.test.tsx __tests__/phase3-loops-off.test.tsx __tests__/phase3-readalong-ui.test.tsx`. Exit: 0. Three files and 31 tests.
+- Full phase 2 and phase 3 run: `cd apps/storytime && ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase2-*.test.ts __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx`.
+  - First run: exit 1. One failed suite, `phase3-printed-urls.test.ts`: Vitest cannot resolve the `@/lib/questions` alias. No test failed; the suite failed to load.
+  - Fix: the page uses the relative import `../../../../../lib/questions`. The committed Red tests did not change.
+  - Second run: exit 0. Thirty-one files and 327 tests.
+- `tsc --noEmit` in `apps/storytime` exits 0 through the heavy lock.
+- ESLint exits 0 on the 6 changed TypeScript files.
+- `graph.db` is untracked, so no `build-graph update` ran.
+- New message keys, drafts for Daniel's Thai check: `questionSkip` "ข้าม", `questionRight` "ใช่", `questionGentle` "ลองอีกครั้ง".
+- The first-load bytes and the browser gate did not run in Green. They belong to the task 3.7 phase check.
+- No committed Red test changed. No content file and no receiver file changed. Report: `measure/runs/storytime_app_rebuild_20261025/green-744e1fa.log`.
 - [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
   - Hand-off of the w01 app package (PM accepted these defaults, 2026-11-03): Workbooks sends the package by 2026-11-06 in `/home/daniebo/Desktop/handoff/w01-storytime-app-package/`. The folder holds `MANIFEST.txt` with the line `workbooks-commit: <full sha>`. The media paths are relative to `content/storytime/`. The receiver runs at that commit. The received `w01.json` must equal the hand-off `w01.json` byte for byte. The media come from the folder after the SHA-256 check against `MANIFEST.txt`.
   - Take recorded 2026-11-03 at Workbooks commit `cf30bb2eee55806bf8830b3a3e69e4f6044847e6`.
