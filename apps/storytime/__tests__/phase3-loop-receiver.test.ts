@@ -60,6 +60,12 @@ function contractExportOf<T>(name: string): T {
   return value as T;
 }
 
+/** A drill clip that no other field of a week holds. */
+const DRILL_CLIP = "phonemes/daniel/98-zz.mp3";
+
+/** A recall clip that no other field of a week holds. */
+const RECALL_CLIP = "phonemes/daniel/99-yy.mp3";
+
 const work = mkdtempSync(join(tmpdir(), "loop-receiver-"));
 const source = join(work, "workbooks");
 let baseCommit = "";
@@ -213,21 +219,15 @@ describe("AC-13.4 the clip pattern of the phoneme bank", () => {
   });
 
   it("lists every drill clip and every recall clip as a phoneme of the bank", () => {
-    const week = loopWeek(
-      ["phonemes/daniel/04-n.mp3", "phonemes/daniel/27-e-short.mp3", "phonemes/daniel/02-t.mp3"],
-      "phonemes/daniel/04-n.mp3",
-    );
+    const week = loopWeek([DRILL_CLIP, DRILL_CLIP, DRILL_CLIP], RECALL_CLIP);
     const media = receiver.mediaOf(week as unknown as Week);
-    const clips = media.filter((item) => item.file.startsWith("phonemes/daniel/"));
-    expect(clips.length, "The media list must hold the drill and recall clips (A4)").toBeGreaterThan(0);
-    for (const clip of clips) {
-      expect(clip.kind, `The clip ${clip.file} has another kind`).toBe("phoneme");
-      expect(clip.rule, `The clip ${clip.file} has another rule`).toBe(exportOf<Record<string, string>>("MEDIA_RULES").phoneme);
+    const rules = exportOf<Record<string, string>>("MEDIA_RULES");
+    for (const clip of [DRILL_CLIP, RECALL_CLIP]) {
+      const item = media.find((entry) => entry.file === clip);
+      expect(item, `The media list misses the clip ${clip} (A4)`).toBeDefined();
+      expect(item?.kind, `The clip ${clip} has another kind`).toBe("phoneme");
+      expect(item?.rule, `The clip ${clip} has another rule`).toBe(rules.phoneme);
     }
-    expect(
-      clips.some((clip) => clip.file === "phonemes/daniel/04-n.mp3"),
-      "The media list misses the drill clip",
-    ).toBe(true);
   });
 
   it("fails the receiver run on a clip outside the bank", () => {

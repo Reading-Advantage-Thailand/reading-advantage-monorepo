@@ -34,6 +34,12 @@ interface WeekMediaPath {
 /** One Storytime week, as the contract reads it. */
 type Week = ReturnType<typeof contract.weekSchema.parse>;
 
+/** A drill clip that no other field of a week holds. */
+const DRILL_CLIP = "phonemes/daniel/98-zz.mp3";
+
+/** A recall clip that no other field of a week holds. */
+const RECALL_CLIP = "phonemes/daniel/99-yy.mp3";
+
 /**
  * The field paths that the media list does not hold, each with its reason.
  *
@@ -143,14 +149,14 @@ describe("F13 the media list covers every media path of a shipped week", () => {
     ).toBe(true);
   });
 
-  it("covers the clips of a new blend drill", () => {
+  it("covers the clips of a new blend drill and of a new recall", () => {
     const week = readWeek("w01.json");
     week.scripts[0].steps[0].blendDrill = {
       words: [
         {
           word: "net",
           sounds: ["/n/", "/e/", "/t/"],
-          audio: ["phonemes/daniel/04-n.mp3", "phonemes/daniel/27-e-short.mp3", "phonemes/daniel/02-t.mp3"],
+          audio: [DRILL_CLIP, DRILL_CLIP, DRILL_CLIP],
         },
       ],
       model: { en: "Listen.", th: "ฟัง" },
@@ -159,8 +165,26 @@ describe("F13 the media list covers every media path of a shipped week", () => {
       repeats: 3,
       correction: { en: "Listen again.", th: "ฟังอีกครั้ง" },
     };
+    week.scripts[0].recall = {
+      items: [
+        { kind: "sound", text: "n", week: 1, audio: RECALL_CLIP },
+        { kind: "tricky", text: "a", week: 2 },
+        { kind: "frame", text: "I see a", week: 1 },
+        { kind: "word", text: "net", week: 1 },
+        { kind: "sound", text: "t", week: 3 },
+      ],
+      ask: { en: "Show the five cards.", th: "ชูบัตรห้าใบ" },
+    };
     const uncovered = uncoveredOf(week);
     expect(uncovered.length, "The coverage check misses the clips of a new drill").toBe(0);
+    const rules = exportOf<Record<string, string>>("MEDIA_RULES");
+    const listed = receiver.mediaOf(week as unknown as Week);
+    for (const clip of [DRILL_CLIP, RECALL_CLIP]) {
+      const item = listed.find((entry) => entry.file === clip);
+      expect(item, `The media list misses the clip ${clip} (A4)`).toBeDefined();
+      expect(item?.kind, `The clip ${clip} has another kind`).toBe("phoneme");
+      expect(item?.rule, `The clip ${clip} has another rule`).toBe(rules.phoneme);
+    }
   });
 });
 

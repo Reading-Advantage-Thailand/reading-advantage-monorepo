@@ -22,8 +22,11 @@ const WEEK_FILES = [
   "w08.json",
 ];
 
-/** The Phase 2 content pin. The A-42 pin is a later commit. */
-const PHASE_2_PIN = "ccf3d95c92bb5b3970722946dffbed1de57f9df6";
+/** The pin that the content held before the take of task 3.8. */
+const PREVIOUS_PIN = "cf30bb2eee55806bf8830b3a3e69e4f6044847e6";
+
+/** The A-42 draft pin that task 3.8 received. */
+const A_42_PIN = "cad0307cad31a3131dc3a06e9e773537a1a6219b";
 
 /** A week as plain JSON, for a broken copy. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -251,12 +254,15 @@ describe("AC-13.1 the typed schemas read the shipped weeks at the A-42 pin", () 
     ).toBeGreaterThan(0);
   });
 
-  it("records the A-42 pin and not the Phase 2 pin", () => {
+  it("records the A-42 pin and not the pin before the take", () => {
     const record = JSON.parse(
       readFileSync(resolve(app, "content", "source.json"), "utf8"),
     ) as { commit?: string };
     expect(record.commit, "The source record must hold a commit (A15)").toMatch(/^[0-9a-f]{40}$/);
-    expect(record.commit, "The source record still names the Phase 2 pin").not.toBe(PHASE_2_PIN);
+    expect(record.commit, "The source record names another pin").toBe(A_42_PIN);
+    expect(record.commit, "The source record still names the pin before the take").not.toBe(
+      PREVIOUS_PIN,
+    );
   });
 
   it("keeps the loops part out of the six approval parts", () => {

@@ -166,9 +166,23 @@ describe("F78 a link in the content folder stops the run", () => {
     ]);
     expect(snapshot(content).size, "The run wrote a file in the content folder").toBe(0);
   });
+
+  it("stops the run when the content folder is itself a link", () => {
+    const folder = join(work, "f78-content");
+    const outside = join(work, "f78-content-outside");
+    mkdirSync(join(folder, "apps/storytime"), { recursive: true });
+    mkdirSync(outside, { recursive: true });
+    symlinkSync(outside, join(folder, "apps/storytime/content"));
+    const result = run(folder, "--commit", baseCommit);
+    expect(result.code, "The run wrote through the link").toBe(1);
+    expect(result.errors, "The message names no content link").toContain(
+      join(folder, "apps/storytime/content"),
+    );
+    expect(readdirSync(outside), "The run wrote a file outside the content folder").toEqual([]);
+  });
 });
 
-describe("F84 a stage path is checked at every folder of the way", () => {
+describe("F84 the stage path is checked at every folder of the way", () => {
   it("writes no file outside the content folder", () => {
     const folder = freshRoot("f84");
     const content = join(folder, "apps/storytime/content");
@@ -180,6 +194,56 @@ describe("F84 a stage path is checked at every folder of the way", () => {
     expect(result.code, "The run wrote through the link").not.toBe(0);
     expect(result.errors, "The message names no link").toContain(join(content, "l3"));
     expect(readdirSync(outside), "The run wrote a file outside the content folder").toEqual([]);
+  });
+
+  it("finds a link at the first folder of the way", () => {
+    const folder = join(work, "f84-first");
+    const root = join(folder, "content");
+    const outside = join(folder, "outside");
+    mkdirSync(root, { recursive: true });
+    mkdirSync(outside, { recursive: true });
+    symlinkSync(outside, join(root, "l2"));
+    expect(
+      receiver.linkInPath(root, join(root, "l2", "w01.json")),
+      "The link of the first folder was not found",
+    ).toBe(join(root, "l2"));
+  });
+
+  it("finds a link at the second folder of the way", () => {
+    const folder = join(work, "f84-second");
+    const root = join(folder, "content");
+    const outside = join(folder, "outside");
+    mkdirSync(join(root, "l2"), { recursive: true });
+    mkdirSync(outside, { recursive: true });
+    symlinkSync(outside, join(root, "l2", "deep"));
+    expect(
+      receiver.linkInPath(root, join(root, "l2", "deep", "w01.json")),
+      "The link of the second folder was not found",
+    ).toBe(join(root, "l2", "deep"));
+  });
+
+  it("finds a link in the name of the file", () => {
+    const folder = join(work, "f84-file");
+    const root = join(folder, "content");
+    const outside = join(folder, "outside");
+    mkdirSync(join(root, "l2"), { recursive: true });
+    mkdirSync(outside, { recursive: true });
+    symlinkSync(outside, join(root, "l2", "w01.json"));
+    expect(
+      receiver.linkInPath(root, join(root, "l2", "w01.json")),
+      "The link of the file was not found",
+    ).toBe(join(root, "l2", "w01.json"));
+  });
+
+  it("finds no link in a plain folder", () => {
+    const folder = join(work, "f84-plain");
+    const root = join(folder, "content");
+    mkdirSync(join(root, "l2"), { recursive: true });
+    writeFileSync(join(root, "l2", "w01.json"), "a week\n");
+    expect(
+      receiver.linkInPath(root, join(root, "l2", "w01.json")),
+      "The plain folder holds a link",
+    ).toBeNull();
   });
 });
 
@@ -208,8 +272,16 @@ describe("F92 the recovery steps answer for an untracked target", () => {
 
   it("gives an answer for a target that Git does not track", () => {
     expect(section, "The recovery steps give no answer for an untracked target").toMatch(
-      /git restore[\s\S]{0,400}?(delete|remove)/i,
+      /untracked[\s\S]{0,400}?git restore[\s\S]{0,400}?(delete|remove)/i,
     );
+  });
+});
+
+describe("the recovery steps name the full copy of an original", () => {
+  const section = runbook.slice(runbook.indexOf("## Recover from a failed run"));
+
+  it("names the full copy of an original", () => {
+    expect(section, "The recovery steps name no full copy").toMatch(/full copy/i);
   });
 });
 
@@ -258,5 +330,89 @@ describe("F98 a fault in the copy write leaves no partial copy", () => {
     expect(readFileSync(join(folder, "b.json"), "utf8"), "The target holds the new text").toBe(
       "new b.json\n",
     );
+  });
+
+  it("keeps the full original in the stage file when the rename of the copy fails", () => {
+    const folder = join(work, "f98-rename");
+    mkdirSync(folder, { recursive: true });
+    const names = ["a.json", "b.json", "c.json", "d.json", "e.json"];
+    for (const name of names.slice(0, 3)) writeFileSync(join(folder, name), `old ${name}\n`);
+    let renames = 0;
+    let restoreFailed = false;
+    let error: unknown;
+    try {
+      receiver.writeStaged(
+        names.map((name) => ({ path: join(folder, name), text: `new ${name}\n` })),
+        {
+          rename: (from, to) => {
+            renames += 1;
+            if (renames === 5) throw new Error("rename failed");
+            if (restoreFailed && to.includes(".orig-")) throw new Error("copy rename failed");
+            renameSync(from, to);
+          },
+          write: (path, data, flag) => {
+            if (flag === "w" && path === join(folder, "b.json")) {
+              restoreFailed = true;
+              throw new Error("restore failed");
+            }
+            writeFileSync(path, data, { flag });
+          },
+        },
+      );
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error, "The failed write did not raise an error").toBeInstanceOf(
+      receiver.RollbackIncompleteError,
+    );
+    const message = (error as Error).message;
+    expect(message, "The error names no full copy").toMatch(/the full copy stays in/);
+    const stages = [...snapshot(folder).keys()].filter((path) => path.includes("b.json.tmp-"));
+    expect(stages.length, `The run kept no stage file with the original: ${stages.join(" | ")}`).toBe(
+      1,
+    );
+    expect(
+      readFileSync(join(folder, stages[0]!), "utf8"),
+      "The stage file holds another text than the original",
+    ).toBe("old b.json\n");
+  });
+
+  it("names that no partial copy stays when the copy write created nothing", () => {
+    const folder = join(work, "f98-nothing");
+    mkdirSync(folder, { recursive: true });
+    const names = ["a.json", "b.json", "c.json", "d.json", "e.json"];
+    for (const name of names.slice(0, 3)) writeFileSync(join(folder, name), `old ${name}\n`);
+    let renames = 0;
+    let restoreFailed = false;
+    let error: unknown;
+    try {
+      receiver.writeStaged(
+        names.map((name) => ({ path: join(folder, name), text: `new ${name}\n` })),
+        {
+          rename: (from, to) => {
+            renames += 1;
+            if (renames === 5) throw new Error("rename failed");
+            renameSync(from, to);
+          },
+          write: (path, data, flag) => {
+            if (flag === "w" && path === join(folder, "b.json")) {
+              restoreFailed = true;
+              throw new Error("restore failed");
+            }
+            if (restoreFailed && flag === "wx") throw new Error("copy failed");
+            writeFileSync(path, data, { flag });
+          },
+        },
+      );
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error, "The failed write did not raise an error").toBeInstanceOf(
+      receiver.RollbackIncompleteError,
+    );
+    const message = (error as Error).message;
+    expect(message, "The error names no partial copy").toMatch(/no partial copy stays/);
+    const left = [...snapshot(folder).keys()].filter((path) => /\.orig-|\.tmp-/.test(path));
+    expect(left, `The run left a partial copy: ${left.join(" | ")}`).toEqual([]);
   });
 });
