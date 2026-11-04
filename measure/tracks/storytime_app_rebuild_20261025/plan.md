@@ -678,6 +678,28 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
   - Changed expectation 2: `phase3-readiness.test.ts` removes a page image file from a clone before checking readiness. Old: shipped w01 page images lack files. New: a missing page image keeps a week not ready.
   - Rerun command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && HEAVY_PREFLIGHT_WAIT_S=3600 ./node_modules/.bin/vitest run --maxWorkers=1 apps/storytime/__tests__/phase2-contract.test.ts apps/storytime/__tests__/phase2-receive-guards.test.ts apps/storytime/__tests__/phase2-blend.test.ts apps/storytime/__tests__/phase2-contract-hardening.test.ts apps/storytime/__tests__/phase2-adversarial.test.ts apps/storytime/__tests__/phase2-adversarial-r2.test.ts apps/storytime/__tests__/phase2-adversarial-r3.test.ts apps/storytime/__tests__/phase2-content.test.ts apps/storytime/__tests__/phase2-media-missing.test.ts apps/storytime/__tests__/phase3-readiness.test.ts apps/storytime/__tests__/phase3-entry-route.test.ts'`. Exit: 0; 11 files and 143 tests passed.
   - `phase3-media-gate.test.ts` was not run. Task 3.1a remains open.
+  - PM 2026-11-03: light lane.
+
+### w01 approval take (PM 2026-11-04, light lane)
+
+- The Workbooks check: `git -C /home/daniebo/Desktop/Workbooks diff --stat cad0307cad31a3131dc3a06e9e773537a1a6219b 67be5603e0410f21491a006b8e9d12f3f9dd1bfc -- content/storytime/l2` shows only `content/storytime/l2/w01.json`. That file holds 8 insertions and 2 deletions.
+- The hash check: `git -C /home/daniebo/Desktop/Workbooks show 67be5603e0410f21491a006b8e9d12f3f9dd1bfc:content/storytime/l2/w01.json | sha256sum` gives `d8bd9230358d94a0dd2c5aa820db0a5e3952c3c983ba1720f6aaffc6b87af094`. The shipped file holds the same hash after the run. The PM value and the app value are equal.
+- The receiver command: `node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit 67be5603e0410f21491a006b8e9d12f3f9dd1bfc --weeks 1-8`. Exit: 0.
+- The receiver wrote 8 weeks, 179 media files, and 159 missing pictures. The record holds 8 weeks.
+- The week states: w01 is ready. w02 to w08 are not ready.
+- The unchanged check: `git diff --exit-code` over w02 to w08 exits 0. The seven hashes of w02 to w08 are the same before and after the run.
+- The second run of the same command exits 0 and makes no difference.
+- The source record: `apps/storytime/content/source.json` holds the commit `67be5603e0410f21491a006b8e9d12f3f9dd1bfc`.
+- The content diff holds two files. Only the approval parts of w01 changed. The audio part and the song part hold the status `approved` and the date `2026-11-04`. The loops part stays `draft`. The media files of w01 did not change.
+- The new row in `phase3-readiness.test.ts` reads the shipped w01. It finds no readiness blocker. The function `isWeekReady` is true. The loops part is draft, so the function `loopsApproved` is false and the routines stay hidden.
+- Changed expectation 1: `phase3-loop-contract.test.ts` names the pin of the take. The old value was the A-42 draft pin `cad0307cad31a3131dc3a06e9e773537a1a6219b`. The new value is the take pin `67be5603e0410f21491a006b8e9d12f3f9dd1bfc`. The reason is that the receiver ran at the new commit. The row also holds the check that the record names no older pin.
+- Changed expectation 2: `phase3-media-coverage.test.ts` allows the approval part in the coverage check. The old value of the allowed reasons was `["print", "benchmark"]`. The new value is `["print", "benchmark", "approval"]`. The reason is that the new approval text of w01 ends with a media file name. The text of an approval is not a file of the app.
+- The test command runs the 29 files of phase 2 and phase 3 of `apps/storytime/__tests__/` through `HEAVY_MIN_AVAIL_MB=2500 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && ./node_modules/.bin/vitest run --maxWorkers=1 <the 29 files>'`.
+- The first run after the take exits 1 with 2 failed files and 2 failed tests (303 passed of 305). The two failures name the new approval text of w01. The second run exits 0 with 29 files and 305 tests.
+- `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on the three changed test files.
+- No build ran and no browser check ran.
+- Task 3.10 stays open, because the loops approval comes later.
+- Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
 - [ ] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line).
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
