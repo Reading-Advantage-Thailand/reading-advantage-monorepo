@@ -14,11 +14,11 @@ const VIDEO_HOST_PARTS = ["youtube", "google"];
 const PLAYER_ERRORS = ["video unavailable", "watch on youtube", "sign in to confirm", "error"];
 
 const VIEWS = [
-  { locale: "en", label: "desktop", width: 1440, height: 900, file: "en-desktop", poster: DESKTOP_POSTER, video: DESKTOP_VIDEO_ID, ratio: 16 / 9 },
-  { locale: "en", label: "phone", width: 390, height: 844, file: "en-phone", poster: PHONE_POSTER, video: PHONE_VIDEO_ID, ratio: 9 / 16 },
-  { locale: "th", label: "desktop", width: 1440, height: 900, file: "th-desktop", poster: DESKTOP_POSTER, video: DESKTOP_VIDEO_ID, ratio: 16 / 9 },
-  { locale: "th", label: "phone", width: 390, height: 844, file: "th-phone", poster: PHONE_POSTER, video: PHONE_VIDEO_ID, ratio: 9 / 16 },
-  { locale: "th", label: "phone-360", width: 360, height: 780, file: "th-phone-360", poster: PHONE_POSTER, video: PHONE_VIDEO_ID, ratio: 9 / 16 },
+  { locale: "en", label: "desktop", width: 1440, height: 900, file: "en-desktop", poster: DESKTOP_POSTER, video: DESKTOP_VIDEO_ID, ratio: 16 / 9, minWidth: 700 },
+  { locale: "en", label: "phone", width: 390, height: 844, file: "en-phone", poster: PHONE_POSTER, video: PHONE_VIDEO_ID, ratio: 9 / 16, minWidth: 0 },
+  { locale: "th", label: "desktop", width: 1440, height: 900, file: "th-desktop", poster: DESKTOP_POSTER, video: DESKTOP_VIDEO_ID, ratio: 16 / 9, minWidth: 700 },
+  { locale: "th", label: "phone", width: 390, height: 844, file: "th-phone", poster: PHONE_POSTER, video: PHONE_VIDEO_ID, ratio: 9 / 16, minWidth: 0 },
+  { locale: "th", label: "phone-360", width: 360, height: 780, file: "th-phone-360", poster: PHONE_POSTER, video: PHONE_VIDEO_ID, ratio: 9 / 16, minWidth: 0 },
 ];
 
 const captures = [];
@@ -60,6 +60,9 @@ function checkRatio(view, state, stage) {
   }
   if (view.ratio < 1 && state.height > state.viewportHeight * 0.8) {
     throw new Error(`${view.file} ${stage}: box height ${state.height} is over 80% of ${state.viewportHeight}`);
+  }
+  if (state.width < view.minWidth) {
+    throw new Error(`${view.file} ${stage}: box width ${state.width} is under ${view.minWidth}`);
   }
 }
 
@@ -109,6 +112,14 @@ async function captureView(view) {
     });
     if (response?.status() !== 200) throw new Error(`${view.file}: HTTP ${response?.status()}`);
 
+    const button = page.locator("[data-testid='song-player-box'] button");
+    await button.waitFor({ state: "visible" });
+    await centerBox(page);
+    await page.waitForFunction(() => {
+      const poster = document.querySelector("[data-testid='song-player-box'] picture img");
+      return Boolean(poster && poster.naturalWidth > 0);
+    }, undefined, { timeout: 30000 });
+
     const hostRequests = requests.filter((url) => {
       try {
         const host = new URL(url).host;
@@ -121,8 +132,6 @@ async function captureView(view) {
       throw new Error(`${view.file}: ${hostRequests.length} video host request(s) before the tap: ${hostRequests.join(", ")}`);
     }
 
-    const button = page.locator("[data-testid='song-player-box'] button");
-    await button.waitFor({ state: "visible" });
     const before = await readBox(page);
     if (before.missing) throw new Error(`${view.file}: the player box is missing`);
     if (before.iframeCount !== 0) throw new Error(`${view.file}: ${before.iframeCount} frame(s) before the tap`);
@@ -131,14 +140,38 @@ async function captureView(view) {
     checkRatio(view, before, "before");
     checkOverflow(view, before, "before");
 
-    await centerBox(page);
     const beforePath = `${output}/${view.file}-before.png`;
     await page.screenshot({ path: beforePath, animations: "disabled" });
     if (statSync(beforePath).size === 0) throw new Error(`${view.file}: the before capture file is empty`);
 
     await button.click();
     await page.waitForSelector("[data-testid='song-player-box'] iframe", { timeout: 30000 });
-    await page.waitForTimeout(2500);
+    let frame = null;
+    let playerText = "";
+    for (let i = 0; i < 60; i += 1) {
+      frame = page.frames().find((item) => item.url().includes("youtube")) ?? null;
+      if (frame) {
+        playerText = await frame.evaluate(() => document.body?.innerText ?? "").catch(() => "");
+        if (playerText.includes("Storytime Advantage Unit 1")) break;
+      }
+      await page.waitForTimeout(500);
+    }
+    if (!frame) throw new Error(`${view.file}: the player frame did not load`);
+    const videoState = await frame
+      .evaluate(() => {
+        const element = document.querySelector("video");
+        if (!element) return null;
+        return {
+          readyState: element.readyState,
+          currentTime: element.currentTime,
+          paused: element.paused,
+          width: element.videoWidth,
+          height: element.videoHeight,
+          error: element.error ? element.error.code : null,
+        };
+      })
+      .catch(() => null);
+    await page.waitForTimeout(1500);
     const after = await readBox(page);
     if (after.missing) throw new Error(`${view.file}: the player box is missing after the tap`);
     if (after.iframeCount !== 1) throw new Error(`${view.file}: ${after.iframeCount} frame(s) after the tap`);
@@ -148,13 +181,11 @@ async function captureView(view) {
     checkRatio(view, after, "after");
     checkOverflow(view, after, "after");
 
-    const frame = page.frames().find((item) => item.url().includes("youtube"));
-    let playerText = "";
-    if (frame) {
-      playerText = await frame.evaluate(() => document.body?.innerText ?? "").catch(() => "");
-    }
     const errorText = PLAYER_ERRORS.find((part) => playerText.toLowerCase().includes(part));
     if (errorText) throw new Error(`${view.file}: the player shows an error: ${errorText}. Player text: ${playerText.slice(0, 300)}`);
+    if (!playerText.includes("Storytime Advantage Unit 1")) {
+      throw new Error(`${view.file}: the player did not load its title. Player text: ${playerText.slice(0, 300)}`);
+    }
 
     await centerBox(page);
     const afterPath = `${output}/${view.file}-after.png`;
@@ -169,6 +200,7 @@ async function captureView(view) {
       poster: view.poster,
       videoHostRequests: hostRequests.length,
       video: null,
+      videoState: null,
     });
     captures.push({
       file: `${view.file}-after.png`,
@@ -178,8 +210,9 @@ async function captureView(view) {
       poster: view.poster,
       videoHostRequests: hostRequests.length,
       video: view.video,
+      videoState,
     });
-    console.log(`${view.file}: HTTP ${response.status()}, ${hostRequests.length} video host request(s) before the tap, poster ${view.poster}, video ${view.video}`);
+    console.log(`${view.file}: HTTP ${response.status()}, ${hostRequests.length} video host request(s) before the tap, poster ${view.poster}, video ${view.video}, video state ${JSON.stringify(videoState)}`);
     await page.close();
   } catch (error) {
     console.error(`${view.file} capture failed:`, error);
