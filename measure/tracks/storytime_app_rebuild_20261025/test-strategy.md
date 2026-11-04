@@ -288,7 +288,7 @@ Dates are the latest dates. The PM fixed the dates of tasks 3.8, 3.9, 3.10, and 
 | 3.3 Read-along UI | 2026-11-12 | high | `phase3-readalong-ui.test.tsx`; `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx` | AC-6.1 |
 | 3.4 Decodable UI | 2026-11-13 | medium | `phase3-decodable-ui.test.tsx`, `phase3-phoneme-bank.test.ts` | AC-7.1 |
 | 3.5 Song page | 2026-11-16 | medium | `phase3-song-ui.test.tsx` | AC-8.1, AC-8.2 (browser) |
-| 3.8 part 2 Draft pin receipt | 2026-11-19 (target: 2 days after the pin arrives) | high | `phase3-loop-pin.test.ts`; the updated P2 tests that name the pin | AC-13.1 |
+| 3.8 part 2 Draft pin receipt | 2026-11-19 (target: 2 days after the pin arrives) | high | `phase3-loop-contract.test.ts`, `phase3-f99-page-audio.test.ts`, `phase3-loop-receiver.test.ts`, `phase3-media-coverage.test.ts`, `phase3-receiver-hardening.test.ts`; the updated P2 tests that name the pin | AC-13.1 |
 | 3.6 Printed URLs and first load | 2026-11-17 | high | `phase3-printed-urls.test.ts`; `phase3-browser-gate.sh` (AC-5.3) | AC-2.2, AC-5.3 |
 | 3.7 Phase check | 2026-11-19 (the Phase 3 checkpoint) | high | the Closeout gate below | all of the above |
 | 3.10 Approved pin receipt | 2026-11-17 to 2026-11-19 (PM) | high | `phase3-approved-pin.test.ts` | AC-13.1 at the approved pin |
