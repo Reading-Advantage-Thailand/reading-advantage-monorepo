@@ -517,6 +517,9 @@ export function writeStaged(files: StagedFile[], overrides: Partial<StagedOps> =
           } catch (copyError) {
             if (written) {
               note = `its original could not be kept under its own name (${(copyError as Error).message}); the full copy stays in ${stage}`;
+            } else if (!existsSync(stage)) {
+              // The copy write failed before it made a file, so no partial copy stands.
+              note = `its original could not be kept (${(copyError as Error).message}); no partial copy stays`;
             } else {
               // A fault in the middle of the copy leaves a partial file. Remove it and name it.
               try {
@@ -567,6 +570,22 @@ export function findLeftovers(directory: string): string[] {
     else if (LEFTOVER_NAME.test(entry.name)) found.push(path);
   }
   return found;
+}
+
+/**
+ * Tells whether a path is a link (finding F78).
+ *
+ * A link to a folder is not a folder entry, so the scan of a folder tree misses it. The content
+ * folder itself can be a link, and then every week would land outside the content folder.
+ * @param path The absolute path.
+ * @returns Whether the path is a symbolic link.
+ */
+export function isLink(path: string): boolean {
+  try {
+    return lstatSync(path).isSymbolicLink();
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -683,6 +702,16 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
   }
   const contentDirectory = resolve(root, "apps/storytime/content");
   const sourcePath = resolve(contentDirectory, "source.json");
+  if (isLink(contentDirectory)) {
+    console.error(
+      [
+        `The content folder is a link: ${contentDirectory}`,
+        "Nothing was read or written. A link can send a week outside the content folder.",
+        "Remove the link, then run the receiver again.",
+      ].join("\n"),
+    );
+    return 1;
+  }
   const leftovers = findLeftovers(contentDirectory);
   if (leftovers.length > 0) {
     console.error(

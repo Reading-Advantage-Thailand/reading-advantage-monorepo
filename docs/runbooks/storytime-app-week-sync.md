@@ -96,12 +96,14 @@ file, do these steps. Do not delete any file and do not run `git restore` before
    leftover `.tmp-` file.
 2. A file with a name that holds `.orig-` is a copy of an original that the receiver could not put
    back. It can hold the only copy of an uncommitted original. A `.tmp-` file holds new text that
-   the receiver did not finish. Keep all of them.
-3. For each `.orig-` copy, compare it with its target and with Git:
+   the receiver did not finish, unless the message names it as the full copy: that file holds the
+   original of the target. Keep all of them.
+3. For each `.orig-` copy and each full copy, compare it with its target and with Git:
    `git diff --no-index <copy> <target>`, then `git diff -- <target>`. If the copy differs from the
    committed file, the copy holds bytes that Git does not hold.
 4. Make a decision for each target, and write it down:
-   - To keep the original: copy the `.orig-` file over the target (`cp <copy> <target>`). Then run
+   - To keep the original: copy the `.orig-` file or the full copy over the target
+     (`cp <copy> <target>`). Then run
      `git diff -- <target>` and check that it shows the changes you expect.
    - To use the committed file: run `git restore <target>`. Do this only when the copy holds
      nothing that you need.
@@ -109,7 +111,8 @@ file, do these steps. Do not delete any file and do not run `git restore` before
      nothing, because Git does not track the file. Delete the target to discard it. Keep the copy
      with `cp <copy> <target>` when the copy holds bytes that Git does not hold.
 5. After each target holds the bytes you chose, delete the `.orig-` copy and the `.tmp-` files for
-   that target. This is an explicit decision. A clean `git status` does not prove that the
-   original came back, because `git restore` also discards uncommitted changes.
+   that target, including a `.tmp-` file that holds the full copy. This is an explicit decision. A
+   clean `git status` does not prove that the original came back, because `git restore` also
+   discards uncommitted changes.
 6. Run `git status apps/storytime/content`. Check that no `.tmp-` or `.orig-` file stands in the
    content folder. Then run the receiver again.
