@@ -32,7 +32,9 @@ async function readBox(page) {
     const box = document.querySelector("[data-testid='song-player-box']");
     if (!box) return { missing: true };
     const poster = box.querySelector("picture img");
+    const control = box.querySelector("[data-testid='song-player-control']");
     const rect = box.getBoundingClientRect();
+    const controlRect = control ? control.getBoundingClientRect() : null;
     return {
       missing: false,
       posterSrc: poster?.currentSrc || poster?.getAttribute("src") || "",
@@ -43,6 +45,9 @@ async function readBox(page) {
       documentWidth: document.documentElement.scrollWidth,
       bodyWidth: document.body.scrollWidth,
       viewportHeight: window.innerHeight,
+      controlTop: controlRect ? (controlRect.top - rect.top) / rect.height : null,
+      controlBottom: controlRect ? (controlRect.bottom - rect.top) / rect.height : null,
+      controlCentre: controlRect ? (controlRect.left + controlRect.right) / 2 - (rect.left + rect.right) / 2 : null,
     };
   });
 }
@@ -88,6 +93,27 @@ async function centerBox(page) {
     box?.scrollIntoView({ block: "center" });
   });
   await page.waitForTimeout(400);
+}
+
+/**
+ * Checks that the play control sits below the poster title and above the bottom.
+ * The poster title band ends at 57% of the poster height. The "Level 2" line
+ * band runs from 78% to 86%. The control must start below the "Level 2" line.
+ * @param view The view of the capture.
+ * @param state The state of the box.
+ * @param stage The stage of the capture.
+ */
+function checkControl(view, state, stage) {
+  if (state.controlTop === null) throw new Error(`${view.file} ${stage}: the play control is missing`);
+  if (state.controlTop < 0.86) {
+    throw new Error(`${view.file} ${stage}: the play control starts at ${(state.controlTop * 100).toFixed(1)}% and covers the Level 2 line`);
+  }
+  if (state.controlBottom > 1) {
+    throw new Error(`${view.file} ${stage}: the play control ends at ${(state.controlBottom * 100).toFixed(1)}% and leaves the box`);
+  }
+  if (Math.abs(state.controlCentre) > 2) {
+    throw new Error(`${view.file} ${stage}: the play control is ${state.controlCentre.toFixed(1)}px off the centre`);
+  }
 }
 
 /**
@@ -139,6 +165,7 @@ async function captureView(view) {
     if (before.posterAlt !== "") throw new Error(`${view.file}: poster alt is not empty`);
     checkRatio(view, before, "before");
     checkOverflow(view, before, "before");
+    checkControl(view, before, "before");
 
     const beforePath = `${output}/${view.file}-before.png`;
     await page.screenshot({ path: beforePath, animations: "disabled" });
@@ -201,6 +228,8 @@ async function captureView(view) {
       videoHostRequests: hostRequests.length,
       video: null,
       videoState: null,
+      controlTop: Number(before.controlTop.toFixed(3)),
+      controlBottom: Number(before.controlBottom.toFixed(3)),
     });
     captures.push({
       file: `${view.file}-after.png`,
@@ -212,7 +241,7 @@ async function captureView(view) {
       video: view.video,
       videoState,
     });
-    console.log(`${view.file}: HTTP ${response.status()}, ${hostRequests.length} video host request(s) before the tap, poster ${view.poster}, video ${view.video}, video state ${JSON.stringify(videoState)}`);
+    console.log(`${view.file}: HTTP ${response.status()}, ${hostRequests.length} video host request(s) before the tap, poster ${view.poster}, video ${view.video}, control ${(before.controlTop * 100).toFixed(1)}% to ${(before.controlBottom * 100).toFixed(1)}%, video state ${JSON.stringify(videoState)}`);
     await page.close();
   } catch (error) {
     console.error(`${view.file} capture failed:`, error);

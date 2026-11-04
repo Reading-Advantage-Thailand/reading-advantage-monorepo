@@ -64,13 +64,15 @@ export function StorytimeSongPlayer({ playLabel, playerTitle }: StorytimeSongPla
           <button
             type="button"
             onClick={play}
-            className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-3 bg-site-navy/40 text-white transition-colors hover:bg-site-navy/60 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-amber-400"
+            className="absolute inset-0 flex flex-col items-center justify-end gap-2 bg-site-navy/40 pb-2 text-white transition-colors hover:bg-site-navy/60 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-amber-400"
           >
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-site-navy shadow-lg">
-              <Play aria-hidden="true" className="h-8 w-8" />
-            </span>
-            <span className="rounded-full bg-site-navy/85 px-5 py-2 text-base font-bold shadow-md">
-              {playLabel}
+            <span data-testid="song-player-control" className="flex items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-site-navy shadow-lg">
+                <Play aria-hidden="true" className="h-6 w-6" />
+              </span>
+              <span className="rounded-full bg-site-navy/85 px-4 py-2 text-sm font-bold shadow-md">
+                {playLabel}
+              </span>
             </span>
           </button>
         </div>

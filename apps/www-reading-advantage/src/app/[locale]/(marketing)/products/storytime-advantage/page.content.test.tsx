@@ -298,11 +298,12 @@ describe("Storytime Advantage content", () => {
     expect(document.querySelector("picture img")?.getAttribute("src")).toBe(SONG_POSTERS.desktop);
   });
 
-  it("holds no youtube string in the server HTML", async () => {
+  it("holds no video host string in the server HTML", async () => {
     state.messages = MESSAGES.en;
     const page = await StorytimeAdvantage({ params: Promise.resolve({ locale: "en" }) });
     const html = renderToStaticMarkup(page);
     expect(html.toLowerCase()).not.toContain("youtube");
+    expect(html.toLowerCase()).not.toContain("google");
     expect(html).not.toContain("Id4_X0nQnV4");
     expect(html).not.toContain("nwJW8yENJnY");
   });

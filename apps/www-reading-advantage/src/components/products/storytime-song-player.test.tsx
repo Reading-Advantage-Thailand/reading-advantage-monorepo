@@ -57,11 +57,12 @@ function playerBox(container: HTMLElement): HTMLElement {
 afterEach(cleanup);
 
 describe("Storytime song player", () => {
-  it("holds no player and no YouTube URL before the tap", () => {
+  it("holds no player and no video host URL before the tap", () => {
     stubMatchMedia(false);
     const { container } = renderPlayer();
     expect(container.querySelector("iframe")).toBeNull();
     expect(container.innerHTML).not.toContain("youtube");
+    expect(container.innerHTML).not.toContain("google");
     expect(container.innerHTML).not.toContain(DESKTOP_VIDEO_ID);
     expect(container.innerHTML).not.toContain(PHONE_VIDEO_ID);
   });
@@ -178,6 +179,29 @@ describe("Storytime song player", () => {
     await user.keyboard("{Enter}");
 
     expect(container.querySelectorAll("iframe")).toHaveLength(1);
+  });
+
+  it("starts the video with the Space key", async () => {
+    stubMatchMedia(false);
+    const user = userEvent.setup();
+    const { container } = renderPlayer();
+    const button = screen.getByRole("button", { name: SONG_COPY.en.playLabel });
+    button.focus();
+    expect(document.activeElement).toBe(button);
+    await user.keyboard(" ");
+
+    expect(container.querySelectorAll("iframe")).toHaveLength(1);
+  });
+
+  it("keeps the play control at the bottom of the box", () => {
+    stubMatchMedia(false);
+    const { container } = renderPlayer();
+    const button = screen.getByRole("button", { name: SONG_COPY.en.playLabel });
+    expect(button.className).toContain("justify-end");
+    expect(button.className).toContain("pb-2");
+    const control = container.querySelector("[data-testid='song-player-control']");
+    expect(control).not.toBeNull();
+    expect(control?.textContent).toBe(SONG_COPY.en.playLabel);
   });
 
   it("moves the focus to the player after it loads", async () => {
