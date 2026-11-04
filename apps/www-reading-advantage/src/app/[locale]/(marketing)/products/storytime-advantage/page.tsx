@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/locales/navigation";
 import { getScopedI18n } from "@/locales/server";
+import { StorytimeSongPlayer } from "@/components/products/storytime-song-player";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 const IMAGE_DIR = "/images/storytime-advantage";
@@ -141,6 +142,11 @@ export default async function StorytimeAdvantage({
                 <p className="leading-relaxed">{t(`coreValue.features.${feature}.description`)}</p>
               </article>
             ))}
+          </div>
+          <div className="mb-12">
+            <h3 className="mb-3 text-2xl font-bold text-site-navy">{t("song.heading")}</h3>
+            <p className="mb-6 max-w-3xl leading-relaxed">{t("song.text")}</p>
+            <StorytimeSongPlayer playLabel={t("song.playLabel")} playerTitle={t("song.playerTitle")} />
           </div>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {STORY_IMAGES.map((image) => (

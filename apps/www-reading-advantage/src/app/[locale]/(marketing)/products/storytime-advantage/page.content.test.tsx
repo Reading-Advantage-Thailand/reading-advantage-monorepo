@@ -1,10 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import StorytimeAdvantage, { generateMetadata } from "@/app/[locale]/(marketing)/products/storytime-advantage/page";
 import { navigation } from "@/config/navigation";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
+import { en as storytimeEn, zh as storytimeZh } from "@/locales/pages/products/storytime-advantage";
 import {
   BANNED_COPY,
   CLAIM_TERMS,
@@ -17,9 +19,13 @@ import {
   OLD_STOCK_REFERENCES,
   OVERVIEW_LABEL_COPY,
   PAGE_COPY,
+  SONG_COPY,
+  SONG_POSTER_MEDIA,
+  SONG_POSTERS,
   STORYTIME_IMAGES,
   findClaimTerms,
   type ClaimTermName,
+  type ExpectedCopy,
 } from "@/__tests__/fixtures/storytime-page-expected";
 
 const state = vi.hoisted(() => ({ messages: {} as unknown }));
@@ -47,6 +53,17 @@ vi.mock("@/locales/server", () => ({
 type Locale = "en" | "th" | "zh";
 const MESSAGES: Record<Locale, unknown> = { en: enMessages, th: thMessages, zh: zhMessages };
 const copyLocale = (locale: Locale): "en" | "th" => locale === "th" ? "th" : "en";
+
+/**
+ * Reads the expected text of one page string in one locale.
+ * @param entry The page string of the fixture.
+ * @param locale The locale of the page.
+ * @returns The expected text.
+ */
+function expectedText(entry: ExpectedCopy, locale: Locale): string {
+  if (locale === "zh" && entry.zh) return entry.zh;
+  return entry[copyLocale(locale)];
+}
 
 const OLD_ROADMAP_STRINGS = OLD_ROADMAP_COPY.flatMap(({ en, th, zh }) => [en, th, zh]);
 
@@ -204,19 +221,25 @@ describe("Storytime Advantage content", () => {
       const container = document.querySelector(`[data-testid="${id}"]`);
       return [id, container ? textNodes(container) : []];
     }));
-    expect(renderedCopy).toEqual(Object.fromEntries(CONTAINER_IDS.map((id) => [id, PAGE_COPY[id].map((entry) => entry[copy])])));
-    expect(textNodes(document.body)).toEqual(CONTAINER_IDS.flatMap((id) => PAGE_COPY[id].map((entry) => entry[copy])));
+    expect(renderedCopy).toEqual(Object.fromEntries(CONTAINER_IDS.map((id) => [id, PAGE_COPY[id].map((entry) => expectedText(entry, locale))])));
+    expect(textNodes(document.body)).toEqual(CONTAINER_IDS.flatMap((id) => PAGE_COPY[id].map((entry) => expectedText(entry, locale))));
 
     const buttons = CONTAINER_IDS.flatMap((id) => PAGE_COPY[id]).filter((entry) => entry.href);
     const links = Array.from(document.querySelectorAll("a"));
     expect(links).toHaveLength(2);
     expect(links.map((link) => link.getAttribute("href"))).toEqual(["/contact", "/contact"]);
     expect(links.map((link) => ({ href: link.getAttribute("href"), text: link.textContent?.trim() })))
-      .toEqual(buttons.map((entry) => ({ href: entry.href, text: entry[copy] })));
+      .toEqual(buttons.map((entry) => ({ href: entry.href, text: expectedText(entry, locale) })));
 
     const images = Array.from(document.querySelectorAll("img"));
-    expect(images).toHaveLength(STORYTIME_IMAGES.length);
-    expect(images.map((image) => ({
+    const posterImages = images.filter((image) => imagePath(image.getAttribute("src") ?? "").includes("song-week-1"));
+    expect(posterImages).toHaveLength(1);
+    expect(imagePath(posterImages[0].getAttribute("src") ?? "")).toBe(SONG_POSTERS.desktop);
+    expect(posterImages[0].getAttribute("alt")).toBe("");
+
+    const storyImages = images.filter((image) => !posterImages.includes(image));
+    expect(storyImages).toHaveLength(STORYTIME_IMAGES.length);
+    expect(storyImages.map((image) => ({
       path: imagePath(image.getAttribute("src") ?? ""),
       alt: image.getAttribute("alt"),
     }))).toEqual(STORYTIME_IMAGES.map((image) => ({
@@ -249,6 +272,40 @@ describe("Storytime Advantage content", () => {
     const metaText = [metadata.title, metadata.description].filter((value) => typeof value === "string").join("\n");
     expect(findClaimTerms(metaText)).toEqual([]);
     expect(findOldRoadmapCopy(metaText)).toEqual([]);
+  });
+
+  it.each(["en", "th", "zh"] as const)("uses the exact song copy in %s", (locale) => {
+    state.messages = MESSAGES[locale];
+    const song = lookup("pages.products.storytimeAdvantage.song") as Record<string, string>;
+    expect(song).toEqual(SONG_COPY[locale]);
+  });
+
+  it("keeps every zh string equal to en except the song section", () => {
+    const { song: enSong, ...enRest } = storytimeEn;
+    const { song: zhSong, ...zhRest } = storytimeZh;
+    expect(zhRest).toEqual(enRest);
+    expect(enSong).toEqual(SONG_COPY.en);
+    expect(zhSong).toEqual(SONG_COPY.zh);
+  });
+
+  it("loads one local poster with the 767 px media rule", async () => {
+    state.messages = MESSAGES.en;
+    const page = await StorytimeAdvantage({ params: Promise.resolve({ locale: "en" }) });
+    render(page);
+    const source = document.querySelector("picture source");
+    expect(source?.getAttribute("media")).toBe(SONG_POSTER_MEDIA);
+    expect(source?.getAttribute("srcset")).toBe(SONG_POSTERS.phone);
+    expect(document.querySelector("picture img")?.getAttribute("src")).toBe(SONG_POSTERS.desktop);
+  });
+
+  it("holds no video host string in the server HTML", async () => {
+    state.messages = MESSAGES.en;
+    const page = await StorytimeAdvantage({ params: Promise.resolve({ locale: "en" }) });
+    const html = renderToStaticMarkup(page);
+    expect(html.toLowerCase()).not.toContain("youtube");
+    expect(html.toLowerCase()).not.toContain("google");
+    expect(html).not.toContain("Id4_X0nQnV4");
+    expect(html).not.toContain("nwJW8yENJnY");
   });
 
   it("control: the claims scanner has one control for each term class of spec section 7", () => {

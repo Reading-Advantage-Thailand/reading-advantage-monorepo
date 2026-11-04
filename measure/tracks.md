@@ -44,6 +44,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [~] **Track: Storytime Advantage www song section** — *created 2026-11-04*
+  *Link: [./tracks/www_storytime_song_embed_20261104/](./tracks/www_storytime_song_embed_20261104/)*
+  *Status: track files open; tests next | Owner: Monorepo orchestrator | PM assignment A-46 | Lane: light lane | Priority: next after the Storytime page revamp*
+  *Note: Daniel 2026-11-04, Google Tasks bms4Ujg2bEQ3TFNsNlVqYg: "Storytime Advantage www page - add song embed". One song section with a click-to-load player: a local poster before the tap, the phone video under 768 px, the desktop video from 768 px, and no request to any video host before the tap. The en, th, and zh strings come from hand-off v0.2. The Thai waits for Daniel's check. The zh song strings go live, and a contracted Chinese speaker checks them after the push. The push and the merge stay with Daniel.*
+
 - [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
   *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
   *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*

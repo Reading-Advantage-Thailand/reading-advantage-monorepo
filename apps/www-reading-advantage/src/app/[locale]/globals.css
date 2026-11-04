@@ -113,6 +113,10 @@
   --radius-lg: var(--radius);
   --radius-panel: 2.5rem;
 
+  /* The width cap of the Storytime song player box. 45vh keeps a 9:16 box at
+     80vh or less on a phone screen. */
+  --container-storytime-song: 45vh;
+
   --tracking-eyebrow: 0.18em;
   --tracking-eyebrow-wide: 0.24em;
   --leading-display: 1.05;

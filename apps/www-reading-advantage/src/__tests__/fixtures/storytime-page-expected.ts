@@ -102,11 +102,47 @@ export const OVERVIEW_LABEL_COPY = {
   },
 } as const;
 
+/**
+ * The four song strings, word for word from hand-off v0.2 section (a).
+ * The Thai strings are Daniel's draft. The zh strings are the PR draft.
+ * The song title "Hello, I am Pip" stays in English in all three locales.
+ */
+export const SONG_COPY = {
+  en: {
+    heading: "The Week 1 Song",
+    text: "“Hello, I am Pip” is the song of week 1 in the first unit. Each week has its own song with a video, so children can sing along in class or at home.",
+    playLabel: "Play the song",
+    playerTitle: "Video of the week 1 song “Hello, I am Pip”, Storytime Advantage",
+  },
+  th: {
+    heading: "เพลงของสัปดาห์ที่ 1",
+    text: "“Hello, I am Pip” เป็นเพลงของสัปดาห์ที่ 1 ในหน่วยแรก แต่ละสัปดาห์มีเพลงของตัวเองพร้อมวิดีโอ เด็กจึงร้องตามได้ทั้งในห้องเรียนและที่บ้าน",
+    playLabel: "เล่นเพลง",
+    playerTitle: "วิดีโอเพลงของสัปดาห์ที่ 1 “Hello, I am Pip” ของ Storytime Advantage",
+  },
+  zh: {
+    heading: "第一周歌曲",
+    text: "“Hello, I am Pip”是第一单元第一周的歌曲。每周都有自己的歌曲和视频，孩子们可以在课堂上或在家里一起唱。",
+    playLabel: "播放歌曲",
+    playerTitle: "视频：第一周歌曲“Hello, I am Pip”，Storytime Advantage",
+  },
+} as const;
+
+/** The local poster files of the song section. */
+export const SONG_POSTERS = {
+  desktop: "/images/storytime-advantage/song-week-1-desktop-poster.jpg",
+  phone: "/images/storytime-advantage/song-week-1-phone-poster.jpg",
+} as const;
+
+/** The media rule that picks the phone poster. */
+export const SONG_POSTER_MEDIA = "(max-width: 767px)";
+
 /** One rendered page string: its locale key, its English and Thai text, and the link target of a button. */
 export interface ExpectedCopy {
   readonly key: string;
   readonly en: string;
   readonly th: string;
+  readonly zh?: string;
   readonly href?: "/contact";
 }
 
@@ -150,6 +186,9 @@ export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly
     { key: "coreValue.features.1.description", en: "Each week teaches one letter sound, with a recorded pure sound, a hand action, and words that start with the sound.", th: "หนังสือหนึ่งเล่มมีเรื่องอ่านตามและหนังสือฝึกอ่านที่ใช้เสียงและคำตามบทเรียน" },
     { key: "coreValue.features.2.title", en: "A Link to Home", th: "เชื่อมต่อกับบ้านด้วยคิวอาร์โค้ด" },
     { key: "coreValue.features.2.description", en: "A Thai home card each week, with QR codes that open the song and the books on a phone.", th: "บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดที่เปิดเพลงและหนังสือบนโทรศัพท์ได้" },
+    { key: "song.heading", en: SONG_COPY.en.heading, th: SONG_COPY.th.heading, zh: SONG_COPY.zh.heading },
+    { key: "song.text", en: SONG_COPY.en.text, th: SONG_COPY.th.text, zh: SONG_COPY.zh.text },
+    { key: "song.playLabel", en: SONG_COPY.en.playLabel, th: SONG_COPY.th.playLabel, zh: SONG_COPY.zh.playLabel },
   ],
   "st-section-4": [
     { key: "eyebrows.teacherResources", en: "FOR THE TEACHER", th: "สำหรับครู" },
