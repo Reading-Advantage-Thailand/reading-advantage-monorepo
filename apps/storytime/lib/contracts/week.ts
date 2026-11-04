@@ -18,6 +18,9 @@
  * the question page and word only when the loops part is approved.
  */
 import { z } from "zod";
+import { loopsApproved, STORYTIME_LOOPS_PART } from "../loops";
+
+export { loopsApproved, STORYTIME_LOOPS_PART };
 
 /** The longest media path that the contract accepts. */
 const MEDIA_PATH_MAX = 200;
@@ -487,9 +490,6 @@ export const PUBLISHED_BOOK_KINDS = ["readalong", "decodable"] as const;
 /** The parts of a week that Daniel approves (spec FR-3). */
 export const STORYTIME_APPROVAL_PARTS = ["text", "thai", "images", "audio", "song", "scripts"] as const;
 
-/** The name of the loops approval part. It is not one of the six approval parts. */
-export const STORYTIME_LOOPS_PART = "loops";
-
 /**
  * One approval part of a week.
  *
@@ -542,23 +542,6 @@ export const storytimeApprovalsSchema = z
     loops: storytimeLoopsApprovalSchema.optional(),
   })
   .passthrough();
-
-/**
- * Tells whether the loops of a week are approved (spec FR-13).
- *
- * An absent loops part counts as a draft, so the app shows no routine for it. The rule reads the
- * week and never changes it.
- * @param week The week, or a value of another shape.
- * @returns `true` only when the loops part holds the status `approved`.
- */
-export function loopsApproved(week: unknown): boolean {
-  if (!week || typeof week !== "object") return false;
-  const approval = (week as Record<string, unknown>).approval;
-  if (!approval || typeof approval !== "object") return false;
-  const loops = (approval as Record<string, unknown>)[STORYTIME_LOOPS_PART];
-  if (!loops || typeof loops !== "object") return false;
-  return (loops as Record<string, unknown>).status === "approved";
-}
 
 /**
  * Reports a sentence timing whose end comes before its start, and a word timing out of order.

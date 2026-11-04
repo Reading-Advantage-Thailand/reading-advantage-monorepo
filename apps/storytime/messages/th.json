@@ -16,6 +16,9 @@
   "playerNextPage": "หน้าถัดไป",
   "playerAudioError": "เล่นเสียงไม่ได้",
   "playerFinished": "จบเล่มแล้ว",
+  "questionSkip": "ข้าม",
+  "questionRight": "ใช่",
+  "questionGentle": "ลองอีกครั้ง",
   "songPlay": "เล่น",
   "songPause": "หยุด"
 }

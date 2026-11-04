@@ -17,6 +17,8 @@ import {
   type ReadAlongPosition,
 } from "@reading-advantage/read-along/lib/position";
 import { wordCutBounds } from "@reading-advantage/read-along/lib/seek";
+import type { BookQuestion } from "../../../../../lib/questions";
+import { StorytimeQuestions, type QuestionLabels, type QuestionTile } from "./questions";
 
 /** The decodable part of the client reader (plan task 3.4, spec FR-7). */
 export { StorytimeDecodable } from "./decodable";
@@ -86,6 +88,12 @@ interface StorytimeReaderProps {
   locale: string;
   /** The translated control labels. */
   labels: ReaderLabels;
+  /** The questions of the read-along book; the screen shows when the page passes them. */
+  questions?: BookQuestion[];
+  /** The three tiles of the week page, which the end of the question screen shows. */
+  tiles?: QuestionTile[];
+  /** The translated labels of the question screen. */
+  questionLabels?: QuestionLabels;
   /** The media base URL; the default is `/media`. */
   mediaBase?: string;
 }
@@ -120,6 +128,9 @@ export function StorytimeReader({
   book,
   locale,
   labels,
+  questions = [],
+  tiles = [],
+  questionLabels,
   mediaBase = "/media",
 }: StorytimeReaderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -296,7 +307,16 @@ export function StorytimeReader({
         goToPage(deltaX < 0 ? pageIndex + 1 : pageIndex - 1);
       }}
     >
-      {finished ? (
+      {finished && questions.length > 0 && questionLabels ? (
+        <StorytimeQuestions
+          questions={questions}
+          pages={book.pages}
+          tiles={tiles}
+          locale={locale}
+          labels={questionLabels}
+          mediaBase={mediaBase}
+        />
+      ) : finished ? (
         <p className="text-lg font-semibold">{labels.finished}</p>
       ) : (
         <>

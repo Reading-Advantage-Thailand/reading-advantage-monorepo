@@ -16,6 +16,9 @@
   "playerNextPage": "Next page",
   "playerAudioError": "Sound could not be played",
   "playerFinished": "Book finished",
+  "questionSkip": "Skip",
+  "questionRight": "Yes",
+  "questionGentle": "Try again",
   "songPlay": "Play",
   "songPause": "Pause"
 }

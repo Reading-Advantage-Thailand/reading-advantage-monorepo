@@ -6,7 +6,9 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { loadVisibleWeek } from "@/lib/content";
 import type { StorytimeWeek } from "@/lib/contracts/week";
+import { questionScreenShows, readAlongQuestions } from "../../../../../lib/questions";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
+import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
 
 /**
@@ -267,6 +269,20 @@ export default async function StorytimeWeekPage({
     tiles.push({ id: "karaoke", part: "song", label: t("tileKaraoke"), picture: songPicture(week) });
   }
 
+  const questionTiles: QuestionTile[] = tiles.slice(0, 3).map((tile) => ({
+    id: tile.id,
+    href: `?part=${tile.part}`,
+    label: tile.label,
+    pictureFile: tile.picture?.file,
+    pictureAlt: tile.picture?.caption ?? "",
+  }));
+  const showQuestions = questionScreenShows(week, route === null ? 0 : route.level);
+  const questionLabels = {
+    skip: t("questionSkip"),
+    right: t("questionRight"),
+    gentle: t("questionGentle"),
+  };
+
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 p-6">
       <header>
@@ -360,6 +376,9 @@ export default async function StorytimeWeekPage({
               book={readAlongBook}
               locale={locale}
               labels={readerLabels}
+              questions={showQuestions ? readAlongQuestions(week) : []}
+              tiles={questionTiles}
+              questionLabels={questionLabels}
               mediaBase={mediaBase}
             />
           ) : null}
