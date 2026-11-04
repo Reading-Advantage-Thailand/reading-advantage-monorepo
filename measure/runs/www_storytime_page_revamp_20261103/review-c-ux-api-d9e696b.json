@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "The page copy, rules, images, scripts, and captures pass. Three items block: the content tests check 7 of about 45 strings and no old roadmap string (AC-1), the claims scanner misses spec term classes and its control tests a copy (AC-6), and the cover art needs the new crop box.",
+  "blocking_findings": [
+    "F1 [major] apps/www-reading-advantage/src/__tests__/fixtures/storytime-page-expected.ts:37-56 and src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx:66: AC-1 and spec section 2 line 30 need every brief string checked word for word in en and th. REQUIRED_COPY holds 7 strings per locale of about 45. A changed hero body, FAQ answer, key-feature point, or teacher-tool line would pass. The spec section 5 (lines 218-220) also needs a check that the old roadmap strings are absent; the fixture holds none of them (old values are in git at eae9f4ed7). I compared every en and th string by eye against the source files and found no difference, so the page is correct now. The test cannot keep it correct. Fix: put the full en and th string list in the fixture, assert each string on the page, and assert the old roadmap values are absent.",
+    "F2 [major] apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx:91 and :101-104: AC-6 and spec section 7 line 276 need a claims scanner with a control test for each term class. The scanner regex lacks English month names, the Buddhist-era abbreviation, baht, the Thai word for baht, the dollar sign, and grade level. The control test uses a second, shorter regex copy, not the real scanner, and has no Thai term and no baht sign. A change to the real scanner would not fail the control. Fix: define one scanner in the fixture, use it in the page test and in the control, and inject one sample for each class. The page has none of these terms now (checked by eye).",
+    "F3 [major] apps/www-reading-advantage/scripts/crop-storytime-page-images.ts:23, src/lib/__tests__/storytime-page-images.test.ts:83, plan.md crop table row for level-2-unit-1-cover-art: the cover art in the section 'Every Item on One Skill Map' shows a cream band over the top 40 percent of the picture. The capture confirms it in en and th, desktop and phone. A crop is needed. The box 600, 870, 2800, 2100 (source pixels) is close but leaves about 10 source pixels to the leftmost raised hand (hand starts near x 590). Better box: 520, 840, 2880, 2160 (4:3, bottom edge at 3000, margins about 70 left and 60 right, all six children and the dog inside, beam top and floor kept). Output stays 960x720. Three places must change together: CROPS row in the script, the fixed full-frame extract in the image test (line 83 applies 0,0,4000,3000 to all images; it needs a per-image crop, for example a crop field in the fixture), and the plan crop table. Re-run the crop script and the image test. My box values come from a half-size preview of the source; check the left hand edge once after the crop."
+  ],
+  "nonblocking_findings": [
+    "F4 [minor] apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts:20 and :147: adaptiveEngine.alt is stale. en reads 'The approved Level 2 cover artwork for Storytime Advantage' and th reads 'ภาพปก Level 2 ของ Storytime Advantage ที่ได้รับอนุมัติ'. Spec section 5 line 224 says this key takes the cover alt text 'The cover picture of Storytime Advantage Level 2.' / 'ภาพปกของ Storytime Advantage Level 2'. Source copy v0.4 gives 'Storytime Advantage skill map' for this key. The page does not render the key (it uses images.level2Unit1CoverArt, which is correct), so no reader sees it. The key holds internal status wording ('approved') and Thai text that is not in the Thai source. Fix: set the spec text or remove the key.",
+    "F5 [minor] apps/www-reading-advantage/src/lib/__tests__/storytime-page-images.test.ts:11: MANIFEST is a fixed path under /home/daniebo/Desktop/handoff, with no env override and no skip. The test also reads the advantage-forge source PNGs through the manifest. It fails on any machine without these folders (CI, another developer, after the hand-off folder is cleaned). The Primary test uses an env override (primary-page-images.test.ts:22, A34_SOURCE_ROOT). Fix: use the same pattern, or skip with a clear message when the manifest is missing.",
+    "F6 [minor] apps/www-reading-advantage/public/images/storytime-advantage/*.webp: the 10 lossless WebP files total about 4.4 MB (hero 1.03 MB). next.config.ts:25 sets images.unoptimized true, so next/image serves the files as they are. The spec requires lossless output, so this is a decision for Daniel, not a defect. Phone data cost is high on the first view.",
+    "F7 [minor] page.tsx:107-129 (capture en-desktop.png, th-desktop.png): the 'In Print' card has about one third empty white space at the bottom because the 'By QR Code' card holds two reader covers. This is cosmetic. Daniel decides at the look check.",
+    "F8 [minor] apps/www-reading-advantage/src/locales/components/products/b2b-solutions.ts:76-85, src/locales/components/common/navigation.ts:18, :41, :64, src/components/products/b2b-solutions.tsx:116, src/app/[locale]/(marketing)/(home)/page.tsx:96: the product index card, the navigation text, and the home page still show the old roadmap wording ('On our roadmap', 'Planned progress reports'), 'Interactive storytelling platform', and the old stock image /storytime-advantage.png. All of them link to the new page. A reader sees 'planned' on the card and 'first unit is being prepared' on the page. This is outside the spec (it limits the old-string removal to the page), but it is a user-flow inconsistency. Route to the PM for a follow-up decision.",
+    "F9 [minor] measure/tracks/www_storytime_page_revamp_20261103/plan.md tasks 1.2, 1.4, 1.5: no command text. Task 1.2 has no exit code and no count (its evidence sits in 1.3). Tasks 1.4 and 1.5 describe the ESLint, tsc, build, and capture runs and give exit codes, but not the exact commands. Task 1.3 and 1.6 give the full command, exit 0, and counts (5 files, 42 tests). Add the commands to 1.4 and 1.5."
+  ],
+  "evidence": [
+    "Item 1 copy: all en strings in locales/pages/products/storytime-advantage.ts (lines 1-126) equal copy v0.4 (advantage-pr 9b5e1743) word for word: metadata, hero, heroAlt, coreValue, keyFeatures, teacherTools, faq, cta, eyebrows, adaptiveEngine.eyebrow, heading, description. All th strings (lines 128-221) equal Thai v0.1 (4f8fcbde) word for word, and the th images block equals table rows 38-47. zh = en (line 223). Not on the page and not in the locale object: classroomAlt (removed on purpose per spec) and the teacherTools icon emoji (the page does not render icons). The only difference is F4 (adaptiveEngine.alt).",
+    "Item 2 rules: no date, price, outcome claim, free term, trial, or discount found in the en or th copy (read in full). Both links in page.tsx:198 and :201 go to /contact; there is no other Link or anchor in the page. No games or demo container (containers: st-hero, st-section-1 to 5, st-cta). grep of the locale file finds no roadmap, planned, K-3, or early literacy string (only the key name k3Curriculum). The page holds no old stock path. Thai FAQ A5 (th line 195) equals the English hand-off statement word for word.",
+    "Item 3 images: git ls-tree shows exactly 10 files in public/images/storytime-advantage/, with the 10 target names of image list v0.2 (webp, not png, per the plan). The 10 SHA-256 values in MANIFEST.txt equal the values in the image list v0.2. page.tsx uses next/image 10 times (hero, cover, 2 reader covers, 6 story images), as the Primary page does. en and th alt text for all 10 equals the image list v0.2 (locale lines 114-125 and 209-220). classroomAlt is left out. Cover art uses images.level2Unit1CoverArt (correct).",
+    "Item 4 shared change: i18n.ts:17 and locale-provider.tsx:14 set timeZone Asia/Bangkok. These only configure next-intl's formatter. grep of src finds no useFormatter, useNow, or format.dateTime call. The only date formatting is Intl.DateTimeFormat(locale) in blog-header.tsx:7 and blog-card.tsx:14, which does not use next-intl, so no other www page changes. A missing timeZone is the cause of the next-intl ENVIRONMENT_FALLBACK error. The client provider wrapper does not inherit the request config, so it needs its own prop. Setting both is the documented fix. Primary uses the same zone (SCHOOL_TIME_ZONE). Minor: the literal repeats in two files, and the change is outside the spec file list. The final start log with no fallback error is recorded in plan 1.5; I did not run or check the log.",
+    "Item 5 scripts: crop-storytime-page-images.ts computes SHA-256 in memory only and compares it to MANIFEST.txt (allowed). It writes no hash field. capture-storytime-page.mjs has no hash. Playwright uses chromium.launch with channel 'chrome' (line 15). No 'playwright install' appears in the diff (grep found none).",
+    "Item 6 tests: page.test.tsx checks the seven containers in order, once each, and no game or demo container. page.content.test.tsx checks en, th, zh: containers, no missing key, 7 phrases, two /contact links with button text, 10 images with path and alt, banned copy, old stock paths, meta title and description. The image test checks 10 manifest rows with SHA-256, the WebP VP8L chunk (lossless), the sizes, and the pixel equality with a Lanczos3 resize. phase-2-seo test now compares metadata.title and metadata.description, which is correct because the hero title is no longer the meta title. phase-w3-claims.test.ts: storytime-advantage left NONEXISTENT_APPS; the roadmap-label check would fail for the new page, so the change has a reason (the page is no longer roadmap-labelled; its stale-date check at line 187 still runs). No assertion was weakened without a reason. Gaps against the spec are F1, F2, F3 (test), F5.",
+    "Item 7 captures (all four read, but the tool shows the long pages at reduced size): no overlap, no cut text, no broken image, no sideways scroll seen; the script also checks scrollWidth and 10 loaded images. Thai headings and hero text break between words; at the shown size I cannot check body-line breaks inside a word, and I saw no fault. Story pictures, the hero, and the two reader covers look good in their slots. The cover art shows the cream band (F3). Card layout fault: F7. Source cover viewed at half size: children span about x 590 to 3340 and y 1490 to 2500 (source pixels).",
+    "Item 8 plan evidence: tasks 1.3 and 1.6 give command, exit 0, and counts (5 files, 42 tests; capture file sizes). Task 1.4 gives exit codes (ESLint 1 on 9 errors, then 0 with tsc 0). Task 1.5 gives exit 0, HTTP 200, 10 images. Commands are missing in 1.2, 1.4, 1.5 (F9).",
+    "Provenance: HEAD d9e696b9a equals the audited head (git rev-parse). git status of the worktree showed no uncommitted file at the first check. Range eae9f4ed7..d9e696b9a has 10 commits and 25 files.",
+    "Not run, by PM rule: no test, build, server, browser, or type check."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --stat eae9f4ed7..d9e696b9a",
+    "git diff --name-only eae9f4ed7..d9e696b9a",
+    "git diff eae9f4ed7..d9e696b9a -- i18n.ts locale-provider.tsx phase-w3-claims.test.ts page.test.tsx phase-2-seo-remaining-static.red.test.ts spec.md spec-review.md",
+    "git -C /home/daniebo/Desktop/advantage-pr show 9b5e1743:09-sales-enablement/storytime-release-1/www-page-copy.md",
+    "git -C /home/daniebo/Desktop/advantage-pr show 4f8fcbde:09-sales-enablement/storytime-release-1/www-page-copy-th.md",
+    "git -C /home/daniebo/Desktop/advantage-pr show 84b07643:09-sales-enablement/storytime-release-1/www-page-images.md",
+    "git ls-tree -r --name-only HEAD apps/www-reading-advantage/public/images/storytime-advantage",
+    "git show eae9f4ed7:apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts",
+    "grep checks (read tool): storytime references, timezone and date-format use, next/image use, /home/daniebo paths, roadmap strings",
+    "read tool: four capture PNGs, the cover source PNG, the cover WebP"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/scripts/capture-storytime-page.mjs",
+    "apps/www-reading-advantage/scripts/crop-storytime-page-images.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/storytime-page-expected.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-2-seo-remaining-static.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx",
+    "apps/www-reading-advantage/src/i18n.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/storytime-page-images.test.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts",
+    "apps/www-reading-advantage/src/providers/locale-provider.tsx",
+    "apps/www-reading-advantage/public/images/storytime-advantage/ (10 webp files)",
+    "measure/tracks/www_storytime_page_revamp_20261103/plan.md",
+    "measure/tracks/www_storytime_page_revamp_20261103/spec-review.md",
+    "measure/tracks/www_storytime_page_revamp_20261103/spec.md"
+  ],
+  "test_strategy_violations": [
+    "F1: fixture and content test check 7 of about 45 strings per locale and no old roadmap string (AC-1).",
+    "F2: scanner regex misses spec section 7 term classes; the control tests a regex copy (AC-6).",
+    "F3 (test part): image test applies the full-frame crop 0,0,4000,3000 to every image."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [
+    "F5: the image test needs absolute paths that exist only on the developer machine."
+  ],
+  "route_parity_violations": [
+    "F8: product index card, navigation text, and home page keep old roadmap wording and the old stock logo, and link to the new page."
+  ],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "medium",
+  "phase_base_sha": "eae9f4ed7",
+  "role_base_sha": "eae9f4ed7",
+  "audited_head_sha": "d9e696b9a"
+}

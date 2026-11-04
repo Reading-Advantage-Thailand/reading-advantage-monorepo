@@ -1,0 +1,57 @@
+Measure closeout log
+Track: www_storytime_page_revamp_20261103
+Pre-closeout HEAD: a51f9a1c513db72114a1422a7ba4dc2cd3202711
+Lane: light lane (PM 2026-11-03, rule 3). One maker, one checker, then Daniel's look check. No final acceptance role.
+Checker audited head: 5b0dc59a262b4377046a0c097012a64c6b54e68a
+Initial tracked tree: clean apart from the closeout paths
+
+Evidence read:
+- measure/index.md, measure/tracks.md, the track spec.md, plan.md, metadata.json
+- measure/anti-patterns.md, measure/lessons-learned.md, measure/tech-debt.md
+- review-c-ux-api-d9e696b.json and review-c-ux-api-14427dd.json with their logs
+- The precedent closeout commit 9baf7e535 for the www Primary page
+
+Plan audit:
+- Tasks 1.0 to 1.12 are complete with commit SHA evidence.
+- Task 1.8 now holds the merge, push, deploy, and live check evidence.
+- No [~] task and no [ ] task remains.
+- A5 scan found no false-claim text in the plan.
+- The plan scope note now matches the completed push, merge, and deploy.
+
+Registry audit:
+- The A-45 row moved out of the active section into the archived www section.
+- The archived row records the checker pass, the F12 fix, the deploy, the live check, and the A-32 CI failure.
+
+Archive path moved:
+measure/tracks/www_storytime_page_revamp_20261103 -> measure/archive/www_storytime_page_revamp_20261103
+
+Merge and deploy audit:
+- Command: git merge-base --is-ancestor dd1c4133f HEAD -> exit 0.
+- Command: gh run view 41737286738 -> CD run, head dd1c4133f, conclusion success, updated 2026-11-03T23:24:06Z (06:24 ICT on 2026-11-04).
+- Command: gh run view 41737286699 -> CI run, failure on the step "Architecture boundary check" only.
+- Command: gh run view 41606523505 -> CI run at 7db52a49d, failure on the step "Architecture boundary check" only.
+- Live check: 12 captures in /home/daniebo/Desktop/a45-www-storytime-captures/live-20261104/.
+
+A9 audit:
+Command: rg -n 'www_storytime_page_revamp_20261103' tests/
+Result: no test references this track's plan path. tests/orchestrator_marker_vocabulary.sh and tests/codecamp_pr_release_approval_provenance.sh use track_dir_resolve() with archive-first resolution. No fix was required.
+
+Closeout checker:
+Command: python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track www_storytime_page_revamp_20261103
+Output: PASS: closeout checks passed
+
+Retained evidence: the two checker results with their logs, the closeout result and log, the merge commit, the deploy run, the live captures, and Daniel's approval.
+Cleanup: none. The orchestrator named no bulky artifact for deletion. The capture folders stay on disk as Daniel's record.
+
+MEASURE_AGENT_RESULT
+role: measure-closeout
+status: complete
+track: www_storytime_page_revamp_20261103
+phase: closeout
+commits: pending
+tests_run: closeout checker PASS; A9 path scan found no stale reference; no test, build, or browser run by the closeout rule
+files_changed: archived track, registry, closeout manifest, closeout evidence
+plan_updates: task 1.8 marked complete with the merge, push, deploy, and live check evidence; tasks 1.4, 1.5, 1.7, 1.10, 1.11, and 1.12 gained their commit SHAs
+known_failures: the CI step "Architecture boundary check" fails at dd1c4133f and at 7db52a49d; track A-32 owns it
+handoff: Daniel owns the deploy gate, and it is closed. The CI failure in "Architecture boundary check" stays with track A-32. The lossy WebP item stays in tech-debt.md.
+END_MEASURE_AGENT_RESULT

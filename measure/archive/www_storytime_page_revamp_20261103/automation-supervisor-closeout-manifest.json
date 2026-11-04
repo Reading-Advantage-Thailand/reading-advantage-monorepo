@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "track_id": "www_storytime_page_revamp_20261103",
+  "status": "closed",
+  "completion_date": "2026-11-04",
+  "pre_closeout_head": "a51f9a1c513db72114a1422a7ba4dc2cd3202711",
+  "lane": "light lane, PM 2026-11-03 rule 3: one maker, one checker, then Daniel's look check. This lane has no final acceptance role.",
+  "acceptance": {
+    "phase": "measure/runs/www_storytime_page_revamp_20261103/review-c-ux-api-14427dd.json",
+    "final": "none; the light lane has no final acceptance role",
+    "audited_head_sha": "5b0dc59a262b4377046a0c097012a64c6b54e68a",
+    "status": "pass",
+    "note": "The checker pass covers the round 2 head 5b0dc59a2. The last code commit db52712f8 closed the checker's F12 finding. The merge dd1c4133f carries both into master."
+  },
+  "audits": {
+    "review_c_round_1": "fail at d9e696b9a; findings F1, F2, F3 closed in commit 89bd28e4e",
+    "review_c_round_2": "pass at 5b0dc59a2; finding F12 closed in commit db52712f8; F6 stays a Daniel decision in tech-debt.md",
+    "look_check": "pass; Daniel answered \"Approved\" on 2026-11-04 for the look and every Thai line",
+    "deploy": "pass; GitHub run 41737286738 \"CD — www-reading-advantage\" at dd1c4133f finished at 06:24 ICT on 2026-11-04",
+    "live_check": "pass at 07:11:15 ICT on 2026-11-04 on https://www.reading-advantage.com for en and th, desktop and phone"
+  },
+  "commands": [
+    "git rev-parse HEAD; git status --short --untracked-files=no",
+    "git merge-base --is-ancestor dd1c4133f HEAD",
+    "rg -n 'www_storytime_page_revamp_20261103' tests/ measure/ --glob '!measure/archive/www_storytime_page_revamp_20261103/**'",
+    "gh run view 41737286738 --json databaseId,name,conclusion,headSha",
+    "gh run view 41737286699 --json jobs --jq '.jobs[] | {name, conclusion, steps: [.steps[] | select(.conclusion==\"failure\") | .name]}'",
+    "gh run view 41606523505 --json jobs --jq '.jobs[] | {name, conclusion, steps: [.steps[] | select(.conclusion==\"failure\") | .name]}'",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track www_storytime_page_revamp_20261103"
+  ],
+  "retained_evidence": [
+    "measure/runs/www_storytime_page_revamp_20261103/review-c-ux-api-d9e696b.json",
+    "measure/runs/www_storytime_page_revamp_20261103/review-c-ux-api-d9e696b.log",
+    "measure/runs/www_storytime_page_revamp_20261103/review-c-ux-api-14427dd.json",
+    "measure/runs/www_storytime_page_revamp_20261103/review-c-ux-api-14427dd.log",
+    "measure/runs/www_storytime_page_revamp_20261103/closeout-a51f9a1.json",
+    "measure/runs/www_storytime_page_revamp_20261103/closeout-a51f9a1.log",
+    "Daniel approval: \"Approved\", 2026-11-04, through the PM; plan task 1.7",
+    "Merge commit dd1c4133f; deploy run 41737286738; live captures in /home/daniebo/Desktop/a45-www-storytime-captures/live-20261104/ (12 files)"
+  ],
+  "findings_recorded_in_tech_debt": [
+    "Lossy WebP quality 85 for the Storytime and Primary page illustrations, added in commit dd1c4133f"
+  ],
+  "archive_path": "measure/archive/www_storytime_page_revamp_20261103",
+  "test_reference_audit": "No test references this track's plan path. tests/orchestrator_marker_vocabulary.sh and tests/codecamp_pr_release_approval_provenance.sh define track_dir_resolve() and check the archive first; no test update was required.",
+  "artifact_cleanup": "None. The orchestrator named no bulky artifact for deletion. The capture folders stay on disk as Daniel's record.",
+  "owner_gate": "Task 1.8 is complete. The merge, the push, the deploy, and the live check ran under Daniel's gate. The CI run 41737286699 at dd1c4133f failed only on the step \"Architecture boundary check\", the same step that failed at 7db52a49d before the push. Track A-32 owns that step."
+}

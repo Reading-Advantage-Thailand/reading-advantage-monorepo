@@ -1,11 +1,11 @@
 {
   "track_id": "www_storytime_page_revamp_20261103",
   "type": "feature",
-  "status": "new",
+  "status": "done",
   "created": "2026-11-03",
   "created_at": "2026-11-03T00:00:00Z",
-  "updated_at": "2026-11-03T00:00:00Z",
-  "completed": null,
+  "updated_at": "2026-11-04T00:00:00Z",
+  "completed": "2026-11-04",
   "priority": "high",
   "description": "Revamp the www Storytime Advantage page at /products/storytime-advantage in en and th: refreshed brief copy word for word, real product images cropped and scaled into public/images/storytime-advantage/, lossless WebP, links to /contact, and the English copy in zh. Daniel checks the Thai and the look, then pushes and deploys.",
   "owner_chain": [
@@ -25,11 +25,7 @@
     "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx at HEAD 3b182491c",
     "apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts at HEAD 3b182491c"
   ],
-  "pending_inputs": [
-    "PM hand-off of the accepted brief v0.4 or later, the Thai file v0.1 or later, and the image list v0.1 or later (published 2026-11-03 17:25-17:27 ICT; hand-off due 2026-11-04)",
-    "Crop box and output size for each image (absent from image list v0.1)",
-    "Daniel's acceptance of the brief and his check of every Thai line"
-  ],
+  "pending_inputs": [],
   "branch": "www/storytime-page-revamp",
   "worktree": "/home/daniebo/Desktop/rama-worktrees/www-storytime-page",
   "captures_dir": "/home/daniebo/Desktop/a45-www-storytime-captures/",
@@ -50,5 +46,5 @@
     "Monorepo never writes in /home/daniebo/Desktop/advantage-pr."
   ],
   "estimated_tasks": 9,
-  "deviation_notes": "Opened 2026-11-03 by the Monorepo build agent as track files only. The PM handed over the task at 16:43 ICT and said the inputs would come by 2026-11-04. The PR session published the copy v0.4, the Thai file v0.1, and the image list v0.1 at 17:25-17:27 ICT on 2026-11-03. The PM hand-off is still pending. The image list v0.1 gives no crop box and no output size. The track quotes v0.4 as provisional and waits for the accepted brief."
+  "deviation_notes": "Opened 2026-11-03 by the Monorepo build agent as track files only. The PM handed over the task at 16:43 ICT and said the inputs would come by 2026-11-04. The PR session published the copy v0.4, the Thai file v0.1, and the image list v0.1 at 17:25-17:27 ICT on 2026-11-03. The PM hand-off is still pending. The image list v0.1 gives no crop box and no output size. The track quotes v0.4 as provisional and waits for the accepted brief. Closed 2026-11-04. The three opening inputs closed: the PM hand-off arrived on 2026-11-03, the crop boxes and output sizes are in the plan crop table, and Daniel approved the look and every Thai line on 2026-11-04. The lane was the light lane (PM 2026-11-03, rule 3), so the track has one maker, one checker, and Daniel's look check, with no final acceptance role. The merge into master is dd1c4133f. The push, the deploy, and the live check ran under Daniel's gate in task 1.8. The lossy WebP item stays in tech-debt.md."
 }

@@ -1,0 +1,34 @@
+Review C (UX and API end-to-end contract), track www_storytime_page_revamp_20261103, Phase 1.
+Audited HEAD d9e696b9a (current). phase_base_sha = role_base_sha = eae9f4ed7.
+Mode: audit only. No test, build, server, browser, or type check ran (PM rule).
+Contract applicability: applicable (marketing page route /products/storytime-advantage in en, th, zh; shared next-intl timezone change).
+
+Result: fail. Details are in review-c-ux-api-d9e696b.json.
+
+Blocking:
+F1 Content test checks 7 of about 45 strings per locale and no old roadmap string (AC-1).
+F2 Claims scanner misses spec term classes; control tests a regex copy (AC-6).
+F3 Cover art needs a crop. Box 600,870,2800,2100 clips about 10 source pixels of the left hand. Better: 520,840,2880,2160. Change the script, the image test, and the plan table together.
+
+Nonblocking:
+F4 adaptiveEngine.alt stale text in en and th (unused key).
+F5 Image test needs absolute local paths with no override.
+F6 Images total about 4.4 MB lossless, served unoptimized.
+F7 'In Print' card has empty space at the bottom.
+F8 Product index card, navigation, and home page keep old roadmap wording and old stock logo.
+F9 Plan tasks 1.2, 1.4, 1.5 miss exact commands.
+
+Checked and passing: en and th copy word for word, zh = en, rules, FAQ A5 in Thai, 10 images and alt text, next/image use, timezone change (no other page affected; correct fix for ENVIRONMENT_FALLBACK), scripts (no hash field, channel chrome, no playwright install), captures (no layout fault seen).
+
+MEASURE_AGENT_RESULT
+status: fail
+role: review-c-ux-api
+audited_head_sha: d9e696b9a
+phase_base_sha: eae9f4ed7
+role_base_sha: eae9f4ed7
+artifact: measure/runs/www_storytime_page_revamp_20261103/review-c-ux-api-d9e696b.json
+blocking_findings: 3
+nonblocking_findings: 6
+retry_recommendation: retry_implementation
+handoff: Green fixes F1, F2, F3 (use box 520,840,2880,2160 after one check of the left hand edge). F4 to F9 are optional before Daniel's look check; F8 goes to the PM.
+END_MEASURE_AGENT_RESULT

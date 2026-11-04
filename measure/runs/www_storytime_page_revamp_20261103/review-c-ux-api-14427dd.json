@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "All round 1 findings (F1, F2, F3, F4, F5, F7, F9) stay closed, and F8 is closed by round 2. Hand-off sections (a), (b), (c), and now (d) are applied word for word in en, th, and zh. Both logos are byte-equal to the hand-off SVGs and the old public/storytime-advantage.png is gone. No 'roadmap' or 'Planned' wording for Storytime remains in any changed place. The phone hero top padding clears the fixed header at 390 px and 360 px only; desktop is unchanged. No date, price, outcome claim, free term, trial, or discount appears in any changed place. The recaptured th-phone.png now shows all six story images, so the earlier capture paint fault is withdrawn. Two nonblocking items remain: the products-overview content test covers en and th but not zh, and the 10 lossless WebP files total about 4.4 MB, which is a Daniel decision.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F12 [minor] apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx:145-160: the new products-overview content test runs for en and th only (it.each([\"en\", \"th\"])). The zh overview copy was applied (overview.ts:81-82) and matches the hand-off draft by read, but no test asserts it word for word. The (a)-(c) labels test does cover zh. Fix: add \"zh\" to the overview it.each.",
+    "F6 [minor] apps/www-reading-advantage/public/images/storytime-advantage/*.webp (unchanged): the 10 lossless WebP files total about 4.4 MB (hero 1.03 MB) and next.config.ts serves them unoptimized. The spec requires lossless output, so this stays a decision for Daniel at the look check, not a defect."
+  ],
+  "evidence": [
+    "F10 withdrawn: the recaptured /home/daniebo/Desktop/a45-www-storytime-captures/after-r2/th-phone.png shows all six story images in the 'One Sound, One Song, Two Books a Week' section painted (picnic, classroom, sofa, ears, cat, pot). The capture-script paint fix (5b0dc59a2) scrolls each story image into view with double requestAnimationFrame before the screenshot and fails on zero-size rendered boxes, so the blank-box artifact should not recur.",
+    "F11 closed: commit 5b0dc59a2 replaces the Storytime gradeRange and description in overview.ts for en (:9-10), th (:45-46), and zh (:81-82), word for word equal to hand-off section (d); ctaLabel is unchanged in all three locales as the hand-off requires.",
+    "Section (d) values verified against www-labels-handoff.md: en gradeRange 'English for Anuban 2 to P2' and description 'Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.'; th 'ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2' and the matching Thai sentence; zh '面向 Anuban 2 至 P2 的英语课程' and the matching zh sentence. No roadmap or planned wording appears.",
+    "Section (d) test: OVERVIEW_LABEL_COPY in the fixture holds the three locales word for word (storytime-page-expected.ts:87-105) and the content test asserts gradeRange, description, and ctaLabel against the locale object plus claims scans for en and th (page.content.test.tsx:145-160).",
+    "Captures: the four recaptured Storytime pages (en-desktop, en-phone, th-desktop, th-phone) and the four new overview captures (en-overview-desktop, en-overview-phone, th-overview-desktop, th-overview-phone) all show the new copy. The overview cards display 'ENGLISH FOR ANUBAN 2 TO P2' / 'หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2' with the new description and 'Explore Storytime' link. No sideways scroll, no cut text, no broken images, no blank image slots seen in any of the 8 captures.",
+    "Round 2 re-verification at 14427dd50 (from the prior pass, unchanged by 5b0dc59a2): sections (a), (b), (c) match the hand-off word for word in en, th, zh (b2b-solutions.ts:76-86, :175-185, :275-285; navigation.ts:18, :41, :64 and config/navigation.ts:43; home.ts:106-107, :327-328, :557). Both logos are byte-equal to the hand-off SVGs (SHA-256 66175fba... for public/storytime-advantage.svg, 3b9f8f43... for public/media/brand/logos/svg/storytime-advantage.svg). public/storytime-advantage.png is deleted. The home strip shows 'First unit being prepared' instead of 'Planned' for Storytime. Hero padding pt-32 applies only below sm (page.tsx:50); 390 px and 360 px captures show the badge clear of the fixed header; desktop is unchanged.",
+    "Claims: read every changed string in the (d) edit and re-checked the changed places. No date, price, outcome claim, free term, trial, or discount. The content test runs findClaimTerms on the overview gradeRange and description.",
+    "Provenance: git rev-parse 5b0dc59a2 is 5b0dc59a262b4377046a0c097012a64c6b54e68a, the audited HEAD. The audited range is d9e696b9a..5b0dc59a2 (round 1 fixes 89bd28e4e, capture fix 62fe7d40e, round 2 14427dd50, overview fix 5b0dc59a2). No test, build, server, browser, or type check was run, per PM rule."
+  ],
+  "commands": [
+    "git rev-parse 5b0dc59a2",
+    "git show 5b0dc59a2 --stat",
+    "git show 5b0dc59a2 -- apps/www-reading-advantage/src/locales/pages/products/overview.ts",
+    "git show 5b0dc59a2 -- storytime-page-expected.ts page.content.test.tsx capture-storytime-page.mjs",
+    "read tool: th-phone.png, th-desktop.png, en-overview-desktop.png, th-overview-desktop.png, en-overview-phone.png, th-overview-phone.png from /home/daniebo/Desktop/a45-www-storytime-captures/after-r2/",
+    "python3 PIL crops of en-overview-phone.png and en-phone.png for close inspection",
+    "prior pass evidence at 14427dd50 (fixture, tests, locales, logos sha256sum, 14 captures)"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/locales/pages/products/overview.ts (section d, en/th/zh)",
+    "apps/www-reading-advantage/src/__tests__/fixtures/storytime-page-expected.ts (OVERVIEW_LABEL_COPY)",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx (overview test)",
+    "apps/www-reading-advantage/scripts/capture-storytime-page.mjs (paint fix, overview captures)",
+    "measure/tracks.md",
+    "measure/tracks/www_storytime_page_revamp_20261103/plan.md",
+    "plus the 20 files of the prior range d9e696b9a..14427dd50"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "eae9f4ed7",
+  "role_base_sha": "d9e696b9a",
+  "audited_head_sha": "5b0dc59a262b4377046a0c097012a64c6b54e68a"
+}

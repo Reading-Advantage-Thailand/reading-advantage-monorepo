@@ -1,0 +1,42 @@
+# Review C (UX and API contract) — www_storytime_page_revamp_20261103 — head 5b0dc59a2
+
+Role: Measure Review C, second pass, light lane. Audit only. No test, build, server, browser, or type check was run.
+
+## What was audited
+
+- Range d9e696b9a..14427dd50: round 1 fixes (89bd28e4e), capture fix (62fe7d40e), round 2 (14427dd50).
+- New head 5b0dc59a2: section (d) products overview card, its content test, and the capture-script paint fix.
+- Sources: review-c-ux-api-d9e696b.json (first pass), www-labels-handoff.md and MANIFEST.txt in /home/daniebo/Desktop/handoff/a45-storytime-labels/, captures in /home/daniebo/Desktop/a45-www-storytime-captures/after-r2/.
+
+## Round 1 closure (contested items)
+
+- F1 closed: PAGE_COPY fixture holds every rendered string per locale; absence checks for OLD_ROADMAP_COPY; controls flag each old string.
+- F2 closed: one scanner findClaimTerms with 25 term classes; per-class injected controls; allowed-terms control.
+- F3 closed: crop 520, 840, 2880, 2160 in script, fixture, image test, plan; cover WebP re-cropped; captures show no cream band.
+- F4 closed: adaptiveEngine.alt now holds the spec text in en and th.
+- F5 closed: image test uses A45_STORYTIME_SOURCE_ROOT with manifest check and skip.
+- F7 closed: feature grid uses items-start; the gap no longer sits inside the In Print card.
+- F9 closed: plan tasks 1.2, 1.4, 1.5 record command text and exit codes.
+
+## Round 2 and section (d)
+
+- Sections (a), (b), (c) match the hand-off word for word in en, th, zh. Both logos byte-equal to the hand-off SVGs. public/storytime-advantage.png deleted. No Storytime roadmap/planned wording left.
+- Section (d): overview.ts en/th/zh gradeRange and description equal the hand-off word for word; ctaLabel unchanged. Content test added for en and th with claims scans.
+- Phone hero pt-32 applies below sm only; 390 px and 360 px captures clear the fixed header; desktop unchanged.
+- Captures: 8 new captures viewed. th-phone now shows all six story images. Overview cards show the new copy in en and th, desktop and phone.
+- Claims: none in any changed place.
+
+## Findings
+
+- F10 (th-phone blank story images): withdrawn. The recaptured th-phone.png paints all six images; the script now fails on zero-size rendered boxes.
+- F11 (old overview copy on /products): closed by 5b0dc59a2.
+- F12 [minor]: the overview content test covers en and th only; zh overview copy is applied but has no word-for-word test.
+- F6 [minor]: 10 lossless WebP files total about 4.4 MB; Daniel decision at the look check.
+
+MEASURE_AGENT_RESULT
+status: pass
+retry_recommendation: none
+audited_head_sha: 5b0dc59a262b4377046a0c097012a64c6b54e68a
+summary: All round 1 findings closed; round 2 sections (a)-(c) and the section (d) overview card match the hand-off word for word in en, th, zh; logos byte-equal; no Storytime roadmap/planned wording left; phone hero clears the header at 390 and 360 px; no claims. th-phone paint fault withdrawn after recapture. Nonblocking: overview test lacks zh; WebP size is a Daniel decision.
+findings: F12 [minor] page.content.test.tsx:145-160 overview content test covers en and th only, add zh; F6 [minor] storytime-advantage/*.webp about 4.4 MB lossless total, Daniel decision.
+END_MEASURE_AGENT_RESULT

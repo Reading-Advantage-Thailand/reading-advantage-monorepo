@@ -44,11 +44,6 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
-- [~] **Track: Storytime Advantage www page revamp** — *created 2026-11-03*
-  *Link: [./tracks/www_storytime_page_revamp_20261103/](./tracks/www_storytime_page_revamp_20261103/)*
-  *Status: Round 2 labels and final captures ready for Daniel's look and Thai check | Owner: Monorepo orchestrator | PM assignment A-45 | Priority: next after the Primary page*
-  *Note: Daniel 2026-11-03 16:38 ICT: "Primary page is updated and live. Next is the storytime page". Same pipeline as the Primary page track. No date, no price, no outcome claim, and real product files only. Daniel checks the captures and the Thai. The deploy is Daniel's push of master.*
-
 - [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
   *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
   *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*
@@ -1231,6 +1226,11 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 - [x] **Track: www Primary Advantage page revamp** — *created 2026-10-30*
   *Link: [./archive/www_primary_page_revamp_20261030/](./archive/www_primary_page_revamp_20261030/)*
   *Status: implementation accepted and archived 2026-11-03 at 5e719505257c6f7390d28c15a0dc7d09da15e643; final acceptance passed. Daniel approved Thai and v2 captures. Local-master merge, push, and deploy remain with Daniel under deferred:daniel-deploy. Carried findings are listed in tech-debt.md.*
+
+- [x] **Track: www Storytime Advantage page revamp** — *created 2026-11-03*
+  *Link: [./archive/www_storytime_page_revamp_20261103/](./archive/www_storytime_page_revamp_20261103/)*
+  *Status: implementation accepted and archived 2026-11-04 at a51f9a1c513db72114a1422a7ba4dc2cd3202711. The checker passed at 5b0dc59a2 and the last code commit db52712f8 closed the checker finding F12. Daniel approved the look and every Thai line on 2026-11-04. The merge dd1c4133f, the push to origin/master, the deploy run 41737286738, and the live check at 07:11:15 ICT on 2026-11-04 are complete. The CI run 41737286699 at dd1c4133f failed only on the step "Architecture boundary check", which track A-32 owns. The lossy WebP item stays in tech-debt.md.*
+  *Note: Daniel 2026-11-03 16:38 ICT: "Primary page is updated and live. Next is the storytime page". Same pipeline as the Primary page track. No date, no price, no outcome claim, and real product files only. The Thai and zh copy stay drafts until their checks.*
 
 - [x] **Track: Update Science Advantage Product Page** *Link: [./archive/www_science_product_update_20260517/](./archive/www_science_product_update_20260517/)*
   Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs. *Status: COMPLETE — Page updated with Early Access badge, student features (join classes, interactive lessons, progress tracking, AI recommendations), teacher features (intervention alerts, class analytics, student progress, assignments), and platform features. All 7 tests passing, lint clean. Commit: 1c384a1*
