@@ -782,8 +782,83 @@ Green builds to these rules:
 
 ## Phase 4: Teacher app
 
-- [ ] 4.1 Teacher route group `apps/storytime/app/[locale]/teacher/` behind an environment flag that is off by default. With the flag off, every teacher route answers 404. Test: AC-9.3.
-- [ ] 4.2 Week view `/<locale>/teacher/<level>/<week>`: the title, the element with its sound, the phonemic awareness skill, the tricky words, the frame, the family words with pictures, the five lessons by day, and the three materials. Test: AC-9.1.
+Deviation (PM order of 2026-11-05, recorded by the P4 Red role): Phase 4 starts while the Phase 3
+tasks 3.7, 3.10, and 3.11 stay open on external inputs (A-42 final pin after the 11-16 check;
+the at-home deploy is Daniel's gate). The at-home release of 2026-11-20 is P1, so the PM puts
+Phase 4 first. Phase 3 keeps its own checkpoint later; the phase-order rule of this plan stays
+for every other track.
+
+- [~] 4.1 Teacher route group `apps/storytime/app/[locale]/teacher/` behind an environment flag that is off by default. With the flag off, every teacher route answers 404. Test: AC-9.3.
+- [~] 4.2 Week view `/<locale>/teacher/<level>/<week>`: the title, the element with its sound, the phonemic awareness skill, the tricky words, the frame, the family words with pictures, the five lessons by day, and the three materials. Test: AC-9.1.
+
+### Phase 4 tasks 4.1 and 4.2 Red evidence
+
+- Mid-Red started at `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Both supplied base SHAs resolve to this
+  commit, and HEAD matched it. No other session committed into `apps/storytime` or this track.
+- Deviation (PM order of 2026-11-05): Phase 4 starts while the Phase 3 tasks 3.7, 3.10, and 3.11
+  stay open on external inputs (A-42 final pin after the 11-16 check; the at-home deploy is
+  Daniel's gate). The at-home release of 2026-11-20 is P1, so the PM puts Phase 4 first. Phase 3
+  keeps its own checkpoint later. Tasks 4.3 and 4.6 wait for the A-48 step map; a later Red round
+  covers them.
+- measure-guard note: the guard blocked the `[~]` marker edit on this phase because its active
+  track is another track and Phase 3 has no checkpoint. The PM-ordered markers of tasks 4.1 and
+  4.2 stand, per the deviation above; the orchestrator may run `/measure-off` if the block stays.
+- Red model: `kimi-code-plan-cn/kimi-for-coding#high` (Kimi). Green model (recorded for the
+  hand-off): `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax). Red and Green differ.
+- The flag default (A5, recorded for the plan): the flag name is `STORYTIME_TEACHER_ROUTES`, a
+  server-side value. It is on only when the value is exactly `1`, the same rule as
+  `STORYTIME_SHOW_DRAFT_MEDIA`. Unset, empty, `0`, `false`, `FALSE`, `true`, `yes`, ` 1`, `1 `,
+  and `01` are off. No `NEXT_PUBLIC_` flag exists anywhere in `apps/storytime` sources. The
+  Docker smoke and the production-build leak check stay with task 4.5.
+- The F21 default (A-48 paper map, `handoff/a48-storytime-book-audit/B-activity-design.md`
+  section 1): the three materials of the week view are the student book (`print`), the read-along
+  `books[0]` ("Hello!"), and the decodable `books[1]` ("Nan Can Nod"). Red does not own the
+  strategy row of F21, so the row stays open and this evidence records the default the test
+  proves. The strategy role closes the row.
+- Red added two test files and changed no production source, no week content, and no shipped file.
+- Test commit: `43d7e7c18` (`test(storytime): add red tests for tasks 4.1 and 4.2`).
+- Automated Red command (the gate, light and direct):
+  `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx`.
+  Result: exit 1; 2 failed files; 13 failed tests and 2 passed tests (15 total).
+  `phase4-teacher-flag.test.ts`: 7 failed, 2 passed. `phase4-week-view.test.tsx`: 6 failed,
+  0 passed. Every failure is a missing-module assertion or a new assertion; no import, syntax,
+  or transform error occurred.
+- The two passing tests of the flag file are guards that already hold at this HEAD: the
+  draft-media switch keeps the exact-`1` rule (`lib/content.ts`), and the app sources hold no
+  `NEXT_PUBLIC_` read (the scan found only prose comments, which the check does not match).
+- Automated type check: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd
+  /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc
+  --noEmit'`. Result: exit 0. Both Red files are in the program.
+- Intentionally red tests, each with its cause and its task:
+
+| Test | Cause | Task |
+|---|---|---|
+| `phase4-teacher-flag` creates the teacher route group with the week view and the lesson flow | `app/[locale]/teacher/` does not exist | 4.1 |
+| `phase4-teacher-flag` names the server-side flag `STORYTIME_TEACHER_ROUTES` in the rule module | `lib/teacher.ts` with `TEACHER_ROUTES_ENV` and `teacherRoutesEnabled()` does not exist | 4.1 |
+| `phase4-teacher-flag` reads the flag in both teacher pages before any week content renders | the teacher pages do not exist | 4.1 |
+| `phase4-teacher-flag` turns the flag on only when the value is exactly 1 | `teacherRoutesEnabled()` does not exist | 4.1 |
+| `phase4-teacher-flag` answers 404 from every teacher route when the flag is off | the teacher pages do not exist | 4.1 |
+| `phase4-teacher-flag` answers 404 for an unknown level, week, or day with the flag on | the teacher pages do not exist | 4.1 |
+| `phase4-teacher-flag` exports no `generateStaticParams` and reads the flag at request time | the teacher pages do not exist | 4.1 |
+| `phase4-week-view` renders the title, the element with its sound, and the phonemic awareness skill | the week view module does not exist | 4.2 |
+| `phase4-week-view` renders each tricky word and the frame from the week | the week view module does not exist | 4.2 |
+| `phase4-week-view` renders each family word with its picture | the week view module does not exist | 4.2 |
+| `phase4-week-view` lists the five lessons by day, each with a link to the lesson flow | the week view module does not exist | 4.2 |
+| `phase4-week-view` lists the three materials: the student book, the read-along, and the decodable | the week view module does not exist | 4.2 |
+| `phase4-week-view` takes every item from the shipped file, never a hard-coded string | the week view module does not exist | 4.2 |
+
+- The week view tests read the shipped `w01.json` and parse it with the app contract. Every
+  expectation comes from the loaded week (A4: the day list holds exactly five lessons and each
+  day holds at least one step before any property is asserted). The anti-hard-code test mutates
+  a deep clone per case and re-renders. No week fixture exists under `__tests__/`.
+- The family pictures of the shipped week hold no file yet, so the test accepts the picture as an
+  `<img alt="{caption}">` or a `role="img"` element with `aria-label="{caption}"`.
+- Green builds to the named contract: `lib/teacher.ts` (`TEACHER_ROUTES_ENV`,
+  `teacherRoutesEnabled()`), the two teacher pages (flag gate, `notFound()`, `loadWeek`, no
+  `generateStaticParams`, `force-dynamic`), and
+  `app/[locale]/teacher/[level]/[week]/week-view.tsx` (`TeacherWeekView` with `{ week, locale }`).
+- Report: `measure/runs/storytime_app_rebuild_20261025/red-bfaae89.log`.
+
 - [ ] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
 - [ ] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes.
 - [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
