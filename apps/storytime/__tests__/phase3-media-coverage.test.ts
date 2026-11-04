@@ -44,13 +44,15 @@ const RECALL_CLIP = "phonemes/daniel/99-yy.mp3";
  * The field paths that the media list does not hold, each with its reason.
  *
  * The print part holds the files of the printed book, and the benchmark holds the files of the
- * one-to-one sitting. The app serves neither. Each entry names a field path of the week, and a
- * `*` stands for one list index.
+ * one-to-one sitting. The app serves neither. The approval part holds the text of the approvals,
+ * and a file name in that text is not a file of the app. Each entry names a field path of the
+ * week, and a `*` stands for one list index.
  */
 const ALLOWED_MEDIA_PATHS: Array<{ path: string; reason: string }> = [
   { path: "print", reason: "print" },
   { path: "benchmark.oneToOne.soundAudio.*", reason: "benchmark" },
   { path: "benchmark.oneToOne.blend.*.audio.*", reason: "benchmark" },
+  { path: "approval", reason: "approval" },
 ];
 
 /**
@@ -193,9 +195,10 @@ describe("the allow list of the coverage check", () => {
     expect(ALLOWED_MEDIA_PATHS.length, "The allow list must not be empty (A4)").toBeGreaterThan(0);
     for (const allowed of ALLOWED_MEDIA_PATHS) {
       expect(allowed.reason, `The allowed path ${allowed.path} has no reason`).not.toBe("");
-      expect(["print", "benchmark"], `The allowed path ${allowed.path} has another reason`).toContain(
-        allowed.reason,
-      );
+      expect(
+        ["print", "benchmark", "approval"],
+        `The allowed path ${allowed.path} has another reason`,
+      ).toContain(allowed.reason);
     }
   });
 

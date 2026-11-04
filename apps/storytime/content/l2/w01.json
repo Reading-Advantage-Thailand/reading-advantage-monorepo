@@ -18,10 +18,16 @@
       "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; print Phase 4 git note on 2e3272e9"
     },
     "audio": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-04",
+      "words": "\"Question 2: all audio approved\"",
+      "source": "PM relay Tasks id dGpjemFrb2hIWS1rU0Fkdw; the 4 week 1 book audio files and song.mp3"
     },
     "song": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-04",
+      "words": "\"Song approved\" (song.mp4, song-phone.mp4); \"Question 2: all audio approved\" (song.mp3)",
+      "source": "PM relay Tasks id T0ZLenUzaFJsUUZDTy1LSw (song.mp4 sha256 4c88951f3407c8e1, song-phone.mp4 sha256 74ccefed722d3a97); song.mp3 by Tasks id dGpjemFrb2hIWS1rU0Fkdw"
     },
     "scripts": {
       "status": "approved",

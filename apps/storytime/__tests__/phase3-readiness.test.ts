@@ -4,6 +4,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
+import { loopsApproved } from "../lib/contracts/week";
+
 const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const shippedPath = resolve(app, "content/l2/w01.json");
 
@@ -71,5 +73,27 @@ describe("Phase 3 week readiness", () => {
   it("uses the same readiness function in the receiver", () => {
     const receiver = readFileSync(resolve(app, "scripts/receive-weeks.ts"), "utf8");
     expect(receiver).toMatch(/isWeekReady/);
+  });
+
+  it("holds the shipped w01 ready and keeps the routines hidden", async () => {
+    const week = JSON.parse(readFileSync(shippedPath, "utf8"));
+    const lib = resolve(app, "lib/readiness.ts");
+    const readiness = await import(/* @vite-ignore */ new URL(`file://${lib}`).href);
+    expect(
+      readiness.readinessBlocker(week),
+      "The shipped w01 holds a readiness blocker after the approval take of 2026-11-04",
+    ).toBeNull();
+    expect(
+      readiness.isWeekReady(week),
+      "The shipped w01 is not ready after the approval take",
+    ).toBe(true);
+    expect(
+      week.approval.loops.status,
+      "The loops part of the shipped w01 is not draft after the approval take of 2026-11-04",
+    ).toBe("draft");
+    expect(
+      loopsApproved(week),
+      "The routines of the shipped w01 show while the loops part is draft",
+    ).toBe(false);
   });
 });
