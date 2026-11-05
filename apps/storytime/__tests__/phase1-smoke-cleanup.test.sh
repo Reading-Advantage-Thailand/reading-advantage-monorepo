@@ -306,13 +306,26 @@ else
     fail "F1: the real re-entry passes the lock hint (heavy-run.sh)"
   fi
 fi
-# F1b (Review A finding A3-4 / F10): the same re-entry run with HEAVY_LOCK_HELD unset, so a
-# passing run cannot come from an inherited hint; the string inside the re-entry line must
-# carry the hint itself.
-if env -u HEAVY_LOCK_HELD bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "${REENTRY//\$0/$F/smoke-stub}" >/dev/null 2>&1; then
-  pass "F1b: the re-entry passes the lock hint with HEAVY_LOCK_HELD unset"
+# F1b (Review A finding A3-4 / F10, re-checked as A4-2): the same re-entry run with
+# HEAVY_LOCK_HELD unset and a private lock file. In a plain nested run heavy-run.sh finds the
+# ancestor lock holder and exports the hint itself, so this check passed even with the string
+# removed (vacuous; the A4-2 probe run exited 0 on the no-hint line). With HEAVY_LOCK pointing
+# at a lock that no ancestor holds, heavy-run takes the lock itself and exports no hint, so
+# only the string inside the re-entry line can carry HEAVY_LOCK_HELD=1 to the stub.
+if HEAVY_LOCK="$WORK/f1b.lock" env -u HEAVY_LOCK_HELD bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "${REENTRY//\$0/$F/smoke-stub}" >/dev/null 2>&1; then
+  pass "F1b: the re-entry passes the lock hint with HEAVY_LOCK_HELD unset and a private lock"
 else
-  fail "F1b: the re-entry passes the lock hint with HEAVY_LOCK_HELD unset"
+  fail "F1b: the re-entry passes the lock hint with HEAVY_LOCK_HELD unset and a private lock"
+fi
+# F1b fail-first proof: the same private-lock run with a re-entry line that lacks the
+# HEAVY_LOCK_HELD=1 string must fail, or the check above cannot detect a lost hint.
+REENTRY_NOHINT="$(printf '%s' "$REENTRY" | sed 's/HEAVY_LOCK_HELD=1 //')"
+if [ -z "$REENTRY_NOHINT" ] || [ "$REENTRY_NOHINT" = "$REENTRY" ]; then
+  fail "F1b: the no-hint re-entry line differs from the real line"
+elif HEAVY_LOCK="$WORK/f1b.lock" env -u HEAVY_LOCK_HELD bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "${REENTRY_NOHINT//\$0/$F/smoke-stub}" >/dev/null 2>&1; then
+  fail "F1b: the re-entry without the hint string fails the stub lock check"
+else
+  pass "F1b: the re-entry without the hint string fails the stub lock check"
 fi
 # F1c (A3-4): every smoke-style script holds the exact re-entry string, so each one re-enters
 # through heavy-run.sh with the lock hint. The check is one function over one file, so the
