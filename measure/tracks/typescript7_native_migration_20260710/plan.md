@@ -133,6 +133,30 @@
 - Checkpoint note: two sentences added at the end. The marker and the Phase 1 text stay.
 - Tasks 2 and 3 stay `[~]`. No archive move. No `tracks.md` change.
 
+#### Tasks 2 and 3 Green evidence (blocked on the scope gate, 2026-11-06)
+
+- Role: Measure Junior Green. Model: opencode-go/deepseek-v4.1-flash. Tasks 2 and 3.
+- phase_base_sha: `5841dc528b0bcd22f426f043d86ba9dc7939a448`. role_base_sha: `acf282174cee08106897661d1343fd353a29eb20`.
+- Task 2 commit: `c0e2cfbb1cbd4a2771c50bd62b3c153d05dd878e`. It sets vinext 1.2.0 in the
+  two apps, resolves `@vitejs/plugin-rsc` 0.5.38 inside the declared `^0.5.27` range, adds
+  `apps/activity-vinext-fixture/vite.config.ts`, and refreshes the lockfile.
+- Task 3 commit: `71ae73509260a064aa4c94d5cdf2202d0e30b5f6`. It adds the `resolved-after`
+  and `gate-results` blocks and the raw gate logs.
+- Resolved versions: vinext 1.2.0, vite 8.1.6, react 19.2.9, `@vitejs/plugin-rsc` 0.5.38,
+  Node 24.19.0.
+- Heavy gates all exit 0: H0/H1 types for both apps, H0/H1 builds for both apps, the H0/H1
+  fixture probe (HTTP 200 and marker), H0/H1 marketing tests (65 files, 573 tests), and
+  `H1-install` (`pnpm install --frozen-lockfile`).
+- Full Phase 2 gate with `P2_GREEN_COMMITS="c0e2cfbb1 71ae73509"`: 22 of 23 pass. The one
+  failure is `P2T2ScopeTests.test_lock_diff_in_scope`.
+- Cause: the test's `APPS` tuple holds `marketing` and `activity-vinext-fixture`. The pnpm
+  lockfile v9 importer keys hold `apps/marketing` and `apps/activity-vinext-fixture`. The
+  test rejects a change in the two app importers that the strategy section 4.3 allows.
+- Tasks 2 and 3 stay `[~]`. The Red test is immutable. A Mid Red retry must accept the
+  `apps/<name>` importer key form or strip the `apps/` prefix. Then rerun the gate.
+- The lockfile diff stays in the two app importers and the `packages` and `snapshots`
+  sections. `pnpm-workspace.yaml` is unchanged. No deploy ran.
+
 ## Phase 3: TypeScript 7 trial (PM step 1)
 
 - [ ] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
