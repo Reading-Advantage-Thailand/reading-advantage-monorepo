@@ -179,7 +179,8 @@ function TileCard({ tile }: { tile: Tile }) {
             className="h-20 w-20 rounded-xl object-cover"
           />
         ) : null}
-        <span className="text-lg font-semibold" lang="en">
+        {/* The label comes from the message files, so its lang follows the locale (finding F135). */}
+        <span className="text-lg font-semibold">
           {tile.label}
         </span>
       </Link>
@@ -264,7 +265,7 @@ export default async function StorytimeWeekPage({
       {part === null ? (
         <>
           <section aria-label={t("homeChoosePart")}>
-            <h2 className="mb-3 text-lg font-semibold" lang="en">
+            <h2 className="mb-3 text-lg font-semibold">
               {t("homeChoosePart")}
             </h2>
             <ul className="flex flex-col gap-3">
@@ -277,7 +278,7 @@ export default async function StorytimeWeekPage({
             aria-label={t("homeParentHeading")}
             className="flex flex-col gap-4 rounded-2xl border border-neutral-300 p-4"
           >
-            <h2 className="text-lg font-semibold" lang="th">
+            <h2 className="text-lg font-semibold">
               {t("homeParentHeading")}
             </h2>
             {parentLine ? (
@@ -287,7 +288,7 @@ export default async function StorytimeWeekPage({
             ) : null}
             {element && elementAudio ? (
               <div className="flex flex-col gap-2">
-                <h3 className="font-semibold" lang="en">
+                <h3 className="font-semibold">
                   {t("homeSoundHeading")}
                 </h3>
                 <p className="text-sm" lang="en">
@@ -300,7 +301,7 @@ export default async function StorytimeWeekPage({
               </div>
             ) : null}
             <div className="flex flex-col gap-2">
-              <h3 className="font-semibold" lang="en">
+              <h3 className="font-semibold">
                 {t("homeWordsHeading")}
               </h3>
               <ul className="flex flex-wrap gap-2" aria-label={t("homeWordsHeading")}>
@@ -322,7 +323,7 @@ export default async function StorytimeWeekPage({
             </div>
             {frame ? (
               <div className="flex flex-col gap-2">
-                <h3 className="font-semibold" lang="en">
+                <h3 className="font-semibold">
                   {t("homeFrameHeading")}
                 </h3>
                 <p className="text-lg" lang="en">
@@ -332,7 +333,7 @@ export default async function StorytimeWeekPage({
             ) : null}
             {activityText ? (
               <div className="flex flex-col gap-2">
-                <h3 className="font-semibold" lang="en">
+                <h3 className="font-semibold">
                   {t("homeActivityHeading")}
                 </h3>
                 <p lang={locale === "th" ? "th" : "en"}>{activityText}</p>

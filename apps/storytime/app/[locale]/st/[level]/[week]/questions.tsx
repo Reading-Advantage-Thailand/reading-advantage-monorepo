@@ -167,7 +167,8 @@ export function StorytimeQuestions({
                     className="h-20 w-20 rounded-xl object-cover"
                   />
                 ) : null}
-                <span className="text-lg font-semibold" lang="en">
+                {/* The label comes from the message files, so its lang follows the locale (finding F135). */}
+                <span className="text-lg font-semibold">
                   {tile.label}
                 </span>
               </Link>
