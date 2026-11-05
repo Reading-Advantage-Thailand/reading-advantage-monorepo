@@ -21,5 +21,7 @@
   "questionGentle": "Try again",
   "questionPicture": "Picture {n}",
   "songPlay": "Play",
-  "songPause": "Pause"
+  "songPause": "Pause",
+  "notFoundThai": "ไม่พบหน้านี้ กลับไปที่รหัส QR แล้วเลือกส่วนที่ต้องการ",
+  "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part."
 }
