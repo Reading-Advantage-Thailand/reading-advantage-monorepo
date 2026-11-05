@@ -9,8 +9,9 @@
  * tricky word and every word of a sound book play whole. The component never uses the phone voice
  * (rule 10.5): every sound is a recorded file.
  */
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { blendPlanForWord } from "../../../../../lib/blend";
+import { seekAndRun } from "../../../../../lib/audio-seek";
 import type { StorytimeBook, StorytimeWeek } from "../../../../../lib/contracts/week";
 import { PHONEME_BANK, PHONEME_BANK_COUNT } from "../../../../../lib/phoneme-bank";
 
@@ -68,6 +69,7 @@ export function StorytimeDecodable({
   const phonemeRef = useRef<HTMLAudioElement | null>(null);
   const wholeRef = useRef<HTMLAudioElement | null>(null);
   const wholeEndRef = useRef<number | null>(null);
+  const wholeStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [phonemeSrc, setPhonemeSrc] = useState<string | null>(null);
   const [wholeSrc, setWholeSrc] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -158,6 +160,29 @@ export function StorytimeDecodable({
     return null;
   }
 
+  /** Clears the pending stop timer of the whole-word recording (finding F123). */
+  function clearWholeStopTimer(): void {
+    if (wholeStopRef.current !== null) {
+      clearTimeout(wholeStopRef.current);
+      wholeStopRef.current = null;
+    }
+  }
+
+  /**
+   * Arms the timer that stops the whole-word recording at its word-cut end without a
+   * `timeupdate` event. A browser fires `timeupdate` about every 250 ms, so a 0.3 s cut can
+   * overshoot when the stop waits for it (finding F123).
+   * @param bounds The start and end of the word cut, in seconds.
+   */
+  function armWholeStop(bounds: { start: number; end: number }): void {
+    clearWholeStopTimer();
+    wholeStopRef.current = setTimeout(() => {
+      wholeStopRef.current = null;
+      wholeEndRef.current = null;
+      wholeRef.current?.pause();
+    }, Math.max(0, (bounds.end - bounds.start) * 1000));
+  }
+
   /**
    * Plays one whole word from the book recording.
    * @param word The word from the page or the tricky-word list.
@@ -173,8 +198,16 @@ export function StorytimeDecodable({
     const url = mediaUrl(mediaBase, file);
     target.src = url;
     setWholeSrc(url);
-    target.currentTime = bounds ? bounds.start : 0;
-    wholeEndRef.current = bounds ? bounds.end : null;
+    if (bounds) {
+      // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
+      // F122). The cut stop arms once the seek is in place, so the timer starts with the cut.
+      seekAndRun(target, bounds.start, () => armWholeStop(bounds));
+      wholeEndRef.current = bounds.end;
+    } else {
+      clearWholeStopTimer();
+      wholeEndRef.current = null;
+      target.currentTime = 0;
+    }
     playElement(target);
     setFailed(false);
   }
@@ -188,9 +221,12 @@ export function StorytimeDecodable({
     if (!target || end === null) return;
     if (target.currentTime >= end) {
       target.pause();
+      clearWholeStopTimer();
       wholeEndRef.current = null;
     }
   }
+
+  useEffect(() => clearWholeStopTimer, []);
 
   /**
    * Plays one tapped word: its graphemes first, then the whole word.

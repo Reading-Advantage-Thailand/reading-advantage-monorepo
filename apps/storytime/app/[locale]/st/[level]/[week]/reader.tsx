@@ -7,7 +7,7 @@
  * labels. The reader holds the audio element, the page turner, the modes, and the page-end stop.
  * It never speaks with the phone voice (rule 10.5): every sound is a recorded file.
  */
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
 import type { ReadAlongSentence } from "@reading-advantage/read-along/lib/align";
 import {
@@ -16,7 +16,8 @@ import {
   sentencesOfPage,
   type ReadAlongPosition,
 } from "@reading-advantage/read-along/lib/position";
-import { wordCutBounds } from "@reading-advantage/read-along/lib/seek";
+import { seekOrWait, wordCutBounds } from "@reading-advantage/read-along/lib/seek";
+import { seekAndRun } from "../../../../../lib/audio-seek";
 import type { BookQuestion } from "../../../../../lib/questions";
 import { StorytimeQuestions, type QuestionLabels, type QuestionTile } from "./questions";
 
@@ -104,6 +105,9 @@ const THAI_AUDIO_ERROR = "เล่นเสียงไม่ได้";
 /** The horizontal swipe distance, in pixels, that turns one page. */
 const SWIPE_MIN_PX = 50;
 
+/** The last window of a page, in seconds, inside which the page stop arms its timer (finding F123). */
+const PAGE_STOP_WINDOW_S = 0.3;
+
 /**
  * Builds the URL of one recorded file.
  * @param base The media base URL.
@@ -135,6 +139,7 @@ export function StorytimeReader({
 }: StorytimeReaderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const stopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
   const [mode, setMode] = useState<"idle" | "listen" | "myTurn" | "slow">("idle");
   const [position, setPosition] = useState<ReadAlongPosition>(NO_POSITION);
@@ -155,6 +160,8 @@ export function StorytimeReader({
     mode === "slow" && slowSentences.length > 0 ? slowSentences : normalSentences;
   const page = book.pages[pageIndex];
 
+  useEffect(() => clearStopTimer, []);
+
   /**
    * Plays the audio element and reports a rejected playback as a failed sound.
    * @param element The audio element.
@@ -170,6 +177,29 @@ export function StorytimeReader({
     }
   }
 
+  /** Clears the pending stop timer (finding F123). */
+  function clearStopTimer(): void {
+    if (stopTimerRef.current !== null) {
+      clearTimeout(stopTimerRef.current);
+      stopTimerRef.current = null;
+    }
+  }
+
+  /**
+   * Arms the timer that stops the audio at an end time without a `timeupdate` event. A browser
+   * fires `timeupdate` about every 250 ms, so a 0.3 s cut can overshoot when the stop waits for
+   * it (finding F123).
+   * @param delayMs The delay from now, in milliseconds.
+   * @param onFire The stop action.
+   */
+  function armStop(delayMs: number, onFire: () => void): void {
+    clearStopTimer();
+    stopTimerRef.current = setTimeout(() => {
+      stopTimerRef.current = null;
+      onFire();
+    }, Math.max(0, delayMs));
+  }
+
   /**
    * Stops the audio and clears the current mark.
    */
@@ -178,6 +208,7 @@ export function StorytimeReader({
     if (!element) return;
     element.pause();
     element.currentTime = 0;
+    clearStopTimer();
     setCutEnd(null);
     setPosition(NO_POSITION);
   }
@@ -186,6 +217,7 @@ export function StorytimeReader({
    * Resets the marks of the previous mode.
    */
   function resetMarks(): void {
+    clearStopTimer();
     setCutEnd(null);
     setPosition(NO_POSITION);
     setAudioFailed(false);
@@ -203,7 +235,8 @@ export function StorytimeReader({
     element.src = mediaUrl(mediaBase, book.audio.file);
     element.playbackRate = 1;
     const first = normalSentences[0];
-    element.currentTime = first ? Math.max(0, first.startTime - 0.05) : 0;
+    // A seek at readyState 0 applies on the loadedmetadata event (finding F122).
+    if (first) seekOrWait(element, Math.max(0, first.startTime - 0.05));
     if (first) setPosition({ sentenceIndex: 0, wordIndex: -1 });
     playAudio(element);
   }
@@ -231,7 +264,6 @@ export function StorytimeReader({
     if (!element || !book.audio?.slowFile) return;
     element.src = mediaUrl(mediaBase, book.audio.slowFile);
     element.playbackRate = 1;
-    element.currentTime = 0;
     playAudio(element);
   }
 
@@ -247,7 +279,15 @@ export function StorytimeReader({
     const word = sentence?.words[audioWordIndex];
     if (!element || !word) return;
     const bounds = wordCutBounds(word);
-    element.currentTime = bounds.start;
+    // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
+    // F122). The cut stop arms once the seek is in place, so the timer starts with the cut.
+    seekAndRun(element, bounds.start, () =>
+      armStop((bounds.end - bounds.start) * 1000, () => {
+        audioRef.current?.pause();
+        setCutEnd(null);
+        setPosition(NO_POSITION);
+      }),
+    );
     setCutEnd(bounds.end);
     setPosition({ sentenceIndex, wordIndex: audioWordIndex });
     playAudio(element);
@@ -261,6 +301,7 @@ export function StorytimeReader({
     if (!element) return;
     if (cutEnd !== null && element.currentTime >= cutEnd) {
       element.pause();
+      clearStopTimer();
       setCutEnd(null);
       setPosition(NO_POSITION);
       return;
@@ -268,7 +309,14 @@ export function StorytimeReader({
     if (mode !== "listen" && mode !== "slow") return;
     setPosition(findPosition(timingSentences, element.currentTime, position));
     const last = timingSentences[timingSentences.length - 1];
-    if (last && element.currentTime >= last.endTime) element.pause();
+    if (!last) return;
+    const remaining = last.endTime - element.currentTime;
+    // A browser fires timeupdate about every 250 ms, so the stop arms a timer inside the last
+    // window and runs without the next timeupdate (finding F123).
+    if (remaining > 0 && remaining <= PAGE_STOP_WINDOW_S && stopTimerRef.current === null) {
+      armStop(remaining * 1000, () => audioRef.current?.pause());
+    }
+    if (element.currentTime >= last.endTime) element.pause();
   }
 
   /**
