@@ -353,16 +353,17 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
 
 ## Turn 5e work done (full gate list)
 
-- Turn 5e runs the nine-gate list on ONE final HEAD and writes the
-  `#### Turn 5 Green evidence (review round 3)` sub-block. No source and
-  no test change in this turn. The status stays partial until every gate
-  exits 0 on the final HEAD.
+- Turn 5e ran the nine-gate list on ONE final HEAD `465286be8` (same SHA
+  at the start and at the end) and wrote the
+  `#### Turn 5 Green evidence (review round 3)` sub-block (1c4b7805a).
+  No source and no test changed in this turn. Every gate exited 0, so
+  the result block below is `status: complete`.
 
 ## Result block
 
 MEASURE_AGENT_RESULT
 role: measure-jr-green
-status: partial
+status: complete
 track: storytime_app_rebuild_20261025
 phase: Phase 3: At-home app
 commits: bec713a8d, b7a0347b0, 2515efe95, cf382af02 (turn 1); f92f36b0f,
@@ -375,58 +376,71 @@ commits: bec713a8d, b7a0347b0, 2515efe95, cf382af02 (turn 1); f92f36b0f,
   evidence); ec9703284 (turn 4e, the browser-gate week-404 row and its
   self-test); a88aca89b (turn 4e, the smoke loses only the html lang row);
   478931888 (turn 4e, the tech-debt line); 383a9376f (turn 4e, plan
-  evidence); acf282174 (turn 4e, the log result block). Turn 5 is in
-  progress at base acf282174; its commits land below as each finding passes
-  its tests.
-tests_run: turn 4e — all gates on ONE HEAD 478931888. `bash -n` on
-  phase3-browser-gate.sh and phase3-docker-smoke.sh passes; the smoke
-  `--self-test` exits 0 (`Self-test: PASS`). Item 3, the full Docker smoke,
-  exits 0 with 17 checks, `PASS=17, FAIL=0` (the removed html lang row drops
-  the count from 18 to 17; the status, Thai line, English line, `noindex`,
-  and no-`Set-Cookie` rows stay). Item 4, the browser gate, exits 0 with the
-  inner Playwright run `PASS=45, FAIL=0` and the wrapper `PASS=4, FAIL=0`.
-  The new live row loads `/th/st/2/2` on the fixture: `week404_status=404`,
-  `week404_lang=th (expected=th)`, `week404_thai_text=true`,
-  `week404_english_text=true` — PASS. The self-test answers `/th/nowhere`
-  with 404 and `<html lang="en">` plus both texts: `week404_status=404`,
-  `week404_lang=en (expected=th)`, both texts true; the row fails the page,
-  so `self-test rejects lang="en" under a /th/ URL (week 404 lang)` passes
-  as a genuine fail-first proof. Turn 4c items 1a, 1b, 1c, 2, 5, and 6 stay
-  valid: no production file changed and no build-graph run is needed.
-files_changed: turn 4e — apps/storytime/__tests__/phase3-browser-gate.sh
-  (ec9703284), apps/storytime/__tests__/phase3-docker-smoke.sh (a88aca89b),
-  measure/tech-debt.md (478931888),
-  measure/tracks/storytime_app_rebuild_20261025/plan.md (383a9376f), and
-  this log. No other row, no other gate, and the P3.8 unit row "404 view
-  language" changed nothing. The first unpushed commits b645d6af4, 408e3e111,
-  and d1e129c8a were rewritten locally after the self-test URL fix. Turn 4d
-  changed only the not-found.tsx comment and evidence; its segment
-  not-found.tsx experiment was deleted uncommitted.
-plan_updates: turn 4e plan evidence 383a9376f (`#### Turn 4e Green evidence`
-  sub-block, before the 3.11 line; earlier evidence a5232ff9e, a9087eb61).
-  Task 3.7 stays [~]; no task line changed.
-known_failures: none. The turn 4c item 3 row "The 404 document holds a
-  non-empty html lang" is resolved by the PM amendment of test-strategy line
-  402 (option a, commit a45cd43d6): the Docker smoke no longer checks
-  `<html lang=`, and the live check is the browser-gate week-404 row, which
-  passes on the fixture. F128 stays CONTEST with no code change (see
-  dispositions).
-handoff: the Phase 3 closeout gate is complete on the amended line 402:
-  items 1, 2, 3, 4, 5, and 6 hold on ONE HEAD 478931888. Task 3.7 stays [~]
-  for item 7 (the reviews and the adversarial record). The tech-debt line
-  (478931888) asks for the Docker smoke `lang` recheck at each Next upgrade.
-  Deviations recorded: the first version of the browser-gate self-test
-  loaded an empty page at the wrong path (`/th/st/2/2` on the inline server,
-  status 200) and passed for the wrong reason; it was fixed to serve the
-  `lang="en"` 404 page at `/th/nowhere` and the unpushed commits were
-  rewritten before the recorded runs. The gate wrapper prints the captured
-  node output twice; the inner run happened once. Ports 3940 to 3960 were
-  checked before the first run and after the last run; no next-server ran
-  outside a gate job. Turn 4d deviations (PM load fault, pkill self-match)
-  and the turn 4c deviation (build-graph outside heavy-run.sh) stay recorded
-  above. phase_base_sha 7db52a49d20e195388fd91670cc7c022312b50c5; turn 2
-  base 099506a4c; turn 3 base 2c5bacabc; turn 4a base b9007dcef; turn 4b
-  base b939962a9; turn 4c base 4f004a916; turn 4d base 296adf9e7; turn 4e
-  base a45cd43d6; final turn 4e HEAD 383a9376f.
+  evidence); acf282174 (turn 4e, the log result block). Turn 5 (review
+  round 3), base acf282174: f60626163 (F144); a0f0e8357 (F140); baf1c63f5
+  (F141); 99a231d03 (F142); 98d1ccc12 (F143); 465286be8 (the gate list
+  HEAD, the turn 5e log note); 1c4b7805a (the turn 5 plan evidence, after
+  the gates).
+tests_run: turn 5e, the nine gates on ONE HEAD 465286be8, each through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a
+  time. 1. the exact P3.4 line-328 command with `CI=true`: exit 0, 33
+  files, 309 tests, all passed. 2. the P4 tests (phase4-teacher-flag,
+  phase4-week-view): exit 0, 2 files, 15 tests. 3.
+  phase1-smoke-cleanup.test.sh: exit 0, PASS=32, FAIL=0. 4. the smoke
+  `--self-test`: exit 0, 6 SELF-TEST PASS, 0 FAIL. 5. the full smoke with
+  `HEAVY_HANG_KILL_S=off`: exit 0, PASS=19, FAIL=0. 6. the browser gate
+  with `HEAVY_HANG_KILL_S=off`: exit 0, inner PASS=52, FAIL=0, wrapper
+  PASS=4, FAIL=0. 7. `tsc --noEmit` in apps/storytime: exit 0. 8. ESLint
+  on the six changed TS/TSX files of
+  `git diff --name-only acf282174..HEAD -- apps/storytime`: exit 0. 9.
+  `build-graph update ./graph.db` on the four changed source files: exit
+  0, 52 to 66 nodes, 83 to 91 edges. Gate 6 live values:
+  `duplicate_ids_*=0 (ids_found=1)` on five screens,
+  `bottom_bar_gap_px=0 (bars_found=0)`, `focus_target_count=16`,
+  `focus_visible_failures=0`, `word_cut_overshoot_ms=0
+  (signed_pause_delta_ms=0, pause_at=0.33967)`, `word_cut_early_ms=0`.
+  Gate 5 new rows: the week page, the locale redirect (HTTP 307), and the
+  week 404 each answer with no `Set-Cookie`. Fail-first proofs per
+  finding are in the plan evidence (1c4b7805a): F140 jsdom 2 failed of 7
+  on the old code and the old-code gate printed `word_cut_early_ms=49`;
+  F141 the nested no-hint re-entry exited 0 on the old code; F142 the
+  probe printed `curl_rc=7 headers_len=0` and the old row passed
+  vacuously; F143 the run shows each self-test rejection with its row
+  value and the word-cut rule had no testable unit on the old code; F144
+  1 failed of 7 on the old code. Turn 4c items on this HEAD: 1a, 1b, and
+  6 rerun (gates 1 and 9); 1c, 2, and 5 stay valid with the reasons in
+  the plan evidence. Ports 3940 to 3960 checked before the first run and
+  after the last run; clear. No server ran outside a heavy-run job.
+files_changed: turn 5 — apps/storytime/lib/audio-seek.ts,
+  apps/storytime/lib/route-parse.ts,
+  apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx,
+  apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx,
+  apps/storytime/__tests__/phase3-audio-seek-stop.test.tsx,
+  apps/storytime/__tests__/phase3-route-parse.test.ts,
+  apps/storytime/__tests__/phase1-smoke-cleanup.test.sh,
+  apps/storytime/__tests__/phase3-docker-smoke.sh,
+  apps/storytime/__tests__/phase3-browser-gate.sh, and the plan evidence.
+  No source or test change in turn 5e. The TS7 session files
+  (apps/marketing/*, apps/activity-vinext-fixture/*, pnpm-lock.yaml)
+  stayed unstaged.
+plan_updates: turn 5 plan evidence 1c4b7805a (`#### Turn 5 Green evidence
+  (review round 3)` sub-block, before the 3.11 line; earlier evidence
+  383a9376f, a5232ff9e, a9087eb61). Task 3.7 stays [~]; no task line
+  changed.
+known_failures: none. All nine gates exit 0 on ONE HEAD 465286be8. F128
+  stays CONTEST with no code change (see dispositions).
+handoff: remediation round 3 is complete on the audited HEAD 465286be8
+  (gates) with the plan evidence at 1c4b7805a. Review and acceptance can
+  audit from `acf282174..465286be8` for the round 3 diff; new files to
+  scope: apps/storytime/__tests__/phase3-audio-seek-stop.test.tsx and
+  apps/storytime/__tests__/phase3-route-parse.test.ts. Task 3.7 stays [~]
+  for the review and acceptance roles; tasks 3.10 and 3.11 stay open on
+  external inputs. The gate wrapper prints the captured node output
+  twice; the inner run happened once. phase_base_sha
+  7db52a49d20e195388fd91670cc7c022312b50c5; turn 2 base 099506a4c; turn 3
+  base 2c5bacabc; turn 4a base b9007dcef; turn 4b base b939962a9; turn 4c
+  base 4f004a916; turn 4d base 296adf9e7; turn 4e base a45cd43d6; turn 5
+  base acf282174; gate HEAD 465286be8; final HEAD 1c4b7805a.
 dispositions: F120=FIX; F121=FIX; F122=FIX; F123=FIX; F124=FIX; F125=FIX; F126=FIX; F127=FIX; F128=CONTEST(spec.md:153 and spec.md:285 require date and words on the loops approval only - PM decision 2026-11-05 recorded in test-strategy.md by f7b5484ae); F129=FIX; F130=FIX; F131=FIX; F132=FIX; F133=FIX; F134=FIX; F135=FIX; F136=FIX; F137=FIX; F138=FIX; F139=FIX; F140=FIX; F141=FIX; F142=FIX; F143=FIX; F144=FIX
 END_MEASURE_AGENT_RESULT
