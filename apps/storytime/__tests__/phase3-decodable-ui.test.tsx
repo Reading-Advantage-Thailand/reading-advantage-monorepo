@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -54,6 +54,134 @@ function shippedCvcWords() {
   return words;
 }
 
+/** One play call of the fake media element model. */
+interface FakePlay {
+  /** The source of the element when the play started. */
+  src: string;
+}
+
+/** The state of one fake media element. */
+interface FakeMediaState {
+  /** The source the element holds now. */
+  source: string;
+  /** The play that waits for the clip to end, or null when no play waits. */
+  pending: { resolve: () => void; reject: (error: DOMException) => void } | null;
+}
+
+/** The fake media element model of one test. */
+interface FakeMedia {
+  /** The plays of the test, in order. */
+  plays: FakePlay[];
+  /** The timeline of the element: every play and every ended event, in order. */
+  timeline(): string[];
+  /** Restores the prototype and removes the listener. */
+  restore(): void;
+}
+
+/**
+ * Installs a browser-like media element model on the jsdom prototype.
+ *
+ * A browser ends a pending play when the element loads a new source, and it rejects the play
+ * promise with an `AbortError` DOMException. The model never ends a clip on its own: the test
+ * fires the `ended` event, and the model settles the pending play when that event fires.
+ * @returns The model of the test.
+ */
+function installFakeMedia(): FakeMedia {
+  const plays: FakePlay[] = [];
+  const timeline: string[] = [];
+  const states = new WeakMap<HTMLMediaElement, FakeMediaState>();
+  const srcDescriptor = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, "src");
+  const setAttribute = Element.prototype.setAttribute;
+
+  /** Gives the state of one element. */
+  function stateOf(element: HTMLMediaElement): FakeMediaState {
+    const found = states.get(element);
+    if (found) return found;
+    const created: FakeMediaState = { source: "", pending: null };
+    states.set(element, created);
+    return created;
+  }
+
+  /** Loads a new source into the element and aborts the pending play of the old source. */
+  function loadSource(element: HTMLMediaElement, source: string): void {
+    const state = stateOf(element);
+    if (source === state.source) return;
+    state.source = source;
+    const pending = state.pending;
+    if (!pending) return;
+    state.pending = null;
+    pending.reject(
+      new DOMException("The play request was aborted by a new load request.", "AbortError"),
+    );
+  }
+
+  vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(function (this: HTMLMediaElement) {
+    plays.push({ src: this.src });
+    timeline.push(`play ${fileNameOf(this.src)}`);
+    return new Promise<void>((resolve, reject) => {
+      stateOf(this).pending = { resolve, reject };
+    });
+  });
+
+  Object.defineProperty(HTMLMediaElement.prototype, "src", {
+    configurable: true,
+    enumerable: srcDescriptor?.enumerable ?? true,
+    get(this: HTMLMediaElement): string {
+      return srcDescriptor!.get!.call(this);
+    },
+    set(this: HTMLMediaElement, value: string) {
+      srcDescriptor!.set!.call(this, value);
+      loadSource(this, String(value));
+    },
+  });
+
+  Object.defineProperty(HTMLMediaElement.prototype, "setAttribute", {
+    configurable: true,
+    writable: true,
+    value(this: HTMLMediaElement, name: string, value: string) {
+      if (String(name).toLowerCase() === "src") loadSource(this, String(value));
+      return setAttribute.call(this, name, value);
+    },
+  });
+
+  const onEnded = (event: Event): void => {
+    const element = event.target as HTMLMediaElement | null;
+    const state = element ? states.get(element) : undefined;
+    if (!state?.pending) return;
+    const pending = state.pending;
+    state.pending = null;
+    timeline.push("ended");
+    pending.resolve();
+  };
+  document.addEventListener("ended", onEnded, true);
+
+  return {
+    plays,
+    timeline: () => [...timeline],
+    restore() {
+      document.removeEventListener("ended", onEnded, true);
+      Object.defineProperty(HTMLMediaElement.prototype, "src", srcDescriptor!);
+      delete (HTMLMediaElement.prototype as unknown as Record<string, unknown>).setAttribute;
+    },
+  };
+}
+
+/**
+ * Fires the `ended` event of one element and lets the pending play settle.
+ * @param element The media element that ends its clip.
+ */
+async function fireEnded(element: Element): Promise<void> {
+  await act(async () => {
+    element.dispatchEvent(new Event("ended", { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
+/** The file name of a media source. */
+function fileNameOf(src: string): string {
+  return src.split("/").at(-1) ?? src;
+}
+
 describe("Phase 3 Storytime decodable UI", () => {
   it("shows the sounds page and plays the phoneme bank clip on tap", async () => {
     const week = shippedWeeks.find((entry) => entry.meta.week === 1)!;
@@ -72,37 +200,112 @@ describe("Phase 3 Storytime decodable UI", () => {
     expect(audio.getAttribute("src")).not.toContain("speechSynthesis");
   });
 
-  it("plays a shipped CVC word's clips in grapheme order before its whole-word recording", async () => {
+  it("plays a shipped CVC word's clips one at a time in grapheme order, then the whole word", async () => {
     const cvc = shippedWeeks.find((week) => week.meta.week === 3);
     expect(cvc, "shipped week 3 must be present").toBeDefined();
     const week = cvc!;
     shippedCvcWords();
-    const word = (week.books.find((book) => book.kind === "decodable")?.soundsPage?.words ?? [])
+    const book = week.books.find((entry) => entry.kind === "decodable");
+    const word = (book?.soundsPage?.words ?? [])
       .find((candidate) => blendPlanForWord(candidate, week).mode === "blend");
     expect(word, "a shipped CVC word must exist").toBeTruthy();
-    const played: string[] = [];
-    const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(function (this: HTMLMediaElement) {
-      played.push(this.src);
-      return Promise.resolve();
-    });
-    const { audio } = await renderDecodable(week);
-    fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${word}$`, "i") }));
-    expect(play).toHaveBeenCalled();
-    expect(audio.getAttribute("src")).toContain("phonemes/daniel/");
-    const clips = played.filter((src) => src.includes("phonemes/daniel/"));
-    expect(clips).toHaveLength(blendPlanForWord(word!, week).graphemes.length);
+    const graphemes = blendPlanForWord(word!, week).graphemes;
+    expect(graphemes.length, "the blend word must hold more than one grapheme").toBeGreaterThan(1);
     const g3ClipByGrapheme: Record<string, string> = {
       p: "03-p.mp3",
       a: "26-a-short.mp3",
       n: "04-n.mp3",
     };
-    const graphemes = blendPlanForWord(word!, week).graphemes;
     expect(graphemes.every((grapheme) => g3ClipByGrapheme[grapheme])).toBe(true);
-    expect(clips.map((src) => src.split("/").at(-1))).toEqual(
-      graphemes.map((grapheme) => g3ClipByGrapheme[grapheme]),
-    );
-    expect(played.at(-1)).not.toContain("phonemes/daniel/");
-    expect(audio).toBeInTheDocument();
+    const clipNames = graphemes.map((grapheme) => g3ClipByGrapheme[grapheme]);
+    const wholeFile = book!.audio!.file;
+    expect(wholeFile, "the shipped decodable must hold its book recording").toBeTruthy();
+    const wholeName = fileNameOf(wholeFile!);
+    const expected: string[] = [];
+    for (const name of clipNames) expected.push(`play ${name}`, "ended");
+    expected.push(`play ${wholeName}`);
+    const media = installFakeMedia();
+    try {
+      const { audio, container } = await renderDecodable(week);
+      const phoneme = container.querySelectorAll("audio")[0];
+      expect(phoneme, "the decodable must render its phoneme audio element").not.toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${word}$`, "i") }));
+      expect(
+        media.timeline(),
+        "only the first grapheme clip plays after the click",
+      ).toEqual(expected.slice(0, 1));
+      expect(audio.getAttribute("src")).toContain("phonemes/daniel/");
+      for (let index = 1; index <= graphemes.length; index += 1) {
+        await fireEnded(phoneme!);
+        expect(
+          media.timeline(),
+          index < graphemes.length
+            ? `the clip ${index + 1} plays after the ended event of clip ${index}`
+            : "the whole word starts after the ended event of the last clip",
+        ).toEqual(expected.slice(0, 2 * index + 1));
+      }
+      expect(screen.queryByRole("alert"), "an aborted play shows no error alert").toBeNull();
+      expect(audio).toBeInTheDocument();
+    } finally {
+      media.restore();
+    }
+  });
+
+  it("stops the blend sequence of a first tap when a second tap starts another word", async () => {
+    const cvc = shippedWeeks.find((week) => week.meta.week === 3);
+    expect(cvc, "shipped week 3 must be present").toBeDefined();
+    const week = cvc!;
+    const book = week.books.find((entry) => entry.kind === "decodable");
+    const wholeFile = book!.audio!.file;
+    expect(wholeFile, "the shipped decodable must hold its book recording").toBeTruthy();
+    const g3ClipByGrapheme: Record<string, string> = {
+      p: "03-p.mp3",
+      a: "26-a-short.mp3",
+      n: "04-n.mp3",
+    };
+    const first = "pan";
+    const second = "nan";
+    const firstPlan = blendPlanForWord(first, week);
+    const secondPlan = blendPlanForWord(second, week);
+    expect(firstPlan.mode, "the first word must blend").toBe("blend");
+    expect(secondPlan.mode, "the second word must blend").toBe("blend");
+    const firstClip = g3ClipByGrapheme[firstPlan.graphemes[0]];
+    const secondClips = secondPlan.graphemes.map((grapheme) => g3ClipByGrapheme[grapheme]);
+    expect(firstClip, "the first word must hold a bank clip").toBeTruthy();
+    expect(
+      secondClips.every((name) => name),
+      "the second word must hold a bank clip for every grapheme",
+    ).toBe(true);
+    const expected: string[] = [`play ${firstClip}`, `play ${secondClips[0]}`];
+    for (const name of secondClips.slice(1)) expected.push("ended", `play ${name}`);
+    expected.push("ended", `play ${fileNameOf(wholeFile!)}`);
+    const media = installFakeMedia();
+    try {
+      const { container } = await renderDecodable(week);
+      const phoneme = container.querySelectorAll("audio")[0];
+      expect(phoneme, "the decodable must render its phoneme audio element").not.toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${first}$`, "i") }));
+      expect(
+        media.timeline(),
+        "the first tap plays only the first grapheme clip",
+      ).toEqual([`play ${firstClip}`]);
+      const beforeSecondTap = media.timeline().length;
+      fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${second}$`, "i") }));
+      expect(
+        media.timeline().slice(beforeSecondTap),
+        "the second tap starts the new word and stops the old sequence",
+      ).toEqual([`play ${secondClips[0]}`]);
+      for (let index = 0; index < secondClips.length; index += 1) {
+        await fireEnded(phoneme!);
+      }
+      expect(
+        media.timeline(),
+        "no clip of the old sequence plays after the new tap",
+      ).toEqual(expected);
+      expect(screen.queryByRole("alert"), "a stopped sequence shows no error alert").toBeNull();
+    } finally {
+      media.restore();
+    }
   });
 
   it("plays every word of the sound book and every tricky word whole", async () => {
