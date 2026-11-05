@@ -22,7 +22,9 @@ fi
 
 echo "=== AC-1.1 build, types, lint, and tests ==="
 if [ "$FAILED" -eq 0 ] && (
-  cd "$ROOT" && CI=true pnpm turbo run build check-types lint test --filter=storytime --ui=stream --concurrency=1 < /dev/null
+  # The switch stops the automatic pnpm install of pnpm 11 (it waits on the
+  # network; the machine rules forbid an install in a gate).
+  cd "$ROOT" && CI=true pnpm_config_verify_deps_before_run=false pnpm turbo run build check-types lint test --filter=storytime --ui=stream --concurrency=1 < /dev/null
 ); then
   pass "All four Storytime gates exit 0"
 else
