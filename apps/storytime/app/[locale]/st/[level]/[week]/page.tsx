@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { routing } from "@/i18n/routing";
-import { loadVisibleWeek } from "@/lib/content";
+import { routing } from "../../../../../i18n/routing";
+import { loadVisibleWeek } from "../../../../../lib/content";
 import type { StorytimeWeek } from "@/lib/contracts/week";
-import { questionScreenShows, readAlongQuestions } from "@/lib/questions";
-import { parseStorytimeRoute } from "@/lib/route-parse";
+import { questionScreenShows, readAlongQuestions } from "../../../../../lib/questions";
+// Relative paths for the runtime imports: the shared root vitest config holds no `@`
+// alias, so an `@/lib/...` import cannot resolve there (finding F139). The tests mock
+// the same files by relative specifier, so the factories match in both runs. Only the
+// type-only import keeps the `@` form; types never resolve at runtime.
+import { parseStorytimeRoute } from "../../../../../lib/route-parse";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";

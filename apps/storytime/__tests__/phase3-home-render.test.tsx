@@ -6,7 +6,7 @@ import week3 from "../content/l2/w03.json";
 import type { StorytimeWeek } from "../lib/contracts/week";
 
 const routeMocks = vi.hoisted(() => ({ loadVisibleWeek: vi.fn() }));
-vi.mock("@/lib/content", () => ({ loadVisibleWeek: routeMocks.loadVisibleWeek }));
+vi.mock("../lib/content", () => ({ loadVisibleWeek: routeMocks.loadVisibleWeek }));
 vi.mock("next-intl/server", () => ({
   // The test renders the home view twice; each message string carries its locale prefix, so the
   // assertions can find the localized tile labels and headings without the message files.

@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 const routeMocks = vi.hoisted(() => ({ loadVisibleWeek: vi.fn() }));
-vi.mock("@/lib/content", () => ({ loadVisibleWeek: routeMocks.loadVisibleWeek }));
-vi.mock("@/i18n/routing", () => ({ routing: { locales: ["th", "en"] } }));
+vi.mock("../lib/content", () => ({ loadVisibleWeek: routeMocks.loadVisibleWeek }));
+vi.mock("../i18n/routing", () => ({ routing: { locales: ["th", "en"] } }));
 vi.mock("next-intl", () => ({ hasLocale: (locales: string[], locale: string) => locales.includes(locale) }));
 vi.mock("next-intl/server", () => ({ getTranslations: async () => async (key: string) => key }));
 vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("unexpected notFound"); } }));
