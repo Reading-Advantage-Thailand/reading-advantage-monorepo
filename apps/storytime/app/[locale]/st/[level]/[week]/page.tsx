@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { loadVisibleWeek } from "@/lib/content";
 import type { StorytimeWeek } from "@/lib/contracts/week";
-import { questionScreenShows, readAlongQuestions } from "../../../../../lib/questions";
+import { questionScreenShows, readAlongQuestions } from "@/lib/questions";
+import { parseStorytimeRoute } from "@/lib/route-parse";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
@@ -48,12 +48,6 @@ const HOME_WORD_AUDIO: Partial<Record<string, string>> = {};
  * server: no request can set it, and it is never a `NEXT_PUBLIC_` value. */
 const MEDIA_BASE_ENV = "STORYTIME_MEDIA_BASE";
 
-/** The highest level of the week contract. */
-const LEVEL_MAX = 4;
-
-/** The highest week number of the week contract. */
-const WEEK_MAX = 32;
-
 /** One entry tile: the read-along, the decodable, the song, and a conditional karaoke tile. */
 type TileId = "readalong" | "decodable" | "song" | "karaoke";
 
@@ -91,35 +85,21 @@ export function generateMetadata(): Metadata {
 }
 
 /**
- * Reads a route segment as a canonical positive number.
- * @param segment The route segment.
- * @param max The highest accepted value.
- * @returns The number, or `null` when the segment is not `^[1-9][0-9]*$` inside the bound.
+ * Reads the media base URL of the Storytime media files (finding F131). The value stays on the
+ * server, so one helper holds it for `mediaUrl` and for the client views.
+ * @returns The base URL, with no trailing slash.
  */
-function parseCanonicalNumber(segment: string, max: number): number | null {
-  if (!/^[1-9][0-9]*$/.test(segment)) return null;
-  const value = Number(segment);
-  return Number.isSafeInteger(value) && value <= max ? value : null;
+function mediaBase(): string {
+  return (process.env[MEDIA_BASE_ENV] || "/media").replace(/\/+$/, "");
 }
 
 /**
- * Parses the three route segments.
- * @param locale The locale segment.
- * @param level The level segment.
- * @param week The week segment.
- * @returns The level and the week, or `null` for a path that must answer 404.
+ * Builds the URL of one media file.
+ * @param file The file, relative to the Storytime content folder.
+ * @returns The URL under the media base.
  */
-function parseRoute(
-  locale: string,
-  level: string,
-  week: string,
-): { level: number; week: number } | null {
-  const localeKnown = hasLocale(routing.locales, locale);
-  const levelNumber = localeKnown ? parseCanonicalNumber(level, LEVEL_MAX) : null;
-  const weekNumber = localeKnown ? parseCanonicalNumber(week, WEEK_MAX) : null;
-  if (levelNumber !== null && weekNumber !== null) return { level: levelNumber, week: weekNumber };
-  console.warn(`storytime week ${locale}/${level}/${week} blocked: invalid`);
-  return null;
+function mediaUrl(file: string): string {
+  return `${mediaBase()}/${file}`;
 }
 
 /**
@@ -131,16 +111,6 @@ function openPart(value: string | string[] | undefined): Part | null {
   return typeof value === "string" && (PARTS as readonly string[]).includes(value)
     ? (value as Part)
     : null;
-}
-
-/**
- * Builds the URL of one media file.
- * @param file The file, relative to the Storytime content folder.
- * @returns The URL under the media base.
- */
-function mediaUrl(file: string): string {
-  const base = (process.env[MEDIA_BASE_ENV] || "/media").replace(/\/+$/, "");
-  return `${base}/${file}`;
 }
 
 /**
@@ -232,7 +202,7 @@ export default async function StorytimeWeekPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale, level: levelSegment, week: weekSegment } = await params;
-  const route = parseRoute(locale, levelSegment, weekSegment);
+  const route = parseStorytimeRoute(routing.locales, locale, levelSegment, weekSegment);
   const loaded = route === null ? null : await loadVisibleWeek(route.level, route.week);
   const part = openPart((await searchParams).part);
   const week = loaded ?? notFound();
@@ -247,7 +217,7 @@ export default async function StorytimeWeekPage({
     audioError: t("playerAudioError"),
     finished: t("playerFinished"),
   };
-  const mediaBase = (process.env[MEDIA_BASE_ENV] || "/media").replace(/\/+$/, "");
+  const mediaBaseUrl = mediaBase();
   const readAlongBook = week.books.find((entry) => entry.kind === "readalong");
   const decodableBook = week.books.find((entry) => entry.kind === "decodable");
 
@@ -380,14 +350,14 @@ export default async function StorytimeWeekPage({
               questions={showQuestions ? readAlongQuestions(week) : []}
               tiles={questionTiles}
               questionLabels={questionLabels}
-              mediaBase={mediaBase}
+              mediaBase={mediaBaseUrl}
             />
           ) : null}
         </section>
       ) : part === "decodable" ? (
         <section data-part={part}>
           {decodableBook ? (
-            <StorytimeDecodable week={week} locale={locale} mediaBase={mediaBase} />
+            <StorytimeDecodable week={week} locale={locale} mediaBase={mediaBaseUrl} />
           ) : null}
         </section>
       ) : (
@@ -395,7 +365,7 @@ export default async function StorytimeWeekPage({
           {week.song ? (
             <StorytimeSong
               song={week.song}
-              mediaBase={mediaBase}
+              mediaBase={mediaBaseUrl}
               labels={{ play: t("songPlay"), pause: t("songPause") }}
             />
           ) : null}

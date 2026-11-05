@@ -464,13 +464,19 @@ export const tagsSchema = z
   .passthrough()
   .default({ graphVersion: "", taught: [], reviewed: [] });
 
+/** The highest level of the week contract (finding F131). */
+export const LEVEL_MAX = 4;
+
+/** The highest week number of the week contract (finding F131). */
+export const WEEK_MAX = 32;
+
 /** The week header, with its level, its week number, and its publication status. */
 export const metaSchema = z
   .object({
     program: z.literal("storytime"),
     shape: z.literal("storytime-week"),
-    level: z.number().int().min(1).max(4),
-    week: z.number().int().min(1).max(32),
+    level: z.number().int().min(1).max(LEVEL_MAX),
+    week: z.number().int().min(1).max(WEEK_MAX),
     unit: z.number().int().min(1).optional(),
     /** `st<level>/<week>`, the stable URL key. */
     key: z.string().regex(/^st[1-4]\/\d+$/),
