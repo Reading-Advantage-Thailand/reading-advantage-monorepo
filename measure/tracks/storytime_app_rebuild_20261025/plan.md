@@ -1081,6 +1081,48 @@ Green builds to these rules:
   hydrated `lang`, which the browser gate can assert) and a framework
   follow-up.
 
+#### Turn 4e Green evidence (the 404 lang row moves to the browser gate)
+
+- Base: the strategy amendment `a45cd43d6` (P3.6 line 402, PM option a,
+  2026-11-05). Audited HEAD: `478931888` — every gate below ran on this one
+  HEAD. Commits: `ec9703284` (the browser-gate week-404 row and its
+  self-test), `a88aca89b` (the smoke loses only the `<html lang=` row),
+  `d1e129c8a` was superseded by `478931888` in a local rewrite of unpushed
+  commits (the pre-rewrite gate and smoke commits were `b645d6af4` and
+  `408e3e111`; the rewrite fixed the self-test URL, see below). No
+  production file changed, so turn 4c items 1a, 1b, 1c, 2, 5, and
+  6 stay valid on this HEAD, and no build-graph run is needed.
+- Browser-gate row (live, on the fixture where w02 stays draft): the row
+  `Week 404 answers 404 and the hydrated locale lang with both texts` loads
+  `/th/st/2/2` and asserts from the Playwright response object and the
+  hydrated document. Values: `week404_status=404`,
+  `week404_lang=th (expected=th)`, `week404_thai_text=true`,
+  `week404_english_text=true`. PASS.
+- Browser-gate self-test: the inline server answers `/th/nowhere` with 404
+  and `<html lang="en">` plus both texts. Values:
+  `week404_status=404`, `week404_lang=en (expected=th)`,
+  `week404_thai_text=true`, `week404_english_text=true`. The row fails the
+  page (`ok=false`), so `self-test rejects lang="en" under a /th/ URL (week
+  404 lang)` passes as a genuine fail-first proof. The first version of the
+  self-test loaded an empty page at the wrong path (`/th/st/2/2` on the
+  inline server, status 200) and passed for the wrong reason; it was fixed
+  before the recorded runs and the unpushed commits were rewritten.
+- Docker smoke: only the `<html lang=` check of the week-404 row is removed;
+  the status, Thai line, English line, `noindex`, and no-`Set-Cookie` rows
+  stay. No other row or gate changed; the P3.8 unit row "404 view language"
+  is untouched.
+- tech-debt.md holds one new line: the Next.js 16.4.1 error-shell cause and
+  the recheck (at each Next upgrade, the Docker smoke checks the week 404
+  `lang` again).
+- Gates on `478931888`: `bash -n` on both scripts passes; the smoke
+  `--self-test` exits 0 (`Self-test: PASS`). Item 3, the full Docker smoke,
+  exits 0 with 17 checks, `PASS=17, FAIL=0` (the removed row drops the count
+  from 18 to 17). Item 4, the browser gate, exits 0 with the inner
+  Playwright run `PASS=45, FAIL=0` and the wrapper `PASS=4, FAIL=0`; the new
+  row adds 2 checks to the previous 43 (the live row and its self-test).
+  No next-server ran outside a gate job; ports 3940 to 3960 were checked
+  before the first run and after the last run and are clear.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
 ## Phase 4: Teacher app
