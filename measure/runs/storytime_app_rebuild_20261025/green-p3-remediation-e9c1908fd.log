@@ -234,11 +234,26 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
   real shell and hydration behavior. This section and the result block below
   were filled at the end of the turn.
 
+## Turn 4e work done
+
+- Turn 4e at strategy base `a45cd43d6` (PM option a, 2026-11-05) moves the
+  week 404 `lang` check to the browser gate. Commits `ec9703284` (gate row
+  plus self-test), `a88aca89b` (the smoke loses only the `<html lang=` row),
+  `478931888` (the tech-debt line), and the evidence commit `383a9376f`. The
+  self-test first loaded a wrong empty page and passed for the wrong reason;
+  it was fixed and the unpushed commits were rewritten before the recorded
+  runs. Gates on ONE HEAD `478931888`: `bash -n` on both scripts, the smoke
+  `--self-test` exit 0, item 3 smoke exit 0 (`PASS=17, FAIL=0`), item 4
+  browser gate exit 0 (inner `PASS=45, FAIL=0`, wrapper `PASS=4, FAIL=0`).
+  Turn 4c items 1, 2, 5, and 6 stay valid (no production file changed; no
+  build-graph run needed). This section and the result block below were
+  filled at the end of the turn.
+
 ## Result block
 
 MEASURE_AGENT_RESULT
 role: measure-jr-green
-status: blocked
+status: complete
 track: storytime_app_rebuild_20261025
 phase: Phase 3: At-home app
 commits: bec713a8d, b7a0347b0, 2515efe95, cf382af02 (turn 1); f92f36b0f,
@@ -248,58 +263,60 @@ commits: bec713a8d, b7a0347b0, 2515efe95, cf382af02 (turn 1); f92f36b0f,
   b939962a9 (turn 4a); c21cbbf05, 4aabe85c8, b4c72c163, 6303c70a0, 4f004a916
   (turn 4b); a5232ff9e (turn 4c, the plan evidence of the closeout gate);
   296adf9e7 (turn 4c, the log result block); 90013004c (turn 4d, the
-  corrected not-found.tsx comment); a9087eb61 (turn 4d, plan evidence).
-tests_run: turn 4d — step 1 read the Next.js 16.4.1 guides for not-found and
-  a dynamic-segment root layout. Step 2, one heavy-run job (server, curl,
-  server log): `GET /th/st/2/2` gives `STATUS=404`, the shell
-  `<html id="__next_error__">`, the Thai line present, and the server log
-  holds no render error (only `storytime week st2/2 blocked: draft`), so no
-  defect in our code fired. Step 3, Chromium in the same one-job shape:
-  `http_status=404`, `documentElement_lang=[th]`,
-  `html_open=[<html lang="th" class="Vd5zcG_variable">...]`, `thai_text=true
-  english_text=true` — the hydrated document holds the locale `lang`, the
-  404 status, and both lines. Step 4, fix attempt 1, a segment-level
-  `app/[locale]/st/[level]/[week]/not-found.tsx` re-exporting the locale
-  view: rebuilt and curl-ed — status 404 but the shell is unchanged, so it
-  was reverted uncommitted. The comment-only commit keeps
-  phase3-not-found.test.tsx green through heavy-run.sh (1 file, 1 test).
-files_changed: turn 4d — apps/storytime/app/[locale]/not-found.tsx (comment
-  correction, 90013004c), measure/tracks/storytime_app_rebuild_20261025/
-  plan.md (a9087eb61), and this log. The segment not-found.tsx experiment
-  was deleted uncommitted and apps/storytime/.next was removed. Turn 4c
-  changed only the plan evidence; the framework experiments of turn 4c were
-  reverted to HEAD before items 5 and 6 ran.
-plan_updates: turn 4d plan evidence a9087eb61 (`#### Turn 4d Green evidence
-  (item 3 follow-up, blocked)` sub-block, before the 3.11 line; turn 4c
-  evidence a5232ff9e). Task 3.7 stays [~]; no task line changed.
-known_failures: gate item 3 of turn 4c, one row: "The 404 document holds a
-  non-empty html lang" (exit 1; PASS=17, FAIL=1). Turn 4d root cause, with
-  exact output: Next.js 16.4.1 serves the fixed error shell for the errored
-  flight stream of a pre-stream `notFound()` on a matched route (the runtime
-  sets the fallback document `b.d={r:y}`); the browser re-renders the layout
-  on hydration, so the live document is `<html lang="th">` with status 404.
-  No app-level fix reaches the curl document: the segment not-found.tsx
-  leaves the shell unchanged, a Suspense shape answers 200, and
-  `global-not-found.tsx` needs an experimental flag and fires only for
-  unmatched URLs. F128 stays CONTEST with no code change (see dispositions).
-handoff: the PM chooses between amending test-strategy line 402 (accept the
-  hydrated `lang` of turn 4d step 3; the browser gate can assert
-  `documentElement.lang` and the 404 status live) and a framework follow-up
-  (upgrade or patch Next so the pre-stream 404 document composes the dynamic
-  root layout). Task 3.7 stays [~]; item 7 (the reviews and the adversarial
-  record) is open. Deviations recorded: (PM load fault rule 2026-11-05) the
-  first step 2 attempt started `next start` as its own heavy-run job and
-  held the heavy lock; the Chromium job waited on the same lock, and the PM
-  stopped both jobs and three orphan next-server processes on ports 3947 to
-  3949 at 21:15; the re-run put the server, the curl, and Chromium in ONE
-  heavy-run job with a `trap`, and the two orphan servers of ports 3951 and
-  3952 were killed after it. A pkill pattern also matched its own shell once
-  (SIGTERM, no effect on the repo). Turn 4c deviation: the first item 6
-  `build-graph update` ran outside heavy-run.sh (MemAvailable fell to
-  1562 MB); it was re-run through heavy-run.sh, exit 0, and every later
-  build-graph command ran through heavy-run.sh. phase_base_sha
-  7db52a49d20e195388fd91670cc7c022312b50c5; turn 2 base 099506a4c; turn 3 base
-  2c5bacabc; turn 4a base b9007dcef; turn 4b base b939962a9; turn 4c base
-  4f004a916; turn 4d base 296adf9e7; final turn 4d HEAD a9087eb61.
+  corrected not-found.tsx comment); a9087eb61, f0ad96771 (turn 4d,
+  evidence); ec9703284 (turn 4e, the browser-gate week-404 row and its
+  self-test); a88aca89b (turn 4e, the smoke loses only the html lang row);
+  478931888 (turn 4e, the tech-debt line); 383a9376f (turn 4e, plan
+  evidence).
+tests_run: turn 4e — all gates on ONE HEAD 478931888. `bash -n` on
+  phase3-browser-gate.sh and phase3-docker-smoke.sh passes; the smoke
+  `--self-test` exits 0 (`Self-test: PASS`). Item 3, the full Docker smoke,
+  exits 0 with 17 checks, `PASS=17, FAIL=0` (the removed html lang row drops
+  the count from 18 to 17; the status, Thai line, English line, `noindex`,
+  and no-`Set-Cookie` rows stay). Item 4, the browser gate, exits 0 with the
+  inner Playwright run `PASS=45, FAIL=0` and the wrapper `PASS=4, FAIL=0`.
+  The new live row loads `/th/st/2/2` on the fixture: `week404_status=404`,
+  `week404_lang=th (expected=th)`, `week404_thai_text=true`,
+  `week404_english_text=true` — PASS. The self-test answers `/th/nowhere`
+  with 404 and `<html lang="en">` plus both texts: `week404_status=404`,
+  `week404_lang=en (expected=th)`, both texts true; the row fails the page,
+  so `self-test rejects lang="en" under a /th/ URL (week 404 lang)` passes
+  as a genuine fail-first proof. Turn 4c items 1a, 1b, 1c, 2, 5, and 6 stay
+  valid: no production file changed and no build-graph run is needed.
+files_changed: turn 4e — apps/storytime/__tests__/phase3-browser-gate.sh
+  (ec9703284), apps/storytime/__tests__/phase3-docker-smoke.sh (a88aca89b),
+  measure/tech-debt.md (478931888),
+  measure/tracks/storytime_app_rebuild_20261025/plan.md (383a9376f), and
+  this log. No other row, no other gate, and the P3.8 unit row "404 view
+  language" changed nothing. The first unpushed commits b645d6af4, 408e3e111,
+  and d1e129c8a were rewritten locally after the self-test URL fix. Turn 4d
+  changed only the not-found.tsx comment and evidence; its segment
+  not-found.tsx experiment was deleted uncommitted.
+plan_updates: turn 4e plan evidence 383a9376f (`#### Turn 4e Green evidence`
+  sub-block, before the 3.11 line; earlier evidence a5232ff9e, a9087eb61).
+  Task 3.7 stays [~]; no task line changed.
+known_failures: none. The turn 4c item 3 row "The 404 document holds a
+  non-empty html lang" is resolved by the PM amendment of test-strategy line
+  402 (option a, commit a45cd43d6): the Docker smoke no longer checks
+  `<html lang=`, and the live check is the browser-gate week-404 row, which
+  passes on the fixture. F128 stays CONTEST with no code change (see
+  dispositions).
+handoff: the Phase 3 closeout gate is complete on the amended line 402:
+  items 1, 2, 3, 4, 5, and 6 hold on ONE HEAD 478931888. Task 3.7 stays [~]
+  for item 7 (the reviews and the adversarial record). The tech-debt line
+  (478931888) asks for the Docker smoke `lang` recheck at each Next upgrade.
+  Deviations recorded: the first version of the browser-gate self-test
+  loaded an empty page at the wrong path (`/th/st/2/2` on the inline server,
+  status 200) and passed for the wrong reason; it was fixed to serve the
+  `lang="en"` 404 page at `/th/nowhere` and the unpushed commits were
+  rewritten before the recorded runs. The gate wrapper prints the captured
+  node output twice; the inner run happened once. Ports 3940 to 3960 were
+  checked before the first run and after the last run; no next-server ran
+  outside a gate job. Turn 4d deviations (PM load fault, pkill self-match)
+  and the turn 4c deviation (build-graph outside heavy-run.sh) stay recorded
+  above. phase_base_sha 7db52a49d20e195388fd91670cc7c022312b50c5; turn 2
+  base 099506a4c; turn 3 base 2c5bacabc; turn 4a base b9007dcef; turn 4b
+  base b939962a9; turn 4c base 4f004a916; turn 4d base 296adf9e7; turn 4e
+  base a45cd43d6; final turn 4e HEAD 383a9376f.
 dispositions: F120=FIX; F121=FIX; F122=FIX; F123=FIX; F124=FIX; F125=FIX; F126=FIX; F127=FIX; F128=CONTEST(spec.md:153 and spec.md:285 require date and words on the loops approval only - PM decision 2026-11-05 recorded in test-strategy.md by f7b5484ae); F129=FIX; F130=FIX; F131=FIX; F132=FIX; F133=FIX; F134=FIX; F135=FIX; F136=FIX; F137=FIX; F138=FIX; F139=FIX
 END_MEASURE_AGENT_RESULT
