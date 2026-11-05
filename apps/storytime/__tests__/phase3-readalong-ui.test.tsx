@@ -144,6 +144,21 @@ describe("Phase 3 Storytime read-along UI", () => {
     expect(message).toHaveAttribute("lang", locale);
   });
 
+  it("renders a book word with lang=en as its nearest lang under a th document (P3.6, finding F134)", async () => {
+    const previous = document.documentElement.lang;
+    document.documentElement.lang = "th";
+    try {
+      const { container } = await renderReader();
+      const word = container.querySelector("[data-word]");
+      expect(word, "the shipped page must render a book word").not.toBeNull();
+      const nearest = word!.closest("[lang]");
+      expect(nearest, "a book word must sit inside an element with a lang attribute").not.toBeNull();
+      expect(nearest!.getAttribute("lang"), "the nearest lang of book text must be en").toBe("en");
+    } finally {
+      document.documentElement.lang = previous;
+    }
+  });
+
   it("turns pages by buttons and horizontal swipe, but not vertical swipe", async () => {
     const { container, book } = await renderReader();
     const image = container.querySelector("img")!;

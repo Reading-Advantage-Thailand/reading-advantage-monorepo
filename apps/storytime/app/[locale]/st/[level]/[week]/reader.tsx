@@ -378,13 +378,17 @@ export function StorytimeReader({
                 className="w-full rounded-2xl object-cover"
               />
             ) : null}
-            <ReadAlongPassage
-              sentences={normalSentences}
-              passage=""
-              position={position}
-              active={mode !== "idle"}
-              onWordTap={mode === "myTurn" ? onWordTap : undefined}
-            />
+            {/* The book text is English on every locale, so the nearest lang of a word is en
+                even on the printed th route (finding F134). */}
+            <div lang="en">
+              <ReadAlongPassage
+                sentences={normalSentences}
+                passage=""
+                position={position}
+                active={mode !== "idle"}
+                onWordTap={mode === "myTurn" ? onWordTap : undefined}
+              />
+            </div>
           </div>
           <div className="flex flex-wrap gap-2">
             <button

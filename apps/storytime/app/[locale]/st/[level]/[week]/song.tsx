@@ -173,7 +173,9 @@ export function StorytimeSong({
                 <span className="text-lg" lang="en">
                   {line.text}
                 </span>
-                <span className="text-sm text-neutral-600">{line.gesture}</span>
+                <span className="text-sm text-neutral-600" lang="en">
+                  {line.gesture}
+                </span>
               </span>
             </li>
           );
