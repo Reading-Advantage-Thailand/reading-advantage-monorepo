@@ -264,3 +264,49 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
     expect(pause, "the whole-word stop pauses when the media clock reaches the cut end").toHaveBeenCalled();
   });
 });
+
+describe("a second word tap replaces the first cut stop (finding F146)", () => {
+  it("keeps one pending stop and does not pause the second cut at the first cut end", async () => {
+    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+    const { container, audio, book } = await renderReader();
+    const sentence = book.audio.sentences.find((entry) => (entry.page ?? 1) === 1)!;
+    const wordA = sentence.words[0]!;
+    const wordB = sentence.words[1]!;
+    expect(wordB.end, "the second word must end after the first word").toBeGreaterThan(wordA.end);
+    const spans = [...container.querySelectorAll<HTMLElement>("[data-word]")];
+    const spanFor = (word: { word: string }) =>
+      spans.find((span) => (span.textContent ?? "").toLowerCase() === word.word.toLowerCase());
+    expect(spanFor(wordA), "page one must render the first word span").toBeTruthy();
+    expect(spanFor(wordB), "page one must render the second word span").toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
+    pause.mockClear();
+    vi.useFakeTimers();
+
+    // First tap: the cut stop of word A arms when the metadata seek is in place.
+    fireEvent.click(spanFor(wordA)!);
+    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
+    // Second tap BEFORE the first stop fires: the new stop must replace the old one
+    // (the strategy line 498 floor: a word tap plays to its measured end).
+    fireEvent.click(spanFor(wordB)!);
+    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
+    expect(audio.currentTime, "the second seek applies").toBeCloseTo(wordB.start - 0.03);
+
+    // The media clock crosses the FIRST word's end while the second cut still plays.
+    act(() => {
+      audio.currentTime = wordA.end;
+    });
+    expect(audio.currentTime, "the second cut is still running").toBeLessThan(wordB.end);
+    act(() => vi.advanceTimersByTime((wordA.end - Math.max(0, wordA.start - 0.03)) * 1000 + 10));
+
+    // The first stop must be gone: one pending stop (the second cut), no pause, and the
+    // second word keeps its mark.
+    expect(vi.getTimerCount(), "only the second cut's stop stays armed").toBe(1);
+    expect(pause, "the first word's stale stop must not pause the second cut").not.toHaveBeenCalled();
+    expect(
+      document.querySelector('[data-word][aria-current="true"]'),
+      "the second word's mark must stay while its cut plays",
+    ).not.toBeNull();
+  });
+});

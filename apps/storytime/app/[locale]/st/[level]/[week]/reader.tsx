@@ -285,6 +285,10 @@ export function StorytimeReader({
     const word = sentence?.words[audioWordIndex];
     if (!element || !word) return;
     const bounds = wordCutBounds(word);
+    // A second tap cancels the pending stop of the first cut before arming its own, as
+    // decodable.tsx armWholeStop does (finding F146); otherwise the first loop leaks, loses
+    // its cancel handle, and pauses the second cut when the clock passes the first end.
+    clearStopTimer();
     // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
     // F122). The cut stop follows the media clock: the timer re-arms while `currentTime` is
     // still below the cut end, so output latency and a mid-word stall do not cut the end of
