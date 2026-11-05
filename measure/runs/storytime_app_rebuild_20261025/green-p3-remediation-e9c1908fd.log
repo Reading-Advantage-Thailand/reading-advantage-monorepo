@@ -249,11 +249,19 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
   build-graph run needed). This section and the result block below were
   filled at the end of the turn.
 
+## Turn 5 work done
+
+- Turn 5 (remediation round 3) at base `acf282174` fixes the routed findings
+  F140 to F144 from Review A r3 (A4-1 to A4-4) and Review B r2 (B4-1, B4-2).
+  F128 is withdrawn (accepted by A and B). This section and the result block
+  below are filled at the end of the turn; the work is in progress, so the
+  status below is partial for now.
+
 ## Result block
 
 MEASURE_AGENT_RESULT
 role: measure-jr-green
-status: complete
+status: partial
 track: storytime_app_rebuild_20261025
 phase: Phase 3: At-home app
 commits: bec713a8d, b7a0347b0, 2515efe95, cf382af02 (turn 1); f92f36b0f,
@@ -261,13 +269,14 @@ commits: bec713a8d, b7a0347b0, 2515efe95, cf382af02 (turn 1); f92f36b0f,
   9ac3fb0db, 03f530340, 005854e47, 4bcc897ff, b9007dcef (turn 3; 088e9b1d4 is
   superseded by the local amend 73c217cf0, not pushed); 207c11b50, a1ba6a161,
   b939962a9 (turn 4a); c21cbbf05, 4aabe85c8, b4c72c163, 6303c70a0, 4f004a916
-  (turn 4b); a5232ff9e (turn 4c, the plan evidence of the closeout gate);
-  296adf9e7 (turn 4c, the log result block); 90013004c (turn 4d, the
-  corrected not-found.tsx comment); a9087eb61, f0ad96771 (turn 4d,
+  (turn 4b); a5232ff9e, 296adf9e7 (turn 4c, evidence); 90013004c (turn 4d,
+  the corrected not-found.tsx comment); a9087eb61, f0ad96771 (turn 4d,
   evidence); ec9703284 (turn 4e, the browser-gate week-404 row and its
   self-test); a88aca89b (turn 4e, the smoke loses only the html lang row);
   478931888 (turn 4e, the tech-debt line); 383a9376f (turn 4e, plan
-  evidence).
+  evidence); acf282174 (turn 4e, the log result block). Turn 5 is in
+  progress at base acf282174; its commits land below as each finding passes
+  its tests.
 tests_run: turn 4e — all gates on ONE HEAD 478931888. `bash -n` on
   phase3-browser-gate.sh and phase3-docker-smoke.sh passes; the smoke
   `--self-test` exits 0 (`Self-test: PASS`). Item 3, the full Docker smoke,
