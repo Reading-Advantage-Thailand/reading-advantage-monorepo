@@ -306,6 +306,35 @@ else
     fail "F1: the real re-entry passes the lock hint (heavy-run.sh)"
   fi
 fi
+# F1b (Review A finding A3-4 / F10): the same re-entry run with HEAVY_LOCK_HELD unset, so a
+# passing run cannot come from an inherited hint; the string inside the re-entry line must
+# carry the hint itself.
+if env -u HEAVY_LOCK_HELD bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "${REENTRY//\$0/$F/smoke-stub}" >/dev/null 2>&1; then
+  pass "F1b: the re-entry passes the lock hint with HEAVY_LOCK_HELD unset"
+else
+  fail "F1b: the re-entry passes the lock hint with HEAVY_LOCK_HELD unset"
+fi
+# F1c (A3-4): every smoke-style script holds the exact re-entry string, so each one re-enters
+# through heavy-run.sh with the lock hint. The check is one function over one file, so the
+# stripped-copy check below proves the check fails when the string is missing.
+holds_reentry() { grep -qF "HEAVY_LOCK_HELD=1 bash '\$0' --locked" "$1"; }
+for script_file in phase1-docker-smoke.sh phase3-docker-smoke.sh phase3-browser-gate.sh phase3-redirect-check.sh; do
+  if holds_reentry "$HERE/$script_file"; then
+    pass "F1c: $script_file holds the exact re-entry string"
+  else
+    fail "F1c: $script_file holds the exact re-entry string"
+  fi
+done
+# F1c fail-first proof: a copy of phase1-docker-smoke.sh without the string must fail the
+# same check. Note: phase1-quality-gates.sh re-enters heavy-run.sh with no HEAVY_LOCK_HELD=1
+# in its command; it stays unchanged by design and holds no re-entry string to assert.
+STRIPPED="$WORK/stripped-smoke.sh"
+sed '/HEAVY_LOCK_HELD/d' "$HERE/phase1-docker-smoke.sh" > "$STRIPPED"
+if holds_reentry "$STRIPPED"; then
+  fail "F1c: the stripped copy fails the re-entry check"
+else
+  pass "F1c: the stripped copy fails the re-entry check"
+fi
 # F8a: a store root inside the default podman store is rejected.
 DEFAULT_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/containers/storage"
 if (
