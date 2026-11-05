@@ -3,9 +3,9 @@
   "type": "chore",
   "status": "new",
   "created_at": "2026-07-10T07:46:30Z",
-  "updated_at": "2026-07-10T07:46:30Z",
-  "description": "Adopt the native TypeScript 7 compiler for monorepo type-checking and eligible builds while retaining the TypeScript 6 compatibility API for tools that embed TypeScript.",
-  "estimated_tasks": 23,
+  "updated_at": "2026-11-05T12:00:00Z",
+  "description": "Move the monorepo to ONE compiler, TypeScript 7 (tsgo). Upgrade vinext to 1.x first, run a TypeScript 7 trial in a worktree, prepare for the Cloudflare move with a Node-only dependency inventory and adapter plan, then roll out after Daniel decides.",
+  "estimated_tasks": 27,
   "actual_tasks": null,
-  "deviation_notes": "Supersedes the deferred typescript6_major_migration stub. TypeScript 6 remains in scope only as the compatibility bridge required by TypeScript 7.0 tooling."
+  "deviation_notes": "Amended 2026-11-05 (Daniel via the PM; Author model: claude-code/claude-sonnet-5-5). Daniel's point 2 replaced the dual-compiler design: the TypeScript 6 bridge and FR-2 are removed, and the end state has one compiler. Phase 1 stays as history; dual-compiler-contract.json and diagnostic-parity-ledger.json are superseded. Old Phase 2 to 4 tasks had no implementation and were replaced by vinext upgrade (PM step 0), TypeScript 7 trial (PM step 1), Cloudflare preparation (PM step 2), and a rollout phase deferred:daniel. Supersedes the deferred typescript6_major_migration stub."
 }

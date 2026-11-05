@@ -1367,11 +1367,11 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 - [ ] **Track: TypeScript 6 Major Migration** *(typescript6_major_migration — superseded)*
   *Link: [./tracks/typescript6_major_migration/](./tracks/typescript6_major_migration/)*
-  Superseded before implementation by the stable TypeScript 7 native-compiler track below. TypeScript 6 is retained there only as the compatibility API and rollback bridge required by TypeScript 7.0 tooling.
+  Superseded before implementation by the stable TypeScript 7 native-compiler track below. The TypeScript 7 track now targets one compiler (amended 2026-11-05).
 
 - [ ] **Track: TypeScript 7 Native Compiler Migration** *(typescript7_native_migration_20260710)*
   *Link: [./tracks/typescript7_native_migration_20260710/](./tracks/typescript7_native_migration_20260710/)*
-  Adopt stable TypeScript 7 for native type-checking and eligible package builds while retaining `@typescript/typescript6` for tools that embed the legacy compiler API. Includes all-tsconfig compatibility, explicit ambient types, TypeScript 6/7 diagnostic parity, controlled performance benchmarks, bounded Turbo/CI concurrency, full toolchain gates, rollback, and a TypeScript 7.1+ compatibility-removal follow-up.
+  Move the monorepo to one compiler, TypeScript 7 (tsgo), with no second install. Amended 2026-11-05 (Daniel): vinext 1.x upgrade first, then a TypeScript 7 trial in a worktree with a regression list and memory/time table, then Cloudflare preparation (Node-only dependency inventory and adapter plan, no code moves), then a rollout phase deferred until Daniel decides.
 
 - [ ] **Track: Zod 4 Major Migration** *(zod4_major_migration)*
   *Link: [./tracks/zod4_major_migration/](./tracks/zod4_major_migration/)*
