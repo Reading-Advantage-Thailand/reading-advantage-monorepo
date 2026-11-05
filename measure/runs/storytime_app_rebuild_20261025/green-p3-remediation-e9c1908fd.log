@@ -351,6 +351,13 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
   (signed_pause_delta_ms=0, pause_at=0.33967)`, `word_cut_early_ms=0`.
   Ports 3940 to 3960 free before and after.
 
+## Turn 5e work done (full gate list)
+
+- Turn 5e runs the nine-gate list on ONE final HEAD and writes the
+  `#### Turn 5 Green evidence (review round 3)` sub-block. No source and
+  no test change in this turn. The status stays partial until every gate
+  exits 0 on the final HEAD.
+
 ## Result block
 
 MEASURE_AGENT_RESULT
