@@ -124,8 +124,6 @@ export function StorytimeDecodable({
   const wholeEndRef = useRef<number | null>(null);
   const wholeStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const blendGenerationRef = useRef(0);
-  const [phonemeSrc, setPhonemeSrc] = useState<string | null>(null);
-  const [wholeSrc, setWholeSrc] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
   const [failed, setFailed] = useState(false);
 
@@ -234,10 +232,12 @@ export function StorytimeDecodable({
     const url = mediaUrl(mediaBase, file);
     const target = phonemeRef.current;
     if (target) {
+      // The imperative write is the only src write (the live browser-gate row found that a
+      // second write through React state re-runs the load algorithm and aborts the pending
+      // play, so no clip ever reached its end).
       target.src = url;
       playElement(target);
     }
-    setPhonemeSrc(url);
     setFailed(false);
   }
 
@@ -275,7 +275,6 @@ export function StorytimeDecodable({
       const target = phonemeRef.current;
       if (!target || blendGenerationRef.current !== generation) return;
       const url = mediaUrl(mediaBase, file);
-      setPhonemeSrc(url);
       target.src = url;
       try {
         await playClip(target);
@@ -342,8 +341,8 @@ export function StorytimeDecodable({
     }
     const bounds = wordBounds(word, pageNumber);
     const url = mediaUrl(mediaBase, file);
+    // The imperative write is the only src write; see playPhoneme.
     target.src = url;
-    setWholeSrc(url);
     if (bounds) {
       // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
       // F122). The cut stop arms once the seek is in place, so the timer starts with the cut.
@@ -393,11 +392,10 @@ export function StorytimeDecodable({
 
   return (
     <div className="flex flex-col gap-4" data-phoneme-bank={PHONEME_BANK_COUNT}>
-      <audio ref={phonemeRef} preload="none" src={phonemeSrc ?? undefined} onError={() => setFailed(true)} />
+      <audio ref={phonemeRef} preload="none" onError={() => setFailed(true)} />
       <audio
         ref={wholeRef}
         preload="none"
-        src={wholeSrc ?? undefined}
         onTimeUpdate={onWholeTimeUpdate}
         onError={() => setFailed(true)}
       />
