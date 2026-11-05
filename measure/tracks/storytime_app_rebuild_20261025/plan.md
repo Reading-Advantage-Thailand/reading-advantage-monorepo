@@ -1033,6 +1033,54 @@ Green builds to these rules:
   the remediation diff. The closeout is incomplete, so task 3.7 stays `[~]`
   and the next step is the spec decision above.
 
+#### Turn 4d Green evidence (item 3 follow-up, blocked)
+
+- Base `296adf9e7`; audited fix commit `90013004c` (comment correction only).
+  No behavior fix landed, so gate item 3 stays failed and F136 stays FIX.
+- Step 1, the Next.js 16.4.1 guides (`node_modules/next/dist/docs/`,
+  `01-app/03-api-reference/03-file-conventions/not-found.md` and
+  `04-functions/not-found.md`): the not-found UI renders inside your root
+  layout, and before streaming starts Next returns a 404 status. The
+  global-not-found section names our shape as hard to compose: "Your root
+  layout is defined using top-level dynamic segments (e.g.
+  `app/[country]/layout.tsx`), which makes composing a consistent 404 page
+  harder."
+- Step 2, the production server: one heavy-run job started `next start` and
+  curl-ed the draft week `GET /th/st/2/2`. Exact output: `STATUS=404`,
+  `<html id="__next_error__">`, Thai line present. The server log holds no
+  render error — only `storytime week st2/2 blocked: draft` (the expected
+  gating log) — so no translation or `setRequestLocale` defect fired. The
+  runtime (`app-page.runtime.prod.js`) shows the design: the errored flight
+  stream (the notFound digest) gets the fixed fallback shell
+  (`b.d={r:y}` where `y` is the `__next_error__` document); the client
+  recovers on hydration.
+- Step 3, Chromium (Playwright, `channel: chrome`, one heavy-run job with the
+  server): `http_status=404`, `documentElement_lang=[th]`,
+  `html_open=[<html lang="th" class="Vd5zcG_variable">...]`,
+  `thai_text=true english_text=true`. The hydrated document holds the locale
+  `lang`, the 404 status, and both lines.
+- Step 4, fix attempts (at most two, both must keep the 404 status): attempt
+  1, a segment-level `app/[locale]/st/[level]/[week]/not-found.tsx`
+  re-exporting the locale view — rebuilt and curl-ed: status 404, the shell is
+  still `<html id="__next_error__">`, reverted uncommitted. The turn 4c
+  experiments count as the remaining framework paths: a Suspense shape
+  answers 200 (forbidden by the turn rule), and `global-not-found.tsx` needs
+  the experimental flag (forbidden) and fires only for unmatched URLs. No fix
+  gives a non-empty `lang` in the curl response, so the turn stops blocked.
+- Deviation (PM load fault rule 2026-11-05): the first step 2 attempt started
+  `next start` as its own heavy-run job, which held the heavy lock; the
+  Chromium client job waited on the same lock, and the PM stopped both jobs
+  and three orphan next-server processes on ports 3947 to 3949 at 21:15.
+  Re-run per the rule: server and client in ONE heavy-run job with a `trap`,
+  and the two orphan servers of ports 3951 and 3952 were killed after the
+  one-job run. A pkill pattern also matched its own shell once (SIGTERM, no
+  effect on the repo).
+- Handoff to the PM: line 402 asks for a non-empty `lang` on the week 404.
+  The curl document cannot hold it on Next.js 16.4.1; the hydrated document
+  does (step 3). The PM chooses between amending line 402 (accept the
+  hydrated `lang`, which the browser gate can assert) and a framework
+  follow-up.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
 ## Phase 4: Teacher app
