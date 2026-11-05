@@ -20,6 +20,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import week from "../content/l2/w01.json";
+import { stopAtMediaEnd } from "../lib/audio-seek";
 
 const appDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const labels = {
@@ -309,4 +310,29 @@ describe("a second word tap replaces the first cut stop (finding F146)", () => {
       "the second word's mark must stay while its cut plays",
     ).not.toBeNull();
   });
+});
+
+describe("stopAtMediaEnd ends when the media stops below the cut end (finding F145)", () => {
+  const cases: Array<[string, (audio: HTMLMediaElement) => void]> = [
+    ["a pause event", (audio) => audio.dispatchEvent(new Event("pause"))],
+    ["an ended event below the cut end", (audio) => audio.dispatchEvent(new Event("ended"))],
+    ["an error event", (audio) => audio.dispatchEvent(new Event("error"))],
+  ];
+  for (const [name, fire] of cases) {
+    it(`ends the loop on ${name} with no timer left after 10 s`, () => {
+      vi.useFakeTimers();
+      const audio = document.createElement("audio");
+      audio.currentTime = 0.3; // below the cut end 0.34, so the old loop re-arms forever
+      const onStop = vi.fn();
+      stopAtMediaEnd(audio, 0.34, onStop);
+      expect(vi.getTimerCount(), "the loop arms one timer").toBe(1);
+      act(() => fire(audio));
+      act(() => vi.advanceTimersByTime(10_000));
+      expect(vi.getTimerCount(), `after ${name}, no timer stays pending`).toBe(0);
+      expect(
+        onStop,
+        `after ${name}, the stop ran once so the reader clears the mark`,
+      ).toHaveBeenCalledTimes(1);
+    });
+  }
 });

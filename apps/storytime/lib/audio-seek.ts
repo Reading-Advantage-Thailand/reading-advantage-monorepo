@@ -40,15 +40,58 @@ export function seekAndRun(audio: HTMLAudioElement, time: number, onReady: () =>
  * `playing` (finding F140). When the timer fires while `currentTime` is still below `end`,
  * the helper re-arms for the remaining media time, so the pause lands at the measured cut
  * end on real devices and also after a stall in the middle of the word.
+ *
+ * The loop ends by itself when the media stops below the cut end (finding F145): a `pause`,
+ * `ended`, or `error` event ends the loop, removes the listeners, and runs `onStop` once, so
+ * the caller clears the mark of a cut that can no longer play to its end. `onStop` runs on
+ * such an end because both callers clear their mark in it; a paused or ended element must
+ * leave no stale mark.
+ *
+ * One loop lives per element (finding F146): a new arm replaces the previous loop of the
+ * same element, so a caller that loses the previous cancel function cannot leak a loop that
+ * pauses a later cut or outlives the component. The previous `onStop` does not run on such a
+ * replacement; the new playback owns the mark.
  * @param audio The media element to stop.
  * @param end The cut end, in seconds on the media clock.
- * @param onStop The stop action that runs when the media clock reaches `end`.
- * @returns A cancel function that clears the pending timer; the caller must run it on
- *   cleanup and on a new playback.
+ * @param onStop The stop action that runs when the media clock reaches `end` or the media
+ *   stops below it.
+ * @returns A cancel function that clears the pending timer and the listeners; the caller
+ *   must run it on cleanup and on a new playback.
  */
+const activeStops = new WeakMap<HTMLMediaElement, () => void>();
+const TERMINAL_STOP_EVENTS = ["pause", "ended", "error"] as const;
+
 export function stopAtMediaEnd(audio: HTMLMediaElement, end: number, onStop: () => void): () => void {
+  activeStops.get(audio)?.();
   let timer: ReturnType<typeof setTimeout> | null = null;
-  const arm = (delayMs: number): void => {
+  let finished = false;
+  const clearTimer = (): void => {
+    if (timer !== null) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  };
+  function detach(): void {
+    for (const type of TERMINAL_STOP_EVENTS) audio.removeEventListener(type, onTerminal);
+    if (activeStops.get(audio) === cancel) activeStops.delete(audio);
+  }
+  function finish(): void {
+    if (finished) return;
+    finished = true;
+    clearTimer();
+    detach();
+    onStop();
+  }
+  function onTerminal(): void {
+    finish();
+  }
+  function cancel(): void {
+    if (finished) return;
+    finished = true;
+    clearTimer();
+    detach();
+  }
+  function arm(delayMs: number): void {
     timer = setTimeout(() => {
       timer = null;
       const remainingMs = Math.round((end - audio.currentTime) * 1000);
@@ -56,14 +99,11 @@ export function stopAtMediaEnd(audio: HTMLMediaElement, end: number, onStop: () 
         arm(Math.max(5, remainingMs));
         return;
       }
-      onStop();
+      finish();
     }, Math.max(0, delayMs));
-  };
+  }
+  for (const type of TERMINAL_STOP_EVENTS) audio.addEventListener(type, onTerminal);
+  activeStops.set(audio, cancel);
   arm(Math.max(0, Math.round((end - audio.currentTime) * 1000)));
-  return () => {
-    if (timer !== null) {
-      clearTimeout(timer);
-      timer = null;
-    }
-  };
+  return cancel;
 }
