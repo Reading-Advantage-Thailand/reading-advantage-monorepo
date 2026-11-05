@@ -222,12 +222,14 @@ if [ -n "$C2" ]; then
   else
     fail "Expected HTTP 200 with the fixture; got $STATUS2"
   fi
-  HEADERS="$(curl --silent --head "http://$PORT2/th/st/2/1")"
-  if printf '%s\n' "$HEADERS" | grep -qi "^x-robots-tag:.*noindex"; then
-    pass "The week page sends the noindex header"
+  BODY="$(curl --silent "http://$PORT2/th/st/2/1")"
+  ROBOTS_META="$(printf '%s' "$BODY" | grep -oi '<meta[^>]*name="robots"[^>]*>' | head -n 1)"
+  if printf '%s' "$ROBOTS_META" | grep -qi "noindex"; then
+    pass "The week page metadata holds noindex"
   else
-    fail "The week page misses the noindex header"
+    fail "The week page metadata misses noindex"
   fi
+  HEADERS="$(curl --silent --head "http://$PORT2/th/st/2/1")"
   if printf '%s\n' "$HEADERS" | grep -qi "^set-cookie:"; then
     fail "The week page sends a Set-Cookie header"
   else
