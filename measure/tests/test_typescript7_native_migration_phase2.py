@@ -89,6 +89,10 @@ The `gate-results` block holds:
 A `log` value is a gate id, a log file name, or a repository path. Every gate
 id of test-strategy.md section 4.6 needs one entry. A build gate entry needs a
 `warning_line_count`.
+
+The lockfile scope rule accepts the importer block of each app. It also accepts
+the `packages` section and the `snapshots` section. Every other importer block
+is out of scope. The importer key of an app is its `apps/` path.
 """
 
 from __future__ import annotations
@@ -105,6 +109,7 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ID = "typescript7_native_migration_20260710"
 APPS = ("marketing", "activity-vinext-fixture")
+APP_PATHS = tuple(f"apps/{app}" for app in APPS)
 CANDIDATE_PATTERN = re.compile(r"^1\.\d+\.\d+$")
 SOURCE_PATTERN = re.compile(r"^(?P<path>[^:]+):(?P<line>\d+)$")
 ANSI_PATTERN = re.compile(r"\x1b\[[0-9;]*m")
@@ -467,6 +472,25 @@ def _lock_sections(text: str) -> dict[int, tuple[str, str]]:
             importer = line.strip().rstrip(":")
         sections[number] = (section, importer)
     return sections
+
+
+def _lock_change_is_in_scope(section: tuple[str, str]) -> bool:
+    """Decide whether a lockfile change stays inside the phase scope.
+
+    The scope holds the importer block of each app in `APP_PATHS`. It also
+    holds the `packages` section and the `snapshots` section. Every other
+    importer block is out of scope.
+
+    Args:
+        section: The section and importer pair of a changed lockfile line.
+
+    Returns:
+        True when the change is in scope. False for every other importer.
+    """
+    top, importer = section
+    if top in ("packages", "snapshots"):
+        return True
+    return top == "importers" and importer in APP_PATHS
 
 
 def _changed_lock_lines(diff: str) -> list[tuple[str, int]]:
@@ -1081,9 +1105,7 @@ class P2T2ScopeTests(unittest.TestCase):
                     continue
                 if path.startswith(f"measure/tracks/{TRACK_ID}/evidence/"):
                     continue
-                if path.startswith("apps/marketing/") or path.startswith(
-                    "apps/activity-vinext-fixture/"
-                ):
+                if any(path.startswith(f"{app_path}/") for app_path in APP_PATHS):
                     if path.endswith("/package.json"):
                         continue
                     self.assertIn(
@@ -1142,14 +1164,135 @@ class P2T2ScopeTests(unittest.TestCase):
                 )
                 assert section is not None
                 top, importer = section
-                if top in ("packages", "snapshots"):
-                    continue
-                if top == "importers" and importer in APPS:
+                if _lock_change_is_in_scope(section):
                     continue
                 self.fail(
                     f"the commit {commit} changes the lockfile line {number} "
                     f"in the {top} section ({importer})"
                 )
+
+
+class P2T2ScopeRuleTests(unittest.TestCase):
+    """Falsification tests for the lockfile scope rule.
+
+    The rule accepts the importer block of each app. It also accepts the
+    `packages` section and the `snapshots` section. It rejects every other
+    importer block. These tests feed a synthetic lockfile through the same
+    helper that the scope test calls.
+    """
+
+    LOCK_TEXT = (
+        "lockfileVersion: '9.0'\n"
+        "\n"
+        "settings:\n"
+        "  autoInstallPeers: true\n"
+        "\n"
+        "overrides:\n"
+        "  react: 19.2.9\n"
+        "\n"
+        "importers:\n"
+        "\n"
+        "  apps/activity-vinext-fixture:\n"
+        "    dependencies:\n"
+        "      vinext:\n"
+        "        specifier: 1.2.0\n"
+        "        version: 1.2.0\n"
+        "\n"
+        "  apps/marketing:\n"
+        "    dependencies:\n"
+        "      vinext:\n"
+        "        specifier: 1.2.0\n"
+        "        version: 1.2.0\n"
+        "\n"
+        "  apps/storytime:\n"
+        "    dependencies:\n"
+        "      vinext:\n"
+        "        specifier: 1.2.0\n"
+        "        version: 1.2.0\n"
+        "\n"
+        "packages:\n"
+        "\n"
+        "  vinext@1.2.0:\n"
+        "    resolution: {integrity: sha512-placeholder}\n"
+        "\n"
+        "snapshots:\n"
+        "\n"
+        "  vinext@1.2.0:\n"
+        "    dependencies:\n"
+        "      react: 19.2.9\n"
+    )
+
+    def _lines_of(self, section: tuple[str, str]) -> list[int]:
+        """Read the line numbers of a section and importer pair.
+
+        Args:
+            section: The section and importer pair.
+
+        Returns:
+            The line numbers that hold the pair.
+        """
+        sections = _lock_sections(self.LOCK_TEXT)
+        return [
+            number for number, pair in sections.items() if pair == section
+        ]
+
+    def test_app_importer_lines_are_in_scope(self) -> None:
+        """Requires the importer block of each app to be in scope."""
+        for app_path in APP_PATHS:
+            section = ("importers", app_path)
+            numbers = self._lines_of(section)
+            self.assertTrue(
+                numbers,
+                f"the synthetic lockfile has no line for {app_path}",
+            )
+            for number in numbers:
+                self.assertTrue(
+                    _lock_change_is_in_scope(section),
+                    f"the line {number} of {app_path} must be in scope",
+                )
+
+    def test_other_importer_lines_are_out_of_scope(self) -> None:
+        """Requires a change in another importer block to fail the rule."""
+        section = ("importers", "apps/storytime")
+        numbers = self._lines_of(section)
+        self.assertTrue(
+            numbers,
+            "the synthetic lockfile has no line for apps/storytime",
+        )
+        for number in numbers:
+            self.assertFalse(
+                _lock_change_is_in_scope(section),
+                f"the line {number} of apps/storytime must be out of scope",
+            )
+
+    def test_package_section_lines_are_in_scope(self) -> None:
+        """Requires the packages section and the snapshots section to be in scope."""
+        for top in ("packages", "snapshots"):
+            section = (top, "vinext@1.2.0")
+            numbers = self._lines_of(section)
+            self.assertTrue(
+                numbers,
+                f"the synthetic lockfile has no line for {top}",
+            )
+            for number in numbers:
+                self.assertTrue(
+                    _lock_change_is_in_scope(section),
+                    f"the line {number} of {top} must be in scope",
+                )
+
+    def test_other_section_lines_are_out_of_scope(self) -> None:
+        """Requires a change in another lockfile section to fail the rule."""
+        section = ("overrides", "")
+        numbers = self._lines_of(section)
+        self.assertTrue(
+            numbers,
+            "the synthetic lockfile has no line for the overrides section",
+        )
+        for number in numbers:
+            self.assertFalse(
+                _lock_change_is_in_scope(section),
+                f"the line {number} of the overrides section must be out of scope",
+            )
 
 
 class P2T3ResolvedNoteTests(unittest.TestCase):
