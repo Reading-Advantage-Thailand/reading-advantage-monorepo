@@ -350,4 +350,29 @@ describe("Phase 3 Storytime decodable UI", () => {
     week.tags.taught = Array.from({ length: 200_000 }, (_, index) => `english.phonics.gpc.g${index}.sound`);
     expect(() => blendPlanForWord("pan", week)).not.toThrow(RangeError);
   });
+
+  it("renders labels passed through the optional labels prop (finding F137)", async () => {
+    const week = shippedWeeks.find((entry) => entry.meta.week === 1)!;
+    const Decodable = await loadDecodable();
+    render(
+      <Decodable
+        week={cloneWeek(week)}
+        locale="en"
+        labels={{
+          soundOfWeek: "Test sound",
+          playSound: "Test play",
+          trickyWords: "Test tricky",
+          previousPage: "Test back",
+          nextPage: "Test forward",
+          audioError: "Test error",
+        }}
+      />,
+    );
+    expect(screen.getByText("Test play")).toBeInTheDocument();
+    expect(screen.queryByText("Play the sound")).toBeNull();
+    expect(screen.getByRole("region", { name: "Test sound" })).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Sound of the week" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Test back" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Test forward" })).toBeInTheDocument();
+  });
 });

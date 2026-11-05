@@ -22,6 +22,12 @@
   "questionPicture": "ภาพที่ {n}",
   "songPlay": "เล่น",
   "songPause": "หยุด",
+  "decSoundOfWeek": "เสียงของสัปดาห์",
+  "decPlaySound": "เล่นเสียง",
+  "decTrickyWords": "คำที่จำทั้งคำ",
+  "decPreviousPage": "หน้าก่อน",
+  "decNextPage": "หน้าต่อไป",
+  "decAudioError": "เล่นเสียงไม่ได้",
   "notFoundThai": "ไม่พบหน้านี้ กลับไปที่รหัส QR แล้วเลือกส่วนที่ต้องการ",
   "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part."
 }

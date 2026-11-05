@@ -358,7 +358,19 @@ export default async function StorytimeWeekPage({
       ) : part === "decodable" ? (
         <section data-part={part}>
           {decodableBook ? (
-            <StorytimeDecodable week={week} locale={locale} mediaBase={mediaBaseUrl} />
+            <StorytimeDecodable
+              week={week}
+              locale={locale}
+              mediaBase={mediaBaseUrl}
+              labels={{
+                soundOfWeek: t("decSoundOfWeek"),
+                playSound: t("decPlaySound"),
+                trickyWords: t("decTrickyWords"),
+                previousPage: t("decPreviousPage"),
+                nextPage: t("decNextPage"),
+                audioError: t("decAudioError"),
+              }}
+            />
           ) : null}
         </section>
       ) : (

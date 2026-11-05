@@ -22,6 +22,12 @@
   "questionPicture": "Picture {n}",
   "songPlay": "Play",
   "songPause": "Pause",
+  "decSoundOfWeek": "Sound of the week",
+  "decPlaySound": "Play the sound",
+  "decTrickyWords": "Tricky words",
+  "decPreviousPage": "Previous page",
+  "decNextPage": "Next page",
+  "decAudioError": "The sound could not be played.",
   "notFoundThai": "ไม่พบหน้านี้ กลับไปที่รหัส QR แล้วเลือกส่วนที่ต้องการ",
   "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part."
 }

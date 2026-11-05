@@ -15,6 +15,26 @@ import { seekAndRun } from "../../../../../lib/audio-seek";
 import type { StorytimeBook, StorytimeWeek } from "../../../../../lib/contracts/week";
 import { PHONEME_BANK, PHONEME_BANK_COUNT } from "../../../../../lib/phoneme-bank";
 
+/**
+ * The translated labels of the decodable part (finding F137). The server page passes the labels
+ * from the message files; the defaults keep the exact strings that the component held before,
+ * so a caller without labels still renders the same text.
+ */
+interface DecodableLabels {
+  /** The accessible name of the sounds-page section. */
+  soundOfWeek: string;
+  /** The label of the button that plays the recorded sound of the focus element. */
+  playSound: string;
+  /** The heading and accessible name of the tricky-words section. */
+  trickyWords: string;
+  /** The accessible name of the previous-page button. */
+  previousPage: string;
+  /** The accessible name of the next-page button. */
+  nextPage: string;
+  /** The alert that shows when a recorded sound fails to play. */
+  audioError: string;
+}
+
 /** The props of the decodable part. */
 interface StorytimeDecodableProps {
   /** The week, with its decodable book. */
@@ -23,6 +43,38 @@ interface StorytimeDecodableProps {
   locale: string;
   /** The media base URL; the default is `/media`. */
   mediaBase?: string;
+  /** The translated labels; the default keeps the exact pre-remediation strings (finding F137). */
+  labels?: Partial<DecodableLabels>;
+}
+
+/**
+ * Builds the label set of one render: the page labels override the locale defaults, which keep
+ * the exact strings that the component hard-coded before finding F137 moved them to the message
+ * files.
+ * @param locale The page language.
+ * @param labels The labels from the server page, when given.
+ * @returns The full label set for this render.
+ */
+function labelsFor(locale: string, labels?: Partial<DecodableLabels>): DecodableLabels {
+  const thai = locale === "th";
+  const defaults: DecodableLabels = thai
+    ? {
+        soundOfWeek: "เสียงของสัปดาห์",
+        playSound: "เล่นเสียง",
+        trickyWords: "คำที่จำทั้งคำ",
+        previousPage: "หน้าก่อน",
+        nextPage: "หน้าต่อไป",
+        audioError: "เล่นเสียงไม่ได้",
+      }
+    : {
+        soundOfWeek: "Sound of the week",
+        playSound: "Play the sound",
+        trickyWords: "Tricky words",
+        previousPage: "Previous page",
+        nextPage: "Next page",
+        audioError: "The sound could not be played.",
+      };
+  return { ...defaults, ...labels };
 }
 
 /** The pattern of one word of a page; spaces and punctuation stay outside the match. */
@@ -65,6 +117,7 @@ export function StorytimeDecodable({
   week,
   locale,
   mediaBase = "/media",
+  labels: labelOverrides,
 }: StorytimeDecodableProps) {
   const phonemeRef = useRef<HTMLAudioElement | null>(null);
   const wholeRef = useRef<HTMLAudioElement | null>(null);
@@ -336,7 +389,7 @@ export function StorytimeDecodable({
     playWhole(word);
   }
 
-  const thai = locale === "th";
+  const labels = labelsFor(locale, labelOverrides);
 
   return (
     <div className="flex flex-col gap-4" data-phoneme-bank={PHONEME_BANK_COUNT}>
@@ -349,7 +402,7 @@ export function StorytimeDecodable({
         onError={() => setFailed(true)}
       />
       {element ? (
-        <section aria-label={thai ? "เสียงของสัปดาห์" : "Sound of the week"} className="flex flex-col gap-2">
+        <section aria-label={labels.soundOfWeek} className="flex flex-col gap-2">
           <p className="text-3xl font-semibold" lang="en">
             {element.graphemes.join(" ")}
           </p>
@@ -362,7 +415,7 @@ export function StorytimeDecodable({
               onClick={() => playPhoneme(element.audio!)}
               className="min-h-12 rounded-xl border border-neutral-300 px-4"
             >
-              {thai ? "เล่นเสียง" : "Play the sound"}
+              {labels.playSound}
             </button>
           ) : null}
         </section>
@@ -399,7 +452,7 @@ export function StorytimeDecodable({
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          aria-label={thai ? "หน้าก่อน" : "Previous page"}
+          aria-label={labels.previousPage}
           disabled={pageIndex === 0}
           onClick={() => {
             stopBlendSequence();
@@ -411,7 +464,7 @@ export function StorytimeDecodable({
         </button>
         <button
           type="button"
-          aria-label={thai ? "หน้าต่อไป" : "Next page"}
+          aria-label={labels.nextPage}
           disabled={!decodable || pageIndex >= decodable.pages.length - 1}
           onClick={() => {
             stopBlendSequence();
@@ -423,9 +476,9 @@ export function StorytimeDecodable({
         </button>
       </div>
       {tricky.length > 0 ? (
-        <section aria-label={thai ? "คำที่จำทั้งคำ" : "Tricky words"} className="flex flex-col gap-2">
+        <section aria-label={labels.trickyWords} className="flex flex-col gap-2">
           <h2 className="text-lg font-semibold" lang="en">
-            {thai ? "คำที่จำทั้งคำ" : "Tricky words"}
+            {labels.trickyWords}
           </h2>
           <ul className="flex flex-wrap gap-2">
             {tricky.map((word) => (
@@ -444,7 +497,7 @@ export function StorytimeDecodable({
       ) : null}
       {failed ? (
         <p role="alert" lang={locale} className="text-red-700">
-          {thai ? "เล่นเสียงไม่ได้" : "The sound could not be played."}
+          {labels.audioError}
         </p>
       ) : null}
     </div>
