@@ -136,6 +136,9 @@ allowBuilds: { '@commitlint/cli': true, '@commitlint/config-conventional': true,
 
 nodeLinker: hoisted
 
+# pnpm 11 starts a hidden install before run/exec; it waits on the network. Install by hand.
+verifyDepsBeforeRun: false
+
 resolvePeersFromWorkspaceRoot: true
 
 minimumReleaseAgeExclude:

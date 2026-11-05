@@ -53,6 +53,8 @@ pnpm turbo run build
 pnpm turbo run check-types
 ```
 
+After a lockfile change, run `pnpm install` yourself, through `heavy-run.sh`.
+
 ## Database
 
 ```bash
