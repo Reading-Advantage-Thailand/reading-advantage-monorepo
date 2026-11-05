@@ -920,6 +920,62 @@ Green builds to these rules:
   reduced-motion fix), `a1ba6a161` (the decodable src-write fix with its regression test), and
   the plan evidence commit that holds this block. Task 3.7 stays `[~]`.
 
+#### Turn 4b Green evidence
+
+- Green role base: `b939962a9` (HEAD matched at start). Green model: `coding-plan/glm-5.3-flash`.
+  Findings routed: F139, F125 (rest), F124, F130, each FIX; F128 CONTEST, no code change.
+- F139: the P3.4 phase command (test-strategy.md line 328) failed from the repo root because
+  the turn 2 commit `7f88e0e80` moved the page.tsx imports of `lib/questions` and
+  `lib/route-parse` to the `@/` alias, and the shared root `vitest.config.ts` holds no `@`
+  alias. **Correction of the 4a evidence:** the 4a block called the root-run failure
+  pre-existing; it was not. At `e9c1908fd` the root command passed with 179 tests, because
+  page.tsx then imported `lib/questions` relatively and `phase3-home-render.test.tsx` did not
+  exist yet (it was created in turn 3 and imports the page unmocked). Fix: page.tsx holds
+  relative imports for `i18n/routing`, `lib/content`, `lib/questions`, and `lib/route-parse`;
+  the type-only `contracts/week` import keeps the `@` form. The two Green-owned tests of turn
+  3 moved their `vi.mock` specifiers to the matching relative paths
+  (`../lib/content`, `../i18n/routing`), so the factories resolve and intercept in both the
+  root run and the `apps/storytime` run. The root `vitest.config.ts` is unchanged. Gate: the
+  exact line 328 command exits 0 (33 files, 306 tests). Commit `c21cbbf05`.
+- F125 (rest): the `focus_visible_failures` row reaches the question screen through the same
+  next-page walk the duplicate_ids and tap-target rows use. Gate: `PASS=43, FAIL=0`, exit 0;
+  `focus_target_count_home=4`, `_book=4`, `_decodable=4`, `_question=4`,
+  `focus_target_count=16` (was 12), `focus_visible_failures=0`. Commit `4aabe85c8`.
+- F124 (review-a A3-4, old finding F10): `phase1-smoke-cleanup.test.sh` gains F1b and F1c.
+  F1b runs the real re-entry with `HEAVY_LOCK_HELD` unset, so only the string inside the
+  re-entry line can carry the lock hint. F1c greps `phase1-docker-smoke.sh`,
+  `phase3-docker-smoke.sh`, `phase3-browser-gate.sh`, and `phase3-redirect-check.sh` for the
+  exact string `HEAVY_LOCK_HELD=1 bash '$0' --locked`, and a stripped copy of
+  `phase1-docker-smoke.sh` (every `HEAVY_LOCK_HELD` line deleted) fails the same check.
+  Fact recorded: `phase1-quality-gates.sh` re-enters `heavy-run.sh` with no
+  `HEAVY_LOCK_HELD=1` in its command; the script stays unchanged and holds no re-entry string
+  to assert. Gate: the test through `heavy-run.sh` exits 0 (31 checks, PASS=31, FAIL=0).
+  Commit `b4c72c163`.
+- F130 (review-a A3-10): `phase3-docker-smoke.sh` — the image-left-behind row reads
+  `podman images` through one helper and fails when the command exits non-zero (the old row
+  piped into `grep -c ... || true`, so a podman failure printed 0 and passed); the Set-Cookie
+  check reads the headers of a GET request (`curl -D -`) instead of HEAD; a new P3.6 week-404
+  row checks `/th/st/2/99` for HTTP 404, a non-empty `<html lang>`, and the Thai
+  (`ไม่พบหน้านี้`) and English (`This page is not here`) lines of
+  `app/[locale]/not-found.tsx`. Fail-first proof: a `--self-test` block with stub commands
+  and no build — a podman stub that exits 1 gives `podman-failed`, a listing stub gives
+  `left-behind`, a curl stub with `Set-Cookie` fails the no-cookie row, a clean stub passes
+  it (self-test exit 0). No second Docker build; the full smoke runs in turn 4c.
+  Commit `6303c70a0`.
+- F128 (review-a A3-8, review-b B3-1), CONTEST, no code change: spec.md:153 and spec.md:285
+  require `date` and `words` on the loops approval only — PM decision 2026-11-05 recorded in
+  test-strategy.md by `f7b5484ae`. The reviewer's wider reading asks for the two fields on
+  every approval kind; the PM decision governs.
+- Gates at HEAD `6303c70a0`, each through `heavy-run.sh`, one at a time: the exact P3.4 line
+  328 command exits 0 (33 files, 306 tests); `phase1-smoke-cleanup.test.sh` exits 0 (31
+  checks); `phase3-browser-gate.sh` exits 0 (`PASS=43, FAIL=0`); `tsc --noEmit` in
+  `apps/storytime` exits 0; ESLint on `page.tsx` exits 0; `bash -n` passes on
+  `phase1-smoke-cleanup.test.sh`, `phase3-docker-smoke.sh`, and `phase3-browser-gate.sh`;
+  the smoke `--self-test` exits 0.
+- Commits of this turn: `c21cbbf05` (F139), `4aabe85c8` (F125 rest), `b4c72c163` (F124),
+  `6303c70a0` (F130), and the plan evidence commit that holds this block. Task 3.7 stays
+  `[~]`.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
 ## Phase 4: Teacher app
