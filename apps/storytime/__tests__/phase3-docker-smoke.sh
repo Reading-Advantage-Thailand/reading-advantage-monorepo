@@ -13,8 +13,86 @@ set -uo pipefail
 # Run 2 (the ready review fixture mounted, P3.7): the week page answers HTTP 200
 # with the noindex header and no Set-Cookie header.
 # The runs together are the final form of AC-1.4.
+# Run 2 also holds the P3.6 week-404 row: a week outside the shipped range answers 404 with a
+# non-empty <html lang> and the Thai and English lines of app/[locale]/not-found.tsx.
+# --self-test runs the fail-first proof of the podman-exit and GET-header rows with stub
+# commands and no build (finding F130), before the lock re-entry.
 # Without --locked the script re-enters through heavy-run.sh (PM 2026-10-26), as
 # phase1-docker-smoke.sh does. Callers run the script plain, with no flock.
+# The state of the storytime smoke images left behind, from the podman command array. A
+# non-zero exit of podman images is its own failing state (finding F130): the old row piped
+# into `grep -c ... || true`, so a podman failure printed 0 and passed the row.
+left_behind_state() {
+  local out
+  out="$("${SMOKE_PODMAN[@]}" images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null)"
+  if [ $? -ne 0 ]; then printf 'podman-failed\n'; return 0; fi
+  if printf '%s\n' "$out" | grep -q "storytime-phase1-local:"; then printf 'left-behind\n'; return 0; fi
+  printf 'clean\n'
+}
+# The headers of one GET request (finding F130: the old row read a HEAD request, while the
+# body checks of the same page read GET responses).
+week_page_headers() { curl --silent --show-error -D - -o /dev/null "$1"; }
+# True when the headers hold a Set-Cookie field.
+headers_hold_cookie() { printf '%s\n' "$1" | grep -qi '^set-cookie:'; }
+
+if [ "${1:-}" = "--self-test" ]; then
+  SELFTEST_FAILED=0
+  STUB_DIR="$(mktemp -d -t storytime-p3smoke-stub-XXXXXX)"
+  trap 'rm -rf "$STUB_DIR"' EXIT
+  printf '#!/usr/bin/env bash\nexit 1\n' > "$STUB_DIR/podman-fail"
+  chmod +x "$STUB_DIR/podman-fail"
+  printf '#!/usr/bin/env bash\necho "storytime-phase1-local:deadbee"\nexit 0\n' > "$STUB_DIR/podman-left"
+  chmod +x "$STUB_DIR/podman-left"
+  printf '#!/usr/bin/env bash\ncat "$STUB_HDRS"\n' > "$STUB_DIR/curl"
+  chmod +x "$STUB_DIR/curl"
+  printf 'HTTP/1.1 200 OK\r\nSet-Cookie: session=1\r\n\r\n' > "$STUB_DIR/with-cookie.txt"
+  printf 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n' > "$STUB_DIR/no-cookie.txt"
+
+  SMOKE_PODMAN=("$STUB_DIR/podman-fail")
+  STATE="$(left_behind_state)"
+  if [ "$STATE" = "podman-failed" ]; then
+    echo "SELF-TEST PASS: a podman stub that exits 1 makes the image row fail (podman-failed)"
+  else
+    echo "SELF-TEST FAIL: a podman stub that exits 1 gave $STATE, not podman-failed"
+    SELFTEST_FAILED=1
+  fi
+
+  SMOKE_PODMAN=("$STUB_DIR/podman-left")
+  STATE="$(left_behind_state)"
+  if [ "$STATE" = "left-behind" ]; then
+    echo "SELF-TEST PASS: a podman stub that lists a storytime image gives left-behind"
+  else
+    echo "SELF-TEST FAIL: a listing podman stub gave $STATE, not left-behind"
+    SELFTEST_FAILED=1
+  fi
+
+  export STUB_HDRS="$STUB_DIR/with-cookie.txt"
+  PATH="$STUB_DIR:$PATH"
+  export PATH
+  HEADERS="$(week_page_headers "http://stub/week")"
+  if headers_hold_cookie "$HEADERS"; then
+    echo "SELF-TEST PASS: a GET answer with Set-Cookie fails the no-cookie row"
+  else
+    echo "SELF-TEST FAIL: the Set-Cookie stub answer held no cookie"
+    SELFTEST_FAILED=1
+  fi
+  export STUB_HDRS="$STUB_DIR/no-cookie.txt"
+  HEADERS="$(week_page_headers "http://stub/week")"
+  if headers_hold_cookie "$HEADERS"; then
+    echo "SELF-TEST FAIL: the clean stub answer held a cookie"
+    SELFTEST_FAILED=1
+  else
+    echo "SELF-TEST PASS: a GET answer with no Set-Cookie passes the row"
+  fi
+
+  if [ "$SELFTEST_FAILED" -eq 0 ]; then
+    echo "=== Self-test: PASS ==="
+  else
+    echo "=== Self-test: FAIL ==="
+  fi
+  exit "$SELFTEST_FAILED"
+fi
+
 if [ "${1:-}" != "--locked" ]; then
   exec bash "$HOME/Desktop/advantage-pr/scripts/jobs/heavy-run.sh" -c "HEAVY_LOCK_HELD=1 bash '$0' --locked"
 fi
@@ -229,11 +307,36 @@ if [ -n "$C2" ]; then
   else
     fail "The week page metadata misses noindex"
   fi
-  HEADERS="$(curl --silent --head "http://$PORT2/th/st/2/1")"
-  if printf '%s\n' "$HEADERS" | grep -qi "^set-cookie:"; then
+  HEADERS="$(week_page_headers "http://$PORT2/th/st/2/1")"
+  if headers_hold_cookie "$HEADERS"; then
     fail "The week page sends a Set-Cookie header"
   else
     pass "The week page sends no Set-Cookie header"
+  fi
+  # P3.6 week-404 row: a week outside the shipped range answers 404 with a non-empty
+  # <html lang> and the Thai and English lines of app/[locale]/not-found.tsx.
+  P404_CODE="$(curl --silent --show-error -o "$TMP_DIR/notfound.html" -w '%{http_code}' "http://$PORT2/th/st/2/99")"
+  P404_BODY="$(cat "$TMP_DIR/notfound.html")"
+  P404_LANG="$(printf '%s' "$P404_BODY" | grep -o '<html[^>]*lang="[^"]*"' | head -n 1 | sed 's/.*lang="//;s/"$//')"
+  if [ "$P404_CODE" = "404" ]; then
+    pass "A week outside the shipped range answers HTTP 404"
+  else
+    fail "A week outside the shipped range answers HTTP 404; got $P404_CODE"
+  fi
+  if [ -n "$P404_LANG" ]; then
+    pass "The 404 document holds a non-empty html lang (lang=$P404_LANG)"
+  else
+    fail "The 404 document holds a non-empty html lang"
+  fi
+  if printf '%s' "$P404_BODY" | grep -q "ไม่พบหน้านี้"; then
+    pass "The 404 document holds the Thai line of not-found.tsx"
+  else
+    fail "The 404 document holds the Thai line of not-found.tsx"
+  fi
+  if printf '%s' "$P404_BODY" | grep -q "This page is not here"; then
+    pass "The 404 document holds the English line of not-found.tsx"
+  else
+    fail "The 404 document holds the English line of not-found.tsx"
   fi
 else
   fail "No container serves the fixture"
@@ -249,12 +352,18 @@ C1=""; C2=""; C3=""
 # failing path.
 prune_old_image_tags "$IMAGE"
 "${SMOKE_PODMAN[@]}" rmi "$IMAGE" >/dev/null 2>&1 || true
-LEFT="$("${SMOKE_PODMAN[@]}" images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -c "storytime-phase1-local:" || true)"
-if [ "$LEFT" -eq 0 ]; then
-  pass "No storytime smoke image stays behind"
-else
-  fail "A storytime smoke image stays behind"
-fi
+LEFT_STATE="$(left_behind_state)"
+case "$LEFT_STATE" in
+  podman-failed)
+    fail "podman images exits 0 when the image row counts what stays behind"
+    ;;
+  left-behind)
+    fail "A storytime smoke image stays behind"
+    ;;
+  clean)
+    pass "No storytime smoke image stays behind"
+    ;;
+esac
 
 printf '%s\n' "${RESULTS[@]}"
 echo "=== Total: $((PASS_COUNT + FAIL_COUNT)) checks (PASS=$PASS_COUNT, FAIL=$FAIL_COUNT) ==="
