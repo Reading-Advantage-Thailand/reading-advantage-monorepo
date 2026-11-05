@@ -817,6 +817,10 @@ Questions from the Phase 3 refresh. Each has a default, and no question blocks P
 
 1. **Schedule (PM).** The Phase 3 checkpoint lands on 2026-11-19 at the latest, and the printed cards ship about 2026-11-22. The plan order puts Phases 4 and 5 before the deploy of Phase 6. May the at-home page deploy (Daniel's gate) before Phases 4 and 5 close? Default: the plan order stays.
 2. **Alt text (PM, Workbooks).** May the week contract get an `alt` field for pictures (172 of 237 captions are empty)? Default: Phase 3 renders `alt=""` for an empty caption, and the field waits for release 1.
-3. **Pictures (PM, Workbooks, Forge).** No shipped week has a page picture file, so every printed URL answers 404 on the live domain until the pictures arrive. Which date do the first picture files have? Default: Phase 5 (task 5.5).
+3. **Pictures (PM, Workbooks, Forge).** **Answered 2026-11-05 (the record answers it, no PM wait).** Original text: No shipped week has a page picture file, so every printed URL answers 404 on the live domain until the pictures arrive. Which date do the first picture files have? Default: Phase 5 (task 5.5).
+   - Evidence: at pin `67be5603` the shipped w01 is ready, so its pages have picture files.
+   - Evidence: plan task 3.7, evidence item 5 (`plan.md`, near line 802). The receiver ran at pin `67be5603e0410f21491a006b8e9d12f3f9dd1bfc` for weeks 1-8. It reports 8 weeks, 179 media files, and 159 missing pictures, with w01 ready.
+   - Evidence: the Docker smoke run 1 asserts that shipped st2/1 answers 200.
+   - The date for the remaining missing pictures stays with Phase 5 (task 5.5).
 4. **Tile and home-word audio (PM, Workbooks).** Which Workbooks field carries the tile label recordings and the home word recordings? Default: an app naming table with no entries; no speaker shows.
 5. **Thai reading font (Daniel, Phase 5 look check).** Which font? Default: the system Thai font.
