@@ -1,0 +1,16 @@
+Scope: all 49 workspace projects
+✓ Lockfile passes supply-chain policies (verified 51s ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 9, downloaded 0, added 0
+Progress: resolved 0, reused 28, downloaded 0, added 0
+Packages: +39 -342
+++++++++------------------------------------------------------------------------
+Progress: resolved 0, reused 188, downloaded 0, added 0
+Progress: resolved 0, reused 342, downloaded 0, added 9
+Progress: resolved 0, reused 344, downloaded 0, added 39
+Progress: resolved 0, reused 344, downloaded 0, added 39, done
+
+. prepare$ husky
+. prepare: Done
+Done in 10.3s using pnpm v11.8.0

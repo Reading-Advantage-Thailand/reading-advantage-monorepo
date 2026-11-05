@@ -1,0 +1,9 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/reading-advantage-monorepo/apps/marketing
+
+
+ Test Files  65 passed (65)
+      Tests  573 passed (573)
+   Start at  23:10:17
+   Duration  158.24s (transform 5.18s, setup 0ms, import 49.51s, tests 67.61s, environment 21.32s)
+

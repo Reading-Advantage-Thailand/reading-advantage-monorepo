@@ -1,0 +1,115 @@
+=== marketing vinext ===
+vinext@1.2.0
+└── marketing@0.1.0 (dependencies)
+
+Found 1 version of vinext
+=== marketing vite ===
+vite@8.1.6 peer#5558 (3 variations)
+├─┬ @vitest/mocker@4.1.8 peer#9326 (3 variations)
+│ └─┬ vitest@4.1.8 peer#a90e (3 variations)
+│   ├── @reading-advantage/advantage-play-kit@0.1.0 (devDependencies)
+│   ├── @reading-advantage/avatar-kit@0.1.0 (devDependencies)
+│   ├── @reading-advantage/config@0.0.0 (devDependencies)
+│   ├── @reading-advantage/game-contracts@0.1.0 (devDependencies)
+│   ├── @reading-advantage/knowledge-space-core@0.1.0 (devDependencies)
+│   ├── @reading-advantage/srs-engine@0.1.0 (devDependencies)
+│   └── @reading-advantage/types@0.1.0 (devDependencies)
+└── vitest@4.1.8 peer#a90e (3 variations) [deduped]
+
+vite@8.1.6 peer#6390 (3 variations)
+├─┬ @vitest/mocker@4.1.8 peer#6db3 (3 variations)
+│ └─┬ vitest@4.1.8 peer#57e0 (3 variations)
+│   └── @reading-advantage/auth-client@0.1.0 (devDependencies)
+└── vitest@4.1.8 peer#57e0 (3 variations) [deduped]
+
+vite@8.1.6 peer#f0a4 (3 variations)
+├─┬ @vitejs/plugin-react@6.0.3
+│ ├── marketing@0.1.0 (devDependencies)
+│ └─┬ vinext@1.2.0
+│   └── marketing@0.1.0 (dependencies)
+├─┬ @vitejs/plugin-rsc@0.5.38
+│ ├── marketing@0.1.0 (devDependencies)
+│ └── vinext@1.2.0 [deduped]
+├─┬ @vitest/mocker@4.1.8 peer#27ea (3 variations)
+│ └─┬ vitest@4.1.8 peer#b867 (3 variations)
+│   ├── @reading-advantage/activity-runtime@0.1.0 (devDependencies)
+│   ├── @reading-advantage/activity-tutorial@0.1.0 (devDependencies)
+│   ├── @reading-advantage/ai@0.1.0 (devDependencies)
+│   ├── @reading-advantage/api@0.1.0 (devDependencies)
+│   ├── @reading-advantage/auth@0.1.0 (devDependencies)
+│   ├── @reading-advantage/codecamp-knowledge@0.1.0 (devDependencies)
+│   ├── @reading-advantage/db@0.1.0 (devDependencies)
+│   ├── @reading-advantage/domain@0.1.0 (devDependencies)
+│   ├── @reading-advantage/integrations-github@0.1.0 (devDependencies)
+│   ├── @reading-advantage/practice-core@0.1.0 (devDependencies)
+│   ├── @reading-advantage/sales-knowledge@0.1.0 (devDependencies)
+│   ├── @reading-advantage/storage@0.1.0 (devDependencies)
+│   ├── @reading-advantage/utils@0.0.0 (devDependencies)
+│   ├─┬ @vitest/coverage-v8@4.1.8
+│   │ ├── @reading-advantage/activity-runtime@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/advantage-play-kit@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/codecamp-knowledge@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/game-contracts@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/knowledge-space-core@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/practice-core@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/srs-engine@0.1.0 (devDependencies)
+│   │ ├── vitest@4.1.8 [circular]
+│   │ ├─┬ vitest@4.1.8 peer#57e0 (3 variations)
+│   │ │ └── @reading-advantage/auth-client@0.1.0 (devDependencies)
+│   │ └─┬ vitest@4.1.8 peer#a90e (3 variations)
+│   │   ├── @reading-advantage/advantage-play-kit@0.1.0 (devDependencies)
+│   │   ├── @reading-advantage/avatar-kit@0.1.0 (devDependencies)
+│   │   ├── @reading-advantage/config@0.0.0 (devDependencies)
+│   │   ├── @reading-advantage/game-contracts@0.1.0 (devDependencies)
+│   │   ├── @reading-advantage/knowledge-space-core@0.1.0 (devDependencies)
+│   │   ├── @reading-advantage/srs-engine@0.1.0 (devDependencies)
+│   │   └── @reading-advantage/types@0.1.0 (devDependencies)
+│   ├─┬ @vitest/ui@4.1.9
+│   │ └── vitest@4.1.8 [circular]
+│   └── marketing@0.1.0 (devDependencies)
+├── marketing@0.1.0 (devDependencies)
+├── vinext@1.2.0 [deduped]
+├─┬ vitefu@1.1.3
+│ └── @vitejs/plugin-rsc@0.5.38 [deduped]
+└── vitest@4.1.8 peer#b867 (3 variations) [deduped]
+
+Found 1 version, 3 instances of vite
+=== activity-vinext-fixture vinext ===
+vinext@1.2.0
+└── activity-vinext-fixture@0.1.0 (dependencies)
+
+Found 1 version of vinext
+=== activity-vinext-fixture vite ===
+vite@8.1.6 peer#5558 (2 variations)
+├─┬ @vitest/mocker@4.1.8 peer#9326 (2 variations)
+│ └─┬ vitest@4.1.8 peer#a90e (2 variations)
+│   └── @reading-advantage/config@0.0.0 (devDependencies)
+└── vitest@4.1.8 peer#a90e (2 variations) [deduped]
+
+vite@8.1.6 peer#f0a4 (2 variations)
+├─┬ @vitejs/plugin-react@6.0.3
+│ └─┬ vinext@1.2.0
+│   └── activity-vinext-fixture@0.1.0 (dependencies)
+├─┬ @vitejs/plugin-rsc@0.5.38
+│ └── vinext@1.2.0 [deduped]
+├─┬ @vitest/mocker@4.1.8 peer#27ea (2 variations)
+│ └─┬ vitest@4.1.8 peer#b867 (2 variations)
+│   ├── @reading-advantage/activity-react@0.1.0 (devDependencies)
+│   ├── @reading-advantage/activity-runtime@0.1.0 (devDependencies)
+│   ├── @reading-advantage/practice-core@0.1.0 (devDependencies)
+│   ├─┬ @vitest/coverage-v8@4.1.8
+│   │ ├── @reading-advantage/activity-react@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/activity-runtime@0.1.0 (devDependencies)
+│   │ ├── @reading-advantage/practice-core@0.1.0 (devDependencies)
+│   │ ├── vitest@4.1.8 [circular]
+│   │ └─┬ vitest@4.1.8 peer#a90e (2 variations)
+│   │   └── @reading-advantage/config@0.0.0 (devDependencies)
+│   └─┬ @vitest/ui@4.1.9
+│     └── vitest@4.1.8 [circular]
+├── activity-vinext-fixture@0.1.0 (devDependencies)
+├── vinext@1.2.0 [deduped]
+├─┬ vitefu@1.1.3
+│ └── @vitejs/plugin-rsc@0.5.38 [deduped]
+└── vitest@4.1.8 peer#b867 (2 variations) [deduped]
+
+Found 1 version, 2 instances of vite

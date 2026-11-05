@@ -1,0 +1,68 @@
+✓ Lockfile passes supply-chain policies (verified 31m ago)
+Progress: resolved 1, reused 0, downloaded 0, added 0
+packages/config                          | [WARN] deprecated eslint@9.39.4
+Progress: resolved 50, reused 0, downloaded 0, added 0
+Progress: resolved 63, reused 0, downloaded 0, added 0
+Progress: resolved 68, reused 0, downloaded 0, added 0
+Progress: resolved 83, reused 0, downloaded 0, added 0
+Progress: resolved 105, reused 0, downloaded 0, added 0
+Progress: resolved 112, reused 0, downloaded 0, added 0
+Progress: resolved 115, reused 0, downloaded 1, added 0
+Progress: resolved 121, reused 0, downloaded 1, added 0
+Progress: resolved 126, reused 0, downloaded 1, added 0
+Progress: resolved 136, reused 0, downloaded 1, added 0
+Progress: resolved 145, reused 0, downloaded 1, added 0
+Progress: resolved 161, reused 0, downloaded 1, added 0
+Progress: resolved 177, reused 0, downloaded 1, added 0
+Progress: resolved 190, reused 0, downloaded 1, added 0
+apps/reading-advantage                   | [WARN] deprecated react-tailwindcss-datepicker@1.7.4
+apps/reading-advantage                   | [WARN] deprecated uuid@10.0.0
+Progress: resolved 214, reused 0, downloaded 1, added 0
+apps/science-advantage                   | [WARN] deprecated @opentelemetry/sdk-trace-base@2.8.0
+Progress: resolved 231, reused 0, downloaded 1, added 0
+Progress: resolved 232, reused 0, downloaded 1, added 0
+Progress: resolved 233, reused 0, downloaded 1, added 0
+Progress: resolved 415, reused 0, downloaded 1, added 0
+Progress: resolved 493, reused 0, downloaded 1, added 0
+Progress: resolved 606, reused 0, downloaded 1, added 0
+Progress: resolved 705, reused 0, downloaded 1, added 0
+Progress: resolved 785, reused 0, downloaded 1, added 0
+Progress: resolved 810, reused 0, downloaded 1, added 0
+Progress: resolved 918, reused 0, downloaded 1, added 0
+Progress: resolved 1055, reused 0, downloaded 1, added 0
+Progress: resolved 1197, reused 0, downloaded 1, added 0
+Progress: resolved 1278, reused 0, downloaded 1, added 0
+Progress: resolved 1425, reused 0, downloaded 1, added 0
+Progress: resolved 1528, reused 0, downloaded 1, added 0
+Progress: resolved 1660, reused 0, downloaded 1, added 0
+Progress: resolved 1763, reused 0, downloaded 1, added 0
+Progress: resolved 1938, reused 0, downloaded 1, added 0
+Progress: resolved 1967, reused 0, downloaded 1, added 0
+Progress: resolved 2000, reused 0, downloaded 1, added 0
+Progress: resolved 2172, reused 0, downloaded 1, added 0
+Progress: resolved 2284, reused 0, downloaded 1, added 0
+Progress: resolved 2285, reused 0, downloaded 1, added 0
+Progress: resolved 2327, reused 0, downloaded 1, added 0
+Progress: resolved 2328, reused 0, downloaded 1, added 0
+Progress: resolved 2336, reused 0, downloaded 1, added 0
+Progress: resolved 2338, reused 0, downloaded 1, added 0
+Progress: resolved 2339, reused 0, downloaded 1, added 0
+[WARN] 18 deprecated subdependencies found: @esbuild-kit/core-utils@3.3.2, @esbuild-kit/esm-loader@2.6.5, @opentelemetry/propagator-jaeger@1.30.1, @opentelemetry/sdk-trace-base@1.30.1, @opentelemetry/sdk-trace-base@2.12.0, @opentelemetry/sdk-trace-node@1.30.1, @smithy/core@3.25.1, debug@4.1.0, fluent-ffmpeg@2.1.3, git-raw-commits@4.0.0, glob@10.5.0, glob@7.2.3, inflight@1.0.6, mathjax-full@3.2.2, node-domexception@1.0.0, puppeteer@23.11.1, uuid@9.0.1, whatwg-encoding@3.1.1
+[WARN] Issues with peer dependencies found. Run "pnpm peers check" to list them.
+Progress: resolved 2339, reused 1, downloaded 1, added 0
+Progress: resolved 2339, reused 81, downloaded 1, added 0
+Progress: resolved 2339, reused 141, downloaded 1, added 0
+.                                        |  +49 -340 +++------------------------
+Progress: resolved 2339, reused 327, downloaded 1, added 0
+Progress: resolved 2339, reused 328, downloaded 3, added 16
+Progress: resolved 2339, reused 328, downloaded 5, added 19
+Progress: resolved 2339, reused 328, downloaded 6, added 20
+Progress: resolved 2339, reused 328, downloaded 12, added 27
+Progress: resolved 2339, reused 328, downloaded 21, added 36
+Progress: resolved 2339, reused 328, downloaded 25, added 41
+Progress: resolved 2339, reused 328, downloaded 28, added 45
+Progress: resolved 2339, reused 328, downloaded 29, added 45
+Progress: resolved 2339, reused 328, downloaded 29, added 49, done
+. prepare$ husky
+. prepare: Done
+Done in 1m 29.3s using pnpm v11.8.0
