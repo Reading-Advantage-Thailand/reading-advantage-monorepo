@@ -45,6 +45,34 @@ function imports(source: string, file = "source.ts"): string[] {
   return result;
 }
 
+/**
+ * Reports whether one import specifier enters the other app: by its direct path, by its module
+ * resolution, or by its app package name (finding F126). The scan and the self-test share this
+ * one predicate.
+ * @param specifier The literal import specifier.
+ * @param fromFile The absolute path of the importing file.
+ * @param options The compiler options of the importing app.
+ * @param root The monorepo root.
+ * @param other The absolute directory of the other app.
+ * @param packageName The bare name of the other app package.
+ * @returns Whether the import crosses the app boundary.
+ */
+function crossesBoundary(
+  specifier: string,
+  fromFile: string,
+  options: ts.CompilerOptions,
+  root: string,
+  other: string,
+  packageName: string,
+): boolean {
+  const resolved = ts.resolveModuleName(specifier, fromFile, options, ts.sys)
+    .resolvedModule?.resolvedFileName;
+  const direct = specifier.startsWith(".") ? resolve(dirname(fromFile), specifier)
+    : resolve(root, specifier);
+  return inside(direct, other) || (resolved !== undefined && inside(resolved, other))
+    || specifier === packageName || specifier.startsWith(`${packageName}/`);
+}
+
 describe("AC-1.3 bidirectional app boundary", () => {
   it("detects each import form without treating comments as imports", () => {
     expect(imports(`
@@ -62,8 +90,29 @@ describe("AC-1.3 bidirectional app boundary", () => {
   it("detects bare and subpath app package names", () => {
     const refs = imports('import a from "primary-advantage"; import b from "primary-advantage/lib/x";');
     expect(refs).toEqual(["primary-advantage", "primary-advantage/lib/x"]);
-    expect(refs.every((specifier) => specifier === "primary-advantage"
-      || specifier.startsWith("primary-advantage/"))).toBe(true);
+    // The shared predicate must flag both forms; a false result here fails the case (finding
+    // F126).
+    for (const specifier of refs) {
+      expect(
+        crossesBoundary(
+          specifier,
+          resolve(app, "page.tsx"),
+          {},
+          root,
+          resolve(root, "apps/primary-advantage"),
+          "primary-advantage",
+        ),
+        `the boundary predicate must flag ${specifier}`,
+      ).toBe(true);
+    }
+    expect(crossesBoundary(
+      "reading-advantage",
+      resolve(app, "page.tsx"),
+      {},
+      root,
+      resolve(root, "apps/primary-advantage"),
+      "primary-advantage",
+    )).toBe(false);
   });
 
   it("has real app sources and no cross-app imports in either direction", () => {
@@ -88,11 +137,9 @@ describe("AC-1.3 bidirectional app boundary", () => {
       for (const file of files) {
         const absolute = resolve(root, file);
         for (const specifier of imports(readFileSync(absolute, "utf8"), file)) {
-          const resolved = ts.resolveModuleName(specifier, absolute, options, ts.sys).resolvedModule?.resolvedFileName;
-          const direct = specifier.startsWith(".") ? resolve(dirname(absolute), specifier)
-            : resolve(root, specifier);
-          if (inside(direct, other) || (resolved && inside(resolved, other))
-            || specifier === to || specifier.startsWith(`${to}/`)) violations.push(`${file}: ${specifier}`);
+          if (crossesBoundary(specifier, absolute, options, root, other, to)) {
+            violations.push(`${file}: ${specifier}`);
+          }
         }
       }
     }
