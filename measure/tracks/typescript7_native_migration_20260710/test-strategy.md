@@ -246,9 +246,9 @@ that value as the comparison for `H1`.
 
 - **Green gate (Task 2 and Task 3):**
   `PYTHONDONTWRITEBYTECODE=1 P2_GREEN_COMMITS="<sha> <sha>" python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2`
-  exits 0, and all `H1-*` rows exit 0. **Amended 2026-11-06 (4.12.2 and 4.12.4):** the list holds
-  every Green commit, the command also sets `P2_PHASE_BASE`, `P2_AUDITED_HEAD`, and
-  `P2_OTHER_ROLE_COMMITS`, and the `HR-*` rows run after the remediation.
+  exits 0, and all `H1-*` rows exit 0. **Amended 2026-11-06 (4.12.2 and 4.12.4):** the orchestrator
+  passes every Green commit in `P2_GREEN_COMMITS` and records the list. The `HR-*` rows run after
+  the remediation.
 - **Phase gate (build and tests of the two apps):** the `H1-*` sequence above, each row through
   `heavy-run.sh`. The orchestrator also runs these light checks:
   - `git show --name-only --format= <green sha>` for each Green commit. Every path is in the
@@ -320,11 +320,18 @@ results `review-a-0e5a85543.json`, `review-b-0e5a85543.json`, and `review-c-0e5a
 `green-p2-t2-acf282174.log` in the same folder. This amendment does not widen the product scope.
 The product scope stays the two apps, their `package.json` files, and the lockfile entries.
 
+Trimmed 2026-11-06 (orchestrator request, same day as the amendment). Reason: AGENTS.md has the
+Ponytail rules (the minimum that works) and the hashing and provenance policy (do not improve
+auditability or provenance unless asked). Removed: the test `test_green_commit_list_is_complete`
+and the justification `kind` rule with its tests. The review findings do not ask for them.
+A1 came from a short list that the orchestrator passed. The orchestrator now passes the full list.
+C2 asked only to archive the failing build log.
+
 #### 4.12.1 Decisions
 
 | Finding | Decision | Reason |
 | --- | --- | --- |
-| A1 [Major] scope test rejects two bookkeeping paths | **Allow two bookkeeping paths, with narrow rules** (see 4.12.2). `P2_GREEN_COMMITS` lists **every** Green commit. | The tech-debt row is a required workflow step (`workflow.md` step 8). The role log is an orchestration artifact. Both belong to this track. Excluding them would leave Green commits unchecked, which is what happened. |
+| A1 [Major] scope test rejects two bookkeeping paths | **Allow two bookkeeping paths, with narrow rules** (see 4.12.2). The orchestrator passes the full Green commit list in the gate command. | The tech-debt row is a required workflow step (`workflow.md` step 8). The role log is an orchestration artifact. Both belong to this track. The short list, and not the scope rule alone, left two Green commits unchecked. |
 | A4 [Nit] `vite.config.ts` outside the fixture type check | **Tech debt, no `tsconfig` change.** | The plan allows an app file only when the build fails. A wider `include` is not a build failure. The build runs the file (esbuild), and it holds three lines. A `tsconfig` change also moves the Phase 3 baseline of this workspace. Severity: low. |
 | A2 [Major] `next-env.d.ts` rewritten by the build | **Evidence rule** (see 4.12.4, step 2). | The H1 type checks ran before the rewrite, so no gate covers the new content. |
 | A3 and C1 probe logs hold no HTTP status | **New probe logs with labeled lines.** Do not edit the old logs. | A log must show the status it claims (A5). The `H0` run cannot repeat, because vinext 0.2.0 is gone. The note must say that the `H0` status was not archived and that the body file holds the marker. |
@@ -342,23 +349,20 @@ list in 4.7. A Green commit may touch only:
 - the two app `package.json` files, `pnpm-lock.yaml`, `plan.md` of this track, and the evidence
   folder of this track (as before);
 - an app file other than `package.json`, only with an `app_changes_justified` entry in the note.
-  The entry has `path`, `kind`, and `build_log`. `kind` is `build_failure` or `generated`.
-  `build_failure` needs a log with the labeled line `EXIT=<n>` where `n` is 1 or more.
-  `generated` is allowed only for `apps/marketing/next-env.d.ts` and
-  `apps/activity-vinext-fixture/next-env.d.ts`. It needs a log with `EXIT=0` and `DIAGNOSTICS=0`
-  (a type check on a tree with no `.next` folder);
+  The existing check stays as it is: the entry has `path` and `build_log`, and the log exists
+  and is not empty. For `vite.config.ts` the log is the failing build log (step 6 of 4.12.4).
+  For a `next-env.d.ts` file the log is the clean-state type check of the generated text;
 - `measure/tech-debt.md`, only if the commit diff has **no removed line**, and every added line
   starts with `| 2026-` and holds the text `typescript7_native_migration_20260710`;
 - one file `measure/runs/typescript7_native_migration_20260710/green-p2-*.log` (a flat file, not
   a sub-folder). Review files (`review-*`) and probe scripts are not allowed in a Green commit.
 
-`P2_GREEN_COMMITS` lists every Green commit of the phase, including the plan and evidence
-commits. For the audited HEAD `0e5a85543` it lists 7 commits: `3abb7dcc1`, `6b67d4920`,
-`c0e2cfbb1`, `71ae73509`, `b4c127a86`, `627a784cd`, and `0e5a85543`. The accepted list held 2.
-The Red commits (`fbdad905e`, `11903d304`, `2111434dd`), the strategy commits, and the review
-commits are **other-role** commits. They are not Green commits, and the Green rules do not apply
-to them. The orchestrator lists them in `P2_OTHER_ROLE_COMMITS`. Every commit of the phase carries
-the text `track_id: typescript7_native_migration_20260710`, also a `chore` commit.
+The orchestrator passes **every** Green commit of the phase in `P2_GREEN_COMMITS` and records the
+list in its run log. The list includes the plan and evidence commits. For the audited HEAD
+`0e5a85543` it holds 7 commits: `3abb7dcc1`, `6b67d4920`, `c0e2cfbb1`, `71ae73509`, `b4c127a86`,
+`627a784cd`, and `0e5a85543`. The accepted list held 2. The new Green commits of the remediation
+join the list. The Red, strategy, and review commits are not Green commits, and the Green rules do
+not apply to them. No test checks the list. The orchestrator owns it.
 
 #### 4.12.3 Work for Red (test file only)
 
@@ -372,29 +376,15 @@ Red edits `measure/tests/test_typescript7_native_migration_phase2.py`. Red adds 
    start with `| 2026-` (rejected); `green-p2-t2-x.log` in the track run folder (accepted);
    a log in another run folder (rejected); `review-a-x.json` in the track run folder (rejected);
    a `.py` file in the track run folder (rejected).
-3. Add `test_green_commit_list_is_complete`. It reads `P2_PHASE_BASE`, `P2_AUDITED_HEAD`,
-   `P2_GREEN_COMMITS`, and `P2_OTHER_ROLE_COMMITS`. It **fails** when any of them is unset or
-   empty (A4). It lists the commits with
-   `git log --format=%h --fixed-strings --grep='track_id: typescript7_native_migration_20260710' <base>..<head>`.
-   Rule 1: that set equals the Green set plus the other-role set. Rule 2: the two lists share no
-   commit. Rule 3: every commit that touches `apps/marketing`, `apps/activity-vinext-fixture`,
-   `pnpm-lock.yaml`, `measure/tracks/<track>`, or `measure/runs/<track>` in that range is in the
-   union. A path-based commit without the track id then fails. Synthetic cases: a Green list
-   with one commit removed (fail); a commit in both lists (fail); a listed commit that is not in
-   the range (fail).
-4. Add the `kind` rule of 4.12.2 to the justification check, with synthetic cases: a missing
-   `kind`; an unknown `kind`; `build_failure` with a log that holds `EXIT=0` or no `EXIT=` line;
-   `generated` for a path other than the two `next-env.d.ts` files; `generated` with
-   `DIAGNOSTICS=3`. Parse labeled lines only, anchored at the line start (A3).
-5. Add the gate ids of 4.12.5 to the `gate-results` completeness test. Add
+3. Add the gate ids of 4.12.5 to the `gate-results` completeness test. Add
    `test_probe_logs_hold_status`: the log of `HR-probe-fixture` has the line `HTTP_STATUS=200`;
    the log of `HR-probe-marketing-redirect` has `HTTP_STATUS=307` and a line `LOCATION=` whose
-   path starts with `/login?returnTo=`. A log with only the server banner fails (the two H1 probe
-   logs are such logs).
+   path starts with `/login?returnTo=`. Parse the labeled lines at the line start (A3). A log
+   with only the server banner fails (the two H1 probe logs are such logs).
 
-Expected Red result: the new `kind`, gate-id, and status tests fail at the current HEAD, because
-the note has no `kind` and the `HR-*` logs do not exist. The helper tests and the list test pass
-when Red supplies the full lists. The Red run must show an error count of 0 (section 4.4).
+Red adds no other test. Expected Red result: the gate-id and status tests fail at the current
+HEAD, because the `HR-*` logs do not exist. The helper tests pass when Red supplies the full
+Green list. The Red run must show an error count of 0 (section 4.4).
 
 #### 4.12.4 Work for Green (in this order; all heavy steps through `heavy-run.sh`)
 
@@ -410,7 +400,8 @@ when Red supplies the full lists. The Red run must show an error count of 0 (sec
    gate (A14). That gives 6 runs.
 3. **Choose the content.**
    - If `generated` gives `EXIT=0` and `DIAGNOSTICS=0` for both apps, commit the generated text
-     for both files, with `kind: generated` entries. Reason: the build then rewrites the same
+     for both files, with an `app_changes_justified` entry for each that cites its
+   `HR-types-<app>-generated` log. Reason: the build then rewrites the same
      text, and the tree stays clean after each build.
    - If `blank` also gives 0 for an app, write in the note: "`next-env.d.ts` has no effect on
      this type check". The choice stays the same. A 0 result from `blank` shows that the check
@@ -436,9 +427,9 @@ when Red supplies the full lists. The Red run must show an error count of 0 (sec
    fixture build, append `EXIT=<n>`, and move the file back, also when the build fails (use a
    `trap`). The log must hold `EXIT=` with `n` of 1 or more and the text
    `No Vite config was found for this project`. Then `git status` must show no change for that
-   file. Point the `vite.config.ts` justification (`kind: build_failure`) at this log.
-7. **Note.** Update `evidence/phase2-vinext-peer-check.md`: add the `kind` and the new log to each
-   justification entry; add the `HR-*` entries to `gate-results`; state that the `H0` probe status
+   file. Point the `vite.config.ts` justification (`build_log`) at this log.
+7. **Note.** Update `evidence/phase2-vinext-peer-check.md`: point each justification entry at its
+   `HR-*` log; add the `HR-*` entries to `gate-results`; state that the `H0` probe status
    was not archived and that the `H0` body file holds the marker; correct the "HTTP 200" claim to
    cite `HR-probe-fixture`; add the B2 record (four snapshots moved from acorn 8.17.0 to 8.19.0,
    no new package key). Do not edit an old log.
@@ -449,9 +440,9 @@ when Red supplies the full lists. The Red run must show an error count of 0 (sec
    already has more than 50 lines. Default: append anyway, as the earlier Green commit did. The
    orchestrator may ask the PM to prune the file.
 9. **Commits and gate.** Every commit names its paths and carries the track id. Write a Green log
-   `green-p2-amend-<sha>.log` with the 7 earlier commits and all new commits. Run the full module
-   command with `P2_PHASE_BASE`, `P2_AUDITED_HEAD`, `P2_GREEN_COMMITS`, and
-   `P2_OTHER_ROLE_COMMITS` set. The result must be exit 0.
+   `green-p2-amend-<sha>.log` with all new commits. The orchestrator then runs the full module
+   command with `P2_GREEN_COMMITS` set to the 7 earlier commits plus the new ones. The result
+   must be exit 0.
 
 Not repeated, with the reason: `H1-install`, `H1-build-*` in their old form, and `H1-test`. The
 inputs (`package.json` files, lockfile, `vite.config.ts`, and sources) do not change. Review A
@@ -474,7 +465,7 @@ re-ran both builds on the audited HEAD with exit 0.
 | Review A | **Rerun** on the new HEAD | The scope test and the note change. |
 | Review B | **Carry forward**; rerun only if the Green diff touches a `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `proxy.ts`, or `apps/marketing/scripts/` | The remediation holds type declarations, evidence, and tech-debt rows. No dependency, auth, or runtime file changes. The B3 probe result is evidence for the file list, not a new security surface. |
 | Review C | **Carry forward**; rerun only if a Green commit touches `apps/*/app`, `proxy.ts`, `vite.config.ts`, or `tsconfig*.json` | `next-env.d.ts` is not in the trigger list, and the A4 decision keeps `tsconfig.json` unchanged. |
-| Adversarial and UX browser review | As in 4.10 | Add one attack to the adversarial list: remove the `kind` or the `EXIT=` line of one justification and confirm that the scope test fails. |
+| Adversarial and UX browser review | As in 4.10 | Add one attack to the adversarial list: add a removed line to a tech-debt diff and confirm that the scope test fails. |
 
 The carry-forward check is `git diff --name-only 0e5a85543..<new head> -- apps pnpm-lock.yaml pnpm-workspace.yaml`.
 The orchestrator records its output with the decision.
@@ -483,11 +474,11 @@ The orchestrator records its output with the decision.
 
 | Anti-pattern | Defense |
 | --- | --- |
-| A3 | `EXIT=`, `DIAGNOSTICS=`, `HTTP_STATUS=`, and `LOCATION=` are labeled lines that the tests parse at the line start. |
-| A4 | The list test fails when any of its four variables is unset. A `blank` control run shows if the type check can judge the content. The redirect probe has a `/` control. |
+| A3 | `HTTP_STATUS=` and `LOCATION=` are labeled lines that the status test parses at the line start. `EXIT=` and `DIAGNOSTICS=` are labeled lines for the reader of the Green log. |
+| A4 | The scope test still fails when `P2_GREEN_COMMITS` is unset. A `blank` control run shows if the type check can judge the content. The redirect probe has a `/` control. |
 | A5 | The note cites `HR-*` logs for every status it claims. The `H0` gap is stated and not hidden. Old logs are never edited. |
 | A6 | `plan.md` and `tracks.md` say "reviews pass" only with the three result files. They say nothing on a rerun that has not happened. |
-| A7 | The tech-debt rule rejects any removed line. The commit selector uses the track id text, not a bare word. |
+| A7 | The tech-debt rule rejects any removed line and requires the full track id text, not a bare word. |
 | A14 | Every `rg` detector in a gate treats exit 2 as a failure. |
 
 ## 5. Phase 3 outline: TypeScript 7 trial
