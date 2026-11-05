@@ -198,7 +198,7 @@ async function duplicateIdCount(pg) {
       seen.set(el.id, count);
       if (count === 2) duplicates += 1;
     }
-    return duplicates;
+    return { duplicates, ids: seen.size };
   });
 }
 /** Tabs through one page and collects the focused targets without a visible focus indicator. */
@@ -226,6 +226,27 @@ function ratio(fg, bg) {
     return 0.2126*c[0] + 0.7152*c[1] + 0.0722*c[2];
   };
   const a = lum(fg), b = lum(bg); return (Math.max(a,b)+0.05)/(Math.min(a,b)+0.05);
+}
+// The word-cut pass rule for the live rows and the self-test (finding F143): the pause must
+// land at most 20 ms before the cut end (timer and media-clock jitter) and at most 50 ms
+// after it. One function serves the live rows and the self-test, so the self-test tests the
+// real rule with synthetic values.
+function wordCutVerdict(pauseAt, cutEnd) {
+  const signedPauseDeltaMs = Math.round((pauseAt - cutEnd) * 1000);
+  const overshoot = Math.max(0, signedPauseDeltaMs);
+  const early = Math.max(0, -signedPauseDeltaMs);
+  return { signedPauseDeltaMs, overshoot, early, overshootOk: overshoot <= 50, earlyOk: early <= 20 };
+}
+// The bottom-bar gap for the live row and the self-test (finding F143): with a matching bar,
+// the rounded gap between the bar bottom and the viewport bottom; without a bar, bars=0 and
+// the row passes as before.
+async function bottomBarGap(pg, selector) {
+  return pg.evaluate((sel) => {
+    const bar = document.querySelector(sel);
+    if (!bar) return { bars: 0, gap: 0 };
+    const rect = bar.getBoundingClientRect();
+    return { bars: 1, gap: Math.round(window.innerHeight - rect.bottom) };
+  }, selector);
 }
 async function watchNetwork(page) {
   const requests = [];
@@ -259,6 +280,12 @@ try {
     // The week 404 lang self-test: a /th/ URL whose 404 page hydrates with lang="en", with both
     // texts present, so only the lang half of checkWeek404 can fail (PM 2026-11-05).
     ['/th/nowhere', '<!doctype html><html lang="en"><body>ไม่พบหน้านี้ This page is not here</body></html>'],
+    // F143 self-test pages: one deliberately bad page per row that a synthetic page can
+    // exercise (duplicate ids; a bottom bar 10 px above the viewport bottom; a focusable
+    // button with no visible focus indicator).
+    ['/duplicate-id', '<!doctype html><div id="same"></div><p id="same"></p>'],
+    ['/bottom-bar', '<!doctype html><style>.fixed.bottom{position:fixed;left:0;right:0;bottom:10px;height:40px;background:#333}</style><div class="fixed bottom"></div>'],
+    ['/no-focus-ring', '<!doctype html><style>button,button:focus{outline:none;box-shadow:none}</style><button>press</button>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -282,6 +309,14 @@ try {
     ['400 KB script', '/large-script', async p => p._transferredBytes <= 300000],
     ['white text on #3080ff', '/contrast', async p => ratio(await p.locator('p').evaluate(e=>getComputedStyle(e).color), await p.locator('p').evaluate(e=>getComputedStyle(e).backgroundColor)) >= 4.5],
     ['lang="en" under a /th/ URL (week 404 lang)', '/th/nowhere', async p => (await checkWeek404(p, `http://127.0.0.1:${selfTestPort}/th/nowhere`, 'th')).ok],
+    // F143 self-tests: each check uses the same function as its live row, with the row value
+    // printed, so a page that must be rejected shows the reason.
+    ['two elements with one id (duplicate_ids)', '/duplicate-id', async p => { const counts = await duplicateIdCount(p); console.log(`selftest duplicate_ids=${counts.duplicates} (ids_found=${counts.ids})`); return counts.duplicates === 0; }],
+    ['a bottom bar 10 px above the viewport bottom (bottom_bar_gap_px)', '/bottom-bar', async p => { const info = await bottomBarGap(p, '[class*="fixed"][class*="bottom"]'); console.log(`selftest bottom_bar_gap_px=${info.gap} (bars_found=${info.bars})`); return info.bars === 0 || info.gap <= 1; }],
+    ['a button with no visible focus indicator (focus_visible_failures)', '/no-focus-ring', async p => { const out = await focusVisibleFailures(p); console.log(`selftest focus_visible_failures=${out.failures.length} (targets=${out.count})`); return out.failures.length === 0; }],
+    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
+    ['a pause 48 ms before the cut end (word cut early rule)', '/button', async () => { const v = wordCutVerdict(0.34 - 0.048, 0.34); console.log(`selftest word_cut_early_ms=${v.early}`); return v.earlyOk; }],
+    ['a pause at the cut end passes both word cut rules', '/button', async () => { const v = wordCutVerdict(0.34, 0.34); console.log(`selftest word_cut signed=${v.signedPauseDeltaMs} overshoot=${v.overshoot} early=${v.early}`); return !(v.overshootOk && v.earlyOk); }],
   ]) {
     await runCheck(`self-test rejects ${name}`, async () => {
       const p = await browser.newPage();
@@ -402,7 +437,9 @@ try {
     return { ok: Math.abs(value-1778)<=5, detail: `video_box_ratio_x1000_laptop=${value}` };
   });
   // The P3.6 rows (findings F125, F121 live, F120 live, F123 live). Each row prints a labeled
-  // value, and each floor has a self-test above or a fail-first run in the plan evidence.
+  // value. Every rule that a synthetic page or value can exercise has a self-test in the
+  // self-test list above (finding F143); the live rows add the real audio, the fixture, and
+  // the hydrated screens that no synthetic page can replace.
   const questionScreen = async () => {
     await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
     for (let i = 0; i < 10; i += 1) {
@@ -421,17 +458,17 @@ try {
       if (!page) throw new Error('Browser page is unavailable');
       await page.setViewportSize({ width: 360, height: 800 });
       await page.goto(screen === 'home' ? `${base}/th/st/2/1` : `${base}/th/st/2/1?part=${screen}`, { waitUntil: 'networkidle' });
-      const duplicates = await duplicateIdCount(page);
-      console.log(`duplicate_ids_${screen}=${duplicates}`);
-      return { ok: duplicates === 0, detail: `duplicate_ids_${screen}=${duplicates}` };
+      const counts = await duplicateIdCount(page);
+      console.log(`duplicate_ids_${screen}=${counts.duplicates} (ids_found=${counts.ids})`);
+      return { ok: counts.duplicates === 0, detail: `duplicate_ids_${screen}=${counts.duplicates}` };
     });
   }
   await runCheck('duplicate_ids is 0 on the question screen', async () => {
     if (!page) throw new Error('Browser page is unavailable');
     if (!(await questionScreen())) throw new Error('the question screen did not render');
-    const duplicates = await duplicateIdCount(page);
-    console.log(`duplicate_ids_question=${duplicates}`);
-    return { ok: duplicates === 0, detail: `duplicate_ids_question=${duplicates}` };
+    const counts = await duplicateIdCount(page);
+    console.log(`duplicate_ids_question=${counts.duplicates} (ids_found=${counts.ids})`);
+    return { ok: counts.duplicates === 0, detail: `duplicate_ids_question=${counts.duplicates}` };
   });
 
   // tap_target_min_px_player: 44 px floor over the reader, the decodable, and the question
@@ -461,16 +498,21 @@ try {
     });
   }
 
-  // bottom_bar_gap_px at 768x1024. The Phase 3 reader holds no bottom control bar, so the row
-  // prints the searched selector and the bar count as its evidence.
+  // bottom_bar_gap_px at 768x1024 (finding F143): with a matching bar, the gap between the
+  // bar bottom and the viewport bottom fails above 1; without a bar, the row passes and
+  // prints bars_found=0.
   await runCheck('bottom_bar_gap_px is at most 1 at 768x1024', async () => {
     if (!page) throw new Error('Browser page is unavailable');
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
     const selector = '[data-bottom-bar], [class*="fixed"][class*="bottom"], [class*="sticky"][class*="bottom"]';
-    const bars = await page.locator(selector).count();
-    console.log(`bottom_bar_gap_px=0 (selector=${selector}; bars_found=${bars})`);
-    return { ok: bars === 0, detail: `bars_found=${bars}` };
+    const barInfo = await bottomBarGap(page, selector);
+    if (barInfo.bars === 0) {
+      console.log(`bottom_bar_gap_px=0 (selector=${selector}; bars_found=0)`);
+      return { ok: true, detail: 'bars_found=0' };
+    }
+    console.log(`bottom_bar_gap_px=${barInfo.gap} (selector=${selector}; bars_found=${barInfo.bars})`);
+    return { ok: barInfo.gap <= 1, detail: `bottom_bar_gap_px=${barInfo.gap}` };
   });
 
   // reduced_motion_transition_ms: 0 on the marks with reducedMotion reduce.
@@ -712,11 +754,10 @@ try {
     await page.waitForFunction(() => window.__pauseAt !== null || (window.__cutErrors || []).length > 0, null, { timeout: 30000 });
     const state = await page.evaluate(() => ({ pauseAt: window.__pauseAt, errors: window.__cutErrors }));
     if (state.pauseAt === null) throw new Error(`fixture audio could not play: ${state.errors.join('; ')}`);
-    const signedPauseDeltaMs = Math.round((state.pauseAt - timing.end) * 1000);
-    const overshoot = Math.max(0, signedPauseDeltaMs);
-    console.log(`word_cut_overshoot_ms=${overshoot} (word=${timing.word}, cut_end=${timing.end}, pause_at=${state.pauseAt}, signed_pause_delta_ms=${signedPauseDeltaMs})`);
-    wordCutSignedPauseDeltaMs = signedPauseDeltaMs;
-    return { ok: overshoot <= 50, detail: `word_cut_overshoot_ms=${overshoot}` };
+    const verdict = wordCutVerdict(state.pauseAt, timing.end);
+    console.log(`word_cut_overshoot_ms=${verdict.overshoot} (word=${timing.word}, cut_end=${timing.end}, pause_at=${state.pauseAt}, signed_pause_delta_ms=${verdict.signedPauseDeltaMs})`);
+    wordCutSignedPauseDeltaMs = verdict.signedPauseDeltaMs;
+    return { ok: verdict.overshootOk, detail: `word_cut_overshoot_ms=${verdict.overshoot}` };
   });
 
   // word_cut_early_ms: the pause lands before the measured cut end when the stop timer counts
@@ -725,7 +766,8 @@ try {
     if (wordCutSignedPauseDeltaMs === null) throw new Error('the word cut measurement did not run');
     const early = Math.max(0, -wordCutSignedPauseDeltaMs);
     console.log(`word_cut_early_ms=${early} (signed_pause_delta_ms=${wordCutSignedPauseDeltaMs})`);
-    return { ok: early <= 20, detail: `word_cut_early_ms=${early}` };
+    // The shared rule applied to the same measurement: pauseAt = cutEnd + signed delta.
+    return { ok: wordCutVerdict(wordCutSignedPauseDeltaMs / 1000, 0).earlyOk, detail: `word_cut_early_ms=${early}` };
   });
 
   await runCheck('Week 404 answers 404 and the hydrated locale lang with both texts', async () => {
