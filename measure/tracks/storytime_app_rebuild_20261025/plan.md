@@ -266,6 +266,8 @@ Amendment M-1 (2026-11-03, media approval gate): the PM decision of 2026-11-03 1
 
 Amendment R-1 (2026-11-03, at-home release): the at-home deploy moves out of task 6.3 and into task 3.11 at the end of Phase 3. Task 3.11 follows the Phase 3 acceptance, with target 2026-11-20. Task 6.3 keeps the teacher-app deploy. No task number changes.
 
+Amendment M-2 (2026-11-06, move to the release track): tasks 3.10 and 3.11 move to the track storytime_at_home_release_20261106 (Phase 2 and Phase 3). Decision owner: PM, 2026-11-05. Both tasks stay here as `[b]` lines with a pointer. The Phase 3 checkpoint is written after its reviews and its phase acceptance.
+
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
 - [x] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4. Done: `0c42dde7a`. Automated: the targeted command exits 0 with 5 files and 17 tests; `tsc --noEmit` exits 0; `phase3-redirect-check.sh` exits 0 with PASS=6, FAIL=0.
@@ -740,7 +742,7 @@ Green builds to these rules:
 - Dispositions of the checker findings: F1 and F4 are fixed. F2 asks for behavior tests of the page gate; the fix needs a Mid Red retry, because Green may not edit the committed Red tests. F3 (label audio on the end tiles) needs a product decision. F5 and F6 are notes with no defect; Green declines them. F7 is the Thai draft, which needs Daniel's check.
 - Task 3.9 stays complete. The next step is the re-review on `42ddbf5f8`.
 
-- [ ] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19.
+- [b] 3.10 Receive the approved A-42 pin: the week files with approval.loops approved after Daniel's content check (by 2026-11-16). Tests: AC-13.1 at the approved pin. Target 2026-11-17 to 2026-11-19. Moved to storytime_at_home_release_20261106 Phase 2 (PM decision 2026-11-05). deferred:moved-to-storytime_at_home_release_20261106
   - Hand-off of the w01 app package (PM accepted these defaults, 2026-11-03): Workbooks sends the package by 2026-11-06 in `/home/daniebo/Desktop/handoff/w01-storytime-app-package/`. The folder holds `MANIFEST.txt` with the line `workbooks-commit: <full sha>`. The media paths are relative to `content/storytime/`. The receiver runs at that commit. The received `w01.json` must equal the hand-off `w01.json` byte for byte. The media come from the folder after the SHA-256 check against `MANIFEST.txt`.
   - Take recorded 2026-11-03 at Workbooks commit `cf30bb2eee55806bf8830b3a3e69e4f6044847e6`.
   - All 43 file hashes in `MANIFEST.txt` match. `sha256sum -c` warned about six metadata lines, not file entries.
@@ -1247,7 +1249,7 @@ Green builds to these rules:
   readiness tests) and 5 (the smoke lists w01 to w08 and mounts the
   fixture) cover the receiver outputs on this HEAD.
 
-- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
+- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
 
 ## Phase 4: Teacher app
 
