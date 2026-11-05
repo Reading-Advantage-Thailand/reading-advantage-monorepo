@@ -21,6 +21,8 @@
 > 2026-11-05 (commit `0daf35478`) declares Phase 1 to be finished history. It
 > records the count mismatch as a known defect. It sets the default that Phases
 > 2 to 4 proceed. The checkpoint marker below records that closure.
+>
+> The marker is a disclosed closure of Phase 1 history; it is not acceptance evidence. A Phase 1 acceptance under the amended spec runs before the Phase 2 acceptance (PM decision, 2026-11-05).
 
 > Phase 1 is history. Superseded outputs: `dual-compiler-contract.json` and
 > `diagnostic-parity-ledger.json`. Inputs that stay: `compiler-baseline.json`,
@@ -57,7 +59,7 @@
 
 ## Phase 2: vinext 1.x upgrade (PM step 0)
 
-- [~] Task: Check the vinext 1.x peer requirements.
+- [x] Task: Check the vinext 1.x peer requirements. [commit: 3abb7dcc1]
   - What: read the vinext 1.x `peerDependencies` and engines from the npm registry (current
     release was 1.4.3 on 2026-11-03). Compare them with Vite 8.1.0, React, and Node in
     `apps/marketing/package.json` and `apps/activity-vinext-fixture/package.json`.
@@ -112,6 +114,24 @@
   Red command only.
 - Files changed by this role: `measure/tests/test_typescript7_native_migration_phase2.py` and
   this plan.
+
+#### Task 1 Green evidence (Junior Green, 2026-11-05)
+
+- Role: Measure Junior Green. Model: opencode-go/deepseek-v4.1-flash. Task 1 only.
+- phase_base_sha: `5841dc528b0bcd22f426f043d86ba9dc7939a448`. role_base_sha: `11903d304caf8f34ffcdf76ecc4559ee25a61f1a`.
+- Implementation commit: `3abb7dcc1c769acfe0ee81eab3f706878b2b109d`. It adds the note
+  `evidence/phase2-vinext-peer-check.md` and the React 19.3.1 tech-debt row.
+- Registry reads: `npm view vinext@1.2.0 peerDependencies engines --json` (also 1.2.1 and
+  1.4.3). No install, build, type check, or deploy ran. No `package.json` or lockfile changed.
+- Candidate: vinext 1.2.0 (PM option (a)). React `^19.2.6` is met by 19.2.9. Vite `^8.0.0` is
+  met by 8.1.6. Node `>=22` is met by 24.19.0. Plugin-react `^5.1.4 || ^6.0.0` is met by 6.0.3.
+- The optional peer `@vitejs/plugin-rsc` (`^0.5.37`) is not met by the installed 0.5.27.
+  `apps/marketing/package.json:36` declares `^0.5.27`.
+- The note records `overall: "not met"` and `decision: "stop-ask-pm"`. Task 2 does not start.
+- Gate G2.1: the `P2CheckerTests` and `P2T1PeerNoteTests` command gives `Ran 11 tests in
+  0.012s` and `OK`, exit 0. The gate checks that the note is true; it does not require "met".
+- Checkpoint note: two sentences added at the end. The marker and the Phase 1 text stay.
+- Tasks 2 and 3 stay `[~]`. No archive move. No `tracks.md` change.
 
 ## Phase 3: TypeScript 7 trial (PM step 1)
 
