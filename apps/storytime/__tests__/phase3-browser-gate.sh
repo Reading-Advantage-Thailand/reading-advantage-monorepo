@@ -595,14 +595,19 @@ try {
     }
   });
 
-  // focus_visible_failures over the tab targets of the home, the reader, and the decodable.
+  // focus_visible_failures over the tab targets of the home, the reader, the decodable, and
+  // the question screen (F125).
   {
     let totalTargets = 0; const focusFailures = [];
-    for (const screen of ['home', 'book', 'decodable']) {
+    for (const screen of ['home', 'book', 'decodable', 'question']) {
       await runCheck(`focus_visible_failures is 0 on the ${screen} screen`, async () => {
         if (!page) throw new Error('Browser page is unavailable');
         await page.setViewportSize({ width: 360, height: 800 });
-        await page.goto(screen === 'home' ? `${base}/th/st/2/1` : `${base}/th/st/2/1?part=${screen}`, { waitUntil: 'networkidle' });
+        if (screen === 'question') {
+          if (!(await questionScreen())) throw new Error('the question screen did not render');
+        } else {
+          await page.goto(screen === 'home' ? `${base}/th/st/2/1` : `${base}/th/st/2/1?part=${screen}`, { waitUntil: 'networkidle' });
+        }
         const outcome = await focusVisibleFailures(page);
         console.log(`focus_target_count_${screen}=${outcome.count}`);
         if (outcome.failures.length) focusFailures.push(`${screen}: ${outcome.failures.join(', ')}`);
