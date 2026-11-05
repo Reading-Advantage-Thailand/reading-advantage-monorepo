@@ -126,6 +126,24 @@ async function runCheck(name, action) {
   }
 }
 function area(box) { return box ? Math.min(box.width, box.height) : 0; }
+// The P3.6 week-404 row (PM 2026-11-05, option a; test strategy line 402). The server curl
+// document of a pre-stream notFound() is the Next.js error shell without `lang`, so the row
+// asserts the hydrated document in a real browser: the network response status is 404, the
+// `document.documentElement.lang` after load equals the URL locale, and both the Thai and the
+// English line of not-found.tsx show. Used by the live row and by the lang self-test.
+async function checkWeek404(p, url, expectedLocale) {
+  const response = await p.goto(url, { waitUntil: 'load' });
+  await p.waitForTimeout(1200); // let hydration re-render the layout over the error shell
+  const status = response ? response.status() : null;
+  const lang = await p.evaluate(() => document.documentElement.lang);
+  const thai = await p.evaluate(() => document.body.innerText.includes('ไม่พบหน้านี้'));
+  const english = await p.evaluate(() => document.body.innerText.includes('This page is not here'));
+  console.log(`week404_status=${status}`);
+  console.log(`week404_lang=${lang} (expected=${expectedLocale})`);
+  console.log(`week404_thai_text=${thai}`);
+  console.log(`week404_english_text=${english}`);
+  return { ok: status === 404 && lang === expectedLocale && thai && english, detail: `status=${status} lang=${lang} thai=${thai} english=${english}` };
+}
 // A silent 3 s WAV that stands in for every media file, so the live playback rows
 // (the blend clip count and the word cut) run on real decoded audio. The length keeps a
 // three-clip blend sequence well inside the row timeout.
@@ -238,10 +256,15 @@ try {
     ['/button', '<!doctype html><button style="width:30px;height:30px">x</button>'],
     ['/large-script', `<!doctype html><script>window.payload='${'x'.repeat(400000)}'</script>`],
     ['/contrast', '<!doctype html><p style="color:white;background:#3080ff">x</p>'],
+    // The week 404 lang self-test: a /th/ URL whose 404 page hydrates with lang="en", with both
+    // texts present, so only the lang half of checkWeek404 can fail (PM 2026-11-05).
+    ['/th/nowhere', '<!doctype html><html lang="en"><body>ไม่พบหน้านี้ This page is not here</body></html>'],
   ]);
+  const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
-    const html = selfTestPages.get(new URL(req.url, 'http://127.0.0.1').pathname) ?? '';
-    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+    const pathname = new URL(req.url, 'http://127.0.0.1').pathname;
+    const html = selfTestPages.get(pathname) ?? '';
+    res.writeHead(selfTestStatus.get(pathname) ?? 200, { 'content-type': 'text/html; charset=utf-8' });
     res.end(html);
   });
   await runCheck('Start inline self-test server', async () => {
@@ -258,6 +281,7 @@ try {
     ['30 px button (player floor)', '/button', async p => (await p.locator('button').boundingBox()).width >= 44],
     ['400 KB script', '/large-script', async p => p._transferredBytes <= 300000],
     ['white text on #3080ff', '/contrast', async p => ratio(await p.locator('p').evaluate(e=>getComputedStyle(e).color), await p.locator('p').evaluate(e=>getComputedStyle(e).backgroundColor)) >= 4.5],
+    ['lang="en" under a /th/ URL (week 404 lang)', '/th/nowhere', async p => (await checkWeek404(p, `http://127.0.0.1:${selfTestPort}/th/nowhere`, 'th')).ok],
   ]) {
     await runCheck(`self-test rejects ${name}`, async () => {
       const p = await browser.newPage();
@@ -690,6 +714,15 @@ try {
     const overshoot = Math.max(0, Math.round((state.pauseAt - timing.end) * 1000));
     console.log(`word_cut_overshoot_ms=${overshoot} (word=${timing.word}, cut_end=${timing.end}, pause_at=${state.pauseAt})`);
     return { ok: overshoot <= 50, detail: `word_cut_overshoot_ms=${overshoot}` };
+  });
+
+  await runCheck('Week 404 answers 404 and the hydrated locale lang with both texts', async () => {
+    const p = await browser.newPage();
+    try {
+      return await checkWeek404(p, `${base}/th/st/2/2`, 'th');
+    } finally {
+      await p.close();
+    }
   });
 
   if (network) await runCheck('Close CDP session', async () => { await network.close(); return { ok: true }; });
