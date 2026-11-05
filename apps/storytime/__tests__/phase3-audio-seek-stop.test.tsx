@@ -8,6 +8,11 @@
 //
 // F123: the word-cut end and the page-end stop run from a timer, so the stop does not wait for
 // the next timeupdate event (a browser fires timeupdate about every 250 ms).
+//
+// F140: the word-cut stop follows the media clock. A wall-clock timer of the remaining time
+// fires before currentTime reaches the cut end, because the media clock starts to move tens
+// of milliseconds after `playing` (output latency); the stop re-arms while currentTime is
+// below the cut end.
 import "@testing-library/jest-dom/vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
@@ -125,6 +130,10 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
     vi.useFakeTimers();
     fireEvent.click(screen.getByText(new RegExp(`^${word.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`)));
     act(() => audio.dispatchEvent(new Event("loadedmetadata")));
+    // F140: the media clock reaches the cut end when the timer fires.
+    act(() => {
+      audio.currentTime = word.end;
+    });
     act(() => vi.advanceTimersByTime(cutMs + 5));
     expect(pause, "the cut stop runs from the timer, not from a timeupdate").toHaveBeenCalled();
   });
@@ -174,7 +183,84 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
     const whole = view.container.querySelectorAll("audio")[1];
     expect(whole, "the decodable must render its whole-word audio element").not.toBeNull();
     act(() => (whole as HTMLAudioElement).dispatchEvent(new Event("loadedmetadata")));
+    // F140: the media clock reaches the cut end when the timer fires.
+    act(() => {
+      (whole as HTMLAudioElement).currentTime = timing!.end;
+    });
     act(() => vi.advanceTimersByTime((timing!.end - timing!.start) * 1000 + 5));
     expect(pause, "the whole-word cut stop runs from the timer").toHaveBeenCalled();
+  });
+
+  it("pauses the word cut only when the media clock reaches the cut end (finding F140)", async () => {
+    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+    const { audio, book } = await renderReader();
+    const word = firstWordOfPageOne(book);
+    const cutStart = Math.max(0, word.start - 0.03);
+    const cutMs = (word.end - cutStart) * 1000;
+    // The review measured about 48 ms of output latency: the media clock lags the wall clock.
+    const latencyMs = 48;
+    expect(cutMs, "the pre-play delay must sit well inside the cut").toBeGreaterThan(200);
+    fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
+    pause.mockClear();
+    vi.useFakeTimers();
+    fireEvent.click(screen.getByText(new RegExp(`^${word.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`)));
+    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
+    expect(audio.currentTime, "the seek applies before playback").toBeCloseTo(cutStart);
+    // The wall timer fires while the media clock still lags it by 48 ms; the stop must
+    // re-arm instead of pausing, or the child loses the end of the word.
+    act(() => {
+      audio.currentTime = cutStart + (cutMs - latencyMs) / 1000;
+    });
+    act(() => vi.advanceTimersByTime(cutMs));
+    expect(pause, "the stop must not pause while the media clock is below the cut end").not.toHaveBeenCalled();
+    act(() => {
+      audio.currentTime = word.end;
+    });
+    act(() => vi.advanceTimersByTime(latencyMs + 5));
+    expect(pause, "the stop pauses when the media clock reaches the cut end").toHaveBeenCalled();
+  });
+
+  it("pauses the whole word only when the media clock reaches the cut end (finding F140)", async () => {
+    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+    const Decodable = await loadDecodable();
+    const week3 = JSON.parse(readFileSync(resolve(appDir, "content/l2/w03.json"), "utf8")) as {
+      books: Array<{
+        kind: string;
+        audio?: { sentences: Array<{ words: Array<{ word: string; start: number; end: number }> }> };
+      }>;
+    };
+    const decodable = week3.books.find((entry) => entry.kind === "decodable")!;
+    const timing = decodable.audio?.sentences
+      ?.flatMap((sentence) => sentence.words)
+      .find((entry) => entry.word.toLowerCase() === "pan");
+    expect(timing, "the shipped w03 timing must hold the word pan").toBeTruthy();
+    const cutMs = (timing!.end - timing!.start) * 1000;
+    const latencyMs = 48;
+    expect(cutMs, "the pre-play delay must sit well inside the cut").toBeGreaterThan(200);
+    const view = render(<Decodable week={week3 as never} locale="en" />);
+    const phoneme = view.container.querySelectorAll("audio")[0];
+    expect(phoneme, "the decodable must render its phoneme audio element").not.toBeNull();
+    vi.useFakeTimers();
+    fireEvent.click(screen.getByRole("button", { name: /^pan$/i }));
+    for (let index = 0; index < 3; index += 1) {
+      await act(async () => {
+        (phoneme as HTMLAudioElement).dispatchEvent(new Event("ended"));
+      });
+    }
+    const whole = view.container.querySelectorAll("audio")[1];
+    expect(whole, "the decodable must render its whole-word audio element").not.toBeNull();
+    act(() => (whole as HTMLAudioElement).dispatchEvent(new Event("loadedmetadata")));
+    act(() => {
+      (whole as HTMLAudioElement).currentTime = timing!.start + (cutMs - latencyMs) / 1000;
+    });
+    act(() => vi.advanceTimersByTime(cutMs));
+    expect(pause, "the whole-word stop must not pause below the cut end").not.toHaveBeenCalled();
+    act(() => {
+      (whole as HTMLAudioElement).currentTime = timing!.end;
+    });
+    act(() => vi.advanceTimersByTime(latencyMs + 5));
+    expect(pause, "the whole-word stop pauses when the media clock reaches the cut end").toHaveBeenCalled();
   });
 });

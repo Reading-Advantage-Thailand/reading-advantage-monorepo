@@ -17,7 +17,7 @@ import {
   type ReadAlongPosition,
 } from "@reading-advantage/read-along/lib/position";
 import { seekOrWait, wordCutBounds } from "@reading-advantage/read-along/lib/seek";
-import { seekAndRun } from "../../../../../lib/audio-seek";
+import { seekAndRun, stopAtMediaEnd } from "../../../../../lib/audio-seek";
 import type { BookQuestion } from "../../../../../lib/questions";
 import { StorytimeQuestions, type QuestionLabels, type QuestionTile } from "./questions";
 
@@ -140,6 +140,8 @@ export function StorytimeReader({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const stopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // F140: cancels the pending media-clock stop of the word cut; `clearStopTimer` runs it.
+  const stopCancelRef = useRef<(() => void) | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
   const [mode, setMode] = useState<"idle" | "listen" | "myTurn" | "slow">("idle");
   const [position, setPosition] = useState<ReadAlongPosition>(NO_POSITION);
@@ -177,8 +179,12 @@ export function StorytimeReader({
     }
   }
 
-  /** Clears the pending stop timer (finding F123). */
+  /** Clears the pending media-clock stop and the pending stop timer (findings F123, F140). */
   function clearStopTimer(): void {
+    if (stopCancelRef.current !== null) {
+      stopCancelRef.current();
+      stopCancelRef.current = null;
+    }
     if (stopTimerRef.current !== null) {
       clearTimeout(stopTimerRef.current);
       stopTimerRef.current = null;
@@ -280,14 +286,16 @@ export function StorytimeReader({
     if (!element || !word) return;
     const bounds = wordCutBounds(word);
     // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
-    // F122). The cut stop arms once the seek is in place, so the timer starts with the cut.
-    seekAndRun(element, bounds.start, () =>
-      armStop((bounds.end - bounds.start) * 1000, () => {
+    // F122). The cut stop follows the media clock: the timer re-arms while `currentTime` is
+    // still below the cut end, so output latency and a mid-word stall do not cut the end of
+    // the word (finding F140).
+    seekAndRun(element, bounds.start, () => {
+      stopCancelRef.current = stopAtMediaEnd(element, bounds.end, () => {
         audioRef.current?.pause();
         setCutEnd(null);
         setPosition(NO_POSITION);
-      }),
-    );
+      });
+    });
     setCutEnd(bounds.end);
     setPosition({ sentenceIndex, wordIndex: audioWordIndex });
     playAudio(element);

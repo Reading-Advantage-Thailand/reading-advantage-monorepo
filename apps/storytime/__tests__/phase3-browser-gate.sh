@@ -690,6 +690,7 @@ try {
     return { ok: state.whole && state.ended === 3, detail: `ended=${state.ended}, whole=${state.whole}` };
   });
 
+  let wordCutSignedPauseDeltaMs = null; // signed pause_at - cut_end, in ms; set by the overshoot row
   // word_cut_overshoot_ms: the time between the cut end and the pause of one reader word cut.
   await runCheck('word_cut_overshoot_ms is at most 50', async () => {
     if (!page) throw new Error('Browser page is unavailable');
@@ -711,9 +712,20 @@ try {
     await page.waitForFunction(() => window.__pauseAt !== null || (window.__cutErrors || []).length > 0, null, { timeout: 30000 });
     const state = await page.evaluate(() => ({ pauseAt: window.__pauseAt, errors: window.__cutErrors }));
     if (state.pauseAt === null) throw new Error(`fixture audio could not play: ${state.errors.join('; ')}`);
-    const overshoot = Math.max(0, Math.round((state.pauseAt - timing.end) * 1000));
-    console.log(`word_cut_overshoot_ms=${overshoot} (word=${timing.word}, cut_end=${timing.end}, pause_at=${state.pauseAt})`);
+    const signedPauseDeltaMs = Math.round((state.pauseAt - timing.end) * 1000);
+    const overshoot = Math.max(0, signedPauseDeltaMs);
+    console.log(`word_cut_overshoot_ms=${overshoot} (word=${timing.word}, cut_end=${timing.end}, pause_at=${state.pauseAt}, signed_pause_delta_ms=${signedPauseDeltaMs})`);
+    wordCutSignedPauseDeltaMs = signedPauseDeltaMs;
     return { ok: overshoot <= 50, detail: `word_cut_overshoot_ms=${overshoot}` };
+  });
+
+  // word_cut_early_ms: the pause lands before the measured cut end when the stop timer counts
+  // pre-playback wall time (finding F140, review A4-1); FR-6 asks for play to the measured end.
+  await runCheck('word_cut_early_ms is at most 20', async () => {
+    if (wordCutSignedPauseDeltaMs === null) throw new Error('the word cut measurement did not run');
+    const early = Math.max(0, -wordCutSignedPauseDeltaMs);
+    console.log(`word_cut_early_ms=${early} (signed_pause_delta_ms=${wordCutSignedPauseDeltaMs})`);
+    return { ok: early <= 20, detail: `word_cut_early_ms=${early}` };
   });
 
   await runCheck('Week 404 answers 404 and the hydrated locale lang with both texts', async () => {

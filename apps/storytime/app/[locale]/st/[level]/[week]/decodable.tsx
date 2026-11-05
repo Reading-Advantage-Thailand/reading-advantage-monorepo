@@ -11,7 +11,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { blendPlanForWord } from "../../../../../lib/blend";
-import { seekAndRun } from "../../../../../lib/audio-seek";
+import { seekAndRun, stopAtMediaEnd } from "../../../../../lib/audio-seek";
 import type { StorytimeBook, StorytimeWeek } from "../../../../../lib/contracts/week";
 import { PHONEME_BANK, PHONEME_BANK_COUNT } from "../../../../../lib/phoneme-bank";
 
@@ -123,6 +123,9 @@ export function StorytimeDecodable({
   const wholeRef = useRef<HTMLAudioElement | null>(null);
   const wholeEndRef = useRef<number | null>(null);
   const wholeStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // F140: cancels the pending media-clock stop of the whole-word cut; `clearWholeStopTimer`
+  // runs it.
+  const wholeStopCancelRef = useRef<(() => void) | null>(null);
   const blendGenerationRef = useRef(0);
   const [pageIndex, setPageIndex] = useState(0);
   const [failed, setFailed] = useState(false);
@@ -305,8 +308,12 @@ export function StorytimeDecodable({
     return null;
   }
 
-  /** Clears the pending stop timer of the whole-word recording (finding F123). */
+  /** Clears the pending media-clock stop and the pending stop timer (findings F123, F140). */
   function clearWholeStopTimer(): void {
+    if (wholeStopCancelRef.current !== null) {
+      wholeStopCancelRef.current();
+      wholeStopCancelRef.current = null;
+    }
     if (wholeStopRef.current !== null) {
       clearTimeout(wholeStopRef.current);
       wholeStopRef.current = null;
@@ -314,18 +321,20 @@ export function StorytimeDecodable({
   }
 
   /**
-   * Arms the timer that stops the whole-word recording at its word-cut end without a
-   * `timeupdate` event. A browser fires `timeupdate` about every 250 ms, so a 0.3 s cut can
-   * overshoot when the stop waits for it (finding F123).
+   * Arms the stop of the whole-word recording at its word-cut end. The stop follows the
+   * media clock: it re-arms while `currentTime` is still below the cut end, so output
+   * latency and a mid-word stall do not cut the end of the word (finding F140). The timer
+   * also keeps the stop off the `timeupdate` cadence of about 250 ms (finding F123).
    * @param bounds The start and end of the word cut, in seconds.
    */
   function armWholeStop(bounds: { start: number; end: number }): void {
     clearWholeStopTimer();
-    wholeStopRef.current = setTimeout(() => {
-      wholeStopRef.current = null;
+    const target = wholeRef.current;
+    if (!target) return;
+    wholeStopCancelRef.current = stopAtMediaEnd(target, bounds.end, () => {
       wholeEndRef.current = null;
       wholeRef.current?.pause();
-    }, Math.max(0, (bounds.end - bounds.start) * 1000));
+    });
   }
 
   /**
@@ -345,7 +354,8 @@ export function StorytimeDecodable({
     target.src = url;
     if (bounds) {
       // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
-      // F122). The cut stop arms once the seek is in place, so the timer starts with the cut.
+      // F122). The cut stop follows the media clock, so the pause lands at the measured end
+      // even with output latency or a stall (finding F140).
       seekAndRun(target, bounds.start, () => armWholeStop(bounds));
       wholeEndRef.current = bounds.end;
     } else {
