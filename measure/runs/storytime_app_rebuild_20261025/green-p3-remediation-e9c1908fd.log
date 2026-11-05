@@ -289,8 +289,31 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
 ## Turn 5c work done (F141, F142)
 
 - Turn 5c continues turn 5 with F141 (the F1b lock hint) and F142 (the
-  no-cookie row on a failed fetch). Work in progress; the status stays
-  partial until every gate of turn 5 exits 0 on the final HEAD.
+  no-cookie row on a failed fetch).
+- F141 (baf1c63f5): cause — in a nested run heavy-run.sh finds the ancestor
+  lock holder and exports `HEAVY_LOCK_HELD=1` itself, so the old F1b passed
+  even with the string removed. Fail-first evidence: nested, the no-hint
+  re-entry line exited 0 on the old code (probe in one heavy-run job);
+  unnested it exits 1, so the vacuity is nesting-specific. Fix: F1b runs
+  with `HEAVY_LOCK="$WORK/f1b.lock"` (a lock no ancestor holds, so
+  heavy-run takes it and exports no hint) and a new negative case runs the
+  same command with a re-entry line built by `sed` without the
+  `HEAVY_LOCK_HELD=1` string, which must fail. Check: the
+  phase1-smoke-cleanup run exits 0 with `PASS=32, FAIL=0`; both F1b rows
+  pass. Correction of the earlier claim: "only the string can carry the
+  lock hint" was wrong in a nested run — the ancestor branch of
+  heavy-run.sh is a second carrier; with a private lock the string is the
+  only carrier, which is what F1b now tests. F1 and F1c unchanged.
+- F142 (99a231d03): fail-first probe on the old logic — a curl to an unused
+  local port gave `curl_rc=7 headers_len=0` and the old row passed
+  vacuously. Fix: `week_page_headers_checked` (curl exit code plus a
+  status line) and `week_no_cookie_ok` decide the row; the week no-cookie
+  row fails on a failed fetch; new live rows check that the week 404 and
+  the locale redirect (HTTP 307) send no Set-Cookie; two new self-test
+  cases (a curl stub that exits 7, an answer without a status line) must
+  fail the row. `bash -n` passes; `--self-test` exits 0 with 6 cases; the
+  full smoke exits 0 with `PASS=19, FAIL=0` (grew from 17 by the 404 and
+  redirect rows).
 
 ## Result block
 
