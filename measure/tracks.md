@@ -59,6 +59,11 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-10-25; Phase 1 (app scaffold and service config) next | Owner: Monorepo orchestrator | Milestone 1: one week end to end (teacher app, at-home app, one read-along, one decodable, one song) at Daniel's quality bar | Release goal: internal release 1 on 2026-12-01 (S17 scope open until after milestone 1)*
   *Note: Daniel 2026-10-25: "Storytime is an APP in the MONOREPO." `apps/storytime` with its own Cloud Run service and container (`storytime-app`, S30), sharing packages with primary-advantage. Printed QR paths `/th/st/<level>/<week>` must answer before about 2026-11-22. S1–S28 survival report: [docs/s1-s28-survival.md](./tracks/storytime_app_rebuild_20261025/docs/s1-s28-survival.md).*
 
+- [~] **Track: Storytime at-home release (weeks 1 to 7 in the app)** — *created 2026-11-06*
+  *Link: [./tracks/storytime_at_home_release_20261106/](./tracks/storytime_at_home_release_20261106/)*
+  *Status: active, opened 2026-11-06; Phase 1 (receive the Workbooks 82f88853 week packages) waits for the parent Phase 3 checkpoint | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`)*
+  *Note: PM decision 2026-11-05 moved tasks 3.10 and 3.11 of the parent here. PM hand-off 2026-11-06: 7 week packages from Workbooks commit 82f88853. Dependency: Red and Green of Phase 1 start after the parent Phase 3 heading carries its checkpoint. No push and no deploy without Daniel's word.*
+
 
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
