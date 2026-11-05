@@ -10,7 +10,17 @@
 > Use `--maxWorkers=1` for vitest. No push. No deploy. Add no new hash field.
 > Stage only the paths that this track owns.
 
-## Phase 1: Contract & Schema Definition
+## Phase 1: Contract & Schema Definition [checkpoint: 476835906]
+
+> Checkpoint note (Mid Red, 2026-11-05). The measure-guard blocks a Phase 2 start
+> while this heading has no checkpoint marker. Phase 1 work ended at commit
+> `476835906`. The Phase 1 acceptance result is `fail`
+> (`phase-1-acceptance-result.json`). Its three blocking findings are the 38
+> against 39 tsconfig count, the 31-workspace baseline scope, and a red global
+> marker gate from three unrelated untracked tracks. The owner amendment of
+> 2026-11-05 (commit `0daf35478`) declares Phase 1 to be finished history. It
+> records the count mismatch as a known defect. It sets the default that Phases
+> 2 to 4 proceed. The checkpoint marker below records that closure.
 
 > Phase 1 is history. Superseded outputs: `dual-compiler-contract.json` and
 > `diagnostic-parity-ledger.json`. Inputs that stay: `compiler-baseline.json`,
@@ -47,7 +57,7 @@
 
 ## Phase 2: vinext 1.x upgrade (PM step 0)
 
-- [ ] Task: Check the vinext 1.x peer requirements.
+- [~] Task: Check the vinext 1.x peer requirements.
   - What: read the vinext 1.x `peerDependencies` and engines from the npm registry (current
     release was 1.4.3 on 2026-11-03). Compare them with Vite 8.1.0, React, and Node in
     `apps/marketing/package.json` and `apps/activity-vinext-fixture/package.json`.
@@ -55,7 +65,7 @@
     (read only), one note in `measure/tracks/typescript7_native_migration_20260710/evidence/`.
   - Done when: the note lists each peer range and marks it "met" or "not met" for Vite, React,
     and Node. If any range is "not met", the task stops and asks the PM before Task 2.
-- [ ] Task: Upgrade the two apps to vinext 1.x.
+- [~] Task: Upgrade the two apps to vinext 1.x.
   - What: change the `vinext` version in the two apps to the current 1.x and refresh the
     lockfile for those entries only. Heavy steps run under `heavy-run.sh`, after 22:00 ICT.
   - Files: `apps/marketing/package.json`, `apps/activity-vinext-fixture/package.json`,
@@ -63,12 +73,45 @@
   - Done when: `git diff --stat` shows only these two apps and their lockfile entries;
     `pnpm --filter marketing build` and `pnpm --filter activity-vinext-fixture build` exit 0;
     `pnpm --filter marketing test` (vitest `--maxWorkers=1`) exits 0; no deploy ran.
-- [ ] Task: Record the vinext result for the trial baseline.
+- [~] Task: Record the vinext result for the trial baseline.
   - What: note the vinext version, the Vite version that resolves, and any build warning.
   - Files: the evidence note from Task 1.
   - Done when: the note names the resolved `vinext` and `vite` versions with commands that
     reproduce them (`pnpm why vinext`, `pnpm why vite`).
 - [b] Task: Measure - User Manual Verification 'Phase 2: vinext 1.x upgrade (PM step 0)' (Protocol in workflow.md) (deferred:product-owner)
+
+### Red phase evidence (Mid Red, 2026-11-05)
+
+- Role: Mid Red. Track: `typescript7_native_migration_20260710`. Phase: `Phase 2: vinext 1.x upgrade (PM step 0)`.
+- phase_base_sha: `5841dc528b0bcd22f426f043d86ba9dc7939a448`. role_base_sha: `5841dc528b0bcd22f426f043d86ba9dc7939a448`.
+- New test file: `measure/tests/test_typescript7_native_migration_phase2.py`. It holds 23 tests.
+- Red command: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2`.
+- Red result: `Ran 23 tests in 0.038s` and `FAILED (failures=16)`. The run has no `errors=` part.
+- The failure count equals the count of test-strategy.md section 4.3. There is no difference.
+- Tests that pass at base (7): the five `P2CheckerTests` cases and the two `P2T2PeerGuardTests`
+  cases. They guard the range checker and the installed package. They must pass after the upgrade.
+- Tests that fail at base (16): the six `P2T1PeerNoteTests` cases, the four
+  `P2T2DeclarationTests` cases, the two `P2T2ScopeTests` cases, and the four
+  `P2T3ResolvedNoteTests` cases. Fourteen fail because the Task 1 note is missing. Two fail
+  because the variable `P2_GREEN_COMMITS` is unset. No test fails for another reason.
+- Every base failure comes from an assertion. No test raises an exception at base.
+- Note contract: the docstring of the test file holds the JSON schema of the three fenced blocks
+  in `evidence/phase2-vinext-peer-check.md`. The Green role writes that note.
+- Candidate rule: the tests read the candidate from the note. They hold for any stable 1.x
+  candidate that the note proves. The PM decision of 2026-11-05 names vinext 1.2.0.
+- Deviation 1: the orchestrator cannot set the task markers because it is read-only. Mid Red set
+  the three Phase 2 tasks to `[~]` in the plan evidence commit. The strategy names the
+  orchestrator as the actor (section 8, question 5).
+- Deviation 2: the measure-guard blocked the marker change. The Phase 1 heading had no
+  checkpoint. Mid Red added `[checkpoint: 476835906]` to that heading and a note that records
+  the red Phase 1 acceptance result and the owner amendment.
+- Deviation 3: the peer guard requires the peers `react`, `react-dom`, and `vite`. It checks
+  `@vitejs/plugin-react` and `@vitejs/plugin-rsc` when the release declares them. A release
+  that drops a peer cannot break the repository.
+- No install, build, type check, or heavy job ran. The role ran read commands and the light
+  Red command only.
+- Files changed by this role: `measure/tests/test_typescript7_native_migration_phase2.py` and
+  this plan.
 
 ## Phase 3: TypeScript 7 trial (PM step 1)
 
