@@ -13,8 +13,9 @@ set -uo pipefail
 # Run 2 (the ready review fixture mounted, P3.7): the week page answers HTTP 200
 # with the noindex header and no Set-Cookie header.
 # The runs together are the final form of AC-1.4.
-# Run 2 also holds the P3.6 week-404 row: a week outside the shipped range answers 404 with a
-# non-empty <html lang> and the Thai and English lines of app/[locale]/not-found.tsx.
+# Run 2 also holds the P3.6 week-404 row: a week outside the shipped range answers 404 with the
+# Thai and English lines of app/[locale]/not-found.tsx (PM 2026-11-05: this script does not
+# check <html lang>; the live lang check is the browser-gate row).
 # --self-test runs the fail-first proof of the podman-exit and GET-header rows with stub
 # commands and no build (finding F130), before the lock re-entry.
 # Without --locked the script re-enters through heavy-run.sh (PM 2026-10-26), as
@@ -313,20 +314,15 @@ if [ -n "$C2" ]; then
   else
     pass "The week page sends no Set-Cookie header"
   fi
-  # P3.6 week-404 row: a week outside the shipped range answers 404 with a non-empty
-  # <html lang> and the Thai and English lines of app/[locale]/not-found.tsx.
+  # P3.6 week-404 row: a week outside the shipped range answers 404 with the Thai and
+  # English lines of app/[locale]/not-found.tsx. The live `lang` check is the browser-gate
+  # row (PM 2026-11-05): the curl document is the Next.js error shell without `lang`.
   P404_CODE="$(curl --silent --show-error -o "$TMP_DIR/notfound.html" -w '%{http_code}' "http://$PORT2/th/st/2/99")"
   P404_BODY="$(cat "$TMP_DIR/notfound.html")"
-  P404_LANG="$(printf '%s' "$P404_BODY" | grep -o '<html[^>]*lang="[^"]*"' | head -n 1 | sed 's/.*lang="//;s/"$//')"
   if [ "$P404_CODE" = "404" ]; then
     pass "A week outside the shipped range answers HTTP 404"
   else
     fail "A week outside the shipped range answers HTTP 404; got $P404_CODE"
-  fi
-  if [ -n "$P404_LANG" ]; then
-    pass "The 404 document holds a non-empty html lang (lang=$P404_LANG)"
-  else
-    fail "The 404 document holds a non-empty html lang"
   fi
   if printf '%s' "$P404_BODY" | grep -q "ไม่พบหน้านี้"; then
     pass "The 404 document holds the Thai line of not-found.tsx"
