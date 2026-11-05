@@ -710,6 +710,22 @@ const RECALL_CARDS = 5;
  * @param week The parsed week.
  * @param ctx The refinement context.
  */
+/**
+ * Reports whether a page text holds a word as a whole word.
+ *
+ * The check compares lower-cased text and matches on a word boundary, so the answer word
+ * `at` does not match the page text `cat` (finding F132 of the Phase 3 review at e9c1908fd).
+ * @param text The text of the page.
+ * @param word The answer word of the question.
+ * @returns `true` when the lower-cased word appears with no letter or digit on either side.
+ */
+function pageHoldsWord(text: string, word: string): boolean {
+  const escaped = word.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, "u").test(
+    text.toLowerCase(),
+  );
+}
+
 function checkLoops(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): void {
   if (!loopsApproved(week)) return;
   week.scripts.forEach((script, scriptIndex) => {
@@ -732,8 +748,7 @@ function checkLoops(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx):
         });
         return;
       }
-      const text = page.text.toLowerCase();
-      if (!text.includes(question.answer.word.toLowerCase())) {
+      if (!pageHoldsWord(page.text, question.answer.word)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["books", bookIndex, "questions", questionIndex, "answer", "word"],
