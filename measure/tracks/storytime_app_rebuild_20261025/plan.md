@@ -976,6 +976,63 @@ Green builds to these rules:
   `6303c70a0` (F130), and the plan evidence commit that holds this block. Task 3.7 stays
   `[~]`.
 
+#### Phase 3 closeout gate (remediation HEAD 4f004a916)
+
+- Audited HEAD: `4f004a916` (one HEAD for every item; the tracked tree stayed
+  clean through the gate). Gate window: 2026-11-05T20:08:04Z (first item start)
+  to 2026-11-05T20:54:25Z. Every item ran through `HEAVY_MIN_AVAIL_MB=1500
+  HEAVY_PREFLIGHT_WAIT_S=3600` heavy-run.sh, one heavy run at a time; the
+  scripts that re-enter heavy-run.sh themselves ran directly with the same
+  env flags.
+- Item 1, three vitest commands: the P3.4 Phase command (test-strategy.md line
+  328) exits 0 with 33 files and 306 tests; the P1 command (line 90, the full
+  `apps/storytime` suite from the repo root) exits 0 with 42 files and 382
+  tests — the root run passes the whole suite after F139; the P2 command (line
+  191) exits 0 with 22 files and 257 tests.
+- Item 2: `phase1-quality-gates.sh` exits 0 (PASS=2, FAIL=0). The read-along
+  package tasks (`CI=true pnpm turbo run build check-types lint test --filter=
+  @reading-advantage/read-along --ui=stream --concurrency=1`, the flags of the
+  quality-gates script) exit 0 with **only the `test` task run** (1 successful,
+  1 total; 9 files, 104 tests): the package has no `build`, `check-types`, or
+  `lint` scripts and no tsconfig, so turbo skips the other three tasks.
+- Item 3, the full Docker smoke (`HEAVY_HANG_KILL_S=off
+  phase3-docker-smoke.sh`): 18 checks, **PASS=17, FAIL=1, exit 1**. The runs
+  built the image once, ran 1, 1b, and 2, and exercised the F130 rows: the
+  podman-exit row, the GET Set-Cookie row, and the week-404 row. 17 rows pass,
+  including "A week outside the shipped range answers HTTP 404", the Thai
+  line, and the English line. The failing row: "The 404 document holds a
+  non-empty html lang". Root cause (verified live with `next start`): Next.js
+  16.4.1 answers the matched week-path `notFound()` with its error shell
+  `<html id="__next_error__">`, which holds no `lang` attribute; the locale
+  layout itself is correct (a 200 page renders `<html lang="th">`). Two
+  framework paths were tested and reverted without a commit: a Suspense-
+  wrapped page renders the layout `lang` but answers 200 (breaks AC-2.1 and
+  the smoke draft/missing_picture 404 rows), and `global-not-found.tsx` with
+  the experimental flag fires only for unmatched URLs. The cause is not in the
+  remediation diff, so per the turn rule no fix was made and the gate stops
+  incomplete. Resolution needs a spec or framework decision (amend strategy
+  line 402, target a parse-invalid week path, or change the framework).
+- Item 4, the browser gate: exits 0, `PASS=43, FAIL=0`.
+- Item 5, the receiver: `tsx apps/storytime/scripts/receive-weeks.ts --commit
+  67be5603e0410f21491a006b8e9d12f3f9dd1bfc` exits 0 and `git diff --exit-code
+  apps/storytime/content` exits 0; the receiver changed no content file.
+- Item 6, build-graph: **deviation (PM load rule 2026-11-05)** — the first
+  `build-graph update` of this item ran outside heavy-run.sh and MemAvailable
+  fell to 1562 MB; the PM rule landed afterwards. Re-run through heavy-run.sh:
+  `update` over the 13 changed export files exits 0 (205 → 232 nodes, 286 →
+  283 edges, re-run 283 → 283). The searches ran through heavy-run.sh, one
+  heavy run each batch: `parseStorytimeRoute` found (lib/route-parse.ts),
+  `parseCanonicalNumber` found (lib/route-parse.ts), `seekOrWait` found
+  (packages/read-along/lib/seek.ts; `apps/storytime/lib/audio-seek.ts` exports
+  `seekAndRun`, whose summary documents `seekOrWait`), and the not-found view:
+  the graph holds the file node of `app/[locale]/not-found.tsx`; its
+  default-export `NotFound` component does not surface as a symbol node (the
+  fuzzy search returns the other apps' `NotFound` symbols first and the
+  inspect command holds no storytime hit), recorded as an index limitation.
+- Gate verdict: items 1, 2, 4, 5, and 6 pass; item 3 fails on one row outside
+  the remediation diff. The closeout is incomplete, so task 3.7 stays `[~]`
+  and the next step is the spec decision above.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
 ## Phase 4: Teacher app
