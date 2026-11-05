@@ -254,9 +254,37 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
 - Turn 5 (remediation round 3) at base `acf282174` fixes the routed findings
   F140 to F144 from Review A r3 (A4-1 to A4-4) and Review B r2 (B4-1, B4-2).
   F128 is withdrawn (accepted by A and B). Turn 5b continues turn 5 with
-  F140 only (media-clock stop); the work is in progress, so the status below
-  is partial for now. This section and the result block are filled at the
-  end of the turn.
+  F140 only (media-clock stop).
+
+## Turn 5b work done (F140)
+
+- Cause proved: a wall-clock stop timer of `(bounds.end - currentTime)` ms
+  fired while the media clock still lagged it. Old-code gate rows:
+  `word_cut_early_ms=49` (exit 1) before the first fix, then `48` and `51`
+  on two runs with a `playing`-armed timer (exit 1 each), with
+  `pause_at=0.2887` to `0.2923` against `cut_end=0.34`. A `readyState >= 3`
+  guard on the `playing` branch did not change the value, which ruled out
+  the arming time and left the media-clock lag as the cause.
+- Fix (a0f0e8357): `stopAtMediaEnd(audio, end, onStop)` in
+  `apps/storytime/lib/audio-seek.ts` replaces `onPlaybackStart` (removed).
+  The timer re-arms for the remaining media time while `currentTime` is
+  below `end` (floor 5 ms) and pauses only when the media clock reaches the
+  cut end; this also covers a mid-word stall. `reader.tsx` `onWordTap` and
+  `decodable.tsx` `armWholeStop` use it through their cancel refs, cleared
+  in `clearStopTimer` / `clearWholeStopTimer`.
+- Tests: the two F140 jsdom tests now drive a lagging fake media clock
+  (`currentTime` set 48 ms below the cut end at the first timer fire; the
+  stop must re-arm, not pause) and the two F123 timer tests set
+  `currentTime` to the cut end instead of dispatching `playing`. Fail-first
+  evidence: on the old code the F140 pair failed (2 failed / 5 passed,
+  turn 5 run); the new assertions fail on the old code by construction,
+  because the old timer paused unconditionally at the wall delay.
+- Gates on a0f0e8357: jsdom tests 7/7 exit 0 and `tsc --noEmit` exit 0 (one
+  heavy-run job); browser gate exit 0, inner `PASS=46, FAIL=0`, wrapper
+  `PASS=4, FAIL=0`, rows `word_cut_overshoot_ms=0
+  (signed_pause_delta_ms=0)` and `word_cut_early_ms=0 (pause_at=0.339972,
+  cut_end=0.34)`. Ports 3940 to 3960 free before and after. F141, F142,
+  F143, the full gate list, and the evidence sub-block come in later turns.
 
 ## Result block
 
