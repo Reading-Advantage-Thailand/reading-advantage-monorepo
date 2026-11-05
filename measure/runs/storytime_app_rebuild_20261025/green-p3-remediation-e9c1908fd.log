@@ -253,9 +253,10 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
 
 - Turn 5 (remediation round 3) at base `acf282174` fixes the routed findings
   F140 to F144 from Review A r3 (A4-1 to A4-4) and Review B r2 (B4-1, B4-2).
-  F128 is withdrawn (accepted by A and B). This section and the result block
-  below are filled at the end of the turn; the work is in progress, so the
-  status below is partial for now.
+  F128 is withdrawn (accepted by A and B). Turn 5b continues turn 5 with
+  F140 only (media-clock stop); the work is in progress, so the status below
+  is partial for now. This section and the result block are filled at the
+  end of the turn.
 
 ## Result block
 
