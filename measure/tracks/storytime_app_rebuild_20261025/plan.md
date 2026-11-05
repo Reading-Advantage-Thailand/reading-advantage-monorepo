@@ -788,8 +788,8 @@ the at-home deploy is Daniel's gate). The at-home release of 2026-11-20 is P1, s
 Phase 4 first. Phase 3 keeps its own checkpoint later; the phase-order rule of this plan stays
 for every other track.
 
-- [~] 4.1 Teacher route group `apps/storytime/app/[locale]/teacher/` behind an environment flag that is off by default. With the flag off, every teacher route answers 404. Test: AC-9.3.
-- [~] 4.2 Week view `/<locale>/teacher/<level>/<week>`: the title, the element with its sound, the phonemic awareness skill, the tricky words, the frame, the family words with pictures, the five lessons by day, and the three materials. Test: AC-9.1.
+- [x] 4.1 Teacher route group `apps/storytime/app/[locale]/teacher/` behind an environment flag that is off by default. With the flag off, every teacher route answers 404. Test: AC-9.3. Done: `82c386344`. Automated: the Green command exits 0 with 2 files and 15 tests; `tsc --noEmit` in `apps/storytime` exits 0; ESLint exits 0 on the four changed files; the Phase 3 regression set exits 0 with 18 files and 179 tests.
+- [x] 4.2 Week view `/<locale>/teacher/<level>/<week>`: the title, the element with its sound, the phonemic awareness skill, the tricky words, the frame, the family words with pictures, the five lessons by day, and the three materials. Test: AC-9.1. Done: `82c386344`. Automated: the Green command exits 0 with 2 files and 15 tests; the Phase 3 regression set exits 0 with 18 files and 179 tests.
 
 ### Phase 4 tasks 4.1 and 4.2 Red evidence
 
@@ -858,6 +858,27 @@ for every other track.
   `generateStaticParams`, `force-dynamic`), and
   `app/[locale]/teacher/[level]/[week]/week-view.tsx` (`TeacherWeekView` with `{ week, locale }`).
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-bfaae89.log`.
+
+### Phase 4 tasks 4.1 and 4.2 Green evidence
+
+- Green started at the role base `412642137e54d9d0108bd7ae8420b8375ab39de3`. The immutable phase base is `bfaae8905993076ca1e8a49939c400eb038fe3ae`. HEAD matched the role base before the edits, so no other session committed into `apps/storytime` or this track. The Red commits `43d7e7c18` (tests) and `412642137` (plan) sit inside the phase range.
+- Red model: `kimi-code-plan-cn/kimi-for-coding#high` (Kimi). Green model: `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax). The two families differ. No coder was delegated: the harness depth limit blocks a nested coder session in this role.
+- Red confirmation: a copy of the Red state commit `412642137` outside the repo runs the targeted command and exits 1 with 2 failed files, 13 failed tests, and 2 passed tests (15 total). The counts match the Red log. The failures name the missing route group, the missing rule module, the missing page rules, and the missing week view.
+- Implementation commit: `82c386344` (`feat(storytime): add teacher routes and the week view`). Files: `apps/storytime/lib/teacher.ts`, `apps/storytime/app/[locale]/teacher/[level]/[week]/page.tsx`, `apps/storytime/app/[locale]/teacher/[level]/[week]/week-view.tsx`, and `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx`.
+- The rule module holds `TEACHER_ROUTES_ENV` (`STORYTIME_TEACHER_ROUTES`) and `teacherRoutesEnabled()`. The rule is on only at the value `1`, the same rule as `STORYTIME_SHOW_DRAFT_MEDIA`. The value stays on the server, and no `NEXT_PUBLIC_` name exists in the app sources.
+- Both teacher pages read the flag first and answer 404 when it is off, before any week read. They load the week with `loadWeek` and answer 404 for an absent or invalid level, week, or day. Both pages export `dynamic = "force-dynamic"`, export no static params, and keep the page out of the search index.
+- The week view renders the title, the element with its graphemes, its sound, and its recording, the phonemic awareness skill, the tricky words, the frame, the family words with their pictures, the five lessons by day, and the three materials. Every item comes from the week file at render time. The view holds no string that names a week item.
+- The three materials are the student book from the print part, the read-along book, and the decodable book. The F21 default of the A-48 map holds. The strategy row of F21 stays open for the strategy role.
+- The family pictures of the shipped week hold no file yet. A picture with a file shows as an image whose alt text is the caption. A picture without a file shows as a placeholder whose accessible name is the caption. The media files arrive with the Phase 5 milestone media.
+- The lesson links point to `/<locale>/teacher/<level>/<week>/<day>`. The day route holds the day title and the way back to the week. The lesson flow of task 4.3 comes later.
+- Gates, all through `heavy-run.sh`:
+  - Green command: `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx`. Exit 0; 2 files; 15 tests; no skip.
+  - `tsc --noEmit` in `apps/storytime`: exit 0. The program holds the four new files.
+  - ESLint on the four changed files: exit 0; 0 errors; 0 warnings.
+  - Phase 3 regression set: `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx`. Exit 0; 18 files; 179 tests. The at-home routes stay unchanged.
+- No committed Red test changed. No week content, contract, readiness, receiver, message, deploy, or Docker file changed. The at-home routes under `app/[locale]/st/` stay unchanged.
+- The canonical-number rule of the at-home route stays in the at-home route. `lib/teacher.ts` holds its own copy, because the brief keeps the at-home routes unchanged. A later phase may join the two.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-4126421.log`.
 
 - [ ] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
 - [ ] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes.
