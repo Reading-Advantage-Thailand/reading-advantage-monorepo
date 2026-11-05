@@ -3,6 +3,7 @@ import "@testing-library/jest-dom/vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import { describe, expect, it, vi, afterEach } from "vitest";
 import week3 from "../content/l2/w03.json";
+import type { StorytimeWeek } from "../lib/contracts/week";
 
 const routeMocks = vi.hoisted(() => ({ loadVisibleWeek: vi.fn() }));
 vi.mock("@/lib/content", () => ({ loadVisibleWeek: routeMocks.loadVisibleWeek }));
@@ -19,8 +20,8 @@ import { StorytimeDecodable } from "../app/[locale]/st/[level]/[week]/reader";
 import { StorytimeSong } from "../app/[locale]/st/[level]/[week]/song";
 
 /** One deep clone of the shipped week 3 for the render fixtures. */
-function cloneWeek() {
-  return JSON.parse(JSON.stringify(week3)) as typeof week3;
+function cloneWeek(): StorytimeWeek {
+  return JSON.parse(JSON.stringify(week3)) as StorytimeWeek;
 }
 
 /** Renders the home view of a shipped week in one locale and returns the rendered container. */
@@ -80,7 +81,9 @@ describe("Phase 3 rendered alt attributes (finding F138)", () => {
     for (const book of clone.books) {
       for (const [index, page] of book.pages.entries()) {
         page.image = {
-          ...page.image,
+          prompt: page.image?.prompt,
+          characters: page.image?.characters ?? [],
+          caption: page.image?.caption ?? "",
           file: page.image?.file ?? `review/${book.kind}-${index + 1}.jpg`,
         };
       }
