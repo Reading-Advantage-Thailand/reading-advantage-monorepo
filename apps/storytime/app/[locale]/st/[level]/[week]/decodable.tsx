@@ -70,6 +70,7 @@ export function StorytimeDecodable({
   const wholeRef = useRef<HTMLAudioElement | null>(null);
   const wholeEndRef = useRef<number | null>(null);
   const wholeStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const blendGenerationRef = useRef(0);
   const [phonemeSrc, setPhonemeSrc] = useState<string | null>(null);
   const [wholeSrc, setWholeSrc] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -94,7 +95,18 @@ export function StorytimeDecodable({
   }, [week.focus?.trickyWords, soundsPage?.tricky]);
 
   /**
-   * Plays one audio element and records a failed sound (rule 10.4).
+   * Reports whether a play rejection is the abort of a replaced load (finding F120).
+   * @param error The rejection value of a play promise.
+   * @returns `true` for an `AbortError` DOMException.
+   */
+  function isAbortError(error: unknown): boolean {
+    return typeof error === "object" && error !== null
+      && (error as { name?: string }).name === "AbortError";
+  }
+
+  /**
+   * Plays one audio element and records a failed sound (rule 10.4). An aborted play is the
+   * normal effect of a newer load on the same element, so it shows no error alert (finding F120).
    * @param target The audio element.
    */
   function playElement(target: HTMLAudioElement | null): void {
@@ -102,18 +114,70 @@ export function StorytimeDecodable({
     try {
       const result = target.play();
       if (result && typeof result.catch === "function") {
-        result.catch(() => setFailed(true));
+        result.catch((error: unknown) => {
+          if (!isAbortError(error)) setFailed(true);
+        });
       }
-    } catch {
-      setFailed(true);
+    } catch (error) {
+      if (!isAbortError(error)) setFailed(true);
     }
   }
 
   /**
-   * Plays one recorded clip on the phoneme element.
+   * Plays one clip on one element and settles when the element ends the clip (finding F120).
+   * The promise settles on the `ended` event, not on the play start, so a caller can chain
+   * clips.
+   * @param target The audio element.
+   * @returns The promise of the clip end; it rejects on a failed or aborted play.
+   */
+  function playClip(target: HTMLAudioElement): Promise<void> {
+    return new Promise((resolveClip, rejectClip) => {
+      const stop = () => {
+        target.removeEventListener("ended", onEnded);
+        target.removeEventListener("error", onError);
+      };
+      const onEnded = () => {
+        stop();
+        resolveClip();
+      };
+      const onError = () => {
+        stop();
+        rejectClip(new Error("The clip could not be played."));
+      };
+      target.addEventListener("ended", onEnded);
+      target.addEventListener("error", onError);
+      try {
+        const result = target.play();
+        if (result && typeof result.catch === "function") {
+          result.catch((error: unknown) => {
+            stop();
+            rejectClip(error);
+          });
+        }
+      } catch (error) {
+        stop();
+        rejectClip(error);
+      }
+    });
+  }
+
+  /**
+   * Stops a running blend sequence and starts a new generation: a sequence returns at its next
+   * step when the generation number no longer matches (finding F120).
+   * @returns The new generation number.
+   */
+  function stopBlendSequence(): number {
+    blendGenerationRef.current += 1;
+    return blendGenerationRef.current;
+  }
+
+  /**
+   * Plays one recorded clip on the phoneme element. A tap here also stops a running blend
+   * sequence (finding F120).
    * @param file The clip file, relative to the media base.
    */
   function playPhoneme(file: string): void {
+    stopBlendSequence();
     const url = mediaUrl(mediaBase, file);
     const target = phonemeRef.current;
     if (target) {
@@ -125,22 +189,51 @@ export function StorytimeDecodable({
   }
 
   /**
-   * Plays the grapheme clips of a blend word in reading order.
+   * Plays the grapheme clips of a blend word one at a time in reading order, then the whole
+   * word after the last clip ends (spec FR-7, finding F120).
    * @param graphemes The graphemes of the word, in reading order.
-   * @returns `true` when every grapheme has a bank clip.
+   * @param word The whole word, played after the last clip ends.
+   * @returns `true` when every grapheme has a bank clip and the sequence started.
    */
-  function playBlend(graphemes: string[]): boolean {
-    const target = phonemeRef.current;
-    const files = graphemes.map((grapheme) => CLIP_BY_GRAPHEME.get(grapheme));
-    if (!target || files.some((file) => !file)) return false;
-    for (const file of files) {
-      const url = mediaUrl(mediaBase, file!);
-      target.src = url;
-      playElement(target);
+  function playBlend(graphemes: string[], word: string): boolean {
+    const files: string[] = [];
+    for (const grapheme of graphemes) {
+      const file = CLIP_BY_GRAPHEME.get(grapheme);
+      if (!file) return false;
+      files.push(file);
     }
-    setPhonemeSrc(mediaUrl(mediaBase, files.at(-1)!));
-    setFailed(false);
+    const generation = stopBlendSequence();
+    runBlendSequence(files, word, generation).catch(() => setFailed(true));
     return true;
+  }
+
+  /**
+   * Runs one blend sequence: the phoneme element plays each clip, and the next clip starts
+   * when the element ends the previous one. The whole word starts after the last clip ends. A
+   * second word tap, a sounds-page tap, or a page turn raises the generation number and stops
+   * this sequence; the abort of its pending play shows no error alert.
+   * @param files The clip files, in reading order.
+   * @param word The whole word.
+   * @param generation The generation of this sequence.
+   */
+  async function runBlendSequence(files: string[], word: string, generation: number): Promise<void> {
+    setFailed(false);
+    for (const file of files) {
+      const target = phonemeRef.current;
+      if (!target || blendGenerationRef.current !== generation) return;
+      const url = mediaUrl(mediaBase, file);
+      setPhonemeSrc(url);
+      target.src = url;
+      try {
+        await playClip(target);
+      } catch (error) {
+        // A newer load on the element aborts this play; that is not a failure (finding F120).
+        if (!isAbortError(error)) setFailed(true);
+        return;
+      }
+    }
+    if (blendGenerationRef.current !== generation) return;
+    playWhole(word);
   }
 
   /**
@@ -226,15 +319,20 @@ export function StorytimeDecodable({
     }
   }
 
-  useEffect(() => clearWholeStopTimer, []);
+  useEffect(() => () => {
+    clearWholeStopTimer();
+    stopBlendSequence();
+  }, []);
 
   /**
-   * Plays one tapped word: its graphemes first, then the whole word.
+   * Plays one tapped word: a blend word plays its graphemes first and the whole word after the
+   * last clip ends; every other word plays whole at once (finding F120). When no clip bank
+   * covers the word, only the whole word plays, as before.
    * @param word The word from the page or the tricky-word list.
    */
   function onWordTap(word: string): void {
     const plan = blendPlanForWord(word, week);
-    if (plan.mode === "blend") playBlend(plan.graphemes);
+    if (plan.mode === "blend" && playBlend(plan.graphemes, word)) return;
     playWhole(word);
   }
 
@@ -303,7 +401,10 @@ export function StorytimeDecodable({
           type="button"
           aria-label={thai ? "หน้าก่อน" : "Previous page"}
           disabled={pageIndex === 0}
-          onClick={() => setPageIndex((index) => Math.max(0, index - 1))}
+          onClick={() => {
+            stopBlendSequence();
+            setPageIndex((index) => Math.max(0, index - 1));
+          }}
           className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
         >
           ←
@@ -312,9 +413,10 @@ export function StorytimeDecodable({
           type="button"
           aria-label={thai ? "หน้าต่อไป" : "Next page"}
           disabled={!decodable || pageIndex >= decodable.pages.length - 1}
-          onClick={() =>
-            setPageIndex((index) => Math.min((decodable?.pages.length ?? 1) - 1, index + 1))
-          }
+          onClick={() => {
+            stopBlendSequence();
+            setPageIndex((index) => Math.min((decodable?.pages.length ?? 1) - 1, index + 1));
+          }}
           className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
         >
           →

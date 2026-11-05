@@ -160,8 +160,17 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
       .find((entry) => entry.word.toLowerCase() === "pan");
     expect(timing, "the shipped w03 timing must hold the word pan").toBeTruthy();
     const view = render(<Decodable week={week3 as never} locale="en" />);
+    const phoneme = view.container.querySelectorAll("audio")[0];
+    expect(phoneme, "the decodable must render its phoneme audio element").not.toBeNull();
     vi.useFakeTimers();
     fireEvent.click(screen.getByRole("button", { name: /^pan$/i }));
+    // F120: the whole word starts only after the phoneme element ends the last grapheme clip,
+    // so the test fires the three clip ends of "pan" before it arms the cut stop.
+    for (let index = 0; index < 3; index += 1) {
+      await act(async () => {
+        (phoneme as HTMLAudioElement).dispatchEvent(new Event("ended"));
+      });
+    }
     const whole = view.container.querySelectorAll("audio")[1];
     expect(whole, "the decodable must render its whole-word audio element").not.toBeNull();
     act(() => (whole as HTMLAudioElement).dispatchEvent(new Event("loadedmetadata")));
