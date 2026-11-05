@@ -11,14 +11,11 @@
  * and never reaches the content loader.
  */
 
+import { LEVEL_MAX, WEEK_MAX } from "./contracts/week";
+import { parseCanonicalNumber } from "./route-parse";
+
 /** The environment value that turns the teacher routes on. */
 export const TEACHER_ROUTES_ENV = "STORYTIME_TEACHER_ROUTES";
-
-/** The highest level of the week contract. */
-const LEVEL_MAX = 4;
-
-/** The highest week number of the week contract. */
-const WEEK_MAX = 32;
 
 /** The highest lesson day of the week contract. */
 const DAY_MAX = 5;
@@ -37,18 +34,6 @@ export interface TeacherRoute {
  */
 export function teacherRoutesEnabled(): boolean {
   return process.env[TEACHER_ROUTES_ENV] === "1";
-}
-
-/**
- * Reads a route segment as a canonical positive number.
- * @param segment The route segment.
- * @param max The highest accepted value.
- * @returns The number, or `null` when the segment is not `^[1-9][0-9]*$` inside the bound.
- */
-function parseCanonicalNumber(segment: string, max: number): number | null {
-  if (!/^[1-9][0-9]*$/.test(segment)) return null;
-  const value = Number(segment);
-  return Number.isSafeInteger(value) && value <= max ? value : null;
 }
 
 /**

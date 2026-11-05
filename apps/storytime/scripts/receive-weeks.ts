@@ -761,6 +761,9 @@ export function receiveMain(argv: string[], root: string = defaultRoot): number 
       if (inside.startsWith("..") || isAbsolute(inside)) {
         throw new Error(`The week path ${week.path} leaves ${relative(root, contentDirectory)}`);
       }
+      // Unreachable while findLinks above rejects every link under the content folder first; it
+      // stays as the guard for the race where a link appears between that scan and the write of
+      // the week path (finding F129). No test covers this line.
       const link = linkInPath(contentDirectory, resolve(root, week.path));
       if (link) {
         throw new Error(
