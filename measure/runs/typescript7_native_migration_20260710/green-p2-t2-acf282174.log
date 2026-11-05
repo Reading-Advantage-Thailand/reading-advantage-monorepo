@@ -1,0 +1,101 @@
+# Measure Junior Green report: Phase 2 Tasks 2 and 3 (vinext 1.x upgrade)
+
+- Role: Measure Junior Green. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 2: vinext 1.x upgrade (PM step 0)`. Tasks 2 and 3.
+- Model: opencode-go/deepseek-v4.1-flash.
+- phase_base_sha: `5841dc528b0bcd22f426f043d86ba9dc7939a448`.
+- role_base_sha: `acf282174cee08106897661d1343fd353a29eb20`.
+- Status: complete. Tasks 2 and 3 are `[x]`.
+
+## Red retry
+
+Red fixed the lock scope test in `2111434dd`. The helper `_lock_change_is_in_scope` now uses
+`APP_PATHS` (`apps/marketing`, `apps/activity-vinext-fixture`). Four `P2T2ScopeRuleTests`
+cases guard it. The test file holds 27 tests. This role did not edit the test file.
+
+## Full gate
+
+Command, through heavy-run:
+
+```
+HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=5400 \
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \
+  'cd /home/daniebo/Desktop/reading-advantage-monorepo && \
+   P2_GREEN_COMMITS="c0e2cfbb1 71ae73509" \
+   python3 -m unittest measure/tests/test_typescript7_native_migration_phase2.py -v'
+```
+
+Result: `Ran 27 tests in 0.392s` and `OK`. Exit 0.
+
+The run started at 01:57 ICT on 2026-11-06. It is inside the 22:00 to 06:00 window.
+
+## Commits
+
+- Task 2: `c0e2cfbb1cbd4a2771c50bd62b3c153d05dd878e`. It sets vinext 1.2.0 in the two apps,
+  resolves `@vitejs/plugin-rsc` 0.5.38 inside the declared `^0.5.27` range, adds the fixture
+  Vite config, and refreshes the lockfile.
+- Task 3: `71ae73509260a064aa4c94d5cdf2202d0e30b5f6`. It adds the `resolved-after` and
+  `gate-results` blocks and the raw gate logs.
+- Plan close: `627a784cd1289dc7652ca342d351c19e461f7f3c`. It marks Tasks 2 and 3 `[x]` and
+  records the closed evidence.
+
+## Resolved versions
+
+| Item | Value |
+| --- | --- |
+| vinext | 1.2.0 |
+| vite | 8.1.6 |
+| react | 19.2.9 |
+| `@vitejs/plugin-rsc` | 0.5.38 |
+| Node | 24.19.0 |
+
+`apps/marketing/package.json:36` stays `^0.5.27`.
+
+## Gate table
+
+| Id | Exit | Result |
+| --- | --- | --- |
+| H0-types-marketing | 0 | 0 diagnostics |
+| H1-types-marketing | 0 | 0 diagnostics |
+| H0-types-fixture | 0 | 0 diagnostics |
+| H1-types-fixture | 0 | 0 diagnostics |
+| H0-build-marketing | 0 | 154 new files; probe 200 and 401 |
+| H1-build-marketing | 0 | 171 new files; probe 200 and 401 |
+| H0-build-fixture | 0 | 48 new files |
+| H1-build-fixture | 0 | 70 new files; needs the new Vite config |
+| H0-probe-fixture | 0 | HTTP 200, marker present |
+| H1-probe-fixture | 0 | HTTP 200, marker present |
+| H0-test | 0 | 65 files, 573 tests |
+| H1-test | 0 | 65 files, 573 tests |
+| H1-install | 0 | `pnpm install --frozen-lockfile` |
+
+The build logs hold no line that matches `warn`. The counter is 0 for all four build logs.
+
+## Review C
+
+Review C applies. A Green commit touches `apps/activity-vinext-fixture/vite.config.ts`. The
+strategy section 4.10 (line 293) makes Review C apply for a file under `apps/*/` or a
+`vite.config.ts`. The note justifies the file with `phase2/raw-logs/H1-build-fixture.log`.
+
+## Known failures
+
+None. The full Phase 2 test file exits 0.
+
+## Scope
+
+The lockfile diff stays in the two app importers and the `packages` and `snapshots` sections.
+`pnpm-workspace.yaml` is unchanged. No `package.json` other than the two apps changed. No
+deploy ran. No push ran.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: typescript7_native_migration_20260710
+phase: Phase 2: vinext 1.x upgrade (PM step 0)
+commits: c0e2cfbb1 71ae73509 627a784cd
+tests_run: full Phase 2 with P2_GREEN_COMMITS="c0e2cfbb1 71ae73509": Ran 27 tests in 0.392s, OK, exit 0
+files_changed: apps/marketing/package.json; apps/activity-vinext-fixture/package.json; apps/activity-vinext-fixture/vite.config.ts (new); pnpm-lock.yaml; evidence note and raw logs; plan.md; this log
+plan_updates: Tasks 2 and 3 [x] with c0e2cfbb1 and 71ae73509; closed evidence records the Red retry 2111434dd and the 27-test run
+known_failures: none
+handoff: Tasks 2 and 3 are complete. Review C applies because a Green commit touches apps/activity-vinext-fixture/vite.config.ts (strategy line 293). The note justifies it with H1-build-fixture.log. Resolved: vinext 1.2.0, vite 8.1.6, react 19.2.9, @vitejs/plugin-rsc 0.5.38. No deploy and no push. The phase manual verification task stays [b] with deferred:product-owner.
+END_MEASURE_AGENT_RESULT
