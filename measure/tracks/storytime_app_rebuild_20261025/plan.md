@@ -1123,6 +1123,130 @@ Green builds to these rules:
   No next-server ran outside a gate job; ports 3940 to 3960 were checked
   before the first run and after the last run and are clear.
 
+#### Turn 5 Green evidence (review round 3)
+
+- Base: the turn 5 diff base is `acf282174`. Audited HEAD:
+  `465286be88c9329faf766e4c0f2da648b7f57d44` — every gate below ran on
+  this one HEAD, and `git rev-parse HEAD` names the same SHA at the start
+  and at the end. Turn 5 commits: `f60626163` (F144), `a0f0e8357` (F140),
+  `baf1c63f5` (F141), `99a231d03` (F142), `98d1ccc12` (F143). Files
+  changed in turn 5: `lib/audio-seek.ts`, `lib/route-parse.ts`,
+  `app/[locale]/st/[level]/[week]/reader.tsx`,
+  `app/[locale]/st/[level]/[week]/decodable.tsx`,
+  `__tests__/phase3-audio-seek-stop.test.tsx`,
+  `__tests__/phase3-route-parse.test.ts`,
+  `__tests__/phase1-smoke-cleanup.test.sh`,
+  `__tests__/phase3-docker-smoke.sh`, `__tests__/phase3-browser-gate.sh`.
+- F140 (A4-1, the word cut fires about 48 ms early). Cause: the stop
+  timer counted wall time from before playback, while the media clock
+  lags the wall clock by 48 to 51 ms (output latency), so the timer
+  paused before the measured cut end. Fail-first: the jsdom rows of
+  `phase3-audio-seek-stop.test.tsx` exited 1 (2 failed, 5 passed) on the
+  old code, and the browser gate on the old app code printed
+  `word_cut_early_ms=49` (gate exit 1, `signed_pause_delta_ms=-49`,
+  clamped `word_cut_overshoot_ms=0`). Fix commit `a0f0e8357`: the shared
+  helper `stopAtMediaEnd(audio, end, onStop)` in `lib/audio-seek.ts`
+  re-arms the timer for the remaining media time (floor 5 ms) while
+  `currentTime` is below `end` and pauses only at the cut end; reader.tsx
+  and decodable.tsx use it; `onPlaybackStart` was tried and removed (it
+  did not help). After the fix the jsdom suite exits 0 (7 passed) and the
+  gate prints `word_cut_early_ms=0`, `word_cut_overshoot_ms=0`
+  (`pause_at=0.339972`).
+- F141 (A4-2, the F1b lock check is vacuous in a nested run). Cause:
+  in a gate run the test sits inside `heavy-run.sh`, which finds the
+  ancestor lock holder and exports `HEAVY_LOCK_HELD=1` itself, so the old
+  F1b passed even with the string removed from the re-entry line.
+  Fail-first: the nested probe (one heavy-run job) ran the no-hint
+  re-entry line on the old code and it exited 0; unnested it exits 1, so
+  the vacuity is nesting-specific. Fix commit `baf1c63f5`: F1b runs with
+  `HEAVY_LOCK="$WORK/f1b.lock"` (no ancestor holds it, so heavy-run takes
+  the lock through flock and exports no hint) and a new negative case
+  runs the same command with the `HEAVY_LOCK_HELD=1` string removed by
+  `sed`, which must fail. After the fix both F1b rows pass
+  (`PASS=32, FAIL=0`). Corrected claim: "only the string can carry the
+  lock hint" was wrong in a nested run — the ancestor branch of
+  `heavy-run.sh` (lines 705 to 709) is a second carrier; with a private
+  lock the string is the only carrier, which is what F1b now tests.
+- F142 (A4-3 and B4-1, the no-cookie row passes on a failed fetch).
+  Cause: `headers_hold_cookie ""` returns false, so a failed curl
+  (Review A probe: `curl_rc=7`, `headers_len=0`) made the row pass
+  vacuously. Fail-first: the probe on the old row logic printed
+  `OLD_ROW_PASSES_VACUOUSLY` for a curl to an unused local port. Fix
+  commit `99a231d03`: `week_page_headers_checked` checks the curl exit
+  code and the status line; `week_no_cookie_ok` decides the row; new live
+  rows assert no `Set-Cookie` on the week 404 and on the locale redirect
+  (HTTP 307); two new self-test cases (a curl stub that exits 7, an
+  answer without a status line) must fail the row. After the fix the
+  self-test exits 0 with 6 cases and the smoke exits 0 with
+  `PASS=19, FAIL=0` (17 to 19).
+- F143 (A4-4, four gate rows without a self-test). Cause: `duplicate_ids`,
+  `bottom_bar_gap_px`, `focus_visible_failures`, and the word-cut rules
+  had no self-test, the bottom-bar row printed a fixed
+  `bottom_bar_gap_px=0` and passed only when no bar matched, and the 4a
+  comment claimed "each floor has a self-test above or a fail-first run",
+  which was not true for these rows. Fail-first state: the duplicate-ids
+  and focus helpers existed, so the new self-tests exercise them directly
+  and the run shows each rejection with its row value; the old bottom-bar
+  logic (`ok: bars === 0`) rejected the bar page too but without
+  measuring the gap; the word-cut rule was inline in the live rows, so no
+  testable unit existed on the old code. Fix commit `98d1ccc12`: the
+  shared `wordCutVerdict(pauseAt, cutEnd)` and `bottomBarGap(pg,
+  selector)` serve the live rows and the self-tests; `duplicateIdCount`
+  returns `{duplicates, ids}` and the live rows print `ids_found=<n>`;
+  three new self-test pages and six new self-test entries. Self-test
+  values: `duplicate_ids=1 (ids_found=1)`, `bottom_bar_gap_px=10
+  (bars_found=1)`, `focus_visible_failures=1 (targets=1)`, overshoot
+  80 ms fails, early 48 ms fails, a pause at the end passes both.
+  Corrected 4a claim: every rule that a synthetic page or value can
+  exercise has a self-test; the live rows add the real audio, the
+  fixture, and the hydrated screens that no synthetic page can replace.
+- F144 (A3-13, control characters in route logs). Cause: `logSegment`
+  wrote `JSON.stringify` output raw, so DEL, C1, and U+2028/U+2029 could
+  break the log line or the log consumer. Fail-first: the new
+  `phase3-route-parse.test.ts` row exited 1 on the old code (1 failed,
+  6 passed). Fix commit `f60626163`: `logSegment` escapes
+  `[\u007f-\u009f\u2028\u2029]` to `\uXXXX` after `JSON.stringify`. After
+  the fix the suite exits 0 (7 passed).
+- Gates on `465286be8` (each through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a
+  time; no HEAVY_PRIORITY):
+  | # | Command | Exit | Counts |
+  |---|---------|------|--------|
+  | 1 | the exact P3.4 line-328 command with `CI=true`: `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 33 files, 309 tests, all passed |
+  | 2 | `CI=true pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests, all passed |
+  | 3 | `bash apps/storytime/__tests__/phase1-smoke-cleanup.test.sh` | 0 | PASS=32, FAIL=0 |
+  | 4 | `bash apps/storytime/__tests__/phase3-docker-smoke.sh --self-test` | 0 | 6 SELF-TEST PASS, 0 FAIL |
+  | 5 | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-docker-smoke.sh` | 0 | PASS=19, FAIL=0 |
+  | 6 | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=52, FAIL=0; wrapper PASS=4, FAIL=0 |
+  | 7 | `pnpm exec tsc --noEmit` in `apps/storytime` | 0 | no output, clean |
+  | 8 | `pnpm exec eslint` on the six changed TS/TSX files of `git diff --name-only acf282174..HEAD -- apps/storytime` | 0 | clean |
+  | 9 | `build-graph update ./graph.db` on the four changed source files | 0 | 52 to 66 nodes, 83 to 91 edges |
+- Gate 6 live values on this HEAD: `duplicate_ids_*=0 (ids_found=1)` on
+  the five screens, `bottom_bar_gap_px=0 (bars_found=0)`,
+  `focus_target_count=16`, `focus_visible_failures=0`,
+  `word_cut_overshoot_ms=0 (signed_pause_delta_ms=0, pause_at=0.33967)`,
+  `word_cut_early_ms=0`. Gate 5 new rows: the week page, the locale
+  redirect (HTTP 307), and the week 404 each answer with no
+  `Set-Cookie`. No server ran outside a heavy-run job; ports 3940 to 3960
+  were checked before the first run and after the last run and are clear.
+- Turn 4c closeout items on this HEAD: 1a rerun (gate 1, the phase3-*
+  storytime part; 33 files and 309 tests against the turn 4c 18 and 179,
+  the growth is the task 3.10 and remediation test files); 1b rerun
+  (gate 1 includes `packages/read-along`); 6 rerun (gate 9 updates the
+  graph for the four changed source files; turn 4c indexed 41 phase 3
+  files and the unchanged ones keep their entries). 1c stays valid: no
+  Phase 1 source or scaffold, boundary, or service target changed in
+  `acf282174..HEAD`, and gate 3 reran the phase 1 smoke-cleanup shell
+  suite (`PASS=32`). Item 2 stays valid: no turbo config or script
+  changed in the diff, and the same scope is covered on this HEAD by
+  gate 5 (the production docker build of the app succeeded), gate 7
+  (`tsc --noEmit`), gate 8 (ESLint on every changed TS/TSX file), and
+  gates 1 and 2 (the vitest suites). Item 5 stays valid: turn 5 changed
+  no content, receiver script, or manifest; gates 1 (the manifest and
+  readiness tests) and 5 (the smoke lists w01 to w08 and mounts the
+  fixture) cover the receiver outputs on this HEAD.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
 ## Phase 4: Teacher app
