@@ -387,6 +387,7 @@ export function StorytimeReader({
                 position={position}
                 active={mode !== "idle"}
                 onWordTap={mode === "myTurn" ? onWordTap : undefined}
+                tapTargetFloor
               />
             </div>
           </div>

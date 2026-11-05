@@ -40,6 +40,11 @@ export interface ReadAlongPassageProps {
     sentence: ReactNode,
     onTranslate: () => void,
   ) => ReactNode;
+  /**
+   * Raises the tap-target floor of the word spans to 44 px (the Phase 3 gate row
+   * `tap_target_min_px_player`). The default keeps the compact article layout of the other hosts.
+   */
+  tapTargetFloor?: boolean;
 }
 
 interface SentenceViewProps {
@@ -50,6 +55,8 @@ interface SentenceViewProps {
   /** Screen word to mark, or -1. */
   markedWord: number;
   active: boolean;
+  /** Raises the word tap targets to the 44 px floor (the at-home gate row). */
+  tapTargetFloor: boolean;
   currentSentenceRef?: Ref<HTMLSpanElement>;
   onWordTap?: (sentenceIndex: number, audioWordIndex: number) => void;
 }
@@ -62,6 +69,7 @@ const SentenceView = memo(function SentenceView({
   isCurrent,
   markedWord,
   active,
+  tapTargetFloor,
   currentSentenceRef,
   onWordTap,
 }: SentenceViewProps) {
@@ -72,7 +80,7 @@ const SentenceView = memo(function SentenceView({
       data-sentence={index}
       aria-current={active && isCurrent ? "true" : undefined}
       className={cn(
-        "font-article rounded px-0.5 text-lg transition-all duration-200 md:text-xl",
+        "font-article rounded px-0.5 text-lg transition-all duration-200 motion-reduce:transition-none md:text-xl",
         active && isCurrent && HIGHLIGHT_CLASSES.playingSentence,
         interactive &&
           "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -125,7 +133,8 @@ const SentenceView = memo(function SentenceView({
               data-word={word.index}
               aria-current={active && word.index === markedWord ? "true" : undefined}
               className={cn(
-                "cursor-pointer rounded transition-colors duration-150",
+                "cursor-pointer rounded transition-colors duration-150 motion-reduce:transition-none",
+                tapTargetFloor && "inline-flex min-h-[44px] min-w-[44px] items-center justify-center",
                 active && word.index === markedWord ? HIGHLIGHT_CLASSES.currentWord : HIGHLIGHT_CLASSES.hoverWord,
                 interactive &&
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -158,6 +167,7 @@ export function ReadAlongPassage({
   onWordTap,
   onTranslate,
   renderSentenceMenu,
+  tapTargetFloor,
 }: ReadAlongPassageProps): ReactNode {
   const aligned = useMemo(
     () =>
@@ -200,6 +210,7 @@ export function ReadAlongPassage({
               isCurrent={isCurrent}
               markedWord={isCurrent && position.wordIndex >= 0 ? (maps.audioToDisplay[position.wordIndex] ?? -1) : -1}
               active={active}
+              tapTargetFloor={tapTargetFloor ?? false}
               currentSentenceRef={currentSentenceRef}
               onWordTap={onWordTap}
             />

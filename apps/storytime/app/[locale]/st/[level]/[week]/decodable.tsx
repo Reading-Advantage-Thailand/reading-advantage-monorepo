@@ -438,7 +438,7 @@ export function StorytimeDecodable({
                   key={index}
                   type="button"
                   onClick={() => onWordTap(token)}
-                  className="rounded px-0.5 hover:bg-neutral-100"
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded px-0.5 hover:bg-neutral-100"
                 >
                   {token.toUpperCase()}
                 </button>
@@ -486,7 +486,7 @@ export function StorytimeDecodable({
                 <button
                   type="button"
                   onClick={() => onWordTap(word)}
-                  className="min-h-12 rounded-full border border-neutral-300 px-4"
+                  className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-neutral-300 px-4"
                 >
                   {word.toUpperCase()}
                 </button>
