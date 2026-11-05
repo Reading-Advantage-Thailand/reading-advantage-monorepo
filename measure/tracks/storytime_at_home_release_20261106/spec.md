@@ -50,22 +50,22 @@ Each acceptance check (AC) names its evidence class: **automated**, **person-che
 ### FR-1 Receive the week packages (Phase 1)
 
 - Each of the 7 folders passes `sha256sum -c MANIFEST.txt` before any copy. A broken manifest stops the import and goes to the PM.
-- w01 r2 replaces w01. It goes into its own commit, so it can ship alone on Daniel's deploy word.
+- w01 r2 replaces w01. The whole receipt (weeks 1 to 8 and `source.json`) goes into one commit, the receipt commit. w02 to w08 are already in the app as drafts at the old pin, and they stay draft. A deploy of the receipt commit changes only w01 for a user, so the commit is ready for Daniel's deploy word.
 - w02 to w07 enter with `meta.status` `draft`. The receiver never changes `meta.status` or `approval` (parent spec FR-4).
 - The receiver runs at `82f88853615f2925d8f1c12b4571790305224178` for weeks 1 to 8, with the existing command and no new tool. The receiver gate of the parent moves to this pin.
 - Each week file in `apps/storytime/content/l2/` equals `git show 82f88853:content/storytime/l2/w<nn>.json` byte for byte. The check reads the Workbooks repository only. No command writes in the Workbooks repository.
-- w02 to w07 do not show as published. The readiness gate (parent spec FR-5, AC-5.5) keeps them at 404. w01 stays ready.
+- w02 to w08 do not show as published. The readiness gate (parent spec FR-5, AC-5.5) keeps them at 404. w01 stays ready.
 - No push and no deploy.
 
 Acceptance:
 
 - AC-1.1 (automated) `sha256sum -c MANIFEST.txt` exits 0 in each of the 7 folders. The run records `folders_checked=7`.
 - AC-1.2 (automated) For each of weeks 1 to 8, the written week equals the `git show 82f88853:…` output. The run records `weeks_equal=8`. For w01 to w07, the file also equals the hand-off file (`weeks_equal_handoff=7`).
-- AC-1.3 (automated) A test reads the shipped w02 to w07. Each has `meta.status` `draft`, and `isWeekReady` is false for each. The test records `weeks_checked=6`.
+- AC-1.3 (automated) A test reads the shipped w02 to w08. Each has `meta.status` `draft`, and `isWeekReady` is false for each, so each answers 404. The test records `weeks_checked=7`. The check for w08 is part of this test, because the receipt writes w08 at the new pin.
 - AC-1.4 (automated) A test reads the shipped w01. It has `meta.status` `published`, and `isWeekReady` is true. It also holds the new color-own-book teacher lines of r2.
-- AC-1.5 (automated) `source.json` records the commit `82f88853615f2925d8f1c12b4571790305224178` and lists weeks 1 to 8. A second receiver run at this commit makes no difference (`git diff --exit-code apps/storytime/content` exits 0).
-- AC-1.6 (automated) The targeted app tests of the parent strategy (the phase 2 and phase 3 files that read shipped weeks, and the files that name the pin) exit 0 at the new pin. `tsc --noEmit` in `apps/storytime` exits 0.
-- AC-1.7 (automated) The commit of w01 r2 holds `apps/storytime/content/l2/w01.json` only, with the tests that need it. The targeted tests exit 0 at that commit alone.
+- AC-1.5 (automated) `source.json` records the commit `82f88853615f2925d8f1c12b4571790305224178` and lists weeks 1 to 8. The second-run gate binds to the receipt commit: after the receipt commit exists, a second receiver run at this pin makes no difference (`git diff --exit-code apps/storytime/content` exits 0).
+- AC-1.6 (automated) The targeted app tests of the parent strategy (the phase 2 and phase 3 files that read shipped weeks, and the files that name the pin) exit 0 at the receipt commit. `tsc --noEmit` in `apps/storytime` exits 0.
+- AC-1.7 (automated) The receipt commit holds `apps/storytime/content/l2/w01.json` to `w08.json` and `source.json`, with the changed pin expectations of the tests. It holds no other file. The whole task 1.7 set exits 0 at this commit.
 
 ### FR-2 The approved A-42 pin (Phase 2)
 
@@ -84,7 +84,7 @@ This is the task 3.11 of the parent, with amendment R-1 (parent plan line 267: t
 
 - The deploy is Daniel's gate (parent spec section 5). The target is 2026-11-20. The marker is `[b] deferred:daniel`.
 - The deploy ships the exact passed commit to `storytime-app` with no traffic, by the runbook `docs/runbooks/storytime-deploy.md`.
-- w01 r2 ships only on Daniel's deploy word.
+- w01 r2 ships only on Daniel's deploy word. It ships with the receipt commit of Phase 1.
 - The production service has no `STORYTIME_SHOW_DRAFT_MEDIA` (parent spec AC-5.5).
 
 Acceptance:
@@ -117,5 +117,5 @@ Acceptance:
 | # | Question | Default until the PM answers |
 |---|---|---|
 | R1 | The hand-off has no w08 folder, but the receiver rule needs weeks 1 to 8 at a new commit, and `82f88853` changes w08 by 8 lines. | Run weeks 1 to 8. Check w08 byte-equal to `git show`. w08 stays draft and not ready. Report the w08 diff to the PM. |
-| R2 | The receiver writes `source.json` at the new pin, and it covers all weeks. How does w01 r2 ship alone? | Two commits. Commit A holds `w01.json` only. Commit B holds `w02.json` to `w08.json` and `source.json`. |
+| R2 | The receiver writes `source.json` at the new pin, and it covers all weeks. How does w01 r2 ship alone? | It does not need a separate commit (spec review F1). One receipt commit holds weeks 1 to 8 and `source.json`. w02 to w08 are drafts at the old pin already and stay draft. |
 | R3 | Do the media of the 7 folders stay in the hand-off folders until the deploy? | Yes. The review copy reads them through `STORYTIME_MEDIA_BASE`. The first w01 folder is superseded by r2. |
