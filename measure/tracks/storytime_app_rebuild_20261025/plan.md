@@ -1249,6 +1249,83 @@ Green builds to these rules:
   readiness tests) and 5 (the smoke lists w01 to w08 and mounts the
   fixture) cover the receiver outputs on this HEAD.
 
+#### Turn 6 Green evidence (review round 4)
+
+- Base: the round 3 result HEAD `f87f07a57`; the reviews ran there
+  (Review A r4 pass, Review B r3 pass, Review C r3). Audited HEAD:
+  `f5f93a3a12cf83a618903017ab754c57137be883` — the probes and every gate
+  below ran on this one HEAD. Turn 6 commits: `0c9263572` (F146) and
+  `f5f93a3a1` (F145). Files changed in turn 6: `lib/audio-seek.ts`,
+  `app/[locale]/st/[level]/[week]/reader.tsx`, and
+  `__tests__/phase3-audio-seek-stop.test.tsx`. No server, container, or
+  gate-script change, so the Docker smoke and the phase 1 smoke-cleanup
+  test need no rerun; their turn 5 runs stay valid.
+- F146 (A5-1, B5-2, C5-1; closes the strategy line 498 second-tap gap).
+  Cause: `reader.tsx` `onWordTap` assigned
+  `stopCancelRef.current = stopAtMediaEnd(...)` without the previous
+  cancel (the F140 change dropped `clearStopTimer()`), so a second word
+  tap leaked the first cut's loop, which paused the second cut when the
+  clock passed the first end and could outlive the component. Fail-first:
+  the new jsdom row "keeps one pending stop and does not pause the second
+  cut at the first cut end" exited 1 on the current code (1 failed,
+  7 passed; `the first word's stale stop must not pause the second cut:
+  expected pause not to be called, but called 1 times`); the Review C
+  probe failed on the audited copy the same way. Fix commit `0c9263572`:
+  `onWordTap` calls `clearStopTimer()` before arming, as
+  `decodable.tsx` `armWholeStop` does. After the fix the suite exits 0
+  (8 passed at that commit) and the Review C probe exits 0.
+- F145 (B5-1, A5-2). Cause: `stopAtMediaEnd` re-armed while
+  `currentTime` stayed below the cut end, so a `pause`, `ended`, or
+  `error` below the end left the loop waking forever (Review B measured
+  245 ticks in 10 s; the worst case is a 5 ms wake loop). Fail-first:
+  three new jsdom rows (one per event) exited 1 on the current helper
+  (3 failed, 8 passed; each `after <event>, no timer stays pending:
+  expected 1 to be 0`). Fix commit `f5f93a3a1`: one-shot `pause`,
+  `ended`, and `error` listeners end the loop, remove the listeners, and
+  run `onStop` once. Decision on `onStop`: it runs on such an end,
+  because both callers clear their mark in it and a paused or ended
+  element must leave no stale mark; the listeners detach before
+  `onStop`, so the pause that `onStop` itself fires cannot re-enter.
+  The commit also makes one loop live per element (a new arm replaces
+  the previous loop of the same element without running its `onStop`):
+  the Review B probe R6c arms two loops on one element without
+  canceling — the unfixed reader pattern — so the reader-level cancel
+  alone cannot make that probe pass; both callers hold one cut per
+  element, and the rule also covers the second tap before
+  `loadedmetadata`, where two `seekAndRun` callbacks queue. After the
+  fix the suite exits 0 (11 passed).
+- Gates on `f5f93a3a1` (each through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a
+  time; no HEAVY_PRIORITY):
+  | # | Command | Exit | Counts |
+  |---|---------|------|--------|
+  | 1 | the exact P3.4 line-328 command with `CI=true` | 0 | 33 files, 313 tests, all passed |
+  | 2a | `node_modules/.bin/tsx measure/runs/storytime_app_rebuild_20261025/review-b-f87f07a57-probe.mts` | 0 | `SUMMARY failed=0`; R6a 0 ticks (pause, error, ended), R6b `orphan_ticks_in_10s=0`, R6c `pause_at=null`, R6d pass |
+  | 2b | `CI=true pnpm exec vitest run --maxWorkers=1 measure/runs/storytime_app_rebuild_20261025/review-a-f87f07a57-probe.test.ts` | 0 | 2 tests passed |
+  | 2c | `CI=true pnpm exec vitest run --maxWorkers=1 measure/runs/storytime_app_rebuild_20261025/probe-c5-reader-second-tap.test.tsx` | 0 | 1 test passed |
+  | 3a | the P4 tests (`phase4-teacher-flag`, `phase4-week-view`) | 0 | 2 files, 15 tests |
+  | 3b | `pnpm exec tsc --noEmit` in `apps/storytime` | 0 | clean |
+  | 3c | `pnpm exec eslint` on the three changed files | 0 | clean |
+  | 4 | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=52, FAIL=0; wrapper PASS=4, FAIL=0 |
+  | 5 | `build-graph update ./graph.db` on the two changed source files | 0 | 28 to 34 nodes, 50 to 49 edges |
+  The Docker smoke and `phase1-smoke-cleanup.test.sh` need no rerun:
+  turn 6 changed no server, container, or gate-script file, so their
+  turn 5 runs on `465286be8` stay valid. Gate 4 word-cut rows:
+  `word_cut_early_ms=0` in both runs; `word_cut_overshoot_ms=4`
+  (`pause_at=0.344341`) in the first run and `0` (`pause_at=0.339972`,
+  the exact turn 5 value) in a rerun — run-to-run media-clock jitter,
+  both inside the 50 ms floor, and the F140 stop path is unchanged
+  (early 0, the stop lands on the media clock at the cut end).
+  Other gate 4 live values are the turn 5 values: `duplicate_ids_*=0
+  (ids_found=1)`, `bottom_bar_gap_px=0 (bars_found=0)`,
+  `focus_target_count=16`, `focus_visible_failures=0`. Ports 3940 to
+  3960 were checked before the first run and after the last run and are
+  clear. Deviation: one ad-hoc `tsc --noEmit` check ran outside
+  heavy-run after the F145 edit (read-only, no writes, no server); the
+  recorded gate 3b tsc ran through heavy-run. No test, build,
+  build-graph, or server ran outside heavy-run otherwise.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
 
 ## Phase 4: Teacher app
