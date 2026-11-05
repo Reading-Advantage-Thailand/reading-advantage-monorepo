@@ -93,6 +93,15 @@ id of test-strategy.md section 4.6 needs one entry. A build gate entry needs a
 The lockfile scope rule accepts the importer block of each app. It also accepts
 the `packages` section and the `snapshots` section. Every other importer block
 is out of scope. The importer key of an app is its `apps/` path.
+
+The bookkeeping rule accepts one append to `measure/tech-debt.md` only when the
+diff has no removed line and every added line starts with `| 2026-` and holds
+the track id. It accepts one flat `measure/runs/<track>/green-p2-*.log`. Review
+files and scripts in that folder are rejected.
+
+The gate list holds 24 ids. The 11 `HR-*` ids come from section 4.12.5 of the
+strategy. The two probe logs must hold their labeled `HTTP_STATUS=` and
+`LOCATION=` lines at the line start.
 """
 
 from __future__ import annotations
@@ -104,12 +113,17 @@ import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ID = "typescript7_native_migration_20260710"
 APPS = ("marketing", "activity-vinext-fixture")
 APP_PATHS = tuple(f"apps/{app}" for app in APPS)
+TECH_DEBT_PATH = "measure/tech-debt.md"
+GREEN_LOG_PATTERN = re.compile(
+    r"^measure/runs/" + re.escape(TRACK_ID) + r"/green-p2-[A-Za-z0-9._-]+\.log$"
+)
 CANDIDATE_PATTERN = re.compile(r"^1\.\d+\.\d+$")
 SOURCE_PATTERN = re.compile(r"^(?P<path>[^:]+):(?P<line>\d+)$")
 ANSI_PATTERN = re.compile(r"\x1b\[[0-9;]*m")
@@ -129,6 +143,17 @@ GATE_IDS = (
     "H0-types-fixture",
     "H1-types-fixture",
     "H1-install",
+    "HR-types-marketing-blank",
+    "HR-types-marketing-generated",
+    "HR-types-marketing-committed",
+    "HR-types-fixture-blank",
+    "HR-types-fixture-generated",
+    "HR-types-fixture-committed",
+    "HR-build-marketing",
+    "HR-build-fixture",
+    "HR-probe-fixture",
+    "HR-probe-marketing-redirect",
+    "HR-build-fixture-no-vite-config",
 )
 
 BUILD_GATE_IDS = (
@@ -493,6 +518,46 @@ def _lock_change_is_in_scope(section: tuple[str, str]) -> bool:
     return top == "importers" and importer in APP_PATHS
 
 
+def _bookkeeping_path_is_allowed(path: str, diff: str) -> bool:
+    """Decide whether a Green commit may touch a bookkeeping path.
+
+    The rule accepts the tech-debt file of this track only when the diff holds
+    no removed line and every added line starts with `| 2026-` and holds the
+    track id. The rule accepts one flat Green log in the run folder of this
+    track. Every other bookkeeping path is rejected.
+
+    Args:
+        path: The changed file path.
+        diff: The unified diff of that path in the commit.
+
+    Returns:
+        True when the change is allowed. False otherwise.
+    """
+    if path == TECH_DEBT_PATH:
+        added: list[str] = []
+        removed: list[str] = []
+        in_hunk = False
+        for line in diff.splitlines():
+            if line.startswith("@@"):
+                in_hunk = True
+                continue
+            if not in_hunk:
+                continue
+            if line.startswith("+"):
+                added.append(line[1:])
+            elif line.startswith("-"):
+                removed.append(line[1:])
+        if removed or not added:
+            return False
+        for row in added:
+            if not row.startswith("| 2026-"):
+                return False
+            if TRACK_ID not in row:
+                return False
+        return True
+    return bool(GREEN_LOG_PATTERN.match(path))
+
+
 def _changed_lock_lines(diff: str) -> list[tuple[str, int]]:
     """Read the changed line numbers of a lockfile diff.
 
@@ -544,6 +609,21 @@ def _resolve_log(value: str) -> Path:
     if text.endswith(".log"):
         return RAW_LOGS_DIR / text
     return RAW_LOGS_DIR / f"{text}.log"
+
+
+def _labeled_values(text: str, label: str) -> list[str]:
+    """Read every labeled value at the line start of a log.
+
+    Args:
+        text: The log text.
+        label: The label with its equals sign.
+
+    Returns:
+        The values that follow the label. An empty list means the log holds no
+        such line.
+    """
+    pattern = re.compile(r"^" + re.escape(label) + r"(.*)$", re.MULTILINE)
+    return [match.group(1).strip() for match in pattern.finditer(text)]
 
 
 def _parse_vitest_counts(text: str) -> tuple[int | None, int | None]:
@@ -1132,6 +1212,14 @@ class P2T2ScopeTests(unittest.TestCase):
                         f"the build log of {path} is empty: {build_log}",
                     )
                     continue
+                diff = ""
+                if path == TECH_DEBT_PATH:
+                    diff, error = _run_git(
+                        ["show", "--format=", "--unified=0", commit, "--", path]
+                    )
+                    self.assertIsNone(error, error)
+                if _bookkeeping_path_is_allowed(path, diff):
+                    continue
                 self.fail(
                     f"the commit {commit} touches {path}, which is outside the phase scope"
                 )
@@ -1295,6 +1383,117 @@ class P2T2ScopeRuleTests(unittest.TestCase):
             )
 
 
+class P2T2BookkeepingRuleTests(unittest.TestCase):
+    """Falsification tests for the bookkeeping scope rule.
+
+    The rule accepts one tech-debt append of this track and one flat Green log
+    in the run folder of this track. Every other bookkeeping path fails. Each
+    case here calls the helper that the scope test calls.
+    """
+
+    TECH_DEBT_PATH = "measure/tech-debt.md"
+    ROW = (
+        "| 2026-11-06 | typescript7_native_migration_20260710 | "
+        "fixture vite.config.ts is outside the type check | Open |"
+    )
+    OTHER_TRACK_ROW = (
+        "| 2026-11-06 | storytime_app_rebuild_20261025 | "
+        "a row of another track | Open |"
+    )
+    NO_DATE_ROW = (
+        "| typescript7_native_migration_20260710 | a row without a date | Open |"
+    )
+
+    @staticmethod
+    def _diff(added: list[str], removed: list[str] | None = None) -> str:
+        """Build a unified diff of the tech-debt file.
+
+        Args:
+            added: The text of the added lines.
+            removed: The text of the removed lines.
+
+        Returns:
+            The unified diff text.
+        """
+        lines = [
+            "--- a/measure/tech-debt.md",
+            "+++ b/measure/tech-debt.md",
+            "@@ -57,0 +58 @@",
+        ]
+        for line in removed or []:
+            lines.append("-" + line)
+        for line in added:
+            lines.append("+" + line)
+        return "\n".join(lines)
+
+    def test_tech_debt_append_with_track_id_is_allowed(self) -> None:
+        """Requires a tech-debt append of this track to be allowed."""
+        self.assertTrue(
+            _bookkeeping_path_is_allowed(self.TECH_DEBT_PATH, self._diff([self.ROW])),
+            "a tech-debt append of this track must be allowed",
+        )
+
+    def test_tech_debt_removed_line_is_rejected(self) -> None:
+        """Requires a tech-debt diff with a removed line to be rejected."""
+        self.assertFalse(
+            _bookkeeping_path_is_allowed(
+                self.TECH_DEBT_PATH,
+                self._diff([self.ROW], ["| 2026-01-01 | an old row | Open |"]),
+            ),
+            "a tech-debt diff with a removed line must be rejected",
+        )
+
+    def test_tech_debt_other_track_id_is_rejected(self) -> None:
+        """Requires a tech-debt row of another track to be rejected."""
+        self.assertFalse(
+            _bookkeeping_path_is_allowed(
+                self.TECH_DEBT_PATH, self._diff([self.OTHER_TRACK_ROW])
+            ),
+            "a tech-debt row of another track must be rejected",
+        )
+
+    def test_tech_debt_row_without_date_prefix_is_rejected(self) -> None:
+        """Requires a tech-debt row without the date prefix to be rejected."""
+        self.assertFalse(
+            _bookkeeping_path_is_allowed(
+                self.TECH_DEBT_PATH, self._diff([self.NO_DATE_ROW])
+            ),
+            "a tech-debt row without the date prefix must be rejected",
+        )
+
+    def test_green_log_in_track_run_folder_is_allowed(self) -> None:
+        """Requires a Green log of this track to be allowed."""
+        path = f"measure/runs/{TRACK_ID}/green-p2-t2-x.log"
+        self.assertTrue(
+            _bookkeeping_path_is_allowed(path, ""),
+            "a Green log of this track must be allowed",
+        )
+
+    def test_green_log_in_other_run_folder_is_rejected(self) -> None:
+        """Requires a Green log of another track to be rejected."""
+        path = "measure/runs/storytime_app_rebuild_20261025/green-p2-t2-x.log"
+        self.assertFalse(
+            _bookkeeping_path_is_allowed(path, ""),
+            "a Green log of another track must be rejected",
+        )
+
+    def test_review_file_in_run_folder_is_rejected(self) -> None:
+        """Requires a review result in the run folder to be rejected."""
+        path = f"measure/runs/{TRACK_ID}/review-a-x.json"
+        self.assertFalse(
+            _bookkeeping_path_is_allowed(path, ""),
+            "a review file must be rejected",
+        )
+
+    def test_python_file_in_run_folder_is_rejected(self) -> None:
+        """Requires a script in the run folder to be rejected."""
+        path = f"measure/runs/{TRACK_ID}/probe.py"
+        self.assertFalse(
+            _bookkeeping_path_is_allowed(path, ""),
+            "a script file must be rejected",
+        )
+
+
 class P2T3ResolvedNoteTests(unittest.TestCase):
     """Contracts for the Task 3 resolved note and the gate results."""
 
@@ -1403,6 +1602,41 @@ class P2T3ResolvedNoteTests(unittest.TestCase):
                 0,
                 f"the log of the gate {gate_id} is empty: {entry['log']}",
             )
+
+    def test_probe_logs_hold_status(self) -> None:
+        """Requires the probe logs to hold their labeled status lines."""
+        fixture_log = _resolve_log("HR-probe-fixture")
+        self.assertTrue(
+            fixture_log.is_file(),
+            f"the fixture probe log does not exist: {fixture_log}",
+        )
+        fixture_text = fixture_log.read_text(encoding="utf-8")
+        self.assertIn(
+            "200",
+            _labeled_values(fixture_text, "HTTP_STATUS="),
+            "the fixture probe log has no HTTP_STATUS=200 line",
+        )
+        redirect_log = _resolve_log("HR-probe-marketing-redirect")
+        self.assertTrue(
+            redirect_log.is_file(),
+            f"the redirect probe log does not exist: {redirect_log}",
+        )
+        redirect_text = redirect_log.read_text(encoding="utf-8")
+        self.assertIn(
+            "307",
+            _labeled_values(redirect_text, "HTTP_STATUS="),
+            "the redirect probe log has no HTTP_STATUS=307 line",
+        )
+        locations = _labeled_values(redirect_text, "LOCATION=")
+        paths = []
+        for location in locations:
+            parts = urlsplit(location)
+            paths.append(parts.path + ("?" + parts.query if parts.query else ""))
+        self.assertTrue(
+            any(path.startswith("/login?returnTo=") for path in paths),
+            "the redirect probe log has no LOCATION path under /login?returnTo=: "
+            f"{locations}",
+        )
 
     def test_counts_match_logs(self) -> None:
         """Requires the vitest counts to match the raw logs and the baseline."""
