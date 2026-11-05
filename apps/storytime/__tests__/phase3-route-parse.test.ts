@@ -70,4 +70,16 @@ describe("Phase 3 route segment parsing (finding F127)", () => {
     expect(text).not.toBeNull();
     expect(text!.length).toBeLessThan(300);
   });
+
+  it("escapes DEL, the C1 range, and the Unicode line separators (finding F144)", () => {
+    const text = blockedLog(routing.locales, "1\u007f", "1\u009b", "1\u2028\u2029");
+    expect(text).not.toBeNull();
+    expect(text!, "DEL, C1, U+2028, and U+2029 must not stay raw").not.toMatch(
+      /[\u007f-\u009f\u2028\u2029]/,
+    );
+    expect(text!).toContain(String.raw`\u007f`);
+    expect(text!).toContain(String.raw`\u009b`);
+    expect(text!).toContain(String.raw`\u2028`);
+    expect(text!).toContain(String.raw`\u2029`);
+  });
 });

@@ -34,12 +34,17 @@ export function parseCanonicalNumber(segment: string, max: number): number | nul
 /**
  * Escapes one route segment for the blocked-route log. A raw segment can hold a newline or a
  * carriage return, which would forge a log line (finding F133), so the value is JSON-quoted
- * with control characters escaped and cut to a bounded length.
+ * with control characters escaped and cut to a bounded length. `JSON.stringify` leaves DEL
+ * (U+007F), the C1 range (U+0080 to U+009F), U+2028, and U+2029 raw, so the escape rewrites
+ * them too (finding F144).
  * @param segment The route segment.
  * @returns The escaped and bounded segment text, with its quotes.
  */
 function logSegment(segment: string): string {
-  return JSON.stringify(segment.slice(0, LOG_SEGMENT_MAX));
+  return JSON.stringify(segment.slice(0, LOG_SEGMENT_MAX)).replace(
+    /[\u007f-\u009f\u2028\u2029]/g,
+    (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
 }
 
 /**
