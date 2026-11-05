@@ -319,8 +319,37 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
 
 - Turn 5d continues turn 5 with F143 (self-tests for the four gate rows,
   the ids_found and bars_found prints, and the 4a comment correction).
-  Work in progress; the status stays partial until every gate of turn 5
-  exits 0 on the final HEAD.
+- F143 (98d1ccc12): the self-test list holds six new entries, each using
+  the same function as its live row. `duplicate_ids`: a page with two
+  elements that share one id is rejected (`selftest duplicate_ids=1,
+  ids_found=1`); the live rows now print `ids_found=<n>` next to each
+  value (`ids_found=1` on every screen — Review A's near-empty subject is
+  now visible). `bottom_bar_gap_px`: the row measures the real gap between
+  a matching bar bottom and the viewport bottom and fails above 1; with no
+  bar it prints `bars_found=0` and passes as before; the self-test page
+  holds a fixed bar 10 px above the bottom and is rejected
+  (`selftest bottom_bar_gap_px=10, bars_found=1`). `focus_visible_failures`:
+  a button with `outline:none` and no ring is rejected
+  (`selftest focus_visible_failures=1, targets=1`). `word_cut_overshoot_ms`
+  and `word_cut_early_ms`: one shared rule `wordCutVerdict(pauseAt,
+  cutEnd)` serves both live rows and the self-test; a pause 80 ms after
+  the end fails the overshoot rule, a pause 48 ms before the end fails the
+  early rule, and a pause at the end passes both (values printed).
+  Fail-first state: the duplicate-ids and focus helpers existed, so the
+  new self-tests exercise them directly and the run shows each rejection
+  with its row value; the old bottom-bar logic (`ok: bars === 0`) also
+  rejected the bar page but without measuring the gap and with a fixed
+  `bottom_bar_gap_px=0` print, which is what the new measurement fixes;
+  the word-cut rule was inline in the live rows, so no testable unit
+  existed on the old code. The 4a comment now states the true state: every
+  rule that a synthetic page or value can exercise has a self-test; the
+  live rows add the real audio, the fixture, and the hydrated screens.
+  Gate: `bash -n` OK; the gate exits 0 with inner `PASS=52, FAIL=0` and
+  wrapper `PASS=4, FAIL=0`; live values `duplicate_ids_*=0 (ids_found=1)`,
+  `bottom_bar_gap_px=0 (bars_found=0)`, `focus_target_count=16`,
+  `focus_visible_failures=0`, `word_cut_overshoot_ms=0
+  (signed_pause_delta_ms=0, pause_at=0.33967)`, `word_cut_early_ms=0`.
+  Ports 3940 to 3960 free before and after.
 
 ## Result block
 
@@ -392,5 +421,5 @@ handoff: the Phase 3 closeout gate is complete on the amended line 402:
   base 099506a4c; turn 3 base 2c5bacabc; turn 4a base b9007dcef; turn 4b
   base b939962a9; turn 4c base 4f004a916; turn 4d base 296adf9e7; turn 4e
   base a45cd43d6; final turn 4e HEAD 383a9376f.
-dispositions: F120=FIX; F121=FIX; F122=FIX; F123=FIX; F124=FIX; F125=FIX; F126=FIX; F127=FIX; F128=CONTEST(spec.md:153 and spec.md:285 require date and words on the loops approval only - PM decision 2026-11-05 recorded in test-strategy.md by f7b5484ae); F129=FIX; F130=FIX; F131=FIX; F132=FIX; F133=FIX; F134=FIX; F135=FIX; F136=FIX; F137=FIX; F138=FIX; F139=FIX
+dispositions: F120=FIX; F121=FIX; F122=FIX; F123=FIX; F124=FIX; F125=FIX; F126=FIX; F127=FIX; F128=CONTEST(spec.md:153 and spec.md:285 require date and words on the loops approval only - PM decision 2026-11-05 recorded in test-strategy.md by f7b5484ae); F129=FIX; F130=FIX; F131=FIX; F132=FIX; F133=FIX; F134=FIX; F135=FIX; F136=FIX; F137=FIX; F138=FIX; F139=FIX; F140=FIX; F141=FIX; F142=FIX; F143=FIX; F144=FIX
 END_MEASURE_AGENT_RESULT
