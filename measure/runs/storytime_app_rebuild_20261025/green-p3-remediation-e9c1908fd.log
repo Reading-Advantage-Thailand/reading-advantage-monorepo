@@ -286,6 +286,12 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
   cut_end=0.34)`. Ports 3940 to 3960 free before and after. F141, F142,
   F143, the full gate list, and the evidence sub-block come in later turns.
 
+## Turn 5c work done (F141, F142)
+
+- Turn 5c continues turn 5 with F141 (the F1b lock hint) and F142 (the
+  no-cookie row on a failed fetch). Work in progress; the status stays
+  partial until every gate of turn 5 exits 0 on the final HEAD.
+
 ## Result block
 
 MEASURE_AGENT_RESULT
