@@ -7,6 +7,8 @@
 
 > **Revision 2026-11-03:** the Phase 3 refresh at role base `89724ddb6`. It adds the A-42 tasks (3.8, 3.9, 3.10, 4.6), dates, the placement of the Phase 2 open findings, the accessibility decisions, and the Phase 3 role models. The role table names Opus for the strategy role. This revision ran on claude-code/claude-sonnet-5-5 under Daniel's Claude-only order until 14:59 ICT.
 
+> **Amendment 2026-11-05:** three PM decisions at role base `e9c1908fd`. (1) The Docker smoke: run 1 asserts 200 for shipped st2/1, and run 1b proves `missing_picture` with a broken clone. (2) The `date` and `words` rule for an approved part applies to the loops part only. (3) The six P3.6 machine-check rows stay in the Phase 3 browser gate.
+
 ## 1. Rules for every phase
 
 ### 1.1 Heavy jobs
@@ -252,6 +254,7 @@ If the root Vitest config does not reach the package, use `pnpm --filter <read-a
 These facts were measured at `89724ddb6`. Red and Green must not assume the opposite.
 
 - No shipped week has a page picture with a `file` (w01 to w07: 0 of 16 pages in each; w08 has no book). The only published week, w01, is therefore **not ready** under spec FR-5 and AC-5.4. The real route answers 404 for w01 with the shipped content. This is correct behavior and not a defect.
+- **Note 2026-11-05 (PM):** the two lines above describe the pin at the time of writing. At the pin `67be5603` shipped w01 is ready and answers 200. Tests of the not-ready path use a broken clone (see the smoke run 1b).
 - A live test of a ready page needs a **ready copy**. A ready copy is a deep clone of shipped w01 with one change class: a `file` on every page picture. The test makes the clone. No ready week file goes into `apps/storytime/content/`.
 - A test may mock the week loader to supply the ready copy. A mock never decides the readiness result. The readiness function runs on the shipped files (expected result: not ready) and on the clone (expected result: ready).
 - The standalone output holds no `content/` folder today (cloud report `storytime-standalone-content.md`, unverified claim; Green re-measures). Vitest cannot see this fault. Only the built server or the container shows it.
@@ -336,9 +339,12 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 1. The Phase Red command, and the P1 and P2 targeted commands (P2 command: section P2).
 2. `bash apps/storytime/__tests__/phase1-quality-gates.sh`. It runs `pnpm turbo run build check-types lint test --filter=storytime`. Add `--filter=@reading-advantage/read-along` for the package tasks.
 3. The Docker smoke in its P3 form, in two runs of one container image:
-   - Run 1 (production content): `/th/st/2/1` answers 404 and the container log holds the reason `missing_picture` for `st2/1`. A draft week answers 404 with the reason `draft`. `docker run --entrypoint sh <image> -c 'ls apps/storytime/content/l2'` lists w01 to w08.
+   - **Replaced 2026-11-05 (PM, see the deviation below):** ~~Run 1 (production content): `/th/st/2/1` answers 404 and the container log holds the reason `missing_picture` for `st2/1`. A draft week answers 404 with the reason `draft`. `docker run --entrypoint sh <image> -c 'ls apps/storytime/content/l2'` lists w01 to w08.~~
+   - Run 1 (production content, as built): `/th/st/2/1` answers 200. A draft week answers 404 with the reason `draft`. `docker run --entrypoint sh <image> -c 'ls apps/storytime/content/l2'` lists w01 to w08.
+   - Run 1b (broken clone of w01): the run mounts a clone of w01 with the `file` field of every page picture deleted. `/th/st/2/1` answers 404 and the container log holds the line `st2/1 blocked: missing_picture`.
    - Run 2 (ready review fixture mounted): `/th/st/2/1` answers 200 with the week page, `noindex`, and no `Set-Cookie`.
-   - The two runs together are the final form of AC-1.4. Run 1 alone proves nothing, because a 404 can come from absent content (A4).
+   - The runs together are the final form of AC-1.4. Run 1 alone proves nothing, because a 404 can come from absent content (A4). Run 1b is the only proof of the `missing_picture` path, because the shipped w01 is ready.
+   - **Deviation 2026-11-05 (decision owner: PM).** The text above said the shipped `/th/st/2/1` answers 404 with `missing_picture`. At the recorded pin `67be5603` the shipped w01 is ready, after the w01 approval take, so it answers 200. The PM accepted the smoke as built: run 1 asserts 200, and run 1b proves `missing_picture` with a broken copy. Review A at `e9c1908fd` confirmed that run 1b fails for the right reason (probe `review-a-e9c1908fd-probe-run1b.test.ts`, 4 of 4 cases).
 4. `bash apps/storytime/__tests__/phase3-browser-gate.sh` (task 3.7 browser review).
 5. `git diff --exit-code apps/storytime/content` after `node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit <recorded pin>` (the draft pin of task 3.8 part 2).
 6. `build-graph update ./graph.db <changed files>` under `heavy-run.sh`. Then `build-graph search ./graph.db <new export>` finds the new exports (A10).
@@ -402,6 +408,8 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | Visible focus on tiles and controls | Browser gate: `focus_visible_failures=0` over a non-empty list of focus targets | live | A focused tile shows no outline or ring. |
 | Right and wrong marks of the question screen use more than color | `phase3-question-screen.test.tsx` (task 3.9): the state shows as a shape or text and as an ARIA state | live | The mark is a color class only. |
 
+**P3.6 decision (PM, 2026-11-05):** the six rows `tap_target_min_px_player`, `duplicate_ids`, `bottom_bar_gap_px`, `reduced_motion_transition_ms`, `focus_visible_failures`, and `contrast_min_ratio_x100` need no human check, because each row is a machine check. The rows stay in the Phase 3 browser gate. Green adds them now. No row moves to another role.
+
 **Later phases (decided now):**
 
 | Check | Phase and owner | Reason |
@@ -433,6 +441,7 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | AC-2.1 locale redirect | `/st/2/1` redirects to `/th/st/2/1` on the same origin. The `Location` header is a relative path or the request origin. A forged `Host` or `X-Forwarded-Host` header does not change it. A path with `//` does not redirect off-site | The redirect uses the forged host (open redirect) |
 | AC-2.1 404 | An unknown, draft, or not-ready week answers HTTP 404. An invalid locale answers 404 | A draft week renders (A2) |
 | AC-5.4 and F53 readiness | `isWeekReady(week)` returns not ready for shipped w01 (16 pages without a file) and ready for the clone. The receiver imports the same function for its missing list. The log reason is one of `missing_picture`, `draft`, `absent`, `invalid` | The function returns ready for shipped w01 |
+| AC-5.4 note, 2026-11-05 (PM) | The row above is replaced for the pin `67be5603`: shipped w01 is ready, so `isWeekReady` returns ready for it. The not-ready case uses a clone of w01 with the page picture `file` field deleted (see the smoke run 1b) | The not-ready test reads shipped w01 and expects not ready |
 | AC-5.1 public | The route needs no login. The metadata has `noindex`. No `Set-Cookie` on the 200, the 404, and the redirect (live check in the Docker smoke run 2 and the browser gate: `set_cookie_headers=0`) | The next-intl middleware sets `NEXT_LOCALE` |
 | 404 view language | The not-found view under a valid locale has a non-empty `lang` and Thai and English text | `lang=""` |
 | F70 manifest | `phase3-manifest.test.ts`: the app manifest declares `tsx` and the test libraries (P3.5) with `catalog:` | `tsx` is missing |
@@ -444,7 +453,8 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | Test | Proves | Falsification condition |
 |---|---|---|
 | AC-13.2 shape copies | Draft copies with two questions, a repeated question kind, 2 words in a `blendDrill`, `repeats` 6, `loopMinutes` 21, and `audio` of a different length than `sounds` each fail with the field path in every status | One copy parses, or the error has no path |
-| AC-13.2 approval copies | A recall of four cards (approved), an approval status other than `draft` or `approved`, and an approved part without `date` or without `words` each fail | An approved part with an empty `words` string parses (A2) |
+| AC-13.2 approval copies | A recall of four cards (approved), an approval status other than `draft` or `approved`, and an approved loops part without `date` or without `words` each fail | An approved loops part with an empty `words` string parses (A2) |
+| AC-13.2 media approval (PM decision 2026-11-05) | `approval.images`, `approval.audio`, and `approval.song` need only a `status` (spec.md:153). The contract requires `date` and `words` on an approved loops part only (spec.md:285). Workbooks keeps the record of Daniel's words for the media. The app does not enforce them. | A test fails an approved media part for a missing `date` or `words` (the test claims a rule the spec does not have) |
 | AC-13.2 draft tolerance | A draft copy with a recall of four cards, or with a bad question page or word, parses. The receipt run on it exits 0 | A draft recall error stops the receipt |
 | AC-13.3 question check | An approved question with `answer.page` beyond the book fails. An approved question whose `answer.word` is not in the text of that page fails | The check also fails a draft week |
 | AC-13.4 clips | The clip pattern `^phonemes/daniel/[0-9]{2}-[a-z]+(-[a-z]+)*\.mp3$` is one constant next to `mediaPath`. `04-n.mp3` and `26-a-short.mp3` pass. `../x.mp3`, `phonemes/daniel/4-n.mp3`, and `phonemes/daniel/04-N.mp3` fail in every status. The media list holds each clip with kind `"phoneme"` and rule `MEDIA_RULES.phoneme`. The receiver run exits non-zero on a bad path | The list is empty for a week that has a `blendDrill` with audio (A4) |
@@ -534,7 +544,7 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | Task | Anti-patterns and defense |
 |---|---|
 | 3.1 | **A2:** only `meta.status: published` and ready renders; a draft clone with all files still answers 404. **A3:** `set_cookie_headers=<n>`, `weeks_checked=<n>`. **A4:** each loop asserts a non-empty week list and a non-empty path list. **A7:** the scanner excludes `node_modules`, `.next`, `__tests__` by exact name. **A9:** no test reads `measure/tracks/`. **A14:** detectors use `rg -n`. |
-| 3.8 | **A2:** the receiver never writes `approved`; an approved part without `date` or `words` fails. **A3:** `weeks_parsed=8`, `phoneme_clips=45`. **A4:** non-empty week, clip, and media lists. **A5:** the plan note quotes the exit code and counts of the receipt run. **A7:** the F13 coverage test names exact field paths in its allow list, never words. **A15:** `source.json` holds a commit, not a hash. |
+| 3.8 | **A2:** the receiver never writes `approved`; an approved loops part without `date` or `words` fails (media parts need only a `status`). **A3:** `weeks_parsed=8`, `phoneme_clips=45`. **A4:** non-empty week, clip, and media lists. **A5:** the plan note quotes the exit code and counts of the receipt run. **A7:** the F13 coverage test names exact field paths in its allow list, never words. **A15:** `source.json` holds a commit, not a hash. |
 | 3.2 | **A4:** the tile list and the home-word list are not empty. **A7:** the `th` allow list names exact Latin strings. |
 | 3.3 | **A3:** labeled tap-target and contrast integers. **A4:** a size check never runs in jsdom; the browser gate lists at least 20 targets. |
 | 3.4 | **A3:** `phoneme_clips=45`. **A4:** the shipped CVC word list is not empty. |
@@ -570,9 +580,9 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 Reviews run at the Phase 3 checkpoint on the diff `phase_base_sha..HEAD` (tasks 3.1 to 3.8). Tasks 3.9 and 3.10 get the delta reviews named in P3.4.
 
 - **Review A (change quality):** yes. Scope: `lib/` functions, the route, `lib/contracts/week.ts`, `scripts/receive-weeks.ts`, `packages/read-along`, the tests. It checks A1 to A16, test falsification, the placement table in P3.5, and the thin route rule. Model: Opus.
-- **Review B (security):** yes. Probe list: (1) path and query input: `..`, `//`, leading zeros, huge numbers, repeated `part`; (2) the redirect target with a forged `Host`; (3) cookies and `Set-Cookie` on 200, 404, and redirect; (4) `noindex` in the metadata and the header; (5) the server-side content and media values: no `NEXT_PUBLIC_`, no request control, no path traversal from a week file name to the media URL; (6) the approval gate: an approved part without `date` or `words`; (7) new dependencies (Playwright, jsdom, tsx) and the lockfile diff; (8) the receiver symlink and leftover fixes. Model: Haiku. Tasks 3.9 and 3.10: no Review B, because they add no input surface (3.10 is data only; 3.9 is tap handling).
+- **Review B (security):** yes. Probe list: (1) path and query input: `..`, `//`, leading zeros, huge numbers, repeated `part`; (2) the redirect target with a forged `Host`; (3) cookies and `Set-Cookie` on 200, 404, and redirect; (4) `noindex` in the metadata and the header; (5) the server-side content and media values: no `NEXT_PUBLIC_`, no request control, no path traversal from a week file name to the media URL; (6) the approval gate: an approved loops part without `date` or `words` (media parts need only a `status`, PM decision 2026-11-05); (7) new dependencies (Playwright, jsdom, tsx) and the lockfile diff; (8) the receiver symlink and leftover fixes. Model: Haiku. Tasks 3.9 and 3.10: no Review B, because they add no input surface (3.10 is data only; 3.9 is tap handling).
 - **Review C (UX/API):** yes. Scope: the printed URL contract, the `?part=` behavior, the three-tile entry view, the child screens (tap targets, contrast, `lang`, alt, messages in Thai and English), the page-end behavior of the audio, the package public API additions, and the question screen (task 3.9). Daniel judges the media later (Phase 6). Review C judges structure and accessibility. Model: Opus.
-- **Adversarial:** yes. Attack surface: the URL (`..`, `//`, `%2e%2e`, leading zeros, huge numbers, unknown locales, unknown and repeated `part`), hostile week data in the loader (a published week with `..` in a file name, a very long path, duplicate books, an approved flag without words, a page number of 0 or beyond the book), rapid taps and double taps, and a draft week reached through `?part=`. Anti-patterns A1 to A7 are attack surfaces. Model: Opus. Task 3.9: a small round on the draft-week bypass and rapid taps. Task 3.10: no round.
+- **Adversarial:** yes. Attack surface: the URL (`..`, `//`, `%2e%2e`, leading zeros, huge numbers, unknown locales, unknown and repeated `part`), hostile week data in the loader (a published week with `..` in a file name, a very long path, duplicate books, an approved loops part without words, a page number of 0 or beyond the book), rapid taps and double taps, and a draft week reached through `?part=`. Anti-patterns A1 to A7 are attack surfaces. Model: Opus. Task 3.9: a small round on the draft-week bypass and rapid taps. Task 3.10: no round.
 - **Browser review (UX):** yes. The browser gate at the Phase 3 checkpoint covers tasks 3.2, 3.3, 3.5, 3.6, and 3.8 at the draft pin.
   - `PROJECT_DEV_URL` source: a local `next start` of the Storytime production build with the **ready review fixture** (P3.7), under `heavy-run.sh`, on `http://127.0.0.1:<port>`. The orchestrator records the port and the commit.
   - Viewports: portrait phone 360x800, landscape phone 800x360, tablet 768x1024, and laptop 1366x768.
