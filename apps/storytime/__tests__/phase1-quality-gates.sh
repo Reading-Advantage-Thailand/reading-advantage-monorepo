@@ -22,7 +22,7 @@ fi
 
 echo "=== AC-1.1 build, types, lint, and tests ==="
 if [ "$FAILED" -eq 0 ] && (
-  cd "$ROOT" && TURBO_CONCURRENCY=1 pnpm turbo run build check-types lint test --filter=storytime
+  cd "$ROOT" && CI=true pnpm turbo run build check-types lint test --filter=storytime --ui=stream --concurrency=1 < /dev/null
 ); then
   pass "All four Storytime gates exit 0"
 else
