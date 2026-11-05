@@ -857,6 +857,69 @@ Green builds to these rules:
 - Gates (each through `heavy-run.sh`, one at a time): changed and new test files (`phase3-decodable-ui.test.tsx` + `phase3-messages.test.ts`): exit 0; 2 files, 9 tests. `phase3-messages.test.ts` alone: exit 0; 1 file, 4 tests. The P3 phase command: exit 0; 21 files, 201 tests. The read-along suite: exit 0; 104 tests. The Phase 4 command (the message files changed): exit 0; 2 files, 15 tests. `tsc --noEmit` in `apps/storytime`: exit 0 (first run exit 2 on the two new test files, fixed by `4bcc897ff`). ESLint on the eleven changed and new files: exit 0. `build-graph update` over the six changed structural files: exit 0 (111 nodes, 153 edges).
 - Commits of this turn: `0e155ba07` (F134), `73c217cf0` (F135, F138 part b; supersedes `088e9b1d4`), `9ac3fb0db` (F136), `03f530340` (F137), `005854e47` (F138 part a), `4bcc897ff` (test types), and the plan evidence commit that holds this block. Task 3.7 stays `[~]`.
 
+#### Turn 4a Green evidence
+
+- Green role base: `b9007dcef` (HEAD matched at start). Green model: `coding-plan/glm-5.3-flash`.
+  Findings routed: F125 (A3-5, C3-2) plus the live part of F121 (C3-1), the live part of F120
+  (A3-1), and the live part of F123 (A3-3), each with the expectation FIX. Turn 4b (the F10 and
+  smoke fixes and the full Phase 3 closeout gate) follows.
+- P3.6 rows in `phase3-browser-gate.sh` (each row prints a labeled value; each floor has a
+  self-test or a fail-first run): `tap_target_min_px_player` book 44 and decodable 44 in both
+  360x800 and 800x360, question screen min 48 with `tile_min=64` (`button[data-choice-page]`,
+  the 64 px floor of AC-5.2); `contrast_min_ratio_x100` currentword 683, sentenceband 1687,
+  hover 1642, min 683 (settled colors from a `reducedMotion: 'reduce'` page; the canvas turns
+  the computed `lab()`/`oklab()` values into sRGB; an alpha composites over the nearest opaque
+  ancestor background); `duplicate_ids` 0 on home, book, decodable, song, and question screens;
+  `bottom_bar_gap_px=0 (bars_found=0)` at 768x1024 (selector
+  `[data-bottom-bar], [class*="fixed"][class*="bottom"], [class*="sticky"][class*="bottom"]`;
+  no Phase 3 screen holds a bottom bar, and no bar was invented); `reduced_motion_transition_ms=0`;
+  `focus_visible_failures=0` over `focus_target_count=12` (4 targets each on home, book,
+  decodable); `blend_clips_played=3 (expected=3)` with real decoded audio; `word_cut_overshoot_ms=0
+  (word=Hello, cut_end=0.34, pause_at=0.291711)`. Gate: `PASS=42, FAIL=0`, exit 0.
+- Fail-first values: on the pre-fix code `reduced_motion_transition_ms=200` (the row now counts
+  `transition-property: none` as 0 ms); player tap-target mins 5 and 18; the decodable min was
+  43 on the tricky-word button (`min-h-12 rounded-full`, 44x48 after rounding), raised with
+  `min-w-[44px]`; the contrast row on the old parser failed with unmeasurable states, and the
+  self-test page (white on `#3080ff`) still fails (the three self-tests pass as rejects); the
+  blend row pre-fix printed `audio state: [{"src":"03-p.mp3","paused":true,"readyState":0,
+  "networkState":1,"code":null}, {"src":"none",...}], failedAlert=false` (run 6). Fail-first
+  logs: `/tmp/opencode/gate-failfirst3.log`, `/tmp/opencode/gate-run6.log`.
+- Real F120 defect found by the live row (jsdom tests missed it): `decodable.tsx` wrote the
+  media src twice per play, imperatively and through the `phonemeSrc`/`wholeSrc` state props.
+  Every src attribute write re-runs the load algorithm (the HTML spec, the same value included),
+  so the React re-render write aborted the pending play with AbortError, which the component
+  treats as a normal abort; no clip reached its end. Fix: the imperative `target.src` write is
+  the only writer; the src props and the two state values are gone; the onError handlers stay.
+  Green-owned regression test `phase3-media-src-write.test.tsx` installs a fake media element
+  that aborts a pending play on every src write (the committed Red model returns early on the
+  same value); fail-first output: the timeline moved from `play 03-p.mp3` straight to
+  `play 26-a-short.mp3` with no settled `ended`. The committed Red file is unchanged.
+- Fixture notes: the gate fixture clones shipped `w01` and `w03`, approves every approval part
+  (an approved loops part needs `date` and `words`, per the week contract), publishes the w03
+  fixture copy (shipped w03 is a draft), and gives pages without a picture file placeholder
+  picture entries (shipped w03 pages hold no picture, and the readiness rule blocks such a
+  week). Shipped content files stay untouched. The media intercept fulfills every `.mp3`
+  request with a 3 s silent WAV, and Chromium launches with
+  `--autoplay-policy=no-user-gesture-required`, so the live rows play real decoded audio.
+- Notes for the browser review (task 3.10): the shared read-along package holds a new opt-in
+  `tapTargetFloor` prop (default off, so `apps/primary-advantage` keeps its compact article
+  layout), and the Storytime reader passes it. The 44 px word spans
+  (`inline-flex min-h-[44px] min-w-[44px]`) change the line spacing of the book text.
+- Gates: the browser gate `PASS=42, FAIL=0`, exit 0. The new test file through `heavy-run.sh`:
+  exit 0; 1 file, 1 test. The P3 phase command (`pnpm exec vitest run --maxWorkers=1
+  apps/storytime` from the repo root) fails on 2 suites (`phase3-home-render`,
+  `phase3-printed-urls`) that cannot resolve the `@/` alias from the root run; the same run on
+  clean HEAD (all turn 4a changes stashed) fails the same way, so the failure is pre-existing
+  and belongs to turn 4b. The equivalent full suite from `apps/storytime`: exit 0; 42 files,
+  382 tests. The read-along suite: exit 0; 104 tests. ESLint on the three changed storytime
+  files: exit 0. `packages/read-along` holds no ESLint config or lint script and no tsconfig,
+  so no lint or tsc gate exists there; its 104 tests and the production `next build` of the
+  gate compile the changed passage. `build-graph update` over the three changed source files:
+  exit 0 (61 nodes, 89 edges).
+- Commits of this turn: `207c11b50` (the P3.6 rows, the fixture, the tap floors, the
+  reduced-motion fix), `a1ba6a161` (the decodable src-write fix with its regression test), and
+  the plan evidence commit that holds this block. Task 3.7 stays `[~]`.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
 
 ## Phase 4: Teacher app
