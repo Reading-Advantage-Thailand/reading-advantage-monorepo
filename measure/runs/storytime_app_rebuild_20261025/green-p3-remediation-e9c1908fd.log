@@ -315,6 +315,13 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
   full smoke exits 0 with `PASS=19, FAIL=0` (grew from 17 by the 404 and
   redirect rows).
 
+## Turn 5d work done (F143)
+
+- Turn 5d continues turn 5 with F143 (self-tests for the four gate rows,
+  the ids_found and bars_found prints, and the 4a comment correction).
+  Work in progress; the status stays partial until every gate of turn 5
+  exits 0 on the final HEAD.
+
 ## Result block
 
 MEASURE_AGENT_RESULT
