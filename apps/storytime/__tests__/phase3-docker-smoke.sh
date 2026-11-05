@@ -11,13 +11,16 @@ set -uo pipefail
 # for st2/1; the shipped w01 grew page picture files at the w01 approval take, so
 # the clone carries the not-ready state (task 3.7 evidence, 2026-11-05).
 # Run 2 (the ready review fixture mounted, P3.7): the week page answers HTTP 200
-# with the noindex header and no Set-Cookie header.
+# with the noindex header and no Set-Cookie header; the locale redirect and the week 404
+# answer with no Set-Cookie header too, and a failed curl fails a no-cookie row
+# (findings A4-3 and B4-1).
 # The runs together are the final form of AC-1.4.
 # Run 2 also holds the P3.6 week-404 row: a week outside the shipped range answers 404 with the
 # Thai and English lines of app/[locale]/not-found.tsx (PM 2026-11-05: this script does not
 # check <html lang>; the live lang check is the browser-gate row).
 # --self-test runs the fail-first proof of the podman-exit and GET-header rows with stub
-# commands and no build (finding F130), before the lock re-entry.
+# commands and no build (finding F130), before the lock re-entry; the self-test covers the
+# failed-curl and status-line-less cases of the no-cookie row.
 # Without --locked the script re-enters through heavy-run.sh (PM 2026-10-26), as
 # phase1-docker-smoke.sh does. Callers run the script plain, with no flock.
 # The state of the storytime smoke images left behind, from the podman command array. A
@@ -35,6 +38,25 @@ left_behind_state() {
 week_page_headers() { curl --silent --show-error -D - -o /dev/null "$1"; }
 # True when the headers hold a Set-Cookie field.
 headers_hold_cookie() { printf '%s\n' "$1" | grep -qi '^set-cookie:'; }
+
+# The headers of one GET with a fetch check (findings A4-3 and B4-1): a failed curl or an
+# answer without a status line must fail a no-cookie row, not pass it. Sets WEEK_HEADERS to
+# the header text and WEEK_HEADERS_RC to the curl exit code; returns non-zero on a failed
+# fetch.
+week_page_headers_checked() {
+  WEEK_HEADERS_RC=0
+  WEEK_HEADERS="$(week_page_headers "$1")" || WEEK_HEADERS_RC=$?
+  if [ "$WEEK_HEADERS_RC" -ne 0 ] || ! printf '%s\n' "$WEEK_HEADERS" | grep -q '^HTTP/'; then
+    return 1
+  fi
+}
+
+# The no-cookie row decision (findings A4-3 and B4-1): the row passes only when the fetch
+# succeeded and the headers hold no Set-Cookie line.
+week_no_cookie_ok() {
+  week_page_headers_checked "$1" || return 1
+  ! headers_hold_cookie "$WEEK_HEADERS"
+}
 
 if [ "${1:-}" = "--self-test" ]; then
   SELFTEST_FAILED=0
@@ -84,6 +106,31 @@ if [ "${1:-}" = "--self-test" ]; then
     SELFTEST_FAILED=1
   else
     echo "SELF-TEST PASS: a GET answer with no Set-Cookie passes the row"
+  fi
+
+  # A failed curl must fail the no-cookie row (findings A4-3 and B4-1); the old row passed
+  # vacuously on empty headers (Review A probe: curl_rc=7, headers_len=0).
+  FAIL_DIR="$STUB_DIR/fail-curl"
+  mkdir -p "$FAIL_DIR"
+  printf '#!/usr/bin/env bash\necho "curl: (7) Failed to connect" >&2\nexit 7\n' > "$FAIL_DIR/curl"
+  chmod +x "$FAIL_DIR/curl"
+  if PATH="$FAIL_DIR:$PATH" week_no_cookie_ok "http://stub/week"; then
+    echo "SELF-TEST FAIL: a failed curl left the no-cookie row passing"
+    SELFTEST_FAILED=1
+  else
+    echo "SELF-TEST PASS: a failed curl fails the no-cookie row (curl_rc=$WEEK_HEADERS_RC)"
+  fi
+
+  # An answer without a status line must fail the row too.
+  NOSTATUS_DIR="$STUB_DIR/no-status"
+  mkdir -p "$NOSTATUS_DIR"
+  printf '#!/usr/bin/env bash\nprintf "garbage without a status line\\n"\n' > "$NOSTATUS_DIR/curl"
+  chmod +x "$NOSTATUS_DIR/curl"
+  if PATH="$NOSTATUS_DIR:$PATH" week_no_cookie_ok "http://stub/week"; then
+    echo "SELF-TEST FAIL: a status-line-less answer left the no-cookie row passing"
+    SELFTEST_FAILED=1
+  else
+    echo "SELF-TEST PASS: an answer without a status line fails the no-cookie row"
   fi
 
   if [ "$SELFTEST_FAILED" -eq 0 ]; then
@@ -308,11 +355,23 @@ if [ -n "$C2" ]; then
   else
     fail "The week page metadata misses noindex"
   fi
-  HEADERS="$(week_page_headers "http://$PORT2/th/st/2/1")"
-  if headers_hold_cookie "$HEADERS"; then
-    fail "The week page sends a Set-Cookie header"
-  else
+  # A4-3 and B4-1: the row fails on a failed curl or a status-line-less answer, not only on
+  # a Set-Cookie line (the old row passed vacuously on empty headers).
+  if week_no_cookie_ok "http://$PORT2/th/st/2/1"; then
     pass "The week page sends no Set-Cookie header"
+  elif [ "$WEEK_HEADERS_RC" -ne 0 ]; then
+    fail "The week page sends no Set-Cookie header (curl_rc=$WEEK_HEADERS_RC)"
+  else
+    fail "The week page sends no Set-Cookie header (no status line or a Set-Cookie field)"
+  fi
+  # B4-1: the locale redirect answer sends no Set-Cookie header either (AC-2.1 middleware;
+  # curl without -L shows the redirect answer itself).
+  if week_no_cookie_ok "http://$PORT2/st/2/1" && printf '%s\n' "$WEEK_HEADERS" | head -n 1 | grep -q ' 307'; then
+    pass "The locale redirect answers HTTP 307 with no Set-Cookie header"
+  elif [ "$WEEK_HEADERS_RC" -ne 0 ]; then
+    fail "The locale redirect answers HTTP 307 with no Set-Cookie header (curl_rc=$WEEK_HEADERS_RC)"
+  else
+    fail "The locale redirect answers HTTP 307 with no Set-Cookie header (got $(printf '%s\n' "$WEEK_HEADERS" | head -n 1 | tr -d '\r'))"
   fi
   # P3.6 week-404 row: a week outside the shipped range answers 404 with the Thai and
   # English lines of app/[locale]/not-found.tsx. The live `lang` check is the browser-gate
@@ -333,6 +392,14 @@ if [ -n "$C2" ]; then
     pass "The 404 document holds the English line of not-found.tsx"
   else
     fail "The 404 document holds the English line of not-found.tsx"
+  fi
+  # B4-1: the 404 answer sends no Set-Cookie header either.
+  if week_no_cookie_ok "http://$PORT2/th/st/2/99"; then
+    pass "The 404 answer sends no Set-Cookie header"
+  elif [ "$WEEK_HEADERS_RC" -ne 0 ]; then
+    fail "The 404 answer sends no Set-Cookie header (curl_rc=$WEEK_HEADERS_RC)"
+  else
+    fail "The 404 answer sends no Set-Cookie header (no status line or a Set-Cookie field)"
   fi
 else
   fail "No container serves the fixture"
