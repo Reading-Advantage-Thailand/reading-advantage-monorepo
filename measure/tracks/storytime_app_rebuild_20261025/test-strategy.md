@@ -399,7 +399,7 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | `lang="en"` on English text inside Thai pages, and `lang="th"` on Thai text | `phase3-home-card.test.tsx` and `phase3-readalong-ui.test.tsx`: every element that holds book text, lyrics, home words, or `ask.en` has `lang="en"` as its nearest `lang`; `home.line.th` and `ask.th` have `lang="th"` | live (jsdom, no layout needed) | The passage `<p>` has no `lang` and the test passes. |
 | Alt text for pictures | `phase3-home-card.test.tsx`: no `<img>` on an at-home screen lacks an `alt` attribute (`img_without_alt_attr=0`). A picture with a non-empty `caption` uses it as `alt`. A picture with an empty `caption` has `alt=""` and sits next to its text | live | An `<img>` without `alt` passes. The count line has no label. |
 | Messages in `th` and `en` have the same keys, and no `th` value is empty or Latin-only | `phase3-messages.test.ts` (A7: an exact allow list for Latin words such as the product name) | artifact | An empty `th.json` passes (it is `{}` today). |
-| The 404 for a week path has a non-empty `lang` and a Thai and English message | `phase3-entry-route.test.ts` (render of the not-found view) and the Docker smoke (`<html lang=`) | live | The 404 body has `lang=""`. |
+| The 404 for a week path has a non-empty `lang` and a Thai and English message | **Moved 2026-11-05 (PM, see the deviation note below).** `phase3-entry-route.test.ts` (render of the not-found view) keeps the texts. The live `lang` check is a browser-gate row in `phase3-browser-gate.sh` that asserts three things: the status from the network response is 404; `document.documentElement.lang` after load equals the locale of the URL (`th` for `/th/...`); both texts show. The Docker smoke keeps the status, the texts, `noindex`, and no `Set-Cookie`, and does not check `<html lang=`. ~~`phase3-entry-route.test.ts` (render of the not-found view) and the Docker smoke (`<html lang=`)~~ | live | The hydrated `lang` is empty or differs from the URL locale, or the network status is not 404, and the gate passes. ~~The 404 body has `lang=""`.~~ |
 | `aria-current` on the current sentence and the marked word | `phase3-a11y.test.tsx` in `packages/read-along` | live | The mark is a color class only. |
 | A word is reachable with the keyboard, and Enter and Space tap it | `phase3-a11y.test.tsx` | live | A word has a click handler and no key handler. |
 | No duplicate `id` on a rendered at-home page | Browser gate: `duplicate_ids=<n>` must be 0; unit test with two players | live | The fixed `id="playPauseButton"` repeats. |
@@ -409,6 +409,12 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | Right and wrong marks of the question screen use more than color | `phase3-question-screen.test.tsx` (task 3.9): the state shows as a shape or text and as an ARIA state | live | The mark is a color class only. |
 
 **P3.6 decision (PM, 2026-11-05):** the six rows `tap_target_min_px_player`, `duplicate_ids`, `bottom_bar_gap_px`, `reduced_motion_transition_ms`, `focus_visible_failures`, and `contrast_min_ratio_x100` need no human check, because each row is a machine check. The rows stay in the Phase 3 browser gate. Green adds them now. No row moves to another role.
+
+**Deviation 2026-11-05 (decision owner: PM, option a): the week 404 `lang` check.**
+- Cause: Next.js 16.4.1 answers a pre-stream `notFound()` on a matched week route under `app/[locale]/layout.tsx` with its fixed error shell `<html id="__next_error__">`. The shell has no `lang`. In Chromium the hydrated document is `<html lang="th">` with status 404 and both texts.
+- Decision: the live `lang` check of the week 404 row moves to the browser gate (`phase3-browser-gate.sh`). The Docker smoke no longer checks `<html lang=`. It keeps the status, the texts, `noindex`, and no `Set-Cookie`. No other row and no other gate changes.
+- Debt: Green writes a line in `measure/tech-debt.md`. The line names the cause and the recheck: at each Next upgrade, the smoke checks `lang` again. This file only points to that line.
+- Evidence: `plan.md`, sub-blocks `#### Phase 3 closeout gate (remediation HEAD 4f004a916)` and `#### Turn 4d Green evidence (item 3 follow-up, blocked)`.
 
 **Later phases (decided now):**
 
