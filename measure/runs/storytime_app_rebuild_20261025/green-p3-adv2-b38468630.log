@@ -1,0 +1,43 @@
+# Measure Green report: Phase 3 adversarial round 2
+
+- Role: Measure Green (measure-jr-green); track `storytime_app_rebuild_20261025`; Phase 3.
+- Model: `opencode-go/deepseek-v4.1-flash`. Red models of this phase: MiniMax and OpenAI.
+  Adversarial model: `opencode-go/mimo-v2.6-flash`.
+- Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- role_base_sha: `b38468630e68e750912c43f730ab2a25c3c871a7`.
+- Adversarial result: `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`
+  at role base `f53c218e4`; status fail with F240, F241, and F242.
+
+## Routed findings
+
+- F240 [Blocker], FIX. `sentencePieces` groups only punctuation with no whitespace after it,
+  so a comma before a space stays its own flex item. Shipped pages w05 page 8, w06 pages 3
+  and 6, and w07 page 6 render "TAP , TAP , TAP!".
+- F241 [Nit], FIX. A play rejection before the queued `loadedmetadata` event leaves the
+  queued arm to run after the F147 clear, so a stop stays armed for playback that never
+  starts.
+- F242 [Major], FIX. The week page builds all three tiles while `song` stays optional, so
+  `?part=song` on a week without a song renders an empty section with no control.
+
+## Plan (provisional)
+
+1. Fail-first: run the three pins as plain `it` on the old code.
+2. Fix F240 in `decodable.tsx`, fix F241 in `audio-seek.ts` and its callers, fix F242 in
+   `page.tsx`; flip each pin to `it` in the same fix commit.
+3. Run the Phase Red command, the P4 tests, `tsc --noEmit`, ESLint, the browser gate, and
+   the graph update, each on ONE code HEAD.
+4. Commit implementation, then the plan evidence in a docs commit.
+
+MEASURE_AGENT_RESULT
+role: green
+status: partial
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app
+commits: pending
+tests_run: pending
+files_changed: pending
+plan_updates: pending
+known_failures: pending
+handoff: provisional; the final block replaces this one at the end of the turn.
+dispositions: F240=FIX; F241=FIX; F242=FIX
+END_MEASURE_AGENT_RESULT
