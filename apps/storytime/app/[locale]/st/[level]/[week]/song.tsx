@@ -108,6 +108,10 @@ export function StorytimeSong({
     <div className="flex flex-col gap-4">
       <div className="song-stage" data-phone={phone ? "true" : "false"}>
         {hasVideo ? (
+          // F280: a landscape phone caps the stage so the play control stays inside the
+          // viewport. The cap keeps the 16:9 shape. The query holds only below 500 px, so the
+          // measured phone 9:16 and laptop 16:9 boxes stay as they are. The important flags
+          // override the .song-stage video rule of globals.css.
           <video
             ref={(node) => {
               mediaRef.current = node;
@@ -121,6 +125,7 @@ export function StorytimeSong({
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
             onEnded={() => setPlaying(false)}
+            className="[@media(max-height:500px)]:h-44! [@media(max-height:500px)]:w-auto!"
           />
         ) : (
           <audio

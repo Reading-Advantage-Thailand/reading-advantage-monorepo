@@ -42,9 +42,9 @@ export function WeekTileLinks({
   mediaBase?: string;
 }) {
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row">
       {tiles.map((tile) => (
-        <li key={tile.id}>
+        <li key={tile.id} className="[@media(max-height:500px)]:flex-1">
           <Link
             href={tile.href}
             className="flex min-h-16 items-center gap-3 rounded-2xl border border-neutral-300 p-3"
@@ -204,19 +204,19 @@ export function StorytimeQuestions({
       data-question-screen
       lang={locale === "th" ? "th" : "en"}
       aria-live="polite"
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-4 [@media(max-height:500px)]:gap-2"
     >
-      <div className="flex flex-col gap-2">
-        <p className="text-lg font-semibold" lang="en">
+      <div className="flex flex-col gap-2 [@media(max-height:500px)]:gap-1">
+        <p className="text-lg font-semibold [@media(max-height:500px)]:text-base" lang="en">
           {question.ask.en}
         </p>
         {question.ask.th.trim() ? (
-          <p className="text-base" lang="th">
+          <p className="text-base [@media(max-height:500px)]:text-sm" lang="th">
             {question.ask.th}
           </p>
         ) : null}
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 [@media(max-height:500px)]:grid-cols-3 [@media(max-height:500px)]:gap-2">
         {choices.map((choice, position) => {
           const mark = marks[choice.page];
           return (
@@ -228,7 +228,7 @@ export function StorytimeQuestions({
               aria-label={labels.picture.replace("{n}", String(position + 1))}
               aria-pressed={mark === "right" ? true : mark === "gentle" ? false : undefined}
               onClick={() => choose(choice.page)}
-              className="flex min-h-16 min-w-16 flex-col items-center gap-2 rounded-2xl border border-neutral-300 p-2"
+              className="flex min-h-16 min-w-16 flex-col items-center gap-2 rounded-2xl border border-neutral-300 p-2 [@media(max-height:500px)]:gap-1"
             >
               {choice.file ? (
                 <img
@@ -236,7 +236,7 @@ export function StorytimeQuestions({
                   alt={choice.caption}
                   loading="lazy"
                   decoding="async"
-                  className="h-28 w-full rounded-xl object-cover"
+                  className="h-28 w-full rounded-xl object-cover [@media(max-height:500px)]:h-16"
                 />
               ) : null}
               {mark ? (

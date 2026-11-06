@@ -39,7 +39,7 @@ import path from 'node:path';
 const [source, targetDir, root] = process.argv.slice(2);
 const media = new Set();
 fs.mkdirSync(targetDir, { recursive: true });
-for (const name of ['w01.json', 'w03.json']) {
+for (const name of ['w01.json', 'w03.json', 'w04.json']) {
   const week = JSON.parse(fs.readFileSync(path.resolve(source, name), 'utf8'));
   // Every approval part holds status approved. An approved loops part needs the date and the
   // exact words of the approval (the week contract), so the fixture fills both.
@@ -49,9 +49,22 @@ for (const name of ['w01.json', 'w03.json']) {
   if (week.approval.loops) {
     week.approval.loops = { ...week.approval.loops, date: '2026-11-05', words: 'fixture approval for the browser gate' };
   }
+  // The end-of-book landscape row needs a ready week with a draft loops part, so the reader
+  // end view (F149, F282) is the screen at the end of the book, with no question screen. The
+  // three end tiles also need their pictures, because a tile picture sets the tile height.
+  if (name === 'w04.json') {
+    for (const book of week.books ?? []) {
+      book.cover = { file: `pictures/fixture-w04-cover-${book.kind}.png`, caption: '' };
+    }
+    if (week.song) week.song.poster = 'pictures/fixture-w04-song-poster.png';
+  }
+  if (name === 'w04.json' && week.approval.loops) {
+    week.approval.loops = { status: 'draft' };
+  }
   // The blend row needs a published week with a blend word; w03 ships as a draft, so the fixture
-  // copy publishes it (fixture only, like the approvals above; shipped files stay untouched).
-  if (name === 'w03.json' && week.meta) {
+  // copy publishes it. The end-of-book row needs a second published week, so w04 is published
+  // too (fixture only, like the approvals above; shipped files stay untouched).
+  if ((name === 'w04.json' || name === 'w03.json') && week.meta) {
     week.meta.status = 'published';
   }
   // w03 ships with page pictures that hold no file yet, and the readiness rule blocks such a
@@ -91,7 +104,7 @@ NODE
 else
   FIXTURE_RC=1
 fi
-if [ "$FIXTURE_RC" -eq 0 ]; then pass "Ready clones use shipped w01 and w03 with approvals and placeholder media"; else fail "Could not create ready review fixtures"; fi
+if [ "$FIXTURE_RC" -eq 0 ]; then pass "Ready clones use shipped w01, w03, and w04 with approvals and placeholder media"; else fail "Could not create ready review fixtures"; fi
 echo "=== Fixture mode: STORYTIME_CONTENT_DIR points to a temporary ready review copy; draft-media switch is not set ==="
 
 echo "=== Start next start on a free 127.0.0.1 port ==="
@@ -264,11 +277,12 @@ async function bottomBarGap(pg, selector) {
     return { bars: 1, gap: Math.round(window.innerHeight - rect.bottom) };
   }, selector);
 }
-// The bottom edge of the player controls row at 844x390, in pixels (finding F150). The live
-// row and the self-test share it; the picture cap in landscape keeps the row inside the
-// viewport so the child needs no scroll to reach it. The row is the `flex flex-wrap gap-2`
-// container of the page arrows and the mode buttons; the tricky-words list sits after it.
-async function controlBottomAtLandscape(pg) {
+// The bottom edge of the measured controls at 844x390, in pixels (findings F150, F280 to F282).
+// The live rows and the self-test share it; the layout fix in landscape keeps the controls
+// inside the viewport so the child needs no scroll to reach them. The default selector is the
+// `flex flex-wrap gap-2` row of the page arrows and the mode buttons; the song play control,
+// the question skip control, and the end-of-book tiles pass their own selector.
+async function controlBottomAtLandscape(pg, selector = 'div.flex.flex-wrap.gap-2 > button') {
   await pg.setViewportSize({ width: 844, height: 390 });
   // The page pictures are lazy; measure only after every image has loaded, or the layout is
   // still short and the row would pass before the picture takes its height (finding F150).
@@ -276,10 +290,10 @@ async function controlBottomAtLandscape(pg) {
     .waitForFunction(() => [...document.images].every((img) => img.complete), undefined, { timeout: 10000 })
     .catch(() => {});
   await pg.waitForTimeout(50);
-  return pg.evaluate(() => {
+  return pg.evaluate((sel) => {
     let bottom = 0;
     let count = 0;
-    for (const el of document.querySelectorAll('div.flex.flex-wrap.gap-2 > button')) {
+    for (const el of document.querySelectorAll(sel)) {
       const rect = el.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
         count += 1;
@@ -298,7 +312,7 @@ async function controlBottomAtLandscape(pg) {
       picture: picture ? Math.round(picture.getBoundingClientRect().height) : 0,
       sections,
     };
-  });
+  }, selector);
 }
 async function watchNetwork(page) {
   const requests = [];
@@ -586,6 +600,44 @@ try {
       return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
     });
   }
+
+  // landscape_controls_visible on the song, the question screen, and the end of the book
+  // (findings F280 to F282, the F150 class): the play control, the skip control, and the three
+  // end tiles must end inside the 390 px viewport, so the child needs no scroll to reach them.
+  await runCheck('landscape_controls_visible on the song screen at 844x390', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
+    const info = await controlBottomAtLandscape(page, 'section[data-part="song"] button');
+    const ok = info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport;
+    console.log(`landscape_controls_visible_song=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
+    return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
+  });
+  await runCheck('landscape_controls_visible on the question screen at 844x390', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    if (!(await questionScreen())) throw new Error('the question screen did not render');
+    const info = await controlBottomAtLandscape(page, '[data-question-screen] button:not([data-choice-page])');
+    const ok = info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport;
+    console.log(`landscape_controls_visible_question=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
+    return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
+  });
+  await runCheck('landscape_controls_visible on the end of the book at 844x390', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    await page.goto(`${base}/th/st/2/4?part=book`, { waitUntil: 'networkidle' });
+    let reached = false;
+    for (let i = 0; i < 12; i += 1) {
+      if (await page.locator('[data-reader-end]').count()) { reached = true; break; }
+      const next = page.locator('button[aria-label="หน้าถัดไป"]');
+      if (!(await next.count()) || !(await next.isEnabled())) break;
+      await next.click();
+      await page.waitForTimeout(120);
+    }
+    if (!reached) reached = Boolean(await page.locator('[data-reader-end]').count());
+    if (!reached) throw new Error('the end of the book did not render');
+    const info = await controlBottomAtLandscape(page, '[data-reader-end] a');
+    const ok = info.count >= 3 && info.bottom > 0 && info.bottom <= info.viewport;
+    console.log(`landscape_controls_visible_endofbook=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
+    return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
+  });
 
   // reduced_motion_transition_ms: 0 on the marks with reducedMotion reduce.
   await runCheck('reduced_motion_transition_ms is 0 on the marks', async () => {
