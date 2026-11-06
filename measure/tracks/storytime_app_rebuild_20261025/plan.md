@@ -821,7 +821,7 @@ Green builds to these rules:
 - No build ran and no browser check ran.
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
-- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`). The adversarial round 2 result is `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`; its findings F240, F241, and F242 are fixed at `5bda02bb0` (see the `#### Turn 11 Green evidence (adversarial round 2)` sub-block). The UX browser review round 2 passed at `0def8d79d` (`measure/runs/storytime_app_rebuild_20261025/ux-browser-0def8d79d.json`), and its Nits F280, F281, and F282 are fixed at `6ff5c4654` (see the `#### Turn 12 Green evidence (UX round 2)` sub-block).
+- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`). The adversarial round 2 result is `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`; its findings F240, F241, and F242 are fixed at `5bda02bb0` (see the `#### Turn 11 Green evidence (adversarial round 2)` sub-block). The UX browser review round 2 passed at `0def8d79d` (`measure/runs/storytime_app_rebuild_20261025/ux-browser-0def8d79d.json`), and its Nits F280, F281, and F282 are fixed at `6ff5c4654` (see the `#### Turn 12 Green evidence (UX round 2)` sub-block). The round 10 reviews passed at `ac3415b54` (`review-a-ac3415b54.json` and `review-c-ac3415b54.json`; Review B passed with 0 findings), the UX browser review round 3 passed at the same head (`ux-browser-ac3415b54.json`), and their Nits F290, F310, and F320 are fixed at `6718f72a5` (see the `#### Turn 13 Green evidence (review round 10 and UX round 3)` sub-block).
 
 #### Phase 3 closeout gate (turn 9, HEAD 4b980126c)
 
@@ -968,6 +968,56 @@ Green builds to these rules:
   | 8 | the read-along turbo filter (the script covers only storytime) | `pnpm turbo run build check-types lint test --filter=@reading-advantage/read-along --ui=stream --concurrency=1` | 0 | 1 task (test); 104 tests; 0 cached |
 - No route handler, server, or smoke script changed, so the Docker smoke did not rerun. No
   content file changed. Ports 3940 to 3960 were free before and after.
+
+#### Turn 13 Green evidence (review round 10 and UX round 3)
+
+- Base: `ac3415b54` (review round 10 and UX round 3). Sources:
+  `measure/runs/storytime_app_rebuild_20261025/review-a-ac3415b54.json` (F290),
+  `review-c-ac3415b54.json` (F320), and `ux-browser-ac3415b54.json` (F310). Code content
+  for every gate below: the tree that became `6718f72a5` (the commit holds exactly the
+  verified files; nothing changed after the gates ran).
+- F310 (week page). Cause: the F282 landscape row reached only `WeekTileLinks`; the week
+  page tile list kept a column, so the song tile ended at 462 px in the 390 px viewport.
+  Fix `6718f72a5`: the `data-week-tiles` list of `page.tsx` uses the same
+  `[@media(max-height:500px)]` row with `flex-1` items; portrait and laptop keep the
+  column.
+- F320 (horizontal fit). Cause: the landscape tile rows had no right-edge check, so a wide
+  label could push a tile past the viewport edge. Fix `6718f72a5`: the gate gains
+  `controlRightAtLandscape`, four `landscape_row_right_edge` rows (end-of-book and week
+  page, `th` and `en`, at 844x390), and a `/wide-row` self-test that the same function must
+  reject. Measured: end-of-book th 686, en 686; week th 686, en 686 — all at or below 844,
+  so the English row does not overflow and no item change was needed (the measured right
+  edges stand in for the fix, per the finding).
+- F290 (song cap comment). Fix `6718f72a5`: the cap query adds the landscape orientation
+  condition (`[@media(max-height:500px)_and_(orientation:landscape)]`), chosen over
+  rewording because the cap exists for the landscape phone and the comment now states the
+  real rule. The compiled CSS holds the media query; a short desktop window and a portrait
+  phone with a soft keyboard keep the full-size box, and the AC-8.2 rows stay green.
+- Fail-first proof: the extended gate ran on the old layout in one heavy-run job before the
+  fixes. `landscape_controls_visible_week=false (control_bottom_px=462, controls_found=3,
+  viewport_px=390)` — the same 462 px the UX round 3 shot shows. The four right-edge rows
+  read 686 on the old code and passed, so the fail-first of F320 is the self-test: the
+  wide-row page is rejected with `control_right_px=1020 > viewport_width_px=844`.
+- Gates, one at a time, through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'` (or the script plain where
+  it enters heavy-run itself):
+  | # | Item | Command | Exit | Counts |
+  |---|------|---------|------|--------|
+  | 1 | the Phase Red command with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+  | 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+  | 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+  | 4 | ESLint on the changed app source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/page.tsx" "app/[locale]/st/[level]/[week]/song.tsx"` | 0 | no output |
+  | 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=65, FAIL=0; wrapper PASS=4, FAIL=0; week 226; right edges 686 th/en on both rows; wide-row self-test rejected at 1020; phone 563 and 69 percent, laptop 1778, song 320 |
+  | 6 | the graph update | `build-graph update ./graph.db` on the two changed source files | 0 | 2 files, 38 to 48 nodes, 64 to 66 edges |
+- No route handler, server, or smoke script changed, so the Docker smoke did not rerun. No
+  content file changed. `packages/read-along` did not change this round, so the quality
+  gates and the read-along turbo filter did not rerun. Ports 3940 to 3960 were free before
+  and after (the 39683 listener is an unrelated OpenChamber service).
+- Model deviation: Green ran on `volcengine-agent-plan/glm-5.3-flash#high` (the role table
+  model) directly; the PM set OpenCode Go to WAIT, so the ra-quota Go route was not used.
+  Red/Green independence held: the Red models of the phase are MiniMax and OpenAI, and no
+  coder ran on a Red model family. No coder was delegated this round.
 
 #### Owner look approval (2026-11-06)
 

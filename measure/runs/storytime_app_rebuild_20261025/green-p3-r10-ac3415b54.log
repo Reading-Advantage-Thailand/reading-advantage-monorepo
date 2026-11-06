@@ -1,0 +1,87 @@
+# Green P3 turn 13 — review round 10 Nits (F290, F310, F320)
+
+- Role: measure-jr-green (Green), turn 13, new session.
+- Track: storytime_app_rebuild_20261025, phase `## Phase 3: At-home app` (P3).
+- role_base_sha: ac3415b5458a0f303de39ed0b777dcb35246e5a6 (immutable).
+- phase_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5 (immutable).
+- Inputs read: `review-a-ac3415b54.json` (PASS, F290 Nit),
+  `review-c-ac3415b54.json` (PASS, F320 Nit), `ux-browser-ac3415b54.json` (PASS, F310
+  Nit); Review B passed with 0 findings per the orchestrator handoff. The committed Red
+  change sits inside `phase_base_sha..HEAD` (round 10 audited 0def8d79d..ac3415b54).
+
+## Findings and fixes (all in 6718f72a5)
+
+- F310 [Nit] FIX. Cause: the F282 landscape row reached only `WeekTileLinks`; the week
+  page tile list in `page.tsx` kept a column, so the third tile ended at 462 px in the
+  390 px viewport. Fix: the `data-week-tiles` list uses the same
+  `[@media(max-height:500px)]` row with `flex-1` items; portrait and laptop keep the
+  column. Fail-first: `landscape_controls_visible_week=false (control_bottom_px=462,
+  controls_found=3, viewport_px=390)` on the old layout — the same 462 px the UX shot
+  shows. After: `control_bottom_px=226`.
+- F320 [Nit] FIX. The gate gains `controlRightAtLandscape`, four `landscape_row_right_edge`
+  rows (end-of-book and week page rows, `th` and `en`, at 844x390), and a `/wide-row`
+  self-test that the same function must reject. Measured on the old code: end-of-book th
+  686, en 686; week th 686, en 686 — all at or below 844, so the English row does not
+  overflow the viewport and no item change was needed (per the finding, the measured right
+  edges are recorded instead). Self-test fail-first: the wide-row page is rejected with
+  `control_right_px=1020 > viewport_width_px=844`.
+- F290 [Nit] FIX (choice stated). I added the landscape orientation condition to the query
+  — `[@media(max-height:500px)_and_(orientation:landscape)]:h-44!` and the matching
+  `w-auto!` — and reworded the comment, instead of only rewording, because the cap exists
+  for the landscape phone and the query then matches its stated purpose. The compiled CSS
+  holds `@media (max-height:500px) and (orientation:landscape)`; a short desktop window
+  and a portrait phone with a soft keyboard keep the full-size box. Every AC-8.2 row and
+  the landscape rows stayed green, so the condition met its gate requirement.
+- No song picture or content file changed. No committed Red or adversarial assertion
+  changed; the gate rows only add checks.
+
+## Gates on ONE code content (the tree that became 6718f72a5), one at a time, each through heavy-run
+
+| # | Item | Command | Exit | Counts |
+|---|------|---------|------|--------|
+| 1 | Phase Red command, `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+| 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+| 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+| 4 | ESLint on the changed source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/page.tsx" "app/[locale]/st/[level]/[week]/song.tsx"` | 0 | no output |
+| 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=65, FAIL=0; wrapper PASS=4, FAIL=0; week 226; right edges 686 th/en on both rows; wide-row self-test rejected at 1020; phone 563 and 69 percent, laptop 1778, song 320 |
+| 6 | the graph update | `build-graph update ./graph.db` on the two changed source files | 0 | 2 files, 38 to 48 nodes, 64 to 66 edges |
+
+The browser gate ran twice: once on the old layout with the new rows (fail-first), once on
+the fixed tree (FAIL=0). `packages/read-along` did not change this round, so the quality
+gates and the read-along turbo filter did not rerun. No route handler, server, or smoke
+script changed, so the Docker smoke did not rerun. Ports 3940 to 3960 were free before and
+after (the 39683 listener is an unrelated OpenChamber service).
+
+## Commits
+
+- Implementation: `6718f72a5` `fix(storytime): fit the landscape rows and cap (track_id:
+  storytime_app_rebuild_20261025)` — phase3-browser-gate.sh, page.tsx, song.tsx.
+- Plan evidence: the `docs(measure):` commit right after `6718f72a5`, which holds this log
+  (`git add -f`) and the plan Turn 13 sub-block; its SHA is in the orchestrator reply,
+  since a commit cannot hold its own SHA.
+
+## Model deviation
+
+Green ran on `volcengine-agent-plan/glm-5.3-flash#high` (the role table model) directly;
+the PM set OpenCode Go to WAIT, so the ra-quota Go route was not used. Red/Green
+independence held: the Red models of the phase are MiniMax and OpenAI, and no coder ran on
+a Red model family. No coder was delegated this round.
+
+## Result
+
+Task 3.7 stays `[x]`; the plan gains the Turn 13 evidence sub-block. No task moved to
+archive and no closeout metadata changed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: P3
+commits: 6718f72a5 (implementation); plan-evidence docs(measure) commit recorded in the orchestrator reply
+tests_run: gate 1 = 45 files 342 tests exit 0; gate 2 = 2 files 15 tests exit 0; gate 3 = tsc exit 0; gate 4 = eslint exit 0; gate 5 = browser gate inner PASS=65 FAIL=0 wrapper PASS=4 FAIL=0 exit 0; gate 6 = graph update 2 files exit 0
+files_changed: apps/storytime/__tests__/phase3-browser-gate.sh, apps/storytime/app/[locale]/st/[level]/[week]/page.tsx, apps/storytime/app/[locale]/st/[level]/[week]/song.tsx
+plan_updates: task 3.7 sentence (round 10 reviews and UX round 3 passed at ac3415b54, Nits fixed at 6718f72a5); new sub-block "#### Turn 13 Green evidence (review round 10 and UX round 3)"
+known_failures: none (every gate exits 0 on one code content)
+handoff: F290 fixed with the orientation condition and the comment reworded; F310 fixed with the landscape row (fail-first 462, after 226); F320 fixed with four right-edge rows plus the wide-row self-test, English rows fit at 686 so no item change. phase_base_sha 7db52a49d20e195388fd91670cc7c022312b50c5, Green HEAD 6718f72a5 plus the plan-evidence commit. Model deviation: Green on volcengine-agent-plan/glm-5.3-flash#high directly, OpenCode Go set to WAIT by the PM so the ra-quota Go route was not used; Red models MiniMax and OpenAI, independence held. New gate rows for the reviewers to scope: landscape_controls_visible_week, landscape_row_right_edge_endofbook_th, landscape_row_right_edge_endofbook_en, landscape_row_right_edge_week_th, landscape_row_right_edge_week_en, and the wide-row self-test, all served by controlRightAtLandscape. No question.
+dispositions: F290=FIX; F310=FIX; F320=FIX
+END_MEASURE_AGENT_RESULT
