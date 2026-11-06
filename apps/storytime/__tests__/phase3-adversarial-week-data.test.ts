@@ -29,7 +29,7 @@ function clone(): Record<string, any> {
 
 /** The ready form of a clone: every page picture has a file and the media parts are approved. */
 function ready(copy: Record<string, any>): Record<string, any> {
-  for (const book of copy.books as Array<{ pages: Array<{ image?: Record<string, unknown> }> }>) {
+  for (const book of copy.books as Array<{ kind: string; pages: Array<{ image?: Record<string, unknown> }> }>) {
     for (const page of book.pages) {
       if (page.image) page.image.file = `review/${book.kind}-page.webp`;
     }
