@@ -101,33 +101,39 @@ describe("Phase 3 Storytime song UI", () => {
     expect(play).toHaveBeenCalledTimes(1);
   });
 
-  it("shows lyric text, gesture text, and the song line picture", async () => {
+  it("shows lyric and gesture text on every shipped line without lyric pictures", async () => {
     const week = cloneWeek();
     const { container } = await renderSong(week);
-    const line = week.song!.lines[0];
-    expect(screen.getByText(new RegExp(line.text, "i"))).toBeInTheDocument();
-    const lineElement = container.querySelector('[data-line-index="0"]');
-    expect(lineElement).toBeInTheDocument();
+    expect(week.song!.lines, "shipped w01 must provide all lyric lines").toHaveLength(15);
+    const lyricList = container.querySelector("ol");
+    expect(lyricList, "the song view must render its lyric list").not.toBeNull();
+    const lineElements = lyricList!.querySelectorAll("[data-line-index]");
+    expect(lineElements, "the lyric list must render every shipped line").toHaveLength(15);
+    week.song!.lines.forEach((line, index) => {
+      const lineElement = container.querySelector(`[data-line-index="${index}"]`);
+      expect(lineElement, `lyric line ${index} must render`).toBeInTheDocument();
+      expect(within(lineElement as HTMLElement).getByText(line.text)).toBeInTheDocument();
+      expect(within(lineElement as HTMLElement).getByText(line.gesture)).toBeInTheDocument();
+    });
+    expect(lyricList!.querySelector("img"), "the lyric list must contain no pictures").toBeNull();
     expect(
-      within(lineElement as HTMLElement).getByText(new RegExp(line.gesture, "i")),
-    ).toBeInTheDocument();
-    expect(container.querySelector(`img[src*="${line.image!.file!.split("/").at(-1)}"]`)).toBeInTheDocument();
-    expect(container.querySelectorAll("img")).toHaveLength(week.song!.lines.filter((entry) => entry.image || entry.imageOf !== undefined).length);
+      Array.from(lineElements, (line) => line.querySelectorAll("img").length),
+      "every one of the 15 lyric lines must contain no picture",
+    ).toEqual(Array(15).fill(0));
   });
 
-  it("resolves imageOf from the referenced line and does not render gesture art", async () => {
+  it("shows gesture text without a picture on each imageOf lyric line", async () => {
     const week = cloneWeek();
     const repeated = week.song!.lines.find((line) => line.imageOf !== undefined)!;
     expect(repeated, "shipped w01 must include a repeated image reference").toBeDefined();
-    const target = week.song!.lines[repeated.imageOf!]!;
-    expect(target.image?.file, "the referenced shipped line must name a picture").toBeTruthy();
+    expect(week.song!.lines[repeated.imageOf!]?.image?.file, "the referenced shipped line must name a picture").toBeTruthy();
     const { container } = await renderSong(week);
     const repeatedIndex = week.song!.lines.indexOf(repeated);
-    expect(container.querySelector(`[data-line-index="${repeatedIndex}"] img`)).toHaveAttribute(
-      "src",
-      expect.stringContaining(target.image!.file!),
-    );
-    expect(container.querySelector(`[data-line-index="${repeatedIndex}"]`)).toHaveTextContent(repeated.gesture);
+    const lineElement = container.querySelector(`[data-line-index="${repeatedIndex}"]`);
+    expect(lineElement).toBeInTheDocument();
+    expect(within(lineElement as HTMLElement).getByText(repeated.text)).toBeInTheDocument();
+    expect(within(lineElement as HTMLElement).getByText(repeated.gesture)).toBeInTheDocument();
+    expect(lineElement!.querySelector("img")).toBeNull();
   });
 
   it("does not add a karaoke tile when the shipped week has no karaoke field", () => {
