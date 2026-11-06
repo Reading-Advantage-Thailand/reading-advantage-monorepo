@@ -1,0 +1,42 @@
+# Measure Green report: UX round 2 (turn 12)
+
+- Role: Measure Green (measure-jr-green); track `storytime_app_rebuild_20261025`; Phase 3.
+- Model: `opencode-go/deepseek-v4.1-flash`. Red models of this phase: MiniMax and OpenAI.
+- role_base_sha: `0def8d79d5e05fe38cc266f2479a760da9dc7730`.
+- Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
+- Sources: `review-b-0def8d79d.json` (pass, with F260) and `ux-browser-0def8d79d.json`
+  (pass, with F280, F281, and F282).
+
+## Routed findings
+
+- F280 [Nit], FIX. Song at 844x390: the play control ends at 441 px in the 390 px viewport.
+- F281 [Nit], FIX. Question screen at 844x390: the skip control ends at 492 px.
+- F282 [Nit], FIX. End of the book at 844x390: the third tile ends at 466 px.
+- F260 [Nit], FIX (small). A rejected play leaves the `seekOrWait` `applySeek` listener, so a
+  later load can seek to the old cut start.
+
+## Plan (provisional)
+
+1. Cap the song stage in landscape and keep the 9:16 and 16:9 ratios.
+2. Use a three-column choice row and smaller choice pictures on the question screen in
+   landscape.
+3. Lay out the three week tiles in a row in landscape.
+4. Extend the `landscape_controls_visible` rows to the song, the question screen, and the
+   end of the book; record the fail-first values on the old code.
+5. Let `seekOrWait` report a cancel for its queued seek, and remove that listener from the
+   `seekAndRun` cancel; add a test that fails first.
+6. Run the gates on one code HEAD and write the Turn 12 plan block.
+
+MEASURE_AGENT_RESULT
+role: green
+status: partial
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app
+commits: pending
+tests_run: pending
+files_changed: pending
+plan_updates: pending
+known_failures: pending
+handoff: provisional; the final block replaces this one at the end of the turn.
+dispositions: F260=FIX; F280=FIX; F281=FIX; F282=FIX
+END_MEASURE_AGENT_RESULT
