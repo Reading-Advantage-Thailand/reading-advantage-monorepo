@@ -1326,6 +1326,120 @@ Green builds to these rules:
   recorded gate 3b tsc ran through heavy-run. No test, build,
   build-graph, or server ran outside heavy-run otherwise.
 
+#### Turn 7 Green evidence (review round 5)
+
+- Base: the round 4 result HEAD `f2619efb8`; the adversarial role added
+  `ae4411954..a61464e83` on top. Audited HEAD:
+  `cbcb592389d2e089fdec7a9fae24de63ba4cf1a6` — the probes and every gate
+  below ran on this one HEAD. Turn 7 commits: `8df2de232` (F147),
+  `fc81f69a0` (F148), `211991a93` (F149), `d29abdafb` (the adversarial
+  fixture type fix), `f08684795` (F150), `cbcb59238` (F151). Files
+  changed: `lib/audio-seek.ts`,
+  `app/[locale]/st/[level]/[week]/reader.tsx`,
+  `app/[locale]/st/[level]/[week]/decodable.tsx`,
+  `app/[locale]/st/[level]/[week]/questions.tsx`,
+  `__tests__/phase3-adversarial-taps.test.tsx` (the two pin flips),
+  `__tests__/phase3-adversarial-week-data.test.ts` (one type
+  annotation), `__tests__/phase3-reader-end.test.tsx` (new),
+  `__tests__/phase3-decodable-punct.test.tsx` (new), and
+  `__tests__/phase3-browser-gate.sh`.
+- F147 (adversarial C6-1). Cause: a rejected `play()` fires no media
+  event, so the F145 terminal listeners never run and the stop loop
+  below the cut end re-armed until the next interaction or unmount.
+  Fail-first: the pin at `phase3-adversarial-taps.test.tsx:240` ran as a
+  plain test on the current code and failed (1 failed, 3 passed, 1
+  expected fail): `a rejected play must cancel the stop loop below the
+  cut end: expected 1 to be +0`. Fix commit `8df2de232`: `playAudio`
+  (reader) and `playElement` and `playClip` (decodable) cancel the
+  pending stop on a rejected play; the aborted-play case keeps its
+  behaviour. After the fix the pin passes as a plain test.
+- F148 (adversarial A6-1). Cause: the F145 terminal pause ends the loop
+  and clears the mark, but nothing re-arms on a resume below the cut
+  end, so resumed playback ran past the measured end. Fail-first: the
+  pin at line 264 ran as a plain test and failed: `a resume below the
+  cut end must re-arm the stop loop: expected +0 to be 1`. Fix commit
+  `fc81f69a0`: after a terminal `pause`, `stopAtMediaEnd` keeps a
+  one-shot `play` listener that re-arms while `currentTime` is below the
+  end; the listener is removed on a cancel and on a replacement, and it
+  does nothing when a newer loop owns the element or the clock is
+  already past the end. `onStop` still runs on the pause, so the mark
+  clears (the F145 rule stays). After the fix the pin passes.
+- F149 (UX1). Cause: the reader's finished branch showed only the line
+  "จบเล่มแล้ว"; on a shipped week the loops part is draft, so no
+  question screen exists, and the end left the child with no tiles and
+  no way back. Fail-first: the new `phase3-reader-end.test.tsx` failed
+  on the current code: `the end must show the three week tiles (finding
+  F149): expected [] to have a length of 3 but got +0`. Fix commit
+  `211991a93`: the tiles list moves to `WeekTileLinks` in questions.tsx
+  and the question end and the book end share it; the book end keeps the
+  finished line above the three tile links. No new string was needed.
+- F150 (UX2). Cause: at 844x390 the page picture (about 396 px in the
+  review) and the decodable sound section pushed the player controls
+  below the 390 px viewport. Fail-first on the unfixed code: the first
+  gate run could not test the row because the production build failed
+  on the adversarial fixture type error (fixed in `d29abdafb`, a
+  one-line type annotation; no assertion changed — see below), and the
+  next run passed vacuously because the fixture wrote text placeholders
+  for pictures and the built app serves no static media, so no picture
+  took layout height. With the fixture fixed (a valid 1x1 PNG per
+  picture, served by the gate's media route), the row failed on the
+  unfixed code: book `control_bottom_px=744` and decodable `876` against
+  `viewport_px=390`; the self-test page failed at `629`. Fix commit
+  `f08684795`: at `max-height: 500px` the page picture is capped at
+  `40vh` and the page text sits beside it, and the decodable sound
+  section lays out in one row, so the controls end at `book=300` and
+  `decodable=364`. The browser gate gains the shared helper
+  `controlBottomAtLandscape`, the two live rows
+  `landscape_controls_visible` on the book and the decodable screen, and
+  one self-test page (`/tall-controls`) that must be rejected (it is:
+  `629 > 390`). The gate fixture now serves a 1x1 PNG for picture
+  requests, because the built app has no static media and a 404 picture
+  takes no height; the fixture files stay placeholders.
+- F151 (UX3). Cause: the sentence is a `flex flex-wrap gap-x-1` row and
+  the punctuation token was its own flex item, so the flex gap opened a
+  space before the full stop ("A NEST ."). The week content is correct
+  (`A nest.` in `content/l2/w01.json`), so no content changed. The wide
+  reader word gaps come from the agreed 44 px tap floor and stay. Fail-
+  first: the new `phase3-decodable-punct.test.tsx` failed on the
+  current code: `the group holds only its own word: expected 2 to have a
+  length of 1`. Fix commit `cbcb59238`: `sentencePieces` groups a word
+  with its trailing punctuation in one flex item, so the stop sits next
+  to its word, a line break cannot start a line with a stop, and the
+  word gaps and tap floor stay.
+- Adversarial fixture change (`d29abdafb`): `next build` type-checks the
+  test files, and `phase3-adversarial-week-data.test.ts:34` failed with
+  `Property 'kind' does not exist`; the change adds `kind: string` to
+  the annotation used by the fixture loop. It changes no assertion and
+  no behaviour. It was needed before any build gate could run.
+- Gates on `cbcb59238` (each through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a
+  time; no HEAVY_PRIORITY):
+  | # | Command | Exit | Counts |
+  |---|---------|------|--------|
+  | 1 | the exact P3.4 line-328 command with `CI=true` | 0 | 38 files, 333 tests, no expected fail |
+  | 2 | the P4 tests (`phase4-teacher-flag`, `phase4-week-view`) | 0 | 2 files, 15 tests |
+  | 3 | `pnpm exec tsc --noEmit` in `apps/storytime` | 0 | clean |
+  | 4 | `pnpm exec eslint` on the eight changed TS/TSX files | 0 | 0 errors, 8 warnings (all in the adversarial fixture) |
+  | 5 | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=55, FAIL=0; wrapper PASS=4, FAIL=0 |
+  | 6 | `build-graph update ./graph.db` on the four changed source files | 0 | 59 to 82 nodes, 105 to 113 edges |
+  Gate 5 values: `landscape_controls_visible_book=true (control_bottom_px=300, viewport_px=390, picture_px=156)`, `landscape_controls_visible_decodable=true (control_bottom_px=364, viewport_px=390, picture_px=156)`, `selftest landscape_controls_visible=false (control_bottom_px=629)`; the word-cut rows stay in the agreed band (`word_cut_early_ms=0`, `word_cut_overshoot_ms=4`). The smoke and
+  `phase1-smoke-cleanup.test.sh` need no rerun: turn 7 changed no
+  server, route, or gate script other than the browser gate, and no
+  container or smoke file. Ports 3940 to 3960 were checked before the
+  first run and after the last run and are clear.
+- Deviations (recorded): (1) the Ark Coding Plan token limit (error
+  2056) stopped the session after the F148 test pass; (2) a DNS fault
+  (`getaddrinfo EAI_AGAIN opencode.ai`) stopped it before the F150
+  fail-first; (3) the orchestrator moved the session from the Ark model
+  to `opencode-go/deepseek-v4.1-flash`, a Storytime Green family (Red is
+  MiniMax and OpenAI), so the independence rule holds; (4) one
+  temporary CSS revert for the F150 fail-first used `sed -i` instead of
+  the edit tools, and the cap was restored with the edit tool; no
+  committed content came from `sed`. Every heavy step ran through
+  `heavy-run.sh`; no test, build, tsc, build-graph, or server ran
+  outside it.
+
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
 
 ## Phase 4: Teacher app
