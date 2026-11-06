@@ -1,0 +1,73 @@
+# Green P3 turn 15 — review round 12 Nits (F370, F371)
+
+- Role: measure-jr-green (Green), turn 15.
+- Track: storytime_app_rebuild_20261025, phase `## Phase 3: At-home app` (P3).
+- role_base_sha: ff76719852348e69bf0832e32cf148223c59aea2 (immutable).
+- phase_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5 (immutable).
+- Inputs read: `review-a-ff7671985.json` (PASS, F370 and F371 Nits); Review B and Review C
+  passed with 0 findings per the orchestrator handoff (Review C withdrew F350). No
+  committed Red or adversarial assertion changed; the gate rows only add checks.
+
+## Findings and fixes (both in 1145e2054, gate script only; no app code change)
+
+- F370 [Nit] FIX. Cause: the turn 14 note claimed recorded `<audio controls>` speakers sit
+  in the scrolling parent block by design; that is wrong for the week tiles — `TileCard`
+  renders a child-facing label Speaker inside each tile `li`, in the same landscape row as
+  the tile links, and no row measured it. Fix: the gate function
+  `allControlsAtLandscape` gains an `extraSelector` probe, and `all_controls_visible_week`
+  measures `[data-week-tiles] audio` on the bottom and the right edge, printing
+  `speakers_found`, `speakers_outside`, and `speaker_bottom_px`; a speaker outside the
+  viewport fails the row. Measured today: `speakers_found=0, speaker_bottom_px=0` — no
+  tile recording ships yet (`TILE_LABEL_AUDIO` is empty), so no defect is shown and no app
+  code change was needed. The plan Turn 14 block holds a `Correction (turn 15, F370):`
+  line instead of a history rewrite.
+- F371 [Nit] FIX. Cause: each `all_controls_visible` row passed on `count > 0 &&
+  outside === 0`, so a screen that fell back to the week-home link (a missing book or a
+  missing song) would pass with one link inside the viewport (A4 class). Fix: each row
+  holds a per-screen minimum count from the measured values with `>=` — week 3, reader 9,
+  end of book 3, decodable 8, song 1, question 4 — and prints `controls_min`. Fail-first
+  proof: the `/one-link` self-test page (one link inside the viewport) is measured by the
+  same function in one run, which prints `old_rule_passes=true new_rule_passes=false
+  (controls_found=1, controls_min=9)` — the old `count > 0` rule improperly passed the
+  page and the new reader minimum rejects it. The self-test loop accepts the page only
+  when the new rule fails, so the row is not vacuous.
+
+## Gates on ONE code content (the tree that became 1145e2054), one at a time, each through heavy-run
+
+| # | Item | Command | Exit | Counts |
+|---|------|---------|------|--------|
+| 1 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=74, FAIL=0; wrapper PASS=4, FAIL=0; six rows green with controls_min (week 3, reader 9, end of book 3, decodable 8, song 1, question 4); week speakers_found=0; one-link self-test rejected |
+| 2 | the Phase Red command, `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+
+No app code changed, so the P4 tests, `tsc --noEmit`, ESLint, and `build-graph update`
+did not rerun this round. No route handler, server, or smoke script changed, so the
+Docker smoke did not rerun. No content file changed. Ports 3940 to 3960 were free before
+and after.
+
+## Commits
+
+- Implementation: `1145e2054` `fix(storytime): guard the week speaker and row counts
+  (track_id: storytime_app_rebuild_20261025)` — phase3-browser-gate.sh.
+- Plan evidence: the `docs(measure):` commit right after `1145e2054`, which holds this log
+  (`git add -f`), the plan Turn 15 sub-block, the Turn 14 correction line, and the task
+  3.7 sentence; its SHA is in the orchestrator reply, since a commit cannot hold its own
+  SHA.
+
+## Result
+
+Task 3.7 stays `[x]`; the plan gains the Turn 15 evidence sub-block and the Turn 14
+correction line. No task moved to archive and no closeout metadata changed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: P3
+commits: 1145e2054 (implementation); plan-evidence docs(measure) commit recorded in the orchestrator reply
+tests_run: gate 1 = browser gate inner PASS=74 FAIL=0 wrapper PASS=4 FAIL=0 exit 0; gate 2 = Phase Red 45 files 342 tests exit 0
+files_changed: apps/storytime/__tests__/phase3-browser-gate.sh
+plan_updates: task 3.7 sentence (round 12 reviews passed at ff7671985, F370 and F371 fixed at 1145e2054); Turn 14 correction line (F370); new sub-block "#### Turn 15 Green evidence (review round 12)"
+known_failures: none (both gates exit 0 on one code content)
+handoff: F370 fixed with the [data-week-tiles] audio probe in all_controls_visible_week (speakers_found=0 and speaker_bottom_px=0 today because no tile recording ships yet; the row fails when a speaker renders outside the viewport), plus the Turn 14 correction line. F371 fixed with per-screen minimum counts (week 3, reader 9, end of book 3, decodable 8, song 1, question 4) and the /one-link self-test that records the fail-first in one run: old_rule_passes=true, new_rule_passes=false at controls_found=1 against the reader minimum of 9. No app code changed, so P4, tsc, ESLint, and the graph update did not rerun. phase_base_sha 7db52a49d20e195388fd91670cc7c022312b50c5, role_base_sha ff76719852348e69bf0832e32cf148223c59aea2, Green HEAD 1145e2054 plus the plan-evidence commit. New gate items for reviewer scope: the extraSelector probe in allControlsAtLandscape, controls_min on the six all_controls_visible rows, and the /one-link self-test. No question.
+dispositions: F370=FIX; F371=FIX
+END_MEASURE_AGENT_RESULT
