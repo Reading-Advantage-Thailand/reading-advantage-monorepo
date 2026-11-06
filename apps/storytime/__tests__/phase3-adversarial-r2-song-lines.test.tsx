@@ -30,7 +30,7 @@ describe("Phase 3 adversarial song lines without a picture", () => {
     const rendered = list!.querySelectorAll("[data-line-index]");
     expect(rendered, "every shipped line must render").toHaveLength(lines.length);
     for (const [index, line] of lines.entries()) {
-      const item = view.container.querySelector(`[data-line-index="${index}"]`)!;
+      const item = view.container.querySelector<HTMLElement>(`[data-line-index="${index}"]`)!;
       expect(item, `lyric line ${index} must render`).toBeInTheDocument();
       expect(within(item).getByText(line.text)).toBeInTheDocument();
       expect(within(item).getByText(line.gesture)).toBeInTheDocument();
