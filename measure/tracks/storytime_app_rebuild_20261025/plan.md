@@ -610,7 +610,17 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Implementation commit: `a5f856091` (`fix(storytime): size the phone song box (track_id: storytime_app_rebuild_20261025)`).
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-02816cf.log`.
 
-- [ ] 3.5a Song list per amendment M-3: the lyric list shows no picture, and the gesture text stays under each line. The stage poster and the song tile picture stay. Tests: the song UI test (rule 9.1 row of the strategy).
+- [~] 3.5a Song list per amendment M-3: the lyric list shows no picture, and the gesture text stays under each line. The stage poster and the song tile picture stay. Tests: the song UI test (rule 9.1 row of the strategy).
+
+#### Task 3.5a Red evidence
+
+- Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`. Role base: `afc3ae71836ea64a97dfabdf921bb40c795d2f97`; both resolve and the phase base is an ancestor. HEAD matched the role base before edits.
+- Red changed the two prior song-picture assertions because amendment M-3 replaces their contract. The test now checks lyric and gesture text on all 15 shipped w01 lines, no image in the lyric list or any line, and no image on an `imageOf` line. The existing pre-tap poster assertion stays.
+- Changed test names: `shows lyric and gesture text on every shipped line without lyric pictures`; `shows gesture text without a picture on each imageOf lyric line`.
+- Red model: `openai/gpt-6-luna#high`.
+- Targeted command: `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-song-ui.test.tsx'`. Exit 1; one file, 2 failed and 5 passed tests (7 total).
+- Expected failures: `the lyric list must contain no pictures` finds `point-to-self.jpg`; the `imageOf` line assertion finds `hands-out.jpg`. The tests collect and run, and lyric and gesture text assertions pass.
+- No production source changed. The stage poster assertion still verifies the poster before a tap. Report: `measure/runs/storytime_app_rebuild_20261025/red-p3-3.5a-afc3ae718.log`.
 - [x] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3). Done: `a5f856091`. Automated: the printed-URL test exits 0 (1 file, 1 test, 16 URLs); the browser gate exits 0 with Playwright `PASS=22, FAIL=0` and outer `PASS=4, FAIL=0`; `transferred_bytes_first_load=223741`; `media_requests_before_tap=0`; `tsc --noEmit` exits 0. The gate ran on this tree, per the orchestrator decision at 05:24 ICT.
 - [x] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19. Done: `9c0e9f0d7` (the contract and the receiver), `804944378` (the receipt at the draft pin), `f163d4692` and `aeffe6826` (fix round 1). Automated: the targeted command exits 0 with 22 files and 270 tests; `tsc --noEmit` exits 0; ESLint exits 0 on the 8 changed files. The take exits 0 with 8 weeks, 179 media files, and 159 missing pictures; the 26 hand-off hashes match; the 8 written weeks equal the hand-off files byte for byte; a second run makes no difference.
   - PM 2026-11-04: light lane for task 3.8 part 1 (one maker, one checker).
