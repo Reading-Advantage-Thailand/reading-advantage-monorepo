@@ -118,10 +118,15 @@ interface SentencePiece {
   text?: string;
 }
 
+/** The punctuation that ends a word before its gap, as one run (finding F240). */
+const WORD_END_PUNCTUATION = /^([^\s\p{L}\p{N}]+)(\s[\s\S]*)$/u;
+
 /**
  * Splits one page text into pieces. Trailing punctuation joins its word in one flex item, so
- * the flex gap cannot open a space before a full stop (finding F151) and a line break cannot
- * start a line with a stop. The tap floor and the word gaps stay.
+ * the flex gap cannot open a space before a stop (findings F151, F240) and a line break
+ * cannot start a line with a stop. A comma that sits before a space joins its word too, and
+ * the space stays a plain piece, so no character moves or doubles. The tap floor and the
+ * word gaps stay.
  * @param text The page text.
  * @returns The pieces, in reading order.
  */
@@ -132,13 +137,26 @@ function sentencePieces(text: string): SentencePiece[] {
     const token = tokens[index]!;
     if (isWord(token)) {
       const trailing: string[] = [];
+      const after: string[] = [];
       while (index + 1 < tokens.length) {
         const next = tokens[index + 1]!;
-        if (next.length === 0 || /\s/.test(next) || isWord(next)) break;
-        trailing.push(next);
+        if (next.length === 0 || isWord(next)) break;
+        if (!/\s/.test(next)) {
+          trailing.push(next);
+          index += 1;
+          continue;
+        }
+        // A gap that holds a space: the punctuation that ends the word joins it, and the
+        // whitespace stays a plain piece (finding F240).
+        const gap = WORD_END_PUNCTUATION.exec(next);
+        if (!gap) break;
+        trailing.push(gap[1]!);
+        after.push(gap[2]!);
         index += 1;
+        break;
       }
       pieces.push({ word: token, trailing });
+      for (const rest of after) pieces.push({ text: rest });
       continue;
     }
     pieces.push({ text: token });

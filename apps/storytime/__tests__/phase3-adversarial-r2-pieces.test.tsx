@@ -106,7 +106,7 @@ describe("Phase 3 adversarial hostile sentence text", () => {
 
   // F240: a comma that sits before a space stays a separate flex item, so the gap opens
   // before it on the shipped w06 page 3, w05 page 8 and w07 page 6.
-  it.fails("keeps a shipped comma in the same flex item as its word", async () => {
+  it("keeps a shipped comma in the same flex item as its word", async () => {
     const Decodable = await loadDecodable();
     const view = render(<Decodable week={week6 as unknown as StorytimeWeek} locale="en" />);
     fireEvent.click(screen.getByRole("button", { name: "Next page" }));
