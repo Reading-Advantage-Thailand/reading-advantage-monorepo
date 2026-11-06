@@ -54,9 +54,10 @@ export function seekAndRun(audio: HTMLAudioElement, time: number, onReady: () =>
  *
  * A terminal `pause` ends the loop and clears the mark (F145), but playback can resume below
  * the cut end (the child presses play again), so the pause keeps a one-shot `play` listener
- * that re-arms the loop while `currentTime` is below the end (finding F148). The listener is
- * removed on a cancel and on a replacement, and it does nothing when a newer loop owns the
- * element or the clock is already past the end.
+ * that re-arms the loop while `currentTime` is below the end (finding F148). The helper holds
+ * that listener per element: a cancel and a replacement remove it, including the listener of
+ * a loop that already finished and left the active map (finding F153). It does nothing when a
+ * newer loop owns the element or the clock is already past the end.
  * @param audio The media element to stop.
  * @param end The cut end, in seconds on the media clock.
  * @param onStop The stop action that runs when the media clock reaches `end` or the media
@@ -65,9 +66,19 @@ export function seekAndRun(audio: HTMLAudioElement, time: number, onReady: () =>
  *   must run it on cleanup and on a new playback.
  */
 const activeStops = new WeakMap<HTMLMediaElement, () => void>();
+/** The one-shot resume listener of a terminally paused loop, per element (findings F148, F153). */
+const pendingResumes = new WeakMap<HTMLMediaElement, () => void>();
 const TERMINAL_STOP_EVENTS = ["pause", "ended", "error"] as const;
 
 export function stopAtMediaEnd(audio: HTMLMediaElement, end: number, onStop: () => void): () => void {
+  // A finished loop leaves `activeStops`, but it can still hold a one-shot resume listener
+  // from its terminal pause; a new loop removes it here, so it cannot re-arm the old loop
+  // after the new one ends (finding F153).
+  const staleResume = pendingResumes.get(audio);
+  if (staleResume) {
+    staleResume();
+    pendingResumes.delete(audio);
+  }
   activeStops.get(audio)?.();
   let timer: ReturnType<typeof setTimeout> | null = null;
   let finished = false;
@@ -81,6 +92,7 @@ export function stopAtMediaEnd(audio: HTMLMediaElement, end: number, onStop: () 
   const detachResume = (): void => {
     if (resumeDetach !== null) {
       resumeDetach();
+      if (pendingResumes.get(audio) === resumeDetach) pendingResumes.delete(audio);
       resumeDetach = null;
     }
   };
@@ -106,6 +118,7 @@ export function stopAtMediaEnd(audio: HTMLMediaElement, end: number, onStop: () 
     if (resumeDetach !== null) return;
     audio.addEventListener("play", onResume, { once: true });
     resumeDetach = () => audio.removeEventListener("play", onResume);
+    pendingResumes.set(audio, resumeDetach);
   }
   function finish(): void {
     if (finished) return;

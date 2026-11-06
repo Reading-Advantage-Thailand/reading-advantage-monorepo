@@ -336,3 +336,30 @@ describe("stopAtMediaEnd ends when the media stops below the cut end (finding F1
     });
   }
 });
+
+describe("a new loop removes the stale resume listener of a finished loop (finding F153)", () => {
+  it("does not re-arm the old loop after the new loop ends", () => {
+    vi.useFakeTimers();
+    const audio = document.createElement("audio");
+    audio.currentTime = 0.1;
+    const stopsA = vi.fn();
+    stopAtMediaEnd(audio, 0.2, stopsA);
+    // Loop A ends on a terminal pause below its end and keeps its one-shot resume listener;
+    // it also leaves the active map, so only the helper can remove that listener.
+    act(() => audio.dispatchEvent(new Event("pause")));
+    expect(stopsA, "the pause ran A's stop").toHaveBeenCalledTimes(1);
+    // A new loop starts on the same element without a caller cancel (the finding's case).
+    const stopsB = vi.fn();
+    stopAtMediaEnd(audio, 0.5, stopsB);
+    // The new loop ends at its own cut end.
+    audio.currentTime = 0.5;
+    act(() => vi.advanceTimersByTime(400));
+    expect(stopsB, "the new loop stops at its own end").toHaveBeenCalledTimes(1);
+    // A play event below the old end must not re-arm the old loop.
+    audio.currentTime = 0.15;
+    act(() => audio.dispatchEvent(new Event("play")));
+    expect(vi.getTimerCount(), "the stale resume listener of A is gone").toBe(0);
+    act(() => vi.advanceTimersByTime(1000));
+    expect(stopsA, "the old loop must not run again").toHaveBeenCalledTimes(1);
+  });
+});
