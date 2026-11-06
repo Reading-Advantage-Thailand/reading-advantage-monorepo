@@ -610,7 +610,36 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Implementation commit: `a5f856091` (`fix(storytime): size the phone song box (track_id: storytime_app_rebuild_20261025)`).
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-02816cf.log`.
 
-- [~] 3.5a Song list per amendment M-3: the lyric list shows no picture, and the gesture text stays under each line. The stage poster and the song tile picture stay. Tests: the song UI test (rule 9.1 row of the strategy).
+- [x] 3.5a Song list per amendment M-3: the lyric list shows no picture, and the gesture text stays under each line. The stage poster and the song tile picture stay. Tests: the song UI test (rule 9.1 row of the strategy). Done: `9b088aaa3`.
+
+#### Task 3.5a Green evidence
+
+- The lyric-line `<img>` is gone from `song.tsx`, including the `imageOf` lines; the
+  `referenced` and `image` values went with it. `mediaUrl` stays because the stage
+  sources and the poster use it. The lyric text and the gesture text stay under each
+  line; the stage poster, the phone poster, the video, and the audio-only path are
+  unchanged. The top JSDoc states the M-3 rule. The song tile on the week page and all
+  content files are untouched.
+- The Red file passes: `phase3-song-ui.test.tsx` exits 0 with 7 tests (2 were the
+  expected failures on the Red copy).
+- Gates on the fixed tree (the fix commit `9b088aaa3` records it byte for byte), each
+  through `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a time:
+  | Gate | Exit | Counts |
+  |------|------|--------|
+  | the P3.4 line-328 command with `CI=true` | 0 | 38 files, 333 tests, no expected fail |
+  | the P4 tests (`phase4-teacher-flag`, `phase4-week-view`) | 0 | 2 files, 15 tests |
+  | `pnpm exec tsc --noEmit` in `apps/storytime` | 0 | clean |
+  | `pnpm exec eslint` on `song.tsx` | 0 | clean |
+  | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=55, FAIL=0; wrapper PASS=4, FAIL=0 |
+  | `build-graph update ./graph.db` on `song.tsx` | 0 | 10 to 13 nodes, 15 to 16 edges |
+- Browser values on the song screen: `video_box_ratio_x1000_phone=563`,
+  `video_box_height_pct_phone=69`, `video_box_ratio_x1000_laptop=1778`,
+  `duplicate_ids_song=0 (ids_found=1)`; the landscape rows stay green. No gate row
+  counted the lyric pictures, so no row was weakened or changed.
+- Model: Green `opencode-go/deepseek-v4.1-flash` (ra-quota route; the Ark Coding Plan
+  is out). Red model: `openai/gpt-6-luna#high`. Report:
+  `measure/runs/storytime_app_rebuild_20261025/green-p3-3.5a-25801f7e8.log`.
 
 #### Task 3.5a Red evidence
 
@@ -792,7 +821,7 @@ Green builds to these rules:
 - No build ran and no browser check ran.
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
-- [~] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line).
+- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the gate HEAD `9b088aaa3` (task 3.5a): the P3.4 line-328 command exits 0 with 38 files and 333 tests; the P4 tests exit 0 with 2 files and 15 tests; `tsc --noEmit` exits 0; ESLint exits 0 on `song.tsx`; the browser gate exits 0 with inner PASS=55, FAIL=0 and wrapper PASS=4, FAIL=0. The change-quality reviews of round 5 run after this commit, and the reviews and the phase acceptance check the mark. Round 5 and task 3.5a evidence: the turn 7 sub-block (`#### Turn 7 Green evidence (review round 5)`, fixes F147 to F151 at `cbcb59238`) and the task 3.5a Green evidence above.
 
 #### Owner look approval (2026-11-06)
 
