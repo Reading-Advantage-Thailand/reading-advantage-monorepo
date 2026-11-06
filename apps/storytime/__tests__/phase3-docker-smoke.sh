@@ -133,6 +133,16 @@ if [ "${1:-}" = "--self-test" ]; then
     echo "SELF-TEST PASS: an answer without a status line fails the no-cookie row"
   fi
 
+  # F201: the 404 row reuses the same check, so a Set-Cookie answer to the 404 path must
+  # fail the 404 no-cookie row; the status value plays no part in the header decision.
+  export STUB_HDRS="$STUB_DIR/with-cookie.txt"
+  if week_no_cookie_ok "http://stub/th/st/2/99"; then
+    echo "SELF-TEST FAIL: a 404 answer with Set-Cookie left the 404 no-cookie row passing"
+    SELFTEST_FAILED=1
+  else
+    echo "SELF-TEST PASS: a 404 answer with Set-Cookie fails the 404 no-cookie row"
+  fi
+
   if [ "$SELFTEST_FAILED" -eq 0 ]; then
     echo "=== Self-test: PASS ==="
   else
@@ -393,12 +403,16 @@ if [ -n "$C2" ]; then
   else
     fail "The 404 document holds the English line of not-found.tsx"
   fi
-  # B4-1: the 404 answer sends no Set-Cookie header either.
+  # B4-1 and F201: the 404 answer sends no Set-Cookie header either; the row reuses
+  # week_no_cookie_ok and prints its labeled value.
   if week_no_cookie_ok "http://$PORT2/th/st/2/99"; then
+    echo "404_no_set_cookie=1 (status=$P404_CODE, curl_rc=0)"
     pass "The 404 answer sends no Set-Cookie header"
   elif [ "$WEEK_HEADERS_RC" -ne 0 ]; then
+    echo "404_no_set_cookie=0 (status=$P404_CODE, curl_rc=$WEEK_HEADERS_RC)"
     fail "The 404 answer sends no Set-Cookie header (curl_rc=$WEEK_HEADERS_RC)"
   else
+    echo "404_no_set_cookie=0 (status=$P404_CODE, a Set-Cookie field or no status line)"
     fail "The 404 answer sends no Set-Cookie header (no status line or a Set-Cookie field)"
   fi
 else
