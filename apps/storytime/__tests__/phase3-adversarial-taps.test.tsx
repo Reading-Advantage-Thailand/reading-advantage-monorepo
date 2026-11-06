@@ -237,7 +237,7 @@ describe("Phase 3 adversarial rapid taps", () => {
 });
 
 describe("Phase 3 adversarial pins for the open review gaps", () => {
-  it.fails("a rejected play leaves no stop loop armed below the cut end (C6-1)", async () => {
+  it("a rejected play leaves no stop loop armed below the cut end (C6-1)", async () => {
     vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
     vi.spyOn(HTMLMediaElement.prototype, "play").mockRejectedValue(
       new DOMException("blocked", "NotAllowedError"),

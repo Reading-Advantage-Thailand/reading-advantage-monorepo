@@ -166,16 +166,22 @@ export function StorytimeReader({
 
   /**
    * Plays the audio element and reports a rejected playback as a failed sound.
+   * A rejected play fires no media event, so the rejection also cancels the pending stop
+   * loop or page stop; playback that never starts must not keep a stop armed (finding F147).
    * @param element The audio element.
    */
   function playAudio(element: HTMLAudioElement): void {
     try {
       const result = element.play();
       if (result && typeof result.catch === "function") {
-        result.catch(() => setAudioFailed(true));
+        result.catch(() => {
+          setAudioFailed(true);
+          clearStopTimer();
+        });
       }
     } catch {
       setAudioFailed(true);
+      clearStopTimer();
     }
   }
 

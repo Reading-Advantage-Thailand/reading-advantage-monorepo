@@ -169,11 +169,20 @@ export function StorytimeDecodable({
       const result = target.play();
       if (result && typeof result.catch === "function") {
         result.catch((error: unknown) => {
-          if (!isAbortError(error)) setFailed(true);
+          if (!isAbortError(error)) {
+            setFailed(true);
+            // A rejected play fires no media event, so the rejection also cancels the
+            // pending whole-word stop; playback that never starts must not keep a stop
+            // armed (finding F147).
+            clearWholeStopTimer();
+          }
         });
       }
     } catch (error) {
-      if (!isAbortError(error)) setFailed(true);
+      if (!isAbortError(error)) {
+        setFailed(true);
+        clearWholeStopTimer();
+      }
     }
   }
 
@@ -205,11 +214,15 @@ export function StorytimeDecodable({
         if (result && typeof result.catch === "function") {
           result.catch((error: unknown) => {
             stop();
+            // A rejected clip fires no media event; the whole-word stop has nothing to wait
+            // for, so the rejection cancels it too (finding F147).
+            clearWholeStopTimer();
             rejectClip(error);
           });
         }
       } catch (error) {
         stop();
+        clearWholeStopTimer();
         rejectClip(error);
       }
     });
