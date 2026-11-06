@@ -194,6 +194,24 @@ function TileCard({ tile }: { tile: Tile }) {
 }
 
 /**
+ * Renders the link back to the week tiles from a part screen whose part the week lacks.
+ * It keeps the screen from a dead end (finding F242).
+ * @param props.href The week home path.
+ * @param props.label The link text.
+ * @returns The link to the week tiles.
+ */
+function WeekHomeLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex min-h-16 items-center rounded-2xl border border-neutral-300 p-3"
+    >
+      {label}
+    </Link>
+  );
+}
+
+/**
  * Renders one published and ready week.
  * @param props.params The locale, the level, and the week segments.
  * @param props.searchParams The query of the request.
@@ -235,14 +253,21 @@ export default async function StorytimeWeekPage({
   const elementAudio = element?.audio;
   const karaoke = week.song ? week.song.karaoke : undefined;
 
-  const tiles: Tile[] = [
-    { id: "readalong", part: "book", label: t("tileReadalong"), picture: bookPicture(week, "readalong") },
-    { id: "decodable", part: "decodable", label: t("tileDecodable"), picture: bookPicture(week, "decodable") },
-    { id: "song", part: "song", label: t("tileSong"), picture: songPicture(week) },
-  ];
+  const tiles: Tile[] = [];
+  if (readAlongBook) {
+    tiles.push({ id: "readalong", part: "book", label: t("tileReadalong"), picture: bookPicture(week, "readalong") });
+  }
+  if (decodableBook) {
+    tiles.push({ id: "decodable", part: "decodable", label: t("tileDecodable"), picture: bookPicture(week, "decodable") });
+  }
+  if (week.song) {
+    tiles.push({ id: "song", part: "song", label: t("tileSong"), picture: songPicture(week) });
+  }
   if (karaoke) {
     tiles.push({ id: "karaoke", part: "song", label: t("tileKaraoke"), picture: songPicture(week) });
   }
+
+  const weekHref = `/${locale}/st/${levelSegment}/${weekSegment}`;
 
   const questionTiles: QuestionTile[] = tiles.slice(0, 3).map((tile) => ({
     id: tile.id,
@@ -357,7 +382,9 @@ export default async function StorytimeWeekPage({
               questionLabels={questionLabels}
               mediaBase={mediaBaseUrl}
             />
-          ) : null}
+          ) : (
+            <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />
+          )}
         </section>
       ) : part === "decodable" ? (
         <section data-part={part}>
@@ -375,7 +402,9 @@ export default async function StorytimeWeekPage({
                 audioError: t("decAudioError"),
               }}
             />
-          ) : null}
+          ) : (
+            <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />
+          )}
         </section>
       ) : (
         <section data-part={part}>
@@ -385,7 +414,9 @@ export default async function StorytimeWeekPage({
               mediaBase={mediaBaseUrl}
               labels={{ play: t("songPlay"), pause: t("songPause") }}
             />
-          ) : null}
+          ) : (
+            <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />
+          )}
         </section>
       )}
     </main>

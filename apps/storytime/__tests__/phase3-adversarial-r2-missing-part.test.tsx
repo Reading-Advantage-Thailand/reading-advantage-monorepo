@@ -35,7 +35,7 @@ afterEach(() => {
 describe("Phase 3 adversarial part screen without its content", () => {
   // F242: the song section of a week without a song renders empty, so the child who follows
   // the end-of-book tile has no control on that screen.
-  it.fails("offers a control on the song part of a week that has no song", async () => {
+  it("offers a control on the song part of a week that has no song", async () => {
     const week = structuredClone(shippedWeek) as unknown as StorytimeWeek;
     delete week.song;
     routeMocks.loadVisibleWeek.mockResolvedValue(week);
