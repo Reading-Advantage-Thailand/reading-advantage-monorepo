@@ -551,7 +551,7 @@ Label note (2026-11-06, Review C round 7, F200 and F201): the rows above name th
 
 | Task | Anti-patterns and defense |
 |---|---|
-| 3.1 | **A2:** only `meta.status: published` and ready renders; a draft clone with all files still answers 404. **A3:** `set_cookie_headers=<n>`, `weeks_checked=<n>`. **A4:** each loop asserts a non-empty week list and a non-empty path list. **A7:** the scanner excludes `node_modules`, `.next`, `__tests__` by exact name. **A9:** no test reads `measure/tracks/`. **A14:** detectors use `rg -n`. |
+| 3.1 | **A2:** only `meta.status: published` and ready renders; a draft clone with all files still answers 404. **A3:** `404_no_set_cookie=1`; `phase3-loop-contract.test.ts` asserts eight parsed weeks. **A4:** each loop asserts a non-empty week list and a non-empty path list. **A7:** the scanner excludes `node_modules`, `.next`, `__tests__` by exact name. **A9:** no test reads `measure/tracks/`. **A14:** detectors use `rg -n`. |
 | 3.8 | **A2:** the receiver never writes `approved`; an approved loops part without `date` or `words` fails (media parts need only a `status`). **A3:** `weeks_parsed=8`, `phoneme_clips=45`. **A4:** non-empty week, clip, and media lists. **A5:** the plan note quotes the exit code and counts of the receipt run. **A7:** the F13 coverage test names exact field paths in its allow list, never words. **A15:** `source.json` holds a commit, not a hash. |
 | 3.2 | **A4:** the tile list and the home-word list are not empty. **A7:** the `th` allow list names exact Latin strings. |
 | 3.3 | **A3:** labeled tap-target and contrast integers. **A4:** a size check never runs in jsdom; the browser gate lists at least 20 targets. |
