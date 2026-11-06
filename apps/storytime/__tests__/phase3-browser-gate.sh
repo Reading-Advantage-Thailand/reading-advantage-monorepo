@@ -446,6 +446,9 @@ try {
     // F371 self-test page: one link inside the viewport. The old count > 0 rule improperly
     // passed such a page; the reader row minimum of 9 must reject it.
     ['/one-link', '<!doctype html><a href="/only">only link</a>'],
+    // F410 self-test page: one audio speaker below the 390 px fold, so the extraSelector
+    // speaker branch of the all-controls check must report it and reject the page.
+    ['/audio-below-fold', '<!doctype html><div style="height:600px;background:#eee"></div><audio controls style="width:300px;height:54px"></audio>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -478,7 +481,9 @@ try {
     ['no player control found at 844x390 (landscape_controls_visible)', '/no-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
     ['a tile row wider than the viewport at 844x390 (landscape_row_right_edge)', '/wide-row', async p => { const info = await controlRightAtLandscape(p, '.row > button'); console.log(`selftest landscape_row_right_edge=${info.count > 0 && info.right > 0 && info.right <= info.viewport} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`); return info.count > 0 && info.right > 0 && info.right <= info.viewport; }],
     ['an interactive element below the fold at 844x390 (all_controls_visible)', '/below-fold', async p => { const info = await allControlsAtLandscape(p); console.log(`selftest all_controls_visible=${info.count > 0 && info.outside === 0} (controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}, viewport_px=${info.viewportH})`); return info.count > 0 && info.outside === 0; }],
-    ['one link against the reader minimum of 9 (all_controls_visible)', '/one-link', async p => { const info = await allControlsAtLandscape(p); const oldRule = info.count > 0 && info.outside === 0; const newRule = info.count >= 9 && info.outside === 0; console.log(`selftest all_controls_visible_min old_rule_passes=${oldRule} new_rule_passes=${newRule} (controls_found=${info.count}, controls_min=9, controls_outside=${info.outside})`); return newRule; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
+    ['one link against the reader minimum of 9 (all_controls_visible)', '/one-link', async p => { const info = await allControlsAtLandscape(p); const oldRule = info.count > 0 && info.outside === 0; const newRule = info.count >= 9 && info.outside === 0; console.log(`selftest all_controls_visible_min old_rule_passes=${oldRule} new_rule_passes=${newRule} (controls_found=${info.count}, controls_min=9, controls_outside=${info.outside})`); return newRule; }],
+    ['an audio speaker below the fold at 844x390 (all_controls_visible speaker probe)', '/audio-below-fold', async p => { const info = await allControlsAtLandscape(p, 'button', 'audio'); console.log(`selftest all_controls_speaker_probe=${info.speakerOutside === 0} (speakers_found=${info.speakerCount}, speakers_outside=${info.speakerOutside}, speaker_bottom_px=${info.speakerBottom}, viewport_px=${info.viewportH})`); return info.speakerOutside === 0; }],
+    ['a fallback page with no song section against the song row open rule (all_controls_visible)', '/one-link', async p => { const info = await allControlsAtLandscape(p); const songOpen = (await p.locator('section[data-part="song"] button').count()) > 0; const countRule = info.count >= 1 && info.outside === 0; console.log(`selftest all_controls_song_open song_open_ok=${songOpen} count_rule_ok=${countRule} (controls_found=${info.count}, controls_min=1, song_buttons_found=0)`); return songOpen; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
     ['a pause 48 ms before the cut end (word cut early rule)', '/button', async () => { const v = wordCutVerdict(0.34 - 0.048, 0.34); console.log(`selftest word_cut_early_ms=${v.early}`); return v.earlyOk; }],
     ['a pause at the cut end passes both word cut rules', '/button', async () => { const v = wordCutVerdict(0.34, 0.34); console.log(`selftest word_cut signed=${v.signedPauseDeltaMs} overshoot=${v.overshoot} early=${v.early}`); return !(v.overshootOk && v.earlyOk); }],
   ]) {
@@ -828,6 +833,9 @@ try {
   }, 8);
   await allControlsCheck('song', async () => {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
+    // F411: the minimum of 1 equals the fallback WeekHomeLink, so the open step requires
+    // the song section itself; a week with no song renders one link and must fail here.
+    if (!(await page.locator('section[data-part="song"] button').count())) throw new Error('the song section did not render');
   }, 1);
   await allControlsCheck('question', async () => {
     if (!(await questionScreen())) throw new Error('the question screen did not render');
