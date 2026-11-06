@@ -1,0 +1,111 @@
+# Green run: Phase 3 closeout (turn 9, review round 6 remediation)
+
+- Track: storytime_app_rebuild_20261025
+- Phase: Phase 3: At-home app
+- Role base: acf0d591d2732de8a5ce6d067ce0f1f4d96a9162
+- Phase base: 7db52a49d20e195388fd91670cc7c022312b50c5
+- Green model: opencode-go/deepseek-v4.1-flash (ra-quota route)
+- Red model of the phase: MiniMax and OpenAI
+
+## Work
+
+- Round 6 reviews at acf0d591d: Review A pass with F152 [Major], F153
+  [Nit], F154 [Nit]; Review B and Review C pass with no findings.
+- F153 (e39016e80): `stopAtMediaEnd` now holds the one-shot resume
+  listener of a terminally paused loop in a per-element map and removes
+  it when a new loop starts, even when the finished loop already left
+  the active map. Fail-first: the new jsdom row
+  "does not re-arm the old loop after the new loop ends" failed on the
+  old helper with `the stale resume listener of A is gone: expected 1 to
+  be +0` (1 failed, 11 passed); after the fix the file and the
+  adversarial tap file pass (17 tests).
+- F154 (4b980126c): `controlBottomAtLandscape` counts the matched player
+  controls, and the two live rows and both self-tests pass only when
+  `controls_found > 0`, the bottom is above 0, and the bottom is inside
+  the viewport; the live rows print `controls_found`. A new `/no-controls`
+  self-test page must be rejected. Fail-first: with the old bottom-only
+  verdict the `/no-controls` page passed (`control_bottom_px=0`) and the
+  self-test FAILED (gate exit 1, PASS=55, FAIL=1); after the fix the gate
+  exits 0 with inner PASS=56, FAIL=0 and the live rows print
+  `controls_found=5` (book) and `2` (decodable).
+- F152 (the closeout gate): every item 1 to 6 of the strategy closeout
+  gate exits 0 on ONE code HEAD `4b980126c`; the table is in the plan
+  sub-block `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` and in
+  the result block below. The plan task 3.7 line keeps `[x]`, names the
+  closeout gate HEAD, drops the "change-quality reviews of round 5" text,
+  and says the round 6 reviews passed at acf0d591d while the round 7
+  reviews, the adversarial record, the UX browser review, and the phase
+  acceptance follow (the checkpoint marker stays the orchestrator's,
+  plan line 862). Plan commit ef5c2f690.
+- Deviations: one ad-hoc read-only `tsc --noEmit` ran outside heavy-run
+  after the F153 edit (the gate tsc is not part of the closeout list; the
+  quality-gates script ran it through heavy-run anyway). One commit
+  attempt used a mistyped track id and commitlint rejected it; no commit
+  was created. The first receiver run used the A-42 draft pin and the
+  content diff exited 1; the run at the recorded take pin restored the
+  same bytes and the diff exits 0 (recorded in the plan evidence).
+
+## Result block
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app
+commits: e39016e80 (fix(storytime): drop a stale resume listener, F153);
+  4b980126c (test(storytime): guard the landscape row on a control, F154,
+  the closeout gate code HEAD); ef5c2f690 (docs(measure): record the phase
+  3 closeout gate); this log commit. Role base acf0d591d; phase base
+  7db52a49d20e195388fd91670cc7c022312b50c5; Green model
+  opencode-go/deepseek-v4.1-flash; Red model of the phase MiniMax and
+  OpenAI.
+tests_run: F153 fail-first — the new row failed on the old helper (1
+  failed, 11 passed; expected 1 to be +0); after the fix the audio-seek and
+  adversarial tap files pass (17 tests). F154 fail-first — with the old
+  bottom-only verdict the /no-controls page passed (control_bottom_px=0)
+  and the self-test failed (gate exit 1, PASS=55, FAIL=1); after the fix
+  the gate exits 0. Closeout gate on ONE code HEAD 4b980126c, each item
+  through heavy-run (or the script plain where it enters heavy-run
+  itself), one at a time: 1a. the Phase Red command with CI=true: exit 0,
+  38 files, 334 tests, no expected fail. 1b. the P1 targeted command: exit
+  0, 47 files, 410 tests. 1c. the P2 targeted command: exit 0, 22 files,
+  257 tests. 2a. phase1-quality-gates.sh: exit 0, PASS=2, FAIL=0 (test
+  task 47 files, 410 tests). 2b. the read-along turbo filter: exit 0, 1
+  task, 9 files, 104 tests. 3. the Docker smoke with df -h / first (16 GB
+  free, above 12 GB): exit 0, PASS=19, FAIL=0. 4. the browser gate: exit
+  0, inner PASS=56, FAIL=0, wrapper PASS=4, FAIL=0;
+  landscape_controls_visible_*=true with controls_found=5 and 2. 5. the
+  receiver at the recorded take pin
+  67be5603e0410f21491a006b8e9d12f3f9dd1bfc: exit 0, 8 weeks, 179 media
+  files, 159 missing pictures, w01 ready; git diff --exit-code
+  apps/storytime/content exits 0. 6. build-graph update on
+  lib/audio-seek.ts: exit 0, 9 to 9 nodes, 11 to 9 edges; no new export,
+  so no search row. Ports 3940 to 3960 free before and after.
+files_changed: apps/storytime/lib/audio-seek.ts (e39016e80),
+  apps/storytime/__tests__/phase3-audio-seek-stop.test.tsx (e39016e80),
+  apps/storytime/__tests__/phase3-browser-gate.sh (4b980126c),
+  measure/tracks/storytime_app_rebuild_20261025/plan.md (ef5c2f690), and
+  this log. The receiver rewrote the content byte-identically; the tree
+  shows no content change. The two modified apps/*/next-env.d.ts files
+  belong to TS7 and stayed unstaged.
+plan_updates: task 3.7 keeps [x]; its Done text names the closeout gate
+  code HEAD 4b980126c, points to the new
+  `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block (one row
+  per item 1 to 6 with command, exit, and counts), says the round 6
+  reviews passed at acf0d591d (the three review JSON paths), and says the
+  round 7 reviews, the adversarial record, the UX browser review, and the
+  phase acceptance follow; the checkpoint marker stays the orchestrator's
+  (line 862). The "change-quality reviews of round 5" text is removed.
+known_failures: none. Every closeout item 1 to 6 exits 0 on ONE code HEAD
+  4b980126c.
+handoff: the Phase 3 closeout gate is complete on code HEAD 4b980126c with
+  the plan evidence at ef5c2f690. Item 7 stays the orchestrator's: the
+  round 7 reviews, the adversarial role, the UX browser review, and the
+  phase acceptance run after this commit, and the checkpoint marker stays
+  with the orchestrator (plan line 862). The receiver's first run used the
+  A-42 draft pin and differed, as expected, because the committed content
+  is the take-pin content; the recorded take pin run is byte-identical.
+  One ad-hoc read-only tsc ran outside heavy-run (recorded); all other
+  heavy steps ran through heavy-run or the script that enters it.
+dispositions: F152=FIX; F153=FIX; F154=FIX
+END_MEASURE_AGENT_RESULT
