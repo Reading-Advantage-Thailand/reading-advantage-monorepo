@@ -16,7 +16,7 @@
 - No new hash, checksum field, or provenance file (AGENTS.md hashing policy). The `sha256sum -c` run named by the PM hand-off is the only hash step.
 - At the end of each phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
 
-## Phase 1: Receive the Workbooks 82f88853 week packages
+## Phase 1: Receive the Workbooks 82f88853 week packages [checkpoint: 811f05f36]
 
 Dependency: Red and Green of Phase 1 start only after the heading of Phase 3 in the parent plan carries its checkpoint. The parent Phase 3 receiver gate pins `apps/storytime/content` at `67be5603` during its review. This phase moves that pin to `82f88853`.
 
