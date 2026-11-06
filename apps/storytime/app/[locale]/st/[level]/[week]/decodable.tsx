@@ -423,7 +423,10 @@ export function StorytimeDecodable({
         onError={() => setFailed(true)}
       />
       {element ? (
-        <section aria-label={labels.soundOfWeek} className="flex flex-col gap-2">
+        <section
+          aria-label={labels.soundOfWeek}
+          className="flex flex-col gap-2 [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-center"
+        >
           <p className="text-3xl font-semibold" lang="en">
             {element.graphemes.join(" ")}
           </p>
@@ -442,17 +445,20 @@ export function StorytimeDecodable({
         </section>
       ) : null}
       {page ? (
-        <section data-page-number={pageNumber} className="flex flex-col gap-3">
+        <section
+          data-page-number={pageNumber}
+          className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-start"
+        >
           {page.image?.file ? (
             <img
               src={mediaUrl(mediaBase, page.image.file)}
               alt={page.image.caption ?? ""}
               loading="lazy"
               decoding="async"
-              className="w-full rounded-2xl object-cover"
+              className="w-full rounded-2xl object-cover [@media(max-height:500px)]:max-h-[40vh] [@media(max-height:500px)]:basis-[45%] [@media(max-height:500px)]:shrink-0"
             />
           ) : null}
-          <p className="flex flex-wrap items-center gap-x-1 whitespace-pre-wrap text-2xl" lang="en">
+          <p className="flex flex-wrap items-center gap-x-1 whitespace-pre-wrap text-2xl [@media(max-height:500px)]:flex-1" lang="en">
             {page.text.split(WORD_PATTERN).map((token, index) =>
               isWord(token) ? (
                 <button

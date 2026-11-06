@@ -78,7 +78,13 @@ for (const name of media) {
   const file = path.resolve(root, name);
   if (!file.startsWith(`${path.resolve(root)}${path.sep}`)) throw new Error(`unsafe fixture path: ${name}`);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, name.endsWith('.mp3') ? Buffer.from('ID3') : Buffer.from('fixture'));
+  // A picture is a valid 1x1 PNG so it takes its layout height (the landscape row of finding
+  // F150 needs a real picture); audio and other files keep the small placeholder bytes.
+  const png = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+    'base64',
+  );
+  fs.writeFileSync(file, name.endsWith('.mp3') ? Buffer.from('ID3') : /\.(png|webp|jpe?g|gif|avif)$/i.test(name) ? png : Buffer.from('fixture'));
 }
 NODE
   FIXTURE_RC=$?
@@ -162,10 +168,20 @@ function wavBuffer(seconds) {
 }
 const WAV = wavBuffer(3);
 /** Answers every audio file under the media base with the WAV, so the elements decode and play. */
+const PNG_1X1 = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+  'base64',
+);
 async function interceptMedia(pg) {
   await pg.route('**/media/**', route => {
     const path = new URL(route.request().url()).pathname;
     if (/\.mp3$/i.test(path)) return route.fulfill({ status: 200, contentType: 'audio/wav', body: WAV });
+    // The built app serves no static media, so a page picture would 404 and take no layout
+    // height. A valid 1x1 PNG gives every picture its layout box, which the landscape row of
+    // finding F150 needs (a 1:1 picture is as tall as its container is wide).
+    if (/\.(png|webp|jpe?g|gif|avif)$/i.test(path)) {
+      return route.fulfill({ status: 200, contentType: 'image/png', body: PNG_1X1 });
+    }
     return route.continue();
   });
 }
@@ -248,6 +264,37 @@ async function bottomBarGap(pg, selector) {
     return { bars: 1, gap: Math.round(window.innerHeight - rect.bottom) };
   }, selector);
 }
+// The bottom edge of the player controls row at 844x390, in pixels (finding F150). The live
+// row and the self-test share it; the picture cap in landscape keeps the row inside the
+// viewport so the child needs no scroll to reach it. The row is the `flex flex-wrap gap-2`
+// container of the page arrows and the mode buttons; the tricky-words list sits after it.
+async function controlBottomAtLandscape(pg) {
+  await pg.setViewportSize({ width: 844, height: 390 });
+  // The page pictures are lazy; measure only after every image has loaded, or the layout is
+  // still short and the row would pass before the picture takes its height (finding F150).
+  await pg
+    .waitForFunction(() => [...document.images].every((img) => img.complete), undefined, { timeout: 10000 })
+    .catch(() => {});
+  await pg.waitForTimeout(50);
+  return pg.evaluate(() => {
+    let bottom = 0;
+    for (const el of document.querySelectorAll('div.flex.flex-wrap.gap-2 > button')) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) bottom = Math.max(bottom, rect.bottom);
+    }
+    const picture = document.querySelector('img');
+    const sections = [...document.querySelectorAll('section')].map((el) => ({
+      label: (el.getAttribute('aria-label') ?? el.getAttribute('data-page-number') ?? el.tagName).slice(0, 18),
+      box: Math.round(el.getBoundingClientRect().height),
+    }));
+    return {
+      bottom: Math.round(bottom),
+      viewport: Math.round(window.innerHeight),
+      picture: picture ? Math.round(picture.getBoundingClientRect().height) : 0,
+      sections,
+    };
+  });
+}
 async function watchNetwork(page) {
   const requests = [];
   const transfers = [];
@@ -286,6 +333,9 @@ try {
     ['/duplicate-id', '<!doctype html><div id="same"></div><p id="same"></p>'],
     ['/bottom-bar', '<!doctype html><style>.fixed.bottom{position:fixed;left:0;right:0;bottom:10px;height:40px;background:#333}</style><div class="fixed bottom"></div>'],
     ['/no-focus-ring', '<!doctype html><style>button,button:focus{outline:none;box-shadow:none}</style><button>press</button>'],
+    // F150 self-test page: a tall block pushes its player control below the 390 px landscape
+    // viewport, so the shared landscape check must reject it.
+    ['/tall-controls', '<!doctype html><div style="height:600px;background:#eee"></div><div class="flex flex-wrap gap-2"><button>go</button></div>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -314,7 +364,7 @@ try {
     ['two elements with one id (duplicate_ids)', '/duplicate-id', async p => { const counts = await duplicateIdCount(p); console.log(`selftest duplicate_ids=${counts.duplicates} (ids_found=${counts.ids})`); return counts.duplicates === 0; }],
     ['a bottom bar 10 px above the viewport bottom (bottom_bar_gap_px)', '/bottom-bar', async p => { const info = await bottomBarGap(p, '[class*="fixed"][class*="bottom"]'); console.log(`selftest bottom_bar_gap_px=${info.gap} (bars_found=${info.bars})`); return info.bars === 0 || info.gap <= 1; }],
     ['a button with no visible focus indicator (focus_visible_failures)', '/no-focus-ring', async p => { const out = await focusVisibleFailures(p); console.log(`selftest focus_visible_failures=${out.failures.length} (targets=${out.count})`); return out.failures.length === 0; }],
-    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
+    ['controls below the fold at 844x390 (landscape_controls_visible)', '/tall-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, viewport_px=${info.viewport})`); return info.bottom <= info.viewport; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
     ['a pause 48 ms before the cut end (word cut early rule)', '/button', async () => { const v = wordCutVerdict(0.34 - 0.048, 0.34); console.log(`selftest word_cut_early_ms=${v.early}`); return v.earlyOk; }],
     ['a pause at the cut end passes both word cut rules', '/button', async () => { const v = wordCutVerdict(0.34, 0.34); console.log(`selftest word_cut signed=${v.signedPauseDeltaMs} overshoot=${v.overshoot} early=${v.early}`); return !(v.overshootOk && v.earlyOk); }],
   ]) {
@@ -514,6 +564,18 @@ try {
     console.log(`bottom_bar_gap_px=${barInfo.gap} (selector=${selector}; bars_found=${barInfo.bars})`);
     return { ok: barInfo.gap <= 1, detail: `bottom_bar_gap_px=${barInfo.gap}` };
   });
+
+  // landscape_controls_visible at 844x390 (finding F150): the page picture is capped in
+  // landscape, so the lowest control ends inside the viewport and the child needs no scroll.
+  for (const screen of ['book', 'decodable']) {
+    await runCheck(`landscape_controls_visible on the ${screen} screen at 844x390`, async () => {
+      if (!page) throw new Error('Browser page is unavailable');
+      await page.goto(`${base}/th/st/2/1?part=${screen}`, { waitUntil: 'networkidle' });
+      const info = await controlBottomAtLandscape(page);
+      console.log(`landscape_controls_visible_${screen}=${info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, viewport_px=${info.viewport}, picture_px=${info.picture}, sections=${JSON.stringify(info.sections)})`);
+      return { ok: info.bottom <= info.viewport, detail: `control_bottom_px=${info.bottom}, viewport_px=${info.viewport}` };
+    });
+  }
 
   // reduced_motion_transition_ms: 0 on the marks with reducedMotion reduce.
   await runCheck('reduced_motion_transition_ms is 0 on the marks', async () => {

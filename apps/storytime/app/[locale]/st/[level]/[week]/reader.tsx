@@ -392,19 +392,23 @@ export function StorytimeReader({
         </div>
       ) : (
         <>
-          <div data-page-content data-page-number={pageNumber} className="flex flex-col gap-3">
+          <div
+            data-page-content
+            data-page-number={pageNumber}
+            className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-start"
+          >
             {image?.file ? (
               <img
                 src={mediaUrl(mediaBase, image.file)}
                 alt={image.caption ?? ""}
                 loading="lazy"
                 decoding="async"
-                className="w-full rounded-2xl object-cover"
+                className="w-full rounded-2xl object-cover [@media(max-height:500px)]:max-h-[40vh] [@media(max-height:500px)]:basis-[45%] [@media(max-height:500px)]:shrink-0"
               />
             ) : null}
             {/* The book text is English on every locale, so the nearest lang of a word is en
                 even on the printed th route (finding F134). */}
-            <div lang="en">
+            <div lang="en" className="[@media(max-height:500px)]:flex-1">
               <ReadAlongPassage
                 sentences={normalSentences}
                 passage=""
