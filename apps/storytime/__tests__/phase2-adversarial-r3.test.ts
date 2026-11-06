@@ -325,7 +325,7 @@ beforeAll(() => {
 });
 
 describe("r3 receiver failures preserve user data", () => {
-  it("restores an uncommitted week edit and the old record after a real write failure", () => {
+  it("keeps an uncommitted week edit and the old record when writeStaged fails reading the originals before any replacement write", () => {
     const root = freshRoot("user-edit");
     expect(run(root, "--commit", baseCommit)).toBe(0);
     const content = join(root, "apps/storytime/content");
