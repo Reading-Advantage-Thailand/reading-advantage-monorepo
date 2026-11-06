@@ -348,7 +348,10 @@ async function controlRightAtLandscape(pg, selector) {
 // viewport, so no child-facing control sits below the fold or past the right edge in
 // landscape. The live rows and the self-test share it; `outside` counts the elements that
 // fail either edge and `outsideList` names them, so a fail shows which element must move.
-async function allControlsAtLandscape(pg) {
+// `extraSelector` (finding F370) measures a second element kind, such as the child-facing
+// `<audio controls>` speakers of the week tiles, with its own count, bottom, and outside
+// number, so the row fails when such a speaker leaves the viewport.
+async function allControlsAtLandscape(pg, selector = 'a[href], button, [role="button"], [data-word]', extraSelector = null) {
   await pg.setViewportSize({ width: 844, height: 390 });
   // The pictures are lazy; measure only after every image has loaded, or the layout is still
   // short and an element would pass before the picture takes its height.
@@ -356,7 +359,7 @@ async function allControlsAtLandscape(pg) {
     .waitForFunction(() => [...document.images].every((img) => img.complete), undefined, { timeout: 10000 })
     .catch(() => {});
   await pg.waitForTimeout(50);
-  return pg.evaluate(() => {
+  return pg.evaluate(({ sel, extra }) => {
     const viewportH = Math.round(window.innerHeight);
     const viewportW = Math.round(window.innerWidth);
     let count = 0;
@@ -364,7 +367,7 @@ async function allControlsAtLandscape(pg) {
     let maxBottom = 0;
     let maxRight = 0;
     const outsideList = [];
-    for (const el of document.querySelectorAll('a[href], button, [role="button"], [data-word]')) {
+    for (const el of document.querySelectorAll(sel)) {
       const rect = el.getBoundingClientRect();
       if (!(rect.width > 0 && rect.height > 0)) continue;
       count += 1;
@@ -375,8 +378,20 @@ async function allControlsAtLandscape(pg) {
         outsideList.push(`${el.tagName.toLowerCase()}[${(el.getAttribute('aria-label') ?? el.textContent ?? '').trim().slice(0, 16)}] bottom=${Math.round(rect.bottom)} right=${Math.round(rect.right)}`);
       }
     }
-    return { viewportH, viewportW, count, outside, maxBottom, maxRight, outsideList };
-  });
+    let speakerCount = 0;
+    let speakerOutside = 0;
+    let speakerBottom = 0;
+    if (extra) {
+      for (const el of document.querySelectorAll(extra)) {
+        const rect = el.getBoundingClientRect();
+        if (!(rect.width > 0 && rect.height > 0)) continue;
+        speakerCount += 1;
+        speakerBottom = Math.max(speakerBottom, Math.round(rect.bottom));
+        if (Math.round(rect.bottom) > viewportH || Math.round(rect.right) > viewportW) speakerOutside += 1;
+      }
+    }
+    return { viewportH, viewportW, count, outside, maxBottom, maxRight, outsideList, speakerCount, speakerOutside, speakerBottom };
+  }, { sel: selector, extra: extraSelector });
 }
 async function watchNetwork(page) {
   const requests = [];
@@ -428,6 +443,9 @@ try {
     // F360 self-test page: one interactive element sits below the 390 px fold, so the shared
     // all-controls check must reject the page.
     ['/below-fold', '<!doctype html><div style="height:600px;background:#eee"></div><button>late</button>'],
+    // F371 self-test page: one link inside the viewport. The old count > 0 rule improperly
+    // passed such a page; the reader row minimum of 9 must reject it.
+    ['/one-link', '<!doctype html><a href="/only">only link</a>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -459,7 +477,8 @@ try {
     ['controls below the fold at 844x390 (landscape_controls_visible)', '/tall-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
     ['no player control found at 844x390 (landscape_controls_visible)', '/no-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
     ['a tile row wider than the viewport at 844x390 (landscape_row_right_edge)', '/wide-row', async p => { const info = await controlRightAtLandscape(p, '.row > button'); console.log(`selftest landscape_row_right_edge=${info.count > 0 && info.right > 0 && info.right <= info.viewport} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`); return info.count > 0 && info.right > 0 && info.right <= info.viewport; }],
-    ['an interactive element below the fold at 844x390 (all_controls_visible)', '/below-fold', async p => { const info = await allControlsAtLandscape(p); console.log(`selftest all_controls_visible=${info.count > 0 && info.outside === 0} (controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}, viewport_px=${info.viewportH})`); return info.count > 0 && info.outside === 0; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
+    ['an interactive element below the fold at 844x390 (all_controls_visible)', '/below-fold', async p => { const info = await allControlsAtLandscape(p); console.log(`selftest all_controls_visible=${info.count > 0 && info.outside === 0} (controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}, viewport_px=${info.viewportH})`); return info.count > 0 && info.outside === 0; }],
+    ['one link against the reader minimum of 9 (all_controls_visible)', '/one-link', async p => { const info = await allControlsAtLandscape(p); const oldRule = info.count > 0 && info.outside === 0; const newRule = info.count >= 9 && info.outside === 0; console.log(`selftest all_controls_visible_min old_rule_passes=${oldRule} new_rule_passes=${newRule} (controls_found=${info.count}, controls_min=9, controls_outside=${info.outside})`); return newRule; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
     ['a pause 48 ms before the cut end (word cut early rule)', '/button', async () => { const v = wordCutVerdict(0.34 - 0.048, 0.34); console.log(`selftest word_cut_early_ms=${v.early}`); return v.earlyOk; }],
     ['a pause at the cut end passes both word cut rules', '/button', async () => { const v = wordCutVerdict(0.34, 0.34); console.log(`selftest word_cut signed=${v.signedPauseDeltaMs} overshoot=${v.overshoot} early=${v.early}`); return !(v.overshootOk && v.earlyOk); }],
   ]) {
@@ -779,36 +798,40 @@ try {
   // One all-controls row per at-home screen at 844x390 (finding F360, the F150 class): every
   // interactive element (`a`, `button`, `[role=button]`, `[data-word]`) ends inside the
   // viewport on the bottom and the right edge, so no child-facing control sits below the fold
-  // in landscape. The rows print `controls_found` and the number of elements outside, with the
-  // first offenders named, so a fail shows which element must move.
-  const allControlsCheck = async (name, open) => {
+  // in landscape. Each row holds a per-screen minimum count (finding F371) from the measured
+  // values, so a screen that falls back to a single home link fails its row instead of
+  // passing on count > 0. The rows print `controls_found`, the minimum, the number of
+  // elements outside, and the first offenders, so a fail shows which element must move. The
+  // week row (finding F370) also measures the child-facing tile speakers, which the
+  // link-and-button selector misses.
+  const allControlsCheck = async (name, open, minCount, extraSelector = null) => {
     await runCheck(`all_controls_visible on the ${name} screen at 844x390`, async () => {
       if (!page) throw new Error('Browser page is unavailable');
       await open();
-      const info = await allControlsAtLandscape(page);
-      const ok = info.count > 0 && info.outside === 0;
-      console.log(`all_controls_visible_${name}=${ok} (controls_found=${info.count}, controls_outside=${info.outside}, outside=${JSON.stringify(info.outsideList.slice(0, 4))}, max_bottom_px=${info.maxBottom}, max_right_px=${info.maxRight}, viewport_px=${info.viewportH}x${info.viewportW})`);
-      return { ok, detail: `controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}` };
+      const info = await allControlsAtLandscape(page, undefined, extraSelector);
+      const ok = info.count >= minCount && info.outside === 0 && info.speakerOutside === 0;
+      console.log(`all_controls_visible_${name}=${ok} (controls_found=${info.count}, controls_min=${minCount}, controls_outside=${info.outside}, speakers_found=${info.speakerCount}, speakers_outside=${info.speakerOutside}, speaker_bottom_px=${info.speakerBottom}, outside=${JSON.stringify(info.outsideList.slice(0, 4))}, max_bottom_px=${info.maxBottom}, max_right_px=${info.maxRight}, viewport_px=${info.viewportH}x${info.viewportW})`);
+      return { ok, detail: `controls_found=${info.count}, controls_min=${minCount}, controls_outside=${info.outside}, speakers_outside=${info.speakerOutside}, max_bottom_px=${info.maxBottom}` };
     });
   };
   await allControlsCheck('week', async () => {
     await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
-  });
+  }, 3, '[data-week-tiles] audio');
   await allControlsCheck('reader', async () => {
     await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
-  });
+  }, 9);
   await allControlsCheck('endofbook', async () => {
     await reachEndOfBook('th');
-  });
+  }, 3);
   await allControlsCheck('decodable', async () => {
     await page.goto(`${base}/th/st/2/1?part=decodable`, { waitUntil: 'networkidle' });
-  });
+  }, 8);
   await allControlsCheck('song', async () => {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
-  });
+  }, 1);
   await allControlsCheck('question', async () => {
     if (!(await questionScreen())) throw new Error('the question screen did not render');
-  });
+  }, 4);
 
   // reduced_motion_transition_ms: 0 on the marks with reducedMotion reduce.
   await runCheck('reduced_motion_transition_ms is 0 on the marks', async () => {
