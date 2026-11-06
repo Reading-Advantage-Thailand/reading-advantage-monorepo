@@ -821,7 +821,36 @@ Green builds to these rules:
 - No build ran and no browser check ran.
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
-- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the gate HEAD `9b088aaa3` (task 3.5a): the P3.4 line-328 command exits 0 with 38 files and 333 tests; the P4 tests exit 0 with 2 files and 15 tests; `tsc --noEmit` exits 0; ESLint exits 0 on `song.tsx`; the browser gate exits 0 with inner PASS=55, FAIL=0 and wrapper PASS=4, FAIL=0. The change-quality reviews of round 5 run after this commit, and the reviews and the phase acceptance check the mark. Round 5 and task 3.5a evidence: the turn 7 sub-block (`#### Turn 7 Green evidence (review round 5)`, fixes F147 to F151 at `cbcb59238`) and the task 3.5a Green evidence above.
+- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (line 862).
+
+#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)
+
+- Code HEAD: `4b980126c99e6e06ae27f4143fdc4fd02cbcc302`. Every item below ran on this
+  ONE HEAD, one at a time, through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'` (or the script plain where
+  it enters heavy-run itself). Ports 3940 to 3960 were free before the first run and
+  after the last run.
+  | # | Item | Command | Exit | Counts |
+  |---|------|---------|------|--------|
+  | 1a | the Phase Red command, line 328, with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 38 files, 334 tests, no expected fail |
+  | 1b | the P1 targeted command (strategy P1) | `pnpm exec vitest run --maxWorkers=1 apps/storytime` | 0 | 47 files, 410 tests |
+  | 1c | the P2 targeted command (strategy P2) | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase2-*.test.ts packages/read-along` | 0 | 22 files, 257 tests |
+  | 2a | `bash apps/storytime/__tests__/phase1-quality-gates.sh` (plain; enters heavy-run itself) | `pnpm turbo run build check-types lint test --filter=storytime` | 0 | PASS=2, FAIL=0; test task 47 files, 410 tests |
+  | 2b | the read-along filter of line 340 (the script covers only `storytime`) | `pnpm turbo run build check-types lint test --filter=@reading-advantage/read-along --ui=stream --concurrency=1` | 0 | 1 task (`test` is the only script); 9 files, 104 tests |
+  | 3 | the Docker smoke in its P3 form (runs 1, 1b, 2), `df -h /` first | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-docker-smoke.sh` | 0 | PASS=19, FAIL=0; 16 GB free at the start (above the 12 GB floor) |
+  | 4 | the browser gate (task 3.7 browser review) | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=56, FAIL=0; wrapper PASS=4, FAIL=0; `landscape_controls_visible_*=true` with `controls_found=5` and `2` |
+  | 5 | the receiver at the recorded pin, then the content diff | `tsx apps/storytime/scripts/receive-weeks.ts --commit 67be5603e0410f21491a006b8e9d12f3f9dd1bfc --weeks 1-8`; `git diff --exit-code apps/storytime/content` | 0 | 8 weeks, 179 media files, 159 missing pictures; w01 ready, w02 to w08 not ready; the content diff is empty |
+  | 6 | the graph update (A10) | `build-graph update ./graph.db apps/storytime/lib/audio-seek.ts` | 0 | 9 to 9 nodes, 11 to 9 edges; no new export, so no search row |
+- Item 5 note: the first run used the A-42 draft pin
+  `cad0307cad31a3131dc3a06e9e773537a1a6219b` and the content diff exited 1, because the
+  committed content is the take-pin content (plan line 816 names the take pin
+  `67be5603e0410f21491a006b8e9d12f3f9dd1bfc`). The run at the recorded take pin restored
+  the same bytes and the diff exits 0. The at-home import of pin `82f88853` has not
+  happened and was not run.
+- Item 7 (the change-quality review, Review B, Review C, and the adversarial record) is the
+  orchestrator's: the round 7 reviews, the adversarial role, and the UX browser review run
+  after this commit. The checkpoint marker stays the orchestrator's (line 862).
 
 #### Owner look approval (2026-11-06)
 
