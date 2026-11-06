@@ -6,37 +6,81 @@
 - Immutable phase base: `7db52a49d20e195388fd91670cc7c022312b50c5`.
 - Sources: `review-b-0def8d79d.json` (pass, with F260) and `ux-browser-0def8d79d.json`
   (pass, with F280, F281, and F282).
+- Final code HEAD: `6ff5c4654`. Every gate below ran on that ONE HEAD.
 
-## Routed findings
+## Routed findings and fixes
 
-- F280 [Nit], FIX. Song at 844x390: the play control ends at 441 px in the 390 px viewport.
-- F281 [Nit], FIX. Question screen at 844x390: the skip control ends at 492 px.
-- F282 [Nit], FIX. End of the book at 844x390: the third tile ends at 466 px.
-- F260 [Nit], FIX (small). A rejected play leaves the `seekOrWait` `applySeek` listener, so a
-  later load can seek to the old cut start.
+- F280 [Nit], FIX at `f85a9e9f7`. Song at 844x390: the play control ended at 441 px in the
+  390 px viewport, because the stage kept a 16:9 box of about 297 px. Fix: the song video
+  caps at 11rem in landscape and keeps its 16:9 shape. It now ends at 320 px.
+- F281 [Nit], FIX at `f85a9e9f7`. Question screen at 844x390: the skip control ended at
+  492 px. Fix: the choices use three columns and a 64 px picture in landscape, and the
+  prompt is one step smaller. The skip control now ends at 274 px.
+- F282 [Nit], FIX at `f85a9e9f7`. End of the book at 844x390: the third tile ended at
+  466 px. Fix: the three week tiles use a row in landscape. All three now end at 230 px.
+- F260 [Nit], FIX at `6ff5c4654`. After a rejected `play()`, the `seekAndRun` cancel
+  removed only its stop arm. The `seekOrWait` once `applySeek` listener stayed, so a later
+  load could seek to the old cut start. Fix: `seekOrWait` reports a cancel through a new
+  optional callback, and `seekAndRun` removes both listeners. Callers without the callback
+  keep the old behavior. `packages/read-along/lib/seek.ts` and its other callers were read:
+  only `audio-seek.ts` uses the package function for a queued seek.
 
-## Plan (provisional)
+## Fail-first
 
-1. Cap the song stage in landscape and keep the 9:16 and 16:9 ratios.
-2. Use a three-column choice row and smaller choice pictures on the question screen in
-   landscape.
-3. Lay out the three week tiles in a row in landscape.
-4. Extend the `landscape_controls_visible` rows to the song, the question screen, and the
-   end of the book; record the fail-first values on the old code.
-5. Let `seekOrWait` report a cancel for its queued seek, and remove that listener from the
-   `seekAndRun` cancel; add a test that fails first.
-6. Run the gates on one code HEAD and write the Turn 12 plan block.
+- F280 to F282: the extended browser gate ran on the old layout in one heavy-run job. The
+  new rows failed against the 390 px viewport: song 441, question 492, and end of book
+  466. The run totals were PASS=56, FAIL=3. The first fixture draft used week 2 and broke
+  the week 404 row, so the end-of-book fixture moved to week 4.
+- F260: `phase3-seek-cancel.test.ts` ran on the old cancel and failed with a queued write
+  of `3.5` after `cancel()` ("a later load must not seek to the old cut start"). It passes
+  after the fix.
+
+## Gates on `6ff5c4654`
+
+Each gate ran alone through
+`HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, or the script plain
+where it enters heavy-run itself.
+
+| # | Item | Command | Exit | Counts |
+|---|------|---------|------|--------|
+| 1 | the Phase Red command with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+| 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+| 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+| 4 | ESLint on the changed app source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/song.tsx" "app/[locale]/st/[level]/[week]/questions.tsx" "lib/audio-seek.ts"` | 0 | no output; `packages/read-along` holds no ESLint config or lint script |
+| 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=59, FAIL=0; wrapper PASS=4, FAIL=0; song 320, question 274, end 230; phone ratio 563 and height 69 percent, laptop ratio 1778 |
+| 6 | the graph update | `build-graph update ./graph.db` on the four changed source files | 0 | 4 files, 41 to 53 nodes, 63 to 61 edges |
+| 7 | the quality gates (`packages/read-along` changed) | `bash apps/storytime/__tests__/phase1-quality-gates.sh` | 0 | PASS=2, FAIL=0; the test task ran 418 tests; 0 cached, 4 total |
+| 8 | the read-along turbo filter (the script covers only storytime) | `pnpm turbo run build check-types lint test --filter=@reading-advantage/read-along --ui=stream --concurrency=1` | 0 | 1 task (test); 104 tests; 0 cached |
+
+- A hand-written `@media (max-height: 500px)` block in `globals.css` was dropped by the
+  Next build, so the song cap uses the app `[@media(max-height:500px)]` utility with an
+  important flag instead. The measured phone and laptop boxes keep their ratios.
+- No route handler, server, or smoke script changed, so the Docker smoke did not rerun. No
+  content file changed. `graph.db` is untracked and ignored. Ports 3940 to 3960 were free
+  before and after.
+
+## Files changed
+
+- `apps/storytime/app/[locale]/st/[level]/[week]/song.tsx`
+- `apps/storytime/app/[locale]/st/[level]/[week]/questions.tsx`
+- `apps/storytime/__tests__/phase3-browser-gate.sh`
+- `apps/storytime/lib/audio-seek.ts`
+- `packages/read-along/lib/seek.ts`
+- `apps/storytime/__tests__/phase3-seek-cancel.test.ts` (new)
+- `measure/tracks/storytime_app_rebuild_20261025/plan.md` (Turn 12 block and task 3.7
+  sentence)
 
 MEASURE_AGENT_RESULT
 role: green
-status: partial
+status: complete
 track: storytime_app_rebuild_20261025
 phase: Phase 3: At-home app
-commits: pending
-tests_run: pending
-files_changed: pending
-plan_updates: pending
-known_failures: pending
-handoff: provisional; the final block replaces this one at the end of the turn.
+commits: f85a9e9f7 (F280, F281, F282), 6ff5c4654 (F260); plan evidence is the docs commit that adds this log and the plan block
+tests_run: fail-first browser gate on the old layout PASS=56 FAIL=3 with song 441, question 492, end 466; fail-first F260 test failed with a queued write of 3.5; gate 1 Phase Red command 45 files 342 tests no expected fail; gate 2 P4 tests 2 files 15 tests; gate 3 tsc exit 0; gate 4 ESLint exit 0; gate 5 browser gate inner PASS=59 FAIL=0 wrapper PASS=4 FAIL=0; gate 6 graph update exit 0; gate 7 quality gates PASS=2 FAIL=0 with 418 tests; gate 8 read-along turbo filter 1 task 104 tests
+files_changed: apps/storytime/app/[locale]/st/[level]/[week]/song.tsx; apps/storytime/app/[locale]/st/[level]/[week]/questions.tsx; apps/storytime/__tests__/phase3-browser-gate.sh; apps/storytime/lib/audio-seek.ts; packages/read-along/lib/seek.ts; apps/storytime/__tests__/phase3-seek-cancel.test.ts (new); measure/tracks/storytime_app_rebuild_20261025/plan.md
+plan_updates: task 3.7 stays [x] with one sentence that names ux-browser-0def8d79d.json and the fix HEAD 6ff5c4654; a Turn 12 Green evidence block follows Turn 11; plan evidence is a separate docs commit
+known_failures: none on 6ff5c4654; the Docker smoke did not rerun because no route handler, server, or smoke script changed
+handoff: Re-review the landscape rows and the seek cancel at 6ff5c4654 against ux-browser-0def8d79d.json and review-b-0def8d79d.json. The browser gate holds 59 rows with no failure. The song cap uses the viewport utility because the Next build dropped the plain media block. The read-along package keeps its API for callers that pass no cancel callback. No question is open. phase_base_sha 7db52a49d20e195388fd91670cc7c022312b50c5; final Green HEAD 6ff5c4654 plus this docs commit.
 dispositions: F260=FIX; F280=FIX; F281=FIX; F282=FIX
 END_MEASURE_AGENT_RESULT

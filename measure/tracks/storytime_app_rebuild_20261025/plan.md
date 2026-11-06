@@ -821,7 +821,7 @@ Green builds to these rules:
 - No build ran and no browser check ran.
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
-- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`). The adversarial round 2 result is `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`; its findings F240, F241, and F242 are fixed at `5bda02bb0` (see the `#### Turn 11 Green evidence (adversarial round 2)` sub-block).
+- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`). The adversarial round 2 result is `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`; its findings F240, F241, and F242 are fixed at `5bda02bb0` (see the `#### Turn 11 Green evidence (adversarial round 2)` sub-block). The UX browser review round 2 passed at `0def8d79d` (`measure/runs/storytime_app_rebuild_20261025/ux-browser-0def8d79d.json`), and its Nits F280, F281, and F282 are fixed at `6ff5c4654` (see the `#### Turn 12 Green evidence (UX round 2)` sub-block).
 
 #### Phase 3 closeout gate (turn 9, HEAD 4b980126c)
 
@@ -925,6 +925,47 @@ Green builds to these rules:
   | 4 | ESLint on the four changed source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/decodable.tsx" "app/[locale]/st/[level]/[week]/page.tsx" "app/[locale]/st/[level]/[week]/reader.tsx" "lib/audio-seek.ts"` | 0 | no output |
   | 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=56, FAIL=0; wrapper PASS=4, FAIL=0; `landscape_controls_visible_book` and `_decodable` true |
   | 6 | the graph update | `build-graph update ./graph.db` on the four changed source files | 0 | 4 files, 72 to 93 nodes, 122 to 135 edges |
+- No route handler, server, or smoke script changed, so the Docker smoke did not rerun. No
+  content file changed. Ports 3940 to 3960 were free before and after.
+
+#### Turn 12 Green evidence (UX round 2)
+
+- Base: `0def8d79d` (review round 9 and UX round 2). Sources:
+  `measure/runs/storytime_app_rebuild_20261025/review-b-0def8d79d.json` (F260) and
+  `ux-browser-0def8d79d.json` (F280, F281, and F282). Code HEAD for every gate below:
+  `6ff5c4654`.
+- F280 (song), F281 (question screen), F282 (end of the book). Cause: the F150 landscape
+  fit held only for the reader and the decodable. At 844x390 the song play control ended at
+  441 px, the question skip control at 492 px, and the third end tile at 466 px. Fix
+  `f85a9e9f7`: the song video caps at 11rem in landscape and keeps its 16:9 shape; the
+  question choices use three columns and a 64 px picture; the three week tiles use a row.
+  The phone 9:16 box reads 563, the phone height 69 percent, and the laptop 16:9 box 1778.
+  A hand-written `@media` block in `globals.css` was dropped by the Next build, so the
+  song cap uses the app `[@media(max-height:500px)]` utility with an important flag.
+- F260 (seek listener). Cause: after a rejected `play()`, the `seekAndRun` cancel removed
+  only the stop arm. The `seekOrWait` once `applySeek` listener stayed, so a later load
+  could seek to the old cut start. Fix `6ff5c4654`: `seekOrWait` reports a cancel through
+  a new optional callback, and `seekAndRun` removes both listeners. Callers without the
+  callback keep the old behavior. New test `phase3-seek-cancel.test.ts` fails first with a
+  write of `3.5` and passes after the fix.
+- Fail-first proof for F280 to F282: the extended browser gate ran on the old layout in
+  one heavy-run job. Song 441, question 492, and end of book 466 all failed against the
+  390 px viewport; the totals were PASS=56, FAIL=3. After the fix the same rows read 320,
+  274, and 230.
+- Gates on `6ff5c4654`, one at a time, through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'` (or the script plain where
+  it enters heavy-run itself):
+  | # | Item | Command | Exit | Counts |
+  |---|------|---------|------|--------|
+  | 1 | the Phase Red command with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+  | 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+  | 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+  | 4 | ESLint on the changed app source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/song.tsx" "app/[locale]/st/[level]/[week]/questions.tsx" "lib/audio-seek.ts"` | 0 | no output; `packages/read-along` holds no ESLint config or lint script |
+  | 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=59, FAIL=0; wrapper PASS=4, FAIL=0; song 320, question 274, end 230; phone 563 and 69 percent, laptop 1778 |
+  | 6 | the graph update | `build-graph update ./graph.db` on the four changed source files | 0 | 4 files, 41 to 53 nodes, 63 to 61 edges |
+  | 7 | the quality gates (`packages/read-along` changed) | `bash apps/storytime/__tests__/phase1-quality-gates.sh` | 0 | PASS=2, FAIL=0; the test task ran 418 tests; 0 cached, 4 total |
+  | 8 | the read-along turbo filter (the script covers only storytime) | `pnpm turbo run build check-types lint test --filter=@reading-advantage/read-along --ui=stream --concurrency=1` | 0 | 1 task (test); 104 tests; 0 cached |
 - No route handler, server, or smoke script changed, so the Docker smoke did not rerun. No
   content file changed. Ports 3940 to 3960 were free before and after.
 
