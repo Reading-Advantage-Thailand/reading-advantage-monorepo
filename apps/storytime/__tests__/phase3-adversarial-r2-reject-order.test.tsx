@@ -40,7 +40,7 @@ afterEach(() => {
 describe("Phase 3 adversarial rejected play order", () => {
   // F241: the rejection lands before the queued `loadedmetadata` arm, so the arm runs after
   // the F147 clear and a stop stays armed for playback that never starts.
-  it.fails("leaves no stop armed when the rejection lands before loadedmetadata", async () => {
+  it("leaves no stop armed when the rejection lands before loadedmetadata", async () => {
     vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
     vi.spyOn(HTMLMediaElement.prototype, "play").mockRejectedValue(
       new DOMException("blocked", "NotAllowedError"),

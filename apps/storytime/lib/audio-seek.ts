@@ -18,18 +18,30 @@ import { seekOrWait } from "@reading-advantage/read-along/lib/seek";
  * @param audio The media element to seek.
  * @param time The playback time in seconds.
  * @param onReady The callback that runs when the seek is in place.
+ * @returns A cancel function that drops a queued `onReady`; it is a no-op when the callback
+ *   already ran. A caller runs it when playback never starts, so a rejected play does not
+ *   leave a queued stop arm (finding F241).
  */
-export function seekAndRun(audio: HTMLAudioElement, time: number, onReady: () => void): void {
+export function seekAndRun(
+  audio: HTMLAudioElement,
+  time: number,
+  onReady: () => void,
+): () => void {
   if (seekOrWait(audio, time)) {
     onReady();
-    return;
+    return () => {};
   }
-  audio.addEventListener("loadedmetadata", onReady, { once: true });
+  const runOnReady = (): void => {
+    audio.removeEventListener("loadedmetadata", runOnReady);
+    onReady();
+  };
+  audio.addEventListener("loadedmetadata", runOnReady, { once: true });
   try {
     audio.currentTime = time;
   } catch {
     // The seek applies on the loadedmetadata event.
   }
+  return () => audio.removeEventListener("loadedmetadata", runOnReady);
 }
 
 /**

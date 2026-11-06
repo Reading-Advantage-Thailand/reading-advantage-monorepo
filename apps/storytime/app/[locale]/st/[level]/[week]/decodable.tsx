@@ -182,6 +182,9 @@ export function StorytimeDecodable({
   // F140: cancels the pending media-clock stop of the whole-word cut; `clearWholeStopTimer`
   // runs it.
   const wholeStopCancelRef = useRef<(() => void) | null>(null);
+  // F241: drops a stop arm queued on `loadedmetadata`; `clearWholeStopTimer` runs it too, so a
+  // rejected play cannot arm a stop for playback that never starts.
+  const wholeSeekCancelRef = useRef<(() => void) | null>(null);
   const blendGenerationRef = useRef(0);
   const [pageIndex, setPageIndex] = useState(0);
   const [failed, setFailed] = useState(false);
@@ -379,6 +382,10 @@ export function StorytimeDecodable({
 
   /** Clears the pending media-clock stop and the pending stop timer (findings F123, F140). */
   function clearWholeStopTimer(): void {
+    if (wholeSeekCancelRef.current !== null) {
+      wholeSeekCancelRef.current();
+      wholeSeekCancelRef.current = null;
+    }
     if (wholeStopCancelRef.current !== null) {
       wholeStopCancelRef.current();
       wholeStopCancelRef.current = null;
@@ -424,8 +431,13 @@ export function StorytimeDecodable({
     if (bounds) {
       // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
       // F122). The cut stop follows the media clock, so the pause lands at the measured end
-      // even with output latency or a stall (finding F140).
-      seekAndRun(target, bounds.start, () => armWholeStop(bounds));
+      // even with output latency or a stall (finding F140). The queued arm of an earlier cut
+      // is dropped first, and a rejected play drops this one (findings F146, F241).
+      wholeSeekCancelRef.current?.();
+      wholeSeekCancelRef.current = seekAndRun(target, bounds.start, () => {
+        wholeSeekCancelRef.current = null;
+        armWholeStop(bounds);
+      });
       wholeEndRef.current = bounds.end;
     } else {
       clearWholeStopTimer();
