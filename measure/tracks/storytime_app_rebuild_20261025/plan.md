@@ -821,7 +821,7 @@ Green builds to these rules:
 - No build ran and no browser check ran.
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
-- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`).
+- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`). The adversarial round 2 result is `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`; its findings F240, F241, and F242 are fixed at `5bda02bb0` (see the `#### Turn 11 Green evidence (adversarial round 2)` sub-block).
 
 #### Phase 3 closeout gate (turn 9, HEAD 4b980126c)
 
@@ -884,6 +884,49 @@ Green builds to these rules:
   | 3 | the Phase Red command (line 328) with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 38 files, 334 tests |
 - No app code changed, so the browser gate and `build-graph` need no rerun. No server ran
   outside heavy-run. Ports 3940 to 3960 were free before and after.
+
+#### Turn 11 Green evidence (adversarial round 2)
+
+- Base: `ad4b96d2f` (review round 7); adversarial role base `f53c218e4`; immutable phase
+  base `7db52a49d20e195388fd91670cc7c022312b50c5`. The adversarial round 2 result is
+  `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`, and its status
+  is FAIL on F240, F241, and F242. Code HEAD for every gate below: `5bda02bb0`.
+- F240 (Blocker, shipped punctuation). Cause: `sentencePieces` joined only a punctuation
+  run with no whitespace after it, so the comma in "Tap, tap, tap!" stayed a separate flex
+  item and the row gap opened a space before it on w05 page 8, w06 pages 3 and 6, and w07
+  page 6. Fix `d31c2431f`: a word-end punctuation run joins its word even when a space
+  follows, and the space stays a plain piece. The tap-button count does not change, and no
+  character moves or doubles. The F240 pin flips from `it.fails` to `it` with its assertion
+  unchanged; `phase3-decodable-punct.test.tsx` (F151) still passes.
+- F242 (Major, dead end). Cause: `page.tsx` built all three tiles while `song` stays
+  optional, so `?part=song` on a week without a song rendered an empty section with no
+  control. Fix `3dbd4fa9b`: a tile exists only for a part the week has, and a part screen
+  without its content shows the link back to the week tiles. Shipped weeks keep three
+  tiles, and `phase3-reader-end.test.tsx` (F149) still passes.
+- F241 (Nit, stop order). Cause: a `play()` rejection before the queued `loadedmetadata`
+  event ran the F147 clear first, and the queued arm then armed a stop for playback that
+  never starts. Fix `0d2df682d`: `seekAndRun` returns a cancel for its queued `onReady`,
+  and `reader.tsx` and `decodable.tsx` run it from their clear functions.
+- Gate-blocking test typing: `5bda02bb0` names `HTMLElement` in the round 2 song-lines
+  test, so `tsc --noEmit` exits 0. No assertion changed.
+- Fail-first proof: the three pins as plain `it` on base `b38468630` failed on their own
+  assertions. F240 failed with "expected 'TAP' to be 'TAP,'"; F241 failed with "expected 1
+  to be +0"; F242 failed with "expected null not to be null". The adversarial record holds
+  the same three results.
+- Gates on `5bda02bb0`, one at a time, through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'` (or the script plain where
+  it enters heavy-run itself):
+  | # | Item | Command | Exit | Counts |
+  |---|------|---------|------|--------|
+  | 1 | the Phase Red command with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 44 files, 341 tests, no expected fail |
+  | 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+  | 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+  | 4 | ESLint on the four changed source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/decodable.tsx" "app/[locale]/st/[level]/[week]/page.tsx" "app/[locale]/st/[level]/[week]/reader.tsx" "lib/audio-seek.ts"` | 0 | no output |
+  | 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=56, FAIL=0; wrapper PASS=4, FAIL=0; `landscape_controls_visible_book` and `_decodable` true |
+  | 6 | the graph update | `build-graph update ./graph.db` on the four changed source files | 0 | 4 files, 72 to 93 nodes, 122 to 135 edges |
+- No route handler, server, or smoke script changed, so the Docker smoke did not rerun. No
+  content file changed. Ports 3940 to 3960 were free before and after.
 
 #### Owner look approval (2026-11-06)
 

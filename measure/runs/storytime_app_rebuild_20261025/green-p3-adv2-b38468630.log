@@ -7,37 +7,85 @@
 - role_base_sha: `b38468630e68e750912c43f730ab2a25c3c871a7`.
 - Adversarial result: `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`
   at role base `f53c218e4`; status fail with F240, F241, and F242.
+- Final code HEAD: `5bda02bb0`. Every gate below ran on that ONE HEAD.
 
-## Routed findings
+## Routed findings and fixes
 
-- F240 [Blocker], FIX. `sentencePieces` groups only punctuation with no whitespace after it,
-  so a comma before a space stays its own flex item. Shipped pages w05 page 8, w06 pages 3
-  and 6, and w07 page 6 render "TAP , TAP , TAP!".
-- F241 [Nit], FIX. A play rejection before the queued `loadedmetadata` event leaves the
-  queued arm to run after the F147 clear, so a stop stays armed for playback that never
-  starts.
-- F242 [Major], FIX. The week page builds all three tiles while `song` stays optional, so
-  `?part=song` on a week without a song renders an empty section with no control.
+- F240 [Blocker], FIX at `d31c2431f`. Cause: `sentencePieces` joined only a punctuation
+  run with no whitespace after it, so a comma before a space stayed its own flex item and
+  the row gap opened a space before it. Shipped w05 page 8, w06 pages 3 and 6, and w07
+  page 6 read "TAP , TAP , TAP!". Fix: the word-end punctuation run joins its word even
+  when a space follows, and the space stays a plain piece. The tap-button count does not
+  change, and no character moves or doubles. The pin flips from `it.fails` to `it` with its
+  assertion unchanged. `phase3-decodable-punct.test.tsx` (F151) still passes.
+- F242 [Major], FIX at `3dbd4fa9b`. Cause: the week page built all three tiles while
+  `song` stays optional, so `?part=song` on a week without a song rendered an empty
+  section with no control. Fix: a tile exists only for a part the week has, and a part
+  screen without its content shows the link back to the week tiles. Shipped weeks keep
+  three tiles. `phase3-reader-end.test.tsx` (F149) still passes.
+- F241 [Nit], FIX at `0d2df682d`. Cause: a `play()` rejection before the queued
+  `loadedmetadata` event ran the F147 clear first, and the queued arm then armed a stop for
+  playback that never starts. Fix: `seekAndRun` returns a cancel for its queued `onReady`,
+  and `reader.tsx` and `decodable.tsx` run it from their clear functions.
+- Gate-blocking test typing, FIX at `5bda02bb0`. The round 2 song-lines test read a lyric
+  item as `Element`, so `tsc --noEmit` failed with TS2345. The query now names
+  `HTMLElement`. No assertion changed.
 
-## Plan (provisional)
+## Fail-first
 
-1. Fail-first: run the three pins as plain `it` on the old code.
-2. Fix F240 in `decodable.tsx`, fix F241 in `audio-seek.ts` and its callers, fix F242 in
-   `page.tsx`; flip each pin to `it` in the same fix commit.
-3. Run the Phase Red command, the P4 tests, `tsc --noEmit`, ESLint, the browser gate, and
-   the graph update, each on ONE code HEAD.
-4. Commit implementation, then the plan evidence in a docs commit.
+The three pins ran as plain `it` on base `b38468630`, before any fix, in one heavy-run job.
+The run exited 1 with 3 failed tests, each on its own assertion:
+
+- F240: `expected 'TAP' to be 'TAP,'`.
+- F241: `expected 1 to be +0`.
+- F242: `expected null not to be null`.
+
+The `it.fails` markers were restored before the fixes. `adversarial-f53c218e4.json` records
+the same three failures.
+
+## Gates on `5bda02bb0`
+
+Each gate ran alone through
+`HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, or the script plain
+where it enters heavy-run itself.
+
+| # | Item | Command | Exit | Counts |
+|---|------|---------|------|--------|
+| 1 | the Phase Red command with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 44 files, 341 tests, no expected fail |
+| 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+| 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+| 4 | ESLint on the four changed source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/decodable.tsx" "app/[locale]/st/[level]/[week]/page.tsx" "app/[locale]/st/[level]/[week]/reader.tsx" "lib/audio-seek.ts"` | 0 | no output |
+| 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=56, FAIL=0; wrapper PASS=4, FAIL=0 |
+| 6 | the graph update | `build-graph update ./graph.db` on the four changed source files | 0 | 4 files, 72 to 93 nodes, 122 to 135 edges |
+
+- The Docker smoke did not rerun: no route handler, server, or smoke script changed.
+- No content file changed. Ports 3940 to 3960 were free before and after.
+- `graph.db` is untracked and ignored, so the graph update adds no commit.
+
+## Files changed
+
+- `apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx`
+- `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`
+- `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx`
+- `apps/storytime/lib/audio-seek.ts`
+- `apps/storytime/__tests__/phase3-adversarial-r2-pieces.test.tsx` (pin flip only)
+- `apps/storytime/__tests__/phase3-adversarial-r2-missing-part.test.tsx` (pin flip only)
+- `apps/storytime/__tests__/phase3-adversarial-r2-reject-order.test.tsx` (pin flip only)
+- `apps/storytime/__tests__/phase3-adversarial-r2-song-lines.test.tsx` (typing only)
+- `measure/tracks/storytime_app_rebuild_20261025/plan.md` (Turn 11 block and task 3.7
+  sentence)
 
 MEASURE_AGENT_RESULT
 role: green
-status: partial
+status: complete
 track: storytime_app_rebuild_20261025
 phase: Phase 3: At-home app
-commits: pending
-tests_run: pending
-files_changed: pending
-plan_updates: pending
-known_failures: pending
-handoff: provisional; the final block replaces this one at the end of the turn.
+commits: d31c2431f (F240), 3dbd4fa9b (F242), 0d2df682d (F241), 5bda02bb0 (test typing); plan evidence is the docs commit that adds this log and the plan block
+tests_run: fail-first 3 pins as plain it (3 failed on their assertions); gate 1 Phase Red command 44 files 341 passed no expected fail; gate 2 P4 tests 2 files 15 passed; gate 3 tsc --noEmit exit 0; gate 4 ESLint exit 0; gate 5 browser gate inner PASS=56 FAIL=0; gate 6 build-graph update exit 0
+files_changed: apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx; apps/storytime/app/[locale]/st/[level]/[week]/page.tsx; apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx; apps/storytime/lib/audio-seek.ts; apps/storytime/__tests__/phase3-adversarial-r2-pieces.test.tsx (pin flip); apps/storytime/__tests__/phase3-adversarial-r2-missing-part.test.tsx (pin flip); apps/storytime/__tests__/phase3-adversarial-r2-reject-order.test.tsx (pin flip); apps/storytime/__tests__/phase3-adversarial-r2-song-lines.test.tsx (HTMLElement typing); measure/tracks/storytime_app_rebuild_20261025/plan.md
+plan_updates: task 3.7 stays [x] with one sentence that names adversarial-f53c218e4.json and the fix HEAD 5bda02bb0; a Turn 11 Green evidence block follows Turn 10; plan evidence is a separate docs commit
+known_failures: none on 5bda02bb0; the Docker smoke did not rerun because no route handler, server, or smoke script changed
+handoff: Re-review the three fixes at 5bda02bb0 against adversarial-f53c218e4.json. The three pins are plain it and pass. The adversarial round 2 test file phase3-adversarial-r2-song-lines.test.tsx needed an HTMLElement type parameter for tsc; its assertion is unchanged. The Docker smoke is clean because no route handler, server, or smoke script changed. No question is open.
 dispositions: F240=FIX; F241=FIX; F242=FIX
 END_MEASURE_AGENT_RESULT
