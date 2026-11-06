@@ -858,12 +858,13 @@ Green builds to these rules:
 - Base: `ad4b96d2f`; the round 7 reviews passed there (Review A with F180, Review B with no
   finding, Review C with F200 and F201). Gate HEAD:
   `a2b049d8eea619ce7cb9d6b3bcd4bf6acfac4548`, one HEAD for every gate below.
-- F180 (plan pointers). Cause: the task 3.7 line and the closeout sub-block pointed to
-  "(line 862)"; the marker sentence sits under a heading, and its old copy read "Task 3.7
-  stays `[~]`", which contradicts `[x]`. Fix (this docs commit): both pointers name
+- F180 (plan pointers). Cause: the task 3.7 line and the closeout sub-block pointed to a
+  line number; that number now lands on an unrelated line, and the marker sentence sits
+  under a heading with an old copy that read "Task 3.7 stays `[~]`", which contradicts
+  `[x]`. Fix (this docs commit): both pointers name
   `### Phase 3 task 3.7 phase check evidence` (no line number), and the old sentence reads
-  "At that turn, task 3.7 stayed `[~]`" with the rest unchanged. Proof: no "(line 862)"
-  remains, and the two pointers name a heading that holds the marker rule.
+  "At that turn, task 3.7 stayed `[~]`" with the rest unchanged. Proof: no line-number
+  pointer remains, and the two pointers name a heading that holds the marker rule.
 - F201 (the 404 no-cookie row). Cause: the 404 answer had no labeled no-cookie value, and
   the self-test did not name the 404 row. Fix `a2b049d8e`: the row reuses
   `week_no_cookie_ok`, prints `404_no_set_cookie=1 (status=404, curl_rc=0)` on the passing
