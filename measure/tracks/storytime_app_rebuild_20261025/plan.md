@@ -256,7 +256,7 @@
 - Follow-ups: F49 (Phase 3 task 3.3 with the A-42 pin), F53 (Phase 3 task 3.1 and AC-5.4), F70 (Phase 3, first manifest change). Open and unchanged: F4, F6, F7 and F14, F10, F13, F16 to F21, F28, word overlap.
 - No week file and no `source.json` content changed. Every `[x]` task line keeps a commit SHA.
 
-## Phase 3: At-home app
+## Phase 3: At-home app [checkpoint: f97fffbaf]
 
 Amendment A-42 (2026-11-03): tasks 3.8, 3.9, 3.10, and 4.6 come from FR-13. The 11-20 release proof is a print proof (PM decision, 2026-11-03, spec FR-13), so the app does not show the loops on 2026-11-20. Task 3.8 closes at the draft pin and stays in Phase 3 with the F99 rule. Task 3.10 follows task 3.8 and receives the approved weeks (PM decision, 2026-11-03). The latest date for both tasks is 2026-11-19.
 
