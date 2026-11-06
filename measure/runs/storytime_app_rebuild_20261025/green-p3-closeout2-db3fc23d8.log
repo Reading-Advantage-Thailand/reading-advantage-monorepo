@@ -1,0 +1,62 @@
+# Green P3 turn 17 — the Phase 3 closeout gate rerun (turn 17)
+
+- Role: measure-jr-green (Green), turn 17.
+- Track: storytime_app_rebuild_20261025, phase `## Phase 3: At-home app` (P3).
+- role_base_sha: db3fc23d84450cd99a3e600ae2ba9f05b83fe1fe (immutable).
+- phase_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5 (immutable).
+- State: round 14 reviews A, B, and C passed at `4ce932c30`; UX round 5 passed at
+  `33278b8d8` (`ux-browser-33278b8d8.json`); adversarial round 3 passed at `db3fc23d8`
+  with no findings (`adversarial-4ce932c30.json`). Seven production files changed since
+  the last full closeout gate (`4b980126c`): `decodable.tsx`, `page.tsx`, `questions.tsx`,
+  `reader.tsx`, `song.tsx`, `apps/storytime/lib/audio-seek.ts`,
+  `packages/read-along/lib/seek.ts`. This turn ran the full Closeout gate (test strategy
+  lines 337-351, items 1 to 6) on the ONE code HEAD `db3fc23d8`, in the form of the
+  `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block.
+
+## Items on ONE HEAD (db3fc23d8), one at a time, each through heavy-run
+
+| # | Item | Command | Exit | Counts |
+|---|------|---------|------|--------|
+| 1a | the Phase Red command, line 328, with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 48 files, 354 tests, no expected fail |
+| 1b | the P1 targeted command (strategy P1) | `pnpm exec vitest run --maxWorkers=1 apps/storytime` | 0 | 57 files, 430 tests |
+| 1c | the P2 targeted command (strategy P2) | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase2-*.test.ts packages/read-along` | 0 | 22 files, 257 tests |
+| 2a | `bash apps/storytime/__tests__/phase1-quality-gates.sh` (plain; enters heavy-run itself) | `pnpm turbo run build check-types lint test --filter=storytime` | 0 | PASS=2, FAIL=0; test task 57 files, 430 tests; 0 cached, 4 total |
+| 2b | the read-along filter of line 340 | `pnpm turbo run build check-types lint test --filter=@reading-advantage/read-along --ui=stream --concurrency=1` | 0 | 1 task (`test` is the only script); 9 files, 104 tests |
+| 3 | the Docker smoke in its P3 form (runs 1, 1b, 2), `df -h /` first | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-docker-smoke.sh` | 0 | PASS=19, FAIL=0 with `404_no_set_cookie=1`; 14 GB free at the start (above the 12 GB floor) |
+| 4 | the browser gate (task 3.7 browser review) | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=76, FAIL=0; wrapper PASS=4, FAIL=0; `landscape_controls_visible_*` true on all six screens (book 300, decodable 348, end 230, question 274, song 320, week 226); `all_controls_visible_*` true with their minimums (week 3, reader 9, end of book 3, decodable 8, song 1, question 4) |
+| 5 | the receiver at the recorded pin, then the content diff | `tsx apps/storytime/scripts/receive-weeks.ts --commit 67be5603e0410f21491a006b8e9d12f3f9dd1bfc --weeks 1-8`; `git diff --exit-code apps/storytime/content` | 0 | 8 weeks, 179 media files, 159 missing pictures; w01 ready, w02 to w08 not ready; the content diff is empty |
+| 6 | the graph update (A10) | `build-graph update ./graph.db` on the seven changed production files | 0 | 7 files, 110 to 137 nodes, 189 to 187 edges; no new export name (the F260 change altered two signatures), so the search rows resolved `seekAndRun` and `WeekTileLinks` |
+
+- Item 5 note: the run used the recorded take pin `67be5603` (the at-home pin `82f88853`
+  was not run, per the brief). The receiver restored the same bytes and the content diff
+  exited 0, as in the turn 9 gate.
+- Every item exited 0. No production code or test changed in this turn. Ports 3940 to
+  3960 were free before the first run and after the last run.
+
+## Commits
+
+- Plan evidence: the `docs(measure):` commit that holds plan.md (the new `#### Phase 3
+  closeout gate (turn 17, HEAD db3fc23d8)` sub-block and the task 3.7 sentence) and this
+  log (`git add -f`); its SHA is in the orchestrator reply, since a commit cannot hold
+  its own SHA. No production file and no test file changed, so there is no implementation
+  commit.
+
+## Result
+
+Task 3.7 stays `[x]`; the plan gains the closeout sub-block. The checkpoint marker stays
+the orchestrator's (it follows the phase acceptance). No task moved to archive and no
+closeout metadata changed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: P3
+commits: plan-evidence docs(measure) commit recorded in the orchestrator reply (no implementation commit; no code changed)
+tests_run: item 1a = 48 files 354 tests exit 0; item 1b = 57 files 430 tests exit 0; item 1c = 22 files 257 tests exit 0; item 2a = PASS=2 FAIL=0 (430 tests, 0 cached of 4) exit 0; item 2b = 9 files 104 tests, 1 task exit 0; item 3 = docker smoke PASS=19 FAIL=0 with 404_no_set_cookie=1 exit 0 (14 GB free, above the 12 GB floor); item 4 = browser gate inner PASS=76 FAIL=0 wrapper PASS=4 FAIL=0 exit 0; item 5 = receiver at pin 67be5603 exit 0 with an empty content diff; item 6 = graph update 7 files exit 0
+files_changed: measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/green-p3-closeout2-db3fc23d8.log
+plan_updates: new sub-block "#### Phase 3 closeout gate (turn 17, HEAD db3fc23d8)"; task 3.7 sentence naming the round 14 reviews (4ce932c30), UX round 5 (33278b8d8), adversarial round 3 (db3fc23d8), and the new closeout sub-block
+known_failures: none (every item exits 0 on the ONE HEAD db3fc23d8)
+handoff: the full Closeout gate (items 1 to 6 of test-strategy.md lines 337-351) passed on db3fc23d8 in the turn 9 form; phase acceptance can proceed on this HEAD. The checkpoint marker and item 7 (change-quality review closure) stay with the orchestrator; the round 14 reviews, UX round 5, and adversarial round 3 already passed at or before this HEAD. The at-home pin 82f88853 was not run, per the brief. No question.
+dispositions: none
+END_MEASURE_AGENT_RESULT
