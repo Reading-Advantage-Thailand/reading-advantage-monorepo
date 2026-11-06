@@ -821,7 +821,7 @@ Green builds to these rules:
 - No build ran and no browser check ran.
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
-- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`). The adversarial round 2 result is `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`; its findings F240, F241, and F242 are fixed at `5bda02bb0` (see the `#### Turn 11 Green evidence (adversarial round 2)` sub-block). The UX browser review round 2 passed at `0def8d79d` (`measure/runs/storytime_app_rebuild_20261025/ux-browser-0def8d79d.json`), and its Nits F280, F281, and F282 are fixed at `6ff5c4654` (see the `#### Turn 12 Green evidence (UX round 2)` sub-block). The round 10 reviews passed at `ac3415b54` (`review-a-ac3415b54.json` and `review-c-ac3415b54.json`; Review B passed with 0 findings), the UX browser review round 3 passed at the same head (`ux-browser-ac3415b54.json`), and their Nits F290, F310, and F320 are fixed at `6718f72a5` (see the `#### Turn 13 Green evidence (review round 10 and UX round 3)` sub-block).
+- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`). The adversarial round 2 result is `measure/runs/storytime_app_rebuild_20261025/adversarial-f53c218e4.json`; its findings F240, F241, and F242 are fixed at `5bda02bb0` (see the `#### Turn 11 Green evidence (adversarial round 2)` sub-block). The UX browser review round 2 passed at `0def8d79d` (`measure/runs/storytime_app_rebuild_20261025/ux-browser-0def8d79d.json`), and its Nits F280, F281, and F282 are fixed at `6ff5c4654` (see the `#### Turn 12 Green evidence (UX round 2)` sub-block). The round 10 reviews passed at `ac3415b54` (`review-a-ac3415b54.json` and `review-c-ac3415b54.json`; Review B passed with 0 findings), the UX browser review round 3 passed at the same head (`ux-browser-ac3415b54.json`), and their Nits F290, F310, and F320 are fixed at `6718f72a5` (see the `#### Turn 13 Green evidence (review round 10 and UX round 3)` sub-block). The round 11 reviews passed at `daf234efd` (`review-a-daf234efd.json` and `review-c-daf234efd.json`; Review B passed with 0 findings), the UX browser review round 4 passed at the same head (`ux-browser-daf234efd.json`), and their Nits F330, F350, and F360 are fixed at `ca4d3f9be` (see the `#### Turn 14 Green evidence (review round 11 and UX round 4)` sub-block).
 
 #### Phase 3 closeout gate (turn 9, HEAD 4b980126c)
 
@@ -1018,6 +1018,64 @@ Green builds to these rules:
   model) directly; the PM set OpenCode Go to WAIT, so the ra-quota Go route was not used.
   Red/Green independence held: the Red models of the phase are MiniMax and OpenAI, and no
   coder ran on a Red model family. No coder was delegated this round.
+- Correction (turn 14, F350): the F290 bullet above says a short desktop window keeps the
+  full-size song box; that claim is wrong. A desktop window of 500 px height or less is
+  landscape, so the cap applies there too. Only a portrait phone with a soft keyboard keeps
+  the full-size box. The comment fix is in `ca4d3f9be`, and the F330 gate row at 390x400
+  holds the rule (see the `#### Turn 14 Green evidence` sub-block).
+
+#### Turn 14 Green evidence (review round 11 and UX round 4)
+
+- Base: `daf234efd` (review round 11 and UX round 4). Sources:
+  `measure/runs/storytime_app_rebuild_20261025/review-a-daf234efd.json` (F330),
+  `review-c-daf234efd.json` (F350), and `ux-browser-daf234efd.json` (F360). Code content
+  for every gate below: the tree that became `ca4d3f9be` (the commit holds exactly the
+  verified files; nothing changed after the gates ran).
+- F360 (decodable). Cause: the tricky-words section stacked under the page-turn arrows, so
+  its three word buttons ended at 464 px in the 390 px landscape viewport. Fix
+  `ca4d3f9be`: the arrows and the tricky-words section share one row below 500 px of
+  height, with landscape-only gap and heading compression; the portrait column is
+  unchanged. After: 376 px, 0 elements outside. The gate also gains the class stopper:
+  `allControlsAtLandscape` plus one `all_controls_visible` row per at-home screen (week
+  page, reader, end of book, decodable, song, question screen) at 844x390 that checks every
+  `a`, `button`, `[role=button]`, and `[data-word]` on the bottom and the right edge, and a
+  `/below-fold` self-test that the same function rejects. The selector follows the finding;
+  it does not count `<audio controls>` speakers, which sit in the scrolling parent block by
+  design.
+- F330 (orientation clause). Fix `ca4d3f9be`: the gate row
+  `song_video_fullsize_short_portrait` measures the song video at a short portrait
+  viewport (390x400) and requires an uncapped box. Fail-first: a scratch gate run with the
+  orientation clause removed read `video_height_px=176` (capped, width 99, ratio 563) and
+  the row failed; with the clause the box is 300 px tall at a 9:16 ratio and the row
+  passes. The behavior of the clause itself is unchanged.
+- F350 (comment). Fix `ca4d3f9be`: the song cap comment now says that a short desktop
+  window is landscape and gets the cap, and only a portrait phone with a soft keyboard
+  keeps the full-size box. The plan Turn 13 text holds the correction line above. The
+  behavior is unchanged.
+- Fail-first proof for F360: one scratch gate run on the old layout with the new rows
+  measured `all_controls_visible_decodable=false (controls_found=8, controls_outside=3,
+  max_bottom_px=464)`; the three outside elements are the tricky-word buttons. The other
+  five screens passed on the old code (week 226, reader 300, end of book 230, song 320,
+  question 274), so the decodable was the last offender, and the `/below-fold` self-test
+  was rejected (outside=1, bottom 629).
+- Gates, one at a time, through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'` (or the script plain where
+  it enters heavy-run itself):
+  | # | Item | Command | Exit | Counts |
+  |---|------|---------|------|--------|
+  | 1 | the Phase Red command with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+  | 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+  | 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+  | 4 | ESLint on the changed app source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/decodable.tsx" "app/[locale]/st/[level]/[week]/song.tsx"` | 0 | no output |
+  | 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=73, FAIL=0; wrapper PASS=4, FAIL=0; decodable 376 with 0 outside; song short portrait 300; week 226; right edges 686 th/en on both rows; phone 563 and 69 percent, laptop 1778, song 320 |
+  | 6 | the graph update | `build-graph update ./graph.db` on the two changed source files | 0 | 2 files, 29 to 36 nodes, 49 to 50 edges |
+- No route handler, server, or smoke script changed, so the Docker smoke did not rerun. No
+  content file changed and `packages/read-along` did not change, so the quality gates and
+  the read-along turbo filter did not rerun. Ports 3940 to 3960 were free before and after.
+- No interactive element had to break a spec rule: the tricky-word buttons keep the 44 px
+  word floor and the arrows keep 48 px, the decodable picture keeps its 40 vh landscape cap,
+  and the 9:16 and 16:9 song boxes hold.
 
 #### Owner look approval (2026-11-06)
 

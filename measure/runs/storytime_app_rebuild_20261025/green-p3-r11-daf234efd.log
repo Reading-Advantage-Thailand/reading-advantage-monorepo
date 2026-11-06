@@ -1,0 +1,96 @@
+# Green P3 turn 14 — review round 11 Nits (F330, F350, F360)
+
+- Role: measure-jr-green (Green), turn 14.
+- Track: storytime_app_rebuild_20261025, phase `## Phase 3: At-home app` (P3).
+- role_base_sha: daf234efd29495d5d244d0c701b0c9f08a81ff93 (immutable).
+- phase_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5 (immutable).
+- Inputs read: `review-a-daf234efd.json` (PASS, F330 Nit),
+  `review-c-daf234efd.json` (PASS, F350 Nit), `ux-browser-daf234efd.json` (PASS, F360 Nit;
+  F310 and F320 closed); Review B passed with 0 findings per the orchestrator handoff.
+
+## Findings and fixes (all in ca4d3f9be)
+
+- F360 [Nit] FIX. Cause: the decodable kept the tricky-words row below the page arrows in
+  landscape, so at 844x390 its three word buttons ended at 464 px in the 390 px viewport.
+  Fix: `decodable.tsx` shares one row between the page arrows and the tricky words below
+  500 px of height, with landscape-only gap and heading compression; the portrait column is
+  unchanged. After: `all_controls_visible_decodable` reads `controls_outside=0,
+  max_bottom_px=376`. Class stopper: the gate gains `allControlsAtLandscape` and one
+  `all_controls_visible` row per at-home screen (week, reader, end of book, decodable,
+  song, question) at 844x390 that checks every `a`, `button`, `[role=button]`, and
+  `[data-word]` on the bottom and the right edge, with `controls_found`, the number of
+  elements outside, and the first offenders named, plus a `/below-fold` self-test that the
+  same function must reject (outside=1, bottom 629, rejected).
+- F330 [Nit] FIX. The gate row `song_video_fullsize_short_portrait` at 390x400 requires the
+  song video height above the 176 px (11 rem) cap, so a deleted orientation clause fails
+  the row. Fail-first: one scratch gate run with the clause removed from the query read
+  `video_height_px=176` (capped, width 99, ratio 563) and the row failed; with the clause
+  the box is `video_height_px=300` at a 9:16 ratio. The clause behavior itself is
+  unchanged.
+- F350 [Nit] FIX. The `song.tsx` comment now states the real rule: a short desktop window
+  is landscape, so the cap applies there too; only a portrait phone with a soft keyboard
+  keeps the full-size box. The behavior is unchanged. The plan Turn 13 block holds a
+  `Correction (turn 14, F350):` line instead of a history rewrite.
+- No song picture or content file changed. No committed Red or adversarial assertion
+  changed; the gate rows only add checks.
+
+## Fail-first values on the old code (one scratch gate run with the new rows)
+
+- `all_controls_visible_decodable=false (controls_found=8, controls_outside=3, ...,
+  max_bottom_px=464)` — the three tricky-word buttons at bottom 464 (`AND`, `CAN`, and one
+  more), matching the UX shot.
+- `song_video_fullsize_short_portrait=false (video_height_px=176, video_width_px=99,
+  video_ratio_x1000=563, cap_px=176)` — with the orientation clause removed in the scratch
+  tree.
+- The other five all-controls rows passed on the old code: week 3 and 0 at 226, reader 9
+  and 0 at 300, end of book 3 and 0 at 230, song 1 and 0 at 320, question 4 and 0 at 274.
+  So the decodable held the last below-fold control in landscape.
+
+## Gates on ONE code content (the tree that became ca4d3f9be), one at a time, each through heavy-run
+
+| # | Item | Command | Exit | Counts |
+|---|------|---------|------|--------|
+| 1 | Phase Red command, `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+| 2 | the P4 tests | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-teacher-flag.test.ts apps/storytime/__tests__/phase4-week-view.test.tsx` | 0 | 2 files, 15 tests |
+| 3 | `tsc --noEmit` in `apps/storytime` | `pnpm exec tsc --noEmit` | 0 | no output |
+| 4 | ESLint on the changed source files | `pnpm exec eslint "app/[locale]/st/[level]/[week]/decodable.tsx" "app/[locale]/st/[level]/[week]/song.tsx"` | 0 | no output |
+| 5 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=73, FAIL=0; wrapper PASS=4, FAIL=0; decodable 376 with 0 outside; short-portrait song 300; week 226; right edges 686 th/en on both rows; phone 563 and 69 percent, laptop 1778, song 320 |
+| 6 | the graph update | `build-graph update ./graph.db` on the two changed source files | 0 | 2 files, 29 to 36 nodes, 49 to 50 edges |
+
+The browser gate ran twice: once on the scratch tree (clause removed, old decodable layout;
+fail-first values above) and once on the fixed tree (FAIL=0). No interactive element had to
+break a spec rule: the tricky-word buttons keep the 44 px word floor, the arrows keep
+48 px, the decodable picture keeps its 40 vh landscape cap, and the 9:16 and 16:9 song
+boxes hold. The all-controls rows count the brief's selector list, so recorded
+`<audio controls>` speakers are not counted; the week page parent block keeps its scroll by
+design (the F310 row already covers its tile row). No route handler, server, or smoke
+script changed, so the Docker smoke did not rerun. `packages/read-along` did not change, so
+the quality gates and the read-along turbo filter did not rerun. Ports 3940 to 3960 were
+free before and after.
+
+## Commits
+
+- Implementation: `ca4d3f9be` `fix(storytime): fit the decodable landscape row (track_id:
+  storytime_app_rebuild_20261025)` — phase3-browser-gate.sh, decodable.tsx, song.tsx.
+- Plan evidence: the `docs(measure):` commit right after `ca4d3f9be`, which holds this log
+  (`git add -f`) and the plan Turn 14 sub-block; its SHA is in the orchestrator reply,
+  since a commit cannot hold its own SHA.
+
+## Result
+
+Task 3.7 stays `[x]`; the plan gains the Turn 14 evidence sub-block and the Turn 13
+correction line. No task moved to archive and no closeout metadata changed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: P3
+commits: ca4d3f9be (implementation); plan-evidence docs(measure) commit recorded in the orchestrator reply
+tests_run: gate 1 = 45 files 342 tests exit 0; gate 2 = 2 files 15 tests exit 0; gate 3 = tsc exit 0; gate 4 = eslint exit 0; gate 5 = browser gate inner PASS=73 FAIL=0 wrapper PASS=4 FAIL=0 exit 0; gate 6 = graph update 2 files exit 0
+files_changed: apps/storytime/__tests__/phase3-browser-gate.sh, apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx, apps/storytime/app/[locale]/st/[level]/[week]/song.tsx
+plan_updates: task 3.7 sentence (round 11 reviews and UX round 4 passed at daf234efd, Nits fixed at ca4d3f9be); Turn 13 correction line for F350; new sub-block "#### Turn 14 Green evidence (review round 11 and UX round 4)"
+known_failures: none (every gate exits 0 on one code content)
+handoff: F360 fixed with the decodable arrows-plus-tricky-words landscape row (fail-first 3 outside at 464, after 0 at 376) and the per-screen all_controls_visible rows plus the below-fold self-test; F330 fixed with the song_video_fullsize_short_portrait row at 390x400 (fail-first with the clause removed: 176 capped; after: 300 at 9:16); F350 fixed with the comment and the Turn 13 correction line, behavior unchanged. No element needed a spec rule broken: the 44 px word floor, the 48 px arrows, the 40 vh picture cap, and the 9:16 and 16:9 boxes hold. Scoping note for reviewers: the all-controls rows count a, button, [role=button], and [data-word] per the finding, so recorded-audio <audio controls> speakers are not counted, and the week page parent block keeps its scroll by design. phase_base_sha 7db52a49d20e195388fd91670cc7c022312b50c5, role_base_sha daf234efd29495d5d244d0c701b0c9f08a81ff93, Green HEAD ca4d3f9be plus the plan-evidence commit. New gate rows for reviewer scope: all_controls_visible_{week,reader,endofbook,decodable,song,question}, the /below-fold self-test, and song_video_fullsize_short_portrait, served by allControlsAtLandscape. No question.
+dispositions: F330=FIX; F350=FIX; F360=FIX
+END_MEASURE_AGENT_RESULT
