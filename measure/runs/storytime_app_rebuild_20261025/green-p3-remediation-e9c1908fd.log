@@ -369,6 +369,19 @@ Probe: a jsdom HTMLMediaElement reports readyState 0 (HAVE_NOTHING) and never fi
   `tsc --noEmit` check ran outside heavy-run after the F145 edit
   (read-only); the recorded gate tsc ran through heavy-run.
 
+## Turn 7 work done (F147 to F151)
+
+- Turn 7 is remediation round 5: F147, F148, F149, F150, and F151 are
+  fixed and committed: `8df2de232`, `fc81f69a0`, `211991a93`,
+  `f08684795`, and `cbcb59238`, plus the adversarial fixture type fix
+  `d29abdafb`. Every gate exited 0 on ONE HEAD `cbcb59238`, so the
+  result block below is `status: complete`. Deviations: the Ark token
+  limit (error 2056) and a DNS fault (`EAI_AGAIN`) stopped two turns;
+  the orchestrator moved the session to
+  `opencode-go/deepseek-v4.1-flash` (a Storytime Green family; Red is
+  MiniMax and OpenAI); one temporary CSS revert used `sed -i` instead
+  of the edit tools. The plan evidence is `f94b3841f`.
+
 ## Result block
 
 MEASURE_AGENT_RESULT
@@ -376,62 +389,77 @@ role: measure-jr-green
 status: complete
 track: storytime_app_rebuild_20261025
 phase: Phase 3: At-home app
-commits: (turns 1 to 5 are in the turn 5 result recorded in plan.md
-  1c4b7805a and in the log history above; the turn 5 gate HEAD was
-  465286be8 and the round 3 result HEAD f87f07a57.) Turn 6 (review
-  round 4), base f87f07a57: 0c9263572 (F146); f5f93a3a1 (F145, the gate
-  HEAD); 301e8f900 (the turn 6 plan evidence, after the gates); this
-  log commit. The two modified apps/*/next-env.d.ts files belong to TS7
-  and stayed unstaged.
-tests_run: turn 6 on ONE HEAD f5f93a3a1. Fail-first (each through
-  heavy-run): F146 — the new jsdom row exited 1 on the current code
-  (1 failed, 7 passed; the stale stop paused the second cut); F145 —
-  three new jsdom rows exited 1 (3 failed, 8 passed; each timer stayed
-  pending after the event). Gates on f5f93a3a1, each through
+commits: (the turn 1 to 5 result sits in the log history above; the
+  turn 5 gate HEAD was 465286be8 and the round 3 result HEAD f87f07a57;
+  the turn 6 result and plan evidence are f5f93a3a1 and 301e8f900.)
+  Turn 7 (review round 5), base f2619efb8: 8df2de232 (F147);
+  fc81f69a0 (F148); 211991a93 (F149); d29abdafb (the adversarial
+  fixture type fix); f08684795 (F150); cbcb59238 (F151, the gate HEAD);
+  f94b3841f (the turn 7 plan evidence, after the gates); this log
+  commit. The two modified apps/*/next-env.d.ts files belong to TS7 and
+  stayed unstaged.
+tests_run: turn 7 on ONE HEAD cbcb59238. Fail-first (each through
+  heavy-run): F147 — the flipped pin failed (1 failed, 3 passed, 1
+  expected fail; `expected 1 to be +0`); F148 — the flipped pin failed
+  (`expected +0 to be 1`); F149 — the new reader-end test failed
+  (`expected [] to have a length of 3 but got +0`); F150 — the gate row
+  failed on the unfixed code (book 744, decodable 876 against 390; the
+  self-test page at 629); F151 — the new punct test failed (`expected 2
+  to have a length of 1`). Gates on cbcb59238, each through
   `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
   ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a
-  time: 1. the exact P3.4 line-328 command with CI=true: exit 0, 33
-  files, 313 tests. 2a. review-b-f87f07a57-probe.mts: exit 0, `SUMMARY
-  failed=0` (R6a 0 ticks for pause, error, ended; R6b
-  orphan_ticks_in_10s=0; R6c pause_at=null; R6d pass). 2b. the Review A
-  probe: exit 0, 2 tests. 2c. the Review C probe: exit 0, 1 test. 3a.
-  the P4 tests: exit 0, 2 files, 15 tests. 3b. tsc --noEmit in
-  apps/storytime: exit 0. 3c. ESLint on the three changed files: exit
-  0. 4. the browser gate with HEAVY_HANG_KILL_S=off: exit 0, inner
-  PASS=52, FAIL=0, wrapper PASS=4, FAIL=0; word_cut_early_ms=0 in both
-  runs, word_cut_overshoot_ms=4 (pause_at=0.344341) in the first run
-  and 0 (pause_at=0.339972, the turn 5 value) in a rerun — run-to-run
-  media-clock jitter, both inside the 50 ms floor; the F140 stop path
-  is unchanged. 5. build-graph update on the two changed source files:
-  exit 0, 28 to 34 nodes. The Docker smoke and
-  phase1-smoke-cleanup.test.sh need no rerun (no server, container, or
-  gate-script change in turn 6). Ports 3940 to 3960 checked before the
-  first run and after the last run; clear. No test, build, build-graph,
-  or server ran outside heavy-run except one ad-hoc read-only
-  `tsc --noEmit` after the F145 edit (recorded as a deviation; the
-  gate tsc ran through heavy-run).
-files_changed: turn 6 — apps/storytime/lib/audio-seek.ts (f5f93a3a1),
-  apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx (0c9263572),
-  apps/storytime/__tests__/phase3-audio-seek-stop.test.tsx (both
-  commits), measure/tracks/storytime_app_rebuild_20261025/plan.md
-  (301e8f900), and this log. The probes were not edited.
-plan_updates: turn 6 plan evidence 301e8f900 (`#### Turn 6 Green
-  evidence (review round 4)` sub-block, before the 3.11 line; earlier
-  evidence 1c4b7805a, 383a9376f). Task 3.7 stays [~]; no task line
-  changed.
-known_failures: none. Every gate exits 0 on ONE HEAD f5f93a3a1.
-handoff: remediation round 4 is complete on the audited HEAD f5f93a3a1
-  (gates and probes) with the plan evidence at 301e8f900. Review and
-  acceptance can audit the round 4 diff from f87f07a57 to f5f93a3a1
-  (3 files). The smoke and the cleanup test stay valid from turn 5
-  (no server, container, or gate-script change). Task 3.7 stays [~] for
-  the review and acceptance roles; tasks 3.10 and 3.11 stay open on
-  external inputs. F145 decisions to check in review: `onStop` runs on
-  a terminal pause, ended, or error so the mark clears, and one loop
-  lives per element (a new arm replaces the previous without running
-  its `onStop`) — the helper-side half of the second-tap fix that the
-  R6c probe requires. phase_base_sha
-  7db52a49d20e195388fd91670cc7c022312b50c5; turn 6 base f87f07a57; gate
-  HEAD f5f93a3a1; final HEAD after the log commit below.
-dispositions: F120=FIX; F121=FIX; F122=FIX; F123=FIX; F124=FIX; F125=FIX; F126=FIX; F127=FIX; F128=CONTEST(spec.md:153 and spec.md:285 require date and words on the loops approval only - PM decision 2026-11-05 recorded in test-strategy.md by f7b5484ae); F129=FIX; F130=FIX; F131=FIX; F132=FIX; F133=FIX; F134=FIX; F135=FIX; F136=FIX; F137=FIX; F138=FIX; F139=FIX; F140=FIX; F141=FIX; F142=FIX; F143=FIX; F144=FIX; F145=FIX; F146=FIX
+  time: 1. the exact P3.4 line-328 command with CI=true: exit 0, 38
+  files, 333 tests, no expected fail. 2. the P4 tests: exit 0, 2 files,
+  15 tests. 3. tsc --noEmit in apps/storytime: exit 0. 4. ESLint on the
+  eight changed TS/TSX files: exit 0 (0 errors, 8 warnings, all in the
+  adversarial fixture). 5. the browser gate with
+  HEAVY_HANG_KILL_S=off: exit 0, inner PASS=55, FAIL=0, wrapper PASS=4,
+  FAIL=0; `landscape_controls_visible_book=true (300)`,
+  `landscape_controls_visible_decodable=true (364)`,
+  `selftest landscape_controls_visible=false (629)`; the word-cut rows
+  stay in the band (`word_cut_early_ms=0`,
+  `word_cut_overshoot_ms=4`). 6. build-graph update on the four changed
+  source files: exit 0, 59 to 82 nodes, 105 to 113 edges. The Docker
+  smoke and phase1-smoke-cleanup.test.sh need no rerun (no server,
+  route, or gate-script change in turn 7 other than the browser gate).
+  Ports 3940 to 3960 checked before the first run and after the last
+  run; clear. Every heavy step ran through heavy-run.
+files_changed: turn 7 — apps/storytime/lib/audio-seek.ts (fc81f69a0),
+  app/[locale]/st/[level]/[week]/reader.tsx (8df2de232, 211991a93,
+  f08684795), app/[locale]/st/[level]/[week]/decodable.tsx (8df2de232,
+  f08684795, cbcb59238), app/[locale]/st/[level]/[week]/questions.tsx
+  (211991a93), __tests__/phase3-adversarial-taps.test.tsx (both pin
+  flips), __tests__/phase3-adversarial-week-data.test.ts (d29abdafb, a
+  type annotation only, no assertion changed),
+  __tests__/phase3-reader-end.test.tsx (new, 211991a93),
+  __tests__/phase3-decodable-punct.test.tsx (new, cbcb59238),
+  __tests__/phase3-browser-gate.sh (f08684795), plan.md (f94b3841f),
+  and this log. The probes were not edited.
+plan_updates: turn 7 plan evidence f94b3841f (`#### Turn 7 Green
+  evidence (review round 5)` sub-block, before the 3.11 line; earlier
+  evidence 1c4b7805a, 301e8f900, 383a9376f). Task 3.7 stays [~]; no task
+  line changed.
+known_failures: none. Every gate exits 0 on ONE HEAD cbcb59238.
+handoff: remediation round 5 is complete on the audited HEAD cbcb59238
+  with the plan evidence at f94b3841f. Review and acceptance can audit
+  the round 5 diff from f2619efb8 to cbcb59238. The smoke and the
+  cleanup test stay valid from turn 5 (no server, route, or gate-script
+  change other than the browser gate). Decisions to check in review:
+  F148 keeps the one-shot play listener after a terminal pause and
+  skips it when a newer loop owns the element; F150 adds a landscape
+  layout (picture 40vh cap, text beside the picture, the sound section
+  in a row) and the gate fixture now serves a 1x1 PNG for pictures
+  because the built app has no static media; F151 groups a word with
+  its trailing punctuation, and the content is correct so no content
+  changed. Task 3.7 stays [~] for the review and acceptance roles;
+  tasks 3.10 and 3.11 stay open on external inputs. Deviations: the Ark
+  token limit (error 2056) and the DNS fault (EAI_AGAIN) stopped two
+  turns; the orchestrator moved the session to
+  opencode-go/deepseek-v4.1-flash (a Storytime Green family; Red is
+  MiniMax and OpenAI); one temporary CSS revert for the F150 fail-first
+  used sed -i instead of the edit tools (no committed content came from
+  it). phase_base_sha
+  7db52a49d20e195388fd91670cc7c022312b50c5; turn 7 base f2619efb8; gate
+  HEAD cbcb59238; final HEAD after the log commit below.
+dispositions: F120=FIX; F121=FIX; F122=FIX; F123=FIX; F124=FIX; F125=FIX; F126=FIX; F127=FIX; F128=CONTEST(spec.md:153 and spec.md:285 require date and words on the loops approval only - PM decision 2026-11-05 recorded in test-strategy.md by f7b5484ae); F129=FIX; F130=FIX; F131=FIX; F132=FIX; F133=FIX; F134=FIX; F135=FIX; F136=FIX; F137=FIX; F138=FIX; F139=FIX; F140=FIX; F141=FIX; F142=FIX; F143=FIX; F144=FIX; F145=FIX; F146=FIX; F147=FIX; F148=FIX; F149=FIX; F150=FIX; F151=FIX
 END_MEASURE_AGENT_RESULT
