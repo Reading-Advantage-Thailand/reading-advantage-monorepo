@@ -5,10 +5,10 @@
  *
  * The stage shows the poster and plays no sound before a tap. A portrait phone uses the phone
  * video and the phone poster; every other screen uses the regular pair. Without a video the stage
- * plays the song audio. The lyric lines light from `song.times`. Each line shows its gesture as
- * text and its own picture. A repeated line (`imageOf`) shows the picture of the line that it
- * names, never a gesture thumbnail (rule 9.1). The component never uses the phone voice
- * (rule 10.5): every sound is a recorded file.
+ * plays the song audio. The lyric lines light from `song.times`. Amendment M-3 keeps the lyric
+ * list free of pictures: each line shows its lyric and its gesture as text under it, and the
+ * stage poster and the song tile picture stay (rule 9.1). The component never uses the phone
+ * voice (rule 10.5): every sound is a recorded file.
  */
 import { useEffect, useRef, useState, type SyntheticEvent } from "react";
 import type { StorytimeWeek } from "../../../../../lib/contracts/week";
@@ -146,8 +146,6 @@ export function StorytimeSong({
       </button>
       <ol className="flex flex-col gap-2">
         {song.lines.map((line, index) => {
-          const referenced = line.imageOf === undefined ? undefined : song.lines[line.imageOf];
-          const image = line.image ?? referenced?.image;
           const active = index === activeLine;
           return (
             <li
@@ -160,15 +158,6 @@ export function StorytimeSong({
                   : "flex items-center gap-3 rounded-xl p-2"
               }
             >
-              {image?.file ? (
-                <img
-                  src={mediaUrl(mediaBase, image.file)}
-                  alt={image.caption ?? ""}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-16 w-16 rounded-lg object-cover"
-                />
-              ) : null}
               <span className="flex flex-col">
                 <span className="text-lg" lang="en">
                   {line.text}
