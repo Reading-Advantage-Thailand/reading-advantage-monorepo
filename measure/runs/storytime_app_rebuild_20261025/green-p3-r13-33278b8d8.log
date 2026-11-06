@@ -1,0 +1,73 @@
+# Green P3 turn 16 — review round 13 Nits (F410, F411)
+
+- Role: measure-jr-green (Green), turn 16.
+- Track: storytime_app_rebuild_20261025, phase `## Phase 3: At-home app` (P3).
+- role_base_sha: 33278b8d830537e444ca3e787b4c7d4e2d3a9f8e (immutable).
+- phase_base_sha: 7db52a49d20e195388fd91670cc7c022312b50c5 (immutable).
+- Inputs read: `review-a-33278b8d8.json` (PASS, F410 and F411 Nits; F370 and F371
+  accepted, F371 for five rows). UX browser round 5 passed at the same head with no
+  finding (F360 closed), per the orchestrator handoff. No committed Red or adversarial
+  assertion changed; the gate rows only add checks.
+
+## Findings and fixes (both in bf7af37d4, gate script only; no app code change)
+
+- F410 [Nit] FIX. Cause: the `extraSelector` speaker branch of `allControlsAtLandscape`
+  had never run on a failing page — `TILE_LABEL_AUDIO` is empty, so `speakers_found=0`
+  today, and the only self-tests called the function without the probe, so a defect in
+  the branch (a wrong selector, a bad rect filter, a wrong edge) would stay hidden until
+  the first tile recording ships. Fix: the `/audio-below-fold` self-test page (a 600 px
+  block, then one `<audio controls>` with a fixed 300x54 box) is measured with
+  `allControlsAtLandscape(p, 'button', 'audio')`, and the row rule must reject the page.
+  Recorded self-test output: `selftest all_controls_speaker_probe=false
+  (speakers_found=1, speakers_outside=1, speaker_bottom_px=662, viewport_px=390)` — the
+  branch reports the outside speaker and the rule fails, so the branch is no longer
+  untested.
+- F411 [Nit] FIX. Cause: the song `all_controls_visible` minimum of 1 equals the fallback
+  `WeekHomeLink`, so a week with no song passed the row on one link (A4 class). Fix: the
+  song row's open step requires a `section[data-part="song"] button` and throws when
+  absent, as the end-of-book and question rows do. Self-test on the fallback page
+  (`/one-link`, one link, no song section):
+  `selftest all_controls_song_open song_open_ok=false count_rule_ok=true
+  (controls_found=1, controls_min=1, song_buttons_found=0)` — the fallback passes the
+  count rule and fails the open rule, so the row fails on a missing song. The plan Turn
+  15 block holds a `Correction (turn 16, F411):` line instead of a history rewrite.
+
+## Gates on ONE code content (the tree that became bf7af37d4), one at a time, each through heavy-run
+
+| # | Item | Command | Exit | Counts |
+|---|------|---------|------|--------|
+| 1 | the browser gate | `bash apps/storytime/__tests__/phase3-browser-gate.sh` | 0 | inner PASS=76, FAIL=0; wrapper PASS=4, FAIL=0; speaker-probe and song-open self-tests rejected; live rows unchanged |
+| 2 | the Phase Red command, `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 45 files, 342 tests, no expected fail |
+
+No app code changed, so the P4 tests, `tsc --noEmit`, ESLint, and `build-graph update`
+did not rerun this round. No route handler, server, or smoke script changed, so the
+Docker smoke did not rerun. No content file changed. Ports 3940 to 3960 were free before
+and after.
+
+## Commits
+
+- Implementation: `bf7af37d4` `fix(storytime): test the speaker probe and song guard
+  (track_id: storytime_app_rebuild_20261025)` — phase3-browser-gate.sh.
+- Plan evidence: the `docs(measure):` commit right after `bf7af37d4`, which holds this
+  log (`git add -f`), the plan Turn 16 sub-block, the Turn 15 correction line, and the
+  task 3.7 sentence; its SHA is in the orchestrator reply, since a commit cannot hold its
+  own SHA.
+
+## Result
+
+Task 3.7 stays `[x]`; the plan gains the Turn 16 evidence sub-block and the Turn 15
+correction line. No task moved to archive and no closeout metadata changed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: P3
+commits: bf7af37d4 (implementation); plan-evidence docs(measure) commit recorded in the orchestrator reply
+tests_run: gate 1 = browser gate inner PASS=76 FAIL=0 wrapper PASS=4 FAIL=0 exit 0; gate 2 = Phase Red 45 files 342 tests exit 0
+files_changed: apps/storytime/__tests__/phase3-browser-gate.sh
+plan_updates: task 3.7 sentence (round 13 review and UX round 5 passed at 33278b8d8, F410 and F411 fixed at bf7af37d4); Turn 15 correction line (F411); new sub-block "#### Turn 16 Green evidence (review round 13)"
+known_failures: none (both gates exit 0 on one code content)
+handoff: F410 fixed with the /audio-below-fold self-test measured through the extraSelector speaker probe; recorded output selftest all_controls_speaker_probe=false (speakers_found=1, speakers_outside=1, speaker_bottom_px=662, viewport_px=390), so the branch ran on a failing page and the row rule rejected it. F411 fixed with the song row open guard (section[data-part=song] button required, throws when absent) plus the fallback self-test (song_open_ok=false, count_rule_ok=true on one link), and the Turn 15 correction line; the plan text no longer claims a missing song fails through the minimum. No app code changed, so P4, tsc, ESLint, and the graph update did not rerun. phase_base_sha 7db52a49d20e195388fd91670cc7c022312b50c5, role_base_sha 33278b8d830537e444ca3e787b4c7d4e2d3a9f8e, Green HEAD bf7af37d4 plus the plan-evidence commit. New gate items for reviewer scope: the /audio-below-fold self-test page and entry, the song-open self-test entry on /one-link, and the song row open step. No question.
+dispositions: F410=FIX; F411=FIX
+END_MEASURE_AGENT_RESULT
