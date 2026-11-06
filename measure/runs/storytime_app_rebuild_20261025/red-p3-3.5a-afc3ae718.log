@@ -1,0 +1,17 @@
+MEASURE_AGENT_RESULT
+role: Red
+status: complete
+track: storytime_app_rebuild_20261025
+phase: P3 / 3.5a
+baseline_sha: 7db52a49d20e195388fd91670cc7c022312b50c5
+role_base_sha: afc3ae71836ea64a97dfabdf921bb40c795d2f97
+resulting_head: 13f84c7433b71f2971e768e44189ca424be04a74 before this report commit
+commits: d6f9b01e1b1a6cd52598209c40de4a7f331fb083 (tests); 13f84c7433b71f2971e768e44189ca424be04a74 (plan)
+tests_run: `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-song-ui.test.tsx'`; exit 1; 1 file, 2 failed and 5 passed tests (7 total).
+files_changed: apps/storytime/__tests__/phase3-song-ui.test.tsx; measure/tracks/storytime_app_rebuild_20261025/plan.md; this log.
+plan_updates: task 3.5a marked [~]. Plan records both SHAs, renamed tests, exact command, exit, failures, and model.
+known_failures: `the lyric list must contain no pictures` finds `/media/l2/media/w01/song-lines/point-to-self.jpg`; `imageOf` lyric line has `/media/l2/media/w01/song-lines/hands-out.jpg`. These are expected current-code failures. Both new tests pass all lyric and gesture text assertions. No syntax or import failure occurred.
+handoff: Remove lyric-line `img` in song.tsx for all lines, including imageOf lines. Keep the lyric text, gesture text under each line, and stage poster. Then mark 3.5a [x] with Green evidence.
+END_MEASURE_AGENT_RESULT
+
+Dirty paths at start: no other task-relevant changes existed. Generated/ignorable paths included the two apps/*/next-env.d.ts files, caches, and test-results folders. All remaining dirty paths were unrelated user work. Red left them unchanged and unstaged.
