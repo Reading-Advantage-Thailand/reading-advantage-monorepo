@@ -1,0 +1,85 @@
+# Green run: review round 7 Nits (turn 10)
+
+- Track: storytime_app_rebuild_20261025
+- Phase: Phase 3: At-home app
+- Role base: ad4b96d2fe36886f085ff3b2ab7471b6f5e34028
+- Phase base: 7db52a49d20e195388fd91670cc7c022312b50c5
+- Green model: opencode-go/deepseek-v4.1-flash
+
+## Work
+
+- Round 7 at ad4b96d2f: Review A PASS (F152, F153, F154 withdrawn;
+  F180 [Nit]), Review B PASS (0 findings), Review C PASS (F200 and F201
+  [Nit]).
+- F180: the task 3.7 line and the closeout sub-block pointed to a line
+  number that now lands on an unrelated line; the marker rule sits under
+  `### Phase 3 task 3.7 phase check evidence`, and its old sentence read
+  "Task 3.7 stays `[~]`" beside the `[x]`. Fix (the plan commits
+  e0dc613b1 and 2a03186e9): both pointers name that heading with no line
+  number, and the old sentence reads "At that turn, task 3.7 stayed
+  `[~]`" with its other content unchanged. A `grep` for the old pointer
+  text finds no hit.
+- F201 (code part): the 404 answer already had a no-cookie check from
+  turn 5, but no labeled value and no self-test that names the 404 row.
+  Fix a2b049d8e: the row reuses `week_no_cookie_ok`, prints
+  `404_no_set_cookie=1 (status=404, curl_rc=0)` (and `0` with the reason
+  on a failure), and a new self-test case proves that a Set-Cookie answer
+  to the 404 path fails the row. `--self-test` exits 0 with 7 cases; the
+  smoke prints the labeled row. The printed row label for the docs
+  session is `404_no_set_cookie`.
+- F200 is a docs-only strategy label; the docs session closes it. No code
+  change here, and F200 is not in the dispositions line.
+- Gates on ONE HEAD a2b049d8e: the Docker smoke exits 0 with PASS=19,
+  FAIL=0 and the labeled 404 row (14 GB free at the start, above the
+  12 GB floor); the smoke-cleanup test exits 0 with PASS=32, FAIL=0; the
+  Phase Red command with CI=true exits 0 with 38 files and 334 tests. No
+  app code changed, so the browser gate and build-graph need no rerun.
+  Ports 3940 to 3960 were free before and after; nothing heavy ran
+  outside heavy-run, and no ad-hoc tsc ran this turn.
+
+## Result block
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app
+commits: a2b049d8e (test(storytime): check the 404 answer for set-cookie,
+  F201, the gate HEAD); e0dc613b1 (docs(measure): record the turn 10
+  green evidence, F180 and the sub-block); 2a03186e9 (docs(measure):
+  reword the f180 evidence pointer); this log commit. Role base
+  ad4b96d2f; phase base
+  7db52a49d20e195388fd91670cc7c022312b50c5; Green model
+  opencode-go/deepseek-v4.1-flash.
+tests_run: gates on ONE HEAD a2b049d8e, each through heavy-run (or the
+  script plain where it enters heavy-run itself), one at a time: 1. the
+  Docker smoke with HEAVY_HANG_KILL_S=off after df -h / (14 GB free,
+  above the 12 GB floor): exit 0, PASS=19, FAIL=0;
+  `404_no_set_cookie=1 (status=404, curl_rc=0)`. 2. the smoke-cleanup
+  test: exit 0, PASS=32, FAIL=0. 3. the Phase Red command with CI=true:
+  exit 0, 38 files, 334 tests. The smoke `--self-test` exits 0 with 7
+  cases, including "a 404 answer with Set-Cookie fails the 404 no-cookie
+  row". No app code changed, so the browser gate and build-graph need no
+  rerun. Ports 3940 to 3960 free before and after; nothing heavy ran
+  outside heavy-run.
+files_changed: apps/storytime/__tests__/phase3-docker-smoke.sh
+  (a2b049d8e); measure/tracks/storytime_app_rebuild_20261025/plan.md
+  (e0dc613b1, 2a03186e9); this log. The two modified
+  apps/*/next-env.d.ts files belong to TS7 and stayed unstaged.
+plan_updates: task 3.7 keeps [x]; both pointer texts name
+  `### Phase 3 task 3.7 phase check evidence` with no line number; the
+  old marker sentence reads as history of that turn; one sentence records
+  that the round 7 reviews passed at ad4b96d2f (the three review JSON
+  paths); the new `#### Turn 10 Green evidence (review round 7)`
+  sub-block follows the closeout sub-block with the cause, fix commit,
+  and proof per finding and the gate table on ONE HEAD.
+known_failures: none. Every gate exits 0 on ONE HEAD a2b049d8e.
+handoff: the round 7 Nits are closed for Green. The docs session should
+  align test-strategy.md line 451 (`set_cookie_headers=0`) with the smoke
+  row label `404_no_set_cookie` (and the other smoke labels if needed),
+  and close F200 by renaming the strategy label to the two gate labels
+  `tap_target_min_px_tiles_<w>x<h>` and `tap_target_min_px_speakers_<w>x<h>`.
+  The checkpoint marker stays the orchestrator's (the rule sits in
+  `### Phase 3 task 3.7 phase check evidence`).
+dispositions: F180=FIX; F201=FIX
+END_MEASURE_AGENT_RESULT
