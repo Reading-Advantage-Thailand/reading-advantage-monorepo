@@ -169,7 +169,7 @@ function Speaker({ file, label }: { file: string; label: string }) {
 function TileCard({ tile }: { tile: Tile }) {
   const audio = TILE_LABEL_AUDIO[tile.id];
   return (
-    <li className="flex flex-col gap-2">
+    <li className="flex flex-col gap-2 [@media(max-height:500px)]:flex-1">
       <Link
         href={`?part=${tile.part}`}
         className="flex min-h-16 items-center gap-3 rounded-2xl border border-neutral-300 p-3"
@@ -297,7 +297,10 @@ export default async function StorytimeWeekPage({
             <h2 className="mb-3 text-lg font-semibold">
               {t("homeChoosePart")}
             </h2>
-            <ul className="flex flex-col gap-3">
+            {/* `data-week-tiles` names the tile list for the landscape browser-gate rows. In
+            landscape the list uses the same row as the end of the book (F282, F310), so every
+            tile stays inside the viewport; portrait and laptop keep the column. */}
+            <ul data-week-tiles className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row">
               {tiles.map((tile) => (
                 <TileCard key={tile.id} tile={tile} />
               ))}

@@ -314,6 +314,35 @@ async function controlBottomAtLandscape(pg, selector = 'div.flex.flex-wrap.gap-2
     };
   }, selector);
 }
+// The right edge of the measured controls at 844x390, in pixels (finding F320). The live
+// rows and the self-test share it, as `controlBottomAtLandscape` does for the bottom edge: a
+// landscape tile row that pushes a tile past the right edge forces a sideways scroll, so the
+// row must report the widest right edge and the check compares it with the viewport width.
+async function controlRightAtLandscape(pg, selector) {
+  await pg.setViewportSize({ width: 844, height: 390 });
+  // The tile pictures are lazy; measure only after every image has loaded, or a tile without
+  // its picture is narrower than its settled width (the same rule as controlBottomAtLandscape).
+  await pg
+    .waitForFunction(() => [...document.images].every((img) => img.complete), undefined, { timeout: 10000 })
+    .catch(() => {});
+  await pg.waitForTimeout(50);
+  return pg.evaluate((sel) => {
+    let right = 0;
+    let count = 0;
+    for (const el of document.querySelectorAll(sel)) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        count += 1;
+        right = Math.max(right, rect.right);
+      }
+    }
+    return {
+      right: Math.round(right),
+      count,
+      viewport: Math.round(window.innerWidth),
+    };
+  }, selector);
+}
 async function watchNetwork(page) {
   const requests = [];
   const transfers = [];
@@ -358,6 +387,9 @@ try {
     // F154 self-test page: no player control matches the row selector, so the check must
     // reject the page instead of passing with control_bottom_px=0.
     ['/no-controls', '<!doctype html><div class="flex flex-wrap gap-2"></div><p>no controls</p>'],
+    // F320 self-test page: a row of two tiles whose minimum widths push the second tile past
+    // the 844 px right edge, so the shared right-edge check must reject it.
+    ['/wide-row', '<!doctype html><style>.row{display:flex;gap:12px}</style><div class="row"><button style="min-width:500px;height:60px">a</button><button style="min-width:500px;height:60px">b</button></div>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -387,7 +419,8 @@ try {
     ['a bottom bar 10 px above the viewport bottom (bottom_bar_gap_px)', '/bottom-bar', async p => { const info = await bottomBarGap(p, '[class*="fixed"][class*="bottom"]'); console.log(`selftest bottom_bar_gap_px=${info.gap} (bars_found=${info.bars})`); return info.bars === 0 || info.gap <= 1; }],
     ['a button with no visible focus indicator (focus_visible_failures)', '/no-focus-ring', async p => { const out = await focusVisibleFailures(p); console.log(`selftest focus_visible_failures=${out.failures.length} (targets=${out.count})`); return out.failures.length === 0; }],
     ['controls below the fold at 844x390 (landscape_controls_visible)', '/tall-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
-    ['no player control found at 844x390 (landscape_controls_visible)', '/no-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
+    ['no player control found at 844x390 (landscape_controls_visible)', '/no-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
+    ['a tile row wider than the viewport at 844x390 (landscape_row_right_edge)', '/wide-row', async p => { const info = await controlRightAtLandscape(p, '.row > button'); console.log(`selftest landscape_row_right_edge=${info.count > 0 && info.right > 0 && info.right <= info.viewport} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`); return info.count > 0 && info.right > 0 && info.right <= info.viewport; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
     ['a pause 48 ms before the cut end (word cut early rule)', '/button', async () => { const v = wordCutVerdict(0.34 - 0.048, 0.34); console.log(`selftest word_cut_early_ms=${v.early}`); return v.earlyOk; }],
     ['a pause at the cut end passes both word cut rules', '/button', async () => { const v = wordCutVerdict(0.34, 0.34); console.log(`selftest word_cut signed=${v.signedPauseDeltaMs} overshoot=${v.overshoot} early=${v.early}`); return !(v.overshootOk && v.earlyOk); }],
   ]) {
@@ -638,6 +671,57 @@ try {
     console.log(`landscape_controls_visible_endofbook=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
     return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
   });
+
+  // landscape_controls_visible on the week page tiles at 844x390 (finding F310, the F150
+  // class): the entry tiles kept a column on the old layout, so the song tile ended below the
+  // 390 px viewport and the child needed a scroll to reach it. The list uses the same
+  // landscape row as the end of the book (F282), so all tiles stay inside the viewport.
+  await runCheck('landscape_controls_visible on the week page at 844x390', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
+    const info = await controlBottomAtLandscape(page, '[data-week-tiles] a');
+    const ok = info.count >= 3 && info.bottom > 0 && info.bottom <= info.viewport;
+    console.log(`landscape_controls_visible_week=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
+    return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
+  });
+
+  // The landscape tile rows hold a horizontal-fit rule (finding F320): every tile of the
+  // end-of-book row and of the week page row must end at or inside the right viewport edge at
+  // 844x390, in both locales, or a child must scroll sideways to reach a link. The
+  // bottom-edge rows cannot catch a sideways overflow, and the Thai labels of the fixture fit,
+  // so the English route is measured too.
+  const reachEndOfBook = async (locale) => {
+    await page.goto(`${base}/${locale}/st/2/4?part=book`, { waitUntil: 'networkidle' });
+    const nextLabel = locale === 'th' ? 'หน้าถัดไป' : 'Next page';
+    let reached = false;
+    for (let i = 0; i < 12; i += 1) {
+      if (await page.locator('[data-reader-end]').count()) { reached = true; break; }
+      const next = page.locator(`button[aria-label="${nextLabel}"]`);
+      if (!(await next.count()) || !(await next.isEnabled())) break;
+      await next.click();
+      await page.waitForTimeout(120);
+    }
+    if (!reached) reached = Boolean(await page.locator('[data-reader-end]').count());
+    if (!reached) throw new Error('the end of the book did not render');
+  };
+  for (const locale of ['th', 'en']) {
+    await runCheck(`landscape_row_right_edge on the end of the book at 844x390 (${locale})`, async () => {
+      if (!page) throw new Error('Browser page is unavailable');
+      await reachEndOfBook(locale);
+      const info = await controlRightAtLandscape(page, '[data-reader-end] a');
+      const ok = info.count >= 3 && info.right > 0 && info.right <= info.viewport;
+      console.log(`landscape_row_right_edge_endofbook_${locale}=${ok} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`);
+      return { ok, detail: `control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport}` };
+    });
+    await runCheck(`landscape_row_right_edge on the week page at 844x390 (${locale})`, async () => {
+      if (!page) throw new Error('Browser page is unavailable');
+      await page.goto(`${base}/${locale}/st/2/1`, { waitUntil: 'networkidle' });
+      const info = await controlRightAtLandscape(page, '[data-week-tiles] a');
+      const ok = info.count >= 3 && info.right > 0 && info.right <= info.viewport;
+      console.log(`landscape_row_right_edge_week_${locale}=${ok} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`);
+      return { ok, detail: `control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport}` };
+    });
+  }
 
   // reduced_motion_transition_ms: 0 on the marks with reducedMotion reduce.
   await runCheck('reduced_motion_transition_ms is 0 on the marks', async () => {
