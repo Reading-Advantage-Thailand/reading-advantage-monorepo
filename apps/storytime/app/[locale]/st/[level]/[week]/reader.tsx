@@ -19,7 +19,7 @@ import {
 import { seekOrWait, wordCutBounds } from "@reading-advantage/read-along/lib/seek";
 import { seekAndRun, stopAtMediaEnd } from "../../../../../lib/audio-seek";
 import type { BookQuestion } from "../../../../../lib/questions";
-import { StorytimeQuestions, type QuestionLabels, type QuestionTile } from "./questions";
+import { StorytimeQuestions, WeekTileLinks, type QuestionLabels, type QuestionTile } from "./questions";
 
 /** The decodable part of the client reader (plan task 3.4, spec FR-7). */
 export { StorytimeDecodable } from "./decodable";
@@ -383,7 +383,13 @@ export function StorytimeReader({
           mediaBase={mediaBase}
         />
       ) : finished ? (
-        <p className="text-lg font-semibold">{labels.finished}</p>
+        // The end of the book always offers a way back: on a shipped week the loops part is
+        // draft, so no question screen exists and the old end left the child with no control
+        // (finding F149, UX1).
+        <div data-reader-end className="flex flex-col gap-4">
+          <p className="text-lg font-semibold">{labels.finished}</p>
+          {tiles.length > 0 ? <WeekTileLinks tiles={tiles} mediaBase={mediaBase} /> : null}
+        </div>
       ) : (
         <>
           <div data-page-content data-page-number={pageNumber} className="flex flex-col gap-3">

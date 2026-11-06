@@ -28,6 +28,47 @@ export interface QuestionTile {
   pictureAlt: string;
 }
 
+/**
+ * Renders the three entry tiles of the week page as links. The end of the question screen
+ * and the end of the book share it, so a child always has a way back (finding F149).
+ * @param props The tiles and the media base.
+ * @returns The list of tile links.
+ */
+export function WeekTileLinks({
+  tiles,
+  mediaBase = "/media",
+}: {
+  tiles: QuestionTile[];
+  mediaBase?: string;
+}) {
+  return (
+    <ul className="flex flex-col gap-3">
+      {tiles.map((tile) => (
+        <li key={tile.id}>
+          <Link
+            href={tile.href}
+            className="flex min-h-16 items-center gap-3 rounded-2xl border border-neutral-300 p-3"
+          >
+            {tile.pictureFile ? (
+              <img
+                src={mediaUrl(mediaBase, tile.pictureFile)}
+                alt={tile.pictureAlt}
+                loading="lazy"
+                decoding="async"
+                className="h-20 w-20 rounded-xl object-cover"
+              />
+            ) : null}
+            {/* The label comes from the message files, so its lang follows the locale (finding F135). */}
+            <span className="text-lg font-semibold">
+              {tile.label}
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /** The translated labels of the question screen. */
 export interface QuestionLabels {
   /** The skip control. */
@@ -151,30 +192,7 @@ export function StorytimeQuestions({
   if (ended) {
     return (
       <section data-question-screen data-question-end className="flex flex-col gap-4">
-        <ul className="flex flex-col gap-3">
-          {tiles.map((tile) => (
-            <li key={tile.id}>
-              <Link
-                href={tile.href}
-                className="flex min-h-16 items-center gap-3 rounded-2xl border border-neutral-300 p-3"
-              >
-                {tile.pictureFile ? (
-                  <img
-                    src={mediaUrl(mediaBase, tile.pictureFile)}
-                    alt={tile.pictureAlt}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-20 w-20 rounded-xl object-cover"
-                  />
-                ) : null}
-                {/* The label comes from the message files, so its lang follows the locale (finding F135). */}
-                <span className="text-lg font-semibold">
-                  {tile.label}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <WeekTileLinks tiles={tiles} mediaBase={mediaBase} />
       </section>
     );
   }
