@@ -8,11 +8,15 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-10-22",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82"
+      "date": "2026-11-05",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
     },
     "images": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-05",
+      "words": "\"Yes\" (2026-11-03 11:54 ICT); \"The book seems fine.\" (2026-11-05 ICT)",
+      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
       "status": "draft"
@@ -220,7 +224,8 @@
         "characters": [
           "Sam"
         ],
-        "caption": "I Have Two"
+        "caption": "I Have Two",
+        "file": "l2/media/w05/books/1-i-have-two/cover.jpg"
       },
       "pages": [
         {
@@ -230,7 +235,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p01.jpg"
           }
         },
         {
@@ -240,7 +246,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p02.jpg"
           }
         },
         {
@@ -250,7 +257,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p03.jpg"
           }
         },
         {
@@ -260,7 +268,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p04.jpg"
           }
         },
         {
@@ -270,7 +279,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p05.jpg"
           }
         },
         {
@@ -278,7 +288,8 @@
           "image": {
             "prompt": "Sam, a five-year-old boy with large dark-brown eyes and short neat dark-brown hair, in a red T-shirt with two white stripes across the chest and blue denim shorts, sits on the grass in the same sunny park with green grass and a low tree with bare feet; his blue sneakers with white soles stand next to him. He points at his two bare feet. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p06.jpg"
           }
         },
         {
@@ -288,7 +299,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p07.jpg"
           }
         },
         {
@@ -299,7 +311,8 @@
               "Pip",
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/1-i-have-two/p08.jpg"
           }
         }
       ],
@@ -313,7 +326,9 @@
         "arms",
         "legs",
         "feet",
-        "nose"
+        "one",
+        "nose",
+        "four"
       ],
       "audio": {
         "voice": "English_captivating_female1",
@@ -816,7 +831,8 @@
         "characters": [
           "Sam"
         ],
-        "caption": "Sam and Pam"
+        "caption": "Sam and Pam",
+        "file": "l2/media/w05/books/2-sam-and-pam/cover.jpg"
       },
       "pages": [
         {
@@ -826,7 +842,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p01.jpg"
           }
         },
         {
@@ -836,7 +853,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p02.jpg"
           }
         },
         {
@@ -846,7 +864,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p03.jpg"
           }
         },
         {
@@ -856,7 +875,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p04.jpg"
           }
         },
         {
@@ -866,7 +886,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p05.jpg"
           }
         },
         {
@@ -876,7 +897,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p06.jpg"
           }
         },
         {
@@ -887,7 +909,8 @@
               "Sam",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p07.jpg"
           }
         },
         {
@@ -898,7 +921,8 @@
               "Sam",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w05/books/2-sam-and-pam/p08.jpg"
           }
         }
       ],
@@ -1407,7 +1431,7 @@
     "title": "I Have Two",
     "styleBrief": "Bouncy classroom action song for a kindergarten English class, 104 bpm, D major, the melody between C4 and C5, playful, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
     "bpm": 104,
-    "lyricSheet": "[Verse]\nI have two eyes. Look, look, look!\nI have two ears. Listen, listen!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Verse]\nI have two hands. Clap, clap, clap!\nI have two feet. Stamp, stamp, stamp!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Verse]\nI have two arms. Reach up high!\nI have two legs. Hop, hop, hop!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!",
+    "lyricSheet": "[Verse]\nI have two eyes. Look, look, look!\nI have two ears. Listen, listen!\nI have two eyes. Look, look, look!\nI have two ears. Listen, listen!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Verse]\nI have two hands. Clap, clap, clap!\nI have two feet. Stamp, stamp, stamp!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Verse]\nI have two arms. Reach up high!\nI have two legs. Hop, hop, hop!\n\n[Chorus]\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\nSam, Sam, Sam! Look at me!\nI have two hands and I have two feet!\n\n[Chorus]",
     "lines": [
       {
         "text": "I have two eyes. Look, look, look!",
@@ -3644,7 +3668,8 @@
             ],
             "studentActions": [
               "Children read each page with a finger under the words.",
-              "Pairs take turns, page by page."
+              "Pairs take turns, page by page.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read \"saw\" as \"was\": point to the first letter and say sss.",
@@ -3664,7 +3689,8 @@
             "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
           },
           "materials": [
-            "books (one for each pair): \"Sam and Pam\""
+            "small books (each child's own): \"Sam and Pam\"",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
@@ -3681,7 +3707,8 @@
             ],
             "studentActions": [
               "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
-              "คู่ผลัดกันอ่านทีละหน้า"
+              "คู่ผลัดกันอ่านทีละหน้า",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่าน \"saw\" เป็น \"was\": ชี้ที่ตัวอักษรตัวแรก แล้วพูด sss",
@@ -3724,7 +3751,7 @@
             "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
           },
           "materials": [
-            "books (one for each pair): \"Sam and Pam\""
+            "small books (each child's own): \"Sam and Pam\""
           ],
           "th": {
             "teacherActions": [
@@ -3777,7 +3804,7 @@
             "th": "ทั้งชั้น"
           },
           "materials": [
-            "books (one for each pair): \"Sam and Pam\""
+            "small books (each child's own): \"Sam and Pam\""
           ],
           "moved": "next-opening",
           "th": {
@@ -3938,7 +3965,7 @@
             "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
           },
           "materials": [
-            "books (one for each pair): \"Sam and Pam\"",
+            "small books (each child's own): \"Sam and Pam\"",
             "record sheet"
           ],
           "th": {
@@ -4044,7 +4071,7 @@
           "minutes": 6,
           "en": {
             "teacherActions": [
-              "Give out the class set of \"I Have Two\" (Sprout band).",
+              "Children take out their own small books.",
               "Read it together once, then pairs read it page by page."
             ],
             "teacherLanguage": [
@@ -4052,7 +4079,8 @@
               "\"Now read it with your partner. Partner A reads, partner B reads.\""
             ],
             "studentActions": [
-              "Children read \"I Have Two\" together, then in pairs."
+              "Children read \"I Have Two\" together, then in pairs.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read a body word wrong: point to the picture, then to their own body."
@@ -4071,11 +4099,12 @@
             "th": "ทำเป็นคู่"
           },
           "materials": [
-            "books (one for each pair): \"I Have Two\""
+            "small books (each child's own): \"I Have Two\" (Sprout band)",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
-              "แจกหนังสือ \"I Have Two\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "เด็ก ๆ หยิบหนังสือเล่มเล็กของตัวเองออกมา",
               "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
             ],
             "teacherLanguage": [
@@ -4083,7 +4112,8 @@
               "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
             ],
             "studentActions": [
-              "เด็ก ๆ อ่าน \"I Have Two\" พร้อมกัน แล้วอ่านเป็นคู่"
+              "เด็ก ๆ อ่าน \"I Have Two\" พร้อมกัน แล้วอ่านเป็นคู่",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่านคำศัพท์ส่วนของร่างกายผิด: ชี้ที่ภาพ แล้วชี้ที่ร่างกายของเด็กเอง"
@@ -4424,7 +4454,7 @@
             "picture cards: cat, dog, pen",
             "workmats (class set)",
             "letter cards (class set): s, n, a, p, m",
-            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\", \"I Have Two\", \"Sam and Pam\"",
+            "small books (each child's own): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\", \"I Have Two\", \"Sam and Pam\"",
             "class tablet",
             "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\", \"This Is My Family\", \"I Have Two\"",
             "record sheet"
@@ -4576,7 +4606,8 @@
           "en": {
             "teacherActions": [
               "Children do the check page: in rows 1 to 3, circle the picture that starts with sss; in rows 4 and 5, circle the word that you say. Then they write the letter s and the word \"Sam\".",
-              "Collect the books and mark the check."
+              "Collect the books and mark the check.",
+              "While the class does the written rows, the teacher calls one child at a time for row 8 and row 9 and ticks the box when the child is right."
             ],
             "teacherLanguage": [
               "\"Row 1: sun, cat, dog. Which one starts with sss? Circle it.\"",
@@ -4584,7 +4615,9 @@
               "\"Row 3: cup, hat, sofa. Which one starts with sss? Circle it.\"",
               "\"Row 4: Pam, Sam, map. Find the word Sam. Circle it.\"",
               "\"Row 5: with, saw, is. Find the word saw. Circle it.\"",
-              "\"Now write the letter s. Then write the word Sam, with a big letter S.\""
+              "\"Now write the letter s. Then write the word Sam, with a big letter S.\"",
+              "\"Row 8: Read this word: off.\"",
+              "\"Row 9: /s/ /a/ /d/. What is the word?\""
             ],
             "studentActions": [
               "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter s, and write \"Sam\"."
@@ -4613,7 +4646,8 @@
           "th": {
             "teacherActions": [
               "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย sss แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร s และคำ \"Sam\"",
-              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ",
+              "ขณะที่ชั้นเรียนทำแถวที่ต้องเขียน ครูเรียกเด็กมาทีละคนเพื่อทำแถว 8 และแถว 9 แล้วขีดถูกเมื่อเด็กทำถูก"
             ],
             "teacherLanguage": [
               "\"แถว 1: sun, cat, dog คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
@@ -4621,7 +4655,9 @@
               "\"แถว 3: cup, hat, sofa คำไหนขึ้นต้นด้วย sss? วงกลมไว้\"",
               "\"แถว 4: Pam, Sam, map หาคำว่า Sam วงกลมไว้\"",
               "\"แถว 5: with, saw, is หาคำว่า saw วงกลมไว้\"",
-              "\"ทีนี้เขียนตัวอักษร s แล้วเขียนคำ Sam โดยใช้ S ตัวพิมพ์ใหญ่\""
+              "\"ทีนี้เขียนตัวอักษร s แล้วเขียนคำ Sam โดยใช้ S ตัวพิมพ์ใหญ่\"",
+              "\"แถว 8: อ่านคำนี้: off\"",
+              "\"แถว 9: /s/ /a/ /d/. คำนี้คือคำอะไร?\""
             ],
             "studentActions": [
               "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร s และเขียน \"Sam\""
@@ -5145,6 +5181,10 @@
     ]
   },
   "print": {
+    "checkRows": {
+      "trickyWord": "off",
+      "blendWord": "sad"
+    },
     "letterBox": {
       "letter": "s",
       "formationWords": "Start at the dot. Round to the left. Then round to the right.",
@@ -5160,9 +5200,16 @@
       "traceSentence": "Sam saw Pam."
     },
     "writing": {
-      "traceText": "I have two eyes",
+      "traceText": "I have two eyes.",
       "line": "word",
-      "pictureBox": true
+      "pictureBox": true,
+      "promptPicture": "face",
+      "promptAction": "draw",
+      "choiceWords": [
+        "hands",
+        "ears",
+        "feet"
+      ]
     }
   }
 }

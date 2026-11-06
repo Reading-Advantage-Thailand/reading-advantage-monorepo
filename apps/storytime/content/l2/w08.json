@@ -1849,7 +1849,7 @@
                 "pictures": [
                   "apple",
                   "ant",
-                  "alligator"
+                  "axe"
                 ]
               }
             ]
@@ -2085,7 +2085,7 @@
             "kind": "picture-sort",
             "groups": [
               {
-                "sound": "nnn",
+                "sound": "/n/",
                 "pictures": [
                   "nest"
                 ]
@@ -2103,13 +2103,13 @@
                 ]
               },
               {
-                "sound": "mmm",
+                "sound": "/m/",
                 "pictures": [
                   "moon"
                 ]
               },
               {
-                "sound": "sss",
+                "sound": "/s/",
                 "pictures": [
                   "sun"
                 ]

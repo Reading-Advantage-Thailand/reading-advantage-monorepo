@@ -8,14 +8,15 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-10-22",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 67"
+      "date": "2026-11-05",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 67 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
     },
     "images": {
       "status": "approved",
-      "date": "2026-11-03",
-      "words": "\"Both ok\" (2026-11-02 07:00 ICT); \"Looks good\" (2026-11-02 14:28 ICT); \"Yes\" (2026-11-03 11:54 ICT)",
-      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; print Phase 4 git note on 2e3272e9"
+      "date": "2026-11-05",
+      "words": "\"Both ok\" (2026-11-02 07:00 ICT); \"Looks good\" (2026-11-02 14:28 ICT); \"Yes\" (2026-11-03 11:54 ICT); \"The book seems fine.\" (2026-11-05 ICT)",
+      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; print Phase 4 git note on 2e3272e9; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
       "status": "approved",
@@ -34,6 +35,11 @@
       "date": "2026-10-23",
       "words": "publish week 1",
       "source": "Workbooks commit 4d78b21 (decision S29)"
+    },
+    "print": {
+      "status": "approved",
+      "date": "2026-11-05",
+      "words": "The book seems fine."
     },
     "loops": {
       "status": "draft"
@@ -1308,7 +1314,7 @@
     "title": "Hello, I Am Pip",
     "styleBrief": "Children's classroom hello song for a kindergarten English classroom, young learners, 104 bpm, C major, bright and playful, one warm clear female lead with an American accent, every word slowly and clearly sung, call-and-response chorus where a small group of young singers echo the short lines, acoustic guitar, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 80 seconds long.",
     "bpm": 104,
-    "lyricSheet": "[Verse]\nHello, hello, I am Pip\nHello, hello, I am Nan\nWave your hand and say it too\nHello, I am you\n\n[Chorus]\nHello, I am Pip (clap clap)\nHello, I am Nan (clap clap)\nHello, I am, hello, I am\nHello, who are you?\n\n[Verse]\nPoint to me, I am Pip\nPoint to you, you are Nan\nNod your head and say it too\nHello, I am you\n\n[Chorus]\nHello, I am Pip (clap clap)\nHello, I am Nan (clap clap)\nHello, I am, hello, I am\nHello, who are you?",
+    "lyricSheet": "[Verse]\nHello, hello, I am Pip\nHello, hello, I am Nan\nWave your hand and say it too\nHello, I am you\n\n[Chorus]\nHello, I am Pip (Hello, I am Pip!)\nHello, I am Nan (Hello, I am Nan!)\nHello, who are you? (Hello, who are you?)\nHello, who are you?\n\n[Verse]\nPoint to me, I am Pip\nPoint to you, you are Nan\nNod your head and say it too\nHello, I am you\n\n[Chorus]\nHello, I am Pip (Hello, I am Pip!)\nHello, I am Nan (Hello, I am Nan!)\nHello, who are you? (Hello, who are you?)",
     "lines": [
       {
         "text": "Hello, hello, I am Pip",
@@ -2261,7 +2267,7 @@
               "Children write the letter n in the air, then trace it in the book three times."
             ],
             "teacherLanguage": [
-              "\"Start at the top. Down. Up. Over the hill. Down.\"",
+              "\"Start at the dot. Down. Up. Over the hill. Down.\"",
               "\"Fingers up. Write the letter n in the air with me.\"",
               "\"Open your book. Find the letter n. Trace it three times. Start at the dot.\""
             ],
@@ -2297,7 +2303,7 @@
               "เด็ก ๆ เขียนตัวอักษร n กลางอากาศ แล้วลากเส้นตามตัวอักษร n ในหนังสือ 3 ครั้ง"
             ],
             "teacherLanguage": [
-              "\"เริ่มที่ด้านบน ลง ขึ้น ข้ามเนิน ลง\"",
+              "\"เริ่มที่จุด ลง ขึ้น ข้ามเนิน ลง\"",
               "\"ยกนิ้วขึ้น เขียนตัวอักษร n กลางอากาศพร้อมครู\"",
               "\"เปิดหนังสือ หาตัวอักษร n ลากเส้นตาม 3 ครั้ง เริ่มที่จุด\""
             ],
@@ -3351,8 +3357,8 @@
             "th": "เด็ก ๆ หลับตาเขียน n แล้วลืมตาตรวจดู"
           },
           "group": {
-            "en": "Pairs check each other's letter n: start at the top, down, up, over the hill, down.",
-            "th": "ทำเป็นคู่: ตรวจตัวอักษร n ของกันและกัน (เริ่มที่ด้านบน ลง ขึ้น ข้ามเนิน ลง)"
+            "en": "Pairs check each other's letter n: start at the dot, down, up, over the hill, down.",
+            "th": "ทำเป็นคู่: ตรวจตัวอักษร n ของกันและกัน (เริ่มที่จุด ลง ขึ้น ข้ามเนิน ลง)"
           },
           "materials": [
             "student book: dictation lines"
@@ -3379,8 +3385,8 @@
         {
           "id": "C4",
           "title": {
-            "en": "Decodable: read together",
-            "th": "หนังสือฝึกสะกดอ่าน: อ่านด้วยกัน"
+            "en": "First-sound book: read together",
+            "th": "หนังสือเสียงแรก: อ่านด้วยกัน"
           },
           "minutes": 7,
           "en": {
@@ -3396,7 +3402,8 @@
             ],
             "studentActions": [
               "Children read each page: \"A\" and the picture word with n.",
-              "Pairs take turns, page by page."
+              "Pairs take turns, page by page.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who name the picture with a different word (bird for nest): point to the n and stretch the first sound.",
@@ -3416,7 +3423,8 @@
             "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
           },
           "materials": [
-            "books (one for each pair): \"Nan Can Nod\""
+            "small books (each child's own): \"Nan Can Nod\"",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
@@ -3431,7 +3439,8 @@
             ],
             "studentActions": [
               "เด็ก ๆ อ่านแต่ละหน้า: \"A\" และคำที่ตรงกับภาพซึ่งขึ้นต้นด้วย n",
-              "คู่ผลัดกันอ่านทีละหน้า"
+              "คู่ผลัดกันอ่านทีละหน้า",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่เรียกภาพด้วยคำอื่น (bird แทน nest): ชี้ที่ n และลากเสียงแรกให้ยาว",
@@ -3474,7 +3483,7 @@
             "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
           },
           "materials": [
-            "books (one for each pair): \"Nan Can Nod\""
+            "small books (each child's own): \"Nan Can Nod\""
           ],
           "th": {
             "teacherActions": [
@@ -3527,7 +3536,7 @@
             "th": "ทั้งชั้น"
           },
           "materials": [
-            "books (one for each pair): \"Nan Can Nod\""
+            "small books (each child's own): \"Nan Can Nod\""
           ],
           "moved": "next-opening",
           "th": {
@@ -3681,7 +3690,7 @@
             "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
           },
           "materials": [
-            "books (one for each pair): \"Nan Can Nod\"",
+            "small books (each child's own): \"Nan Can Nod\"",
             "record sheet"
           ],
           "th": {
@@ -3785,7 +3794,7 @@
           "minutes": 6,
           "en": {
             "teacherActions": [
-              "Give out the class set of \"Hello!\" (Sprout band).",
+              "Children take out their own small books.",
               "Read it together once, then pairs read it page by page."
             ],
             "teacherLanguage": [
@@ -3793,7 +3802,8 @@
               "\"Now read it with your partner. A reads, B reads.\""
             ],
             "studentActions": [
-              "Children read \"Hello!\" together, then in pairs."
+              "Children read \"Hello!\" together, then in pairs.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read a name wrong: point to the picture of the child on the page."
@@ -3812,11 +3822,12 @@
             "th": "ทำเป็นคู่"
           },
           "materials": [
-            "books (one for each pair): \"Hello!\""
+            "small books (each child's own): \"Hello!\" (Sprout band)",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
-              "แจกหนังสือ \"Hello!\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "เด็ก ๆ หยิบหนังสือเล่มเล็กของตัวเองออกมา",
               "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
             ],
             "teacherLanguage": [
@@ -3824,7 +3835,8 @@
               "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
             ],
             "studentActions": [
-              "เด็ก ๆ อ่าน \"Hello!\" พร้อมกัน แล้วอ่านเป็นคู่"
+              "เด็ก ๆ อ่าน \"Hello!\" พร้อมกัน แล้วอ่านเป็นคู่",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่านชื่อผิด: ชี้ที่ภาพของเด็กในหน้านั้น"
@@ -4158,7 +4170,7 @@
             "a second set of the picture cards and the sound picture cards",
             "workmats (class set)",
             "letter cards (class set): n",
-            "books (one for each pair): \"Hello!\", \"Nan Can Nod\"",
+            "small books (each child's own): \"Hello!\", \"Nan Can Nod\"",
             "class tablet",
             "karaoke videos: \"Hello, I Am Pip\"",
             "record sheet"
@@ -4309,13 +4321,16 @@
           "en": {
             "teacherActions": [
               "Children do the check page: circle the picture that starts with n in each row, and write the letter n.",
-              "Collect the books and mark the check."
+              "Collect the books and mark the check.",
+              "While the class does the written rows, the teacher calls one child at a time for row 5 and row 6 and ticks the box when the child is right."
             ],
             "teacherLanguage": [
               "\"Row 1: nest, cat, fish. Which one starts with nnn? Circle it.\"",
               "\"Row 2: dog, nose, bus. Which one starts with nnn? Circle it.\"",
               "\"Row 3: hat, cup, net. Which one starts with nnn? Circle it.\"",
-              "\"Now write the letter n.\""
+              "\"Now write the letter n.\"",
+              "\"Row 5: Read this word: a.\"",
+              "\"Row 6: /n/ /e/ /t/. What is the word?\""
             ],
             "studentActions": [
               "Children circle one picture in each row and write n."
@@ -4343,13 +4358,16 @@
           "th": {
             "teacherActions": [
               "เด็ก ๆ ทำหน้าตรวจสอบ: วงกลมภาพที่ขึ้นต้นด้วย n ในแต่ละแถว และเขียนตัวอักษร n",
-              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ",
+              "ขณะที่ชั้นเรียนทำแถวที่ต้องเขียน ครูเรียกเด็กมาทีละคนเพื่อทำแถว 5 และแถว 6 แล้วขีดถูกเมื่อเด็กทำถูก"
             ],
             "teacherLanguage": [
               "\"แถว 1: nest, cat, fish คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
               "\"แถว 2: dog, nose, bus คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
               "\"แถว 3: hat, cup, net คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
-              "\"ทีนี้เขียนตัวอักษร n\""
+              "\"ทีนี้เขียนตัวอักษร n\"",
+              "\"แถว 5: อ่านคำนี้: a\"",
+              "\"แถว 6: /n/ /e/ /t/. คำนี้คือคำอะไร?\""
             ],
             "studentActions": [
               "เด็ก ๆ วงกลมภาพ 1 ภาพในแต่ละแถว และเขียน n"
@@ -4533,10 +4551,14 @@
     "readAlongUrl": "/th/st/2/1?part=book"
   },
   "print": {
+    "checkRows": {
+      "trickyWord": "a",
+      "blendWord": "net"
+    },
     "letterBox": {
       "letter": "n",
-      "formationWords": "Start at the top. Down. Up. Over the hill. Down.",
-      "startPoint": "top"
+      "formationWords": "Start at the dot. Down. Up. Over the hill. Down.",
+      "startPoint": "dot"
     },
     "practice": [
       {
@@ -4545,11 +4567,10 @@
       },
       {
         "text": "A nest. A net.",
-        "pictureWord": "nest"
-      },
-      {
-        "text": "and",
-        "pictureWord": "nut"
+        "pictureWord": "nest",
+        "extraPictureWords": [
+          "net"
+        ]
       }
     ],
     "dictation": {

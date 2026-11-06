@@ -8,11 +8,15 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-10-22",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80"
+      "date": "2026-11-05",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
     },
     "images": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-05",
+      "words": "\"Yes\" (2026-11-03 11:54 ICT); \"The book seems fine.\" (2026-11-05 ICT)",
+      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
       "status": "draft"
@@ -232,7 +236,8 @@
           "Grandpa",
           "Tom"
         ],
-        "caption": "My Family"
+        "caption": "My Family",
+        "file": "l2/media/w04/books/1-my-family/cover.jpg"
       },
       "pages": [
         {
@@ -243,7 +248,8 @@
               "Lily",
               "Mom"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p01.jpg"
           }
         },
         {
@@ -254,7 +260,8 @@
               "Lily",
               "Dad"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p02.jpg"
           }
         },
         {
@@ -265,7 +272,8 @@
               "Lily",
               "Tom"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p03.jpg"
           }
         },
         {
@@ -276,7 +284,8 @@
               "Lily",
               "Grandma"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p04.jpg"
           }
         },
         {
@@ -287,7 +296,8 @@
               "Lily",
               "Grandpa"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p05.jpg"
           }
         },
         {
@@ -297,7 +307,8 @@
             "characters": [
               "Lily"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p06.jpg"
           }
         },
         {
@@ -312,7 +323,8 @@
               "Grandpa",
               "Tom"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p07.jpg"
           }
         },
         {
@@ -328,7 +340,8 @@
               "Grandpa",
               "Tom"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/1-my-family/p08.jpg"
           }
         }
       ],
@@ -856,7 +869,8 @@
         "characters": [
           "Nan"
         ],
-        "caption": "Pam"
+        "caption": "Pam",
+        "file": "l2/media/w04/books/2-pam/cover.jpg"
       },
       "pages": [
         {
@@ -866,7 +880,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p01.jpg"
           }
         },
         {
@@ -876,7 +891,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p02.jpg"
           }
         },
         {
@@ -886,7 +902,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p03.jpg"
           }
         },
         {
@@ -896,7 +913,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p04.jpg"
           }
         },
         {
@@ -906,7 +924,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p05.jpg"
           }
         },
         {
@@ -916,7 +935,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p06.jpg"
           }
         },
         {
@@ -926,7 +946,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p07.jpg"
           }
         },
         {
@@ -936,7 +957,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w04/books/2-pam/p08.jpg"
           }
         }
       ],
@@ -2508,7 +2530,7 @@
             ],
             "teacherLanguage": [
               "\"Here is the letter m. It says mmm.\"",
-              "\"Our new words! Read them with me: am. Man. Map. Pam.\"",
+              "\"Our new words! Read them with me: Am. Man. Map. Pam.\"",
               "\"Now read all the words: an, Nan, pan, nap, am, man, map, Pam.\""
             ],
             "studentActions": [
@@ -2647,7 +2669,7 @@
             ],
             "teacherLanguage": [
               "\"Read the sounds with me: mmm, /a/, /p/, nnn.\"",
-              "\"Read the words: am. Man. Map. Pam.\"",
+              "\"Read the words: Am. Man. Map. Pam.\"",
               "\"Read the sentences: This is Pam. I am Nan.\""
             ],
             "studentActions": [
@@ -3468,7 +3490,8 @@
             ],
             "studentActions": [
               "Children read each page with a finger under the words.",
-              "Pairs take turns, page by page."
+              "Pairs take turns, page by page.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read \"man\" as \"map\" on page 5: point to the last letter and ask for its sound.",
@@ -3488,7 +3511,8 @@
             "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
           },
           "materials": [
-            "books (one for each pair): \"Pam\""
+            "small books (each child's own): \"Pam\"",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
@@ -3505,7 +3529,8 @@
             ],
             "studentActions": [
               "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
-              "คู่ผลัดกันอ่านทีละหน้า"
+              "คู่ผลัดกันอ่านทีละหน้า",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่าน \"man\" เป็น \"map\" ในหน้า 5: ชี้ที่ตัวอักษรตัวสุดท้าย แล้วถามว่าออกเสียงอะไร",
@@ -3548,7 +3573,7 @@
             "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
           },
           "materials": [
-            "books (one for each pair): \"Pam\""
+            "small books (each child's own): \"Pam\""
           ],
           "th": {
             "teacherActions": [
@@ -3601,7 +3626,7 @@
             "th": "ทั้งชั้น"
           },
           "materials": [
-            "books (one for each pair): \"Pam\""
+            "small books (each child's own): \"Pam\""
           ],
           "moved": "next-opening",
           "th": {
@@ -3762,7 +3787,7 @@
             "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
           },
           "materials": [
-            "books (one for each pair): \"Pam\"",
+            "small books (each child's own): \"Pam\"",
             "record sheet"
           ],
           "th": {
@@ -3867,7 +3892,7 @@
           "minutes": 6,
           "en": {
             "teacherActions": [
-              "Give out the class set of \"My Family\" (Sprout band).",
+              "Children take out their own small books.",
               "Read it together once, then pairs read it page by page."
             ],
             "teacherLanguage": [
@@ -3875,7 +3900,8 @@
               "\"Now read it with your partner. Partner A reads, partner B reads.\""
             ],
             "studentActions": [
-              "Children read \"My Family\" together, then in pairs."
+              "Children read \"My Family\" together, then in pairs.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read a family word wrong: point to the person in the picture."
@@ -3894,11 +3920,12 @@
             "th": "ทำเป็นคู่"
           },
           "materials": [
-            "books (one for each pair): \"My Family\""
+            "small books (each child's own): \"My Family\" (Sprout band)",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
-              "แจกหนังสือ \"My Family\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "เด็ก ๆ หยิบหนังสือเล่มเล็กของตัวเองออกมา",
               "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
             ],
             "teacherLanguage": [
@@ -3906,7 +3933,8 @@
               "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
             ],
             "studentActions": [
-              "เด็ก ๆ อ่าน \"My Family\" พร้อมกัน แล้วอ่านเป็นคู่"
+              "เด็ก ๆ อ่าน \"My Family\" พร้อมกัน แล้วอ่านเป็นคู่",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่านคำศัพท์ครอบครัวผิด: ชี้ที่คนในภาพ"
@@ -4247,7 +4275,7 @@
             "picture cards: cat, sun, fish",
             "workmats (class set)",
             "letter cards (class set): m, a, n, p",
-            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\"",
+            "small books (each child's own): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\"",
             "class tablet",
             "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\", \"This Is My Family\"",
             "record sheet"
@@ -4396,7 +4424,8 @@
           "en": {
             "teacherActions": [
               "Children do the check page: in rows 1 to 3, circle the picture that starts with mmm; in rows 4 and 5, circle the word that you say. Then they write the letter m and the word \"map\".",
-              "Collect the books and mark the check."
+              "Collect the books and mark the check.",
+              "While the class does the written rows, the teacher calls one child at a time for row 8 and row 9 and ticks the box when the child is right."
             ],
             "teacherLanguage": [
               "\"Row 1: monkey, cat, sun. Which one starts with mmm? Circle it.\"",
@@ -4404,7 +4433,9 @@
               "\"Row 3: fish, hat, milk. Which one starts with mmm? Circle it.\"",
               "\"Row 4: map, man, nap. Find the word man. Circle it.\"",
               "\"Row 5: is, the, this. Find the word this. Circle it.\"",
-              "\"Now write the letter m. Then write the word map.\""
+              "\"Now write the letter m. Then write the word map.\"",
+              "\"Row 8: Read this word: is.\"",
+              "\"Row 9: /j/ /a/ /m/. What is the word?\""
             ],
             "studentActions": [
               "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter m, and write \"map\"."
@@ -4433,7 +4464,8 @@
           "th": {
             "teacherActions": [
               "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย mmm แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร m และคำ \"map\"",
-              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ",
+              "ขณะที่ชั้นเรียนทำแถวที่ต้องเขียน ครูเรียกเด็กมาทีละคนเพื่อทำแถว 8 และแถว 9 แล้วขีดถูกเมื่อเด็กทำถูก"
             ],
             "teacherLanguage": [
               "\"แถว 1: monkey, cat, sun คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
@@ -4441,7 +4473,9 @@
               "\"แถว 3: fish, hat, milk คำไหนขึ้นต้นด้วย mmm? วงกลมไว้\"",
               "\"แถว 4: map, man, nap หาคำว่า man วงกลมไว้\"",
               "\"แถว 5: is, the, this หาคำว่า this วงกลมไว้\"",
-              "\"ทีนี้เขียนตัวอักษร m แล้วเขียนคำ map\""
+              "\"ทีนี้เขียนตัวอักษร m แล้วเขียนคำ map\"",
+              "\"แถว 8: อ่านคำนี้: is\"",
+              "\"แถว 9: /j/ /a/ /m/. คำนี้คือคำอะไร?\""
             ],
             "studentActions": [
               "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร m และเขียน \"map\""
@@ -4867,6 +4901,10 @@
     ]
   },
   "print": {
+    "checkRows": {
+      "trickyWord": "is",
+      "blendWord": "jam"
+    },
     "letterBox": {
       "letter": "m",
       "formationWords": "Start at the dot. Down. Up, over the hill, down. Up, over the hill, down.",
@@ -4874,7 +4912,7 @@
     },
     "practice": [
       { "text": "m m m", "pictureWord": "monkey" },
-      { "text": "am. Man. Map. Pam. This is Pam. I am Nan.", "pictureWord": "Pam" }
+      { "text": "Am. Man. Map. Pam. This is Pam. I am Nan.", "pictureWord": "Pam" }
     ],
     "dictation": {
       "letters": ["m", "m"],
@@ -4884,7 +4922,16 @@
     "writing": {
       "traceText": "This is my ...",
       "line": "word",
-      "pictureBox": true
+      "pictureBox": true,
+      "choiceWords": [
+        "mom",
+        "dad",
+        "brother",
+        "sister",
+        "grandma",
+        "grandpa",
+        "family"
+      ]
     }
   }
 }

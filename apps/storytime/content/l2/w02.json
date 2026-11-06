@@ -8,11 +8,15 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-10-22",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80"
+      "date": "2026-11-05",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
     },
     "images": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-05",
+      "words": "\"Yes\" (2026-11-03 11:54 ICT); \"The book seems fine.\" (2026-11-05 ICT)",
+      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
       "status": "draft"
@@ -232,7 +236,8 @@
           "Teacher Kim",
           "Nan"
         ],
-        "caption": "How Many?"
+        "caption": "How Many?",
+        "file": "l2/media/w02/books/1-how-many/cover.jpg"
       },
       "pages": [
         {
@@ -243,7 +248,8 @@
               "Pat",
               "Teacher Kim"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p01.jpg"
           }
         },
         {
@@ -254,7 +260,8 @@
               "May",
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p02.jpg"
           }
         },
         {
@@ -264,7 +271,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p03.jpg"
           }
         },
         {
@@ -274,7 +282,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p04.jpg"
           }
         },
         {
@@ -284,7 +293,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p05.jpg"
           }
         },
         {
@@ -299,7 +309,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p06.jpg"
           }
         },
         {
@@ -309,7 +320,8 @@
             "characters": [
               "Teacher Kim"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p07.jpg"
           }
         },
         {
@@ -326,7 +338,8 @@
               "Teacher Kim",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/1-how-many/p08.jpg"
           }
         }
       ],
@@ -991,7 +1004,8 @@
           "Ben",
           "Nan"
         ],
-        "caption": "Can I?"
+        "caption": "Can I?",
+        "file": "l2/media/w02/books/2-can-i/cover.jpg"
       },
       "pages": [
         {
@@ -1001,7 +1015,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p01.jpg"
           }
         },
         {
@@ -1011,7 +1026,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p02.jpg"
           }
         },
         {
@@ -1021,7 +1037,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p03.jpg"
           }
         },
         {
@@ -1031,7 +1048,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p04.jpg"
           }
         },
         {
@@ -1041,7 +1059,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p05.jpg"
           }
         },
         {
@@ -1051,7 +1070,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p06.jpg"
           }
         },
         {
@@ -1062,7 +1082,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p07.jpg"
           }
         },
         {
@@ -1073,7 +1094,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w02/books/2-can-i/p08.jpg"
           }
         }
       ],
@@ -1415,7 +1437,7 @@
     "title": "How Many? One, Two!",
     "styleBrief": "Bright classroom counting song for a kindergarten English class, 100 bpm, G major, playful and bouncy, the melody between C4 and C5, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
     "bpm": 100,
-    "lyricSheet": "[Verse]\nHow many suns? One sun!\nHow many kites? Two kites!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Verse]\nHow many ducks? Three ducks!\nHow many birds? Four birds!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Verse]\nHow many balls? Five balls!\nHow many friends? Six friends!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!",
+    "lyricSheet": "[Verse]\nHow many suns? One sun!\nHow many kites? Two kites!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Verse]\nHow many ducks? Three ducks!\nHow many birds? Four birds!\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Verse]\nHow many balls? Five balls!\nHow many friends? Six friends! (How many friends? Six friends!)\n\n[Chorus]\nHow many? How many? One, two, three!\nRed, red apples! Count with me!\n\n[Chorus]",
     "lines": [
       {
         "text": "How many suns? One sun!",
@@ -2069,7 +2091,7 @@
             "th": "ทำเป็นคู่: ครูชูบัตร 1 ใบ คู่คนที่ 1 พูดคำ และคู่คนที่ 2 ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง"
           },
           "materials": [
-            "sound picture cards: apple, ant, alligator, astronaut",
+            "sound picture cards: apple, ant, axe, astronaut",
             "picture cards: dog, sun, bus",
             "picture cards: cat, hat, fan"
           ],
@@ -2431,7 +2453,7 @@
             ],
             "teacherLanguage": [
               "\"Here is the letter a. It says /a/. Here is the letter n. It says nnn.\"",
-              "\"Our first words! Read them with me: an. Nan.\"",
+              "\"Our first words! Read them with me: An. Nan.\"",
               "\"Every week, we put new words here.\""
             ],
             "studentActions": [
@@ -2572,7 +2594,7 @@
             ],
             "teacherLanguage": [
               "\"Read the sounds with me: /a/, /a/, /a/. Nnn, /a/, nnn.\"",
-              "\"Read the words: an. Nan.\"",
+              "\"Read the words: An. Nan.\"",
               "\"Read the sentences: Nan can. I can.\""
             ],
             "studentActions": [
@@ -3397,7 +3419,8 @@
             ],
             "studentActions": [
               "Children read each page with a finger under the words.",
-              "Pairs take turns, page by page."
+              "Pairs take turns, page by page.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who guess \"Ben\" or another name: point under each letter of \"Nan\" and say the sounds.",
@@ -3417,7 +3440,8 @@
             "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
           },
           "materials": [
-            "books (one for each pair): \"Can I?\""
+            "small books (each child's own): \"Can I?\"",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
@@ -3434,7 +3458,8 @@
             ],
             "studentActions": [
               "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
-              "คู่ผลัดกันอ่านทีละหน้า"
+              "คู่ผลัดกันอ่านทีละหน้า",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่เดาว่าเป็น \"Ben\" หรือชื่ออื่น: ชี้ใต้ตัวอักษรแต่ละตัวของ \"Nan\" และออกเสียง",
@@ -3477,7 +3502,7 @@
             "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
           },
           "materials": [
-            "books (one for each pair): \"Can I?\""
+            "small books (each child's own): \"Can I?\""
           ],
           "th": {
             "teacherActions": [
@@ -3530,7 +3555,7 @@
             "th": "ทั้งชั้น"
           },
           "materials": [
-            "books (one for each pair): \"Can I?\""
+            "small books (each child's own): \"Can I?\""
           ],
           "moved": "next-opening",
           "th": {
@@ -3691,7 +3716,7 @@
             "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
           },
           "materials": [
-            "books (one for each pair): \"Can I?\"",
+            "small books (each child's own): \"Can I?\"",
             "record sheet"
           ],
           "th": {
@@ -3799,7 +3824,7 @@
           "minutes": 6,
           "en": {
             "teacherActions": [
-              "Give out the class set of \"How Many?\" (Sprout band).",
+              "Children take out their own small books.",
               "Read it together once, then pairs read it page by page."
             ],
             "teacherLanguage": [
@@ -3807,7 +3832,8 @@
               "\"Now read it with your partner. Partner A reads, partner B reads.\""
             ],
             "studentActions": [
-              "Children read \"How Many?\" together, then in pairs."
+              "Children read \"How Many?\" together, then in pairs.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read a number wrong: count the picture with them."
@@ -3826,11 +3852,12 @@
             "th": "ทำเป็นคู่"
           },
           "materials": [
-            "books (one for each pair): \"How Many?\""
+            "small books (each child's own): \"How Many?\" (Sprout band)",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
-              "แจกหนังสือ \"How Many?\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "เด็ก ๆ หยิบหนังสือเล่มเล็กของตัวเองออกมา",
               "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
             ],
             "teacherLanguage": [
@@ -3838,7 +3865,8 @@
               "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
             ],
             "studentActions": [
-              "เด็ก ๆ อ่าน \"How Many?\" พร้อมกัน แล้วอ่านเป็นคู่"
+              "เด็ก ๆ อ่าน \"How Many?\" พร้อมกัน แล้วอ่านเป็นคู่",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่านตัวเลขผิด: นับสิ่งของในภาพพร้อมเด็ก"
@@ -3855,19 +3883,19 @@
           "en": {
             "teacherActions": [
               "Part 1 (5 min): write \"How many?\" on the board. Show where the big letter and the question mark go.",
-              "Children trace \"How many?\" in the book. Then they count the apples in the picture and trace the number word under it: three.",
+              "Children trace \"How many?\" in the book. Then they count the ducks in the picture: three.",
               "Stand-and-count break (at minute 5): all children stand up. Show some fingers and ask \"How many jumps?\" The class counts and jumps. Do it two times, then sit down.",
               "Part 2 (5 min): children draw one, two, or three balls in the empty box. They find the number word under the box (one, two, three) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter at the start. A question mark at the end of a question.\"",
               "\"Trace the words: How many?\"",
-              "\"Count the apples. How many? Three! Trace the word three.\"",
+              "\"Count the ducks. How many? Three!\"",
               "\"Stand up! How many jumps? One, two, three. Jump three times!\"",
               "\"Now draw one, two, or three balls. How many balls? Find the word and trace it.\""
             ],
             "studentActions": [
-              "Children trace the frame and the number word.",
+              "Children trace the frame and count the ducks.",
               "Children stand, count, and jump in the break.",
               "Children draw balls, then find and trace the number word."
             ],
@@ -3895,19 +3923,19 @@
           "th": {
             "teacherActions": [
               "ส่วนที่ 1 (5 นาที): เขียน \"How many?\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และเครื่องหมายคำถาม (question mark) อยู่ที่ไหน",
-              "เด็ก ๆ ลากเส้นตาม \"How many?\" ในหนังสือ จากนั้นนับแอปเปิลในภาพ และลากเส้นตามคำศัพท์ตัวเลขใต้ภาพ: three",
+              "เด็ก ๆ ลากเส้นตาม \"How many?\" ในหนังสือ จากนั้นนับเป็ดในภาพ: three",
               "พักยืนนับ (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น ครูชูนิ้วแล้วถามว่า \"How many jumps?\" (กระโดดกี่ครั้ง) ทั้งชั้นนับและกระโดด ทำ 2 รอบ แล้วนั่งลง",
               "ส่วนที่ 2 (5 นาที): เด็ก ๆ วาดลูกบอล 1, 2 หรือ 3 ลูกในช่องว่าง แล้วหาคำศัพท์ตัวเลขที่ตรงกับจำนวนลูกบอลจากคำใต้ช่อง (one, two, three) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่เครื่องหมายคำถามที่ท้ายคำถาม\"",
               "\"ลากเส้นตามคำ: How many?\"",
-              "\"นับแอปเปิล How many? Three! ลากเส้นตามคำ three\"",
+              "\"นับเป็ด How many? Three!\"",
               "\"Stand up! (ยืนขึ้น) How many jumps? (กระโดดกี่ครั้ง) One, two, three. Jump three times! (กระโดด 3 ครั้ง)\"",
               "\"ทีนี้วาดลูกบอล 1, 2 หรือ 3 ลูก How many balls? (มีลูกบอลกี่ลูก) หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
-              "เด็ก ๆ ลากเส้นตามกรอบประโยคและคำศัพท์ตัวเลข",
+              "เด็ก ๆ ลากเส้นตามกรอบประโยคและนับเป็ด",
               "เด็ก ๆ ยืน นับ และกระโดดในช่วงพัก",
               "เด็ก ๆ วาดลูกบอล แล้วหาคำศัพท์ตัวเลขและลากเส้นตาม"
             ],
@@ -4088,7 +4116,7 @@
             "teacherActions": [
               "Show the four centers and the group signs. Send each group to its first center.",
               "Groups 1 and 2 start at the letter cards and the picture sort; groups 3 and 4 at the karaoke corner and the book corner.",
-              "Hold up each sound picture card and say the word with the class: apple, ant, alligator, astronaut."
+              "Hold up each sound picture card and say the word with the class: apple, ant, axe, astronaut."
             ],
             "teacherLanguage": [
               "\"Group 1, go to the letter cards. Group 2, the picture sort.\"",
@@ -4116,13 +4144,13 @@
           "materials": [
             "center cards",
             "group signs",
-            "sound picture cards: apple, ant, alligator, astronaut"
+            "sound picture cards: apple, ant, axe, astronaut"
           ],
           "th": {
             "teacherActions": [
               "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
               "กลุ่ม 1 และ 2 เริ่มที่มุมบัตรตัวอักษรและมุมแยกภาพ กลุ่ม 3 และ 4 เริ่มที่มุมคาราโอเกะและมุมหนังสือ",
-              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: apple, ant, alligator, astronaut"
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: apple, ant, axe, astronaut"
             ],
             "teacherLanguage": [
               "\"กลุ่ม 1 ไปที่มุมบัตรตัวอักษร กลุ่ม 2 ไปที่มุมแยกภาพ\"",
@@ -4174,11 +4202,11 @@
           },
           "materials": [
             "sorting mat: /a/ / not /a/",
-            "sound picture cards: apple, ant, alligator, astronaut",
+            "sound picture cards: apple, ant, axe, astronaut",
             "picture cards: dog, sun, bus",
             "workmats (class set)",
             "letter cards (class set): a, n, n",
-            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\"",
+            "small books (each child's own): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\"",
             "class tablet",
             "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\"",
             "record sheet"
@@ -4330,15 +4358,18 @@
           "en": {
             "teacherActions": [
               "Children do the check page: in rows 1 to 3, circle the picture that starts with /a/; in rows 4 and 5, circle the word that you say. Then they write the letter a and the word \"an\".",
-              "Collect the books and mark the check."
+              "Collect the books and mark the check.",
+              "While the class does the written rows, the teacher calls one child at a time for row 8 and row 9 and ticks the box when the child is right."
             ],
             "teacherLanguage": [
               "\"Row 1: apple, dog, sun. Which one starts with /a/? Circle it.\"",
               "\"Row 2: bus, ant, fish. Which one starts with /a/? Circle it.\"",
-              "\"Row 3: pig, bed, alligator. Which one starts with /a/? Circle it.\"",
+              "\"Row 3: pig, bed, axe. Which one starts with /a/? Circle it.\"",
               "\"Row 4: an, Nan, can. Find the word Nan. Circle it.\"",
               "\"Row 5: on, I, in. Find the word in. Circle it.\"",
-              "\"Now write the letter a. Then write the word an.\""
+              "\"Now write the letter a. Then write the word an.\"",
+              "\"Row 8: Read this word: I.\"",
+              "\"Row 9: /k/ /a/ /t/. What is the word?\""
             ],
             "studentActions": [
               "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter a, and write \"an\"."
@@ -4367,15 +4398,18 @@
           "th": {
             "teacherActions": [
               "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย /a/ แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร a และคำ \"an\"",
-              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ",
+              "ขณะที่ชั้นเรียนทำแถวที่ต้องเขียน ครูเรียกเด็กมาทีละคนเพื่อทำแถว 8 และแถว 9 แล้วขีดถูกเมื่อเด็กทำถูก"
             ],
             "teacherLanguage": [
               "\"แถว 1: apple, dog, sun คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
               "\"แถว 2: bus, ant, fish คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
-              "\"แถว 3: pig, bed, alligator คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
+              "\"แถว 3: pig, bed, axe คำไหนขึ้นต้นด้วย /a/? วงกลมไว้\"",
               "\"แถว 4: an, Nan, can หาคำว่า Nan วงกลมไว้\"",
               "\"แถว 5: on, I, in หาคำว่า in วงกลมไว้\"",
-              "\"ทีนี้เขียนตัวอักษร a แล้วเขียนคำ an\""
+              "\"ทีนี้เขียนตัวอักษร a แล้วเขียนคำ an\"",
+              "\"แถว 8: อ่านคำนี้: I\"",
+              "\"แถว 9: /k/ /a/ /t/. คำนี้คือคำอะไร?\""
             ],
             "studentActions": [
               "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร a และเขียน \"an\""
@@ -4655,9 +4689,9 @@
         "pictures": [
           "pig",
           "bed",
-          "alligator"
+          "axe"
         ],
-        "answer": "alligator"
+        "answer": "axe"
       },
       {
         "kind": "circle-word",
@@ -4699,7 +4733,7 @@
     },
     "activity": {
       "en": "Put some spoons or toys on the table and ask \"How many?\" in English. Your child counts in English: \"One, two, three. Three!\" Then say \"ap, ap, apple\" and \"an, an, ant\" together.",
-      "th": "วางช้อนหรือของเล่นจำนวนหนึ่งบนโต๊ะ แล้วถามบุตรหลานเป็นภาษาอังกฤษว่า \"How many?\" ให้บุตรหลานนับเป็นภาษาอังกฤษ: \"One, two, three. Three!\" จากนั้นพูด \"ap, ap, apple\" และ \"an, an, ant\" พร้อมกับบุตรหลาน (ออกเสียง /a/ สั้น ๆ ใกล้กับเสียงสระ แอะ ไม่ใช่ชื่อตัวอักษร \"เอ\")"
+      "th": "วางช้อนหรือของเล่นจำนวนหนึ่งบนโต๊ะ แล้วถามบุตรหลานเป็นภาษาอังกฤษว่า \"How many?\" ให้บุตรหลานนับเป็นภาษาอังกฤษ: \"One, two, three. Three!\" จากนั้นพูด \"ap, ap, apple\" และ \"an, an, ant\" พร้อมกับบุตรหลาน"
     },
     "songUrl": "/th/st/2/2?part=song",
     "readAlongUrl": "/th/st/2/2?part=book"
@@ -4728,6 +4762,10 @@
     ]
   },
   "print": {
+    "checkRows": {
+      "trickyWord": "I",
+      "blendWord": "cat"
+    },
     "letterBox": {
       "letter": "a",
       "formationWords": "Start at the dot. Round to the left. Up to the top. Down.",
@@ -4735,7 +4773,7 @@
     },
     "practice": [
       { "text": "a a a", "pictureWord": "apple" },
-      { "text": "an. Nan. Nan can. I can.", "pictureWord": "Nan" }
+      { "text": "An. Nan. Nan can. I can.", "pictureWord": "Nan" }
     ],
     "dictation": {
       "letters": ["a", "a"],
@@ -4745,7 +4783,14 @@
     "writing": {
       "traceText": "How many?",
       "line": "word",
-      "pictureBox": true
+      "pictureBox": true,
+      "promptPicture": "ducks",
+      "promptAction": "look",
+      "choiceWords": [
+        "one",
+        "two",
+        "three"
+      ]
     }
   }
 }

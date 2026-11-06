@@ -179,9 +179,11 @@ describe("r2 the media list keeps every picture entry distinct", () => {
       lines: [{ text: "line", part: "verse", gesture: "wave", image: { prompt: "song" } }],
     };
     const media = mediaOf(weekSchema.parse(week));
-    expect(media.find((item) => item.kind === "book-cover")?.missing).toMatch(/cover/);
-    expect(media.find((item) => item.kind === "family-word-picture")?.missing).toMatch(/tap/);
-    expect(media.find((item) => item.kind === "song-line-picture")?.missing).toMatch(/song line 1/);
+    // The release pin ships covers for w02, so the search names the missing entry and not the
+    // first shipped cover.
+    expect(media.find((item) => item.kind === "book-cover" && item.missing)?.missing).toMatch(/cover/);
+    expect(media.find((item) => item.kind === "family-word-picture" && item.missing)?.missing).toMatch(/tap/);
+    expect(media.find((item) => item.kind === "song-line-picture" && item.missing)?.missing).toMatch(/song line 1/);
   });
 
   it("lists the same pictures with files as normal media", () => {

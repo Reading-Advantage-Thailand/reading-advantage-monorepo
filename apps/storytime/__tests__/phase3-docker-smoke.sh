@@ -5,7 +5,7 @@ set -uo pipefail
 # The image is built once and runs three checks.
 # Run 1 (production content): a draft week answers 404 with the reason draft, the
 # image lists the received weeks w01 to w08, and the shipped w01 answers with its
-# true state (ready at the pin 67be5603, so HTTP 200).
+# true state (ready at the pin 82f88853, so HTTP 200).
 # Run 1b (a broken clone mounted): a published week with a page picture without a
 # file answers 404 with the reason missing_picture. The strategy names this reason
 # for st2/1; the shipped w01 grew page picture files at the w01 approval take, so
@@ -241,7 +241,7 @@ if [ -n "$C1" ]; then
   fi
   STATUS_R="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://$PORT1/th/st/2/1")" || true
   if [ "$STATUS_R" = "200" ]; then
-    pass "The shipped w01 answers HTTP 200 (ready at the pin 67be5603)"
+    pass "The shipped w01 answers HTTP 200 (ready at the pin 82f88853)"
   else
     fail "Expected HTTP 200 for the shipped w01; got $STATUS_R"
   fi

@@ -307,6 +307,9 @@ describe("the media list keeps a picture with a file next to a picture without o
 
   it("lists the missing pages of two books once each, with the book kind", () => {
     const week = shipped("w02.json");
+    // The release pin ships page pictures for w02, so the clone drops the page files to make the
+    // missing rows this case checks.
+    for (const book of week.books) for (const page of book.pages) if (page.image) delete page.image.file;
     const media = mediaOf(weekSchema.parse(week));
     const readalong = media.filter((item) => item.missing?.endsWith("of the readalong book"));
     const decodable = media.filter((item) => item.missing?.endsWith("of the decodable book"));

@@ -8,11 +8,15 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-10-22",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82"
+      "date": "2026-11-05",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
     },
     "images": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-05",
+      "words": "\"Yes\" (2026-11-03 11:54 ICT); \"The book seems fine.\" (2026-11-05 ICT)",
+      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
       "status": "draft"
@@ -212,7 +216,8 @@
         "characters": [
           "Mia"
         ],
-        "caption": "I Can See"
+        "caption": "I Can See",
+        "file": "l2/media/w06/books/1-i-can-see/cover.jpg"
       },
       "pages": [
         {
@@ -222,7 +227,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p01.jpg"
           }
         },
         {
@@ -232,7 +238,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p02.jpg"
           }
         },
         {
@@ -242,7 +249,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p03.jpg"
           }
         },
         {
@@ -252,7 +260,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p04.jpg"
           }
         },
         {
@@ -262,7 +271,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p05.jpg"
           }
         },
         {
@@ -272,7 +282,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p06.jpg"
           }
         },
         {
@@ -282,7 +293,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p07.jpg"
           }
         },
         {
@@ -293,7 +305,8 @@
               "Pip",
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/1-i-can-see/p08.jpg"
           }
         }
       ],
@@ -853,8 +866,8 @@
         {
           "kind": "what",
           "ask": {
-            "en": "What can you see on page 4? Point and say it.",
-            "th": "เห็นอะไรในหน้า 4? ให้ชี้ที่ภาพแล้วพูดตามครู"
+            "en": "What can you see on page 6? Point and say it.",
+            "th": "เห็นอะไรในหน้า 6? ให้ชี้ที่ภาพแล้วพูดตามครู"
           },
           "answer": {
             "page": 4,
@@ -883,7 +896,8 @@
           "Pat",
           "Sam"
         ],
-        "caption": "Tap, Tap!"
+        "caption": "Tap, Tap!",
+        "file": "l2/media/w06/books/2-tap-tap/cover.jpg"
       },
       "pages": [
         {
@@ -893,7 +907,8 @@
             "characters": [
               "Pat"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p01.jpg"
           }
         },
         {
@@ -904,7 +919,8 @@
               "Sam",
               "Pat"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p02.jpg"
           }
         },
         {
@@ -915,7 +931,8 @@
               "Pat",
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p03.jpg"
           }
         },
         {
@@ -925,7 +942,8 @@
             "characters": [
               "Pat"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p04.jpg"
           }
         },
         {
@@ -935,7 +953,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p05.jpg"
           }
         },
         {
@@ -946,7 +965,8 @@
               "Sam",
               "Pat"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p06.jpg"
           }
         },
         {
@@ -957,7 +977,8 @@
               "Sam",
               "Pip"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p07.jpg"
           }
         },
         {
@@ -969,7 +990,8 @@
               "Pat",
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w06/books/2-tap-tap/p08.jpg"
           }
         }
       ],
@@ -1493,7 +1515,7 @@
     "title": "I Can See a Cat",
     "styleBrief": "Cheerful classroom animal song for a kindergarten English class, 100 bpm, C major, the melody between C4 and C5, playful and bouncy, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
     "bpm": 100,
-    "lyricSheet": "[Verse]\nI can see a cat. Meow, meow!\nI can see a dog. Woof, woof!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!\n\n[Verse]\nI can see a bird. Tweet, tweet!\nI can see a fish. Swim, swim!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!\n\n[Verse]\nI can see a frog. Hop, hop!\nI can see a duck. Quack, quack!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!",
+    "lyricSheet": "[Verse]\nI can see a cat. Meow, meow!\nI can see a dog. Woof, woof!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal! (What can you see? I can see an animal!)\n\n[Verse]\nI can see a bird. Tweet, tweet!\nI can see a fish. Swim, swim!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal! (What can you see? I can see an animal!)\n\n[Verse]\nI can see a frog. Hop, hop!\nI can see a duck. Quack, quack!\n\n[Chorus]\nTap, tap, tap! Look and see!\nWhat can you see? I can see an animal!\n\n[Chorus]",
     "lines": [
       {
         "text": "I can see a cat. Meow, meow!",
@@ -2667,7 +2689,7 @@
             ],
             "teacherLanguage": [
               "\"Here is the letter t. It says /t/.\"",
-              "\"Our new words! Read them with me: sat. Mat. Tap. Pat.\"",
+              "\"Our new words! Read them with me: Sat. Mat. Tap. Pat.\"",
               "\"Now read all the words: an, Nan, pan, nap, am, man, map, Pam, Sam, sat, mat, tap, Pat.\""
             ],
             "studentActions": [
@@ -2810,7 +2832,7 @@
             ],
             "teacherLanguage": [
               "\"Read the sounds with me: /t/, sss, mmm, /p/, /a/, nnn.\"",
-              "\"Read the words: sat. Mat. Tap. Pat.\"",
+              "\"Read the words: Sat. Mat. Tap. Pat.\"",
               "\"Read the sentences: Pat sat on a mat. He can see Sam.\""
             ],
             "studentActions": [
@@ -3633,7 +3655,8 @@
             ],
             "studentActions": [
               "Children read each page with a finger under the words.",
-              "Pairs take turns, page by page."
+              "Pairs take turns, page by page.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read \"tap\" as \"Pat\": point to the first letter and ask for its sound.",
@@ -3653,7 +3676,8 @@
             "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
           },
           "materials": [
-            "books (one for each pair): \"Tap, Tap!\""
+            "small books (each child's own): \"Tap, Tap!\"",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
@@ -3670,7 +3694,8 @@
             ],
             "studentActions": [
               "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
-              "คู่ผลัดกันอ่านทีละหน้า"
+              "คู่ผลัดกันอ่านทีละหน้า",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่าน \"tap\" เป็น \"Pat\": ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร",
@@ -3713,7 +3738,7 @@
             "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
           },
           "materials": [
-            "books (one for each pair): \"Tap, Tap!\""
+            "small books (each child's own): \"Tap, Tap!\""
           ],
           "th": {
             "teacherActions": [
@@ -3766,7 +3791,7 @@
             "th": "ทั้งชั้น"
           },
           "materials": [
-            "books (one for each pair): \"Tap, Tap!\""
+            "small books (each child's own): \"Tap, Tap!\""
           ],
           "moved": "next-opening",
           "th": {
@@ -3927,7 +3952,7 @@
             "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
           },
           "materials": [
-            "books (one for each pair): \"Tap, Tap!\"",
+            "small books (each child's own): \"Tap, Tap!\"",
             "record sheet"
           ],
           "th": {
@@ -4033,7 +4058,7 @@
           "minutes": 6,
           "en": {
             "teacherActions": [
-              "Give out the class set of \"I Can See\" (Sprout band).",
+              "Children take out their own small books.",
               "Read it together once, then pairs read it page by page."
             ],
             "teacherLanguage": [
@@ -4041,7 +4066,8 @@
               "\"Now read it with your partner. Partner A reads, partner B reads.\""
             ],
             "studentActions": [
-              "Children read \"I Can See\" together, then in pairs."
+              "Children read \"I Can See\" together, then in pairs.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read an animal word wrong: point to the picture and make the sound of the animal."
@@ -4060,11 +4086,12 @@
             "th": "ทำเป็นคู่"
           },
           "materials": [
-            "books (one for each pair): \"I Can See\""
+            "small books (each child's own): \"I Can See\" (Sprout band)",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
-              "แจกหนังสือ \"I Can See\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "เด็ก ๆ หยิบหนังสือเล่มเล็กของตัวเองออกมา",
               "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
             ],
             "teacherLanguage": [
@@ -4072,7 +4099,8 @@
               "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
             ],
             "studentActions": [
-              "เด็ก ๆ อ่าน \"I Can See\" พร้อมกัน แล้วอ่านเป็นคู่"
+              "เด็ก ๆ อ่าน \"I Can See\" พร้อมกัน แล้วอ่านเป็นคู่",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่านคำศัพท์ชื่อสัตว์ผิด: ชี้ที่ภาพ แล้วทำเสียงร้องของสัตว์ตัวนั้น"
@@ -4417,7 +4445,7 @@
             "picture cards: sun, dog, pen",
             "workmats (class set)",
             "letter cards (class set): t, s, m, p, a, n",
-            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\", \"I Have Two\", \"Sam and Pam\", \"I Can See\", \"Tap, Tap!\"",
+            "small books (each child's own): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\", \"My Family\", \"Pam\", \"I Have Two\", \"Sam and Pam\", \"I Can See\", \"Tap, Tap!\"",
             "class tablet",
             "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\", \"This Is My Family\", \"I Have Two\", \"I Can See a Cat\"",
             "record sheet"
@@ -4569,7 +4597,8 @@
           "en": {
             "teacherActions": [
               "Children do the check page: in rows 1 to 3, circle the picture that starts with /t/; in rows 4 and 5, circle the word that you say. Then they write the letter t and the word \"sat\".",
-              "Collect the books and mark the check."
+              "Collect the books and mark the check.",
+              "While the class does the written rows, the teacher calls one child at a time for row 8 and row 9 and ticks the box when the child is right."
             ],
             "teacherLanguage": [
               "\"Row 1: tiger, sun, bag. Which one starts with /t/? Circle it.\"",
@@ -4577,7 +4606,9 @@
               "\"Row 3: dog, pen, table. Which one starts with /t/? Circle it.\"",
               "\"Row 4: Pat, tap, map. Find the word tap. Circle it.\"",
               "\"Row 5: saw, see, he. Find the word see. Circle it.\"",
-              "\"Now write the letter t. Then write the word sat.\""
+              "\"Now write the letter t. Then write the word sat.\"",
+              "\"Row 8: Read this word: he.\"",
+              "\"Row 9: /t/ /e/ /n/. What is the word?\""
             ],
             "studentActions": [
               "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter t, and write \"sat\"."
@@ -4606,7 +4637,8 @@
           "th": {
             "teacherActions": [
               "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย /t/ แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร t และคำ \"sat\"",
-              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ",
+              "ขณะที่ชั้นเรียนทำแถวที่ต้องเขียน ครูเรียกเด็กมาทีละคนเพื่อทำแถว 8 และแถว 9 แล้วขีดถูกเมื่อเด็กทำถูก"
             ],
             "teacherLanguage": [
               "\"แถว 1: tiger, sun, bag คำไหนขึ้นต้นด้วย /t/? วงกลมไว้\"",
@@ -4614,7 +4646,9 @@
               "\"แถว 3: dog, pen, table คำไหนขึ้นต้นด้วย /t/? วงกลมไว้\"",
               "\"แถว 4: Pat, tap, map หาคำว่า tap วงกลมไว้\"",
               "\"แถว 5: saw, see, he หาคำว่า see วงกลมไว้\"",
-              "\"ทีนี้เขียนตัวอักษร t แล้วเขียนคำ sat\""
+              "\"ทีนี้เขียนตัวอักษร t แล้วเขียนคำ sat\"",
+              "\"แถว 8: อ่านคำนี้: he\"",
+              "\"แถว 9: /t/ /e/ /n/. คำนี้คือคำอะไร?\""
             ],
             "studentActions": [
               "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร t และเขียน \"sat\""
@@ -5167,6 +5201,10 @@
     ]
   },
   "print": {
+    "checkRows": {
+      "trickyWord": "he",
+      "blendWord": "ten"
+    },
     "letterBox": {
       "letter": "t",
       "formationWords": "Start at the dot. Down, with a little curve at the bottom. Then a short line across.",
@@ -5174,7 +5212,7 @@
     },
     "practice": [
       { "text": "t t t", "pictureWord": "tiger" },
-      { "text": "sat. Mat. Tap. Pat. Pat sat on a mat. He can see Sam.", "pictureWord": "Pat" }
+      { "text": "Sat. Mat. Tap. Pat. Pat sat on a mat. He can see Sam.", "pictureWord": "Pat" }
     ],
     "dictation": {
       "letters": ["t", "t"],
@@ -5182,9 +5220,16 @@
       "traceSentence": "Pat sat on a mat."
     },
     "writing": {
-      "traceText": "I can see a cat",
+      "traceText": "I can see a cat.",
       "line": "word",
-      "pictureBox": true
+      "pictureBox": true,
+      "promptPicture": "cat",
+      "promptAction": "color",
+      "choiceWords": [
+        "dog",
+        "fish",
+        "bird"
+      ]
     }
   }
 }

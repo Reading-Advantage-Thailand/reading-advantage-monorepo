@@ -8,11 +8,15 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-10-22",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80"
+      "date": "2026-11-05",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
     },
     "images": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-05",
+      "words": "\"Yes\" (2026-11-03 11:54 ICT); \"The book seems fine.\" (2026-11-05 ICT)",
+      "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
       "status": "draft"
@@ -208,7 +212,8 @@
           "Teacher Kim",
           "Nan"
         ],
-        "caption": "Paint!"
+        "caption": "Paint!",
+        "file": "l2/media/w03/books/1-paint/cover.jpg"
       },
       "pages": [
         {
@@ -218,7 +223,8 @@
             "characters": [
               "Pat"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p01.jpg"
           }
         },
         {
@@ -228,7 +234,8 @@
             "characters": [
               "May"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p02.jpg"
           }
         },
         {
@@ -238,7 +245,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p03.jpg"
           }
         },
         {
@@ -248,7 +256,8 @@
             "characters": [
               "Mia"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p04.jpg"
           }
         },
         {
@@ -258,7 +267,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p05.jpg"
           }
         },
         {
@@ -268,7 +278,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p06.jpg"
           }
         },
         {
@@ -278,7 +289,8 @@
             "characters": [
               "Teacher Kim"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p07.jpg"
           }
         },
         {
@@ -295,7 +307,8 @@
               "Teacher Kim",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/1-paint/p08.jpg"
           }
         }
       ],
@@ -702,8 +715,8 @@
         {
           "kind": "what",
           "ask": {
-            "en": "What color is the paint on page 4? Point and say it.",
-            "th": "สีในหน้า 4 คือสีอะไร? ให้ชี้ที่ภาพแล้วพูดตามครู"
+            "en": "What color is the paint on page 6? Point and say it.",
+            "th": "สีในหน้า 6 คือสีอะไร? ให้ชี้ที่ภาพแล้วพูดตามครู"
           },
           "answer": {
             "page": 4,
@@ -732,7 +745,8 @@
           "Ben",
           "Nan"
         ],
-        "caption": "The Pan"
+        "caption": "The Pan",
+        "file": "l2/media/w03/books/2-the-pan/cover.jpg"
       },
       "pages": [
         {
@@ -742,7 +756,8 @@
             "characters": [
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p01.jpg"
           }
         },
         {
@@ -752,7 +767,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p02.jpg"
           }
         },
         {
@@ -763,7 +779,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p03.jpg"
           }
         },
         {
@@ -774,7 +791,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p04.jpg"
           }
         },
         {
@@ -785,7 +803,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p05.jpg"
           }
         },
         {
@@ -795,7 +814,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p06.jpg"
           }
         },
         {
@@ -805,7 +825,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p07.jpg"
           }
         },
         {
@@ -817,7 +838,8 @@
               "Ben",
               "Nan"
             ],
-            "caption": ""
+            "caption": "",
+            "file": "l2/media/w03/books/2-the-pan/p08.jpg"
           }
         }
       ],
@@ -1372,7 +1394,7 @@
     "title": "It Is Red!",
     "styleBrief": "Bright classroom color song for a kindergarten English class, 96 bpm, F major, the melody between C4 and C5, happy and bouncy, one warm clear female lead with an American accent, every word slowly and clearly sung, a small group of young singers sings the chorus with the lead, ukulele, glockenspiel, hand claps, soft upright bass, dry and uncluttered. The song is about 75 seconds long.",
     "bpm": 96,
-    "lyricSheet": "[Verse]\nLook at the apple. It is red!\nLook at the sky. It is blue!\n\n[Chorus]\nPaint, paint, paint! What color is it?\nIt is red! It is blue! It is yellow, too!\n\n[Verse]\nLook at the sun. It is yellow!\nLook at the tree. It is green!\n\n[Chorus]\nPaint, paint, paint! What color is it?\nIt is red! It is blue! It is yellow, too!\n\n[Verse]\nLook at the grape. It is purple!\nLook at the flower. It is pink!\n\n[Chorus]\nPaint, paint, paint! What color is it?\nIt is red! It is blue! It is yellow, too!\n\n[Chorus]\nPaint, paint, paint! What color is it?\nIt is red! It is blue! It is yellow, too!",
+    "lyricSheet": "[Verse]\nLook at the apple. It is red!\nLook at the sky. It is blue!\n\n[Chorus]\nPaint, paint, paint! What color is it?\nIt is red! It is blue! It is yellow, too!\n\n[Verse]\nLook at the sun. It is yellow!\nLook at the tree. It is green!\n\n[Chorus]\nPaint, paint, paint! What color is it?\nIt is red! It is blue! It is yellow, too!\n\n[Verse]\nLook at the grape. It is purple!\nLook at the flower. It is pink!\n\n[Chorus]\nPaint, paint, paint! What color is it?\nIt is red! It is blue! It is yellow, too!\n\n[Chorus]",
     "lines": [
       {
         "text": "Look at the apple. It is red!",
@@ -2474,7 +2496,7 @@
             ],
             "teacherLanguage": [
               "\"Here is the letter p. It says /p/.\"",
-              "\"Our new words! Read them with me: pan. Nap.\"",
+              "\"Our new words! Read them with me: Pan. Nap.\"",
               "\"Now read all the words: an, Nan, pan, nap.\""
             ],
             "studentActions": [
@@ -2613,7 +2635,7 @@
             ],
             "teacherLanguage": [
               "\"Read the sounds with me: /p/, /a/, nnn.\"",
-              "\"Read the words: pan. Nap. An. Nan.\"",
+              "\"Read the words: Pan. Nap. An. Nan.\"",
               "\"Read the sentences: Get the pan. I can nap.\""
             ],
             "studentActions": [
@@ -3438,7 +3460,8 @@
             ],
             "studentActions": [
               "Children read each page with a finger under the words.",
-              "Pairs take turns, page by page."
+              "Pairs take turns, page by page.",
+              "Each child colors their own book."
             ],
             "watchFor": [
               "Children who read \"in\" for \"on\" on pages 3 and 4: point to the picture and ask, \"In the pan or on the pan?\" Then read the two pages again.",
@@ -3458,7 +3481,8 @@
             "th": "ทำเป็นคู่ ครูนั่งกับ 1 คู่"
           },
           "materials": [
-            "books (one for each pair): \"The Pan\""
+            "small books (each child's own): \"The Pan\"",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
@@ -3475,7 +3499,8 @@
             ],
             "studentActions": [
               "เด็ก ๆ อ่านแต่ละหน้า โดยวางนิ้วใต้คำ",
-              "คู่ผลัดกันอ่านทีละหน้า"
+              "คู่ผลัดกันอ่านทีละหน้า",
+              "เด็ก ๆ ระบายสีหนังสือเล่มเล็กของตัวเอง"
             ],
             "watchFor": [
               "เด็กที่อ่าน \"on\" เป็น \"in\" ในหน้า 3 และ 4: ชี้ที่ภาพแล้วถามว่า \"In the pan or on the pan?\" (อยู่ในกระทะหรือบนกระทะ) แล้วอ่านทั้ง 2 หน้าอีกครั้ง",
@@ -3518,7 +3543,7 @@
             "th": "ทำเป็นคู่: ผลัดกันถามคำถามคนละ 1 ข้อ"
           },
           "materials": [
-            "books (one for each pair): \"The Pan\""
+            "small books (each child's own): \"The Pan\""
           ],
           "th": {
             "teacherActions": [
@@ -3571,7 +3596,7 @@
             "th": "ทั้งชั้น"
           },
           "materials": [
-            "books (one for each pair): \"The Pan\""
+            "small books (each child's own): \"The Pan\""
           ],
           "moved": "next-opening",
           "th": {
@@ -3732,7 +3757,7 @@
             "th": "ทำเป็นคู่ ครูฟัง 1 โต๊ะ"
           },
           "materials": [
-            "books (one for each pair): \"The Pan\"",
+            "small books (each child's own): \"The Pan\"",
             "record sheet"
           ],
           "th": {
@@ -3837,7 +3862,7 @@
           "minutes": 6,
           "en": {
             "teacherActions": [
-              "Give out the class set of \"Paint!\" (Sprout band).",
+              "Children take out their own small books.",
               "Read it together once, then pairs read it page by page."
             ],
             "teacherLanguage": [
@@ -3845,7 +3870,8 @@
               "\"Now read it with your partner. Partner A reads, partner B reads.\""
             ],
             "studentActions": [
-              "Children read \"Paint!\" together, then in pairs."
+              "Children read \"Paint!\" together, then in pairs.",
+              "Each child colors the pictures in their own Paint! book with the color that each page names."
             ],
             "watchFor": [
               "Children who read a color wrong: point to the paper in the picture."
@@ -3864,11 +3890,12 @@
             "th": "ทำเป็นคู่"
           },
           "materials": [
-            "books (one for each pair): \"Paint!\""
+            "small books (each child's own): \"Paint!\" (Sprout band)",
+            "crayons"
           ],
           "th": {
             "teacherActions": [
-              "แจกหนังสือ \"Paint!\" ชุดสำหรับทั้งชั้น (ระดับ Sprout)",
+              "เด็ก ๆ หยิบหนังสือเล่มเล็กของตัวเองออกมา",
               "อ่านพร้อมกัน 1 รอบ แล้วให้คู่อ่านทีละหน้า"
             ],
             "teacherLanguage": [
@@ -3876,7 +3903,8 @@
               "\"ทีนี้อ่านกับคู่ คู่คนที่ 1 อ่าน คู่คนที่ 2 อ่าน\""
             ],
             "studentActions": [
-              "เด็ก ๆ อ่าน \"Paint!\" พร้อมกัน แล้วอ่านเป็นคู่"
+              "เด็ก ๆ อ่าน \"Paint!\" พร้อมกัน แล้วอ่านเป็นคู่",
+              "เด็ก ๆ ระบายสีภาพในหนังสือเล่มเล็ก \"Paint!\" ของตัวเอง ด้วยสีที่เขียนไว้ในแต่ละหน้า"
             ],
             "watchFor": [
               "เด็กที่อ่านชื่อสีผิด: ชี้ที่กระดาษในภาพ"
@@ -3895,27 +3923,27 @@
               "Part 1 (5 min): write \"It is ___.\" on the board. Show where the big letter and the full stop go.",
               "Children trace \"It is red.\" in the book. Then they color the apple above it red.",
               "Stand-and-point break (at minute 5): all children stand up. Say a color; children point to something of that color in the room and say \"It is red!\" Do it three times, then sit down.",
-              "Part 2 (5 min): children color the balloon in the second box red, blue, or yellow. They find the color word under the box (red, blue, yellow) and trace it."
+              "Part 2 (5 min): children draw one thing in the second box and color it red, blue, or yellow. They find the color word under the box (red, blue, yellow) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter at the start. A full stop at the end.\"",
               "\"Trace the words: It is red.\"",
               "\"Color the apple red.\"",
               "\"Stand up! Point to something red. What color is it? It is red!\"",
-              "\"Now color the balloon. What color is it? Find the word and trace it.\""
+              "\"Now draw something and color it. What color is it? Find the word and trace it.\""
             ],
             "studentActions": [
               "Children trace the frame and color the apple.",
               "Children stand, point to a color, and say \"It is ___.\" in the break.",
-              "Children color the balloon, then find and trace the color word."
+              "Children draw one thing and color it, then find and trace the color word."
             ],
             "watchFor": [
-              "Children who trace the wrong color word: point to the balloon and ask: \"What color is it?\""
+              "Children who trace the wrong color word: point to the picture and ask: \"What color is it?\""
             ]
           },
           "easier": {
-            "en": "Color the balloon with the child; the child traces the word.",
-            "th": "ระบายสีลูกโป่งพร้อมกับเด็ก แล้วให้เด็กลากเส้นตามคำ"
+            "en": "Draw and color with the child; the child traces the word.",
+            "th": "วาดและระบายสีพร้อมกับเด็ก แล้วให้เด็กลากเส้นตามคำ"
           },
           "harder": {
             "en": "The child traces the frame again on the second line and says it with a color: \"It is blue.\"",
@@ -3935,22 +3963,22 @@
               "ส่วนที่ 1 (5 นาที): เขียน \"It is ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน",
               "เด็ก ๆ ลากเส้นตาม \"It is red.\" ในหนังสือ จากนั้นระบายสีแอปเปิลที่อยู่เหนือประโยคให้เป็นสีแดง",
               "พักยืนชี้ (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น ครูพูดชื่อสี 1 สี เด็ก ๆ ชี้ของที่มีสีนั้นในห้อง แล้วพูดว่า \"It is red!\" ทำ 3 รอบ แล้วนั่งลง",
-              "ส่วนที่ 2 (5 นาที): เด็ก ๆ ระบายสีลูกโป่งในช่องที่สองเป็นสีแดง สีน้ำเงิน หรือสีเหลือง แล้วหาคำศัพท์สีใต้ช่องที่ตรงกับสีลูกโป่ง (red, blue, yellow) และลากเส้นตามคำนั้น"
+              "ส่วนที่ 2 (5 นาที): เด็ก ๆ วาดสิ่งของ 1 อย่างในช่องที่สองและระบายสีแดง สีน้ำเงิน หรือสีเหลือง แล้วหาคำศัพท์สีใต้ช่องที่ตรงกับสีที่ระบาย (red, blue, yellow) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่จุดที่ท้ายประโยค\"",
               "\"ลากเส้นตามคำ: It is red.\"",
               "\"ระบายสีแอปเปิลให้เป็นสีแดง\"",
               "\"Stand up! (ยืนขึ้น) Point to something red. (ชี้ของที่เป็นสีแดง) What color is it? It is red!\"",
-              "\"ทีนี้ระบายสีลูกโป่ง What color is it? (สีอะไร) หาคำนั้นแล้วลากเส้นตาม\""
+              "\"ทีนี้วาดสิ่งของแล้วระบายสี What color is it? (สีอะไร) หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
               "เด็ก ๆ ลากเส้นตามกรอบประโยค และระบายสีแอปเปิล",
               "เด็ก ๆ ยืน ชี้ของที่มีสีนั้น และพูดว่า \"It is ___.\" ในช่วงพัก",
-              "เด็ก ๆ ระบายสีลูกโป่ง แล้วหาคำศัพท์สีและลากเส้นตาม"
+              "เด็ก ๆ วาดสิ่งของ 1 อย่างและระบายสี แล้วหาคำศัพท์สีและลากเส้นตาม"
             ],
             "watchFor": [
-              "เด็กที่ลากเส้นตามคำศัพท์สีผิดคำ: ชี้ที่ลูกโป่งแล้วถามว่า: \"What color is it?\""
+              "เด็กที่ลากเส้นตามคำศัพท์สีผิดคำ: ชี้ที่ภาพแล้วถามว่า: \"What color is it?\""
             ]
           }
         },
@@ -4217,7 +4245,7 @@
             "picture cards: cat, sun, fish",
             "workmats (class set)",
             "letter cards (class set): p, a, n, n",
-            "books (one for each pair): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\"",
+            "small books (each child's own): \"Hello!\", \"Nan Can Nod\", \"How Many?\", \"Can I?\", \"Paint!\", \"The Pan\"",
             "class tablet",
             "karaoke videos: \"Hello, I Am Pip\", \"How Many? One, Two!\", \"It Is Red!\"",
             "record sheet"
@@ -4367,7 +4395,8 @@
           "en": {
             "teacherActions": [
               "Children do the check page: in rows 1 to 3, circle the picture that starts with /p/; in rows 4 and 5, circle the word that you say. Then they write the letter p and the word \"pan\".",
-              "Collect the books and mark the check."
+              "Collect the books and mark the check.",
+              "While the class does the written rows, the teacher calls one child at a time for row 8 and row 9 and ticks the box when the child is right."
             ],
             "teacherLanguage": [
               "\"Row 1: pen, cat, sun. Which one starts with /p/? Circle it.\"",
@@ -4375,7 +4404,9 @@
               "\"Row 3: fish, hat, pencil. Which one starts with /p/? Circle it.\"",
               "\"Row 4: pan, nap, an. Find the word nap. Circle it.\"",
               "\"Row 5: get, the, can. Find the word the. Circle it.\"",
-              "\"Now write the letter p. Then write the word pan.\""
+              "\"Now write the letter p. Then write the word pan.\"",
+              "\"Row 8: Read this word: get.\"",
+              "\"Row 9: /p/ /a/ /n/. What is the word?\""
             ],
             "studentActions": [
               "Children circle one picture in each of rows 1 to 3 and one word in each of rows 4 and 5, write the letter p, and write \"pan\"."
@@ -4404,7 +4435,8 @@
           "th": {
             "teacherActions": [
               "เด็ก ๆ ทำหน้าตรวจสอบ: แถว 1 ถึง 3 วงกลมภาพที่ขึ้นต้นด้วย /p/ แถว 4 และ 5 วงกลมคำที่ครูพูด จากนั้นเขียนตัวอักษร p และคำ \"pan\"",
-              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ"
+              "เก็บหนังสือ แล้วตรวจหน้าตรวจสอบ",
+              "ขณะที่ชั้นเรียนทำแถวที่ต้องเขียน ครูเรียกเด็กมาทีละคนเพื่อทำแถว 8 และแถว 9 แล้วขีดถูกเมื่อเด็กทำถูก"
             ],
             "teacherLanguage": [
               "\"แถว 1: pen, cat, sun คำไหนขึ้นต้นด้วย /p/? วงกลมไว้\"",
@@ -4412,7 +4444,9 @@
               "\"แถว 3: fish, hat, pencil คำไหนขึ้นต้นด้วย /p/? วงกลมไว้\"",
               "\"แถว 4: pan, nap, an หาคำว่า nap วงกลมไว้\"",
               "\"แถว 5: get, the, can หาคำว่า the วงกลมไว้\"",
-              "\"ทีนี้เขียนตัวอักษร p แล้วเขียนคำ pan\""
+              "\"ทีนี้เขียนตัวอักษร p แล้วเขียนคำ pan\"",
+              "\"แถว 8: อ่านคำนี้: get\"",
+              "\"แถว 9: /p/ /a/ /n/. คำนี้คือคำอะไร?\""
             ],
             "studentActions": [
               "เด็ก ๆ วงกลมภาพแถวละ 1 ภาพในแถว 1 ถึง 3 และวงกลมคำแถวละ 1 คำในแถว 4 และ 5 แล้วเขียนตัวอักษร p และเขียน \"pan\""
@@ -4824,7 +4858,7 @@
     "words": [
       "pen",
       "pear",
-      "cup"
+      "pencil"
     ],
     "line": {
       "en": "This week, your child learns the sound /p/, as in \"pen\". It is a small puff of air, close to the Thai letter พ, with no \"uh\" after it. Your child also learns to say colors in English: \"It is red.\"",
@@ -4864,6 +4898,10 @@
     ]
   },
   "print": {
+    "checkRows": {
+      "trickyWord": "get",
+      "blendWord": "pan"
+    },
     "letterBox": {
       "letter": "p",
       "formationWords": "Start at the dot. Down, down, below the line. Back up to the top. Round to the right, and back to the stick.",
@@ -4871,7 +4909,7 @@
     },
     "practice": [
       { "text": "p p p", "pictureWord": "pen" },
-      { "text": "pan. Nap. An. Nan. Get the pan. I can nap.", "pictureWord": "pan" }
+      { "text": "Pan. Nap. An. Nan. Get the pan. I can nap.", "pictureWord": "pan" }
     ],
     "dictation": {
       "letters": ["p", "p"],
@@ -4879,9 +4917,16 @@
       "traceSentence": "Get the pan."
     },
     "writing": {
-      "traceText": "It is red",
+      "traceText": "It is red.",
       "line": "word",
-      "pictureBox": false
+      "pictureBox": true,
+      "promptPicture": "apple",
+      "promptAction": "color",
+      "choiceWords": [
+        "red",
+        "blue",
+        "yellow"
+      ]
     }
   }
 }
