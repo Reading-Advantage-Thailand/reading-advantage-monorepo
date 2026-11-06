@@ -108,12 +108,12 @@ export function StorytimeSong({
     <div className="flex flex-col gap-4">
       <div className="song-stage" data-phone={phone ? "true" : "false"}>
         {hasVideo ? (
-          // F280: a landscape phone caps the stage so the play control stays inside the
-          // viewport. The cap keeps the 16:9 shape. The query holds only below 500 px of
-          // height AND in landscape orientation, so a short desktop window and a portrait
-          // phone with a soft keyboard (F290) keep the full-size box, and the measured phone
-          // 9:16 and laptop 16:9 boxes stay as they are. The important flags override the
-          // .song-stage video rule of globals.css.
+          // F280: a landscape screen below 500 px of height caps the stage so the play control
+          // stays inside the viewport; a short desktop window is landscape, so it gets the cap
+          // too (F350). The cap keeps the 16:9 shape. A portrait phone with a soft keyboard
+          // (short but not landscape) keeps the full-size box, and the measured phone 9:16 and
+          // laptop 16:9 boxes stay as they are. The important flags override the .song-stage
+          // video rule of globals.css.
           <video
             ref={(node) => {
               mediaRef.current = node;

@@ -343,6 +343,41 @@ async function controlRightAtLandscape(pg, selector) {
     };
   }, selector);
 }
+// Every interactive element of a screen at 844x390 (finding F360): the bottom and the right
+// edge of each `a`, `button`, `[role=button]`, and `[data-word]` must stay inside the
+// viewport, so no child-facing control sits below the fold or past the right edge in
+// landscape. The live rows and the self-test share it; `outside` counts the elements that
+// fail either edge and `outsideList` names them, so a fail shows which element must move.
+async function allControlsAtLandscape(pg) {
+  await pg.setViewportSize({ width: 844, height: 390 });
+  // The pictures are lazy; measure only after every image has loaded, or the layout is still
+  // short and an element would pass before the picture takes its height.
+  await pg
+    .waitForFunction(() => [...document.images].every((img) => img.complete), undefined, { timeout: 10000 })
+    .catch(() => {});
+  await pg.waitForTimeout(50);
+  return pg.evaluate(() => {
+    const viewportH = Math.round(window.innerHeight);
+    const viewportW = Math.round(window.innerWidth);
+    let count = 0;
+    let outside = 0;
+    let maxBottom = 0;
+    let maxRight = 0;
+    const outsideList = [];
+    for (const el of document.querySelectorAll('a[href], button, [role="button"], [data-word]')) {
+      const rect = el.getBoundingClientRect();
+      if (!(rect.width > 0 && rect.height > 0)) continue;
+      count += 1;
+      maxBottom = Math.max(maxBottom, Math.round(rect.bottom));
+      maxRight = Math.max(maxRight, Math.round(rect.right));
+      if (Math.round(rect.bottom) > viewportH || Math.round(rect.right) > viewportW) {
+        outside += 1;
+        outsideList.push(`${el.tagName.toLowerCase()}[${(el.getAttribute('aria-label') ?? el.textContent ?? '').trim().slice(0, 16)}] bottom=${Math.round(rect.bottom)} right=${Math.round(rect.right)}`);
+      }
+    }
+    return { viewportH, viewportW, count, outside, maxBottom, maxRight, outsideList };
+  });
+}
 async function watchNetwork(page) {
   const requests = [];
   const transfers = [];
@@ -390,6 +425,9 @@ try {
     // F320 self-test page: a row of two tiles whose minimum widths push the second tile past
     // the 844 px right edge, so the shared right-edge check must reject it.
     ['/wide-row', '<!doctype html><style>.row{display:flex;gap:12px}</style><div class="row"><button style="min-width:500px;height:60px">a</button><button style="min-width:500px;height:60px">b</button></div>'],
+    // F360 self-test page: one interactive element sits below the 390 px fold, so the shared
+    // all-controls check must reject the page.
+    ['/below-fold', '<!doctype html><div style="height:600px;background:#eee"></div><button>late</button>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -420,7 +458,8 @@ try {
     ['a button with no visible focus indicator (focus_visible_failures)', '/no-focus-ring', async p => { const out = await focusVisibleFailures(p); console.log(`selftest focus_visible_failures=${out.failures.length} (targets=${out.count})`); return out.failures.length === 0; }],
     ['controls below the fold at 844x390 (landscape_controls_visible)', '/tall-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
     ['no player control found at 844x390 (landscape_controls_visible)', '/no-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
-    ['a tile row wider than the viewport at 844x390 (landscape_row_right_edge)', '/wide-row', async p => { const info = await controlRightAtLandscape(p, '.row > button'); console.log(`selftest landscape_row_right_edge=${info.count > 0 && info.right > 0 && info.right <= info.viewport} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`); return info.count > 0 && info.right > 0 && info.right <= info.viewport; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
+    ['a tile row wider than the viewport at 844x390 (landscape_row_right_edge)', '/wide-row', async p => { const info = await controlRightAtLandscape(p, '.row > button'); console.log(`selftest landscape_row_right_edge=${info.count > 0 && info.right > 0 && info.right <= info.viewport} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`); return info.count > 0 && info.right > 0 && info.right <= info.viewport; }],
+    ['an interactive element below the fold at 844x390 (all_controls_visible)', '/below-fold', async p => { const info = await allControlsAtLandscape(p); console.log(`selftest all_controls_visible=${info.count > 0 && info.outside === 0} (controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}, viewport_px=${info.viewportH})`); return info.count > 0 && info.outside === 0; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
     ['a pause 48 ms before the cut end (word cut early rule)', '/button', async () => { const v = wordCutVerdict(0.34 - 0.048, 0.34); console.log(`selftest word_cut_early_ms=${v.early}`); return v.earlyOk; }],
     ['a pause at the cut end passes both word cut rules', '/button', async () => { const v = wordCutVerdict(0.34, 0.34); console.log(`selftest word_cut signed=${v.signedPauseDeltaMs} overshoot=${v.overshoot} early=${v.early}`); return !(v.overshootOk && v.earlyOk); }],
   ]) {
@@ -541,6 +580,20 @@ try {
     const value = await page.locator('.song-stage').evaluate(e => { const r=e.getBoundingClientRect(); return Math.round(r.width/r.height*1000); });
     console.log(`video_box_ratio_x1000_laptop=${value}`);
     return { ok: Math.abs(value-1778)<=5, detail: `video_box_ratio_x1000_laptop=${value}` };
+  });
+  // The song cap holds only in landscape below 500 px of height (finding F330): at a short
+  // portrait viewport the video keeps its full 9:16 box, so the orientation clause is load
+  // bearing. A deleted clause re-caps the box at 176 px here and this row fails.
+  await runCheck('song video is not capped at a short portrait viewport (390x400)', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    await page.setViewportSize({ width: 390, height: 400 });
+    await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
+    const box = await page.locator('section[data-part="song"] video').evaluate(e => {
+      const r = e.getBoundingClientRect();
+      return { height: Math.round(r.height), width: Math.round(r.width), ratio: Math.round(r.width / r.height * 1000) };
+    });
+    console.log(`song_video_fullsize_short_portrait=${box.height > 177} (video_height_px=${box.height}, video_width_px=${box.width}, video_ratio_x1000=${box.ratio}, cap_px=176)`);
+    return { ok: box.height > 177, detail: `video_height_px=${box.height}, cap_px=176` };
   });
   // The P3.6 rows (findings F125, F121 live, F120 live, F123 live). Each row prints a labeled
   // value. Every rule that a synthetic page or value can exercise has a self-test in the
@@ -722,6 +775,40 @@ try {
       return { ok, detail: `control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport}` };
     });
   }
+
+  // One all-controls row per at-home screen at 844x390 (finding F360, the F150 class): every
+  // interactive element (`a`, `button`, `[role=button]`, `[data-word]`) ends inside the
+  // viewport on the bottom and the right edge, so no child-facing control sits below the fold
+  // in landscape. The rows print `controls_found` and the number of elements outside, with the
+  // first offenders named, so a fail shows which element must move.
+  const allControlsCheck = async (name, open) => {
+    await runCheck(`all_controls_visible on the ${name} screen at 844x390`, async () => {
+      if (!page) throw new Error('Browser page is unavailable');
+      await open();
+      const info = await allControlsAtLandscape(page);
+      const ok = info.count > 0 && info.outside === 0;
+      console.log(`all_controls_visible_${name}=${ok} (controls_found=${info.count}, controls_outside=${info.outside}, outside=${JSON.stringify(info.outsideList.slice(0, 4))}, max_bottom_px=${info.maxBottom}, max_right_px=${info.maxRight}, viewport_px=${info.viewportH}x${info.viewportW})`);
+      return { ok, detail: `controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}` };
+    });
+  };
+  await allControlsCheck('week', async () => {
+    await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
+  });
+  await allControlsCheck('reader', async () => {
+    await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
+  });
+  await allControlsCheck('endofbook', async () => {
+    await reachEndOfBook('th');
+  });
+  await allControlsCheck('decodable', async () => {
+    await page.goto(`${base}/th/st/2/1?part=decodable`, { waitUntil: 'networkidle' });
+  });
+  await allControlsCheck('song', async () => {
+    await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
+  });
+  await allControlsCheck('question', async () => {
+    if (!(await questionScreen())) throw new Error('the question screen did not render');
+  });
 
   // reduced_motion_transition_ms: 0 on the marks with reducedMotion reduce.
   await runCheck('reduced_motion_transition_ms is 0 on the marks', async () => {

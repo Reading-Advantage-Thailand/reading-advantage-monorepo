@@ -482,7 +482,10 @@ export function StorytimeDecodable({
   const labels = labelsFor(locale, labelOverrides);
 
   return (
-    <div className="flex flex-col gap-4" data-phoneme-bank={PHONEME_BANK_COUNT}>
+    <div
+      className="flex flex-col gap-4 [@media(max-height:500px)]:gap-2"
+      data-phoneme-bank={PHONEME_BANK_COUNT}
+    >
       <audio ref={phonemeRef} preload="none" onError={() => setFailed(true)} />
       <audio
         ref={wholeRef}
@@ -548,52 +551,56 @@ export function StorytimeDecodable({
           </p>
         </section>
       ) : null}
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          aria-label={labels.previousPage}
-          disabled={pageIndex === 0}
-          onClick={() => {
-            stopBlendSequence();
-            setPageIndex((index) => Math.max(0, index - 1));
-          }}
-          className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
-        >
-          ←
-        </button>
-        <button
-          type="button"
-          aria-label={labels.nextPage}
-          disabled={!decodable || pageIndex >= decodable.pages.length - 1}
-          onClick={() => {
-            stopBlendSequence();
-            setPageIndex((index) => Math.min((decodable?.pages.length ?? 1) - 1, index + 1));
-          }}
-          className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
-        >
-          →
-        </button>
+      {/* F360: in landscape the page arrows and the tricky words share one row, so the
+      tricky-word buttons stay inside the 390 px viewport; portrait keeps the column. */}
+      <div className="flex flex-col gap-4 [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-start [@media(max-height:500px)]:gap-3">
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            aria-label={labels.previousPage}
+            disabled={pageIndex === 0}
+            onClick={() => {
+              stopBlendSequence();
+              setPageIndex((index) => Math.max(0, index - 1));
+            }}
+            className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            aria-label={labels.nextPage}
+            disabled={!decodable || pageIndex >= decodable.pages.length - 1}
+            onClick={() => {
+              stopBlendSequence();
+              setPageIndex((index) => Math.min((decodable?.pages.length ?? 1) - 1, index + 1));
+            }}
+            className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+          >
+            →
+          </button>
+        </div>
+        {tricky.length > 0 ? (
+          <section aria-label={labels.trickyWords} className="flex flex-col gap-2">
+            <h2 className="text-lg font-semibold [@media(max-height:500px)]:text-sm" lang="en">
+              {labels.trickyWords}
+            </h2>
+            <ul className="flex flex-wrap gap-2">
+              {tricky.map((word) => (
+                <li key={word}>
+                  <button
+                    type="button"
+                    onClick={() => onWordTap(word)}
+                    className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-neutral-300 px-4"
+                  >
+                    {word.toUpperCase()}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
       </div>
-      {tricky.length > 0 ? (
-        <section aria-label={labels.trickyWords} className="flex flex-col gap-2">
-          <h2 className="text-lg font-semibold" lang="en">
-            {labels.trickyWords}
-          </h2>
-          <ul className="flex flex-wrap gap-2">
-            {tricky.map((word) => (
-              <li key={word}>
-                <button
-                  type="button"
-                  onClick={() => onWordTap(word)}
-                  className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-neutral-300 px-4"
-                >
-                  {word.toUpperCase()}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
       {failed ? (
         <p role="alert" lang={locale} className="text-red-700">
           {labels.audioError}
