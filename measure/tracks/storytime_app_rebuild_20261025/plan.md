@@ -821,7 +821,7 @@ Green builds to these rules:
 - No build ran and no browser check ran.
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
-- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (line 862).
+- [x] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line). Done: the closeout gate code HEAD `4b980126c` — every item 1 to 6 of the Closeout gate (Phase 3 checkpoint) exits 0 on that ONE HEAD; see the `#### Phase 3 closeout gate (turn 9, HEAD 4b980126c)` sub-block. The round 6 reviews passed at `acf0d591d` (`measure/runs/storytime_app_rebuild_20261025/review-a-acf0d591d.json`, `review-b-acf0d591d.json`, `review-c-acf0d591d.json`). The round 7 reviews, the adversarial record, the UX browser review, and the phase acceptance follow this commit. The checkpoint marker stays the orchestrator's (the rule sits in `### Phase 3 task 3.7 phase check evidence`). The round 7 reviews passed at `ad4b96d2f` (`measure/runs/storytime_app_rebuild_20261025/review-a-ad4b96d2f.json`, `review-b-ad4b96d2f.json`, `review-c-ad4b96d2f.json`).
 
 #### Phase 3 closeout gate (turn 9, HEAD 4b980126c)
 
@@ -850,7 +850,39 @@ Green builds to these rules:
   happened and was not run.
 - Item 7 (the change-quality review, Review B, Review C, and the adversarial record) is the
   orchestrator's: the round 7 reviews, the adversarial role, and the UX browser review run
-  after this commit. The checkpoint marker stays the orchestrator's (line 862).
+  after this commit. The checkpoint marker stays the orchestrator's (the rule sits in
+  `### Phase 3 task 3.7 phase check evidence`).
+
+#### Turn 10 Green evidence (review round 7)
+
+- Base: `ad4b96d2f`; the round 7 reviews passed there (Review A with F180, Review B with no
+  finding, Review C with F200 and F201). Gate HEAD:
+  `a2b049d8eea619ce7cb9d6b3bcd4bf6acfac4548`, one HEAD for every gate below.
+- F180 (plan pointers). Cause: the task 3.7 line and the closeout sub-block pointed to
+  "(line 862)"; the marker sentence sits under a heading, and its old copy read "Task 3.7
+  stays `[~]`", which contradicts `[x]`. Fix (this docs commit): both pointers name
+  `### Phase 3 task 3.7 phase check evidence` (no line number), and the old sentence reads
+  "At that turn, task 3.7 stayed `[~]`" with the rest unchanged. Proof: no "(line 862)"
+  remains, and the two pointers name a heading that holds the marker rule.
+- F201 (the 404 no-cookie row). Cause: the 404 answer had no labeled no-cookie value, and
+  the self-test did not name the 404 row. Fix `a2b049d8e`: the row reuses
+  `week_no_cookie_ok`, prints `404_no_set_cookie=1 (status=404, curl_rc=0)` on the passing
+  path (and `0` with the reason on a failure), and a new self-test case proves that a
+  Set-Cookie answer to the 404 path fails the row. Proof: `--self-test` exits 0 with 7
+  cases, including "a 404 answer with Set-Cookie fails the 404 no-cookie row"; the smoke row
+  prints `404_no_set_cookie=1 (status=404, curl_rc=0)`.
+- F200 is a docs-only strategy label; the docs session closes it. No code change here.
+- Gates on `a2b049d8e` (each through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, or the script plain where it
+  enters heavy-run itself, one at a time):
+  | # | Item | Command | Exit | Counts |
+  |---|------|---------|------|--------|
+  | 1 | the Docker smoke (P3 form; `df -h /` first) | `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase3-docker-smoke.sh` | 0 | PASS=19, FAIL=0; `404_no_set_cookie=1 (status=404, curl_rc=0)`; 14 GB free at the start (above the 12 GB floor) |
+  | 2 | the smoke-cleanup test | `bash apps/storytime/__tests__/phase1-smoke-cleanup.test.sh` | 0 | PASS=32, FAIL=0 |
+  | 3 | the Phase Red command (line 328) with `CI=true` | `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along` | 0 | 38 files, 334 tests |
+- No app code changed, so the browser gate and `build-graph` need no rerun. No server ran
+  outside heavy-run. Ports 3940 to 3960 were free before and after.
 
 #### Owner look approval (2026-11-06)
 
@@ -888,7 +920,7 @@ Green builds to these rules:
 - Item 5 (the receiver at the recorded pin): `node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit 67be5603e0410f21491a006b8e9d12f3f9dd1bfc --weeks 1-8 && git diff --exit-code apps/storytime/content`. Start 05:17:05Z. Exit 0. 8 weeks, 179 media files, 159 missing pictures; w01 ready; the content diff is empty.
 - Item 6 (the graph update, A10): `build-graph update ./graph.db <41 phase 3 files>`; then `build-graph search ./graph.db readinessBlocker` and `readAlongQuestions`. Start 05:24:26Z. Exit 0. 305 to 541 nodes and 350 to 629 edges; both exports found.
 - Item 7 (the change-quality review, Reviews B and C, and the adversarial record) is the orchestrator's role. Green did not run it.
-- Task 3.7 stays `[~]`. The checkpoint marker is the orchestrator's, after the Phase 3 reviews and the phase acceptance.
+- At that turn, task 3.7 stayed `[~]`. The checkpoint marker is the orchestrator's, after the Phase 3 reviews and the phase acceptance.
 
 ### Phase 3 review remediation evidence
 
