@@ -61,7 +61,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Storytime at-home release (weeks 1 to 7 in the app)** — *created 2026-11-06*
   *Link: [./tracks/storytime_at_home_release_20261106/](./tracks/storytime_at_home_release_20261106/)*
-  *Status: active, opened 2026-11-06; Phase 1 (receive the Workbooks 82f88853 week packages) waits for the parent Phase 3 checkpoint | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`)*
+  *Status: active, opened 2026-11-06; Phase 1 received locally at f2989514d, not deployed | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`)*
   *Note: PM decision 2026-11-05 moved tasks 3.10 and 3.11 of the parent here. PM hand-off 2026-11-06: 7 week packages from Workbooks commit 82f88853. Dependency: Red and Green of Phase 1 start after the parent Phase 3 heading carries its checkpoint. No push and no deploy without Daniel's word.*
 
 

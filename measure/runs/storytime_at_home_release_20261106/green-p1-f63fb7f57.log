@@ -1,0 +1,63 @@
+# Green log - Phase 1 - track storytime_at_home_release_20261106
+
+Role base: `f63fb7f579c1eb5f9bb0f3946347feec021ed6b3`. Phase base: `22ec08bb0eb924e296e67d18a0766f8154e9d945`.
+The Red commit `6cbfd0c9c` sits inside `phase_base_sha..HEAD`. Receipt commit: `f2989514d7f05c2a98c2661e1c6138249e64661f`.
+
+## Task 1.4 - receiver at the new pin
+
+- Pre-check: `content_dirty_lines=0 leftovers=0`.
+- Receiver exit 0 at `82f88853615f2925d8f1c12b4571790305224178`, weeks 1 to 8.
+- Week lines: w01 `42 media files, 6 missing pictures; ready`; w02 `41, 10; not ready`; w03 `40, 7; not ready`; w04 `36, 7; not ready`; w05 `42, 7; not ready`; w06 `39, 7; not ready`; w07 `40, 7; not ready`; w08 `7, 0; not ready`.
+- `Not ready for the at-home app:` lists 7 paths (w02 to w08).
+- Last line: `record 8 weeks; this run 8 weeks, 287 media files, 51 missing pictures`. `<M>=287`, `<X>=51`.
+- Media cross-check: `receiver_media_not_in_manifest=0`; `manifest_media_not_listed=2` per folder (`w0n.json` and `pictures.sha256`).
+- Falsification: `git diff --exit-code HEAD -- apps/storytime/content` exits 1 before the receipt commit (9 dirty paths).
+
+## Task 1.5 - receipt commit
+
+- One commit by pathspec: `f2989514d7f05c2a98c2661e1c6138249e64661f`. `receipt_paths=12`.
+- 10 planned paths plus 2 test files whose old-content expectations the new pin changed:
+  - `apps/storytime/__tests__/phase2-adversarial.test.ts` - the case read missing page pictures of shipped w02; the new pin ships them, so the clone drops the page files before the check.
+  - `apps/storytime/__tests__/phase2-adversarial-r2.test.ts` - the case searched the first `book-cover` entry; the new pin ships covers, so the search names the missing entry.
+- No media file in the commit. No path under `lib`, `app`, `scripts`, or `packages`.
+
+## Task 1.6 - byte-equal checks
+
+- `weeks_equal=8`, `weeks_equal_handoff=7` (w01 from `w01-storytime-app-package-r2`).
+- `media_named=280 media_in_manifest=280 media_diff=0`.
+- `w08_changed_lines=8` (`alligator` to `axe`; `nnn`, `mmm`, `sss` to `/n/`, `/m/`, `/s/`).
+- Broken copies: a scratch copy of w05 with one changed byte gives `cmp` exit 1; w02 against `67be5603` gives `cmp` exit 1. Scratch folder removed. No write in `~/Desktop/handoff` or `~/Desktop/Workbooks`.
+
+## Task 1.7 - green tests and the receiver gate
+
+- Targeted Green command exits 0: `files=59 tests_passed=452 tests_failed=0 tests_skipped=0`.
+- `tsc --noEmit` exits 0. ESLint on the 5 test files exits 0.
+- Receiver gate bound to the receipt commit: `content_last_commit=f2989514d7f05c2a98c2661e1c6138249e64661f`; `content_dirty_lines=0` before and after; second receiver run exits 0; `git diff --exit-code apps/storytime/content` exits 0; `git diff --cached --exit-code apps/storytime/content` exits 0.
+
+## Task 1.8 - phase check
+
+- `bash apps/storytime/__tests__/phase1-quality-gates.sh` exits 0 with `=== Total: 2 checks (PASS=2, FAIL=0) ===`.
+- `rg -n '67be5603' apps/storytime` exits 1.
+- `git diff --stat 22ec08bb0..HEAD -- apps/primary-advantage apps/storytime/lib apps/storytime/app apps/storytime/scripts packages` is empty.
+- `git worktree list` holds 8 entries. `build-graph update` is not needed (no export and no signature changed, A10).
+- `rg -n 'measure/tracks' apps/storytime/__tests__` exits 1 (A9).
+- Browser gate not run: no app code, no route, no media file.
+
+## Plan and registry
+
+- Plan tasks 1.3 to 1.8 are `[x]` with commit and counts. `measure/tracks.md` names the state `received locally at f2989514d, not deployed`.
+- Review A, the adversarial round, and the phase acceptance follow this log. The checkpoint follows them.
+
+MEASURE_AGENT_RESULT
+role: measure-green
+status: complete
+track: storytime_at_home_release_20261106
+phase: Phase 1: Receive the Workbooks 82f88853 week packages
+commits: f2989514d (receipt); the plan-evidence commit that carries this log sits directly above it on master
+tests_run: targeted Green command exit 0 (files=59 tests_passed=452 tests_failed=0 tests_skipped=0); tsc --noEmit exit 0; ESLint exit 0; receiver exit 0 twice; receiver gate diff checks exit 0; phase1-quality-gates.sh exit 0 (PASS=2, FAIL=0)
+files_changed: apps/storytime/content/l2/w01.json to w08.json, apps/storytime/content/source.json, apps/storytime/__tests__/phase3-docker-smoke.sh, apps/storytime/__tests__/phase2-adversarial.test.ts, apps/storytime/__tests__/phase2-adversarial-r2.test.ts
+plan_updates: 1.3 [x], 1.4 [x], 1.5 [x], 1.6 [x], 1.7 [x], 1.8 [x]; tracks.md names "received locally at f2989514d, not deployed"
+known_failures: none
+handoff: Review A on the 12-path diff of the receipt commit f2989514d, then the focused adversarial round, then the phase acceptance, then the checkpoint. The two extra test paths carry one reason line each in the plan Green evidence. The question for the orchestrator: the orchestrator decision fixed receipt_paths=10, but the full suite exposed 2 old-content test expectations that the plan task 1.3 mandates Green to change; the default is to keep the 12-path single receipt commit.
+dispositions: none
+END_MEASURE_AGENT_RESULT
