@@ -394,7 +394,7 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 
 | Check | Test | Class | Falsification condition |
 |---|---|---|---|
-| Tap target floor: 44 px on every interactive element of the at-home screens (words, sentences, arrows, play, speed, skip). The entry tiles, the speakers, and the question pictures keep the 64 px of AC-5.2 | Browser gate: `tap_target_min_px_entry`, `tap_target_min_px_player` (both labeled integers, portrait and landscape) | live | One element is 30 px and the gate passes. The self-test page with a 30 px button must fail. |
+| Tap target floor: 44 px on every interactive element of the at-home screens (words, sentences, arrows, play, speed, skip). The entry tiles, the speakers, and the question pictures keep the 64 px of AC-5.2 | Browser gate: `tap_target_min_px_tiles_<w>x<h>` and `tap_target_min_px_speakers_<w>x<h>` (64 px); `tap_target_min_px_player_<screen>_<w>x<h>` and `tap_target_min_px_player_question_<w>x<h>` (44 px; both labeled integers, portrait and landscape) | live | One element is 30 px and the gate passes. The self-test page with a 30 px button must fail. |
 | Contrast of the current word and of each highlight state: 4.5 to 1 or more (white on blue-500 is 3.71 to 1 today) | Browser gate: `contrast_min_ratio_x100` from computed colors, one value for each state of `HIGHLIGHT_CLASSES` | live | The current word keeps `#3080ff` and the gate passes. The self-test page with white on `#3080ff` must fail. |
 | `lang="en"` on English text inside Thai pages, and `lang="th"` on Thai text | `phase3-home-card.test.tsx` and `phase3-readalong-ui.test.tsx`: every element that holds book text, lyrics, home words, or `ask.en` has `lang="en"` as its nearest `lang`; `home.line.th` and `ask.th` have `lang="th"` | live (jsdom, no layout needed) | The passage `<p>` has no `lang` and the test passes. |
 | Alt text for pictures | `phase3-home-card.test.tsx`: no `<img>` on an at-home screen lacks an `alt` attribute (`img_without_alt_attr=0`). A picture with a non-empty `caption` uses it as `alt`. A picture with an empty `caption` has `alt=""` and sits next to its text | live | An `<img>` without `alt` passes. The count line has no label. |
@@ -448,11 +448,13 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | AC-2.1 404 | An unknown, draft, or not-ready week answers HTTP 404. An invalid locale answers 404 | A draft week renders (A2) |
 | AC-5.4 and F53 readiness | `isWeekReady(week)` returns not ready for shipped w01 (16 pages without a file) and ready for the clone. The receiver imports the same function for its missing list. The log reason is one of `missing_picture`, `draft`, `absent`, `invalid` | The function returns ready for shipped w01 |
 | AC-5.4 note, 2026-11-05 (PM) | The row above is replaced for the pin `67be5603`: shipped w01 is ready, so `isWeekReady` returns ready for it. The not-ready case uses a clone of w01 with the page picture `file` field deleted (see the smoke run 1b) | The not-ready test reads shipped w01 and expects not ready |
-| AC-5.1 public | The route needs no login. The metadata has `noindex`. No `Set-Cookie` on the 200, the 404, and the redirect (live check in the Docker smoke run 2 and the browser gate: `set_cookie_headers=0`) | The next-intl middleware sets `NEXT_LOCALE` |
+| AC-5.1 public | The route needs no login. The metadata has `noindex`. The Docker smoke run 2 checks no `Set-Cookie` on the 200 (`The week page sends no Set-Cookie header`), the redirect (`The locale redirect answers HTTP 307 with no Set-Cookie header`), and the 404 (`404_no_set_cookie=1`), under `week_no_cookie_ok` | The next-intl middleware sets `NEXT_LOCALE` |
 | 404 view language | The not-found view under a valid locale has a non-empty `lang` and Thai and English text | `lang=""` |
 | F70 manifest | `phase3-manifest.test.ts`: the app manifest declares `tsx` and the test libraries (P3.5) with `catalog:` | `tsx` is missing |
 | F6 scanner | The boundary scanner flags the bare package names | `from "primary-advantage"` passes |
 | P1 replacement | The old test "answers with notFound for every week before Phase 3" is replaced in the same commit | The old test still stands |
+
+Label note (2026-11-06, Review C round 7, F200 and F201): the rows above name the labels that the gates print.
 
 **Task 3.8 part 1 (loop contract, F99, receiver):**
 
