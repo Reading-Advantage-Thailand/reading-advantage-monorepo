@@ -17,14 +17,23 @@ const HAVE_METADATA = 1;
  * returns false.
  * @param audio The media element to seek.
  * @param time The playback time in seconds.
+ * @param onQueued Reports the cancel of a queued seek. It runs only when the
+ *   seek waits for metadata; the cancel removes that listener, so a later load
+ *   does not seek to the old time (finding F260). Callers that do not pass it
+ *   keep the old behavior.
  * @returns True when the element seeked at once.
  */
-export function seekOrWait(audio: HTMLAudioElement, time: number): boolean {
+export function seekOrWait(
+  audio: HTMLAudioElement,
+  time: number,
+  onQueued?: (cancel: () => void) => void,
+): boolean {
   if (audio.readyState < HAVE_METADATA) {
     const applySeek = () => {
       audio.currentTime = time;
     };
     audio.addEventListener("loadedmetadata", applySeek, { once: true });
+    onQueued?.(() => audio.removeEventListener("loadedmetadata", applySeek));
     return false;
   }
   audio.currentTime = time;
