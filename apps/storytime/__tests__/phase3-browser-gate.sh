@@ -278,9 +278,13 @@ async function controlBottomAtLandscape(pg) {
   await pg.waitForTimeout(50);
   return pg.evaluate(() => {
     let bottom = 0;
+    let count = 0;
     for (const el of document.querySelectorAll('div.flex.flex-wrap.gap-2 > button')) {
       const rect = el.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) bottom = Math.max(bottom, rect.bottom);
+      if (rect.width > 0 && rect.height > 0) {
+        count += 1;
+        bottom = Math.max(bottom, rect.bottom);
+      }
     }
     const picture = document.querySelector('img');
     const sections = [...document.querySelectorAll('section')].map((el) => ({
@@ -289,6 +293,7 @@ async function controlBottomAtLandscape(pg) {
     }));
     return {
       bottom: Math.round(bottom),
+      count,
       viewport: Math.round(window.innerHeight),
       picture: picture ? Math.round(picture.getBoundingClientRect().height) : 0,
       sections,
@@ -336,6 +341,9 @@ try {
     // F150 self-test page: a tall block pushes its player control below the 390 px landscape
     // viewport, so the shared landscape check must reject it.
     ['/tall-controls', '<!doctype html><div style="height:600px;background:#eee"></div><div class="flex flex-wrap gap-2"><button>go</button></div>'],
+    // F154 self-test page: no player control matches the row selector, so the check must
+    // reject the page instead of passing with control_bottom_px=0.
+    ['/no-controls', '<!doctype html><div class="flex flex-wrap gap-2"></div><p>no controls</p>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -364,7 +372,8 @@ try {
     ['two elements with one id (duplicate_ids)', '/duplicate-id', async p => { const counts = await duplicateIdCount(p); console.log(`selftest duplicate_ids=${counts.duplicates} (ids_found=${counts.ids})`); return counts.duplicates === 0; }],
     ['a bottom bar 10 px above the viewport bottom (bottom_bar_gap_px)', '/bottom-bar', async p => { const info = await bottomBarGap(p, '[class*="fixed"][class*="bottom"]'); console.log(`selftest bottom_bar_gap_px=${info.gap} (bars_found=${info.bars})`); return info.bars === 0 || info.gap <= 1; }],
     ['a button with no visible focus indicator (focus_visible_failures)', '/no-focus-ring', async p => { const out = await focusVisibleFailures(p); console.log(`selftest focus_visible_failures=${out.failures.length} (targets=${out.count})`); return out.failures.length === 0; }],
-    ['controls below the fold at 844x390 (landscape_controls_visible)', '/tall-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, viewport_px=${info.viewport})`); return info.bottom <= info.viewport; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
+    ['controls below the fold at 844x390 (landscape_controls_visible)', '/tall-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
+    ['no player control found at 844x390 (landscape_controls_visible)', '/no-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
     ['a pause 48 ms before the cut end (word cut early rule)', '/button', async () => { const v = wordCutVerdict(0.34 - 0.048, 0.34); console.log(`selftest word_cut_early_ms=${v.early}`); return v.earlyOk; }],
     ['a pause at the cut end passes both word cut rules', '/button', async () => { const v = wordCutVerdict(0.34, 0.34); console.log(`selftest word_cut signed=${v.signedPauseDeltaMs} overshoot=${v.overshoot} early=${v.early}`); return !(v.overshootOk && v.earlyOk); }],
   ]) {
@@ -572,8 +581,9 @@ try {
       if (!page) throw new Error('Browser page is unavailable');
       await page.goto(`${base}/th/st/2/1?part=${screen}`, { waitUntil: 'networkidle' });
       const info = await controlBottomAtLandscape(page);
-      console.log(`landscape_controls_visible_${screen}=${info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, viewport_px=${info.viewport}, picture_px=${info.picture}, sections=${JSON.stringify(info.sections)})`);
-      return { ok: info.bottom <= info.viewport, detail: `control_bottom_px=${info.bottom}, viewport_px=${info.viewport}` };
+      const ok = info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport;
+      console.log(`landscape_controls_visible_${screen}=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, picture_px=${info.picture}, sections=${JSON.stringify(info.sections)})`);
+      return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
     });
   }
 
