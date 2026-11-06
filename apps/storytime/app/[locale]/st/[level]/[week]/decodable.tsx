@@ -108,6 +108,44 @@ function isWord(token: string): boolean {
   return WORD_TOKEN.test(token);
 }
 
+/** One piece of a decodable sentence: a plain token, or a word with its trailing punctuation. */
+interface SentencePiece {
+  /** The word of a tappable piece. */
+  word?: string;
+  /** The punctuation that sits right after the word, with no flex gap. */
+  trailing?: string[];
+  /** The plain text of a piece that is not a word. */
+  text?: string;
+}
+
+/**
+ * Splits one page text into pieces. Trailing punctuation joins its word in one flex item, so
+ * the flex gap cannot open a space before a full stop (finding F151) and a line break cannot
+ * start a line with a stop. The tap floor and the word gaps stay.
+ * @param text The page text.
+ * @returns The pieces, in reading order.
+ */
+function sentencePieces(text: string): SentencePiece[] {
+  const tokens = text.split(WORD_PATTERN);
+  const pieces: SentencePiece[] = [];
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index]!;
+    if (isWord(token)) {
+      const trailing: string[] = [];
+      while (index + 1 < tokens.length) {
+        const next = tokens[index + 1]!;
+        if (next.length === 0 || /\s/.test(next) || isWord(next)) break;
+        trailing.push(next);
+        index += 1;
+      }
+      pieces.push({ word: token, trailing });
+      continue;
+    }
+    pieces.push({ text: token });
+  }
+  return pieces;
+}
+
 /**
  * Renders one decodable part for a child (spec FR-7).
  * @param props See `StorytimeDecodableProps`.
@@ -459,18 +497,22 @@ export function StorytimeDecodable({
             />
           ) : null}
           <p className="flex flex-wrap items-center gap-x-1 whitespace-pre-wrap text-2xl [@media(max-height:500px)]:flex-1" lang="en">
-            {page.text.split(WORD_PATTERN).map((token, index) =>
-              isWord(token) ? (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => onWordTap(token)}
-                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded px-0.5 hover:bg-neutral-100"
-                >
-                  {token.toUpperCase()}
-                </button>
+            {sentencePieces(page.text).map((piece, index) =>
+              piece.word ? (
+                <span key={index} className="inline-flex items-baseline">
+                  <button
+                    type="button"
+                    onClick={() => onWordTap(piece.word!)}
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded px-0.5 hover:bg-neutral-100"
+                  >
+                    {piece.word.toUpperCase()}
+                  </button>
+                  {(piece.trailing ?? []).map((token, trailingIndex) => (
+                    <span key={trailingIndex}>{token}</span>
+                  ))}
+                </span>
               ) : (
-                <span key={index}>{token}</span>
+                <span key={index}>{piece.text}</span>
               ),
             )}
           </p>
