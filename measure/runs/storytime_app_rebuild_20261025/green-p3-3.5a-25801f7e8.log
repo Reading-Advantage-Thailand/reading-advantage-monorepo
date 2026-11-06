@@ -1,0 +1,68 @@
+# Green run: task 3.5a (M-3, remove the lyric list pictures)
+
+- Track: storytime_app_rebuild_20261025
+- Phase: Phase 3: At-home app
+- Role base: 25801f7e88a5f695cced1669c60ac70dc91f3b7a
+- Phase base: 7db52a49d20e195388fd91670cc7c022312b50c5
+- Green model: opencode-go/deepseek-v4.1-flash (ra-quota route; the Ark Coding
+  Plan is out)
+- Red model of this task: openai/gpt-6-luna#high
+
+## Work
+
+- Read the M-3 amendment, task 3.5a, the Red evidence at 13f84c743, and the Red
+  test change d6f9b01e1. The two Red tests were the expected failures on the
+  Red copy.
+- Edited `apps/storytime/app/[locale]/st/[level]/[week]/song.tsx`: removed the
+  lyric-line `<img>` for every line, including the `imageOf` lines; removed the
+  now-unused `referenced` and `image` values; `mediaUrl` stays because the
+  stage sources and the poster use it. The lyric text and the gesture text
+  stay under each line. The stage poster, the phone poster, the video, and the
+  audio-only path are unchanged. The top JSDoc states the M-3 rule. The song
+  tile on the week page and every content file are untouched.
+- The Red file passes: `phase3-song-ui.test.tsx` exits 0 with 7 tests.
+- All six gates exit 0 on the fixed tree; the fix commit records that tree
+  byte for byte. No gate row counted the lyric pictures, so no row was
+  weakened or changed.
+- Task 3.5a is `[x]` with `Done: 9b088aaa3` and its Green evidence sub-block;
+  task 3.7 is `[x]` with the gate HEAD and the round 5 and 3.5a evidence
+  pointers.
+
+## Result block
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: Phase 3: At-home app
+commits: 9b088aaa3 (fix(storytime): remove the lyric list pictures, the gate
+  tree); eb5446c86 (docs(measure): mark task 3.5a and 3.7 done); this log
+  commit. Role base 25801f7e8; phase base
+  7db52a49d20e195388fd91670cc7c022312b50c5.
+tests_run: the Red file `apps/storytime/__tests__/phase3-song-ui.test.tsx`
+  exits 0 (1 file, 7 tests). Gates, each through
+  `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash
+  ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a time,
+  on the fixed tree: a. the P3.4 line-328 command with CI=true: exit 0, 38
+  files, 333 tests, no expected fail. b. the P4 tests: exit 0, 2 files, 15
+  tests. c. tsc --noEmit in apps/storytime: exit 0. d. ESLint on song.tsx:
+  exit 0. e. the browser gate with HEAVY_HANG_KILL_S=off: exit 0, inner
+  PASS=55, FAIL=0, wrapper PASS=4, FAIL=0; `video_box_ratio_x1000_phone=563`,
+  `video_box_height_pct_phone=69`, `video_box_ratio_x1000_laptop=1778`,
+  `duplicate_ids_song=0 (ids_found=1)`, the landscape rows green. f.
+  build-graph update on song.tsx: exit 0, 10 to 13 nodes, 15 to 16 edges. Ports
+  3940 to 3960 were free before and after; no server ran outside heavy-run.
+files_changed: apps/storytime/app/[locale]/st/[level]/[week]/song.tsx
+  (9b088aaa3); measure/tracks/storytime_app_rebuild_20261025/plan.md
+  (eb5446c86); this log. No content file changed. The two modified
+  apps/*/next-env.d.ts files belong to TS7 and stayed unstaged.
+plan_updates: task 3.5a marked [x] with `Done: 9b088aaa3` and the task 3.5a
+  Green evidence sub-block (gate table, counts, browser values, models); task
+  3.7 marked [x] with the gate HEAD `9b088aaa3`, the gate counts, and the
+  pointers to the turn 7 sub-block and the task 3.5a evidence.
+known_failures: none. Every gate exits 0.
+handoff: task 3.5a and task 3.7 are marked done in the plan. The
+  change-quality reviews of round 5 run after this commit; the reviews and the
+  phase acceptance check the 3.7 mark. The song tile on the week page and all
+  content files are untouched. No question.
+END_MEASURE_AGENT_RESULT
