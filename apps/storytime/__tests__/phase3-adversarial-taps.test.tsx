@@ -6,10 +6,11 @@
  * The tap cases prove that three rapid word taps leave one pending stop and that
  * no stale stop pauses before the last cut end, that a word tap during a pending
  * page stop replaces it, and that three rapid decodable taps arm one whole-word
- * stop. The two `it.fails` pins hold the open review gaps: C6-1 (a rejected
- * `play()` leaves the stop loop with no terminal event) and A6-1 (an external
- * pause ends the loop, and a resume below the cut end runs past the cut end).
- * A pin passes while the defect exists and turns red when Green fixes it.
+ * stop. The two review-gap pins are plain tests now that Green closed them:
+ * C6-1 (a rejected `play()` leaves the stop loop with no terminal event;
+ * finding F147) and A6-1 (an external pause ends the loop, and a resume below
+ * the cut end runs past the cut end; finding F148). Each pin failed on the
+ * copy before its fix.
  */
 import "@testing-library/jest-dom/vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -261,7 +262,7 @@ describe("Phase 3 adversarial pins for the open review gaps", () => {
     ).toBe(0);
   });
 
-  it.fails("a resume below the cut end re-arms the stop loop (A6-1)", () => {
+  it("a resume below the cut end re-arms the stop loop (A6-1)", () => {
     vi.useFakeTimers();
     const audio = document.createElement("audio");
     audio.currentTime = 0.1;

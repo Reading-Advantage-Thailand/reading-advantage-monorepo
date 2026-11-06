@@ -51,6 +51,12 @@ export function seekAndRun(audio: HTMLAudioElement, time: number, onReady: () =>
  * same element, so a caller that loses the previous cancel function cannot leak a loop that
  * pauses a later cut or outlives the component. The previous `onStop` does not run on such a
  * replacement; the new playback owns the mark.
+ *
+ * A terminal `pause` ends the loop and clears the mark (F145), but playback can resume below
+ * the cut end (the child presses play again), so the pause keeps a one-shot `play` listener
+ * that re-arms the loop while `currentTime` is below the end (finding F148). The listener is
+ * removed on a cancel and on a replacement, and it does nothing when a newer loop owns the
+ * element or the clock is already past the end.
  * @param audio The media element to stop.
  * @param end The cut end, in seconds on the media clock.
  * @param onStop The stop action that runs when the media clock reaches `end` or the media
@@ -65,31 +71,57 @@ export function stopAtMediaEnd(audio: HTMLMediaElement, end: number, onStop: () 
   activeStops.get(audio)?.();
   let timer: ReturnType<typeof setTimeout> | null = null;
   let finished = false;
+  let resumeDetach: (() => void) | null = null;
   const clearTimer = (): void => {
     if (timer !== null) {
       clearTimeout(timer);
       timer = null;
     }
   };
-  function detach(): void {
+  const detachResume = (): void => {
+    if (resumeDetach !== null) {
+      resumeDetach();
+      resumeDetach = null;
+    }
+  };
+  function detachAll(): void {
     for (const type of TERMINAL_STOP_EVENTS) audio.removeEventListener(type, onTerminal);
+    detachResume();
     if (activeStops.get(audio) === cancel) activeStops.delete(audio);
+  }
+  function rearm(): void {
+    finished = false;
+    for (const type of TERMINAL_STOP_EVENTS) audio.addEventListener(type, onTerminal);
+    activeStops.set(audio, cancel);
+    arm(Math.max(0, Math.round((end - audio.currentTime) * 1000)));
+  }
+  function onResume(): void {
+    detachResume();
+    if (activeStops.get(audio) !== undefined) return;
+    if (audio.currentTime >= end) return;
+    rearm();
+  }
+  /** Keeps the one-shot resume listener after a terminal pause (finding F148). */
+  function keepResume(): void {
+    if (resumeDetach !== null) return;
+    audio.addEventListener("play", onResume, { once: true });
+    resumeDetach = () => audio.removeEventListener("play", onResume);
   }
   function finish(): void {
     if (finished) return;
     finished = true;
     clearTimer();
-    detach();
+    detachAll();
     onStop();
   }
-  function onTerminal(): void {
+  function onTerminal(event: Event): void {
     finish();
+    if (event.type === "pause") keepResume();
   }
   function cancel(): void {
-    if (finished) return;
-    finished = true;
     clearTimer();
-    detach();
+    detachAll();
+    finished = true;
   }
   function arm(delayMs: number): void {
     timer = setTimeout(() => {
