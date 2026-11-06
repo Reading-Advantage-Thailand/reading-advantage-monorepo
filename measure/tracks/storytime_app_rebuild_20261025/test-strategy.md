@@ -521,7 +521,7 @@ The report states 41 checks at `01f2acfe8`: 15 fail and 5 partial. Its claims ar
 | AC-8.1 no autoplay | No `play()` call before a tap. The poster shows first | The video plays on mount |
 | AC-8.1 line timing | The line lights from `song.times` of shipped w01 (15 lines). An uneven time table gives an uneven lit time | A line lights from an even split |
 | Phone and other video | A portrait phone uses `videoPhone` and `posterPhone`. Other screens use `video` and `poster`. Without a video the page plays `song.audio` | The phone plays `video` |
-| Rule 9.1 | A line shows `line.image`, or the picture of `imageOf`. The gesture shows as text only | A line uses a gesture thumbnail |
+| Rule 9.1 | The lyric list shows no picture. The gesture shows as text under each line (amendment M-3) | A lyric line shows a picture, or a line loses its gesture text |
 | Karaoke | No tile without `song.karaoke` | The tile shows with no data |
 | AC-8.2 box | Browser gate: `video_box_ratio_x1000_phone` is 562 plus or minus 5, `video_box_height_pct_phone` is at most 75, and `video_box_ratio_x1000_laptop` is 1778 plus or minus 5 | The phone video fills the screen |
 

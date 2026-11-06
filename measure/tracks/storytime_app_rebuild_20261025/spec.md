@@ -198,7 +198,7 @@ Acceptance:
 
 - The page shows the poster and a play button. No sound plays before a tap.
 - A portrait phone plays `song.videoPhone` in a 9:16 box, at most 75 percent of the screen height, with `song.posterPhone`. Other screens play `song.video` in a 16:9 box with `song.poster`.
-- Below the video, each lyric line lights up in time from `song.times`. Each line shows its gesture name and its picture. A picture shows the object of the line, never a gesture thumbnail (rule 9.1).
+- Below the video, each lyric line lights up in time from `song.times`. The lyric text shows with the gesture name as text under each line. The lyric list shows no picture (amendment M-3, owner look decision 2026-11-06).
 - Without a video, the page plays `song.audio` with the lit lyric lines.
 - A karaoke tile shows only when `song.karaoke` exists. Karaoke waits for S28.
 

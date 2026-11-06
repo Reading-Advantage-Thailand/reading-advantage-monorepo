@@ -268,6 +268,8 @@ Amendment R-1 (2026-11-03, at-home release): the at-home deploy moves out of tas
 
 Amendment M-2 (2026-11-06, move to the release track): tasks 3.10 and 3.11 move to the track storytime_at_home_release_20261106 (Phase 2 and Phase 3). Decision owner: PM, 2026-11-05. Both tasks stay here as `[b]` lines with a pointer. The Phase 3 checkpoint is written after its reviews and its phase acceptance.
 
+Amendment M-3 (2026-11-06, song list pictures): Daniel approved the look, and the PM set default 2 in task A-11. FR-8 now says that the lyric list has no pictures and keeps each gesture name as text under its line. The strategy rule 9.1 row now checks the same requirement. New task 3.5a holds this work before the Phase 3 checkpoint. Task 3.5 and its old evidence stay as history.
+
 The at-home app comes before the teacher app (spec section 9, choice 2). The teacher flow uses its players, and the printed URLs have a date.
 
 - [x] 3.1 Entry route `apps/storytime/app/[locale]/st/[level]/[week]/page.tsx`: load, parse, published check, 404 status, `?part=`, the locale redirect, `noindex`, and no cookie. A published week with a book page picture without a file answers 404, like a week that is not published (Daniel 2026-11-02, spec FR-5). Tests: AC-2.1, AC-5.1, AC-5.4. Done: `0c42dde7a`. Automated: the targeted command exits 0 with 5 files and 17 tests; `tsc --noEmit` exits 0; `phase3-redirect-check.sh` exits 0 with PASS=6, FAIL=0.
@@ -608,6 +610,7 @@ The at-home app comes before the teacher app (spec section 9, choice 2). The tea
 - Implementation commit: `a5f856091` (`fix(storytime): size the phone song box (track_id: storytime_app_rebuild_20261025)`).
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-02816cf.log`.
 
+- [ ] 3.5a Song list per amendment M-3: the lyric list shows no picture, and the gesture text stays under each line. The stage poster and the song tile picture stay. Tests: the song UI test (rule 9.1 row of the strategy).
 - [x] 3.6 Printed-URL test (AC-2.2) and the first-load budget of 300 KB (AC-5.3). Done: `a5f856091`. Automated: the printed-URL test exits 0 (1 file, 1 test, 16 URLs); the browser gate exits 0 with Playwright `PASS=22, FAIL=0` and outer `PASS=4, FAIL=0`; `transferred_bytes_first_load=223741`; `media_requests_before_tap=0`; `tsc --noEmit` exits 0. The gate ran on this tree, per the orchestrator decision at 05:24 ICT.
 - [x] 3.8 Loop contract: typed optional read schemas for the seven A-42 fields with passthrough kept, the question page and word check, the receiver media list for the loop audio, the F99 page coverage rule, and receipt at the Workbooks commit of the A-42 drafts (due 2026-11-09). Tests: w01 to w08 parse at the new pin; AC-13.1 to AC-13.5. Target: closes at the draft pin. Task 3.10 follows it. The latest date for both is 2026-11-19. Done: `9c0e9f0d7` (the contract and the receiver), `804944378` (the receipt at the draft pin), `f163d4692` and `aeffe6826` (fix round 1). Automated: the targeted command exits 0 with 22 files and 270 tests; `tsc --noEmit` exits 0; ESLint exits 0 on the 8 changed files. The take exits 0 with 8 weeks, 179 media files, and 159 missing pictures; the 26 hand-off hashes match; the 8 written weeks equal the hand-off files byte for byte; a second run makes no difference.
   - PM 2026-11-04: light lane for task 3.8 part 1 (one maker, one checker).
@@ -780,6 +783,19 @@ Green builds to these rules:
 - Task 3.10 stays open, because the loops approval comes later.
 - Commit: `c672e6d23` (the content, the record, and the tests). The plan commit is the second one.
 - [~] 3.7 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check on the review copy (portrait phone, landscape phone, laptop). The browser check is evidence class "automated". It covers task 3.8 at the draft pin. Tasks 3.9 and 3.10 do not hold this checkpoint (see the exception in the amendment line).
+
+#### Owner look approval (2026-11-06)
+
+- Evidence class: human.
+- Daniel's exact words: "Good. That's what I wanted".
+- Source: the PM, task A-11, the screenshot look check task.
+- Folder: `~/Desktop/handoff/storytime-app-screens-20261106/`.
+- Files 01-05: 01 week page, 02 reader, 03 song, 04 decodable, and 05 parent view. Each file has sizes 390x844 and 1024x768.
+- The set was taken at repository HEAD `fea09573d` and Storytime tree `f2619efb8`.
+- PM default 1: the plain look stays for release 1; a Storytime look comes later.
+- PM default 2: remove every picture from the lyric list; keep the gesture text under each line.
+- Files 06-07 (teacher day and teacher week) were view only. Finding UX4, where the teacher week view shows each family word twice, stays in Phase 4.
+- Turn 7 changes at `cbcb59238` came after the set and are not part of this approval: week tiles at the end of the book, the landscape fit, and the full stop next to its word.
 
 ### Phase 3 task 3.7 phase check evidence
 
