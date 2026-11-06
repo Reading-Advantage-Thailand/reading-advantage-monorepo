@@ -1,0 +1,118 @@
+# Red run log: storytime_at_home_release_20261106, Phase 1
+
+role: Red
+track: storytime_at_home_release_20261106
+phase: Phase 1 (Receive the Workbooks 82f88853 week packages)
+phase_base_sha: 22ec08bb0eb924e296e67d18a0766f8154e9d945
+role_base_sha: 22ec08bb0eb924e296e67d18a0766f8154e9d945
+model: minimax-cn-coding-plan/MiniMax-M3.1-Flash (MiniMax)
+date: 2026-11-07
+
+## Task 1.1 start gate
+
+Evidence class: automated. The phase base is `22ec08bb0eb924e296e67d18a0766f8154e9d945`.
+
+- Command A: `rg -n '^## Phase 3: At-home app.*\[checkpoint: [0-9a-f]{7,40}\]' measure/tracks/storytime_app_rebuild_20261025/plan.md` exits 0 with one line: `259:## Phase 3: At-home app [checkpoint: f97fffbaf]`.
+- Command A negative: the same command over a scratch copy of the parent plan, with the checkpoint text removed, exits 1. The scratch copy sat under `mktemp -d` in /tmp and is removed.
+- Command B: in `~/Desktop/handoff`, each of the 7 folders holds `workbooks-commit: 82f88853` with a prefix count of 1 and a full pin count of 1. `folders_with_commit=7`. The superseded `w01-storytime-app-package` prints 0 and 0.
+- Command C: `git -C ~/Desktop/Workbooks rev-parse 82f88853` prints `82f88853615f2925d8f1c12b4571790305224178`.
+- Command D: `git rev-parse HEAD` prints `22ec08bb0eb924e296e67d18a0766f8154e9d945`. `git worktree list` holds 8 entries.
+
+The gate passes. The phase starts.
+
+## Task 1.2 hand-off check
+
+Evidence class: automated. The check runs `sha256sum -c MANIFEST.txt` in each of the 7 folders, without `--strict`. The run copies nothing.
+
+Per-folder line: `entries=<n> ok=<n> failed=0 files_on_disk=<n> entries_outside_l2=0 improperly_formatted=6 exit=0`.
+
+| Folder | entries | ok | failed | files_on_disk | exit |
+|---|---|---|---|---|---|
+| w01-storytime-app-package-r2 | 44 | 44 | 0 | 45 | 0 |
+| w02-storytime-app-package | 43 | 43 | 0 | 44 | 0 |
+| w03-storytime-app-package | 42 | 42 | 0 | 43 | 0 |
+| w04-storytime-app-package | 38 | 38 | 0 | 39 | 0 |
+| w05-storytime-app-package | 44 | 44 | 0 | 45 | 0 |
+| w06-storytime-app-package | 41 | 41 | 0 | 42 | 0 |
+| w07-storytime-app-package | 42 | 42 | 0 | 43 | 0 |
+
+Summary: `folders_checked=7 entries_ok=294 failed_total=0 rejected_total=0`.
+
+The 6 broken copies ran in `/tmp/storytime-release-neg-<random>`. Each one rejects its folder.
+
+| Case | Change | Result |
+|---|---|---|
+| 1 | one hex digit of one entry line changed | `exit=1 failed=1` |
+| 2 | one listed media file deleted | `exit=1 failed=1` |
+| 3 | one byte of one mp3 flipped | `exit=1 failed=1` |
+| 4 | one unlisted file added | `exit=0 files_on_disk=40 entries=38` |
+| 5 | `MANIFEST.txt` holds only metadata lines | `entries=0` |
+| 6 | entry line `<64 hex>  ../x.mp3` added | `entries_outside_l2=1` |
+
+The scratch folder is removed. Nothing was written in `~/Desktop/handoff` or `~/Desktop/Workbooks`.
+
+## Task 1.3 Red tests
+
+The Red tests are `release-receipt-pin.test.ts` (R1 to R5) and `release-weeks-readiness.test.ts` (W1 to W6). The edit of `phase3-loop-contract.test.ts` holds the release pin in the case "records the release pin". The Red commit is `6cbfd0c9c8d3ab18437f2b13d8c6b46eb1133fc1`.
+
+The Red command:
+
+```
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/release-receipt-pin.test.ts __tests__/release-weeks-readiness.test.ts __tests__/phase3-loop-contract.test.ts'
+```
+
+Exit: 1. Three failed files, 4 failed tests, and 77 passed tests of 81.
+
+The 4 failed cases:
+
+1. R1 `records the release pin in the source record` in `release-receipt-pin.test.ts`. Expected `67be5603e0410f21491a006b8e9d12f3f9dd1bfc` to be `82f88853615f2925d8f1c12b4571790305224178`.
+2. W3 `gives every page of every draft week its picture file` in `release-weeks-readiness.test.ts`. A page of the week 2 holds no picture file.
+3. W6 `holds the color own book teacher lines and no old pair books line` in `release-weeks-readiness.test.ts`. Expected `color_own_book_en=2`, got `color_own_book_en=0`.
+4. `records the release pin` in `phase3-loop-contract.test.ts`. Expected `67be5603e0410f21491a006b8e9d12f3f9dd1bfc` to be `82f88853615f2925d8f1c12b4571790305224178`.
+
+Every failure is an assertion on the old content. The output holds no `ENOENT`, no `Cannot find`, and no skipped or todo test.
+
+The type gate and the lint gate, each through `heavy-run.sh`:
+
+- `../../node_modules/.bin/tsc --noEmit` in `apps/storytime`: exit 0, no output.
+- ESLint on the 3 test files: exit 0, no warning.
+
+## MEASURE_AGENT_RESULT
+
+status: complete
+role: Red
+track: storytime_at_home_release_20261106
+phase: 1
+baseline_sha: 22ec08bb0eb924e296e67d18a0766f8154e9d945
+role_base_sha: 22ec08bb0eb924e296e67d18a0766f8154e9d945
+head_sha: 6cbfd0c9c8d3ab18437f2b13d8c6b46eb1133fc1
+commits:
+  - 6cbfd0c9c8d3ab18437f2b13d8c6b46eb1133fc1 test(storytime): add the release receipt red tests (track_id: storytime_at_home_release_20261106)
+tests_added:
+  - apps/storytime/__tests__/release-receipt-pin.test.ts (R1 to R5)
+  - apps/storytime/__tests__/release-weeks-readiness.test.ts (W1 to W6)
+tests_edited:
+  - apps/storytime/__tests__/phase3-loop-contract.test.ts (the case "records the release pin", the constant RELEASE_PIN)
+files_changed:
+  - apps/storytime/__tests__/release-receipt-pin.test.ts
+  - apps/storytime/__tests__/release-weeks-readiness.test.ts
+  - apps/storytime/__tests__/phase3-loop-contract.test.ts
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/release-receipt-pin.test.ts __tests__/release-weeks-readiness.test.ts __tests__/phase3-loop-contract.test.ts'
+red_exit: 1
+red_counts: files=3 failed_files=3 failed_tests=4 passed_tests=77 total_tests=81
+red_failed_cases:
+  - R1 records the release pin in the source record
+  - W3 gives every page of every draft week its picture file
+  - W6 holds the color own book teacher lines and no old pair books line
+  - phase3-loop-contract.test.ts records the release pin
+tsc_exit: 0
+eslint_exit: 0
+task_1_1: pass, phase_base=22ec08bb0, folders_with_commit=7, checkpoint=f97fffbaf, workbooks_pin=82f88853615f2925d8f1c12b4571790305224178, command_a_negative_exit=1, worktree_entries=8
+task_1_2: pass, folders_checked=7 entries_ok=294 failed_total=0 rejected_total=0, broken_copies_rejected=6
+task_1_3: red, commit 6cbfd0c9c8d3ab18437f2b13d8c6b46eb1133fc1
+remaining_failures:
+  - R1 source.json still records the pin 67be5603e0410f21491a006b8e9d12f3f9dd1bfc
+  - W3 the draft weeks 2 to 7 hold no page picture file at the old pin
+  - W6 the w01 holds no color own book teacher line at the old pin
+  - phase3-loop-contract.test.ts records the release pin and the source record holds the old pin
+notes: The Measure Red gate needs a committed Red test change, so the Red commit holds the 3 test paths only. The receipt commit of task 1.5 holds 10 paths: the 8 week files, source.json, and phase3-docker-smoke.sh. The receipt still changes only content for a user. The next role is Green. Green runs the receiver at the new pin, changes the label of phase3-docker-smoke.sh, and makes the receipt commit.
