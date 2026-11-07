@@ -180,6 +180,9 @@ the default `REQUIRED_...` for each, and the step refuses that default):
 - The workbooks app has no traffic file. A first service of the app must exist before a push can
   build a revision of it.
 - The push files of `marketing` and `sales-advantage` hold the default `REQUIRED_RELEASE_COMMIT_SHA`
-  in `_RELEASE_COMMIT_SHA`, and `cd-apps.yml` passes no substitution. The first steps of both push
-  files (`validate-release-input` and `validate-release-inputs`) check the commit form. A push build
-  of these two apps can fail there until a substitution reaches the build.
+  in `_RELEASE_COMMIT_SHA`. The job of `cd-apps.yml` for `marketing` passes the pushed commit
+  (`--substitutions=_RELEASE_COMMIT_SHA=<commit>`), because that is the only `REQUIRED_` default in
+  the file. The job for `sales-advantage` passes no substitution: its push file holds two more
+  `REQUIRED_` defaults (`_CURRICULUM_BACKUP_NOT_BEFORE` and `_RELEASE_SOURCE_MANIFEST_SHA256`). The
+  first step `validate-release-inputs` refuses the defaults, so the sales push build fails there
+  until the PM decides how the inputs reach the build. This is an open limit.

@@ -47,14 +47,30 @@ jobs:
           ids="$(node scripts/ci/affected-apps.mjs --base "$BASE_SHA" --head "$HEAD_SHA")"
           echo "affected: $ids"
           AFFECTED_IDS="$ids" node -e '
-            const { readFileSync } = require("node:fs");
+            const { existsSync, readFileSync } = require("node:fs");
             const ids = JSON.parse(process.env.AFFECTED_IDS);
             const rows = JSON.parse(readFileSync("scripts/ci/apps.json", "utf8"));
             const hit = (row) => ids.includes(row.id);
             const www = rows.some((row) => row.mode === "direct" && hit(row));
+            // A push file may declare a REQUIRED_ default for _RELEASE_COMMIT_SHA. The job passes the
+            // pushed commit only when that is the one such default in the file (other defaults would
+            // still fail the build, and Cloud Build refuses a substitution that the file does not declare).
+            const substitutions = (file) => {
+              if (!existsSync(file)) return "";
+              const text = readFileSync(file, "utf8");
+              const required = [...text.matchAll(/^  (_[A-Z0-9_]+): "REQUIRED_/gm)].map((match) => match[1]);
+              const only = required.length === 1 && required[0] === "_RELEASE_COMMIT_SHA";
+              return only ? "--substitutions=_RELEASE_COMMIT_SHA=" + process.env.HEAD_SHA : "";
+            };
             const matrix = rows
               .filter((row) => row.mode === "gated" && hit(row))
-              .map(({ id, service, project, cloudbuild }) => ({ id, service, project, cloudbuild }));
+              .map(({ id, service, project, cloudbuild }) => ({
+                id,
+                service,
+                project,
+                cloudbuild,
+                substitutions: substitutions(cloudbuild),
+              }));
             console.log("www=" + (www ? "yes" : "no"));
             console.log("matrix=" + JSON.stringify(matrix));
           ' >> "$GITHUB_OUTPUT"
@@ -88,4 +104,5 @@ jobs:
           gcloud builds submit \
             --project="${{ matrix.project }}" \
             --config="${{ matrix.cloudbuild }}" \
+            ${{ matrix.substitutions }} \
             .
