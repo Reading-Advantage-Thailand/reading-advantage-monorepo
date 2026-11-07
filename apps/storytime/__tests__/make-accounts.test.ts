@@ -89,6 +89,18 @@ afterEach(() => {
   }
 });
 
+/**
+ * The backfill read that task 2b.5 expects on the fake store. Green adds it to the fake store and
+ * the store contract. It lists every account and the ids that already hold an `account_created`
+ * event.
+ */
+interface AuditReadStore extends FakeStore {
+  listAccountsForAudit(): Promise<{
+    accounts: Array<{ id: string; username: string }>;
+    auditedAccountIds: string[];
+  }>;
+}
+
 describe("the account script (AC-4.8)", () => {
   it("writes the card list outside the repository and keeps the tree clean", async () => {
     const folder = tempFolder();
@@ -217,5 +229,92 @@ describe("the account script (AC-4.8)", () => {
       ["a", "b"],
       ["c", "d"],
     ]);
+  });
+
+  it("appends one account_created audit event for each new account, none for a skipped one, and no secret", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), CSV);
+    const store = createFakeStore();
+
+    const first = await run(["--folder", folder], store);
+    expect(first, "the first run exits 0").toBe(0);
+    const firstLog = logLines.join("\n");
+
+    const created = store.auditEvents.filter((event) => event.action === "account_created");
+    console.log(`audit_created_events=${created.length} accounts=${store.accounts.length}`);
+    expect(created, "one event per created account").toHaveLength(3);
+    for (const account of store.accounts) {
+      const events = created.filter((event) => event.accountId === account.id);
+      expect(events, `${account.username} has one account_created event`).toHaveLength(1);
+      expect(events[0].username, `${account.username} names the username`).toBe(account.username);
+    }
+
+    const second = await run(["--folder", folder], store);
+    expect(second, "the second run exits 0").toBe(0);
+    const secondLog = logLines.join("\n");
+    expect(
+      store.auditEvents.filter((event) => event.action === "account_created"),
+      "a skipped account appends no event",
+    ).toHaveLength(created.length);
+
+    const cards = readFileSync(join(folder, "sign-in-cards.csv"), "utf8");
+    const passwords = cards
+      .split("\n")
+      .slice(1)
+      .filter((line) => line.length > 0)
+      .map((line) => line.split(",").pop() ?? "");
+    const secrets = [...passwords, ...store.accounts.map((account) => account.passwordHash)];
+    const text = `${firstLog}\n${secondLog}\n${JSON.stringify(store.auditEvents)}`;
+    let secretHits = 0;
+    for (const secret of secrets) if (secret && text.includes(secret)) secretHits += 1;
+    console.log(`audit_secret_hits=${secretHits}`);
+    expect(secretHits, "audit_secret_hits").toBe(0);
+    expect(`${text} ${passwords[0]}`.includes(passwords[0]), "the scan finds a planted string").toBe(true);
+  });
+
+  it("backfills one account_created event for each account that has none, and is idempotent", async () => {
+    const PASSWORD_HASH = "$argon2id$v=19$m=19456,t=2,p=1$c2FsdA$c2FsdA";
+    const store = createFakeStore({
+      accounts: [
+        { username: "staff-01", passwordHash: PASSWORD_HASH, role: "family" },
+        { username: "staff-02", passwordHash: PASSWORD_HASH, role: "family" },
+      ],
+    }) as AuditReadStore;
+    store.auditEvents.push({
+      id: 1,
+      action: "account_created",
+      accountId: store.accounts[0].id,
+      username: store.accounts[0].username,
+      now: new Date("2026-11-07T10:00:00.000Z"),
+    });
+    const hash = store.accounts[1].passwordHash;
+    const accountCount = store.accounts.length;
+    const sessionCount = store.sessions.length;
+    const reason = "created 2026-11-07 17:12 before the audit fix";
+
+    const first = await run(["--backfill-audit", reason], store);
+    expect(first, "the backfill exits 0").toBe(0);
+    const created = store.auditEvents.filter((event) => event.action === "account_created");
+    console.log(`audit_present_after=${created.length}`);
+    expect(created, "one event per account after the backfill").toHaveLength(2);
+    const backfilled = created.filter((event) => event.reason === `backfill: ${reason}`);
+    expect(backfilled, "one backfilled event").toHaveLength(1);
+    expect(backfilled[0].accountId, "the backfill names the missing account").toBe(store.accounts[1].id);
+    expect(backfilled[0].username, "the backfill names the username").toBe("staff-02");
+    expect(logLines.join("\n"), "the run prints both counts").toContain("audit_backfilled=1 audit_present=1");
+
+    expect(store.accounts, "the backfill changes no account").toHaveLength(accountCount);
+    expect(store.accounts[1].passwordHash, "the backfill changes no hash").toBe(hash);
+    expect(store.sessions, "the backfill changes no session").toHaveLength(sessionCount);
+
+    const second = await run(["--backfill-audit", reason], store);
+    expect(second, "the second backfill exits 0").toBe(0);
+    expect(
+      store.auditEvents.filter((event) => event.action === "account_created"),
+      "the second backfill appends no event",
+    ).toHaveLength(2);
+    expect(logLines.join("\n"), "the second run backfills 0 and reports 2 present").toContain(
+      "audit_backfilled=0 audit_present=2",
+    );
   });
 });
