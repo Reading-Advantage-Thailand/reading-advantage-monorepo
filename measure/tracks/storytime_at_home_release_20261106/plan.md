@@ -78,10 +78,27 @@ Exception to the phase-order rule (copied from the parent plan, line 263, and ad
   - The approved pin replaces the pin of Phase 1. The receiver gate moves to the approved pin in the same way as in task 1.7.
 - [ ] 2.2 Phase check: the Closeout gate of the parent strategy for task 3.10. `phase3-approved-pin.test.ts` and `phase3-loop-contract.test.ts` exit 0. The receiver at the approved pin exits 0. `git diff --exit-code apps/storytime/content` exits 0 after a second receiver run. `phase1-quality-gates.sh` exits 0. Review A on the diff. Append `[checkpoint: <sha>]` to this heading.
 
+## Phase 2b: Login and protected media
+
+Why "2b": the task numbers of Phase 2 and Phase 3 stay as they are (the parent plan and the hand-offs name them). The login must exist before the deploy of Phase 3, so the phase sits between them. Design: [login-design.md](./login-design.md). Owner words and approval: Daniel, 2026-11-07 06:07 and 06:21 ICT (spec FR-4). Phase 3 starts after this heading carries its checkpoint, and after the gates 2b.8 to 2b.10 close.
+
+Not in this phase: the change of the www Storytime page copy ("By QR Code, With No Login" and its FAQ). It changes after PR's text arrives, in the www app, as a separate change.
+
+- [ ] 2b.1 Spec review of FR-4 and this phase by a reviewer of another model family than `claude-code/claude-sonnet-5-5`, and the test strategy (accounts, sessions, return path, media, proxy). Target: 2026-11-09. Evidence class: automated (review report).
+- [ ] 2b.2 Red tests (AC-4.1 to AC-4.8): the return-path check with a table of bad inputs; the proxy redirect for `/<locale>/st/**` and `/<locale>/teacher/**` with no cookie; the sign-in handler (good password, bad password, disabled account, rate limit); the session renewal; the teacher role check; the media route with no session; the signed URL expiry and the object key scope. Run red, commit alone. Target: 2026-11-10. Evidence class: automated.
+- [ ] 2b.3 Schema and migration in `packages/db` (accounts, sessions, rate limits, audit events), the tenant-registry row, and the migration test. Target: 2026-11-11. Evidence class: automated.
+- [ ] 2b.4 Green: sign-in route, session cookie, renewal, sign-out, the proxy check, the "How to join" page, the sign-in page, and the teacher role check. Target: 2026-11-12. Evidence class: automated.
+- [ ] 2b.5 Green: the account script `apps/storytime/scripts/make-accounts.ts` (CSV in, hashes in the database, card list out, both files outside the repository), with a test that writes only to a temp folder. Target: 2026-11-12. Evidence class: automated.
+- [ ] 2b.6 Green: signed media URLs through the storage adapter behind the session check, and a browser test of mp4 seek on a signed URL. If the seek fails, report to the orchestrator and use the proxy fallback of the design. Target: 2026-11-13. Evidence class: automated.
+- [ ] 2b.7 Phase check: targeted tests, `tsc`, ESLint (through `heavy-run`), Reviews A, B (authentication, session, media), and C, the adversarial tests, the browser review (scan, sign in, return, sign out, stranger, teacher), and the phase acceptance. Local commits by 2026-11-14. Append `[checkpoint: <sha>]` to this heading. Evidence class: automated.
+- [b] 2b.8 Create the database `storytime`, the runtime user, the new secrets (`STORYTIME_DATABASE_URL`, the storage HMAC pair), and the roles of design section 5. Needed by 2026-11-11. deferred:daniel
+- [b] 2b.9 Give the account list (families, classes, teachers) to the Monorepo session through the PM. Needed by 2026-11-14. The accounts are made on the production database after 2b.8. deferred:daniel
+- [b] 2b.10 Deploy the login revision with no traffic, check the tagged URL signed in and signed out, and move the traffic on Daniel's word. This step merges into the deploy of task 3.1. After the traffic move, remove the public read of `gs://primary-app-storage/storytime-app/` (the old prefix `storytime/` stays). deferred:daniel
+
 ## Phase 3: At-home deploy
 
 Amendment R-1 (copied from the parent plan, line 267): the at-home deploy moves out of task 6.3 and into this task. The deploy follows the acceptance of the receipt phases, with target 2026-11-20. Task 6.3 of the parent keeps the teacher-app deploy. No other task number changes.
 
-- [b] 3.1 (old parent task 3.11) At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
+- [b] 3.1 (old parent task 3.11) At-home deploy (after the Phase 2b checkpoint): the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel
   - w01 r2 ships only on Daniel's deploy word. It ships with the receipt commit of task 1.5. w02 to w08 stay at 404 until Daniel's approvals of 2026-11-16 and the approved pin of task 2.1 are in the deployed commit.
   - The deploy follows the runbook `docs/runbooks/storytime-deploy.md`. A traffic move is a separate step with Daniel's word. Tests: AC-3.1 to AC-3.4.

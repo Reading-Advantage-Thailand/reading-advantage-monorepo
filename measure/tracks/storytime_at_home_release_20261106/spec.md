@@ -90,9 +90,31 @@ This is the task 3.11 of the parent, with amendment R-1 (parent plan line 267: t
 Acceptance:
 
 - AC-3.1 (owner-passed) Daniel gives the deploy word. The record names the revision and the word.
-- AC-3.2 (automated, after the deploy word) The tagged URL answers 200 for the ready weeks. The media files in the production bucket match the hand-off files, file by file (parent spec rule 12.4).
+- AC-3.2 (automated, after the deploy word) The tagged URL answers 200 for the ready weeks with a valid session, and redirects to the sign-in page without one (FR-4). The media files in the production bucket match the hand-off files, file by file (parent spec rule 12.4).
 - AC-3.3 (automated, after the deploy word) The environment of the deployed revision has no `STORYTIME_SHOW_DRAFT_MEDIA`. The record names the check and the result.
 - AC-3.4 (automated, after the deploy word) AC-2.3 of the parent spec: each printed URL of the published weeks answers 200 on the live domain, after Daniel moves the traffic.
+
+### FR-4 Login and protected media (Phase 2b)
+
+Owner words, Daniel, Google Tasks, 2026-11-07 06:07 ICT: "Have noticed the student books have QR codes linking to our content and state that no login is required. This is of course an absurd choice because then any school or any person can use our online content without paying at all. Parents are going to be supervising the young learners so we can simply have a long running login that they have to complete the first time then we can keep out random people who aren't in our program". Approval, 2026-11-07 06:21 ICT: "Approved". The design is [login-design.md](./login-design.md).
+
+- One account per family or per school class. The first sign-in, then the device stays signed in (about one year, renewed on use).
+- A scan without a sign-in opens the sign-in page and returns to the same page after the sign-in (same-origin path check).
+- A stranger sees a short "How to join" page and no content. Pictures, songs, and videos are protected too (signed URLs behind the session).
+- The company makes the accounts for release 1 by a script from a list. Teacher routes need a teacher login.
+- The www Storytime page copy ("By QR Code, With No Login" and its FAQ) changes after PR's text arrives. That is a separate change and is not in this FR.
+
+Acceptance:
+
+- AC-4.1 (automated) A request to `/<locale>/st/**` or `/<locale>/teacher/**` with no session redirects to the sign-in page with `next` set. A request with a valid session gets the page.
+- AC-4.2 (automated) The `next` check accepts the scanned week path and rejects each bad input of a table (`//host`, `\\host`, `https://host`, a control character, bad percent encoding, a path outside `/(th|en)/(st|teacher)/`, a path over 200 characters). The table is asserted not empty (`next_cases` is the table size).
+- AC-4.3 (automated) The sign-in handler rejects a bad password and a disabled account, locks after the rate limit, and writes an audit event for each success and failure. A good sign-in sets a cookie with `HttpOnly`, `Secure`, `SameSite=Lax`, and a 365-day `Max-Age`.
+- AC-4.4 (automated) A session with fewer than 335 days left gets a renewed expiry on use, at most once each day. A disabled account fails on the next request.
+- AC-4.5 (automated) The "How to join" page answers 200 with no session and holds no week content and no media URL.
+- AC-4.6 (automated) A family session gets 403 on a teacher route. A teacher session gets 200.
+- AC-4.7 (automated) Every media URL in a page response is a signed URL of the storage adapter with an expiry of 6 hours or less. A page response with no session holds none. A browser test seeks in an mp4 on a signed URL.
+- AC-4.8 (automated) The account script writes the CSV and the card list only to a path outside the repository, and the test checks `git status` of the repository stays clean.
+- AC-4.9 (owner-passed) Daniel creates the database and the secrets (task 2b.8), gives the account list (2b.9), and gives the word for the deploy and the removal of the public read (2b.10). The record names the revision and the word.
 
 ## 4. Constraints
 
