@@ -65,6 +65,12 @@ export interface FakeStore {
   auditEvents: FakeAuditEvent[];
   attempts: Map<string, FakeAttemptBucket>;
   findAccountByUsername(username: string): Promise<FakeAccount | null>;
+  /**
+   * Finds one account by its id.
+   * @param accountId The account id to look up.
+   * @returns The account, or `null` when no account holds that id.
+   */
+  findAccountById(accountId: string): Promise<FakeAccount | null>;
   createAccount(input: {
     username: string;
     passwordHash: string;
@@ -132,6 +138,9 @@ export function createFakeStore(seed: FakeStoreSeed = {}): FakeStore {
     attempts,
     async findAccountByUsername(username) {
       return accounts.find((account) => account.username === username) ?? null;
+    },
+    async findAccountById(accountId) {
+      return accounts.find((account) => account.id === accountId) ?? null;
     },
     async createAccount(input) {
       if (accounts.some((account) => account.username === input.username)) {

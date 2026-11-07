@@ -37,6 +37,7 @@ export interface ContractBucket {
 /** The store surface of the contract (P2b.2 pins). */
 export interface ContractStore {
   findAccountByUsername(username: string): Promise<ContractAccount | null>;
+  findAccountById(accountId: string): Promise<ContractAccount | null>;
   createAccount(input: {
     username: string;
     passwordHash: string;
@@ -110,6 +111,33 @@ export function storeContractSuite(
       const found = await store.findAccountByUsername("staff-01");
       expect(found?.id).toBe(created.id);
       expect(await store.findAccountByUsername("nobody")).toBeNull();
+    });
+
+    it("finds a created account by its id and returns null for an unknown id", async () => {
+      const store = await makeStore();
+      const created = await store.createAccount({
+        username: "staff-07",
+        passwordHash: HASH,
+        role: "family",
+        now: base,
+      });
+      const found = await store.findAccountById(created.id);
+      expect(found?.id).toBe(created.id);
+      expect(found?.username).toBe("staff-07");
+      expect(await store.findAccountById("no-such-id")).toBeNull();
+    });
+
+    it("reflects a later setDisabled in the account found by id", async () => {
+      const store = await makeStore();
+      const created = await store.createAccount({
+        username: "staff-08",
+        passwordHash: HASH,
+        role: "teacher",
+        now: base,
+      });
+      expect((await store.findAccountById(created.id))?.disabled).toBe(false);
+      await store.setDisabled(created.id, true);
+      expect((await store.findAccountById(created.id))?.disabled).toBe(true);
     });
 
     it("sets the disabled flag and replaces the password hash", async () => {
