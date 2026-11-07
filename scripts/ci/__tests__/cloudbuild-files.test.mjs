@@ -18,6 +18,7 @@ import {
   dbToken,
   deployStep,
   ordered,
+  readTable,
   readText,
   stepIds,
   stepText,
@@ -126,5 +127,103 @@ describe("F: Cloud Build files", () => {
       if (readText(`.github/workflows/${name}`).includes("cloudbuild-traffic")) refs += 1;
     }
     must(refs === 0, `traffic_refs=${refs}`);
+  });
+
+  it("F-06 accounts and workbooks deploy with no traffic and a tag", () => {
+    const rows = [
+      { id: "accounts", file: "apps/accounts/cloudbuild.yaml", prefix: "ac" },
+      { id: "workbooks", file: "apps/workbooks/cloudbuild.yaml", prefix: "wb" },
+    ];
+    must(rows.length === 2, `files_checked=${rows.length}`);
+    const problems = [];
+    for (const row of rows) {
+      const text = stepText(deployStep(cloudbuild(row.file)));
+      if (!text.includes("--no-traffic")) {
+        problems.push(`${row.id} deploy step has no --no-traffic`);
+      }
+      if (!text.includes(`--tag=${row.prefix}-${"${BUILD_ID:0:8}"}`)) {
+        problems.push(`${row.id} deploy step has no tag`);
+      }
+      if (text.includes("update-traffic")) {
+        problems.push(`${row.id} deploy step moves traffic`);
+      }
+    }
+    must(problems.length === 0, `${problems.join("; ")} files_checked=2`);
+  });
+
+  it("F-07 the accounts and workbooks runtime flags stay", () => {
+    const rows = [
+      { id: "accounts", file: "apps/accounts/cloudbuild.yaml", serviceAccount: "accounts-cloud-run@", secrets: "--set-secrets=" },
+      { id: "workbooks", file: "apps/workbooks/cloudbuild.yaml", serviceAccount: "workbooks-cloud-run@", secrets: "--set-secrets=" },
+    ];
+    must(rows.length === 2, `files_checked=${rows.length}`);
+    for (const row of rows) {
+      const text = stepText(deployStep(cloudbuild(row.file)));
+      must(text.includes(row.serviceAccount), `${row.id}: --service-account missing`);
+      must(text.includes(row.secrets), `${row.id}: --set-secrets missing`);
+      must(text.includes("--add-cloudsql-instances="), `${row.id}: --add-cloudsql-instances missing`);
+    }
+  });
+
+  it("F-08 the 9 non-excluded push files hold no database step", () => {
+    const rows = readTable().filter((row) => row.mode !== "excluded");
+    must(rows.length === 9, `files_checked=${rows.length}`);
+    const withSteps = [];
+    for (const row of rows) {
+      const doc = cloudbuild(String(row.cloudbuild));
+      const steps = doc.steps ?? [];
+      must(steps.length >= 1, `${row.id}: steps=0`);
+      const found = databaseSteps(doc);
+      if (found.length > 0) withSteps.push(`${row.id}(${found.map((entry) => entry.id).join("+")})`);
+    }
+    must(
+      withSteps.length === 0,
+      `files_with_db_steps=${withSteps.length} files_checked=9: ${withSteps.join(",")}`,
+    );
+  });
+
+  it("F-09 the database-step detector fixtures", () => {
+    const fixtures = [
+      {
+        step: { args: ["run", "deploy", "x", "--set-secrets=DATABASE_URL=DB:latest"] },
+        expected: null,
+      },
+      {
+        step: { args: ["run", "deploy", "x", "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"] },
+        expected: null,
+      },
+      {
+        step: { entrypoint: "bash", args: ["-c", 'psql "$DATABASE_URL" -f probe.sql'] },
+        expected: "psql",
+      },
+    ];
+    must(fixtures.length === 3, `fixtures=${fixtures.length}`);
+    for (const fixture of fixtures) {
+      const token = dbToken(fixture.step);
+      must(
+        token === fixture.expected,
+        `detector returned ${JSON.stringify(token)} expected ${JSON.stringify(fixture.expected)}`,
+      );
+    }
+  });
+
+  it("F-10 the accounts traffic file orders the five database steps and the move", () => {
+    const doc = cloudbuild("apps/accounts/cloudbuild-traffic.yaml");
+    const ids = ordered(
+      doc,
+      [
+        "migrate-company-identity",
+        "bootstrap-company-identity",
+        "doctor-company-identity",
+        "bootstrap-production-identity",
+        "runtime-db-contract",
+        "update-traffic",
+      ],
+      "accounts traffic",
+    );
+    must(ids.length >= 6, `steps_checked=${ids.length}`);
+    const guard = ids.findIndex((id) => /refuse|guard/.test(id));
+    if (guard >= 0) must(guard === 0, "a guard step is not first");
+    must(ids[ids.length - 1] === "update-traffic", "update-traffic is not last");
   });
 });
