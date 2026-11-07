@@ -15,6 +15,12 @@ vi.mock("next-intl/server", () => ({
 }));
 vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("unexpected notFound"); } }));
 
+vi.mock("../lib/auth", () => ({
+  // The login of task 2b.4 needs a session. The page runs with a signed-in family account, so
+  // the content assertions of this test stay unchanged.
+  requireUser: async () => ({ id: "account-1", username: "staff-01", role: "family" }),
+}));
+
 import StorytimeWeekPage from "../app/[locale]/st/[level]/[week]/page";
 import { StorytimeDecodable } from "../app/[locale]/st/[level]/[week]/reader";
 import { StorytimeSong } from "../app/[locale]/st/[level]/[week]/song";

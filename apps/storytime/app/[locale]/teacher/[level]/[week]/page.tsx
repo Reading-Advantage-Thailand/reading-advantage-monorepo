@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { loadWeek } from "@/lib/content";
-import { parseTeacherRoute, teacherRoutesEnabled } from "@/lib/teacher";
+import { getTranslations } from "next-intl/server";
+import { loadWeek } from "../../../../../lib/content";
+import { parseTeacherRoute, teacherRoutesEnabled } from "../../../../../lib/teacher";
+import { requireRole } from "../../../../../lib/auth";
+import TeacherForbidden from "../../forbidden";
 import { TeacherWeekView } from "./week-view";
 
 /**
@@ -14,6 +17,10 @@ import { TeacherWeekView } from "./week-view";
  * The route answers 404 for an unknown level, an unknown week, and a week that breaks the
  * contract. The teacher reads the week of the class, so the route loads the file with the same
  * loader as the at-home route and never opens a week that the contract rejects.
+ *
+ * The route needs a teacher session (AC-4.6). The order of the checks is fixed: a visitor without
+ * a session goes to the sign-in page, the teacher switch answers 404 for every session, a
+ * session of another role answers the 403 page, and only then does the week load.
  */
 
 /**
@@ -32,16 +39,30 @@ export function generateMetadata(): Metadata {
 /**
  * Renders the week of the teacher.
  * @param props.params The locale, the level, and the week segments.
- * @returns The teacher week view, or the 404 view.
+ * @returns The teacher week view, the 403 page, or the 404 view.
  */
 export default async function TeacherWeekPage({
   params,
 }: {
   params: Promise<{ locale: string; level: string; week: string }>;
 }) {
-  if (!teacherRoutesEnabled()) notFound();
-
   const { locale, level: levelSegment, week: weekSegment } = await params;
+  const returnPath = `/${locale}/teacher/${levelSegment}/${weekSegment}`;
+  const teacher = await requireRole("teacher", returnPath);
+  if (!teacherRoutesEnabled()) notFound();
+  if (!teacher) {
+    const translate = await getTranslations({ locale });
+    const t = (key: string) => translate(key);
+    return (
+      <TeacherForbidden
+        heading={t("teacherForbiddenHeading")}
+        line={t("teacherForbiddenLine")}
+        link={t("teacherForbiddenLink")}
+        href={`/${locale}/sign-in?next=${encodeURIComponent(returnPath)}`}
+      />
+    );
+  }
+
   const route = parseTeacherRoute(levelSegment, weekSegment);
   const loaded = route === null ? null : await loadWeek(route.level, route.week);
   if (loaded === null || loaded.kind !== "ok") notFound();

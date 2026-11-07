@@ -29,5 +29,19 @@
   "decNextPage": "Next page",
   "decAudioError": "The sound could not be played.",
   "notFoundThai": "ไม่พบหน้านี้ กลับไปที่รหัส QR แล้วเลือกส่วนที่ต้องการ",
-  "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part."
+  "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part.",
+  "joinDraftMarker": "Draft copy. The Thai text waits for the check of Daniel.",
+  "signInHeading": "Sign in to Storytime Advantage",
+  "signInUsername": "Username",
+  "signInPassword": "Password",
+  "signInSubmit": "Sign in",
+  "signInInvalid": "The sign-in details are wrong. Please check them and try again.",
+  "signInLocked": "Too many tries. Please wait 15 minutes and try again.",
+  "signInHowToJoin": "How to join Storytime Advantage",
+  "signOut": "Sign out",
+  "teacherForbiddenHeading": "This page is for teachers",
+  "teacherForbiddenLine": "Sign in with a teacher account to open the lesson page.",
+  "teacherForbiddenLink": "Sign in as a teacher",
+  "stFallbackHeading": "Scan the book code",
+  "stFallbackLine": "Scan the code in the book to open the week."
 }

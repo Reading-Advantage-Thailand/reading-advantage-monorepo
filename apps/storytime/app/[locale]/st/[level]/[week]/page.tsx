@@ -11,6 +11,7 @@ import { questionScreenShows, readAlongQuestions } from "../../../../../lib/ques
 // the same files by relative specifier, so the factories match in both runs. Only the
 // type-only import keeps the `@` form; types never resolve at runtime.
 import { parseStorytimeRoute } from "../../../../../lib/route-parse";
+import { requireUser } from "../../../../../lib/auth";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
@@ -212,6 +213,23 @@ function WeekHomeLink({ href, label }: { href: string; label: string }) {
 }
 
 /**
+ * Builds the query of a request, for the path the visitor comes back to.
+ * @param searchParams The query values of the request.
+ * @returns The query string with a leading `?`, or an empty string.
+ */
+function queryOf(searchParams: Record<string, string | string[] | undefined>): string {
+  const parts: string[] = [];
+  for (const [key, value] of Object.entries(searchParams)) {
+    for (const entry of Array.isArray(value) ? value : [value]) {
+      if (typeof entry === "string") {
+        parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(entry)}`);
+      }
+    }
+  }
+  return parts.length > 0 ? `?${parts.join("&")}` : "";
+}
+
+/**
  * Renders one published and ready week.
  * @param props.params The locale, the level, and the week segments.
  * @param props.searchParams The query of the request.
@@ -225,9 +243,11 @@ export default async function StorytimeWeekPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale, level: levelSegment, week: weekSegment } = await params;
+  const search = await searchParams;
+  await requireUser(`/${locale}/st/${levelSegment}/${weekSegment}${queryOf(search)}`);
   const route = parseStorytimeRoute(routing.locales, locale, levelSegment, weekSegment);
   const loaded = route === null ? null : await loadVisibleWeek(route.level, route.week);
-  const part = openPart((await searchParams).part);
+  const part = openPart(search.part);
   const week = loaded ?? notFound();
   const translate = await getTranslations({ locale });
   const t = (key: string) => translate(key);
@@ -422,6 +442,15 @@ export default async function StorytimeWeekPage({
           )}
         </section>
       )}
+      <form method="post" action="/api/auth/sign-out" className="w-fit">
+        <input type="hidden" name="locale" value={locale} />
+        <button
+          type="submit"
+          className="min-h-16 rounded-2xl border border-neutral-300 px-4 py-2"
+        >
+          {t("signOut")}
+        </button>
+      </form>
     </main>
   );
 }

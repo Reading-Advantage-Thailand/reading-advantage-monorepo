@@ -32,6 +32,12 @@ vi.mock("next/navigation", () => ({
   },
 }));
 
+vi.mock("../lib/auth", () => ({
+  // The login of task 2b.4 needs a session. This file belongs to the look track, so its
+  // expectation stays unchanged: the page runs with a signed-in family account.
+  requireUser: async () => ({ id: "account-1", username: "staff-01", role: "family" }),
+}));
+
 import StorytimeWeekPage from "../app/[locale]/st/[level]/[week]/page";
 
 afterEach(() => {

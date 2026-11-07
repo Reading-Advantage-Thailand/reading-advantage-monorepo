@@ -29,5 +29,19 @@
   "decNextPage": "หน้าต่อไป",
   "decAudioError": "เล่นเสียงไม่ได้",
   "notFoundThai": "ไม่พบหน้านี้ กลับไปที่รหัส QR แล้วเลือกส่วนที่ต้องการ",
-  "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part."
+  "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part.",
+  "joinDraftMarker": "ฉบับร่าง ข้อความภาษาไทยรอการตรวจจากคุณแดเนียล",
+  "signInHeading": "เข้าสู่ระบบ Storytime Advantage",
+  "signInUsername": "ชื่อผู้ใช้",
+  "signInPassword": "รหัสผ่าน",
+  "signInSubmit": "เข้าสู่ระบบ",
+  "signInInvalid": "ข้อมูลเข้าสู่ระบบไม่ถูกต้อง โปรดตรวจสอบแล้วลองใหม่อีกครั้ง",
+  "signInLocked": "ลองมากเกินไป โปรดรอ 15 นาทีแล้วลองใหม่อีกครั้ง",
+  "signInHowToJoin": "วิธีเข้าร่วม Storytime Advantage",
+  "signOut": "ออกจากระบบ",
+  "teacherForbiddenHeading": "หน้านี้สำหรับครู",
+  "teacherForbiddenLine": "เข้าสู่ระบบด้วยบัญชีครูเพื่อเปิดหน้าบทเรียน",
+  "teacherForbiddenLink": "เข้าสู่ระบบในชื่อครู",
+  "stFallbackHeading": "สแกนรหัสในหนังสือ",
+  "stFallbackLine": "สแกนรหัสในหนังสือเพื่อเปิดสัปดาห์"
 }

@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadWeek } from "@/lib/content";
-import { parseTeacherDay, parseTeacherRoute, teacherRoutesEnabled } from "@/lib/teacher";
+import { getTranslations } from "next-intl/server";
+import { loadWeek } from "../../../../../../lib/content";
+import {
+  parseTeacherDay,
+  parseTeacherRoute,
+  teacherRoutesEnabled,
+} from "../../../../../../lib/teacher";
+import { requireRole } from "../../../../../../lib/auth";
+import TeacherForbidden from "../../../forbidden";
 
 /**
  * The teacher lesson route `/<locale>/teacher/<level>/<week>/<day>` (spec FR-9, plan task 4.1).
@@ -13,6 +20,10 @@ import { parseTeacherDay, parseTeacherRoute, teacherRoutesEnabled } from "@/lib/
  * The route answers 404 for an unknown level, an unknown week, an unknown day, and a week that
  * breaks the contract. The lesson flow of task 4.3 comes later. This route holds the day title
  * and the way back to the week.
+ *
+ * The route needs a teacher session (AC-4.6). The order of the checks is fixed: a visitor without
+ * a session goes to the sign-in page, the teacher switch answers 404 for every session, a
+ * session of another role answers the 403 page, and only then does the week load.
  */
 
 /**
@@ -38,14 +49,28 @@ export default async function TeacherDayPage({
 }: {
   params: Promise<{ locale: string; level: string; week: string; day: string }>;
 }) {
-  if (!teacherRoutesEnabled()) notFound();
-
   const {
     locale,
     level: levelSegment,
     week: weekSegment,
     day: daySegment,
   } = await params;
+  const returnPath = `/${locale}/teacher/${levelSegment}/${weekSegment}/${daySegment}`;
+  const teacher = await requireRole("teacher", returnPath);
+  if (!teacherRoutesEnabled()) notFound();
+  if (!teacher) {
+    const translate = await getTranslations({ locale });
+    const t = (key: string) => translate(key);
+    return (
+      <TeacherForbidden
+        heading={t("teacherForbiddenHeading")}
+        line={t("teacherForbiddenLine")}
+        link={t("teacherForbiddenLink")}
+        href={`/${locale}/sign-in?next=${encodeURIComponent(returnPath)}`}
+      />
+    );
+  }
+
   const route = parseTeacherRoute(levelSegment, weekSegment);
   const day = parseTeacherDay(daySegment);
   if (route === null || day === null) notFound();
