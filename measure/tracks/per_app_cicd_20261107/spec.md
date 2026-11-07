@@ -43,6 +43,25 @@ PM order (WHAT):
 | workbooks | `cloudbuild.yaml` | `workbooks` | `$PROJECT_ID` | direct | Gated: `--no-traffic` + tag (D2) |
 | reading-advantage | `cloudbuild.yaml` | `reading-advantage-web` | `$PROJECT_ID` | direct; the file builds `web/` of the legacy layout | Excluded from CD until its file matches the monorepo layout (D3) |
 
+### 2a. App table file and tag rule
+
+The table file is `scripts/ci/apps.json`: a JSON array with one object per app and these keys: `id` (the workspace name of the app, for example `storytime`), `path` (`apps/<folder>`), `service`, `project`, `region`, `cloudbuild` (the file path), `mode` (`direct`, `gated`, or `excluded`), and `tagPrefix` (empty for `direct` and `excluded`). Gated rows also hold `tag` (the rule text, for example `st-${BUILD_ID:0:8}`) and `tagLength` (the computed length). Region is `asia-southeast1` for every row (measured in the four files that this track edits). Project is the value of the file for the row (`$PROJECT_ID` rows keep that text; the workflow supplies it).
+
+Tag rule `<prefix>-<first 8 characters of BUILD_ID>` is 3 characters of prefix and dash plus 8, so 11 characters. Computed lengths:
+
+| App (gated) | Service | Service length | Tag | Tag length | Tag + service |
+|---|---|---|---|---|---|
+| primary-advantage | `primary-advantage-app` | 21 | `pa-xxxxxxxx` | 11 | 32 |
+| storytime | `storytime-app` | 13 | `st-xxxxxxxx` | 11 | 24 |
+| accounts | `accounts` | 8 | `ac-xxxxxxxx` | 11 | 19 |
+| workbooks | `workbooks` | 9 | `wb-xxxxxxxx` | 11 | 20 |
+| accounting | `accounting` | 10 | `candidate` (as in the file) | 9 | 19 |
+| codecamp-advantage | `codecamp-advantage` | 18 | `sso-candidate` (as in the file) | 13 | 31 |
+| marketing | `marketing` | 9 | `c` + 8 characters (as in the file) | 9 | 18 |
+| sales-advantage | `sales-advantage` | 15 | `legacy-rollback` (longest tag in the file) | 15 | 30 |
+
+The limit is 46 for tag plus service name (the failure text of build `4907d929`). The four rows below the line keep the tags that their files already set; their lengths are in the table so that AC-2.3 covers every gated row.
+
 **One-off Cloud Build files, excluded from CD:** `apps/primary-advantage/cloudbuild-backfill.yaml` (untracked), `cloudbuild-catalogue.yaml`, `cloudbuild-etl.yaml`, and `apps/sales-advantage/cloudbuild.continue-f5063222.yaml`. They run by hand with a named context.
 
 **Workflows today:**
@@ -62,34 +81,50 @@ Evidence classes: **automated**, **person-checked**, **owner-passed**.
 
 ### FR-1 The affected-app logic (Phase 1)
 
-- One script answers: "which apps does this commit range affect?" Input: a base SHA and a head SHA. Output: a list of app names, as JSON. It uses the workspace graph (turbo `--filter` over the range, or an equal graph read) with `fetch-depth: 0` and `github.event.before`.
+- One script answers: "which apps does this commit range affect?" Its exact path is `scripts/ci/affected-apps.mjs`. Red, Green, and the three workflows (`cd-www-reading-advantage.yml`, `cd-apps.yml`, `ci.yml`) all call this one path with this one CLI:
+
+  ```
+  node scripts/ci/affected-apps.mjs --base <sha> --head <sha>
+  ```
+
+  - It is plain Node ESM. It uses only Node built-ins (`node:child_process`, `node:fs`, `node:path`) and `git`. It adds no dependency. The root `package.json` has no `yaml` package, so the script reads `pnpm-lock.yaml` as text.
+  - On success it prints one JSON array of app ids on stdout (sorted, one line, one final newline) and exits 0. The array is `[]` only when the range is readable and no app is affected.
+  - On a bad argument, a bad base, or a bad head it prints nothing on stdout, writes one message on stderr, and exits 2.
+  - It reads the workspace graph from the `package.json` files of `apps/*` and `packages/*`, with `git diff --name-only <base> <head>` for the changed files. The workflows check out with `fetch-depth: 0` and pass `${{ github.event.before }}` and `${{ github.sha }}`.
+  - The app ids come from the table file `scripts/ci/apps.json` (section 2a). The script prints the id of each table row that the range affects, including the `excluded` row. A workflow skips a row whose mode is `excluded`.
 - An app is affected when a file in its folder changes, when a workspace package that it depends on (directly or through other packages) changes, or when a lockfile entry in its importer or in its resolved dependency set changes.
 - A change to `measure/`, `docs/`, `.github/workflows/` (outside the workflow under test), or another app affects no other app. A change to the root `package.json`, `pnpm-workspace.yaml`, or `turbo.json` is a global change; the script lists which root keys count as global (D4).
-- A new branch push (all-zero `before`) falls back to the merge base with `origin/master`. A missing base stops the script with an error. The script never answers "no app" when it cannot read the range.
+- Rule for the base:
+  - A zero base (40 zeros, the `before` of a new branch) falls back to `git merge-base <head> origin/master`. If that merge base fails, or equals the head (an empty range), the script exits 2.
+  - A base that is empty, is not a 40-character hex value, or names a commit that the clone does not hold (for example after a force push) exits 2. The workflow step then fails and no deploy starts. The workflow does not retry with a guess.
+  - The script never answers `[]` when it cannot read the range.
 
 Acceptance:
 
 - AC-1.1 (automated) Fake-range test: a www-only change returns `["www-reading-advantage"]`.
 - AC-1.2 (automated) A storytime-only change returns `["storytime"]`.
-- AC-1.3 (automated) A change of `packages/read-along` returns the apps that depend on it (www and primary, and storytime) and no app that does not depend on it.
+- AC-1.3 (automated) Two cases on the real workspace manifests (measured 2026-11-07 from `package.json` files, direct and through other packages):
+  - A change of `packages/read-along` returns `["storytime"]`. Only `storytime` lists `@reading-advantage/read-along`, and no other workspace package lists it.
+  - A change of `packages/utils` (listed directly by `www-reading-advantage` and `primary-advantage`, and by `reading-advantage`) returns the table rows `accounting`, `codecamp-advantage`, `marketing`, `primary-advantage`, `reading-advantage`, `sales-advantage`, and `www-reading-advantage`, through the workspace graph. It returns none of `storytime`, `accounts`, and `workbooks`. The test asserts that `www-reading-advantage` and `primary-advantage` are in the list and that the three named apps are not.
 - AC-1.4 (automated) A lockfile change of one dependency of one app returns that app only. A lockfile change of a dependency that two apps share returns both.
 - AC-1.5 (automated) A docs-only change (`docs/`, `measure/`) returns `[]`.
-- AC-1.6 (automated) A zero or missing base does not return `[]`; it falls back or stops with an error (two cases).
+- AC-1.6 (automated) Three cases: a zero base falls back to the merge base with `origin/master` and prints a non-empty array for a scratch branch that changes an app; a zero base with no `origin/master` exits 2; a base commit that the clone does not hold exits 2. Each exit 2 prints nothing on stdout.
 - AC-1.7 (automated) Each test asserts that the app list is not empty before it checks a property of each app, where a list is expected.
 
 ### FR-2 Per-app CD workflows (Phase 2)
 
 - `cd-www-reading-advantage.yml` runs the FR-1 script and deploys www only when the output holds `www-reading-advantage`. It keeps the direct deploy and the two secrets.
 - One workflow (`cd-apps.yml`) runs the FR-1 script and starts one job for each affected gated app. The job runs `gcloud builds submit` with the app's own config. A gated job builds a new revision with `--no-traffic` and a tag. No gated job moves traffic.
-- A table in the repository (one row per app: service, project, config, mode) drives the jobs. The table of section 2 is its source.
-- The tag is short: `st-` plus the first 8 characters of the build id for storytime, and a rule for every gated app that keeps tag plus service name at 46 characters or less.
+- The table `scripts/ci/apps.json` (section 2a) drives the jobs and is the one source for the script, the tests, and the three workflows.
+- The tag of a gated app is `<prefix>-<first 8 characters of BUILD_ID>`. The prefix is set per app in the table so that tag plus service name is 46 characters or less (section 2a gives the prefix and the computed length). The deploy step computes the 8 characters in a bash step (`${BUILD_ID:0:8}`; Cloud Build substitutions have no substring), with `BUILD_ID` passed through `env`.
+- `apps/accounts/cloudbuild.yaml` and `apps/workbooks/cloudbuild.yaml` change their deploy step to `--no-traffic` and the tag (D2), so that no push moves their traffic without Daniel's word.
 - The one-off files of section 2 are not in the table.
 
 Acceptance:
 
 - AC-2.1 (automated) Dry run of the www workflow with a www-only range plans one deploy job. With a docs-only range, it plans none. With a storytime-only range, it plans none.
 - AC-2.2 (automated) Dry run of `cd-apps.yml` for each gated app: a range that affects only that app plans exactly one job for that app, with `--no-traffic` and a tag.
-- AC-2.3 (automated) For each row of the table, the tag rule gives a tag whose length plus the service name length is 46 or less (`rows_checked` equals the row count, asserted not empty).
+- AC-2.3 (automated) For every gated row of `scripts/ci/apps.json`, the tag rule gives a tag whose length plus the service name length is 46 or less, and the length equals the value in the table (`rows_checked` equals the gated row count, 8, asserted not empty). A second check reads each app's `cloudbuild.yaml` and finds the tag expression of the table.
 - AC-2.4 (automated) No job in any workflow runs `update-traffic` or `--to-latest` (a text check of the workflow files).
 - AC-2.5 (person-checked) Each gated app's secrets and roles exist for the GitHub service account. A missing secret or role is a `[b] deferred:daniel` task, and the workflow for that app stays out of the table until the gate passes.
 
@@ -156,7 +191,7 @@ The PM decided the six open questions of the first draft on 2026-11-07. Each dec
 
 | # | Decision (PM, 2026-11-07) |
 |---|---|
-| D1 | A push builds and deploys Primary with `--no-traffic` and a tag, with NO migrate step. The migrate step runs only inside the manual traffic step, on Daniel's word. Until then the new revision must start against the old schema. The manual traffic step is a separate Cloud Build file, `apps/primary-advantage/cloudbuild-traffic.yaml`, that Daniel's word starts by hand. It runs the migrate steps first and then the traffic move. No workflow runs it. The migrate steps move out of the push file `apps/primary-advantage/cloudbuild.yaml`. |
+| D1 | A push builds and deploys Primary with `--no-traffic` and a tag, with NO migrate step. The migrate step runs only inside the manual traffic step, on Daniel's word. Until then the new revision must start against the old schema. The manual traffic step is a separate Cloud Build file, `apps/primary-advantage/cloudbuild-traffic.yaml`, that Daniel's word starts by hand. It runs, in this order: the read-only guard `refuse-legacy-db` (it refuses to migrate the legacy Primary database that Tutor reads), then `migrate-db`, then `doctor-check`, then the traffic move. The guard, the migrate step, and the doctor step all move out of the push file `apps/primary-advantage/cloudbuild.yaml`, so the push file holds no database step. The traffic move targets the tag of the new revision (a substitution that Daniel's word supplies). No workflow runs the file. |
 | D2 | `accounts` and `workbooks` become `--no-traffic` plus a tag. |
 | D3 | `reading-advantage` stays out of CD until its monorepo build exists. |
 | D4 | `overrides` and `catalog` entries count only for the apps that use them. Every other root key of `package.json`, `pnpm-workspace.yaml`, and `turbo.json` is global. |
@@ -165,6 +200,7 @@ The PM decided the six open questions of the first draft on 2026-11-07. Each dec
 
 Acceptance for D1 (added to FR-2):
 
-- AC-2.6 (automated) A test reads `apps/primary-advantage/cloudbuild.yaml` (the push path). It holds no migrate step (no `db:migrate`, `drizzle-kit migrate`, or migration doctor step). The test asserts that the file has steps before it checks a property of each step.
-- AC-2.7 (automated) A test reads `apps/primary-advantage/cloudbuild-traffic.yaml`. Its migrate step comes before its traffic move step (step order check). Both steps exist.
+- AC-2.6 (automated) A test reads `apps/primary-advantage/cloudbuild.yaml` (the push path). It asserts that the file has steps before it checks a property of each step. No step has the id `refuse-legacy-db`, `migrate-db`, or `doctor-check`, and no step command holds `@reading-advantage/db migrate`, `@reading-advantage/db doctor`, or `refuse-legacy-db`. A conditional rule holds the guard in place: if a database step ever returns to this file, a `refuse-legacy-db` step comes before it. Today the file has no database step, so the guard is absent from it.
+- AC-2.7 (automated) A test reads `apps/primary-advantage/cloudbuild-traffic.yaml`. The four steps exist and run in this order (step index check): `refuse-legacy-db`, `migrate-db`, `doctor-check`, the traffic move (`update-traffic`). The doctor step keeps its `--required-migration` argument from the push file of today.
 - AC-2.8 (automated) No workflow file references `cloudbuild-traffic.yaml`. Only a person starts it.
+- AC-2.9 (automated) A test reads `apps/accounts/cloudbuild.yaml` and `apps/workbooks/cloudbuild.yaml` (`files_checked` equals 2, asserted). In each, the `deploy-cloudrun` step holds `--no-traffic` and a `--tag=` with the prefix of section 2a (`ac` or `wb`) plus the first 8 characters of `BUILD_ID`, and the file holds no `update-traffic` and no `--to-latest`. The pre-deploy database steps of `accounts` (company-identity migrate, bootstrap, doctor, runtime probe) are not part of this track and stay as they are.
