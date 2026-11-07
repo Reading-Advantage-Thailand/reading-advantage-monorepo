@@ -104,6 +104,17 @@ Follow-up (Review C): the proxy re-sets the session cookie once a day.
 - The Red commit: `17aa92982`.
 - Green must also move the `Origin` of `sign_in_cookie()` in the smoke script to `http://127.0.0.1:<port>`. That request sends `Host: 127.0.0.1:<port>`, so the old value `http://localhost:<port>` matches only the current `nextUrl.origin`.
 
+### Phase 2b task 2b.7 Red r8 note (closeout item 4)
+
+- The file is `apps/storytime/__tests__/phase3-browser-gate.sh`. The role base is `97569137d8e2716dfe54afbacf1e420a4a52d7a2`. The Red commit is `2321279b2`.
+- Before: `PASS=73, FAIL=3` of 76 rows. The 3 rows failed only on `button[ออกจากระบบ]` at the end of `page.tsx` (bottom 902, 464, and 1496 px at 844x390).
+- After: `bash apps/storytime/__tests__/phase3-browser-gate.sh` (the script enters heavy-run itself) exits 0 with `PASS=80, FAIL=0`. The 4 new rows are 3 `sign_out_control` rows and 1 self-test row.
+- The 3 rows: `all_controls_visible_week=true (controls_found=3, controls_min=3, controls_outside=0, max_bottom_px=226)`; `all_controls_visible_decodable=true (controls_found=8, controls_min=8, controls_outside=0, max_bottom_px=376)`; `all_controls_visible_song=true (controls_found=1, controls_min=1, controls_outside=0, max_bottom_px=320)`.
+- The 3 sign-out rows: `sign_out_reachable=1 (screen=week, exists=1, named=1, height_px=64, bottom_px=902, scroll_delta_px=536)`; `(screen=decodable, bottom_px=464, scroll_delta_px=98)`; `(screen=song, bottom_px=1496, scroll_delta_px=1130)`.
+- The exclusion is exact: `form[action="/api/auth/sign-out"]`, applied through `el.closest`. Every other child control and the `controls_min` counts stay.
+- The narrowness proof: the real self-test reads `selftest sign_out_exclusion_narrow=true (controls_found=4, controls_outside=1)`. A scratch copy under `/tmp` with the exclusion pointed at the broad selector `button` reads `false (controls_found=0, controls_outside=0)` and `FAIL: self-test rejects a child play button below the fold beside the sign-out form`, `PASS=20, FAIL=1`. The scratch is removed.
+- The PM default applies (question open): the sign-out control is an adult control. It stays at the end of the page, so a child does not tap it by chance.
+
 ### Phase 2b Green evidence
 
 - **The commits.** `6afa39173` holds the adapter, the two routes, the store lookup by id, the runtime client, the three workspace packages, the lockfile, the Tailwind sources, and the Docker pruner stage. `ef36b6c37` holds the proxy rule, the sign-in page, the join page, the fallback page, the teacher 403 page, the three guarded pages, the copy file, the two message files, and the six old tests. `9daaaba0f` holds the strict session expiry.
