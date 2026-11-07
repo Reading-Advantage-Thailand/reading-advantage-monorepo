@@ -68,6 +68,20 @@ const DUMMY_PASSWORD_HASH =
   "$argon2id$v=19$m=19456,t=2,p=1$spnrhMFmDYEXEl0r7A/DMA$s7hqbNXUDg+TxUX2jI50YHkrMWoWA6NvG2oLdGa06zQ";
 
 /**
+ * Escapes a value for one structured log record.
+ *
+ * The username comes from the form, so it can hold a line break. The escaped form holds none, so
+ * one attempt writes one record (Review B F46). A plain username stays as it is.
+ * @param value The value to log.
+ * @returns The value with every control character, quote, and backslash escaped.
+ */
+function logValue(value: string): string {
+  return JSON.stringify(value).slice(1, -1).replace(/[\u2028\u2029]/g, (c) =>
+    `\\u${c.charCodeAt(0).toString(16)}`,
+  );
+}
+
+/**
  * Builds the sign-in path of a return path.
  * @param returnPath The path the visitor came from.
  * @returns The locale sign-in path with the return path in `next`.
@@ -175,10 +189,10 @@ export async function login(input: {
       ip: input.ip,
       now: input.now,
     });
+    const limit = accountLimit.allowed ? "ip" : "account";
     console.warn(
-      `storytime sign-in locked: username=${input.username} ip=${input.ip} limit=${
-        accountLimit.allowed ? "ip" : "account"
-      }`,
+      `storytime sign-in locked: username=${logValue(input.username)} ip=${logValue(input.ip)} ` +
+        `limit=${limit}`,
     );
     return { status: "locked", reason: "rate_limited" };
   }
@@ -194,7 +208,9 @@ export async function login(input: {
       ip: input.ip,
       now: input.now,
     });
-    console.warn(`storytime sign-in failed: username=${input.username} reason=unknown_user`);
+    console.warn(
+      `storytime sign-in failed: username=${logValue(input.username)} reason=unknown_user`,
+    );
     return { status: "invalid", reason: "unknown_user" };
   }
   if (!passwordMatches) {
@@ -206,7 +222,9 @@ export async function login(input: {
       ip: input.ip,
       now: input.now,
     });
-    console.warn(`storytime sign-in failed: username=${account.username} reason=bad_password`);
+    console.warn(
+      `storytime sign-in failed: username=${logValue(account.username)} reason=bad_password`,
+    );
     return { status: "invalid", reason: "bad_password" };
   }
   if (account.disabled) {
@@ -218,7 +236,9 @@ export async function login(input: {
       ip: input.ip,
       now: input.now,
     });
-    console.warn(`storytime sign-in failed: username=${account.username} reason=disabled`);
+    console.warn(
+      `storytime sign-in failed: username=${logValue(account.username)} reason=disabled`,
+    );
     return { status: "invalid", reason: "disabled" };
   }
 
@@ -238,7 +258,9 @@ export async function login(input: {
     ip: input.ip,
     now: input.now,
   });
-  console.warn(`storytime sign-in succeeded: username=${account.username} role=${account.role}`);
+  console.warn(
+    `storytime sign-in succeeded: username=${logValue(account.username)} role=${account.role}`,
+  );
   return { status: "signed_in", cookie: cookie.createSessionCookie(token) };
 }
 

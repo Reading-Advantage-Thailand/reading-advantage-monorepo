@@ -63,6 +63,11 @@ export function ownOriginOf(headers: Headers, urlOrigin: string): string {
 export function assertSameOrigin(headers: Headers, ownOrigin: string): void {
   const origin = headers.get("origin");
   if (origin !== null) {
+    // The protected pages send `Referrer-Policy: no-referrer`, so a browser writes `Origin: null`
+    // on the sign-out POST of such a page. The browser sets `Sec-Fetch-Site` itself, and a page
+    // cannot forge it, so `same-origin` there names a request from the own site. A cross-site
+    // request, a sandboxed frame, and a request with no such header stay refused.
+    if (origin === "null" && headers.get("sec-fetch-site") === "same-origin") return;
     if (origin !== ownOrigin) throw new CrossOriginError();
     return;
   }
