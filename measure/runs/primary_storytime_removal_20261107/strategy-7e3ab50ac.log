@@ -1,0 +1,51 @@
+Strategy role log. Track primary_storytime_removal_20261107. Role base 7e3ab50ac2dc5386978d0d98fadf5212200c8871.
+Model: claude-code/claude-sonnet-5-5 (PM rule: a substitution for Opus). Strategy file: measure/tracks/primary_storytime_removal_20261107/test-strategy.md.
+
+Read: spec.md, plan.md, metadata.json, measure/workflow.md, measure/anti-patterns.md, parent strategy P7 (lines 762-799),
+apps/primary-advantage/vitest.config.ts, the EDIT tests, apps/storytime/__tests__/phase1-boundary.test.ts, and the release
+track strategy as the form example. Five heavy jobs ran through heavy-run, one at a time (vitest on 10 files, ESLint of the
+app, tsc, vitest on 29 locale readers, the Storytime boundary test). No file in apps/ or packages/ changed.
+
+Measured facts that shape the gates:
+- 25 DELETE paths and 9 EDIT paths exist. The start scan lists 34 files: 22 DELETE, 9 EDIT, 3 KEEP. scan_files_outside_lists=0.
+- Existing tests that name a deleted module (outside DELETE): service-worker-register.test.tsx (mocks @/lib/storytime/host).
+  The 4 proxy tests (default-locale, proxy-callback, proxy-matcher, proxy-root-home) load proxy.ts and fail to load if the import stays.
+- Test counts at base: 10 files, 63 passed. Deleted tests: 26 (3+9+3+8+3). Green G2 = 7 files, 48 tests (51 in 8 files with the adversarial file).
+- Red test minimum structure: 9 tests (4 guards pass, 5 properties fail). Expected Red tail: "Tests  5 failed | 4 passed (9)".
+  Labels at base: storytime_removed_paths=0, offending_files=13, proxy_storytime_lines=3, 5 locales, namespace_callers=4.
+- Primary ESLint at base: errors=13, warnings=864, 1075 files (the spec says 49). Touched code files: 0 errors, 0 warnings.
+- tsc --noEmit at base exits 2 with 102 errors (stale dist of @reading-advantage/ui and /api; none names a touched path).
+  The spec says exit 0. The strategy uses a before/after list comparison (G4).
+- 29 Primary tests read locale files: 3 failed | 26 passed, 25 failed | 182 passed (207) at base, all in 3 files, none about Storytime.
+  The gate compares with the before-run (an intentionally-red aggregate).
+- Storytime is the last key in each of the 5 locale files (26 lines), so each file diff is 1 added and 27 removed lines.
+- phase1-boundary.test.ts reads Primary files from the Git index: Green must git rm the 25 files before the run, else ENOENT.
+- build-graph callers for isStorytimeHost prints (no matches): Review A uses rg -n as the main evidence.
+
+Decisions: Phase 1 risk high. Review A yes, Review B yes (proxy.ts), Review C yes (public route and 5 message files),
+adversarial yes (3 cases, each with a temporary-change falsification), browser review no (no UI stays; AC-2.2 checks the 404 after
+the deploy). Phase 2 medium, Phase 3 low. Three track commits with exact path sets (1, 34, 1). phase_base_sha is captured at plan task
+1.2 after this commit, the plan author's AC-list fix, and the start check, before Red starts.
+
+Self-check: every command uses ../../node_modules/.bin/{vitest,eslint,tsc} (exist); the commit headers are 96, 96, and 94 characters;
+the AC-1.2 and Review A detectors run at base and hit only Primary paths; no hash or checksum field is added.
+
+status: done
+
+MEASURE_AGENT_RESULT
+role: strategy
+status: complete
+track: primary_storytime_removal_20261107
+phase: Phase 1: Removal
+commits: the commit with the header "docs(measure): write the removal test strategy (track_id: primary_storytime_removal_20261107)" (SHA in the final reply)
+tests_run: none for the strategy; baseline measurement runs at 7e3ab50ac (vitest 63 passed, locale readers 25 failed | 182 passed, tsc exit 2 with 102 errors, ESLint 13 errors, storytime boundary 3 passed)
+files_changed: measure/tracks/primary_storytime_removal_20261107/test-strategy.md, measure/runs/primary_storytime_removal_20261107/strategy-7e3ab50ac.log
+plan_updates: none (plan.md not edited; the plan author fixes AC-1.8 in task 1.10 in a parallel commit)
+known_failures: tsc exits 2 at base (stale package dist); 25 locale-reader tests fail at base in 3 files; Primary ESLint count is 13, not 49
+handoff:
+  Q1. The spec and plan say the known ESLint count is 49; the measured count is 13. Default: gate on 0 errors and 0 warnings for touched files and whole-app errors at most 13.
+  Q2. AC-1.5 says tsc exits 0; it exits 2 at base. Default: G4 compares the before and after error lists, or exit 0 if the builds are fresh.
+  Q3. The plan task 1.10 AC list omits AC-1.8. Default: this strategy checks AC-1.1 to AC-1.8; the plan author fixes the word.
+  Q4. The adversarial file needs jsdom (service worker) and NextRequest (proxy). Default: the role tests NextRequest under jsdom; if it fails, stop and ask the orchestrator.
+  Q5. Sonnet substitution for Opus (PM rule). Default: the orchestrator logs it.
+END_MEASURE_AGENT_RESULT
