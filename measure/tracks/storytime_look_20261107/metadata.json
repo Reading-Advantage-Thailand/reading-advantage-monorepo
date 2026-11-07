@@ -20,7 +20,8 @@
     "PM, 2026-11-07: the UI council round 2 on the look options scored option 2 at 78.3, option 3 at 77.6, option 1 at 73.9, and the current look at 59.0; the default is option 1 with the hero fix (stands at 2026-11-10 12:00)",
     "Daniel via the PM, 2026-11-07: look accepted (his word \"Acepted\"); the pick is option 1, Storybook Quest, with the hero fix",
     "PM, 2026-11-07: Workbooks sends the final SVG pieces by 2026-11-11; Green makes the 5 places from the cover art; Fredoka and Mitr through next/font/local",
-    "PM, 2026-11-07: task 1.3 is not held (poster stays until a frame plays, preload metadata); new task 1.9 fixes the read-along highlight skip (per-frame loop, 120 ms minimum window)"
+    "PM, 2026-11-07: task 1.3 is not held (poster stays until a frame plays, preload metadata); new task 1.9 fixes the read-along highlight skip (per-frame loop, 120 ms minimum window)",
+    "Daniel via the PM, 2026-11-07 13:48: two findings on the live test release; new tasks 1.10 (word tap plays the word's own clip) and 1.11 (song line highlight offset of 3.000 s)"
   ],
   "dates": {
     "phase_1": "before 2026-11-20",
@@ -33,7 +34,7 @@
     "No push and no deploy",
     "No new hash or provenance file (AGENTS.md hashing policy)"
   ],
-  "estimated_tasks": 17,
+  "estimated_tasks": 19,
   "actual_tasks": null,
   "deviation_notes": ""
 }
