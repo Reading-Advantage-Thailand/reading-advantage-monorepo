@@ -1,0 +1,221 @@
+// @vitest-environment node
+import { existsSync, lstatSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { execFileSync } from "node:child_process";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createFakeStore, type FakeStore } from "./helpers/fake-store";
+import { generatePassword, main, parseCsv, readRows } from "../scripts/make-accounts";
+
+/**
+ * The tests of the account script (AC-4.8, test strategy P2b.7, task 2b.5).
+ *
+ * The script reads a CSV of accounts from a folder outside the repository, writes the hashes into
+ * the Storytime database, and writes a print-ready card list into the same outside folder. The
+ * test writes only to a temp folder outside the repository, and it compares `git status` before
+ * and after, so the shared tree stays as it was.
+ */
+
+const app = resolve(import.meta.dirname, "..");
+const repository = resolve(app, "../..");
+
+/** The database URL that the fake store ignores. */
+const DATABASE_URL = "postgres://storytime:secret@localhost:5432/storytime";
+
+/** The CSV of the accounts of one run. */
+const CSV = "name,class,role\n\"Suda, P.\",staff,family\nNok,staff,family\nTeacher One,tutor,teacher\n";
+
+/** The temp folders of the runs. */
+const folders: string[] = [];
+
+/** The log lines of the last run. */
+let logLines: string[] = [];
+
+/**
+ * Creates a temp folder outside the repository.
+ * @returns The path of the folder.
+ */
+function tempFolder(): string {
+  const folder = mkdtempSync(join(tmpdir(), "storytime-accounts-"));
+  folders.push(folder);
+  return folder;
+}
+
+/**
+ * Reads the git status of the repository.
+ * @returns The status lines.
+ */
+function gitStatus(): string {
+  return execFileSync("git", ["status", "--porcelain"], { cwd: repository, encoding: "utf8" });
+}
+
+/**
+ * Runs the script with the fake store.
+ * @param args The arguments of the run.
+ * @param store The store of the run.
+ * @param env The environment of the run.
+ * @returns The exit code of the run.
+ */
+async function run(
+  args: string[],
+  store: FakeStore,
+  env: Record<string, string | undefined> = { STORYTIME_DATABASE_URL: DATABASE_URL },
+): Promise<number> {
+  const lines: string[] = [];
+  const log = vi.spyOn(console, "log").mockImplementation((...values: unknown[]) => {
+    lines.push(values.map((value) => String(value)).join(" "));
+  });
+  const error = vi.spyOn(console, "error").mockImplementation((...values: unknown[]) => {
+    lines.push(values.map((value) => String(value)).join(" "));
+  });
+  try {
+    const code = await main(args, env, () => store as never);
+    logLines = lines;
+    return code;
+  } finally {
+    log.mockRestore();
+    error.mockRestore();
+  }
+}
+
+beforeEach(() => {
+  logLines = [];
+});
+
+afterEach(() => {
+  while (folders.length > 0) {
+    const folder = folders.pop();
+    if (folder) rmSync(folder, { recursive: true, force: true });
+  }
+});
+
+describe("the account script (AC-4.8)", () => {
+  it("writes the card list outside the repository and keeps the tree clean", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), CSV);
+    const before = gitStatus();
+    const store = createFakeStore();
+    const code = await run(["--folder", folder], store);
+
+    expect(code, "the run exits 0").toBe(0);
+    expect(logLines.join("\n"), "the run counts the accounts").toContain("accounts_created=3 verified=3 failed=0");
+    expect(store.accounts, "three accounts").toHaveLength(3);
+    expect(store.accounts.map((account) => account.username)).toEqual([
+      "staff-01",
+      "staff-02",
+      "tutor-01",
+    ]);
+    for (const account of store.accounts) {
+      expect(account.passwordHash, "the hash is an Argon2id hash").toMatch(
+        /^\$argon2id\$v=19\$m=19456,t=2,p=1\$/,
+      );
+    }
+
+    const cardsPath = join(folder, "sign-in-cards.csv");
+    expect(existsSync(cardsPath), "the card list exists").toBe(true);
+    expect(lstatSync(cardsPath).mode & 0o777, "the card list is mode 0600").toBe(0o600);
+    expect(lstatSync(folder).mode & 0o777, "the folder is mode 0700").toBe(0o700);
+    const cards = readFileSync(cardsPath, "utf8");
+    expect(cards, "the card list holds the usernames").toContain("staff-01");
+    expect(cards.split("\n").filter((line) => line.length > 0), "the card list holds three cards").toHaveLength(4);
+
+    expect(gitStatus(), "the tree of the repository stays the same").toBe(before);
+  });
+
+  it("refuses a folder inside the repository and a link that resolves into it", async () => {
+    const inside = join(app, "accounts-outside-test");
+    const store = createFakeStore();
+    const code = await run(["--folder", inside], store);
+    expect(code, "the run exits non-zero").not.toBe(0);
+    expect(logLines.join("\n"), "the run names the reason").toContain("output_inside_repo=1");
+    expect(existsSync(inside), "the script writes no folder in the repository").toBe(false);
+    expect(store.accounts, "the script writes no account").toHaveLength(0);
+
+    const folder = tempFolder();
+    const link = join(folder, "link");
+    symlinkSync(app, link);
+    const linked = await run(["--folder", link], createFakeStore());
+    expect(linked, "the run exits non-zero").not.toBe(0);
+    expect(logLines.join("\n"), "the run names the reason").toContain("output_inside_repo=1");
+  });
+
+  it("draws a password of ten characters with no look-alike and no formula sign", async () => {
+    const random = vi.spyOn(Math, "random");
+    const seen = new Set<string>();
+    for (let index = 0; index < 1000; index += 1) {
+      const password = generatePassword();
+      expect(password.length, "the password holds ten characters").toBe(10);
+      expect(password, "the password holds no look-alike").not.toMatch(/[0O1lI]/);
+      expect(password, "the password holds no formula sign").not.toMatch(/[=+\-@]/);
+      seen.add(password);
+    }
+    random.mockRestore();
+    expect(seen.size, "1000 draws have no repeat").toBe(1000);
+    expect(10 * Math.log2(57), "the password carries at least 49 bits").toBeGreaterThanOrEqual(49);
+  });
+
+  it("refuses a role outside the three roles and a username that stands twice", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), "name,class,role\nNok,staff,admin\n");
+    const store = createFakeStore();
+    const code = await run(["--folder", folder], store);
+    expect(code, "the run exits non-zero").not.toBe(0);
+    expect(store.accounts, "the script writes no account").toHaveLength(0);
+
+    writeFileSync(
+      join(folder, "accounts.csv"),
+      "name,username,class,role\nNok,staff-01,staff,family\nNok Two,staff-01,staff,family\n",
+    );
+    const twice = createFakeStore();
+    const second = await run(["--folder", folder], twice);
+    expect(second, "the run exits non-zero").not.toBe(0);
+    expect(twice.accounts, "the script writes no account").toHaveLength(0);
+  });
+
+  it("skips an account that exists and changes nothing on a second run", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), CSV);
+    const store = createFakeStore();
+    expect(await run(["--folder", folder], store), "the first run exits 0").toBe(0);
+    const hash = store.accounts[0].passwordHash;
+
+    const second = await run(["--folder", folder], store);
+    expect(second, "the second run exits 0").toBe(0);
+    expect(logLines.join("\n"), "the second run skips every account").toContain("accounts_skipped=3");
+    expect(logLines.join("\n"), "the second run creates no account").toContain("accounts_created=0");
+    expect(store.accounts, "the accounts stay three").toHaveLength(3);
+    expect(store.accounts[0].passwordHash, "the hash of the account stays the same").toBe(hash);
+  });
+
+  it("keeps the password, the hash, the URL, and the names out of the log and the arguments", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), CSV);
+    const store = createFakeStore();
+    const argv = ["--folder", folder, "--database-url-env", "STORYTIME_DATABASE_URL"];
+    const code = await run(argv, store);
+    expect(code, "the run exits 0").toBe(0);
+
+    const cards = readFileSync(join(folder, "sign-in-cards.csv"), "utf8");
+    const password = cards.split("\n")[1].split(",").pop() ?? "";
+    const text = `${logLines.join("\n")}\n${argv.join(" ")}`;
+    let secretHits = 0;
+    for (const secret of [password, DATABASE_URL, store.accounts[0].passwordHash, "Suda, P.", "Teacher One"]) {
+      if (secret && text.includes(secret)) secretHits += 1;
+    }
+    console.log(`secret_hits=${secretHits}`);
+    expect(secretHits, "secret_hits").toBe(0);
+    expect(`${text} ${password}`.includes(password), "the scan finds a planted string").toBe(true);
+  });
+
+  it("reads the CSV of the accounts and names the columns", () => {
+    const rows = readRows(CSV);
+    expect(rows, "the CSV holds three rows").toHaveLength(3);
+    expect(rows[0].username, "the username comes from the class and the row").toBe("staff-01");
+    expect(rows[0].name, "the name keeps its comma").toBe("Suda, P.");
+    expect(rows[2].role, "the role comes from the CSV").toBe("teacher");
+    expect(parseCsv("a,b\nc,d"), "the CSV parser reads the rows").toEqual([
+      ["a", "b"],
+      ["c", "d"],
+    ]);
+  });
+});
