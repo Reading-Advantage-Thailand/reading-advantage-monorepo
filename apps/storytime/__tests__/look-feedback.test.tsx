@@ -64,7 +64,7 @@ function readyWeek(): StorytimeWeek {
   const copy = structuredClone(shipped);
   for (const book of copy.books) {
     for (const [index, page] of book.pages.entries()) {
-      page.image.file ??= `review/${book.kind}-${index + 1}.jpg`;
+      if (page.image) page.image.file ??= `review/${book.kind}-${index + 1}.jpg`;
     }
   }
   return copy;
@@ -276,7 +276,7 @@ describe("Task 1.5 feedback and Next (AC-1.6)", () => {
     expect(screen.queryByText("2 / 8"), "the count must not read 2 / 8 on page 1").toBeNull();
 
     const picture = [...container.querySelectorAll<HTMLImageElement>("img")].find((image) =>
-      (image.getAttribute("src") ?? "").endsWith(book.pages[1]!.image.file!),
+      (image.getAttribute("src") ?? "").endsWith(book.pages[1]!.image!.file!),
     );
     expect(picture, "the page 2 picture must be an img in the document").not.toBeNull();
     fireEvent.load(picture!);

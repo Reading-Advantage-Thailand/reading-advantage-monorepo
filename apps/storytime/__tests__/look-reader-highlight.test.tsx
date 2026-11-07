@@ -57,7 +57,7 @@ function readyWeek(): StorytimeWeek {
   const copy = structuredClone(shipped);
   for (const book of copy.books) {
     for (const [index, page] of book.pages.entries()) {
-      page.image.file ??= `review/${book.kind}-${index + 1}.jpg`;
+      if (page.image) page.image.file ??= `review/${book.kind}-${index + 1}.jpg`;
     }
   }
   return copy;

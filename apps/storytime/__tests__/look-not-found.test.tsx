@@ -270,7 +270,7 @@ describe("Task 1.1 404 week-not-open view (AC-1.1, AC-1.2)", () => {
       typeof (routeParse as { parseStorytimePath?: unknown }).parseStorytimePath,
       "lib/route-parse.ts must export parseStorytimePath",
     ).toBe("function");
-    const parse = (routeParse as { parseStorytimePath: (path: string, locales: readonly string[]) =>
+    const parse = (routeParse as unknown as { parseStorytimePath: (path: string, locales: readonly string[]) =>
       { locale: string; level: number; week: number } | null }).parseStorytimePath;
 
     const accepted = ["/th/st/2/2", "/en/st/4/32", "/th/st/1/1"];
@@ -316,7 +316,7 @@ describe("Task 1.1 404 week-not-open view (AC-1.1, AC-1.2)", () => {
       typeof (content as { highestOpenWeeks?: unknown }).highestOpenWeeks,
       "lib/content.ts must export highestOpenWeeks",
     ).toBe("function");
-    const highestOpenWeeks = (content as { highestOpenWeeks: () => Promise<Record<number, number | null>> })
+    const highestOpenWeeks = (content as unknown as { highestOpenWeeks: () => Promise<Record<number, number | null>> })
       .highestOpenWeeks;
 
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
@@ -349,7 +349,7 @@ describe("Task 1.1 404 week-not-open view (AC-1.1, AC-1.2)", () => {
       typeof (content as { highestOpenWeeks?: unknown }).highestOpenWeeks,
       "lib/content.ts must export highestOpenWeeks",
     ).toBe("function");
-    const highestOpenWeeks = (content as { highestOpenWeeks: () => Promise<Record<number, number | null>> })
+    const highestOpenWeeks = (content as unknown as { highestOpenWeeks: () => Promise<Record<number, number | null>> })
       .highestOpenWeeks;
     const shipped = JSON.parse(readFileSync(shippedPath, "utf8")) as Record<string, unknown>;
 

@@ -52,12 +52,14 @@ afterEach(() => {
 /** Creates a ready deep clone of the shipped week. */
 function readyWeek(): StorytimeWeek {
   const copy = structuredClone(shipped);
-  copy.approval.images = { ...copy.approval.images, status: "approved" };
-  copy.approval.audio = { ...copy.approval.audio, status: "approved" };
-  copy.approval.song = { ...copy.approval.song, status: "approved" };
+  if (copy.approval) {
+    copy.approval.images = { ...copy.approval.images, status: "approved" };
+    copy.approval.audio = { ...copy.approval.audio, status: "approved" };
+    copy.approval.song = { ...copy.approval.song, status: "approved" };
+  }
   for (const book of copy.books) {
     for (const [index, page] of book.pages.entries()) {
-      page.image.file ??= `review/${book.kind}-${index + 1}.jpg`;
+      if (page.image) page.image.file ??= `review/${book.kind}-${index + 1}.jpg`;
     }
   }
   return copy;
