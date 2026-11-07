@@ -34,6 +34,8 @@ interface DecodableLabels {
   nextPage: string;
   /** The alert that shows when a recorded sound fails to play. */
   audioError: string;
+  /** The label of the sound button while its sound plays. */
+  playing: string;
 }
 
 /** The props of the decodable part. */
@@ -66,6 +68,7 @@ function labelsFor(locale: string, labels?: Partial<DecodableLabels>): Decodable
         previousPage: "หน้าก่อน",
         nextPage: "หน้าต่อไป",
         audioError: "เล่นเสียงไม่ได้",
+        playing: "กำลังเล่น",
       }
     : {
         soundOfWeek: "Sound of the week",
@@ -74,6 +77,7 @@ function labelsFor(locale: string, labels?: Partial<DecodableLabels>): Decodable
         previousPage: "Previous page",
         nextPage: "Next page",
         audioError: "The sound could not be played.",
+        playing: "Playing",
       };
   return { ...defaults, ...labels };
 }
@@ -185,8 +189,11 @@ export function StorytimeDecodable({
   // rejected play cannot arm a stop for playback that never starts.
   const wholeSeekCancelRef = useRef<(() => void) | null>(null);
   const blendGenerationRef = useRef(0);
+  // True while the "Play the sound" button owns the phoneme element; a blend word clears it.
+  const soundOwnerRef = useRef(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [failed, setFailed] = useState(false);
+  const [soundPlaying, setSoundPlaying] = useState(false);
 
   const decodable: StorytimeBook | undefined = week.books.find(
     (book) => book.kind === "decodable",
@@ -330,6 +337,7 @@ export function StorytimeDecodable({
       files.push(file);
     }
     const generation = stopBlendSequence();
+    soundOwnerRef.current = false;
     runBlendSequence(files, word, generation).catch(() => setFailed(true));
     return true;
   }
@@ -485,7 +493,17 @@ export function StorytimeDecodable({
       className="flex flex-col gap-4 [@media(max-height:500px)]:gap-2"
       data-phoneme-bank={PHONEME_BANK_COUNT}
     >
-      <audio ref={phonemeRef} preload="none" onError={() => setFailed(true)} />
+      <audio
+        ref={phonemeRef}
+        preload="none"
+        onPlay={() => setSoundPlaying(soundOwnerRef.current)}
+        onPause={() => setSoundPlaying(false)}
+        onEnded={() => setSoundPlaying(false)}
+        onError={() => {
+          setSoundPlaying(false);
+          setFailed(true);
+        }}
+      />
       <audio
         ref={wholeRef}
         preload="none"
@@ -506,10 +524,14 @@ export function StorytimeDecodable({
           {element.audio ? (
             <button
               type="button"
-              onClick={() => playPhoneme(element.audio!)}
-              className="min-h-12 rounded-xl border border-neutral-300 px-4"
+              aria-pressed={soundPlaying}
+              onClick={() => {
+                playPhoneme(element.audio!);
+                soundOwnerRef.current = true;
+              }}
+              className="min-h-12 rounded-xl border border-neutral-300 px-4 aria-pressed:border-amber-500 aria-pressed:bg-amber-100"
             >
-              {labels.playSound}
+              {soundPlaying ? labels.playing : labels.playSound}
             </button>
           ) : null}
         </section>

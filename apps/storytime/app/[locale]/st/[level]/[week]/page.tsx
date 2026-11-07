@@ -258,6 +258,7 @@ export default async function StorytimeWeekPage({
     nextPage: t("playerNextPage"),
     audioError: t("playerAudioError"),
     finished: t("playerFinished"),
+    playing: t("playerPlaying"),
   };
   let mediaUrls: Record<string, string> = {};
   try {
@@ -429,6 +430,7 @@ export default async function StorytimeWeekPage({
                 previousPage: t("decPreviousPage"),
                 nextPage: t("decNextPage"),
                 audioError: t("decAudioError"),
+                playing: t("playerPlaying"),
               }}
             />
           ) : (
