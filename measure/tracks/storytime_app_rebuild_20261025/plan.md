@@ -10,7 +10,7 @@
 
 - Markers: `[ ]` pending, `[~]` in progress, `[x]` done, and `[b] … deferred:<owner>` at a human gate. A task in phase N+1 starts only after the heading of phase N has its checkpoint (measure-guard).
 - An `[x]` note names the commit and the evidence class: automated, model pre-check, person-checked, or owner-passed (spec FR-11, rule 7.1).
-- Hard gates stay with Daniel: paid generation, deploys, deletions, and public dates. A task at a gate gets `[b] deferred:daniel`, and the work continues with the next task. No other step stops to ask (Daniel, 2026-10-25).
+- Hard gates stay with Daniel: traffic moves to production, paid generation, data deletions, public dates, and his look, Thai, and proof judgments. A task at such a gate gets `[b] deferred:daniel`. Every other gate gets `[b] deferred:pm`, and the PM decides (PM decision 2026-11-07). The work continues with the next task. No other step stops to ask (Daniel, 2026-10-25).
 - Daniel judges the media at milestone 1 (Phase 6), not in each phase.
 - Each task follows `measure/workflow.md`: tests first, then code, then one commit with `(track_id: storytime_app_rebuild_20261025)`. The commit header is 100 characters or less.
 - At the end of each phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
@@ -1866,7 +1866,7 @@ Green builds to these rules:
   `heavy-run.sh`; no test, build, tsc, build-graph, or server ran
   outside it.
 
-- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
+- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:pm Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
 
 ## Phase 4: Teacher app
 
@@ -1988,7 +1988,7 @@ for every other track.
 
 - [b] 6.1 Daniel judges the five items on the review page, with the sound and touch checks on a real iPhone and a low-cost Android phone. A section without an answer is open. AC-12.1. deferred:daniel
 - [ ] 6.2 Fix each finding from Daniel. Repeat stages 1 and 2 for each changed file. Put the changed items in a new page section.
-- [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:daniel
+- [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:pm
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel
 - [ ] 6.5 Retro entry in `measure/lessons-learned.md`. Update the spec and the plan to the state at the milestone.
 
@@ -1996,17 +1996,17 @@ for every other track.
 
 - [b] 7.1 Remove the void Storytime code from `apps/primary-advantage` on master: `app/[locale]/st/`, `components/storytime/`, `content/storytime/`, `lib/storytime/`, `scripts/storytime/`, the host rule in `proxy.ts`, and the old runbook `docs/runbooks/storytime-week-sync.md`. This is a deletion (code fate RU2). Moved to primary_storytime_removal_20261107 (PM decision 2026-11-07); the route leaves production at the next Primary deploy by the team. deferred:moved-to-primary_storytime_removal_20261107
 - [ ] 7.2 After 7.1: Primary imports the player from `packages/read-along`, with no change of behavior. Run Primary's read-along tests and a browser check of articles, lesson reading, and story chapters. Remove the tech-debt row of task 2.3. The Primary deploy of this change is Daniel's gate.
-- [b] 7.3 Fate of the void build branches and worktrees: `master-next`, `storytime/own-app`, `storytime/primary-cleanup`, `~/Desktop/rama-worktrees/storytime`, and `~/Desktop/rama-worktrees/storytime-qr`. First, the Monorepo orchestrator lists the commits on each branch that are not Storytime work. deferred:daniel
+- [b] 7.3 Fate of the void build branches and worktrees: `master-next`, `storytime/own-app`, `storytime/primary-cleanup`, `~/Desktop/rama-worktrees/storytime`, and `~/Desktop/rama-worktrees/storytime-qr`. First, the Monorepo orchestrator lists the commits on each branch that are not Storytime work. deferred:pm
   - Note (2026-10-27): the records that exist only on storytime/own-app are copied to docs/generation-rules-draft2.md and docs/void-build-carryover.md (rules draft 2 with rule 6.7, decisions S31 to S34, and the uncommitted speak.ts timer fix). Removal of the worktrees and the master-next delete wait for Daniel.
 - [ ] 7.4 Continuity watch: on 2026-11-15, request each printed path on the live domain. If a path does not answer with its week page, give Daniel the options. One option is the week page with only the passed parts. The deploy stays his gate.
 
 ## Phase 8: Release 1 (deferred until Daniel decides S17)
 
-- [b] 8.1 Daniel confirms or cuts the release-1 scope (S17) after milestone 1. deferred:daniel
+- [b] 8.1 Daniel confirms or cuts the release-1 scope (S17) after milestone 1. deferred:pm
 - [b] 8.2 Weeks 2 to 8 at the standard of the passed milestone week: media through the production side, stages 1 and 2, and Daniel's pass for each batch. Weeks 2 to 7 also wait for S26. deferred:daniel
-- [b] 8.3 Karaoke cuts and the karaoke tile, if Daniel decides S28 for release 1. deferred:daniel
-- [b] 8.4 Teacher access (Q1): the sign-in for the teacher app and the teacher routes on the public service. deferred:daniel
-- [b] 8.5 The Phonics, Speaking, and Writing skill values (S8) with the first evidence code, if the release-1 scope has evidence. deferred:daniel
+- [b] 8.3 Karaoke cuts and the karaoke tile, if Daniel decides S28 for release 1. deferred:pm
+- [b] 8.4 Teacher access (Q1): the sign-in for the teacher app and the teacher routes on the public service. deferred:pm
+- [b] 8.5 The Phonics, Speaking, and Writing skill values (S8) with the first evidence code, if the release-1 scope has evidence. deferred:pm
 - [b] 8.6 Internal release 1 on 2026-12-01: no public date, and the deploy on Daniel's go. deferred:daniel
 
 ## Task count
