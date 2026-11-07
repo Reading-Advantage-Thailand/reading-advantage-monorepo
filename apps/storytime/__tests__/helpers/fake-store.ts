@@ -39,7 +39,7 @@ export interface FakeAuditEvent {
   username?: string;
   reason?: string;
   ip?: string;
-  at: Date;
+  now: Date;
 }
 
 /** One rate-limit bucket of the fake store. */

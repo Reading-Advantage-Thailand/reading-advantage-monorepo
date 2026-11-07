@@ -141,7 +141,7 @@ describe("login join page (red)", () => {
     console.log(`media_urls_found=${found.length}`);
     expect(found, "media_urls_found").toHaveLength(0);
     expect(html, "no week path").not.toMatch(/\/(th|en)\/st\//);
-    const planted = 'https://storage.googleapis.com/storytime-app-media/l2/media/w01/x.jpg';
+    const planted = 'https://storage.googleapis.com/storytime-app-media/l2/w01/x.jpg';
     expect(mediaUrls(planted), "the positive control finds a planted media URL").toHaveLength(1);
   });
 

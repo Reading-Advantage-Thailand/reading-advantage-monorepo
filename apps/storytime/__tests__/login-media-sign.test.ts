@@ -71,7 +71,8 @@ async function realStorage(): Promise<StorageClient> {
 
 /** Loads the signing module after the pinned path check. */
 async function loadSign(): Promise<SignModule> {
-  return (await import("../lib/media/sign.js")) as SignModule;
+  const modulePath = resolve(APP, "lib/media/sign.js");
+  return (await import(/* @vite-ignore */ modulePath)) as SignModule;
 }
 
 afterEach(() => {

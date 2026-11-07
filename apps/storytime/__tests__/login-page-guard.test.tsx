@@ -121,18 +121,18 @@ const TOKEN = "A".repeat(43);
 /** The week fixture of one test. */
 const week = JSON.parse(JSON.stringify(week1)) as {
   meta: { title?: string };
-  focus: { element?: string; paSkill?: string; family?: unknown };
+  focus: {
+    element?: { sound?: string; graphemes?: string[] };
+    paSkill?: { en?: string; th?: string };
+    family?: unknown;
+  };
 };
 
 /** The distinctive strings of the teacher week view. */
 function teacherStrings(): string[] {
-  const family = week.focus.family;
   const values: string[] = [];
-  if (week.focus.element) values.push(week.focus.element);
-  if (week.focus.paSkill) values.push(week.focus.paSkill);
-  if (Array.isArray(family)) {
-    for (const entry of family) if (typeof entry === "string") values.push(entry);
-  }
+  if (typeof week.focus.element?.sound === "string") values.push(week.focus.element.sound);
+  if (typeof week.focus.paSkill?.en === "string") values.push(week.focus.paSkill.en);
   return values;
 }
 

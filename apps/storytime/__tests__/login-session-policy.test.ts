@@ -80,8 +80,12 @@ describe("login session policy (red)", () => {
       false,
     );
     expect(
-      policy.isSessionActive({ expiresAt: new Date(NOW.getTime() - 1000) }, NOW),
-      "one second before the expiry is a session",
+      policy.isSessionActive({ expiresAt: new Date(NOW.getTime() - 1) }, NOW),
+      "one millisecond past the expiry is no session",
+    ).toBe(false);
+    expect(
+      policy.isSessionActive({ expiresAt: new Date(NOW.getTime() + 1) }, NOW),
+      "one millisecond before the expiry is a session",
     ).toBe(true);
     expect(
       policy.isSessionActive({ expiresAt: new Date(NOW.getTime() + DAY_MS), disabled: true }, NOW),
@@ -89,7 +93,7 @@ describe("login session policy (red)", () => {
     ).toBe(false);
     expect(
       policy.isSessionActive({ expiresAt: new Date(NOW.getTime() + DAY_MS) }, NOW),
-      "one second before is active",
+      "one day before is active",
     ).toBe(true);
   });
 

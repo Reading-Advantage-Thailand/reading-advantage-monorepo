@@ -158,10 +158,8 @@ describe("login boundary (red)", () => {
       "Missing packages/backend/src/modules/storytime-access/index.ts",
     ).toBe(true);
 
-    const previousNodeEnv = process.env.NODE_ENV;
-    const previousDatabaseUrl = process.env.DATABASE_URL;
-    process.env.NODE_ENV = "production";
-    delete process.env.DATABASE_URL;
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("DATABASE_URL", "");
     try {
       for (const directory of [resolve(APP, "lib/auth"), resolve(APP, "lib/media")]) {
         for (const name of readdirSync(directory)) {
@@ -186,9 +184,7 @@ describe("login boundary (red)", () => {
         "the package root throws without DATABASE_URL",
       ).rejects.toThrow();
     } finally {
-      process.env.NODE_ENV = previousNodeEnv;
-      if (previousDatabaseUrl === undefined) delete process.env.DATABASE_URL;
-      else process.env.DATABASE_URL = previousDatabaseUrl;
+      vi.unstubAllEnvs();
     }
   });
 });
