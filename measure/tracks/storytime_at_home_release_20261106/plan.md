@@ -136,6 +136,7 @@ Follow-up (Review C): the proxy re-sets the session cookie once a day.
   - The 7 old shell rows pass. The old flow labels hold: `returned_same_url=1 unsigned_media=0 media_path_requests=0 device_kept=1 content_after_signout=0 stranger_media_requests=0 stranger_set_cookie=0 generic_error=1 locked_after=6 teacher_ok=1 family_403=1 loop=0 offsite_requests=0 phone_form_checks=6 seek_ok=1 range_206=21`. The flows row fails only on the new F45 and F47 checks.
 - Non-vacuity (F46; fixture under `/tmp`; no app file changed): `f46_sanitized_log_records=1 f46_sanitized_raw_line_breaks=0` passes the assertion, and the positive control `f46_positive_control_raw_line_breaks=1` proves the scan finds a raw break.
 - `tsc --noEmit` exits 0 in `apps/storytime` and `packages/backend`.
+- Red r10 (`c00e05a92`): the `..` folder case keeps a raw `${parent}/other/../run` value, so only the `..` rule can refuse it; the corrected case passes on Green r3 `acdf704df`, and `__tests__/make-accounts.test.ts` exits 0 with `Tests 25 passed (25)`.
 
 ### Phase 2b Green evidence
 
