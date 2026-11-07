@@ -5,7 +5,7 @@
   "created_at": "2026-11-07T00:00:00Z",
   "updated_at": "2026-11-07T00:00:00Z",
   "opened": "2026-11-07",
-  "description": "Fix eight UI council findings on the Storytime week pages (Phase 1), then port the look of the option that Daniel picks from the look study (Phase 2), so that Storytime has a look in the vein of Primary Advantage.",
+  "description": "Fix eleven UI council findings on the Storytime week pages (Phase 1), then port the look of the option that Daniel picks from the look study (Phase 2), so that Storytime has a look in the vein of Primary Advantage.",
   "author_model": "claude-code/claude-sonnet-5-5",
   "related_track": "storytime_at_home_release_20261106",
   "depends_on": "none; the at-home Phase 3 deploy waits for the Phase 1 checkpoint of this track",
@@ -15,8 +15,9 @@
     "PM orchestrator (decisions of 2026-11-07)"
   ],
   "decisions": [
-    "PM, 2026-11-07: the council batch is accepted; M-3 stands; finding 10 is dropped; item 6 label is 'Read the words'",
-    "Orchestrator, 2026-11-07: Phase 2c and Phase 2d move here from the at-home plan so two roles run in parallel in different tracks"
+    "PM, 2026-11-07: the council batch is accepted; M-3 stands; finding 10 is dropped; the English label of the decodable card (council finding 2) is 'Read the words'",
+    "Orchestrator, 2026-11-07: Phase 2c and Phase 2d move here from the at-home plan so two roles run in parallel in different tracks",
+    "PM, 2026-11-07: the UI council round 2 on the look options scored option 2 at 78.3, option 3 at 77.6, option 1 at 73.9, and the current look at 59.0; the default is option 1 with the hero fix (stands at 2026-11-10 12:00)"
   ],
   "dates": {
     "phase_1": "before 2026-11-20",
@@ -29,7 +30,7 @@
     "No push and no deploy",
     "No new hash or provenance file (AGENTS.md hashing policy)"
   ],
-  "estimated_tasks": 13,
+  "estimated_tasks": 16,
   "actual_tasks": null,
   "deviation_notes": ""
 }
