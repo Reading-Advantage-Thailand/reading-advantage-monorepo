@@ -99,6 +99,24 @@ for (const name of ['w01.json', 'w03.json', 'w04.json']) {
       }
     }
   }
+  // AC-1.12 makes a word without a clip a non-target, and the shipped w01 holds no wordClips
+  // yet (closeout item 11 waits for the Workbooks data), so the reader rows would have no tap
+  // target at all. The fixture copy maps each readalong sentence word to its own clip path,
+  // except the word "I", which the no-clip row needs (fixture only; the shipped file stays
+  // untouched). The media signing lists the clips through mediaOf, so no file is read here.
+  if (name === 'w01.json') {
+    for (const book of week.books ?? []) {
+      if (book.kind !== 'readalong' || !book.audio) continue;
+      const clips = {};
+      for (const sentence of book.audio?.sentences ?? []) {
+        for (const word of sentence.words ?? []) {
+          const key = String(word.word).toLowerCase();
+          if (key !== 'i') clips[key] = `audio/words/${key}.mp3`;
+        }
+      }
+      book.audio.wordClips = clips;
+    }
+  }
   function collect(value) {
     if (Array.isArray(value)) return value.forEach(collect);
     if (!value || typeof value !== 'object') return;
@@ -181,10 +199,12 @@ import http from 'node:http';
 const base = process.env.PROJECT_DEV_URL;
 const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
 // F7c: every week route needs a session, so the gate signs in first. The helper posts the sign-in
-// form with the Origin of the server (next start with --hostname 127.0.0.1 reports the origin
-// http://localhost:<port>) and keeps the name=value pair of the session cookie; a context adds it
-// with signedContext. The password comes from the environment and is never printed.
-const SIGN_IN_ORIGIN = `http://localhost:${new URL(base).port}`;
+// form with the origin of the request itself. The login origin check compares the Origin header to
+// the origin of the Host header (`lib/auth/same-origin.ts`, `ownOriginOf`), so a request that posts
+// to 127.0.0.1 must send the 127.0.0.1 origin; a fixed `localhost` origin answers 403. It keeps the
+// name=value pair of the session cookie; a context adds it with signedContext. The password comes
+// from the environment and is never printed.
+const SIGN_IN_ORIGIN = new URL(base).origin;
 async function signIn(user, password) {
   const body = new URLSearchParams({ username: user, password, locale: 'th', next: '/th/st' });
   const response = await fetch(`${base}/api/auth/sign-in`, {
@@ -240,20 +260,40 @@ function area(box) { return box ? Math.min(box.width, box.height) : 0; }
 // The P3.6 week-404 row (PM 2026-11-05, option a; test strategy line 402). The server curl
 // document of a pre-stream notFound() is the Next.js error shell without `lang`, so the row
 // asserts the hydrated document in a real browser: the network response status is 404, the
-// `document.documentElement.lang` after load equals the URL locale, and both the Thai and the
-// English line of not-found.tsx show. Used by the live row and by the lang self-test.
-async function checkWeek404(p, url, expectedLocale) {
+// `document.documentElement.lang` after load equals the URL locale, and the text of the view
+// shows. AC-1.1 (commit 5ab3834bb) changes the text of a draft week of an open level to the
+// not-open pair and adds one 48 px link to the highest open week, so the live row uses the
+// `notOpen` variant with the link href; the `/th/nowhere` self-test path holds no week route
+// and keeps the `old` variant (the lang half of the row).
+async function checkWeek404(p, url, expectedLocale, variant = 'old', linkHref = null) {
   const response = await p.goto(url, { waitUntil: 'load' });
   await p.waitForTimeout(1200); // let hydration re-render the layout over the error shell
   const status = response ? response.status() : null;
   const lang = await p.evaluate(() => document.documentElement.lang);
-  const thai = await p.evaluate(() => document.body.innerText.includes('ไม่พบหน้านี้'));
-  const english = await p.evaluate(() => document.body.innerText.includes('This page is not here'));
+  const thaiText = variant === 'notOpen' ? 'สัปดาห์นี้ยังไม่เปิด' : 'ไม่พบหน้านี้';
+  const englishText = variant === 'notOpen' ? 'This week is not open yet' : 'This page is not here';
+  const thai = await p.evaluate(text => document.body.innerText.includes(text), thaiText);
+  const english = await p.evaluate(text => document.body.innerText.includes(text), englishText);
+  const link = linkHref === null ? null : await p.evaluate(href => {
+    const a = [...document.querySelectorAll('a')].find(node => node.getAttribute('href') === href);
+    if (!a) return { found: false, height: 0 };
+    return { found: true, height: Math.round(a.getBoundingClientRect().height) };
+  }, linkHref);
   console.log(`week404_status=${status}`);
   console.log(`week404_lang=${lang} (expected=${expectedLocale})`);
   console.log(`week404_thai_text=${thai}`);
   console.log(`week404_english_text=${english}`);
-  return { ok: status === 404 && lang === expectedLocale && thai && english, detail: `status=${status} lang=${lang} thai=${thai} english=${english}` };
+  if (link) console.log(`week404_link_found=${link.found} week404_link_height_px=${link.height} (href=${linkHref})`);
+  if (link && !link.found) {
+    const links = await p.evaluate(() =>
+      [...document.querySelectorAll('a[href]')].slice(0, 5).map(node => node.getAttribute('href')));
+    console.log(`week404_links=${JSON.stringify(links)}`);
+  }
+  const textsHold = status === 404 && lang === expectedLocale && thai && english;
+  const linkHolds = link === null || (link.found && link.height >= 48);
+  const detail = `status=${status} lang=${lang} thai=${thai} english=${english}` +
+    (link ? ` link_found=${link.found} link_height_px=${link.height}` : '');
+  return { ok: textsHold && linkHolds, detail };
 }
 // A silent 3 s WAV that stands in for every media file, so the live playback rows
 // (the blend clip count and the word cut) run on real decoded audio. The length keeps a
@@ -750,16 +790,51 @@ try {
 
   // tap_target_min_px_player: 44 px floor over the reader, the decodable, and the question
   // screen, in portrait and landscape. The question tiles keep the 64 px floor of AC-5.2.
+  // AC-1.9 and plan task 1.8 (commit db8b093bb) hold one accepted exception: a word of the
+  // sentence is a text span, and its tap area is a pseudo-element (0.5 rem above and below,
+  // 0.25 rem on each side), so the word gap stays a text gap. The UX review measured the
+  // trade-off (measure/runs/storytime_look_20261107/ux-browser-2c5b3d73f.json finding F1:
+  // I_hit_w_px=13.27, I_hit_h_px=39; the word stays reachable and "Hello" does not steal its
+  // tap) and accepted it as nonblocking. The row keeps the 44 px floor for every control and
+  // holds the accepted exception as a bounded rule: every word carries the pseudo hit area, and
+  // its effective area stays at least 10 px wide and 36 px high (the measured floor of F1).
   const playerScreens = ['book', 'decodable'];
+  const CONTROL_FLOOR_SELECTOR = 'button, a[href], [role="button"], audio[aria-label]';
   for (const viewport of [{ width: 360, height: 800 }, { width: 800, height: 360 }]) {
     for (const screen of playerScreens) {
-      await runCheck(`tap_target_min_px_player is at least 44 on ${screen} at ${viewport.width}x${viewport.height}`, async () => {
+      await runCheck(`tap_target_min_px_player is at least 44 on ${screen} at ${viewport.width}x${viewport.height} except the accepted word hit area`, async () => {
         if (!page) throw new Error('Browser page is unavailable');
         await page.setViewportSize(viewport);
         await page.goto(`${base}/th/st/2/1?part=${screen}`, { waitUntil: 'networkidle' });
-        const measured = await minTapSide(page);
-        console.log(`tap_target_min_px_player_${screen}_${viewport.width}x${viewport.height}=${measured.min} (elements=${measured.count}, smallest=${measured.smallest})`);
-        return { ok: measured.count > 0 && measured.min >= 44, detail: `min=${measured.min}, elements=${measured.count}` };
+        const measured = await minTapSide(page, CONTROL_FLOOR_SELECTOR);
+        const words = await page.evaluate(() => {
+          const out = [];
+          for (const el of document.querySelectorAll('[data-word]')) {
+            const r = el.getBoundingClientRect();
+            if (!(r.width > 0 && r.height > 0)) continue;
+            const before = getComputedStyle(el, '::before');
+            const classes = typeof el.className === 'string' ? el.className : '';
+            const hitArea = before.position === 'absolute' ||
+              (classes.includes('before:absolute') && classes.includes('before:inset-y-[-0.5rem]'));
+            out.push({
+              text: (el.textContent ?? '').trim(),
+              effectiveWidth: Math.round(r.width + 8),
+              effectiveHeight: Math.round(r.height + 16),
+              hitArea,
+            });
+          }
+          return out;
+        });
+        const total = words.length;
+        const noHitArea = words.filter(w => !w.hitArea).length;
+        const wordEffectiveMinW = total ? Math.min(...words.map(w => w.effectiveWidth)) : 0;
+        const wordEffectiveMinH = total ? Math.min(...words.map(w => w.effectiveHeight)) : 0;
+        const wordsHold = words.length === 0 ||
+          (noHitArea === 0 && wordEffectiveMinW >= 10 && wordEffectiveMinH >= 36);
+        // The reader screen holds the sentence words of AC-1.9; their absence there is a failure.
+        const ok = measured.count > 0 && measured.min >= 44 && wordsHold && (screen !== 'book' || total > 0);
+        console.log(`tap_target_min_px_player_${screen}_${viewport.width}x${viewport.height}=${measured.min} (elements=${measured.count}, smallest=${measured.smallest}, words=${total}, words_without_hit_area=${noHitArea}, word_effective_min_w=${wordEffectiveMinW}, word_effective_min_h=${wordEffectiveMinH})`);
+        return { ok, detail: `min=${measured.min}, elements=${measured.count}, words=${total}, word_effective_min=${wordEffectiveMinW}x${wordEffectiveMinH}` };
       });
     }
     await runCheck(`tap_target_min_px_player is at least 44 on the question screen at ${viewport.width}x${viewport.height}`, async () => {
@@ -1055,14 +1130,24 @@ try {
       const states = { currentWord: wordMin.ratio, sentenceBand: sentenceMin.ratio };
       console.log(`contrast_raw_word_min=${wordMin.raw}`);
       console.log(`contrast_raw_sentence_min=${sentenceMin.raw}`);
-      await contrastPage.locator('[data-word]').nth(2).hover();
+      // AC-1.12 (commit db8b093bb) makes a word with no clip a non-target, and only a target
+      // word carries the hover class. The shipped w01 holds no wordClips yet (UX finding F2:
+      // clip_words_on_page=0), so the fixture maps the readalong words to clips and the row
+      // hovers the first target word (its computed cursor is the pointer of a target). No target
+      // means a broken fixture, not a pass.
+      const targetIndex = await contrastPage.evaluate(() =>
+        [...document.querySelectorAll('[data-word]')].findIndex(el => getComputedStyle(el).cursor === 'pointer'));
+      if (targetIndex < 0) {
+        throw new Error('the fixture holds no word clip target; AC-1.12 makes a word with no clip a non-target');
+      }
+      await contrastPage.locator('[data-word]').nth(targetIndex).hover();
       await contrastPage.waitForTimeout(200);
-      states.hover = await contrastPage.evaluate(() => {
-        const el = document.querySelectorAll('[data-word]')[2];
+      states.hover = await contrastPage.evaluate((index) => {
+        const el = document.querySelectorAll('[data-word]')[index];
         const own = window.__srgb(getComputedStyle(el).backgroundColor);
         if (own.a < 1) return null;
         return window.__ratioOf(el);
-      });
+      }, targetIndex);
       if (states.hover === null) {
         throw new Error('the hover state holds no opaque background after the pointer rests');
       }
@@ -1152,48 +1237,100 @@ try {
     return { ok: state.whole && state.ended === 3, detail: `ended=${state.ended}, whole=${state.whole}` };
   });
 
-  let wordCutSignedPauseDeltaMs = null; // signed pause_at - cut_end, in ms; set by the overshoot row
-  // word_cut_overshoot_ms: the time between the cut end and the pause of one reader word cut.
-  await runCheck('word_cut_overshoot_ms is at most 50', async () => {
+  // AC-1.12 (plan task 1.10, commit db8b093bb) removed the word cut: a tap in My turn plays the
+  // word's own clip from books[].audio.wordClips and makes no seek and no stop on the sentence
+  // audio. The two rows below replace the old word_cut_overshoot_ms and word_cut_early_ms rows,
+  // whose behavior the spec deleted. The first row holds the new contract with the clip source
+  // and two zero counts; the second holds the no-clip rule (a word with no clip is not a target).
+  let clipTarget = null; // { key, display, clipFile } set by the word clip row
+  await runCheck('word_clip_played is the tapped word own clip and the sentence audio sees no seek and no pause', async () => {
     if (!page) throw new Error('Browser page is unavailable');
     const { default: fs } = await import('node:fs');
     const week = JSON.parse(fs.readFileSync(process.env.PROJECT_FIXTURE_WEEK, 'utf8'));
     const book = week.books.find(b => b.kind === 'readalong');
-    const timing = book.audio.sentences.flatMap(s => s.words).find(w => w.end - w.start >= 0.15);
-    if (!timing) throw new Error('the fixture week holds no measurable word cut');
+    const clips = book.audio.wordClips ?? {};
+    const first = book.audio.sentences.flatMap(s => s.words)
+      .find(w => Object.hasOwn(clips, String(w.word).toLowerCase()));
+    if (!first) throw new Error('the fixture week holds no word clip; AC-1.12 needs one to run');
+    const key = String(first.word).toLowerCase();
+    clipTarget = { key, display: first.word, clipFile: clips[key] };
     await page.setViewportSize({ width: 360, height: 800 });
-    await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
-    await page.evaluate(() => {
-      window.__pauseAt = null; window.__cutErrors = [];
-      const audio = document.querySelector('audio');
-      audio?.addEventListener('pause', () => { window.__pauseAt = audio.currentTime; });
-      audio?.addEventListener('error', () => window.__cutErrors.push(`${audio.currentSrc || 'unknown source'} (${audio.error?.code ?? '?'})`));
+    await page.addInitScript(() => {
+      window.__wordPlays = [];
+      const original = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function (...args) {
+        try { window.__wordPlays.push(this.src || ''); } catch { /* a detached element holds no source */ }
+        return original.apply(this, args);
+      };
     });
+    await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
     await page.getByRole('button', { name: 'ตาฉัน' }).click();
-    await page.locator('[data-word]', { hasText: timing.word }).first().click();
-    await page.waitForFunction(() => window.__pauseAt !== null || (window.__cutErrors || []).length > 0, null, { timeout: 30000 });
-    const state = await page.evaluate(() => ({ pauseAt: window.__pauseAt, errors: window.__cutErrors }));
-    if (state.pauseAt === null) throw new Error(`fixture audio could not play: ${state.errors.join('; ')}`);
-    const verdict = wordCutVerdict(state.pauseAt, timing.end);
-    console.log(`word_cut_overshoot_ms=${verdict.overshoot} (word=${timing.word}, cut_end=${timing.end}, pause_at=${state.pauseAt}, signed_pause_delta_ms=${verdict.signedPauseDeltaMs})`);
-    wordCutSignedPauseDeltaMs = verdict.signedPauseDeltaMs;
-    return { ok: verdict.overshootOk, detail: `word_cut_overshoot_ms=${verdict.overshoot}` };
+    // The listeners go on after the mode switch, so a pause of the mode change is not counted.
+    await page.evaluate(() => {
+      window.__sentenceSeeks = 0; window.__sentencePauses = 0;
+      const sentence = document.querySelector('audio');
+      sentence?.addEventListener('seeking', () => { window.__sentenceSeeks += 1; });
+      sentence?.addEventListener('pause', () => { window.__sentencePauses += 1; });
+    });
+    await page.locator('[data-word]', { hasText: clipTarget.display }).first().click();
+    await page.waitForFunction(() => (window.__wordPlays || []).length > 0, null, { timeout: 15000 });
+    const state = await page.evaluate(() => ({
+      plays: (window.__wordPlays || []).slice(),
+      seeks: window.__sentenceSeeks,
+      pauses: window.__sentencePauses,
+    }));
+    const pathOf = (url) => { try { return new URL(url).pathname; } catch { return String(url); } };
+    const ownClip = state.plays.length === 1 && pathOf(state.plays[0]).endsWith(`/${clipTarget.clipFile}`);
+    console.log(`word_clip_played=${ownClip} (word=${clipTarget.key}, clip=${clipTarget.clipFile}, plays=${JSON.stringify(state.plays.map(pathOf))}, sentence_seeks=${state.seeks}, sentence_pauses=${state.pauses})`);
+    return { ok: ownClip && state.seeks === 0 && state.pauses === 0, detail: `own_clip=${ownClip}, sentence_seeks=${state.seeks}, sentence_pauses=${state.pauses}` };
   });
 
-  // word_cut_early_ms: the pause lands before the measured cut end when the stop timer counts
-  // pre-playback wall time (finding F140, review A4-1); FR-6 asks for play to the measured end.
-  await runCheck('word_cut_early_ms is at most 20', async () => {
-    if (wordCutSignedPauseDeltaMs === null) throw new Error('the word cut measurement did not run');
-    const early = Math.max(0, -wordCutSignedPauseDeltaMs);
-    console.log(`word_cut_early_ms=${early} (signed_pause_delta_ms=${wordCutSignedPauseDeltaMs})`);
-    // The shared rule applied to the same measurement: pauseAt = cutEnd + signed delta.
-    return { ok: wordCutVerdict(wordCutSignedPauseDeltaMs / 1000, 0).earlyOk, detail: `word_cut_early_ms=${early}` };
+  await runCheck('no_clip_word_target is none (a word without a clip is not a tap target)', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    if (!clipTarget) throw new Error('the word clip measurement did not run');
+    await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'ตาฉัน' }).click();
+    const found = await page.evaluate(() => {
+      const words = [...document.querySelectorAll('[data-word]')];
+      const el = words.find(n => (n.textContent ?? '').trim() === 'I');
+      if (!el) return { found: false };
+      window.__wordPlays = [];
+      const tabindex = el.getAttribute('tabindex');
+      el.click();
+      // The positive control: a word that has a clip holds the -1 tab stop of a target, so the
+      // absence of a tab stop below is the rule, not an empty page.
+      const target = words.find(n => n.getAttribute('tabindex') === '-1');
+      return { found: true, tabindex, targetFound: Boolean(target), targetWord: target ? (target.textContent ?? '').trim() : null };
+    });
+    await page.waitForTimeout(700);
+    const plays = await page.evaluate(() => (window.__wordPlays || []).length);
+    const ok = found.found === true && found.tabindex === null && plays === 0 && found.targetFound === true;
+    console.log(`no_clip_word_target=${ok ? 'none' : 'present'} (word=I, found=${found.found === true}, tabindex=${String(found.tabindex)}, plays=${plays}, target_found=${found.targetFound === true}, target_word=${String(found.targetWord)})`);
+    return { ok, detail: `no_clip_word_target=${ok ? 'none' : 'present'}, plays=${plays}` };
   });
 
-  await runCheck('Week 404 answers 404 and the hydrated locale lang with both texts', async () => {
+  await runCheck('Week 404 answers 404 with the hydrated locale lang, the not-open text, and the 48 px link', async () => {
+    const { default: fs } = await import('node:fs');
+    const path = await import('node:path');
+    // AC-1.1 links to the highest open week of the level. The fixture publishes w03 and w04 for
+    // the end-of-book rows, so the highest open week of level 2 in this run is 4, not the shipped
+    // 1; the row reads the rank from the fixture copies instead of hard-coding a week.
+    const levelDir = path.dirname(process.env.PROJECT_FIXTURE_WEEK);
+    const published = fs.readdirSync(levelDir)
+      .filter(name => /^w(\d+)\.json$/.test(name))
+      .map(name => ({
+        week: Number(/^w(\d+)\.json$/.exec(name)[1]),
+        status: JSON.parse(fs.readFileSync(path.join(levelDir, name), 'utf8')).meta?.status,
+      }))
+      .filter(entry => entry.status === 'published')
+      .map(entry => entry.week)
+      .sort((a, b) => a - b);
+    const highest = published.length ? published[published.length - 1] : null;
+    if (highest === null) throw new Error('the fixture holds no published week of level 2');
+    console.log(`week404_highest_open_week=${highest} (level=2, weeks=${JSON.stringify(published)})`);
     const p = await signedPage();
     try {
-      return await checkWeek404(p, `${base}/th/st/2/2`, 'th');
+      return await checkWeek404(p, `${base}/th/st/2/2`, 'th', 'notOpen', `/th/st/2/${highest}`);
     } finally {
       await p.close();
     }
