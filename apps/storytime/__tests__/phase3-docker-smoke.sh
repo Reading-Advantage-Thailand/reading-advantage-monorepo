@@ -21,6 +21,9 @@ set -uo pipefail
 # read week_stranger_status=307, stranger_set_cookie=0, and join_status=200. The content rows
 # run with the session cookie of staff-01. The app containers run on the host network so that
 # they reach the database; no password is printed.
+# F-origin (Red r6): one row posts a sign-in with `Host: storytime.example.test` and
+# `Origin: http://storytime.example.test` and no x-forwarded-proto. The own origin comes from the
+# Host header, so the row reads standalone_origin_status=303; request.nextUrl.origin gives 403.
 # Run 2 also holds the P3.6 week-404 row: a week outside the shipped range answers 404 with the
 # Thai and English lines of app/[locale]/not-found.tsx (PM 2026-11-05: this script does not
 # check <html lang>; the live lang check is the browser-gate row).
@@ -343,6 +346,28 @@ if [ -n "$C1" ]; then
     pass "staff-01 signs in and receives the session cookie"
   else
     fail "staff-01 cannot sign in"
+  fi
+  # F-origin (Red r6): the own origin is `<scheme>://<Host header>`, with the scheme from
+  # x-forwarded-proto when present and else from the request URL. Cloud Run sends the public Host
+  # and keeps the server at the bind address, so the old check (request.nextUrl.origin) refused
+  # every browser sign-in with 403. This POST names the site in Host and Origin, with no
+  # forwarded proto, and must sign in (303 with a session cookie), not answer 403.
+  STANDALONE_ORIGIN_HEADERS="$(curl --silent --show-error -D - -o /dev/null -X POST \
+    -H "Host: storytime.example.test" \
+    -H "Origin: http://storytime.example.test" \
+    --data-urlencode "username=staff-01" --data-urlencode "password=$STAFF_PASSWORD" \
+    --data-urlencode "locale=th" --data-urlencode "next=/th/st" \
+    "http://127.0.0.1:$PORT1/api/auth/sign-in")" || STANDALONE_ORIGIN_HEADERS=""
+  STANDALONE_ORIGIN_STATUS="$(printf '%s\n' "$STANDALONE_ORIGIN_HEADERS" | head -n 1 | tr -d '\r' | awk '{print $2}')"
+  [ -n "$STANDALONE_ORIGIN_STATUS" ] || STANDALONE_ORIGIN_STATUS="fetch-failed"
+  STANDALONE_ORIGIN_COOKIE=0
+  headers_hold_cookie "$STANDALONE_ORIGIN_HEADERS" && STANDALONE_ORIGIN_COOKIE=1
+  echo "standalone_origin_status=$STANDALONE_ORIGIN_STATUS"
+  echo "standalone_origin_cookie=$STANDALONE_ORIGIN_COOKIE"
+  if [ "$STANDALONE_ORIGIN_STATUS" = "303" ] && [ "$STANDALONE_ORIGIN_COOKIE" -eq 1 ]; then
+    pass "A proxied sign-in with the site Host and Origin signs in (not 403)"
+  else
+    fail "Expected 303 and a session cookie for the proxied sign-in; got $STANDALONE_ORIGIN_STATUS (cookie=$STANDALONE_ORIGIN_COOKIE)"
   fi
   STATUS_D="$(status_of "http://127.0.0.1:$PORT1/th/st/2/2" "$SESSION_COOKIE")"
   if [ "$STATUS_D" = "404" ]; then
