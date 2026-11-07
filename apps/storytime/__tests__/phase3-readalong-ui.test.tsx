@@ -10,6 +10,14 @@ import { HIGHLIGHT_CLASSES } from "@reading-advantage/read-along/lib/highlight";
 import { findPosition, NO_POSITION } from "@reading-advantage/read-along/lib/position";
 import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
 
+// The media of a week now comes from the signed map of the page. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/url", () => ({
+  mediaUrl: (_mediaUrls: Record<string, string>, file: string) =>
+    `https://storage.googleapis.com/storytime-app-media/${file}`,
+}));
+
+
 const app = resolve(import.meta.dirname, "..");
 const routePath = resolve(app, "app/[locale]/st/[level]/[week]/page.tsx");
 const route = readFileSync(routePath, "utf8");
@@ -102,21 +110,35 @@ describe("Phase 3 Storytime read-along UI", () => {
     expect(container.querySelector(`[data-page-number="${page}"]`)).toBeInTheDocument();
   });
 
-  it("keeps My turn silent until a word tap and plays the measured word cut", async () => {
-    const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
-    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
-    const { source, sentences } = shippedTwoSentencePage();
-    const { audio } = await renderReader(source);
+  it("My turn stays silent until a tap, then the tap plays the word clip of the fixture", async () => {
+    const played: string[] = [];
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(function (this: HTMLMediaElement) {
+      played.push(this.src);
+      return Promise.resolve();
+    });
+    const { source } = shippedTwoSentencePage();
+    const copy = structuredClone(source) as unknown as {
+      books: Array<{ kind: string; audio: Record<string, unknown> & { file?: string; sentences: Array<{ page?: number; words: Array<{ word: string; start: number; end: number }> }> } }>;
+    };
+    const book = copy.books.find((entry) => entry.kind === "readalong")!;
+    const first = book.audio.sentences.find((sentence) => (sentence.page ?? 1) === 1)!;
+    const word = first.words[0]!;
+    const clip = `words/${word.word.toLowerCase()}.mp3`;
+    book.audio.wordClips = { [word.word.toLowerCase()]: clip };
+    const Reader = await loadReader();
+    const view = render(
+      <Reader
+        book={book as never}
+        locale="en"
+        labels={labels}
+        mediaUrls={{ [clip]: `https://media.example/${clip}` }}
+      />,
+    );
     fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
-    expect(play).not.toHaveBeenCalled();
-    const sentence = sentences[0];
-    const word = sentence.words[0];
-    fireEvent.click(screen.getByText(new RegExp(`^${word.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`)));
-    expect(play).toHaveBeenCalledTimes(1);
-    expect(audio.currentTime).toBeCloseTo(Math.max(0, word.start - 0.03));
-    audio.currentTime = word.end;
-    fireEvent.timeUpdate(audio);
-    await waitFor(() => expect(pause).toHaveBeenCalled());
+    expect(played, "My turn must stay silent until a tap").toHaveLength(0);
+    fireEvent.click(view.container.querySelector('[data-word="0"]')!);
+    expect(played, "the tap must play the word clip once").toHaveLength(1);
+    expect(played[0]!.endsWith(clip), "the tap must play the word clip of the fixture").toBe(true);
   });
 
   it("uses slowFile and slowSentences at playback rate one", async () => {

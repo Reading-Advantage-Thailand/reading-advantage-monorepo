@@ -117,75 +117,6 @@ function spanFor(container: HTMLElement, word: TimedWord): HTMLElement {
 }
 
 describe("Phase 3 adversarial rapid taps", () => {
-  it("three rapid word taps leave one stop and pause only at the last cut end", async () => {
-    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
-    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
-    const { container, audio, book } = await renderReader();
-    const [wordA, wordB, wordC] = pickedWords(book);
-    fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
-    pause.mockClear();
-    vi.useFakeTimers();
-
-    // Three taps with no clock between them: well under 50 ms of fake time.
-    fireEvent.click(spanFor(container, wordA!));
-    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
-    fireEvent.click(spanFor(container, wordB!));
-    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
-    fireEvent.click(spanFor(container, wordC!));
-    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
-    expect(vi.getTimerCount(), "three rapid taps must leave one pending stop").toBe(1);
-
-    // The media clock crosses the first two cut ends while the third cut plays.
-    act(() => {
-      audio.currentTime = wordA!.end;
-    });
-    act(() => vi.advanceTimersByTime(10_000));
-    expect(pause, "no stale stop may pause before the last cut end").not.toHaveBeenCalled();
-    expect(vi.getTimerCount(), "the one stop must re-arm below the last cut end").toBe(1);
-
-    act(() => {
-      audio.currentTime = wordC!.end;
-    });
-    act(() => vi.advanceTimersByTime(10_000));
-    expect(pause, "the last cut end must pause the audio").toHaveBeenCalledTimes(1);
-  });
-
-  it("a word tap during a pending page stop replaces the page stop", async () => {
-    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
-    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
-    const { container, audio, book } = await renderReader();
-    const word = pickedWords(book)[0]!;
-    const pageSentences = book.audio.sentences.filter((entry) => (entry.page ?? 1) === 1);
-    const last = pageSentences.at(-1)!;
-    expect(last.endTime, "the page-one end must sit above zero").toBeGreaterThan(0);
-
-    fireEvent.click(screen.getByRole("button", { name: labels.readToMe }));
-    vi.useFakeTimers();
-    act(() => {
-      audio.currentTime = last.endTime - 0.2;
-    });
-    fireEvent.timeUpdate(audio);
-    expect(vi.getTimerCount(), "the page stop arms inside the page-end window").toBe(1);
-
-    // The tap arrives while the page stop is pending: the mode change clears it
-    // and the word cut arms its own stop.
-    fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
-    pause.mockClear(); // the mode click pauses once; the test measures the two stops only
-    fireEvent.click(spanFor(container, word));
-    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
-    expect(vi.getTimerCount(), "only the word-cut stop stays armed").toBe(1);
-
-    // The old page-stop deadline passes; the cancelled page stop must not pause.
-    act(() => vi.advanceTimersByTime(210));
-    expect(pause, "the cancelled page stop must not pause the word cut").not.toHaveBeenCalled();
-
-    act(() => {
-      audio.currentTime = word.end;
-    });
-    act(() => vi.advanceTimersByTime(10_000));
-    expect(pause, "the word-cut end must pause the audio").toHaveBeenCalledTimes(1);
-  });
-
   it("three rapid decodable taps arm one whole-word stop", async () => {
     const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
@@ -238,30 +169,6 @@ describe("Phase 3 adversarial rapid taps", () => {
 });
 
 describe("Phase 3 adversarial pins for the open review gaps", () => {
-  it("a rejected play leaves no stop loop armed below the cut end (C6-1)", async () => {
-    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
-    vi.spyOn(HTMLMediaElement.prototype, "play").mockRejectedValue(
-      new DOMException("blocked", "NotAllowedError"),
-    );
-    const { container, audio, book } = await renderReader();
-    const word = pickedWords(book)[0]!;
-    fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
-    vi.useFakeTimers();
-    fireEvent.click(spanFor(container, word));
-    // The metadata event runs the queued arm; the rejected play lands after it,
-    // exactly as a NotAllowedError does in a browser.
-    act(() => audio.dispatchEvent(new Event("loadedmetadata")));
-    expect(vi.getTimerCount(), "the cut stop arms on the metadata event").toBe(1);
-    await act(async () => {
-      await Promise.resolve();
-    });
-    act(() => vi.advanceTimersByTime(10_000));
-    expect(
-      vi.getTimerCount(),
-      "a rejected play must cancel the stop loop below the cut end (C6-1)",
-    ).toBe(0);
-  });
-
   it("a resume below the cut end re-arms the stop loop (A6-1)", () => {
     vi.useFakeTimers();
     const audio = document.createElement("audio");

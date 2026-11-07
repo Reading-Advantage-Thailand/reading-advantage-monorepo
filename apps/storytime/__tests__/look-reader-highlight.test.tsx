@@ -111,9 +111,13 @@ interface Clock {
 }
 
 /** Renders one page of the reader with a controlled clock and a ready audio element. */
-async function renderPage(page: number): Promise<{ clock: Clock; unmount: () => void }> {
+async function renderPage(
+  page: number,
+  wordClips?: Record<string, string>,
+): Promise<{ clock: Clock; unmount: () => void }> {
   const Reader = await loadReader();
   const book = pageBook(readyWeek(), page);
+  if (wordClips) (book.audio as unknown as { wordClips: Record<string, string> }).wordClips = wordClips;
   const view = render(<Reader book={book} locale="en" labels={labels} />);
   const audio = view.container.querySelector<HTMLAudioElement>("audio");
   expect(audio, "the reader must render its page audio element").not.toBeNull();
@@ -440,27 +444,20 @@ describe("Task 1.9 read-along highlight (AC-1.11)", () => {
     );
   });
 
-  it("H5 My turn keeps the original cut bounds (characterization)", async () => {
-    // Named characterization: the helper does not leak into wordCutBounds.
+  it("H5b with clips present, Read it to me lights every word of page 1", async () => {
+    // Task 1.10 removes the sentence-audio cut, so H5 is replaced by this guard: the clip data
+    // must not break the listen highlight. It fails at the base for the task 1.9 skip.
     useFrames();
-    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
-    const pageOne = pageWords(readyWeek(), 1);
-    const shortWord = pageOne[2]!;
-    expect(shortWord.end - shortWord.start, "the tapped word must be the shipped short word").toBeLessThan(0.12);
-    const { clock, unmount } = await renderPage(1);
-    startMode(labels.myTurn);
-    pause.mockClear();
-    fireEvent.click(clock.container.querySelector('[data-word="2"]')!);
-    expect(clock.value, "the cut must seek to the original start minus 0.03 s").toBeCloseTo(
-      Math.max(0, shortWord.start - 0.03),
-      6,
-    );
-    clock.value = shortWord.end - 0.01;
-    fireEvent.timeUpdate(clock.audio);
-    expect(pause, "the cut must not pause before the original end").not.toHaveBeenCalled();
-    clock.value = shortWord.end;
-    fireEvent.timeUpdate(clock.audio);
-    expect(pause, "the cut must pause at the original end, not the extended highlight end").toHaveBeenCalled();
+    const expected = pageWords(readyWeek(), 1).map((_, index) => index);
+    const bounds = pageBounds(readyWeek(), 1);
+    const clips = { hello: "words/hello.mp3", am: "words/am.mp3", pat: "words/pat.mp3" };
+    const { clock, unmount } = await renderPage(1, clips);
+    startMode(labels.readToMe);
+    const run = await runClock(clock, bounds, 0);
+    expect(
+      `pages_run=1 lit=[${run.sequence.join(",")}]`,
+      "with clips present the listen highlight must light every word in order",
+    ).toBe(`pages_run=1 lit=[${expected.join(",")}]`);
     unmount();
   });
 
