@@ -1,0 +1,118 @@
+[
+  {
+    "id": "www-reading-advantage",
+    "path": "apps/www-reading-advantage",
+    "service": "www-reading-advantage",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/www-reading-advantage/cloudbuild.yaml",
+    "mode": "direct",
+    "tagPrefix": ""
+  },
+  {
+    "id": "primary-advantage",
+    "path": "apps/primary-advantage",
+    "service": "primary-advantage-app",
+    "project": "primary-advantage",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/primary-advantage/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "pa",
+    "tag": "pa-${BUILD_ID:0:8}",
+    "tagLength": 11
+  },
+  {
+    "id": "storytime",
+    "path": "apps/storytime",
+    "service": "storytime-app",
+    "project": "primary-advantage",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/storytime/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "st",
+    "tag": "st-${BUILD_ID:0:8}",
+    "tagLength": 11
+  },
+  {
+    "id": "accounting",
+    "path": "apps/accounting",
+    "service": "accounting",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/accounting/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "candidate",
+    "tag": "candidate",
+    "tagLength": 9
+  },
+  {
+    "id": "codecamp-advantage",
+    "path": "apps/codecamp-advantage",
+    "service": "codecamp-advantage",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/codecamp-advantage/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "sso-candidate",
+    "tag": "sso-candidate",
+    "tagLength": 13
+  },
+  {
+    "id": "marketing",
+    "path": "apps/marketing",
+    "service": "marketing",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/marketing/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "c",
+    "tag": "c$${build_id%%-*}",
+    "tagLength": 9
+  },
+  {
+    "id": "sales-advantage",
+    "path": "apps/sales-advantage",
+    "service": "sales-advantage",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/sales-advantage/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "legacy-rollback",
+    "tag": "legacy-rollback",
+    "tagLength": 15
+  },
+  {
+    "id": "accounts",
+    "path": "apps/accounts",
+    "service": "accounts",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/accounts/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "ac",
+    "tag": "ac-${BUILD_ID:0:8}",
+    "tagLength": 11
+  },
+  {
+    "id": "workbooks",
+    "path": "apps/workbooks",
+    "service": "workbooks",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/workbooks/cloudbuild.yaml",
+    "mode": "gated",
+    "tagPrefix": "wb",
+    "tag": "wb-${BUILD_ID:0:8}",
+    "tagLength": 11
+  },
+  {
+    "id": "reading-advantage",
+    "path": "apps/reading-advantage",
+    "service": "reading-advantage-web",
+    "project": "$PROJECT_ID",
+    "region": "asia-southeast1",
+    "cloudbuild": "apps/reading-advantage/cloudbuild.yaml",
+    "mode": "excluded",
+    "tagPrefix": ""
+  }
+]
