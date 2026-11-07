@@ -1,0 +1,36 @@
+MEASURE_AGENT_RESULT
+role: red
+status: complete
+track: primary_storytime_removal_20261107
+phase: Phase 1: Removal
+baseline_sha: f1382b2c3e6c8581fded9eddecf783b96121d85c
+phase_base_sha: f1382b2c3e6c8581fded9eddecf783b96121d85c
+role_base_sha: f1382b2c3e6c8581fded9eddecf783b96121d85c
+model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+red_commit: a9b705948e9581b95a4ae6dcf45fed0336c01028
+red_commit_header: test(primary): add the storytime removal red test (track_id: primary_storytime_removal_20261107)
+red_commit_paths: apps/primary-advantage/__tests__/storytime-removed.test.ts (1 file)
+docs_commit_header: docs(measure): record the removal red evidence (track_id: primary_storytime_removal_20261107)
+docs_commit_paths: measure/tracks/primary_storytime_removal_20261107/plan.md; measure/runs/primary_storytime_removal_20261107/red-p1-f1382b2c3.log
+docs_commit_sha: the SHA is in the final reply of this role
+start_check_delete_paths: 25
+start_check_edit_paths: 9
+start_check_scan_files_outside_lists: 0
+start_check_detail: delete_exist=25; delete_missing=0; edit_exist=9; edit_missing=0; scan_files=34; rg_exit=0; no stop condition
+start_check_command: bash /tmp/opencode/start-check-rm.sh, part (a) test -e on each of the 25 DELETE and 9 EDIT paths, part (b) rg -il storytime apps/primary-advantage --glob '!node_modules' --glob '!.next' with each scanned file checked against the DELETE, EDIT, and KEEP lists
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/primary-advantage && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/storytime-removed.test.ts'
+red_exit: 1
+red_result: Test Files  1 failed (1); Tests  5 failed | 4 passed (9)
+red_failed_cases: removes every delete path (storytime_removed_paths=0); leaves no file that imports a removed module or names a removed host rule (offending_files=13); leaves no Storytime line in the proxy (proxy_storytime_lines=3); leaves no Storytime top-level key in any locale file (locales_with_storytime_key=5 locales=cn,en,th,tw,vi); leaves no caller of the Storytime message namespace (namespace_callers=4)
+red_passed_cases: holds 25 delete paths, 24 in the app and 1 at the repository root; scans at least 900 source files and finds the three anchor files; keeps the other routing names in the proxy; holds the five locale files with at least 50 top-level keys each
+red_load_state: no file failed to load; no skip; no todo; no ENOENT
+eslint_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/primary-advantage && ../../node_modules/.bin/eslint --max-warnings 0 __tests__/storytime-removed.test.ts'
+eslint_exit: 0
+eslint_result: errors=0; warnings=0; no output
+a9_detector: rg -n 'measure/tracks' apps/primary-advantage/__tests__ exits 1
+files_changed: apps/primary-advantage/__tests__/storytime-removed.test.ts; measure/tracks/primary_storytime_removal_20261107/plan.md; measure/runs/primary_storytime_removal_20261107/red-p1-f1382b2c3.log
+plan_updates: task 1.1 is [x] with the review and strategy SHAs on its first line; task 1.2 is [x] with the phase base and the start check values on its first line; task 1.3 stays [~] with the Red commit, the Red command, its exit, and the failed case names on its first line
+parent_track: the parent plan was not edited; the earlier inventory in measure/runs/storytime_app_rebuild_20261025/red-p7-t71-732547e11.log stays provisional
+known_failures: the five property tests fail at the phase base by design; the Green role makes them pass
+handoff: Green works from the Red commit a9b705948. The Red test reads the working tree, so Green stages the 25 deletions before the run. The test excludes its own path from the source scan and counts 1076 scanned files at the phase base. The guard needs at least 900 scanned files, so the deletion leaves room. The worktree count stays 8. No Primary file changed in this role.
+END_MEASURE_AGENT_RESULT
