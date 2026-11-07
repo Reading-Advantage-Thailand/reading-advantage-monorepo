@@ -64,6 +64,11 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-11-06; Phase 1 received locally at f2989514d, not deployed | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`)*
   *Note: PM decision 2026-11-05 moved tasks 3.10 and 3.11 of the parent here. PM hand-off 2026-11-06: 7 week packages from Workbooks commit 82f88853. Dependency: Red and Green of Phase 1 start after the parent Phase 3 heading carries its checkpoint. No push and no deploy without Daniel's word.*
 
+- [ ] **Track: Remove the void Storytime code from Primary** — *created 2026-11-07*
+  *Link: [./tracks/primary_storytime_removal_20261107/](./tracks/primary_storytime_removal_20261107/)*
+  *Status: active, opened 2026-11-07; Phase 1 (removal) next; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
+  *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
+
 
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
