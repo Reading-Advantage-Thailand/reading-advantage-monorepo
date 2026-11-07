@@ -1,7 +1,7 @@
 // @vitest-environment node
-import { existsSync, lstatSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { basename, join, relative, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createFakeStore, type FakeStore } from "./helpers/fake-store";
@@ -47,6 +47,17 @@ function tempFolder(): string {
  */
 function gitStatus(): string {
   return execFileSync("git", ["status", "--porcelain"], { cwd: repository, encoding: "utf8" });
+}
+
+/**
+ * Builds a one-row account CSV with quoted cells.
+ * @param name The name cell.
+ * @param className The class cell.
+ * @returns The CSV text.
+ */
+function csvText(name: string, className: string): string {
+  const cell = (value: string) => `"${value.replace(/"/g, '""')}"`;
+  return `name,class,role\n${cell(name)},${cell(className)},family\n`;
 }
 
 /**
@@ -316,5 +327,103 @@ describe("the account script (AC-4.8)", () => {
     expect(logLines.join("\n"), "the second run backfills 0 and reports 2 present").toContain(
       "audit_backfilled=0 audit_present=2",
     );
+  });
+
+  // Review B finding F43 and P2b.9 row 13: a spreadsheet evaluates a cell that starts with
+  // `=`, `+`, `-`, or `@` (and a leading tab or carriage return reaches the same cell). The
+  // script must fail closed before the first insert and write no card file.
+  const FORMULA_PREFIXES = ["=", "+", "-", "@", "\t", "\r"] as const;
+  for (const field of ["name", "class"] as const) {
+    for (const prefix of FORMULA_PREFIXES) {
+      it(`fails closed on a ${field} cell that starts with ${JSON.stringify(prefix)}`, async () => {
+        const folder = tempFolder();
+        const name = field === "name" ? `${prefix}Nok` : "Nok";
+        const className = field === "class" ? `${prefix}staff` : "staff";
+        writeFileSync(join(folder, "accounts.csv"), csvText(name, className));
+        const before = gitStatus();
+        const store = createFakeStore();
+        const code = await run(["--folder", folder], store);
+        console.log(`accounts_inserted=${store.accounts.length}`);
+        expect(code, "the run exits non-zero").not.toBe(0);
+        expect(store.accounts, "accounts_inserted").toHaveLength(0);
+        expect(
+          existsSync(join(folder, "sign-in-cards.csv")),
+          "the script writes no card file",
+        ).toBe(false);
+        expect(gitStatus(), "the repository holds no new file").toBe(before);
+      });
+    }
+  }
+
+  // Review B finding F42 and P2b.9 row 13: both files stay outside the repository. A `--cards`
+  // value that leaves the folder through `..`, an absolute value, and a value that resolves into
+  // the repository must fail closed before the first insert.
+  it("refuses a --cards value that leaves the folder through ..", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), CSV);
+    const escapeName = `${basename(folder)}-x.csv`;
+    const escaped = resolve(folder, "..", escapeName);
+    const store = createFakeStore();
+    let code = 0;
+    try {
+      code = await run(["--folder", folder, "--cards", `../${escapeName}`], store);
+    } finally {
+      rmSync(escaped, { force: true });
+    }
+    console.log(`accounts_inserted=${store.accounts.length}`);
+    expect(code, "the run exits non-zero").not.toBe(0);
+    expect(store.accounts, "accounts_inserted").toHaveLength(0);
+    expect(existsSync(escaped), "no card file leaves the folder").toBe(false);
+  });
+
+  it("refuses an absolute --cards value", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), CSV);
+    const absolute = join(folder, `${basename(folder)}-absolute.csv`);
+    const store = createFakeStore();
+    let code = 0;
+    try {
+      code = await run(["--folder", folder, "--cards", absolute], store);
+    } finally {
+      rmSync(absolute, { force: true });
+    }
+    console.log(`accounts_inserted=${store.accounts.length}`);
+    expect(code, "the run exits non-zero").not.toBe(0);
+    expect(store.accounts, "accounts_inserted").toHaveLength(0);
+    expect(existsSync(absolute), "no absolute card file").toBe(false);
+  });
+
+  it("refuses a --cards value that resolves into the repository", async () => {
+    const folder = tempFolder();
+    writeFileSync(join(folder, "accounts.csv"), CSV);
+    const inside = join(repository, `storytime-cards-escape-${basename(folder)}.csv`);
+    const store = createFakeStore();
+    let code = 0;
+    try {
+      code = await run(["--folder", folder, "--cards", relative(folder, inside)], store);
+    } finally {
+      rmSync(inside, { force: true });
+    }
+    console.log(`accounts_inserted=${store.accounts.length}`);
+    expect(code, "the run exits non-zero").not.toBe(0);
+    expect(store.accounts, "accounts_inserted").toHaveLength(0);
+    expect(existsSync(inside), "no card file in the repository").toBe(false);
+  });
+
+  it("refuses a folder path that holds a .. segment", async () => {
+    const parent = tempFolder();
+    const runFolder = join(parent, "run");
+    mkdirSync(runFolder);
+    writeFileSync(join(runFolder, "accounts.csv"), CSV);
+    const dotted = join(parent, "other", "..", "run");
+    const store = createFakeStore();
+    const code = await run(["--folder", dotted], store);
+    console.log(`accounts_inserted=${store.accounts.length}`);
+    expect(code, "the run exits non-zero").not.toBe(0);
+    expect(store.accounts, "accounts_inserted").toHaveLength(0);
+    expect(
+      existsSync(join(runFolder, "sign-in-cards.csv")),
+      "the script writes no card file",
+    ).toBe(false);
   });
 });

@@ -282,6 +282,24 @@ describe("login sign-in handler (red)", () => {
     expect(locationPath(badNext), "a bad next falls back to /<locale>/st").toBe("/th/st");
   });
 
+  it("writes one log record for a username with a line break and no raw break", async () => {
+    expect(existsSync(ROUTE), MISSING).toBe(true);
+    await loadRoute();
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const response = await signIn("bad\nuser", "wrong password");
+      expect(isInvalid(response), "the answer is the generic invalid answer").toBe(true);
+      const records = warnSpy.mock.calls.map((call) => call.map((value) => String(value)).join(" "));
+      console.log(`sign_in_log_records=${records.length}`);
+      expect(records, "one log record only").toHaveLength(1);
+      const rawBreaks = records.filter((record) => /[\r\n]/.test(record)).length;
+      console.log(`log_raw_line_breaks=${rawBreaks}`);
+      expect(rawBreaks, "the log holds no raw line break").toBe(0);
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("keeps the password and the token out of the audit rows and the logs", async () => {
     expect(existsSync(ROUTE), MISSING).toBe(true);
     const route = await loadRoute();

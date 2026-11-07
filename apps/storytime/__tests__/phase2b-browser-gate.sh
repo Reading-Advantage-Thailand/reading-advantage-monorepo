@@ -98,6 +98,25 @@ for _ in 1 2; do
 done
 if [ "$MIGRATE_OK" -eq 1 ]; then pass "The migration runs twice and exits 0"; else fail "The migration fails"; fi
 
+echo "=== Run the real-database races (P2b.5, P2b.7, P2b.9 row 7) ==="
+REAL_DB_LOG="$TMP_DIR/real-db.log"
+REAL_DB_RC=0
+if ! (cd "$ROOT/packages/backend" && PG_TEST_URL="$DB_URL" CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/storytime-access/__tests__/store.real-db.test.ts >"$REAL_DB_LOG" 2>&1); then
+  REAL_DB_RC=1
+fi
+REAL_DB_SUMMARY="$(grep -E '^[[:space:]]*Tests[[:space:]]' "$REAL_DB_LOG" | tail -1)"
+REAL_DB_TESTS="$(printf '%s' "$REAL_DB_SUMMARY" | grep -oE '\([0-9]+\)' | tr -dc '0-9' || true)"
+REAL_DB_FAILED="$(printf '%s' "$REAL_DB_SUMMARY" | grep -oE '[0-9]+ failed' | grep -oE '[0-9]+' || true)"
+REAL_DB_TESTS="${REAL_DB_TESTS:-0}"
+REAL_DB_FAILED="${REAL_DB_FAILED:-0}"
+echo "real_db_tests=$REAL_DB_TESTS real_db_failed=$REAL_DB_FAILED"
+if [ "$REAL_DB_RC" -eq 0 ]; then
+  pass "The real-database races stay within the session caps and the rate limit"
+else
+  fail "The real-database races exceed a session cap or lose a rate-limit count"
+  grep -E "family_sessions_after_race|class_sessions_after_race|rate_limit_count_after_race|AssertionError|expected" "$REAL_DB_LOG" | tail -10 || true
+fi
+
 echo "=== Seed the accounts of the gate ==="
 mkdir -p "$TMP_DIR/accounts"
 cat > "$TMP_DIR/accounts/accounts.csv" <<'CSV'
@@ -215,11 +234,14 @@ if [ "$APP_UP" -eq 1 ]; then pass "The app answers on its port"; else fail "The 
 echo "=== Run the flows F1 to F9 with SYSTEM Chrome ==="
 cat > "$PLAYWRIGHT" <<'NODE'
 import fs from "node:fs";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { chromium } from "@playwright/test";
 
 const base = process.argv[2];
 const cardsPath = process.argv[3];
 const storageOrigin = process.argv[4] ?? "";
+const container = process.argv[5] ?? "";
 const labels = [];
 function label(name, value) { labels.push(`${name}=${value}`); }
 function fail(message) { labels.push(`FAIL: ${message}`); process.exitCode = 1; }
@@ -485,14 +507,84 @@ label("seek_ok", seek.ok ? 1 : 0);
 label("video_duration", seek.range ? 1 : 0);
 label("range_206", rangeResponses - rangeBefore);
 
+// F45: protected pages carry Cache-Control with no-store and Referrer-Policy no-referrer.
+// The pages hold signed media links, so no referrer and no shared cache may leave them.
+// `no-referrer` is stricter than `strict-origin`: not even this app's origin is sent.
+await context.clearCookies();
+await signIn("staff-01", "/th/st/2/1");
+const weekResponse = await page.goto(`${base}/th/st/2/1`, { waitUntil: "domcontentloaded" });
+const weekHeaders = await weekResponse.allHeaders();
+const weekCache = weekHeaders["cache-control"] ?? "";
+const weekReferrer = weekHeaders["referrer-policy"] ?? "";
+label("week_cache_control", weekCache);
+label("week_referrer_policy", weekReferrer);
+if (!/no-store/.test(weekCache)) {
+  fail(`the week page has Cache-Control ${weekCache || "(none)"}; expected no-store`);
+}
+if (weekReferrer !== "no-referrer") {
+  fail(`the week page has Referrer-Policy ${weekReferrer || "(none)"}; expected no-referrer`);
+}
+await context.clearCookies();
+await signIn("tutor-01", "/th/teacher/2/1");
+const teacherResponse = await page.goto(`${base}/th/teacher/2/1`, { waitUntil: "domcontentloaded" });
+const teacherHeaders = await teacherResponse.allHeaders();
+const teacherCache = teacherHeaders["cache-control"] ?? "";
+const teacherReferrer = teacherHeaders["referrer-policy"] ?? "";
+label("teacher_cache_control", teacherCache);
+label("teacher_referrer_policy", teacherReferrer);
+if (!/no-store/.test(teacherCache)) {
+  fail(`the teacher page has Cache-Control ${teacherCache || "(none)"}; expected no-store`);
+}
+if (teacherReferrer !== "no-referrer") {
+  fail(`the teacher page has Referrer-Policy ${teacherReferrer || "(none)"}; expected no-referrer`);
+}
+
+// F47: the first use of the day of a session with fewer than 335 days left renews the database
+// expiry and re-sets the cookie with the full lifetime and the same flags. A second use on the
+// same day sets no cookie.
+await context.clearCookies();
+await signIn("staff-03", "/th/st/2/1");
+const renewalJar = await context.cookies();
+const renewalToken = renewalJar.find((cookie) => cookie.name === "__Host-st_session")?.value ?? "";
+const renewalDigest = createHash("sha256").update(renewalToken).digest("hex");
+execFileSync("podman", [
+  "exec", container, "psql", "-U", "postgres", "-d", "storytime", "-c",
+  `UPDATE storytime_sessions SET expires_at = now() + interval '300 days', last_use_at = now() - interval '2 days' WHERE token_digest = '${renewalDigest}'`,
+]);
+const renewedResponse = await page.goto(`${base}/th/st/2/1`, { waitUntil: "domcontentloaded" });
+const renewedHeaders = await renewedResponse.allHeaders();
+const renewedCookie = renewedHeaders["set-cookie"] ?? "";
+const renewedMaxAge = /Max-Age=(\d+)/i.exec(renewedCookie);
+const renewalFlags =
+  renewedCookie.startsWith("__Host-st_session=") &&
+  /HttpOnly/i.test(renewedCookie) &&
+  /Secure/i.test(renewedCookie) &&
+  /SameSite=Lax/i.test(renewedCookie);
+label("renewal_set_cookie", renewedCookie.length > 0 ? 1 : 0);
+label("renewal_max_age", renewedMaxAge ? renewedMaxAge[1] : 0);
+label("renewal_flags_ok", renewalFlags ? 1 : 0);
+if (renewedCookie.length === 0) fail("the renewed session sets no cookie");
+if (!renewedMaxAge || renewedMaxAge[1] !== "31536000") {
+  fail(`the renewed cookie Max-Age is ${renewedMaxAge ? renewedMaxAge[1] : "(none)"}; expected 31536000`);
+}
+if (!renewalFlags) {
+  fail("the renewed cookie misses HttpOnly, Secure, SameSite=Lax, or the __Host- name");
+}
+const secondResponse = await page.goto(`${base}/th/st/2/1`, { waitUntil: "domcontentloaded" });
+const secondHeaders = await secondResponse.allHeaders();
+const secondCookie = secondHeaders["set-cookie"] ?? "";
+label("second_use_set_cookie", secondCookie.length > 0 ? 1 : 0);
+if (secondCookie.length > 0) fail("the second use on the same day sets a cookie");
+
 console.log(labels.join("\n"));
 await browser.close();
 NODE
-if (cd "$APP" && node "$PLAYWRIGHT" "http://localhost:$APP_PORT" "$TMP_DIR/accounts/sign-in-cards.csv" "http://127.0.0.1:$STORAGE_PORT" >"$TMP_DIR/playwright.log" 2>&1); then
+if (cd "$APP" && node "$PLAYWRIGHT" "http://localhost:$APP_PORT" "$TMP_DIR/accounts/sign-in-cards.csv" "http://127.0.0.1:$STORAGE_PORT" "$CONTAINER" >"$TMP_DIR/playwright.log" 2>&1); then
   pass "The flows F1 to F9 run and exit 0"
   grep -E "^[a-z0-9_]+=" "$TMP_DIR/playwright.log" || true
 else
   fail "The flows F1 to F9 fail"
+  grep -E "^[a-z0-9_]+=" "$TMP_DIR/playwright.log" || true
   tail -20 "$TMP_DIR/playwright.log" || true
   echo "--- the log of the app ---"
   tail -40 "$TMP_DIR/next-start.log" || true
