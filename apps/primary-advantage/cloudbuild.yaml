@@ -18,76 +18,46 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
 
-  # DATABASE_URL is a Cloud SQL unix-socket URL (?host=/cloudsql/<instance>) held
-  # in its own secret, PRIMARY_V2_DATABASE_URL. Never point the legacy
-  # DATABASE_URL secret at the new database: a legacy rollback revision uses it.
-  # Cloud Build steps have no /cloudsql socket, so each step starts the Cloud SQL
-  # Auth Proxy on the same /cloudsql path the runtime uses.
-  # Step 3: Read-only guard first: never migrate the legacy Primary database
-  # (Tutor reads it). Then migrate, then fail closed unless the ledger matches
-  # the journal and the latest migration is applied. All run before deploy.
-  - name: "node:22-slim"
-    id: "refuse-legacy-db"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db refuse-legacy-db"
-    secretEnv:
-      - "DATABASE_URL"
+  # The push holds no database step (decision D1). The new revision starts with no traffic and
+  # must start against the old schema. The migration runs only in cloudbuild-traffic.yaml, by hand.
 
-  - name: "node:22-slim"
-    id: "migrate-db"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
-    secretEnv:
-      - "DATABASE_URL"
-
-  - name: "node:22-slim"
-    id: "doctor-check"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0074_primary_help_events"
-    secretEnv:
-      - "DATABASE_URL"
-
-  # Step 4: Deploy to Cloud Run
+  # Step 3: Deploy the new revision with no traffic and a tag. The tag is pa- plus the first 8
+  # characters of BUILD_ID. Bash slices the build id (a Cloud Build substitution cannot).
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-cloudrun"
+    entrypoint: "bash"
+    env:
+      - "BUILD_ID=$BUILD_ID"
     args:
-      - "run"
-      - "deploy"
-      - "primary-advantage-app"
-      - "--image=asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
-      - "--region=asia-southeast1"
-      - "--platform=managed"
-      - "--allow-unauthenticated"
-      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-secrets=DATABASE_URL=${_DATABASE_URL}:latest"
-      - "--set-secrets=RESEND_API_KEY=${_RESEND_API_KEY}:latest"
-      - "--set-secrets=AUTH_SECRET=${_AUTH_SECRET}:latest"
-      - "--set-secrets=AUTH_URL=${_AUTH_URL}:latest"
-      - "--set-secrets=AUTH_GOOGLE_ID=${_AUTH_GOOGLE_ID}:latest"
-      - "--set-secrets=AUTH_GOOGLE_SECRET=${_AUTH_GOOGLE_SECRET}:latest"
-      - "--set-secrets=OPENAI_API_KEY=${_OPENAI_API_KEY}:latest"
-      - "--set-secrets=VERTEX_CLIENT_EMAIL=${_VERTEX_CLIENT_EMAIL}:latest"
-      - "--set-secrets=VERTEX_PRIVATE_KEY=${_VERTEX_PRIVATE_KEY}:latest"
-      - "--set-secrets=GOOGLE_API_KEY=${_GOOGLE_API_KEY}:latest"
-      - "--set-secrets=AUDIO_API_KEY=${_AUDIO_API_KEY}:latest"
-      - "--set-secrets=STORAGE_BUCKET_NAME=${_STORAGE_BUCKET_NAME}:latest"
-      - "--set-secrets=STORAGE_CLIENT_EMAIL=${_STORAGE_CLIENT_EMAIL}:latest"
-      - "--set-secrets=STORAGE_PRIVATE_KEY=${_STORAGE_PRIVATE_KEY}:latest"
-      - "--set-secrets=ACCESS_KEY=${_ACCESS_KEY}:latest"
-      - "--set-env-vars=PROJECT_ID=${_PROJECT_ID}"
-      - "--set-env-vars=NODE_ENV=${_NODE_ENV}"
-      - "--set-env-vars=AUTH_TRUST_HOST=true"
-
-availableSecrets:
-  secretManager:
-    - versionName: "projects/$PROJECT_ID/secrets/${_DATABASE_URL}/versions/latest"
-      env: "DATABASE_URL"
+      - "-c"
+      - |
+        set -euo pipefail
+        gcloud run deploy primary-advantage-app \
+          --image=asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID \
+          --region=asia-southeast1 \
+          --platform=managed \
+          --allow-unauthenticated \
+          --add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql \
+          --set-secrets=DATABASE_URL=${_DATABASE_URL}:latest \
+          --set-secrets=RESEND_API_KEY=${_RESEND_API_KEY}:latest \
+          --set-secrets=AUTH_SECRET=${_AUTH_SECRET}:latest \
+          --set-secrets=AUTH_URL=${_AUTH_URL}:latest \
+          --set-secrets=AUTH_GOOGLE_ID=${_AUTH_GOOGLE_ID}:latest \
+          --set-secrets=AUTH_GOOGLE_SECRET=${_AUTH_GOOGLE_SECRET}:latest \
+          --set-secrets=OPENAI_API_KEY=${_OPENAI_API_KEY}:latest \
+          --set-secrets=VERTEX_CLIENT_EMAIL=${_VERTEX_CLIENT_EMAIL}:latest \
+          --set-secrets=VERTEX_PRIVATE_KEY=${_VERTEX_PRIVATE_KEY}:latest \
+          --set-secrets=GOOGLE_API_KEY=${_GOOGLE_API_KEY}:latest \
+          --set-secrets=AUDIO_API_KEY=${_AUDIO_API_KEY}:latest \
+          --set-secrets=STORAGE_BUCKET_NAME=${_STORAGE_BUCKET_NAME}:latest \
+          --set-secrets=STORAGE_CLIENT_EMAIL=${_STORAGE_CLIENT_EMAIL}:latest \
+          --set-secrets=STORAGE_PRIVATE_KEY=${_STORAGE_PRIVATE_KEY}:latest \
+          --set-secrets=ACCESS_KEY=${_ACCESS_KEY}:latest \
+          --set-env-vars=PROJECT_ID=${_PROJECT_ID} \
+          --set-env-vars=NODE_ENV=${_NODE_ENV} \
+          --set-env-vars=AUTH_TRUST_HOST=true \
+          --no-traffic \
+          --tag=pa-${BUILD_ID:0:8}
 
 # Substitutions
 substitutions:
