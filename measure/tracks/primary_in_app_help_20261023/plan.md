@@ -39,7 +39,7 @@ Paths are under `apps/primary-advantage/` unless they start with `packages/`, `d
 - [x] 4.3 Route `POST /api/v1/help/events` (thin, same-origin check) and the panel calls (fire and forget; a failure never blocks the video). Tests. `a7a794c23`, review fixes `4acb2a42c` (Sec-Fetch-Site, else the forwarded host; 30 events a minute per user)
 - [x] 4.4 `app/[locale]/system/help/page.tsx` and a system sidebar entry. Test: the system role sees the report; a teacher gets no access (AC-8). `fe8bae268`. Browser check `run2/help-events-check-23.mjs` 11/11 on the local test copy with 0074.
 
-## Phase 5: Help index and manual links [checkpoint: 53d1b76fc]
+## Phase 5: Help index and manual links
 
 - [x] 5.1 `app/[locale]/teacher/help/page.tsx`: all enabled teacher videos by area (FR-9). Sidebar entry under the manual. Test. `0673e70db` (areas from the routes, `lib/help/areas.ts`; `?play=<id>` opens a video)
 - [x] 5.2 The student "All videos" view inside the panel. `0673e70db`
