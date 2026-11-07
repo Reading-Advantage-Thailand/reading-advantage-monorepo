@@ -24,6 +24,7 @@ import {
   removePlanScratch,
   runSelect,
   runbookFacts,
+  sectionText,
   selectStep,
   stepEnv,
   stepText,
@@ -469,6 +470,62 @@ describe("W: per-app CD workflows", () => {
     must(ranges >= 6, `ranges=${ranges}`);
     const table = readTable();
     must(table.length === 10, `rows_checked=${table.length}`);
+  });
+
+  it("W-22 the traffic runbook names how to find the tag or build", () => {
+    const text = readText("docs/runbooks/traffic-moves.md");
+    const sections = [
+      { id: "primary-advantage", variable: "_TAG" },
+      { id: "accounts", variable: "_TAG" },
+      { id: "accounting", variable: "" },
+      { id: "codecamp-advantage", variable: "" },
+      { id: "marketing", variable: "_TAG" },
+      { id: "sales-advantage", variable: "_PUSH_BUILD_ID" },
+    ];
+    must(sections.length === 6, `sections_checked=${sections.length}`);
+    const missing = [];
+    for (const section of sections) {
+      const body = sectionText(text, section.id);
+      if (body === "") {
+        missing.push(`${section.id}:missing`);
+        continue;
+      }
+      if (
+        !/gcloud run revisions list|gcloud builds list|actions\/runs|GitHub Actions run/i.test(
+          body,
+        )
+      ) {
+        missing.push(`${section.id}:lookup`);
+      }
+      if (section.variable && !body.includes(section.variable)) {
+        missing.push(`${section.id}:${section.variable}`);
+      }
+    }
+    const sales = sectionText(text, "sales-advantage");
+    for (const name of [
+      "_RELEASE_COMMIT_SHA",
+      "_CURRICULUM_BACKUP_ID",
+      "_CURRICULUM_BACKUP_NOT_BEFORE",
+    ]) {
+      if (!sales.includes(name)) missing.push(`sales-advantage:${name}`);
+    }
+    must(missing.length === 0, `missing=${missing.join(",")} sections_checked=6`);
+  });
+
+  it("W-23 every CD workflow action uses a pinned commit SHA", () => {
+    let lines = 0;
+    const bad = [];
+    for (const name of [WWW, APPS]) {
+      const text = readText(`.github/workflows/${name}`);
+      for (const line of text.split("\n")) {
+        const match = line.match(/^\s*uses:\s*(\S+)(?:\s+#.*)?\s*$/);
+        if (!match) continue;
+        lines += 1;
+        if (!/@[0-9a-f]{40}$/.test(match[1])) bad.push(`${name}:${match[1]}`);
+      }
+    }
+    must(lines >= 5, `uses_lines=${lines}`);
+    must(bad.length === 0, `unpinned=${bad.join(",")} uses_lines=${lines}`);
   });
 });
 
