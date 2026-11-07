@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 
 const root = resolve(import.meta.dirname, "..");
 const cloudbuild = readFileSync(resolve(root, "cloudbuild.yaml"), "utf8");
+const traffic = readFileSync(resolve(root, "cloudbuild-traffic.yaml"), "utf8");
 const codecampCloudbuild = readFileSync(
   resolve(root, "../codecamp-advantage/cloudbuild.yaml"),
   "utf8",
@@ -49,20 +50,29 @@ describe("Accounts production readiness", () => {
       "doctor-company-identity",
       "bootstrap-production-identity",
       "runtime-db-contract",
-      "deploy-cloudrun",
-    ].map((gate) => cloudbuild.indexOf(`id: "${gate}"`));
+      "update-traffic",
+    ].map((gate) => traffic.indexOf(`id: "${gate}"`));
     expect(ordered.every((position) => position >= 0)).toBe(true);
     expect(ordered).toEqual([...ordered].sort((a, b) => a - b));
-    expect(cloudbuild).toContain("company-identity:bootstrap");
-    const staticBootstrap = cloudbuild.slice(
-      cloudbuild.indexOf('id: "bootstrap-company-identity"'),
-      cloudbuild.indexOf('id: "doctor-company-identity"'),
+    for (const gate of [
+      "migrate-company-identity",
+      "bootstrap-company-identity",
+      "doctor-company-identity",
+      "bootstrap-production-identity",
+      "runtime-db-contract",
+    ]) {
+      expect(cloudbuild).not.toContain(`id: "${gate}"`);
+    }
+    expect(traffic).toContain("company-identity:bootstrap");
+    const staticBootstrap = traffic.slice(
+      traffic.indexOf('id: "bootstrap-company-identity"'),
+      traffic.indexOf('id: "doctor-company-identity"'),
     );
     expect(staticBootstrap).toContain("COMPANY_AUTH_DIRECT_DATABASE_URL");
     expect(staticBootstrap).toContain("COMPANY_AUTH_DATABASE_URL");
-    const productionBootstrap = cloudbuild.slice(
-      cloudbuild.indexOf('id: "bootstrap-production-identity"'),
-      cloudbuild.indexOf('id: "runtime-db-contract"'),
+    const productionBootstrap = traffic.slice(
+      traffic.indexOf('id: "bootstrap-production-identity"'),
+      traffic.indexOf('id: "runtime-db-contract"'),
     );
     const dbBuild = productionBootstrap.indexOf(
       "pnpm --filter @reading-advantage/db build",
@@ -84,7 +94,7 @@ describe("Accounts production readiness", () => {
     ]) {
       expect(productionBootstrap).toContain(clientSecret);
     }
-    expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);
+    expect(traffic.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);
     expect(cloudbuild).toContain("https://accounts.reading-advantage.com");
     expect(cloudbuild).toContain("__Host-ra_company_sso");
   });
@@ -203,7 +213,7 @@ describe("Accounts production readiness", () => {
     }
     const accountsCentralSecret =
       "projects/reading-advantage/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET";
-    expect(cloudbuild).toContain(`${accountsCentralSecret}/versions/latest`);
+    expect(traffic).toContain(`${accountsCentralSecret}/versions/latest`);
     const codecampCentralSecret =
       "projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET";
     expect(codecampCloudbuild).toContain(
