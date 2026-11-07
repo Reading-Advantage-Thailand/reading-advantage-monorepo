@@ -1,0 +1,91 @@
+name: CD — gated apps
+
+# A push builds a new revision of each affected gated app with no traffic and a tag.
+# A person starts the traffic files by hand. No job here moves traffic.
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "services/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - ".pnpmfile.cjs"
+      - ".dockerignore"
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    name: Select affected apps
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+    steps:
+      - name: Checkout Repository 📂
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The same step text sits in cd-www-reading-advantage.yml. The table scripts/ci/apps.json is the one source.
+      - name: Select affected apps
+        id: select
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          ids="$(node scripts/ci/affected-apps.mjs --base "$BASE_SHA" --head "$HEAD_SHA")"
+          echo "affected: $ids"
+          AFFECTED_IDS="$ids" node -e '
+            const { readFileSync } = require("node:fs");
+            const ids = JSON.parse(process.env.AFFECTED_IDS);
+            const rows = JSON.parse(readFileSync("scripts/ci/apps.json", "utf8"));
+            const hit = (row) => ids.includes(row.id);
+            const www = rows.some((row) => row.mode === "direct" && hit(row));
+            const matrix = rows
+              .filter((row) => row.mode === "gated" && hit(row))
+              .map(({ id, service, project, cloudbuild }) => ({ id, service, project, cloudbuild }));
+            console.log("www=" + (www ? "yes" : "no"));
+            console.log("matrix=" + JSON.stringify(matrix));
+          ' >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.id }} with no traffic
+    needs: select
+    if: needs.select.outputs.matrix != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.select.outputs.matrix) }}
+    steps:
+      - name: Checkout Repository 📂
+        uses: actions/checkout@v4
+
+      - id: "auth"
+        name: Authenticate with Google Cloud 🔑
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GCP_SERVICE_ACCOUNT }}"
+
+      - name: Set Up Google Cloud SDK ☁️
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ matrix.project }}
+
+      - name: Submit Cloud Build 🐳
+        run: |
+          gcloud builds submit \
+            --project="${{ matrix.project }}" \
+            --config="${{ matrix.cloudbuild }}" \
+            .
