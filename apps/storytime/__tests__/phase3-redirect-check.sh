@@ -20,20 +20,48 @@ ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 PORT="${PHASE3_REDIRECT_PORT:-3413}"
 HOST="127.0.0.1:$PORT"
 SERVER_PID=""
+SERVER_PGID=""
+SERVER_PORT=""
 LOG="$(mktemp -t storytime-redirect-XXXXXX.log)"
+SERVER_PID_FILE="$(mktemp -t storytime-redirect-pid-XXXXXX)"
+
+# Stops the whole process group of the dev server and waits for the port to close.
+# The dev server starts its own child, so a kill of the parent leaves the child alive.
+stop_server_group() {
+  if [ -n "$SERVER_PID" ]; then
+    kill -- "-$SERVER_PGID" 2>/dev/null || kill "$SERVER_PID" 2>/dev/null || true
+    wait "$SERVER_PID" 2>/dev/null || true
+    SERVER_PID=""
+  fi
+  if [ -n "$SERVER_PORT" ]; then
+    for _ in $(seq 1 30); do
+      if ! ss -ltn 2>/dev/null | grep -qE ":${SERVER_PORT}[[:space:]]"; then break; fi
+      sleep 1
+    done
+    if ss -ltn 2>/dev/null | grep -qE ":${SERVER_PORT}[[:space:]]"; then
+      echo "port_still_open=$SERVER_PORT"
+    else
+      echo "port_closed=$SERVER_PORT"
+    fi
+  fi
+}
 
 cleanup() {
-  if [ -n "$SERVER_PID" ]; then
-    kill "$SERVER_PID" 2>/dev/null
-    wait "$SERVER_PID" 2>/dev/null
-  fi
-  rm -f "$LOG"
+  stop_server_group
+  rm -f "$LOG" "$SERVER_PID_FILE"
 }
-trap cleanup EXIT
+trap cleanup EXIT INT TERM
 
 echo "=== Start the dev server on the shipped content ==="
-(cd "$ROOT/apps/storytime" && exec ../../node_modules/.bin/next dev --port "$PORT" > "$LOG" 2>&1) &
-SERVER_PID=$!
+setsid bash -c "echo \$\$ > '$SERVER_PID_FILE'; cd '$ROOT/apps/storytime' && exec ../../node_modules/.bin/next dev --port '$PORT' > '$LOG' 2>&1" &
+for _ in $(seq 1 20); do
+  [ -s "$SERVER_PID_FILE" ] && break
+  sleep 0.2
+done
+SERVER_PID="$(cat "$SERVER_PID_FILE" 2>/dev/null)"
+SERVER_PGID="$(ps -o pgid= -p "$SERVER_PID" 2>/dev/null | tr -d ' ')"
+[ -n "$SERVER_PGID" ] || SERVER_PGID="$SERVER_PID"
+SERVER_PORT="$PORT"
 READY=0
 for _ in $(seq 1 120); do
   STATUS="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://$HOST/th/st/2/1")" || true

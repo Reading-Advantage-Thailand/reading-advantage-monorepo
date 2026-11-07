@@ -12,16 +12,37 @@ ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 APP="$ROOT/apps/storytime"
 PORT="${PHASE3_BROWSER_PORT:-}"
 SERVER_PID=""
+SERVER_PGID=""
+SERVER_PORT=""
 TMP_DIR="$(mktemp -d -t storytime-browser-XXXXXX)"
 SERVER_LOG="$TMP_DIR/next-start.log"
+SERVER_PID_FILE="$TMP_DIR/server.pid"
 FIXTURE="$TMP_DIR/content"
 PLAYWRIGHT="$APP/.next/phase3-browser-gate-$$.mjs"
 
-cleanup() {
+# Stops the whole process group of the server and waits for the port to close.
+# The server starts its own `next-server` child, so a kill of the parent leaves the child alive.
+stop_server_group() {
   if [ -n "$SERVER_PID" ]; then
-    kill "$SERVER_PID" 2>/dev/null || true
+    kill -- "-$SERVER_PGID" 2>/dev/null || kill "$SERVER_PID" 2>/dev/null || true
     wait "$SERVER_PID" 2>/dev/null || true
+    SERVER_PID=""
   fi
+  if [ -n "$SERVER_PORT" ]; then
+    for _ in $(seq 1 30); do
+      if ! ss -ltn 2>/dev/null | grep -qE ":${SERVER_PORT}[[:space:]]"; then break; fi
+      sleep 1
+    done
+    if ss -ltn 2>/dev/null | grep -qE ":${SERVER_PORT}[[:space:]]"; then
+      echo "port_still_open=$SERVER_PORT"
+    else
+      echo "port_closed=$SERVER_PORT"
+    fi
+  fi
+}
+
+cleanup() {
+  stop_server_group
   rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }
@@ -111,8 +132,15 @@ echo "=== Start next start on a free 127.0.0.1 port ==="
 if [ -z "$PORT" ]; then
   PORT="$(node -e 'const s=require("node:net").createServer();s.listen(0,"127.0.0.1",()=>{console.log(s.address().port);s.close()})')"
 fi
-(cd "$APP" && STORYTIME_CONTENT_DIR="$FIXTURE" exec ../../node_modules/.bin/next start --hostname 127.0.0.1 --port "$PORT" >"$SERVER_LOG" 2>&1) &
-SERVER_PID=$!
+setsid bash -c "echo \$\$ > '$SERVER_PID_FILE'; cd '$APP' && STORYTIME_CONTENT_DIR='$FIXTURE' exec ../../node_modules/.bin/next start --hostname 127.0.0.1 --port '$PORT' >'$SERVER_LOG' 2>&1" &
+for _ in $(seq 1 20); do
+  [ -s "$SERVER_PID_FILE" ] && break
+  sleep 0.2
+done
+SERVER_PID="$(cat "$SERVER_PID_FILE" 2>/dev/null)"
+SERVER_PGID="$(ps -o pgid= -p "$SERVER_PID" 2>/dev/null | tr -d ' ')"
+[ -n "$SERVER_PGID" ] || SERVER_PGID="$SERVER_PID"
+SERVER_PORT="$PORT"
 READY=0
 for _ in $(seq 1 120); do
   STATUS="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://127.0.0.1:$PORT/th/st/2/1")" || true
