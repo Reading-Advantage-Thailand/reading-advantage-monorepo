@@ -38,6 +38,7 @@ const CLOUDBUILD_PATH = join(
   REPO_ROOT,
   "apps/codecamp-advantage/cloudbuild.yaml",
 );
+const TRAFFIC_PATH = CLOUDBUILD_PATH.replace(/cloudbuild\.yaml$/, "cloudbuild-traffic.yaml");
 const DB_README_PATH = join(PACKAGE_ROOT, "README.md");
 const TECH_DEBT_PATH = join(REPO_ROOT, "measure/tech-debt.md");
 const LESSONS_LEARNED_PATH = join(REPO_ROOT, "measure/lessons-learned.md");
@@ -159,11 +160,11 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     expect(text.length).toBeGreaterThan(0);
   });
 
-  it("contains a migrate step that runs `pnpm --filter @reading-advantage/db migrate` before deploy-cloudrun", () => {
-    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+  it("contains a migrate step that runs `pnpm --filter @reading-advantage/db migrate` before update-traffic", () => {
+    const text = readFileSync(TRAFFIC_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
-    const deployIdx = steps.findIndex((s) => s.id === "deploy-cloudrun");
-    expect(deployIdx, "deploy-cloudrun step must exist").toBeGreaterThanOrEqual(
+    const deployIdx = steps.findIndex((s) => s.id === "update-traffic");
+    expect(deployIdx, "update-traffic step must exist").toBeGreaterThanOrEqual(
       0,
     );
 
@@ -185,11 +186,11 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     ).toBeLessThan(deployIdx);
   });
 
-  it("contains a doctor --check step that runs after migrate and before deploy-cloudrun", () => {
-    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+  it("contains a doctor --check step that runs after migrate and before update-traffic", () => {
+    const text = readFileSync(TRAFFIC_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
-    const deployIdx = steps.findIndex((s) => s.id === "deploy-cloudrun");
-    expect(deployIdx, "deploy-cloudrun step must exist").toBeGreaterThanOrEqual(
+    const deployIdx = steps.findIndex((s) => s.id === "update-traffic");
+    expect(deployIdx, "update-traffic step must exist").toBeGreaterThanOrEqual(
       0,
     );
 
@@ -209,7 +210,7 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
   });
 
   it("requires the Codecamp exercise/quiz repair before candidate deployment while retaining the SSO function check", () => {
-    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+    const text = readFileSync(TRAFFIC_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
     const doctorStep = steps.find((step) =>
       step.args.some(
@@ -294,7 +295,7 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
   // The project has no DIRECT_DATABASE_URL secret; Cloud SQL replaced the
   // pooled/direct URL split this contract was originally written against.
   it("doctor step targets CODECAMP_DATABASE_URL (privileged connection, per test-strategy §2)", () => {
-    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+    const text = readFileSync(TRAFFIC_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
     const doctorStep = steps.find((s) =>
       s.args.some((a) => a.includes("doctor") && a.includes("--check")),
@@ -317,7 +318,7 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
   });
 
   it("wires CODECAMP_DATABASE_URL through Cloud Build Secret Manager availableSecrets", () => {
-    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+    const text = readFileSync(TRAFFIC_PATH, "utf8");
     expect(
       text,
       "Cloud Build must use Secret Manager `availableSecrets`, not legacy KMS `secrets`, so secretEnv receives CODECAMP_DATABASE_URL",
@@ -335,7 +336,7 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
   });
 
   it("doctor step has no `allowFailure: true` — non-zero exit must fail the build (FR-4 acceptance #5)", () => {
-    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+    const text = readFileSync(TRAFFIC_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
     const doctorStep = steps.find((s) =>
       s.args.some((a) => a.includes("doctor") && a.includes("--check")),

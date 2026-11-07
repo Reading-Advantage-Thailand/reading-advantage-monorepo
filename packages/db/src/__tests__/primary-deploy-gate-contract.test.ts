@@ -10,8 +10,12 @@ import { fileURLToPath } from "node:url";
 import { sentinelProbes } from "../sentinels";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const CLOUDBUILD = readFileSync(
+const PUSH = readFileSync(
   join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild.yaml"),
+  "utf8",
+);
+const CLOUDBUILD = readFileSync(
+  join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild-traffic.yaml"),
   "utf8",
 );
 const JOURNAL = JSON.parse(
@@ -19,10 +23,10 @@ const JOURNAL = JSON.parse(
 ) as { entries: { tag: string }[] };
 const LATEST_TAG = JOURNAL.entries[JOURNAL.entries.length - 1]!.tag;
 
-/** Splits the Cloud Build file into step blocks keyed by step id. */
-function stepBlocks(): Map<string, string> {
+/** Splits a Cloud Build file into step blocks keyed by step id. */
+function stepBlocks(text: string = CLOUDBUILD): Map<string, string> {
   const blocks = new Map<string, string>();
-  for (const block of CLOUDBUILD.split(/\n\s*-\s*name:\s*/).slice(1)) {
+  for (const block of text.split(/\n\s*-\s*name:\s*/).slice(1)) {
     const id = block.match(/id:\s*"([^"]+)"/)?.[1];
     if (id) blocks.set(id, block);
   }
@@ -41,10 +45,12 @@ describe("Primary Cloud Build migration gate", () => {
     expect(guard).toMatch(/secretEnv:\s*\n\s*-\s*"DATABASE_URL"/);
     const migrate = ids.indexOf("migrate-db");
     const doctor = ids.indexOf("doctor-check");
-    const deploy = ids.indexOf("deploy-cloudrun");
+    const deploy = ids.indexOf("update-traffic");
     expect(migrate).toBeGreaterThanOrEqual(0);
     expect(doctor).toBeGreaterThan(migrate);
     expect(deploy).toBeGreaterThan(doctor);
+    // D1: the push file holds no database step.
+    expect(PUSH).not.toMatch(/id:\s*"(refuse-legacy-db|migrate-db|doctor-check)"/);
   });
 
   it("runs `pnpm --filter @reading-advantage/db migrate` with the DB secret", () => {
@@ -93,7 +99,7 @@ describe("Primary Cloud Build migration gate", () => {
   });
 
   it("mounts the Cloud SQL instance on the Cloud Run service for the socket URL", () => {
-    expect(stepBlocks().get("deploy-cloudrun")).toContain(
+    expect(stepBlocks(PUSH).get("deploy-cloudrun")).toContain(
       "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql",
     );
   });

@@ -60,7 +60,7 @@ const PACKAGE_ROOT = resolve(HERE, "../..");
 const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "../..");
 const CLOUDBUILD_PATH = join(
   REPOSITORY_ROOT,
-  "apps/codecamp-advantage/cloudbuild.yaml",
+  "apps/codecamp-advantage/cloudbuild-traffic.yaml",
 );
 const MIGRATOR_PATH = join(PACKAGE_ROOT, "src/migration.ts");
 const MIGRATE_SCRIPT_PATH = join(PACKAGE_ROOT, "scripts/migrate.ts");
