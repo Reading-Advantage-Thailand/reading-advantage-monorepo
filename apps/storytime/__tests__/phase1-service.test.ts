@@ -27,7 +27,21 @@ describe("Phase 1 service contracts", () => {
       (_match, braced, bare) => config.substitutions?.[braced ?? bare] ?? _match,
     ).replace(/\$\{PROJECT_ID\}|\$PROJECT_ID/g, "primary-advantage");
     const steps = config.steps.map((step: { args?: string[] }) => (step.args ?? []).map(substitute));
-    const deploys = steps.filter((args: string[]) => args[0] === "run" && args[1] === "deploy");
+    // Phase 2 moved the deploy command into a bash step that makes the tag from the
+    // step env BUILD_ID. Read the command from both forms.
+    const deployCommands: string[][] = [];
+    for (const step of config.steps as { entrypoint?: string; args?: string[] }[]) {
+      const args = (step.args ?? []).map(substitute);
+      if (args[0] === "run" && args[1] === "deploy") {
+        deployCommands.push(args);
+      } else if (step.entrypoint === "bash" && args[0] === "-c") {
+        const script = args.slice(1).join("\n").replace(/\\\r?\n/g, " ");
+        for (const match of script.matchAll(/gcloud\s+run\s+deploy\s+([^\n]+)/g)) {
+          deployCommands.push(["run", "deploy", ...match[1].trim().split(/\s+/)]);
+        }
+      }
+    }
+    const deploys = deployCommands.filter((args: string[]) => args[1] === "deploy");
     expect(deploys).toHaveLength(1);
     const deploy = deploys[0];
     expect(deploy[2]).toBe("storytime-app");
@@ -38,6 +52,7 @@ describe("Phase 1 service contracts", () => {
     expect(JSON.stringify(config)).not.toContain("primary-advantage-app");
     expect(JSON.stringify(config)).not.toMatch(/DATABASE_URL|secretEnv|availableSecrets|--(?:set|update)-secrets|--add-cloudsql/);
     expect(steps.some((args: string[]) => args.includes("update-traffic"))).toBe(false);
+    expect(JSON.stringify(config)).not.toContain("update-traffic");
     const build = steps.find((args: string[]) => args[0] === "build");
     expect(build).toBeDefined();
     expect(build).toContain("apps/storytime/Dockerfile");
