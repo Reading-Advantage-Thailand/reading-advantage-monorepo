@@ -197,6 +197,9 @@ cat > "$PLAYWRIGHT" <<'NODE'
 import { chromium } from '@playwright/test';
 import http from 'node:http';
 const base = process.env.PROJECT_DEV_URL;
+// The sign-out form is the one adult control that the three first-view rows exclude (PM default,
+// Red r8). The match is exact: the form action, never a tag or a broad selector.
+const SIGN_OUT_FORM = 'form[action="/api/auth/sign-out"]';
 const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
 // F7c: every week route needs a session, so the gate signs in first. The helper posts the sign-in
 // form with the origin of the request itself. The login origin check compares the Origin header to
@@ -485,7 +488,9 @@ async function controlRightAtLandscape(pg, selector) {
 // `extraSelector` (finding F370) measures a second element kind, such as the child-facing
 // `<audio controls>` speakers of the week tiles, with its own count, bottom, and outside
 // number, so the row fails when such a speaker leaves the viewport.
-async function allControlsAtLandscape(pg, selector = 'a[href], button, [role="button"], [data-word]', extraSelector = null) {
+// `excludeSelector` (Red r8) drops the elements inside an exact match only, so the three rows of
+// the week page can leave out the adult sign-out form while every child control stays counted.
+async function allControlsAtLandscape(pg, selector = 'a[href], button, [role="button"], [data-word]', extraSelector = null, excludeSelector = null) {
   await pg.setViewportSize({ width: 844, height: 390 });
   // The pictures are lazy; measure only after every image has loaded, or the layout is still
   // short and an element would pass before the picture takes its height.
@@ -493,7 +498,7 @@ async function allControlsAtLandscape(pg, selector = 'a[href], button, [role="bu
     .waitForFunction(() => [...document.images].every((img) => img.complete), undefined, { timeout: 10000 })
     .catch(() => {});
   await pg.waitForTimeout(50);
-  return pg.evaluate(({ sel, extra }) => {
+  return pg.evaluate(({ sel, extra, exclude }) => {
     const viewportH = Math.round(window.innerHeight);
     const viewportW = Math.round(window.innerWidth);
     let count = 0;
@@ -502,6 +507,9 @@ async function allControlsAtLandscape(pg, selector = 'a[href], button, [role="bu
     let maxRight = 0;
     const outsideList = [];
     for (const el of document.querySelectorAll(sel)) {
+      // The sign-out form is an adult control at the end of the page (PM default, Red r8). The
+      // live rows pass its exact form action, so no child control leaves the check.
+      if (exclude && el.closest(exclude)) continue;
       const rect = el.getBoundingClientRect();
       if (!(rect.width > 0 && rect.height > 0)) continue;
       count += 1;
@@ -525,7 +533,35 @@ async function allControlsAtLandscape(pg, selector = 'a[href], button, [role="bu
       }
     }
     return { viewportH, viewportW, count, outside, maxBottom, maxRight, outsideList, speakerCount, speakerOutside, speakerBottom };
-  }, { sel: selector, extra: extraSelector });
+  }, { sel: selector, extra: extraSelector, exclude: excludeSelector });
+}
+// The sign-out control is an adult control (PM default, Red r8): it stays at the end of the page.
+// This helper proves that it exists, has an accessible name, is tall enough for an adult thumb
+// (44 px), and is reachable by a scroll from the first view.
+async function signOutControlAtLandscape(pg) {
+  await pg.setViewportSize({ width: 844, height: 390 });
+  return pg.evaluate(() => {
+    const empty = { exists: false, named: false, tall: false, reachable: false, height: 0, bottom: 0, scrollDelta: 0 };
+    const form = document.querySelector('form[action="/api/auth/sign-out"]');
+    if (!(form instanceof HTMLFormElement)) return empty;
+    const button = form.querySelector('button[type="submit"], button');
+    if (!(button instanceof HTMLButtonElement)) return empty;
+    const label = (button.getAttribute('aria-label') ?? button.textContent ?? '').trim();
+    const before = button.getBoundingClientRect();
+    const beforeScroll = window.scrollY;
+    button.scrollIntoView({ block: 'center' });
+    const after = button.getBoundingClientRect();
+    const reachable = after.top >= 0 && after.bottom <= window.innerHeight && after.left >= 0 && after.right <= window.innerWidth;
+    return {
+      exists: true,
+      named: label.length > 0,
+      tall: after.height >= 44,
+      reachable,
+      height: Math.round(after.height),
+      bottom: Math.round(before.bottom),
+      scrollDelta: Math.round(Math.abs(window.scrollY - beforeScroll)),
+    };
+  });
 }
 async function watchNetwork(page) {
   const requests = [];
@@ -583,6 +619,10 @@ try {
     // F410 self-test page: one audio speaker below the 390 px fold, so the extraSelector
     // speaker branch of the all-controls check must report it and reject the page.
     ['/audio-below-fold', '<!doctype html><div style="height:600px;background:#eee"></div><audio controls style="width:300px;height:54px"></audio>'],
+    // Red r8 self-test page: three child buttons in the first view, one child play button below
+    // the 390 px fold, and the sign-out form below it. The exact-form exclusion must keep the play
+    // button in the count; a broad selector would hide it.
+    ['/signout-narrow', '<!doctype html><body><button>one</button><button>two</button><button>three</button><div style="height:600px;background:#eee"></div><button>play</button><form method="post" action="/api/auth/sign-out"><input type="hidden" name="locale" value="th"><button type="submit" style="min-height:64px;width:120px">ออกจากระบบ</button></form></body>'],
   ]);
   const selfTestStatus = new Map([['/th/nowhere', 404]]);
   const selfTestServer = http.createServer((req, res) => {
@@ -615,6 +655,7 @@ try {
     ['no player control found at 844x390 (landscape_controls_visible)', '/no-controls', async p => { const info = await controlBottomAtLandscape(p); console.log(`selftest landscape_controls_visible=${info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport})`); return info.count > 0 && info.bottom > 0 && info.bottom <= info.viewport; }],
     ['a tile row wider than the viewport at 844x390 (landscape_row_right_edge)', '/wide-row', async p => { const info = await controlRightAtLandscape(p, '.row > button'); console.log(`selftest landscape_row_right_edge=${info.count > 0 && info.right > 0 && info.right <= info.viewport} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`); return info.count > 0 && info.right > 0 && info.right <= info.viewport; }],
     ['an interactive element below the fold at 844x390 (all_controls_visible)', '/below-fold', async p => { const info = await allControlsAtLandscape(p); console.log(`selftest all_controls_visible=${info.count > 0 && info.outside === 0} (controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}, viewport_px=${info.viewportH})`); return info.count > 0 && info.outside === 0; }],
+    ['a child play button below the fold beside the sign-out form (sign_out_exclusion_narrow)', '/signout-narrow', async p => { const info = await allControlsAtLandscape(p, undefined, null, SIGN_OUT_FORM); console.log(`selftest sign_out_exclusion_narrow=${info.outside >= 1} (controls_found=${info.count}, controls_outside=${info.outside}, max_bottom_px=${info.maxBottom}, viewport_px=${info.viewportH})`); return info.outside === 0; }],
     ['one link against the reader minimum of 9 (all_controls_visible)', '/one-link', async p => { const info = await allControlsAtLandscape(p); const oldRule = info.count > 0 && info.outside === 0; const newRule = info.count >= 9 && info.outside === 0; console.log(`selftest all_controls_visible_min old_rule_passes=${oldRule} new_rule_passes=${newRule} (controls_found=${info.count}, controls_min=9, controls_outside=${info.outside})`); return newRule; }],
     ['an audio speaker below the fold at 844x390 (all_controls_visible speaker probe)', '/audio-below-fold', async p => { const info = await allControlsAtLandscape(p, 'button', 'audio'); console.log(`selftest all_controls_speaker_probe=${info.speakerOutside === 0} (speakers_found=${info.speakerCount}, speakers_outside=${info.speakerOutside}, speaker_bottom_px=${info.speakerBottom}, viewport_px=${info.viewportH})`); return info.speakerOutside === 0; }],
     ['a fallback page with no song section against the song row open rule (all_controls_visible)', '/one-link', async p => { const info = await allControlsAtLandscape(p); const songOpen = (await p.locator('section[data-part="song"] button').count()) > 0; const countRule = info.count >= 1 && info.outside === 0; console.log(`selftest all_controls_song_open song_open_ok=${songOpen} count_rule_ok=${countRule} (controls_found=${info.count}, controls_min=1, song_buttons_found=0)`); return songOpen; }],    ['a pause 80 ms after the cut end (word cut overshoot rule)', '/button', async () => { const v = wordCutVerdict(0.34 + 0.080, 0.34); console.log(`selftest word_cut_overshoot_ms=${v.overshoot}`); return v.overshootOk; }],
@@ -978,34 +1019,50 @@ try {
   // elements outside, and the first offenders, so a fail shows which element must move. The
   // week row (finding F370) also measures the child-facing tile speakers, which the
   // link-and-button selector misses.
-  const allControlsCheck = async (name, open, minCount, extraSelector = null) => {
+  const allControlsCheck = async (name, open, minCount, extraSelector = null, excludeSelector = null) => {
     await runCheck(`all_controls_visible on the ${name} screen at 844x390`, async () => {
       if (!page) throw new Error('Browser page is unavailable');
       await open();
-      const info = await allControlsAtLandscape(page, undefined, extraSelector);
+      const info = await allControlsAtLandscape(page, undefined, extraSelector, excludeSelector);
       const ok = info.count >= minCount && info.outside === 0 && info.speakerOutside === 0;
       console.log(`all_controls_visible_${name}=${ok} (controls_found=${info.count}, controls_min=${minCount}, controls_outside=${info.outside}, speakers_found=${info.speakerCount}, speakers_outside=${info.speakerOutside}, speaker_bottom_px=${info.speakerBottom}, outside=${JSON.stringify(info.outsideList.slice(0, 4))}, max_bottom_px=${info.maxBottom}, max_right_px=${info.maxRight}, viewport_px=${info.viewportH}x${info.viewportW})`);
       return { ok, detail: `controls_found=${info.count}, controls_min=${minCount}, controls_outside=${info.outside}, speakers_outside=${info.speakerOutside}, max_bottom_px=${info.maxBottom}` };
     });
   };
-  await allControlsCheck('week', async () => {
-    await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
-  }, 3, '[data-week-tiles] audio');
+  // The three first-view rows leave out the adult sign-out form. These three rows prove that the
+  // control is still present, named, 44 px tall, and reachable by a scroll (PM default, Red r8).
+  const signOutCheck = async (name, open) => {
+    await runCheck(`sign_out_control on the ${name} screen at 844x390`, async () => {
+      if (!page) throw new Error('Browser page is unavailable');
+      await open();
+      const info = await signOutControlAtLandscape(page);
+      const ok = info.exists && info.named && info.tall && info.reachable;
+      console.log(`sign_out_reachable=${ok ? 1 : 0} (screen=${name}, exists=${info.exists ? 1 : 0}, named=${info.named ? 1 : 0}, height_px=${info.height}, bottom_px=${info.bottom}, scroll_delta_px=${info.scrollDelta})`);
+      return { ok, detail: `screen=${name}, exists=${info.exists}, named=${info.named}, height_px=${info.height}, reachable=${info.reachable}, scroll_delta_px=${info.scrollDelta}` };
+    });
+  };
+  const openWeek = async () => { await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' }); };
+  await allControlsCheck('week', openWeek, 3, '[data-week-tiles] audio', SIGN_OUT_FORM);
+  await signOutCheck('week', openWeek);
   await allControlsCheck('reader', async () => {
     await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
   }, 9);
   await allControlsCheck('endofbook', async () => {
     await reachEndOfBook('th');
   }, 3);
-  await allControlsCheck('decodable', async () => {
+  const openDecodable = async () => {
     await page.goto(`${base}/th/st/2/1?part=decodable`, { waitUntil: 'networkidle' });
-  }, 8);
-  await allControlsCheck('song', async () => {
+  };
+  await allControlsCheck('decodable', openDecodable, 8, null, SIGN_OUT_FORM);
+  await signOutCheck('decodable', openDecodable);
+  const openSong = async () => {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
     // F411: the minimum of 1 equals the fallback WeekHomeLink, so the open step requires
     // the song section itself; a week with no song renders one link and must fail here.
     if (!(await page.locator('section[data-part="song"] button').count())) throw new Error('the song section did not render');
-  }, 1);
+  };
+  await allControlsCheck('song', openSong, 1, null, SIGN_OUT_FORM);
+  await signOutCheck('song', openSong);
   await allControlsCheck('question', async () => {
     if (!(await questionScreen())) throw new Error('the question screen did not render');
   }, 4);
