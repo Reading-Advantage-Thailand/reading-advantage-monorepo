@@ -12,6 +12,12 @@
  * when the query names a part.
  */
 import "@testing-library/jest-dom/vitest";
+// The page signs the media of the week after the session check. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/sign", () => ({
+  signWeekMedia: async () => ({}),
+}));
+
 import { cleanup, render, screen } from "@testing-library/react";
 import { resolve } from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -50,6 +56,8 @@ vi.mock("../lib/auth", () => ({
 }));
 
 import StorytimeWeekPage from "../app/[locale]/st/[level]/[week]/page";
+
+
 
 type PageParams = { locale: string; level: string; week: string };
 type SearchParams = Record<string, string | string[] | undefined>;

@@ -1,5 +1,11 @@
 // @vitest-environment node
 import { existsSync, readFileSync } from "node:fs";
+// The page signs the media of the week after the session check. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/sign", () => ({
+  signWeekMedia: async () => ({}),
+}));
+
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { beforeAll, describe, expect, it, vi } from "vitest";
@@ -18,6 +24,8 @@ vi.mock("../lib/auth", () => ({
 }));
 
 import StorytimeWeekPage from "../app/[locale]/st/[level]/[week]/page";
+
+
 
 const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const content = resolve(app, "content/l2");

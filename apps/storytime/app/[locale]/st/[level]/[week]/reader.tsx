@@ -7,6 +7,7 @@
  * labels. The reader holds the audio element, the page turner, the modes, and the page-end stop.
  * It never speaks with the phone voice (rule 10.5): every sound is a recorded file.
  */
+import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
 import type { ReadAlongSentence } from "@reading-advantage/read-along/lib/align";
@@ -96,7 +97,7 @@ interface StorytimeReaderProps {
   /** The translated labels of the question screen. */
   questionLabels?: QuestionLabels;
   /** The media base URL; the default is `/media`. */
-  mediaBase?: string;
+  mediaUrls?: Record<string, string>;
 }
 
 /** The Thai message of a failed sound, so the Thai page needs no Thai label from the caller. */
@@ -114,9 +115,7 @@ const PAGE_STOP_WINDOW_S = 0.3;
  * @param file The file, relative to the base.
  * @returns The URL, with one slash between the base and the file.
  */
-function mediaUrl(base: string, file: string): string {
-  return `${base.replace(/\/+$/, "")}/${file.replace(/^\/+/, "")}`;
-}
+
 
 /**
  * Renders one read-along book for a child (spec FR-6).
@@ -135,7 +134,7 @@ export function StorytimeReader({
   questions = [],
   tiles = [],
   questionLabels,
-  mediaBase = "/media",
+  mediaUrls = {},
 }: StorytimeReaderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -251,7 +250,7 @@ export function StorytimeReader({
     setMode("listen");
     const element = audioRef.current;
     if (!element || !book.audio?.file) return;
-    element.src = mediaUrl(mediaBase, book.audio.file);
+    element.src = mediaUrl(mediaUrls, book.audio.file);
     element.playbackRate = 1;
     const first = normalSentences[0];
     // A seek at readyState 0 applies on the loadedmetadata event (finding F122).
@@ -268,7 +267,7 @@ export function StorytimeReader({
     setMode("myTurn");
     const element = audioRef.current;
     if (!element || !book.audio?.file) return;
-    element.src = mediaUrl(mediaBase, book.audio.file);
+    element.src = mediaUrl(mediaUrls, book.audio.file);
     element.playbackRate = 1;
     element.pause();
   }
@@ -281,7 +280,7 @@ export function StorytimeReader({
     setMode("slow");
     const element = audioRef.current;
     if (!element || !book.audio?.slowFile) return;
-    element.src = mediaUrl(mediaBase, book.audio.slowFile);
+    element.src = mediaUrl(mediaUrls, book.audio.slowFile);
     element.playbackRate = 1;
     playAudio(element);
   }
@@ -388,7 +387,7 @@ export function StorytimeReader({
           tiles={tiles}
           locale={locale}
           labels={questionLabels}
-          mediaBase={mediaBase}
+          mediaUrls={mediaUrls}
         />
       ) : finished ? (
         // The end of the book always offers a way back: on a shipped week the loops part is
@@ -396,7 +395,7 @@ export function StorytimeReader({
         // (finding F149, UX1).
         <div data-reader-end className="flex flex-col gap-4">
           <p className="text-lg font-semibold">{labels.finished}</p>
-          {tiles.length > 0 ? <WeekTileLinks tiles={tiles} mediaBase={mediaBase} /> : null}
+          {tiles.length > 0 ? <WeekTileLinks tiles={tiles} mediaUrls={mediaUrls} /> : null}
         </div>
       ) : (
         <>
@@ -407,7 +406,7 @@ export function StorytimeReader({
           >
             {image?.file ? (
               <img
-                src={mediaUrl(mediaBase, image.file)}
+                src={mediaUrl(mediaUrls, image.file)}
                 alt={image.caption ?? ""}
                 loading="lazy"
                 decoding="async"

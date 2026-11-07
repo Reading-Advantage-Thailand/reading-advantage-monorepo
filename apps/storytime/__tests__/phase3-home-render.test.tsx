@@ -1,5 +1,11 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
+// The page signs the media of the week after the session check. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/sign", () => ({
+  signWeekMedia: async () => ({}),
+}));
+
 import { render, screen, cleanup } from "@testing-library/react";
 import { describe, expect, it, vi, afterEach } from "vitest";
 import week3 from "../content/l2/w03.json";
@@ -24,6 +30,8 @@ vi.mock("../lib/auth", () => ({
 import StorytimeWeekPage from "../app/[locale]/st/[level]/[week]/page";
 import { StorytimeDecodable } from "../app/[locale]/st/[level]/[week]/reader";
 import { StorytimeSong } from "../app/[locale]/st/[level]/[week]/song";
+
+
 
 /** One deep clone of the shipped week 3 for the render fixtures. */
 function cloneWeek(): StorytimeWeek {
@@ -97,7 +105,7 @@ describe("Phase 3 rendered alt attributes (finding F138)", () => {
     const home = await renderHome("th");
     const decodable = render(<StorytimeDecodable week={clone} locale="en" />);
     const song = clone.song
-      ? render(<StorytimeSong song={clone.song} mediaBase="/media" labels={{ play: "th:songPlay", pause: "th:songPause" }} />)
+      ? render(<StorytimeSong song={clone.song} mediaUrls={{}} labels={{ play: "th:songPlay", pause: "th:songPause" }} />)
       : null;
     try {
       const containers = [home.container, decodable.container, ...(song ? [song.container] : [])];

@@ -8,6 +8,7 @@
  * control ends the screen. The end shows the three tiles of the week page.
  */
 import Link from "next/link";
+import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { questionChoices, type BookQuestion, type QuestionPage } from "../../../../../lib/questions";
 
@@ -36,10 +37,10 @@ export interface QuestionTile {
  */
 export function WeekTileLinks({
   tiles,
-  mediaBase = "/media",
+  mediaUrls = {},
 }: {
   tiles: QuestionTile[];
-  mediaBase?: string;
+  mediaUrls?: Record<string, string>;
 }) {
   return (
     <ul className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row">
@@ -51,7 +52,7 @@ export function WeekTileLinks({
           >
             {tile.pictureFile ? (
               <img
-                src={mediaUrl(mediaBase, tile.pictureFile)}
+                src={mediaUrl(mediaUrls, tile.pictureFile)}
                 alt={tile.pictureAlt}
                 loading="lazy"
                 decoding="async"
@@ -94,7 +95,7 @@ interface StorytimeQuestionsProps {
   /** The translated labels. */
   labels: QuestionLabels;
   /** The media base URL; the default is `/media`. */
-  mediaBase?: string;
+  mediaUrls?: Record<string, string>;
 }
 
 /** One mark of a choice. */
@@ -106,9 +107,7 @@ type QuestionMark = "right" | "gentle";
  * @param file The file, relative to the base.
  * @returns The URL, with one slash between the base and the file.
  */
-function mediaUrl(base: string, file: string): string {
-  return `${base.replace(/\/+$/, "")}/${file.replace(/^\/+/, "")}`;
-}
+
 
 /**
  * Renders the question screen of the read-along (spec FR-13).
@@ -121,7 +120,7 @@ export function StorytimeQuestions({
   tiles,
   locale,
   labels,
-  mediaBase = "/media",
+  mediaUrls = {},
 }: StorytimeQuestionsProps) {
   const choices = useMemo(() => questionChoices(questions, pages), [questions, pages]);
   const [index, setIndex] = useState(0);
@@ -192,7 +191,7 @@ export function StorytimeQuestions({
   if (ended) {
     return (
       <section data-question-screen data-question-end className="flex flex-col gap-4">
-        <WeekTileLinks tiles={tiles} mediaBase={mediaBase} />
+        <WeekTileLinks tiles={tiles} mediaUrls={mediaUrls} />
       </section>
     );
   }
@@ -232,7 +231,7 @@ export function StorytimeQuestions({
             >
               {choice.file ? (
                 <img
-                  src={mediaUrl(mediaBase, choice.file)}
+                  src={mediaUrl(mediaUrls, choice.file)}
                   alt={choice.caption}
                   loading="lazy"
                   decoding="async"

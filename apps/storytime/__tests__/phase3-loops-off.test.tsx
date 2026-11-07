@@ -1,10 +1,25 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
+// The media of a week now comes from the signed map of the page. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/url", () => ({
+  mediaUrl: (_mediaUrls: Record<string, string>, file: string) =>
+    `https://storage.googleapis.com/storytime-app-media/${file}`,
+}));
+
+// The page signs the media of the week after the session check. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/sign", () => ({
+  signWeekMedia: async () => ({}),
+}));
+
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import week from "../content/l2/w01.json";
+
+
 
 /**
  * The Red tests of the loops-off rule of the at-home app (plan task 3.9, AC-13.8).

@@ -8,10 +8,19 @@
  * and a tile without a picture must render no `img`.
  */
 import "@testing-library/jest-dom/vitest";
+// The media of a week now comes from the signed map of the page. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/url", () => ({
+  mediaUrl: (_mediaUrls: Record<string, string>, file: string) =>
+    `https://storage.googleapis.com/storytime-app-media/${file}`,
+}));
+
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import week from "../content/l2/w01.json";
 import type { QuestionTile } from "../app/[locale]/st/[level]/[week]/questions";
+
+
 
 const labels = {
   readToMe: "Read it to me",
@@ -68,9 +77,9 @@ describe("Phase 3 adversarial end-of-book way back", () => {
     const withPicture = await renderEnd(tiles);
     const images = [...withPicture.container.querySelectorAll("img")];
     expect(images, "the first tile carries the picture of the tile set").toHaveLength(1);
-    expect(images[0], "the tile picture must land on the media base").toHaveAttribute(
+    expect(images[0], "the tile picture must land on the signed URL").toHaveAttribute(
       "src",
-      "/media/review/book-1.jpg",
+      "https://storage.googleapis.com/storytime-app-media/review/book-1.jpg",
     );
     expect(images[0], "the tile picture must keep its alt text").toHaveAttribute(
       "alt",

@@ -10,6 +10,7 @@
  * stage poster and the song tile picture stay (rule 9.1). The component never uses the phone
  * voice (rule 10.5): every sound is a recorded file.
  */
+import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useRef, useState, type SyntheticEvent } from "react";
 import type { StorytimeWeek } from "../../../../../lib/contracts/week";
 
@@ -32,7 +33,7 @@ interface StorytimeSongProps {
   /** The song of the week. */
   song: NonNullable<StorytimeWeek["song"]>;
   /** The media base URL; the default is `/media`. */
-  mediaBase?: string;
+  mediaUrls?: Record<string, string>;
   /** The translated control labels. */
   labels?: SongLabels;
 }
@@ -43,9 +44,7 @@ interface StorytimeSongProps {
  * @param file The file, relative to the base.
  * @returns The URL, with one slash between the base and the file.
  */
-function mediaUrl(base: string, file: string): string {
-  return `${base.replace(/\/+$/, "")}/${file.replace(/^\/+/, "")}`;
-}
+
 
 /**
  * Renders one song for a child (spec FR-8).
@@ -54,7 +53,7 @@ function mediaUrl(base: string, file: string): string {
  */
 export function StorytimeSong({
   song,
-  mediaBase = "/media",
+  mediaUrls = {},
   labels = DEFAULT_LABELS,
 }: StorytimeSongProps) {
   const mediaRef = useRef<HTMLVideoElement | HTMLAudioElement | null>(null);
@@ -75,8 +74,8 @@ export function StorytimeSong({
   const videoFile = phone ? (song.videoPhone ?? song.video) : song.video;
   const posterFile = phone ? (song.posterPhone ?? song.poster) : song.poster;
   const mediaFile = hasVideo ? videoFile : song.audio;
-  const mediaSrc = mediaFile ? mediaUrl(mediaBase, mediaFile) : undefined;
-  const poster = posterFile ? mediaUrl(mediaBase, posterFile) : undefined;
+  const mediaSrc = mediaFile ? mediaUrl(mediaUrls, mediaFile) : undefined;
+  const poster = posterFile ? mediaUrl(mediaUrls, posterFile) : undefined;
   const times = song.times;
 
   /**

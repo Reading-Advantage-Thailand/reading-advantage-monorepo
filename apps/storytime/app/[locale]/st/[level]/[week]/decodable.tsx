@@ -9,6 +9,7 @@
  * tricky word and every word of a sound book play whole. The component never uses the phone voice
  * (rule 10.5): every sound is a recorded file.
  */
+import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { blendPlanForWord } from "../../../../../lib/blend";
 import { seekAndRun, stopAtMediaEnd } from "../../../../../lib/audio-seek";
@@ -42,7 +43,7 @@ interface StorytimeDecodableProps {
   /** The page language; it selects the Thai control labels. */
   locale: string;
   /** The media base URL; the default is `/media`. */
-  mediaBase?: string;
+  mediaUrls?: Record<string, string>;
   /** The translated labels; the default keeps the exact pre-remediation strings (finding F137). */
   labels?: Partial<DecodableLabels>;
 }
@@ -95,9 +96,7 @@ for (const clip of PHONEME_BANK) {
  * @param file The file, relative to the base.
  * @returns The URL, with one slash between the base and the file.
  */
-function mediaUrl(base: string, file: string): string {
-  return `${base.replace(/\/+$/, "")}/${file.replace(/^\/+/, "")}`;
-}
+
 
 /**
  * Reports whether a token of the page text is a word.
@@ -172,7 +171,7 @@ function sentencePieces(text: string): SentencePiece[] {
 export function StorytimeDecodable({
   week,
   locale,
-  mediaBase = "/media",
+  mediaUrls = {},
   labels: labelOverrides,
 }: StorytimeDecodableProps) {
   const phonemeRef = useRef<HTMLAudioElement | null>(null);
@@ -304,7 +303,7 @@ export function StorytimeDecodable({
    */
   function playPhoneme(file: string): void {
     stopBlendSequence();
-    const url = mediaUrl(mediaBase, file);
+    const url = mediaUrl(mediaUrls, file);
     const target = phonemeRef.current;
     if (target) {
       // The imperative write is the only src write (the live browser-gate row found that a
@@ -349,7 +348,7 @@ export function StorytimeDecodable({
     for (const file of files) {
       const target = phonemeRef.current;
       if (!target || blendGenerationRef.current !== generation) return;
-      const url = mediaUrl(mediaBase, file);
+      const url = mediaUrl(mediaUrls, file);
       target.src = url;
       try {
         await playClip(target);
@@ -425,7 +424,7 @@ export function StorytimeDecodable({
       return;
     }
     const bounds = wordBounds(word, pageNumber);
-    const url = mediaUrl(mediaBase, file);
+    const url = mediaUrl(mediaUrls, file);
     // The imperative write is the only src write; see playPhoneme.
     target.src = url;
     if (bounds) {
@@ -522,7 +521,7 @@ export function StorytimeDecodable({
         >
           {page.image?.file ? (
             <img
-              src={mediaUrl(mediaBase, page.image.file)}
+              src={mediaUrl(mediaUrls, page.image.file)}
               alt={page.image.caption ?? ""}
               loading="lazy"
               decoding="async"

@@ -12,6 +12,7 @@ import { questionScreenShows, readAlongQuestions } from "../../../../../lib/ques
 // type-only import keeps the `@` form; types never resolve at runtime.
 import { parseStorytimeRoute } from "../../../../../lib/route-parse";
 import { requireUser } from "../../../../../lib/auth";
+import { signWeekMedia } from "../../../../../lib/media/sign";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
@@ -48,10 +49,6 @@ const TILE_LABEL_AUDIO: Partial<Record<TileId, string>> = {};
 /** The recorded home-word audio, keyed by the word (finding F17). The table stays empty until the
  * production side delivers the files; a missing recording shows no speaker. */
 const HOME_WORD_AUDIO: Partial<Record<string, string>> = {};
-
-/** The environment value that holds the media base URL (test strategy P3.7). It stays on the
- * server: no request can set it, and it is never a `NEXT_PUBLIC_` value. */
-const MEDIA_BASE_ENV = "STORYTIME_MEDIA_BASE";
 
 /** One entry tile: the read-along, the decodable, the song, and a conditional karaoke tile. */
 type TileId = "readalong" | "decodable" | "song" | "karaoke";
@@ -90,21 +87,15 @@ export function generateMetadata(): Metadata {
 }
 
 /**
- * Reads the media base URL of the Storytime media files (finding F131). The value stays on the
- * server, so one helper holds it for `mediaUrl` and for the client views.
- * @returns The base URL, with no trailing slash.
- */
-function mediaBase(): string {
-  return (process.env[MEDIA_BASE_ENV] || "/media").replace(/\/+$/, "");
-}
-
-/**
- * Builds the URL of one media file.
+ * Reads the signed URL of one media file.
+ *
+ * Every media file of the week holds a signed URL, so the page never builds a public URL.
+ * @param mediaUrls The signed URLs of the week.
  * @param file The file, relative to the Storytime content folder.
- * @returns The URL under the media base.
+ * @returns The signed URL, or an empty string when the file holds no signed URL.
  */
-function mediaUrl(file: string): string {
-  return `${mediaBase()}/${file}`;
+function mediaUrl(mediaUrls: Record<string, string>, file: string): string {
+  return mediaUrls[file] ?? "";
 }
 
 /**
@@ -150,12 +141,20 @@ function songPicture(week: StorytimeWeek): TilePicture | null {
  * @param props.label The accessible label.
  * @returns The speaker control.
  */
-function Speaker({ file, label }: { file: string; label: string }) {
+function Speaker({
+  file,
+  label,
+  mediaUrls,
+}: {
+  file: string;
+  label: string;
+  mediaUrls: Record<string, string>;
+}) {
   return (
     <audio
       controls
       preload="none"
-      src={mediaUrl(file)}
+      src={mediaUrl(mediaUrls, file)}
       aria-label={label}
       className="min-h-16 min-w-16"
     />
@@ -167,7 +166,7 @@ function Speaker({ file, label }: { file: string; label: string }) {
  * @param props.tile The tile.
  * @returns The tile item.
  */
-function TileCard({ tile }: { tile: Tile }) {
+function TileCard({ tile, mediaUrls }: { tile: Tile; mediaUrls: Record<string, string> }) {
   const audio = TILE_LABEL_AUDIO[tile.id];
   return (
     <li className="flex flex-col gap-2 [@media(max-height:500px)]:flex-1">
@@ -177,7 +176,7 @@ function TileCard({ tile }: { tile: Tile }) {
       >
         {tile.picture ? (
           <img
-            src={mediaUrl(tile.picture.file)}
+            src={mediaUrl(mediaUrls, tile.picture.file)}
             alt={tile.picture.caption}
             loading="lazy"
             decoding="async"
@@ -189,7 +188,7 @@ function TileCard({ tile }: { tile: Tile }) {
           {tile.label}
         </span>
       </Link>
-      {audio ? <Speaker file={audio} label={tile.label} /> : null}
+      {audio ? <Speaker file={audio} label={tile.label} mediaUrls={mediaUrls} /> : null}
     </li>
   );
 }
@@ -260,7 +259,13 @@ export default async function StorytimeWeekPage({
     audioError: t("playerAudioError"),
     finished: t("playerFinished"),
   };
-  const mediaBaseUrl = mediaBase();
+  let mediaUrls: Record<string, string> = {};
+  try {
+    mediaUrls = await signWeekMedia(week, {});
+  } catch (error) {
+    console.warn(`storytime media signing failed: ${(error as Error).message}`);
+    throw error;
+  }
   const readAlongBook = week.books.find((entry) => entry.kind === "readalong");
   const decodableBook = week.books.find((entry) => entry.kind === "decodable");
 
@@ -322,7 +327,7 @@ export default async function StorytimeWeekPage({
             tile stays inside the viewport; portrait and laptop keep the column. */}
             <ul data-week-tiles className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row">
               {tiles.map((tile) => (
-                <TileCard key={tile.id} tile={tile} />
+                <TileCard key={tile.id} tile={tile} mediaUrls={mediaUrls} />
               ))}
             </ul>
           </section>
@@ -349,6 +354,7 @@ export default async function StorytimeWeekPage({
                 <Speaker
                   file={elementAudio}
                   label={`${t("homeSoundHeading")} ${element.sound}`}
+                  mediaUrls={mediaUrls}
                 />
               </div>
             ) : null}
@@ -367,7 +373,7 @@ export default async function StorytimeWeekPage({
                       >
                         {word}
                       </span>
-                      {wordAudio ? <Speaker file={wordAudio} label={word} /> : null}
+                      {wordAudio ? <Speaker file={wordAudio} label={word} mediaUrls={mediaUrls} /> : null}
                     </li>
                   );
                 })}
@@ -403,7 +409,7 @@ export default async function StorytimeWeekPage({
               questions={showQuestions ? readAlongQuestions(week) : []}
               tiles={questionTiles}
               questionLabels={questionLabels}
-              mediaBase={mediaBaseUrl}
+              mediaUrls={mediaUrls}
             />
           ) : (
             <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />
@@ -415,7 +421,7 @@ export default async function StorytimeWeekPage({
             <StorytimeDecodable
               week={week}
               locale={locale}
-              mediaBase={mediaBaseUrl}
+              mediaUrls={mediaUrls}
               labels={{
                 soundOfWeek: t("decSoundOfWeek"),
                 playSound: t("decPlaySound"),
@@ -434,7 +440,7 @@ export default async function StorytimeWeekPage({
           {week.song ? (
             <StorytimeSong
               song={week.song}
-              mediaBase={mediaBaseUrl}
+              mediaUrls={mediaUrls}
               labels={{ play: t("songPlay"), pause: t("songPause") }}
             />
           ) : (

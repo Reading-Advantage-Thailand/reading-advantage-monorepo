@@ -3,12 +3,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { verifyPassword } from "@reading-advantage/auth/password";
 import { consumeRateLimit } from "@reading-advantage/auth/rate-limit";
-import {
-  SESSION_COOKIE_NAME,
-  createSessionCookie,
-  newSessionToken,
-  sessionTokenDigest,
-} from "./cookie";
+import * as cookie from "./cookie";
 import {
   RATE_LIMIT_ACCOUNT_MAX,
   RATE_LIMIT_IP_MAX,
@@ -103,10 +98,10 @@ export function mayOpenPath(user: StorytimeUser, path: string): boolean {
  * @returns The user, or `null` when the request holds no open session.
  */
 export async function getCurrentUser(): Promise<StorytimeUser | null> {
-  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+  const token = (await cookies()).get(cookie.SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
   const store = getStore();
-  const session = await store.findSessionByDigest(sessionTokenDigest(token));
+  const session = await store.findSessionByDigest(cookie.sessionTokenDigest(token));
   if (!session) return null;
   const account = await store.findAccountById(session.accountId);
   if (!account) return null;
@@ -227,11 +222,11 @@ export async function login(input: {
     return { status: "invalid", reason: "disabled" };
   }
 
-  const token = newSessionToken();
+  const token = cookie.newSessionToken();
   const expiresAt = new Date(input.now.getTime() + SESSION_MAX_AGE_S * 1000);
   await store.createSessionWithCap({
     accountId: account.id,
-    tokenDigest: sessionTokenDigest(token),
+    tokenDigest: cookie.sessionTokenDigest(token),
     now: input.now,
     expiresAt,
     cap: sessionCapForRole(account.role),
@@ -244,7 +239,7 @@ export async function login(input: {
     now: input.now,
   });
   console.warn(`storytime sign-in succeeded: username=${account.username} role=${account.role}`);
-  return { status: "signed_in", cookie: createSessionCookie(token) };
+  return { status: "signed_in", cookie: cookie.createSessionCookie(token) };
 }
 
 /**
@@ -253,5 +248,5 @@ export async function login(input: {
  */
 export async function logout(token: string): Promise<void> {
   if (!token) return;
-  await getStore().deleteSessionByDigest(sessionTokenDigest(token));
+  await getStore().deleteSessionByDigest(cookie.sessionTokenDigest(token));
 }

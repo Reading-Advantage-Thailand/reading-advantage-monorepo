@@ -1,11 +1,20 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
+// The media of a week now comes from the signed map of the page. The mock keeps the old URLs of
+// the test, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/url", () => ({
+  mediaUrl: (_mediaUrls: Record<string, string>, file: string) =>
+    `https://storage.googleapis.com/storytime-app-media/${file}`,
+}));
+
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import week from "../content/l2/w01.json";
 import { weekSchema } from "../lib/contracts/week";
+
+
 
 /**
  * The Red tests of the question screen of the at-home read-along (plan task 3.9, AC-13.6).
