@@ -2,7 +2,7 @@
 
 > **Track:** `storytime_at_home_release_20261106` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
 > **Parent strategy:** [storytime_app_rebuild_20261025/test-strategy.md](../storytime_app_rebuild_20261025/test-strategy.md) (sections 1, P2, and P3 apply).
-> **Scope:** Phase 1 in full. Phases 2 and 3 as an outline (sections P2 and P3 below).
+> **Scope:** Phase 1 in full. Phase 2b in full (section P2b, written 2026-11-07 at role base `1da5f7968`, text of `7cd1fc067`). Phases 2 and 3 as an outline (sections P2 and P3 below).
 > **Written:** 2026-11-06 at role base `6716a1546`. Model: claude-code/claude-sonnet-5-5 (PM rule: no Opus).
 > **Facts:** each "measured" fact below was read on 2026-11-06 at `6716a1546`. No heavy job ran. Red and Green must measure again.
 
@@ -114,6 +114,7 @@ The catalog is `measure/anti-patterns.md`. The parent table (parent section 1.5)
 | Phase | Risk | Review A | Review B (security) | Review C (UX/API) | Adversarial | Browser review |
 |---|---|---|---|---|---|---|
 | P1 Receive the week packages | medium | yes | no (probe list folded into Review A) | no | yes (focused) | no |
+| P2b Login and protected media | critical | yes | **yes (required)** | **yes (required)** | **yes (required)** | **yes (required)** |
 | P2 Approved A-42 pin | high | yes | no | no | yes (small) | no |
 | P3 At-home deploy | high | yes (on the record) | yes (environment check) | no | no | no (tagged-URL checks instead) |
 
@@ -446,6 +447,342 @@ Falsification: case 3 with the shipped w02 and `published` only must not be visi
   commit as the approved pin (row F7, repeated).
 - **Draft weeks have pictures now.** w02 to w07 would be ready except for the status and the audio and song approvals. A mistaken `published` in a later
   Workbooks pin plus approved audio and song would open the week. The approval parts are Daniel's record. The Phase 2 receipt test counts the statuses.
+
+## P2b: Login and protected media
+
+**Risk: critical.** The phase adds authentication, sessions, a CSRF check, a password store, signed media URLs, and a role gate to a service that
+was public. A fault opens paid content to any person, or locks every family out on release day. Both faults are silent in a unit test that
+mocks the store. The data are family accounts of children. The spec and the design were reviewed before this strategy (DeepSeek, `spec-review-p2b-fb0545c15.json`).
+Source: spec FR-4 and AC-4.1 to AC-4.12, plan Phase 2b tasks 2b.2 to 2b.10, `login-design.md`, owner words of Daniel (2026-11-07 06:07 and 06:21 ICT).
+
+| Task | Risk | Reason |
+|---|---|---|
+| 2b.2 Red | high | Wrong tests give false trust in the gate. The Red files hold the contract pins of P2b.2. |
+| 2b.3 Schema, migration | high | A wrong constraint or a missing EXEMPT entry breaks sessions, or fails the tenant coverage test. |
+| 2b.4 Auth adapter, routes, proxy, pages | critical | The sign-in, the return path, the cookie, the CSRF check, the role gate. |
+| 2b.5 Account script | high | It handles passwords and writes secret files outside the repository. |
+| 2b.6 Signed media | high | Scope of keys and expiry decide who can read the media. |
+| 2b.7 Phase check | critical | It is the only place where the app, a real Postgres, and a browser run together. |
+| 2b.8, 2b.9 Orchestrator | high | Cloud policy, secrets, and 9 production accounts. |
+
+### P2b.0 Role base and capture of `phase_base_sha`
+
+- Role base of this strategy: `1da5f79681c215c836f135fc83e18544bd9ff2a5`. HEAD moved to `7cd1fc067` during the work (plan, spec, and design only: task 2b.8 `[x]`,
+  the private bucket `gs://storytime-app-media`, new AC-4.7 and AC-4.9 text). This strategy covers the text of `7cd1fc067`.
+- The Phase 1 heading carries `[checkpoint: 811f05f36]`. The start gate of Phase 2b holds.
+- `phase_base_sha`: the orchestrator captures it with `git rev-parse HEAD` AFTER the commit of this strategy, AFTER the answers to the questions of P2b.12, and BEFORE
+  the Red role starts. The orchestrator records the full SHA in the Red evidence. A SHA from before the strategy commit is not valid. The Red commit sits inside `phase_base_sha..HEAD`.
+
+### P2b.1 Measured facts (2026-11-07, role base `1da5f7968`, tree read-only)
+
+| # | Fact | How measured |
+|---|---|---|
+| M1 | The targeted Storytime command (section P1.5, glob of the base) exits 0 with `files=59 tests_passed=452 tests_failed=0`. Duration 105 s. | One `heavy-run.sh` job (this strategy). |
+| M2 | `apps/storytime/__tests__` holds 60 `*.test.ts(x)` files and 7 `*.sh` gates. 5 test files call the week page as a function (`phase3-adversarial-r2-missing-part`, `phase3-adversarial-r3-tiles`, `phase3-home-render`, `phase3-adversarial-route`, `phase3-printed-urls`). 29 files name `app/[locale]`. | `rg -l`. |
+| M3 | `apps/storytime/node_modules/@reading-advantage/` links only `config` and `read-along`. `package.json` has no `db`, `auth`, `storage`, or `backend` dependency. Green must add them and run `pnpm install`. | `ls -la`. |
+| M4 | The workspace packages resolve to `dist/` (their `exports`). A test in the app reads built code, so `db`, `auth`, `storage`, and `backend` must be built before the app tests (`pnpm turbo run build --filter=storytime...`). `dist` exists today. | `package.json` `exports`. |
+| M5 | `@reading-advantage/auth` exports only `"."`. Import of `dist/index.js` with `NODE_ENV=production` and no `DATABASE_URL` THROWS `{ DATABASE_URL is required in production runtime }` (the index loads `@reading-advantage/db`, whose `client.ts` builds a `postgres` client at load). Import of `dist/password.js` alone, and of `dist/rate-limit.js` alone, succeeds. | `node --input-type=module` probe, no `DATABASE_URL`. |
+| M6 | `hashPassword`/`verifyPassword` use Argon2id with `m=19456,t=2,p=1` (`ARGON2ID_OPTS`). `verifyPassword` returns `false` on a thrown error. `consumeRateLimit(store, key, {windowMs,maxAttempts})` counts EVERY call and allows while `failedCount <= maxAttempts`. Defaults in the package: 5 per username and 30 per IP in 15 minutes. | Read `password.ts`, `rate-limit.ts`. |
+| M7 | The session token digest function of `packages/auth` (`sha256Hex` in `session.ts`) is private. Storytime writes its own. A SHA-256 digest of a random token is a credential store and not a provenance hash (hashing policy: allowed, required by the design). | Read `session.ts`. |
+| M8 | `DATABASE_BOUNDARY` (`ownership-map.v2.json`, severity error) allows imports of `@reading-advantage/db`, `@reading-advantage/db/*`, `drizzle-orm`, and `postgres` only in `packages/db/src`, `packages/domain/src`, `packages/backend/src`, and the db migration folders. The baseline holds 467 existing findings in apps. A new import in `apps/storytime` is a NEW finding. `apps/accounting` shows the pattern: the app depends on `@reading-advantage/backend`. `STORAGE_PROVIDER_BOUNDARY` matches only `@aws-sdk/`, `@google-cloud/storage`, and `firebase-admin/storage`; the adapter `@reading-advantage/storage` is allowed in an app. | Read `ownership-map.v2.json`, `database.v2.json`. |
+| M9 | `packages/domain/src/tenant-registry.ts` registers `accountingSubmissions` and `accountingSubmissionAuditEvents` as EXEMPT through the subpath `@reading-advantage/db/accounting/schema`, although the accounting module is not in the db barrel. `tenant-coverage.test.ts` enumerates the db barrel. Precedent for a separate-database module: `packages/db/accounting/drizzle.config.ts`, `src/accounting/`, subpath export, registry entry. | Read both files. |
+| M10 | `packages/db/vitest.config.ts` includes `src/**/*.{test,spec}.{ts,tsx}`. A db test runs as `cd packages/db && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 <file>`. `*.real-db.test.ts` files use `describe.skip` unless `PG_TEST_URL` is set. Measured: `accounting-schema.test.ts` and `barrel-hygiene.test.ts` run as 2 files and `tests_passed=9` in 3.4 s. The domain `tenant-coverage.test.ts` runs as 1 file and `tests_passed=11` in 2.4 s (both exit 0, one `heavy-run.sh` job). | Read config; probe job. |
+| M11 | PGlite (`@electric-sql/pglite` 0.5.3) is installed at the root and used by `apps/marketing` and `apps/primary-advantage` tests (`testDb.ts`, `migration-0041-live.test.ts`). It is a real Postgres engine in the test process: no server, no Docker. Neither `packages/db` nor `packages/backend` lists it. `@electric-sql/pglite-socket` is not installed. | `ls`, `git grep`. |
+| M12 | No Postgres container runs. The image `docker.io/library/postgres:16-alpine` is present under podman (`docker` is the podman emulation). Port 5432 has no listener. | `podman ps`, `ss -ltn`. |
+| M13 | `proxy.ts` only adds the Thai prefix. `FILE_PATH` (`/\.[^/]+$/`) and the `PASSTHROUGH` list return `NextResponse.next()` BEFORE any other rule. A cookie rule placed after them is bypassable by a dotted last segment (`/th/st/2/1.x`). | Read `proxy.ts`. |
+| M14 | No `app/[locale]/st/page.tsx` exists. The return fallback `/<locale>/st` of the design would answer 404. | `find app`. |
+| M15 | The teacher pages call `teacherRoutesEnabled()` (`STORYTIME_TEACHER_ROUTES` exact `1`) and answer 404 when it is off (`phase4-teacher-flag.test.ts`). Production has the flag off. | Read the pages. |
+| M16 | The week page builds media URLs as `${mediaBase}/${file}` on the server and on 4 client components, and a client component receives `mediaBase` as a prop. The 42 w01 files include 14 mp3, 26 jpg, and 2 mp4. The bucket holds the 42 w01 r2 objects (task 2b.8 note). | Read page and client sources; `find`. |
+| M17 | The existing gates assume a public site: `phase3-docker-smoke.sh` asserts that the week page answers 200 with no `Set-Cookie`; `phase3-browser-gate.sh` opens `/th/st/2/*` with no session. Both break by design when the login lands. | Read the scripts. |
+| M18 | `pnpm architecture:check` FAILS at the base: exit 1 with the one message `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes`. The break exists before this phase (a stale reconciliation manifest). The check cannot serve as a pass gate. | Probe job (`arch_exit=1`). |
+
+### P2b.2 Contract pins (names that Red and Green share)
+
+Red tests import these names. Green must create exactly these. The orchestrator may change a pin before Red starts, and the change goes in this table.
+
+| Item | Pin |
+|---|---|
+| Schema module | `packages/db/src/schema/storytime/index.ts`, subpath export `@reading-advantage/db/storytime/schema`. Tables `storytimeAccounts`, `storytimeSessions`, `storytimeLoginAttempts`, `storytimeAuditEvents`. Config `packages/db/drizzle.storytime.config.ts`. Migrations `packages/db/drizzle-storytime/`. Script `storytime:migrate` in `packages/db/package.json`. |
+| Store | `packages/backend/src/modules/storytime-access/index.ts`, subpath export `@reading-advantage/backend/storytime-access`. It owns all SQL. Every time-dependent function takes an explicit `now: Date`. Functions: `findAccountByUsername`, `createAccount`, `setDisabled`, `setPasswordHash`, `createSessionWithCap` (one transaction), `findSessionByDigest`, `recordUse`, `renewSession`, `deleteSessionByDigest`, `rateLimitStore` (a `RateLimitStore`), `insertAuditEvent`. Created with `createStorytimeStore(db)`. |
+| App adapter | `apps/storytime/lib/auth/`: `index.ts` (`login`, `logout`, `getCurrentUser`, `requireUser`, `requireRole`), `return-path.ts` (`safeReturnPath(value, fallback)`), `same-origin.ts` (`assertSameOrigin(headers, ownOrigin)`, throws `CrossOriginError`), `session-policy.ts` (constants below), `cookie.ts`, `password.ts` or the `@reading-advantage/auth` subpath (Q2), `client-ip.ts`, `store.ts` (`getStore()`, the only place that reads `STORYTIME_DATABASE_URL`). |
+| Routes | `app/api/auth/sign-in/route.ts` (POST), `app/api/auth/sign-out/route.ts` (POST; GET answers 405), `app/[locale]/sign-in/page.tsx`, `app/[locale]/join/page.tsx`, `app/[locale]/st/page.tsx` (return fallback, Q4), `lib/join-copy.ts` (`JOIN_COPY.status`). Form fields: `username`, `password`, `next`, `locale`. |
+| Responses | Sign-in success: 303 to the checked `next`. Failure: 303 to `/<locale>/sign-in?error=invalid&next=<checked>`. Locked: 303 with `error=locked`. Cross-origin: 403, no `Set-Cookie`. Sign-out: 303 to `/<locale>/sign-in`. |
+| Cookie | Name `__Host-st_session`. `HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=31536000`, no `Domain`. Value: 32 random bytes, base64url (43 characters). The database holds the lowercase 64-hex SHA-256 digest only. |
+| Constants | `SESSION_MAX_AGE_S=31536000`, `RENEW_BELOW_DAYS=335`, `CAP_CLASS=30`, `CAP_FAMILY=5`, `CAP_TEACHER=5`, `MEDIA_URL_EXPIRES_S=21600`, rate limit 5 per account and 30 per IP in 15 minutes (package defaults). |
+| Media | `apps/storytime/lib/media/sign.ts`: `signWeekMedia(week, deps)` returns a map `file -> signed URL` for the `file` fields of that week only. `STORYTIME_MEDIA_BASE=gs://<bucket>` names the bucket. The page passes the map to the client views. |
+| Script | `apps/storytime/scripts/make-accounts.ts`. It reads the database URL from the environment only. |
+| Fake store | `apps/storytime/__tests__/helpers/fake-store.ts` (not a test file). It implements the store interface for app tests. |
+
+### P2b.3 Red command (task 2b.2) and expected failures
+
+Red writes 12 files: 10 in `apps/storytime/__tests__/`, 1 in `packages/db/src/__tests__/`, and 1 in `packages/backend/src/modules/storytime-access/__tests__/`. One job, three Vitest runs:
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'ROOT=/home/daniebo/Desktop/reading-advantage-monorepo; cd $ROOT/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-*.test.ts __tests__/login-*.test.tsx; A=$?; cd $ROOT/packages/db && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/__tests__/storytime-schema.test.ts; B=$?; cd $ROOT/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/storytime-access/__tests__/store.contract.test.ts; C=$?; echo "red_exit_app=$A red_exit_db=$B red_exit_backend=$C"; exit $(( (A!=0) || (B!=0) || (C!=0) ))'
+```
+
+Expected: exit 1; `red_exit_app`, `red_exit_db`, and `red_exit_backend` are all non-zero; `files_failed=12 of 12`; `tests_passed=3` in total (the three characterization cases C1 to C3 of `login-proxy.test.ts`).
+A Red test that passes besides C1 to C3 is vacuous (A4). A Red failure is an assertion with a message, not a load error: each test first asserts `existsSync(<pinned path>)` with the message `Missing <path>`, then imports the module dynamically (pattern of `phase3-entry-route.test.ts`). The output holds no `Cannot find module` and no `ENOENT`.
+
+| File | AC | Expected Red failure (at base) |
+|---|---|---|
+| `login-return-path.test.ts` | 4.2 | `Missing apps/storytime/lib/auth/return-path.ts`. After Green: `next_cases >= 24`, accepted >= 5, rejected >= 19. |
+| `login-origin-check.test.ts` | 4.3 CSRF | `Missing .../same-origin.ts`. After Green: `cross_origin_cases >= 10`, `same_origin_cases >= 3`. |
+| `login-signin-handler.test.ts` | 4.3 | `Missing app/api/auth/sign-in/route.ts`. Covers good, bad, unknown, disabled, locked, audit, and the response pins. |
+| `login-session-cookie.test.ts` | 4.3 | `Missing .../cookie.ts`. Flags, 365-day `Max-Age`, no `Domain`, digest-only store, sign-out, replay, fixation. |
+| `login-session-policy.test.ts` | 4.4 | `Missing .../session-policy.ts`. Renewal boundary, once-a-day write, expiry, disabled account, caps. |
+| `login-proxy.test.ts` | 4.1 | C1 to C3 pass (locale redirect of `/st/2/1`; passthrough of `/_next/static/x.js`; passthrough of `/api/auth/sign-in`). The other cases fail: `expected 307 to /th/sign-in?next=...`, got `NextResponse.next()`. |
+| `login-page-guard.test.tsx` | 4.1, 4.6 | `Missing .../auth/index.ts`; page with no session does not redirect; role matrix; the fallback page; the sign-in GET loop. |
+| `login-join-page.test.tsx` | 4.5 | `Missing app/[locale]/join/page.tsx`; `Missing lib/join-copy.ts`. |
+| `login-media-sign.test.ts` | 4.7 | `Missing apps/storytime/lib/media/sign.ts`. |
+| `login-boundary.test.ts` | 4.12 | Import scan finds no violation at base (vacuous guard): the test asserts `files_scanned > 0` and that the three required files exist; fails on `Missing`. The no-connection harness fails on `Missing`. |
+| `storytime-schema.test.ts` (db) | 4.12 | `Missing packages/db/src/schema/storytime/index.ts`; EXEMPT entries absent; no migration folder. |
+| `store.contract.test.ts` (backend) | 4.3, 4.4 | `Missing .../storytime-access/index.ts`. |
+
+Plan 2b.2 does not list the schema test and the store contract test. This strategy adds both to Red (Q6). The migration SQL test and the PGlite race-free checks of the schema are in the same files.
+
+### P2b.4 Green gates and the phase check
+
+`HEAVY` is the wrapper of section 1.1. `ROOT` is the repository root. Every job: `CI=true`, `--maxWorkers=1`, one job at a time. Install and build come first, once: `pnpm install` (lockfile change for the new workspace dependencies and `@electric-sql/pglite` as a devDependency of `packages/db` and `packages/backend`), then `pnpm turbo run build --filter=@reading-advantage/db --filter=@reading-advantage/auth --filter=@reading-advantage/storage --filter=@reading-advantage/backend` through `HEAVY`.
+
+| Task | Green gate command (inside `HEAVY`) | Expected |
+|---|---|---|
+| 2b.3 Schema | `cd packages/db && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/__tests__/storytime-schema.test.ts`; `cd packages/domain && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/__tests__/tenant-coverage.test.ts`; `pnpm --filter @reading-advantage/db exec drizzle-kit generate --config drizzle.storytime.config.ts` then `git status --porcelain -- packages/db/drizzle-storytime` unchanged. | Both Vitest runs exit 0 with `tests_failed=0 tests_skipped=0`. The generate step makes no new file (`generated_files=0`): the committed migration equals the schema (drift check). The domain count equals the base count of M10 (`tests_passed` unchanged). |
+| 2b.4 Adapter, routes, proxy, pages | The targeted Storytime command below this table. `cd packages/backend && ... vitest run --maxWorkers=1 src/modules/storytime-access`. `cd apps/storytime && ../../node_modules/.bin/tsc --noEmit`. ESLint on the changed files. `pnpm architecture:check` (comparison only, M18). | All exit 0 except `architecture:check`: it exits 1 with the SAME single message as the base (`arch_message_same=1`), because the check is already broken (M18). Green does not run `architecture:reconcile` or `architecture:baseline:update`: `git diff --stat -- packages/architecture-enforcement` is empty. The boundary is enforced by `login-boundary.test.ts` (AC-4.12). |
+| 2b.5 Script | `login`/`make-accounts` files in the targeted command. | `make-accounts.test.ts` exits 0 (AC-4.8). |
+| 2b.6 Signed media | The `login-media-sign` file, `tsc`, ESLint, and the live signed-URL proof of P2b.8 (run by the orchestrator). | The proof prints `signed_status=206` and the other labeled lines of P2b.8. |
+| 2b.7 Phase check | The targeted command, `tsc`, ESLint, `architecture:check`, `phase1-quality-gates.sh`, the updated `phase3-docker-smoke.sh`, the updated `phase3-browser-gate.sh`, and the new `phase2b-browser-gate.sh`. | See below. |
+
+**Targeted Storytime command (Green and phase check).** The glob of the base plus the new files:
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/release-receipt-pin.test.ts __tests__/release-weeks-readiness.test.ts __tests__/phase1-*.test.ts __tests__/phase2-*.test.ts __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx __tests__/login-*.test.ts __tests__/login-*.test.tsx __tests__/make-accounts.test.ts'
+```
+
+Expected: exit 0; `files=70` (59 at the base + 10 `login-*` + `make-accounts.test.ts`); `tests_failed=0 tests_skipped=0`.
+Count rule (A4, A5): Green also runs the new 11 files alone and records `new_tests=<n>`. The full run must show `tests_passed = 452 + new_tests`. A lower count means a deleted or skipped old test. Green changes only the old tests that the page-session change breaks (P2b.11, row F7a), each with one line of reason in the evidence.
+
+**Backend and db counts.** Backend: the `store.contract.test.ts` file runs against PGlite with `tests_skipped=0`. The file `store.real-db.test.ts` (concurrency race of the cap and of the rate limit) runs only in the gate job (`PG_TEST_URL` set) and shows `tests_skipped=0` there. In any other run it shows `real_db_skipped=1` and the note says "skipped, not passed" (A5). Db: `storytime-schema.test.ts` exits 0.
+
+**Phase check (2b.7).** Closeout gate:
+
+1. The targeted command, `tsc` (app, db, backend, auth if changed), and ESLint on the changed files exit 0 with the counts above. `pnpm architecture:check` shows the same failure as the base (M18), and the boundary test passes.
+2. `phase1-quality-gates.sh` exits 0 (`PASS=2, FAIL=0`).
+3. `phase3-docker-smoke.sh`, updated (P2b.11 F7b): exits 0; the stranger rows read `week_stranger_status=307`, `stranger_set_cookie=0`, `join_status=200`.
+4. `phase3-browser-gate.sh`, updated to sign in first: exits 0 and shows the same number of PASS rows as the base. Green measures the base count once before the change (`phase3_browser_pass=<n>`) and quotes it (the base count was not measured in this strategy).
+5. `phase2b-browser-gate.sh` (new, Green writes it): one `HEAVY` job; flows F1 to F9 of P2b.6; exit 0.
+6. `rg -n "primary-app-storage" apps/storytime/app apps/storytime/lib apps/storytime/scripts apps/storytime/Dockerfile apps/storytime/cloudbuild.yaml` exits 1 (A14: exit 1 means no hit; exit 2 fails).
+7. `rg -n "measure/tracks" apps/storytime/__tests__ packages/backend/src/modules/storytime-access packages/db/src/__tests__/storytime-schema.test.ts` exits 1 (A9).
+8. `git diff --stat <phase_base_sha>..HEAD -- apps/primary-advantage apps/accounts packages/domain/src/tenant-registry.ts` shows only `tenant-registry.ts` (Q1 answer) and no Primary or Accounts file.
+9. `git worktree list | wc -l` equals the count at the capture (A16).
+10. `build-graph update ./graph.db <files>` runs once for the changed exports (A10): the phase changes exports and adds modules.
+11. Review A, B, C, the adversarial record, the UX browser review, and the phase acceptance. The checkpoint follows them.
+
+### P2b.5 Fixtures, mocks, and live proof
+
+| Layer | Method | Where it runs | What it proves |
+|---|---|---|---|
+| App unit | `fake-store.ts` injected through `vi.mock("../lib/auth/store")`. Real `@node-rs/argon2` hashing (the real cost options; a hash takes about 50 ms). Fake timers for dates. | `heavy-run`, app Vitest. | Handler, policy, proxy, guard logic. |
+| Contract suite | One suite of store behaviors (`store-contract.ts` in the backend test folder). It runs against the FAKE (in `login-*` helper test) and against PGlite (`store.contract.test.ts`). | Backend Vitest, in-process Postgres. | The fake does not drift from SQL. This is the defense against a mock that proves only the mock (A2). |
+| Real storage signing | The real `S3StorageDriver` with the endpoint `https://storage.googleapis.com`, bucket `storytime-app-media`, and fake keys. A presigned URL is a local computation: no network. The test parses `X-Amz-Expires`, `X-Amz-Signature`, host, and path. | App Vitest. | Real adapter output. No mock of `getSignedUrl`. |
+| Real Postgres server | A throwaway container `postgres:16-alpine` on a free port, inside the gate job only: migrate (twice), `store.real-db.test.ts` with `PG_TEST_URL`, `make-accounts` with a temp CSV, `next start`, and Playwright. A trap removes the container. | `phase2b-browser-gate.sh`, one heavy job. | Concurrent sign-ins at the cap, atomic rate-limit upsert, trigger of the audit table, real migration SQL, the whole flow. |
+| Storage stand-in | A local HTTP server in the gate that serves a small mp4 with `Range` (206), and answers 403 when `X-Amz-Signature` is missing or `X-Amz-Expires` is over 21600. The app uses it as the S3 endpoint. | Gate job. | The browser seeks on a presigned URL; every media request is signed. It does not prove Google behavior. |
+| Live Google proof | The orchestrator signs one URL with the real HMAC key for an existing object and calls it (P2b.8). | Orchestrator, no deploy. | Range requests, anonymous 403, tampering, and expiry on the real bucket. |
+
+Notes:
+
+- AGENTS says "no real Postgres for unit tests". The unit tests use the fake store. PGlite tests are database integration tests (testing order item 3) and follow the repository precedent (M11). The one real server runs only in the gate (Q6 records this).
+- The Red author chooses the key layout of the fixtures. The object key equals the `file` value of the week JSON, with no prefix (the bucket holds the files of the hand-off folder, M16). The orchestrator confirms the key layout with `gcloud storage ls` before Green 2b.6 (Q7).
+- Artifact tests (source scans: boundary, no secrets, no `primary-app-storage`) prove structure. Behavior tests (handler, proxy, guard, signing, browser) prove behavior. The plan note names each class (A5).
+- Safari/iOS: the gate runs Chrome. The iOS Safari seek on a Google-signed URL is not tested here. The design rests on the Range support of Google. The residual risk goes to Review C and the person check of Daniel on a phone at the deploy.
+
+### P2b.6 Browser flows for 2b.7 (phase2b-browser-gate.sh) and the UX review
+
+The gate seeds 9 accounts through `make-accounts.ts` with a temp CSV, in a temp folder. It sets `STORYTIME_TEACHER_ROUTES=1` and the stand-in storage. Viewports: desktop 1280x800 and phone 390x844 (parents scan with phones).
+
+| Flow | Steps | Pass line (labeled) |
+|---|---|---|
+| F1 scan and return | Open `/th/st/2/1?part=song` with no cookie. Expect the sign-in page. Sign in as `staff-01`. Expect the same URL with the query. Network log: every media request goes to the stand-in with `X-Amz-Signature`; none to `/media/`. | `returned_same_url=1 media_requests>0 unsigned_media=0` |
+| F2 stays signed in | Save the cookie jar, open a new context with it, open the week. Expect 200 with no sign-in. The cookie `Max-Age` is 31536000. | `device_kept=1` |
+| F3 sign out | Sign out, press back, press reload. Expect the sign-in page and no week text in the DOM. | `content_after_signout=0` |
+| F4 stranger | Open the week with no cookie, follow "How to join". Expect the draft marker and no week text. Network: no media request. `Set-Cookie` count is 0. | `stranger_media_requests=0 stranger_set_cookie=0` |
+| F5 wrong password | Wrong password gives one generic message in Thai and English. The username stays in the field, the password does not. 6 attempts: the locked message. | `generic_error=1 locked_after=6` |
+| F6 teacher | `tutor-01` opens the teacher week and the family week. `staff-01` gets the 403 page with a link to the teacher sign-in. The link opens a form (no loop). `tutor-01` then returns to the teacher path. | `teacher_ok=1 family_403=1 loop=0` |
+| F7 bad return path | Sign in with `next=//evil.example`. Expect `/th/st` (fallback). Zero requests to another origin. | `offsite_requests=0` |
+| F8 phone form | At 390x844: labels, `autocomplete` `username` and `current-password`, `autocapitalize=none`, password type, touch target of at least 44 px, no horizontal scroll, Enter submits. | `phone_form_checks=6` |
+| F9 mp4 seek | A `<video>` on the signed stand-in URL seeks to 50 percent: `seeked` fires and `currentTime` is within 0.5 s. The stand-in logs a `Range` request that answers 206. | `seek_ok=1 range_206>0` |
+
+UX review (role): the reviewer opens the gate artifacts and the live page on the phone viewport. The reviewer checks Thai copy fit, error text, focus order, the 403 page, and the draft marker. Daniel checks the Thai text later (AC-4.10).
+
+### P2b.7 Security test list (Red writes, Green satisfies)
+
+Each row has a mutant: a wrong implementation that the test must reject. A test without a mutant does not count (A2).
+
+**Return path (AC-4.2).** `login-return-path.test.ts`, table `next_cases` of at least 24 values. Accepted: `/th/st/2/1`, `/en/st/2/1?part=song`, `/th/teacher/2/1/3`, `/th/st/2/1?part=song&x=%C3%A9` (valid encoding), and a 200-character path. Rejected (fallback `/<locale>/st`): `//evil.example`, `/\evil.example`, `\\evil.example`, `https://evil.example/th/st/2/1`, `javascript:alert(1)`, `/th/st/2/1\r\nSet-Cookie:x=1`, a tab and a newline inside the path, `%00`, a leading space, `/th/st/%E0%A4%A` (bad percent), `/th/st/%2F%2Fevil.example` (a `//` after one decode), `/th/st/../../admin` (dot segments leave the allow list), `/th/other/x`, `/TH/st/2/1` (upper case), `/th/sign-in?next=/th/st/2/1` (outside the list), a 201-character path, an empty string, `undefined`, an array (`next=a&next=b`), a number. For every accepted value, `new URL(result, "https://app.example").origin` equals the app origin. The test prints `next_cases=<n>`, asserts `n >= 24`, `accepted >= 5`, `rejected >= 19`.
+Mutant: a validator `value.startsWith("/")` must fail at least 10 rows. The test embeds this mutant and asserts it fails (`mutant_failures >= 10`).
+
+**CSRF (AC-4.3).** `login-origin-check.test.ts`, pure `assertSameOrigin(headers, ownOrigin)` plus both handlers. Cross-origin cases, each 403, no `Set-Cookie`, no store write: `Origin: https://evil.example`; `Origin: null`; same host with another scheme; same host with another port; `Origin` absent and `Referer: https://evil.example/x`; both absent; `Referer: https://app.example.evil.example/` (prefix attack); `Referer: https://app.example@evil.example/`; `Origin: https://evil.example` plus `X-Forwarded-Host: app.example` (the forged header must not move the comparison); an `Origin` with a trailing dot. Same-origin cases pass: exact `Origin`; `Origin` absent with `Referer: https://app.example/th/sign-in`. Labeled `cross_origin_cases >= 10`, `same_origin_cases >= 3`.
+The check runs as the first statement of the handler: a spy proves `store.*` and `verifyPassword` call counts are 0 on a cross-origin POST (`store_calls=0`). Sign-out GET answers 405.
+Mutant: `referer.startsWith(ownOrigin)` without a trailing slash fails the prefix-attack row.
+
+**Rate limit (AC-4.3).** `login-signin-handler.test.ts` with the real `consumeRateLimit` (or the copy chosen in Q2) and the fake store. Attempts 1 to 5 for one account pass the limiter and attempt 6 is `locked` even with the right password. An attacker on 40 different `X-Forwarded-For` first entries but one real last entry still hits the IP limit at attempt 31 (`ip_spoof_cases >= 3`; the key is the LAST entry that Cloud Run appends: `client-ip.ts`). Two IPs do not lock each other. A lock of account A does not block account B from the same IP below 30. The window expires: at 15 min + 1 s the 6th attempt passes (fake timers). Boundary: exactly `maxAttempts` passes. The store increment is one atomic upsert (`INSERT ... ON CONFLICT DO UPDATE ... RETURNING`): the contract suite proves it on PGlite, the real-db race (20 parallel attempts on one key give a final count of 20) proves it on a server. Mutant: a read-then-write store loses counts in the race.
+Review B reads the account-lockout trade-off (an attacker can lock a known username for 15 minutes). The strategy accepts it for release 1 and records it.
+
+**Sign-in handler (AC-4.3).** Good password: 303 to the checked `next`, `Set-Cookie` once, one `sign_in_success` audit row, one new session. Wrong password, unknown username, and disabled account give the SAME response (status, `Location`, `error=invalid`, body) (`enumeration_cases=3`), and each calls `verifyPassword` exactly once (the unknown username verifies against a fixed dummy Argon2id hash). The audit `reason` differs: `bad_password`, `unknown_user`, `disabled`, `rate_limited`, `csrf_rejected`. A 100,000-character password is rejected before hashing (`verify_calls=0`), and a username over 64 characters too. Username is trimmed and lower-cased. The audit rows and the logs hold no password, no token, and no digest (serialize all rows and all `console.*` calls and scan: `secret_hits=0`, with a positive control that proves the scan finds a planted string). A bad `next` falls back to `/<locale>/st`. The audit table has no update or delete function in the store (`Object.keys` check) and the migration holds a `BEFORE UPDATE OR DELETE` trigger that raises (db test: SQL text; real-db: an UPDATE fails).
+
+**Sessions and cookie (AC-4.3, AC-4.4).** `login-session-cookie.test.ts` and `login-session-policy.test.ts`. The cookie has exactly these attributes and no others: `HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/`, `Max-Age=31536000`, name `__Host-st_session`, no `Domain` (`cookie_flag_cases=6`, parse the header). The value is 43 base64url characters, differs on every sign-in (1,000 draws, no repeat), and does not contain the username, the role, or the account id. The store row holds the 64-hex digest; the raw value appears in no row (`raw_token_rows=0`). A sign-in with an attacker-chosen cookie value never reuses it (fixation): the new session has a new value and the old row is untouched. Sign-out deletes the row by digest and sends the same cookie with `Max-Age=0`; the old value then fails `getCurrentUser` (replay). Sign-out with an unknown or empty cookie still answers 303 and clears the cookie.
+Renewal: days left 335 exactly: no renewal; 334 days 23 h: renewal to 365 days and a new `Set-Cookie`; 50 requests in one day make at most 1 write (`last_use_writes <= 1` per day; fake timers across 3 days give at most 3). Expiry: a session with `expiresAt == now` is no session; one second before is a session. Disabled account: the next request redirects to sign-in, no renewal happens, and the session is ended. Caps: 5 sessions for `family` and for `teacher`, 30 for `class`; the 6th (31st) sign-in ends the OLDEST session by `createdAt` (the test sets last-use order opposite to creation order, so it detects the wrong key). `createSessionWithCap` is one transaction that locks the account row: the contract suite checks one call; the real-db test runs 10 parallel sign-ins for one `family` account and ends with exactly 5 rows (`sessions_after_race=5`). Mutant: count-then-insert in two statements ends with more than 5 rows in the race.
+
+**Proxy and page guard (AC-4.1).** `login-proxy.test.ts`: no cookie on `/th/st/2/1?part=song` gives 307 to `/th/sign-in?next=%2Fth%2Fst%2F2%2F1%3Fpart%3Dsong`; the locale is kept for `/en/teacher/2/1`; `/th/join`, `/th/sign-in`, `/api/auth/*`, `/_next/*`, `/favicon.ico` pass with no cookie. The protected rule runs BEFORE `FILE_PATH` and `PASSTHROUGH` (M13). Bypass table `bypass_cases >= 9`, each redirects: `/th/st/2/1.x`, `/th/st/2/1/`, `/th//st/2/1`, `/TH/st/2/1`, `/th/ST/2/1`, `/th/%73t/2/1` (encoded `s`), `/th/st%2F2/1`, `/th/teacher/2/1.json`, `/th/st/2/1;x=1`. The proxy decodes the path once, safely (a bad encoding does not throw: it redirects). The proxy answers `Cache-Control: no-store` and sets no cookie. A forged cookie value passes the proxy by design (it checks only that a cookie exists) and `login-page-guard.test.tsx` proves the page redirects (`forged_cookie_pages=<n> content_leaks=0`; each of the 5 page callers of M2 plus the two teacher pages). Mutant: a proxy rule placed after `FILE_PATH` fails the dotted-path row.
+Page guard order: no session → redirect; teacher flag off → 404 (all sessions); wrong role → 403; week load → 404 or 200 (Q5). Protected responses carry `Cache-Control` with `no-store`.
+
+**Roles (AC-4.6).** `login-page-guard.test.tsx` matrix: roles `family`, `class`, `teacher`, `none` against family week, teacher week, teacher day (flag on). `family` and `class` on a teacher route: 403 page, a link `/<locale>/sign-in?next=<teacher path>`, and the page holds none of the strings of the teacher week (`teacher_text_leaks=0`; a positive control renders the teacher view and finds them). `teacher` gets 200 on all. The role comes from the store at request time (change the role in the fake store between two requests: the second request obeys). The cookie holds no role. `GET /<locale>/sign-in` with a valid session redirects to a safe `next` only when that session may open it; otherwise it shows the form (no redirect loop: `redirect_hops <= 2`). Mutant: a guard that trusts a `role` cookie fails the role-change row.
+
+**Join page (AC-4.5).** `login-join-page.test.tsx`: status 200 with no session and no cookie written; both locales; the text holds no week text and no URL to media (`media_urls_found=0` on the HTML, with a positive control on the week page); `JOIN_COPY.status === "draft"` and the page shows a visible draft marker (`data-draft` element with text); the sign-in page links to it. Test of the deploy gate (AC-4.10): a test reads `JOIN_COPY.status` and is marked as the guard that blocks Phase 3 when the value is not `approved` — it is a separate file `gate-join-copy-approved.test.ts` (the name misses the `login-*` glob on purpose) is EXPECTED red until Daniel's check. It stays out of the targeted command, and the Phase 3 strategy lists it as a deploy gate (A2: consent-blind publish gate).
+
+**Signed media (AC-4.7).** `login-media-sign.test.ts` with the real driver. For the shipped w01: render the page with a session; collect every URL from the HTML and from the props of the client views (`renderToStaticMarkup` of the page element plus a walk of the element props). `media_urls_found > 0` first (42 files expected for w01, A4). Then for every URL: host `storage.googleapis.com` (or the stand-in), first path segment `storytime-app-media`, query holds `X-Amz-Signature` and `X-Amz-Expires <= 21600` (`signed_urls_checked == media_urls_found`). No URL contains `primary-app-storage` or the string `/media/`. Key scope: the signed set equals the `file` fields of that week; a `file` with `..`, a leading `/`, or a scheme is not signed and the page fails closed; a request for a week the account may not see signs nothing. A page with no session or an invalid session renders no URL (`stranger_urls=0`). If the signing configuration is missing (no access key, base not `gs://`), the page fails closed with an error page and NEVER falls back to a public or relative URL (`unsigned_fallback=0`). A `STORYTIME_MEDIA_BASE` that names `primary-app-storage` makes the configuration check throw. Signing runs after the session check (a spy orders the calls). Mutant: a page that signs all keys of the bucket, or sets `expiresIn` to 604800, fails.
+
+**No secrets (AC-4.9 part, AC-4.12).** `login-boundary.test.ts`: (a) import scan of `apps/storytime` source (not `__tests__`, not `node_modules`, not `.next`; exact folder names, A7): no import of `@reading-advantage/db`, `@reading-advantage/db/*`, `drizzle-orm`, `postgres`, or of any shared company table or `createSession`; imports from `@reading-advantage/auth` name only `hashPassword`, `verifyPassword`, `consumeRateLimit`, through a subpath that passes (b); (b) the no-connection harness: with `NODE_ENV=production`, no `DATABASE_URL`, and `vi.mock("postgres")` as a spy, `await import` of each module in `lib/auth/`, `lib/media/`, and of `@reading-advantage/backend/storytime-access` resolves and the spy has 0 calls (`postgres_calls_on_import=0`). Control: the same harness on `@reading-advantage/auth` (root) throws (M5), so the harness can detect a failure. A call of `getStore()` creates one client (`postgres_calls_after_getStore=1`). (c) secret-shape scan of the tracked files under `apps/storytime`, `packages/backend/src/modules/storytime-access`, `packages/db/src/schema/storytime`, `packages/db/drizzle-storytime`, `Dockerfile`, and `cloudbuild.yaml`: no `GOOG1E` key id, no `postgres(ql)?://user:password@`, no `BEGIN ... PRIVATE KEY`, no 40-character base64 string next to the word `secret` (`secret_shape_hits=0`; a planted string in a fixture proves the detector, A2). The `cloudbuild.yaml` secret references use `secretEnv` or `--set-secrets` names only.
+
+**Account script (AC-4.8, Green 2b.5).** `make-accounts.test.ts`: the output folder must be outside the repository (a path inside it, or a symlink that resolves inside it, exits non-zero with `output_inside_repo=1`); the files get mode 0600 in a 0700 folder; `git status --porcelain` is IDENTICAL before and after (`dirty_lines_before == dirty_lines_after`; the shared tree is not clean, so the test compares and does not require empty). The database URL comes from an environment variable named by `--database-url-env`; `process.argv` and the log never hold a URL or a password (`argv_secret_hits=0`). Passwords: 10 characters from an alphabet without `0 O 1 l I` and without `= + - @` (formula injection in a sheet), alphabet size at least 31 (`bits >= 49`), drawn with `crypto.randomInt` (a spy on `Math.random` shows 0 calls); 1,000 draws have no repeat. Role validation: only `family|class|teacher`; a duplicate username in the CSV fails before any insert; an existing account is skipped (`accounts_skipped=<n>`) and its hash is unchanged; a second run exits 0 and changes nothing (idempotence). The stored hash starts with `$argon2id$v=19$m=19456,t=2,p=1$`. After the insert, the script reads each account back and verifies the card password against the stored hash and prints `accounts_created=<n> verified=<n> failed=0` (no password in the output). The names of the CSV are not logged. Mutant: a script that stores the plain password, or prints it, fails.
+
+**Schema (2b.3, db test).** `storytime-schema.test.ts`: four tables with the pinned names; `role` check `family|class|teacher`; unique lower-case `username`; `storytime_sessions` has a unique digest column of 64 hex characters (check constraint), a foreign key to the account with `ON DELETE CASCADE`, and an index on `(account_id, created_at)`; `storytime_login_attempts` has a primary key `key`; the audit table has the trigger. Every exported table is in the EXEMPT list of the registry (`classifyTable(table)` returns `EXEMPT` for each, `exempt_tables=4`), or in the module's own list if Q1 keeps it out of the registry; the test asserts `exported == 4`. The migration folder holds one SQL file and a journal entry; `drizzle-kit generate` makes no diff. The shared `drizzle/` folder and the shared schema barrel are unchanged (`git diff --stat` empty for them).
+
+### P2b.8 Orchestrator evidence: tasks 2b.8 and 2b.9, and the live signed-URL proof
+
+All commands: no secret value in the output, the transcript, or a file in the repository. Each prints labeled values and its exit code.
+
+**Task 2b.8 re-check (AC-4.9; read-only; task text is `[x]`, the note stays the record).** `P` is the project of record in the 2b.8 note; `S=storytime-media-signer@<project>.iam.gserviceaccount.com`.
+
+| Check | Command (shape) | Expected line |
+|---|---|---|
+| Bucket settings | `gcloud storage buckets describe gs://storytime-app-media --format='value(location,uniform_bucket_level_access,public_access_prevention)'` | `asia-southeast1`, `True`, `enforced` |
+| Bucket policy | `gcloud storage buckets get-iam-policy gs://storytime-app-media --format=json`, parsed by a script | `viewer_members=1 viewer_is_signer=1 public_members=0` |
+| Signer scope | `gcloud storage buckets get-iam-policy gs://primary-app-storage --format=json` and `gcloud projects get-iam-policy P --format=json`, parsed | `signer_on_primary_bucket=0 signer_project_storage_roles=0` |
+| Anonymous read | `curl -s -o /dev/null -w '%{http_code}' https://storage.googleapis.com/storytime-app-media/<a w01 key>` | `anon_status=403` |
+| Secrets exist | `gcloud secrets versions list <name> --filter=state=ENABLED --format='value(name)' \| wc -l` for each of the 3 names | `versions_storytime-database-url>=1`, `versions_storytime-storage-hmac-access-key>=1`, `versions_storytime-storage-hmac-secret>=1` |
+| Secret scan | The values come through a pipe into a scan script that reads stdin and runs `git grep -F -f` on the tracked files; it prints only counts. For the URL secret it scans the password part too. | `secrets_scanned=3 secret_value_hits=0` |
+| Objects | `gcloud storage ls gs://storytime-app-media/** \| wc -l`; compare the key list with the `file` fields of w01 | `objects=42 week_files_missing=0 keys_outside_week=0` (confirms the key layout, Q7) |
+| Secret access | `gcloud secrets get-iam-policy <name>` for the 3 names | `accessors_runtime_sa=1` each; no `allUsers` |
+
+**Live signed-URL proof (task 2b.6 evidence, no deploy).** A script outside the repository (`/tmp`, removed after) reads the HMAC pair from Secret Manager through a pipe, builds the real `S3StorageDriver` with bucket `storytime-app-media`, signs one jpg and one mp4 key with `expiresIn=21600`, and calls:
+
+| Call | Expected |
+|---|---|
+| signed GET of the mp4 with `Range: bytes=0-99` | `signed_status=206 range_bytes=100` |
+| the same URL with one character changed in the signature | `tampered_status=403` |
+| the same URL with another key in the path | `other_key_status=403` |
+| the URL signed with `expiresIn=1`, called after 3 s | `expired_status=403` (or 400; record the value) |
+| the unsigned URL | `unsigned_status=403` |
+| `HEAD` of the signed mp4 | `accept_ranges=bytes` |
+
+Then one Playwright run (Chrome) loads a page with a `<video>` on the signed mp4 URL and seeks (`seek_ok=1`). If the seek fails, task 2b.6 stops and the proxy fallback of the design starts (Q7). The URL is never printed: the script prints only the labeled lines.
+
+**Task 2b.9 (production accounts).** Order: the production `storytime:migrate` first (`migrations_applied=1` and exit 0; a second run exits 0 with `migrations_applied=0`), then `make-accounts.ts` with the first-batch CSV (names `staff-01` to `staff-05`, `tutor-01` to `tutor-03`, `demo-class-01`). The database URL goes through an environment variable that the orchestrator sets from a Cloud SQL Auth Proxy session (the secret `storytime-database-url` is a unix-socket URL for Cloud Run and does not work from the workstation). Evidence (counts only, one SQL session, read-only queries):
+
+| Query result | Expected |
+|---|---|
+| `SELECT role, count(*) FROM storytime_accounts GROUP BY role` | `family=5 teacher=3 class=1 total=9` |
+| usernames outside the pattern `^(staff-0[1-5]\|tutor-0[1-3]\|demo-class-01)$` | `unexpected_usernames=0` (no personal names) |
+| `password_hash NOT LIKE '$argon2id$v=19$m=19456,t=2,p=1$%'` | `non_argon2id=0` |
+| `disabled = true` | `disabled=0` |
+| sessions, audit | `sessions=0 audit_rows=9` (one `account_created` row each) |
+| the script line | `accounts_created=9 verified=9 failed=0` |
+| `stat -c %a ~/Desktop/storytime-accounts` and its files; `git status --porcelain` before and after | `dir_mode=700 file_mode=600 repo_dirty_delta=0` |
+
+The per-role account count is 5, 3, 1. A sign-in check with each role happens at the tagged URL in task 2b.10 (owner-passed deploy; the strategy for Phase 3 lists it).
+
+### P2b.9 Adversarial cases (required)
+
+The adversarial role works on scratch copies and on the test harness, and may add test files in a later commit. It never touches the production database or the real bucket (read-only live proof by the orchestrator excepted).
+
+| # | Case | Method | Expected |
+|---|---|---|---|
+| 1 | Open redirect | Return-path table plus 30 extra values from the role (unicode line separators, overlong UTF-8, `%2e%2e`, `/th/st/2/1%0d%0a`, `///`, `/@evil`) | Every value falls back or stays same-origin. |
+| 2 | CSRF | Cross-origin form post from a scratch page at another origin to sign-in and sign-out (browser, real `Origin`) | 403, no cookie change. Login-CSRF (forcing a victim into the attacker account) fails. |
+| 3 | Session fixation and replay | Set a chosen cookie, sign in; use an old cookie after sign-out; use a cookie of a disabled account | New value each time; old values fail. |
+| 4 | Proxy bypass | Path variants of P2b.7 plus encodings, `HEAD`, `OPTIONS`, a RSC request (`RSC: 1` header, `?_rsc=`), `_next/data` style paths, a trailing-dot host | No week text or media URL without a valid session. The role views the gate with `curl`. |
+| 5 | Forged cookie | Random 43-character value, the digest of a real session as the cookie value, a very long cookie (8 KB), a cookie with a `;` | Redirect to sign-in. No 500. The digest is not a credential (`digest_as_cookie=0`). |
+| 6 | Brute force and enumeration | 40 attempts across rotating IP headers; timing of known versus unknown usernames (call counts, not wall time) | Locks at 6 and 31. Same response for known and unknown. |
+| 7 | Cap abuse | 10 parallel sign-ins on one account (real Postgres) | 5 sessions. |
+| 8 | Signed-URL scope | Take a signed URL of week 1 and change the key to week 2 or to a file outside the week; change the bucket; extend `X-Amz-Expires` | Real bucket answers 403 for each. The page never signs a key outside the week. |
+| 9 | Signed-URL leak window | Open the URL without a cookie from another browser profile | It works until expiry (accepted: a bearer link of at most 6 hours, Review B decision). The expiry is 21600 s or less. |
+| 10 | Role escalation | A `family` session requests teacher routes, teacher days, and the 403 link; change the role in the DB between requests; send `X-Role: teacher`, `?role=teacher`, and a `role` cookie | Always 403. |
+| 11 | Draft week to an unsigned account | Valid session requests w02 (draft) | 404 (the login does not open a draft week: `STORYTIME_SHOW_DRAFT_MEDIA` rules unchanged). |
+| 12 | Disabled account, live | Disable `staff-01` in the gate DB while its browser is open | Next navigation goes to sign-in. |
+| 13 | Account script | CSV with a formula cell (`=1+1`), a duplicate username, a role `admin`, a 10,000-line file, a path with `..`, and the output folder as a symlink into the repository | Fails closed, no partial insert, no file in the repository. |
+| 14 | Secrets in output | Run the gate, the script, and the handler with debug logging; scan stdout, stderr, and the gate artifacts | `secret_hits=0`. |
+| 15 | Argon2 cost abuse | 200 parallel sign-in posts with a valid username | The limiter locks first; the server stays up (no out-of-memory). The machine is a 7 GB box: the role runs 20 parallel at most. |
+
+Falsification: case 4 with the proxy rule moved after `FILE_PATH` must show a leak; the role confirms the harness can see a leak before it reports zero (A2).
+
+### P2b.10 Review applicability
+
+| Role | Applies | Reason and scope |
+|---|---|---|
+| Review A (change quality) | yes | Diff of Red, schema, backend module, app, scripts, gates. Checks JSDoc on every export (AGENTS), file size, the hashing policy, reuse (Q2), no dead code, commit headers, the plan notes (A5). |
+| Review B (security) | **required** | The phase adds authentication, sessions, a CSRF check, a credential store, signed URLs, and a role gate. Scope: P2b.7 and P2b.9 rows 1 to 10, cookie flags, `__Host-` prefix, Argon2 cost and the limiter, lockout trade-off, client-IP rule behind Cloud Run, CSRF design (Origin/Referer, no token), headers (`Cache-Control`, `Referrer-Policy`), secrets handling in `cloudbuild.yaml`, IAM scope of the signer, the one-year session. Model family differs from Green. |
+| Review C (routes, API, UX contract) | **required** | New routes and a changed route contract for all `st/**` and `teacher/**` pages (redirect, 403, 404 order), the proxy, the form contract, locale handling, the fallback page, the redirect loop, the changed smoke and browser gates. |
+| Adversarial testing | **required** | Sign-in, return path, sessions, media access: P2b.9. |
+| Browser review (UX) | **required** | Flows F1 to F9 on desktop and phone (P2b.6). Chrome only; iOS Safari stays a residual risk (P2b.5). |
+| Phase acceptance | yes | Closeout gate, plan notes, checkpoint text. |
+| Model families | | Red: MiniMax or Claude Sonnet (the route at Red time). Green: another family than Red (DeepSeek or Claude Sonnet; Ark GLM plans are WAIT). Review A, B, C, and the adversarial role: not the family of Green. The orchestrator logs a deviation. This strategy ran on Claude Sonnet (PM rule: a substitute for Opus). |
+
+### P2b.11 Changed-contract risks and anti-pattern coverage
+
+**Existing tests and gates that the login changes (row F7 of the parent: Green edits them in the same commit as the cause, one line of reason each).**
+
+| Row | Item | Change |
+|---|---|---|
+| F7a | The 5 page callers of M2, plus `phase4-week-view.test.tsx` and `phase4-teacher-flag.test.ts` if they render a page | Mock `../lib/auth` (a signed-in `family` or `teacher` session) so the page runs. The assertions on content stay unchanged. |
+| F7b | `phase3-docker-smoke.sh` (week page 200 with no `Set-Cookie`) | Stranger rows: 307 to sign-in, no `Set-Cookie`. Signed-in rows need an account in a container database: the script starts the same throwaway Postgres as the 2b gate or moves the content rows to the 2b gate. |
+| F7c | `phase3-browser-gate.sh` | Sign in first (a `signIn()` helper with a seeded account). The PASS count stays the same as the base count. |
+| F7d | `phase3-entry-route.test.ts` ("public metadata with the no-cookie route configuration") | Keeps passing: `localeCookie: false` stays, `noindex` stays. The route is no longer public: no edit expected. |
+| F7e | `cloudbuild.yaml` rule "no database and no secrets" and the `Dockerfile` COPY set | Change as the design section 5 says. A test reads `cloudbuild.yaml` for `--add-cloudsql-instances`, the three `STORYTIME_*` secret names, and no secret value; `phase3-docker-smoke.sh` builds with the new COPY set (`packages/db`, `packages/auth`, `packages/storage`, `packages/backend`). |
+| F7f | `tenant-registry.ts` and `tenant-coverage.test.ts` | Four EXEMPT entries (M9). The domain test count stays the same. |
+
+**Guardrails.**
+
+- No change to `apps/primary-advantage`, `apps/accounts`, or the shared tables, schema barrel, and `drizzle/` folder. No call of `createSession`, `validateSession`, or the shared audit and rate-limit stores.
+- `packages/auth` changes at most two `exports` lines and one test (Q2). Nothing else.
+- Hashing policy: the SHA-256 session digest and the Argon2id password hash are required credential stores and are allowed. No provenance hash, no manifest, no baseline update (`architecture:baseline:update` is not run).
+- Transport independence: the store and the policy functions take plain arguments and explicit `now`. The route handlers and pages only orchestrate (AGENTS).
+- The migration runs only in the manual traffic step (design section 5). A push changes no production database.
+- Heavy jobs: one at a time under the lock; the gate script holds one job with the container, the server, and the client (section 1.1). Stop the container with a trap.
+
+**Anti-pattern coverage.**
+
+| Anti-pattern | Where it applies in P2b | Defense | Falsification condition |
+|---|---|---|---|
+| A1 substring as signal | Detectors of imports, secrets, and `primary-app-storage` | Match parsed import specifiers and exact folder names, not words. Gate rows use labeled lines. | A comment that names `primary-app-storage` fails a scan of the app sources; a scan that reads `__tests__` fails itself. |
+| A2 consent-blind gate; mock proves the mock | Every "stranger sees nothing" test; the store; signing | Both directions in each test (session sees content, stranger does not). One contract suite for the fake and PGlite. Real `S3StorageDriver` presign. Mutants in P2b.7. Positive controls for scans. A separate `gate-join-copy-approved.test.ts` guards Phase 3. | A page that renders content for a stranger passes; a signer mock hides a wrong expiry. |
+| A3 digit-only count | `next_cases`, `cross_origin_cases`, `media_urls_found`, `signed_urls_checked`, `ip_spoof_cases`, `sessions_after_race`, account counts | Labeled integers; the check parses the integer after the label. | A bare number passes the check. |
+| A4 vacuous pass | Loops over URLs, table rows, accounts, and bypass paths | Assert `n > 0` (and a floor) before each property check; `media_urls_found > 0` before "all are signed". | A page with zero URLs passes the signed-URL test. A Red run with more than 3 passes is vacuous. |
+| A5 claim vs result | Plan notes for 2b.2 to 2b.9 | Quote exit codes and labeled counts. A skipped real-db test is "skipped", not "passed". | The note says "pass" and a cited command exits non-zero. |
+| A6 registry overstatement | `measure/tracks.md` | State "login built and reviewed locally at `<sha>`, not deployed". "Live" only after Daniel's word and the traffic move. | The registry says "login live" before AC-4.11. |
+| A7 over-broad filter | Import scan, secret scan, URL detection | Exact folder skip list (`node_modules`, `.next`, `__tests__`); URL detection by parsed URL and by the `file` key, not by a word. | The scan skips a real source folder, or flags prose. |
+| A8 marker ambiguity | Plan task 2b.10 | Keep the structured marker `[b] ... deferred:daniel`. | A prose "waiting for Daniel" replaces the marker. |
+| A9 archived track path | New tests | No read of `measure/tracks/`. `rg -n 'measure/tracks'` exits 1. | A new test names the path. |
+| A10 generated facts | Graph | `build-graph update` after the export changes. | `graph.db` lacks the new modules. |
+| A14 ripgrep option | All `rg` detectors | `rg -n`; exit code 2 is a failure. | A bad option reports zero hits. |
+| A15 role-receipt hash | Review and acceptance records | No new hash or receipt chain. Git identity only. | A record adds a hash of a generated file. |
+| A16 worktrees | Gate containers and scratch | Work only in the shared master tree; scratch under `/tmp`; the account script test compares `git status` before and after (not "clean"). | `git worktree list` has an extra entry. |
+
+### P2b.12 Questions and plan changes for the orchestrator (defaults apply if no answer)
+
+| # | Item | Default |
+|---|---|---|
+| Q1 | M8: `DATABASE_BOUNDARY` forbids a DB import in `apps/storytime`. The plan puts the adapter in the app. | The SQL store lives in `packages/backend/src/modules/storytime-access/` (the `apps/accounting` pattern). The app adapter wraps it. Register the 4 tables in `tenant-registry.ts` as EXEMPT (the accounting pattern). The boundary test `login-boundary.test.ts` replaces the broken `architecture:check` (M18) as the gate. |
+| Q2 | M5: `@reading-advantage/auth` has no subpath for the helpers, and its root throws in production without `DATABASE_URL`. | Add two `exports` lines (`./password`, `./rate-limit`) to `packages/auth` and reuse the helpers (Ponytail rule 2). If the no-connection test fails on them, write Storytime helpers with `@node-rs/argon2` and the same `ARGON2ID_OPTS`, as the design says. |
+| Q3 | The own origin for the CSRF check. | `request.nextUrl.origin`. Never `X-Forwarded-Host`. Review B confirms it for the Cloud Run domain mapping. |
+| Q4 | M14: the return fallback `/<locale>/st` has no page. | Green adds a small signed-in page at `app/[locale]/st/page.tsx` (a line that says to scan the book code; no week content). |
+| Q5 | Order of teacher checks (M15). | No session: redirect. Flag off: 404 for all. Wrong role: 403. Then the week. Tests set `STORYTIME_TEACHER_ROUTES=1`. |
+| Q6 | Plan 2b.2 lacks the schema test and the store contract test; AGENTS says no real Postgres in unit tests. | Add both to Red. PGlite (precedent M11) for integration tests, one real container only in the gate. Add `@electric-sql/pglite` as a devDependency of `packages/db` and `packages/backend`. |
+| Q7 | The bucket key layout is not in the plan. The mp4 seek on Google is unproven. | The orchestrator confirms the layout (key equals the `file` value) with `gcloud storage ls` before Green 2b.6, and runs the live proof of P2b.8 as soon as `signWeekMedia` exists. A failed seek stops 2b.6 and opens the proxy fallback. |
+| Q8 | The contract pins of P2b.2 (names, cookie, response codes). | Accept. The orchestrator may change a pin before Red starts. |
+| Q9 | The migration must exist in the production database before task 2b.9, but the design runs the migrate step only at the manual traffic step. | The orchestrator runs `storytime:migrate` by hand in task 2b.9 (P2b.8). The deploy step stays as designed. |
+| Q10 | Hardening note of the plan: split `storytime_migration` and `storytime_runtime`. | Out of scope for Phase 2b. The migrate script reads the URL from an environment variable, so the split needs no code change later. |
+| Q11 | M18: `pnpm architecture:check` already fails at the base (stale reconciliation manifest). | Out of scope for this track. The orchestrator reports it to the PM. This phase compares the failure message before and after and does not repair it. |
 
 ## P2: Approved A-42 pin (outline)
 

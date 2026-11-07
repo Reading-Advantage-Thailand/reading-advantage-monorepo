@@ -1,0 +1,29 @@
+Strategy role log: Phase 2b (Login and protected media), track storytime_at_home_release_20261106.
+Model: claude-code/claude-sonnet-5-5 (PM rule: substitute for Opus). Date: 2026-11-07.
+Role base: 1da5f79681c215c836f135fc83e18544bd9ff2a5. HEAD at the end of the work: 7cd1fc067 (plan, spec, design only).
+Output file: measure/tracks/storytime_at_home_release_20261106/test-strategy.md, section P2b (and the summary row in section 3).
+
+Measured at the role base (heavy-run jobs, CI=true, --maxWorkers=1):
+- targeted Storytime command: exit=0 files=59 tests_passed=452 tests_failed=0 (105 s)
+- packages/db probe (accounting-schema, barrel-hygiene): exit=0 files=2 tests_passed=9
+- packages/domain tenant-coverage: exit=0 files=1 tests_passed=11
+- pnpm architecture:check: exit=1, message "V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes" (broken before this phase)
+- import of @reading-advantage/auth root with NODE_ENV=production and no DATABASE_URL: throws; import of dist/password.js and dist/rate-limit.js alone: ok
+
+Red command: one heavy-run job with three vitest runs (apps/storytime login-*, packages/db storytime-schema, packages/backend store.contract). Expected exit=1, files_failed=12 of 12, tests_passed=3 (characterization cases C1 to C3 of login-proxy).
+Green gate: targeted Storytime command with the login-* and make-accounts files, expected exit=0 files=70, tests_passed = 452 + new_tests, failed=0 skipped=0.
+
+MEASURE_AGENT_RESULT
+role: strategy
+track: storytime_at_home_release_20261106
+phase: 2b
+role_base_sha: 1da5f79681c215c836f135fc83e18544bd9ff2a5
+file: measure/tracks/storytime_at_home_release_20261106/test-strategy.md
+commit: the commit that holds this log and test-strategy.md (read it with git log -1 --format=%H -- measure/tracks/storytime_at_home_release_20261106/test-strategy.md)
+phase_base_sha_capture: after this strategy commit and after the answers to Q1 to Q11 (section P2b.12), before the Red role starts
+risk: critical
+reviews: Review A yes; Review B required; Review C required; adversarial required; UX browser review required
+status: done
+summary: Section P2b written with measured facts, contract pins, Red command, Green gates, security tests, adversarial cases, evidence of tasks 2b.8 and 2b.9, review applicability, and anti-pattern rows.
+handoff: Answer or accept the defaults of Q1 to Q11 in section P2b.12 before Red. Q1 (SQL store in packages/backend because of DATABASE_BOUNDARY), Q2 (two export lines in packages/auth), Q4 (fallback page /<locale>/st does not exist), Q6 (PGlite plus one container in the gate), and Q11 (architecture:check is broken at the base) change the plan.
+END_MEASURE_AGENT_RESULT
