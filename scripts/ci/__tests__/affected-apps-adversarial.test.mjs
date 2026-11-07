@@ -3,22 +3,49 @@
  *
  * Hostile paths and refs of P1.7 that the Red suite does not cover: a merge
  * commit as the head, a base that the clone still holds after a force push, a
- * very long file list (10 000 changed paths), and CRLF line endings in a
+ * very long file list (10 000 changed paths, the only app path last and over
+ * 1 MB of path text so a buffer cut drops it), and CRLF line endings in a
  * manifest. Every case runs the real script on a scratch git repository with
  * the existing harness. A case that fails stays red and goes to Green.
  */
+import { spawnSync } from "node:child_process";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   changedFileCount,
   commitChanges,
   expectIds,
   git,
+  gitEnv,
+  homeFor,
   makeRepo,
   realWorkspaceFiles,
   removeScratchDirs,
   runScript,
   workspaceSeedFiles,
 } from "./helpers/scratch.mjs";
+
+/**
+ * Read a changed-path list with a 1 GB stdout buffer.
+ *
+ * The harness `git` has no `maxBuffer`, so a listing over 1 MB truncates there.
+ * This reader keeps the long-list case honest.
+ *
+ * @param {string} dir The scratch repository path.
+ * @param {string} base The base commit.
+ * @param {string} head The head commit.
+ * @returns {string[]} The changed paths.
+ * @throws {Error} When git fails.
+ */
+function largeChangedPaths(dir, base, head) {
+  const result = spawnSync("git", ["diff", "--name-only", "--no-renames", "-z", base, head], {
+    cwd: dir,
+    env: gitEnv(homeFor(dir)),
+    encoding: "utf8",
+    maxBuffer: 1 << 30,
+  });
+  if (result.status !== 0) throw new Error(`H-03 git diff failed: ${result.stderr}`);
+  return (result.stdout ?? "").split("\0").filter((name) => name !== "");
+}
 
 /** The cached copy of the real workspace files. */
 let workspaceFilesCache = null;
@@ -114,12 +141,24 @@ describe("P1 hostile paths and refs", () => {
   it("H-03 a very long file list is read in full", () => {
     const { dir, sha: base } = workspaceRepo();
     const write = {};
-    for (let index = 0; index < 10000; index += 1) {
-      write[`apps/storytime/content/gen-${index}.txt`] = `generated ${index}\n`;
+    const filler = "x".repeat(96);
+    for (let index = 0; index < 9999; index += 1) {
+      write[`apps/aaa-bulk/data/${filler}-${index}.txt`] = `generated ${index}\n`;
     }
+    // The only app path sorts last, so a read cut at the default 1 MB buffer drops it.
+    const onlyAppPath = "apps/storytime/content/zzzz-only.txt";
+    write[onlyAppPath] = "only storytime\n";
     const head = commitChanges(dir, { write });
-    const changed = changedFileCount(dir, base, head);
+    const listing = largeChangedPaths(dir, base, head);
+    const changed = listing.length;
     expect(changed, `H-03 changed_files=${changed}`).toBe(10000);
+    expect(listing[listing.length - 1], `H-03 last_path=${listing[listing.length - 1]}`).toBe(
+      onlyAppPath,
+    );
+    expect(
+      listing.join("").length,
+      `H-03 path_bytes=${listing.join("").length}`,
+    ).toBeGreaterThan(1024 * 1024);
     const out = runScript(dir, base, head);
     expectIds(out, ["storytime"], `H-03 rows=1 changed_files=${changed}`, changed);
   });
