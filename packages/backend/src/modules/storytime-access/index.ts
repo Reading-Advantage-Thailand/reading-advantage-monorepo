@@ -209,6 +209,14 @@ export function createStorytimeStore(db: StorytimeDb): StorytimeStore {
 
     async createSessionWithCap(input) {
       return db.transaction(async (tx) => {
+        // Lock the account row first, so two sign-ins of one account count the sessions one after
+        // the other. Without the lock both read the same list and both insert, and the account
+        // holds more sessions than its cap (Review B F41).
+        await tx
+          .select({ id: storytimeAccounts.id })
+          .from(storytimeAccounts)
+          .where(eq(storytimeAccounts.id, input.accountId))
+          .for("update");
         const owned = await tx
           .select({ tokenDigest: storytimeSessions.tokenDigest })
           .from(storytimeSessions)
