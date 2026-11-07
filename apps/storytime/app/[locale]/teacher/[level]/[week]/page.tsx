@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { loadWeek } from "../../../../../lib/content";
 import { parseTeacherRoute, teacherRoutesEnabled } from "../../../../../lib/teacher";
 import { requireRole } from "../../../../../lib/auth";
+import { signWeekMedia } from "../../../../../lib/media/sign";
 import TeacherForbidden from "../../forbidden";
 import { TeacherWeekView } from "./week-view";
 
@@ -67,5 +68,6 @@ export default async function TeacherWeekPage({
   const loaded = route === null ? null : await loadWeek(route.level, route.week);
   if (loaded === null || loaded.kind !== "ok") notFound();
 
-  return <TeacherWeekView week={loaded.week} locale={locale} />;
+  const mediaUrls = await signWeekMedia(loaded.week, {});
+  return <TeacherWeekView week={loaded.week} locale={locale} mediaUrls={mediaUrls} />;
 }

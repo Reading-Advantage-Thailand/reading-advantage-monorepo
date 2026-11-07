@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { mediaUrl } from "../../../../../lib/media/url";
 import type { StorytimeWeek } from "../../../../../lib/contracts/week";
 
 /**
@@ -15,9 +16,6 @@ import type { StorytimeWeek } from "../../../../../lib/contracts/week";
  * teacher routes are off.
  */
 
-/** The environment value that holds the media base URL. It stays on the server: no request sets
- * it, and the build never inlines it. */
-const MEDIA_BASE_ENV = "STORYTIME_MEDIA_BASE";
 
 /** The print part of a week, as the shipped file holds it. The contract leaves it open, because
  * production owns it. */
@@ -32,23 +30,23 @@ interface WeekPrint {
   };
 }
 
-/**
- * Builds the URL of one media file.
- * @param file The file, relative to the Storytime content folder.
- * @returns The URL under the media base.
- */
-function mediaUrl(file: string): string {
-  const base = (process.env[MEDIA_BASE_ENV] || "/media").replace(/\/+$/, "");
-  return `${base}/${file}`;
-}
 
 /**
  * Renders the week of the teacher.
  * @param props.week The week of the view.
  * @param props.locale The locale segment of the route.
+ * @param props.mediaUrls The signed URLs of the week.
  * @returns The week view.
  */
-export function TeacherWeekView({ week, locale }: { week: StorytimeWeek; locale: string }) {
+export function TeacherWeekView({
+  week,
+  locale,
+  mediaUrls = {},
+}: {
+  week: StorytimeWeek;
+  locale: string;
+  mediaUrls?: Record<string, string>;
+}) {
   const element = week.focus.element;
   const paSkill = week.focus.paSkill;
   const family = week.focus.family;
@@ -83,7 +81,7 @@ export function TeacherWeekView({ week, locale }: { week: StorytimeWeek; locale:
             <audio
               controls
               preload="none"
-              src={mediaUrl(element.audio)}
+              src={mediaUrl(mediaUrls, element.audio)}
               aria-label={`The sound of the week: ${element.sound}`}
               className="min-h-16 min-w-16"
             />
@@ -137,7 +135,7 @@ export function TeacherWeekView({ week, locale }: { week: StorytimeWeek; locale:
                   </span>
                   {entry.image?.file ? (
                     <img
-                      src={mediaUrl(entry.image.file)}
+                      src={mediaUrl(mediaUrls, entry.image.file)}
                       alt={caption}
                       loading="lazy"
                       decoding="async"
