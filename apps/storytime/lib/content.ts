@@ -16,7 +16,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { weekSchema, type StorytimeWeek } from "./contracts/week";
+import { LEVEL_MAX, WEEK_MAX, weekSchema, type StorytimeWeek } from "./contracts/week";
 import { mediaPartsNotApproved, missingPagePictures, readinessBlocker } from "./readiness";
 
 /** The environment value that moves the content folder. */
@@ -132,4 +132,32 @@ export async function loadVisibleWeek(level: number, week: number): Promise<Stor
       : `storytime week ${key} blocked: draft`,
   );
   return null;
+}
+
+/**
+ * Gives the highest week that a child may see in each level that has a week file (spec FR-1,
+ * AC-1.1). A week is open by the rule of `loadVisibleWeek`: the readiness gate holds and the
+ * draft-media switch is honored. The function writes no log, because the 404 view calls it on
+ * every missing week, and it reads each of the `LEVEL_MAX` times `WEEK_MAX` week files once.
+ * @returns A map of level to its highest open week. A level with week files and no open week
+ * holds `null`, and a level with no week file has no key.
+ */
+export async function highestOpenWeeks(): Promise<Record<number, number | null>> {
+  const open: Record<number, number | null> = {};
+  for (let level = 1; level <= LEVEL_MAX; level += 1) {
+    const loads = await Promise.all(
+      Array.from({ length: WEEK_MAX }, (_, index) => loadWeek(level, index + 1)),
+    );
+    if (loads.every((loaded) => loaded.kind === "absent")) continue;
+    let highest: number | null = null;
+    loads.forEach((loaded, index) => {
+      if (loaded.kind !== "ok") return;
+      const blocker = readinessBlocker(loaded.week);
+      if (blocker === null || (blocker === "media_not_approved" && showDraftMedia())) {
+        highest = index + 1;
+      }
+    });
+    open[level] = highest;
+  }
+  return open;
 }

@@ -72,3 +72,28 @@ export function parseStorytimeRoute(
   );
   return null;
 }
+
+/** The parts of a canonical `/<locale>/st/<level>/<week>` path. */
+export interface StorytimePath extends StorytimeRoute {
+  /** The locale segment, one of the accepted locales. */
+  locale: string;
+}
+
+/**
+ * Parses a request path as a canonical at-home week path. The 404 view reads the path with this
+ * function, so it writes no log: a path that is not a week route is a normal case there.
+ * @param pathname The path of the request, without a query or a hash.
+ * @param locales The accepted locales of the routing config.
+ * @returns The locale, the level, and the week, or `null` when the path is not
+ * `/<known locale>/st/<level>/<week>` with canonical numbers inside the contract bounds.
+ */
+export function parseStorytimePath(pathname: string, locales: readonly string[]): StorytimePath | null {
+  const segments = pathname.split("/");
+  if (segments.length !== 5 || segments[0] !== "" || segments[2] !== "st") return null;
+  const [, locale = "", , level = "", week = ""] = segments;
+  if (!locales.includes(locale)) return null;
+  const levelNumber = parseCanonicalNumber(level, LEVEL_MAX);
+  const weekNumber = parseCanonicalNumber(week, WEEK_MAX);
+  if (levelNumber === null || weekNumber === null) return null;
+  return { locale, level: levelNumber, week: weekNumber };
+}

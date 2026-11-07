@@ -32,6 +32,12 @@ vi.mock("next/navigation", () => ({
   },
 }));
 
+// The page signs the media of the week after the session check (login task 2b.6). The mock gives
+// an empty signed map, because this file reads only the card label.
+vi.mock("../lib/media/sign", () => ({
+  signWeekMedia: async () => ({}),
+}));
+
 vi.mock("../lib/auth", () => ({
   // The login of task 2b.4 needs a session. This file belongs to the look track, so its
   // expectation stays unchanged: the page runs with a signed-in family account.
