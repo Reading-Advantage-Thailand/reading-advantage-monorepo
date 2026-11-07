@@ -8,6 +8,8 @@ import {
   storytimeSessions,
 } from "@reading-advantage/db/storytime/schema";
 
+import { createStorytimeRuntimeDb } from "./runtime.js";
+
 /**
  * Any driver-bound Drizzle Postgres client, so the store runs on PGlite in
  * tests and on the `storytime` database at runtime.
@@ -16,6 +18,9 @@ export type StorytimeDb = PgDatabase<PgQueryResultHKT>;
 
 /** The account roles a Storytime account can hold. */
 export const storytimeRoleSchema = z.enum(["family", "class", "teacher"]);
+
+/** The id shape of a Storytime account. A value of another shape names no account. */
+const accountIdSchema = z.string().uuid();
 
 /** One account row as the store returns it. */
 export interface StorytimeAccount {
@@ -57,6 +62,7 @@ export interface StorytimeRateLimitBucket {
  */
 export interface StorytimeStore {
   findAccountByUsername(username: string): Promise<StorytimeAccount | null>;
+  findAccountById(accountId: string): Promise<StorytimeAccount | null>;
   createAccount(input: {
     username: string;
     passwordHash: string;
@@ -147,6 +153,17 @@ export function createStorytimeStore(db: StorytimeDb): StorytimeStore {
         .select()
         .from(storytimeAccounts)
         .where(eq(storytimeAccounts.username, username))
+        .limit(1);
+      return row ? toAccount(row) : null;
+    },
+
+    async findAccountById(accountId) {
+      const parsed = accountIdSchema.safeParse(accountId);
+      if (!parsed.success) return null;
+      const [row] = await db
+        .select()
+        .from(storytimeAccounts)
+        .where(eq(storytimeAccounts.id, parsed.data))
         .limit(1);
       return row ? toAccount(row) : null;
     },
@@ -303,4 +320,18 @@ export function createStorytimeStore(db: StorytimeDb): StorytimeStore {
       });
     },
   };
+}
+
+/**
+ * Creates the Storytime store that the app adapter and the account script use.
+ *
+ * The store owns every Storytime SQL statement, and the client it opens names the dedicated
+ * `storytime` database. The app may not open a database client itself, so this factory is the
+ * only way into the database from the app.
+ *
+ * @param databaseUrl The PostgreSQL URL of the Storytime database.
+ * @returns The store bound to a new client.
+ */
+export function createStorytimeRuntimeStore(databaseUrl: string): StorytimeStore {
+  return createStorytimeStore(createStorytimeRuntimeDb(databaseUrl));
 }
