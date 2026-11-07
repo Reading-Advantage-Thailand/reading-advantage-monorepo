@@ -39,6 +39,11 @@
       "import": "./dist/accounting/schema/index.js",
       "default": "./dist/accounting/schema/index.js"
     },
+    "./storytime/schema": {
+      "types": "./dist/schema/storytime/index.d.ts",
+      "import": "./dist/schema/storytime/index.js",
+      "default": "./dist/schema/storytime/index.js"
+    },
     "./accounting/runtime": {
       "types": "./dist/accounting/runtime.d.ts",
       "import": "./dist/accounting/runtime.js",
@@ -72,6 +77,8 @@
     "accounting:generate": "drizzle-kit generate --config accounting/drizzle.config.ts",
     "accounting:migrate": "tsx src/accounting/commands/migrate.ts",
     "accounting:doctor": "tsx src/accounting/commands/doctor.ts",
+    "storytime:generate": "drizzle-kit generate --config drizzle.storytime.config.ts",
+    "storytime:migrate": "tsx scripts/storytime-migrate.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
@@ -83,6 +90,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "catalog:",
     "@reading-advantage/config": "workspace:*",
     "@types/node": "catalog:",
     "drizzle-kit": "^0.31.7",

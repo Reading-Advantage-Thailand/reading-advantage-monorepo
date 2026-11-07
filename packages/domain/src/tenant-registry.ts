@@ -203,6 +203,12 @@ import {
   accountingSubmissions,
   accountingSubmissionAuditEvents,
 } from "@reading-advantage/db/accounting/schema";
+import {
+  storytimeAccounts,
+  storytimeSessions,
+  storytimeLoginAttempts,
+  storytimeAuditEvents,
+} from "@reading-advantage/db/storytime/schema";
 
 // auth infrastructure — identifier/token/expires; not scoped to a school.
 register(verificationTokens, "EXEMPT");
@@ -257,6 +263,12 @@ register(standardPackSuccessorAdmissionReceipts, "EXEMPT");
 // single-company global; the accounting app is company-scoped by design
 register(accountingSubmissions, "EXEMPT");
 register(accountingSubmissionAuditEvents, "EXEMPT");
+// Storytime families are not company accounts: the dedicated storytime
+// database is single-tenant and no school scopes these rows.
+register(storytimeAccounts, "EXEMPT");
+register(storytimeSessions, "EXEMPT");
+register(storytimeLoginAttempts, "EXEMPT");
+register(storytimeAuditEvents, "EXEMPT");
 // Explicit product identity links are global authentication infrastructure;
 // application and local-user keys are validated by the mapping adapter.
 

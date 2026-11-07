@@ -28,6 +28,10 @@
       "types": "./dist/modules/accounting/index.d.ts",
       "import": "./dist/modules/accounting/index.js"
     },
+    "./storytime-access": {
+      "types": "./dist/modules/storytime-access/index.d.ts",
+      "import": "./dist/modules/storytime-access/index.js"
+    },
     "./company-identity/internal-route-adapter": {
       "types": "./dist/modules/company-identity/public-route-adapter.d.ts",
       "import": "./dist/modules/company-identity/public-route-adapter.js"
@@ -49,10 +53,12 @@
   "dependencies": {
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/db": "workspace:*",
+    "drizzle-orm": "^0.45.0",
     "postgres": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "catalog:",
     "@reading-advantage/config": "workspace:*",
     "@reading-advantage/advantage-play-kit": "workspace:*",
     "@types/node": "catalog:",

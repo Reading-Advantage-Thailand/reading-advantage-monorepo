@@ -14,6 +14,16 @@
       "import": "./dist/company-identity/index.js",
       "default": "./dist/company-identity/index.js"
     },
+    "./password": {
+      "types": "./dist/password.d.ts",
+      "import": "./dist/password.js",
+      "default": "./dist/password.js"
+    },
+    "./rate-limit": {
+      "types": "./dist/rate-limit.d.ts",
+      "import": "./dist/rate-limit.js",
+      "default": "./dist/rate-limit.js"
+    },
     "./roles": {
       "types": "./dist/roles.d.ts",
       "import": "./dist/roles.js",
