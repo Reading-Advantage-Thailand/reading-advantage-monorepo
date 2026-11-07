@@ -6,6 +6,10 @@ const cloudbuild = readFileSync(
   new URL("../../../cloudbuild.yaml", import.meta.url),
   "utf8",
 );
+const traffic = readFileSync(
+  new URL("../../../cloudbuild-traffic.yaml", import.meta.url),
+  "utf8",
+);
 
 const BUILD_STEP_SECRETS = [
   "ACCOUNTING_DATABASE_URL",
@@ -23,15 +27,23 @@ describe("Accounting Cloud Build candidate pipeline contract", () => {
       "asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID",
     );
     for (const requiredStep of [
+      "mint-company-candidate-token",
+      "verify-accounting-release.ts",
+    ]) {
+      expect(cloudbuild).toContain(requiredStep);
+    }
+    // D7: the database steps live in the manual traffic file.
+    for (const requiredStep of [
       "accounting:migrate",
       "ACCOUNTING_DIRECT_DATABASE_URL",
       "accounting:doctor",
       "accounting-runtime-grants.sql",
       "accounting-runtime-probe.sql",
-      "mint-company-candidate-token",
-      "verify-accounting-release.ts",
     ]) {
-      expect(cloudbuild).toContain(requiredStep);
+      expect(traffic).toContain(requiredStep);
+    }
+    for (const id of ["migrate-db", "doctor-check", "runtime-db-contract"]) {
+      expect(cloudbuild).not.toContain(`id: "${id}"`);
     }
   });
 
@@ -62,7 +74,7 @@ describe("Accounting Cloud Build candidate pipeline contract", () => {
 
   it("declares only secrets consumed by Cloud Build steps", () => {
     const availableSecrets = Array.from(
-      cloudbuild.matchAll(/^\s+env: "(ACCOUNTING_[A-Z0-9_]+)"$/gmu),
+      traffic.matchAll(/^\s+env: "(ACCOUNTING_[A-Z0-9_]+)"$/gmu),
       (match) => match[1],
     ).sort();
 
