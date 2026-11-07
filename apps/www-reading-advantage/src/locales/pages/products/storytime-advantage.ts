@@ -32,13 +32,12 @@ export const en = {
         ],
       },
       {
-        title: "By QR Code, With One Sign-In",
+        title: "By QR Code, With No Login",
         points: [
           "The song of the week, with a video",
           "The read-along book, with \"read to me\" and \"I read\"",
           "The decodable book, with words to tap and hear",
           "A 5-minute home activity in Thai",
-          "A parent, or the teacher for the class, signs in on the first visit. The phone or the screen then stays signed in.",
         ],
       },
     ],
@@ -88,7 +87,7 @@ export const en = {
       {
         question: "Do we need computers or an app?",
         answer:
-          "No. The program is printed. The songs and the books open by QR code on a phone or a classroom screen, with no app to install. A parent, or the teacher for the class, signs in on the first visit, and the device then stays signed in. The sign-in keeps the content for the children in the program.",
+          "No. The program is printed. The songs and the books open on a phone or a classroom screen by QR code, with no app and no login.",
       },
       {
         question: "Our kindergarten teachers are not English teachers. Can they teach it?",
@@ -166,13 +165,12 @@ export const th = {
         ],
       },
       {
-        title: "ผ่านคิวอาร์โค้ด เข้าสู่ระบบครั้งเดียว",
+        title: "ผ่านคิวอาร์โค้ด ไม่ต้องเข้าสู่ระบบ",
         points: [
           "เพลงประจำสัปดาห์พร้อมวิดีโอ",
           "หนังสืออ่านตามพร้อมโหมด \"อ่านให้ฟัง\" และ \"ฉันอ่านเอง\"",
           "หนังสือฝึกอ่านที่แตะคำเพื่อฟังเสียงได้",
           "กิจกรรมที่บ้านภาษาไทย ใช้เวลาห้านาที",
-          "ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบครั้งแรก จากนั้นโทรศัพท์หรือจอก็จะยังเข้าสู่ระบบอยู่",
         ],
       },
     ],
@@ -203,7 +201,7 @@ export const th = {
     heading: "คำถามที่พบบ่อย",
     questions: [
       { question: "ในหน่วยแรกมีอะไรบ้าง", answer: "หนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน คู่มือครูภาษาไทย ไฟล์หนังสือฝึกอ่านสีที่ครูพิมพ์ลงกระดาษ A3 และเพลงกับหนังสือที่เปิดด้วยคิวอาร์โค้ด ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยแรก" },
-      { question: "ต้องใช้คอมพิวเตอร์หรือแอปไหม", answer: "ไม่ต้องใช้ โปรแกรมเป็นสื่อสิ่งพิมพ์ เพลงและหนังสือเปิดได้บนโทรศัพท์หรือจอในห้องเรียนด้วยคิวอาร์โค้ด โดยไม่ต้องติดตั้งแอป ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบครั้งแรก แล้วอุปกรณ์นั้นก็ยังเข้าสู่ระบบอยู่ การเข้าสู่ระบบนี้ทำให้เนื้อหาอยู่กับเด็กในโครงการ" },
+      { question: "ต้องใช้คอมพิวเตอร์หรือแอปไหม", answer: "ไม่ต้องใช้ โปรแกรมเป็นสื่อสิ่งพิมพ์ เพลงและหนังสือเปิดได้บนโทรศัพท์หรือจอในห้องเรียนด้วยคิวอาร์โค้ด โดยไม่ต้องใช้แอปและไม่ต้องเข้าสู่ระบบ" },
       { question: "ครูอนุบาลที่ไม่ใช่ครูภาษาอังกฤษสอนได้ไหม", answer: "ได้ คู่มือครูมีแผนการสอนและข้อความภาษาอังกฤษที่ใช้สอน พร้อมความหมายภาษาไทยและสิ่งที่เด็กทำในแต่ละขั้นตอน" },
       { question: "Storytime Advantage เหมาะกับใคร", answer: "เด็กอนุบาล 2 ถึง ป.2 อายุประมาณ 4 ถึง 8 ปี และครูประจำชั้น ผู้ปกครองร่วมกิจกรรมที่บ้านได้ผ่านบัตรประจำสัปดาห์" },
       { question: "หลังจาก ป.2 แล้วเรียนอะไรต่อ", answer: "Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module." },

@@ -8,12 +8,6 @@ import { buildMarketingMetadata } from "@/lib/seo";
 
 const IMAGE_DIR = "/images/storytime-advantage";
 
-/** The point indexes of each key feature group. The QR group has five points. */
-const FEATURE_POINTS: readonly (readonly number[])[] = [
-  [0, 1, 2, 3],
-  [0, 1, 2, 3, 4],
-];
-
 const STORY_IMAGES = [
   { name: "week-02-how-many-cakes", alt: "week02HowManyCakes" },
   { name: "week-03-it-is-red", alt: "week03ItIsRed" },
@@ -118,7 +112,7 @@ export default async function StorytimeAdvantage({
                   {t(`keyFeatures.features.${group}.title`)}
                 </h3>
                 <ul className="space-y-4">
-                  {FEATURE_POINTS[group].map((point) => (
+                  {[0, 1, 2, 3].map((point) => (
                     <li key={point} className="flex gap-3 leading-relaxed">
                       <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 rounded-full bg-amber-400" />
                       {t(`keyFeatures.features.${group}.points.${point}`)}
