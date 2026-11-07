@@ -12,9 +12,13 @@ const LATIN_ONLY_ALLOW_LIST = new Set(["Storytime"]);
 
 /**
  * The keys whose value is intentionally English in both files: the 404 shows both languages
- * under every locale, and the parity rule pins the same value in `th.json` and `en.json`.
+ * under every locale, and the parity rule pins the same value in `th.json` and `en.json`. The
+ * week-not-open keys `notOpenEnglish` and `openWeekEnglish` join the rule (AC-1.1).
  */
-const ENGLISH_VALUE_KEYS = new Set(["notFoundEnglish"]);
+const ENGLISH_VALUE_KEYS = new Set(["notFoundEnglish", "notOpenEnglish", "openWeekEnglish"]);
+
+/** The week-not-open keys that task 1.1 adds to both message files. */
+const WEEK_NOT_OPEN_KEYS = ["notOpenThai", "notOpenEnglish", "openWeekThai", "openWeekEnglish"];
 
 describe("Phase 3 at-home messages", () => {
   it("defines the same non-empty message keys in Thai and English", () => {
@@ -23,6 +27,10 @@ describe("Phase 3 at-home messages", () => {
     expect(englishKeys.length, "English messages must not be empty").toBeGreaterThan(0);
     expect(thaiKeys.length, "Thai messages must not be empty").toBeGreaterThan(0);
     expect(thaiKeys).toEqual(englishKeys);
+    for (const key of WEEK_NOT_OPEN_KEYS) {
+      expect(englishKeys, `messages/en.json must define ${key}`).toContain(key);
+      expect(thaiKeys, `messages/th.json must define ${key}`).toContain(key);
+    }
   });
 
   it("has no blank Thai strings and uses Sarabun for Thai app text", () => {

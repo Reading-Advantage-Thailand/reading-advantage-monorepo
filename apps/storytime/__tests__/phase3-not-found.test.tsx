@@ -37,8 +37,21 @@ describe("Phase 3 not-found view (finding F136)", () => {
     expect(thaiLine.textContent?.trim().length, "the Thai 404 text must not be empty").toBeGreaterThan(0);
     expect(englishLine.textContent?.trim().length, "the English 404 text must not be empty").toBeGreaterThan(0);
     // The message files hold the same 404 values in both locales, so the view shows both
-    // languages under every locale.
-    expect(thai.notFoundThai).toBe(english.notFoundThai);
-    expect(thai.notFoundEnglish).toBe(english.notFoundEnglish);
+    // languages under every locale. The equal-value rule also covers the four week-not-open keys
+    // that AC-1.1 adds; a key must be present, non-empty, and equal in both message files.
+    const equalKeys = [
+      "notFoundThai",
+      "notFoundEnglish",
+      "notOpenThai",
+      "notOpenEnglish",
+      "openWeekThai",
+      "openWeekEnglish",
+    ];
+    for (const key of equalKeys) {
+      expect(typeof english[key], `messages/en.json must define ${key}`).toBe("string");
+      expect(typeof thai[key], `messages/th.json must define ${key}`).toBe("string");
+      expect(english[key]!.trim().length, `${key} must not be blank`).toBeGreaterThan(0);
+      expect(thai[key], `${key} must hold the same value in both message files`).toBe(english[key]);
+    }
   });
 });
