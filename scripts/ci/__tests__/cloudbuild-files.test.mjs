@@ -463,28 +463,87 @@ describe("F: Cloud Build files", () => {
     must(complete === 6, `traffic_runbook_sections=${complete}`);
   });
 
-  it("F-19 the sales traffic file names the pushed build in the capture and the move", () => {
+  it("F-19 the sales traffic file moves to the candidate of the pushed build", () => {
+    // The move goes to the company candidate revision of the same push build, not to the
+    // legacy-rollback revision and not to a tag that a later push can move.
     const file = "apps/sales-advantage/cloudbuild-traffic.yaml";
     const doc = cloudbuild(file);
     const steps = doc.steps ?? [];
     must(steps.length >= 2, `steps_checked=${steps.length}`);
-    const capture = steps.find((step) => String(step.id ?? "") === "capture-legacy-rollback");
-    const move = steps.find((step) => String(step.id ?? "") === "update-traffic");
-    must(capture, "capture-legacy-rollback step missing");
-    must(move, "update-traffic step missing");
-    const captureText = stepText(capture);
-    const moveText = stepText(move);
+    const moveIndex = steps.findIndex((step) => String(step.id ?? "") === "update-traffic");
+    must(moveIndex >= 0, "update-traffic step missing");
     const image =
       "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:${_PUSH_BUILD_ID}";
-    const record = "/workspace/.sales-legacy-rollback";
+
+    /**
+     * Read a capture-sales-cloud-run-tag.sh call of a step.
+     *
+     * @param {Record<string, unknown>} step The step.
+     * @returns {{ tag: string, image: string, record: string } | null} The call, or null.
+     */
+    function captureCall(step) {
+      const args = (step.args ?? []).map(String);
+      const index = args.findIndex((value) => value.endsWith("capture-sales-cloud-run-tag.sh"));
+      if (index < 0 || index + 3 >= args.length) return null;
+      return { tag: args[index + 1], image: args[index + 2], record: args[index + 3] };
+    }
+
+    const captures = [];
+    steps.forEach((step, index) => {
+      const call = captureCall(step);
+      if (call) captures.push({ index, call });
+    });
+    const legacy = captures.find((entry) => entry.call.tag === "legacy-rollback");
+    const candidate = captures.find((entry) => entry.call.tag === "candidate");
+    const legacyRecord = legacy ? legacy.call.record : "/workspace/.sales-legacy-rollback";
+    const candidateRecord = candidate
+      ? candidate.call.record
+      : "/workspace/.sales-company-candidate";
+
+    /**
+     * Tell whether a move text targets the captured candidate revision.
+     *
+     * @param {string} text The text of the move step.
+     * @returns {boolean} True when the move reads the candidate record and no tag.
+     */
+    function moveTargetsCandidate(text) {
+      return (
+        text.includes("--to-revisions=") &&
+        text.includes(`${candidateRecord}.revision`) &&
+        !text.includes("--to-tags=") &&
+        !text.includes(legacyRecord)
+      );
+    }
+
+    const moveText = stepText(steps[moveIndex]);
+    const legacyMoveText =
+      'gcloud run services update-traffic sales-advantage ' +
+      '--to-revisions="$$(tr -d "\\r\\n" < /workspace/.sales-legacy-rollback.revision)=100"';
     const checks = [
-      { name: "capture-image", ok: captureText.includes(image) },
-      { name: "capture-record", ok: captureText.includes(record) },
+      { name: "legacy-capture-image", ok: Boolean(legacy) && legacy.call.image === image },
+      { name: "legacy-capture-before-move", ok: Boolean(legacy) && legacy.index < moveIndex },
+      {
+        name: "candidate-capture-image",
+        ok: Boolean(candidate) && candidate.call.image === image,
+      },
+      {
+        name: "candidate-capture-record",
+        ok:
+          Boolean(candidate) &&
+          candidate.call.record.startsWith("/workspace/") &&
+          candidate.call.record !== legacyRecord,
+      },
+      {
+        name: "candidate-capture-before-move",
+        ok: Boolean(candidate) && candidate.index < moveIndex,
+      },
       { name: "move-to-revisions", ok: moveText.includes("--to-revisions=") },
-      { name: "move-revision", ok: moveText.includes(`${record}.revision`) },
+      { name: "move-candidate", ok: moveText.includes(`${candidateRecord}.revision`) },
       { name: "move-no-tag", ok: !moveText.includes("--to-tags=") },
+      { name: "move-no-legacy", ok: !moveText.includes(legacyRecord) },
+      { name: "negative-legacy-move-rejected", ok: !moveTargetsCandidate(legacyMoveText) },
     ];
-    must(checks.length === 5, `sales_build_identity_checks=${checks.length}`);
+    must(checks.length === 10, `sales_build_identity_checks=${checks.length}`);
     const failed = checks.filter((check) => !check.ok).map((check) => check.name);
     const identity = failed.length === 0 ? 1 : 0;
     must(
