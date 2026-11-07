@@ -249,7 +249,7 @@ describe("submitAccountingSubmission", () => {
       actor: staffActor,
       input: {
         ...thbExpenseInput,
-        money: { amountMinor: "15000", currency: "usd" },
+        money: { amountMinor: "15000", currency: "usd" as never },
       },
     }).catch((caught: unknown) => caught);
 
