@@ -47,6 +47,8 @@
 - [ ] 3.3 Record the first failing step of the latest CI run on master (D5). Do not fix it here; the PM opens a separate small track later (decision D5). Evidence class: automated.
 - [ ] 3.4 Phase check: tests, ESLint of changed files, Reviews A and B, phase acceptance. Append `[checkpoint: <sha>]` to this heading. Evidence class: automated.
 
+Follow-up for the CI-green track after this one (PM, 2026-11-07): repair `pnpm architecture:check`. It fails on master with exit 1: "V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes".
+
 ## Phase 4: Dry runs, www proof, and the first-push plan
 
 - [ ] 4.1 Dry run of each workflow for each fake range, with `act` or a script, with no secret and no deploy. One report row for each app and one for CI (AC-5.1). The report goes to `measure/tracks/per_app_cicd_20261107/dry-run-report.md`. Evidence class: automated.
