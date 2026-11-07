@@ -143,8 +143,11 @@ describe("F: Cloud Build files", () => {
       if (!text.includes("--no-traffic")) {
         problems.push(`${row.id} deploy step has no --no-traffic`);
       }
-      if (!text.includes(`--tag=${row.prefix}-${"${BUILD_ID:0:8}"}`)) {
+      if (!text.includes(`--tag=${row.prefix}-${"$${BUILD_ID:0:8}"}`)) {
         problems.push(`${row.id} deploy step has no tag`);
+      }
+      if (/(^|[^$])\$\{BUILD_ID:0:8\}/.test(text)) {
+        problems.push(`${row.id} deploy step holds an unescaped tag`);
       }
       if (text.includes("update-traffic")) {
         problems.push(`${row.id} deploy step moves traffic`);
