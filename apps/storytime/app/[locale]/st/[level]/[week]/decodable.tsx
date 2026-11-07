@@ -537,7 +537,7 @@ export function StorytimeDecodable({
                     onClick={() => onWordTap(piece.word!)}
                     className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded px-0.5 hover:bg-neutral-100"
                   >
-                    {piece.word.toUpperCase()}
+                    {piece.word}
                   </button>
                   {(piece.trailing ?? []).map((token, trailingIndex) => (
                     <span key={trailingIndex}>{token}</span>
@@ -592,7 +592,7 @@ export function StorytimeDecodable({
                     onClick={() => onWordTap(word)}
                     className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-neutral-300 px-4"
                   >
-                    {word.toUpperCase()}
+                    {word}
                   </button>
                 </li>
               ))}

@@ -34,7 +34,7 @@ describe("the decodable keeps the full stop next to its word (finding F151)", ()
     );
     expect(sentence, "the shipped w01 decodable page one holds the word nest").toBeTruthy();
     const button = [...sentence!.querySelectorAll("button")].find(
-      (element) => element.textContent === "NEST",
+      (element) => element.textContent === "nest",
     );
     expect(button, "the word nest is a tappable button").toBeTruthy();
     const dot = [...sentence!.querySelectorAll("span")].find((element) => element.textContent === ".");
@@ -45,6 +45,6 @@ describe("the decodable keeps the full stop next to its word (finding F151)", ()
       "the stop shares one flex item with its word (finding F151)",
     ).toBe(button!.parentElement);
     expect(group!.querySelectorAll("button"), "the group holds only its own word").toHaveLength(1);
-    expect(group!.textContent, "the group reads as the word and its stop, with no gap").toBe("NEST.");
+    expect(group!.textContent, "the group reads as the word and its stop, with no gap").toBe("nest.");
   });
 });
