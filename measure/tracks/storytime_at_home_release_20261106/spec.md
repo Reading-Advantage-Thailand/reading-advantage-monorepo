@@ -80,6 +80,8 @@ Acceptance:
 
 ### FR-3 The at-home deploy (Phase 3)
 
+**Cross-track dependency (2026-11-07):** Phase 3 (the deploy) waits for the Phase 2b checkpoint of this track and for the Phase 1 checkpoint ("Council fixes") of track [storytime_look_20261107](../storytime_look_20261107/). Phase 2 of that track (the look port) ships on 2026-11-20 only if its gates pass in time.
+
 This is the task 3.11 of the parent, with amendment R-1 (parent plan line 267: the at-home deploy moves out of task 6.3 into the parent task 3.11; task 6.3 keeps the teacher-app deploy).
 
 - The deploy is Daniel's gate (parent spec section 5). The target is 2026-11-20. The marker is `[b] deferred:daniel`.
@@ -115,22 +117,6 @@ Acceptance:
 - AC-4.7 (automated) Every media URL in a page response is a signed URL of the storage adapter with an expiry of 6 hours or less. A page response with no session holds none. A browser test seeks in an mp4 on a signed URL.
 - AC-4.8 (automated) The account script writes the CSV and the card list only to a path outside the repository, and the test checks `git status` of the repository stays clean.
 - AC-4.9 (owner-passed) Daniel creates the database and the secrets (task 2b.8), gives the account list (2b.9), and gives the word for the deploy and the removal of the public read (2b.10). The record names the revision and the word.
-
-### FR-5 UI council round 1 fixes (Phase 2c)
-
-Source: the UI council round 1 on week 1 live (`~/.local/state/ui-council/storytime-w01-live/round-1.md`, 19 findings, total 59.5, read only). PM decisions, 2026-11-07: the batch is accepted; M-3 stands (no pictures in the lyric list), so finding 10 is dropped; the English label of item 6 is "Read the words". The look port of Daniel's pick is a later phase (plan Phase 2d).
-
-Acceptance:
-
-- AC-5.1 (automated) `/th/st/2/2` (a week that is not open) answers 404 with a text that says the week is not open yet and does not hold "Go back to the QR code". It holds one link or button of 48 px or more whose target is the highest open week of level 2 (`/th/st/2/1` today, by `loadVisibleWeek`). English and Thai copy are tested.
-- AC-5.2 (automated) For a level with no open week, the not-open page holds no such button (`buttons` equals 0).
-- AC-5.3 (automated) The decodable page for week 1 renders the sentence "A nest." with no space before the full stop, and the chips "a", "and", and "can" in the case of the source. No rendered text of the sentence or the chips is the upper-case form of the source.
-- AC-5.4 (person-checked, then automated) A person check on a real phone records whether the video area goes blank white while the song plays. If it does, the media element keeps its `poster` and no hiding style in the playing state (test).
-- AC-5.5 (automated) After a press on Next, the old sentence stays in the page until the load event of the new picture (or 3 seconds), then both change together.
-- AC-5.6 (automated) While a sound plays, its button has `aria-pressed="true"` and an active label. Next is the filled main button of 48 px or more. A page count "1 / N" sits between the arrows and updates on each turn (N from the week data; the test asserts N is greater than 1).
-- AC-5.7 (automated) The English label of the decodable card is "Read the words". The Thai label is "อ่านคำ".
-- AC-5.8 (automated) The rendered week page for `/th/st/2/1` and `/en/st/2/1` lists no sub-resource that answers 404 (the list is asserted not empty first).
-- AC-5.9 (automated) The reader sentence has one even word gap: the sentence has no `justify` alignment, no `word-spacing` above 0.35 em, and its text with single spaces equals the source sentence ("Hello, I am May."). A browser check at phone, tablet, and phone landscape finds the gaps between neighbouring words within 2 px of each other.
 
 ## 4. Constraints
 
