@@ -48,7 +48,7 @@ steps:
           --platform=managed \
           --allow-unauthenticated \
           --no-traffic \
-          --tag=st-${BUILD_ID:0:8}
+          --tag=st-$${BUILD_ID:0:8}
 
 options:
   logging: CLOUD_LOGGING_ONLY

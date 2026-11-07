@@ -50,7 +50,7 @@ steps:
           --concurrency=80 \
           --set-secrets=DATABASE_URL=WORKBOOKS_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest \
           --no-traffic \
-          --tag=wb-${BUILD_ID:0:8}
+          --tag=wb-$${BUILD_ID:0:8}
 
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"

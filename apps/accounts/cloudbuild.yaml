@@ -31,7 +31,7 @@ steps:
           --max-instances=20 \
           --concurrency=40 \
           --no-traffic \
-          --tag=ac-${BUILD_ID:0:8}
+          --tag=ac-$${BUILD_ID:0:8}
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"

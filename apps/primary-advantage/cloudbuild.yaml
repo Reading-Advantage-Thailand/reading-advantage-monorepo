@@ -57,7 +57,7 @@ steps:
           --set-env-vars=NODE_ENV=${_NODE_ENV} \
           --set-env-vars=AUTH_TRUST_HOST=true \
           --no-traffic \
-          --tag=pa-${BUILD_ID:0:8}
+          --tag=pa-$${BUILD_ID:0:8}
 
 # Substitutions
 substitutions:
