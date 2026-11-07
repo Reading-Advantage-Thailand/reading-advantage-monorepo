@@ -69,6 +69,11 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-11-07; Phase 1 (removal) next; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
   *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
+- [ ] **Track: Per-app CI/CD (a change deploys only the affected app)** — *created 2026-11-07*
+  *Link: [./tracks/per_app_cicd_20261107/](./tracks/per_app_cicd_20261107/)*
+  *Status: active, opened 2026-11-07; Phase 1 (affected-app logic) next | Owner: Monorepo orchestrator | Date needed 2026-11-09; first push and every traffic move are `deferred:daniel`*
+  *Note: Daniel 2026-11-07 06:02 ICT: "We need to fix the ci/CD so that changes to an app or an app's packages deploys only that app." www keeps its direct deploy; gated apps build with --no-traffic and a tag. Includes the storytime tag-length fix and the storytime deploy runbook facts. No push and no deploy before the dry-run report.*
+
 
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
