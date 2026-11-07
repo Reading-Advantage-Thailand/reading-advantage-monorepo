@@ -51,6 +51,33 @@ function must(condition, message) {
 }
 
 /**
+ * Assert that a deploy step makes its tag from the step environment.
+ *
+ * The file must hold the escaped text `$${BUILD_ID:0:8}`. Cloud Build turns the
+ * `$$` into one literal `$`, and bash then slices the step env `BUILD_ID`. The step
+ * must not hold an unescaped `${BUILD_ID:0:8}`, because Cloud Build reads that text
+ * as a substitution key and the submit fails.
+ *
+ * @param {Record<string, unknown>} step The deploy step.
+ * @param {string} prefix The tag prefix, for example `pa`.
+ * @param {string} id The app id of the failure message.
+ * @returns {void}
+ */
+function assertEscapedTag(step, prefix, id) {
+  const text = stepText(step);
+  const wanted = "--tag=" + prefix + "-$${BUILD_ID:0:8}";
+  must(text.includes(wanted), `${id} tag expression missing; expected ${wanted}`);
+  must(
+    !/(^|[^$])\$\{BUILD_ID:0:8\}/.test(text),
+    `${id} tag holds an unescaped ${"${BUILD_ID:0:8}"}`,
+  );
+  must(
+    stepEnv(step).includes("BUILD_ID=$BUILD_ID"),
+    `${id} env must hold BUILD_ID=$BUILD_ID`,
+  );
+}
+
+/**
  * List the raw text of every workflow file.
  *
  * @returns {{ name: string, text: string }[]} The file name and text.
@@ -238,40 +265,32 @@ describe("W: per-app CD workflows", () => {
     const row = gatedRows().find((entry) => entry.id === "primary-advantage");
     const doc = workflowTextTable(row);
     const step = doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy"));
-    const text = stepText(step);
-    must(text.includes("--tag=pa-${BUILD_ID:0:8}"), "primary tag expression missing");
-    must(text.includes("--no-traffic"), "primary deploy step has no --no-traffic");
-    must(stepEnv(step).some((value) => value.startsWith("BUILD_ID=")), "primary env BUILD_ID missing");
+    assertEscapedTag(step, "pa", "primary-advantage");
+    must(stepText(step).includes("--no-traffic"), "primary deploy step has no --no-traffic");
   });
 
   it("W-11-storytime storytime deploy step holds st- and the build id slice", () => {
     const row = gatedRows().find((entry) => entry.id === "storytime");
     const doc = workflowTextTable(row);
     const step = doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy"));
-    const text = stepText(step);
-    must(text.includes("--no-traffic"), "storytime deploy step has no --no-traffic");
-    must(text.includes("--tag=st-${BUILD_ID:0:8}"), "storytime tag expression missing");
-    must(stepEnv(step).some((value) => value.startsWith("BUILD_ID=")), "storytime env BUILD_ID missing");
+    must(stepText(step).includes("--no-traffic"), "storytime deploy step has no --no-traffic");
+    assertEscapedTag(step, "st", "storytime");
   });
 
   it("W-11-accounts accounts deploy step holds ac- and the build id slice", () => {
     const row = gatedRows().find((entry) => entry.id === "accounts");
     const doc = workflowTextTable(row);
     const step = doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy"));
-    const text = stepText(step);
-    must(text.includes("--tag=ac-${BUILD_ID:0:8}"), "accounts tag expression missing");
-    must(text.includes("--no-traffic"), "accounts deploy step has no --no-traffic");
-    must(stepEnv(step).some((value) => value.startsWith("BUILD_ID=")), "accounts env BUILD_ID missing");
+    assertEscapedTag(step, "ac", "accounts");
+    must(stepText(step).includes("--no-traffic"), "accounts deploy step has no --no-traffic");
   });
 
   it("W-11-workbooks workbooks deploy step holds wb- and the build id slice", () => {
     const row = gatedRows().find((entry) => entry.id === "workbooks");
     const doc = workflowTextTable(row);
     const step = doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy"));
-    const text = stepText(step);
-    must(text.includes("--tag=wb-${BUILD_ID:0:8}"), "workbooks tag expression missing");
-    must(text.includes("--no-traffic"), "workbooks deploy step has no --no-traffic");
-    must(stepEnv(step).some((value) => value.startsWith("BUILD_ID=")), "workbooks env BUILD_ID missing");
+    assertEscapedTag(step, "wb", "workbooks");
+    must(stepText(step).includes("--no-traffic"), "workbooks deploy step has no --no-traffic");
   });
 
   it("W-11-accounting accounting deploy step holds the candidate tag", () => {
@@ -371,17 +390,17 @@ describe("W: per-app CD workflows", () => {
 
   it("W-15 the storytime tag stays within 46 characters", () => {
     const doc = workflowTextTable(gatedRows().find((entry) => entry.id === "storytime"));
-    const text = stepText(doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy")));
+    const step = doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy"));
+    assertEscapedTag(step, "st", "storytime");
+    const text = stepText(step);
     const match = text.match(/--tag=(\S+)/);
     must(match, "storytime tag expression missing");
     const buildId = "a".repeat(36);
-    const rendered = match[1].includes("${BUILD_ID:0:8}")
-      ? match[1].replace("${BUILD_ID:0:8}", buildId.slice(0, 8))
-      : match[1].replace("$BUILD_ID", buildId);
+    const rendered = match[1].replace("$${BUILD_ID:0:8}", buildId.slice(0, 8));
     const total = rendered.length + "storytime-app".length;
     must(total <= 46, `storytime tag combined=${total} limit=46`);
-    must(match[1].includes("st-"), "storytime tag expression missing");
-    must(match[1].includes("${BUILD_ID:0:8}"), "storytime tag expression missing");
+    must(rendered.startsWith("st-"), "storytime tag expression missing");
+    must(rendered.length === 11, `storytime tag length=${rendered.length} expected=11`);
   });
 
   it("W-16 the runbook holds the 7 FR-4 facts", () => {

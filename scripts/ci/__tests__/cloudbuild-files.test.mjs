@@ -18,6 +18,7 @@ import {
   dbToken,
   deployStep,
   ordered,
+  pushAndTrafficFiles,
   readTable,
   readText,
   sectionText,
@@ -457,5 +458,25 @@ describe("F: Cloud Build files", () => {
       complete += 1;
     }
     must(complete === 6, `traffic_runbook_sections=${complete}`);
+  });
+
+  it("F-17 no push or traffic file holds an invalid substitution", () => {
+    const files = pushAndTrafficFiles();
+    must(files.length === 16, `files_checked=${files.length}`);
+    const bad = [];
+    for (const file of files) {
+      const doc = cloudbuild(file);
+      for (const step of doc.steps ?? []) {
+        const text = stepText(step);
+        for (const match of text.matchAll(/(?<!\$)\$\{([^}]*)\}/g)) {
+          const key = match[1];
+          if (!/^[A-Z_][A-Z0-9_]*$/.test(key)) bad.push(`${file}:${match[0]}`);
+        }
+      }
+    }
+    must(
+      bad.length === 0,
+      `invalid_substitutions=${bad.length}: ${bad.slice(0, 8).join(",")}`,
+    );
   });
 });

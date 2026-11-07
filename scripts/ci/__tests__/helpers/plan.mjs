@@ -126,6 +126,27 @@ export function readTable() {
 }
 
 /**
+ * List the push and traffic Cloud Build files of the fixture tree.
+ *
+ * A push file is `apps/<app>/cloudbuild.yaml`. A traffic file is
+ * `apps/<app>/cloudbuild-traffic.yaml`. One-off files are not listed.
+ *
+ * @returns {string[]} The repository paths, sorted.
+ */
+export function pushAndTrafficFiles() {
+  const dir = join(FIXTURE_ROOT, "apps");
+  const files = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    for (const name of ["cloudbuild.yaml", "cloudbuild-traffic.yaml"]) {
+      const relativePath = `apps/${entry.name}/${name}`;
+      if (existsSync(join(FIXTURE_ROOT, relativePath))) files.push(relativePath);
+    }
+  }
+  return files.sort();
+}
+
+/**
  * Get the gated rows of the app table.
  *
  * @returns {Record<string, unknown>[]} The gated rows.
