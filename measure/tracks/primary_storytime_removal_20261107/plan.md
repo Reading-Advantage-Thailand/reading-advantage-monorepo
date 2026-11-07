@@ -35,7 +35,7 @@ Roles after Green (not plan tasks): the orchestrator runs these roles after the 
 ## Phase 2: Production leaves the route
 
 - [b] 2.1 The next Primary deploy by the team carries the deletion commit. Target: the next Primary deploy. Tests: AC-2.1. deferred:daniel
-- [b] 2.2 After the deploy, request `https://primary.reading-advantage.com/th/st/2/1`. It must not answer with the void Storytime page. Record the command and the status. Tests: AC-2.2. deferred:daniel
+- [b] 2.2 After the deploy, request `https://primary.reading-advantage.com/th/st/2/1`. It must not answer with the void Storytime page. Record the command and the status. Tests: AC-2.2. deferred:pm
 
 ## Phase 3: Closeout
 
