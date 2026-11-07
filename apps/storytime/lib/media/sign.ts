@@ -18,6 +18,9 @@ import { MEDIA_URL_EXPIRES_S } from "../auth/session-policy";
 /** The environment value that names the bucket of the media. */
 export const MEDIA_BASE_ENV = "STORYTIME_MEDIA_BASE";
 
+/** The environment value that names the endpoint of the storage. */
+export const ENDPOINT_ENV = "STORYTIME_STORAGE_ENDPOINT";
+
 /** The environment value that holds the access key of the signer. */
 export const ACCESS_KEY_ENV = "STORYTIME_STORAGE_ACCESS_KEY";
 
@@ -98,7 +101,7 @@ function clientFromEnvironment(bucket: string): SignedMediaClient {
     throw new Error(`the environment holds no ${ACCESS_KEY_ENV} or ${SECRET_KEY_ENV}`);
   }
   return createStorageClient({
-    endpoint: STORAGE_ENDPOINT,
+    endpoint: process.env[ENDPOINT_ENV] ?? STORAGE_ENDPOINT,
     region: STORAGE_REGION,
     bucket,
     accessKeyId,
