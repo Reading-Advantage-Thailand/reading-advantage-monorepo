@@ -15,6 +15,12 @@ set -uo pipefail
 # answer with no Set-Cookie header too, and a failed curl fails a no-cookie row
 # (findings A4-3 and B4-1).
 # The runs together are the final form of AC-1.4.
+# Login phase (P2b.11 F7b): the image now holds the sign-in. The script starts a throwaway
+# Postgres container (the one of phase2b-browser-gate.sh), migrates it, makes the account
+# staff-01 with make-accounts.ts in a temp folder, and signs in with curl. The stranger rows
+# read week_stranger_status=307, stranger_set_cookie=0, and join_status=200. The content rows
+# run with the session cookie of staff-01. The app containers run on the host network so that
+# they reach the database; no password is printed.
 # Run 2 also holds the P3.6 week-404 row: a week outside the shipped range answers 404 with the
 # Thai and English lines of app/[locale]/not-found.tsx (PM 2026-11-05: this script does not
 # check <html lang>; the live lang check is the browser-gate row).
@@ -35,7 +41,8 @@ left_behind_state() {
 }
 # The headers of one GET request (finding F130: the old row read a HEAD request, while the
 # body checks of the same page read GET responses).
-week_page_headers() { curl --silent --show-error -D - -o /dev/null "$1"; }
+# An optional second argument is the Cookie header value of a signed-in session.
+week_page_headers() { curl --silent --show-error -D - -o /dev/null ${2:+-H "Cookie: $2"} "$1"; }
 # True when the headers hold a Set-Cookie field.
 headers_hold_cookie() { printf '%s\n' "$1" | grep -qi '^set-cookie:'; }
 
@@ -45,7 +52,7 @@ headers_hold_cookie() { printf '%s\n' "$1" | grep -qi '^set-cookie:'; }
 # fetch.
 week_page_headers_checked() {
   WEEK_HEADERS_RC=0
-  WEEK_HEADERS="$(week_page_headers "$1")" || WEEK_HEADERS_RC=$?
+  WEEK_HEADERS="$(week_page_headers "$1" "${2:-}")" || WEEK_HEADERS_RC=$?
   if [ "$WEEK_HEADERS_RC" -ne 0 ] || ! printf '%s\n' "$WEEK_HEADERS" | grep -q '^HTTP/'; then
     return 1
   fi
@@ -54,7 +61,7 @@ week_page_headers_checked() {
 # The no-cookie row decision (findings A4-3 and B4-1): the row passes only when the fetch
 # succeeded and the headers hold no Set-Cookie line.
 week_no_cookie_ok() {
-  week_page_headers_checked "$1" || return 1
+  week_page_headers_checked "$1" "${2:-}" || return 1
   ! headers_hold_cookie "$WEEK_HEADERS"
 }
 
@@ -164,6 +171,8 @@ APP="$ROOT/apps/storytime"
 IMAGE="storytime-phase1-local:$(git -C "$ROOT" rev-parse --short HEAD)"
 BUILT=0
 C1=""; C2=""; C3=""
+DB_CONTAINER="storytime-p3smoke-db-$$"
+SESSION_COOKIE=""
 TMP_DIR="$(mktemp -d -t storytime-p3smoke-XXXXXX)"
 FIXTURE="$TMP_DIR/content"
 BROKEN="$TMP_DIR/broken"
@@ -180,14 +189,50 @@ cleanup() {
   for c in "$C1" "$C2" "$C3"; do
     [ -n "$c" ] && "${SMOKE_PODMAN[@]}" rm -f "$c" >/dev/null 2>&1
   done
+  podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT INT TERM
 
+free_port() {
+  node -e 'const s=require("net").createServer();s.listen(0,"127.0.0.1",()=>{console.log(s.address().port);s.close();});'
+}
+
+# Starts one app container on the host network with the database and the storage settings of
+# the smoke. The storage settings only sign URLs (a local computation); no request leaves.
+# $1 is the port; further arguments are podman options. The image is the last argument.
+start_app() {
+  local port="$1"; shift
+  "${SMOKE_PODMAN[@]}" run --detach --network=host --env "PORT=$port" --env HOSTNAME=127.0.0.1 \
+    --env "STORYTIME_DATABASE_URL=$DB_URL" --env STORYTIME_MEDIA_BASE=gs://storytime-app-media \
+    --env STORYTIME_STORAGE_ACCESS_KEY=smoke-access-key --env STORYTIME_STORAGE_SECRET_KEY=smoke-secret-key \
+    "$@" "$IMAGE"
+}
+
+# Prints the HTTP status of one GET; an optional second argument is the Cookie header value.
+status_of() {
+  curl --silent --output /dev/null --write-out '%{http_code}' ${2:+-H "Cookie: $2"} "$1" || true
+}
+
+# Signs one account in and prints the name=value pair of the session cookie, or nothing.
+# $1 is the port, $2 the username, $3 the password.
+# The Origin header is http://localhost:<port>: in the standalone server request.nextUrl.origin
+# follows the HOSTNAME of the server (127.0.0.1 gives localhost), not the Host header, and the
+# sign-in handler compares the Origin header with it (finding F-origin of the 2b.7 log).
+sign_in_cookie() {
+  local port="$1" headers
+  headers="$(curl --silent --show-error -D - -o /dev/null -X POST \
+    -H "Origin: http://localhost:$port" \
+    --data-urlencode "username=$2" --data-urlencode "password=$3" \
+    --data-urlencode "locale=th" --data-urlencode "next=/th/st" \
+    "http://127.0.0.1:$port/api/auth/sign-in")" || return 1
+  printf '%s\n' "$headers" | tr -d '\r' | sed -n 's/^[Ss]et-[Cc]ookie: \(__Host-st_session=[^;]*\).*/\1/p' | head -n 1
+}
+
 wait_ready() {
   local port="$1" status="" tries=0
   while [ "$tries" -lt 90 ]; do
-    status="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://$port/th/st/2/1" 2>/dev/null)" || true
+    status="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://$port/th/join" 2>/dev/null)" || true
     [ "$status" != "000" ] && { printf '%s' "$status"; return 0; }
     sleep 1; tries=$((tries + 1))
   done
@@ -221,14 +266,85 @@ else
   fail "The local image cannot build"
 fi
 
-echo "=== Run 1 (production content): a draft week answers 404 with the reason draft ==="
+echo "=== Start the local database, migrate it, and make the account staff-01 (F7b) ==="
+DB_URL=""
+DB_READY=0
 if [ "$BUILT" -eq 1 ]; then
-  C1="$("${SMOKE_PODMAN[@]}" run --detach --publish 127.0.0.1::8080 "$IMAGE")" || fail "The container cannot start"
+  DB_PORT="$(free_port)"
+  if podman run -d --name "$DB_CONTAINER" -p "127.0.0.1:$DB_PORT:5432" \
+    -e POSTGRES_PASSWORD=storytime -e POSTGRES_DB=storytime \
+    docker.io/library/postgres:16-alpine >/dev/null 2>&1; then
+    pass "The local database container starts"
+    for _ in $(seq 1 60); do
+      if podman exec "$DB_CONTAINER" pg_isready -U postgres -d storytime >/dev/null 2>&1; then DB_READY=1; break; fi
+      sleep 1
+    done
+  else
+    fail "The local database container does not start"
+  fi
+  DB_URL="postgres://postgres:storytime@127.0.0.1:$DB_PORT/storytime"
+fi
+SEED_OK=0
+if [ "$DB_READY" -eq 1 ]; then
+  mkdir -p "$TMP_DIR/accounts"
+  printf 'name,class,role\nStaff One,staff,family\n' > "$TMP_DIR/accounts/accounts.csv"
+  if (cd "$ROOT" && STORYTIME_DATABASE_URL="$DB_URL" pnpm --filter @reading-advantage/db storytime:migrate >"$TMP_DIR/migrate.log" 2>&1) \
+    && (cd "$ROOT" && STORYTIME_DATABASE_URL="$DB_URL" ./node_modules/.bin/tsx apps/storytime/scripts/make-accounts.ts --folder "$TMP_DIR/accounts" --database-url-env STORYTIME_DATABASE_URL >"$TMP_DIR/accounts.log" 2>&1) \
+    && [ -s "$TMP_DIR/accounts/sign-in-cards.csv" ]; then
+    SEED_OK=1
+    pass "The database holds the account staff-01"
+  else
+    fail "The migration or the account script fails"
+  fi
+elif [ "$BUILT" -eq 1 ]; then
+  fail "The local database does not answer"
+fi
+STAFF_PASSWORD=""
+if [ "$SEED_OK" -eq 1 ]; then
+  STAFF_PASSWORD="$(awk -F, '$1=="staff-01" { print $NF }' "$TMP_DIR/accounts/sign-in-cards.csv" | tr -d '\r')"
+fi
+
+echo "=== Run 1 (production content): a stranger gets the sign-in; staff-01 reads the weeks ==="
+if [ "$BUILT" -eq 1 ] && [ "$SEED_OK" -eq 1 ]; then
+  PORT1="$(free_port)"
+  C1="$(start_app "$PORT1")" || fail "The container cannot start"
 fi
 if [ -n "$C1" ]; then
-  PORT1="$("${SMOKE_PODMAN[@]}" port "$C1" 8080/tcp | head -n 1)"
-  wait_ready "$PORT1" >/dev/null 2>&1 || true
-  STATUS_D="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://$PORT1/th/st/2/2")" || true
+  wait_ready "127.0.0.1:$PORT1" >/dev/null 2>&1 || true
+  # F7b: the stranger rows. A week page with no session answers 307 to the sign-in page and
+  # sets no cookie; the "How to join" page answers 200 and sets no cookie.
+  if week_page_headers_checked "http://127.0.0.1:$PORT1/th/st/2/1"; then
+    STRANGER_STATUS="$(printf '%s\n' "$WEEK_HEADERS" | head -n 1 | tr -d '\r' | awk '{print $2}')"
+    STRANGER_COOKIE=0; headers_hold_cookie "$WEEK_HEADERS" && STRANGER_COOKIE=1
+  else
+    STRANGER_STATUS="fetch-failed"; STRANGER_COOKIE=1
+  fi
+  echo "week_stranger_status=$STRANGER_STATUS"
+  echo "stranger_set_cookie=$STRANGER_COOKIE"
+  if [ "$STRANGER_STATUS" = "307" ] && printf '%s\n' "$WEEK_HEADERS" | grep -qi '^location: .*/th/sign-in?next='; then
+    pass "A stranger gets HTTP 307 to the sign-in page"
+  else
+    fail "Expected HTTP 307 to the sign-in page for a stranger; got $STRANGER_STATUS"
+  fi
+  if [ "$STRANGER_COOKIE" -eq 0 ]; then
+    pass "The stranger answer sends no Set-Cookie header"
+  else
+    fail "The stranger answer sends a Set-Cookie header or the fetch failed"
+  fi
+  JOIN_STATUS="$(status_of "http://127.0.0.1:$PORT1/th/join")"
+  echo "join_status=$JOIN_STATUS"
+  if [ "$JOIN_STATUS" = "200" ] && week_no_cookie_ok "http://127.0.0.1:$PORT1/th/join"; then
+    pass "The How to join page answers HTTP 200 with no Set-Cookie header"
+  else
+    fail "Expected HTTP 200 and no Set-Cookie for the How to join page; got $JOIN_STATUS"
+  fi
+  SESSION_COOKIE="$(sign_in_cookie "$PORT1" staff-01 "$STAFF_PASSWORD")"
+  if [ -n "$SESSION_COOKIE" ]; then
+    pass "staff-01 signs in and receives the session cookie"
+  else
+    fail "staff-01 cannot sign in"
+  fi
+  STATUS_D="$(status_of "http://127.0.0.1:$PORT1/th/st/2/2" "$SESSION_COOKIE")"
   if [ "$STATUS_D" = "404" ]; then
     pass "The draft week returns HTTP 404"
   else
@@ -239,7 +355,7 @@ if [ -n "$C1" ]; then
   else
     fail "The container log does not name draft for st2/2"
   fi
-  STATUS_R="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://$PORT1/th/st/2/1")" || true
+  STATUS_R="$(status_of "http://127.0.0.1:$PORT1/th/st/2/1" "$SESSION_COOKIE")"
   if [ "$STATUS_R" = "200" ]; then
     pass "The shipped w01 answers HTTP 200 (ready at the pin 82f88853)"
   else
@@ -289,11 +405,12 @@ fi
 
 echo "=== Run 1b (broken clone mounted): the route answers 404 with the reason missing_picture ==="
 if [ "$BUILT" -eq 1 ] && [ "$BROKEN_RC" -eq 0 ]; then
-  C3="$("${SMOKE_PODMAN[@]}" run --detach --publish 127.0.0.1::8080 --volume "$BROKEN:/fixture:ro" --env STORYTIME_CONTENT_DIR=/fixture "$IMAGE")" || fail "The broken-clone container cannot start"
+  PORT3="$(free_port)"
+  C3="$(start_app "$PORT3" --volume "$BROKEN:/fixture:ro" --env STORYTIME_CONTENT_DIR=/fixture)" || fail "The broken-clone container cannot start"
 fi
 if [ -n "$C3" ]; then
-  PORT3="$("${SMOKE_PODMAN[@]}" port "$C3" 8080/tcp | head -n 1)"
-  STATUS_B="$(wait_ready "$PORT3")" || true
+  wait_ready "127.0.0.1:$PORT3" >/dev/null 2>&1 || true
+  STATUS_B="$(status_of "http://127.0.0.1:$PORT3/th/st/2/1" "$SESSION_COOKIE")"
   if [ "$STATUS_B" = "404" ]; then
     pass "The broken clone returns HTTP 404"
   else
@@ -348,17 +465,18 @@ fi
 
 echo "=== Run 2 (ready review fixture mounted): the week page renders with noindex and no Set-Cookie ==="
 if [ "$BUILT" -eq 1 ] && [ "$FIXTURE_RC" -eq 0 ]; then
-  C2="$("${SMOKE_PODMAN[@]}" run --detach --publish 127.0.0.1::8080 --volume "$FIXTURE:/fixture:ro" --env STORYTIME_CONTENT_DIR=/fixture "$IMAGE")" || fail "The fixture container cannot start"
+  PORT2="$(free_port)"
+  C2="$(start_app "$PORT2" --volume "$FIXTURE:/fixture:ro" --env STORYTIME_CONTENT_DIR=/fixture)" || fail "The fixture container cannot start"
 fi
 if [ -n "$C2" ]; then
-  PORT2="$("${SMOKE_PODMAN[@]}" port "$C2" 8080/tcp | head -n 1)"
-  STATUS2="$(wait_ready "$PORT2")" || true
+  wait_ready "127.0.0.1:$PORT2" >/dev/null 2>&1 || true
+  STATUS2="$(status_of "http://127.0.0.1:$PORT2/th/st/2/1" "$SESSION_COOKIE")"
   if [ "$STATUS2" = "200" ]; then
     pass "The printed route returns HTTP 200 with the fixture"
   else
     fail "Expected HTTP 200 with the fixture; got $STATUS2"
   fi
-  BODY="$(curl --silent "http://$PORT2/th/st/2/1")"
+  BODY="$(curl --silent -H "Cookie: $SESSION_COOKIE" "http://127.0.0.1:$PORT2/th/st/2/1")"
   ROBOTS_META="$(printf '%s' "$BODY" | grep -oi '<meta[^>]*name="robots"[^>]*>' | head -n 1)"
   if printf '%s' "$ROBOTS_META" | grep -qi "noindex"; then
     pass "The week page metadata holds noindex"
@@ -367,7 +485,7 @@ if [ -n "$C2" ]; then
   fi
   # A4-3 and B4-1: the row fails on a failed curl or a status-line-less answer, not only on
   # a Set-Cookie line (the old row passed vacuously on empty headers).
-  if week_no_cookie_ok "http://$PORT2/th/st/2/1"; then
+  if week_no_cookie_ok "http://127.0.0.1:$PORT2/th/st/2/1" "$SESSION_COOKIE"; then
     pass "The week page sends no Set-Cookie header"
   elif [ "$WEEK_HEADERS_RC" -ne 0 ]; then
     fail "The week page sends no Set-Cookie header (curl_rc=$WEEK_HEADERS_RC)"
@@ -376,7 +494,7 @@ if [ -n "$C2" ]; then
   fi
   # B4-1: the locale redirect answer sends no Set-Cookie header either (AC-2.1 middleware;
   # curl without -L shows the redirect answer itself).
-  if week_no_cookie_ok "http://$PORT2/st/2/1" && printf '%s\n' "$WEEK_HEADERS" | head -n 1 | grep -q ' 307'; then
+  if week_no_cookie_ok "http://127.0.0.1:$PORT2/st/2/1" && printf '%s\n' "$WEEK_HEADERS" | head -n 1 | grep -q ' 307'; then
     pass "The locale redirect answers HTTP 307 with no Set-Cookie header"
   elif [ "$WEEK_HEADERS_RC" -ne 0 ]; then
     fail "The locale redirect answers HTTP 307 with no Set-Cookie header (curl_rc=$WEEK_HEADERS_RC)"
@@ -386,26 +504,21 @@ if [ -n "$C2" ]; then
   # P3.6 week-404 row: a week outside the shipped range answers 404 with the Thai and
   # English lines of app/[locale]/not-found.tsx. The live `lang` check is the browser-gate
   # row (PM 2026-11-05): the curl document is the Next.js error shell without `lang`.
-  P404_CODE="$(curl --silent --show-error -o "$TMP_DIR/notfound.html" -w '%{http_code}' "http://$PORT2/th/st/2/99")"
+  P404_CODE="$(curl --silent --show-error -H "Cookie: $SESSION_COOKIE" -o "$TMP_DIR/notfound.html" -w '%{http_code}' "http://127.0.0.1:$PORT2/th/st/2/99")"
   P404_BODY="$(cat "$TMP_DIR/notfound.html")"
   if [ "$P404_CODE" = "404" ]; then
     pass "A week outside the shipped range answers HTTP 404"
   else
     fail "A week outside the shipped range answers HTTP 404; got $P404_CODE"
   fi
-  if printf '%s' "$P404_BODY" | grep -q "ไม่พบหน้านี้"; then
-    pass "The 404 document holds the Thai line of not-found.tsx"
-  else
-    fail "The 404 document holds the Thai line of not-found.tsx"
-  fi
-  if printf '%s' "$P404_BODY" | grep -q "This page is not here"; then
-    pass "The 404 document holds the English line of not-found.tsx"
-  else
-    fail "The 404 document holds the English line of not-found.tsx"
-  fi
+  # The look track (5ab3834bb) moved the 404 text into a client view (not-found-view.tsx), so
+  # the curl document holds none of the Thai or English 404 lines (404_body_bytes was 8183 with
+  # zero hits for the four lines at the first run). The two text rows moved to the live-DOM
+  # browser gates: look-phase1-browser-gate.sh (not-open lines) and phase3-browser-gate.sh
+  # (generic lines). This script keeps the status row and the no-cookie row.
   # B4-1 and F201: the 404 answer sends no Set-Cookie header either; the row reuses
   # week_no_cookie_ok and prints its labeled value.
-  if week_no_cookie_ok "http://$PORT2/th/st/2/99"; then
+  if week_no_cookie_ok "http://127.0.0.1:$PORT2/th/st/2/99" "$SESSION_COOKIE"; then
     echo "404_no_set_cookie=1 (status=$P404_CODE, curl_rc=0)"
     pass "The 404 answer sends no Set-Cookie header"
   elif [ "$WEEK_HEADERS_RC" -ne 0 ]; then
