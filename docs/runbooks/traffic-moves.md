@@ -16,6 +16,9 @@ Daniel's word starts a traffic file. No workflow runs a traffic file.
 - Start a traffic file with `gcloud builds submit --project=<project> --config=<file> .` from
   the repository root at the commit of the push. Add `--substitutions=<name>=<value>` for each
   substitution that the section names.
+- Find the build of a push in the GitHub Actions run `CD — gated apps` of that push. The job
+  `Build <app> with no traffic` prints the Cloud Build id in the log of the step
+  `Submit Cloud Build`. The first 8 characters of that id are the end of the tag.
 - The rollback is a traffic move to the previous revision. It does not undo a database step.
 
 ## primary-advantage
@@ -31,6 +34,16 @@ Steps, in order: `refuse-legacy-db`, `migrate-db`, `doctor-check`, `update-traff
   that Tutor reads.
 - `doctor-check` keeps its argument `--required-migration 0074_primary_help_events`.
 
+Find the tag after a push:
+
+- Read the build id in the GitHub Actions log of the push job (step `Submit Cloud Build`). `_TAG` is `pa-` plus the first 8 characters of this id.
+- Or list the builds of the project and read the newest build id:
+  `gcloud builds list --project=primary-advantage --limit=5 --format='table(id,createTime,status)'`.
+- Check that the revision exists with this tag. Read the tag list of the service:
+  `gcloud run services describe primary-advantage-app --region=asia-southeast1 --project=primary-advantage --format="value(status.traffic.extract(tag).flatten())"`.
+  List the newest revisions with
+  `gcloud run revisions list --service=primary-advantage-app --region=asia-southeast1 --project=primary-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`.
+
 ## accounts
 
 File: `apps/accounts/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitution: `_TAG`,
@@ -41,6 +54,16 @@ Steps, in order: `migrate-company-identity`, `bootstrap-company-identity`,
 `doctor-company-identity`, `bootstrap-production-identity`, `runtime-db-contract`,
 `update-traffic`.
 
+Find the tag after a push:
+
+- Read the build id in the GitHub Actions log of the push job (step `Submit Cloud Build`). `_TAG` is `ac-` plus the first 8 characters of this id.
+- Or list the builds of the project and read the newest build id:
+  `gcloud builds list --project=reading-advantage --limit=5 --format='table(id,createTime,status)'`.
+- Check that the revision exists with this tag. Read the tag list of the service:
+  `gcloud run services describe accounts --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.extract(tag).flatten())"`.
+  List the newest revisions with
+  `gcloud run revisions list --service=accounts --region=asia-southeast1 --project=reading-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`.
+
 ## accounting
 
 File: `apps/accounting/cloudbuild-traffic.yaml`. Project: `reading-advantage`. No substitution:
@@ -49,6 +72,16 @@ the traffic goes to the tag `candidate`, which the latest push owns. The push fi
 old schema.
 
 Steps, in order: `migrate-db`, `doctor-check`, `runtime-db-contract`, `update-traffic`.
+
+Find the tag after a push: the tag is the fixed name `candidate`. No substitution is needed.
+
+- Check which revision holds the tag now:
+  `gcloud run services describe accounting --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.filter(tag='candidate').extract(revisionName).flatten())"`.
+- Limit: every later push moves the tag `candidate` to its new revision. The traffic file sends the
+  traffic to the revision that holds the tag when the file runs, not to a build that a person names.
+  Compare the revision with the newest revision from
+  `gcloud run revisions list --service=accounting --region=asia-southeast1 --project=reading-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`
+  and with the push build in the GitHub Actions log before the run.
 
 ## codecamp-advantage
 
@@ -59,6 +92,16 @@ start against the old schema.
 
 Steps, in order: `migrate-db`, `doctor-check`, `update-traffic`.
 
+Find the tag after a push: the tag is the fixed name `sso-candidate`. No substitution is needed.
+
+- Check which revision holds the tag now:
+  `gcloud run services describe codecamp-advantage --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.filter(tag='sso-candidate').extract(revisionName).flatten())"`.
+- Limit: every later push moves the tag `sso-candidate` to its new revision. The traffic file sends
+  the traffic to the revision that holds the tag when the file runs, not to a build that a person
+  names. Compare the revision with the newest revision from
+  `gcloud run revisions list --service=codecamp-advantage --region=asia-southeast1 --project=reading-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`
+  and with the push build in the GitHub Actions log before the run.
+
 ## marketing
 
 File: `apps/marketing/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitution:
@@ -68,6 +111,16 @@ File: `apps/marketing/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Su
 old schema.
 
 Steps, in order: `migrate-db`, `doctor-check`, `runtime-db-contract`, `update-traffic`.
+
+Find the tag after a push:
+
+- Read the build id in the GitHub Actions log of the push job (step `Submit Cloud Build`). `_TAG` is `c` plus the first segment of this id (the characters before the first dash).
+- Or list the builds of the project and read the newest build id:
+  `gcloud builds list --project=reading-advantage --limit=5 --format='table(id,createTime,status)'`.
+- Check that the revision exists with this tag. Read the tag list of the service:
+  `gcloud run services describe marketing --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.extract(tag).flatten())"`.
+  List the newest revisions with
+  `gcloud run revisions list --service=marketing --region=asia-southeast1 --project=reading-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`.
 
 ## sales-advantage
 
@@ -87,6 +140,35 @@ Steps, in order: `verify-curriculum-backup`, `migrate-db`, `doctor-check`,
 - `capture-legacy-rollback` runs before `verify-repair-verify-legacy-rollback`. The second step
   reads the URL of the tagged `legacy-rollback` revision that the first step writes.
 
+Find the tag and the build after a push:
+
+- `_PUSH_BUILD_ID` is the full Cloud Build id of the push build. Read it in the GitHub Actions log of
+  the push job (step `Submit Cloud Build`), or list the builds:
+  `gcloud builds list --project=reading-advantage --limit=5 --format='table(id,createTime,status)'`.
+- The tags `candidate` and `legacy-rollback` are fixed names. Check which revision holds them now:
+  `gcloud run services describe sales-advantage --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.filter(tag='candidate').extract(revisionName).flatten())"`.
+  List the newest revisions with
+  `gcloud run revisions list --service=sales-advantage --region=asia-southeast1 --project=reading-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`.
+- Limit: the traffic move uses the tag `candidate`, not `_PUSH_BUILD_ID`. A later push moves the tag.
+  The capture step reads the image of `_PUSH_BUILD_ID`, and the traffic move goes to the revision
+  that holds the tag. Check that both name the same push before the run.
+
+Where the other substitutions come from (each is a value of the release attempt; the file holds
+the default `REQUIRED_...` for each, and the step refuses that default):
+
+- `_RELEASE_COMMIT_SHA` is the exact lowercase 40-character commit of the release. It is the
+  commit that `apps/sales-advantage/scripts/create-sales-release-archive.sh` archives. The step
+  `verify-curriculum-backup` rejects any other form.
+- `_CURRICULUM_BACKUP_ID` is the id of an on-demand backup run of the Cloud SQL instance
+  `cloud-sql` in the project `reading-advantage`. The step reads it with the Cloud SQL Admin API.
+  The backup must have the status `SUCCESSFUL` and the type `ON_DEMAND`. Its description must be
+  `sales-curriculum-before-<commit>-not-before-<boundary>`, and it must end after the boundary.
+- `_CURRICULUM_BACKUP_NOT_BEFORE` is the boundary: a UTC RFC3339 time such as
+  `2026-11-07T10:00:00Z`. It is the same value that the description of the backup holds. It must not be in
+  the future, and it must be 1 hour old or less when the step runs
+  (`apps/sales-advantage/scripts/verify-sales-release-inputs.mjs`). A person creates the backup
+  before the run; the traffic file does not create it.
+
 ## Open limits (2026-11-07)
 
 - No traffic file has run. The files are checked as text only.
@@ -97,3 +179,7 @@ Steps, in order: `verify-curriculum-backup`, `migrate-db`, `doctor-check`,
   the script.
 - The workbooks app has no traffic file. A first service of the app must exist before a push can
   build a revision of it.
+- The push files of `marketing` and `sales-advantage` hold the default `REQUIRED_RELEASE_COMMIT_SHA`
+  in `_RELEASE_COMMIT_SHA`, and `cd-apps.yml` passes no substitution. The first steps of both push
+  files (`validate-release-input` and `validate-release-inputs`) check the commit form. A push build
+  of these two apps can fail there until a substitution reaches the build.

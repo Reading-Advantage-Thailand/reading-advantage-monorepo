@@ -7,6 +7,11 @@ revision with `--no-traffic` and a revision tag, and a later traffic step moves 
 
 ## Steps
 
+Note (2026-11-07): after `.github/workflows/cd-apps.yml` lands on master, a push that affects
+`storytime` builds the revision with `--no-traffic` and the tag `st-<first 8 characters of BUILD_ID>`.
+Steps 1 and 2 below apply only when the workflow did not run for the commit. The traffic move
+(step 4) still waits for Daniel's word.
+
 1. Archive the exact commit that Daniel approved. The archive is the build source, so the
    deployed revision matches one commit:
 
