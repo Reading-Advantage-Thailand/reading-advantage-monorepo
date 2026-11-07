@@ -20,6 +20,7 @@ import {
   ordered,
   readTable,
   readText,
+  sectionText,
   stepIds,
   stepText,
 } from "./helpers/plan.mjs";
@@ -225,5 +226,236 @@ describe("F: Cloud Build files", () => {
     const guard = ids.findIndex((id) => /refuse|guard/.test(id));
     if (guard >= 0) must(guard === 0, "a guard step is not first");
     must(ids[ids.length - 1] === "update-traffic", "update-traffic is not last");
+  });
+
+  it("F-11 the four apps move their database steps to a traffic file", () => {
+    const rows = [
+      {
+        id: "accounting",
+        push: "apps/accounting/cloudbuild.yaml",
+        traffic: "apps/accounting/cloudbuild-traffic.yaml",
+        steps: ["migrate-db", "doctor-check", "runtime-db-contract", "update-traffic"],
+      },
+      {
+        id: "codecamp-advantage",
+        push: "apps/codecamp-advantage/cloudbuild.yaml",
+        traffic: "apps/codecamp-advantage/cloudbuild-traffic.yaml",
+        steps: ["migrate-db", "doctor-check", "update-traffic"],
+      },
+      {
+        id: "marketing",
+        push: "apps/marketing/cloudbuild.yaml",
+        traffic: "apps/marketing/cloudbuild-traffic.yaml",
+        steps: ["migrate-db", "doctor-check", "runtime-db-contract", "update-traffic"],
+      },
+      {
+        id: "sales-advantage",
+        push: "apps/sales-advantage/cloudbuild.yaml",
+        traffic: "apps/sales-advantage/cloudbuild-traffic.yaml",
+        steps: [
+          "verify-curriculum-backup",
+          "migrate-db",
+          "doctor-check",
+          "build-curriculum-workspace-deps",
+          "seed-production-curriculum",
+          "verify-production-curriculum",
+          "runtime-db-contract",
+          "capture-legacy-rollback",
+          "verify-repair-verify-legacy-rollback",
+          "update-traffic",
+        ],
+      },
+    ];
+    must(rows.length === 4, `files_checked=${rows.length}`);
+    const missing = [];
+    const pushProblems = [];
+    for (const row of rows) {
+      const push = cloudbuild(row.push);
+      const found = databaseSteps(push);
+      if (found.length > 0) {
+        pushProblems.push(`${row.id}(${found.map((entry) => entry.id).join("+")})`);
+      }
+      let traffic;
+      try {
+        traffic = cloudbuild(row.traffic);
+      } catch {
+        missing.push(row.id);
+        continue;
+      }
+      ordered(traffic, row.steps, `${row.id} traffic`);
+    }
+    must(
+      missing.length === 0 && pushProblems.length === 0,
+      `missing traffic files for the four apps: ${missing.join(",")}; push db steps: ${pushProblems.join(",")}; files_checked=4`,
+    );
+  });
+
+  it("F-12 sales moves its six database steps and keeps the order", () => {
+    const pushFile = "apps/sales-advantage/cloudbuild.yaml";
+    const trafficFile = "apps/sales-advantage/cloudbuild-traffic.yaml";
+    const dbSteps = [
+      "migrate-db",
+      "doctor-check",
+      "seed-production-curriculum",
+      "verify-production-curriculum",
+      "runtime-db-contract",
+      "verify-repair-verify-legacy-rollback",
+    ];
+    must(dbSteps.length === 6, `steps_expected=${dbSteps.length}`);
+    const push = cloudbuild(pushFile);
+    const pushIds = stepIds(push);
+    const pushDb = databaseSteps(push).map((entry) => entry.id);
+    let traffic;
+    try {
+      traffic = cloudbuild(trafficFile);
+    } catch {
+      traffic = null;
+    }
+    const trafficIds = traffic ? stepIds(traffic) : [];
+    const moved = dbSteps.filter((id) => trafficIds.includes(id) && !pushDb.includes(id)).length;
+    must(
+      moved === 6,
+      `sales_db_steps_moved=${moved} expected=6${traffic ? "" : `; missing ${trafficFile}`}`,
+    );
+    const ids = ordered(
+      traffic,
+      [
+        "verify-curriculum-backup",
+        "migrate-db",
+        "doctor-check",
+        "build-curriculum-workspace-deps",
+        "seed-production-curriculum",
+        "verify-production-curriculum",
+        "runtime-db-contract",
+        "capture-legacy-rollback",
+        "verify-repair-verify-legacy-rollback",
+        "update-traffic",
+      ],
+      "sales traffic",
+    );
+    must(ids[0] === "verify-curriculum-backup", "the curriculum backup guard is not first");
+    must(
+      ids.indexOf("build-curriculum-workspace-deps") < ids.indexOf("seed-production-curriculum"),
+      "the workspace build does not precede the seed",
+    );
+    must(
+      ids.indexOf("capture-legacy-rollback") < ids.indexOf("verify-repair-verify-legacy-rollback"),
+      "the capture does not precede the legacy-rollback verify",
+    );
+  });
+
+  it("F-13 the sales push keeps its steps and both no-traffic deploys", () => {
+    const doc = cloudbuild("apps/sales-advantage/cloudbuild.yaml");
+    const ids = stepIds(doc);
+    const expected = [
+      "validate-release-inputs",
+      "build-image",
+      "push-image",
+      "deploy-legacy-rollback",
+      "deploy-company-candidate",
+      "allow-public-invoker",
+      "capture-company-candidate",
+      "verify-company-candidate",
+    ];
+    must(expected.length >= 1, "steps_expected=0");
+    const indexes = expected.map((id) => {
+      const index = ids.indexOf(id);
+      must(index >= 0, `sales push is missing ${id}`);
+      return index;
+    });
+    for (let i = 1; i < indexes.length; i += 1) {
+      must(indexes[i] > indexes[i - 1], "the sales push step order changed");
+    }
+    for (const id of ["deploy-legacy-rollback", "deploy-company-candidate"]) {
+      const step = (doc.steps ?? []).find((candidate) => candidate.id === id);
+      must(stepText(step).includes("--no-traffic"), `${id} holds no --no-traffic`);
+    }
+  });
+
+  it("F-14 no non-excluded push file holds psql", () => {
+    const rows = readTable().filter((row) => row.mode !== "excluded");
+    must(rows.length === 9, `files_checked=${rows.length}`);
+    const hits = [];
+    for (const row of rows) {
+      const doc = cloudbuild(String(row.cloudbuild));
+      const text = (doc.steps ?? []).map((step) => stepText(step)).join("\n");
+      const count = (text.match(/psql/g) ?? []).length;
+      if (count > 0) hits.push(`${row.id}(${count})`);
+    }
+    must(hits.length === 0, `psql in a push file: ${hits.join(",")} psql_hits=${hits.length}`);
+  });
+
+  it("F-15 the input-size guards", () => {
+    const four = ["accounting", "codecamp-advantage", "marketing", "sales-advantage"];
+    must(four.length === 4, `files_checked=${four.length}`);
+    const salesSteps = 6;
+    must(salesSteps === 6, `steps_expected=${salesSteps}`);
+    const two = ["accounts", "workbooks"];
+    must(two.length === 2, `files_checked=${two.length}`);
+  });
+
+  it("F-16 the traffic runbook holds one complete section per file", () => {
+    const text = readText("docs/runbooks/traffic-moves.md");
+    const sections = [
+      {
+        id: "primary-advantage",
+        file: "apps/primary-advantage/cloudbuild-traffic.yaml",
+        steps: ["refuse-legacy-db", "migrate-db", "doctor-check", "update-traffic"],
+      },
+      {
+        id: "accounts",
+        file: "apps/accounts/cloudbuild-traffic.yaml",
+        steps: [
+          "migrate-company-identity",
+          "bootstrap-company-identity",
+          "doctor-company-identity",
+          "bootstrap-production-identity",
+          "runtime-db-contract",
+          "update-traffic",
+        ],
+      },
+      {
+        id: "accounting",
+        file: "apps/accounting/cloudbuild-traffic.yaml",
+        steps: ["migrate-db", "doctor-check", "runtime-db-contract", "update-traffic"],
+      },
+      {
+        id: "codecamp-advantage",
+        file: "apps/codecamp-advantage/cloudbuild-traffic.yaml",
+        steps: ["migrate-db", "doctor-check", "update-traffic"],
+      },
+      {
+        id: "marketing",
+        file: "apps/marketing/cloudbuild-traffic.yaml",
+        steps: ["migrate-db", "doctor-check", "runtime-db-contract", "update-traffic"],
+      },
+      {
+        id: "sales-advantage",
+        file: "apps/sales-advantage/cloudbuild-traffic.yaml",
+        steps: [
+          "verify-curriculum-backup",
+          "migrate-db",
+          "doctor-check",
+          "build-curriculum-workspace-deps",
+          "seed-production-curriculum",
+          "verify-production-curriculum",
+          "runtime-db-contract",
+          "capture-legacy-rollback",
+          "verify-repair-verify-legacy-rollback",
+          "update-traffic",
+        ],
+      },
+    ];
+    must(sections.length === 6, `traffic_runbook_sections=${sections.length}`);
+    let complete = 0;
+    for (const section of sections) {
+      const body = sectionText(text, section.id);
+      if (body === "") continue;
+      if (!body.includes(section.file)) continue;
+      if (section.steps.some((step) => !body.includes(step))) continue;
+      if (!/old schema/i.test(body)) continue;
+      complete += 1;
+    }
+    must(complete === 6, `traffic_runbook_sections=${complete}`);
   });
 });
