@@ -463,6 +463,36 @@ describe("F: Cloud Build files", () => {
     must(complete === 6, `traffic_runbook_sections=${complete}`);
   });
 
+  it("F-19 the sales traffic file names the pushed build in the capture and the move", () => {
+    const file = "apps/sales-advantage/cloudbuild-traffic.yaml";
+    const doc = cloudbuild(file);
+    const steps = doc.steps ?? [];
+    must(steps.length >= 2, `steps_checked=${steps.length}`);
+    const capture = steps.find((step) => String(step.id ?? "") === "capture-legacy-rollback");
+    const move = steps.find((step) => String(step.id ?? "") === "update-traffic");
+    must(capture, "capture-legacy-rollback step missing");
+    must(move, "update-traffic step missing");
+    const captureText = stepText(capture);
+    const moveText = stepText(move);
+    const image =
+      "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:${_PUSH_BUILD_ID}";
+    const record = "/workspace/.sales-legacy-rollback";
+    const checks = [
+      { name: "capture-image", ok: captureText.includes(image) },
+      { name: "capture-record", ok: captureText.includes(record) },
+      { name: "move-to-revisions", ok: moveText.includes("--to-revisions=") },
+      { name: "move-revision", ok: moveText.includes(`${record}.revision`) },
+      { name: "move-no-tag", ok: !moveText.includes("--to-tags=") },
+    ];
+    must(checks.length === 5, `sales_build_identity_checks=${checks.length}`);
+    const failed = checks.filter((check) => !check.ok).map((check) => check.name);
+    const identity = failed.length === 0 ? 1 : 0;
+    must(
+      identity === 1,
+      `sales_build_identity=${identity} failed=${failed.join(",")} steps_checked=${steps.length}`,
+    );
+  });
+
   it("F-17 no push or traffic file holds an invalid substitution", () => {
     const files = pushAndTrafficFiles();
     must(files.length === 16, `files_checked=${files.length}`);
