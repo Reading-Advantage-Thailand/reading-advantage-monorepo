@@ -29,19 +29,26 @@ steps:
       - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID"
 
   # Step 3: Deploy the new revision with no traffic and a revision tag for the tagged check.
+  # The tag is st- plus the first 8 characters of BUILD_ID: the tag and the service name together
+  # must stay within 46 characters (build 4907d929 failed with st- plus the full 36-character id).
+  # Bash slices the build id (a Cloud Build substitution cannot), so the step passes BUILD_ID in env.
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-cloudrun"
+    entrypoint: "bash"
+    env:
+      - "BUILD_ID=$BUILD_ID"
     args:
-      - "run"
-      - "deploy"
-      - "storytime-app"
-      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID"
-      - "--project=primary-advantage"
-      - "--region=asia-southeast1"
-      - "--platform=managed"
-      - "--allow-unauthenticated"
-      - "--no-traffic"
-      - "--tag=st-$BUILD_ID"
+      - "-c"
+      - |
+        set -euo pipefail
+        gcloud run deploy storytime-app \
+          --image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID \
+          --project=primary-advantage \
+          --region=asia-southeast1 \
+          --platform=managed \
+          --allow-unauthenticated \
+          --no-traffic \
+          --tag=st-${BUILD_ID:0:8}
 
 options:
   logging: CLOUD_LOGGING_ONLY
