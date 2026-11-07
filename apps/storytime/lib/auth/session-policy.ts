@@ -52,10 +52,9 @@ export function sessionCapForRole(role: string): number {
 /**
  * Reports whether a session is still open.
  *
- * The session ends at its expiry time. The Red contract of task 2b.2 holds a session whose
- * expiry passed one second ago, so the rule keeps the second that follows the expiry and ends
- * the session from the next second. The expiry of a Storytime session sits a year ahead, so the
- * second changes nothing for a family.
+ * The session ends at its expiry time, so a session is open only while the current time is
+ * before the expiry. A disabled account has no session, so the company can end the sessions of
+ * one account at any time.
  * @param session The session row and the disabled flag of its account.
  * @param now The current time.
  * @returns `true` when the session is open and the account is not disabled.
@@ -65,9 +64,7 @@ export function isSessionActive(
   now: Date,
 ): boolean {
   if (session.disabled === true) return false;
-  const remainingMs = session.expiresAt.getTime() - now.getTime();
-  if (remainingMs === 0) return false;
-  return remainingMs >= -1000;
+  return session.expiresAt.getTime() > now.getTime();
 }
 
 /**
