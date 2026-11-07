@@ -71,6 +71,10 @@ export interface ContractStore {
     ip?: string;
     now: Date;
   }): Promise<void>;
+  listAccountsForAudit(): Promise<{
+    accounts: Array<{ id: string; username: string }>;
+    auditedAccountIds: string[];
+  }>;
 }
 
 /** The pinned Argon2id hash prefix of every Storytime password. */
@@ -331,6 +335,47 @@ export function storeContractSuite(
           now: new Date(base.getTime() + 1000),
         }),
       ).resolves.toBeUndefined();
+    });
+
+    it("lists every account and the ids that hold an account_created event", async () => {
+      const store = await makeStore();
+      const first = await store.createAccount({
+        username: "staff-11",
+        passwordHash: HASH,
+        role: "family",
+        now: base,
+      });
+      const second = await store.createAccount({
+        username: "staff-12",
+        passwordHash: HASH,
+        role: "teacher",
+        now: new Date(base.getTime() + 1000),
+      });
+      const empty = await store.listAccountsForAudit();
+      expect(empty.accounts.map((account) => account.username).sort()).toEqual([
+        "staff-11",
+        "staff-12",
+      ]);
+      expect(empty.auditedAccountIds, "no account holds the event yet").toEqual([]);
+
+      await store.insertAuditEvent({
+        action: "account_created",
+        accountId: first.id,
+        username: first.username,
+        now: new Date(base.getTime() + 2000),
+      });
+      await store.insertAuditEvent({
+        action: "sign_in_success",
+        accountId: second.id,
+        username: second.username,
+        now: new Date(base.getTime() + 3000),
+      });
+      const read = await store.listAccountsForAudit();
+      expect(read.accounts.map((account) => account.username).sort()).toEqual([
+        "staff-11",
+        "staff-12",
+      ]);
+      expect(read.auditedAccountIds, "only the account_created event counts").toEqual([first.id]);
     });
   });
 }

@@ -104,6 +104,14 @@ export interface FakeStore {
     ip?: string;
     now: Date;
   }): Promise<void>;
+  /**
+   * Lists every account and the ids that already hold an `account_created` event.
+   * @returns The accounts and the ids of the accounts that hold the event.
+   */
+  listAccountsForAudit(): Promise<{
+    accounts: Array<{ id: string; username: string }>;
+    auditedAccountIds: string[];
+  }>;
 }
 
 /**
@@ -232,6 +240,19 @@ export function createFakeStore(seed: FakeStoreSeed = {}): FakeStore {
     async insertAuditEvent(event) {
       auditSeq += 1;
       auditEvents.push({ id: auditSeq, ...event });
+    },
+    async listAccountsForAudit() {
+      const auditedAccountIds = auditEvents
+        .filter((event) => event.action === "account_created")
+        .map((event) => event.accountId)
+        .filter((id): id is string => id !== undefined);
+      return {
+        accounts: accounts.map((account) => ({
+          id: account.id,
+          username: account.username,
+        })),
+        auditedAccountIds,
+      };
     },
   };
 

@@ -19,6 +19,9 @@ export type StorytimeDb = PgDatabase<PgQueryResultHKT>;
 /** The account roles a Storytime account can hold. */
 export const storytimeRoleSchema = z.enum(["family", "class", "teacher"]);
 
+/** The audit action of one account creation. */
+export const ACCOUNT_CREATED_ACTION = "account_created";
+
 /** The id shape of a Storytime account. A value of another shape names no account. */
 const accountIdSchema = z.string().uuid();
 
@@ -93,6 +96,14 @@ export interface StorytimeStore {
     ): Promise<StorytimeRateLimitBucket>;
   };
   insertAuditEvent(event: StorytimeAuditEvent): Promise<void>;
+  /**
+   * Lists every account and the ids that already hold an `account_created` event.
+   * @returns The accounts and the ids of the accounts that hold the event.
+   */
+  listAccountsForAudit(): Promise<{
+    accounts: Array<{ id: string; username: string }>;
+    auditedAccountIds: string[];
+  }>;
 }
 
 /**
@@ -318,6 +329,24 @@ export function createStorytimeStore(db: StorytimeDb): StorytimeStore {
         ip: event.ip,
         createdAt: event.now,
       });
+    },
+
+    async listAccountsForAudit() {
+      const accounts = await db
+        .select({
+          id: storytimeAccounts.id,
+          username: storytimeAccounts.username,
+        })
+        .from(storytimeAccounts)
+        .orderBy(asc(storytimeAccounts.createdAt), asc(storytimeAccounts.id));
+      const audited = await db
+        .select({ accountId: storytimeAuditEvents.accountId })
+        .from(storytimeAuditEvents)
+        .where(eq(storytimeAuditEvents.action, ACCOUNT_CREATED_ACTION));
+      const auditedAccountIds = audited
+        .map((row) => row.accountId)
+        .filter((id): id is string => id !== null);
+      return { accounts, auditedAccountIds };
     },
   };
 }

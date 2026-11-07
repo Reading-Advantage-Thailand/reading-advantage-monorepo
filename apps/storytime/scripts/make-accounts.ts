@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from
 import { basename, dirname, resolve } from "node:path";
 import { hashPassword, verifyPassword } from "@reading-advantage/auth/password";
 import {
+  ACCOUNT_CREATED_ACTION,
   createStorytimeRuntimeStore,
   type StorytimeStore,
 } from "@reading-advantage/backend/storytime-access";
@@ -64,6 +65,8 @@ export interface AccountOptions {
   cardsName: string;
   /** The name of the environment variable that holds the database URL. */
   databaseUrlEnv: string;
+  /** The reason of the audit backfill, or `null` when the run creates accounts. */
+  backfillAuditReason: string | null;
 }
 
 /**
@@ -78,6 +81,7 @@ export function parseOptions(argv: string[]): AccountOptions | null {
     csvName: DEFAULT_CSV_NAME,
     cardsName: DEFAULT_CARDS_NAME,
     databaseUrlEnv: DEFAULT_DATABASE_URL_ENV,
+    backfillAuditReason: null,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
@@ -91,9 +95,12 @@ export function parseOptions(argv: string[]): AccountOptions | null {
     else if (flag === "--csv") options.csvName = value;
     else if (flag === "--cards") options.cardsName = value;
     else if (flag === "--database-url-env") options.databaseUrlEnv = value;
+    else if (flag === "--backfill-audit") options.backfillAuditReason = value;
     else throw new Error(`unknown option ${flag}`);
   }
-  if (options.folder === "") throw new Error("the option --folder needs a value");
+  if (options.folder === "" && options.backfillAuditReason === null) {
+    throw new Error("the option --folder needs a value");
+  }
   return options;
 }
 
@@ -262,6 +269,57 @@ function writeCards(folder: string, name: string, cards: Array<AccountRow & { pa
 }
 
 /**
+ * Appends the audit event of one account creation.
+ *
+ * The event names the account and its username, and it holds no password and no hash.
+ * @param store The store of the run.
+ * @param accountId The id of the new account.
+ * @param username The username of the new account.
+ * @param reason The reason of the event.
+ */
+async function appendAccountCreated(
+  store: StorytimeStore,
+  accountId: string,
+  username: string,
+  reason: string,
+): Promise<void> {
+  await store.insertAuditEvent({
+    action: ACCOUNT_CREATED_ACTION,
+    accountId,
+    username,
+    reason,
+    now: new Date(),
+  });
+}
+
+/**
+ * Appends the missing audit events of the accounts.
+ *
+ * The run reads every account and the ids that already hold an `account_created` event, and it
+ * appends one event for each account that holds none. It changes no account, no hash, and no
+ * session, so a second run appends nothing.
+ * @param store The store of the run.
+ * @param reason The reason of the backfill.
+ * @returns The exit code of the run.
+ */
+async function backfillAudit(store: StorytimeStore, reason: string): Promise<number> {
+  const read = await store.listAccountsForAudit();
+  const audited = new Set(read.auditedAccountIds);
+  let backfilled = 0;
+  let present = 0;
+  for (const account of read.accounts) {
+    if (audited.has(account.id)) {
+      present += 1;
+      continue;
+    }
+    await appendAccountCreated(store, account.id, account.username, `backfill: ${reason}`);
+    backfilled += 1;
+  }
+  console.log(`audit_backfilled=${backfilled} audit_present=${present}`);
+  return 0;
+}
+
+/**
  * Runs the account script.
  *
  * The script writes the card list only for the accounts it creates. An account that already
@@ -285,7 +343,18 @@ export async function main(
   }
   if (options === null) {
     console.log("usage: make-accounts.ts --folder <outside folder> [--csv <name>] [--cards <name>] [--database-url-env <name>]");
+    console.log("usage: make-accounts.ts --backfill-audit <reason> [--database-url-env <name>]");
     return 0;
+  }
+
+  const databaseUrl = env[options.databaseUrlEnv];
+  if (!databaseUrl) {
+    console.error(`make-accounts: the environment holds no ${options.databaseUrlEnv}`);
+    return 1;
+  }
+
+  if (options.backfillAuditReason !== null) {
+    return backfillAudit(makeStore(databaseUrl), options.backfillAuditReason);
   }
 
   const folder = resolve(options.folder);
@@ -308,12 +377,6 @@ export async function main(
     return 1;
   }
 
-  const databaseUrl = env[options.databaseUrlEnv];
-  if (!databaseUrl) {
-    console.error(`make-accounts: the environment holds no ${options.databaseUrlEnv}`);
-    return 1;
-  }
-
   mkdirSync(folder, { recursive: true, mode: 0o700 });
   const store = makeStore(databaseUrl);
   const cards: Array<AccountRow & { password: string }> = [];
@@ -327,12 +390,13 @@ export async function main(
     }
     const password = generatePassword();
     const passwordHash = await hashPassword(password);
-    await store.createAccount({
+    const account = await store.createAccount({
       username: row.username,
       passwordHash,
       role: row.role,
       now: new Date(),
     });
+    await appendAccountCreated(store, account.id, account.username, "created");
     cards.push({ ...row, password });
     created += 1;
   }
