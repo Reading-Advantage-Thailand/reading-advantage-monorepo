@@ -33,15 +33,15 @@ PM order (WHAT):
 | App | File | Cloud Run service | Project | Traffic in the file | Choice for this track |
 |---|---|---|---|---|---|
 | www-reading-advantage | `cloudbuild.yaml` | `www-reading-advantage` | `$PROJECT_ID` (secret `GCP_PROJECT_ID`) | direct | Direct deploy (PM order); only when www is affected |
-| primary-advantage | `cloudbuild.yaml` | `primary-advantage-app` | `${_PROJECT_ID}` = `primary-advantage` | direct; the build runs migrations before the deploy | Gated: `--no-traffic` + tag (see Q2 on migrations) |
+| primary-advantage | `cloudbuild.yaml` | `primary-advantage-app` | `${_PROJECT_ID}` = `primary-advantage` | direct; the build runs migrations before the deploy | Gated: `--no-traffic` + tag, with no migrate step on the push (D1) |
 | storytime | `cloudbuild.yaml` | `storytime-app` | `primary-advantage` (fixed in the file) | `--no-traffic --tag=st-$BUILD_ID` | Gated; fix the tag length (FR-4) |
 | accounting | `cloudbuild.yaml` | `accounting` | `$PROJECT_ID` | `--no-traffic --tag=candidate` when the service exists | Gated |
 | codecamp-advantage | `cloudbuild.yaml` | `codecamp-advantage` | `$PROJECT_ID` | `--tag=sso-candidate --no-traffic` | Gated |
 | marketing | `cloudbuild.yaml` | `marketing` | `$PROJECT_ID` | `--no-traffic` with a candidate tag | Gated |
 | sales-advantage | `cloudbuild.yaml` | `sales-advantage` | `$PROJECT_ID` | `--no-traffic`, tags `legacy-rollback` and `candidate` | Gated |
-| accounts | `cloudbuild.yaml` | `accounts` | `$PROJECT_ID` | direct | Gated: the CD call adds `--no-traffic` and a tag (see Q3) |
-| workbooks | `cloudbuild.yaml` | `workbooks` | `$PROJECT_ID` | direct | Gated (see Q3) |
-| reading-advantage | `cloudbuild.yaml` | `reading-advantage-web` | `$PROJECT_ID` | direct; the file builds `web/` of the legacy layout | Excluded from CD until its file matches the monorepo layout (see Q4) |
+| accounts | `cloudbuild.yaml` | `accounts` | `$PROJECT_ID` | direct | Gated: `--no-traffic` + tag (D2) |
+| workbooks | `cloudbuild.yaml` | `workbooks` | `$PROJECT_ID` | direct | Gated: `--no-traffic` + tag (D2) |
+| reading-advantage | `cloudbuild.yaml` | `reading-advantage-web` | `$PROJECT_ID` | direct; the file builds `web/` of the legacy layout | Excluded from CD until its file matches the monorepo layout (D3) |
 
 **One-off Cloud Build files, excluded from CD:** `apps/primary-advantage/cloudbuild-backfill.yaml` (untracked), `cloudbuild-catalogue.yaml`, `cloudbuild-etl.yaml`, and `apps/sales-advantage/cloudbuild.continue-f5063222.yaml`. They run by hand with a named context.
 
@@ -64,7 +64,7 @@ Evidence classes: **automated**, **person-checked**, **owner-passed**.
 
 - One script answers: "which apps does this commit range affect?" Input: a base SHA and a head SHA. Output: a list of app names, as JSON. It uses the workspace graph (turbo `--filter` over the range, or an equal graph read) with `fetch-depth: 0` and `github.event.before`.
 - An app is affected when a file in its folder changes, when a workspace package that it depends on (directly or through other packages) changes, or when a lockfile entry in its importer or in its resolved dependency set changes.
-- A change to `measure/`, `docs/`, `.github/workflows/` (outside the workflow under test), or another app affects no other app. A change to the root `package.json`, `pnpm-workspace.yaml`, or `turbo.json` is a global change; the script lists which root keys count as global (see Q5).
+- A change to `measure/`, `docs/`, `.github/workflows/` (outside the workflow under test), or another app affects no other app. A change to the root `package.json`, `pnpm-workspace.yaml`, or `turbo.json` is a global change; the script lists which root keys count as global (D4).
 - A new branch push (all-zero `before`) falls back to the merge base with `origin/master`. A missing base stops the script with an error. The script never answers "no app" when it cannot read the range.
 
 Acceptance:
@@ -97,7 +97,7 @@ Acceptance:
 
 - `ci.yml` runs the FR-1 script. It checks the affected apps with `turbo run build lint check-types test --filter=<app>...`. Repository-wide guards that do not depend on an app (config drift, architecture checks, tenant guards) keep running on every change that touches their inputs.
 - A change that affects no app runs only the repository-wide guards that its paths trigger.
-- The red state of CI since 2026-09-24 is a fact to record, not to fix here. This track records the first failing step of the latest run in the report (Q6).
+- The red state of CI since 2026-09-24 is a fact to record, not to fix here. This track records the first failing step of the latest run in the report (D5).
 
 Acceptance:
 
@@ -147,16 +147,24 @@ Acceptance:
 
 - A traffic move for any app.
 - A change to a Cloud Build trigger or to the legacy repository.
-- The fix of the red CI steps (Q6), except where a step blocks the affected-app run.
+- The fix of the red CI steps (D5), except where a step blocks the affected-app run.
 - A change in the app code. Build config files change only for the tag rule (storytime) and the table.
 
-## 6. Open questions
+## 6. PM decisions (2026-11-07)
 
-| # | Question | Default |
-|---|---|---|
-| Q1 | One shared workflow or one file for each app? | One `cd-apps.yml` for the gated apps and the existing www file. The table drives the jobs. |
-| Q2 | The Primary build runs database migrations before the deploy. A `--no-traffic` revision still runs them on a push. | Keep the migrate step. Migrations must stay backward compatible with the live revision. Record the risk in the report. Daniel decides if he wants the Primary job to wait for his word. |
-| Q3 | `accounts` and `workbooks` deploy direct today. | The CD call passes `--no-traffic` and a tag through a substitution. The file changes only if the substitution cannot do it. |
-| Q4 | `reading-advantage` builds `web/` of the legacy layout. | Excluded from CD until the PM names its monorepo build. |
-| Q5 | Which root keys of `package.json`, `pnpm-workspace.yaml`, and `turbo.json` count as global? | Read the diff by key: `packageManager`, `overrides`, and `catalog` entries count for the apps that use them; other keys are global to all apps. |
-| Q6 | CI has been red since 2026-09-24. | Record the first failing step. Make ci.yml run the affected apps; do not fix old failures in this track. |
+The PM decided the six open questions of the first draft on 2026-11-07. Each decision binds this track.
+
+| # | Decision (PM, 2026-11-07) |
+|---|---|
+| D1 | A push builds and deploys Primary with `--no-traffic` and a tag, with NO migrate step. The migrate step runs only inside the manual traffic step, on Daniel's word. Until then the new revision must start against the old schema. The manual traffic step is a separate Cloud Build file, `apps/primary-advantage/cloudbuild-traffic.yaml`, that Daniel's word starts by hand. It runs the migrate steps first and then the traffic move. No workflow runs it. The migrate steps move out of the push file `apps/primary-advantage/cloudbuild.yaml`. |
+| D2 | `accounts` and `workbooks` become `--no-traffic` plus a tag. |
+| D3 | `reading-advantage` stays out of CD until its monorepo build exists. |
+| D4 | `overrides` and `catalog` entries count only for the apps that use them. Every other root key of `package.json`, `pnpm-workspace.yaml`, and `turbo.json` is global. |
+| D5 | Record the first failing step of `ci.yml` only. The PM opens a separate small track later to make `ci.yml` green for the affected apps. |
+| D6 | Keep `cd-www-reading-advantage.yml` and add one table-driven `cd-apps.yml`. Fold the storytime tag-length fix into this track: the tag `st-$BUILD_ID` and the service name together are 52 characters and the limit is 46. |
+
+Acceptance for D1 (added to FR-2):
+
+- AC-2.6 (automated) A test reads `apps/primary-advantage/cloudbuild.yaml` (the push path). It holds no migrate step (no `db:migrate`, `drizzle-kit migrate`, or migration doctor step). The test asserts that the file has steps before it checks a property of each step.
+- AC-2.7 (automated) A test reads `apps/primary-advantage/cloudbuild-traffic.yaml`. Its migrate step comes before its traffic move step (step order check). Both steps exist.
+- AC-2.8 (automated) No workflow file references `cloudbuild-traffic.yaml`. Only a person starts it.
