@@ -47,7 +47,8 @@ describe("Phase 3 Storytime song UI", () => {
     const week = cloneWeek();
     const { media } = await renderSong(week);
     expect(media).toHaveAttribute("poster", expect.stringContaining(week.song!.poster!));
-    expect(media).toHaveAttribute("preload", "none");
+    // PM decision 2026-11-07 (plan task 1.3): the song video warms its metadata, so iOS shows a frame.
+    expect(media).toHaveAttribute("preload", "metadata");
     expect(play).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: /play/i }));
     expect(play).toHaveBeenCalledTimes(1);
