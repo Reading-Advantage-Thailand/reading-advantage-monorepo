@@ -414,8 +414,10 @@ describe("the account script (AC-4.8)", () => {
     const parent = tempFolder();
     const runFolder = join(parent, "run");
     mkdirSync(runFolder);
+    mkdirSync(join(parent, "other"));
     writeFileSync(join(runFolder, "accounts.csv"), CSV);
-    const dotted = join(parent, "other", "..", "run");
+    const dotted = `${parent}/other/../run`;
+    expect(dotted.split("/"), "the argument keeps the raw .. segment").toContain("..");
     const store = createFakeStore();
     const code = await run(["--folder", dotted], store);
     console.log(`accounts_inserted=${store.accounts.length}`);
