@@ -294,10 +294,11 @@ describe("adversarial highlight windows helper (X8)", () => {
   });
 
   it("X8b touching windows give the boundary time exactly one owner", () => {
-    const windows = highlightWindows([
+    const words = [
       { word: "ab", start: 0, end: 0.5 },
       { word: "cd", start: 0.5, end: 1 },
-    ]);
+    ];
+    const windows = highlightWindows(words);
     const owners = windows.filter((window) => 0.5 >= window.start && 0.5 < window.end);
     expect(owners, "the boundary time must light exactly one word").toHaveLength(1);
     expect(owners[0]!.start, "the second word owns its own start").toBe(0.5);
