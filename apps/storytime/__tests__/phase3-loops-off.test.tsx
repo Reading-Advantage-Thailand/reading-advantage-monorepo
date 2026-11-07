@@ -245,6 +245,9 @@ describe("Phase 3 Storytime loops-off rule", () => {
     const firstImage = container.querySelector("img")?.getAttribute("src");
     expect(firstImage, "the reader must show the picture of the first page").toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: readerLabels.nextPage }));
+    // AC-1.5 (look track): a press on Next keeps the old page until the new picture loads, so the
+    // test sends the load event of the new picture, the second img of the reader.
+    fireEvent.load(container.querySelectorAll("img")[1]!);
     expect(
       container.querySelector("img")?.getAttribute("src"),
       "the reader must turn the page",

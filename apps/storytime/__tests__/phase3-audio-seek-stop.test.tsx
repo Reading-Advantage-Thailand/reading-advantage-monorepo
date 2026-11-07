@@ -92,6 +92,9 @@ describe("the reader seek waits for the metadata (F122)", () => {
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     const { audio, book } = await renderReader();
     fireEvent.click(screen.getByRole("button", { name: labels.nextPage }));
+    // AC-1.5 (look track): a press on Next keeps page one until the new picture loads, so the
+    // test sends the load event of the new picture, the second img of the reader.
+    fireEvent.load(document.querySelectorAll("img")[1]!);
     const sentences = book.audio.sentences.filter((entry) => (entry.page ?? 1) === 2);
     expect(sentences, "page two must hold timed sentences").not.toHaveLength(0);
     const target = Math.max(0, sentences[0]!.startTime - 0.05);

@@ -41,10 +41,17 @@ export interface ReadAlongPassageProps {
     onTranslate: () => void,
   ) => ReactNode;
   /**
-   * Raises the tap-target floor of the word spans to 44 px (the Phase 3 gate row
-   * `tap_target_min_px_player`). The default keeps the compact article layout of the other hosts.
+   * Gives each word span a 44 px tap target through an expanded hit area (the Phase 3 gate row
+   * `tap_target_min_px_player`). The hit area is a pseudo-element, so it changes no layout and the
+   * gap between two words stays the gap of the text. The default keeps the compact article layout
+   * of the other hosts.
    */
   tapTargetFloor?: boolean;
+  /**
+   * Tells whether the word with this audio text is a tap target. A word that is not a target has
+   * no pointer cursor, no tab stop, and no tap. Without this function every word is a target.
+   */
+  wordIsTarget?: (audioWord: string) => boolean;
 }
 
 interface SentenceViewProps {
@@ -59,7 +66,18 @@ interface SentenceViewProps {
   tapTargetFloor: boolean;
   currentSentenceRef?: Ref<HTMLSpanElement>;
   onWordTap?: (sentenceIndex: number, audioWordIndex: number) => void;
+  /** The audio text of each word of the sentence, in audio order. */
+  audioWords: string[];
+  /** Tells whether the word with this audio text is a tap target; `undefined` means all are. */
+  wordIsTarget?: (audioWord: string) => boolean;
 }
+
+/**
+ * The expanded 44 px hit area of a word: a pseudo-element that adds no layout width. Every word
+ * of a floor passage carries it, so the touch size does not change when a word becomes a target.
+ */
+const HIT_AREA_CLASSES =
+  "relative before:absolute before:inset-x-[-0.25rem] before:inset-y-[-0.5rem] before:content-['']";
 
 /** One sentence: the band, and the words with the mark. */
 const SentenceView = memo(function SentenceView({
@@ -72,6 +90,8 @@ const SentenceView = memo(function SentenceView({
   tapTargetFloor,
   currentSentenceRef,
   onWordTap,
+  audioWords,
+  wordIsTarget,
 }: SentenceViewProps) {
   const interactive = active && !!onWordTap;
   return (
@@ -106,6 +126,9 @@ const SentenceView = memo(function SentenceView({
         : {})}
     >
       {display.words.map((word) => {
+        const audioIndex = maps.displayToAudio[word.index] ?? -1;
+        const audioWord = audioIndex >= 0 ? audioWords[audioIndex] : undefined;
+        const target = !wordIsTarget || (audioWord !== undefined && wordIsTarget(audioWord));
         const tap = (e: MouseEvent) => {
           e.stopPropagation();
           onWordTap?.(index, maps.displayToAudio[word.index] ?? -1);
@@ -133,14 +156,18 @@ const SentenceView = memo(function SentenceView({
               data-word={word.index}
               aria-current={active && word.index === markedWord ? "true" : undefined}
               className={cn(
-                "cursor-pointer rounded transition-colors duration-150 motion-reduce:transition-none",
-                tapTargetFloor && "inline-flex min-h-[44px] min-w-[44px] items-center justify-center",
-                active && word.index === markedWord ? HIGHLIGHT_CLASSES.currentWord : HIGHLIGHT_CLASSES.hoverWord,
+                "rounded transition-colors duration-150 motion-reduce:transition-none",
+                target && "cursor-pointer",
+                tapTargetFloor && HIT_AREA_CLASSES,
+                active && word.index === markedWord
+                  ? HIGHLIGHT_CLASSES.currentWord
+                  : target && HIGHLIGHT_CLASSES.hoverWord,
                 interactive &&
+                  target &&
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               )}
-              onClick={tap}
-              {...(interactive ? { tabIndex: -1, onKeyDown } : {})}
+              {...(target ? { onClick: tap } : {})}
+              {...(interactive && target ? { tabIndex: -1, onKeyDown } : {})}
             >
               {word.text}
             </span>
@@ -168,6 +195,7 @@ export function ReadAlongPassage({
   onTranslate,
   renderSentenceMenu,
   tapTargetFloor,
+  wordIsTarget,
 }: ReadAlongPassageProps): ReactNode {
   const aligned = useMemo(
     () =>
@@ -177,7 +205,7 @@ export function ReadAlongPassage({
           display.words.map((w) => w.text),
           sentence.words.map((w) => w.word),
         );
-        return { display, maps };
+        return { display, maps, audioWords: sentence.words.map((w) => w.word) };
       }),
     [sentences],
   );
@@ -200,7 +228,7 @@ export function ReadAlongPassage({
       {renderBlockMedia?.(blockIndex)}
       <p className="mb-4 indent-8 whitespace-pre-wrap">
         {block.map((i) => {
-          const { display, maps } = aligned[i];
+          const { display, maps, audioWords } = aligned[i];
           const isCurrent = i === position.sentenceIndex;
           const view = (
             <SentenceView
@@ -213,6 +241,8 @@ export function ReadAlongPassage({
               tapTargetFloor={tapTargetFloor ?? false}
               currentSentenceRef={currentSentenceRef}
               onWordTap={onWordTap}
+              audioWords={audioWords}
+              wordIsTarget={wordIsTarget}
             />
           );
           return (

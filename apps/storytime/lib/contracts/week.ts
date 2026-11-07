@@ -105,7 +105,21 @@ export const sentenceTimepointSchema = z
   })
   .passthrough();
 
-/** The audio of a book: the narration and the real slow reading. */
+/** The longest key of a word clip map. */
+const WORD_CLIP_KEY_MAX = 40;
+
+/**
+ * The key of a word clip map: the lower-case audio word. The key is an allowlist, and a name that
+ * `Object.prototype` holds (`constructor`) fails, so a lookup by a book word never reaches an
+ * inherited property.
+ */
+const wordClipKey = z
+  .string()
+  .max(WORD_CLIP_KEY_MAX)
+  .regex(/^[a-z]+(['-][a-z]+)*$/, { message: "a word clip key is a lower-case word" })
+  .refine((key) => !(key in Object.prototype), { message: "a word clip key names no inherited property" });
+
+/** The audio of a book: the narration, the real slow reading, and the clip of each word. */
 export const bookAudioSchema = z
   .object({
     voice: z.string().optional(),
@@ -113,6 +127,8 @@ export const bookAudioSchema = z
     sentences: z.array(sentenceTimepointSchema).default([]),
     slowFile: mediaPath.optional(),
     slowSentences: z.array(sentenceTimepointSchema).default([]),
+    /** The lower-case word to the clip file of that word; a tap on a word plays its own clip. */
+    wordClips: z.record(wordClipKey, mediaPath).default({}),
   })
   .passthrough();
 
