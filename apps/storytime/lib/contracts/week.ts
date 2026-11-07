@@ -247,6 +247,11 @@ export const songSchema = z
     poster: mediaPath.optional(),
     posterPhone: mediaPath.optional(),
     karaoke: mediaPath.optional(),
+    /**
+     * The seconds that a video starts the song after `audio`. The lyric lines light from the
+     * video time minus this value; the audio-only fallback uses 0.
+     */
+    videoLeadInSeconds: z.number().min(0).max(30).default(0),
     /** One entry per sung line, with its word times. */
     times: z.array(sentenceTimepointSchema).default([]),
   })

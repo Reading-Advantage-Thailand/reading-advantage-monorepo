@@ -1,5 +1,12 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
+// The media of a week now comes from the signed map of the page (login task 2b.6). The mock keeps
+// a URL for every file, so the assertions of this file stay unchanged.
+vi.mock("../lib/media/url", () => ({
+  mediaUrl: (_mediaUrls: Record<string, string>, file: string) =>
+    `https://storage.googleapis.com/storytime-app-media/${file}`,
+}));
+
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";

@@ -9,6 +9,11 @@
  * list free of pictures: each line shows its lyric and its gesture as text under it, and the
  * stage poster and the song tile picture stay (rule 9.1). The component never uses the phone
  * voice (rule 10.5): every sound is a recorded file.
+ *
+ * The stage holds the poster as its background until the video plays a frame (the `playing`
+ * event), so a phone shows a picture and never a white box (council finding 9, AC-1.4). A video
+ * starts the song `videoLeadInSeconds` after the song audio, so the lyric lines light from the
+ * video time minus that lead-in (AC-1.13); the audio-only fallback has no lead-in.
  */
 import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useRef, useState, type SyntheticEvent } from "react";
@@ -60,6 +65,7 @@ export function StorytimeSong({
   const [phone, setPhone] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [activeLine, setActiveLine] = useState(-1);
+  const [framePlayed, setFramePlayed] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
@@ -77,6 +83,7 @@ export function StorytimeSong({
   const mediaSrc = mediaFile ? mediaUrl(mediaUrls, mediaFile) : undefined;
   const poster = posterFile ? mediaUrl(mediaUrls, posterFile) : undefined;
   const times = song.times;
+  const leadIn = hasVideo ? (song.videoLeadInSeconds ?? 0) : 0;
 
   /**
    * Plays or pauses the media element; it never starts on its own.
@@ -99,13 +106,26 @@ export function StorytimeSong({
    * @param event The time update of the media element.
    */
   function onTimeUpdate(event: SyntheticEvent<HTMLMediaElement>): void {
-    const current = event.currentTarget.currentTime;
+    const current = event.currentTarget.currentTime - leadIn;
     setActiveLine(times.findIndex((row) => current >= row.startTime && current < row.endTime));
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="song-stage" data-phone={phone ? "true" : "false"}>
+      <div
+        className="song-stage"
+        data-phone={phone ? "true" : "false"}
+        style={
+          poster && !framePlayed
+            ? {
+                backgroundImage: `url(${JSON.stringify(poster)})`,
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+              }
+            : undefined
+        }
+      >
         {hasVideo ? (
           // F280: a landscape screen below 500 px of height caps the stage so the play control
           // stays inside the viewport; a short desktop window is landscape, so it gets the cap
@@ -119,10 +139,12 @@ export function StorytimeSong({
             }}
             src={mediaSrc}
             poster={poster}
-            preload="none"
+            preload="metadata"
             playsInline
             aria-label={song.title}
+            style={framePlayed ? undefined : { background: "transparent" }}
             onTimeUpdate={onTimeUpdate}
+            onPlaying={() => setFramePlayed(true)}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
             onEnded={() => setPlaying(false)}
