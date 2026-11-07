@@ -15,7 +15,7 @@
 - No new hash, checksum field, or provenance file (AGENTS.md hashing policy).
 - At the end of each phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
 
-## Phase 1: Removal
+## Phase 1: Removal [checkpoint: e62a8eba7]
 
 Blast radius: `apps/primary-advantage` only (25 deletions, 9 edits). `apps/storytime` and `packages/` do not change.
 
