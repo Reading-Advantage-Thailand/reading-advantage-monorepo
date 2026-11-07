@@ -14,7 +14,7 @@
 - No new hash, checksum field, or provenance file (AGENTS.md hashing policy).
 - At the end of each phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
 
-## Phase 1: The affected-app logic
+## Phase 1: The affected-app logic [checkpoint: db8b093bb]
 
 Roles after Green (not plan tasks): Reviews A and C and the phase acceptance run after task 1.5. The orchestrator runs them. The acceptance role appends `[checkpoint: <sha>]` to this heading.
 
