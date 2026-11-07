@@ -205,9 +205,6 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
   });
 });
 
-describe("a second word tap replaces the first cut stop (finding F146)", () => {
-});
-
 describe("stopAtMediaEnd ends when the media stops below the cut end (finding F145)", () => {
   const cases: Array<[string, (audio: HTMLMediaElement) => void]> = [
     ["a pause event", (audio) => audio.dispatchEvent(new Event("pause"))],

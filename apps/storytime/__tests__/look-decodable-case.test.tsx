@@ -17,7 +17,6 @@ import type { StorytimeWeek } from "../lib/contracts/week";
 
 const app = resolve(import.meta.dirname, "..");
 const contentDir = resolve(app, "content/l2");
-const decodablePath = resolve(app, "app/[locale]/st/[level]/[week]/decodable.tsx");
 const shippedWeeks = readdirSync(contentDir)
   .filter((file) => /^w[0-9]{2}\.json$/.test(file))
   .map((file) => JSON.parse(readFileSync(resolve(contentDir, file), "utf8")) as StorytimeWeek);
@@ -230,10 +229,11 @@ describe("Task 1.2 decodable case (AC-1.3)", () => {
       offenders,
       "no upper-case transform may stay in the app or lib source (AC-1.3)",
     ).toEqual([]);
-    // The detector must really catch the base call, or it is vacuous.
-    expect(
-      stripComments(readFileSync(decodablePath, "utf8")),
-      "the detector must find the base toUpperCase call",
-    ).toContain("toUpperCase");
+    // The detector must catch a call and ignore a comment, or it is vacuous.
+    const detect = (source: string) =>
+      [...stripComments(source).matchAll(/toUpperCase|toLocaleUpperCase|text-transform|\buppercase\b/g)]
+        .length;
+    expect(detect("const word = text.toUpperCase();"), "the detector must catch a toUpperCase call").toBe(1);
+    expect(detect("// text.toUpperCase() sits in a comment"), "the detector must ignore a comment").toBe(0);
   });
 });

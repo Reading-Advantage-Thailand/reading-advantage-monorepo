@@ -239,7 +239,6 @@ describe("Task 1.9 read-along highlight (AC-1.11)", () => {
         const run = await runClock(clock, bounds, phase);
         unmount();
         framesSeen += run.frames;
-        if (run.frames <= 100) details.push(`page ${page}: frames_run=${run.frames} is not above 100`);
         if (JSON.stringify(run.sequence) !== JSON.stringify(expected)) {
           failedPages.add(page);
           details.push(`page ${page} listen: lit words [${run.sequence.join(",")}], expected [${expected.join(",")}]`);

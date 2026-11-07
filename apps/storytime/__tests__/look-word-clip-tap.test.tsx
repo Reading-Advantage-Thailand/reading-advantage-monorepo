@@ -266,16 +266,31 @@ describe("Task 1.10 word clip tap (AC-1.12)", () => {
   });
 
   it("C3 every word of every page plays its own clip", async () => {
-    const week = allClipsWeek();
     const pages = [1, 2, 3, 4, 5, 6, 7, 8];
-    const wordsChecked = pages.reduce((sum, page) => sum + pageWordTexts(week, page).length, 0);
+    const fixture = allClipsWeek();
+    const wordsChecked = pages.reduce((sum, page) => sum + pageWordTexts(fixture, page).length, 0);
     expect(`pages_run=${pages.length}`).toBe("pages_run=8");
     expect(`taps_checked=${wordsChecked}`).toBe("taps_checked=33");
+
+    const clipsOfFixture = (fixture.books.find((entry) => entry.kind === "readalong")!.audio as unknown as {
+      wordClips: Record<string, string>;
+    }).wordClips;
+    const insertion = Object.values(clipsOfFixture);
+    const letterMap: Record<string, string> = {};
+    for (const word of ALL_WORDS) {
+      const clip = clipsOfFixture[word];
+      if (clip && !letterMap[word[0]!]) letterMap[word[0]!] = clip;
+    }
+
     let taps = 0;
+    let indexRejected = false;
+    let letterRejected = false;
+    let sentenceRejected = false;
     for (const page of pages) {
+      const words = pageWordTexts(fixture, page);
+      const week = allClipsWeek();
       const { container, unmount } = await renderPage(week, page);
       fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
-      const words = pageWordTexts(week, page);
       for (let index = 0; index < words.length; index += 1) {
         const word = words[index]!;
         const before = plays.length;
@@ -287,21 +302,19 @@ describe("Task 1.10 word clip tap (AC-1.12)", () => {
           played ? endsWithFile(played.src, expected!) : false,
           `a tap must play the clip ${expected}, played ${played?.src ?? "nothing"}`,
         ).toBe(true);
+        if (insertion[index] !== expected) indexRejected = true;
+        if (letterMap[word[0]!] !== expected) letterRejected = true;
+        if (clipOf(week, words[0]!) !== expected) sentenceRejected = true;
         taps += 1;
       }
       unmount();
     }
     expect(`taps_checked=${taps}`).toBe("taps_checked=33");
 
-    // A clip chosen by index, by first letter, or by the sentence must be rejected.
-    const clips = ALL_WORDS.map((word) => clipOf(week, word)!);
-    const byIndex = ALL_WORDS.map((word, index) => clips[index]);
-    const byKey = ALL_WORDS.map((word) => clipOf(week, word));
-    expect(byIndex.join("|"), "an index-keyed clip map must be rejected").not.toBe(byKey.join("|"));
-    const byLetter = ALL_WORDS.map((word) => clipOf(week, word[0]!));
-    expect(byLetter.join("|"), "a first-letter clip map must be rejected").not.toBe(byKey.join("|"));
-    const bySentence = ALL_WORDS.map(() => clipOf(week, "hello"));
-    expect(bySentence.join("|"), "a sentence-keyed clip map must be rejected").not.toBe(byKey.join("|"));
+    // A clip chosen by index, by first letter, or by the sentence must be rejected by the taps.
+    expect(indexRejected, "an index-keyed clip map must be rejected").toBe(true);
+    expect(letterRejected, "a first-letter clip map must be rejected").toBe(true);
+    expect(sentenceRejected, "a sentence-keyed clip map must be rejected").toBe(true);
   });
 
   it("C4 a word with no clip is not a tap target", async () => {
@@ -398,6 +411,9 @@ describe("Task 1.10 word clip tap (AC-1.12)", () => {
     unmount();
 
     // The Thai locale shows the Thai alert.
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockRejectedValue(
+      new DOMException("blocked", "NotAllowedError"),
+    );
     const thai = await renderPage(week, 1, "th");
     fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
     fireEvent.click(wordElement(thai.container, 0));
@@ -529,7 +545,10 @@ describe("Task 1.10 receiver block (Q16)", () => {
       `mediaOf must list the 12 clip files, listed ${clips.length}`,
     ).toBe("listed_clips=12");
     const listed = new Set(list.map((entry) => entry.file));
-    const missing = receiver.mediaPathsOf(parsed).filter((entry) => !listed.has(entry.file));
+    // The login pin excludes the paths under `approval.`: they are provenance, not media.
+    const missing = receiver
+      .mediaPathsOf(parsed)
+      .filter((entry) => !entry.path.startsWith("approval.") && !listed.has(entry.file));
     expect(
       `walk_not_in_list=${missing.length}`,
       `every media path must be listed, missing ${missing.slice(0, 2).map((entry) => entry.path).join(", ")}`,
