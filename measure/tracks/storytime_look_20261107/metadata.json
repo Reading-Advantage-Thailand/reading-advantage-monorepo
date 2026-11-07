@@ -1,0 +1,35 @@
+{
+  "track_id": "storytime_look_20261107",
+  "type": "feature",
+  "status": "active",
+  "created_at": "2026-11-07T00:00:00Z",
+  "updated_at": "2026-11-07T00:00:00Z",
+  "opened": "2026-11-07",
+  "description": "Fix eight UI council findings on the Storytime week pages (Phase 1), then port the look of the option that Daniel picks from the look study (Phase 2), so that Storytime has a look in the vein of Primary Advantage.",
+  "author_model": "claude-code/claude-sonnet-5-5",
+  "related_track": "storytime_at_home_release_20261106",
+  "depends_on": "none; the at-home Phase 3 deploy waits for the Phase 1 checkpoint of this track",
+  "owner_chain": [
+    "Daniel (owner; look pick; look check; deploy word)",
+    "Monorepo orchestrator (track owner)",
+    "PM orchestrator (decisions of 2026-11-07)"
+  ],
+  "decisions": [
+    "PM, 2026-11-07: the council batch is accepted; M-3 stands; finding 10 is dropped; item 6 label is 'Read the words'",
+    "Orchestrator, 2026-11-07: Phase 2c and Phase 2d move here from the at-home plan so two roles run in parallel in different tracks"
+  ],
+  "dates": {
+    "phase_1": "before 2026-11-20",
+    "phase_2_green_start": "2026-11-12",
+    "phase_2_gates": "2026-11-17 (option 1)",
+    "phase_2_look_check": "2026-11-18"
+  },
+  "constraints": [
+    "Docs-only creation; no change under apps/ or packages/ at creation",
+    "No push and no deploy",
+    "No new hash or provenance file (AGENTS.md hashing policy)"
+  ],
+  "estimated_tasks": 13,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

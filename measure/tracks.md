@@ -69,6 +69,11 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-11-07; Phase 1 (removal) next; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
   *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
+- [ ] **Track: Storytime look and council fixes** — *created 2026-11-07*
+  *Link: [./tracks/storytime_look_20261107/](./tracks/storytime_look_20261107/)*
+  *Status: active, opened 2026-11-07; Phase 1 (8 council fixes) next; Phase 2 (look port) waits for Daniel's pick (`deferred:daniel`) | Owner: Monorepo orchestrator | Related: storytime_at_home_release_20261106 (its Phase 3 deploy waits for the Phase 1 checkpoint) | Phase 2 Green starts by 2026-11-12 for the 2026-11-20 release*
+  *Note: Daniel 2026-11-07 07:43 ICT: "We had agreed that we would have a theme or look developed in the same vein as our primary advantage program which uses our assets to create a unique and engaging experience for the students". Moved here from Phase 2c and 2d of the at-home plan. PM: M-3 stands, finding 10 dropped, label "Read the words".*
+
 - [ ] **Track: Per-app CI/CD (a change deploys only the affected app)** — *created 2026-11-07*
   *Link: [./tracks/per_app_cicd_20261107/](./tracks/per_app_cicd_20261107/)*
   *Status: active, opened 2026-11-07; Phase 1 (affected-app logic) next | Owner: Monorepo orchestrator | Date needed 2026-11-09; first push and every traffic move are `deferred:daniel`*
