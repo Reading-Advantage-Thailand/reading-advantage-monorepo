@@ -219,13 +219,13 @@ status_of() {
 
 # Signs one account in and prints the name=value pair of the session cookie, or nothing.
 # $1 is the port, $2 the username, $3 the password.
-# The Origin header is http://localhost:<port>: in the standalone server request.nextUrl.origin
-# follows the HOSTNAME of the server (127.0.0.1 gives localhost), not the Host header, and the
-# sign-in handler compares the Origin header with it (finding F-origin of the 2b.7 log).
+# The Origin header is http://127.0.0.1:<port>: the own origin is now read from the Host header
+# (green r2 of 2b.7, finding F-origin), and curl sends Host 127.0.0.1:<port>. The old Origin
+# http://localhost:<port> matched request.nextUrl.origin, which followed the server HOSTNAME.
 sign_in_cookie() {
   local port="$1" headers
   headers="$(curl --silent --show-error -D - -o /dev/null -X POST \
-    -H "Origin: http://localhost:$port" \
+    -H "Origin: http://127.0.0.1:$port" \
     --data-urlencode "username=$2" --data-urlencode "password=$3" \
     --data-urlencode "locale=th" --data-urlencode "next=/th/st" \
     "http://127.0.0.1:$port/api/auth/sign-in")" || return 1

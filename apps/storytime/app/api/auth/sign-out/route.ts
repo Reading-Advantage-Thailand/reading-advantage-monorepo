@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { localeSchema, logout } from "../../../../lib/auth";
 import { SESSION_COOKIE_NAME, clearSessionCookie } from "../../../../lib/auth/cookie";
-import { CrossOriginError, assertSameOrigin } from "../../../../lib/auth/same-origin";
+import { CrossOriginError, assertSameOrigin, ownOriginOf } from "../../../../lib/auth/same-origin";
 
 /**
  * The sign-out handler of the Storytime app (design section 2, AC-4.3).
@@ -18,7 +18,7 @@ import { CrossOriginError, assertSameOrigin } from "../../../../lib/auth/same-or
  */
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    assertSameOrigin(request.headers, request.nextUrl.origin);
+    assertSameOrigin(request.headers, ownOriginOf(request.headers, request.nextUrl.origin));
   } catch (error) {
     if (error instanceof CrossOriginError) {
       // A request from another site changes no session, so it writes no audit row. The log line

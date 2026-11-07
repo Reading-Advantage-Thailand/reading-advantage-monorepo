@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { login, localeSchema, signInFieldsSchema } from "../../../../lib/auth";
 import { clientIp } from "../../../../lib/auth/client-ip";
 import { safeReturnPath } from "../../../../lib/auth/return-path";
-import { CrossOriginError, assertSameOrigin } from "../../../../lib/auth/same-origin";
+import { CrossOriginError, assertSameOrigin, ownOriginOf } from "../../../../lib/auth/same-origin";
 
 /**
  * The sign-in handler of the Storytime app (design section 2, AC-4.3).
@@ -29,7 +29,7 @@ function text(value: FormDataEntryValue | null): string {
  */
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    assertSameOrigin(request.headers, request.nextUrl.origin);
+    assertSameOrigin(request.headers, ownOriginOf(request.headers, request.nextUrl.origin));
   } catch (error) {
     if (error instanceof CrossOriginError) {
       // A request from another site changes no session, so it writes no audit row. The log line
