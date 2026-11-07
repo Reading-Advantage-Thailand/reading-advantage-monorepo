@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import { randomInt } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
-import { basename, dirname, resolve } from "node:path";
+import { basename, dirname, isAbsolute, resolve } from "node:path";
 import { hashPassword, verifyPassword } from "@reading-advantage/auth/password";
 import {
   ACCOUNT_CREATED_ACTION,
@@ -143,6 +143,41 @@ export function insideRepository(folder: string): boolean {
 }
 
 /**
+ * Reports whether a path value holds a `..` segment.
+ * @param value The path value of an argument.
+ * @returns `true` when one segment of the value is `..`.
+ */
+function holdsParentSegment(value: string): boolean {
+  return value.split(/[\\/]/).includes("..");
+}
+
+/**
+ * Checks the file names and the folder of a run before the first insert (Review B F42).
+ *
+ * The CSV and the card list must be plain file names inside the folder: no path separator, no
+ * `..`, and no absolute path. The folder must hold no `..` segment. The resolved file paths must
+ * not lie inside the repository, also through a link.
+ * @param options The options of the run.
+ * @returns The reason to refuse the run, or `null` when the paths are safe.
+ */
+export function refusedPathReason(options: AccountOptions): string | null {
+  if (holdsParentSegment(options.folder)) return "the folder holds a .. segment";
+  for (const [label, name] of [
+    ["--csv", options.csvName],
+    ["--cards", options.cardsName],
+  ] as const) {
+    if (name === "" || name === "." || name === "..") return `${label} needs a file name`;
+    if (isAbsolute(name)) return `${label} must not be an absolute path`;
+    if (/[\\/]/.test(name)) return `${label} must be a file name with no folder`;
+  }
+  const folder = resolve(options.folder);
+  for (const name of [options.csvName, options.cardsName]) {
+    if (insideRepository(resolve(folder, name))) return "a file path lies inside the repository";
+  }
+  return null;
+}
+
+/**
  * Splits one CSV text into its rows and its fields.
  * @param text The CSV text.
  * @returns The rows of the text.
@@ -202,10 +237,23 @@ function slugOf(value: string): string {
 }
 
 /**
+ * Reports whether a spreadsheet may read a cell as a formula (Review B F43).
+ *
+ * A cell that starts with `=`, `+`, `-`, `@`, a tab, or a carriage return, also after leading
+ * spaces, can run in a sheet and send the card data out.
+ * @param cell The raw cell.
+ * @returns `true` when the cell starts like a formula.
+ */
+function startsLikeFormula(cell: string): boolean {
+  return /^[=+\-@\t\r]/.test(cell) || /^[=+\-@]/.test(cell.trimStart());
+}
+
+/**
  * Reads the rows of the account CSV.
  * @param text The CSV text.
  * @returns The rows of the CSV.
- * @throws When a row names no role, names a role outside the three roles, or repeats a username.
+ * @throws When a row names no role, names a role outside the three roles, repeats a username, or
+ * holds a name or class cell that starts like a formula.
  */
 export function readRows(text: string): AccountRow[] {
   const rows = parseCsv(text);
@@ -225,6 +273,14 @@ export function readRows(text: string): AccountRow[] {
     const role = (row[roleIndex] ?? "").trim().toLowerCase();
     if (!(ROLES as readonly string[]).includes(role)) {
       throw new Error(`the role ${role || "(empty)"} is not a Storytime role`);
+    }
+    for (const [label, index] of [
+      ["name", nameIndex],
+      ["class", classIndex],
+    ] as const) {
+      if (index >= 0 && startsLikeFormula(row[index] ?? "")) {
+        throw new Error(`a ${label} cell starts like a spreadsheet formula`);
+      }
     }
     const className = classIndex >= 0 ? (row[classIndex] ?? "").trim() : "";
     let username = usernameIndex >= 0 ? (row[usernameIndex] ?? "").trim().toLowerCase() : "";
@@ -360,6 +416,12 @@ export async function main(
   const folder = resolve(options.folder);
   if (insideRepository(folder)) {
     console.log("output_inside_repo=1");
+    return 1;
+  }
+  const refused = refusedPathReason(options);
+  if (refused !== null) {
+    console.error(`make-accounts: ${refused}`);
+    console.log("output_path_refused=1");
     return 1;
   }
 
