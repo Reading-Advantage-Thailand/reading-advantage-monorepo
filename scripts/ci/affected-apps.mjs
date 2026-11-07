@@ -421,7 +421,7 @@ function importerDeps(importer) {
  * Build a function that lists the base keys and names an importer resolves.
  *
  * @param {{ importers: Map<string, object>, snapshots: Map<string, { lines: string[] }> }} lock The parsed lockfile.
- * @returns {(path: string) => { keys: Set<string>, names: Set<string> }} The resolver.
+ * @returns {(path: string) => { keys: Set<string>, bases: Set<string>, names: Set<string> }} The resolver.
  */
 function resolverFor(lock) {
   const children = new Map();
@@ -476,7 +476,11 @@ function resolverFor(lock) {
       keys.add(key);
       queue.push(...childrenOf(key));
     }
-    return { keys: new Set([...keys].map(baseKey)), names: new Set([...keys].map(keyName)) };
+    return {
+      keys,
+      bases: new Set([...keys].map(baseKey)),
+      names: new Set([...keys].map(keyName)),
+    };
   };
 }
 
@@ -557,10 +561,18 @@ function compareWorkspaceYaml(before, after) {
  *
  * @param {string | null} before The base text.
  * @param {string | null} after The head text.
- * @returns {{ global: boolean, importers: Set<string>, keys: Set<string>, catalog: Set<string>, overrides: Set<string>, locks: object[] }} The effect.
+ * @returns {{ global: boolean, importers: Set<string>, snapshotKeys: Set<string>, packageKeys: Set<string>, catalog: Set<string>, overrides: Set<string>, locks: object[] }} The effect.
  */
 function compareLock(before, after) {
-  const effect = { global: false, importers: new Set(), keys: new Set(), catalog: new Set(), overrides: new Set(), locks: [] };
+  const effect = {
+    global: false,
+    importers: new Set(),
+    snapshotKeys: new Set(),
+    packageKeys: new Set(),
+    catalog: new Set(),
+    overrides: new Set(),
+    locks: [],
+  };
   if (before === null || after === null) {
     effect.global = before !== after;
     return effect;
@@ -570,9 +582,8 @@ function compareLock(before, after) {
   effect.locks = [a, b];
   if (changedKeys(a.top, b.top).length > 0) effect.global = true;
   for (const path of changedKeys(asText(a.importers), asText(b.importers))) effect.importers.add(path);
-  for (const section of ["packages", "snapshots"]) {
-    for (const key of changedKeys(asText(a[section]), asText(b[section]))) effect.keys.add(baseKey(key));
-  }
+  for (const key of changedKeys(a.packages, b.packages)) effect.packageKeys.add(key);
+  for (const key of changedKeys(asText(a.snapshots), asText(b.snapshots))) effect.snapshotKeys.add(key);
   for (const key of changedKeys(a.catalogs, b.catalogs)) effect.catalog.add(key.slice(key.indexOf("/") + 1));
   for (const key of changedKeys(a.overrides, b.overrides)) effect.overrides.add(overrideName(key));
   return effect;
@@ -678,13 +689,14 @@ function affectedApps(base, head) {
     }
   }
 
-  const keys = lockEffect?.keys ?? new Set();
-  if (lockEffect && (keys.size > 0 || overrideNames.size > 0)) {
+  if (lockEffect && (lockEffect.snapshotKeys.size + lockEffect.packageKeys.size + overrideNames.size > 0)) {
     for (const lock of lockEffect.locks) {
       const resolve = resolverFor(lock);
       for (const path of lock.importers.keys()) {
         const resolved = resolve(path);
-        const hitKey = [...keys].some((key) => resolved.keys.has(key));
+        const hitKey =
+          [...lockEffect.snapshotKeys].some((key) => resolved.keys.has(key)) ||
+          [...lockEffect.packageKeys].some((key) => resolved.bases.has(key));
         const hitName = [...overrideNames].some((name) => resolved.names.has(name));
         if (hitKey || hitName) markFolder(path);
       }
