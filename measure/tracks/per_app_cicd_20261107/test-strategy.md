@@ -5,6 +5,7 @@
 > **Written:** 2026-11-07 at role base `04b5cb1619afb7742a06f6cf1c884805cee3e320` (spec review passed in round 2). Model: claude-code/claude-sonnet-5-5.
 > **Checked and revised (round 2):** 2026-11-07 at role base `c4890971f4c99bbe74ba052722938e29c6700371`. Model: deepseek/deepseek-v4.1-flash (a different family from the writer). Section 5 lists what was re-measured and what changed.
 > **Phase 2 written:** 2026-11-07 at the P2 role base `390bcb684237d0ed9bde78682a2d3e06493cb0d3` (the tree after the Phase 1 checkpoint). Model: deepseek/deepseek-flash, a family different from the spec writer (the plan requires it). The immutable `phase_base_sha` is captured after this strategy commit (P2.7).
+> **Amended 2026-11-07 (PM decision):** guard runs for the P2, P3, and P4 phase gates (Red r5), Red r6 cases W-22 and F-18, the P3 sales build-identity contract, and Review B finding B1 (M43).
 > **Facts:** each "measured" fact in section 2 was read at its role base on 2026-11-07. One heavy job ran at each base (M1, M37). Red and Green must measure again. Facts re-read in round 2 carry the round-2 date. Facts M23 to M42 were read at `390bcb684`.
 > **No push.** A push to `master` deploys www today. No role pushes before Phase 4 and Daniel's word.
 
@@ -112,6 +113,7 @@
 | M40 | **P2 base.** In project `primary-advantage`, neither candidate service account holds a project-level binding. The Cloud Build service account `1064299189080@cloudbuild.gserviceaccount.com` holds `cloudbuild.builds.builder`; the user `wannachok.job@gmail.com` holds `cloudbuild.builds.editor`. | `gcloud projects get-iam-policy primary-advantage ...`. |
 | M41 | **P2 base.** Project `reading-advantage` holds the service accounts `accounts-cloud-run`, `accounting-cloud-run`, `codecamp-cloud-run`, `marketing-cloud-run`, `sales-cloud-run`, and `accounting-build-verifier`. It holds no `workbooks-cloud-run` (`describe` returns NOT_FOUND). Its Cloud Run services hold `accounting`, `accounts`, `codecamp-advantage`, `marketing`, `sales-advantage`, `reading-advantage-web`, and others, and no `workbooks`. Project `www-reading-advantage` holds `www-reading-advantage`. | `gcloud iam service-accounts list|describe`, `gcloud run services list`. |
 | M42 | **P2 base.** The table's `project` field holds `$PROJECT_ID` on 8 rows and `primary-advantage` on 2. The measured locations put www in project `www-reading-advantage` and the six `$PROJECT_ID` gated apps in `reading-advantage`. One `GCP_PROJECT_ID` secret cannot select both projects. This is the new fact of the phase (Q10). | M41 and a table read. |
+| M43 | **Review B, 2026-11-07.** B1: the www deploy key held `roles/editor`, `run.admin`, `storage.admin`, and `iam.serviceAccountUser` in project `www-reading-advantage`. Daniel reduced the roles in IAM on 2026-11-07. No repository file changed. The reduced role set was not read. The P4 www dry run (AC-5.2) is the live proof that the reduced key still deploys. | Review B result and the owner statement; no secret value read. |
 
 ## 3. Phase summary
 
@@ -352,6 +354,8 @@ Red tests pin each assumption. A test that disagrees with the PM is a question (
 - **C20 Literal project for gated rows.** A gated row's `project` is the literal GCP project id that the job passes to `gcloud builds submit --project`. The default fills the measured project of each row (M42). A `direct` or `excluded` row may keep `$PROJECT_ID`. No new table key: P1 case B-21 asserts the exact key set. (Q10)
 - **C21 Tag shape per row.** The four prefix rows (`primary-advantage`, `storytime`, `accounts`, `workbooks`) use a bash deploy step with `env: BUILD_ID=$BUILD_ID` and the tag `<prefix>-${BUILD_ID:0:8}`. The four file-tag rows keep their text: `candidate` (accounting, conditional on service existence), `sso-candidate` (codecamp), `c$${build_id%%-*}` (marketing), and `legacy-rollback` (sales). The table's `tag` and `tagLength` are the source; a change to one side changes the other in the same commit.
 - **C22 Runbook append.** `docs/runbooks/storytime-deploy.md` already exists (M35) and holds none of the 7 facts. Task 2.5 appends a dated facts block; it does not rewrite the steps. The traffic-file facts live in one new runbook, `docs/runbooks/traffic-moves.md`, with one section per traffic file (6). (Q14, Q17)
+- **C23 SHA-pinned actions.** Every `uses:` line of `cd-www-reading-advantage.yml` and `cd-apps.yml` names a 40-hex commit SHA, with the version in a trailing comment. A tag such as `@v4` fails W-22. The pin covers `actions/checkout`, `actions/setup-node`, `google-github-actions/auth`, and `google-github-actions/setup-gcloud`.
+- **C24 Traffic runbook names the build.** Each section of `docs/runbooks/traffic-moves.md` names how the operator finds the tag or build after a push: the command and the field (for example `gcloud builds list --filter=...` and the `BUILD_ID`). F-18 fails a section without that text. (Q17)
 
 ### P2.2 Harness
 
@@ -367,6 +371,7 @@ Files, created by the Red roles: `scripts/ci/__tests__/cd-workflows.test.mjs` (t
 - `dbToken(step)` applies the AC-2.10 rule. A step is a database step when its `secretEnv` holds a name with `DATABASE_URL`, or its text holds `cloud-sql-proxy`, `psql`, `drizzle`, `@reading-advantage/db`, `company-identity:`, or `bootstrap:production`. The runtime options `--set-secrets` and `--add-cloudsql-instances` are removed before the scan. It returns the matching token or `null`.
 - `ordered(doc, expected)` finds each expected id and asserts the indexes rise; it asserts that the `update-traffic` step is last, and that `expected.length > 0` first.
 - `runbookFacts()` returns 7 checker functions. The test asserts `facts.length === 7` before the loop.
+- `usesLines(doc)` returns every `uses:` value. W-22 asserts each value matches `^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{40}$` and records `uses_lines_checked=<n>`.
 - Every case ends with a labeled message: `rows_checked=8`, `files_checked=9`, `files_checked=4`, `files_checked=2`, `steps_checked=<n>`, `facts_found=<n>`, `jobs_planned=<n>`, `gated_jobs=<n>`, `gcloud_calls=0`, `max_combined=<n>`, `sales_db_steps_moved=<n>`, `mutants_rejected=<k>/<n>`.
 
 ### P2.3 Red: command, expected failure, and proof
@@ -389,6 +394,7 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | W-14a | `permissions missing on .github/workflows/cd-www-reading-advantage.yml` |
 | W-16 | `facts_found=0 expected=7` |
 | W-18a, W-19, W-20 | `missing select step` and `missing fetch-depth: 0` |
+| W-22 | `uses line is not a 40-hex SHA: actions/checkout@v4` |
 
 Characterization passes at the 2.1 Red: W-10 and W-12 (the table math and the service agreement, M26), W-13 (AC-2.4, `workflow_detector_hits=0`, M34), W-14 (`secret_names=2`, M38), W-14c, W-17 (AC-2.8, `traffic_refs=0`, M34), and W-21 (the input-size guards).
 
@@ -397,6 +403,8 @@ Characterization passes at the 2.1 Red: W-10 and W-12 (the table math and the se
 **Expected at the 2.3d Red commit:** F-06 fails (`accounts deploy step has no --no-traffic`, `workbooks deploy step has no --no-traffic`, M29/M30); F-08 fails (`files_with_db_steps=6 files_checked=9`); F-10 fails (`missing apps/accounts/cloudbuild-traffic.yaml`). F-07 and F-09 pass (characterization: the runtime flags stay; the detector fixtures).
 
 **Expected at the 2.3f Red commit:** F-08 fails (`files_with_db_steps=4 files_checked=9`); F-11 fails (missing traffic files for the four apps); F-12 fails (`sales_db_steps_moved=0 expected=6`, M32); F-14 fails (`psql in a push file`). F-13 and F-15 pass (characterization: the sales push keeps its steps; the input-size guards).
+
+**Expected at the r6 Red commit (W-22 and F-18, Red r6 writes them now):** W-22 fails with `uses line is not a 40-hex SHA: actions/checkout@v4` (the base holds 5 tag forms across the two CD workflows). F-18 fails with `missing docs/runbooks/traffic-moves.md` before 2.3g, and with `traffic runbook section <app> has no build-finding step` for each section that lacks the C24 text after 2.3g.
 
 **Proof at Red time, partial repairs.** The Red role copies the real tree to a `mktemp -d` folder, edits one artifact, and runs the new file with `CICD_FIXTURE_ROOT=<copy>`. Each partial must still fail its case (6 partials, `partials_rejected=6`, `partials_accepted=0`):
 
@@ -450,6 +458,7 @@ Group W: `scripts/ci/__tests__/cd-workflows.test.mjs`.
 | W-19 | 2.2 | www deploy job | `gcloud builds submit --config=apps/www-reading-advantage/cloudbuild.yaml` equals the www row's file; both secrets kept |
 | W-20 | 2.2 | www deploy job condition | `needs: select` and `if:` reference `steps.select.outputs.www` (the job `needs.select.outputs.www`) |
 | W-21 | A4 | the input-size guards | `gated_rows=8`, `ranges>=6`, `rows_checked=8`; passes at the base |
+| W-22 | C23 | every `uses:` line of the two CD workflows | a 40-hex SHA each; `uses_lines_checked>=4`; a tag fails |
 
 Group F: `scripts/ci/__tests__/cloudbuild-files.test.mjs`.
 
@@ -471,8 +480,9 @@ Group F: `scripts/ci/__tests__/cloudbuild-files.test.mjs`.
 | F-14 | AC-2.10 | no `psql` in a non-excluded push file | `psql_hits=0` |
 | F-15 | A4 | the input-size guards | `files_checked=4`, `steps_expected=6`, `files_checked=2` |
 | F-16 | C22 | `docs/runbooks/traffic-moves.md` | 6 sections, one per traffic file; each names the file, the ordered steps, and the old-schema sentence; `traffic_runbook_sections=6` |
+| F-18 | C24 | each of the 6 traffic runbook sections | names the build-finding command and field after a push; `sections_checked=6` |
 
-Counts: about 46 P2 cases. The phase gate runs 52 P1 cases plus the P2 cases.
+Counts: about 48 P2 cases. The phase gate runs 52 P1 cases plus the P2 cases.
 
 ### P2.5 Green gates and the phase check
 
@@ -485,15 +495,34 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | Task | Green gate |
 |---|---|
 | 2.2 | W-01 to W-04, W-14a, W-18a, W-19, W-20; `cd-www` holds `select` and `deploy`; `fetch-depth: 0`; node 22; `permissions` exactly `contents: read`; the build still targets the www file; `yaml_ok=<n>`; no test edit |
-| 2.3 | W-05 to W-09, W-14b, W-18b, W-18c; `cd-apps.yml` parses; the matrix holds only gated rows; `gcloud_calls=0`; no traffic-file reference; no test edit |
+| 2.3 | W-05 to W-09, W-14b, W-18b, W-18c, W-22; `cd-apps.yml` parses; the matrix holds only gated rows; `gcloud_calls=0`; no traffic-file reference; no test edit |
 | 2.3b | F-01 to F-04 and W-11-primary; the primary push ids are `build-image`, `push-image`, `deploy-cloudrun`; the deploy step holds `--no-traffic`, `pa-`, `${BUILD_ID:0:8}`, and `env`; `yaml_ok`; `schema_note_found=1` |
 | 2.3e | F-06, F-07, F-09, F-10 and W-11-accounts, W-11-workbooks; the accounts push ids are `build-image`, `push-image`, `deploy-cloudrun`, `allow-public-invoker`; the workbooks push ids are `build-image`, `push-image`, `deploy-cloudrun`; the accounts traffic file holds the 5 steps and the move; `yaml_ok` |
-| 2.3g | F-08, F-11 to F-16 and W-11-accounting, W-11-codecamp, W-11-marketing, W-11-sales; the four push ids match the expected lists; the four traffic files parse; `sales_db_steps_moved=6` |
+| 2.3g | F-08, F-11 to F-16, F-18 and W-11-accounting, W-11-codecamp, W-11-marketing, W-11-sales; the four push ids match the expected lists; the four traffic files parse; `sales_db_steps_moved=6` |
 | 2.4 | W-15 and W-11-storytime; the tag renders 11 plus 13 = 24; `yaml_ok`; no test edit |
 | 2.5 | W-16 `facts_found=7`; the runbook diff adds a block; no test edit |
 | 2.3c, 2.3h, 2.6 | `[b] ... deferred:daniel`; no automated test. The phase check asserts the marker and the owner field |
 
 Every Green gate also runs `git diff --stat <red_commit>..HEAD -- scripts/ci/__tests__/<file>`; the output must be empty. Green never edits a test to pass.
+
+**Guard runs (P2, P3, and P4 phase gates).** Green `a8eeaf793` broke `apps/storytime/__tests__/phase1-service.test.ts`, because the phase gates ran only `scripts/ci`. From now on every phase gate also runs the tests that read a file the track changes. Red r5 (P2, 2026-11-07) measured the list, the runner, and the counts. Each row is one heavy job, in the foreground, one at a time. Prefix each inner command with the wrapper of section 1.1 and `cd /home/daniebo/Desktop/reading-advantage-monorepo &&`; read the `EXIT=` line.
+
+| App or package | Inner command (Vitest for every row) | Expected at the gate (Red r5 baseline) |
+|---|---|---|
+| storytime | `CI=true pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase1-service.test.ts apps/storytime/__tests__/phase3-media-gate.test.ts; echo "EXIT=$?"` | 0 failed; the r5 app count is 17 passed across 3 files |
+| packages/db | `CI=true pnpm exec vitest run --maxWorkers=1 packages/db/src/__tests__/primary-deploy-gate-contract.test.ts packages/db/src/__tests__/deploy-gate-contract.test.ts packages/db/src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts; echo "EXIT=$?"` | 29 tests: 28 passed; 1 known failure (`codecamp-0049` ceiling) |
+| accounting | `CI=true pnpm exec vitest run --maxWorkers=1 apps/accounting/app/lib/__tests__/cloudbuild.red.test.ts apps/accounting/app/lib/__tests__/release-verifier.red.test.ts; echo "EXIT=$?"` | 2 files, 18 passed, 0 failed |
+| accounts | `CI=true pnpm exec vitest run --maxWorkers=1 apps/accounts/scripts/production-readiness.test.ts; echo "EXIT=$?"` | 1 file, 9 passed, 0 failed |
+| marketing | `CI=true pnpm exec vitest run --maxWorkers=1 apps/marketing/app/__tests__/production-readiness.test.ts apps/marketing/scripts/marketing-staged-release-contract.test.ts; echo "EXIT=$?"` | 2 files, 15 passed, 0 failed |
+| packages/domain | `CI=true pnpm exec vitest run --maxWorkers=1 packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts; echo "EXIT=$?"` | 1 file, 10 passed, 0 failed |
+| sales-advantage | `CI=true pnpm exec vitest run --maxWorkers=1 apps/sales-advantage/scripts/production-readiness.test.ts apps/sales-advantage/scripts/sales-continuation.test.ts apps/sales-advantage/scripts/sales-release-source.test.ts apps/sales-advantage/scripts/__tests__/cloudbuild-secret-isolation.test.ts; echo "EXIT=$?"` | r5: 27 passed, 2 failed. The gate needs 29 passed, 0 failed: the 2 are the D7 regression, not older failures |
+| codecamp-advantage | `CI=true pnpm exec vitest run --maxWorkers=1 apps/codecamp-advantage/lib/__tests__/auth-rollback-deployment.test.ts apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-10-edge-cases-and-production-scenarios.test.ts apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-2-database-and-configuration.test.ts apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-3-authentication-and-authorization.test.ts apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts apps/codecamp-advantage/lib/__tests__/review-worker-deployment-contract.test.ts; echo "EXIT=$?"` | 8 files, 133 tests: 131 passed; 2 known failures |
+
+**Known failures (3).** They fail at `d28f8fd52` too. The gate records `known_failures=3`; a fourth failure fails the gate:
+
+1. `packages/db` `codecamp-0049-ledger-gap-deploy-contract.test.ts` case "bounds the Codecamp migration step to 0049" (the file holds `0059_game_challenges`).
+2. codecamp `prod-smoke/phase-10` "auth session schema pins the DB session lifetime to 7 days".
+3. codecamp `prod-smoke/phase-10` launch gate.
 
 **Adversarial mutant set (task 2.7).** The adversarial role copies the real tree and applies each mutant with `CICD_FIXTURE_ROOT`. Each mutant must make at least one case fail. Label `mutants_rejected=12/12`; closeout needs 12/12.
 
@@ -526,6 +555,7 @@ Every Green gate also runs `git diff --stat <red_commit>..HEAD -- scripts/ci/__t
 10. The adversarial mutant set above reports `mutants_rejected=12/12`.
 11. Review A, Review B, and Review C results are `pass`. The browser review is `not applicable`.
 12. Tasks 2.3c, 2.3h, and 2.6 stay `[b] ... deferred:daniel`. They are not part of the closeout. The check asserts `blocked_tasks=3` and the owner field on each.
+13. The 8 guard runs above: `known_failures=3`, `other_failures=0`, and the sales command reports 29 passed and 0 failed.
 
 Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 2 heading.
 
@@ -542,7 +572,7 @@ Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 2 heading.
 | Review | Applies | Checks |
 |---|---|---|
 | Review A (code) | **yes** | C11 to C22; the YAML parse instead of substring matching; the table as the only source of app facts; the step-id dependencies; the traffic-file order; the bash slice and `env: BUILD_ID`; the scope. |
-| Review B (secrets, permissions) | **yes (required)** | `permissions` exactly `contents: read` on the two CD workflows; the two secret names and nothing else; no secret outside a push-triggered job; no `pull_request_target`; no secret on a fork run; the measured roles (M39 to M41) and the three gaps (primary-advantage binding, `workbooks-cloud-run`, the two-project ambiguity); no push path touches a production database; the traffic files have no trigger and no workflow reference. |
+| Review B (secrets, permissions) | **yes (required)** | `permissions` exactly `contents: read` on the two CD workflows; the two secret names and nothing else; no secret outside a push-triggered job; no `pull_request_target`; no secret on a fork run; the measured roles (M39 to M41) and the three gaps (primary-advantage binding, `workbooks-cloud-run`, the two-project ambiguity); no push path touches a production database; the traffic files have no trigger and no workflow reference. B1 (M43): the www deploy key held `editor`, `run.admin`, `storage.admin`, and `serviceAccountUser`; Daniel reduced the roles on 2026-11-07 with no repository change. P4 proves that the reduced key still deploys. |
 | Review C (UX/API) | **yes** | The tag names, the job names, the traffic-file contract, and the runbook text. The text is plain and one meaning per word. There is no screen. |
 | Adversarial testing | **yes** | The 12 mutants of P2.5; a fork PR (no secret); a zero base; a base that the clone lacks after a force push; a comment that names `cloudbuild-traffic`. |
 | Browser review (UX) | **no** | No UI. |
@@ -578,6 +608,8 @@ A2 does not apply: P2 holds no publish gate with named subjects; the traffic mov
 - **Green gates:** the Red command exits 0 with every file passing; AC-3.1 holds for each fake range of P1 (the planned app set of the `ci.yml` select step equals the script output, `ranges_checked>=6`); AC-3.2 (docs-only range plans no app job and keeps the guards that its paths trigger); the filter syntax is valid for every table id: `pnpm exec turbo ls --filter=<id>...` exits 0 and lists at least 1 package for each of the 10 ids, label `turbo_filters_ok=10` (not measured at the base, M14); YAML parses.
 - **Non-table apps (M21, Q9).** The nine non-excluded rows get a job. `activity-vinext-fixture`, `advantage-games`, and `science-advantage` are not rows, so a change to one of them plans no app job. The phase test asserts this behavior (it is the spec, not a bug), and task 3.2 records the gap in one line of the plan note: `untested_apps=3` with the three names. A test that silently widens the filter to every app fails AC-3.1.
 - **Closeout gate (task 3.4).** The Green gates again at the phase HEAD; one Red commit and one Green commit for task 3.1/3.2, in that order; `git log <phase_base_sha>..HEAD --grep='track_id: per_app_cicd_20261107'` inspected the same way; Review A and Review B results are `pass`; the scope label `p3_out_of_scope_paths=0` over `.github/workflows/ci.yml`, `scripts/ci/**`, `measure/tracks/per_app_cicd_20261107/**`, `measure/runs/per_app_cicd_20261107/**`; `ci_first_failing_step` is recorded. Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 3 heading.
+- **Guard runs (P3 gate).** The 8 commands of P2.5 again, one heavy job each. P3 changes `ci.yml`, so the gate also runs the 4 `apps/science-advantage/lib/ci-gates/` files that read `.github/workflows/**`: `phase-10-monorepo-root-ci-paths-filter.test.ts`, `phase-13-final-acceptance.test.ts`, `phase-9-delete-app-local-ci-workflow.test.ts`, and `verification-partition.test.ts`. One heavy job, expected 0 failed; the count is recorded at the gate (not measured in this role). `known_failures=3`; a fourth failure fails the gate.
+- **Sales build identity contract (P3).** `apps/sales-advantage/cloudbuild-traffic.yaml` must name the same build in the rollback capture step and in the traffic target: the `BUILD_ID` and image that `capture-legacy-rollback` records equal the revision that `update-traffic` targets. A P3 test asserts the equality, label `sales_build_identity=1`, before any sales traffic run (task 2.3h). A mismatch blocks 2.3h.
 - **Task 3.3:** record the first failing step of the latest `ci.yml` run on master with a read-only `gh run list` and `gh run view --log-failed` (a read, not a run). Label: `ci_first_failing_step=<step name>`. The expected step is `Architecture boundary check` (`pnpm architecture:check`, exit 1, "Analyzer input snapshot hash does not match current bytes", per the plan). The role does not fix it (D5).
 - **Document vs live:** artifact tests plus the select-step dry run. Live proof is the first push and the CI run that follows. CI stays red until the later CI-green track.
 - **Reviews:** A yes; B yes (the service containers and test credentials only; no deploy secret in `ci.yml`; the `permissions:` block, M20); C no; adversarial yes, light (one mutant round: drop the guards, run all apps on a docs range, ignore a failed select step); browser no.
@@ -602,6 +634,8 @@ A2 does not apply: P2 holds no publish gate with named subjects; the traffic mov
 - **Red:** the report test, run with the P1.3 command, fails at the base because the report is missing (`Missing dry-run-report.md`) and passes after task 4.1. Task 4.2 has no Red (it is a run). Expected failure shape for 4.2 if www does not build: the first failing task from `turbo`.
 - **Green gates:** AC-5.1 (`rows=11`, each row names its range, its planned jobs, and `gcloud_calls=0`); AC-5.2: `HEAVY … 'cd ROOT && CI=true pnpm exec turbo run build test --filter=www-reading-advantage...; echo "EXIT=$?"'` gives `EXIT=0` at the HEAD that the report names (label `www_head=<sha>`; the heavy job takes long and one job runs at a time); AC-5.3: the plan line names exactly the ids that the script returns for `origin/master..HEAD`, computed at the report HEAD; no `gcloud` write and no change to a Cloud Build trigger happened (`gcloud builds triggers list` read only).
 - AC-5.2 is the one aggregate run that gates a phase (section 1.1). If `www` is red, the phase stops: the report names the first failing task and the failing test, and the first push does not happen.
+- **Guard runs (P4 gate).** The 8 commands of P2.5 again, one heavy job each, plus the report test. `known_failures=3`; a fourth failure fails the gate.
+- **B1 live proof (M43).** The P4 www dry run is the live proof that the reduced www deploy key still deploys. The workflow uses the `GCP_SERVICE_ACCOUNT` secret, and AC-5.2 must pass with the reduced roles. A failure here blocks the first push.
 - **Closeout gate (task 4.4).** The Green gates again at the report HEAD; the report and the plan line read from the same immutable HEAD (`www_head` equals the HEAD that the plan uses); the adversarial round of the Reviews bullet passes (`mutants_rejected=n/n`); Review A, Review B, and Review C results are `pass`; the scope label `p4_out_of_scope_paths=0` over `measure/tracks/per_app_cicd_20261107/**` and `measure/runs/per_app_cicd_20261107/**`; the handoff to the PM names the raw truth: which apps the push deploys, which stay gated, and that Daniel decides (AC-5.4). Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 4 heading. The first push (`[b]` 4.5) and every traffic move (`[b]` 4.6) stay blocked after the checkpoint; they are not part of the closeout.
 - **Predicted plan at the base:** all 10 ids affected (M12). The non-excluded rows deploy: `www-reading-advantage` to traffic (direct) and 8 gated apps as `--no-traffic` revisions with a tag; `reading-advantage` is skipped (`excluded`). The report states this in one line, with the app names, and keeps the deploy list (round 2: the orchestrator sent Q7 to the PM; Daniel decides at AC-5.4). The role does not narrow the list on its own.
 - **Document vs live:** the dry run and the report are artifact and function-level proof. Live proof is the first push on Daniel's word (`[b] deferred:daniel`) and every traffic move.
