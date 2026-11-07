@@ -3,7 +3,7 @@
  *
  * `apps/storytime/lib/media/sign.ts` exports `signWeekMedia(week, deps)`. `deps` holds the storage
  * client and an optional media base; the module reads `STORYTIME_MEDIA_BASE` when the base is
- * absent. The map is `file -> signed URL` for the `file` fields of that week only. The real
+ * absent. The map is `file -> signed URL` for every media path of that week. The real
  * `S3StorageDriver` presigns; presigning is a local computation, so no network call runs.
  *
  * At the base the first assertion fails on `Missing apps/storytime/lib/media/sign.ts`. The module
@@ -13,6 +13,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import week1 from "../content/l2/w01.json";
+import { mediaPathsOf } from "../scripts/receive-weeks";
 
 const APP = resolve(import.meta.dirname, "..");
 const SIGN_MODULE = resolve(APP, "lib/media/sign.ts");
@@ -34,19 +35,6 @@ interface SignModule {
 /** A deep clone of the shipped week 1. */
 function cloneWeek(): Record<string, unknown> {
   return JSON.parse(JSON.stringify(week1)) as Record<string, unknown>;
-}
-
-/** Collects every `file` value of one week object. */
-function collectFiles(value: unknown, out: string[] = []): string[] {
-  if (Array.isArray(value)) {
-    for (const entry of value) collectFiles(entry, out);
-  } else if (value && typeof value === "object") {
-    for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
-      if (key === "file" && typeof entry === "string") out.push(entry);
-      else collectFiles(entry, out);
-    }
-  }
-  return out;
 }
 
 /** Builds the real storage client with fake keys and the Google interop endpoint. */
@@ -85,22 +73,50 @@ describe("login media sign (red)", () => {
     const sign = await loadSign();
     const storage = await realStorage();
     const week = cloneWeek();
-    const files = new Set(collectFiles(week));
-    expect(files.size, "the fixture holds files").toBeGreaterThan(0);
+    // Every media path of the week outside `approval`, not only the `file` fields: the receiver's
+    // walker is the one list, and the `approval` subtree holds prose that can end in `.mp3`.
+    const expected = new Set(
+      mediaPathsOf(week)
+        .filter((entry) => !entry.path.startsWith("approval."))
+        .map((entry) => entry.file),
+    );
+    console.log(`signed_map_size_expected=${expected.size}`);
+    expect(expected.size, "signed_map_size_expected").toBe(42);
+
+    // F7g positive control: the old pin signed only the `file` fields (26 of the 42), so the
+    // unsigned check must report the 16 media paths that the old pin misses.
+    const fileOnly = new Set(
+      mediaPathsOf(week)
+        .filter((entry) => entry.path.endsWith(".file") && !entry.path.startsWith("approval."))
+        .map((entry) => entry.file),
+    );
+    console.log(`file_only_map_size=${fileOnly.size}`);
+    expect(fileOnly.size, "file_only_map_size").toBe(26);
+    const unsignedUnderOldPin = [...expected].filter((file) => !fileOnly.has(file));
+    console.log(`old_pin_unsigned=${unsignedUnderOldPin.length}`);
+    expect(unsignedUnderOldPin, "the old `file`-only map leaves 16 unsigned").toHaveLength(16);
+
     const map = await sign.signWeekMedia(week, { storage, mediaBase: MEDIA_BASE });
     const mediaUrlsFound = Object.keys(map).length;
-    console.log(`media_urls_found=${mediaUrlsFound} unique_files=${files.size}`);
-    expect(mediaUrlsFound, "media_urls_found").toBe(files.size);
+    console.log(`signed_map_size=${mediaUrlsFound} expected=${expected.size}`);
+    expect(mediaUrlsFound, "signed_map_size").toBe(expected.size);
     expect(mediaUrlsFound).toBeGreaterThan(0);
+
+    const unsigned = [...expected].filter((file) => map[file] === undefined);
+    console.log(`media_paths_unsigned=${unsigned.length}`);
+    expect(unsigned, `unsigned expected media: ${unsigned.join(", ")}`).toEqual([]);
 
     let signedUrlsChecked = 0;
     for (const [file, rawUrl] of Object.entries(map)) {
-      expect(files.has(file), `${file} is a file of the week`).toBe(true);
+      expect(expected.has(file), `${file} is a media path of the week`).toBe(true);
       const url = new URL(rawUrl);
       expect(url.host, `${file} uses the storage host`).toBe("storage.googleapis.com");
       expect(url.pathname.startsWith(`/${BUCKET}/`), `${file} is in the private bucket`).toBe(true);
       expect(rawUrl, `${file} names no public bucket`).not.toContain("primary-app-storage");
-      expect(rawUrl, `${file} names no media proxy`).not.toContain("/media/");
+      expect(
+        decodeURIComponent(url.pathname),
+        `${file} is the exact bucket key path`,
+      ).toBe(`/${BUCKET}/${file}`);
       expect(url.searchParams.get("X-Amz-Signature"), `${file} is signed`).toBeTruthy();
       const expires = Number(url.searchParams.get("X-Amz-Expires"));
       expect(Number.isFinite(expires), `${file} holds X-Amz-Expires`).toBe(true);
@@ -146,6 +162,29 @@ describe("login media sign (red)", () => {
       expect(key.includes(".."), `${key} holds no dot segments`).toBe(false);
       expect(key.startsWith("/"), `${key} is relative`).toBe(false);
       expect(key.includes("://"), `${key} holds no scheme`).toBe(false);
+    }
+  });
+
+  it("signs the song video, the phone video, both posters, a slow book audio, and a phoneme clip", async () => {
+    expect(existsSync(SIGN_MODULE), MISSING).toBe(true);
+    const sign = await loadSign();
+    const storage = await realStorage();
+    const week = cloneWeek();
+    const paths = mediaPathsOf(week);
+    const targets: Array<[string, string]> = [
+      ["song video", "song.video"],
+      ["phone video", "song.videoPhone"],
+      ["poster", "song.poster"],
+      ["phone poster", "song.posterPhone"],
+      ["slow book audio", "books.0.audio.slowFile"],
+      ["phoneme clip", "focus.element.audio"],
+    ];
+    const map = await sign.signWeekMedia(week, { storage, mediaBase: MEDIA_BASE });
+    for (const [label, path] of targets) {
+      const file = paths.find((entry) => entry.path === path)?.file;
+      expect(file, `${label} names a media path`).toBeTruthy();
+      console.log(`${label.replace(/ /g, "_")}_signed=${file && map[file] ? 1 : 0}`);
+      expect(file && map[file], `${label} gets a signed URL`).toBeTruthy();
     }
   });
 
