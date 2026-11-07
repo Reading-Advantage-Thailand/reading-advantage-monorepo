@@ -1,17 +1,14 @@
 steps:
+  # The push holds no database step (decision D7 of the track per_app_cicd_20261107). The new
+  # revision must start against the old schema. The database steps run only in
+  # cloudbuild-traffic.yaml, by hand, on Daniel's word.
+
   - name: "node:22-slim"
     id: "validate-release-inputs"
     entrypoint: "bash"
     args:
       - "-c"
       - 'set -euo pipefail && validation_now="$$(date -u +%Y-%m-%dT%H:%M:%SZ)" && node apps/sales-advantage/scripts/release-source-manifest.mjs verify "$_RELEASE_COMMIT_SHA" /workspace /workspace/apps/sales-advantage/release-source.json "$_RELEASE_SOURCE_MANIFEST_SHA256" && node apps/sales-advantage/scripts/verify-sales-release-inputs.mjs inputs "$_RELEASE_COMMIT_SHA" "$_CURRICULUM_BACKUP_NOT_BEFORE" "$$validation_now"'
-
-  - name: "node:22-slim"
-    id: "verify-curriculum-backup"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && node apps/sales-advantage/scripts/verify-sales-release-inputs.mjs backup-live "$_RELEASE_COMMIT_SHA" "$_CURRICULUM_BACKUP_NOT_BEFORE" "$$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$PROJECT_ID" cloud-sql "$_CURRICULUM_BACKUP_ID"'
 
   - name: "gcr.io/cloud-builders/docker"
     id: "build-image"
@@ -29,61 +26,6 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
 
-  - name: "node:22-slim"
-    id: "migrate-db"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db migrate'
-    secretEnv:
-      - "SALES_DIRECT_DATABASE_URL"
-
-  - name: "node:22-slim"
-    id: "doctor-check"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0042_company_product_principal_local_unique && psql "$$SALES_DIRECT_DATABASE_URL" -f apps/sales-advantage/scripts/sales-migration-0042-probe.sql'
-    secretEnv:
-      - "SALES_DIRECT_DATABASE_URL"
-
-  - name: "node:22-slim"
-    id: "build-curriculum-workspace-deps"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && pnpm --recursive --filter @reading-advantage/domain... --workspace-concurrency=2 --if-present run build"
-
-  - name: "node:22-slim"
-    id: "seed-production-curriculum"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export SALES_CURRICULUM_APPROVAL_SHA256="$$SALES_CURRICULUM_APPROVAL_SHA256" && pnpm --filter sales-advantage seed:production-curriculum'
-    secretEnv:
-      - "SALES_DIRECT_DATABASE_URL"
-      - "SALES_CURRICULUM_APPROVAL_SHA256"
-
-  - name: "node:22-slim"
-    id: "verify-production-curriculum"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && pnpm --filter sales-advantage verify:production-curriculum'
-    secretEnv:
-      - "SALES_DIRECT_DATABASE_URL"
-
-  - name: "node:22-slim"
-    id: "runtime-db-contract"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && cleanup() { psql "$$SALES_DIRECT_DATABASE_URL" --set=probe_owner="$BUILD_ID" -f apps/sales-advantage/scripts/sales-runtime-probe-cleanup.sql; } && trap cleanup EXIT && psql "$$SALES_DIRECT_DATABASE_URL" -f apps/sales-advantage/scripts/sales-runtime-grants.sql && psql "$$SALES_DIRECT_DATABASE_URL" -f apps/sales-advantage/scripts/sales-legacy-runtime-grants.sql && psql "$$SALES_DIRECT_DATABASE_URL" --set=probe_owner="$BUILD_ID" -f apps/sales-advantage/scripts/sales-runtime-probe-setup.sql && psql "$$SALES_DATABASE_URL" --set=probe_owner="$BUILD_ID" -f apps/sales-advantage/scripts/sales-runtime-probe.sql && psql "$$SALES_LEGACY_DATABASE_URL" --set=probe_owner="$BUILD_ID" -f apps/sales-advantage/scripts/sales-legacy-runtime-probe.sql && cleanup && trap - EXIT'
-    secretEnv:
-      - "SALES_DIRECT_DATABASE_URL"
-      - "SALES_DATABASE_URL"
-      - "SALES_LEGACY_DATABASE_URL"
-
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-legacy-rollback"
     args:
@@ -100,25 +42,6 @@ steps:
       - "--set-secrets=DATABASE_URL=SALES_LEGACY_DATABASE_URL:latest,AUTH_SECRET=SALES_AUTH_SECRET:latest,AI_PROVIDER=SALES_AI_PROVIDER:latest,OPENROUTER_API_KEY=SALES_OPENROUTER_API_KEY:latest,SALES_AUDIO_EVAL_MODEL=SALES_AUDIO_EVAL_MODEL:latest,SALES_AUDIO_EVAL_FALLBACK_MODEL=SALES_AUDIO_EVAL_FALLBACK_MODEL:latest,SALES_CHAT_MODEL=SALES_CHAT_MODEL:latest,STORAGE_ENDPOINT=SALES_STORAGE_ENDPOINT:latest,STORAGE_REGION=SALES_STORAGE_REGION:latest,STORAGE_BUCKET=SALES_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=SALES_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=SALES_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=SALES_STORAGE_PUBLIC_BASE_URL:latest"
       - "--tag=legacy-rollback"
       - "--no-traffic"
-
-  - name: "gcr.io/cloud-builders/gcloud"
-    id: "capture-legacy-rollback"
-    entrypoint: "bash"
-    args:
-      - "apps/sales-advantage/scripts/capture-sales-cloud-run-tag.sh"
-      - "legacy-rollback"
-      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
-      - "/workspace/.sales-legacy-rollback"
-
-  - name: "node:22-slim"
-    id: "verify-repair-verify-legacy-rollback"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates openssl postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export BUILD_ID="$BUILD_ID" && export SALES_LEGACY_ROLLBACK_URL="$$(tr -d "\r\n" < /workspace/.sales-legacy-rollback.url)" && bash apps/sales-advantage/scripts/verify-legacy-rollback-release.sh && manifest_sha256="$$(printf %s "$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST" | sha256sum | cut -d " " -f 1)" && psql "$$SALES_DIRECT_DATABASE_URL" --set=repair_manifest="$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST" --set=repair_manifest_sha256="$$manifest_sha256" --set=release_build_id="$BUILD_ID" --set=release_commit_sha="$_RELEASE_COMMIT_SHA" -f apps/sales-advantage/scripts/sales-legacy-source-role-repair.sql && bash apps/sales-advantage/scripts/verify-legacy-rollback-release.sh && rm -f /workspace/.sales-legacy-rollback.url /workspace/.sales-legacy-rollback.revision'
-    secretEnv:
-      - "SALES_DIRECT_DATABASE_URL"
-      - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-company-candidate"
@@ -172,22 +95,8 @@ images:
 
 substitutions:
   _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
-  _CURRICULUM_BACKUP_ID: "REQUIRED_CURRICULUM_BACKUP_ID"
   _CURRICULUM_BACKUP_NOT_BEFORE: "REQUIRED_CURRICULUM_BACKUP_NOT_BEFORE"
   _RELEASE_SOURCE_MANIFEST_SHA256: "REQUIRED_RELEASE_SOURCE_MANIFEST_SHA256"
-
-availableSecrets:
-  secretManager:
-    - versionName: "projects/$PROJECT_ID/secrets/SALES_DIRECT_DATABASE_URL/versions/latest"
-      env: "SALES_DIRECT_DATABASE_URL"
-    - versionName: "projects/$PROJECT_ID/secrets/SALES_DATABASE_URL/versions/latest"
-      env: "SALES_DATABASE_URL"
-    - versionName: "projects/$PROJECT_ID/secrets/SALES_LEGACY_DATABASE_URL/versions/latest"
-      env: "SALES_LEGACY_DATABASE_URL"
-    - versionName: "projects/$PROJECT_ID/secrets/SALES_CURRICULUM_APPROVAL_SHA256/versions/latest"
-      env: "SALES_CURRICULUM_APPROVAL_SHA256"
-    - versionName: "projects/$PROJECT_ID/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/latest"
-      env: "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"
 
 options:
   env:

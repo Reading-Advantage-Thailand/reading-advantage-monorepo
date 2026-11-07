@@ -1,4 +1,8 @@
 steps:
+  # The push holds no database step (decision D7 of the track per_app_cicd_20261107). The new
+  # revision must start against the old schema. The database steps run only in
+  # cloudbuild-traffic.yaml, by hand, on Daniel's word.
+
   - name: "gcr.io/cloud-builders/docker"
     id: "build-image"
     args:
@@ -14,29 +18,6 @@ steps:
     args:
       - "push"
       - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
-
-  # CODECAMP_DATABASE_URL is a Cloud SQL unix-socket URL
-  # (?host=/cloudsql/<instance>). Cloud Build steps have no /cloudsql socket,
-  # so migrate/doctor start the Cloud SQL Auth Proxy (IAM-authenticated,
-  # session-mode direct connection — no transaction pooler) listening on the
-  # same /cloudsql path the runtime uses; the secret URL then works as-is.
-  - name: "node:22-slim"
-    id: "migrate-db"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL="$$CODECAMP_DATABASE_URL" && export DIRECT_DATABASE_URL="$$CODECAMP_DATABASE_URL" && export MIGRATION_CEILING_TAG=0059_game_challenges && pnpm --filter @reading-advantage/db migrate'
-    secretEnv:
-      - "CODECAMP_DATABASE_URL"
-
-  - name: "node:22-slim"
-    id: "doctor-check"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL="$$CODECAMP_DATABASE_URL" && export DIRECT_DATABASE_URL="$$CODECAMP_DATABASE_URL" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0049_codecamp_exercise_quiz_repair && test "$$(psql "$$CODECAMP_DATABASE_URL" -Atc "select to_regprocedure(''public.sync_codecamp_company_principal(uuid,text,uuid,text,text)'') is not null")" = t'
-    secretEnv:
-      - "CODECAMP_DATABASE_URL"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-cloudrun"
@@ -85,8 +66,6 @@ images:
 
 availableSecrets:
   secretManager:
-    - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_DATABASE_URL/versions/latest"
-      env: "CODECAMP_DATABASE_URL"
     - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_REVIEW_WORKER_TICK_TOKEN/versions/latest"
       env: "CODECAMP_REVIEW_WORKER_TICK_TOKEN"
 

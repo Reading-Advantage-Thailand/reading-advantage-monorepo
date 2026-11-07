@@ -1,0 +1,69 @@
+# Manual traffic step of the marketing app (decision D7 of the track per_app_cicd_20261107).
+#
+# A person starts this file by hand, on Daniel's word. No workflow runs it. It changes the
+# production database of marketing and then moves traffic to the revision that a push built with
+# --no-traffic. Daniel's word supplies _TAG, the candidate tag of the push build (c plus the first
+# segment of its BUILD_ID, for example c1a2b3c4d).
+#
+# Order: migrate, doctor check, runtime probe, traffic move.
+# See docs/runbooks/traffic-moves.md.
+steps:
+  # ── Migrate database ─────────────────────────────────────────────────
+  # The build worker does not receive a Cloud Run /cloudsql mount. Start the
+  # pinned Cloud SQL Auth Proxy on the same Unix-socket path used by the
+  # production URL, then run migrations through the direct connection secret.
+  - name: "node:22-slim"
+    id: "migrate-db"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db migrate'
+    secretEnv:
+      - "MARKETING_DIRECT_DATABASE_URL"
+
+  # ── Doctor check ─────────────────────────────────────────────────────
+  # Validates migration ledger integrity before the new code is deployed.
+  - name: "node:22-slim"
+    id: "doctor-check"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0042_company_product_principal_local_unique'
+    secretEnv:
+      - "MARKETING_DIRECT_DATABASE_URL"
+
+  # Apply the reviewed, table-specific runtime grants and prove the runtime
+  # credential can use only Marketing application relations before traffic
+  # moves. Employee authentication and sessions are owned by Accounts over OIDC.
+  - name: "node:22-slim"
+    id: "runtime-db-contract"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && psql "$$MARKETING_DIRECT_DATABASE_URL" -f apps/marketing/scripts/marketing-runtime-grants.sql && psql "$$MARKETING_DATABASE_URL" -f apps/marketing/scripts/marketing-runtime-probe.sql'
+    secretEnv:
+      - "MARKETING_DIRECT_DATABASE_URL"
+      - "MARKETING_DATABASE_URL"
+
+  # The traffic move runs last. It sends all traffic to the tagged revision of the push.
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "update-traffic"
+    args:
+      - "run"
+      - "services"
+      - "update-traffic"
+      - "marketing"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--to-tags=${_TAG}=100"
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$PROJECT_ID/secrets/MARKETING_DIRECT_DATABASE_URL/versions/latest"
+      env: "MARKETING_DIRECT_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/MARKETING_DATABASE_URL/versions/latest"
+      env: "MARKETING_DATABASE_URL"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
