@@ -76,7 +76,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: Per-app CI/CD (a change deploys only the affected app)** — *created 2026-11-07*
   *Link: [./tracks/per_app_cicd_20261107/](./tracks/per_app_cicd_20261107/)*
-  *Status: active, opened 2026-11-07; Phase 1 (affected-app logic) next | Owner: Monorepo orchestrator | Date needed 2026-11-09; first push and every traffic move are `deferred:daniel`*
+  *Status: active, opened 2026-11-07; Phase 1 accepted (checkpoint db8b093bb); Phase 2 in review remediation | Owner: Monorepo orchestrator | Date needed 2026-11-09; first push and every traffic move are `deferred:daniel`*
   *Note: Daniel 2026-11-07 06:02 ICT: "We need to fix the ci/CD so that changes to an app or an app's packages deploys only that app." www keeps its direct deploy; gated apps build with --no-traffic and a tag. Includes the storytime tag-length fix and the storytime deploy runbook facts. No push and no deploy before the dry-run report.*
 
 
