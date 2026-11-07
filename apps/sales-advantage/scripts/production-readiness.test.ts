@@ -1,9 +1,11 @@
 // @vitest-environment node
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
 
 const appRoot = resolve(import.meta.dirname, "..");
 const cloudbuild = readFileSync(resolve(appRoot, "cloudbuild.yaml"), "utf8");
+const traffic = readFileSync(resolve(appRoot, "cloudbuild-traffic.yaml"), "utf8");
 const grants = readFileSync(
   resolve(appRoot, "scripts/sales-runtime-grants.sql"),
   "utf8",
@@ -125,45 +127,58 @@ describe("Sales production readiness", () => {
   });
 
   it("verifies compatibility and company candidates before traffic cutover", () => {
-    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(10);
-    expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(6);
-    expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(7);
-    const ordered = [
+    expect((cloudbuild + traffic).match(/node:22-slim/g)).toHaveLength(10);
+    expect((cloudbuild + traffic).match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(6);
+    expect((cloudbuild + traffic).match(/pnpm@11\.8\.0/g)).toHaveLength(7);
+    const pushOrdered = [
       "validate-release-inputs",
-      "verify-curriculum-backup",
       "build-image",
       "push-image",
+      "deploy-legacy-rollback",
+      "deploy-company-candidate",
+      "allow-public-invoker",
+      "capture-company-candidate",
+      "verify-company-candidate",
+    ].map((id) => cloudbuild.indexOf(`id: "${id}"`));
+    expect(pushOrdered.every((position) => position >= 0)).toBe(true);
+    expect(pushOrdered).toEqual([...pushOrdered].sort((left, right) => left - right));
+    const trafficOrdered = [
+      "verify-curriculum-backup",
       "migrate-db",
       "doctor-check",
       "build-curriculum-workspace-deps",
       "seed-production-curriculum",
       "verify-production-curriculum",
       "runtime-db-contract",
-      "deploy-legacy-rollback",
       "capture-legacy-rollback",
       "verify-repair-verify-legacy-rollback",
-      "deploy-company-candidate",
-      "allow-public-invoker",
-      "capture-company-candidate",
-      "verify-company-candidate",
-    ].map((id) => cloudbuild.indexOf(`id: "${id}"`));
-    expect(ordered.every((position) => position >= 0)).toBe(true);
-    expect(ordered).toEqual([...ordered].sort((left, right) => left - right));
-    expect(ordered[0]).toBe(cloudbuild.indexOf('id: "validate-release-inputs"'));
-    expect(ordered[1]).toBe(cloudbuild.indexOf('id: "verify-curriculum-backup"'));
-    expect(cloudbuild).toContain("SALES_DIRECT_DATABASE_URL");
+      "update-traffic",
+    ].map((id) => traffic.indexOf(`id: "${id}"`));
+    expect(trafficOrdered.every((position) => position >= 0)).toBe(true);
+    expect(trafficOrdered).toEqual([...trafficOrdered].sort((left, right) => left - right));
+    for (const id of [
+      "migrate-db",
+      "doctor-check",
+      "seed-production-curriculum",
+      "verify-production-curriculum",
+      "runtime-db-contract",
+      "verify-repair-verify-legacy-rollback",
+    ]) {
+      expect(cloudbuild).not.toContain(`id: "${id}"`);
+    }
+    expect(traffic).toContain("SALES_DIRECT_DATABASE_URL");
     expect(cloudbuild).toContain("SALES_DATABASE_URL");
     expect(cloudbuild).toContain("SALES_LEGACY_DATABASE_URL");
-    expect(cloudbuild).not.toContain("SALES_PRIVILEGED_ADMIN_DATABASE_URL");
-    expect(cloudbuild).not.toContain("sales-runtime-role-provision.sql");
-    expect(cloudbuild).toContain("sales-runtime-probe-setup.sql");
-    expect(cloudbuild).toContain("sales-runtime-probe-cleanup.sql");
-    expect(cloudbuild).toContain("sales-legacy-runtime-grants.sql");
-    expect(cloudbuild).toContain("sales-legacy-runtime-probe.sql");
-    expect(cloudbuild).toContain(
+    expect(traffic).not.toContain("SALES_PRIVILEGED_ADMIN_DATABASE_URL");
+    expect(traffic).not.toContain("sales-runtime-role-provision.sql");
+    expect(traffic).toContain("sales-runtime-probe-setup.sql");
+    expect(traffic).toContain("sales-runtime-probe-cleanup.sql");
+    expect(traffic).toContain("sales-legacy-runtime-grants.sql");
+    expect(traffic).toContain("sales-legacy-runtime-probe.sql");
+    expect(traffic).toContain(
       "doctor --check --required-migration 0042_company_product_principal_local_unique",
     );
-    expect(cloudbuild).toContain(
+    expect(traffic).toContain(
       'psql "$$SALES_DIRECT_DATABASE_URL" -f apps/sales-advantage/scripts/sales-migration-0042-probe.sql',
     );
     expect(cloudbuild).toContain("SALES_AUTH_MODE=legacy-school");
@@ -185,9 +200,13 @@ describe("Sales production readiness", () => {
       cloudbuild.indexOf('id: "deploy-legacy-rollback"'),
       cloudbuild.indexOf('id: "deploy-company-candidate"'),
     );
-    const combinedVerification = cloudbuild.slice(
-      cloudbuild.indexOf('id: "verify-repair-verify-legacy-rollback"'),
-      cloudbuild.indexOf('id: "deploy-company-candidate"'),
+    const combinedVerification = traffic.slice(
+      traffic.indexOf('id: "verify-repair-verify-legacy-rollback"'),
+      traffic.indexOf('id: "update-traffic"'),
+    );
+    const legacyCapture = traffic.slice(
+      traffic.indexOf('id: "capture-legacy-rollback"'),
+      traffic.indexOf('id: "verify-repair-verify-legacy-rollback"'),
     );
     const companyCandidate = cloudbuild.slice(
       cloudbuild.indexOf('id: "deploy-company-candidate"'),
@@ -199,7 +218,8 @@ describe("Sales production readiness", () => {
       "DATABASE_URL=SALES_LEGACY_DATABASE_URL:latest",
     );
     expect(legacyRelease).not.toContain("SALES_DATABASE_URL:latest");
-    expect(legacyRelease).toContain("capture-sales-cloud-run-tag.sh");
+    expect(legacyCapture).toContain("capture-sales-cloud-run-tag.sh");
+    expect(legacyCapture).toContain("capture-sales-cloud-run-tag.sh");
     expect(
       combinedVerification.match(/verify-legacy-rollback-release\.sh/g),
     ).toHaveLength(2);
@@ -237,7 +257,7 @@ describe("Sales production readiness", () => {
     expect(candidatePromotion).toContain(
       "SALES_RELEASE_BASE_URL=https://sales.reading-advantage.com",
     );
-    expect(cloudbuild).toContain(
+    expect(traffic).toContain(
       "projects/$PROJECT_ID/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/latest",
     );
 
@@ -299,28 +319,29 @@ describe("Sales production readiness", () => {
   it("seeds only deterministic approved curriculum and gates exact completeness", () => {
     const inputStep = cloudbuild.slice(
       cloudbuild.indexOf('id: "validate-release-inputs"'),
-      cloudbuild.indexOf('id: "verify-curriculum-backup"'),
-    );
-    const backupStep = cloudbuild.slice(
-      cloudbuild.indexOf('id: "verify-curriculum-backup"'),
       cloudbuild.indexOf('id: "build-image"'),
+    );
+    const backupStep = traffic.slice(
+      traffic.indexOf('id: "verify-curriculum-backup"'),
+      traffic.indexOf('id: "migrate-db"'),
     );
     const preBuildSteps = cloudbuild.slice(
       0,
       cloudbuild.indexOf('id: "build-image"'),
     );
-    const seedStep = cloudbuild.slice(
-      cloudbuild.indexOf('id: "seed-production-curriculum"'),
-      cloudbuild.indexOf('id: "verify-production-curriculum"'),
+    const seedStep = traffic.slice(
+      traffic.indexOf('id: "seed-production-curriculum"'),
+      traffic.indexOf('id: "verify-production-curriculum"'),
     );
-    const verifyStep = cloudbuild.slice(
-      cloudbuild.indexOf('id: "verify-production-curriculum"'),
-      cloudbuild.indexOf('id: "runtime-db-contract"'),
+    const verifyStep = traffic.slice(
+      traffic.indexOf('id: "verify-production-curriculum"'),
+      traffic.indexOf('id: "runtime-db-contract"'),
     );
     expect(backupStep).toContain("_CURRICULUM_BACKUP_ID");
     expect(backupStep).toContain("_CURRICULUM_BACKUP_NOT_BEFORE");
     expect(backupStep).toContain("verify-sales-release-inputs.mjs backup-live");
-    expect(preBuildSteps.match(/name: "node:22-slim"/g)).toHaveLength(2);
+    expect(preBuildSteps.match(/name: "node:22-slim"/g)).toHaveLength(1);
+    expect(backupStep.match(/name: "node:22-slim"/g)).toHaveLength(1);
     expect(inputStep).toContain("release-source-manifest.mjs verify");
     expect(inputStep).toContain("_RELEASE_SOURCE_MANIFEST_SHA256");
     expect(cloudbuild).not.toContain("$${COMMIT_SHA");
@@ -346,10 +367,10 @@ describe("Sales production readiness", () => {
     expect(roleRunbook).not.toContain(
       "bash apps/sales-advantage/scripts/create-sales-release-archive.sh",
     );
-    expect(cloudbuild).toContain(
+    expect(traffic).toContain(
       '_CURRICULUM_BACKUP_ID: "REQUIRED_CURRICULUM_BACKUP_ID"',
     );
-    expect(cloudbuild).toContain(
+    expect(traffic).toContain(
       '_CURRICULUM_BACKUP_NOT_BEFORE: "REQUIRED_CURRICULUM_BACKUP_NOT_BEFORE"',
     );
     expect(cloudbuild).toContain(
@@ -365,9 +386,9 @@ describe("Sales production readiness", () => {
     );
     expect(seedStep).not.toContain("SALES_DATABASE_URL");
     expect(verifyStep).not.toContain("SALES_DATABASE_URL");
-    const dependencyBuild = cloudbuild.slice(
-      cloudbuild.indexOf('id: "build-curriculum-workspace-deps"'),
-      cloudbuild.indexOf('id: "seed-production-curriculum"'),
+    const dependencyBuild = traffic.slice(
+      traffic.indexOf('id: \"build-curriculum-workspace-deps\"'),
+      traffic.indexOf('id: "seed-production-curriculum"'),
     );
     expect(cloudIgnore).toContain("**/dist");
     expect(cloudIgnore.split(/\r?\n/)).not.toContain(".gcloudignore");

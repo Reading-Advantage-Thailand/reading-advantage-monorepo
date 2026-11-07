@@ -9,6 +9,10 @@ const cloudBuild = readFileSync(
   resolve(testDirectory, "../../cloudbuild.yaml"),
   "utf8",
 );
+const traffic = readFileSync(
+  resolve(testDirectory, "../../cloudbuild-traffic.yaml"),
+  "utf8",
+);
 
 describe("Sales Cloud Build secret isolation", () => {
   it("maps shared runtime names to Sales-owned Secret Manager resources", () => {
@@ -31,16 +35,16 @@ describe("Sales Cloud Build secret isolation", () => {
   });
 
   it("uses a Sales-owned direct database secret for migration gates", () => {
-    expect(cloudBuild).toContain(
+    expect(traffic).toContain(
       "projects/$PROJECT_ID/secrets/SALES_DIRECT_DATABASE_URL/versions/latest",
     );
-    expect(cloudBuild).not.toContain(
+    expect(traffic).not.toContain(
       "projects/$PROJECT_ID/secrets/DIRECT_DATABASE_URL/versions/latest",
     );
   });
 
   it("isolates no-traffic compatibility and company candidates", () => {
-    expect(cloudBuild).toContain(
+    expect(traffic).toContain(
       "projects/$PROJECT_ID/secrets/SALES_LEGACY_DATABASE_URL/versions/latest",
     );
     const compatibilityRelease = cloudBuild.slice(
@@ -56,13 +60,17 @@ describe("Sales Cloud Build secret isolation", () => {
     );
     expect(compatibilityRelease).not.toContain("SALES_DATABASE_URL:latest");
     expect(compatibilityRelease).toContain("--no-traffic");
-    expect(compatibilityRelease).toContain(
+    const combinedVerification = traffic.slice(
+      traffic.indexOf('id: "verify-repair-verify-legacy-rollback"'),
+      traffic.indexOf('id: "update-traffic"'),
+    );
+    expect(combinedVerification).toContain(
       'id: "verify-repair-verify-legacy-rollback"',
     );
-    expect(compatibilityRelease).toContain(
+    expect(combinedVerification).toContain(
       '      - "SALES_DIRECT_DATABASE_URL"',
     );
-    expect(compatibilityRelease).toContain(
+    expect(combinedVerification).toContain(
       '      - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
     );
     expect(companyCandidate).toContain(
