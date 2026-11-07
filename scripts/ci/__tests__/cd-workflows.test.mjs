@@ -527,6 +527,86 @@ describe("W: per-app CD workflows", () => {
     must(lines >= 5, `uses_lines=${lines}`);
     must(bad.length === 0, `unpinned=${bad.join(",")} uses_lines=${lines}`);
   });
+
+  it("W-24 a REQUIRED release commit row gets the pushed commit", () => {
+    const rows = gatedRows().filter((row) => row.id !== "sales-advantage");
+    must(rows.length >= 1, `rows_checked=${rows.length}`);
+    const needs = [];
+    for (const row of rows) {
+      const subs = cloudbuild(String(row.cloudbuild)).substitutions ?? {};
+      if (String(subs._RELEASE_COMMIT_SHA ?? "").startsWith("REQUIRED_")) {
+        needs.push({ id: String(row.id), key: "_RELEASE_COMMIT_SHA" });
+      }
+    }
+    must(needs.length >= 1, `required_rows=${needs.length}`);
+    must(
+      needs.some((entry) => entry.id === "marketing"),
+      `required_rows=${needs.map((entry) => entry.id).join(",")}`,
+    );
+    const appText = readText(`.github/workflows/${APPS}`);
+    const appDoc = workflow(APPS);
+    const submit = (appDoc.jobs?.build?.steps ?? [])
+      .map((step) => String(step.run ?? ""))
+      .join("\n");
+    for (const { id, key } of needs) {
+      const direct = submit.includes(key) && /github\.sha/.test(submit);
+      const viaMatrix =
+        /matrix\.[\w.-]*substitution/.test(submit) &&
+        appText.includes(key) &&
+        /github\.sha/.test(appText);
+      must(direct || viaMatrix, `${id} does not pass ${key} from the pushed commit`);
+    }
+  });
+
+  it("W-25 a row without the key gets no release substitution", () => {
+    const ids = ["primary-advantage", "storytime", "accounts", "accounting"];
+    must(ids.length === 4, `rows_checked=${ids.length}`);
+    const rows = readTable().filter((row) => ids.includes(String(row.id)));
+    must(rows.length === 4, `rows_checked=${rows.length}`);
+    for (const row of rows) {
+      const subs = cloudbuild(String(row.cloudbuild)).substitutions ?? {};
+      must(
+        !("_RELEASE_COMMIT_SHA" in subs),
+        `${row.id} declares the release key`,
+      );
+    }
+    const appDoc = workflow(APPS);
+    const submit = (appDoc.jobs?.build?.steps ?? [])
+      .map((step) => String(step.run ?? ""))
+      .join("\n");
+    if (submit.includes("_RELEASE_COMMIT_SHA")) {
+      must(/matrix\./.test(submit), "the release commit reaches every row");
+      must(
+        !/--substitutions=[^\n]*_RELEASE_COMMIT_SHA/.test(submit),
+        "the release commit is passed unconditionally",
+      );
+    }
+  });
+
+  it("W-26 the sales push stays an open limit", () => {
+    const row = readTable().find((entry) => entry.id === "sales-advantage");
+    must(row, "sales row missing");
+    const subs = cloudbuild(String(row.cloudbuild)).substitutions ?? {};
+    must(
+      String(subs._RELEASE_COMMIT_SHA ?? "").startsWith("REQUIRED_"),
+      "the sales release commit default changed",
+    );
+    const runbook = readText("docs/runbooks/traffic-moves.md");
+    const limits = sectionText(runbook, "Open limits");
+    must(limits !== "", "the Open limits section is missing");
+    must(limits.includes("sales-advantage"), "Open limits does not name sales-advantage");
+    for (const key of ["_RELEASE_COMMIT_SHA"]) {
+      must(limits.includes(key), `Open limits does not name ${key}`);
+    }
+    const sales = sectionText(runbook, "sales-advantage");
+    for (const key of [
+      "_CURRICULUM_BACKUP_ID",
+      "_CURRICULUM_BACKUP_NOT_BEFORE",
+      "_PUSH_BUILD_ID",
+    ]) {
+      must(sales.includes(key), `the sales section does not name ${key}`);
+    }
+  });
 });
 
 /**
