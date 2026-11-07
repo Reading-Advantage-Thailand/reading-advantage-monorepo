@@ -22,7 +22,7 @@ revision with `--no-traffic` and a revision tag, and a later traffic step moves 
 
    The build pushes the image
    `asia-southeast1-docker.pkg.dev/primary-advantage/primary-advantage-repo/storytime-app:$BUILD_ID`
-   and deploys the `storytime-app` service with `--no-traffic --tag=st-$BUILD_ID`.
+   and deploys the `storytime-app` service with `--no-traffic --tag=st-<first 8 characters of BUILD_ID>`.
 
 3. Check the tagged revision URL before any traffic move. Read the tag URL of the new revision:
 
@@ -31,10 +31,10 @@ revision with `--no-traffic` and a revision tag, and a later traffic step moves 
    ```
 
    Then check the printed route on the tagged URL. The tag URL has the form
-   `https://st-<build-id>---storytime-app-<hash>-<region-alias>.a.run.app`:
+   `https://st-<first 8 characters of build-id>---storytime-app-<hash>-<region-alias>.a.run.app`:
 
    ```
-   curl -s -o /dev/null -w '%{http_code}\n' "https://st-<build-id>---storytime-app-<hash>-<region-alias>.a.run.app/th/st/2/1"
+   curl -s -o /dev/null -w '%{http_code}\n' "https://st-<first-8-of-build-id>---storytime-app-<hash>-<region-alias>.a.run.app/th/st/2/1"
    ```
 
    Phase 1 expects 404 on `/th/st/2/1`: the route exists, and the week content comes in
@@ -62,3 +62,28 @@ revision with `--no-traffic` and a revision tag, and a later traffic step moves 
 - The service answers the printed paths `/<locale>/st/<level>/<week>` for the locales `th` and `en`.
 - The build needs no database and no secrets (milestone 1).
 - The image repository is `primary-advantage-repo`; the image name is `storytime-app`.
+
+## Facts (2026-11-07)
+
+These facts come from the test deploy of 2026-11-07. The tag rule below is in the file
+`apps/storytime/cloudbuild.yaml`. No build has run it yet.
+
+- The test deploy used an archive of the Dockerfile `COPY` set in place of the whole commit.
+  The archive held 154 files (about 3 MB): `package.json`, `pnpm-lock.yaml`,
+  `pnpm-workspace.yaml`, `turbo.json`, `.pnpmfile.cjs`, `.dockerignore`, `apps/storytime`,
+  `packages/config`, and `packages/read-along`.
+- The service needs the environment variable
+  `STORYTIME_MEDIA_BASE=https://storage.googleapis.com/primary-app-storage/storytime-app`.
+  It was set on 2026-11-07.
+- The media of the new app sit under `gs://primary-app-storage/storytime-app/`. They have public
+  read until the login phase.
+- The ingress was `internal`: every public address answered 404. The ingress is now `all`.
+  The rollback is `--ingress=internal`.
+- The traffic must not move to `storytime-app-00008-tmb` (the rejected build) while the ingress
+  is `all`.
+- The live revision is `storytime-app-00011-dut`.
+- The tag and the service name together must have 46 characters or less. Build `4907d929`
+  failed at the deploy step with this text: `traffic tag 'st-4907d929-48ae-4f4f-8983-e7666d8407a1'
+  and service name 'storytime-app' together are too long. Combined traffic tag and service name
+  cannot exceed 46 characters.` The tag rule is `st-` plus the first 8 characters of `BUILD_ID`.
+  The tag and the service name `storytime-app` then have 24 characters.
