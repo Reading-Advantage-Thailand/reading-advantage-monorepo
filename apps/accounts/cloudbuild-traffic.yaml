@@ -1,0 +1,93 @@
+# Manual traffic step of the accounts app (decision D7 of the track per_app_cicd_20261107).
+#
+# A person starts this file by hand, on Daniel's word. No workflow runs it. It changes the
+# production company-identity database and then moves traffic to the revision that a push built
+# with --no-traffic. Daniel's word supplies _TAG, for example ac-1a2b3c4d.
+#
+# Order: migrate, bootstrap, doctor, production identity bootstrap, runtime probe, traffic move.
+# See docs/runbooks/traffic-moves.md.
+steps:
+  - name: "node:22-slim"
+    id: "migrate-company-identity"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export COMPANY_AUTH_DIRECT_DATABASE_URL=\"$$COMPANY_AUTH_DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db company-identity:migrate"
+    secretEnv: ["COMPANY_AUTH_DIRECT_DATABASE_URL"]
+
+  - name: "node:22-slim"
+    id: "bootstrap-company-identity"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export COMPANY_AUTH_DIRECT_DATABASE_URL=\"$$COMPANY_AUTH_DIRECT_DATABASE_URL\" && export COMPANY_AUTH_DATABASE_URL=\"$$COMPANY_AUTH_DATABASE_URL\" && pnpm --filter @reading-advantage/db company-identity:bootstrap"
+    secretEnv: ["COMPANY_AUTH_DIRECT_DATABASE_URL", "COMPANY_AUTH_DATABASE_URL"]
+
+  - name: "node:22-slim"
+    id: "doctor-company-identity"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export COMPANY_AUTH_DIRECT_DATABASE_URL=\"$$COMPANY_AUTH_DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db company-identity:doctor"
+    secretEnv: ["COMPANY_AUTH_DIRECT_DATABASE_URL"]
+
+  - name: "node:22-slim"
+    id: "bootstrap-production-identity"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @reading-advantage/db build && pnpm --filter @reading-advantage/auth build && pnpm --filter accounts bootstrap:production"
+    secretEnv:
+      - "COMPANY_AUTH_DIRECT_DATABASE_URL"
+      - "COMPANY_AUTH_BOOTSTRAP_OWNER_USERNAME"
+      - "COMPANY_AUTH_BOOTSTRAP_OWNER_DISPLAY_NAME"
+      - "COMPANY_AUTH_BOOTSTRAP_OWNER_PASSWORD"
+      - "MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+      - "SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+      - "CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+      - "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+
+  - name: "node:22-slim"
+    id: "runtime-db-contract"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && psql \"$$COMPANY_AUTH_DATABASE_URL\" -v ON_ERROR_STOP=1 -f apps/accounts/scripts/accounts-runtime-probe.sql"
+    secretEnv: ["COMPANY_AUTH_DATABASE_URL"]
+
+  # The traffic move runs last. It sends all traffic to the tagged revision of the push.
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "update-traffic"
+    args:
+      - "run"
+      - "services"
+      - "update-traffic"
+      - "accounts"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--to-tags=${_TAG}=100"
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$PROJECT_ID/secrets/COMPANY_AUTH_DIRECT_DATABASE_URL/versions/latest"
+      env: "COMPANY_AUTH_DIRECT_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/COMPANY_AUTH_DATABASE_URL/versions/latest"
+      env: "COMPANY_AUTH_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/COMPANY_AUTH_BOOTSTRAP_OWNER_USERNAME/versions/latest"
+      env: "COMPANY_AUTH_BOOTSTRAP_OWNER_USERNAME"
+    - versionName: "projects/$PROJECT_ID/secrets/COMPANY_AUTH_BOOTSTRAP_OWNER_DISPLAY_NAME/versions/latest"
+      env: "COMPANY_AUTH_BOOTSTRAP_OWNER_DISPLAY_NAME"
+    - versionName: "projects/$PROJECT_ID/secrets/COMPANY_AUTH_BOOTSTRAP_OWNER_PASSWORD/versions/latest"
+      env: "COMPANY_AUTH_BOOTSTRAP_OWNER_PASSWORD"
+    - versionName: "projects/$PROJECT_ID/secrets/MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
+      env: "MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+    - versionName: "projects/$PROJECT_ID/secrets/SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
+      env: "SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+    - versionName: "projects/reading-advantage/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
+      env: "CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
+      env: "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8

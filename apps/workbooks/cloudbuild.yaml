@@ -1,4 +1,4 @@
-# Cloud Build pipeline for apps/workbooks: build, push, deploy to Cloud Run.
+# Cloud Build pipeline for apps/workbooks: build, push, deploy to Cloud Run with no traffic.
 # Mirrors apps/codecamp-advantage/cloudbuild.yaml (the closest Company-SSO
 # sibling) minus its DB migrate/doctor steps, which are run separately for this
 # app.
@@ -27,22 +27,30 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"
 
+  # Deploy the new revision with no traffic and a tag: wb- plus the first 8 characters of BUILD_ID.
+  # A traffic move is a manual step on Daniel's word (decision D2 of the track per_app_cicd_20261107).
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-cloudrun"
+    entrypoint: "bash"
+    env:
+      - "BUILD_ID=$BUILD_ID"
     args:
-      - "run"
-      - "deploy"
-      - "workbooks"
-      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"
-      - "--region=asia-southeast1"
-      - "--platform=managed"
-      - "--service-account=workbooks-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
-      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=workbooks-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://workbooks.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=workbooks,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
-      - "--min-instances=0"
-      - "--max-instances=10"
-      - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=WORKBOOKS_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
+      - "-c"
+      - |
+        set -euo pipefail
+        gcloud run deploy workbooks \
+          --image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID \
+          --region=asia-southeast1 \
+          --platform=managed \
+          --service-account=workbooks-cloud-run@$PROJECT_ID.iam.gserviceaccount.com \
+          --add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql \
+          --set-env-vars=NODE_ENV=production,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=workbooks-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://workbooks.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=workbooks,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30 \
+          --min-instances=0 \
+          --max-instances=10 \
+          --concurrency=80 \
+          --set-secrets=DATABASE_URL=WORKBOOKS_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest \
+          --no-traffic \
+          --tag=wb-${BUILD_ID:0:8}
 
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"
