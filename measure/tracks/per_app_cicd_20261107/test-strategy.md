@@ -1,10 +1,11 @@
 # Test strategy: Per-app CI/CD
 
 > **Track:** `per_app_cicd_20261107` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
-> **Scope:** Phase 1 `## Phase 1: The affected-app logic` in full (section P1). Outlines for `## Phase 2: Per-app CD workflows`, `## Phase 3: CI for the affected apps`, and `## Phase 4: Dry runs, www proof, and the first-push plan` (sections P2, P3, P4).
+> **Scope:** Phase 1 `## Phase 1: The affected-app logic` and Phase 2 `## Phase 2: Per-app CD workflows` in full (sections P1 and P2). Outlines for `## Phase 3: CI for the affected apps` and `## Phase 4: Dry runs, www proof, and the first-push plan` (sections P3 and P4).
 > **Written:** 2026-11-07 at role base `04b5cb1619afb7742a06f6cf1c884805cee3e320` (spec review passed in round 2). Model: claude-code/claude-sonnet-5-5.
 > **Checked and revised (round 2):** 2026-11-07 at role base `c4890971f4c99bbe74ba052722938e29c6700371`. Model: deepseek/deepseek-v4.1-flash (a different family from the writer). Section 5 lists what was re-measured and what changed.
-> **Facts:** each "measured" fact in section 2 was read at the role base on 2026-11-07. One heavy job ran (M1). Red and Green must measure again. Facts re-read in round 2 carry the round-2 date.
+> **Phase 2 written:** 2026-11-07 at the P2 role base `390bcb684237d0ed9bde78682a2d3e06493cb0d3` (the tree after the Phase 1 checkpoint). Model: deepseek/deepseek-flash, a family different from the spec writer (the plan requires it). The immutable `phase_base_sha` is captured after this strategy commit (P2.7).
+> **Facts:** each "measured" fact in section 2 was read at its role base on 2026-11-07. One heavy job ran at each base (M1, M37). Red and Green must measure again. Facts re-read in round 2 carry the round-2 date. Facts M23 to M42 were read at `390bcb684`.
 > **No push.** A push to `master` deploys www today. No role pushes before Phase 4 and Daniel's word.
 
 ## 1. Rules for every phase
@@ -91,6 +92,26 @@
 | M20 | **Round 2.** Neither workflow declares `permissions:`. `grep -rn 'permissions:' .github/workflows` finds nothing. The two workflows read the repository and use `secrets.GCP_SERVICE_ACCOUNT` and `secrets.GCP_PROJECT_ID`; `ci.yml` also holds a Postgres and a pgbouncer service. | Read of both workflow files. |
 | M21 | **Round 2.** Three apps are not table rows: `activity-vinext-fixture`, `advantage-games` (package name `vocabulary-games`), and `science-advantage`. A change to one of them returns `[]` from the script by design (C5), so Phase 3 plans no app job for it. `ci.yml` today checks `apps/**` under one job. This is a coverage gap, recorded as Q9. | Read of the app list against the table. |
 | M22 | **Round 2.** `ci.yml` already sets `fetch-depth: 0` in its checkout. `cd-www-reading-advantage.yml` does not set it (the default is 1). With `fetch-depth: 0`, `actions/checkout` fetches all branches into `refs/remotes/origin/*`, so the zero-base fallback to `origin/master` works in Actions. A shallow checkout breaks that fallback (case A6-06). | Read of both workflows. |
+| M23 | **P2 base.** HEAD is `390bcb684237d0ed9bde78682a2d3e06493cb0d3` and equals the given P2 base. The working tree is dirty from other sessions. | `git rev-parse HEAD`, `git status --porcelain`. |
+| M24 | **P2 base.** `.github/workflows/` holds exactly `cd-www-reading-advantage.yml` and `ci.yml`. No `cd-apps.yml`. `cd-www` triggers on push to `master` with 6 paths (`apps/www-reading-advantage/**`, `packages/**`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`) and runs one job `deploy`. Its steps are checkout (no `fetch-depth`), auth, setup-gcloud, `gcloud builds submit --config=apps/www-reading-advantage/cloudbuild.yaml .`, and describe. `ci.yml` holds `fetch-depth: 0`, Node 22, and the two service containers. Neither file declares `permissions:`, `concurrency:`, or `pull_request_target`. Only `cd-www` uses secrets. | Read of both files, `grep -rn`. |
+| M25 | **P2 base.** `scripts/ci/apps.json` exists (P1): 10 rows, `direct=1`, `gated=8`, `excluded=1`. Every gated row holds `tag` and `tagLength`. The four prefix rows hold `<prefix>-${BUILD_ID:0:8}`. The four file-tag rows hold `candidate`, `sso-candidate`, `c$${build_id%%-*}` (JSON text), and `legacy-rollback`. | Read and a Node read of the table. |
+| M26 | **P2 base.** Tag math: primary 11+21=32; storytime 11+13=24; accounting 9+10=19; codecamp 13+18=31; marketing 9+9=18; sales 15+15=30; accounts 11+8=19; workbooks 11+9=20. The maximum is 32. The limit 46 comes from the spec's quoted failure text of build `4907d929`. `gcloud run deploy --help` does not state the number locally. | A Node read of the table; `gcloud run deploy --help`. |
+| M27 | **P2 base.** `apps/storytime/cloudbuild.yaml` deploys `--no-traffic --tag=st-$BUILD_ID`. The tag renders to 39 characters (`st-` plus the 36-character build id). Tag plus service is 52. | Read of the deploy step. |
+| M28 | **P2 base.** Primary push file step ids: `build-image`, `push-image`, `refuse-legacy-db`, `migrate-db`, `doctor-check`, `deploy-cloudrun`. The deploy step is direct (no `--no-traffic`, no `--tag`). The three database steps hold `cloud-sql-proxy`, `pnpm --filter @reading-advantage/db`, and `secretEnv DATABASE_URL`. `doctor-check` holds `--required-migration 0074_primary_help_events`. | `yaml` parse and a read. |
+| M29 | **P2 base.** Accounts push file step ids: `build-image`, `push-image`, `migrate-company-identity`, `bootstrap-company-identity`, `doctor-company-identity`, `bootstrap-production-identity`, `runtime-db-contract`, `deploy-cloudrun`, `allow-public-invoker`. The deploy step is direct (no `--no-traffic`, no `--tag`). It holds `--service-account=accounts-cloud-run@...`, `--set-secrets`, and `--add-cloudsql-instances`. The five database steps hold `cloud-sql-proxy`, `company-identity:`, `bootstrap:production`, `psql`, and secret names that contain `DATABASE_URL`. | `yaml` parse and a read. |
+| M30 | **P2 base.** Workbooks push file step ids: `build-image`, `push-image`, `deploy-cloudrun`. It deploys direct and holds `--service-account=workbooks-cloud-run@$PROJECT_ID.iam.gserviceaccount.com`. It holds no database step. | `yaml` parse and a read. |
+| M31 | **P2 base.** Accounting holds `migrate-db`, `doctor-check`, `runtime-db-contract` before `deploy-company-candidate`. That deploy step runs `--tag=candidate --no-traffic` only when the service exists, and `--tag=candidate` otherwise (M17 holds). | Read of lines 46 to 71. |
+| M32 | **P2 base.** Codecamp holds `migrate-db` and `doctor-check`; it deploys `--tag=sso-candidate --no-traffic`. Marketing holds `migrate-db`, `doctor-check`, `runtime-db-contract`; its deploy derives the tag `c$${build_id%%-*}` and uses `--no-traffic`. Sales holds the 6 database steps `migrate-db`, `doctor-check`, `seed-production-curriculum`, `verify-production-curriculum`, `runtime-db-contract`, `verify-repair-verify-legacy-rollback`, and the helpers `build-curriculum-workspace-deps` and `capture-legacy-rollback`. `verify-curriculum-backup` is at index 1. Both sales deploys use `--no-traffic` (tags `legacy-rollback` and `candidate`). | `yaml` parse of all files. |
+| M33 | **P2 base.** No `apps/*/cloudbuild-traffic.yaml` exists. | `git ls-files 'apps/*/cloudbuild-traffic.yaml'`. |
+| M34 | **P2 base.** `rg -n 'update-traffic\|--to-latest' .github/workflows` exits 1 (no hit). `rg -n 'cloudbuild-traffic' .github/workflows` exits 1. These are characterization passes. | `rg -n` on `.github/workflows`. |
+| M35 | **P2 base.** `docs/runbooks/storytime-deploy.md` exists (track `storytime_app_rebuild_20261025`) and holds `facts_found=0` of the 7 FR-4 facts. It still documents `--tag=st-$BUILD_ID`. | A read and 7 greps. |
+| M36 | **P2 base.** `yaml` 2.9.0 resolves from the root and parses both workflows and every `cloudbuild*.yaml`. `on` is a string key. `jq`, `gh`, and `gcloud` exist locally. `act` and `actionlint` do not (M8). | `node -e require.resolve`, a parse, `command -v`. |
+| M37 | **P2 base.** `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci` gives `EXIT=0`, `Test Files 2 passed (2)`, `Tests 52 passed (52)` (48 P1 plus 4 adversarial). One heavy job, 45.60 s. | One `heavy-run.sh` job, 2026-11-07. |
+| M38 | **P2 base.** `gh secret list --repo Reading-Advantage-Thailand/reading-advantage-monorepo` shows exactly two names: `GCP_PROJECT_ID` (`2026-05-23T03:56:03Z`) and `GCP_SERVICE_ACCOUNT` (`2026-05-23T03:55:39Z`). No per-app secret exists. The values were not read. | `gh auth status`, `gh secret list`. |
+| M39 | **P2 base.** In project `reading-advantage`, `github-actions-deploy@reading-advantage` holds `artifactregistry.writer`, `iam.serviceAccountUser`, `run.admin`, and `secretmanager.secretAccessor`, with no Cloud Build role at project level. `docker-service-account@reading-advantage` holds `cloudbuild.builds.builder`, `cloudbuild.serviceAgent`, `run.developer`, `run.invoker`, and `run.serviceAgent`. The secret value is unknown, so the active identity is not proven. | `gcloud projects get-iam-policy ... --flatten='bindings[].members' --filter=...`. |
+| M40 | **P2 base.** In project `primary-advantage`, neither candidate service account holds a project-level binding. The Cloud Build service account `1064299189080@cloudbuild.gserviceaccount.com` holds `cloudbuild.builds.builder`; the user `wannachok.job@gmail.com` holds `cloudbuild.builds.editor`. | `gcloud projects get-iam-policy primary-advantage ...`. |
+| M41 | **P2 base.** Project `reading-advantage` holds the service accounts `accounts-cloud-run`, `accounting-cloud-run`, `codecamp-cloud-run`, `marketing-cloud-run`, `sales-cloud-run`, and `accounting-build-verifier`. It holds no `workbooks-cloud-run` (`describe` returns NOT_FOUND). Its Cloud Run services hold `accounting`, `accounts`, `codecamp-advantage`, `marketing`, `sales-advantage`, `reading-advantage-web`, and others, and no `workbooks`. Project `www-reading-advantage` holds `www-reading-advantage`. | `gcloud iam service-accounts list|describe`, `gcloud run services list`. |
+| M42 | **P2 base.** The table's `project` field holds `$PROJECT_ID` on 8 rows and `primary-advantage` on 2. The measured locations put www in project `www-reading-advantage` and the six `$PROJECT_ID` gated apps in `reading-advantage`. One `GCP_PROJECT_ID` secret cannot select both projects. This is the new fact of the phase (Q10). | M41 and a table read. |
 
 ## 3. Phase summary
 
@@ -101,7 +122,7 @@
 | P3 CI for affected apps | medium | yes | yes (CI service containers and env only) | no | yes (light, one mutant round) | no |
 | P4 Dry runs, www proof, first-push plan | **high** | yes | yes (final) | yes (the report and the push plan) | **yes** | no (a post-push www page check belongs to Daniel and the PM) |
 
-The reasons are in P1.7 and in the outline sections.
+The reasons are in P1.7 and P2.7, and in the P3 and P4 outlines.
 
 ## P1: The affected-app logic
 
@@ -309,31 +330,245 @@ Anti-pattern coverage (catalog `measure/anti-patterns.md`):
 
 A1 and A2 do not apply: no supervisor decides from a substring, and P1 has no publish gate. A8 does not apply: this track uses the four markers only. A10 does not apply: the track generates no facts file. A11 does not apply: P1 holds no `[b]` review task (the human gates are in P2, 2.3c, 2.3h, 2.6, 4.5, 4.6). A12 and A13 do not apply: no archive move in P1. A15 does not apply: this repository adds no role receipts or hashes (AGENTS.md hashing policy).
 
-## P2: Per-app CD workflows (outline)
+## P2: Per-app CD workflows
 
-**Risk: critical.** The phase changes production deploy files: the push path of 9 apps, the traffic mode of `accounts` and `workbooks`, and the move of every database step out of the push files (D1, D7). A mistake can start a production build on an unplanned push, or leave a schema step out of the manual path. Task risk: 2.1 low, 2.2 high (www deploys straight to traffic), 2.3 high, 2.3a/b critical, 2.3d/e critical, 2.3f/g critical, 2.4 medium, 2.5 low, 2.7 low.
+**Risk: critical.** The phase changes production deploy files: the push path of 9 apps, the traffic mode of `accounts` and `workbooks`, and the move of every database step out of the push files (D1, D7). A wrong workflow can start a production build on an unplanned push. A wrong traffic file can leave a schema step out of the manual path. Task risk: 2.1 low, 2.2 high, 2.3 high, 2.3a/2.3b critical, 2.3c human gate, 2.3d/2.3e critical, 2.3f/2.3g critical, 2.3h human gate, 2.4 medium, 2.5 low, 2.6 human gate, 2.7 low.
 
-- **Red command (all Red tasks):** the P1.3 command (the same `scripts/ci` filter). Files: `cd-workflows.test.mjs` (2.1), `cloudbuild-files.test.mjs` (2.3a, 2.3d, 2.3f). Each Red task commits alone. The P1 file stays green.
-- **Expected failures at the P2 base:** `cd-workflows`: the www workflow has no `affected-apps.mjs` call and no `fetch-depth: 0`; `cd-apps.yml` is missing; `apps/storytime/cloudbuild.yaml` holds `st-$BUILD_ID` (52 characters with the service, limit 46); `facts_found=0` of 7 in the runbook. `cloudbuild-files`: Primary holds `refuse-legacy-db`, `migrate-db`, `doctor-check` in the push file; `cloudbuild-traffic.yaml` files are missing; `accounts` and `workbooks` deploy straight to traffic. Characterization cases that pass at the base: AC-2.4 (no `update-traffic` or `--to-latest` in the workflows) and AC-2.8 (no workflow names a traffic file). Red names them.
-- **Select-step dry run.** A helper parses each workflow with `yaml` 2.9.0 (M3), finds the step that runs `affected-apps.mjs`, runs its `run:` text in a scratch repo with `GITHUB_OUTPUT=<tmpfile>`, the event `before` and `sha` in the env, and a stub `gcloud` first on `PATH` that records each call. It asserts that the select step makes **zero** `gcloud` calls and that the matrix or the flag in `GITHUB_OUTPUT` plans the right jobs for the AC-1 ranges (AC-2.1, AC-2.2). Labeled counts: `jobs_planned=<n>`, `gcloud_calls=0`. The planned job names the app id and the app's own `cloudbuild` file. The `--no-traffic` and tag assertion belongs to the file text (AC-2.3, AC-2.9), not to the plan: for `accounting` the file sets `--no-traffic` only when the service exists (M17), so the artifact test accepts that conditional and asserts both branches.
-- **Green gates:** the Red command exits 0 with every file passing and the same P1 count; `rows_checked=8` (AC-2.3); `files_checked=2` (AC-2.9), `files_checked=4` and `sales_db_steps_moved=6` (AC-2.12); `rows` of non-excluded table rows equals 9 (AC-2.10); `facts_found=7` (AC-4.2); the YAML of each changed workflow and `cloudbuild` file parses (`yaml` parse exits without error); no workflow holds `update-traffic`, `--to-latest`, or `cloudbuild-traffic` (`rg -n` exit 1 on `.github/workflows` only, M18).
-- **Tag rule nuance (M17, M19).** AC-2.3 has two halves. The first computes the length: for the four rows whose tag follows `<prefix>-<first 8>`, the test builds the longest legal tag (prefix + dash + 8) and asserts length plus service name is 46 or less and equals the row's `tagLength`. For the four rows that keep their file's tag (`accounting` `candidate`, `codecamp-advantage` `sso-candidate`, `marketing` the bash derivation `c<first 8 hex>`, `sales-advantage` `legacy-rollback`), the test measures the tag text that the file holds, including the bash derivation for marketing, and asserts the same two properties. The second half reads the file of each row and finds the expression of the table. A literal-string match on `<prefix>-<8>` for marketing or accounting fails; the test matches the row's `tag` text as a pattern (`c$${build_id%%-*}` for marketing).
-- **Closeout gate (task 2.7).** The Green gates again at the phase HEAD; `git log <phase_base_sha>..HEAD --grep='track_id: per_app_cicd_20261107'` shows one Red commit and one Green commit per Red/Green pair, in order, each 100 characters or less; the Red commits alone run red with the expected failure; the adversarial mutant set of the Reviews bullet reports `mutants_rejected=n/n`; the scope label `p2_out_of_scope_paths=0` over the allowed paths (`scripts/ci/**`, `.github/workflows/**`, `apps/*/cloudbuild*.yaml`, `docs/runbooks/**`, `measure/tracks/per_app_cicd_20261107/**`, `measure/runs/per_app_cicd_20261107/**`); Review A and Review B results are `pass`. Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 2 heading.
-- **Document vs live:** all P2 tests are artifact tests plus the select-step dry run. None proves that Cloud Build accepts the edited file, that the tag stays within 46 characters at run time, or that the new Primary revision starts against the old schema (D1). The last one is a runbook statement and an owner-passed check at the first traffic move.
-- **Reviews:** A yes; **B yes (required)**: `permissions:` of each workflow, secrets only in push jobs, no `pull_request_target`, no secret on a fork run, the roles of the GitHub service account for each gated app (AC-2.5, `[b] deferred:daniel`), and the rule that no push path touches a production database. Neither workflow declares `permissions:` today (M20), so the phase adds a least-privilege block (`contents: read` plus nothing else that a job does not use) or records a written reason why not; Review B rejects any scope a job does not use and any secret outside a push job. C yes: the tag names, the traffic-file contract, and the runbook text; adversarial **yes**: put a database step back in a push file, drop `--no-traffic`, lengthen a tag to 40 characters, add `update-traffic` to a workflow, and add a row that is `excluded` to the matrix. Each must fail a test (`mutants_rejected=<n>`). Browser: no.
-- Anti-pattern coverage (catalog `measure/anti-patterns.md`):
+`ROOT=/home/daniebo/Desktop/reading-advantage-monorepo`. `HEAVY` is the wrapper of section 1.1. P2 adds no hash (section 1.2). Every P2 test is an artifact test or the select-step dry run (section 1.3).
 
-  | ID | Defense in this phase | Falsification condition |
-  |---|---|---|
-  | A3 | Every count is a labeled integer in the evidence: `rows_checked`, `files_checked`, `sales_db_steps_moved`, `facts_found`, `jobs_planned`, `gcloud_calls`, `mutants_rejected`. The check parses the integer after the label. | A count without its label, or a bare number, passes a check. |
-  | A4 | Every loop asserts its input first: `steps_n>0` before a per-step database-step check, `files_checked` asserted equal to 2 or 4 before the loop, `gated_rows_checked>=1` before the tag loop, `facts_found` asserted 7 before the runbook check. | A loop over zero files or zero steps exits 0 and reports pass. |
-  | A5 | The plan note of 2.3b, 2.3e, and 2.3g quotes the step names it moved and the exit code of the test command. It never says a Cloud Build run succeeded (no run happens). | A note claims a build or deploy result that the phase did not produce. |
-  | A6 | The 2.5 runbook note records the facts of 2026-11-07 and names them as such. It does not claim that the tag fix is deployed or that traffic moved. | The runbook or the plan says the fix is live. |
-  | A7 | The database-step detector (AC-2.10) matches the seven tokens `DATABASE_URL` in `secretEnv`, `cloud-sql-proxy`, `psql`, `drizzle`, `@reading-advantage/db`, `company-identity:`, `bootstrap:production`, and must not flag the runtime options `--set-secrets` and `--add-cloudsql-instances`. A mutant that adds each token to a step must fail, and a mutant that adds `--set-secrets=DATABASE_URL=...` to a deploy step must **not** fail. | The detector misses a `psql` step, or flags `--set-secrets`. |
-  | A9 | No test reads a path under `measure/tracks/` or `measure/archive/`. The P1 detector runs again over both test files. | A test reads a `measure/` file as data. |
-  | A14 | Detectors use `rg -n '<regex>'` with no `-E`, and `--pcre2` only where the pattern needs it. Exit 1 means no hit; exit 2 is a failure. Each detector is proven on a scratch file that must hit. | A detector with a bad option reports no hit and the gate passes. |
-  | A16 | Scratch folders under `/tmp` only. `git worktree list \| wc -l` still prints 8. | The worktree count changes. |
-- **`phase_base_sha`:** captured by the section 1.4 command after the Phase 1 checkpoint.
+### P2.1 Contract assumptions that the spec leaves open
+
+Red tests pin each assumption. A test that disagrees with the PM is a question (section 4), not a silent change.
+
+- **C11 One select step, one filter.** Each CD workflow holds a job `select` with one step `id: select`. The step runs `node scripts/ci/affected-apps.mjs --base "$BASE_SHA" --head "$HEAD_SHA"`. It then reads `scripts/ci/apps.json` with `node` and appends two keys to `$GITHUB_OUTPUT`: `www=yes|no` and `matrix=<json array>`. The array holds one object per affected gated row: `{id, service, project, cloudbuild}`. The two select steps are equal after trimming (one filter text, two files). Neither step names an app id, a service, a project, or a tag prefix; the table is the source. (Q12)
+- **C12 SHAs from the event.** The select step env binds `BASE_SHA: ${{ github.event.before }}` and `HEAD_SHA: ${{ github.sha }}`. A zero `before` reaches the script, and the script handles it (P1 C1 and P1 C6). The step passes no ref name.
+- **C13 Job wiring.** `cd-www-reading-advantage.yml` has jobs `select` and `deploy`; `deploy` has `needs: select` and `if: needs.select.outputs.www == 'yes'`. `cd-apps.yml` has jobs `select` and `build`; `build` has `needs: select`, `if: needs.select.outputs.matrix != '[]'`, and `strategy.matrix.include: ${{ fromJSON(needs.select.outputs.matrix) }}`. The build job runs `gcloud builds submit --config="${{ matrix.cloudbuild }}" --project="${{ matrix.project }}" .`. (Q12)
+- **C14 Node 22 on the runner.** Both CD workflows set up Node 22 (`actions/setup-node@v4`, `node-version: 22`) before the select step. Local Node is 24 (M9). The script uses no API that Node 22 lacks (P1 gate 7). (Q15)
+- **C15 Full clone.** The checkout of both CD workflows sets `fetch-depth: 0`. The zero-base fallback needs `origin/master`; a shallow clone lacks the base (P1 case A6-06).
+- **C16 Coarse path filters stay.** A workflow `paths:` filter is a cheap pre-filter, not the decision. `cd-www` keeps `apps/www-reading-advantage/**`, `packages/**`, and the root build files. `cd-apps` uses `apps/**`, `packages/**`, `services/**`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`, `.pnpmfile.cjs`, and `.dockerignore`. Neither filter holds `measure/**` or `docs/**`, so a docs push starts no CD workflow.
+- **C17 One job per gated row.** The matrix holds only rows with `mode: "gated"` and an id in the script output. A `direct` row (`www`) is handled by `cd-www` only. An `excluded` row (`reading-advantage`) starts no job. The matrix ids are unique.
+- **C18 No traffic move; the traffic files are manual.** No workflow names a `cloudbuild-traffic.yaml`. No workflow step holds `update-traffic` or `--to-latest`. The traffic step of each traffic file holds `update-traffic` and a substitution (`--to-revisions=<sub>` or `--to-tag=<sub>`), never a literal revision.
+- **C19 Least privilege.** Each CD workflow declares `permissions:` with exactly `contents: read`. It declares no `id-token: write`, because the auth uses a JSON key and not OIDC. It declares no `pull_request_target`. `ci.yml` is P3's file and gets no block here. (Q16)
+- **C20 Literal project for gated rows.** A gated row's `project` is the literal GCP project id that the job passes to `gcloud builds submit --project`. The default fills the measured project of each row (M42). A `direct` or `excluded` row may keep `$PROJECT_ID`. No new table key: P1 case B-21 asserts the exact key set. (Q10)
+- **C21 Tag shape per row.** The four prefix rows (`primary-advantage`, `storytime`, `accounts`, `workbooks`) use a bash deploy step with `env: BUILD_ID=$BUILD_ID` and the tag `<prefix>-${BUILD_ID:0:8}`. The four file-tag rows keep their text: `candidate` (accounting, conditional on service existence), `sso-candidate` (codecamp), `c$${build_id%%-*}` (marketing), and `legacy-rollback` (sales). The table's `tag` and `tagLength` are the source; a change to one side changes the other in the same commit.
+- **C22 Runbook append.** `docs/runbooks/storytime-deploy.md` already exists (M35) and holds none of the 7 facts. Task 2.5 appends a dated facts block; it does not rewrite the steps. The traffic-file facts live in one new runbook, `docs/runbooks/traffic-moves.md`, with one section per traffic file (6). (Q14, Q17)
+
+### P2.2 Harness
+
+Files, created by the Red roles: `scripts/ci/__tests__/cd-workflows.test.mjs` (task 2.1), `scripts/ci/__tests__/cloudbuild-files.test.mjs` (2.3a, 2.3d, 2.3f), and one support file `scripts/ci/__tests__/helpers/plan.mjs`. P1's `scratch.mjs` is reused and not edited.
+
+- `FIXTURE_ROOT = process.env.CICD_FIXTURE_ROOT ?? ROOT`. The variable exists only for the mutation proof (P2.3). Green does not read it.
+- `workflow(name)` parses `<FIXTURE_ROOT>/.github/workflows/<name>` with `yaml` 2.9.0 (M36). A missing file throws `Missing .github/workflows/<name>`.
+- `allSteps(doc)` returns `{job, index, step}` for every step of every job. `selectStep(doc)` returns the step with `id === "select"` and throws `missing select step in <file>`.
+- `runSelect(workflow, repo, base, head)` writes the step's `run:` text to a temp `.sh`, then runs `bash -e` with cwd `repo`, `BASE_SHA=<base>`, `HEAD_SHA=<head>`, `GITHUB_OUTPUT=<tmp>/out`, `PATH=<tmp>/bin:$PATH` (a stub `gcloud` that appends its args to a log and exits 0), and the hermetic git env of `scratch.mjs`. It returns `{status, outputs, gcloudCalls, stdout, stderr}`. `parseOutputs` reads `key=value` lines and rejects a line without `=`.
+- `planRepo(range)` builds a scratch repository with `makeRepo(realPlanFiles())`, then commits the range with `commitChanges`. `realPlanFiles()` is `realWorkspaceFiles()` plus the table and script text read from `FIXTURE_ROOT`. The real table replaces the P1 fixture table.
+- `tagFor(row)` returns `{text, length}`: for a prefix row `prefix + "-" + "x".repeat(8)`; for a file row the table's `tag`, with `$$` read as one `$`. `combined(row)` is `tagFor(row).length + row.service.length`.
+- `deployStep(doc)` returns the step whose `args` hold `run` and `deploy`, or whose id starts with `deploy`. `stepIds(doc)` returns the ordered ids. `stepText(step)` joins `entrypoint`, `args`, and `env`.
+- `dbToken(step)` applies the AC-2.10 rule. A step is a database step when its `secretEnv` holds a name with `DATABASE_URL`, or its text holds `cloud-sql-proxy`, `psql`, `drizzle`, `@reading-advantage/db`, `company-identity:`, or `bootstrap:production`. The runtime options `--set-secrets` and `--add-cloudsql-instances` are removed before the scan. It returns the matching token or `null`.
+- `ordered(doc, expected)` finds each expected id and asserts the indexes rise; it asserts that the `update-traffic` step is last, and that `expected.length > 0` first.
+- `runbookFacts()` returns 7 checker functions. The test asserts `facts.length === 7` before the loop.
+- Every case ends with a labeled message: `rows_checked=8`, `files_checked=9`, `files_checked=4`, `files_checked=2`, `steps_checked=<n>`, `facts_found=<n>`, `jobs_planned=<n>`, `gated_jobs=<n>`, `gcloud_calls=0`, `max_combined=<n>`, `sales_db_steps_moved=<n>`, `mutants_rejected=<k>/<n>`.
+
+### P2.3 Red: command, expected failure, and proof
+
+**Red command (task 2.1, then 2.3a, 2.3d, 2.3f):**
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+```
+
+**Measured at the P2 base before the first Red commit:** `EXIT=0`, `Test Files 2 passed (2)`, `Tests 52 passed (52)` (M37). That is the characterization baseline, not a Red result.
+
+**Expected at the 2.1 Red commit:** `EXIT=1`; `cd-workflows.test.mjs` fails; `affected-apps.test.mjs` still passes 52. The failure messages:
+
+| Case group | Message |
+|---|---|
+| W-01 to W-04 | `missing select step in .github/workflows/cd-www-reading-advantage.yml` |
+| W-05 to W-09 | `missing .github/workflows/cd-apps.yml` |
+| W-11, W-15 | `storytime tag combined=52 limit=46` and `tag expression missing` |
+| W-14a | `permissions missing on .github/workflows/cd-www-reading-advantage.yml` |
+| W-16 | `facts_found=0 expected=7` |
+| W-18a, W-19, W-20 | `missing select step` and `missing fetch-depth: 0` |
+
+Characterization passes at the 2.1 Red: W-10 and W-12 (the table math and the service agreement, M26), W-13 (AC-2.4, `workflow_detector_hits=0`, M34), W-14 (`secret_names=2`, M38), W-14c, W-17 (AC-2.8, `traffic_refs=0`, M34), and W-21 (the input-size guards).
+
+**Expected at the 2.3a Red commit:** F-01 fails (`primary push file holds database steps: refuse-legacy-db,migrate-db,doctor-check`, M28); F-03 and F-04 fail (`missing apps/primary-advantage/cloudbuild-traffic.yaml`, M33). F-02 and F-05 pass (characterization: the guard rule on a fixture; no workflow traffic reference).
+
+**Expected at the 2.3d Red commit:** F-06 fails (`accounts deploy step has no --no-traffic`, `workbooks deploy step has no --no-traffic`, M29/M30); F-08 fails (`files_with_db_steps=6 files_checked=9`); F-10 fails (`missing apps/accounts/cloudbuild-traffic.yaml`). F-07 and F-09 pass (characterization: the runtime flags stay; the detector fixtures).
+
+**Expected at the 2.3f Red commit:** F-08 fails (`files_with_db_steps=4 files_checked=9`); F-11 fails (missing traffic files for the four apps); F-12 fails (`sales_db_steps_moved=0 expected=6`, M32); F-14 fails (`psql in a push file`). F-13 and F-15 pass (characterization: the sales push keeps its steps; the input-size guards).
+
+**Proof at Red time, partial repairs.** The Red role copies the real tree to a `mktemp -d` folder, edits one artifact, and runs the new file with `CICD_FIXTURE_ROOT=<copy>`. Each partial must still fail its case (6 partials, `partials_rejected=6`, `partials_accepted=0`):
+
+| # | Partial edit | Case that must still fail |
+|---|---|---|
+| P-1 | add a `select` step that runs the script and writes nothing | W-01, W-05 |
+| P-2 | add `--no-traffic` to the accounts deploy step and no tag | F-06 |
+| P-3 | add a primary traffic file with `migrate-db` before `refuse-legacy-db` | F-03 |
+| P-4 | add 6 of the 7 runbook facts | W-16 |
+| P-5 | add `permissions: write-all` | W-14a |
+| P-6 | add `--tag=st-$BUILD_ID` only as a comment | W-15 |
+
+A partial repair passes when an assertion is loose text. These 6 prove that each assertion is specific.
+
+### P2.4 Cases per acceptance check
+
+Group W: `scripts/ci/__tests__/cd-workflows.test.mjs`.
+
+| Case | Acceptance | Check | Expected after Green |
+|---|---|---|---|
+| W-01 | AC-2.1 | www-only range, dry run of the www select step | `www=yes`, `jobs_planned=1`, `gcloud_calls=0` |
+| W-02 | AC-2.1 | docs-only range (`docs/a.md`, `measure/b.md`) | `www=no`, `jobs_planned=0`, `changed_files>=1` |
+| W-03 | AC-2.1 | storytime-only range | `www=no`, `jobs_planned=0` |
+| W-04 | AC-2.1 | `packages/read-along` only (www does not use it) | `www=no`, `jobs_planned=0` |
+| W-05 | AC-2.2 | loop over the 8 gated rows; one app change each; `gated_rows=8` | one matrix object per range; id and `cloudbuild` match the row; `gcloud_calls=0` |
+| W-06 | AC-2.2 | `apps/reading-advantage/...` change (excluded row) | `matrix=[]`, `jobs_planned=0` |
+| W-07 | AC-2.2 | www change | `matrix=[]`, `jobs_planned=0` |
+| W-08 | AC-2.2 | accounts and workbooks change in one range | `jobs_planned=2`; ids equal; unique |
+| W-09 | AC-2.2 | every `--config` and `--project` in `cd-apps.yml` | both are expressions; `--config` equals `${{ matrix.cloudbuild }}` |
+| W-10 | AC-2.3 | tag math over the 8 gated rows (M26) | `rows_checked=8`, `max_combined<=46`, `tagLength` equals the rule |
+| W-11-primary | AC-2.3 | primary deploy step | tag `pa-` and `${BUILD_ID:0:8}`; `env` holds `BUILD_ID` |
+| W-11-storytime | AC-2.3 | storytime deploy step | tag `st-` and `${BUILD_ID:0:8}`; `env` holds `BUILD_ID` |
+| W-11-accounts | AC-2.3 | accounts deploy step | tag `ac-` and `${BUILD_ID:0:8}`; `env` holds `BUILD_ID` |
+| W-11-workbooks | AC-2.3 | workbooks deploy step | tag `wb-` and `${BUILD_ID:0:8}`; `env` holds `BUILD_ID` |
+| W-11-accounting | AC-2.3 | accounting deploy step | `--tag=candidate` in both branches (M31) |
+| W-11-codecamp | AC-2.3 | codecamp deploy step | `--tag=sso-candidate` |
+| W-11-marketing | AC-2.3 | marketing deploy step | `c$${build_id%%-*}`; the rendered tag is 9 characters |
+| W-11-sales | AC-2.3 | sales deploy steps | `legacy-rollback` and `candidate` |
+| W-12 | AC-2.3 | each deploy step's service name | equals `row.service`; `services_checked=8` |
+| W-13 | AC-2.4 | every step text of every workflow | no `update-traffic`, no `--to-latest`; `workflow_detector_hits=0` |
+| W-14 | AC-2.5 | union of `secrets.*` names in all workflows | exactly `GCP_SERVICE_ACCOUNT` and `GCP_PROJECT_ID` (M38) |
+| W-14a | AC-2.5, C19 | `permissions` of `cd-www` | exactly `{contents: read}` |
+| W-14b | AC-2.5, C19 | `permissions` of `cd-apps` | exactly `{contents: read}` |
+| W-14c | AC-2.5 | trigger and secret placement | no `pull_request_target`; every `secrets.*` sits in a push-triggered job |
+| W-15 | AC-4.1 | storytime with a 36-character build id | tag 11 plus service 13 = 24, `<=46`; prefix and slice present |
+| W-16 | AC-4.2 | the 7 runbook facts of FR-4 | `facts_found=7`; `facts_expected=7` first |
+| W-17 | AC-2.8 | every workflow text | no `cloudbuild-traffic`; `traffic_refs=0` |
+| W-18a | C11, C14, C15 | `cd-www` plumbing | `fetch-depth: 0`; node 22; `BASE_SHA`/`HEAD_SHA`; script call |
+| W-18b | C11, C14, C15 | `cd-apps` plumbing | same four facts |
+| W-18c | C11 | the two select `run:` blocks | equal after trimming |
+| W-19 | 2.2 | www deploy job | `gcloud builds submit --config=apps/www-reading-advantage/cloudbuild.yaml` equals the www row's file; both secrets kept |
+| W-20 | 2.2 | www deploy job condition | `needs: select` and `if:` reference `steps.select.outputs.www` (the job `needs.select.outputs.www`) |
+| W-21 | A4 | the input-size guards | `gated_rows=8`, `ranges>=6`, `rows_checked=8`; passes at the base |
+
+Group F: `scripts/ci/__tests__/cloudbuild-files.test.mjs`.
+
+| Case | Acceptance | Check | Expected after Green |
+|---|---|---|---|
+| F-01 | AC-2.6 | primary push file | `push_steps>=1`; no step id `refuse-legacy-db`, `migrate-db`, `doctor-check`; no DB token; `db_steps_found=0` |
+| F-02 | AC-2.6 | the guard rule on a fixture | a DB step without `refuse-legacy-db` fails the rule; with it passes; `guard_rule_cases=2`; passes at the base |
+| F-03 | AC-2.7 | primary traffic file | ids in order `refuse-legacy-db`, `migrate-db`, `doctor-check`, traffic; `--required-migration 0074_primary_help_events` kept; `steps_checked>=4` |
+| F-04 | AC-2.7, C18 | the traffic step | `update-traffic` plus a substitution; no literal revision |
+| F-05 | AC-2.8 | every workflow text | no traffic-file reference; passes at the base |
+| F-06 | AC-2.9 | accounts and workbooks deploy steps | `files_checked=2`; `--no-traffic`; tag `ac-`/`wb-` plus 8 characters; no `update-traffic` |
+| F-07 | AC-2.9 | the runtime flags of the two deploy steps | `--service-account`, `--set-secrets`, `--add-cloudsql-instances` kept; passes at the base |
+| F-08 | AC-2.10 | the 9 non-excluded push files | `files_checked=9`; `steps>=1` each; `database_steps_found=0` |
+| F-09 | AC-2.10 | the detector fixtures | `--set-secrets=DATABASE_URL=...` and `--add-cloudsql-instances` pass; `psql` fails; `fixtures=3`; passes at the base |
+| F-10 | AC-2.11 | accounts traffic file | `migrate-company-identity`, `bootstrap-company-identity`, `doctor-company-identity`, `bootstrap-production-identity`, `runtime-db-contract`, traffic; a guard has the lowest index; `steps_checked>=6` |
+| F-11 | AC-2.12 | the 4 apps | `files_checked=4`; no DB step in each push file; each traffic file holds its expected ordered list (M28 to M32) |
+| F-12 | AC-2.12 | sales | `sales_db_steps_moved=6`; each of the 6 is in the traffic file and absent from the push file; the guard is first; `build-curriculum-workspace-deps` precedes `seed-production-curriculum`; `capture-legacy-rollback` precedes `verify-repair-verify-legacy-rollback` |
+| F-13 | AC-2.12 | the sales push keeps its steps | `validate-release-inputs`, build, push, both deploys, `allow-public-invoker`, `capture-company-candidate`, `verify-company-candidate`; both deploys `--no-traffic`; passes at the base |
+| F-14 | AC-2.10 | no `psql` in a non-excluded push file | `psql_hits=0` |
+| F-15 | A4 | the input-size guards | `files_checked=4`, `steps_expected=6`, `files_checked=2` |
+| F-16 | C22 | `docs/runbooks/traffic-moves.md` | 6 sections, one per traffic file; each names the file, the ordered steps, and the old-schema sentence; `traffic_runbook_sections=6` |
+
+Counts: about 46 P2 cases. The phase gate runs 52 P1 cases plus the P2 cases.
+
+### P2.5 Green gates and the phase check
+
+Each Green task runs its subset with a name filter. The command is the P1.3 wrapper:
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/<file> -t "<pattern>"; echo "EXIT=$?"'
+```
+
+| Task | Green gate |
+|---|---|
+| 2.2 | W-01 to W-04, W-14a, W-18a, W-19, W-20; `cd-www` holds `select` and `deploy`; `fetch-depth: 0`; node 22; `permissions` exactly `contents: read`; the build still targets the www file; `yaml_ok=<n>`; no test edit |
+| 2.3 | W-05 to W-09, W-14b, W-18b, W-18c; `cd-apps.yml` parses; the matrix holds only gated rows; `gcloud_calls=0`; no traffic-file reference; no test edit |
+| 2.3b | F-01 to F-04 and W-11-primary; the primary push ids are `build-image`, `push-image`, `deploy-cloudrun`; the deploy step holds `--no-traffic`, `pa-`, `${BUILD_ID:0:8}`, and `env`; `yaml_ok`; `schema_note_found=1` |
+| 2.3e | F-06, F-07, F-09, F-10 and W-11-accounts, W-11-workbooks; the accounts push ids are `build-image`, `push-image`, `deploy-cloudrun`, `allow-public-invoker`; the workbooks push ids are `build-image`, `push-image`, `deploy-cloudrun`; the accounts traffic file holds the 5 steps and the move; `yaml_ok` |
+| 2.3g | F-08, F-11 to F-16 and W-11-accounting, W-11-codecamp, W-11-marketing, W-11-sales; the four push ids match the expected lists; the four traffic files parse; `sales_db_steps_moved=6` |
+| 2.4 | W-15 and W-11-storytime; the tag renders 11 plus 13 = 24; `yaml_ok`; no test edit |
+| 2.5 | W-16 `facts_found=7`; the runbook diff adds a block; no test edit |
+| 2.3c, 2.3h, 2.6 | `[b] ... deferred:daniel`; no automated test. The phase check asserts the marker and the owner field |
+
+Every Green gate also runs `git diff --stat <red_commit>..HEAD -- scripts/ci/__tests__/<file>`; the output must be empty. Green never edits a test to pass.
+
+**Adversarial mutant set (task 2.7).** The adversarial role copies the real tree and applies each mutant with `CICD_FIXTURE_ROOT`. Each mutant must make at least one case fail. Label `mutants_rejected=12/12`; closeout needs 12/12.
+
+| # | Mutant | Case that must fail |
+|---|---|---|
+| X1 | drop the `if` on the www deploy job | W-01, W-20 |
+| X2 | plan every row (drop the excluded filter) | W-06 |
+| X3 | plan no gated job | W-05, W-08 |
+| X4 | add `update-traffic` to `cd-apps.yml` | W-13, F-05 |
+| X5 | remove `fetch-depth: 0` | W-18a, W-18b |
+| X6 | drop `--no-traffic` from the accounts deploy | F-06 |
+| X7 | put `migrate-db` back into the primary push file | F-01 |
+| X8 | put the accounts traffic move before `runtime-db-contract` | F-10 |
+| X9 | add `psql` to a deploy step | F-08, F-14 |
+| X10 | set the storytime tag to `st-$BUILD_ID` | W-15 |
+| X11 | drop `env: BUILD_ID` from the primary deploy step | W-11-primary |
+| X12 | point the www job at the gated matrix | W-01, W-19 |
+
+**Phase check (task 2.7).** The orchestrator runs it; no role edits a file to pass it.
+
+1. The P1.3 command at the phase HEAD: `EXIT=0`; `Test Files 4 passed (4)`; `Tests <52+P2> passed`; failed 0; skipped 0.
+2. `git diff --stat <p1_green>..HEAD -- scripts/ci/affected-apps.mjs` prints nothing. The table may change only the `project` text (C20); the key set and the row count stay (P1 case B-21 passes).
+3. `git log <phase_base_sha>..HEAD --grep='track_id: per_app_cicd_20261107'` lists the commits in this order: 2.1 Red, 2.2 Green, 2.3 Green, 2.3a Red, 2.3b Green, 2.3d Red, 2.3e Green, 2.3f Red, 2.3g Green, 2.4 Green, 2.5 Green. Each header is 100 characters or less.
+4. The 2.1 Red commit, checked out alone, runs red with the messages of P2.3; the P1 file passes 52.
+5. `yaml_ok=<n>` for every changed workflow and `cloudbuild` file; the parse exits 0.
+6. Detectors: `rg -n 'update-traffic|--to-latest' .github/workflows` exits 1; `rg -n 'cloudbuild-traffic' .github/workflows` exits 1; the DB-token detector over the 9 push files exits 1; `rg -n --pcre2 'secrets\.(?!GCP_SERVICE_ACCOUNT|GCP_PROJECT_ID)' .github/workflows` exits 1; the `permissions` deep-equal check passes; no `pull_request_target`. Each detector is proven on a scratch file that must hit (A14).
+7. `p2_out_of_scope_paths=0` over `.github/workflows/**`, `apps/*/cloudbuild*.yaml`, `docs/runbooks/**`, `scripts/ci/**`, `measure/tracks/per_app_cicd_20261107/**`, `measure/runs/per_app_cicd_20261107/**`.
+8. No dependency file changed by the P2 commits: `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`, `.pnpmfile.cjs`.
+9. `git worktree list | wc -l` prints 8 (M15 and A16).
+10. The adversarial mutant set above reports `mutants_rejected=12/12`.
+11. Review A, Review B, and Review C results are `pass`. The browser review is `not applicable`.
+12. Tasks 2.3c, 2.3h, and 2.6 stay `[b] ... deferred:daniel`. They are not part of the closeout. The check asserts `blocked_tasks=3` and the owner field on each.
+
+Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 2 heading.
+
+### P2.6 Document tests and live tests
+
+- **Artifact:** every W and F case except the select-step dry run. They read the files. They prove no Cloud Build or GitHub behavior.
+- **Function-level (dry run):** `runSelect` runs the real script and the real step text on a scratch git repository. It proves the step plumbing, the outputs, and the zero `gcloud` calls. It does not evaluate the GitHub expressions (`fromJSON`, `if`), the runner, or the auth.
+- **Documentation:** W-16 (the storytime runbook) and F-16 (the traffic runbook). They prove the text, not that a person follows it.
+- **Live:** only the first push (P4, Daniel) and the traffic runs (2.3c, 2.3h, Daniel). No test fakes a build.
+- **Not proven:** that Cloud Build accepts an edited file; that the tag stays within 46 at run time; that the new Primary revision starts against the old schema; that the GitHub service account can submit in `primary-advantage` (M40). The report states each limit.
+
+### P2.7 Review applicability and anti-patterns
+
+| Review | Applies | Checks |
+|---|---|---|
+| Review A (code) | **yes** | C11 to C22; the YAML parse instead of substring matching; the table as the only source of app facts; the step-id dependencies; the traffic-file order; the bash slice and `env: BUILD_ID`; the scope. |
+| Review B (secrets, permissions) | **yes (required)** | `permissions` exactly `contents: read` on the two CD workflows; the two secret names and nothing else; no secret outside a push-triggered job; no `pull_request_target`; no secret on a fork run; the measured roles (M39 to M41) and the three gaps (primary-advantage binding, `workbooks-cloud-run`, the two-project ambiguity); no push path touches a production database; the traffic files have no trigger and no workflow reference. |
+| Review C (UX/API) | **yes** | The tag names, the job names, the traffic-file contract, and the runbook text. The text is plain and one meaning per word. There is no screen. |
+| Adversarial testing | **yes** | The 12 mutants of P2.5; a fork PR (no secret); a zero base; a base that the clone lacks after a force push; a comment that names `cloudbuild-traffic`. |
+| Browser review (UX) | **no** | No UI. |
+
+Anti-pattern coverage:
+
+| ID | Defense in this phase | Falsification condition |
+|---|---|---|
+| A1 | The supervisor reads the markers. Tasks 2.3c, 2.3h, and 2.6 are `[b] ... deferred:daniel`; no free-text "deferred" stands in for a marker. The phase check counts `blocked_tasks=3` and requires the owner field on each. | A `[b]` task without `deferred:daniel`, or a `[ ]` task whose prose says "deferred", counts as blocked. |
+| A3 | Every count is a labeled integer: `rows_checked`, `files_checked`, `steps_checked`, `facts_found`, `jobs_planned`, `gated_jobs`, `gcloud_calls`, `max_combined`, `sales_db_steps_moved`, `mutants_rejected`, `traffic_runbook_sections`, `services_checked`. The check parses the integer after the label. | A bare number or a date passes a count check. |
+| A4 | Every loop asserts its input first: `gated_rows=8` before the tag and matrix loops, `files_checked=4` before the four-app loop, `files_checked=2` before the accounts/workbooks loop, `facts_expected=7` before the runbook loop, `steps_expected>=4` before an order check. W-02 and W-06 assert `changed_files>=1` before they accept an empty plan. | A loop over zero rows, zero files, or an empty range exits 0 and reports pass. |
+| A5 | The plan notes of 2.3b, 2.3e, and 2.3g quote the step names they moved, the exit code, and the labels. No note says that a Cloud Build run succeeded or that traffic moved. | A note claims a build or deploy result that the phase did not produce. |
+| A6 | The 2.5 runbook block says the 7 facts are of 2026-11-07. Neither the runbook nor the plan says the tag fix is deployed or that traffic moved. | The runbook or the plan says the fix is live. |
+| A7 | The DB-token detector matches the 7 named tokens and must not flag `--set-secrets` or `--add-cloudsql-instances` (F-09). The tag test matches the deploy step and not a comment (P-6). The project/secrets test matches whole names, not substrings. | The detector misses a `psql` step, flags `--set-secrets`, or accepts a comment as the tag. |
+| A8 | The plan uses `[~x]` and `[b]` only. The three human gates are `[b]`. | A P2 task uses `[ ]` with prose that says "blocked". |
+| A9 | No test reads a path under `measure/tracks/` or `measure/archive/` as data. Detector: `rg -n '(readFile|readFileSync|existsSync)[^;]*measure/' scripts/ci/__tests__` exits 1. The runbook path is `docs/runbooks/`, which is allowed. | A test reads a `measure/` file as data. |
+| A10 | Does not apply: P2 generates no facts file. | A generated facts file appears in the phase scope. |
+| A11 | Review A, Review B, and Review C run after task 2.7 and report a result. The plan does not leave them `[b] deferred:review-execution`. | The phase closes while a review has no result. |
+| A12, A13 | Do not apply: no catalog guard reference changes, and no archive move in P2. | A guard reference dangles, or a track directory moves. |
+| A14 | Detectors use `rg -n '<regex>'`; `--pcre2` only where the pattern needs it. Exit 2 is a failure, not a pass. Each detector is proven on a scratch file that must hit. | A bad option reports no hit and the gate passes. |
+| A15 | Does not apply: this repository adds no role receipts or hashes. | A receipt hash or a checksum field appears. |
+| A16 | Scratch folders are under `/tmp`. `git worktree list \| wc -l` still prints 8. | The worktree count changes. |
+
+A2 does not apply: P2 holds no publish gate with named subjects; the traffic move is a deploy gate and has its own guards (AC-2.4, C18, 2.3c/2.3h).
+
+**`phase_base_sha`.** The orchestrator captures it with `git rev-parse HEAD` immediately after the commit of this strategy and before the first P2 Red commit. `390bcb684237d0ed9bde78682a2d3e06493cb0d3` is the role base of this section. It predates this strategy commit and is not the immutable base. Verify the capture with `git cat-file -e <sha>:measure/tracks/per_app_cicd_20261107/test-strategy.md`.
 
 ## P3: CI for the affected apps (outline)
 
@@ -398,6 +633,14 @@ The role continued with each default. The orchestrator relays a question to the 
 | Q7 | The pending range changes the global key `verifyDepsBeforeRun` of `pnpm-workspace.yaml` (M12). Under D4 the first push then affects all 10 rows: www deploys to traffic and 8 gated apps build. Do you keep D4 literal for that push? | **Answered by the PM on 2026-11-07: yes, no change.** The role does not change D4. Phase 4 keeps its deploy list, and Daniel decides the first push at AC-5.4. |
 | Q8 | The root has no ESLint config and no `tsconfig` for `scripts/`. The plan names `tsc` and ESLint for the new files. | The gate is `node --check` of the script and the tests, plus the detectors of P1.5 gate 3 to 6. `tsc --checkJs` is optional and advisory. The Green role records the exit code of any optional run. |
 | Q9 | Three apps are not table rows: `activity-vinext-fixture`, `advantage-games` (package name `vocabulary-games`), and `science-advantage` (M21). A change to one of them returns `[]`, so Phase 3 plans no app job for it. May the table grow to 13 rows, or may `ci.yml` fall back to a whole-repo check for those paths? | **Keep the spec: 10 rows.** The table is the one source, and the excluded row rule stays. Task 3.2 records the gap in one line (`untested_apps=3` with the three names), and the Phase 3 report sends it to the PM as a follow-up for the CI-green track. The role does not widen the filter. |
+| Q10 | The table gives `project: $PROJECT_ID` on 8 rows, but the measured services live in two projects: www in `www-reading-advantage` and the six gated apps in `reading-advantage` (M41). One `GCP_PROJECT_ID` secret cannot select both. How does a gated job resolve its project? | **Literal project on the gated rows.** P2 changes `project` on the 8 gated rows to the measured project (`reading-advantage` on 6, `primary-advantage` on 2). `www` and `reading-advantage` keep `$PROJECT_ID`. `cd-apps.yml` passes `--project="${{ matrix.project }}"`; `cd-www` keeps `GCP_PROJECT_ID`. No new table key, so P1 case B-21 stays green. The PM may instead add a second project secret; that answer changes the 2.3 Green. |
+| Q11 | AC-2.5 measured three gaps. `workbooks-cloud-run` does not exist (M41). No candidate service account holds a project-level binding in `primary-advantage` (M40). The `project: $PROJECT_ID` text hides a second project (Q10). The spec says an app with a missing secret or role stays out of the table. Removing rows breaks the 10-row and 8-gated-row counts of P1 case B-21 and AC-2.3. | **Keep all 10 rows.** Task 2.6 stays `[b] ... deferred:daniel`. The Phase 2 report names the three gaps. A job whose role is missing fails closed (no deploy) until Daniel adds the role. The tag and `--no-traffic` text still land. The PM decides if a row must leave the table; that answer reopens P1 case B-21 and AC-2.3. |
+| Q12 | The select step id, the job names, and the output names are consumed by the tests and by the job `if` and matrix. The spec does not name them. | `id: select`; jobs `select` and `deploy` (`cd-www`), `select` and `build` (`cd-apps`); outputs `www` (`yes`/`no`) and `matrix` (a JSON array of `{id, service, project, cloudbuild}`). A rename is a contract change: the workflow and the test change in one commit. |
+| Q13 | AC-2.2 says a gated job runs "with `--no-traffic` and a tag". The flag lives in the app's `cloudbuild` file, not in the workflow. The plan runs task 2.3 (workflow) before 2.3d and 2.3e (files). | **Split the assertion.** The 2.3 gate checks the planned job, the `--config` from the table, and `gcloud_calls=0`. The 2.3d/2.3e gate checks `--no-traffic` and the tag in the file. The phase gate needs both. |
+| Q14 | `docs/runbooks/storytime-deploy.md` exists and holds none of the 7 FR-4 facts (M35). Does task 2.5 rewrite it? | **Append.** Task 2.5 adds a dated "Facts (2026-11-07)" block. The existing steps stay. The test counts the 7 fact patterns and does not require a rewrite. |
+| Q15 | `cd-www` sets up no Node today. The select step needs `node`. | Both CD workflows add `actions/setup-node@v4` with `node-version: 22`, the same as `ci.yml`. A test asserts it. |
+| Q16 | `ci.yml` declares no `permissions:` block (M20). Does P2 add one? | **No.** P2 adds `permissions: contents: read` to the two CD workflows only. `ci.yml` is P3's file. |
+| Q17 | Tasks 2.3b, 2.3e, and 2.3g say "record in the runbook" and "the runbook of each app". Only `docs/runbooks/storytime-deploy.md` exists. Six new files is churn. | **One new runbook:** `docs/runbooks/traffic-moves.md`, with one section per traffic file (6). Each section names the file, the ordered steps, and the old-schema sentence. Test F-16 counts the sections. |
 
 ## 5. Independent check (round 2)
 
