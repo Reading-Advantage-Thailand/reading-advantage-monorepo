@@ -61,12 +61,12 @@ async function renderSentence(text: string): Promise<HTMLElement> {
 }
 
 /**
- * Builds the text the sentence must show: each word uppercased, every other character kept.
+ * Builds the text the sentence must show: the source case is kept, every character is kept.
  * @param text The page text.
  * @returns The expected rendered text.
  */
 function expectedText(text: string): string {
-  return text.replace(WORD_RE, (word) => word.toUpperCase());
+  return text;
 }
 
 describe("Phase 3 adversarial hostile sentence text", () => {
@@ -96,7 +96,7 @@ describe("Phase 3 adversarial hostile sentence text", () => {
       expect(
         buttons.map((button) => button.textContent ?? ""),
         `each word of ${JSON.stringify(text)} must keep exactly one tap button`,
-      ).toEqual(words.map((word) => word.toUpperCase()));
+      ).toEqual(words);
       wordsSeen += words.length;
       cleanup();
     }
@@ -112,7 +112,7 @@ describe("Phase 3 adversarial hostile sentence text", () => {
     fireEvent.click(screen.getByRole("button", { name: "Next page" }));
     fireEvent.click(screen.getByRole("button", { name: "Next page" }));
     const sentence = [...view.container.querySelectorAll<HTMLElement>("[data-page-number] p")].find(
-      (element) => (element.textContent ?? "") === "TAP, TAP, TAP!",
+      (element) => (element.textContent ?? "") === "Tap, tap, tap!",
     );
     expect(
       sentence,
@@ -124,7 +124,7 @@ describe("Phase 3 adversarial hostile sentence text", () => {
     expect(
       group.textContent,
       "the comma must share one flex item with its word, so no gap opens before it (F151)",
-    ).toBe("TAP,");
+    ).toBe("Tap,");
     expect(group.querySelectorAll("button"), "the group holds only its own word").toHaveLength(1);
   });
 });

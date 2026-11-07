@@ -36,12 +36,12 @@ function weekWithText(text: string): StorytimeWeek {
 }
 
 /**
- * Builds the text the sentence must show: each word uppercased, every other character kept.
+ * Builds the text the sentence must show: the source case is kept, every character is kept.
  * @param text The page text.
  * @returns The expected rendered text.
  */
 function expectedText(text: string): string {
-  return text.replace(WORD_RE, (word) => word.toUpperCase());
+  return text;
 }
 
 /**
@@ -96,7 +96,7 @@ describe("Phase 3 adversarial hostile sentence text after the F240 fix", () => {
       expect(
         buttons.map((button) => button.textContent ?? ""),
         `each word of ${JSON.stringify(text)} must keep exactly one tap button`,
-      ).toEqual(words.map((word) => word.toUpperCase()));
+      ).toEqual(words);
       wordsSeen += words.length;
       cleanup();
     }
@@ -110,7 +110,7 @@ describe("Phase 3 adversarial hostile sentence text after the F240 fix", () => {
     expect(
       items[1],
       "the punctuation run before the space must share the flex item with its word (F240)",
-    ).toBe("HELLO!!");
+    ).toBe("Hello!!");
     expect(
       run.querySelectorAll("button"),
       "the word group holds only its own word",
@@ -120,7 +120,7 @@ describe("Phase 3 adversarial hostile sentence text after the F240 fix", () => {
     expect(
       itemTexts(quoted)[1],
       "the comma and the closing quote must share the flex item with their word (F240)",
-    ).toBe("HI,\"");
+    ).toBe("Hi,\"");
     cleanup();
   });
 
@@ -131,7 +131,7 @@ describe("Phase 3 adversarial hostile sentence text after the F240 fix", () => {
     fireEvent.click(screen.getByRole("button", { name: "Next page" }));
     fireEvent.click(screen.getByRole("button", { name: "Next page" }));
     const sentence = [...view.container.querySelectorAll<HTMLElement>("[data-page-number] p")].find(
-      (element) => (element.textContent ?? "") === "TAP, TAP, TAP!",
+      (element) => (element.textContent ?? "") === "Tap, tap, tap!",
     );
     expect(sentence, "the shipped w06 decodable page three must read Tap, tap, tap!").toBeTruthy();
     const buttons = [...sentence!.querySelectorAll("button")];
@@ -139,6 +139,6 @@ describe("Phase 3 adversarial hostile sentence text after the F240 fix", () => {
     expect(
       buttons[0]!.parentElement!.textContent,
       "the comma must share one flex item with its word, so no gap opens before it (F240)",
-    ).toBe("TAP,");
+    ).toBe("Tap,");
   });
 });
