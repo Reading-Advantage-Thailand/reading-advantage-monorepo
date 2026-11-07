@@ -124,6 +124,11 @@ describe("Marketing Cloud Run production contract", () => {
     "utf8",
   );
   const cloudbuild = parse(cloudbuildText) as CloudBuildConfig;
+  const trafficText = readFileSync(
+    resolve(marketingRoot, "cloudbuild-traffic.yaml"),
+    "utf8",
+  );
+  const traffic = parse(trafficText) as CloudBuildConfig;
   const dockerfile = readFileSync(resolve(marketingRoot, "Dockerfile"), "utf8");
   const packageJson = JSON.parse(
     readFileSync(resolve(marketingRoot, "package.json"), "utf8"),
@@ -185,16 +190,20 @@ describe("Marketing Cloud Run production contract", () => {
   });
 
   it("orders migration, doctor, runtime privilege proof, and candidate deployment", () => {
-    const ids = cloudbuild.steps?.map((step) => step.id) ?? [];
+    const ids = traffic.steps?.map((step) => step.id) ?? [];
     expect(ids.indexOf("migrate-db")).toBeLessThan(ids.indexOf("doctor-check"));
     expect(ids.indexOf("doctor-check")).toBeLessThan(
       ids.indexOf("runtime-db-contract"),
     );
     expect(ids.indexOf("runtime-db-contract")).toBeLessThan(
-      ids.indexOf("deploy-candidate"),
+      ids.indexOf("update-traffic"),
     );
+    const pushIds = cloudbuild.steps?.map((step) => step.id) ?? [];
+    for (const id of ["migrate-db", "doctor-check", "runtime-db-contract"]) {
+      expect(pushIds).not.toContain(id);
+    }
 
-    const doctor = requireBuildStep(cloudbuild, "doctor-check");
+    const doctor = requireBuildStep(traffic, "doctor-check");
     expect(doctor.args?.join(" ")).toContain(
       "doctor --check --required-migration 0042_company_product_principal_local_unique",
     );
@@ -205,7 +214,7 @@ describe("Marketing Cloud Run production contract", () => {
 
   it("grants only Marketing tables and rejects retired local-auth privileges", () => {
     const runtimeContract = requireBuildStep(
-      cloudbuild,
+      traffic,
       "runtime-db-contract",
     );
     expect(runtimeContract.secretEnv).toEqual([
@@ -292,7 +301,7 @@ describe("Marketing Cloud Run production contract", () => {
   });
 
   it("maps every referenced secret through parsed Secret Manager entries", () => {
-    const secretEntries = cloudbuild.availableSecrets?.secretManager ?? [];
+    const secretEntries = traffic.availableSecrets?.secretManager ?? [];
     expect(secretEntries).toEqual(
       expect.arrayContaining([
         {
