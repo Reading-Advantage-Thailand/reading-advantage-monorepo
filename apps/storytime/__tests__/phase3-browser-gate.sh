@@ -19,6 +19,7 @@ SERVER_LOG="$TMP_DIR/next-start.log"
 SERVER_PID_FILE="$TMP_DIR/server.pid"
 FIXTURE="$TMP_DIR/content"
 PLAYWRIGHT="$APP/.next/phase3-browser-gate-$$.mjs"
+DB_CONTAINER="storytime-phase3-gate-db-$$"
 
 # Stops the whole process group of the server and waits for the port to close.
 # The server starts its own `next-server` child, so a kill of the parent leaves the child alive.
@@ -43,6 +44,7 @@ stop_server_group() {
 
 cleanup() {
   stop_server_group
+  podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }
@@ -128,11 +130,35 @@ fi
 if [ "$FIXTURE_RC" -eq 0 ]; then pass "Ready clones use shipped w01, w03, and w04 with approvals and placeholder media"; else fail "Could not create ready review fixtures"; fi
 echo "=== Fixture mode: STORYTIME_CONTENT_DIR points to a temporary ready review copy; draft-media switch is not set ==="
 
+echo "=== Start the local database and make the account staff-01 (F7c: the gate signs in first) ==="
+# The same throwaway Postgres as phase2b-browser-gate.sh. The account lives only in this run.
+DB_PORT="$(node -e 'const s=require("node:net").createServer();s.listen(0,"127.0.0.1",()=>{console.log(s.address().port);s.close()})')"
+DB_URL="postgres://postgres:storytime@127.0.0.1:$DB_PORT/storytime"
+STAFF_PASSWORD=""
+SEED_OK=0
+if podman run -d --name "$DB_CONTAINER" -p "127.0.0.1:$DB_PORT:5432" \
+  -e POSTGRES_PASSWORD=storytime -e POSTGRES_DB=storytime \
+  docker.io/library/postgres:16-alpine >/dev/null 2>&1; then
+  for _ in $(seq 1 60); do
+    if podman exec "$DB_CONTAINER" pg_isready -U postgres -d storytime >/dev/null 2>&1; then break; fi
+    sleep 1
+  done
+  mkdir -p "$TMP_DIR/accounts"
+  printf 'name,class,role\nStaff One,staff,family\n' > "$TMP_DIR/accounts/accounts.csv"
+  if (cd "$ROOT" && STORYTIME_DATABASE_URL="$DB_URL" pnpm --filter @reading-advantage/db storytime:migrate >"$TMP_DIR/migrate.log" 2>&1) \
+    && (cd "$ROOT" && STORYTIME_DATABASE_URL="$DB_URL" ./node_modules/.bin/tsx apps/storytime/scripts/make-accounts.ts --folder "$TMP_DIR/accounts" --database-url-env STORYTIME_DATABASE_URL >"$TMP_DIR/accounts.log" 2>&1) \
+    && [ -s "$TMP_DIR/accounts/sign-in-cards.csv" ]; then
+    SEED_OK=1
+    STAFF_PASSWORD="$(awk -F, '$1=="staff-01" { print $NF }' "$TMP_DIR/accounts/sign-in-cards.csv" | tr -d '\r')"
+  fi
+fi
+if [ "$SEED_OK" -eq 1 ]; then pass "Local database holds the account staff-01"; else fail "Could not make the account staff-01"; fi
+
 echo "=== Start next start on a free 127.0.0.1 port ==="
 if [ -z "$PORT" ]; then
   PORT="$(node -e 'const s=require("node:net").createServer();s.listen(0,"127.0.0.1",()=>{console.log(s.address().port);s.close()})')"
 fi
-setsid bash -c "echo \$\$ > '$SERVER_PID_FILE'; cd '$APP' && STORYTIME_CONTENT_DIR='$FIXTURE' exec ../../node_modules/.bin/next start --hostname 127.0.0.1 --port '$PORT' >'$SERVER_LOG' 2>&1" &
+setsid bash -c "echo \$\$ > '$SERVER_PID_FILE'; cd '$APP' && STORYTIME_CONTENT_DIR='$FIXTURE' STORYTIME_DATABASE_URL='$DB_URL' STORYTIME_MEDIA_BASE='gs://storytime-app-media' STORYTIME_STORAGE_ENDPOINT='http://127.0.0.1:$PORT' STORYTIME_STORAGE_ACCESS_KEY='gate-access-key' STORYTIME_STORAGE_SECRET_KEY='gate-secret-key' exec ../../node_modules/.bin/next start --hostname 127.0.0.1 --port '$PORT' >'$SERVER_LOG' 2>&1" &
 for _ in $(seq 1 20); do
   [ -s "$SERVER_PID_FILE" ] && break
   sleep 0.2
@@ -154,6 +180,44 @@ import { chromium } from '@playwright/test';
 import http from 'node:http';
 const base = process.env.PROJECT_DEV_URL;
 const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
+// F7c: every week route needs a session, so the gate signs in first. The helper posts the sign-in
+// form with the Origin of the server (next start with --hostname 127.0.0.1 reports the origin
+// http://localhost:<port>) and keeps the name=value pair of the session cookie; a context adds it
+// with signedContext. The password comes from the environment and is never printed.
+const SIGN_IN_ORIGIN = `http://localhost:${new URL(base).port}`;
+async function signIn(user, password) {
+  const body = new URLSearchParams({ username: user, password, locale: 'th', next: '/th/st' });
+  const response = await fetch(`${base}/api/auth/sign-in`, {
+    method: 'POST',
+    redirect: 'manual',
+    headers: { origin: SIGN_IN_ORIGIN, 'content-type': 'application/x-www-form-urlencoded' },
+    body,
+  });
+  const cookie = response.headers.getSetCookie().map(line => /^(__Host-st_session)=([^;]+)/.exec(line)).find(Boolean);
+  if (!cookie) throw new Error(`sign-in of ${user} gave status ${response.status} and no session cookie`);
+  return { name: cookie[1], value: cookie[2] };
+}
+const SESSION = await signIn(process.env.PROJECT_SIGN_IN_USER, process.env.PROJECT_SIGN_IN_PASSWORD);
+/** Opens a browser context that holds the session cookie of the signed-in account. */
+async function signedContext(options) {
+  const context = await browser.newContext(options);
+  // context.addCookies refuses a `__Host-` cookie ("Invalid cookie fields"), so the cookie goes in
+  // through the protocol with the url only; the cookie then stays host-only.
+  const setup = await context.newPage();
+  const cdp = await context.newCDPSession(setup);
+  const stored = await cdp.send('Network.setCookie', { name: SESSION.name, value: SESSION.value, url: base, httpOnly: true, secure: true, sameSite: 'Lax' });
+  if (!stored.success) throw new Error('the browser refused the session cookie');
+  await cdp.detach();
+  await setup.close();
+  return context;
+}
+/** Opens one signed-in page in its own context. */
+async function signedPage() {
+  const context = await signedContext({});
+  const pg = await context.newPage();
+  pg.on('close', () => { context.close().catch(() => {}); });
+  return pg;
+}
 let pass = 0, fail = 0;
 const results = [];
 function record(name, ok, detail = '') {
@@ -214,7 +278,9 @@ const PNG_1X1 = Buffer.from(
   'base64',
 );
 async function interceptMedia(pg) {
-  await pg.route('**/media/**', route => {
+  // The signed URLs name the storage endpoint (here the origin of the server) and carry a
+  // signature; the old `/media/` path rule stays for the keys that hold `/media/`.
+  await pg.route(url => url.pathname.includes('/media/') || url.searchParams.has('X-Amz-Signature'), route => {
     const path = new URL(route.request().url()).pathname;
     if (/\.mp3$/i.test(path)) return route.fulfill({ status: 200, contentType: 'audio/wav', body: WAV });
     // The built app serves no static media, so a page picture would 404 and take no layout
@@ -537,7 +603,7 @@ try {
 
   let context, page, network;
   await runCheck('Create live review browser context', async () => {
-    context = await browser.newContext({ viewport: { width: 360, height: 800 } });
+    context = await signedContext({ viewport: { width: 360, height: 800 } });
     page = await context.newPage();
     await interceptMedia(page);
     network = await watchNetwork(page);
@@ -871,7 +937,7 @@ try {
 
   // reduced_motion_transition_ms: 0 on the marks with reducedMotion reduce.
   await runCheck('reduced_motion_transition_ms is 0 on the marks', async () => {
-    const rmContext = await browser.newContext({ viewport: { width: 360, height: 800 }, reducedMotion: 'reduce' });
+    const rmContext = await signedContext({ viewport: { width: 360, height: 800 }, reducedMotion: 'reduce' });
     const rmPage = await rmContext.newPage();
     try {
       await interceptMedia(rmPage);
@@ -902,7 +968,7 @@ try {
   // nearest opaque ancestor background, white when none exists.
   await runCheck('contrast_min_ratio_x100 is at least 450 for every highlight state', async () => {
     if (!page) throw new Error('Browser page is unavailable');
-    const contrastContext = await browser.newContext({ viewport: { width: 360, height: 800 }, reducedMotion: 'reduce' });
+    const contrastContext = await signedContext({ viewport: { width: 360, height: 800 }, reducedMotion: 'reduce' });
     const contrastPage = await contrastContext.newPage();
     try {
       await interceptMedia(contrastPage);
@@ -1125,7 +1191,7 @@ try {
   });
 
   await runCheck('Week 404 answers 404 and the hydrated locale lang with both texts', async () => {
-    const p = await browser.newPage();
+    const p = await signedPage();
     try {
       return await checkWeek404(p, `${base}/th/st/2/2`, 'th');
     } finally {
@@ -1147,7 +1213,7 @@ NODE
 
 echo "=== Run Playwright with SYSTEM Chrome (channel: chrome); timeout 15m ==="
 if [ "$READY" -eq 1 ]; then
-  PROJECT_DEV_URL="http://127.0.0.1:$PORT" PROJECT_FIXTURE_WEEK="$FIXTURE/l2/w01.json" timeout 15m node "$PLAYWRIGHT"
+  PROJECT_DEV_URL="http://127.0.0.1:$PORT" PROJECT_FIXTURE_WEEK="$FIXTURE/l2/w01.json" PROJECT_SIGN_IN_USER=staff-01 PROJECT_SIGN_IN_PASSWORD="$STAFF_PASSWORD" timeout 15m node "$PLAYWRIGHT"
   PW_RC=$?
   if [ "$PW_RC" -eq 0 ]; then pass "Playwright gate exits 0"; else fail "Playwright gate exits $PW_RC"; fi
 else
