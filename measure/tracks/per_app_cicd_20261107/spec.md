@@ -166,7 +166,7 @@ Acceptance:
 
 - AC-5.1 (automated) The dry-run report has one row for each app in the table and for the CI workflow (`rows` equals the table count plus 1).
 - AC-5.2 (automated) `turbo run build test --filter=www-reading-advantage...` exits 0 at the HEAD that the report names, through `heavy-run`.
-- AC-5.3 (automated) The first-push plan names the apps that the FR-1 script returns for `origin/master..HEAD`.
+- AC-5.3 (automated) The first-push plan names the apps that the FR-1 script returns for `origin/master..HEAD`. The plan also lists every www text change that the first push publishes, each checked against what is live on www that day (for example, the www sign-in copy on branch `storytime/www-signin-copy` goes in only after the Storytime login is live).
 - AC-5.4 (owner-passed) Daniel gives the word for the first push after the PM relays the report.
 
 ## 4. Constraints

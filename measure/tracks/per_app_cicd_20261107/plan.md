@@ -54,6 +54,7 @@ Follow-up for the CI-green track after this one (PM, 2026-11-07): repair `pnpm a
 - [ ] 4.1 Dry run of each workflow for each fake range, with `act` or a script, with no secret and no deploy. One report row for each app and one for CI (AC-5.1). The report goes to `measure/tracks/per_app_cicd_20261107/dry-run-report.md`. Evidence class: automated.
 - [ ] 4.2 Build and test www locally at the HEAD that will be pushed: `turbo run build test --filter=www-reading-advantage...` through `heavy-run` (AC-5.2). The pending commits change `packages/read-along`, `pnpm-lock.yaml`, and `pnpm-workspace.yaml` (next 16.4.1, vinext 1.2.0). Evidence class: automated.
 - [ ] 4.3 Write the one-line first-push plan: the apps that the script returns for `origin/master..HEAD` (AC-5.3). Evidence class: automated.
+  - The first-push list also names every www text change that the first push publishes, and checks each one against what is live on www that day (PM decision, 2026-11-07). Example: the www sign-in copy waits on branch `storytime/www-signin-copy` and goes in only after the Storytime login is live.
 - [ ] 4.4 Adversarial review of the workflows, final acceptance at an immutable HEAD, then hand the report to the PM. Evidence class: automated.
 - [b] 4.5 The first push, on Daniel's word after the PM relays the report (AC-5.4). deferred:daniel
 - [b] 4.6 Every traffic move of a gated app, on Daniel's word. deferred:daniel
