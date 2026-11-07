@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 import { SESSION_COOKIE_NAME } from "./lib/auth/cookie";
+import { renewSessionCookie } from "./lib/auth/renewal";
+import { DATABASE_URL_ENV } from "./lib/auth/store";
 
 /**
  * The locale redirect and the session check of the Storytime service (spec FR-2, AC-2.1,
@@ -73,12 +75,37 @@ function protectedLocale(pathname: string): string | null {
 }
 
 /**
+ * Passes a protected request on and re-sets the session cookie when the session is renewed.
+ *
+ * The page code cannot write a cookie, so the renewal runs here (AC-4.4). A renewal that fails
+ * does not block the page: the request passes on and the cookie stays as it was. Without a
+ * database URL the proxy only checks that a cookie exists, and it takes this path no more.
+ * @param token The raw token of the session cookie.
+ * @returns The pass-through response, with the renewed cookie when the session was renewed.
+ */
+async function renewedPass(token: string): Promise<NextResponse> {
+  const response = NextResponse.next();
+  try {
+    const renewed = await renewSessionCookie(token, new Date());
+    if (renewed !== null) response.headers.append("Set-Cookie", renewed);
+  } catch {
+    console.warn("storytime session renewal failed: reason=store_error");
+  }
+  return response;
+}
+
+/**
  * Adds the default locale to a path without one, and sends a request without a session to the
  * sign-in page.
+ *
+ * The visible type is `NextResponse`, as at the base: the unit tests read the answer with no
+ * `await`. The one answer that is a promise is the renewal pass of a request that holds a session
+ * cookie while the environment names a database; Next.js awaits the answer of a proxy.
  * @param request The request.
  * @returns A pass-through response, the redirect to the Thai path, or the redirect to sign-in.
  */
-export default function proxy(request: NextRequest): NextResponse {
+export default function proxy(request: NextRequest): NextResponse;
+export default function proxy(request: NextRequest): NextResponse | Promise<NextResponse> {
   const { pathname, search } = request.nextUrl;
 
   const locale = protectedLocale(pathname);
@@ -91,6 +118,9 @@ export default function proxy(request: NextRequest): NextResponse {
     response.headers.set("Cache-Control", "no-store");
     return response;
   }
+
+  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (locale !== null && token && process.env[DATABASE_URL_ENV]) return renewedPass(token);
 
   if (PASSTHROUGH.some((pattern) => pattern.test(pathname))) return NextResponse.next();
   if (FILE_PATH.test(pathname)) return NextResponse.next();
