@@ -25,7 +25,7 @@ PM decision, 2026-11-07: the code part of plan task 7.1 of `storytime_app_rebuil
 
 ## 2. Inventory (read only, 2026-11-07, at 732547e11)
 
-All paths start at `apps/primary-advantage/` unless the path starts with `docs/`. The Red role runs `rg -il storytime` again before the first test and records any difference.
+All paths start at `apps/primary-advantage/` unless the path starts with `docs/`. The start check (plan task 1.2) has two parts. Part (a): each DELETE path and each EDIT path exists. A missing path stops the task. Part (b): each file that `rg -il storytime apps/primary-advantage --glob '!node_modules' --glob '!.next'` lists is in DELETE, EDIT, or KEEP. A listed file in none of them stops the task. The scan reads file contents only, so it does not list every DELETE path (for example `media-list.txt`).
 
 **DELETE (25 files):**
 
@@ -77,6 +77,7 @@ Acceptance:
 - AC-1.4 (automated) No `messages/*.json` file has a top-level `Storytime` key (`locales_checked=5`). No Primary file calls `useTranslations('Storytime')` or `getTranslations('Storytime')`.
 - AC-1.5 (automated) The Primary tests of the touched files exit 0. `tsc --noEmit` for `primary-advantage` exits 0 through `heavy-run`. ESLint of the touched files adds no new error against the known Primary count (49).
 - AC-1.6 (automated) `apps/storytime/__tests__/phase1-boundary.test.ts` exits 0 (the new app still builds without Primary files).
+- AC-1.8 (automated) The adversarial file `apps/primary-advantage/__tests__/storytime-removal-adversarial.test.ts`, written by the adversarial role, exits 0 with its three cases: the `/st/` path answers the Primary 404, a Storytime host header is not rewritten, and the service worker registers on a normal host.
 - AC-1.7 (automated) The files of the KEEP list are unchanged in the deletion commit (`git diff --stat` over the KEEP paths is empty). No bucket command and no deploy command is part of this track; the bucket and production stay as they are.
 
 ### FR-2 Production leaves the route (Phase 2)
