@@ -67,7 +67,7 @@ Phase 2 edits the same route files as Phase 1, and `questions.tsx` too, so it st
 | Work | 3.5 days | 2 days | 2.5 days |
 | Before 2026-11-20 | Yes, if Green starts by 2026-11-12: gates pass 2026-11-17, look check 2026-11-18. Later start: 2026-11-24. | Yes: gates pass 2026-11-14 if it starts 2026-11-11. | Yes: gates pass 2026-11-16, if the frontispiece uses the read-along cover. |
 
-Phase 2 ships on 2026-11-20 only if its gates pass in time. Asset gaps (study section 3): no cut-out pictures of the cast, no painted places at final size (WebP, 1080 x 1920 and 1920 x 1080, under 250 KB), and the bar, crest, and plaque are stand-ins. Each gap that blocks a gate goes to the orchestrator.
+Phase 2 ships on 2026-11-20 only if its gates pass in time. Asset plan for option 1 (PM, 2026-11-07): Workbooks sends the final SVG pieces from the cover template by 2026-11-11 (the game bar, the crest, and the left and right plaque tips; they replace the stand-ins `q-bar`, `q-crest`, `q-tip-l`, and `q-tip-r`). Green makes the 5 places (meadow, grove, oak, trail, path) from the cover art `A-front-a1-clean`, `A-reader-a2-clean`, and `A-back-a1`, as WebP at 1080 x 1920 and 1920 x 1080, under 250 KB each, without the 16 px edge glitch. Option 1 uses no cast cut-out. Fonts: Fredoka and Mitr through `next/font/local`. Any other gap that blocks a gate goes to the orchestrator. Dates (PM, 2026-11-07): Phase 2 Green starts by 2026-11-12; after the look port checkpoint the PM runs the council on the fixed screens; Daniel's final look check is on 2026-11-18, and the deploy waits for his word.
 
 Rules from the study that bind every option: the read-along text, the decodable sentence, and the lyric list stay plain; the lyric list has no pictures (M-3); all targets are 48 px or more; there is one main action on each screen; Storytime plays only recorded files (no synthetic tone); Storytime is 2D only (no WebGL); motion is off with `prefers-reduced-motion`.
 
@@ -81,14 +81,14 @@ Hero fix for option 1 (items 1 to 3 of `s1-storybook-quest/round-1.md`):
 
 Acceptance:
 
-- AC-2.1 (owner-passed) Daniel's pick of an option is recorded with his words and the date.
+- AC-2.1 (owner-passed) Daniel's pick of an option is recorded with his words and the date. Recorded 2026-11-07: option 1, Storybook Quest, with the council hero fix; his word in chat was "Acepted" (relayed by the PM).
 - AC-2.2 (automated) For the 24 captures of the study (phone, tablet, phone landscape, English and Thai, four pages): console errors 0, broken pictures 0, targets under 48 px 0, clipped text 0, page overflow 0, text contrast failures 0. The capture list is asserted to hold 24 entries.
 - AC-2.3 (automated) The sentence, the lyric list, and the read-along text carry no decoration class of the look; the lyric list holds no `img`; the code holds no WebGL call and no synthetic audio tone; motion rules sit under `prefers-reduced-motion`.
 - AC-2.4 (automated) The UI council round 2 total is 85.0 or more (the council goal), with the same shots list as round 1.
 - AC-2.5 (owner-passed) Daniel's look check passes. The record names the commit and the word.
-- AC-2.6 (automated, option 1) Song page on the phone viewport of the browser gate: the cover card has a computed height of 220 CSS px, and the Play button and the active lyric line are inside the first view (bottom edge at or above the viewport height).
-- AC-2.7 (automated, option 1) Decodable and question screens on the phone viewport: the hero band has a computed height of 96 CSS px, and the previous and next arrows are inside the first view.
-- AC-2.8 (automated, option 1) Reader at 1024 by 768: the hero band has a computed height of 120 CSS px, and the button row is above the fold (bottom edge at or above 768).
+- AC-2.6 (automated, option 1) Song page on the phone viewport of the browser gate: the cover card has a computed height of 220 CSS px (pin) and a measured height from 220 to 240 CSS px passes (PM range), and the Play button and the active lyric line are inside the first view (bottom edge at or above the viewport height).
+- AC-2.7 (automated, option 1) Decodable and question screens on the phone viewport: the hero band has a computed height of 96 CSS px (pin) and a measured height from 92 to 100 CSS px passes (orchestrator tolerance of 4 px around the PM value "about 96"), and the previous and next arrows are inside the first view.
+- AC-2.8 (automated, option 1) Reader at 1024 by 768: the hero band has a computed height of 120 CSS px (pin) and a measured height from 116 to 124 CSS px passes (orchestrator tolerance of 4 px around the PM value "about 120"), and the button row is above the fold (bottom edge at or above 768).
 
 ## 4. Constraints
 
