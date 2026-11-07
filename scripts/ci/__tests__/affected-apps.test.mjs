@@ -974,8 +974,12 @@ describe("P1 group B: the cases from the measured facts", () => {
     expect(globals.length).toBe(7);
     let head = base;
     for (const global of globals) {
-      head = commitChanges(dir, global.write);
+      head = commitChanges(dir, { write: global.write });
       const changed = changedFileCount(dir, base, head);
+      expect(
+        changed,
+        `B-17 global=${global.label} changed_files=${changed} globals_checked=${globals.length}`,
+      ).toBeGreaterThanOrEqual(1);
       const result = runScript(dir, base, head);
       expectIds(
         result,
