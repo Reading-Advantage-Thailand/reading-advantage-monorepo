@@ -5,10 +5,20 @@
 # --no-traffic. Daniel's word supplies _PUSH_BUILD_ID, the BUILD_ID of the push
 # build whose image the tagged revisions run. The move goes to the candidate revision of that build.
 #
-# Order: curriculum backup guard, migrate, doctor check, curriculum seed and check,
-# runtime probe, legacy rollback capture and check, candidate capture, traffic move.
-# See docs/runbooks/traffic-moves.md.
+# Order: release source bind, curriculum backup guard, migrate, doctor check, curriculum seed and
+# check, runtime probe, legacy rollback capture and check, candidate capture, traffic move.
+# The first step compares the uploaded repository root with the release commit and stops the build
+# before any step that reads the source. See docs/runbooks/traffic-moves.md.
 steps:
+  - name: "gcr.io/cloud-builders/git"
+    id: "bind-release-source"
+    entrypoint: "bash"
+    args:
+      - "scripts/ci/verify-traffic-source.sh"
+      - "$_RELEASE_COMMIT_SHA"
+      - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
+      - "."
+
   - name: "node:22-slim"
     id: "verify-curriculum-backup"
     entrypoint: "bash"
