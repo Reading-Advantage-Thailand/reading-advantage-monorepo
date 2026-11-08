@@ -16,15 +16,16 @@ const LINK_CLASS =
  *
  * The text comes from the English message file: the 404 keys hold the same value in both message
  * files, and the locale layout holds no client message provider. The link target is built from
- * the page locale and two integers, never from the path text, so a hostile path cannot move the
- * child to another host.
+ * the locale of the path (as `parseStorytimePath` reads it against the known locales) and two
+ * integers, never from the path text, so a hostile path cannot move the child to another host.
+ * The page locale falls back to the routing default on a 404, so the `locale` prop cannot carry
+ * the locale of the scanned page; the path is the only source (carried item N6).
  * @param props.openWeeks The highest open week of each level that has a week file, or `null`.
- * @param props.locale The locale of the page.
+ * @param props.locale The locale of the page. The link does not read it.
  * @returns The 404 view.
  */
 export function NotFoundView({
   openWeeks,
-  locale,
 }: {
   openWeeks: Record<number, number | null>;
   locale: string;
@@ -51,8 +52,8 @@ export function NotFoundView({
         {messages.notOpenThai}
       </h1>
       <p lang="en">{messages.notOpenEnglish}</p>
-      {week !== null && (routing.locales as readonly string[]).includes(locale) ? (
-        <a href={`/${locale}/st/${route.level}/${week}`} className={LINK_CLASS}>
+      {week !== null ? (
+        <a href={`/${route.locale}/st/${route.level}/${week}`} className={LINK_CLASS}>
           <span lang="th">{messages.openWeekThai.replace("{week}", week)}</span>
           <span lang="en">{messages.openWeekEnglish.replace("{week}", week)}</span>
         </a>

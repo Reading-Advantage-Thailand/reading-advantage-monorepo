@@ -1,0 +1,43 @@
+/*
+ * The look of Storytime, option 1 "Storybook Quest" (track storytime_look_20261107, Phase 2).
+ *
+ * This file starts with the carried Phase 1 items (task 2.3d): the touch marker of a clip word
+ * (N2) and the 48 px hit height of a read-along word with no layout width (N1, Q27). Task 2.3
+ * adds the full port of the study CSS (places, hero, plaque, cards, buttons, motion).
+ *
+ * Scope rules (test strategy P2.9): the rules for `html`, `body`, and `main > a` are the only
+ * ones that reach the sign-in, join, teacher, and 404 pages; they set tokens and the 48 px link
+ * floor only. Every other rule attaches to hooks that only the week pages render
+ * (`main[data-place]`, `header[data-hero]`, `[data-part]`, `.song-stage`, `[data-word]`).
+ * No rule selects by Tailwind class text (Q30), no url() is root-absolute (M30), and no rule
+ * gives a read-along word a layout width (AC-1.9).
+ */
+
+/* The tap floor of a plain link that a page renders as a direct child of `main` (the sign-in
+ * "how to join" link, the teacher link, and the 404 open-week link). The sign-in page is owned
+ * by the login track, so the floor comes from this shared rule, not from an edit of that page
+ * (PM decision, 2026-11-08). */
+main > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+}
+
+/*
+ * A read-along word (N1, Q27): the hit area grows to 48 px of height through the pseudo-element
+ * that the read-along passage already positions; only the vertical insets move, so the word keeps
+ * no layout width and the even word gap of AC-1.9 holds. A short word such as "I" keeps a narrow
+ * tap (the width part of N1 is a recorded non-goal: a wider area takes the tap of the neighbour).
+ */
+[data-word]::before {
+  top: -12px;
+  bottom: -12px;
+}
+
+/* The touch marker of a clip word (N2, Q28): a dotted underline that needs no hover, because a
+ * phone has none. A word with no clip carries no `tabindex`, so it shows no marker. This is the
+ * only text decoration that the plain-text rule allows on the read-along text (AC-2.3, T4). */
+[data-word][tabindex] {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+}

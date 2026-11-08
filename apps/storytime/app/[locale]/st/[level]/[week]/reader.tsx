@@ -292,10 +292,12 @@ export function StorytimeReader({
   }
 
   /**
-   * Starts the page recording from the first sentence of the page.
+   * Starts the page recording from the first sentence of the page. A word clip that still
+   * plays stops first, so the child never hears two sounds at once (carried item N3).
    */
   function startListen(): void {
     resetMarks();
+    clipRef.current?.pause();
     setMode("listen");
     const element = audioRef.current;
     if (!element || !book.audio?.file) return;
@@ -310,18 +312,23 @@ export function StorytimeReader({
 
   /**
    * Starts "My turn": the reader stays silent until the child taps a word that has a clip.
+   * A word clip that still plays stops first (carried item N3).
    */
   function startMyTurn(): void {
     resetMarks();
+    clipRef.current?.pause();
     setMode("myTurn");
     audioRef.current?.pause();
   }
 
   /**
    * Starts the slow mode from the real slow recording at a normal playback rate (rule 10.1).
+   * A word clip that still plays stops first, so the child never hears two sounds at once
+   * (carried item N3).
    */
   function startSlow(): void {
     resetMarks();
+    clipRef.current?.pause();
     setMode("slow");
     const element = audioRef.current;
     if (!element || !book.audio?.slowFile) return;
