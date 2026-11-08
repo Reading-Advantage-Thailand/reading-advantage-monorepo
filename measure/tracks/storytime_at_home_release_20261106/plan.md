@@ -93,6 +93,7 @@ Later hardening (PM, 2026-11-07): split the database user into `storytime_migrat
 
 Follow-up (Review C): the proxy re-sets the session cookie once a day.
 F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-11-08). Reason: Storytime week content is company-written fiction with a fictional cast; no real person or school appears in it; the app uploads no photo or video (rule D23); people data stays out of the repos (PR rule 13).
+- [~] 2b.7b UX F1 (F5 line): a wrong sign-in keeps the username in the field and clears the password; the username goes into no URL. Red test, then Green. Evidence class: automated. PM decision Q7 (2026-11-08) adds the flash cookie: the sign-in handler sets one host-only flash cookie, the proxy clears it, and the page shows the value as escaped input text. Red r15 note below holds the evidence.
 
 ### Phase 2b task 2b.7 Red r6 note (F-origin)
 
@@ -210,6 +211,21 @@ F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-
 - **The command exits 0.** `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash .../heavy-run.sh -c 'cd .../apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-return-path.test.ts && ../../node_modules/.bin/eslint __tests__/login-return-path.test.ts'` gives `Test Files 1 passed (1)`, `Tests 2 passed (2)`, and ESLint exits 0.
 - **The syntax checks.** `bash -n` on the gate exits 0. `node --check` on the extracted NODE block exits 0. These are test-contract corrections, so no Red failure is expected at HEAD.
 - **The task state.** Task 2b.7 stays `[~]` for the Green rerun of the browser gate.
+
+### Phase 2b task 2b.7b Red r15 note (UX F1, PM decision Q7)
+
+- Phase base `ef41f6521e178987dd349ac8a6854bd4a413333d`; role base and HEAD `a1d3bb741fa23e355590e35a5fb3d87c61562993` at the start. Test commit `1e9541c83`. No production file changed. The Green runs on a different model family.
+- **The contract.** `SIGN_IN_USERNAME_COOKIE = "st_signin_username"`, exported from `apps/storytime/lib/auth/index.ts`. A wrong password answers 303 with one host-only cookie `st_signin_username=<username>`; Max-Age=60; Path=/<locale>/sign-in; HttpOnly; Secure; SameSite=Strict; no Domain. The value is the username only. The handler sets the cookie only when the username passes the rule: trim, lower case, 1 to 64 characters, and the characters a-z, 0-9, "-", "_", ".". The sign-in schema stays as it is; a helper applies the character rule to the cookie. The proxy clears the cookie on a GET of /<locale>/sign-in with Max-Age=0 and the same Path, and the page shows the value as escaped input text. The sign-in log holds no username. A good sign-in sets no flash cookie and clears one that exists.
+- **Targeted command, exit 1.** `cd apps/storytime && npx vitest run __tests__/login-signin-username-flash.test.ts __tests__/login-signin-page-username.test.tsx __tests__/login-proxy.test.ts` gives `Test Files 3 failed (3)`, `Tests 8 failed | 7 passed (15)`. All 8 new cases fail; the 7 passes are the existing proxy cases. No case fails with a load error. `login-signin-handler.test.ts` exits 0 with `Tests 9 passed (9)`; its enumeration row now reads "no session cookie".
+- **Condition 1, case `flash_cookie_attrs`** (file `login-signin-username-flash.test.ts`): 303, one cookie, value `staff-01`, Max-Age=60, Path=/th/sign-in, HttpOnly, Secure, SameSite=Strict, no Domain. Fails now with `flash_cookie_count=0`.
+- **Condition 2, cases `flash_value_username_only` and `flash_refused_username`** (6 values: 65 chars, a line break, a space, non-ASCII, `<script>`, `"><img src=x>`): the value never holds the password; each refused value gives no flash cookie. Fails now.
+- **Condition 3, cases `username_input_value` and `username_input_after_clear`** (`login-signin-page-username.test.tsx`), and `flash_clear_count` (in `login-proxy.test.ts`): the field holds `staff-02`, the second GET holds no value, and the proxy clears with Max-Age=0 and Path=/th/sign-in. Fails now (the input has no value; the proxy sets no cookie).
+- **Condition 4, cases `username_input_escaped` and `username_markup_leak`, plus the refused `"><img src=x>` row**: the page shows `value="&quot;&gt;&lt;img src=x&gt;"` and no `<img src=x>` markup. The handler refuses the same value. Fails now.
+- **Condition 5, case `flash_log_holds_username`**: the captured `console.warn`, `console.log`, and `console.error` text holds no `staff-01`. At HEAD the log line `storytime sign-in failed: username=staff-01` would also fail this row.
+- **Condition 6, cases `good_sign_in_flash_cookies` and `good_sign_in_clear_cookies`**: a good sign-in sets no flash cookie and clears a carried one (`Max-Age=0`, `Path=/th/sign-in`) beside the one session cookie. Fails now.
+- **Condition 0, case `sign_in_username_cookie_export`**: the constant is exported with the pinned name. Fails now with `undefined`.
+- **Browser gate, exit 1.** `bash apps/storytime/__tests__/phase2b-browser-gate.sh` in the foreground gives `=== Total: 37 checks (PASS=36, FAIL=1) ===`, `FAIL: F62 username_kept=0 (expected 1)`, `PASS: F62 password_kept=0 (expected 0)`, `PASS: F62 username_in_location=0 (expected 0)`, `PASS: The flows F1 to F9 run and exit 0`, and `PASS: F62 flow label rows: 27`. The F5 block now reads the username in th and en and collects the 303 Location headers and the sign-in page URLs. `bash -n` on the gate exits 0. The gate has no self-test script.
+- **The task state.** Task 2b.7b stays `[~]` for the Green.
 
 ### Phase 2b Green evidence
 
