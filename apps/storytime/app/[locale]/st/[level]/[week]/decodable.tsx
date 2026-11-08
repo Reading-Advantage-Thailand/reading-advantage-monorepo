@@ -12,6 +12,7 @@
 import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { markPartDone } from "../../../../../lib/done";
+import { isAbortError } from "../../../../../lib/is-abort-error";
 import { blendPlanForWord } from "../../../../../lib/blend";
 import { seekAndRun, stopAtMediaEnd } from "../../../../../lib/audio-seek";
 import type { StorytimeBook, StorytimeWeek } from "../../../../../lib/contracts/week";
@@ -236,16 +237,6 @@ export function StorytimeDecodable({
     }
     return [...words.values()];
   }, [week.focus?.trickyWords, soundsPage?.tricky]);
-
-  /**
-   * Reports whether a play rejection is the abort of a replaced load (finding F120).
-   * @param error The rejection value of a play promise.
-   * @returns `true` for an `AbortError` DOMException.
-   */
-  function isAbortError(error: unknown): boolean {
-    return typeof error === "object" && error !== null
-      && (error as { name?: string }).name === "AbortError";
-  }
 
   /**
    * Plays one audio element and records a failed sound (rule 10.4). An aborted play is the

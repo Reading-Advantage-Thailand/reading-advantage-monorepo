@@ -18,6 +18,7 @@ import { useReadAlong } from "@reading-advantage/read-along/hooks/use-read-along
 import { findPosition, sentencesOfPage } from "@reading-advantage/read-along/lib/position";
 import { seekOrWait } from "@reading-advantage/read-along/lib/seek";
 import { markPartDone } from "../../../../../lib/done";
+import { isAbortError } from "../../../../../lib/is-abort-error";
 import { highlightWindows } from "../../../../../lib/highlight-windows";
 import type { BookQuestion } from "../../../../../lib/questions";
 import { StorytimeQuestions, WeekTileLinks, type QuestionLabels, type QuestionTile } from "./questions";
@@ -197,9 +198,10 @@ export function StorytimeReader({
 
   useEffect(() => clearStopTimer, []);
 
-  // The book is done on this device when it reaches its last page or its end view.
+  // The book is done on this device when it reaches its last page or its end view. A one-page
+  // book reaches its last page on its first view; a longer book needs the last page itself.
   useEffect(() => {
-    if (finished || (book.pages.length > 1 && pageIndex >= book.pages.length - 1)) markPartDone(doneKey);
+    if (finished || (book.pages.length > 0 && pageIndex >= book.pages.length - 1)) markPartDone(doneKey);
   }, [finished, pageIndex, book.pages.length, doneKey]);
 
   // The clip of a tapped word plays on its own element, never on the sentence recording.
@@ -244,12 +246,16 @@ export function StorytimeReader({
     try {
       const result = element.play();
       if (result && typeof result.catch === "function") {
-        result.catch(() => {
+        result.catch((error: unknown) => {
+          // A new src on the same element aborts the pending play; that is no failed sound
+          // (finding F120), so a mode-switch storm shows no alert.
+          if (isAbortError(error)) return;
           setAudioFailed(true);
           clearStopTimer();
         });
       }
-    } catch {
+    } catch (error) {
+      if (isAbortError(error)) return;
       setAudioFailed(true);
       clearStopTimer();
     }
