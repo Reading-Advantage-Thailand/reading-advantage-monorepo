@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
-import { STORYTIME_IMAGES } from "@/__tests__/fixtures/storytime-page-expected";
+import { SONG_POSTERS, STORYTIME_IMAGES } from "@/__tests__/fixtures/storytime-page-expected";
 
 const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const SOURCE_ROOT = process.env.A45_STORYTIME_SOURCE_ROOT ?? "/home/daniebo/Desktop/handoff/a45-storytime-www-images";
@@ -59,9 +59,12 @@ describe("Storytime Advantage page image assets", () => {
     expect(problems).toEqual([]);
   });
 
-  it("writes only the 10 lossless WebP files at their selected sizes", async () => {
+  it("writes only the 10 lossless WebP files and the two song posters", async () => {
     expect(readdirSync(OUTPUT_DIR).sort()).toEqual(
-      STORYTIME_IMAGES.map(({ name }) => `${name}.webp`).sort(),
+      [
+        ...STORYTIME_IMAGES.map(({ name }) => `${name}.webp`),
+        ...Object.values(SONG_POSTERS).map((path) => basename(path)),
+      ].sort(),
     );
     const problems: string[] = [];
     for (const image of STORYTIME_IMAGES) {
