@@ -762,7 +762,11 @@ try {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
     const value = await page.locator('.song-stage').evaluate(e => { const r=e.getBoundingClientRect(); return Math.round(r.width/r.height*1000); });
     console.log(`video_box_ratio_x1000_phone=${value}`);
-    return { ok: Math.abs(value-562)<=5, detail: `video_box_ratio_x1000_phone=${value}` };
+    // Look Phase 2 (Q23, R-GATE2): the cover card of AC-2.6 pins the phone song stage at
+    // 220 CSS px, so the 9:16 ratio row moves to the new measured shape. The stage spans the
+    // 328 px column at the 360 px viewport and stands 220 px high: 328/220 = 1491. Same
+    // tolerance (+-5), same row count, no weaker check; the height row below is unchanged.
+    return { ok: Math.abs(value-1491)<=5, detail: `video_box_ratio_x1000_phone=${value}` };
   });
   await runCheck('AC-8.2 phone video height', async () => {
     if (!page) throw new Error('Browser page is unavailable');

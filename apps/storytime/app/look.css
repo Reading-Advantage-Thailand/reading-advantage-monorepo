@@ -533,6 +533,17 @@ main[data-place] button:active:not(:disabled) {
   border-radius: 22px;
   box-shadow: 0 0 0 4px var(--sq-blue-dark), 0 0 0 7px var(--sq-ice), 0 12px 0 7px rgba(10, 25, 60, 0.3);
 }
+/* The phone cover card (AC-2.6, task 2.3a): 220 CSS px high, so the gold Play button and
+ * the active lyric line show in the first view. The video fills the card at its 9:16 shape;
+ * the framed poster window of AC-1.4 stays until the video plays a frame. */
+.song-stage[data-phone="true"] {
+  height: 220px;
+  align-items: center;
+}
+.song-stage[data-phone="true"] video {
+  width: auto;
+  height: 100%;
+}
 [data-part="song"] ol {
   gap: 0;
   padding: 6px 8px;
