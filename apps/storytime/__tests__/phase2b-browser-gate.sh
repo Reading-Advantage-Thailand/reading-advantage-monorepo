@@ -590,6 +590,69 @@ else
   tail -40 "$TMP_DIR/next-start.log" || true
 fi
 
+echo "=== F62: every printed flow label of F1 to F4 and F7 to F9 is an assertion ==="
+FLOW_ROWS=0
+flow_value() {
+  grep -E "^$1=" "$TMP_DIR/playwright.log" 2>/dev/null | tail -n 1 | cut -d= -f2-
+}
+flow_eq() {
+  local name="$1" expected="$2" value
+  value="$(flow_value "$name")"
+  FLOW_ROWS=$((FLOW_ROWS + 1))
+  echo "${name}=${value:-<missing>}"
+  if [ -n "$value" ] && [ "$value" = "$expected" ]; then
+    pass "F62 ${name}=${value} (expected ${expected})"
+  else
+    fail "F62 ${name}=${value:-<missing>} (expected ${expected})"
+  fi
+}
+flow_ge() {
+  local name="$1" min="$2" value
+  value="$(flow_value "$name")"
+  FLOW_ROWS=$((FLOW_ROWS + 1))
+  echo "${name}=${value:-<missing>}"
+  if printf '%s' "$value" | grep -qE '^[0-9]+$' && [ "$value" -ge "$min" ]; then
+    pass "F62 ${name}=${value} (expected >=${min})"
+  else
+    fail "F62 ${name}=${value:-<missing>} (expected >=${min})"
+  fi
+}
+# F1: the sign-in page opens, the sign-in returns to the same URL, and no media leaks.
+flow_eq f1_sign_in_page 1
+flow_eq returned_same_url 1
+flow_ge media_requests 1
+flow_eq unsigned_media 0
+flow_eq media_path_requests 0
+flow_eq app_media_requests 0
+# F2: the device keeps the 365-day cookie and a new context with the jar opens the week.
+flow_eq device_kept_max_age 31536000
+flow_eq device_kept 1
+flow_eq device_kept_status 200
+flow_eq device_kept_sign_in_page 0
+# F3: the sign-out ends the session, so the week content is gone.
+flow_eq content_after_signout 0
+# F4: a stranger gets no draft, no week text, no media, and no cookie.
+flow_eq stranger_draft_marker 0
+flow_eq stranger_week_text 0
+flow_eq stranger_media_requests 0
+flow_eq stranger_set_cookie 0
+# F7: an off-site return path sends no off-site request and falls back to /<locale>/st.
+flow_eq offsite_requests 0
+flow_eq bad_next_fallback 1
+# F8: the phone form passes its six checks and submits with Enter.
+flow_eq phone_form_checks 6
+flow_eq phone_no_scroll 1
+flow_eq phone_enter_submits 1
+# F9: the video seeks and the storage answers a range request.
+flow_eq seek_ok 1
+flow_eq video_duration 1
+flow_ge range_206 1
+if [ "$FLOW_ROWS" -gt 0 ]; then
+  pass "F62 flow label rows: $FLOW_ROWS"
+else
+  fail "F62 flow label rows: 0"
+fi
+
 echo "=== The requests of the stand-in for the storage ==="
 echo "standin_requests=$(grep -c '^REQ ' "$TMP_DIR/stand-in.log" 2>/dev/null || echo 0)"
 echo "standin_range_requests=$(grep -c 'range=bytes=' "$TMP_DIR/stand-in.log" 2>/dev/null || echo 0)"

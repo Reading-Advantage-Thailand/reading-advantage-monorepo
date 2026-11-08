@@ -107,12 +107,13 @@ function proxyHeaders(extra: Record<string, string> = {}): Record<string, string
 /**
  * Builds a sign-in POST at the bind address with the given headers.
  * @param headers The request headers.
+ * @param password The password field value.
  * @returns The request.
  */
-function signInRequest(headers: Record<string, string>): NextRequest {
+function signInRequest(headers: Record<string, string>, password: string = PASSWORD): NextRequest {
   const body = new URLSearchParams({
     username: "staff-01",
-    password: PASSWORD,
+    password,
     next: "/th/st/2/1",
     locale: "th",
   });
@@ -137,6 +138,47 @@ function signOutRequest(headers: Record<string, string>, cookie: string): NextRe
     method: "POST",
     headers: { ...headers, cookie },
   });
+}
+
+/** The markers of the bind address, with the bind port of the standalone image. */
+const BIND_MARKERS = ["0.0.0.0", "localhost", "127.0.0.1"];
+
+/**
+ * Reads the Location header of a response.
+ * @param response The route response.
+ * @returns The Location value, or an empty string.
+ */
+function locationValue(response: Response): string {
+  return response.headers.get("location") ?? "";
+}
+
+/**
+ * Reports whether a Location is a relative path or the exact public URL.
+ * @param location The Location header value.
+ * @param pathWithQuery The expected path and query.
+ * @returns True when the value holds no bind address.
+ */
+function pinnedLocation(location: string, pathWithQuery: string): boolean {
+  if (location === pathWithQuery) return true;
+  try {
+    const url = new URL(location);
+    return url.origin === SITE_ORIGIN && `${url.pathname}${url.search}` === pathWithQuery;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Counts the bind markers of a Location.
+ * @param location The Location header value.
+ * @returns The number of bind markers in the value.
+ */
+function bindMarkerHits(location: string): number {
+  const lowered = location.toLowerCase();
+  let hits = 0;
+  for (const marker of BIND_MARKERS) if (lowered.includes(marker)) hits += 1;
+  if (/:3000(?:[/?#]|$)/.test(lowered)) hits += 1;
+  return hits;
 }
 
 /**
@@ -268,5 +310,54 @@ describe("login origin behind a proxy (red, F-origin)", () => {
     expect(accepted.status, "the site origin is accepted with the same headers").toBe(303);
     expect(warn, "a refused request logs one warning per refusal").toHaveBeenCalled();
     console.log(`proxy_same_origin_status=${accepted.status}`);
+  });
+
+  it("pins the 303 Location to the public host behind the proxy (F60)", async () => {
+    expect(existsSync(SIGN_IN_ROUTE), MISSING_SIGN_IN).toBe(true);
+    expect(existsSync(SIGN_OUT_ROUTE), MISSING_SIGN_OUT).toBe(true);
+    const signIn = await loadSignIn();
+    const signOut = await loadSignOut();
+    const store = seedSite();
+
+    const good = await signIn.POST(signInRequest(proxyHeaders({ origin: SITE_ORIGIN })));
+    const bad = await signIn.POST(
+      signInRequest(proxyHeaders({ origin: SITE_ORIGIN }), "wrong password"),
+    );
+    const out = await signOut.POST(
+      signOutRequest(proxyHeaders({ origin: SITE_ORIGIN }), COOKIE),
+    );
+
+    const errorPath = `/th/sign-in?error=invalid&next=${encodeURIComponent("/th/st/2/1")}`;
+    const rows = [
+      { label: "sign-in good password", response: good, path: "/th/st/2/1" },
+      { label: "sign-in error redirect", response: bad, path: errorPath },
+      { label: "sign-out", response: out, path: "/th/sign-in" },
+    ];
+
+    let locationBindHits = 0;
+    for (const row of rows) locationBindHits += bindMarkerHits(locationValue(row.response));
+    console.log(`location_bind_hits=${locationBindHits}`);
+
+    let pinnedCases = 0;
+    for (const row of rows) {
+      expect(row.response.status, `${row.label} answers 303`).toBe(303);
+      const location = locationValue(row.response);
+      const pinned = pinnedLocation(location, row.path);
+      expect(
+        pinned,
+        `${row.label} Location ${JSON.stringify(location)} names the bind host ${BIND_ORIGIN}; ` +
+          `expected the relative path ${row.path} or ${SITE_ORIGIN}${row.path}`,
+      ).toBe(true);
+      if (pinned) pinnedCases += 1;
+    }
+    expect(
+      locationBindHits,
+      "the Location must never hold 0.0.0.0, localhost, 127.0.0.1, or the bind port",
+    ).toBe(0);
+    expect(pinnedCases, "pinned_location_cases").toBe(3);
+    expect(
+      store.sessions.some((row) => row.tokenDigest === sessionTokenDigest(TOKEN)),
+      "the sign-out ends the seeded session",
+    ).toBe(false);
   });
 });

@@ -369,6 +369,26 @@ if [ -n "$C1" ]; then
   else
     fail "Expected 303 and a session cookie for the proxied sign-in; got $STANDALONE_ORIGIN_STATUS (cookie=$STANDALONE_ORIGIN_COOKIE)"
   fi
+  # F60 (Red r11): the 303 Location of the standalone sign-in must name the public host, not the
+  # bind address. request.nextUrl.origin is http://0.0.0.0:<port> in the image, so the old redirect
+  # sent the browser to the bind address. This row reads the Location value, not only the status,
+  # and accepts a relative path or the public host of the Host header.
+  STANDALONE_LOCATION="$(printf '%s\n' "$STANDALONE_ORIGIN_HEADERS" | tr -d '\r' | sed -n 's/^[Ll]ocation:[[:space:]]*//p' | head -n 1)"
+  STANDALONE_LOCATION_BIND=0
+  case "$STANDALONE_LOCATION" in
+    *0.0.0.0*|*localhost*|*127.0.0.1*) STANDALONE_LOCATION_BIND=1 ;;
+  esac
+  case "$STANDALONE_LOCATION" in
+    /*|"http://storytime.example.test/"*) : ;;
+    *) STANDALONE_LOCATION_BIND=1 ;;
+  esac
+  echo "standalone_location=$STANDALONE_LOCATION"
+  echo "standalone_location_bind=$STANDALONE_LOCATION_BIND"
+  if [ -n "$STANDALONE_LOCATION" ] && [ "$STANDALONE_LOCATION_BIND" -eq 0 ]; then
+    pass "The standalone sign-in Location names the public host, not the bind address"
+  else
+    fail "The standalone sign-in Location names the bind address or is missing: $STANDALONE_LOCATION"
+  fi
   STATUS_D="$(status_of "http://127.0.0.1:$PORT1/th/st/2/2" "$SESSION_COOKIE")"
   if [ "$STATUS_D" = "404" ]; then
     pass "The draft week returns HTTP 404"
