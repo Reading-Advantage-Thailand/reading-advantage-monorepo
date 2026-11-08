@@ -581,6 +581,76 @@ function prefixedLines(stream, prefix) {
   return stream.split("\n").filter((line) => line.startsWith(`${prefix}: `));
 }
 
+/**
+ * Read the real root `.gcloudignore` text.
+ *
+ * @returns {string} The text.
+ */
+function rulesText() {
+  return readFileSync(join(ROOT, ".gcloudignore"), "utf8");
+}
+
+/**
+ * Add a `measure/` line to rules text when the text lacks it (default D7).
+ *
+ * @param {string} text The rules text.
+ * @returns {string} The text with the line.
+ */
+function rulesWithMeasureLine(text) {
+  const lines = text.split(/\r?\n/).map((line) => line.trim());
+  if (lines.includes("measure/")) return text;
+  return text === "" || text.endsWith("\n") ? `${text}measure/\n` : `${text}\nmeasure/\n`;
+}
+
+/**
+ * Remove every `measure/` line from rules text (the control of default D7).
+ *
+ * @param {string} text The rules text.
+ * @returns {string} The text without the line.
+ */
+function rulesWithoutMeasureLine(text) {
+  return text
+    .split(/\r?\n/)
+    .filter((line) => line.trim() !== "measure/")
+    .join("\n");
+}
+
+/**
+ * Build an empty non-bare scratch repository with an exclude file (default D8).
+ *
+ * @param {string} text The rules text.
+ * @returns {{ dir: string, file: string }} The repository and the exclude file.
+ */
+function ignoreScratch(text) {
+  const dir = scratch();
+  gitText(dir, ["init", "-q"]);
+  const file = join(dir, "gcloudignore");
+  writeFileSync(file, text);
+  return { dir, file };
+}
+
+/**
+ * Return the paths that the rules do not ignore (default D8).
+ *
+ * @param {string} text The rules text.
+ * @param {string[]} paths The paths to check.
+ * @returns {string[]} The paths that stay in scope.
+ */
+function inScopePaths(text, paths) {
+  const { dir, file } = ignoreScratch(text);
+  const input = paths.length === 0 ? "" : `${paths.join("\0")}\0`;
+  const result = spawnSync(
+    "git",
+    ["-c", `core.excludesFile=${file}`, "check-ignore", "--no-index", "--stdin", "-z"],
+    { cwd: dir, env: gitEnv(), encoding: "utf8", input },
+  );
+  if (result.status !== 0 && result.status !== 1) {
+    throw new Error(`git check-ignore failed: ${(result.stderr ?? "").trim()}`);
+  }
+  const ignored = new Set((result.stdout ?? "").split("\0").filter((path) => path !== ""));
+  return paths.filter((path) => !ignored.has(path));
+}
+
 describe("S: sales traffic source binding", () => {
   it("S-01 a matching source passes and the script fetches once", () => {
     requireScript();
@@ -1151,5 +1221,97 @@ describe("S: sales traffic source binding", () => {
     if (!(bindIndex < backupIndex)) {
       throw new Error("the sales step list puts bind-release-source after verify-curriculum-backup");
     }
+  });
+
+  it("S-31 the root .gcloudignore excludes the measure folder", () => {
+    assertDisk();
+    const text = rulesText();
+    const line = text.split(/\r?\n/).find((candidate) => candidate.trim() === "measure/");
+    if (!line) throw new Error("the root .gcloudignore holds no line measure/");
+    const { dir, file } = ignoreScratch(text);
+    const result = spawnSync(
+      "git",
+      ["-c", `core.excludesFile=${file}`, "check-ignore", "--no-index", "measure/tracks/x.md"],
+      { cwd: dir, env: gitEnv(), encoding: "utf8" },
+    );
+    const printed = (result.stdout ?? "").split("\n").filter((value) => value !== "");
+    if (result.status !== 0 || !printed.includes("measure/tracks/x.md")) {
+      throw new Error(
+        `check-ignore did not report measure/tracks/x.md (exit ${result.status}); stdout=${JSON.stringify(result.stdout)}`,
+      );
+    }
+  });
+
+  it("S-32 every tracked link is outside the upload scope", () => {
+    assertDisk();
+    const index = spawnSync("git", ["ls-files", "-s", "-z"], {
+      cwd: ROOT,
+      env: gitEnv(),
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+    });
+    if (index.status !== 0) throw new Error(`git ls-files failed: ${(index.stderr ?? "").trim()}`);
+    const links = (index.stdout ?? "")
+      .split("\0")
+      .filter((record) => record !== "")
+      .map((record) => {
+        const tab = record.indexOf("\t");
+        const mode = record.slice(0, tab).split(" ")[0];
+        return { mode, path: record.slice(tab + 1) };
+      })
+      .filter((entry) => entry.mode === "120000")
+      .map((entry) => entry.path);
+    if (links.length < 1) throw new Error(`links_tracked=${links.length}: no tracked symbolic link`);
+    const text = rulesText();
+    const control = inScopePaths(text, ["scripts/ci/fake-link"]);
+    if (!control.includes("scripts/ci/fake-link")) {
+      throw new Error("the link control did not report scripts/ci/fake-link");
+    }
+    const kept = inScopePaths(text, links);
+    if (kept.length !== 0) {
+      throw new Error(`links_in_scope=${kept.length}; not excluded: ${kept.join(",")}`);
+    }
+  });
+
+  it("S-33 ignored measure links and files match the upload", () => {
+    requireScript();
+    const rules = rulesWithMeasureLine(REAL_GCLOUDIGNORE);
+    const main = fixture([
+      { path: ".gcloudignore", content: rules },
+      { path: "measure/tracks/old", link: "../archive/old" },
+      { path: "measure/archive/old/plan.md", content: "# old plan\n" },
+    ]);
+    const mainLog = join(main.dir, "git.log");
+    const mainBin = gitWrapper(main.dir, mainLog);
+    const mainRes = runScript([main.sha, main.url, "."], {
+      cwd: main.upload,
+      env: scriptEnv({ pathDir: mainBin }),
+      fetchLog: mainLog,
+    });
+    if (mainRes.status !== 0) {
+      throw new Error(`the ignored measure paths failed the run; stderr=${mainRes.stderr}`);
+    }
+    const mainMissing = prefixedLines(`${mainRes.stdout}\n${mainRes.stderr}`, "missing");
+    if (mainMissing.length > 0) {
+      throw new Error(`the ignored measure paths printed ${mainMissing.join("; ")}`);
+    }
+    const controlRules = rulesWithoutMeasureLine(REAL_GCLOUDIGNORE);
+    const control = fixture([
+      { path: ".gcloudignore", content: controlRules },
+      { path: "measure/tracks/old", link: "../archive/old" },
+      { path: "measure/archive/old/plan.md", content: "# old plan\n" },
+    ]);
+    rmSync(join(control.upload, "measure/tracks/old"), { force: true });
+    rmSync(join(control.upload, "measure/archive/old/plan.md"), { force: true });
+    const controlLog = join(control.dir, "git.log");
+    const controlBin = gitWrapper(control.dir, controlLog);
+    const controlRes = runScript([control.sha, control.url, "."], {
+      cwd: control.upload,
+      env: scriptEnv({ pathDir: controlBin }),
+      fetchLog: controlLog,
+    });
+    assertNonZero(controlRes, "S-33 control");
+    assertStderrLine(controlRes.stderr, "missing: measure/archive/old/plan.md");
+    assertStderrLine(controlRes.stderr, "missing: measure/tracks/old");
   });
 });
