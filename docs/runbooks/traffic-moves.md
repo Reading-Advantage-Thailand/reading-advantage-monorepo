@@ -127,16 +127,18 @@ Find the tag after a push:
 File: `apps/sales-advantage/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitutions:
 `_RELEASE_COMMIT_SHA`, `_CURRICULUM_BACKUP_ID`, and `_CURRICULUM_BACKUP_NOT_BEFORE` for the
 backup guard, and `_PUSH_BUILD_ID`, the `BUILD_ID` of the push build whose image the tagged
-revisions run. The traffic goes to the tag `candidate`, which the latest push owns. The push file
-`apps/sales-advantage/cloudbuild.yaml` holds no database step. The new revision must start against
-the old schema.
+revisions run. The traffic goes to the `candidate` revision of that push build, not to a tag. The
+push file `apps/sales-advantage/cloudbuild.yaml` holds no database step. The new revision must
+start against the old schema.
 
 Steps, in order: `verify-curriculum-backup`, `migrate-db`, `doctor-check`,
 `build-curriculum-workspace-deps`, `seed-production-curriculum`, `verify-production-curriculum`,
 `runtime-db-contract`, `capture-legacy-rollback`, `verify-repair-verify-legacy-rollback`,
-`update-traffic`.
+`capture-company-candidate`, `update-traffic`.
 
 - `verify-curriculum-backup` is the guard. It checks the curriculum backup before the seed.
+- `capture-company-candidate` runs after `verify-repair-verify-legacy-rollback`. It is the last
+  step before the move.
 - `capture-legacy-rollback` runs before `verify-repair-verify-legacy-rollback`. The second step
   reads the URL of the tagged `legacy-rollback` revision that the first step writes.
 
@@ -149,9 +151,10 @@ Find the tag and the build after a push:
   `gcloud run services describe sales-advantage --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.filter(tag='candidate').extract(revisionName).flatten())"`.
   List the newest revisions with
   `gcloud run revisions list --service=sales-advantage --region=asia-southeast1 --project=reading-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`.
-- Limit: the traffic move uses the tag `candidate`, not `_PUSH_BUILD_ID`. A later push moves the tag.
-  The capture step reads the image of `_PUSH_BUILD_ID`, and the traffic move goes to the revision
-  that holds the tag. Check that both name the same push before the run.
+- The step `capture-company-candidate` reads the image of `_PUSH_BUILD_ID` and fails unless the
+  `candidate` revision runs that image. The step `update-traffic` then moves 100 percent of the
+  traffic to the revision that this step records. A later push that moves the tag makes the
+  capture fail, and the traffic does not move.
 
 Where the other substitutions come from (each is a value of the release attempt; the file holds
 the default `REQUIRED_...` for each, and the step refuses that default):

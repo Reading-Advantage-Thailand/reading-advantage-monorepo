@@ -3,10 +3,10 @@
 # A person starts this file by hand, on Daniel's word. No workflow runs it. It changes the
 # production database of sales-advantage and then moves traffic to the revision that a push built with
 # --no-traffic. Daniel's word supplies _PUSH_BUILD_ID, the BUILD_ID of the push
-# build whose image the tagged revisions run. The tag candidate is owned by the latest push.
+# build whose image the tagged revisions run. The move goes to the candidate revision of that build.
 #
 # Order: curriculum backup guard, migrate, doctor check, curriculum seed and check,
-# runtime probe, legacy rollback capture and check, traffic move.
+# runtime probe, legacy rollback capture and check, candidate capture, traffic move.
 # See docs/runbooks/traffic-moves.md.
 steps:
   - name: "node:22-slim"
@@ -90,17 +90,31 @@ steps:
       - "SALES_DIRECT_DATABASE_URL"
       - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"
 
-  # The traffic move runs last. It sends all traffic to the tagged revision of the push.
+  # Capture the company candidate revision of the push build. The script fails closed unless the
+  # tagged revision runs the image of _PUSH_BUILD_ID and is the latest created revision.
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "capture-company-candidate"
+    entrypoint: "bash"
+    args:
+      - "apps/sales-advantage/scripts/capture-sales-cloud-run-tag.sh"
+      - "candidate"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:${_PUSH_BUILD_ID}"
+      - "/workspace/.sales-company-candidate"
+
+  # The traffic move runs last. It sends all traffic to the captured candidate revision, not to a
+  # tag that a later push can move.
   - name: "gcr.io/cloud-builders/gcloud"
     id: "update-traffic"
+    entrypoint: "bash"
     args:
-      - "run"
-      - "services"
-      - "update-traffic"
-      - "sales-advantage"
-      - "--region=asia-southeast1"
-      - "--platform=managed"
-      - "--to-tags=candidate=100"
+      - "-c"
+      - |
+        set -euo pipefail
+        candidate_revision="$$(tr -d '\r\n' < /workspace/.sales-company-candidate.revision)"
+        gcloud run services update-traffic sales-advantage \
+          --region=asia-southeast1 \
+          --platform=managed \
+          --to-revisions="$${candidate_revision}=100"
 
 substitutions:
   _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
