@@ -133,11 +133,24 @@ revisions run. The traffic goes to the `candidate` revision of that push build, 
 push file `apps/sales-advantage/cloudbuild.yaml` holds no database step. The new revision must
 start against the old schema.
 
-Steps, in order: `verify-curriculum-backup`, `migrate-db`, `doctor-check`,
+Steps, in order: `bind-release-source`, `verify-curriculum-backup`, `migrate-db`, `doctor-check`,
 `build-curriculum-workspace-deps`, `seed-production-curriculum`, `verify-production-curriculum`,
 `runtime-db-contract`, `capture-legacy-rollback`, `verify-repair-verify-legacy-rollback`,
 `capture-company-candidate`, `update-traffic`.
 
+- `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
+  `_RELEASE_COMMIT_SHA`. The script loads the release commit from GitHub and compares it with the
+  uploaded files. A file that the commit holds in the upload scope and the upload lacks stops the
+  build (`missing:`). A file that the upload holds and the commit lacks stops the build (`extra:`).
+  A file with other bytes, or another type (file or link), stops the build (`differs:`). The
+  build then stops before `migrate-db`, and the database does not change. The step installs
+  nothing, and its log starts with the two lines `GNU bash, version ...` and `git version ...`.
+- The upload is the repository root `.`, the folder where you run `gcloud builds submit`. The
+  script reads the scope from the `.gcloudignore` of the commit. The folder `measure/` is outside
+  the upload, and the script does not use `create-sales-release-archive.sh`.
+- Start from a clean checkout of the release commit. An untracked file in the upload stops the
+  build, because the script compares every uploaded file with the commit.
+- The step needs the release commit on GitHub. A run passes only after the first push of that commit.
 - `verify-curriculum-backup` is the guard. It checks the curriculum backup before the seed.
 - `capture-company-candidate` runs after `verify-repair-verify-legacy-rollback`. It is the last
   step before the move.
@@ -161,9 +174,9 @@ Find the tag and the build after a push:
 Where the other substitutions come from (each is a value of the release attempt; the file holds
 the default `REQUIRED_...` for each, and the step refuses that default):
 
-- `_RELEASE_COMMIT_SHA` is the exact lowercase 40-character commit of the release. It is the
-  commit that `apps/sales-advantage/scripts/create-sales-release-archive.sh` archives. The step
-  `verify-curriculum-backup` rejects any other form.
+- `_RELEASE_COMMIT_SHA` is the exact lowercase 40-character commit of the release. The step
+  `bind-release-source` compares the upload with this commit, and it rejects any other form
+  before it loads anything. The step `verify-curriculum-backup` rejects any other form too.
 - `_CURRICULUM_BACKUP_ID` is the id of an on-demand backup run of the Cloud SQL instance
   `cloud-sql` in the project `reading-advantage`. The step reads it with the Cloud SQL Admin API.
   The backup must have the status `SUCCESSFUL` and the type `ON_DEMAND`. Its description must be
