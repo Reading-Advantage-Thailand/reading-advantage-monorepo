@@ -245,6 +245,44 @@ describe("sign-in username flash cookie (red)", () => {
     expect(leaks, "no flash cookie for a refused username").toEqual([]);
   });
 
+  it("accepts the generated account formats and sets the cookie with each", async () => {
+    expect(existsSync(ROUTE), MISSING).toBe(true);
+    const examples = [
+      `staff-${String(42).padStart(2, "0")}`,
+      `tutor-${String(17).padStart(2, "0")}`,
+      `demo-class-${String(9).padStart(2, "0")}`,
+    ];
+    const wrong: string[] = [];
+    for (const username of examples) {
+      const response = await signIn(username, "wrong-password");
+      const flash = flashCookies(response);
+      console.log(
+        `flash_generated_username=${username} flash_cookie_count=${flash.length} ` +
+          `flash_cookie_value=${flash[0]?.value ?? "<none>"}`,
+      );
+      if (response.status !== 303 || flash.length !== 1 || flash[0].value !== username) {
+        wrong.push(
+          `${username}: status=${response.status} cookies=${flash.length} ` +
+            `value=${flash[0]?.value ?? "<none>"}`,
+        );
+      }
+    }
+    expect(wrong, "each generated username sets the flash cookie").toEqual([]);
+  });
+
+  it("sets no cookie for a name that fails the flash rule", async () => {
+    expect(existsSync(ROUTE), MISSING).toBe(true);
+    const refused = ["staff-42!", "tutor 17", "demo-class-٠١", "<script>42"];
+    const leaks: string[] = [];
+    for (const username of refused) {
+      const response = await signIn(username, "wrong-password");
+      const count = flashCookies(response).length;
+      console.log(`flash_rule_refused=${JSON.stringify(username)} flash_cookie_count=${count}`);
+      if (count !== 0 || response.status !== 303) leaks.push(`${JSON.stringify(username)}: ${count}`);
+    }
+    expect(leaks, "no flash cookie for a name that fails the rule").toEqual([]);
+  });
+
   it("logs no username value on a wrong password", async () => {
     expect(existsSync(ROUTE), MISSING).toBe(true);
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);

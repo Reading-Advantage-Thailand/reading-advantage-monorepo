@@ -67,13 +67,13 @@ const APP = resolve(import.meta.dirname, "..");
 const PAGE = resolve(APP, "app/[locale]/sign-in/page.tsx");
 
 /** Renders the sign-in page and returns its static HTML. */
-async function renderSignIn(): Promise<string> {
+async function renderSignIn(query: Record<string, string> = {}): Promise<string> {
   const mod = (await import("../app/[locale]/sign-in/page.js")) as {
     default: (props: never) => Promise<ReactElement> | ReactElement;
   };
   const element = await mod.default({
     params: Promise.resolve({ locale: "th" }),
-    searchParams: Promise.resolve({}),
+    searchParams: Promise.resolve(query),
   } as never);
   return renderToStaticMarkup(element);
 }
@@ -113,5 +113,22 @@ describe("sign-in page username from the flash cookie (red)", () => {
     expect(input, "the username input is on the page").not.toBe("");
     expect(input, "the value is escaped input text").toContain('value="&quot;&gt;&lt;img src=x&gt;"');
     expect(html, "the value is never markup").not.toContain("<img src=x>");
+  });
+
+  it("shows an empty field and only the generic message when no flash cookie exists", async () => {
+    expect(existsSync(PAGE), "Missing apps/storytime/app/[locale]/sign-in/page.tsx").toBe(true);
+    const html = await renderSignIn({ error: "invalid" });
+    const input = usernameInput(html);
+    const value = input.match(/value="([^"]*)"/)?.[1] ?? "";
+    const alerts = html.match(/role="alert"/g) ?? [];
+    const alertBody = html.match(/<p role="alert"[^>]*>([^<]*)<\/p>/)?.[1] ?? "";
+    console.log(`refused_username_field_empty=${value === "" ? 1 : 0} refused_username_value=${JSON.stringify(value)}`);
+    console.log(`refused_username_alerts=${alerts.length} refused_username_alert_text=${alertBody}`);
+    expect(input, "the username input is on the page").not.toBe("");
+    expect(value, "the field is empty").toBe("");
+    expect(alerts, "one generic message").toHaveLength(1);
+    expect(alertBody, "the generic wrong sign-in message").toBe("th:signInInvalid");
+    expect(html, "no locked message").not.toContain("th:signInLocked");
+    expect(html, "no refused name reaches the page").not.toContain("staff-42!");
   });
 });
