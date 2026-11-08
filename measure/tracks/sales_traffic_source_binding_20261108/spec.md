@@ -68,6 +68,8 @@ The step `bind-release-source` uses this form. The three YAML lines are written 
 
 Reason: the builder image holds `git`, so the step needs no `apt-get` install; `node:22-slim` has no `git`. Base image: the Dockerfile of the builder is `FROM gcr.io/cloud-builders/gcloud-slim`, with `ENTRYPOINT ["/usr/bin/notice.sh"]`, a `/bin/sh` script that runs `git "$@"` (source: https://raw.githubusercontent.com/GoogleCloudPlatform/cloud-builders/master/git/Dockerfile and `notice.sh` in the same folder). The Dockerfile does not state `bash`. The `entrypoint: "bash"` replaces the builder entrypoint. The gcloud-slim base is a Debian image, and bash is a Debian base package; the existing `gcr.io/cloud-builders/gcloud` steps of the sales file already use `entrypoint: "bash"`. The step uses `git init`, `git fetch`, and `git hash-object` only.
 
+**Tool check (review finding F-R3-1).** The script prints `bash --version` and `git --version` as its first output, before the commit check and before any fetch. It exits non-zero, with a message that names the missing tool, when `command -v bash` or `command -v git` fails. So a missing tool stops step 1 before `migrate-db` (and before `refuse-legacy-db` for Primary), and no traffic moves. The first traffic-file Cloud Build run of each app is the live proof: its log shows both version lines. Fallback: if a run stops at this check, the fix is another image that holds git and bash, written in the same quoted-tag form with no digest. The live proof stays with Daniel's traffic run (task 2.3h of `per_app_cicd_20261107`, `deferred:daniel`).
+
 ## 3b. Where the Primary step goes (Phase 2)
 
 The step `bind-release-source` is step 1 of the Primary file, before `refuse-legacy-db`. Reason: `refuse-legacy-db` runs `pnpm install` and a script of the `db` package from the uploaded source. A wrong tree could change that guard and disable it. The bind step must run first. The bind step reads the database in no way. It does not weaken the read-only guard: the guard still runs before any migrate step. This phase makes no Primary deploy, no Cloud Build submit, and no revision change. The next Primary deploy stays the team's, on Daniel's word.
@@ -81,7 +83,7 @@ The step `bind-release-source` is step 1 of the Primary file, before `refuse-leg
 - **FR-5.** `docs/runbooks/traffic-moves.md` (the sales section) names the step, says what it checks, and says that a traffic run stops before `migrate-db` on a mismatch.
 - **FR-6.** The change adds no SHA-256, checksum field, manifest, or provenance file.
 - **FR-10.** The script is `scripts/ci/verify-traffic-source.sh`. The sales upload is the repository root `.` and holds it. The sales section of the runbook says so, and no archive script changes.
-- **FR-11.** The step `bind-release-source` of each file has the three lines of section 3a-1 (`name: "gcr.io/cloud-builders/git"`, `id: "bind-release-source"`, `entrypoint: "bash"`) and installs nothing.
+- **FR-11.** The step `bind-release-source` of each file has the three lines of section 3a-1 (`name: "gcr.io/cloud-builders/git"`, `id: "bind-release-source"`, `entrypoint: "bash"`) and installs nothing. The step prints the two version lines first and fails closed on a missing tool (section 3a-1).
 - **FR-12.** The runbook rules for every traffic file say: start from a clean checkout of the release commit, because an untracked file in the upload stops the build (Q6).
 
 - **FR-7 (Phase 2).** Each traffic file of `accounts`, `accounting`, `codecamp-advantage`, `marketing`, and `primary-advantage` holds the same step `bind-release-source` as its first step. The step calls the script of Phase 1 with the GitHub URL. Each file holds a new substitution `_RELEASE_COMMIT_SHA` with the default `REQUIRED_RELEASE_COMMIT_SHA`.
@@ -99,6 +101,7 @@ Each criterion has an automated test. Criteria 1 to 7 are in `scripts/ci/__tests
 5. Given the runbook, when a test reads the sales section, then it names `bind-release-source`.
 6. Given the script and the `bind-release-source` step of the sales traffic file, when a test reads their text, then it finds none of `sha256`, `sha-256`, `sha1sum`, `checksum`, `createHash`, or `manifest` (case-insensitive).
 7. The test run `vitest run --maxWorkers=1 scripts/ci` exits 0 (light run).
+16. Given the script text, when a test reads it, then the two version commands come before the first fetch. Given a scratch folder that holds a copy of the script and a PATH without `git`, when the script runs, then it exits non-zero, prints a message that names `git`, and makes no fetch. The same holds for a PATH without `bash` where a test can run it (task 1.1).
 15. Given the sales step, when a test reads it, then its image is `gcr.io/cloud-builders/git`, its entrypoint is `bash`, and its command holds no `apt-get`. Given `.gcloudignore`, when a test reads it, then no pattern excludes `scripts/` or `scripts/ci`, and the file `scripts/ci/verify-traffic-source.sh` exists (task 1.1).
 
 **Phase 2 criteria.** One Red test file, `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`, covers the five files.
