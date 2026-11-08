@@ -193,6 +193,15 @@ F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-
 - **The Red evidence is pre-fix.** The corrected rows cannot fail at HEAD, because commit `9a88d2317` holds the F90 fix. At the Red r12 base `b8041728a`, this case failed with `next_errors=3` (ByteString at 8232, 8233, and 3585). The old `safeReturnPath` returned the raw value for these three rows, so the corrected rows also fail on that code. The Green r6 note above records the same failure.
 - **The task state.** Task 2b.7 stays `[~]` for the next Green run.
 
+### Phase 2b task 2b.7 Red r14 note (lint and media row)
+
+- Phase base `ef41f6521e178987dd349ac8a6854bd4a413333d`; role base `c468308100a8eab603c6a2f23fc6568b44940637`. Test commits `324ad3b4c` and `971ec6070`. No production file changed.
+- **Item 1: the lint row.** Line 128 of `apps/storytime/__tests__/login-return-path.test.ts` now reads `/^\p{ASCII}*$/u`, so ESLint no longer reports `no-control-regex`. The case keeps its five hostile values and both expectations.
+- **Item 2: the media row.** `apps/storytime/__tests__/phase2b-browser-gate.sh` now skips only the built look assets under `/_next/static/`: the names of the places, the pieces, and the fonts of `apps/storytime/app/look/`, plus `/icon.png`. The helper `isLookStaticAsset()` makes the match. A story file under `/_next/static/` with any other name counts as app media. The gate prints `look_assets_skipped=<n>`, and `first_app_media=<url>` stays.
+- **The command exits 0.** `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash .../heavy-run.sh -c 'cd .../apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-return-path.test.ts && ../../node_modules/.bin/eslint __tests__/login-return-path.test.ts'` gives `Test Files 1 passed (1)`, `Tests 2 passed (2)`, and ESLint exits 0.
+- **The syntax checks.** `bash -n` on the gate exits 0. `node --check` on the extracted NODE block exits 0. These are test-contract corrections, so no Red failure is expected at HEAD.
+- **The task state.** Task 2b.7 stays `[~]` for the Green rerun of the browser gate.
+
 ### Phase 2b Green evidence
 
 - **The commits.** `6afa39173` holds the adapter, the two routes, the store lookup by id, the runtime client, the three workspace packages, the lockfile, the Tailwind sources, and the Docker pruner stage. `ef36b6c37` holds the proxy rule, the sign-in page, the join page, the fallback page, the teacher 403 page, the three guarded pages, the copy file, the two message files, and the six old tests. `9daaaba0f` holds the strict session expiry.
