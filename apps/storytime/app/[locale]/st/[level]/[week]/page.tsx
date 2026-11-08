@@ -14,7 +14,7 @@ import { parseStorytimeRoute } from "../../../../../lib/route-parse";
 import { requireUser } from "../../../../../lib/auth";
 import { signWeekMedia } from "../../../../../lib/media/sign";
 import { placeFor } from "../../../../../lib/look/places";
-import { Frame } from "../../frame";
+import { Frame } from "../../../frame";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
