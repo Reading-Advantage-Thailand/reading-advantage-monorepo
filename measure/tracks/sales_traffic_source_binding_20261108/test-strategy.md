@@ -3,6 +3,8 @@
 > **Track:** `sales_traffic_source_binding_20261108` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
 >
 > **Phase 1 written:** 2026-11-08 at the role base `50cb858bbc209e1f7b1d1b2176e2f22ad03dcd75`. Model: claude-code/claude-opus-5-5. The role base is not the `phase_base_sha` (section 1.4). Phase 2 has an outline only (section P2).
+>
+> **Amendment round 2:** 2026-11-08 at the role base `d5301b5c55e77f5c7258c218aa87af06afae8772`, after the spec and plan commit `0a042ccbb` (criterion 21, FR-14, PM decision Q19). It adds the cases S-31 to S-33, the mutants Y31 to Y33, and the `.gcloudignore` gate items. It does not move the captured `phase_base_sha`.
 
 ## 1. Rules for every phase
 
@@ -47,7 +49,8 @@
 Guardrails (a violation is a Review A blocker):
 
 - No new dependency. No edit to `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, or `turbo.json`.
-- No edit to `.gcloudignore`, `apps/sales-advantage/cloudbuild.yaml`, `release-source-manifest.mjs`, or `create-sales-release-archive.sh` (spec section 6, FR-10).
+- The only edit to `.gcloudignore` is one added line `measure/` (FR-14, task 1.2). No other line of that file changes.
+- No edit to `apps/sales-advantage/cloudbuild.yaml`, `release-source-manifest.mjs`, or `create-sales-release-archive.sh` (spec section 6, FR-10).
 - No edit to `scripts/ci/__tests__/helpers/plan.mjs` or `helpers/scratch.mjs`. The new test may import their exports.
 - The bind step holds the exact block of spec section 3a-1. It holds no `-c` string, no `secretEnv`, no `env`, and no `apt-get`.
 - The script reads no secret, writes nothing outside its `mktemp -d` folder, and calls no network except the one `git fetch` (and the lazy load of `.gcloudignore`) from the URL argument.
@@ -60,7 +63,7 @@ Changed contracts (each one gets a test and a review):
 
 Live risks (no local test can close them; Review B and the live proof must see them):
 
-- **R-L1 In-scope directory link.** At the role base, the path `measure/tracks/backend_architecture_enforcement_20260713` is a symbolic link (mode 120000) to `../archive/backend_architecture_enforcement_20260713`, and `.gcloudignore` keeps it in scope. If `gcloud builds submit` stores the link target files and not the link, the first live run prints `missing:` and `extra:` lines and stops. The stop is safe, but it blocks the traffic move. Review B records it. A fix is a product decision for Daniel.
+- **R-L1 In-scope directory link (resolved in task 1.2; PM decision Q19).** The path `measure/tracks/backend_architecture_enforcement_20260713` is a tracked symbolic link (mode 120000) to `../archive/backend_architecture_enforcement_20260713`. It is the only tracked link inside the root upload scope. The orchestrator ran `gcloud meta list-files-for-upload .` (local, no API call). It lists 25 regular files under that path and no link entry. So gcloud follows the link, and without a fix the bind step fails closed on every sales run. Q19 makes this a CI and build-config item of the PM, not of Daniel. Task 1.2 adds the line `measure/` to the root `.gcloudignore`, and criterion 21 (cases S-31 to S-33) pins the fix. R-L1 is not part of the `deferred:daniel` live proof. No PM step is expected after task 1.2. If item 16 of P1.7 fails, R-L1 goes back to the PM as `deferred:pm`.
 - **R-L2 Rule difference** between gcloud and `git check-ignore`. It gives a false stop only (spec section 3c).
 - **R-L3 Tool set of the builder image** (`bash`, `git`, `sort -z`, `comm -z`). The live log must show both version lines (spec section 3a-1).
 
@@ -76,7 +79,8 @@ Live risks (no local test can close them; Review B and the live proof must see t
 - Fixtures are scratch Git repositories under `/tmp` (`/tmp/opencode` when it exists, else `os.tmpdir()`), with the prefix `traffic-bind-`.
 - The origin of each fixture is a local bare repository with `uploadpack.allowFilter true` and `uploadpack.allowAnySHA1InWant true`. The URL is `file://<absolute path>` (spec section 5).
 - The test builds the commit through a work clone, pushes it to the bare repository, and writes the upload as a second scratch folder.
-- Not allowed in any role of Phase 1: network access, `gcloud`, a Cloud Build submit, a GitHub workflow run, a container build, an image pull, a clone of the monorepo, and a push.
+- One `gcloud` command is allowed: `gcloud meta list-files-for-upload .` in task 1.2 and in the closeout. It is local and makes no API call. No test calls `gcloud`.
+- Not allowed in any role of Phase 1: network access, any other `gcloud` command, a Cloud Build submit, a GitHub workflow run, a container build, an image pull, a clone of the monorepo, and a push.
 - The test environment sets `GIT_ALLOW_PROTOCOL=file` and `GIT_TERMINAL_PROMPT=0`. So an `https` fetch fails in every case.
 - Git calls of the test and of the script use the hermetic environment of `gitEnv()` in `helpers/scratch.mjs` (`GIT_CONFIG_GLOBAL=/dev/null`, `GIT_CONFIG_NOSYSTEM=1`). Case S-26 is the one exception.
 - The script runs as `/bin/bash <repo>/scripts/ci/verify-traffic-source.sh <sha> <url> .` with the upload root as the working folder. This is the form of the step (entrypoint `bash`, the `args` list).
@@ -88,7 +92,8 @@ Live risks (no local test can close them; Review B and the live proof must see t
 - The sales traffic file has 11 steps. Line 120 holds `_RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"`. Lines 17 and 88 use the value as a label. Line 88 holds the words `sha256sum` and `manifest` in another step; criterion 6 reads the bind step only.
 - The runbook section `## sales-advantage` starts at `docs/runbooks/traffic-moves.md:127`. Its step list starts with `verify-curriculum-backup`.
 - Local tools: `git version 2.53.0`, `GNU bash, version 5.3.9`. `locale -a` lists `en_US.utf8`; in that locale `sort` puts `a` before `B`, and in `C` it puts `B` before `a`.
-- At HEAD, `git ls-tree -r` gave 91,473 entries of mode 100644, 49 of mode 100755, 6 of mode 120000, and 0 of mode 160000. One link is in scope (R-L1).
+- At HEAD, `git ls-tree -r` gave 91,473 entries of mode 100644, 49 of mode 100755, 6 of mode 120000, and 0 of mode 160000. One link is in the root upload scope until task 1.2 (R-L1).
+- Round 2, at `d5301b5c5`: `scripts/ci/verify-traffic-source.sh` is still absent. The Red r1 file holds the cases S-01 to S-30b.
 - With `core.autocrlf=true` in the global config, `git hash-object` of a CRLF file gave a different id than `git hash-object --no-filters`. So case S-26 can reject a script that omits `--no-filters`.
 - No test may depend on the counts of spec.md:50 (review r7 Nit F17). This strategy uses none.
 
@@ -111,7 +116,10 @@ These defaults are test rules only. They change no product decision.
 - **D4 Fixture builder.** The builder lives in the new test file. Phase 1 adds no helper file, because task 1.4 allows no other path.
 - **D5 Pass output.** A pass run prints no `missing:`, `extra:`, or `differs:` line. The spec defines no pass text, so the test asserts none.
 - **D6 Actual list.** The actual list is not filtered (spec section 3, step 4). An extra file on an ignored path in the upload stops the run (case S-05).
-- **D7 Fixture rules file.** The fixture `.gcloudignore` is the text of the real root `.gcloudignore`, read at test time. Cases S-13 add one line to a copy.
+- **D7 Fixture rules file.** The fixture `.gcloudignore` is the text of the real root `.gcloudignore`, read at test time. Case S-13 adds one line to a copy. Case S-33 adds the line `measure/` to a copy when the real text lacks it, so S-33 does not depend on task 1.2.
+- **D8 Link check location.** S-31 and S-32 run `git check-ignore --no-index` in an empty non-bare scratch repository with `core.excludesFile=<copy of .gcloudignore>`. They do not run it in the real checkout. Reason: in the real checkout, the `.gitignore` files also apply, and they can hide a path that `.gcloudignore` keeps.
+- **D9 No staged mutant.** No role stages a file in the shared index of the real checkout. Other tracks commit on master, and a staged mutant can enter their commit. So S-32 holds a synthetic control, and mutant Y32 uses a negation line (section P1.5).
+- **D10 Owner of the fork limit.** By the rule of Q19, a CI and build-config limit belongs to the PM. So the fork-commit limit of Review B (section P1.9) goes to the PM, not to Daniel.
 
 ### P1.2 Harness
 
@@ -135,7 +143,14 @@ Light run (repository root, criterion 7):
 CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
 ```
 
-Expected Red result:
+**Red round 2 (criterion 21).** The Red adds S-31, S-32, and S-33 to the same file and runs the same two commands. Expected result:
+
+- S-31 and S-32 fail for the reasons of section P1.4: the line `measure/` is absent, and the link path is not ignored.
+- S-33 fails at the script-exists precondition.
+- The 31 cases of round 1 and F-12 still fail as before.
+- Light run: `EXIT=1` and `tests_failed=35` (34 in the new file, and F-12). Record the labels and the fail line of each new case.
+
+Expected Red result (round 1):
 
 - `sales-traffic-source-binding.test.mjs`: every case fails. `tests_passed=0`. Each script case fails on the precondition of P1.2. S-27 fails because the script is absent. S-28 fails because step 0 is `verify-curriculum-backup`. S-29 fails because the script is absent. S-30 fails because the runbook lacks the id.
 - `cloudbuild-files.test.mjs`: exactly one failing case, F-12. All other cases pass.
@@ -179,15 +194,18 @@ Each row gives the fail-first reason at Red. Criterion numbers are of spec secti
 | S-29 | 15 | The bind step text. The real `.gcloudignore`. | No `apt-get` in the step. In a non-bare scratch repository, `git -c core.excludesFile=<copy> check-ignore --no-index` exits 1 for `scripts/ci/verify-traffic-source.sh`. The script file exists. | The script and the step are absent. |
 | S-30 | 5 | `sectionText(runbook, "sales-advantage")`. | The section holds `bind-release-source`. | The runbook lacks the id. |
 | S-30b | 5, task 1.3 | The sentence that starts `Steps, in order:` in that section. | `bind-release-source` comes before `verify-curriculum-backup`. | The list starts with `verify-curriculum-backup`. |
+| S-31 | 21(a) | The real root `.gcloudignore` text. A copy of it is the exclude file of an empty non-bare scratch repository (D8). | The text holds a line that equals `measure/` after trim. `git check-ignore --no-index` prints `measure/tracks/x.md`, so no later `!` line includes it again. | The line `measure/` is absent until task 1.2. |
+| S-32 | 21(b) | `git ls-files -s -z` in the repository root. Keep the mode-120000 entries. Run `check-ignore --no-index --stdin -z` on their paths in the scratch repository of D8. | `links_tracked>=1` before the check (6 at the role base). `links_in_scope=0`. The fail message names each path that the rules keep. Control: the same function, given a synthetic entry for `scripts/ci/fake-link` with mode 120000, reports that path. The case reads index data only and no file under `measure/`, so rule C27 holds. | `measure/tracks/backend_architecture_enforcement_20260713` is in scope until task 1.2. |
+| S-33 | 21(c) | Scratch commit: the rules text of D7 with the line `measure/`, a directory link `measure/tracks/old` to `../archive/old`, and a regular file `measure/archive/old/plan.md`. The upload lacks both paths. Control: the same tree without the line `measure/`, in the commit and in the upload. | Exit 0 and no `missing:` line. Control: exit non-zero and a `missing:` line for each of the two paths. | Script absent. |
 | F-12 | 4 | `cloudbuild-files.test.mjs` case F-12. | Add `bind-release-source` as the first item of the `ordered()` list. Assert `ids[0] === "bind-release-source"` and `ids[1] === "verify-curriculum-backup"`. Keep the two `indexOf` checks. | The traffic file has no `bind-release-source`. |
 
 Criterion 7 is the light-run gate, not a case.
 
-No test reads a path under `measure/` (rule C27 of `per_app_cicd_20261107`).
+No test reads a path under `measure/` (rule C27 of `per_app_cicd_20261107`). S-31 and S-32 read only `.gcloudignore` and the `git ls-files -s` output. S-33 writes `measure/` paths in a scratch folder only.
 
 ### P1.5 Adversarial mutant set
 
-The adversarial role applies each mutant to a scratch copy of the script or of the YAML, runs the targeted command, and restores the file. It commits no mutant. Label: `mutants_rejected=<n>/30`.
+The adversarial role applies each mutant to a scratch copy of the script or of the YAML, runs the targeted command, and restores the file. It commits no mutant. Label: `mutants_rejected=<n>/33`.
 
 | Mutant | Change | Case that must reject it |
 |---|---|---|
@@ -221,12 +239,19 @@ The adversarial role applies each mutant to a scratch copy of the script or of t
 | Y28 | The script adds a SHA-256 manifest check. | S-27 |
 | Y29 | A mismatch exits 0 (the status is lost in a pipe or a subshell). | S-02, S-03, S-04 |
 | Y30 | The version lines print after the SHA check. | S-20 |
+| Y31 | The line `measure/` is removed from `.gcloudignore` (scratch edit, then restore). | S-31, S-32 |
+| Y32 | A tracked link stays outside the ignore rules. Form: add `!measure/tracks/backend_architecture_enforcement_20260713` after the line `measure/` (scratch edit, then restore). No staged file (D9). | S-32 |
+| Y33 | The compare skips the ignore filter on the Git side. | S-33 (the `measure/` paths print as `missing:`), S-06 |
 
 Adversarial scenarios (no mutant): a SHA that starts with `-`; a URL argument with a space; an upload root that is a link; an upload with an empty folder. Label: `scenarios_checked=<n>/4`. No scenario may give a false pass. An empty folder is not a file, so it must not stop the run.
 
 ### P1.6 Green gates
 
-- **Task 1.2 gate.** Disk guard first. Run the targeted command of P1.3. Required: every case passes except S-30 and S-30b. `tests_failed=2` with those two names. F-12 passes. Then run `bash -n scripts/ci/verify-traffic-source.sh` (exit 0).
+- **Task 1.2 gate.** Disk guard first. Run the targeted command of P1.3. Required: every case passes except S-30 and S-30b. `tests_failed=2` with those two names. S-31, S-32, S-33, and F-12 pass. Then run `bash -n scripts/ci/verify-traffic-source.sh` (exit 0).
+- **Task 1.2 upload list.** After the `.gcloudignore` edit, run `gcloud meta list-files-for-upload . > /tmp/opencode/traffic-bind-upload.txt` from the repository root. The command is local and makes no API call. Record these labels and then delete the file:
+  - `measure_files_in_upload` = `grep -c '^measure/'` of the file. It must be 0.
+  - `sales_files_in_upload` = `grep -c '^apps/sales-advantage/'` of the file. It must be 1 or more.
+  - `scripts/ci/verify-traffic-source.sh` must be a line of the file.
 - **Task 1.3 gate.** Disk guard first. Run the light command. Required: `EXIT=0`, `tests_failed=0`, `tests_skipped=0`, and the F-16 runbook case passes.
 - No Green edits a test to pass, except the F-12 update that the Red owns.
 
@@ -234,23 +259,25 @@ Adversarial scenarios (no mutant): a SHA that starts with `-`; a URL argument wi
 
 1. Disk guard: `disk_avail_mb>=3000`.
 2. Light run at the phase head: `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci`. Record `EXIT=0`, the test file count, the test count, `tests_failed=0`, and `tests_skipped=0`.
-3. Targeted run of the two files of P1.3: `EXIT=0`. The record names S-27 (criterion 6) and S-20 to S-24 (criterion 16) as passed.
-4. Scope check (section 1.4 commands): the track commits change only `scripts/ci/verify-traffic-source.sh`, `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, `apps/sales-advantage/cloudbuild-traffic.yaml`, `docs/runbooks/traffic-moves.md`, `measure/tracks.md`, and paths under `measure/tracks/sales_traffic_source_binding_20261108/` and `measure/runs/sales_traffic_source_binding_20261108/`. Label: `p1_out_of_scope_paths=0`.
-5. No-change check: `git diff --stat <phase_base_sha> HEAD -- .gcloudignore apps/sales-advantage/cloudbuild.yaml apps/sales-advantage/scripts package.json pnpm-lock.yaml scripts/ci/__tests__/helpers` prints 0 lines. Other tracks can change other files; this list must not change.
+3. Targeted run of the two files of P1.3: `EXIT=0`. The record names S-27 (criterion 6) S-20 to S-24 (criterion 16), and S-31 to S-33 (criterion 21) as passed.
+4. Scope check (section 1.4 commands): the track commits change only `scripts/ci/verify-traffic-source.sh`, `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, `apps/sales-advantage/cloudbuild-traffic.yaml`, `docs/runbooks/traffic-moves.md`, `.gcloudignore`, `measure/tracks.md`, and paths under `measure/tracks/sales_traffic_source_binding_20261108/` and `measure/runs/sales_traffic_source_binding_20261108/`. Label: `p1_out_of_scope_paths=0`.
+5. No-change check: `git diff --stat <phase_base_sha> HEAD -- apps/sales-advantage/cloudbuild.yaml apps/sales-advantage/scripts package.json pnpm-lock.yaml scripts/ci/__tests__/helpers` prints 0 lines. Other tracks can change other files; this list must not change.
 6. Hash detector: `rg -n -i 'sha256|sha-256|sha256sum|sha1sum|shasum|md5sum|openssl dgst|checksum|createHash|manifest' scripts/ci/verify-traffic-source.sh` exits 1. The same command exits 0 on a scratch file that holds `sha256sum` (A14 control).
 7. Measure-read detector: `rg -n '(readFile|readFileSync|existsSync|readText)\([^)]*measure/' scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` exits 1.
 8. Clean state: `scratch_left=0`. `git worktree list | wc -l` prints the same value as at the phase base (A16).
 9. Header check: each commit subject of the track is 100 characters or less.
-10. Adversarial set: `mutants_rejected=30/30` and `scenarios_checked=4/4`. The main checkout holds no mutant file after the round.
+10. Adversarial set: `mutants_rejected=33/33` and `scenarios_checked=4/4`. The main checkout holds no mutant file after the round.
 11. Review A, Review B, and Review C each give a pass at the phase head. The browser review is recorded as not applicable.
-12. Phase acceptance gives a pass against FR-1 to FR-6, FR-3a, FR-10 to FR-13, and criteria 1 to 7, 15 to 17, 19, and 20.
+12. Phase acceptance gives a pass against FR-1 to FR-6, FR-3a, FR-10 to FR-14, and criteria 1 to 7, 15 to 17, and 19 to 21.
 13. The plan note of task 1.4 states that no role ran `gcloud`, a Cloud Build submit, a workflow run, or a push. It states that the live proof is open.
-14. **Live proof, `deferred:daniel`.** The first sales traffic Cloud Build run shows the two version lines and a pass of `bind-release-source` before `migrate-db`. It belongs to task 2.3h of `per_app_cicd_20261107`, which stays `[b]` with `deferred:daniel`. Risk R-L1 is recorded with it.
+14. **Live proof, `deferred:daniel`.** The first sales traffic Cloud Build run shows the two version lines and a pass of `bind-release-source` before `migrate-db`. It belongs to task 2.3h of `per_app_cicd_20261107`, which stays `[b]` with `deferred:daniel`. R-L1 is not part of this item (Q19).
+15. `.gcloudignore` diff: `git diff <phase_base_sha> HEAD -- .gcloudignore` shows one added line `measure/` and no removed line. Labels: `gcloudignore_lines_added=1` and `gcloudignore_lines_removed=0`.
+16. Upload list at the phase head: run the command of the task 1.2 upload list again (P1.6). Required: `measure_files_in_upload=0`, `sales_files_in_upload>=1`, and the script path in the list. Then R-L1 is closed. If a value fails, R-L1 goes to the PM as `deferred:pm`, and the phase does not close.
 
 ### P1.8 Document tests and live tests
 
-- S-28, S-29, S-30, S-30b, S-27, the text part of S-20, and F-12 are artifact tests. They prove the text of the YAML, the runbook, and the script. They do not prove a Cloud Build run.
-- S-01 to S-26 and the run part of S-20 are function-level live tests of the script on local Git data. They prove the compare and the stop rules. They do not prove the GitHub fetch, the builder image, or the gcloud upload form.
+- S-27 to S-32 (with S-30b), the text part of S-20, and F-12 are artifact tests. S-31 and S-32 read `.gcloudignore` and the index of the real checkout; they do not prove what gcloud uploads. The upload list of P1.6 is the local proof of the upload form. They prove the text of the YAML, the runbook, and the script. They do not prove a Cloud Build run.
+- S-01 to S-26, S-33, and the run part of S-20 are function-level live tests of the script on local Git data. They prove the compare and the stop rules. They do not prove the GitHub fetch, the builder image, or the gcloud upload form.
 - The live proof is item 14 of P1.7. Text that calls the binding "live" or "proven in Cloud Build" before that run is an A5 or A6 defect.
 
 ### P1.9 Review gates
@@ -258,9 +285,9 @@ Adversarial scenarios (no mutant): a SHA that starts with `-`; a URL argument wi
 | Review | Applies | Reason and checks |
 |---|---|---|
 | Review A (correctness) | **yes, required** | The compare method of spec section 3, the table of section 3c, the NUL path from `ls-tree -z` to `comm -z`, the exit codes, the line order, the `trap`, the exact step block, the F-12 update, and the scope of P1.7 item 4. |
-| Review B (security) | **yes, required** | The step fetches code from GitHub inside Cloud Build, and it gates a step that migrates the production database. Checks: the `args` form gives no shell injection; the SHA check runs before any Git use of the value, so a value that starts with `-` cannot become an option; the step holds no secret and no credential URL; the URL is fixed in the YAML; the step runs before every `secretEnv` step; fail-closed on each error path; the `.gcloudignore` of the upload is itself compared. Review B also confirms or refutes this point: GitHub can serve a commit that exists only in a fork through the upstream URL. If so, the check binds the upload to the named commit, not to a commit of `master`. Review B records that limit and R-L1. A change of the limit is a decision for Daniel. |
+| Review B (security) | **yes, required** | The step fetches code from GitHub inside Cloud Build, and it gates a step that migrates the production database. Checks: the `args` form gives no shell injection; the SHA check runs before any Git use of the value, so a value that starts with `-` cannot become an option; the step holds no secret and no credential URL; the URL is fixed in the YAML; the step runs before every `secretEnv` step; fail-closed on each error path; the `.gcloudignore` of the upload is itself compared. Review B also confirms or refutes this point: GitHub can serve a commit that exists only in a fork through the upstream URL. If so, the check binds the upload to the named commit, not to a commit of `master`. Review B records that limit. A change of the limit is a decision for the PM (D10). R-L1: Review B confirms that the line `measure/` removes the only tracked link from the upload, and that no traffic step reads a file under `measure/` (the grep of spec section 2). |
 | Review C (UX/API) | **yes, required** | There is no screen. The operator API changes: the script CLI (C1), the `missing:`, `extra:`, and `differs:` lines, the tool messages, and the sales runbook text (FR-5, FR-10, FR-12). The text must tell the operator what stopped and what to do. |
-| Adversarial testing | **yes, required** | The 30 mutants and 4 scenarios of P1.5. The risk is `high`. |
+| Adversarial testing | **yes, required** | The 33 mutants and 4 scenarios of P1.5. The risk is `high`. |
 | Browser review (UX) | **no** | No page, component, or route changes. The only human surface is a build log and a runbook. |
 | Phase acceptance | **yes, required** | P1.7 item 12. |
 
@@ -269,11 +296,11 @@ Adversarial scenarios (no mutant): a SHA that starts with `-`; a URL argument wi
 | ID | Defense in Phase 1 | Falsification condition |
 |---|---|---|
 | A1 | Task 2.3h of `per_app_cicd_20261107` stays `[b] ... deferred:daniel`. No free text "deferred" stands for a marker. | The live proof counts as done, or the marker is not `[b]`. |
-| A3 | Each count is a labeled integer: `forms_checked`, `tests_failed`, `tests_passed`, `tests_skipped`, `mutants_rejected`, `scenarios_checked`, `scratch_left`, `p1_out_of_scope_paths`, `disk_avail_mb`. A check parses the integer after its label. | A bare number or a date passes a count check. |
-| A4 | The script-exists precondition in each script case. The `fetch` control in S-01 before any "no fetch" claim. `forms_checked=10` before the S-18 loop. Negative cases assert a named stderr line, not only a non-zero exit. | A case passes while the script is absent, or a "no fetch" check passes with a dead wrapper. |
+| A3 | Each count is a labeled integer: `links_tracked`, `links_in_scope`, `measure_files_in_upload`, `sales_files_in_upload`, `gcloudignore_lines_added`, `forms_checked`, `tests_failed`, `tests_passed`, `tests_skipped`, `mutants_rejected`, `scenarios_checked`, `scratch_left`, `p1_out_of_scope_paths`, `disk_avail_mb`. A check parses the integer after its label. | A bare number or a date passes a count check. |
+| A4 | The script-exists precondition in each script case. The `fetch` control in S-01 before any "no fetch" claim. `forms_checked=10` before the S-18 loop. In S-32, `links_tracked>=1` and the synthetic link control. In S-33, the control tree without `measure/`. In the upload list, `sales_files_in_upload>=1` must hold, so a changed path form (for example a `./` prefix) cannot give `measure_files_in_upload=0` by default. Negative cases assert a named stderr line, not only a non-zero exit. | A case passes while the script is absent, or a "no fetch" check passes with a dead wrapper. |
 | A5 | Plan notes quote `EXIT=`, the labels, and the case names. No note claims a Cloud Build result. | A note says that the step ran in Cloud Build or that a run passed. |
 | A6 | `measure/tracks.md` and the runbook do not call the defect fixed in production before item 14 of P1.7. | The registry says "resolved" while the live proof is open. |
-| A7 | The forbidden-word check of S-27 reads the bind step only, not the whole file (line 88 holds `sha256sum` legally). The `.gcloudignore` check of S-29 runs `check-ignore` and does not match text. | The check flags line 88, or a pattern such as `scripts/**` passes a text check. |
+| A7 | The forbidden-word check of S-27 reads the bind step only, not the whole file (line 88 holds `sha256sum` legally). The `.gcloudignore` checks of S-29, S-31, and S-32 run `check-ignore` in an empty scratch repository (D8), so a `.gitignore` rule cannot hide a path that `.gcloudignore` keeps. | The check flags line 88, a pattern such as `scripts/**` passes a text check, or a `.gitignore` rule hides a kept link. |
 | A8 | The plan uses `[ ]`, `[~]`, `[x]`, and `[b]` as its rules section defines. No task holds `[ ]` with "blocked" prose. | A blocked task uses `[ ]`. |
 | A9 | No test reads `measure/` as data (P1.7 item 7). | The detector finds a hit. |
 | A10 | Does not apply: the phase generates no facts file. | A generated facts file appears in the scope. |
@@ -294,6 +321,7 @@ A2 does not apply: the phase has no publish gate with named subjects.
 - **Criterion 18 method:** read the `args` of each bind step. Assert that they name the script and `$_RELEASE_COMMIT_SHA`. Replace the SHA with the fixture commit and the GitHub URL with the `file://` URL. Run `/bin/bash` with that list in the scratch upload root, which holds a copy of the script. No `-c` string.
 - **Open scope point for the Phase 2 strategy:** Phase 2 needs the fixture builder of Phase 1. A shared helper file under `scripts/ci/__tests__/helpers/` is outside the Phase 1 paths. The Phase 2 strategy must state the allowed path before the Red starts.
 - **Mutants:** the bind step after `refuse-legacy-db` or after `migrate-company-identity`; a missing substitution; a GitHub URL with a typing error in one file; a `-c` string in one file.
+- **Criterion 21 in Phase 2:** the five files upload the same root, so the line `measure/` and S-32 cover them too. The Phase 2 strategy runs S-32 and the upload list of P1.6 again and adds no new link case.
 - **Reviews:** A, B, C, adversarial, and phase acceptance apply. The browser review does not apply. Review B checks that the Primary read-only guard still runs before every migrate step.
 - **Scope rule (Q2b):** no Primary deploy, no Cloud Build submit, and no revision change. Traffic moves stay Daniel's word. The live proofs stay `deferred:daniel` in task 2.3h (four apps) and task 2.3c (`primary-advantage`) of `per_app_cicd_20261107`.
 - **`phase_base_sha`:** a new capture after the Phase 1 checkpoint (section 1.4).
