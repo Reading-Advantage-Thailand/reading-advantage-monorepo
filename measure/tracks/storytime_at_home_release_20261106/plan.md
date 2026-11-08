@@ -226,6 +226,7 @@ F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-
 - **Condition 0, case `sign_in_username_cookie_export`**: the constant is exported with the pinned name. Fails now with `undefined`.
 - **Browser gate, exit 1.** `bash apps/storytime/__tests__/phase2b-browser-gate.sh` in the foreground gives `=== Total: 37 checks (PASS=36, FAIL=1) ===`, `FAIL: F62 username_kept=0 (expected 1)`, `PASS: F62 password_kept=0 (expected 0)`, `PASS: F62 username_in_location=0 (expected 0)`, `PASS: The flows F1 to F9 run and exit 0`, and `PASS: F62 flow label rows: 27`. The F5 block now reads the username in th and en and collects the 303 Location headers and the sign-in page URLs. `bash -n` on the gate exits 0. The gate has no self-test script.
 - **The task state.** Task 2b.7b stays `[~]` for the Green.
+- **Q8 generated formats (2026-11-08).** Two cases were added: `flash_generated_username` for `staff-42`, `tutor-17`, and `demo-class-09` (built in the test, no real account name), and `refused_username_field_empty` with one generic message and an empty field; commit `214c98be3`; the heavy-run command exits 0 with `Test Files 2 passed (2)`, `Tests 10 passed (10)`, because the Green landed the helper and the route.
 
 ### Phase 2b Green evidence
 
