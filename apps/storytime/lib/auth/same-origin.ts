@@ -64,6 +64,8 @@ export function ownOriginOf(headers: Headers, urlOrigin: string): string {
  * browser used (finding F60).
  * @param path The path and query of the target, which starts with a single `/`.
  * @returns The 303 response with the relative Location header.
+ * @throws When the path holds a character that a header value cannot carry. The sign-in handler
+ *   calls this function before it writes a session, so a throw there leaves no session (F90).
  */
 export function seeOther(path: string): NextResponse {
   return new NextResponse(null, { status: 303, headers: { Location: path } });

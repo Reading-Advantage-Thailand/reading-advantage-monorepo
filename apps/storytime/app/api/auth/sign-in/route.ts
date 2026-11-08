@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server";
+import type { NextRequest, NextResponse } from "next/server";
 import { login, localeSchema, signInFieldsSchema } from "../../../../lib/auth";
 import { clientIp } from "../../../../lib/auth/client-ip";
 import { safeReturnPath } from "../../../../lib/auth/return-path";
@@ -30,7 +30,21 @@ function text(value: FormDataEntryValue | null): string {
 }
 
 /**
+ * Builds the path of the sign-in page with one error and the checked return path.
+ * @param locale The locale of the sign-in page.
+ * @param error The error code that the page shows.
+ * @param next The checked return path.
+ * @returns The path and query of the sign-in page.
+ */
+function signInPath(locale: string, error: "invalid" | "locked", next: string): string {
+  return `/${locale}/sign-in?error=${error}&next=${encodeURIComponent(next)}`;
+}
+
+/**
  * Answers one sign-in.
+ *
+ * The handler builds all redirects before it calls `login`. When a redirect cannot be built, the
+ * handler writes no session and no audit row, and answers a 303 to `/<locale>/st`.
  * @param request The request of the form.
  * @returns The redirect to the checked path, or the answer of a rejected request.
  */
@@ -55,9 +69,22 @@ export async function POST(request: NextRequest): Promise<Response> {
     password: text(form.get("password")),
   });
   const now = new Date();
-  if (!fields.success) {
-    return seeOther(`/${locale}/sign-in?error=invalid&next=${encodeURIComponent(next)}`);
+
+  // Every redirect is built before `login` runs, because `login` writes the session and the audit
+  // row. A Location that cannot be built then leaves no session and no audit row (finding F90).
+  // The answer to that failure uses no `seeOther`, so it cannot fail the same way.
+  let redirects: { signedIn: NextResponse; invalid: NextResponse; locked: NextResponse };
+  try {
+    redirects = {
+      signedIn: seeOther(next),
+      invalid: seeOther(signInPath(locale, "invalid", next)),
+      locked: seeOther(signInPath(locale, "locked", next)),
+    };
+  } catch {
+    console.warn("storytime sign-in rejected: reason=bad_location");
+    return new Response(null, { status: 303, headers: { Location: `/${locale}/st` } });
   }
+  if (!fields.success) return redirects.invalid;
 
   const outcome = await login({
     username: fields.data.username,
@@ -66,10 +93,8 @@ export async function POST(request: NextRequest): Promise<Response> {
     now,
   });
   if (outcome.status === "signed_in") {
-    const response = seeOther(next);
-    response.headers.set("Set-Cookie", outcome.cookie);
-    return response;
+    redirects.signedIn.headers.set("Set-Cookie", outcome.cookie);
+    return redirects.signedIn;
   }
-  const error = outcome.status === "locked" ? "locked" : "invalid";
-  return seeOther(`/${locale}/sign-in?error=${error}&next=${encodeURIComponent(next)}`);
+  return outcome.status === "locked" ? redirects.locked : redirects.invalid;
 }
