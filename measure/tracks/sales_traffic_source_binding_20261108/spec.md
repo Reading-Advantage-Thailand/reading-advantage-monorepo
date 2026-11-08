@@ -6,7 +6,7 @@
 **Author model:** claude-code/claude-sonnet-5-5
 **Plan:** [plan.md](./plan.md)
 **Depends on:** nothing.
-**Blocks:** task 2.3h of `measure/tracks/per_app_cicd_20261107/plan.md`. That task runs the `cloudbuild-traffic.yaml` files and stays `deferred:daniel`. Task 2.3h names five apps and not `primary-advantage`. So Phase 2 gates the next Primary traffic move instead, for that app. In total this track gates six apps: Phase 1 gates the first sales traffic run, and Phase 2 gates the first traffic run of `accounts`, `accounting`, `codecamp-advantage`, and `marketing`, and the next traffic run of `primary-advantage` (test-strategy rows M53, C31, and Q18 of that track).
+**Blocks:** task 2.3h for accounts, accounting, codecamp-advantage, marketing, and sales-advantage, and task 2.3c for primary-advantage, of `measure/tracks/per_app_cicd_20261107/plan.md`. Those tasks run the `cloudbuild-traffic.yaml` files and stay `deferred:daniel`. Phase 2 gates the first traffic run of the first four apps and the next Primary traffic run (task 2.3c). In total this track gates six apps: Phase 1 gates the first sales traffic run, and Phase 2 gates the first traffic run of `accounts`, `accounting`, `codecamp-advantage`, and `marketing`, and the next traffic run of `primary-advantage` (test-strategy rows M53, C31, and Q18 of that track).
 **PM decisions of 2026-11-08:** Q1 is Option A. Q3 is yes. Q2 is decided differently: this track covers the other traffic files in Phase 2, and no separate track is planned (reason, PM: one script and one review set cost less than two tracks). Q2b is yes: `primary-advantage` joins Phase 2. Q4 is yes: the shared script lives in `scripts/ci/`.
 
 ## 1. Purpose
@@ -68,7 +68,7 @@ The step `bind-release-source` uses this form. The three YAML lines are written 
 
 Reason: the builder image holds `git`, so the step needs no `apt-get` install; `node:22-slim` has no `git`. Base image: the Dockerfile of the builder is `FROM gcr.io/cloud-builders/gcloud-slim`, with `ENTRYPOINT ["/usr/bin/notice.sh"]`, a `/bin/sh` script that runs `git "$@"` (source: https://raw.githubusercontent.com/GoogleCloudPlatform/cloud-builders/master/git/Dockerfile and `notice.sh` in the same folder). The Dockerfile does not state `bash`. The `entrypoint: "bash"` replaces the builder entrypoint. The gcloud-slim base is a Debian image, and bash is a Debian base package; the existing `gcr.io/cloud-builders/gcloud` steps of the sales file already use `entrypoint: "bash"`. The step uses `git init`, `git fetch`, and `git hash-object` only.
 
-**Tool check (review finding F-R3-1).** The script prints `bash --version` and `git --version` as its first output, before the commit check and before any fetch. It exits non-zero, with a message that names the missing tool, when `command -v bash` or `command -v git` fails. So a missing tool stops step 1 before `migrate-db` (and before `refuse-legacy-db` for Primary), and no traffic moves. The first traffic-file Cloud Build run of each app is the live proof: its log shows both version lines. Fallback: if a run stops at this check, the fix is another image that holds git and bash, written in the same quoted-tag form with no digest. The live proof stays with Daniel's traffic run (task 2.3h of `per_app_cicd_20261107`, `deferred:daniel`).
+**Tool check (review finding F-R3-1).** The script prints `bash --version` and `git --version` as its first output, before the commit check and before any fetch. It exits non-zero, with a message that names the missing tool, when `command -v bash` or `command -v git` fails. So a missing tool stops step 1 before `migrate-db` (and before `refuse-legacy-db` for Primary), and no traffic moves. The first traffic-file Cloud Build run of each app is the live proof: its log shows both version lines. Fallback: if a run stops at this check, the fix is another image that holds git and bash, written in the same quoted-tag form with no digest. The live proof stays with Daniel's traffic run (task 2.3h for accounts, accounting, codecamp-advantage, marketing, and sales-advantage, and task 2.3c for primary-advantage, of `per_app_cicd_20261107`; both `deferred:daniel`).
 
 ## 3b. Where the Primary step goes (Phase 2)
 
@@ -116,7 +116,7 @@ Each criterion has an automated test. Criteria 1 to 7 are in `scripts/ci/__tests
 
 ## 6. Out of scope
 
-- A live traffic run, a deploy, a push, and any `gcloud` write, for all six apps. The live runs stay `deferred:daniel` in task 2.3h of `per_app_cicd_20261107`.
+- A live traffic run, a deploy, a push, and any `gcloud` write, for all six apps. The live runs stay `deferred:daniel` in task 2.3h for accounts, accounting, codecamp-advantage, marketing, and sales-advantage, and task 2.3c for primary-advantage, of `per_app_cicd_20261107`.
 - The open limit of `capture-legacy-rollback` in the runbook.
 - Any change to `cloudbuild.yaml` (the push file) or to `release-source-manifest.mjs`.
 
@@ -134,5 +134,5 @@ Added by the spec review of 2026-11-08 (no PM question): the image of the step (
 
 Open (default used):
 
-- **Q5.** Task 2.3h of `per_app_cicd_20261107` names five apps and not `primary-advantage`. Should the PM add `primary-advantage` to that task? Default: no change to that task. This spec says the Primary file gates the next Primary traffic move.
+- **Q5 (closed).** Task 2.3h of `per_app_cicd_20261107` names five apps and not `primary-advantage`. Task 2.3c of that track covers the Primary file and points to this track, so the Primary live proof stays with task 2.3c. No change to the other track is needed.
 - **Q6.** The check compares every uploaded file, so an untracked file in the upload stops the build. Is that acceptable? Default: yes. The check fails closed, and the operator uploads a clean tree.
