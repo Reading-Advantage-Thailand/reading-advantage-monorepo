@@ -59,7 +59,7 @@ Roles after Green (not plan tasks): Reviews A and B and the phase acceptance run
 
 Follow-up for the CI-green track after this one (PM, 2026-11-07): repair `pnpm architecture:check`. It fails on master with exit 1: "V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes".
 
-## Phase 4: Dry runs, www proof, and the first-push plan
+## Phase 4: Dry runs, www proof, and the first-push plan [checkpoint: ad2b43467]
 
 Roles after Green (not plan tasks): the adversarial review of the workflows and the final acceptance at an immutable HEAD run after task 4.3. Then the report goes to the PM. The orchestrator runs these roles.
 
