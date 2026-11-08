@@ -287,8 +287,13 @@ page.on("request", (request) => {
       mediaPathRequests += 1;
       if (mediaPathRequests === 1) console.log(`first_media_path=${url}`);
     }
-    // The app icon (`app/icon.png`, look track) is a page asset and no story media.
-    if (storyMedia && new URL(url).pathname !== "/icon.png") appMediaRequests += 1;
+    // The app icon (`app/icon.png`) and the built look images (`/_next/static/`, the CSS
+    // backgrounds of the look track) are page assets and no story media.
+    const pathname = new URL(url).pathname;
+    if (storyMedia && pathname !== "/icon.png" && !pathname.startsWith("/_next/static/")) {
+      appMediaRequests += 1;
+      if (appMediaRequests === 1) console.log(`first_app_media=${url}`);
+    }
   }
 });
 
