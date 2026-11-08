@@ -1637,4 +1637,4 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 - [ ] **Track: Bind the traffic sources to the release commit** — *created 2026-11-08*
   *Link: [./tracks/sales_traffic_source_binding_20261108/](./tracks/sales_traffic_source_binding_20261108/)*
-  *Status: new | Chore, security fix of Review B finding F4 (per_app_cicd_20261107) | 2 phases: sales-advantage (Phase 1), accounts, accounting, codecamp-advantage, marketing (Phase 2) | Blocks task 2.3h of per_app_cicd_20261107 for all five apps; the live traffic runs stay `deferred:daniel`*
+  *Status: new | Chore, security fix of Review B finding F4 (per_app_cicd_20261107) | 2 phases: sales-advantage (Phase 1), accounts, accounting, codecamp-advantage, marketing, primary-advantage (Phase 2); shared script scripts/ci/verify-traffic-source.sh | Gates six apps for task 2.3h of per_app_cicd_20261107; the live traffic runs stay `deferred:daniel`*
