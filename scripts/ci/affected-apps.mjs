@@ -23,6 +23,9 @@ const ZERO_BASE = "0".repeat(40);
 /** The shape of a commit id that the script accepts. */
 const COMMIT_ID = /^[0-9a-f]{40}$/;
 
+/** The shape of an app id that may reach a workflow shell line: lower-case letters, digits, hyphens. */
+const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
+
 /** The package.json fields that hold dependency edges. */
 const DEPENDENCY_FIELDS = [
   "dependencies",
@@ -345,6 +348,9 @@ function readTable(side) {
   for (const row of rows) {
     if (typeof row?.id !== "string" || typeof row?.path !== "string") {
       fail("scripts/ci/apps.json holds a row without id and path");
+    }
+    if (!SAFE_ID.test(row.id)) {
+      fail(`scripts/ci/apps.json holds an id that is not a safe workspace id: ${JSON.stringify(row.id)}`);
     }
   }
   return rows;
