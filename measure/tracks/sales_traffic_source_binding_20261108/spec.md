@@ -58,7 +58,15 @@ The six traffic files call one script: `scripts/ci/verify-traffic-source.sh`. Re
 
 ## 3a-1. Container image of the step (review finding F1)
 
-The step `bind-release-source` runs on the image `gcr.io/cloud-builders/git` with `entrypoint: "bash"`. Reason: the image holds `git` and `bash`, so the step needs no `apt-get` install and no network install; `node:22-slim` has no `git`. The step uses `git init`, `git fetch`, and `git hash-object` only. The script needs no other tool.
+The step `bind-release-source` uses this form. The three YAML lines are written exactly, in this order, with a quoted tag and no digest, as the other steps of the traffic files write their image (`name: "node:22-slim"`, `name: "gcr.io/cloud-builders/gcloud"`; no `@sha256:` appears in any `cloudbuild-traffic.yaml`):
+
+```yaml
+  - name: "gcr.io/cloud-builders/git"
+    id: "bind-release-source"
+    entrypoint: "bash"
+```
+
+Reason: the builder image holds `git`, so the step needs no `apt-get` install; `node:22-slim` has no `git`. Base image: the Dockerfile of the builder is `FROM gcr.io/cloud-builders/gcloud-slim`, with `ENTRYPOINT ["/usr/bin/notice.sh"]`, a `/bin/sh` script that runs `git "$@"` (source: https://raw.githubusercontent.com/GoogleCloudPlatform/cloud-builders/master/git/Dockerfile and `notice.sh` in the same folder). The Dockerfile does not state `bash`. The `entrypoint: "bash"` replaces the builder entrypoint. The gcloud-slim base is a Debian image, and bash is a Debian base package; the existing `gcr.io/cloud-builders/gcloud` steps of the sales file already use `entrypoint: "bash"`. The step uses `git init`, `git fetch`, and `git hash-object` only.
 
 ## 3b. Where the Primary step goes (Phase 2)
 
@@ -73,7 +81,7 @@ The step `bind-release-source` is step 1 of the Primary file, before `refuse-leg
 - **FR-5.** `docs/runbooks/traffic-moves.md` (the sales section) names the step, says what it checks, and says that a traffic run stops before `migrate-db` on a mismatch.
 - **FR-6.** The change adds no SHA-256, checksum field, manifest, or provenance file.
 - **FR-10.** The script is `scripts/ci/verify-traffic-source.sh`. The sales upload is the repository root `.` and holds it. The sales section of the runbook says so, and no archive script changes.
-- **FR-11.** The step `bind-release-source` of each file runs on `gcr.io/cloud-builders/git` with `entrypoint: "bash"` and installs nothing.
+- **FR-11.** The step `bind-release-source` of each file has the three lines of section 3a-1 (`name: "gcr.io/cloud-builders/git"`, `id: "bind-release-source"`, `entrypoint: "bash"`) and installs nothing.
 - **FR-12.** The runbook rules for every traffic file say: start from a clean checkout of the release commit, because an untracked file in the upload stops the build (Q6).
 
 - **FR-7 (Phase 2).** Each traffic file of `accounts`, `accounting`, `codecamp-advantage`, `marketing`, and `primary-advantage` holds the same step `bind-release-source` as its first step. The step calls the script of Phase 1 with the GitHub URL. Each file holds a new substitution `_RELEASE_COMMIT_SHA` with the default `REQUIRED_RELEASE_COMMIT_SHA`.
