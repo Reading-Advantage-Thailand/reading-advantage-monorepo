@@ -12,6 +12,9 @@
  *   is not a safe workspace id. The id must not reach a shell line unquoted.
  * - CI-R3 (Review B F2, Major): `.github/workflows/ci.yml` holds a workflow-level
  *   `permissions` map equal to `contents: read`, and no job widens it.
+ * - CI-R4 (Review B r2 F6, Major): a pull request that changes `scripts/**` starts
+ *   `ci.yml`, and a job that runs on push and on pull request runs the tests of
+ *   `scripts/ci` with vitest.
  *
  * The cases read the real workflow, table, and manifests. CI-R2 runs the real script on
  * a scratch git repository. They are artifact and function-level tests: no workflow runs
@@ -22,6 +25,7 @@
  * @module ci-remediation.test
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { createRequire } from "node:module";
 import { join } from "node:path";
 import { parse } from "yaml";
 import { afterAll, describe, it } from "vitest";
@@ -72,6 +76,89 @@ const UNSAFE_IDS = ["x;rm -rf /", "--help", "a b"];
  */
 function must(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+/** The pull request path probes of the CI-R4 case. */
+const SCRIPT_PATH_PROBES = [
+  "scripts/ci/affected-apps.mjs",
+  "scripts/ci/__tests__/x.test.mjs",
+];
+
+/**
+ * Return a glob matcher over repository paths.
+ *
+ * The matcher uses the `minimatch` copy of `node_modules` when it resolves. It
+ * falls back to a small `**` and `*` rule, so the case reports the state of the
+ * workflow and not a missing dependency.
+ *
+ * @returns {(path: string, pattern: string) => boolean} The matcher.
+ */
+function globMatcher() {
+  try {
+    const require = createRequire(import.meta.url);
+    const mod = require("minimatch");
+    const fn = typeof mod === "function" ? mod : (mod.minimatch ?? mod.default);
+    if (typeof fn === "function") return (path, pattern) => fn(path, pattern, { dot: true });
+  } catch {
+    // Use the small rule below.
+  }
+  return (path, pattern) => {
+    const body = pattern
+      .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+      .replace(/\*\*/g, "\u0000")
+      .replace(/\*/g, "[^/]*")
+      .replace(/\u0000/g, ".*");
+    return new RegExp(`^${body}$`).test(path);
+  };
+}
+
+/**
+ * Get the event names of the `on` map of a workflow.
+ *
+ * @param {Record<string, unknown>} doc The parsed workflow.
+ * @returns {string[]} The event names.
+ */
+function triggerNames(doc) {
+  const on = doc.on;
+  if (on === null || typeof on !== "object" || Array.isArray(on)) return [];
+  return Object.keys(on);
+}
+
+/**
+ * Get the path filters of the `pull_request` trigger.
+ *
+ * @param {Record<string, unknown>} doc The parsed workflow.
+ * @returns {string[]} The patterns, or an empty list when the trigger holds no filter.
+ */
+function pullRequestPaths(doc) {
+  const trigger = doc.on?.pull_request;
+  if (trigger === null || typeof trigger !== "object" || Array.isArray(trigger)) return [];
+  return Array.isArray(trigger.paths) ? trigger.paths.map(String) : [];
+}
+
+/**
+ * Test whether a job runs for a push and for a pull request.
+ *
+ * A job with no `if` runs on both events. A guard that names the event or the
+ * selector matrix can skip one event, so the case does not accept it.
+ *
+ * @param {Record<string, unknown>} job The job.
+ * @returns {boolean} True when the job runs on both events.
+ */
+function runsOnBothEvents(job) {
+  const guard = String(job?.if ?? "");
+  return guard === "" || !/event_name|matrix/i.test(guard);
+}
+
+/**
+ * Test whether a `run` line runs the tests of `scripts/ci` with vitest.
+ *
+ * @param {Record<string, unknown>} step The step.
+ * @returns {boolean} True when the line meets the rule.
+ */
+function runsSelectorTests(step) {
+  const run = String(step?.run ?? "");
+  return /\bvitest\b/.test(run) && /scripts\/ci(\/|\s|$)/.test(run);
 }
 
 /**
@@ -317,5 +404,43 @@ describe("CI review remediation", () => {
       );
     }
     console.log(`ci_permissions=${expected} jobs_checked=${jobs.length}`);
+  });
+
+  it("CI-R4 ci.yml gates a scripts change and runs the selector tests", () => {
+    const doc = workflow("ci.yml");
+    const triggers = triggerNames(doc);
+    must(
+      triggers.includes("push") && triggers.includes("pull_request"),
+      `ci_triggers=${triggers.join(",")}`,
+    );
+    const paths = pullRequestPaths(doc);
+    must(
+      paths.length > 0,
+      `pr_paths_scripts=0 scripts_ci_test_steps=0 reason=no_pull_request_path_filter paths=${JSON.stringify(paths)}`,
+    );
+    const matches = globMatcher();
+    const uncovered = SCRIPT_PATH_PROBES.filter(
+      (probe) => !paths.some((pattern) => matches(probe, pattern)),
+    );
+    const prPathsScripts = uncovered.length === 0 ? 1 : 0;
+
+    const testSteps = [];
+    for (const [jobName, job] of Object.entries(doc.jobs ?? {})) {
+      if (!runsOnBothEvents(job)) continue;
+      for (const step of job?.steps ?? []) {
+        if (runsSelectorTests(step)) testSteps.push({ jobName, step });
+      }
+    }
+    const scriptsCiTestSteps = testSteps.length;
+    console.log(`pr_paths_scripts=${prPathsScripts} scripts_ci_test_steps=${scriptsCiTestSteps}`);
+
+    must(
+      prPathsScripts === 1,
+      `pr_paths_scripts=${prPathsScripts} scripts_ci_test_steps=${scriptsCiTestSteps} missing=${uncovered.join(",")} patterns=${paths.length}`,
+    );
+    must(
+      scriptsCiTestSteps >= 1,
+      `pr_paths_scripts=${prPathsScripts} scripts_ci_test_steps=${scriptsCiTestSteps} reason=no_vitest_step_on_scripts_ci`,
+    );
   });
 });
