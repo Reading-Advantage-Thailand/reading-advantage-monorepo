@@ -1,11 +1,12 @@
 # Test strategy: Per-app CI/CD
 
 > **Track:** `per_app_cicd_20261107` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
-> **Scope:** Phase 1 `## Phase 1: The affected-app logic` and Phase 2 `## Phase 2: Per-app CD workflows` in full (sections P1 and P2). Outlines for `## Phase 3: CI for the affected apps` and `## Phase 4: Dry runs, www proof, and the first-push plan` (sections P3 and P4).
+> **Scope:** Phase 1 `## Phase 1: The affected-app logic` and Phase 2 `## Phase 2: Per-app CD workflows` in full (sections P1 and P2). An outline for `## Phase 3: CI for the affected apps` (section P3). Phase 4 `## Phase 4: Dry runs, www proof, and the first-push plan` in full (section P4, written 2026-11-08).
 > **Written:** 2026-11-07 at role base `04b5cb1619afb7742a06f6cf1c884805cee3e320` (spec review passed in round 2). Model: claude-code/claude-sonnet-5-5.
 > **Checked and revised (round 2):** 2026-11-07 at role base `c4890971f4c99bbe74ba052722938e29c6700371`. Model: deepseek/deepseek-v4.1-flash (a different family from the writer). Section 5 lists what was re-measured and what changed.
 > **Phase 2 written:** 2026-11-07 at the P2 role base `390bcb684237d0ed9bde78682a2d3e06493cb0d3` (the tree after the Phase 1 checkpoint). Model: deepseek/deepseek-flash, a family different from the spec writer (the plan requires it). The immutable `phase_base_sha` is captured after this strategy commit (P2.7).
 > **Amended 2026-11-07 (PM decision):** guard runs for the P2, P3, and P4 phase gates (Red r5), Red r6 cases W-22 and F-18, the P3 sales build-identity contract, and Review B finding B1 (M43).
+> **Phase 4 written:** 2026-11-08 at the P4 role base `c0a1fe51d4a6a11fc67b620b3de87020355bd734`; reads at `f05ab07d148cd5fa98b979b97acca119bd4a5baf` (M44 to M54). Model: claude-code/claude-opus-5-5[1m]#high. The immutable P4 base is captured after this strategy commit (P4.6).
 > **Facts:** each "measured" fact in section 2 was read at its role base on 2026-11-07. One heavy job ran at each base (M1, M37). Red and Green must measure again. Facts re-read in round 2 carry the round-2 date. Facts M23 to M42 were read at `390bcb684`.
 > **No push.** A push to `master` deploys www today. No role pushes before Phase 4 and Daniel's word.
 
@@ -113,7 +114,7 @@
 | M40 | **P2 base.** In project `primary-advantage`, neither candidate service account holds a project-level binding. The Cloud Build service account `1064299189080@cloudbuild.gserviceaccount.com` holds `cloudbuild.builds.builder`; the user `wannachok.job@gmail.com` holds `cloudbuild.builds.editor`. | `gcloud projects get-iam-policy primary-advantage ...`. |
 | M41 | **P2 base.** Project `reading-advantage` holds the service accounts `accounts-cloud-run`, `accounting-cloud-run`, `codecamp-cloud-run`, `marketing-cloud-run`, `sales-cloud-run`, and `accounting-build-verifier`. It holds no `workbooks-cloud-run` (`describe` returns NOT_FOUND). Its Cloud Run services hold `accounting`, `accounts`, `codecamp-advantage`, `marketing`, `sales-advantage`, `reading-advantage-web`, and others, and no `workbooks`. Project `www-reading-advantage` holds `www-reading-advantage`. | `gcloud iam service-accounts list|describe`, `gcloud run services list`. |
 | M42 | **P2 base.** The table's `project` field holds `$PROJECT_ID` on 8 rows and `primary-advantage` on 2. The measured locations put www in project `www-reading-advantage` and the six `$PROJECT_ID` gated apps in `reading-advantage`. One `GCP_PROJECT_ID` secret cannot select both projects. This is the new fact of the phase (Q10). | M41 and a table read. |
-| M43 | **Review B, 2026-11-07.** B1: the www deploy key held `roles/editor`, `run.admin`, `storage.admin`, and `iam.serviceAccountUser` in project `www-reading-advantage`. Daniel reduced the roles in IAM on 2026-11-07. No repository file changed. The reduced role set was not read. The P4 www dry run (AC-5.2) is the live proof that the reduced key still deploys. | Review B result and the owner statement; no secret value read. |
+| M43 | **Review B, 2026-11-07.** B1: the www deploy key held `roles/editor`, `run.admin`, `storage.admin`, and `iam.serviceAccountUser` in project `www-reading-advantage`. Daniel reduced the roles in IAM on 2026-11-07. No repository file changed. The reduced role set was not read. Corrected 2026-11-08 (P4.2 C30): AC-5.2 is a local turbo build and uses no key, so it cannot prove that the reduced key deploys. The live proof is the first push (task 4.5). | Review B result and the owner statement; no secret value read. |
 
 ## 3. Phase summary
 
@@ -124,7 +125,7 @@
 | P3 CI for affected apps | medium | yes | yes (CI service containers and env only) | no | yes (light, one mutant round) | no |
 | P4 Dry runs, www proof, first-push plan | **high** | yes | yes (final) | yes (the report and the push plan) | **yes** | no (a post-push www page check belongs to Daniel and the PM) |
 
-The reasons are in P1.7 and P2.7, and in the P3 and P4 outlines.
+The reasons are in P1.7, P2.7, the P3 outline, and P4.8.
 
 ## P1: The affected-app logic
 
@@ -573,7 +574,7 @@ Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 2 heading.
 | Review | Applies | Checks |
 |---|---|---|
 | Review A (code) | **yes** | C11 to C22; the YAML parse instead of substring matching; the table as the only source of app facts; the step-id dependencies; the traffic-file order; the bash slice and `env: BUILD_ID`; the scope. |
-| Review B (secrets, permissions) | **yes (required)** | `permissions` exactly `contents: read` on the two CD workflows; the two secret names and nothing else; no secret outside a push-triggered job; no `pull_request_target`; no secret on a fork run; the measured roles (M39 to M41) and the three gaps (primary-advantage binding, `workbooks-cloud-run`, the two-project ambiguity); no push path touches a production database; the traffic files have no trigger and no workflow reference. B1 (M43): the www deploy key held `editor`, `run.admin`, `storage.admin`, and `serviceAccountUser`; Daniel reduced the roles on 2026-11-07 with no repository change. P4 proves that the reduced key still deploys. |
+| Review B (secrets, permissions) | **yes (required)** | `permissions` exactly `contents: read` on the two CD workflows; the two secret names and nothing else; no secret outside a push-triggered job; no `pull_request_target`; no secret on a fork run; the measured roles (M39 to M41) and the three gaps (primary-advantage binding, `workbooks-cloud-run`, the two-project ambiguity); no push path touches a production database; the traffic files have no trigger and no workflow reference. B1 (M43): the www deploy key held `editor`, `run.admin`, `storage.admin`, and `serviceAccountUser`; Daniel reduced the roles on 2026-11-07 with no repository change. The first push (task 4.5) is the live proof that the reduced key still deploys (P4.2 C30). |
 | Review C (UX/API) | **yes** | The tag names, the job names, the traffic-file contract, and the runbook text. The text is plain and one meaning per word. There is no screen. |
 | Adversarial testing | **yes** | The 12 mutants of P2.5; a fork PR (no secret); a zero base; a base that the clone lacks after a force push; a comment that names `cloudbuild-traffic`. |
 | Browser review (UX) | **no** | No UI. |
@@ -627,31 +628,313 @@ A2 does not apply: P2 holds no publish gate with named subjects; the traffic mov
   | A14 | Every detector is proven on a scratch file that must hit. | A bad-option detector reports no hit. |
   | A16 | Scratch repos under `/tmp`; `git worktree list \| wc -l` still prints 8. | The worktree count changes. |
 
-## P4: Dry runs, www proof, and the first-push plan (outline)
+## P4: Dry runs, www proof, and the first-push plan
 
-**Risk: high.** No deploy happens in the phase, but its report and its plan lead directly to a push that deploys www to traffic. The www build and test at the pushed HEAD is the only proof that the pending commits build (207 at the round-2 check, M11; the phase measures the count again at its own HEAD).
+**Risk: high.** The phase deploys nothing and moves no traffic. But its report and its plan line lead straight to a push that deploys www to traffic and builds 8 gated apps. The local www build at the report HEAD is the only proof that the pending commits build before that push. Task risk: 4.1 medium, 4.2 high, 4.3 high, 4.4 medium, 4.5 human gate (critical), 4.6 human gate (critical), 4.7 human gate.
 
-- **Dry run:** `act` is not installed (M8). The dry run is the select-step runner of P2 and P3 over each workflow and each fake range, with no secret and no deploy. The report `dry-run-report.md` has one row per table app (10) and one row for CI (`rows=11`, AC-5.1).
-- **Red:** the report test, run with the P1.3 command, fails at the base because the report is missing (`Missing dry-run-report.md`) and passes after task 4.1. Task 4.2 has no Red (it is a run). Expected failure shape for 4.2 if www does not build: the first failing task from `turbo`.
-- **Green gates:** AC-5.1 (`rows=11`, each row names its range, its planned jobs, and `gcloud_calls=0`); AC-5.2: `HEAVY … 'cd ROOT && CI=true pnpm exec turbo run build test --filter=www-reading-advantage...; echo "EXIT=$?"'` gives `EXIT=0` at the HEAD that the report names (label `www_head=<sha>`; the heavy job takes long and one job runs at a time); AC-5.3: the plan line names exactly the ids that the script returns for `origin/master..HEAD`, computed at the report HEAD; no `gcloud` write and no change to a Cloud Build trigger happened (`gcloud builds triggers list` read only).
-- AC-5.2 is the one aggregate run that gates a phase (section 1.1). If `www` is red, the phase stops: the report names the first failing task and the failing test, and the first push does not happen.
-- **Guard runs (P4 gate).** The 8 commands of P2.5 again, one heavy job each, plus the report test. `known_failures=4`; a fifth failure fails the gate.
-- **B1 live proof (M43).** The P4 www dry run is the live proof that the reduced www deploy key still deploys. The workflow uses the `GCP_SERVICE_ACCOUNT` secret, and AC-5.2 must pass with the reduced roles. A failure here blocks the first push.
-- **Closeout gate (task 4.4).** The Green gates again at the report HEAD; the report and the plan line read from the same immutable HEAD (`www_head` equals the HEAD that the plan uses); the adversarial round of the Reviews bullet passes (`mutants_rejected=n/n`); Review A, Review B, and Review C results are `pass`; the scope label `p4_out_of_scope_paths=0` over `measure/tracks/per_app_cicd_20261107/**` and `measure/runs/per_app_cicd_20261107/**`; the handoff to the PM names the raw truth: which apps the push deploys, which stay gated, and that Daniel decides (AC-5.4). Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 4 heading. The first push (`[b]` 4.5) and every traffic move (`[b]` 4.6) stay blocked after the checkpoint; they are not part of the closeout.
-- **Predicted plan at the base:** all 10 ids affected (M12). The non-excluded rows deploy: `www-reading-advantage` to traffic (direct) and 8 gated apps as `--no-traffic` revisions with a tag; `reading-advantage` is skipped (`excluded`). The report states this in one line, with the app names, and keeps the deploy list (round 2: the orchestrator sent Q7 to the PM; Daniel decides at AC-5.4). The role does not narrow the list on its own.
-- **Document vs live:** the dry run and the report are artifact and function-level proof. Live proof is the first push on Daniel's word (`[b] deferred:daniel`) and every traffic move.
-- **Reviews:** A yes; B yes (final check of workflow permissions, secrets, and roles against the dry-run report); C yes (the report and the push plan: plain words, one row per app, the deploy list); **adversarial yes**: a force-pushed base that the runner lacks, a zero base on a new branch, a push with only `measure/` files, and a workflow run on a pull request from a fork (no secret). Browser: no.
-- Anti-pattern coverage:
+`ROOT=/home/daniebo/Desktop/reading-advantage-monorepo`. `HEAVY` is the wrapper of section 1.1. **Gate command rule (PM, 2026-11-08):** a Vitest run of `scripts/ci` with `--maxWorkers=1` is a light run, with no wrapper. The turbo run of www is heavy and goes through `HEAVY`. P4 adds no hash (section 1.2, and the B-F4 item of P4.2).
 
-  | ID | Defense in this phase | Falsification condition |
-  |---|---|---|
-  | A3 | `rows=11`, `www_head=<sha>`, `gcloud_calls=0`, `mutants_rejected=n/n` are labeled. | A count without its label passes. |
-  | A4 | The plan line asserts at least 1 id before it names them; a plan with zero ids needs a stated reason and fails the gate. Each report row asserts its range count is 1. | A plan with zero ids passes, or a report row without a range passes. |
-  | A5 | The report quotes the exit code of every command it cites, including the failing `turbo` task. | A row says "pass" with no exit code. |
-  | A6 | The report and the plan claim no deploy, no traffic move, and no CI fix. | The report says a deploy or a CI fix happened. |
-  | A9 | No test or report reads a `measure/` path as proof input. | A report row cites a `measure/` file as its evidence. |
-  | A14 | Every detector is proven on a scratch file that must hit. | A bad-option detector reports no hit. |
-  | A16 | Scratch folders under `/tmp`; `git worktree list \| wc -l` still prints 8. | The worktree count changes. |
+### P4.1 Measured at the P4 role base
+
+The role started at `c0a1fe51d4a6a11fc67b620b3de87020355bd734` (`role_base_sha`). Other tracks committed during the role, so the reads below ran at `f05ab07d148cd5fa98b979b97acca119bd4a5baf` (`measure_head`). `phase_base_sha` is `bf80408eb5104ae060cab8990e6515331ef6047f`, the Phase 3 checkpoint commit (P4.6 gives the capture rule).
+
+| # | Fact (2026-11-08) | How measured |
+|---|---|---|
+| M44 | `origin_master=f3611d47c7ca5b02848691bab1cc109266511842`. `commits_ahead=418` for `origin/master..f05ab07d1`. The spec said 168 and round 2 said 207 (M11). | `git rev-parse origin/master`; `git rev-list --count origin/master..HEAD`. |
+| M45 | `node scripts/ci/affected-apps.mjs --base f3611d47c7ca5b02848691bab1cc109266511842 --head f05ab07d148cd5fa98b979b97acca119bd4a5baf` gives `EXIT=0` and all 10 ids: `affected_ids=10`. The cause is still the global key `verifyDepsBeforeRun: false` of `pnpm-workspace.yaml` (M12, D4, Q7). The same command with `--head c0a1fe51d...` gave the same 10 ids. | Light run, both 40-hex. |
+| M46 | Light baseline: `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci` gives `EXIT=0`, `Test Files 8 passed (8)`, `Tests 138 passed (138)`, 169.70 s. | Light run at `f05ab07d1`. |
+| M47 | Live www: the latest successful `cd-www-reading-advantage.yml` run on master is `41796713212`, `headSha` `f3611d47c7ca5b02848691bab1cc109266511842` (equals `origin/master`), created 2026-11-04T08:04:28Z. | `gh run list --workflow cd-www-reading-advantage.yml --branch master --limit 3 --json databaseId,headSha,conclusion,createdAt` (read only). |
+| M48 | The www closure is `apps/www-reading-advantage` plus `@reading-advantage/ui`, `@reading-advantage/utils`, and `@reading-advantage/config`. `git diff --name-only f3611d47c f05ab07d1 -- apps/www-reading-advantage packages/ui packages/utils packages/config` prints 0 lines: `www_closure_files_changed=0`. The range changes `packages/auth`, `backend`, `db`, `domain`, and `read-along`, which www does not list. | A read of the www `package.json`; `git diff --name-only`. |
+| M49 | The held sign-in copy. `ca3155932` (2026-11-07 10:33) changed 3 www files. `a776187e2` (11:49, a `docs(measure)` commit of `storytime_look_20261107`) restored the 3 files in its own diff. The revert `67a5d1a47` (12:24) has an empty diff. Net change: 0. At `f05ab07d1`, `git grep -c 'With One Sign-In' <sha> -- apps/www-reading-advantage` exits 1, and `With No Login` is in 2 files. Branch `storytime/www-signin-copy` has tip `ca3155932`. | `git show --stat`, `git grep`, `git log`. |
+| M50 | Live page probe: `curl -sL https://www.reading-advantage.com/en/products/storytime-advantage` gives `http=200`; `By QR Code, With No Login` has 3 hits and `With One Sign-In` has 0 hits. | `curl` and `grep -o` (read only). |
+| M51 | `turbo run build test --filter=www-reading-advantage... --dry=json` gives `EXIT=0`, `turbo_dry_packages=4` (`@reading-advantage/config`, `ui`, `utils`, `www-reading-advantage`), and `turbo_dry_tasks=8`, which include `www-reading-advantage#build` and `www-reading-advantage#test`. A typo filter `--filter=www-typo...` exits 1 with `No package found with name 'www-typo'` (turbo 2.9.18). | Light dry run; no build ran. |
+| M52 | `git status --porcelain` over the www closure and the 5 root build files prints 0 lines: `www_dirty_paths=0`. The tree has dirty files of other sessions outside that set. | `git status --porcelain -- <paths>`. |
+| M53 | Review B F4 (`review-b-p3-57bb8376c`): `migrate-db` of `apps/sales-advantage/cloudbuild-traffic.yaml` applies migrations from the uploaded source, and no step binds that source to `_RELEASE_COMMIT_SHA`. The push path has the binding: `cd-apps.yml` passes the pushed commit as `_RELEASE_COMMIT_SHA`, and `apps/sales-advantage/cloudbuild.yaml` line 11 runs `release-source-manifest.mjs verify "$_RELEASE_COMMIT_SHA" ... "$_RELEASE_SOURCE_MANIFEST_SHA256"`. | Read of the review log, the workflow, and the two sales files. |
+| M54 | `git worktree list \| wc -l` prints 9 (M15 said 8; another session added one). `act` and `actionlint` are still absent (M8). | Light reads. |
+
+### P4.2 Contract assumptions that the spec leaves open
+
+- **C25 One report file.** The report is `measure/tracks/per_app_cicd_20261107/dry-run-report.md`. It holds, in this order: the lines `report_head: <40-hex>` and `origin_master: <40-hex>`; a section `## Dry runs` with one table; a section `## First-push plan` with one `first_push_plan:` line; a section `## www text changes`. P4.6 gives the exact format.
+- **C26 One immutable report HEAD.** Tasks 4.1, 4.2, and 4.3 name the same 40-hex `report_head`. The orchestrator picks it with `git rev-parse HEAD` before task 4.1 starts. The script, the dry run, the www build, and the plan line all use it. A role never reads `HEAD` again in place of `report_head`.
+- **C27 No test reads the report (A9).** The Vitest cases prove the behavior. A light Node check (the report check of P4.6) proves the report. The check takes the report path as an argument, so the scratch proof can feed it bad copies.
+- **C28 The www text rule (PM, 2026-11-07, plan task 4.3).** The report lists each changed file of the www closure between the live www commit (`www_live_sha`) and `report_head`. Each file has a class, `text` or `no-text`. Each `text` row names the old text, the new text, and a live probe of the page. P4.5 gives the check and its label.
+- **C29 A stale plan is void.** The push of task 4.5 pushes the master tip of that moment. When that tip is not `report_head`, the PM role runs `node scripts/ci/affected-apps.mjs --base <report_head> --head <push_head>`. When the output holds `www-reading-advantage`, tasks 4.2 and 4.3 run again at the new tip. When the output holds an id outside the plan line, task 4.3 runs again. This is a precondition of task 4.5, not a part of the closeout.
+- **C30 What the local www run proves (B1, M43).** AC-5.2 runs `turbo` on this machine. It uses no key, no Cloud Build, no Docker build, and no network deploy. It proves that the www closure at `report_head` builds and that its tests pass. It does not prove that the reduced deploy key `www-reading-github@www-reading-advantage` can submit a build, upload the source, stream the log, act as the runtime account, or deploy. **The live proof of B1 is the first push (task 4.5, `deferred:pm`, on Daniel's word at AC-5.4).** The push role records `www_cd_run=<run id> www_cd_conclusion=<value>` and the Cloud Build status. A failed submit or a permission error blocks the next push and goes to the PM with the error text. A failed submit leaves the live revision unchanged. When `gcloud builds submit` fails only on the log stream (Review B N3, task 4.7), the role reads the build status with `gcloud builds describe` (read only) before it names a cause.
+- **C31 Review B F4 stays out of Phase 4.** Default of the orchestrator: a small follow-up track binds the sales traffic source to `_RELEASE_COMMIT_SHA`. The fix reuses the SHA-256 manifest check of `release-source-manifest.mjs verify` in one more build file, and the AGENTS.md hashing policy says to stop and explain before a hash spreads. The first sales traffic move (task 2.3h) waits for that track (Q18).
+
+### P4.3 Task 4.1: dry run of each workflow and the report
+
+**Red contract.** The select-step behavior already has its Red and Green: tasks 2.1, 2.2, and 2.3 for the two CD workflows, and tasks 3.1 and 3.2 for `ci.yml`. So the new dry-run cases are characterization cases, and they pass at the Red commit. The falsifiable part of task 4.1 is the report. At the Red commit the report is absent, and the report check of P4.6 fails with `missing measure/tracks/per_app_cicd_20261107/dry-run-report.md report_rows=0 first_push_plan_lines=0`.
+
+**Harness.** One new file, `scripts/ci/__tests__/dry-run.test.mjs`. It imports `readTable`, `planRepo`, `runSelect`, `selectStep`, `stepText`, and `workflow` from `helpers/plan.mjs`, and `requireNonEmpty` from `helpers/scratch.mjs`. No helper changes. For each row, the fake range adds `<row.path>/dry-run.txt`. The case runs the select step of `cd-www-reading-advantage.yml`, `cd-apps.yml`, and `ci.yml` on the same range with `runSelect`.
+
+| Case | Range | Expected |
+|---|---|---|
+| DR-00 | none (input guard) | `table_rows=10` before the loop; at the end `dry_run_rows=11` |
+| DR-01 to DR-10 | `<row.path>/dry-run.txt`, one row each, in table order | script ids equal `[row.id]` (non-empty first); `www=yes` only for the `direct` row; the `cd-apps` matrix ids equal `[row.id]` only for a `gated` row, else `[]`; the `ci` matrix ids equal `[row.id]`; each of the 3 runs has `status=0` and `gcloud_calls=0`; `select_secret_refs=0` (no `secrets.` in the 3 select step texts) |
+| DR-11 (CI row) | `docs/a.md` and `measure/b.md` | `changed_files>=1`; `www=no`; `cd-apps` matrix `[]`; `ci` matrix `[]`; `gcloud_calls=0`; `ci_ranges=11` (the 10 app ranges plus this one) |
+
+Each case prints one labeled line, for example `DRYRUN row=storytime mode=gated range=apps/storytime/dry-run.txt cd_www=no cd_apps=["storytime"] ci=["storytime"] gcloud_calls=0 select_secret_refs=0`. The Green role copies the 11 lines into the report table.
+
+**Commands.**
+
+```bash
+cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/dry-run.test.mjs; echo "EXIT=$?"
+cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"
+node <scratch>/report-check.cjs measure/tracks/per_app_cicd_20261107/dry-run-report.md; echo "EXIT=$?"
+```
+
+**Expected at the Red commit.** The dry-run file gives `EXIT=0`, `Tests 12 passed (12)`. The full light run gives `EXIT=0`, `Test Files 9 passed (9)`, `Tests 150 passed (150)` (M46 plus 12). The report check gives `EXIT=1` with the `missing ...` line. When another track adds a `scripts/ci` test first, the role records the new total and the reason.
+
+**Scratch proof of no vacuous case (Red role).** The role copies the tree with `mktemp -d` under `/tmp` and runs the dry-run file with `CICD_FIXTURE_ROOT=<copy>`. Each mutant must fail at least the named cases. Label `dry_run_mutants_rejected=4/4`.
+
+| # | Mutant in the copy | Cases that must fail |
+|---|---|---|
+| V1 | `cd-apps.yml` select drops the `row.mode === "gated"` filter | DR-01 (www), DR-10 (reading-advantage) |
+| V2 | the `ci.yml` select step writes `matrix=[]` always | DR-01 to DR-10 |
+| V3 | the `cd-www` select step writes `www=yes` always | DR-02 to DR-11 |
+| V4 | a select step calls `gcloud --version` | every DR case (`gcloud_calls=1`) |
+
+**Green gates (task 4.1).** The dry-run file passes 12 of 12. The full light run passes with `tests_failed=0`. The report check gives `report_rows=11 expected_rows=11 ids_match=1 bad_rows=0` (R-1). Each row cites `gcloud_calls=0` and `EXIT=0` of the dry-run command. `git diff --stat <red_commit>..HEAD -- scripts/ci/__tests__` prints nothing. Evidence class: automated (function-level dry run plus an artifact check).
+
+### P4.4 Task 4.2: build and test www at `report_head`
+
+**No Red.** Task 4.2 is a run, not a code change. The falsifiable parts are the exit code, the task list, and the HEAD and dirty-path guards.
+
+**Command (heavy, one job; the orchestrator or the Green role runs it, not this role):**
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && echo "www_head=$(git rev-parse HEAD)" && echo "www_dirty_paths=$(git status --porcelain -- apps/www-reading-advantage packages/ui packages/utils packages/config package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .pnpmfile.cjs | wc -l)" && CI=true pnpm exec turbo run build test --filter=www-reading-advantage...; echo "EXIT=$?"; echo "www_head_after=$(git rev-parse HEAD)"'
+```
+
+**Labels and Green gate (AC-5.2).**
+
+- `EXIT=0` on the inner command. The wrapper exit does not count (M1).
+- `www_head` equals `report_head`. When `www_head_after` differs, the role runs `git diff --name-only <www_head> <www_head_after> -- <the 9 paths above>`. A non-empty output voids the run, and the run repeats.
+- `www_dirty_paths=0` (M52). The local build reads the working tree, not the commit, so a dirty file in the closure voids the proof.
+- `www_tasks_seen=2`: the turbo log names `www-reading-advantage#build` and `www-reading-advantage#test`. Also record `turbo_tasks_successful=<n> turbo_tasks_total=<n> turbo_cached=<n>` from the summary. M51 predicts 8 tasks. A cache hit is valid, because turbo keys the cache on the inputs. The role records the cached count and does not hide it.
+- `www_tests_passed=<n> www_tests_failed=0` from the www Vitest summary.
+
+**Scratch proof of no vacuous case.** M51 is the proof: the dry run lists 8 tasks with the two www tasks, and a typo filter exits 1. The role runs the `--dry=json` command again at `report_head` (light) and records `turbo_dry_tasks=8`. A filter that selects no www task fails `www_tasks_seen=2`.
+
+**A red www run.** This is the one aggregate run that gates a phase (section 1.1). The phase stops. The report names `turbo_first_failed_task=<package>#<task>`, the failing test, and the cause read from the log. No role edits app code in this track (spec section 5). The PM routes the fix. The first push does not happen.
+
+**What the run proves.** See C30. It proves the build and the tests of the www closure at `report_head` on local Node 24.19.0 (the runner uses Node 22, M9, and the Cloud Build image has its own Node). It does not prove the Docker build, the deploy key, Cloud Build, or the live service. Evidence class: automated.
+
+### P4.5 Task 4.3: the first-push plan and the www text list
+
+**Red contract.** The plan line and the www list are text in the report. At the Red commit of task 4.1 the report is absent, so R-2 and R-3 of the report check fail with `first_push_plan_lines=0`. No Vitest case reads them (C27).
+
+**The plan line (AC-5.3).** One line in `## First-push plan`:
+
+```text
+first_push_plan: report_head=<40-hex> base=<origin_master 40-hex> commits=<n> affected=<JSON ids> traffic=<JSON ids> no_traffic=<JSON ids> skipped=<JSON ids> www_text_changes=<k>
+```
+
+`affected` is the script output for `--base <origin_master> --head <report_head>`. `traffic` holds the `direct` rows of `affected`, `no_traffic` the `gated` rows, and `skipped` the `excluded` rows. Predicted from M44 and M45: `commits=418`, 10 affected ids, `traffic=["www-reading-advantage"]`, 8 `no_traffic` ids, and `skipped=["reading-advantage"]`. The role does not narrow the list (Q7). Under the line, one sentence in plain words says which apps the push deploys and which stay gated. It says that www deploys to traffic on the push, and that Daniel decides (AC-5.4).
+
+**The www text rule (C28): the check.**
+
+1. `www_live_sha`: the `headSha` of the latest successful `cd-www-reading-advantage.yml` run on master. Command: `gh run list --workflow cd-www-reading-advantage.yml --branch master --status success --limit 1 --json headSha,databaseId,createdAt` (read only). M47 measured `f3611d47c` (run `41796713212`).
+2. `www_closure_files_changed=<n>`: `git diff --name-only <www_live_sha> <report_head> -- apps/www-reading-advantage packages/ui packages/utils packages/config`. M48 measured 0.
+3. One table row for each changed file: `| <file> | text or no-text | <old text> | <new text> | <live old count> | <live new count> |`. A `text` row is a change that a reader of the www pages sees (locale strings, page copy, metadata, alt text). `www_text_changes=<k>` counts the `text` rows.
+4. Live probe for each `text` row: `curl -sL -o <tmp> -w 'http=%{http_code}' <page URL>`, then `grep -c` of the old text and the new text. The expected result for a change that the push publishes is `http=200 live_old>=1 live_new=0`. When `live_new>=1`, the live site does not come from `www_live_sha`. The role stops and asks the PM.
+5. The held sign-in copy (the PM example). The line `held_signin_copy_in_head: <0|1>` is the exit of `git grep -c 'With One Sign-In' <report_head> -- apps/www-reading-advantage` (1 when the copy is in the head, else 0). M49 and M50 measured 0 in the head and 0 hits live. When the value is 1, the plan lists the copy as a `text` row, and the push waits until the Storytime login is live (PM rule; the PM confirms).
+6. Zero case (A4): `www_text_changes=0` needs the printed `www_closure_files_changed` line, its command, and the held-copy line. A bare "none" fails R-3.
+
+**Label and owner.** The git and live reads are automated (R-3). The PR check of the www text at task 4.5 is person-checked and stays `deferred:pm`.
+
+**Scratch proof of no vacuous case.** The report check of P4.6 ran on scratch copies at `measure_head` (2026-11-08, `/tmp/opencode/p4-strategy`). A good copy gave `report_check=pass` and exit 0. Each bad copy failed: no `ci` row (R-1), a row with `gcloud_calls=1` (R-1), `storytime` dropped from the plan line (R-2), a `report_head` that differs from the plan line (R-2, `head_match=0`), and `www_live_sha=ca3155932` with an empty www table (R-3, `www_closure_files_changed=3 files_match=0`). A missing report gave exit 1. Labels: `report_partials_rejected=5 report_good_passed=1`. The Red role repeats this proof at `report_head`.
+
+**Green gate (task 4.3).** The report check gives `report_check=pass` with `first_push_plan_lines=1`, the 7 `*_match=1` labels of R-2, `files_match=1`, and `held_line_match=1`. Evidence class: automated.
+
+### P4.6 Closeout gate (task 4.4), the report format, and the report check
+
+**`phase_base_sha`.** The orchestrator gave `bf80408eb5104ae060cab8990e6515331ef6047f`, the Phase 3 checkpoint commit. It predates this strategy commit. Section 1.4 voids a base without the committed strategy. So the orchestrator captures the immutable P4 base with `git rev-parse HEAD` immediately after the commit of this strategy, and before the first P4 Red commit. It verifies the capture with `git cat-file -e <sha>:measure/tracks/per_app_cicd_20261107/test-strategy.md` and with a grep of `### P4.6` in that blob. The SHA `bf80408eb` stays the scope base of the phase commits (item 6 below).
+
+**Report format.** The report check reads this shape. The table header cells `Row` and `File` are fixed.
+
+```markdown
+report_head: <40-hex>
+origin_master: <40-hex>
+
+## Dry runs
+
+| Row | Mode | Fake range | cd-www | cd-apps | ci | gcloud_calls | Exit |
+|---|---|---|---|---|---|---|---|
+| <table id or ci> | <mode> | <range> | www=<yes|no> | <JSON ids> | <JSON ids> | gcloud_calls=0 | EXIT=0 |
+
+## First-push plan
+
+first_push_plan: report_head=... base=... commits=... affected=[...] traffic=[...] no_traffic=[...] skipped=[...] www_text_changes=<k>
+
+## www text changes
+
+www_live_sha: <40-hex> (run <id>)
+held_signin_copy_in_head: <0|1>
+
+| File | Class | Old text | New text | Live old | Live new |
+|---|---|---|---|---|---|
+```
+
+**The report check.** Copy this block to `<scratch>/report-check.cjs` (a `mktemp -d` folder under `/tmp`). Run it from `ROOT` with `node <scratch>/report-check.cjs <report path>`. It is light: it reads files, runs `git`, and runs the script once.
+
+```js
+// P4 report check. Run from the repository root: node <this file> <report path>.
+const fs = require("fs");
+const { execFileSync } = require("child_process");
+const file = process.argv[2];
+const fail = [];
+if (!file || !fs.existsSync(file)) {
+  console.log(`missing ${file} report_rows=0 first_push_plan_lines=0`);
+  process.exit(1);
+}
+const text = fs.readFileSync(file, "utf8");
+const table = JSON.parse(fs.readFileSync("scripts/ci/apps.json", "utf8"));
+const git = (...args) => execFileSync("git", args, { encoding: "utf8" }).trim();
+const field = (name) => (text.match(new RegExp(`^${name}: ([0-9a-f]{40})\\b`, "m")) || [])[1];
+const head = field("report_head");
+const origin = field("origin_master");
+const section = (title) => {
+  const start = text.indexOf(`## ${title}`);
+  if (start < 0) return "";
+  const rest = text.slice(start + title.length + 3);
+  const next = rest.indexOf("\n## ");
+  return next < 0 ? rest : rest.slice(0, next);
+};
+const rowsOf = (part, header) =>
+  part.split("\n").filter((l) => /^\| /.test(l) && !l.startsWith(`| ${header} `))
+    .map((l) => l.split("|").slice(1, -1).map((c) => c.trim()));
+if (!head) fail.push("report_head");
+if (!origin) fail.push("origin_master");
+// R-1: one row per table id plus ci, each with gcloud_calls=0 and EXIT=0.
+const rows = rowsOf(section("Dry runs"), "Row");
+const ids = table.map((r) => r.id).concat("ci");
+const rowIds = rows.map((c) => c[0]);
+const idsMatch = rowIds.length === ids.length && ids.every((id) => rowIds.includes(id)) ? 1 : 0;
+const badRows = rows.filter((c) => !c.includes("gcloud_calls=0") || !c.includes("EXIT=0")).length;
+console.log(`report_rows=${rows.length} expected_rows=${ids.length} ids_match=${idsMatch} bad_rows=${badRows}`);
+if (rows.length !== ids.length || !idsMatch || badRows) fail.push("R-1");
+// R-2: the plan line equals the script output and the table split at report_head.
+const plans = text.split("\n").filter((l) => l.startsWith("first_push_plan: "));
+console.log(`first_push_plan_lines=${plans.length}`);
+if (plans.length !== 1 || !head || !origin) fail.push("R-2");
+else {
+  const kv = Object.fromEntries([...plans[0].matchAll(/(\w+)=(\[[^\]]*\]|\S+)/g)].map((m) => [m[1], m[2]]));
+  const affected = JSON.parse(execFileSync("node", ["scripts/ci/affected-apps.mjs", "--base", origin, "--head", head], { encoding: "utf8" }));
+  const pick = (mode) => JSON.stringify(table.filter((r) => r.mode === mode && affected.includes(r.id)).map((r) => r.id).sort());
+  const same = (key, want) => (JSON.stringify(JSON.parse(kv[key] ?? "null")?.slice().sort()) === want ? 1 : 0);
+  const checks = {
+    head_match: kv.report_head === head ? 1 : 0,
+    base_match: kv.base === origin ? 1 : 0,
+    commits_match: kv.commits === git("rev-list", "--count", `${origin}..${head}`) ? 1 : 0,
+    affected_match: same("affected", JSON.stringify(affected.slice().sort())),
+    traffic_match: same("traffic", pick("direct")),
+    no_traffic_match: same("no_traffic", pick("gated")),
+    skipped_match: same("skipped", pick("excluded")),
+  };
+  console.log(`affected_ids=${affected.length} ` + Object.entries(checks).map(([k, v]) => `${k}=${v}`).join(" "));
+  if (affected.length < 1 || Object.values(checks).includes(0)) fail.push("R-2");
+  // R-3: one www row per changed file of the www closure; the text count matches.
+  const www = section("www text changes");
+  const live = (www.match(/^www_live_sha: ([0-9a-f]{40})\b/m) || [])[1];
+  const closure = ["apps/www-reading-advantage", "packages/ui", "packages/utils", "packages/config"];
+  const changed = live ? git("diff", "--name-only", live, head, "--", ...closure).split("\n").filter(Boolean) : null;
+  const wrows = rowsOf(www, "File");
+  const listed = wrows.map((c) => c[0].replace(/`/g, ""));
+  const filesMatch = changed && listed.length === changed.length && changed.every((f) => listed.includes(f)) ? 1 : 0;
+  const textRows = wrows.filter((c) => c[1] === "text").length;
+  let held = 1;
+  try { git("grep", "-c", "With One Sign-In", head, "--", "apps/www-reading-advantage"); } catch { held = 0; }
+  const heldLine = (www.match(/^held_signin_copy_in_head: (\d+)$/m) || [])[1];
+  console.log(`www_live_sha=${live ?? "none"} www_closure_files_changed=${changed ? changed.length : "none"} www_files_listed=${listed.length} files_match=${filesMatch} www_text_changes=${textRows} plan_www_text_changes=${kv.www_text_changes} held_signin_copy_in_head=${held} held_line_match=${heldLine === String(held) ? 1 : 0}`);
+  if (!filesMatch || String(textRows) !== kv.www_text_changes || heldLine !== String(held)) fail.push("R-3");
+}
+console.log(`report_check=${fail.length === 0 ? "pass" : "fail"} failed=${fail.join(",") || "none"}`);
+process.exit(fail.length === 0 ? 0 : 1);
+```
+
+**Closeout gate (task 4.4).** The orchestrator runs it at the phase HEAD. No role edits a file to pass it.
+
+1. The light run `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"` gives `EXIT=0`, `Test Files 9 passed (9)`, `tests_failed=0`, `tests_skipped=0`.
+2. The report check gives `report_check=pass` and exit 0, with the labels of R-1, R-2, and R-3.
+3. The 4.2 labels: `EXIT=0`, `www_head` equals `report_head`, `www_dirty_paths=0`, `www_tasks_seen=2`, `www_tests_failed=0`.
+4. The plan line, the report, and the www run name one `report_head` (C26).
+5. `git diff --stat <4.1 red_commit>..HEAD -- scripts/ci/__tests__` prints nothing. `git diff --stat bf80408eb..HEAD -- scripts/ci/affected-apps.mjs scripts/ci/apps.json .github/workflows apps/*/cloudbuild*.yaml` prints nothing (P4 changes no workflow, script, table, or build file).
+6. Scope: `git log bf80408eb..HEAD --format=%H --grep='track_id: per_app_cicd_20261107'`, then `git show --name-only --format= <sha>` for each. `p4_out_of_scope_paths=0` over `scripts/ci/__tests__/dry-run.test.mjs`, `measure/tracks/per_app_cicd_20261107/**`, and `measure/runs/per_app_cicd_20261107/**`. Each header is 100 characters or less.
+7. Detectors, each proven on a scratch file that must hit (A14): the hash detector of section 1.2 over `scripts/ci/__tests__/dry-run.test.mjs` exits 1; `rg -n '(readFile|readFileSync|existsSync)[^;]*measure/' scripts/ci/__tests__` exits 1 (A9); `rg -n 'update-traffic|--to-latest|cloudbuild-traffic' .github/workflows` exits 1.
+8. No dependency file changed by the P4 commits: `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`, `.pnpmfile.cjs`.
+9. No `gcloud` write, no `gh workflow run`, no push, and no change to a Cloud Build trigger in the phase. The phase log lists each `gcloud` and `gh` command, and each one is a read (`list`, `describe`, `view`).
+10. `git worktree list | wc -l` prints the count of the phase start (9 at M54). The phase adds no worktree (A16).
+11. The guard runs of P4.7: `known_failures=4`, `other_failures=0`.
+12. The adversarial set of P4.8: `mutants_rejected=10/10` and `scenarios_checked=4`.
+13. Review A, Review B, and Review C results are `pass`. The browser review is `not applicable`.
+14. Tasks 4.5, 4.6, and 4.7 stay `[b]` with their owner fields (`deferred:pm`, `deferred:daniel`, `deferred:pm`). They are not part of the closeout. The check asserts `blocked_tasks=3` in Phase 4. Tasks 2.3c, 2.3h, and 2.3i stay `[b]` too.
+15. The handoff to the PM names the raw truth: the plan line, the apps that deploy to traffic (www), the apps that build with no traffic (8), the skipped app, `www_text_changes`, the B1 limit of C30, the F4 deferral of C31, and that Daniel decides (AC-5.4).
+
+Then the orchestrator appends `[checkpoint: <sha>]` to the Phase 4 heading.
+
+### P4.7 Guard runs (P4 gate)
+
+The 8 commands of P2.5 run again at `report_head`, one heavy job each, plus the P3 row below. P4 changes no product file, so these runs show that the commits of other tracks did not break a test that reads a file of this track.
+
+| App or package | Inner command | Expected |
+|---|---|---|
+| the 8 rows of P2.5 | as in P2.5 | as in P2.5; `known_failures=4` (P2.5 items 1 to 4) |
+| science-advantage CI gates | `CI=true pnpm exec vitest run --maxWorkers=1 apps/science-advantage/lib/ci-gates/phase-10-monorepo-root-ci-paths-filter.test.ts apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts apps/science-advantage/lib/ci-gates/phase-9-delete-app-local-ci-workflow.test.ts apps/science-advantage/lib/ci-gates/verification-partition.test.ts; echo "EXIT=$?"` | 4 files, 40 passed, 0 failed (P3 acceptance `43162d278`) |
+
+The gate records `known_failures=4` and `other_failures=0`. A fifth failure fails the gate. A known failure that now passes is recorded with its name, and it does not fail the gate.
+
+### P4.8 Review applicability and anti-patterns
+
+| Review | Applies | Checks |
+|---|---|---|
+| Review A (code) | **yes** | The dry-run file: reuse of the helpers, the input guard, one labeled line per row, no helper edit. The report check text. The scope of item 6. |
+| Review B (secrets, permissions) | **yes (final)** | The workflow permissions, the two secret names, and the roles against the report. The B1 limit of C30: the report must not claim that the reduced key deploys. The F4 deferral of C31 and the block on the first sales traffic move. The 4.7 items stay `[b]`. |
+| Review C (UX/API) | **yes** | The report and the plan line: plain words, one row per app, the deploy list, and the www text list. One meaning per word. |
+| Adversarial testing | **yes** | The 10 mutants and the 4 scenarios below. |
+| Browser review (UX) | **no** | The phase changes no page. A page check of www after the push belongs to Daniel and the PM. |
+
+**Adversarial mutant set.** The role applies each mutant to a scratch copy (`CICD_FIXTURE_ROOT`) or to a scratch copy of the report. Each must make the named check fail. Closeout needs `mutants_rejected=10/10`.
+
+| # | Mutant | Check that must fail |
+|---|---|---|
+| Y1 | `cd-apps.yml` select drops the gated filter | DR-01, DR-10 |
+| Y2 | `ci.yml` select writes `matrix=[]` | DR-01 to DR-10 |
+| Y3 | `cd-www` select writes `www=yes` always | DR-02 to DR-11 |
+| Y4 | a select step calls `gcloud --version` | every DR case |
+| Y5 | the report has 10 rows (no `ci` row) | R-1 |
+| Y6 | a report row holds `gcloud_calls=1` | R-1 |
+| Y7 | the plan line drops `storytime` from `affected` and `no_traffic` | R-2 |
+| Y8 | the plan line names a `report_head` that differs from the report | R-2 (`head_match=0`) |
+| Y9 | `www_live_sha` set to `ca3155932` with no www row | R-3 (`files_match=0`) |
+| Y10 | the 4.2 filter becomes `--filter=www-typo...` | the 4.2 gate (`EXIT=1`, `www_tasks_seen=0`) |
+
+**Scenarios (`scenarios_checked=4`).** The role cites a passing case or a scratch run for each:
+
+1. A force-pushed base that the runner lacks: the script exits 2 and prints nothing, so the select step fails and writes no matrix (P1 AC-1.6). No job deploys.
+2. A zero base on a new branch: the script falls back to the merge base with `origin/master` (P1 AC-1.6, C15).
+3. A push with only `measure/` files: no CD workflow starts (C16), and the select step gives `[]` (DR-11).
+4. A pull request from a fork: the CD workflows run on push only, and `ci.yml` uses no secret (W-14c, CI-R3).
+
+**Anti-pattern coverage.**
+
+| ID | Defense in this phase | Falsification condition |
+|---|---|---|
+| A1 | The supervisor reads the plan markers. Tasks 4.5, 4.6, and 4.7 are `[b] ... deferred:<owner>`. Item 14 counts `blocked_tasks=3` with the owner field. | A `[b]` task without its owner field, or a `[ ]` task whose prose says "deferred", passes item 14. |
+| A2 | The www text list is a publish gate with named subjects. Each `text` row names the file and the live probe. The held sign-in copy has a fixed line, and the push waits for the PM when it is 1. | A text change of the www closure reaches the push with no row, or `held_signin_copy_in_head=1` passes with no PM word. |
+| A3 | Every count is a labeled integer: `commits_ahead`, `affected_ids`, `report_rows`, `first_push_plan_lines`, `www_closure_files_changed`, `www_text_changes`, `www_tasks_seen`, `www_dirty_paths`, `known_failures`, `mutants_rejected`, `scenarios_checked`, `blocked_tasks`. The report check parses the label. | A bare number or a date passes a count check. |
+| A4 | DR-00 asserts `table_rows=10` before the loop. DR-11 asserts `changed_files>=1` before it accepts an empty plan. R-2 needs `affected_ids>=1`. R-3 needs the closure diff line before it accepts `www_text_changes=0`. The 4.2 gate needs `www_tasks_seen=2`. | An empty table, an empty range, an empty affected list, a missing diff, or a zero-task turbo run passes. |
+| A5 | Every row and note quotes the exit code and the labels of its command. No note says that a deploy ran, that traffic moved, or that the reduced key deploys. | A row says "pass" with no exit code, or a note claims the B1 live proof before task 4.5. |
+| A6 | The registry note and the plan notes say that Phase 4 deployed nothing, that CI stays red (D5), and that F4 stays open (C31). | A note says that a deploy, a CI fix, or the F4 fix happened. |
+| A7 | R-2 compares id sets after a parse, not substrings. R-3 compares file sets. The held-copy probe uses the exact string `With One Sign-In`. | An extra or a missing id, or an extra or a missing file, passes. |
+| A8 | The plan uses `[ ]`, `[~]`, `[x]`, and `[b]` with their meanings. The human gates are `[b]`. | A Phase 4 task uses `[ ]` with prose that says "blocked". |
+| A9 | No test reads `measure/` (C27). Detector of item 7. The report check is a scratch script, not a test. | A test under `scripts/ci/__tests__` reads `measure/` as data. |
+| A10 | Does not apply: the report holds no generated facts that a later structural change can make stale. C29 handles a moved HEAD. | A generated facts file appears in the phase scope. |
+| A11 | Reviews A, B, and C and the adversarial role run after task 4.3 and report a result. | The phase closes while a review has no result. |
+| A12, A13, A15 | Do not apply: no catalog guard reference changes, no archive move, and no role receipts or hashes. | A dangling guard reference, a moved track directory, or a receipt hash appears. |
+| A14 | Detectors use `rg -n '<regex>'`. Exit 2 is a failure. Each detector hits a scratch file first. | A bad option gives no hit and the gate passes. |
+| A16 | Scratch folders are under `/tmp`. The worktree count does not change during the phase (item 10). | The count changes. |
 
 ## 4. Questions and defaults
 
@@ -676,6 +959,9 @@ The role continued with each default. The orchestrator relays a question to the 
 | Q15 | `cd-www` sets up no Node today. The select step needs `node`. | Both CD workflows add `actions/setup-node@v4` with `node-version: 22`, the same as `ci.yml`. A test asserts it. |
 | Q16 | `ci.yml` declares no `permissions:` block (M20). Does P2 add one? | **No.** P2 adds `permissions: contents: read` to the two CD workflows only. `ci.yml` is P3's file. |
 | Q17 | Tasks 2.3b, 2.3e, and 2.3g say "record in the runbook" and "the runbook of each app". Only `docs/runbooks/storytime-deploy.md` exists. Six new files is churn. | **One new runbook:** `docs/runbooks/traffic-moves.md`, with one section per traffic file (6). Each section names the file, the ordered steps, and the old-schema sentence. Test F-16 counts the sections. |
+| Q18 | Review B F4 (M53): the sales traffic file applies migrations from an uploaded source that no step binds to `_RELEASE_COMMIT_SHA`. Does the fix go into Phase 4? | **No (orchestrator default).** A small follow-up track does it. The fix reuses the SHA-256 manifest check of `release-source-manifest.mjs verify` in one more build file, and the AGENTS.md hashing policy says to stop and explain before a hash spreads. The first sales traffic move (task 2.3h) waits for that track. The PM may choose another binding with no hash, for example a check that the uploaded tree equals `git archive` of the commit. |
+| Q19 | Plan task 4.4 (the phase check) does not exist in plan.md. The outline named it. | **Add it.** The Build session adds the 4.4 line of the strategy handoff to plan.md. This role does not edit plan.md. |
+| Q20 | The www build of task 4.2 runs in the shared tree, which other sessions change. Is a scratch clone at `report_head` required? | **No.** The shared tree is the proof when `www_dirty_paths=0` and `www_head` equals `report_head` (P4.4). A clone needs a full install, network, and disk on a 7 GB machine. |
 
 ## 5. Independent check (round 2)
 
