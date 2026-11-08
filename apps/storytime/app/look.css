@@ -114,9 +114,11 @@ main[data-hero="oak"] > header { background-position: 93% 43%; background-size: 
 main[data-hero="meadow"] > header { background-position: 62% 12%; background-size: cover; }
 main[data-place="trail"][data-hero="path"] > header { background-position: 18% 72%; background-size: 210% auto; }
 
-/* The cover variant: the tall window of the home view and the song. */
+/* The cover variant: the tall window of the home view and the song. 280 CSS px keeps the
+ * active lyric line of the song inside the first phone view with the 220 px cover card
+ * (AC-2.6, measured: the line bottom sits at 832 px of the 844 px view). */
 header[data-hero="cover"] {
-  height: 300px;
+  height: 280px;
 }
 /* The band variant: the slim window of the book and the decodable page (AC-2.7, task 2.3b:
  * 96 CSS px below 640 px of width, so the arrows show in the first view). */
@@ -588,9 +590,15 @@ main[data-place] button:active:not(:disabled) {
   background: #fff6d4;
 }
 
-/* ---- A read-along word (N1, Q27): the hit area grows to 48 px of height through the
- * pseudo-element that the read-along passage already positions; only the vertical insets move,
- * so the word keeps no layout width and the even word gap of AC-1.9 holds. ---- */
+/* ---- A read-along word (N1, Q27): the word box itself is 48 px tall (the capture tap rule
+ * reads the element rect), and the hit area grows further through the pseudo-element that the
+ * read-along passage positions. The word keeps no layout width, so the even word gap of
+ * AC-1.9 holds; a short word such as "I" keeps a narrow tap (the width part of N1 is a
+ * recorded non-goal). ---- */
+[data-word] {
+  display: inline-block;
+  min-height: 48px;
+}
 [data-word]::before {
   top: -12px;
   bottom: -12px;
@@ -660,6 +668,17 @@ main[data-place] button:active:not(:disabled) {
   }
   main[data-hero="path"] > header { background-position: 50% 27%; }
   main[data-hero="oak"] > header { background-position: 93% 47%; }
+}
+
+/* A tall screen also caps the page picture, so the audio button row of the reader stays above
+ * the fold at 1024 x 768 with the English button labels (AC-2.8; measured: the row bottom
+ * moves from 796.5 px to 751 px). The cap does not apply to a landscape phone, which keeps
+ * its own smaller cap from the page classes. */
+@media (min-width: 640px) and (min-height: 501px) {
+  [data-page-number] > img,
+  [data-part="decodable"] section > img {
+    max-height: 340px;
+  }
 }
 
 /* ---- A landscape phone: a slim hero, the bar at the left, the plaque at the right. ---- */

@@ -501,14 +501,17 @@ export function StorytimeReader({
               />
             ) : null}
             {/* The book text is English on every locale, so the nearest lang of a word is en
-                even on the printed th route (finding F134). */}
+                even on the printed th route (finding F134). The passage stays interactive in
+                every mode, so a child sees the clip-word marker from the first view (N2): a
+                tap outside "My turn" still plays nothing, because onWordTap checks the mode,
+                and the highlight follows the playback position alone. */}
             <div lang="en" className="[@media(max-height:500px)]:flex-1">
               <ReadAlongPassage
                 sentences={normalSentences}
                 passage=""
                 position={position}
-                active={mode !== "idle"}
-                onWordTap={mode === "myTurn" ? onWordTap : undefined}
+                active
+                onWordTap={onWordTap}
                 wordIsTarget={(audioWord) => Object.hasOwn(wordClips, audioWord.toLowerCase())}
                 tapTargetFloor
               />
