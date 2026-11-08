@@ -4,10 +4,10 @@
  *
  * The cases pin the three findings that the orchestrator routed to a Red pin:
  *
- * - CI-R1 (Review A F1, Blocker): every workspace package under `apps/` or `packages/`
- *   that holds a `test` script is inside the closure of the job filters. The roots are
- *   the `--filter=<x>...` roots of the `Test` step of `.github/workflows/ci.yml` plus
- *   every id of `scripts/ci/apps.json`, each with its workspace dependencies.
+ * - CI-R1 (Review A F1, Blocker): every workspace package of `pnpm-workspace.yaml` that
+ *   holds a `test` script is inside the closure of the job filters. The roots are the
+ *   `--filter=<x>...` roots of the `Test` step of `.github/workflows/ci.yml` plus every
+ *   id of `scripts/ci/apps.json`, each with its workspace dependencies.
  * - CI-R2 (Review B F1, Major): `scripts/ci/affected-apps.mjs` refuses a table id that
  *   is not a safe workspace id. The id must not reach a shell line unquoted.
  * - CI-R3 (Review B F2, Major): `.github/workflows/ci.yml` holds a workflow-level
@@ -23,6 +23,7 @@
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { parse } from "yaml";
 import { afterAll, describe, it } from "vitest";
 import {
   commitChanges,
@@ -56,8 +57,8 @@ const MIN_TABLE_ROWS = 10;
 /** The shape of a safe workspace id: lower-case letters, digits, and hyphens. */
 const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
 
-/** The parent folders of the workspace packages that the coverage case reads. */
-const PACKAGE_PARENTS = ["apps", "packages", "packages/integrations"];
+/** The lowest number of workspace globs that the coverage case accepts. */
+const MIN_WORKSPACE_GLOBS = 4;
 
 /** The ids of the fixture table that must be refused. */
 const UNSAFE_IDS = ["x;rm -rf /", "--help", "a b"];
@@ -74,32 +75,58 @@ function must(condition, message) {
 }
 
 /**
+ * Read the workspace globs from `pnpm-workspace.yaml`.
+ *
+ * The old CI `Test` step ran the root `turbo run test` over every glob of this list,
+ * so the case reads the list and does not hardcode the folders.
+ *
+ * @returns {string[]} The globs of the `packages` list.
+ * @throws {Error} When the list is missing or holds a glob without `/*`.
+ */
+function workspaceGlobs() {
+  const doc = parse(readText("pnpm-workspace.yaml"));
+  const globs = doc?.packages;
+  must(
+    Array.isArray(globs) && globs.length >= MIN_WORKSPACE_GLOBS,
+    `workspace_globs=${globs?.length} floor=${MIN_WORKSPACE_GLOBS}`,
+  );
+  must(
+    globs.every((glob) => typeof glob === "string" && glob.endsWith("/*")),
+    `workspace_globs=${JSON.stringify(globs)}`,
+  );
+  return globs.map(String);
+}
+
+/**
  * List the workspace package folders under the fixture tree.
  *
+ * @param {string[]} globs The globs of `pnpm-workspace.yaml`.
  * @returns {string[]} The relative folder of every manifest, sorted.
  */
-function packageFolders() {
-  const folders = [];
-  for (const parent of PACKAGE_PARENTS) {
+function packageFolders(globs) {
+  const folders = new Set();
+  for (const glob of globs) {
+    const parent = glob.slice(0, -2);
     const dir = join(FIXTURE_ROOT, parent);
     if (!existsSync(dir)) continue;
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;
       const folder = `${parent}/${entry.name}`;
-      if (existsSync(join(FIXTURE_ROOT, folder, "package.json"))) folders.push(folder);
+      if (existsSync(join(FIXTURE_ROOT, folder, "package.json"))) folders.add(folder);
     }
   }
-  return folders.sort();
+  return [...folders].sort();
 }
 
 /**
  * Read the workspace manifests of the fixture tree.
  *
+ * @param {string[]} globs The globs of `pnpm-workspace.yaml`.
  * @returns {Map<string, { folder: string, name: string, hasTest: boolean, deps: string[] }>} The packages by folder.
  */
-function workspacePackages() {
+function workspacePackages(globs) {
   const packages = new Map();
-  for (const folder of packageFolders()) {
+  for (const folder of packageFolders(globs)) {
     const manifest = JSON.parse(readFileSync(join(FIXTURE_ROOT, folder, "package.json"), "utf8"));
     const deps = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]
       .flatMap((field) => Object.keys(manifest[field] ?? {}));
@@ -174,12 +201,16 @@ function visit(folder, packages, byName, covered) {
 
 describe("CI review remediation", () => {
   it("CI-R1 every test-bearing workspace package is inside the job filter closure", () => {
-    const packages = workspacePackages();
-    must(packages.size >= MIN_TEST_PACKAGES, `workspace_packages=${packages.size}`);
+    const globs = workspaceGlobs();
+    const packages = workspacePackages(globs);
+    must(
+      packages.size >= MIN_TEST_PACKAGES,
+      `workspace_packages=${packages.size} workspace_globs=${globs.length}`,
+    );
     const testPackages = [...packages.values()].filter((pkg) => pkg.hasTest);
     must(
       testPackages.length >= MIN_TEST_PACKAGES,
-      `test_packages=${testPackages.length} floor=${MIN_TEST_PACKAGES}`,
+      `test_packages=${testPackages.length} floor=${MIN_TEST_PACKAGES} workspace_globs=${globs.length}`,
     );
 
     const byName = new Map();
@@ -211,10 +242,12 @@ describe("CI review remediation", () => {
       uncovered.length === 0,
       `uncovered_test_packages=${uncovered.length} names=${uncovered
         .map((pkg) => pkg.name)
-        .join(",")} test_packages=${testPackages.length} filter_roots=${roots.length}`,
+        .join(",")} test_packages=${testPackages.length} filter_roots=${
+        roots.length
+      } workspace_globs=${globs.length}`,
     );
     console.log(
-      `uncovered_test_packages=0 test_packages=${testPackages.length} filter_roots=${roots.length}`,
+      `uncovered_test_packages=0 test_packages=${testPackages.length} filter_roots=${roots.length} workspace_globs=${globs.length}`,
     );
   });
 
