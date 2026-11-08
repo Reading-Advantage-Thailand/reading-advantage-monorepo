@@ -7,7 +7,7 @@
   "description": "Bind the uploaded source of the traffic files of sales-advantage (Phase 1) and of accounts, accounting, codecamp-advantage, marketing, and primary-advantage (Phase 2) to _RELEASE_COMMIT_SHA before the first source-reading step (Review B finding F4 of per_app_cicd_20261107).",
   "author_model": "claude-code/claude-sonnet-5-5",
   "depends_on": "none",
-  "blocks": "per_app_cicd_20261107 task 2.3h, for six apps (Phase 1 sales-advantage; Phase 2 the other five; task 2.3h does not name primary-advantage)",
+  "blocks": "per_app_cicd_20261107 task 2.3h for accounts, accounting, codecamp-advantage, marketing, and sales-advantage, and task 2.3c for primary-advantage (six apps; Phase 1 sales-advantage, Phase 2 the other five)",
   "estimated_tasks": 8,
   "actual_tasks": null,
   "deviation_notes": ""
