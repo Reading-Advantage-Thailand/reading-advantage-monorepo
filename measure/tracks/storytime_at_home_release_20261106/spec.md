@@ -130,6 +130,7 @@ Acceptance:
 - Heavy steps (vitest, `tsc`, eslint, build) run through `heavy-run.sh`, one job at a time, with server and client in one job. Vitest uses `--maxWorkers=1` and targeted files.
 - Commit headers and body lines are 100 characters or less, with the `track_id`.
 - No push. No deploy.
+- A content type that names or shows a real person or school (class photo, school name, certificate) needs a consent field and a publish-gate check before it ships (PM decision on F44, 2026-11-08).
 
 ## 5. Out of scope
 

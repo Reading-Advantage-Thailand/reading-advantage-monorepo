@@ -90,6 +90,7 @@ Architecture check (PM, 2026-11-07): `pnpm architecture:check` already fails on 
 Later hardening (PM, 2026-11-07): split the database user into `storytime_migration` (DDL) and `storytime_runtime` (DML only), the house `<app>_migration` and `<app>_runtime` pattern.
 
 Follow-up (Review C): the proxy re-sets the session cookie once a day.
+F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-11-08). Reason: Storytime week content is company-written fiction with a fictional cast; no real person or school appears in it; the app uploads no photo or video (rule D23); people data stays out of the repos (PR rule 13).
 
 ### Phase 2b task 2b.7 Red r6 note (F-origin)
 
