@@ -165,4 +165,27 @@ describe("sign-in username flash cookie clear (red, UX F1 / task 2b.7b)", () => 
     expect(clear[0], "Max-Age=0").toContain("Max-Age=0");
     expect(clear[0], "the same Path").toContain("Path=/th/sign-in");
   });
+
+  it("clears the username flash cookie on the locale path of the request", async () => {
+    const rows = [
+      { locale: "th", path: "/th/sign-in?error=invalid" },
+      { locale: "en", path: "/en/sign-in?error=invalid" },
+    ];
+    const wrong: string[] = [];
+    for (const row of rows) {
+      const response = await proxy(request(row.path, { cookie: `${FLASH_COOKIE}=staff-02` }));
+      const clear = setCookieLines(response).filter((line) =>
+        line.startsWith(`${FLASH_COOKIE}=`),
+      );
+      console.log(
+        `flash_clear_locale=${row.locale} count=${clear.length} line=${clear[0] ?? "<none>"}`,
+      );
+      if (clear.length !== 1) {
+        wrong.push(`${row.locale}: ${clear.length} clearing cookies`);
+      } else if (!clear[0].includes(`Path=/${row.locale}/sign-in`)) {
+        wrong.push(`${row.locale}: ${clear[0]}`);
+      }
+    }
+    expect(wrong, "each locale clears the cookie on its own path").toEqual([]);
+  });
 });

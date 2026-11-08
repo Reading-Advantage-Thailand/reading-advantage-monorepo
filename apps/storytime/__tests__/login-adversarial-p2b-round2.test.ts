@@ -121,6 +121,23 @@ const MATCHER_CASES: MatcherCase[] = [
     lookAsset: false,
   },
   {
+    // The hostile part sits in a directory segment, so only the guard of the helper rejects it.
+    // A valid look file name follows, so the file name checks alone would skip the request.
+    label: "a dot-dot segment before a valid look file name",
+    pathname: "/_next/static/../media/path-p.abc123.webp",
+    lookAsset: false,
+  },
+  {
+    label: "a query in a directory segment before a valid look file name",
+    pathname: "/_next/static/media?x=/path-p.abc123.webp",
+    lookAsset: false,
+  },
+  {
+    label: "a hash in a directory segment before a valid look file name",
+    pathname: "/_next/static/media#/path-p.abc123.webp",
+    lookAsset: false,
+  },
+  {
     label: "positive control: a built look place",
     pathname: "/_next/static/media/grove-d.4f3a.webp",
     lookAsset: true,
@@ -428,7 +445,7 @@ describe("login adversarial round 2 (P2b.9)", () => {
     console.log(
       `round2_matcher_cases=${MATCHER_CASES.length} round2_matcher_false_skips=${falseSkips}`,
     );
-    expect(MATCHER_CASES.length, "round2_matcher_cases").toBe(8);
+    expect(MATCHER_CASES.length, "round2_matcher_cases").toBe(11);
     expect(wrong, "the look-asset skip does not swallow a story media file").toEqual([]);
   });
 });

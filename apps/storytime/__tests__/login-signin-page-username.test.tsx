@@ -115,6 +115,31 @@ describe("sign-in page username from the flash cookie (red)", () => {
     expect(html, "the value is never markup").not.toContain("<img src=x>");
   });
 
+  it("shows a cookie value that fails the flash rule as escaped text, never as markup", async () => {
+    expect(existsSync(PAGE), "Missing apps/storytime/app/[locale]/sign-in/page.tsx").toBe(true);
+    // The page has no rule of its own: it shows whatever the cookie holds. React escapes the value.
+    for (const planted of ["<b>x</b>", "a".repeat(65)]) {
+      flash.set(planted);
+      const html = await renderSignIn();
+      const input = usernameInput(html);
+      const value = input.match(/value="([^"]*)"/)?.[1] ?? "";
+      const markupLeak = html.includes("<b>x</b>");
+      console.log(
+        `rule_failing_cookie=${JSON.stringify(planted)} input_value=${JSON.stringify(value)} ` +
+          `markup_leak=${markupLeak ? 1 : 0}`,
+      );
+      expect(input, "the username input is on the page").not.toBe("");
+      expect(markupLeak, "the value is never markup").toBe(false);
+      const decoded = value
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#x27;/g, "'")
+        .replace(/&amp;/g, "&");
+      expect(decoded, "the field shows the planted value as text").toBe(planted);
+    }
+  });
+
   it("shows an empty field and only the generic message when no flash cookie exists", async () => {
     expect(existsSync(PAGE), "Missing apps/storytime/app/[locale]/sign-in/page.tsx").toBe(true);
     const html = await renderSignIn({ error: "invalid" });
