@@ -29,6 +29,12 @@ set -uo pipefail
 #                 a navy label at 4.5:1 or more, the HUD label sits off the progress track at 14 px
 #                 in the interface language (hud_overlap_px=0), and the sentence spacing holds
 #                 (double_space_runs=0, space_before_punct=0), in en and th.
+#  13 council r2  the round 2 fix batch (task 2.3f): done_marks_found=0 before a part and >= 1
+#                 after the decodable reaches its last page; active_line_before_play=0 and the
+#                 active line follows the media clock (the gate moves currentTime to line 2 at
+#                 15.14 s and fires timeupdate, the method of Q33; it plays no recording); each
+#                 action chip is 16 px or more, opaque, navy, at 4.5:1 or more; the decodable
+#                 and reader word gap is 0.25em or more with space_before_punct=0, in en and th.
 #
 # No row plays a recording (M21). The song row sets currentTime and fires timeupdate (Q33).
 # A headless run is not phone evidence. The gate reads no file under ~/Desktop/handoff except the
@@ -228,6 +234,32 @@ function spacingVerdict(doubleRuns, beforePunct) {
   return doubleRuns === 0 && beforePunct === 0;
 }
 
+/** The verdict of the done marks: none before a part, at least one after one part. */
+function doneMarkVerdict(before, after) {
+  return before === 0 && after >= 1;
+}
+
+/** The verdict of the lyric line: no line before playback, and the expected index after its start. */
+function lyricVerdict(beforeCount, afterIndex, expected) {
+  return beforeCount === 0 && afterIndex === expected;
+}
+
+/** The verdict of one action chip: 16 px or more, opaque, navy, and 4.5:1 or more. */
+function chipVerdict(fontPx, background, label) {
+  const bg = parseCssColor(background);
+  const fg = parseCssColor(label);
+  if (!Number.isFinite(fontPx) || fontPx < 16) return false;
+  if (!bg || !fg) return false;
+  if (bg.a !== 1) return false;
+  if (!isNavyColor(fg)) return false;
+  return contrastOf(bg, fg) >= 4.5;
+}
+
+/** The verdict of the word gap: 0.25em or more, and no space before punctuation. */
+function wordGapVerdict(gapEm, beforePunct) {
+  return Number.isFinite(gapEm) && gapEm >= 0.25 && beforePunct === 0;
+}
+
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
   countVerdict(23) === false,
@@ -254,6 +286,15 @@ const mutants = [
   hudVerdict(0, 14, "Level 2 · Week 1", "th") === false,
   spacingVerdict(1, 0) === false,
   spacingVerdict(0, 1) === false,
+  doneMarkVerdict(1, 1) === false,
+  doneMarkVerdict(0, 0) === false,
+  lyricVerdict(1, 1, 1) === false,
+  lyricVerdict(0, 0, 1) === false,
+  chipVerdict(14, "rgb(255, 248, 225)", "rgb(11, 42, 107)") === false,
+  chipVerdict(16, "rgba(255, 248, 225, 0.6)", "rgb(11, 42, 107)") === false,
+  chipVerdict(16, "rgb(255, 248, 225)", "rgb(239, 230, 200)") === false,
+  wordGapVerdict(0.2, 0) === false,
+  wordGapVerdict(0.3, 1) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -267,6 +308,13 @@ const controls = [
   hudVerdict(0, 14, "Level 2 · Week 1", "en") === true,
   hudVerdict(0, 14.5, "ระดับ 2 · สัปดาห์ 1", "th") === true,
   spacingVerdict(0, 0) === true,
+  doneMarkVerdict(0, 1) === true,
+  doneMarkVerdict(0, 3) === true,
+  lyricVerdict(0, 1, 1) === true,
+  chipVerdict(16, "rgb(255, 248, 225)", "rgb(11, 42, 107)") === true,
+  chipVerdict(16.5, "rgba(255, 248, 225, 1)", "#0b2a6b") === true,
+  wordGapVerdict(0.25, 0) === true,
+  wordGapVerdict(0.3, 0) === true,
 ];
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
@@ -438,6 +486,14 @@ const SONG_LINE_TIME = (() => {
     const times = week.song.times ?? [];
     return times.length > 1 ? Number(times[1].startTime) + 0.01 : 12;
   } catch { return 12; }
+})();
+
+/** The number of lyric lines of the fixture song. */
+const shippedLines = (() => {
+  try {
+    const week = JSON.parse(fs.readFileSync(`${fixtureDir}/l2/w01.json`, "utf8"));
+    return (week.song?.lines ?? []).length;
+  } catch { return 0; }
 })();
 
 /** Makes line index 1 active: sets currentTime and fires timeupdate (Q33). Plays no recording. */
@@ -1232,6 +1288,195 @@ await guarded("row 12 council spacing", async () => {
   }
   row("council sentence spacing", cases === 8 && failures === 0,
     `spacing_cases=${cases} spacing_failures=${failures} double_space_runs=${doubleRuns} space_before_punct=${beforePunct}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+// ---- Row 13: the council round 2 fix batch (task 2.3f). ----
+/** Counts the visible done marks of the week page. */
+async function readDoneMarks(page) {
+  return page.evaluate(() => document.querySelectorAll("[data-done-mark]").length);
+}
+
+/** Presses Next on the decodable until the last page writes the per-device completion record. */
+async function finishDecodable(page, locale) {
+  const english = JSON.parse(fs.readFileSync("messages/en.json", "utf8"));
+  const thai = JSON.parse(fs.readFileSync("messages/th.json", "utf8"));
+  const label = locale === "th" ? thai.decNextPage : english.decNextPage;
+  const next = page.getByRole("button", { name: label, exact: true });
+  for (let step = 0; step < 12; step += 1) {
+    if (await next.isDisabled().catch(() => true)) break;
+    await next.click();
+  }
+}
+
+/** Counts the lyric lines that are active, and returns the index of the active one. */
+async function readActiveLine(page) {
+  return page.evaluate(() => {
+    const active = [...document.querySelectorAll('li[data-line-index][aria-current="true"]')];
+    return { count: active.length, index: active.length > 0 ? Number(active[0].getAttribute("data-line-index")) : -1 };
+  });
+}
+
+/** Reads the computed style of each action chip. */
+async function readActionChips(page) {
+  return page.evaluate(() => [...document.querySelectorAll("[data-action-chip]")].map((chip) => {
+    const style = getComputedStyle(chip);
+    return { font: parseFloat(style.fontSize), background: style.backgroundColor, color: style.color };
+  }));
+}
+
+/** Reads the gap between the first two word boxes, in em of the sentence root. */
+async function readWordGap(page, rootSelector, wordSelector) {
+  return page.evaluate(({ rootSelector: rootSel, wordSelector: wordSel }) => {
+    const root = document.querySelector(rootSel);
+    if (!root) return null;
+    const words = [...root.querySelectorAll(wordSel)].filter((element) => (element.textContent ?? "").trim() !== "");
+    if (words.length < 2) return null;
+    const one = words[0].getBoundingClientRect();
+    const two = words[1].getBoundingClientRect();
+    const fontPx = parseFloat(getComputedStyle(root).fontSize) || 16;
+    return { gapEm: (two.left - one.right) / fontPx };
+  }, { rootSelector, wordSelector });
+}
+
+await guarded("row 13 council r2 done marks", async () => {
+  let cases = 0;
+  let failures = 0;
+  let beforeMax = 0;
+  let afterMin = 99;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    await openScreen(page, locale, "week");
+    const before = await readDoneMarks(page);
+    beforeMax = Math.max(beforeMax, before);
+    if (before !== 0) {
+      failures += 1;
+      sample = sample || `${locale}: done_marks_found=${before} before any part is done`;
+    }
+    await openScreen(page, locale, "decodable");
+    await finishDecodable(page, locale);
+    await openScreen(page, locale, "week");
+    const after = await readDoneMarks(page);
+    afterMin = Math.min(afterMin, after);
+    cases += 1;
+    if (!doneMarkVerdict(before, after)) {
+      failures += 1;
+      sample = sample || `${locale}: before=${before} after=${after}`;
+    }
+    await page.close();
+    await context.close();
+  }
+  emit("done_marks_found_before", beforeMax);
+  emit("done_marks_found_after", afterMin === 99 ? 0 : afterMin);
+  row("council r2 done marks", cases === 2 && failures === 0,
+    `done_mark_cases=${cases} done_mark_failures=${failures} done_marks_found=0 before=${beforeMax} done_marks_found_after=${afterMin === 99 ? 0 : afterMin}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 13 council r2 lyric line", async () => {
+  let cases = 0;
+  let failures = 0;
+  let beforeCount = 0;
+  let afterIndex = -1;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    await page.goto(`${base}/${locale}/st/2/1?part=song`, { waitUntil: "load" });
+    await page.waitForSelector(".song-stage video, .song-stage audio", { timeout: 20000 });
+    const before = await readActiveLine(page);
+    beforeCount = Math.max(beforeCount, before.count);
+    const after = await activateLine(page, 1);
+    afterIndex = cases === 0 ? after : Math.min(afterIndex, after);
+    cases += 1;
+    if (!lyricVerdict(before.count, after, 1)) {
+      failures += 1;
+      sample = sample || `${locale}: before=${before.count} after=${after}`;
+    }
+    await page.close();
+    await context.close();
+  }
+  emit("active_line_before_play", beforeCount);
+  row("council r2 lyric line", cases === 2 && failures === 0,
+    `lyric_cases=${cases} lyric_failures=${failures} active_line_before_play=${beforeCount} active_line_after_play=${afterIndex}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 13 council r2 action chips", async () => {
+  let cases = 0;
+  let failures = 0;
+  let chips = 0;
+  let fontMin = 999;
+  let alphaMin = 9;
+  let contrastMin = 99;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    await openScreen(page, locale, "song");
+    const found = await readActionChips(page);
+    cases += 1;
+    if (found.length !== shippedLines) {
+      failures += 1;
+      sample = sample || `${locale}: action_chips=${found.length}`;
+    }
+    for (const chip of found) {
+      chips += 1;
+      fontMin = Math.min(fontMin, chip.font);
+      const bg = parseCssColor(chip.background);
+      const fg = parseCssColor(chip.color);
+      if (bg) alphaMin = Math.min(alphaMin, bg.a);
+      if (bg && fg) contrastMin = Math.min(contrastMin, contrastOf(bg, fg));
+      if (!chipVerdict(chip.font, chip.background, chip.color)) {
+        failures += 1;
+        sample = sample || `${locale}: font=${chip.font} bg=${chip.background} color=${chip.color}`;
+      }
+    }
+    await page.close();
+    await context.close();
+  }
+  emit("action_chips", chips);
+  row("council r2 action chips", cases === 2 && failures === 0,
+    `action_chip_cases=${cases} action_chip_failures=${failures} action_chips=${chips} chip_font_px_min=${fontMin === 999 ? 0 : fontMin} chip_alpha_min=${alphaMin === 9 ? 0 : alphaMin} chip_contrast_min=${contrastMin === 99 ? 0 : Math.round(contrastMin * 100) / 100}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 13 council r2 word gap", async () => {
+  let cases = 0;
+  let failures = 0;
+  let gapMin = 99;
+  let beforePunct = 0;
+  let sample = "";
+  const targets = [
+    { screen: "decodable", root: "[data-page-number] p", word: "button" },
+    { screen: "reader", root: "[data-sentence]", word: "[data-word]" },
+  ];
+  for (const vp of [VIEWPORTS[0], VIEWPORTS[1]]) {
+    const context = await makeContext(vp);
+    for (const locale of LOCALES) {
+      for (const target of targets) {
+        const page = await context.newPage();
+        await openScreen(page, locale, target.screen);
+        const found = await readWordGap(page, target.root, target.word);
+        const spacing = await readSpacing(page, target.root);
+        cases += 1;
+        if (!found) {
+          failures += 1;
+          sample = sample || `${locale} ${vp.text} ${target.screen}: no two word boxes`;
+        } else {
+          gapMin = Math.min(gapMin, found.gapEm);
+          beforePunct += spacing ? spacing.before : 0;
+          if (!wordGapVerdict(found.gapEm, spacing ? spacing.before : 1)) {
+            failures += 1;
+            sample = sample || `${locale} ${vp.text} ${target.screen}: gap_em=${Math.round(found.gapEm * 1000) / 1000} before=${spacing ? spacing.before : "none"}`;
+          }
+        }
+        await page.close();
+      }
+    }
+    await context.close();
+  }
+  emit("word_gap_em_min", gapMin === 99 ? 0 : Math.round(gapMin * 1000) / 1000);
+  row("council r2 word gap", cases === 8 && failures === 0,
+    `word_gap_cases=${cases} word_gap_failures=${failures} word_gap_em_min=${gapMin === 99 ? 0 : Math.round(gapMin * 1000) / 1000} space_before_punct=${beforePunct}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
 });
 
 row("row count the rows ran", rowsVerdict(rowCount), `row_count=${rowCount}`);
