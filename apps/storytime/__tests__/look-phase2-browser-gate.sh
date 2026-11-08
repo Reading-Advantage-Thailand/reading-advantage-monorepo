@@ -14,9 +14,12 @@ set -uo pipefail
 #                 hero_band_height_px_tablet 116 to 124, and the first-view rules.
 #   3 frame       the game bar shows the route level and week; the plaque holds the week title.
 #   4 assets      every place, SVG, and font that the built CSS requests answers 200 with its type.
+#                 look_woff2_files counts only the 2 files of app/look/fonts (Sarabun stays on
+#                 next/font/google, so woff2_files_total is larger); no font host, no remote @import.
 #   5 reader      gap_max_delta_px, word_hit_h_px_min, and the touch marker of a clip word.
 #   6 plain text  the computed text rules of the sentence, the words, the chips, and the lyrics.
-#   7 motion      reduced motion stops every animation; the positive control shows a running one.
+#   7 motion      under reduce every element has animation-name none and no running transition
+#                 (transition-property none, or a total duration of 0 s); the positive control runs.
 #   8 other       sign_in, join, and not_found under the shared global CSS.
 #   9 missing     with the place images aborted, the text stays readable.
 #  10 question    the question screen shows the same hero band and passes the row 1 checks.
@@ -148,6 +151,14 @@ function pinVerdict(value, low, high) { return Number.isFinite(value) && value >
 function rowsVerdict(n) { return n > 0; }
 /** The verdict of an edge scan: 10 files and a delta within T. */
 function edgeVerdict(delta, files) { return files === 10 && Number.isFinite(delta) && delta <= EDGE_T; }
+/** The verdict of the font count: both look fonts are served, and the total never falls below them. */
+function fontVerdict(lookFiles, total) { return lookFiles === 2 && total >= lookFiles; }
+/** True when an element still moves under reduce: a running animation, or a transition that can run. */
+function motionOffender(animationName, transitionProperty, transitionDuration) {
+  if (animationName.trim() !== "none") return true;
+  if (transitionProperty.trim() === "none") return false;
+  return !transitionDuration.split(",").map((text) => parseFloat(text)).every((value) => value === 0);
+}
 
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
@@ -160,10 +171,19 @@ const mutants = [
   captureVerdict({ ...goodCapture, contrast_fail: 2 }) === false,
   edgeVerdict(200, 10) === false,
   edgeVerdict(0, 9) === false,
+  fontVerdict(0, 8) === false,
+  fontVerdict(1, 9) === false,
+  motionOffender("crest-bob", "none", "0s") === true,
+  motionOffender("none", "all", "0.15s") === true,
+  motionOffender("none", "opacity, color", "0s, 0.2s") === true,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
   rowsVerdict(3), captureVerdict(goodCapture), edgeVerdict(10, 10),
+  fontVerdict(2, 10), fontVerdict(2, 2),
+  motionOffender("none", "none", "0.15s") === false,
+  motionOffender("none", "all", "0s") === false,
+  motionOffender("none", "opacity, color", "0s, 0s") === false,
 ];
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
@@ -618,24 +638,33 @@ await guarded("row 4 assets", async () => {
   const context = await makeContext(VIEWPORTS[0]);
   const page = await context.newPage();
   const urls = new Set();
+  let remoteImports = 0;
   for (const screen of SCREENS) {
     await page.goto(`${base}/th/st/2/1${QUERY[screen]}`, { waitUntil: "load" });
     const found = await page.evaluate(async () => {
-      const out = [];
+      const out = { urls: [], remoteImports: 0 };
       for (const sheet of [...document.styleSheets]) {
         if (!sheet.href) continue;
         const text = await (await fetch(sheet.href)).text();
+        out.remoteImports += [...text.matchAll(/@import\s+(?:url\(\s*)?["']?https?:/g)].length;
         for (const match of text.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/g)) {
           if (match[1].startsWith("data:")) continue;
-          out.push(new URL(match[1], sheet.href).href);
+          out.urls.push(new URL(match[1], sheet.href).href);
         }
       }
       return out;
     });
-    for (const url of found) urls.add(url);
+    remoteImports += found.remoteImports;
+    for (const url of found.urls) urls.add(url);
   }
   const TYPES = { webp: /^image\/webp/, svg: /^image\/svg\+xml/, woff2: /^(font\/woff2|application\/font-woff2|application\/octet-stream)/ };
   const counts = { webp: 0, svg: 0, woff2: 0 };
+  // The look fonts are the files of app/look/fonts; next/font/local serves them with their bytes.
+  const fontDir = "app/look/fonts";
+  const lookFonts = fs.readdirSync(fontDir).filter((name) => name.endsWith(".woff2")).map((name) => ({ name, bytes: fs.readFileSync(`${fontDir}/${name}`) }));
+  const lookServed = new Set();
+  const origin = new URL(base).origin;
+  let remoteFonts = 0;
   const webpUrls = [];
   let bad = 0;
   for (const url of urls) {
@@ -645,10 +674,16 @@ await guarded("row 4 assets", async () => {
     const type = answer.headers()["content-type"] ?? "";
     if (answer.status() === 200 && TYPES[extension].test(type)) counts[extension] += 1; else bad += 1;
     if (extension === "webp") webpUrls.push(url);
+    if (extension === "woff2") {
+      if (new URL(url).origin !== origin) remoteFonts += 1;
+      const body = await answer.body();
+      for (const font of lookFonts) if (body.equals(font.bytes)) lookServed.add(font.name);
+    }
   }
   emit("css_urls_found", urls.size);
-  row("assets built CSS files", counts.webp === 10 && counts.svg === 4 && counts.woff2 === 2 && bad === 0,
-    `webp_files=${counts.webp} svg_files=${counts.svg} woff2_files=${counts.woff2} asset_bad=${bad} urls_checked=${urls.size}`);
+  row("assets built CSS files",
+    counts.webp === 10 && counts.svg === 4 && fontVerdict(lookServed.size, counts.woff2) && lookFonts.length === 2 && bad === 0 && remoteFonts === 0 && remoteImports === 0,
+    `webp_files=${counts.webp} svg_files=${counts.svg} look_woff2_files=${lookServed.size} woff2_files_total=${counts.woff2} look_font_sources=${lookFonts.length} font_remote_urls=${remoteFonts} css_remote_imports=${remoteImports} asset_bad=${bad} urls_checked=${urls.size}`);
   // naturalWidth of each place matches its pin (-p is 1080 wide, -d is 1920 wide).
   let widthBad = 0;
   let widthChecked = 0;
@@ -822,18 +857,24 @@ await guarded("row 7 reduced motion", async () => {
     const page = await reduced.newPage();
     await openScreen(page, "en", screen);
     const found = await page.evaluate(() => {
-      const out = { checked: 0, bad: [] };
+      // One entry per distinct style triple; Node applies motionOffender, the function of the self-test.
+      const out = { checked: 0, groups: {} };
       for (const el of document.querySelectorAll("*")) {
         out.checked += 1;
         const cs = getComputedStyle(el);
-        const durations = cs.transitionDuration.split(",").map((text) => parseFloat(text));
-        if (cs.animationName !== "none" || !durations.every((value) => value === 0)) out.bad.push(`${el.tagName.toLowerCase()} animation=${cs.animationName} transition=${cs.transitionDuration}`);
+        const key = JSON.stringify([cs.animationName, cs.transitionProperty, cs.transitionDuration]);
+        const group = out.groups[key] ?? (out.groups[key] = { count: 0, tag: el.tagName.toLowerCase() });
+        group.count += 1;
       }
       return out;
     });
     checked += found.checked;
-    violations += found.bad.length;
-    if (!first && found.bad.length > 0) first = found.bad[0];
+    for (const [key, group] of Object.entries(found.groups)) {
+      const [animation, property, duration] = JSON.parse(key);
+      if (!motionOffender(animation, property, duration)) continue;
+      violations += group.count;
+      if (!first) first = `${group.tag} animation=${animation} transition-property=${property} transition-duration=${duration}`;
+    }
     await page.close();
   }
   await reduced.close();
