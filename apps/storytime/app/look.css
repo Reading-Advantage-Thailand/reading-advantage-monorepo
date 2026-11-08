@@ -131,7 +131,7 @@ header[data-hero="band"] {
  * of the final piece (644.8 x 52, M32), so the bar never draws at the stand-in ratio. */
 [data-game-bar] {
   position: absolute;
-  top: 12px;
+  top: 34px;
   left: 50%;
   translate: -50% 0;
   box-sizing: border-box;
@@ -151,6 +151,40 @@ header[data-hero="band"] {
   text-shadow: 0 1px 0 rgba(8, 28, 70, 0.6);
   background: url("look/pieces/q-bar.svg") center / 100% 100% no-repeat;
   filter: drop-shadow(0 3px 0 rgba(10, 25, 60, 0.35));
+}
+
+/* The text copy inside the track is for a screen reader only. It has no overflow rule, so the
+ * capture clip check reads no clipped text. */
+[data-game-bar] > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+/* The HUD level and week label (council round 1, task 2.3e): the visible text, in its own box
+ * above the track so the two boxes never overlap. 14 CSS px is the floor for a label. */
+[data-level-week] {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  translate: -50% 0;
+  box-sizing: border-box;
+  z-index: 1;
+  margin: 0;
+  padding: 1px 14px;
+  font-family: var(--sq-display);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #fff;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(8, 28, 70, 0.6);
+  background-color: rgba(8, 28, 70, 0.62);
+  border-radius: 999px;
 }
 
 /* The crest: a decorative drawing that bobs (under no-preference only). */
@@ -400,14 +434,15 @@ main[data-place] button:active:not(:disabled) {
   box-shadow: inset 0 0 0 2px var(--sq-blue-dark), 0 2px 0 rgba(10, 25, 60, 0.42);
 }
 
-/* The reader audio buttons keep the Phase 1 outline look, because the Phase 1 browser gate
- * reads a transparent computed background on them (P1.4 row 4). The pressed state shows the
- * gold-soft fill and the ink text. */
-[data-part="book"] button[aria-pressed] {
-  color: var(--sq-ink);
+/* The reader mode buttons (Read it to me, My turn, Slow; council round 1, task 2.3e): an
+ * opaque cream fill and a navy label, 4.5 to 1 or more in contrast. The pressed state shows the
+ * gold-soft fill. */
+[data-part="book"] button[data-mode-button] {
+  color: var(--sq-navy);
   text-shadow: none;
-  background: transparent;
-  box-shadow: none;
+  background-color: var(--sq-cream);
+  background-image: none;
+  box-shadow: inset 0 0 0 2px var(--sq-blue-dark);
 }
 [data-part="book"] button[aria-pressed="true"] {
   background-color: var(--sq-gold-soft);
@@ -489,11 +524,15 @@ main[data-place] button:active:not(:disabled) {
   font-size: 64px;
 }
 /* The decodable word buttons keep the display face of the study (Q29) at the plain text
- * values (no shadow, no transform). */
+ * values (no shadow, no transform).
+ * The 48 px box of a short word is the tap target of the capture rule. `decodable.tsx` sets a
+ * negative inline margin for a word narrower than 48 px, so the word box adds no visible gap
+ * and the words read with a normal word space (council round 1, task 2.3e). */
 [data-part="decodable"] section[data-page-number] > p button {
   min-height: 48px;
   min-width: 48px;
-  padding: 0 6px;
+  justify-content: center;
+  padding: 0;
   font-family: var(--sq-display);
   font-size: 34px;
   font-weight: 600;
@@ -706,6 +745,11 @@ main[data-place] button:active:not(:disabled) {
     top: 8px;
     width: 220px;
     font-size: 11px;
+  }
+  [data-level-week] {
+    left: 12px;
+    translate: none;
+    top: 30px;
   }
   header[data-hero] > h1 {
     left: auto;

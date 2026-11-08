@@ -375,7 +375,7 @@ async function measureReader(page) {
     const nextTransparent = nextBg === "" || nextBg === "transparent" || nextBg === "rgba(0, 0, 0, 0)";
     const audioBg = audioButtons.length === 3 && audioButtons.every((button) => {
       const bg = getComputedStyle(button).backgroundColor;
-      return bg === "transparent" || bg === "rgba(0, 0, 0, 0)";
+      return bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)";
     });
     const countElement = document.querySelector('span[aria-live="polite"]');
     const overflow = Math.max(0, Math.round(document.documentElement.scrollWidth - window.innerWidth)) +
@@ -633,7 +633,7 @@ try {
   emit("gap_max_delta_px", gapDelta);
   emit("next_bg_transparent", nextBg ? 0 : 1);
   emit("next_min_height", nextMinHeight);
-  emit("audio_bg_transparent", audioBg ? 1 : 0);
+  emit("audio_bg_filled", audioBg ? 1 : 0);
   emit("page_count_ok", countOk ? 1 : 0);
   emit("page_overflow", overflow);
   row(4, readerVerdict(verdict), `pages_measured=${pagesMeasured} gap_max_delta_px=${gapDelta} next_min_height=${nextMinHeight}`);

@@ -550,14 +550,15 @@ export function StorytimeDecodable({
               className="w-full rounded-2xl object-cover [@media(max-height:500px)]:max-h-[40vh] [@media(max-height:500px)]:basis-[45%] [@media(max-height:500px)]:shrink-0"
             />
           ) : null}
-          <p className="flex flex-wrap items-center gap-x-1 whitespace-pre-wrap text-2xl [@media(max-height:500px)]:flex-1" lang="en">
+          <p className="flex flex-wrap items-center whitespace-pre-wrap text-2xl [@media(max-height:500px)]:flex-1" lang="en">
             {sentencePieces(page.text).map((piece, index) =>
               piece.word ? (
                 <span key={index} className="inline-flex items-baseline">
                   <button
                     type="button"
                     onClick={() => onWordTap(piece.word!)}
-                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded px-0.5 hover:bg-neutral-100"
+                    style={{ marginInline: `min(0px, calc((${piece.word.length}ch - 48px) / 2))` }}
+                    className="inline-flex min-h-[44px] items-center rounded hover:bg-neutral-100"
                   >
                     {piece.word}
                   </button>

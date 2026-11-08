@@ -540,6 +540,7 @@ export function StorytimeReader({
             <button
               type="button"
               aria-pressed={pressedMode === "listen"}
+              data-mode-button
               onClick={startListen}
               className={audioButtonClass}
             >
@@ -548,6 +549,7 @@ export function StorytimeReader({
             <button
               type="button"
               aria-pressed={pressedMode === "myTurn"}
+              data-mode-button
               onClick={startMyTurn}
               className={audioButtonClass}
             >
@@ -556,6 +558,7 @@ export function StorytimeReader({
             <button
               type="button"
               aria-pressed={pressedMode === "slow"}
+              data-mode-button
               onClick={startSlow}
               className={audioButtonClass}
             >

@@ -329,6 +329,7 @@ export default async function StorytimeWeekPage({
         week={route!.week}
         title={week.meta.title}
         variant={part === null || part === "song" ? "cover" : "band"}
+        locale={locale === "th" ? "th" : "en"}
       />
       {part === null ? (
         <>

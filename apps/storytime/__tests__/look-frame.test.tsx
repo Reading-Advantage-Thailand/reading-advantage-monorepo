@@ -146,11 +146,14 @@ describe("the frame of the look (AC-2.2)", () => {
     }
   });
 
-  it("F2 the message keys barLevel and barWeek hold equal values in both files", () => {
+  it("F2 the message keys barLevel and barWeek exist in both files, each in its own language", () => {
+    // Task 2.3e (PM council round 1) replaced the equal Thai drafts: the English file holds the
+    // English words and the Thai file holds the Thai words.
     for (const key of ["barLevel", "barWeek"]) {
       expect(typeof english[key], `messages/en.json must hold ${key}`).toBe("string");
       expect((english[key] ?? "").length, `${key} must not be empty`).toBeGreaterThan(0);
-      expect(thai[key], `messages/th.json must hold the same ${key} value`).toBe(english[key]);
+      expect(typeof thai[key], `messages/th.json must hold ${key}`).toBe("string");
+      expect(thai[key], `messages/th.json ${key} must differ from the English words`).not.toBe(english[key]);
     }
   });
 

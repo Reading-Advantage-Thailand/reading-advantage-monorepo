@@ -49,6 +49,6 @@
   "teacherForbiddenLink": "Sign in as a teacher",
   "stFallbackHeading": "Scan the book code",
   "stFallbackLine": "Scan the code in the book to open the week.",
-  "barLevel": "ระดับ {level}",
-  "barWeek": "สัปดาห์ {week}"
+  "barLevel": "Level {level}",
+  "barWeek": "Week {week}"
 }
