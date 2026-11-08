@@ -48,5 +48,7 @@
   "teacherForbiddenLine": "เข้าสู่ระบบด้วยบัญชีครูเพื่อเปิดหน้าบทเรียน",
   "teacherForbiddenLink": "เข้าสู่ระบบในชื่อครู",
   "stFallbackHeading": "สแกนรหัสในหนังสือ",
-  "stFallbackLine": "สแกนรหัสในหนังสือเพื่อเปิดสัปดาห์"
+  "stFallbackLine": "สแกนรหัสในหนังสือเพื่อเปิดสัปดาห์",
+  "barLevel": "ระดับ {level}",
+  "barWeek": "สัปดาห์ {week}"
 }

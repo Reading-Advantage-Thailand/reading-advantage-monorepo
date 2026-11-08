@@ -13,6 +13,8 @@ import { questionScreenShows, readAlongQuestions } from "../../../../../lib/ques
 import { parseStorytimeRoute } from "../../../../../lib/route-parse";
 import { requireUser } from "../../../../../lib/auth";
 import { signWeekMedia } from "../../../../../lib/media/sign";
+import { placeFor } from "../../../../../lib/look/places";
+import { Frame } from "../../frame";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
@@ -294,6 +296,9 @@ export default async function StorytimeWeekPage({
   }
 
   const weekHref = `/${locale}/st/${levelSegment}/${weekSegment}`;
+  // The look places of the part: `main` carries them as data attributes, so the CSS of
+  // `app/look.css` selects by attribute and no `:has()` carries the place (Q36).
+  const places = placeFor(part);
 
   const questionTiles: QuestionTile[] = tiles.slice(0, 3).map((tile) => ({
     id: tile.id,
@@ -311,12 +316,20 @@ export default async function StorytimeWeekPage({
   };
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold" lang="en">
-          {week.meta.title}
-        </h1>
-      </header>
+    <main
+      className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 p-6"
+      data-place={places.place}
+      data-hero={places.hero}
+    >
+      {/* The hero frame of the look: `cover` on the home view and the song, `band` on the book
+          and the decodable page (AC-2.6 to AC-2.8). The week renders only when the route
+          parsed, so `route` is non-null here. */}
+      <Frame
+        level={route!.level}
+        week={route!.week}
+        title={week.meta.title}
+        variant={part === null || part === "song" ? "cover" : "band"}
+      />
       {part === null ? (
         <>
           <section aria-label={t("homeChoosePart")}>
