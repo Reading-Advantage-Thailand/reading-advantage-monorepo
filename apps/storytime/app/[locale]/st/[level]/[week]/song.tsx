@@ -37,7 +37,7 @@ interface SongLabels {
 interface StorytimeSongProps {
   /** The song of the week. */
   song: NonNullable<StorytimeWeek["song"]>;
-  /** The media base URL; the default is `/media`. */
+  /** The signed media URL of each file name; a file with no entry gets an empty URL. */
   mediaUrls?: Record<string, string>;
   /** The translated control labels. */
   labels?: SongLabels;

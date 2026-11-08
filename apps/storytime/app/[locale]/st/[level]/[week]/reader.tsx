@@ -99,7 +99,7 @@ interface StorytimeReaderProps {
   tiles?: QuestionTile[];
   /** The translated labels of the question screen. */
   questionLabels?: QuestionLabels;
-  /** The media base URL; the default is `/media`. */
+  /** The signed media URL of each file name; a file with no entry gets an empty URL. */
   mediaUrls?: Record<string, string>;
 }
 

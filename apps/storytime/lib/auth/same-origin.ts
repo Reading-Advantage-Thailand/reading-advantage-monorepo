@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 /**
  * The same-origin check of the sign-in and the sign-out (design section 2, AC-4.3).
  *
@@ -52,6 +54,19 @@ export function ownOriginOf(headers: Headers, urlOrigin: string): string {
       ? forwarded
       : new URL(urlOrigin).protocol.slice(0, -1);
   return originOf(`${scheme}://${host}`) ?? urlOrigin;
+}
+
+/**
+ * Builds a 303 answer whose Location is a relative path.
+ *
+ * In the standalone image `request.nextUrl` holds the bind address, so a Location built from it
+ * sends the browser to `http://0.0.0.0:<port>`. A relative Location keeps the origin that the
+ * browser used (finding F60).
+ * @param path The path and query of the target, which starts with a single `/`.
+ * @returns The 303 response with the relative Location header.
+ */
+export function seeOther(path: string): NextResponse {
+  return new NextResponse(null, { status: 303, headers: { Location: path } });
 }
 
 /**

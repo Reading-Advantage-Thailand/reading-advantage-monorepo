@@ -44,7 +44,7 @@ interface StorytimeDecodableProps {
   week: StorytimeWeek;
   /** The page language; it selects the Thai control labels. */
   locale: string;
-  /** The media base URL; the default is `/media`. */
+  /** The signed media URL of each file name; a file with no entry gets an empty URL. */
   mediaUrls?: Record<string, string>;
   /** The translated labels; the default keeps the exact pre-remediation strings (finding F137). */
   labels?: Partial<DecodableLabels>;

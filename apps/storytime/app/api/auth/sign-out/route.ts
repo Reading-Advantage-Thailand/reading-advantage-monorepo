@@ -1,14 +1,20 @@
-import { NextResponse, type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { localeSchema, logout } from "../../../../lib/auth";
 import { SESSION_COOKIE_NAME, clearSessionCookie } from "../../../../lib/auth/cookie";
-import { CrossOriginError, assertSameOrigin, ownOriginOf } from "../../../../lib/auth/same-origin";
+import {
+  CrossOriginError,
+  assertSameOrigin,
+  ownOriginOf,
+  seeOther,
+} from "../../../../lib/auth/same-origin";
 
 /**
  * The sign-out handler of the Storytime app (design section 2, AC-4.3).
  *
  * The handler checks the origin first, so a request from another site gets 403, sets no cookie,
  * and changes no session. It then ends the session of the device and clears the cookie. A device
- * without a session answers 303 as well, so the sign-out never fails.
+ * without a session answers 303 as well, so the sign-out never fails. The Location is relative,
+ * because `request.nextUrl` holds the bind address of the standalone image (finding F60).
  */
 
 /**
@@ -34,7 +40,7 @@ export async function POST(request: NextRequest): Promise<Response> {
   const form = await request.formData().catch(() => null);
   const localeValue = form?.get("locale");
   const locale = localeSchema.parse(typeof localeValue === "string" ? localeValue : "");
-  const response = NextResponse.redirect(new URL(`/${locale}/sign-in`, request.nextUrl), 303);
+  const response = seeOther(`/${locale}/sign-in`);
   response.headers.set("Set-Cookie", clearSessionCookie());
   return response;
 }

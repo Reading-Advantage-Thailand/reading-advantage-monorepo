@@ -1,8 +1,13 @@
-import { NextResponse, type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { login, localeSchema, signInFieldsSchema } from "../../../../lib/auth";
 import { clientIp } from "../../../../lib/auth/client-ip";
 import { safeReturnPath } from "../../../../lib/auth/return-path";
-import { CrossOriginError, assertSameOrigin, ownOriginOf } from "../../../../lib/auth/same-origin";
+import {
+  CrossOriginError,
+  assertSameOrigin,
+  ownOriginOf,
+  seeOther,
+} from "../../../../lib/auth/same-origin";
 
 /**
  * The sign-in handler of the Storytime app (design section 2, AC-4.3).
@@ -11,6 +16,8 @@ import { CrossOriginError, assertSameOrigin, ownOriginOf } from "../../../../lib
  * and changes no session. It then reads the form fields, holds the rate limit of the account and
  * of the client address, verifies the Argon2id hash, and creates the session. A good answer
  * redirects to the checked `next`; a bad answer redirects to the sign-in page with one message.
+ * Every redirect has a relative Location, because `request.nextUrl` holds the bind address of the
+ * standalone image (finding F60).
  */
 
 /**
@@ -49,13 +56,7 @@ export async function POST(request: NextRequest): Promise<Response> {
   });
   const now = new Date();
   if (!fields.success) {
-    return NextResponse.redirect(
-      new URL(
-        `/${locale}/sign-in?error=invalid&next=${encodeURIComponent(next)}`,
-        request.nextUrl,
-      ),
-      303,
-    );
+    return seeOther(`/${locale}/sign-in?error=invalid&next=${encodeURIComponent(next)}`);
   }
 
   const outcome = await login({
@@ -65,13 +66,10 @@ export async function POST(request: NextRequest): Promise<Response> {
     now,
   });
   if (outcome.status === "signed_in") {
-    const response = NextResponse.redirect(new URL(next, request.nextUrl), 303);
+    const response = seeOther(next);
     response.headers.set("Set-Cookie", outcome.cookie);
     return response;
   }
   const error = outcome.status === "locked" ? "locked" : "invalid";
-  return NextResponse.redirect(
-    new URL(`/${locale}/sign-in?error=${error}&next=${encodeURIComponent(next)}`, request.nextUrl),
-    303,
-  );
+  return seeOther(`/${locale}/sign-in?error=${error}&next=${encodeURIComponent(next)}`);
 }
