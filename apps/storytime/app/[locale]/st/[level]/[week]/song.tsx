@@ -18,6 +18,7 @@
 import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useRef, useState, type SyntheticEvent } from "react";
 import type { StorytimeWeek } from "../../../../../lib/contracts/week";
+import { markPartDone } from "../../../../../lib/done";
 
 /** The media query that marks a portrait phone (spec FR-8, AC-8.2). */
 const PHONE_QUERY = "(max-width: 640px) and (orientation: portrait)";
@@ -41,6 +42,8 @@ interface StorytimeSongProps {
   mediaUrls?: Record<string, string>;
   /** The translated control labels. */
   labels?: SongLabels;
+  /** The `<level>:<week>:<part>` key that the song writes to the done record when it ends. */
+  doneKey?: string;
 }
 
 /**
@@ -60,6 +63,7 @@ export function StorytimeSong({
   song,
   mediaUrls = {},
   labels = DEFAULT_LABELS,
+  doneKey,
 }: StorytimeSongProps) {
   const mediaRef = useRef<HTMLVideoElement | HTMLAudioElement | null>(null);
   const [phone, setPhone] = useState(false);
@@ -110,6 +114,14 @@ export function StorytimeSong({
     setActiveLine(times.findIndex((row) => current >= row.startTime && current < row.endTime));
   }
 
+  /**
+   * Stops the playing state and records the finished song on this device.
+   */
+  function onEnded(): void {
+    setPlaying(false);
+    markPartDone(doneKey);
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div
@@ -147,7 +159,7 @@ export function StorytimeSong({
             onPlaying={() => setFramePlayed(true)}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            onEnded={() => setPlaying(false)}
+            onEnded={onEnded}
             className="[@media(max-height:500px)_and_(orientation:landscape)]:h-44! [@media(max-height:500px)_and_(orientation:landscape)]:w-auto!"
           />
         ) : (
@@ -161,7 +173,7 @@ export function StorytimeSong({
             onTimeUpdate={onTimeUpdate}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            onEnded={() => setPlaying(false)}
+            onEnded={onEnded}
           />
         )}
       </div>
@@ -190,7 +202,7 @@ export function StorytimeSong({
                 <span className="text-lg" lang="en">
                   {line.text}
                 </span>
-                <span className="text-sm text-neutral-600" lang="en">
+                <span data-action-chip className="text-sm text-neutral-600" lang="en">
                   {line.gesture}
                 </span>
               </span>

@@ -17,13 +17,20 @@ const LATIN_ONLY_ALLOW_LIST = new Set(["Storytime"]);
  */
 const ENGLISH_VALUE_KEYS = new Set(["notFoundEnglish", "notOpenEnglish", "openWeekEnglish"]);
 
+/**
+ * The Thai-only approval status keys (look task 2.3f, PM decision Q9): `partDoneStatus` marks the
+ * Thai `partDone` string as a draft until the Thai check. English has no status, so these keys
+ * sit outside the key parity and the Latin-only rule.
+ */
+const STATUS_KEYS = new Set(["partDoneStatus"]);
+
 /** The week-not-open keys that task 1.1 adds to both message files. */
 const WEEK_NOT_OPEN_KEYS = ["notOpenThai", "notOpenEnglish", "openWeekThai", "openWeekEnglish"];
 
 describe("Phase 3 at-home messages", () => {
   it("defines the same non-empty message keys in Thai and English", () => {
     const englishKeys = Object.keys(english).sort();
-    const thaiKeys = Object.keys(thai).sort();
+    const thaiKeys = Object.keys(thai).filter((key) => !STATUS_KEYS.has(key)).sort();
     expect(englishKeys.length, "English messages must not be empty").toBeGreaterThan(0);
     expect(thaiKeys.length, "Thai messages must not be empty").toBeGreaterThan(0);
     expect(thaiKeys).toEqual(englishKeys);
@@ -43,7 +50,7 @@ describe("Phase 3 at-home messages", () => {
 
   it("has no Latin-only Thai string outside the P3.6 allow list", () => {
     for (const [key, value] of Object.entries(thai)) {
-      if (typeof value !== "string" || ENGLISH_VALUE_KEYS.has(key)) continue;
+      if (typeof value !== "string" || ENGLISH_VALUE_KEYS.has(key) || STATUS_KEYS.has(key)) continue;
       expect(
         isLatinOnlyThai(value) && !LATIN_ONLY_ALLOW_LIST.has(value),
         `the Thai string ${key} must hold Thai script or sit in the exact P3.6 allow list`,

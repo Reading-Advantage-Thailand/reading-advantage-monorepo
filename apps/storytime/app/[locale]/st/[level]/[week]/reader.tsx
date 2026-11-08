@@ -17,6 +17,7 @@ import type { ReadAlongSentence } from "@reading-advantage/read-along/lib/align"
 import { useReadAlong } from "@reading-advantage/read-along/hooks/use-read-along";
 import { findPosition, sentencesOfPage } from "@reading-advantage/read-along/lib/position";
 import { seekOrWait } from "@reading-advantage/read-along/lib/seek";
+import { markPartDone } from "../../../../../lib/done";
 import { highlightWindows } from "../../../../../lib/highlight-windows";
 import type { BookQuestion } from "../../../../../lib/questions";
 import { StorytimeQuestions, WeekTileLinks, type QuestionLabels, type QuestionTile } from "./questions";
@@ -101,6 +102,8 @@ interface StorytimeReaderProps {
   questionLabels?: QuestionLabels;
   /** The signed media URL of each file name; a file with no entry gets an empty URL. */
   mediaUrls?: Record<string, string>;
+  /** The `<level>:<week>:<part>` key that the book writes to the done record at its last page. */
+  doneKey?: string;
 }
 
 /** The Thai message of a failed sound, so the Thai page needs no Thai label from the caller. */
@@ -145,6 +148,7 @@ export function StorytimeReader({
   tiles = [],
   questionLabels,
   mediaUrls = {},
+  doneKey,
 }: StorytimeReaderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const clipRef = useRef<HTMLAudioElement | null>(null);
@@ -192,6 +196,11 @@ export function StorytimeReader({
   const playingLabel = labels.playing ?? DEFAULT_PLAYING[locale === "th" ? "th" : "en"];
 
   useEffect(() => clearStopTimer, []);
+
+  // The book is done on this device when it reaches its last page or its end view.
+  useEffect(() => {
+    if (finished || (book.pages.length > 1 && pageIndex >= book.pages.length - 1)) markPartDone(doneKey);
+  }, [finished, pageIndex, book.pages.length, doneKey]);
 
   // The clip of a tapped word plays on its own element, never on the sentence recording.
   useEffect(() => {

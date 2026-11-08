@@ -18,6 +18,7 @@ import { Frame } from "../../../frame";
 import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
+import { DoneMark } from "./done-mark";
 
 /**
  * The at-home entry route `/<locale>/st/<level>/<week>` (spec FR-5, AC-2.1, AC-5.2, AC-5.4).
@@ -166,9 +167,21 @@ function Speaker({
 /**
  * Renders one entry tile with its picture and its recorded label audio.
  * @param props.tile The tile.
+ * @param props.doneKey The `<level>:<week>:<part>` key of the per-device completion record.
+ * @param props.doneLabel The localized Done label.
  * @returns The tile item.
  */
-function TileCard({ tile, mediaUrls }: { tile: Tile; mediaUrls: Record<string, string> }) {
+function TileCard({
+  tile,
+  mediaUrls,
+  doneKey,
+  doneLabel,
+}: {
+  tile: Tile;
+  mediaUrls: Record<string, string>;
+  doneKey: string;
+  doneLabel: string;
+}) {
   const audio = TILE_LABEL_AUDIO[tile.id];
   return (
     <li className="flex flex-col gap-2 [@media(max-height:500px)]:flex-1">
@@ -190,6 +203,7 @@ function TileCard({ tile, mediaUrls }: { tile: Tile; mediaUrls: Record<string, s
           {tile.label}
         </span>
       </Link>
+      <DoneMark doneKey={doneKey} label={doneLabel} />
       {audio ? <Speaker file={audio} label={tile.label} mediaUrls={mediaUrls} /> : null}
     </li>
   );
@@ -296,6 +310,8 @@ export default async function StorytimeWeekPage({
   }
 
   const weekHref = `/${locale}/st/${levelSegment}/${weekSegment}`;
+  /** The per-device completion key of one part: `<level>:<week>:<part>`. */
+  const doneKeyOf = (partName: string) => `${route!.level}:${route!.week}:${partName}`;
   // The look places of the part: `main` carries them as data attributes, so the CSS of
   // `app/look.css` selects by attribute and no `:has()` carries the place (Q36).
   const places = placeFor(part);
@@ -342,7 +358,13 @@ export default async function StorytimeWeekPage({
             tile stays inside the viewport; portrait and laptop keep the column. */}
             <ul data-week-tiles className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row">
               {tiles.map((tile) => (
-                <TileCard key={tile.id} tile={tile} mediaUrls={mediaUrls} />
+                <TileCard
+                  key={tile.id}
+                  tile={tile}
+                  mediaUrls={mediaUrls}
+                  doneKey={doneKeyOf(tile.part)}
+                  doneLabel={t("partDone")}
+                />
               ))}
             </ul>
           </section>
@@ -425,6 +447,7 @@ export default async function StorytimeWeekPage({
               tiles={questionTiles}
               questionLabels={questionLabels}
               mediaUrls={mediaUrls}
+              doneKey={doneKeyOf("book")}
             />
           ) : (
             <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />
@@ -437,6 +460,7 @@ export default async function StorytimeWeekPage({
               week={week}
               locale={locale}
               mediaUrls={mediaUrls}
+              doneKey={doneKeyOf("decodable")}
               labels={{
                 soundOfWeek: t("decSoundOfWeek"),
                 playSound: t("decPlaySound"),
@@ -458,6 +482,7 @@ export default async function StorytimeWeekPage({
               song={week.song}
               mediaUrls={mediaUrls}
               labels={{ play: t("songPlay"), pause: t("songPause") }}
+              doneKey={doneKeyOf("song")}
             />
           ) : (
             <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />

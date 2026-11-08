@@ -10,7 +10,8 @@
  * (rule 10.5): every sound is a recorded file.
  */
 import { mediaUrl } from "../../../../../lib/media/url";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { markPartDone } from "../../../../../lib/done";
 import { blendPlanForWord } from "../../../../../lib/blend";
 import { seekAndRun, stopAtMediaEnd } from "../../../../../lib/audio-seek";
 import type { StorytimeBook, StorytimeWeek } from "../../../../../lib/contracts/week";
@@ -48,6 +49,8 @@ interface StorytimeDecodableProps {
   mediaUrls?: Record<string, string>;
   /** The translated labels; the default keeps the exact pre-remediation strings (finding F137). */
   labels?: Partial<DecodableLabels>;
+  /** The `<level>:<week>:<part>` key that the book writes to the done record at its last page. */
+  doneKey?: string;
 }
 
 /**
@@ -168,6 +171,20 @@ function sentencePieces(text: string): SentencePiece[] {
 }
 
 /**
+ * Builds the inline box style of one word button. A word narrower than 48 px keeps a 48 px tap
+ * box, and a negative margin takes back the blank so the glyphs keep their text gap. The first
+ * word has no left neighbor, so its box grows to the left and its right edge stays at the glyph:
+ * the measured gap to the next word box then equals the visible gap (look task 2.3f).
+ * @param word The word of the button.
+ * @param first True for the first word of the sentence.
+ * @returns The inline style of the button.
+ */
+function wordBoxStyle(word: string, first: boolean): CSSProperties {
+  if (first) return { marginInlineStart: `min(0px, calc(${word.length}ch - 48px))`, justifyContent: "flex-end" };
+  return { marginInline: `min(0px, calc((${word.length}ch - 48px) / 2))` };
+}
+
+/**
  * Renders one decodable part for a child (spec FR-7).
  * @param props See `StorytimeDecodableProps`.
  * @returns The sounds page, the current book page, the tricky words, and the audio elements.
@@ -177,6 +194,7 @@ export function StorytimeDecodable({
   locale,
   mediaUrls = {},
   labels: labelOverrides,
+  doneKey,
 }: StorytimeDecodableProps) {
   const phonemeRef = useRef<HTMLAudioElement | null>(null);
   const wholeRef = useRef<HTMLAudioElement | null>(null);
@@ -200,6 +218,12 @@ export function StorytimeDecodable({
   );
   const page = decodable?.pages[pageIndex];
   const pageNumber = pageIndex + 1;
+  const lastPage = (decodable?.pages.length ?? 1) - 1;
+
+  // The decodable is done on this device when it reaches its last page.
+  useEffect(() => {
+    if (lastPage > 0 && pageIndex >= lastPage) markPartDone(doneKey);
+  }, [pageIndex, lastPage, doneKey]);
   const element = week.focus?.element;
   const soundsPage = decodable?.soundsPage;
   const tricky = useMemo(() => {
@@ -551,13 +575,13 @@ export function StorytimeDecodable({
             />
           ) : null}
           <p className="flex flex-wrap items-center whitespace-pre-wrap text-2xl [@media(max-height:500px)]:flex-1" lang="en">
-            {sentencePieces(page.text).map((piece, index) =>
+            {sentencePieces(page.text).map((piece, index, pieces) =>
               piece.word ? (
                 <span key={index} className="inline-flex items-baseline">
                   <button
                     type="button"
                     onClick={() => onWordTap(piece.word!)}
-                    style={{ marginInline: `min(0px, calc((${piece.word.length}ch - 48px) / 2))` }}
+                    style={wordBoxStyle(piece.word, index === pieces.findIndex((entry) => entry.word))}
                     className="inline-flex min-h-[44px] items-center rounded hover:bg-neutral-100"
                   >
                     {piece.word}

@@ -50,5 +50,6 @@
   "stFallbackHeading": "Scan the book code",
   "stFallbackLine": "Scan the code in the book to open the week.",
   "barLevel": "Level {level}",
-  "barWeek": "Week {week}"
+  "barWeek": "Week {week}",
+  "partDone": "Done"
 }

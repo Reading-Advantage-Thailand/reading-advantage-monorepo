@@ -50,5 +50,7 @@
   "stFallbackHeading": "สแกนรหัสในหนังสือ",
   "stFallbackLine": "สแกนรหัสในหนังสือเพื่อเปิดสัปดาห์",
   "barLevel": "ระดับ {level}",
-  "barWeek": "สัปดาห์ {week}"
+  "barWeek": "สัปดาห์ {week}",
+  "partDone": "เสร็จแล้ว",
+  "partDoneStatus": "draft"
 }
