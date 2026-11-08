@@ -252,6 +252,26 @@ function widthFloorViolations(button: HTMLElement): string[] {
   return failures;
 }
 
+/**
+ * The word gap tokens that read as wide: 8 px (0.5rem) or more, or 0.4em or more. Task 2.3f
+ * allows a small gap (0.25em or more) so that the decodable shows two words; the intent of
+ * task 2.3e stays: the sentence must not add a wide gap.
+ * @param className The class list of the sentence paragraph.
+ * @returns The wide gap tokens, if any.
+ */
+function wideGapTokens(className: string): string[] {
+  const wide: string[] = [];
+  for (const token of className.split(/\s+/)) {
+    const numeric = /^gap-x-(\d+)$/.exec(token);
+    if (numeric && Number(numeric[1]) >= 2) wide.push(token);
+    const em = /^gap-x-\[([0-9.]+)em\]$/.exec(token);
+    if (em && Number(em[1]) >= 0.4) wide.push(token);
+    const px = /^gap-x-\[([0-9.]+)px\]$/.exec(token);
+    if (px && Number(px[1]) >= 8) wide.push(token);
+  }
+  return wide;
+}
+
 describe("the council round 1 fix batch (task 2.3e)", () => {
   it("C1 the reader mode buttons carry the hook and look.css gives opaque cream, navy, 4.5:1 (en and th)", async () => {
     const failures: string[] = [];
@@ -355,8 +375,8 @@ describe("the council round 1 fix batch (task 2.3e)", () => {
           failures.push(`${locale}: the decodable word "${word.textContent}" holds a ${violation}`);
         }
       }
-      if (/(^|\s)gap-x-/.test(paragraph!.className)) {
-        failures.push(`${locale}: the decodable sentence must not add a horizontal flex gap (${paragraph!.className})`);
+      for (const token of wideGapTokens(paragraph!.className)) {
+        failures.push(`${locale}: the decodable sentence must not add a wide flex gap (${token})`);
       }
       cleanup();
     }
