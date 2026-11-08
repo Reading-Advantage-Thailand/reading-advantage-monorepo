@@ -32,11 +32,11 @@ const HERO_BAND = ['[data-hero="band"]', 'header[data-hero="band"]'];
 const WIDE = "(min-width: 640px)";
 
 /** The CSS pins and the measured ranges of the three hero fixes. */
-const PINS = {
+const PINS: Record<string, { pin: number; range: readonly [number, number] }> = {
   song: { pin: 220, range: [220, 240] },
   phone: { pin: 96, range: [92, 100] },
   tablet: { pin: 120, range: [116, 124] },
-} as const;
+};
 
 /** The units that move a pixel pin (H4). */
 const MOVING_UNIT = /(\d(rem|em|vh|dvh|svh|lvh|%)(?![a-z]))|calc\(|clamp\(|min\(|max\(|var\(/i;
