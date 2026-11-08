@@ -656,7 +656,7 @@ main[data-place] button:active:not(:disabled) {
     height: 340px;
   }
   header[data-hero="band"] {
-    height: 200px;
+    height: 120px;
   }
   main[data-hero="path"] > header { background-position: 50% 27%; }
   main[data-hero="oak"] > header { background-position: 93% 47%; }
