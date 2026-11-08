@@ -93,6 +93,46 @@ Acceptance:
 - AC-2.7 (automated, option 1) Decodable and question screens on the phone viewport: the hero band has a computed height of 96 CSS px (pin) and a measured height from 92 to 100 CSS px passes (orchestrator tolerance of 4 px around the PM value "about 96"), and the previous and next arrows are inside the first view.
 - AC-2.8 (automated, option 1) Reader at 1024 by 768: the hero band has a computed height of 120 CSS px (pin) and a measured height from 116 to 124 CSS px passes (orchestrator tolerance of 4 px around the PM value "about 120"), and the button row is above the fold (bottom edge at or above 768).
 
+### FR-3 Week content r3 import (Phase 3; amendment of 2026-11-09)
+
+**Amendment date:** 2026-11-09. **Source:** the PM handoff of 2026-11-09, quoted exactly:
+
+```
+PM handoff, Storytime app packages r3 for weeks 02-07 (Workbooks 953f798e). Folders: ~/Desktop/handoff/w02-storytime-app-package-r3 through ~/Desktop/handoff/w07-storytime-app-package-r3. PM re-checked them: sha256sum -c on each MANIFEST passes (77, 70, 70, 80, 71, 74 payload files; 23, 20, 24, 28, 22, 24 word clips). With w01 r4 the packages hold 163 word clips. They follow your K17 contract: books[].audio.wordClips (lower-case word to a path relative to content/storytime/) and song.videoLeadInSeconds. Key rule K2: NFC; U+2019 and U+2018 become U+0027; lower case; outer characters other than a-z and the apostrophe removed; key matches ^[a-z]+('[a-z]+)*$. A word with no key has no clip and no tap target. What: import the r3 packages in place of the older w02-w07 packages. Why: word taps and song line times for all 7 weeks before the 11-14 18:00 capture. Done when: the app reads all 7 weeks, each wordClips path resolves, and the import test passes. Date: 11-12, after K2a and S4b. Put it into the look plan as a task; it uses your next light slot.
+```
+
+Facts checked on 2026-11-09:
+
+- `apps/storytime/content/l2/w01.json` to `w08.json` hold no `wordClips` and no `videoLeadInSeconds`.
+- `apps/storytime/content/source.json` pins Workbooks commit `82f88853615f2925d8f1c12b4571790305224178` for w01 to w08.
+- The contract already accepts both fields (`lib/contracts/week.ts`: `wordClips` record and `videoLeadInSeconds`, 0 to 30).
+- The packages `~/Desktop/handoff/w02-storytime-app-package-r3` to `w07-storytime-app-package-r3` and `w01-storytime-app-package-r4` exist. Each holds `MANIFEST.txt`, `l2/`, and `phonemes/`.
+- Workbooks commit `953f798e` exists and holds `content/storytime/l2/w01.json` to `w08.json`.
+- `scripts/receive-weeks.ts` resolves a commit with `git rev-parse` and writes `content/l2`. Its `mediaOf` already lists the clip entries (look task 1.10, test-strategy M24).
+
+The handoff text says the packages hold `song.videoLeadInSeconds`. The measure of AC-3.4 below shows that only w01 r4 holds it; the PM is asked to confirm that the w02 to w07 songs have no video.
+
+The handoff names weeks 02 to 07 and a w01 r4 package. The "all 7 weeks" and the 163 clips need the w01 r4 package too, so FR-3 imports w01 to w07.
+
+**Decisions with defaults** (the orchestrator may change one before Red starts):
+
+- D1 Import path. Default: run `receive-weeks.ts` at Workbooks `953f798e` for w01 to w07. Keep w08 at its present source. Record both commits in `source.json`. If the receiver cannot read `953f798e`, or the r3 JSON differs from Workbooks at `953f798e`, import the package JSON from the handoff folders and record the reason.
+- D2 Media. Default: the import changes `content/l2` and `source.json` only. The clip files stay in the handoff packages for the local gates. The upload of the clips to the media bucket is a separate task with `deferred:daniel` (a production write).
+- D3 Hashing. Default: FR-3 adds no hash, checksum field, or provenance file. The `MANIFEST.txt` check (`sha256sum -c`) is the PM's handoff check. It is not a new test field.
+- D4 Scope. Default: Phase 3 touches files that the at-home track `storytime_at_home_release_20261106` owns: `apps/storytime/content/l2/`, `apps/storytime/content/source.json`, and, only if the receiver cannot read the r3 content, `apps/storytime/scripts/receive-weeks.ts`. The at-home Phase 3 deploy waits for the Phase 3 checkpoint of this track, and the orchestrator tells the at-home track owner before the import commit.
+- D5 Timing. Default: Phase 3 starts only after the Phase 2 checkpoint (plan rules). The PM date is 2026-11-12, after K2a and S4b, in the next light slot. The capture of 2026-11-14 18:00 needs the import.
+
+Acceptance:
+
+- AC-3.1 (automated) All seven week files `w01.json` to `w07.json` parse with the week contract of `lib/contracts/week.ts`. The file count is asserted equal to 7.
+- AC-3.2 (automated) Every `wordClips` key in the seven weeks is in K2 form (NFC, U+2018 and U+2019 turned into U+0027, lower case, outer characters other than a-z and the apostrophe removed) and matches `^[a-z]+('[a-z]+)*$`. The key count is asserted greater than 0 before the property runs.
+- AC-3.3 (automated) Every `wordClips` path in the seven weeks resolves to an existing file in its handoff package (the package of the week, under `~/Desktop/handoff/`). The path is relative to `content/storytime/`. The test skips no path.
+- AC-3.4 (automated) Every week whose `song` holds a `video` field has `song.videoLeadInSeconds` present (a number from 0 to 30). Measured on 2026-11-09: w01 r4 holds `video`, `videoPhone`, and `videoLeadInSeconds` 3. The packages w02 to w07 r3 hold an audio-only `song` (no `video`, no `videoLeadInSeconds`), so the contract default 0 applies to them. The test asserts the count of weeks with a `video` field is greater than 0, and it asserts that w01 has 3.
+- AC-3.5 (automated) The distinct `wordClips` keys of the seven weeks total 163. Measured on 2026-11-09 (distinct paths of `books[].audio.wordClips` in each package): w01 22, w02 23, w03 20, w04 24, w05 28, w06 22, w07 24. The test asserts the total and each per-week count.
+- AC-3.6 (automated) The look glob, the receiver tests, and the media coverage test `phase3-media-coverage.test.ts` (finding F13) pass after the import, with the `mediaOf` list covering every clip path. The test files outside the look glob that the import breaks are updated in the same commit, with the reason.
+- AC-3.7 (automated) `source.json` records the commit of the w01 to w07 import and the commit of w08, and the listed files match the files in `content/l2`.
+- AC-3.8 (owner-passed) Daniel or the PM confirms the upload of the clips to the media bucket. The task is deferred to Daniel (D2). Until then, the local gates read the handoff media root.
+
 ## 4. Constraints
 
 - Human gates (`[b] … deferred:daniel`): Daniel's pick, his look check, and every deploy and traffic move. No push and no deploy.

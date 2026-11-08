@@ -3,7 +3,7 @@
   "type": "feature",
   "status": "active",
   "created_at": "2026-11-07T00:00:00Z",
-  "updated_at": "2026-11-07T00:00:00Z",
+  "updated_at": "2026-11-09T00:00:00Z",
   "opened": "2026-11-07",
   "description": "Fix eleven UI council findings on the Storytime week pages (Phase 1), then port the look of the option that Daniel picks from the look study (Phase 2), so that Storytime has a look in the vein of Primary Advantage.",
   "author_model": "claude-code/claude-sonnet-5-5",
@@ -21,20 +21,22 @@
     "Daniel via the PM, 2026-11-07: look accepted (his word \"Acepted\"); the pick is option 1, Storybook Quest, with the hero fix",
     "PM, 2026-11-07: Workbooks sends the final SVG pieces by 2026-11-11; Green makes the 5 places from the cover art; Fredoka and Mitr through next/font/local",
     "PM, 2026-11-07: task 1.3 is not held (poster stays until a frame plays, preload metadata); new task 1.9 fixes the read-along highlight skip (per-frame loop, 120 ms minimum window)",
-    "Daniel via the PM, 2026-11-07 13:48: two findings on the live test release; new tasks 1.10 (word tap plays the word's own clip) and 1.11 (song line highlight offset of 3.000 s)"
+    "Daniel via the PM, 2026-11-07 13:48: two findings on the live test release; new tasks 1.10 (word tap plays the word's own clip) and 1.11 (song line highlight offset of 3.000 s)",
+    "PM, 2026-11-09: import the Storytime app packages r3 (w02-w07, Workbooks 953f798e) and w01 r4; new Phase 3 (FR-3)"
   ],
   "dates": {
     "phase_1": "before 2026-11-20",
     "phase_2_green_start": "2026-11-12",
     "phase_2_gates": "2026-11-17 (option 1)",
-    "phase_2_look_check": "2026-11-18"
+    "phase_2_look_check": "2026-11-18",
+    "phase_3_import": "2026-11-12 (PM; after the Phase 2 checkpoint)"
   },
   "constraints": [
     "Docs-only creation; no change under apps/ or packages/ at creation",
     "No push and no deploy",
     "No new hash or provenance file (AGENTS.md hashing policy)"
   ],
-  "estimated_tasks": 19,
+  "estimated_tasks": 29,
   "actual_tasks": null,
   "deviation_notes": ""
 }
