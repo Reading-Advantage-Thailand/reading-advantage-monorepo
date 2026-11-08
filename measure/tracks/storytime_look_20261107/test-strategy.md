@@ -9,6 +9,7 @@
 > **Amended after the phase acceptance r2:** 2026-11-08 (orchestrator decision). Closeout item 3 of P1.4 gains the exception for `apps/storytime/__tests__/phase3-browser-gate.sh` (look commit `97569137d`). Nothing else changed.
 > **Phase 2 written:** 2026-11-08 at role base `e0fe89c7a`. Model: claude-code/claude-sonnet-5-5#high (PM route order 2026-11-08). Section P2 replaces the outline. New: facts M29 to M40, section 2.2.2 (merge and edit rules for the shared files), and questions Q23 to Q36. The Phase 1 text is unchanged. Task lines 2.2a, 2.2b, and 2.3d are added to the plan.
 > **Amended for the Phase 2 paths:** 2026-11-09 at role base `7c11aa22c` (the shared master HEAD when this amendment began). Cause: the look commits of Phase 2 touched paths outside the allowed list of closeout item 3. The Review A Nits at `be5b22394` and `c54b78ea4` name them. Closeout item 3 gains the council and adversarial paths with their tasks, the true `look-*` test count, and the recorded shared-index sweep of the two login files. Closeout item 9 gains the recorded PM decision of council round 3. Nothing else changed. The capture point of the Phase 2 base is unchanged (section 1.4 and P2.0): the orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after the strategy commit and before the Red role starts. The value the orchestrator already captured stands. This amendment does not move it and embeds no SHA.
+> **Phase 3 written:** 2026-11-09 at role base `fe1c2bd11` (the shared master HEAD when this amendment began). Model: minimax-cn-coding-plan/MiniMax-M3 (a substitute for claude-opus-5-5; the Claude 7-day window sat at 80 percent). Cause: the spec review round 2 (`measure/runs/storytime_look_20261107/spec-review-fe1c2bd11.json`, pass) leaves F8 open for the strategy role and names F10 (Major), F11 (Nit), and F12 (Nit). The plan holds the new heading `## Phase 3: Week content r3 import` with tasks 3.1 to 3.4. Section P3 is new. The phase summary gains one row. Section 4 gains Q37 to Q41. The Phase 1 and the Phase 2 text is unchanged. The Phase 3 base capture is new: the orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after the commit of this strategy and before the Red role starts (P3.0). This amendment embeds no SHA.
 > **Related strategy:** [storytime_at_home_release_20261106/test-strategy.md](../storytime_at_home_release_20261106/test-strategy.md). Its section 1.1 (heavy jobs) and section P2b.4 (targeted command shape) apply here.
 > **Facts:** each "measured" fact was read on 2026-11-07 at `d8e73fc6c`. One heavy job ran (fact M1). Red and Green must measure again.
 
@@ -141,8 +142,9 @@ Order: Red can run now. Green on shared files waits for no login commit; it re-r
 |---|---|---|---|---|---|---|
 | P1 Council fixes | high | yes | no | **yes (required)** | yes (focused, one round) | **yes (required)** |
 | P2 Look port of option 1 | high | yes | no | **yes (required)** | yes | **yes (required)** + UI council round 2 |
+| P3 Week content r3 import | high | yes | no (a stated condition) | **yes (required)** | yes (one round) | **yes (required)** |
 
-The reasons are in P1.6 and P2.
+The reasons are in P1.6, P2, and P3.7.
 
 ## P1: Council fixes
 
@@ -679,6 +681,190 @@ A6 (registry-note overstatement) applies to every `[x]` note: no note says "look
 - Fonts: Sarabun stays the reading face of the sentence, the read-along text, and the lyric lines (LOOK-NOTE section 1). Fredoka and Mitr are display faces.
 - The study picks the place with `:has()`. The default of Q36 uses a `data-place` attribute on `main`, so no `:has()` carries the place and an older browser still shows the right ground.
 
+## P3: Week content r3 import
+
+**Risk: high.** Phase 3 replaces the data of seven week files. It adds 163 clip paths and one song field to the app content. The change reaches the reader, the decodable, and the song of every week. It adds no code to the app, no auth, no session, no database, and no secret. The risk is high for two reasons. First, a wrong clip path reaches a media URL that the app builds from the week file. Second, the receiver writes eight files in one run, and seven of them belong to another track.
+
+Task risk: 3.1 medium (one new test file, no product code), 3.2 high (the receiver rewrites the content of eight files), 3.3 medium (the gates), 3.4 critical (a write to the production bucket; `deferred:daniel`, no work in this phase).
+
+`HEAVY` is the wrapper of section 1.1. The Phase 1 rules hold: one heavy job at a time, `CI=true`, `--maxWorkers=1`, targeted files, and the foreground.
+
+### P3.0 Facts, the decisions, and the base capture
+
+| # | Fact | How measured |
+|---|---|---|
+| M41 | The Phase 2 heading of plan.md (line 35) holds no `[checkpoint: ...]`. Phase 3 starts only after the acceptance role writes it. | Read of plan.md, 2026-11-09. |
+| M42 | The shipped `content/l2/w01.json` to `w08.json` hold no `wordClips` and no `videoLeadInSeconds`. `source.json` pins the commit `82f88853615f2925d8f1c12b4571790305224178` and lists the eight files. | Read of the eight files and of `source.json`. |
+| M43 | The seven packages hold the per-week distinct clip key counts 22, 23, 20, 24, 28, 22, 24, and the sum is 163. The 101 distinct keys of the seven weeks are all in K2 form. No key holds a hyphen. No key holds an apostrophe. Every one of the 163 paths ends in `.mp3` and sits under `l2/media/w<NN>/`. | Python read of the seven package JSON files, 2026-11-09. |
+| M44 | The seven media roots hold 230 `.jpg`, 198 `.mp3`, 2 `.mp4`, and 14 `.sha256` files. The `words` folder of each root holds the clips of that week, and the seven roots hold 163 clip files. The `.sha256` files serve the manifest check of the PM (D3), not a test field. | The command of Q38 and a `find` over the `words` folders. |
+| M45 | **The w08 file at Workbooks `953f798e` is not equal to the shipped w08.** The receiver output adds 20 fields: 5 scripts, each with `share.caption.en`, `share.caption.th`, `share.shots[0].media`, and `share.shots[0].step`. No other field differs. | `git show 953f798e:content/storytime/l2/w08.json` and a parsed field diff, 2026-11-09. |
+| M46 | The receiver command of the runbook is `node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit <commit>` from the monorepo root. The defaults are `--level 2` and `--weeks 1-8`. A run that leaves a week out at a new commit exits with code 64 and changes nothing. The runbook forbids `pnpm --filter storytime exec`. | Read of `docs/runbooks/storytime-app-week-sync.md`. |
+| M47 | `mediaOf` in `scripts/receive-weeks.ts` (line 102) lists each `books[].audio.wordClips` value as kind `word-clip`. The media coverage test therefore covers the clips after the import. | Read of the receiver and of `phase3-media-coverage.test.ts`. |
+| M48 | The look glob holds 90 test files at the role base. The last recorded run of that glob reads `Test Files 90 passed (90)` and `Tests 689 passed (689)`. | Light file count and the log `green-p2-adv-433a613ae.log`. |
+| M49 | The contract key rule is `^[a-z]+(['-][a-z]+)*$`, and `mediaPath` accepts any extension. The Phase 3 test uses the K2 rule of the hand-off and the `.mp3` set of Q38. | Read of `lib/contracts/week.ts`. |
+| M50 | The shipped `w01.json` holds `song.video` and no `song.videoLeadInSeconds`. The shipped `w02.json` to `w08.json` hold no `song.video` and no `song.videoLeadInSeconds`. | Read of the eight files. |
+
+**The decisions of the orchestrator** (Q37 to Q41 of section 4, dated 2026-11-09): the w08 diff is a stop condition (Q37), the allowed clip extension set is `.mp3` (Q38), the old dates of FR-2 are superseded (Q39), the model families for Red and Green (Q40), and the w08 question that M45 raises (Q41).
+
+**Base capture.** This file embeds no SHA. The commit `fe1c2bd11` is the role base at which this strategy was written. It is **not** `phase_base_sha`, because it predates the strategy commit. The orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after two events: the commit of this strategy, and the answers to Q37 to Q41 (the defaults apply when no answer comes). The capture happens before the Red role starts. The orchestrator records the full SHA and `git worktree list | wc -l` in the Red evidence. The scope check uses the commits of this track only:
+
+```bash
+git log <phase_base_sha>..HEAD --format=%H --grep='track_id: storytime_look_20261107'
+```
+
+Then `git show --name-only --format= <sha>` for each commit. The label is `look_out_of_scope_paths=<n>`; the Phase 3 closeout needs 0, with the allowed paths of P3.9.
+
+### P3.1 Red: the command and the expected failure for task 3.1
+
+**Red rule.** Red writes one new file, `apps/storytime/__tests__/look-r3-import.test.ts`, and commits it alone. Red edits no old test. The file reads the repository content files only (A9).
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-r3-import.test.ts'
+```
+
+Expected at the base: exit 1; `look_files=1`; `load_errors=0`; `tests_failed>=4`.
+
+| Case | Expected at the base |
+|---|---|
+| R1 the parse case | Passes (characterization): the seven weeks parse with the contract today. |
+| R2 the K2 key case | Fails on the count guard: `clip_keys_checked=0`, the rule needs more than 0 keys. |
+| R3 the path case | Fails on the count guard: `clip_paths_checked=0`. |
+| R4 the count case | Fails: `the seven weeks hold 0 distinct clip keys, expected 163`. |
+| R5 the raw JSON case | Fails on w01: `w01 song.videoLeadInSeconds is absent in the raw JSON, expected 3`. The w02 to w07 part passes (characterization, M50). |
+| R6 the self-test mutants | Pass (characterization): the mutants test the rule, not the data. |
+
+The Red evidence lists each passing case with its reason (A4) and quotes `week_files=7`, `clip_keys_total=<n>`, `clip_paths_total=<n>`, `mutants_checked=<n>`, and `look_tsc_errors=0`.
+
+### P3.2 The content of `look-r3-import.test.ts` (what the case asserts, and the broken copy)
+
+A "broken copy" is a mutant that the test must reject. Green does not build the mutant. The Red role proves the rejection with strings inside the test, and records `mutants_checked=<n>` with a floor of 13.
+
+- **R1, the parse case (AC-3.1).** The test reads `content/l2/w01.json` to `w07.json` with `readFileSync` and parses each with `weekSchema.parse(JSON.parse(text))`. The file count is asserted equal to 7 (`week_files=7`). The test reads no file outside the repository and no other folder.
+- **R2, the K2 key case (AC-3.2).** The test collects the keys of `books[].audio.wordClips` of the seven weeks. The key count is asserted greater than 0 before the loop (`clip_keys_checked=<n>`, floor 1). Each key must equal its K2 form and must match `^[a-z]+('[a-z]+)*$`. The K2 form of a key is: the NFC form, then U+2019 and U+2018 turned into U+0027, then the lower-case form, then the outer characters other than `a-z` and the apostrophe removed. The test holds this function as `k2Key(key)` and asserts `k2Key(key) === key`.
+- **R3, the path case (AC-3.3).** The test collects the values of `books[].audio.wordClips`. The path count is asserted greater than 0 before the loop (`clip_paths_checked=<n>`, floor 1). Each path must hold no `..` segment, must not start with `/`, must start with the media folder of its own week (`l2/media/w<NN>/`), and must end in `.mp3` (Q38). The test holds this function as `safeClipPath(path, week)`.
+- **R4, the count case (AC-3.5).** The per-week distinct key counts are 22, 23, 20, 24, 28, 22, 24, and the sum is 163. The test asserts each count and the sum (`clip_keys_total=163`). The count is of the distinct keys of a week across its books, which is the same as the distinct paths of that week (M43).
+- **R5, the raw JSON case (AC-3.4).** The test reads the raw text of each week file and parses it with `JSON.parse`. For w01, `song.videoLeadInSeconds` equals 3. For w02 to w07, the `song` object holds no `video` key and no `videoLeadInSeconds` key, and the parsed value of the field is 0 (the contract default). The test names an absent field apart from the value 0.
+- **R6, the self-test mutants.** The test calls `k2Key` and `safeClipPath` on strings and rejects the broken copies: a key with U+2019, a key with U+2018, an upper-case key, a key with a space inside, a key with a leading digit, a key with a trailing apostrophe, a key with two apostrophes in a row, a decomposed key, a path with `..`, a path with a leading `/`, a path of another week, a path with `.txt`, a path with a backslash, and an empty path. Two positive controls pass: the key `don't` and the path `l2/media/w01/words/wa-am.mp3`.
+- **R7, the repository-only rule (A9).** The test file holds no path under `~/Desktop/handoff`, no `measure/tracks` path, and no council path. The detector of P3.4 must exit 1.
+- **R8, the type rule.** The Red file type-checks (`look_tsc_errors=0`).
+
+**What the Red test cannot prove:** that a clip file holds the right word, that the file exists (the resolve command of P3.3 is the proof), that the clip sounds right (a human check), and that the app plays the clip on a phone (the browser review and the live check).
+
+### P3.3 The Green evidence of task 3.2
+
+**The receiver run.** From the monorepo root (M46):
+
+```bash
+cd /home/daniebo/Desktop/reading-advantage-monorepo
+node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit 953f798e --weeks 1-8 --level 2
+```
+
+The exit code must be 0. A run that leaves a week out exits with code 64 and changes nothing, so the run covers all eight weeks (D1). The receiver writes `source.json` last. The Green evidence quotes the exit code and the last line of the receiver output (`weeks_in_record=<n>`, `weeks_in_run=<n>`).
+
+**The compare with the packages.** A node script (run through `HEAVY`) reads the seven received files and the seven package files, parses both, and compares them with `assert.deepStrictEqual`. The package for w01 is `~/Desktop/handoff/w01-storytime-app-package-r4/l2/w01.json`. The packages for w02 to w07 are `~/Desktop/handoff/w0N-storytime-app-package-r3/l2/w0N.json`. The label is `weeks_compared=7 weeks_equal=7`. A difference stops Green before the commit and reports to the orchestrator. There is no package-JSON fallback (D1).
+
+**The w08 diff rule (Q37).** The same script compares the received w08 with the shipped w08, which the script reads from Git with `git show HEAD:apps/storytime/content/l2/w08.json`. An empty diff passes. A non-empty diff is a stop condition: Green stops before the commit, writes no commit, and reports to the orchestrator with `w08_diff_fields=<n>` and the names of the changed field paths. The reason is that w08 sits outside the PM hand-off. M45 says the diff is not empty at the role base, so the expected outcome of task 3.2 today is a stop and a report (Q41).
+
+**The resolve command (AC-3.3a).** A script reads the seven received week files, collects the clip paths, and checks each path under the media root of its week. The path is relative to the content folder, so the script joins the media root with the path. The label is `clip_paths_checked=163 clip_paths_missing=0`. This command is Green evidence, not a repository test, because the hand-off folder is absent in CI.
+
+**The two new media roots.** They serve the Green evidence and the browser review only. No test reads them (A9).
+
+| Root | Package | Weeks |
+|---|---|---|
+| `~/Desktop/handoff/w01-storytime-app-package-r4/` | r4 | w01 |
+| `~/Desktop/handoff/w02-storytime-app-package-r3/` to `~/Desktop/handoff/w07-storytime-app-package-r3/` | r3 | w02 to w07 |
+
+The Phase 2 gate read the Phase 1 root `~/Desktop/handoff/w01-storytime-app-package-r2`. These two roots replace it in the Phase 3 evidence.
+
+### P3.4 The gates of task 3.3 (AC-3.6)
+
+**The look glob** (the command of P1.4, which already holds `look-*`):
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/release-*.test.ts __tests__/phase1-*.test.ts __tests__/phase2-*.test.ts __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx __tests__/look-*.test.ts __tests__/look-*.test.tsx'
+```
+
+- **R-COUNT-3.** `files = 90 + 1 = 91`. `tests_passed = 689 - old_cases_removed_p3 + new_tests_p3`. `tests_failed=0`. `tests_skipped=0`. Red states `old_cases_removed_p3=<n>` and `old_cases_rewritten_p3=<n>` as labeled integers. A lower total means a deleted or a skipped case (A4, A5). `new_tests_p3` is the count of the new file run alone.
+- **The receiver gate** (the four files named in plan.md line 67): `__tests__/phase2-receive-commit.test.ts __tests__/phase2-receive-guards.test.ts __tests__/phase3-loop-receiver.test.ts __tests__/phase3-receiver-hardening.test.ts`. Exit 0; `files=4`; `tests_failed=0`.
+- **The media coverage gate**: `__tests__/phase3-media-coverage.test.ts`. Exit 0; `files=1`; `tests_failed=0`. The list `mediaOf` must cover every clip path of the seven imported weeks (M47).
+- **The new test**: `__tests__/look-r3-import.test.ts`. Exit 0; `files=1`; `tests_failed=0`; `clip_keys_total=163`; `clip_paths_total=163`; `week_files=7`.
+- **Type gate**: `../../node_modules/.bin/tsc --noEmit` through `HEAVY`. Exit 0; `look_tsc_errors=0`.
+- **Lint gate**: `../../node_modules/.bin/eslint` on the changed `.ts` and `.tsx` files through `HEAVY`. Exit 0; `eslint_errors=0`. The `.json` files have no lint run.
+- **R-EDIT3.** Red edits no old test. Green edits an old test only when a run proves the import breaks it, and only to an assertion of equal strength. Each edit names the reason in the Green evidence. The count of the cases of that file does not fall.
+- **R-GATE3.** No gate script changes in this phase. A gate row changes only where the import moves a measured value, and then the check count stays the same or grows, and no assertion becomes weaker.
+- **Detectors** (light; exit 1 means no hit; exit 2 is a failure, A14): `rg -n 'handoff|Desktop|measure/tracks|ui-council' apps/storytime/__tests__/look-r3-import.test.ts` exits 1; `rg -n 'wordClips' apps/storytime/lib/contracts/week.ts` exits 0; `rg -n 'videoLeadInSeconds' apps/storytime/lib/contracts/week.ts` exits 0.
+
+### P3.5 The closeout gate of Phase 3
+
+1. The look glob, the receiver gate, the media coverage gate, the new test, `tsc`, and ESLint exit 0 with the counts of P3.4.
+2. The Red file of task 3.1 exists, and `git log --format=%H --grep='track_id: storytime_look_20261107' -- apps/storytime/__tests__/look-r3-import.test.ts` shows the Red commit before the Green commit (`red_before_green=1`).
+3. `look_out_of_scope_paths=0` with the allowed paths of P3.9.
+4. The receiver evidence holds: the exit code 0, `weeks_compared=7`, `weeks_equal=7`, `clip_paths_checked=163`, `clip_paths_missing=0`, and the `source.json` commit equals the full id of `953f798e` with the eight files listed.
+5. The w08 rule holds: either the diff is empty, or the Green evidence names the stop and the report to the orchestrator, and no commit carries a w08 change (Q37). A commit that carries a changed w08 without an orchestrator decision fails this item.
+6. `git worktree list | wc -l` equals the count at the capture (A16). `build-graph update ./graph.db apps/storytime/scripts/receive-weeks.ts apps/storytime/lib/contracts/week.ts` runs once after the import (A10).
+7. Review A, Review C, the adversarial record, and the browser review exist and pass the audit-result checker.
+8. The phase acceptance role writes `[checkpoint: <sha>]` to the Phase 3 heading of plan.md after the items above.
+9. **Task 3.4 (AC-3.8) stays `[b] deferred:daniel`.** The clip upload to the media bucket is a production write. Until Daniel does it, the local gates read the hand-off media root.
+
+### P3.6 Fixtures, mocks, and live proof
+
+- The Red test holds no fixture file. It reads the seven shipped week files and the real contract.
+- The test mocks nothing. A case that claims to prove the contract calls the contract.
+- The clip files stay in the hand-off packages for the local gates (D2). The app plays no clip until the bucket upload (task 3.4).
+- The live proof of a word tap is the browser review of P3.8 and the human check after the deploy word. No role writes that line from a test run (A5).
+
+### P3.7 Review applicability
+
+| Review | Applies | Reason and scope |
+|---|---|---|
+| Review A (code) | **yes** | The change is data, but it is data that the app builds media URLs from. Review A reads the diff of the eight week files, the `source.json` shape, the receiver rule that covers all eight weeks, the `mediaOf` clip entries, the Red test of P3.2, the old-test edits under R-EDIT3, and the stop rule of Q37. Review A also reads the K2 rule and the `.mp3` set against the contract rule (M49), and checks that the phase touches no path outside P3.9. |
+| Review B (security) | **no, with a stated condition** | The phase adds no auth, no session, no database, no storage write, no network call, and no secret. It adds JSON data and one test file. The clip paths are the one input risk, and the contract already holds them to an allowlist: `mediaPath` rejects a URL, a drive, an absolute path, a backslash, a control byte, an empty segment, a `.` segment, and a `..` segment. The new test holds the same rule for the clip values and pins the `.mp3` set (Q38). Review B becomes required if the import weakens `mediaPath`, if the receiver accepts a remote URL, if the phase adds a route or a cookie, or if the bucket upload of task 3.4 moves into this phase. |
+| Review C (UX/API) | **yes (required)** | A child taps a word in every week. Review C reads the child-facing result of the import: a word tap plays the clip of that word, a word with no clip is not a tap target, the song of w01 keeps its lead-in of 3 s, and the songs of w02 to w07 stay audio-only with a lead-in of 0. Review C also reads the Thai drafts of the interface, which the import does not change, and the K2 key names that a child never sees but a teacher screen may show. |
+| Adversarial testing | **yes (one round)** | The K2 edge keys (U+2019, U+2018, an upper-case word, a decomposed word, a leading digit, a trailing apostrophe, two apostrophes in a row), the path traversal strings (`../`, a leading `/`, a path of another week, a `.txt` path, a backslash), a week with no clip at all, and a duplicate key in two books. The adversarial role adds tests only in `apps/storytime/__tests__/`. |
+| Browser review (UX) | **yes (required)** | The word taps on w02 to w07 and the capture of 2026-11-14 18:00. The browser reads the week pages with the imported content and checks that a tapped word plays its own clip, that a word with no clip shows no tap affordance, and that no console error and no failed request appear. |
+| Human checks | **yes** | The clip sounds right for a child (after the bucket upload and the deploy word). No role writes that line from a test run. |
+
+### P3.8 The browser review and the capture of 2026-11-14 18:00
+
+- The review runs on the imported content with the media root of the week. The root for w02 to w07 is `~/Desktop/handoff/w0N-storytime-app-package-r3/`, and the root for w01 is `~/Desktop/handoff/w01-storytime-app-package-r4/`.
+- The review taps one word per week of w02 to w07 that holds a clip, and one word that holds no clip. It records `tap_<week>=own_clip|no_clip_target` for each of the seven lines, and `taps_checked=<n>` with a floor of 7.
+- The capture of 2026-11-14 18:00 shows the seven week pages with the imported content. It records `console_errors=0` and `failed_requests=0` for each week page.
+- A headless run is not a phone check. No role writes a phone result.
+
+### P3.9 Architecture guardrails, the allowed paths, and the at-home ownership
+
+**Guardrails.**
+
+- The phase changes data, not code. It adds no dependency, no provider SDK, and no log line.
+- The changed contract: the week files now carry `books[].audio.wordClips` and `song.videoLeadInSeconds`. The contract accepted both before the import (M49). The `mediaOf` list already names the clips (M47).
+- `source.json` keeps one commit, the full id of `953f798e`, and its shape of eight files (AC-3.7).
+- The receiver guard holds: a subset run at a new commit exits 64 and changes nothing (M46).
+- The `MANIFEST.txt` check of the PM is a hand-off check. The phase adds no hash, no checksum field, and no provenance file (D3).
+
+**The allowed paths of Phase 3.**
+
+| Path | Rule |
+|---|---|
+| `apps/storytime/content/l2/w01.json` to `w07.json` | The import writes these seven files. |
+| `apps/storytime/content/l2/w08.json` | The receiver writes it in the same run. It may be committed only when its diff is empty (Q37). |
+| `apps/storytime/content/source.json` | The import writes it. |
+| `apps/storytime/__tests__/look-r3-import.test.ts` | The new Red file of task 3.1. |
+| The old tests that the import breaks | Each edit names the reason in the Green evidence (R-EDIT3). |
+| `apps/storytime/scripts/receive-weeks.ts` | Only after the stop-and-report rule of D4, and only with a test. |
+
+**The at-home ownership note.** The paths above belong to the track `storytime_at_home_release_20261106`. The orchestrator tells that track owner before the import commit. The Phase 3 deploy of the at-home track waits for the checkpoint of this phase. The scope check of the closeout counts the paths of the other track as `look_out_of_scope_paths` only when the look commits changed them outside the list above.
+
+### P3.10 Anti-pattern coverage per task
+
+The catalog IDs follow `measure/anti-patterns.md`. A2 (the consent-blind publish gate), A8, A10 (see closeout item 6), A11, A12, A13, and A15 are not phase risks.
+
+| Task | Anti-patterns | Defense | Falsification condition |
+|---|---|---|---|
+| 3.1 `look-r3-import` | A3, A4, A5, A9, A14 | Labeled integers with a floor: `week_files=7`, `clip_keys_checked=<n>` above 0, `clip_paths_checked=<n>` above 0, `clip_keys_total=163`, `mutants_checked=<n>` at least 13. Every `every` check runs after its count guard. The self-test mutants prove that the K2 rule and the path rule reject the broken copies. The test reads repository files only, and the detector of P3.4 exits 1. | A test with no clip in the data passes; a mutant key with U+2019 passes; a path with `..` passes; a test that reads the hand-off folder passes CI. |
+| 3.2 Green import | A5, A6, A9, A14 | The Green evidence quotes the exit code of the receiver, the labels `weeks_compared`, `weeks_equal`, `clip_paths_checked`, `clip_paths_missing`, and `w08_diff_fields`. A non-empty w08 diff stops the run and reports. No note says "the import is done" without those labels. | The plan note says the import passed while the receiver exited 64; a commit carries a changed w08 without an orchestrator decision; the resolve command reports a missing clip and the note says 0. |
+| 3.3 gates | A3, A4, A5, A16 | The R-COUNT-3 formula with `old_cases_removed_p3` and `new_tests_p3` as labeled integers. The old-test edits obey R-EDIT3. The gate rows keep their count and their strength under R-GATE3. | A lower test total passes; a deleted old case passes; a weakened gate row passes. |
+| 3.4 bucket upload | A2, A6 | The task stays `[b] deferred:daniel`. No note claims the clips live in the bucket before the upload. | A plan note claims the clips are in the bucket before Daniel uploads them. |
+
 ## 4. Questions for the orchestrator (the defaults apply if no answer comes)
 
 | # | Question | Default |
@@ -720,3 +906,13 @@ A6 (registry-note overstatement) applies to every `[x]` note: no note says "look
 | Q34 | AC-2.7 names the "arrows" of the "question screens", but the question screen has a skip control and no arrows. | The gate measures the arrows on the decodable page and on the reader page, and the skip control (and the first answer card) on the question screen. Each bottom edge is at or above the viewport height. |
 | Q35 | The study offers a reduced build (the five CSS pieces with no painted hero, 1.5 days) if Green starts after 2026-11-12. | Not planned. Red tests the full option. If the PM orders the reduced build, the hero art cases of `look-assets` (oak, path) and gate row 4 change, and the orchestrator asks for a strategy amendment first. |
 | Q36 | How does the page choose the place, with `:has()` (the study) or with an attribute? | The route sets `data-place` on `main` from `placeFor`. The CSS selects `main[data-place="..."]`. No `:has()` carries the place. |
+
+**The decisions of the orchestrator for Phase 3 (2026-11-09).** The defaults below apply. An answer may change one row before Red starts.
+
+| # | Question | Default |
+|---|---|---|
+| Q37 | F10 (spec review round 2, Major). Does a non-empty content diff of w08 between the shipped file and the receiver output at `953f798e` stop the import, or is it only recorded? | **Stop condition.** A non-empty diff stops Green before the commit, and Green reports to the orchestrator. The reason is that w08 sits outside the PM hand-off. An empty w08 diff passes. The evidence label is `w08_diff_fields=<n>` (P3.3, P3.5 item 5). |
+| Q38 | F11 (spec review round 2, Nit). AC-3.3 says "an audio extension" and names no set. The contract accepts any extension. | **The allowed clip extension set is `.mp3` only.** Every hand-off clip is an `.mp3` file. The check command is `find ~/Desktop/handoff/w0[1-7]-storytime-app-package-r[34]/l2/media -type f \| sed 's/.*\.//' \| sort \| uniq -c` (it reads 262 `.jpg`, 203 `.mp3`, 4 `.mp4`, and 16 `.sha256` at the role base; the seven roots of P3.3 read 230 `.jpg`, 198 `.mp3`, 2 `.mp4`, and 14 `.sha256`). The test asserts the `.mp3` end of each clip path (P3.2, case R3). |
+| Q39 | F12 (spec review round 2, Nit). The old dates of FR-2 and of the plan header differ from D5. | **Superseded.** The dates at spec.md line 71 and plan.md line 4 are superseded by D5. The Phase 2 checkpoint sits at 2026-11-09 or 2026-11-10, and Phase 3 runs from 2026-11-10 to 2026-11-12. This row is a Nit, so it carries no test. |
+| Q40 | The model families for the Phase 3 roles. The Claude 7-day window sat at 80 percent until 2026-11-10 15:00. | **Red on DeepSeek. Green on a family other than DeepSeek.** The orchestrator picks the Green family at the spawn with `ra-quota pick green --not-family deepseek`. The strategy role ran on minimax-cn-coding-plan/MiniMax-M3 as a substitute for claude-opus-5-5. |
+| Q41 | M45 measured a non-empty w08 diff at the role base: the receiver output at `953f798e` adds 20 fields under `scripts[].share` (5 scripts, each with `share.caption.en`, `share.caption.th`, `share.shots[0].media`, and `share.shots[0].step`). Under Q37 the import stops before the commit. | **Follow Q37.** Green stops before the commit and reports to the orchestrator with `w08_diff_fields=20` and the field names. This track commits no w08 change. The orchestrator asks the PM whether the hand-off covers w08, or whether the at-home track updates its w08 first. |
