@@ -12,7 +12,9 @@ Daniel's word starts a traffic file. No workflow runs a traffic file.
 - Each traffic file runs the database steps first and the traffic move (`update-traffic`) last.
   A failed database step stops the build, and the traffic does not move.
 - Each traffic file sends 100 percent of the traffic to the tag of the new revision. It never
-  names a revision by number.
+  names a revision by number. The one exception is the `sales-advantage` file: it moves the
+  traffic to the revision that its step `capture-company-candidate` records (see the section
+  `sales-advantage`).
 - Start a traffic file with `gcloud builds submit --project=<project> --config=<file> .` from
   the repository root at the commit of the push. Add `--substitutions=<name>=<value>` for each
   substitution that the section names.
