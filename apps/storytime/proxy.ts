@@ -1,6 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
-import { SESSION_COOKIE_NAME } from "./lib/auth/cookie";
+import {
+  SESSION_COOKIE_NAME,
+  SIGN_IN_USERNAME_COOKIE,
+  clearSignInUsernameCookie,
+} from "./lib/auth/cookie";
 import { renewSessionCookie } from "./lib/auth/renewal";
 import { DATABASE_URL_ENV } from "./lib/auth/store";
 
@@ -22,6 +26,9 @@ import { DATABASE_URL_ENV } from "./lib/auth/store";
 
 /** Paths that never redirect: the build assets, the API routes, and the service files. */
 const PASSTHROUGH = [/^\/_next\//, /^\/api\//, /^\/(?:favicon\.ico|robots\.txt|sitemap\.xml)$/];
+
+/** The sign-in page of a locale; the group holds the locale of the cookie path. */
+const SIGN_IN_PAGE = /^\/(th|en)\/sign-in\/?$/;
 
 /** A path whose last segment names a file. */
 const FILE_PATH = /\.[^/]+$/;
@@ -121,6 +128,14 @@ export default function proxy(request: NextRequest): NextResponse | Promise<Next
 
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   if (locale !== null && token && process.env[DATABASE_URL_ENV]) return renewedPass(token);
+
+  const signInLocale = request.method === "GET" ? SIGN_IN_PAGE.exec(pathname)?.[1] : undefined;
+  if (signInLocale && request.cookies.has(SIGN_IN_USERNAME_COOKIE)) {
+    const response = NextResponse.next();
+    response.headers.append("Set-Cookie", clearSignInUsernameCookie(signInLocale));
+    response.headers.set("Cache-Control", "no-store");
+    return response;
+  }
 
   if (PASSTHROUGH.some((pattern) => pattern.test(pathname))) return NextResponse.next();
   if (FILE_PATH.test(pathname)) return NextResponse.next();

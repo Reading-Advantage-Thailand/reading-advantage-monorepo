@@ -1,5 +1,11 @@
 import type { NextRequest, NextResponse } from "next/server";
-import { login, localeSchema, signInFieldsSchema } from "../../../../lib/auth";
+import {
+  SIGN_IN_USERNAME_COOKIE,
+  login,
+  localeSchema,
+  signInFieldsSchema,
+} from "../../../../lib/auth";
+import { clearSignInUsernameCookie, createSignInUsernameCookie } from "../../../../lib/auth/cookie";
 import { clientIp } from "../../../../lib/auth/client-ip";
 import { safeReturnPath } from "../../../../lib/auth/return-path";
 import {
@@ -84,7 +90,14 @@ export async function POST(request: NextRequest): Promise<Response> {
     console.warn("storytime sign-in rejected: reason=bad_location");
     return new Response(null, { status: 303, headers: { Location: `/${locale}/st` } });
   }
-  if (!fields.success) return redirects.invalid;
+  // A wrong sign-in carries the username back in one flash cookie (UX F1). The helper refuses a
+  // username that fails the username rule, and the cookie never holds the password.
+  const invalid = (): NextResponse => {
+    const flash = createSignInUsernameCookie(locale, text(form.get("username")));
+    if (flash) redirects.invalid.headers.append("Set-Cookie", flash);
+    return redirects.invalid;
+  };
+  if (!fields.success) return invalid();
 
   const outcome = await login({
     username: fields.data.username,
@@ -94,7 +107,10 @@ export async function POST(request: NextRequest): Promise<Response> {
   });
   if (outcome.status === "signed_in") {
     redirects.signedIn.headers.set("Set-Cookie", outcome.cookie);
+    if (request.cookies.has(SIGN_IN_USERNAME_COOKIE)) {
+      redirects.signedIn.headers.append("Set-Cookie", clearSignInUsernameCookie(locale));
+    }
     return redirects.signedIn;
   }
-  return outcome.status === "locked" ? redirects.locked : redirects.invalid;
+  return outcome.status === "locked" ? redirects.locked : invalid();
 }

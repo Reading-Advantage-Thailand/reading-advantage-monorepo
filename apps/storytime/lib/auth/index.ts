@@ -27,6 +27,9 @@ import { getStore } from "./store";
 /** The locales the app serves. */
 export const LOCALES = ["th", "en"] as const;
 
+/** The name of the username flash cookie that the sign-in handler sets after a wrong sign-in. */
+export const SIGN_IN_USERNAME_COOKIE = cookie.SIGN_IN_USERNAME_COOKIE;
+
 /** The role of one Storytime account. */
 export type StorytimeRole = "family" | "class" | "teacher";
 
@@ -191,8 +194,7 @@ export async function login(input: {
     });
     const limit = accountLimit.allowed ? "ip" : "account";
     console.warn(
-      `storytime sign-in locked: username=${logValue(input.username)} ip=${logValue(input.ip)} ` +
-        `limit=${limit}`,
+      `storytime sign-in locked: ip=${logValue(input.ip)} limit=${limit}`,
     );
     return { status: "locked", reason: "rate_limited" };
   }
@@ -208,9 +210,7 @@ export async function login(input: {
       ip: input.ip,
       now: input.now,
     });
-    console.warn(
-      `storytime sign-in failed: username=${logValue(input.username)} reason=unknown_user`,
-    );
+    console.warn("storytime sign-in failed: reason=unknown_user");
     return { status: "invalid", reason: "unknown_user" };
   }
   if (!passwordMatches) {
@@ -222,9 +222,7 @@ export async function login(input: {
       ip: input.ip,
       now: input.now,
     });
-    console.warn(
-      `storytime sign-in failed: username=${logValue(account.username)} reason=bad_password`,
-    );
+    console.warn("storytime sign-in failed: reason=bad_password");
     return { status: "invalid", reason: "bad_password" };
   }
   if (account.disabled) {
@@ -236,9 +234,7 @@ export async function login(input: {
       ip: input.ip,
       now: input.now,
     });
-    console.warn(
-      `storytime sign-in failed: username=${logValue(account.username)} reason=disabled`,
-    );
+    console.warn("storytime sign-in failed: reason=disabled");
     return { status: "invalid", reason: "disabled" };
   }
 
@@ -258,9 +254,7 @@ export async function login(input: {
     ip: input.ip,
     now: input.now,
   });
-  console.warn(
-    `storytime sign-in succeeded: username=${logValue(account.username)} role=${account.role}`,
-  );
+  console.warn(`storytime sign-in succeeded: role=${account.role}`);
   return { status: "signed_in", cookie: cookie.createSessionCookie(token) };
 }
 

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { getCurrentUser, mayOpenPath } from "../../../lib/auth";
+import { SIGN_IN_USERNAME_COOKIE, getCurrentUser, mayOpenPath } from "../../../lib/auth";
 import { safeReturnPath } from "../../../lib/auth/return-path";
 
 /**
@@ -41,6 +42,10 @@ export default async function SignInPage({
   const user = await getCurrentUser();
   if (user && mayOpenPath(user, next)) redirect(next);
 
+  // The handler sets the flash cookie after a wrong sign-in, and the proxy clears it on this GET.
+  // React escapes the value, so the field shows it as text and never as markup.
+  const flashUsername = (await cookies()).get(SIGN_IN_USERNAME_COOKIE)?.value ?? "";
+
   const translate = await getTranslations({ locale });
   const t = (key: string) => translate(key);
   const error = query.error === "locked" ? "locked" : query.error === "invalid" ? "invalid" : null;
@@ -64,6 +69,7 @@ export default async function SignInPage({
             id="username"
             name="username"
             type="text"
+            defaultValue={flashUsername}
             autoComplete="username"
             autoCapitalize="none"
             spellCheck={false}
