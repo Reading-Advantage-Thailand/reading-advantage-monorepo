@@ -1,6 +1,6 @@
 # Phase 4 dry-run report (per_app_cicd_20261107)
 
-report_head: 03307ccb241c0abf01a86ed6005733c3c915c6f5
+report_head: abd7e30ae0511e459a676e180aada28378deefe9
 origin_master: f3611d47c7ca5b02848691bab1cc109266511842
 
 ## Dry runs
