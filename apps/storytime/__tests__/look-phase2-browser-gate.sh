@@ -23,7 +23,12 @@ set -uo pipefail
 #   8 other       sign_in, join, and not_found under the shared global CSS.
 #   9 missing     with the place images aborted, the text stays readable.
 #  10 question    the question screen shows the same hero band and passes the row 1 checks.
-#  11 self-test   the verdict functions reject 23 captures, a hero height of 172, and no rows.
+#  11 self-test   the verdict functions reject the broken copies (captures, heights, colours,
+#                 overlap, language, spacing), and no rows.
+#  12 council     the round 1 fix batch (task 2.3e): the reader mode buttons are opaque cream with
+#                 a navy label at 4.5:1 or more, the HUD label sits off the progress track at 14 px
+#                 in the interface language (hud_overlap_px=0), and the sentence spacing holds
+#                 (double_space_runs=0, space_before_punct=0), in en and th.
 #
 # No row plays a recording (M21). The song row sets currentTime and fires timeupdate (Q33).
 # A headless run is not phone evidence. The gate reads no file under ~/Desktop/handoff except the
@@ -160,6 +165,69 @@ function motionOffender(animationName, transitionProperty, transitionDuration) {
   return !transitionDuration.split(",").map((text) => parseFloat(text)).every((value) => value === 0);
 }
 
+/** Parses a computed CSS colour into channels, or returns null for any other value. */
+function parseCssColor(value) {
+  const text = String(value).trim().toLowerCase();
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/.exec(text);
+  if (hex) {
+    const digits = hex[1];
+    const full = digits.length === 3 ? [...digits].map((digit) => digit + digit).join("") : digits;
+    return { r: parseInt(full.slice(0, 2), 16), g: parseInt(full.slice(2, 4), 16), b: parseInt(full.slice(4, 6), 16), a: 1 };
+  }
+  const rgb = /^rgba?\(([^)]+)\)$/.exec(text);
+  if (!rgb) return null;
+  const parts = rgb[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+  if (parts.length < 3 || parts.slice(0, 3).some((part) => Number.isNaN(part))) return null;
+  return { r: parts[0], g: parts[1], b: parts[2], a: parts[3] === undefined ? 1 : parts[3] };
+}
+
+/** The relative luminance of a colour (WCAG 2.x). */
+function relativeLuminance(color) {
+  const channel = (value) => {
+    const unit = value / 255;
+    return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(color.r) + 0.7152 * channel(color.g) + 0.0722 * channel(color.b);
+}
+
+/** The WCAG contrast ratio of two colours. */
+function contrastOf(one, two) {
+  const high = Math.max(relativeLuminance(one), relativeLuminance(two));
+  const low = Math.min(relativeLuminance(one), relativeLuminance(two));
+  return (high + 0.05) / (low + 0.05);
+}
+
+/** True when the colour reads as navy: blue dominates, and the colour is dark. */
+function isNavyColor(color) {
+  return color.b > color.r + 20 && color.b > color.g && color.b >= 40 && color.r <= 80 && color.g <= 80;
+}
+
+/** True when the colour reads as cream: light, warm, and not pure white. */
+function isCreamColor(color) {
+  return color.r >= 240 && color.g >= 220 && color.b <= 240 && color.r >= color.g && color.g >= color.b && relativeLuminance(color) >= 0.7;
+}
+
+/** The verdict of one mode button: opaque cream, a navy label, and 4.5:1 or more. */
+function modeButtonVerdict(background, label) {
+  const bg = parseCssColor(background);
+  const fg = parseCssColor(label);
+  if (!bg || !fg) return false;
+  if (bg.a !== 1) return false;
+  if (!isCreamColor(bg) || !isNavyColor(fg)) return false;
+  return contrastOf(bg, fg) >= 4.5;
+}
+
+/** The verdict of the HUD: no overlap of the two boxes, 14 px or more, and the locale text. */
+function hudVerdict(overlapPx, fontPx, text, locale) {
+  const expected = locale === "en" ? "Level 2 · Week 1" : "ระดับ 2 · สัปดาห์ 1";
+  return overlapPx === 0 && Number.isFinite(fontPx) && fontPx >= 14 && text === expected;
+}
+
+/** The verdict of the sentence spacing: no visible double space and no space before punctuation. */
+function spacingVerdict(doubleRuns, beforePunct) {
+  return doubleRuns === 0 && beforePunct === 0;
+}
+
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
   countVerdict(23) === false,
@@ -176,6 +244,16 @@ const mutants = [
   motionOffender("crest-bob", "none", "0s") === true,
   motionOffender("none", "all", "0.15s") === true,
   motionOffender("none", "opacity, color", "0s, 0.2s") === true,
+  modeButtonVerdict("rgba(255, 248, 225, 0.5)", "rgb(11, 42, 107)") === false,
+  modeButtonVerdict("rgb(255, 248, 225)", "rgb(239, 230, 200)") === false,
+  modeButtonVerdict("rgb(51, 51, 51)", "rgb(255, 255, 255)") === false,
+  modeButtonVerdict("transparent", "rgb(11, 42, 107)") === false,
+  hudVerdict(4, 14, "Level 2 · Week 1", "en") === false,
+  hudVerdict(0, 12, "Level 2 · Week 1", "en") === false,
+  hudVerdict(0, 14, "ระดับ 2 · สัปดาห์ 1", "en") === false,
+  hudVerdict(0, 14, "Level 2 · Week 1", "th") === false,
+  spacingVerdict(1, 0) === false,
+  spacingVerdict(0, 1) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -184,6 +262,11 @@ const controls = [
   motionOffender("none", "none", "0.15s") === false,
   motionOffender("none", "all", "0s") === false,
   motionOffender("none", "opacity, color", "0s, 0s") === false,
+  modeButtonVerdict("rgb(255, 248, 225)", "rgb(11, 42, 107)") === true,
+  modeButtonVerdict("rgba(255, 248, 225, 1)", "#0b2a6b") === true,
+  hudVerdict(0, 14, "Level 2 · Week 1", "en") === true,
+  hudVerdict(0, 14.5, "ระดับ 2 · สัปดาห์ 1", "th") === true,
+  spacingVerdict(0, 0) === true,
 ];
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
@@ -970,6 +1053,185 @@ await guarded("row 10 question", async () => {
     }
     await context.close();
   }
+});
+
+// ---- Row 12: the council round 1 fix batch (task 2.3e). ----
+/** Reads the reader mode buttons: their computed fill, label, and the stable hook. */
+async function readModeButtons(page) {
+  return page.evaluate(() => [...document.querySelectorAll("button[aria-pressed]")].map((button) => {
+    const style = getComputedStyle(button);
+    return {
+      text: (button.textContent ?? "").trim(),
+      background: style.backgroundColor,
+      color: style.color,
+      hook: button.hasAttribute("data-mode-button"),
+    };
+  }));
+}
+
+/** Reads the HUD label and the progress track box: their overlap, font size, and text. */
+async function readHud(page) {
+  return page.evaluate(() => {
+    const label = document.querySelector("[data-level-week]");
+    const bar = document.querySelector("[data-game-bar]");
+    if (!label || !bar) return { text: null, font: 0, overlap: -1 };
+    const one = label.getBoundingClientRect();
+    const two = bar.getBoundingClientRect();
+    const width = Math.max(0, Math.min(one.right, two.right) - Math.max(one.left, two.left));
+    const height = Math.max(0, Math.min(one.bottom, two.bottom) - Math.max(one.top, two.top));
+    return {
+      text: (label.textContent ?? "").trim(),
+      font: parseFloat(getComputedStyle(label).fontSize),
+      overlap: Math.round(width * height),
+    };
+  });
+}
+
+/** Counts the visible double spaces and the spaces before punctuation of one sentence element. */
+async function readSpacing(page, selector) {
+  return page.evaluate((sel) => {
+    const root = document.querySelector(sel);
+    if (!root) return null;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const chars = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      const data = node.data ?? "";
+      for (let index = 0; index < data.length; index += 1) {
+        const range = document.createRange();
+        range.setStart(node, index);
+        range.setEnd(node, index + 1);
+        const rect = range.getBoundingClientRect();
+        chars.push({ ch: data[index], left: rect.left, right: rect.right, top: rect.top });
+      }
+    }
+    const letters = chars.filter((char) => char.ch.trim() !== "");
+    if (letters.length < 4) return { double: 0, before: 0, chars: letters.length };
+    const fontPx = parseFloat(getComputedStyle(root).fontSize) || 16;
+    let double = 0;
+    let before = 0;
+    for (let index = 0; index + 1 < letters.length; index += 1) {
+      const a = letters[index];
+      const b = letters[index + 1];
+      if (Math.abs(a.top - b.top) > 2) continue;
+      if (b.left - a.right > fontPx * 0.6) double += 1;
+    }
+    for (let index = 1; index < letters.length; index += 1) {
+      const a = letters[index - 1];
+      const b = letters[index];
+      if (!/[.,!?]/.test(b.ch) || Math.abs(a.top - b.top) > 2) continue;
+      if (b.left - a.right > fontPx * 0.35) before += 1;
+    }
+    return { double, before, chars: letters.length };
+  }, selector);
+}
+
+await guarded("row 12 council buttons", async () => {
+  let buttons = 0;
+  let failures = 0;
+  let minContrast = 99;
+  let minAlpha = 9;
+  let sample = "";
+  for (const vp of VIEWPORTS) {
+    const context = await makeContext(vp);
+    for (const locale of LOCALES) {
+      const page = await context.newPage();
+      await openScreen(page, locale, "reader");
+      const found = await readModeButtons(page);
+      const mode = found.filter((button) => button.hook);
+      if (mode.length !== 3) {
+        failures += 1;
+        sample = sample || `${locale} ${vp.text}: mode_buttons=${mode.length}`;
+      }
+      for (const button of mode) {
+        buttons += 1;
+        const bg = parseCssColor(button.background);
+        const fg = parseCssColor(button.color);
+        if (bg) minAlpha = Math.min(minAlpha, bg.a);
+        if (bg && fg) minContrast = Math.min(minContrast, contrastOf(bg, fg));
+        if (!modeButtonVerdict(button.background, button.color)) {
+          failures += 1;
+          sample = sample || `${locale} ${vp.text}: ${button.text} bg=${button.background} color=${button.color}`;
+        }
+      }
+      await page.close();
+    }
+    await context.close();
+  }
+  const minimum = minContrast === 99 ? 0 : Math.round(minContrast * 100) / 100;
+  row("council mode buttons", buttons === 18 && failures === 0,
+    `mode_button_pairs=${buttons} mode_button_failures=${failures} mode_button_contrast_min=${minimum} mode_button_alpha_min=${minAlpha === 9 ? 0 : minAlpha}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 12 council hud", async () => {
+  let cases = 0;
+  let failures = 0;
+  let overlapMax = 0;
+  let fontMin = 999;
+  let sample = "";
+  for (const vp of VIEWPORTS) {
+    const context = await makeContext(vp);
+    for (const locale of LOCALES) {
+      const page = await context.newPage();
+      await openScreen(page, locale, "week");
+      const hud = await readHud(page);
+      cases += 1;
+      if (hud.text === null) {
+        failures += 1;
+        sample = sample || `${locale} ${vp.text}: no HUD label or progress track`;
+      } else {
+        overlapMax = Math.max(overlapMax, hud.overlap);
+        fontMin = Math.min(fontMin, hud.font);
+        if (!hudVerdict(hud.overlap, hud.font, hud.text, locale)) {
+          failures += 1;
+          sample = sample || `${locale} ${vp.text}: text=${JSON.stringify(hud.text)} font=${hud.font} overlap=${hud.overlap}`;
+        }
+      }
+      await page.close();
+    }
+    await context.close();
+  }
+  emit("hud_overlap_px", overlapMax);
+  row("council hud label", cases === 6 && failures === 0,
+    `hud_cases=${cases} hud_failures=${failures} hud_overlap_px=${overlapMax} hud_font_px_min=${fontMin === 999 ? 0 : fontMin}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 12 council spacing", async () => {
+  let cases = 0;
+  let failures = 0;
+  let doubleRuns = 0;
+  let beforePunct = 0;
+  let sample = "";
+  const targets = [
+    { screen: "decodable", selector: "[data-page-number] p" },
+    { screen: "reader", selector: "[data-sentence]" },
+  ];
+  for (const vp of [VIEWPORTS[0], VIEWPORTS[1]]) {
+    const context = await makeContext(vp);
+    for (const locale of LOCALES) {
+      for (const target of targets) {
+        const page = await context.newPage();
+        await openScreen(page, locale, target.screen);
+        const found = await readSpacing(page, target.selector);
+        cases += 1;
+        if (!found || found.chars < 4) {
+          failures += 1;
+          sample = sample || `${locale} ${vp.text} ${target.screen}: no sentence`;
+        } else {
+          doubleRuns += found.double;
+          beforePunct += found.before;
+          if (!spacingVerdict(found.double, found.before)) {
+            failures += 1;
+            sample = sample || `${locale} ${vp.text} ${target.screen}: double=${found.double} before=${found.before}`;
+          }
+        }
+        await page.close();
+      }
+    }
+    await context.close();
+  }
+  row("council sentence spacing", cases === 8 && failures === 0,
+    `spacing_cases=${cases} spacing_failures=${failures} double_space_runs=${doubleRuns} space_before_punct=${beforePunct}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
 });
 
 row("row count the rows ran", rowsVerdict(rowCount), `row_count=${rowCount}`);
