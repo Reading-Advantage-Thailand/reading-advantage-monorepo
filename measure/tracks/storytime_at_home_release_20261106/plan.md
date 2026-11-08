@@ -93,7 +93,7 @@ Later hardening (PM, 2026-11-07): split the database user into `storytime_migrat
 
 Follow-up (Review C): the proxy re-sets the session cookie once a day.
 F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-11-08). Reason: Storytime week content is company-written fiction with a fictional cast; no real person or school appears in it; the app uploads no photo or video (rule D23); people data stays out of the repos (PR rule 13).
-- [~] 2b.7b UX F1 (F5 line): a wrong sign-in keeps the username in the field and clears the password; the username goes into no URL. Red test, then Green. Evidence class: automated. PM decision Q7 (2026-11-08) adds the flash cookie: the sign-in handler sets one host-only flash cookie, the proxy clears it, and the page shows the value as escaped input text. Red r15 note below holds the evidence.
+- [x] 2b.7b UX F1 (F5 line): a wrong sign-in keeps the username in the field and clears the password; the username goes into no URL. Red test, then Green. Evidence class: automated. PM decision Q7 (2026-11-08) adds the flash cookie: the sign-in handler sets one host-only flash cookie, the proxy clears it, and the page shows the value as escaped input text. Red r15 note below holds the evidence. Green code commit `1fa196df8`; the Green r8 note below holds the gate evidence. The docker smoke (gate 4) is deferred by the PM for disk; it is the one open gate.
 
 ### Phase 2b task 2b.7 Red r6 note (F-origin)
 
@@ -227,6 +227,16 @@ F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-
 - **Browser gate, exit 1.** `bash apps/storytime/__tests__/phase2b-browser-gate.sh` in the foreground gives `=== Total: 37 checks (PASS=36, FAIL=1) ===`, `FAIL: F62 username_kept=0 (expected 1)`, `PASS: F62 password_kept=0 (expected 0)`, `PASS: F62 username_in_location=0 (expected 0)`, `PASS: The flows F1 to F9 run and exit 0`, and `PASS: F62 flow label rows: 27`. The F5 block now reads the username in th and en and collects the 303 Location headers and the sign-in page URLs. `bash -n` on the gate exits 0. The gate has no self-test script.
 - **The task state.** Task 2b.7b stays `[~]` for the Green.
 - **Q8 generated formats (2026-11-08).** Two cases were added: `flash_generated_username` for `staff-42`, `tutor-17`, and `demo-class-09` (built in the test, no real account name), and `refused_username_field_empty` with one generic message and an empty field; commit `214c98be3`; the heavy-run command exits 0 with `Test Files 2 passed (2)`, `Tests 10 passed (10)`, because the Green landed the helper and the route.
+
+### Phase 2b task 2b.7b Green r8 note (UX F1, PM decisions Q7 and Q8)
+
+- Phase base `ef41f6521e178987dd349ac8a6854bd4a413333d`; role base `ada7c22d944593a2107fb00b240f2fbecee5e7e9`. Code commit `1fa196df8`. The Red commits are `1e9541c83` and `214c98be3` (the generated formats); the final runs include both. The Green model is Anthropic; the Red model is DeepSeek.
+- **The change.** `lib/auth/cookie.ts` holds `SIGN_IN_USERNAME_COOKIE`, the cookie-only username rule (a-z, 0-9, "-", "_", "."; 1 to 64 after trim and lower case), `createSignInUsernameCookie`, and `clearSignInUsernameCookie`. `lib/auth/index.ts` exports the constant and logs no username. The handler sets the flash cookie on an invalid answer (not on a locked answer) and clears a carried cookie on a good sign-in. The page reads the cookie and shows it as the escaped `defaultValue` of the username input. The proxy adds the clear on a GET of `/<locale>/sign-in`; it sets no request header, so no inbound copy needs a delete. The sign-in schema stays as it is.
+- **Gate 1, the Red files.** At the Red: exit 1 (`Tests 8 failed | 7 passed (15)`, r15 note). After the change: exit 0, `Test Files 4 passed (4)`, `Tests 27 passed (27)`.
+- **Gate 2, the targeted command.** Exit 0, `Test Files 76 passed (76)`, `Tests 555 passed (555)`. `make-accounts.test.ts` passed on the first run.
+- **Gate 3, `phase2b-browser-gate.sh`.** Exit 0, `=== Total: 37 checks (PASS=37, FAIL=0) ===`, `username_kept=1`, `password_kept=0`, `username_in_location=0`, `app_media_requests=0`.
+- **Gate 5.** `tsc --noEmit` exit 0. ESLint on the five changed files exit 0.
+- **Gate 4, the docker smoke: deferred by the PM for disk on 2026-11-08; reruns when the disk has room.** The first run ended with exit 137 during the image build and the free disk fell to 3.8 GB. One retry (before the PM order) ended with exit 1, `=== Total: 8 checks (PASS=4, FAIL=4) ===`, `FAIL: The local image cannot build (exit 1)`, and the three container rows failed as a result. The PM stopped the smoke job on 2026-11-08; the order reached the Green after the retry ended (the retry log ran between 17:11 and 17:50 Bangkok time). No stranger row ran, so `stranger_location_bind` has no value. This is the one open gate.
 
 ### Phase 2b Green evidence
 
