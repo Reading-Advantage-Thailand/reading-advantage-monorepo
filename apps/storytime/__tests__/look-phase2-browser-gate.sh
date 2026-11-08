@@ -260,6 +260,54 @@ function wordGapVerdict(gapEm, beforePunct) {
   return Number.isFinite(gapEm) && gapEm >= 0.25 && beforePunct === 0;
 }
 
+/** The verdict of the default song view: no active row and no filled row before playback. */
+function defaultSongVerdict(activeRows, filledRows) {
+  return activeRows === 0 && filledRows === 0;
+}
+
+/** The verdict of the done badge: 32 x 32 px, #F5B82E, a navy check, and the locale label. */
+function badgeVerdict(width, height, background, check, name, locale) {
+  const bg = parseCssColor(background);
+  const fg = parseCssColor(check);
+  const expected = locale === "en" ? "Done" : "เสร็จแล้ว";
+  if (bg === null || fg === null) return false;
+  if (bg.r !== 245 || bg.g !== 184 || bg.b !== 46) return false;
+  if (!isNavyColor(fg)) return false;
+  if (Math.round(width) !== 32 || Math.round(height) !== 32) return false;
+  return typeof name === "string" && name.trim() === expected;
+}
+
+/** The verdict of the pressed sound button: aria-pressed is true, and the fill differs from idle. */
+function pressedVerdict(pressedAttr, idleFill, pressedFill) {
+  const idle = parseCssColor(idleFill);
+  const pressed = parseCssColor(pressedFill);
+  if (pressedAttr !== "true") return false;
+  if (idle === null || pressed === null) return false;
+  return idle.r !== pressed.r || idle.g !== pressed.g || idle.b !== pressed.b || idle.a !== pressed.a;
+}
+
+/** The verdict of one dashed frame: 12 CSS px or more from the dashed line to the content. */
+function framePadVerdict(paddingSides, insetPx) {
+  if (!Array.isArray(paddingSides) || paddingSides.length !== 4) return false;
+  if (!Number.isFinite(insetPx)) return false;
+  return Math.min(...paddingSides) - insetPx >= 12;
+}
+
+/** The verdict of the reader page counter: a cream pill, a navy label, and 4.5:1 or more. */
+function counterVerdict(background, label) {
+  const bg = parseCssColor(background);
+  const fg = parseCssColor(label);
+  if (bg === null || fg === null) return false;
+  if (bg.a !== 1) return false;
+  if (!isCreamColor(bg) || !isNavyColor(fg)) return false;
+  return contrastOf(bg, fg) >= 4.5;
+}
+
+/** The verdict of the parent panel: no native duration text before the clip loads. */
+function nativeDurationVerdict(durationTexts, nativeControls) {
+  return durationTexts === 0 && nativeControls === 0;
+}
+
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
   countVerdict(23) === false,
@@ -295,6 +343,21 @@ const mutants = [
   chipVerdict(16, "rgb(255, 248, 225)", "rgb(239, 230, 200)") === false,
   wordGapVerdict(0.2, 0) === false,
   wordGapVerdict(0.3, 1) === false,
+  defaultSongVerdict(1, 0) === false,
+  defaultSongVerdict(0, 1) === false,
+  badgeVerdict(30, 32, "rgb(245, 184, 46)", "rgb(19, 36, 78)", "Done", "en") === false,
+  badgeVerdict(32, 32, "rgb(245, 185, 50)", "rgb(19, 36, 78)", "Done", "en") === false,
+  badgeVerdict(32, 32, "rgb(245, 184, 46)", "rgb(255, 250, 240)", "Done", "en") === false,
+  badgeVerdict(32, 32, "rgb(245, 184, 46)", "rgb(19, 36, 78)", "Done", "th") === false,
+  pressedVerdict("false", "rgb(224, 156, 28)", "rgb(255, 231, 161)") === false,
+  pressedVerdict("true", "rgb(224, 156, 28)", "rgb(224, 156, 28)") === false,
+  framePadVerdict([18, 18, 18, 18], 7) === false,
+  framePadVerdict([19, 19, 19, 19], 8) === false,
+  counterVerdict("rgb(255, 255, 255)", "rgb(19, 36, 78)") === false,
+  counterVerdict("rgb(255, 250, 240)", "rgb(255, 255, 255)") === false,
+  counterVerdict("rgba(255, 250, 240, 0.5)", "rgb(19, 36, 78)") === false,
+  nativeDurationVerdict(1, 0) === false,
+  nativeDurationVerdict(0, 1) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -315,6 +378,13 @@ const controls = [
   chipVerdict(16.5, "rgba(255, 248, 225, 1)", "#0b2a6b") === true,
   wordGapVerdict(0.25, 0) === true,
   wordGapVerdict(0.3, 0) === true,
+  defaultSongVerdict(0, 0),
+  badgeVerdict(32, 32, "rgb(245, 184, 46)", "rgb(19, 36, 78)", "Done", "en"),
+  badgeVerdict(32, 32, "#f5b82e", "#13244e", "เสร็จแล้ว", "th"),
+  pressedVerdict("true", "rgb(224, 156, 28)", "rgb(255, 231, 161)"),
+  framePadVerdict([19, 19, 19, 19], 7),
+  counterVerdict("rgb(255, 250, 240)", "rgb(19, 36, 78)"),
+  nativeDurationVerdict(0, 0),
 ];
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
@@ -525,10 +595,12 @@ async function openScreen(page, locale, screen, path = "/st/2/1") {
       return element !== null && element.textContent.trim() === "2 / 8";
     }, undefined, { timeout: 10000 }).catch(() => {});
   }
+  let beforePlay = null;
+  if (screen === "song") beforePlay = await readDefaultSong(page);
   let activeLine = -1;
   if (screen === "song") activeLine = await activateLine(page, 1).catch(() => -1);
   await settle(page);
-  return { activeLine };
+  return { activeLine, beforePlay };
 }
 
 /** Opens the question screen of the reader (the end of the book, level 2). */
@@ -597,8 +669,9 @@ await guarded("row 1 captures", async () => {
           totalPairs += counts.contrast_pairs;
           totalSkipped += counts.contrast_skipped;
           const signedIn = !new URL(page.url()).pathname.endsWith("/sign-in");
-          ok = captureVerdict(counts) && signedIn && (screen !== "song" || opened.activeLine === 1);
-          detail = `${countsText(counts)}${screen === "song" ? ` active_line_index=${opened.activeLine}` : ""}${counts.sample ? ` first=${JSON.stringify(counts.sample)}` : ""}`;
+          const defaultOk = screen !== "song" || (opened.beforePlay !== null && defaultSongVerdict(opened.beforePlay.active, opened.beforePlay.filled));
+          ok = captureVerdict(counts) && signedIn && (screen !== "song" || opened.activeLine === 1) && defaultOk;
+          detail = `${countsText(counts)}${screen === "song" ? ` active_line_index=${opened.activeLine} active_line_before_play=${opened.beforePlay ? opened.beforePlay.active : -1} filled_rows_before_play=${opened.beforePlay ? opened.beforePlay.filled : -1}` : ""}${counts.sample ? ` first=${JSON.stringify(counts.sample)}` : ""}`;
         } catch (error) {
           detail = `the capture raises an error: ${String(error).slice(0, 120)}`;
         }
@@ -1316,6 +1389,19 @@ async function readActiveLine(page) {
   });
 }
 
+/** Reads the default song state: rows with aria-current, and rows that paint their own fill. */
+async function readDefaultSong(page) {
+  return page.evaluate(() => {
+    const rows = [...document.querySelectorAll("li[data-line-index]")];
+    const filled = rows.filter((row) => {
+      const background = getComputedStyle(row).backgroundColor;
+      return background !== "rgba(0, 0, 0, 0)" && background !== "transparent";
+    }).length;
+    const active = rows.filter((row) => row.getAttribute("aria-current") === "true").length;
+    return { active, filled };
+  });
+}
+
 /** Reads the computed style of each action chip. */
 async function readActionChips(page) {
   return page.evaluate(() => [...document.querySelectorAll("[data-action-chip]")].map((chip) => {
@@ -1477,6 +1563,269 @@ await guarded("row 13 council r2 word gap", async () => {
   emit("word_gap_em_min", gapMin === 99 ? 0 : Math.round(gapMin * 1000) / 1000);
   row("council r2 word gap", cases === 8 && failures === 0,
     `word_gap_cases=${cases} word_gap_failures=${failures} word_gap_em_min=${gapMin === 99 ? 0 : Math.round(gapMin * 1000) / 1000} space_before_punct=${beforePunct}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+// ---- Row 14: the council round 3 fix batch (task 2.3g). ----
+/** Reads the done badge: its box, its fill, its check colour, its name, and the chevron. */
+async function readBadge(page) {
+  return page.evaluate(() => {
+    const badge = document.querySelector("[data-done-badge]");
+    if (!badge) return null;
+    const box = badge.getBoundingClientRect();
+    const style = getComputedStyle(badge);
+    const icon = badge.querySelector("[data-done-icon], svg");
+    const link = badge.closest("li") ? badge.closest("li").querySelector("a") : null;
+    const after = link ? getComputedStyle(link, "::after") : null;
+    return {
+      w: box.width,
+      h: box.height,
+      background: style.backgroundColor,
+      check: icon ? getComputedStyle(icon).color : style.color,
+      name: (badge.getAttribute("aria-label") ?? badge.textContent ?? "").trim(),
+      chevron: after ? after.display !== "none" && after.content !== "none" : true,
+    };
+  });
+}
+
+/** Reads the decodable sound button: its pressed attribute and its computed fill. */
+async function readSoundButton(page) {
+  return page.evaluate(() => {
+    const button = document.querySelector('[data-part="decodable"] > div > section[aria-label] button');
+    if (!button) return null;
+    return { pressed: button.getAttribute("aria-pressed"), background: getComputedStyle(button).backgroundColor };
+  });
+}
+
+/** Reads the padding inside each dashed decodable frame, in CSS px per side. */
+async function readFrameGaps(page) {
+  return page.evaluate(() => {
+    const frames = [
+      '[data-part="decodable"] > div > section[aria-label]',
+      '[data-part="decodable"] div > section[aria-label]:last-child',
+    ];
+    return frames.map((selector) => {
+      const element = document.querySelector(selector);
+      if (!element) return null;
+      const style = getComputedStyle(element);
+      const frame = getComputedStyle(element, "::before");
+      const gaps = [
+        parseFloat(style.paddingTop) - parseFloat(frame.top),
+        parseFloat(style.paddingRight) - parseFloat(frame.right),
+        parseFloat(style.paddingBottom) - parseFloat(frame.bottom),
+        parseFloat(style.paddingLeft) - parseFloat(frame.left),
+      ];
+      return { gaps, gap: Math.min(...gaps) };
+    });
+  });
+}
+
+/** Reads the reader page counter: its fill, its label colour, and its text. */
+async function readCounter(page) {
+  return page.evaluate(() => {
+    const element = document.querySelector("[data-page-count]");
+    if (!element) return null;
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, color: style.color, text: (element.textContent ?? "").trim() };
+  });
+}
+
+/** Reads the parent panel: the 0:00 / 0:00 text nodes and the native audio controls. */
+async function readParentPanel(page) {
+  return page.evaluate(() => {
+    const panels = [...document.querySelectorAll("main > section[aria-label]")];
+    const panel = panels[panels.length - 1];
+    if (!panel) return null;
+    const walker = document.createTreeWalker(panel, NodeFilter.SHOW_TEXT);
+    let texts = 0;
+    while (walker.nextNode()) {
+      if (/0:00\s*\/\s*0:00/.test(walker.currentNode.data ?? "")) texts += 1;
+    }
+    return { texts, controls: panel.querySelectorAll("audio[controls]").length };
+  });
+}
+
+await guarded("row 14 council r3 default song", async () => {
+  let cases = 0;
+  let failures = 0;
+  let activeMax = 0;
+  let filledMax = 0;
+  let sample = "";
+  for (const vp of VIEWPORTS) {
+    const context = await makeContext(vp);
+    for (const locale of LOCALES) {
+      const page = await context.newPage();
+      await page.goto(`${base}/${locale}/st/2/1?part=song`, { waitUntil: "load" });
+      await page.waitForSelector(".song-stage video, .song-stage audio", { timeout: 20000 }).catch(() => {});
+      const before = await readDefaultSong(page);
+      cases += 1;
+      activeMax = Math.max(activeMax, before.active);
+      filledMax = Math.max(filledMax, before.filled);
+      if (!defaultSongVerdict(before.active, before.filled)) {
+        failures += 1;
+        sample = sample || `${locale} ${vp.text}: active=${before.active} filled=${before.filled}`;
+      }
+      await page.close();
+    }
+    await context.close();
+  }
+  emit("default_song_active_rows", activeMax);
+  emit("default_song_filled_rows", filledMax);
+  row("council r3 default song", cases === 6 && failures === 0,
+    `default_song_cases=${cases} default_song_failures=${failures} active_line_before_play=${activeMax} filled_rows_before_play=${filledMax}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 14 council r3 done badge", async () => {
+  let cases = 0;
+  let failures = 0;
+  let widthMin = 99;
+  let heightMin = 99;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    await page.addInitScript(() => {
+      window.localStorage.setItem("storytime:done", JSON.stringify({ "2:1:book": true }));
+    });
+    await openScreen(page, locale, "week");
+    const found = await readBadge(page);
+    cases += 1;
+    if (!found) {
+      failures += 1;
+      sample = sample || `${locale}: no [data-done-badge]`;
+    } else {
+      widthMin = Math.min(widthMin, Math.round(found.w));
+      heightMin = Math.min(heightMin, Math.round(found.h));
+      if (!badgeVerdict(found.w, found.h, found.background, found.check, found.name, locale) || found.chevron) {
+        failures += 1;
+        sample = sample || `${locale}: w=${Math.round(found.w)} h=${Math.round(found.h)} bg=${found.background} check=${found.check} name=${JSON.stringify(found.name)} chevron=${found.chevron}`;
+      }
+    }
+    await page.close();
+    await context.close();
+  }
+  emit("done_badge_w_px_min", widthMin === 99 ? 0 : widthMin);
+  emit("done_badge_h_px_min", heightMin === 99 ? 0 : heightMin);
+  row("council r3 done badge", cases === 2 && failures === 0,
+    `done_badge_cases=${cases} done_badge_failures=${failures} done_badge_w_px_min=${widthMin === 99 ? 0 : widthMin} done_badge_h_px_min=${heightMin === 99 ? 0 : heightMin}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 14 council r3 pressed sound", async () => {
+  const english = JSON.parse(fs.readFileSync("messages/en.json", "utf8"));
+  const thai = JSON.parse(fs.readFileSync("messages/th.json", "utf8"));
+  let cases = 0;
+  let failures = 0;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    await openScreen(page, locale, "decodable");
+    const idle = await readSoundButton(page);
+    const label = locale === "th" ? thai.decPlaySound : english.decPlaySound;
+    await page.getByRole("button", { name: label, exact: true }).click().catch(() => {});
+    await page.waitForFunction(() => {
+      const button = document.querySelector('[data-part="decodable"] > div > section[aria-label] button');
+      return button !== null && button.getAttribute("aria-pressed") === "true";
+    }, undefined, { timeout: 5000 }).catch(() => {});
+    const pressed = await readSoundButton(page);
+    cases += 1;
+    if (!idle || !pressed || !pressedVerdict(pressed.pressed, idle.background, pressed.background)) {
+      failures += 1;
+      sample = sample || `${locale}: idle=${idle ? idle.background : "none"} pressed=${pressed ? `${pressed.pressed} ${pressed.background}` : "none"}`;
+    }
+    await page.close();
+    await context.close();
+  }
+  row("council r3 pressed sound", cases === 2 && failures === 0,
+    `pressed_sound_cases=${cases} pressed_sound_failures=${failures}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 14 council r3 frame padding", async () => {
+  let cases = 0;
+  let failures = 0;
+  let gapMin = 99;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[2]);
+    const page = await context.newPage();
+    await openScreen(page, locale, "decodable");
+    const frames = await readFrameGaps(page);
+    cases += 1;
+    if (frames.some((frame) => frame === null)) {
+      failures += 1;
+      sample = sample || `${locale}: a dashed frame is missing`;
+    } else {
+      for (const frame of frames) {
+        gapMin = Math.min(gapMin, frame.gap);
+        if (!framePadVerdict(frame.gaps, 0)) {
+          failures += 1;
+          sample = sample || `${locale}: frame_gap_px=${frame.gap}`;
+        }
+      }
+    }
+    await page.close();
+    await context.close();
+  }
+  emit("frame_content_gap_px_min", gapMin === 99 ? 0 : Math.round(gapMin));
+  row("council r3 frame padding", cases === 2 && failures === 0,
+    `frame_padding_cases=${cases} frame_padding_failures=${failures} frame_content_gap_px_min=${gapMin === 99 ? 0 : Math.round(gapMin)}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 14 council r3 page counter", async () => {
+  let cases = 0;
+  let failures = 0;
+  let contrastMin = 99;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    await openScreen(page, locale, "reader");
+    const counter = await readCounter(page);
+    cases += 1;
+    if (!counter || counter.text !== "2 / 8" || !counterVerdict(counter.background, counter.color)) {
+      failures += 1;
+      sample = sample || `${locale}: ${counter ? `${JSON.stringify(counter.text)} bg=${counter.background} color=${counter.color}` : "no [data-page-count]"}`;
+    } else {
+      contrastMin = Math.min(contrastMin, contrastOf(parseCssColor(counter.background), parseCssColor(counter.color)));
+    }
+    await page.close();
+    await context.close();
+  }
+  emit("page_counter_contrast_min", contrastMin === 99 ? 0 : Math.round(contrastMin * 100) / 100);
+  row("council r3 page counter", cases === 2 && failures === 0,
+    `page_counter_cases=${cases} page_counter_failures=${failures} page_counter_contrast_min=${contrastMin === 99 ? 0 : Math.round(contrastMin * 100) / 100}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+await guarded("row 14 council r3 parent duration", async () => {
+  let cases = 0;
+  let failures = 0;
+  let textsMax = 0;
+  let controlsMax = 0;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    await page.goto(`${base}/${locale}/st/2/1`, { waitUntil: "load" });
+    await page.waitForSelector("main[data-place]", { timeout: 20000 }).catch(() => {});
+    const panel = await readParentPanel(page);
+    cases += 1;
+    if (!panel) {
+      failures += 1;
+      sample = sample || `${locale}: no parent panel`;
+    } else {
+      textsMax = Math.max(textsMax, panel.texts);
+      controlsMax = Math.max(controlsMax, panel.controls);
+      if (!nativeDurationVerdict(panel.texts, panel.controls)) {
+        failures += 1;
+        sample = sample || `${locale}: duration_texts=${panel.texts} native_controls=${panel.controls}`;
+      }
+    }
+    await page.close();
+    await context.close();
+  }
+  emit("parent_duration_texts", textsMax);
+  emit("parent_native_controls", controlsMax);
+  row("council r3 parent duration", cases === 2 && failures === 0,
+    `parent_duration_cases=${cases} parent_duration_failures=${failures} duration_texts=${textsMax} native_controls=${controlsMax}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
 });
 
 row("row count the rows ran", rowsVerdict(rowCount), `row_count=${rowCount}`);
