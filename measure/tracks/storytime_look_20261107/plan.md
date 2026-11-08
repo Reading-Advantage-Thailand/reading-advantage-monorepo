@@ -14,7 +14,7 @@
 - No new hash, checksum field, or provenance file (AGENTS.md hashing policy).
 - Role lines are not plan tasks. Each phase has a "Roles" note paragraph instead (the role gates count every non-deferred `- [ ]` line as an incomplete task).
 
-## Phase 1: Council fixes
+## Phase 1: Council fixes [checkpoint: dcad011f6]
 
 Source: `~/.local/state/ui-council/storytime-w01-live/round-1.md` (19 ranked findings, total 59.5) and `round-1/shots/`. PM decisions of 2026-11-07: the batch below is accepted; M-3 stands (no pictures in the lyric list), so council finding 10 is dropped; the English label of the decodable card (council finding 2) is "Read the words". Each task with a test that can hold it starts with a Red test in its own commit, then Green. Files: the route files of `apps/storytime/app/[locale]/st/[level]/[week]/` (`questions.tsx` stays unchanged in this phase), `app/[locale]/not-found.tsx`, `lib/content.ts`, `lib/route-parse.ts`, the messages, and the app icon. Council findings covered: 1, 2, 3, 5, 6, 7, 8, 9, 12, 13, and 18 (eleven). Spec: FR-1.
 
