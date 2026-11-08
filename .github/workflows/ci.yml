@@ -18,6 +18,7 @@ on:
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
+      - 'scripts/**'
       - 'tsconfig*.json'
       - 'turbo.json'
 
@@ -136,6 +137,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # The selector and CI-config tests of scripts/ci run here once for each event. The affected-app
+      # matrix does not run them, because scripts/ci is not a workspace package.
+      - name: CI selector tests
+        run: CI=true pnpm exec vitest run scripts/ci
 
       - name: Config drift check
         run: pnpm config-drift
