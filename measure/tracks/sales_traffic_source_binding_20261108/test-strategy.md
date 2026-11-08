@@ -5,6 +5,8 @@
 > **Phase 1 written:** 2026-11-08 at the role base `50cb858bbc209e1f7b1d1b2176e2f22ad03dcd75`. Model: claude-code/claude-opus-5-5. The role base is not the `phase_base_sha` (section 1.4). Phase 2 has an outline only (section P2).
 >
 > **Amendment round 2:** 2026-11-08 at the role base `d5301b5c55e77f5c7258c218aa87af06afae8772`, after the spec and plan commit `0a042ccbb` (criterion 21, FR-14, PM decision Q19). It adds the cases S-31 to S-33, the mutants Y31 to Y33, and the `.gcloudignore` gate items. It does not move the captured `phase_base_sha`.
+>
+> **Amendment round 3:** 2026-11-09 at the role base `b131f9a16c7deecc1fc4df60e33731476fb8d495`. Model: minimax-cn-coding-plan/MiniMax-M3, a substitute for claude-opus-5-5. Cause: the adversarial round rejected the Y32 form of section P1.5 as an equivalent mutant. A `!` line cannot re-include a path whose parent directory is excluded, so the old form changed no upload list. Evidence: `measure/runs/sales_traffic_source_binding_20261108/adversarial-p1-dd66da7e3.json` and `.log` (commit `b131f9a16c7deecc1fc4df60e33731476fb8d495`). This round replaces the Y32 form with `!measure/` after the line `measure/`. The mutant count stays 33. It does not move the captured `phase_base_sha`. The capture of section 1.4 already happened at the commit that first landed this file, so this amendment creates no new capture point.
 
 ## 1. Rules for every phase
 
@@ -38,6 +40,7 @@
 
 - This file embeds no `phase_base_sha`. The role base `50cb858bb` predates this strategy commit. It is not a valid `phase_base_sha`.
 - **Exact point for Phase 1.** The orchestrator runs `git rev-parse HEAD` immediately after the commit of this strategy lands. The capture happens before the Red role writes its first file.
+- The capture for Phase 1 happened once, at the commit that landed this file the first time. A later amendment of this file does not move the captured value. The orchestrator keeps the captured value in the Red evidence and in the phase log.
 - Verify the capture: `git cat-file -e <sha>:measure/tracks/sales_traffic_source_binding_20261108/test-strategy.md` must exit 0. If it fails, the capture is void; capture again.
 - Other tracks commit on master. A later HEAD that holds this file is valid at the capture time. Record the full 40-hex value in the Red evidence and in the phase log.
 - Scope checks use the commits of this track only: `git log <phase_base_sha>..HEAD --format=%H --grep='track_id: sales_traffic_source_binding_20261108'`, then `git show --name-only --format= <sha>` for each.
@@ -207,6 +210,8 @@ No test reads a path under `measure/` (rule C27 of `per_app_cicd_20261107`). S-3
 
 The adversarial role applies each mutant to a scratch copy of the script or of the YAML, runs the targeted command, and restores the file. It commits no mutant. Label: `mutants_rejected=<n>/33`.
 
+Every mutant form must change an observable output of the targeted command. A form that changes no output is an equivalent mutant, and it does not count as rejected. The adversarial role names the form that it applied for each mutant.
+
 | Mutant | Change | Case that must reject it |
 |---|---|---|
 | Y1 | The expected list drops the `check-ignore` filter. | S-06, S-01 |
@@ -240,7 +245,7 @@ The adversarial role applies each mutant to a scratch copy of the script or of t
 | Y29 | A mismatch exits 0 (the status is lost in a pipe or a subshell). | S-02, S-03, S-04 |
 | Y30 | The version lines print after the SHA check. | S-20 |
 | Y31 | The line `measure/` is removed from `.gcloudignore` (scratch edit, then restore). | S-31, S-32 |
-| Y32 | A tracked link stays outside the ignore rules. Form: add `!measure/tracks/backend_architecture_enforcement_20260713` after the line `measure/` (scratch edit, then restore). No staged file (D9). | S-32 |
+| Y32 | A tracked link stays outside the ignore rules. Form: in the scratch tree, add the line `!measure/` after the line `measure/` in the root `.gcloudignore` (scratch edit, then restore). No staged file (D9). The negation re-includes the excluded folder, so the tracked link returns to scope in the compare. | S-31, S-32 |
 | Y33 | The compare skips the ignore filter on the Git side. | S-33 (the `measure/` paths print as `missing:`), S-06 |
 
 Adversarial scenarios (no mutant): a SHA that starts with `-`; a URL argument with a space; an upload root that is a link; an upload with an empty folder. Label: `scenarios_checked=<n>/4`. No scenario may give a false pass. An empty folder is not a file, so it must not stop the run.
