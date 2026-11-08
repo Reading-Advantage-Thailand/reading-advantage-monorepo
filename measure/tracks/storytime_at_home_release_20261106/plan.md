@@ -174,6 +174,16 @@ F44 (Review B, 68a86e173): closed as an accepted scope limit (PM decision, 2026-
 - **Blocked: Red contradiction.** The Red command exits 1 on one case: `login-adversarial-p2b.test.ts` "keeps every hostile next value on the app origin through the real handler" prints `next_errors=0` (it printed `next_errors=3` before the fix) and then fails on three rows with `fallback: false`: "raw line separator" (`/th/st/2/1 `), "raw paragraph separator" (` `), and "raw Thai letter in the query" (`?x=ก`). The test expects the Location to equal the raw value (`expected "/th/st/2/1?x=ก", got /th/st`). A Location header cannot carry U+2028, U+2029, or U+0E01 (ByteString), and point 1 of the PM acceptance requires the fallback, so no code can satisfy both. The table comment in that file says the rows record the fault ("does not hide the fault"). It needs a Mid Red retry: set `fallback: true` for these three rows (or expect the percent-encoded path). The test file was not edited.
 - **Not run in this round.** `phase3-docker-smoke.sh` (`standalone_location`, `standalone_location_bind`, prune, `df`) waits for the retry, because the Red command does not yet exit 0. The task stays `[~]`.
 
+### Phase 2b task 2b.7 Red r13 note (F90 row correction)
+
+- Phase base `ef41f6521e178987dd349ac8a6854bd4a413333d`; role base `9ae48d514a7bd975c9b6163a5e1043dbb56f8b88`. Test commit `ee98ff48f`. No production file changed.
+- **The correction.** Three rows of `NEXT_CASES` in `apps/storytime/__tests__/login-adversarial-p2b.test.ts` get `fallback: true`: "raw line separator" (U+2028), "raw paragraph separator" (U+2029), and "raw Thai letter in the query" (U+0E01). The JSDoc above the table now states the ASCII-only rule of F90, PM point 1.
+- **The other rows.** No other row expects a raw non-ASCII value. The "valid encoded e-acute" row keeps `fallback: false`, because `%C3%A9` is ASCII.
+- **The corrected command exits 0.** `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash .../heavy-run.sh -c 'cd .../apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-return-path.test.ts __tests__/login-signin-handler.test.ts __tests__/login-adversarial-p2b.test.ts'` gives `Test Files 3 passed (3)`, `Tests 16 passed (16)`.
+- **The adversarial counts.** The verbose run of the same file prints `next_adversarial_cases=29 next_fallbacks=24 next_offsite=0 next_errors=0`.
+- **The Red evidence is pre-fix.** The corrected rows cannot fail at HEAD, because commit `9a88d2317` holds the F90 fix. At the Red r12 base `b8041728a`, this case failed with `next_errors=3` (ByteString at 8232, 8233, and 3585). The old `safeReturnPath` returned the raw value for these three rows, so the corrected rows also fail on that code. The Green r6 note above records the same failure.
+- **The task state.** Task 2b.7 stays `[~]` for the next Green run.
+
 ### Phase 2b Green evidence
 
 - **The commits.** `6afa39173` holds the adapter, the two routes, the store lookup by id, the runtime client, the three workspace packages, the lockfile, the Tailwind sources, and the Docker pruner stage. `ef36b6c37` holds the proxy rule, the sign-in page, the join page, the fallback page, the teacher 403 page, the three guarded pages, the copy file, the two message files, and the six old tests. `9daaaba0f` holds the strict session expiry.
