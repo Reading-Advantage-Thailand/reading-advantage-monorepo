@@ -37,13 +37,17 @@ Source: Review B finding F4 (Nit) in `measure/runs/per_app_cicd_20261107/review-
 The AGENTS.md hashing policy says: prefer Git commit or tree identity, and stop and explain before a hash spreads to a new file.
 
 **Option A (default): bind with Git identity. No new hash.**
-A new first step `bind-release-source` runs before `verify-curriculum-backup` and so before `migrate-db`. The step does three things:
+A new first step `bind-release-source` runs before `verify-curriculum-backup` and so before `migrate-db`. The step does five things:
 
 1. It refuses a `_RELEASE_COMMIT_SHA` that is not 40 lowercase hex characters. This includes the default `REQUIRED_RELEASE_COMMIT_SHA`.
-2. It fetches that commit from the upstream repository into a temporary directory.
-3. It lists each uploaded file. For each file it compares the Git blob id of the file with the blob id of the same path in the commit. A file that is missing from the commit, or that differs, stops the build.
+2. It fetches that commit from the upstream repository into a scratch folder: `git init`, then `git fetch --depth=1 --filter=blob:none <url> <sha>`. The fetch needs trees only, because `git ls-tree` gives the blob ids.
+3. It builds the expected path list: `git ls-tree -r <sha>` (mode, blob id, path), filtered by the `.gcloudignore` of that commit. The step reads that file with `git show <sha>:.gcloudignore` and runs `git -c core.excludesFile=<that file> check-ignore --no-index --stdin`. A path that the command reports is outside the upload and leaves the list. The scratch repository has no `.gitignore`, so only that file filters. The file has no `#!include:` line today. If the file ever holds one, git reads it as a comment and the filter is wrong, so the script exits non-zero (fail closed).
+4. It builds the actual path list: each regular file and each symbolic link under the uploaded root (`find <root> \( -type f -o -type l \)`).
+5. The two lists must be equal. A path in one list and not in the other stops the build, and the script prints the first such path. This catches an uploaded file that the commit lacks and a file of the commit that the upload lacks (for example a newer migration file). Each common path compares its Git blob id: `git hash-object` of the uploaded file, or of the link text (`readlink`) for a symbolic link. Any mismatch stops the build. The script also exits non-zero when the expected list holds a submodule entry (mode 160000). Limit: the executable bit is not compared.
 
-Reason for the form: the upload has no `.git`, so a check "uploaded tree equals tree of the commit" needs the commit from outside. The upload is a subset of the commit (a fixed path list), so a subset check is the smallest exact test. The blob ids are Git identity. The step adds no SHA-256 field and no manifest. The script is shared (see section 3a). A small script holds the logic so that a test can run it against a local fixture repository: `scripts/ci/verify-traffic-source.sh <commit> <repo-url> <uploaded-root>`. The YAML passes the GitHub URL. The fetch is read-only and uses no secret, because the repository is public. If the repository becomes private, the step needs a credential. That change needs Daniel's word.
+Method check on 2026-11-08, with plain `git` in a scratch repository and no new tool: for the commit at HEAD, `git ls-tree -r` gave 91,528 paths, `check-ignore` removed 5,953, and 85,575 stayed in the expected list. Hence the method runs in the git builder, which holds `git`.
+
+Reason for the form: the upload has no `.git`, so a check "uploaded tree equals tree of the commit" needs the commit from outside. The scope of the upload is defined by `.gcloudignore`, so the expected list uses the same rule on the commit. A second list of folders would be a copy that can drift from that file; this is why the method does not pick a folder scope. The blob ids are Git identity. The step adds no SHA-256 field and no manifest. The script is shared (see section 3a). A small script holds the logic so that a test can run it against a local fixture repository: `scripts/ci/verify-traffic-source.sh <commit> <repo-url> <uploaded-root>`. The YAML passes the GitHub URL. The fetch is read-only and uses no secret, because the repository is public. If the repository becomes private, the step needs a credential. That change needs Daniel's word.
 
 **Option B: reuse `release-source-manifest.mjs verify`.**
 The traffic file would run the same SHA-256 manifest check as the push file, with a new substitution `_RELEASE_SOURCE_MANIFEST_SHA256`. This spreads an existing SHA-256 check to one more build file. Reason it could be chosen: it needs no network fetch and it matches the push path. Reason it is not the default: the policy tells us to prefer Git identity, and the hash would also bind only to the manifest, not to the commit itself, because the manifest hash comes from the operator.
@@ -78,9 +82,10 @@ The step `bind-release-source` is step 1 of the Primary file, before `refuse-leg
 
 - **FR-1.** `apps/sales-advantage/cloudbuild-traffic.yaml` holds a step `bind-release-source` that comes before `verify-curriculum-backup` and before `migrate-db`.
 - **FR-2.** The step stops the build (non-zero exit) when `_RELEASE_COMMIT_SHA` is missing, is the `REQUIRED_` default, or is not 40 lowercase hex characters.
-- **FR-3.** The step stops the build when any uploaded file differs from, or is missing in, the release commit.
-- **FR-4.** The step passes when each uploaded file equals the file of the release commit at the same path.
+- **FR-3.** The step stops the build when any uploaded file differs from the same path in the release commit, or is missing in the commit.
+- **FR-4.** The step passes only when the expected list and the actual list are equal and each common path has the same blob id.
 - **FR-5.** `docs/runbooks/traffic-moves.md` (the sales section) names the step, says what it checks, and says that a traffic run stops before `migrate-db` on a mismatch.
+- **FR-3a.** The check is two-way inside the upload scope (section 3). A path that the commit holds in scope and the upload lacks stops the build, as does an uploaded path that the commit lacks.
 - **FR-6.** The change adds no SHA-256, checksum field, manifest, or provenance file.
 - **FR-10.** The script is `scripts/ci/verify-traffic-source.sh`. The sales upload is the repository root `.` and holds it. The sales section of the runbook says so, and no archive script changes.
 - **FR-11.** The step `bind-release-source` of each file has the three lines of section 3a-1 (`name: "gcr.io/cloud-builders/git"`, `id: "bind-release-source"`, `entrypoint: "bash"`) and installs nothing. The step prints the two version lines first and fails closed on a missing tool (section 3a-1).
@@ -92,7 +97,7 @@ The step `bind-release-source` is step 1 of the Primary file, before `refuse-leg
 
 ## 5. Acceptance criteria
 
-Each criterion has an automated test. Criteria 1 to 7 are in `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` (task 1.1). Criteria 8 to 14 are in the new file `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs` (task 2.1). No test reads `measure/` (rule C27 of `per_app_cicd_20261107`).
+Each criterion has an automated test. Criteria 1 to 7 and 15 to 17 are in `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` (task 1.1). Criteria 8 to 14 and 18 are in the new file `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs` (task 2.1). No test reads `measure/` (rule C27 of `per_app_cicd_20261107`).
 
 1. Given an uploaded source that differs from `_RELEASE_COMMIT_SHA`, when the script runs, then it exits non-zero and prints the path of the first differing file.
 2. Given a matching source, when the script runs, then it exits 0.
@@ -101,8 +106,9 @@ Each criterion has an automated test. Criteria 1 to 7 are in `scripts/ci/__tests
 5. Given the runbook, when a test reads the sales section, then it names `bind-release-source`.
 6. Given the script and the `bind-release-source` step of the sales traffic file, when a test reads their text, then it finds none of `sha256`, `sha-256`, `sha1sum`, `checksum`, `createHash`, or `manifest` (case-insensitive).
 7. The test run `vitest run --maxWorkers=1 scripts/ci` exits 0 (light run).
-16. Given the script text, when a test reads it, then the two version commands come before the first fetch. Given a scratch folder that holds a copy of the script and a PATH without `git`, when the script runs, then it exits non-zero, prints a message that names `git`, and makes no fetch. The same holds for a PATH without `bash` where a test can run it (task 1.1).
 15. Given the sales step, when a test reads it, then its image is `gcr.io/cloud-builders/git`, its entrypoint is `bash`, and its command holds no `apt-get`. Given `.gcloudignore`, when a test reads it, then no pattern excludes `scripts/` or `scripts/ci`, and the file `scripts/ci/verify-traffic-source.sh` exists (task 1.1).
+16. Given the script text, when a test reads it, then the two version commands come before the first fetch. Given a scratch folder that holds a copy of the script and a PATH without `git`, when the script runs, then it exits non-zero, prints a message that names `git`, and makes no fetch. The same holds for a PATH without `bash` where a test can run it (task 1.1).
+17. Given a scratch repository with a commit and an upload that lacks one file of the commit (for example a migration file), when the script runs, then it exits non-zero and prints the path of the missing file. Given an upload with one extra file that the commit lacks, then it exits non-zero and prints that path. Given a file of the commit that `.gcloudignore` excludes and the upload lacks, then the script exits 0 (task 1.1).
 
 **Phase 2 criteria.** One Red test file, `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`, covers the five files.
 
@@ -113,6 +119,7 @@ Each criterion has an automated test. Criteria 1 to 7 are in `scripts/ci/__tests
 12. Given the runbook, then the sections of the five apps name `bind-release-source`.
 13. Given the `bind-release-source` step text of each of the five files, then it finds none of the words of criterion 6, and the step uses the image and entrypoint of FR-11.
 14. Given the Primary traffic file, when a test reads the step ids, then they are exactly `bind-release-source`, `refuse-legacy-db`, `migrate-db`, `doctor-check`, `update-traffic`, and the bind step holds no `gcloud` command. (The rule of no Primary deploy, no Cloud Build submit, and no revision change is a scope rule of this track, not a test.)
+18. Given the scratch repository of criterion 17 and the step command of each of the five files, when the upload lacks one file of the commit, then the shared script exits non-zero, and each step command calls that script with `$_RELEASE_COMMIT_SHA` (task 2.1).
 
 ## 6. Out of scope
 
@@ -122,7 +129,7 @@ Each criterion has an automated test. Criteria 1 to 7 are in `scripts/ci/__tests
 
 ## 7. Questions
 
-Answered by the PM on 2026-11-08:
+Answered by the PM on 2026-11-08 (Q1 to Q6):
 
 - **Q1.** Option A (accepted).
 - **Q2.** Decided differently: the other traffic files join this track as Phase 2. No separate track.
@@ -130,9 +137,7 @@ Answered by the PM on 2026-11-08:
 - **Q3.** Yes. The script takes the repository URL as an argument.
 - **Q4.** Yes. The script lives in `scripts/ci/` (section 3a).
 
-Added by the spec review of 2026-11-08 (no PM question): the image of the step (section 3a-1), the Phase 2 test file, the tests of criteria 6, 14, and 15, and the sales upload source (section 2: the repository root `.`).
-
-Open (default used):
+Added by the spec review of 2026-11-08 (no PM question): the image of the step (section 3a-1), the Phase 2 test file, the tests of criteria 6, 14, and 15, and the sales upload source (section 2: the repository root `.`). Review r4 added the two-way check (section 3, FR-3a, criteria 17 and 18).
 
 - **Q5 (closed).** Task 2.3h of `per_app_cicd_20261107` names five apps and not `primary-advantage`. Task 2.3c of that track covers the Primary file and points to this track, so the Primary live proof stays with task 2.3c. No change to the other track is needed.
-- **Q6.** The check compares every uploaded file, so an untracked file in the upload stops the build. Is that acceptable? Default: yes. The check fails closed, and the operator uploads a clean tree.
+- **Q6 (closed).** The check compares every uploaded file, so an untracked file in the upload stops the build. PM answer, 2026-11-08: accepted. Fail closed on any untracked file in the upload; the operator uploads a clean tree.
