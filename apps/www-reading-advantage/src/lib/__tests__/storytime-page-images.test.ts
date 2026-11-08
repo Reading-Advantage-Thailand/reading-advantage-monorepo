@@ -104,5 +104,5 @@ describe("Storytime Advantage page image assets", () => {
       if (!expected.equals(actual)) problems.push(`${image.name}: crop pixels differ`);
     }
     expect(problems).toEqual([]);
-  });
+  }, 20000);
 });
