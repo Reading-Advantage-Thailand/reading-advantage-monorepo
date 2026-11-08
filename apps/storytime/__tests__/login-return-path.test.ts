@@ -125,7 +125,8 @@ describe("login return path (red)", () => {
     const mod = (await import("../lib/auth/return-path.js")) as {
       safeReturnPath(value: unknown, fallback: string): string;
     };
-    const ASCII_ONLY = /^[\u0000-\u007f]*$/;
+    // Every code point is U+007F or lower (the same meaning as the old control-character range).
+    const ASCII_ONLY = /^\p{ASCII}*$/u;
     const hostile = [
       { label: "U+2028 line separator", value: "/th/st/2/1\u2028" },
       { label: "U+2029 paragraph separator", value: "/th/st/2/1\u2029" },
