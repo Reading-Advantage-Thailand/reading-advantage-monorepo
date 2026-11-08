@@ -119,4 +119,38 @@ describe("login return path (red)", () => {
     expect(mutantFailures, "mutant_failures").toBeGreaterThanOrEqual(10);
     expect(naiveFailures.length).toBeGreaterThanOrEqual(10);
   });
+
+  it("accepts only ASCII return paths (F90)", async () => {
+    expect(existsSync(RETURN_PATH), MISSING).toBe(true);
+    const mod = (await import("../lib/auth/return-path.js")) as {
+      safeReturnPath(value: unknown, fallback: string): string;
+    };
+    const ASCII_ONLY = /^[\u0000-\u007f]*$/;
+    const hostile = [
+      { label: "U+2028 line separator", value: "/th/st/2/1\u2028" },
+      { label: "U+2029 paragraph separator", value: "/th/st/2/1\u2029" },
+      { label: "raw Thai letter in the query", value: "/th/st/2/1?x=\u0e01" },
+      { label: "raw Latin-1 e-acute", value: "/th/st/2/1?x=\u00e9" },
+      { label: "U+0080 code point", value: "/th/st/2/1?x=\u0080" },
+    ];
+    let fallenBack = 0;
+    for (const entry of hostile) {
+      const result = mod.safeReturnPath(entry.value, FALLBACK);
+      console.log(`${entry.label}: ${result}`);
+      expect(
+        result === FALLBACK || ASCII_ONLY.test(result),
+        `${entry.label} falls back or stays ASCII`,
+      ).toBe(true);
+      expect(ASCII_ONLY.test(result), `${entry.label} holds only ASCII bytes`).toBe(true);
+      if (result === FALLBACK) fallenBack += 1;
+    }
+    const asciiControl = "/th/st/2/1?x=%C3%A9";
+    expect(mod.safeReturnPath(asciiControl, FALLBACK), "the ASCII control stays").toBe(
+      asciiControl,
+    );
+    // The app builds no return path from Thai text (searched 2026-11-08: no hit in app/ or lib/).
+    console.log("app_thai_paths=0");
+    console.log(`ascii_cases=${hostile.length} fallen_back=${fallenBack}`);
+    expect(hostile.length, "ascii_cases").toBe(5);
+  });
 });

@@ -300,6 +300,50 @@ describe("login sign-in handler (red)", () => {
     }
   });
 
+  it("writes no session and no audit row when the Location cannot be built (F90)", async () => {
+    expect(existsSync(ROUTE), MISSING).toBe(true);
+    vi.resetModules();
+    const actualSameOrigin =
+      await vi.importActual<typeof import("../lib/auth/same-origin")>(
+        "../lib/auth/same-origin",
+      );
+    vi.doMock("../lib/auth/same-origin", () => ({
+      ...actualSameOrigin,
+      seeOther: () => {
+        throw new Error("the Location cannot be built");
+      },
+    }));
+    try {
+      const route = await loadRoute();
+      expect(typeof route.POST, "POST is exported").toBe("function");
+      let response: Response | null = null;
+      let thrown: unknown = null;
+      try {
+        response = await signIn("staff-01", PASSWORD);
+      } catch (error) {
+        thrown = error;
+      }
+      const sessions = fakeStoreState.current.sessions.length;
+      const audits = fakeStoreState.current.auditEvents.length;
+      console.log(
+        `sessions_written_on_bad_location=${sessions} audits_written_on_bad_location=${audits}`,
+      );
+      expect(sessions, "sessions_written_on_bad_location").toBe(0);
+      expect(audits, "audits_written_on_bad_location").toBe(0);
+      expect(thrown, "the handler does not throw").toBeNull();
+      expect(response, "the handler answers").not.toBeNull();
+      const answer = response as unknown as Response;
+      if (answer.status === 303) {
+        expect(locationPath(answer), "the default path").toBe("/th/st");
+      } else {
+        expect(answer.status >= 400 && answer.status < 500, "a 4xx answer").toBe(true);
+      }
+    } finally {
+      vi.doUnmock("../lib/auth/same-origin");
+      vi.resetModules();
+    }
+  });
+
   it("keeps the password and the token out of the audit rows and the logs", async () => {
     expect(existsSync(ROUTE), MISSING).toBe(true);
     const route = await loadRoute();
