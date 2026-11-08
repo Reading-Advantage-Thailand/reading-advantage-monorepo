@@ -414,13 +414,25 @@ label("stranger_media_requests", strangerMedia);
 label("stranger_set_cookie", strangerSetCookie);
 await stranger.close();
 
-// F5: a wrong password gives one generic message, and the sixth attempt locks the account.
+// F5: a wrong password gives one generic message, keeps the username, and the sixth attempt
+// locks the account. UX F1: the username stays in the field, the password does not, and the
+// username never enters the Location of the 303 answer or the URL of the sign-in page.
 await context.clearCookies();
 let genericError = 0;
 let genericErrorEnglish = 0;
 let passwordKept = 0;
 let usernameKept = 0;
 let lockedAfter = 0;
+const signInRedirectLocations = [];
+const signInPageUrls = [];
+const noteSignInRedirect = (response) => {
+  if (response.url().includes("/api/auth/sign-in") && response.status() === 303) {
+    signInRedirectLocations.push(response.headers()["location"] ?? "");
+  }
+};
+page.on("response", noteSignInRedirect);
+const holdsUsername = (text) =>
+  text.includes("username=") || text.includes("staff-02") || text.includes("demo-class-01");
 for (let attempt = 1; attempt <= 6; attempt += 1) {
   await page.goto(`${base}/th/sign-in`, { waitUntil: "domcontentloaded" });
   await page.fill('input[name="username"]', "staff-02");
@@ -433,10 +445,11 @@ for (let attempt = 1; attempt <= 6; attempt += 1) {
   if (page.url().includes("error=locked")) lockedAfter = attempt;
   else if (alerts > 0) genericError = 1;
   if (attempt === 1) {
+    signInPageUrls.push(page.url());
     const password = await page.inputValue('input[name="password"]');
     passwordKept = password.length > 0 ? 1 : 0;
     const username = await page.inputValue('input[name="username"]');
-    usernameKept = username.length > 0 ? 1 : 0;
+    usernameKept = username === "staff-02" ? 1 : 0;
   }
 }
 await context.clearCookies();
@@ -448,10 +461,20 @@ await Promise.all([
   page.click('button[type="submit"]'),
 ]);
 if ((await page.locator('[role="alert"]').count()) > 0) genericErrorEnglish = 1;
+signInPageUrls.push(page.url());
+const englishPassword = await page.inputValue('input[name="password"]');
+const englishUsername = await page.inputValue('input[name="username"]');
+if (englishPassword.length > 0) passwordKept = 1;
+if (englishUsername !== "demo-class-01") usernameKept = 0;
+page.off("response", noteSignInRedirect);
+const usernameInLocation = [...signInRedirectLocations, ...signInPageUrls].some(holdsUsername)
+  ? 1
+  : 0;
 label("generic_error", genericError);
 label("generic_error_english", genericErrorEnglish);
 label("password_kept", passwordKept);
 label("username_kept", usernameKept);
+label("username_in_location", usernameInLocation);
 label("locked_after", lockedAfter);
 
 // F6: the teacher routes need a teacher session.
@@ -629,7 +652,7 @@ else
   tail -40 "$TMP_DIR/next-start.log" || true
 fi
 
-echo "=== F62: every printed flow label of F1 to F4 and F7 to F9 is an assertion ==="
+echo "=== F62: each pinned flow row of F1 to F5 and F7 to F9 holds its expected value ==="
 FLOW_ROWS=0
 flow_value() {
   grep -E "^$1=" "$TMP_DIR/playwright.log" 2>/dev/null | tail -n 1 | cut -d= -f2-
@@ -678,6 +701,11 @@ flow_eq stranger_draft_marker 1
 flow_eq stranger_week_text 0
 flow_eq stranger_media_requests 0
 flow_eq stranger_set_cookie 0
+# F5: a wrong sign-in keeps the username in the field (th and en), clears the password, and puts
+# the username in no URL (UX finding F1, task 2b.7b).
+flow_eq username_kept 1
+flow_eq password_kept 0
+flow_eq username_in_location 0
 # F7: an off-site return path sends no off-site request and falls back to /<locale>/st.
 flow_eq offsite_requests 0
 flow_eq bad_next_fallback 1

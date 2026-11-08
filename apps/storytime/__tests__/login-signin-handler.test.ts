@@ -191,7 +191,10 @@ describe("login sign-in handler (red)", () => {
       expect(locationPath(response), "location").toBe(
         "/th/sign-in?error=invalid&next=%2Fth%2Fst%2F2%2F1",
       );
-      expect(setCookies(response), "no cookie").toHaveLength(0);
+      expect(
+        setCookies(response).filter((cookie) => cookie.startsWith("__Host-st_session=")),
+        "no session cookie",
+      ).toHaveLength(0);
       enumerationCases += 1;
     }
     console.log(`enumeration_cases=${enumerationCases}`);

@@ -138,3 +138,31 @@ describe("login proxy (red)", () => {
     expect(redirectPath(dotted)).toBe(signInFor("th", "/th/st/2/1.x"));
   });
 });
+
+describe("sign-in username flash cookie clear (red, UX F1 / task 2b.7b)", () => {
+  const FLASH_COOKIE = "st_signin_username";
+
+  /** Returns the Set-Cookie headers of a response as separate lines. */
+  function setCookieLines(response: Response): string[] {
+    const headers = response.headers as Headers & { getSetCookie?: () => string[] };
+    if (typeof headers.getSetCookie === "function") return headers.getSetCookie();
+    const value = headers.get("set-cookie");
+    return value ? [value] : [];
+  }
+
+  it("clears the username flash cookie on a GET of the sign-in page", async () => {
+    const response = await proxy(
+      request("/th/sign-in?error=invalid", { cookie: `${FLASH_COOKIE}=staff-02` }),
+    );
+    const lines = setCookieLines(response);
+    const clear = lines.filter((line) => line.startsWith(`${FLASH_COOKIE}=`));
+    console.log(`flash_clear_count=${clear.length} flash_clear=${clear[0] ?? "<none>"}`);
+    console.log(`flash_clear_response_status=${response.status}`);
+    expect(response.status, "the sign-in page passes through").toBe(200);
+    expect(response.headers.get("location"), "no redirect").toBeNull();
+    expect(clear, "one clearing flash cookie").toHaveLength(1);
+    expect(clear[0], "the value is empty").toContain(`${FLASH_COOKIE}=;`);
+    expect(clear[0], "Max-Age=0").toContain("Max-Age=0");
+    expect(clear[0], "the same Path").toContain("Path=/th/sign-in");
+  });
+});
