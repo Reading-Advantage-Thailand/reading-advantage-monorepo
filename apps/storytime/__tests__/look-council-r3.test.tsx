@@ -27,7 +27,7 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { ComponentType } from "react";
+import type { ComponentType, ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { StorytimeWeek } from "../lib/contracts/week";
 import { lastCompound, lastDeclaration, lengthPx, parseCss, selectorParts } from "./helpers/css-rules";
@@ -442,10 +442,13 @@ describe("the council round 3 fix batch (task 2.3g)", () => {
   it("C6 the week parent panel renders no native audio controls before the clip loads", async () => {
     routeMocks.loadVisibleWeek.mockResolvedValue(JSON.parse(JSON.stringify(week3)) as StorytimeWeek);
     const pagePath = "../app/[locale]/st/[level]/[week]/page";
-    const Page = (await import(/* @vite-ignore */ pagePath)).default as ComponentType<{
+    type WeekPageProps = {
       params: Promise<{ locale: string; level: string; week: string }>;
       searchParams: Promise<Record<string, string | string[] | undefined>>;
-    }>;
+    };
+    const { default: Page } = (await import(/* @vite-ignore */ pagePath)) as {
+      default: (props: WeekPageProps) => Promise<ReactElement>;
+    };
     const element = await Page({
       params: Promise.resolve({ locale: "en", level: "2", week: "3" }),
       searchParams: Promise.resolve({}),
