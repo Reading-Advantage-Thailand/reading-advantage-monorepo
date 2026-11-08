@@ -275,12 +275,19 @@ const LOOK_ASSET_NAMES = [
 /**
  * Tells whether a path is a built look asset under `/_next/static/`.
  * @param {string} pathname The path of the request.
- * @returns {boolean} true when the file name starts with a look asset name.
+ * @returns {boolean} true when the file name is exactly `<look name>.<build hash>.<extension>`.
  */
 function isLookStaticAsset(pathname) {
   if (!pathname.startsWith("/_next/static/")) return false;
+  if (pathname.includes("..") || pathname.includes("?") || pathname.includes("#")) return false;
   const name = pathname.slice(pathname.lastIndexOf("/") + 1);
-  return LOOK_ASSET_NAMES.some((prefix) => name.startsWith(prefix));
+  const [lookName, hash, extension, ...rest] = name.split(".");
+  return (
+    rest.length === 0 &&
+    LOOK_ASSET_NAMES.includes(lookName) &&
+    /^[A-Za-z0-9_-]+$/.test(hash ?? "") &&
+    /^[a-z0-9]+$/.test(extension ?? "")
+  );
 }
 
 page.on("response", (response) => {
