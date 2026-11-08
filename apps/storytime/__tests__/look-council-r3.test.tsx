@@ -481,7 +481,7 @@ describe("the council round 3 fix batch (task 2.3g)", () => {
     const mutants = gate.slice(gate.indexOf("const mutants = ["), gate.indexOf("const controls = ["));
     const withoutMutant = verdicts.filter((name) => !mutants.includes(`${name}(`));
     expect(withoutMutant, "the gate self-test must hold a mutant for each round 3 verdict").toEqual([]);
-    expect(gate, "the gate must print the row 14 results").toMatch(/row\(`?council r3/);
+    expect(gate, "the gate must print the row 14 results").toMatch(/row\(["'`]?council r3/);
   });
 });
 
