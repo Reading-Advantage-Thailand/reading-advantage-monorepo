@@ -37,7 +37,7 @@ This file tracks all major tracks for the project.
 ---
 
 
-- [~] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
+- [b] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
   Plan the complete game rebuild, shared arcade experience, listening, progression, and social play. Sol medium handoff is complete; implementation remains planned.
   *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
 
