@@ -6,6 +6,7 @@
 > **Amended:** 2026-11-07 for the plan of `a776187e2`: task 1.3 is not held (poster stays until a frame plays), and new task 1.9 (read-along highlight skip, AC-1.11). Facts M16 to M21 and the sections that name task 1.3 or 1.9 changed. Nothing else changed.
 > **Amended again:** 2026-11-07 for the plan of `ab4a3f344`: new task 1.10 (a word tap plays the word's own clip, AC-1.12) and new task 1.11 (song line offset, AC-1.13). Facts M22 to M28, the P1.1 rows, the P1.2 blocks, the Red command, the Green gates, the phase check, the reviews, and the questions Q16 to Q22 changed. The Phase 1 risk is now high.
 > **Amended after the Phase 1 reviews:** 2026-11-07 (orchestrator and PM decisions). Closeout item 3 gains two old test paths and one accepted PM exception. The Q6 row and the Browser run text change (look Red writes the script; signed-in pattern; process-group trap). Phase 2 gains the K5 Red case (clip mode switch). The carried items for the UX browser review of Phase 1 are below in P1.6.
+> **Amended after the phase acceptance r2:** 2026-11-08 (orchestrator decision). Closeout item 3 of P1.4 gains the exception for `apps/storytime/__tests__/phase3-browser-gate.sh` (look commit `97569137d`). Nothing else changed.
 > **Related strategy:** [storytime_at_home_release_20261106/test-strategy.md](../storytime_at_home_release_20261106/test-strategy.md). Its section 1.1 (heavy jobs) and section P2b.4 (targeted command shape) apply here.
 > **Facts:** each "measured" fact was read on 2026-11-07 at `d8e73fc6c`. One heavy job ran (fact M1). Red and Green must measure again.
 
@@ -348,6 +349,7 @@ The row count is asserted greater than 0 before the verdict (A4). No row plays t
    - `phase3-decodable-punct.test.tsx`: the Green edit is needed for the new source-case rule and weakens no assertion. The reason is in the Green commit body.
    - `phase3-loops-off.test.tsx`: the Green edit is needed for the new reader markup and weakens no assertion. The reason is in the Green commit body.
    - Accepted PM exception: the www page copy of commit `a776187e2` is outside the allowed paths. The copy waits on branch `storytime/www-signin-copy` (revert `67a5d1a47`). The count `look_out_of_scope_paths` names it and does not fail on it.
+   - Orchestrator exception (2026-11-08): `apps/storytime/__tests__/phase3-browser-gate.sh` (look commit `97569137d`, Red r6 triage, orchestrator decision). The look Phase 1 changes moved six rows of the login gate. The new rows weaken no assertion (see `red-p1-r6-triage.log`). The count `look_out_of_scope_paths` names this path and does not fail on it.
 4. `phase1-quality-gates.sh` exits 0 with `=== Total: 2 checks (PASS=2, FAIL=0) ===`.
 5. The browser run: exit 0, `FAIL=0`, `console_errors=0`.
 6. Task 1.3 has its Green evidence (`look-song-playing.test.tsx` and `phase3-song-ui.test.tsx` exit 0). Daniel's phone record (`phone_blank=no`, `phone_model=not given`) is copied into the plan note as human evidence and as a check line for the look check. Its absence or a later change does not block the checkpoint.
