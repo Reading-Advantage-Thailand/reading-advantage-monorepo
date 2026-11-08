@@ -21,6 +21,9 @@ on:
       - 'tsconfig*.json'
       - 'turbo.json'
 
+permissions:
+  contents: read
+
 jobs:
   select:
     name: Select affected apps
@@ -173,13 +176,17 @@ jobs:
       - name: Codecamp cold-start tests
         run: pnpm test:codecamp-cold-start
 
-      # The three workspace apps that are not rows of scripts/ci/apps.json get no job in the
-      # affected-app matrix, so this step keeps their tests. The science-advantage CI gates pin the
-      # step name and the command `pnpm test`.
+      # The affected-app matrix covers only the rows of scripts/ci/apps.json. This step keeps the
+      # tests of every other test-bearing workspace package. The roots are: the three apps that are
+      # not table rows (science-advantage, vocabulary-games, activity-vinext-fixture), and the six
+      # packages that no table app depends on (architecture-enforcement, knowledge-space-practice,
+      # mastery-runtime-compat, scripts, session-service, worker). Each `...` adds the dependencies
+      # of the root. The science-advantage CI gates pin the step name and the command `pnpm test`, and
+      # they read `run:` and the command on one line, so the filters stay on one line.
       - name: Test
         env:
           COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
-        run: pnpm test --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture...
+        run: pnpm test --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture... --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker...
 
   affected:
     name: Check ${{ matrix.id }}
