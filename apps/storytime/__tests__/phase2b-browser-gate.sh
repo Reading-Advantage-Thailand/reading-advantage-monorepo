@@ -261,6 +261,27 @@ let mediaPathRequests = 0;
 let appMediaRequests = 0;
 let rangeResponses = 0;
 let offsiteRequests = 0;
+let lookAssetsSkipped = 0;
+
+// The built look assets (`apps/storytime/app/look/`): the look places, the look pieces,
+// and the look fonts. A build writes them under `/_next/static/` with a hash after the name.
+const LOOK_ASSET_NAMES = [
+  "grove-d", "grove-p", "meadow-d", "meadow-p", "oak-d", "oak-p",
+  "path-d", "path-p", "trail-d", "trail-p",
+  "q-bar", "q-crest", "q-tip-l", "q-tip-r",
+  "fredoka-latin", "mitr-500-thai",
+];
+
+/**
+ * Tells whether a path is a built look asset under `/_next/static/`.
+ * @param {string} pathname The path of the request.
+ * @returns {boolean} true when the file name starts with a look asset name.
+ */
+function isLookStaticAsset(pathname) {
+  if (!pathname.startsWith("/_next/static/")) return false;
+  const name = pathname.slice(pathname.lastIndexOf("/") + 1);
+  return LOOK_ASSET_NAMES.some((prefix) => name.startsWith(prefix));
+}
 
 page.on("response", (response) => {
   if (response.status() === 206 && response.url().startsWith(storageOrigin)) rangeResponses += 1;
@@ -287,10 +308,13 @@ page.on("request", (request) => {
       mediaPathRequests += 1;
       if (mediaPathRequests === 1) console.log(`first_media_path=${url}`);
     }
-    // The app icon (`app/icon.png`) and the built look images (`/_next/static/`, the CSS
-    // backgrounds of the look track) are page assets and no story media.
+    // The app icon (`app/icon.png`) and the built look assets (`/_next/static/`: the look
+    // places, pieces, and fonts) are page assets and no story media. A story file under
+    // `/_next/static/` with any other name still counts.
     const pathname = new URL(url).pathname;
-    if (storyMedia && pathname !== "/icon.png" && !pathname.startsWith("/_next/static/")) {
+    if (storyMedia && isLookStaticAsset(pathname)) {
+      lookAssetsSkipped += 1;
+    } else if (storyMedia && pathname !== "/icon.png") {
       appMediaRequests += 1;
       if (appMediaRequests === 1) console.log(`first_app_media=${url}`);
     }
@@ -328,6 +352,7 @@ storageMediaRequests = 0;
 unsignedMedia = 0;
 mediaPathRequests = 0;
 appMediaRequests = 0;
+lookAssetsSkipped = 0;
 const setCookie = await signIn("staff-01", "/th/st/2/1?part=song");
 const f1Same = page.url().includes("/th/st/2/1") && page.url().includes("part=song");
 label("returned_same_url", f1Same ? 1 : 0);
@@ -335,6 +360,7 @@ label("media_requests", storageMediaRequests);
 label("unsigned_media", unsignedMedia);
 label("media_path_requests", mediaPathRequests);
 label("app_media_requests", appMediaRequests);
+label("look_assets_skipped", lookAssetsSkipped);
 
 // F2: the cookie stays 365 days, and a new context with the jar opens the week.
 const maxAgeMatch = /Max-Age=(\d+)/.exec(setCookie);
@@ -630,6 +656,8 @@ flow_ge media_requests 1
 flow_eq unsigned_media 0
 flow_eq media_path_requests 0
 flow_eq app_media_requests 0
+# The count is 0 when the page loads no built look asset; the row proves the label prints.
+flow_ge look_assets_skipped 0
 # F2: the device keeps the 365-day cookie and a new context with the jar opens the week.
 flow_eq device_kept_max_age 31536000
 flow_eq device_kept 1
