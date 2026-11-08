@@ -455,6 +455,12 @@ main[data-place] button:active:not(:disabled) {
   font-size: 25px;
   line-height: 1.7;
 }
+/* A tappable sentence is an inline span. Vertical padding grows its box to the 44 px floor
+ * without changing the line layout (AC-1.9, the tap-target row of the Phase 3 gate). */
+[data-sentence][role="button"] {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
 
 /* ---- The decodable: the sound tile, the page, the tricky words. ---- */
 [data-part="decodable"] > div > section[aria-label] {
@@ -681,11 +687,14 @@ main[data-place] button:active:not(:disabled) {
   }
 }
 
-/* ---- A landscape phone: a slim hero, the bar at the left, the plaque at the right. ---- */
+/* ---- A landscape phone: a slim hero, the bar at the left, the plaque at the right. The
+ * band is 64 px (Q26 allows the study value 84 px or less), because every child control of
+ * the at-home screens, and the sign-out button on the reader, must end inside the 390 px
+ * fold of 844x390 (the login-track browser gate reads them). ---- */
 @media (max-height: 500px) {
   header[data-hero] {
-    height: 84px;
-    margin-bottom: 26px;
+    height: 64px;
+    margin-bottom: 16px;
     border-radius: 0 0 22px 22px;
   }
   header[data-hero] [data-crest] {
@@ -694,24 +703,28 @@ main[data-place] button:active:not(:disabled) {
   [data-game-bar] {
     left: 12px;
     translate: none;
-    top: 10px;
-    width: 250px;
+    top: 8px;
+    width: 220px;
+    font-size: 11px;
   }
   header[data-hero] > h1 {
     left: auto;
     right: 22px;
     margin: 0;
     min-width: 0;
-    min-height: 48px;
-    height: 48px;
-    bottom: -22px;
-    padding: 0 22px 4px;
-    font-size: 24px;
+    min-height: 40px;
+    height: 40px;
+    bottom: -16px;
+    padding: 0 18px 2px;
+    font-size: 20px;
   }
   header[data-hero] > h1::before,
   header[data-hero] > h1::after {
-    width: 30px;
-    height: 40px;
+    width: 24px;
+    height: 32px;
+  }
+  main[data-place] {
+    gap: 12px;
   }
   main[data-place] ul[data-week-tiles] a {
     flex-direction: column;
@@ -728,6 +741,43 @@ main[data-place] button:active:not(:disabled) {
     font-size: 22px;
   }
   main[data-place] > section[aria-label] + section[aria-label] {
-    padding: 16px 16px 18px;
+    padding: 10px 12px 12px;
+  }
+  /* The reader column and its page picture. */
+  [data-part="book"] > div {
+    gap: 8px;
+  }
+  [data-part="book"] [data-page-content] > div {
+    padding: 6px 10px;
+  }
+  [data-page-number] > img,
+  [data-part="decodable"] section > img {
+    margin: 2px 4px 6px;
+    width: calc(100% - 8px);
+    max-height: 110px;
+  }
+  /* The decodable: a slim sound tile, a slim sentence card, a slim tricky card. Every
+   * control keeps its 48 px tap floor; only the type and the padding shrink. */
+  [data-part="decodable"] > div > section[aria-label] {
+    padding: 4px 10px 6px;
+  }
+  [data-part="decodable"] > div > section[aria-label] p:first-of-type {
+    font-size: 28px;
+  }
+  [data-part="decodable"] section[data-page-number] > p {
+    padding: 6px 10px;
+  }
+  [data-part="decodable"] section[data-page-number] > p button {
+    font-size: 26px;
+  }
+  [data-part="decodable"] div > section[aria-label]:last-child {
+    padding: 2px 8px 4px;
+  }
+  [data-part="decodable"] div > section[aria-label]:last-child h2 {
+    font-size: 16px;
+  }
+  [data-part="decodable"] div > section[aria-label]:last-child button {
+    min-height: 48px;
+    font-size: 20px;
   }
 }
