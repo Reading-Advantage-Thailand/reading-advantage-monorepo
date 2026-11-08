@@ -1632,3 +1632,9 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 
 ---
+
+---
+
+- [ ] **Track: Bind the sales traffic source to the release commit** — *created 2026-11-08*
+  *Link: [./tracks/sales_traffic_source_binding_20261108/](./tracks/sales_traffic_source_binding_20261108/)*
+  *Status: new | Chore, security fix of Review B finding F4 (per_app_cicd_20261107) | Blocks task 2.3h of per_app_cicd_20261107 for sales-advantage; the live traffic run stays `deferred:daniel`*
