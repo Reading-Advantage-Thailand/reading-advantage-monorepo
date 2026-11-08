@@ -1,0 +1,23 @@
+run_id: review-a-p4-355079cb0-r3
+role: measure-review-a-correctness
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: 6a68f07dc5a47bc9f52dc3f4ff3ae43feb6fb70b
+audited_head_sha: 355079cb02889b42937953b4aa4b154cc0ebc734
+model: nvidia/stepfun-ai/step-5-preview
+model_substitution: the role table names claude-opus-5-5; this run uses step-5-preview because the r2 recheck lost its model at 16:57 (bailian GLM fell back to claude-haiku-5-5, the Green family) and its verdict is void
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: pass
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: 6a68f07dc5a47bc9f52dc3f4ff3ae43feb6fb70b
+audited_head_sha: 355079cb02889b42937953b4aa4b154cc0ebc734
+gates: report_check=pass failed=none exit=0 report_rows=11 expected_rows=11 ids_match=1 bad_rows=0 missing_fixture_exit=1; CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci exit=0 Test Files 9 passed (9) Tests 150 passed (150)
+blocking_findings: none
+nonblocking_findings: HEAD (6a68f07dc) is one measure-only commit above the audited head 355079cb0; the scoped diff git diff --stat 355079cb0 6a68f07d -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage prints nothing, so the audited content is intact
+retry_recommendation: none
+confidence: high
+END_MEASURE_AGENT_RESULT

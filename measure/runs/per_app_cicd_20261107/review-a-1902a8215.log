@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: per_app_cicd_20261107
+phase: Phase 2: Per-app CD workflows
+commits: 1902a8215
+tests_run: scripts/ci + storytime guard files (CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci apps/storytime/__tests__/phase1-service.test.ts apps/storytime/__tests__/phase3-media-gate.test.ts, foreground via heavy-run.sh): EXIT=0, Test Files 6 passed (6), Tests 119 passed (119) (107 scripts/ci + 12 storytime guard); sales guard line (production-readiness, sales-continuation, sales-release-source, cloudbuild-secret-isolation, foreground via heavy-run.sh): EXIT=1, Test Files 1 failed | 3 passed (4), Tests 1 failed | 28 passed (29), the one failure is the known sales approval case
+files_changed: measure/runs/per_app_cicd_20261107/review-a-1902a8215.json, measure/runs/per_app_cicd_20261107/review-a-1902a8215.log
+plan_updates: none
+known_failures: apps/sales-advantage/scripts/production-readiness.test.ts "seeds only deterministic approved curriculum and gates exact completeness" (releaseCandidate.approval holds awaiting_human_review; the human review gate of the sales curriculum, known failure item 4, outside this track)
+handoff: verdict pass; no blocking findings; four nonblocking Nits A31 to A34 recorded in review-a-1902a8215.json; retry_recommendation none
+END_MEASURE_AGENT_RESULT

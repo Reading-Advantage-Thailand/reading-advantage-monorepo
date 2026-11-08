@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Round 1 at role base f1382b2c3 (HEAD read at start; HEAD moved to a9b705948 during the review, but that commit touches only primary_storytime_removal, so the per_app_cicd spec and plan are unchanged). The app table of section 2 is factually correct against every cloudbuild.yaml and workflow in the tree. Five findings remain: two Blockers and three Majors. F1: D2 makes accounts and workbooks deploy --no-traffic, but no plan task edits their cloudbuild files, so a literal plan keeps their direct deploy and a push that affects either app would move traffic without Daniel's word. F2: the plan names no path and no CLI for the affected-app script and no path for the app table, which Red, Green, and three workflows all share. F3: AC-1.3 says packages/read-along affects www, primary, and storytime, but only storytime depends on that workspace package. F4: the tag rule is named only for storytime, so primary, accounts, and workbooks get a tag with no value or rule. F5: D1 moves the migrate steps out, but the plan does not say where the refuse-legacy-db read-only guard goes.",
+  "blocking_findings": [
+    "F1 [Blocker] plan 2.3/D2: Decision D2 makes accounts and workbooks deploy with --no-traffic and a tag, but no plan task edits their cloudbuild.yaml files. Rationale: task 2.3 names only cd-apps.yml, task 2.3b edits only Primary, and task 2.4 edits only storytime; a literal plan keeps the direct deploy in both files, so a push that affects accounts or workbooks moves traffic without Daniel's word.",
+    "F2 [Blocker] plan 1.3/FR-1/FR-2: The plan names no file path for the affected-app script or the app table, and it names no CLI shape for the script. Rationale: Red tests task 1.2 and the three workflows cd-www, cd-apps, and ci use the script before Green writes it, so Red and Green can pick different paths and interfaces, and no phase names these files to create."
+  ],
+  "nonblocking_findings": [
+    "F3 [Major] AC-1.3: The criterion says a change of packages/read-along returns www, primary, and storytime, but only storytime depends on that workspace package. Rationale: www and primary do not list @reading-advantage/read-along in their package.json; www's 'read-along' is marketing copy and primary's lib/read-along is its own folder, so the real result is ['storytime'] only.",
+    "F4 [Major] FR-2/D1/D2/AC-2.3: The spec names the tag rule only for storytime (st- plus the first eight build-id characters); primary, accounts, and workbooks get 'a tag' with no value or rule. Rationale: Green must invent the tag for these three newly-gated apps, and Red cannot write a deterministic AC-2.3 length test without the rule.",
+    "F5 [Major] D1/AC-2.6/2.3b: Decision D1 says the migrate steps move out, but AC-2.6 counts only the migrate and doctor steps, so the plan does not say where the refuse-legacy-db read-only guard goes. Rationale: the guard protects the migrate step and must move with it, but no text states this and no test checks it, so Green must guess."
+  ],
+  "evidence": [
+    "App table verification: all 10 rows of spec section 2 match the files. www: service www-reading-advantage, project $PROJECT_ID (workflow secret GCP_PROJECT_ID), direct. primary: service primary-advantage-app, project ${_PROJECT_ID}=primary-advantage, direct with migrate-db and doctor-check before deploy. storytime: service storytime-app, project primary-advantage (--project flag), --no-traffic --tag=st-$BUILD_ID. accounting: service accounting, $PROJECT_ID, --no-traffic --tag=candidate when the service exists (if/else in the deploy step). codecamp: codecamp-advantage, $PROJECT_ID, --tag=sso-candidate --no-traffic. marketing: marketing, $PROJECT_ID, --no-traffic with candidate tag c<first-8>. sales: sales-advantage, $PROJECT_ID, --no-traffic with tags legacy-rollback and candidate. accounts: accounts, $PROJECT_ID, direct. workbooks: workbooks, $PROJECT_ID, direct. reading-advantage: reading-advantage-web, $PROJECT_ID, direct, builds ./web. No wrong fact in the table.",
+    "One-off files: apps/primary-advantage/cloudbuild-backfill.yaml is untracked (present in the tree, absent from git ls-files), matching the spec note; cloudbuild-catalogue.yaml, cloudbuild-etl.yaml, and apps/sales-advantage/cloudbuild.continue-f5063222.yaml are all present and excluded, matching the spec.",
+    "Workflow facts match: cd-www-reading-advantage.yml paths are apps/www-reading-advantage/**, packages/**, package.json, pnpm-lock.yaml, pnpm-workspace.yaml, turbo.json; it runs gcloud builds submit --config=apps/www-reading-advantage/cloudbuild.yaml . with secrets GCP_SERVICE_ACCOUNT and GCP_PROJECT_ID. ci.yml runs on push to master (no path filter) and on pull requests with a path filter; it runs the whole monorepo in one job.",
+    "Storytime tag defect math holds: st- (3) plus a 36-character build id is 39, plus storytime-app (13) is 52, over the 46-character limit. The fix st- plus the first eight build-id characters is 11 plus 13 equals 24, within the limit. The failure text in spec section 2 matches the defect.",
+    "FR-4 runbook facts: the current docs/runbooks/storytime-deploy.md does not yet hold the seven FR-4 facts; task 2.5 adds them, and AC-4.2 expects facts_found equals 7, which matches the seven bullets of FR-4. The seven facts are operational records from 2026-11-07, not claims I can falsify from the tree.",
+    "Local master drift: git rev-list --count origin/master..HEAD is 176 at a9b705948, not the 168 recorded at f3611d47c; f3611d47c resolves to f3611d47c7ca5b02848691bab1cc109266511842. This is the expected drift from other sessions committing on master, and plan task 1.1 re-measures it, so it is not a false fact.",
+    "AC-2.6 wording note (not a finding): the parenthetical lists 'db:migrate' and 'drizzle-kit migrate', but the actual migrate step runs 'pnpm --filter @reading-advantage/db migrate' and the doctor step runs 'pnpm --filter @reading-advantage/db doctor --check'. The intent (no migrate step and no doctor step) is clear, and a careful Red reads the actual file, so this is a wording note only.",
+    "Zero-decision check on the workflow files: cd-www-reading-advantage.yml, cd-apps.yml, ci.yml, apps/primary-advantage/cloudbuild.yaml, apps/primary-advantage/cloudbuild-traffic.yaml, apps/storytime/cloudbuild.yaml, and docs/runbooks/storytime-deploy.md are all named in the plan. The affected-app script and the app table are not named (F2)."
+  ],
+  "commands": [
+    "git rev-parse HEAD (f1382b2c3e6c8581fded9eddecf783b96121d85c at start)",
+    "git log --oneline -5 (HEAD a9b705948 after another session committed)",
+    "git status --short (cloudbuild-backfill.yaml untracked, other sessions' files)",
+    "git rev-list --count origin/master..HEAD (176)",
+    "git rev-parse f3611d47c (f3611d47c7ca5b02848691bab1cc109266511842)",
+    "git ls-files apps/ | grep cloudbuild (backfill absent, so untracked)",
+    "read of all 10 cloudbuild.yaml files, both workflow files, the storytime runbook, and the root/workspace package.json files",
+    "grep for read-along in apps/**/package.json and repo-wide package.json (only storytime and read-along itself)"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "paraphrase": {
+    "proposes": "This track makes a push deploy only the apps that the push changes. One script reads a base SHA and a head SHA and lists the affected apps. The www workflow, a new table-driven cd-apps.yml, and ci.yml all use that script. Each gated app builds a new revision with --no-traffic and a tag, and only a manual traffic step on Daniel's word moves traffic. The track fixes the storytime tag length and records the storytime deploy facts.",
+    "current_system": "Today one workflow deploys www on every push that changes packages, so the team avoids pushes to stop deploys. Each app has its own cloudbuild.yaml, and most deploy the new revision straight to traffic. Primary runs its migrations before the deploy. Storytime already deploys with --no-traffic, but its tag plus service name is 52 characters, over the 46-character limit."
+  }
+}

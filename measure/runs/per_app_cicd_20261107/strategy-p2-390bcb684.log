@@ -1,0 +1,82 @@
+# Strategy role log: Phase 2 (per_app_cicd_20261107)
+
+- Role: measure-strategy
+- Track: per_app_cicd_20261107
+- Phase: P2 `## Phase 2: Per-app CD workflows`
+- phase_base_sha (given, equals HEAD before this strategy): 390bcb684237d0ed9bde78682a2d3e06493cb0d3
+- Date: 2026-11-07
+- Model: deepseek/deepseek-flash#high (different family from the spec/plan writer claude-code/claude-sonnet-5-5)
+- Strategy commit: d28f8fd52096dd3101d60005182fc90a17ea52a9
+- Scope: only `measure/tracks/per_app_cicd_20261107/test-strategy.md`
+
+## Status
+
+DONE. The P2 strategy replaced the P2 outline. The commit changed one file
+(268 insertions, 25 deletions). No product source, no workflow, no cloudbuild file changed.
+
+## Measured facts M23 to M42 (read-only at 390bcb684)
+
+- M23: HEAD equals 390bcb684; the tree is dirty from other sessions.
+- M24: `.github/workflows/` holds `cd-www-reading-advantage.yml` and `ci.yml` only. No `cd-apps.yml`, no `permissions:`, no `fetch-depth` on cd-www.
+- M25: `scripts/ci/apps.json` holds 10 rows: direct=1, gated=8, excluded=1.
+- M26: tag math max is primary 32 (11+21); limit 46 comes from the spec's quoted build `4907d929` failure text.
+- M27: storytime uses `st-$BUILD_ID`: tag 39 plus service 13 = 52.
+- M28: primary push ids `build-image|push-image|refuse-legacy-db|migrate-db|doctor-check|deploy-cloudrun`; direct deploy; doctor holds `--required-migration 0074_primary_help_events`.
+- M29: accounts holds 5 database steps then `deploy-cloudrun|allow-public-invoker`; direct deploy.
+- M30: workbooks holds `build-image|push-image|deploy-cloudrun`; direct deploy; no database step.
+- M31: accounting keeps the conditional `--tag=candidate --no-traffic` / `--tag=candidate`.
+- M32: codecamp, marketing, and sales step orders measured; sales holds 6 database steps and both deploys use `--no-traffic`.
+- M33: no `apps/*/cloudbuild-traffic.yaml` exists.
+- M34: no `update-traffic`, `--to-latest`, or `cloudbuild-traffic` in `.github/workflows` (characterization passes).
+- M35: `docs/runbooks/storytime-deploy.md` exists with `facts_found=0` of 7.
+- M36: `yaml` 2.9.0 parses all files; `jq`, `gh`, `gcloud` exist; `act` and `actionlint` do not.
+- M37: P2 base suite `EXIT=0`, 2 files, 52 tests (48 P1 plus 4 adversarial), 45.60 s.
+- M38: `gh secret list` shows only `GCP_PROJECT_ID` and `GCP_SERVICE_ACCOUNT`; values not read.
+- M39: reading-advantage roles measured: `github-actions-deploy` has run.admin and secret accessor; `docker-service-account` has cloudbuild.builds.builder.
+- M40: no candidate service account has a project-level binding in primary-advantage.
+- M41: no `workbooks-cloud-run` account and no workbooks Cloud Run service in reading-advantage.
+- M42: www runs in project `www-reading-advantage`; six gated apps run in `reading-advantage`; one `GCP_PROJECT_ID` cannot select both.
+
+## Red command
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+```
+
+Expected at the 2.1 Red commit: `EXIT=1`; `cd-workflows.test.mjs` fails; the P1 file passes 52.
+
+## Open questions Q10 to Q17 and the defaults used
+
+- Q10 project resolution: literal project on gated rows; www keeps `$PROJECT_ID`.
+- Q11 AC-2.5 gaps: keep all 10 rows; task 2.6 stays `[b] deferred:daniel`; a missing-role job fails closed.
+- Q12 select contract: `id: select`; jobs `select`+`deploy` and `select`+`build`; outputs `www` and `matrix`.
+- Q13 AC-2.2 split: workflow half at 2.3; file half at 2.3d and 2.3e.
+- Q14 runbook: append a dated fact block; do not rewrite the steps.
+- Q15 Node: both CD workflows add `actions/setup-node@v4` with Node 22.
+- Q16 `ci.yml` permissions: P3 only.
+- Q17 traffic runbook: one new `docs/runbooks/traffic-moves.md` with 6 sections.
+
+## phase_base_sha
+
+The given 390bcb684 predates this strategy commit. It is the role base, not the
+immutable base. The orchestrator captures `git rev-parse HEAD` after d28f8fd52 and
+before the first P2 Red commit, then verifies the strategy path is in that commit.
+
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-strategy
+track: per_app_cicd_20261107
+phase: P2
+strategy_commit: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base: 390bcb684237d0ed9bde78682a2d3e06493cb0d3
+files_changed: 1
+files: measure/tracks/per_app_cicd_20261107/test-strategy.md
+out_of_scope_paths: 0
+facts_added: M23-M42
+questions_added: Q10-Q17
+heavy_jobs: 1
+heavy_job_result: EXIT=0, 2 files, 52 tests
+push: none
+deploy: none
+handoff: capture phase_base_sha with `git rev-parse HEAD` after d28f8fd52 and before the first P2 Red commit; the given 390bcb684 predates the committed strategy
+END_MEASURE_AGENT_RESULT

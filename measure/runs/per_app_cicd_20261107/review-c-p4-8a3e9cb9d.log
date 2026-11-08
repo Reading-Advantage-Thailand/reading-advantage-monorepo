@@ -1,0 +1,50 @@
+# Review C - P4 - per_app_cicd_20261107
+
+Status: fail (one blocking clarity finding, F1).
+
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: a1d3bb741fa23e355590e35a5fb3d87c61562993 (the HEAD the role started at)
+audited_head_sha: 8a3e9cb9d09e47192d4925f66b630cd00a4107da
+report_head: abd7e30ae
+
+Head-current evidence: at HEAD a1d3bb741fa23e355590e35a5fb3d87c61562993 the command `git diff --stat 8a3e9cb9d HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage` printed nothing and returned EXIT=0. The later commits belong to other tracks.
+
+Model: deepseek/deepseek-flash#high. The role table names kimi-for-coding, which is WAIT. The substitution is recorded.
+
+Contract applicability: applicable. test-strategy.md P4.8 (line 894) says Review C applies to the report and the plan line. The phase changes no page, so no browser inspection applies (line 896).
+
+## Checks
+
+C1 Report shape: pass. 11 rows (10 app ids and ci). The ids match scripts/ci/apps.json.
+C2 Deploy list: pass. traffic=[www-reading-advantage], 8 no_traffic, skipped=[reading-advantage]. The prose agrees.
+C3 www text list: pass. The one closure file is classed "test only". The report prints the diff command, www_closure_files_changed=1, www_text_changes=0, and held_signin_copy_in_head=0. PR can check the www text from the report alone.
+C4 One meaning per word: fail on `deploy`.
+
+## Blocking
+
+F1 dry-run-report.md line 28. `deploy` means any deploy call (line 8) and a traffic move (line 28). A reader can conclude that the push deploys nine apps. Fix: "The push moves traffic for one app ... Eight apps build a no-traffic revision ..."; line 8 becomes "No secret, no gcloud call".
+
+## Nonblocking
+
+N1 dry-run-report.md lines 12 to 21 and 26: direct|gated|excluded and traffic|no_traffic|skipped name one set of classes. Fix: one mapping line under the table.
+N2 dry-run-report.md lines 10 and 22: `ci` is the row and Mode, and the CI-id column. Fix: rename the header to `ci_apps`.
+N3 dry-run-report.md line 26: `traffic` is a list of apps and the served state. Fix: one half line that the key names apps.
+
+Evidence: read only; no suite ran.
+
+MEASURE_AGENT_RESULT
+status: fail
+role: measure-review-c-ux-api
+track: per_app_cicd_20261107
+phase: Phase 4
+verdict: fail
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: a1d3bb741fa23e355590e35a5fb3d87c61562993
+audited_head_sha: 8a3e9cb9d09e47192d4925f66b630cd00a4107da
+head_is_current: true
+contract_applicability: applicable
+blocking_findings: F1
+nonblocking_findings: N1, N2, N3
+retry_recommendation: retry_implementation
+confidence: medium
+END_MEASURE_AGENT_RESULT

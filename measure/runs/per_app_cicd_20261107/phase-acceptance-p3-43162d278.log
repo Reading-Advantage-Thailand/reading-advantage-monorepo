@@ -1,0 +1,68 @@
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+audited_head_sha: 43162d27868d3b43a2fbde02ed95b0116bedfb60
+audited_head_current: true
+model_route: nvidia/stepfun-ai/step-5-preview#high
+model_substitution: substituted for the table model claude-opus-5-5, because an Anthropic model wrote Red work in this phase and DeepSeek is excluded too.
+status: pass
+retry_recommendation: none
+confidence: high
+
+Provenance
+- git log -1 --format=%H on the four audited paths returned 43162d27868d3b43a2fbde02ed95b0116bedfb60, which equals the audited head.
+- git status --short on the same paths printed no line. The audited paths are clean.
+- git log --oneline a14964eb3..43162d278 on the same paths printed one commit, 43162d278 test(ci): add the p3 adversarial cases. Reviews A and B at a14964eb3 saw the same production surface.
+- git diff --stat 25d774e08..43162d278 on the four audited paths printed 8 files, 1300 insertions, 19 deletions. The changed paths are .github/workflows/ci.yml, apps/sales-advantage/cloudbuild-traffic.yaml, docs/runbooks/traffic-moves.md, scripts/ci/affected-apps.mjs, and four test files under scripts/ci/__tests__.
+
+Prerequisite results
+- Review A: measure/runs/per_app_cicd_20261107/review-a-p3-a14964eb3.json, line 3 "status": "pass", line 7 phase_base_sha 25d774e08a0f9bef8074fb6f88bde439d1a72066.
+- Review B: measure/runs/per_app_cicd_20261107/review-b-p3-a14964eb3.json, line 15 "status": "pass", line 7 the same phase_base_sha.
+- Adversarial: measure/runs/per_app_cicd_20261107/adversarial-p3-36a683b91.json, line 3 "status": "pass", line 7 mutants_rejected=15 of 15, line 32 names scripts/ci/__tests__/ci-workflow-adversarial.test.mjs.
+- The only commit after a14964eb3 on the audited paths is the test commit 43162d278, so every prerequisite result targets the same audited content.
+
+Phase tasks
+- plan.md line 52 task 3.1: [x]. Scripts at ci-workflow.test.mjs; the 12 case labels sit at lines 256, 263, 270, 277, 284, 291, 298, 301, 317, 342. Standalone run exit 0, Tests 12 passed (12).
+- plan.md line 53 task 3.2: [x]. ci.yml line 29 select job, line 53 the affected-apps call, lines 55-58 the matrix output, line 60 packages job, line 197 affected job with needs: select at 199, the non-empty gate at 200, fromJSON at 205, and the turbo filter run at 270. The six guards stay in the packages job at ci.yml lines 146, 149, 154, 157, 171, 174. The replacement Test step is one line at ci.yml line 195 with nine filters.
+- plan.md line 54 task 3.3: [x]. The record names run 41796713259 and the step Architecture boundary check. measure/tracks.md lines 1252 and 1257 corroborate the run and the step.
+- plan.md line 55 task 3.3a: [x]. apps/sales-advantage/cloudbuild-traffic.yaml line 75 capture-legacy-rollback with the ${_PUSH_BUILD_ID} image at line 80; line 96 capture-company-candidate with the same image at line 101; line 107 update-traffic reads the candidate record at line 113 and sends 100 percent at line 117. docs/runbooks/traffic-moves.md lines 13-16 name the exception.
+- plan.md line 56 task 3.4: [x]. The phase check is this audit's gate run. The six Green commits (acc5f59d2, e0cf21a1f, 36b2b7bb9, e99512251, 049eef53f, 1b0e756d5) each touched 0 files under __tests__.
+- plan.md line 57 task 3.5: [x]. ci-remediation.test.mjs lines 290, 341, 383, 409 hold the four cases, and the file passes with Tests 4 passed (4). affected-apps.mjs line 27 and line 352 hold the id guard. ci.yml lines 25-26 hold workflow-level permissions contents: read.
+- plan.md line 58 task 3.6: [x]. ci.yml line 21 adds - scripts/** and lines 143-144 add the CI selector tests step in the packages job, which holds no if and no matrix. ci-remediation.test.mjs lines 409-445 pin both conditions.
+
+Gate
+- Command: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
+- Result: Test Files 8 passed (8), Tests 138 passed (138), exit 0. Run twice with the same result.
+- Plan counts reconcile: 7 files and 133 tests recorded at 049eef53f, 7 files and 134 at a14964eb3, and one test file with four cases added by 43162d278 gives 8 and 138.
+
+Scope and order
+- All 21 Phase 3 commits touch only .github/workflows/ci.yml, scripts/ci/**, measure files of this track, apps/sales-advantage/cloudbuild-traffic.yaml, and docs/runbooks/traffic-moves.md. p3_out_of_scope_paths=0.
+- git rev-list --count gives 16, 10, 13, and 2 for the four Red to Green pairs, so every Red test precedes its Green commit.
+- No dependency file changed. git worktree list | wc -l prints 8.
+
+Anti-pattern results
+- A3 clean: the phase diff holds no bare-digit assertion, and every count carries a label.
+- A4 clean: ci-workflow.test.mjs line 326 asserts changed_files>=1 before an empty plan is accepted, and lines 218 and 238 assert a non-empty guard list that the select output does not gate.
+- A5 clean: measured 138 equals recorded 134 plus the four added cases, and the plan never claims that CI is green.
+- A6 clean: measure/tracks.md lines 78-82 make no resolution claim, and the red state stays disclosed.
+- A7 clean: the planned set is compared as sorted id arrays, never as a substring.
+- A9 clean: grep for .skip, .only, and todo in scripts/ci prints 0, and no test reads a measure/ path as proof data.
+
+Strategy guard runs and checks
+- The four science-advantage CI gates that read .github/workflows pass: Test Files 4 passed (4), Tests 40 passed (40), exit 0. No fifth known failure appeared.
+- pnpm exec turbo ls --filter=<id>... for the ten table ids prints 4, 26, 9, 12, 24, 22, 23, 7, 19, and 24 packages, matching plan.md line 57. turbo_filters_ok=10.
+- node --check scripts/ci/affected-apps.mjs exits 0. YAML parse gives 3 jobs for ci.yml and 11 steps for the sales traffic file.
+- The detector rg -n 'update-traffic|--to-latest|cloudbuild-traffic' .github/workflows returns exit 1 with no line, so no workflow names a traffic file. The hash detector on ci.yml returns exit 1.
+- The live selector probe on a zero range prints [] with exit 0, and on the phase range prints the five affected ids with exit 0.
+
+Nonblocking findings
+1. The sandbox denied the shell twice for gh run view 41796713259 --json headSha,event,conclusion, so task 3.3 could not be re-queried from GitHub. Two independent measure/tracks.md lines (1252 and 1257) corroborate the run id and the failing step.
+2. The sandbox denied the shell twice for timeout 300 pnpm architecture:check, so D5 could not be re-measured locally. D5 is a known item outside this phase and is not a blocker.
+3. The scratch copies of the no-vacuous-case proofs (/tmp/opencode/p3-green-copy, p3-r3-good, p3-r4-good, p3-r4-bad) are absent from this machine now, so they could not be re-inspected. The cases stay non-vacuous by construction, verified in source at ci-remediation.test.mjs lines 409-445 and ci-workflow.test.mjs lines 196-212. This is a documentation gap, not a defect.
+
+Blocking findings: none.
+
+handoff: Phase 3 acceptance passes at 43162d27868d3b43a2fbde02ed95b0116bedfb60. Append [checkpoint: 43162d278] to the Phase 3 heading of measure/tracks/per_app_cicd_20261107/plan.md. The gate is 8 test files and 138 tests with exit 0. Three nonblocking observations need no action: two sandbox denials (gh run view, pnpm architecture:check) and the cleaned scratch copies. Known items outside this phase stay as recorded: D5 (the master Architecture boundary check stays red, a separate track fixes it), Review B F3 (declined, PM accepted), and Review B F4 (a Phase 4 task or a follow-up track, PM decision). Nothing in this audited phase blocks Phase 4.
+END_MEASURE_AGENT_RESULT

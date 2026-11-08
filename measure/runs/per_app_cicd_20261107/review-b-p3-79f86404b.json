@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "per_app_cicd_20261107",
+  "phase": "P3",
+  "phase_heading": "## Phase 3: CI for the affected apps",
+  "phase_base_sha": "25d774e08a0f9bef8074fb6f88bde439d1a72066",
+  "role_base_sha": "79f86404b4ac46ff2bca1c8f12d8468b24033eed",
+  "audited_head_sha": "79f86404b4ac46ff2bca1c8f12d8468b24033eed",
+  "audited_head_current": true,
+  "head_drift": "HEAD is 998c6dc74. That commit changes one file only, measure/tracks/storytime_look_20261107/plan.md. git diff --stat 79f86404b..HEAD over the P3 paths is empty, so the audited phase tree equals the current tree.",
+  "model_route": "deepseek/deepseek-flash#high. DeepSeek differs from the P3 Green family (Anthropic) and from Review A (GLM).",
+  "security_applicability": "applicable",
+  "applicability_rationale": "test-strategy.md line 124 rates P3 medium and requires Review B for the CI service containers and the env. Line 616 names the ci.yml permissions block. The P3 diff changes .github/workflows/ci.yml, scripts/ci/affected-apps.mjs, and docs/runbooks/traffic-moves.md. Those are untrusted-input, token-scope, and deploy-gate boundaries.",
+  "status": "pass",
+  "summary": "The Phase 3 security re-review passes at 79f86404b with one nonblocking Major finding and no blocker. F1 is closed: readTable rejects an id that fails ^[a-z0-9][a-z0-9-]*$ with exit 2 before any stdout, and the select step is the only writer of the matrix. F2 is closed: ci.yml line 24 holds permissions: contents: read, and no job widens it. F5 is closed: the runbook states the sales-advantage exception, and its step list matches cloudbuild-traffic.yaml. The six new Test roots add no secret, no production network call, and no new environment value. A2 is not applicable and A6 has no hit. F6 stays open: ci.yml pull_request paths omit scripts/**, and no workflow runs the scripts/ci/__tests__ suite.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F6 [Major] review-b: .github/workflows/ci.yml lines 8-22 list the pull_request paths and omit scripts/**. A pull request that changes only scripts/ci/apps.json or scripts/ci/affected-apps.mjs starts no ci.yml run. No workflow runs the selector tests either: a grep over .github/workflows for node --test, scripts/ci/__tests__, ci-remediation, and ci-workflow finds no match. The tests CI-R1 to CI-R3 of scripts/ci/__tests__/ci-remediation.test.mjs therefore never run in CI. The selector decides which app a push builds and which app deploys. Rationale: the adversarial tests of the deploy gate must run on every change to the gate. The impact is bounded: the push trigger holds no path filter, so a master push runs ci.yml before a deploy, and the deploy still needs Daniel's word. A scripts/** entry in the paths list and one test step close the gap."
+  ],
+  "evidence": [
+    "Provenance: phase_base_sha 25d774e08a0f9bef8074fb6f88bde439d1a72066 resolves. role_base_sha and audited_head_sha are 79f86404b4ac46ff2bca1c8f12d8468b24033eed. HEAD is 998c6dc74, and git diff --stat 79f86404b..HEAD lists one measure plan file only.",
+    "F1 closed: scripts/ci/affected-apps.mjs defines SAFE_ID = /^[a-z0-9][a-z0-9-]*$/ and readTable fails on a row whose id does not match, before main writes stdout. scripts/ci/__tests__/ci-remediation.test.mjs CI-R2 (line 254) runs three unsafe ids (x;rm -rf /, --help, a b) and asserts a refusal. The ci.yml select step (lines 47-57) is the only writer of the matrix, and it writes JSON.stringify output.",
+    "F2 closed: .github/workflows/ci.yml line 24 holds permissions: contents: read at workflow level. grep -n 'permissions' .github/workflows/ci.yml returns line 24 only, so no job declares its own block. scripts/ci/__tests__/ci-remediation.test.mjs CI-R3 (line 296) asserts the workflow map equals {contents: read} and that no job widens it.",
+    "F5 closed: docs/runbooks/traffic-moves.md lines 15-17 state the sales-advantage exception to the tag rule. Lines 129-159 name the same steps and the same order as apps/sales-advantage/cloudbuild-traffic.yaml. The file moves traffic with --to-revisions to the revision that capture-company-candidate records, and the runbook says the same.",
+    "F3 withdrawn: the owner declined it. The five new uses lines follow the existing ci.yml style (actions/checkout@v4, actions/setup-node@v4, pnpm/action-setup@v4).",
+    "F4 withdrawn: the PM puts the sales source binding into Phase 4 as one task, so it is out of P3 scope.",
+    "Six new Test roots: architecture-enforcement, knowledge-space-practice, mastery-runtime-compat, scripts, session-service, and worker. No root reads a secret. session-service reads REDIS_URL only when it is set, and ci.yml sets no REDIS_URL. session-service tests listen on 127.0.0.1 port 0. worker health tests bind 127.0.0.1 port 0. scripts/generateArticle.test.js injects a fake client. mastery-runtime-compat spawns local node processes. architecture-enforcement uses ARCHITECTURE_TEST_TMPDIR. knowledge-space-practice reads repository files. No root adds an env value to ci.yml.",
+    "A2: the P3 diff over the track paths holds no draft, published, consent, or anonymization token (git diff 57bb8376c..79f86404b with that grep exits 1). No test flips a named subject to published.",
+    "A6: measure/tracks.md line 79 says Phase 2 in review remediation. It claims no resolved security state, so the registry does not overstate the implementation.",
+    "Limits: this role ran no workflow, called no gcloud, read no secret, and ran no test suite."
+  ],
+  "commands": [
+    "git log --oneline -6; git rev-parse HEAD (HEAD 998c6dc74; audited head 79f86404b)",
+    "git diff --stat 79f86404b..HEAD; git diff --stat 25d774e08..79f86404b",
+    "cat scripts/ci/affected-apps.mjs (SAFE_ID check in readTable)",
+    "git diff 57bb8376c..79f86404b -- .github/workflows/ci.yml",
+    "grep -n 'permissions|matrix|GITHUB_OUTPUT|GITHUB_ENV' .github/workflows/ci.yml",
+    "git diff 049eef53f~1..049eef53f -- docs/runbooks/traffic-moves.md; grep -n 'sales-advantage' -A 20 docs/runbooks/traffic-moves.md",
+    "grep -n 'it\\(|describe\\(|SAFE|permissions|contents: read|status, 2' scripts/ci/__tests__/ci-remediation.test.mjs",
+    "read services/session-service/package.json and services/worker/package.json (test scripts)",
+    "grep -n 'redis|REDIS|process.env|io\\(|connect' services/session-service/src/__tests__; grep -n 'process.env|fetch\\(|localhost' services/worker/src/__tests__",
+    "grep -n 'process.env|https?://|fetch\\(|DATABASE_URL' packages/knowledge-space-practice; packages/mastery-runtime-compat; packages/architecture-enforcement",
+    "grep -n 'node --test|scripts/ci/__tests__|ci-remediation|ci-workflow' .github/workflows (no match, exit 1)",
+    "git diff --unified=0 57bb8376c..79f86404b -- .github/workflows/ci.yml scripts/ci docs/runbooks/traffic-moves.md measure/tracks.md | grep -Ei '^\\+[^+].*(draft|published|consent|anonymiz|resolved|secret|token=|BEGIN .*PRIVATE KEY)' (exit 1)"
+  ],
+  "changed_files": [
+    "measure/runs/per_app_cicd_20261107/review-b-p3-79f86404b.json",
+    "measure/runs/per_app_cicd_20261107/review-b-p3-79f86404b.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

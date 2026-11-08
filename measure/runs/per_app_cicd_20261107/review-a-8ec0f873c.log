@@ -1,0 +1,36 @@
+Review A (correctness), track per_app_cicd_20261107, Phase 1.
+phase_base_sha:   4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+role_base_sha:    8ec0f873ccb1aba5e8b71df8f5c00089a090e0d3
+audited_head_sha: 8ec0f873ccb1aba5e8b71df8f5c00089a090e0d3
+
+Verdict: PASS. No blocker is open. Two Minor non-blocking findings.
+
+Targeted suite (run once, foreground):
+  Test Files 1 passed (1); Tests 48 passed (48); EXIT=0.
+
+What I verified:
+- The affected-app logic matches FR-1, D4, and C1 to C10.
+- Git handling: --no-renames -z counts a move at both paths and keeps non-ASCII raw; the helper scrubs the git env; ids are validated as 40-hex.
+- Lockfile matching: the fix c03e201ea is correct (packages by name@version, snapshots by exact key).
+- Global inputs of D4: .pnpmfile.cjs, .dockerignore, turbo.json fully global; package.json and pnpm-workspace.yaml global except catalog and overrides; lockfile top-level keys global.
+- Workspace globs: the four globs are parsed from the real pnpm-workspace.yaml.
+- Exit codes: 0 on success, 2 with one stderr line and empty stdout on any failure.
+- Tests are not vacuous: expectIds and requireNonEmpty guard every empty result and loop; B-16 is the one legitimate empty-range [].
+- Six real ranges of task 1.4: origin/master..HEAD returns all 10 ids (verifyDepsBeforeRun is global under D4); the changed-file counts of the five past commits match the plan.
+- The acorn explanation for c0e2cfbb1 is factually correct (acorn 8.17.0 -> 8.19.0 in esast-util-from-js and micromark-extension-mdxjs snapshots; www resolves them through @next/mdx and next-mdx-remote).
+- Scope: no dependency file, no workflow, no cloudbuild, no runbook change; built-ins only; no shell; no hash. Detectors all exit 1 where expected.
+- Guardrail (strategy 1.5): no module imports scripts/ci/affected-apps.mjs. git grep hits only the script, the test, and the harness helper (which spawns it via node). No build-graph run needed (standalone ESM, no exported symbol consumed elsewhere); used git grep for callers.
+
+Findings (all Minor, non-blocking):
+- F1 scratch.mjs:112 fixture marketing tag "c${BUILD_ID:0:8}" diverges from real apps.json "c$${build_id%%-*}". No P1 impact.
+- F2 affected-apps.mjs:685 startsWith("catalog:") vs test catalogRows === "catalog:" at affected-apps.test.mjs:298. Latent fragility if a ranged catalog spec appears.
+
+MEASURE_AGENT_RESULT
+status: pass
+retry_recommendation: none
+confidence: high
+blocking_findings: []
+nonblocking_findings:
+- F1 [Minor] scripts/ci/__tests__/helpers/scratch.mjs:112: fixture marketing tag "c${BUILD_ID:0:8}" diverges from the real apps.json "c$${build_id%%-*}". No P1 test reads the fixture tag text; zero P1 impact.
+- F2 [Minor] scripts/ci/affected-apps.mjs:685 vs scripts/ci/__tests__/affected-apps.test.mjs:298: script matches catalog spec with startsWith("catalog:") but the test helper uses === "catalog:". Latent fragility only; no current manifest uses a ranged catalog spec.
+END_MEASURE_AGENT_RESULT

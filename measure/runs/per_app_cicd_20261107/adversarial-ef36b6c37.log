@@ -1,0 +1,64 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: per_app_cicd_20261107
+phase: P1 (## Phase 1: The affected-app logic)
+round: 2
+phase_base_sha: 4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+role_base_sha: ef36b6c378bf77b75d4069d73052b9138cd7dc13
+pre_adversarial_head_sha: 28da8c92d028fcb81b57278d8a4ad3ee6d37e1b3
+green_head_sha: 8ec0f873ccb1aba5e8b71df8f5c00089a090e0d3
+status: pass
+summary: 10/10 mutants killed, full scripts/ci suite 52/52 with the real script, 4/4 hostile cases pass and each is killed by the [] and all-ids stubs, no script defect found.
+
+provenance:
+- The implementation at 28da8c92d is byte-identical to Green HEAD 8ec0f873c for scripts/ci/affected-apps.mjs and scripts/ci/apps.json (empty git diff).
+- No commit after 8ec0f873c changes the script or the table (git log 8ec0f873c..HEAD -- those paths is empty).
+- The only audit commit is a620b096f: 1 file, the adversarial test file, +43/-4.
+- The script and the table were not edited by this role.
+
+baseline_real_script:
+- One heavy job, foreground: EXIT=0, Test Files 2 passed (2), Tests 52 passed (52), 46.22s.
+- Final heavy run after the H-03 hardening: EXIT=0, Test Files 2 passed (2), Tests 52 passed (52), 52.94s.
+- Live-HEAD verification at 26fdb2630 (stable before and after the run): EXIT=0, Test Files 2 passed (2), Tests 52 passed (52), 45.61s. The diff 28da8c92d..26fdb2630 over all workspace manifests, the lockfile, pnpm-workspace.yaml, the script, and the table is empty.
+
+mutants: 10
+mutants_killed: 10
+mutants_survived: 0
+mutant_table:
+| # | mutation | label | killed_by |
+|---|---|---|---|
+| X1 | any lockfile change is global | lockfile-global | A4-01,A4-02,A4-03,A4-04,A4-05,A4-06,B-18,B-19 |
+| X2 | direct dependencies only (no transitive closure) | no-transitive | A3-01,A3-02,A4-05,B-01,B-04,B-05,B-13,B-14 |
+| X3 | folder match without the trailing slash | no-trailing-slash | B-06 |
+| X4 | git diff with default rename detection | default-renames | B-07 |
+| X5 | no -z (newline split, default core.quotepath) | no-z | B-08 |
+| X6 | read only apps/* and packages/* | apps-and-packages-only | B-01 |
+| X7 | skip devDependencies and peerDependencies | skip-dev-peer | B-04,B-13,B-14 |
+| X8 | drop any path that contains docs/ or measure/ | drop-docs-measure | B-05 |
+| X9 | every catalog or overrides change is global | catalog-override-global | B-18,B-19 |
+| X10 | print [] and exit 0 when git fails | empty-on-git-failure | A6-02,A6-03,A6-04,A6-05,A6-06,A6-07,A6-08,A6-09,A6-10,A6-11 |
+
+mutation_jobs:
+- Job 1: one heavy job, 10 sequential vitest runs, every EXIT=1.
+- Job 2 (after the H-03 hardening): one heavy job, 10 sequential vitest runs, every EXIT=1, same kill attribution.
+- All mutants were built outside the repository in /tmp/opencode/cicd-adv/mutants by exact single-occurrence replacements; node --check passes on all 10.
+
+hostile_cases:
+- H-01 merge commit as head: 2 parents, changed_files=2, result [storytime,www-reading-advantage]. Pass. Killed by S1 and S2.
+- H-02 force-pushed base still held: base readable, changed_files=2, result [storytime,www-reading-advantage]. Pass. Killed by S1 and S2.
+- H-03 very long file list: changed_files=10000, path_bytes=1.2 MB, only app path sorts last, result [storytime]. Pass. Killed by S1 and S2. A script with the default 1 MB buffer fails H-03 only (1 failed | 3 passed), so the case detects a buffer cut.
+- H-04 CRLF in pnpm-workspace.yaml and an app package.json: changed_files=2 per commit, results [www-reading-advantage] and [storytime]. Pass. Killed by S1 and S2.
+- Vacuity proof: S1 ([] exit 0) fails 4/4; S2 (all 10 ids exit 0) fails 4/4.
+
+harness_finding:
+- N1 [Minor] scripts/ci/__tests__/helpers/scratch.mjs:208: helper git() has no maxBuffer (1 MB default); changedFileCount returned 8626 of 10000 paths on the 1.2 MB listing. The real script read all 10000. H-03 now uses a local 1 GB reader. No current script defect; the fix belongs to the helper owner.
+
+detectors:
+- A9 detector exit 1.
+- hash detector exit 1.
+
+commits:
+- a620b096f test(ci): extend the affected-app adversarial tests (track_id: per_app_cicd_20261107) -- scripts/ci/__tests__/affected-apps-adversarial.test.mjs only.
+
+verdict: pass. No hostile case exposes a script defect. No change to production behavior. No implementation commit invalidates this result at the time of writing.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,9 @@
+# Review A log — Phase 2 (per_app_cicd_20261107)
+
+Role: measure-review-a-correctness. Audit only.
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+audited_head_sha: 00e8c248c (to be resolved to full SHA)
+
+## Provisional state
+
+Audit started. Artifacts not yet read. This file will end with the MEASURE_AGENT_RESULT block.

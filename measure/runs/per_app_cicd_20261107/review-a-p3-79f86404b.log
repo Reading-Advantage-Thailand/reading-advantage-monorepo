@@ -1,0 +1,119 @@
+# Review A re-review of Phase 3 (per_app_cicd_20261107), audited head 79f86404b
+
+Role: measure-review-a-correctness. Audit only; no commit. Result JSON:
+`measure/runs/per_app_cicd_20261107/review-a-p3-79f86404b.json`.
+
+## Provenance
+
+- phase_base_sha 25d774e08; audited head 79f86404b (the role base). HEAD moved to
+  998c6dc74 during the audit (a storytime look docs commit). The audit used
+  `git show` and `git diff` on the exact SHAs. The P3 paths of the working tree
+  are byte-identical to 79f86404b (empty diff), so every run reflects the
+  audited content.
+- Model: volcengine-agent-plan/glm-5.3-flash#high (the r1 substitution).
+  P3 Green runs claude-code/claude-sonnet-5-5#high; Review B runs
+  deepseek/deepseek-flash#high. This run is the GLM family, different from both.
+
+## Range discipline
+
+57bb8376c..79f86404b holds 22 commits.
+
+- 14 other-track commits (60ae4e72f, 4ce9721cf, 3d53e2680, 2b123bd3b,
+  c72c97897, 692449618, 90f51d444, 253a68ad9, 08e60c795, e0fe89c7a, 47c27a7f1,
+  dcad011f6, 06e51fba0, eae128027) touch only apps/storytime/** or the measure
+  files of storytime tracks (one also measure/tracks.md). No P3 path.
+- 8 track commits: Red f00f28493 and e72e4b8ae (ci-remediation.test.mjs),
+  plan evidence 825713559 and a0b5f7209, Green 36b2b7bb9 (ci.yml),
+  e99512251 (affected-apps.mjs), 049eef53f (runbook), 79f86404b (plan 3.5).
+- The test helpers are unchanged in the range.
+
+## r1 findings
+
+- F1 (Blocker, coverage loss) CLOSED. The `Test` step now holds 9
+  `--filter=<root>...` roots: the 3 non-table apps plus architecture-enforcement,
+  knowledge-space-practice, mastery-runtime-compat, scripts, session-service,
+  worker. Independent closure computation: 48 workspace packages from the 4
+  pnpm-workspace.yaml globs, 47 with a `test` script; the closure of the 9 run
+  roots plus the 10 table ids covers all 47; uncovered is empty. The r1 finding
+  understated the gap (4): the services workspace was outside its scan, so the
+  true base gap was 6. The fix covers all 6, and CI-R1 reads the globs.
+- F2 (Nit, turbo_filters_ok label) CLOSED: plan 3.5 records
+  `turbo_filters_ok=10` with per-id counts.
+- F3 (Nit, gates invocation) CLOSED: plan 3.5 records the exact
+  verification-config invocation; reproduced here at 40 of 40, EXIT=0.
+- F4 (Nit, p3_out_of_scope_paths label) CLOSED: plan 3.5 records
+  `p3_out_of_scope_paths=0` with the file list; re-verified over the range.
+
+## Test meaning of CI-R1 to CI-R3 (checks 1 and 4)
+
+Base fixture: git-archive copy of 57bb8376c at /tmp/opencode/r2-base-x, run
+through heavy-run with CICD_FIXTURE_ROOT and AFFECTED_APPS_SCRIPT at the base
+tree (the repository wrote nothing). 3 failed of 3, for the right reasons:
+
+- CI-R1: `uncovered_test_packages=6 names=... test_packages=47
+  filter_roots=13 workspace_globs=4`.
+- CI-R2: `unsafe id "x;rm -rf /": expected exit 2, got 0`.
+- CI-R3: `ci.yml has no workflow-level permissions map; permissions=undefined`.
+
+At the head the same 3 cases pass inside the full gate. No vacuous pass: every
+case throws on a missing deliverable; counts are labeled integers (A3 clean).
+
+## Check 2
+
+The `Test` run line is one line (ci.yml line 189), so the science gate regex
+`run:[^\n]*pnpm test` matches. The science gates reproduce at 40 of 40, EXIT=0.
+The plan claims no green CI (task 3.3: master run 41796713259 failed at the
+`Architecture boundary check` step; D5). The plan's claim of 2 pre-existing
+architecture-enforcement failures does NOT reproduce: see F5.
+
+## Check 3
+
+The SAFE_ID guard `^[a-z0-9][a-z0-9-]*$` accepts all 10 real table ids.
+`permissions: contents: read` at workflow level breaks no step: the three jobs
+use only checkout, setup-node, pnpm/action-setup, step outputs, service
+containers, and shell; no step writes a check, comment, release, or deployment
+status; no job sets its own permissions map.
+
+## Check 5 and the gate reruns
+
+- scripts/ci gate at the audited tree: 7 files, 133 passed (133), EXIT=0.
+- Science gates: 4 files, 40 passed (40), EXIT=0.
+- Architecture-enforcement suite, root context and package context: 31 files,
+  251 passed (251), EXIT=0 in both. The two named base-failure cases pass 7
+  of 7. The phase range touches no input of the suite (empty diff over
+  packages/architecture-enforcement, measure/archive, test-fixtures).
+- Labels verified: test_packages=47, filter_roots=19, workspace_globs=4,
+  safe_table_rows=10, unsafe_ids_refused=3, ci_permissions={"contents":"read"},
+  jobs_checked=3.
+- Q8 premise holds: no ESLint config at the repository root.
+
+## New finding F5 (Major, nonblocking)
+
+Plan 3.5 records that the architecture-enforcement suite holds 2 pre-existing
+failures (`monorepo_boundaries_20261029` records them) and that the packages
+job can show them. Measured at the audited head: 0 failures in both runner
+contexts, the two named cases pass, and the range touches no suite input. The
+citation names no track on master; the track exists only on the unmerged branch
+chore/monorepo-boundaries, whose plan measured the 2 failures in its own
+worktree. The plan copied the record without a run on master; the Green r3 log
+carries the same line. Fix: correct the plan line to the measured state. The D5
+note about the separate red `pnpm architecture:check` step stays true.
+
+## Review B F6 (confirmation only)
+
+Confirmed by facts: the ci.yml pull_request paths omit `scripts/**`, and no job
+runs scripts/ci/__tests__. It stays with Review B and the PM decision (small
+Red/Green in Phase 3).
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: per_app_cicd_20261107
+phase: ## Phase 3: CI for the affected apps (P3, re-review)
+commits: audited 79f86404b (remediation range 57bb8376c..79f86404b); no commits made
+tests_run: scripts/ci gate exit 0, 133 of 133; science ci-gates 40 of 40 (verification config); CI-R1..R3 base fixture 3 failed of 3, head passes; architecture-enforcement suite 251 of 251 in both runner contexts
+files_changed: measure/runs/per_app_cicd_20261107/review-a-p3-79f86404b.json and .log
+plan_updates: none (audit-only)
+known_failures: F5 (Major, nonblocking): the plan 3.5 record of 2 pre-existing architecture-enforcement failures does not reproduce at the audited head; F6 (Review B) confirmed, fix decided by the PM
+handoff: F1 to F4 of r1 are withdrawn as closed; withdraw the routed items F101 to F104. F5 routes to Green as a one-line plan correction (suite green at the audited head in both runner contexts; cite the rerun or the chore/monorepo-boundaries branch for the historical 2-failure record). F6 keeps its Review B id and the PM decision. No re-run of this audit is needed.
+END_MEASURE_AGENT_RESULT

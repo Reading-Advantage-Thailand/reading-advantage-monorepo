@@ -1,0 +1,26 @@
+Review C (measure-review-c-ux-api) re-review of Phase 2: Per-app CD workflows, track per_app_cicd_20261107.
+Audited HEAD 1902a8215 (role base). Phase base d28f8fd52096dd3101d60005182fc90a17ea52a9.
+Repository HEAD 7721962d2 moved past the audited HEAD; git diff --stat over the phase paths prints nothing (recorded). The working tree equals 1902a8215 for every audited file.
+Earlier result: measure/runs/per_app_cicd_20261107/review-c-09ce375d2.json (fail on B1; N1, N2, N3).
+Remediation under audit: 3f1c33b9a (runbook tag lookup, storytime note), bbe334bff (matrix substitutions, Open limits), Red 8380479ea, action pins a60c8352c.
+Checks run:
+1. B1: the six find-the-tag blocks of docs/runbooks/traffic-moves.md. Service, region, and project names match scripts/ci/apps.json and the cloudbuild files. Nine read-only gcloud calls proved each command form live (revisions list, describes with extract and filter, builds list). No secret printed.
+2. N2: the sales input sources. The text matches verify-sales-release-inputs.mjs (Cloud SQL Admin API read, SUCCESSFUL, ON_DEMAND, description form, boundary age) and create-sales-release-archive.sh (the archived 40-character commit).
+3. N1: the dated note in docs/runbooks/storytime-deploy.md (under Steps, before steps 1 and 2) agrees with cd-apps.yml and apps/storytime/cloudbuild.yaml (--no-traffic, st- tag, no traffic step, Daniel's word).
+4. Open limits text versus code: marketing declares one REQUIRED_ default and receives the pushed commit; sales declares three, receives none, and fails at validate-release-inputs.
+5. Matrix substitutions and operator output: the field is computed from the real push files and consumed by the submit; the select step logs 'affected: $ids' in both workflows; the job names name each app.
+Withdrawals: B1, N1, N2, N3 (all fixed by the remediation commits).
+New finding: C31 [Nit] the gcloud builds list fallback says 'read the newest build id' in shared projects. Owner: Green.
+Verdict: pass. Blocking findings: none.
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+status: complete
+track: per_app_cicd_20261107
+phase: ## Phase 2: Per-app CD workflows
+commits: none (audit only; audited HEAD 1902a8215)
+tests_run: no suite by this role; relied on Review A at the same HEAD (EXIT=0, 119 passed) and ran nine read-only gcloud reads (all exit 0)
+files_changed: measure/runs/per_app_cicd_20261107/review-c-1902a8215.json, measure/runs/per_app_cicd_20261107/review-c-1902a8215.log
+plan_updates: none (audit only)
+known_failures: none blocking; C31 [Nit] open (owner Green)
+handoff: pass at 1902a8215; B1, N1, N2, and N3 withdrawn after 3f1c33b9a and bbe334bff; route C31 to Green; Phase 4 keeps the live proofs
+END_MEASURE_AGENT_RESULT

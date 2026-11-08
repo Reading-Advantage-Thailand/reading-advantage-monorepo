@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "provisional",
+  "summary": "Review A (correctness) of Phase 2 per-app CD workflows. Audit in progress; provisional verdict before reading artifacts.",
+  "retry_recommendation": "none",
+  "confidence": "low",
+  "phase_base_sha": "d28f8fd52096dd3101d60005182fc90a17ea52a9",
+  "role_base_sha": "d28f8fd52096dd3101d60005182fc90a17ea52a9",
+  "audited_head_sha": "00e8c248c",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [],
+  "commands": [],
+  "changed_files": [],
+  "violations": {
+    "A4_vacuous_pass": [],
+    "A3_digit_only_count": [],
+    "A5_false_claim_text": []
+  }
+}

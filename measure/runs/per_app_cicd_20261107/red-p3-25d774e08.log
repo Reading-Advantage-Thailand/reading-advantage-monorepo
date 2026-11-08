@@ -1,0 +1,116 @@
+status: done
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+tasks: 3.1 Red (complete), 3.3a Red part (Green remains)
+head: 89b8b8e08c9e9f2c3c73d7418c3c9392282e08c7
+
+commits:
+  6ba8f6696 test(ci): pin the affected-app plan of ci.yml (track_id: per_app_cicd_20261107)
+  2cec361da test(cd): pin the sales build identity (track_id: per_app_cicd_20261107)
+  89b8b8e08 chore(measure): record the P3 Red evidence (track_id: per_app_cicd_20261107)
+
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+red_exit: 1
+test_files_failed: 2
+test_files_passed: 4
+tests_failed: 12
+tests_passed: 118
+tests_total: 130
+
+failing_cases: CI-01a,CI-01b,CI-01c,CI-01d,CI-01e,CI-01f,CI-01g,CI-02,CI-03,CI-04,CI-06,F-19
+passing_new_case: CI-05 (characterization; the guards exist at the base)
+ranges_checked: 0
+ranges_compared_in_the_scratch_proof: 12
+sales_build_identity: 0
+
+non_vacuity_proof:
+  ci_workflow: scratch copy /tmp/opencode/p3-green-copy with the select step and the turbo filter job -> 12 passed
+  sales_identity: scratch copy with update-traffic reading /workspace/.sales-legacy-rollback.revision and --to-revisions -> 1 passed, 17 skipped
+
+remaining_failures: the 12 new cases above, each for the stated reason. None is a defect of the produced tests.
+production_files_changed: 0
+worktree_count: 8
+
+handoff:
+  green_task_3_2: add to .github/workflows/ci.yml a job with a step id: select; env BASE_SHA=${{ github.event.before }} and HEAD_SHA=${{ github.sha }}; run node scripts/ci/affected-apps.mjs --base "$BASE_SHA" --head "$HEAD_SHA"; write matrix=<JSON array of {id}> to $GITHUB_OUTPUT with exactly the script ids; add a job needs: select with strategy.matrix.include: ${{ fromJSON(needs.select.outputs.matrix) }} that runs turbo run ... --filter=${{ matrix.id }}...; keep the six guard steps in a job the plan does not gate, and keep the pull request path triggers.
+  green_task_3_3a: in apps/sales-advantage/cloudbuild-traffic.yaml make update-traffic target the revision that capture-legacy-rollback records in /workspace/.sales-legacy-rollback.revision (a bash step with --to-revisions, no --to-tags); the capture image stays the _PUSH_BUILD_ID image.
+  note: ci.yml stays red on master until the later CI-green track (D5). This role fixes no CI failure.
+
+measure_guard_note: the guard note named another track (primary_in_app_help_20261023); ignored per the assignment.
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+baseline_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+head_sha: 89b8b8e08c9e9f2c3c73d7418c3c9392282e08c7
+commits: 6ba8f6696,2cec361da,89b8b8e08
+tests:
+  new_files: scripts/ci/__tests__/ci-workflow.test.mjs, scripts/ci/__tests__/cloudbuild-files.test.mjs (F-19)
+  failing: CI-01a,CI-01b,CI-01c,CI-01d,CI-01e,CI-01f,CI-01g,CI-02,CI-03,CI-04,CI-06,F-19
+  passing: CI-05
+  red_exit: 1
+  tests_failed: 12
+  tests_passed: 118
+  tests_total: 130
+  ranges_checked: 0
+  ranges_compared_in_the_scratch_proof: 12
+  sales_build_identity: 0
+files_changed:
+  - scripts/ci/__tests__/ci-workflow.test.mjs
+  - scripts/ci/__tests__/cloudbuild-files.test.mjs
+  - measure/tracks/per_app_cicd_20261107/plan.md
+remaining: task 3.3a Green (the sales traffic target); task 3.2 Green (the ci.yml select step); tasks 3.3 and 3.4
+END_MEASURE_AGENT_RESULT
+
+Red r2 (correction of F-19; supersedes the r1 reading of the sales target)
+role_base_sha: e62a8eba7dce4ae56b99e3711d24cbc6355f9a5f
+test_commit: b7c8952a60fb9de15fa875a5466295fac937f6b2
+plan_commit: f0284be4ed1fdca12fc67a37f351da549ff6ad24
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+red_exit: 1
+test_files_failed: 2
+test_files_passed: 4
+tests_failed: 12
+tests_passed: 118
+tests_total: 130
+
+failing_cases: CI-01a,CI-01b,CI-01c,CI-01d,CI-01e,CI-01f,CI-01g,CI-02,CI-03,CI-04,CI-06,F-19
+passing_new_case: CI-05 (characterization)
+f19_failure: sales_build_identity=0 failed=candidate-capture-image,candidate-capture-record,candidate-capture-before-move,move-to-revisions,move-candidate,move-no-tag steps_checked=10
+f19_contract: before update-traffic a step resolves the company candidate revision and fails closed unless its image is the _PUSH_BUILD_ID image; update-traffic moves 100% to that captured candidate revision with --to-revisions, not to a tag and not to the legacy-rollback record; the legacy-rollback capture stays before the move with the same image; the candidate record path is any /workspace/ path that differs from the legacy-rollback record.
+proof_good: /tmp/opencode/p3-r2-good (candidate capture plus move to its record) -> F-19 passes, 1 passed, 17 skipped
+proof_bad: /tmp/opencode/p3-r2-bad (move reads the legacy-rollback record) -> F-19 fails, sales_build_identity=0 failed=move-candidate,move-no-legacy steps_checked=11, 1 failed, 17 skipped
+production_files_changed: 0
+worktree_count: 8
+
+handoff:
+  green_task_3_3a: in apps/sales-advantage/cloudbuild-traffic.yaml add a step before update-traffic that calls capture-sales-cloud-run-tag.sh candidate <the _PUSH_BUILD_ID image> <a /workspace/ path that differs from /workspace/.sales-legacy-rollback>; make update-traffic a bash step with --to-revisions reading <that path>.revision, with no --to-tags; keep capture-legacy-rollback before the move with the same image.
+  note: ci.yml stays red on master until the later CI-green track (D5).
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+baseline_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: e62a8eba7dce4ae56b99e3711d24cbc6355f9a5f
+head_sha: f0284be4ed1fdca12fc67a37f351da549ff6ad24
+commits: b7c8952a6,f0284be4e
+tests:
+  changed_file: scripts/ci/__tests__/cloudbuild-files.test.mjs (F-19)
+  failing: CI-01a,CI-01b,CI-01c,CI-01d,CI-01e,CI-01f,CI-01g,CI-02,CI-03,CI-04,CI-06,F-19
+  passing: CI-05
+  red_exit: 1
+  tests_failed: 12
+  tests_passed: 118
+  tests_total: 130
+  f19_failure: sales_build_identity=0 failed=candidate-capture-image,candidate-capture-record,candidate-capture-before-move,move-to-revisions,move-candidate,move-no-tag steps_checked=10
+  proof_good: 1 passed, 17 skipped
+  proof_bad: sales_build_identity=0 failed=move-candidate,move-no-legacy steps_checked=11
+remaining: task 3.3a Green; task 3.2 Green; tasks 3.3 and 3.4
+END_MEASURE_AGENT_RESULT

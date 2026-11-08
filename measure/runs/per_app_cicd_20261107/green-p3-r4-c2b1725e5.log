@@ -1,0 +1,43 @@
+Green P3 T3.6 r4 - track per_app_cicd_20261107
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: c2b1725e5eb22aaf61892e6781014d39a1882689
+Red commits in range: 5e0b8d567 (test CI-R4), c2b1725e5 (plan 3.6)
+
+Targeted Red rerun before the edit: not rerun separately; the Red log (red-p3-r4-341d91cc0.log)
+holds exit=1 with pr_paths_scripts=0 scripts_ci_test_steps=0 at the same HEAD.
+
+Edit (commit 1b0e756d5): .github/workflows/ci.yml
+- on.pull_request.paths: add 'scripts/**'
+- packages job: add step "CI selector tests": CI=true pnpm exec vitest run scripts/ci (after install)
+
+Gate 1: heavy-run ... CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
+  EXIT=0; Test Files 7 passed (7); Tests 134 passed (134)
+Gate 1b: same runner, CI-R4 only (--disableConsoleIntercept -t CI-R4)
+  EXIT=0; 1 passed | 3 skipped; pr_paths_scripts=1 scripts_ci_test_steps=1
+F105 measurement: heavy-run ... cd packages/architecture-enforcement && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+  EXIT=0; Test Files 31 passed (31); Tests 251 passed (251)
+Lint: no .mjs changed; root has no ESLint config (Q8); yaml parse ok.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: "## Phase 3: CI for the affected apps"
+status: in_progress
+head: 1b0e756d5
+END_MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: "## Phase 3: CI for the affected apps"
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: c2b1725e5eb22aaf61892e6781014d39a1882689
+status: done
+commits: ["1b0e756d5", "plan-evidence commit that adds this log"]
+tasks_done: ["3.6 [x] (1b0e756d5)", "3.5 evidence corrected (251 of 251)"]
+tasks_deferred: []
+gate: "EXIT=0; Test Files 7 passed (7); Tests 134 passed (134); pr_paths_scripts=1 scripts_ci_test_steps=1"
+files_changed: [".github/workflows/ci.yml", "measure/tracks/per_app_cicd_20261107/plan.md", "measure/runs/per_app_cicd_20261107/green-p3-r4-c2b1725e5.log"]
+new_files: ["measure/runs/per_app_cicd_20261107/green-p3-r4-c2b1725e5.log"]
+dispositions: F206=FIX; F105=FIX
+END_MEASURE_AGENT_RESULT

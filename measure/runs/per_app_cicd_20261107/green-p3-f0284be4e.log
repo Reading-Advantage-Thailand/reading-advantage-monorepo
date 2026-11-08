@@ -1,0 +1,43 @@
+# Measure Green role log — per_app_cicd_20261107 — Phase 3
+
+- Role: measure-jr-green
+- Model: claude-code/claude-sonnet-5-5#high
+- Track: `per_app_cicd_20261107`
+- Phase: `## Phase 3: CI for the affected apps` (P3)
+- `phase_base_sha`: `25d774e08a0f9bef8074fb6f88bde439d1a72066`
+- `role_base_sha`: `f0284be4ed1fdca12fc67a37f351da549ff6ad24`
+- Red model: deepseek/deepseek-flash#high
+- Status: DONE (run r2 continued the stopped first run; role base of r2: `876f730596f059c4523ce4e443595c5d43d8d757`)
+
+Run r2 notes
+- Reviewed the uncommitted edits of the first run. `capture-sales-cloud-run-tag.sh` writes `<prefix>.revision` and `<prefix>.url`, and exits 1 unless the revision is the latest created revision and runs the digest of the expected image. The comments of the traffic file match the script.
+- Wrapped two runbook lines to 100 characters or less (no change of meaning).
+- Gate: `heavy-run.sh` with `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"`: EXIT=0, Test Files 6 passed (6), Tests 130 passed (130), tests_failed=0. Run twice (before and after the runbook wrap): same result.
+- F-19 passes (`sales_build_identity=1`). CI-01a to CI-01g, CI-02, CI-03, CI-04, CI-06 pass. CI-05 stays green.
+- `untested_apps=3`: activity-vinext-fixture, advantage-games (package `vocabulary-games`), science-advantage. The `packages` job Test step keeps them.
+- Task 3.3 record (read-only `gh`): latest master `ci.yml` run 41796713259, head f3611d47c, conclusion failure, first failed step `Architecture boundary check`. CI is not green. Not fixed (D5).
+- ESLint: Green changed no .mjs, .ts, or .js file. yaml and md have no ESLint run.
+- Commit hook note: the type `ci:` fails the commitlint subject pattern, so the CI commit uses `feat(ci):`.
+- Not staged: `apps/activity-vinext-fixture/next-env.d.ts`, `apps/marketing/next-env.d.ts`, and all untracked files.
+- No push, no GitHub workflow run, no gcloud write.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: P3
+status: done
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: 876f730596f059c4523ce4e443595c5d43d8d757
+implementation_commits: e0cf21a1f (3.3a sales traffic), acc5f59d2 (3.2 ci.yml)
+plan_commit: the commit after acc5f59d2 that holds this log (see final HEAD in the reply)
+gate_exit: 0
+test_files_passed: 6
+tests_passed: 130
+tests_failed: 0
+sales_build_identity: 1
+untested_apps: 3 (activity-vinext-fixture, advantage-games, science-advantage)
+tasks_done: 3.2, 3.3, 3.3a, 3.4
+tasks_deferred: none
+ci_first_failing_step_master: Architecture boundary check (run 41796713259, head f3611d47c)
+new_files: none
+END_MEASURE_AGENT_RESULT

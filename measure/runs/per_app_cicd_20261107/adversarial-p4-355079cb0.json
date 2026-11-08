@@ -1,0 +1,31 @@
+{
+  "role": "measure-adversarial-testing",
+  "track_id": "per_app_cicd_20261107",
+  "phase": 4,
+  "status": "inconclusive",
+  "retry_recommendation": "rerun",
+  "reason": "The verdict needs a non-Anthropic, non-DeepSeek reviewer. This session fell back to claude-code/claude-haiku-5-5.",
+  "reviewer_model": "claude-code/claude-haiku-5-5 (fallback from bailian-token-plan/glm-5.3#high)",
+  "phase_base_sha": "7d81c7e6fd6f067431b931812baafc36cbe16f2d",
+  "role_base_sha": "0f20816014968f8a588900c82d6feb10f7d6c3f8",
+  "audited_head": "355079cb02889b42937953b4aa4b154cc0ebc734",
+  "pass_fail_verdict": "none",
+  "commits": [],
+  "mutant_evidence": [
+    "mutant=C0 exit=0 result=not_applied failed=none applied=no",
+    "mutant=Y1 exit=1 result=rejected failed=DR-01,DR-10 applied=yes",
+    "mutant=Y2 exit=1 result=rejected failed=DR-01,DR-02,DR-03,DR-04,DR-05,DR-06,DR-07,DR-08,DR-09,DR-10 applied=yes",
+    "mutant=Y3 exit=1 result=rejected failed=DR-02,DR-03,DR-04,DR-05,DR-06,DR-07,DR-08,DR-09,DR-10,DR-11 applied=yes",
+    "mutant=Y4 exit=1 result=rejected failed=DR-01,DR-02,DR-03,DR-04,DR-05,DR-06,DR-07,DR-08,DR-09,DR-10,DR-11 applied=yes",
+    "mutant=Y5 exit=1 result=rejected failed=R-1 applied=yes",
+    "mutant=Y6 exit=1 result=rejected failed=R-1 applied=yes",
+    "mutant=Y7 exit=1 result=rejected failed=R-2 applied=yes",
+    "mutant=Y8 exit=1 result=rejected failed=R-2 applied=yes",
+    "mutant=Y9 exit=1 result=rejected failed=R-3 applied=yes"
+  ],
+  "not_run_this_round": ["Y10 (rejected in an earlier round; see y10.json)", "scenario greps AC-1.6, C15, C16, DR-11, W-14c, CI-R3"],
+  "gate_evidence": "/tmp/opencode/p4-adv/gate.out (vitest scripts/ci exit 0, 150 passed, run 16:58)",
+  "mutants_out": "/tmp/opencode/p4-adv/mutants.out",
+  "pm_rule_status_check": "git status --porcelain -- .github scripts measure/tracks/per_app_cicd_20261107 shows no file of the mutant set",
+  "retry_recommendation_detail": "Rerun with a non-Anthropic, non-DeepSeek reviewer."
+}

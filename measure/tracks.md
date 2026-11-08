@@ -74,12 +74,6 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-11-07; Phase 1 (8 council fixes) has its checkpoint dcad011f6 (phase acceptance r3 passed on 2026-11-08); Phase 2 (the look port of option 1) is next | Owner: Monorepo orchestrator | Related: storytime_at_home_release_20261106 (its Phase 3 deploy waits for the Phase 1 checkpoint) | Phase 2 Green starts by 2026-11-12 for the 2026-11-20 release*
   *Note: Daniel 2026-11-07 07:43 ICT: "We had agreed that we would have a theme or look developed in the same vein as our primary advantage program which uses our assets to create a unique and engaging experience for the students". Moved here from Phase 2c and 2d of the at-home plan. PM: M-3 stands, finding 10 dropped, label "Read the words".*
 
-- [ ] **Track: Per-app CI/CD (a change deploys only the affected app)** — *created 2026-11-07*
-  *Link: [./tracks/per_app_cicd_20261107/](./tracks/per_app_cicd_20261107/)*
-  *Status: active, opened 2026-11-07; Phase 1 accepted (checkpoint db8b093bb); Phase 2 in review remediation | Owner: Monorepo orchestrator | Date needed 2026-11-09; first push and every traffic move are `deferred:daniel`*
-  *Note: Daniel 2026-11-07 06:02 ICT: "We need to fix the ci/CD so that changes to an app or an app's packages deploys only that app." www keeps its direct deploy; gated apps build with --no-traffic and a tag. Includes the storytime tag-length fix and the storytime deploy runbook facts. No push and no deploy before the dry-run report.*
-
-
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
   *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*
@@ -670,6 +664,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: Per-app CI/CD (a change deploys only the affected app)** — *created 2026-11-07, archived 2026-11-09*
+  *Link: [./archive/per_app_cicd_20261107/](./archive/per_app_cicd_20261107/)*
+  *Make CI and CD affected-app aware: a change to an app or to the workspace packages and lockfile entries of that app deploys only that app, and ci.yml checks only the affected apps. Gated apps build a --no-traffic revision with a tag. Fix the storytime tag length defect. Record the storytime deploy runbook facts.*
+  *Status: done, opened 2026-11-07, archived 2026-11-09; four phase checkpoints (db8b093bb, 68a86e173, 43162d278, ad2b43467) and the final acceptance at 4bca5a504 passed | Owner: Monorepo orchestrator | Date needed 2026-11-09; the first push, every traffic move, and the build-account work stay deferred (deferred:pm, deferred:daniel)*
+  *Note: Daniel 2026-11-07 06:02 ICT: "We need to fix the ci/CD so that changes to an app or an app's packages deploys only that app." www keeps its direct deploy; gated apps build with --no-traffic and a tag. Includes the storytime tag-length fix and the storytime deploy runbook facts. No push and no deploy before the dry-run report. The dry-run report and the one-line first-push plan sit in the archived folder. The first push and every traffic move wait on Daniel.*
 
 - [x] **Track: Measure APK Evidence Integrity Gates — COMPLETED** *Link: [./archive/measure_apk_evidence_integrity_gates_20260712/](./archive/measure_apk_evidence_integrity_gates_20260712/)*
   Build exact-source, independent-denominator, mandatory-subagent, stop-loss, counterexample, and completion gates before another APK audit begins. All 46 tasks complete; v8 accepted manifest at measure/evidence-integrity-accepted-gate.json; successor APK evidence tracks unblocked. Archived 2026-07-13.

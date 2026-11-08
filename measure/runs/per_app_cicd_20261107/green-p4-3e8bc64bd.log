@@ -1,0 +1,151 @@
+# Green log, Phase 4, per_app_cicd_20261107
+role_base_sha: 3e8bc64bd26720807164faf0bf641a901ad129d2
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+report_head: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+
+## Commands (all outputs under /tmp/opencode/p4-green/)
+1. Light, dry-run file: `CI=true pnpm exec vitest run --maxWorkers=1 --disableConsoleIntercept scripts/ci/__tests__/dry-run.test.mjs`
+   EXIT=0; Test Files 1 passed (1); Tests 12 passed (12). The first run without the flag also gave
+   EXIT=0 and 12 passed, but vitest hid the DRYRUN lines; the 11 row lines equal the Red log.
+2. Report check: R-1 `report_rows=11 expected_rows=11 ids_match=1 bad_rows=0`; then
+   `first_push_plan_lines=0`, `report_check=fail failed=R-2` (EXIT=1, expected until task 4.3).
+3. Commit 165bdb178 adds dry-run-report.md.
+4. Heavy www run (P4.4 command, heavy-run, foreground): wrapper exit 0, inner EXIT=1.
+   www_head=165bdb178202fc3f60ac6a089e3c8c55b8bf4b5f www_head_after=same www_dirty_paths=0
+   www_closure_diff_from_report_head=0 (git diff --name-only 7d81c7e6f 165bdb178 -- 9 paths: 0 lines)
+   Tasks: 5 successful, 7 total; Cached: 0 cached, 7 total; Time 5m27.977s
+   turbo_first_failed_task=www-reading-advantage#test
+   www_tests_passed=1979 www_tests_failed=1 (Test Files 1 failed | 45 passed (46))
+   Failing: src/lib/__tests__/storytime-page-images.test.ts > "writes only the 10 lossless WebP files
+   at their selected sizes": public/images/storytime-advantage holds 12 files; extra
+   song-week-1-desktop-poster.jpg, song-week-1-phone-poster.jpg (commit 30df1746b, 2026-11-04).
+   Test commit 89bd28e4e (2026-11-03). Both are ancestors of origin/master.
+   Turbo stopped www#build at "Running TypeScript" after the test failure; build result open.
+5. Light turbo dry run: `pnpm exec turbo run build test --filter=www-reading-advantage... --dry=json`
+   DRY_EXIT=0 turbo_dry_tasks=8 (incl. www-reading-advantage#build, www-reading-advantage#test).
+6. Light full run: `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci` EXIT=0;
+   Test Files 9 passed (9); Tests 150 passed (150); tests_failed=0; 159.25 s.
+7. `git diff --stat 931c9f2a5..HEAD -- scripts/ci/__tests__` 0 lines; the workflow/script/table/build
+   diff from 7d81c7e6f prints 0 lines; `git worktree list | wc -l` = 8.
+8. No gcloud, gh, workflow run, deploy, or push command ran in this role.
+
+## Turn 2 (new report_head 03307ccb241c0abf01a86ed6005733c3c915c6f5)
+9. git diff --name-only 7d81c7e6f 03307ccb2 -- .github/workflows scripts/ci prints only
+   scripts/ci/__tests__/dry-run.test.mjs (this track's own Red test). The rows stand.
+10. Commit 0328f0e05 changes the report_head line of dry-run-report.md.
+11. Report check: report_rows=11 expected_rows=11 ids_match=1 bad_rows=0; first_push_plan_lines=0.
+12. Light full run at 0328f0e05: EXIT=0; Test Files 9 passed (9); Tests 150 passed (150); 153.02 s.
+    test-dir diff 0 lines; workflow/script/table/build diff 0 lines; worktree count 8.
+13. Heavy www run 2 (P4.4 command, heavy-run, foreground): wrapper exit 0, inner EXIT=1.
+    www_head=0328f0e05e061facae792724d902117e9c5c1adb www_head_after=same www_dirty_paths=0
+    www_closure_diff_from_report_head=0 (0328f0e05 changes only measure files)
+    Tasks: 6 successful, 7 total; Cached: 5 cached, 7 total; Time 4m44.916s
+    www_tests_passed=1979 www_tests_failed=1 turbo_first_failed_task=www-reading-advantage#test
+    The poster case passes now. Failing: storytime-page-images.test.ts > "contains exactly the
+    selected crop resized with Lanczos3": Test timed out in 5000ms (suite 180.54 s; load avg 6).
+14. Diagnostic (not the gate): that file alone under heavy-run EXIT=0, 3 passed (3), case 2492 ms.
+15. No gcloud, gh, workflow run, deploy, or push command ran. 4.3 and 4.4 not started.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+status: blocked
+tasks: 4.1=[x] (165bdb178, 0328f0e05); 4.2=[ ] red run 2 (www-reading-advantage#test timeout); 4.3=[ ] not started; 4.4=[~] not started
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: 3e8bc64bd26720807164faf0bf641a901ad129d2
+report_head: 03307ccb241c0abf01a86ed6005733c3c915c6f5
+head_sha: f281a9c7680b1e180fab2c898461e22221cd7c39
+commits: 165bdb178; 0328f0e05 (report_head line); b5d7a1e8a and f281a9c76 (plan evidence)
+gates: light scripts/ci EXIT=0 9 files 150 tests tests_failed=0; R-1 pass (report_rows=11
+  expected_rows=11 ids_match=1 bad_rows=0); www turbo EXIT=1 (www_tests_failed=1,
+  turbo_first_failed_task=www-reading-advantage#test, 6/7 successful, 5 cached, www_dirty_paths=0,
+  www_closure_diff_from_report_head=0)
+deviation: www_head 0328f0e05 differs from report_head 03307ccb2; the 9-path closure diff is empty.
+handoff: Run 2 is red by a 5000 ms timeout of a sharp case under load (load avg 6); the case takes
+  2.5 s alone. The fixed poster case passes. Default: rerun the P4.4 command when the machine is
+  quiet (the rule for a red www run says stop, so I did not rerun). Then 4.3 and 4.4 Green items.
+END_MEASURE_AGENT_RESULT
+
+## Turn 3 (report_head 03307ccb241c0abf01a86ed6005733c3c915c6f5)
+16. Heavy www run 3 (P4.4 command, heavy-run, foreground; the tool call was interrupted, the job
+    finished and wrote its output to /tmp/opencode/p4-green/www-turbo3.out): inner EXIT=1.
+    www_head=56f9ef12ab1500f2b4eba9973be98ae510d21a4c www_head_after=same www_dirty_paths=0
+    www_closure_diff_from_report_head=0 (03307ccb2..56f9ef12a, 9 paths: 0 lines)
+    Tasks: 6 successful, 7 total; Cached: 6 cached, 7 total; Time 4m40.461s
+    www_tests_passed=1979 www_tests_failed=1 turbo_first_failed_task=www-reading-advantage#test
+    Failing: storytime-page-images.test.ts > "contains exactly the selected crop resized with
+    Lanczos3": Test timed out in 5000ms; suite 193.61 s; load avg 12.53 (other heavy jobs ran).
+17. Stop per rule 3 of the turn: the orchestrator applies the 20000 ms per-case fix outside this
+    track. 4.3 and 4.4 not started. No gcloud, gh, workflow, deploy, or push command ran.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+status: blocked
+tasks: 4.1=[x] (165bdb178, 0328f0e05); 4.2=[ ] red run 3 (Lanczos3 case timeout); 4.3=[ ] not started; 4.4=[~] not started
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: 3e8bc64bd26720807164faf0bf641a901ad129d2
+report_head: 03307ccb241c0abf01a86ed6005733c3c915c6f5
+head_sha: bc040073be4e8bc5ecebcc3834ad75ea14bc30a8
+commits: 165bdb178; 0328f0e05; b5d7a1e8a; f281a9c76; bc040073b (plan evidence run 3)
+gates: www turbo EXIT=1 (6/7 successful, 6 cached, www_tests_passed=1979 www_tests_failed=1,
+  www_dirty_paths=0, www_closure_diff_from_report_head=0, turbo_first_failed_task=www-reading-advantage#test)
+deviation: www_head 56f9ef12a differs from report_head 03307ccb2; the 9-path closure diff is empty.
+handoff: The Lanczos3 case timed out again at 5000 ms (suite 193.61 s, load avg 12.53). Apply the
+  one-off 20000 ms fix; the new commit changes the www closure, so C29 gives a new report_head.
+  Then rerun 4.2, and 4.3 and the Green 4.4 items. I did not edit www code.
+END_MEASURE_AGENT_RESULT
+
+== Green turn 3 (run 3 of 4.2) ==
+www_head=56f9ef12ab1500f2b4eba9973be98ae510d21a4c www_dirty_paths=0 www_closure_diff_from_report_head=0
+EXIT=1 Tasks 6/7 successful, Cached 6/7, 4m40.461s; www_tests_passed=1979 www_tests_failed=1
+turbo_first_failed_task=www-reading-advantage#test
+case "contains exactly the selected crop resized with Lanczos3": 5082ms vs 5000ms limit; file 8157ms; suite Duration 193.61s; load avg 12.35
+status: blocked (stop rule). Tasks 4.3, 4.4 not started.
+plan evidence commit: bc040073b (plan.md line 4.2 run 3). head_sha=bc040073be4e8bc5ecebcc3834ad75ea14bc30a8
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: Phase 4
+status: blocked
+tasks: 4.1=[x]; 4.2=[ ] red run 3 (Lanczos3 case timeout); 4.3, 4.4 not started
+report_head: 03307ccb241c0abf01a86ed6005733c3c915c6f5
+head_sha: bc040073be4e8bc5ecebcc3834ad75ea14bc30a8
+END_MEASURE_AGENT_RESULT
+
+== Green turn 4 step 1 ==
+workflow/scripts-ci diff 03307ccb2..abd7e30ae: 0 lines. report_head line moved to abd7e30ae.
+
+== Green turn 4 step 2 ==
+4.2 PASS: www_head=7b50b8b4f dirty=0 closure_diff=0 EXIT=0 tasks 7/7 cached 5 4m7.877s tests 1980/0 lanczos3 4529ms turbo_dry_tasks=8 plan commit 64d147aa7
+
+== step 3 == 4.3 done: report commit 012b02f1f; report_check=pass; gh run list read (1)
+guards: storytime 12/0 EXIT0; db 28/1 EXIT1; accounting 18 EXIT0; accounts 9 EXIT0; marketing(apps/marketing) 15 EXIT0; domain 10 EXIT0; sales 28/1 EXIT1; codecamp(app dir) 86/2/47skip EXIT1; science(app dir, verification config) 40 EXIT0; known_failures=4 other_failures=0
+
+== Green turn 4 final ==
+4.4 Green-owned items done; plan commit 8a3e9cb9d. report_check=pass; light scripts/ci 9/150 EXIT=0;
+known_failures=4 other_failures=0; p4_out_of_scope_paths=0; worktrees=8; detectors ok.
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: ok (4.4 stays [~])
+report_head: abd7e30ae0511e459a676e180aada28378deefe9
+head_sha: 8a3e9cb9d09e47192d4925f66b630cd00a4107da
+END_MEASURE_AGENT_RESULT
+
+== r5 (review remediation) ==
+role base: ada7c22d944593a2107fb00b240f2fbecee5e7e9. Commit 355079cb02889b42937953b4aa4b154cc0ebc734.
+Files: dry-run-report.md, plan.md only. test-strategy.md not edited (strategy role owns it).
+F1 fixed; Review A Nit fixed (no-text (test only)); C N1/N3 added; N2 done (ci_apps header only); B N1 pointers on 2.3c and 2.3h.
+report check EXIT=0 report_check=pass failed=none; light scripts/ci EXIT=0 9 files 150 tests.
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: Phase 4 (round r5)
+status: ok (4.4 stays [~])
+role_base_sha: ada7c22d944593a2107fb00b240f2fbecee5e7e9
+report_head: abd7e30ae0511e459a676e180aada28378deefe9
+head_sha: 355079cb02889b42937953b4aa4b154cc0ebc734
+commits: 355079cb02889b42937953b4aa4b154cc0ebc734
+END_MEASURE_AGENT_RESULT

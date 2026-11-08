@@ -1,0 +1,75 @@
+Adversarial testing run record for Phase 2 of per_app_cicd_20261107 (per-app CD workflows).
+Date: 2026-11-08
+role_base_sha=7721962d2a76923715aff3fba85f5402b08207db
+phase_base_sha=d28f8fd52096dd3101d60005182fc90a17ea52a9
+audited_head_sha=68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb
+
+Inputs read: contracts.md, test-strategy.md (P2.5 mutant table, P2.7 attacks), plan.md Phase 2,
+review-a-1902a8215.json (A31..A34), both CD workflows, scripts/ci/apps.json,
+scripts/ci/affected-apps.mjs, cd-workflows.test.mjs, cloudbuild-files.test.mjs,
+helpers/plan.mjs, helpers/scratch.mjs, affected-apps-adversarial.test.mjs,
+apps/marketing/cloudbuild.yaml, apps/sales-advantage/cloudbuild.yaml.
+
+Round 1 (before the new cases): 12 mutants plus the comment attack, run on copied artifact
+trees with CICD_FIXTURE_ROOT under /tmp/opencode. mutants_rejected=11/12. X4 survived: a
+Move Traffic step (gcloud run services update-traffic --to-latest) inside a workflow run:
+body stayed invisible to W-13, because stepText() of helpers/plan.mjs joins only
+entrypoint, args, and env.
+
+Gap closure: scripts/ci/__tests__/cd-workflows-adversarial.test.mjs, 10 cases
+(A-P2-01..A-P2-10). Clean-tree check: Test Files 1 passed (1), Tests 10 passed (10).
+
+Round 2 (the same driver, the new file included in the X4 and XC runs, plus a step 0 that
+runs all A-P2 cases on the clean tree and requires 10 tests, so the filter cannot run
+vacuously), one heavy job:
+  A0 CLEAN exit=0 suites=0F/2P tests=0F/10P failed=none
+  X1 REJECTED exit=1 suites=2F/0P tests=1F/1P named_failed=W-20
+  X2 REJECTED exit=1 suites=2F/0P tests=1F/0P named_failed=W-06
+  X3 REJECTED exit=1 suites=2F/0P tests=2F/0P named_failed=W-05,W-08
+  X4 REJECTED exit=1 suites=2F/4P tests=1F/2P named_failed=A-P2-06
+  X5 REJECTED exit=1 suites=2F/0P tests=2F/0P named_failed=W-18a,W-18b
+  X6 REJECTED exit=1 suites=2F/0P tests=1F/0P named_failed=F-06
+  X7 REJECTED exit=1 suites=2F/0P tests=1F/0P named_failed=F-01
+  X8 REJECTED exit=1 suites=2F/0P tests=1F/0P named_failed=F-10
+  X9 REJECTED exit=1 suites=2F/0P tests=2F/0P named_failed=F-08,F-14
+  X10 REJECTED exit=1 suites=2F/0P tests=1F/0P named_failed=W-15
+  X11 REJECTED exit=1 suites=2F/0P tests=1F/0P named_failed=W-11-primary
+  X12 REJECTED exit=1 suites=2F/0P tests=1F/1P named_failed=W-19
+  XC REJECTED exit=1 suites=6F/0P tests=4F/0P named_failed=W-17,F-05,A-P2-06,A-P2-07
+  mutants_rejected=12/12
+
+Final validation heavy job, run once in the foreground:
+  CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
+  EXIT=0; Test Files 5 passed (5); Tests 117 passed (117); duration 75.31s.
+  The 4 known failures of test-strategy P2.5 live outside scripts/ci; none appeared.
+
+Commit: 68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb
+  test(cd): add the phase 2 adversarial cases (track_id: per_app_cicd_20261107)
+  One file, 325 insertions. Staged area checked empty before the explicit path add;
+  the staged list held exactly that file; the commitlint hook passed.
+
+Provenance notes: HEAD moved from 7721962d2 to c6b7068f1 during the audit by commits of
+other tracks (storytime). The diff over .github/workflows, scripts/ci, apps/*/cloudbuild*.yaml,
+and docs/runbooks is empty, so the audited artifacts are identical at both; the audit commit
+sits on c6b7068f1. HEAD drift detail is recorded in the JSON evidence.
+
+Cleanup: /tmp/opencode/cicd-mutant-* (27 copies), /tmp/opencode/adversarial-p2-mutants, and
+/tmp/opencode/adversarial-p2-mutants.py removed. git worktree list printed 8 worktrees.
+
+No production defect found. One nonblocking test gap found and routed to Red (see the JSON).
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: per_app_cicd_20261107
+phase: Phase 2: Per-app CD workflows
+role_base_sha: 7721962d2a76923715aff3fba85f5402b08207db
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+audit_commit: 68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb
+status: pass
+mutants_rejected: 12/12
+final_validation: EXIT=0, Test Files 5 passed (5), Tests 117 passed (117)
+blocking_findings: none
+nonblocking_finding_1: W-13 in cd-workflows.test.mjs cannot see traffic moves inside a workflow run: step body, because stepText() of helpers/plan.mjs joins only entrypoint, args, and env. Mutant X4 survived round 1 (11/12) through this gap. Owner: Red (test weakness, not a production defect). Mitigation committed in this run: A-P2-06 scans the raw text of every workflow file for update-traffic, --to-latest, and cloudbuild-traffic, and A-P2-07 pins that the scan keeps hits inside comments and denial lines. The re-run rejects X4 by A-P2-06. The production tree is clean and the phase-check rg detector of P2.5 item 6 still guards it.
+retry_recommendation: none
+confidence: high
+END_MEASURE_AGENT_RESULT

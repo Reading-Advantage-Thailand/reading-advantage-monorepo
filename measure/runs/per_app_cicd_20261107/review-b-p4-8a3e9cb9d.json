@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "per_app_cicd_20261107",
+  "phase": "P4",
+  "phase_heading": "## Phase 4: Dry runs, www proof, and the first-push plan",
+  "phase_base_sha": "7d81c7e6fd6f067431b931812baafc36cbe16f2d",
+  "role_base_sha": "7d81c7e6fd6f067431b931812baafc36cbe16f2d",
+  "audited_head_sha": "8a3e9cb9d09e47192d4925f66b630cd00a4107da",
+  "report_head_sha": "abd7e30ae",
+  "audited_head_current": true,
+  "head_drift": "HEAD is a1d3bb741fa23e355590e35a5fb3d87c61562993. `git diff --stat 8a3e9cb9d HEAD -- .github scripts measure/tracks/per_app_cicd_20261107` prints nothing, so the audited phase tree equals the current tree for the security surface.",
+  "model_route": "deepseek/deepseek-flash#high. DeepSeek differs from the P4 Green family (Anthropic) and from Review A (GLM).",
+  "security_applicability": "applicable",
+  "applicability_rationale": "test-strategy.md P4.8 (line 893) marks Review B as final and requires it: the workflow permissions, the two secret names, the roles against the report, the B1 limit of C30, and the F4 block of C31. The audited diff changes scripts/ci/__tests__/dry-run.test.mjs, which runs the real select step of the two CD workflows. That step decides which app deploys and whether a secret is used.",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "The Phase 4 security re-review passes at 8a3e9cb9d with no blocker and one nonblocking Minor finding. Check 1 passes: both CD workflows and ci.yml hold workflow-level `permissions: contents: read`, no job widens it, no `pull_request_target` appears, and the CD workflows run on push only. Check 2 passes: the repository names two secrets, GCP_SERVICE_ACCOUNT and GCP_PROJECT_ID, and both sit in push-triggered jobs. Check 3 passes: the report names one traffic app, eight no-traffic apps, and one skipped app, and every gated row is in primary-advantage or reading-advantage, the two projects where the reduced key was measured. Check 4 passes: C30, plan task 2.6, and plan task 4.2 keep the reduced-key proof open until task 4.5; the report does not claim the key deploys. Check 5 passes with N1: the plan and the report do not contradict the follow-up track, but the plan does not name it. Check 6 passes: tasks 4.5, 4.6, and 4.7 are `[b]`, and task 2.3h is `[b] ... deferred:daniel`. A2 is not applicable and A6 has no hit.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Minor] review-b: the per_app_cicd plan does not name the follow-up track that gates the traffic runs. Plan task 2.3h (line 41) says only `every run needs Daniel's word. deferred:daniel`. test-strategy C31 (line 663) and Q18 say only that the first sales traffic move waits for `a small follow-up track`. The track now exists: `measure/tracks/sales_traffic_source_binding_20261108` (commits dbc669bff, 592d199e9, e2747094b). Its metadata says it blocks task 2.3h for six apps: sales-advantage (Phase 1) and accounts, accounting, codecamp-advantage, marketing, primary-advantage (Phase 2). Task 2.3h names five apps and not primary-advantage. So a reader of the plan can start the accounts, accounting, codecamp-advantage, or marketing traffic run with only Daniel's word, before `bind-release-source` exists. Those four files apply migrations from an uploaded tree that no step binds to `_RELEASE_COMMIT_SHA` (the F4 defect of C31). The impact is bounded: every run is `[b]` and needs Daniel's word, and the follow-up track holds the fix. The plan text does not contradict the track; it omits the pointer. A one-line pointer in task 2.3h and in C31 names the track, its six apps, and its Phase 2 order."
+  ],
+  "evidence": [
+    "Provenance: phase_base_sha 7d81c7e6fd6f067431b931812baafc36cbe16f2d resolves. role_base_sha is the same commit. audited_head_sha 8a3e9cb9d resolves. HEAD is a1d3bb741fa23e355590e35a5fb3d87c61562993, and `git diff --stat 8a3e9cb9d HEAD -- .github scripts measure/tracks/per_app_cicd_20261107` prints nothing.",
+    "Check 1 passes: `.github/workflows` holds exactly three files: cd-apps.yml, cd-www-reading-advantage.yml, and ci.yml. cd-apps.yml line 20-21 and cd-www-reading-advantage.yml line 15-16 and ci.yml line 25-26 each hold `permissions: contents: read` at workflow level. A grep for `permissions` over `.github/workflows` finds only those three lines, so no job declares its own map and no job widens the token. No file holds `pull_request_target`. cd-apps.yml line 5-6 and cd-www line 3-4 trigger on push to master only.",
+    "Check 2 passes: a grep for `secrets.` over `.github/workflows` finds four references and two names: GCP_SERVICE_ACCOUNT (cd-apps.yml line 95; cd-www line 86) and GCP_PROJECT_ID (cd-www lines 91, 96, 106). ci.yml holds no secret reference. Both CD workflows are push-triggered, so a pull request from a fork runs no job that reads a secret.",
+    "Check 3 passes: dry-run-report.md line 28 names one traffic app (www-reading-advantage, through the direct workflow), eight no-traffic apps (accounting, accounts, codecamp-advantage, marketing, primary-advantage, sales-advantage, storytime, workbooks), and one skipped app (reading-advantage); the Dry runs table holds the 11 rows of the plan line. scripts/ci/apps.json puts primary-advantage and storytime in project primary-advantage and the other six gated rows in project reading-advantage, the two projects where plan task 2.6 measured the reduced key roles. The workbooks prerequisite stays a `[b]` fail-closed task (2.3i).",
+    "Check 4 passes: test-strategy C30 (line 662) says the local www run uses no key and that the live proof of B1 is the first push (task 4.5, deferred:pm). Row M43 says the same. Plan task 2.6 says the first push is the live proof and task 4.5 stays `[b]`. Plan task 4.2 says `Scope: local Node build and tests of the www closure only (C30); no Docker build, deploy key, Cloud Build, or live proof`. The report names no key and claims no deploy; its one traffic line is the future plan, and line 28 says Daniel decides the push.",
+    "Check 5 passes with N1: the follow-up track `measure/tracks/sales_traffic_source_binding_20261108` exists with commits dbc669bff, 592d199e9, and e2747094b. Its spec line 9 says it gates six apps and that task 2.3h keeps `deferred:daniel`. measure/tracks.md line 1640 records the same. The per_app_cicd plan and report do not contradict it: task 2.3h needs Daniel's word, and plan task 3.3a already moves sales traffic to the captured candidate revision, not to a tag. The plan does not name the track; that is N1.",
+    "Check 6 passes: plan lines 71 to 73 hold `[b] 4.5 ... deferred:pm`, `[b] 4.6 ... deferred:daniel`, and `[b] 4.7 ... deferred:pm`. Plan line 41 holds `[b] 2.3h ... deferred:daniel`. Task 4.4 stays `[~]`; tasks 4.1, 4.2, and 4.3 are `[x]`.",
+    "A2: not applicable. The P4 diff holds no draft, published, consent, or anonymization token on a new line (a filtered diff of 7d81c7e6f..8a3e9cb9d prints only `reads no secret` prose). No test flips a named subject to published; the only www change is a test file, and the publish gate R-3 reads a text table of page files.",
+    "A6: no hit. measure/tracks.md line 79 says `Phase 2 in review remediation` and claims no resolved security state. The status line is stale for Phase 4 and says the first push is `deferred:daniel` where plan task 4.5 says `deferred:pm`; both keep a human gate, so no security claim outruns the implementation. Phase 4 deployed nothing, and CI on master stays red (D5).",
+    "F6 of Phase 3 stays closed at the audited head: ci.yml line 21 holds `- 'scripts/**'` in the pull_request paths, and the step `CI selector tests` at line 143-144 runs `CI=true pnpm exec vitest run scripts/ci`.",
+    "The new dry-run test reads no secret and calls no network: it imports execFileSync only, runs `node scripts/ci/affected-apps.mjs` and `git diff --name-only` inside scratch repositories, and runs the select steps with a logging fake gcloud. DR-00 asserts `select_secret_refs=0` before the loop.",
+    "Limits: this role ran no workflow, called no gcloud, read no secret value, and ran no test suite. It read repository files and git metadata only. No commit was made and no production code, test, plan, or registry file was edited. Only the two result files were written.",
+    "Evidence entry: F<n> withdrawn applies to no item. No earlier Review B run exists for Phase 4, so this run receives no CONTEST item."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git diff --stat 8a3e9cb9d -- .github scripts measure/tracks/per_app_cicd_20261107 (empty)",
+    "read .github/workflows/cd-apps.yml, cd-www-reading-advantage.yml, ci.yml (full text)",
+    "grep -n 'secrets\\.|pull_request_target|permissions:' .github/workflows",
+    "read scripts/ci/apps.json (project and mode of the 10 rows)",
+    "grep -n '4\\.|2\\.3|deferred:' measure/tracks/per_app_cicd_20261107/plan.md",
+    "read measure/tracks/per_app_cicd_20261107/dry-run-report.md",
+    "grep -n 'C30|C31' measure/tracks/per_app_cicd_20261107/test-strategy.md; sed -n '880,930p' test-strategy.md",
+    "grep -rn 'sales_traffic_source_binding' measure/tracks/per_app_cicd_20261107 (no match: N1)",
+    "read measure/tracks/sales_traffic_source_binding_20261108 (spec.md, metadata.json)",
+    "git log --oneline -1 dbc669bff 592d199e9 e2747094b",
+    "git diff --stat 7d81c7e6f 8a3e9cb9d; git diff 7d81c7e6f 8a3e9cb9d | grep -Ei '^\\+[^+].*(published|consent|anonymi|resolved|secret|token=)'",
+    "read scripts/ci/__tests__/dry-run.test.mjs lines 1-135; grep for process.env|fetch|http|GCP_|spawn (no hit)"
+  ],
+  "changed_files": [
+    "measure/runs/per_app_cicd_20261107/review-b-p4-8a3e9cb9d.json",
+    "measure/runs/per_app_cicd_20261107/review-b-p4-8a3e9cb9d.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "handoff": {
+    "to": "Green / Monorepo orchestrator",
+    "blocking_items": 0,
+    "nonblocking_items": ["N1: name measure/tracks/sales_traffic_source_binding_20261108 in plan task 2.3h and in test-strategy C31, with its six apps"],
+    "question": null,
+    "default": "Apply N1 as a documentation edit in Phase 4 closeout: add one pointer line to task 2.3h and C31. No retry is needed for the security checks.",
+    "dispatchable_without_new_input": true
+  },
+  "escalation_note": "The verdict is pass with no blocking finding. This run set retry_recommendation to escalate_human per the role contract; the escalation carries N1 only, which is a documentation pointer and needs no retry.",
+  "retry_recommendation": "escalate_human",
+  "confidence": "high"
+}

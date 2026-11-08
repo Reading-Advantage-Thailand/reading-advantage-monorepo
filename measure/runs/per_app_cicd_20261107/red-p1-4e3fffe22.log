@@ -1,0 +1,29 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: Phase 1: The affected-app logic
+role_base_sha: 4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+phase_base_sha: 4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+baseline_sha: 4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+status: complete
+dispositions: none
+commit: f302b4edc325021096ff0236820577661e422df9
+commit_plan: 06d73a4a9a95bc138ff647636d52793bf751c853
+head_after_role: 06d73a4a9a95bc138ff647636d52793bf751c853
+files: scripts/ci/__tests__/affected-apps.test.mjs, measure/tracks/per_app_cicd_20261107/plan.md
+red_retry: the defect was that case B-17 passed `global.write` to `commitChanges` while the helper reads `changes.write`, so every global step committed nothing, base equalled head, and B-16 rightly required `[]`; the fix commit is f302b4edc and it also asserts `changed_files>=1` with the global label
+red_retry_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; rc=$?; echo "EXIT=$rc"; exit $rc'
+red_retry_exit: 0
+red_retry_evidence: test_files=1; test_files_passed=1; tests_passed=48; tests_failed=0; cases_total=48; the Green script is at c03e201ea
+red_retry_stub_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && AFFECTED_APPS_SCRIPT=/tmp/opencode/ci-cd-stubs-5Wfiph/s1.mjs CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci -t "B-17"; rc=$?; echo "EXIT=$rc"; exit $rc'
+red_retry_stub_exit: 1
+red_retry_stub_evidence: stub_label=S1; tests_failed=1; tests_skipped=47; cases_total=48; B-17 fails with `B-17 rows=10 changed_files=1 global=pnpm-workspace.yaml nodeLinker globals_checked=7: stdout differs; expected=[10 ids] actual="[]\n"`; the case is not vacuous
+first_red_evidence: test_files=1; test_files_failed=1; tests_failed=43; tests_passed=5; cases_total=48; failures_missing_script=42; failures_missing_table=1; cases_killed_by_a_stub=42; cases_unkilled=0
+stub_evidence: stubs=7; stub_labels=S1,S2,S3,S4,S5,S6,S7; cases_total=48; cases_killed_by_a_stub=42; cases_unkilled=0; exempt_cases=A7-01,B-21,B-22,P-01,P-02,P-03; stub_failures=S1:36,S2:40,S3:39,S4:36,S5:38,S6:36,S7:43
+characterization_reasons: A7-01=the helper guards fire on an empty list, it runs no script; B-22=the helper environment scrub, it runs no script; P-01=read_along_dependents=1 from the copied manifests; P-02=utils_rows=7 from the copied manifests; P-03=integrations_rows=6 from the copied manifests
+remaining_failures: none; the 48 cases pass with the Green script at c03e201ea
+scope: p1_out_of_scope_paths=0; the first Red commit holds only scripts/ci/__tests__/affected-apps.test.mjs and scripts/ci/__tests__/helpers/scratch.mjs; the first plan commit holds only measure/tracks/per_app_cicd_20261107/plan.md; the retry commit holds only scripts/ci/__tests__/affected-apps.test.mjs; the retry plan commit holds only measure/tracks/per_app_cicd_20261107/plan.md
+role_gate: FAIL on one check only; the log block, the dispositions line, the advanced HEAD, the [~] task 1.2, and the Red command (expected failure) pass. The check "Mid Red changed non-test/non-Measure files" lists the files of other tracks that landed on master after the phase base; the Red role did not change them: commitlint.config.js (24b9eb56f), packages/auth/package.json, packages/backend/package.json, packages/backend/src/modules/storytime-access/index.ts, packages/backend/vitest.config.ts, packages/db/drizzle-storytime/0000_glorious_butterfly.sql, packages/db/drizzle-storytime/meta/0000_snapshot.json, packages/db/drizzle-storytime/meta/_journal.json, packages/db/drizzle.storytime.config.ts, packages/db/package.json, packages/db/scripts/storytime-migrate.ts, packages/db/src/schema/storytime/index.ts, packages/db/vitest.config.ts, packages/domain/src/tenant-registry.ts, pnpm-lock.yaml (eeeea3598, track_id: storytime_at_home_release_20261106)
+questions_and_defaults: Q-A=the synthetic workspace holds the apps alpha, beta, gamma, and delta so that one app reaches no package; default=used four apps, and the packages are named @fixture/p1, @fixture/p2, and @fixture/p3. Q-B=case A4-03 changes the key of the snapshots entry of ansi-styles; default=the package name stays the same, and the app is found through the resolved set by name. Q-C=case B-11 uses the commit before the three changes as the base; default=the first commit of the scratch repository. The Green role keeps these defaults.
+handoff: The Green role wrote scripts/ci/affected-apps.mjs and scripts/ci/apps.json (commits cee377fb1 and c03e201ea). The Red retry fixed the one test defect of task 1.2, and the targeted command now exits 0 with 48 of 48 cases. The next roles are plan tasks 1.3, 1.4, and 1.5. The Red role changed no other file. The scratch repositories are plain folders under /tmp/opencode; no worktree was made (A16). The mid-red role-gate check RED_TEST_COMMAND expects a failure and no longer applies, because the suite is green with the Green script.
+END_MEASURE_AGENT_RESULT

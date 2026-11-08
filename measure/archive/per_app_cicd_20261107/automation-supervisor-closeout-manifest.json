@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "track_id": "per_app_cicd_20261107",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-09",
+  "pre_closeout_head": "8397d8e950a6a80b9905551a7260df29fefe8cbc",
+  "final_acceptance_audited_head_sha": "4bca5a504182dce57d7b6c449b50705f414d7bd4",
+  "track_base_sha": "fff675ab214889d9aaa6ba6a13ab3656cf6483f9",
+  "lane": "full lane: a spec review, four phases, one phase acceptance per phase, an adversarial set, and a final acceptance.",
+  "archive_path": "measure/archive/per_app_cicd_20261107",
+  "audits": [
+    {
+      "role": "phase-acceptance",
+      "phase": 1,
+      "result_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-db8b093bb.json",
+      "log_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-db8b093bb.log",
+      "audited_head_sha": "db8b093bb86ef116b68664a1df4f594ac71a1eb3",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 1
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 2,
+      "result_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-p2-68a86e173.json",
+      "log_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-p2-68a86e173.log",
+      "audited_head_sha": "68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 12
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 3,
+      "result_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-p3-43162d278.json",
+      "log_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-p3-43162d278.log",
+      "audited_head_sha": "43162d27868d3b43a2fbde02ed95b0116bedfb60",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 3
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 4,
+      "result_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-p4-ad2b43467.json",
+      "log_file": "measure/runs/per_app_cicd_20261107/phase-acceptance-p4-ad2b43467.log",
+      "audited_head_sha": "ad2b434671caa767522789ad2f1e0956bfaecdea",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 4
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "1 to 4",
+      "result_file": "measure/runs/per_app_cicd_20261107/final-acceptance-4bca5a504.json",
+      "log_file": "measure/runs/per_app_cicd_20261107/final-acceptance-4bca5a504.log",
+      "audited_head_sha": "4bca5a504182dce57d7b6c449b50705f414d7bd4",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 8
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 4,
+      "result_file": "measure/runs/per_app_cicd_20261107/adversarial-p4-355079cb0-r5.json",
+      "log_file": "measure/runs/per_app_cicd_20261107/adversarial-p4-355079cb0-r5.log",
+      "audited_head_sha": "355079cb0",
+      "status": "pass",
+      "mutants_rejected": "10 of 10",
+      "scenarios_checked": "4 of 4",
+      "blocking_findings": 0
+    }
+  ],
+  "gate_commands": [
+    "git rev-parse HEAD (8397d8e950a6a80b9905551a7260df29fefe8cbc, exit 0)",
+    "git log --format='%h %s' 4bca5a504..HEAD (one commit: 8397d8e95 chore(measure): mark the p2b checkpoint (track_id: storytime_at_home_release_20261106), exit 0)",
+    "git diff --stat 4bca5a504..HEAD -- measure/tracks/per_app_cicd_20261107 .github scripts/ci/affected-apps.mjs scripts/ci/apps.json (no line, exit 0)",
+    "git diff --stat 4bca5a504..HEAD (one file: measure/tracks/storytime_at_home_release_20261106/plan.md, exit 0)",
+    "rg -n '^- \\[[ x~b]\\] ' measure/archive/per_app_cicd_20261107/plan.md (35 task lines: 29 [x], 6 [b], 0 [~], 0 [ ], exit 0)",
+    "python3 over the task lines of the plan (at least one SHA for each of the 29 [x] tasks, exit 0)",
+    "rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' measure/archive/per_app_cicd_20261107/plan.md (no hit, exit 1)",
+    "rg -n 'API-key encryption (was )?resolved|encryption.*resolved|completely fixed|fully solved|all (checks |tests )?pass' measure/tracks.md (no hit, exit 1)",
+    "rg -n 'measure/tracks/([a-z_0-9-]+)/plan\\.md' tests/*.sh (no hit, exit 1)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track per_app_cicd_20261107 (exit 0)",
+    "git mv measure/tracks/per_app_cicd_20261107 measure/archive/per_app_cicd_20261107 (exit 0)",
+    "git commit -m 'chore(measure): archive the per-app ci/cd track (track_id: per_app_cicd_20261107)' -- measure/tracks/per_app_cicd_20261107 measure/archive/per_app_cicd_20261107 measure/tracks.md measure/runs/per_app_cicd_20261107 (exit 0)"
+  ],
+  "deferred_tasks": [
+    {
+      "task": "2.3c",
+      "plan_line": 36,
+      "marker": "[b]",
+      "owner": "daniel",
+      "subject": "Run cloudbuild-traffic.yaml for Primary.",
+      "relay": "The PM informs the PM report and carries Daniel's item."
+    },
+    {
+      "task": "2.3h",
+      "plan_line": 41,
+      "marker": "[b]",
+      "owner": "daniel",
+      "subject": "Run each cloudbuild-traffic.yaml of accounts, accounting, codecamp-advantage, marketing, and sales-advantage.",
+      "relay": "The PM informs the PM report and carries Daniel's item."
+    },
+    {
+      "task": "2.3i",
+      "plan_line": 42,
+      "marker": "[b]",
+      "owner": "pm",
+      "subject": "Workbooks deploy prerequisites: the Artifact Registry repository, the two secrets, and a first service.",
+      "relay": "The PM reopens the task when the Workbooks app has a release date."
+    },
+    {
+      "task": "4.5",
+      "plan_line": 71,
+      "marker": "[b]",
+      "owner": "pm",
+      "subject": "The first push, on the PM's go after Phase 4 passes.",
+      "relay": "The PM holds the first push."
+    },
+    {
+      "task": "4.6",
+      "plan_line": 72,
+      "marker": "[b]",
+      "owner": "daniel",
+      "subject": "Every traffic move of a gated app, on Daniel's word.",
+      "relay": "The PM informs the PM report and carries Daniel's item."
+    },
+    {
+      "task": "4.7",
+      "plan_line": 73,
+      "marker": "[b]",
+      "owner": "pm",
+      "subject": "After the first push: a build account per project, Workload Identity Federation, and the JSON key deletion.",
+      "relay": "The PM holds the build-account work."
+    }
+  ],
+  "plan_state": {
+    "total_tasks": 35,
+    "done_tasks": 29,
+    "deferred_tasks": 6,
+    "in_progress_tasks": 0,
+    "space_marker_tasks": 0,
+    "phase_checkpoints": [
+      "db8b093bb",
+      "68a86e173",
+      "43162d278",
+      "ad2b43467"
+    ],
+    "note": "Every done task names a commit SHA. No deferred task is claimed done."
+  },
+  "retained_evidence": [
+    "measure/runs/per_app_cicd_20261107/ holds 86 files, about 581197 bytes. The whole folder is kept.",
+    "measure/runs/per_app_cicd_20261107/final-acceptance-4bca5a504.json and .log (the final acceptance verdict)",
+    "measure/runs/per_app_cicd_20261107/phase-acceptance-db8b093bb.json, phase-acceptance-p2-68a86e173.json, phase-acceptance-p3-43162d278.json, phase-acceptance-p4-ad2b43467.json and their logs (the four phase verdicts)",
+    "measure/runs/per_app_cicd_20261107/adversarial-p4-355079cb0-r5.json and .log (the adversarial set of Phase 4)",
+    "measure/runs/per_app_cicd_20261107/review-a-*.json, review-b-*.json, review-c-*.json and their logs (the review verdicts)",
+    "measure/runs/per_app_cicd_20261107/red-*.log, green-*.log, strategy-*.log, spec-review-*.json (the phase work records)",
+    "measure/runs/per_app_cicd_20261107/closeout-4bca5a504.json and .log (this closeout)",
+    "measure/archive/per_app_cicd_20261107/dry-run-report.md (the dry-run report and the one-line first-push plan)"
+  ],
+  "artifact_cleanup": "None. The orchestrator named no artifact for deletion. The whole run folder and the archive folder stay on disk.",
+  "open_nits": [
+    "Nit 1, registry: the status line of the track was stale before the archive move. It read 'Phase 2 in review remediation'. The archive move and the status line now name the four checkpoints and the final acceptance. A6 does not fire.",
+    "Nit 2, doctor: 'bash measure/doctor.sh' exits 1. The script stops at its second step with 'FAIL: measure/automation-supervisor.py not found'. The file was already missing at the track base, and this track changed no doctor file.",
+    "Nit 3, doctor: 'bash tests/orchestrator_supervisor_invariants.sh' and 'bash tests/orchestrator_marker_vocabulary.sh' exit 1 on the legacy plans of other tracks. This track plan holds no space marker and no in-progress marker.",
+    "Nit 4, known failure: 'pnpm architecture:check' exits 1 with 'V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes'. The failure predates the track, and decision D5 excludes the fix from this track.",
+    "Nit 5, parallel track: case F-12 of scripts/ci/__tests__/cloudbuild-files.test.mjs expects the step 'bind-release-source' first. The Red commit 157e45cc5 of track sales_traffic_source_binding_20261108 causes that red case. The heavy gate ran with F-12 excluded.",
+    "Nit 6, carried from Phase 4: Review C N4 and N5 of the dry-run report stay open. The report wording change belongs to the closeout or to a later track.",
+    "Nit 7, metadata: the task counts were stale. The plan holds 35 tasks, and the metadata now holds estimated_tasks 35 and actual_tasks 35.",
+    "Nit 8, parallel red: scripts/ci/__tests__/sales-traffic-source-binding.test.mjs of the parallel track fails in the aggregate scripts/ci suite until that track lands its Green. The plan claim of task 4.4 stays true for the head it names."
+  ],
+  "anti_pattern_checks": {
+    "a5": "No false-claim text in the plan. The scan for 'PASS=[0-9]+.*FAIL=0' and 'all checks pass' found no hit.",
+    "a6": "The registry note of the track was refreshed during the archive move. It makes no green claim about a red adversarial test.",
+    "a9": "No test reads the track folder at run time. The scan of tests/*.sh found no hardcoded track plan path."
+  },
+  "a9_comment_only_references": [
+    "scripts/ci/__tests__/cd-workflows.test.mjs line 5 names measure/tracks/per_app_cicd_20261107/test-strategy.md in a comment only.",
+    "scripts/ci/__tests__/cloudbuild-files.test.mjs line 5 names measure/tracks/per_app_cicd_20261107/test-strategy.md in a comment only.",
+    "scripts/ci/__tests__/dry-run.test.mjs line 7 names measure/tracks/per_app_cicd_20261107/test-strategy.md in a comment only.",
+    "These three files were not edited. Another track works in scripts/ci now, and no test reads the track folder at run time."
+  ],
+  "stale_links_outside_the_track": [
+    "measure/tracks/sales_traffic_source_binding_20261108/index.md line 7 links to ../per_app_cicd_20261107/test-strategy.md. The relative link breaks after the archive move. The file belongs to another track, so the closeout did not edit it. A later track updates the link to ../archive/per_app_cicd_20261107/test-strategy.md."
+  ],
+  "registry": {
+    "file": "measure/tracks.md",
+    "section": "Archived Tracks",
+    "link": "./archive/per_app_cicd_20261107/",
+    "description_matches_metadata": true,
+    "note": "The active section named no track id before the move. The archived entry sits after the '## Archived Tracks' heading."
+  },
+  "metadata_updates": {
+    "file": "measure/archive/per_app_cicd_20261107/metadata.json",
+    "status": "done",
+    "completed": "2026-11-09",
+    "estimated_tasks": 35,
+    "actual_tasks": 35,
+    "description_unchanged": true
+  },
+  "owner_gate": "Six human-gated tasks stay deferred. The first push and the build-account work are the PM's. The Primary traffic run, the five gated traffic runs, and every traffic move are Daniel's. The PM informs the PM report of the deferred set and carries Daniel's items. No live proof of this track is claimed as done.",
+  "retry_recommendation": "none"
+}

@@ -1,0 +1,136 @@
+# Review B (security and data handling) - per_app_cicd_20261107 - Phase 2
+
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 09ce375d2bf32aac34b7d357496d64e52c201d31
+audited_head_sha: 09ce375d2bf32aac34b7d357496d64e52c201d31
+
+status: fail
+retry_recommendation: escalate_human
+confidence: high
+
+## Summary
+
+One blocking finding. The GitHub deploy identity holds project-level editor, run.admin,
+storage.admin, and iam.serviceAccountUser in www-reading-advantage. That is a no-build path, so
+the PM acceptance does not bound it. The 2.6 grants in primary-advantage and reading-advantage are
+least-privileged for a build submit. Both CD workflows hold contents: read only, use exactly the two
+existing secrets, echo no secret, and take no untrusted input into a shell line. No workflow moves
+traffic. The primary, accounts, and marketing traffic files require _TAG with no default. The
+workbooks job fails closed. A2 is not applicable. A6 holds.
+
+## Provenance
+
+HEAD moved to 505b6df6d. No new commit touches this phase's paths
+(git log 09ce375d2..HEAD -- .github apps/*/cloudbuild*.yaml scripts/ci docs/runbooks is empty).
+The diff range holds other tracks' commits; the audit stayed on the phase paths.
+
+## Blocking
+
+B1 (owner: PM; Daniel decides; not a Green code change). The identity
+www-reading-github@www-reading-advantage (the GCP_SERVICE_ACCOUNT key that both CD workflows use)
+holds project-level roles/editor, roles/run.admin, roles/storage.admin, and
+roles/iam.serviceAccountUser in project www-reading-advantage. A key holder can deploy or delete
+the www-reading-advantage service and move its traffic with no build, and can act as any service
+account in that project. The PM acceptance covers build accounts in primary-advantage and
+reading-advantage only. Task 4.7 (WIF plus key deletion) does not remove these grants. Recommended
+fix: reduce the identity to cloudbuild.builds.editor, serviceusage.serviceUsageConsumer,
+logging.viewer, run.viewer, and objectCreator/objectViewer on www-reading-advantage_cloudbuild;
+remove editor, run.admin, storage.admin, and serviceAccountUser; add the reduction to task 4.7.
+The grant is pre-existing. It is confined to the www project; the identity has no run role in
+primary-advantage or reading-advantage.
+
+## Nonblocking
+
+N1 (PM and track owner, task 2.3h): accounting, codecamp-advantage, and sales-advantage move
+traffic to a fixed tag name. Spec section 2a and the runbook document the tag. Sales takes
+_PUSH_BUILD_ID for the rollback capture but its traffic move ignores it, so the capture and the
+target can name different builds.
+
+N2 (task 4.7): the PM accepted the default build account. Measured: primary-advantage uses
+1064299189080-compute@developer (editor, run.admin, actAs, secretAccessor); reading-advantage uses
+1090865515742@cloudbuild (run.admin, actAs, no editor).
+
+N3 (task 4.7): project-level logging.viewer and storage.bucketViewer are broader than a build submit
+needs.
+
+N4 (PM, design note): a tagged revision of a service with --allow-unauthenticated is publicly
+reachable at its tag URL. --no-traffic is not an access gate.
+
+N5 (track owner): the workflows use mutable major tags (@v4, @v2), not commit SHAs.
+
+N6 (task 2.3i): workbooks-cloud-run holds only cloudsql.client. It also needs
+secretmanager.secretAccessor on the two future WORKBOOKS_* secrets.
+
+N7 (track owner): measure/tracks.md still says the track status is "Phase 1 (affected-app logic)
+next". The line is stale. It is not a security overstatement.
+
+## Evidence
+
+- Permissions: both CD workflows declare permissions: contents: read exactly. No id-token, no
+  pull_request_target, no write-all, no pull_request trigger. The repository default workflow
+  permission is read.
+- Secrets: only GCP_SERVICE_ACCOUNT and GCP_PROJECT_ID appear in .github/workflows. gh secret list
+  returns exactly those two, both created 2026-05-23. No echo of a secret; no set -x, no
+  printenv, no env pipe.
+- Injection: github.event.before and github.sha pass through env and are quoted. The matrix is
+  JSON-encoded, so no GITHUB_OUTPUT line split. matrix values come from scripts/ci/apps.json, not
+  from a branch name, a commit message, or a PR title.
+- Traffic: git grep for update-traffic, --to-latest, and cloudbuild-traffic over
+  .github/workflows exits 1. The update-traffic steps use --to-tags only. primary, accounts, and
+  marketing require ${_TAG} with no default. sales requires ${_PUSH_BUILD_ID} with no default.
+- IAM (primary-advantage and reading-advantage): the member holds only cloudbuild.builds.editor,
+  logging.viewer, serviceusage.serviceUsageConsumer, and storage.bucketViewer. No owner, editor,
+  or *.admin role.
+- Buckets (primary-advantage_cloudbuild, reading-advantage_cloudbuild): objectCreator and
+  objectViewer only. No delete role.
+- Keys: two system-managed keys and one user-managed key. The user-managed key dates from
+  2026-05-23. Task 2.6 made no key.
+- www-reading-advantage: editor, iam.serviceAccountUser, run.admin, storage.admin for the member.
+  One service and one build bucket in the project.
+- Workbooks fails closed: no workbooks repo, no workbooks service, no WORKBOOKS_* secret.
+- Secrets in Cloud Build: secrets mount only through secretEnv and availableSecrets. The Cloud
+  Build service account is secretAccessor on COMPANY_AUTH_DIRECT_DATABASE_URL.
+- Error handling: every bash step starts with set -euo pipefail.
+- No credential in the diff. Only scripts/ci/apps.json matches a key or secret file name.
+- No workflow run: gh run list shows only old www and CI runs. "CD - gated apps" never ran.
+- A2 not applicable. A6 holds.
+
+## Commands run
+
+git rev-parse HEAD; git log --oneline 09ce375d2..HEAD -- <phase paths>
+git diff --stat d28f8fd52..09ce375d2
+git diff --name-only d28f8fd52..09ce375d2 | grep -iE 'key|secret|credential|\\.env|\\.pem|\\.json'
+git grep -n -E 'secrets\\.[A-Za-z0-9_]+' 09ce375d2 -- .github/workflows
+git grep -n -E 'permissions:|id-token|pull_request_target|write-all|contents: write' 09ce375d2 -- .github/workflows
+git grep -n -E 'update-traffic|--to-latest|cloudbuild-traffic' 09ce375d2 -- .github/workflows
+git grep -n -E 'update-traffic|--to-latest|--to-revisions' 09ce375d2 -- apps/*/cloudbuild*.yaml
+git grep -n -E 'echo|printenv|set -x' 09ce375d2 -- .github/workflows apps/*/cloudbuild*.yaml
+gcloud projects get-iam-policy primary-advantage --format=json
+gcloud projects get-iam-policy reading-advantage --format=json
+gcloud projects get-iam-policy www-reading-advantage --format=json
+gcloud storage buckets get-iam-policy gs://primary-advantage_cloudbuild --format=json
+gcloud storage buckets get-iam-policy gs://reading-advantage_cloudbuild --format=json
+gcloud storage buckets get-iam-policy gs://www-reading-advantage_cloudbuild --format=json
+gcloud iam service-accounts keys list --iam-account=www-reading-github@www-reading-advantage.iam.gserviceaccount.com
+gcloud builds get-default-service-account --project=reading-advantage
+gcloud builds get-default-service-account --project=primary-advantage
+gcloud run services list --project=reading-advantage --region=asia-southeast1
+gcloud artifacts repositories list --project=reading-advantage
+gcloud secrets list --project=reading-advantage | grep -i workbook
+gcloud secrets get-iam-policy COMPANY_AUTH_DIRECT_DATABASE_URL --project=reading-advantage
+gh secret list --repo Reading-Advantage-Thailand/reading-advantage-monorepo
+gh api repos/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/permissions/workflow
+gh run list --repo Reading-Advantage-Thailand/reading-advantage-monorepo --limit 5
+
+No file outside the two result artifacts was edited. No commit was made.
+
+MEASURE_AGENT_RESULT
+status: fail
+track: per_app_cicd_20261107
+phase: P2
+blocking_findings: 1
+nonblocking_findings: 7
+retry_recommendation: escalate_human
+confidence: high
+audited_head_sha: 09ce375d2bf32aac34b7d357496d64e52c201d31
+END_MEASURE_AGENT_RESULT

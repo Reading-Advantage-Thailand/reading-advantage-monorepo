@@ -1,0 +1,115 @@
+# Measure Review B (security and data handling) log — per_app_cicd_20261107 — Phase 3
+
+- Role: measure-review-b-security (audit only; report, do not fix)
+- Model: deepseek/deepseek-flash#high
+- Model note: the role table names `ra-quota pick review-b`, and that pick gave `openai/gpt-6-sol#high` (Codex, last resort). The PM allows DeepSeek. DeepSeek differs from the P3 Green family (Anthropic) and from Review A (GLM).
+- Track: `per_app_cicd_20261107`
+- Phase: `## Phase 3: CI for the affected apps` (P3)
+- `phase_base_sha`: `25d774e08a0f9bef8074fb6f88bde439d1a72066`
+- `role_base_sha` and `audited_head_sha`: `57bb8376c1193988f907e4d0fd56ef6dd7eef23d`
+- Current HEAD: `eae1280274eae643a1fbde43c5869c14df2e4329`. That commit is one step after the audited head and changes one file, `measure/tracks/storytime_at_home_release_20261106/plan.md`. The diff over every phase path is empty, so the audited phase tree equals the current tree.
+- Status: pass, with five nonblocking findings and no blocker.
+
+## Method
+
+1. Captured the provenance. `phase_base_sha` resolves, and `git cat-file -e 25d774e08:measure/tracks/per_app_cicd_20261107/test-strategy.md` succeeds. The audited range is `git diff 25d774e08 57bb8376c`.
+2. Read `spec.md`, `plan.md`, and `test-strategy.md` (sections P1.1 C1 to C19, P2, P3, and the questions). Read `measure/anti-patterns.md` entries A2 and A6.
+3. Read the phase base version and the audited version of `.github/workflows/ci.yml`. Read `scripts/ci/apps.json` and `scripts/ci/affected-apps.mjs`. Read the two new test files.
+4. Read `apps/sales-advantage/cloudbuild-traffic.yaml`, `apps/sales-advantage/cloudbuild.yaml`, and `apps/sales-advantage/scripts/capture-sales-cloud-run-tag.sh`. Read `apps/sales-advantage/scripts/verify-sales-release-inputs.mjs`.
+5. Read `docs/runbooks/traffic-moves.md` and compared it with the sales file step by step.
+6. Ran static detectors on the workflows, the push files, and the phase diff. Ran no workflow, no gcloud call, no gh write, and no secret read. Ran no test suite.
+
+## Scope note
+
+The range `25d774e08..57bb8376c` holds commits of three other tracks: `storytime_at_home_release_20261106`, `primary_storytime_removal_20261107`, and `storytime_app_rebuild_20261025`. This audit reads the paths of this track only, as the P2 Review B did.
+
+## Checks and results
+
+### 1. Workflow permissions and secrets
+
+- `ci.yml` declares no `permissions:` block. `grep -nE 'permissions|secrets\.|pull_request_target'` over the audited file exits 1. Test-strategy Q16 assigns `ci.yml` to Phase 3, and the P3 review bullet names the permissions block. Finding F2 (Major).
+- No job reads a secret. The only credential-shaped text is the test-only `PGPASSWORD=postgres` health check of pgbouncer. No `pull_request_target` trigger exists in any workflow.
+- The two CD workflows keep `permissions: contents: read`, and `scripts/ci/__tests__/cd-workflows.test.mjs` asserts it. No test asserts a `ci.yml` permissions block.
+
+### 2. Untrusted input and injection
+
+- `BASE_SHA` and `HEAD_SHA` pass through `env:` and appear quoted in `run:`. The base uses `${{ github.event.before || github.event.pull_request.base.sha }}`. The head uses `${{ github.sha }}`.
+- `scripts/ci/affected-apps.mjs` accepts 40-hex ids only (case C2). A bad id exits 2, which fails the select step under the default `bash -e`. Selection therefore fails closed.
+- The matrix ids come from `scripts/ci/apps.json` through `readTable`. `readTable` checks the type only. The new test checks a non-empty string only. `affected` interpolates the id unquoted into `--filter=${{ matrix.id }}...` and into the job name. A table id with a newline or a semicolon adds a shell command. Finding F1 (Major).
+- The pull request path reads `apps.json` from the pull request tree, because the script reads the head commit (case C1). A pull request can therefore narrow its own matrix. Case C1 and question Q2 record that read as a design choice, so this audit does not raise it as a defect. It is the reason F1 matters more on a pull request than on a push to master.
+- A failed or empty select never plans a deploy: a script error fails the step, and `if: matrix != '[]'` skips `affected` without a pass claim from that job.
+
+### 3. Service containers and env
+
+- `postgres:16-alpine` and `docker.io/bitnamilegacy/pgbouncer:1.23.1` are the same two images at the base and at the head.
+- Credentials are the test pair `postgres`/`postgres`. `DATABASE_URL` and `COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL` point at `localhost`. `COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER` takes `job.services.postgres.id`.
+- No production URL, no `--add-cloudsql-instances`, and no secret name appears in the new jobs.
+- The two images are moving tags, not digests. This is unchanged from the base, so this audit records it and raises no finding.
+
+### 4. Sales traffic file (task 3.3a)
+
+- `capture-company-candidate` runs after `verify-repair-verify-legacy-rollback` and before `update-traffic`. It calls the script with an argv list and no `-c`, so `_PUSH_BUILD_ID` never reaches a shell.
+- The script fails closed on three points: the tag URL shape, the tag revision is the latest created revision, and the revision image equals `<repository>@<sha256 digest of the expected image>`.
+- `update-traffic` reads only `/workspace/.sales-company-candidate.revision`, quotes the value in `--to-revisions="<revision>=100"`, holds no `--to-tags`, and never names the legacy record.
+- `verify-repair-verify-legacy-rollback` deletes both legacy record files before the candidate capture, so the legacy record cannot be read.
+- A later push that moves the `candidate` tag makes the digest check or the latest-revision check fail. `set -euo pipefail` then stops the build before the move.
+- The traffic file holds no `_PUSH_BUILD_ID` default. An undefined substitution fails the build.
+- The script writes `/workspace/.sales-company-candidate.{url,revision}`. That path is outside the repository.
+- Static check of F-19: all 10 checks hold on the file as read. The Green log records `sales_build_identity=1` with 130 tests passed. This audit did not run the suite.
+
+### 5. Triggers, workflow references, and push paths
+
+- `grep -rn cloudbuild-traffic .github/workflows` exits 1. `grep -rnE 'update-traffic|--to-latest' .github/workflows` exits 1.
+- No `apps/*/cloudbuild-traffic.yaml` holds an `on:` or `triggers:` key.
+- The table `cloudbuild` values are push files only. F-08 reads `row.cloudbuild` and asserts no database step, so a row pointed at a traffic file would fail that test.
+- The 9 non-excluded push files hold no database command. The only grep hit is a comment in `apps/workbooks/cloudbuild.yaml`.
+
+### 6. Runbook accuracy
+
+- The step list in the sales section equals the file order.
+- The fail-closed sentence matches the script.
+- The global rule at lines 13-14 still says every traffic file moves traffic to a tag and never names a revision. The sales file now moves traffic to a revision. Finding F5 (Nit).
+- The "Open limits" section records that `capture-legacy-rollback` can fail when the legacy tag revision is not the latest created revision. That failure stops the build before `capture-company-candidate`. The record assigns the change to Daniel and the sales app owner, so this audit records it and raises no finding.
+
+### 7. Migration and data handling
+
+- The phase changes no migration and no schema file.
+- `migrate-db` in the traffic file applies migrations from the source that the operator uploads. No step binds that source to `_RELEASE_COMMIT_SHA`. Finding F4 (Nit). The gap predates the phase.
+- The traffic build runs only by hand on Daniel's word.
+- No push path changes a production database.
+
+### 8. Anti-patterns
+
+- A2 (consent-blind publish gate): not applicable. The phase diff holds no draft, published, consent, or anonymization token, and no test flips a named subject to published. The sales move is a deploy gate with its own guards.
+- A6 (registry overstatement): no hit. The A6 detector over `measure/tracks.md` exits 1. The track row claims Phase 1 accepted and Phase 2 in review remediation. It claims no resolved security state. The plan note for 3.3a states the F-19 contract and claims no security state.
+
+### 9. Not verified in this role
+
+- No workflow ran. No Cloud Build ran. No gcloud read or write ran. No secret was read. No test suite ran.
+- Live IAM and the reduced www deploy key stay with task 4.7 and the Phase 4 dry run.
+
+## Findings
+
+- F1 [Major] `ci.yml` line 257: an unvalidated table id reaches the shell through `--filter=${{ matrix.id }}...`.
+- F2 [Major] `ci.yml`: no `permissions:` block on any job.
+- F3 [Nit] `ci.yml` lines 32, 37, 238, 241, 246: five new `uses:` lines float on a major tag.
+- F4 [Nit] `cloudbuild-traffic.yaml` lines 19-26: the migration source is not bound to `_RELEASE_COMMIT_SHA`.
+- F5 [Nit] `traffic-moves.md` lines 13-14: the global tag rule is false for sales-advantage.
+
+## Artifacts
+
+- `measure/runs/per_app_cicd_20261107/review-b-p3-57bb8376c.json`
+- `measure/runs/per_app_cicd_20261107/review-b-p3-57bb8376c.log`
+
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: per_app_cicd_20261107
+phase: ## Phase 3: CI for the affected apps
+commits: none (audit only; audited head 57bb8376c, phase base 25d774e08)
+tests_run: none (report-only role; static detectors on ci.yml, the push files, and the phase diff; no suite ran)
+files_changed: measure/runs/per_app_cicd_20261107/review-b-p3-57bb8376c.json, measure/runs/per_app_cicd_20261107/review-b-p3-57bb8376c.log
+plan_updates: none
+known_failures: none
+handoff: Verdict pass with no blocker and five nonblocking findings. F1 and F2 are Major and belong to Green. F1: .github/workflows/ci.yml line 257 puts ${{ matrix.id }} unquoted into the shell, and the id comes from scripts/ci/apps.json with a string-type check only (affected-apps.mjs readTable line 346; ci-workflow.test.mjs line 177). Ask Green to reject any id that does not match ^[a-z0-9-]+$ in the script or in the select step. F2: ci.yml has no permissions block on any job (test-strategy Q16 assigns the file to Phase 3). Ask Green to add permissions: contents: read at the workflow level. F3 (Nit): five new uses lines float on major tags while the CD workflows pin 40-hex commits. F4 (Nit): the sales traffic build does not bind its uploaded source to _RELEASE_COMMIT_SHA; the gap predates Phase 3. F5 (Nit): docs/runbooks/traffic-moves.md lines 13-14 still say every traffic file moves traffic to a tag, and the sales file now moves to a revision. No user decision is needed for the pass. One recorded limit for the PM: docs/runbooks/traffic-moves.md lines 176-181 record that capture-legacy-rollback can fail before capture-company-candidate runs, because the legacy tag revision is not the latest created revision. That limit blocks the first sales traffic run and stays with Daniel and the sales app owner. The sales traffic contract of 3.3a holds by static read: the move targets the captured candidate revision with --to-revisions, and it reads no tag and no legacy record. HEAD moved to eae128027 (storytime docs only) and the phase tree is unchanged.
+END_MEASURE_AGENT_RESULT

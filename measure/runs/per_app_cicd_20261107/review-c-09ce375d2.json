@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase 2 per-app CD workflows fail Review C on one operator-contract gap: docs/runbooks/traffic-moves.md never tells the operator how to find the tag of the new revision (or the push BUILD_ID) after a push, so the documented traffic move cannot be run from the runbooks alone. All other checked contracts hold: the Q12 select contract (step id select, outputs www and matrix, jobs select+deploy and select+build), the operator-visible workflow names and path filters, the tag rule (prefix plus 8 characters, maximum combined length 32 within 46, escaped $${BUILD_ID:0:8} with env BUILD_ID), the six traffic-runbook sections with the ordered steps, the _TAG and _PUSH_BUILD_ID inputs (no defaults, fail closed), the rollback rule, the 7 dated FR-4 facts in docs/runbooks/storytime-deploy.md, and the recorded sales capture limit for task 2.3h.",
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "phase_base_sha": "d28f8fd52096dd3101d60005182fc90a17ea52a9",
+  "role_base_sha": "09ce375d2bf32aac34b7d357496d64e52c201d31",
+  "audited_head_sha": "09ce375d2bf32aac34b7d357496d64e52c201d31",
+  "contract_applicability": "applicable: the phase changes operator-facing contracts (two CD workflows, the select-step CLI consumption, the app table, the tag rule, and two runbooks). No UI exists, so no browser inspection is needed; the dedicated UX browser auditor is not duplicated.",
+  "blocking_findings": [
+    "B1 (owner: Green, docs/runbooks/traffic-moves.md): The runbook requires the operator to supply `_TAG` (primary-advantage, accounts, marketing) and `_PUSH_BUILD_ID` (sales-advantage), and it gives only shape examples such as `pa-1a2b3c4d`. It never says how the operator finds the concrete tag after a push. The tag is `<prefix>-` plus the first 8 characters of the BUILD_ID of the push build, and that BUILD_ID lives only in the GitHub Actions run log of the push or in a `gcloud builds list --project=<project>` read; neither source is named in the runbook (git grep for 'gcloud builds list|builds list|BUILD_ID of the push|find the tag' over docs/runbooks returns no hit at 09ce375d2). The sibling runbook docs/runbooks/storytime-deploy.md step 3 shows the discovery pattern (`gcloud run services describe <service> --format='value(status.traffic)'`), so the fix is one line per section or one line in the general rules. As written, an operator who reads only the runbooks cannot complete a traffic move, which is the exact user flow this runbook exists for. Every traffic move is a Daniel human gate (tasks 2.3c, 2.3h), so the gap sits on the critical path of the phase."
+  ],
+  "nonblocking_findings": [
+    "N1 (owner: PM follow-up, docs/runbooks/storytime-deploy.md): Steps 1 and 2 still describe a manual flow in which a person archives a commit and runs `gcloud builds submit` by hand and 'Daniel gives the go for this deploy'. The new cd-apps.yml builds a storytime revision automatically on every push to master with --no-traffic and the tag. The runbook flow and the workflow now disagree about who builds the revision; an operator who follows steps 1-2 literally after a push does a redundant manual deploy. The safety contract stays intact (step 3 checks the tagged URL, step 4 moves traffic only on Daniel's go). The strategy decision Q14 chose append-only for task 2.5, so this is a recorded follow-up, not a phase regression.",
+    "N2 (owner: Green, docs/runbooks/traffic-moves.md sales-advantage section): The sales traffic file also requires `_RELEASE_COMMIT_SHA`, `_CURRICULUM_BACKUP_ID`, and `_CURRICULUM_BACKUP_NOT_BEFORE` for the backup guard; the runbook names them but does not say how the operator obtains them. Same class of gap as B1 but limited to one app and one guard step; fold the fix into the B1 edit.",
+    "N3 (owner: none, evidence class): every proof of this phase is an artifact test or a select-step dry run; no Cloud Build run has run any edited file. The strategy P2.6 records this class of limit, and Phase 4 live proofs stay the gate. Review A records the same limit as its N2."
+  ],
+  "evidence": [
+    "Provenance: audited_head_sha 09ce375d2bf32aac34b7d357496d64e52c201d31 is the pinned HEAD and exists. Repository HEAD moved to 505b6df6d during this review; the newer commits belong to storytime_at_home_20261106 and touch no phase path (git diff 09ce375d2..HEAD -- .github apps/*/cloudbuild*.yaml scripts/ci docs/runbooks measure/tracks/per_app_cicd_20261107 measure/runs/per_app_cicd_20261107 prints nothing).",
+    "Q12 select contract holds in both workflows at 09ce375d2: one step id `select` per workflow; cd-www-reading-advantage.yml has jobs `select` and `deploy` with `needs: select` and `if: needs.select.outputs.www == 'yes'`; cd-apps.yml has jobs `select` and `build` with `needs: select`, `if: needs.select.outputs.matrix != '[]'`, and `strategy.matrix.include: ${{ fromJSON(needs.select.outputs.matrix) }}`; both select steps append `www=yes|no` and `matrix=<json>` to GITHUB_OUTPUT and are text-equal after trimming; env binds BASE_SHA=${{ github.event.before }} and HEAD_SHA=${{ github.sha }}; checkout fetch-depth: 0; Node 22; permissions: contents: read exactly.",
+    "Operator-visible names and filters: `CD — www-reading-advantage` and `CD — gated apps`; job display names `Select affected apps`, `Deploy to Cloud Run`, and `Build ${{ matrix.id }} with no traffic` (the matrix id renders in the GitHub UI). cd-www keeps its 6 coarse paths; cd-apps holds apps/**, packages/**, services/**, and the root build files; neither filter holds measure/** or docs/**, so a docs or measure push starts no CD workflow. Both trigger on push to master only; no pull_request_target.",
+    "Tag rule holds: scripts/ci/apps.json gated rows give tagLength 11 (pa/st/ac/wb), 9 (accounting candidate, marketing c+8), 13 (codecamp sso-candidate), 15 (sales legacy-rollback); maximum combined tag+service length is 32 (primary-advantage-app), within the 46 limit of build 4907d929. The four prefix push files hold `--tag=<prefix>-$${BUILD_ID:0:8}` with `env: BUILD_ID=$BUILD_ID` (primary line 60, accounts line 34, storytime line 51, workbooks line 53): Cloud Build turns $$ into $, bash slices the env to 8 characters. The four file-tag rows keep their file text (accounting `candidate` both branches, codecamp `sso-candidate`, marketing `c$${build_id%%-*}` with a UUID regex guard, sales `legacy-rollback` and `candidate`). No push file holds a database step or a traffic token (the only grep hit is a storytime comment that forbids an update-traffic step).",
+    "Traffic runbook holds except B1: docs/runbooks/traffic-moves.md has six sections (primary-advantage, accounts, accounting, codecamp-advantage, marketing, sales-advantage); each names the file, the project, the ordered steps, and the old-schema sentence; the general rules give the exact start command `gcloud builds submit --project=<project> --config=<file> .` with --substitutions for the named inputs, and the rollback rule (a traffic move to the previous revision; it does not undo a database step). `_TAG` and `_PUSH_BUILD_ID` have no defaults in the traffic files, so a manual run without Daniel's values fails closed; sales `_PUSH_BUILD_ID` feeds only the image reference of capture-legacy-rollback.",
+    "Traffic-file orders match D1, D2, D7: primary runs refuse-legacy-db, migrate-db, doctor-check (--required-migration 0074_primary_help_events kept), update-traffic with --to-tags=${_TAG}=100; accounts runs the five company-identity steps then update-traffic; sales runs verify-curriculum-backup first, capture-legacy-rollback before verify-repair-verify-legacy-rollback, --to-tags=candidate=100 last; accounting and codecamp move to their fixed tags. No workflow references any cloudbuild-traffic.yaml (git grep exit 1).",
+    "FR-4 facts hold: docs/runbooks/storytime-deploy.md has a dated block `Facts (2026-11-07)` with all 7 facts: the 154-file archive COPY set, STORYTIME_MEDIA_BASE set 2026-11-07, the gs://primary-app-storage/storytime-app/ media with public read, the ingress internal-to-all change with the --ingress=internal rollback, the ban on moving traffic to storytime-app-00008-tmb, the live revision storytime-app-00011-dut, and the tag rule with the 46-character limit and the quoted failure text of build 4907d929. The block states that no build has run the tag rule.",
+    "Sales capture limit for task 2.3h is recorded: the Open limits section of traffic-moves.md states that capture-legacy-rollback calls capture-sales-cloud-run-tag.sh, that the script requires the tagged revision to be the latest created revision, and that the first run of the sales traffic file can fail at this check; Daniel and the sales app owner decide the script change. Review A records the same limit as its N1.",
+    "Workbooks fails closed: the workbooks row stays in the table but no Cloud Run service and no workbooks-cloud-run account exist (task 2.3i [b] deferred:pm); the push job would fail at deploy time rather than move traffic. Tasks 2.3c, 2.3h, and 2.6 keep `[b] ... deferred:daniel` markers with owner fields.",
+    "Test evidence relied on: Review A re-ran the full targeted suite at this same pinned HEAD (heavy-run foreground: EXIT=0, 4 files, 102 passed). This review re-verified every contract by reading the files at 09ce375d2 with git show/git grep and did not need a second heavy run. No anti-pattern hits: all runbook and workflow counts cited above are labeled in the tests (rows_checked=8, facts_found=7, traffic_runbook_sections=6, files_checked values), and no runbook or plan prose claims a build ran or traffic moved."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git diff 09ce375d2..HEAD --stat -- .github apps/*/cloudbuild*.yaml scripts/ci docs/runbooks measure/tracks/per_app_cicd_20261107 measure/runs/per_app_cicd_20261107 (empty: HEAD moved on other-track work only)",
+    "git diff d28f8fd52..09ce375d2 --stat -- .github apps/*/cloudbuild*.yaml scripts/ci docs/runbooks (22 files, the phase scope)",
+    "git show 09ce375d2:.github/workflows/cd-apps.yml and cd-www-reading-advantage.yml (read in full)",
+    "git show 09ce375d2:docs/runbooks/traffic-moves.md and docs/runbooks/storytime-deploy.md (read in full)",
+    "git show 09ce375d2:scripts/ci/apps.json (10 rows, gated tag lengths, Q10 literal projects)",
+    "git grep -n 'gcloud builds list\\|builds list\\|BUILD_ID of the push\\|find the tag' 09ce375d2 -- docs/runbooks (no hit; the B1 evidence)",
+    "git grep -n 'update-traffic\\|--to-latest\\|cloud-sql-proxy\\|psql\\|drizzle\\|@reading-advantage/db \\|company-identity:\\|bootstrap:production' 09ce375d2 -- the 9 push files (only a forbidding comment in apps/storytime/cloudbuild.yaml)",
+    "git grep -n -- '--tag' 09ce375d2 -- the 8 gated push files (escaped prefix tags and the four file tags)",
+    "git show 09ce375d2:apps/{primary-advantage,accounts,sales-advantage}/cloudbuild-traffic.yaml (read; orders, substitutions, fail-closed inputs)"
+  ],
+  "changed_files": [
+    ".github/workflows/cd-apps.yml",
+    ".github/workflows/cd-www-reading-advantage.yml",
+    "apps/accounting/cloudbuild.yaml",
+    "apps/accounting/cloudbuild-traffic.yaml",
+    "apps/accounts/cloudbuild.yaml",
+    "apps/accounts/cloudbuild-traffic.yaml",
+    "apps/codecamp-advantage/cloudbuild.yaml",
+    "apps/codecamp-advantage/cloudbuild-traffic.yaml",
+    "apps/marketing/cloudbuild.yaml",
+    "apps/marketing/cloudbuild-traffic.yaml",
+    "apps/primary-advantage/cloudbuild.yaml",
+    "apps/primary-advantage/cloudbuild-traffic.yaml",
+    "apps/sales-advantage/cloudbuild.yaml",
+    "apps/sales-advantage/cloudbuild-traffic.yaml",
+    "apps/storytime/cloudbuild.yaml",
+    "apps/workbooks/cloudbuild.yaml",
+    "docs/runbooks/storytime-deploy.md",
+    "docs/runbooks/traffic-moves.md",
+    "scripts/ci/apps.json",
+    "scripts/ci/__tests__/cd-workflows.test.mjs",
+    "scripts/ci/__tests__/cloudbuild-files.test.mjs",
+    "scripts/ci/__tests__/helpers/plan.mjs"
+  ],
+  "violations": {
+    "A4_vacuous_pass": [],
+    "A3_digit_only_count": [],
+    "A5_false_claim_text": []
+  }
+}

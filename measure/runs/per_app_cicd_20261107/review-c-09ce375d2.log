@@ -1,0 +1,47 @@
+Review C audit log for track per_app_cicd_20261107, Phase 2 "Per-app CD workflows".
+Role: measure-review-c-ux-api (audit only). audited_head_sha 09ce375d2bf32aac34b7d357496d64e52c201d31.
+phase_base_sha d28f8fd52096dd3101d60005182fc90a17ea52a9. role_base_sha 09ce375d2bf32aac34b7d357496d64e52c201d31.
+
+Inputs read: spec.md, plan.md (Phase 2), test-strategy.md (P2, Q12 to Q17),
+review-a-09ce375d2.json, and the phase diff (22 files).
+
+Provenance: HEAD moved to 505b6df6d during the run (storytime_at_home_20261106 work).
+git diff 09ce375d2..HEAD over .github, apps/*/cloudbuild*.yaml, scripts/ci, docs/runbooks,
+and the measure track and runs folders prints nothing. The audited HEAD is current for this phase.
+
+Checks and results:
+1. Q12 select contract: holds. Step id select in both workflows; outputs www and matrix;
+   jobs select+deploy (cd-www, if needs.select.outputs.www == 'yes') and select+build
+   (cd-apps, if matrix != '[]', strategy.matrix.include from fromJSON). Steps text-equal,
+   BASE_SHA/HEAD_SHA from the event, fetch-depth: 0, Node 22, permissions: contents: read.
+2. Operator-visible names and path filters: hold. Coarse filters carry no measure/** or
+   docs/**; push to master only; no pull_request_target.
+3. Tag rule: holds. Prefix plus first 8 characters of BUILD_ID; max combined length 32
+   within 46; the four prefix files escape the tag as $${BUILD_ID:0:8} with env BUILD_ID;
+   the four file-tag rows keep their file text.
+4. traffic-moves.md: six sections, ordered steps, old-schema sentence, exact submit command,
+   rollback rule, fail-closed _TAG/_PUSH_BUILD_ID inputs, and the recorded sales capture
+   limit for task 2.3h. BLOCKER: no section says how the operator finds the tag or the
+   push BUILD_ID after a push (B1).
+5. storytime-deploy.md: the dated Facts (2026-11-07) block holds all 7 FR-4 facts (N1 flags
+   the stale manual-build steps 1-2, a Q14 append-only follow-up).
+6. No push file holds a database step or a traffic token; no workflow references a
+   cloudbuild-traffic.yaml; workbooks fails closed.
+
+Verdict: FAIL. One blocking finding (B1, owner Green). Retry recommendation: reaudit.
+
+MEASURE_AGENT_RESULT
+status: fail
+retry_recommendation: retry_implementation
+blocking_findings:
+  - id: B1
+    owner: green
+    summary: docs/runbooks/traffic-moves.md never tells the operator how to find the tag of the new revision (or the push BUILD_ID) after a push; _TAG and _PUSH_BUILD_ID examples only, no discovery command, so the documented traffic move cannot be run from the runbooks alone.
+nonblocking_findings:
+  - id: N1
+    summary: docs/runbooks/storytime-deploy.md steps 1-2 still describe a manual build on Daniel's go while cd-apps.yml now builds storytime on every push; safety contract intact; Q14 append-only follow-up.
+  - id: N2
+    summary: sales section names _RELEASE_COMMIT_SHA, _CURRICULUM_BACKUP_ID, _CURRICULUM_BACKUP_NOT_BEFORE without saying how the operator obtains them; fold into the B1 edit.
+  - id: N3
+    summary: artifact and dry-run evidence only; no Cloud Build run has run any edited file (recorded limit, strategy P2.6).
+END_MEASURE_AGENT_RESULT

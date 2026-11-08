@@ -1,0 +1,115 @@
+Adversarial testing run record for Phase 3 of per_app_cicd_20261107 (CI for the affected apps).
+Date: 2026-11-08
+role_base_sha=36a683b91b457465988f86eb2c76176f3c6427d1
+phase_base_sha=25d774e08a0f9bef8074fb6f88bde439d1a72066
+status=pass (refined after each step; final after the gate)
+
+Model substitution: the role table names kimi-code-plan-cn/k3-256k#high for this role
+(Kimi is WAIT); this run uses bailian-token-plan/glm-5.3#high, picked by
+`ra-quota pick adversarial` without Anthropic (P3 Green) and DeepSeek (P3 Red).
+
+Inputs read: the P3 section of test-strategy.md, measure/anti-patterns.md,
+adversarial-p2-7721962d2.json and .log (the form), plan.md Phase 3, .github/workflows/ci.yml,
+scripts/ci/affected-apps.mjs, scripts/ci/apps.json, ci-workflow.test.mjs,
+ci-remediation.test.mjs, cloudbuild-files.test.mjs (F-19), cd-workflows.test.mjs,
+cd-workflows-adversarial.test.mjs, helpers/plan.mjs, helpers/scratch.mjs,
+apps/sales-advantage/cloudbuild-traffic.yaml, pnpm-workspace.yaml.
+
+Round: 15 mutants (M1 drop the worker filter root; M2 remove scripts/** from the
+pull request paths; M3 move the CI selector tests step into the affected job; M4a workflow
+permissions contents: write; M4b job-level permissions write-all; M5 inline
+github.event.before in the select run line; M6a loosen the safe id guard; M6b remove the
+safe id guard; M7 matrix guard if to always true; M8a the sales move reads the legacy
+rollback revision; M8b the sales move targets --to-tags=candidate=100; M9 a new workspace
+glob with an uncovered test package; M10 the select step ignores a script failure; M11
+drop a repository-wide guard step; M12 the select step lists every table row for any
+range), plus the strategy attacks of P3.7 (drop the guards = M11, run all apps on a docs
+range = M12, ignore a failed select step = M10). Each mutant runs on a copied artifact tree
+under /tmp/opencode with CICD_FIXTURE_ROOT (and AFFECTED_APPS_SCRIPT for the script
+mutants). A clean-tree control runs first and aborts the round when it fails.
+
+Round 1 (one heavy job, background, shell sh_1b9196f55001zhTzEfN10glZcl, started 10:20:50,
+DRIVER_EXIT=0): control M0 exit=0, Test Files 7 passed (7), Tests 134 passed (134).
+mutants_total=15
+mutants_rejected=13
+mutants_survived=M7,M10
+
+The 13 rejections and their first failing tests: M1 CI-R1, M2 CI-R4, M3 CI-R4, M4a CI-R3,
+M4b CI-R3, M5 CI-01a (10 failures, bash bad substitution), M6a CI-R2, M6b CI-R2, M8a F-19,
+M8b F-19, M9 CI-R1, M11 CI-02 (2 failures), M12 CI-01a (11 failures).
+
+Per the PM note, M0.log, M7.log, and M10.log were read before the survivors were counted.
+Each holds a real vitest result: RUN v4.1.8, Test Files 7 passed (7), Tests 134 passed
+(134), exit 0. The survivors are real.
+
+Findings (test gaps, not production defects; the real ci.yml holds the gate and fails
+closed):
+- M7: no committed test pins the affected-job gate. ci.yml line 200 holds
+  `if: needs.select.outputs.matrix != '[]'`, and no test fails when it becomes `if: true`.
+- M10: no committed test proves that the select step fails closed. ci.yml line 53 runs the
+  script without a fallback, and no test fails when `|| echo '[]'` swallows a script
+  failure, plans no app job, and reports success.
+
+Remedy: scripts/ci/__tests__/ci-workflow-adversarial.test.mjs with four cases
+(A-P3-01 select env bindings and no ${{ in run text and fetch-depth 0; A-P3-02 the exact
+matrix gate and output wiring; A-P3-03 zero base without origin/master fails closed;
+A-P3-04 zero base with origin/master plans the script ids). Local pre-verification
+(not vitest, not gate evidence): clean fixture tree precheck_failures=0; the M5, M7, and
+M10 mutant trees each fail the new cases as designed.
+
+Round 2 (kill round, after the new file was copied into the repo; run directly per the PM
+note of 2026-11-08 — a scripts/ci vitest run with --maxWorkers=1 is light, one vitest at a
+time, no heavy lock held):
+`python3 /tmp/opencode/p3-adv-mutants.py --only M0 M1 M2 M3 M4a M4b M5 M6a M6b M7 M8a M8b M9 M10 M11 M12`
+KILL_ROUND_EXIT=0
+Control M0: exit=0, Test Files 8 passed (8), Tests 138 passed (138) — the four new cases
+pass on the clean tree.
+mutants_total=15
+mutants_rejected=15
+mutants_survived=none
+
+Round 2 kill detail (real vitest results, read from the per-mutant logs):
+- M7 fails A-P3-02: `Error: job affected if=true expected="needs.select.outputs.matrix != '[]'"`
+  (1 failed | 137 passed).
+- M10 fails A-P3-03: `Error: expected exit 2, got 0; stderr=affected-apps: zero base: no
+  merge base with origin/master` (1 failed | 137 passed) — the fallback swallowed the
+  failure and wrote matrix=[].
+- M5 fails A-P3-01 first (13 failures: the three env and run-text checks plus the old
+  bash bad-substitution failures).
+- M12 fails A-P3-01 first (14 failures: the mutant dropped the --base/--head env plumbing).
+- The other 11 mutants fail the same cases as round 1 (passed=137 with 1 or 2 failures).
+
+Round 1 logs are preserved at /tmp/opencode/p3-adv-mutant-logs-round1/; round 2 logs are at
+/tmp/opencode/p3-adv-mutant-logs/.
+
+The commit: 43162d278 test(ci): add the p3 adversarial cases (track_id: per_app_cicd_20261107).
+One file: scripts/ci/__tests__/ci-workflow-adversarial.test.mjs, 179 insertions. The
+measure/runs/ records stay local (gitignored, line 56 of .gitignore).
+
+The gate at the final head (background shell sh_1b969b9ff001W5PVTeGztGvACV, launched
+through the heavy wrapper per the brief): RUN v4.1.8, Test Files 8 passed (8), Tests 138
+passed (138), GATE_EXIT=0, started 11:28:38, duration 99.28s. The last commit that touched
+scripts/ci, .github/workflows, and apps/sales-advantage/cloudbuild-traffic.yaml is
+43162d27868d3b43a2fbde02ed95b0116bedfb60, and those paths are clean in the worktree, so
+the gate ran exactly the committed state. The job finished through the wrapper before the
+PM light-run rule of 2026-11-08 arrived (a scripts/ci vitest run with --maxWorkers=1 is
+light and takes no heavy lock); per the orchestrator the result stands and no rerun
+happened.
+
+Scratch cleanup: the /tmp/opencode p3-adv-* trees, per-mutant logs, pre-check scripts,
+and helper scripts of this run were removed after the record was written and validated.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+role_base_sha: 36a683b91b457465988f86eb2c76176f3c6427d1
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+audit_commit: 43162d278
+status: pass
+mutants_rejected: 15/15
+final_validation: pass
+blocking_findings: none
+retry_recommendation: none
+confidence: high
+END_MEASURE_AGENT_RESULT

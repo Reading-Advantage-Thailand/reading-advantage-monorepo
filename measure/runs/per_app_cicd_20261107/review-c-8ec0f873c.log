@@ -1,0 +1,21 @@
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+track: per_app_cicd_20261107
+phase: Phase 1: The affected-app logic
+phase_base_sha: 4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+role_base_sha: fcc7274897863569541722a5e8983a82a7d31fe5
+audited_head_sha: 8ec0f873ccb1aba5e8b71df8f5c00089a090e0d3
+status: pass
+summary: Phase 1 CLI contract audit: PASS with no findings. Six direct probes of node scripts/ci/affected-apps.mjs confirm the FR-1 contract (flags, sorted one-line JSON on stdout, exit 0, exit 2 with one stderr line and empty stdout on refusals). The table scripts/ci/apps.json holds the 10 specified ids, keys, modes, and regions. No workflow file changed in this phase, so route parity holds.
+contract_applicability: applicable (Phase 1 is the CLI contract; strategy review_c=yes, CLI contract only)
+blocking_findings: none
+nonblocking_findings: none
+evidence: docs-only range -> status 0 stdout [] stderr empty; same-range -> status 0 stdout []+newline; unknown-commit base -> status 2 stdout empty stderr one line; ref-name base -> status 2, --base must be a 40-character lowercase hex commit id; missing --head -> status 2, --head is required; unknown flag -> status 2, unknown argument "--extra"; pre-table head -> status 2, scripts/ci/apps.json is missing at the head commit; non-empty sorted output covered by Green 48/48 at this HEAD (script unchanged since); both workflows unreferenced by the script as planned for Phase 2
+live_contract_violations: none
+prod_wiring_violations: none
+route_parity_violations: none
+test_strategy_violations: none
+retry_recommendation: none
+confidence: high
+handoff: No questions. No push was made. Suggested default for the orchestrator: proceed to Reviews A/adversarial and phase acceptance; Phase 2 tasks 2.2/2.3/3.2 must add fetch-depth 0 and the --base ${{ github.event.before }} --head ${{ github.sha }} call plus the excluded-mode skip to the workflows.
+END_MEASURE_AGENT_RESULT

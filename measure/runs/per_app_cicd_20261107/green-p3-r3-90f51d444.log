@@ -1,0 +1,49 @@
+MEASURE_AGENT_RESULT
+status: in_progress
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+task: 3.5
+note: provisional block; the final block is at the end of this log
+END_MEASURE_AGENT_RESULT
+
+Green P3 T3.5 r3 (review remediation)
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: 90f51d4444581d35f2bb80fcdcbb12c21b2e2b73
+red_commits_in_range: f00f28493, 825713559, e72e4b8ae, a0b5f7209
+green_model: claude-code/claude-sonnet-5-5#high (no coder delegated)
+
+code_commits:
+  36b2b7bb9 fix(ci): test every package and limit the token  (ci.yml: six Test roots, permissions)
+  e99512251 fix(ci): refuse an unsafe app id in the table     (affected-apps.mjs: SAFE_ID guard)
+  049eef53f docs(runbook): name the sales traffic target      (traffic-moves.md)
+
+note_one_line_step: phase-13-final-acceptance.test.ts reads `run:[^\n]*pnpm test`; a folded `>-` scalar would
+  move the command to the next line and fail that gate, so the Test step stays on one line.
+
+checks:
+  gate: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci (heavy-run) EXIT=0; Test Files 7 passed (7); Tests 133 passed (133)
+  labels: uncovered_test_packages=0 test_packages=47 filter_roots=19 workspace_globs=4; unsafe_ids_refused=3 safe_table_rows=10; ci_permissions={"contents":"read"} jobs_checked=3
+  turbo_dry_run: 9 filters, --dry-run=json, EXIT=0; tasks=60; test_tasks=34; the six new roots each have a test task
+  turbo_filters_ok=10
+  p3_out_of_scope_paths=0 (8 distinct paths over the P3 commits)
+  science_ci_gates: cd apps/science-advantage && pnpm exec vitest run --config vitest.verification.config.ts lib/ci-gates/{phase-10-monorepo-root-ci-paths-filter,phase-13-final-acceptance,phase-9-delete-app-local-ci-workflow,verification-partition}.test.ts -> EXIT=0; 4 files passed; 40 passed (40)
+  eslint: root has no ESLint config (test-strategy Q8); node --check scripts/ci/affected-apps.mjs exit 0; ad hoc ESLint (no-undef, no-unused-vars) exit 0
+known_not_fixed: architecture-enforcement 2 pre-existing failures (monorepo_boundaries_20261029); master step "Architecture boundary check" red (D5)
+declined: F203, F204 (per orchestrator)
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+task: 3.5 [x]
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: 90f51d4444581d35f2bb80fcdcbb12c21b2e2b73
+implementation_commits: 36b2b7bb9,e99512251,049eef53f
+dispositions: F101=FIX; F201=FIX; F202=FIX; F205=FIX; F102=FIX; F103=FIX; F104=FIX
+tests: gate EXIT=0, Test Files 7 passed (7), Tests 133 passed (133); CI-R1 uncovered_test_packages=0; CI-R2 unsafe_ids_refused=3; CI-R3 ci_permissions={"contents":"read"}
+new_files: none (this log only)
+deferred: none
+handoff: none blocked. Default taken: ESLint gate is node --check because the root has no ESLint config.
+END_MEASURE_AGENT_RESULT

@@ -1,9 +1,9 @@
 {
   "track_id": "per_app_cicd_20261107",
   "type": "chore",
-  "status": "active",
+  "status": "done",
   "created_at": "2026-11-07T00:00:00Z",
-  "updated_at": "2026-11-07T00:00:00Z",
+  "updated_at": "2026-11-09T00:00:00Z",
   "opened": "2026-11-07",
   "description": "Make CI and CD affected-app aware: a change to an app or to the workspace packages and lockfile entries of that app deploys only that app, and ci.yml checks only the affected apps. Gated apps build a --no-traffic revision with a tag. Fix the storytime tag length defect. Record the storytime deploy runbook facts.",
   "author_model": "claude-code/claude-sonnet-5-5",
@@ -27,7 +27,8 @@
     "No change to a Cloud Build trigger",
     "No new hash or provenance file (AGENTS.md hashing policy)"
   ],
-  "estimated_tasks": 22,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "estimated_tasks": 35,
+  "actual_tasks": 35,
+  "deviation_notes": "The plan holds 35 tasks: 29 done tasks with a commit SHA, and 6 human-gated tasks that stay deferred (2.3c deferred:daniel, 2.3h deferred:daniel, 2.3i deferred:pm, 4.5 deferred:pm, 4.6 deferred:daniel, 4.7 deferred:pm). The estimate of 22 tasks at creation was stale. The track was archived on 2026-11-09.",
+  "completed": "2026-11-09"
 }

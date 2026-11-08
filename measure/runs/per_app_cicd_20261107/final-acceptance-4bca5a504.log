@@ -1,0 +1,10 @@
+MEASURE_AGENT_RESULT
+role: measure-final-acceptance
+track: per_app_cicd_20261107
+track_base_sha: fff675ab214889d9aaa6ba6a13ab3656cf6483f9
+role_base_sha: 4bca5a504182dce57d7b6c449b50705f414d7bd4
+audited_head_sha: 4bca5a504182dce57d7b6c449b50705f414d7bd4
+status: pass
+summary: Final acceptance passes for track per_app_cicd_20261107 at audited head 4bca5a504182dce57d7b6c449b50705f414d7bd4 over track base fff675ab214889d9aaa6ba6a13ab3656cf6483f9. The audited head is current, and the re-read at the end of the audit printed the same head with no new commit. The plan holds four phase checkpoints, 29 done tasks each naming a commit SHA, and 6 deferred tasks with owner fields, so no human gate is claimed done. Exactly one passing phase acceptance exists for each phase, with every violation array empty and no blocking finding. Every phase baseline is an ancestor of its audited head, and every audited head is an ancestor of the current head. The heavy gate PROJECT_TESTS passed on the orchestrator evidence: 8 track test files with 132 tests passed and exit 0, then cloudbuild-files.test.mjs with the F-12 case excluded and 17 passed, 1 skipped, and exit 0. The light gates pass: node --check exit 0 on 13 files, the JSDoc detector exit 1, and a yaml parse of 22 files with no failure. The A5, A6, and A9 checks found no violation. The doctor gate exits 1 for three causes that predate the track and sit outside its diff, so the orchestrator keeps them as Nits with citations. No workflow, script, table, or build file of this track changed after the audited head. The track is ready for closeout.
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

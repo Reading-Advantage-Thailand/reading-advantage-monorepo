@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "session": "Review C - P4 recheck (r2) - per_app_cicd",
+  "model": "deepseek/deepseek-flash#high",
+  "model_substitution": "The role table names kimi-for-coding, which is WAIT. This run used deepseek/deepseek-flash#high.",
+  "track": "per_app_cicd_20261107",
+  "phase": "Phase 4: Dry runs, www proof, and the first-push plan",
+  "summary": "PASS: F1 is closed (the report says the push moves traffic for one app and eight apps build a no-traffic revision; the dry-run note says no gcloud call), N1 and N2 are done, and N3 is done in part: the added note names the plan-line key but says it is a class 'in the table scripts/ci/apps.json', which the table does not hold. Two nonblocking notes remain.",
+  "phase_base_sha": "7d81c7e6fd6f067431b931812baafc36cbe16f2d",
+  "role_base_sha": "a106ad81960a447a136a82d9b016fca06b2a62f1",
+  "role_base_sha_note": "The role started at the checked-out HEAD a106ad819 (master). The diff from 355079cb0 to this HEAD over the audited paths is empty.",
+  "audited_head_sha": "355079cb02889b42937953b4aa4b154cc0ebc734",
+  "report_head": "abd7e30ae",
+  "head_is_current": true,
+  "head_evidence": "git diff --stat 355079cb0 HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage printed nothing, EXIT=0",
+  "phase_diff_stat": "git diff --stat 8a3e9cb9d 355079cb0 -- measure/tracks/per_app_cicd_20261107 -> dry-run-report.md (12 lines changed) and plan.md (6 lines changed), 2 files, 10 insertions, 8 deletions",
+  "contract_applicability": "applicable",
+  "contract_applicability_evidence": [
+    "test-strategy.md P4.8 line 894: Review C checks the report and the plan line",
+    "The phase diff holds dry-run-report.md and plan.md only",
+    "The phase changes no page, so no browser inspection applies (P4.8 line 896)"
+  ],
+  "checks": {
+    "F1_deploy": "closed: dry-run-report.md line 30 says 'The push moves traffic for one app ... Eight apps build a no-traffic revision'; line 8 says 'No secret, no gcloud call, no workflow run'",
+    "N1_mode_mapping": "done: line 24 maps direct = traffic, gated = no_traffic, and excluded = skipped",
+    "N2_ci_column": "done: the dry-run table header is `ci_apps` (line 10)",
+    "N3_traffic_key": "partial: line 24 scopes the key away from the live state, but it calls `traffic` a class 'in the table scripts/ci/apps.json'; apps.json holds modes direct, gated, and excluded, not traffic",
+    "www_text_list": "pass: the row reads `no-text (test only)` with old and new text 'none'. The report prints the diff command, www_closure_files_changed=1, www_text_changes=0, and held_signin_copy_in_head=0, so PR can check the www text from the report alone",
+    "plan_line": "pass: unchanged, traffic=[www-reading-advantage], 8 no_traffic ids, skipped=[reading-advantage], matching line 30"
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N4 [Minor] dry-run-report.md:24: the note says 'The word `traffic` names a class of apps in the table `scripts/ci/apps.json`'. The table holds no traffic class; the class is `direct`. Fix: 'The plan-line key `traffic` lists the rows whose mode is `direct`.'",
+    "N5 [Minor] dry-run-report.md:24 and :34: `class` now names an app deploy group and a text class ('the class is `no-text`'). Fix: use 'group' or 'mode' on line 24, which the N4 fix already does."
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "evidence": [
+    "git rev-parse HEAD -> a106ad81960a447a136a82d9b016fca06b2a62f1",
+    "git diff --stat 8a3e9cb9d 355079cb0 -- measure/tracks/per_app_cicd_20261107 -> 2 files, 10 insertions, 8 deletions",
+    "read of dry-run-report.md lines 20 to 35 at the audited content",
+    "No suite ran; this review is read only"
+  ],
+  "commands": [
+    "git rev-parse HEAD -> a106ad81960a447a136a82d9b016fca06b2a62f1",
+    "git diff --stat 355079cb0 HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage -> no output, EXIT=0",
+    "git diff --stat 8a3e9cb9d 355079cb0 -- measure/tracks/per_app_cicd_20261107 -> 2 files changed, 10 insertions(+), 8 deletions(-)",
+    "git diff 8a3e9cb9d 355079cb0 -- measure/tracks/per_app_cicd_20261107 -> read in full"
+  ],
+  "changed_files": [
+    "measure/runs/per_app_cicd_20261107/review-c-p4-355079cb0.json",
+    "measure/runs/per_app_cicd_20261107/review-c-p4-355079cb0.log"
+  ],
+  "status": "pass",
+  "retry_recommendation": "none",
+  "confidence": "medium"
+}

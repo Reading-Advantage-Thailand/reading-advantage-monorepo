@@ -1,0 +1,50 @@
+Review B security audit log. Track per_app_cicd_20261107. Phase "Phase 3: CI for the affected apps".
+phase_base_sha 25d774e08a0f9bef8074fb6f88bde439d1a72066. role_base_sha a14964eb3f3b72cbae4f181639a645051769c730.
+audited_head_sha a14964eb3f3b72cbae4f181639a645051769c730. HEAD is current.
+Model deepseek/deepseek-flash#high (DeepSeek substitution, same as r1 and r2).
+
+Verdict: PASS. security_applicability: applicable.
+Delta 79f86404b..a14964eb3 over .github and scripts: ci.yml path entry and one new test step; test case CI-R4; plan update.
+
+Check 1. F6 is closed.
+- ci.yml:21 adds 'scripts/**' to on.pull_request.paths.
+- ci.yml:143-144 adds step "CI selector tests" with run "CI=true pnpm exec vitest run scripts/ci".
+- The step is in the "packages" job. That job has no if guard, so it runs on push and on pull_request.
+- scripts/ci/__tests__/ci-remediation.test.mjs:431-443 asserts both parts (case CI-R4).
+- Root vitest.config.ts sets no include filter. The default pattern finds the .test.mjs files.
+
+Check 2. The new step is safe.
+- The run line holds no ${{ }} expression and no secret.
+- No env value on the step holds a secret.
+- The tests use spawnSync git on scratch repositories.
+- helpers/plan.mjs:406-409 puts a stub gcloud in a fixture PATH. The stub logs its arguments and exits 0. It makes no network call.
+- The adversarial cases assert gcloud_calls=0.
+
+Check 3. Permissions stay narrow.
+- ci.yml:25-26 keeps workflow-level "permissions: contents: read".
+- No job declares a permissions key.
+
+A2: not triggered. The delta does not publish a named subject.
+A6: clean. The test asserts the state that the phase claims.
+
+Findings: F6 withdrawn with the evidence above. No blocking and no nonblocking findings.
+retry_recommendation: none. No user decision needed.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-review-b-security",
+  "session": "Review B · P3 · per_app_cicd · r3",
+  "track": "per_app_cicd_20261107",
+  "phase": "Phase 3: CI for the affected apps",
+  "phase_base_sha": "25d774e08a0f9bef8074fb6f88bde439d1a72066",
+  "role_base_sha": "a14964eb3f3b72cbae4f181639a645051769c730",
+  "audited_head_sha": "a14964eb3f3b72cbae4f181639a645051769c730",
+  "security_applicability": "applicable",
+  "verdict": "PASS",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "retry_recommendation": "none",
+  "result_json": "measure/runs/per_app_cicd_20261107/review-b-p3-a14964eb3.json",
+  "result_log": "measure/runs/per_app_cicd_20261107/review-b-p3-a14964eb3.log"
+}
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: per_app_cicd_20261107
+phase: Phase 1: The affected-app logic
+role_base_sha: 04b5cb1619afb7742a06f6cf1c884805cee3e320
+status: complete
+commit: c4890971f4c99bbe74ba052722938e29c6700371
+files: measure/tracks/per_app_cicd_20261107/test-strategy.md
+risk: P1=medium, P2=critical, P3=medium, P4=high
+review_applicability_p1: review_a=yes; review_b=no; review_c=yes (CLI contract only); adversarial=yes (10-mutant set); browser=no
+measured: vitest at base = "No test files found, exiting with code 1" (filter scripts/ci, root vitest.config.ts, 4.1.8); wrapper exit 0 while inner exit 1; yaml 2.9.0 and js-yaml 4.3.2 resolve from root (nodeLinker hoisted, undeclared); workspace has 4 globs not 2 (packages/integrations/github reaches 6 rows); origin/master..HEAD = 198 commits (spec says 168); range changes global key verifyDepsBeforeRun so all 10 rows are affected; act not installed
+handoff: questions with defaults (Q1 strict 40-hex base and head; Q2 read head commit not working tree; Q3 same-sha range is [] exit 0; Q4 .pnpmfile.cjs, .dockerignore, lockfile top-level keys are global; Q5 .github and scripts/ci affect no app; Q6 four workspace globs; Q7 first push affects all 10 rows under D4, Daniel decides at AC-5.4; Q8 gate is node --check since root has no ESLint or tsconfig for scripts). phase_base_sha: capture with git rev-parse HEAD after this commit, after the answers, before Red starts.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,71 @@
+# Review A log — Phase 2 (per_app_cicd_20261107), pinned HEAD 09ce375d2
+
+Role: measure-review-a-correctness. Audit only.
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 09ce375d2bf32aac34b7d357496d64e52c201d31
+audited_head_sha: 09ce375d2bf32aac34b7d357496d64e52c201d31
+Status: DONE. Verdict: pass.
+
+## Scope
+
+Delta audit over `00e8c248c..09ce375d2`, plus confirmation of the earlier checks 1 to 6.
+The earlier audit (00e8c248c) covered the full phase diff, the Red and Green logs, the
+spec, the plan, and the test strategy. Its conclusions hold and are not repeated here.
+
+## HEAD movement
+
+Repository HEAD moved to 68780a1d8 during the run. The two newer commits are
+storytime_at_home_20261106 work. `git diff 09ce375d2..HEAD -- .github/workflows
+apps/accounts apps/primary-advantage apps/workbooks apps/storytime/cloudbuild.yaml
+scripts/ci docs/runbooks measure/tracks/per_app_cicd_20261107` is empty. No phase path
+changed after the audited HEAD.
+
+## Delta findings
+
+1. The four prefix-tag push files (accounts, primary-advantage, storytime, workbooks)
+   now hold `--tag=<prefix>-$${BUILD_ID:0:8}`. Cloud Build turns `$$` into one literal
+   `$`; bash slices the step env `BUILD_ID=$BUILD_ID` to 8 characters. The submit-time
+   rejection risk of the earlier review is closed (PM order 2026-11-07).
+2. The tests grew stronger. `assertEscapedTag` (W-11 x4, W-15) requires the escaped
+   text, requires the env map, and rejects the unescaped form. F-06 expects the
+   escaped form. New F-17 scans all 16 push and traffic files for an unescaped
+   `${key}` with an invalid key; it asserts `files_checked=16` before the loop.
+   Legitimate `${_...}` substitutions pass; `$${...}` escapes pass.
+3. Red r3 partial-repair proof stands: a scratch copy with only the storytime tag
+   escaped failed with `invalid_substitutions=3`; the all-escaped copy passed.
+4. The plan records the intermediate red state honestly (Green run at 586981581
+   EXIT=1 on F-06 until Red r4 09ce375d2). No false claim.
+
+## Independent verification
+
+Heavy run, foreground, at the pinned HEAD:
+
+```
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+```
+
+Result: EXIT=0, Test Files 4 passed (4), Tests 102 passed (102), duration 59.32 s.
+Matches the expected 102.
+
+## Verdict
+
+Pass. No blocking finding. Three nonblocking notes are in the JSON result: the sales
+capture-script latest-created limit (recorded for task 2.3h), the artifact-only
+evidence class of P2, and the combined Green run (the evidence still proves each
+task; this review re-ran the suite).
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+track: per_app_cicd_20261107
+phase: P2
+status: pass
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 09ce375d2bf32aac34b7d357496d64e52c201d31
+audited_head_sha: 09ce375d2bf32aac34b7d357496d64e52c201d31
+retry_recommendation: none
+confidence: high
+blocking_findings: 0
+nonblocking_findings: 3
+tests: "EXIT=0; Test Files 4 passed (4); Tests 102 passed (102) at the pinned HEAD through heavy-run"
+handoff: "Review B, Review C, adversarial mutants X1-X12, and the phase acceptance run. Nonblocking notes N1-N3 in review-a-09ce375d2.json need no implementation retry."
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,23 @@
+Adversarial P4 run for per_app_cicd_20261107 (audited head 355079cb0). Status: inconclusive. No pass or fail verdict.
+
+Reviewer: claude-code/claude-haiku-5-5 (fallback from bailian-token-plan/glm-5.3#high). The verdict needs a non-Anthropic, non-DeepSeek reviewer. Retry recommendation: rerun.
+
+Mutant runs (from /tmp/opencode/p4-adv/mutants.out):
+mutant=C0 exit=0 result=not_applied failed=none applied=no
+mutant=Y1 exit=1 result=rejected failed=DR-01,DR-10 applied=yes
+mutant=Y2 exit=1 result=rejected failed=DR-01 to DR-10 applied=yes
+mutant=Y3 exit=1 result=rejected failed=DR-02 to DR-11 applied=yes
+mutant=Y4 exit=1 result=rejected failed=DR-01 to DR-11 applied=yes
+mutant=Y5 exit=1 result=rejected failed=R-1 applied=yes
+mutant=Y6 exit=1 result=rejected failed=R-1 applied=yes
+mutant=Y7 exit=1 result=rejected failed=R-2 applied=yes
+mutant=Y8 exit=1 result=rejected failed=R-2 applied=yes
+mutant=Y9 exit=1 result=rejected failed=R-3 applied=yes
+
+Not run in this round: Y10 (rejected in an earlier round), and the scenario greps AC-1.6, C15, C16, DR-11, W-14c, CI-R3.
+
+Gate: /tmp/opencode/p4-adv/gate.out shows vitest scripts/ci with exit 0 and 150 passed (run at 16:58).
+
+PM rule check: git status --porcelain shows no file of the mutant set under .github, scripts, or the track directory.
+
+Commits: none.

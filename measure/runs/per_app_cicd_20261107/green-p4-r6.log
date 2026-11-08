@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+task: 4.4
+role_base_sha: c9a8c7850b8d5976acbec22ba77b7f9e6c263382
+commits: ad2b434671caa767522789ad2f1e0956bfaecdea
+status: pass
+summary: Task 4.4 changed from [~] to [x] with evidence in plan.md. Light gate scripts/ci exit 0, Test Files 9 passed (9), Tests 150 passed (150). Report check exit 0, report_check=pass failed=none. Maximum header length is 98 characters over 99 subject lines. The diff from 355079cb0 to HEAD over .github, scripts, and dry-run-report.md prints 0 lines. Adversarial r5 passes with mutants_rejected=10/10 and scenarios_checked=4/4. Reviews A r3, B r2, and C r2 pass at 355079cb0. Tasks 4.5, 4.6, and 4.7 stay [b]. Only plan.md changed. No push. No hash field added.
+gate_command: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
+gate_exit: 0
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

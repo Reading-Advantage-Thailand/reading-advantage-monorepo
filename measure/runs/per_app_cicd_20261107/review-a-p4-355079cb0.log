@@ -1,0 +1,65 @@
+Review A (correctness and architecture) — recheck r2 audit log
+Track: per_app_cicd_20261107
+Phase heading: ## Phase 4: Dry runs, www proof, and the first-push plan
+Model: claude-haiku-5-5 (session model). The role table names claude-opus-5-5; this log does not re-verify the orchestrator substitution from the first run.
+Audited head: 355079cb02889b42937953b4aa4b154cc0ebc734
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: aec23d3e1214e3a3a32d6ab88d026857857fdf79 (HEAD at the recheck)
+
+Provenance
+- HEAD at the recheck equals aec23d3e1214e3a3a32d6ab88d026857857fdf79.
+- git diff --stat 355079cb0 HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage printed no lines. The audited content equals HEAD.
+- Range 8a3e9cb9d..355079cb0 holds 7 commits: 355079cb0 (this fix) and 6 foreign-track commits.
+- No .github, scripts, or apps/www-reading-advantage path changed in the range.
+
+Track diff (8a3e9cb9d..355079cb0)
+- dry-run-report.md: 12 lines. plan.md: 6 lines.
+- Header cell ci became ci_apps. The Row and File cells stay unchanged.
+- www class cell became no-text (test only). The other 10 rows keep their values.
+- Report header values are unchanged: report_head abd7e30ae, origin_master f3611d47c.
+- Plan 2.3c and 2.3h stay [b] with deferred:daniel and gain the Review B N1 pointer.
+- Plan 4.4 stays [~].
+
+Checks
+1. Report value cells: only the header and the www class cell changed. All 11 rows keep their values.
+2. Header rename: the check parses by position and skips the header by the Row prefix. It does not read the ci name. The DRYRUN key ci in scripts/ci/__tests__/dry-run.test.mjs is unchanged.
+3. Strategy template: test-strategy.md line 763 still shows the header ci. P4.6 fixes only the Row and File cells. The report meets the contract. Nonblocking note N1 records the template mismatch for the orchestrator.
+4. Review C F1: no deploy word remains in the report.
+5. Review A Nit (www class): the check counts exact text equality, so www_text_changes=0 stays correct. The prior F1 is withdrawn for this recheck with evidence "F1 withdrawn: class cell now no-text (test only); check counts exact text; prose separates class and reason."
+6. Mode mapping line: the report explains traffic, no_traffic, and skipped. The labels match the check.
+
+Gates
+- node /tmp/opencode/p4-red/report-check.cjs measure/tracks/per_app_cicd_20261107/dry-run-report.md
+  report_rows=11 expected_rows=11 ids_match=1 bad_rows=0
+  first_push_plan_lines=1
+  affected_ids=10 head_match=1 base_match=1 commits_match=1 affected_match=1 traffic_match=1 no_traffic_match=1 skipped_match=1
+  www_live_sha=f3611d47c7ca5b02848691bab1cc109266511842 www_closure_files_changed=1 www_files_listed=1 files_match=1 www_text_changes=0 plan_www_text_changes=0 held_signin_copy_in_head=0 held_line_match=1
+  report_check=pass failed=none
+  Exit 0.
+- CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
+  Test Files 9 passed (9)
+  Tests 150 passed (150)
+  Duration 186.25 s.
+  The relayed output did not echo a shell exit code. The all-pass counts show exit 0 for the test run. This is a recorded limit.
+
+Findings
+- Blocking: none.
+- Nonblocking N1 (Nit): test-strategy.md line 763 template shows header ci; the report shows ci_apps. No contract break. The orchestrator may align the template.
+
+Verdict: pass. retry_recommendation: none. confidence: high.
+END_MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: pass
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: aec23d3e1214e3a3a32d6ab88d026857857fdf79
+audited_head_sha: 355079cb02889b42937953b4aa4b154cc0ebc734
+blocking_findings: none
+nonblocking_findings: N1 (Nit) test-strategy.md line 763 header ci against ci_apps
+gates: report-check exit 0 report_check=pass; scripts/ci Test Files 9 passed (9), Tests 150 passed (150)
+retry_recommendation: none
+confidence: high
+END_MEASURE_AGENT_RESULT

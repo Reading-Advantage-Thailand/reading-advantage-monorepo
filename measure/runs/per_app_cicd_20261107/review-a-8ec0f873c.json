@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review A (correctness) of Phase 1 at audited head 8ec0f873c. The affected-app logic is correct against FR-1, D4, and C1 to C10. The 48-case suite passes 48/48 (exit 0). Git handling, lockfile matching (fix c03e201ea), global inputs (D4), workspace globs, and exit codes are correct. The six real ranges of task 1.4 check out, including the acorn explanation for the extra www id of c0e2cfbb1. Scope is clean. Two Minor non-blocking findings.",
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "4e3fffe227b18f8fad78a897dc02e15e8bc1656a",
+  "role_base_sha": "8ec0f873ccb1aba5e8b71df8f5c00089a090e0d3",
+  "audited_head_sha": "8ec0f873ccb1aba5e8b71df8f5c00089a090e0d3",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Minor] scripts/ci/__tests__/helpers/scratch.mjs:112: The fixture TABLE_ROWS sets marketing tag to \"c${BUILD_ID:0:8}\", but the real scripts/ci/apps.json sets \"c$${build_id%%-*}\" (the bash derivation of M19). Rationale: the strategy P1.2 says the fixture writes the 10 rows of spec section 2a, so the fixture diverges from the real table. No P1 test reads the fixture tag text: the script reads only id and path, and B-21 reads the real table and checks presence, not text. Zero P1 impact. P2 AC-2.3 re-checks the real table. Risk: a future P1 test that relies on the fixture tag would diverge from the real table.",
+    "F2 [Minor] scripts/ci/affected-apps.mjs:685 vs scripts/ci/__tests__/affected-apps.test.mjs:298: The script matches a catalog spec with String(spec).startsWith(\"catalog:\"), but the test helper catalogRows matches all[name] === \"catalog:\". Rationale: no current manifest uses a ranged catalog spec (catalog:^x.y.z), so the expected set and the script output coincide and B-18 passes. If a future track adds a ranged catalog spec, catalogRows under-counts the expected set and B-18 fails spuriously even though the script is right. Latent fragility, not a current defect."
+  ],
+  "evidence": [
+    "HEAD equals audited_head_sha 8ec0f873c (git rev-parse HEAD).",
+    "Diff audited: git diff 4e3fffe22 8ec0f873c -- scripts/ci measure/tracks/per_app_cicd_20261107 touches only scripts/ci/affected-apps.mjs, scripts/ci/apps.json, scripts/ci/__tests__/affected-apps.test.mjs, scripts/ci/__tests__/helpers/scratch.mjs, and measure/tracks/per_app_cicd_20261107/{plan,spec}.md.",
+    "Targeted suite run once in the foreground: EXIT=0, Test Files 1 passed (1), Tests 48 passed (48).",
+    "Lockfile fix c03e201ea is correct: packages section matches by name@version (baseKey), snapshots section matches by exact key (peer suffix included). A peer-suffix variant no longer marks every app that resolves another variant.",
+    "Global inputs of D4 are correct: GLOBAL_FILES is {.pnpmfile.cjs, .dockerignore, turbo.json} (fully global). package.json and pnpm-workspace.yaml are global except catalog and overrides (compareRootPackage/compareWorkspaceYaml). Lockfile top-level keys outside {importers, packages, snapshots, catalogs, overrides} are global (compareLock).",
+    "Workspace globs parsed from pnpm-workspace.yaml packages list equal the four globs apps/*, packages/*, packages/integrations/*, services/* (verified against the real file and B-21).",
+    "Exit codes: parseArgs, requireCommit, resolveBase, and git failures all throw RangeFailure, caught in main to set exitCode 2 with one stderr line and empty stdout; success writes one JSON line and exitCode 0.",
+    "Git handling: changedPaths uses git diff --name-only --no-renames -z base head, so a moved file counts at both paths (B-07) and non-ASCII paths keep raw bytes (B-08). The helper scrubs GIT_CONFIG_GLOBAL=/dev/null, GIT_CONFIG_NOSYSTEM=1, and drops GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE/GIT_PREFIX (B-22). Ids validated by /^[0-9a-f]{40}$/ (A6-07 to A6-11, A6-09 injection).",
+    "Non-vacuousness: expectIds asserts a non-empty expected list and asserts changed_files>=1 before accepting []; requireNonEmpty guards every loop (A6-07, A6-08, A6-09, A6-10, A6-11, B-17, B-18, B-20). B-16 is the one legitimate empty-range [] and asserts changed=0 directly. The Red evidence records 42 cases killed by a stub, 0 unkilled.",
+    "Six real ranges of task 1.4 verified: origin/master..HEAD (f3611d47c..HEAD) returns all 10 ids, exit 0 (verifyDepsBeforeRun added to pnpm-workspace.yaml is a non-catalog/non-overrides key, so D4 makes it global). Changed files of the five past commits match the plan (ca3155932=3 www, 811f05f36=1 storytime, 2515efe95=2 read-along, 04b5cb161=2 measure, c0e2cfbb1=4).",
+    "Acorn explanation for c0e2cfbb1 verified against pnpm-lock.yaml: the commit moves acorn 8.17.0 to 8.19.0 in the esast-util-from-js@2.0.1 and micromark-extension-mdxjs@3.0.0 snapshots and adds acorn-jsx@5.3.2(acorn@8.19.0). www lists @next/mdx and next-mdx-remote; remark-mdx@3.1.1 depends on micromark-extension-mdxjs@3.0.0, so these entries sit in www's resolved set (FR-1). The extra www id is correct.",
+    "Scope clean: git log 4e3fffe22..8ec0f873c --grep='track_id: per_app_cicd_20261107' touches no package.json, pnpm-lock.yaml, pnpm-workspace.yaml, turbo.json, .pnpmfile.cjs, no .github/workflows/**, no apps/*/cloudbuild*.yaml, and no docs/runbooks/**. All commit headers are 100 characters or less and carry the track_id.",
+    "Detectors pass at HEAD: built-ins detector exit 1; require(/import( detector exit 1; no-shell detector exit 1; hash detector exit 1; node --check exit 0 on the script and both test files; JSDoc detector exit 1; A9 detector exit 1; git diff --stat f302b4edc..HEAD -- scripts/ci/__tests__ prints nothing.",
+    "Architecture guardrail (strategy 1.5): no app, package, test, or workflow imports scripts/ci/affected-apps.mjs as a module. git grep for 'affected-apps' (excluding measure/) hits only the script itself, the test file, and the harness helper, which spawns it via node (spawnSync of process.execPath), not import. No build-graph run was needed: the script is standalone ESM with no exported symbols consumed elsewhere; the contract is the CLI plus one JSON line on stdout. Used git grep for callers per the heavy-run rule for build-graph.",
+    "F1 and F2 are Minor and non-blocking; neither changes the affected set for any current range or test."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff 4e3fffe22 8ec0f873c -- scripts/ci measure/tracks/per_app_cicd_20261107",
+    "git log 4e3fffe22..8ec0f873c --format='%H %s' --grep='track_id: per_app_cicd_20261107'",
+    "git show c03e201ea -- scripts/ci/affected-apps.mjs",
+    "git show c0e2cfbb1:pnpm-lock.yaml | grep acorn",
+    "git show c0e2cfbb1:apps/www-reading-advantage/package.json",
+    "node scripts/ci/affected-apps.mjs --base $(git rev-parse origin/master) --head $(git rev-parse HEAD)",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; rc=$?; echo \"EXIT=$rc\"; exit $rc'",
+    "rg detectors for built-ins, require/import, shell, hash, JSDoc, A9; node --check on the script and both test files"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": []
+}

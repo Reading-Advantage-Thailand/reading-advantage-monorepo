@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: per_app_cicd_20261107
+phase: Phase 1: The affected-app logic
+role_base_sha: c4890971f4c99bbe74ba052722938e29c6700371
+status: complete
+commit: 53e7f3dac12602585d6ab9c5b4142df650bd4291
+commit_plan: 4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+files: measure/tracks/per_app_cicd_20261107/test-strategy.md, measure/tracks/per_app_cicd_20261107/plan.md
+risk: P1=medium, P2=critical, P3=medium, P4=high
+review_applicability_p1: review_a=yes; review_b=no; review_c=yes (CLI contract only); adversarial=yes (10-mutant set); browser=no
+measured: vitest 4.1.8 at base = "No test files found, exiting with code 1" (filter scripts/ci, EXIT=1); yaml 2.9.0 and js-yaml 4.3.2 resolve from root (nodeLinker hoisted, undeclared); 4 workspace globs and 48 workspace packages, packages/integrations/github reaches 6 rows; origin/master..HEAD = 207 commits (198 in round 1, 168 in the spec); range still changes the global key verifyDepsBeforeRun so all 10 rows are affected; lockfile diff 88/101 unchanged; 1 non-ASCII tracked path; act and actionlint absent; neither workflow declares permissions; accounting sets --no-traffic only when the service exists; cloudbuild.continue-f5063222.yaml holds update-traffic so the AC-2.4 detector is workflow-scoped; 3 apps are not table rows (activity-vinext-fixture, advantage-games, science-advantage)
+changed: header names the round-2 model and base; section 1.1 intentionally-red aggregate rules (AC-5.2 is the only gating aggregate run); section 1.4 exact phase_base_sha capture point (after this commit, before Red; c4890971f is void); new section 1.5 architecture guardrails and changed-contract risks; section 2 facts refreshed and M16-M22 added; P1.5 closeout gate and P1.7 anti-pattern table with A6; P2-P4 closeout gates, tag and detector nuances, per-phase anti-pattern tables with falsification conditions; new section 5 independent check
+handoff: Q7 accepted by the PM on 2026-11-07 (no change to D4; Phase 4 keeps its deploy list; Daniel decides the first push at AC-5.4). Q9 default used: keep the 10-row table, record untested_apps=3 in task 3.2, and send the gap to the PM as a follow-up. Orchestrator: capture phase_base_sha with `git rev-parse HEAD` now (4e3fffe22) before the Red role starts, and record the full SHA in the Red evidence.
+END_MEASURE_AGENT_RESULT

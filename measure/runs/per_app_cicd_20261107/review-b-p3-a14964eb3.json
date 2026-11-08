@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "per_app_cicd_20261107",
+  "phase": "P3",
+  "phase_heading": "## Phase 3: CI for the affected apps",
+  "phase_base_sha": "25d774e08a0f9bef8074fb6f88bde439d1a72066",
+  "role_base_sha": "a14964eb3f3b72cbae4f181639a645051769c730",
+  "audited_head_sha": "a14964eb3f3b72cbae4f181639a645051769c730",
+  "audited_head_current": true,
+  "head_drift": "HEAD equals the audited head a14964eb3. The audited phase tree equals the current tree.",
+  "model_route": "deepseek/deepseek-flash#high. DeepSeek is the model substitution, the same as r1 and r2.",
+  "security_applicability": "applicable",
+  "applicability_rationale": "The delta 79f86404b..a14964eb3 changes .github/workflows/ci.yml and scripts/ci/__tests__/ci-remediation.test.mjs. Those files carry security relevance: workflow permissions, trigger scope, and the test surface of the deploy selector.",
+  "status": "pass",
+  "summary": "The Phase 3 security re-review passes at a14964eb3 with no blocker and no finding. F6 of r2 is closed. The ci.yml pull_request paths now hold 'scripts/**' at line 21, and the packages job runs 'CI=true pnpm exec vitest run scripts/ci' at lines 143-144. The packages job has no if guard, so the step runs on push and on pull_request. Case CI-R4 of ci-remediation.test.mjs asserts both conditions. The new step holds no secret, no ${{ }} expression, and no production network call; the gcloud in the test path is a fixture stub that logs and exits 0. The workflow-level permissions: contents: read at lines 25-26 stays, and no job declares a permissions key. A2 is not triggered and A6 has no hit.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "F6 closed, path entry: .github/workflows/ci.yml line 21 adds '- ''scripts/**''' to the on.pull_request.paths list that starts at line 8. A pull request that changes scripts/ci/apps.json or scripts/ci/affected-apps.mjs now starts ci.yml.",
+    "F6 closed, test step: .github/workflows/ci.yml lines 143-144 add the step 'CI selector tests' with run 'CI=true pnpm exec vitest run scripts/ci'. The step sits in the packages job that starts at line 60. That job holds no if guard, so the step runs on push and on pull_request.",
+    "F6 closed, test case: scripts/ci/__tests__/ci-remediation.test.mjs lines 431-443 add case CI-R4. It asserts the two triggers, a pull_request path filter that matches the probes scripts/ci/affected-apps.mjs and scripts/ci/__tests__/x.test.mjs, and at least one job that runs vitest on scripts/ci on both events.",
+    "F6 closed, discovery: the root vitest.config.ts lines 8-12 sets testTimeout only and holds no include filter. The vitest default pattern finds the .test.mjs files under scripts/ci.",
+    "Step safety, secrets: the run line of lines 143-144 holds no ${{ }} expression, no secret reference, and no env value. grep -n 'permissions|secrets\\.|\\$\\{\\{' .github/workflows/ci.yml returns the permissions key at line 25 and only matrix, sha, service id, and output expressions.",
+    "Step safety, network: scripts/ci/__tests__/affected-apps-adversarial.test.mjs line 40 and helpers/scratch.mjs lines 208 and 330 run spawnSync('git', ...) on scratch repositories. helpers/plan.mjs lines 406-409 write a stub gcloud into the fixture PATH; the stub appends its arguments to a log and exits 0. cd-workflows-adversarial.test.mjs lines 77, 140, 174, and 256 assert zero gcloud calls.",
+    "Permissions: .github/workflows/ci.yml lines 25-26 keep the workflow-level map 'permissions: contents: read'. The file declares no job-level permissions key, so no job widens the map.",
+    "A2: the delta flips no draft to published status and publishes no named subject.",
+    "A6: the new case CI-R4 asserts the state that this phase claims, so the test backs the claim. measure/tracks.md holds no statement that this phase resolved a security state beyond that scope.",
+    "Limits: this role ran no workflow, called no gcloud, read no secret, and ran no test suite."
+  ],
+  "commands": [
+    "git diff 79f86404b a14964eb3 -- .github scripts (permission-gated shell)",
+    "read .github/workflows/ci.yml (lines 1-270)",
+    "grep -n 'permissions|secrets\\.|\\$\\{\\{' .github/workflows/ci.yml",
+    "grep -n 'fetch\\(|https?://|process\\.env|net\\.|http\\.request|child_process|execSync|spawnSync' scripts/ci --include *.mjs",
+    "grep -n 'gcloud|docker|curl|wget|npm publish|ssh ' scripts/ci --include *.mjs",
+    "read scripts/ci/__tests__/helpers/plan.mjs (lines 380-449)",
+    "read vitest.config.ts",
+    "grep -n 'resolve|security|F6|Review B' measure/tracks.md"
+  ],
+  "changed_files": [
+    "measure/runs/per_app_cicd_20261107/review-b-p3-a14964eb3.json",
+    "measure/runs/per_app_cicd_20261107/review-b-p3-a14964eb3.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "P1 acceptance passes at current HEAD db8b093bb. Review A and C cover the unchanged production files, adversarial tests exercise that same production tree, and the suite and phase checks pass.",
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "4e3fffe227b18f8fad78a897dc02e15e8bc1656a",
+  "role_base_sha": "db8b093bb86ef116b68664a1df4f594ac71a1eb3",
+  "audited_head_sha": "db8b093bb86ef116b68664a1df4f594ac71a1eb3",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Nit] adversarial-testing: The adversarial result reports the helper maxBuffer limitation as a minor finding. It has no current implementation impact; no additional disposition was requested for this nonblocking item."
+  ],
+  "evidence": [
+    "Current HEAD at role start and audit completion: db8b093bb86ef116b68664a1df4f594ac71a1eb3. phase_base_sha 4e3fffe227b18f8fad78a897dc02e15e8bc1656a exists. Since reviewed HEAD 8ec0f873c, the only commits touching this phase or scripts/ci are bdda3dd18 and a620b096f; both add or update only scripts/ci/__tests__/affected-apps-adversarial.test.mjs. No production script or table change occurred.",
+    "F1 withdrawn: I checked the current branch history and scoped diff. Review A and C audited the unchanged production script and table at 8ec0f873c. The adversarial result verifies those production files are byte-identical at its test base and runs the 10-mutant set against that implementation; later scoped commits change only adversarial test code. The acceptance rerun at db8b093bb passes all 52 tests. This matches the scope-equivalence precedent in measure/runs/storytime_at_home_release_20261106/phase-acceptance-811f05f36.json.",
+    "Review A and Review C have no blocking findings. Their nonblocking findings are F1 and F2 in Review A and are recorded as Minor; they do not block acceptance. The adversarial result has no blocking findings and reports N1 only.",
+    "Required heavy suite rerun at current HEAD: EXIT=0; Test Files 2 passed (2); Tests 52 passed (52); failed 0. The original Green plan count 48 is historical and explicitly cites its earlier command at 06d73a4a9; current adversarial tests expand the suite to 52.",
+    "Task 1.5 detectors at current HEAD: built-ins exit 1; dynamic require/import exit 1; no-shell exit 1; hash detector exit 1; node --check on implementation and both test files exit 0; JSDoc detector exit 1; A9 detector exit 1. These match expected detector semantics.",
+    "Real-range invocation: node scripts/ci/affected-apps.mjs --base 4e3fffe227b18f8fad78a897dc02e15e8bc1656a --head db8b093bb86ef116b68664a1df4f594ac71a1eb3; exit 0; returned 9 ids. This is a readable real range, not the historical origin/master range required by plan task 1.4.",
+    "Plan A5 claims reviewed: task 1.2 records the historical Red run exit 1 and its labeled counts; task 1.3 and 1.4 record historical exits and counts; task 1.5 records the historical detector outcomes. Current suite count 52 is confirmed by the rerun. No false PASS=N or all-checks-pass claim was found.",
+    "A3/A4/A6/A7 framework checks are not applicable: the exact phase diff does not change contract tests framework, filters, or tracks registry. A5 was checked against current-phase plan claims."
+  ],
+  "commands": [
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; rc=$?; echo \"EXIT=$rc\"; exit $rc' — EXIT=0; 2 files, 52 tests passed, 0 failed.",
+    "rg -n --pcre2 \"from ['\\\"](?!node:|\\.)\" scripts/ci/affected-apps.mjs — exit 1 (no external import).",
+    "rg -n \"require\\(|import\\(\" scripts/ci/affected-apps.mjs — exit 1.",
+    "rg -n \"execSync\\(|exec\\(|shell: *true\" scripts/ci/affected-apps.mjs — exit 1.",
+    "rg -n \"createHash|node:crypto|sha256sum|shasum|checksum\" scripts/ci/affected-apps.mjs scripts/ci/__tests__ — exit 1.",
+    "node --check scripts/ci/affected-apps.mjs; node --check scripts/ci/__tests__/affected-apps.test.mjs; node --check scripts/ci/__tests__/helpers/scratch.mjs — each exit 0.",
+    "rg -U --pcre2 -n \"(?<!\\*/\\n)^export (async )?function\" scripts/ci/affected-apps.mjs — exit 1.",
+    "rg -n \"(readFile|readFileSync|existsSync)[^;]*measure/\" scripts/ci/__tests__ — exit 1.",
+    "node scripts/ci/affected-apps.mjs --base 4e3fffe227b18f8fad78a897dc02e15e8bc1656a --head db8b093bb86ef116b68664a1df4f594ac71a1eb3 — exit 0; 9 ids."
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": []
+}

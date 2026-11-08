@@ -1,0 +1,35 @@
+# Review B · Phase 4 · per_app_cicd_20261107 (final recheck r2)
+
+Model: deepseek/deepseek-flash#high. P4 Green runs on Anthropic and Review A on GLM, so the families differ.
+
+Audit target: phase_base_sha 7d81c7e6f, role_base_sha aec23d3e1 (HEAD), audited_head_sha 355079cb0, report_head abd7e30ae. `git diff --stat 355079cb0 HEAD -- .github scripts measure/tracks/per_app_cicd_20261107` prints nothing.
+
+Verdict: pass. No blocker. No open finding. No question for Daniel.
+
+## Checks
+
+1. N1 is closed. The r5 commit 355079cb0 changes two files only: dry-run-report.md and plan.md. Plan task 2.3c names `measure/tracks/sales_traffic_source_binding_20261108` and its Phase 2, which gates the Primary traffic run. Task 2.3h names Phase 1 (sales-advantage) and Phase 2 (accounts, accounting, codecamp-advantage, marketing, primary-advantage). The app lists match the metadata of the follow-up track. Both tasks stay `[b] ... deferred:daniel`.
+2. The C30 limit holds. The report names no reduced deploy key and claims no deploy. Plan task 2.6 and task 4.2 are unchanged. The report keeps `Daniel decides whether the push happens.`
+3. No secret. The diff adds no `secrets.` text. The dry-run note now says `No secret, no gcloud call, no workflow run`; it removes the word `deploy` and keeps the no-secret fact.
+4. The report word changes stay inside the same labels: header `ci_apps`, and www class `no-text (test only)`. `report_head: abd7e30ae` and the first-push plan line are unchanged.
+5. The workflow security surface is unchanged since the pass at 8a3e9cb9d. Each of the two CD workflows and ci.yml holds `permissions: contents: read` at workflow level. Two secret names exist, GCP_SERVICE_ACCOUNT and GCP_PROJECT_ID, and both sit in push-triggered jobs. No file holds `pull_request_target`.
+6. Tasks 4.5, 4.6, and 4.7 stay `[b]` with owners pm, daniel, and pm. Task 4.4 stays `[~]`. Tasks 2.3c and 2.3h stay `[b] ... deferred:daniel`.
+
+## Other checks
+
+- A2: not applicable. The diff holds no draft, published, consent, or anonymization token.
+- A6: no hit. measure/tracks.md is untouched and claims no resolved security state.
+- This role ran no workflow, called no gcloud, read no secret value, and ran no test suite. No commit. Only the two result files were written.
+
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+commits: none
+tests_run: none (audit only)
+files_changed: measure/runs/per_app_cicd_20261107/review-b-p4-355079cb0.json, measure/runs/per_app_cicd_20261107/review-b-p4-355079cb0.log
+plan_updates: none
+known_failures: none
+handoff: Pass at 355079cb0 with no blocker and no open finding. N1 is closed: plan tasks 2.3c and 2.3h name measure/tracks/sales_traffic_source_binding_20261108 and its phases, and both stay `[b] ... deferred:daniel`. The report claims no deploy of the reduced www key and names no secret. No workflow, script, table, or build file changed. Tasks 4.5, 4.6, and 4.7 stay `[b]`. retry_recommendation: none. No question for Daniel. No commit. Model: deepseek/deepseek-flash#high.
+END_MEASURE_AGENT_RESULT

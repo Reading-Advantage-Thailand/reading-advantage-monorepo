@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Adversarial testing of Phase 1 (track per_app_cicd_20261107). The implementation at pre-adversarial HEAD 28da8c92d is byte-identical to Green HEAD 8ec0f873c for scripts/ci/affected-apps.mjs and scripts/ci/apps.json. 10 of 10 mutants are killed in one heavy job, the full scripts/ci suite passes 52/52 with the real script, and the four P1.7 hostile cases pass and each is killed by the [] and all-ids stubs. H-03 is hardened so its only app path sorts last behind 1.2 MB of path text; it fails on a script with the default 1 MB buffer. One Minor harness finding, no blocking finding.",
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "4e3fffe227b18f8fad78a897dc02e15e8bc1656a",
+  "role_base_sha": "ef36b6c378bf77b75d4069d73052b9138cd7dc13",
+  "audited_head_sha": "28da8c92d028fcb81b57278d8a4ad3ee6d37e1b3",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Minor] scripts/ci/__tests__/helpers/scratch.mjs:208: the helper git() sets no maxBuffer, so spawnSync uses the 1 MB default. changedFileCount returned 8626 of 10000 paths on the 1.2 MB listing of the hardened H-03. The script under test sets a 1 GB buffer and reads all 10000 paths. H-03 now uses a local 1 GB reader in the adversarial file. The fix belongs to the helper owner; no current script defect."
+  ],
+  "evidence": [
+    "Provenance: run started at HEAD 28da8c92d (pre-adversarial HEAD); phase_base_sha 4e3fffe22 and role_base_sha ef36b6c37 exist. git diff 8ec0f873c 28da8c92d -- scripts/ci/affected-apps.mjs scripts/ci/apps.json is empty. git log 8ec0f873c..a620b096f -- scripts/ci/affected-apps.mjs scripts/ci/apps.json is empty. Green HEAD 8ec0f873c is the implementation head; the script and table are unchanged since it. The only audit commit is a620b096f, one file, +43/-4.",
+    "Baseline with the real script, one heavy job in the foreground: EXIT=0, Test Files 2 passed (2), Tests 52 passed (52), 46.22s.",
+    "Final suite with the real script after the H-03 hardening, one heavy job in the foreground: EXIT=0, Test Files 2 passed (2), Tests 52 passed (52), 52.94s. The file at HEAD is byte-identical to the tested tree (git diff HEAD -- the adversarial file is empty).",
+    "Final verification at the live HEAD 26fdb2630 (stable before and after the run; two unrelated storytime test/docs commits landed after a620b096f): EXIT=0, Test Files 2 passed (2), Tests 52 passed (52), 45.61s. git diff 28da8c92d 26fdb2630 over every workspace package.json, pnpm-lock.yaml, pnpm-workspace.yaml, scripts/ci/affected-apps.mjs, and scripts/ci/apps.json is empty, so the audited implementation is unchanged.",
+    "Mutation set: 10 mutants built in /tmp/opencode/cicd-adv/mutants from the real script by exact single-occurrence replacements; python3 asserted each anchor count is 1 and each output differs; node --check passes on all 10.",
+    "Mutation job 1 (one heavy job, 10 sequential vitest runs on scripts/ci): mutants=10, mutants_killed=10, mutants_survived=0; every run EXIT=1. Kill table: X1 lockfile-global killed by A4-01,A4-02,A4-03,A4-04,A4-05,A4-06,B-18,B-19; X2 no-transitive killed by A3-01,A3-02,A4-05,B-01,B-04,B-05,B-13,B-14; X3 no-trailing-slash killed by B-06; X4 default-renames killed by B-07; X5 no-z killed by B-08; X6 apps-and-packages-only killed by B-01; X7 skip-dev-peer killed by B-04,B-13,B-14; X8 drop-docs-measure killed by B-05; X9 catalog-override-global killed by B-18,B-19; X10 empty-on-git-failure killed by A6-02,A6-03,A6-04,A6-05,A6-06,A6-07,A6-08,A6-09,A6-10,A6-11.",
+    "Mutation job 2 after the H-03 hardening, one heavy job, 10 sequential runs: 10/10 EXIT=1 again, with the same kill attribution. Every kill is a real assertion failure in the Red file, not a harness error; no mutant survived on only a hostile case.",
+    "Hostile case H-01 (merge commit as head): a --no-ff merge with 2 parents and changed_files=2 returns [storytime, www-reading-advantage]; killed by S1 (always []) and S2 (all 10 ids).",
+    "Hostile case H-02 (force-pushed base that the clone still holds): after reset --hard to the base and a new head, the base commit stays readable (cat-file -e exit 0), changed_files=2, and the result is [storytime, www-reading-advantage]; killed by S1 and S2.",
+    "Hostile case H-03 (very long file list): 9999 files under apps/aaa-bulk plus one app file last in path order; changed_files=10000, path_bytes=1.2 MB, the last path is apps/storytime/content/zzzz-only.txt, and the result is [storytime]; killed by S1 and S2. A truncating script (the real script with maxBuffer removed, /tmp/opencode/cicd-adv/x11-truncation.mjs) fails H-03 only (1 failed | 3 passed), so the case detects a 1 MB cut.",
+    "Hostile case H-04 (CRLF in pnpm-workspace.yaml and in an app package.json): each commit changes 2 files; the results are [www-reading-advantage] and [storytime]; killed by S1 and S2. CRLF does not turn the workspace file into a global change.",
+    "Vacuity proof: S1 (prints [] exit 0) and S2 (prints all 10 ids exit 0) each fail all four hostile cases (4 failed of 4). No hostile case passes for every script.",
+    "Harness measurement that produced N1: changedFileCount on the 1.2 MB H-03 listing returned 8626 paths, because the helper git() has no maxBuffer. The real script read all 10000 paths and returned [storytime] once the count used a 1 GB reader.",
+    "Detectors on the final tree: A9 detector (readFile/readFileSync/existsSync near measure/) exit 1; hash detector (createHash|node:crypto|sha256sum|shasum|checksum) exit 1.",
+    "No production behavior was changed: the script and the table are untouched. The only change is the adversarial test file."
+  ],
+  "commands": [
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; rc=$?; echo \"EXIT=$rc\"; exit $rc'",
+    "python3 /tmp/opencode/cicd-adv/make-mutants.py /tmp/opencode/cicd-adv/mutants",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /tmp/opencode/cicd-adv/run-mutants.sh /tmp/opencode/cicd-adv/mutants /tmp/opencode/cicd-adv/out'",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /tmp/opencode/cicd-adv/final-check.sh'",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /tmp/opencode/cicd-adv/run-mutants.sh /tmp/opencode/cicd-adv/mutants /tmp/opencode/cicd-adv/out2'",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; rc=$?; echo \"EXIT=$rc\"; exit $rc' (live HEAD 26fdb2630)",
+    "git add -- scripts/ci/__tests__/affected-apps-adversarial.test.mjs && git diff --cached --name-only && git commit -m 'test(ci): extend the affected-app adversarial tests (track_id: per_app_cicd_20261107)' -- scripts/ci/__tests__/affected-apps-adversarial.test.mjs",
+    "git diff 8ec0f873c 28da8c92d -- scripts/ci/affected-apps.mjs scripts/ci/apps.json",
+    "git log 8ec0f873c..HEAD -- scripts/ci/affected-apps.mjs scripts/ci/apps.json",
+    "rg -n \"(readFile|readFileSync|existsSync)[^;]*measure/\" scripts/ci/__tests__",
+    "rg -n \"createHash|node:crypto|sha256sum|shasum|checksum\" scripts/ci/affected-apps.mjs scripts/ci/__tests__"
+  ],
+  "changed_files": [
+    "scripts/ci/__tests__/affected-apps-adversarial.test.mjs"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": []
+}

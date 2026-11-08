@@ -1,0 +1,42 @@
+# Review B · Phase 4 · per_app_cicd_20261107 (final)
+
+Model: deepseek/deepseek-flash#high (route `ra-quota pick review-b --not-family anthropic`). The P4 Green runs on Anthropic and Review A runs on GLM, so the families differ.
+
+Audit target: phase_base_sha 7d81c7e6f, role_base_sha 7d81c7e6f, audited_head_sha 8a3e9cb9d, report_head abd7e30ae. HEAD is a1d3bb741. `git diff --stat 8a3e9cb9d HEAD -- .github scripts measure/tracks/per_app_cicd_20261107` prints nothing. The audited HEAD is current for the security surface.
+
+Security applicability: applicable. test-strategy P4.8 (line 893) marks Review B as final and names the checks. The audited diff adds a test that runs the real select step of the two CD workflows. That step decides which app deploys.
+
+## Checks
+
+1. Pass. `.github/workflows` holds three files. cd-apps.yml, cd-www-reading-advantage.yml, and ci.yml each hold `permissions: contents: read` at workflow level. No job declares its own map. No file holds `pull_request_target`. Both CD workflows trigger on push to master only.
+2. Pass. Two secret names exist: GCP_SERVICE_ACCOUNT and GCP_PROJECT_ID. Both sit in push-triggered jobs. ci.yml holds no secret reference. A pull request from a fork runs no job that reads a secret.
+3. Pass. dry-run-report.md line 28 names one traffic app (www-reading-advantage), eight no-traffic apps, and one skipped app (reading-advantage). scripts/ci/apps.json puts every gated row in primary-advantage or reading-advantage, the two projects where plan task 2.6 measured the reduced key roles. Workbooks stays a fail-closed `[b]` prerequisite (2.3i).
+4. Pass. C30 and M43 say the local www run uses no key and the live proof of B1 is the first push (task 4.5). Plan task 2.6 and task 4.2 say the same. The report names no key and claims no deploy.
+5. Pass, with N1. The follow-up track `sales_traffic_source_binding_20261108` exists (dbc669bff, 592d199e9, e2747094b). It gates six apps. The per_app_cicd plan and report do not contradict it, but they do not name it.
+6. Pass. Tasks 4.5, 4.6, and 4.7 are `[b]` with owners pm, daniel, and pm. Task 2.3h is `[b] ... deferred:daniel`. Task 4.4 stays `[~]`.
+
+## Finding
+
+- N1 [Minor]. Plan task 2.3h says only that every run needs Daniel's word. test-strategy C31 and Q18 say only that "a small follow-up track" holds the fix. The track now exists and it gates six apps: sales-advantage, accounts, accounting, codecamp-advantage, marketing, and primary-advantage. Task 2.3h names five apps and not primary-advantage. A reader of the plan can start the accounts, accounting, codecamp-advantage, or marketing traffic run before `bind-release-source` exists. Those four files apply migrations from an uploaded tree that no step binds to `_RELEASE_COMMIT_SHA`. Every run is `[b]` and needs Daniel's word, so the impact is bounded. One pointer line in task 2.3h and in C31 closes the gap.
+
+## Other checks
+
+- A2: not applicable. The P4 diff holds no draft, published, consent, or anonymization token on a new line. The only www change is a test file.
+- A6: no hit. measure/tracks.md line 79 claims no resolved security state. The line is stale for Phase 4 and says the first push is `deferred:daniel` where task 4.5 says `deferred:pm`; both keep a human gate.
+- F6 of Phase 3 stays closed: ci.yml holds `scripts/**` in the pull_request paths and the step `CI selector tests`.
+- The new dry-run test reads no secret and calls no network. It runs the selector and the select steps in scratch repositories with a logging fake gcloud.
+- This role ran no workflow, called no gcloud, read no secret value, and ran no test suite. No commit. Only the two result files were written.
+- No CONTEST item exists: no earlier Review B run exists for Phase 4.
+
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+commits: none
+tests_run: none (audit only; Review A runs the light suite)
+files_changed: measure/runs/per_app_cicd_20261107/review-b-p4-8a3e9cb9d.json, measure/runs/per_app_cicd_20261107/review-b-p4-8a3e9cb9d.log
+plan_updates: none
+known_failures: none
+handoff: Pass with no blocker and one nonblocking Minor finding, N1. Checks 1 to 4 and 6 pass. Check 5 passes: the plan and the report do not contradict the follow-up track, but plan task 2.3h and test-strategy C31 do not name it. Route N1 to Green as a one-line pointer that names measure/tracks/sales_traffic_source_binding_20261108 and its six apps. No retry is needed. retry_recommendation is escalate_human per the role contract; the escalation carries N1 only. No commit. Model: deepseek/deepseek-flash#high.
+END_MEASURE_AGENT_RESULT

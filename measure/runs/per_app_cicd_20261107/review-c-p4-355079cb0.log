@@ -1,0 +1,46 @@
+# Review C - P4 recheck (r2) - per_app_cicd_20261107
+
+Status: pass (F1 closed; two nonblocking notes).
+
+audited_head_sha: 355079cb02889b42937953b4aa4b154cc0ebc734
+role_base_sha: a106ad81960a447a136a82d9b016fca06b2a62f1
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+report_head: abd7e30ae
+
+Head evidence: `git diff --stat 355079cb0 HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage` printed nothing, EXIT=0, at HEAD a106ad819.
+Phase diff: `git diff --stat 8a3e9cb9d 355079cb0 -- measure/tracks/per_app_cicd_20261107` gives 2 files (dry-run-report.md, plan.md), 10 insertions, 8 deletions.
+
+Model: deepseek/deepseek-flash#high. The role table names kimi-for-coding, which is WAIT. The substitution is recorded.
+
+## Checks
+
+F1 deploy: closed. Line 30: "The push moves traffic for one app ... Eight apps build a no-traffic revision". Line 8: "No secret, no gcloud call, no workflow run".
+N1 mode mapping: done. Line 24 maps direct, gated, and excluded.
+N2 ci column: done. Header `ci_apps` on line 10.
+N3 traffic key: done in part. Line 24 scopes the key away from the live state. It calls `traffic` a class "in the table scripts/ci/apps.json". The table holds no traffic class.
+www list: pass. Row `no-text (test only)`, www_text_changes=0, command and held line present. PR can check from the report alone.
+Plan line: pass. Unchanged and agrees with line 30.
+
+## Nonblocking
+
+N4 dry-run-report.md:24: wrong source for the class. Fix: "The plan-line key `traffic` lists the rows whose mode is `direct`."
+N5 dry-run-report.md:24 and :34: `class` names an app group and a text class. The N4 fix removes it.
+
+No suite ran. Read only.
+
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-review-c-ux-api
+track: per_app_cicd_20261107
+phase: Phase 4
+verdict: pass
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: a106ad81960a447a136a82d9b016fca06b2a62f1
+audited_head_sha: 355079cb02889b42937953b4aa4b154cc0ebc734
+head_is_current: true
+contract_applicability: applicable
+blocking_findings: none
+nonblocking_findings: N4, N5
+retry_recommendation: none
+confidence: medium
+END_MEASURE_AGENT_RESULT

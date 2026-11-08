@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review A recheck (r2) of Phase 4 at 355079cb0. Provenance: phase_base_sha=7d81c7e6fd6f067431b931812baafc36cbe16f2d, role_base_sha=aec23d3e1214e3a3a32d6ab88d026857857fdf79 (HEAD at the recheck), audited_head_sha=355079cb02889b42937953b4aa4b154cc0ebc734. Scoped diff 355079cb0..HEAD over .github, scripts, the track dir, and apps/www-reading-advantage prints nothing, so the audited content equals HEAD. The remediation changed two track files only. The report keeps 11 rows with the same values. The header ci became ci_apps, and the fixed Row and File cells stay unchanged. The www class cell is now no-text (test only), and the check counts it as no-text. The 2.3c and 2.3h lines keep [b] and deferred:daniel. The 4.4 line keeps [~]. Verdict pass with one nonblocking note (N1: the strategy template still shows header ci). Light suite: Test Files 9 passed (9), Tests 150 passed (150). Report check: report_check=pass failed=none.",
+  "baseline_sha": "7d81c7e6fd6f067431b931812baafc36cbe16f2d",
+  "phase_base_sha": "7d81c7e6fd6f067431b931812baafc36cbe16f2d",
+  "role_base_sha": "aec23d3e1214e3a3a32d6ab88d026857857fdf79",
+  "audited_head_sha": "355079cb02889b42937953b4aa4b154cc0ebc734",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (Nit): measure/tracks/per_app_cicd_20261107/test-strategy.md line 763 shows the dry-run table header with the column name ci. The report now uses ci_apps. The P4.6 report-format text fixes only the Row and File header cells, so the report meets the contract. The orchestrator may align the template example to ci_apps in a later plan edit. No check or test reads this header name."
+  ],
+  "evidence": [
+    "Provenance: HEAD aec23d3e1214e3a3a32d6ab88d026857857fdf79 at the recheck; git diff --stat 355079cb0 HEAD over .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage printed no lines.",
+    "Range 8a3e9cb9d..355079cb0 holds 7 commits: the per_app_cicd fix 355079cb0 and 6 foreign-track commits (storytime, storytime_look, sales_traffic). No .github, scripts, or apps/www-reading-advantage path changed in the range.",
+    "Track diff 8a3e9cb9d..355079cb0: dry-run-report.md (12 lines) and plan.md (6 lines) only.",
+    "Report value cells: only the header cell ci became ci_apps, and the www class cell test only became no-text (test only). All 11 data rows keep the same values, and no DRYRUN value changed.",
+    "Report header: report_head abd7e30ae0511e459a676e180aada28378deefe9 and origin_master f3611d47c7ca5b02848691bab1cc109266511842 are unchanged.",
+    "Plan lines: 2.3c and 2.3h stay [b] with deferred:daniel and gain a pointer to sales_traffic_source_binding_20261108 (Review B N1). The 4.4 line stays [~].",
+    "Test file scripts/ci/__tests__/dry-run.test.mjs writes the DRYRUN key ci (line 185 region). The key is unchanged, and the test file is not in the remediation diff.",
+    "Review C F1 (deploy words): grep of the report for deploy finds no word. The prose now says no gcloud call and moves traffic for one app.",
+    "Review A Nit (www class): the cell is no-text (test only). The check at line 64 counts exact text equality, so www_text_changes=0 stays correct. Prose separates class from reason. The Nit is resolved; the prior finding F1 is withdrawn for this recheck.",
+    "Mode mapping line: the report explains traffic, no_traffic, and skipped, matching the check's pick() labels.",
+    "Report check: node /tmp/opencode/p4-red/report-check.cjs measure/tracks/per_app_cicd_20261107/dry-run-report.md printed report_rows=11 expected_rows=11 ids_match=1 bad_rows=0; first_push_plan_lines=1; affected_ids=10 head_match=1 base_match=1 commits_match=1 affected_match=1 traffic_match=1 no_traffic_match=1 skipped_match=1; www_live_sha=f3611d47c7ca5b02848691bab1cc109266511842 www_closure_files_changed=1 www_files_listed=1 files_match=1 www_text_changes=0 plan_www_text_changes=0 held_signin_copy_in_head=0 held_line_match=1; report_check=pass failed=none. Exit 0.",
+    "Light suite: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci printed Test Files 9 passed (9), Tests 150 passed (150), Duration 186.25 s. The relayed output did not echo a shell exit code; the all-pass counts show exit 0 for the test run. Recorded as a limit, not a failure."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --stat 355079cb0 HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage",
+    "git log --oneline 8a3e9cb9d..355079cb0",
+    "git diff 8a3e9cb9d 355079cb0 -- measure/tracks/per_app_cicd_20261107",
+    "git diff 8a3e9cb9d 355079cb0 -- measure/tracks/per_app_cicd_20261107/plan.md",
+    "node /tmp/opencode/p4-red/report-check.cjs measure/tracks/per_app_cicd_20261107/dry-run-report.md",
+    "CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci"
+  ],
+  "changed_files": [
+    "measure/runs/per_app_cicd_20261107/review-a-p4-355079cb0.json",
+    "measure/runs/per_app_cicd_20261107/review-a-p4-355079cb0.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

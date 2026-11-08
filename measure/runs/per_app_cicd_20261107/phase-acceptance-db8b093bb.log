@@ -1,0 +1,60 @@
+Measure Phase 1 acceptance — per_app_cicd_20261107
+
+Verdict: PASS.
+
+Required bases:
+- phase_base_sha: 4e3fffe227b18f8fad78a897dc02e15e8bc1656a
+- role_base_sha: db8b093bb86ef116b68664a1df4f594ac71a1eb3
+- audited_head_sha: db8b093bb86ef116b68664a1df4f594ac71a1eb3
+- HEAD was db8b093bb86ef116b68664a1df4f594ac71a1eb3 at start and end.
+
+Prerequisite scope alignment:
+- Review A audited 8ec0f873c; status pass; no blockers.
+- Review C audited 8ec0f873c; status pass; no blockers.
+- Adversarial audited 28da8c92d; status pass; 10/10 mutants killed. The result also cites a later suite run at 26fdb2630.
+- Current HEAD is db8b093bb86ef116b68664a1df4f594ac71a1eb3. The scoped history since reviewed HEAD 8ec0f873c has only bdda3dd18 and a620b096f; both change only scripts/ci/__tests__/affected-apps-adversarial.test.mjs. Other intervening commits do not touch the phase paths.
+- Review A and C therefore cover every unchanged production file at the audited HEAD. Adversarial evidence states the script and app table match the reviewed implementation byte-for-byte and mutation tests exercise that implementation. The acceptance suite was rerun at current HEAD. This scope-equivalence treatment follows measure/runs/storytime_at_home_release_20261106/phase-acceptance-811f05f36.json.
+- F1 withdrawn: I checked the scoped commit history, file diff, adversarial provenance, and current HEAD test result. The production tree is unchanged; later scoped commits modify only adversarial tests.
+- No blocking Review A or Review C finding is unresolved. Their listed findings are nonblocking only.
+
+Heavy suite, foreground:
+Command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; rc=$?; echo "EXIT=$rc"; exit $rc'
+Result: EXIT=0; Test Files 2 passed (2); Tests 52 passed (52); failed 0.
+
+Task 1.5 detector results:
+- Built-ins detector: exit 1, no hit.
+- require/import detector: exit 1, no hit.
+- No-shell detector: exit 1, no hit.
+- Hash detector: exit 1, no hit.
+- node --check implementation: exit 0.
+- node --check affected-apps.test.mjs: exit 0.
+- node --check scratch.mjs: exit 0.
+- JSDoc detector: exit 1, no hit.
+- A9 detector: exit 1, no hit.
+
+Real-range check:
+Command: node scripts/ci/affected-apps.mjs --base 4e3fffe227b18f8fad78a897dc02e15e8bc1656a --head db8b093bb86ef116b68664a1df4f594ac71a1eb3
+Result: exit 0; 9 ids: accounting, accounts, codecamp-advantage, marketing, primary-advantage, reading-advantage, sales-advantage, storytime, workbooks.
+This verifies a real range. It does not replace task 1.4's historical six-range evidence.
+
+A5 review:
+- Plan tasks 1.2–1.5 make historical claims tied to named commands, commits, exits, and counts.
+- Current script suite rerun passes 52 tests; the plan's 48-test count is explicitly historical.
+- No current false PASS=N or all-checks-pass assertion found.
+
+Framework-only A3, A4, A6, and A7 do not apply. The exact Phase 1 diff did not change contract test framework, test filters, or tracks registry. A5 was checked against current P1 plan claims.
+
+Acceptance passes, but the gate-only role does not edit plans or commit. The orchestrator may append [checkpoint: db8b093bb] and commit the plan path. No implementation file was changed.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+status: complete
+track: per_app_cicd_20261107
+phase: ## Phase 1: The affected-app logic
+commits: none
+tests_run: Heavy scripts/ci suite EXIT=0, 52 passed, 0 failed; task 1.5 detectors expected exits; real-range command exit 0, 9 ids.
+files_changed: measure/runs/per_app_cicd_20261107/phase-acceptance-db8b093bb.json; measure/runs/per_app_cicd_20261107/phase-acceptance-db8b093bb.log
+plan_updates: None; gate-only role leaves the plan and commit to the orchestrator.
+known_failures: none.
+handoff: Phase 1 accepted. Scope-equivalent prerequisite evidence covers the unchanged production tree at audited HEAD db8b093bb.
+END_MEASURE_AGENT_RESULT

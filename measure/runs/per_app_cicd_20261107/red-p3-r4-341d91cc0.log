@@ -1,0 +1,63 @@
+# Red log P3 r4 (role measure-mid-red, Review B r2 F6 pin)
+
+- Track: per_app_cicd_20261107, phase "## Phase 3: CI for the affected apps".
+- phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066 (resolves).
+- role_base_sha: 341d91cc0c6e2d55519e783c9486674f9a4507db (resolves; equals HEAD at start).
+- Branch: master.
+- Dirty paths at start: fixture `next-env.d.ts` files, temp folders, and one storytime test file. All are unrelated or generated. None staged, none touched.
+
+## Routed finding
+
+F206 = Review B r2 F6 (Major). The ci.yml pull_request paths omit `scripts/**`, and no job runs the `scripts/ci/__tests__` suite. The deploy selector and its tests get no CI run.
+
+Review A r2 F5 goes to Green as a plan correction. This role does not pin it.
+
+## Work
+
+1. Add case CI-R4 to `scripts/ci/__tests__/ci-remediation.test.mjs`. It parses ci.yml, needs a `pull_request.paths` pattern that matches both `scripts/ci` probes, and needs a vitest step on `scripts/ci` in a job that runs on push and on pull_request.
+2. Run the Red command under heavy-run. Result: exit 1.
+3. Prove no vacuous case on two scratch copies.
+4. Commit the test alone, then the plan line 3.6.
+
+## Red evidence
+
+Command:
+
+`HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'`
+
+Result: EXIT=1; Test Files 1 failed | 6 passed (7); Tests 1 failed | 133 passed (134).
+
+Failing case: CI-R4 `ci.yml gates a scripts change and runs the selector tests`.
+
+Labels: `pr_paths_scripts=0 scripts_ci_test_steps=0`.
+Failure message: `pr_paths_scripts=0 scripts_ci_test_steps=0 missing=scripts/ci/affected-apps.mjs,scripts/ci/__tests__/x.test.mjs patterns=14`.
+
+## No vacuous case
+
+- `/tmp/opencode/p3-r4-good`: `- 'scripts/**'` in the pull_request paths, and the step `CI=true pnpm exec vitest run scripts/ci` in the `packages` job. CI-R4 passes; 1 passed, 3 skipped.
+- `/tmp/opencode/p3-r4-bad`: the same copy without `- 'scripts/**'`. CI-R4 fails with `pr_paths_scripts=0 scripts_ci_test_steps=1`. The case therefore reads the fixture root and finds the step, so the label pair is not fixed.
+
+## Commits
+
+- `5e0b8d567` test(ci): pin the selector tests in CI (track_id: per_app_cicd_20261107).
+- `c2b1725e5` chore(measure): record the CI-R4 Red evidence (track_id: per_app_cicd_20261107).
+
+No production file changed. No `.github/workflows/*.yml` or `scripts/ci/*.mjs` edit. No workflow ran on GitHub.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: "## Phase 3: CI for the affected apps"
+baseline_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: 341d91cc0c6e2d55519e783c9486674f9a4507db
+head: c2b1725e5
+status: done
+commits: ["5e0b8d567", "c2b1725e5"]
+tests: ["scripts/ci/__tests__/ci-remediation.test.mjs CI-R4"]
+red_command: "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo \"EXIT=$?\"'"
+red_result: "EXIT=1; Test Files 1 failed | 6 passed (7); Tests 1 failed | 133 passed (134)"
+labels: "pr_paths_scripts=0 scripts_ci_test_steps=0"
+files: ["scripts/ci/__tests__/ci-remediation.test.mjs", "measure/tracks/per_app_cicd_20261107/plan.md", "measure/runs/per_app_cicd_20261107/red-p3-r4-341d91cc0.log"]
+remaining_failures: ["CI-R4 at HEAD: ci.yml pull_request paths hold no scripts/** pattern, and no job runs vitest on scripts/ci"]
+next: "Green adds 'scripts/**' to .github/workflows/ci.yml pull_request paths and one run step 'CI=true pnpm exec vitest run scripts/ci' in the packages job, then turns plan 3.6 to [x]."
+END_MEASURE_AGENT_RESULT

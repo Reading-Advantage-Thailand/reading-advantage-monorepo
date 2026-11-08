@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Round 2 at HEAD 701e76f53. All five round 1 findings are resolved: the fix commit 8bd37b6c5 names the script and table paths and the CLI, assigns the accounts/workbooks --no-traffic edit to task 2.3e, corrects AC-1.3 to return ['storytime'] for packages/read-along, names the tag rule in section 2a, and names the refuse-legacy-db guard in D1 and AC-2.6/2.7. The accounts database decision fb0545c15 adds D7, which is accurate for accounts. One new Major: the D7 extension to the four other apps names only migrate-db, doctor-check, and probe steps, but sales-advantage holds three more database steps that no task names.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F6 [Major] plan 2.3g/AC-2.12/D7: The plan names only migrate-db, doctor-check, and probe steps for the four D7 apps, but sales-advantage also holds seed-production-curriculum, verify-production-curriculum, and verify-repair-verify-legacy-rollback, all database steps under AC-2.10. Rationale: these three steps must leave the push file to pass AC-2.10, but the plan does not say where they go and no test checks that they are preserved, so Green may drop them and silently break the sales curriculum release."
+  ],
+  "evidence": [
+    "F1 withdrawn: plan task 2.3e now edits apps/accounts/cloudbuild.yaml and apps/workbooks/cloudbuild.yaml to --no-traffic and the tag, and AC-2.9 reads both files for --no-traffic and the tag; FR-2 and D2 name the change, so the direct-deploy gate risk is closed.",
+    "F2 withdrawn: FR-1 names the exact path scripts/ci/affected-apps.mjs and the one CLI node scripts/ci/affected-apps.mjs --base <sha> --head <sha>; section 2a names scripts/ci/apps.json and its keys; task 1.2 names scripts/ci/__tests__/affected-apps.test.mjs and the run command, so Red and Green share one path and one interface.",
+    "F3 withdrawn: AC-1.3 now returns ['storytime'] for packages/read-along, matching the tree (only storytime lists @reading-advantage/read-along; www and primary do not); the shared-package case moved to packages/utils with a correct result.",
+    "F4 withdrawn: section 2a gives the tag prefix and computed tag length for every gated row, and AC-2.3 checks 8 gated rows against the table, so the tag rule is no longer a guess.",
+    "F5 withdrawn: D1 now names the order refuse-legacy-db, migrate-db, doctor-check, then the traffic move; AC-2.6 checks that no push step has those ids or command strings; AC-2.7 checks the four-step order, so the guard's fate is decided.",
+    "AC-1.3 utils case verified against the tree: grep for @reading-advantage/utils in package.json shows direct dependents www-reading-advantage, primary-advantage, reading-advantage, accounting, codecamp-advantage, marketing, sales-advantage (plus advantage-games and science-advantage, which are not table rows because they have no cloudbuild file). The seven table rows in the result are correct, and storytime, accounts, and workbooks do not depend on utils (checked in their package.json). The parenthetical 'listed directly by www and primary and reading-advantage' is true but under-inclusive; it does not change the test.",
+    "Tag table verified: service name lengths (primary-advantage-app 21, storytime-app 13, accounts 8, workbooks 9, accounting 10, codecamp-advantage 18, marketing 9, sales-advantage 15) and tag lengths (11 for the four new tags, candidate 9, sso-candidate 13, c+8 9, legacy-rollback 15) all sum to 46 or less; the largest is primary at 32.",
+    "Accounts D7 verified: apps/accounts/cloudbuild.yaml holds exactly the five steps migrate-company-identity, bootstrap-company-identity, doctor-company-identity, bootstrap-production-identity, runtime-db-contract before the deploy, matching D7 and AC-2.11 (six steps with update-traffic). The accounts file has no read-only guard step, matching D7's note.",
+    "AC-2.12 note is slightly loose: codecamp-advantage holds migrate-db and doctor-check but no separate probe step (its doctor step embeds a psql check), while accounting, marketing, and sales-advantage hold a separate runtime-db-contract probe step. The requirement (migrate and doctor steps before the traffic move) is correct for all four, so this is a wording note, not a finding.",
+    "Region check: all four files this track edits (primary, storytime, accounts, workbooks) use --region=asia-southeast1, matching section 2a; the other six files also use it.",
+    "The architecture-check follow-up note (pnpm architecture:check fails on master) is a PM-recorded fact for a separate CI-green track, consistent with D5, and is out of scope for this track.",
+    "Zero-decision check on the new lines: FR-1 names the script path, CLI, exit codes, and the base/head rules; section 2a names the table path, keys, and every gated tag; D1 and D7 name the exact step ids and order; tasks 2.3d-2.3h name every file and every test. No choice is left to Red or Green except the sales-advantage steps of F6."
+  ],
+  "commands": [
+    "git rev-parse HEAD (701e76f532450d3d167bb8b1ff2d1765395cfe64)",
+    "git log --oneline -8",
+    "git diff f1382b2c3 701e76f53 -- measure/tracks/per_app_cicd_20261107",
+    "grep for @reading-advantage/utils in package.json files (11 matches)",
+    "read of apps/accounts/package.json, apps/workbooks/package.json, apps/reading-advantage/package.json",
+    "re-read of the four cloudbuild files for the D7 step ids and the tag/service lengths"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "paraphrase": {
+    "proposes": "This track makes a push deploy only the apps that the push changes. One script at scripts/ci/affected-apps.mjs reads a base SHA and a head SHA and lists the affected apps. The www workflow, a new table-driven cd-apps.yml, and ci.yml all use that script. Each gated app builds a new revision with --no-traffic and a tag, and only a manual traffic step on Daniel's word moves traffic or changes a production database. The track fixes the storytime tag length and records the storytime deploy facts.",
+    "current_system": "Today one workflow deploys www on every push that changes packages, so the team avoids pushes to stop deploys. Each app has its own cloudbuild.yaml, and most deploy the new revision straight to traffic. Primary, accounts, accounting, codecamp, marketing, and sales-advantage run database steps (migrate, doctor, seed, probe) before the deploy. Storytime already deploys with --no-traffic, but its tag plus service name is 52 characters, over the 46-character limit."
+  }
+}

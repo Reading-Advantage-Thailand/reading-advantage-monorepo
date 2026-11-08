@@ -1,0 +1,44 @@
+# Review B r2 (security and data handling) - per_app_cicd_20261107 Phase 3
+
+- Model: deepseek/deepseek-flash (high). It differs from the P3 Green family (Anthropic) and from Review A (GLM).
+- phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+- role_base_sha: 79f86404b4ac46ff2bca1c8f12d8468b24033eed
+- audited_head_sha: 79f86404b4ac46ff2bca1c8f12d8468b24033eed
+- HEAD: 998c6dc74. That commit changes one measure plan file only, so the audited phase tree equals the current tree.
+- Result JSON: measure/runs/per_app_cicd_20261107/review-b-p3-79f86404b.json
+
+## Verdict
+
+pass. No blocker. One nonblocking finding, F6 (Major).
+
+## Routed items from r1
+
+- F1 CLOSED. scripts/ci/affected-apps.mjs readTable rejects an id that fails ^[a-z0-9][a-z0-9-]*$ with exit 2 before any stdout. The ci.yml select step is the only writer of the matrix. scripts/ci/__tests__/ci-remediation.test.mjs CI-R2 covers the refusal.
+- F2 CLOSED. .github/workflows/ci.yml line 24 holds permissions: contents: read. No line adds a job block. CI-R3 covers it.
+- F5 CLOSED. docs/runbooks/traffic-moves.md lines 15-17 state the sales-advantage exception. Lines 129-159 match apps/sales-advantage/cloudbuild-traffic.yaml.
+- F3 declined by the owner. Withdrawn. The new uses lines follow the existing ci.yml style.
+- F4 declined for P3. Withdrawn. The PM puts the sales source binding into Phase 4 as one task.
+
+## New finding
+
+- F6 [Major]. .github/workflows/ci.yml lines 8-22 omit scripts/** from the pull_request paths. No workflow runs scripts/ci/__tests__ (grep for node --test, scripts/ci/__tests__, ci-remediation, and ci-workflow finds no match). The selector tests never run on a change to the selector. The push trigger holds no path filter, so the impact is bounded.
+
+## Other checks
+
+- The six new Test roots add no secret, no production network call, and no new env value.
+- A2: not applicable. The P3 diff holds no publish or consent token.
+- A6: no hit. measure/tracks.md line 79 claims no resolved security state.
+- This role ran no workflow, called no gcloud, read no secret, and ran no test suite.
+
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+commits: none
+tests_run: none (audit only; no suite run)
+files_changed: measure/runs/per_app_cicd_20261107/review-b-p3-79f86404b.json, measure/runs/per_app_cicd_20261107/review-b-p3-79f86404b.log
+plan_updates: none
+known_failures: none
+handoff: Pass with one nonblocking Major finding, F6. F1, F2, and F5 are closed. F3 and F4 are withdrawn after the owner declined them. F6: ci.yml pull_request paths omit scripts/**, and no workflow runs scripts/ci/__tests__, so the selector tests never run on a selector change. Route F6 to Green as an optional follow-up; a scripts/** path entry and one test step close the gap. No blocker. No commit. Model: deepseek/deepseek-flash#high.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,509 @@
+# Measure Red role log — per_app_cicd_20261107 — Phase 2
+
+- Role: measure-mid-red
+- Model: deepseek/deepseek-flash#high
+- Track: `per_app_cicd_20261107`
+- Phase: `## Phase 2: Per-app CD workflows` (P2)
+- `phase_base_sha`: `d28f8fd52096dd3101d60005182fc90a17ea52a9`
+- `role_base_sha`: `d28f8fd52096dd3101d60005182fc90a17ea52a9`
+- Role base HEAD: `d28f8fd52096dd3101d60005182fc90a17ea52a9`
+- Status: DONE
+- Date: 2026-11-07
+
+## Scope
+
+Red work only: tasks 2.1, 2.3a, 2.3d, and 2.3f of Phase 2. The files are
+`scripts/ci/__tests__/cd-workflows.test.mjs`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`,
+and the support helper `scripts/ci/__tests__/helpers/plan.mjs`. No workflow file, no
+Cloud Build file, no runbook, and no script outside `scripts/ci/__tests__/` changed.
+
+## Run environment
+
+Every Vitest run went through the wrapper, in the foreground, one at a time:
+
+```
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+```
+
+The wrapper exit was 0 and the inner `EXIT=` line was 1 in every Red run. The inner
+exit is the evidence.
+
+## Red results
+
+### Task 2.1 (commit 9be261864)
+
+- Test file: `cd-workflows.test.mjs` (33 cases), helper `helpers/plan.mjs`.
+- `EXIT=1`; `Test Files 1 failed | 2 passed (3)`; `Tests 22 failed | 63 passed (85)`.
+- The 52 P1 tests passed (48 affected-apps plus 4 adversarial).
+- Failed W cases: W-01 to W-09, W-11-primary, W-11-storytime, W-11-accounts,
+  W-11-workbooks, W-14a, W-14b, W-15, W-16, W-18a, W-18b, W-18c, W-19, W-20.
+- Characterization passes: W-10, W-11-accounting, W-11-codecamp, W-11-marketing,
+  W-11-sales, W-12, W-13, W-14, W-14c, W-17, W-21.
+- Expected messages held, for example `missing select step in
+  .github/workflows/cd-www-reading-advantage.yml`, `Missing
+  .github/workflows/cd-apps.yml`, `storytime tag combined=52 limit=46`, and
+  `facts_found=0 expected=7`. One helper defect (a workflow `env:` map) was fixed
+  before this run; no failure came from a thrown non-assertion error.
+- `cd-workflows.test.mjs` also holds W-11-accounting, W-11-codecamp,
+  W-11-marketing, and W-11-sales, which pass at the base (characterization).
+
+### Task 2.3a (commit 2c7b8a6a9)
+
+- Test file: `cloudbuild-files.test.mjs`, F-01 to F-05 (5 cases).
+- `EXIT=1`; `Test Files 2 failed | 2 passed (4)`; `Tests 25 failed | 65 passed (90)`.
+- F-01 failed: `primary push file holds database steps:
+  refuse-legacy-db,migrate-db,doctor-check`.
+- F-03 and F-04 failed: `missing apps/primary-advantage/cloudbuild-traffic.yaml`.
+- F-02 and F-05 passed (the guard rule on a fixture; no workflow traffic reference).
+- The W cases stayed red from 2.1 because no Green task ran in this Red pass.
+
+### Task 2.3d (commit 2d2b15cee)
+
+- Added F-06 to F-10 (5 cases).
+- `EXIT=1`; `Test Files 2 failed | 2 passed (4)`; `Tests 28 failed | 67 passed (95)`.
+- F-06 failed: `accounts deploy step has no --no-traffic; accounts deploy step has
+  no tag; workbooks deploy step has no --no-traffic; workbooks deploy step has no
+  tag files_checked=2`.
+- F-08 failed: `files_with_db_steps=6 files_checked=9`. This matches the P2.3 figure
+  for the 2.3d Red commit: six push files held database steps at this point
+  (primary-advantage, accounting, codecamp-advantage, marketing, sales-advantage,
+  accounts).
+- F-10 failed: `missing apps/accounts/cloudbuild-traffic.yaml`.
+- F-07 and F-09 passed (the runtime flags stay; the detector fixtures).
+
+### Task 2.3f (commit a6d696902)
+
+- Added F-11 to F-16 (6 cases).
+- `EXIT=1`; `Test Files 2 failed | 2 passed (4)`; `Tests 32 failed | 69 passed (101)`.
+- F-11 failed: `missing traffic files for the four apps:
+  accounting,codecamp-advantage,marketing,sales-advantage`.
+- F-12 failed: `sales_db_steps_moved=0 expected=6`.
+- F-14 failed: `psql in a push file: accounting(3),codecamp-advantage(1),
+  marketing(2),sales-advantage(8),accounts(1) psql_hits=5`.
+- F-16 failed: `missing docs/runbooks/traffic-moves.md`.
+- F-13 and F-15 passed (the sales push keeps its steps; the input-size guards).
+- F-08 also still failed with `files_with_db_steps=6 files_checked=9`. P2.3 predicted
+  4 at this commit, but the prediction assumes Green 2.3b and 2.3e already moved the
+  primary and accounts database steps. This Red role ran all four Red tasks before
+  any Green task, so the count is still 6. After Green 2.3b and 2.3e the same check
+  reports 4, and after 2.3g it reports 0. The test itself needs no change.
+
+## Partial-repair proof
+
+The Red role copied the artifacts to `/tmp/opencode/partial-proof/<P>` and ran the
+new tests with `CICD_FIXTURE_ROOT`. Result: `partials_rejected=6
+partials_accepted=0` (seven runs; P-1 covers W-01 and W-05).
+
+| # | Partial edit | Case and message |
+|---|---|---|
+| P-1 | a select step that runs the script and writes nothing | W-01 `www=undefined expected=yes`; W-05 `primary-advantage: matrix is not an array` |
+| P-2 | accounts deploy step with `--no-traffic` and no tag | F-06 `accounts deploy step has no tag` |
+| P-3 | primary traffic file with `migrate-db` before `refuse-legacy-db` | F-03 `order is wrong; got migrate-db,refuse-legacy-db,doctor-check,update-traffic` |
+| P-4 | 6 of the 7 runbook facts | W-16 `facts_found=6 expected=7` |
+| P-5 | `permissions: write-all` | W-14a `permissions="write-all"` |
+| P-6 | a tag in a comment only | W-15 `storytime tag combined=52 limit=46` |
+
+## P1 regression
+
+The 52 P1 tests passed in every Red run: `affected-apps.test.mjs` and
+`affected-apps-adversarial.test.mjs` were always the 2 passed test files. No P1 file
+was edited.
+
+## Dirty paths at the role base
+
+- Relevant: `measure/tracks/per_app_cicd_20261107/plan.md` (this role; committed as
+  b6d9757f7). New test files were committed in the four Red commits.
+- Generated or ignorable: `apps/*/next-env.d.ts`, `.generated/`, `.pnpm-store/`,
+  `.tmp/`, `.qa-tmp/`, `.tmp-playwright/`, `.opencode/goals/state.json.sessions/`,
+  `.antigravitycli/`, `.reasonix/`, `test-results/`,
+  `apps/advantage-games/test-results/`.
+- Unrelated user work, preserved and not staged: `apps/storytime/lib/media/sign.ts`,
+  `apps/primary-advantage/cloudbuild-backfill.yaml`,
+  `apps/primary-advantage/qa-check-user.tmp.ts`,
+  `apps/primary-advantage/scripts/seed-qa-users.ts`,
+  `apps/science-advantage/lib/ci-gates/wave5-phase-8-de-prisma.test.ts`,
+  `apps/storytime/__tests__/phase2b-browser-gate.sh`,
+  `div.absolute.top-4.right-4.z-10`, `listGameLearningContent`, `probe-tmp.mjs`, `t/`,
+  `test-results/`, `docs/deployment/tutor-switch-brief.md`.
+
+## Commits of this role
+
+- `9be2618647859c0368621858e8bb68d9886b8081` — 2.1 Red tests and the helper.
+- `2c7b8a6a902e650c445810702e7818c46619e440` — 2.3a Red tests.
+- `2d2b15ceebd5a8b0ea4cd4f8c749bfe45224ab8e` — 2.3d Red tests.
+- `a6d696902a0f98064e8cab3624afa1def4a72cbe` — 2.3f Red tests.
+- `b6d9757f7bd0f928d871988a003af12239060905` — plan evidence (4 task lines).
+
+HEAD after this role: `b6d9757f7bd0f928d871988a003af12239060905`.
+
+## Remaining failures (all expected)
+
+32 Red failures at HEAD: 22 W cases and 10 F cases from the four new test files.
+No P1 failure. No unexpected error. Green closes them by task; Green must not edit a
+test.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+baseline_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+head: b6d9757f7bd0f928d871988a003af12239060905
+commits:
+  - 9be2618647859c0368621858e8bb68d9886b8081
+  - 2c7b8a6a902e650c445810702e7818c46619e440
+  - 2d2b15ceebd5a8b0ea4cd4f8c749bfe45224ab8e
+  - a6d696902a0f98064e8cab3624afa1def4a72cbe
+  - b6d9757f7bd0f928d871988a003af12239060905
+tests:
+  command: "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo \"EXIT=$?\"'"
+  exit: 1
+  test_files_failed: 2
+  test_files_passed: 2
+  tests_failed: 32
+  tests_passed: 69
+  tests_total: 101
+  p1_tests_passed: 52
+  p2_cases: 49
+files:
+  - scripts/ci/__tests__/cd-workflows.test.mjs
+  - scripts/ci/__tests__/cloudbuild-files.test.mjs
+  - scripts/ci/__tests__/helpers/plan.mjs
+  - measure/tracks/per_app_cicd_20261107/plan.md
+remaining_failures: "32 expected Red failures (22 W, 10 F); no P1 failure; no unexpected error"
+status: done
+END_MEASURE_AGENT_RESULT
+
+## Red r3 (2026-11-07) — step-made build tag
+
+- Role base: `d456c90ba3c2ad616d16a3eec13ef0aaf78e54df`
+- Status: DONE
+- Scope: tests only. No workflow, Cloud Build, runbook, or script file changes.
+- Task: the four push files (accounts, primary-advantage, storytime, workbooks) must
+  escape the tag slice as `$${BUILD_ID:0:8}`, must not hold an unescaped
+  `${BUILD_ID:0:8}`, and the deploy step must map `BUILD_ID=$BUILD_ID` in `env`.
+  One new guard case rejects an invalid substitution in any push or traffic file.
+
+### Changed cases
+
+- W-11-primary, W-11-storytime, W-11-accounts, W-11-workbooks: each deploy step must
+  hold `--tag=<prefix>-$${BUILD_ID:0:8}`, must not hold an unescaped
+  `${BUILD_ID:0:8}`, and its env must hold exactly `BUILD_ID=$BUILD_ID`.
+- W-15: same three checks for the storytime tag, then the rendered tag is 11
+  characters and tag plus `storytime-app` is 24.
+- F-17 (new, `cloudbuild-files.test.mjs`): all 16 push and traffic files
+  (`files_checked=16`) must hold no unescaped `${...}` whose inner text is not
+  `[A-Z_][A-Z0-9_]*`. The check uses the lookbehind `(?<!\$)\$\{([^}]*)\}` so an
+  escaped `$${...}` is not a hit.
+- Helper `pushAndTrafficFiles()` in `helpers/plan.mjs` lists the 10 push and 6
+  traffic files under `FIXTURE_ROOT`.
+
+### Red result
+
+Command (the P2.3 command):
+
+```
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+```
+
+- `EXIT=1`; `Test Files 2 failed | 2 passed (4)`; `Tests 6 failed | 96 passed (102)`.
+- Failing cases, with the message:
+  - W-11-primary: `primary-advantage tag expression missing; expected --tag=pa-$${BUILD_ID:0:8}`
+  - W-11-storytime: `storytime tag expression missing; expected --tag=st-$${BUILD_ID:0:8}`
+  - W-11-accounts: `accounts tag expression missing; expected --tag=ac-$${BUILD_ID:0:8}`
+  - W-11-workbooks: `workbooks tag expression missing; expected --tag=wb-$${BUILD_ID:0:8}`
+  - W-15: `storytime tag expression missing; expected --tag=st-$${BUILD_ID:0:8}`
+  - F-17: `invalid_substitutions=4: apps/accounts/cloudbuild.yaml:${BUILD_ID:0:8},apps/primary-advantage/cloudbuild.yaml:${BUILD_ID:0:8},apps/storytime/cloudbuild.yaml:${BUILD_ID:0:8},apps/workbooks/cloudbuild.yaml:${BUILD_ID:0:8}`
+- No other case failed. The 52 P1 cases and the other 44 P2 cases passed.
+
+### Guard proof (F-17 is not vacuous)
+
+A scratch tree held copies of all 16 push and traffic files.
+
+- All four tags escaped: `CICD_FIXTURE_ROOT=<ok>` gives exit=0, `1 passed | 16 skipped`.
+- Only the storytime tag escaped: exit=1, `invalid_substitutions=3` for accounts,
+  primary-advantage, and workbooks.
+- The real tree: F-17 fails with `invalid_substitutions=4` (the Red result above).
+
+### Commits
+
+- `a67576ee70f073263fd9f39d8f286e27c2660afb` — the test files and the helper.
+- `551519234f9385749686077253325d25c85713cc` — the plan evidence on task 2.4.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+round: 3
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: d456c90ba3c2ad616d16a3eec13ef0aaf78e54df
+role_base_sha: d456c90ba3c2ad616d16a3eec13ef0aaf78e54df
+baseline_sha: d456c90ba3c2ad616d16a3eec13ef0aaf78e54df
+head: 551519234f9385749686077253325d25c85713cc
+commits:
+  - a67576ee70f073263fd9f39d8f286e27c2660afb
+  - 551519234f9385749686077253325d25c85713cc
+tests:
+  command: "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo \"EXIT=$?\"'"
+  exit: 1
+  test_files_failed: 2
+  test_files_passed: 2
+  tests_failed: 6
+  tests_passed: 96
+  tests_total: 102
+  p1_tests_passed: 52
+  failing_cases: "W-11-primary,W-11-storytime,W-11-accounts,W-11-workbooks,W-15,F-17"
+  guard_proof: "escaped copy exit=0 (1 passed); partial copy exit=1 (invalid_substitutions=3); current tree invalid_substitutions=4"
+files:
+  - scripts/ci/__tests__/cd-workflows.test.mjs
+  - scripts/ci/__tests__/cloudbuild-files.test.mjs
+  - scripts/ci/__tests__/helpers/plan.mjs
+  - measure/tracks/per_app_cicd_20261107/plan.md
+remaining_failures: "6 expected Red failures; Green must escape the four tags; no P1 failure"
+status: done
+END_MEASURE_AGENT_RESULT
+
+## Red r4 (2026-11-07) — F-06 expects the escaped tag
+
+- Role base: `f1b6d9ae8b8e660a879bf55eb2eaf15ca419bbad`
+- Status: DONE
+- Scope: tests only. One test file changed.
+- Change: F-06 now requires `--tag=<prefix>-$${BUILD_ID:0:8}` for `apps/accounts`
+  and `apps/workbooks`, and rejects an unescaped `${BUILD_ID:0:8}`. It still fails
+  when the tag is absent and when the tag is unescaped.
+- Search: `git grep -n 'BUILD_ID:0:8' -- scripts/ci/__tests__` found no other case
+  that pins the unescaped file text. W-11 and W-15 already require the escaped form.
+  `tagFor()` in `plan.mjs` matches the table text, and the four rows hold the escaped
+  form. `TABLE_ROWS` of `scratch.mjs` is the P1 fixture and inspects no file.
+- Full run: `EXIT=0`; `Test Files 4 passed (4)`; `Tests 102 passed (102)`.
+- Vacuity proof: a scratch copy of `apps/accounts/cloudbuild.yaml` with the tag line
+  removed makes F-06 fail: `accounts deploy step has no tag files_checked=2`
+  (exit=1; 1 failed | 16 skipped).
+- Commit: `09ce375d2bf32aac34b7d357496d64e52c201d31`.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+round: 4
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: f1b6d9ae8b8e660a879bf55eb2eaf15ca419bbad
+role_base_sha: f1b6d9ae8b8e660a879bf55eb2eaf15ca419bbad
+baseline_sha: f1b6d9ae8b8e660a879bf55eb2eaf15ca419bbad
+head: 09ce375d2bf32aac34b7d357496d64e52c201d31
+commits:
+  - 09ce375d2bf32aac34b7d357496d64e52c201d31
+tests:
+  command: "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo \"EXIT=$?\"'"
+  exit: 0
+  test_files_passed: 4
+  tests_passed: 102
+  tests_total: 102
+  p1_tests_passed: 52
+  proof: "tag removed from a scratch accounts file: F-06 exit=1, accounts deploy step has no tag"
+files:
+  - scripts/ci/__tests__/cloudbuild-files.test.mjs
+remaining_failures: none
+status: done
+END_MEASURE_AGENT_RESULT
+
+## Red r5 (2026-11-07) — cross-track regression sweep
+
+- Role base: `505b6df6d06fff99031d55391b7649b19f42df73`
+- Status: IN PROGRESS
+- Scope: tests only. Run the app and package tests that read a Cloud Build,
+  workflow, or runbook file that Phase 2 changed. Fix a Phase 2 regression in a test
+  only when the new file follows the spec. Report a Green defect when the file looks
+  wrong.
+
+Per-file results, changes, commits, and the new MEASURE_AGENT_RESULT block follow.
+
+### Red r5 results
+
+| File | Runner | Before | After | Cause | Change |
+|---|---|---|---|---|---|
+| apps/storytime/__tests__/phase1-service.test.ts | vitest | 1 failed (AC-1.2) | 17/17 pass with the other 2 files | Phase 2 made the deploy a bash step | Read `gcloud run deploy` from the bash script and keep every check |
+| packages/db/src/__tests__/primary-deploy-gate-contract.test.ts | vitest | 4 failed | pass | D1 moved the DB steps to the traffic file | Read the traffic file; anchor on `update-traffic`; assert the push file has no DB step |
+| packages/db/src/__tests__/deploy-gate-contract.test.ts | vitest | 6 failed | pass | D7 moved the DB steps to the traffic file | Read the traffic file; anchor on `update-traffic` |
+| packages/db/src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts | vitest | 2 failed | 1 failed | Case 1: D7 move. Case 2: fails at d28f8fd52 too (expects ceiling 0049; the file has 0059) | Case 1 reads the traffic file; case 2 unchanged (older) |
+| apps/accounting/app/lib/__tests__/cloudbuild.red.test.ts | vitest | 2 failed | 18/18 pass with the verifier file | D7 moved the DB steps | Read the traffic file; push file holds no DB step |
+| apps/accounts/scripts/production-readiness.test.ts | vitest | 2 failed | 9/9 pass | D7 moved the DB steps and the availableSecrets | Read the traffic file; push file holds no DB step |
+| apps/marketing/app/__tests__/production-readiness.test.ts | vitest | 3 failed | 15/15 pass with the staged-release file | D7 moved the DB steps and the availableSecrets | Read the traffic file; push file holds no DB step |
+| apps/sales-advantage/scripts/production-readiness.test.ts | vitest | 2 failed | 2 failed (4 cases earlier) | D7 moved the DB steps and the guard | NOT FIXED. A partial edit passed 27/29; the tree is reverted. Needs a push/traffic split rewrite. |
+| apps/sales-advantage/scripts/__tests__/cloudbuild-secret-isolation.test.ts | vitest | 2 failed | 2 failed | D7 moved the availableSecrets and `verify-repair-verify-legacy-rollback` | NOT FIXED. Reverted with the file above. |
+| apps/codecamp-advantage prod-smoke phase-10 | vitest | 2 failed | 2 failed | Older than Phase 2: session-cookie lifetime and the launch gate; no cloudbuild dependency | No change |
+| packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts | vitest | pass | pass | - | No change |
+
+All other listed files passed before and after.
+
+### Guard files for future phases
+
+Run these when Phase 2 files change: the `cloudbuild.yaml` of accounts, primary-advantage,
+storytime, workbooks, accounting, codecamp-advantage, marketing, sales-advantage; the
+`cloudbuild-traffic.yaml` of the last six; `.github/workflows/cd-www-reading-advantage.yml`
+and `cd-apps.yml`; `docs/runbooks/storytime-deploy.md` and `traffic-moves.md`.
+
+### Known older failures (unchanged)
+
+- `codecamp-0049`: "bounds the Codecamp migration step to 0049" expects `MIGRATION_CEILING_TAG=0049…`; the file has `0059_game_challenges` at the base and at HEAD.
+- codecamp phase-10: "auth session schema pins the DB session lifetime to 7 days" and the launch gate. No cloudbuild dependency.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+round: 5
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: 505b6df6d06fff99031d55391b7649b19f42df73
+role_base_sha: 505b6df6d06fff99031d55391b7649b19f42df73
+baseline_sha: 505b6df6d06fff99031d55391b7649b19f42df73
+head: a987ccb48ca3bf82fc7eb2059861390b7aac8a9e
+commits:
+  - 4f4a893372484e59aed5dc5a708f9015c2d8af4e
+  - e8917df46f5211b8eb08dd9e70dc863d46436cc0
+  - b5087acbe0eb13de42810f3c5dba5720147c71ba
+  - c934643b544ffa4387ceef5d0f07fc4a62e55f72
+  - a987ccb48ca3bf82fc7eb2059861390b7aac8a9e
+per_app:
+  storytime: "3 files, 17 passed"
+  db: "3 files, 28 passed, 1 older failure"
+  accounting: "2 files, 18 passed"
+  accounts: "1 file, 9 passed"
+  marketing: "2 files, 15 passed"
+  domain: "1 file, 10 passed"
+  sales: "4 files, 27 passed, 2 failed (not fixed, reverted)"
+  codecamp: "8 files, 133 tests, 2 older failures"
+remaining_failures: "sales production-readiness 2 cases; sales isolation 2 cases before the revert; 2 older codecamp phase-10 cases; 1 older codecamp-0049 ceiling case"
+status: done-with-gap
+END_MEASURE_AGENT_RESULT
+
+## Red r6 (2026-11-07) — sales split, tag lookup, action SHAs
+
+- Role base: `67c9104d2c3d797f7902924b3486b977a12c93a5`
+- Status: IN PROGRESS
+- Scope: tests only.
+- Item 1: split the three sales cases across the push file and the traffic file.
+- Item 2: require the traffic runbook to name how the operator finds the tag or build.
+- Item 3: require a 40-hex commit SHA in every `uses:` line of the two CD workflows.
+
+Results and the MEASURE_AGENT_RESULT block follow.
+
+### Red r6 results
+
+- Item 1 (sales): 2 cases still fail: `production-readiness` "verifies compatibility…" (`projects/...SALES_LE…` assertion) and "seeds only deterministic…" (`_CURRICULUM_BACKUP_ID` slice). 27/29 pass; the tree stays uncommitted for sales. Cause: the push/traffic split is incomplete in the two large tests.
+- Item 2 (W-22): fails on the current runbook: `missing=primary-advantage:lookup,accounts:lookup,accounting:lookup,codecamp-advantage:lookup,marketing:lookup,sales-advantage:lookup`. A scratch runbook with the lookup commands passes (`W22_EXIT=0`, 1 passed).
+- Item 3 (W-23): fails now: `unpinned=...@v4,...@v2 uses_lines=10`. A scratch pair of workflows with 40-hex pins passes (`W23_EXIT=0`, 1 passed).
+- Full `scripts/ci` run: `CI_EXIT=1`, `Test Files 1 failed | 3 passed (4)`, `Tests 2 failed | 102 passed (104)`. The only failures are W-22 and W-23.
+- Commit: `85ad8bb87584056ec5d43704b85e2bc4725967d1` (items 2 and 3).
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+round: 6
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: 67c9104d2c3d797f7902924b3486b977a12c93a5
+role_base_sha: 67c9104d2c3d797f7902924b3486b977a12c93a5
+baseline_sha: 67c9104d2c3d797f7902924b3486b977a12c93a5
+head: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+commits:
+  - 85ad8bb87584056ec5d43704b85e2bc4725967d1
+ci_run: "EXIT=1; 4 files, 2 failed | 102 passed (104); failing W-22,W-23"
+proofs: "W-22 scratch runbook exit=0; W-23 scratch workflows exit=0"
+sales: "27 passed | 2 failed; not committed"
+remaining_failures: "W-22 and W-23 are the intended Red state; sales has 2 unfinished cases"
+status: done-with-gap
+END_MEASURE_AGENT_RESULT
+
+## Red r7 (2026-11-07) — sales split close
+
+- Role base: `85ad8bb87584056ec5d43704b85e2bc4725967d1`
+- Status: IN PROGRESS
+- Result: 28 of 29 sales tests pass. One case remains red: "seeds only deterministic approved curriculum and gates exact completeness".
+- No commit: the sales run is not green.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+round: 7
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+role_base_sha: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+baseline_sha: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+head: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+commits: none
+tests: "EXIT=1; 4 files, 1 failed | 28 passed (29)"
+remaining_failures: "sales production-readiness seeds case"
+status: done-with-gap
+END_MEASURE_AGENT_RESULT
+
+### Red r7 correction (supersedes the block above)
+
+- Commit: `7cc94da8a91e900280e073abfe1e803b44d1f9b7`
+- Sales run: EXIT=1; 4 files, 1 failed | 28 passed (29).
+- All Phase 2 (D7) assertions now pass. The one remaining failure is not a CD
+  contract: "seeds only deterministic approved curriculum and gates exact
+  completeness" fails with `expected { …(6) } to match object { status: 'approved', …(2) }`.
+  That is a curriculum-approval data mismatch outside Phase 2. It stayed hidden
+  behind the earlier cloudbuild slice failure. No test was weakened for it.
+- Reason lines: the repair-manifest secret moved to the traffic file; the backup,
+  seed, verify, and workspace-build slices moved there; the release-source
+  substitution stayed in the push file; every check is kept.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+round: 7
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+role_base_sha: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+baseline_sha: 85ad8bb87584056ec5d43704b85e2bc4725967d1
+head: 7cc94da8a91e900280e073abfe1e803b44d1f9b7
+commits:
+  - 7cc94da8a91e900280e073abfe1e803b44d1f9b7
+tests: "EXIT=1; 4 files, 1 failed | 28 passed (29)"
+remaining_failures: "1 older failure: curriculum-approval object mismatch (not Phase 2)"
+status: done
+END_MEASURE_AGENT_RESULT
+
+## Red r8 (2026-11-07) — release commit for marketing pushes
+
+- Role base: `03085e26052002ed7ad2463c7d584308bef68ff0`
+- Status: IN PROGRESS
+- Scope: tests only. `cd-apps.yml` passes no substitution today, so the marketing push
+  build stops at `validate-release-input`. The sales push stays an open limit.
+- Cases: W-24 (a REQUIRED `_RELEASE_COMMIT_SHA` row gets the pushed commit), W-25 (a row
+  without the key gets no substitution), W-26 (sales stays as it is; the runbook keeps
+  the sales inputs).
+
+Results and the MEASURE_AGENT_RESULT block follow.
+
+### Red r8 results
+
+- Role base: `03085e26052002ed7ad2463c7d584308bef68ff0`.
+- Cases: W-24 fails; W-25 and W-26 pass now.
+- Full run: `EXIT=1`; `Test Files 1 failed | 3 passed (4)`; `Tests 1 failed | 106 passed (107)`.
+- Failing case: `W-24 a REQUIRED release commit row gets the pushed commit` with
+  `marketing does not pass _RELEASE_COMMIT_SHA from the pushed commit`.
+- Proofs: a scratch cd-apps.yml with `--substitutions=_RELEASE_COMMIT_SHA=${{ github.sha }}`
+  passes W-24. A scratch conditional `matrix.substitutions` passes W-25. An
+  unconditional `--substitutions=_RELEASE_COMMIT_SHA=...` fails W-25. A scratch runbook
+  copy passes W-26.
+- Commit: `8380479eabb147130a6de9bc903cf05f1565d343`.
+- Sales stays an open limit. The runbook Open limits names the sales row and
+  `_RELEASE_COMMIT_SHA`; the sales section names the backup and push-build keys.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+round: 8
+track: per_app_cicd_20261107
+phase: P2
+phase_base_sha: 03085e26052002ed7ad2463c7d584308bef68ff0
+role_base_sha: 03085e26052002ed7ad2463c7d584308bef68ff0
+baseline_sha: 03085e26052002ed7ad2463c7d584308bef68ff0
+head: 8380479eabb147130a6de9bc903cf05f1565d343
+commits:
+  - 8380479eabb147130a6de9bc903cf05f1565d343
+tests: "EXIT=1; 4 files, 1 failed | 106 passed (107)"
+failing_cases: "W-24"
+proofs: "W-24 fixture exit=0; W-25 conditional exit=0, unconditional exit=1; W-26 fixture exit=0"
+remaining_failures: "W-24 is the intended Red state; sales stays an open limit"
+status: done
+END_MEASURE_AGENT_RESULT

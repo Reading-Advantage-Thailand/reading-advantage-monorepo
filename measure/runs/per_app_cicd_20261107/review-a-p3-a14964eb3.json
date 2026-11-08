@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Re-review of Phase 3 at a14964eb3 (r3; provenance: phase_base_sha=25d774e08a0f9bef8074fb6f88bde439d1a72066, role_base_sha=audited_head=a14964eb3f3b72cbae4f181639a645051769c730, repo HEAD confirmed equal by rev-parse; model volcengine-agent-plan/glm-5.3-flash#high, same substitution as r1 and r2). The r4 delta (79f86404b..a14964eb3) touches only ci.yml, the track plan, and ci-remediation.test.mjs for this track. F5 is withdrawn: plan 3.5 now states the measured 251 of 251 in both runner contexts and still states that the master 'Architecture boundary check' step stays red (D5). Review B r2 F6 is verified closed: the new CI-R4 case fails on each missing deliverable through two independent must gates (no pull_request path filter covering both probes fails the first; no vitest scripts/ci step in a job without an event/matrix guard fails the second), the recorded scratch pair proves the case reads the fixture, and Green commit 1b0e756d5 adds only '- scripts/**' to on.pull_request.paths and the 'CI selector tests' step to the packages job, which has no if and no matrix, so the step runs on push and on pull_request; the Test step line and the permissions block are untouched. The root vitest.config.ts keeps the vitest defaults, so 'pnpm exec vitest run scripts/ci' from the root picks up scripts/ci, and the recorded gate reproduces at 134 of 134 with counts consistent across 3.2 (6 files, 130), 3.5 (7 files, 133), and 3.6 (7 files, 134). A3 and A4 checks are clean over the delta. One nonblocking observation N1: the optional rerun did not run because the sandbox denied shell access at that step, so execution evidence stays plan-recorded.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Observation, not a defect] review-a: the local rerun of the gate (heavy-run of 'CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci') and a direct listing of the /tmp/opencode/p3-r4-good and p3-r4-bad scratch copies could not run in this audit; the sandbox denied shell access at that step. The audit relied on recorded plan evidence plus direct code and workflow inspection (the CI-R4 case source at lines 409 to 445, its helpers, and git show 1b0e756d5). Execution evidence for 134 of 134 stays plan-recorded (heavy-run EXIT=0)."
+  ],
+  "evidence": [
+    "Provenance: phase_base_sha=25d774e08a0f9bef8074fb6f88bde439d1a72066; role_base_sha=audited_head=a14964eb3f3b72cbae4f181639a645051769c730; git rev-parse HEAD returned the same SHA, so the audit ran on the audited content.",
+    "Model route: volcengine-agent-plan/glm-5.3-flash#high, same substitution as r1 and r2.",
+    "F5 withdrawn: plan 3.5 now states the measured result: command EXIT=0, Test Files 31 passed (31), Tests 251 passed (251), tests_failed=0, and 'Review A measured the same count (251 of 251) in both runner contexts'. The line still states that the master CI step 'Architecture boundary check' (pnpm architecture:check) stays red (D5) and is separate from the vitest suite. The earlier wrong claim of 2 architecture-enforcement failures is corrected.",
+    "F6 closed (routed from Review B r2): the delta adds case CI-R4 to scripts/ci/__tests__/ci-remediation.test.mjs (125 added lines) and Green commit 1b0e756d5 adds 6 lines to .github/workflows/ci.yml. Verified by inspection: CI-R4 parses the real ci.yml with yaml, requires both triggers push and pull_request, requires a pull_request.paths filter that covers both probes (scripts/ci/affected-apps.mjs, scripts/ci/__tests__/x.test.mjs) through minimatch or a fallback rule, and requires a step with a run line naming vitest and scripts/ci inside a job with no if guard that names event_name or matrix. Two independent must gates fail on the two missing-deliverable cases: dropping the path entry fails the first must (pr_paths_scripts=0); dropping the step fails the second must (scripts_ci_test_steps=0). Plan Red evidence matches: exit=1, labels pr_paths_scripts=0 scripts_ci_test_steps=0, patterns=14. The recorded scratch pair supports non-vacuous reading: p3-r4-good (path entry plus step) passes; p3-r4-bad (path entry dropped only) fails with scripts_ci_test_steps=1, which proves the case reads the fixture and finds the step independently of the path rule.",
+    "F6 Green placement verified by git show 1b0e756d5: on.pull_request.paths gains - 'scripts/**'; job packages gains step 'CI selector tests' with run 'CI=true pnpm exec vitest run scripts/ci' after 'Install dependencies'. The packages job has no if and no matrix, so the step runs on push and on pull_request. The delta touches no other ci.yml line: the Test step stays on its one line (the science gate regex run:[^\\n]*pnpm test still matches) and the workflow permissions map contents:read is unchanged.",
+    "Root config check (scope item 3): vitest.config.ts at the repository root keeps the vitest defaults (only testTimeout 120000), so 'pnpm exec vitest run scripts/ci' from the root picks up scripts/ci/__tests__/*.test.mjs through the default include. The recorded gate run (EXIT=0, Test Files 7 passed (7), Tests 134 passed (134)) exercises exactly this path. Counts are consistent across phases: 6 files and 130 tests at 3.2, 7 files and 133 tests at 3.5 (CI-R1 to CI-R3), 7 files and 134 tests at 3.6 (CI-R4).",
+    "A3 check: all counts in plan 3.5 and 3.6 are labeled integers from command output (tests_failed=0, pr_paths_scripts=1, scripts_ci_test_steps=1, 251 passed (251), 134 passed (134)). No bare-digit string match found in the audited delta.",
+    "A4 check: no vacuous-pass case found in the delta. CI-R4 fails on a missing path filter, on a missing step, on a missing trigger, and workflow() throws on a missing ci.yml file.",
+    "A5 check: plan 3.6 states every count comes from a command that exited 0; the recorded Red shows exit=1 with the failing label, which matches a true Red.",
+    "Scope item 4: the r4 delta (79f86404b..a14964eb3) touches, for this track, only .github/workflows/ci.yml, measure/tracks/per_app_cicd_20261107/plan.md, and scripts/ci/__tests__/ci-remediation.test.mjs. The other changed files in the range (apps/storytime gate scripts, storytime track plans) belong to the storytime tracks, not to P3 of this track.",
+    "test-strategy.md cross-check: CI-R4 reuses the P1.3 Red command per the test file header; no conflict found in the P3 strategy section."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git log --oneline 25d774e08a0f9bef8074fb6f88bde439d1a72066..a14964eb3f3b72cbae4f181639a645051769c730; git diff --stat of the full range and of the r4 delta 79f86404b..a14964eb3",
+    "sed of plan.md Phase 3 (tasks 3.5 and 3.6 verified, 3.6 is [x])",
+    "git show 1b0e756d5 -- .github/workflows/ci.yml (6 added lines: the scripts/** path entry and the CI selector tests step)",
+    "grep and read of scripts/ci/__tests__/ci-remediation.test.mjs: the CI-R4 case at lines 409 to 445 with its helpers pullRequestPaths, runsOnBothEvents, runsSelectorTests, globMatcher, SCRIPT_PATH_PROBES",
+    "read of vitest.config.ts at the repository root (testTimeout only, vitest defaults kept)",
+    "grep of measure/tracks/per_app_cicd_20261107/test-strategy.md for CI-R4 and the Red command (reuses P1.3; no conflict)",
+    "attempted: heavy-run of 'CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci' and ls of /tmp/opencode/p3-r4-good and p3-r4-bad; the sandbox denied shell at both (N1)"
+  ],
+  "changed_files": [
+    "measure/runs/per_app_cicd_20261107/review-a-p3-a14964eb3.json",
+    "measure/runs/per_app_cicd_20261107/review-a-p3-a14964eb3.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

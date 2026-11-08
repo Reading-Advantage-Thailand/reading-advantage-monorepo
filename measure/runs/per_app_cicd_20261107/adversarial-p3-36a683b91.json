@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "role_base_sha": "36a683b91b457465988f86eb2c76176f3c6427d1",
+  "phase_base_sha": "25d774e08a0f9bef8074fb6f88bde439d1a72066",
+  "audited_head_sha": "43162d278",
+  "summary": "The Phase 3 adversarial round is complete. Round 1 (the committed suite) rejected 13 of 15 mutants; M7 (the ci.yml matrix guard set to always true) and M10 (the select step ignoring a script failure with an empty fallback) survived. Both survivors are test gaps, not production defects: the real ci.yml holds the gate and fails closed. The new file scripts/ci/__tests__/ci-workflow-adversarial.test.mjs (four cases A-P3-01 through A-P3-04) was committed as 43162d278, and the kill round rejected all 15 mutants: mutants_total=15, mutants_rejected=15. The gate at the final head exited 0 with 138 tests passed (8 files). No production defect routes to Green. Model substitution recorded: the role table names kimi-code-plan-cn/k3-256k#high (Kimi is WAIT); this run uses bailian-token-plan/glm-5.3#high.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "M7 SURVIVED round 1 and was killed in round 2: no committed test pinned the affected-job gate, so `if: needs.select.outputs.matrix != '[]'` changed to `if: true` passed the suite. The new case A-P3-02 pins the exact gate, the job output wiring, and the fromJSON include; the kill round shows `Error: job affected if=true expected=\"needs.select.outputs.matrix != '[]'\"`.",
+    "M10 SURVIVED round 1 and was killed in round 2: no committed test proved that the select step fails closed, so an `|| echo '[]'` fallback that swallows a script failure passed the suite. The new case A-P3-03 runs the real select step with a zero base and no origin/master and requires exit 2 and no outputs; the kill round shows `Error: expected exit 2, got 0; stderr=affected-apps: zero base: no merge base with origin/master`."
+  ],
+  "evidence": [
+    "Round 1 (one heavy job, shell sh_1b9196f55001zhTzEfN10glZcl, started 10:20:50, DRIVER_EXIT=0): control M0 exit=0, Test Files 7 passed (7), Tests 134 passed (134); mutants_total=15, mutants_rejected=13, mutants_survived=M7,M10. M0.log, M7.log, and M10.log each hold a real vitest result, checked per the PM note before the survivors were counted.",
+    "Round 1 rejections and first failing tests: M1 CI-R1, M2 CI-R4, M3 CI-R4, M4a CI-R3, M4b CI-R3, M5 CI-01a (10 failures, bash bad substitution), M6a CI-R2, M6b CI-R2, M8a F-19, M8b F-19, M9 CI-R1, M11 CI-02 (2 failures), M12 CI-01a (11 failures).",
+    "Round 2 (kill round, run directly per the PM note of 2026-11-08, one vitest at a time, no heavy lock): `python3 /tmp/opencode/p3-adv-mutants.py --only M0 M1 M2 M3 M4a M4b M5 M6a M6b M7 M8a M8b M9 M10 M11 M12`; KILL_ROUND_EXIT=0.",
+    "Round 2 control M0: exit=0, Test Files 8 passed (8), Tests 138 passed (138) — the four new cases pass on the clean tree.",
+    "Round 2 verdicts: mutants_total=15, mutants_rejected=15. M7 fails A-P3-02 (1 failed | 137 passed); M10 fails A-P3-03 (1 failed | 137 passed); M5 fails A-P3-01 first (13 failures); M12 fails A-P3-01 first (14 failures, the mutant dropped the --base/--head env plumbing); the other 11 mutants fail the same cases as round 1.",
+    "The gate at the final head (background shell sh_1b969b9ff001W5PVTeGztGvACV, started 11:28:38, duration 99.28s): RUN v4.1.8, Test Files 8 passed (8), Tests 138 passed (138), GATE_EXIT=0. The last commit touching scripts/ci, .github/workflows, and apps/sales-advantage/cloudbuild-traffic.yaml is 43162d27868d3b43a2fbde02ed95b0116bedfb60, and those paths are clean in the worktree, so the gate ran exactly the committed state. The job finished through the heavy wrapper before the PM light-run rule of 2026-11-08 arrived; per the orchestrator its result stands and no rerun happened.",
+    "Local pre-check of the four new cases (not vitest, not gate evidence): clean fixture tree precheck_failures=0; the M5, M7, and M10 mutant trees each fail the new cases as designed."
+  ],
+  "commands": [
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'python3 /tmp/opencode/p3-adv-mutants.py; echo \"DRIVER_EXIT=$?\"' (round 1, background)",
+    "python3 /tmp/opencode/p3-adv-mutants.py --only M0 M1 M2 M3 M4a M4b M5 M6a M6b M7 M8a M8b M9 M10 M11 M12 (round 2, direct per PM note)",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; rc=$?; echo \"GATE_EXIT=$rc\"; exit $rc' (gate at the final head, background, GATE_EXIT=0)",
+    "node /tmp/opencode/p3-adv-precheck.mjs (clean tree)",
+    "CICD_FIXTURE_ROOT=/tmp/opencode/p3-adv-verify-M5 node /tmp/opencode/p3-adv-precheck.mjs",
+    "CICD_FIXTURE_ROOT=/tmp/opencode/p3-adv-verify-M7 node /tmp/opencode/p3-adv-precheck.mjs",
+    "CICD_FIXTURE_ROOT=/tmp/opencode/p3-adv-verify-M10 node /tmp/opencode/p3-adv-precheck.mjs"
+  ],
+  "changed_files": [
+    "scripts/ci/__tests__/ci-workflow-adversarial.test.mjs"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

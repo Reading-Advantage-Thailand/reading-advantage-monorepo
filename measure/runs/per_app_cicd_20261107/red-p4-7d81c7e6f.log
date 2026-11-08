@@ -1,0 +1,135 @@
+# Red log - per_app_cicd_20261107 Phase 4 task 4.1
+
+Role: measure-mid-red (DeepSeek, deepseek/deepseek-flash#high)
+Date: 2026-11-08
+Track: per_app_cicd_20261107
+Phase: 4 - Dry runs, www proof, and the first-push plan
+Task: 4.1 (Red part)
+
+## Guards
+
+- phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d (given, resolves)
+- role_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d (`git rev-parse HEAD` at start)
+- report_head: 7d81c7e6fd6f067431b931812baafc36cbe16f2d (given; never replaced by HEAD)
+- worktree count at start: `git worktree list | wc -l` = 8
+- `git status --short` at start held the two modified `next-env.d.ts` files of another
+  session and several untracked folders (`.agents/`, `.tmp/`, `t/`, `test-results/`,
+  and others). All are unrelated user work. This role touched none of them.
+- Relevant dirty paths owned by this role: `scripts/ci/__tests__/dry-run.test.mjs` and
+  the track `plan.md`. No other file was edited.
+- The measure-guard note named the track `apk_arcade_portfolio_refactor_20260908`. The
+  orchestrator assignment for `per_app_cicd_20261107` task 4.1 governs here. This role
+  did not touch the other track.
+
+## Work
+
+1. Task 4.1 marked `[~]` in `measure/tracks/per_app_cicd_20261107/plan.md` before work.
+2. Added `scripts/ci/__tests__/dry-run.test.mjs` with cases DR-00 to DR-11 of P4.3.
+   It imports `planRepo`, `readTable`, `removePlanScratch`, `runSelect`, `selectStep`,
+   `stepText`, and `workflow` from `helpers/plan.mjs`, and `removeScratchDirs` and
+   `requireNonEmpty` from `helpers/scratch.mjs`. No helper file changed.
+   Each app case adds `<row.path>/dry-run.txt` and runs the select step of
+   `cd-www-reading-advantage.yml`, `cd-apps.yml`, and `ci.yml` on that range with the
+   harness's logging fake `gcloud`. DR-00 checks the 10 rows before the loop; a file
+   `afterAll` checks `dry_run_rows=11`. DR-11 is the docs and measure range.
+3. Copied the P4.6 report check to `/tmp/opencode/p4-red/report-check.cjs` and kept it.
+   It is the exact block of test-strategy lines 783 to 854 and passes `node --check`.
+
+## Runs (light; no heavy-run)
+
+Command 1 (targeted):
+`cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/dry-run.test.mjs; echo "EXIT=$?"`
+Result: EXIT=0; `Test Files 1 passed (1)`; `Tests 12 passed (12)`; 30.23 s.
+Labeled lines (12 of 12):
+```
+DRYRUN row=guard table_rows=10 select_secret_refs=0
+DRYRUN row=www-reading-advantage mode=direct range=apps/www-reading-advantage/dry-run.txt cd_www=yes cd_apps=[] ci=["www-reading-advantage"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=primary-advantage mode=gated range=apps/primary-advantage/dry-run.txt cd_www=no cd_apps=["primary-advantage"] ci=["primary-advantage"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=storytime mode=gated range=apps/storytime/dry-run.txt cd_www=no cd_apps=["storytime"] ci=["storytime"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=accounting mode=gated range=apps/accounting/dry-run.txt cd_www=no cd_apps=["accounting"] ci=["accounting"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=codecamp-advantage mode=gated range=apps/codecamp-advantage/dry-run.txt cd_www=no cd_apps=["codecamp-advantage"] ci=["codecamp-advantage"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=marketing mode=gated range=apps/marketing/dry-run.txt cd_www=no cd_apps=["marketing"] ci=["marketing"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=sales-advantage mode=gated range=apps/sales-advantage/dry-run.txt cd_www=no cd_apps=["sales-advantage"] ci=["sales-advantage"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=accounts mode=gated range=apps/accounts/dry-run.txt cd_www=no cd_apps=["accounts"] ci=["accounts"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=workbooks mode=gated range=apps/workbooks/dry-run.txt cd_www=no cd_apps=["workbooks"] ci=["workbooks"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=reading-advantage mode=excluded range=apps/reading-advantage/dry-run.txt cd_www=no cd_apps=[] ci=["reading-advantage"] gcloud_calls=0 select_secret_refs=0
+DRYRUN row=ci mode=ci range=docs/a.md,measure/b.md changed_files=2 cd_www=no cd_apps=[] ci=[] gcloud_calls=0 select_secret_refs=0 ci_ranges=11
+DRYRUN rows_total=11 dry_run_rows=11
+```
+
+Command 2 (full light):
+`cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"`
+Result: EXIT=0; `Test Files 9 passed (9)`; `Tests 150 passed (150)`; 162.29 s.
+The M46 baseline of 138 plus the 12 new cases matches the P4.3 prediction of 150.
+
+Command 3 (report check):
+`cd /home/daniebo/Desktop/reading-advantage-monorepo && node /tmp/opencode/p4-red/report-check.cjs measure/tracks/per_app_cicd_20261107/dry-run-report.md; echo "EXIT=$?"`
+Result: EXIT=1; `missing measure/tracks/per_app_cicd_20261107/dry-run-report.md report_rows=0 first_push_plan_lines=0`.
+This is the falsifiable Red part: the report does not exist yet.
+
+## Scratch proof of no vacuous case
+
+Tool: `/tmp/opencode/p4-red/mutants.mjs`. It copies `.github/workflows`, `scripts/ci/apps.json`,
+and `scripts/ci/affected-apps.mjs` to a `mktemp -d` folder, applies one mutant, and runs
+`CI=true CICD_FIXTURE_ROOT=<copy> pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/dry-run.test.mjs`
+as its own light vitest process, one mutant at a time. Logs: `/tmp/opencode/p4-red/V1.log` to `V4.log`.
+Scratch trees are removed; only the logs, the runner, and `report-check.cjs` remain.
+
+```
+V1 exit=1 failed_cases=["DR-01","DR-10"] tests_failed=2 verdict=rejected
+V2 exit=1 failed_cases=["DR-01","DR-02","DR-03","DR-04","DR-05","DR-06","DR-07","DR-08","DR-09","DR-10"] tests_failed=10 verdict=rejected
+V3 exit=1 failed_cases=["DR-02","DR-03","DR-04","DR-05","DR-06","DR-07","DR-08","DR-09","DR-10","DR-11"] tests_failed=10 verdict=rejected
+V4 exit=1 failed_cases=["DR-01","DR-02","DR-03","DR-04","DR-05","DR-06","DR-07","DR-08","DR-09","DR-10","DR-11"] tests_failed=11 verdict=rejected
+dry_run_mutants_rejected=4/4
+```
+
+Failing reasons:
+- V1 (the `cd-apps.yml` select drops the `row.mode === "gated"` filter):
+  `DR-01 www-reading-advantage cd_apps=["www-reading-advantage"] expected=[]` and
+  `DR-10 reading-advantage cd_apps=["reading-advantage"] expected=[]`.
+- V2 (`ci.yml` writes `matrix=[]` always): `ci=[] expected=["<id>"]` on DR-01 to DR-10.
+- V3 (`cd-www` writes `www=yes` always): `cd_www=yes expected=no mode=gated` on DR-02 to DR-11.
+- V4 (the `cd-www` select calls `gcloud --version`):
+  `gcloud_calls=1 calls=["--version"]` on DR-01 to DR-11.
+
+## Commits
+
+- `931c9f2a5` - `test(ci): add the p4 dry-run cases (track_id: per_app_cicd_20261107)`.
+  One file: `scripts/ci/__tests__/dry-run.test.mjs`. Parent is `7d81c7e6f`.
+- `3e8bc64bd` - `chore(measure): record the p4 task 4.1 red evidence (track_id: per_app_cicd_20261107)`.
+  One file: `measure/tracks/per_app_cicd_20261107/plan.md`. Task 4.1 stays `[~]`.
+
+No `git add -A`, `git add .`, or `git commit -a` was used. No gcloud call of any kind,
+no GitHub workflow run, no deploy, and no www build.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: "Phase 4: Dry runs, www proof, and the first-push plan"
+task: "4.1 (Red part)"
+phase_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+role_base_sha: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+report_head: 7d81c7e6fd6f067431b931812baafc36cbe16f2d
+head_sha: 3e8bc64bd26720807164faf0bf641a901ad129d2
+commits: 931c9f2a57a4408bb2a23289545f3ef186b4a708,3e8bc64bd26720807164faf0bf641a901ad129d2
+tests:
+  file: scripts/ci/__tests__/dry-run.test.mjs
+  cases: DR-00,DR-01,DR-02,DR-03,DR-04,DR-05,DR-06,DR-07,DR-08,DR-09,DR-10,DR-11
+  targeted: EXIT=0; test_files=1; tests_passed=12; tests_failed=0; duration=30.23s
+  full_light: EXIT=0; test_files=9; tests_passed=150; tests_failed=0; duration=162.29s
+  report_check: EXIT=1; label="missing measure/tracks/per_app_cicd_20261107/dry-run-report.md report_rows=0 first_push_plan_lines=0"
+  dry_run_labels: dry_run_rows=11; table_rows=10; ci_ranges=11; select_secret_refs=0; gcloud_calls=0
+  mutants: dry_run_mutants_rejected=4/4
+  mutant_V1: rejected; failed=DR-01,DR-10
+  mutant_V2: rejected; failed=DR-01,DR-02,DR-03,DR-04,DR-05,DR-06,DR-07,DR-08,DR-09,DR-10
+  mutant_V3: rejected; failed=DR-02,DR-03,DR-04,DR-05,DR-06,DR-07,DR-08,DR-09,DR-10,DR-11
+  mutant_V4: rejected; failed=DR-01,DR-02,DR-03,DR-04,DR-05,DR-06,DR-07,DR-08,DR-09,DR-10,DR-11
+  remaining_failures: none in the dry-run file; task 4.1 stays [~] for the Green report
+production_edits: none
+handoff: Green of task 4.1 copies the 12 labeled lines above into the report table of
+  measure/tracks/per_app_cicd_20261107/dry-run-report.md (R-1) and writes the plan line
+  and www text list of tasks 4.3. The report check is at /tmp/opencode/p4-red/report-check.cjs
+  and gives EXIT=1 until the report exists. Keep report_head=7d81c7e6f everywhere;
+  task 4.2 is a heavy run and belongs to the orchestrator or the Green, not this role.
+  No question blocks this handoff.
+END_MEASURE_AGENT_RESULT

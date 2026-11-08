@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "role_base_sha": "7721962d2a76923715aff3fba85f5402b08207db",
+  "phase_base_sha": "d28f8fd52096dd3101d60005182fc90a17ea52a9",
+  "audited_head_sha": "68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb",
+  "summary": "Phase 2 adversarial testing passed at commit 68a86e173: all 12 mutants are rejected (X4 by the new case A-P2-06), the comment attack XC is rejected by W-17, F-05, A-P2-06, and A-P2-07, the clean-tree run A0 passed 10 of 10, and the final validation passed 5 files and 117 tests with EXIT=0. No production defect was found. One nonblocking test gap (W-13) was found and closed by the committed case A-P2-06.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "W-13 in scripts/ci/__tests__/cd-workflows.test.mjs is vacuous for workflow run: step bodies. stepText() in scripts/ci/__tests__/helpers/plan.mjs joins only entrypoint, args, and env, so update-traffic inside a workflow run: step is invisible to W-13. Mutant X4 survived the first round (11 of 12) through this gap. Owner: Red (a test weakness, not a production defect). Mitigation committed in this run: A-P2-06 scans the raw text of every workflow file for update-traffic, --to-latest, and cloudbuild-traffic, and A-P2-07 pins that the scan keeps hits inside comments and denial lines. The re-run rejects X4 by A-P2-06. The production tree is clean: rg -n 'update-traffic|--to-latest' .github/workflows finds no hit, and the phase-check detector of P2.5 item 6 still guards the tree."
+  ],
+  "evidence": [
+    "role_base_sha=7721962d2a76923715aff3fba85f5402b08207db. phase_base_sha=d28f8fd52096dd3101d60005182fc90a17ea52a9. Audit commit=68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb (test(cd): add the phase 2 adversarial cases (track_id: per_app_cicd_20261107), subject 77 characters, one file, 325 insertions).",
+    "HEAD moved from 7721962d2 to c6b7068f1 during the audit by commits of other tracks. The diff 7721962d2..c6b7068f1 over .github/workflows, scripts/ci, apps/*/cloudbuild*.yaml, and docs/runbooks is empty, so the audit conclusions hold at both. The audit commit sits on c6b7068f1.",
+    "First mutant round: mutants_rejected=11/12. X4 (a Move Traffic step added to cd-apps.yml) was not rejected: W-13 and F-05 stayed green because W-13 reads stepText() output only.",
+    "New file scripts/ci/__tests__/cd-workflows-adversarial.test.mjs holds 10 cases A-P2-01..A-P2-10: fork pull request trigger keys; zero base with origin/master; zero base without origin/master fails closed; force-pushed base held by the clone; pruned force-pushed base fails closed; raw-text traffic scan; comment and denial probes keep their hits; all 8 gated push files in the scratch repo so only marketing gets the release substitution; the exact REQUIRED_ trigger shape with single-quote, indent, and hostile-value variants; and the provenance pin of the HEAD_SHA expression.",
+    "Mutant re-run with the new file included, one heavy job: A0 CLEAN exit=0 tests=0F/10P; X1 named_failed=W-20; X2 W-06; X3 W-05,W-08; X4 A-P2-06; X5 W-18a,W-18b; X6 F-06; X7 F-01; X8 F-10; X9 F-08,F-14; X10 W-15; X11 W-11-primary; X12 W-19; XC W-17,F-05,A-P2-06,A-P2-07; mutants_rejected=12/12; driver EXIT=0.",
+    "Final validation heavy job, run once in the foreground: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; EXIT=0; Test Files 5 passed (5); Tests 117 passed (117); duration 75.31s. The 4 known failures of P2.5 live outside scripts/ci; none appeared.",
+    "Commit procedure: git diff --cached --name-only before staging was empty; the explicit path git add staged exactly one file; the header matched the required text; the commitlint hook passed.",
+    "Cleanup: the scratch folders /tmp/opencode/cicd-mutant-*, /tmp/opencode/adversarial-p2-mutants, and /tmp/opencode/adversarial-p2-mutants.py were removed; git worktree list printed 8 worktrees."
+  ],
+  "commands": [
+    "CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/cd-workflows-adversarial.test.mjs  # Test Files 1 passed (1), Tests 10 passed (10)",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'python3 /tmp/opencode/adversarial-p2-mutants.py; echo EXIT=$?'  # mutants_rejected=12/12, EXIT=0",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo EXIT=$?'  # EXIT=0, Test Files 5 passed (5), Tests 117 passed (117)",
+    "git commit -m 'test(cd): add the phase 2 adversarial cases (track_id: per_app_cicd_20261107)'  # 68a86e173, 1 file, 325 insertions"
+  ],
+  "changed_files": [
+    "scripts/ci/__tests__/cd-workflows-adversarial.test.mjs"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

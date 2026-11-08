@@ -1,0 +1,50 @@
+# Review A · P3 · per_app_cicd_20261107 — audit log (final)
+
+- role_base_sha / audited head: 57bb8376c1193988f907e4d0fd56ef6dd7eef23d
+- phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+- Model route: volcengine-agent-plan/glm-5.3-flash#high via `ra-quota pick review-a` (recorded). Independence: P3 Green runs claude-code/claude-sonnet-5-5#high, Review B runs deepseek/deepseek-flash#high; this run is the GLM family, different from both.
+- HEAD drift: HEAD is eae128027 during the audit. The audit used `git diff 25d774e08..57bb8376c` and `git show 57bb8376c:<path>` only. ci.yml and scripts/ci are byte-identical between 57bb8376c and HEAD, so all runs reflect the audited content.
+
+## Checks
+
+1. ci.yml select job — verified. Push uses `github.event.before`; PR uses `github.event.pull_request.base.sha`; a first push gives 40 zeros, which the script resolves to the merge base with `origin/master` (reachable because of `fetch-depth: 0`); a force push keeps the right range but can fail closed when the old head is unreachable. Script failure exits 2 and fails the select job, so the affected job never starts: fails closed. Matrix is an array of `{id}`; `if: needs.select.outputs.matrix != '[]'` skips an empty plan; the helpers run the real select run block on scratch repos and compare its ids to the script output as sets.
+2. Coverage — F1 (blocker). Old step ran `pnpm test` = `turbo run test` over the whole workspace. The new union (packages Test filters + affected matrix) covers all 13 apps but misses 4 standalone packages with test scripts: packages/architecture-enforcement (about 30 test files), packages/knowledge-space-practice, packages/mastery-runtime-compat, packages/reading-advantage-scripts. No workspace package depends on them, so no job ever runs their tests. The plan records only `untested_apps=3` (apps). `reading-advantage` (mode excluded) is still planned for CI (CI-01d), so no app loses coverage.
+3. Science CI gates — F3 (Nit). Three heavy-run invocations: monorepo root, root runner: 32 failed, 8 passed (cwd-based paths read `/home/daniebo/...`); package root with `vitest.unit.config.ts`: no test files found (config excludes `lib/ci-gates/**`); package root with `vitest.verification.config.ts`: 4 files, 40 passed, 0 failed, exit 0. The strategy records no invocation, and its guard-table shape fails. Step name `Test` and the regex `run:[^\n]*pnpm test` match the new ci.yml, and the passing phase-13 file asserts the real ci.yml content directly.
+4. Services and env — verified. The affected job copies the packages job exactly: both DATABASE_URL values, both service containers with the same env and health checks, and `COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER` on the run step.
+5. Sales build identity — verified. `capture-company-candidate` sits after `verify-repair-verify-legacy-rollback` and before `update-traffic`; the script writes `<prefix>.revision` and fails closed on a wrong digest, a non-latest revision, or an unpublished URL; the move is a bash step with correct `$$` escapes, reads the candidate record with `--to-revisions=`, no tag, no legacy record. The push file holds `--tag=candidate`, so a later push makes the capture fail closed. The runbook matches.
+6. Test meaning — verified. The Red cases build real scratch repos, run the real script and the real select block, compare sets, assert `changed_files>=1` before an empty plan (A4), use labeled counts (A3), and F-19 pins 10 labeled checks with a negative mutant. The Red logs record good-copy-passes and bad-copy-fails proofs.
+7. Scope and truthfulness — verified with one Nit (F4). `p3_out_of_scope_paths=0` holds as a fact over the 7 P3 commits; the labeled line is absent from plan 3.4 evidence. Task 3.3 records master CI as failed (`Architecture boundary check`, run 41796713259) and never claims CI is green (A5 holds). The gate reproduces: exit 0, 130 of 130.
+
+## Findings
+
+- F1 [Blocker]: 4 standalone packages lose all CI test coverage after P3. Fix (Green): add the 4 package filters to the packages Test step, or record the gap as an accepted decision in plan and strategy.
+- F3 [Nit]: the strategy records no runner for the 4 science ci-gates files; the guard-table shape fails with 32 failures. Record the passing invocation (app root + `vitest.verification.config.ts`, 40 of 40).
+- F2 [Nit]: `turbo_filters_ok=10` was never recorded in plan 3.2 evidence. Review A measured it: all 10 ids pass, `turbo_filters_ok=10`.
+- F4 [Nit]: the labeled `p3_out_of_scope_paths=0` line is missing from plan 3.4 evidence (the fact is true).
+
+## Measurements
+
+- heavy-run `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci` -> EXIT=0, Test Files 6 passed (6), Tests 130 passed (130).
+- heavy-run gates invocation 1 (monorepo root, root runner): 32 failed, 8 passed, GATES_EXIT=1.
+- heavy-run gates invocation 2 (package root, unit config): No test files found, GATES_EXIT=1.
+- heavy-run gates invocation 3 (package root, verification config): 40 passed (40), 0 failed, GATES_EXIT=0.
+- heavy-run turbo filters: `turbo_filters_ok=10` (every id exits 0 with at least 1 package).
+- Dependency graph over `git show 57bb8376c` manifests: 45 workspace packages with test scripts, 42 covered, 4 uncovered.
+
+## Notes for the orchestrator
+
+- The scratch runner `measure/runs/per_app_cicd_20261107/review-a-turbo-filters.sh` could not be deleted (`rm` denied for this role). It is safe to delete.
+- F1 routes to Green with retry_implementation. F2, F3, F4 are Nits for the plan note or the strategy note; no re-run of this audit is needed for them once the plan records the labels.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: per_app_cicd_20261107
+phase: ## Phase 3: CI for the affected apps (P3)
+commits: audited 57bb8376c (range 25d774e08..57bb8376c); no commits made
+tests_run: scripts/ci gate exit 0, 130 of 130; science ci-gates 40 of 40 under the verification config; turbo_filters_ok=10
+files_changed: measure/runs/per_app_cicd_20261107/review-a-p3-57bb8376c.json, .log, and the scratch turbo-filters runner
+plan_updates: none (audit-only)
+known_failures: F1 coverage loss (4 standalone packages); F3 unrecorded gates invocation; F2 and F4 missing labeled evidence lines
+handoff: F1 is the one blocker: add the 4 package filters (packages/architecture-enforcement, packages/knowledge-space-practice, packages/mastery-runtime-compat, packages/reading-advantage-scripts) to the packages Test step, or record the gap as an accepted decision; then this audit needs no full re-run, only a check of the diff. F3: record `cd apps/science-advantage && pnpm exec vitest run --config vitest.verification.config.ts lib/ci-gates/<4 files>` in the strategy as the gates invocation (40 of 40). F2 and F4: add the labels `turbo_filters_ok=10` and `p3_out_of_scope_paths=0` to the plan evidence. Question for the user (default applied): accept F1 as a blocker with the small filter fix? Default: yes.
+END_MEASURE_AGENT_RESULT

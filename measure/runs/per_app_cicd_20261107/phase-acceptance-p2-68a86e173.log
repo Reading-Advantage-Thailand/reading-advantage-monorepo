@@ -1,0 +1,20 @@
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-phase-acceptance
+track: per_app_cicd_20261107
+phase: Phase 2: Per-app CD workflows
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb
+audited_head_sha: 68a86e173c29ba69d8c0a7f1dbd0078b9979bfcb
+result_file: measure/runs/per_app_cicd_20261107/phase-acceptance-p2-68a86e173.json
+retry_recommendation: none
+confidence: high
+blocking_findings: 0
+nonblocking_findings: 9
+summary: The targeted suite runs 5 files and 117 tests with exit 0. The 8 guard rows give known_failures=4 and other_failures=0. The sales row reports 28 passed and 1 failed. Every current-phase task and every applicable acceptance criterion matches the implementation, the tests, the commands, and the commits. The phase notes claim no live build, no live deploy, and no moved traffic.
+nonblocking: F701 the strategy item 12 line names 2.6 as blocked; the plan shows 2.6 as [x] by the PM decision of 2026-11-07 and 2.3i as [b] deferred:pm; owner is the strategy author.
+nonblocking: F702 the P2 commits touch 10 paths outside the 9 allowed prefixes of item 7; they are 9 test files of other apps and the registry line; owner is the strategy author.
+nonblocking: A31 A32 A33 A34 carried from Review A (1902a8215).
+nonblocking: N1 N2 N3 N4 N6 carried from Review B (1902a8215).
+nonblocking: C31 carried from Review C (1902a8215).
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,38 @@
+Review B security re-review: Phase 2 per-app CD workflows.
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 1902a8215299d96c4079fb877d38b351eb1f7c55
+audited_head_sha: 1902a8215299d96c4079fb877d38b351eb1f7c55
+current_HEAD: 7721962d2a76923715aff3fba85f5402b08207db
+status: pass
+security_applicability: applicable
+blocking_findings: 0
+nonblocking_findings: N1, N2, N3, N4, N6.
+B1 withdrawn: the direct no-build Cloud Run permission path is gone from the live www deploy identity. The default www build account remains privileged. A holder of the deploy key can submit a custom build as that account. Task 4.7 records this residual risk.
+N1: task 3.3a plans the sales build match. Accounting and Codecamp retain fixed-tag drift.
+N2 and N3: task 4.7 records dedicated build accounts, WIF, and reduced bucket access.
+N4: a public tag URL remains reachable with --no-traffic.
+N5 resolved: both workflows pin their actions to commit SHAs.
+N6: workbooks secret grants remain a deferred first-release prerequisite.
+N7 resolved: the track registry now says Phase 2 review remediation.
+Sales push inputs remain an open PM decision. This path fails at its input validation step without the required inputs. The review supplied no backup time and did not run a build.
+A2: no draft-to-published transition in the scoped phase paths.
+A6: the track registry does not claim a resolved security state.
+Commands: git rev-parse HEAD and git diff --stat 1902a8215..HEAD over phase paths exit 0; the diff is empty.
+Commands: gcloud projects get-iam-policy www-reading-advantage, gcloud storage buckets get-iam-policy gs://www-reading-advantage_cloudbuild, gcloud iam service-accounts get-iam-policy for the compute account, and gcloud run services get-iam-policy for www exit 0. All outputs were filtered to IAM roles. No key value was read or printed.
+Commands: gcloud builds get-default-service-account --project=www-reading-advantage and filtered project IAM checks of the build account exit 0.
+Commands: filtered gcloud project IAM checks of the deploy identity in primary-advantage and reading-advantage exit 0.
+Commands: git grep of workflow secrets and traffic references exits 0 for permissions and secret names only; git grep of traffic files exits 0 for manual --to-tags steps. Scans for traffic defaults, draft-to-published changes, and credential patterns each exit 1 with no hit.
+No test, workflow, Cloud Build job, key change, push, or traffic move ran in this security re-review. Review A independently measured 119 passing targeted tests at the audited role base.
+
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: per_app_cicd_20261107
+phase: ## Phase 2: Per-app CD workflows
+commits: none
+tests_run: read-only IAM and scoped Git checks passed; no live build; Review A recorded 119 passing targeted tests
+files_changed: measure/runs/per_app_cicd_20261107/review-b-1902a8215.json, measure/runs/per_app_cicd_20261107/review-b-1902a8215.log
+plan_updates: none
+known_failures: Sales push inputs lack a PM-approved backup time and input path; sales push validation fails closed. The www live CD proof remains in Phase 4.
+handoff: Green receives no blocker. PM retains the sales input decision and task 4.7. Daniel controls the first push and every traffic move.
+END_MEASURE_AGENT_RESULT

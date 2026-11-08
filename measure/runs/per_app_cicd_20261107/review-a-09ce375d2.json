@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 2 per-app CD workflows pass Review A. The delta on 09ce375d2 escapes the four prefix tags as $${BUILD_ID:0:8} per the PM order, the tests grew stronger (W-11, W-15, F-06, new F-17), and the targeted suite passes 102/102 through heavy-run at the pinned HEAD. Earlier checks 1 to 6 on 00e8c248c hold: the table change (Q10), the select contract (Q12), the tag math (<=46), the traffic-file orders, no workflow moves traffic, cd-apps.yml holds no describe call, and workbooks fails closed. No blocking finding.",
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "d28f8fd52096dd3101d60005182fc90a17ea52a9",
+  "role_base_sha": "09ce375d2bf32aac34b7d357496d64e52c201d31",
+  "audited_head_sha": "09ce375d2bf32aac34b7d357496d64e52c201d31",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (owner: none, recorded limit): apps/sales-advantage/scripts/capture-sales-cloud-run-tag.sh exits 1 when the tagged revision is not the latest created revision (line 49). After a push, the candidate revision is the latest, so the legacy-rollback capture in the sales traffic file can fail on its first run. Correctly recorded in docs/runbooks/traffic-moves.md 'Open limits' and plan task 2.3g; the first traffic run is task 2.3h [b] deferred:daniel. Not a defect of this phase.",
+    "N2 (owner: none, evidence class): every P2 proof is an artifact test or a select-step dry run. No Cloud Build run has run any edited file, so submit-time acceptance and the rendered 8-character tag are static analysis only. The strategy (P2.6) records this class of limit; Phase 4 live proofs remain the gate.",
+    "N3 (owner: none, process): Green ran one combined verbose run instead of the seven per-task gate jobs of P2.5, and one plan-evidence commit. Each task's case set passed inside the combined run, no test file changed after Red (git diff 413467c3a..HEAD -- scripts/ci/__tests__ empty), and this review re-ran the full suite at the pinned HEAD (102/102), so the evidence still proves each task."
+  ],
+  "evidence": [
+    "Provenance: audited_head_sha 09ce375d2bf32aac34b7d357496d64e52c201d31 exists and is the pinned HEAD for Reviews A, B, C. Repository HEAD moved to 68780a1d8 during the run; the two newer commits are storytime_at_home_20261106 work and touch no phase path (git diff 09ce375d2..HEAD -- .github/workflows apps/accounts apps/primary-advantage apps/workbooks apps/storytime/cloudbuild.yaml scripts/ci docs/runbooks measure/tracks/per_app_cicd_20261107 is empty).",
+    "Heavy run at the pinned HEAD (this review, foreground): EXIT=0, Test Files 4 passed (4), Tests 102 passed (102), duration 59.32 s. Command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo \"EXIT=$?\"'. Matches the expected 102.",
+    "Check 1 (${BUILD_ID:0:8}, resolved by the PM order): the four push files (accounts, primary-advantage, storytime, workbooks) now hold --tag=<prefix>-$${BUILD_ID:0:8}. Cloud Build substitution turns $$ into one literal $ (documented escape; Google's cloud-build-local subst.go matches keys [A-Z_][A-Z0-9_]* only), bash then slices the step env BUILD_ID=$BUILD_ID to 8 characters. The submit-time rejection risk of my earlier review is closed by the escape; the escaped form is also safe under the scanner because the braced-key regex cannot match a key with a colon. F-17 forbids the unescaped form in all 16 push and traffic files.",
+    "Check 1 delta tests keep their strength: assertEscapedTag (W-11-primary/storytime/accounts/workbooks, W-15) requires the exact escaped text, requires env BUILD_ID=$BUILD_ID, and rejects any unescaped ${BUILD_ID:0:8} via /(^|[^$])\\$\\{BUILD_ID:0:8\\}/. W-15 renders the tag at 11 characters and asserts combined 24 <= 46. F-06 expects the escaped form and adds the same unescaped-tag rejection. F-17 asserts files_checked=16 before the loop (A4 input guard) and flags any ${key} whose key fails ^[A-Z_][A-Z0-9_]*$ while legitimate ${_...} keys pass.",
+    "Check 2 (tag rule): tagLength plus service length is <=46 for every gated row of scripts/ci/apps.json (max 32, primary-advantage); W-10 covers the 8 rows with rows_checked=8.",
+    "Check 3 (traffic files): primary, accounts, marketing use --to-tags=${_TAG}=100 with no _TAG default, so a manual run without the substitution fails closed under MUST_MATCH. Primary order is refuse-legacy-db, migrate-db, doctor-check (--required-migration 0074_primary_help_events kept), update-traffic. Sales order matches AC-2.12 with verify-curriculum-backup first and capture-legacy-rollback before verify-repair-verify-legacy-rollback; the sales _PUSH_BUILD_ID substitution has no default. The capture-script latest-created check (N1) is a recorded limit for task 2.3h, not a phase blocker.",
+    "Check 4 (table and select contract): the Q10 table change holds (6 gated rows project: reading-advantage, 2 rows primary-advantage, www and reading-advantage keep $PROJECT_ID; key set and row count unchanged). The Q12 select contract holds: step id select, jobs select/deploy in cd-www-reading-advantage.yml, jobs select/build in cd-apps.yml, outputs www and matrix, strategy.matrix.include from fromJSON, --config and --project from matrix.",
+    "Check 5 (no traffic move): git grep at 09ce375d2 finds no update-traffic, no --to-latest, and no cloudbuild-traffic reference in .github/workflows. cd-apps.yml holds zero 'run services describe' calls. Both CD workflows declare permissions: contents: read exactly, Node 22, fetch-depth: 0, and no id-token or pull_request_target. Workbooks fails closed: no Cloud Run service and no workbooks-cloud-run account exist (task 2.3i [b] deferred:pm).",
+    "Check 6 (combined Green run): recorded as N3. The per-task case sets are named in the plan notes, the Red tests were not edited after the Red commits, and this review's independent run at the pinned HEAD passed 102/102, so the combined run still proves each task.",
+    "A4: F-17 and the W/F loops assert their input sizes first (files_checked=16, gated_rows=8, files_checked=2/4/9). Red r3 proved the new assertions reject partial repairs: a scratch copy with only the storytime tag escaped failed with invalid_substitutions=3; the all-four-escaped copy passed. Earlier partial-repair proof (6 partials, partials_rejected=6) stands.",
+    "A3: all counts in the new and changed tests are labeled integers (files_checked, invalid_substitutions, rendered.length). No bare-digit matching found.",
+    "A5: the plan's round-2 evidence honestly records the intermediate red state (Green run at 586981581 EXIT=1 with F-06 failing until Red r4 09ce375d2) and the final claims match this review's independent run (EXIT=0, 102 passed). No 'all checks pass' claim contradicts an actual exit."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git log --oneline 00e8c248c..09ce375d2",
+    "git diff 00e8c248c..09ce375d2 -- scripts/ci apps/accounts apps/primary-advantage apps/storytime/cloudbuild.yaml apps/workbooks .github docs/runbooks measure/tracks/per_app_cicd_20261107",
+    "git grep -n 'update-traffic\\|--to-latest' 09ce375d2 -- .github/workflows (exit 1); git grep -n 'cloudbuild-traffic' 09ce375d2 -- .github/workflows (exit 1)",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo \"EXIT=$?\"' -> EXIT=0, 4 files, 102 passed",
+    "git diff 09ce375d2..HEAD -- <phase paths> (empty; HEAD moved to 68780a1d8 on other-track work)"
+  ],
+  "changed_files": [
+    "apps/accounts/cloudbuild.yaml",
+    "apps/primary-advantage/cloudbuild.yaml",
+    "apps/storytime/cloudbuild.yaml",
+    "apps/workbooks/cloudbuild.yaml",
+    "scripts/ci/__tests__/cd-workflows.test.mjs",
+    "scripts/ci/__tests__/cloudbuild-files.test.mjs",
+    "scripts/ci/__tests__/helpers/plan.mjs",
+    "measure/tracks/per_app_cicd_20261107/plan.md"
+  ],
+  "violations": {
+    "A4_vacuous_pass": [],
+    "A3_digit_only_count": [],
+    "A5_false_claim_text": []
+  }
+}

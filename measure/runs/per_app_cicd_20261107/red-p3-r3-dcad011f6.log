@@ -1,0 +1,143 @@
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+baseline_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: dcad011f65385362bc20183dce3e43486fc0a098
+head_sha: f00f2849389ed9d4c6719484e5ebacb5c1f46471
+commits: f00f28493
+tests:
+  new_file: scripts/ci/__tests__/ci-remediation.test.mjs
+  failing: CI-R1,CI-R2,CI-R3
+  red_exit: 1
+  tests_failed: 3
+  tests_passed: 130
+  tests_total: 133
+remaining: task 3.5 Green (coverage filters, table-id guard, ci.yml permissions, runbook lines 13 to 14, plan labels)
+END_MEASURE_AGENT_RESULT
+
+Red r3 (Review remediation pins; task 3.5)
+role_base_sha: dcad011f65385362bc20183dce3e43486fc0a098
+phase_base_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+green_head_of_the_phase: 57bb8376c
+test_commit: f00f2849389ed9d4c6719484e5ebacb5c1f46471
+plan_commit: 825713559fea3128ebbdc091dfc195e035552700
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+red_exit: 1
+test_files_failed: 1
+test_files_passed: 6
+tests_failed: 3
+tests_passed: 130
+tests_total: 133
+
+failing_cases:
+  CI-R1 (Review A F1, Blocker) uncovered_test_packages=4 names=@reading-advantage/architecture-enforcement,@reading-advantage/knowledge-space-practice,@reading-advantage/mastery-runtime-compat,@reading-advantage/scripts test_packages=45 filter_roots=13
+  CI-R2 (Review B F1, Major) unsafe id "x;rm -rf /": expected exit 2, got 0; stderr=
+  CI-R3 (Review B F2, Major) ci.yml has no workflow-level permissions map; permissions=undefined
+
+passing_old_cases: 130 (6 test files: affected-apps, affected-apps-adversarial, ci-workflow, cloudbuild-files, cd-workflows, cd-workflows-adversarial)
+
+non_vacuity_proof:
+  good_copy: /tmp/opencode/p3-r3-good (workflow-level permissions: contents: read; four extra Test filters for @reading-advantage/architecture-enforcement, @reading-advantage/knowledge-space-practice, @reading-advantage/mastery-runtime-compat, @reading-advantage/scripts; table-id charset guard in readTable)
+  command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CICD_FIXTURE_ROOT=/tmp/opencode/p3-r3-good AFFECTED_APPS_SCRIPT=/tmp/opencode/p3-r3-good/scripts/ci/affected-apps.mjs CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/ci-remediation.test.mjs --reporter=verbose; echo "EXIT=$?"'
+  result: EXIT=0; Tests 3 passed (3)
+  labels: uncovered_test_packages=0 test_packages=45 filter_roots=17; unsafe_ids_refused=3 safe_table_rows=10; ci_permissions={"contents":"read"} jobs_checked=3
+
+contracts_pinned:
+  CI-R1 reads every workspace package.json under apps/, packages/*, and packages/integrations/*; test-bearing packages must be inside the closure of the Test-step --filter=<x>... roots plus every apps.json id, each with its workspace dependencies. Every filter token must end with "...". A root that resolves to no package fails.
+  CI-R2 runs the real script on a scratch git repository whose table holds x;rm -rf /, --help, or a b. Each must exit 2, print one stderr line, and print no stdout. A positive control runs the real table and requires exit 0 and a JSON array. Every real id must match ^[a-z0-9][a-z0-9-]*$.
+  CI-R3 parses ci.yml: the workflow-level permissions map equals {contents: read} and every job either omits permissions or holds the same map.
+
+declined_findings: F203 (action tags follow the existing ci.yml style), F204 (predates P3; goes to the PM)
+production_files_changed: 0
+worktree_count: 8
+
+handoff:
+  green_task_3_5: add --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... to the Test step of .github/workflows/ci.yml; add a table-id charset guard to readTable in scripts/ci/affected-apps.mjs (^[a-z0-9][a-z0-9-]*$, exit 2); add permissions: contents: read at workflow level in ci.yml; state the sales-advantage revision-target exception in docs/runbooks/traffic-moves.md lines 13 to 14; add the labels turbo_filters_ok=10 and p3_out_of_scope_paths=0 and the science-gates invocation to the plan evidence.
+  note: ci.yml stays red on master until the later CI-green track (D5). This role fixes no CI failure.
+
+measure_guard_note: the guard note named another track (primary_in_app_help_20261023); ignored per the assignment.
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+baseline_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: dcad011f65385362bc20183dce3e43486fc0a098
+head_sha: 825713559fea3128ebbdc091dfc195e035552700
+commits: f00f28493,825713559
+tests:
+  new_file: scripts/ci/__tests__/ci-remediation.test.mjs
+  failing: CI-R1,CI-R2,CI-R3
+  passing_old: 130
+  red_exit: 1
+  tests_failed: 3
+  tests_passed: 130
+  tests_total: 133
+  files: 1 test file, 1 plan file
+remaining_failures: CI-R1 (uncovered_test_packages=4, the four standalone package names), CI-R2 (unsafe table id accepted, exit 0), CI-R3 (no ci.yml permissions map). Green repairs them.
+remaining: task 3.5 Green; then the P3 checkpoint after the acceptance run.
+production_files_changed: 0
+worktree_count: 8
+END_MEASURE_AGENT_RESULT
+
+Red r3b (orchestrator correction: the coverage case reads the workspace globs)
+correction: the old CI Test step ran the root `turbo run test` over every glob of pnpm-workspace.yaml, so CI-R1 now parses that file and reads every glob. The two services are in the case.
+test_commit: e72e4b8ae634b5eaacb7c66e92ec84b81e9f9f8c
+plan_commit: a0b5f7209c1202c4ca0eb7cc4ed712b63181b053
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+red_exit: 1
+test_files_failed: 1
+test_files_passed: 6
+tests_failed: 3
+tests_passed: 130
+tests_total: 133
+
+failing_cases:
+  CI-R1 uncovered_test_packages=6 names=@reading-advantage/architecture-enforcement,@reading-advantage/knowledge-space-practice,@reading-advantage/mastery-runtime-compat,@reading-advantage/scripts,@reading-advantage/session-service,@reading-advantage/worker test_packages=47 filter_roots=13 workspace_globs=4
+  CI-R2 unsafe id "x;rm -rf /": expected exit 2, got 0; stderr=
+  CI-R3 ci.yml has no workflow-level permissions map; permissions=undefined
+
+workspace_globs: apps/*, packages/*, packages/integrations/*, services/*
+workspace_packages: 48
+test_packages: 47
+no_integrations_package_with_a_test_script: packages/integrations/github holds no test script
+
+non_vacuity_proof:
+  good_copy: /tmp/opencode/p3-r3-good (workflow-level permissions: contents: read; six extra Test filters; table-id charset guard)
+  command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CICD_FIXTURE_ROOT=/tmp/opencode/p3-r3-good AFFECTED_APPS_SCRIPT=/tmp/opencode/p3-r3-good/scripts/ci/affected-apps.mjs CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/ci-remediation.test.mjs --reporter=verbose; echo "EXIT=$?"'
+  result: EXIT=0; Tests 3 passed (3)
+  labels: uncovered_test_packages=0 test_packages=47 filter_roots=19 workspace_globs=4; unsafe_ids_refused=3 safe_table_rows=10; ci_permissions={"contents":"read"} jobs_checked=3
+
+handoff_green_task_3_5:
+  filters_to_add: --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker...
+  other_green_work: table-id charset guard in readTable (^[a-z0-9][a-z0-9-]*$, exit 2); permissions: contents: read at ci.yml workflow level; runbook lines 13 to 14 for sales-advantage; labels turbo_filters_ok=10, p3_out_of_scope_paths=0, and the science-gates invocation in the plan evidence.
+production_files_changed: 0
+worktree_count: 8
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+track: per_app_cicd_20261107
+phase: Phase 3: CI for the affected apps
+baseline_sha: 25d774e08a0f9bef8074fb6f88bde439d1a72066
+role_base_sha: dcad011f65385362bc20183dce3e43486fc0a098
+head_sha: a0b5f7209c1202c4ca0eb7cc4ed712b63181b053
+commits: f00f28493,825713559,e72e4b8ae,a0b5f7209
+tests:
+  new_file: scripts/ci/__tests__/ci-remediation.test.mjs
+  failing: CI-R1,CI-R2,CI-R3
+  passing_old: 130
+  red_exit: 1
+  tests_failed: 3
+  tests_passed: 130
+  tests_total: 133
+  ci_r1_label: uncovered_test_packages=6 names=@reading-advantage/architecture-enforcement,@reading-advantage/knowledge-space-practice,@reading-advantage/mastery-runtime-compat,@reading-advantage/scripts,@reading-advantage/session-service,@reading-advantage/worker test_packages=47 filter_roots=13 workspace_globs=4
+  proof_good: /tmp/opencode/p3-r3-good -> EXIT=0, 3 passed (3), uncovered_test_packages=0 test_packages=47 filter_roots=19 workspace_globs=4
+remaining_failures: CI-R1 (the six names above), CI-R2 (unsafe table id accepted), CI-R3 (missing ci.yml permissions map)
+remaining: task 3.5 Green, then the P3 acceptance run and checkpoint
+production_files_changed: 0
+worktree_count: 8
+END_MEASURE_AGENT_RESULT

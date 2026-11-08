@@ -1,0 +1,59 @@
+# measure-strategy P4 log
+
+Role: measure-strategy for Phase 4 of per_app_cicd_20261107. Date: 2026-11-08.
+Model: claude-code/claude-opus-5-5[1m]#high.
+
+## Reads
+- spec.md FR-5 (line 159) and AC-5.1 to AC-5.4; plan.md Phase 4 (line 62 on);
+  test-strategy.md sections 1, 2, P2, P3 outline, P4 outline, section 4.
+- Review B logs review-b-p3-57bb8376c (F4) and review-b-p3-79f86404b (F4 withdrawn for P3).
+- Phase 3 acceptance log phase-acceptance-p3-43162d278 (science gates: 4 files, 40 passed).
+
+## Measurements (read only, 2026-11-08)
+- role_base_sha=c0a1fe51d4a6a11fc67b620b3de87020355bd734 (git rev-parse HEAD at the start).
+- measure_head=f05ab07d148cd5fa98b979b97acca119bd4a5baf (other tracks committed during the role).
+- origin_master=f3611d47c7ca5b02848691bab1cc109266511842
+- commits_ahead=418 (git rev-list --count origin/master..f05ab07d1; same value right before the commit)
+- node scripts/ci/affected-apps.mjs --base f3611d47c7ca5b02848691bab1cc109266511842
+  --head f05ab07d148cd5fa98b979b97acca119bd4a5baf: EXIT=0, affected_ids=10
+  ["accounting","accounts","codecamp-advantage","marketing","primary-advantage",
+   "reading-advantage","sales-advantage","storytime","workbooks","www-reading-advantage"]
+- light run CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci: EXIT=0,
+  Test Files 8 passed (8), Tests 138 passed (138), 169.70 s.
+- www live: cd-www run 41796713212, headSha f3611d47c, success, 2026-11-04T08:04:28Z (gh run list).
+- www_closure_files_changed=0 (f3611d47c..f05ab07d1 over apps/www-reading-advantage, packages/ui,
+  packages/utils, packages/config).
+- held sign-in copy: ca3155932 changed 3 www files; a776187e2 (docs(measure) commit of
+  storytime_look_20261107) restored them; 67a5d1a47 has an empty diff. held_signin_copy_in_head=0.
+- live page http=200; "By QR Code, With No Login" 3 hits; "With One Sign-In" 0 hits.
+- turbo --dry=json: EXIT=0, turbo_dry_packages=4, turbo_dry_tasks=8; --filter=www-typo... EXIT=1.
+- www_dirty_paths=0. git worktree list | wc -l = 9. act and actionlint absent.
+- No heavy job ran. No www build ran. No gcloud write, no gh workflow run, no push, no deploy.
+
+## Scratch proof of the report check (/tmp/opencode/p4-strategy)
+- good report: report_check=pass, exit 0.
+- no ci row: fail R-1. gcloud_calls=1: fail R-1. storytime dropped: fail R-2.
+  report_head mismatch: fail R-2 (head_match=0). www_live_sha=ca3155932: fail R-3
+  (www_closure_files_changed=3 files_match=0). missing report: exit 1.
+- report_partials_rejected=5 report_good_passed=1. The text block in P4.6 equals the tested file (diff empty).
+
+## Commit
+- 4898143fe6ea510686dbd412bf069f269ab5ee9f docs(measure): write the p4 test strategy
+  (track_id: per_app_cicd_20261107). Pathspec commit of test-strategy.md only.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: per_app_cicd_20261107
+phase: Phase 4: Dry runs, www proof, and the first-push plan
+status: pass
+phase_base_sha: bf80408eb5104ae060cab8990e6515331ef6047f (given; it predates the strategy commit, so the orchestrator captures the immutable P4 base with git rev-parse HEAD after 4898143fe and before the first P4 Red commit; P4.6)
+role_base_sha: c0a1fe51d4a6a11fc67b620b3de87020355bd734
+measure_head: f05ab07d148cd5fa98b979b97acca119bd4a5baf
+head_sha: 4898143fe6ea510686dbd412bf069f269ab5ee9f
+commits: 4898143fe6ea510686dbd412bf069f269ab5ee9f
+remeasured: origin_master=f3611d47c7ca5b02848691bab1cc109266511842 commits_ahead=418 affected_ids=10 affected_exit=0 light_scripts_ci_exit=0 tests_passed=138 test_files=8 www_closure_files_changed=0 held_signin_copy_in_head=0 www_live_sha=f3611d47c7ca5b02848691bab1cc109266511842 worktrees=9
+risk: phase high; 4.1 medium, 4.2 high, 4.3 high, 4.4 medium, 4.5 and 4.6 human gates (critical), 4.7 human gate
+review_gates: review_a=yes review_b=yes(final) review_c=yes adversarial=yes(mutants_rejected=10/10, scenarios_checked=4) browser=no
+plan_line_4_4: - [ ] 4.4 Phase check: the closeout gate of test-strategy.md P4.6 (items 1 to 15) at the phase HEAD: the light `scripts/ci` run, the report check (R-1 to R-3), the www build labels of task 4.2, the 9 guard runs (`known_failures=4`), the detectors, the scope check, and the adversarial set (`mutants_rejected=10/10`). Tasks 4.5, 4.6, and 4.7 stay `[b]`. Evidence class: automated.
+handoff: (1) A Build session adds the plan_line_4_4 text to plan.md after task 4.3 (Q19). (2) plan.md task 2.6 ends with "The www dry run of Phase 4 is the live proof that the reduced key still deploys." That sentence is false; a Build session changes it to "The first push (task 4.5) is the live proof; the local www build of 4.2 uses no key (test-strategy P4.2 C30)." M43 and the P2.7 Review B row are corrected in the strategy. (3) The orchestrator picks report_head before task 4.1 and gives it to 4.1, 4.2, and 4.3 (C26). (4) Task 4.2 is heavy; the orchestrator runs it through heavy-run.sh. This role did not run it. (5) Review B F4 stays out of Phase 4 (C31, Q18 default): a small follow-up track; the first sales traffic move (2.3h) waits for it. (6) Fact for the PM: a776187e2, a docs(measure) commit of storytime_look_20261107, restored the 3 www files of ca3155932; the net www text change of the push is 0 at f05ab07d1. (7) The worktree count is 9, not 8 (M54). (8) Defaults used: Q18, Q19, Q20 in section 4.
+END_MEASURE_AGENT_RESULT

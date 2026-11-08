@@ -1,0 +1,21 @@
+Measure closeout log
+Track: per_app_cicd_20261107
+Pre-closeout HEAD: 8397d8e950a6a80b9905551a7260df29fefe8cbc
+Final acceptance audited head: 4bca5a504182dce57d7b6c449b50705f414d7bd4
+Completion date: 2026-11-09 (Asia/Bangkok)
+
+MEASURE_AGENT_RESULT
+role: measure-closeout
+track: per_app_cicd_20261107
+phase: closeout
+status: pass
+summary: The final acceptance passed at audited head 4bca5a504182dce57d7b6c449b50705f414d7bd4. The pre-closeout HEAD is 8397d8e950a6a80b9905551a7260df29fefe8cbc. The one commit between them belongs to track storytime_at_home_release_20261106 and touches no file of this track. The plan holds 29 done tasks with a commit SHA and 6 deferred tasks with an owner. The track folder sits in measure/archive/per_app_cicd_20261107. The registry entry moved into the Archived Tracks section with the metadata description. The metadata status is done with the completion date 2026-11-09. The closeout manifest names the audits, the gate commands, the deferred tasks, the retained evidence, and the 8 open Nits. The A5, A6, and A9 checks found no violation.
+commits: pending; this closeout commit carries the log and the manifest. The pre-closeout HEAD is 8397d8e950a6a80b9905551a7260df29fefe8cbc.
+tests_run: the closeout gate passed (exit 0); the A5, A6, and A9 scans found no hit; no test, build, or deploy ran by the closeout rule
+files_changed: the archive folder, the registry, the closeout manifest, and the run folder of the track
+plan_updates: none; the plan keeps 29 [x] tasks with a SHA, 6 [b] deferred tasks, and no [~] or [ ] task
+known_failures: the doctor gate exits 1 for three causes that predate the track; pnpm architecture:check exits 1 for a known master failure; the parallel track sales_traffic_source_binding_20261108 holds one red file in the aggregate scripts/ci suite
+handoff: the PM holds the first push, the build-account work, and the Workbooks prerequisites; Daniel holds the Primary traffic run, the five gated traffic runs, and every traffic move. The orchestrator informs the PM in its report, and the PM carries Daniel's items. The manifest records the 8 open Nits and the stale relative link in measure/tracks/sales_traffic_source_binding_20261108/index.md line 7.
+retry_recommendation: none
+dispositions: none
+END_MEASURE_AGENT_RESULT

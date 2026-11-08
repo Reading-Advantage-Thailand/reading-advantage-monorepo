@@ -1,0 +1,308 @@
+# Measure Green role log — per_app_cicd_20261107 — Phase 2
+
+- Role: measure-jr-green
+- Model: claude-code/claude-sonnet-5-5#high (a substitution for the quota pick)
+- Track: `per_app_cicd_20261107`
+- Phase: `## Phase 2: Per-app CD workflows` (P2)
+- `phase_base_sha`: `d28f8fd52096dd3101d60005182fc90a17ea52a9`
+- `role_base_sha`: `413467c3a91434650679bda5a1e895dd512cfae1`
+- Red model: deepseek/deepseek-flash#high (DeepSeek). No `coder` subagent was used.
+- Status: DONE
+- Date: 2026-11-07
+
+## Scope
+
+Green tasks 2.2, 2.3, 2.3b, 2.3e, 2.3g, 2.4, 2.5, and the Green part of 2.7. The `[b]` tasks
+2.3c, 2.3h, 2.3i stay as they are. Task 2.6 stays done. No push, no deploy, no workflow run, no
+Cloud Build run, no traffic move, and no trigger change. No traffic file ran.
+
+## Red confirmation
+
+The committed Red log `red-p2-d28f8fd52.log` reports 32 failing cases at `b6d9757f7`
+(22 W cases and 10 F cases). Before the first edit the tree held no `cd-apps.yml`, no
+`cloudbuild-traffic.yaml`, and the old push files, so the Red state was the state of that log.
+No test file was edited. `git diff --stat 413467c3a..HEAD -- scripts/ci/__tests__ scripts/ci/affected-apps.mjs`
+prints nothing.
+
+## Commits (all after the role base, in order)
+
+| Task | Commit | Header |
+|---|---|---|
+| 2.2 | `bc733b6ac` | feat(cd): deploy www only when the script selects it |
+| 2.3 | `f524e9af0` | feat(cd): add the table-driven cd-apps workflow (also `project` of 6 gated rows) |
+| 2.3b | `68692d6b7` | feat(cd): move primary database steps to a traffic file |
+| 2.3e | `23280f78b` | feat(cd): deploy accounts and workbooks with no traffic |
+| 2.3g | `62ccddd75` | feat(cd): move app database steps to traffic files (+ `docs/runbooks/traffic-moves.md`) |
+| 2.4 | `a8eeaf793` | fix(cd): shorten the storytime revision tag |
+| 2.5 | `d4f1d6098` | docs(cd): record the storytime deploy facts |
+
+Plan-evidence commit: `00e8c248c` (`plan.md` only; `measure/runs` is ignored by git, so this log is
+not committed, as with the earlier logs). Green code HEAD for the tests:
+`d4f1d609865841ecaf953d9573dfd72f9811f78f`. Final HEAD: `00e8c248c`.
+`grep -nE '^- \[( |~)\] 2\.' plan.md` prints nothing (exit 1).
+
+## Gates
+
+Gate command (GREEN_TEST_COMMAND, through `heavy-run.sh`, in the foreground):
+
+```
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci; echo "EXIT=$?"'
+```
+
+- Run 1 (verbose reporter, working tree with every Green edit, before the commits):
+  `EXIT=0`, Test Files 4 passed (4), Tests 101 passed (101). Per file: `cd-workflows.test.mjs` 33,
+  `cloudbuild-files.test.mjs` 16, `affected-apps.test.mjs` 48, `affected-apps-adversarial.test.mjs` 4.
+  No failed case, no skipped case.
+- Run 2 (the exact final command at HEAD `d4f1d6098`): `EXIT=0`, Test Files 4 passed (4),
+  Tests 101 passed (101), duration 56.37 s.
+- The per-task gates of P2.5 were not run as seven separate jobs. The heavy lock was held by
+  other sessions (a queue of about 30 minutes for one job). Run 1 covers the cases of every task
+  in one run. Each task case set was part of that run, and Run 2 repeats it at the final HEAD.
+- `files_with_db_steps=0 files_checked=9` (F-08) at the final HEAD. The strategy figure of 4
+  applies after 2.3b and 2.3e only; 2.3g takes it to 0.
+- `sales_db_steps_moved=6` (F-12), `traffic_runbook_sections=6` (F-16), `facts_found=7` (W-16),
+  `psql_hits=0` (F-14), `max_combined=32` (W-10).
+
+Other checks:
+
+- `yaml_ok=17` (2 workflows, 15 Cloud Build files incl. one untracked file of another session).
+- `rg -n 'update-traffic|--to-latest' .github/workflows` exit 1; `rg -n 'cloudbuild-traffic' .github/workflows`
+  exit 1; the `secrets\.(?!GCP_SERVICE_ACCOUNT|GCP_PROJECT_ID)` pcre2 search exit 1;
+  `rg -n 'pull_request_target' .github/workflows` exit 1.
+- A9 detector `rg -n '(readFile|readFileSync|existsSync)[^;]*measure/' scripts/ci/__tests__` exit 1.
+- Dependency files (`package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`,
+  `.pnpmfile.cjs`) unchanged by the Green commits (exit 1).
+- Out-of-scope paths of the Green commits: 0 (paths: `.github/workflows/**`,
+  `apps/*/cloudbuild*.yaml`, `docs/runbooks/**`, `scripts/ci/apps.json`).
+- ESLint: no `.mjs` file changed by Green, so no file to lint.
+- `git worktree list | wc -l` prints 8.
+- Push files hold `update-traffic` only in a comment of `apps/storytime/cloudbuild.yaml` (the
+  old header line "do not add ... an update-traffic step"). No step holds it.
+
+## Tests changed
+
+None. No Red test, no helper, and no P1 file changed.
+
+## Design choices that the tests do not pin (for Review A, B, and C)
+
+1. Select step: one text in both workflows. `node` reads the table and writes `www=yes|no` and
+   `matrix=<json>` to `GITHUB_OUTPUT`. No app id, service, project, or tag is in the workflows.
+2. Q10 default applied in task 2.3: `project` is `reading-advantage` on the 6 gated rows that held
+   `$PROJECT_ID`; `primary-advantage` stays on 2 rows. Only the `project` text changed in the table.
+3. Traffic moves use tags: `--to-tags=${_TAG}=100` (primary, accounts, marketing) and the static
+   tags `candidate` (accounting, sales) and `sso-candidate` (codecamp). `_TAG` has no default, so
+   Cloud Build refuses a run without it.
+4. The sales traffic file takes `_PUSH_BUILD_ID` (no default) for the image of
+   `capture-legacy-rollback`. The step cannot use `$BUILD_ID` of the traffic build.
+5. `availableSecrets` entries that only the moved steps use left the push files. The push files
+   have no database secret.
+6. The accounting push keeps its conditional deploy (`--no-traffic` only when the service exists).
+
+## Risks and open items
+
+- The literal `${BUILD_ID:0:8}` in a Cloud Build step text: the tests need this exact text. The
+  strategy states that bash expands it. Cloud Build may treat `${...}` as a substitution field and
+  reject the file at submit time. If so, the build fails closed (no deploy). The fix then is
+  `$${BUILD_ID:0:8}` with a test change. No build has run it.
+- Sales traffic file: `capture-sales-cloud-run-tag.sh` requires that the tagged revision is the
+  latest created revision. After the push deploys the candidate, the `legacy-rollback` tag fails
+  this check. The order of F-12 forces the capture into the traffic file. A script change is
+  outside this phase. The traffic runbook records the limit.
+- Review B (recorded for the review): builds run as the default build account of each project
+  (task 4.7). The workbooks job fails closed until task 2.3i is done.
+- The strategy order of commits (P2.5 item 3) cannot hold: the Red role committed all four Red
+  tasks before any Green task.
+
+## Questions and defaults
+
+1. Q: Does the PM accept that the sales capture step can fail on its first traffic run? Default
+   used: follow F-12 and the spec; record the limit in the runbook; no script change.
+2. Q: Should `${BUILD_ID:0:8}` be written `$${BUILD_ID:0:8}`? Default used: keep the literal
+   text, because W-11 and W-15 need it. The orchestrator may route a Mid Red retry.
+3. Q: Is one plan-evidence commit for all tasks acceptable? Default used: one commit.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: P2
+status: done
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 413467c3a91434650679bda5a1e895dd512cfae1
+green_code_head: d4f1d609865841ecaf953d9573dfd72f9811f78f
+final_head: 00e8c248c
+commits: bc733b6ac f524e9af0 68692d6b7 23280f78b 62ccddd75 a8eeaf793 d4f1d6098; plan evidence 00e8c248c
+tasks_flipped_x: 2.2 2.3 2.3b 2.3e 2.3g 2.4 2.5 2.7
+tasks_blocked_b: 2.3c (deferred:daniel) 2.3h (deferred:daniel) 2.3i (deferred:pm)
+targeted_command_output: EXIT=0; Test Files 4 passed (4); Tests 101 passed (101)
+new_files: .github/workflows/cd-apps.yml apps/{primary-advantage,accounts,accounting,codecamp-advantage,marketing,sales-advantage}/cloudbuild-traffic.yaml docs/runbooks/traffic-moves.md
+red_tests_edited: none
+handoff: Review A, B, C, adversarial mutants (X1 to X12), and phase acceptance. See Risks above.
+END_MEASURE_AGENT_RESULT
+
+## Round 2 — the step-made build tag
+
+- Role: measure-jr-green. Role base: `551519234f9385749686077253325d25c85713cc`.
+- PM order (2026-11-07): write the tag as `--tag=<prefix>-$${BUILD_ID:0:8}` (Red r3, `a67576ee7`).
+- Change: `apps/accounts`, `apps/primary-advantage`, `apps/storytime`, and `apps/workbooks`
+  `cloudbuild.yaml`, one line each. Commit `586981581`. The runbook does not quote the tag text,
+  so it did not change. `apps/storytime` and the other three keep `env: BUILD_ID=$BUILD_ID`.
+- `yaml_ok=4`. No test edited.
+- Final command at `586981581`: `EXIT=1`, Test Files 1 failed | 3 passed (4),
+  Tests 1 failed | 101 passed (102).
+- The 6 cases of Red r3 pass: W-11-primary, W-11-storytime, W-11-accounts, W-11-workbooks, W-15, F-17.
+- The one failure: F-06 (`cloudbuild-files.test.mjs:153`, Red task 2.3d): `accounts deploy step has
+  no tag; workbooks deploy step has no tag files_checked=2`. F-06 checks for the text
+  `--tag=<prefix>-${BUILD_ID:0:8}` without the extra `$`. F-17 forbids that text in any step
+  (`(?<!\$)\$\{...\}`), and W-11 requires the `$$` form. No file can pass F-06 and F-17 together.
+  The proof is the run above.
+- Plan evidence commit: see the git log (`docs(measure): record the round 2 tag fix evidence`).
+
+Test case that must change (Mid Red retry): F-06. Expected text for both rows:
+`--tag=${row.prefix}-$${BUILD_ID:0:8}`. After that change the expected result is EXIT=0, 4 files, 102 passed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: P2
+round: 2
+status: blocked
+role_base_sha: 551519234f9385749686077253325d25c85713cc
+commits: 586981581 (code); plan evidence follows in the git log
+targeted_command_output: EXIT=1; Test Files 1 failed | 3 passed (4); Tests 1 failed | 101 passed (102)
+red_tests_edited: none
+handoff: Request a Mid Red retry. Change F-06 in scripts/ci/__tests__/cloudbuild-files.test.mjs to expect the `$$` tag text. Then rerun the final command; expect EXIT=0 and 102 passed.
+END_MEASURE_AGENT_RESULT
+
+## Green r3 — remediation of Review B N5, Review C B1, N1, and N2, and Red cases W-22 and W-23
+
+- Role: measure-jr-green. Model: claude-code/claude-sonnet-5-5#high. Role base: `7cc94da8a`.
+- Red model: deepseek/deepseek-flash#high (Red r6 `85ad8bb87`, r7 `7cc94da8a`). No coder used.
+- Status: DONE
+
+### Commits
+
+| Commit | Content |
+|---|---|
+| `3f1c33b9a` | docs(cd): `docs/runbooks/traffic-moves.md` (W-22, B1, N2) and `docs/runbooks/storytime-deploy.md` (N1) |
+| `a60c8352c` | fix(cd): pin the 10 `uses:` lines of `cd-apps.yml` and `cd-www-reading-advantage.yml` (W-23, N5) |
+| `688a2abb2` | docs(measure): plan task 2.7 "Remediation r3" evidence (`plan.md` only) |
+
+### What changed
+
+1. `traffic-moves.md`: a general rule (the GitHub Actions run log of the push prints the Cloud Build
+   id) and a "Find the tag" block in each of the six sections, with the real service, region
+   (`asia-southeast1`), and project of each app (`primary-advantage-app` / `primary-advantage`;
+   `accounts`, `accounting`, `codecamp-advantage`, `marketing`, `sales-advantage` / `reading-advantage`).
+   `_TAG` for primary, accounts, marketing; `_PUSH_BUILD_ID` for sales. Accounting (`candidate`),
+   codecamp (`sso-candidate`), and sales (`candidate`) carry the fixed-tag limit (Review B N1).
+2. Sales substitutions, from `verify-sales-release-inputs.mjs` and `create-sales-release-archive.sh`:
+   `_RELEASE_COMMIT_SHA` is the exact 40-character release commit; `_CURRICULUM_BACKUP_ID` is an
+   on-demand Cloud SQL backup run of instance `cloud-sql` (status `SUCCESSFUL`, description
+   `sales-curriculum-before-<commit>-not-before-<boundary>`); `_CURRICULUM_BACKUP_NOT_BEFORE` is a
+   UTC RFC3339 boundary, 1 hour old or less. A person creates the backup first.
+3. New open limit in the runbook: the push files of marketing and sales hold the default
+   `REQUIRED_RELEASE_COMMIT_SHA`, and `cd-apps.yml` passes no substitution. The first step of each
+   push file can fail until a substitution reaches the build. This is a finding for the PM, not a
+   change made here.
+4. `storytime-deploy.md`: a dated note at the start of "Steps".
+5. Workflows: only the `uses:` lines changed (SHAs and version comments of the order).
+
+### Gates (each through heavy-run.sh, foreground, one at a time)
+
+| Gate | Exit | Counts |
+|---|---|---|
+| `vitest run --maxWorkers=1 scripts/ci` | 0 | Test Files 4 passed (4), Tests 104 passed (104) |
+| storytime (phase1-service, phase3-media-gate) | 0 | 2 files, 12 passed |
+| packages/db (3 files) | 1 | 28 passed, 1 failed: known `codecamp-0049` ceiling |
+| accounting (2 files) | 0 | 18 passed |
+| accounts (1 file) | 0 | 9 passed |
+| marketing, run in `apps/marketing` | 0 | 2 files, 15 passed |
+| packages/domain (1 file) | 0 | 10 passed |
+| sales-advantage (4 files) | 1 | 28 passed, 1 failed: `seeds only deterministic approved curriculum and gates exact completeness` (known, `awaiting_human_review`) |
+| codecamp-advantage (8 files), run in `apps/codecamp-advantage` | 1 | 86 passed, 2 failed (known session lifetime, launch gate), 47 skipped |
+
+Notes: the marketing and codecamp rows from the repository root fail to load (`@/` alias:
+`Cannot find package '@/lib/company-oidc'`; marketing 1 file failed, 2 tests passed; codecamp 4
+files failed to load, 25 passed). The app config resolves the alias, so the counts above come from the
+app folders. The strategy counts (codecamp 131 passed, storytime 17 passed across 3 files) differ from
+the measured counts; the failed cases are the known ones. Known failures: 4 (db, codecamp x2, sales).
+No other failure. `actionlint` is not installed (`command -v actionlint` prints nothing); both
+workflows parse (`yaml_ok=2`). No test file edited.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: P2
+round: 3
+status: done
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 7cc94da8a91e900280e073abfe1e803b44d1f9b7
+commits: 3f1c33b9a a60c8352c 688a2abb2
+targeted_command_output: EXIT=0; Test Files 4 passed (4); Tests 104 passed (104)
+red_tests_edited: none
+handoff: Re-run Review B and C on the runbook, the pins, and the open limit about the marketing and sales push defaults. The PM decides that open limit.
+END_MEASURE_AGENT_RESULT
+
+## Green r4 — pass the pushed commit to the marketing build (Red r8: W-24, W-25, W-26)
+
+- Role: measure-jr-green. Model: claude-code/claude-sonnet-5-5#high. Role base: `8380479ea`.
+- Red r8 model: deepseek/deepseek-flash#high. No coder used. No test file edited.
+- Status: DONE
+
+### Commits
+
+| Commit | Content |
+|---|---|
+| `bbe334bff` | fix(cd): select step of both CD workflows adds a matrix field `substitutions`; `cd-apps.yml` passes it on the submit line; runbook "Open limits" bullet updated |
+| `d19c603d0` | docs(measure): plan task 2.7 "Remediation r4" evidence (cited a wrong commit id by a commit race) |
+| `1902a8215` | docs(measure): corrects the commit id in that note to `bbe334bff` |
+
+The first commit attempt failed because another session moved HEAD (`cannot lock ref 'HEAD'`).
+The plan commit then landed before the code commit. No file was lost.
+
+### Mechanism
+
+The select step reads the push file of each affected gated row. It sets `substitutions` to
+`--substitutions=_RELEASE_COMMIT_SHA=<pushed commit>` when `_RELEASE_COMMIT_SHA` is the only
+`REQUIRED_` default of the file (marketing). It sets an empty string otherwise (sales-advantage has
+two more `REQUIRED_` defaults, so it stays an open limit). The table has no new field: B-21 pins the
+key set. The select step text is still equal in both workflows (W-18c). A scratch repository has no
+push file, so the step returns an empty string there. No cloudbuild file changed.
+
+### Dry render (real select program, no gcloud call)
+
+```
+marketing: gcloud builds submit --project="reading-advantage" --config="apps/marketing/cloudbuild.yaml" --substitutions=_RELEASE_COMMIT_SHA=0123456789abcdef0123456789abcdef01234567 .
+storytime: gcloud builds submit --project="primary-advantage" --config="apps/storytime/cloudbuild.yaml" .
+sales-advantage: gcloud builds submit --project="reading-advantage" --config="apps/sales-advantage/cloudbuild.yaml" .
+```
+
+### Gates (each through heavy-run.sh, foreground, one at a time)
+
+| Gate | Exit | Counts |
+|---|---|---|
+| `vitest run --maxWorkers=1 scripts/ci` | 0 | Test Files 4 passed (4), Tests 107 passed (107) |
+| storytime (2 files) | 0 | 12 passed |
+| packages/db (3 files) | 1 | 28 passed, 1 failed (known `codecamp-0049`) |
+| accounting (2 files) | 0 | 18 passed |
+| accounts | 0 | 9 passed |
+| marketing, from `apps/marketing` | 0 | 2 files, 15 passed |
+| packages/domain | 0 | 10 passed |
+| sales-advantage (4 files) | 1 | 28 passed, 1 failed (known `releaseCandidate.approval`) |
+| codecamp-advantage, from its folder | 1 | 86 passed, 2 failed (known), 47 skipped |
+
+`known_failures=4`, `other_failures=0`. Both workflows parse with node (`yaml_ok=2`).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: per_app_cicd_20261107
+phase: P2
+round: 4
+status: done
+phase_base_sha: d28f8fd52096dd3101d60005182fc90a17ea52a9
+role_base_sha: 8380479eabb147130a6de9bc903cf05f1565d343
+commits: bbe334bff d19c603d0 1902a8215
+targeted_command_output: EXIT=0; Test Files 4 passed (4); Tests 107 passed (107)
+red_tests_edited: none
+handoff: Re-run Review B and C on the matrix field and the runbook limit. Sales push inputs stay an open limit for the PM.
+END_MEASURE_AGENT_RESULT

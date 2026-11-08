@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "session": "Review C - P4 - per_app_cicd",
+  "model": "deepseek/deepseek-flash#high",
+  "model_substitution": "The role table names kimi-for-coding, which is WAIT. This run used deepseek/deepseek-flash#high.",
+  "track": "per_app_cicd_20261107",
+  "phase": "Phase 4: Dry runs, www proof, and the first-push plan",
+  "summary": "FAIL: the report shape, the deploy list, and the www text list pass, but the word `deploy` on dry-run-report.md line 28 carries two meanings and can lead Daniel or PR to expect nine deployments instead of one traffic move and eight no-traffic builds; three other words slow the reading only.",
+  "phase_base_sha": "7d81c7e6fd6f067431b931812baafc36cbe16f2d",
+  "role_base_sha": "a1d3bb741fa23e355590e35a5fb3d87c61562993",
+  "role_base_sha_note": "The role started at the checked-out HEAD a1d3bb741 (master). The phase base stays 7d81c7e6f.",
+  "audited_head_sha": "8a3e9cb9d09e47192d4925f66b630cd00a4107da",
+  "report_head": "abd7e30ae",
+  "head_is_current": true,
+  "head_evidence": "git diff --stat 8a3e9cb9d HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage printed nothing, EXIT=0",
+  "contract_applicability": "applicable",
+  "contract_applicability_evidence": [
+    "test-strategy.md line 894 (P4.8 table): Review C (UX/API) applies, checks the report and the plan line",
+    "measure/tracks/per_app_cicd_20261107/dry-run-report.md exists in the phase diff and holds the dry-run table, the plan line, and the www list",
+    "The phase changes no page, so no browser inspection applies (P4.8 line 896)"
+  ],
+  "checks": {
+    "C1_report_shape": "pass: 11 rows (10 app ids and ci). The ids match scripts/ci/apps.json.",
+    "C2_deploy_list": "pass: traffic=[www-reading-advantage], 8 no_traffic ids, skipped=[reading-advantage]. The dry-run Mode column and the prose agree.",
+    "C3_www_text_list": "pass: the one closure file is classed 'test only'. The report prints the diff command, www_closure_files_changed=1, www_text_changes=0, and held_signin_copy_in_head=0.",
+    "C4_one_meaning_per_word": "fail on `deploy` (F1); N1 to N3 slow the reading only."
+  },
+  "blocking_findings": [
+    "F1 [Major] dry-run-report.md:28: `deploy` means any deploy call (line 8 'no deploy') and a traffic move (line 28 'The push deploys one app to traffic'), so a reader can conclude that the push deploys nine apps instead of one traffic move and eight no-traffic builds. Fix: write 'The push moves traffic for one app ... Eight apps build a no-traffic revision ...' and change line 8 to 'No secret, no gcloud call'."
+  ],
+  "nonblocking_findings": [
+    "N1 [Minor] dry-run-report.md:12-21,26: direct|gated|excluded (Mode) and traffic|no_traffic|skipped (plan key) name one set of three classes, so the reader must map them. Fix: add one line under the table: 'Mode direct = traffic; gated = no_traffic; excluded = skipped.'",
+    "N2 [Minor] dry-run-report.md:10,22: `ci` names the CI-workflow row and its Mode, and also the column of CI app ids, whose cell is empty on the ci row. Fix: rename the column header to `ci_apps`; P4.6 fixes only the Row and File headers.",
+    "N3 [Minor] dry-run-report.md:26: `traffic` is a plan-line key that lists direct apps, and also the noun for the served revision state. Fix: add one half line: 'The key names the apps; it is not the live traffic state.'"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "commands": [
+    "git rev-parse HEAD -> a1d3bb741fa23e355590e35a5fb3d87c61562993",
+    "git diff --stat 8a3e9cb9d HEAD -- .github scripts measure/tracks/per_app_cicd_20261107 apps/www-reading-advantage -> no output, EXIT=0"
+  ],
+  "changed_files": [
+    "measure/runs/per_app_cicd_20261107/review-c-p4-8a3e9cb9d.json",
+    "measure/runs/per_app_cicd_20261107/review-c-p4-8a3e9cb9d.log"
+  ],
+  "evidence": [
+    "scripts/ci/apps.json holds the same 10 ids with modes direct, gated, and excluded",
+    "Plan task 4.3 labels (report_rows=11 expected_rows=11 ids_match=1, report_check=pass) agree with the read rows",
+    "No suite was run; this review is read only"
+  ],
+  "verdict": "fail",
+  "status": "fail",
+  "retry_recommendation": "retry_implementation",
+  "confidence": "medium"
+}
