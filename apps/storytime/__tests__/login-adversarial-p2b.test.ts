@@ -82,9 +82,10 @@ interface NextCase {
 /**
  * The hostile `next` table.
  *
- * The last three values hold a non-ASCII code point above U+00FF. They pass the check today, and
- * the answer then tries to write them into a `Location` header, which a Headers value cannot
- * hold. The case records the answer; it does not hide the fault.
+ * Three values hold a raw code point above U+007F: U+2028, U+2029, and U+0E01. The return-path
+ * check accepts ASCII only (F90, PM point 1). These three values must fall back to the default
+ * path, so a `Location` header never holds a raw non-ASCII byte. The "valid encoded e-acute" row
+ * keeps its value because it is ASCII after encoding.
  */
 const NEXT_CASES: NextCase[] = [
   { label: "protocol-relative", value: "//evil.test", fallback: true },
@@ -113,9 +114,9 @@ const NEXT_CASES: NextCase[] = [
   { label: "NUL escape", value: "/th/st/%00", fallback: true },
   { label: "raw NUL", value: "/th/st/2/1\u0000", fallback: true },
   { label: "encoded NUL then a protocol-relative value", value: "/%00//evil.test", fallback: true },
-  { label: "raw line separator", value: "/th/st/2/1\u2028", fallback: false },
-  { label: "raw paragraph separator", value: "/th/st/2/1\u2029", fallback: false },
-  { label: "raw Thai letter in the query", value: "/th/st/2/1?x=\u0e01", fallback: false },
+  { label: "raw line separator", value: "/th/st/2/1\u2028", fallback: true },
+  { label: "raw paragraph separator", value: "/th/st/2/1\u2029", fallback: true },
+  { label: "raw Thai letter in the query", value: "/th/st/2/1?x=\u0e01", fallback: true },
 ];
 
 /** One row of the cross-site table. */
