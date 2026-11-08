@@ -736,11 +736,13 @@ try {
       if (!page) throw new Error('Browser page is unavailable');
       await page.setViewportSize(viewport);
       await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
-      const targets = await page.locator('a[href*="part="], audio[aria-label]').evaluateAll(nodes => nodes.map(n => {
+      // Look task 2.3g (R-GATE2, council round 3): the parent speaker is a button beside a hidden
+      // audio element (no native "0:00 / 0:00" controls), so the 64 px target is the button.
+      const targets = await page.locator('a[href*="part="], [data-speaker] > button').evaluateAll(nodes => nodes.map(n => {
         const r=n.getBoundingClientRect(); return { tag:n.tagName, width:r.width, height:r.height };
       }));
       const tiles = targets.filter(t => t.tag === 'A');
-      const speakers = targets.filter(t => t.tag === 'AUDIO');
+      const speakers = targets.filter(t => t.tag === 'BUTTON');
       const minTile = tiles.length ? Math.min(...tiles.map(area)) : 0;
       const minSpeaker = speakers.length ? Math.min(...speakers.map(area)) : 0;
       console.log(`tap_target_min_px_tiles_${viewport.width}x${viewport.height}=${Math.floor(minTile)}`);
@@ -1046,7 +1048,10 @@ try {
     });
   };
   const openWeek = async () => { await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' }); };
-  await allControlsCheck('week', openWeek, 3, '[data-week-tiles] audio', SIGN_OUT_FORM);
+  // Look task 2.3g (R-GATE2): the parent panel is an adult area at the end of the page; its speaker
+  // buttons replaced native audio elements that this row never counted, so the panel leaves the
+  // child-control count the way the sign-out form does. The tile speaker probe follows the button.
+  await allControlsCheck('week', openWeek, 3, '[data-week-tiles] [data-speaker] > button', `${SIGN_OUT_FORM}, [data-parent-panel]`);
   await signOutCheck('week', openWeek);
   await allControlsCheck('reader', async () => {
     await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });

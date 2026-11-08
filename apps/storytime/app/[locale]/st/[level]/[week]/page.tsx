@@ -19,6 +19,7 @@ import { StorytimeReader, StorytimeDecodable } from "./reader";
 import type { QuestionTile } from "./questions";
 import { StorytimeSong } from "./song";
 import { DoneMark } from "./done-mark";
+import { SpeakerButton } from "./speaker-button";
 
 /**
  * The at-home entry route `/<locale>/st/<level>/<week>` (spec FR-5, AC-2.1, AC-5.2, AC-5.4).
@@ -139,7 +140,8 @@ function songPicture(week: StorytimeWeek): TilePicture | null {
 
 /**
  * Renders one recorded-audio speaker control. The element holds a real file, so a tap plays the
- * recording; the page never asks the phone voice (rule 10.5).
+ * recording; the page never asks the phone voice (rule 10.5). The audio element has no native
+ * controls, so no "0:00 / 0:00" text shows before the clip loads (council round 3, item 6).
  * @param props.file The recorded file, relative to the content folder.
  * @param props.label The accessible label.
  * @returns The speaker control.
@@ -154,13 +156,10 @@ function Speaker({
   mediaUrls: Record<string, string>;
 }) {
   return (
-    <audio
-      controls
-      preload="none"
-      src={mediaUrl(mediaUrls, file)}
-      aria-label={label}
-      className="min-h-16 min-w-16"
-    />
+    <span data-speaker className="inline-flex">
+      <audio preload="none" src={mediaUrl(mediaUrls, file)} />
+      <SpeakerButton label={label} className="min-h-16 min-w-16" />
+    </span>
   );
 }
 
@@ -370,6 +369,7 @@ export default async function StorytimeWeekPage({
           </section>
           <section
             aria-label={t("homeParentHeading")}
+            data-parent-panel
             className="flex flex-col gap-4 rounded-2xl border border-neutral-300 p-4"
           >
             <h2 className="text-lg font-semibold">

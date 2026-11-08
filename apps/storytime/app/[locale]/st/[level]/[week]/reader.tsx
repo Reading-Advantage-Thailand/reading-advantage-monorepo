@@ -536,7 +536,7 @@ export function StorytimeReader({
             >
               ←
             </button>
-            <span aria-live="polite">{`${pageNumber} / ${book.pages.length}`}</span>
+            <span data-page-count aria-live="polite">{`${pageNumber} / ${book.pages.length}`}</span>
             <button
               type="button"
               aria-label={labels.nextPage}
