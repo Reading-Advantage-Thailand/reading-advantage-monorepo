@@ -24,6 +24,9 @@ set -uo pipefail
 # F-origin (Red r6): one row posts a sign-in with `Host: storytime.example.test` and
 # `Origin: http://storytime.example.test` and no x-forwarded-proto. The own origin comes from the
 # Host header, so the row reads standalone_origin_status=303; request.nextUrl.origin gives 403.
+# F80 (adversarial round): one row GETs a protected week page with `Host: storytime.example.test`
+# and reads the 307 Location value. A value that names the bind host (0.0.0.0, localhost,
+# 127.0.0.1) or the bind port prints stranger_location_bind=1 and fails the row.
 # Run 2 also holds the P3.6 week-404 row: a week outside the shipped range answers 404 with the
 # Thai and English lines of app/[locale]/not-found.tsx (PM 2026-11-05: this script does not
 # check <html lang>; the live lang check is the browser-gate row).
@@ -388,6 +391,34 @@ if [ -n "$C1" ]; then
     pass "The standalone sign-in Location names the public host, not the bind address"
   else
     fail "The standalone sign-in Location names the bind address or is missing: $STANDALONE_LOCATION"
+  fi
+  # F80 (adversarial round, Phase 2b): the proxy still builds its sign-in redirect from
+  # request.nextUrl, which holds the bind address in the standalone image. A stranger GET of a
+  # protected week page with a Host header that differs from the bind address must answer 307 with
+  # a Location that does not name 0.0.0.0, localhost, 127.0.0.1, or the bind port. The row reads
+  # the Location VALUE, not only the status (the old stranger row read the status and a suffix).
+  STRANGER_HOST_HEADERS="$(curl --silent --show-error -D - -o /dev/null \
+    -H "Host: storytime.example.test" \
+    "http://127.0.0.1:$PORT1/th/st/2/1")" || STRANGER_HOST_HEADERS=""
+  STRANGER_HOST_STATUS="$(printf '%s\n' "$STRANGER_HOST_HEADERS" | head -n 1 | tr -d '\r' | awk '{print $2}')"
+  [ -n "$STRANGER_HOST_STATUS" ] || STRANGER_HOST_STATUS="fetch-failed"
+  STRANGER_LOCATION="$(printf '%s\n' "$STRANGER_HOST_HEADERS" | tr -d '\r' | sed -n 's/^[Ll]ocation:[[:space:]]*//p' | head -n 1)"
+  STRANGER_LOCATION_BIND=0
+  case "$STRANGER_LOCATION" in
+    *0.0.0.0*|*localhost*|*127.0.0.1*|*:$PORT1*) STRANGER_LOCATION_BIND=1 ;;
+  esac
+  case "$STRANGER_LOCATION" in
+    //*) STRANGER_LOCATION_BIND=1 ;;
+    /*|"http://storytime.example.test/"*|"https://storytime.example.test/"*) : ;;
+    *) STRANGER_LOCATION_BIND=1 ;;
+  esac
+  echo "stranger_host_status=$STRANGER_HOST_STATUS"
+  echo "stranger_location=$STRANGER_LOCATION"
+  echo "stranger_location_bind=$STRANGER_LOCATION_BIND"
+  if [ "$STRANGER_HOST_STATUS" = "307" ] && [ -n "$STRANGER_LOCATION" ] && [ "$STRANGER_LOCATION_BIND" -eq 0 ]; then
+    pass "The stranger proxy Location names the public host, not the bind address"
+  else
+    fail "The stranger proxy Location names the bind address or is missing: status=$STRANGER_HOST_STATUS location=$STRANGER_LOCATION"
   fi
   STATUS_D="$(status_of "http://127.0.0.1:$PORT1/th/st/2/2" "$SESSION_COOKIE")"
   if [ "$STATUS_D" = "404" ]; then
