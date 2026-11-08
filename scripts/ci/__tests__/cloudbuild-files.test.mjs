@@ -324,6 +324,7 @@ describe("F: Cloud Build files", () => {
     const ids = ordered(
       traffic,
       [
+        "bind-release-source",
         "verify-curriculum-backup",
         "migrate-db",
         "doctor-check",
@@ -337,7 +338,8 @@ describe("F: Cloud Build files", () => {
       ],
       "sales traffic",
     );
-    must(ids[0] === "verify-curriculum-backup", "the curriculum backup guard is not first");
+    must(ids[0] === "bind-release-source", "the release-source bind guard is not first");
+    must(ids[1] === "verify-curriculum-backup", "the curriculum backup guard is not second");
     must(
       ids.indexOf("build-curriculum-workspace-deps") < ids.indexOf("seed-production-curriculum"),
       "the workspace build does not precede the seed",
