@@ -23,7 +23,9 @@ describe("@reading-advantage/backend package scaffold", () => {
       "./company-identity/internal-route-adapter",
       "./finance-operations",
       "./jobs",
+      "./jobs/adapters/postgres",
       "./kernel",
+      "./storytime-access",
     ]);
     expect(manifest.exports).toHaveProperty(".");
     expect(manifest.exports).toHaveProperty("./accounting");
@@ -35,7 +37,9 @@ describe("@reading-advantage/backend package scaffold", () => {
     );
     expect(manifest.exports).toHaveProperty("./finance-operations");
     expect(manifest.exports).toHaveProperty("./jobs");
+    expect(manifest.exports).toHaveProperty("./jobs/adapters/postgres");
     expect(manifest.exports).toHaveProperty("./kernel");
+    expect(manifest.exports).toHaveProperty("./storytime-access");
     expect(manifest.scripts).toMatchObject({
       build: "tsc",
       lint: "eslint .",
