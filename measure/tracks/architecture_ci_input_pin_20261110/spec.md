@@ -53,8 +53,8 @@ The PM decisions, word for word:
   HEAD 5062b170e, `:740-750` holds `selectV2AnalyzerSourcePaths` (`:740`), not a
   comparison. The comparison has two sites, not three.
 - **Pin computation.** `packages/architecture-enforcement/src/v2-manifest-validation.ts:812`
-  (async) and `:837` (sync). The snapshot hashes the ordered path list and the
-  exact bytes of every analyzed input (`:775-805`).
+  (async) and `:837` (sync). The snapshot hashes the exact bytes of every
+  analyzed input. The path list is `:775-805`.
 - **Analyzed files.** Tracked TypeScript and JavaScript files under `apps`,
   `integrations`, `packages`, and `services`
   (`packages/architecture-enforcement/src/inventory.ts:180-197`).
@@ -99,7 +99,10 @@ The PM decisions, word for word:
   writes the manifest. It refreshes five fields:
   `analyzerInputSnapshotSha256`, `analyzerImplementationTreeSha256`,
   `implementationAndTestTreeSha256`, `reportSha256s`, and
-  `reviewSubjectSha256`.
+  `reviewSubjectSha256`. The round 2 review confirms the five-field scope.
+  `reviewSubjectSha256` binds all protected fields
+  (`v2-manifest-validation.ts:606-616`), so a refresh of the other four must
+  recompute it.
 - **D-4 (the refresh order). DECIDED (orchestrator, 2026-11-10).** The Green
   code commits first. The refresh runs at that clean HEAD. The refreshed
   manifest is the last Green commit. Reason: the projection reads HEAD bytes for
@@ -203,7 +206,10 @@ Each criterion has an automated test in
    then the CI-mode check exits non-zero. The result holds the report hash error
    (`v2-manifest-validation.ts:1031-1039`) and no input snapshot error. Reason:
    the report holds the exact source path list. The manifest was refreshed
-   before the new file existed.
+   before the new file existed. The fixture must satisfy
+   `hasFullRepositoryInputSet` (`v2-manifest-validation.ts:916-923`). Build it
+   on the `createMinimalV2EvidenceRepository` pattern
+   (`baseline-validation.test.ts:112`).
 3. **AC-3 (the skip is narrow).** Given a manifest whose
    `analyzerImplementationTreeSha256` differs from the current bytes, when the
    validator runs with `validateInputSnapshotPin: false`, then the result holds
@@ -211,7 +217,10 @@ Each criterion has an automated test in
 4. **AC-4 (the CI wiring).** When a test reads `.github/workflows/ci.yml`, then
    the "Architecture boundary check" step runs
    `pnpm architecture:check --skip-input-snapshot-pin`, and the local command in
-   `package.json` holds no flag.
+   `package.json` holds no flag. When a test calls `runArchitectureCheckCli` with
+   the flag and a stub `checkRepository`, then the stub receives
+   `skipInputSnapshotPin: true` (`architecture-check-cli.ts:114-119`). A parsed
+   but inert flag fails this assertion.
 5. **AC-5 (the refresh command).** Given a fixture repository whose manifest is
    stale, when the refresh command runs without `--acknowledge`, then it prints
    the old and new values, exits 1, and the manifest bytes do not change. When
