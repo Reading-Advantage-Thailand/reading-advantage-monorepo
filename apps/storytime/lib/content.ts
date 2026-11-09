@@ -7,8 +7,10 @@
  *
  * A published week with a media part that is not approved is blocked like a draft week, and the log
  * names each part (spec FR-5, AC-5.5). `STORYTIME_SHOW_DRAFT_MEDIA=1` shows the draft parts on the
- * review copy. The switch never opens an unpublished week and never opens a week with a missing
- * picture. It is a server-side value, never a `NEXT_PUBLIC_` one.
+ * review copy. `STORYTIME_REVIEW_DRAFT_WEEKS=1` shows a draft week on the review copy, judged by
+ * the published-week rules: a missing picture still blocks, and media that is not approved still
+ * needs `STORYTIME_SHOW_DRAFT_MEDIA` (spec FR-3, AC-3.9). Both switches are server-side values, and
+ * no deploy file sets them.
  *
  * `STORYTIME_CONTENT_DIR` moves the content folder for the review fixture (test strategy P3.7).
  * The value stays on the server: no request can set it. The default folder sits next to the app,
@@ -31,6 +33,17 @@ export const DRAFT_MEDIA_ENV = "STORYTIME_SHOW_DRAFT_MEDIA";
  */
 export function showDraftMedia(): boolean {
   return process.env[DRAFT_MEDIA_ENV] === "1";
+}
+
+/** The environment value that shows a draft week on the review copy. */
+export const DRAFT_WEEKS_ENV = "STORYTIME_REVIEW_DRAFT_WEEKS";
+
+/**
+ * Reports whether the review copy shows draft weeks.
+ * @returns `true` only when `STORYTIME_REVIEW_DRAFT_WEEKS` holds the value `1`.
+ */
+export function showDraftWeeks(): boolean {
+  return process.env[DRAFT_WEEKS_ENV] === "1";
 }
 
 /**
@@ -98,8 +111,10 @@ export async function loadWeek(level: number, week: number): Promise<WeekLoad> {
  * The route calls this function and answers 404 when it returns `null`. The log line names the
  * reason: `absent`, `invalid`, `draft`, `missing_picture`, or `media_not_approved` with each part
  * that is not approved. With `STORYTIME_SHOW_DRAFT_MEDIA=1`, a week with draft media is visible,
- * and the log names the draft parts. The switch never overrides an unpublished week and never
- * overrides a week with a missing picture.
+ * and the log names the draft parts. That switch never opens an unpublished week and never opens a
+ * week with a missing picture. With `STORYTIME_REVIEW_DRAFT_WEEKS=1`, a draft week is visible
+ * under the published-week rules: a missing picture still blocks, and media that is not approved
+ * still needs `STORYTIME_SHOW_DRAFT_MEDIA` (spec FR-3, AC-3.9).
  * @param level The Storytime level.
  * @param week The week of the level.
  * @returns The week, or `null` when the week is absent, invalid, not published, and not ready.
@@ -112,20 +127,28 @@ export async function loadVisibleWeek(level: number, week: number): Promise<Stor
   }
 
   const key = loaded.week.meta.key;
-  const blocker = readinessBlocker(loaded.week);
-  if (blocker === null) return loaded.week;
+  const review = showDraftWeeks() && loaded.week.meta.status !== "published";
+  const judged = review
+    ? { ...loaded.week, meta: { ...loaded.week.meta, status: "published" } }
+    : loaded.week;
+  const blocker = readinessBlocker(judged);
+  if (blocker === null) {
+    if (review) console.warn(`storytime week ${key} shows a draft week (review switch)`);
+    return loaded.week;
+  }
 
   if (blocker === "media_not_approved") {
-    const parts = mediaPartsNotApproved(loaded.week).join(", ");
+    const parts = mediaPartsNotApproved(judged).join(", ");
     if (showDraftMedia()) {
       console.warn(`storytime week ${key} shows draft media: ${parts}`);
+      if (review) console.warn(`storytime week ${key} shows a draft week (review switch)`);
       return loaded.week;
     }
     console.warn(`storytime week ${key} blocked: media_not_approved (${parts})`);
     return null;
   }
 
-  const missing = missingPagePictures(loaded.week).length;
+  const missing = missingPagePictures(judged).length;
   console.warn(
     blocker === "missing_picture"
       ? `storytime week ${key} blocked: missing_picture (${missing} page pictures without a file)`
@@ -136,9 +159,10 @@ export async function loadVisibleWeek(level: number, week: number): Promise<Stor
 
 /**
  * Gives the highest week that a child may see in each level that has a week file (spec FR-1,
- * AC-1.1). A week is open by the rule of `loadVisibleWeek`: the readiness gate holds and the
- * draft-media switch is honored. The function writes no log, because the 404 view calls it on
- * every missing week, and it reads each of the `LEVEL_MAX` times `WEEK_MAX` week files once.
+ * AC-1.1). A week is open by the rule of `loadVisibleWeek`: the readiness gate holds, the
+ * draft-media switch is honored, and the draft-week review switch is honored in the same way. The
+ * function writes no log, because the 404 view calls it on every missing week, and it reads each
+ * of the `LEVEL_MAX` times `WEEK_MAX` week files once.
  * @returns A map of level to its highest open week. A level with week files and no open week
  * holds `null`, and a level with no week file has no key.
  */
@@ -152,7 +176,11 @@ export async function highestOpenWeeks(): Promise<Record<number, number | null>>
     let highest: number | null = null;
     loads.forEach((loaded, index) => {
       if (loaded.kind !== "ok") return;
-      const blocker = readinessBlocker(loaded.week);
+      const review = showDraftWeeks() && loaded.week.meta.status !== "published";
+      const judged = review
+        ? { ...loaded.week, meta: { ...loaded.week.meta, status: "published" } }
+        : loaded.week;
+      const blocker = readinessBlocker(judged);
       if (blocker === null || (blocker === "media_not_approved" && showDraftMedia())) {
         highest = index + 1;
       }
