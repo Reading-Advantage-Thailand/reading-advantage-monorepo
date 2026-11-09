@@ -49,6 +49,11 @@
  *     Phase-deliverable-as-artifact tests).
  *   - Test runs against the HEAD worktree (no DB, no network,
  *     no pnpm scripts).
+ *   - The 2026-05-15 `generateReview` row is closed history, not a
+ *     live row: the 50-line prune removed it from the working tree.
+ *     The two cases that read that row read `measure/tech-debt.md`
+ *     from `TECH_DEBT_RESOLVED_ROW_REVISION` through `git show`.
+ *     The live file keeps only its existence and cap cases.
  *
  * Targeted Red command:
  *   cd packages/webhooks && \
@@ -103,6 +108,17 @@ const CLOSE_DATE = "2026-06-12";
 const CLOSEOUT_COMMIT = "7c9bef80c513a1a80b12e020b963f592045c8884";
 const RESOLVING_COMMIT = "3dc3167a";
 
+// The 2026-05-15 "Duplicate `generateReview`" row is closed history. Commit
+// 18d73ce ("chore(measure): record review D repairs and deferred items plan",
+// 2026-09-12) removed it to fit the 50-line cap, and the later prune
+// b7df20013 ("chore(measure): prune tech debt to 50 lines", 2026-10-13) holds
+// no such row either. `TECH_DEBT_RESOLVED_ROW_REVISION` is the last revision
+// whose tree still holds the row: the parent of the commit that removed it.
+// Check it with:
+//   git show bf40558d:measure/tech-debt.md | grep -n 'generateReview'
+const TECH_DEBT_RESOLVED_ROW_REVISION =
+  "bf40558da067bb64b49a1589a1be26d195723da7";
+
 function safeExec(command: string): string {
   try {
     return execSync(command, {
@@ -119,6 +135,16 @@ function shellQuote(s: string): string {
   return `'${s.replace(/'/g, `'\\''`)}'`;
 }
 
+/**
+ * Reads `measure/tech-debt.md` as recorded by the pinned revision.
+ * @returns The file text at `TECH_DEBT_RESOLVED_ROW_REVISION`, or an empty string when git cannot read it.
+ */
+function readTechDebtAtRevision(): string {
+  return safeExec(
+    `git show ${TECH_DEBT_RESOLVED_ROW_REVISION}:measure/tech-debt.md`,
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Task 1 — tech-debt.md row 2026-05-15 marks Duplicate `generateReview`
 //          Resolved by Phase 5 Green dead-code deletion (3dc3167a)
@@ -130,10 +156,10 @@ describe("Phase 7 — Task 1: tech-debt.md 2026-05-15 row marks Duplicate `gener
   });
 
   it("tech-debt.md row tagged 2026-05-15 codecamp_review is flipped to Resolved", () => {
-    const source = readFileSync(TECH_DEBT_PATH, "utf8");
-    // The row in question (current line 24) reads:
+    const source = readTechDebtAtRevision();
+    // The row in question (line 23 at the pinned revision) reads:
     //   `| 2026-05-15 | codecamp_review | Duplicate `generateReview` LLM
-    //    implementation + unverified model capability | High | Open | ...`
+    //    implementation + unverified model capability | High | Resolved | ...`
     // We anchor on the `2026-05-15 | codecamp_review` prefix + the
     // "Duplicate `generateReview`" item-text anchor so we are
     // pinning the *Duplicate* row (not the second 2026-05-15
@@ -148,7 +174,8 @@ describe("Phase 7 — Task 1: tech-debt.md 2026-05-15 row marks Duplicate `gener
       );
     expect(
       rowLine,
-      "tech-debt.md must still contain a 2026-05-15 codecamp_review row whose Item column starts with `Duplicate `generateReview`` (the row this track resolves).",
+      "measure/tech-debt.md must still contain a 2026-05-15 codecamp_review row whose Item column starts with `Duplicate `generateReview`` (the row this track resolves). Read revision: " +
+        TECH_DEBT_RESOLVED_ROW_REVISION,
     ).toBeDefined();
     expect(
       rowLine,
@@ -169,7 +196,7 @@ describe("Phase 7 — Task 1: tech-debt.md 2026-05-15 row marks Duplicate `gener
     // Both must be named in the annotation so a future reader
     // can find each half. The track id must also be present so
     // the closeout is greppable.
-    const source = readFileSync(TECH_DEBT_PATH, "utf8");
+    const source = readTechDebtAtRevision();
     const rowLine =
       source
         .split("\n")
