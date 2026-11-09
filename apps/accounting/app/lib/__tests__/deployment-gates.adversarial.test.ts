@@ -17,6 +17,10 @@ const promotionScript = new URL(
 const trackedTables = [
   "ACCOUNTING_SUBMISSIONS",
   "ACCOUNTING_SUBMISSION_AUDIT_EVENTS",
+  "ACCOUNTING_INTAKE_DOCUMENTS",
+  "ACCOUNTING_MONTHLY_CLOSES",
+  "ACCOUNTING_MONTHLY_CLOSE_AUDIT_EVENTS",
+  "ACCOUNTING_INTAKE_LEASES",
 ];
 
 interface ParsedSqlCommand {
@@ -171,7 +175,7 @@ describe("Accounting deployment gate adversarial checks", () => {
       trackedTables.some((table) => command.tokens.includes(table)),
     );
 
-    expect(tableGrants).toHaveLength(2);
+    expect(tableGrants).toHaveLength(6);
     expect(
       commands.some(
         (command) =>

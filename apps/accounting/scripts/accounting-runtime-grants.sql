@@ -135,6 +135,14 @@ $$;
 GRANT SELECT, INSERT, UPDATE ON TABLE accounting_submissions TO accounting_runtime;
 -- The audit trail is append-only for the runtime role: SELECT and INSERT only.
 GRANT SELECT, INSERT ON TABLE accounting_submission_audit_events TO accounting_runtime;
+-- The intake poll writes one row per Drive file and moves its status.
+GRANT SELECT, INSERT, UPDATE ON TABLE accounting_intake_documents TO accounting_runtime;
+-- The app opens a close, then signs and locks it in one call (spec section 7).
+GRANT SELECT, INSERT, UPDATE ON TABLE accounting_monthly_closes TO accounting_runtime;
+-- The close audit trail is append-only for the runtime role: SELECT and INSERT only.
+GRANT SELECT, INSERT ON TABLE accounting_monthly_close_audit_events TO accounting_runtime;
+-- The intake lease is claimed, renewed, reclaimed, and released by the job.
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE accounting_intake_leases TO accounting_runtime;
 
 -- Do not let future migrations silently broaden runtime access. New tables
 -- require an explicit reviewed grant above before the runtime probe will pass.

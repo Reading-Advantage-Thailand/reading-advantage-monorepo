@@ -30,6 +30,10 @@ describe("Accounting database access contracts", () => {
     expect(grants.match(/^GRANT .* ON TABLE .* TO accounting_runtime;$/gmu)).toEqual([
       "GRANT SELECT, INSERT, UPDATE ON TABLE accounting_submissions TO accounting_runtime;",
       "GRANT SELECT, INSERT ON TABLE accounting_submission_audit_events TO accounting_runtime;",
+      "GRANT SELECT, INSERT, UPDATE ON TABLE accounting_intake_documents TO accounting_runtime;",
+      "GRANT SELECT, INSERT, UPDATE ON TABLE accounting_monthly_closes TO accounting_runtime;",
+      "GRANT SELECT, INSERT ON TABLE accounting_monthly_close_audit_events TO accounting_runtime;",
+      "GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE accounting_intake_leases TO accounting_runtime;",
     ]);
     expect(grants).not.toMatch(
       /^GRANT .*\b(?:UPDATE|DELETE)\b.*accounting_submission_audit_events/gmu,
@@ -64,8 +68,15 @@ describe("Accounting database access contracts", () => {
     expect(probe).toContain("UPDATE accounting_submissions");
     expect(probe).toContain("FROM accounting_submissions");
     expect(probe).toContain("INSERT INTO accounting_submission_audit_events");
+    expect(probe).toContain("INSERT INTO accounting_intake_documents");
+    expect(probe).toContain("UPDATE accounting_intake_documents");
+    expect(probe).toContain("INSERT INTO accounting_monthly_closes");
+    expect(probe).toContain("UPDATE accounting_monthly_closes");
+    expect(probe).toContain("INSERT INTO accounting_monthly_close_audit_events");
+    expect(probe).toContain("INSERT INTO accounting_intake_leases");
+    expect(probe).toContain("UPDATE accounting_intake_leases");
     expect(probe.match(/EXCEPTION WHEN insufficient_privilege THEN/gmu)).toHaveLength(
-      3,
+      5,
     );
     expect(probe).not.toContain("OR OTHERS");
     expect(probe).toContain("CREATE TABLE accounting_runtime_probe_forbidden");
@@ -74,6 +85,10 @@ describe("Accounting database access contracts", () => {
   it("uses one owner namespace and cleans both probe tables", () => {
     expect(probe).toContain("probe_owner_id");
     expect(cleanup).toContain("probe_owner_id");
+    expect(cleanup).toContain("DELETE FROM accounting_monthly_close_audit_events");
+    expect(cleanup).toContain("DELETE FROM accounting_intake_leases");
+    expect(cleanup).toContain("DELETE FROM accounting_monthly_closes");
+    expect(cleanup).toContain("DELETE FROM accounting_intake_documents");
     expect(cleanup).toContain("DELETE FROM accounting_submission_audit_events");
     expect(cleanup).toContain("DELETE FROM accounting_submissions");
   });

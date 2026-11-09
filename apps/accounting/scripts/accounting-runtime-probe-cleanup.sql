@@ -9,6 +9,18 @@
   \quit 2
 \endif
 
+DELETE FROM accounting_monthly_close_audit_events
+ WHERE actor_account_id = :'probe_owner_id'::uuid
+   AND reason = 'runtime-probe';
+DELETE FROM accounting_intake_leases
+ WHERE scope_company_id = :'probe_owner_id'::uuid
+   AND worker_id IN ('runtime-probe', 'runtime-probe-renewed');
+DELETE FROM accounting_monthly_closes
+ WHERE scope_company_id = :'probe_owner_id'::uuid
+   AND opened_by_account_id = :'probe_owner_id'::uuid;
+DELETE FROM accounting_intake_documents
+ WHERE scope_company_id = :'probe_owner_id'::uuid
+   AND drive_file_id = 'runtime-probe';
 DELETE FROM accounting_submission_audit_events
  WHERE actor_account_id = :'probe_owner_id'::uuid
    AND reason = 'runtime-probe';
