@@ -480,6 +480,22 @@ describe("Task 1.10 schema block (AC-1.12)", () => {
     return week;
   }
 
+  /**
+   * Builds a week with no `wordClips` on the read-along book.
+   *
+   * The r3 take of 2026-11-09 (plan task 3.2) gives the read-along book its own clips, so the
+   * absent case removes the map before the parse (R-EDIT3).
+   * @returns A clone of the shipped week with the clip map removed.
+   */
+  function weekWithoutClips(): unknown {
+    const week = structuredClone(shipped) as unknown as {
+      books: Array<{ kind: string; audio: Record<string, unknown> }>;
+    };
+    const book = week.books.find((entry) => entry.kind === "readalong")!;
+    delete book.audio.wordClips;
+    return week;
+  }
+
   it("accepts a clip map and defaults an absent map to an empty object", () => {
     const good = [
       { hello: "words/hello.mp3" },
@@ -492,8 +508,11 @@ describe("Task 1.10 schema block (AC-1.12)", () => {
     }
     const absent = weekSchema.safeParse(structuredClone(shipped));
     expect(absent.success, "the shipped week must parse").toBe(true);
-    if (absent.success) {
-      const audio = absent.data.books.find((entry) => entry.kind === "readalong")!.audio as unknown as {
+    // The shipped week now holds clips, so the default case parses the clone with the map removed.
+    const noClips = weekSchema.safeParse(weekWithoutClips());
+    expect(noClips.success, "a week with no clip map must parse").toBe(true);
+    if (noClips.success) {
+      const audio = noClips.data.books.find((entry) => entry.kind === "readalong")!.audio as unknown as {
         wordClips?: unknown;
       };
       expect(audio.wordClips, "an absent wordClips must default to {}").toEqual({});
@@ -540,11 +559,18 @@ describe("Task 1.10 receiver block (Q16)", () => {
     const parsed = weekSchema.parse(allClipsWeek());
     const list = receiver.mediaOf(parsed);
     const clips = list.filter((entry) => entry.kind === "word-clip");
+    // The r3 take of 2026-11-09 (plan task 3.2) gives the decodable book 11 clips, so the week
+    // of this fixture holds 23 clip files: the 12 reader words and the 11 decodable clips.
+    // The old pin was listed_clips=12, when only the read-along book held clips (R-EDIT3).
     expect(
       `listed_clips=${clips.length}`,
-      `mediaOf must list the 12 clip files, listed ${clips.length}`,
-    ).toBe("listed_clips=12");
+      `mediaOf must list the 23 clip files, listed ${clips.length}`,
+    ).toBe("listed_clips=23");
     const listed = new Set(list.map((entry) => entry.file));
+    expect(
+      `listed_distinct_clips=${new Set(clips.map((entry) => entry.file)).size}`,
+      "every clip file must be listed once",
+    ).toBe("listed_distinct_clips=23");
     // The login pin excludes the paths under `approval.`: they are provenance, not media.
     const missing = receiver
       .mediaPathsOf(parsed)
