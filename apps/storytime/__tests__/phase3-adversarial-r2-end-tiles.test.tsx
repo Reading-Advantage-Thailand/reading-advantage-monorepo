@@ -17,8 +17,12 @@ vi.mock("../lib/media/url", () => ({
 
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import week from "../content/l2/w01.json";
+import weekData from "../content/l2/w01.json";
 import type { QuestionTile } from "../app/[locale]/st/[level]/[week]/questions";
+import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
+
+/** The shipped w01 week through the contract (the r3 take of 2026-11-09 adds `wordClips`). */
+const week: StorytimeWeek = weekSchema.parse(weekData);
 
 
 

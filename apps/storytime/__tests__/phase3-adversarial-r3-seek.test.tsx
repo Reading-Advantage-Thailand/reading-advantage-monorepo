@@ -15,7 +15,11 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { seekAndRun } from "../lib/audio-seek";
 import { seekOrWait } from "@reading-advantage/read-along/lib/seek";
-import week1 from "../content/l2/w01.json";
+import week1Data from "../content/l2/w01.json";
+import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
+
+/** The shipped w01 week through the contract (the r3 take of 2026-11-09 adds `wordClips`). */
+const week1: StorytimeWeek = weekSchema.parse(week1Data);
 
 /** The labels of the reader controls. */
 const labels = {

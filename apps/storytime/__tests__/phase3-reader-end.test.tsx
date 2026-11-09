@@ -10,7 +10,8 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import week from "../content/l2/w01.json";
+import weekData from "../content/l2/w01.json";
+import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
 
 const labels = {
   readToMe: "Read it to me",
@@ -21,6 +22,9 @@ const labels = {
   audioError: "Sound could not be played",
   finished: "Book finished",
 };
+
+/** The shipped w01 week through the contract (the r3 take of 2026-11-09 adds `wordClips`). */
+const week: StorytimeWeek = weekSchema.parse(weekData);
 
 afterEach(() => {
   cleanup();
