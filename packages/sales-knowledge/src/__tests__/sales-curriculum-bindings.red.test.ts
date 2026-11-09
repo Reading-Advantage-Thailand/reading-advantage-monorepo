@@ -225,7 +225,8 @@ function validateBindings(
 }
 
 describe("Sales curriculum-to-objective bindings (intended red)", () => {
-  it("derives the protected release inventory from approved coordinates, not lesson prose", () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("derives the protected release inventory from approved coordinates, not lesson prose", () => {
     expect(expectedSeedCoordinates()).toEqual({
       modules: [
         "foundations-discovery",
@@ -247,7 +248,8 @@ describe("Sales curriculum-to-objective bindings (intended red)", () => {
     expect(expected.roleplayLessons).toHaveLength(7);
   });
 
-  it("binds every approved coordinate exactly once with zero-evidence lesson exposure", async () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("binds every approved coordinate exactly once with zero-evidence lesson exposure", async () => {
     const [api, bindings, graph, releaseCandidate, approval] =
       await Promise.all([
         loadSalesKnowledgePublicApi(),
@@ -297,7 +299,8 @@ describe("Sales curriculum-to-objective bindings (intended red)", () => {
     }
   });
 
-  it("defines fourteen practice.v1 quiz variants, preserving incorrect outcomes as evidence", async () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("defines fourteen practice.v1 quiz variants, preserving incorrect outcomes as evidence", async () => {
     const bindings = asRecord(
       await readRequiredJson(SALES_BINDINGS_ARTIFACT),
       "binding release",
@@ -324,7 +327,8 @@ describe("Sales curriculum-to-objective bindings (intended red)", () => {
     }
   });
 
-  it("keeps eight roleplay bindings pending a versioned evaluator eligibility contract", async () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("keeps eight roleplay bindings pending a versioned evaluator eligibility contract", async () => {
     const bindings = asRecord(
       await readRequiredJson(SALES_BINDINGS_ARTIFACT),
       "binding release",
@@ -574,7 +578,8 @@ describe("Sales curriculum-to-objective bindings (intended red)", () => {
     ).toContain("ROLEPLAY_EVALUATOR_PROVENANCE_INCOMPLETE");
   });
 
-  it("generates metadata from immutable seed coordinates without rewriting the approved curriculum", async () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("generates metadata from immutable seed coordinates without rewriting the approved curriculum", async () => {
     const [api, releaseCandidate, approval, beforeSeedBytes] =
       await Promise.all([
         loadSalesKnowledgePublicApi(),

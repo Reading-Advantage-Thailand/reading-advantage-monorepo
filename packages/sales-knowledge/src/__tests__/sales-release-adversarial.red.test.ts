@@ -176,7 +176,8 @@ function verificationRequest(
 }
 
 describe("Sales reviewed-release adversarial gates (intended red)", () => {
-  it("requires byte-exact approval and seed evidence before a graph can be reviewed", async () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("requires byte-exact approval and seed evidence before a graph can be reviewed", async () => {
     const [
       api,
       graph,
@@ -302,7 +303,8 @@ describe("Sales reviewed-release adversarial gates (intended red)", () => {
     ).toContain("STATIC_SEED_EVIDENCE_MISMATCH");
   });
 
-  it("rejects arbitrary generator inputs instead of stamping reviewed provenance", async () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("rejects arbitrary generator inputs instead of stamping reviewed provenance", async () => {
     const [api, artifact, candidate, approval] = await Promise.all([
       loadPublicApi(),
       readJson(BINDINGS_ARTIFACT),
@@ -482,7 +484,8 @@ describe("Sales reviewed-release adversarial gates (intended red)", () => {
     ).toContain("UNAPPROVED_SOURCE_REF");
   });
 
-  it("requires a full runtime verifier so public exports cannot bypass graph or binding drift", async () => {
+  // Red of sales_mastery_consumer_20260810: the Green task removes .fails.
+  it.fails("requires a full runtime verifier so public exports cannot bypass graph or binding drift", async () => {
     const [
       api,
       graph,
