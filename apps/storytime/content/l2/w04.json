@@ -81,7 +81,8 @@
             "characters": [
               "Mom"
             ],
-            "caption": "mom"
+            "caption": "mom",
+            "file": "l2/media/w04/family/mom.jpg"
           }
         },
         {
@@ -91,7 +92,8 @@
             "characters": [
               "Dad"
             ],
-            "caption": "dad"
+            "caption": "dad",
+            "file": "l2/media/w04/family/dad.jpg"
           }
         },
         {
@@ -102,7 +104,8 @@
               "Tom",
               "Lily"
             ],
-            "caption": "brother"
+            "caption": "brother",
+            "file": "l2/media/w04/family/brother.jpg"
           }
         },
         {
@@ -113,7 +116,8 @@
               "Lily",
               "Tom"
             ],
-            "caption": "sister"
+            "caption": "sister",
+            "file": "l2/media/w04/family/sister.jpg"
           }
         },
         {
@@ -123,7 +127,8 @@
             "characters": [
               "Grandma"
             ],
-            "caption": "grandma"
+            "caption": "grandma",
+            "file": "l2/media/w04/family/grandma.jpg"
           }
         },
         {
@@ -133,7 +138,8 @@
             "characters": [
               "Grandpa"
             ],
-            "caption": "grandpa"
+            "caption": "grandpa",
+            "file": "l2/media/w04/family/grandpa.jpg"
           }
         },
         {
@@ -148,7 +154,8 @@
               "Tom",
               "Lily"
             ],
-            "caption": "family"
+            "caption": "family",
+            "file": "l2/media/w04/family/family.jpg"
           }
         }
       ]
@@ -823,7 +830,21 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "brother": "l2/media/w04/words/wa-brother.mp3",
+          "dad": "l2/media/w04/words/wa-dad.mp3",
+          "dog": "l2/media/w04/words/wa-dog.mp3",
+          "family": "l2/media/w04/words/wa-family.mp3",
+          "grandma": "l2/media/w04/words/wa-grandma.mp3",
+          "grandpa": "l2/media/w04/words/wa-grandpa.mp3",
+          "house": "l2/media/w04/words/wa-house.mp3",
+          "is": "l2/media/w04/words/wa-is.mp3",
+          "mom": "l2/media/w04/words/wa-mom.mp3",
+          "my": "l2/media/w04/words/wa-my.mp3",
+          "pip": "l2/media/w04/words/wa-pip.mp3",
+          "this": "l2/media/w04/words/wa-this.mp3"
+        }
       },
       "questions": [
         {
@@ -1438,7 +1459,23 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w04/words/wa-a.mp3",
+          "and": "l2/media/w04/words/wa-and.mp3",
+          "can": "l2/media/w04/words/wa-can.mp3",
+          "in": "l2/media/w04/words/wa-in.mp3",
+          "is": "l2/media/w04/words/wa-is.mp3",
+          "man": "l2/media/w04/words/wa-man.mp3",
+          "map": "l2/media/w04/words/wa-map.mp3",
+          "nan": "l2/media/w04/words/wa-nan.mp3",
+          "nap": "l2/media/w04/words/wa-nap.mp3",
+          "on": "l2/media/w04/words/wa-on.mp3",
+          "pam": "l2/media/w04/words/wa-pam.mp3",
+          "pan": "l2/media/w04/words/wa-pan.mp3",
+          "the": "l2/media/w04/words/wa-the.mp3",
+          "this": "l2/media/w04/words/wa-this.mp3"
+        }
       }
     }
   ],
@@ -2114,6 +2151,15 @@
   },
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A3", "media": "video" }
+        ],
+        "caption": {
+          "en": "Listen for the sound m. Your child says mmm, says mom, and writes the letter m.",
+          "th": "วันนี้ฝึกเสียง m ค่ะ ลูกพูดเสียง mmm พูดคำว่า mom แล้วเขียนตัวอักษร m"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -2806,6 +2852,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B5", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child acts the story My Family and says This is my mom with an action.",
+          "th": "ลูกแสดงเรื่อง My Family และพูดประโยค This is my mom พร้อมทำท่าค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -3275,6 +3330,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C4", "media": "video" }
+        ],
+        "caption": {
+          "en": "One child reads one page of the book My Family aloud for the class.",
+          "th": "เด็กหนึ่งคนอ่านหนังสือ My Family หนึ่งหน้าดัง ๆ ให้ชั้นเรียนฟังค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -3738,6 +3802,16 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D4", "media": "photo" },
+          { "step": "D5", "media": "video" }
+        ],
+        "caption": {
+          "en": "The photo shows the sentence This is my ... in your child's hand. The video shows the reading.",
+          "th": "ภาพถ่ายคือประโยค This is my ... ที่ลูกเขียนเอง ส่วนวิดีโอคือตอนที่ลูกอ่านค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -4161,6 +4235,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D6", "media": "video" }
+        ],
+        "caption": {
+          "en": "The class sings This Is My Family. Your child says the family words in English.",
+          "th": "ห้องเรียนร้องเพลง This Is My Family ลูกบอกคำเกี่ยวกับครอบครัวเป็นภาษาอังกฤษค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {

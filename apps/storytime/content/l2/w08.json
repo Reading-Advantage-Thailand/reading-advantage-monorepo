@@ -191,6 +191,15 @@
   "books": [],
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A2", "media": "video" }
+        ],
+        "caption": {
+          "en": "The unit 1 review week starts. Your child reads one page of a unit 1 book aloud at the reading center.",
+          "th": "เริ่มสัปดาห์ทบทวนหน่วยที่ 1 ค่ะ ลูกอ่านหนังสือหน่วยที่ 1 หนึ่งหน้าดัง ๆ ที่มุมอ่านหนังสือ"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -459,6 +468,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B1", "media": "video" }
+        ],
+        "caption": {
+          "en": "At the reading center your child reads one page of a unit 1 book aloud to the group.",
+          "th": "ที่มุมอ่านหนังสือ ลูกอ่านหนังสือหน่วยที่ 1 หนึ่งหน้าดัง ๆ ให้เพื่อน ๆ ฟังค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -708,6 +726,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C1", "media": "video" }
+        ],
+        "caption": {
+          "en": "Today your child reads one page of another unit 1 book aloud at the reading center.",
+          "th": "วันนี้ลูกอ่านหนังสือหน่วยที่ 1 อีกเล่มหนึ่ง หนึ่งหน้าดัง ๆ ที่มุมอ่านหนังสือค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -957,6 +984,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D1", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child reads one page of a third unit 1 book aloud. The class hears all the unit books.",
+          "th": "ลูกอ่านหนังสือหน่วยที่ 1 เล่มที่สาม หนึ่งหน้าดัง ๆ ชั้นเรียนได้ฟังหนังสือครบทุกเล่มค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -1208,6 +1244,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "E3", "media": "video" }
+        ],
+        "caption": {
+          "en": "The class sings the unit 1 songs at the song show, and your child gets the unit sticker.",
+          "th": "ชั้นเรียนร้องเพลงของหน่วยที่ 1 ในโชว์เพลง และลูกได้รับสติกเกอร์หน่วยที่ 1 ค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {

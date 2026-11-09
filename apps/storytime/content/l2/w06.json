@@ -80,7 +80,8 @@
           "image": {
             "prompt": "One gray cat sits and looks at the viewer, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "cat"
+            "caption": "cat",
+            "file": "l2/media/w06/family/cat.jpg"
           }
         },
         {
@@ -88,7 +89,8 @@
           "image": {
             "prompt": "One brown dog stands and wags its tail, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "dog"
+            "caption": "dog",
+            "file": "l2/media/w06/family/dog.jpg"
           }
         },
         {
@@ -96,7 +98,8 @@
           "image": {
             "prompt": "One small blue bird sits on a short branch. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "bird"
+            "caption": "bird",
+            "file": "l2/media/w06/family/bird.jpg"
           }
         },
         {
@@ -104,7 +107,8 @@
           "image": {
             "prompt": "One orange fish swims in a round glass fish bowl. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "fish"
+            "caption": "fish",
+            "file": "l2/media/w06/family/fish.jpg"
           }
         },
         {
@@ -112,7 +116,8 @@
           "image": {
             "prompt": "One green frog sits on a lily pad. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "frog"
+            "caption": "frog",
+            "file": "l2/media/w06/family/frog.jpg"
           }
         },
         {
@@ -120,7 +125,8 @@
           "image": {
             "prompt": "One white duck with an orange beak stands, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "duck"
+            "caption": "duck",
+            "file": "l2/media/w06/family/duck.jpg"
           }
         },
         {
@@ -128,7 +134,8 @@
           "image": {
             "prompt": "One brown horse stands, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "horse"
+            "caption": "horse",
+            "file": "l2/media/w06/family/horse.jpg"
           }
         }
       ]
@@ -849,7 +856,21 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w06/words/wa-a.mp3",
+          "bird": "l2/media/w06/words/wa-bird.mp3",
+          "can": "l2/media/w06/words/wa-can.mp3",
+          "cat": "l2/media/w06/words/wa-cat.mp3",
+          "dog": "l2/media/w06/words/wa-dog.mp3",
+          "duck": "l2/media/w06/words/wa-duck.mp3",
+          "fish": "l2/media/w06/words/wa-fish.mp3",
+          "frog": "l2/media/w06/words/wa-frog.mp3",
+          "horse": "l2/media/w06/words/wa-horse.mp3",
+          "i": "l2/media/w06/words/wa-i.mp3",
+          "pip": "l2/media/w06/words/wa-pip.mp3",
+          "see": "l2/media/w06/words/wa-see.mp3"
+        }
       },
       "questions": [
         {
@@ -1507,7 +1528,23 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w06/words/wa-a.mp3",
+          "can": "l2/media/w06/words/wa-can.mp3",
+          "he": "l2/media/w06/words/wa-he.mp3",
+          "map": "l2/media/w06/words/wa-map.mp3",
+          "mat": "l2/media/w06/words/wa-mat.mp3",
+          "on": "l2/media/w06/words/wa-on.mp3",
+          "pan": "l2/media/w06/words/wa-pan.mp3",
+          "pat": "l2/media/w06/words/wa-pat.mp3",
+          "pip": "l2/media/w06/words/wa-pip.mp3",
+          "sam": "l2/media/w06/words/wa-sam.mp3",
+          "sat": "l2/media/w06/words/wa-sat.mp3",
+          "see": "l2/media/w06/words/wa-see.mp3",
+          "tap": "l2/media/w06/words/wa-tap.mp3",
+          "the": "l2/media/w06/words/wa-the.mp3"
+        }
       }
     }
   ],
@@ -2261,6 +2298,15 @@
   },
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A3", "media": "video" }
+        ],
+        "caption": {
+          "en": "Today we practice the sound t. Your child says t, says tap, and writes the letter t.",
+          "th": "วันนี้ฝึกเสียง t ค่ะ ลูกพูดเสียง t พูดคำว่า tap แล้วเขียนตัวอักษร t"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -2969,6 +3015,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B5", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child acts the story I Can See and says I can see a cat.",
+          "th": "ลูกแสดงเรื่อง I Can See และพูดประโยค I can see a cat ค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -3438,6 +3493,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C4", "media": "video" }
+        ],
+        "caption": {
+          "en": "One child reads one page of the book I Can See aloud for us.",
+          "th": "เด็กหนึ่งคนอ่านหนังสือ I Can See หนึ่งหน้าดัง ๆ ให้พวกเราฟังค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -3903,6 +3967,16 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D4", "media": "photo" },
+          { "step": "D5", "media": "video" }
+        ],
+        "caption": {
+          "en": "The photo shows the sentence your child wrote about an animal. The video shows the reading.",
+          "th": "ภาพถ่ายคือประโยคที่ลูกเขียนเกี่ยวกับสัตว์ ส่วนวิดีโอคือตอนที่ลูกอ่านประโยคค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -4329,6 +4403,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D6", "media": "video" }
+        ],
+        "caption": {
+          "en": "The class sings I Can See a Cat. Your child names the animals in English.",
+          "th": "ห้องเรียนร้องเพลง I Can See a Cat ลูกบอกชื่อสัตว์เป็นภาษาอังกฤษค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {

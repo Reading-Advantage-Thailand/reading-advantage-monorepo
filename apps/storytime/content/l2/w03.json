@@ -79,7 +79,8 @@
           "image": {
             "prompt": "A big round splash of red paint. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "red"
+            "caption": "red",
+            "file": "l2/media/w03/family/red.jpg"
           }
         },
         {
@@ -87,7 +88,8 @@
           "image": {
             "prompt": "A big round splash of blue paint. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "blue"
+            "caption": "blue",
+            "file": "l2/media/w03/family/blue.jpg"
           }
         },
         {
@@ -95,7 +97,8 @@
           "image": {
             "prompt": "A big round splash of yellow paint. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "yellow"
+            "caption": "yellow",
+            "file": "l2/media/w03/family/yellow.jpg"
           }
         },
         {
@@ -103,7 +106,8 @@
           "image": {
             "prompt": "A big round splash of green paint. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "green"
+            "caption": "green",
+            "file": "l2/media/w03/family/green.jpg"
           }
         },
         {
@@ -111,7 +115,8 @@
           "image": {
             "prompt": "A big round splash of orange paint. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "orange"
+            "caption": "orange",
+            "file": "l2/media/w03/family/orange.jpg"
           }
         },
         {
@@ -119,7 +124,8 @@
           "image": {
             "prompt": "A big round splash of pink paint. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "pink"
+            "caption": "pink",
+            "file": "l2/media/w03/family/pink.jpg"
           }
         },
         {
@@ -127,7 +133,8 @@
           "image": {
             "prompt": "A big round splash of purple paint. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "purple"
+            "caption": "purple",
+            "file": "l2/media/w03/family/purple.jpg"
           }
         }
       ]
@@ -698,7 +705,19 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "blue": "l2/media/w03/words/wa-blue.mp3",
+          "green": "l2/media/w03/words/wa-green.mp3",
+          "is": "l2/media/w03/words/wa-is.mp3",
+          "it": "l2/media/w03/words/wa-it.mp3",
+          "orange": "l2/media/w03/words/wa-orange.mp3",
+          "pink": "l2/media/w03/words/wa-pink.mp3",
+          "pip": "l2/media/w03/words/wa-pip.mp3",
+          "purple": "l2/media/w03/words/wa-purple.mp3",
+          "red": "l2/media/w03/words/wa-red.mp3",
+          "yellow": "l2/media/w03/words/wa-yellow.mp3"
+        }
       },
       "questions": [
         {
@@ -1386,7 +1405,19 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w03/words/wa-a.mp3",
+          "can": "l2/media/w03/words/wa-can.mp3",
+          "get": "l2/media/w03/words/wa-get.mp3",
+          "i": "l2/media/w03/words/wa-i.mp3",
+          "in": "l2/media/w03/words/wa-in.mp3",
+          "nan": "l2/media/w03/words/wa-nan.mp3",
+          "nap": "l2/media/w03/words/wa-nap.mp3",
+          "on": "l2/media/w03/words/wa-on.mp3",
+          "pan": "l2/media/w03/words/wa-pan.mp3",
+          "the": "l2/media/w03/words/wa-the.mp3"
+        }
       }
     }
   ],
@@ -2078,6 +2109,15 @@
   },
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A3", "media": "video" }
+        ],
+        "caption": {
+          "en": "The sound of the week is p. Your child says p, says pen, and writes the letter p.",
+          "th": "เสียงประจำสัปดาห์คือเสียง p ค่ะ ลูกพูดเสียง p พูดคำว่า pen แล้วเขียนตัวอักษร p"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -2772,6 +2812,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B5", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child acts the story Paint! and says It is red.",
+          "th": "ลูกแสดงเรื่อง Paint! และพูดประโยค It is red ค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -3243,6 +3292,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C4", "media": "video" }
+        ],
+        "caption": {
+          "en": "One child reads one page of the book Paint! aloud to the class.",
+          "th": "เด็กหนึ่งคนอ่านหนังสือ Paint! หนึ่งหน้าดัง ๆ ให้เพื่อน ๆ ฟังค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -3708,6 +3766,16 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D4", "media": "photo" },
+          { "step": "D5", "media": "video" }
+        ],
+        "caption": {
+          "en": "The photo shows your child's sentence. The video shows your child reading the sentence to us.",
+          "th": "ภาพถ่ายคือประโยคของลูก ส่วนวิดีโอคือตอนที่ลูกอ่านประโยคให้พวกเราฟังค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -4131,6 +4199,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D6", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child sings It Is Red! and names the colors in English.",
+          "th": "ลูกและเพื่อน ๆ ร้องเพลง It Is Red! และบอกชื่อสีเป็นภาษาอังกฤษค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {

@@ -80,7 +80,8 @@
           "image": {
             "prompt": "One red-and-yellow ball. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "ball"
+            "caption": "ball",
+            "file": "l2/media/w07/family/ball.jpg"
           }
         },
         {
@@ -88,7 +89,8 @@
           "image": {
             "prompt": "One small doll with yellow yarn hair and a red dress, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "doll"
+            "caption": "doll",
+            "file": "l2/media/w07/family/doll.jpg"
           }
         },
         {
@@ -96,7 +98,8 @@
           "image": {
             "prompt": "One small blue toy car, seen from the side. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "car"
+            "caption": "car",
+            "file": "l2/media/w07/family/car.jpg"
           }
         },
         {
@@ -104,7 +107,8 @@
           "image": {
             "prompt": "One red-and-yellow kite with a long tail. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "kite"
+            "caption": "kite",
+            "file": "l2/media/w07/family/kite.jpg"
           }
         },
         {
@@ -112,7 +116,8 @@
           "image": {
             "prompt": "One small red toy drum with two drumsticks. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "drum"
+            "caption": "drum",
+            "file": "l2/media/w07/family/drum.jpg"
           }
         },
         {
@@ -120,7 +125,8 @@
           "image": {
             "prompt": "One small green toy train with three cars, seen from the side. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "train"
+            "caption": "train",
+            "file": "l2/media/w07/family/train.jpg"
           }
         },
         {
@@ -128,7 +134,8 @@
           "image": {
             "prompt": "One white teddy bear with a blue bow sits, full body. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "teddy"
+            "caption": "teddy",
+            "file": "l2/media/w07/family/teddy.jpg"
           }
         }
       ]
@@ -992,7 +999,22 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w07/words/wa-a.mp3",
+          "ball": "l2/media/w07/words/wa-ball.mp3",
+          "car": "l2/media/w07/words/wa-car.mp3",
+          "doll": "l2/media/w07/words/wa-doll.mp3",
+          "drum": "l2/media/w07/words/wa-drum.mp3",
+          "is": "l2/media/w07/words/wa-is.mp3",
+          "it": "l2/media/w07/words/wa-it.mp3",
+          "kite": "l2/media/w07/words/wa-kite.mp3",
+          "no": "l2/media/w07/words/wa-no.mp3",
+          "pip": "l2/media/w07/words/wa-pip.mp3",
+          "teddy": "l2/media/w07/words/wa-teddy.mp3",
+          "train": "l2/media/w07/words/wa-train.mp3",
+          "yes": "l2/media/w07/words/wa-yes.mp3"
+        }
       },
       "questions": [
         {
@@ -1679,7 +1701,23 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w07/words/wa-a.mp3",
+          "can": "l2/media/w07/words/wa-can.mp3",
+          "get": "l2/media/w07/words/wa-get.mp3",
+          "is": "l2/media/w07/words/wa-is.mp3",
+          "mat": "l2/media/w07/words/wa-mat.mp3",
+          "mom": "l2/media/w07/words/wa-mom.mp3",
+          "on": "l2/media/w07/words/wa-on.mp3",
+          "pip": "l2/media/w07/words/wa-pip.mp3",
+          "pot": "l2/media/w07/words/wa-pot.mp3",
+          "run": "l2/media/w07/words/wa-run.mp3",
+          "see": "l2/media/w07/words/wa-see.mp3",
+          "the": "l2/media/w07/words/wa-the.mp3",
+          "tom": "l2/media/w07/words/wa-tom.mp3",
+          "top": "l2/media/w07/words/wa-top.mp3"
+        }
       }
     }
   ],
@@ -2462,6 +2500,15 @@
   },
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A3", "media": "video" }
+        ],
+        "caption": {
+          "en": "The sound of the week is short o. Your child says o, says octopus, and writes the letter o.",
+          "th": "เสียงประจำสัปดาห์คือเสียง o แบบสั้นค่ะ ลูกพูดเสียง o พูดคำว่า octopus แล้วเขียนตัวอักษร o"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -3167,6 +3214,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B5", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child acts the story Is It a Ball? and asks Is it a ball? Yes or no?",
+          "th": "ลูกแสดงเรื่อง Is It a Ball? และถามว่า Is it a ball? Yes or no? ค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -3636,6 +3692,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C4", "media": "video" }
+        ],
+        "caption": {
+          "en": "One child reads one page of the book Is It a Ball? aloud to the class.",
+          "th": "เด็กหนึ่งคนอ่านหนังสือ Is It a Ball? หนึ่งหน้าดัง ๆ ให้เพื่อน ๆ ฟังค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -4101,6 +4166,16 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D4", "media": "photo" },
+          { "step": "D5", "media": "video" }
+        ],
+        "caption": {
+          "en": "The photo shows your child's question sentence. The video shows the question and the answer.",
+          "th": "ภาพถ่ายคือประโยคคำถามที่ลูกเขียน ส่วนวิดีโอคือตอนที่ลูกถามและตอบค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -4529,6 +4604,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D6", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child sings What Is in the Box? and asks and answers in English.",
+          "th": "ลูกและเพื่อน ๆ ร้องเพลง What Is in the Box? และถามตอบเป็นภาษาอังกฤษค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {

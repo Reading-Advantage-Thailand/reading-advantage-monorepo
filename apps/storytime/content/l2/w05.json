@@ -82,7 +82,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": "eyes"
+            "caption": "eyes",
+            "file": "l2/media/w05/family/eyes.jpg"
           }
         },
         {
@@ -92,7 +93,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": "ears"
+            "caption": "ears",
+            "file": "l2/media/w05/family/ears.jpg"
           }
         },
         {
@@ -102,7 +104,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": "nose"
+            "caption": "nose",
+            "file": "l2/media/w05/family/nose.jpg"
           }
         },
         {
@@ -112,7 +115,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": "hands"
+            "caption": "hands",
+            "file": "l2/media/w05/family/hands.jpg"
           }
         },
         {
@@ -122,7 +126,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": "arms"
+            "caption": "arms",
+            "file": "l2/media/w05/family/arms.jpg"
           }
         },
         {
@@ -132,7 +137,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": "legs"
+            "caption": "legs",
+            "file": "l2/media/w05/family/legs.jpg"
           }
         },
         {
@@ -140,7 +146,8 @@
           "image": {
             "prompt": "Sam, a five-year-old boy with large dark-brown eyes and short neat dark-brown hair, in a red T-shirt with two white stripes across the chest and blue denim shorts, sits on the floor with bare feet; his blue sneakers with white soles stand next to him. He points at his two bare feet. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "feet"
+            "caption": "feet",
+            "file": "l2/media/w05/family/feet.jpg"
           }
         }
       ]
@@ -785,7 +792,21 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "arms": "l2/media/w05/words/wa-arms.mp3",
+          "ears": "l2/media/w05/words/wa-ears.mp3",
+          "eyes": "l2/media/w05/words/wa-eyes.mp3",
+          "feet": "l2/media/w05/words/wa-feet.mp3",
+          "four": "l2/media/w05/words/wa-four.mp3",
+          "hands": "l2/media/w05/words/wa-hands.mp3",
+          "have": "l2/media/w05/words/wa-have.mp3",
+          "i": "l2/media/w05/words/wa-i.mp3",
+          "legs": "l2/media/w05/words/wa-legs.mp3",
+          "nose": "l2/media/w05/words/wa-nose.mp3",
+          "one": "l2/media/w05/words/wa-one.mp3",
+          "two": "l2/media/w05/words/wa-two.mp3"
+        }
       },
       "questions": [
         {
@@ -1423,7 +1444,25 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w05/words/wa-a.mp3",
+          "and": "l2/media/w05/words/wa-and.mp3",
+          "can": "l2/media/w05/words/wa-can.mp3",
+          "get": "l2/media/w05/words/wa-get.mp3",
+          "in": "l2/media/w05/words/wa-in.mp3",
+          "is": "l2/media/w05/words/wa-is.mp3",
+          "map": "l2/media/w05/words/wa-map.mp3",
+          "nan": "l2/media/w05/words/wa-nan.mp3",
+          "nap": "l2/media/w05/words/wa-nap.mp3",
+          "off": "l2/media/w05/words/wa-off.mp3",
+          "on": "l2/media/w05/words/wa-on.mp3",
+          "pam": "l2/media/w05/words/wa-pam.mp3",
+          "pan": "l2/media/w05/words/wa-pan.mp3",
+          "sam": "l2/media/w05/words/wa-sam.mp3",
+          "saw": "l2/media/w05/words/wa-saw.mp3",
+          "with": "l2/media/w05/words/wa-with.mp3"
+        }
       }
     }
   ],
@@ -2284,6 +2323,15 @@
   },
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A3", "media": "video" }
+        ],
+        "caption": {
+          "en": "The sound of the week is s. Your child says sss, says sun, and writes the letter s.",
+          "th": "เสียงประจำสัปดาห์คือเสียง s ค่ะ ลูกพูดเสียง sss พูดคำว่า sun แล้วเขียนตัวอักษร s"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -2980,6 +3028,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B5", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child acts the story I Have Two and says I have two hands.",
+          "th": "ลูกแสดงเรื่อง I Have Two และพูดประโยค I have two hands ค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -3451,6 +3508,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C4", "media": "video" }
+        ],
+        "caption": {
+          "en": "One child reads one page of the book I Have Two aloud to the class.",
+          "th": "เด็กหนึ่งคนอ่านหนังสือ I Have Two หนึ่งหน้าดัง ๆ ให้เพื่อน ๆ ฟังค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -3916,6 +3982,16 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D4", "media": "photo" },
+          { "step": "D5", "media": "video" }
+        ],
+        "caption": {
+          "en": "The photo shows your child's written sentence with two things. The video shows the reading.",
+          "th": "ภาพถ่ายคือประโยคที่ลูกเขียนเกี่ยวกับของสองสิ่ง ส่วนวิดีโอคือตอนที่ลูกอ่านให้ฟังค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -4340,6 +4416,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D6", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child sings I Have Two and counts two of each body part in English.",
+          "th": "ลูกและเพื่อน ๆ ร้องเพลง I Have Two และนับของสองชิ้นเป็นภาษาอังกฤษค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {

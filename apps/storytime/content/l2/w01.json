@@ -96,7 +96,8 @@
             "characters": [
               "Pat"
             ],
-            "caption": "hello"
+            "caption": "hello",
+            "file": "l2/media/w01/family/hello.jpg"
           }
         },
         {
@@ -106,7 +107,8 @@
             "characters": [
               "Ben"
             ],
-            "caption": "goodbye"
+            "caption": "goodbye",
+            "file": "l2/media/w01/family/goodbye.jpg"
           }
         },
         {
@@ -116,7 +118,8 @@
             "characters": [
               "Sam"
             ],
-            "caption": "boy"
+            "caption": "boy",
+            "file": "l2/media/w01/family/boy.jpg"
           }
         },
         {
@@ -126,7 +129,8 @@
             "characters": [
               "May"
             ],
-            "caption": "girl"
+            "caption": "girl",
+            "file": "l2/media/w01/family/girl.jpg"
           }
         },
         {
@@ -137,7 +141,8 @@
               "Mia",
               "Nan"
             ],
-            "caption": "friend"
+            "caption": "friend",
+            "file": "l2/media/w01/family/friend.jpg"
           }
         },
         {
@@ -147,7 +152,8 @@
             "characters": [
               "Teacher Kim"
             ],
-            "caption": "teacher"
+            "caption": "teacher",
+            "file": "l2/media/w01/family/teacher.jpg"
           }
         }
       ]
@@ -805,7 +811,21 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "am": "l2/media/w01/words/wa-am.mp3",
+          "ben": "l2/media/w01/words/wa-ben.mp3",
+          "hello": "l2/media/w01/words/wa-hello.mp3",
+          "i": "l2/media/w01/words/wa-i.mp3",
+          "may": "l2/media/w01/words/wa-may.mp3",
+          "mia": "l2/media/w01/words/wa-mia.mp3",
+          "nan": "l2/media/w01/words/wa-nan.mp3",
+          "pat": "l2/media/w01/words/wa-pat.mp3",
+          "pip": "l2/media/w01/words/wa-pip.mp3",
+          "sam": "l2/media/w01/words/wa-sam.mp3",
+          "teacher": "l2/media/w01/words/wa-teacher.mp3",
+          "your": "l2/media/w01/words/wa-your.mp3"
+        }
       },
       "questions": [
         {
@@ -1306,7 +1326,20 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "a": "l2/media/w01/words/wa-a.mp3",
+          "and": "l2/media/w01/words/wa-and.mp3",
+          "can": "l2/media/w01/words/wa-can.mp3",
+          "nan": "l2/media/w01/words/wa-nan.mp3",
+          "neck": "l2/media/w01/words/wa-neck.mp3",
+          "nest": "l2/media/w01/words/wa-nest.mp3",
+          "net": "l2/media/w01/words/wa-net.mp3",
+          "nod": "l2/media/w01/words/wa-nod.mp3",
+          "nose": "l2/media/w01/words/wa-nose.mp3",
+          "nurse": "l2/media/w01/words/wa-nurse.mp3",
+          "nut": "l2/media/w01/words/wa-nut.mp3"
+        }
       }
     }
   ],
@@ -2078,11 +2111,21 @@
     "audio": "l2/media/w01/song.mp3",
     "video": "l2/media/w01/song.mp4",
     "videoPhone": "l2/media/w01/song-phone.mp4",
+    "videoLeadInSeconds": 3,
     "poster": "l2/media/w01/song-poster.jpg",
     "posterPhone": "l2/media/w01/song-phone-poster.jpg"
   },
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A3", "media": "video" }
+        ],
+        "caption": {
+          "en": "Listen for the sound n. Your child says n, says the word nest, and writes the letter n.",
+          "th": "วันนี้เด็ก ๆ เรียนเสียง n กันค่ะ ลูกพูดเสียง n พูดคำว่า nest แล้วเขียนตัวอักษร n ค่ะ"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -2735,6 +2778,15 @@
       ]
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B5", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child acts the story Hello! and says Hello, I am ... with a name.",
+          "th": "ลูกแสดงเรื่อง Hello! และพูดประโยค Hello, I am ... พร้อมบอกชื่อของตัวเองค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -3201,6 +3253,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C4", "media": "video" }
+        ],
+        "caption": {
+          "en": "One child reads one page of Nan Can Nod aloud to the class for ten seconds.",
+          "th": "วันนี้เด็กหนึ่งคนอ่านหนังสือ Nan Can Nod หนึ่งหน้าดัง ๆ ให้เพื่อน ๆ ฟังค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -3647,6 +3708,16 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D4", "media": "photo" },
+          { "step": "D5", "media": "video" }
+        ],
+        "caption": {
+          "en": "The photo shows a written sentence. The video shows your child reading it to the class.",
+          "th": "ภาพถ่ายคือประโยคที่ลูกเขียนเอง ส่วนวิดีโอคือตอนที่ลูกอ่านประโยคนั้นให้เพื่อน ๆ ฟังค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -4063,6 +4134,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D6", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child sings Hello, I Am Pip with the class and does the actions.",
+          "th": "ลูกและเพื่อน ๆ ร้องเพลง Hello, I Am Pip พร้อมทำท่าประกอบค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {

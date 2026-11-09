@@ -80,7 +80,8 @@
           "image": {
             "prompt": "One red apple on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "one"
+            "caption": "one",
+            "file": "l2/media/w02/family/one.jpg"
           }
         },
         {
@@ -88,7 +89,8 @@
           "image": {
             "prompt": "Two red apples side by side on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "two"
+            "caption": "two",
+            "file": "l2/media/w02/family/two.jpg"
           }
         },
         {
@@ -96,7 +98,8 @@
           "image": {
             "prompt": "Three red apples in a row on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "three"
+            "caption": "three",
+            "file": "l2/media/w02/family/three.jpg"
           }
         },
         {
@@ -104,7 +107,8 @@
           "image": {
             "prompt": "Four red apples in a row on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "four"
+            "caption": "four",
+            "file": "l2/media/w02/family/four.jpg"
           }
         },
         {
@@ -112,7 +116,8 @@
           "image": {
             "prompt": "Five red apples in a row on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "five"
+            "caption": "five",
+            "file": "l2/media/w02/family/five.jpg"
           }
         },
         {
@@ -120,7 +125,8 @@
           "image": {
             "prompt": "Six red apples in two rows of three on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "six"
+            "caption": "six",
+            "file": "l2/media/w02/family/six.jpg"
           }
         },
         {
@@ -128,7 +134,8 @@
           "image": {
             "prompt": "Seven red apples in two rows: four on top and three below on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "seven"
+            "caption": "seven",
+            "file": "l2/media/w02/family/seven.jpg"
           }
         },
         {
@@ -136,7 +143,8 @@
           "image": {
             "prompt": "Eight red apples in two rows of four on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "eight"
+            "caption": "eight",
+            "file": "l2/media/w02/family/eight.jpg"
           }
         },
         {
@@ -144,7 +152,8 @@
           "image": {
             "prompt": "Nine red apples in three rows of three on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "nine"
+            "caption": "nine",
+            "file": "l2/media/w02/family/nine.jpg"
           }
         },
         {
@@ -152,7 +161,8 @@
           "image": {
             "prompt": "Ten red apples in two rows of five on a white plate, seen from above, easy to count. One clear picture, the main thing large in the middle, a plain light background. No letters, words, or numbers anywhere.",
             "characters": [],
-            "caption": "ten"
+            "caption": "ten",
+            "file": "l2/media/w02/family/ten.jpg"
           }
         }
       ],
@@ -957,7 +967,28 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "balls": "l2/media/w02/words/wa-balls.mp3",
+          "birds": "l2/media/w02/words/wa-birds.mp3",
+          "cakes": "l2/media/w02/words/wa-cakes.mp3",
+          "ducks": "l2/media/w02/words/wa-ducks.mp3",
+          "five": "l2/media/w02/words/wa-five.mp3",
+          "four": "l2/media/w02/words/wa-four.mp3",
+          "friends": "l2/media/w02/words/wa-friends.mp3",
+          "how": "l2/media/w02/words/wa-how.mp3",
+          "kites": "l2/media/w02/words/wa-kites.mp3",
+          "many": "l2/media/w02/words/wa-many.mp3",
+          "no": "l2/media/w02/words/wa-no.mp3",
+          "oh": "l2/media/w02/words/wa-oh.mp3",
+          "one": "l2/media/w02/words/wa-one.mp3",
+          "pip": "l2/media/w02/words/wa-pip.mp3",
+          "seven": "l2/media/w02/words/wa-seven.mp3",
+          "six": "l2/media/w02/words/wa-six.mp3",
+          "suns": "l2/media/w02/words/wa-suns.mp3",
+          "three": "l2/media/w02/words/wa-three.mp3",
+          "two": "l2/media/w02/words/wa-two.mp3"
+        }
       },
       "questions": [
         {
@@ -1429,7 +1460,13 @@
             ],
             "page": 8
           }
-        ]
+        ],
+        "wordClips": {
+          "and": "l2/media/w02/words/wa-and.mp3",
+          "can": "l2/media/w02/words/wa-can.mp3",
+          "i": "l2/media/w02/words/wa-i.mp3",
+          "nan": "l2/media/w02/words/wa-nan.mp3"
+        }
       }
     }
   ],
@@ -2035,6 +2072,15 @@
   },
   "scripts": [
     {
+      "share": {
+        "shots": [
+          { "step": "A3", "media": "video" }
+        ],
+        "caption": {
+          "en": "Today the class works on the short sound a. Your child says a in the word cat and writes a.",
+          "th": "วันนี้เรียนเสียง a แบบสั้นค่ะ ลูกพูดเสียง a ในคำว่า cat แล้วเขียนตัวอักษร a ค่ะ"
+        }
+      },
       "id": "A",
       "day": 1,
       "title": {
@@ -2730,6 +2776,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "B5", "media": "video" }
+        ],
+        "caption": {
+          "en": "Your child acts the story How Many? and asks How many? One, two... with the group.",
+          "th": "ลูกแสดงเรื่อง How Many? และถามประโยค How many? One, two... กับเพื่อน ๆ ค่ะ"
+        }
+      },
       "id": "B",
       "day": 2,
       "title": {
@@ -3202,6 +3257,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "C4", "media": "video" }
+        ],
+        "caption": {
+          "en": "One child reads one page of the book How Many? aloud for the class.",
+          "th": "เด็กหนึ่งคนอ่านหนังสือ How Many? หนึ่งหน้าดัง ๆ ให้ชั้นเรียนฟังค่ะ"
+        }
+      },
       "id": "C",
       "day": 3,
       "title": {
@@ -3667,6 +3731,16 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D4", "media": "photo" },
+          { "step": "D5", "media": "video" }
+        ],
+        "caption": {
+          "en": "The photo shows the sentence your child wrote. The video shows your child reading it aloud.",
+          "th": "ภาพถ่ายคือประโยคที่ลูกเขียน วันนี้ลูกอ่านประโยคนั้นให้เพื่อน ๆ ฟังในวิดีโอค่ะ"
+        }
+      },
       "id": "D",
       "day": 4,
       "title": {
@@ -4092,6 +4166,15 @@
       }
     },
     {
+      "share": {
+        "shots": [
+          { "step": "D6", "media": "video" }
+        ],
+        "caption": {
+          "en": "The class sings How Many? One, Two! Your child counts one and two in English.",
+          "th": "ห้องเรียนร้องเพลง How Many? One, Two! ลูกนับหนึ่งและสองเป็นภาษาอังกฤษค่ะ"
+        }
+      },
       "id": "E",
       "day": 5,
       "title": {
