@@ -89,6 +89,11 @@ sign-off and the lock.
 | No production code may import an AI SDK directly | `packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts:89` (`G1_REGEX`), recorded in `measure/tech-stack.md:96` |
 | That guard matches direct imports only. It holds no OpenRouter and no Aliyun check | `packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts:89` |
 | The doctor runs the orchestrator checks and `architecture:check`. It holds no JSDoc check | `measure/doctor.sh:1-8` |
+| `esbuild` is not a direct dependency of `apps/accounting` today | `apps/accounting/package.json` (no `esbuild` key) |
+| `esbuild@0.28.1` is already resolved by the lockfile and carries a binary | `pnpm-lock.yaml:10067` (`resolution`, `hasBin: true`) |
+| `esbuild` is approved for build scripts in the workspace catalog | `pnpm-workspace.yaml` under `allowBuilds` |
+| The accounting Dockerfile copies only the standalone output and starts `server.js` | `apps/accounting/Dockerfile:39-40` and `:46` (`CMD ["node", "apps/accounting/server.js"]`) |
+| The web service deploy reads `ACCOUNTING_DATABASE_URL`, `STORAGE_ACCESS_KEY`, and `STORAGE_SECRET_KEY` from `--set-secrets` | `apps/accounting/cloudbuild.yaml:40` |
 
 ### 2.5 Tutor Advantage settlement (read only)
 
@@ -119,12 +124,12 @@ The folder holds:
 - the accountant's year-end working papers.
 - school sales invoices.
 
-**The first load scope (PM decision, 2026-11-09).** The first load covers
-January to October 2026 only. The folders `2024` and `2025` are not loaded.
-November 2026 has no first-load row. The PM runs the load on this machine on
-2026-11-10 at 15:22 and sends a structure report by 2026-11-11. The report
-holds the document types, the fields, and the sample shapes. The report holds
-no real amount.
+**The first load scope (PM decision PM-5, 2026-11-09).** The first load covers
+January to October 2026 only. The folders `2024` and `2025` are not loaded. The
+PM runs its own script on this machine on 2026-11-10 at 15:22 and sends a
+structure report by 2026-11-11 (PM-7). The report holds the document types, the
+fields, and the sample shapes. The report holds no real amount. The PM script
+writes no row in the accounting database (D-7 superseded).
 
 ## 3. Roles and permissions
 
@@ -287,10 +292,11 @@ the owner.
 8. The OWNER or the ACCOUNTANT approves or rejects the item, as today.
 9. The CSV export does not change.
 
-**The first load.** The first load of 2026-11-10 runs the same
-`intakeDriveDocument` function that the December poll runs. It writes the
-`accounting_intake_documents` rows with the Drive file id, so the December poll
-replays them and adds no second row (F30).
+**The first load (PM-7).** The first load of 2026-11-10 is a PM script on this
+machine. It writes the structure report only, it uses no code of this track, it
+writes no row in the accounting database, and its output stays outside git. The
+app poll takes the files that follow the naming rule from November 2026 on. The
+January to October 2026 rows come through the history import of section 9a.
 
 ### 5.1 The idempotency rule and the hashing policy
 
@@ -385,16 +391,27 @@ match, or at the cap.
   outside the request path, so the cost lands on the job and not on a request.
   A person may lower the cap in the config; a lower cap widens the set of
   content duplicates that become new submissions.
-- **The comparison.** The lookup calls the domain helper
-  `hasSameSubmissionContent` with the `sameEvidenceBytes` callback of section
-  5.4. That helper is exported from
-  `packages/backend/src/modules/accounting/submissions.ts` (it is private at
-  `:169-191` today). The private byte loop stays in the app. No hash key and no
-  checksum column is added, because the hashing policy forbids them
-  (AGENTS.md).
+- **The comparison.** The lookup calls `sameEvidenceBytes` alone (section 5.4).
+  It reads no parsed scalar field. The domain helper
+  `hasSameSubmissionContent`
+  (`packages/backend/src/modules/accounting/submissions.ts:169-191`) returns
+  false when `kind`, `payee`, `category`, `description`, `money`, or
+  `settledThbAmount` differ, before it calls any evidence callback
+  (`:174-186`), so it would miss a file whose bytes match and whose parsed
+  values differ. That helper therefore serves the same-file idempotent replay
+  only, inside `submitAccountingSubmissionWithOutcome`, where the app already
+  passes the `compareEvidence` callback
+  (`apps/accounting/app/api/submissions/route.ts:298-309`). It stays private and
+  the intake does not export it (F48, D-11 revised).
 - **The write.** A content duplicate writes one intake row with
   `status = duplicate` and `duplicate_of_submission_id` set to the earlier
   submission. The poll writes no submission row for the second file.
+- **The history rows (PM condition, 2026-11-09).** The lookup scans the history
+  rows of Phase 8 together with the poll rows. A copy of a history file that the
+  office assistant uploads into a monthly folder therefore gets
+  `status = duplicate` and a link to the history row's submission, and the poll
+  adds no new submission. This catches the same document under a new Drive file
+  id without a new hash field (PM-7).
 
 ### 5.6 A file that fails
 
@@ -425,10 +442,31 @@ CSV read, or a model read. The rule covers all three paths:
 | a Google Sheets voucher, exported as CSV and read local | `parsed` |
 | a non-text PDF, a JPEG, or a PNG, read by the model | `parsed` |
 | any read that fails | `failed`, with `failure_reason` and `failure_count` |
-| any read that yields a duplicate | `duplicate`, with `duplicate_of_submission_id` |
+| any read that yields a content duplicate | `duplicate`, with `duplicate_of_submission_id` |
 
 A `parsed` row keeps its `submission_id` and its `extraction` marker. A row
-never moves from `parsed` back to `pending`.
+never moves from `parsed` back to `pending`. The table applies to a new file. A
+same-file replay is different: it keeps its own status and gets the `duplicate`
+label in the intake list, because section 5.5 marks it by `sighting_count` and
+not by status (F53).
+
+### 5.8 The intake document repository port
+
+The intake rows need their own persistence port. The interface
+`AccountingIntakeDocumentRepository` lives beside `AccountingSubmissionRepository`
+in `packages/backend/src/modules/accounting/intake.ts`. It holds these members:
+`insert` (one intake row and its submit audit event in one transaction);
+`findByDriveFileId` (one row by the Drive file id inside the company scope);
+`listRecentWithEvidence` (the newest rows that hold evidence, bounded by a
+limit, for the content-duplicate lookup); `listByScope` (every row for the
+intake list); `markDuplicate` (set `status = duplicate`,
+`duplicate_of_submission_id`, and the reason); `markParsed` (set
+`status = parsed`); `markFailed` (set `status = failed`, `failure_reason`, and
+increase `failure_count`); and `bumpSighting` (increase `sighting_count` and set
+`last_seen_at`). The Postgres implementation is
+`apps/accounting/app/lib/accounting-intake-document-repository.ts`. `intakeDriveDocument`
+and the intake list both receive the port, and a fake implementation serves the
+tests (F47).
 
 ## 6. Accepted types
 
@@ -456,18 +494,20 @@ Q5).
 ## 7. The monthly close
 
 1. The OWNER or the ACCOUNTANT opens a close for one period month (`YYYY-MM`).
-   The open builds the report and stores it as private evidence. The report
-   evidence reference is set at open (F32).
-2. The close collects the approved submissions of that period.
-3. The CEO signs the report. The sign writes the status `signed`, the signer,
-   the role, and the instant, and it writes one audit row with action
-   `monthly-close-sign`. The OWNER and the ACCOUNTANT do not sign.
-4. The CEO sign locks the close in the same call. The lock writes the status
+2. The open collects the approved submissions of that period.
+3. The open builds the report from those submissions and stores it as private
+   evidence. The report evidence reference is set at open (F32, F54).
+4. The CEO signs the report. The sign writes `signed_at`, `signed_by_account_id`,
+   and `signed_by_role`, and it writes one audit row with action
+   `monthly-close-sign`. The status moves to `signed` and then to `locked` inside
+   the same call, so the stored status ends at `locked`. The OWNER and the
+   ACCOUNTANT do not sign.
+5. The CEO sign locks the close in the same call. The lock writes the status
    `locked` and `locked_at`, and it writes one audit row with action
    `monthly-close-lock`. The lock uses the CEO actor, so the audit row carries a
-   non-null `actor_account_id`. One call gives two audit rows, one for the sign
-   and one for the lock.
-5. The open, the sign-off, and the lock each write one audit row in a dedicated
+   non-null `actor_account_id`. One call gives three audit rows, one for the
+   open, one for the sign, and one for the lock.
+6. The open, the sign-off, and the lock each write one audit row in a dedicated
    close audit table.
 
 The report is a private-evidence object. The storage port writes it once and
@@ -550,20 +590,85 @@ this section after the report arrives.
 - **A file with a name that does not match the rule.** The poll skips it. The
   app shows no row for it, and the run logs one count line with no file name.
   Fix the name and upload the file again.
+- **The 2026 history.** The files from January to October 2026 come into the app
+  through the history import. Those files predate the naming rule, so the import
+  reads the month from the folder or the file date and the type from the parser.
+  A dry-run report runs first. The history rows carry the history marker in the
+  intake list, and they start no monthly close, because the external accountant
+  closed those months.
 - **Who sees what.** The OWNER and the ACCOUNTANT see every document, payslips
   and bank statements included. The CEO sees every approved item with its
   evidence, payslips and bank statements included, read only, plus the locked
   report. The CEO sees no pending item. Staff and contractors see only their own
   items.
 
+## 9a. The history import for January to October 2026 (PM-7)
+
+Daniel asked for the history in the app (Tasks, 11-08: "ingest the historical
+information we have in Google drive"). This section defines the history import.
+The PM's first load of 2026-11-10 is a different thing: it is a PM script that
+writes the structure report only. It uses no code of this track, it writes no row
+in the accounting database, and its output stays outside git.
+
+**One code path.** The history import uses the same Drive read, the same parsers,
+and the same audit rows as the poll. It is one mode of `intakeDriveDocument`, not
+a second function. The mode is an input value: `history` for the history import
+and `poll` for the monthly poll. A test asserts that one function serves both
+modes and that no second intake function exists.
+
+**The naming rule.** The history files predate the naming rule, so the history
+mode does not apply the filter of section 5.7. A history file gets its month and
+its type this way:
+
+| Field | Source | Fallback |
+|---|---|---|
+| the month | the Drive folder name, when it is `YYYY-MM` | the file's Drive `modifiedTime` |
+| the document type | the parser that matches the file | none; the file is unmatched |
+
+A file whose type no parser matches is listed in the dry-run report and is not
+imported. A file whose month cannot be read is listed in the dry-run report and
+is not imported.
+
+**Idempotency.** A history row is idempotent by the Drive file id, exactly as a
+poll row is. A second import run of the same file adds no row. A content
+duplicate of a history row is found by the same byte-only lookup of section 5.5,
+which covers the history rows (PM condition). No new hash field, no checksum
+column, and no manifest is added. The PM wrote "file hash"; the Drive file id
+plus the byte compare gives the same guarantee, and the AGENTS.md hashing policy
+forbids a new hash field. This is an open note in section 14.3.
+
+**The history marker.** A history row carries `is_history = true` and a
+`history_source` of `drive-folder` or `drive-modified-date`. A poll row carries
+`is_history = false` and a null `history_source`. The intake list shows the
+marker, so a reviewer sees which rows came from the history.
+
+**No past close.** The history import starts no CEO sign-off and no monthly close
+for a past month, because the external accountant closed those months. An attempt
+to open a close for a month before the first live month is refused.
+
+**The dry-run report.** The history import runs a dry-run first. The report holds
+the counts by month and by type, and the list of unmatched files. The report
+holds no amount, no file content, no payee, and no Drive id. The dry-run writes
+no row in the accounting database. The production write runs only after the
+deploy, on Daniel's word (`deferred:daniel`).
+
+**The parser fixtures.** The parser fixtures for the history files come from the
+PM structure report of 2026-11-11. They are fakes only; no real document and no
+real amount enters git, a test, or a log.
+
+**The `2024` and `2025` folders.** Those folders come in a later phase, after the
+2026 import passes. That is the PM's order of work, not a scope cut. The start is
+`deferred:pm`.
+
 ## 10. Functional requirements
 
 - **FR-1.** One new backend module extends
   `packages/backend/src/modules/accounting`. The contracts live in one file:
   `packages/backend/src/modules/accounting/intake-contracts.ts`. The intake
-  domain functions live in `intake.ts`, the close domain functions live in
-  `monthly-close.ts`, the permissions live in `permissions.ts`, the parsers live
-  in `document-parsing.ts`, and the architecture guards live in
+  domain functions and the `AccountingIntakeDocumentRepository` port live in
+  `intake.ts`, the close domain functions live in `monthly-close.ts`, the
+  permissions live in `permissions.ts`, the parsers live in
+  `document-parsing.ts`, and the architecture guards live in
   `intake-architecture-guards.ts`. The export path
   `@reading-advantage/backend/accounting` does not change.
 - **FR-2.** Four new tables are classified in
@@ -578,11 +683,13 @@ this section after the report arrives.
   null; `duplicate_of_submission_id` uuid null; `evidence_reference` text null;
   `extraction` text null (`human`, `local-text`, `model`); `failure_reason` text
   null; `failure_count` integer not null default 0; `sighting_count` integer not
-  null default 1; `first_seen_at` timestamptz not null default now;
-  `last_seen_at` timestamptz not null default now; `scope_company_id` uuid not
-  null. A unique index on (`scope_company_id`, `drive_file_id`) stops a second
-  row for one file. An index on (`scope_company_id`, `status`) serves the
-  intake list.
+  null default 1; `is_history` boolean not null default false; `history_source`
+  text null (`drive-folder`, `drive-modified-date`); `first_seen_at` timestamptz
+  not null default now; `last_seen_at` timestamptz not null default now;
+  `scope_company_id` uuid not null. A unique index on
+  (`scope_company_id`, `drive_file_id`) stops a second row for one file. An index
+  on (`scope_company_id`, `status`) serves the intake list. A check requires
+  `history_source` to be null when `is_history` is false, and the reverse.
 - **FR-4.** A new table `accounting_monthly_closes` holds one row per period
   month. Columns: `id` uuid primary key default random; `period_month` text not
   null (`YYYY-MM`); `status` text not null default `open` (`open`, `signed`,
@@ -624,15 +731,29 @@ this section after the report arrives.
   actions do not change.
 - **FR-10.** The intake poll runs on a schedule. It is not in a request path.
   The runner is a Cloud Run job in `apps/accounting` named
-  `accounting-intake-poll`. The job runs the command
-  `pnpm --filter accounting exec tsx app/lib/intake-runner.ts` on the schedule
-  `0 6 * * *` (06:00 Asia/Bangkok daily) under the runtime service account
-  `accounting-cloud-run`. The job receives the env vars
-  `ACCOUNTING_DRIVE_FOLDER_ID`, `ACCOUNTING_DATABASE_URL`, the `STORAGE_*` set,
-  `ACCOUNTING_INTAKE_ACTOR_ID`, `ACCOUNTING_DUPLICATE_SCAN_CAP`, and
-  `ACCOUNTING_EXTRACTION_MODEL`. The job claims the lease row of
+  `accounting-intake-poll`. The job runs the command `node dist/intake-runner.mjs`
+  on the schedule `0 6 * * *` (06:00 Asia/Bangkok daily) under the runtime
+  service account `accounting-cloud-run`. The `apps/accounting/Dockerfile` builds
+  `app/lib/intake-runner.ts` into the single bundled Node file
+  `dist/intake-runner.mjs` with `esbuild` in a builder stage, and a final stage
+  copies only that file and starts it. The web service stage keeps
+  `CMD ["node", "apps/accounting/server.js"]`. The job claims the lease row of
   FR-6 with a compare-and-swap, so two runs never read the same file. The job
   step itself is deploy config, and the first deploy is `deferred:daniel`.
+- **FR-10a.** Cloud Scheduler starts the job through the Cloud Run Admin API
+  run endpoint
+  `https://run.googleapis.com/v2/projects/<project>/locations/asia-southeast1/jobs/accounting-intake-poll:run`
+  with `--http-method=POST` and an OAuth token of the scheduler service account
+  `accounting-scheduler`. That account holds `roles/run.invoker` on the job and
+  `roles/iam.serviceAccountTokenCreator` on `accounting-cloud-run`. A Cloud Run
+  job has no HTTP run URL, so the scheduler names no `run.app` address.
+- **FR-10b.** The job takes its secret values through `--set-secrets`, exactly as
+  the web service does at `apps/accounting/cloudbuild.yaml:40`:
+  `ACCOUNTING_DATABASE_URL`, `STORAGE_ACCESS_KEY`, and `STORAGE_SECRET_KEY`. Only
+  the non-secret values go through `--set-env-vars`:
+  `ACCOUNTING_DRIVE_FOLDER_ID`, `STORAGE_ENDPOINT`, `STORAGE_REGION`,
+  `STORAGE_BUCKET`, `STORAGE_PUBLIC_BASE_URL`, `ACCOUNTING_INTAKE_ACTOR_ID`,
+  `ACCOUNTING_DUPLICATE_SCAN_CAP`, and `ACCOUNTING_EXTRACTION_MODEL`.
 - **FR-11.** The Drive access sits behind a provider-neutral port in the backend
   module. The Google adapter lives in
   `apps/accounting/app/lib/drive-document-source.ts`. The adapter uses
@@ -662,13 +783,15 @@ this section after the report arrives.
   model uses a fake; no test calls a real model.
 - **FR-16.** Every extracted value carries the marker of section 5.3.
 - **FR-17.** The intake passes the Drive file id as the idempotency key. The
-  byte comparison reuses `hasSameSubmissionContent`, which is exported from
-  `packages/backend/src/modules/accounting/submissions.ts` (it is private at
-  `:169-191` today), through the `sameEvidenceBytes` callback of section 5.4 and
-  the app byte loop that the submissions route uses today
-  (`apps/accounting/app/api/submissions/route.ts:109-115`). A content duplicate
-  is found by the capped lookup of section 5.5. A duplicate is shown by the
-  intake row of section 5.5, and no second submission row is written.
+  same-file replay goes through `submitAccountingSubmissionWithOutcome`, which
+  calls the private `hasSameSubmissionContent`
+  (`packages/backend/src/modules/accounting/submissions.ts:169-191`) with the
+  `compareEvidence` callback the app already passes
+  (`apps/accounting/app/api/submissions/route.ts:298-309`); that helper stays
+  private and serves the replay only. The content duplicate of section 5.5 is a
+  byte-only compare through `sameEvidenceBytes`, and the lookup covers the
+  history rows of section 9a. A duplicate is shown by the intake row, and no
+  second submission row is written.
 - **FR-18.** The intake adds no hash field, no checksum column, and no manifest.
 - **FR-19.** The close writes the report to private evidence, then the open
   audit row, then the sign-off, then the lock, then the sign and lock audit rows
@@ -686,6 +809,18 @@ this section after the report arrives.
   `apps/accounting/app/lib/accounting-evidence-store.ts`,
   `apps/accounting/app/lib/drive-document-source.ts`, and
   `apps/accounting/app/lib/intake-runner.ts` (F39).
+- **FR-24.** The `apps/accounting/Dockerfile` builds `app/lib/intake-runner.ts`
+  into one bundled Node file `dist/intake-runner.mjs` with `esbuild` in a builder
+  stage. A final stage copies only that file and starts `node
+  dist/intake-runner.mjs`. The web service stage keeps
+  `CMD ["node", "apps/accounting/server.js"]` unchanged. `esbuild` joins
+  `apps/accounting/package.json` as a devDependency pinned to `0.28.1`, the
+  version `pnpm-lock.yaml` already resolves; it is not a direct dependency today.
+- **FR-25.** Cloud Scheduler starts the job through the Cloud Run Admin API run
+  endpoint with an OAuth token of the scheduler service account
+  `accounting-scheduler`. The job secrets go through `--set-secrets`, exactly as
+  the web service does at `apps/accounting/cloudbuild.yaml:40`. Only the
+  non-secret values go through `--set-env-vars`.
 
 ## 11. Non-functional requirements
 
@@ -712,11 +847,11 @@ Each criterion has an automated test that can falsify it.
 2. Given the same Drive file id twice with equal bytes, when the poll runs, then
    the second run adds no submission row, the intake row keeps its status, and
    `sighting_count` increases by one.
-3. Given a second Drive file whose bytes equal an earlier submission, when the
-   poll runs, then it writes an intake row with `status = duplicate`,
-   `duplicate_of_submission_id` set, and no submission row. The lookup compares
-   the newest 500 submissions of the company, and the candidate bytes with the
-   stored evidence.
+3. Given a second Drive file whose bytes equal an earlier submission and whose
+   parsed values differ, when the poll runs, then it writes an intake row with
+   `status = duplicate`, `duplicate_of_submission_id` set, and no submission row.
+   The lookup is a byte-only compare through `sameEvidenceBytes`, and it reads
+   the newest 500 rows that hold evidence.
 4. Given the same Drive file id with different bytes, when the poll runs, then
    the domain raises `conflict`, and no second submission row is written.
 5. Given a file above the size limit or with a refused type, when the poll runs,
@@ -803,9 +938,25 @@ Each criterion has an automated test that can falsify it.
 31. Given the intake list component, when a test renders it with a failed row
     and a content-duplicate row, then both rows appear with their reason and
     their link, and neither has a submission row.
-32. Given the first load of 2026-11-10, when the December poll reads the same
-    top level, then it replays the rows the first load wrote and adds no second
-    row.
+32. Given a fake history row and a new Drive file id whose bytes equal that
+    row's evidence, when the poll runs, then it writes an intake row with
+    `status = duplicate`, `duplicate_of_submission_id` set to the history row's
+    submission, and no new submission (the PM condition of PM-7).
+33. Given the history mode and the poll mode of `intakeDriveDocument`, when a
+    test reads the module, then one function serves both modes and no second
+    intake function exists.
+34. Given a history file with no parser match, when the dry run runs, then the
+    file is listed in the report and is not imported, and the report holds no
+    amount, no file content, no payee, and no Drive id.
+35. Given a month before the first live month, when a close open is attempted,
+    then the domain refuses it, and the history import writes no close row and no
+    sign-off row.
+36. Given the `Dockerfile` and the job step, when a test reads them, then the
+    Dockerfile bundles `app/lib/intake-runner.ts` into `dist/intake-runner.mjs`
+    with `esbuild`, a final stage starts `node dist/intake-runner.mjs`, the web
+    `CMD` stays unchanged, the job step carries the command `node
+    dist/intake-runner.mjs`, and the scheduler step targets the Cloud Run Admin
+    API `:run` endpoint with an OAuth service account and no `run.app` URL.
 
 ## 13. Out of scope
 
@@ -816,8 +967,9 @@ Each criterion has an automated test that can falsify it.
 - The deploy and the traffic move (`deferred:daniel`).
 - The Primary Advantage `PA-INV` source and the Storytime receipts, until the PM
   names the source (`deferred:pm`).
-- A load of the `2024` and `2025` folders. PM decision of 2026-11-09: no such
-  load now.
+- A load of the `2024` and `2025` folders in this phase. PM order of work
+  (PM-7): those folders come in a later phase, after the 2026 import passes, with
+  a `deferred:pm` start.
 - The double-entry ledger, the chart of accounts, VAT, withholding tax, and the
   tax invoices. `accounting_app_foundation_20260820` owns them.
 - A new Cloud SQL instance. The accounting database stays on the shared instance
@@ -863,21 +1015,57 @@ reopen a decision in this section; a change needs a new PM answer.
   by name only, and the Drive id comes from the config value
   `ACCOUNTING_DRIVE_FOLDER_ID`. Sections 4.1, 5.7, 9, FR-10 to FR-12, criterion
   28, plan tasks 3.1, 3.2, 3.4, and 8.2.
+- **PM-7 (the history import). DECIDED (PM, 2026-11-09).** Daniel asked for the
+  history in the app (Tasks, 11-08: "ingest the historical information we have in
+  Google drive"). Three parts. (a) The PM first load of 2026-11-10 is a PM script
+  on this machine: it writes the structure report only, writes no row in the
+  accounting database, uses no code of this track, and its output stays outside
+  git. (b) The app poll takes the files that follow the naming rule from November
+  2026 on. (c) A history import phase brings January to October 2026 into the
+  app: the same Drive read, the same parsers, and the same audit rows as the
+  poll, with no second code path (one mode of `intakeDriveDocument`); no
+  naming-rule filter for the history files, because those files predate the rule;
+  the month from the Drive folder or the file's modified date and the type from
+  the parser, with an unmatched file listed in the dry-run report and not
+  imported; idempotent by the Drive file id plus the same byte compare as the
+  poll; no new hash field; a dry-run report first, with counts by month and by
+  type and the unmatched files, and no amount and no file content in the report
+  or a log; a history marker on each row; no CEO sign-off and no monthly close
+  for a past month, because the external accountant closed them; the production
+  write only after the deploy, on Daniel's word; the parser fixtures from the PM
+  structure report of 2026-11-11, fakes only. The `2024` and `2025` folders come
+  in a later phase, after the 2026 import passes; that is the PM's order of work,
+  not a scope cut, and the start is `deferred:pm`. Sections 5.5, 9, 9a, FR-17,
+  FR-24, criteria 32 to 35, plan Phase 8 and Phase 10.
+- **PM-7 condition (idempotency by file id plus byte compare). ACCEPTED by the PM
+  (2026-11-09).** No new hash field. Condition: the byte compare must also catch
+  the same document under a new Drive file id, so a copy of a history file that
+  the office assistant uploads into a monthly folder is marked a content
+  duplicate of the history row, not added. The content-duplicate lookup of
+  section 5.5 therefore covers the history rows, and a fake history row and a
+  fake new Drive file with the same bytes and a different id gives
+  `status = duplicate` with a link to the history row and no new submission.
+  Sections 5.5, 9a, FR-17, criterion 32, plan tasks 3.1 and 8.1.
+- **PM-7 note (the hash word).** The PM wrote "file hash". The orchestrator told
+  the PM that the Drive file id plus the byte compare of `sameEvidenceBytes`
+  gives the same guarantee with no new hash field, and the AGENTS.md hashing
+  policy forbids one. Recorded here as an open note, not a change of scope
+  (section 14.3).
 
 ### 14.2 Orchestrator decisions of 2026-11-09 (DECIDED)
 
 The orchestrator recorded these decisions after spec review round 2. Each
 decision is binding. A reader must not reopen a decision in this section.
 
-- **D-1 (content duplicate). DECIDED (orchestrator, 2026-11-09).** A content
-  duplicate is found by comparing the candidate bytes with the evidence of the
-  company's earlier submissions, newest first, with a cap of 500
-  (`ACCOUNTING_DUPLICATE_SCAN_CAP`). Past the cap the item is not marked a
-  duplicate and it becomes a pending submission. The comparison reuses
-  `hasSameSubmissionContent`, which is exported from
-  `packages/backend/src/modules/accounting/submissions.ts`. No hash key is
-  added, because the hashing policy forbids it (AGENTS.md). Sections 5.4, 5.5,
-  FR-17, criteria 3 and 30, plan tasks 3.1 and 3.2.
+- **D-1 (content duplicate). DECIDED (orchestrator, 2026-11-09), REVISED by D-11
+  (2026-11-09).** A content duplicate is found by comparing the candidate bytes
+  with the evidence of the company's earlier submissions, newest first, with a
+  cap of 500 (`ACCOUNTING_DUPLICATE_SCAN_CAP`). Past the cap the item is not
+  marked a duplicate and it becomes a pending submission. The comparison is a
+  byte-only compare through `sameEvidenceBytes` (section 5.4); the revision D-11
+  below names the reason. The lookup covers the history rows (PM-7 condition). No
+  hash key is added, because the hashing policy forbids it (AGENTS.md). Sections
+  5.4, 5.5, 9a, FR-17, criteria 3, 30, and 32, plan tasks 3.1, 3.2, and 8.1.
 - **D-2 (the intake list surface). DECIDED (orchestrator, 2026-11-09).** The app
   holds an intake list component. It shows every row of
   `accounting_intake_documents`, a failed row and a content-duplicate row
@@ -918,16 +1106,24 @@ decision is binding. A reader must not reopen a decision in this section.
   and `privateKey` become optional in `VertexProviderConfig`
   (`packages/ai/src/providers/vertex.ts:7-18`). Section 5.2, FR-14, criterion
   26, plan tasks 4.1 and 4.2.
-- **D-11 (the compare helper). DECIDED (orchestrator, 2026-11-09).**
-  `hasSameSubmissionContent` is exported from
-  `packages/backend/src/modules/accounting/submissions.ts` and the intake calls
-  it. Section 5.5, FR-17, plan tasks 3.1 and 3.2.
-- **D-12 (the Cloud Run job). DECIDED (orchestrator, 2026-11-09).** The job is
-  named `accounting-intake-poll`. It runs
-  `pnpm --filter accounting exec tsx app/lib/intake-runner.ts` on the schedule
-  `0 6 * * *` under the service account `accounting-cloud-run`, with the env
-  vars of FR-10. The job step is deploy config, and the first deploy is
-  `deferred:daniel`. FR-10, plan tasks 3.3, 3.4, and 8.7.
+- **D-11 (the compare helper). DECIDED (orchestrator, 2026-11-09) and then
+  REVISED (2026-11-09, round 3).** The round-2 decision exported
+  `hasSameSubmissionContent` and called it from the content-duplicate lookup.
+  Round 3 showed that the helper returns false on a scalar mismatch before it
+  calls any evidence callback (`:174-186`), so it would miss a file whose bytes
+  match and whose parsed values differ. The helper therefore stays private and
+  serves the same-key replay only, and the content duplicate is a byte-only
+  compare through `sameEvidenceBytes`. Section 5.5, FR-17, criterion 3, plan
+  tasks 3.1 and 3.2.
+- **D-12 (the Cloud Run job). DECIDED (orchestrator, 2026-11-09), REVISED by
+  D-18 to D-21 (2026-11-09, round 3).** The job is named
+  `accounting-intake-poll`. Round 3 replaced the command, the trigger, and the
+  secret handling: the job runs `node dist/intake-runner.mjs` from a bundled
+  runner (D-18, D-19), Cloud Scheduler triggers it through the Admin API
+  `:run` endpoint (D-20), and the secrets go through `--set-secrets` (D-21). The
+  schedule is `0 6 * * *` under the service account `accounting-cloud-run`. The
+  job step is deploy config, and the first deploy is `deferred:daniel`. FR-10,
+  FR-10a, FR-10b, FR-24, FR-25, criteria 36, plan tasks 3.3, 3.4, and 9.7.
 - **D-13 (the two invoice types). DECIDED (orchestrator, 2026-11-09).** A
   non-text Google Cloud, Workspace, or OpenAI invoice goes to Vertex like any
   non-text PDF. Sections 5.2 and 6, criterion 9, plan tasks 3.1 and 6.2.
@@ -940,7 +1136,63 @@ decision is binding. A reader must not reopen a decision in this section.
 - **D-16 (the JSDoc guard scope). DECIDED (orchestrator, 2026-11-09).** The JSDoc
   guard covers the new backend module and the four app adapter files. FR-23,
   criterion 27, plan tasks 7.3 and 7.4.
-- **D-17 (the PM labels). DECIDED (orchestrator, 2026-11-09).** PM-1 to PM-6 are
+- **D-7 (the first load). SUPERSEDED by PM-7 (PM, 2026-11-09).** The first load
+  of 2026-11-10 is the PM's own script. It writes the structure report only, it
+  uses no code of this track, and it writes no row in the accounting database.
+  The January to October 2026 rows come through the Phase 8 history import, not
+  through the first load. Spec sections 2.6, 5, and 9a; plan tasks 5.1 and 8.1.
+- **D-11 (the compare helper). REVISED (orchestrator, 2026-11-09).**
+  `hasSameSubmissionContent` stays private at
+  `packages/backend/src/modules/accounting/submissions.ts:169-191` and serves the
+  same-key replay only, inside `submitAccountingSubmissionWithOutcome`. The
+  content duplicate is a byte-only compare through `sameEvidenceBytes`. Spec
+  section 5.5, FR-17, criterion 3, plan tasks 3.1 and 3.2.
+- **D-18 (the job image and entry point). DECIDED (orchestrator, 2026-11-09).**
+  The Cloud Run job uses the accounting image with a bundled runner. The
+  Dockerfile builds `app/lib/intake-runner.ts` into one Node file
+  `dist/intake-runner.mjs` with a bundler from the lockfile, copies that file
+  into the runner stage, and the job command is `node dist/intake-runner.mjs`.
+  Spec FR-24, criterion 36, plan tasks 3.3 and 3.4.
+- **D-19 (the bundler). DECIDED (orchestrator, 2026-11-09).** The bundler is
+  `esbuild`, pinned to `0.28.1`, the version `pnpm-lock.yaml` already resolves.
+  `esbuild` is not a direct dependency of `apps/accounting` today, so the task
+  adds it as a devDependency and records the addition. `esbuild` is already
+  approved for build scripts in `pnpm-workspace.yaml` under `allowBuilds`. Spec
+  FR-24, plan task 3.4.
+- **D-20 (the scheduler trigger). DECIDED (orchestrator, 2026-11-09).** Cloud
+  Scheduler triggers the job through the Cloud Run Admin API run endpoint
+  `https://run.googleapis.com/v2/projects/<project>/locations/<region>/jobs/accounting-intake-poll:run`
+  with an OAuth token of the named scheduler service account
+  `accounting-scheduler`, which holds `roles/run.invoker` on the job. A Cloud Run
+  job has no HTTP run URL, so the scheduler names no `run.app` address. Spec
+  FR-10a, criterion 36, plan task 3.4.
+- **D-21 (the job secrets). DECIDED (orchestrator, 2026-11-09).** The job takes
+  `ACCOUNTING_DATABASE_URL`, `STORAGE_ACCESS_KEY`, and `STORAGE_SECRET_KEY`
+  through `--set-secrets`, exactly as `apps/accounting/cloudbuild.yaml:40` does
+  for the web service. Only the non-secret values (`ACCOUNTING_DRIVE_FOLDER_ID`,
+  `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`,
+  `STORAGE_PUBLIC_BASE_URL`, `ACCOUNTING_INTAKE_ACTOR_ID`,
+  `ACCOUNTING_DUPLICATE_SCAN_CAP`, `ACCOUNTING_EXTRACTION_MODEL`) go through
+  `--set-env-vars`. Spec FR-10b, plan task 3.4.
+- **D-22 (the intake document repository). DECIDED (orchestrator, 2026-11-09).**
+  The port `AccountingIntakeDocumentRepository` lives beside
+  `AccountingSubmissionRepository` in `packages/backend`, and its Postgres
+  implementation lives in `apps/accounting`. `intakeDriveDocument` and the intake
+  list both use it. Spec sections 5.8 and 10, FR-1, plan tasks 1.1, 1.2, and 3.2.
+- **D-23 (the history month and type). DECIDED (orchestrator, 2026-11-09).** A
+  history file takes its month from the Drive folder name when it is `YYYY-MM`,
+  otherwise from the file's `modifiedTime`, and its type from the parser. An
+  unmatched file is listed in the dry-run report and not imported. Spec section
+  9a, criteria 33 to 35, plan tasks 8.1 and 8.2.
+- **D-24 (the history marker). DECIDED (orchestrator, 2026-11-09).** The marker is
+  a column: `is_history` boolean, plus `history_source` text with the values
+  `drive-folder` and `drive-modified-date`. Spec sections 9a and 10, FR-3, plan
+  tasks 1.5, 1.6, and 8.2.
+- **D-25 (the history close block). DECIDED (orchestrator, 2026-11-09).** The
+  history import starts no CEO sign-off and no monthly close for a past month. A
+  close open for a month before the first live month is refused. Spec section 9a,
+  criterion 35, plan task 8.1.
+- **D-26 (the PM labels). DECIDED (orchestrator, 2026-11-09).** PM-1 to PM-7 are
   DECIDED, not defaults. Sections 14.1 and 14.2, plan rules header.
 
 ### 14.3 Open items
@@ -996,6 +1248,14 @@ stops for no item in this list.
   Default: a Cloud Run job in `apps/accounting` with the lease row of FR-6. Not
   in a request path. The main `durable_jobs` table is not reused, because it
   lives in the main product database (`packages/db/src/schema/jobs.ts:44`).
+- **Q13. Does the history need a file hash?**
+  Open note, no default. The PM wrote "file hash" for the history import. The
+  orchestrator told the PM that the Drive file id plus the byte compare of
+  `sameEvidenceBytes` gives the same guarantee with no new hash field, and the
+  AGENTS.md hashing policy forbids a new hash field, a checksum column, or a
+  manifest. This track therefore adds none (PM-7). If the PM still wants a hash,
+  the change needs a new PM answer and a stop under the hashing policy.
+
 ## 15. Deferred tasks
 
 | Task | Owner | Reason |
@@ -1006,6 +1266,7 @@ stops for no item in this list.
 | The Tutor read endpoints and the service-identity gate | `deferred:pm` | The Tutor developer owns that repository |
 | The `PA-INV` and Storytime receipt sources | `deferred:pm` | The source is not in this repository |
 | The Accounts role seed for `CEO` and `CONTRACTOR` | `deferred:pm` | Accounts belongs to the PM |
-| The first deploy of the Cloud Run job `accounting-intake-poll` and its schedule | `deferred:daniel` | The job step is deploy config; the job itself is named in FR-10 |
-| The first load and the structure report | `deferred:pm` | The PM runs them on this machine |
+| The first deploy of the Cloud Run job `accounting-intake-poll` and its scheduler | `deferred:daniel` | The job step is deploy config; the job is named in FR-10 and FR-10a |
+| The first load and the structure report | `deferred:pm` | The PM runs its own script on this machine |
+| The production history write for January to October 2026 | `deferred:daniel` | The dry-run report goes to Daniel first; the write runs on his word |
 | The deploy and the traffic move | `deferred:daniel` | Daniel's word |

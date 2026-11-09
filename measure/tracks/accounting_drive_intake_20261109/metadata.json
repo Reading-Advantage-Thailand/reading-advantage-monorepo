@@ -8,7 +8,7 @@
   "author_model": "nvidia/stepfun-ai/step-5-preview",
   "depends_on": "none",
   "blocks": "the monthly accountant handoff of apps/accounting, and the structure report of 2026-11-11",
-  "estimated_tasks": 43,
+  "estimated_tasks": 51,
   "actual_tasks": null,
   "deviation_notes": ""
 }
