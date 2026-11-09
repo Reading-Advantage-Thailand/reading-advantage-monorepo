@@ -66,17 +66,20 @@ describe("Phase 3 Storytime song UI", () => {
     const week = cloneWeek();
     expect(week.song!.times, "shipped w01 must provide song timing rows").toHaveLength(15);
     expect(week.song!.lines, "shipped w01 must provide song lines").toHaveLength(15);
+    // The r3 take of 2026-11-09 (plan task 3.2) declares the 3 s lead-in of the w01 video, so the
+    // media clock carries it. The lyric clock is the media clock less that lead-in (R-EDIT3).
+    const leadIn = week.song!.videoLeadInSeconds ?? 0;
     const { media, container } = await renderSong(week);
     const firstTime = week.song!.times[0];
     const secondTime = week.song!.times[1];
     expect(firstTime.endTime - firstTime.startTime).not.toBeCloseTo(
       secondTime.endTime - secondTime.startTime,
     );
-    media.currentTime = firstTime.startTime + (firstTime.endTime - firstTime.startTime) / 2;
+    media.currentTime = firstTime.startTime + (firstTime.endTime - firstTime.startTime) / 2 + leadIn;
     fireEvent.timeUpdate(media);
     const firstLine = container.querySelector('[data-line-index="0"]');
     expect(firstLine).toHaveAttribute("aria-current", "true");
-    media.currentTime = secondTime.startTime + (secondTime.endTime - secondTime.startTime) / 2;
+    media.currentTime = secondTime.startTime + (secondTime.endTime - secondTime.startTime) / 2 + leadIn;
     fireEvent.timeUpdate(media);
     expect(container.querySelector('[data-line-index="0"]')).not.toHaveAttribute("aria-current", "true");
     expect(container.querySelector('[data-line-index="1"]')).toHaveAttribute("aria-current", "true");
