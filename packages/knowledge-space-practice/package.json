@@ -23,7 +23,7 @@
     "build": "tsc",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "pnpm --filter @reading-advantage/knowledge-space-core build && pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run",
+    "test": "vitest run",
     "test:coverage": "pnpm --filter @reading-advantage/knowledge-space-core build && pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run --coverage"
   },
   "dependencies": {

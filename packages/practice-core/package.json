@@ -23,7 +23,7 @@
     "build": "tsc",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "pnpm build && vitest run",
+    "test": "vitest run",
     "test:generators": "vitest run src/generator-qa/__tests__/ci-gate.test.ts",
     "test:coverage": "pnpm build && vitest run --coverage"
   },

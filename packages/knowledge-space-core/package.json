@@ -51,7 +51,7 @@
     "build": "tsc",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "pnpm build && vitest run",
+    "test": "vitest run",
     "test:coverage": "pnpm build && vitest run --coverage"
   },
   "dependencies": {
