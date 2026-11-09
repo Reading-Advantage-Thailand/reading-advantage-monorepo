@@ -42,12 +42,19 @@ function tableContract(table: PgTable): unknown {
 }
 
 describe("Accounting schema entrypoint parity", () => {
-  it("exports exactly the two Accounting tables", () => {
+  it("exports exactly the six Accounting tables", () => {
     const exported = Object.keys(accountingSchema).filter((key) =>
       key.startsWith("accounting"),
     );
     expect(new Set(exported)).toEqual(
-      new Set(["accountingSubmissions", "accountingSubmissionAuditEvents"]),
+      new Set([
+        "accountingSubmissions",
+        "accountingSubmissionAuditEvents",
+        "accountingIntakeDocuments",
+        "accountingMonthlyCloses",
+        "accountingMonthlyCloseAuditEvents",
+        "accountingIntakeLeases",
+      ]),
     );
   });
 
@@ -121,6 +128,34 @@ describe("Accounting schema entrypoint parity", () => {
       ],
       name: "accounting_submission_audit_events",
     });
+  });
+
+  it("creates the four intake and close tables in the 0001 migration", () => {
+    const journalDirectory = new URL("../../../accounting/drizzle/", import.meta.url);
+    const intakeMigrationFiles = readdirSync(journalDirectory).filter((file) =>
+      /^0001_.+\.sql$/u.test(file),
+    );
+    expect(intakeMigrationFiles).toHaveLength(1);
+    const intakeSql = readFileSync(
+      new URL(intakeMigrationFiles[0] as string, journalDirectory),
+      "utf8",
+    );
+    for (const requiredSql of [
+      'CREATE TABLE "accounting_intake_documents"',
+      'CREATE TABLE "accounting_monthly_closes"',
+      'CREATE TABLE "accounting_monthly_close_audit_events"',
+      'CREATE TABLE "accounting_intake_leases"',
+      'CONSTRAINT "accounting_intake_documents_history_source_check" CHECK',
+      'CONSTRAINT "accounting_intake_leases_expiry_check" CHECK',
+      'CONSTRAINT "accounting_monthly_closes_locked_at_check" CHECK',
+      'CREATE UNIQUE INDEX "accounting_intake_documents_scope_company_file_idx"',
+      'CREATE UNIQUE INDEX "accounting_monthly_closes_scope_company_month_idx"',
+      'CREATE UNIQUE INDEX "accounting_intake_leases_scope_company_queue_idx"',
+    ]) {
+      expect(intakeSql).toContain(requiredSql);
+    }
+    expect(intakeSql).not.toContain("DROP ");
+    expect(intakeSql).not.toContain("ALTER TABLE");
   });
 
   it("creates the exact dedicated tables in one 0000 migration", () => {

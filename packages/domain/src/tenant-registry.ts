@@ -200,6 +200,10 @@ import {
   primaryVoiceSchoolSettings,
 } from "@reading-advantage/db";
 import {
+  accountingIntakeDocuments,
+  accountingIntakeLeases,
+  accountingMonthlyCloses,
+  accountingMonthlyCloseAuditEvents,
   accountingSubmissions,
   accountingSubmissionAuditEvents,
 } from "@reading-advantage/db/accounting/schema";
@@ -263,6 +267,12 @@ register(standardPackSuccessorAdmissionReceipts, "EXEMPT");
 // single-company global; the accounting app is company-scoped by design
 register(accountingSubmissions, "EXEMPT");
 register(accountingSubmissionAuditEvents, "EXEMPT");
+// The intake and close tables carry the same single-company scope; the close
+// audit trail is reached through close_id and holds no scope column.
+register(accountingIntakeDocuments, "EXEMPT");
+register(accountingMonthlyCloses, "EXEMPT");
+register(accountingMonthlyCloseAuditEvents, "EXEMPT");
+register(accountingIntakeLeases, "EXEMPT");
 // Storytime families are not company accounts: the dedicated storytime
 // database is single-tenant and no school scopes these rows.
 register(storytimeAccounts, "EXEMPT");

@@ -8,6 +8,13 @@
       "when": 1788215047176,
       "tag": "0000_past_reavers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794216328989,
+      "tag": "0001_intake_and_close_tables",
+      "breakpoints": true
     }
   ]
 }

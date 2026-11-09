@@ -1,0 +1,831 @@
+{
+  "id": "0e428bcc-4493-401f-8bb0-35add9f56575",
+  "prevId": "ec078f0a-a4c5-45b0-91a2-b06537535b40",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.accounting_intake_documents": {
+      "name": "accounting_intake_documents",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "drive_file_id": {
+          "name": "drive_file_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "drive_folder_id": {
+          "name": "drive_folder_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_month": {
+          "name": "source_month",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "document_type": {
+          "name": "document_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "submission_id": {
+          "name": "submission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "duplicate_of_submission_id": {
+          "name": "duplicate_of_submission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "evidence_reference": {
+          "name": "evidence_reference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "extraction": {
+          "name": "extraction",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_count": {
+          "name": "failure_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "sighting_count": {
+          "name": "sighting_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "evidence_byte_size": {
+          "name": "evidence_byte_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_history": {
+          "name": "is_history",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "history_source": {
+          "name": "history_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "scope_company_id": {
+          "name": "scope_company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "accounting_intake_documents_scope_company_status_idx": {
+          "name": "accounting_intake_documents_scope_company_status_idx",
+          "columns": [
+            {
+              "expression": "scope_company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounting_intake_documents_evidence_byte_size_idx": {
+          "name": "accounting_intake_documents_evidence_byte_size_idx",
+          "columns": [
+            {
+              "expression": "scope_company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "evidence_byte_size",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounting_intake_documents_scope_company_file_idx": {
+          "name": "accounting_intake_documents_scope_company_file_idx",
+          "columns": [
+            {
+              "expression": "scope_company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "drive_file_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounting_intake_documents_document_type_check": {
+          "name": "accounting_intake_documents_document_type_check",
+          "value": "\"accounting_intake_documents\".\"document_type\" IN ('receipt', 'tax-invoice', 'bank-statement', 'payroll-sheet', 'withholding-certificate', 'payment-voucher-sheet', 'cloud-invoice', 'openai-invoice')"
+        },
+        "accounting_intake_documents_status_check": {
+          "name": "accounting_intake_documents_status_check",
+          "value": "\"accounting_intake_documents\".\"status\" IN ('pending', 'parsed', 'failed', 'duplicate')"
+        },
+        "accounting_intake_documents_extraction_check": {
+          "name": "accounting_intake_documents_extraction_check",
+          "value": "\"accounting_intake_documents\".\"extraction\" IS NULL OR \"accounting_intake_documents\".\"extraction\" IN ('human', 'local-text', 'model')"
+        },
+        "accounting_intake_documents_source_month_check": {
+          "name": "accounting_intake_documents_source_month_check",
+          "value": "\"accounting_intake_documents\".\"source_month\" ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'"
+        },
+        "accounting_intake_documents_history_source_check": {
+          "name": "accounting_intake_documents_history_source_check",
+          "value": "(\"accounting_intake_documents\".\"is_history\" = false AND \"accounting_intake_documents\".\"history_source\" IS NULL) OR (\"accounting_intake_documents\".\"is_history\" = true AND \"accounting_intake_documents\".\"history_source\" IN ('drive-folder', 'drive-modified-date'))"
+        },
+        "accounting_intake_documents_evidence_byte_size_check": {
+          "name": "accounting_intake_documents_evidence_byte_size_check",
+          "value": "\"accounting_intake_documents\".\"evidence_byte_size\" IS NULL OR \"accounting_intake_documents\".\"evidence_byte_size\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.accounting_intake_leases": {
+      "name": "accounting_intake_leases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "queue_name": {
+          "name": "queue_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lease_token": {
+          "name": "lease_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "worker_id": {
+          "name": "worker_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lease_expires_at": {
+          "name": "lease_expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "claimed_at": {
+          "name": "claimed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "scope_company_id": {
+          "name": "scope_company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "accounting_intake_leases_scope_company_queue_idx": {
+          "name": "accounting_intake_leases_scope_company_queue_idx",
+          "columns": [
+            {
+              "expression": "scope_company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "queue_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounting_intake_leases_queue_name_check": {
+          "name": "accounting_intake_leases_queue_name_check",
+          "value": "char_length(\"accounting_intake_leases\".\"queue_name\") between 1 and 128 AND \"accounting_intake_leases\".\"queue_name\" ~ '[^[:space:]]'"
+        },
+        "accounting_intake_leases_expiry_check": {
+          "name": "accounting_intake_leases_expiry_check",
+          "value": "\"accounting_intake_leases\".\"lease_expires_at\" > \"accounting_intake_leases\".\"claimed_at\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.accounting_monthly_close_audit_events": {
+      "name": "accounting_monthly_close_audit_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "close_id": {
+          "name": "close_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "action": {
+          "name": "action",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_account_id": {
+          "name": "actor_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_role": {
+          "name": "actor_role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "accounting_monthly_close_audit_events_close_created_idx": {
+          "name": "accounting_monthly_close_audit_events_close_created_idx",
+          "columns": [
+            {
+              "expression": "close_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounting_monthly_close_audit_events_action_check": {
+          "name": "accounting_monthly_close_audit_events_action_check",
+          "value": "\"accounting_monthly_close_audit_events\".\"action\" IN ('monthly-close-open', 'monthly-close-sign', 'monthly-close-lock')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.accounting_monthly_closes": {
+      "name": "accounting_monthly_closes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "period_month": {
+          "name": "period_month",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'open'"
+        },
+        "report_evidence_reference": {
+          "name": "report_evidence_reference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opened_by_account_id": {
+          "name": "opened_by_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "opened_at": {
+          "name": "opened_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "signed_by_account_id": {
+          "name": "signed_by_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "signed_by_role": {
+          "name": "signed_by_role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "signed_at": {
+          "name": "signed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "locked_at": {
+          "name": "locked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scope_company_id": {
+          "name": "scope_company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "accounting_monthly_closes_scope_company_month_idx": {
+          "name": "accounting_monthly_closes_scope_company_month_idx",
+          "columns": [
+            {
+              "expression": "scope_company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "period_month",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounting_monthly_closes_status_check": {
+          "name": "accounting_monthly_closes_status_check",
+          "value": "\"accounting_monthly_closes\".\"status\" IN ('open', 'signed', 'locked')"
+        },
+        "accounting_monthly_closes_period_month_check": {
+          "name": "accounting_monthly_closes_period_month_check",
+          "value": "\"accounting_monthly_closes\".\"period_month\" ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'"
+        },
+        "accounting_monthly_closes_locked_at_check": {
+          "name": "accounting_monthly_closes_locked_at_check",
+          "value": "\"accounting_monthly_closes\".\"status\" <> 'locked' OR \"accounting_monthly_closes\".\"locked_at\" IS NOT NULL"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.accounting_submission_audit_events": {
+      "name": "accounting_submission_audit_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "submission_id": {
+          "name": "submission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "action": {
+          "name": "action",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_account_id": {
+          "name": "actor_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_role": {
+          "name": "actor_role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "accounting_submission_audit_events_submission_idx": {
+          "name": "accounting_submission_audit_events_submission_idx",
+          "columns": [
+            {
+              "expression": "submission_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounting_submission_audit_events_action_check": {
+          "name": "accounting_submission_audit_events_action_check",
+          "value": "\"accounting_submission_audit_events\".\"action\" IN ('submit', 'approve', 'reject')"
+        },
+        "accounting_submission_audit_events_reason_check": {
+          "name": "accounting_submission_audit_events_reason_check",
+          "value": "\"accounting_submission_audit_events\".\"reason\" IS NULL OR \"accounting_submission_audit_events\".\"reason\" ~ '[^[:space:]]'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.accounting_submissions": {
+      "name": "accounting_submissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payee": {
+          "name": "payee",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amount_minor": {
+          "name": "amount_minor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "char(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "settled_thb_amount_minor": {
+          "name": "settled_thb_amount_minor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "evidence_reference": {
+          "name": "evidence_reference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scope_company_id": {
+          "name": "scope_company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "submitted_by_account_id": {
+          "name": "submitted_by_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "accounting_submissions_scope_company_status_idx": {
+          "name": "accounting_submissions_scope_company_status_idx",
+          "columns": [
+            {
+              "expression": "scope_company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounting_submissions_submitted_by_idx": {
+          "name": "accounting_submissions_submitted_by_idx",
+          "columns": [
+            {
+              "expression": "submitted_by_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounting_submissions_idempotency_key_idx": {
+          "name": "accounting_submissions_idempotency_key_idx",
+          "columns": [
+            {
+              "expression": "scope_company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "submitted_by_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "idempotency_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounting_submissions_kind_check": {
+          "name": "accounting_submissions_kind_check",
+          "value": "\"accounting_submissions\".\"kind\" IN ('expense', 'bill')"
+        },
+        "accounting_submissions_payee_check": {
+          "name": "accounting_submissions_payee_check",
+          "value": "char_length(\"accounting_submissions\".\"payee\") between 1 and 256 AND \"accounting_submissions\".\"payee\" ~ '[^[:space:]]'"
+        },
+        "accounting_submissions_category_check": {
+          "name": "accounting_submissions_category_check",
+          "value": "char_length(\"accounting_submissions\".\"category\") between 1 and 128 AND \"accounting_submissions\".\"category\" ~ '[^[:space:]]'"
+        },
+        "accounting_submissions_description_check": {
+          "name": "accounting_submissions_description_check",
+          "value": "\"accounting_submissions\".\"description\" IS NULL OR (char_length(\"accounting_submissions\".\"description\") between 1 and 1024 AND \"accounting_submissions\".\"description\" ~ '[^[:space:]]')"
+        },
+        "accounting_submissions_amount_minor_check": {
+          "name": "accounting_submissions_amount_minor_check",
+          "value": "\"accounting_submissions\".\"amount_minor\" ~ '^[0-9]+$'"
+        },
+        "accounting_submissions_currency_check": {
+          "name": "accounting_submissions_currency_check",
+          "value": "\"accounting_submissions\".\"currency\" ~ '^[A-Z]{3}$'"
+        },
+        "accounting_submissions_settled_thb_amount_minor_check": {
+          "name": "accounting_submissions_settled_thb_amount_minor_check",
+          "value": "\"accounting_submissions\".\"settled_thb_amount_minor\" IS NULL OR \"accounting_submissions\".\"settled_thb_amount_minor\" ~ '^[1-9][0-9]*$'"
+        },
+        "accounting_submissions_settled_thb_currency_check": {
+          "name": "accounting_submissions_settled_thb_currency_check",
+          "value": "(\"accounting_submissions\".\"currency\" = 'THB' AND \"accounting_submissions\".\"settled_thb_amount_minor\" IS NULL) OR (\"accounting_submissions\".\"currency\" <> 'THB' AND \"accounting_submissions\".\"settled_thb_amount_minor\" IS NOT NULL)"
+        },
+        "accounting_submissions_evidence_reference_check": {
+          "name": "accounting_submissions_evidence_reference_check",
+          "value": "\"accounting_submissions\".\"evidence_reference\" ~ '^private-evidence://[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(/[A-Za-z0-9._~-]+)+$' AND \"accounting_submissions\".\"evidence_reference\" NOT LIKE '%/../%' AND \"accounting_submissions\".\"evidence_reference\" NOT LIKE '%/./%' AND \"accounting_submissions\".\"evidence_reference\" NOT LIKE '%/..' AND \"accounting_submissions\".\"evidence_reference\" NOT LIKE '%/.'"
+        },
+        "accounting_submissions_status_check": {
+          "name": "accounting_submissions_status_check",
+          "value": "\"accounting_submissions\".\"status\" IN ('pending', 'approved', 'rejected')"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
