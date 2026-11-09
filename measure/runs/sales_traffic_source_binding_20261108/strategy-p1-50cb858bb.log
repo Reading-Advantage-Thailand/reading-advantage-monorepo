@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+role_base_sha: 50cb858bbc209e1f7b1d1b2176e2f22ad03dcd75
+commits: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+status: pass
+summary: Wrote test-strategy.md with a full Phase 1 section and a Phase 2 outline. Phase 1 risk is high. The strategy has 31 Red cases (S-01 to S-30b and the F-12 update), each with a fail-first reason. It has 30 named mutants (Y1 to Y30), local fixtures only, a disk guard of 3000 MB, a 14-item closeout gate, and live proof item 14 deferred:daniel (task 2.3h of per_app_cicd_20261107). The orchestrator captures phase_base_sha with git rev-parse HEAD after commit 7c853d9ba and before the first Red file. The given commit header was 102 characters, so the word "test" was dropped (97 characters). Live risk R-L1: the in-scope directory link measure/tracks/backend_architecture_enforcement_20260713 can stop the first live run if gcloud uploads the link target. Review B must also check if GitHub serves fork-only commits through the upstream URL.
+review_gates: review-a=required; review-b=required; review-c=required; adversarial=required; browser=not-applicable; phase-acceptance=required
+red_command: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/sales-traffic-source-binding.test.mjs scripts/ci/__tests__/cloudbuild-files.test.mjs
+green_command: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

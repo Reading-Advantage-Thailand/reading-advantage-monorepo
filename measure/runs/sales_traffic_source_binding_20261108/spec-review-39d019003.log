@@ -1,0 +1,19 @@
+Spec review log. Track sales_traffic_source_binding_20261108, round 6 (full review).
+Role base and audited head: 39d019003d92dc4e49e7871f6b5ff9c8db732fee (git rev-parse HEAD matched).
+Reviewer model: deepseek/deepseek-flash#high. The role table names kimi-code-plan-cn/kimi-for-coding#high (WAIT); this run used a fallback model. Rounds 2 to 5 also ran on an unlisted fallback model, so their verdicts do not count.
+Standard: ~/.agents/skills/measure/references/spec-review.md.
+
+Checks:
+1. Six traffic files: the first step of each reads the uploaded source. bind-release-source must precede it in each file.
+2. Two-way compare: .gcloudignore line 1 is .git, no #!include: line. git check-ignore with core.excludesFile filters the tree; 91,528 paths, 6,274 ignored, 85,254 kept at HEAD.
+3. Fetch: fixture proof with git 2.53.0. A bare SHA with --depth=1 --filter=blob:none works; the promisor remote loads .gcloudignore on demand; the fixture sets both uploadpack flags.
+4. Criteria 1 to 20 have named tests in two files. Criterion 9 states a build outcome and tests a proxy.
+5. Hashing: git identity only; no new hash, manifest, or sha256 call in the bind script or step.
+6. No task runs a build, a deploy, or a gcloud write.
+7. Zero decision: one open item, the exact args block of the step. One existing test breaks.
+
+Result: fail. Blocking F10. Nonblocking F11 to F16. retry_recommendation: escalate_human.
+
+MEASURE_AGENT_RESULT
+{"role":"spec-review","phase":"track setup","track":"sales_traffic_source_binding_20261108","round":6,"audited_head_sha":"39d019003d92dc4e49e7871f6b5ff9c8db732fee","status":"fail","retry_recommendation":"escalate_human","confidence":"medium","blocking_findings":["F10 [Blocker] plan.md tasks 1.1, 1.2, and 1.4: the new first step breaks existing case F-12 at scripts/ci/__tests__/cloudbuild-files.test.mjs:340 (ids[0] === \"verify-curriculum-backup\"), and no task names that file."],"nonblocking_findings":["F11 [Major] spec.md 3a-1, plan.md 1.2 and 2.2: the exact args block of the bind step is not written.","F12 [Major] plan.md 2.3, FR-7, FR-9: the runbook does not tell the operator to pass _RELEASE_COMMIT_SHA for the five Phase 2 files.","F13 [Nit] spec.md 3 step 3: \"no work tree\" contradicts git init; a bare repository makes check-ignore exit 128.","F14 [Nit] measure/tracks.md:1640 attributes the Primary live proof to task 2.3h; it is task 2.3c.","F15 [Nit] spec.md 2 and 3a do not state that apps/primary-advantage stays outside the root upload.","F16 [Nit] criterion 9 states a build outcome and tests a proxy."],"reviewer_model":"deepseek/deepseek-flash#high","artifacts":["measure/runs/sales_traffic_source_binding_20261108/spec-review-39d019003.json","measure/runs/sales_traffic_source_binding_20261108/spec-review-39d019003.log"]}
+END_MEASURE_AGENT_RESULT

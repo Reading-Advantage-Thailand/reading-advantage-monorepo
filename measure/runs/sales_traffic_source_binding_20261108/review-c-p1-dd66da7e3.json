@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "session": "Review C - P1 - sales_traffic_source_binding",
+  "model": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+  "model_substitution": "The role table names kimi-for-coding, which is WAIT. This run used minimax-cn-coding-plan/MiniMax-M3.1-Flash. The Red model is DeepSeek and the Green model is Anthropic, so both are excluded.",
+  "track": "sales_traffic_source_binding_20261108",
+  "phase": "Phase 1: Bind the sales traffic source to the release commit",
+  "summary": "PASS: the operator contract holds. The script CLI matches C1, the exit codes match the header, the three difference lines keep their order and their format, and the runbook sales section names the step, its check, the stop before migrate-db, the upload root, and the clean-checkout rule. The version lines print before the first fetch. The dropped archive claim is true and the new text keeps the other use of the SHA. Six nits remain, each about a missing next action or an incomplete line list.",
+  "phase_base_sha": "7c853d9baf1700f4a78e19c70fbfc355bdfcca57",
+  "role_base_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+  "role_base_sha_note": "The role started at the checked-out HEAD dd66da7e3 on master.",
+  "audited_head_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+  "report_head_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+  "head_is_current": true,
+  "head_evidence": "git rev-parse HEAD prints dd66da7e33d7a0dccce5ffb50bf8a449beb0265c, equal to role_base_sha and audited_head_sha. git diff --stat dd66da7e3 HEAD -- scripts/ci apps/sales-advantage docs/runbooks .gcloudignore prints nothing, EXIT=0.",
+  "phase_diff_stat": "git diff --stat 7c853d9ba dd66da7e3 -- scripts/ci apps/sales-advantage docs/runbooks .gcloudignore gives 6 files and 1547 insertions: .gcloudignore (1), apps/sales-advantage/cloudbuild-traffic.yaml (16), docs/runbooks/traffic-moves.md (21), two test files, and scripts/ci/verify-traffic-source.sh (196 new lines).",
+  "contract_applicability": "applicable",
+  "contract_applicability_evidence": [
+    "test-strategy.md line 289 marks Review C as required and names the script CLI, the difference lines, the tool messages, and the sales runbook text.",
+    "The phase adds scripts/ci/verify-traffic-source.sh and changes the sales section of docs/runbooks/traffic-moves.md.",
+    "test-strategy.md line 291 marks the browser review as not applicable. The phase changes no page, component, or route, so no browser inspection applies."
+  ],
+  "checks": {
+    "C1_cli": "pass: scripts/ci/verify-traffic-source.sh line 5 gives `verify-traffic-source.sh <commit> <repo-url> <uploaded-root>`, the same order as test-strategy.md line 60. Lines 106-108 bind $1 to the commit, $2 to the URL, $3 to the upload root. apps/sales-advantage/cloudbuild-traffic.yaml lines 17-20 pass the script, $_RELEASE_COMMIT_SHA, the URL, and `.` in that order.",
+    "usage_and_exit_codes": "pass: the header at lines 19-22 names 0, 1, and other non-zero. The fail function exits 1 at line 44, a bad argument exits 1 at line 105, a difference exits 1 at lines 170 and 193, a Git failure exits with the Git code under set -euo pipefail at line 32, and the pass line 196 exits 0.",
+    "difference_lines": "pass: report() prints the prefix and the path at line 64. Line 168 prints `missing: <path>`, line 169 prints `extra: <path>`, and line 192 prints `differs: <path>`. The order is missing, then extra, then differs, as spec.md line 50 requires.",
+    "runbook_FR5": "pass: docs/runbooks/traffic-moves.md line 141 names `bind-release-source`. Lines 142-146 state its check and the three line names. Line 146 states that the build stops before `migrate-db` and that the database does not change.",
+    "runbook_FR10": "pass: docs/runbooks/traffic-moves.md line 148 names the repository root `.` as the upload. Line 149 says the script reads the scope from the `.gcloudignore` of the commit. Line 150 says the script does not use `create-sales-release-archive.sh`.",
+    "runbook_FR12": "pass: docs/runbooks/traffic-moves.md lines 151-152 say to start from a clean checkout of the release commit and that an untracked file in the upload stops the build.",
+    "runbook_substitution": "partial: docs/runbooks/traffic-moves.md line 130 names `_RELEASE_COMMIT_SHA`, line 177 gives the lowercase 40-character rule, and lines 19-20 give the generic `--substitutions=<name>=<value>` form. The literal `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` is absent from the sales section. See N5.",
+    "archive_claim_dropped": "pass: the new text at docs/runbooks/traffic-moves.md line 150 is true. The traffic file holds no archive step (grep for `archive` in apps/sales-advantage/cloudbuild-traffic.yaml exits 1). The archive script appears only in docs/deployment/sales-database-role-provisioning.md line 79. The new text is complete: line 182 gives the backup description `sales-curriculum-before-<commit>-not-before-<boundary>`, which matches apps/sales-advantage/scripts/verify-sales-release-inputs.mjs line 98. So the SHA keeps its second use.",
+    "version_lines_first": "pass: scripts/ci/verify-traffic-source.sh lines 91-92 print `bash --version` and `git --version`. The first fetch is at line 129, and grep for `fetch` finds only that line. The runbook line 147 names the two lines, so the first Cloud Build log shows them.",
+    "tool_messages": "partial: every tool message names the tool, at lines 49, 96, and 98, and each stop happens before any fetch. The messages do not name the next action. See N1.",
+    "no_screen": "pass: test-strategy.md line 291 marks the browser review as not applicable. The phase changes no page, component, or route."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Nit] scripts/ci/verify-traffic-source.sh:49, :96, :98, :134, :136, :156: these messages name the cause but not the next action. The runbook sales section (docs/runbooks/traffic-moves.md:141-153) gives an action for a mismatch and for a commit that GitHub does not hold. It gives no action for a stop that names a missing tool. The fallback of spec.md line 98 says the fix is another image that holds git and bash. Add that line to the runbook.",
+    "N2 [Nit] scripts/ci/verify-traffic-source.sh:170 and :193: a mismatch exits 1 with no closing line. The pass path prints `verify-traffic-source: the upload matches commit <sha> (<n> paths)` at line 196. Add one closing line with the commit and the counts of missing, extra, and differs paths.",
+    "N3 [Nit] scripts/ci/verify-traffic-source.sh:155 prints a `submodule: <path>` line. The output list of the header at lines 24-27 names only missing, extra, and differs. The runbook at docs/runbooks/traffic-moves.md:142-146 names only the same three lines. Add the `submodule:` line to both lists.",
+    "N4 [Nit] docs/runbooks/traffic-moves.md:144 describes `extra:` as a file that the upload holds and the commit lacks. The header at scripts/ci/verify-traffic-source.sh:26 adds `or excludes it`. Say that a file that the `.gcloudignore` of the commit excludes also gives an `extra:` line.",
+    "N5 [Nit] docs/runbooks/traffic-moves.md:129-131 and :177: the sales section names `_RELEASE_COMMIT_SHA` and gives its 40-character lowercase rule. The literal `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` is absent. FR-9 of spec.md line 121 puts that literal in Phase 2. The sales run is the first run the operator makes, so add the literal to the sales section too.",
+    "N6 [Nit] docs/runbooks/traffic-moves.md:151, :153, and :177 use the term `the release commit`. No line names that commit by a command the operator can run. The general rule at lines 18-20 says to run at the commit of the push. The removed text pointed at the archive script. Say that the release commit is the commit of the push."
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "evidence": [
+    "Provenance: `git rev-parse HEAD` prints dd66da7e33d7a0dccce5ffb50bf8a449beb0265c, equal to role_base_sha and audited_head_sha. `git diff --stat dd66da7e3 HEAD -- scripts/ci apps/sales-advantage docs/runbooks .gcloudignore` prints nothing, EXIT=0. The audited HEAD is current.",
+    "Scope: `git diff --stat 7c853d9ba dd66da7e3 -- scripts/ci apps/sales-advantage docs/runbooks .gcloudignore` gives 6 files, EXIT=0. The track changes no other path of the operator contract.",
+    "CLI: read of scripts/ci/verify-traffic-source.sh lines 1-196. The usage line is at line 5, the exit code list at lines 19-22, the output list at lines 24-27, and the special-entry note at line 29.",
+    "Version lines: `grep -n fetch scripts/ci/verify-traffic-source.sh` prints only line 129, EXIT=0. The version commands are at lines 91-92.",
+    "Runbook: read of docs/runbooks/traffic-moves.md lines 1-206. The sales section runs from line 127 to line 188. The open limits run from line 190 to line 206.",
+    "Archive claim: `git show 3a63eeb14 -- docs/runbooks/traffic-moves.md` shows the removed line `It is the commit that apps/sales-advantage/scripts/create-sales-release-archive.sh archives` and the new line 150. `grep -c archive apps/sales-advantage/cloudbuild-traffic.yaml` prints 0, grep exit 1.",
+    "Backup description: `grep -n 'sales-curriculum-before' apps/sales-advantage/scripts/verify-sales-release-inputs.mjs` prints line 98, EXIT=0. The same file line 53 holds the 40-character lowercase check.",
+    "Step block: read of apps/sales-advantage/cloudbuild-traffic.yaml lines 13-20. The substitution defaults are at lines 129-133.",
+    "Spec: read of measure/tracks/sales_traffic_source_binding_20261108/spec.md lines 40-121. FR-5 is at line 110, FR-10 at line 115, FR-11 at line 116, FR-12 at line 117, and FR-9 at line 121.",
+    "Strategy: read of measure/tracks/sales_traffic_source_binding_20261108/test-strategy.md line 60 (C1), line 289 (the Review C row), and line 291 (the browser row).",
+    "Limits: this role ran no vitest, no gcloud, no Cloud Build submit, no workflow, and no network call. It read files and ran git, grep, and cat. Only the two result files were written. No commit."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+    "git diff --stat dd66da7e3 HEAD -- scripts/ci apps/sales-advantage docs/runbooks .gcloudignore -> no output, EXIT=0",
+    "git diff --stat 7c853d9ba dd66da7e3 -- scripts/ci apps/sales-advantage docs/runbooks .gcloudignore -> 6 files changed, 1547 insertions, EXIT=0",
+    "git show 3a63eeb14 -- docs/runbooks/traffic-moves.md -> the runbook diff, EXIT=0",
+    "grep -n fetch scripts/ci/verify-traffic-source.sh -> line 129 only, EXIT=0",
+    "grep -c archive apps/sales-advantage/cloudbuild-traffic.yaml -> 0, grep exit 1",
+    "grep -n 'sales-curriculum-before' apps/sales-advantage/scripts/verify-sales-release-inputs.mjs -> line 98, EXIT=0",
+    "grep -n substitutions docs/runbooks/traffic-moves.md -> lines 19, 174, and 202, EXIT=0",
+    "cat .gcloudignore -> the root ignore rules, EXIT=0"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/review-c-p1-dd66da7e3.json",
+    "measure/runs/sales_traffic_source_binding_20261108/review-c-p1-dd66da7e3.log"
+  ],
+  "status": "pass",
+  "retry_recommendation": "escalate_human",
+  "confidence": "medium"
+}

@@ -1,0 +1,14 @@
+role: spec-review
+phase: track setup
+track_id: sales_traffic_source_binding_20261108
+round: 5
+status: fail
+role_base_sha: 6a68f07dc5a47bc9f52dc3f4ff3ae43feb6fb70b
+audited_head_sha: 6a68f07dc5a47bc9f52dc3f4ff3ae43feb6fb70b
+author_model: claude-code/claude-sonnet-5-5
+reviewer_model: claude-haiku-5-5
+blocking_count: 1
+nonblocking_count: 8
+retry_recommendation: escalate_human
+note: artifacts written in the turn after the review; the provisional write step was skipped in that turn
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "sales_traffic_source_binding_20261108",
+  "phase": "P2",
+  "phase_heading": "Phase 2: Bind the other five traffic sources to the release commit",
+  "phase_base_sha": "17a26b073febba9aaf8c23b834b56d0e187bf587",
+  "role_base_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+  "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+  "report_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+  "audited_head_current": true,
+  "head_drift": "git rev-parse HEAD prints 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee, equal to role_base_sha and audited_head_sha. The only non-track commit in range, d90c4c24f, touches apps/storytime only.",
+  "model_route": "kimi-code-plan-cn/kimi-for-coding#high",
+  "security_applicability": "applicable",
+  "applicability_rationale": "test-strategy.md P2.9 Review B row: required. The phase changes a fail-closed gate that runs before a production migration on five files.",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Phase 2 security audit passes at 4c34987ca. The master-only fetch with the FETCH_HEAD ancestor check closes the D10 fork limit: a commit only on refs/pull/* or on no branch stops with the 8.6 line and exit 1, and any other git error stops with the 8.7 line and a non-zero exit, never a pass. The SHA is validated before any git call, the default literal stops the run, the URL is fixed in all five files, the bind step is step 1 everywhere (before refuse-legacy-db in Primary), no secret reaches the log, and the trap cleans the scratch folder on every exit path.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Provenance: git rev-parse HEAD = 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee (exit 0); git diff --name-only 17a26b07..HEAD lists only allowed P2.2 paths plus apps/storytime/__tests__/look-adversarial-p2-r4.test.ts (other track).",
+    "SHA gate before git: scripts/ci/verify-traffic-source.sh lines 130-133; git init at line 146. Dynamic: default literal REQUIRED_RELEASE_COMMIT_SHA exit 1; uppercase 40-hex exit 1; 39-hex exit 1; --upload-pack=evil exit 1; each prints the 40-lowercase-hex message with a garbage URL, so no fetch ran.",
+    "URL and upload gates: lines 135-137 (dash-leading -x exit 1; empty exit 1); line 138 (/no/such/dir exit 1).",
+    "Fetch and compare: line 150 fetches origin master once, no --depth, SHA not named; line 153 cat-file -e ^{commit}; lines 156-162 capture merge-base rc: 0 continues, 1 fails with the 8.6 line and exit 1, any other value fails with the 8.7 line. Script lines 154/160/161 match spec 8.6/8.7 text exactly (spec.md lines 214-229).",
+    "Fail-closed dynamic proof: valid HEAD SHA + /no/such/repo exits 128 with the git fatal text; ls of /tmp/opencode/verify-traffic-source.* finds nothing (trap cleanup lines 58-62, 143).",
+    "Five files: bind-release-source is step 1 in apps/accounts, apps/accounting, apps/codecamp-advantage, apps/marketing, apps/primary-advantage cloudbuild-traffic.yaml; grep -E 'waitFor|continueOn' exits 1; each file holds exactly one fixed GitHub URL literal; the bind step holds no secretEnv, no env, no install; Primary runs bind before refuse-legacy-db (lines 12-34).",
+    "Compare hardening: submodule-in-scope fail closed lines 184-189; #!include: fail closed lines 167-169; symlink type and target compared lines 207-221; xargs -- separator line 214; NUL-separated lists; set -euo pipefail line 37 with every git exit guarded or aborting.",
+    "Red tests: scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs lines 723-996 assert T-20 to T-25 including a refs/pull/7/head fork fixture and forced merge-base exits 128 and 1. Execution blocked in this sandbox; recorded as a limit.",
+    "A2: not applicable, no publish/consent gate. A6: no hit; measure/tracks.md line 1638 says in progress; runbook additions name the step, _RELEASE_COMMIT_SHA, and the stop rule with no resolved/proven wording."
+  ],
+  "commands": [
+    "git rev-parse HEAD (4c34987ca774a5cd6323b4ce5d7bbb5a716797ee)",
+    "git diff --name-only 17a26b07..HEAD (track paths + one storytime path)",
+    "bash -n scripts/ci/verify-traffic-source.sh (exit 0)",
+    "grep -nE 'waitFor|continueOn' apps/*/cloudbuild-traffic.yaml (exit 1)",
+    "bash scripts/ci/verify-traffic-source.sh with default/uppercase/short/dash SHA (exit 1 each)",
+    "bash scripts/ci/verify-traffic-source.sh HEADSHA -x /tmp/opencode (exit 1); empty URL (exit 1); bad upload dir (exit 1)",
+    "TMPDIR=/tmp/opencode bash scripts/ci/verify-traffic-source.sh HEADSHA /no/such/repo /tmp/opencode (exit 128); scratch-clean glob (no match)"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/review-b-p2-4c34987ca.json",
+    "measure/runs/sales_traffic_source_binding_20261108/review-b-p2-4c34987ca.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "findings_resolution": {
+    "D10 fork limit": "Closed by design in Phase 2: the fetch names only origin master, so a fork-only commit is absent and stops the run. Recorded in Review B phase 1, now resolved by the ancestor check of spec 8.2.",
+    "sandbox limit": "vitest run, git init/clone, and file redirection are blocked in this sandbox, so the Red suite and a self-built fixture could not be executed; the Red assertions were read and Green gate evidence in plan.md records tests_failed=0 at the phase head."
+  },
+  "handoff": {
+    "to": "Monorepo orchestrator",
+    "blocking_items": 0,
+    "nonblocking_items": [],
+    "question": null,
+    "default": "Accept the pass. The JSON and log are written at the result paths.",
+    "dispatchable_without_new_input": true
+  },
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "deviations": [
+    "PM decision 2026-11-09: no Codex; MiniMax wrote the Green and DeepSeek wrote the Red of this phase; xai is disabled; Kimi accepted by the PM for this one security role."
+  ]
+}

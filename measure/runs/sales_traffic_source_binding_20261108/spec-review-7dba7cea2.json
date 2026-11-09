@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "role": "spec-review",
+  "phase": "track setup",
+  "track": "sales_traffic_source_binding_20261108",
+  "round": 1,
+  "baseline_sha": "b69109d69",
+  "role_base_sha": "b69109d69cf691e19f2b6a04577e0261edbc85ec",
+  "audited_head_sha": "7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f",
+  "status": "fail",
+  "summary": "The Phase 2 amendment fails on one Blocker. HEAD equals the audited head. The master fetch, the local fixture, criteria 22 and 23, and the plan's carrier items are sound. But the fork-only commit is absent from the scratch repository, so the script stops it at scripts/ci/verify-traffic-source.sh:130 with the wrong message and cannot meet criterion 22 as task 2.2 describes. One Major and four Nits are also open.",
+  "paraphrase": {
+    "proposes": "The amendment adds an ancestor check to the bind step of the six traffic files. The step fetches the upstream `master` once, without a depth limit and without blobs, then runs `git merge-base --is-ancestor <release commit> FETCH_HEAD`. A release commit that is not an ancestor of `master` stops the run with one message, and a commit that `master` holds but is not its tip passes. Criteria 22 and 23 and the fixture rule of section 8.5 cover the stop and the pass.",
+    "current_system": "The Phase 1 script fetches the release commit by its SHA with `--depth=1 --filter=blob:none`, then compares the upload with that commit. It carries no check that the upstream `master` holds the commit, so it accepts a commit that exists only in a fork. The runbook tells the operator to pass the release commit, and the push path uses a separate SHA-256 manifest."
+  },
+  "blocking_findings": [
+    "F17 [Blocker] plan.md:71 and spec.md:195-197, :205: the fork-only commit is absent from the scratch repository, because the one `master` fetch replaces the SHA fetch, and `scripts/ci/verify-traffic-source.sh:130` then stops it with `verify-traffic-source: the commit is not in the repository`, not the section 8.6 message. Without line 130, `git merge-base --is-ancestor` gets an unknown object and exits 128 (`git rev-parse --verify <unknown>^{commit}` exits 128), and task 2.2 maps only exit 1 to the section 8.6 message. Rationale: criterion 22 needs that message, and the plan leaves the implementer to choose a second refspec or an absence-to-8.6 mapping, so the zero-decision check fails and criterion 22 cannot pass as written."
+  ],
+  "nonblocking_findings": [
+    "F18 [Major] spec.md:212-214 and :205: the section 8.6 message rule has no literal text; it fixes only the prefix `verify-traffic-source:`. A Red can assert the prefix, the commit, and `master`, but not the clause `gives the next action`. Rationale: the spec fixes exact formats for `missing:`, `extra:`, and `differs:` at :50 and the script, and criterion 22 depends on this message, so the Red and the Green can disagree on the sentence.",
+    "F19 [Nit] spec.md:47: section 3 step 2 still states the depth-limited fetch `--depth=1 --filter=blob:none origin <sha>`; section 8.2 :197 says the `master` fetch replaces it, but line 47 is not marked as replaced. Rationale: a reader of section 3 alone gets the old method; the plan resolves it, so the build does not change.",
+    "F20 [Nit] spec.md:194: the amendment states the fetched object set (every commit and tree of `master`, no blob), but no size or time bound for the full `master` fetch. Rationale: an operator cannot predict the step duration; the statement does not change what the Green builds.",
+    "F21 [Nit] spec.md:126: the changed-path list names `the two new test files`; the track also changes `scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs` (plan.md:74, commit b131f9a16). Rationale: task 2.4's scope check would see a third new test file that the spec list does not name.",
+    "F22 [Nit] plan.md:72: task 2.3 is the runbook task, but it assigns Nit N2's closing line to the script and names no script path; the rules at plan.md:9 say to stage named paths only. Rationale: the implementer must choose the task and the file for the N2 change."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f; audited_head_sha equals HEAD.",
+    "git show 7dba7cea2 names spec.md (+49/-4), plan.md (+8/-4), and metadata.json (+1/-1); the amendment text is section 8 of spec.md.",
+    "Point 1: spec.md:194 states the one non-shallow, blobless `master` fetch; :195 gives `git merge-base --is-ancestor <commit> FETCH_HEAD`; :197 says the fetch replaces the depth-limited fetch and no second fetch runs; :194-197 state the object set but no time bound.",
+    "Point 1, Phase 1: scripts/ci/__tests__/sales-traffic-source-binding.test.mjs:344-370 builds a `file://` bare repository and :367 pushes the fixture commit to `refs/heads/master`; S-01 at :675 checks only that a fetch ran, so the Phase 1 cases hold after the master-only fetch.",
+    "Point 1, failure path: scripts/ci/verify-traffic-source.sh:129 is the current `--depth=1` fetch; :130 `git cat-file -e \"${commit}^{commit}\" || fail \"the commit is not in the repository\"`; :42-45 shows `fail` prints `verify-traffic-source: <text>` and exits 1. With a master-only fetch the fork-only object is absent, so line 130 fires before the ancestor check.",
+    "Point 1, exit code: `git rev-parse --verify 0123456789012345678901234567890123456789^{commit}` returned `fatal: Needed a single revision`, exit 128; `git cat-file -t` on the same id returned `fatal: git cat-file: could not get object info`, exit 128. An absent object is a Git fatal, not the exit 1 case of spec.md:195.",
+    "Point 2: spec.md:210 and :142 specify a `mkdtemp` bare repository with `uploadpack.allowFilter` and `uploadpack.allowAnySHA1InWant`, the URL `file://<absolute path>`, two commits on `refs/heads/master`, and a third commit on `refs/pull/<n>/head`; the same form runs in Phase 1 at sales-traffic-source-binding.test.mjs:344-370, and a new ref is a local push in a bare repository.",
+    "Point 3: spec.md:214 gives the prefix, the commit name, the ancestor statement, and the next action as prose; no literal sentence appears; criterion 22 at :205 says `prints the message of section 8.6`.",
+    "Point 4: spec.md:205 gives the fork-only stop; :206 gives the old non-tip `master` commit pass and says the row proves the fetch is not depth-limited. Both rows are present and distinct.",
+    "Point 5: plan.md:68 says the runbook edit covers all six sections; :72 carries Review C Nits N1 to N6 (N5 for all six sections at the substitution sentence), the clean-checkout line in each of the six sections (FR-12), and the two general-rule lines; :74 names scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs in scope. docs/runbooks/traffic-moves.md has the six sections at :26, :49, :69, :88, :107, and :127, the clean-checkout line only in sales at :151, and the substitution rule at :18-20.",
+    "Scope: the amendment changes only the track files. scripts/ci/verify-traffic-source.sh, the six traffic files, the runbook, and the test files are unchanged at 7dba7cea2 (the plan tasks are still `[ ]`).",
+    "Metadata: metadata.json:8 keeps the original author model `claude-code/claude-sonnet-5-5`; spec.md:182 records the substitute author `nvidia/stepfun-ai/step-5-preview`."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f, exit 0",
+    "git show 7dba7cea2 --stat -> 3 track files, exit 0",
+    "git show 7dba7cea2 -- spec.md -> section 8 added, line 61 replaced, exit 0",
+    "git rev-parse --verify 0123456789012345678901234567890123456789^{commit} -> fatal: Needed a single revision, exit 128",
+    "git cat-file -t 0123456789012345678901234567890123456789 -> fatal: could not get object info, exit 128",
+    "grep -n push scripts/ci/__tests__/sales-traffic-source-binding.test.mjs -> line 367 HEAD:refs/heads/master",
+    "grep -n fetch scripts/ci/verify-traffic-source.sh -> line 129 only",
+    "grep -n 'findIndex' scripts/ci/__tests__/cloudbuild-files.test.mjs -> line 230; the guard check at :231 is skipped because bind-release-source does not match /refuse|guard/",
+    "grep -n '_RELEASE_COMMIT_SHA|Steps, in order' docs/runbooks/traffic-moves.md -> six sections, exit 0"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-7dba7cea2.json",
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-7dba7cea2.log"
+  ],
+  "test_strategy_violations": [
+    "plan.md:70 names the criterion 22 row, but the method of plan.md:71 cannot print the section 8.6 message for the section 8.5 fixture."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "author_model": "nvidia/stepfun-ai/step-5-preview",
+  "reviewer_model": "deepseek/deepseek-flash#high",
+  "model_substitution": "The amendment author was nvidia/stepfun-ai/step-5-preview as a substitute for claude-code/claude-sonnet-5-5 (spec.md:182). The reviewer runs on deepseek/deepseek-flash#high; the role table model kimi is WAIT. The reviewer family differs from both author families.",
+  "confidence": "high",
+  "retry_recommendation": "escalate_human"
+}

@@ -1,0 +1,46 @@
+Spec review log for track sales_traffic_source_binding_20261108.
+Round: 1. Baseline: e06e3b4dd (dbc669bff^). Audited head: e2747094b.
+Reviewer: measure-spec-review subagent on model bailian-token-plan/glm-5.3#high (GLM).
+Model substitution: the role table names kimi-code-plan-cn/kimi-for-coding#high for this role. That model is WAIT. The orchestrator ran this review on GLM instead. The spec author is claude-code/claude-sonnet-5-5, per the Author model line of measure/tracks/sales_traffic_source_binding_20261108/spec-review.md.
+HEAD check: HEAD is ada7c22d9 at review time. Five storytime commits follow e2747094b. The diff of e2747094b..HEAD on the track folder and on measure/tracks.md is empty. The reviewed content equals HEAD for every track file.
+Method: read the spec-review standard and the audit contract; read spec.md, plan.md, metadata.json, and the tracks.md entry; read every file the spec names; checked each fact claim against the repository. Read-only commands only. No commit, no push, no gcloud, no workflow run.
+
+### What this track proposes
+This track binds the uploaded source of six manual traffic builds to the release commit before any step that reads that source. A new first step `bind-release-source` refuses a `_RELEASE_COMMIT_SHA` that is not 40 lowercase hex characters, fetches that commit from GitHub, and compares the Git blob id of each uploaded file, except `release-source.json`, with the blob id of the same path in the commit. A file that differs, or is missing from the commit, stops the build. Phase 1 covers sales-advantage and creates the shared script `scripts/ci/verify-traffic-source.sh`; Phase 2 adds the same step to accounts, accounting, codecamp-advantage, marketing, and primary-advantage. The change adds no hash field and no manifest, and no task makes a live run, a deploy, or a gcloud write.
+
+### How the current system works, per this spec
+A person starts each `cloudbuild-traffic.yaml` by hand, on Daniel's word, and uploads a source tree. The push path binds its build: `cd-apps.yml` passes the pushed commit as `_RELEASE_COMMIT_SHA`, and line 11 of `apps/sales-advantage/cloudbuild.yaml` runs `release-source-manifest.mjs verify` against a SHA-256 manifest. The traffic files hold no binding: sales uses the SHA only as a label in two steps, and the other five files never mention it. The first source-reading step of each file runs `pnpm install` and a migrate command from the upload, so a wrong tree can change the production schema. The sales upload is the release archive that `create-sales-release-archive.sh` builds from a fixed path list; the other five uploads come from the repository root through the root `.gcloudignore`.
+
+### Findings
+- F1 [Blocker] spec.md section 3, plan.md task 1.2: The spec names no container image for the bind step and no way for the step to get git. Rationale: The step must fetch the commit and read blob ids with git; every bash step of the six files runs on node:22-slim, an image without git, and those steps install curl with apt-get; Green must pick the image and the install, so a dependency choice stays open and the zero-decision check fails.
+- F2 [Blocker] spec.md section 5 (Phase 2 criteria), plan.md task 2.1: The Phase 2 test file location stays open. Rationale: The spec says `in the same test file or a new file next to it`, and task 2.1 names no test file; a file location that the plan leaves to the implementer is a design choice, and the zero-decision check fails.
+- F3 [Major] spec.md section 5, plan.md tasks 1.1, 1.4, 2.1, 2.4: Criteria 6, 14, and 15 hold no automated test, against the claim of section 5 that each criterion has one. Rationale: Task 1.1 covers criteria 1 to 5 and task 2.1 covers 8 to 13; the phase checks read `git diff --stat`, which shows file names only, so a new hash field inside a changed file stays hidden; a person reads the diff, so the evidence is person-checked, not automated.
+- F4 [Major] spec.md section 2, section 3a, FR-10: The sales traffic submit source stays unreconciled. Rationale: Section 3a says the sales upload is the release archive, and FR-10 exists for that model; the runbook rule for every traffic file (docs/runbooks/traffic-moves.md line 18) says a person submits `.` from the repository root, and that upload already holds scripts/ci; no task changes the rule, so the operator cannot tell which source to submit, and the path of the release-source.json exception stays unnamed.
+- F5 [Nit] spec.md section 1: The sentence `Neither step reads the uploaded files` is imprecise. Rationale: verify-curriculum-backup runs node apps/sales-advantage/scripts/verify-sales-release-inputs.mjs from the upload; FR-1 orders the bind step before it anyway, so the build does not change.
+- F6 [Nit] spec.md section 2: The root .gcloudignore re-includes six apps, not seven. Rationale: The file re-includes accounting, codecamp-advantage, marketing, sales-advantage, accounts, and www-reading-advantage; the load-bearing claim that scripts/ stays unexcluded holds.
+- F7 [Nit] plan.md tasks 1.3 and 2.3: The runbook updates carry no clean-tree rule. Rationale: Q6 stops the build on any untracked file; the five working-tree uploads hold untracked files that .gcloudignore does not exclude; one runbook line that says start from a clean checkout closes the gap.
+
+Checked facts:
+- The six traffic files match the spec: sales steps and _RELEASE_COMMIT_SHA label use; accounts first step migrate-company-identity; accounting, codecamp, marketing first step migrate-db; primary first step refuse-legacy-db with migrate-db near line 27; each first source-reading step runs pnpm install.
+- The push path matches: cloudbuild.yaml line 11 runs release-source-manifest.mjs verify; release-source-manifest.mjs uses sha256; cd-apps.yml passes the pushed commit.
+- .gcloudignore matches: excludes .git and apps/*; re-includes six apps; does not exclude scripts/.
+- create-sales-release-archive.sh matches: fixed path list with no scripts/ folder; writes release-source.json.
+- The remote URL, scripts/ci contents, the F-16 runbook test, per_app_cicd task 2.3h with deferred:daniel, test-strategy rows M53, C31, Q18, and Review B F4 all match the spec.
+- The AGENTS.md hashing policy holds: a Git blob id comparison, no new hash field, no manifest; the spec records the Option A and Option B analysis, and Q18 allows a no-hash binding.
+- The bind step comes before the first source-reading step in each of the six files, and before refuse-legacy-db in Primary.
+- No task makes a live run, a deploy, or a gcloud write.
+
+Verdict: fail. Two Blockers, two Majors, three Nits. Retry recommendation: escalate_human.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+status: complete
+track: sales_traffic_source_binding_20261108
+phase: track setup
+commits: none
+tests_run: none (review only; read-only git and grep commands)
+files_changed: measure/runs/sales_traffic_source_binding_20261108/spec-review-e2747094b.json and measure/runs/sales_traffic_source_binding_20261108/spec-review-e2747094b.log
+plan_updates: none
+known_failures: none
+handoff: Verdict fail with two Blockers that the author fixes in spec.md or plan.md. F1: name the container image of the bind step and the way git becomes available; node:22-slim, the image of every bash step in the six files, holds no git. F2: pick the Phase 2 test file, the Phase 1 file or a new file next to it. F3 to F7 are Major or Nit; F4 asks the author to reconcile the sales traffic submit source with the runbook rule at docs/runbooks/traffic-moves.md line 18. Model substitution recorded: kimi-for-coding is WAIT; this review ran on bailian-token-plan/glm-5.3#high. HEAD moved to ada7c22d9 after the audited head; the track files are unchanged. No question for the user; no product decision is needed.
+END_MEASURE_AGENT_RESULT

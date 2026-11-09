@@ -1,0 +1,10 @@
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+role_base_sha: d5301b5c55e77f5c7258c218aa87af06afae8772
+commits: 11ab03e8f64514a94afef0521b8979f51db99f2d
+status: pass
+summary: Amended test-strategy.md for criterion 21, FR-14, and PM decision Q19. R-L1 is now a PM item that task 1.2 resolves with the line measure/ in .gcloudignore and that criterion 21 pins. R-L1 is no longer part of the deferred:daniel live proof. It goes to deferred:pm only if closeout item 16 fails. New Red cases: S-31 (the measure/ line, fails until task 1.2), S-32 (no tracked mode-120000 link in scope, fails until task 1.2), and S-33 (an ignored measure/ link and file absent from the upload give exit 0, fails until the script exists). The expected Red r2 light run is EXIT=1 with tests_failed=35. New mutants: Y31 (line removed, rejected by S-31 and S-32), Y32 (a link left outside the rules by a negation line, rejected by S-32), and Y33 (no ignore filter on the Git side, rejected by S-33). The mutant total is 33. The closeout adds item 15 (.gcloudignore diff with one added line) and item 16 (gcloud meta list-files-for-upload with measure_files_in_upload=0 and sales_files_in_upload>=1). Task 1.2 runs the same upload list check. New defaults: D8 (run check-ignore in an empty scratch repository), D9 (no staged mutant in the shared index), and D10 (the fork-commit limit goes to the PM by the Q19 rule). The commit header is 99 characters.
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

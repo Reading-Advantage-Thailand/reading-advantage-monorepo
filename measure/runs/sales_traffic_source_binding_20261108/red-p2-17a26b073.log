@@ -1,0 +1,19 @@
+MEASURE_AGENT_RESULT
+role: measure-red
+track: sales_traffic_source_binding_20261108
+phase: 2
+task: 2.1
+phase_base_sha: 17a26b073febba9aaf8c23b834b56d0e187bf587
+role_base_sha: 17a26b073febba9aaf8c23b834b56d0e187bf587
+model: deepseek/deepseek-flash#high
+green_model: ra-quota pick, a family other than DeepSeek
+commits: test 9b7ece89fd53f755acb2b119a0164b0e9ba4a76c; plan 607ebe251e93453e7ae02fd57bb942fa7217aed6
+status: ok
+summary: The Phase 2 Red file adds T-01 to T-08 and T-20 to T-25. The 11 Phase 1 files still pass. The new rows fail on the missing bind step and the missing ancestor check. T-23 is the guard row and it passes at Red by design. Task 2.1 stays [~] until the orchestrator gate.
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci'
+red_exit: 1
+counts: test_files=12 (1 failed, 11 passed); tests=205 (13 failed, 192 passed); scratch_left=0; disk_avail_mb=9445
+failing_ids: T-01 accounts: step 1 is "migrate-company-identity" | T-02 accounts: the file has no bind-release-source step | T-03 accounts: the file has no bind-release-source step | T-04 T-04 accounts: _RELEASE_COMMIT_SHA is undefined | T-05 T-05 accounts: the section does not name bind-release-source | T-06 T-06 accounts: the file has no bind-release-source step | T-07 T-07: the ids are refuse-legacy-db, migrate-db, doctor-check, update-traffic | T-08 accounts: the file has no bind-release-source step | T-20 T-20: the script text lacks "merge-base --is-ancestor" | T-21 T-21: the fetch does not name origin master | T-22 T-22: expected exit 1, got 0 | T-24 T-24: expected a non-zero exit | T-25 T-25: expected exit 1, got 0
+passed_row: T-23 the old non-tip master commit passes with a matching upload (the declared guard row)
+retry_recommendation: none; hand the phase to Green on the ra-quota pick
+END_MEASURE_AGENT_RESULT

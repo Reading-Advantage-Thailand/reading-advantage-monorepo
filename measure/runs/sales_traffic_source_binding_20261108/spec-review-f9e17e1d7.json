@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "role": "spec-review",
+  "track": "sales_traffic_source_binding_20261108",
+  "phase": "track setup",
+  "round": 2,
+  "baseline_sha": "e06e3b4dd",
+  "role_base_sha": "f9e17e1d7",
+  "audited_head_sha": "f9e17e1d7",
+  "status": "fail",
+  "summary": "Round 2 review of fixes in commit f9e17e1d7. Fixes F1 to F7 hold against repository facts. One zero-decision Blocker remains: the exact image form is not fixed. One Major finding remains: bash presence is unverified.",
+  "paraphrase": {
+    "proposes": "This track binds the uploaded source of six manual traffic builds to the release commit before any step that reads that source. A new first step fetches the commit from GitHub and compares Git blob ids of each uploaded file, except release-source.json.",
+    "current_system": "A person starts each cloudbuild-traffic.yaml by hand on Daniel's word and uploads a source tree. The push path binds its build with a SHA-256 manifest, but the traffic files hold no binding to the release commit."
+  },
+  "blocking_findings": [
+    "F8 [Blocker] measure/tracks/sales_traffic_source_binding_20261108/spec.md:61 and plan.md:28: The exact image form is not fixed. Spec line 61 names gcr.io/cloud-builders/git in prose only. Plan task 2.2 names no image and no entrypoint. Rationale: the Green task would choose the YAML name form, which is a zero-decision gap. Fix: add the exact line name: \"gcr.io/cloud-builders/git\" with no digest to the spec and to tasks 1.2 and 2.2."
+  ],
+  "nonblocking_findings": [
+    "F9 [Major] measure/tracks/sales_traffic_source_binding_20261108/plan.md:19: Bash presence in gcr.io/cloud-builders/git is unverified. Task 1.2 states that git and bash are present. Rationale: the image contents were not confirmed; the webfetch returned other builder files. Fix: verify the image contents, or name an image whose contents are verified."
+  ],
+  "evidence": [
+    "F4 closed: docs/runbooks/traffic-moves.md line 18 states upload of the repository root with gcloud builds submit ... .",
+    "F6 closed: .gcloudignore re-includes accounting, codecamp-advantage, marketing, sales-advantage, accounts, and www-reading-advantage. No pattern excludes scripts/.",
+    "Release-source exception dropped: apps/sales-advantage/cloudbuild-traffic.yaml holds no archive or release-source reference.",
+    "F1, F2, F3, F5, F7 accepted from spec and plan text. Named test and verify files do not exist yet, as expected before Red and Green.",
+    "Q11 met: spec states upload ., archive push-only, and fail-closed on untracked files (FR-12, Q6).",
+    "Standard file not read by instruction. Severity levels set by reviewer judgment."
+  ],
+  "commands": [
+    "grep docs/runbooks/traffic-moves.md for gcloud builds submit",
+    "read .gcloudignore",
+    "read scripts/ci",
+    "read measure/tracks/sales_traffic_source_binding_20261108/plan.md lines 22 to 29",
+    "grep measure/tracks/sales_traffic_source_binding_20261108/spec.md for image, git, bash, and upload wording"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-f9e17e1d7.json",
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-f9e17e1d7.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "medium"
+}

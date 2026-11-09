@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "role": "spec-review",
+  "phase": "track setup",
+  "track": "sales_traffic_source_binding_20261108",
+  "round": 7,
+  "baseline_sha": "ad2b434671caa767522789ad2f1e0956bfaecdea",
+  "role_base_sha": "ad2b434671caa767522789ad2f1e0956bfaecdea",
+  "audited_head_sha": "c9a8c7850b8d5976acbec22ba77b7f9e6c263382",
+  "status": "pass",
+  "summary": "Short re-review at c9a8c7850. The track files at HEAD equal the audited head, and one later commit belongs to another track. All seven round 6 findings are fixed and verified. The Phase 2 guard checks hold, Q16 and Q17 are logged, and criterion 18 agrees in every place. A Red and a Green can start with no open product decision.\n\nOne new Nit is open: the method-check counts at spec.md:50 do not reproduce. The known gate fault is recorded and is not a finding. HEAD is ad2b434.",
+  "paraphrase": {
+    "proposes": "This track adds one first step, bind-release-source, to six manual traffic Cloud Build files. The step fetches the release commit from GitHub into a scratch repository. It builds the expected path and blob id list from the commit and its .gcloudignore. It compares that list with the uploaded tree before any step reads the source. A missing, extra, or differing path stops the build, and the check adds no hash, manifest, or provenance file. Phase 1 covers sales-advantage, and Phase 2 covers the other five apps.",
+    "current_system": "A person starts each cloudbuild-traffic.yaml by hand and uploads the repository root with gcloud builds submit. The six files hold no check that the upload equals the release commit. The sales file uses _RELEASE_COMMIT_SHA only as a label in two steps. The other five files do not mention it. The push path binds its build with release-source-manifest.mjs and a SHA-256 manifest, and the traffic files ignore that manifest. The first step of each traffic file runs pnpm install and a db command from the uploaded source."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F17 [Nit] spec.md:50: the method-check counts do not reproduce. Rationale: spec.md:50 says check-ignore removed 5,953 paths and 85,575 stayed; at HEAD, `git ls-tree -r -z --name-only HEAD | git -c core.excludesFile=.gcloudignore check-ignore --no-index --stdin -z` removed 6,274 paths and left 85,254, with and without -z, and the total is 91,528 in both cases. No test uses these counts, so the implementer's work does not change."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned ad2b434671caa767522789ad2f1e0956bfaecdea. git diff c9a8c7850b8d5976acbec22ba77b7f9e6c263382 HEAD -- measure/tracks/sales_traffic_source_binding_20261108 measure/tracks.md returned no change, so the audited content equals HEAD. git log c9a8c7850..HEAD lists one commit, ad2b434 (per_app_cicd_20261107 p4 phase check).",
+    "F10 withdrawn (fixed): plan.md:16-28 records the grep of every step-order assertion on the six traffic files; cloudbuild-files.test.mjs:340 (case F-12) holds the ids[0] check; plan.md:32 (task 1.1) updates it to bind-release-source at 0 and verify-curriculum-backup at 1; plan.md:35 (task 1.4) allows scripts/ci/__tests__/cloudbuild-files.test.mjs.",
+    "ordered() at scripts/ci/__tests__/helpers/plan.mjs:317 checks relative order only and requires update-traffic last (lines 317-340), so a new first step does not break it. The only absolute first-step assertion in cloudbuild-files.test.mjs is line 340 (grep for ids[0] and steps[0]).",
+    "The accounts guard check at scripts/ci/__tests__/cloudbuild-files.test.mjs:230-231 is conditional: `if (guard >= 0) must(guard === 0)`. No accounts step id matches /refuse|guard/ (apps/accounts/cloudbuild-traffic.yaml holds migrate-company-identity, bootstrap-company-identity, doctor-company-identity, bootstrap-production-identity, runtime-db-contract, update-traffic), so guard is -1 and the check never fires. The Primary case F-03 at cloudbuild-files.test.mjs:92-108 has no zero-index guard check. So a Phase 2 bind step first does not break the gate.",
+    "F11 withdrawn (fixed): spec.md:79 and spec.md:81-90 give the exact block: name gcr.io/cloud-builders/git (no digest), id bind-release-source, entrypoint bash, and four args (script path, \"$_RELEASE_COMMIT_SHA\", the GitHub URL, \".\"). plan.md:33 (task 1.2) and plan.md:42 (task 2.2) repeat the same block.",
+    "F12 withdrawn (fixed): spec.md:116 (FR-7), spec.md:118 (FR-9), and plan.md:43 (task 2.3) tell the operator to pass --substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit> for each of the five Phase 2 sections, and a missing or empty value fails closed. docs/runbooks/traffic-moves.md:18-19 passes only the substitutions that a section names, which is the stated reason.",
+    "F13 withdrawn (fixed): spec.md:46 says the step uses a non-bare repository (plain git init, never --bare), because git check-ignore exits 128 in a bare repository.",
+    "F14 withdrawn (fixed): measure/tracks.md:1640 names task 2.3h for the five apps other than primary-advantage and task 2.3c for primary-advantage.",
+    "F15 withdrawn (fixed): spec.md:35 names .gcloudignore line 3 apps/* and states that no line re-includes apps/primary-advantage; .gcloudignore:3-16 confirms the six re-included apps and no primary-advantage line.",
+    "F16 withdrawn (fixed): spec.md:142 restates criterion 9 as what the test proves (the args name the script and $_RELEASE_COMMIT_SHA; the script rejects a differing upload) and says the test observes no build, with the live proof deferred to task 2.3h and task 2.3c.",
+    "Q16 and Q17 are in the decision log at spec.md:169-170. spec.md:96 and spec.md:132 add the printf 'b\\0a\\0' | sort -z | comm -z - /dev/null check before the compare, fail closed, and the stub test; plan.md:32 adds the stub test to task 1.1. Q17 records xargs -0 -n 500 git hash-object --no-filters and lets the Green pick another batch size.",
+    "Criterion 18 at spec.md:148 runs /bin/bash with the substituted args list. spec.md:79 says there is no -c string; plan.md:33 and plan.md:42 require the exact block of spec section 3a-1, so the spec and plan agree in every place.",
+    "No open product decision: the step block, the script path, the runbook sections, the test files, and the substitution are named; Q17's batch size is a named allowance, and the fallback image applies only after a live-run failure.",
+    "Known gate fault recorded: the spec-review gate counts commits of other tracks (for example ad2b434) as files outside measure/runs/. This review does not fail on it; the PM routes it to the Measure session.",
+    "printf 'b\\0a\\0' | sort -z | comm -z -3 - /dev/null exited 0 and printed a\\0b\\0, so the Q16 check runs on this platform.",
+    "git ls-tree -r HEAD returned 91,528 paths, the number in spec.md:50. The check-ignore count is 6,274 removed and 85,254 kept; the .gitignore variant gives 323 removed, so the spec's 5,953 figure matches no current exclude file.",
+    "apps/sales-advantage/cloudbuild-traffic.yaml:120 already holds _RELEASE_COMMIT_SHA: REQUIRED_RELEASE_COMMIT_SHA; the five Phase 2 files hold no _RELEASE_COMMIT_SHA, so task 2.2 adds it.",
+    "scripts/ci/__tests__ holds no other step-order assertion on a traffic file: the cd-workflows tests use cloudbuild-traffic only as a workflow token, and ci-remediation, dry-run, ci-workflow, ci-workflow-adversarial, affected-apps, and affected-apps-adversarial tests do not name a traffic file."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> ad2b434671caa767522789ad2f1e0956bfaecdea, exit 0",
+    "git diff --stat c9a8c7850b8d5976acbec22ba77b7f9e6c263382 HEAD -- measure/tracks/sales_traffic_source_binding_20261108 measure/tracks.md -> empty, exit 0",
+    "git log --oneline c9a8c7850..HEAD -> one commit, ad2b434 (per_app_cicd_20261107), exit 0",
+    "git diff 39d019003 c9a8c7850 -- measure/tracks/sales_traffic_source_binding_20261108 measure/tracks.md -> read, exit 0",
+    "git ls-tree -r HEAD | wc -l -> 91,528, exit 0",
+    "git ls-tree -r -z --name-only HEAD | git -c core.excludesFile=.gcloudignore check-ignore --no-index --stdin -z | tr -cd '\\0' | wc -c -> 6,274, exit 0",
+    "git ls-tree -r --name-only -z HEAD | tr '\\0' '\\n' | git -c core.excludesFile=.gcloudignore check-ignore --no-index --stdin | wc -l -> 6,274, exit 0",
+    "git ls-tree -r -z --name-only HEAD | git -c core.excludesFile=.gitignore check-ignore --no-index --stdin -z | tr -cd '\\0' | wc -c -> 323, exit 0",
+    "printf 'b\\0a\\0' | sort -z | comm -z -3 - /dev/null -> exit 0, printed a\\0b\\0",
+    "printf 'apps/primary-advantage/x.ts\\napps/sales-advantage/y.ts\\n.gitignore\\nscripts/ci/a.sh\\n' | git -c core.excludesFile=.gcloudignore check-ignore --no-index --stdin -> listed the primary path and .gitignore, exit 0",
+    "grep for ids[0], steps[0], ordered(, stepIds( in scripts/ci/__tests__/cloudbuild-files.test.mjs -> line 340 is the only absolute first-step check, exit 0",
+    "grep for traffic names in scripts/ci/__tests__/*.test.mjs -> no step-order assertion outside cloudbuild-files.test.mjs, exit 1 on the empty set",
+    "read .gcloudignore:1-20, docs/runbooks/traffic-moves.md:14-22 and 127-176, the six traffic file step ids, and the track files"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-c9a8c7850.json",
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-c9a8c7850.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "reviewer_model": "deepseek/deepseek-flash#high",
+  "confidence": "high",
+  "retry_recommendation": "none"
+}

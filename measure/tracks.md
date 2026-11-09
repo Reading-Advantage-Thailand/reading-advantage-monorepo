@@ -1635,9 +1635,10 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 ---
 
-- [~] **Track: Bind the traffic sources to the release commit** — *created 2026-11-08*
-  *Link: [./tracks/sales_traffic_source_binding_20261108/](./tracks/sales_traffic_source_binding_20261108/)*
-  *Status: in progress (Phase 1 checkpoint 7c11aa22c, Phase 2 checkpoint 4c34987ca, 2026-11-09) | Chore, security fix of Review B finding F4 (per_app_cicd_20261107) | 2 phases: sales-advantage (Phase 1), accounts, accounting, codecamp-advantage, marketing, primary-advantage (Phase 2); shared script scripts/ci/verify-traffic-source.sh | Gates six apps: task 2.3h of per_app_cicd_20261107 for the five apps other than primary-advantage, task 2.3c for primary-advantage; the live traffic runs stay `deferred:daniel`*
+- [x] **Track: Bind the traffic sources to the release commit** — *created 2026-11-08, archived 2026-11-09*
+  *Link: [./archive/sales_traffic_source_binding_20261108/](./archive/sales_traffic_source_binding_20261108/)*
+  *Bind the uploaded source of the traffic files of sales-advantage (Phase 1) and of accounts, accounting, codecamp-advantage, marketing, and primary-advantage (Phase 2) to _RELEASE_COMMIT_SHA before the first source-reading step (Review B finding F4 of per_app_cicd_20261107).*
+  *Status: completed (final acceptance r2 PASS at 613cba7fa, 2026-11-09; Phase 1 checkpoint 7c11aa22c, Phase 2 checkpoint 4c34987ca; adversarial Phase 1 rejected 33 of 33 mutants, Phase 2 rejected 10 of 10) | Chore, security fix of Review B finding F4 (per_app_cicd_20261107) | 2 phases: sales-advantage (Phase 1), accounts, accounting, codecamp-advantage, marketing, primary-advantage (Phase 2); shared script scripts/ci/verify-traffic-source.sh | Gates six apps: task 2.3h of per_app_cicd_20261107 for the five apps other than primary-advantage, task 2.3c for primary-advantage; the live traffic proofs stay `deferred:daniel` in per_app_cicd_20261107 tasks 2.3h and 2.3c*
 
 - [ ] **Track: Accounting Drive intake** — *created 2026-11-09*
   *Link: [./tracks/accounting_drive_intake_20261109/](./tracks/accounting_drive_intake_20261109/)*

@@ -1,0 +1,17 @@
+Spec review of the Phase 2 amendment (commit 7dba7cea2). Track sales_traffic_source_binding_20261108.
+Baseline b69109d69cf691e19f2b6a04577e0261edbc85ec. Audited head 7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f; git rev-parse HEAD matched.
+Author nvidia/stepfun-ai/step-5-preview (substitute for claude-code/claude-sonnet-5-5). Reviewer deepseek/deepseek-flash#high; the role table model kimi is WAIT.
+Standard: ~/.agents/skills/measure/references/spec-review.md. Scope: spec.md section 8 (FR-15, criteria 22 and 23), the line 61 paragraph, plan.md tasks 2.1 to 2.4, and metadata.json.
+
+Checks:
+1. Method: one non-shallow `--filter=blob:none` fetch of `master` at spec.md:194. The Phase 1 fixture commits are on `master` (sales-traffic-source-binding.test.mjs:367), so the Phase 1 cases hold. The build-time object set is stated; no time bound is stated.
+2. Fixture: local only. The Phase 1 fixture (sales-traffic-source-binding.test.mjs:344-370) proves the `file://` bare form; a third commit pushes to `refs/pull/<n>/head` locally.
+3. Message: spec.md:214 has no literal sentence; a Red can assert the prefix, the commit, and `master` only.
+4. Criteria 22 and 23: the fork-only stop and the old non-tip `master` pass are both present (spec.md:205-206).
+5. Plan carrier: plan.md:72 carries N1 to N6 (N5 for six sections), the clean-checkout line in six sections, and plan.md:74 names the adversarial test file.
+
+Result: fail. Blocking F17 (the fork-only commit is absent from the master-only fetch, so scripts/ci/verify-traffic-source.sh:130 prints "the commit is not in the repository" and criterion 22 cannot get the section 8.6 message). Nonblocking F18 to F22. retry_recommendation: escalate_human.
+
+MEASURE_AGENT_RESULT
+{"role":"spec-review","phase":"track setup","track":"sales_traffic_source_binding_20261108","scope":"Phase 2 amendment, commit 7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f","baseline":"b69109d69cf691e19f2b6a04577e0261edbc85ec","audited_head_sha":"7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f","author_model":"nvidia/stepfun-ai/step-5-preview","reviewer_model":"deepseek/deepseek-flash#high","status":"fail","verdict":"fail","summary":"HEAD equals the audited head. The master fetch, the local fixture, criteria 22 and 23, and the plan's carrier items are sound. One Blocker: the fork-only commit is absent from the master-only fetch, so the script stops it at scripts/ci/verify-traffic-source.sh:130 with the wrong message and criterion 22 cannot pass as written. One Major and four Nits are also open.","retry_recommendation":"escalate_human","blocking_findings":["F17 [Blocker] plan.md:71 and spec.md:195-197, :205: the fork-only commit is absent from the scratch repository, and scripts/ci/verify-traffic-source.sh:130 stops it with the wrong message."],"nonblocking_findings":["F18 [Major] spec.md:212-214: the 8.6 message has no literal text; a Red cannot assert the next-action clause.","F19 [Nit] spec.md:47 still states the depth-limited fetch; section 8.2 overrides it but line 47 is not marked.","F20 [Nit] spec.md:194 states the object set but no time bound for the full master fetch.","F21 [Nit] spec.md:126 names two new test files; the adversarial test file is a third.","F22 [Nit] plan.md:72 puts Nit N2's script change in the runbook task and names no script path."],"handoff":"none"}
+END_MEASURE_AGENT_RESULT

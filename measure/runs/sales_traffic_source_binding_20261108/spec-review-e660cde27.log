@@ -1,0 +1,27 @@
+Spec review round 2 of the Phase 2 amendment fix. Track sales_traffic_source_binding_20261108.
+Baseline 7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f. Audited head e660cde27fccf396232e6f7500a6f69a228d0d02; git rev-parse HEAD matched.
+Author nvidia/stepfun-ai/step-5-preview (substitute for claude-code/claude-sonnet-5-5). Reviewer deepseek/deepseek-flash#high; the role table model kimi is WAIT.
+Standard: ~/.agents/skills/measure/references/spec-review.md. Scope: the diff 7dba7cea2..e660cde27 over the track files.
+
+Closed findings:
+- F17 closed: spec.md:195-196 and :207, plan.md:71. An absent commit and a merge-base exit 1 both print the 8.6 line and exit 1.
+- F18 closed: spec.md:216-222. The exact line is fixed, and the Red asserts it with the SHA.
+- F19 closed: spec.md:47 marks the depth-1 SHA fetch as superseded.
+- F20 closed: spec.md:199 states the cost and that no time bound is set.
+- F21 closed: spec.md:126 names the three test files, including the adversarial file.
+- F22 closed: plan.md:71-72 moves Review C Nit N2 to task 2.2 and names the script.
+
+Open findings:
+- F23 [Major] spec.md:207, :212 and plan.md:70: row 22(b), a present fork-only commit, cannot be built. The script's scratch repository is a private mktemp folder that fetches only master. The spec says the row is optional and needs a second ref, but section 8.2 names no second ref.
+- F24 [Nit] spec.md:194: the "because the release commit is a commit of master" sentence presupposes the check result.
+- F25 [Nit] spec.md:196 and plan.md:71: the tool-failure message is "its own message", with no literal and no test.
+
+Phase 1: the fixtures push to refs/heads/master at sales-traffic-source-binding.test.mjs:367 and sales-traffic-source-binding-adversarial.test.mjs:189. A-04 accepts the Git error code and no "the commit is not in the repository" line, which the new 8.6 line does not contain. The dropped SHA fetch keeps the Phase 1 criteria true.
+
+Zero-decision: the commands, the message, and the exit codes are fixed. Row 22(b) and the tool-failure message remain.
+
+Result: pass, no Blocker. One Major and two Nits. retry_recommendation: route_to_author.
+
+MEASURE_AGENT_RESULT
+{"role":"spec-review","phase":"track setup","track":"sales_traffic_source_binding_20261108","round":2,"scope":"Phase 2 amendment fix, commit e660cde27fccf396232e6f7500a6f69a228d0d02","baseline":"7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f","audited_head_sha":"e660cde27fccf396232e6f7500a6f69a228d0d02","author_model":"nvidia/stepfun-ai/step-5-preview","reviewer_model":"deepseek/deepseek-flash#high","status":"pass","verdict":"pass","summary":"F17 to F22 are closed with exact commands, the exact 8.6 line, and the Phase 1 fixtures on master. One Major remains: row 22(b) cannot be built with the one master fetch, because the script's scratch repository is private. Two Nits remain. Route to the author.","retry_recommendation":"route_to_author","blocking_findings":[],"nonblocking_findings":["F23 [Major] spec.md:207, :212 and plan.md:70: row 22(b) cannot be built with the master-only fetch; the spec must delete the row or name a second refspec.","F24 [Nit] spec.md:194: the sentence presupposes that the release commit is on master.","F25 [Nit] spec.md:196 and plan.md:71: the tool-failure message has no literal."],"handoff":"none"}
+END_MEASURE_AGENT_RESULT

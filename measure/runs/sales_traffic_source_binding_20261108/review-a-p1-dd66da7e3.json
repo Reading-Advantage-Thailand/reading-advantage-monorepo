@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "run_id": "review-a-p1-dd66da7e3",
+  "role": "measure-review-a-correctness",
+  "model": "nvidia/stepfun-ai/step-5-preview",
+  "model_substitution": "The role table names claude-opus-5-5. This run uses step-5-preview, a third family, because Red (DeepSeek) and Green (Anthropic) are excluded and Review B runs on MiniMax.",
+  "track": "sales_traffic_source_binding_20261108",
+  "phase": "Phase 1: Bind the sales traffic source to the release commit",
+  "phase_base_sha": "7c853d9baf1700f4a78e19c70fbfc355bdfcca57",
+  "role_base_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+  "audited_head_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+  "head_matches_audited_head": true,
+  "scoped_diff_empty": false,
+  "summary": "PASS with two Nits. The compare method, the section 3c table, the NUL path, the exit codes, the line order, the trap, the step block, and the F-12 update match the spec and the strategy. The script filters the ignore rules on the Git side only, pairs the kind (file or link) with the blob id, and fails closed on a submodule, a #!include: line, a missing tool, a bad SHA, and a missing .gcloudignore. The split -z probe beats the spec text, because each message names its own tool.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Nit N1 (stale registry): measure/tracks.md line 1638 still marks this track [ ] with Status: new, although plan.md tasks 1.1 to 1.4 are [x]. No Phase 1 task owns that line and the Phase 1 heading holds no checkpoint sha, which workflow.md step 9.2 writes after phase acceptance.",
+    "Nit N2 (spec wording): FR-12 names the runbook section Rules for every traffic file (traffic-moves.md line 8), but Phase 1 writes the clean-checkout line in the sales section only. Plan task 2.3 closes it for the general rules."
+  ],
+  "evidence": [
+    "git rev-parse HEAD -> dd66da7e3, equal to audited_head_sha, exit 0.",
+    "git log 7c853d9ba..dd66da7e3 --grep=track_id -> ten commits, subjects 89 to 99 characters (P1.7 item 9); git show --name-only --format= on them lists only the script, the two tests, the traffic yaml, the runbook, .gcloudignore, and track paths (item 4, p1_out_of_scope_paths=0).",
+    "git diff --stat 7c853d9ba..dd66da7e3 -- apps/sales-advantage/cloudbuild.yaml apps/sales-advantage/scripts package.json pnpm-lock.yaml scripts/ci/__tests__/helpers -> no output (P1.7 item 5).",
+    "git diff --numstat -- .gcloudignore -> 1 added, 0 removed, the line is measure/ (P1.7 item 15).",
+    ".gcloudignore lines 1 to 32: measure/ is last and no later negation re-includes it; scripts/ci stays in and primary-advantage stays out.",
+    "verify-traffic-source.sh lines 84 to 102: require_tool, then bash --version (91) and git --version (92), then the two -z probes (95 to 98). The first fetch is line 129.",
+    "verify-traffic-source.sh lines 110 to 123: the case pattern rejects an empty value, non lowercase hex, and a length other than 40, before any git use of it; mktemp -d then trap cleanup EXIT; line 55 removes the folder.",
+    "verify-traffic-source.sh lines 145 to 157: check-ignore --no-index --stdin -z with core.excludesFile, the code is 0 or 1, a 160000 entry in scope fails closed.",
+    "verify-traffic-source.sh lines 161 to 170: find -type f and -type l build the actual list with no ignore filter; comm -z -23 and -13 give missing and extra; missing prints first; line 170 exits 1.",
+    "verify-traffic-source.sh lines 174 to 193: the sed maps 100644 and 100755 to file and 120000 to link. Local probe: the records gave apps/x.txt TAB file aaaa and l TAB link bbbb; comm -z -13 kept the actual record; the strip gave the bare path.",
+    "cloudbuild-traffic.yaml diff: the bind step is first, image gcr.io/cloud-builders/git, entrypoint bash, the four args of section 3a-1, no secretEnv, no env, no apt-get. cloudbuild-files.test.mjs F-12 diff: ordered() gained the id, ids[0] is bind-release-source, ids[1] is verify-curriculum-backup, the two indexOf checks stay.",
+    "green-p1-4bca5a504.log lines 30 to 31: the pair gave EXIT=0 tests_passed=52 and the light run EXIT=0 test_files=10 tests_passed=184. The orchestrator gate ran the light scripts/ci run through heavy-run with a pass. Review A ran no vitest."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log and git show --name-only --format= on the track commits",
+    "git diff --stat and numstat on .gcloudignore and the no-change list",
+    "bash -c with printf, sed -z, sort -z, comm -z, od -c on synthetic NUL records"
+  ],
+  "changed_files": [
+    "scripts/ci/verify-traffic-source.sh",
+    "apps/sales-advantage/cloudbuild-traffic.yaml",
+    ".gcloudignore",
+    "docs/runbooks/traffic-moves.md",
+    "scripts/ci/__tests__/sales-traffic-source-binding.test.mjs",
+    "scripts/ci/__tests__/cloudbuild-files.test.mjs"
+  ],
+  "test_meaning": {
+    "S-05": "Lines 727 to 737 add apps/primary-advantage/evil.ts and assert a non-zero exit plus the line extra: apps/primary-advantage/evil.ts. A script that filters the actual list by the ignore rules loses the path on both sides and exits 0, so line 735 throws. Mirror S-06 (739 to 757) demands exit 0 when that path is in the commit and out of the upload. requireScript at 728 blocks a missing-script pass.",
+    "S-16": "Lines 897 to 910 put a regular file where the commit holds the link link, so both sides have the same blob id. The test asserts a non-zero exit and the line differs: link. A script that compares blob ids only exits 0, so line 908 throws. The script pairs the kind into the record (176 gives link link <id>, 186 gives <path> file <id>)."
+  },
+  "contract_violations": [],
+  "test_violations": [],
+  "pattern_violations": [],
+  "plan_violations": [],
+  "test_strategy_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,37 @@
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+phase_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+role_base_sha: 7c11aa22c4e80f980a48736ac3bc64602f077b41
+audited_head_sha: 7c11aa22c4e80f980a48736ac3bc64602f077b41
+model: nvidia/stepfun-ai/step-5-preview#high (substitute for claude-opus-5-5: Red is DeepSeek and Green is Anthropic, so both are excluded)
+status: pass
+verdict: pass
+summary: Phase 1 passes at 7c11aa22c. All sixteen items of test-strategy P1.7 hold. The light run through heavy-run gives exit 0 with 11 files and 191 tests; the targeted pair gives exit 0 with 2 files and 52 tests. The scope check finds no out-of-scope path, the hash detector and the measure-read detector exit 1 with live controls, .gcloudignore gains one line measure/ with 0 removed, and the upload list holds measure_files_in_upload=0, sales_files_in_upload=154, and the script path. FR-1 to FR-6, FR-3a, FR-10 to FR-14 and criteria 1 to 7, 15 to 17, and 19 to 21 hold. The live traffic proof stays deferred:daniel. Five Nits stay open; no blocker.
+items:
+  1. Disk guard disk_avail_mb>=3000: PASS. The disk guard of the test file and the heavy-run preflight both held the guard; every run below completed.
+  2. Light run at the phase head: PASS. heavy-run.sh with CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci prints 11 files and 191 tests, duration 131.29 s, exit 0.
+  3. Targeted run of the two files: PASS. Exit 0 with 2 files and 52 tests; S-27, S-20 to S-24, S-31 to S-33, S-30, S-30b, F-12, and F-16 passed.
+  4. Scope check: PASS. The twelve track commits touch only the named paths plus the adversarial test file of N2; p1_out_of_scope_paths=0.
+  5. No-change check: PASS. git diff --stat over the five guarded paths prints nothing, exit 0.
+  6. Hash detector: PASS. The detector over the script exits 1; the control over cloudbuild-traffic.yaml exits 0 and names line 98.
+  7. Measure-read detector: PASS. The detector over the binding test exits 1 with no hit.
+  8. Clean state: PASS with N3. No traffic-bind or adv-p1 scratch folder; git worktree list prints 8, the same count as the Green record. Twenty-two /tmp script scratch folders from a killed run at 03:46 are recorded as a Nit.
+  9. Header check: PASS. The twelve track subjects are 88 to 99 characters.
+  10. Adversarial set: PASS. mutants_rejected=33/33, scenarios_checked=4/4, scratch_left=0, and the main checkout holds no mutant file.
+  11. Reviews A, B, C: PASS. All three records give status pass with no blocking finding. The browser review is recorded as not applicable.
+  12. Phase acceptance against the FRs and criteria: PASS. See the evidence list of the JSON for each FR and criterion with its case.
+  13. Plan note of task 1.4: PASS. plan.md line 64 states no gcloud other than the list command, no Cloud Build submit, no workflow run, no push, no deploy, and the live proof open as deferred:daniel; the green log line 13 and line 35 state the same.
+  14. Live proof deferred:daniel: PASS. measure/archive/per_app_cicd_20261107/plan.md line 41 holds task 2.3h as [b] deferred:daniel and line 36 holds task 2.3c the same way. R-L1 is not part of this item.
+  15. .gcloudignore diff: PASS. One added line measure/ and no removed line.
+  16. Upload list at the phase head: PASS. measure_files_in_upload=0, sales_files_in_upload=154, the script path is in the list. R-L1 is closed.
+nonblocking_findings:
+  N1 registry: measure/tracks.md line 1638 still marks this track [ ] with Status: new while plan tasks 1.1 to 1.4 are [x]. The Build session writes the checkpoint.
+  N2 scope: the adversarial test file (b131f9a16) is not a named path of P1.7 item 4. It is the adversarial role output, so it counts as in scope. The Phase 2 strategy amendment adds the path.
+  N3 clean state: 22 leftover /tmp/verify-traffic-source.* folders from a killed run at 2026-11-09 03:46:08 to 03:46:16, before this run at 06:26. The trap holds on a normal exit and S-25 passes.
+  N4 spec wording (Review A N2): FR-12 names the section Rules for every traffic file, but Phase 1 writes the clean-checkout line in the sales section only. Plan task 2.3 closes it.
+  N5 runbook wording (Review C N1 to N6): the tool messages name no next action, a mismatch prints no closing line, the submodule line is absent from the output lists, the extra: description is incomplete, the literal --substitutions flag is absent from the sales section, and no line names the release commit by a command. Phase 2 carries them.
+retry_recommendation: none
+handoff: none
+END_MEASURE_AGENT_RESULT

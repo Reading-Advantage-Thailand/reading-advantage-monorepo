@@ -1,0 +1,11 @@
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+phase_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+role_base_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+audited_head_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+status: pass
+summary: The Phase 1 security audit passes at dd66da7e3. The bind step passes the SHA to the script as one argv element, checks the SHA before any Git use, holds no secret, no env, and no apt-get, runs before every secretEnv step and before migrate-db, fails closed on each error path with a trap that removes the scratch folder, and compares the .gcloudignore of the upload. The measure/ line removes the only tracked link from the upload scope, no traffic step reads a file under measure/, and no hash or checksum field exists beyond git hash-object. The D10 fork-commit limit is recorded for the PM.
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

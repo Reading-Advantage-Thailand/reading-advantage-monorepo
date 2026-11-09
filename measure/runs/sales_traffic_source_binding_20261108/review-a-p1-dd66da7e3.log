@@ -1,0 +1,11 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+phase_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+role_base_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+audited_head_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+status: pass
+summary: PASS with two Nits. Review A ran no vitest. The audited diff holds the script, the sales traffic step, the .gcloudignore line, the runbook sales section, the new test file, and the F-12 update. The compare method, the section 3c table, the NUL path from ls-tree -z to comm -z, the exit codes, the line order, the trap, and the exact step block match the spec and the strategy. The script keeps the ignore filter on the Git side only, pairs the kind (file or link) with the blob id, and fails closed on a submodule entry, a #!include line, a missing tool, a bad SHA, and a missing .gcloudignore. The two picked Red cases fail for their named reasons. Nit N1: measure/tracks.md line 1638 still marks the track pending although plan tasks 1.1 to 1.4 are done. Nit N2: FR-12 names the general runbook rules but Phase 1 writes the clean-checkout line in the sales section only, and task 2.3 closes it.
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

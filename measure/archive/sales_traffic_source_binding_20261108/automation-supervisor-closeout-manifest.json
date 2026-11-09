@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "track_id": "sales_traffic_source_binding_20261108",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-09",
+  "pre_closeout_head": "b9ba532bffad493c868e1e8ae2dc3e8d8007f044",
+  "final_acceptance_audited_head_sha": "613cba7fa55f602f3d4e5629e6f8fa564930a141",
+  "track_base_sha": "7c853d9baf1700f4a78e19c70fbfc355bdfcca57",
+  "lane": "short lane: one spec review that repeats until it passes, two phases, one phase acceptance per phase, one adversarial set per phase, and a final acceptance that repeats until it passes.",
+  "archive_path": "measure/archive/sales_traffic_source_binding_20261108",
+  "model_routes": [
+    "The first closeout run used nvidia/minimax-cn-coding-plan/MiniMax-M3.1-Flash and stopped at its step limit after the archive move, the metadata rewrite, and the registry update. It wrote no manifest, no closeout result, and no commit.",
+    "The second closeout run used nvidia/stepfun-ai/step-5-preview#high and finished the closeout. It wrote this manifest, the closeout result file, the closeout log, and the closeout commit."
+  ],
+  "audits": [
+    {
+      "role": "spec-review",
+      "phase": "spec",
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/spec-review-c9a8c7850.json",
+      "log_file": "measure/runs/sales_traffic_source_binding_20261108/spec-review-c9a8c7850.log",
+      "audited_head_sha": "c9a8c7850b8d5976acbec22ba77b7f9e6c263382",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 1
+    },
+    {
+      "role": "review-a-correctness",
+      "phase": 1,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/review-a-p1-dd66da7e3.json",
+      "audited_head_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 2
+    },
+    {
+      "role": "review-b-security",
+      "phase": 1,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/review-b-p1-dd66da7e3.json",
+      "audited_head_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "review-c-ux-api",
+      "phase": 1,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/review-c-p1-dd66da7e3.json",
+      "audited_head_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 6
+    },
+    {
+      "role": "review-a-correctness",
+      "phase": 2,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/review-a-p2-4c34987ca.json",
+      "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 1
+    },
+    {
+      "role": "review-b-security",
+      "phase": 2,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/review-b-p2-4c34987ca.json",
+      "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "review-c-ux-api",
+      "phase": 2,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/review-c-p2-4c34987ca.json",
+      "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 3
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 1,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/phase-acceptance-p1-7c11aa22c.json",
+      "log_file": "measure/runs/sales_traffic_source_binding_20261108/phase-acceptance-p1-7c11aa22c.log",
+      "audited_head_sha": "7c11aa22c4e80f980a48736ac3bc64602f077b41",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 5
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 2,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/phase-acceptance-p2-4c34987ca.json",
+      "log_file": "measure/runs/sales_traffic_source_binding_20261108/phase-acceptance-p2-4c34987ca.log",
+      "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 3
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 1,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/adversarial-p1-dd66da7e3.json",
+      "log_file": "measure/runs/sales_traffic_source_binding_20261108/adversarial-p1-dd66da7e3.log",
+      "audited_head_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+      "status": "pass",
+      "mutants_rejected": "33 of 33",
+      "mutants_equivalent": 0,
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 2,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/adversarial-p2-4c34987ca.json",
+      "log_file": "measure/runs/sales_traffic_source_binding_20261108/adversarial-p2-4c34987ca.log",
+      "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+      "status": "pass",
+      "mutants_rejected": "10 of 10",
+      "mutants_equivalent": 0,
+      "blocking_findings": 0,
+      "open_nits": 1
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "1 to 2",
+      "round": 1,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-613cba7fa.json",
+      "log_file": "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-613cba7fa.log",
+      "audited_head_sha": "613cba7fa55f602f3d4e5629e6f8fa564930a141",
+      "status": "fail",
+      "blocking_findings": 2,
+      "note": "Round 1 failed on two items that belong to other tracks. It stays as a record and is not the acceptance of this track."
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "1 to 2",
+      "round": 2,
+      "result_file": "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-r2-613cba7fa.json",
+      "log_file": "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-r2-613cba7fa.log",
+      "audited_head_sha": "613cba7fa55f602f3d4e5629e6f8fa564930a141",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 4
+    }
+  ],
+  "gate_commands": [
+    "git rev-parse HEAD (b9ba532bffad493c868e1e8ae2dc3e8d8007f044, exit 0)",
+    "rg -n '^- \\[[ x~b]\\] ' measure/archive/sales_traffic_source_binding_20261108/plan.md (8 task lines: 8 [x], 0 [b], 0 [~], 0 [ ], exit 0)",
+    "python3 over the task lines of the plan (at least one SHA for each of the 8 [x] tasks, exit 0)",
+    "rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' measure/archive/sales_traffic_source_binding_20261108/plan.md (no hit, exit 1)",
+    "rg -n 'sales_traffic_source_binding_20261108' measure/tracks.md (one line: the archived entry in the Archived Tracks section, exit 0)",
+    "rg -n 'measure/tracks/sales_traffic_source_binding_20261108' tests/*.sh (no hit, exit 1)",
+    "python3 json.load over the two phase acceptance files, the two adversarial files, and the round 2 final acceptance file (status pass, empty violation arrays, exit 0)",
+    "git mv measure/tracks/sales_traffic_source_binding_20261108 measure/archive/sales_traffic_source_binding_20261108 (6 renames, exit 0; run by the first closeout session)",
+    "git add -f measure/runs/sales_traffic_source_binding_20261108 (exit 0)",
+    "git add measure/tech-debt.md measure/archive/sales_traffic_source_binding_20261108 measure/tracks.md (exit 0)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track sales_traffic_source_binding_20261108 (exit 0)",
+    "git commit -m 'chore(measure): archive traffic binding (track_id: sales_traffic_source_binding_20261108)' -- measure/tracks/sales_traffic_source_binding_20261108 measure/archive/sales_traffic_source_binding_20261108 measure/tracks.md measure/tech-debt.md measure/runs/sales_traffic_source_binding_20261108 (exit 0)",
+    "git show --stat HEAD (the commit names only the five pathspec paths, exit 0)"
+  ],
+  "deferred_tasks": [],
+  "plan_state": {
+    "total_tasks": 8,
+    "done_tasks": 8,
+    "deferred_tasks": 0,
+    "in_progress_tasks": 0,
+    "space_marker_tasks": 0,
+    "phase_checkpoints": [
+      "7c11aa22c",
+      "4c34987ca"
+    ],
+    "note": "Every done task names a commit SHA or an evidence commit. The plan holds no human-gated task of this track."
+  },
+  "retained_evidence": [
+    "measure/runs/sales_traffic_source_binding_20261108/ holds 51 files before this closeout and 53 files after it. The whole folder is kept and it is force-added, because measure/runs/ is ignored.",
+    "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-r2-613cba7fa.json and .log (the round 2 final acceptance verdict)",
+    "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-613cba7fa.json and .log (the round 1 record)",
+    "measure/runs/sales_traffic_source_binding_20261108/phase-acceptance-p1-7c11aa22c.json and .log, phase-acceptance-p2-4c34987ca.json and .log (the two phase verdicts)",
+    "measure/runs/sales_traffic_source_binding_20261108/adversarial-p1-dd66da7e3.json and .log, adversarial-p2-4c34987ca.json and .log (the two adversarial sets)",
+    "measure/runs/sales_traffic_source_binding_20261108/review-a-p1-dd66da7e3, review-b-p1-dd66da7e3, review-c-p1-dd66da7e3, review-a-p2-4c34987ca, review-b-p2-4c34987ca, and review-c-p2-4c34987ca .json and .log (the six review verdicts)",
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-*.json and .log (the nine spec review rounds, six fail and three pass)",
+    "measure/runs/sales_traffic_source_binding_20261108/red-*.log, green-*.log, and strategy-*.log (the phase work records)",
+    "measure/runs/sales_traffic_source_binding_20261108/closeout-613cba7fa.json and .log (this closeout)",
+    "measure/archive/sales_traffic_source_binding_20261108/ holds index.md, metadata.json, plan.md, spec-review.md, spec.md, test-strategy.md, and this manifest"
+  ],
+  "artifact_cleanup": "None. The orchestrator named no artifact for deletion. The closeout deleted no file from the run folder and no file from the archive folder.",
+  "hashing_policy_note": "AGENTS.md hashing policy: this manifest records file names, commit SHAs, audited head SHAs, and the phase checkpoints only. It holds no SHA-256, MD5, tree-hash, or checksum field of any file, of any report, or of the run folder. Commit identity is the provenance of this closeout, and the retained audit files are the correctness evidence.",
+  "open_nits": [
+    "Nit 1, docs: Review C N7, N8, N9, and the Review A closing-line gap are open and PM accepted 2026-11-09. They are rows of measure/tech-debt.md from this closeout.",
+    "Nit 2, doctor: 'bash measure/doctor.sh' exits 1 with 'FAIL: measure/automation-supervisor.py not found'. The failure is external to this track and is a row of measure/tech-debt.md from this closeout. Todo b3010a51 schedules the chore after 2026-11-20.",
+    "Nit 3, scope: the files measure/archive/sales_traffic_source_binding_20261108/index.md, metadata.json, and measure/tracks.md and measure/tech-debt.md were edited by the closeout. The six plan, spec, and spec-review files came from the move only.",
+    "Nit 4, registry: the tracks.md line of this track read 'Status: new' at the Phase 1 review (Review A N1 of Phase 1). The archived status line now names the final acceptance round 2, the two phase checkpoints, and the two adversarial results. A6 does not fire."
+  ],
+  "anti_pattern_checks": {
+    "a5": "No false-claim text in the plan. The scan for 'PASS=[0-9]+.*FAIL=0' and 'all checks pass' found no hit (exit 1). The plan names a commit SHA for each done task and claims no aggregate green result.",
+    "a6": "The registry note of the track names the adversarial state exactly: Phase 1 rejected 33 of 33 mutants and Phase 2 rejected 10 of 10. Both adversarial files hold status pass, so the note overstates nothing.",
+    "a9": "No test reads the track folder at run time. The scan of tests/*.sh found no hardcoded path of this track. The two hits, tests/orchestrator_review_execution_truthfulness.sh line 12 and tests/orchestrator_marker_vocabulary.sh line 45, iterate the wildcard measure/tracks/*/plan.md and name no track id, so the archive move breaks no test."
+  },
+  "a9_comment_only_references": [],
+  "stale_links_resolved": [
+    "measure/archive/sales_traffic_source_binding_20261108/index.md line 7 linked to ../per_app_cicd_20261107/test-strategy.md. The closeout resolved it to ../archive/per_app_cicd_20261107/test-strategy.md, because the parent track is archived too."
+  ],
+  "registry": {
+    "file": "measure/tracks.md",
+    "section": "Archived Tracks",
+    "link": "./archive/sales_traffic_source_binding_20261108/",
+    "description_matches_metadata": true,
+    "note": "The active section holds no entry of this track after the move. The archived entry holds the [x] marker, the archive link, the metadata description, and the completed status line."
+  },
+  "metadata_updates": {
+    "file": "measure/archive/sales_traffic_source_binding_20261108/metadata.json",
+    "status": "done",
+    "completed": "2026-11-09",
+    "estimated_tasks": 8,
+    "actual_tasks": 8,
+    "final_acceptance": "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-r2-613cba7fa.json",
+    "phase_checkpoints": [
+      "7c11aa22c",
+      "4c34987ca"
+    ],
+    "description_unchanged": true
+  },
+  "owner_gate": "This track holds no human-gated task of its own. The live Cloud Build traffic proofs stay deferred:daniel in per_app_cicd_20261107 tasks 2.3h and 2.3c, and the closeout claims no live proof of this track as done.",
+  "retry_recommendation": "none"
+}

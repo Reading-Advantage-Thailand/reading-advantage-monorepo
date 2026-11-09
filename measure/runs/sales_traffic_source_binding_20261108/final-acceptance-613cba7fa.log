@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-final-acceptance
+track: sales_traffic_source_binding_20261108
+track_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+role_base_sha: 613cba7fa55f602f3d4e5629e6f8fa564930a141
+audited_head_sha: 613cba7fa55f602f3d4e5629e6f8fa564930a141
+model_route: kimi-code-plan-cn/k3.1-pro#high; Kimi ran Review B of Phase 2
+status: blocked
+verdict: fail
+summary: Track tests pass with 12 files and 205 tests. Final acceptance fails because measure/doctor.sh exits 1 on a stale external guard. The current upload-list command produced no completed result.
+retry_recommendation: escalate_human
+END_MEASURE_AGENT_RESULT

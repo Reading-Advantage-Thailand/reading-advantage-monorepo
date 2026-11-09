@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+task: 1.1 (Red round 2)
+role_base_sha: 11ab03e8f64514a94afef0521b8979f51db99f2d
+commits: 97784e4e9ca2fa3d19b4657717c13efab73f2b8a (tests), 2c949f16db439f28a0039211fe6e06a20e222bd8 (plan evidence)
+status: complete
+summary: Cases S-31, S-32, and S-33 are added and committed. The targeted run exits 1 with tests_failed=35 and tests_passed=17 (2 files). The light run exits 1 with test_files=10, test_files_failed=2, test_files_passed=8, tests_failed=35, tests_passed=149, tests_skipped=0. S-31 stops on the absent `measure/` line. S-32 stops on the in-scope measure link, with links_tracked=6. S-33 stops at the script-exists precondition. The 31 round-1 cases and F-12 fail as before. scratch_left=0, disk_avail_mb=11361. No production file changed.
+red_command: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/sales-traffic-source-binding.test.mjs scripts/ci/__tests__/cloudbuild-files.test.mjs
+red_exit: 1
+tests_failed: 35
+tests_passed: 17
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

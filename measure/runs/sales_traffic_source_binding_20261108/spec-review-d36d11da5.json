@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "role": "spec-review",
+  "phase": "track setup",
+  "track": "sales_traffic_source_binding_20261108",
+  "round": 3,
+  "baseline_sha": "d36d11da5",
+  "role_base_sha": "d36d11da5b657e2c5e55b42331a06853ae70301a",
+  "audited_head_sha": "d36d11da5b657e2c5e55b42331a06853ae70301a",
+  "status": "pass",
+  "summary": "Round 3 passes with one Nit. HEAD equals the audited head. F23, F24, and F25 are closed. Row 22(b) is deleted from criterion 22, section 8.5, and plan task 2.1; criterion 22 now has only the absent path. Section 8.2 keeps the merge-base check as a guard and states that the branch needs a second ref. Section 8.7 fixes the tool-failure literal. The zero-decision test passes. One wording Nit remains in plan.md:70.",
+  "paraphrase": {
+    "proposes": "The amendment keeps one non-shallow, blobless `master` fetch and drops the fetch of the release commit by SHA. The script runs `git cat-file -e` and then `git merge-base --is-ancestor`; an absent commit stops with the section 8.6 line, and a merge-base tool failure stops with the section 8.7 line. Criterion 22 has one row, the absent fork-only commit, and criterion 23 passes an old non-tip commit of `master`.",
+    "current_system": "The Phase 1 script fetches the release commit by its SHA with `--depth=1 --filter=blob:none`, then compares the upload with that commit. It carries no check that the upstream `master` holds the commit, so it accepts a commit that exists only in a fork. The runbook tells the operator to pass the release commit, and the push path uses a separate SHA-256 manifest."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F26 [Nit] plan.md:70: the clause `so the fixture holds the fork-only commit on refs/pull/<n>/head and the Red builds only the absent row` attaches the fixture fact to the fetch. The two facts are separate: the fixture holds the fork-only commit on `refs/pull/<n>/head`, and the Red builds only the absent row. Rationale: the intended test set is clear, so the build does not change, but a reader can take the fixture fact as a result of the master-only fetch."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned d36d11da5b657e2c5e55b42331a06853ae70301a; audited_head_sha equals HEAD.",
+    "git show --stat d36d11da5 changes spec.md and plan.md only (2 files, +17/-7).",
+    "F23 closed: spec.md:207 gives criterion 22 with one path, the absent fork-only commit; spec.md:212 deletes the row 22(b) sentence from section 8.5; spec.md:196 keeps `git merge-base --is-ancestor` as a guard and says the branch needs a later change that fetches a second ref; plan.md:70 says the Red builds only the absent row.",
+    "F24 closed: spec.md:194 rewrites item 1; the sentence no longer says the release commit is a commit of master. It says the fetch comes first and the step then checks whether the release commit is on master.",
+    "F25 closed: spec.md:196 points a tool failure to section 8.7; spec.md:224-230 gives the exact line `verify-traffic-source: the ancestor check failed (git exit <n>); the run stops`; spec.md:234 renumbers the network section to 8.8; plan.md:71 points the non-0/1 exit to section 8.7.",
+    "Zero-decision: the fetch (:194), the cat-file check (:195), the merge-base check (:196), the 8.6 line (:219), the 8.7 line (:229), the exit codes (:195-196), the criterion rows (22 absent at :207, 23 pass at :208), and the fixture (:212) are fixed. The script, test file, runbook, and traffic files are named in plan.md:70-72.",
+    "Phase 1: the fixtures still push to `refs/heads/master` (`scripts/ci/__tests__/sales-traffic-source-binding.test.mjs:367`, `scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs:189`), so the dropped SHA fetch keeps the Phase 1 criteria true. The adversarial A-04 accepts a bad URL as a Git error, not the 8.6 line.",
+    "No stale reference to the old 8.7 network section remains: spec.md:224 is the tool-failure section and :234 is network access."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> d36d11da5b657e2c5e55b42331a06853ae70301a, exit 0",
+    "git show --stat d36d11da5 -> 2 track files, +17/-7, exit 0",
+    "git diff e660cde27 d36d11da5 -- measure/tracks/sales_traffic_source_binding_20261108 -> spec.md and plan.md, exit 0",
+    "grep -n '^22\\.|^### 8\\.[4-8]' spec.md -> lines 207, 208, 210, 214, 224, 234",
+    "grep -n 'builds only the absent row|section 8.7' plan.md -> lines 70-71"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-d36d11da5.json",
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-d36d11da5.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "author_model": "nvidia/stepfun-ai/step-5-preview",
+  "reviewer_model": "deepseek/deepseek-flash#high",
+  "model_substitution": "The amendment author is nvidia/stepfun-ai/step-5-preview (substitute for claude-code/claude-sonnet-5-5). The reviewer runs on deepseek/deepseek-flash#high; the role table model kimi is WAIT. The reviewer family differs from both author families.",
+  "confidence": "high",
+  "retry_recommendation": "none"
+}

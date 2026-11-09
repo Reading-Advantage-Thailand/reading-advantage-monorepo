@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "role": "spec-review",
+  "phase": "track setup",
+  "track": "sales_traffic_source_binding_20261108",
+  "round": 2,
+  "baseline_sha": "7dba7cea2",
+  "role_base_sha": "7dba7cea2b0d69f344d4eac9d3e0216e2f504a3f",
+  "audited_head_sha": "e660cde27fccf396232e6f7500a6f69a228d0d02",
+  "status": "pass",
+  "summary": "Round 2 passes with one Major and two Nits. HEAD equals the audited head. The commit closes F17 to F22 with exact commands, an exact message, the Phase 1 fixtures on master, and the three test files. The Major: row 22(b), a present fork-only commit, cannot be built with the one master fetch, because the script's scratch repository is private and loads no fork ref; the spec must delete the row or name the second refspec. Route to the author.",
+  "paraphrase": {
+    "proposes": "The revised amendment keeps the one non-shallow, blobless `master` fetch and drops the fetch of the release commit by SHA. The script then runs `git cat-file -e` and `git merge-base --is-ancestor`; an absent commit or a non-ancestor stops with one exact line. Criterion 22 has an absent row and an optional present row, and criterion 23 passes an old non-tip commit of `master`.",
+    "current_system": "The Phase 1 script fetches the release commit by its SHA with `--depth=1 --filter=blob:none`, then compares the upload with that commit. It carries no check that the upstream `master` holds the commit, so it accepts a commit that exists only in a fork. The runbook tells the operator to pass the release commit, and the push path uses a separate SHA-256 manifest."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F23 [Major] spec.md:207, :212 and plan.md:70: row 22(b), a present fork-only commit, cannot be built with the method of section 8.2. The script's scratch repository is a private `mktemp -d` that fetches only `master`, so every present commit is an ancestor of `FETCH_HEAD`, and the test cannot place the fork-only object there; the `refs/pull/<n>/head` object stays in the fixture repository. The spec calls the row optional and says it `stands only when the fetch names a second ref`, but section 8.2 names no second ref. Rationale: the implementer must choose between dropping the row and adding a second refspec such as `+refs/pull/*/head:refs/remotes/pull/*`, and the merge-base exit-1 branch stays untested. The spec must state one choice.",
+    "F24 [Nit] spec.md:194: the sentence `the release commit is a commit of master, so this one fetch holds it` presupposes the result of the check. The fetch holds the commit only when the check passes. Rationale: step 2 of :195 handles the absence, so the method is clear, but a reader can take the sentence as a guarantee.",
+    "F25 [Nit] spec.md:196 and plan.md:71: a tool failure `stops with its own message`, but the text fixes no literal and no criterion asserts it. Rationale: the implementer chooses the text of the edge-case message; the build behavior does not change."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned e660cde27fccf396232e6f7500a6f69a228d0d02; audited_head_sha equals HEAD.",
+    "git diff 7dba7cea2 e660cde27 -- measure/tracks/sales_traffic_source_binding_20261108 changes spec.md and plan.md only; git show --stat confirms 2 files, +21/-13.",
+    "F17 closed: spec.md:195-196 gives `git cat-file -e <sha>^{commit}` and `git merge-base --is-ancestor <sha> FETCH_HEAD`; an absent commit and exit 1 both print the 8.6 line and exit 1; plan.md:71 gives the same order. The wrong-message path at scripts/ci/verify-traffic-source.sh:130 is replaced by the 8.6 line.",
+    "F18 closed: spec.md:216-222 gives the exact line `verify-traffic-source: the release commit <sha> is not on the upstream master; merge it into master first, then start the traffic run from a commit on master`, and the Red asserts it with the SHA.",
+    "F19 closed: spec.md:47 adds `Phase 2 supersedes this step`, so the depth-1 SHA fetch is marked as replaced by the master fetch.",
+    "F20 closed: spec.md:199 states the cost: the commits and trees of master, no blob, no time bound, and the Cloud Build step timeout.",
+    "F21 closed: spec.md:126 names the three test files, including `scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs`.",
+    "F22 closed: plan.md:71 moves Review C Nit N2 to task 2.2 and names `scripts/ci/verify-traffic-source.sh`; plan.md:72 says `Nit N2 belongs to task 2.2`.",
+    "F23: scripts/ci/verify-traffic-source.sh:122 creates a private `mktemp -d`, :126-129 runs `git init`, `git remote add origin <url>`, and one fetch; section 8.2 :194 names only `master`. The fork-only commit sits on `refs/pull/<n>/head` (spec.md:212) and is not fetched. A test cannot seed the scratch repository, so row 22(b) at spec.md:207 and plan.md:70 is unbuildable as written.",
+    "Phase 1 criteria: scripts/ci/__tests__/sales-traffic-source-binding.test.mjs:367 and scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs:189 push each fixture commit to `refs/heads/master`; the adversarial A-04 at :317-329 expects a bad URL to give the Git code and no `the commit is not in the repository` line, and the new 8.6 line does not contain that phrase. So the dropped SHA fetch keeps the Phase 1 criteria true.",
+    "The spec's 8.5 last sentence at :212 says row 22(b) `stands only when the fetch names a second ref`; section 8.2 :194 names no second ref, and plan.md:71 names only `master`. The implementer receives a contradiction.",
+    "Zero-decision: the fetch, the cat-file, the merge-base, the 8.6 line, and the exit codes are fixed. The open choices are row 22(b) (F23) and the tool-failure message (F25)."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> e660cde27fccf396232e6f7500a6f69a228d0d02, exit 0",
+    "git show --stat e660cde27 -> 2 track files, +21/-13, exit 0",
+    "git diff 7dba7cea2 e660cde27 -- measure/tracks/sales_traffic_source_binding_20261108 -> spec.md and plan.md, exit 0",
+    "grep -n 'push' scripts/ci/__tests__/sales-traffic-source-binding.test.mjs -> line 367 HEAD:refs/heads/master",
+    "grep -n 'push' scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs -> line 189 HEAD:refs/heads/master",
+    "grep -n 'cat-file|merge-base|row (b)|second ref|Cost:' spec.md -> lines 194-199, 207, 212",
+    "grep -n 'Nit N2 belongs|Also close Review C Nit N2|cat-file' plan.md -> lines 71-72"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-e660cde27.json",
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-e660cde27.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "author_model": "nvidia/stepfun-ai/step-5-preview",
+  "reviewer_model": "deepseek/deepseek-flash#high",
+  "model_substitution": "The amendment author is nvidia/stepfun-ai/step-5-preview (substitute for claude-code/claude-sonnet-5-5). The reviewer runs on deepseek/deepseek-flash#high; the role table model kimi is WAIT. The reviewer family differs from both author families.",
+  "confidence": "high",
+  "retry_recommendation": "route_to_author"
+}

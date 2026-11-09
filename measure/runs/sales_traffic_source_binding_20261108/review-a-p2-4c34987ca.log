@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+track: sales_traffic_source_binding_20261108
+phase: Phase 2: Bind the other five traffic sources to the release commit
+phase_base_sha: 17a26b073febba9aaf8c23b834b56d0e187bf587
+role_base_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+audited_head_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+model_route: nvidia/stepfun-ai/step-5-preview#high (substitute for claude-opus-5-5, held to 11-10 15:22)
+status: pass
+verdict: pass
+summary: The ancestor order, the exit mapping, the exact section 8.6 and 8.7 lines, the five step blocks, the Primary ids, the substitution default, and the order comments all match the spec. Phase 1 behavior holds, and the Red rows failed for the right reasons. Nit: verify-traffic-source.sh line 99 prints the closing line of a mismatch (Review C N2), but no test asserts it and no runbook section names it (same as Review C N9).
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

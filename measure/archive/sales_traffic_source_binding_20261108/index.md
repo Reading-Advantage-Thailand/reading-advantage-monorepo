@@ -4,4 +4,4 @@
 - [Implementation Plan](./plan.md)
 - [Metadata](./metadata.json)
 - [Spec Review](./spec-review.md)
-- [Parent finding](../per_app_cicd_20261107/test-strategy.md)
+- [Parent finding](../archive/per_app_cicd_20261107/test-strategy.md)

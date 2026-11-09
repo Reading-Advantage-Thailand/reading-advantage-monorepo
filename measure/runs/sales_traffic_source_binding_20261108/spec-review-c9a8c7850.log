@@ -1,0 +1,50 @@
+Spec review round 7 for sales_traffic_source_binding_20261108
+Audited head: c9a8c7850b8d5976acbec22ba77b7f9e6c263382
+Role base (HEAD): ad2b434671caa767522789ad2f1e0956bfaecdea
+Reviewer: deepseek/deepseek-flash#high
+Status: pass
+Findings: F17 Nit (spec.md:50 method-check counts). No Blocker and no Major.
+
+Head check
+- HEAD is ad2b434. The track files at HEAD equal c9a8c7850 (git diff is empty).
+- The one later commit, ad2b434, belongs to per_app_cicd_20261107.
+- The known gate fault is recorded: the gate counts other tracks' commits as files outside
+  measure/runs/. The PM routes it to the Measure session. This review does not fail on it.
+
+Round 6 findings, rechecked
+- F10 fixed: plan.md:16-28 grep record, plan.md:32 case F-12 update, plan.md:35 task 1.4 allowance.
+  ordered() at helpers/plan.mjs:317 is relative only. The accounts guard check at
+  cloudbuild-files.test.mjs:230 is conditional; no accounts id matches /refuse|guard/.
+- F11 fixed: spec.md:79 and 81-90 exact block; plan.md:33 and 42 repeat it.
+- F12 fixed: spec.md:116, 118 and plan.md:43 give the substitution instruction.
+- F13 fixed: spec.md:46 says plain git init, never --bare.
+- F14 fixed: measure/tracks.md:1640 splits task 2.3h and task 2.3c.
+- F15 fixed: spec.md:35 names .gcloudignore line 3 apps/* and no primary re-include.
+- F16 fixed: spec.md:142 restates criterion 9 as what the test proves.
+
+PM orders and consistency
+- Q16 at spec.md:169 and criterion 16 at spec.md:132: the -z check runs before the compare,
+  fails closed, and the stub test is in plan.md:32.
+- Q17 at spec.md:170: xargs -0 -n 500 git hash-object --no-filters, batch size open to the Green.
+- Criterion 18 at spec.md:148 runs /bin/bash with the substituted args list; spec.md:79 says no
+  -c string; plan.md:33 and 42 require the same block.
+
+Measured facts
+- git ls-tree -r HEAD gives 91,528 paths.
+- check-ignore with the commit .gcloudignore gives 6,274 removed and 85,254 kept, with and
+  without -z. The .gitignore variant gives 323. spec.md:50 states 5,953 and 85,575.
+- printf 'b\0a\0' | sort -z | comm -z -3 - /dev/null exits 0 and prints a\0b\0.
+
+Zero-decision check: a Red and a Green can start with no open product decision.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+track: sales_traffic_source_binding_20261108
+audited_head_sha: c9a8c7850b8d5976acbec22ba77b7f9e6c263382
+status: pass
+summary: Short re-review at c9a8c7850; all seven round 6 findings are fixed and verified, Phase 2 guard checks hold, Q16 and Q17 are logged, criterion 18 agrees, one new Nit (spec.md:50 counts), no open product decision.
+result_file: measure/runs/sales_traffic_source_binding_20261108/spec-review-c9a8c7850.json
+retry_recommendation: none
+confidence: high
+reviewer_model: deepseek/deepseek-flash#high
+END_MEASURE_AGENT_RESULT

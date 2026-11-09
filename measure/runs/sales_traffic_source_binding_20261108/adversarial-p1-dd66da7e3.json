@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "track": "sales_traffic_source_binding_20261108",
+  "phase": "Phase 1: Bind the sales traffic source to the release commit",
+  "run": "r1",
+  "role": "measure-adversarial-testing",
+  "audited_head": "7c11aa22c4e80f980a48736ac3bc64602f077b41",
+  "role_base_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+  "head_at_final_check": "518953523e8e109e5ca32dd71ea839c52585e527",
+  "model_substitution": {
+    "requested": "r1 on minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+    "used": "nvidia/stepfun-ai/step-5-preview#high",
+    "reason": "The r1 run stopped on the MiniMax Token Plan limit (error 2056) before any mutant run. Red is DeepSeek and Green is Anthropic, so both are excluded."
+  },
+  "status": "pass",
+  "summary": "All 33 mutants of test-strategy section P1.5 are rejected and all 4 scenarios hold. Five mutants survived the Red set at first (Y4, Y12, Y15, Y16, Y23). Y4 needed a corrected mutant form, because the first form ran git check-ignore outside a repository and changed nothing. Y12, Y15, Y16, and Y23 were test gaps, and the new file scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs kills them with cases A-02, A-01, A-03, and A-04. Y32 was an equivalent mutant in its old form; the strategy replaced that form in commit 7c11aa22c (amendment round 3, line 248) with `!measure/` after `measure/`, and S-31 and S-32 reject it. No production defect is found: the script, the sales traffic file, and the .gcloudignore behave correctly on every probe.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD gives 7c11aa22c4e80f980a48736ac3bc64602f077b41 at the start of this round (exit 0)",
+    "git diff --stat b131f9a16 HEAD -- scripts/ci apps/sales-advantage .gcloudignore prints nothing (exit 0); the amendment touches only measure/tracks/sales_traffic_source_binding_20261108/test-strategy.md",
+    "test-strategy section P1.5 line 248 now reads: in the scratch tree, add the line `!measure/` after the line `measure/` in the root `.gcloudignore`; killers S-31 and S-32; no staged file (D9)",
+    "r1 round: 34 runs in one heavy-run job; C0 (control) exit 0 with no failed test; SUMMARY rejected=27 total=33; survivors Y4, Y12, Y15, Y16, Y23, Y32",
+    "the first Y4 form ran git check-ignore outside a repository (fatal: not a git repository), so it changed nothing; the corrected form uses GIT_DIR and GIT_WORK_TREE and changes the S-05 line from `extra:` to `differs:`, which S-05 rejects",
+    "r1 second batch on the pristine tree gives exit 0 with 3 files and 59 tests; Y4 fails S-05, Y12 fails A-02, Y15 fails A-01, Y16 fails A-03, Y23 fails A-04; the old Y32 form prints exit 0 with no failed test",
+    "old Y32 form equivalence: `git check-ignore --no-index -v measure/tracks/backend_architecture_enforcement_20260713` names rules line 32 `measure/` both with and without the added line 33, and the end-to-end runs give exit 0 with 0 `missing:` lines in both cases",
+    "the amended Y32 run: the scratch tree is 1 MB with 42 copied tracked paths and 6 tracked links of mode 120000; PRISTINE exit 0 with no failed test; the Y32 mutant exits 1 with S-31 and S-32 failing; RESTORE_OK; MAIN_UNTOUCHED=0",
+    "the light gate in the main checkout gives exit 0 with 11 test files and 191 tests in 123.73 s; the new file alone gives exit 0 with 7 tests (59 = 52 + 7)",
+    "scenario 1 (a commit that starts with a dash) holds: case S-18 of sales-traffic-source-binding.test.mjs line 960 holds the form `-` plus 39 hex and asserts a non-zero exit with no fetch line",
+    "scenario 2 (a URL with a space) holds: case A-05 exits non-zero (the probe gives exit 128 with a fatal Git line, so no false pass)",
+    "scenario 3 (an upload root that is a symbolic link) holds: case A-06 exits 0 and prints the match line, a true pass",
+    "scenario 4 (an upload with an empty folder) holds: case A-07 exits 0 with no `missing:` line",
+    "commit b131f9a16 gives 1 file changed and 365 insertions; the subject holds 98 characters and commitlint passes",
+    "clean state: /tmp/opencode/adv-p1, /tmp/opencode/adv-p1-y32 and /tmp/opencode/adv-y32 are all absent, so scratch_left=0; the main checkout holds no mutant file",
+    "closeout checks: git diff --stat 7c853d9baf1700f4a78e19c70fbfc355bdfcca57 HEAD over apps/sales-advantage/cloudbuild.yaml, apps/sales-advantage/scripts, package.json, pnpm-lock.yaml and scripts/ci/__tests__/helpers prints nothing; the hash detector over scripts/ci/verify-traffic-source.sh exits 1; the measure-read detector over the new file exits 1"
+  ],
+  "commands": [
+    "git rev-parse HEAD (exit 0, 7c11aa22c4e80f980a48736ac3bc64602f077b41)",
+    "git diff --stat b131f9a16 HEAD -- scripts/ci apps/sales-advantage .gcloudignore (exit 0, no output)",
+    "HEAVY_MIN_FREE_DISK_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 heavy-run.sh -c 'bash /tmp/opencode/adv-y32-r2.sh' (exit 0; COPIED_PATHS=42, TRACKED_LINKS=6, TREE_MB=1, PRISTINE exit 0, Y32 exit 1 with S-31 and S-32, RESTORE_OK, MAIN_UNTOUCHED=0)",
+    "rm -rf of the three scratch folders (scratch_left=0)",
+    "git log -1 --pretty=%s (98 characters)"
+  ],
+  "changed_files": [
+    "scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs"
+  ],
+  "amendments_applied": [
+    "The strategy replaced the old Y32 form with `!measure/` after `measure/` in commit 7c11aa22c (amendment round 3, test-strategy line 248). The mutant count stays 33. The old form was an equivalent mutant, because a `!` line cannot re-include a path whose parent directory is excluded."
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "mutants_rejected": 33,
+  "mutants_total_required": 33,
+  "mutants_equivalent": [],
+  "scenarios_checked": 4,
+  "scenarios_total_required": 4,
+  "scratch_left": 0,
+  "gates": {
+    "baseline_targeted_run": "pass (exit 0, 2 files, 52 tests)",
+    "pristine_with_new_file": "pass (exit 0, 3 files, 59 tests)",
+    "light_gate_main_checkout": "pass (exit 0, 11 files, 191 tests)",
+    "amended_y32_run": "pass (pristine exit 0; Y32 exit 1 with S-31 and S-32)",
+    "mutant_set": "pass (33 of 33 rejected)",
+    "scenarios": "pass (4 of 4)"
+  }
+}

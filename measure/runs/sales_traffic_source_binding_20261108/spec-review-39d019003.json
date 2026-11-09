@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "role": "spec-review",
+  "phase": "track setup",
+  "track": "sales_traffic_source_binding_20261108",
+  "round": 6,
+  "baseline_sha": "39d019003",
+  "role_base_sha": "39d019003d92dc4e49e7871f6b5ff9c8db732fee",
+  "audited_head_sha": "39d019003d92dc4e49e7871f6b5ff9c8db732fee",
+  "status": "fail",
+  "summary": "Full review at 39d019003. HEAD equals the audited head. The method holds against the repository: 91,528 tree paths, 85,254 paths in scope, and a fixture fetch by bare SHA with partial clone works. One Blocker remains: task 1.2 makes bind-release-source step 1 of the sales traffic file, and the existing case F-12 at scripts/ci/__tests__/cloudbuild-files.test.mjs:340 asserts that verify-curriculum-backup is step 0; no task names that file and task 1.4 forbids a change outside the spec paths. Three Majors and three Nits are also open.",
+  "paraphrase": {
+    "proposes": "This track adds a first build step, bind-release-source, to six manual traffic Cloud Build files. The step fetches the release commit from GitHub, builds the expected path and blob id list from the commit and its .gcloudignore, and compares it with the uploaded tree. A missing, extra, or differing path stops the build before any step that reads the source or changes the database. The check uses Git identity only and adds no hash, manifest, or provenance file. Phase 1 covers sales-advantage, and Phase 2 covers accounts, accounting, codecamp-advantage, marketing, and primary-advantage.",
+    "current_system": "A person starts each cloudbuild-traffic.yaml by hand and uploads the repository root . with gcloud builds submit. The six files hold no check that the upload equals the release commit. The sales file uses _RELEASE_COMMIT_SHA only as a label in two steps, and the four Phase 2 files do not mention it. The push path binds its own build with release-source-manifest.mjs and a SHA-256 manifest, and the traffic files do not read that manifest. The first step of each traffic file runs pnpm install and a db package command from the uploaded source."
+  },
+  "blocking_findings": [
+    "F10 [Blocker] plan.md tasks 1.1, 1.2, and 1.4: the new first step breaks existing case F-12, and no task names that file. Rationale: scripts/ci/__tests__/cloudbuild-files.test.mjs:340 asserts ids[0] === \"verify-curriculum-backup\" for the sales traffic file; ordered() at scripts/ci/__tests__/helpers/plan.mjs:317 returns every step id; task 1.2 makes bind-release-source step 1; the vitest command of tasks 1.1 and 1.4 then fails; task 1.4 also requires that no file outside the spec paths changed."
+  ],
+  "nonblocking_findings": [
+    "F11 [Major] spec.md section 3a-1, plan.md tasks 1.2 and 2.2: the exact args block of the bind step is not written. Rationale: the spec fixes only name, id, and entrypoint, so the implementer chooses the args text and the $ escaping; criteria 9, 13, and 18 read that text; a command that passes the text test can still fail Cloud Build; the zero-decision check fails for the API or CLI shape.",
+    "F12 [Major] plan.md task 2.3, spec.md FR-7 and FR-9: the runbook change does not tell the operator to pass _RELEASE_COMMIT_SHA for the five Phase 2 files. Rationale: each new substitution defaults to REQUIRED_RELEASE_COMMIT_SHA, and docs/runbooks/traffic-moves.md lines 18 to 20 pass only the substitutions that the section names; the section will not name it, so every Phase 2 run stops at step 1 and the operator has no named source for the value.",
+    "F13 [Nit] spec.md section 3 step 3: the sentence \"The scratch repository has no work tree\" contradicts the git init of step 2. Rationale: git init --bare makes git check-ignore exit 128 with \"fatal: this operation must be run in a work tree\"; a non-bare git init has an empty work tree and works.",
+    "F14 [Nit] measure/tracks.md:1640: the entry says the track gates six apps for task 2.3h. Rationale: measure/tracks/per_app_cicd_20261107/plan.md:36 puts the Primary live proof in task 2.3c; five apps are in task 2.3h.",
+    "F15 [Nit] spec.md section 2 and section 3a: the text does not state that the root .gcloudignore excludes apps/primary-advantage. Rationale: the measured expected list holds 0 paths under apps/primary-advantage, so the Primary check covers packages/db and the root files and not the app tree; a reader may think the check covers the app.",
+    "F16 [Nit] spec.md criterion 9: the clause \"the build stops before that first step\" is a proxy. Rationale: the named test runs the script on a fixture and reads the command text; criterion 8 checks the order by index; no test observes a build."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 39d019003d92dc4e49e7871f6b5ff9c8db732fee; audited head equals HEAD.",
+    "spec.md:24 and .gcloudignore:1 to 31: line 1 is .git, and no line starts with #!include:.",
+    "git ls-tree -r HEAD returned 91,528 paths, the number in spec.md:48.",
+    "git -c core.excludesFile=.gcloudignore check-ignore --no-index --stdin -z exited 0 with 6,274 ignored and 85,254 kept paths at HEAD; apps/primary-advantage paths kept = 0; scripts/ci paths kept = 16.",
+    "Fixture test with git 2.53.0: git init, git remote add origin file://<bare>, git fetch --depth=1 --filter=blob:none origin <bare sha> exited 0; git show <sha>:.gcloudignore exited 0; remote.origin.promisor = true; the fixture sets uploadpack.allowFilter and uploadpack.allowAnySHA1InWant.",
+    "scripts/ci/__tests__/cloudbuild-files.test.mjs:340 (case F-12 at line 297) asserts ids[0] === \"verify-curriculum-backup\"; scripts/ci/__tests__/helpers/plan.mjs:317 returns stepIds(doc) for the whole file.",
+    "Bare-repository test: git init --bare, then git check-ignore --no-index --stdin -z exited 128 with \"fatal: this operation must be run in a work tree\".",
+    "First step ids, read from each file: sales-advantage verify-curriculum-backup (line 13), primary-advantage refuse-legacy-db (line 18), accounts migrate-company-identity (line 11), accounting migrate-db (line 11), codecamp-advantage migrate-db (line 16), marketing migrate-db (line 16).",
+    "docs/runbooks/traffic-moves.md:18 says a person starts every traffic file with gcloud builds submit --config=<file> . from the repository root; lines 161 to 166 name the source of _RELEASE_COMMIT_SHA for the sales section only.",
+    "apps/sales-advantage/cloudbuild.yaml:11 runs release-source-manifest.mjs verify with _RELEASE_COMMIT_SHA, as spec.md:16 states; the sales traffic file has no sha256 or manifest token in a bind step and has two uses of _RELEASE_COMMIT_SHA at lines 17 and 88.",
+    "plan.md:18 to 30 names only vitest runs and git diff --stat; no task runs a build, a deploy, or a gcloud write; the live proof stays in per_app_cicd tasks 2.3h and 2.3c (plan.md:11).",
+    "scripts/ci holds kebab-case shell scripts (check-graph-db.sh, sql-adr-guard.sh, fresh-db-e2e.sh), and scripts/ci/__tests__ holds the existing test files; git ls-files reports no scripts/ci/verify-traffic-source.sh yet."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 39d019003d92dc4e49e7871f6b5ff9c8db732fee, exit 0",
+    "git ls-tree -r -z HEAD -> 91,528 records, exit 0",
+    "git -c core.excludesFile=.gcloudignore check-ignore --no-index --stdin -z -> exit 0, 6,274 ignored, 85,254 kept",
+    "git init --bare; git check-ignore --no-index --stdin -z -> exit 128, \"this operation must be run in a work tree\"",
+    "python3 fixture: git fetch --depth=1 --filter=blob:none origin <sha> -> exit 0; git show <sha>:.gcloudignore -> exit 0",
+    "git ls-files --error-unmatch scripts/ci/verify-traffic-source.sh -> exit 1 (file absent)",
+    "ls scripts/ci scripts/ci/__tests__ -> exit 0"
+  ],
+  "changed_files": [
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-39d019003.json",
+    "measure/runs/sales_traffic_source_binding_20261108/spec-review-39d019003.log"
+  ],
+  "test_strategy_violations": [
+    "plan.md tasks 1.1 and 1.4 name the vitest command scripts/ci, which includes the failing case F-12 after task 1.2."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "reviewer_model": "deepseek/deepseek-flash#high",
+  "model_substitution": "The role table names kimi-code-plan-cn/kimi-for-coding#high (WAIT). The harness ran this review on deepseek/deepseek-flash#high; rounds 2 to 5 also ran on an unlisted fallback model, so their verdicts do not count and this round is a full review.",
+  "confidence": "medium",
+  "retry_recommendation": "escalate_human"
+}

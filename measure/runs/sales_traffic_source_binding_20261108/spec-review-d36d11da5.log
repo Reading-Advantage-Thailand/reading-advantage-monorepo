@@ -1,0 +1,21 @@
+Spec review round 3 of the Phase 2 amendment fix. Track sales_traffic_source_binding_20261108.
+Baseline and audited head d36d11da5b657e2c5e55b42331a06853ae70301a; git rev-parse HEAD matched.
+Author nvidia/stepfun-ai/step-5-preview (substitute for claude-code/claude-sonnet-5-5). Reviewer deepseek/deepseek-flash#high; the role table model kimi is WAIT.
+Standard: ~/.agents/skills/measure/references/spec-review.md. Scope: the diff e660cde27..d36d11da5 over the track files.
+
+Closed findings:
+- F23 closed: spec.md:207, :212 and plan.md:70. Row 22(b) is deleted; criterion 22 has only the absent path; section 8.2 :196 keeps the merge-base check as a guard and says the branch needs a later second ref.
+- F24 closed: spec.md:194. Item 1 is reworded and no longer says the release commit is a commit of master.
+- F25 closed: spec.md:196 and :224-230 and plan.md:71. Section 8.7 gives the exact tool-failure line; network access moves to 8.8 at :234.
+
+Zero-decision: the fetch, the cat-file check, the merge-base check, the 8.6 line, the 8.7 line, the exit codes, the rows (22 absent, 23 pass), the fixture, and the file locations are fixed. The test passes.
+Phase 1: the fixtures push to refs/heads/master (sales-traffic-source-binding.test.mjs:367, adversarial:189), so the dropped SHA fetch keeps the Phase 1 criteria true.
+
+Open finding:
+- F26 [Nit] plan.md:70: the clause "so the fixture holds the fork-only commit..." attaches the fixture fact to the fetch. The test set is still clear.
+
+Result: pass, no Blocker, no Major. One Nit. retry_recommendation: none.
+
+MEASURE_AGENT_RESULT
+{"role":"spec-review","phase":"track setup","track":"sales_traffic_source_binding_20261108","round":3,"scope":"Phase 2 amendment fix, commit d36d11da5b657e2c5e55b42331a06853ae70301a","baseline":"d36d11da5b657e2c5e55b42331a06853ae70301a","audited_head_sha":"d36d11da5b657e2c5e55b42331a06853ae70301a","author_model":"nvidia/stepfun-ai/step-5-preview","reviewer_model":"deepseek/deepseek-flash#high","status":"pass","verdict":"pass","summary":"F23, F24, and F25 are closed. Row 22(b) is gone; criterion 22 has only the absent path. Section 8.2 keeps the merge-base guard, and section 8.7 fixes the tool-failure line. The zero-decision test passes. One wording Nit remains at plan.md:70.","retry_recommendation":"none","blocking_findings":[],"nonblocking_findings":["F26 [Nit] plan.md:70: the clause 'so the fixture holds the fork-only commit...' attaches the fixture fact to the fetch; the test set is still clear."],"handoff":"none"}
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,17 @@
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+phase_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+role_base_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+audited_head_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+status: pass
+summary: PASS at dd66da7e3. The script CLI matches C1 and the exit codes match the header. The three difference lines keep their format and their order. The runbook sales section names the step, its check, the stop before migrate-db, the upload root, and the clean-checkout rule. The version lines print before the first fetch. The dropped archive claim is true, and the new text keeps the other use of the SHA. Six nits remain. They name a missing next action for a tool stop, a missing closing line on a mismatch, an undocumented submodule line, an incomplete extra line description, a missing literal substitution command, and an undefined release commit term.
+retry_recommendation: escalate_human
+blocking_items: 0
+nonblocking_items: 6
+model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+model_substitution: The role table names kimi-for-coding, which is WAIT. This run used minimax-cn-coding-plan/MiniMax-M3.1-Flash. The Red model is DeepSeek and the Green model is Anthropic, so both are excluded.
+browser_review: not applicable
+live_proof: open and deferred:daniel
+END_MEASURE_AGENT_RESULT

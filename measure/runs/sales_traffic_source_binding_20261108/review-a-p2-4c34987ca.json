@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "verdict": "pass",
+  "run_id": "review-a-p2-4c34987ca",
+  "role": "measure-review-a-correctness",
+  "model": "nvidia/stepfun-ai/step-5-preview",
+  "model_route": "nvidia/stepfun-ai/step-5-preview#high (substitute for claude-opus-5-5, held to 11-10 15:22)",
+  "track": "sales_traffic_source_binding_20261108",
+  "phase": "Phase 2: Bind the other five traffic sources to the release commit",
+  "phase_base_sha": "17a26b073febba9aaf8c23b834b56d0e187bf587",
+  "role_base_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+  "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+  "head_matches_audited_head": true,
+  "scoped_diff_empty": false,
+  "summary": "PASS with one Nit. The ancestor order, the exit mapping, the exact section 8.6 and 8.7 lines, the five step blocks, the Primary ids, the substitution default, and the order comments match the spec and the strategy. Phase 1 behavior and output lines hold. The Red rows assert behavior and each failed for the right reason at Red. Nit: verify-traffic-source.sh line 99 prints the closing line of a mismatch (Review C N2), but no test asserts it and no runbook section names it (Review C N9).",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Nit N9 (untested output line): scripts/ci/verify-traffic-source.sh line 99 prints the closing line 'the upload does not match commit <sha>: missing=<n> extra=<n> differs=<n>'. No test in scripts/ci/__tests__ asserts the line or its counts, and no section of docs/runbooks/traffic-moves.md names it. The same gap is Review C N9. The Red phase holds, so the coverage addition belongs to the adversarial mutant set or to a Green evidence note, not to a new Red commit."
+  ],
+  "evidence": [
+    "git rev-parse HEAD -> 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee, equal to audited_head_sha, exit 0. git log 4c34987ca..HEAD over the track files and the five traffic files gave no output, exit 0.",
+    "verify-traffic-source.sh line 150: one fetch, `git fetch -q --filter=blob:none origin master`, no depth limit and no fetch of the release commit by SHA. The diff of the script shows the old line `git fetch -q --depth=1 --filter=blob:none origin \"$commit\"` removed.",
+    "verify-traffic-source.sh line 153: `git cat-file -e \"${commit}^{commit}\"` with 2>/dev/null, an absent commit stops with the section 8.6 line and exit 1.",
+    "verify-traffic-source.sh line 157: `git merge-base --is-ancestor \"$commit\" FETCH_HEAD || rc=$?`, and lines 158 to 162 map 0 to continue, 1 to the section 8.6 line with exit 1, and any other non-zero exit to the section 8.7 line with a non-zero exit.",
+    "verify-traffic-source.sh line 143: `trap cleanup EXIT` after `mktemp -d`; cleanup at lines 58 to 62 removes the scratch folder on every exit. Both unchanged in the Phase 2 diff.",
+    "verify-traffic-source.sh lines 105 to 122: require_tool list, `bash --version | sed -n '1p'`, `git --version`, then the `sort -z` and `comm -z` probes. The commit check at lines 130 to 133 runs before the fetch, and the two lists start at line 197, so the ancestor check sits after the commit check and before both lists.",
+    "`bash -n scripts/ci/verify-traffic-source.sh` gave exit 0. A grep of the script for sha256, checksum, manifest, and createhash gave exit 1, and a grep for `measure/` gave exit 1.",
+    "The five step blocks equal the section 3a-1 block. Each of apps/accounts, apps/accounting, apps/codecamp-advantage, apps/marketing, and apps/primary-advantage holds `name: \"gcr.io/cloud-builders/git\"`, `id: \"bind-release-source\"`, `entrypoint: \"bash\"`, and the four args of the script path, `$_RELEASE_COMMIT_SHA`, the GitHub URL, and `.`. `awk` of the six traffic files printed the same block in each.",
+    "apps/primary-advantage/cloudbuild-traffic.yaml: the bind step is the first entry under `steps:`, before the `refuse-legacy-db` comment block and its step, and the file holds `_RELEASE_COMMIT_SHA: \"REQUIRED_RELEASE_COMMIT_SHA\"`. Test T-07 asserts the exact id list.",
+    "The `# Order:` comment of each of the five files names the release source bind first, and the `substitutions:` key holds the `REQUIRED_` default in each of the five files.",
+    "scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs: requireScript at line 190 blocks a missing-script pass (A4); T-02, T-03, T-04, T-08, and T-21 to T-25 assert exits, stderr lines, and the git log; T-05 and T-07 fail on a missing section or a missing step; no count assertion uses a bare digit. Red evidence in red-p2-17a26b073.log names the 13 failing rows and the T-23 guard pass.",
+    "The four phase commits (9b7ece89f, 607ebe251, 7f80d3834, edc3da0a2) change only the allowed paths of P2.2; `git diff --stat 607ebe251..4c34987ca` over apps/sales-advantage/cloudbuild.yaml, apps/sales-advantage/scripts, package.json, pnpm-lock.yaml, scripts/ci/__tests__/helpers, and .gcloudignore printed 0 lines. Commit subjects are 94 to 100 characters.",
+    "docs/runbooks/traffic-moves.md: the literal `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` appears six times, once in each of the six sections (lines 52, 97, 139, 180, 224, 270), and the clean-checkout line appears seven times (lines 24, 60, 105, 147, 188, 232, 281).",
+    "green-p2-17a26b073.log: the heavy gate after task 2.2 gave EXIT=1 with one failure, T-05 of task 2.3, and the heavy gate after task 2.3 gave EXIT=0, test_files=12, tests=205, tests_failed=0. The targeted Phase 2 file gave EXIT=0, tests=14, tests_failed=0. Review A ran no vitest."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log and git show --name-only --format= over 17a26b073..4c34987ca",
+    "git diff 17a26b073..4c34987ca over the script, the five traffic files, the runbook, and plan.md",
+    "git diff --stat over the no-change path list",
+    "bash -n scripts/ci/verify-traffic-source.sh",
+    "grep of the script for the forbidden words of criterion 6 and for measure/"
+  ],
+  "changed_files": [
+    "scripts/ci/verify-traffic-source.sh",
+    "apps/accounts/cloudbuild-traffic.yaml",
+    "apps/accounting/cloudbuild-traffic.yaml",
+    "apps/codecamp-advantage/cloudbuild-traffic.yaml",
+    "apps/marketing/cloudbuild-traffic.yaml",
+    "apps/primary-advantage/cloudbuild-traffic.yaml",
+    "docs/runbooks/traffic-moves.md",
+    "scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs",
+    "measure/tracks/sales_traffic_source_binding_20261108/plan.md"
+  ],
+  "contract_violations": [],
+  "test_violations": [],
+  "pattern_violations": [],
+  "plan_violations": [],
+  "test_strategy_violations": [],
+  "confidence": "high",
+  "retry_recommendation": "none"
+}

@@ -1,0 +1,19 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: sales_traffic_source_binding_20261108
+phase: Phase 2: Bind the other five traffic sources to the release commit
+phase_base_sha: 17a26b073febba9aaf8c23b834b56d0e187bf587
+role_base_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+audited_head_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+model_route: deepseek/deepseek-flash#high (ra-quota pick adversarial --not-family minimax). DeepSeek wrote the Red of this phase (9b7ece89f), so the adversarial role shares the Red family. MiniMax wrote the Green (7f80d3834, edc3da0a2). kimi-for-coding k3 is WAIT.
+status: pass
+verdict: pass
+summary: All 10 mutants Y34 to Y43 are rejected and all 4 scenarios of line 418 hold. Each mutant ran on a 1 MB scratch copy of 40 named tracked paths, and each copy was restored. No mutant file stayed in the main checkout. No mutant survived, so no test case was added. Nuance: T-20 kills Y38; T-22 does not, because the fixture allows a lazy object load. No false pass and no production defect. The A4, A7, and A5 controls hold. The light gate gives EXIT=0 with 12 files and 205 tests.
+mutants_rejected: 10/10
+mutants_equivalent: none
+scenarios_checked: 4/4 (scenario 4 is proven by the fetch log, because Git 2.53.0 does not enforce allowAnySHA1InWant on local file transport)
+scratch_left: 0
+commits: none (no surviving mutant, so the adversarial test file did not change)
+retry_recommendation: none
+gates: baseline targeted exit 0 (14 tests); scratch pristine exit 0 (14 tests); 10 of 10 mutants rejected; 4 of 4 scenarios; A4 script-absent probe 10 failed 4 passed; A7 banned term with a filter word still fails T-06; A5 plan and green claims match; bash -n exit 0; light gate exit 0, 12 files, 205 tests; restore MATCH_HEAD and MAIN_UNTOUCHED=0
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+phase_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+role_base_sha: b131f9a16c7deecc1fc4df60e33731476fb8d495
+model_route: minimax-cn-coding-plan/MiniMax-M3 — substitute for claude-opus-5-5, which the Claude 7d window at 76 % cannot serve for the Storytime look phase acceptance.
+commits: 7c11aa22c4e80f980a48736ac3bc64602f077b41 docs(measure): amend the y32 mutant form (track_id: sales_traffic_source_binding_20261108) — 1 file changed, 6 insertions, 1 deletion, measure/tracks/sales_traffic_source_binding_20261108/test-strategy.md only
+status: done
+summary: The Y32 mutant form in section P1.5 was an equivalent mutant, so the mutant set could not reach 33/33. The scratch check in /tmp/opencode/strat-y32 (removed after the check) confirmed the claim: with `measure/` on line 32, the form `!measure/tracks/backend_architecture_enforcement_20260713` leaves check-ignore naming line 32 `measure/` with exit 0, so the upload list does not change. The form `!measure/` after `measure/` gives check-ignore exit 1 for `measure/tracks/x.md` and for `measure/tracks/backend_architecture_enforcement_20260713`, so the tracked link returns to scope and the upload list changes. The strategy now names `!measure/` as the Y32 form, with the killers S-31 and S-32 and the D9 rule of no staged file. The mutant count stays 33. Y4 is unchanged: the adversarial report says its first application ran check-ignore outside a repository, and the corrected form is rejected by S-05, so the strategy text was right. An amendment round 3 note at the top names the date, the role base, the cause, and the evidence files measure/runs/sales_traffic_source_binding_20261108/adversarial-p1-dd66da7e3.json and .log. Section 1.4 now states that the Phase 1 capture happened once, so this amendment moves no phase_base_sha.
+handoff: The orchestrator runs the adversarial round again on the new Y32 form at HEAD 7c11aa22c. The closeout label stays mutants_rejected=33/33 and scenarios_checked=4/4. The orchestrator keeps the phase_base_sha at 7c853d9baf1700f4a78e19c70fbfc355bdfcca57 and captures no new value. No product source changed.
+END_MEASURE_AGENT_RESULT

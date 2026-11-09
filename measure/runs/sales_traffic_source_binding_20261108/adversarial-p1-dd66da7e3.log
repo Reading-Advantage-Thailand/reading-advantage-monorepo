@@ -1,0 +1,18 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+phase_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+role_base_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+model_route: StepFun (nvidia/stepfun-ai/step-5-preview#high) — substitution for r1 on minimax-cn-coding-plan/MiniMax-M3.1-Flash, which stopped on the MiniMax Token Plan limit (error 2056) before any mutant run. Red is DeepSeek and Green is Anthropic, so both are excluded.
+audited_head_sha: 7c11aa22c4e80f980a48736ac3bc64602f077b41
+commits: b131f9a16 test(ci): adversarial cases that kill p1 mutants (track_id: sales_traffic_source_binding_20261108) — 1 file changed, 365 insertions, scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs only
+status: pass
+summary: All 33 mutants of test-strategy section P1.5 are rejected and all 4 scenarios hold. Five mutants survived the Red set at first. Y4 needed a corrected mutant form, because the first form ran git check-ignore outside a repository and changed nothing. Y12, Y15, Y16, and Y23 were test gaps, and the new file kills them with cases A-02, A-01, A-03, and A-04. Y32 was an equivalent mutant in its old form; the strategy replaced that form in 7c11aa22c with `!measure/` after `measure/`, and S-31 and S-32 reject it. The small scratch tree was 1 MB with 42 tracked paths and 6 tracked links; the pristine run passed and the mutant run failed S-31 and S-32. No production defect is found.
+mutants_rejected: 33/33
+mutants_equivalent: none
+scenarios_checked: 4/4
+scratch_left: 0
+retry_recommendation: none
+gates: light gate pass (exit 0, 11 files, 191 tests); pristine with the new file pass (exit 0, 3 files, 59 tests); new file alone pass (exit 0, 7 tests); amended y32 run pass (pristine exit 0, mutant exit 1 with S-31 and S-32)
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: sales_traffic_source_binding_20261108
+phase: Phase 1: Bind the sales traffic source to the release commit
+task: 1.1
+role_base_sha: 7c853d9baf1700f4a78e19c70fbfc355bdfcca57
+commits: 157e45cc5ad35202036467e9cb5034686cf08e25 (tests), ee58b89615d0f72cb95a37bc5d6a7213e488a129 (plan evidence)
+status: complete
+summary: Red tests for cases S-01 to S-30b and the F-12 update are committed. The targeted run exits 1 with tests_failed=32 and tests_passed=17 (2 files). The light run exits 1 with test_files=10, test_files_failed=2, test_files_passed=8, tests_failed=32, tests_passed=149, tests_skipped=0. The only failures are the 31 new cases and F-12. All script cases stop at the script-exists precondition or at the named absent-step reason. scratch_left=0, disk_avail_mb=10657. No production file changed.
+red_command: CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/sales-traffic-source-binding.test.mjs scripts/ci/__tests__/cloudbuild-files.test.mjs
+red_exit: 1
+tests_failed: 32
+tests_passed: 17
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

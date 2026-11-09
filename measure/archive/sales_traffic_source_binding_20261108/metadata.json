@@ -1,0 +1,21 @@
+{
+  "track_id": "sales_traffic_source_binding_20261108",
+  "type": "chore",
+  "status": "done",
+  "created_at": "2026-11-08T00:00:00Z",
+  "updated_at": "2026-11-09T00:00:00Z",
+  "opened": "2026-11-08",
+  "description": "Bind the uploaded source of the traffic files of sales-advantage (Phase 1) and of accounts, accounting, codecamp-advantage, marketing, and primary-advantage (Phase 2) to _RELEASE_COMMIT_SHA before the first source-reading step (Review B finding F4 of per_app_cicd_20261107).",
+  "author_model": "claude-code/claude-sonnet-5-5",
+  "depends_on": "none",
+  "blocks": "per_app_cicd_20261107 task 2.3h for accounts, accounting, codecamp-advantage, marketing, and sales-advantage, and task 2.3c for primary-advantage (six apps; Phase 1 sales-advantage, Phase 2 the other five)",
+  "final_acceptance": "measure/runs/sales_traffic_source_binding_20261108/final-acceptance-r2-613cba7fa.json",
+  "phase_checkpoints": [
+    "7c11aa22c",
+    "4c34987ca"
+  ],
+  "estimated_tasks": 8,
+  "actual_tasks": 8,
+  "deviation_notes": "The plan holds 8 tasks, and every task names a commit SHA. Phase 1 ends at checkpoint 7c11aa22c and Phase 2 at checkpoint 4c34987ca. The final acceptance of round 1 (final-acceptance-613cba7fa) failed on two items outside this track and stays as a record. The final acceptance of round 2 (final-acceptance-r2-613cba7fa) passed at audited head 613cba7fa. The live traffic proofs stay `deferred:daniel` in per_app_cicd_20261107 tasks 2.3h and 2.3c. The track was archived on 2026-11-09.",
+  "completed": "2026-11-09"
+}

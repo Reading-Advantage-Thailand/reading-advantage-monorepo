@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+track: sales_traffic_source_binding_20261108
+phase: Phase 2: Bind the other five traffic sources to the release commit
+phase_base_sha: 17a26b073febba9aaf8c23b834b56d0e187bf587
+role_base_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+audited_head_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+model_route: nvidia/stepfun-ai/step-5-preview#high
+status: pass
+verdict: pass
+summary: Phase 2 passes at 4c34987ca. All thirteen items of P2.7 hold and item 14 stays open as deferred:daniel. The light run gives exit 0 with 12 files and 205 tests; the targeted run gives exit 0 with 2 files and 48 tests. The five track commits change only the allowed paths and the no-change list prints 0 lines. The upload list holds no measure file, 154 sales files, and the script path. The five traffic files hold bind-release-source first, the REQUIRED substitution, and the exact block; the Primary step comes before refuse-legacy-db. The script makes one fetch of origin master with no depth limit, then cat-file, then merge-base with FETCH_HEAD, and maps exit 1 to the section 8.6 line and other exits to the section 8.7 line. The hash and measure-read detectors exit 1, git worktree list gives 8, and the clean state holds. No live run happened and no note claims one. Four nonblocking findings stay open for tech-debt at closeout. StepFun ran Reviews A and C of this phase; Kimi ran Review B on the PM route.
+retry_recommendation: none
+checkpoint_sha_proposed: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+END_MEASURE_AGENT_RESULT
