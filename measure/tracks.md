@@ -1638,3 +1638,7 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 - [~] **Track: Bind the traffic sources to the release commit** — *created 2026-11-08*
   *Link: [./tracks/sales_traffic_source_binding_20261108/](./tracks/sales_traffic_source_binding_20261108/)*
   *Status: in progress (Phase 1 checkpoint 7c11aa22c, 2026-11-09) | Chore, security fix of Review B finding F4 (per_app_cicd_20261107) | 2 phases: sales-advantage (Phase 1), accounts, accounting, codecamp-advantage, marketing, primary-advantage (Phase 2); shared script scripts/ci/verify-traffic-source.sh | Gates six apps: task 2.3h of per_app_cicd_20261107 for the five apps other than primary-advantage, task 2.3c for primary-advantage; the live traffic runs stay `deferred:daniel`*
+
+- [ ] **Track: Accounting Drive intake** — *created 2026-11-09*
+  *Link: [./tracks/accounting_drive_intake_20261109/](./tracks/accounting_drive_intake_20261109/)*
+  *Status: new (spec and plan only) | Feature, PM request A-52 | Build starts after 2026-11-20, or earlier only in a slot that Storytime does not need | Drive intake poll, Gemini on Vertex for non-text PDFs, a CEO monthly close with a lock and an audit row, a read-only Tutor settlement proposal, and a stub parsing section until the structure report of 2026-11-11 | Deferred: `deferred:pm` for the first load, the structure report, the invoice pull job, the Tutor endpoints, the Drive IAM grant, the PA-INV and Storytime sources, and the Accounts role seed; `deferred:daniel` for the deploy and the traffic move*
