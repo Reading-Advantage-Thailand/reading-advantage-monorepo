@@ -484,6 +484,8 @@ describe("StudentCartridgeHost", () => {
         json: jest.fn().mockResolvedValue({
           mode: "vocabulary",
           source: "student-flashcards",
+          requestedTargetLocale: "th",
+          selectedTargetLocales: ["th"],
           content: [{ term: "river", translation: "river" }],
         }),
       });

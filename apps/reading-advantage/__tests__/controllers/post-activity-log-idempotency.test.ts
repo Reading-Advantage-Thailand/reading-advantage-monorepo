@@ -152,7 +152,7 @@ describe("postActivityLog XP idempotency (Red)", () => {
 
   it("parallel completions for the same (userId, activityType, targetId) produce exactly one xpLogs row", async () => {
     const userId = "user-1";
-    const activityType = "ARTICLE_READ";
+    const activityType = "SENTENCE_MATCHING";
     const articleId = "article-1";
     const concurrentRequests = 5;
 
@@ -182,7 +182,7 @@ describe("postActivityLog XP idempotency (Red)", () => {
 
   it("reports the duplicate XP row count when idempotency is missing", async () => {
     const userId = "user-1";
-    const activityType = "ARTICLE_READ";
+    const activityType = "SENTENCE_MATCHING";
     const articleId = "article-1";
 
     await Promise.all([
