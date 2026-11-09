@@ -186,11 +186,13 @@ function readColumns(table: PgTable): readonly ExpectedColumn[] {
 /** Reads the index metadata of one Drizzle table. */
 function readIndexes(table: PgTable): readonly IndexContract[] {
   return getTableConfig(table).indexes.map((tableIndex) => ({
-    columns: tableIndex.config.columns.map((column) =>
-      "name" in column
-        ? column.name
-        : dialect.sqlToQuery(column as SQL).sql,
-    ),
+    columns: tableIndex.config.columns.map((column) => {
+      if ("name" in column) {
+        // An unnamed index column must fail the index checks, so map it to a marker that no real column matches.
+        return column.name ?? "<unnamed-index-column>";
+      }
+      return dialect.sqlToQuery(column as SQL).sql;
+    }),
     unique: tableIndex.config.unique,
   }));
 }
