@@ -12,7 +12,10 @@ set -uo pipefail
 #                 clipped_text, page_overflow, and contrast_fail are all 0.
 #   2 hero        song_stage_height_px 220 to 240, hero_band_height_px_phone 92 to 100,
 #                 hero_band_height_px_tablet 116 to 124, and the first-view rules.
-#   3 frame       the game bar shows the route level and week; the plaque holds the week title.
+#   3 frame       the game bar shows the route level and week; the plaque holds the week title;
+#                 a 60-character title stays inside the plaque (Range text box against the plaque
+#                 box, plaque_overflow_px=0, clipped_text=0) at 390x844, 568x320, and 844x390, in
+#                 English and in Thai (the V1 string).
 #   4 assets      every place, SVG, and font that the built CSS requests answers 200 with its type.
 #                 look_woff2_files counts only the 2 files of app/look/fonts (Sarabun stays on
 #                 next/font/google, so woff2_files_total is larger); no font host, no remote @import.
@@ -24,7 +27,7 @@ set -uo pipefail
 #   9 missing     with the place images aborted, the text stays readable.
 #  10 question    the question screen shows the same hero band and passes the row 1 checks.
 #  11 self-test   the verdict functions reject the broken copies (captures, heights, colours,
-#                 overlap, language, spacing), and no rows.
+#                 overlap, language, spacing, the fixed-height plaque), and no rows.
 #  12 council     the round 1 fix batch (task 2.3e): the reader mode buttons are opaque cream with
 #                 a navy label at 4.5:1 or more, the HUD label sits off the progress track at 14 px
 #                 in the interface language (hud_overlap_px=0), and the sentence spacing holds
@@ -131,6 +134,9 @@ const VIEWPORTS = (process.env.GATE_VIEWPORTS ?? "390x844 1024x768 844x390").spl
 });
 const LOCALES = (process.env.GATE_LOCALES ?? "th en").split(" ");
 const USER = "staff-01";
+// The 60-character Thai title of adversarial case V1 (look-adversarial-p2.test.tsx). Row 3 sets it
+// into the plaque of the fixture week, because one content week holds one title.
+const THAI_LONG_TITLE = "สัปดาห์ที่ยาวและยาวที่สุดในโรงเรื่องของเราทั้งหมดในโลกใบนี้ๆ";
 // The edge threshold T per channel (M39, P2.5). Calibration, read once by Red on 2026-11-08 with the
 // in-page function below (mean colour of the outer 16 px strip against the next 16 px strip, the
 // largest channel delta over the 4 edges):
@@ -308,6 +314,21 @@ function nativeDurationVerdict(durationTexts, nativeControls) {
   return durationTexts === 0 && nativeControls === 0;
 }
 
+/**
+ * The overflow of the title text box outside the plaque box, in CSS px, top and bottom.
+ * A fixed plaque height keeps scrollHeight equal to clientHeight, so the text box of a Range is
+ * the measure (the UX browser review of F1, 2026-11-09).
+ */
+function plaqueOverflowPx(plaque, text) {
+  const over = (high, low) => Math.max(0, high - low);
+  return Math.round(Math.max(over(plaque.top, text.top), over(text.bottom, plaque.bottom)));
+}
+
+/** The verdict of the plaque: no text leaves the box, and no text is clipped. */
+function plaqueFitsVerdict(overflowPx, clippedText) {
+  return Number.isFinite(overflowPx) && overflowPx === 0 && clippedText === 0;
+}
+
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
   countVerdict(23) === false,
@@ -358,6 +379,11 @@ const mutants = [
   counterVerdict("rgba(255, 250, 240, 0.5)", "rgb(19, 36, 78)") === false,
   nativeDurationVerdict(1, 0) === false,
   nativeDurationVerdict(0, 1) === false,
+  // A fixed-height plaque fixture (40 px) cannot hold the wrapped text box: the text sits above it.
+  plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 80, bottom: 140 }), 0) === false,
+  plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 100, bottom: 160 }), 0) === false,
+  plaqueFitsVerdict(0, 1) === false,
+  plaqueFitsVerdict(Number.NaN, 0) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -385,6 +411,10 @@ const controls = [
   framePadVerdict([19, 19, 19, 19], 7),
   counterVerdict("rgb(255, 250, 240)", "rgb(19, 36, 78)"),
   nativeDurationVerdict(0, 0),
+  // The control: the same plaque box holds a text box inside it, and the V1 Thai title holds 60.
+  plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 108, bottom: 132 }), 0),
+  plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 100, bottom: 140 }), 0),
+  THAI_LONG_TITLE.trim().length === 60,
 ];
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
@@ -775,6 +805,35 @@ async function readFrame(page) {
     };
   });
 }
+
+/**
+ * Measures the plaque of the open page: the title text box of a Range against the plaque box.
+ * The fixed height of the landscape plaque keeps scrollHeight equal to clientHeight, so the
+ * scroll measure of row 1 reads 0 and this measure is the one that sees the overflow.
+ */
+async function measurePlaque(page) {
+  const measured = await page.evaluate(() => {
+    const node = document.querySelector("header[data-hero] > h1");
+    if (!node) return null;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    const plaque = node.getBoundingClientRect();
+    const text = range.getBoundingClientRect();
+    return {
+      chars: (node.textContent ?? "").trim().length,
+      plaque_h_px: Math.round(plaque.height),
+      plaque: { top: plaque.top, bottom: plaque.bottom },
+      text: { top: text.top, bottom: text.bottom },
+    };
+  });
+  if (measured === null) return { chars: -1, overflow_px: -1, plaque_h_px: -1 };
+  return {
+    chars: measured.chars,
+    overflow_px: plaqueOverflowPx(measured.plaque, measured.text),
+    plaque_h_px: measured.plaque_h_px,
+  };
+}
+
 await guarded("row 3 frame", async () => {
   const vp = VIEWPORTS[0];
   const context = await makeContext(vp);
@@ -793,18 +852,50 @@ await guarded("row 3 frame", async () => {
       `game_bars=${frame.bars} bar_numbers=${frame.numbers.join(",")} plaque_title=${JSON.stringify(frame.title)}`);
     await page.close();
   }
-  // A 60-character title (adversarial seed) causes no overflow and no clipped text.
-  const page = await context.newPage();
-  const state = watch(page);
-  await page.goto(`${base}/en/st/3/6`, { waitUntil: "load" });
-  await settle(page);
-  const frame = await readFrame(page);
-  const counts = await checkCounts(page, state);
-  row("frame long title 60 characters",
-    frame.title.length === 60 && counts.page_overflow === 0 && counts.clipped_text === 0,
-    `title_chars=${frame.title.length} page_overflow=${counts.page_overflow} clipped_text=${counts.clipped_text}`);
-  await page.close();
   await context.close();
+  // A 60-character title (adversarial seed) causes no overflow and no clipped text. The English
+  // title is the fixture week title. The Thai title is the string of adversarial case V1, set into
+  // the plaque of the same route. The measure is the Range text box against the plaque box, top and
+  // bottom, because the fixed height of the landscape plaque hides the overflow from scrollHeight.
+  const longCases = [];
+  for (const viewport of [
+    { text: "390x844", width: 390, height: 844, phone: true },
+    { text: "568x320", width: 568, height: 320, phone: true },
+    { text: "844x390", width: 844, height: 390, phone: true },
+  ]) {
+    for (const locale of ["en", "th"]) {
+      if (viewport.text === "390x844" && locale === "th") continue;
+      const longContext = await makeContext(viewport);
+      const page = await longContext.newPage();
+      const state = watch(page);
+      await page.goto(`${base}/${locale}/st/3/6`, { waitUntil: "load" });
+      await settle(page);
+      if (locale === "th") {
+        await page.evaluate((text) => {
+          const plaque = document.querySelector("header[data-hero] > h1");
+          if (plaque) plaque.textContent = text;
+        }, THAI_LONG_TITLE);
+        await settle(page);
+      }
+      const plaque = await measurePlaque(page);
+      const counts = await checkCounts(page, state);
+      longCases.push({
+        label: `${viewport.text}_${locale}`,
+        chars: plaque.chars,
+        overflow_px: plaque.overflow_px,
+        plaque_h_px: plaque.plaque_h_px,
+        clipped_text: counts.clipped_text,
+        page_overflow: counts.page_overflow,
+      });
+      await page.close();
+      await longContext.close();
+    }
+  }
+  const longOk = longCases.length === 5 && longCases.every((one) =>
+    one.chars === 60 && one.page_overflow === 0 && plaqueFitsVerdict(one.overflow_px, one.clipped_text));
+  row("frame long title 60 characters", longOk,
+    `cases=${longCases.length} `
+    + longCases.map((one) => `${one.label} plaque_overflow_px=${one.overflow_px} clipped_text=${one.clipped_text} title_chars=${one.chars} plaque_h_px=${one.plaque_h_px} page_overflow=${one.page_overflow}`).join(" | "));
 });
 
 // ---- Row 4: the assets. ----
