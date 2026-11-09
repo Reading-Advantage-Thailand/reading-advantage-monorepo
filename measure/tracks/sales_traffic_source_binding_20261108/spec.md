@@ -58,7 +58,7 @@ The traffic file would run the same SHA-256 manifest check as the push file, wit
 
 **Q1 answer (PM, 2026-11-08): Option A.** The plan follows Option A. Option B is not planned.
 
-**Limit after the first push.** The check fetches the release commit from GitHub. The commit must exist on GitHub. A live traffic run can therefore pass only after the first push of that commit. Before that push, every run stops at the check. This is the correct result: the check cannot confirm a commit that GitHub does not hold.
+**Limit after the first push.** The check fetches the release commit from the upstream. The commit must be an ancestor of the upstream `master`. A live traffic run can therefore pass only after the first push of that commit to `master`. Before that push, every run stops at the check. A commit that exists only in a fork also stops the run. This is the correct result: the check cannot release a commit that the upstream `master` does not hold. Section 8 (the amendment of 2026-11-09) states this rule in full.
 
 ## 3c. Special entries and rule differences
 
@@ -119,10 +119,11 @@ The step `bind-release-source` is step 1 of the Primary file, before `refuse-leg
 - **FR-7 (Phase 2).** Each traffic file of `accounts`, `accounting`, `codecamp-advantage`, `marketing`, and `primary-advantage` holds the same step `bind-release-source` as its first step. The step calls the script of Phase 1 with the GitHub URL. Each file holds a new substitution `_RELEASE_COMMIT_SHA` with the default `REQUIRED_RELEASE_COMMIT_SHA`. The runbook tells the operator to pass it (FR-9).
 - **FR-8 (Phase 2).** The step stops each of the five runs before its first step that reads the source (for `primary-advantage`, `refuse-legacy-db`), on any mismatch, and on a missing, default, or malformed SHA.
 - **FR-9 (Phase 2).** The runbook sections of the five apps name the step and the stop rule. Each section also names `_RELEASE_COMMIT_SHA` as a substitution and tells the operator to pass `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` (together with the substitutions that the section already names). A missing or empty value fails the bind step closed, so the run stops at step 1. Reason: line 19 of `docs/runbooks/traffic-moves.md` passes only the substitutions that a section names, and the default is `REQUIRED_RELEASE_COMMIT_SHA`.
+- **FR-15 (Phase 2).** The ancestor check of section 8.3 (the amendment of 2026-11-09).
 
 ## 5. Acceptance criteria
 
-Each criterion has an automated test. Criteria 1 to 7, 15 to 17, and 19 to 21 are in `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` (task 1.1; the Red adds the rows of criterion 21 in a Red round 2). Criteria 8 to 14 and 18 are in the new file `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs` (task 2.1). No test reads `measure/` (rule C27 of `per_app_cicd_20261107`); criterion 21 reads only `.gcloudignore` and the `git ls-files -s` output. The paths that this track changes are the track files, `scripts/ci/verify-traffic-source.sh`, the six traffic files, `docs/runbooks/traffic-moves.md`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, the two new test files, and `.gcloudignore`.
+Each criterion has an automated test. Criteria 1 to 7, 15 to 17, and 19 to 21 are in `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` (task 1.1; the Red adds the rows of criterion 21 in a Red round 2). Criteria 8 to 14, 18, 22, and 23 are in the new file `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs` (task 2.1). No test reads `measure/` (rule C27 of `per_app_cicd_20261107`); criterion 21 reads only `.gcloudignore` and the `git ls-files -s` output. The paths that this track changes are the track files, `scripts/ci/verify-traffic-source.sh`, the six traffic files, `docs/runbooks/traffic-moves.md`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, the two new test files, and `.gcloudignore`.
 
 1. Given an uploaded source that differs from `_RELEASE_COMMIT_SHA`, when the script runs, then it exits non-zero and prints the path of the first differing file.
 2. Given a matching source, when the script runs, then it exits 0.
@@ -138,9 +139,9 @@ Each criterion has an automated test. Criteria 1 to 7, 15 to 17, and 19 to 21 ar
 20. Given the special entries of section 3c, when the script runs on a fixture, then: a commit with a submodule entry exits non-zero; a `.gcloudignore` with a `#!include:` line exits non-zero; a symbolic link with the same target text exits 0 and with another target text exits non-zero; a file whose executable bit differs from the commit exits 0 (task 1.1).
 
 21. Given the repository, then (a) the root `.gcloudignore` holds a line `measure/` that excludes `measure/` from the root upload; (b) every tracked mode-120000 entry inside the root upload scope is excluded by the `.gcloudignore` rules. Test method for (b): run `git ls-files -s`, keep the entries of mode 120000, and run `git check-ignore --no-index` with the `.gcloudignore` rules on those paths; the test fails for each path that the rules do not exclude. This guard stops a future tracked link from failing the bind step. (c) Given a scratch repository whose commit holds a `.gcloudignore` with the line `measure/`, a directory symbolic link under `measure/`, and a regular file under `measure/`, when the upload lacks both paths, then the script exits 0 and prints no `missing:` line. This proves that the two-way compare applies the same ignore rules on the Git side (task 1.1, Red round 2).
-Fixture for criteria 1, 2, 17, 19, 20, and 21(c): a test creates a scratch bare repository with `mkdtemp` under `os.tmpdir()`, and sets `git config uploadpack.allowFilter true` and `git config uploadpack.allowAnySHA1InWant true` in it. The URL is `file://<absolute path of the bare repository>`. The test commits the fixture tree by a work clone, pushes it, and builds the upload as a second scratch folder. The script gets that URL as its second argument.
+Fixture for criteria 1, 2, 17, 19, 20, and 21(c): a test creates a scratch bare repository with `mkdtemp` under `os.tmpdir()`, and sets `git config uploadpack.allowFilter true` and `git config uploadpack.allowAnySHA1InWant true` in it. The URL is `file://<absolute path of the bare repository>`. The test commits the fixture tree by a work clone, pushes it, and builds the upload as a second scratch folder. The script gets that URL as its second argument. The fixture for criteria 22 and 23 follows the rule of section 8.5.
 
-**Phase 2 criteria.** One Red test file, `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`, covers the five files.
+**Phase 2 criteria.** One Red test file, `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`, covers the five files. The ancestor check adds criteria 22 and 23 (section 8.4) to the same file.
 
 8. Given the traffic file of each of the five apps, when a test reads the step order, then `bind-release-source` is step 1 and comes before the first step that reads the source (`migrate-company-identity` for accounts, `refuse-legacy-db` for primary-advantage, `migrate-db` for the others).
 9. Given a fixture upload that differs from the fixture commit, when the script runs with the arguments of each of the five `bind-release-source` blocks, then the script exits non-zero. The test proves two things: the `args` of each file name the script and `$_RELEASE_COMMIT_SHA`, and the script rejects a differing upload. It observes no build. The outcome "the build stops before the first source-reading step" is shown in part by criterion 8 (step order by index) and in full by the deferred live proof (task 2.3h for accounts, accounting, codecamp-advantage, and marketing; task 2.3c for primary-advantage).
@@ -175,3 +176,43 @@ Added by the spec review of 2026-11-08 (no PM question): the image of the step (
 - **Q17 (closed).** PM order, 2026-11-08: the accepted default is `xargs -0 -n 500 git hash-object --no-filters`. The Green may pick another batch size.
 - **Q13 (closed).** The executable bit is not compared. PM answer, 2026-11-08: accepted (section 3c).
 - **Q6 (closed).** The check compares every uploaded file, so an untracked file in the upload stops the build. PM answer, 2026-11-08: accepted. Fail closed on any untracked file in the upload; the operator uploads a clean tree.
+
+## 8. Amendment of 2026-11-09: the ancestor check (Phase 2)
+
+**Author note.** The author model of line 6 is `claude-code/claude-sonnet-5-5`. The substitute author of this amendment is `nvidia/stepfun-ai/step-5-preview`. The Claude window is held until 2026-11-10 15:22.
+
+**PM decision (2026-11-09 ~02:10).** "D10 closes in Phase 2, not only recorded." Review B of Phase 1 recorded the fork-commit limit as limit D10. The PM closes the limit in Phase 2. The bind step now stops a run unless the release commit is an ancestor of the upstream `master`.
+
+### 8.1 What the step proves now
+
+The step `bind-release-source` proves three things. First, the release commit exists at the upstream. Second, the upstream `master` holds that commit as an ancestor. Third, the upload equals the tree of that commit (FR-3 and FR-4). A commit that exists only in a fork is not a released commit, so the run stops.
+
+### 8.2 The method
+
+The check runs inside the step `bind-release-source`, after the commit check of FR-2 and before the two lists of section 3. The commands are:
+
+1. `git fetch --filter=blob:none origin master`. The script loads `master` from the URL argument (section 3a-1). The fetch gives every commit and every tree of `master` and no blob. The one blob `.gcloudignore` loads on demand, as it does today.
+2. `git merge-base --is-ancestor <commit> FETCH_HEAD`. Exit 0 means the upstream `master` holds the commit, and the script continues. Exit 1 means the run stops, with the message of section 8.6. Any other exit is a Git failure, and the script stops too.
+
+This one fetch replaces the depth-limited fetch of section 3 step 2. A depth-limited fetch of the release commit would set a shallow boundary in the scratch repository, and that boundary hides the older commits of `master`. A released commit that is not the tip of `master` would then stop the run. So the check loads the release commit from the `master` fetch, and the script makes no second fetch.
+
+### 8.3 The functional requirement
+
+- **FR-15 (Phase 2).** The step `bind-release-source` of each of the six traffic files stops the build unless the release commit is an ancestor of the upstream `master` at build time. The step passes the URL argument of section 3a-1 to the same fetch. The stop happens before the first step that reads the source, so FR-8 holds.
+
+### 8.4 The acceptance criteria
+
+22. Given a fixture repository of section 8.5, when the script runs with the fork-only commit, then it exits non-zero and prints the message of section 8.6. The output holds no `missing:`, `extra:`, or `differs:` line, because the check runs before the two lists (task 2.1).
+23. Given the same fixture repository, when the script runs with a commit that `master` holds and that is not the tip, and the upload equals the tree of that commit, then the script exits 0. This row proves that the fetch of `master` is not depth-limited (task 2.1).
+
+### 8.5 The fixture rule
+
+The fixture for criteria 22 and 23 is a bare scratch repository of the form of section 5: `mkdtemp` under `os.tmpdir()`, `git config uploadpack.allowFilter true`, `git config uploadpack.allowAnySHA1InWant true`, and the URL `file://<absolute path>`. A work clone makes two commits, an older commit and a newer commit, and pushes both to `refs/heads/master`. The newer commit is the tip of `master`. A branch from the older commit makes a third commit, and the test pushes that commit to `refs/pull/<n>/head`. That third commit is the fork-only commit: the upstream `master` does not hold it, and a fetch by its SHA still succeeds. The upload holds the files of the commit that the test passes.
+
+### 8.6 The message rule
+
+The stop prints one line on standard error with the prefix `verify-traffic-source:`, as the other messages of the script do. The line names the release commit and says that the upstream `master` does not hold the commit as an ancestor. The line gives the next action: push the commit to `master`, or pass a commit that a push already put on `master`.
+
+### 8.7 Network access
+
+The check needs network access to the upstream at build time only, as the existing fetch does. The fetch is read-only and uses no credential, because the repository is public (section 3). No other network access is needed.
