@@ -142,7 +142,7 @@ Order: Red can run now. Green on shared files waits for no login commit; it re-r
 |---|---|---|---|---|---|---|
 | P1 Council fixes | high | yes | no | **yes (required)** | yes (focused, one round) | **yes (required)** |
 | P2 Look port of option 1 | high | yes | no | **yes (required)** | yes | **yes (required)** + UI council round 2 |
-| P3 Week content r3 import | high | yes | no (a stated condition) | **yes (required)** | yes (one round) | **yes (required)** |
+| P3 Week content r3 import | high | yes | **yes (tasks 3.5 and 3.6 only)** | **yes (required)** | yes (one round) | **yes (required)** |
 
 The reasons are in P1.6, P2, and P3.7.
 
@@ -683,9 +683,9 @@ A6 (registry-note overstatement) applies to every `[x]` note: no note says "look
 
 ## P3: Week content r3 import
 
-**Risk: high.** Phase 3 replaces the data of seven week files. It adds 163 clip paths and one song field to the app content. The change reaches the reader, the decodable, and the song of every week. It adds no code to the app, no auth, no session, no database, and no secret. The risk is high for two reasons. First, a wrong clip path reaches a media URL that the app builds from the week file. Second, the receiver writes eight files in one run, and seven of them belong to another track.
+**Risk: high.** Phase 3 replaces the data of seven week files. It adds 163 clip paths and one song field to the app content. The change reaches the reader, the decodable, and the song of every week. Tasks 3.1 to 3.4 add no code to the app, no auth, no session, no database, and no secret. Tasks 3.5 and 3.6 add one server-side review switch in `lib/content.ts`. The risk is high for two reasons. First, a wrong clip path reaches a media URL that the app builds from the week file. Second, the receiver writes eight files in one run, and seven of them belong to another track.
 
-Task risk: 3.1 medium (one new test file, no product code), 3.2 high (the receiver rewrites the content of eight files), 3.3 medium (the gates), 3.4 critical (a write to the production bucket; `deferred:daniel`, no work in this phase).
+Task risk: 3.1 medium (one new test file, no product code), 3.2 high (the receiver rewrites the content of eight files), 3.3 medium (the gates), 3.4 critical (a write to the production bucket; `deferred:daniel`, no work in this phase), 3.5 medium (one new test file that sets a server-side switch and reads the deploy files), 3.6 medium (one constant, one function, and one branch in `lib/content.ts`; the branch decides which weeks a child may open).
 
 `HEAVY` is the wrapper of section 1.1. The Phase 1 rules hold: one heavy job at a time, `CI=true`, `--maxWorkers=1`, targeted files, and the foreground.
 
@@ -733,7 +733,7 @@ Expected at the base: exit 1; `look_files=1`; `load_errors=0`; `tests_failed>=4`
 | R5 the raw JSON case | Fails on w01: `w01 song.videoLeadInSeconds is absent in the raw JSON, expected 3`. The w02 to w07 part passes (characterization, M50). |
 | R6 the self-test mutants | Pass (characterization): the mutants test the rule, not the data. |
 
-The Red evidence lists each passing case with its reason (A4) and quotes `week_files=7`, `clip_keys_total=<n>`, `clip_paths_total=<n>`, `mutants_checked=<n>`, and `look_tsc_errors=0`.
+The Red evidence lists each passing case with its reason (A4) and quotes `week_files=7`, `clip_keys_total=<n>`, `clip_paths_checked=<n>`, `mutants_checked=<n>`, and `look_tsc_errors=0`.
 
 ### P3.2 The content of `look-r3-import.test.ts` (what the case asserts, and the broken copy)
 
@@ -761,11 +761,11 @@ node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit 953f798e 
 
 The exit code must be 0. A run that leaves a week out exits with code 64 and changes nothing, so the run covers all eight weeks (D1). The receiver writes `source.json` last. The Green evidence quotes the exit code and the last line of the receiver output (`weeks_in_record=<n>`, `weeks_in_run=<n>`).
 
-**The compare with the packages.** A node script (run through `HEAVY`) reads the seven received files and the seven package files, parses both, and compares them with `assert.deepStrictEqual`. The package for w01 is `~/Desktop/handoff/w01-storytime-app-package-r4/l2/w01.json`. The packages for w02 to w07 are `~/Desktop/handoff/w0N-storytime-app-package-r3/l2/w0N.json`. The label is `weeks_compared=7 weeks_equal=7`. A difference stops Green before the commit and reports to the orchestrator. There is no package-JSON fallback (D1).
+**The compare with the packages.** A node script (run through `HEAVY`) reads the seven received files and the seven package files, parses both, and compares them with `assert.deepStrictEqual`. The package for w01 is `~/Desktop/handoff/w01-storytime-app-package-r4/l2/w01.json`. The packages for w02 to w07 are `~/Desktop/handoff/w0N-storytime-app-package-r3/l2/w0N.json`. The labels are `weeks_compared=7` and `weeks_equal=6`. PM decision of 2026-11-09 (plan.md task 3.2): the import commits the received w01 at `953f798e` with its `scripts[].share` blocks, because the r4 package of 2026-11-07 is stale by one Workbooks commit in the chain to `953f798ea309cc10abd5538c202e05ff31a2320d`. The six equal weeks are w02 to w07. For w01 the script also collects the differing leaf paths against the r4 package and asserts `w01_diff_outside_share=0`, so every differing leaf path sits inside `scripts[].share`. A difference outside that block stops Green before the commit and reports to the orchestrator. There is no package-JSON fallback (D1).
 
 **The w08 diff rule (Q37).** The same script compares the received w08 with the shipped w08, which the script reads from Git with `git show HEAD:apps/storytime/content/l2/w08.json`. An empty diff passes. A non-empty diff is a stop condition: Green stops before the commit, writes no commit, and reports to the orchestrator with `w08_diff_fields=<n>` and the names of the changed field paths. The reason is that w08 sits outside the PM hand-off. M45 says the diff is not empty at the role base, so the expected outcome of task 3.2 today is a stop and a report (Q41).
 
-**The resolve command (AC-3.3a).** A script reads the seven received week files, collects the clip paths, and checks each path under the media root of its week. The path is relative to the content folder, so the script joins the media root with the path. The label is `clip_paths_checked=163 clip_paths_missing=0`. This command is Green evidence, not a repository test, because the hand-off folder is absent in CI.
+**The resolve command (AC-3.3a).** A script reads the seven received week files, collects the clip paths, and checks each path under the media root of its week. The path is relative to the content folder, so the script joins the media root with the path. The label is `clip_paths_checked=163 clip_paths_missing=0`, where 163 is the count of the distinct clip paths. The seven week files hold 173 clip entries and 163 distinct paths. This command is Green evidence, not a repository test, because the hand-off folder is absent in CI.
 
 **The two new media roots.** They serve the Green evidence and the browser review only. No test reads them (A9).
 
@@ -784,22 +784,22 @@ The Phase 2 gate read the Phase 1 root `~/Desktop/handoff/w01-storytime-app-pack
 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/release-*.test.ts __tests__/phase1-*.test.ts __tests__/phase2-*.test.ts __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx __tests__/look-*.test.ts __tests__/look-*.test.tsx'
 ```
 
-- **R-COUNT-3.** `files = 90 + 1 = 91`. `tests_passed = 689 - old_cases_removed_p3 + new_tests_p3`. `tests_failed=0`. `tests_skipped=0`. Red states `old_cases_removed_p3=<n>` and `old_cases_rewritten_p3=<n>` as labeled integers. A lower total means a deleted or a skipped case (A4, A5). `new_tests_p3` is the count of the new file run alone.
+- **R-COUNT-3.** `files = 90 + 1 + 1 = 92` (the import test of task 3.1 and the switch test of task 3.5). `tests_passed = 689 - old_cases_removed_p3 + new_tests_p3`. `tests_failed=0`. `tests_skipped=0`. Red states `old_cases_removed_p3=<n>` and `old_cases_rewritten_p3=<n>` as labeled integers. A lower total means a deleted or a skipped case (A4, A5). `new_tests_p3` is the count of the new files run alone.
 - **The receiver gate** (the four files named in plan.md line 67): `__tests__/phase2-receive-commit.test.ts __tests__/phase2-receive-guards.test.ts __tests__/phase3-loop-receiver.test.ts __tests__/phase3-receiver-hardening.test.ts`. Exit 0; `files=4`; `tests_failed=0`.
 - **The media coverage gate**: `__tests__/phase3-media-coverage.test.ts`. Exit 0; `files=1`; `tests_failed=0`. The list `mediaOf` must cover every clip path of the seven imported weeks (M47).
-- **The new test**: `__tests__/look-r3-import.test.ts`. Exit 0; `files=1`; `tests_failed=0`; `clip_keys_total=163`; `clip_paths_total=163`; `week_files=7`.
+- **The new test**: `__tests__/look-r3-import.test.ts`. Exit 0; `files=1`; `tests_failed=0`; `week_files=7`; `clip_keys_total=163` (the distinct keys of the seven weeks, case R4); `clip_paths_checked=173` (every clip entry, case R3). The file emits no `clip_paths_total` label (Review A finding F2, 2026-11-09). The distinct-path count 163 belongs to the resolve command of P3.3, which is not a repository test.
 - **Type gate**: `../../node_modules/.bin/tsc --noEmit` through `HEAVY`. Exit 0; `look_tsc_errors=0`.
 - **Lint gate**: `../../node_modules/.bin/eslint` on the changed `.ts` and `.tsx` files through `HEAVY`. Exit 0; `eslint_errors=0`. The `.json` files have no lint run.
 - **R-EDIT3.** Red edits no old test. Green edits an old test only when a run proves the import breaks it, and only to an assertion of equal strength. Each edit names the reason in the Green evidence. The count of the cases of that file does not fall.
 - **R-GATE3.** No gate script changes in this phase. A gate row changes only where the import moves a measured value, and then the check count stays the same or grows, and no assertion becomes weaker.
-- **Detectors** (light; exit 1 means no hit; exit 2 is a failure, A14): `rg -n 'handoff|Desktop|measure/tracks|ui-council' apps/storytime/__tests__/look-r3-import.test.ts` exits 1; `rg -n 'wordClips' apps/storytime/lib/contracts/week.ts` exits 0; `rg -n 'videoLeadInSeconds' apps/storytime/lib/contracts/week.ts` exits 0.
+- **Detectors** (light; exit 1 means no hit; exit 2 is a failure, A14): `rg -n 'handoff|Desktop|measure/tracks|ui-council' apps/storytime/__tests__/look-r3-import.test.ts apps/storytime/__tests__/look-draft-week-switch.test.ts` exits 1; `rg -n 'wordClips' apps/storytime/lib/contracts/week.ts` exits 0; `rg -n 'videoLeadInSeconds' apps/storytime/lib/contracts/week.ts` exits 0; `rg -n 'NEXT_PUBLIC_' apps/storytime/lib/content.ts` exits 1 (the switch is a server-side value, never a public one).
 
 ### P3.5 The closeout gate of Phase 3
 
 1. The look glob, the receiver gate, the media coverage gate, the new test, `tsc`, and ESLint exit 0 with the counts of P3.4.
 2. The Red file of task 3.1 exists, and `git log --format=%H --grep='track_id: storytime_look_20261107' -- apps/storytime/__tests__/look-r3-import.test.ts` shows the Red commit before the Green commit (`red_before_green=1`).
 3. `look_out_of_scope_paths=0` with the allowed paths of P3.9.
-4. The receiver evidence holds: the exit code 0, `weeks_compared=7`, `weeks_equal=7`, `clip_paths_checked=163`, `clip_paths_missing=0`, and the `source.json` commit equals the full id of `953f798e` with the eight files listed.
+4. The receiver evidence holds: the exit code 0, `weeks_compared=7`, `weeks_equal=6`, `w01_diff_outside_share=0` (PM decision of 2026-11-09, plan.md task 3.2), `clip_paths_checked=163` with `clip_paths_missing=0` for the distinct clip paths of the resolve command of P3.3, and the `source.json` commit equals the full id of `953f798e` with the eight files listed.
 5. The w08 rule holds: either the diff is empty, or the Green evidence names the stop and the report to the orchestrator, and no commit carries a w08 change (Q37). A commit that carries a changed w08 without an orchestrator decision fails this item.
 6. `git worktree list | wc -l` equals the count at the capture (A16). `build-graph update ./graph.db apps/storytime/scripts/receive-weeks.ts apps/storytime/lib/contracts/week.ts` runs once after the import (A10).
 7. Review A, Review C, the adversarial record, and the browser review exist and pass the audit-result checker.
@@ -817,10 +817,10 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 
 | Review | Applies | Reason and scope |
 |---|---|---|
-| Review A (code) | **yes** | The change is data, but it is data that the app builds media URLs from. Review A reads the diff of the eight week files, the `source.json` shape, the receiver rule that covers all eight weeks, the `mediaOf` clip entries, the Red test of P3.2, the old-test edits under R-EDIT3, and the stop rule of Q37. Review A also reads the K2 rule and the `.mp3` set against the contract rule (M49), and checks that the phase touches no path outside P3.9. |
-| Review B (security) | **no, with a stated condition** | The phase adds no auth, no session, no database, no storage write, no network call, and no secret. It adds JSON data and one test file. The clip paths are the one input risk, and the contract already holds them to an allowlist: `mediaPath` rejects a URL, a drive, an absolute path, a backslash, a control byte, an empty segment, a `.` segment, and a `..` segment. The new test holds the same rule for the clip values and pins the `.mp3` set (Q38). Review B becomes required if the import weakens `mediaPath`, if the receiver accepts a remote URL, if the phase adds a route or a cookie, or if the bucket upload of task 3.4 moves into this phase. |
-| Review C (UX/API) | **yes (required)** | A child taps a word in every week. Review C reads the child-facing result of the import: a word tap plays the clip of that word, a word with no clip is not a tap target, the song of w01 keeps its lead-in of 3 s, and the songs of w02 to w07 stay audio-only with a lead-in of 0. Review C also reads the Thai drafts of the interface, which the import does not change, and the K2 key names that a child never sees but a teacher screen may show. |
-| Adversarial testing | **yes (one round)** | The K2 edge keys (U+2019, U+2018, an upper-case word, a decomposed word, a leading digit, a trailing apostrophe, two apostrophes in a row), the path traversal strings (`../`, a leading `/`, a path of another week, a `.txt` path, a backslash), a week with no clip at all, and a duplicate key in two books. The adversarial role adds tests only in `apps/storytime/__tests__/`. |
+| Review A (code) | **yes** | The change is data, but it is data that the app builds media URLs from. Review A reads the diff of the eight week files, the `source.json` shape, the receiver rule that covers all eight weeks, the `mediaOf` clip entries, the Red test of P3.2, the old-test edits under R-EDIT3, and the stop rule of Q37. Review A also reads the K2 rule and the `.mp3` set against the contract rule (M49), and checks that the phase touches no path outside P3.9. Review A also covers tasks 3.5 and 3.6: the pinned names `DRAFT_WEEKS_ENV` and `showDraftWeeks()`, the draft branch of `loadVisibleWeek` and `highestOpenWeeks`, the log line, and the JSDoc and the file comment of `lib/content.ts`. |
+| Review B (security) | **yes, required for tasks 3.5 and 3.6 only** | The import tasks (3.1 to 3.4) add no auth, no session, no database, no storage write, no network call, and no secret. They add JSON data and one test file. The clip paths are the one input risk, and the contract already holds them to an allowlist: `mediaPath` rejects a URL, a drive, an absolute path, a backslash, a control byte, an empty segment, a `.` segment, and a `..` segment. The new test holds the same rule for the clip values and pins the `.mp3` set (Q38). Review B becomes required for tasks 3.5 and 3.6, because the review switch opens unpublished weeks, so it is an access gate. Its scope is three parts: the switch value parse (the exact value `1`, no `NEXT_PUBLIC_` name, no other value), the published-rule fall-through (a missing page picture still blocks, and media that is not approved still needs `STORYTIME_SHOW_DRAFT_MEDIA`), and the deploy-config test that no deploy file sets the name. The stated conditions of the import tasks stay: Review B becomes required for them if the import weakens `mediaPath`, if the receiver accepts a remote URL, if the phase adds a route or a cookie, or if the bucket upload of task 3.4 moves into this phase. |
+| Review C (UX/API) | **yes (required)** | A child taps a word in every week. Review C reads the child-facing result of the import: a word tap plays the clip of that word, a word with no clip is not a tap target, the song of w01 keeps its lead-in of 3 s, and the songs of w02 to w07 stay audio-only with a lead-in of 0. Review C also reads the Thai drafts of the interface, which the import does not change, and the K2 key names that a child never sees but a teacher screen may show. For tasks 3.5 and 3.6, Review C reads the tap result on w02 to w07 with the review switch on (P3.11), and reads that the switch changes no teacher page and no `lib/teacher.ts` path. |
+| Adversarial testing | **yes (one round)** | The K2 edge keys (U+2019, U+2018, an upper-case word, a decomposed word, a leading digit, a trailing apostrophe, two apostrophes in a row), the path traversal strings (`../`, a leading `/`, a path of another week, a `.txt` path, a backslash), a week with no clip at all, and a duplicate key in two books. The adversarial role adds tests only in `apps/storytime/__tests__/`. The adversarial round also covers the switch of tasks 3.5 and 3.6: the values `true`, `yes`, `0`, `""`, and ` 1`; a draft week with a missing page picture; a draft week whose media part is not approved; and a deploy file that holds the name. |
 | Browser review (UX) | **yes (required)** | The word taps on w02 to w07 and the capture of 2026-11-14 18:00. The browser reads the week pages with the imported content and checks that a tapped word plays its own clip, that a word with no clip shows no tap affordance, and that no console error and no failed request appear. |
 | Human checks | **yes** | The clip sounds right for a child (after the bucket upload and the deploy word). No role writes that line from a test run. |
 
@@ -829,14 +829,15 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 - The review runs on the imported content with the media root of the week. The root for w02 to w07 is `~/Desktop/handoff/w0N-storytime-app-package-r3/`, and the root for w01 is `~/Desktop/handoff/w01-storytime-app-package-r4/`.
 - The review taps one word per week of w02 to w07 that holds a clip, and one word that holds no clip. It records `tap_<week>=own_clip|no_clip_target` for each of the seven lines, and `taps_checked=<n>` with a floor of 7.
 - The capture of 2026-11-14 18:00 shows the seven week pages with the imported content. It records `console_errors=0` and `failed_requests=0` for each week page.
+- The review runs in the local review environment with the two review values set: `STORYTIME_REVIEW_DRAFT_WEEKS=1` and `STORYTIME_SHOW_DRAFT_MEDIA=1`, with the local media roots. The report records both values (`review_draft_weeks=1`, `review_draft_media=1`). A draft week of w02 to w07 is then open for the taps, because `meta.status` stays `draft` (AC-3.9). No deploy file sets either value, and no cloudbuild substitution sets either value.
 - A headless run is not a phone check. No role writes a phone result.
 
 ### P3.9 Architecture guardrails, the allowed paths, and the at-home ownership
 
 **Guardrails.**
 
-- The phase changes data, not code. It adds no dependency, no provider SDK, and no log line.
-- The changed contract: the week files now carry `books[].audio.wordClips` and `song.videoLeadInSeconds`. The contract accepted both before the import (M49). The `mediaOf` list already names the clips (M47).
+- Tasks 3.1 to 3.4 change data, not code. They add no dependency, no provider SDK, and no log line. Tasks 3.5 and 3.6 add one server-side review switch in `lib/content.ts` and one log line for a shown draft week. They add no dependency and no provider SDK.
+- The changed contract: the week files now carry `books[].audio.wordClips` and `song.videoLeadInSeconds`. The contract accepted both before the import (M49). The `mediaOf` list already names the clips (M47). The contract does not change for the switch: the week files stay unchanged.
 - `source.json` keeps one commit, the full id of `953f798e`, and its shape of eight files (AC-3.7).
 - The receiver guard holds: a subset run at a new commit exits 64 and changes nothing (M46).
 - The `MANIFEST.txt` check of the PM is a hand-off check. The phase adds no hash, no checksum field, and no provenance file (D3).
@@ -851,6 +852,8 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | `apps/storytime/__tests__/look-r3-import.test.ts` | The new Red file of task 3.1. |
 | The old tests that the import breaks | Each edit names the reason in the Green evidence (R-EDIT3). |
 | `apps/storytime/scripts/receive-weeks.ts` | Only after the stop-and-report rule of D4, and only with a test. |
+| `apps/storytime/lib/content.ts` | The review switch of task 3.6: the constant `DRAFT_WEEKS_ENV`, the function `showDraftWeeks()`, the draft branch of `loadVisibleWeek` and `highestOpenWeeks`, the file comment, and the JSDoc. No other file. |
+| `apps/storytime/__tests__/look-draft-week-switch.test.ts` | The new Red file of task 3.5. |
 
 **The at-home ownership note.** The paths above belong to the track `storytime_at_home_release_20261106`. The orchestrator tells that track owner before the import commit. The Phase 3 deploy of the at-home track waits for the checkpoint of this phase. The scope check of the closeout counts the paths of the other track as `look_out_of_scope_paths` only when the look commits changed them outside the list above.
 
@@ -864,6 +867,40 @@ The catalog IDs follow `measure/anti-patterns.md`. A2 (the consent-blind publish
 | 3.2 Green import | A5, A6, A9, A14 | The Green evidence quotes the exit code of the receiver, the labels `weeks_compared`, `weeks_equal`, `clip_paths_checked`, `clip_paths_missing`, and `w08_diff_fields`. A non-empty w08 diff stops the run and reports. No note says "the import is done" without those labels. | The plan note says the import passed while the receiver exited 64; a commit carries a changed w08 without an orchestrator decision; the resolve command reports a missing clip and the note says 0. |
 | 3.3 gates | A3, A4, A5, A16 | The R-COUNT-3 formula with `old_cases_removed_p3` and `new_tests_p3` as labeled integers. The old-test edits obey R-EDIT3. The gate rows keep their count and their strength under R-GATE3. | A lower test total passes; a deleted old case passes; a weakened gate row passes. |
 | 3.4 bucket upload | A2, A6 | The task stays `[b] deferred:daniel`. No note claims the clips live in the bucket before the upload. | A plan note claims the clips are in the bucket before Daniel uploads them. |
+
+### P3.11 The draft week review switch (tasks 3.5 and 3.6)
+
+**Cause (PM decision, 2026-11-09 14:2x, quoted in spec FR-3).** `meta.status` does not change in the week files. Workbooks owns that field, and w02 to w07 stay draft until the Thai captions pass Daniel's check on 11-16. The PM asked for a review-only switch for draft weeks next to `showDraftMedia()` in `lib/content.ts`. The switch is off by default, it is set only in the local review environment, and it is never set in a deploy file or a cloudbuild substitution. The PM also asked for one test that proves that no deploy config sets it. The orchestrator took that option, because the change is small: `lib/content.ts` lines 26 to 34 hold `DRAFT_MEDIA_ENV` and `showDraftMedia()`, and `loadVisibleWeek` at lines 107 to 135 already has the branch for `media_not_approved`. Background: Review C found that w02 to w07 are `meta.status: "draft"`, so `readinessBlocker` (`lib/readiness.ts:95`) returns `draft` and `loadVisibleWeek` blocks them even with `STORYTIME_SHOW_DRAFT_MEDIA=1`. The browser taps of P3.8 on w02 to w07 cannot run.
+
+**Pinned names.** `DRAFT_WEEKS_ENV` holds the value `STORYTIME_REVIEW_DRAFT_WEEKS`. `showDraftWeeks()` returns `true` only for the exact value `1`. It is a server-side value, and it is never a `NEXT_PUBLIC_` name. The log line is `storytime week <key> shows a draft week (review switch)`. With the switch off the behavior does not change. `highestOpenWeeks()` writes no log, so it applies the switch with no new line.
+
+**Red rule.** Red writes one new file, `apps/storytime/__tests__/look-draft-week-switch.test.ts`, and commits it alone. Red edits no old test. The fixtures are fakes written by the test into a temp content folder. Red is red at its base for case (b) and for the log line.
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-draft-week-switch.test.ts'
+```
+
+Expected at the base: exit 1; `look_files=1`; `load_errors=0`. Case (b) fails with `the draft week st2/2 must be visible with STORYTIME_REVIEW_DRAFT_WEEKS=1, received null`. The log-line check fails with `the log must hold "storytime week st2/2 shows a draft week (review switch)", received "storytime week st2/2 blocked: draft"`. Cases (a), (c), (d), (e), (f), and (g) pass at the base (characterization), because the base blocks every draft week and no tracked deploy file holds the name. The Red evidence lists each passing case with its reason (A4) and quotes `files_checked=<n>` with a floor of 1, `draft_week_cases=<n>` with a floor of 5, `mutants_rejected=<n>`, and `look_tsc_errors=0`.
+
+**The Red cases.**
+
+| Case | What it asserts |
+|---|---|
+| (a) the switch unset | A draft week fixture gives `null` from `loadVisibleWeek`, and `highestOpenWeeks()` holds no open week for that level. |
+| (b) `STORYTIME_REVIEW_DRAFT_WEEKS=1` | The same draft week is returned by `loadVisibleWeek`, `highestOpenWeeks()` holds it, and the log holds `storytime week <key> shows a draft week (review switch)`. |
+| (c) the value parse | The values `true`, `yes`, `0`, `""`, and ` 1` each give `null` from `loadVisibleWeek`. |
+| (d) a missing picture | The switch on with a draft week that has a page with no image file gives `null`. |
+| (e) media not approved | The switch on with a draft week whose media part is not approved and `STORYTIME_SHOW_DRAFT_MEDIA` unset gives `null`. The same week is returned with `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the published-rule path stays in force. |
+| (f) the deploy config | `git ls-files` lists the tracked deploy files (`apps/storytime cloudbuild*.yaml`, `Dockerfile*`, `.env*` files, the storytime row of `scripts/ci/apps.json`, and `.github/workflows/*.yml`). `files_checked` is asserted above 0 first (A4). Then no file holds `STORYTIME_REVIEW_DRAFT_WEEKS` and no file holds `NEXT_PUBLIC_STORYTIME_REVIEW`. |
+| (g) the positive control | A scratch copy of one deploy file with the name added makes the case (f) check fail. The copy is a temp file, never a repository file. |
+
+**Fixtures.** The test makes a `mktemp -d` folder, writes one week file per case, and points `STORYTIME_CONTENT_DIR` at it. A draft week is a clone of the ready shipped `w01` with `meta.status` set to `draft`. A missing picture is a clone with `image.file` removed from one page. Media not approved is a clone with the audio approval set to `draft`. The test unsets and restores `STORYTIME_CONTENT_DIR`, `STORYTIME_REVIEW_DRAFT_WEEKS`, and `STORYTIME_SHOW_DRAFT_MEDIA` around each case. The test holds no path under `~/Desktop/handoff`, no `measure/tracks` path, and no council path (A9). The test mocks no function of `lib/content.ts`, because a case that claims to prove the switch calls the switch (A2).
+
+**The mutants the test must reject.** A switch that accepts `true` (case c). A switch that also skips the missing-picture rule (case d). A switch read from a `NEXT_PUBLIC_` name (cases a and b, because the test sets the server-side value only). Each mutant is proved by a small in-test double, and the Red evidence records `mutants_rejected=<n>` with a floor of 3.
+
+**Green of task 3.6.** The change sits in `lib/content.ts` only. It adds `DRAFT_WEEKS_ENV` and `showDraftWeeks()` next to `showDraftMedia()`, it edits the draft branch of `loadVisibleWeek` and the open rule of `highestOpenWeeks`, and it updates the file comment at lines 8 to 11. Every new export carries JSDoc. No other file changes, and the week files stay unchanged. The teacher pages and `lib/teacher.ts` stay out of scope. The gates: the look glob of P3.4, the new test, `tsc --noEmit` for `apps/storytime`, and ESLint on the changed files, all through `heavy-run`, all exit 0.
+
+**What the test cannot prove.** It proves the switch in jsdom and the deploy files on disk. It does not prove that the local review environment sets the value, that a browser shows the right content, or that a deploy keeps the switch off. The browser review of P3.8 records the two review values in its report, and Review B reads the three parts of P3.7 as an access gate.
 
 ## 4. Questions for the orchestrator (the defaults apply if no answer comes)
 
