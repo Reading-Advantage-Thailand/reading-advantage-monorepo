@@ -2,11 +2,13 @@
 
 > **Track:** `sales_traffic_source_binding_20261108` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
 >
-> **Phase 1 written:** 2026-11-08 at the role base `50cb858bbc209e1f7b1d1b2176e2f22ad03dcd75`. Model: claude-code/claude-opus-5-5. The role base is not the `phase_base_sha` (section 1.4). Phase 2 has an outline only (section P2).
+> **Phase 1 written:** 2026-11-08 at the role base `50cb858bbc209e1f7b1d1b2176e2f22ad03dcd75`. Model: claude-code/claude-opus-5-5. The role base is not the `phase_base_sha` (section 1.4). Amendment round 4 replaces the Phase 2 outline with the full Phase 2 strategy (sections P2.1 to P2.10).
 >
 > **Amendment round 2:** 2026-11-08 at the role base `d5301b5c55e77f5c7258c218aa87af06afae8772`, after the spec and plan commit `0a042ccbb` (criterion 21, FR-14, PM decision Q19). It adds the cases S-31 to S-33, the mutants Y31 to Y33, and the `.gcloudignore` gate items. It does not move the captured `phase_base_sha`.
 >
 > **Amendment round 3:** 2026-11-09 at the role base `b131f9a16c7deecc1fc4df60e33731476fb8d495`. Model: minimax-cn-coding-plan/MiniMax-M3, a substitute for claude-opus-5-5. Cause: the adversarial round rejected the Y32 form of section P1.5 as an equivalent mutant. A `!` line cannot re-include a path whose parent directory is excluded, so the old form changed no upload list. Evidence: `measure/runs/sales_traffic_source_binding_20261108/adversarial-p1-dd66da7e3.json` and `.log` (commit `b131f9a16c7deecc1fc4df60e33731476fb8d495`). This round replaces the Y32 form with `!measure/` after the line `measure/`. The mutant count stays 33. It does not move the captured `phase_base_sha`. The capture of section 1.4 already happened at the commit that first landed this file, so this amendment creates no new capture point.
+>
+> **Amendment round 4 (the Phase 2 strategy):** 2026-11-09 at the role base `d36d11da5b657e2c5e55b42331a06853ae70301a`. Model: nvidia/stepfun-ai/step-5-preview, a substitute for claude-code/claude-opus-5-5. Claude is held to 2026-11-10 15:22. Cause: PM decision D10 closes in Phase 2, not only recorded. The cause is the amendment of spec.md section 8 (commits `7dba7cea2`, `e660cde27`, `d36d11da5`): FR-15, criteria 22 and 23, sections 8.2, 8.5, 8.6, and 8.7, and plan.md tasks 2.1 to 2.4. Spec review r3 PASS: `measure/runs/sales_traffic_source_binding_20261108/spec-review-d36d11da5.json` (one Nit F26 at plan.md:70). This round writes the full Phase 2 strategy in sections P2.1 to P2.10. It adds the path `scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs` (commit `b131f9a16`, phase acceptance Nit N2) to the item 4 list of P1.7 as a recorded amendment. The Phase 1 gate already ran, so the list records a scope fact and changes no Phase 1 result. It does not move the captured Phase 1 `phase_base_sha`. Section 1.4 names the exact capture point for Phase 2.
 
 ## 1. Rules for every phase
 
@@ -45,6 +47,8 @@
 - Other tracks commit on master. A later HEAD that holds this file is valid at the capture time. Record the full 40-hex value in the Red evidence and in the phase log.
 - Scope checks use the commits of this track only: `git log <phase_base_sha>..HEAD --format=%H --grep='track_id: sales_traffic_source_binding_20261108'`, then `git show --name-only --format= <sha>` for each.
 - Phase 2 gets its own capture, by the same command, after the Phase 1 checkpoint commit and before the first Phase 2 Red file.
+- **Exact point for Phase 2.** The orchestrator runs `git rev-parse HEAD` immediately after the commit that lands amendment round 4 of this file. That value is the immutable `phase_base_sha` of Phase 2. The orchestrator records it in the Phase 2 Red evidence and in the phase log. This file embeds no SHA for that capture, and the role base of round 4 is not a valid `phase_base_sha`, because it predates the commit of this amendment. The same check of `git cat-file -e <sha>:measure/tracks/sales_traffic_source_binding_20261108/test-strategy.md` must exit 0, else the capture is void.
+- **Recorded amendment of the Phase 1 capture.** The Phase 1 capture stands at the commit that first landed this file. Rounds 2, 3, and 4 change no captured value.
 - All work runs in the shared master tree. No role runs `git worktree add` (A16).
 
 ### 1.5 Architecture guardrails and changed-contract risks
@@ -265,7 +269,7 @@ Adversarial scenarios (no mutant): a SHA that starts with `-`; a URL argument wi
 1. Disk guard: `disk_avail_mb>=3000`.
 2. Light run at the phase head: `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci`. Record `EXIT=0`, the test file count, the test count, `tests_failed=0`, and `tests_skipped=0`.
 3. Targeted run of the two files of P1.3: `EXIT=0`. The record names S-27 (criterion 6) S-20 to S-24 (criterion 16), and S-31 to S-33 (criterion 21) as passed.
-4. Scope check (section 1.4 commands): the track commits change only `scripts/ci/verify-traffic-source.sh`, `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, `apps/sales-advantage/cloudbuild-traffic.yaml`, `docs/runbooks/traffic-moves.md`, `.gcloudignore`, `measure/tracks.md`, and paths under `measure/tracks/sales_traffic_source_binding_20261108/` and `measure/runs/sales_traffic_source_binding_20261108/`. Label: `p1_out_of_scope_paths=0`.
+4. Scope check (section 1.4 commands): the track commits change only `scripts/ci/verify-traffic-source.sh`, `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, `apps/sales-advantage/cloudbuild-traffic.yaml`, `docs/runbooks/traffic-moves.md`, `.gcloudignore`, `measure/tracks.md`, and paths under `measure/tracks/sales_traffic_source_binding_20261108/` and `measure/runs/sales_traffic_source_binding_20261108/`. Label: `p1_out_of_scope_paths=0`. **Recorded amendment (round 4, 2026-11-09):** the list also holds `scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs` (commit `b131f9a16`, the Phase 1 adversarial output, phase acceptance Nit N2). The Phase 1 gate already ran, so the addition records a scope fact. Sections P2.2 and P2.7 name the path in the Phase 2 allowed paths and in the Phase 2 scope check.
 5. No-change check: `git diff --stat <phase_base_sha> HEAD -- apps/sales-advantage/cloudbuild.yaml apps/sales-advantage/scripts package.json pnpm-lock.yaml scripts/ci/__tests__/helpers` prints 0 lines. Other tracks can change other files; this list must not change.
 6. Hash detector: `rg -n -i 'sha256|sha-256|sha256sum|sha1sum|shasum|md5sum|openssl dgst|checksum|createHash|manifest' scripts/ci/verify-traffic-source.sh` exits 1. The same command exits 0 on a scratch file that holds `sha256sum` (A14 control).
 7. Measure-read detector: `rg -n '(readFile|readFileSync|existsSync|readText)\([^)]*measure/' scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` exits 1.
@@ -317,16 +321,164 @@ Adversarial scenarios (no mutant): a SHA that starts with `-`; a URL argument wi
 
 A2 does not apply: the phase has no publish gate with named subjects.
 
-## P2: Bind the other five traffic sources to the release commit (outline)
+## Phase 2: Bind the other five traffic sources to the release commit
 
-- **Risk:** `high`. The step joins five files. For `primary-advantage`, it must come before `refuse-legacy-db` (spec section 3b).
-- **Red file:** `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`, criteria 8 to 14 and 18.
-- **Red command:** `CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`. **Gate:** the light command of P1.3, `EXIT=0`.
-- **Main cases:** step 1 and its order against the first source step of each file (criterion 8); the exact block and the `REQUIRED_` default in each file (criteria 11 and 13); the exact Primary step ids and no `gcloud` in the bind step (criterion 14); each runbook section names the step and `_RELEASE_COMMIT_SHA` (criterion 12, FR-9).
-- **Criterion 18 method:** read the `args` of each bind step. Assert that they name the script and `$_RELEASE_COMMIT_SHA`. Replace the SHA with the fixture commit and the GitHub URL with the `file://` URL. Run `/bin/bash` with that list in the scratch upload root, which holds a copy of the script. No `-c` string.
-- **Open scope point for the Phase 2 strategy:** Phase 2 needs the fixture builder of Phase 1. A shared helper file under `scripts/ci/__tests__/helpers/` is outside the Phase 1 paths. The Phase 2 strategy must state the allowed path before the Red starts.
-- **Mutants:** the bind step after `refuse-legacy-db` or after `migrate-company-identity`; a missing substitution; a GitHub URL with a typing error in one file; a `-c` string in one file.
-- **Criterion 21 in Phase 2:** the five files upload the same root, so the line `measure/` and S-32 cover them too. The Phase 2 strategy runs S-32 and the upload list of P1.6 again and adds no new link case.
-- **Reviews:** A, B, C, adversarial, and phase acceptance apply. The browser review does not apply. Review B checks that the Primary read-only guard still runs before every migrate step.
-- **Scope rule (Q2b):** no Primary deploy, no Cloud Build submit, and no revision change. Traffic moves stay Daniel's word. The live proofs stay `deferred:daniel` in task 2.3h (four apps) and task 2.3c (`primary-advantage`) of `per_app_cicd_20261107`.
-- **`phase_base_sha`:** a new capture after the Phase 1 checkpoint (section 1.4).
+**Risk: `high`.** The same control joins five files, and the ancestor check of FR-15 is a new fail-closed gate on the path that migrates a production database. The phase makes no live change, so it is not `critical`. Section 3 carries the row.
+
+**Scope:** `apps/accounts`, `apps/accounting`, `apps/codecamp-advantage`, `apps/marketing`, and `apps/primary-advantage` (spec FR-7 to FR-9, FR-15, criteria 8 to 14, 18, 22, and 23).
+
+### P2.1 Defaults that the spec leaves open
+
+These defaults are test rules only. They change no product decision.
+
+- **D11 Fixture builder.** The new test file holds its own `fixture(entries)` and `runScript(args, options)` copies. It edits no file under `scripts/ci/__tests__/helpers/`, and it imports nothing from the Phase 1 test file. Reason: the Phase 1 file exports neither function (`scripts/ci/__tests__/sales-traffic-source-binding.test.mjs:344` and `:468`), and the helper files hold build-plan data for other tests.
+- **D12 Ancestor fixture.** The fixture of section 8.5 is one `file://` bare repository with two commits on `refs/heads/master` (an older commit and the newer tip), plus a third commit pushed to `refs/pull/7/head`. The third commit is the fork-only commit. `refs/pull/7/head` is a local scratch ref name, so the fixture needs no network and no GitHub call (section 1.7).
+- **D13 The exact stop lines.** The section 8.6 line is `verify-traffic-source: the release commit <sha> is not on the upstream master; merge it into master first, then start the traffic run from a commit on master`. The section 8.7 line is `verify-traffic-source: the ancestor check failed (git exit <n>); the run stops`. The Red asserts each full line, with the SHA or the exit code filled in.
+- **D14 Position proof by output.** The test proves the position of the ancestor check with the output order, not with the script text only. Each ancestor row asserts that no `missing:`, `extra:`, or `differs:` line prints (criterion 22).
+- **D15 The dropped fetch.** The script drops the `--depth=1` fetch of the release commit by SHA (spec section 3 step 2, superseded by section 8.2 step 1). The Phase 1 rows stay true: each Phase 1 fixture pushes its commit to `refs/heads/master` (`scripts/ci/__tests__/sales-traffic-source-binding.test.mjs:367`), so the one master fetch holds each fixture commit.
+- **D16 Tool stubs.** A stub is a `#!/bin/bash` file in a scratch `PATH` folder. It logs its arguments to a file and then runs the real tool by absolute path. A forced-exit stub skips the real call and exits with the named code. Phase 1 rows S-23 and S-24 use the same form.
+
+### P2.2 Harness and allowed paths
+
+- New file: `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`. It holds a JSDoc header and JSDoc on each function (AGENTS.md).
+- Changed files: the five traffic files, `scripts/ci/verify-traffic-source.sh`, and `docs/runbooks/traffic-moves.md` (task 2.2 and task 2.3).
+- **Allowed paths of Phase 2** (the scope check of P2.7 item 4): the five files `apps/accounts/cloudbuild-traffic.yaml`, `apps/accounting/cloudbuild-traffic.yaml`, `apps/codecamp-advantage/cloudbuild-traffic.yaml`, `apps/marketing/cloudbuild-traffic.yaml`, `apps/primary-advantage/cloudbuild-traffic.yaml`; `scripts/ci/verify-traffic-source.sh`; `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`; `scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs` (commit `b131f9a16`, the recorded amendment of P1.7 item 4); `scripts/ci/__tests__/cloudbuild-files.test.mjs`; `docs/runbooks/traffic-moves.md`; `.gcloudignore` (no change expected, because criterion 21 is closed; a change needs a spec amendment); and paths under `measure/tracks/sales_traffic_source_binding_20261108/` and `measure/runs/sales_traffic_source_binding_20261108/`.
+- **Not allowed in Phase 2:** a new file under `scripts/ci/__tests__/helpers/`, a new dependency, an edit to `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`, `apps/sales-advantage/cloudbuild.yaml`, `release-source-manifest.mjs`, `create-sales-release-archive.sh`, and any other app folder.
+- **Precondition of every script case:** `existsSync(<ROOT>/scripts/ci/verify-traffic-source.sh)` must be true (rule of P1.2).
+- No test reads a path under `measure/` (rule C27 of `per_app_cicd_20261107`).
+
+### P2.3 Red command and expected failure
+
+Targeted Red command (repository root):
+
+```bash
+CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs
+```
+
+Light run (repository root, criterion 7):
+
+```bash
+CI=true pnpm exec vitest run --maxWorkers=1 scripts/ci
+```
+
+Expected Red result (task 2.1):
+
+- Every artifact row fails, because the five traffic files have no step `bind-release-source` (`scripts/ci/__tests__/cloudbuild-files.test.mjs` records that no Phase 2 step-order assertion breaks).
+- Every script row fails on the script-exists precondition, with `red: scripts/ci/verify-traffic-source.sh is absent`. The script exists at Phase 1, so this line signals a real env defect; if it prints, the Red stops and reports it.
+- Rows T-20, T-21, T-24, and T-25 fail on the script text and the fetch log, because the ancestor check of section 8.2 is absent.
+- Light run: `EXIT=1`, `test_files_failed` includes the new file, and the Phase 1 files still pass. Any other failure is a Red defect, and the Red fixes it before the commit.
+- Record `EXIT=1`, the file count, `tests_failed=<n>`, `tests_passed=<n>`, and the name and fail reason of each new row. Label: `scratch_left=0` and `disk_avail_mb=<n>`.
+
+### P2.4 Cases
+
+Row ids use the `T-` prefix, because the rows live in a second file. Criterion numbers are of spec sections 5 and 8.4. Each row gives the fail-first reason at Red.
+
+| Row | Crit. | Given and action | Assertion | Fail-first reason |
+|---|---|---|---|---|
+| T-01 | 8 | The parsed `steps` of each of the five traffic files. | In each file, `ids[0]` is `bind-release-source`. Its index is below the first source step: `migrate-company-identity` for accounts, `refuse-legacy-db` for primary-advantage, and `migrate-db` for the other three. | The step is absent in each file. |
+| T-02 | 9 | The `args` of each bind step. A fixture whose upload differs from the fixture commit. | The `args` deep-equals the four items of spec section 3a-1: the script path, `$_RELEASE_COMMIT_SHA`, the GitHub URL, and `.`. The run exits non-zero and prints a `differs:` line. | The step is absent. |
+| T-03 | 10 | The `args` of each bind step, with the SHA and the URL replaced by the fixture values. A matching upload. | The run exits 0 for each of the five step commands. No `missing:`, `extra:`, or `differs:` line. | The step is absent. |
+| T-04 | 11 | Each parsed file, and the run of each step command with the SHA forms of S-18. | Each file holds `_RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"` under `substitutions:`. Each malformed SHA gives a non-zero exit before any fetch (the fetch log holds no `fetch` line). | The substitution and the step are absent. |
+| T-05 | 12, FR-9 | `sectionText(runbook, name)` for the five app sections. | Each section holds `bind-release-source` and `_RELEASE_COMMIT_SHA`. | The sections lack the id. |
+| T-06 | 13 | The bind step text of each of the five files, and the parsed step. | No match of the words of criterion 6, case-insensitive. `name` is `gcr.io/cloud-builders/git` with no `@`. `entrypoint` is `bash`. No `apt-get` and no `gcloud` in the step. | The step is absent. |
+| T-07 | 14 | The parsed Primary traffic file. | The step ids are exactly `bind-release-source`, `refuse-legacy-db`, `migrate-db`, `doctor-check`, and `update-traffic`. The bind step holds no `gcloud` command. | The step is absent. |
+| T-08 | 18 | The `args` of each bind step, and a scratch upload that lacks one in-scope file of the fixture commit. | Each of the five runs exits non-zero and prints `missing: <path>`. The `args` name the script and `$_RELEASE_COMMIT_SHA` before the run. | The step is absent. |
+| T-20 | FR-15, §8.2 | The script text. | The text holds `git cat-file -e` with `<sha>^{commit}` before `git merge-base --is-ancestor` and before the two list commands. The text holds `merge-base --is-ancestor` with `FETCH_HEAD` as the second argument. | The script holds no ancestor check. This row is an artifact test. |
+| T-21 | 22, §8.2 | The valid run of T-03, with the logging `git` wrapper first in `PATH` (D2). | The fetch log holds one `fetch` line that names `origin master`. The log holds no fetch by SHA and no `--depth` option. The log holds a `merge-base --is-ancestor` line whose last argument is `FETCH_HEAD`. | The script holds no master fetch. |
+| T-22 | 22, §8.6, §8.5 | The fork-only commit of D12 as the release commit. The upload holds the files of that commit. | Exit 1. One stderr line equals the D13 section 8.6 line with the fork-only SHA filled in. No `missing:`, `extra:`, or `differs:` line. Control: the same run with the tip of `master` and a matching upload exits 0. | The script holds no `cat-file` check. Without it, `git merge-base` on the absent object exits 128 and prints the section 8.7 line, so the D13 assertion fails. |
+| T-23 | 23, §8.5 | The older commit of `master` (not the tip) as the release commit. The upload equals the tree of that commit. | Exit 0. No `missing:`, `extra:`, or `differs:` line. This row proves that the master fetch is not depth-limited. | The script holds no ancestor check. |
+| T-24 | §8.7 | The tip of `master` and a matching upload, with a `git` wrapper that logs the arguments and forces `merge-base --is-ancestor` to exit 128 (D16). | Exit non-zero. One stderr line equals the D13 section 8.7 line with `128` filled in. No `missing:` line. Control: the same run with the real `git` exits 0. | The script holds no tool-failure branch. |
+| T-25 | FR-15, §8.2 step 3 | The tip of `master` and a matching upload, with a `git` wrapper that forces `merge-base --is-ancestor` to exit 1 (D16). | Exit 1. One stderr line equals the D13 section 8.6 line. This row forces the branch that the master-only fetch cannot reach. | The script maps merge-base exit 1 to a pass, or it holds no merge-base call. |
+
+No row depends on the counts of spec.md. No row reads a file under `measure/`. The rows T-02, T-03, and T-08 write scratch paths only.
+
+### P2.5 Adversarial mutant set
+
+The adversarial role applies each mutant to a scratch copy of the script or of the YAML, runs the targeted command of P2.3, and restores the file. It commits no mutant. Label: `mutants_rejected=<n>/10`, `mutants_total=10`.
+
+The new total is 10: the four Phase 2 rows of the outline (now Y34 to Y37) plus the six rows of the ancestor check (Y38 to Y43).
+
+| Mutant | Change | Row that must reject it |
+|---|---|---|
+| Y34 | The bind step moves after the first source step: after `refuse-legacy-db` in the Primary file, or after `migrate-company-identity` in the accounts file. | T-01 |
+| Y35 | The substitution `_RELEASE_COMMIT_SHA` is absent from one file. | T-04 |
+| Y36 | The GitHub URL holds a typing error in one file. | T-02 |
+| Y37 | One bind step uses a `-c` string instead of the four `args`. | T-03, T-06 |
+| Y38 | The `git cat-file -e <sha>^{commit}` check is removed. | T-22, T-20 |
+| Y39 | The `git merge-base --is-ancestor` check is removed. | T-25, T-20 |
+| Y40 | `FETCH_HEAD` is replaced by the release commit, or by `HEAD`. | T-21, T-20 |
+| Y41 | A merge-base exit 1 is mapped to a pass. | T-25 |
+| Y42 | The section 8.6 line changes its text. | T-22, T-25 |
+| Y43 | The fetch of `master` is replaced by a fetch of the release commit. | T-21, T-23 |
+
+Y40 and Y41 need the stub rows of T-24 and T-25, because the master-only fetch cannot reach a commit that is present and not on `master` (spec section 8.2 step 3). T-21 gives the log form for Y40 and for Y43. Y42 is killed by the exact-line assertions of T-22 and T-25. So none of the six new rows is an equivalent mutant.
+
+Adversarial scenarios (no mutant): a URL argument with a space; an upload root that is a symbolic link; an upload that holds an empty folder; a bare repository that refuses `allowAnySHA1InWant`. Label: `scenarios_checked=<n>/4`. No scenario may give a false pass.
+
+**PM scratch rules of 2026-11-09.** The adversarial brief carries these rules:
+
+1. Run any whole-tree copy of the repository through `heavy-run.sh` (section 1.1). Do not start a second heavy job.
+2. Copy only the paths that the case needs. A whole-tree copy is the last choice. The PM form allows `git worktree add --no-checkout` with a sparse checkout, but A16 of `measure/anti-patterns.md` forbids `git worktree add` in this repository. So the case copies named paths and does not add a worktree. The orchestrator records the conflict; a change of A16 is an owner decision, not a role decision.
+3. Delete the scratch base at the end of the case in the same command, with `trap EXIT`. Keep a scratch tree under 200 MB. After the round, `scratch_left=0` and the main checkout holds no mutant file.
+
+### P2.6 Green gates
+
+- **Task 2.2 gate (the script and the five files).** Disk guard first. Run the targeted command of P2.3. Required: `EXIT=0`, `tests_failed=0`, and `tests_skipped=0`. Rows T-20 to T-25 pass, and the Phase 1 file still passes. Then run `bash -n scripts/ci/verify-traffic-source.sh` (exit 0).
+- **Task 2.2 Phase 1 rows.** Run the targeted command of P1.3 again. Required: `EXIT=0` and `tests_failed=0`. Reason: task 2.2 changes the fetch of the script, and the Phase 1 rows must survive the change (D15).
+- **Task 2.3 gate (the runbook).** Run the light command. Required: `EXIT=0`, `tests_failed=0`, `tests_skipped=0`, and the F-16 runbook case passes.
+- No Green edits a test to pass, except a defect fix that the Red names.
+
+### P2.7 Closeout gate (task 2.4)
+
+1. Disk guard: `disk_avail_mb>=3000`.
+2. Light run at the phase head: `EXIT=0`, the test file count, the test count, `tests_failed=0`, `tests_skipped=0`.
+3. Targeted run of the Phase 2 file: `EXIT=0`. The record names T-01, T-06, T-07, T-20, T-21, T-22, T-23, T-24, and T-25 as passed.
+4. Scope check (section 1.4 commands): the Phase 2 track commits change only the allowed paths of P2.2. Label: `p2_out_of_scope_paths=0`.
+5. No-change check: `git diff --stat <phase_base_sha> HEAD -- apps/sales-advantage/cloudbuild.yaml apps/sales-advantage/scripts package.json pnpm-lock.yaml scripts/ci/__tests__/helpers .gcloudignore` prints 0 lines.
+6. Criterion 21 re-run: the cases S-31 and S-32 of the Phase 1 file pass, and `gcloud meta list-files-for-upload .` gives `measure_files_in_upload=0`, `sales_files_in_upload>=1`, and the script path in the list. The five files upload the same root, so this check covers them.
+7. Hash detector and the measure-read detector of P1.7 items 6 and 7, run again over the script and the Phase 2 test file (A14 controls).
+8. Clean state: `scratch_left=0`. `git worktree list | wc -l` prints the same value as at the phase base (A16).
+9. Header check: each commit subject of the track is 100 characters or less.
+10. Adversarial set: `mutants_rejected=10/10` and `scenarios_checked=4/4`.
+11. Reviews A, B, and C each give a pass at the phase head. The browser review is recorded as not applicable.
+12. Phase acceptance gives a pass against FR-7 to FR-9, FR-11 to FR-15, and criteria 8 to 14, 18, 22, and 23.
+13. The plan note of task 2.4 states that no role ran `gcloud` other than the list command, a Cloud Build submit, a workflow run, a push, or a deploy. It states that the live proofs are open.
+14. **Live proof, `deferred:daniel`.** The first traffic Cloud Build run of each app shows the two version lines and a pass of `bind-release-source` before the first source step. The runs stay in task 2.3h (accounts, accounting, codecamp-advantage, marketing, sales-advantage) and task 2.3c (primary-advantage) of `per_app_cicd_20261107`.
+
+### P2.8 Document tests and live tests
+
+- T-01, T-04, T-05, T-06, T-07, and T-20 are artifact tests. They read the YAML, the runbook, and the script text. They prove no Cloud Build run.
+- T-02, T-03, T-08, T-21, T-22, T-23, T-24, and T-25 are function-level live tests. They run the real script with `/bin/bash` on local Git data and controlled `PATH` stubs. They prove the compare, the stop rules, and the ancestor check. They do not prove the GitHub fetch, the builder image, or the gcloud upload form.
+- The live proof is item 14 of P2.7. Text that calls the ancestor check "live" or "proven in Cloud Build" before that run is an A5 or A6 defect.
+
+### P2.9 Review gates
+
+| Review | Applies | Reason and checks |
+|---|---|---|
+| Review A (correctness) | **yes, required** | The ancestor order of section 8.2 (one master fetch, `cat-file`, `merge-base`, then the two lists), the exit handling, the exact lines of sections 8.6 and 8.7, the step order of criterion 8, the Primary ids of criterion 14, the runbook text of FR-9, and the scope of P2.7 item 4. Review A checks that the drop of the depth-1 SHA fetch keeps every Phase 1 case true. |
+| Review B (security) | **yes, required** | The check changes a fail-closed gate that runs before a production migration on six files. Review B confirms or refutes each point of FR-15: the script injects no ref from the release commit or from the argument, so a value such as `master:refs/pull/7/head` cannot widen the fetch; the fetch ref is the fixed name `master` and the URL is the fixed argument of section 3a-1; the check fails closed on each exit of `git cat-file`, of `git merge-base`, and of the fetch itself; the check runs before the two lists, so a stop prints no upload information; and the step still holds no secret and no credential URL. Review B records any remaining limit, and a change of a limit is a decision for the PM (D10). |
+| Review C (UX/API) | **yes, required** | There is no screen. The operator API changes: the runbook sections of six files (FR-9, FR-12), the stop lines of sections 8.6 and 8.7, and the closing line of a mismatch (task 2.2). The text must tell the operator what stopped and what to do. |
+| Adversarial testing | **yes, required** | The 10 mutants and 4 scenarios of P2.5, under the PM scratch rules. The risk is `high`. |
+| Browser review (UX) | **no** | No page, component, or route changes. The only human surface is a build log and a runbook. |
+| Phase acceptance | **yes, required** | P2.7 item 12. |
+
+### P2.10 Anti-pattern coverage
+
+| ID | Defense in Phase 2 | Falsification condition |
+|---|---|---|
+| A1 | The live proofs stay `[b] ... deferred:daniel` in tasks 2.3h and 2.3c of `per_app_cicd_20261107`. No free text stands for a marker. | A plan note counts a live proof as done, or the marker is not `[b]`. |
+| A3 | Each count is a labeled integer: `tests_failed`, `tests_passed`, `tests_skipped`, `test_files`, `mutants_rejected`, `mutants_total`, `scenarios_checked`, `scratch_left`, `disk_avail_mb`, `p2_out_of_scope_paths`, `measure_files_in_upload`, `sales_files_in_upload`. A check parses the integer after its label. | A bare number or a date passes a count check. |
+| A4 | The script-exists precondition in each script row. The T-22 and T-25 controls (a matching tip run exits 0). The T-24 control (the real `git` exits 0). The T-21 fetch log proves the fetch that the row claims. | A row passes while the script is absent, or a stub control runs against a dead wrapper. |
+| A5 | Plan notes quote `EXIT=`, the labels, and the row names. No note claims a Cloud Build result. | A note says that the step ran in Cloud Build or that a run passed. |
+| A6 | `measure/tracks.md` and the runbook do not call the ancestor check resolved before item 14 of P2.7. | The registry says "resolved" while the live proofs are open. |
+| A7 | The forbidden-word check of T-06 reads the bind step text of each file, not the whole file. The `cat-file` and `merge-base` checks of T-20 match the command names and the arguments, not the word "ancestor". | The check flags a step that uses the word in a comment, or a text check passes while the run fails. |
+| A8 | The plan uses `[ ]`, `[~]`, `[x]`, and `[b]`. No task holds `[ ]` with "blocked" prose. | A blocked task uses `[ ]`. |
+| A9 | No test reads `measure/` as data (P2.7 item 7). | The detector finds a hit. |
+| A10 | Does not apply: the phase generates no facts file. | A generated facts file appears in the scope. |
+| A11 | Reviews A, B, and C run and report before the closeout. No task stays `[b] deferred:review-execution`. | The phase closes while a review has no result. |
+| A12, A13 | Do not apply: no catalog guard and no archive move change. | A guard reference dangles, or a track folder moves. |
+| A14 | Each `rg` detector of P2.7 has a scratch control that must hit. Exit 2 is a failure. | A bad option gives no hit and the gate passes. |
+| A15 | Does not apply: the phase adds no receipt and no hash. | A receipt hash or a checksum field appears. |
+| A16 | Scratch folders only under `/tmp`. The worktree count stays the same. The PM worktree form of P2.5 is blocked by A16, so the cases copy named paths. | The count changes, or a case adds a worktree. |
+
+A2 does not apply: the phase has no publish gate with named subjects.
