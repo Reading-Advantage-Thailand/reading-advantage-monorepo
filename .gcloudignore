@@ -15,6 +15,10 @@ apps/*
 !apps/accounts/**
 !apps/www-reading-advantage
 !apps/www-reading-advantage/**
+!apps/primary-advantage
+!apps/primary-advantage/**
+!apps/storytime
+!apps/storytime/**
 **/.env
 **/.env.*
 **/.next
