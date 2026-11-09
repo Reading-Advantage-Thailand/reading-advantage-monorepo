@@ -17,6 +17,7 @@
 - Every package suite in a test command runs through `heavy-run.sh`. One named test file may run outside it: `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`.
 - Commit headers are 100 characters or less. Each header carries `(track_id: architecture_ci_input_pin_20261110)`.
 - Paths start at the monorepo root. At the end of the phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
+- The CI-mode command stays red at the 1.2 and the 1.3 HEADs. It passes only after the 1.4 refresh. A non-zero exit at 1.2 or at 1.3 is the expected state, not a defect. Widening the skip to make it pass is a defect.
 
 ## Phase 1: CI mode and the local pin refresh (target 2026-11-12)
 
