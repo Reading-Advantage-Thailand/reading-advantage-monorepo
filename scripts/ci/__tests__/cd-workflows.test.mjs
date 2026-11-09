@@ -17,6 +17,7 @@ import {
   allWorkflowFiles,
   cloudbuild,
   combined,
+  databaseSteps,
   gatedRows,
   planRepo,
   readTable,
@@ -176,7 +177,7 @@ describe("W: per-app CD workflows", () => {
 
   it("W-05 each gated row plans exactly one job", () => {
     const rows = gatedRows();
-    must(rows.length === 8, `gated_rows=${rows.length}`);
+    must(rows.length === 6, `gated_rows=${rows.length}`);
     for (const row of rows) {
       const range = planRepo({ write: { [`${row.path}/src/red-probe-${row.id}.ts`]: "export const x = 1;\n" } });
       const result = runSelect(APPS, range.dir, range.base, range.head);
@@ -206,7 +207,7 @@ describe("W: per-app CD workflows", () => {
     must(result.outputs.matrix === "[]", `matrix=${result.outputs.matrix}`);
   });
 
-  it("W-08 accounts and workbooks in one range plan two jobs", () => {
+  it("W-08 an accounts and workbooks range plans one job and skips workbooks", () => {
     const range = planRepo({
       write: {
         "apps/accounts/src/red-probe.ts": "export const x = 1;\n",
@@ -216,10 +217,12 @@ describe("W: per-app CD workflows", () => {
     const result = runSelect(APPS, range.dir, range.base, range.head);
     must(result.status === 0, `select step failed: ${result.stderr.trim()}`);
     const matrix = JSON.parse(result.outputs.matrix ?? "null");
-    must(Array.isArray(matrix) && matrix.length === 2, `jobs_planned=${matrix?.length}`);
-    const ids = matrix.map((entry) => entry.id).sort();
-    must(JSON.stringify(ids) === JSON.stringify(["accounts", "workbooks"]), `ids=${ids.join(",")}`);
-    must(new Set(ids).size === ids.length, "matrix ids are not unique");
+    must(Array.isArray(matrix) && matrix.length === 1, `jobs_planned=${matrix?.length}`);
+    must(matrix[0].id === "accounts", `id=${matrix[0]?.id}`);
+    must(
+      result.stderr.includes("skip=workbooks reason=no Cloud Run service exists"),
+      `skip line missing for workbooks: ${result.stderr.trim()}`,
+    );
   });
 
   it("W-09 cd-apps passes the table file and project to gcloud", () => {
@@ -247,7 +250,7 @@ describe("W: per-app CD workflows", () => {
 
   it("W-10 tag math over the gated rows", () => {
     const rows = gatedRows();
-    must(rows.length === 8, `rows_checked=${rows.length}`);
+    must(rows.length === 6, `rows_checked=${rows.length}`);
     let max = 0;
     for (const row of rows) {
       const tag = tagFor(row);
@@ -286,12 +289,15 @@ describe("W: per-app CD workflows", () => {
     must(stepText(step).includes("--no-traffic"), "accounts deploy step has no --no-traffic");
   });
 
-  it("W-11-workbooks workbooks deploy step holds wb- and the build id slice", () => {
-    const row = gatedRows().find((entry) => entry.id === "workbooks");
-    const doc = workflowTextTable(row);
-    const step = doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy"));
-    assertEscapedTag(step, "wb", "workbooks");
-    must(stepText(step).includes("--no-traffic"), "workbooks deploy step has no --no-traffic");
+  it("W-11-workbooks the hand-run push file holds wb-, no traffic move, and no database step", () => {
+    const doc = cloudbuild("apps/workbooks/cloudbuild.yaml");
+    const deploys = (doc.steps ?? []).filter((entry) => String(entry.id ?? "").startsWith("deploy"));
+    must(deploys.length === 1, `deploy_steps=${deploys.length}`);
+    assertEscapedTag(deploys[0], "wb", "workbooks");
+    const text = deploys.map((entry) => stepText(entry)).join("\n");
+    must(text.includes("--no-traffic"), "workbooks deploy step has no --no-traffic");
+    must(!text.includes("update-traffic"), "workbooks push file moves traffic");
+    must(databaseSteps(doc).length === 0, "workbooks push file holds a database step");
   });
 
   it("W-11-accounting accounting deploy step holds the candidate tag", () => {
@@ -312,19 +318,21 @@ describe("W: per-app CD workflows", () => {
     must(text.includes("c$${build_id%%-*}"), "marketing tag expression missing");
   });
 
-  it("W-11-sales sales deploy steps hold both tags", () => {
-    const doc = workflowTextTable(gatedRows().find((entry) => entry.id === "sales-advantage"));
-    const deploys = doc.steps.filter((entry) => String(entry.id ?? "").startsWith("deploy"));
+  it("W-11-sales the hand-run push file holds both tags, no traffic move, and no database step", () => {
+    const doc = cloudbuild("apps/sales-advantage/cloudbuild.yaml");
+    const deploys = (doc.steps ?? []).filter((entry) => String(entry.id ?? "").startsWith("deploy"));
     const text = deploys.map((entry) => stepText(entry)).join("\n");
     must(deploys.length === 2, `deploy_steps=${deploys.length}`);
     must(text.includes("legacy-rollback"), "sales legacy-rollback tag missing");
     must(text.includes("candidate"), "sales candidate tag missing");
     must(text.includes("--no-traffic"), "sales deploy step has no --no-traffic");
+    must(!text.includes("update-traffic"), "sales push file moves traffic");
+    must(databaseSteps(doc).length === 0, "sales push file holds a database step");
   });
 
   it("W-12 each deploy step names the row service", () => {
     const rows = gatedRows();
-    must(rows.length === 8, `services_checked=${rows.length}`);
+    must(rows.length === 6, `services_checked=${rows.length}`);
     for (const row of rows) {
       const doc = workflowTextTable(row);
       const deploys = doc.steps.filter((entry) => String(entry.id ?? "").startsWith("deploy"));
@@ -465,7 +473,7 @@ describe("W: per-app CD workflows", () => {
 
   it("W-21 the input-size guards", () => {
     const rows = gatedRows();
-    must(rows.length === 8, `gated_rows=${rows.length}`);
+    must(rows.length === 6, `gated_rows=${rows.length}`);
     const ranges = 6;
     must(ranges >= 6, `ranges=${ranges}`);
     const table = readTable();

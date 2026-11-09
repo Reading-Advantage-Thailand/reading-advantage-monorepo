@@ -76,10 +76,9 @@
     "project": "reading-advantage",
     "region": "asia-southeast1",
     "cloudbuild": "apps/sales-advantage/cloudbuild.yaml",
-    "mode": "gated",
-    "tagPrefix": "legacy-rollback",
-    "tag": "legacy-rollback",
-    "tagLength": 15
+    "mode": "excluded",
+    "tagPrefix": "",
+    "reason": "release by the traffic runbook only, because it needs release inputs that a push cannot give"
   },
   {
     "id": "accounts",
@@ -100,10 +99,9 @@
     "project": "reading-advantage",
     "region": "asia-southeast1",
     "cloudbuild": "apps/workbooks/cloudbuild.yaml",
-    "mode": "gated",
-    "tagPrefix": "wb",
-    "tag": "wb-${BUILD_ID:0:8}",
-    "tagLength": 11
+    "mode": "excluded",
+    "tagPrefix": "",
+    "reason": "no Cloud Run service exists"
   },
   {
     "id": "reading-advantage",
@@ -113,6 +111,7 @@
     "region": "asia-southeast1",
     "cloudbuild": "apps/reading-advantage/cloudbuild.yaml",
     "mode": "excluded",
-    "tagPrefix": ""
+    "tagPrefix": "",
+    "reason": "excluded until its push file matches the monorepo layout; the file still builds the legacy web/ folder"
   }
 ]

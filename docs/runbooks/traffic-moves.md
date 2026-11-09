@@ -251,6 +251,16 @@ revisions run. The traffic goes to the `candidate` revision of that push build, 
 push file `apps/sales-advantage/cloudbuild.yaml` holds no database step. The new revision must
 start against the old schema.
 
+A push builds no sales revision, because the push file needs three release inputs that a push
+cannot give. A person first runs the push file by hand, from a clean checkout of the release
+commit:
+
+```
+gcloud builds submit --project=reading-advantage --config=apps/sales-advantage/cloudbuild.yaml --substitutions=_RELEASE_COMMIT_SHA=...,_CURRICULUM_BACKUP_NOT_BEFORE=...,_RELEASE_SOURCE_MANIFEST_SHA256=... .
+```
+
+The build id of that build is `_PUSH_BUILD_ID` of the traffic file.
+
 Steps, in order: `bind-release-source`, `verify-curriculum-backup`, `migrate-db`, `doctor-check`,
 `build-curriculum-workspace-deps`, `seed-production-curriculum`, `verify-production-curriculum`,
 `runtime-db-contract`, `capture-legacy-rollback`, `verify-repair-verify-legacy-rollback`,
@@ -326,12 +336,13 @@ the default `REQUIRED_...` for each, and the step refuses that default):
   the tag `legacy-rollback` is no longer the latest created revision. The first run of the sales
   traffic file can fail at this check. Daniel and the owner of the sales app decide how to change
   the script.
-- The workbooks app has no traffic file. A first service of the app must exist before a push can
-  build a revision of it.
-- The push files of `marketing` and `sales-advantage` hold the default `REQUIRED_RELEASE_COMMIT_SHA`
-  in `_RELEASE_COMMIT_SHA`. The job of `cd-apps.yml` for `marketing` passes the pushed commit
+- The workbooks app has no Cloud Run service now. The push CD skips the app. The app returns when
+  a Workbooks web app has a plan (PM decision, 2026-11-09).
+- The push CD skips `sales-advantage`. A push builds no sales revision, because the push file
+  needs three release inputs that a push cannot give (`_RELEASE_COMMIT_SHA`,
+  `_CURRICULUM_BACKUP_NOT_BEFORE`, `_RELEASE_SOURCE_MANIFEST_SHA256`). A person starts the push
+  file by hand (see the section `sales-advantage`).
+- The push file of `marketing` holds the default `REQUIRED_RELEASE_COMMIT_SHA` in
+  `_RELEASE_COMMIT_SHA`. The job of `cd-apps.yml` for `marketing` passes the pushed commit
   (`--substitutions=_RELEASE_COMMIT_SHA=<commit>`), because that is the only `REQUIRED_` default in
-  the file. The job for `sales-advantage` passes no substitution: its push file holds two more
-  `REQUIRED_` defaults (`_CURRICULUM_BACKUP_NOT_BEFORE` and `_RELEASE_SOURCE_MANIFEST_SHA256`). The
-  first step `validate-release-inputs` refuses the defaults, so the sales push build fails there
-  until the PM decides how the inputs reach the build. This is an open limit.
+  the file.

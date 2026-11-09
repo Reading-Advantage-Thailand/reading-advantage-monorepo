@@ -66,6 +66,12 @@ jobs:
                 cloudbuild,
                 substitutions: substitutions(cloudbuild),
               }));
+            // An excluded row of an affected range prints one skip line on stderr. The line names the row and the reason. It does not enter GITHUB_OUTPUT.
+            for (const row of rows) {
+              if (row.mode === "excluded" && hit(row)) {
+                console.error("skip=" + row.id + " reason=" + row.reason);
+              }
+            }
             console.log("www=" + (www ? "yes" : "no"));
             console.log("matrix=" + JSON.stringify(matrix));
           ' >> "$GITHUB_OUTPUT"

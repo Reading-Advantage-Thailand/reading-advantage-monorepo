@@ -240,4 +240,33 @@ describe("Phase 4 dry run of the three workflows on fake ranges", () => {
     must(ciIds.length === 0, `DR-11 ci=${JSON.stringify(ciIds)} expected=[]`);
     must(ciRanges === 11, `DR-11 ci_ranges=${ciRanges} expected=11`);
   });
+
+  it("DR-12 a sales-advantage and workbooks range plans no gated job and logs both skips", () => {
+    const range = planRepo({
+      write: {
+        "apps/sales-advantage/src/dry-run-skip.ts": "export const sales = 1;\n",
+        "apps/workbooks/src/dry-run-skip.ts": "export const workbooks = 1;\n",
+      },
+    });
+    const apps = runSelect(APPS, range.dir, range.base, range.head);
+    const cdApps = matrixIds(apps, "DR-12 cd-apps");
+    const cdWww = apps.outputs.www ?? "missing";
+    console.log(
+      `DRYRUN row=sales-advantage,workbooks range=apps/sales-advantage,apps/workbooks ` +
+        `cd_www=${cdWww} cd_apps=${JSON.stringify(cdApps)} gcloud_calls=${apps.gcloudCalls.length}`,
+    );
+    assertCleanRun(`DR-12 ${APPS}`, apps);
+    must(JSON.stringify(cdApps) === "[]", `DR-12 cd_apps=${JSON.stringify(cdApps)} expected=[]`);
+    must(cdWww === "no", `DR-12 cd_www=${cdWww} expected=no`);
+    must(
+      apps.stderr.includes(
+        "skip=sales-advantage reason=release by the traffic runbook only, because it needs release inputs that a push cannot give",
+      ),
+      `DR-12 sales skip line missing: ${apps.stderr.trim()}`,
+    );
+    must(
+      apps.stderr.includes("skip=workbooks reason=no Cloud Run service exists"),
+      `DR-12 workbooks skip line missing: ${apps.stderr.trim()}`,
+    );
+  });
 });

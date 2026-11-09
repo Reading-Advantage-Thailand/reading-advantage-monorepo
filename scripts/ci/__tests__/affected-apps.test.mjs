@@ -1106,6 +1106,7 @@ describe("P1 group B: the cases from the measured facts", () => {
     expect(rows.length, "B-21 rows=10").toBe(10);
     const baseKeys = ["id", "path", "service", "project", "region", "cloudbuild", "mode", "tagPrefix"];
     const gatedKeys = [...baseKeys, "tag", "tagLength"].sort();
+    const excludedKeys = [...baseKeys, "reason"].sort();
     const ids = new Set();
     const paths = new Set();
     const services = new Set();
@@ -1117,6 +1118,10 @@ describe("P1 group B: the cases from the measured facts", () => {
       if (row.mode === "gated") {
         expect(keys, `B-21 row=${row.id}`).toEqual(gatedKeys);
         gated += 1;
+      } else if (row.mode === "excluded") {
+        expect(keys, `B-21 row=${row.id}`).toEqual(excludedKeys);
+        expect(typeof row.reason, `B-21 row=${row.id}`).toBe("string");
+        expect(row.reason.length, `B-21 row=${row.id}`).toBeGreaterThan(0);
       } else {
         expect(keys, `B-21 row=${row.id}`).toEqual([...baseKeys].sort());
       }
@@ -1141,13 +1146,17 @@ describe("P1 group B: the cases from the measured facts", () => {
         expect(row.tagLength, `B-21 row=${row.id}`).toBeGreaterThan(0);
       } else {
         expect(row.tagPrefix, `B-21 row=${row.id}`).toBe("");
+        expect("tag" in row, `B-21 row=${row.id}`).toBe(false);
+        expect("tagLength" in row, `B-21 row=${row.id}`).toBe(false);
       }
     }
     expect(direct, "B-21 direct=1").toBe(1);
-    expect(gated, "B-21 gated=8").toBe(8);
-    expect(excluded, "B-21 excluded=1").toBe(1);
+    expect(gated, "B-21 gated=6").toBe(6);
+    expect(excluded, "B-21 excluded=3").toBe(3);
     expect(ids.has("www-reading-advantage"), "B-21 direct row").toBe(true);
     expect(ids.has("reading-advantage"), "B-21 excluded row").toBe(true);
+    expect(ids.has("sales-advantage"), "B-21 excluded row").toBe(true);
+    expect(ids.has("workbooks"), "B-21 excluded row").toBe(true);
     for (const oneOff of ONE_OFF_CLOUDBUILD_FILES) {
       const used = rows.filter((row) => row.cloudbuild === oneOff || row.cloudbuild.endsWith(oneOff));
       expect(used.length, `B-21 one_off=${oneOff}`).toBe(0);

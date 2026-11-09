@@ -170,8 +170,8 @@ describe("F: Cloud Build files", () => {
     }
   });
 
-  it("F-08 the 9 non-excluded push files hold no database step", () => {
-    const rows = readTable().filter((row) => row.mode !== "excluded");
+  it("F-08 the 9 push files other than the legacy reading-advantage file hold no database step", () => {
+    const rows = readTable().filter((row) => row.id !== "reading-advantage");
     must(rows.length === 9, `files_checked=${rows.length}`);
     const withSteps = [];
     for (const row of rows) {
@@ -378,8 +378,8 @@ describe("F: Cloud Build files", () => {
     }
   });
 
-  it("F-14 no non-excluded push file holds psql", () => {
-    const rows = readTable().filter((row) => row.mode !== "excluded");
+  it("F-14 no push file other than the legacy reading-advantage file holds psql", () => {
+    const rows = readTable().filter((row) => row.id !== "reading-advantage");
     must(rows.length === 9, `files_checked=${rows.length}`);
     const hits = [];
     for (const row of rows) {
