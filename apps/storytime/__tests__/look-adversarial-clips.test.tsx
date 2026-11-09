@@ -319,23 +319,65 @@ describe("adversarial word clips (K1-K7)", () => {
       mediaOf: (week: StorytimeWeek) => Array<{ file: string; kind: string }>;
     };
     const clips = receiver.mediaOf(parsed.data!).filter((entry) => entry.kind === "word-clip");
+    // The r3 take of 2026-11-09 (plan task 3.2) gives the read-along book 12 clips, so the week
+    // of this fixture holds 14 clip files: the 12 read-along clips and the 2 decodable clips.
+    // The old pin was decodable_clips_listed=2, when only the decodable book held clips (R-EDIT3).
     expect(
       `decodable_clips_listed=${clips.length}`,
-      "the receiver must list both decodable clips with kind word-clip",
-    ).toBe("decodable_clips_listed=2");
-    expect(clips.map((entry) => entry.file).sort(), "the listed files must be the decodable clips").toEqual([
+      `the receiver must list every clip file with kind word-clip, listed ${clips.length}`,
+    ).toBe("decodable_clips_listed=14");
+    expect(
+      `listed_distinct_clips=${new Set(clips.map((entry) => entry.file)).size}`,
+      "every clip file must be listed once",
+    ).toBe("listed_distinct_clips=14");
+    expect(clips.map((entry) => entry.file).sort(), "the listed files must hold both decodable clips").toEqual([
+      "l2/media/w01/words/wa-am.mp3",
+      "l2/media/w01/words/wa-ben.mp3",
+      "l2/media/w01/words/wa-hello.mp3",
+      "l2/media/w01/words/wa-i.mp3",
+      "l2/media/w01/words/wa-may.mp3",
+      "l2/media/w01/words/wa-mia.mp3",
+      "l2/media/w01/words/wa-nan.mp3",
+      "l2/media/w01/words/wa-pat.mp3",
+      "l2/media/w01/words/wa-pip.mp3",
+      "l2/media/w01/words/wa-sam.mp3",
+      "l2/media/w01/words/wa-teacher.mp3",
+      "l2/media/w01/words/wa-your.mp3",
       "words/cat.mp3",
       "words/sat.mp3",
     ]);
 
-    // The read-along reader renders only its own book: the decodable clips must
-    // create no tap target on the read-along page.
+    // The read-along reader renders only its own book: no decodable clip may reach a read-along
+    // word. The r3 take of 2026-11-09 (plan task 3.2) gives the read-along book its own clips, so
+    // page 1 holds a tap target for each word that holds one. The old pin was 0 tap targets,
+    // when the read-along book held no clip (R-EDIT3).
+    const readalongClips = new Set(Object.values(readerBook(parsed.data!).audio!.wordClips ?? {}));
+    const decodableClips = ["words/cat.mp3", "words/sat.mp3"];
     const { container, unmount } = await renderPage(parsed.data!);
     fireEvent.click(screen.getByRole("button", { name: labels.myTurn }));
-    expect(tapTargets(container), "no decodable clip may leak into the read-along page").toBe(0);
+    const targets = [...container.querySelectorAll<HTMLElement>("[data-word]")].filter((word) =>
+      word.hasAttribute("tabindex"),
+    );
+    expect(
+      `tap_targets=${targets.length}`,
+      `page 1 holds a tap target for each clipped word, found ${targets.length}`,
+    ).toBe("tap_targets=4");
     const before = plays.length;
-    for (let index = 0; index < 4; index++) fireEvent.click(wordElement(container, index));
-    expect(plays.length, "no read-along word may play a decodable clip").toBe(before);
+    for (const target of targets) {
+      const word = target.textContent?.trim() ?? "";
+      expect(word, "a tap target must hold its word").not.toBe("");
+      fireEvent.click(target);
+      const src = plays.at(-1)!.src;
+      expect(
+        readalongClips.has(src.replace("https://media.example/", "")),
+        `the tap of "${word}" must play its own read-along clip, played ${src}`,
+      ).toBe(true);
+      expect(
+        decodableClips.some((clip) => src.includes(clip)),
+        `the tap of "${word}" must not play a decodable clip`,
+      ).toBe(false);
+    }
+    expect(plays.length, "each read-along tap plays one clip").toBe(before + targets.length);
     unmount();
   });
 });
