@@ -818,13 +818,16 @@ main[data-place] button:active:not(:disabled) {
     translate: none;
     top: 30px;
   }
+  /* The plaque grows with the wrapped title: a fixed height cut a 60-character title by 20 px
+   * (UX finding F1, task 2.3h). A one-line title still measures the same 40 px. The plaque stays
+   * absolute, so it never grows the hero band, and the crest is hidden here. */
   header[data-hero] > h1 {
     left: auto;
     right: 22px;
     margin: 0;
     min-width: 0;
     min-height: 40px;
-    height: 40px;
+    height: auto;
     bottom: -16px;
     padding: 0 18px 2px;
     font-size: 20px;
