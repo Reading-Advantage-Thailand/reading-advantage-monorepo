@@ -2,14 +2,6 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import { drizzle } from "drizzle-orm/postgres-js";
-import { createDrizzleMasteryPersistence } from "../../../domain/dist/mastery/drizzle-mastery-persistence.js";
-import {
-  createSalesMasteryProjection,
-  SALES_MASTERY_BINDINGS_DIGEST,
-  SALES_MASTERY_GRAPH_RELEASE,
-} from "../../../domain/dist/sales-mastery.js";
-import type { MasteryPersistencePort } from "../../../domain/dist/mastery/persistence-ports.js";
-import { salesCurriculumBindings } from "../../../sales-knowledge/dist/index.js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -33,6 +25,69 @@ const VALID_IDENTITY_TOKEN = "internal-company-identity-token";
 const NOW = new Date("2026-08-16T12:00:00.000Z");
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u;
+const DOMAIN_SOURCE_URL = new URL("../../../domain/src/", import.meta.url);
+const SALES_KNOWLEDGE_SOURCE_URL = new URL(
+  "../../../sales-knowledge/src/",
+  import.meta.url,
+);
+
+/** Local Mastery persistence port contract used by the Red test seam. */
+interface MasteryPersistencePort {
+  readSnapshot(input: unknown): Promise<unknown>;
+  commitMasteryEvidence(input: unknown): Promise<unknown>;
+  approveMasteryCalibration(input: unknown): Promise<unknown>;
+}
+
+/** Local Drizzle Mastery persistence factory contract loaded from domain source. */
+interface DrizzleMasteryPersistenceModule {
+  createDrizzleMasteryPersistence(options: {
+    readonly db: unknown;
+    readonly tenant: { readonly schoolId: string };
+    readonly sourceTenantKey: string;
+    readonly actorId: string;
+  }): MasteryPersistencePort;
+}
+
+/** Local Sales Mastery module contract loaded from domain source. */
+interface SalesMasteryModule {
+  readonly createSalesMasteryProjection: unknown;
+  readonly SALES_MASTERY_BINDINGS_DIGEST: string;
+  readonly SALES_MASTERY_GRAPH_RELEASE: string;
+}
+
+/** Local approved Sales curriculum binding contract loaded from source. */
+interface SalesCurriculumBinding {
+  activityKind: "lesson" | "quiz-question" | "roleplay";
+  variantId: string | null;
+  objectiveIds: string[];
+}
+
+/** Local Sales curriculum binding release contract loaded from source. */
+interface SalesCurriculumBindingsModule {
+  readonly salesCurriculumBindings: {
+    readonly bindings: readonly SalesCurriculumBinding[];
+  };
+}
+
+const drizzleMasteryPersistenceModule = (await import(
+  new URL("mastery/drizzle-mastery-persistence.ts", DOMAIN_SOURCE_URL).href
+)) as DrizzleMasteryPersistenceModule;
+const createDrizzleMasteryPersistence =
+  drizzleMasteryPersistenceModule.createDrizzleMasteryPersistence;
+const salesMasteryModule = (await import(
+  new URL("sales-mastery.ts", DOMAIN_SOURCE_URL).href
+)) as SalesMasteryModule;
+const createSalesMasteryProjection =
+  salesMasteryModule.createSalesMasteryProjection;
+const SALES_MASTERY_BINDINGS_DIGEST =
+  salesMasteryModule.SALES_MASTERY_BINDINGS_DIGEST;
+const SALES_MASTERY_GRAPH_RELEASE =
+  salesMasteryModule.SALES_MASTERY_GRAPH_RELEASE;
+const salesCurriculumBindingsModule = (await import(
+  new URL("index.ts", SALES_KNOWLEDGE_SOURCE_URL).href
+)) as SalesCurriculumBindingsModule;
+const salesCurriculumBindings =
+  salesCurriculumBindingsModule.salesCurriculumBindings;
 
 interface VerifiedSalesIdentity {
   readonly issuer: string;

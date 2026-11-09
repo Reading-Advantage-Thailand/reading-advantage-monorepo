@@ -5,14 +5,6 @@ import { salesMasteryProjectionReceipts } from "@reading-advantage/db";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createDrizzleMasteryPersistence } from "../../../domain/dist/mastery/drizzle-mastery-persistence.js";
-import {
-  createSalesMasteryProjection,
-  SALES_MASTERY_BINDINGS_DIGEST,
-  SALES_MASTERY_GRAPH_RELEASE,
-} from "../../../domain/dist/sales-mastery.js";
-import { salesCurriculumBindings } from "../../../sales-knowledge/dist/index.js";
-
 import {
   createSalesMasteryPostgres16Harness,
   type SalesMasteryPostgres16Harness,
@@ -36,6 +28,62 @@ const VALID_IDENTITY_TOKEN = "internal-company-identity-token";
 const SOURCE_ATTEMPT_ID = "sales-phase2-transaction-atomicity-attempt-001";
 const IDEMPOTENCY_KEY = "sales-phase2-transaction-atomicity-idempotency-001";
 const NOW = new Date("2026-08-17T12:00:00.000Z");
+const DOMAIN_SOURCE_URL = new URL("../../../domain/src/", import.meta.url);
+const SALES_KNOWLEDGE_SOURCE_URL = new URL(
+  "../../../sales-knowledge/src/",
+  import.meta.url,
+);
+
+/** Local Drizzle Mastery persistence factory contract loaded from domain source. */
+interface DrizzleMasteryPersistenceModule {
+  createDrizzleMasteryPersistence(options: {
+    readonly db: unknown;
+    readonly tenant: { readonly schoolId: string };
+    readonly sourceTenantKey: string;
+    readonly actorId: string;
+  }): unknown;
+}
+
+/** Local Sales Mastery module contract loaded from domain source. */
+interface SalesMasteryModule {
+  readonly createSalesMasteryProjection: unknown;
+  readonly SALES_MASTERY_BINDINGS_DIGEST: string;
+  readonly SALES_MASTERY_GRAPH_RELEASE: string;
+}
+
+/** Local approved Sales curriculum binding contract loaded from source. */
+interface SalesCurriculumBinding {
+  activityKind: "lesson" | "quiz-question" | "roleplay";
+  variantId: string | null;
+  objectiveIds: string[];
+}
+
+/** Local Sales curriculum binding release contract loaded from source. */
+interface SalesCurriculumBindingsModule {
+  readonly salesCurriculumBindings: {
+    readonly bindings: readonly SalesCurriculumBinding[];
+  };
+}
+
+const drizzleMasteryPersistenceModule = (await import(
+  new URL("mastery/drizzle-mastery-persistence.ts", DOMAIN_SOURCE_URL).href
+)) as DrizzleMasteryPersistenceModule;
+const createDrizzleMasteryPersistence =
+  drizzleMasteryPersistenceModule.createDrizzleMasteryPersistence;
+const salesMasteryModule = (await import(
+  new URL("sales-mastery.ts", DOMAIN_SOURCE_URL).href
+)) as SalesMasteryModule;
+const createSalesMasteryProjection =
+  salesMasteryModule.createSalesMasteryProjection;
+const SALES_MASTERY_BINDINGS_DIGEST =
+  salesMasteryModule.SALES_MASTERY_BINDINGS_DIGEST;
+const SALES_MASTERY_GRAPH_RELEASE =
+  salesMasteryModule.SALES_MASTERY_GRAPH_RELEASE;
+const salesCurriculumBindingsModule = (await import(
+  new URL("index.ts", SALES_KNOWLEDGE_SOURCE_URL).href
+)) as SalesCurriculumBindingsModule;
+const salesCurriculumBindings =
+  salesCurriculumBindingsModule.salesCurriculumBindings;
 
 interface VerifiedIdentity {
   readonly issuer: string;
