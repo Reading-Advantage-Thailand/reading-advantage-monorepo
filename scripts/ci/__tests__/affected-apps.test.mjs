@@ -25,6 +25,7 @@ import {
   gitEnv,
   makeRepo,
   realWorkspaceFiles,
+  recordScratchDir,
   removeScratchDirs,
   requireNonEmpty,
   runScript,
@@ -580,6 +581,7 @@ describe("P1 group A: the acceptance checks of the spec", () => {
     });
     const clone = `${dir}-shallow`;
     const cloned = git(dir, ["clone", "-q", "--depth", "1", `file://${dir}`, clone]);
+    recordScratchDir(clone);
     expect(cloned.status).toBe(0);
     const result = runScript(clone, base, head);
     expectRefusal(result, "A6-06 bad_bases=1");

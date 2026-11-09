@@ -165,18 +165,28 @@ export const TABLE_ROWS = [
  *
  * The environment holds no `GIT_DIR`, `GIT_WORK_TREE`, `GIT_INDEX_FILE`, or
  * `GIT_PREFIX`. It sets `HOME`, `GIT_CONFIG_GLOBAL`, and `GIT_CONFIG_NOSYSTEM`.
+ * It sets `gc.auto` to 0 and `maintenance.auto` to false. A git call then starts
+ * no maintenance in the background.
  *
  * @param {string} home The home folder of the call.
  * @returns {Record<string, string>} The environment of the call.
  */
 export function gitEnv(home) {
   const env = { ...process.env };
+  for (const key of Object.keys(env)) {
+    if (key.startsWith("GIT_CONFIG_")) delete env[key];
+  }
   for (const key of ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"]) {
     delete env[key];
   }
   env.HOME = home;
   env.GIT_CONFIG_GLOBAL = "/dev/null";
   env.GIT_CONFIG_NOSYSTEM = "1";
+  env.GIT_CONFIG_COUNT = "2";
+  env.GIT_CONFIG_KEY_0 = "gc.auto";
+  env.GIT_CONFIG_VALUE_0 = "0";
+  env.GIT_CONFIG_KEY_1 = "maintenance.auto";
+  env.GIT_CONFIG_VALUE_1 = "false";
   return env;
 }
 
@@ -720,4 +730,17 @@ export function removeScratchDirs() {
   }
   scratchDirs.clear();
   homeDirs.clear();
+}
+
+/**
+ * Record a folder that a test file creates so `removeScratchDirs` removes it.
+ *
+ * A test that builds a folder itself, for example a shallow clone next to its
+ * scratch repository, calls this function with the folder path.
+ *
+ * @param {string} dir The folder path.
+ * @returns {void}
+ */
+export function recordScratchDir(dir) {
+  scratchDirs.add(dir);
 }
