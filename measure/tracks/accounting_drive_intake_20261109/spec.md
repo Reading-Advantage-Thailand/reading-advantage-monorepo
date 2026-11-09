@@ -862,16 +862,22 @@ real amount enters git, a test, or a log.
   file. The exact change:
 
   ```dockerfile
-  # ONE new build stage, before the web stage:
+  # ONE new build stage, before the web stage.
+  # pnpm --filter accounting exec runs with cwd /app/apps/accounting, so the
+  # outfile is ABSOLUTE: a relative path would land in /app/apps/accounting/dist.
   FROM deps AS runner-bundle
   RUN pnpm --filter accounting exec esbuild app/lib/intake-runner.ts \
       --bundle --platform=node --format=esm --target=node22 \
       --banner:js='import{createRequire as __cr}from"node:module";const require=__cr(import.meta.url);' \
-      --outfile=dist/intake-runner.mjs
+      --outfile=/app/dist/intake-runner.mjs
 
-  # The existing web stage (unchanged except the one added COPY line):
+  # The existing web stage (unchanged except the one added COPY line).
+  # Its WORKDIR is /app (apps/accounting/Dockerfile:34), so the destination
+  # ./dist/intake-runner.mjs is /app/dist/intake-runner.mjs in the stage, and the
+  # job arg dist/intake-runner.mjs resolves from /app.
   FROM node:22-alpine AS runner
   ...
+  WORKDIR /app
   RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
   COPY --from=builder --chown=nextjs:nodejs /app/apps/accounting/.next/standalone ./
@@ -881,6 +887,11 @@ real amount enters git, a test, or a log.
   EXPOSE 8080
   CMD ["node", "apps/accounting/server.js"]
   ```
+
+  **The path rule.** The bundle command's `--outfile` and the web stage's `COPY`
+  source are the same absolute path, `/app/dist/intake-runner.mjs`. A relative
+  `--outfile` writes into `/app/apps/accounting/dist` and the build fails, because
+  the `COPY` looks in `/app/dist` (D-35).
 
   The stage names stay unique: `base`, `deps`, `builder`, `runner-bundle`, and
   `runner`. No stage other than `runner` is final, and no second stage is named
@@ -1046,7 +1057,13 @@ Each criterion has an automated test that can falsify it.
     Dockerfile bundles `app/lib/intake-runner.ts` into `dist/intake-runner.mjs`
     with `esbuild` in a full bundle whose command holds `--bundle`, `--platform=node`,
     `--format=esm`, `--target=node22`, a `createRequire` banner, and **no
-    `--packages=external`**; the **last `FROM` of the Dockerfile is the existing
+    `--packages=external`**; **the `--outfile` path of the bundle command equals
+    the web stage's `COPY` source path**, both the absolute path
+    `/app/dist/intake-runner.mjs`, because `pnpm --filter accounting exec` runs
+    with cwd `/app/apps/accounting` and a relative `--outfile` lands in
+    `/app/apps/accounting/dist` (D-35); the web stage's `WORKDIR` is `/app`, so the
+    job arg `dist/intake-runner.mjs` resolves; the **last `FROM` of the Dockerfile
+    is the existing
     web stage** `FROM node:22-alpine AS runner` and its `CMD` is
     `["node", "apps/accounting/server.js"]`, so the image default serves the Next
     server; the stage names are unique and no second stage is named `runner`; the
@@ -1267,11 +1284,15 @@ decision is binding. A reader must not reopen a decision in this section.
   the job `accounting-intake-poll`, and `roles/iam.serviceAccountTokenCreator`
   on `accounting-cloud-run`, so the scheduler can mint an OAuth token for the
   job's runtime service account. A Cloud Run job has no HTTP run URL, so the
-  scheduler names no `run.app` address. **Both grants are IAM grants, and IAM
-  grants belong to the PM.** Each grant is a `deferred:pm` step in the runbook or
-  the account console. A grant is never a `cloudbuild` step, never a `gcloud`
-  command inside a Green task, and never a pipeline step. Spec FR-10a, criterion
-  36, plan task 9.x (deferred:pm).
+  scheduler names no `run.app` address. **These two grants belong to the PM**, and
+  each is a `deferred:pm` step in the runbook or the account console. **The rule is
+  narrow:** no **new** grant step for these two scheduler grants goes in
+  `apps/accounting/cloudbuild.yaml`, in a build step, or in a Green task. The rule
+  is not a ban on every grant command in that file:
+  `apps/accounting/cloudbuild.yaml:48-57` already holds the `allow-build-invoker`
+  `gcloud run services add-iam-policy-binding` step for the Cloud Build service
+  account, and that existing step stays unchanged (F76). Spec FR-10a, criterion
+  36, plan task 9.3 (deferred:pm).
 - **D-21 (the job secrets). DECIDED (orchestrator, 2026-11-09), corrected
   2026-11-09 after round 5 (F70).** **Every** Secret Manager reference goes
   through `--set-secrets`, in the exact `NAME=SECRET_NAME:latest` form of
@@ -1374,6 +1395,16 @@ decision is binding. A reader must not reopen a decision in this section.
   the history path, where both rows are history rows and no poll row exists. One
   row cannot cover both paths, because the two modes differ in their input and in
   their filter. Spec criterion 32, plan tasks 3.1 and 8.1.
+- **D-35 (the bundle output path). DECIDED (orchestrator, 2026-11-09).** The bundle
+  command's `--outfile` is the **absolute** path `/app/dist/intake-runner.mjs`, and
+  the web stage's `COPY` source stays `/app/dist/intake-runner.mjs`, so the two
+  paths are equal. The reason: `pnpm --filter accounting exec` runs with cwd
+  `/app/apps/accounting`, so a relative `--outfile` writes
+  `/app/apps/accounting/dist/intake-runner.mjs` and the image build fails. The web
+  stage's `WORKDIR` is `/app` (`apps/accounting/Dockerfile:34`), so the destination
+  `./dist/intake-runner.mjs` is `/app/dist/intake-runner.mjs` in that stage and the
+  Cloud Run job arg `dist/intake-runner.mjs` resolves. Spec FR-24, criterion 36,
+  plan tasks 3.3 and 3.4.
 
 ### 14.3 Open items
 
