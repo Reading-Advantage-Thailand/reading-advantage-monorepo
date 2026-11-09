@@ -49,6 +49,7 @@
 - [Agent Guidance](#agent-guidance)
 - [Architectural Goal](#architectural-goal)
 - [Measure Workflow](#measure-workflow)
+  - [Quotes of owner words](#quotes-of-owner-words)
 - [Documentation Standards](#documentation-standards)
   - [JSDoc for All Functions](#jsdoc-for-all-functions)
 - [Build & Test](#build--test)
@@ -774,6 +775,18 @@ Key files:
 - `measure/tech-debt.md` — Known shortcuts
 
 Never start significant work without an active track.
+
+### Quotes of owner words
+
+Specs, plans, decisions, and reports quote the owner's words exactly.
+
+In a quote, write a role in square brackets in the place of a person's name. Use "[the CEO]" or "[the office assistant]".
+
+The reason: the repository is public, and the git history keeps every name after a push.
+
+The owner name Daniel stays, because the owner gates use it (for example `deferred:daniel`).
+
+PM rule, 2026-11-09.
 
 ---
 
