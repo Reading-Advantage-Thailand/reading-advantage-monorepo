@@ -14,10 +14,37 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { DRAFT_WEEKS_ENV, loadVisibleWeek, showDraftWeeks } from "../lib/content";
-import { readinessBlocker } from "../lib/readiness";
+import { readinessBlocker, type WeekReadiness } from "../lib/readiness";
 
 const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ENV_NAMES = ["STORYTIME_REVIEW_DRAFT_WEEKS", "NEXT_PUBLIC_STORYTIME_REVIEW_DRAFT_WEEKS"];
+
+/** One media part of a week, with the status that the readiness rule reads. */
+interface LoadedApprovalPart {
+  status: string;
+}
+
+/** One picture of a loaded week, with the file that production has made. */
+interface LoadedPicture {
+  file?: string;
+}
+
+/** One page of a loaded week. */
+interface LoadedPage {
+  image: LoadedPicture;
+}
+
+/** One book of a loaded week. */
+interface LoadedBook {
+  kind: string;
+  pages: LoadedPage[];
+}
+
+/** A loaded week file, shaped so that a case can change its fields. */
+interface LoadedWeek extends WeekReadiness {
+  approval: Record<string, LoadedApprovalPart>;
+  books: LoadedBook[];
+}
 
 /** Removes every switch name from the environment. */
 function clearEnv(): void {
@@ -25,8 +52,8 @@ function clearEnv(): void {
 }
 
 /** Reads one shipped week file as plain JSON. */
-function loadWeek(file: string): Record<string, any> { // eslint-disable-line @typescript-eslint/no-explicit-any
-  return JSON.parse(readFileSync(resolve(app, "content", "l2", file), "utf8"));
+function loadWeek(file: string): LoadedWeek {
+  return JSON.parse(readFileSync(resolve(app, "content", "l2", file), "utf8")) as LoadedWeek;
 }
 
 afterEach(clearEnv);
