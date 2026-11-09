@@ -392,6 +392,17 @@ match, or at the cap.
   test is one indexed integer compare and only the rows of the same size are
   read. Every history row therefore stays a duplicate candidate, and a history
   row older than the newest 500 is still found (PM-7 condition, D-28).
+- **Who writes the size.** The intake `insert` sets `evidence_byte_size` to the
+  byte length of the downloaded Drive file buffer, before the bytes go to
+  storage. The value comes from `buffer.byteLength`, so no second read and no
+  hash is needed. `accounting_intake_documents` is a new table, so no backfill
+  of that column is needed: every row carries its own size from the first write.
+- **The coverage limit (stated).** Pass 2 reads the intake rows, which are the
+  poll rows and the history rows. That is the scope of the PM-7 condition. A
+  submission that a person makes by hand in the app has **no** intake row and no
+  `evidence_byte_size`, so pass 2 does not cover it. Such a submission is a
+  duplicate candidate through pass 1 only, that is the newest 500 rows. This is
+  a stated limit, not a defect; it is listed in section 15 (D-33).
 - **The cost.** Pass 1 reads at most 500 objects. Pass 2 reads only the rows
   whose byte size equals the candidate size, which is normally a handful. A read
   is one storage `get` of one private object. The poll runs once a day on a
@@ -461,8 +472,11 @@ not by status (F53).
 ### 5.8 The intake document repository port
 
 The intake rows need their own persistence port. The interface
-`AccountingIntakeDocumentRepository` lives beside `AccountingSubmissionRepository`
-in `packages/backend/src/modules/accounting/intake.ts`. It holds these members:
+`AccountingIntakeDocumentRepository` lives in
+`packages/backend/src/modules/accounting/intake.ts`, in the same pattern as
+`AccountingSubmissionRepository`, which lives in
+`packages/backend/src/modules/accounting/submissions.ts`. One domain area, one
+file. It holds these members:
 `insert` (**one intake row only**; the submit audit row is written by
 `submitAccountingSubmissionWithOutcome`, which already writes it, so one submit
 request gives one audit row, F61); `findByDriveFileId` (one row by the Drive file
@@ -833,29 +847,49 @@ real amount enters git, a test, or a log.
   `--platform=node` and `--format=esm`, holds `--target=node22`, and holds **no
   `--packages=external`**, so every import is inside the file. The command adds a
   `createRequire` banner, so a bundled CommonJS module can still call `require`.
-  A final stage copies only that one file and starts `node
-  dist/intake-runner.mjs`. The web service stage keeps
-  `CMD ["node", "apps/accounting/server.js"]` unchanged and copies the standalone
-  output as it does today. `esbuild` joins `apps/accounting/package.json` as a
-  devDependency pinned to `0.28.1`, the version `pnpm-lock.yaml` already resolves
-  at `pnpm-lock.yaml:10067` with `hasBin: true`; it is not a direct dependency
-  today. The exact Dockerfile lines:
+  `esbuild` joins `apps/accounting/package.json` as a devDependency pinned to
+  `0.28.1`, the version `pnpm-lock.yaml` already resolves at `pnpm-lock.yaml:10067`
+  with `hasBin: true`; it is not a direct dependency today.
+
+  **The stage layout.** The Dockerfile gains **one** new build stage,
+  `runner-bundle`, and **no** new final stage. The existing web stage
+  `FROM node:22-alpine AS runner` stays the **last** stage of the file, so the
+  image default stays `CMD ["node", "apps/accounting/server.js"]` and the
+  `accounting` Cloud Run service, which sets no `--command`, keeps serving the
+  Next server. The web stage already creates the `nextjs` user and group at
+  `apps/accounting/Dockerfile:36-37`, so the `--chown` works without a second
+  user creation. The web stage gains **one** added line that copies the bundled
+  file. The exact change:
 
   ```dockerfile
-  # runner bundle (FR-24): one self-contained file, no external packages.
+  # ONE new build stage, before the web stage:
   FROM deps AS runner-bundle
-  RUN pnpm --filter accounting exec esbuild app/lib/intake-runner.ts       --bundle --platform=node --format=esm --target=node22       --banner:js='import{createRequire as __cr}from"node:module";const require=__cr(import.meta.url);'       --outfile=dist/intake-runner.mjs
+  RUN pnpm --filter accounting exec esbuild app/lib/intake-runner.ts \
+      --bundle --platform=node --format=esm --target=node22 \
+      --banner:js='import{createRequire as __cr}from"node:module";const require=__cr(import.meta.url);' \
+      --outfile=dist/intake-runner.mjs
 
+  # The existing web stage (unchanged except the one added COPY line):
   FROM node:22-alpine AS runner
   ...
+  RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+  COPY --from=builder --chown=nextjs:nodejs /app/apps/accounting/.next/standalone ./
+  COPY --from=builder --chown=nextjs:nodejs /app/apps/accounting/.next/static ./apps/accounting/.next/static
   COPY --from=runner-bundle --chown=nextjs:nodejs /app/dist/intake-runner.mjs ./dist/intake-runner.mjs
-  CMD ["node", "dist/intake-runner.mjs"]
+  USER nextjs
+  EXPOSE 8080
+  CMD ["node", "apps/accounting/server.js"]
   ```
 
-  The runner stage copies no `node_modules` and no workspace source, so the one
-  file must be self-contained. The runner entry supports a dry start:
-  `node dist/intake-runner.mjs --help` prints the usage and exits 0 without a
-  Drive call, a database call, or a network call (D-27).
+  The stage names stay unique: `base`, `deps`, `builder`, `runner-bundle`, and
+  `runner`. No stage other than `runner` is final, and no second stage is named
+  `runner`. The Cloud Run job uses the **same** image and sets
+  `--command=node --args=dist/intake-runner.mjs`, so the job runs the bundled
+  file and the web service runs the Next server (D-32). The runner entry supports
+  a dry start: `node dist/intake-runner.mjs --help` prints the usage and exits 0
+  without a Drive call, a database call, or a network call.
+
 - **FR-25.** Cloud Scheduler starts the job through the Cloud Run Admin API run
   endpoint with an OAuth token of the scheduler service account
   `accounting-scheduler`. Every Secret Manager reference goes through
@@ -1012,14 +1046,20 @@ Each criterion has an automated test that can falsify it.
     Dockerfile bundles `app/lib/intake-runner.ts` into `dist/intake-runner.mjs`
     with `esbuild` in a full bundle whose command holds `--bundle`, `--platform=node`,
     `--format=esm`, `--target=node22`, a `createRequire` banner, and **no
-    `--packages=external`**; the final runner stage's only dependency copy is that
-    one file; a final stage starts `node dist/intake-runner.mjs`; the web `CMD`
-    stays unchanged; the job step carries the command `node dist/intake-runner.mjs`;
-    the job step puts every Secret Manager reference, the `STORAGE_*` ones included,
-    in `--set-secrets` in the `NAME=SECRET_NAME:latest` form of
-    `apps/accounting/cloudbuild.yaml:40`, and only the plain values in
-    `--set-env-vars`; and the scheduler step targets the Cloud Run Admin API `:run`
-    endpoint with an OAuth service account and no `run.app` URL (F55, F56, D-27).
+    `--packages=external`**; the **last `FROM` of the Dockerfile is the existing
+    web stage** `FROM node:22-alpine AS runner` and its `CMD` is
+    `["node", "apps/accounting/server.js"]`, so the image default serves the Next
+    server; the stage names are unique and no second stage is named `runner`; the
+    web stage holds exactly one added line
+    `COPY --from=runner-bundle --chown=nextjs:nodejs /app/dist/intake-runner.mjs ./dist/intake-runner.mjs`
+    and the web stage copies no `node_modules` for the bundle, so the one file
+    must be self-contained; the job step carries `--command=node` and
+    `--args=dist/intake-runner.mjs` on the same image; the job step puts every
+    Secret Manager reference, the `STORAGE_*` ones included, in `--set-secrets` in
+    the `NAME=SECRET_NAME:latest` form of `apps/accounting/cloudbuild.yaml:40`,
+    and only the plain values in `--set-env-vars`; and the scheduler step targets
+    the Cloud Run Admin API `:run` endpoint with an OAuth service account and no
+    `run.app` URL (F55, F56, F67, F68, D-27, D-32).
 
 ## 13. Out of scope
 
@@ -1223,22 +1263,35 @@ decision is binding. A reader must not reopen a decision in this section.
   Scheduler triggers the job through the Cloud Run Admin API run endpoint
   `https://run.googleapis.com/v2/projects/<project>/locations/<region>/jobs/accounting-intake-poll:run`
   with an OAuth token of the named scheduler service account
-  `accounting-scheduler`, which holds `roles/run.invoker` on the job. A Cloud Run
-  job has no HTTP run URL, so the scheduler names no `run.app` address. Spec
-  FR-10a, criterion 36, plan task 3.4.
-- **D-21 (the job secrets). DECIDED (orchestrator, 2026-11-09).** The job takes
-  `ACCOUNTING_DATABASE_URL`, `STORAGE_ACCESS_KEY`, and `STORAGE_SECRET_KEY`
-  through `--set-secrets`, exactly as `apps/accounting/cloudbuild.yaml:40` does
-  for the web service. Only the non-secret values (`ACCOUNTING_DRIVE_FOLDER_ID`,
-  `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`,
-  `STORAGE_PUBLIC_BASE_URL`, `ACCOUNTING_INTAKE_ACTOR_ID`,
-  `ACCOUNTING_DUPLICATE_SCAN_CAP`, `ACCOUNTING_EXTRACTION_MODEL`) go through
-  `--set-env-vars`. Spec FR-10b, plan task 3.4.
+  `accounting-scheduler`. That account holds two grants: `roles/run.invoker` on
+  the job `accounting-intake-poll`, and `roles/iam.serviceAccountTokenCreator`
+  on `accounting-cloud-run`, so the scheduler can mint an OAuth token for the
+  job's runtime service account. A Cloud Run job has no HTTP run URL, so the
+  scheduler names no `run.app` address. **Both grants are IAM grants, and IAM
+  grants belong to the PM.** Each grant is a `deferred:pm` step in the runbook or
+  the account console. A grant is never a `cloudbuild` step, never a `gcloud`
+  command inside a Green task, and never a pipeline step. Spec FR-10a, criterion
+  36, plan task 9.x (deferred:pm).
+- **D-21 (the job secrets). DECIDED (orchestrator, 2026-11-09), corrected
+  2026-11-09 after round 5 (F70).** **Every** Secret Manager reference goes
+  through `--set-secrets`, in the exact `NAME=SECRET_NAME:latest` form of
+  `apps/accounting/cloudbuild.yaml:40`: `ACCOUNTING_DATABASE_URL`,
+  `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY`,
+  `STORAGE_SECRET_KEY`, and `STORAGE_PUBLIC_BASE_URL` — seven values. Only the
+  four plain values go through `--set-env-vars`: `ACCOUNTING_DRIVE_FOLDER_ID`,
+  `ACCOUNTING_INTAKE_ACTOR_ID`, `ACCOUNTING_DUPLICATE_SCAN_CAP`, and
+  `ACCOUNTING_EXTRACTION_MODEL`. The round-4 text of this decision named three
+  secrets and put the other four in `--set-env-vars`; that text was wrong and is
+  replaced here. Spec FR-10b, FR-25, criterion 36, plan task 3.4.
 - **D-22 (the intake document repository). DECIDED (orchestrator, 2026-11-09).**
-  The port `AccountingIntakeDocumentRepository` lives beside
-  `AccountingSubmissionRepository` in `packages/backend`, and its Postgres
-  implementation lives in `apps/accounting`. `intakeDriveDocument` and the intake
-  list both use it. Spec sections 5.8 and 10, FR-1, plan tasks 1.1, 1.2, and 3.2.
+  The port `AccountingIntakeDocumentRepository` lives in
+  `packages/backend/src/modules/accounting/intake.ts`, in the **same pattern** as
+  `AccountingSubmissionRepository`, which lives in
+  `packages/backend/src/modules/accounting/submissions.ts`. The two interfaces
+  sit in two files, one file per domain area, exactly as the module already does
+  it. The Postgres implementation lives in `apps/accounting`.
+  `intakeDriveDocument` and the intake list both use it. Spec sections 5.8 and 10,
+  FR-1, plan tasks 1.1, 1.2, and 3.2.
 - **D-23 (the history month and type). DECIDED (orchestrator, 2026-11-09).** A
   history file takes its month from the Drive folder name when it is `YYYY-MM`,
   otherwise from the file's `modifiedTime`, and its type from the parser. An
@@ -1293,6 +1346,34 @@ decision is binding. A reader must not reopen a decision in this section.
   owner name Daniel stays, because the owner gates use it. Every quote in the
   three track files follows this rule. Spec section 14.1 (PM-1), the plan rules
   header, and spec-review.md.
+- **D-32 (the stage layout). DECIDED (orchestrator, 2026-11-09).** The Dockerfile
+  gains **one** new build stage, `runner-bundle`, and **no** new final stage. The
+  existing web stage `FROM node:22-alpine AS runner`
+  (`apps/accounting/Dockerfile:27`) stays the **last** stage, so the image
+  default stays `CMD ["node", "apps/accounting/server.js"]` and the `accounting`
+  Cloud Run service, which sets no `--command`, keeps serving the Next server.
+  The web stage already creates the `nextjs` user and group at `:36-37`, so the
+  added `--chown` works. The web stage gains **one** line:
+  `COPY --from=runner-bundle --chown=nextjs:nodejs /app/dist/intake-runner.mjs ./dist/intake-runner.mjs`.
+  Stage names stay unique (`base`, `deps`, `builder`, `runner-bundle`, `runner`),
+  and no second stage is named `runner`. The Cloud Run job uses the **same**
+  image and sets `--command=node --args=dist/intake-runner.mjs`. Spec FR-24,
+  criterion 36, plan tasks 3.3 and 3.4.
+- **D-33 (the byte size write and its coverage limit). DECIDED (orchestrator,
+  2026-11-09).** The intake `insert` sets `evidence_byte_size` to the byte length
+  of the downloaded Drive file buffer. The table is new, so no backfill of that
+  column is needed. Pass 2 covers the intake rows, which are the poll rows and
+  the history rows; that is the scope of the PM-7 condition. A submission that a
+  person types by hand in the app has no intake row and is covered by pass 1
+  only (the newest 500). This is a stated limit, and section 15 lists it. Spec
+  sections 5.5 and 15, FR-3, plan tasks 3.1 and 3.2.
+- **D-34 (the two Red rows for the PM-7 condition). DECIDED (orchestrator,
+  2026-11-09).** The PM-7 condition keeps **two** Red rows on purpose: task 3.1
+  proves the condition on the poll path, where the new file arrives through the
+  monthly folder and the history row is an older row, and task 8.1 proves it on
+  the history path, where both rows are history rows and no poll row exists. One
+  row cannot cover both paths, because the two modes differ in their input and in
+  their filter. Spec criterion 32, plan tasks 3.1 and 8.1.
 
 ### 14.3 Open items
 
@@ -1368,4 +1449,5 @@ stops for no item in this list.
 | The first deploy of the Cloud Run job `accounting-intake-poll` and its scheduler | `deferred:daniel` | The job step is deploy config; the job is named in FR-10 and FR-10a |
 | The first load and the structure report | `deferred:pm` | The PM runs its own script on this machine |
 | The production history write for January to October 2026 | `deferred:daniel` | The dry-run report goes to Daniel first; the write runs on his word |
+| Known limit: a submission typed by hand in the app has no intake row, so pass 2 of the content-duplicate lookup does not cover it; pass 1 (the newest 500) covers it | stated limit (D-33) | A backfill of the hand-made submissions is out of scope; the intake table is new and starts full |
 | The deploy and the traffic move | `deferred:daniel` | Daniel's word |
