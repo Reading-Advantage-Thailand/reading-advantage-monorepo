@@ -111,15 +111,24 @@ const CURRENT_SCHEMA_FILES = [
   "company-product-principals.ts",
   "content.ts",
   "flashcards.ts",
+  "game-challenges.ts",
   "index.ts",
   "jobs.ts",
   "licenses.ts",
   "marketing-constants.ts",
   "marketing.ts",
   "mastery.ts",
+  "primary-avatar.ts",
+  "primary-books.ts",
+  "primary-class-quest.ts",
+  "primary-help.ts",
+  "primary-lesson-attempts.ts",
+  "primary-mastery.ts",
+  "primary-voice.ts",
   "primary.ts",
   "progress.ts",
   "questions.ts",
+  "rpg.ts",
   "sales-mastery.ts",
   "sales.ts",
   "science.ts",
@@ -131,7 +140,7 @@ const CURRENT_SCHEMA_FILES = [
   "workbooks.ts",
 ] as const;
 
-const CURRENT_MIGRATION_INDICES = Array.from({ length: 58 }, (_, i) =>
+const CURRENT_MIGRATION_INDICES = Array.from({ length: 75 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 
