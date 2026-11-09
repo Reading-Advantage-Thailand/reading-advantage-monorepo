@@ -61,7 +61,6 @@ jobs:
     name: Build, Lint, and Test
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/science_advantage_test
       COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
 
     services:
@@ -207,7 +206,6 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.select.outputs.matrix) }}
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/science_advantage_test
       COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
 
     services:
