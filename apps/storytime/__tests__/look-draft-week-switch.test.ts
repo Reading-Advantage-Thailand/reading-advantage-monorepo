@@ -336,6 +336,27 @@ describe("P3.11 the draft week review switch", () => {
     ).not.toBeNull();
   });
 
+  it("(e2) both review values open a draft week with draft media", async () => {
+    draftWeekCases += 1;
+    writeWeek(
+      draftWeek((week) => {
+        week.approval.audio = { ...week.approval.audio, status: "draft" };
+      }),
+    );
+    process.env[DRAFT_WEEKS] = "1";
+    process.env[DRAFT_MEDIA] = "1";
+    const { visible, logs } = await loadWithLog();
+    expect(
+      visible,
+      `the draft week st2/2 with draft media must be visible with both review values, received ${
+        visible === null ? "null" : visible.meta.key
+      }`,
+    ).not.toBeNull();
+    expect(logs.join("\n"), `the log must hold "${SHOWN_LOG}"`).toContain(SHOWN_LOG);
+    const open = await highestOpenWeeks();
+    expect(open[2], "level 2 must open week 2 with both review values").toBe(2);
+  });
+
   it("(f) no tracked deploy file sets the draft week review name", () => {
     const files = deployFiles();
     filesChecked = files.length;
