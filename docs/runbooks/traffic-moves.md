@@ -18,6 +18,11 @@ Daniel's word starts a traffic file. No workflow runs a traffic file.
 - Start a traffic file with `gcloud builds submit --project=<project> --config=<file> .` from
   the repository root at the commit of the push. Add `--substitutions=<name>=<value>` for each
   substitution that the section names.
+- The first step of each traffic file, `bind-release-source`, needs the release commit on the
+  upstream `master`. A live traffic run passes only after the first push of that commit to
+  `master`.
+- Start from a clean checkout of the release commit. An untracked file in the upload stops the
+  build, because the first step compares every uploaded file with the commit.
 - Find the build of a push in the GitHub Actions run `CD — gated apps` of that push. The job
   `Build <app> with no traffic` prints the Cloud Build id in the log of the step
   `Submit Cloud Build`. The first 8 characters of that id are the end of the tag.
@@ -26,12 +31,34 @@ Daniel's word starts a traffic file. No workflow runs a traffic file.
 ## primary-advantage
 
 File: `apps/primary-advantage/cloudbuild-traffic.yaml`. Project: `primary-advantage`.
-Substitution: `_TAG`, the tag of the new revision, for example `pa-1a2b3c4d`. The push file
+Substitutions: `_RELEASE_COMMIT_SHA`, the release commit, and `_TAG`, the tag of the new revision,
+for example `pa-1a2b3c4d`. The push file
 `apps/primary-advantage/cloudbuild.yaml` holds no database step. The new revision must start
 against the old schema.
 
-Steps, in order: `refuse-legacy-db`, `migrate-db`, `doctor-check`, `update-traffic`.
+Steps, in order: `bind-release-source`, `refuse-legacy-db`, `migrate-db`, `doctor-check`,
+`update-traffic`.
 
+- `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
+  `_RELEASE_COMMIT_SHA`. The script loads the upstream `master` from GitHub and proves that the
+  release commit is on it and that the uploaded files equal the tree of that commit. A file that
+  the commit holds in the upload scope and the upload lacks stops the build (`missing:`). A file
+  that the upload holds and the commit lacks stops the build (`extra:`). A file that the
+  `.gcloudignore` of the commit excludes also gives an `extra:` line. A file with other bytes, or
+  another type (file or link), stops the build (`differs:`). A submodule entry in the upload scope
+  stops the build (`submodule:`). The build then stops before `refuse-legacy-db`, the first step
+  that reads the source, and the database does not change. The step installs nothing, and its log
+  starts with the two lines `GNU bash, version ...` and `git version ...`.
+- Pass `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` with the
+  substitutions that this section names. The release commit is the commit of the push. A missing
+  or empty value fails the bind step closed, so the run stops at step 1.
+- The step stops with `the release commit <sha> is not on the upstream master; merge it into
+  master first, then start the traffic run from a commit on master` when the upstream `master`
+  does not hold the commit. Merge the commit into `master`, push it, and start the run again.
+- If the step stops at its tool check, the log names the missing tool. The fix is another image
+  that holds `git` and `bash`, written in the same quoted-tag form with no digest.
+- Start from a clean checkout of the release commit. An untracked file in the upload stops the
+  build, because the step compares every uploaded file with the commit.
 - `refuse-legacy-db` is a read-only guard. It refuses to migrate the legacy Primary database
   that Tutor reads.
 - `doctor-check` keeps its argument `--required-migration 0074_primary_help_events`.
@@ -48,13 +75,35 @@ Find the tag after a push:
 
 ## accounts
 
-File: `apps/accounts/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitution: `_TAG`,
-for example `ac-1a2b3c4d`. The push file `apps/accounts/cloudbuild.yaml` holds no database step.
-The new revision must start against the old schema.
+File: `apps/accounts/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitutions:
+`_RELEASE_COMMIT_SHA`, the release commit, and `_TAG`, for example `ac-1a2b3c4d`. The push file
+`apps/accounts/cloudbuild.yaml` holds no database step. The new revision must start against the
+old schema.
 
-Steps, in order: `migrate-company-identity`, `bootstrap-company-identity`,
+Steps, in order: `bind-release-source`, `migrate-company-identity`, `bootstrap-company-identity`,
 `doctor-company-identity`, `bootstrap-production-identity`, `runtime-db-contract`,
 `update-traffic`.
+
+- `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
+  `_RELEASE_COMMIT_SHA`. The script loads the upstream `master` from GitHub and proves that the
+  release commit is on it and that the uploaded files equal the tree of that commit. A file that
+  the commit holds in the upload scope and the upload lacks stops the build (`missing:`). A file
+  that the upload holds and the commit lacks stops the build (`extra:`). A file that the
+  `.gcloudignore` of the commit excludes also gives an `extra:` line. A file with other bytes, or
+  another type (file or link), stops the build (`differs:`). A submodule entry in the upload scope
+  stops the build (`submodule:`). The build then stops before `migrate-company-identity`, the first
+  step that reads the source, and the database does not change. The step installs nothing, and its
+  log starts with the two lines `GNU bash, version ...` and `git version ...`.
+- Pass `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` with the
+  substitutions that this section names. The release commit is the commit of the push. A missing
+  or empty value fails the bind step closed, so the run stops at step 1.
+- The step stops with `the release commit <sha> is not on the upstream master; merge it into
+  master first, then start the traffic run from a commit on master` when the upstream `master`
+  does not hold the commit. Merge the commit into `master`, push it, and start the run again.
+- If the step stops at its tool check, the log names the missing tool. The fix is another image
+  that holds `git` and `bash`, written in the same quoted-tag form with no digest.
+- Start from a clean checkout of the release commit. An untracked file in the upload stops the
+  build, because the step compares every uploaded file with the commit.
 
 Find the tag after a push:
 
@@ -68,14 +117,37 @@ Find the tag after a push:
 
 ## accounting
 
-File: `apps/accounting/cloudbuild-traffic.yaml`. Project: `reading-advantage`. No substitution:
-the traffic goes to the tag `candidate`, which the latest push owns. The push file
+File: `apps/accounting/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitution:
+`_RELEASE_COMMIT_SHA`, the release commit. The traffic goes to the tag `candidate`, which the
+latest push owns. The push file
 `apps/accounting/cloudbuild.yaml` holds no database step. The new revision must start against the
 old schema.
 
-Steps, in order: `migrate-db`, `doctor-check`, `runtime-db-contract`, `update-traffic`.
+Steps, in order: `bind-release-source`, `migrate-db`, `doctor-check`, `runtime-db-contract`,
+`update-traffic`.
 
-Find the tag after a push: the tag is the fixed name `candidate`. No substitution is needed.
+- `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
+  `_RELEASE_COMMIT_SHA`. The script loads the upstream `master` from GitHub and proves that the
+  release commit is on it and that the uploaded files equal the tree of that commit. A file that
+  the commit holds in the upload scope and the upload lacks stops the build (`missing:`). A file
+  that the upload holds and the commit lacks stops the build (`extra:`). A file that the
+  `.gcloudignore` of the commit excludes also gives an `extra:` line. A file with other bytes, or
+  another type (file or link), stops the build (`differs:`). A submodule entry in the upload scope
+  stops the build (`submodule:`). The build then stops before `migrate-db`, the first step that
+  reads the source, and the database does not change. The step installs nothing, and its log
+  starts with the two lines `GNU bash, version ...` and `git version ...`.
+- Pass `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` with the
+  substitutions that this section names. The release commit is the commit of the push. A missing
+  or empty value fails the bind step closed, so the run stops at step 1.
+- The step stops with `the release commit <sha> is not on the upstream master; merge it into
+  master first, then start the traffic run from a commit on master` when the upstream `master`
+  does not hold the commit. Merge the commit into `master`, push it, and start the run again.
+- If the step stops at its tool check, the log names the missing tool. The fix is another image
+  that holds `git` and `bash`, written in the same quoted-tag form with no digest.
+- Start from a clean checkout of the release commit. An untracked file in the upload stops the
+  build, because the step compares every uploaded file with the commit.
+
+Find the tag after a push: the tag is the fixed name `candidate`. No tag substitution is needed.
 
 - Check which revision holds the tag now:
   `gcloud run services describe accounting --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.filter(tag='candidate').extract(revisionName).flatten())"`.
@@ -87,14 +159,37 @@ Find the tag after a push: the tag is the fixed name `candidate`. No substitutio
 
 ## codecamp-advantage
 
-File: `apps/codecamp-advantage/cloudbuild-traffic.yaml`. Project: `reading-advantage`. No
-substitution: the traffic goes to the tag `sso-candidate`, which the latest push owns. The push
-file `apps/codecamp-advantage/cloudbuild.yaml` holds no database step. The new revision must
-start against the old schema.
+File: `apps/codecamp-advantage/cloudbuild-traffic.yaml`. Project: `reading-advantage`.
+Substitution: `_RELEASE_COMMIT_SHA`, the release commit. The traffic goes to the tag
+`sso-candidate`, which the latest push owns. The push file
+`apps/codecamp-advantage/cloudbuild.yaml` holds no database step. The new revision must start
+against the old schema.
 
-Steps, in order: `migrate-db`, `doctor-check`, `update-traffic`.
+Steps, in order: `bind-release-source`, `migrate-db`, `doctor-check`, `update-traffic`.
 
-Find the tag after a push: the tag is the fixed name `sso-candidate`. No substitution is needed.
+- `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
+  `_RELEASE_COMMIT_SHA`. The script loads the upstream `master` from GitHub and proves that the
+  release commit is on it and that the uploaded files equal the tree of that commit. A file that
+  the commit holds in the upload scope and the upload lacks stops the build (`missing:`). A file
+  that the upload holds and the commit lacks stops the build (`extra:`). A file that the
+  `.gcloudignore` of the commit excludes also gives an `extra:` line. A file with other bytes, or
+  another type (file or link), stops the build (`differs:`). A submodule entry in the upload scope
+  stops the build (`submodule:`). The build then stops before `migrate-db`, the first step that
+  reads the source, and the database does not change. The step installs nothing, and its log
+  starts with the two lines `GNU bash, version ...` and `git version ...`.
+- Pass `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` with the
+  substitutions that this section names. The release commit is the commit of the push. A missing
+  or empty value fails the bind step closed, so the run stops at step 1.
+- The step stops with `the release commit <sha> is not on the upstream master; merge it into
+  master first, then start the traffic run from a commit on master` when the upstream `master`
+  does not hold the commit. Merge the commit into `master`, push it, and start the run again.
+- If the step stops at its tool check, the log names the missing tool. The fix is another image
+  that holds `git` and `bash`, written in the same quoted-tag form with no digest.
+- Start from a clean checkout of the release commit. An untracked file in the upload stops the
+  build, because the step compares every uploaded file with the commit.
+
+Find the tag after a push: the tag is the fixed name `sso-candidate`. No tag substitution is
+needed.
 
 - Check which revision holds the tag now:
   `gcloud run services describe codecamp-advantage --region=asia-southeast1 --project=reading-advantage --format="value(status.traffic.filter(tag='sso-candidate').extract(revisionName).flatten())"`.
@@ -106,13 +201,36 @@ Find the tag after a push: the tag is the fixed name `sso-candidate`. No substit
 
 ## marketing
 
-File: `apps/marketing/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitution:
-`_TAG`, the candidate tag of the push build. The tag is `c` plus the first segment of the
+File: `apps/marketing/cloudbuild-traffic.yaml`. Project: `reading-advantage`. Substitutions:
+`_RELEASE_COMMIT_SHA`, the release commit, and `_TAG`, the candidate tag of the push build. The
+tag is `c` plus the first segment of the
 `BUILD_ID` of the push build, for example `c1a2b3c4d`. The push file
 `apps/marketing/cloudbuild.yaml` holds no database step. The new revision must start against the
 old schema.
 
-Steps, in order: `migrate-db`, `doctor-check`, `runtime-db-contract`, `update-traffic`.
+Steps, in order: `bind-release-source`, `migrate-db`, `doctor-check`, `runtime-db-contract`,
+`update-traffic`.
+
+- `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
+  `_RELEASE_COMMIT_SHA`. The script loads the upstream `master` from GitHub and proves that the
+  release commit is on it and that the uploaded files equal the tree of that commit. A file that
+  the commit holds in the upload scope and the upload lacks stops the build (`missing:`). A file
+  that the upload holds and the commit lacks stops the build (`extra:`). A file that the
+  `.gcloudignore` of the commit excludes also gives an `extra:` line. A file with other bytes, or
+  another type (file or link), stops the build (`differs:`). A submodule entry in the upload scope
+  stops the build (`submodule:`). The build then stops before `migrate-db`, the first step that
+  reads the source, and the database does not change. The step installs nothing, and its log
+  starts with the two lines `GNU bash, version ...` and `git version ...`.
+- Pass `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` with the
+  substitutions that this section names. The release commit is the commit of the push. A missing
+  or empty value fails the bind step closed, so the run stops at step 1.
+- The step stops with `the release commit <sha> is not on the upstream master; merge it into
+  master first, then start the traffic run from a commit on master` when the upstream `master`
+  does not hold the commit. Merge the commit into `master`, push it, and start the run again.
+- If the step stops at its tool check, the log names the missing tool. The fix is another image
+  that holds `git` and `bash`, written in the same quoted-tag form with no digest.
+- Start from a clean checkout of the release commit. An untracked file in the upload stops the
+  build, because the step compares every uploaded file with the commit.
 
 Find the tag after a push:
 
@@ -139,18 +257,31 @@ Steps, in order: `bind-release-source`, `verify-curriculum-backup`, `migrate-db`
 `capture-company-candidate`, `update-traffic`.
 
 - `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
-  `_RELEASE_COMMIT_SHA`. The script loads the release commit from GitHub and compares it with the
-  uploaded files. A file that the commit holds in the upload scope and the upload lacks stops the
-  build (`missing:`). A file that the upload holds and the commit lacks stops the build (`extra:`).
-  A file with other bytes, or another type (file or link), stops the build (`differs:`). The
-  build then stops before `migrate-db`, and the database does not change. The step installs
-  nothing, and its log starts with the two lines `GNU bash, version ...` and `git version ...`.
+  `_RELEASE_COMMIT_SHA`. The script loads the upstream `master` from GitHub and proves that the
+  release commit is on it and that the uploaded files equal the tree of that commit. A file that
+  the commit holds in the upload scope and the upload lacks stops the build (`missing:`). A file
+  that the upload holds and the commit lacks stops the build (`extra:`). A file that the
+  `.gcloudignore` of the commit excludes also gives an `extra:` line. A file with other bytes, or
+  another type (file or link), stops the build (`differs:`). A submodule entry in the upload scope
+  stops the build (`submodule:`). The build then stops before `verify-curriculum-backup`, the
+  first step that reads the source, and before `migrate-db`, so the database does not change. The
+  step installs nothing, and its log starts with the two lines `GNU bash, version ...` and
+  `git version ...`.
+- Pass `--substitutions=_RELEASE_COMMIT_SHA=<lowercase 40-character release commit>` with the
+  substitutions that this section names. The release commit is the commit of the push. A missing
+  or empty value fails the bind step closed, so the run stops at step 1.
+- The step stops with `the release commit <sha> is not on the upstream master; merge it into
+  master first, then start the traffic run from a commit on master` when the upstream `master`
+  does not hold the commit. Merge the commit into `master`, push it, and start the run again.
+- If the step stops at its tool check, the log names the missing tool. The fix is another image
+  that holds `git` and `bash`, written in the same quoted-tag form with no digest.
 - The upload is the repository root `.`, the folder where you run `gcloud builds submit`. The
   script reads the scope from the `.gcloudignore` of the commit. The folder `measure/` is outside
   the upload, and the script does not use `create-sales-release-archive.sh`.
 - Start from a clean checkout of the release commit. An untracked file in the upload stops the
   build, because the script compares every uploaded file with the commit.
-- The step needs the release commit on GitHub. A run passes only after the first push of that commit.
+- The step needs the release commit on the upstream `master`. A run passes only after the first
+  push of that commit to `master`.
 - `verify-curriculum-backup` is the guard. It checks the curriculum backup before the seed.
 - `capture-company-candidate` runs after `verify-repair-verify-legacy-rollback`. It is the last
   step before the move.
