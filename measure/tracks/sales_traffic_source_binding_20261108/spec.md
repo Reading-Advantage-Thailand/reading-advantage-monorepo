@@ -44,7 +44,7 @@ The AGENTS.md hashing policy says: prefer Git commit or tree identity, and stop 
 A new first step `bind-release-source` runs before `verify-curriculum-backup` and so before `migrate-db`. The step does five things:
 
 1. It refuses a `_RELEASE_COMMIT_SHA` that is not 40 lowercase hex characters. This includes the default `REQUIRED_RELEASE_COMMIT_SHA`.
-2. It fetches that commit into a scratch folder. The folder is `mktemp -d` under `${TMPDIR:-/tmp}`, and a `trap` removes it on exit. The commands are `git init`, `git remote add origin <url>`, and `git fetch --depth=1 --filter=blob:none origin <sha>`. The named remote lets Git load the one blob `.gcloudignore` on demand. The fetch needs trees only, because `git ls-tree` gives the blob ids. GitHub serves a fetch of a bare SHA that it holds.
+2. It fetches that commit into a scratch folder. The folder is `mktemp -d` under `${TMPDIR:-/tmp}`, and a `trap` removes it on exit. The commands are `git init`, `git remote add origin <url>`, and `git fetch --depth=1 --filter=blob:none origin <sha>`. The named remote lets Git load the one blob `.gcloudignore` on demand. The fetch needs trees only, because `git ls-tree` gives the blob ids. GitHub serves a fetch of a bare SHA that it holds. **Phase 2 supersedes this step:** the one `master` fetch of section 8.2 holds the release commit, and the script drops the fetch of the commit by SHA.
 3. It builds the expected path list from NUL-separated data only: `git ls-tree -r -z <sha>`. Each record is `<mode> <type> <blob id>`, a tab, and the path; the script splits a record at the first tab. The step reads the `.gcloudignore` of that commit with `git show <sha>:.gcloudignore` into a file and runs `git -c core.excludesFile=<that file> check-ignore --no-index --stdin -z` on the paths. Plain `-z` is enough: without `-v`, the command prints each ignored path, NUL-terminated and unquoted, and the step needs no more. A path that the command prints is outside the upload and leaves the list. The step uses a non-bare repository (plain `git init`, never `--bare`), because `git check-ignore` exits 128 in a bare repository. The work tree of that repository is empty and holds no `.gitignore`, so only that file filters.
 4. It builds the actual path list: `cd <root> && find . \( -type f -o -type l \) -print0`, then removes the leading `./` of each path (for example `sed -z 's|^\./||'`). The paths are relative to the upload root.
 5. Both lists are sorted bytewise with `LC_ALL=C sort -z` and compared with `comm -z -3`. The lists must be equal. If they differ, the script prints one line for each difference on standard error and exits 1, in this order: first every `missing: <path>` (the commit holds it in scope, the upload lacks it), then every `extra: <path>` (the upload holds it, the commit lacks it), each group in bytewise order. The first line names the first problem. The comparison itself is byte exact, so a path with a space, a quote, a newline, or a non-ASCII character compares as it is; a newline in a name affects only the display of the line. If the lists are equal, the script compares the blob id of each path, in the same sorted order, and prints `differs: <path>` for each path whose id differs or whose type differs from the commit, then exits 1. A regular file gets its id from `git hash-object --no-filters -- <path>` (in batches with `xargs -0`); a symbolic link gets it from `readlink -n -- <path> | git hash-object --stdin`. All special entries follow section 3c.
@@ -123,7 +123,7 @@ The step `bind-release-source` is step 1 of the Primary file, before `refuse-leg
 
 ## 5. Acceptance criteria
 
-Each criterion has an automated test. Criteria 1 to 7, 15 to 17, and 19 to 21 are in `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` (task 1.1; the Red adds the rows of criterion 21 in a Red round 2). Criteria 8 to 14, 18, 22, and 23 are in the new file `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs` (task 2.1). No test reads `measure/` (rule C27 of `per_app_cicd_20261107`); criterion 21 reads only `.gcloudignore` and the `git ls-files -s` output. The paths that this track changes are the track files, `scripts/ci/verify-traffic-source.sh`, the six traffic files, `docs/runbooks/traffic-moves.md`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, the two new test files, and `.gcloudignore`.
+Each criterion has an automated test. Criteria 1 to 7, 15 to 17, and 19 to 21 are in `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs` (task 1.1; the Red adds the rows of criterion 21 in a Red round 2). Criteria 8 to 14, 18, 22, and 23 are in the new file `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs` (task 2.1). No test reads `measure/` (rule C27 of `per_app_cicd_20261107`); criterion 21 reads only `.gcloudignore` and the `git ls-files -s` output. The paths that this track changes are the track files, `scripts/ci/verify-traffic-source.sh`, the six traffic files, `docs/runbooks/traffic-moves.md`, `scripts/ci/__tests__/cloudbuild-files.test.mjs`, the three test files `scripts/ci/__tests__/sales-traffic-source-binding.test.mjs`, `scripts/ci/__tests__/traffic-source-binding-phase2.test.mjs`, and `scripts/ci/__tests__/sales-traffic-source-binding-adversarial.test.mjs` (commit `b131f9a16`), and `.gcloudignore`.
 
 1. Given an uploaded source that differs from `_RELEASE_COMMIT_SHA`, when the script runs, then it exits non-zero and prints the path of the first differing file.
 2. Given a matching source, when the script runs, then it exits 0.
@@ -189,12 +189,14 @@ The step `bind-release-source` proves three things. First, the release commit ex
 
 ### 8.2 The method
 
-The check runs inside the step `bind-release-source`, after the commit check of FR-2 and before the two lists of section 3. The commands are:
+The check runs inside the step `bind-release-source`, after the commit check of FR-2 and before the two lists of section 3. The script makes one fetch, first of all:
 
-1. `git fetch --filter=blob:none origin master`. The script loads `master` from the URL argument (section 3a-1). The fetch gives every commit and every tree of `master` and no blob. The one blob `.gcloudignore` loads on demand, as it does today.
-2. `git merge-base --is-ancestor <commit> FETCH_HEAD`. Exit 0 means the upstream `master` holds the commit, and the script continues. Exit 1 means the run stops, with the message of section 8.6. Any other exit is a Git failure, and the script stops too.
+1. `git fetch --filter=blob:none origin master`. The script loads `master` from the URL argument (section 3a-1). The fetch gives every commit and every tree of `master` and no blob. The one blob `.gcloudignore` loads on demand, as it does today. The script drops the fetch of the release commit by SHA, because the release commit is a commit of `master`, so this one fetch holds it and holds its trees. The Phase 1 criteria stay true, because each Phase 1 fixture pushes its commit to `refs/heads/master` (`scripts/ci/__tests__/sales-traffic-source-binding.test.mjs:367`), so every fixture commit is in the fetched set.
+2. The script then proves that the repository holds the commit: `git cat-file -e <sha>^{commit}`. An absent commit is not on `master`, so the script stops with the message of section 8.6 and exit 1.
+3. A present commit then gets `git merge-base --is-ancestor <sha> FETCH_HEAD`. Exit 0 means the upstream `master` holds the commit, and the script continues. Exit 1 means the commit is present but not on `master`, and the script stops with the same message of section 8.6 and exit 1. Any other non-zero exit is a tool failure, and the script stops with its own message and a non-zero exit.
+4. The compare then uses the release commit from that one fetch, so the script sets no depth limit. A shallow boundary would hide the older commits of `master`, and a released commit that is not the tip would then stop the run (criterion 23).
 
-This one fetch replaces the depth-limited fetch of section 3 step 2. A depth-limited fetch of the release commit would set a shallow boundary in the scratch repository, and that boundary hides the older commits of `master`. A released commit that is not the tip of `master` would then stop the run. So the check loads the release commit from the `master` fetch, and the script makes no second fetch.
+Cost: the fetch transfers the commits and the trees of `master`, and no blob. This spec sets no time bound. The Cloud Build step timeout governs the wait.
 
 ### 8.3 The functional requirement
 
@@ -202,16 +204,22 @@ This one fetch replaces the depth-limited fetch of section 3 step 2. A depth-lim
 
 ### 8.4 The acceptance criteria
 
-22. Given a fixture repository of section 8.5, when the script runs with the fork-only commit, then it exits non-zero and prints the message of section 8.6. The output holds no `missing:`, `extra:`, or `differs:` line, because the check runs before the two lists (task 2.1).
+22. Given a fixture repository of section 8.5, when the script runs with the fork-only commit, then it exits non-zero and prints the line of section 8.6 with the SHA filled in. Two rows give the stop, and both print the same line: (a) the fork-only commit is absent from the scratch repository, because the one `master` fetch loads no fork ref, and `git cat-file -e <sha>^{commit}` stops the run; (b) a fork-only commit that is present in the scratch repository stops at `git merge-base --is-ancestor`, and section 8.2 loads no fork ref, so row (b) is optional in the Red (task 2.1). The output holds no `missing:`, `extra:`, or `differs:` line, because the check runs before the two lists.
 23. Given the same fixture repository, when the script runs with a commit that `master` holds and that is not the tip, and the upload equals the tree of that commit, then the script exits 0. This row proves that the fetch of `master` is not depth-limited (task 2.1).
 
 ### 8.5 The fixture rule
 
-The fixture for criteria 22 and 23 is a bare scratch repository of the form of section 5: `mkdtemp` under `os.tmpdir()`, `git config uploadpack.allowFilter true`, `git config uploadpack.allowAnySHA1InWant true`, and the URL `file://<absolute path>`. A work clone makes two commits, an older commit and a newer commit, and pushes both to `refs/heads/master`. The newer commit is the tip of `master`. A branch from the older commit makes a third commit, and the test pushes that commit to `refs/pull/<n>/head`. That third commit is the fork-only commit: the upstream `master` does not hold it, and a fetch by its SHA still succeeds. The upload holds the files of the commit that the test passes.
+The fixture for criteria 22 and 23 is a bare scratch repository of the form of section 5: `mkdtemp` under `os.tmpdir()`, `git config uploadpack.allowFilter true`, `git config uploadpack.allowAnySHA1InWant true`, and the URL `file://<absolute path>`. A work clone makes two commits, an older commit and a newer commit, and pushes both to `refs/heads/master`. The newer commit is the tip of `master`. A branch from the older commit makes a third commit, and the test pushes that commit to `refs/pull/<n>/head`. That third commit is the fork-only commit: the upstream `master` does not hold it, and a fetch by its SHA still succeeds. The upload holds the files of the commit that the test passes. The one `master` fetch of section 8.2 loads no fork ref, so row 22(b) stands only when the fetch names a second ref.
 
 ### 8.6 The message rule
 
-The stop prints one line on standard error with the prefix `verify-traffic-source:`, as the other messages of the script do. The line names the release commit and says that the upstream `master` does not hold the commit as an ancestor. The line gives the next action: push the commit to `master`, or pass a commit that a push already put on `master`.
+The stop prints one line on standard error with the prefix `verify-traffic-source:`, as the other messages of the script do. The exact text is:
+
+```
+verify-traffic-source: the release commit <sha> is not on the upstream master; merge it into master first, then start the traffic run from a commit on master
+```
+
+The Green writes the release commit in place of `<sha>`. The Red asserts this full line, with the SHA filled in (criterion 22). The line names the release commit, says that the upstream `master` does not hold it, and gives the next action.
 
 ### 8.7 Network access
 
