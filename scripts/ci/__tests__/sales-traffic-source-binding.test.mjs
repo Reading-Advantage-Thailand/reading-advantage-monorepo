@@ -660,7 +660,7 @@ describe("S: sales traffic source binding", () => {
       { path: "apps/sales-advantage/app/page.tsx", content: "export default null;\n" },
       { path: "packages/db/drizzle/0001_x.sql", content: "select 1;\n" },
       { path: "scripts/ci/probe.txt", content: "probe\n" },
-      { path: "apps/primary-advantage/x.ts", content: "ignored\n" },
+      { path: "apps/workbooks/x.ts", content: "ignored\n" },
       { path: "node_modules/x.js", content: "ignored\n" },
       { path: ".env", content: "IGNORED=1\n" },
     ]);
@@ -727,13 +727,13 @@ describe("S: sales traffic source binding", () => {
   it("S-05 an extra file on an ignored path fails (default D6)", () => {
     requireScript();
     const f = basicFixture();
-    mkdirSync(join(f.upload, "apps/primary-advantage"), { recursive: true });
-    writeFileSync(join(f.upload, "apps/primary-advantage/evil.ts"), "extra\n");
+    mkdirSync(join(f.upload, "apps/workbooks"), { recursive: true });
+    writeFileSync(join(f.upload, "apps/workbooks/evil.ts"), "extra\n");
     const log = join(f.dir, "git.log");
     const bin = gitWrapper(f.dir, log);
     const res = runScript([f.sha, f.url, "."], { cwd: f.upload, env: scriptEnv({ pathDir: bin }), fetchLog: log });
     assertNonZero(res, "S-05");
-    assertStderrLine(res.stderr, "extra: apps/primary-advantage/evil.ts");
+    assertStderrLine(res.stderr, "extra: apps/workbooks/evil.ts");
   });
 
   it("S-06 excluded files that the upload lacks pass", () => {
@@ -741,10 +741,10 @@ describe("S: sales traffic source binding", () => {
     const f = fixture([
       { path: ".gcloudignore", content: REAL_GCLOUDIGNORE },
       { path: "README.md", content: "# fixture\n" },
-      { path: "apps/primary-advantage/x.ts", content: "ignored\n" },
+      { path: "apps/workbooks/x.ts", content: "ignored\n" },
       { path: "node_modules/x.js", content: "ignored\n" },
     ]);
-    if (existsSync(join(f.upload, "apps/primary-advantage/x.ts"))) {
+    if (existsSync(join(f.upload, "apps/workbooks/x.ts"))) {
       throw new Error("the fixture upload holds an ignored path");
     }
     if (existsSync(join(f.upload, "node_modules/x.js"))) {
