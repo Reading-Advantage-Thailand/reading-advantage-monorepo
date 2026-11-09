@@ -520,13 +520,15 @@ describe("Phase 2 marketing: consumer contracts (apps/marketing uses these symbo
       "apps/marketing/app/api/campaigns/[id]/route.ts",
       "apps/marketing/app/api/video/save-topics/route.ts",
       "apps/marketing/app/api/video/research-topics/route.ts",
+      "apps/marketing/app/lib/ai-credentials.ts",
       "apps/marketing/app/api/settings/route.ts",
     ];
     const expectedImports: Record<string, string[]> = {
       "apps/marketing/app/api/campaigns/route.ts": ["campaigns"],
       "apps/marketing/app/api/campaigns/[id]/route.ts": ["campaigns"],
       "apps/marketing/app/api/video/save-topics/route.ts": ["pastTopics"],
-      "apps/marketing/app/api/video/research-topics/route.ts": ["pastTopics", "settings"],
+      "apps/marketing/app/api/video/research-topics/route.ts": ["pastTopics"],
+      "apps/marketing/app/lib/ai-credentials.ts": ["settings"],
       "apps/marketing/app/api/settings/route.ts": ["settings"],
     };
     for (const f of consumerFiles) {

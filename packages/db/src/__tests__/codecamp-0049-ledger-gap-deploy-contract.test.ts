@@ -65,7 +65,8 @@ const CLOUDBUILD_PATH = join(
 const MIGRATOR_PATH = join(PACKAGE_ROOT, "src/migration.ts");
 const MIGRATE_SCRIPT_PATH = join(PACKAGE_ROOT, "scripts/migrate.ts");
 const TARGET_TAG = "0049_codecamp_exercise_quiz_repair";
-const SUCCESSOR_TAG = "0050_finance_operations_records";
+const MIGRATION_CEILING_TAG = "0059_game_challenges";
+const NEXT_MIGRATION_TAG = "0060_primary_legacy_id_map";
 
 describe("Codecamp 0049 historical-ledger gap deploy contract", () => {
   it("runs the normal migration before the exact 0049 doctor gate", () => {
@@ -91,16 +92,16 @@ describe("Codecamp 0049 historical-ledger gap deploy contract", () => {
     ).toBeLessThan(doctorIndex);
   });
 
-  it("bounds the Codecamp migration step to 0049 and excludes the successor", () => {
+  it("bounds the Codecamp migration step to the 0059_game_challenges ceiling and excludes the next tag", () => {
     const cloudBuild = readFileSync(CLOUDBUILD_PATH, "utf8");
     const migrateStep = cloudBuild
       .split(/\n\s*-\s*name:/)
       .find((block) => block.includes('id: "migrate-db"'));
     expect(migrateStep, "Codecamp migrate step must exist").toBeDefined();
     expect(migrateStep).toMatch(
-      new RegExp(`MIGRATION_CEILING_TAG=${TARGET_TAG}`),
+      new RegExp(`MIGRATION_CEILING_TAG=${MIGRATION_CEILING_TAG}`),
     );
-    expect(migrateStep).not.toContain(SUCCESSOR_TAG);
+    expect(migrateStep).not.toContain(NEXT_MIGRATION_TAG);
 
     const migrationSource = readFileSync(MIGRATOR_PATH, "utf8");
     const migrateScript = readFileSync(MIGRATE_SCRIPT_PATH, "utf8");
