@@ -74,6 +74,11 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-11-07; Phase 1 (8 council fixes) has its checkpoint dcad011f6 (phase acceptance r3 passed on 2026-11-08); Phase 2 (the look port of option 1) is next | Owner: Monorepo orchestrator | Related: storytime_at_home_release_20261106 (its Phase 3 deploy waits for the Phase 1 checkpoint) | Phase 2 Green starts by 2026-11-12 for the 2026-11-20 release*
   *Note: Daniel 2026-11-07 07:43 ICT: "We had agreed that we would have a theme or look developed in the same vein as our primary advantage program which uses our assets to create a unique and engaging experience for the students". Moved here from Phase 2c and 2d of the at-home plan. PM: M-3 stands, finding 10 dropped, label "Read the words".*
 
+- [ ] **Track: Architecture CI input pin** — *created 2026-11-10*
+  *Link: [./tracks/architecture_ci_input_pin_20261110/](./tracks/architecture_ci_input_pin_20261110/)*
+  *Status: new, opened 2026-11-10; Phase 1 (Red, Green, refresh, phase check) target 2026-11-12 | Owner: Monorepo orchestrator | Amends the archived backend_architecture_enforcement_20260713 | Priority: TOP (CI is red on every push)*
+  *Note: PM decisions of 2026-11-10: "architecture: YES to skipping the pin in CI, in backend_architecture_enforcement_20260713, as a small amendment. The pin stays as a local refresh command. A test must prove that an unlisted new analyzed file still fails." and "Option B. Write a new small track that refers to the archived backend_architecture_enforcement_20260713, and keep the archive intact." CI runs the check with `--skip-input-snapshot-pin`; the pin stays on the local `pnpm architecture:check` and the local `pnpm architecture:pin:refresh`. No push and no deploy.*
+
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
   *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*

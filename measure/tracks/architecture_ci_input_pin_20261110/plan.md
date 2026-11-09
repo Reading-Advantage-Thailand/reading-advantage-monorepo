@@ -1,0 +1,42 @@
+# Implementation Plan: CI input pin for the architecture check
+
+> **Track ID:** `architecture_ci_input_pin_20261110` · **Spec:** [spec.md](./spec.md) · **Amends:** [backend_architecture_enforcement_20260713](../../archive/backend_architecture_enforcement_20260713/)
+> **Dates:** Phase 1 local commits on 2026-11-10. Target date 2026-11-12.
+
+## Rules for this plan
+
+- Markers: `[ ]` pending, `[~]` in progress, `[x]` done, and `[b] … deferred:<owner>` at a human gate. A task in a later phase starts only after the phase heading carries its checkpoint.
+- An `[x]` note names the commit and the evidence class: automated, person-checked, or owner-passed.
+- Tests first. The Red test fails at HEAD. The Green change is the minimum.
+- Stage named paths only. Never run `git add -A` or `git add .`.
+- Do not touch `packages/backend/turbo.json` or `packages/webhooks`.
+- No new hash field, checksum, or manifest (`AGENTS.md:80-94`).
+- Do not edit, move, or rename a file in `measure/archive/backend_architecture_enforcement_20260713/`.
+- No push, no deploy, no `--no-verify`, no amend.
+- Heavy steps run through `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'`. Run one job at a time.
+- Every package suite in a test command runs through `heavy-run.sh`. One named test file may run outside it: `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`.
+- Commit headers are 100 characters or less. Each header carries `(track_id: architecture_ci_input_pin_20261110)`.
+- Paths start at the monorepo root. At the end of the phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
+
+## Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+
+Blast radius: `packages/architecture-enforcement` and `.github/workflows/ci.yml:157`. The archive does not change. No app, no deploy, and no traffic rule changes.
+
+- [ ] 1.1 Red tests for AC-1 to AC-5. Write `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`. Use a cast for the new `validateInputSnapshotPin` option. The file must run at HEAD. Run the test command. Confirm AC-1 and AC-2 fail at HEAD. Confirm AC-4 and AC-5 fail at HEAD. Confirm AC-3 passes at HEAD; AC-3 is the guard that the skip stays narrow. Commit the test file alone with `test(architecture): pin the CI mode contract (track_id: architecture_ci_input_pin_20261110)`. Test command (the one named file outside heavy-run): `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`. Evidence class: automated.
+
+- [ ] 1.2 Green: CI mode. Add `validateInputSnapshotPin?: boolean` to `ValidateAnalyzerReconciliationManifestV2Input`. Skip only the two comparisons at `packages/architecture-enforcement/src/v2-manifest-validation.ts:953-960` and `:1026-1030` when it is `false`. Add `skipInputSnapshotPin?: boolean` to `CheckArchitectureRepositoryOptions` in `packages/architecture-enforcement/src/architecture-check.ts:67-80`. Pass `validateInputSnapshotPin: options.skipInputSnapshotPin !== true` at `packages/architecture-enforcement/src/architecture-check.ts:177-185`. Parse `--skip-input-snapshot-pin` in `packages/architecture-enforcement/src/architecture-check-cli.ts:56-96`. Carry it in `ArchitectureCheckCliOptions`. Set the step at `.github/workflows/ci.yml:157` to `run: pnpm architecture:check --skip-input-snapshot-pin`. Run the test command. AC-1 to AC-4 pass. AC-5 stays Red until 1.3. Commit the four files with `feat(architecture): skip the input pin in CI (track_id: architecture_ci_input_pin_20261110)`. Test command: `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`. Evidence class: automated.
+
+- [ ] 1.3 Green: local refresh command. Add `packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts`. It reads the manifest. It computes the five fields of spec D-3. It prints the old and new values. It writes nothing without `--acknowledge`. It writes the canonical manifest with `--acknowledge`. It exits 2 on an analysis error. Add `"pin:refresh": "tsx src/architecture-pin-refresh-cli.ts"` to `packages/architecture-enforcement/package.json`. Add `"architecture:pin:refresh": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-pin-refresh-cli.ts"` to `package.json`. Add the CI mode, the local full check, and the refresh command to `docs/architecture-enforcement.md`. Keep the rule that CI never runs the baseline-update command. Run the test command. AC-5 passes. Commit the four files with `feat(architecture): add the pin refresh command (track_id: architecture_ci_input_pin_20261110)`. Test command: `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`. Evidence class: automated.
+
+- [ ] 1.4 Refresh the manifest pins at the 1.3 HEAD. Run `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:pin:refresh --acknowledge'`. The command changes five fields in `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`. Commit only that file with `chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)`. Run the local full check through heavy-run: `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:check'`. Expect exit 0. Exit 1 means the debt comparison changed: stop and report. Exit 2 means the manifest is invalid: stop and report. Run the test command. Test command: `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`. Evidence class: automated.
+
+- [ ] 1.5 Phase check at one HEAD. Run one job at a time through heavy-run:
+  - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement check-types'`. Expect exit 0.
+  - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement lint'`. Expect exit 0.
+  - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter @reading-advantage/architecture-enforcement test'`. Expect exit 0.
+  - `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts` (the one named file outside heavy-run). Expect exit 0.
+  - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:check --skip-input-snapshot-pin'`. Expect exit 0 and no "Analyzer input snapshot hash does not match current bytes" line.
+  - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:check'`. Expect exit 0, so the local pin stays.
+  - `git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/`. Expect an empty list, so the archive is intact.
+  - `git show --stat --oneline` for each track commit. Expect no path under `packages/backend/turbo.json` or `packages/webhooks`.
+  Record every exit code and the output line count. A non-zero exit stops the phase and goes to the orchestrator. Then the acceptance role checks AC-1 to AC-5 at an immutable HEAD and appends `[checkpoint: <sha>]` to this heading. Evidence class: automated.
