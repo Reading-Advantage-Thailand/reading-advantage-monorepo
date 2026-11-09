@@ -28,8 +28,8 @@ const PREVIOUS_PIN = "cf30bb2eee55806bf8830b3a3e69e4f6044847e6";
 /** The A-42 draft pin that task 3.8 received. */
 const A_42_PIN = "cad0307cad31a3131dc3a06e9e773537a1a6219b";
 
-/** The pin of the release of 2026-11-20. */
-const RELEASE_PIN = "82f88853615f2925d8f1c12b4571790305224178";
+/** The pin of the release of 2026-11-20, after the r3 take of 2026-11-09 (plan task 3.2). */
+const RELEASE_PIN = "953f798ea309cc10abd5538c202e05ff31a2320d";
 
 /** A week as plain JSON, for a broken copy. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
