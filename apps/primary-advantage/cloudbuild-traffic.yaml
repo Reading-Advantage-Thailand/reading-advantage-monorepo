@@ -4,14 +4,26 @@
 # production database of Primary and then moves traffic to the revision that a push built with
 # --no-traffic. Daniel's word supplies _TAG, for example pa-1a2b3c4d.
 #
-# Order: read-only guard, migrate, doctor check, traffic move. See docs/runbooks/traffic-moves.md.
+# Order: release source bind, read-only guard, migrate, doctor check, traffic move.
+# See docs/runbooks/traffic-moves.md.
 steps:
+  # The first step compares the uploaded repository root with the release commit and stops the
+  # build before any step that reads the source.
+  - name: "gcr.io/cloud-builders/git"
+    id: "bind-release-source"
+    entrypoint: "bash"
+    args:
+      - "scripts/ci/verify-traffic-source.sh"
+      - "$_RELEASE_COMMIT_SHA"
+      - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
+      - "."
+
   # DATABASE_URL is a Cloud SQL unix-socket URL (?host=/cloudsql/<instance>) held
   # in its own secret, PRIMARY_V2_DATABASE_URL. Never point the legacy
   # DATABASE_URL secret at the new database: a legacy rollback revision uses it.
   # Cloud Build steps have no /cloudsql socket, so each step starts the Cloud SQL
   # Auth Proxy on the same /cloudsql path the runtime uses.
-  # Read-only guard first: never migrate the legacy Primary database
+  # Read-only guard after the bind step: never migrate the legacy Primary database
   # (Tutor reads it). Then migrate, then fail closed unless the ledger matches
   # the journal and the latest migration is applied. All run before the traffic move.
   - name: "node:22-slim"
@@ -60,6 +72,7 @@ availableSecrets:
       env: "DATABASE_URL"
 
 substitutions:
+  _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
   _PROJECT_ID: "primary-advantage"
   _DATABASE_URL: "PRIMARY_V2_DATABASE_URL"
 

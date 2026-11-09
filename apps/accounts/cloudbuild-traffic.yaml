@@ -4,9 +4,20 @@
 # production company-identity database and then moves traffic to the revision that a push built
 # with --no-traffic. Daniel's word supplies _TAG, for example ac-1a2b3c4d.
 #
-# Order: migrate, bootstrap, doctor, production identity bootstrap, runtime probe, traffic move.
-# See docs/runbooks/traffic-moves.md.
+# Order: release source bind, migrate, bootstrap, doctor, production identity bootstrap, runtime
+# probe, traffic move. See docs/runbooks/traffic-moves.md.
 steps:
+  # The first step compares the uploaded repository root with the release commit and stops the
+  # build before any step that reads the source.
+  - name: "gcr.io/cloud-builders/git"
+    id: "bind-release-source"
+    entrypoint: "bash"
+    args:
+      - "scripts/ci/verify-traffic-source.sh"
+      - "$_RELEASE_COMMIT_SHA"
+      - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
+      - "."
+
   - name: "node:22-slim"
     id: "migrate-company-identity"
     entrypoint: "bash"
@@ -66,6 +77,9 @@ steps:
       - "--region=asia-southeast1"
       - "--platform=managed"
       - "--to-tags=${_TAG}=100"
+
+substitutions:
+  _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
 
 availableSecrets:
   secretManager:

@@ -6,25 +6,30 @@
 #
 # A person starts a traffic Cloud Build file by hand and uploads a source tree. This script
 # proves that the upload equals the tree of the release commit, so that a wrong tree cannot
-# change the production schema. The upload has no Git data, so the script loads the commit
-# (trees only, one blob on demand) from the repository URL into a scratch folder.
+# change the production schema. The upload has no Git data, so the script loads the upstream
+# master (the commits and the trees, one blob on demand) from the repository URL into a
+# scratch folder.
 #
-# Method (spec section 3 of the track sales_traffic_source_binding_20261108):
-#   1. Expected list: `git ls-tree -r -z` of the commit, minus the paths that the
-#      `.gcloudignore` of that commit excludes (`git check-ignore --no-index`).
-#   2. Actual list: every regular file and symbolic link below <uploaded-root>.
-#   3. Both lists are NUL-separated, sorted bytewise, and compared two ways.
-#   4. If the lists are equal, the Git blob id of each path is compared.
+# Method (spec sections 3 and 8.2 of the track sales_traffic_source_binding_20261108):
+#   1. One read of the upstream master: the commits and the trees, no blob.
+#   2. The release commit must exist in that master and must be an ancestor of its tip.
+#   3. Expected list: the NUL-separated tree list of the commit, minus the paths that the
+#      `.gcloudignore` of that commit excludes (the ignore rules of Git).
+#   4. Actual list: every regular file and symbolic link below <uploaded-root>.
+#   5. Both lists are NUL-separated, sorted bytewise, and compared two ways.
+#   6. If the lists are equal, the Git blob id of each path is compared.
 #
 # Exit codes:
 #   0 — the upload equals the commit
-#   1 — a difference, a bad argument, a special entry, or a missing tool
+#   1 — a difference, a bad argument, a special entry, a missing tool, or a release commit
+#       that the upstream master does not hold
 #   other non-zero — a Git command failed
 #
 # Output on standard error, one line for each difference, in this order:
 #   missing: <path>   the commit holds the path in scope; the upload lacks it
 #   extra: <path>     the upload holds the path; the commit lacks it (or excludes it)
 #   differs: <path>   the blob id or the type (file or link) differs
+#   submodule: <path> the commit holds a submodule entry in the upload scope
 #
 # Special entries (spec section 3c): a submodule entry or a `#!include:` line fails closed.
 # The executable bit is not compared.
@@ -81,6 +86,21 @@ pair_records() {
   } 3< "$2" 4< "$3"
 }
 
+# Count the paths of a NUL-separated file.
+# $1: the file. Prints the count on standard output.
+count_paths() {
+  tr -cd '\0' < "$1" | wc -c | tr -d ' '
+}
+
+# Print the closing line of a mismatch and stop with exit 1.
+# $1: the count of the missing paths. $2: the count of the extra paths.
+# $3: the count of the paths whose blob id differs.
+stop_mismatch() {
+  printf 'verify-traffic-source: the upload does not match commit %s: missing=%s extra=%s differs=%s\n' \
+    "$commit" "$1" "$2" "$3" >&2
+  exit 1
+}
+
 # --- Tool check and version lines. Nothing is loaded before this block ends. ---
 require_tool bash
 require_tool git
@@ -118,7 +138,7 @@ esac
 [ -d "$upload_arg" ] || fail "the uploaded root is not a folder"
 root=$(cd -- "$upload_arg" && pwd -P)
 
-# --- Load the commit into a scratch repository (non-bare: check-ignore needs a work tree). ---
+# --- Load the upstream master into a scratch repository (non-bare: the ignore check needs a work tree). ---
 scratch=$(mktemp -d "${TMPDIR:-/tmp}/verify-traffic-source.XXXXXX")
 trap cleanup EXIT
 repo=$scratch/repo
@@ -126,8 +146,20 @@ repo=$scratch/repo
 git init -q "$repo"
 cd -- "$repo"
 git remote add origin "$url"
-git fetch -q --depth=1 --filter=blob:none origin "$commit"
-git cat-file -e "${commit}^{commit}" || fail "the commit is not in the repository"
+# One read of master: it holds the release commit and every tree of master (spec section 8.2).
+git fetch -q --filter=blob:none origin master
+
+# The release commit must exist, and the upstream master must hold it as an ancestor.
+if ! git cat-file -e "${commit}^{commit}" 2>/dev/null; then
+  fail "the release commit $commit is not on the upstream master; merge it into master first, then start the traffic run from a commit on master"
+fi
+rc=0
+git merge-base --is-ancestor "$commit" FETCH_HEAD || rc=$?
+case $rc in
+  0) ;;
+  1) fail "the release commit $commit is not on the upstream master; merge it into master first, then start the traffic run from a commit on master" ;;
+  *) fail "the ancestor check failed (git exit $rc); the run stops" ;;
+esac
 
 # The rules of the commit. Git loads this one blob on demand from the named remote.
 rules=$scratch/gcloudignore
@@ -167,7 +199,8 @@ comm -z -23 "$scratch/expected-paths.z" "$scratch/actual-paths.z" > "$scratch/mi
 comm -z -13 "$scratch/expected-paths.z" "$scratch/actual-paths.z" > "$scratch/extra.z"
 report missing "$scratch/missing.z"
 report extra "$scratch/extra.z"
-[ "$bad" -eq 0 ] || exit 1
+[ "$bad" -eq 0 ] ||
+  stop_mismatch "$(count_paths "$scratch/missing.z")" "$(count_paths "$scratch/extra.z")" 0
 
 # --- Compare the blob id and the type of each path. The lists are equal here. ---
 # Expected records: `<path><TAB><file|link> <blob id>`. The executable bit is not compared.
@@ -190,7 +223,7 @@ xargs -0 -r -n 500 git hash-object --no-filters -- < "$scratch/actual-files.z" >
 comm -z -13 "$scratch/expected-records.z" "$scratch/actual-records.z" > "$scratch/differs-records.z"
 sed -z 's/\t[^\t]*$//' "$scratch/differs-records.z" > "$scratch/differs.z"
 report differs "$scratch/differs.z"
-[ "$bad" -eq 0 ] || exit 1
+[ "$bad" -eq 0 ] || stop_mismatch 0 0 "$(count_paths "$scratch/differs.z")"
 
-count=$(tr -cd '\0' < "$scratch/actual-records.z" | wc -c | tr -d ' ')
+count=$(count_paths "$scratch/actual-records.z")
 printf 'verify-traffic-source: the upload matches commit %s (%s paths)\n' "$commit" "$count"

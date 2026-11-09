@@ -5,9 +5,20 @@
 # --no-traffic. Daniel's word supplies _TAG, the candidate tag of the push build (c plus the first
 # segment of its BUILD_ID, for example c1a2b3c4d).
 #
-# Order: migrate, doctor check, runtime probe, traffic move.
+# Order: release source bind, migrate, doctor check, runtime probe, traffic move.
 # See docs/runbooks/traffic-moves.md.
 steps:
+  # The first step compares the uploaded repository root with the release commit and stops the
+  # build before any step that reads the source.
+  - name: "gcr.io/cloud-builders/git"
+    id: "bind-release-source"
+    entrypoint: "bash"
+    args:
+      - "scripts/ci/verify-traffic-source.sh"
+      - "$_RELEASE_COMMIT_SHA"
+      - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
+      - "."
+
   # ── Migrate database ─────────────────────────────────────────────────
   # The build worker does not receive a Cloud Run /cloudsql mount. Start the
   # pinned Cloud SQL Auth Proxy on the same Unix-socket path used by the
@@ -56,6 +67,9 @@ steps:
       - "--region=asia-southeast1"
       - "--platform=managed"
       - "--to-tags=${_TAG}=100"
+
+substitutions:
+  _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
 
 availableSecrets:
   secretManager:

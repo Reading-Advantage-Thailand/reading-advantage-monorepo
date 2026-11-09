@@ -4,9 +4,20 @@
 # production database of codecamp-advantage and then moves traffic to the revision that a push built with
 # --no-traffic. The tag is sso-candidate: the latest push owns it.
 #
-# Order: migrate, doctor check, traffic move.
+# Order: release source bind, migrate, doctor check, traffic move.
 # See docs/runbooks/traffic-moves.md.
 steps:
+  # The first step compares the uploaded repository root with the release commit and stops the
+  # build before any step that reads the source.
+  - name: "gcr.io/cloud-builders/git"
+    id: "bind-release-source"
+    entrypoint: "bash"
+    args:
+      - "scripts/ci/verify-traffic-source.sh"
+      - "$_RELEASE_COMMIT_SHA"
+      - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
+      - "."
+
   # CODECAMP_DATABASE_URL is a Cloud SQL unix-socket URL
   # (?host=/cloudsql/<instance>). Cloud Build steps have no /cloudsql socket,
   # so migrate/doctor start the Cloud SQL Auth Proxy (IAM-authenticated,
@@ -41,6 +52,9 @@ steps:
       - "--region=asia-southeast1"
       - "--platform=managed"
       - "--to-tags=sso-candidate=100"
+
+substitutions:
+  _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
 
 availableSecrets:
   secretManager:
