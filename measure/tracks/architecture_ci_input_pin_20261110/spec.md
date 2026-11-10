@@ -39,6 +39,12 @@ The PM decisions, word for word:
 
 > Option B. Write a new small track that refers to the archived backend_architecture_enforcement_20260713, and keep the archive intact.
 
+The PM decisions of 2026-11-11, word for word:
+
+> PM DECISION until 11-20: no heavy job may hold the lock longer than 30 min (HEAVY_RUN_TIMEOUT_S 1800 max) except a Storytime p1 job. The pin refresh does not run again until it fits in 30 min.
+
+> Your default is ACCEPTED: a light Build role adds task 1.4a to the spec and the plan; Red on MiniMax with the tree-walk count test (no clock); Green caches the result per module and shares one analysis run (5 passes → 2, 1 copy); manifest fields and the AC-2 guard unchanged; task 1.4 runs again after 1.4a under the 1800 s p2 cap
+
 ## 2. Evidence (read only, 2026-11-10, at 5062b170e)
 
 - **CI step.** `.github/workflows/ci.yml:156-157`. The step name is
@@ -73,6 +79,10 @@ The PM decisions, word for word:
   and `parseErrors` (`packages/architecture-enforcement/src/analyzer.ts:116-125`).
   The report hash binds the exact source path list. A new analyzed file changes
   the report, even when the file adds no finding.
+- **Cost analysis.** `measure/runs/architecture_ci_input_pin_20261110/pin-refresh-cost-analysis.md`
+  (2026-11-11) counts 5 analyzer passes, 5 projections, and 3 input snapshot
+  hash runs for one refresh. It names the whole-file walk in
+  `moduleSpecifierForBinding` as the likely super-linear step.
 - **Projection.** `createV2EvidenceSourceProjection`
   (`v2-manifest-validation.ts:294-346`) reads clean HEAD bytes and overlays only
   `packages/architecture-enforcement` candidates. An unrelated dirty file does
@@ -113,6 +123,12 @@ The PM decisions, word for word:
 - **D-6 (the hash policy). DECIDED (orchestrator, 2026-11-10).** This track adds
   no hash field. It narrows where the existing pin comparison runs
   (`AGENTS.md:80-94`).
+- **D-7 (the refresh cost). DECIDED (PM, 2026-11-11).** A light Build role adds
+  task 1.4a to this spec and the plan. Red runs on the MiniMax model family with
+  the tree-walk count test. The test reads no clock. Green caches the binding
+  result for each module and shares one analysis run. The passes go from 5 to 2.
+  The projections go from 5 to 1. The manifest fields and the AC-2 guard stay
+  unchanged. Task 1.4 runs again after task 1.4a under the 1800 s p2 cap.
 
 ## 4. Functional requirements
 
@@ -178,6 +194,27 @@ flag. No environment variable selects the mode.
 and the refresh command. It keeps the rule that CI never runs the
 baseline-update command.
 
+### FR-7 The refresh cost: one analysis per refresh
+
+`moduleSpecifierForBinding` (`analyzer.ts:1913-1944`) walks the whole source
+file with `ts.forEachChild`. The analyzer calls it once for each member-access
+node, from `analyzer.ts:1999` inside the loops at `analyzer.ts:2775` and
+`analyzer.ts:2856`. A module with N member-access nodes pays N whole-file walks.
+
+The fix stores the module facts once for each module. The store holds the static
+module specifier for each local binding. The call at `analyzer.ts:1999` reads
+the store and stops the whole-file walk.
+
+One refresh makes 1 source projection and 2 analyzer report passes. Its
+validation reuses that evidence. The validation adds no pass and no projection.
+The current command makes 5 passes and 5 projections.
+
+The manifest fields stay the same. `V2_MANIFEST_KEYS` and the strict key check
+do not change. The AC-2 guard stays: an unlisted new analyzed file still fails.
+
+The proof counts tree walks, passes, and projections with spies or counters.
+The proof never reads clock time.
+
 ## 5. Constraints
 
 - Tests first. Red tests fail at HEAD. Green changes the minimum.
@@ -186,8 +223,9 @@ baseline-update command.
 - No production deploy, no traffic move, no push.
 - Stage named paths only. Never run `git add -A` or `git add .`.
 - Heavy steps run through
-  `/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh`. One named test
-  file may run outside it.
+  `/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh` with
+  `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800`. A named test file may run
+  outside it. The PM cap of 2026-11-11 is 30 min for one heavy job.
 - Commit headers are 100 characters or less and carry
   `(track_id: architecture_ci_input_pin_20261110)`.
 
@@ -195,6 +233,8 @@ baseline-update command.
 
 Each criterion has an automated test in
 `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`.
+AC-6 to AC-8 have tests in
+`packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts`.
 
 1. **AC-1 (the input pin no longer fails CI).** Given a manifest whose
    `analyzerInputSnapshotSha256` differs from the current bytes, when the
@@ -226,6 +266,19 @@ Each criterion has an automated test in
    the old and new values, exits 1, and the manifest bytes do not change. When
    it runs with `--acknowledge`, then it exits 0 and the five fields hold the
    current values.
+6. **AC-6 (one walk per module).** Given a fixture module with more than one
+   member-access node on one local binding, when the analyzer runs, then the
+   analyzer walks that file once for the binding store. At HEAD the walk count
+   equals the member-access node count. A counter or a spy on the walk proves the
+   count. The test reads no clock.
+7. **AC-7 (one projection and two passes per refresh).** Given a fixture
+   repository with a stale manifest, when the refresh command runs, then
+   `createV2EvidenceSourceProjection` runs once and the analyzer report runs
+   twice. The validation runs on the same evidence and adds no projection and no
+   pass. A spy or a counter proves each count. The test reads no clock.
+8. **AC-8 (the contract stays).** When the refresh writes the manifest, then the
+   key set equals `V2_MANIFEST_KEYS` and no field is new. AC-2 still holds at the
+   task 1.4a HEAD: an unlisted new analyzed file still fails.
 
 ## 7. Out of scope
 
