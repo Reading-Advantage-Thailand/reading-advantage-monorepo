@@ -70,29 +70,51 @@
 - `tsc --noEmit` in `apps/storytime` through `heavy-run.sh` with `HEAVY_PRIORITY=p1`, in the
   foreground: exit 0. The test file adds no error.
 
+## Round 3: the kept clip count
+
+- Cause of the round 2 failure: the case deletes the file `phonemes/daniel/04-n.mp3` from the map.
+  That file appears in four drill words. The flow drops four controls, so the old expected value
+  `expectedClips.length - 1` was wrong.
+- Fix: the expected value is now the count of the clips whose file keeps a map entry,
+  `expectedClips.filter((clip) => clip !== missingClip).length`. One new check before the walk
+  names `kept_clips=<n>` and proves that the kept count is less than the full count.
+- No other assertion changed. The check that no control holds the missing clip stays, and the
+  check that the word text stays.
+- Test commit: `0544fb6e4ba5202ecd71586071f61ee792dbe595`.
+- Red command at HEAD `f162e92cb` (the task 4.6 Green):
+  `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx`.
+  Result: exit 0; 1 passed file; 17 passed tests and 0 failed tests.
+- `tsc --noEmit` in `apps/storytime` through `heavy-run.sh` with `HEAVY_PRIORITY=p1`, in the
+  foreground: exit 0. The test file adds no error.
+- `plan.md` was not touched and not committed. It holds the Green edits.
+
 MEASURE_AGENT_RESULT
 role: measure-mid-red
 track: storytime_app_rebuild_20261025
 phase: P4
 task: 4.6
 phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
-role_base_sha: 623b326920efb7962a56b12bb587c7082be7ef7e
-head_before: 623b326920efb7962a56b12bb587c7082be7ef7e
-head_at_round2: f162e92cb4fb95b9fd4500ad3870eb4c2f8f47a2
+role_base_sha: 90cd961eb169e8a92ba43786b76a21e65b6f22fe
+head_before: 90cd961eb169e8a92ba43786b76a21e65b6f22fe
+head_at_round3: f162e92cb4fb95b9fd4500ad3870eb4c2f8f47a2
 test_commit_round1: bb246e066233d92cfc12e46f6257c690688655df
 test_commit_round2: d1d500b6603d13c38cd6710c227018e8d4f64950
-plan_log_commit: the commit that carries this log
+test_commit_round3: 0544fb6e4ba5202ecd71586071f61ee792dbe595
+log_commit: the commit that carries this log
 red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx
 round1_exit_code: 1
 round1_tests_failed: 15
 round1_tests_passed: 2
 round2_exit_code: 1
-round2_test_files_failed: 1
 round2_tests_failed: 1
 round2_tests_passed: 16
+round3_exit_code: 0
+round3_test_files_failed: 0
+round3_tests_failed: 0
+round3_tests_passed: 17
 load_errors: 0
 syntax_or_transform_errors: 0
 tsc: exit 0
 characterizations: 2 (the w01 counts; the draft week shows no loop and the step minutes)
-remaining_failures: 1 named assertion, the missing-clip count of the bank clip case (expected 11, measured 8)
+remaining_failures: 0
 END_MEASURE_AGENT_RESULT
