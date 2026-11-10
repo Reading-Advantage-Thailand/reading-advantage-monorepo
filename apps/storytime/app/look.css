@@ -19,32 +19,25 @@
   /* The two tones of the Storytime Advantage logo (spec FR-4, Q43). */
   --st-amber: #fcd34d;
   --st-brown: #92400e;
-  --sq-navy: #13244e;
-  --sq-ink: #14264f;
-  --sq-ink-soft: #3b4d78;
-  --sq-blue: #245f9f;
-  --sq-blue-top: #2f74bd;
-  --sq-blue-dark: #17407a;
-  --sq-ice: #d9e5f6;
-  --sq-gold: #f5b932;
-  --sq-gold-top: #ffd76a;
-  --sq-gold-soft: #ffe7a1;
+  /* The brown ink of the reading text and the parent print (finding P-2, PM 2026-11-10). The
+   * ink measures 14.8:1 on cream #fffaf0 and 12.3:1 on the pale amber band #fde68a. */
+  --st-ink: #3b1d0a;
+  /* The softer brown of the secondary text (9.0:1 on cream). */
+  --st-ink-soft: #6b3a14;
   --sq-cream: #fffaf0;
   --sq-chip-text: #ffd76a;
   --sq-display: var(--font-display-latin), var(--font-display-thai), var(--font-sarabun), ui-sans-serif, system-ui, sans-serif;
-  --sq-plaque: linear-gradient(180deg, var(--sq-blue-top), #1f5594);
-  --sq-gold-img: linear-gradient(180deg, var(--sq-gold-top), var(--sq-gold) 60%, #e09c1c);
-  --sq-shadow: 0 6px 0 rgba(10, 25, 60, 0.38);
+  --sq-shadow: 0 6px 0 rgba(40, 20, 6, 0.38);
 }
 
 /* ---- Ground and face tokens (the only rules that reach the sign-in, join, teacher, and 404
  * pages, besides the link floor and the focus ring below). ---- */
 html {
-  background: #173a6b;
+  background: #6b3a14;
 }
 body {
   background: var(--sq-cream);
-  color: var(--sq-ink);
+  color: var(--st-ink);
 }
 a:focus-visible,
 button:focus-visible {
@@ -68,7 +61,7 @@ main[data-place] {
   isolation: isolate;
   padding: 0 16px 36px;
   gap: 20px;
-  color: var(--sq-ink);
+  color: var(--st-ink);
 }
 /* The place: the painted scene of the page, fixed behind it, soft focus. The layer sits inside
  * the isolated stacking context of `main`, so it paints above the body ground and below the
@@ -92,8 +85,10 @@ main[data-place]::after {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 18%, rgba(10, 30, 70, 0) 30%, rgba(8, 20, 48, 0.6) 100%),
-    linear-gradient(180deg, rgba(12, 30, 70, 0.12), rgba(12, 30, 70, 0.4));
+    radial-gradient(ellipse at 50% 18%, color-mix(in srgb, var(--st-brown) 0%, transparent) 30%,
+      color-mix(in srgb, var(--st-brown) 60%, transparent) 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--st-brown) 12%, transparent),
+      color-mix(in srgb, var(--st-brown) 40%, transparent));
 }
 /* The place of each part (the study crops). The song shares the meadow ground with the home
  * view, at a lower position. */
@@ -109,9 +104,9 @@ header[data-hero] {
   margin: 0 -16px 36px;
   background-color: #2b6a3a;
   background-repeat: no-repeat;
-  border-bottom: 5px solid var(--sq-ice);
+  border-bottom: 5px solid var(--st-amber);
   border-radius: 0 0 30px 30px;
-  box-shadow: 0 8px 0 rgba(10, 25, 60, 0.4), 0 16px 28px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 0 rgba(40, 20, 6, 0.4), 0 16px 28px rgba(0, 0, 0, 0.4);
 }
 /* The hero picture of each part (the hero window draws a second crop of the place art). */
 main[data-hero="path"] > header { background-position: 50% 34%; background-size: cover; }
@@ -293,14 +288,14 @@ main[data-place] > section[aria-label] + section[aria-label] > h2 {
 main[data-place] > section[aria-label] + section[aria-label] p {
   font-size: 18px;
   line-height: 1.8;
-  color: var(--sq-ink);
+  color: var(--st-ink);
 }
 /* The sound-of-week line of the home panel keeps the display face (the study look). */
 main[data-place] > section[aria-label] + section[aria-label] p[lang="en"] {
   font-family: var(--sq-display);
   font-size: 25px;
   font-weight: 600;
-  color: var(--sq-ink);
+  color: var(--st-ink);
 }
 main[data-place] > section[aria-label] + section[aria-label] ul li span {
   display: inline-flex;
@@ -489,7 +484,7 @@ main[data-place] button:active:not(:disabled) {
   border: 4px solid var(--st-brown);
   border-radius: 20px;
   box-shadow: 0 0 0 3px var(--st-amber), 0 8px 0 3px rgba(58, 24, 4, 0.3);
-  color: var(--sq-ink);
+  color: var(--st-ink);
 }
 [data-part="book"] [data-page-content] > div p {
   margin-bottom: 0;
@@ -565,7 +560,7 @@ main[data-place] button:active:not(:disabled) {
   font-family: var(--sq-display);
   font-size: 34px;
   font-weight: 600;
-  color: var(--sq-ink);
+  color: var(--st-ink);
   text-shadow: none;
   background: transparent;
   border: 0;
@@ -644,14 +639,14 @@ main[data-place] button:active:not(:disabled) {
   font-size: 21px;
   font-weight: 600;
   line-height: 1.45;
-  color: var(--sq-ink);
+  color: var(--st-ink);
 }
 [data-part="song"] ol li > span > span:last-child {
   width: fit-content;
   padding: 0 12px 1px;
   font-size: 16px;
   line-height: 1.6;
-  color: var(--sq-ink-soft);
+  color: var(--st-ink-soft);
   background: #fef3c7;
   border-radius: 999px;
 }
