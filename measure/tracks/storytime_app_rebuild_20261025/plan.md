@@ -2218,7 +2218,7 @@ for every other track.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t44.log`.
 
 - [x] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes. Red: `c04bb063b`. Done: `43e0d4067`. Automated: the Green command exits 0 with 4 files and 33 tests; ESLint exits 0 on the six files; tsc --noEmit in apps/storytime (heavy-run p1) exits 2 with 3 errors, all in __tests__/phase4-share-moment.test.tsx (the task 4.6a Red file, commit 806e8238b, lines 177 and 435); the six changed files add no error; the same 3 errors appear with the six files at HEAD.
-- [~] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Red: `bb246e066`. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
+- [x] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Red: `bb246e066`. Done: `f162e92cb`. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
   - Red evidence (task 4.6). Role base `623b326920efb7962a56b12bb587c7082be7ef7e`; phase base
     `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Red added one test file and changed no
     production source, no week content, and no shipped file.
@@ -2281,6 +2281,64 @@ for every other track.
   - `tsc --noEmit` in `apps/storytime` ran once through `heavy-run.sh` with `HEAVY_PRIORITY=p1`,
     in the foreground. Result: exit 0. The new test file adds no error.
   - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t46.log`.
+  - Green evidence (task 4.6, round 2). The round 1 Green ran on minimax-cn-coding-plan/
+    MiniMax-M3.1-Flash and stopped with error 2056 (quota window); it left uncommitted work that
+    this round read, kept, and finished. Round 2 ran on volcengine-agent-plan/glm-5.3-flash#high.
+    Role base `64dc2569f`; phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae`. No coder was
+    delegated.
+  - Implementation commit: `f162e92cb`. It adds `apps/storytime/lib/teacher-loops.ts` (the rule
+    module: `loopsShow`, `loopPanelsShow`, `stepTimeMinutes`) and renders the recall region, the
+    three loop panels, the clip controls, and the step time `loopMinutes ?? minutes` in
+    `lesson-flow.tsx`. Each step section carries `key={step.id}`, so the Red test harness can
+    hold the DOM node of one screen after the walk (React reuses the section element without the
+    key, and every held node then shows the last step). The panels use the brand classes (amber
+    `#fcd34d` with brown `#92400e` text, or brown with white text); no blue class.
+  - Targeted Red command after the implementation:
+    `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx`.
+    Result: exit 1; 16 passed and 1 failed (was 15 failed and 2 passed at the Red base).
+  - The one failing test is `plays the bank clips from the signed map only and never autoplays`.
+    The test builds its own signed map with
+    `urls[file] ??= \`https://signed.example/${file}\``, and every drill file holds the bank
+    prefix, so `urls["phonemes/daniel/04-n.mp3"]` is
+    `https://signed.example/phonemes/daniel/04-n.mp3`. The test then asserts
+    `control.dataset.clipUrl` toBe `urls[path]` (line 1047) and, on the same value,
+    `not.toContain("phonemes/daniel/")` (line 1051). No value satisfies both assertions, so no
+    implementation can pass this test. The implementation follows the stated contract:
+    `data-clip-url={mediaUrls[file]}`. Green requests a Mid Red retry of this one test.
+  - Gate results of round 2. Gate 1 (Green command, six files): exit 1; 63 tests, 62 passed and
+    1 failed after the `key` fix (the first full run gave 58 passed and 5 failed before it). Gate
+    2: `phase3-question-screen.test.tsx` and `phase3-loops-off.test.tsx` exit 0 with 27 tests.
+    `phase1-quality-gates.sh` (heavy-run p1) exits 1: the unsatisfiable clip test above, and
+    `login-media-sign.test.ts` `signed_map_size_expected: expected 70 to be 42` — pre-existing,
+    not from this diff. The w01 content last changed at `345e02ba2` and `f2989514d` (other
+    tracks), which added the loop clips that the 42 count predates; this diff touches only
+    `lesson-flow.tsx` and adds `lib/teacher-loops.ts`. Gate 3: `tsc --noEmit` in apps/storytime
+    (heavy-run p1, foreground) exits 0 after the round 2 edit fixed 3 `LessonScript` type errors.
+    Gate 4: ESLint on the two changed files exits 0. Gate 5: `build-graph update` (heavy-run p1)
+    updated 2 files (81 nodes, 94 edges); no lock was held. MemAvailable was about 3.3 GB, so
+    the direct vitest runs ran direct.
+  - Task 4.6 stayed `[~]` at the end of round 2: gate 1 did not exit 0 while the unsatisfiable
+    Red assertion stood.
+  - Green evidence (task 4.6, round 3). Role base `cea72539c`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. The same Green model
+    (volcengine-agent-plan/glm-5.3-flash#high) returned after a provider error and closed the
+    task. No coder was delegated. Red fixed its test in two commits, both test-only:
+    `d1d500b66` gives the signed map of `mediaUrlsFor` opaque URLs, so the map value no longer
+    carries the bank path, and `0544fb6e4` counts the kept clips in the missing-clip case,
+    because `04-n.mp3` sits in four drill words. Green changed no production code in round 3;
+    the code commit stays `f162e92cb`.
+  - Round 3 gate results. Gate 1 (Green command, six phase 4 files, direct,
+    `--maxWorkers=1`, MemAvailable 3109264 kB): exit 0; 63 passed, 0 failed. Gate 2:
+    `phase3-question-screen.test.tsx` and `phase3-loops-off.test.tsx` exit 0 with 27 tests.
+    `phase1-quality-gates.sh` (heavy-run p1) exits 1 on the one pre-existing case
+    `login-media-sign.test.ts` line 84, `signed_map_size_expected: expected 70 to be 42`;
+    the w01 content last changed at `345e02ba2` and `f2989514d` (other tracks) before this
+    phase, so the 42 count predates the loop clips. The orchestrator owns that stale count;
+    Green does not fix it. Every other check of the gate passes. Gate 3: `tsc --noEmit` in
+    apps/storytime (heavy-run p1, foreground) exits 0. Gate 4: ESLint on the two changed files
+    exits 0. Gate 5: `build-graph update` (heavy-run p1) exits 0 on the two source files; no
+    lock was held.
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t46.log`.
 - [x] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6. Red: `806e8238b`. Done: `1d941b6654465d9b0d4499ffa53351308fb75e4a`. Automated: the Green command exits 0 with 5 files and 46 tests; the contract regression exits 0 with 9 files and 193 tests; tsc --noEmit in apps/storytime (heavy-run p1) exits 0; ESLint exits 0 on the three changed files.
   - Red evidence (task 4.6a). Role base `9687d0ce9cd1cb10d45a421c0101bed1d02fd04e`; phase base
     `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Red added one test file and changed no production

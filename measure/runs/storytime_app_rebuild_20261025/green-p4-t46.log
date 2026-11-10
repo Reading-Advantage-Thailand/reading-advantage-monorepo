@@ -1,0 +1,107 @@
+# Green log — task 4.6 (teacher loops in the lesson flow), rounds 2 and 3
+
+Status: COMPLETE
+
+Round 2 substitution: the round 1 Green ran on minimax-cn-coding-plan/MiniMax-M3.1-Flash and
+stopped with error 2056 (quota window). Round 2 ran on volcengine-agent-plan/glm-5.3-flash#high.
+The Red model is deepseek/deepseek-flash#high; the families differ. Round 3 is the same GLM
+Green after a provider error at the end of round 2.
+
+Round 1 left uncommitted work at HEAD `64dc2569f`: the import line in
+`apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` and the new file
+`apps/storytime/lib/teacher-loops.ts`. Both were read and kept; the flow UI was missing and was
+added in round 2.
+
+- Phase base (immutable): `bfaae8905993076ca1e8a49939c400eb038fe3ae`
+- Round 2 role base: `64dc2569f`
+- Round 3 role base: `cea72539c`
+- Red commit: `bb246e066`
+- Red fixes (test-only, round 3): `d1d500b66` (opaque signed URLs in `mediaUrlsFor`) and
+  `0544fb6e4` (the missing-clip case counts the kept clips)
+- Implementation commit: `f162e92cb`
+
+## Round 2
+
+The targeted Red command, rerun before any edit, failed as the Red log names: exit 1, 15 failed
+and 2 passed (the two named characterizations).
+
+Implementation. `lib/teacher-loops.ts` holds the rule module (`loopsShow`, `loopPanelsShow`,
+`stepTimeMinutes`). `lesson-flow.tsx` renders the recall region at the day opening, the three
+loop panels inside the step sections, the clip controls from the signed map, and the step time
+`loopMinutes ?? minutes`. Each step section carries `key={step.id}`: React reuses the section
+element without the key, so the DOM node that the test harness holds after the walk shows the
+last step. The panels use the brand classes (amber `#fcd34d` with brown `#92400e` text, or brown
+with white text); no blue class.
+
+Round 2 found one un-satisfiable Red assertion: the test built its own signed map with
+`https://signed.example/<file>`, where every drill file holds the `phonemes/daniel/` prefix, and
+then asserted `data-clip-url` equals the map value and, on the same value, does not contain
+`phonemes/daniel/`. No implementation could pass. Round 2 stopped and requested a Mid Red retry;
+Red fixed the test in `d1d500b66` and `0544fb6e4`.
+
+## Round 3 gates
+
+All commands ran with the working tree at role base `cea72539c`. MemAvailable stayed above
+3.1 GB, so the direct vitest runs ran direct.
+
+1. Green command:
+   `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx __tests__/phase4-share-moment.test.tsx __tests__/phase4-loops-flow.test.tsx`
+   Exit 0. 6 files, 63 tests, 63 passed, 0 failed. (At the Red base the same file set held 15
+   failures; the round 2 code already passed 62 of 63 against the old Red file.)
+2. `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-question-screen.test.tsx __tests__/phase3-loops-off.test.tsx`
+   Exit 0. 27 passed, 0 failed.
+   `HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash apps/storytime/__tests__/phase1-quality-gates.sh'`
+   Exit 1. One failure: `__tests__/login-media-sign.test.ts` line 84,
+   `signed_map_size_expected: expected 70 to be 42`. Pre-existing and out of this phase: the w01
+   content last changed at `345e02ba2` and `f2989514d` (other tracks), which added the loop
+   clips that the 42 count predates. This diff touches only `lesson-flow.tsx` and adds
+   `lib/teacher-loops.ts`. Every other check of the gate passes, including the full storytime
+   test suite with the fixed loops-flow file. Green does not fix the stale count; the
+   orchestrator owns it.
+3. `HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && npx tsc --noEmit'`
+   Exit 0. (Round 2 fixed the 3 `LessonScript` type errors its first edit introduced; the
+   production code is unchanged since.)
+4. `cd apps/storytime && npx eslint "app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx" lib/teacher-loops.ts`
+   Exit 0. No warnings, no errors.
+5. `HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && build-graph update ./graph.db "apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx" apps/storytime/lib/teacher-loops.ts'`
+   Exit 0. 2 files updated (81 nodes, 94 edges). No lock was held.
+
+## Result
+
+Task 4.6 is `[x]` with `Done: f162e92cb` in plan.md. Gates 1, 3, and 4 pass; gate 2 holds one
+pre-existing failure that this phase did not cause and does not fix. No committed Red test
+changed. No week content, contract, or look file changed.
+
+Question for the orchestrator (default taken, no user input needed): the stale
+`signed_map_size_expected=42` in `login-media-sign.test.ts` line 84 blocks
+`phase1-quality-gates.sh`, and the file belongs to the storytime_at_home_release_20261106 track.
+Default: the orchestrator routes the count refresh to that track or a small Red/Green round of
+its own; this track stays closed.
+
+MEASURE_AGENT_RESULT
+- Role: measure-jr-green, task 4.6, rounds 2 and 3, track storytime_app_rebuild_20261025
+- Models: Green volcengine-agent-plan/glm-5.3-flash#high (rounds 2 and 3); round 1
+  minimax-cn-coding-plan/MiniMax-M3.1-Flash stopped with error 2056; Red
+  deepseek/deepseek-flash#high
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable)
+- role_base_sha: round 2 `64dc2569f`; round 3 `cea72539c`
+- Red: `bb246e066`; Red fixes `d1d500b66`, `0544fb6e4` (test-only)
+- Implementation commit: `f162e92cb`
+  `feat(storytime): show the teacher loops in the flow (track_id: storytime_app_rebuild_20261025)`
+  Files: apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx (changed),
+  apps/storytime/lib/teacher-loops.ts (new)
+- Targeted Red command (round 2, before edits): vitest run --maxWorkers=1
+  __tests__/phase4-loops-flow.test.tsx → exit 1, 15 failed / 2 passed (matches the Red log)
+- Green command (round 3): the six phase 4 files → exit 0, 63 passed / 0 failed
+- P3 3.9 tests: exit 0, 27 passed / 0 failed
+- phase1-quality-gates.sh (heavy-run p1): exit 1 — one pre-existing failure,
+  login-media-sign.test.ts line 84 `signed_map_size_expected: expected 70 to be 42`;
+  recorded, not fixed
+- tsc --noEmit (heavy-run p1): exit 0
+- ESLint on the two changed files: exit 0
+- build-graph update (heavy-run p1): exit 0, 2 files, 81 nodes / 94 edges
+- Task status: 4.6 flipped to `[x]` with `Done: f162e92cb`; no task deferred; no fabrication
+- New files for the reviewer scope: apps/storytime/lib/teacher-loops.ts (the only new source
+  file); no new test file from Green
+- Plan evidence commit: see the commit that carries this log and plan.md
+END_MEASURE_AGENT_RESULT
