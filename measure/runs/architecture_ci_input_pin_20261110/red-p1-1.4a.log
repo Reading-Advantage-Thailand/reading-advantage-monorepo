@@ -1,0 +1,87 @@
+# Red evidence for task 1.4a round 3
+
+Track: architecture_ci_input_pin_20261110. Role: measure-mid-red. Date: 2026-11-11.
+Model: kimi-code-plan-cn/kimi-for-coding (Kimi).
+role_base_sha: 64dc2569fe838b141a1faa401126ebd05d7af675
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+
+## Substitution note
+Round 1 ran on minimax-cn-coding-plan/MiniMax-M3.1-Flash and stopped with error 2056
+before it wrote any file (the MiniMax 5-hour window was 100 percent used until 04:00).
+Round 2 ran on Kimi and reached the agent step limit after the read-only design work,
+with no file written. Round 3 (this role) wrote the test on Kimi. The planned Green is
+deepseek/deepseek-flash, so the Red and Green families differ, as test-strategy Q9
+requires.
+
+## What the Red role did
+- Marked task 1.4a [~] in plan.md.
+- Wrote packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts
+  with the 8 cases of test-strategy section P1.11.
+- Seams: a vi.mock("typescript", ...) wrapper counts whole-file forEachChild walks per
+  registered fixture path (vi.spyOn cannot hook ts.forEachChild; the namespace defines
+  members as getters without configurable). A passthrough vi.mock("../analyzer.js")
+  counts analyzeArchitectureSources calls. A passthrough vi.mock("node:child_process")
+  counts git archive calls (the projection seam).
+- AC-6 fixture: 50 member-access arguments new Client(db.users) against a same-shape
+  control with string arguments; growth pair with 10 and 50 nodes.
+- AC-6b fixture: one require binding, one await-import binding, one unassigned name,
+  and one double declaration. The strict expected list pins first-declaration-wins and
+  both assignment forms. One fix during Red: the first fixture table name
+  companyAccounts matched a rule without the client-construction kind, so the
+  characterization saw zero findings. The fixture now exports reviewJobs, which
+  resolves to database-table:review_jobs under DURABLE_JOB_DATABASE_BOUNDARY. This is
+  a fixture correction, not a contract change.
+- AC-7 fixture: the refresh runs in the test process through runArchitecturePinRefreshCli
+  on a fixture built like the pin test base fixture (the whole package src; the fixed
+  implementation path lists require it), with a stale manifest clone for the
+  acknowledged and the preview run.
+- AC-8: the key list before and after the refresh is compared in order, the strict
+  sync validator is the oracle, and a control manifest with one extra key is rejected.
+- AC-8b: a new analyzed file after the refresh fails the CI-mode check with the report
+  hash error and no input snapshot error.
+- No test reads clock time. Every count is emitted as label=<n> from a same-named
+  variable. The file holds no measure/tracks or measure/runs path.
+
+## Red command
+CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts
+
+- Exit code: 1 (expected Red state).
+- tests_total=8, tests_failed=4, tests_passed=4.
+- Load errors: none (no transform, resolve, or syntax error).
+- Failing cases, all by assertion:
+  - ac6_walks_per_module_is_one: walks_per_module=50, member_access_nodes=50.
+  - ac6_walk_count_does_not_grow_with_member_access_nodes: walk_growth=40,
+    walks_per_module=50.
+  - ac7_refresh_makes_one_projection_and_two_passes: projections=5,
+    analyzer_passes=5.
+  - ac7b_preview_run_makes_one_projection_and_two_passes: projections=2,
+    analyzer_passes=3 (the preview exit code 1 and the unchanged manifest bytes pass).
+- Passing cases (named characterizations): cost_fixture_positive_control,
+  ac6b_binding_resolution_unchanged, ac8_manifest_key_set_unchanged_after_refresh,
+  ac8b_new_analyzed_file_still_fails.
+- MemAvailable before the run: 3275184 kB (above the 1500 MB floor).
+
+## Commits
+- Test commit: fedfd9ab7 (short) — test(architecture): pin the refresh cost.
+- Evidence commit: this file plus the plan task line.
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+track: architecture_ci_input_pin_20261110
+task: 1.4a (Red)
+round: 3
+phase: Phase 1 (CI mode and the local pin refresh)
+baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 64dc2569fe838b141a1faa401126ebd05d7af675
+test_commit: fedfd9ab7
+resulting_head: see evidence commit in this log
+red_command: CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts
+red_exit_code: 1
+tests_total: 8
+tests_failed: 4
+tests_passed: 4
+load_errors: 0
+substitution: Red round 1 MiniMax-M3.1-Flash died with error 2056 (MiniMax window 100 percent used until 04:00); rounds 2 and 3 ran on kimi-code-plan-cn/kimi-for-coding; Green is planned on deepseek/deepseek-flash, so the Red and Green families differ.
+handoff: Green makes the 4 failing cases pass (walks_per_module<=1, walk_growth=0, projections=1, analyzer_passes=2 for both refresh and preview) and keeps the 4 characterization cases and the 20 pin cases green. The Green gate of test-strategy P1.11 applies, then the 1.4 rerun rule at the 1.4a HEAD with HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800.
+END_MEASURE_AGENT_RESULT
