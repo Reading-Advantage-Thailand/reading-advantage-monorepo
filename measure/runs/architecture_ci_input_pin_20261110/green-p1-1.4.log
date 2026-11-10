@@ -1,13 +1,35 @@
+Round 4 of task 1.4. Recorded for the history.
+
+- Role base: 02ee3252f5aac00762e6aeca0180e1c9e41787da.
+- Step 1 commit: 4da60c286c4f4477f65878827642396734fc116c. It put the Done SHAs on the task lines of 1.1, 1.2, and 1.3.
+- Step 2 refresh: start 2026-11-11T04:07:06+0700, end 2026-11-11T04:08:19+0700, heavy-run exit 134 (SIGABRT).
+- Node reported FATAL ERROR: Reached heap limit at about 1421 MB under the heavy-run 3 GB scope.
+- The manifest stayed unchanged. Steps 3 and 4 did not run.
+- Record commit: c89799b6203ba0febf2afaa37d076e3e24e8666f.
+
+Round 5 of task 1.4. Serialize the two report passes.
+
+- Role base: c89799b6203ba0febf2afaa37d076e3e24e8666f.
+- Fix: the refresh evidence and the default current-evidence path run each report pass in turn. The first report stays as a small result. The AST memory of one pass is released before the next pass starts.
+- Fix commit: bd474955f876e9aee8d9285f151f6d776fc83f42. Header length 99.
+- Gate 1: CI=true pnpm exec vitest run --maxWorkers=1 <cost file> <pin file> exits 0. tests_total=28, tests_failed=0, tests_passed=28.
+- Gate 2: check-types through heavy-run p2 cap 1800 exits 0, 1 line.
+- Gate 3: lint through heavy-run p2 cap 1800 exits 0, 1 line.
+- Refresh: start 2026-11-11T04:14:20+0700, end 2026-11-11T04:44:22+0700, heavy-run exit 124 (the 1800 s cap).
+- No heap error occurred. The output holds 3 lines. The job did not reach the preview line.
+- The manifest stayed unchanged.
+- Steps 3 and 4 did not run. Task 1.4 stays [~].
+
 MEASURE_AGENT_RESULT
 role: green
 status: blocked
 track: architecture_ci_input_pin_20261110
-phase: P1 task 1.4 round 4
-role_base_sha: 02ee3252f5aac00762e6aeca0180e1c9e41787da
-commits: 4da60c286c4f4477f65878827642396734fc116c
-tests_run: none; the refresh aborted before any gate
-files_changed: plan.md and this log only; the manifest and the source stay unchanged
-plan_updates: tasks 1.1, 1.2, and 1.3 hold Done SHAs on their task lines; task 1.4 stays [~] with the round 4 note
-known_failures: the step 2 refresh exited 134 (SIGABRT) with FATAL ERROR Reached heap limit at about 1421 MB under the heavy-run 3 GB scope; steps 3 and 4 did not run
-handoff: question: approve a bounded memory fix (serialize the two evidence report passes and release each report before the next) or a NODE_OPTIONS heap raise within the 3 GB scope? default: serialize the two report passes, then rerun the refresh
+phase: P1 task 1.4 round 5
+role_base_sha: c89799b6203ba0febf2afaa37d076e3e24e8666f
+commits: fix bd474955f876e9aee8d9285f151f6d776fc83f42; earlier 4da60c286c4f4477f65878827642396734fc116c
+tests_run: gate 1 CI=true pnpm exec vitest run --maxWorkers=1 <cost file> <pin file> exits 0 (tests_total=28, tests_failed=0, tests_passed=28); check-types through heavy-run p2 exits 0; lint through heavy-run p2 exits 0
+files_changed: packages/architecture-enforcement/src/v2-manifest-validation.ts in round 5; plan.md and this log in the record commit
+plan_updates: task 1.4 stays [~] with the round 4 and round 5 notes
+known_failures: the refresh no longer hits the heap limit, but the serialized passes exceed the 1800 s cap; the manifest is unchanged; tasks 1.4 and 1.5 stay open
+handoff: question: approve a lower-cost or split refresh, or wait for the PM cap window to change after 2026-11-20? default: wait and do not rerun under the 1800 s cap
 END_MEASURE_AGENT_RESULT
