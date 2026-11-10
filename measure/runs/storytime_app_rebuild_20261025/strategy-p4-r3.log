@@ -1,0 +1,34 @@
+Strategy · P4 · storytime_app_rebuild · r3
+role: measure-strategy (Phase 4: Teacher app), model claude-code/claude-sonnet-5-5#high (substitution for Opus in the role table)
+role_base_sha: 295487892b9a60985504c0a2eb8524b996aafd9d
+file edited: measure/tracks/storytime_app_rebuild_20261025/test-strategy.md (plan.md not touched; no test run)
+
+changes:
+1. F418(a): P4.6 rows (blendDrill row and Blend drill row) now say 4 words and drill_words=4.
+2. P1 command and the two P3 commands now run from apps/storytime with
+   CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 <named files>. File lists unchanged.
+   The packages/read-along run is a separate root command (the app config does not reach packages/).
+3. Closeout gate item 1 and P4.7: tasks 4.1 to 4.6a hold one checkpoint (orchestrator, 2026-11-11).
+   L and S rows ran in the task 4.5 browser gate (apps/storytime/__tests__/phase4-browser-gate.sh).
+4. AC-9.3 order: session, then flag, then role, then week load. The code records it in the header comment of
+   apps/storytime/app/[locale]/teacher/[level]/[week]/page.tsx. NO earlier line of the strategy records it;
+   the old rows (AC-9.3 flag off, Closeout gate item 3) say 404 for every route. Added a table row and an amendment
+   paragraph after the AC-9.3 test table. The smoke or browser gate holds one row with no session.
+
+notes for the orchestrator:
+- The input names "P3b". The strategy has no section with that name; I changed the P3 commands (targeted Red and phase Red).
+- The P2 command (phase2-* plus packages/read-along) still runs from the root. The input did not name P2.
+- The A-42 paragraph "task 4.6 ... does not hold the Phase 4 checkpoint (plan amendment)" in P4 and the plan text still say the old rule.
+  The header amendment gives the new rule. Green or the orchestrator aligns plan.md.
+- The "Closeout gate" amendment line for check order: the Docker smoke item 3 still says "each teacher route answers 404";
+  the amendment says to read it as "for each request with a session".
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: storytime_app_rebuild_20261025
+phase: 4
+status: complete
+role_base_sha: 295487892b9a60985504c0a2eb8524b996aafd9d
+files_changed: measure/tracks/storytime_app_rebuild_20261025/test-strategy.md
+handoff: Strategy r3 amended with 4 changes. No question. Items to check: "P3b" has no section (P3 changed); P2 command unchanged; plan.md still holds the old 4.6 checkpoint text.
+END_MEASURE_AGENT_RESULT

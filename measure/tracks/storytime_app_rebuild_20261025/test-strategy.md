@@ -11,6 +11,8 @@
 
 > **Amendment 2026-11-10:** the Phase 4 refresh r2 at role base `ac46025125ffaccb5cd66f07b1868ab317a8007f`. It covers the open tasks 4.4, 4.6, and 4.6a (sections P4.4, P4.6, P4.6a, P4.7). The phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae` does not change. It also (1) fixes the aggregate P4 command, because the old glob `phase4-*.test.ts` misses the `.tsx` tests, (2) states that `build-graph update` and `build-graph scan` run only through `heavy-run.sh` (PM load rule, 2026-11-10), and (3) adds four open questions with defaults to section 3.
 
+> **Amendment 2026-11-11:** the Phase 4 refresh r3 at role base `295487892b9a60985504c0a2eb8524b996aafd9d`. It makes four changes. (1) Review A finding F418(a): the P4.6 rows now say `drill_words=4`, because the shipped A4 holds 4 words and the test pins 4. (2) The root `vitest.config.ts` has no `@` alias, so the P1 and P3 targeted commands now run from `apps/storytime` with `CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 <named files>`. The file lists stay the same. The `packages/read-along` run stays a separate root command. (3) Tasks 4.1 to 4.6a hold one checkpoint (orchestrator decision, 2026-11-11). (4) The AC-9.3 check order is recorded in section P4 (amendment after the AC-9.3 test table). The phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae` does not change.
+
 ## 1. Rules for every phase
 
 ### 1.1 Heavy jobs
@@ -90,7 +92,7 @@ The reason for each entry is in the phase section.
 **Red (done at `a01d2998d`; recorded, not repeated):**
 
 ```bash
-bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 apps/storytime'
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1'
 ```
 
 **Green gate:**
@@ -320,7 +322,7 @@ Risk reasons:
 **Targeted Red command for the first Red task (3.1):**
 
 ```bash
-bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-entry-route.test.ts apps/storytime/__tests__/phase3-readiness.test.ts apps/storytime/__tests__/phase3-manifest.test.ts apps/storytime/__tests__/phase1-scaffold.test.ts apps/storytime/__tests__/phase1-boundary.test.ts'
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-entry-route.test.ts __tests__/phase3-readiness.test.ts __tests__/phase3-manifest.test.ts __tests__/phase1-scaffold.test.ts __tests__/phase1-boundary.test.ts'
 ```
 
 **Targeted Red command pattern for each later task:** the same command with the Red test files of that task from the table in P3.3. Tasks with a React component add `// @vitest-environment jsdom` at the top of the file, as `packages/read-along` does.
@@ -328,7 +330,8 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 **Phase Red command (the sum of all Phase 3 tests):**
 
 ```bash
-bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-*.test.ts apps/storytime/__tests__/phase3-*.test.tsx packages/read-along'
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx'
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 packages/read-along'
 ```
 
 **Browser gate (tasks 3.2, 3.3, 3.5, 3.6, 3.7):** `bash apps/storytime/__tests__/phase3-browser-gate.sh`. The script enters `heavy-run.sh` itself, as the Phase 1 scripts do. It builds the app, starts `next start` on a free local port with the **ready review fixture** (P3.7), runs Playwright, and prints labeled lines. It ends with `PASS=<n>, FAIL=<n>`.
@@ -624,7 +627,7 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 
 **Closeout gate:**
 
-1. The Green gate, the four task commands of P4.4, P4.6, and P4.6a, and the P1 to P3 targeted Vitest commands. Tasks 4.6 and 4.6a do not hold the checkpoint (plan amendment), so their commands join the closeout only when those tasks are done.
+1. The Green gate, the four task commands of P4.4, P4.6, and P4.6a, and the P1 to P3 targeted Vitest commands. **Amendment 2026-11-11:** tasks 4.1 to 4.6a hold one checkpoint. The orchestrator decided this on 2026-11-11, because tasks 4.6 and 4.6a were done before the task 4.5 check. The old text said that tasks 4.6 and 4.6a do not hold the checkpoint (plan amendment). The task commands of 4.6 and 4.6a now join the closeout.
 2. `bash apps/storytime/__tests__/phase1-quality-gates.sh`.
 3. The Docker smoke with the flag not set. Each teacher route answers 404 from the container.
 4. The browser review (task 4.5).
@@ -646,6 +649,9 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 | Review strip and Friday check | `review[]` shows each day. `check` shows on day 5 only. | The check shows on day 3 |
 | Thai toggle | Each `{ en, th }` field shows its Thai text | One field has no Thai text when the toggle is on |
 | Task 4.4 media | The step keeps its place after the player closes. The full test list is in P4.4. | The flow goes back to step 1 |
+| AC-9.3 check order (amendment 2026-11-11) | The code checks the session first, then the flag. A visitor with no session gets the sign-in redirect in both flag states. Every session gets 404 with the flag off. A session of another role gets the 403 page with the flag on. | A visitor with no session gets 404 with the flag off, or a session gets the week with the flag off |
+
+**Amendment 2026-11-11 (AC-9.3 evidence and check order):** the code order is fixed in the header comment of `apps/storytime/app/[locale]/teacher/[level]/[week]/page.tsx`: session, then flag, then role, then the week load. No earlier line of this strategy records that order. The rows "AC-9.3 flag off" and the Docker smoke line (P4 Closeout gate, item 3) say that each teacher route answers 404 with the flag off. Read those lines as "for every request that has a session". The smoke run or the browser gate (`phase4-browser-gate.sh`) now holds one row with no session. That row asserts the sign-in redirect with the flag on and with the flag off, and it asserts 404 with a session and the flag off. The row logs `nosession_flag_off=<status>` and `nosession_flag_on=<status>` as labeled integers.
 
 **Anti-pattern coverage:** A3 (the step count is a labeled integer per day: `day=<n> steps=<n>`), A4 (five days and at least one step per day), A5 (the plan names the flag default that the test proves).
 
@@ -759,7 +765,7 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 | Field | Where in w01 | Labeled count |
 |---|---|---|
 | `soundLoop` | steps A1, A2, A3 | `soundloop_steps=3` |
-| `blendDrill` | step A4, 5 words with `audio` clips of the phoneme bank | `blenddrill_steps=1` |
+| `blendDrill` | step A4, 4 words with `audio` clips of the phoneme bank | `blenddrill_steps=1` |
 | `sightWords` | steps A6 and D2 | `sightwords_steps=2` |
 | `loopMinutes` | A1, A2, A3, A4, A6, C5, D2 | `loopminutes_steps=7` |
 | `loopMinutes` different from `minutes` | A1 (4 to 5), A2 (4 to 5), A4 (5 to 4), A6 (4 to 3) | `loopminutes_differs=4` |
@@ -787,7 +793,7 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 | Recall (AC-13.7) | The approved clone shows the recall in the opening screen of the days 2 to 5 (`recall_days=4`, 5 cards and the `ask` text each) and shows none on day 1. The recall does not show on the second screen. | A recall shows on day 1, or on a later screen |
 | Day 1 recall shows | A clone that copies the recall of day 2 into day 1 shows it on the day 1 opening screen | The app hides a day 1 recall by its own rule |
 | Sound loop | On A1, A2, and A3, the `correct`, `practise`, and `retest` lines show. On every other step of the day, no sound loop shows. | A loop shows on a step with no `soundLoop` |
-| Blend drill | On A4, the `model`, `lead`, `test`, `correction`, and the `repeats` value show, with the drill words (`drill_words=5`) and the sound labels | A word or the `repeats` value is missing, or a text is a hard-coded string |
+| Blend drill | On A4, the `model`, `lead`, `test`, `correction`, and the `repeats` value show, with the drill words (`drill_words=4`) and the sound labels | A word or the `repeats` value is missing, or a text is a hard-coded string |
 | Sight words | On A6 and D2, the words, the `slide` line, the `check` line, and the `seconds` value show. D2 is on day 4 and has its own screen. | The card shows on one step only |
 | Placement by field | A clone that moves `blendDrill` from A4 to A5 shows it on A5 and not on A4. A clone that adds `soundLoop` to B2 shows it on B2. | The app places a loop by a step id (spec: "A `blendDrill` on another step shows on that step") |
 | Step time | On the approved clone, A1 shows `5 min` and not `4 min`, A4 shows `4 min`, and A5 (no `loopMinutes`) shows its `minutes`. On the draft, A1 shows `4 min`. The guard `loopminutes_differs=4` comes first. | The view always shows `minutes`, or always `loopMinutes` (A5 would show a wrong or empty value) |
@@ -883,7 +889,7 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 
 ### P4.7 Browser rows for tasks 4.4, 4.6, and 4.6a
 
-These rows join the task 4.5 browser check. The task 4.5 rows above stay: `PROJECT_DEV_URL` is a local `next start` of the production build with the teacher flag on and, for the second run, off (404). The viewports stay 1920x1080 and a laptop (default 1366x768). The orchestrator records the port and the commit. Tasks 4.6 and 4.6a do not hold the checkpoint, so the L and S rows run at their own task check, with the same method.
+These rows join the task 4.5 browser check. The task 4.5 rows above stay: `PROJECT_DEV_URL` is a local `next start` of the production build with the teacher flag on and, for the second run, off (404). The viewports stay 1920x1080 and a laptop (default 1366x768). The orchestrator records the port and the commit. **Amendment 2026-11-11:** tasks 4.1 to 4.6a hold one checkpoint (orchestrator decision, 2026-11-11), so the L and S rows are checkpoint rows. They ran in the task 4.5 browser gate (`apps/storytime/__tests__/phase4-browser-gate.sh`), with the same method.
 
 - **Fixtures.** The shipped w01 has the loops draft (loops off). The loops-on run uses an approved copy of w01 (`approval.loops` approved with `date` and `words`) in the review fixture folder of the P3.7 mechanism, never in `content/`. The shipped week stays draft.
 - **Gate self-test.** If the gate adds a font-size limit, it adds a fourth self-test page with 12 px text that must fail the limit. The gate exits non-zero if a self-test page passes.
