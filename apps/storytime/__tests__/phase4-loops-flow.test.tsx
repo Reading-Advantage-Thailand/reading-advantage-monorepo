@@ -249,16 +249,22 @@ function withoutLoopFields(source: StorytimeWeek): StorytimeWeek {
 /** Builds the signed URL map of every bank clip of a week. */
 function mediaUrlsFor(source: StorytimeWeek): Record<string, string> {
   const urls: Record<string, string> = {};
+  let next = 0;
+  const assign = (file: string) => {
+    if (urls[file] !== undefined) return;
+    next += 1;
+    urls[file] = `https://signed.example/m/${next}`;
+  };
   for (const script of source.scripts) {
     for (const step of script.steps) {
       for (const word of step.blendDrill?.words ?? []) {
         for (const file of word.audio ?? []) {
-          urls[file] ??= `https://signed.example/${file}`;
+          assign(file);
         }
       }
     }
     for (const card of script.recall?.items ?? []) {
-      if (card.audio) urls[card.audio] ??= `https://signed.example/${card.audio}`;
+      if (card.audio) assign(card.audio);
     }
   }
   return urls;
