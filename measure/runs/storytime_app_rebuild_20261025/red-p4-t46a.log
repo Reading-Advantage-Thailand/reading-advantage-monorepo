@@ -8,7 +8,8 @@
 - Role base: `9687d0ce9cd1cb10d45a421c0101bed1d02fd04e`
 - Model: deepseek/deepseek-flash#high
 - Test commit: `806e8238bfa5a480605b368997cab4f66029f7a6`
-- Evidence commit: the second commit of this task (this plan evidence and this log)
+- Evidence commit: `8c3e23f6a1bc44688be65a0ef36aa717680eed48` (plan evidence and the first log)
+- Log commit: the commit that adds this update (this line holds no SHA by construction)
 
 ## Scope
 
@@ -111,7 +112,8 @@ status: success
 baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
 role_base_sha: 9687d0ce9cd1cb10d45a421c0101bed1d02fd04e
 test_commit: 806e8238bfa5a480605b368997cab4f66029f7a6
-evidence_commit: the second commit of this task (plan evidence and this log)
+evidence_commit: 8c3e23f6a1bc44688be65a0ef36aa717680eed48
+log_commit: the commit that adds this log update
 red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx
 exit_code: 1
 tests_failed: 12
@@ -120,5 +122,5 @@ tests_total: 13
 load_errors: 0
 files: apps/storytime/__tests__/phase4-share-moment.test.tsx
 remaining_failures: 12 named assertions; the one passing case is the named characterization
-end_head: the second commit of this task
+end_head: the commit that adds this log update
 END_MEASURE_AGENT_RESULT
