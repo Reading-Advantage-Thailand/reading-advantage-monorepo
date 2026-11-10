@@ -96,3 +96,29 @@ plan_updates: closeout 7 sentence appended to 2b.2
 known_failures: none
 handoff: The Phase 2b Green graph update is recorded in cc48d29ee. build-graph is current for frame.tsx, and the worktree count matches the capture.
 END_MEASURE_AGENT_RESULT
+
+post_checkpoint_fix_r5:
+  cause: HIGHLIGHT_CLASSES.currentWord is bg-[#92400e] since 4da455774, and phase3-readalong-ui
+         built a CSS selector from the token. The task 4.4 Green hit "Invalid selector
+         .bg-[#92400e]" in 2 tests.
+  fix: lines 155 and 233 use getElementsByClassName with the same assertions and the R-EDIT reason.
+  code_commit: 2969e660b (one file, apps/storytime/__tests__/phase3-readalong-ui.test.tsx)
+  note: the file entered 731f2441c by accident (shared index) and was reverted in ef56e26f7.
+  tests:
+    phase3-readalong-ui.test.tsx: 10 passed, exit 0
+    read-along-passage.test.tsx: 16 passed, exit 0 (already used [class~=...])
+  files_scanned: 132 files in apps/storytime/__tests__; HIGHLIGHT_CLASSES appears in 6 paths
+                 (2 production, 4 test). Only read-along-passage.test.tsx builds a selector.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome (post-checkpoint fix r5)
+commits: 2969e660b (test file); this commit holds the plan note and this log
+tests_run: phase3-readalong-ui.test.tsx 10 passed, exit 0; read-along-passage.test.tsx 16 passed, exit 0
+files_changed: apps/storytime/__tests__/phase3-readalong-ui.test.tsx; measure/tracks/storytime_look_20261107/plan.md
+plan_updates: post-checkpoint fix r5 appended to 2b.2; the Phase 2b heading keeps its checkpoint
+known_failures: none
+handoff: The selector regression is closed in 2969e660b. Both assertions keep their strength. The read-along passage test already used the attribute selector. No production file changed.
+END_MEASURE_AGENT_RESULT
