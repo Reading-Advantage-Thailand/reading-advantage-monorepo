@@ -95,12 +95,27 @@ An approved level 1 clone and an approved review clone both show the moment.
 
 ## Other gates
 
-- `tsc --noEmit` did not run in this light role. It stays with the Green gate.
+- Round 1: `tsc --noEmit` did not run in this light role. Green owned it.
+- Round 2: `tsc --noEmit` ran through heavy-run p1 and exited 0. No error came from this file.
 - ESLint on the new file: exit 0; 0 errors; 0 warnings.
 - Anti-patterns: A3 holds (labeled integers).
   A4 holds (a count above 0 and a positive control come before each detail).
   A7 holds (exact paths, no `rg -v` list).
   A9 does not apply. A16 holds (no worktree).
+
+## Round 2 — type fix
+
+The first test commit made three errors in `tsc --noEmit`.
+All three errors were in this test file.
+The intersection of the `scripts` array types lost the element type inside `flatMap`.
+The fix is type only: one helper, `scriptsWithShare(source)`, returns `ScriptWithShare[]`.
+No assertion changed and no case changed.
+
+- Type-fix commit: `e4fa82cabe32152433a0a922b246cd6da9cac805`
+- Red command re-run (MemAvailable 3655372 kB): exit 1; 1 failed file; 12 failed tests and
+  1 passed test; 0 load errors. The state is the same as round 1.
+- `tsc --noEmit` through `HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'`:
+  exit 0. No error came from this file.
 
 MEASURE_AGENT_RESULT
 role: measure-mid-red
@@ -112,15 +127,17 @@ status: success
 baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
 role_base_sha: 9687d0ce9cd1cb10d45a421c0101bed1d02fd04e
 test_commit: 806e8238bfa5a480605b368997cab4f66029f7a6
+type_fix_commit: e4fa82cabe32152433a0a922b246cd6da9cac805
 evidence_commit: 8c3e23f6a1bc44688be65a0ef36aa717680eed48
-log_commit: the commit that adds this log update
+log_commit: the commit that adds this round 2 log
 red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx
 exit_code: 1
 tests_failed: 12
 tests_passed: 1
 tests_total: 13
 load_errors: 0
+tsc: exit 0 through heavy-run p1
 files: apps/storytime/__tests__/phase4-share-moment.test.tsx
 remaining_failures: 12 named assertions; the one passing case is the named characterization
-end_head: the commit that adds this log update
+end_head: the commit that adds this round 2 log
 END_MEASURE_AGENT_RESULT
