@@ -2150,7 +2150,62 @@ for every other track.
 
 - [~] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes. Red: `c04bb063b`.
 - [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
-- [ ] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6.
+- [~] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6. Red: `806e8238b`.
+  - Red evidence (task 4.6a). Role base `9687d0ce9cd1cb10d45a421c0101bed1d02fd04e`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Red added one test file and changed no production
+    source, no week content, and no shipped file.
+  - Test commit: `806e8238b` (`test(storytime): add red tests for the share moment`). The plan
+    evidence and the log sit in the next commit.
+  - Contract for Green (named in the test header):
+    1. `apps/storytime/lib/contracts/week.ts` exports `shareSchema` and `shareShotSchema`, and
+       `scriptSchema` holds `share: shareSchema.optional()`. The share object and the shot object
+       are both strict. A shot is `{ step: string, media: "photo" | "video" }` and holds no file
+       path. A share is `{ shots: 1 or 2 shots, caption: biText }`. `caption.en` is not empty;
+       `caption.th` may be empty.
+    2. `apps/storytime/lib/share-moment.ts` exports `SHARE_CONSENT_LINE` with `en` and `th` text.
+    3. `TeacherLessonFlow` shows the moment only when `loopsApproved(week)` is true (approval only,
+       open question 9). A shot shows only at a step of its own day, with no cross-day fallback
+       (open question 7).
+    4. The moment carries `data-share-moment={step.id}`, `data-share-media`, and an element with
+       `data-share-label` that differs between a photo shot and a video shot. The caption and the
+       consent line show in the active language.
+  - Automated Red command, light and direct (MemAvailable 4460276 kB at the start):
+    `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx`.
+    Result: exit 1; 1 failed file; 12 failed tests and 1 passed test (the named characterization).
+    The log holds no `SyntaxError`, `Transform failed`, `Failed to resolve`, or `Unhandled` line, so
+    no entry failed with a load error. The one `ERR_MODULE_NOT_FOUND` is the deliberate load of the
+    absent `lib/share-moment.ts`, and the named assertion catches it.
+  - Each failure is a named assertion:
+
+| Test | Cause at HEAD | Task |
+|---|---|---|
+| parses the shipped share field with shares_parsed=5 and share_shots=6 | `lib/contracts/week.ts` exports no `shareSchema` | 4.6a |
+| rejects each broken share object with its field path | `lib/contracts/week.ts` exports no `shareSchema`; the six broken clones parse at HEAD | 4.6a |
+| keeps the moment hidden while approval.loops is draft | the approved positive control shows `share_shown_approved=0` moments at A3 | 4.6a |
+| shows no moment when approval.loops or scripts[].share is absent | the approved positive control shows no moment | 4.6a |
+| shows the moment at the named step of its own day | `share_shown_day1=0`; the flow renders no `[data-share-moment]` | 4.6a |
+| shows no moment for a shot of another day, and logs share_unresolved=1 | the approved day 4 control shows `share_shown_day4=0`, not 2 | 4.6a |
+| shows the caption in the active language | the flow shows no moment at A3 | 4.6a |
+| shows the consent line in the active language | `lib/share-moment.ts` does not exist | 4.6a |
+| shows a different label for a photo shot and a video shot | the flow shows no `[data-share-moment="D4"]` | 4.6a |
+| follows the approval only (level 1 and review) | `share_shown_level1=0`; no moment shows | 4.6a |
+| sends no upload during a walk of all five approved days | `share_shown_total=0`, so the no-upload claim has no positive control | 4.6a |
+| keeps every teacher source free of an upload path | `lib/share-moment.ts` does not exist, so `files_scanned` cannot reach its guard | 4.6a |
+
+  - Named characterization: `share_days=5`, `soundloop_steps=3`, `blenddrill_steps=1`,
+    `sightwords_steps=2`, `loopminutes_steps=7`, `loopminutes_differs=4`, and `recall_days=4` pass
+    at HEAD. The share field is data only, and this row names it. The behavioral loops gate is
+    `phase4-loops-flow.test.tsx`, which task 4.6 adds; Green runs that file at the 4.6 gate.
+  - Open questions 7, 8, and 9 use the strategy defaults: day 5 shows no moment
+    (`share_unresolved=1`), the consent tests check that `en` and `th` exist and differ, and the
+    moment follows the approval only.
+  - `tsc --noEmit` did not run in this light role. It stays with the Green gate.
+  - ESLint on the new file: exit 0; 0 errors; 0 warnings.
+  - Anti-patterns: A3 holds (each count is a labeled integer and each failure message carries its
+    label). A4 holds (a labeled count above 0 and a positive control come before each detail, and
+    each clone passes `weekSchema` before it renders). A7 holds (the scan names exact paths and
+    uses no `rg -v` list). A9 does not apply. A16 holds (no worktree).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t46a.log`.
 - [ ] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It does not cover task 4.6 or task 4.6a, which do not hold this checkpoint (see the exception in the Phase 3 amendment line).
 
 ## Phase 5: Milestone week integration

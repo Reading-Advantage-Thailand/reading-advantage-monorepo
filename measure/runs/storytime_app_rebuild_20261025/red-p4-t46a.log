@@ -1,0 +1,124 @@
+# Red log — Phase 4, task 4.6a (share moment)
+
+- Role: measure-mid-red (light)
+- Track: `storytime_app_rebuild_20261025`
+- Phase: P4 "Teacher app"
+- Task: 4.6a
+- Phase base: `bfaae8905993076ca1e8a49939c400eb038fe3ae`
+- Role base: `9687d0ce9cd1cb10d45a421c0101bed1d02fd04e`
+- Model: deepseek/deepseek-flash#high
+- Test commit: `806e8238bfa5a480605b368997cab4f66029f7a6`
+- Evidence commit: the second commit of this task (this plan evidence and this log)
+
+## Scope
+
+Red added one test file: `apps/storytime/__tests__/phase4-share-moment.test.tsx`.
+Red changed no production source, no week content, and no shipped file.
+The shipped week `apps/storytime/content/l2/w01.json` holds `scripts[].share` on all 5 days.
+The test reads that file through `weekSchema.parse`.
+A case that needs another state makes a deep clone (`structuredClone`).
+The approved clone sets `approval.loops` to `{ status: "approved", date: "2026-11-10", words: "test clone" }`.
+Each clone passes `weekSchema.safeParse` before it renders.
+
+## Contract for Green
+
+1. `lib/contracts/week.ts` exports `shareSchema` and `shareShotSchema`.
+   `scriptSchema` holds `share: shareSchema.optional()`.
+   The share object and the shot object are both strict.
+   A shot is `{ step: string, media: "photo" | "video" }` and holds no file path.
+   A share is `{ shots: 1 or 2 shots, caption: biText }`.
+   `caption.en` is not empty.
+   `caption.th` may be empty.
+2. `lib/share-moment.ts` exports `SHARE_CONSENT_LINE` with `en` and `th` text.
+3. `TeacherLessonFlow` shows the moment only when `loopsApproved(week)` is true.
+   The gate is the approval only (open question 9).
+   A shot shows only at a step of its own day (open question 7).
+4. The moment carries `data-share-moment={step.id}`, `data-share-media`, and an element with
+   `data-share-label` that differs between photo and video.
+   The caption and the consent line show in the active language.
+
+## Red command
+
+Light and direct, because MemAvailable was 4460276 kB at the start.
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx
+```
+
+Result: exit 1.
+Test files: 1 failed (1).
+Tests: 12 failed, 1 passed (13).
+Load errors: 0. The log holds no `SyntaxError`, `Transform failed`, `Failed to resolve`, or
+`Unhandled` line.
+The one `ERR_MODULE_NOT_FOUND` is the deliberate load of the absent `lib/share-moment.ts`.
+The named assertion catches it inside the consent-line test.
+
+## Failing tests at HEAD
+
+| Test | Cause at HEAD |
+|---|---|
+| parses the shipped share field with shares_parsed=5 and share_shots=6 | `lib/contracts/week.ts` exports no `shareSchema` |
+| rejects each broken share object with its field path | `lib/contracts/week.ts` exports no `shareSchema`; the six broken clones parse at HEAD |
+| keeps the moment hidden while approval.loops is draft | the approved positive control shows `share_shown_approved=0` |
+| shows no moment when approval.loops or scripts[].share is absent | the approved positive control shows no moment |
+| shows the moment at the named step of its own day | `share_shown_day1=0`; the flow renders no `[data-share-moment]` |
+| shows no moment for a shot of another day, and logs share_unresolved=1 | the approved day 4 control shows `share_shown_day4=0`, not 2 |
+| shows the caption in the active language | the flow shows no moment at A3 |
+| shows the consent line in the active language | `lib/share-moment.ts` does not exist |
+| shows a different label for a photo shot and a video shot | the flow shows no `[data-share-moment="D4"]` |
+| follows the approval only (level 1 and review) | `share_shown_level1=0`; no moment shows |
+| sends no upload during a walk of all five approved days | `share_shown_total=0`, so the no-upload claim has no positive control |
+| keeps every teacher source free of an upload path | `lib/share-moment.ts` does not exist, so `files_scanned` cannot reach its guard |
+
+## Named characterization
+
+One test passes at HEAD. It is named as a characterization.
+`share_days=5`, `soundloop_steps=3`, `blenddrill_steps=1`, `sightwords_steps=2`,
+`loopminutes_steps=7`, `loopminutes_differs=4`, and `recall_days=4` pass at HEAD.
+The share field is data only, so this row names the data.
+The behavioral loops gate is `phase4-loops-flow.test.tsx`, which task 4.6 adds.
+Green runs that file at the 4.6 gate.
+
+## Open questions
+
+Q7 (day 5 share step): the default applies.
+Day 5 names D6, and day 5 holds E1 to E5.
+The test logs `share_unresolved=1`, and day 5 shows no moment.
+Q8 (consent wording): the default applies.
+The test checks that `SHARE_CONSENT_LINE.en` and `.th` exist and differ.
+It does not check the words.
+Daniel judges the words at the Phase 6 look check.
+Q9 (level rule): the default applies.
+The moment follows the approval only.
+An approved level 1 clone and an approved review clone both show the moment.
+
+## Other gates
+
+- `tsc --noEmit` did not run in this light role. It stays with the Green gate.
+- ESLint on the new file: exit 0; 0 errors; 0 warnings.
+- Anti-patterns: A3 holds (labeled integers).
+  A4 holds (a count above 0 and a positive control come before each detail).
+  A7 holds (exact paths, no `rg -v` list).
+  A9 does not apply. A16 holds (no worktree).
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+model: deepseek/deepseek-flash#high
+track: storytime_app_rebuild_20261025
+phase: P4
+task: 4.6a
+status: success
+baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: 9687d0ce9cd1cb10d45a421c0101bed1d02fd04e
+test_commit: 806e8238bfa5a480605b368997cab4f66029f7a6
+evidence_commit: the second commit of this task (plan evidence and this log)
+red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx
+exit_code: 1
+tests_failed: 12
+tests_passed: 1
+tests_total: 13
+load_errors: 0
+files: apps/storytime/__tests__/phase4-share-moment.test.tsx
+remaining_failures: 12 named assertions; the one passing case is the named characterization
+end_head: the second commit of this task
+END_MEASURE_AGENT_RESULT
