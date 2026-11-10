@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { loadWeek } from "../../../../../../lib/content";
@@ -10,6 +9,7 @@ import {
 } from "../../../../../../lib/teacher";
 import { requireRole } from "../../../../../../lib/auth";
 import TeacherForbidden from "../../../forbidden";
+import { TeacherLessonFlow } from "./lesson-flow";
 
 /**
  * The teacher lesson route `/<locale>/teacher/<level>/<week>/<day>` (spec FR-9, plan task 4.1).
@@ -18,8 +18,8 @@ import TeacherForbidden from "../../../forbidden";
  * the route reads it at request time.
  *
  * The route answers 404 for an unknown level, an unknown week, an unknown day, and a week that
- * breaks the contract. The lesson flow of task 4.3 comes later. This route holds the day title
- * and the way back to the week.
+ * breaks the contract. The route hands the loaded week to the lesson flow of task 4.3, which
+ * holds the day title and the way back to the week.
  *
  * The route needs a teacher session (AC-4.6). The order of the checks is fixed: a visitor without
  * a session goes to the sign-in page, the teacher switch answers 404 for every session, a
@@ -40,9 +40,9 @@ export function generateMetadata(): Metadata {
 }
 
 /**
- * Renders the placeholder of one lesson day.
+ * Renders the lesson flow of one lesson day.
  * @param props.params The locale, the level, the week, and the day segments.
- * @returns The placeholder of the day, or the 404 view.
+ * @returns The lesson flow of the day, or the 404 view.
  */
 export default async function TeacherDayPage({
   params,
@@ -81,18 +81,5 @@ export default async function TeacherDayPage({
   const script = loaded.week.scripts.find((entry) => entry.day === day);
   if (!script) notFound();
 
-  return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col gap-4 p-6">
-      <h1 className="text-2xl font-semibold" lang="en">
-        {script.title.en}
-      </h1>
-      <p className="text-neutral-600">Day {day}</p>
-      <Link
-        href={`/${locale}/teacher/${route.level}/${route.week}`}
-        className="w-fit rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
-      >
-        Back to the week
-      </Link>
-    </main>
-  );
+  return <TeacherLessonFlow week={loaded.week} day={day} locale={locale} />;
 }
