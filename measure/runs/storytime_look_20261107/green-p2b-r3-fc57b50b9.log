@@ -1,0 +1,90 @@
+status: complete
+role: measure-jr-green
+phase: Phase 2b: Brand chrome (remediation round 3)
+track: storytime_look_20261107
+model: deepseek/deepseek-flash#high
+phase_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: fc57b50b9a593c3d03300794ed30c3337906da0e
+red_commits: 770fadd47 (tests), fc57b50b9 (evidence)
+code_commit: 7a8b6e2b53c616365a0e3d2e95ec0ff1d9eed4e6
+
+p2_blue_ink:
+  tokens_added: --st-ink #3b1d0a, --st-ink-soft #6b3a14
+  tokens_removed: --sq-navy, --sq-ink, --sq-ink-soft, --sq-blue, --sq-blue-top, --sq-blue-dark,
+                  --sq-ice, --sq-plaque, --sq-gold, --sq-gold-top, --sq-gold-soft, --sq-gold-img
+  ground: html background #6b3a14. The Red check needs r >= 100 for brown, so #3b1d0a (r 59) can
+          not pass; 6b3a14 is the darkest tone that passes and keeps the brown family.
+  vignette: color-mix(in srgb, var(--st-brown) 0%/60%/12%/40%, transparent). The check reads
+            var(--st-brown) as brown and finds no blue literal.
+  hero_edge: border-bottom var(--st-amber), was var(--sq-ice)
+  shadow: --sq-shadow rgba(40, 20, 6, 0.38); header shadow rgba(40, 20, 6, 0.4)
+  ink_rules: body, a, and five text rules take var(--st-ink); the small print takes var(--st-ink-soft)
+  contrast:
+    ink #3b1d0a on cream #fffaf0: 14.78:1
+    ink #3b1d0a on pale amber #fde68a: 12.34:1
+    ink #3b1d0a on #fef3c7: 13.81:1
+    soft #6b3a14 on cream #fffaf0: 9.01:1
+    soft #6b3a14 on pale amber #fde68a: 7.53:1
+
+r18_teacher_week_console:
+  result: pre-existing, no change
+  cause: the teacher week view renders the six family-word images of content/l2/w01.json
+         (focus.family.words: hello, goodbye, boy, girl, friend, teacher). The gate media package
+         $HOME/Desktop/handoff/w01-storytime-app-package-r2 has no l2/media/w01/family folder, so
+         the six signed URLs answer 404. That is 6 console errors and 6 failed answers. The
+         teacher day page renders no family image, so it logs 0.
+  evidence:
+    - python read of content/l2/w01.json focus.family.words: 6 entries, each with an image file
+      under l2/media/w01/family/.
+    - ls of the handoff package l2/media/w01: books, song-lines, song pictures, song audio. No
+      family folder.
+    - the gate media root is the default $HOME/Desktop/handoff/w01-storytime-app-package-r2
+      (look-phase2-browser-gate.sh line 86).
+    - the family paths entered w01.json at 345e02ba2 (git log -S "family/hello.jpg").
+    - git diff 3480f904c..HEAD of the teacher files holds class name lines only (14 in the week
+      view, 1 in the day page), so this phase did not make the errors.
+  routing: the fix is a media package that holds the family pictures, or a MEDIA_ROOT that does.
+           The app code needs no change.
+
+checks:
+  check_1_storytime:
+    command: heavy-run; vitest run --maxWorkers=1, 22 files
+    exit: 0
+    test_files: 22 passed (22)
+    tests: 187 passed (187)
+    load_errors: 0
+  check_1_readalong:
+    command: heavy-run; packages/read-along, vitest run --maxWorkers=1
+    exit: 0
+    test_files: 9 passed (9)
+    tests: 105 passed (105)
+    load_errors: 0
+  check_2:
+    command: bash apps/storytime/__tests__/look-phase2-browser-gate.sh --self-test
+    exit: 0
+    mutants: 74 of 74 rejected
+  check_3:
+    tsc_noEmit_exit: 0
+    eslint: no .ts or .tsx file changed this round (only app/look.css), so ESLint has no file
+  check_4:
+    command: git diff --stat 3480f904c -- packages/read-along/hooks apps/storytime/lib/highlight-windows.ts apps/storytime/app/look/places
+    exit: 0
+    output: empty
+
+older_tests_changed: none. No older test pins the navy ink.
+
+files_changed:
+  - apps/storytime/app/look.css (tokens, ground, vignette, inks, hero edge, shadow)
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome (remediation round 3)
+commits: 7a8b6e2b5 (code); this commit holds the plan evidence
+tests_run: storytime 187 passed (22 files), exit 0; read-along 105 passed (9 files), exit 0; --self-test exit 0 (74 of 74); tsc exit 0; protected-path diff empty
+files_changed: apps/storytime/app/look.css
+plan_updates: remediation r3 appended to 2b.2; 2b.3 unchanged at [x]
+known_failures: none in scope. R18 is pre-existing (the gate media package holds no family pictures); it needs a media package or MEDIA_ROOT route, not an app change.
+handoff: P-2 is done in 7a8b6e2b5: the child screens take brown ink #3b1d0a (14.78:1 on cream, 12.34:1 on the pale amber band) and soft brown #6b3a14 (9.01:1), the html ground is #6b3a14, and the vignette is brown. The darkest brown #3b1d0a can not serve as the html ground because the Red brown predicate needs red >= 100; 6b3a14 is the darkest passing tone. R18 is pre-existing: the teacher week view renders six family images whose files are absent from w01-storytime-app-package-r2; the family paths came at 345e02ba2. Route it to a media package or MEDIA_ROOT owner. The browser gate still needs a run for row 16 (blue_text_or_ground=0) and row 18.
+END_MEASURE_AGENT_RESULT
