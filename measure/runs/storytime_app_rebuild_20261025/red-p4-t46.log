@@ -53,6 +53,23 @@
 - measure/tracks/storytime_app_rebuild_20261025/plan.md (the task marker and this evidence).
 - measure/runs/storytime_app_rebuild_20261025/red-p4-t46.log (this log).
 
+## Round 2: the opaque signed URL
+
+- Cause: the fixture `mediaUrlsFor` built each signed URL as `https://signed.example/${file}`. Every signed URL held the raw bank path, so no implementation could pass both the map check and the blank bank-path check.
+- Fix, fixture only: each file gets an opaque URL `https://signed.example/m/<n>` with a counter. No hash. Both assertions and every other case stay as they were.
+- Test commit: `d1d500b6603d13c38cd6710c227018e8d4f64950`.
+- Red command at HEAD `f162e92cb` (the task 4.6 Green):
+  `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx`.
+  Result: exit 1; 1 failed file; 16 passed tests and 1 failed test.
+- Remaining failure, not changed per the round 2 order:
+  `plays the bank clips from the signed map only and never autoplays` fails at
+  `a clip with no signed URL must show no clip control: expected 'clip_controls=8' to be 'clip_controls=11'`.
+  The case deletes one clip file from the map. The file `phonemes/daniel/04-n.mp3` appears in four
+  drill words, so the flow drops four controls, not one. The expected value should count the clips
+  whose file holds a map entry. This is a test-authoring defect, not a Green defect.
+- `tsc --noEmit` in `apps/storytime` through `heavy-run.sh` with `HEAVY_PRIORITY=p1`, in the
+  foreground: exit 0. The test file adds no error.
+
 MEASURE_AGENT_RESULT
 role: measure-mid-red
 track: storytime_app_rebuild_20261025
@@ -61,16 +78,21 @@ task: 4.6
 phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
 role_base_sha: 623b326920efb7962a56b12bb587c7082be7ef7e
 head_before: 623b326920efb7962a56b12bb587c7082be7ef7e
-test_commit: bb246e066233d92cfc12e46f6257c690688655df
+head_at_round2: f162e92cb4fb95b9fd4500ad3870eb4c2f8f47a2
+test_commit_round1: bb246e066233d92cfc12e46f6257c690688655df
+test_commit_round2: d1d500b6603d13c38cd6710c227018e8d4f64950
 plan_log_commit: the commit that carries this log
 red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx
-exit_code: 1
-test_files_failed: 1
-tests_failed: 15
-tests_passed: 2
+round1_exit_code: 1
+round1_tests_failed: 15
+round1_tests_passed: 2
+round2_exit_code: 1
+round2_test_files_failed: 1
+round2_tests_failed: 1
+round2_tests_passed: 16
 load_errors: 0
 syntax_or_transform_errors: 0
 tsc: exit 0
 characterizations: 2 (the w01 counts; the draft week shows no loop and the step minutes)
-remaining_failures: 15 named assertions, all on the absent loop UI or the absent lib/teacher-loops.ts
+remaining_failures: 1 named assertion, the missing-clip count of the bank clip case (expected 11, measured 8)
 END_MEASURE_AGENT_RESULT
