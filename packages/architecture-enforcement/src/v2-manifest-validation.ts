@@ -871,11 +871,17 @@ export async function computeAnalyzerReconciliationEvidence(
   const projection = await createV2EvidenceSourceProjection(repoRoot);
   try {
     const sourcePaths = projection.sourcePaths;
-    const [reportOne, reportTwo] = await Promise.all([
-      computeCurrentAnalyzerReport(projection, sourcePaths, analyzeSources),
-      computeCurrentAnalyzerReport(projection, sourcePaths, analyzeSources),
-    ]);
+    const reportOne = await computeCurrentAnalyzerReport(
+      projection,
+      sourcePaths,
+      analyzeSources,
+    );
     const reportSource = JSON.stringify(reportOne);
+    const reportTwo = await computeCurrentAnalyzerReport(
+      projection,
+      sourcePaths,
+      analyzeSources,
+    );
     if (reportSource !== JSON.stringify(reportTwo)) {
       throw new Error("Analyzer reports are not byte-identical");
     }
@@ -1070,20 +1076,18 @@ async function computeCurrentAnalyzerEvidence(
   const projection = await createV2EvidenceSourceProjection(repoRoot);
   try {
     const sourcePaths = projection.sourcePaths;
-    const [
-      analyzerTree,
-      implementationTree,
-      inputSnapshot,
-      reportOne,
-      reportTwo,
-    ] = await Promise.all([
-      computeAnalyzerImplementationTreeSha256V2(repoRoot),
-      computeReconciliationImplementationTreeSha256V2(repoRoot),
-      computeAnalyzerInputSnapshotSha256(repoRoot, sourcePaths),
-      computeCurrentAnalyzerReport(projection, sourcePaths),
-      computeCurrentAnalyzerReport(projection, sourcePaths),
-    ]);
+    const analyzerTree = await computeAnalyzerImplementationTreeSha256V2(
+      repoRoot,
+    );
+    const implementationTree =
+      await computeReconciliationImplementationTreeSha256V2(repoRoot);
+    const inputSnapshot = await computeAnalyzerInputSnapshotSha256(
+      repoRoot,
+      sourcePaths,
+    );
+    const reportOne = await computeCurrentAnalyzerReport(projection, sourcePaths);
     const reportOneSource = JSON.stringify(reportOne);
+    const reportTwo = await computeCurrentAnalyzerReport(projection, sourcePaths);
     if (reportOneSource !== JSON.stringify(reportTwo)) {
       throw new Error("Analyzer reports are not byte-identical");
     }
