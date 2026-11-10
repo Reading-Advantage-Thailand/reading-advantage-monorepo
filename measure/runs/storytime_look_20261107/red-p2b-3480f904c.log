@@ -98,6 +98,17 @@ r3_self_test_exit: 0
 r3_selftest_mutants_rejected: 74 of 74
 r3_bash_n_exit: 0
 r3_commit: 770fadd47d46d934caa8bd5a8127bae4dac8b468
+r4_red_cases: F-2b reads every plaque rule, C-F1b the focus ring wins the cascade
+r4_tests_failed: 2
+r4_tests_passed: 27
+r4_load_errors: 0
+r4_tsc_exit: 0
+r4_eslint_exit: 0
+r4_self_test_exit: 0
+r4_selftest_mutants_rejected: 79 of 79
+r4_selftest_missing_helpers: 0
+r4_bash_n_exit: 0
+r4_commit: 1204753b516d31efd89f3c8a1025cac52b1b0cb0
 END_MEASURE_AGENT_RESULT
 
 # Part 2 (the browser rows of the Phase 2b gate, same role, same phase).
@@ -356,6 +367,82 @@ END_MEASURE_AGENT_RESULT
 #
 # Remediation r3 commit: 770fadd47d46d934caa8bd5a8127bae4dac8b468
 #   "test(look): pin no blue ink or ground on the child screens
+#   (track_id: storytime_look_20261107)"
+#   Files: apps/storytime/__tests__/look-brand-chrome.test.ts,
+#          apps/storytime/__tests__/look-phase2-browser-gate.sh
+
+# Remediation r4 (automated): status in_progress. The role base is d35f0492c. The lost gate helpers (readBrandElements, brandToneSummary, readBrandBanner, BRAND_FAMILIES, isRgbOf, BRAND_BLUE, BRAND_AMBER, BRAND_BROWN) come back, the self-test checks that every row helper exists, the F-2b case reads every plaque rule, the new C-F1b case computes the cascade of the focus ring, and row 17 walks the eight titles on the band hero. The row "brand focus" is new.
+
+#
+# Remediation r4 (automated), same role, same phase. The role base of this round is d35f0492c.
+# The findings are A2-F1 (the lost gate helpers), A2-F2 and C2-F2 (the band plaque and the band
+# rows), A2-F3 and C2-F1 (the focus ring and the cascade), and A2-F4 (the verdicts of row 18).
+#
+# A2-F1: the lost helpers of apps/storytime/__tests__/look-phase2-browser-gate.sh come back. The
+# block of BRAND_FAMILIES, readBrandElements, isRgbOf, BRAND_BLUE, BRAND_AMBER, BRAND_BROWN, and
+# brandToneSummary comes from the commit 5c386d9cd. The reader of the plaque comes back with the
+# new fields line_count and per_line_ratio. The reader of the blue ink stays.
+# The self-test now checks the helpers. The list ROW_HELPERS holds the names that the rows call.
+# The self-test reports selftest_missing_helpers and fails when one name is not a function of the
+# embedded module.
+# The proof of the check: a copy of the script without readBrandElements fails the self-test with
+# exit=1 and "selftest_missing_helpers=readBrandElements" (the copy was deleted after the run).
+#
+# A2-F2 and C2-F2: the F-2b case of apps/storytime/__tests__/look-brand-chrome.test.ts reads every
+# plaque rule of look.css: the base, the band, and the landscape block. Every font size must name
+# var(--title-chars).
+#   F-2b the frame hands the title length to the CSS and the plaque rule fits the font (AC-4.6)
+#        Fails at HEAD with "the plaque rule header[data-hero="band"] > h1 must fit the font from
+#        var(--title-chars), found 44px".
+# Row 17 walks the eight shipped titles on the book page as well, where the hero is the band. The
+# row expects line_count=1, the per-line ratio from 0.76 to 0.84, and logo_title_overlap_px=0, in
+# the two locales, so the row holds 32 cases.
+#
+# A2-F3 and C2-F1: the new case C-F1b computes the cascade of the focus ring.
+#   C-F1b the focus ring wins the cascade against the rules that set a box shadow
+#        Fails at HEAD with "the focus ring loses the box shadow of the rule header[data-hero] |
+#        the focus ring loses the box shadow of the rule header[data-hero] > h1 | the focus ring
+#        loses the box shadow of the rule main[data-place] > section[aria-label]:first-of-type > h2
+#        | the focus ring loses the box shadow of the rule main[data-place] > section[aria-label] +
+#        section[aria-label] | the focus ring loses the box shadow of the rule main[data-place] >
+#        section[aria-label] + section[aria-label] > h2 | the focus ring loses the box shadow of the
+#        rule main[data-place] > section[aria-label] + section[aria-label] ul li span | and 18 more
+#        rules that set a box shadow".
+#        The case computes the specificity of the focus rule and of every rule that sets a box
+#        shadow. The focus rule wins when its specificity is stronger, when it comes later in the
+#        file, or when its box shadow carries !important.
+# The new row 19 "brand focus" moves the keyboard focus to the decodable word button, the mode
+# button, the week tile link, and the sign-in button. It reads the computed box shadow and the
+# computed outline. The verdict wants a brown ring (rgb(146, 64, 14)) and a white outline of 2 px
+# or more.
+#
+# A2-F4: the verdict of the forbidden page reads the status of the answer (200, the status that the
+# app uses for the forbidden view, or 403). The verdict of the 404 view reads the brand pair of the
+# open-week button (one or more).
+#
+# Red command, run in the foreground through heavy-run:
+#   HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.ts'
+#   Result at HEAD d35f0492c: exit=1; Test Files 1 failed | 1 passed; tests_failed=2;
+#   tests_passed=27; load_errors=0. The two failing cases are the new ones.
+#
+# No-browser check:
+#   cd apps/storytime && bash __tests__/look-phase2-browser-gate.sh --self-test
+#   Result: exit=0; selftest_controls_ok=1; selftest_mutants_rejected=79 of
+#   selftest_mutants_checked=79; selftest_missing_helpers=0; "=== Total: 1 checks (PASS=1, FAIL=0)
+#   ===".
+#   bash -n on the script: exit=0.
+# Type gate through heavy-run in apps/storytime: exit=0.
+# Lint gate in apps/storytime on the changed test file: exit=0.
+#
+# Deviations of this round:
+#   The commitlint rule header-max-length rejects the given commit subject (101 characters), so
+#   the subject is "test(look): restore the brand helpers and pin the focus ring
+#   (track_id: storytime_look_20261107)" (96 characters).
+#   The browser rows do not run in this role. The rows 16, 17, 18, and 19 are verified by the next
+#   live gate run.
+#
+# Remediation r4 commit: 1204753b516d31efd89f3c8a1025cac52b1b0cb0
+#   "test(look): restore the brand helpers and pin the focus ring
 #   (track_id: storytime_look_20261107)"
 #   Files: apps/storytime/__tests__/look-brand-chrome.test.ts,
 #          apps/storytime/__tests__/look-phase2-browser-gate.sh
