@@ -1,0 +1,94 @@
+status: blocked
+role: measure-jr-green
+phase: Phase 2b: Brand chrome (remediation round 2)
+track: storytime_look_20261107
+model: deepseek/deepseek-flash#high
+phase_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: 513c9f6b1d4f7d08c5b0d00a628cad7283623044
+red_commits: 3ca71c054 (tests), 513c9f6b1 (evidence)
+code_commit: 4da455774029588fa9be1af70f05d05c78b3dcfd
+
+fixes:
+  F-2b / A-F4: the fitted clamp lives in look.css on the plaque rule:
+    font-size: clamp(24px, calc((100cqi - 64px) / (var(--title-chars) * 0.68)), 72px).
+    The frame sets only --title-chars. line-height 1.25, no vertical padding, ring not border.
+  F-3b / A-F3: the landscape block moves the label to left 72 px, top 18 px. The label box is
+    x 72..114 and y 18..41. The logo box is x 16..64 and y 8..56. The boxes do not overlap.
+    The block sets its own fitted size: clamp(20px, ..., 32px). The hero is 64 px high.
+  A-F8: the logo img width and height attributes are 48, as the CSS is.
+  C-F1: a:focus-visible, button:focus-visible takes a 3 px white outline and a 6 px brown ring
+    (box-shadow). The reader word takes focus-visible:ring-[#92400e] with a cream offset.
+    Contrast on #92400e: white 8.6:1. On #fcd34d: brown 4.9:1. On #fffaf0: brown 10.3:1.
+  C-F2: the pressed decodable sound button is #fde68a with var(--st-brown), 5.69:1.
+  P-1: HIGHLIGHT_CLASSES.currentWord is
+    "bg-[#92400e] text-white dark:bg-[#fcd34d] dark:text-[#92400e]".
+    The doc comment gives white on #92400e (8.6:1) and #92400e on #fcd34d (4.9:1).
+    The timing files are untouched.
+
+tailwind_source:
+  answer: yes, apps/storytime/app/globals.css line 6 already holds
+          @source "../../../packages/read-along"; the class is generated. No change.
+
+404_check:
+  answer: /th/st/2/8 answers 404 when week 8 is draft, by code and unchanged.
+  evidence: apps/storytime/content/l2/w08.json meta.status is "draft" and meta.key is "st2/8".
+            loadVisibleWeek() returns null for a draft week unless the review switch is on.
+            page.tsx line 265 (const week = loaded ?? notFound()) calls notFound().
+            No change.
+
+checks:
+  check_1_storytime:
+    command: heavy-run; vitest run --maxWorkers=1, 22 files
+    exit: 1
+    test_files: 21 passed, 1 failed (22)
+    tests: 185 passed, 1 failed (186)
+    load_errors: 0
+    failure: B6 in look-brand-chrome.test.tsx pins bg-blue-700
+  check_1_readalong:
+    command: heavy-run; packages/read-along, vitest run --maxWorkers=1
+    exit: 1
+    test_files: 8 passed, 1 failed (9)
+    tests: 104 passed, 1 failed (105)
+    load_errors: 0
+    failure: the dark pair, the palette table misses bg-[#fcd34d] (highlight-contrast.test.ts)
+  check_2:
+    command: bash apps/storytime/__tests__/look-phase2-browser-gate.sh --self-test
+    exit: 0
+    mutants: 70 of 70 rejected
+  check_3:
+    tsc_noEmit_exit: 0
+    eslint_app_exit: 0 (app/[locale]/frame.tsx)
+    eslint_package: not possible; packages/read-along holds no eslint config and no lint script
+  check_4:
+    command: git diff --stat 3480f904c -- packages/read-along/hooks apps/storytime/lib/highlight-windows.ts apps/storytime/app/look/places
+    exit: 0
+    output: empty
+
+legacy_test_update:
+  file: packages/read-along/components/read-along/__tests__/read-along-passage.test.tsx
+  change: markedWords() selects [class~="<MARK>"], because the brown class holds [ and # and a
+          .class selector is invalid. This test is not a Red file. The 5 failures it caused are
+          gone.
+
+blocked_on_red_assertions:
+  - file: apps/storytime/__tests__/look-brand-chrome.test.tsx (B6)
+    line: 385
+    state: expect(currentWord).toContain("bg-blue-700")
+    needed: expect(currentWord).toContain("bg-[#92400e]") and a comment that cites P-1
+  - file: packages/read-along/lib/__tests__/highlight-contrast.test.ts
+    state: TOKEN_HEX holds no bg-[#fcd34d] and no text-[#92400e]
+    needed: add "bg-[#fcd34d]": "#fcd34d" and "text-[#92400e]": "#92400e" to TOKEN_HEX
+  reason: both are committed Red files. A Mid Red retry must change them. This role may not.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome (remediation round 2)
+commits: 4da455774 (code); this commit holds the plan evidence
+tests_run: storytime 186 tests (185 passed, 1 failed), exit 1; read-along 105 tests (104 passed, 1 failed), exit 1; --self-test exit 0 (70 of 70); tsc exit 0; ESLint app exit 0
+files_changed: frame.tsx, look.css, read-along highlight.ts, read-along-passage.tsx, read-along-passage.test.tsx
+plan_updates: remediation r2 appended to 2b.2; 2b.3 unchanged at [x]
+known_failures: 1) look-brand-chrome.test.tsx B6 pins bg-blue-700 (stale after P-1). 2) highlight-contrast.test.ts TOKEN_HEX misses bg-[#fcd34d] and text-[#92400e] (stale after P-1).
+handoff: All findings are implemented in 4da455774 and every other case passes. Two committed Red assertions contradict P-1, so this role must stop. Request a Mid Red retry with two edits: (1) in look-brand-chrome.test.tsx B6, expect "bg-[#92400e]" instead of "bg-blue-700"; (2) in highlight-contrast.test.ts, add "bg-[#fcd34d]": "#fcd34d" and "text-[#92400e]": "#92400e" to TOKEN_HEX. Then Green returns and the two suites pass with no code change. Tailwind already scans the package source. The 404 path is correct and unchanged.
+END_MEASURE_AGENT_RESULT
