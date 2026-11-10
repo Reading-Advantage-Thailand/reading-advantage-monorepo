@@ -1,0 +1,55 @@
+# measure-strategy log: Phase 2b Brand chrome (storytime_look_20261107)
+
+Role base: edd999dd4 (the shared master HEAD when this amendment began).
+The role base is not phase_base_sha. The orchestrator captures phase_base_sha with
+`git rev-parse HEAD` after the commit of this strategy and before the Red role starts (P2b.0).
+
+Model: deepseek/deepseek-flash#high. Deviation: the role table names claude-code/claude-opus-5-5.
+The Claude subagents were held until 15:22, and `ra-quota pick strategy` routed the role to DeepSeek.
+
+## What this role wrote
+
+- `measure/tracks/storytime_look_20261107/test-strategy.md`: new section P2b (P2b.0 to P2b.9),
+  one row in the phase summary table, the header amendment note, and Q42 to Q46 in section 4.
+- No spec.md edit. No plan.md edit. No product source edit.
+- No build, no server, no browser, no deploy, and no port 3005 or 3099.
+- No test run: this role reads and writes strategy text only.
+
+## The orchestrator decisions recorded in the strategy
+
+1. Requirement (c) covers every screen. Screens 6 to 9 take the tones on buttons, title banners,
+   panel frames, and section cards. Only className and CSS change there. Inputs, the red alert,
+   the amber draft note, and the art stay.
+2. AC-4.4 checks look.css, and a source check adds the Tailwind blue and neutral control scan.
+   The per-word highlight (packages/read-along/lib/highlight.ts:13) stays exempt and is named.
+3. Task 2b.4 runs in a separate Build session with a fresh next build at the 3000 MB MemAvailable
+   floor (1589 MB at this role). The AC-4.5 and AC-4.6 browser rows run inside that one launch.
+4. Deadline 2026-11-10 20:00. Red stays small: two files plus the gate rows.
+5. The older tests that break are listed by file and case (R-EDIT-2b, P2b.3).
+6. Review A, B, C, the adversarial round, and the browser review apply.
+7. Q42 to Q46 are decided by the orchestrator on 2026-11-10 and recorded as decisions.
+
+## Commands named for the next roles
+
+RED_TEST_COMMAND:
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts'
+
+GREEN_TEST_COMMAND:
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts __tests__/look-frame.test.tsx __tests__/look-assets.test.ts __tests__/look-council-r1.test.tsx __tests__/look-plain-text.test.tsx __tests__/look-reduced-motion.test.ts __tests__/look-hero-fix.test.ts __tests__/look-captures.test.ts __tests__/look-feedback.test.tsx __tests__/look-reader-gap.test.tsx __tests__/look-word-clip-tap.test.tsx __tests__/look-not-found.test.tsx __tests__/login-page-guard.test.tsx __tests__/login-join-page.test.tsx __tests__/login-signin-page-username.test.tsx __tests__/phase3-question-screen.test.tsx __tests__/phase3-home-render.test.tsx __tests__/phase4-week-view.test.tsx'
+
+Capture names (Q45), in ~/Desktop/storytime-preview-20261110/captures/:
+r2-01-signed-in.png, r2-02-week1-highlight.png, r2-03-week2-home.png,
+r2-06-week1-readalong-week2-home.webm.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome
+commits: the commit with subject "docs(measure): add the brand chrome test strategy (track_id: storytime_look_20261107)"; the SHA is not known at write time, and this log is inside that commit.
+tests_run: none; this role writes strategy text only; no build, no server, no browser
+files_changed: measure/tracks/storytime_look_20261107/test-strategy.md (new section P2b, the phase summary row, the header note, Q42 to Q46); measure/runs/storytime_look_20261107/strategy-p2b-edd999dd4.log
+plan_updates: none; plan.md is not edited
+known_failures: none
+handoff: After this commit, capture phase_base_sha with `git rev-parse HEAD` and record it with `git worktree list | wc -l` in the Red evidence. Then spawn Red: write apps/storytime/__tests__/look-brand-chrome.test.tsx and .test.ts, update the three gate rows, run RED_TEST_COMMAND, and commit. Red runs the gate --self-test (light). Green updates the older tests of P2b.3 under R-EDIT-2b. Task 2b.4 is one heavy launch at the 3000 MB floor; the browser rows of AC-4.5 and AC-4.6 run inside it; the slip rule reports captures_ready=0 with mem_available_mb before 20:00.
+END_MEASURE_AGENT_RESULT

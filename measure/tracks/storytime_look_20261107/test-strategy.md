@@ -1,7 +1,7 @@
 # Test strategy: Storytime look and council fixes
 
 > **Track:** `storytime_look_20261107` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
-> **Scope:** Phase 1 `## Phase 1: Council fixes` in full (section P1). Phase 2 `## Phase 2: Look port of the picked option` in full (section P2).
+> **Scope:** Phase 1 `## Phase 1: Council fixes` in full (section P1). Phase 2 `## Phase 2: Look port of the picked option` in full (section P2). Phase 2b `## Phase 2b: Brand chrome` in full (section P2b).
 > **Written:** 2026-11-07 at role base `d8e73fc6c` (spec review passed in round 2). Model: claude-code/claude-sonnet-5-5 (PM rule: no Opus).
 > **Amended:** 2026-11-07 for the plan of `a776187e2`: task 1.3 is not held (poster stays until a frame plays), and new task 1.9 (read-along highlight skip, AC-1.11). Facts M16 to M21 and the sections that name task 1.3 or 1.9 changed. Nothing else changed.
 > **Amended again:** 2026-11-07 for the plan of `ab4a3f344`: new task 1.10 (a word tap plays the word's own clip, AC-1.12) and new task 1.11 (song line offset, AC-1.13). Facts M22 to M28, the P1.1 rows, the P1.2 blocks, the Red command, the Green gates, the phase check, the reviews, and the questions Q16 to Q22 changed. The Phase 1 risk is now high.
@@ -10,6 +10,7 @@
 > **Phase 2 written:** 2026-11-08 at role base `e0fe89c7a`. Model: claude-code/claude-sonnet-5-5#high (PM route order 2026-11-08). Section P2 replaces the outline. New: facts M29 to M40, section 2.2.2 (merge and edit rules for the shared files), and questions Q23 to Q36. The Phase 1 text is unchanged. Task lines 2.2a, 2.2b, and 2.3d are added to the plan.
 > **Amended for the Phase 2 paths:** 2026-11-09 at role base `7c11aa22c` (the shared master HEAD when this amendment began). Cause: the look commits of Phase 2 touched paths outside the allowed list of closeout item 3. The Review A Nits at `be5b22394` and `c54b78ea4` name them. Closeout item 3 gains the council and adversarial paths with their tasks, the true `look-*` test count, and the recorded shared-index sweep of the two login files. Closeout item 9 gains the recorded PM decision of council round 3. Nothing else changed. The capture point of the Phase 2 base is unchanged (section 1.4 and P2.0): the orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after the strategy commit and before the Red role starts. The value the orchestrator already captured stands. This amendment does not move it and embeds no SHA.
 > **Phase 3 written:** 2026-11-09 at role base `fe1c2bd11` (the shared master HEAD when this amendment began). Model: minimax-cn-coding-plan/MiniMax-M3 (a substitute for claude-opus-5-5; the Claude 7-day window sat at 80 percent). Cause: the spec review round 2 (`measure/runs/storytime_look_20261107/spec-review-fe1c2bd11.json`, pass) leaves F8 open for the strategy role and names F10 (Major), F11 (Nit), and F12 (Nit). The plan holds the new heading `## Phase 3: Week content r3 import` with tasks 3.1 to 3.4. Section P3 is new. The phase summary gains one row. Section 4 gains Q37 to Q41. The Phase 1 and the Phase 2 text is unchanged. The Phase 3 base capture is new: the orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after the commit of this strategy and before the Red role starts (P3.0). This amendment embeds no SHA.
+> **Amended for Phase 2b:** 2026-11-10 at role base `edd999dd4` (the shared master HEAD when this amendment began). Model: deepseek/deepseek-flash#high. The role table names claude-code/claude-opus-5-5. The Claude subagents were held until 15:22, and `ra-quota pick strategy` routed this role to DeepSeek. Cause: Daniel's cover notes of 2026-11-10 (spec FR-4) and the PM brief of 2026-11-10. The plan holds the new heading `## Phase 2b: Brand chrome` with tasks 2b.1 to 2b.5. Section P2b is new. The phase summary gains one row. Section 4 gains Q42 to Q46. The Phase 1, Phase 2, and Phase 3 text is unchanged. The Phase 2b base capture is new: the orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after the commit of this strategy and before the Red role starts (P2b.0). This amendment embeds no SHA.
 > **Related strategy:** [storytime_at_home_release_20261106/test-strategy.md](../storytime_at_home_release_20261106/test-strategy.md). Its section 1.1 (heavy jobs) and section P2b.4 (targeted command shape) apply here.
 > **Facts:** each "measured" fact was read on 2026-11-07 at `d8e73fc6c`. One heavy job ran (fact M1). Red and Green must measure again.
 
@@ -142,6 +143,7 @@ Order: Red can run now. Green on shared files waits for no login commit; it re-r
 |---|---|---|---|---|---|---|
 | P1 Council fixes | high | yes | no | **yes (required)** | yes (focused, one round) | **yes (required)** |
 | P2 Look port of option 1 | high | yes | no | **yes (required)** | yes | **yes (required)** + UI council round 2 |
+| P2b Brand chrome | medium | yes | **yes (the logo asset only)** | **yes (required)** | yes (one focused round) | **yes (required)** + the r2 captures |
 | P3 Week content r3 import | high | yes | **yes (tasks 3.5 and 3.6 only)** | **yes (required)** | yes (one round) | **yes (required)** |
 
 The reasons are in P1.6, P2, and P3.7.
@@ -681,7 +683,241 @@ A6 (registry-note overstatement) applies to every `[x]` note: no note says "look
 - Fonts: Sarabun stays the reading face of the sentence, the read-along text, and the lyric lines (LOOK-NOTE section 1). Fredoka and Mitr are display faces.
 - The study picks the place with `:has()`. The default of Q36 uses a `data-place` attribute on `main`, so no `:has()` carries the place and an older browser still shows the right ground.
 
-## P3: Week content r3 import
+## P2b: Brand chrome
+
+**Risk: medium.** The phase removes the game bar and the crest, replaces the logo asset, repaints every chrome family of `app/look.css` with the amber and brown tokens, and edits the `className` strings of 13 screen files. Six of those files belong to the login track (`sign-in/page.tsx`, `join/page.tsx`, `st/page.tsx`, the two teacher pages, and the 403 page), and one is the 404 view. The phase adds no auth, no session, no database, no network call, no secret, and no schema change. It changes no behavior: no text, no route, no event handler, and no contract. The risk is medium for two reasons. First, a shared chrome rule can reach a text input, the red error alert, the amber draft note, or the art. Second, the phase has a hard capture deadline (2026-11-10 20:00) and its one browser launch needs a Next build at a 3000 MB MemAvailable floor, while the machine held 1589 MB at this role (M53).
+
+Task risk: 2b.1 low (tests only), 2b.2 medium (13 screen files and `look.css`), 2b.3 low (gates), 2b.4 **high** (time risk: one build, one browser launch, fixed deadline), 2b.5 owner gate (no work in this phase).
+
+`ROOT` and `HEAVY` are the values of section 1.1. The Phase 1 and Phase 2 test rules hold: a module loads with `existsSync` first and then a dynamic import; a component test starts with `// @vitest-environment jsdom`; the mocks of P1.5 apply; R-TSC applies (`look_tsc_errors=0` after the last Red edit).
+
+### P2b.0 The decisions, the facts, and the base capture
+
+**The decisions of the orchestrator for Phase 2b (2026-11-10).**
+
+1. **Requirement (c) covers every screen.** The PM brief says "on every screen", so the "Default before Red" clause of spec FR-4 does not limit the phase. Screens 6 to 9 (the teacher week, the teacher day, the 403 page, the 404 view, the `/st` fallback, the sign-in page, and the join page) take the tones on their buttons, title banners, panel frames, and section cards. They use neutral classes today (M55). The phase changes only their `className` strings and `look.css` on those screens. It changes no behavior. **Not chrome, so unchanged:** the text inputs, the red error alert, the amber draft note, and the art.
+2. **AC-4.4 checks `look.css` only.** A source check is added: the TSX of every covered screen holds no Tailwind blue chrome class (`blue-`, `indigo-`, `sky-`, `cyan-`) and no neutral control class where the brand tone is required. The known case is `reader.tsx:551` (`border-indigo-700 bg-indigo-700`). The per-word highlight stays exempt, and the evidence names it (M56).
+3. **Task 2b.4 runs in a separate Build session** through the preview harness in `~/Desktop/storytime-preview-20261110/`. It needs a fresh `next build` of `apps/storytime` through `heavy-run`, whose Next-build floor is 3000 MB MemAvailable (M53). That build is the time risk. The browser rows of AC-4.5 and AC-4.6 run inside that capture launch, so only one heavy browser launch happens before 20:00.
+4. **The deadline is 2026-11-10 20:00.** Red stays small and fast: the unit and source tests of AC-4.1 to AC-4.4 and AC-4.7 in two files, plus the browser rows. The two commands are named in P2b.1 and P2b.3.
+5. **Older tests that pin the game bar, the crest, or the blue tokens break.** P2b.3 lists them by file and case. Green updates each one in its Green commit with the reason (rule R-EDIT-2b).
+6. **The review gates** are A, B, C, the adversarial round, and the browser review. P2b.6 gives the scope. If Green inlines the SVG markup, Review B checks the markup (no script, no event handler, and no external reference).
+
+| # | Fact | How measured |
+|---|---|---|
+| M51 | `frame.tsx` renders `[data-level-week]` with `aria-hidden="true"` (line 56), the game bar `[data-game-bar]` with the readable copy inside a visually hidden span (lines 59 to 61), `[data-crest]` (line 63), and the plaque `h1` (line 64). `frame.tsx` has one consumer: `app/[locale]/st/[level]/[week]/page.tsx`. | Read of `frame.tsx`, `rg -n 'frame' app`. |
+| M52 | `look.css` holds 911 lines and 43 references to the four blue tokens (`--sq-blue`, `--sq-blue-top`, `--sq-blue-dark`, `--sq-navy`). It holds 3 `[data-game-bar]` occurrences, 5 crest occurrences (`[data-crest]`, `q-crest.svg`), and 1 `q-bar.svg` reference. | `rg -o`, `rg -c`. |
+| M53 | `free -m` reports `MemAvailable=1589` MB at this role. `heavy-run.sh` sets the Next-build floor to 3000 MB when the command holds a `next build` and the caller sets no floor (line 775). | `free -m`, read of `heavy-run.sh`. |
+| M54 | The logo source `~/Desktop/advantage-pr/assets/logos/vector/square/storytime-advantage.svg` is 18 883 bytes. It holds `viewBox="0 0 700 700"`, the fills `#fcd34d` and `#92400e`, and `<title>Storytime Advantage</title>`. It holds no script, no event handler, and no external reference. It is read only. | `ls -la`, read of the file. |
+| M55 | The 13 covered screen files hold 32 neutral chrome class occurrences: 30 on controls and containers, and 2 on the `<input>` elements of the sign-in page. The 404 link holds `border-neutral-900 bg-neutral-900`. | `rg -o` over the 13 files. |
+| M56 | The per-word highlight is `packages/read-along/lib/highlight.ts:13` (`currentWord: "bg-blue-700 text-white ..."`). It is not chrome, it stays, and the scan does not read `packages/read-along`. | `rg -n 'bg-blue' packages/read-along`. |
+| M57 | The app sources hold one blue Tailwind chrome class: `app/[locale]/st/[level]/[week]/reader.tsx:551` (`border-indigo-700 bg-indigo-700`). | `rg -n '(bg\|text\|border)-(blue\|indigo\|sky\|cyan)-' app`. |
+| M58 | The tests that name the game bar, the crest, or the blue tokens: `look-frame.test.tsx` (F1, F2, F3, and the baked-pair self-test), `look-council-r1.test.tsx` (C2, the HUD label inside the bar), `look-assets.test.ts` (A3 over the 4 pieces, A4 over the bar and the tips), `look-reduced-motion.test.ts` (self-test strings only), and the gate rows `frame`, `reduced motion`, and `council hud label` of `look-phase2-browser-gate.sh`. | `rg -n`, read. |
+| M59 | The plaque `header[data-hero] > h1` has `min-height: 88px` (cover) and `56px` (band), `font-size: 36px` and `28px`, `line-height: 1.4`, `align-items: flex-end`, and `text-align: center`. So `title_font_px / plaque_h_px` is about 0.41 and 0.50 today, below 0.76. | Read of `look.css` lines 209 to 255. |
+| M60 | `look.css` reaches the login-owned pages today by four rules only: `html`, `body`, `a:focus-visible`/`button:focus-visible`, and `main > a` (the 48 px link floor). No rule paints a button, a panel, or a card there. | Read of `look.css` lines 37 to 60. |
+
+**Base capture.** This file embeds no SHA. The commit `edd999dd4` is the role base at which this strategy was written. It is **not** `phase_base_sha`, because it predates this strategy commit. The orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after two events: the commit of this strategy, and the answers to Q42 to Q46 (the defaults apply when no answer comes). The capture happens before the Red role starts. The orchestrator records the full SHA and `git worktree list | wc -l` (8 at this role; A16) in the Red evidence. The scope check uses the commits of this track only:
+
+```bash
+git log <phase_base_sha>..HEAD --format=%H --grep='track_id: storytime_look_20261107'
+```
+
+Then `git show --name-only --format= <sha>` for each commit. The label is `look_out_of_scope_paths=<n>`. The Phase 2b closeout needs 0, with the allowed paths of P2b.9.
+
+### P2b.1 Red: the command and the expected failure
+
+**Red rule.** Red writes two files and commits them (one commit per file, or one commit for both). Red then updates the three gate rows in its own commit and records `gate_rows_rewritten=3`. Red edits no old test (Green does, rule R-EDIT-2b). Red runs the gate `--self-test` (light, no build, no database, and no server).
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts'
+```
+
+`RED_TEST_COMMAND` is that command. Expected at the base: exit 1; `look_files=2`; `load_errors=0`; every case group fails for a named reason, except the characterization cases of the table. The Red evidence lists each passing case with its reason (A4) and quotes `cases_checked=10`, `files_scanned=13`, `mutants_checked=<n>`, and `look_tsc_errors=0`.
+
+| Group | Expected at the base |
+|---|---|
+| B1 (`look-brand-chrome.test.tsx`) | Exit 1. Each render holds the bar: `the frame must render no [data-game-bar], found 1`. |
+| B2 (label) | Exit 1. `[data-level-week] must not be aria-hidden`, and the frame holds the text twice (`level_week_copies=2`). |
+| B3 (logo) | Exit 1. `Missing apps/storytime/app/look/logo/storytime-advantage.svg`, and `[data-logo]=0`. |
+| B6 (highlight sentinel) | Passes (characterization): the per-word highlight still carries the package class of M56. |
+| S1 (logo bytes) | Exit 1. The logo file is absent. |
+| S2 (bar and crest hooks) | Exit 1. `gamebar_refs=3` and `crest_refs=5`; the rule needs 0. |
+| S3 (tokens) | Exit 1. `--st-amber` and `--st-brown` are absent. |
+| S4 (label rule) | Passes (characterization): the `[data-level-week]` rule holds no clip box and a font size of 14 px. The markup hides the label (B2). |
+| S5 (families and blue tokens) | Exit 1. The families name the blue tokens. |
+| S6 (text pairs) | Exit 1. The tokens are absent, so no pair holds. |
+| S7 (blue references outside the allowlist) | Exit 1. `blue_token_refs_outside_allow=43`. |
+| S8 (Tailwind blue chrome) | Exit 1. `blue_chrome_classes=1`, the indigo class of `reader.tsx:551`. |
+| S9 (neutral chrome) | Exit 1. `neutral_chrome_classes=30`; the rule needs 0. |
+| S10 (banner rule) | Exit 1. `align-items: flex-end` fails the both-ways centering rule. |
+
+**The gate self-test at Red** (light; exit 0 after Red edits the rows):
+
+```bash
+bash apps/storytime/__tests__/look-phase2-browser-gate.sh --self-test
+```
+
+It prints `selftest_mutants_rejected=<n>` of `selftest_mutants_checked=<n>` and `=== Total: 1 checks (PASS=1, FAIL=0) ===`. The new mutants: a page with a game bar, a hidden label, a 0.70 ratio, a 4.4:1 contrast pair, a blue chrome pair, and an empty brand row. The full gate run is not part of Red, because it needs the build (P2b.4).
+
+**The red aggregate suite.** The root suite `pnpm turbo run test` is red for reasons outside this track (section 1.1) and is not a gate. The `login-*` Red files fail by design (M2) and never enter a Phase 2b command. The two `look-brand-chrome.test.*` files are the only new red files of this phase. A command that runs them alone is not vacuous, because each file asserts its input counts first (A4).
+
+### P2b.2 The test content (what the case asserts, and the broken copy)
+
+Pinned names (the orchestrator may change them before Red starts): the logo file `apps/storytime/app/look/logo/storytime-advantage.svg`; the tokens `--st-amber` and `--st-brown`; the hooks `[data-logo]`, `[data-level-week]`, and `[data-crest]` (gone). The four chrome families are the title banner (`header[data-hero] > h1`), the buttons (`button`), the panel frames (`section[aria-label]`), and the section cards (`ul[data-week-tiles] a`, `[data-part="song"] ol`, and the page cards `[data-page-content] > div`). The family predicates are pinned in the test, not in `look.css`.
+
+**`look-brand-chrome.test.tsx` (AC-4.1, AC-4.2, AC-4.3; jsdom renders on the shipped `w01`).**
+
+- B1: render the five screens in `en` and `th` (the `Frame` with `cover` and `band`, `StorytimeReader`, the decodable part, the song part, and the question screen) with the `look-render.tsx` helper. Each render holds `[data-game-bar]=0`, `[role="progressbar"]=0`, `[data-progress]=0`, and `[data-band-icon]=0`. `cases_checked=10` is asserted before the loop (A4). A mutant `Frame` with one bar fails every case.
+- B2: the frame holds exactly one `[data-level-week]`, with no `aria-hidden`, and its text equals the `en` words for `locale="en"` and the `th` words for `locale="th"`. A second fixture (`level=3`, `week=5`) shows 3 and 5, so no pair is baked. `level_week_copies=1` by an exact-text query over the whole render.
+- B3: one `[data-logo]` on the `cover` variant and on the `band` variant, with the accessible name "Storytime Advantage", and `[data-crest]=0`. A mutant with the crest fails.
+- B6 (characterization): the reader word highlight carries the package class of M56; the plain-text rule of AC-2.3 still holds.
+- Artifact versus live: this file proves the markup and the count. jsdom loads no CSS, so it proves no layout, no tone, no contrast, and no centering. Those proofs are the browser rows of P2b.4.
+
+**`look-brand-chrome.test.ts` (AC-4.4, AC-4.5, AC-4.7; source and CSS scan with the `helpers/css-rules.ts` parser).**
+
+- S1: the logo file exists, starts with `<svg`, holds `viewBox="0 0 700 700"`, the fill `#fcd34d`, and the title "Storytime Advantage". It holds no `<script`, no `on*=` attribute, and no `href` outside `#id` or `data:`. This is the Review B control. `logo_bytes=<n>` is above 0.
+- S2: the app sources hold no `data-game-bar`, `data-crest`, `q-bar.svg`, or `q-crest.svg` reference, and `look.css` holds no `[data-game-bar]`, `[data-crest]`, or `q-bar.svg`/`q-crest.svg` text. `gamebar_refs=0`, `crest_refs=0`.
+- S3: `:root` defines `--st-amber: #fcd34d` and `--st-brown: #92400e` (the exact lower-case values).
+- S4: the last `[data-level-week]` rule outside a media block holds no `clip-path: inset(50%)`, no `width: 1px` box with `height: 1px`, and no off-screen `left`. Its `font-size` is 14 px or more (this keeps the C2 case of `look-council-r1`).
+- S5: each family predicate finds at least one rule (`family_rules>=1` for each of the four). No family rule names `--sq-blue`, `--sq-blue-top`, `--sq-blue-dark`, or `--sq-navy`. Each family rule that sets a background uses `var(--st-amber)` or `var(--st-brown)`. Each family rule that sets a color uses `#fff`, `#ffffff`, `white`, or `var(--st-brown)`. No family rule names `--sq-gold` or `--sq-gold-img` (Q43; a gold token may stay only outside a chrome rule). Labels: `families_checked=4` and `family_rules=<a>,<b>,<c>,<d>`.
+- S6: each family rule with a `--st-brown` background sets `#fff`; each with a `--st-amber` background sets `var(--st-brown)`. `chrome_pairs_checked=<n>` has a floor. A rule that sets one side of the pair and inherits the other is counted in `pair_inherit_rules=<n>` and the browser row measures the computed pair.
+- S7: every reference to the four blue tokens in `look.css` sits in a pinned allowlist of art selectors (`main[data-place]::before`, `main[data-place]::after`, and the hero picture rules). `blue_token_refs_outside_allow=0` and `blue_allow_rules=<n>`. The per-word highlight rule is outside this file (M56) and the evidence names it.
+- S8: for the 13 files of P2b.9, no `className` token matches `(bg|border|text|ring|from|to|via|outline|divide|fill|stroke)-(blue|indigo|sky|cyan)-\d+`. `blue_chrome_classes=0`, `files_scanned=13`. A positive-control string fails.
+- S9: for the same files, no `border-neutral-300`, `border-neutral-900`, `bg-neutral-900`, or `bg-neutral-100` token sits on a control (`button`, `a`, `Link`) or a container (`section`, `li`, `div`). The `<input>` elements are exempt (M55). `neutral_chrome_classes=0`; the count today is 30. The positive control: a `<button className="border border-neutral-300">` fails, and an `<input className="border border-neutral-300">` passes.
+- S10: the banner rule sets `text-align: center` and centers the text on both axes (no `align-items: flex-end`), and its height and font size are px values of the rule (no `vh`, `dvh`, `clamp`, or `calc`). `banner_height_rule=px`. The measured ratio is the browser row, because jsdom loads no CSS.
+- Mutants: the test holds at least 12 broken copies (one per scan) and records `mutants_rejected=<n>`.
+
+**The gate rows (written by Red; run in the single launch of P2b.4).**
+
+- `brand chrome`: screens 1 to 5, `en` and `th`, at 390 x 844: `game_bars=0`, `progressbars=0`, `band_icons=0`, `level_week_copies=1`, `label_hidden=0`, `logo_elems=1`, `logo_name_ok=1`, `crest_elems=0`. This is AC-4.1, AC-4.2, and AC-4.3 in a browser.
+- `brand tones`: each of the four families on screens 1 to 5 and on screens 6 to 9: `chrome_pairs_checked=<n>`, `chrome_blue_computed=0`, `chrome_contrast_min=<n>` of 4.5 or more, `amber_pairs=<n>` above 0, `brown_pairs=<n>` above 0. This is AC-4.4 and AC-4.5.
+- `brand banner`: 390 x 844, `en` and `th`, the shipped `w01` title "Hello!": `text_align=center`, `banner_top_gap_px` and `banner_bottom_gap_px` of 2 or less, `banner_ratio` from 0.76 to 0.84, `title_font_px`, `banner_h_px`, `clipped_text=0`, `page_overflow=0`. The 60-character fixture title may step down one size step and must hold `plaque_overflow_px=0` and `clipped_text=0`. This is AC-4.6.
+- `brand pages`: the teacher week, the teacher day, the 403 page, the 404 view, the `/st` fallback, the sign-in page, and the join page: `console_errors=0`, `tap_under_48=0`, `page_overflow=0`, `chrome_contrast_min>=4.5`, and `chrome_brand_pairs>=1` for each page. This is decision 1.
+- The rows of AC-4.7 are the unchanged art files and the Phase 1 reader rows. `reader gaps`, `reader hit area`, and the Phase 1 gate rows must stay PASS.
+
+### P2b.3 The Green gate, the older tests, and the closeout
+
+**The Green command.**
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts __tests__/look-frame.test.tsx __tests__/look-assets.test.ts __tests__/look-council-r1.test.tsx __tests__/look-plain-text.test.tsx __tests__/look-reduced-motion.test.ts __tests__/look-hero-fix.test.ts __tests__/look-captures.test.ts __tests__/look-feedback.test.tsx __tests__/look-reader-gap.test.tsx __tests__/look-word-clip-tap.test.tsx __tests__/look-not-found.test.tsx __tests__/login-page-guard.test.tsx __tests__/login-join-page.test.tsx __tests__/login-signin-page-username.test.tsx __tests__/phase3-question-screen.test.tsx __tests__/phase3-home-render.test.tsx __tests__/phase4-week-view.test.tsx'
+```
+
+`GREEN_TEST_COMMAND` is that command. Expected after Green: exit 0; `tests_failed=0`; `tests_skipped=0`; every file ran at least one case. Green measures the base first and quotes `files_before` and `tests_before`. The last recorded value of the look glob is 92 files and 702 tests at the Phase 3 Green (plan task 3.3); Green measures again, because later commits move the count.
+
+- **R-COUNT-2b.** `tests_after = tests_before - old_cases_removed_p2b + new_tests_p2b`. Red states `old_cases_removed_p2b=<n>` (planned 0) and `old_cases_rewritten_p2b=<n>` as labeled integers. A lower total than the formula means a deleted or a skipped case (A4, A5).
+- **Type and lint gates** (through `HEAVY`, foreground, both exit 0): `../../node_modules/.bin/tsc --noEmit` (`look_tsc_errors=0`) and `../../node_modules/.bin/eslint` on the changed `.ts` and `.tsx` files (`eslint_errors=0`). The `.css` and `.svg` files have no lint run.
+- **R-EDIT-2b.** Green edits an old test only where this list names it, only to an assertion of equal strength, and with the reason in the Green commit. The `it(` case count of each file does not fall.
+- **Detectors** (light; exit 1 means no hit; exit 2 is a failure, A14): `rg -n 'data-game-bar|data-crest|q-bar\.svg|q-crest\.svg' apps/storytime/app` exits 1; `rg -n '(bg|text|border|ring|from|to|via|outline|divide|fill|stroke)-(blue|indigo|sky|cyan)-[0-9]' apps/storytime/app --glob '!**/__tests__/**'` exits 1; `rg -n 'border-neutral-300|bg-neutral-900|border-neutral-900' "apps/storytime/app/[locale]/teacher" "apps/storytime/app/[locale]/sign-in" "apps/storytime/app/[locale]/join" "apps/storytime/app/[locale]/st/page.tsx" "apps/storytime/app/[locale]/not-found-view.tsx"` exits 1; `rg -n 'measure/tracks|ui-council|handoff/storytime' apps/storytime/__tests__/look-brand-chrome.*` exits 1 (A9).
+
+**The older tests that the phase breaks** (decision 5; Green updates each one in the commit that breaks it).
+
+| File | Case | Why it breaks, and the restatement |
+|---|---|---|
+| `look-frame.test.tsx` | `F1 renders one hero header from the variant, the week title, and one game bar` | It expects `bars=1`. Restate: one header, one `[data-level-week]`, and `bars=0`. |
+| `look-frame.test.tsx` | `F2 the game bar shows the level and the week of the route, never a fixed pair` | It reads the bar text. Read `[data-level-week]` instead; keep the two routes (`3`/`5` and `2`/`1`). |
+| `look-frame.test.tsx` | `F3 the crest and the tips are decorative and the bar text is read once` | The crest is gone. Restate: the logo has its text alternative, the plaque tips stay decorative, and the label is read once. |
+| `look-frame.test.tsx` | `the bar check fails a baked pair at another route (self-test)` | The fixture uses `[data-game-bar]`. Move the fixture to the label node. |
+| `look-council-r1.test.tsx` | `C2 the HUD label follows the interface language and sits outside the progress track box` | It requires `[data-game-bar]` and `bar.contains(label) === false`. Restate: the label exists once, is not hidden, and no progress track exists. Keep the Thai text. |
+| `look-assets.test.ts` | `A3 %s is a small inert SVG file with a viewBox` (`it.each(PIECES)`) | `q-bar.svg` and `q-crest.svg` leave the app. The list becomes the two plaque tips plus the logo (3 entries, not 2). |
+| `look-assets.test.ts` | `A4 every rule that draws the bar or a tip pins the ratio of its own viewBox` | No rule draws the bar. Restate over the two tips, and add: no rule draws the bar or the crest. |
+| `look-phase2-browser-gate.sh` | the row `frame` | It reads the bar numbers. Read the label text and assert `game_bars=0`; keep the 60-character plaque measure. |
+| `look-phase2-browser-gate.sh` | the row `reduced motion` | The positive control reads the crest animation. Move it to the active lyric line (`[data-part="song"] li[aria-current="true"]`), which keeps `sq-glow`. |
+| `look-phase2-browser-gate.sh` | the row `council hud label` | It measures the label against the bar box. Measure the label against its own hero box; keep `hud_overlap_px=0` and the 14 px floor. |
+
+These are not breaks: `look-reduced-motion.test.ts` (the lyric glow keeps `motion_rules>=1`; Red records `motion_rules_before` and `motion_rules_after`), `look-plain-text.test.tsx` (it reads the text spans), `look-hero-fix.test.ts` (the hero heights stay), and `phase2b-browser-gate.sh` (its `LOOK_ASSET_NAMES` list only classifies requests, and no case asserts them; the value `look_assets_skipped` falls). Green does not edit the login-owned gate.
+
+**The closeout gate of Phase 2b.**
+
+1. `GREEN_TEST_COMMAND`, `tsc`, and ESLint exit 0 with the counts of P2b.3.
+2. The two Red files exist, and `git log --format=%H --grep='track_id: storytime_look_20261107' -- apps/storytime/__tests__/look-brand-chrome.*` shows each Red commit before its Green commit (`red_before_green=2`).
+3. `look_out_of_scope_paths=0` with the allowed paths of P2b.9.
+4. The AC-4.7 proof: `git diff <phase_base_sha>..HEAD -- packages/read-along/ apps/storytime/lib/highlight-windows.ts apps/storytime/app/look/places/` prints nothing, and the Phase 1 reader rows stay PASS.
+5. The single launch of P2b.4 exits 0 with `FAIL=0`, `captures=24`, `console_errors=0`, `chrome_contrast_min>=4.5`, and `banner_ratio` from 0.76 to 0.84.
+6. The four r2 captures exist in `~/Desktop/storytime-preview-20261110/captures/` with the Q45 names, each with bytes above 0, and the video is 12 s +- 0.5 s. The orchestrator records `r2_captures=4`.
+7. `git worktree list | wc -l` equals the count at the capture (A16). `build-graph update ./graph.db apps/storytime/app/[locale]/frame.tsx` runs once after Green (A10).
+8. Reviews A, B, and C, the adversarial record, and the browser review exist and pass the audit-result checker. The acceptance role writes `[checkpoint: <sha>]` to the Phase 2b heading.
+9. **Task 2b.5 (AC-4.8) stays `[b] deferred:daniel`.** No role writes a pass for the capture or for the look check.
+
+### P2b.4 The single browser launch and the r2 captures (task 2b.4)
+
+**The time risk.** `next build` of `apps/storytime` needs a 3000 MB MemAvailable floor (M53). The machine held 1589 MB at this role. One heavy job at a time, and the deadline is 2026-11-10 20:00. So the phase runs exactly one build, one server, and one browser session before 20:00. Task 2b.4 repeats in a separate Build session, through the preview harness:
+
+```bash
+HEAVY_MIN_AVAIL_MB=3000 HEAVY_PREFLIGHT_WAIT_S=7200 NODE_OPTIONS=--max-old-space-size=1536 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /home/daniebo/Desktop/storytime-preview-20261110/run.sh'
+```
+
+The Build session sets the harness to build (no reuse of an old build), starts the app once, signs in, and then does three things against that one server: the four r2 captures, the Phase 2b rows, and the Phase 2p rows that the harness already checks. The exact harness edit belongs to the Build session. The gate rows live in `look-phase2-browser-gate.sh` and read the same built output.
+
+- **Captures (AC-4.8, task 2b.4).** `r2-01-signed-in.png`, `r2-02-week1-highlight.png` (one word highlighted), `r2-03-week2-home.png`, and `r2-06-week1-readalong-week2-home.webm`, at 390 x 844, in `~/Desktop/storytime-preview-20261110/captures/`. Label `r2_captures=4` and `r2_video_seconds=12`.
+- **Rows.** The four brand rows of P2b.2 (`brand chrome`, `brand tones`, `brand banner`, `brand pages`) run on the same server. This is the proof of AC-4.5 and AC-4.6 and of decision 1.
+- **The slip rule.** If the 3000 MB floor does not clear by 18:00, the orchestrator sends the PM one line at once: `captures_ready=0 mem_available_mb=<n> wait_started=<time>`. The unit and source gates of P2b.3 stand without the launch. The browser rows of AC-4.5 and AC-4.6 gate the phase checkpoint, not task 2b.2. A second launch needs a PM decision, because it costs the only slot before the deadline.
+- **The ports.** The harness uses its own free port. No role starts anything on 3005 or 3099. The server starts in its own process group, and the trap kills the group on EXIT, INT, and TERM.
+- A headless capture is not a phone check. No role writes a phone result.
+
+### P2b.5 Fixtures, mocks, and live proof
+
+- Week data comes from the shipped `content/l2/w01.json` and from `structuredClone` of it with one change made in the test. The 60-character title fixture is the V1 string of `look-adversarial-p2.test.tsx`; the browser row sets it into the plaque, as the `frame long title` row does today.
+- The tests use the mocks of P1.5 (`next/navigation`, `HTMLMediaElement`, `matchMedia`) and the `look-render.tsx` helper. No test mocks `Frame`, the logo, or `look.css` when the case claims to prove them (the mock would prove the mock).
+- **Artifact and documentation tests:** S1 to S10 and B1 to B4 read files, class tokens, or markup. They prove no tone, no contrast, and no centering. **Live behavior tests:** the browser rows of P2b.4 prove the computed tone, the contrast, the centering, and the ratio. AC-4.7 is a repository diff command, not a rendered proof.
+- **Human proof:** Daniel's look check of the r2 captures (AC-4.8) is `owner-passed`. The record names the commit, the folder `~/Desktop/storytime-preview-20261110/captures/`, and his word. No role writes it.
+- Source origin of the logo: the Green evidence prints `logo_source=advantage-pr/assets/logos/vector/square/storytime-advantage.svg` and `logo_bytes=<n>`. A test cannot read that folder (A9), so the S1 scan reads the shape and the values.
+
+### P2b.6 Review applicability
+
+| Review | Applies | Reason and scope |
+|---|---|---|
+| Review A (code) | **yes** | Thirteen screen files change, six of them owned by the login track. Review A checks the merge result, that the diff of the login-owned pages holds only `className` lines, that the shared chrome rules reach the intended elements and not an input, the alert, the draft note, or the art, that the logo is a static asset and not inline script, and that the old-test edits obey R-EDIT-2b. |
+| Review B (security) | **yes, the logo asset only** | The phase adds no auth, no session, no database, no storage call, no route, and no secret. The one new served file is an SVG. Review B checks that the copied file holds no `<script`, no `on*=` handler, no `<foreignObject>`, and no external `href` (Q44: the frame uses `<img>`, not inline markup). It also checks that no chrome rule fetches a remote font or image. If Green adds a `public/` folder, a route, a cookie, or a header rule, the full Review B becomes required. |
+| Review C (UX/API) | **yes (required)** | Child-facing chrome on every screen: the amber and brown tones, white on brown and brown on amber at 4.5:1 or more, the title at about 80 % of the banner, the level and week label read once, the removed game bar, the logo in place of the crest, and the login and teacher pages under the shared rules. |
+| Adversarial testing | **yes (one focused round)** | Viewports 320 x 568, 568 x 320, 1440 x 900, and 200 % text zoom; a 60-character English and Thai title; a missing logo file; a shared rule that catches a text input or the red alert; a page with no panel; the 403 and the `/st` fallback. The role adds tests only in `apps/storytime/__tests__/`. |
+| Browser review (UX) | **yes (required)** | The four r2 captures and the rows of P2b.4, at 390 x 844. The browser review reads the captures of task 2b.4. |
+| Human checks | **yes (AC-4.8)** | Daniel's look check of the r2 captures (`owner-passed`, task 2b.5). No role writes it. |
+
+### P2b.7 Anti-pattern coverage per task
+
+The catalog IDs follow `measure/anti-patterns.md`. A2 (the consent-blind publish gate), A8, A11, A12, A13, and A15 are not phase risks.
+
+| Task | Anti-patterns | Defense | Falsification condition |
+|---|---|---|---|
+| 2b.1 Red | A1, A3, A4, A5, A7, A14 | The scans read rules, selectors, and JSX tag names, not words in comments. Labeled integers with a floor: `cases_checked=10`, `files_scanned=13`, `families_checked=4`, `mutants_checked>=12`, `neutral_chrome_classes`, `blue_chrome_classes`. Every `every` check runs after its count guard. The one exempt list (the per-word highlight) names the file and the line. | A scan that reads a comment fails; a loop over 0 files passes; a count without a label passes; a bare `indigo` word in a comment fails S8; the exempt list hides a real chrome rule. |
+| 2b.2 Green | A1, A5, A6, A9 | The plan note quotes the exit codes and the labeled counts of P2b.3. The logo source and bytes are evidence lines, not a test claim. No note says "brand fixed" without the browser row. No test reads `~/Desktop/advantage-pr`, `measure/tracks`, or the study folder. | "Brand fixed" is written from the vitest run alone; a test reads the read-only source folder; the note says "pass" and the command exits non-zero. |
+| 2b.3 gates | A3, A4, A5, A16 | R-COUNT-2b with `old_cases_removed_p2b` and `new_tests_p2b` as labeled integers. The case count of every edited old file stays or grows. The gate rows keep their count or grow, and no assertion is weaker. | A lower test total passes; a weaker row passes; a worktree is added. |
+| 2b.4 captures | A3, A4, A5, A6 | `r2_captures=4` is parsed, and the four files are checked for bytes above 0. The rows print labeled values. The run is one launch, and the slip rule reports `captures_ready=0` with the real MemAvailable. No note says Daniel passed. | A capture is written from an old build; a missing file passes; "captures ready" is written while the launch is waiting; "Daniel accepted" is written without his word. |
+| 2b.5 owner gate | A2, A6 | The task stays `[b] deferred:daniel`. | A note claims the look check passed before Daniel's word. |
+
+### P2b.8 Architecture guardrails, the login-owned pages, and the changed-contract risks
+
+- **Thin components.** `Frame` renders. It reads no content and holds no logic. The label words come from the two message keys that it already reads. The logo is an asset, not a component with state.
+- **The login-owned pages.** `sign-in/page.tsx`, `join/page.tsx`, `st/page.tsx`, the two teacher pages, and `403` belong to `storytime_at_home_release_20261106` (section 2.2.2). This phase changes their `className` strings and the shared `look.css` rules only. The guard is a diff check: `git diff -U0 <phase_base_sha>..HEAD -- <the six files> "app/[locale]/not-found-view.tsx"` holds no changed line that is not a `className` line or a line inside a JSX class list. Label `login_owned_changed_lines=<n>` and `login_owned_non_class_lines=0`. The orchestrator tells the login track owner before the Green commit.
+- **No new dependency.** The scans use `node:fs` and the `typescript` package that the app already has. No image library and no SVG library.
+- **No provider SDK, no remote font, no `console.log`, and no network call.**
+- **Changed contracts.** The phase adds no export, no message key, no route, no schema field, and no environment name. The visible contract changes are the removed hooks `[data-game-bar]`, `[data-crest]`, the band icons, and the progress bar, and the new hook `[data-logo]`. The label `[data-level-week]` stays and becomes the single readable copy. Any test, gate, or review that reads the old hooks is in the P2b.3 list.
+- **The shared rule risk.** `look.css` reaches the login pages today by four rules only (M60). A new rule that selects `button` or `a` globally (`main button`, `main > a`) also paints the sign-in submit button, the sign-out button, and the join link. That is intended by decision 1. A rule that selects `input`, `p`, or `section` broadly would paint a text input, the red alert, or the amber note, and that is not intended. The scan S9 cannot see a CSS selector; the browser row `brand pages` measures the computed state of those elements, and Review A reads the selectors.
+- **The art and the read-along.** `packages/read-along/`, `lib/highlight-windows.ts`, and `app/look/places/*.webp` stay byte for byte (AC-4.7). The per-word highlight class of M56 stays.
+- **No hash, no manifest, and no provenance file** (AGENTS.md hashing policy). Git commit identity is the provenance. The logo check reads the shape, not a digest.
+
+### P2b.9 The allowed paths of Phase 2b
+
+| Path | Rule |
+|---|---|
+| `apps/storytime/app/[locale]/frame.tsx` | Remove the bar and the crest, add the logo, keep the label. |
+| `apps/storytime/app/look/logo/storytime-advantage.svg` | New file, copied byte for byte from the read-only source. The frame renders one `<img data-logo alt="Storytime Advantage">` (Q44). No inline SVG. |
+| `apps/storytime/app/look/pieces/q-bar.svg`, `q-crest.svg` | Deleted (no app reference stays). |
+| `apps/storytime/app/look/pieces/q-tip-l.svg`, `q-tip-r.svg` | Kept; the plaque tips stay. |
+| `apps/storytime/app/look.css` | The tokens, the four families, the label rule, the banner rule, and the shared rules for screens 6 to 9. |
+| `app/[locale]/st/[level]/[week]/{page,reader,decodable,song,questions}.tsx` | `className` strings only (the indigo case at `reader.tsx:551` and the neutral classes). No logic. |
+| `app/[locale]/not-found-view.tsx` | `className` only (the link of M55). |
+| `app/[locale]/teacher/[level]/[week]/week-view.tsx`, `.../[day]/page.tsx`, `app/[locale]/teacher/forbidden.tsx` | `className` only. |
+| `app/[locale]/st/page.tsx`, `app/[locale]/sign-in/page.tsx`, `app/[locale]/join/page.tsx` | `className` only; the `<input>` elements keep their border. |
+| `apps/storytime/__tests__/look-brand-chrome.test.tsx`, `look-brand-chrome.test.ts` | The two new Red files. |
+| `apps/storytime/__tests__/look-phase2-browser-gate.sh` | The Phase 2b rows and the rewritten rows of P2b.3. |
+| `apps/storytime/__tests__/look-frame.test.tsx`, `look-assets.test.ts`, `look-council-r1.test.tsx` | The old tests of R-EDIT-2b, with their reasons. |
+| The track files under `measure/` | This strategy, the plan notes, and the run logs. |
+| `~/Desktop/storytime-preview-20261110/` | The capture harness and the captures. Outside the repository; no commit. |
+
+Not allowed: `packages/read-along/**` (beyond nothing), `apps/storytime/lib/highlight-windows.ts`, `apps/storytime/app/look/places/*.webp`, `apps/storytime/messages/*.json`, `apps/storytime/app/globals.css`, `proxy.ts`, the auth files, the content files, and the login-owned gate `phase2b-browser-gate.sh`.
+
+
 
 **Risk: high.** Phase 3 replaces the data of seven week files. It adds 163 clip paths and one song field to the app content. The change reaches the reader, the decodable, and the song of every week. Tasks 3.1 to 3.4 add no code to the app, no auth, no session, no database, and no secret. Tasks 3.5 and 3.6 add one server-side review switch in `lib/content.ts`. The risk is high for two reasons. First, a wrong clip path reaches a media URL that the app builds from the week file. Second, the receiver writes eight files in one run, and seven of them belong to another track.
 
@@ -953,3 +1189,13 @@ Expected at the base: exit 1; `look_files=1`; `load_errors=0`. Case (b) fails wi
 | Q39 | F12 (spec review round 2, Nit). The old dates of FR-2 and of the plan header differ from D5. | **Superseded.** The dates at spec.md line 71 and plan.md line 4 are superseded by D5. The Phase 2 checkpoint sits at 2026-11-09 or 2026-11-10, and Phase 3 runs from 2026-11-10 to 2026-11-12. This row is a Nit, so it carries no test. |
 | Q40 | The model families for the Phase 3 roles. The Claude 7-day window sat at 80 percent until 2026-11-10 15:00. | **Red on DeepSeek. Green on a family other than DeepSeek.** The orchestrator picks the Green family at the spawn with `ra-quota pick green --not-family deepseek`. The strategy role ran on minimax-cn-coding-plan/MiniMax-M3 as a substitute for claude-opus-5-5. |
 | Q41 | M45 measured a non-empty w08 diff at the role base: the receiver output at `953f798e` adds 20 fields under `scripts[].share` (5 scripts, each with `share.caption.en`, `share.caption.th`, `share.shots[0].media`, and `share.shots[0].step`). Under Q37 the import stops before the commit. | **Follow Q37.** Green stops before the commit and reports to the orchestrator with `w08_diff_fields=20` and the field names. This track commits no w08 change. The orchestrator asks the PM whether the hand-off covers w08, or whether the at-home track updates its w08 first. |
+
+**The decisions of the orchestrator for Phase 2b (2026-11-10).** These five rows are decided. They are not open questions.
+
+| # | Question | Decision |
+|---|---|---|
+| Q42 | Which element is the "banner" of AC-4.6, the title plaque or the hero band? | **The title plaque.** `banner_h_px` is the box of `header[data-hero] > h1`, on the `cover` variant and on the `band` variant. `title_font_px / banner_h_px` sits from 0.76 to 0.84, and the text box is centered in the plaque within 2 px at the top and at the bottom (P2b.2, S10 and the `brand banner` row). |
+| Q43 | Do the two brand tones also replace the gold of the one gold action per screen? | **Yes.** The chrome gold becomes the brand tones. The one gold action per screen takes amber `--st-amber` with brown text. No gold chrome token stays in a chrome rule. The gold token may stay only outside a chrome rule (the ring of a card picture, the done badge fill). |
+| Q44 | Where does the logo file live, and how does the frame use it? | **`apps/storytime/app/look/logo/storytime-advantage.svg`**, a copy of the read-only source. The frame renders exactly one `<img data-logo alt="Storytime Advantage">`. It uses no inline SVG. Review B still reads the copied file: no script, no event handler, and no external reference. |
+| Q45 | The r2 capture names. | **The first set, so the PM can compare pair by pair:** `r2-01-signed-in.png`, `r2-02-week1-highlight.png`, `r2-03-week2-home.png`, and `r2-06-week1-readalong-week2-home.webm`, all in `~/Desktop/storytime-preview-20261110/captures/`. The slip rule stays: before 20:00 the orchestrator reports `captures_ready=0` with `mem_available_mb` (P2b.4). |
+| Q46 | How do the chrome tones reach screens 6 to 9 without a new hook? | **No new `data-*` hook and no tag selector.** On screens 6 to 9, Green changes only the `className` strings of the buttons, title banners, panel frames, and section cards to the brand tones: Tailwind arbitrary values with the token, or the hex value when the token is not in scope on that page. The source check of decision 2 (P2b.2, S8 and S9) accepts both forms. Inputs, the red alert, the amber draft note, and the art keep their classes. If a change needs a tag selector or a behavior change, Green stops and reports to the orchestrator. |
