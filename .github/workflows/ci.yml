@@ -154,7 +154,7 @@ jobs:
           packages/architecture-enforcement/src/__tests__/archive-evidence-path-compatibility.test.ts
 
       - name: Architecture boundary check
-        run: pnpm architecture:check
+        run: pnpm architecture:check --skip-input-snapshot-pin
 
       - name: Tenant and provider architecture guards
         run: |

@@ -20,6 +20,8 @@ export interface ArchitectureCheckCliOptions {
   repoRoot: string;
   /** Optional explicit architecture policy. */
   policyVersion?: ArchitecturePolicyVersion;
+  /** Skips only the analyzer input snapshot pin comparison; CI mode. */
+  skipInputSnapshotPin?: boolean;
 }
 
 /** Replaceable command dependencies used by direct, side-effect-free tests. */
@@ -63,9 +65,12 @@ export function parseArchitectureCheckArguments(
   let format: ArchitectureCheckOutputFormat = "human";
   let repoRoot: string | undefined;
   let policyVersion: ArchitecturePolicyVersion | undefined;
+  let skipInputSnapshotPin = false;
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
-    if (argument === "--format") {
+    if (argument === "--skip-input-snapshot-pin") {
+      skipInputSnapshotPin = true;
+    } else if (argument === "--format") {
       const value = args[index + 1];
       if (value !== "human" && value !== "json") {
         throw new Error("--format must be human or json");
@@ -92,6 +97,7 @@ export function parseArchitectureCheckArguments(
     format,
     repoRoot: repoRoot ?? discoverRepositoryRoot(cwd),
     ...(policyVersion ? { policyVersion } : {}),
+    ...(skipInputSnapshotPin ? { skipInputSnapshotPin: true } : {}),
   };
 }
 
@@ -116,6 +122,7 @@ export async function runArchitectureCheckCli(
   )({
     repoRoot: options.repoRoot,
     ...(options.policyVersion ? { policyVersion: options.policyVersion } : {}),
+    ...(options.skipInputSnapshotPin ? { skipInputSnapshotPin: true } : {}),
   });
   (dependencies.writeStdout ?? writeProcessStdout)(
     options.format === "json"

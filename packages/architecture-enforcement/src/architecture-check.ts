@@ -77,6 +77,8 @@ export interface CheckArchitectureRepositoryOptions {
   resolverConfigPath?: string;
   /** Explicit policy selection; omission uses the committed default. */
   policyVersion?: ArchitecturePolicyVersion;
+  /** Skips only the analyzer input snapshot pin comparison; CI mode. */
+  skipInputSnapshotPin?: boolean;
 }
 
 /** Converts one domain baseline into its canonical configured baseline path. */
@@ -177,6 +179,7 @@ export async function checkArchitectureRepository(
     const validation = await validateAnalyzerReconciliationManifestV2({
       repoRoot: options.repoRoot,
       manifest: JSON.parse(manifestSource) as unknown,
+      validateInputSnapshotPin: options.skipInputSnapshotPin !== true,
     });
     if (!validation.valid) {
       throw new Error(

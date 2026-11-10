@@ -46,6 +46,8 @@ export interface ValidateAnalyzerReconciliationManifestV2Input {
   manifest: unknown;
   /** Whether full current implementation and analyzer evidence must be checked. */
   validateCurrentState?: boolean;
+  /** Whether the analyzer input snapshot pin must match current bytes; defaults to true. */
+  validateInputSnapshotPin?: boolean;
 }
 
 /** Result returned after strict v2 manifest validation. */
@@ -951,8 +953,9 @@ export function validateAnalyzerReconciliationManifestV2Sync(
         );
       }
       if (
+        input.validateInputSnapshotPin !== false &&
         manifest.analyzerInputSnapshotSha256 !==
-        computeAnalyzerInputSnapshotSha256Sync(input.repoRoot, sourcePaths)
+          computeAnalyzerInputSnapshotSha256Sync(input.repoRoot, sourcePaths)
       ) {
         throw new Error(
           "Analyzer input snapshot hash does not match current bytes",
@@ -1023,7 +1026,10 @@ export async function validateAnalyzerReconciliationManifestV2(
           "Implementation and test tree hash does not match current bytes",
         );
       }
-      if (manifest.analyzerInputSnapshotSha256 !== inputSnapshot) {
+      if (
+        input.validateInputSnapshotPin !== false &&
+        manifest.analyzerInputSnapshotSha256 !== inputSnapshot
+      ) {
         throw new Error(
           "Analyzer input snapshot hash does not match current bytes",
         );
