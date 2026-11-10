@@ -2218,7 +2218,69 @@ for every other track.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t44.log`.
 
 - [x] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes. Red: `c04bb063b`. Done: `43e0d4067`. Automated: the Green command exits 0 with 4 files and 33 tests; ESLint exits 0 on the six files; tsc --noEmit in apps/storytime (heavy-run p1) exits 2 with 3 errors, all in __tests__/phase4-share-moment.test.tsx (the task 4.6a Red file, commit 806e8238b, lines 177 and 435); the six changed files add no error; the same 3 errors appear with the six files at HEAD.
-- [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
+- [~] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
+  - Red evidence (task 4.6). Role base `623b326920efb7962a56b12bb587c7082be7ef7e`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Red added one test file and changed no
+    production source, no week content, and no shipped file.
+  - Test commit: `bb246e066` (`test(storytime): add red tests for the teacher loops`). The plan
+    evidence and the log sit in the next commit. The test file is
+    `apps/storytime/__tests__/phase4-loops-flow.test.tsx`; it holds 17 tests and does not edit
+    `phase4-share-moment.test.tsx`.
+  - Contract for Green (named in the test header):
+    1. `apps/storytime/lib/teacher-loops.ts` exports `loopsShow(week): boolean` and
+       `stepTimeMinutes(step, loops): number`. `loopsShow` is true only when `loopsApproved(week)`
+       is true and `meta.level` is 2, 3, or 4. `stepTimeMinutes` is `loopMinutes ?? minutes` when
+       the loops show, and `minutes` otherwise; a `loopMinutes` of 0 gives 0.
+    2. The flow shows the loops only when `loopsShow(week)` is true. The opening screen of a day
+       with a recall holds a region with `data-recall-day={day}` and one `data-recall-card` per
+       card. A loop field renders a panel `[data-loop="sound-loop"]`,
+       `[data-loop="blend-drill"]`, or `[data-loop="sight-words"]` inside the step section of the
+       step that holds the field. The blend panel carries `data-drill-repeats={repeats}`, and the
+       sight panel carries `data-sight-seconds={seconds}`.
+    3. A bank clip shows a control with `data-clip-path={file}` and `data-clip-url={mediaUrls[file]}`
+       only when the signed map holds the file. The flow builds no URL and never autoplays.
+  - Measured counts of the shipped w01: `soundloop_steps=3`, `blenddrill_steps=1`,
+    `sightwords_steps=2`, `loopminutes_steps=7`, `loopminutes_differs=4`, `recall_days=4`, and
+    `drill_words=4`. The strategy P4.6 table says `drill_words=5`; the shipped A4 blendDrill holds
+    four words (net, nut, pen, sun) and `repeats` 3. The test follows the file, so the strategy row
+    needs a refresh by the orchestrator.
+  - Automated Red command, light and direct (MemAvailable 3452692 kB at the start):
+    `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx`.
+    Result: exit 1; 1 failed file; 15 failed tests and 2 passed tests (the named
+    characterizations). The log holds no `SyntaxError`, `Transform failed`, `Failed to resolve`, or
+    `Unhandled` line, so no test failed with a load error. The four `ERR_MODULE_NOT_FOUND` entries
+    are the deliberate load of the absent `lib/teacher-loops.ts`, and a named assertion catches
+    each one.
+  - Each failure is a named assertion:
+
+| Test | Cause at HEAD | Task |
+|---|---|---|
+| shows no loop when approval.loops is absent | the approved positive control shows `control_loop_panels=0`, not 5 | 4.6 |
+| shows no loop when an approved week holds no loop field | the approved positive control shows `control_loop_panels=0` | 4.6 |
+| shows no loop on an approved level 1 week | `lib/teacher-loops.ts` does not exist | 4.6 |
+| shows the loops on the approved clones at levels 2, 3, and 4 | `lib/teacher-loops.ts` does not exist | 4.6 |
+| shows the recall in the opening screen of days 2 to 5 only | `day=2 recall_day=null`; no `[data-recall-day]` | 4.6 |
+| shows a day 1 recall that the approved week holds | `day=1 recall_day=null` | 4.6 |
+| shows the sound loop on the steps that hold it | `step=A1`: no `[data-loop="sound-loop"]` panel | 4.6 |
+| shows the blend drill of A4 with the model, lead, test, correction, repeats, and words | `step=A4`: no `[data-loop="blend-drill"]` panel | 4.6 |
+| shows the sight words card on A6 and on D2 | `step=A6`: no `[data-loop="sight-words"]` panel | 4.6 |
+| places a loop by the field and never by a step id | `step=A5`: no blend drill panel after the field moves there | 4.6 |
+| shows the step time loopMinutes ?? minutes | `lib/teacher-loops.ts` does not exist | 4.6 |
+| shows 0 min for a loopMinutes of 0 | `lib/teacher-loops.ts` does not exist | 4.6 |
+| shows only the recall and loopMinutes on an approved review week | `day=1 recall_day=null` on the approved w08 clone | 4.6 |
+| shows the th text of the loop fields | `day=1 step=A1`: no sound loop panel for the th line | 4.6 |
+| plays the bank clips from the signed map only | `step=A4`: no blend drill panel and `clip_controls=0` | 4.6 |
+
+  - Named characterizations: the counts test and the draft-week test pass at HEAD. The shipped
+    w01 is `approval.loops` draft, so it shows no loop and its step time stays `minutes`. A
+    Workbooks edit that moves a count fails the counts test.
+  - Anti-patterns: A3 holds (each count is a labeled integer with the same label in the failure
+    message). A4 holds (a labeled count above 0 and a positive control come before each "shows
+    nothing" detail, and every clone passes `weekSchema.safeParse` before it renders). A7 holds
+    (no `rg -v` list). A9 does not apply (no archived-track path). A16 holds (no worktree).
+  - `tsc --noEmit` in `apps/storytime` ran once through `heavy-run.sh` with `HEAVY_PRIORITY=p1`,
+    in the foreground. Result: exit 0. The new test file adds no error.
+  - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t46.log`.
 - [~] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6. Red: `806e8238b`.
   - Red evidence (task 4.6a). Role base `9687d0ce9cd1cb10d45a421c0101bed1d02fd04e`; phase base
     `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Red added one test file and changed no production

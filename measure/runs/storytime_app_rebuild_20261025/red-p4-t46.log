@@ -1,0 +1,76 @@
+# Red log, task 4.6, teacher loops in the lesson flow
+
+- Role: measure-mid-red (light role, one test file).
+- Track: storytime_app_rebuild_20261025. Phase 4, task 4.6.
+- Phase base: bfaae8905993076ca1e8a49939c400eb038fe3ae.
+- Role base: 623b326920efb7962a56b12bb587c7082be7ef7e.
+- Test file: apps/storytime/__tests__/phase4-loops-flow.test.tsx.
+- Test commit: bb246e066233d92cfc12e46f6257c690688655df.
+- Red command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx.
+- Memory at start: MemAvailable 3452692 kB, so the command ran directly.
+- Result: exit 1; 1 failed file; 15 failed tests; 2 passed tests.
+- The 2 passed tests are the named characterizations: the counts of w01, and the draft week that
+  shows no loop and the step minutes. The shipped w01 holds `approval.loops` draft.
+- Load errors: 0. The log holds no `SyntaxError`, `Transform failed`, `Failed to resolve`, or
+  `Unhandled` line. Four tests load the absent `lib/teacher-loops.ts` on purpose; a named assertion
+  catches each `ERR_MODULE_NOT_FOUND`.
+- Measured facts: `soundloop_steps=3`, `blenddrill_steps=1`, `sightwords_steps=2`,
+  `loopminutes_steps=7`, `loopminutes_differs=4`, `recall_days=4`, `drill_words=4`,
+  `drill_repeats=3`, `drill_clips=12`.
+- The strategy P4.6 table says `drill_words=5`; the shipped A4 holds four words (net, nut, pen,
+  sun). The test follows the shipped file and names `drill_words=4`.
+- Contract for Green: `lib/teacher-loops.ts` with `loopsShow` and `stepTimeMinutes`; the recall
+  region `data-recall-day` with `data-recall-card`; the panels `data-loop="sound-loop"`,
+  `data-loop="blend-drill"`, and `data-loop="sight-words"` inside the step section;
+  `data-drill-repeats`, `data-sight-seconds`, `data-clip-path`, and `data-clip-url`.
+- `tsc --noEmit` in `apps/storytime` ran through `heavy-run.sh` with `HEAVY_PRIORITY=p1`, in the
+  foreground. Result: exit 0. The new test file adds no error.
+- No production source, week content, or shipped file changed. The file
+  `phase4-share-moment.test.tsx` was not edited.
+
+## Failing tests and their cause at HEAD
+
+1. approval.loops absent: the approved positive control shows `control_loop_panels=0`.
+2. approved week with no loop field: the approved positive control shows
+   `control_loop_panels=0`.
+3. level 1: `lib/teacher-loops.ts` does not exist.
+4. levels 2, 3, and 4: `lib/teacher-loops.ts` does not exist.
+5. recall days 2 to 5: `day=2 recall_day=null`.
+6. day 1 recall: `day=1 recall_day=null`.
+7. sound loop: `step=A1` shows no `[data-loop="sound-loop"]` panel.
+8. blend drill: `step=A4` shows no `[data-loop="blend-drill"]` panel.
+9. sight words: `step=A6` shows no `[data-loop="sight-words"]` panel.
+10. placement: `step=A5` shows no blend drill panel after the field moves there.
+11. step time: `lib/teacher-loops.ts` does not exist.
+12. zero minutes: `lib/teacher-loops.ts` does not exist.
+13. review week: `day=1 recall_day=null` on the approved w08 clone.
+14. Thai text: `day=1 step=A1` shows no sound loop panel for the th line.
+15. bank clips: `step=A4` shows no blend drill panel, so `clip_controls=0`.
+
+## Files
+
+- apps/storytime/__tests__/phase4-loops-flow.test.tsx (new, 1095 lines).
+- measure/tracks/storytime_app_rebuild_20261025/plan.md (the task marker and this evidence).
+- measure/runs/storytime_app_rebuild_20261025/red-p4-t46.log (this log).
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_app_rebuild_20261025
+phase: P4
+task: 4.6
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: 623b326920efb7962a56b12bb587c7082be7ef7e
+head_before: 623b326920efb7962a56b12bb587c7082be7ef7e
+test_commit: bb246e066233d92cfc12e46f6257c690688655df
+plan_log_commit: the commit that carries this log
+red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx
+exit_code: 1
+test_files_failed: 1
+tests_failed: 15
+tests_passed: 2
+load_errors: 0
+syntax_or_transform_errors: 0
+tsc: exit 0
+characterizations: 2 (the w01 counts; the draft week shows no loop and the step minutes)
+remaining_failures: 15 named assertions, all on the absent loop UI or the absent lib/teacher-loops.ts
+END_MEASURE_AGENT_RESULT
