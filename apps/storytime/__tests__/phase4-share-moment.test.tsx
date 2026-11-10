@@ -160,6 +160,11 @@ function scriptOf(source: StorytimeWeek, day: number): ScriptWithShare {
   return script;
 }
 
+/** Returns the scripts of a week with the share field, typed for the share cases. */
+function scriptsWithShare(source: StorytimeWeek): ScriptWithShare[] {
+  return source.scripts as unknown as ScriptWithShare[];
+}
+
 /** Returns the share object of one day, with a named guard. */
 function shareOf(source: StorytimeWeek, day: number): Share {
   const share = scriptOf(source, day).share;
@@ -173,7 +178,7 @@ function shareOf(source: StorytimeWeek, day: number): Share {
 
 /** Lists the shots of the week with their day. */
 function shotsOf(source: StorytimeWeek): Array<{ day: number; shot: ShareShot }> {
-  return weekWithShare(source).scripts.flatMap((script) =>
+  return scriptsWithShare(source).flatMap((script) =>
     (script.share?.shots ?? []).map((shot) => ({ day: script.day, shot })),
   );
 }
@@ -422,7 +427,7 @@ afterEach(() => {
 describe("Phase 4 share moment (task 4.6a, rule D23)", () => {
   it("parses the shipped share field with shares_parsed=5 and share_shots=6", async () => {
     const schema = await loadShareSchema();
-    const scripts = weekWithShare(week).scripts;
+    const scripts = scriptsWithShare(week);
     expect(scripts.length, `days=${scripts.length}: the shipped week must hold five days`).toBe(5);
 
     const shares = scripts.filter((script) => script.share !== undefined);
