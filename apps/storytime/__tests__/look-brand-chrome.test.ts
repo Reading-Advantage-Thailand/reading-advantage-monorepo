@@ -14,7 +14,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import ts from "typescript";
-import { lastCompound, parseCss, selectorParts, type CssRule } from "./helpers/css-rules";
+import { lastCompound, lengthPx, parseCss, selectorParts, type CssRule } from "./helpers/css-rules";
 
 const app = resolve(import.meta.dirname, "..");
 const repo = resolve(app, "../..");
@@ -416,6 +416,44 @@ function bannerFindings(css: string): {
 }
 
 /**
+ * One vertical band of a box, measured in px above the bottom edge of the hero.
+ */
+interface Band {
+  /** The lower edge of the band. */
+  lo: number;
+  /** The upper edge of the band. */
+  hi: number;
+}
+
+/**
+ * Reads the last value of one property of one rule.
+ * @param rule The rule, or undefined.
+ * @param property The property.
+ * @returns The value, or null.
+ */
+function ruleValue(rule: CssRule | undefined, property: string): string | null {
+  if (!rule) return null;
+  const found = rule.declarations.filter((declaration) => declaration.property === property);
+  return found.length > 0 ? found[found.length - 1]!.value : null;
+}
+
+/**
+ * Reads the vertical band of one rule, in px above the bottom edge of the hero.
+ * @param rule The rule, or undefined.
+ * @param heroHeight The height of the hero, for a rule that anchors its box to the top.
+ * @returns The band, or null when the rule gives no numbers.
+ */
+function bandOf(rule: CssRule | undefined, heroHeight: number | null): Band | null {
+  const height = lengthPx(ruleValue(rule, "height") ?? ruleValue(rule, "min-height") ?? "");
+  if (height === null) return null;
+  const bottom = lengthPx(ruleValue(rule, "bottom") ?? "");
+  if (bottom !== null) return { lo: bottom, hi: bottom + height };
+  const top = lengthPx(ruleValue(rule, "top") ?? "");
+  if (top !== null && heroHeight !== null) return { lo: heroHeight - top - height, hi: heroHeight - top };
+  return null;
+}
+
+/**
  * The findings of the label rule of one style sheet.
  * @param css The text of the style sheet.
  * @returns The counts and the failure texts.
@@ -701,6 +739,119 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
       /^banner_height_rule=[a-z-]+=[0-9]+(\.[0-9]+)?px( [a-z-]+=[0-9]+(\.[0-9]+)?px)*$/,
     );
     expect(found.failures.join(" | "), "the banner rule").toBe("");
+  });
+
+  it("F-1 the logo rule keeps the logo out of the plaque box (AC-4.1)", () => {
+    const css = readLookCss();
+    const rules = parseCss(css).filter((rule) => !rule.keyframes && rule.media.length === 0);
+    const failures: string[] = [];
+    const pick = (test: (part: string) => boolean): CssRule | undefined =>
+      rules.find((rule) => selectorParts(rule.selector).some(test));
+    const isPlaque = (part: string): boolean =>
+      part.includes("header[data-hero") && lastCompound(part) === "h1";
+    const isLogo = (part: string): boolean =>
+      part.includes("header[data-hero") && part.includes("[data-logo]");
+    const heroHeight = (variant: string): number | null =>
+      lengthPx(ruleValue(pick((part) => part === `header[data-hero="${variant}"]`), "height") ?? "");
+    const variants = [
+      {
+        name: "cover",
+        plaque: pick((part) => isPlaque(part) && !part.includes("\"band\"")),
+        logo: pick((part) => isLogo(part) && !part.includes("\"band\"")),
+        hero: heroHeight("cover"),
+      },
+      {
+        name: "band",
+        plaque: pick((part) => isPlaque(part) && part.includes("\"band\"")),
+        logo: pick((part) => isLogo(part) && part.includes("\"band\"")),
+        hero: heroHeight("band"),
+      },
+    ];
+    let measured = 0;
+    let overlap = 0;
+    let heightMin = 999;
+    for (const variant of variants) {
+      const plaque = bandOf(variant.plaque, variant.hero);
+      const logo = bandOf(variant.logo, variant.hero);
+      if (!plaque || !logo) {
+        failures.push(`the plaque band and the logo band of the ${variant.name} hero must be measurable in px`);
+        continue;
+      }
+      measured += 1;
+      const shared = Math.max(0, Math.min(plaque.hi, logo.hi) - Math.max(plaque.lo, logo.lo));
+      overlap = Math.max(overlap, Math.round(shared));
+      if (shared > 0) {
+        failures.push(
+          `the logo band of the ${variant.name} hero sits on the plaque band by ${Math.round(shared)} px`
+          + ` (logo_plaque_overlap_px=${Math.round(shared)})`,
+        );
+      }
+      const height = lengthPx(ruleValue(variant.logo, "height") ?? "");
+      if (height === null) {
+        failures.push(`the logo height of the ${variant.name} hero must be a px value`);
+      } else {
+        heightMin = Math.min(heightMin, height);
+        if (height < 48) {
+          failures.push(`the logo height of the ${variant.name} hero must be 48 px or more, found ${height} px`);
+        }
+      }
+    }
+    expect(`logo_bands_measured=${measured}`, "the logo and the plaque bands must be measured").toMatch(
+      /^logo_bands_measured=[1-9][0-9]*$/,
+    );
+    expect(`logo_h_px_min=${heightMin === 999 ? 0 : heightMin}`, "the logo height must be read").toMatch(
+      /^logo_h_px_min=([1-9][0-9]*)$/,
+    );
+    expect(failures.join(" | "), "the logo and the plaque bands").toBe("");
+  });
+
+  it("F-2 the plaque rule sets a line rule so the height follows the font (AC-4.6)", () => {
+    const css = readLookCss();
+    const rules = parseCss(css).filter((rule) => !rule.keyframes && rule.media.length === 0);
+    const plaqueRules = rules.filter((rule) =>
+      selectorParts(rule.selector).some(
+        (part) => part.includes("header[data-hero") && lastCompound(part) === "h1",
+      ),
+    );
+    const failures: string[] = [];
+    if (plaqueRules.length < 1) failures.push("the plaque rule must exist outside a media block");
+    let lineRules = 0;
+    for (const rule of plaqueRules) {
+      const lineRule = ["white-space", "text-wrap", "word-break"]
+        .map((property) => ruleValue(rule, property))
+        .filter((value) => value !== null);
+      if (lineRule.length > 0) lineRules += 1;
+    }
+    if (lineRules < 1) failures.push("the plaque rule must set white-space or another line rule");
+    expect(failures.join(" | "), "the plaque rule").toBe("");
+    expect(`plaque_line_rules=${lineRules}`, "the plaque rule must set a line rule").toMatch(
+      /^plaque_line_rules=[1-9][0-9]*$/,
+    );
+  });
+
+  it("F-3 the crystal tips of the plaque are gone (AC-4.6)", () => {
+    const failures: string[] = [];
+    const pieces = resolve(app, "app/look/pieces");
+    for (const name of ["q-tip-l.svg", "q-tip-r.svg"]) {
+      if (existsSync(resolve(pieces, name))) failures.push(`the piece ${name} must be gone`);
+    }
+    const css = readLookCss();
+    for (const match of css.matchAll(/q-tip-[lr]\.svg/g)) {
+      failures.push(`look.css names the tip ${match[0]}`);
+    }
+    for (const rule of parseCss(css)) {
+      const isPlaquePseudo = selectorParts(rule.selector).some(
+        (part) => part.includes("h1::before") || part.includes("h1::after"),
+      );
+      if (!isPlaquePseudo) continue;
+      for (const declaration of rule.declarations) {
+        if (!/^background(-image)?$/.test(declaration.property)) continue;
+        if (/url\(/i.test(declaration.value)) {
+          failures.push(`the plaque pseudo-element paints ${declaration.value}`);
+        }
+      }
+    }
+    expect(failures.join(" | "), "the crystal tips").toBe("");
   });
 
   it("S11 the art and the read-along files hold no brand tone (AC-4.7)", () => {

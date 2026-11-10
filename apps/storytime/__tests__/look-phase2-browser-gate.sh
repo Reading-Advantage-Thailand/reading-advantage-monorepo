@@ -147,6 +147,7 @@ const VIEWPORTS = (process.env.GATE_VIEWPORTS ?? "390x844 1024x768 844x390").spl
 });
 const LOCALES = (process.env.GATE_LOCALES ?? "th en").split(" ");
 const USER = "staff-01";
+const TEACHER_USER = "teacher-01";
 // The 60-character Thai title of adversarial case V1 (look-adversarial-p2.test.tsx). Row 3 sets it
 // into the plaque of the fixture week, because one content week holds one title.
 const THAI_LONG_TITLE = "สัปดาห์ที่ยาวและยาวที่สุดในโรงเรื่องของเราทั้งหมดในโลกใบนี้ๆ";
@@ -346,7 +347,8 @@ function plaqueFitsVerdict(overflowPx, clippedText) {
 function brandChromeVerdict(v) {
   return v.game_bars === 0 && v.progressbars === 0 && v.band_icons === 0
     && v.crest_elems === 0 && v.logo_elems === 1 && v.logo_name_ok === 1
-    && v.level_week_copies === 1 && v.label_hidden === 0;
+    && v.level_week_copies === 1 && v.label_hidden === 0
+    && v.logo_title_overlap_px === 0 && v.logo_h_px >= 48;
 }
 /** The verdict of the chrome tones: brand pairs above 0, no blue chrome, and 4.5:1 or more. */
 function brandTonesVerdict(v) {
@@ -361,11 +363,16 @@ function brandTonesVerdict(v) {
   }
   return true;
 }
-/** The verdict of the title plaque: centered on both ways, and about 80 % of the banner height. */
+/** The verdict of the title plaque: one line, centered on both ways, and about 80 % of the line. */
 function brandBannerVerdict(v) {
   return v.text_align === "center" && v.banner_top_gap_px <= 2 && v.banner_bottom_gap_px <= 2
-    && v.banner_ratio >= 0.76 && v.banner_ratio <= 0.84
+    && v.line_count === 1 && v.per_line_ratio >= 0.76 && v.per_line_ratio <= 0.84
     && v.clipped_text === 0 && v.page_overflow === 0;
+}
+/** The verdict of the 60-character title: the same ratio per line, no overflow, and a floor font. */
+function brandLongTitleVerdict(v) {
+  return v.per_line_ratio >= 0.76 && v.per_line_ratio <= 0.84
+    && v.plaque_overflow_px === 0 && v.clipped_text === 0 && v.font_px >= 24;
 }
 /** The verdict of one page of screens 6 to 9: no console error, no small tap, no overflow, one brand pair. */
 function brandPagesVerdict(v) {
@@ -375,6 +382,7 @@ function brandPagesVerdict(v) {
 const goodBrandChrome = {
   game_bars: 0, progressbars: 0, band_icons: 0, crest_elems: 0,
   logo_elems: 1, logo_name_ok: 1, level_week_copies: 1, label_hidden: 0,
+  logo_title_overlap_px: 0, logo_h_px: 48,
 };
 const goodBrandTones = {
   families_checked: 4, chrome_pairs_checked: 4, chrome_blue_computed: 0,
@@ -382,7 +390,10 @@ const goodBrandTones = {
 };
 const goodBrandBanner = {
   text_align: "center", banner_top_gap_px: 0, banner_bottom_gap_px: 1,
-  banner_ratio: 0.8, clipped_text: 0, page_overflow: 0,
+  line_count: 1, per_line_ratio: 0.8, clipped_text: 0, page_overflow: 0,
+};
+const goodBrandLongTitle = {
+  per_line_ratio: 0.8, plaque_overflow_px: 0, clipped_text: 0, font_px: 24,
 };
 const goodBrandPages = {
   console_errors: 0, tap_under_48: 0, page_overflow: 0,
@@ -447,10 +458,13 @@ const mutants = [
   // empty brand row.
   brandChromeVerdict({ ...goodBrandChrome, game_bars: 1 }) === false,
   brandChromeVerdict({ ...goodBrandChrome, label_hidden: 1 }) === false,
-  brandBannerVerdict({ ...goodBrandBanner, banner_ratio: 0.70 }) === false,
+  brandChromeVerdict({ ...goodBrandChrome, logo_title_overlap_px: 4 }) === false,
+  brandBannerVerdict({ ...goodBrandBanner, line_count: 2 }) === false,
+  brandBannerVerdict({ ...goodBrandBanner, per_line_ratio: 0.70 }) === false,
   brandTonesVerdict({ ...goodBrandTones, chrome_contrast_min: 4.4 }) === false,
   brandTonesVerdict({ ...goodBrandTones, chrome_blue_computed: 1 }) === false,
   brandPagesVerdict({ ...goodBrandPages, chrome_brand_pairs: 0 }) === false,
+  brandLongTitleVerdict({ ...goodBrandLongTitle, font_px: 20 }) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -485,6 +499,7 @@ const controls = [
   brandChromeVerdict(goodBrandChrome),
   brandTonesVerdict(goodBrandTones),
   brandBannerVerdict(goodBrandBanner),
+  brandLongTitleVerdict(goodBrandLongTitle),
   brandPagesVerdict(goodBrandPages),
 ];
 const controlsOk = controls.every(Boolean);
@@ -500,13 +515,16 @@ if (selfTestOnly) {
   process.exit(selfOk ? 0 : 1);
 }
 
-const PASS = (() => {
+/** Reads the password of one account from the card list of the fixture. */
+function passwordFor(user) {
   for (const line of fs.readFileSync(cardsPath, "utf8").trim().split("\n").slice(1)) {
     const parts = line.split(",");
-    if (parts[0] === USER) return parts[parts.length - 1].replace(/\r$/, "");
+    if (parts[0] === user) return parts[parts.length - 1].replace(/\r$/, "");
   }
   return "";
-})();
+}
+const PASS = passwordFor(USER);
+const TEACHER_PASS = passwordFor(TEACHER_USER);
 if (!PASS) {
   console.log(`FAIL: card list the temp card list holds no ${USER}`);
   process.exit(1);
@@ -514,14 +532,16 @@ if (!PASS) {
 
 const browser = await chromium.launch({ channel: "chrome" });
 let cookies = [];
+let teacherCookies = [];
 
 /** Signs in once through the page and keeps the session cookies for later contexts. */
-async function signInOnce() {
+/** Signs one account in and returns the cookies of its session. */
+async function signIn(user, password) {
   const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
   await page.goto(`${base}/th/sign-in?next=${encodeURIComponent("/th/st/2/1")}`, { waitUntil: "domcontentloaded" });
-  await page.fill('input[name="username"]', USER);
-  await page.fill('input[name="password"]', PASS);
+  await page.fill('input[name="username"]', user);
+  await page.fill('input[name="password"]', password);
   const answer = page.waitForResponse(
     (response) => response.request().method() === "POST" && response.url().includes("/api/auth/sign-in"),
     { timeout: 20000 },
@@ -531,8 +551,14 @@ async function signInOnce() {
     page.click('button[type="submit"]'),
   ]);
   await answer;
-  cookies = await context.cookies();
+  const signed = await context.cookies();
   await context.close();
+  return signed;
+}
+
+/** Signs the family account in and keeps its cookies. */
+async function signInOnce() {
+  cookies = await signIn(USER, PASS);
   return cookies.length;
 }
 
@@ -545,7 +571,9 @@ async function makeContext(vp, options = {}) {
     hasTouch: vp.phone,
     reducedMotion: options.reducedMotion ?? "reduce",
   });
-  if (options.signedIn !== false) await context.addCookies(cookies);
+  const session = options.session ?? "family";
+  if (session === "family") await context.addCookies(cookies);
+  if (session === "teacher") await context.addCookies(teacherCookies);
   return context;
 }
 
@@ -2391,7 +2419,7 @@ if [ "$MIGRATE_OK" -eq 1 ]; then pass "The migration runs twice and exits 0"; el
 
 echo "=== Seed the account of the gate (temp folder outside the repository) ==="
 mkdir -p "$TMP_DIR/accounts"
-printf 'name,class,role\nStaff One,staff,family\n' > "$TMP_DIR/accounts/accounts.csv"
+printf 'name,class,role\nStaff One,staff,family\nTeacher One,teacher,teacher\n' > "$TMP_DIR/accounts/accounts.csv"
 if (cd "$ROOT" && STORYTIME_DATABASE_URL="$DB_URL" ./node_modules/.bin/tsx apps/storytime/scripts/make-accounts.ts --folder "$TMP_DIR/accounts" --database-url-env STORYTIME_DATABASE_URL >"$TMP_DIR/accounts.log" 2>&1); then
   pass "The account script exits 0"
 else
@@ -2429,7 +2457,9 @@ for (const book of w01.books ?? []) {
 }
 fs.writeFileSync(path.join(target, "l2", "w01.json"), JSON.stringify(w01));
 const longTitle = "Pip and Nan Walk Across the Whole Green Hill Today".padEnd(60, "!");
-for (const [week, title] of [[5, "Second Week"], [6, longTitle]]) {
+const shippedTitles = ["Hello!", "How Many?", "Paint!", "My Family", "I Have Two", "I Can See", "Is It a Ball?", "Unit 1 Review"];
+const titleWeeks = shippedTitles.map((title, index) => [7 + index, title]);
+for (const [week, title] of [[5, "Second Week"], [6, longTitle], ...titleWeeks]) {
   const copy = structuredClone(w01);
   copy.meta.level = 3;
   copy.meta.week = week;
@@ -2515,6 +2545,7 @@ setsid bash -c "echo \$\$ > '$TMP_DIR/server.pid'; cd '$APP' && STORYTIME_CONTEN
   STORYTIME_STORAGE_ENDPOINT='http://127.0.0.1:$STORAGE_PORT_RUN' \
   STORYTIME_STORAGE_ACCESS_KEY='local-access-key' \
   STORYTIME_STORAGE_SECRET_KEY='local-secret-key' \
+  STORYTIME_TEACHER_ROUTES=1 \
   exec ../../node_modules/.bin/next start --hostname 127.0.0.1 -p '$APP_PORT' > '$TMP_DIR/next-start.log' 2>&1" &
 for _ in $(seq 1 20); do
   [ -s "$TMP_DIR/server.pid" ] && break

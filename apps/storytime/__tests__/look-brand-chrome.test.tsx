@@ -262,6 +262,26 @@ function copiesOfText(container: HTMLElement, text: string): number {
   return count;
 }
 
+/**
+ * Reads the numbers that one element hands to the CSS.
+ * @param node The element.
+ * @returns The numbers of its inline custom properties and of its data attributes.
+ */
+function lengthSignals(node: HTMLElement): number[] {
+  const found: number[] = [];
+  const style = node.getAttribute("style") ?? "";
+  for (const match of style.matchAll(/--[\w-]+\s*:\s*([^;]+)/g)) {
+    const value = (match[1] ?? "").trim();
+    if (/^\d+$/.test(value)) found.push(Number(value));
+  }
+  for (const attribute of Array.from(node.attributes)) {
+    if (!attribute.name.startsWith("data-")) continue;
+    const value = attribute.value.trim();
+    if (/^\d+$/.test(value)) found.push(Number(value));
+  }
+  return found;
+}
+
 describe("the brand chrome of the frame (AC-4.1 to AC-4.3)", () => {
   it("B1 the five screens hold no game bar, no progress bar, and no band icon (en and th)", async () => {
     const cases: { locale: Locale; screen: ScreenName }[] = [];
@@ -375,6 +395,32 @@ describe("the brand chrome of the frame (AC-4.1 to AC-4.3)", () => {
       "decorated_nodes=0",
     );
     cleanup();
+  });
+
+  it("F-2 the frame gives the title length to the CSS and the logo stays out of the plaque", async () => {
+    const Frame = await loadFrame();
+    const failures: string[] = [];
+    for (const title of ["Hello!", "How Many? My Family"]) {
+      const { container } = render(
+        <Frame level={2} week={1} title={title} variant="cover" locale="en" />,
+      );
+      const plaque = container.querySelector<HTMLElement>("header[data-hero] > h1");
+      const hero = container.querySelector<HTMLElement>("header[data-hero]");
+      if (!plaque) {
+        failures.push(`the frame must render the plaque for ${JSON.stringify(title)}`);
+      } else {
+        const inside = plaque.querySelectorAll("[data-logo]").length;
+        if (inside !== 0) failures.push(`the logo must not sit inside the plaque, found ${inside}`);
+        const signals = [...lengthSignals(plaque), ...(hero ? lengthSignals(hero) : [])];
+        if (!signals.includes(title.length)) {
+          failures.push(
+            `the frame must give the title length ${title.length} to the CSS, found ${signals.join(",") || "nothing"}`,
+          );
+        }
+      }
+      cleanup();
+    }
+    expect(failures.join(" | "), "the plaque of the frame").toBe("");
   });
 
   it("the chrome check rejects a frame with one game bar (self-test)", () => {
