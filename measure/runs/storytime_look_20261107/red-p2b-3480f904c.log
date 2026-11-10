@@ -58,5 +58,56 @@ load_errors: 0
 files: 2
 tsc_exit: 0
 eslint_exit: 0
-commit: 4dca54e7979365b78fe2f799b10c628a634a0363
+commit: 4dca54e79
+test_commits: 4dca54e79, 0e8e5cebd
+part2_rows_added: brand chrome, brand tones, brand banner, brand pages
+part2_rows_changed: frame, reduced motion, council hud label
+part2_self_test_exit: 0
+part2_selftest_mutants_rejected: 58 of 58
+part2_bash_n_exit: 0
+part2_commit: 0e8e5cebdb5c90fe3488a04df57944b83c2d63aa
 END_MEASURE_AGENT_RESULT
+
+# Part 2 (the browser rows of the Phase 2b gate, same role, same phase).
+# The orchestrator moved the three old rows from Green to this role, so the two roles edit separate
+# files. This role owns every edit of apps/storytime/__tests__/look-phase2-browser-gate.sh in this
+# phase. The commit holds the script only.
+#
+# Rows added (Phase 2b):
+#   brand chrome   (row 15) the five screens in en and th at 390x844: game_bars=0, progressbars=0,
+#                  band_icons=0, crest_elems=0, logo_elems=1, logo_name_ok=1, level_week_copies=1,
+#                  label_hidden=0 (AC-4.1 to AC-4.3).
+#   brand tones    (row 16) the chrome elements of the four families on the look screens:
+#                  chrome_pairs_checked, chrome_blue_computed=0, chrome_contrast_min of 4.5 or more,
+#                  amber_pairs above 0, brown_pairs above 0, families_checked=4 (AC-4.4, AC-4.5).
+#   brand banner   (row 17) the title plaque at 390x844 in en and th: text_align=center,
+#                  banner_top_gap_px and banner_bottom_gap_px of 2 or less, banner_ratio of
+#                  title_font_px over banner_h_px from 0.76 to 0.84, clipped_text=0,
+#                  page_overflow=0, and the 60-character title without overflow (AC-4.6).
+#   brand pages    (row 18) the teacher week, the teacher day, the 403 page, the 404 view, the /st
+#                  fallback, the sign-in page, and the join page: console_errors=0, tap_under_48=0,
+#                  page_overflow=0, chrome_contrast_min of 4.5 or more, chrome_brand_pairs of 1 or
+#                  more (decision 1).
+#
+# Rows changed (the old contract of the game bar, the crest, and the HUD track):
+#   frame          (row 3) reads the label words, the crest count, and the logo name; it expects
+#                  game_bars=0, crest_elems=0, logo_elems=1, logo_name="Storytime Advantage", and
+#                  the level and the week of the route in the label. The 60-character title measure
+#                  stays.
+#   reduced motion (row 7) the positive control reads the active lyric line, because the crest is
+#                  gone; the row keeps its element count, its violation count, and its 14 px floor.
+#   council hud label (row 12) reads the label against the title plaque, because the progress track
+#                  is gone; the row keeps hud_overlap_px=0 and the 14 px floor.
+#
+# No-browser check (the script has a --self-test mode; it opens no browser, no server, and no
+# build):
+#   cd apps/storytime && bash __tests__/look-phase2-browser-gate.sh --self-test
+#   Result: exit=0; selftest_controls_ok=1; selftest_mutants_rejected=58 of
+#   selftest_mutants_checked=58; "=== Total: 1 checks (PASS=1, FAIL=0) ===". The six new mutants
+#   are a page with a game bar, a hidden label, a 0.70 ratio, a 4.4:1 pair, a blue chrome pair, and
+#   an empty brand row.
+#   bash -n on the script: exit=0.
+#
+# Part 2 commit: 0e8e5cebdb5c90fe3488a04df57944b83c2d63aa
+#   "test(look): add the brand chrome browser rows (track_id: storytime_look_20261107)"
+#   File: apps/storytime/__tests__/look-phase2-browser-gate.sh
