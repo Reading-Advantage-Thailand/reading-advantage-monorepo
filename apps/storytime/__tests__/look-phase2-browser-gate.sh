@@ -39,6 +39,19 @@ set -uo pipefail
 #                 action chip is 16 px or more, opaque, navy, at 4.5:1 or more; the decodable
 #                 and reader word gap is 0.25em or more with space_before_punct=0, in en and th.
 #
+#  15 brand chrome  the five screens in en and th at 390x844: game_bars=0, progressbars=0,
+#                 band_icons=0, crest_elems=0, logo_elems=1, logo_name_ok=1,
+#                 level_week_copies=1, label_hidden=0 (AC-4.1 to AC-4.3).
+#  16 brand tones   the chrome elements of the look screens: the four families, the brand pairs
+#                 (white on brown, brown on amber), chrome_contrast_min of 4.5 or more, and
+#                 chrome_blue_computed=0 (AC-4.4 and AC-4.5).
+#  17 brand banner  the title plaque at 390x844 in en and th: text_align=center, the text box
+#                 centered within 2 px at the top and at the bottom, banner_ratio of title_font_px
+#                 over banner_h_px from 0.76 to 0.84, clipped_text=0, page_overflow=0 (AC-4.6).
+#  18 brand pages   the teacher week, the teacher day, the 403 page, the 404 view, the /st
+#                 fallback, the sign-in page, and the join page: console_errors=0,
+#                 tap_under_48=0, page_overflow=0, chrome_contrast_min of 4.5 or more, and
+#                 chrome_brand_pairs of 1 or more (decision 1).
 # No row plays a recording (M21). The song row sets currentTime and fires timeupdate (Q33).
 # A headless run is not phone evidence. The gate reads no file under ~/Desktop/handoff except the
 # Phase 1 media root (STORYTIME_GATE_MEDIA_ROOT, default handoff/w01-storytime-app-package-r2).
@@ -329,6 +342,52 @@ function plaqueFitsVerdict(overflowPx, clippedText) {
   return Number.isFinite(overflowPx) && overflowPx === 0 && clippedText === 0;
 }
 
+/** The verdict of the brand chrome of one screen: no game bar, no crest, one logo, one label. */
+function brandChromeVerdict(v) {
+  return v.game_bars === 0 && v.progressbars === 0 && v.band_icons === 0
+    && v.crest_elems === 0 && v.logo_elems === 1 && v.logo_name_ok === 1
+    && v.level_week_copies === 1 && v.label_hidden === 0;
+}
+/** The verdict of the chrome tones: brand pairs above 0, no blue chrome, and 4.5:1 or more. */
+function brandTonesVerdict(v) {
+  if (!(v.chrome_pairs_checked > 0)) return false;
+  if (v.chrome_blue_computed !== 0) return false;
+  if (!(v.chrome_contrast_min >= 4.5)) return false;
+  if (!(v.amber_pairs > 0)) return false;
+  if (!(v.brown_pairs > 0)) return false;
+  for (const family of v.families || []) {
+    if (family.chrome_blue_computed !== 0) return false;
+    if (family.pairs > 0 && !(family.contrast_min >= 4.5)) return false;
+  }
+  return true;
+}
+/** The verdict of the title plaque: centered on both ways, and about 80 % of the banner height. */
+function brandBannerVerdict(v) {
+  return v.text_align === "center" && v.banner_top_gap_px <= 2 && v.banner_bottom_gap_px <= 2
+    && v.banner_ratio >= 0.76 && v.banner_ratio <= 0.84
+    && v.clipped_text === 0 && v.page_overflow === 0;
+}
+/** The verdict of one page of screens 6 to 9: no console error, no small tap, no overflow, one brand pair. */
+function brandPagesVerdict(v) {
+  return v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
+    && v.chrome_contrast_min >= 4.5 && v.chrome_brand_pairs >= 1;
+}
+const goodBrandChrome = {
+  game_bars: 0, progressbars: 0, band_icons: 0, crest_elems: 0,
+  logo_elems: 1, logo_name_ok: 1, level_week_copies: 1, label_hidden: 0,
+};
+const goodBrandTones = {
+  families_checked: 4, chrome_pairs_checked: 4, chrome_blue_computed: 0,
+  chrome_contrast_min: 4.5, amber_pairs: 2, brown_pairs: 2, families: [],
+};
+const goodBrandBanner = {
+  text_align: "center", banner_top_gap_px: 0, banner_bottom_gap_px: 1,
+  banner_ratio: 0.8, clipped_text: 0, page_overflow: 0,
+};
+const goodBrandPages = {
+  console_errors: 0, tap_under_48: 0, page_overflow: 0,
+  chrome_contrast_min: 4.5, chrome_brand_pairs: 1,
+};
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
   countVerdict(23) === false,
@@ -384,6 +443,14 @@ const mutants = [
   plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 100, bottom: 160 }), 0) === false,
   plaqueFitsVerdict(0, 1) === false,
   plaqueFitsVerdict(Number.NaN, 0) === false,
+  // The brand rows: a game bar, a hidden label, a 0.70 ratio, a 4.4:1 pair, a blue pair, and an
+  // empty brand row.
+  brandChromeVerdict({ ...goodBrandChrome, game_bars: 1 }) === false,
+  brandChromeVerdict({ ...goodBrandChrome, label_hidden: 1 }) === false,
+  brandBannerVerdict({ ...goodBrandBanner, banner_ratio: 0.70 }) === false,
+  brandTonesVerdict({ ...goodBrandTones, chrome_contrast_min: 4.4 }) === false,
+  brandTonesVerdict({ ...goodBrandTones, chrome_blue_computed: 1 }) === false,
+  brandPagesVerdict({ ...goodBrandPages, chrome_brand_pairs: 0 }) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -415,6 +482,10 @@ const controls = [
   plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 108, bottom: 132 }), 0),
   plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 100, bottom: 140 }), 0),
   THAI_LONG_TITLE.trim().length === 60,
+  brandChromeVerdict(goodBrandChrome),
+  brandTonesVerdict(goodBrandTones),
+  brandBannerVerdict(goodBrandBanner),
+  brandPagesVerdict(goodBrandPages),
 ];
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
@@ -793,14 +864,19 @@ await guarded("row 2 hero", async () => {
 });
 
 // ---- Row 3: the frame (game bar and title plaque). ----
-/** Reads the numbers of the game bar and the text of the plaque. */
+/** Reads the chrome of the frame: the game bar, the crest, the logo, the label words, and the plaque. */
 async function readFrame(page) {
   return page.evaluate(() => {
-    const bar = document.querySelector("[data-game-bar]");
+    const label = document.querySelector("[data-level-week]");
+    const logo = document.querySelector("[data-logo]");
     const title = document.querySelector("main h1");
     return {
       bars: document.querySelectorAll("[data-game-bar]").length,
-      numbers: bar ? (bar.textContent ?? "").match(/\d+/g) ?? [] : [],
+      crests: document.querySelectorAll("[data-crest]").length,
+      logos: document.querySelectorAll("[data-logo]").length,
+      logoName: logo && logo.tagName.toLowerCase() === "img" ? (logo.getAttribute("alt") ?? "") : "",
+      labelText: label ? (label.textContent ?? "").trim() : "",
+      numbers: label ? (label.textContent ?? "").match(/\d+/g) ?? [] : [],
       title: title ? (title.textContent ?? "").trim() : "",
     };
   });
@@ -848,8 +924,11 @@ await guarded("row 3 frame", async () => {
     await settle(page);
     const frame = await readFrame(page);
     row(`frame ${item.locale} level ${item.level} week ${item.week}`,
-      frame.bars === 1 && frame.numbers[0] === item.level && frame.numbers[1] === item.week && frame.title === item.title,
-      `game_bars=${frame.bars} bar_numbers=${frame.numbers.join(",")} plaque_title=${JSON.stringify(frame.title)}`);
+      frame.bars === 0 && frame.crests === 0 && frame.logos === 1
+      && frame.logoName === "Storytime Advantage"
+      && frame.numbers[0] === item.level && frame.numbers[1] === item.week
+      && frame.title === item.title,
+      `game_bars=${frame.bars} crest_elems=${frame.crests} logo_elems=${frame.logos} logo_name=${JSON.stringify(frame.logoName)} label_numbers=${frame.numbers.join(",")} plaque_title=${JSON.stringify(frame.title)}`);
     await page.close();
   }
   await context.close();
@@ -1183,10 +1262,12 @@ await guarded("row 7 reduced motion", async () => {
   await reduced.close();
   const normal = await makeContext(VIEWPORTS[0], { reducedMotion: "no-preference" });
   const page = await normal.newPage();
-  await openScreen(page, "en", "week");
+  await openScreen(page, "en", "song");
+  // The crest is gone in the brand chrome, so the positive control reads the active lyric line,
+  // which keeps the sq-glow animation.
   const control = await page.evaluate(() => {
-    const crest = document.querySelector("[data-crest]");
-    return crest ? getComputedStyle(crest).animationName : "none";
+    const line = document.querySelector('[data-part="song"] li[aria-current="true"]');
+    return line ? getComputedStyle(line).animationName : "none";
   });
   await page.close();
   await normal.close();
@@ -1289,14 +1370,14 @@ async function readModeButtons(page) {
   }));
 }
 
-/** Reads the HUD label and the progress track box: their overlap, font size, and text. */
+/** Reads the HUD label and the title plaque: their overlap, the font size, and the text. */
 async function readHud(page) {
   return page.evaluate(() => {
     const label = document.querySelector("[data-level-week]");
-    const bar = document.querySelector("[data-game-bar]");
-    if (!label || !bar) return { text: null, font: 0, overlap: -1 };
+    const plaque = document.querySelector("header[data-hero] > h1");
+    if (!label || !plaque) return { text: null, font: 0, overlap: -1 };
     const one = label.getBoundingClientRect();
-    const two = bar.getBoundingClientRect();
+    const two = plaque.getBoundingClientRect();
     const width = Math.max(0, Math.min(one.right, two.right) - Math.max(one.left, two.left));
     const height = Math.max(0, Math.min(one.bottom, two.bottom) - Math.max(one.top, two.top));
     return {
@@ -1398,7 +1479,7 @@ await guarded("row 12 council hud", async () => {
       cases += 1;
       if (hud.text === null) {
         failures += 1;
-        sample = sample || `${locale} ${vp.text}: no HUD label or progress track`;
+        sample = sample || `${locale} ${vp.text}: no HUD label or title plaque`;
       } else {
         overlapMax = Math.max(overlapMax, hud.overlap);
         fontMin = Math.min(fontMin, hud.font);
@@ -1917,6 +1998,349 @@ await guarded("row 14 council r3 parent duration", async () => {
   emit("parent_native_controls", controlsMax);
   row("council r3 parent duration", cases === 2 && failures === 0,
     `parent_duration_cases=${cases} parent_duration_failures=${failures} duration_texts=${textsMax} native_controls=${controlsMax}${sample ? ` first=${JSON.stringify(sample)}` : ""}`);
+});
+
+// ---- Row 15: the brand chrome of the five screens (AC-4.1 to AC-4.3). ----
+/** Reads the chrome hooks of the open page: the game bar, the crest, the logo, and the label. */
+async function readBrandChrome(page) {
+  return page.evaluate(() => {
+    const label = document.querySelector("[data-level-week]");
+    const logo = document.querySelector("[data-logo]");
+    const labelText = label ? (label.textContent ?? "").trim() : "";
+    let copies = 0;
+    if (labelText) {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        if ((node.textContent ?? "").trim() === labelText) copies += 1;
+        node = walker.nextNode();
+      }
+    }
+    let hidden = 0;
+    if (!label) {
+      hidden = 1;
+    } else {
+      const style = getComputedStyle(label);
+      const clipped = style.clipPath.includes("inset(50%")
+        || (parseFloat(style.width) <= 1 && parseFloat(style.height) <= 1);
+      if (label.getAttribute("aria-hidden") === "true"
+        || label.closest("[aria-hidden='true']") !== null || clipped) hidden = 1;
+    }
+    return {
+      game_bars: document.querySelectorAll("[data-game-bar]").length,
+      progressbars: document.querySelectorAll('[role="progressbar"]').length,
+      band_icons: document.querySelectorAll("[data-band-icon]").length,
+      crest_elems: document.querySelectorAll("[data-crest]").length,
+      logo_elems: document.querySelectorAll("[data-logo]").length,
+      logo_name_ok: logo && logo.tagName.toLowerCase() === "img" && logo.getAttribute("alt") === "Storytime Advantage" ? 1 : 0,
+      level_week_copies: copies,
+      label_hidden: hidden,
+    };
+  });
+}
+await guarded("row 15 brand chrome", async () => {
+  let cases = 0;
+  let failures = 0;
+  let copiesMax = 0;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    for (const screen of [...SCREENS, "question"]) {
+      const page = await context.newPage();
+      if (screen === "question") await openQuestion(page, locale);
+      else await openScreen(page, locale, screen);
+      const found = await readBrandChrome(page);
+      cases += 1;
+      copiesMax = Math.max(copiesMax, found.level_week_copies);
+      if (!brandChromeVerdict(found)) {
+        failures += 1;
+        sample = sample || locale + " " + screen + ": " + JSON.stringify(found);
+      }
+      await page.close();
+    }
+    await context.close();
+  }
+  emit("brand_chrome_cases", cases);
+  row("brand chrome", cases === 10 && failures === 0,
+    "brand_chrome_cases=" + cases + " brand_chrome_failures=" + failures
+    + " label_copies_max=" + copiesMax + (sample ? " first=" + sample : ""));
+});
+
+// ---- Row 16: the chrome tones of the look screens (AC-4.4 and AC-4.5). ----
+/** The four chrome families of the look, with the selectors that read them. */
+const BRAND_FAMILIES = [
+  { name: "banner", selectors: ["header[data-hero] > h1", "main > h1"] },
+  { name: "buttons", selectors: ["button"] },
+  { name: "frames", selectors: ["section[aria-label]", "main > section"] },
+  { name: "cards", selectors: ["ul[data-week-tiles] a", "[data-part=\"song\"] ol", "[data-page-content] > div", "main li", "main a[href]"] },
+];
+/** Reads the chrome elements of the open page: their family, their fill, and their label colour. */
+async function readBrandElements(page) {
+  return page.evaluate((families) => {
+    const seen = new Set();
+    const out = [];
+    for (const family of families) {
+      for (const selector of family.selectors) {
+        for (const element of document.querySelectorAll(selector)) {
+          if (seen.has(element)) continue;
+          seen.add(element);
+          const style = getComputedStyle(element);
+          const box = element.getBoundingClientRect();
+          if (box.width <= 0 || box.height <= 0) continue;
+          if (style.visibility === "hidden" || style.display === "none") continue;
+          out.push({ family: family.name, background: style.backgroundColor, color: style.color });
+        }
+      }
+    }
+    return out;
+  }, BRAND_FAMILIES);
+}
+/** Tells whether one colour holds the channels of one tone. */
+function isRgbOf(color, channels) {
+  return color !== null && color.r === channels[0] && color.g === channels[1] && color.b === channels[2];
+}
+/** The blue tones of the old look, as colour channels. */
+const BRAND_BLUE = [[36, 95, 159], [47, 116, 189], [23, 64, 122], [19, 36, 78], [31, 85, 148]];
+/** The brand tones, as colour channels. */
+const BRAND_AMBER = [252, 211, 77];
+const BRAND_BROWN = [146, 64, 14];
+/** Sums the brand pairs of a list of chrome elements. */
+function brandToneSummary(elements) {
+  const summary = {
+    families_checked: 0, chrome_pairs_checked: 0, chrome_blue_computed: 0,
+    chrome_contrast_min: 0, amber_pairs: 0, brown_pairs: 0, families: [],
+  };
+  const byFamily = new Map();
+  for (const item of elements) {
+    const bg = parseCssColor(item.background);
+    const fg = parseCssColor(item.color);
+    if (!bg || bg.a !== 1) continue;
+    if (!byFamily.has(item.family)) {
+      byFamily.set(item.family, {
+        name: item.family, pairs: 0, chrome_blue_computed: 0,
+        amber_pairs: 0, brown_pairs: 0, contrast_min: 0,
+      });
+    }
+    const family = byFamily.get(item.family);
+    if (BRAND_BLUE.some((channels) => isRgbOf(bg, channels))) {
+      family.chrome_blue_computed += 1;
+      summary.chrome_blue_computed += 1;
+    }
+    const amber = isRgbOf(bg, BRAND_AMBER);
+    const brown = isRgbOf(bg, BRAND_BROWN);
+    if (!amber && !brown) continue;
+    family.pairs += 1;
+    summary.chrome_pairs_checked += 1;
+    if (amber) { family.amber_pairs += 1; summary.amber_pairs += 1; }
+    if (brown) { family.brown_pairs += 1; summary.brown_pairs += 1; }
+    if (!fg) continue;
+    const ratio = contrastOf(bg, fg);
+    family.contrast_min = family.contrast_min === 0 ? ratio : Math.min(family.contrast_min, ratio);
+    summary.chrome_contrast_min = summary.chrome_contrast_min === 0 ? ratio : Math.min(summary.chrome_contrast_min, ratio);
+  }
+  summary.families = [...byFamily.values()];
+  summary.families_checked = byFamily.size;
+  return summary;
+}
+await guarded("row 16 brand tones", async () => {
+  let cases = 0;
+  let failures = 0;
+  const families = new Set();
+  let pairs = 0;
+  let blue = 0;
+  let amber = 0;
+  let brown = 0;
+  let contrastMin = 0;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    for (const screen of SCREENS) {
+      const page = await context.newPage();
+      await openScreen(page, locale, screen);
+      const summary = brandToneSummary(await readBrandElements(page));
+      cases += 1;
+      for (const family of summary.families) families.add(family.name);
+      pairs += summary.chrome_pairs_checked;
+      blue += summary.chrome_blue_computed;
+      amber += summary.amber_pairs;
+      brown += summary.brown_pairs;
+      if (summary.chrome_contrast_min > 0) {
+        contrastMin = contrastMin === 0 ? summary.chrome_contrast_min : Math.min(contrastMin, summary.chrome_contrast_min);
+      }
+      const total = {
+        families_checked: families.size,
+        chrome_pairs_checked: pairs,
+        chrome_blue_computed: blue,
+        chrome_contrast_min: contrastMin,
+        amber_pairs: amber,
+        brown_pairs: brown,
+        families: [],
+      };
+      if (!brandTonesVerdict(total)) {
+        failures += 1;
+        sample = sample || locale + " " + screen + ": " + JSON.stringify(total);
+      }
+      await page.close();
+    }
+    await context.close();
+  }
+  emit("chrome_contrast_min", contrastMin === 0 ? 0 : Math.round(contrastMin * 100) / 100);
+  emit("chrome_blue_computed", blue);
+  emit("amber_pairs", amber);
+  emit("brown_pairs", brown);
+  row("brand tones", cases === 8 && failures === 0,
+    "brand_tone_cases=" + cases + " brand_tone_failures=" + failures
+    + " families_checked=" + families.size + " chrome_pairs_checked=" + pairs
+    + " chrome_blue_computed=" + blue
+    + " chrome_contrast_min=" + (contrastMin === 0 ? 0 : Math.round(contrastMin * 100) / 100)
+    + " amber_pairs=" + amber + " brown_pairs=" + brown + (sample ? " first=" + sample : ""));
+});
+
+// ---- Row 17: the title plaque of the banner (AC-4.6). ----
+/** Reads the title plaque: the text box against the plaque box, the font size, and the height. */
+async function readBrandBanner(page) {
+  return page.evaluate(() => {
+    const plaque = document.querySelector("header[data-hero] > h1");
+    if (!plaque) {
+      return { text_align: "none", banner_top_gap_px: -1, banner_bottom_gap_px: -1, banner_ratio: 0, title_font_px: 0, banner_h_px: 0 };
+    }
+    const style = getComputedStyle(plaque);
+    const box = plaque.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents(plaque);
+    const text = range.getBoundingClientRect();
+    const font = parseFloat(style.fontSize);
+    return {
+      text_align: style.textAlign,
+      banner_top_gap_px: Math.round(text.top - box.top),
+      banner_bottom_gap_px: Math.round(box.bottom - text.bottom),
+      banner_ratio: box.height > 0 ? font / box.height : 0,
+      title_font_px: font,
+      banner_h_px: Math.round(box.height),
+    };
+  });
+}
+await guarded("row 17 brand banner", async () => {
+  let cases = 0;
+  let failures = 0;
+  let ratioMin = 99;
+  let ratioMax = 0;
+  let sample = "";
+  for (const locale of LOCALES) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    const state = watch(page);
+    await openScreen(page, locale, "week");
+    const found = await readBrandBanner(page);
+    const counts = await checkCounts(page, state);
+    cases += 1;
+    ratioMin = Math.min(ratioMin, found.banner_ratio);
+    ratioMax = Math.max(ratioMax, found.banner_ratio);
+    const ok = brandBannerVerdict({
+      ...found,
+      clipped_text: counts.clipped_text,
+      page_overflow: counts.page_overflow,
+    });
+    if (!ok) {
+      failures += 1;
+      sample = sample || locale + ": " + JSON.stringify(found)
+        + " clipped_text=" + counts.clipped_text + " page_overflow=" + counts.page_overflow;
+    }
+    await page.close();
+    await context.close();
+  }
+  // A 60-character title (the V1 Thai string) steps down one size step and stays inside the plaque.
+  const longContext = await makeContext(VIEWPORTS[0]);
+  const longPage = await longContext.newPage();
+  const longState = watch(longPage);
+  await longPage.goto(base + "/th/st/3/6", { waitUntil: "load" });
+  await settle(longPage);
+  await longPage.evaluate((text) => {
+    const plaque = document.querySelector("header[data-hero] > h1");
+    if (plaque) plaque.textContent = text;
+  }, THAI_LONG_TITLE);
+  await settle(longPage);
+  const longPlaque = await measurePlaque(longPage);
+  const longCounts = await checkCounts(longPage, longState);
+  if (longPlaque.overflow_px !== 0 || longCounts.clipped_text !== 0) failures += 1;
+  await longPage.close();
+  await longContext.close();
+  const min = ratioMin === 99 ? 0 : Math.round(ratioMin * 1000) / 1000;
+  const max = ratioMax === 0 ? 0 : Math.round(ratioMax * 1000) / 1000;
+  emit("banner_ratio_min", min);
+  emit("banner_ratio_max", max);
+  row("brand banner", cases === 2 && failures === 0,
+    "brand_banner_cases=" + cases + " brand_banner_failures=" + failures
+    + " banner_ratio_min=" + min + " banner_ratio_max=" + max
+    + " long_title_overflow_px=" + longPlaque.overflow_px
+    + " long_title_clipped_text=" + longCounts.clipped_text + (sample ? " first=" + sample : ""));
+});
+
+// ---- Row 18: the pages of screens 6 to 9 (decision 1). ----
+/** The pages that carry no frame and take the brand tones through their own class names. */
+const BRAND_PAGES = [
+  { label: "teacher week th", path: "/th/teacher/2/1", signedIn: true },
+  { label: "teacher day th", path: "/th/teacher/2/1/1", signedIn: true },
+  { label: "403 page th", path: "/th/teacher/2/2", signedIn: true },
+  { label: "404 view th", path: "/th/st/4/1", signedIn: true },
+  { label: "st fallback th", path: "/th/st", signedIn: true },
+  { label: "sign_in th", path: "/th/sign-in", signedIn: false },
+  { label: "join th", path: "/th/join", signedIn: false },
+];
+await guarded("row 18 brand pages", async () => {
+  let cases = 0;
+  let failures = 0;
+  let pairsMin = 99;
+  let contrastMin = 99;
+  let sample = "";
+  for (const item of BRAND_PAGES) {
+    const context = await makeContext(VIEWPORTS[0], { signedIn: item.signedIn });
+    const page = await context.newPage();
+    const state = watch(page);
+    let detail = "";
+    let ok = false;
+    let pairs = 0;
+    let contrast = 0;
+    try {
+      const response = await page.goto(base + item.path, { waitUntil: "load" });
+      await settle(page);
+      const counts = await checkCounts(page, state);
+      const summary = brandToneSummary(await readBrandElements(page));
+      pairs = summary.chrome_pairs_checked;
+      contrast = summary.chrome_contrast_min;
+      pairsMin = Math.min(pairsMin, pairs);
+      contrastMin = contrastMin === 99 ? contrast : Math.min(contrastMin, contrast);
+      ok = brandPagesVerdict({
+        console_errors: counts.console_errors,
+        tap_under_48: counts.tap_under_48,
+        page_overflow: counts.page_overflow,
+        chrome_contrast_min: contrast,
+        chrome_brand_pairs: pairs,
+      });
+      detail = "status=" + (response ? response.status() : 0)
+        + " console_errors=" + counts.console_errors
+        + " tap_under_48=" + counts.tap_under_48
+        + " page_overflow=" + counts.page_overflow
+        + " chrome_brand_pairs=" + pairs
+        + " chrome_contrast_min=" + (contrast === 0 ? 0 : Math.round(contrast * 100) / 100);
+    } catch (error) {
+      detail = "the page raises an error: " + String(error).slice(0, 120);
+    }
+    cases += 1;
+    if (!ok) {
+      failures += 1;
+      sample = sample || item.label + ": " + detail;
+    }
+    row("brand pages " + item.label, ok, detail);
+    await page.close();
+    await context.close();
+  }
+  emit("chrome_brand_pairs_min", pairsMin === 99 ? 0 : pairsMin);
+  row("brand pages total", cases === BRAND_PAGES.length && failures === 0,
+    "brand_page_cases=" + cases + " brand_page_failures=" + failures
+    + " chrome_brand_pairs_min=" + (pairsMin === 99 ? 0 : pairsMin)
+    + " chrome_contrast_min=" + (contrastMin === 99 ? 0 : Math.round(contrastMin * 100) / 100)
+    + (sample ? " first=" + sample : ""));
 });
 
 row("row count the rows ran", rowsVerdict(rowCount), `row_count=${rowCount}`);
