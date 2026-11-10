@@ -50,6 +50,7 @@ Blast radius: `packages/architecture-enforcement` and `.github/workflows/ci.yml:
 
   - Blocked at 08:05 on 2026-11-10. The PM stopped the refresh job to free the heavy lock for two P1 jobs. The job exited 137 and changed no file. The task stays open. Rerun after 22:00 or after both P1 jobs end.
   - Round 2 at role base `65b8325b0`. The refresh command held the heavy lock from 21:34:46 to 23:04:46. The heavy-run time limit of 5400 s stopped it. The manifest and every repository file stayed unchanged. The command runs five full analyzer passes: one probe, two reports, and two validation reports. The task waits for an orchestrator decision.
+  - Round 3 at role base `0a5b2bc42`. The job started at 23:43:32 on 2026-11-10. The orchestrator stopped it at 00:01:50 on 2026-11-11, after 138 s. The PM order of 2026-11-11 at 00:0x limits a heavy job to 30 minutes (`HEAVY_RUN_TIMEOUT_S` 1800 at most), except a Storytime p1 job. The pin refresh does not run again until it fits in 30 minutes. The manifest and every repository file stayed unchanged. Task 1.4 stays [~].
 
 - [ ] 1.5 Phase check at one HEAD. Run one job at a time through heavy-run:
   - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement check-types'`. Expect exit 0.
