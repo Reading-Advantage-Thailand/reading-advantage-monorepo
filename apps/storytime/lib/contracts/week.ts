@@ -398,6 +398,36 @@ export const recallSchema = z
   })
   .passthrough();
 
+/**
+ * One shot of a share moment (plan task 4.6a, rule D23).
+ *
+ * A shot names the step of the day and the kind of the media that the teacher shares. The shot
+ * holds no file path, because the app sends nothing and a file name would name an upload.
+ */
+export const shareShotSchema = z
+  .object({
+    /** The id of the step of the day. */
+    step: z.string().min(1),
+    /** The kind of the media of the shot. */
+    media: z.enum(["photo", "video"]),
+  })
+  .strict();
+
+/**
+ * The share moment of one lesson day (plan task 4.6a, rule D23).
+ *
+ * The share holds one or two shots and the caption for the parents. The object is strict, so a
+ * later field of Workbooks needs a new commit here and in the receiving step.
+ */
+export const shareSchema = z
+  .object({
+    /** One or two shots of the day. */
+    shots: z.array(shareShotSchema).min(1).max(2),
+    /** The caption that the teacher reads to the parents. */
+    caption: biText,
+  })
+  .strict();
+
 /** One lesson day. */
 export const scriptSchema = z
   .object({
@@ -408,6 +438,8 @@ export const scriptSchema = z
     steps: z.array(stepSchema).min(1),
     /** The recall of the day, shown in the opening. */
     recall: recallSchema.optional(),
+    /** The share moment of the day, shown at the named step. */
+    share: shareSchema.optional(),
   })
   .passthrough();
 

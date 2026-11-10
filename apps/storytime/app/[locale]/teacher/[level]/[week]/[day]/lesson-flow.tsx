@@ -3,6 +3,14 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { StorytimeWeek } from "../../../../../../lib/contracts/week";
+import { loopsApproved } from "../../../../../../lib/loops";
+import {
+  shareShotAt,
+  SHARE_CONSENT_LINE,
+  SHARE_MEDIA_LABELS,
+  type ShareMoment,
+  type ShareShot,
+} from "../../../../../../lib/share-moment";
 import {
   hasSignedMedia,
   stepMediaOf,
@@ -28,6 +36,11 @@ import { StorytimeSong } from "../../../../st/[level]/[week]/song";
  * the at-home player of the week in class-screen mode, and the flow stays open, so the teacher
  * keeps the place of the step. The control "Close" and the Escape key close the player, and the
  * focus returns to the control that opened it.
+ *
+ * A step of an approved week holds the share moment (plan task 4.6a, rule D23). The moment
+ * shows at the step that its shot names, with the caption and the consent line in the language
+ * of the flow. The moment shows only when the loops part of the week is approved, and it shows
+ * only at a step of its own day. The app sends no photo and no video.
  *
  * Every value comes from the week file. The view holds no string that names a week item, so the
  * flow of a draft week and the flow of a published week differ only by their data.
@@ -73,6 +86,9 @@ const VARIANT_LINES = [
 
 /** The accessible name of the player region. */
 const PLAYER_REGION = "The media player";
+
+/** The accessible name of the share moment region. */
+const SHARE_MOMENT_REGION = "The share moment";
 
 /** The English message of a media part with no signed URL. */
 const MEDIA_MISSING_EN = "This media is not available.";
@@ -179,6 +195,45 @@ export interface TeacherLessonFlowProps {
   mediaUrls?: Record<string, string>;
 }
 
+/**
+ * Renders the share moment of one step (plan task 4.6a, rule D23).
+ *
+ * The moment names the shot with the id of the step and the kind of the media. It shows the
+ * label of the kind, the caption of the day, and the consent line, in the language of the flow.
+ * The moment holds no control and sends nothing.
+ * @param props The props of the share moment.
+ * @returns The share moment of the step.
+ */
+function ShareMomentView({
+  share,
+  shot,
+  thai,
+}: {
+  share: ShareMoment;
+  shot: ShareShot;
+  thai: boolean;
+}) {
+  const labels = SHARE_MEDIA_LABELS[shot.media];
+  return (
+    <section
+      aria-label={SHARE_MOMENT_REGION}
+      data-share-moment={shot.step}
+      data-share-media={shot.media}
+      className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#fffaf0] p-4"
+    >
+      <h3 className="text-lg font-semibold" data-share-label lang={thai ? "th" : "en"}>
+        {pick(labels, thai)}
+      </h3>
+      <p className="text-lg" lang={thai ? "th" : "en"}>
+        {pick(share.caption, thai)}
+      </p>
+      <p className="text-neutral-700" lang={thai ? "th" : "en"}>
+        {pick(SHARE_CONSENT_LINE, thai)}
+      </p>
+    </section>
+  );
+}
+
 /** The props of the step view. */
 interface StepViewProps {
   /** The step of the day. */
@@ -203,6 +258,10 @@ interface StepViewProps {
   week: StorytimeWeek;
   /** The locale segment of the route. */
   locale: string;
+  /** The share of the lesson day, or `null` when the week holds none. */
+  share: ShareMoment | null;
+  /** The shot of the step, or `null` when no shot names the step. */
+  shot: ShareShot | null;
 }
 
 /**
@@ -222,6 +281,8 @@ function StepView({
   onClose,
   week,
   locale,
+  share,
+  shot,
 }: StepViewProps) {
   const note = noteOf(step, thai);
   return (
@@ -240,6 +301,8 @@ function StepView({
         </h2>
         <span className="text-lg text-neutral-600">{step.minutes} min</span>
       </header>
+
+      {shot && share ? <ShareMomentView share={share} shot={shot} thai={thai} /> : null}
 
       {media ? (
         <div className="flex flex-col gap-3">
@@ -416,6 +479,9 @@ export function TeacherLessonFlow({
   const last = screen >= steps.length - 1;
   const media = step ? stepMediaOf(step, week) : null;
   const available = media !== null && hasSignedMedia(media, mediaUrls);
+  // The share moment shows only when the loops part of the week is approved (rule D23).
+  const share = loopsApproved(week) ? (script?.share ?? null) : null;
+  const shot = shareShotAt(share ?? undefined, step?.id);
 
   // The Escape key closes the open player, and the focus returns to the control that opened it.
   useEffect(() => {
@@ -527,6 +593,8 @@ export function TeacherLessonFlow({
           onClose={closeMedia}
           week={week}
           locale={locale}
+          share={share}
+          shot={shot}
         />
       ) : null}
 
