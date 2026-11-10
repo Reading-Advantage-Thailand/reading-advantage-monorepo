@@ -9,6 +9,8 @@
 
 > **Amendment 2026-11-05:** three PM decisions at role base `e9c1908fd`. (1) The Docker smoke: run 1 asserts 200 for shipped st2/1, and run 1b proves `missing_picture` with a broken clone. (2) The `date` and `words` rule for an approved part applies to the loops part only. (3) The six P3.6 machine-check rows stay in the Phase 3 browser gate.
 
+> **Amendment 2026-11-10:** the Phase 4 refresh r2 at role base `ac46025125ffaccb5cd66f07b1868ab317a8007f`. It covers the open tasks 4.4, 4.6, and 4.6a (sections P4.4, P4.6, P4.6a, P4.7). The phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae` does not change. It also (1) fixes the aggregate P4 command, because the old glob `phase4-*.test.ts` misses the `.tsx` tests, (2) states that `build-graph update` and `build-graph scan` run only through `heavy-run.sh` (PM load rule, 2026-11-10), and (3) adds four open questions with defaults to section 3.
+
 ## 1. Rules for every phase
 
 ### 1.1 Heavy jobs
@@ -20,6 +22,7 @@
 - Vitest runs with `--maxWorkers=1`, and only on changed or targeted files. Never run the root aggregate `pnpm turbo run test` as a phase gate.
 - On 2026-10-26 no heavy job runs before 16:00 ICT (PM order). The P1 phase check waits for the lock window after 16:00.
 - Reads, `grep`, `git log/show/diff`, and `build-graph` queries on `./graph.db` are light. They need no lock.
+- `build-graph update` and `build-graph scan` are heavy (PM load rule, 2026-11-10). They run only through `heavy-run.sh`, for example `bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && build-graph update ./graph.db <files>'`.
 
 ### 1.2 Capture of `phase_base_sha`
 
@@ -612,14 +615,16 @@ Reviews run at the Phase 3 checkpoint on the diff `phase_base_sha..HEAD` (tasks 
 **Targeted Red command:**
 
 ```bash
-bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase4-*.test.ts'
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx'
 ```
+
+> **Amendment 2026-11-10:** the old command used the glob `apps/storytime/__tests__/phase4-*.test.ts`. The shell expands that glob to the `.ts` files only, so the `.tsx` tests did not run (A4: a gate that skips tests). Each Phase 4 test file now has its own named command. The aggregate list above and the per-task commands in P4.4, P4.6, and P4.6a name every file. A new Phase 4 test file joins this list in the same commit that adds it.
 
 **Green gate:** the targeted Red command exits 0. The browser check at 1920x1080 and on a laptop exits 0 with the flag on.
 
 **Closeout gate:**
 
-1. The Green gate, and the P1 to P3 targeted Vitest commands.
+1. The Green gate, the four task commands of P4.4, P4.6, and P4.6a, and the P1 to P3 targeted Vitest commands. Tasks 4.6 and 4.6a do not hold the checkpoint (plan amendment), so their commands join the closeout only when those tasks are done.
 2. `bash apps/storytime/__tests__/phase1-quality-gates.sh`.
 3. The Docker smoke with the flag not set. Each teacher route answers 404 from the container.
 4. The browser review (task 4.5).
@@ -640,7 +645,7 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 | AC-9.2 lesson steps | For each of the five days, the steps on screen equal the steps in the file, with four headings and three variant lines each | A day with one missing step passes, or the test checks zero days (A4) |
 | Review strip and Friday check | `review[]` shows each day. `check` shows on day 5 only. | The check shows on day 3 |
 | Thai toggle | Each `{ en, th }` field shows its Thai text | One field has no Thai text when the toggle is on |
-| Task 4.4 media | The step keeps its place after the player closes | The flow goes back to step 1 |
+| Task 4.4 media | The step keeps its place after the player closes. The full test list is in P4.4. | The flow goes back to step 1 |
 
 **Anti-pattern coverage:** A3 (the step count is a labeled integer per day: `day=<n> steps=<n>`), A4 (five days and at least one step per day), A5 (the plan names the flag default that the test proves).
 
@@ -648,7 +653,9 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 
 **Changed-contract risks:** the flag name and its default become an ops contract in the deploy runbook. The runbook must state that the default is off.
 
-**A-42 task 4.6 (teacher loops):** the task does not hold the Phase 4 checkpoint (plan amendment). Latest date: 2026-11-27, before the internal Storytime release 1 delivery of 2026-12-01. Risk: medium. Tests: AC-13.7 and AC-13.8 (teacher half) in `apps/storytime/__tests__/phase4-loops*.test.tsx`. Gate: those files, the P3 task 3.9 tests, and `phase1-quality-gates.sh` exit 0, and the browser check at 1920x1080 and on a laptop passes with the loops on and with the loops off. Reviews: Review A, Review C, and a small adversarial round (a draft week, a level 1 week, a w08 copy with an extra `soundLoop`). No Review B: the task adds no input surface. The P4 strategy refresh writes the remaining details before the 4.6 Red role.
+**A-42 task 4.6 (teacher loops):** the task does not hold the Phase 4 checkpoint (plan amendment). Latest date: 2026-11-27, before the internal Storytime release 1 delivery of 2026-12-01. Risk: medium. Tests: AC-13.7 and AC-13.8 (teacher half) in `apps/storytime/__tests__/phase4-loops*.test.tsx`. Gate: those files, the P3 task 3.9 tests, and `phase1-quality-gates.sh` exit 0, and the browser check at 1920x1080 and on a laptop passes with the loops on and with the loops off. Reviews: Review A, Review C, and a small adversarial round (a draft week, a level 1 week, a w08 copy with an extra `soundLoop`). No Review B: the task adds no input surface. The refresh of 2026-11-10 wrote the remaining details: see P4.6.
+
+**Tasks 4.4, 4.6, and 4.6a (refresh r2, 2026-11-10):** the sections P4.4, P4.6, P4.6a, and P4.7 follow the review bullets below. Risk per task: 4.4 `medium`, 4.6 `medium`, 4.6a `medium` (the page names a child photo moment, so the no-upload guard is a hard test).
 
 **Review applicability:**
 
@@ -658,6 +665,243 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 - Browser review: yes. The layout must fit a class screen and a laptop.
   - `PROJECT_DEV_URL` source: a local `next start` of the Storytime production build with the teacher flag on, under `heavy-run.sh`. A second run with the flag not set proves 404.
   - Viewports from task 4.5: 1920x1080 and a laptop (default 1366x768).
+
+### P4.0 Rules for tasks 4.4, 4.6, and 4.6a
+
+- **Fixture rule.** Each test reads the shipped `apps/storytime/content/l2/w01.json` through `weekSchema.parse`, as `phase4-lesson-flow.test.tsx` does. No week fixture file exists under `__tests__/`. Each case that needs another state makes a deep clone of the parsed week (`structuredClone`) and changes the clone. A test never changes the shared parsed week.
+- **Approved clone.** The shipped w01 has `approval.loops` `{ "status": "draft" }`. An approved clone sets `approval.loops` to `{ status: "approved", date: "2026-11-10", words: "test clone" }`, because the contract fails an approved loops part with no `date` or no `words`. The clone passes `weekSchema.parse` before it renders (A4: a clone that the contract rejects proves nothing).
+- **Level 1 clone.** The clone sets `meta.level` to 1 and `meta.key` to `st1/1`. The contract fails a key that does not match the level.
+- **Labeled integers (A3).** Each count is a labeled integer that the test parses: `media_steps=<n>`, `loop_steps=<n>`, `share_shots=<n>`. The failure message holds the same label. A digit anywhere in the text never counts.
+- **Count guards (A4).** Before a property is asserted, the test asserts that the list is not empty and that the labeled count equals the measured value. The measured values of w01 on 2026-11-10 are in the tables below. A positive control (the same assertion on a state that must show the item) comes before each "shows nothing" assertion, so an absence cannot pass because the selector is wrong.
+- **Artifact versus live.** jsdom proves what the DOM holds. It cannot measure a pixel. Each size, overlap, and fit claim has its own browser row in P4.7. A test never claims a pixel size.
+- **Aggregate suite.** Between the Red commit and the Green commit, the new test file is intentionally red. The plan Red evidence lists each failing test with its cause and its task, as for task 4.3. The root aggregate suite never runs as a gate. A new file that fails at import fails with the named assertion of the module that Green must add, never with a syntax error.
+- **Graph update.** After the first structural edit of each task, Green runs `build-graph update ./graph.db <changed files>` only through `heavy-run.sh` (PM load rule, 2026-11-10). Then `build-graph search ./graph.db <new export>` finds each new export (A10).
+- **Task base SHA.** The phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae` stays. Each of the tasks 4.4, 4.6, and 4.6a gets a task base: the orchestrator runs `git rev-parse HEAD` after the commit of this strategy and after the previous task closes, and before the Red role of that task starts. The orchestrator records the full SHA in the Red evidence of the task in `plan.md`. The role base `ac46025125ffaccb5cd66f07b1868ab317a8007f` of this refresh is not a task base, because it predates the strategy commit.
+
+### P4.4 Task 4.4: media in the lesson flow
+
+**Risk:** `medium`. The task opens the at-home player inside the teacher flow and puts signed media URLs on a flag-gated route.
+
+**Data source of the step media (measured 2026-11-10).** The week file holds **no field that marks a step with media**. The step keys of w01 are `blendDrill`, `easier`, `en`, `group`, `harder`, `id`, `loopMinutes`, `materials`, `minutes`, `moved`, `sightWords`, `soundLoop`, `th`, `title`. No step holds a `media`, `video`, `audio`, or `player` field. `materials` holds only text, for example `picture cards: nose, cat, sun`. The week file does hold the media objects: `song` (title, `audio`, `video`, `karaoke`) and `books[]` (title, kind, `audio`).
+
+**Default rule D1 (open question 6 in section 3).** A step opens the player only when one `materials` entry of that step has a fixed key and a title that a media object of the same week holds. The rule is one table in one function of `apps/storytime/lib/` (the Red role names the file; `lib/teacher-media.ts` is the suggested name). The rule is not a guess in the page.
+
+| Fixed key (the start of the entry) | The entry ends with | The step opens |
+|---|---|---|
+| `karaoke videos` | `: "<title>"` where `<title>` equals `song.title` | the song part |
+| `book audio` | `: "<title>"` where `<title>` equals the `title` of one `books[]` entry | the part of that book: read-along for `readalong`, decodable for `decodable` |
+
+All other entries open nothing. `big book or screen`, `small books`, `class tablet`, and `board` are not media keys. A title that matches no media object opens nothing. The rule never reads a step id.
+
+**Measured result of D1 on w01:** `media_steps=4`, in the steps B3 (`book audio`, "Hello!"), B7, D6, and E2 (`karaoke videos`, "Hello, I Am Pip"). The entries `big book or screen: "Hello!"` of B2, B4, and B6 and the `small books` entries open nothing.
+
+**Targeted Red command:**
+
+```bash
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-media.test.tsx'
+```
+
+**Test file:** `apps/storytime/__tests__/phase4-lesson-media.test.tsx` (jsdom). It holds the rule tests and the flow tests. The Red role records the exports, the control name, and the player props as the contract for Green.
+
+| Test | Proves | Falsification condition |
+|---|---|---|
+| Rule on w01 | `media_steps=4` and the ids are B3, B7, D6, E2, in day order | A rule that also matches `big book or screen` or `small books` gives a count above 4. A rule that matches nothing gives 0, and the guard fails before any detail (A4). |
+| Rule has no step ids | A clone whose `song.title` has a new text opens no `karaoke videos` step (`media_steps=1`, only B3). A clone that renames the key `karaoke videos` to `karaoke clips` in E2 only drops E2. | A rule that hard-codes B3, B7, D6, and E2 passes the clones and the test fails |
+| Open | On the step B3, the control opens the player for the book "Hello!". On a clone with the book title changed in both places, the player shows the new title. | The player shows a fixed title, or opens for a step with no media |
+| No media control | The steps A1 and B2 show no media control (`controls=0`) | A control shows on every step |
+| Class-screen mode | The open player carries the class-screen marker that the Red contract names (a prop and a `data-mode="class-screen"` attribute). jsdom checks the marker only. | The marker is missing, or it shows on the at-home route |
+| Flow stays open | While the player is open, the step id and the step title stay in the DOM and the control "Next step" stays in the DOM | The flow unmounts while the player is open |
+| Place kept | For each of the 4 media steps: walk to the step with "Next step", open the player, close it, and read the step id again. It equals the id before the open. The labeled index `index=<n>` is above 0 for every case. | The flow goes back to step 1 (B1 for B3), or the opening screen returns |
+| Thai state kept | The Thai toggle on before the open stays on after the close, and the step shows its Thai text | The toggle resets after the close |
+| Close controls | The control "Close" and the Escape key both close the player. Focus returns to the control that opened it. | Focus falls to the body, or Escape does nothing |
+| No autoplay | A spy on `HTMLMediaElement.prototype.play` shows `play_calls=0` after the open. The positive control: a click on the player's own play control makes `play_calls=1`. | The open calls `play` (AC-8.1) |
+| URL from the server map | The player `src` equals the entry of the `mediaUrls` prop. A file with no entry shows a message in English and Thai and opens no player. No `src` equals a raw path such as `l2/media/w01/song.mp4`. | The client builds a URL from the week path, or the player opens with an empty `src` |
+| Day page signs | A source test of `app/[locale]/teacher/[level]/[week]/[day]/page.tsx` shows that the page calls `signWeekMedia(loaded.week, {})` as the week page does, and that the flow receives `mediaUrls`. The test reads the page text with `files_scanned=<n>` above 0. | The page passes a URL from the request, or passes no `mediaUrls` |
+
+**Gate:**
+
+1. The targeted Red command exits 0 on Green, with `media_steps=4` in the log.
+2. The Phase 4 files `phase4-teacher-flag`, `phase4-week-view`, and `phase4-lesson-flow` exit 0 and are not edited. `git diff <task base>..HEAD --stat -- apps/storytime/__tests__/phase4-lesson-flow.test.tsx apps/storytime/__tests__/phase4-week-view.test.tsx apps/storytime/__tests__/phase4-teacher-flag.test.ts` is empty at Green.
+3. The Phase 3 regression set (`phase3-*.test.ts` and `phase3-*.test.tsx`) exits 0 and is not edited, because the task may add a prop to an at-home player.
+4. `tsc --noEmit` in `apps/storytime` exits 0. ESLint exits 0 on the changed files.
+5. `git diff --stat <phase base>..HEAD -- apps/primary-advantage packages/read-along` is empty.
+
+**Anti-pattern coverage:**
+
+| Anti-pattern | Defense |
+|---|---|
+| A3 | `media_steps=<n>`, `index=<n>`, `play_calls=<n>`, `controls=<n>`: each is a labeled integer that the test parses |
+| A4 | The guard `media_steps` above 0 comes before each detail. Each "no media" assertion has a positive control on a media step. |
+| A5 | The plan note quotes the exit code, the file count, and the test count of the command. It names rule D1 and says that the Workbooks field is open. |
+| A7 | The source test names exact file paths. It uses no `rg -v` list. |
+| A1, A2, A6, A8 to A16 | Not touched by this task. A16: no worktree. |
+
+**Architecture guardrails:**
+
+- The page and the flow stay thin. The media rule is a function in `apps/storytime/lib/`, with JSDoc.
+- The class-screen player reuses the P3 components `StorytimeReader`, `StorytimeDecodable`, and `StorytimeSong`. A new prop is optional and has a default, so the at-home route does not change. `packages/read-along` and Primary do not change.
+- The signed URL map comes from the server only (`signWeekMedia`). No `NEXT_PUBLIC_` value. No phone voice stands in for content audio (rule 10.5).
+- The teacher route loads the week with `loadWeek`, as task 4.2 does. The media shows for a draft week too, because the teacher previews it. This differs from the at-home route, which uses `loadVisibleWeek`.
+
+**Changed-contract risks:**
+
+- Rule D1 reads free text. A Workbooks edit of a `materials` entry can turn the player off with no error. The `media_steps=4` test on the shipped file is the alarm for that. When Workbooks adds a field, the rule module changes and the Rule rows change in the same commit.
+- An at-home player prop can change P3 behavior. The Phase 3 regression set is the guard.
+
+**Review applicability for 4.4:** Review B at the phase checkpoint, with the probe: a `materials` title that holds `..`, a very long title, and a title that matches two books (the rule uses the first match and the test names it). Review C at the checkpoint: the player on a class screen, the close control, the focus return. Adversarial: a small round on a title collision, a missing `mediaUrls` entry, and rapid open and close (five taps in 100 ms leave one valid state). Browser: yes, rows B1 to B4 in P4.7.
+
+### P4.6 Task 4.6: teacher loops
+
+**Risk:** `medium`. Latest date 2026-11-27, before the internal Storytime release 1 delivery of 2026-12-01. The task does not hold the Phase 4 checkpoint.
+
+**Measured facts of w01 (2026-11-10).** `approval.loops` is `draft` in all of w01 to w08, so the shipped week shows no loop. The loop fields exist:
+
+| Field | Where in w01 | Labeled count |
+|---|---|---|
+| `soundLoop` | steps A1, A2, A3 | `soundloop_steps=3` |
+| `blendDrill` | step A4, 5 words with `audio` clips of the phoneme bank | `blenddrill_steps=1` |
+| `sightWords` | steps A6 and D2 | `sightwords_steps=2` |
+| `loopMinutes` | A1, A2, A3, A4, A6, C5, D2 | `loopminutes_steps=7` |
+| `loopMinutes` different from `minutes` | A1 (4 to 5), A2 (4 to 5), A4 (5 to 4), A6 (4 to 3) | `loopminutes_differs=4` |
+| `recall` | days 2 to 5, 5 cards each. Day 1 holds none. | `recall_days=4` |
+
+w08 (`meta.kind` `review`) holds `recall` on all 5 days, no `loopMinutes`, and no `soundLoop`, `blendDrill`, or `sightWords`. No level 1 week is shipped.
+
+**Rule (spec FR-13, AC-13.7, AC-13.8, teacher half).** The loops show only when `loopsApproved(week)` is true and `meta.level` is 2, 3, or 4. The existing function `loopsApproved` in `apps/storytime/lib/loops.ts` is the one approval rule. The recall shows in the opening screen of the day. Each loop field shows on the step that holds it, wherever it sits. A review week shows only `recall` and `loopMinutes`. The step time is `loopMinutes ?? minutes` when the loops show, and `minutes` otherwise. The value `loopMinutes: 0` shows `0 min`.
+
+**Targeted Red command:**
+
+```bash
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-loops-flow.test.tsx'
+```
+
+**Test file:** `apps/storytime/__tests__/phase4-loops-flow.test.tsx` (jsdom). It renders `TeacherLessonFlow`. It passes `mediaUrls` for the bank clips.
+
+| Test | Proves | Falsification condition |
+|---|---|---|
+| Counts guard | The parsed w01 gives `soundloop_steps=3`, `blenddrill_steps=1`, `sightwords_steps=2`, `loopminutes_steps=7`, `loopminutes_differs=4`, `recall_days=4` | A count differs, or a list is empty (A4) |
+| Draft shows nothing (AC-13.8) | The shipped w01 (draft): on all 5 days and on every screen, no recall panel, no loop panel, and the step time is `<minutes> min`. The screen count is `screens=<n>` with n above 0. | A panel shows for a draft week (A2). The positive control on the approved clone must find the same panels. |
+| Absent and empty | A clone with `approval.loops` deleted, and a clone with every loop field removed from an approved week, show the same as the draft | A missing key counts as approved |
+| Level 1 (AC-13.8) | The approved level 1 clone shows no panel and `minutes` on every step | The level rule is missing |
+| Levels 2, 3, 4 | The approved clones at levels 2, 3, and 4 show the panels | The rule reads `level === 2` only |
+| Recall (AC-13.7) | The approved clone shows the recall in the opening screen of the days 2 to 5 (`recall_days=4`, 5 cards and the `ask` text each) and shows none on day 1. The recall does not show on the second screen. | A recall shows on day 1, or on a later screen |
+| Day 1 recall shows | A clone that copies the recall of day 2 into day 1 shows it on the day 1 opening screen | The app hides a day 1 recall by its own rule |
+| Sound loop | On A1, A2, and A3, the `correct`, `practise`, and `retest` lines show. On every other step of the day, no sound loop shows. | A loop shows on a step with no `soundLoop` |
+| Blend drill | On A4, the `model`, `lead`, `test`, `correction`, and the `repeats` value show, with the drill words (`drill_words=5`) and the sound labels | A word or the `repeats` value is missing, or a text is a hard-coded string |
+| Sight words | On A6 and D2, the words, the `slide` line, the `check` line, and the `seconds` value show. D2 is on day 4 and has its own screen. | The card shows on one step only |
+| Placement by field | A clone that moves `blendDrill` from A4 to A5 shows it on A5 and not on A4. A clone that adds `soundLoop` to B2 shows it on B2. | The app places a loop by a step id (spec: "A `blendDrill` on another step shows on that step") |
+| Step time | On the approved clone, A1 shows `5 min` and not `4 min`, A4 shows `4 min`, and A5 (no `loopMinutes`) shows its `minutes`. On the draft, A1 shows `4 min`. The guard `loopminutes_differs=4` comes first. | The view always shows `minutes`, or always `loopMinutes` (A5 would show a wrong or empty value) |
+| Zero minutes | A clone with `loopMinutes: 0` on A5 shows `0 min` | The code uses `||` and shows `minutes` |
+| Review week | An approved copy of w08 shows `recall` and the `loopMinutes` that the test adds to one step (`w08_loopminutes_added=1`). An extra `soundLoop`, `blendDrill`, and `sightWords` on that copy show nowhere. | An extra `soundLoop` panel shows in a review week |
+| Thai toggle | With the toggle on, the loop fields show their `th` text, and a field with an empty `th` keeps its `en` text | One loop field stays in English with a Thai text present |
+| Bank clips | The drill and recall clips play from the `mediaUrls` map only. A clip with no entry shows its text and no play control. No `src` holds a raw `phonemes/daniel/` path. A spy shows `play_calls=0` after the render. | The client builds a URL, a missing clip crashes the flow, or the flow autoplays |
+| AC-9.2 unchanged | `phase4-lesson-flow.test.tsx` exits 0 and has no edit since the task base | The Green commit edits a committed Red test |
+
+**Gate:**
+
+1. The targeted Red command exits 0 on Green, with the labeled counts in the log.
+2. `phase4-lesson-flow`, `phase4-week-view`, `phase4-teacher-flag`, and `phase4-lesson-media` (when task 4.4 is done) exit 0 and are not edited.
+3. The P3 task 3.9 question-screen tests and `phase1-quality-gates.sh` exit 0, as the 4.6 paragraph above requires.
+4. `tsc --noEmit` and ESLint on the changed files exit 0.
+5. The browser rows L1 to L4 of P4.7 pass with the loops on and with the loops off.
+
+**Anti-pattern coverage:**
+
+| Anti-pattern | Defense |
+|---|---|
+| A2 | A draft week, an absent part, and a level 1 week never show a loop. The approved clone is the positive control. |
+| A3 | `soundloop_steps`, `blenddrill_steps`, `sightwords_steps`, `loopminutes_steps`, `loopminutes_differs`, `recall_days`, `drill_words`, `screens`, `play_calls`: each is a labeled integer that the test parses |
+| A4 | Each "shows nothing" assertion follows a positive control. The test asserts `screens` above 0 and every count above 0 first. |
+| A5 | The plan note quotes the exit code, the file count, and the test count. It does not say "all loops" when a field has no test. |
+| A7 | No `rg -v` list. The source checks name exact paths. |
+| A1, A6, A8 to A16 | Not touched by this task. A16: no worktree. |
+
+**Architecture guardrails:** the placement and the level rule are a function in `apps/storytime/lib/` that reuses `loopsApproved`. The flow stays a thin view. No new schema: the typed read schemas of task 3.8 already hold the fields. `packages/read-along` and Primary do not change.
+
+**Changed-contract risks:** a Workbooks edit of a loop field changes the schema pin (task 3.10 owns the receipt). The recall at week 1 day 1 is a Workbooks rule (`loops-recall`), and the app only shows what the file holds. The step time on the draft week must stay `minutes`, because the printed teacher book and the on-screen time must agree until Daniel approves the loops.
+
+**Review applicability for 4.6:** Review A yes. Review C yes (the loop panels on a class screen, Thai text, the heading order). Review B no: the task adds no input surface. Adversarial: a small round on a draft week, a level 1 week, a w08 copy with an extra `soundLoop`, `loopMinutes: 0`, and a loop field on a step that is not named in the spec. Browser: yes, rows L1 to L4 in P4.7.
+
+### P4.6a Task 4.6a: the share moment
+
+**Risk:** `medium`. The moment names a child photo or video that the teacher shares with parents. The app uploads nothing. Daniel has not approved the consent wording (open question 8 in section 3).
+
+**Dependency.** The task needs `scripts[].share` in the received week files. The condition is met: w01 holds `share` on all 5 scripts (received from Workbooks at `953f798e`, after `1d29e893`, measured 2026-11-10). The task wording is in `plan.md`, task 4.6a (line 2081 at the role base).
+
+**Measured facts of w01 (2026-11-10).** The shots are: day 1: A3 `video`; day 2: B5 `video`; day 3: C4 `video`; day 4: D4 `photo` and D5 `video`; day 5: D6 `video`. That is `share_shots=6`. **Day 5 names step D6, but the steps of day 5 are E1 to E5.** D6 belongs to day 4. So `share_resolved=5` and `share_unresolved=1` on the shipped file (open question 7 in section 3). The app contract (`lib/contracts/week.ts`) holds no `share` schema today, so a read schema is part of this task.
+
+**Rule.** The moment shows only when `loopsApproved(week)` is true. The plan wording of the task names the approval only. The moment shows at the named step of its own day, with the caption in the active language (`caption.th` when the Thai toggle is on and `th` is not empty) and the consent line. A shot that names a step that the day does not hold shows nowhere. The consent line is an app constant with `en` and `th` text. The app never uploads a photo or a video.
+
+**Targeted Red command:**
+
+```bash
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx'
+```
+
+**Test file:** `apps/storytime/__tests__/phase4-share-moment.test.tsx` (jsdom). It reads the contract and renders `TeacherLessonFlow`.
+
+| Test | Proves | Falsification condition |
+|---|---|---|
+| Schema on w01 | The read schema parses the shipped week: `shares_parsed=5`, `share_shots=6` | The schema rejects the shipped file, or a count is 0 (A4) |
+| Schema strictness | Each broken clone fails with its field path: 0 shots, 3 shots, `media` `audio`, a shot with a `file` key, an extra key on `share`, an empty `caption.en` | A broken clone parses (the plan says both objects are strict and hold no file path) |
+| Hidden while draft | The shipped w01 (loops draft): on all 5 days and on every screen, no share moment and no consent line (`screens=<n>`, n above 0) | The moment shows for a draft week (A2). The approved clone is the positive control. |
+| Absent part | A clone with `approval.loops` deleted, and a clone with `scripts[].share` deleted from an approved week, show no moment and do not crash | A missing field crashes the flow |
+| Shown at the named step | On the approved clone, day 1 shows the moment on A3 only. Day 4 shows it on D4 (`photo`) and on D5 (`video`): `share_shown_day4=2`. No other step of the day shows it. | The moment shows on the first or the last screen, or both shots show on one screen |
+| Unresolved step | On the approved clone, day 5 shows no moment: `share_shown_day5=0`. The test also logs `share_unresolved=1`. | The app falls back to the last step of the day, or the test hides the defect by editing the file |
+| Active language | The caption shows `caption.en`. With the Thai toggle on, it shows `caption.th`. A clone with `th` empty shows the English caption. | The English text stays with a Thai text present |
+| Consent line | Each shown moment holds the consent line, in the active language. `en` and `th` are not empty and they differ. A hidden moment holds no consent line. | A moment shows without the line |
+| Media label | A `photo` shot and a `video` shot show different labels | Both show the same label |
+| Level (open question 9) | The approved level 1 clone shows the moment at the named step, and the approved copy of w08 shows it too | The app applies the loops level rule to the moment without a PM decision |
+| No upload | While the test walks all 5 days of the approved clone and clicks every control, `network_calls=0` for `fetch`, `XMLHttpRequest.prototype.send`, and `navigator.sendBeacon`. The DOM holds no `input[type=file]`, no `capture` attribute, and no `form`. The positive control: a `fetch` that the test makes itself makes `network_calls=1`. | A component posts, or the spy does not catch a call |
+| No upload in source | A scan of `apps/storytime/app/[locale]/teacher` and of the new `lib/` files finds `upload_hits=0` for `FormData`, `multipart`, `type="file"`, `"use server"`, and `sendBeacon`, with `files_scanned=<n>` of at least 4. The scan excludes `node_modules` and `.next` by exact name. | A planted line that holds one of the words is not found, or the scan reads 0 files (A4) |
+| Loops unchanged | `phase4-loops-flow.test.tsx` exits 0 on the shipped w01 (it holds `share` on every day) | The share field changes a loop assertion |
+
+**Gate:**
+
+1. The targeted Red command exits 0 on Green, with `shares_parsed=5` and `share_shots=6` in the log.
+2. `phase4-lesson-flow`, `phase4-loops-flow`, `phase4-lesson-media`, `phase4-week-view`, and `phase4-teacher-flag` exit 0 and are not edited. The task 3.8 contract tests exit 0.
+3. `tsc --noEmit` and ESLint on the changed files exit 0. `phase1-quality-gates.sh` exits 0.
+4. Browser rows S1 and S2 of P4.7 pass.
+5. `git diff --stat <phase base>..HEAD -- apps/primary-advantage packages/read-along` is empty.
+
+**Anti-pattern coverage:**
+
+| Anti-pattern | Defense |
+|---|---|
+| A2 | The approval gate is the publish gate of the moment. The draft test and the approved positive control sit in one test file. The consent line is a test row, not a prose claim. |
+| A3 | `shares_parsed`, `share_shots`, `share_shown_day4`, `share_shown_day5`, `share_unresolved`, `network_calls`, `upload_hits`, `files_scanned`: each is a labeled integer that the test parses |
+| A4 | The spy has a positive control. The scan asserts `files_scanned` of at least 4. Each hidden check follows a shown check. |
+| A5 | The plan note says "the app uploads nothing" only with the `network_calls=0` and `upload_hits=0` lines. It states the day 5 unresolved step. |
+| A7 | The scan names exact folder names. No `rg -v` list. |
+| A1, A6, A8 to A16 | Not touched by this task. A16: no worktree. |
+
+**Architecture guardrails:** the share read schema sits in `lib/contracts/week.ts` and uses the existing `biText`. The moment is a small component that the flow renders. The consent line is one constant with `en` and `th` text. A client upload is not in scope, and a later upload needs a new task, a human gate, and a Review B. No hash or checksum enters the test or the schema (AGENTS.md hashing policy).
+
+**Changed-contract risks:** the plan says the two objects are strict. Strict objects reject a later Workbooks field, so the receipt of a new week can fail. Workbooks owns the strict schema, so the app schema matches it. The consent wording is a product text for parents and needs Daniel's approval before release (Phase 6 look check).
+
+**Review applicability for 4.6a:** Review B yes, small: the no-upload probe (file input, `capture`, `fetch`, XHR, beacon, `"use server"`), the strict schema, and the draft gate. Review C yes: the consent line, the Thai caption, and the photo or video label. Adversarial: a small round on a draft week, a shot with an unknown step, a shot with a `file` key, and a day 5 style mismatch. Browser: yes, rows S1 and S2 in P4.7.
+
+### P4.7 Browser rows for tasks 4.4, 4.6, and 4.6a
+
+These rows join the task 4.5 browser check. The task 4.5 rows above stay: `PROJECT_DEV_URL` is a local `next start` of the production build with the teacher flag on and, for the second run, off (404). The viewports stay 1920x1080 and a laptop (default 1366x768). The orchestrator records the port and the commit. Tasks 4.6 and 4.6a do not hold the checkpoint, so the L and S rows run at their own task check, with the same method.
+
+- **Fixtures.** The shipped w01 has the loops draft (loops off). The loops-on run uses an approved copy of w01 (`approval.loops` approved with `date` and `words`) in the review fixture folder of the P3.7 mechanism, never in `content/`. The shipped week stays draft.
+- **Gate self-test.** If the gate adds a font-size limit, it adds a fourth self-test page with 12 px text that must fail the limit. The gate exits non-zero if a self-test page passes.
+
+| Row | Check | Falsification condition |
+|---|---|---|
+| B1 | At 1920x1080 and 1366x768, on a media step (B3 and D6), the open player fits in the viewport with no page scroll. The measured box is logged as `player_w=<n> player_h=<n>`. | The player exceeds the viewport |
+| B2 | On each of the 4 media steps, open then close: the step id on screen is the same as before (`place_kept=4`) | A close returns to the first step |
+| B3 | While the player is open, the "Next step" control stays in the document | The flow unmounts |
+| B4 | Keyboard: Tab reaches the open control, Enter opens, Escape closes, and focus returns (`focus_returned=1`) | Focus is lost |
+| L1 | With the loops off (shipped w01), no loop panel and no recall panel on all 5 days. The step time of A1 reads `4 min`. | A panel shows |
+| L2 | With the loops on (approved copy), the panels show on A1 to A4, A6, and D2, and the recall shows on days 2 to 5. A1 reads `5 min`. | A panel is missing, or A1 reads `4 min` |
+| L3 | With the loops on, the loop panels and the recall at 1920x1080 hold a body text of `min_font_px=<n>` of at least 18, and the page has no horizontal scroll | The text is smaller than 18 px, or the page scrolls sideways |
+| L4 | The drill clip controls and the recall clip controls each have a tap target of at least 44x44 px on the laptop view (`targets=<n>`, n above 0) | A target is smaller, or the list is empty (A4) |
+| S1 | With the loops off, no share moment on any day. With the loops on, the moment shows on A3, B5, C4, D4, and D5 and not on day 5 (`share_shown=5`). | The moment shows with the loops off, or on day 5 |
+| S2 | The moment shows its caption and the consent line inside the viewport at 1920x1080. The request log of the run holds no POST and no request to a storage host (`post_requests=0`). | A POST appears, or the moment is cut off |
+
+**Real person checks.** Daniel's look check of the consent wording and the Thai caption is a Phase 6 person check (rule 11.5). No Phase 4 task claims it.
 
 ## P5: Milestone week integration
 
@@ -832,3 +1076,10 @@ Questions from the Phase 3 refresh. Each has a default, and no question blocks P
    - The date for the remaining missing pictures stays with Phase 5 (task 5.5).
 4. **Tile and home-word audio (PM, Workbooks).** Which Workbooks field carries the tile label recordings and the home word recordings? Default: an app naming table with no entries; no speaker shows.
 5. **Thai reading font (Daniel, Phase 5 look check).** Which font? Default: the system Thai font.
+
+Questions from the Phase 4 refresh r2 (2026-11-10). Each has a default that this strategy already uses. No question blocks the Red role of its task:
+
+6. **Source of the step media (task 4.4; PM, Workbooks).** The week file holds no field that marks a step with media. Which source does task 4.4 use? Default: rule D1 (P4.4). A step opens the player only when a `materials` entry starts with `karaoke videos` or `book audio` and ends with `: "<title>"`, and the title equals `song.title` or a `books[].title`. On w01 this gives `media_steps=4` (B3, B7, D6, E2). Alternative: task 4.4 waits for a Workbooks field such as `steps[].media`. Reason for the default: the wait blocks the Phase 4 checkpoint. The orchestrator asks Workbooks for the field in parallel. When the field arrives, the rule module and its test rows change in one commit.
+7. **Day 5 share step (task 4.6a; PM, Workbooks).** In w01 the day 5 `share` names step D6, but the steps of day 5 are E1 to E5 (D6 is the karaoke step of day 4). Which step is right? Default: the app shows a moment only at a step of its own day, so day 5 shows no moment, and the test logs `share_unresolved=1` without hiding it. Workbooks corrects the file, or says that D6 is right. The app contract adds no cross-day rule for the share step.
+8. **Consent wording (task 4.6a; Daniel).** The consent line for parents has no approved text. Default: the app holds one constant with `en` and `th` text. The tests check that both texts exist, are not empty, and differ. They do not check the words. Daniel judges the words at the Phase 6 look check, and the release waits for that.
+9. **Level rule for the share moment (task 4.6a; PM).** The task text names the approval only, not the level. Default: the moment follows the approval only, so an approved level 1 week and a review week show it. If the PM wants the loops level rule (levels 2 to 4), the Level 1 test row changes in the same commit.
