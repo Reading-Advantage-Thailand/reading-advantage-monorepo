@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { StorytimeWeek } from "../../../../../../lib/contracts/week";
 import { loopsApproved } from "../../../../../../lib/loops";
+import { loopPanelsShow, loopsShow, stepTimeMinutes } from "../../../../../../lib/teacher-loops";
 import {
   shareShotAt,
   SHARE_CONSENT_LINE,
@@ -42,6 +43,11 @@ import { StorytimeSong } from "../../../../st/[level]/[week]/song";
  * of the flow. The moment shows only when the loops part of the week is approved, and it shows
  * only at a step of its own day. The app sends no photo and no video.
  *
+ * An approved week of level 2, 3, or 4 holds the teacher loops (plan task 4.6, spec AC-13.7 and
+ * AC-13.8). The opening screen shows the recall cards of the day, a step field shows its loop
+ * panel by the field, and the step time is `loopMinutes ?? minutes`. A review week holds only
+ * the recall and the step time. Every clip plays from the signed map, and nothing autoplays.
+ *
  * Every value comes from the week file. The view holds no string that names a week item, so the
  * flow of a draft week and the flow of a published week differ only by their data.
  *
@@ -51,6 +57,9 @@ import { StorytimeSong } from "../../../../st/[level]/[week]/song";
 
 /** One step of a lesson day. */
 type LessonStep = StorytimeWeek["scripts"][number]["steps"][number];
+
+/** One lesson day. */
+type LessonScript = StorytimeWeek["scripts"][number];
 
 /** One teacher note of a step. */
 type LessonNote = StorytimeWeek["scripts"][number]["steps"][number]["en"];
@@ -234,6 +243,84 @@ function ShareMomentView({
   );
 }
 
+/**
+ * Renders the play control of one bank clip.
+ *
+ * The control shows only when the signed map holds the file. The control plays nothing on
+ * render; a click plays the signed URL once.
+ * @param props.file The bank file of the clip.
+ * @param props.mediaUrls The signed media URL of each file name.
+ * @returns The clip control, or `null` when the map holds no signed URL.
+ */
+function ClipControl({
+  file,
+  mediaUrls,
+}: {
+  file: string;
+  mediaUrls: Record<string, string>;
+}) {
+  const url = mediaUrls[file];
+  if (!url) return null;
+  return (
+    <button
+      type="button"
+      data-clip-path={file}
+      data-clip-url={url}
+      onClick={() => void new Audio(url).play().catch(() => {})}
+      className="rounded-full border border-[#92400e] bg-[#fcd34d] px-2 py-0.5 text-[#92400e]"
+    >
+      Play clip
+    </button>
+  );
+}
+
+/** The props of the recall view. */
+interface RecallViewProps {
+  /** The lesson day, 1 to 5. */
+  day: number;
+  /** The recall of the day. */
+  recall: NonNullable<LessonScript["recall"]>;
+  /** `true` when the Thai toggle is on. */
+  thai: boolean;
+  /** The signed media URL of each file name. */
+  mediaUrls: Record<string, string>;
+}
+
+/**
+ * Renders the recall cards of a lesson day (plan task 4.6, spec AC-13.7).
+ *
+ * The view shows the ask line of the day and one card for each item, with the play control of
+ * the recording of the card when the signed map holds the file.
+ * @param props The props of the recall view.
+ * @returns The recall region of the day.
+ */
+function RecallView({ day, recall, thai, mediaUrls }: RecallViewProps) {
+  return (
+    <section
+      aria-label="The recall cards"
+      data-recall-day={day}
+      className="flex flex-col gap-3 rounded-2xl border border-[#92400e] bg-[#fffaf0] p-4"
+    >
+      <h2 className="text-xl font-semibold">The recall cards</h2>
+      <p className="text-lg" lang={thai ? "th" : "en"}>
+        {pick(recall.ask, thai)}
+      </p>
+      <ul className="flex flex-wrap gap-2">
+        {recall.items.map((card, index) => (
+          <li
+            key={index}
+            data-recall-card={index}
+            className="flex items-center gap-2 rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
+          >
+            {card.text}
+            {card.audio ? <ClipControl file={card.audio} mediaUrls={mediaUrls} /> : null}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 /** The props of the step view. */
 interface StepViewProps {
   /** The step of the day. */
@@ -262,6 +349,10 @@ interface StepViewProps {
   share: ShareMoment | null;
   /** The shot of the step, or `null` when no shot names the step. */
   shot: ShareShot | null;
+  /** `true` when the loops of the week show, so the step shows the loop minutes. */
+  loops: boolean;
+  /** `true` when the loop panels show, so a step field shows its panel. */
+  panels: boolean;
 }
 
 /**
@@ -283,8 +374,13 @@ function StepView({
   locale,
   share,
   shot,
+  loops,
+  panels,
 }: StepViewProps) {
   const note = noteOf(step, thai);
+  const drill = panels ? (step.blendDrill ?? null) : null;
+  const sound = panels ? (step.soundLoop ?? null) : null;
+  const sight = panels ? (step.sightWords ?? null) : null;
   return (
     <section
       aria-label={`The step ${step.id}`}
@@ -299,8 +395,76 @@ function StepView({
         <h2 className="text-2xl font-semibold" lang={thai ? "th" : "en"}>
           {pick(step.title, thai)}
         </h2>
-        <span className="text-lg text-neutral-600">{step.minutes} min</span>
+        <span className="text-lg text-neutral-600">{stepTimeMinutes(step, loops)} min</span>
       </header>
+
+      {sound ? (
+        <section
+          data-loop="sound-loop"
+          className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#fcd34d] p-4 text-[#92400e]"
+        >
+          <h3 className="text-lg font-semibold">The sound loop</h3>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(sound.correct, thai)}
+          </p>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(sound.practise, thai)}
+          </p>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(sound.retest, thai)}
+          </p>
+        </section>
+      ) : null}
+
+      {drill ? (
+        <section
+          data-loop="blend-drill"
+          data-drill-repeats={drill.repeats}
+          className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#fcd34d] p-4 text-[#92400e]"
+        >
+          <h3 className="text-lg font-semibold">The blend drill</h3>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(drill.model, thai)}
+          </p>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(drill.lead, thai)}
+          </p>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(drill.test, thai)}
+          </p>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(drill.correction, thai)}
+          </p>
+          <ul className="flex flex-col gap-1">
+            {drill.words.map((word, wordIndex) => (
+              <li key={wordIndex} className="flex flex-wrap items-center gap-2 text-lg">
+                <span className="font-semibold">{word.word}</span>
+                <span>{word.sounds.join(" ")}</span>
+                {(word.audio ?? []).map((file) => (
+                  <ClipControl key={file} file={file} mediaUrls={mediaUrls} />
+                ))}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {sight ? (
+        <section
+          data-loop="sight-words"
+          data-sight-seconds={sight.seconds}
+          className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#92400e] p-4 text-white"
+        >
+          <h3 className="text-lg font-semibold">The sight words</h3>
+          <p className="text-lg">{sight.words.join(" · ")}</p>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(sight.slide, thai)}
+          </p>
+          <p className="text-lg" lang={thai ? "th" : "en"}>
+            {pick(sight.check, thai)}
+          </p>
+        </section>
+      ) : null}
 
       {shot && share ? <ShareMomentView share={share} shot={shot} thai={thai} /> : null}
 
@@ -482,6 +646,9 @@ export function TeacherLessonFlow({
   // The share moment shows only when the loops part of the week is approved (rule D23).
   const share = loopsApproved(week) ? (script?.share ?? null) : null;
   const shot = shareShotAt(share ?? undefined, step?.id);
+  // The teacher loops show only under the approval and level rule (plan task 4.6).
+  const loops = loopsShow(week);
+  const panels = loopPanelsShow(week);
 
   // The Escape key closes the open player, and the focus returns to the control that opened it.
   useEffect(() => {
@@ -547,6 +714,10 @@ export function TeacherLessonFlow({
         </div>
       </header>
 
+      {screen === 0 && loops && script?.recall ? (
+        <RecallView day={day} recall={script.recall} thai={thai} mediaUrls={mediaUrls} />
+      ) : null}
+
       {screen === 0 ? (
         <>
           <section aria-label="The opening routine" className="flex flex-col gap-3">
@@ -582,6 +753,7 @@ export function TeacherLessonFlow({
 
       {step ? (
         <StepView
+          key={step.id}
           step={step}
           index={screen}
           thai={thai}
@@ -595,6 +767,8 @@ export function TeacherLessonFlow({
           locale={locale}
           share={share}
           shot={shot}
+          loops={loops}
+          panels={panels}
         />
       ) : null}
 
