@@ -2,8 +2,8 @@
  * The look of Storytime, option 1 "Storybook Quest" (track storytime_look_20261107, Phase 2,
  * spec FR-2). A painted place sits behind every week screen, a hero window (the frame) holds the
  * game bar, the crest, and the title plaque, and the cards and buttons take the plaque bevel of
- * the cover art. The study CSS is the source; the changes of the port are: the pieces come from
- * `app/look/pieces/` through relative url() (never a root-absolute path, M30), the place is
+ * the cover art. The study CSS is the source; the changes of the port are: the art and the logo
+ * come from `app/look/` through relative url() (never a root-absolute path, M30), the place is
  * carried by `data-place` and `data-hero` on `main` (Q36, no `:has()`), the hero is chosen by
  * `header[data-hero]` (Q24), and no rule selects by Tailwind class text (Q30).
  *
@@ -104,6 +104,7 @@ main[data-place="meadow"][data-hero="meadow"]::before { background-position: 50%
  * lower edge (the frame of `app/[locale]/frame.tsx`). ---- */
 header[data-hero] {
   position: relative;
+  container-type: inline-size;
   margin: 0 -16px 36px;
   background-color: #2b6a3a;
   background-repeat: no-repeat;
@@ -152,30 +153,33 @@ header[data-hero="band"] {
   border-radius: 999px;
 }
 
-/* The Storytime Advantage logo replaces the sprout crest (spec FR-4, AC-4.3, Q44). It is a
- * square drawing of the brand tones. */
+/* The Storytime Advantage logo replaces the sprout crest (spec FR-4, AC-4.3, Q44). It sits at the
+ * top left, beside the level and week label, and away from the plaque (remediation r1, finding
+ * F-1: the old bottom-center spot covered the title). Its height is 48 CSS px or more. */
 header[data-hero] [data-logo] {
   position: absolute;
-  left: 50%;
-  bottom: 31px;
-  translate: -50% 0;
+  left: 16px;
+  top: 8px;
   display: block;
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   z-index: 2;
   border-radius: 10px;
   object-fit: contain;
   filter: drop-shadow(0 3px 0 rgba(58, 24, 4, 0.35));
 }
 header[data-hero="band"] [data-logo] {
-  width: 36px;
-  height: 36px;
-  bottom: 22px;
+  top: 8px;
+  width: 48px;
+  height: 48px;
 }
 
-/* The title plaque: the week title on an amber plaque with a brown edge and a crystal tip on each
- * side. The plaque wraps (no `nowrap`), so a long title never widens the page. The title reads at
- * about 80 % of the plaque height and is centered on both axes (spec FR-4 (d), AC-4.6, Q42). */
+/* The title plaque: the week title on an amber plaque with a brown edge. The frame hands the title
+ * length to the CSS (`--title-chars`), and the font follows the plaque width, so every shipped
+ * title (6 to 13 characters) stays on one line. A 60-character title stops at the 24 px floor and
+ * wraps there. The height follows the font: line-height 1.25 and no vertical padding, so the font
+ * is 80 % of the line box and the title is centered on both axes (spec FR-4 (d), AC-4.6,
+ * remediation r1, finding F-2). */
 header[data-hero] > h1 {
   position: absolute;
   left: 0;
@@ -183,45 +187,36 @@ header[data-hero] > h1 {
   bottom: -34px;
   margin: 0 auto;
   width: fit-content;
-  min-width: 62%;
+  min-width: 0;
   max-width: calc(100% - 24px);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 96px;
-  padding: 0 28px;
+  min-height: 30px;
+  padding: 0 16px;
   font-family: var(--sq-display);
-  font-size: 78px;
+  /* The frame sets the fitted size inline from the title length (finding F-2); 72 px is the
+   * default. The size stays a px value so the rule reads as a plain height rule. */
+  font-size: 72px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.25;
   color: var(--st-brown);
   text-align: center;
+  white-space: normal;
   text-shadow: none;
   background-color: var(--st-amber);
-  border: 4px solid var(--st-brown);
+  /* A ring, not a border: the box height stays one line box per line, so the font stays 80 % of
+   * the plaque height (AC-4.6, finding F-2). */
   border-radius: 12px;
-  box-shadow: var(--sq-shadow);
+  box-shadow: 0 0 0 4px var(--st-brown), var(--sq-shadow);
 }
-header[data-hero] > h1::before,
-header[data-hero] > h1::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 42px;
-  height: 56px;
-  translate: 0 -50%;
-  background: center / contain no-repeat;
-}
-header[data-hero] > h1::before { left: -37px; background-image: url("look/pieces/q-tip-l.svg"); }
-header[data-hero] > h1::after { right: -37px; background-image: url("look/pieces/q-tip-r.svg"); }
-/* The band plaque is slimmer. */
+/* The band plaque is slimmer and keeps the floor font at 24 px. */
 header[data-hero="band"] > h1 {
-  min-height: 64px;
+  min-height: 30px;
   bottom: -28px;
-  min-width: 40%;
-  padding: 0 24px;
-  font-size: 50px;
+  padding: 0 16px;
+  font-size: 44px;
 }
 
 /* ---- Section titles. ---- */
@@ -600,7 +595,7 @@ main[data-place] button:active:not(:disabled) {
   padding: 2px 22px 4px;
   font-size: 26px;
   color: #fff;
-  text-shadow: 0 2px 0 rgba(58, 24, 4, 0.55);
+  text-shadow: none;
   background: var(--st-brown);
   border: 3px solid var(--st-amber);
   box-shadow: 0 4px 0 rgba(58, 24, 4, 0.38);
@@ -787,11 +782,6 @@ main[data-place] button:active:not(:disabled) {
     bottom: -16px;
     padding: 0 18px 2px;
     font-size: 20px;
-  }
-  header[data-hero] > h1::before,
-  header[data-hero] > h1::after {
-    width: 24px;
-    height: 32px;
   }
   main[data-place] {
     gap: 12px;

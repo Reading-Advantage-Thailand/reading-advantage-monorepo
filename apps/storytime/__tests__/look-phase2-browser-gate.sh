@@ -223,23 +223,24 @@ function contrastOf(one, two) {
   return (high + 0.05) / (low + 0.05);
 }
 
-/** True when the colour reads as navy: blue dominates, and the colour is dark. */
-function isNavyColor(color) {
-  return color.b > color.r + 20 && color.b > color.g && color.b >= 40 && color.r <= 80 && color.g <= 80;
-}
-
 /** True when the colour reads as cream: light, warm, and not pure white. */
 function isCreamColor(color) {
   return color.r >= 240 && color.g >= 220 && color.b <= 240 && color.r >= color.g && color.g >= color.b && relativeLuminance(color) >= 0.7;
 }
 
-/** The verdict of one mode button: opaque cream, a navy label, and 4.5:1 or more. */
+/** True when the colour reads as brown: red dominates, then green, then blue, and it is dark.
+ *  spec FR-4, Daniel 2026-11-10: the brand chrome labels are brown. */
+function isBrownColor(color) {
+  return color.r > color.g && color.g > color.b && color.r >= 100 && color.g <= 120 && color.b <= 80;
+}
+
+/** The verdict of one mode button: opaque cream, a brown label, and 4.5:1 or more. */
 function modeButtonVerdict(background, label) {
   const bg = parseCssColor(background);
   const fg = parseCssColor(label);
   if (!bg || !fg) return false;
   if (bg.a !== 1) return false;
-  if (!isCreamColor(bg) || !isNavyColor(fg)) return false;
+  if (!isCreamColor(bg) || !isBrownColor(fg)) return false;
   return contrastOf(bg, fg) >= 4.5;
 }
 
@@ -264,14 +265,15 @@ function lyricVerdict(beforeCount, afterIndex, expected) {
   return beforeCount === 0 && afterIndex === expected;
 }
 
-/** The verdict of one action chip: 16 px or more, opaque, navy, and 4.5:1 or more. */
+/** The verdict of one action chip: 16 px or more, opaque, a brown label, and 4.5:1 or more.
+ *  spec FR-4, Daniel 2026-11-10: brown text on amber. */
 function chipVerdict(fontPx, background, label) {
   const bg = parseCssColor(background);
   const fg = parseCssColor(label);
   if (!Number.isFinite(fontPx) || fontPx < 16) return false;
   if (!bg || !fg) return false;
   if (bg.a !== 1) return false;
-  if (!isNavyColor(fg)) return false;
+  if (!isBrownColor(fg)) return false;
   return contrastOf(bg, fg) >= 4.5;
 }
 
@@ -285,14 +287,15 @@ function defaultSongVerdict(activeRows, filledRows) {
   return activeRows === 0 && filledRows === 0;
 }
 
-/** The verdict of the done badge: 32 x 32 px, #F5B82E, a navy check, and the locale label. */
+/** The verdict of the done badge: 32 x 32 px, #fcd34d, a brown check, and the locale label.
+ *  spec FR-4, Daniel 2026-11-10: the brand tones replace gold and navy. */
 function badgeVerdict(width, height, background, check, name, locale) {
   const bg = parseCssColor(background);
   const fg = parseCssColor(check);
   const expected = locale === "en" ? "Done" : "เสร็จแล้ว";
   if (bg === null || fg === null) return false;
-  if (bg.r !== 245 || bg.g !== 184 || bg.b !== 46) return false;
-  if (!isNavyColor(fg)) return false;
+  if (bg.r !== 252 || bg.g !== 211 || bg.b !== 77) return false;
+  if (!isBrownColor(fg)) return false;
   if (Math.round(width) !== 32 || Math.round(height) !== 32) return false;
   return typeof name === "string" && name.trim() === expected;
 }
@@ -313,13 +316,14 @@ function framePadVerdict(paddingSides, insetPx) {
   return Math.min(...paddingSides) - insetPx >= 12;
 }
 
-/** The verdict of the reader page counter: a cream pill, a navy label, and 4.5:1 or more. */
+/** The verdict of the reader page counter: a cream pill, a brown label, and 4.5:1 or more.
+ *  spec FR-4, Daniel 2026-11-10: the brand tones replace navy. */
 function counterVerdict(background, label) {
   const bg = parseCssColor(background);
   const fg = parseCssColor(label);
   if (bg === null || fg === null) return false;
   if (bg.a !== 1) return false;
-  if (!isCreamColor(bg) || !isNavyColor(fg)) return false;
+  if (!isCreamColor(bg) || !isBrownColor(fg)) return false;
   return contrastOf(bg, fg) >= 4.5;
 }
 
@@ -473,24 +477,25 @@ const controls = [
   motionOffender("none", "none", "0.15s") === false,
   motionOffender("none", "all", "0s") === false,
   motionOffender("none", "opacity, color", "0s, 0s") === false,
-  modeButtonVerdict("rgb(255, 248, 225)", "rgb(11, 42, 107)") === true,
-  modeButtonVerdict("rgba(255, 248, 225, 1)", "#0b2a6b") === true,
+  // spec FR-4, Daniel 2026-11-10: the brand label is brown.
+  modeButtonVerdict("rgb(255, 248, 225)", "rgb(146, 64, 14)") === true,
+  modeButtonVerdict("rgba(255, 248, 225, 1)", "#92400e") === true,
   hudVerdict(0, 14, "Level 2 · Week 1", "en") === true,
   hudVerdict(0, 14.5, "ระดับ 2 · สัปดาห์ 1", "th") === true,
   spacingVerdict(0, 0) === true,
   doneMarkVerdict(0, 1) === true,
   doneMarkVerdict(0, 3) === true,
   lyricVerdict(0, 1, 1) === true,
-  chipVerdict(16, "rgb(255, 248, 225)", "rgb(11, 42, 107)") === true,
-  chipVerdict(16.5, "rgba(255, 248, 225, 1)", "#0b2a6b") === true,
+  chipVerdict(16, "rgb(255, 248, 225)", "rgb(146, 64, 14)") === true,
+  chipVerdict(16.5, "rgba(255, 248, 225, 1)", "#92400e") === true,
   wordGapVerdict(0.25, 0) === true,
   wordGapVerdict(0.3, 0) === true,
   defaultSongVerdict(0, 0),
-  badgeVerdict(32, 32, "rgb(245, 184, 46)", "rgb(19, 36, 78)", "Done", "en"),
-  badgeVerdict(32, 32, "#f5b82e", "#13244e", "เสร็จแล้ว", "th"),
+  badgeVerdict(32, 32, "rgb(252, 211, 77)", "rgb(146, 64, 14)", "Done", "en"),
+  badgeVerdict(32, 32, "#fcd34d", "#92400e", "เสร็จแล้ว", "th"),
   pressedVerdict("true", "rgb(224, 156, 28)", "rgb(255, 231, 161)"),
   framePadVerdict([19, 19, 19, 19], 7),
-  counterVerdict("rgb(255, 250, 240)", "rgb(19, 36, 78)"),
+  counterVerdict("rgb(255, 250, 240)", "rgb(146, 64, 14)"),
   nativeDurationVerdict(0, 0),
   // The control: the same plaque box holds a text box inside it, and the V1 Thai title holds 60.
   plaqueFitsVerdict(plaqueOverflowPx({ top: 100, bottom: 140 }, { top: 108, bottom: 132 }), 0),
@@ -980,7 +985,12 @@ await guarded("row 3 frame", async () => {
       if (locale === "th") {
         await page.evaluate((text) => {
           const plaque = document.querySelector("header[data-hero] > h1");
-          if (plaque) plaque.textContent = text;
+          if (plaque) {
+            plaque.textContent = text;
+            // spec FR-4 (d), Daniel 2026-11-10: the plaque sizes the font from the title length,
+            // so the injected 60-character title must hand over its own length (finding F-2).
+            plaque.style.setProperty("--title-chars", String(text.length));
+          }
         }, THAI_LONG_TITLE);
         await settle(page);
       }
@@ -1091,8 +1101,9 @@ await guarded("row 4 assets", async () => {
     }
   }
   emit("css_urls_found", urls.size);
+  // spec FR-4, Daniel 2026-11-10: the plaque tips are gone, so the built CSS names no piece SVG.
   row("assets built CSS files",
-    counts.webp === 10 && counts.svg === 4 && fontVerdict(lookServed.size, counts.woff2) && lookFonts.length === 2 && bad === 0 && remoteFonts === 0 && remoteImports === 0,
+    counts.webp === 10 && counts.svg === 0 && fontVerdict(lookServed.size, counts.woff2) && lookFonts.length === 2 && bad === 0 && remoteFonts === 0 && remoteImports === 0,
     `webp_files=${counts.webp} svg_files=${counts.svg} look_woff2_files=${lookServed.size} woff2_files_total=${counts.woff2} look_font_sources=${lookFonts.length} font_remote_urls=${remoteFonts} css_remote_imports=${remoteImports} asset_bad=${bad} urls_checked=${urls.size}`);
   // naturalWidth of each place matches its pin (-p is 1080 wide, -d is 1920 wide).
   let widthBad = 0;

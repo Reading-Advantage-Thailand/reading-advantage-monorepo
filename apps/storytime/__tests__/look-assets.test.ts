@@ -34,7 +34,6 @@ const PIECES = ["q-tip-l.svg", "q-tip-r.svg"] as const;
 const FONTS = ["fredoka-latin.woff2", "mitr-500-thai.woff2"] as const;
 /** The largest place file (strategy A1). */
 const PLACE_BYTES_MAX = 250_000;
-const SVG_BYTES_MAX = 20 * 1024;
 const FONT_BYTES_MAX = 60 * 1024;
 
 /**
@@ -207,31 +206,21 @@ describe("the assets of the look (AC-2.2, FR-2)", () => {
     expect([...used].sort()).toEqual([...PLACES].sort());
   });
 
-  it.each(PIECES)("A3 %s is a small inert SVG file with a viewBox", (name) => {
-    const bytes = readBytes(resolve(piecesDir, name));
-    expect(bytes.length, `${name} is ${bytes.length} bytes`).toBeLessThanOrEqual(SVG_BYTES_MAX);
-    expect(scanSvg(bytes.toString("utf8")), `${name} must hold no active content`).toEqual([]);
+  it.each(PIECES)("A3 %s must be gone: the crystal tips are removed", (name) => {
+    // spec FR-4 (c), Daniel 2026-11-10: the crystal tips go, so no piece file remains.
+    expect(existsSync(resolve(piecesDir, name)), `${name} must be gone`).toBe(false);
   });
 
-  it("A4 every rule that draws a tip pins the ratio of its own viewBox, and no rule draws the bar or the crest", () => {
-    // spec FR-4 (a), Daniel 2026-11-10: the game bar and the crest go, so their rules go too.
-    const boxes: Record<string, { width: number; height: number }> = {};
-    for (const name of ["q-tip-l.svg", "q-tip-r.svg"]) {
-      const box = viewBoxSize(readBytes(resolve(piecesDir, name)).toString("utf8"));
-      expect(box, `${name} must hold a readable viewBox`).not.toBeNull();
-      boxes[name] = box!;
-    }
+  it("A4 no rule draws a piece, and the piece folder holds no SVG", () => {
+    // spec FR-4 (c), Daniel 2026-11-10: the tips are gone, so the plaque draws no piece.
     expect(existsSync(lookCssPath), "Missing apps/storytime/app/look.css").toBe(true);
     const css = readFileSync(lookCssPath, "utf8");
-    const { violations, ratioRules } = checkRatios(css, boxes);
-    expect(violations).toEqual([]);
-    const tipRules = parseCss(css).filter((rule) =>
-      ["q-tip-l.svg", "q-tip-r.svg"].some((name) =>
-        rule.declarations.some((declaration) => declaration.value.includes(name)),
-      ),
-    );
-    expect(`tip_rules=${tipRules.length}`, "look.css must draw the two tips").toBe("tip_rules=2");
-    expect(`tip_ratio_rules=${ratioRules["q-tip-l.svg"] ?? 0}`).toMatch(/^tip_ratio_rules=[0-9]+$/);
+    const pieceUrls = [...stripCssComments(css).matchAll(/look\/pieces\/[^"')]+/g)].map((match) => match[0]);
+    expect(pieceUrls, "look.css must draw no piece").toEqual([]);
+    const svgs = existsSync(piecesDir)
+      ? readdirSync(piecesDir).filter((name) => name.endsWith(".svg"))
+      : [];
+    expect(svgs, "the piece folder must hold no SVG").toEqual([]);
     expect(css.includes("q-bar.svg"), "look.css must draw no game bar").toBe(false);
     expect(css.includes("q-crest.svg"), "look.css must draw no crest").toBe(false);
   });
