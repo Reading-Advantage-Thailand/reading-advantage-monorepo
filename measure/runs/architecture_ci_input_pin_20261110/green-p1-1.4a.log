@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: green
+status: done
+track: architecture_ci_input_pin_20261110
+phase: P1 task 1.4a
+role_base_sha: f162e92cb4fb95b9fd4500ad3870eb4c2f8f47a2
+commits: c8ba91d8c1c0439fb455a501bf241b07be9a7156
+tests_run: gate 1 CI=true pnpm exec vitest run --maxWorkers=1 <cost file> <pin file> exits 0 (tests_total=28, tests_failed=0, tests_passed=28); gate 2a package suite through heavy-run p2 cap 1800 exits 1 (suite_files=33, suite_tests=279, tests_failed=1, tests_passed=278); gate 2b check-types through heavy-run p2 exits 0; gate 3 lint through heavy-run p2 exits 0; gate 4 build-graph update through heavy-run p2 exits 0 (graph_files=3, graph_nodes=296->345)
+files_changed: packages/architecture-enforcement/src/analyzer.ts, packages/architecture-enforcement/src/v2-manifest-validation.ts, packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts
+plan_updates: task 1.4a marked [x] with Done c8ba91d8c and the gate table; task 1.4 stays [~]
+known_failures: baseline-validation.test.ts "rejects stale synchronous v2 implementation and input hashes" (lines 535-547) fails while the committed implementation tree hash is stale; the task 1.4 refresh makes it current, and the package suite reruns as the 1.4 gate
+handoff: task 1.4a done at c8ba91d8c; run task 1.4 and rerun the package suite after the refresh
+END_MEASURE_AGENT_RESULT
