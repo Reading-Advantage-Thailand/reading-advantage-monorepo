@@ -48,7 +48,7 @@ export function WeekTileLinks({
         <li key={tile.id} className="[@media(max-height:500px)]:flex-1">
           <Link
             href={tile.href}
-            className="flex min-h-16 items-center gap-3 rounded-2xl border border-neutral-300 p-3"
+            className="flex min-h-16 items-center gap-3 rounded-2xl border border-[#92400e] p-3"
           >
             {tile.pictureFile ? (
               <img
@@ -227,7 +227,7 @@ export function StorytimeQuestions({
               aria-label={labels.picture.replace("{n}", String(position + 1))}
               aria-pressed={mark === "right" ? true : mark === "gentle" ? false : undefined}
               onClick={() => choose(choice.page)}
-              className="flex min-h-16 min-w-16 flex-col items-center gap-2 rounded-2xl border border-neutral-300 p-2 [@media(max-height:500px)]:gap-1"
+              className="flex min-h-16 min-w-16 flex-col items-center gap-2 rounded-2xl border border-[#92400e] p-2 [@media(max-height:500px)]:gap-1"
             >
               {choice.file ? (
                 <img
@@ -256,7 +256,7 @@ export function StorytimeQuestions({
       <button
         type="button"
         onClick={endScreen}
-        className="min-h-12 rounded-xl border border-neutral-300 px-4"
+        className="min-h-12 rounded-xl border border-[#92400e] bg-[#92400e] px-4 text-white"
       >
         {labels.skip}
       </button>

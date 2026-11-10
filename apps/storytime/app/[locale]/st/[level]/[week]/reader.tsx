@@ -460,7 +460,7 @@ export function StorytimeReader({
 
   const pendingFile = pendingIndex === null ? undefined : book.pages[pendingIndex]?.image?.file;
   const audioButtonClass =
-    "min-h-12 rounded-xl border border-neutral-300 px-4 aria-pressed:border-amber-500 aria-pressed:bg-amber-100";
+    "min-h-12 rounded-xl border border-[#92400e] px-4 aria-pressed:border-amber-500 aria-pressed:bg-amber-100";
 
   const image = page?.image;
 
@@ -538,7 +538,7 @@ export function StorytimeReader({
               aria-label={labels.previousPage}
               disabled={pageIndex === 0}
               onClick={() => goToPage(pageIndex - 1)}
-              className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+              className="min-h-12 rounded-xl border border-[#92400e] bg-[#92400e] px-4 text-white disabled:opacity-40"
             >
               ←
             </button>
@@ -548,7 +548,7 @@ export function StorytimeReader({
               aria-label={labels.nextPage}
               disabled={pendingIndex === null && pageIndex >= book.pages.length - 1 && !hasEnd}
               onClick={goToNext}
-              className="min-h-12 rounded-xl border border-indigo-700 bg-indigo-700 px-4 text-white disabled:opacity-40"
+              className="min-h-12 rounded-xl border border-[#92400e] bg-[#92400e] px-4 text-white disabled:opacity-40"
             >
               →
             </button>

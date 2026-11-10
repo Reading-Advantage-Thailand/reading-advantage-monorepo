@@ -544,7 +544,7 @@ export function StorytimeDecodable({
                 playPhoneme(element.audio!);
                 soundOwnerRef.current = true;
               }}
-              className="min-h-12 rounded-xl border border-neutral-300 px-4 aria-pressed:border-amber-500 aria-pressed:bg-amber-100"
+              className="min-h-12 rounded-xl border border-[#92400e] px-4 aria-pressed:border-amber-500 aria-pressed:bg-amber-100"
             >
               {soundPlaying ? labels.playing : labels.playSound}
             </button>
@@ -573,7 +573,7 @@ export function StorytimeDecodable({
                     type="button"
                     onClick={() => onWordTap(piece.word!)}
                     style={wordBoxStyle(piece.word, index === pieces.findIndex((entry) => entry.word))}
-                    className="inline-flex min-h-[44px] items-center rounded hover:bg-neutral-100"
+                    className="inline-flex min-h-[44px] items-center rounded hover:bg-[#fef3c7]"
                   >
                     {piece.word}
                   </button>
@@ -600,7 +600,7 @@ export function StorytimeDecodable({
               stopBlendSequence();
               setPageIndex((index) => Math.max(0, index - 1));
             }}
-            className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+            className="min-h-12 rounded-xl border border-[#92400e] bg-[#92400e] px-4 text-white disabled:opacity-40"
           >
             ←
           </button>
@@ -612,7 +612,7 @@ export function StorytimeDecodable({
               stopBlendSequence();
               setPageIndex((index) => Math.min((decodable?.pages.length ?? 1) - 1, index + 1));
             }}
-            className="min-h-12 rounded-xl border border-neutral-300 px-4 disabled:opacity-40"
+            className="min-h-12 rounded-xl border border-[#92400e] bg-[#92400e] px-4 text-white disabled:opacity-40"
           >
             →
           </button>
@@ -628,7 +628,7 @@ export function StorytimeDecodable({
                   <button
                     type="button"
                     onClick={() => onWordTap(word)}
-                    className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-neutral-300 px-4"
+                    className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-[#92400e] bg-[#fcd34d] px-4 text-[#92400e]"
                   >
                     {word}
                   </button>

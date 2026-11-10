@@ -89,7 +89,7 @@ export default async function TeacherDayPage({
       <p className="text-neutral-600">Day {day}</p>
       <Link
         href={`/${locale}/teacher/${route.level}/${route.week}`}
-        className="w-fit rounded-xl border border-neutral-300 px-4 py-2"
+        className="w-fit rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
       >
         Back to the week
       </Link>

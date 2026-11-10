@@ -132,7 +132,8 @@ function placesUsed(pick: (part: (typeof PARTS)[number]) => { place: string; her
 }
 
 describe("the frame of the look (AC-2.2)", () => {
-  it("F1 renders one hero header from the variant, the week title, and one game bar", async () => {
+  it("F1 renders one hero header from the variant, the week title, and one level and week label", async () => {
+    // spec FR-4 (a), Daniel 2026-11-10: the game bar goes, and the label stays as text.
     for (const variant of ["cover", "band"] as const) {
       const { container, unmount } = await renderFrame({ level: 2, week: 1, title: "Hello, I am Pip", variant });
       const headers = container.querySelectorAll("header");
@@ -141,7 +142,8 @@ describe("the frame of the look (AC-2.2)", () => {
       const heading = container.querySelector("h1");
       expect(heading?.textContent ?? "", "the h1 holds the week title").toContain("Hello, I am Pip");
       expect(heading?.getAttribute("lang") ?? "", "the h1 keeps its lang").not.toBe("");
-      expect(`bars=${container.querySelectorAll("[data-game-bar]").length}`).toBe("bars=1");
+      expect(`bars=${container.querySelectorAll("[data-game-bar]").length}`).toBe("bars=0");
+      expect(`labels=${container.querySelectorAll("[data-level-week]").length}`).toBe("labels=1");
       unmount();
     }
   });
@@ -157,32 +159,35 @@ describe("the frame of the look (AC-2.2)", () => {
     }
   });
 
-  it("F2 the game bar shows the level and the week of the route, never a fixed pair", async () => {
+  it("F2 the level and week label shows the level and the week of the route, never a fixed pair", async () => {
+    // spec FR-4 (a), Daniel 2026-11-10: the game bar goes, and the label keeps the numbers.
     const first = await renderFrame({ level: 3, week: 5, title: "Week five", variant: "cover" });
-    const numbers = (first.container.querySelector("[data-game-bar]")?.textContent ?? "").match(/\d+/g);
-    expect(numbers, "the bar of level 3, week 5 shows 3 then 5").toEqual(["3", "5"]);
+    const numbers = (first.container.querySelector("[data-level-week]")?.textContent ?? "").match(/\d+/g);
+    expect(numbers, "the label of level 3, week 5 shows 3 then 5").toEqual(["3", "5"]);
     first.unmount();
     const second = await renderFrame({ level: 2, week: 1, title: "Week one", variant: "band" });
-    const again = (second.container.querySelector("[data-game-bar]")?.textContent ?? "").match(/\d+/g);
-    expect(again, "the bar of level 2, week 1 shows 2 then 1").toEqual(["2", "1"]);
+    const again = (second.container.querySelector("[data-level-week]")?.textContent ?? "").match(/\d+/g);
+    expect(again, "the label of level 2, week 1 shows 2 then 1").toEqual(["2", "1"]);
     second.unmount();
   });
 
-  it("F3 the crest and the tips are decorative and the bar text is read once", async () => {
+  it("F3 the logo carries the text alternative and the label text is read once", async () => {
+    // spec FR-4 (b), Daniel 2026-11-10: the crest goes, and the logo takes its place.
     const { container } = await renderFrame({ level: 2, week: 1, title: "Hello", variant: "cover" });
     const header = container.querySelector("header")!;
-    for (const picture of header.querySelectorAll("img, svg")) {
-      const hidden = picture.getAttribute("aria-hidden") === "true" || picture.getAttribute("alt") === "";
-      expect(hidden, `${picture.tagName.toLowerCase()} in the header must be decorative`).toBe(true);
-    }
-    const bar = container.querySelector<HTMLElement>("[data-game-bar]");
-    expect(bar, "the frame must render the game bar").not.toBeNull();
-    expect(bar!.closest("[aria-hidden='true']"), "the bar must not sit inside aria-hidden").toBeNull();
-    const barText = readableText(bar!).replace(/\s+/g, " ").trim();
-    expect(barText.length, "the bar must hold readable text").toBeGreaterThan(0);
+    const pictures = [...header.querySelectorAll("img, svg")];
+    expect(`logo_pictures=${pictures.length}`, "the header must hold one logo").toBe("logo_pictures=1");
+    const logo = pictures[0]!;
+    expect(logo.tagName.toLowerCase(), "the logo must be an img").toBe("img");
+    expect(logo.getAttribute("alt"), "the logo must read Storytime Advantage").toBe("Storytime Advantage");
+    const label = container.querySelector<HTMLElement>("[data-level-week]");
+    expect(label, "the frame must render the level and week label").not.toBeNull();
+    expect(label!.closest("[aria-hidden='true']"), "the label must not sit inside aria-hidden").toBeNull();
+    const labelText = readableText(label!).replace(/\s+/g, " ").trim();
+    expect(labelText.length, "the label must hold readable text").toBeGreaterThan(0);
     const all = readableText(header).replace(/\s+/g, " ");
-    expect(`bar_text_reads=${all.split(barText).length - 1}`, "the screen reader reads the bar once").toBe(
-      "bar_text_reads=1",
+    expect(`label_text_reads=${all.split(labelText).length - 1}`, "the screen reader reads the label once").toBe(
+      "label_text_reads=1",
     );
   });
 
@@ -242,9 +247,10 @@ describe("the frame of the look (AC-2.2)", () => {
     expect(placesUsed(all).size).toBe(5);
   });
 
-  it("the bar check fails a baked pair at another route (self-test)", () => {
+  it("the label check fails a baked pair at another route (self-test)", () => {
+    // spec FR-4 (a), Daniel 2026-11-10: the bar becomes the label, so the fixture follows.
     const baked = document.createElement("div");
-    baked.innerHTML = '<div data-game-bar>Level 2 Week 1</div>';
-    expect(baked.querySelector("[data-game-bar]")?.textContent?.match(/\d+/g)).not.toEqual(["3", "5"]);
+    baked.innerHTML = '<div data-level-week>Level 2 Week 1</div>';
+    expect(baked.querySelector("[data-level-week]")?.textContent?.match(/\d+/g)).not.toEqual(["3", "5"]);
   });
 });

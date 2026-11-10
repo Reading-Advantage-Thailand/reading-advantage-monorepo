@@ -9,13 +9,13 @@
  *      filled row in the default capture is the capture path: `openScreen()` activates line 1
  *      before the screenshot in `look-phase2-browser-gate.sh`. The gate must read the default
  *      state before it activates a line, and row 1 must require that state.
- *   C2 Week: the done part card shows a 32 CSS px gold check badge (navy check on #F5B82E) in
+ *   C2 Week: the done part card shows a 32 CSS px amber check badge (brown check on #fcd34d) in
  *      place of the chevron, with the localized Done label kept for screen readers.
  *   C3 Decodable: the "Play the sound" button shows a pressed rule that differs from the idle
  *      rule. The Tailwind `aria-pressed:` class loses to the look.css button rule on specificity,
  *      so the pressed look must be a look.css rule.
  *   C4 Decodable at 844x390: every dashed inner frame holds 12 CSS px of content padding.
- *   C5 Reader: the page counter sits on a cream pill with navy text at 4.5:1 or more.
+ *   C5 Reader: the page counter sits on a cream pill with brown text at 4.5:1 or more.
  *   C6 Week parent panel: no native audio controls element, so no "0:00 / 0:00" text shows
  *      before the clip loads.
  *   C7 The browser gate holds the six shared verdicts and a mutant for each.
@@ -151,9 +151,9 @@ function contrastRatio(one: Rgba, two: Rgba): number {
   return (high + 0.05) / (low + 0.05);
 }
 
-/** True when the colour reads as navy: blue dominates, and the colour is dark. */
-function isNavy(color: Rgba): boolean {
-  return color.b > color.r + 20 && color.b > color.g && color.b >= 40 && color.r <= 80 && color.g <= 80;
+/** True when the colour reads as brown: red dominates, then green, then blue, and the colour is dark. */
+function isBrown(color: Rgba): boolean {
+  return color.r > color.g && color.g > color.b && color.r >= 100 && color.g <= 120 && color.b <= 80;
 }
 
 /** True when the colour reads as cream: light, warm, and not pure white. */
@@ -244,7 +244,8 @@ describe("the council round 3 fix batch (task 2.3g)", () => {
     expect(gate, "row 1 must reject a filled lyric row before playback").toMatch(/filled_rows_before_play/);
   });
 
-  it("C2 the done card shows a 32 px gold check badge with a navy check and the localized label", async () => {
+  it("C2 the done card shows a 32 px amber check badge with a brown check and the localized label", async () => {
+    // spec FR-4 (c), Daniel 2026-11-10: no blue chrome, so the badge takes the brand tones.
     expect(`en.partDone=${messages.en.partDone}`, "messages/en.json partDone must read Done").toBe("en.partDone=Done");
     expect(`th.partDone=${messages.th.partDone}`, "messages/th.json partDone must hold the Thai draft").toBe(
       "th.partDone=เสร็จแล้ว",
@@ -260,14 +261,14 @@ describe("the council round 3 fix batch (task 2.3g)", () => {
     expect(height, "Missing a [data-done-badge] rule with height").toBeDefined();
     expect(`badge_w=${lengthPx(size?.value ?? "")}`, "the done badge must be 32 CSS px wide").toBe("badge_w=32");
     expect(`badge_h=${lengthPx(height?.value ?? "")}`, "the done badge must be 32 CSS px high").toBe("badge_h=32");
-    const gold = colorOf(background);
-    expect(gold, `the done badge background must be #F5B82E, received ${background?.value ?? "none"}`).not.toBeNull();
-    expect(`badge_gold=${gold?.r},${gold?.g},${gold?.b}`, "the done badge must sit on #F5B82E").toBe(
-      "badge_gold=245,184,46",
+    const amber = colorOf(background);
+    expect(amber, `the done badge background must be #fcd34d, received ${background?.value ?? "none"}`).not.toBeNull();
+    expect(`badge_amber=${amber?.r},${amber?.g},${amber?.b}`, "the done badge must sit on #fcd34d").toBe(
+      "badge_amber=252,211,77",
     );
     const checkColor = colorOf(check);
     expect(checkColor, `the done badge check must hold a colour, received ${check?.value ?? "none"}`).not.toBeNull();
-    expect(isNavy(checkColor!), `the done badge check must be navy, received ${check?.value ?? "none"}`).toBe(true);
+    expect(isBrown(checkColor!), `the done badge check must be brown, received ${check?.value ?? "none"}`).toBe(true);
     const replaced = rules.some((rule) =>
       selectorParts(rule.selector).some(
         (part) =>
@@ -299,7 +300,7 @@ describe("the council round 3 fix batch (task 2.3g)", () => {
     expect(name, "the badge must keep the localized Done label for screen readers").toContain(messages.th.partDone!);
     expect(
       badge.querySelector("[data-done-icon], svg"),
-      "the gold badge must hold the navy check",
+      "the amber badge must hold the brown check",
     ).not.toBeNull();
   });
 
@@ -400,7 +401,8 @@ describe("the council round 3 fix batch (task 2.3g)", () => {
     ).toEqual([]);
   });
 
-  it("C5 the reader page counter is a cream pill with navy text at 4.5:1 or more", async () => {
+  it("C5 the reader page counter is a cream pill with brown text at 4.5:1 or more", async () => {
+    // spec FR-4 (c), Daniel 2026-11-10: no blue chrome, so the label is brown.
     const isCounter = (selector: string) =>
       selectorParts(selector).some((part) => part.includes("[data-page-count]") && !part.includes("::"));
     const background = lastDeclaration(rules, (rule) => isCounter(rule.selector), "background-color")
@@ -413,7 +415,7 @@ describe("the council round 3 fix batch (task 2.3g)", () => {
     expect(bg, `the page counter pill background is not a colour: ${background?.value}`).not.toBeNull();
     expect(fg, `the page counter text is not a colour: ${label?.value}`).not.toBeNull();
     expect(isCream(bg!), `the page counter pill must be cream, received ${background?.value}`).toBe(true);
-    expect(isNavy(fg!), `the page counter text must be navy, received ${label?.value}`).toBe(true);
+    expect(isBrown(fg!), `the page counter text must be brown, received ${label?.value}`).toBe(true);
     expect(
       contrastRatio(bg!, fg!),
       `the page counter contrast must be 4.5:1 or more (bg=${background?.value}, label=${label?.value})`,

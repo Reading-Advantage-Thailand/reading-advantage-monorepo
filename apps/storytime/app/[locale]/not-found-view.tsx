@@ -7,7 +7,7 @@ import messages from "../../messages/en.json";
 
 /** The class list of the 48 px link to the highest open week. */
 const LINK_CLASS =
-  "inline-flex min-h-12 flex-col items-center justify-center rounded border border-neutral-900 bg-neutral-900 px-5 py-2 font-semibold text-white";
+  "inline-flex min-h-12 flex-col items-center justify-center rounded border border-[#92400e] bg-[#92400e] px-5 py-2 font-semibold text-white";
 
 /**
  * The 404 view of the locale routes (spec FR-1, AC-1.1 and AC-1.2). It tells a child that a week

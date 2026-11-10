@@ -30,7 +30,7 @@ const PLACE_FILES = PLACES.flatMap((place) => [
   { name: `${place}-p.webp`, width: 1080, height: 1920, orientation: "portrait" },
   { name: `${place}-d.webp`, width: 1920, height: 1080, orientation: "landscape" },
 ]);
-const PIECES = ["q-bar.svg", "q-crest.svg", "q-tip-l.svg", "q-tip-r.svg"] as const;
+const PIECES = ["q-tip-l.svg", "q-tip-r.svg"] as const;
 const FONTS = ["fredoka-latin.woff2", "mitr-500-thai.woff2"] as const;
 /** The largest place file (strategy A1). */
 const PLACE_BYTES_MAX = 250_000;
@@ -213,9 +213,10 @@ describe("the assets of the look (AC-2.2, FR-2)", () => {
     expect(scanSvg(bytes.toString("utf8")), `${name} must hold no active content`).toEqual([]);
   });
 
-  it("A4 every rule that draws the bar or a tip pins the ratio of its own viewBox", () => {
+  it("A4 every rule that draws a tip pins the ratio of its own viewBox, and no rule draws the bar or the crest", () => {
+    // spec FR-4 (a), Daniel 2026-11-10: the game bar and the crest go, so their rules go too.
     const boxes: Record<string, { width: number; height: number }> = {};
-    for (const name of ["q-bar.svg", "q-tip-l.svg", "q-tip-r.svg"]) {
+    for (const name of ["q-tip-l.svg", "q-tip-r.svg"]) {
       const box = viewBoxSize(readBytes(resolve(piecesDir, name)).toString("utf8"));
       expect(box, `${name} must hold a readable viewBox`).not.toBeNull();
       boxes[name] = box!;
@@ -224,9 +225,15 @@ describe("the assets of the look (AC-2.2, FR-2)", () => {
     const css = readFileSync(lookCssPath, "utf8");
     const { violations, ratioRules } = checkRatios(css, boxes);
     expect(violations).toEqual([]);
-    expect(`bar_ratio_rules=${ratioRules["q-bar.svg"] ?? 0}`, "the game bar must pin its ratio").toMatch(
-      /^bar_ratio_rules=[1-9][0-9]*$/,
+    const tipRules = parseCss(css).filter((rule) =>
+      ["q-tip-l.svg", "q-tip-r.svg"].some((name) =>
+        rule.declarations.some((declaration) => declaration.value.includes(name)),
+      ),
     );
+    expect(`tip_rules=${tipRules.length}`, "look.css must draw the two tips").toBe("tip_rules=2");
+    expect(`tip_ratio_rules=${ratioRules["q-tip-l.svg"] ?? 0}`).toMatch(/^tip_ratio_rules=[0-9]+$/);
+    expect(css.includes("q-bar.svg"), "look.css must draw no game bar").toBe(false);
+    expect(css.includes("q-crest.svg"), "look.css must draw no crest").toBe(false);
   });
 
   it.each(FONTS)("A5 %s is a WOFF2 file of 60 KB or less", (name) => {

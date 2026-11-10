@@ -180,7 +180,7 @@ export function StorytimeSong({
       <button
         type="button"
         onClick={togglePlayback}
-        className="min-h-12 rounded-xl border border-neutral-300 px-4"
+        className="min-h-12 rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 text-[#92400e]"
       >
         {playing ? labels.pause : labels.play}
       </button>

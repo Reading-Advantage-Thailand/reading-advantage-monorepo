@@ -11,7 +11,7 @@
  *   R2 Song lyric line: no line is active before playback, and the line whose start time the
  *      playback reaches is the active line. The browser gate adds `active_line_before_play=0`.
  *   R3 Song action chip: each gesture label is a chip with a hook; `look.css` gives it 16 CSS px or
- *      more, an opaque background, a navy label, and 4.5:1 or more. jsdom loads no CSS, so the
+ *      more, an opaque background, a brown label, and 4.5:1 or more. jsdom loads no CSS, so the
  *      file is read as an artifact; the browser gate measures the computed values.
  *   R4 Word gap regression: the decodable sentence declares a word gap of 0.25em or more, and the
  *      text keeps no space before punctuation. The browser gate measures the gap between two word
@@ -150,9 +150,9 @@ function contrastRatio(one: Rgba, two: Rgba): number {
   return (high + 0.05) / (low + 0.05);
 }
 
-/** True when the colour reads as navy: blue dominates, and the colour is dark. */
-function isNavy(color: Rgba): boolean {
-  return color.b > color.r + 20 && color.b > color.g && color.b >= 40 && color.r <= 80 && color.g <= 80;
+/** True when the colour reads as brown: red dominates, then green, then blue, and the colour is dark. */
+function isBrown(color: Rgba): boolean {
+  return color.r > color.g && color.g > color.b && color.r >= 100 && color.g <= 120 && color.b <= 80;
 }
 
 /** Lists the failures of the action-chip rule of `look.css`. */
@@ -175,7 +175,7 @@ function actionChipFailures(css: string): string[] {
   if (background && !bg) failures.push(`the [data-action-chip] background is not a colour: ${background.value}`);
   if (label && !fg) failures.push(`the [data-action-chip] label is not a colour: ${label.value}`);
   if (bg && bg.a !== 1) failures.push(`the [data-action-chip] background must be opaque, alpha=${bg.a}`);
-  if (fg && !isNavy(fg)) failures.push(`the [data-action-chip] label must be navy, received ${label!.value}`);
+  if (fg && !isBrown(fg)) failures.push(`the [data-action-chip] label must be brown, received ${label!.value}`);
   if (bg && fg) {
     const ratio = contrastRatio(bg, fg);
     if (ratio < 4.5) failures.push(`the [data-action-chip] contrast must be 4.5 or more, contrast=${ratio.toFixed(2)}`);
@@ -391,14 +391,16 @@ describe("the council round 2 fix batch (task 2.3f)", () => {
     expect(failures, "the action chip hooks").toEqual([]);
   });
 
-  it("R3 look.css gives the action chip 16 px, an opaque fill, navy, and 4.5:1", () => {
+  it("R3 look.css gives the action chip 16 px, an opaque fill, brown, and 4.5:1", () => {
+    // spec FR-4 (c), Daniel 2026-11-10: brown text on amber.
     const css = readFileSync(lookCssPath, "utf8");
     expect(actionChipFailures(css), "the [data-action-chip] rules of look.css").toEqual([]);
   });
 
   it("R3 the action chip checks reject the broken copies (falsification)", () => {
-    const good = `:root { --cream: #fff8e1; --navy: #0b2a6b; }
-[data-action-chip] { font-size: 16px; background-color: var(--cream); color: var(--navy); }`;
+    // spec FR-4 (c), Daniel 2026-11-10: brown text on amber.
+    const good = `:root { --cream: #fff8e1; --brown: #92400e; }
+[data-action-chip] { font-size: 16px; background-color: var(--cream); color: var(--brown); }`;
     expect(actionChipFailures(good), "the good copy passes").toEqual([]);
     expect(actionChipFailures(good.replace("16px", "14px")).join(" "), "a small label fails").toContain("16 px");
     expect(
@@ -406,7 +408,7 @@ describe("the council round 2 fix batch (task 2.3f)", () => {
       "a see-through chip fails",
     ).toContain("opaque");
     expect(
-      actionChipFailures(good.replace("color: var(--navy)", "color: var(--cream)")).join(" "),
+      actionChipFailures(good.replace("color: var(--brown)", "color: var(--cream)")).join(" "),
       "a dim label fails",
     ).toContain("contrast");
     expect(actionChipFailures(".x { font-size: 16px; }").join(" "), "a missing rule fails").toContain("Missing a [data-action-chip]");

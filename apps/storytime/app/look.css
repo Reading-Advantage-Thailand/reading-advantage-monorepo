@@ -16,6 +16,9 @@
 
 /* ---- Tokens. ---- */
 :root {
+  /* The two tones of the Storytime Advantage logo (spec FR-4, Q43). */
+  --st-amber: #fcd34d;
+  --st-brown: #92400e;
   --sq-navy: #13244e;
   --sq-ink: #14264f;
   --sq-ink-soft: #3b4d78;
@@ -97,8 +100,8 @@ main[data-place="grove"]::before { background-position: 50% 50%; }
 main[data-place="trail"]::before { background-position: 50% 50%; }
 main[data-place="meadow"][data-hero="meadow"]::before { background-position: 50% 90%; }
 
-/* ---- The hero window: the game bar on top, the crest and the title plaque on the lower
- * edge (the frame of `app/[locale]/frame.tsx`). ---- */
+/* ---- The hero window: the level and week label on top, the logo and the title plaque on the
+ * lower edge (the frame of `app/[locale]/frame.tsx`). ---- */
 header[data-hero] {
   position: relative;
   margin: 0 -16px 36px;
@@ -127,46 +130,8 @@ header[data-hero="band"] {
   margin-bottom: 30px;
 }
 
-/* The game bar: the route level and week as text over the bar piece. The ratio is the viewBox
- * of the final piece (644.8 x 52, M32), so the bar never draws at the stand-in ratio. */
-[data-game-bar] {
-  position: absolute;
-  top: 34px;
-  left: 50%;
-  translate: -50% 0;
-  box-sizing: border-box;
-  width: min(360px, calc(100% - 28px));
-  aspect-ratio: 644.8 / 52;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-  margin: 0;
-  font-family: var(--sq-display);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: #fff;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(8, 28, 70, 0.6);
-  background: url("look/pieces/q-bar.svg") center / 100% 100% no-repeat;
-  filter: drop-shadow(0 3px 0 rgba(10, 25, 60, 0.35));
-}
-
-/* The text copy inside the track is for a screen reader only. It has no overflow rule, so the
- * capture clip check reads no clipped text. */
-[data-game-bar] > span {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  white-space: nowrap;
-  clip-path: inset(50%);
-}
-
-/* The HUD level and week label (council round 1, task 2.3e): the visible text, in its own box
- * above the track so the two boxes never overlap. 14 CSS px is the floor for a label. */
+/* The level and week label (council round 1, task 2.3e; Phase 2b, AC-4.2): the one readable copy
+ * of the route text, in its own box above the plaque. 14 CSS px is the floor for a label. */
 [data-level-week] {
   position: absolute;
   top: 8px;
@@ -182,13 +147,14 @@ header[data-hero="band"] {
   line-height: 1.5;
   color: #fff;
   white-space: nowrap;
-  text-shadow: 0 1px 0 rgba(8, 28, 70, 0.6);
-  background-color: rgba(8, 28, 70, 0.62);
+  text-shadow: 0 1px 0 rgba(58, 24, 4, 0.6);
+  background-color: var(--st-brown);
   border-radius: 999px;
 }
 
-/* The crest: a decorative drawing that bobs (under no-preference only). */
-header[data-hero] [data-crest] {
+/* The Storytime Advantage logo replaces the sprout crest (spec FR-4, AC-4.3, Q44). It is a
+ * square drawing of the brand tones. */
+header[data-hero] [data-logo] {
   position: absolute;
   left: 50%;
   bottom: 31px;
@@ -197,15 +163,19 @@ header[data-hero] [data-crest] {
   width: 46px;
   height: 46px;
   z-index: 2;
-  background: url("look/pieces/q-crest.svg") center / contain no-repeat;
-  filter: drop-shadow(0 3px 0 rgba(10, 25, 60, 0.35));
+  border-radius: 10px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 0 rgba(58, 24, 4, 0.35));
 }
-header[data-hero="band"] [data-crest] {
-  display: none;
+header[data-hero="band"] [data-logo] {
+  width: 36px;
+  height: 36px;
+  bottom: 22px;
 }
 
-/* The title plaque: the week title on a blue plaque with a crystal tip on each side. The plaque
- * wraps (no `nowrap`), so a long title never widens the page. */
+/* The title plaque: the week title on an amber plaque with a brown edge and a crystal tip on each
+ * side. The plaque wraps (no `nowrap`), so a long title never widens the page. The title reads at
+ * about 80 % of the plaque height and is centered on both axes (spec FR-4 (d), AC-4.6, Q42). */
 header[data-hero] > h1 {
   position: absolute;
   left: 0;
@@ -215,23 +185,23 @@ header[data-hero] > h1 {
   width: fit-content;
   min-width: 62%;
   max-width: calc(100% - 24px);
+  box-sizing: border-box;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  min-height: 88px;
-  padding: 0 28px 12px;
+  min-height: 96px;
+  padding: 0 28px;
   font-family: var(--sq-display);
-  font-size: 36px;
+  font-size: 78px;
   font-weight: 600;
-  line-height: 1.4;
-  color: #fff;
+  line-height: 1;
+  color: var(--st-brown);
   text-align: center;
-  text-shadow: 0 2px 0 rgba(8, 28, 70, 0.6);
-  background-color: var(--sq-blue-top);
-  background-image: var(--sq-plaque);
-  border: 4px solid var(--sq-ice);
+  text-shadow: none;
+  background-color: var(--st-amber);
+  border: 4px solid var(--st-brown);
   border-radius: 12px;
-  box-shadow: inset 0 0 0 3px var(--sq-blue-dark), var(--sq-shadow);
+  box-shadow: var(--sq-shadow);
 }
 header[data-hero] > h1::before,
 header[data-hero] > h1::after {
@@ -247,11 +217,11 @@ header[data-hero] > h1::before { left: -37px; background-image: url("look/pieces
 header[data-hero] > h1::after { right: -37px; background-image: url("look/pieces/q-tip-r.svg"); }
 /* The band plaque is slimmer. */
 header[data-hero="band"] > h1 {
-  min-height: 56px;
+  min-height: 64px;
   bottom: -28px;
   min-width: 40%;
-  padding: 0 24px 6px;
-  font-size: 28px;
+  padding: 0 24px;
+  font-size: 50px;
 }
 
 /* ---- Section titles. ---- */
@@ -263,14 +233,15 @@ main[data-place] h2 {
   line-height: 1.5;
   color: var(--sq-chip-text);
 }
-/* The "choose a part" heading: a navy pill. */
+/* The "choose a part" heading: an amber pill with a brown label. */
 main[data-place] > section[aria-label]:first-of-type > h2 {
   display: inline-block;
   padding: 3px 20px 5px;
-  background: var(--sq-navy);
-  border: 3px solid var(--sq-ice);
+  color: var(--st-brown);
+  background: var(--st-amber);
+  border: 3px solid var(--st-brown);
   border-radius: 999px;
-  box-shadow: 0 4px 0 rgba(10, 25, 60, 0.38);
+  box-shadow: 0 4px 0 rgba(58, 24, 4, 0.38);
 }
 main[data-place] h3 {
   display: flex;
@@ -281,34 +252,34 @@ main[data-place] h3 {
   font-size: 19px;
   font-weight: 600;
   line-height: 1.5;
-  color: var(--sq-blue);
+  color: var(--st-brown);
 }
 main[data-place] h3::before {
   content: "";
   flex: none;
   width: 11px;
   height: 11px;
-  background: linear-gradient(135deg, var(--sq-gold-top), var(--sq-gold));
-  border: 1.5px solid #b9800f;
+  background: linear-gradient(135deg, #fde68a, var(--st-amber));
+  border: 1.5px solid var(--st-brown);
   rotate: 45deg;
 }
 
-/* ---- Cream panels with the plaque bevel and a stitched inner ring. ---- */
+/* ---- Cream panels with a brown frame, an amber ring, and a stitched inner ring. ---- */
 main[data-place] > section[aria-label] + section[aria-label] {
   position: relative;
   gap: 16px;
   padding: 22px 18px 24px;
   background: var(--sq-cream);
-  border: 4px solid var(--sq-blue-dark);
+  border: 4px solid var(--st-brown);
   border-radius: 24px;
-  box-shadow: 0 0 0 3px var(--sq-ice), 0 10px 0 3px rgba(10, 25, 60, 0.32);
-  color: var(--sq-ink);
+  box-shadow: 0 0 0 3px var(--st-amber), 0 10px 0 3px rgba(58, 24, 4, 0.32);
+  color: var(--st-brown);
 }
 main[data-place] > section[aria-label] + section[aria-label]::before {
   content: "";
   position: absolute;
   inset: 7px;
-  border: 2px dashed rgba(36, 95, 159, 0.4);
+  border: 2px dashed rgba(146, 64, 14, 0.4);
   border-radius: 17px;
   pointer-events: none;
 }
@@ -317,12 +288,11 @@ main[data-place] > section[aria-label] + section[aria-label] > h2 {
   padding: 3px 22px 5px;
   font-size: 22px;
   color: #fff;
-  text-shadow: 0 2px 0 rgba(8, 28, 70, 0.55);
-  background-color: var(--sq-blue-top);
-  background-image: var(--sq-plaque);
-  border: 3px solid var(--sq-ice);
+  text-shadow: none;
+  background-color: var(--st-brown);
+  border: 3px solid var(--st-amber);
   border-radius: 12px;
-  box-shadow: inset 0 0 0 2px var(--sq-blue-dark), 0 4px 0 rgba(10, 25, 60, 0.3);
+  box-shadow: none;
 }
 main[data-place] > section[aria-label] + section[aria-label] p {
   font-size: 18px;
@@ -345,14 +315,14 @@ main[data-place] > section[aria-label] + section[aria-label] ul li span {
   font-size: 26px;
   font-weight: 600;
   line-height: 1.4;
-  color: var(--sq-chip-text);
-  background: var(--sq-navy);
-  border: 3px solid var(--sq-ice);
+  color: var(--st-brown);
+  background: var(--st-amber);
+  border: 3px solid var(--st-brown);
   border-radius: 999px;
-  box-shadow: 0 4px 0 rgba(10, 25, 60, 0.38);
+  box-shadow: 0 4px 0 rgba(58, 24, 4, 0.38);
 }
 
-/* ---- Entry tiles: blue plaques with a round picture in a gold ring. ---- */
+/* ---- Entry tiles: brown plaques with a round picture in an amber ring. ---- */
 main[data-place] ul[data-week-tiles] {
   gap: 16px;
 }
@@ -360,11 +330,11 @@ main[data-place] ul[data-week-tiles] a {
   min-height: 92px;
   gap: 16px;
   padding: 10px 14px 10px 12px;
-  background-color: var(--sq-blue-top);
-  background-image: var(--sq-plaque);
-  border: 4px solid var(--sq-ice);
+  background-color: var(--st-brown);
+  background-image: none;
+  border: 4px solid var(--st-amber);
   border-radius: 22px;
-  box-shadow: inset 0 0 0 3px var(--sq-blue-dark), var(--sq-shadow);
+  box-shadow: inset 0 0 0 3px var(--st-amber), var(--sq-shadow);
   color: #fff;
   text-decoration: none;
 }
@@ -372,9 +342,9 @@ main[data-place] ul[data-week-tiles] a img {
   flex: none;
   width: 72px;
   height: 72px;
-  border: 4px solid var(--sq-gold);
+  border: 4px solid var(--st-amber);
   border-radius: 50%;
-  box-shadow: 0 0 0 3px var(--sq-blue-dark), 0 4px 0 3px rgba(10, 25, 60, 0.3);
+  box-shadow: 0 0 0 3px var(--st-brown), 0 4px 0 3px rgba(58, 24, 4, 0.3);
   object-fit: cover;
   background: var(--sq-cream);
 }
@@ -384,7 +354,7 @@ main[data-place] ul[data-week-tiles] a span {
   font-weight: 600;
   line-height: 1.5;
   color: #fff;
-  text-shadow: 0 2px 0 rgba(8, 28, 70, 0.55);
+  text-shadow: 0 2px 0 rgba(58, 24, 4, 0.55);
 }
 main[data-place] ul[data-week-tiles] a::after {
   content: "";
@@ -393,8 +363,8 @@ main[data-place] ul[data-week-tiles] a::after {
   height: 40px;
   margin-left: auto;
   border-radius: 50%;
-  border: 3px solid var(--sq-blue-dark);
-  background: var(--sq-gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 5l7 7-7 7' fill='none' stroke='%2313244e' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 22px no-repeat;
+  border: 3px solid var(--st-brown);
+  background: var(--st-amber) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 5l7 7-7 7' fill='none' stroke='%2392400e' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 22px no-repeat;
 }
 /* The done card (council round 3, task 2.3g): a 32 CSS px gold badge with a navy check sits
  * where the chevron was, and the chevron goes. The label stays as text for screen readers. */
@@ -414,23 +384,23 @@ main[data-place] ul[data-week-tiles] li:has([data-done-badge]) a::after {
   justify-content: center;
   width: 32px;
   height: 32px;
-  color: var(--sq-navy);
-  background-color: #F5B82E;
+  color: var(--st-brown);
+  background-color: var(--st-amber);
   border: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 3px var(--sq-blue-dark);
+  box-shadow: 0 0 0 3px var(--st-brown);
   pointer-events: none;
 }
 main[data-place] ul[data-week-tiles] a:active {
   translate: 0 3px;
-  box-shadow: inset 0 0 0 3px var(--sq-blue-dark), 0 3px 0 rgba(10, 25, 60, 0.38);
+  box-shadow: inset 0 0 0 3px var(--st-amber), 0 3px 0 rgba(58, 24, 4, 0.38);
 }
 
 /* ---- Recorded sound players: a soft pill. ---- */
 main[data-place] audio {
   border-radius: 999px;
-  border: 3px solid var(--sq-blue-dark);
-  background: #e4eefb;
+  border: 3px solid var(--st-brown);
+  background: var(--sq-cream);
 }
 
 /* The recorded speaker button of the week page (council round 3, task 2.3g): the native audio
@@ -440,7 +410,7 @@ main[data-place] [data-speaker] > button {
   min-width: 64px;
 }
 
-/* ---- Buttons: blue plaques. ---- */
+/* ---- Buttons: brown plaques with an amber edge (spec FR-4, Q43). ---- */
 main[data-place] button {
   min-height: 52px;
   min-width: 52px;
@@ -450,57 +420,59 @@ main[data-place] button {
   font-weight: 600;
   line-height: 1.5;
   color: #fff;
-  text-shadow: 0 2px 0 rgba(8, 28, 70, 0.55);
-  background-color: var(--sq-blue-top);
-  background-image: var(--sq-plaque);
-  border: 3px solid var(--sq-ice);
+  text-shadow: 0 2px 0 rgba(58, 24, 4, 0.55);
+  background-color: var(--st-brown);
+  background-image: none;
+  border: 3px solid var(--st-amber);
   border-radius: 16px;
-  box-shadow: inset 0 0 0 2px var(--sq-blue-dark), 0 5px 0 rgba(10, 25, 60, 0.42);
+  box-shadow: inset 0 0 0 2px rgba(58, 24, 4, 0.5), 0 5px 0 rgba(58, 24, 4, 0.42);
 }
 main[data-place] button:disabled {
   opacity: 0.5;
-  box-shadow: inset 0 0 0 2px var(--sq-blue-dark), 0 3px 0 rgba(10, 25, 60, 0.42);
+  box-shadow: inset 0 0 0 2px rgba(58, 24, 4, 0.5), 0 3px 0 rgba(58, 24, 4, 0.42);
 }
 main[data-place] button:active:not(:disabled) {
   translate: 0 3px;
-  box-shadow: inset 0 0 0 2px var(--sq-blue-dark), 0 2px 0 rgba(10, 25, 60, 0.42);
+  box-shadow: inset 0 0 0 2px rgba(58, 24, 4, 0.5), 0 2px 0 rgba(58, 24, 4, 0.42);
 }
 
 /* The reader mode buttons (Read it to me, My turn, Slow; council round 1, task 2.3e): an
- * opaque cream fill and a navy label, 4.5 to 1 or more in contrast. The pressed state shows the
- * gold-soft fill. */
+ * opaque cream fill and a brown label, 4.5 to 1 or more in contrast. Spec FR-4 (c), Daniel
+ * 2026-11-10: no blue chrome. The pressed state shows a pale amber fill. */
 [data-part="book"] button[data-mode-button] {
-  color: var(--sq-navy);
+  color: var(--st-brown);
   text-shadow: none;
   background-color: var(--sq-cream);
   background-image: none;
-  box-shadow: inset 0 0 0 2px var(--sq-blue-dark);
+  box-shadow: inset 0 0 0 2px var(--st-brown);
 }
 [data-part="book"] button[aria-pressed="true"] {
-  background-color: var(--sq-gold-soft);
+  background-color: #fde68a;
 }
 
-/* One gold action per screen: the song play button and the decodable sound button. */
+/* One amber action per screen, with a brown label: the song play button and the decodable sound
+ * button (spec FR-4, AC-4.4, Q43). */
 [data-part="song"] > div > button,
 [data-part="decodable"] > div > section[aria-label] button {
-  color: var(--sq-ink);
+  color: var(--st-brown);
   text-shadow: none;
-  background-color: #e09c1c;
-  background-image: var(--sq-gold-img);
-  box-shadow: inset 0 0 0 2px #b9800f, 0 5px 0 rgba(10, 25, 60, 0.42);
+  background-color: var(--st-amber);
+  background-image: none;
+  border-color: var(--st-brown);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6), 0 5px 0 rgba(58, 24, 4, 0.42);
 }
 [data-part="song"] > div > button {
   min-height: 60px;
   font-size: 24px;
 }
 /* The decodable sound button while it plays (council round 3, task 2.3g): `aria-pressed` is
- * true, and the fill, the border, and the shadow differ from the idle gold. The Tailwind
+ * true, and the fill, the border, and the shadow differ from the idle amber. The Tailwind
  * `aria-pressed:` class loses to the rule above on specificity, so the look lives here. This
  * selector has more class weight (0,3,2) than the idle rule (0,2,3). */
 [data-part="decodable"] section[aria-label] button[aria-pressed="true"] {
-  background-color: var(--sq-gold-soft);
+  background-color: #fbbf24;
   background-image: none;
-  box-shadow: inset 0 0 0 3px var(--sq-navy), 0 2px 0 rgba(10, 25, 60, 0.42);
+  box-shadow: inset 0 0 0 3px var(--st-brown), 0 2px 0 rgba(58, 24, 4, 0.42);
   translate: 0 3px;
 }
 
@@ -509,7 +481,7 @@ main[data-place] button:active:not(:disabled) {
 [data-part="decodable"] section > img {
   border: 5px solid #fff;
   border-radius: 20px;
-  box-shadow: 0 0 0 4px var(--sq-blue-dark), 0 0 0 7px var(--sq-ice), 0 12px 0 7px rgba(10, 25, 60, 0.3);
+  box-shadow: 0 0 0 4px var(--st-brown), 0 0 0 7px var(--st-amber), 0 12px 0 7px rgba(58, 24, 4, 0.3);
   margin: 6px 7px 14px;
   width: calc(100% - 14px);
 }
@@ -517,9 +489,9 @@ main[data-place] button:active:not(:disabled) {
 [data-part="decodable"] section[data-page-number] > p {
   padding: 14px 16px;
   background: var(--sq-cream);
-  border: 4px solid var(--sq-blue-dark);
+  border: 4px solid var(--st-brown);
   border-radius: 20px;
-  box-shadow: 0 0 0 3px var(--sq-ice), 0 8px 0 3px rgba(10, 25, 60, 0.3);
+  box-shadow: 0 0 0 3px var(--st-amber), 0 8px 0 3px rgba(58, 24, 4, 0.3);
   color: var(--sq-ink);
 }
 [data-part="book"] [data-page-content] > div p {
@@ -539,15 +511,15 @@ main[data-place] button:active:not(:disabled) {
   padding-bottom: 6px;
 }
 
-/* The reader page counter (council round 3, task 2.3g): a cream pill with navy text, 4.5 to 1
- * or more in contrast. */
+/* The reader page counter (council round 3, task 2.3g): a cream pill with brown text, 4.5 to 1
+ * or more in contrast. Spec FR-4 (c), Daniel 2026-11-10: no blue chrome. */
 [data-page-count] {
   padding: 2px 14px 3px;
   font-family: var(--sq-display);
   font-weight: 600;
-  color: var(--sq-navy);
+  color: var(--st-brown);
   background-color: var(--sq-cream);
-  border: 2px solid var(--sq-blue-dark);
+  border: 2px solid var(--st-brown);
   border-radius: 999px;
 }
 
@@ -556,22 +528,22 @@ main[data-place] button:active:not(:disabled) {
   position: relative;
   padding: 14px 18px 18px;
   background: var(--sq-cream);
-  border: 4px solid var(--sq-blue-dark);
+  border: 4px solid var(--st-brown);
   border-radius: 22px;
-  box-shadow: 0 0 0 3px var(--sq-ice), 0 8px 0 3px rgba(10, 25, 60, 0.3);
+  box-shadow: 0 0 0 3px var(--st-amber), 0 8px 0 3px rgba(58, 24, 4, 0.3);
 }
 [data-part="decodable"] > div > section[aria-label]::before {
   content: "";
   position: absolute;
   inset: 7px;
-  border: 2px dashed rgba(36, 95, 159, 0.4);
+  border: 2px dashed rgba(146, 64, 14, 0.4);
   border-radius: 17px;
   pointer-events: none;
 }
 [data-part="decodable"] > div > section[aria-label] p {
   font-family: var(--sq-display);
   font-weight: 600;
-  color: var(--sq-blue);
+  color: var(--st-brown);
   line-height: 1.2;
 }
 [data-part="decodable"] > div > section[aria-label] p:first-of-type {
@@ -607,39 +579,39 @@ main[data-place] button:active:not(:disabled) {
   position: relative;
   padding: 12px 14px 18px;
   background: var(--sq-cream);
-  border: 4px solid var(--sq-blue-dark);
+  border: 4px solid var(--st-brown);
   border-radius: 22px;
-  box-shadow: 0 0 0 3px var(--sq-ice), 0 8px 0 3px rgba(10, 25, 60, 0.3);
+  box-shadow: 0 0 0 3px var(--st-amber), 0 8px 0 3px rgba(58, 24, 4, 0.3);
 }
 [data-part="decodable"] div > section[aria-label]:last-child::before {
   content: "";
   position: absolute;
   inset: 7px;
-  border: 2px dashed rgba(36, 95, 159, 0.4);
+  border: 2px dashed rgba(146, 64, 14, 0.4);
   border-radius: 17px;
   pointer-events: none;
 }
 [data-part="decodable"] div > section[aria-label]:last-child h2 {
   font-size: 21px;
-  color: var(--sq-blue);
+  color: var(--st-brown);
 }
 [data-part="decodable"] div > section[aria-label]:last-child button {
   min-height: 52px;
   padding: 2px 22px 4px;
   font-size: 26px;
-  color: var(--sq-chip-text);
-  text-shadow: none;
-  background: var(--sq-navy);
-  border: 3px solid var(--sq-ice);
-  box-shadow: 0 4px 0 rgba(10, 25, 60, 0.38);
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(58, 24, 4, 0.55);
+  background: var(--st-brown);
+  border: 3px solid var(--st-amber);
+  box-shadow: 0 4px 0 rgba(58, 24, 4, 0.38);
   border-radius: 999px;
 }
 
-/* ---- The song: a framed stage, one gold play button, a plain lyric list. ---- */
+/* ---- The song: a framed stage, one amber play button, a plain lyric list. ---- */
 .song-stage video {
   border: 5px solid #fff;
   border-radius: 22px;
-  box-shadow: 0 0 0 4px var(--sq-blue-dark), 0 0 0 7px var(--sq-ice), 0 12px 0 7px rgba(10, 25, 60, 0.3);
+  box-shadow: 0 0 0 4px var(--st-brown), 0 0 0 7px var(--st-amber), 0 12px 0 7px rgba(58, 24, 4, 0.3);
 }
 /* The phone cover card (AC-2.6, task 2.3a): 220 CSS px high, so the gold Play button and
  * the active lyric line show in the first view. The video fills the card at its 9:16 shape;
@@ -656,14 +628,14 @@ main[data-place] button:active:not(:disabled) {
   gap: 0;
   padding: 6px 8px;
   background: var(--sq-cream);
-  border: 4px solid var(--sq-blue-dark);
+  border: 4px solid var(--st-brown);
   border-radius: 22px;
-  box-shadow: 0 0 0 3px var(--sq-ice), 0 8px 0 3px rgba(10, 25, 60, 0.3);
+  box-shadow: 0 0 0 3px var(--st-amber), 0 8px 0 3px rgba(58, 24, 4, 0.3);
 }
 [data-part="song"] ol li {
   padding: 12px 14px;
   border-radius: 12px;
-  border-bottom: 2px dashed #c9d8ee;
+  border-bottom: 2px dashed #f3d9a4;
 }
 [data-part="song"] ol li:last-child {
   border-bottom: 0;
@@ -683,19 +655,20 @@ main[data-place] button:active:not(:disabled) {
   font-size: 16px;
   line-height: 1.6;
   color: var(--sq-ink-soft);
-  background: #dce8f8;
+  background: #fef3c7;
   border-radius: 999px;
 }
-/* The gesture chip (council round 2, task 2.3f): 16 px or more, an opaque pale fill, a navy label,
- * 4.5 to 1 or more in contrast. The chip keeps its own fill inside the active line too. */
+/* The gesture chip (council round 2, task 2.3f): 16 px or more, an opaque pale amber fill, a
+ * brown label, 4.5 to 1 or more in contrast (spec FR-4 (c), Daniel 2026-11-10: brown text on
+ * amber). The chip keeps its own fill inside the active line too. */
 [data-part="song"] ol li > span > span[data-action-chip] {
   font-size: 16px;
-  color: var(--sq-navy);
-  background-color: #dce8f8;
+  color: var(--st-brown);
+  background-color: #fef3c7;
 }
 [data-part="song"] ol li[aria-current="true"] {
-  background: var(--sq-gold-soft);
-  box-shadow: inset 8px 0 0 var(--sq-blue);
+  background: #fde68a;
+  box-shadow: inset 8px 0 0 var(--st-brown);
   padding-left: 22px;
 }
 [data-part="song"] ol li[aria-current="true"] > span > span:last-child {
@@ -725,20 +698,13 @@ main[data-place] button:active:not(:disabled) {
 }
 
 /* ---- Motion: everything that moves sits under `prefers-reduced-motion: no-preference`
- * (AC-2.3). The crest bobs and the active lyric line glows. Under reduced motion the
+ * (AC-2.3). The active lyric line glows. Under reduced motion the
  * read-along words and sentences report no transition property (the `motion-reduce` class of
  * the passage), so the browser gate reads no running motion. ---- */
 @media (prefers-reduced-motion: no-preference) {
-  @keyframes sq-bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
-  }
   @keyframes sq-glow {
-    from { box-shadow: inset 8px 0 0 var(--sq-blue), 0 0 0 0 rgba(245, 185, 50, 0); }
-    to { box-shadow: inset 8px 0 0 var(--sq-blue), 0 0 14px 3px rgba(245, 185, 50, 0.7); }
-  }
-  header[data-hero] [data-crest] {
-    animation: sq-bob 2.4s ease-in-out infinite;
+    from { box-shadow: inset 8px 0 0 var(--st-brown), 0 0 0 0 rgba(252, 211, 77, 0); }
+    to { box-shadow: inset 8px 0 0 var(--st-brown), 0 0 14px 3px rgba(252, 211, 77, 0.7); }
   }
   [data-part="song"] ol li[aria-current="true"] {
     animation: sq-glow 1.4s ease-in-out infinite alternate;
@@ -803,16 +769,6 @@ main[data-place] button:active:not(:disabled) {
     margin-bottom: 16px;
     border-radius: 0 0 22px 22px;
   }
-  header[data-hero] [data-crest] {
-    display: none;
-  }
-  [data-game-bar] {
-    left: 12px;
-    translate: none;
-    top: 8px;
-    width: 220px;
-    font-size: 11px;
-  }
   [data-level-week] {
     left: 12px;
     translate: none;
@@ -820,7 +776,7 @@ main[data-place] button:active:not(:disabled) {
   }
   /* The plaque grows with the wrapped title: a fixed height cut a 60-character title by 20 px
    * (UX finding F1, task 2.3h). A one-line title still measures the same 40 px. The plaque stays
-   * absolute, so it never grows the hero band, and the crest is hidden here. */
+   * absolute, so it never grows the hero band. */
   header[data-hero] > h1 {
     left: auto;
     right: 22px;

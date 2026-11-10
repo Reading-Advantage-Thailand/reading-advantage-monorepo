@@ -92,7 +92,7 @@ export default async function SignInPage({
         </div>
         <button
           type="submit"
-          className="min-h-16 w-fit rounded-2xl border border-neutral-300 px-6 py-2 font-semibold"
+          className="min-h-16 w-fit rounded-2xl border border-[#92400e] bg-[#92400e] px-6 py-2 font-semibold text-white"
         >
           {t("signInSubmit")}
         </button>
@@ -102,7 +102,7 @@ export default async function SignInPage({
           <input type="hidden" name="locale" value={locale} />
           <button
             type="submit"
-            className="min-h-16 rounded-2xl border border-neutral-300 px-4 py-2"
+            className="min-h-16 rounded-2xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
           >
             {t("signOut")}
           </button>

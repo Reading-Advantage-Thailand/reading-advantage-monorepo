@@ -186,7 +186,7 @@ function TileCard({
     <li className="flex flex-col gap-2 [@media(max-height:500px)]:flex-1">
       <Link
         href={`?part=${tile.part}`}
-        className="flex min-h-16 items-center gap-3 rounded-2xl border border-neutral-300 p-3"
+        className="flex min-h-16 items-center gap-3 rounded-2xl border border-[#92400e] p-3"
       >
         {tile.picture ? (
           <img
@@ -219,7 +219,7 @@ function WeekHomeLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="inline-flex min-h-16 items-center rounded-2xl border border-neutral-300 p-3"
+      className="inline-flex min-h-16 items-center rounded-2xl border border-[#92400e] p-3"
     >
       {label}
     </Link>
@@ -370,7 +370,7 @@ export default async function StorytimeWeekPage({
           <section
             aria-label={t("homeParentHeading")}
             data-parent-panel
-            className="flex flex-col gap-4 rounded-2xl border border-neutral-300 p-4"
+            className="flex flex-col gap-4 rounded-2xl border border-[#92400e] p-4"
           >
             <h2 className="text-lg font-semibold">
               {t("homeParentHeading")}
@@ -405,7 +405,7 @@ export default async function StorytimeWeekPage({
                   return (
                     <li key={word} className="flex flex-col gap-1">
                       <span
-                        className="rounded-full border border-neutral-300 px-4 py-2 text-lg"
+                        className="rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
                         lang="en"
                       >
                         {word}
@@ -493,7 +493,7 @@ export default async function StorytimeWeekPage({
         <input type="hidden" name="locale" value={locale} />
         <button
           type="submit"
-          className="min-h-16 rounded-2xl border border-neutral-300 px-4 py-2"
+          className="min-h-16 rounded-2xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
         >
           {t("signOut")}
         </button>

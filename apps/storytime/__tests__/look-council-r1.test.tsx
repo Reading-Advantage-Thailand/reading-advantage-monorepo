@@ -4,7 +4,7 @@
  *
  * Three PM items, each with the rule where it lives in code:
  *   C1 Reader mode buttons: the three buttons carry a stable hook and `look.css` gives them an
- *      opaque cream fill, a navy label, and a contrast of 4.5:1 or more (en and th).
+ *      opaque cream fill, a brown label, and a contrast of 4.5:1 or more (en and th).
  *   C2 HUD level and week label: the English message file holds the English words, the frame
  *      renders the label for the interface locale in its own box, and `look.css` gives it 14 CSS
  *      px or more. The browser gate measures the box overlap (`hud_overlap_px=0`).
@@ -150,9 +150,9 @@ function contrastRatio(one: Rgba, two: Rgba): number {
   return (high + 0.05) / (low + 0.05);
 }
 
-/** True when the colour reads as navy: blue dominates, and the colour is dark. */
-function isNavy(color: Rgba): boolean {
-  return color.b > color.r + 20 && color.b > color.g && color.b >= 40 && color.r <= 80 && color.g <= 80;
+/** True when the colour reads as brown: red dominates, then green, then blue, and the colour is dark. */
+function isBrown(color: Rgba): boolean {
+  return color.r > color.g && color.g > color.b && color.r >= 100 && color.g <= 120 && color.b <= 80;
 }
 
 /** True when the colour reads as cream: light, warm, and not pure white. */
@@ -180,7 +180,7 @@ function modeButtonFailures(css: string): string[] {
   if (label && !fg) failures.push(`the [data-mode-button] label is not a colour: ${label.value}`);
   if (bg && bg.a !== 1) failures.push(`the [data-mode-button] background must be opaque, alpha=${bg.a}`);
   if (bg && !isCream(bg)) failures.push(`the [data-mode-button] background must be cream, received ${background!.value}`);
-  if (fg && !isNavy(fg)) failures.push(`the [data-mode-button] label must be navy, received ${label!.value}`);
+  if (fg && !isBrown(fg)) failures.push(`the [data-mode-button] label must be brown, received ${label!.value}`);
   if (bg && fg) {
     const ratio = contrastRatio(bg, fg);
     if (ratio < 4.5) failures.push(`the [data-mode-button] contrast must be 4.5 or more, contrast=${ratio.toFixed(2)}`);
@@ -273,7 +273,7 @@ function wideGapTokens(className: string): string[] {
 }
 
 describe("the council round 1 fix batch (task 2.3e)", () => {
-  it("C1 the reader mode buttons carry the hook and look.css gives opaque cream, navy, 4.5:1 (en and th)", async () => {
+  it("C1 the reader mode buttons carry the hook and look.css gives opaque cream, brown, 4.5:1 (en and th)", async () => {
     const failures: string[] = [];
     let buttons = 0;
     for (const locale of ["en", "th"] as const) {
@@ -302,16 +302,17 @@ describe("the council round 1 fix batch (task 2.3e)", () => {
   });
 
   it("C1 the mode button checks reject the broken copies (falsification)", () => {
-    const good = `:root { --cream: #fff8e1; --navy: #0b2a6b; }
-[data-mode-button] { background-color: var(--cream); color: var(--navy); }`;
+    // spec FR-4 (c), Daniel 2026-11-10: no blue chrome, so the label is brown.
+    const good = `:root { --cream: #fff8e1; --brown: #92400e; }
+[data-mode-button] { background-color: var(--cream); color: var(--brown); }`;
     expect(modeButtonFailures(good), "the good copy passes").toEqual([]);
     const seeThrough = good.replace("--cream: #fff8e1;", "--cream: rgba(255, 248, 225, 0.5);");
     expect(modeButtonFailures(seeThrough).join(" "), "a see-through fill fails").toContain("opaque");
-    const dim = good.replace("--navy: #0b2a6b;", "--navy: #efe6c8;");
+    const dim = good.replace("--brown: #92400e;", "--brown: #efe6c8;");
     expect(modeButtonFailures(dim).join(" "), "a dim label fails").toContain("contrast");
-    const gray = good.replace("--navy: #0b2a6b;", "--navy: #333333;");
-    expect(modeButtonFailures(gray).join(" "), "a gray label fails").toContain("navy");
-    const missing = ".x { background-color: #fff8e1; color: #0b2a6b; }";
+    const gray = good.replace("--brown: #92400e;", "--brown: #555555;");
+    expect(modeButtonFailures(gray).join(" "), "a gray label fails").toContain("brown");
+    const missing = ".x { background-color: #fff8e1; color: #92400e; }";
     expect(modeButtonFailures(missing).join(" "), "a missing rule fails").toContain("Missing a [data-mode-button]");
   });
 
@@ -327,13 +328,17 @@ describe("the council round 1 fix batch (task 2.3e)", () => {
   });
 
   it("C2 the HUD label follows the interface language and sits outside the progress track box", async () => {
+    // spec FR-4 (a), Daniel 2026-11-10: the game bar goes, so the label sits outside no track.
     const english = await renderFrame("en");
     const enLabel = english.container.querySelector<HTMLElement>("[data-level-week]");
     expect(enLabel, "Missing the [data-level-week] label of the HUD").not.toBeNull();
     expect(enLabel!.textContent?.trim(), "the English UI must show Level 2 · Week 1").toBe("Level 2 · Week 1");
     const bar = english.container.querySelector("[data-game-bar]");
-    expect(bar, "the HUD must keep its [data-game-bar] progress track").not.toBeNull();
-    expect(bar!.contains(enLabel!), "the HUD label must sit outside the progress track box").toBe(false);
+    expect(bar, "the HUD must render no [data-game-bar] progress track").toBeNull();
+    expect(
+      english.container.querySelector('[role="progressbar"]'),
+      "the HUD must render no [role=\"progressbar\"] track",
+    ).toBeNull();
     cleanup();
     const thai = await renderFrame("th");
     const thLabel = thai.container.querySelector<HTMLElement>("[data-level-week]");

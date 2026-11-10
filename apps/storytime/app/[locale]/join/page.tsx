@@ -64,7 +64,7 @@ export default async function JoinPage({
       </div>
       <Link
         href={`/${locale}/sign-in`}
-        className="inline-flex min-h-16 w-fit items-center rounded-2xl border border-neutral-300 px-4 py-2"
+        className="inline-flex min-h-16 w-fit items-center rounded-2xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
       >
         {copy.signInLink}
       </Link>
