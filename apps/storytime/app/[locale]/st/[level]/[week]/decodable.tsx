@@ -52,6 +52,8 @@ interface StorytimeDecodableProps {
   labels?: Partial<DecodableLabels>;
   /** The `<level>:<week>:<part>` key that the book writes to the done record at its last page. */
   doneKey?: string;
+  /** The screen that shows the player: the at-home phone and the class screen of the teacher. */
+  playerMode?: "at-home" | "class-screen";
 }
 
 /**
@@ -196,6 +198,7 @@ export function StorytimeDecodable({
   mediaUrls = {},
   labels: labelOverrides,
   doneKey,
+  playerMode = "at-home",
 }: StorytimeDecodableProps) {
   const phonemeRef = useRef<HTMLAudioElement | null>(null);
   const wholeRef = useRef<HTMLAudioElement | null>(null);
@@ -507,6 +510,7 @@ export function StorytimeDecodable({
     <div
       className="flex flex-col gap-4 [@media(max-height:500px)]:gap-2"
       data-phoneme-bank={PHONEME_BANK_COUNT}
+      data-mode={playerMode === "class-screen" ? "class-screen" : undefined}
     >
       <audio
         ref={phonemeRef}

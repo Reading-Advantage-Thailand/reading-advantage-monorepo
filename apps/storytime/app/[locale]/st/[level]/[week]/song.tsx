@@ -44,6 +44,35 @@ interface StorytimeSongProps {
   labels?: SongLabels;
   /** The `<level>:<week>:<part>` key that the song writes to the done record when it ends. */
   doneKey?: string;
+  /** The screen that shows the player: the at-home phone and the class screen of the teacher. */
+  playerMode?: "at-home" | "class-screen";
+}
+
+/**
+ * Picks the media files of the song for the screen that shows the player. The class screen is
+ * 1920x1080, so it uses the regular pair and never the phone pair.
+ * @param song The song of the week.
+ * @param phone `true` when the screen is a portrait phone.
+ * @param classScreen `true` when the player shows on a class screen.
+ * @returns The video file, the poster file, and `true` when the player shows a video.
+ */
+function mediaFilesOf(
+  song: NonNullable<StorytimeWeek["song"]>,
+  phone: boolean,
+  classScreen: boolean,
+): { video: string | undefined; poster: string | undefined; hasVideo: boolean } {
+  if (classScreen) {
+    return { video: song.video, poster: song.poster, hasVideo: Boolean(song.video) };
+  }
+  const hasVideo = Boolean(song.video || song.videoPhone);
+  if (phone) {
+    return {
+      video: song.videoPhone ?? song.video,
+      poster: song.posterPhone ?? song.poster,
+      hasVideo,
+    };
+  }
+  return { video: song.video, poster: song.poster, hasVideo };
 }
 
 /**
@@ -64,6 +93,7 @@ export function StorytimeSong({
   mediaUrls = {},
   labels = DEFAULT_LABELS,
   doneKey,
+  playerMode = "at-home",
 }: StorytimeSongProps) {
   const mediaRef = useRef<HTMLVideoElement | HTMLAudioElement | null>(null);
   const [phone, setPhone] = useState(false);
@@ -80,12 +110,14 @@ export function StorytimeSong({
     return () => query.removeEventListener?.("change", onChange);
   }, []);
 
-  const hasVideo = Boolean(song.video || song.videoPhone);
-  const videoFile = phone ? (song.videoPhone ?? song.video) : song.video;
-  const posterFile = phone ? (song.posterPhone ?? song.poster) : song.poster;
-  const mediaFile = hasVideo ? videoFile : song.audio;
+  // The class screen is 1920x1080, so it never uses the phone pair of the song.
+  const classScreen = playerMode === "class-screen";
+  const phonePair = phone && !classScreen;
+  const pair = mediaFilesOf(song, phonePair, classScreen);
+  const hasVideo = pair.hasVideo;
+  const mediaFile = hasVideo ? pair.video : song.audio;
   const mediaSrc = mediaFile ? mediaUrl(mediaUrls, mediaFile) : undefined;
-  const poster = posterFile ? mediaUrl(mediaUrls, posterFile) : undefined;
+  const poster = pair.poster ? mediaUrl(mediaUrls, pair.poster) : undefined;
   const times = song.times;
   const leadIn = hasVideo ? (song.videoLeadInSeconds ?? 0) : 0;
 
@@ -123,10 +155,13 @@ export function StorytimeSong({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      className="flex flex-col gap-4"
+      data-mode={classScreen ? "class-screen" : undefined}
+    >
       <div
         className="song-stage"
-        data-phone={phone ? "true" : "false"}
+        data-phone={phonePair ? "true" : "false"}
         style={
           poster && !framePlayed
             ? {

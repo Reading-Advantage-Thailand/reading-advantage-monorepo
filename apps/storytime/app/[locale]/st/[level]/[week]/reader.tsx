@@ -105,6 +105,8 @@ interface StorytimeReaderProps {
   mediaUrls?: Record<string, string>;
   /** The `<level>:<week>:<part>` key that the book writes to the done record at its last page. */
   doneKey?: string;
+  /** The screen that shows the player: the at-home phone and the class screen of the teacher. */
+  playerMode?: "at-home" | "class-screen";
 }
 
 /** The Thai message of a failed sound, so the Thai page needs no Thai label from the caller. */
@@ -150,6 +152,7 @@ export function StorytimeReader({
   questionLabels,
   mediaUrls = {},
   doneKey,
+  playerMode = "at-home",
 }: StorytimeReaderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const clipRef = useRef<HTMLAudioElement | null>(null);
@@ -467,6 +470,7 @@ export function StorytimeReader({
   return (
     <div
       className="flex flex-col gap-4"
+      data-mode={playerMode === "class-screen" ? "class-screen" : undefined}
       onTouchStart={(event) => {
         const touch = event.touches[0];
         if (touch) touchStartRef.current = { x: touch.clientX, y: touch.clientY };

@@ -8,6 +8,7 @@ import {
   teacherRoutesEnabled,
 } from "../../../../../../lib/teacher";
 import { requireRole } from "../../../../../../lib/auth";
+import { signWeekMedia } from "../../../../../../lib/media/sign";
 import TeacherForbidden from "../../../forbidden";
 import { TeacherLessonFlow } from "./lesson-flow";
 
@@ -81,5 +82,15 @@ export default async function TeacherDayPage({
   const script = loaded.week.scripts.find((entry) => entry.day === day);
   if (!script) notFound();
 
-  return <TeacherLessonFlow week={loaded.week} day={day} locale={locale} />;
+  // Every media URL of a page is a signed URL, so the route signs the media of the week and
+  // hands the map to the lesson flow (plan task 4.4).
+  const mediaUrls = await signWeekMedia(loaded.week, {});
+  return (
+    <TeacherLessonFlow
+      week={loaded.week}
+      day={day}
+      locale={locale}
+      mediaUrls={mediaUrls}
+    />
+  );
 }
