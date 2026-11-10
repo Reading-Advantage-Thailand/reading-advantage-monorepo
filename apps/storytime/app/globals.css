@@ -42,3 +42,16 @@
 .song-stage audio {
   width: 100%;
 }
+
+/* The class screen of the teacher (plan task 4.5). The stage caps at 44 percent of the screen
+   height and the lyric list bounds at 25 percent and scrolls inside its box, so the open player
+   of the lesson flow fits the 1920x1080 and 1366x768 viewports with no page scroll. The at-home
+   stage and lyric list keep the rules above. */
+.song-stage.st-class-screen video {
+  width: min(100%, calc(44dvh * 16 / 9));
+}
+
+.st-class-lyrics {
+  max-height: 25dvh;
+  overflow-y: auto;
+}

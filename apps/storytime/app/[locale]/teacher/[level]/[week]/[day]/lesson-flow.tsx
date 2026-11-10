@@ -267,7 +267,7 @@ function ClipControl({
       data-clip-path={file}
       data-clip-url={url}
       onClick={() => void new Audio(url).play().catch(() => {})}
-      className="rounded-full border border-[#92400e] bg-[#fcd34d] px-2 py-0.5 text-[#92400e]"
+      className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-[#92400e] bg-[#fcd34d] px-3 text-[#92400e]"
     >
       Play clip
     </button>

@@ -14,6 +14,10 @@
  * event), so a phone shows a picture and never a white box (council finding 9, AC-1.4). A video
  * starts the song `videoLeadInSeconds` after the song audio, so the lyric lines light from the
  * video time minus that lead-in (AC-1.13); the audio-only fallback has no lead-in.
+ *
+ * The class screen of the teacher (plan task 4.5) caps the stage and bounds the lyric list, so
+ * the open player fits the 1920x1080 and 1366x768 viewports with no page scroll. The lyric list
+ * scrolls inside its bounded box. The at-home layout stays as it is.
  */
 import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useRef, useState, type SyntheticEvent } from "react";
@@ -160,7 +164,7 @@ export function StorytimeSong({
       data-mode={classScreen ? "class-screen" : undefined}
     >
       <div
-        className="song-stage"
+        className={classScreen ? "song-stage st-class-screen" : "song-stage"}
         data-phone={phonePair ? "true" : "false"}
         style={
           poster && !framePlayed
@@ -219,7 +223,7 @@ export function StorytimeSong({
       >
         {playing ? labels.pause : labels.play}
       </button>
-      <ol className="flex flex-col gap-2">
+      <ol className={classScreen ? "st-class-lyrics flex flex-col gap-2" : "flex flex-col gap-2"}>
         {song.lines.map((line, index) => {
           const active = index === activeLine;
           return (
