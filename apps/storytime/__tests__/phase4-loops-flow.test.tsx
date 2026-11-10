@@ -1072,6 +1072,11 @@ describe("Phase 4 teacher loops in the lesson flow (AC-13.7, AC-13.8)", () => {
     const missingClip = clipsOf(stepOf(missing, 1, "A4"))[0]!;
     expect(drill.words[0]!.audio?.[0], "the first clip of the drill must exist").toBe(missingClip);
     delete missingUrls[missingClip];
+    const keptClips = expectedClips.filter((clip) => clip !== missingClip);
+    expect(
+      keptClips.length,
+      `kept_clips=${keptClips.length}: the missing clip ${missingClip} must remove at least one of the ${expectedClips.length} controls`,
+    ).toBeLessThan(expectedClips.length);
     const missingDay = await walkDay(1, missing, { mediaUrls: missingUrls });
     const missingPanel = panelOf(
       screenAt(missingDay, "A4").node,
@@ -1084,7 +1089,7 @@ describe("Phase 4 teacher loops in the lesson flow (AC-13.7, AC-13.8)", () => {
     expect(
       `clip_controls=${missingControls.length}`,
       "a clip with no signed URL must show no clip control",
-    ).toBe(`clip_controls=${expectedClips.length - 1}`);
+    ).toBe(`clip_controls=${keptClips.length}`);
     expect(
       missingControls.some((control) => control.dataset.clipPath === missingClip),
       `the clip ${missingClip} must have no control without a signed URL`,
