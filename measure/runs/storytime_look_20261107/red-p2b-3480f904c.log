@@ -1,0 +1,62 @@
+# Red evidence: Phase 2b (brand chrome), task 2b.1
+# Role: measure-mid-red. Track: storytime_look_20261107. Phase base: 3480f904c509dc2d66fa827dba73df95b3768c65.
+# Model: opencode/minimax-m3.1-flash-free#high. The Red commit holds the two new test files only.
+# The Phase 2b rows of look-phase2-browser-gate.sh are not part of this commit (task 2b.4 runs them).
+#
+# Red command (test-strategy P2b.1 RED_TEST_COMMAND), run in the foreground through heavy-run:
+#   HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts'
+# Result at the phase base: exit=1; Test Files 2 failed; tests_failed=12; tests_passed=6; load_errors=0.
+# The six passing cases are the named characterization cases (B6, S4, S11) and the mutant self-tests (B1 self-test, B3 self-test, S12).
+# The twelve failing cases fail for the missing feature, not for a load error, a type error, or a wrong path.
+#
+# Failing cases by acceptance criterion:
+#   AC-4.1 (no game bar, no progress bar)   B1: the five screens in en and th, ten cases. Every case reports
+#                                            "the frame must render no [data-game-bar], found 1".
+#   AC-4.2 (the label is read once)          B2: "[data-level-week] must not be aria-hidden", "[data-level-week] must not sit
+#                                            inside aria-hidden", and "the label must be read once, level_week_copies=2",
+#                                            for the routes 2/1 and 3/5 in en and th.
+#   AC-4.3 (the logo replaces the crest)    B3: "the frame must render one [data-logo], found 0" and "the frame must render no
+#                                            [data-crest], found 1", for the cover and band variants in en and th.
+#                                            S1: "Missing apps/storytime/app/look/logo/storytime-advantage.svg".
+#   AC-4.4 (the brand tones and the families) S3: "the root scope must define the brand tones", brand_tokens_found=0.
+#                                            S5: "the blue token count must be 0", blue_family_refs=11.
+#                                            S7: "the blue background count must be 0", blue_background_refs=7.
+#                                            S8: "the blue chrome count must be 0", blue_chrome_classes=1 (reader.tsx:551).
+#                                            S9: "the neutral chrome count must be 0", neutral_chrome_classes=30.
+#   AC-4.5 (the text colors)                 S6: "the pair count must be above 0", chrome_pairs_checked=0.
+#   AC-4.6 (the banner)                      S10: "the banner rule must center the text on both axes, found flex-end".
+#   AC-4.7 (the unchanged paths)             S11 passes at the base (characterization): protected_paths_checked above 0 and
+#                                            place_files=10.
+#
+# Type gate (P2b.3), run in the foreground through heavy-run:
+#   HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'
+#   Result: exit=0, look_tsc_errors=0.
+#
+# Lint gate (P2b.3), run on the two new files:
+#   cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/eslint __tests__/look-brand-chrome.test.ts __tests__/look-brand-chrome.test.tsx
+#   Result: exit=0, eslint_errors=0, eslint_warnings=0.
+#
+# Red commit: 4dca54e7979365b78fe2f799b10c628a634a0363
+#   "test(look): pin the brand chrome contract (track_id: storytime_look_20261107)"
+#   Files: apps/storytime/__tests__/look-brand-chrome.test.ts, apps/storytime/__tests__/look-brand-chrome.test.tsx
+#
+# Green must still do: the gate rows of look-phase2-browser-gate.sh, the plan note, and the commits of task 2b.2.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome
+task: 2b.1
+status: complete
+baseline_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+red_test_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts'
+red_exit: 1
+tests_failed: 12
+tests_passed: 6
+load_errors: 0
+files: 2
+tsc_exit: 0
+eslint_exit: 0
+commit: 4dca54e7979365b78fe2f799b10c628a634a0363
+END_MEASURE_AGENT_RESULT
