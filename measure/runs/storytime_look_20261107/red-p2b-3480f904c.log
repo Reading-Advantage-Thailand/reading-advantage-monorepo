@@ -89,6 +89,15 @@ r2_self_test_exit: 0
 r2_selftest_mutants_rejected: 70 of 70
 r2_bash_n_exit: 0
 r2_commit: 3ca71c054b0dd7da313e3561ff588b88d09ed623
+r3_red_cases: P-2 no blue ink or ground stays on the child screens
+r3_tests_failed: 1
+r3_tests_passed: 27
+r3_load_errors: 0
+r3_eslint_exit: 0
+r3_self_test_exit: 0
+r3_selftest_mutants_rejected: 74 of 74
+r3_bash_n_exit: 0
+r3_commit: 770fadd47d46d934caa8bd5a8127bae4dac8b468
 END_MEASURE_AGENT_RESULT
 
 # Part 2 (the browser rows of the Phase 2b gate, same role, same phase).
@@ -273,3 +282,80 @@ END_MEASURE_AGENT_RESULT
 #   Files: apps/storytime/__tests__/look-brand-chrome.test.ts,
 #          apps/storytime/__tests__/look-phase2-browser-gate.sh,
 #          packages/read-along/lib/__tests__/highlight-contrast.test.ts
+
+# Remediation r2 follow-up (automated): the B6 case of look-brand-chrome.test.tsx now requires bg-[#92400e] and text-white and no blue class (finding P-1, PM 2026-11-10); the hex map of packages/read-along/lib/__tests__/highlight-contrast.test.ts holds bg-[#fcd34d] and text-[#92400e]; the red run through heavy-run exits 0 with 7 of 7 and 3 of 3 cases passing; commit=%SHA%.
+
+# Remediation r3 (automated): status in_progress. The role base is 0d2c5baef. The new work is the P-2 blue ink source case in apps/storytime/__tests__/look-brand-chrome.test.ts, the blue_text_or_ground check in row 16 of apps/storytime/__tests__/look-phase2-browser-gate.sh, and the teacher verdict of row 18 (decision C-F3, no tap floor on the teacher pages).
+
+#
+# Remediation r3 (automated), same role, same phase. The role base of this round is 0d2c5baef.
+# The findings are P-2 (the blue ink and the blue ground stay on the child screens) and R18 (the
+# teacher week page of row 18).
+#
+# Red case added to apps/storytime/__tests__/look-brand-chrome.test.ts:
+#   P-2 no blue ink or ground stays on the child screens (AC-4.4, AC-4.7)
+#        Fails at HEAD with "the rule html paints the blue #173a6b | the rule body names the blue
+#        token --sq-ink | the rule main[data-place] names the blue token --sq-ink | the rule
+#        header[data-hero] names the blue token --sq-ice | the rule main[data-place] > section
+#        [aria-label] + section[aria-label] p names the blue token --sq-ink | the rule main
+#        [data-place] > section[aria-label] + section[aria-label] p[lang="en"] names the blue token
+#        --sq-ink | and 5 more blue references | the ground of the page must use a brown tone, found
+#        #173a6b | the vignette over the place must use a brown tone, found radial-gradient(ellipse
+#        at 50% 18%, rgba(10, 30, 70, 0) 30%, rgba(8, 20, 48, 0.6) 100%), linear-gradient(180deg,
+#        rgba(12, 30, 70, 0.12), rgba(12, 30, 70, 0.4))".
+#        The case reads every rule of look.css outside the :root token definitions and outside the
+#        art rules. It names the banned tokens --sq-ink, --sq-ink-soft, --sq-navy, --sq-blue,
+#        --sq-blue-top, --sq-blue-dark, and --sq-ice. It also reads a blue hex or rgb colour, a
+#        colour whose blue channel is the largest and leads by 40 or more. It checks the ground of
+#        the page (the html rule) and the vignette over the place (the ::after rule of main
+#        [data-place]) for a brown tone.
+#
+# Red command, run in the foreground through heavy-run:
+#   HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.ts'
+#   Result at HEAD 0d2c5baef: exit=1; Test Files 1 failed | 1 passed; tests_failed=1;
+#   tests_passed=27; load_errors=0. The failing case is the new one. The other cases stay as they
+#   are.
+#
+# Gate script changes in apps/storytime/__tests__/look-phase2-browser-gate.sh:
+#   P-2 row 16 reads every visible element of the five child screens in the two locales. It counts
+#     the elements whose text colour or whose ground holds a blue colour (the blue channel is the
+#     largest and leads by 40 or more). The background of a picture is art and stays out of the
+#     count. The row expects blue_text_or_ground=0 and emits blue_text_or_ground_max. The row now
+#     walks the five child screens (the four screens and the question screen).
+#   R18 row 18 uses the new verdict of the teacher pages. Decision C-F3: the 48 px tap floor
+#     covers the child screens only, so the teacher pages do not check tap_under_48. The row names
+#     the first console error and the first failed answer of every page.
+#   The self-test gains the control and the mutants of the blue ink count and of the teacher
+#     verdict. The mutant count moves from 70 to 74.
+#
+# R18 diagnosis, with the evidence of the gate log r3 and of the source:
+#   The teacher week page answers status=200 with console_errors=6 and tap_under_48=5
+#   (logs/gate-r3.log, line 124).
+#   The five small tap targets are the five "Open the lesson" links of the teacher week view
+#   (apps/storytime/app/[locale]/teacher/[level]/[week]/week-view.tsx). The link holds px-4 py-2
+#   text-white, so it measures about 40 px. Decision C-F3 covers them: the teacher pages no longer
+#   check the tap floor.
+#   The six console errors do not come from the fixture media. The shipped level 2 week 1 holds no
+#   family word (the family word list of content/l2/w01.json is empty), so the teacher week view
+#   renders no picture of a family word. The media package of the gate (the handoff folder
+#   w01-storytime-app-package-r2) holds the media of the week (l2/media/w01/...). The teacher day
+#   page of the same week loads with console_errors=0 and one brand pair, so the fixture, the
+#   storage stand-in, and the media of the week work.
+#   The errors come from the teacher week page itself, so the row stays strict and the teacher
+#   verdict still requires console_errors=0. The row now reports the first console error and the
+#   first failed answer (the status and the URL), so the next gate run names the cause exactly.
+#   The two candidates are the media that the page signs for the five lessons and the answers of
+#   the five day links.
+#
+# No-browser check:
+#   cd apps/storytime && bash __tests__/look-phase2-browser-gate.sh --self-test
+#   Result: exit=0; selftest_controls_ok=1; selftest_mutants_rejected=74 of
+#   selftest_mutants_checked=74; "=== Total: 1 checks (PASS=1, FAIL=0) ===".
+#   bash -n on the script: exit=0.
+# Lint gate in apps/storytime on the changed test file: exit=0.
+#
+# Remediation r3 commit: 770fadd47d46d934caa8bd5a8127bae4dac8b468
+#   "test(look): pin no blue ink or ground on the child screens
+#   (track_id: storytime_look_20261107)"
+#   Files: apps/storytime/__tests__/look-brand-chrome.test.ts,
+#          apps/storytime/__tests__/look-phase2-browser-gate.sh
