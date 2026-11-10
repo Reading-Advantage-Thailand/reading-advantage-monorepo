@@ -1,0 +1,118 @@
+# Green log — task 4.5 (Phase 4 check), track storytime_app_rebuild_20261025
+
+Status: COMPLETE
+
+- Phase base (immutable): `bfaae8905993076ca1e8a49939c400eb038fe3ae`
+- Role base: `02ee3252f5aac00762e6aeca0180e1c9e41787da`
+- Red: `1fc535d26` (the gate), `f0452a975` (the evidence); Red model
+  deepseek/deepseek-flash#high. Green model: volcengine-agent-plan/glm-5.3-flash#high. The
+  families differ; no coder was delegated.
+- Scope deviation (orchestrator decision, recorded in plan.md): tasks 4.6 and 4.6a are Done, so
+  this checkpoint covers tasks 4.1 to 4.6a in one gate. The plan sentence that says task 4.5
+  does not cover 4.6 and 4.6a reads as a note on the old scope.
+- Implementation commit: `3a9f14cbd`
+  `fix(storytime): fit the teacher media and clip controls (track_id: storytime_app_rebuild_20261025)`
+  Files: `apps/storytime/app/[locale]/st/[level]/[week]/song.tsx`,
+  `apps/storytime/app/globals.css`,
+  `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` (changed),
+  `apps/storytime/__tests__/phase4-docker-smoke.sh` (new, Green-owned gate file).
+
+## The two fixes
+
+1. B1 on step D6. The song player in class-screen mode was 1770 px tall: the 16:9 stage 530 px
+   plus an unbounded 15-line lyric list of 1072 px. `song.tsx` now marks the class-screen mode on
+   the stage, and `globals.css` adds two rules for that mode only: the stage caps at 44 percent
+   of the screen height, and the lyric list bounds at 25 percent and scrolls inside its box.
+   Only the class-screen mode changes; the at-home layout and its Phase 3 tests stay the same.
+   Result: `player_h=913` at 1920x1080, `player_h=698` at 1366x768, both fit.
+2. L4. The `Play clip` control was 83x34 px. `ClipControl` in `lesson-flow.tsx` now holds
+   `min-h-[44px] min-w-[44px]` with centered content. The gate measures `min_side_px=44` over 13
+   targets (12 drill, 1 recall).
+
+## Gate results
+
+All commands ran with the working tree at the role base, or with the code commit for gate 5.
+MemAvailable stayed above 3.1 GB; the direct vitest runs with `--maxWorkers=1` ran direct.
+
+1. Targeted commands.
+   - `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx __tests__/phase4-share-moment.test.tsx __tests__/phase4-loops-flow.test.tsx`
+     → exit 0, 63 passed, 0 failed.
+   - P1 (root config): `pnpm exec vitest run --maxWorkers=1 apps/storytime` → exit 1,
+     966 passed, 16 failed. The 16 failures are pre-existing and outside Phase 4:
+     15 sit in the 404-view family (`look-not-found.test.tsx`, `look-not-found-locale.test.tsx`,
+     `look-adversarial-not-found.test.tsx`, `look-adversarial-p2b.test.tsx`,
+     `phase3-not-found.test.tsx`) because the root `vitest.config.ts` holds no `@` alias, so
+     `@/i18n/routing` and `@/lib/route-parse` do not resolve at the root; those files last
+     changed in the `storytime_look_20261107` track. The other failure is
+     `login-media-sign.test.ts` line 84 (`signed_map_size_expected: expected 70 to be 42`),
+     caused by the content import `345e02ba2` of that track. The same tests pass under the app
+     config in gate 2. This diff names only the three source files and the new smoke script.
+   - P2: `pnpm exec vitest run --maxWorkers=1 "apps/storytime/__tests__/phase2-"*.test.ts packages/read-along`
+     → exit 0, 258 passed, 0 failed.
+   - P3a: `pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase3-entry-route.test.ts apps/storytime/__tests__/phase3-readiness.test.ts apps/storytime/__tests__/phase3-manifest.test.ts apps/storytime/__tests__/phase1-scaffold.test.ts apps/storytime/__tests__/phase1-boundary.test.ts`
+     → exit 0, 19 passed, 0 failed.
+   - P3b: `pnpm exec vitest run --maxWorkers=1 "apps/storytime/__tests__/phase3-"*.test.ts "apps/storytime/__tests__/phase3-"*.test.tsx packages/read-along`
+     → exit 1, 346 passed, 1 failed. The one failure is `phase3-not-found.test.tsx`, the same
+     root-config alias cause as the P1 bucket.
+2. `bash apps/storytime/__tests__/phase1-quality-gates.sh` (heavy-run p1): exit 1 on the one
+   pre-existing `login-media-sign.test.ts` case only. 981 of 982 tests pass under the app
+   config, including the full 404-view family. Recorded as pre-existing, outside Phase 4; not
+   fixed here.
+3. Docker smoke with the flag not set. Command:
+   `HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash apps/storytime/__tests__/phase4-docker-smoke.sh'`
+   → exit 0. `PASS=6, FAIL=0`; `teacher_404=13 of 13` (the week route in th, en, and without
+   locale, and the five day routes in th and without locale). The first run of the new script
+   failed honestly twice while it was being built: unauthenticated requests get the sign-in
+   redirect (200 after the follow), so the rows carry the session of `teach-01`, and the sign-in
+   POST needs the `Origin` header that matches the `Host` (finding F-origin).
+4. `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+   Run (a) `PASS=28, FAIL=0`; run (b) `PASS=24, FAIL=0`; run (c) `PASS=12, FAIL=0`; wrapper
+   `PASS=9, FAIL=0`. B1 D6: `player_w=976 player_h=913` at 1920x1080 (`media_box=942x338`,
+   `lyrics_h=192` on the laptop) and `player_h=698` at 1366x768. B1 B3 keeps
+   `player_h=588`. L4: `targets=13 (drill_targets=12, recall_targets=1, min_side_px=44)`.
+5. `tsc --noEmit` in apps/storytime (heavy-run p1, foreground, shell timeout 0): exit 0.
+   `npx eslint` on the two changed `.tsx` files: exit 0. `bash -n` on the new smoke script:
+   exit 0. `build-graph update` (heavy-run p1) on the two changed `.tsx` files: exit 0
+   (88 nodes, 106 edges). No server stayed running: the browser gate and the smoke stop their
+   servers and containers by pid and name, and each printed its closed-port line.
+
+## Result
+
+Task 4.5 is `[x]` with `Done: 3a9f14cbd` in plan.md. Gates 1, 3, 4, and 5 pass; gate 2 fails
+only on the pre-existing media-sign case, as the orchestrator stated. No committed Red test
+changed, and the committed Red gate script is untouched.
+
+Question for the orchestrator (default taken, no user input needed): the root
+`vitest.config.ts` holds no `@` alias, so the strategy P1 and P3b commands fail the 404-view
+family even though the same tests pass under the app config. Default: the orchestrator routes
+the alias fix (or a root-config project reference to the app configs) to a small follow-up task,
+because this Green role may not edit the strategy or the shared root config.
+
+MEASURE_AGENT_RESULT
+- Role: measure-jr-green, task 4.5, track storytime_app_rebuild_20261025
+- Models: Green volcengine-agent-plan/glm-5.3-flash#high; Red deepseek/deepseek-flash#high
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable)
+- role_base_sha: 02ee3252f5aac00762e6aeca0180e1c9e41787da
+- Red commits: 1fc535d26 (gate), f0452a975 (evidence)
+- Implementation commit: 3a9f14cbd
+  fix(storytime): fit the teacher media and clip controls (track_id: storytime_app_rebuild_20261025)
+  Changed: apps/storytime/app/[locale]/st/[level]/[week]/song.tsx,
+  apps/storytime/app/globals.css,
+  apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx
+  New: apps/storytime/__tests__/phase4-docker-smoke.sh (Green-owned gate file)
+- Gate 1: P4 six files exit 0, 63/63; P2 exit 0, 258/258; P3a exit 0, 19/19; P1 root exit 1
+  (16 pre-existing: 15 root-config `@` alias in the 404 family, 1 login-media-sign 70 vs 42);
+  P3b exit 1 (1 pre-existing, same alias cause, 346/347)
+- Gate 2: phase1-quality-gates.sh (heavy-run p1) exit 1 on the pre-existing
+  login-media-sign.test.ts line 84 only; 981/982 pass under the app config; recorded, not fixed
+- Gate 3: phase4-docker-smoke.sh (heavy-run p1) exit 0, teacher_404=13 of 13, PASS=6 FAIL=0
+- Gate 4: phase4-browser-gate.sh (HEAVY_HANG_KILL_S=off) exit 0; run a PASS=28 FAIL=0, run b
+  PASS=24 FAIL=0, run c PASS=12 FAIL=0, wrapper PASS=9 FAIL=0; B1 D6 player_h=913 (1080) and
+  698 (768); L4 min_side_px=44 over 13 targets
+- Gate 5: tsc exit 0; ESLint exit 0; bash -n exit 0; build-graph update exit 0 (heavy-run p1)
+- Task status: 4.5 flipped to [x] with Done: 3a9f14cbd; no deferred tasks; no fabrication
+- Deviations: scope covers tasks 4.1 to 4.6a (orchestrator decision); the P1 and P3b root
+  failures are pre-existing outside Phase 4, with the evidence above
+- New files for the reviewer scope: apps/storytime/__tests__/phase4-docker-smoke.sh
+- Plan evidence commit: see the commit that carries this log and plan.md
+END_MEASURE_AGENT_RESULT

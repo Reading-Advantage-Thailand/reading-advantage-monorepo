@@ -2467,7 +2467,7 @@ for every other track.
 - No week file, no received content, no read-along package, and no Primary file changed. The
   report is `measure/runs/storytime_app_rebuild_20261025/green-p4-t46a.log`.
 
-- [~] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It does not cover task 4.6 or task 4.6a, which do not hold this checkpoint (see the exception in the Phase 3 amendment line).
+- [x] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It does not cover task 4.6 or task 4.6a, which do not hold this checkpoint (see the exception in the Phase 3 amendment line). Done: `3a9f14cbd`.
   - Red evidence (task 4.5). Role base `b1d4bc52014e5874ea66878c68ec2e48e388d927`; phase base
     `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model: `deepseek/deepseek-flash#high` (a
     substitution, because MiniMax reached its limit). Red added one file,
@@ -2536,6 +2536,64 @@ for every other track.
   - No `tsc` run: the role added no TypeScript file (the embedded script is a heredoc inside the
     `.sh`). No `build-graph update`: no TypeScript structure changed.
   - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t45.log`.
+  - Green evidence (task 4.5). Role base `02ee3252f5aac00762e6aeca0180e1c9e41787da`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model: `volcengine-agent-plan/glm-5.3-flash#high`.
+    Red ran on `deepseek/deepseek-flash#high`; the families differ. No coder was delegated.
+  - Implementation commit: `3a9f14cbd`. Two production fixes close the two failing rows:
+    - B1 on D6. `app/[locale]/st/[level]/[week]/song.tsx` marks the class-screen mode, and
+      `app/globals.css` adds two rules for that mode only: the 16:9 stage caps at 44 percent of
+      the screen height (`width: min(100%, calc(44dvh * 16 / 9))`) and the lyric list bounds at
+      25 percent of the screen height and scrolls inside its box. The at-home stage and lyric
+      list keep their Phase 3 rules, so the Phase 3 song tests keep passing.
+    - L4. The `ClipControl` of `lesson-flow.tsx` gets `min-h-[44px] min-w-[44px]` with centered
+      content, so the drill clip controls and the recall clip control all reach the floor; the
+      gate measures `min_side_px=44` over 13 targets.
+    - New Green-owned gate file: `apps/storytime/__tests__/phase4-docker-smoke.sh` (closeout
+      item 3). It follows the `phase3-docker-smoke.sh` pattern: the image builds once, a
+      throwaway Postgres holds the migrated schema and the teacher account `teach-01`, one
+      container runs with no `STORYTIME_TEACHER_ROUTES` name in its environment, the script
+      signs in (the `Origin` header matches the `Host`, finding F-origin), and 13 teacher routes
+      with and without the locale segment each answer 404 from the container. The password stays
+      in a shell value and no log line prints it. The port is free, never 3005, never 3099; the
+      containers stop by name in the exit trap.
+  - Closeout gate results (role base `02ee3252f` for gates 1 to 4; the code commit landed
+    before gate 5):
+    1. Targeted commands, all with `--maxWorkers=1`, MemAvailable above 3.1 GB, direct:
+       the six Phase 4 files exit 0 with 63 of 63. P1 (root config,
+       `pnpm exec vitest run --maxWorkers=1 apps/storytime`): exit 1 with 966 of 982 — the 16
+       failures are two pre-existing causes outside Phase 4: 15 failures in the 404-view family
+       (`look-not-found*`, `look-adversarial-not-found`, `look-adversarial-p2b`,
+       `phase3-not-found`) because the root `vitest.config.ts` holds no `@` alias, so
+       `@/i18n/routing` and `@/lib/route-parse` do not resolve at the root (the files last
+       changed in the `storytime_look_20261107` track), and the 1 `login-media-sign.test.ts`
+       `expected 70 to be 42` case (line 84) from the content import `345e02ba2`. The same tests
+       pass under the app config in gate 2 (981 of 982). P2
+       (`phase2-*.test.ts` + `packages/read-along`): exit 0, 258 of 258. P3a (entry-route,
+       readiness, manifest, scaffold, boundary): exit 0, 19 of 19. P3b (all `phase3-*` +
+       read-along): exit 1 with 346 of 347 — the one failure is `phase3-not-found.test.tsx`, the
+       same root-config alias cause.
+    2. `phase1-quality-gates.sh` (heavy-run p1): exit 1 on the one pre-existing
+       `login-media-sign.test.ts` case only; 981 of 982 pass under the app config. Recorded as
+       pre-existing, outside Phase 4; the orchestrator routes the stale 42 count to the
+       `storytime_look_20261107` track.
+    3. `HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash apps/storytime/__tests__/phase4-docker-smoke.sh'`:
+       exit 0; `teacher_404=13 of 13`, `PASS=6, FAIL=0`.
+    4. `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+       Run (a) `PASS=28, FAIL=0`; run (b) `PASS=24, FAIL=0`; run (c) `PASS=12, FAIL=0`; wrapper
+       `PASS=9, FAIL=0`. B1 on D6 now reads `player_h=913` at 1920x1080 and `player_h=698`
+       at 1366x768 (media box 942x338, lyric list 192 px); B1 on B3 keeps `player_h=588`.
+       L4 reads `targets=13, min_side_px=44`.
+    5. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0. ESLint on the two changed
+       `.tsx` files: exit 0. `bash -n` on the new smoke script: exit 0. `build-graph update`
+       (heavy-run p1) on the two changed `.tsx` files: exit 0 (88 nodes, 106 edges).
+  - Deviations: the scope note above (this gate covers tasks 4.1 to 4.6a); the P1 and P3b root
+    commands fail on the pre-existing root-config alias gap and the pre-existing media-sign
+    count, both outside Phase 4 and both unchanged by this diff
+    (`git diff --stat` names only the three source files and the new smoke script).
+  - Anti-patterns: A3 holds (labeled counts). A5 holds (this block gives each exit code and
+    count). A6 holds (`measure/tracks.md` changes only at closeout, not here). A7 holds. A16
+    holds (no worktree).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t45.log`.
 
 ## Phase 5: Milestone week integration
 
