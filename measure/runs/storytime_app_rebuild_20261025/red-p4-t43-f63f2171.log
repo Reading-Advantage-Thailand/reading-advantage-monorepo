@@ -1,0 +1,91 @@
+# Red log — task 4.3, teacher lesson flow
+
+- Track: storytime_app_rebuild_20261025
+- Phase: 4 (Teacher app), task 4.3
+- Role: measure-mid-red
+- Phase base: bfaae8905993076ca1e8a49939c400eb038fe3ae
+- Role base: f63f2171e2aafa12a6bfeba438ba7897675505fb
+- Test file: apps/storytime/__tests__/phase4-lesson-flow.test.tsx
+- Test commit: 2947b9e1e
+- Plan evidence commit: the commit that holds this log
+
+## Field check
+
+The shipped `apps/storytime/content/l2/w01.json` holds every AC-9.2 field before any test was
+written:
+
+- `opening.pa`: 5 `{ en, th }` prompts, plus `opening.audio`.
+- `scripts`: 5 entries, each with `id`, `day`, `title { en, th }`, `steps`, and `share`.
+- `steps`: each with `id`, `title { en, th }`, `minutes`, `en` and `th` notes that hold
+  `teacherActions`, `teacherLanguage`, `studentActions`, and `watchFor`, and the three variant
+  lines `easier`, `harder`, and `group` as `{ en, th }`.
+- `review[]`: one entry for each day. Days 1, 4, and 5 hold no card.
+- `check`: 4 items. The check holds no `{ en, th }` field.
+
+No field is missing. The two empty-card days are real data, not a gap, so the test mutates a
+card of day 2 to prove that the review strip takes its text from the week.
+
+## Test contract for Green
+
+- `app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` exports `TeacherLessonFlow` with the
+  props `{ week, day, locale }`.
+- Screen 1 holds the opening routine, the review strip of the day, and step 1. Each later screen
+  holds one step. A control named "Next step" moves forward. The last screen holds no such
+  control.
+- A step screen shows the step id, the title, `<minutes> min`, the four headings, and the three
+  variant lines.
+- Day 5 shows the Friday check within the screens of the day.
+- A control named "ไทย" switches every `{ en, th }` field to `th`.
+- The view uses no next-intl hook, the same as the teacher week view of task 4.2.
+
+## Red run
+
+The test file was run directly, because MemAvailable was 3649432 kB.
+
+Command:
+
+```
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-flow.test.tsx
+```
+
+Result: exit 1; 1 failed file; 6 failed tests; 0 passed tests.
+
+Every failure is the named missing-module assertion for
+`app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` (`ERR_MODULE_NOT_FOUND`). No import,
+syntax, or transform error occurred. No test passes at HEAD, so the file holds no
+characterization case.
+
+## Type check
+
+```
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \
+  'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'
+```
+
+Result: exit 0. The new test file is in the program. No build, server, or port ran.
+
+## Scope
+
+The Red role changed one test file and the measure files of this track. It changed no production
+source, no week content, and no shipped file. No file of the look track and no file under
+`measure/runs/storytime_look_20261107` was touched.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_app_rebuild_20261025
+phase: 4
+task: 4.3
+status: red
+baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: f63f2171e2aafa12a6bfeba438ba7897675505fb
+head: 2947b9e1e
+red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-flow.test.tsx
+red_exit_code: 1
+tests_failed: 6
+tests_passed: 0
+load_errors: 0
+tsc_exit_code: 0
+test_commit: 2947b9e1e
+plan_commit: the commit that holds this log (SHA not knowable before the commit)
+report: measure/runs/storytime_app_rebuild_20261025/red-p4-t43-f63f2171.log
+END_MEASURE_AGENT_RESULT

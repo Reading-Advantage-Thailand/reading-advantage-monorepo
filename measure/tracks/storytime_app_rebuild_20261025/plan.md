@@ -1968,7 +1968,65 @@ for every other track.
 - The canonical-number rule of the at-home route stays in the at-home route. `lib/teacher.ts` holds its own copy, because the brief keeps the at-home routes unchanged. A later phase may join the two.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-4126421.log`.
 
-- [ ] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
+- [~] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
+
+### Phase 4 task 4.3 Red evidence
+
+- Mid-Red started at `f63f2171e2aafa12a6bfeba438ba7897675505fb`. HEAD matched the role base, and the
+  immutable phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae` resolves. No other session
+  committed into `apps/storytime` or this track.
+- measure-guard accepted the `[~]` marker on task 4.3. The guard did not block it this time.
+- Field check of the shipped `apps/storytime/content/l2/w01.json` against AC-9.2, before any test:
+  - `opening.pa` holds 5 `{ en, th }` prompts, and `opening.audio` holds the clips.
+  - `scripts` holds 5 entries. Each entry holds `id`, `day`, `title { en, th }`, `steps`, and
+    `share`. Each day holds at least 5 steps.
+  - Each step holds `id`, `title { en, th }`, `minutes`, `en` and `th` note objects with
+    `teacherActions`, `teacherLanguage`, `studentActions`, and `watchFor`, and the three variant
+    lines `easier`, `harder`, and `group` as `{ en, th }`.
+  - The week holds `review[]` with one entry per day (day 1, day 4, and day 5 hold no card), and
+    `check` with 4 items.
+  - No AC-9.2 field is missing. The check holds no `{ en, th }` field, so the Thai toggle has no
+    field there.
+- Red added one test file and changed no production source, no week content, and no shipped file.
+- Contract for Green: `app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` exports
+  `TeacherLessonFlow` with the props `{ week, day, locale }`. Screen 1 holds the opening routine,
+  the review strip of the day, and step 1. Each later screen holds one step. A step screen shows
+  the step id, the title, `<minutes> min`, the four headings, and the three variant lines. A
+  control named "Next step" moves forward, and the last screen holds no such control. Day 5 shows
+  the Friday check within the screens of the day. A control named "ไทย" shows the `th` text of
+  every `{ en, th }` field. The view uses no next-intl hook, the same as the week view.
+- The test renders the component, not the page, so it needs no session and no environment flag.
+- Test commit: `2947b9e1e` (`test(storytime): add red tests for the lesson flow`). The plan
+  evidence and the log sit in the next commit.
+- Automated Red command, light and direct (MemAvailable was 3649432 kB):
+  `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-flow.test.tsx`.
+  Result: exit 1; 1 failed file; 6 failed tests and 0 passed tests. Every failure is the named
+  missing-module assertion for
+  `app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx`. No import, syntax, or transform
+  error occurred.
+- Automated type check through the heavy lock:
+  `HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd
+  .../apps/storytime && ../../node_modules/.bin/tsc --noEmit'`. Result: exit 0. The new test file
+  is in the program.
+- Intentionally red tests, each with its cause and its task:
+
+| Test | Cause | Task |
+|---|---|---|
+| `phase4-lesson-flow` shows the opening routine before the first step of every day | the lesson flow module does not exist | 4.3 |
+| `phase4-lesson-flow` shows one step on each screen with the title, the minutes, the four headings, and the three variant lines | the lesson flow module does not exist | 4.3 |
+| `phase4-lesson-flow` shows the review strip of the day from the week | the lesson flow module does not exist | 4.3 |
+| `phase4-lesson-flow` shows the Friday check on day 5 only, from the week | the lesson flow module does not exist | 4.3 |
+| `phase4-lesson-flow` shows the th text of each { en, th } field when the Thai toggle is on | the lesson flow module does not exist | 4.3 |
+| `phase4-lesson-flow` takes the step fields from the loaded week, never a hard-coded string | the lesson flow module does not exist | 4.3 |
+
+- Anti-patterns: A3 holds (the step count shows as a labeled integer `day=<n> steps=<n>`). A4
+  holds (all five days and at least one step per day before any property assertion). A7 and A9 do
+  not apply: the file holds no `rg -v` exclusion list and no archived-track path.
+- AC-13.8 note for task 4.6: the tests read the week fields that the task 4.3 flow owns. They do
+  not read `recall`, `soundLoop`, `blendDrill`, `sightWords`, or `loopMinutes`, so they pass
+  unchanged on a week with no loop field.
+- Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t43-f63f2171.log`.
+
 - [ ] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes.
 - [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6.
