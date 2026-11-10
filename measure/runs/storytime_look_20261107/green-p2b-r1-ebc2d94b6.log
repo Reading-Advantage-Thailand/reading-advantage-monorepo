@@ -1,0 +1,98 @@
+status: complete
+role: measure-jr-green
+phase: Phase 2b: Brand chrome (remediation round 1)
+track: storytime_look_20261107
+model: deepseek/deepseek-flash#high (deviation: the free route reached its limit this round; same DeepSeek family)
+phase_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: ebc2d94b65e826aa5ff1aaf2aec3b39bb7849779
+red_commits: d2a4ff4c5 (tests), ebc2d94b6 (evidence)
+tasks: 2b.2 (remediation r1 evidence), 2b.3 stays [x]
+code_commit: b9b8817753d6be8f6af4e6689627ac7be9f5cf50
+
+red_run_before:
+  evidence: 4 new cases failed at ebc2d94b6 (the orchestrator brief)
+  cases: F-1, F-2 (CSS), F-2 (frame), F-3
+
+fixes:
+  F-1: the logo sits at the top left (left 16px, top 8px, 48 x 48 px) in both variants. The plaque
+       band and the logo band do not overlap. The band-specific logo rule carries its own top and
+       height, because the F-1 check reads one rule.
+  F-2: frame.tsx hands --title-chars to the CSS and sets the fitted font inline:
+       clamp(24px, calc((100cqi - 64px) / (chars * 0.68)), 72px | 44px).
+       header[data-hero] is the query container (container-type: inline-size).
+       The plaque sets line-height 1.25, no vertical padding, min-height 30px (the 24 px floor
+       line), white-space: normal, so a long title wraps only at the floor.
+       The brown edge is a 4 px ring (box-shadow), not a border, so the box height is exactly one
+       line box per line: font / (plaque_h / lines) = 0.8.
+       Deviation: look.css keeps font-size: 72px and 44px as px defaults, because S10 (Red test)
+       rejects a clamp value in a plaque rule. The frame always overrides with the clamp.
+  F-3: the two ::before and ::after plaque rules go (base and the max-height media block), the
+       q-tip url()s go, and git rm removes q-tip-l.svg and q-tip-r.svg. The pieces folder is empty.
+  F-4: [data-part="decodable"] div > section[aria-label]:last-child button takes
+       text-shadow: none (the 3 violations were the tricky-word buttons).
+  F-6: the old gate rows follow the brand contract:
+       council mode buttons: cream fill, brown label
+       council r2 action chips: 16 px, opaque, brown label
+       council r3 done badge: #fcd34d fill, brown check
+       council r3 page counter: cream pill, brown label
+       assets built CSS files: svg_files=0 (the tips are gone)
+       frame long title 60 characters: the Thai injection sets --title-chars too
+       The row 11 self-test controls use the brand colours. Rows 15 to 18 and their mutants are
+       untouched.
+       look-assets.test.ts: A3 is now the inverse (the two tips must be gone);
+       A4 asserts no piece url and no SVG in the pieces folder.
+
+checks:
+  check_1:
+    command: heavy-run; vitest run --maxWorkers=1 (the two Red files and eight CSS-reading test files)
+    exit: 0
+    test_files: 10 passed (10)
+    tests: 100 passed (100)
+    load_errors: 0
+  check_2:
+    command: bash apps/storytime/__tests__/look-phase2-browser-gate.sh --self-test
+    exit: 0
+    controls: selftest_controls_ok=1
+    mutants: selftest_mutants_rejected=61 of 61
+  check_3:
+    tsc_noEmit_exit: 0
+    eslint_exit: 0
+    eslint_files: app/[locale]/frame.tsx, __tests__/look-assets.test.ts
+  check_4:
+    command: git diff --stat 3480f904c -- packages/read-along apps/storytime/lib/highlight-windows.ts apps/storytime/app/look/places
+    exit: 0
+    output: empty
+
+f7_song_active_line:
+  finding: the rows capture song x6, hero song x2, and council r2 lyric line show
+           active_line_index=0, before=0, after=0
+  result: pre-existing, no change made
+  evidence:
+    - git diff 3480f904c..HEAD -- song.tsx holds one hunk: the play button className only.
+    - git diff 3480f904c..HEAD -- look.css has no added or removed line with aria-current,
+      data-active, or an active selector.
+    - git log -1 -S 'aria-current={active' -- song.tsx prints 13b8bdc9b
+      (feat(storytime): add the song page, 2026-10-25), an ancestor of the phase base.
+    - the protected-path diff is empty, so packages/read-along and the highlight windows are
+      unchanged.
+
+files_changed:
+  - apps/storytime/app/[locale]/frame.tsx (inline --title-chars and the fitted font)
+  - apps/storytime/app/look.css (logo place, plaque rule, ring, tips removed, F-4 shadow)
+  - apps/storytime/app/look/pieces/q-tip-l.svg (deleted)
+  - apps/storytime/app/look/pieces/q-tip-r.svg (deleted)
+  - apps/storytime/__tests__/look-assets.test.ts (A3 inverse, A4 pieces gone)
+  - apps/storytime/__tests__/look-phase2-browser-gate.sh (F-6 rows and the self-test controls)
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome (remediation round 1)
+commits: b9b881775 (code); this commit holds the plan evidence
+tests_run: check 1 100 tests passed (10 files), exit 0; --self-test exit 0 (61 of 61 mutants rejected); tsc exit 0; ESLint exit 0; protected-path diff empty
+files_changed: frame.tsx, look.css, the two tip files removed, look-assets.test.ts, look-phase2-browser-gate.sh
+plan_updates: remediation r1 appended to 2b.2; 2b.3 unchanged at [x]
+known_failures: none in this round's scope (no full app suite this round by the PM memory rule)
+handoff: F-1 to F-4 and F-6 are fixed in b9b881775. F-7 is pre-existing: aria-current came from 13b8bdc9b, and Phase 2b did not touch the lyric active state. Two points for the browser gate: (1) look.css keeps px defaults and the frame overrides the font inline, because S10 (Red) rejects a clamp value; (2) the plaque edge is a box-shadow ring, so the height ratio is 0.8. Run the browser gate through the heavy wrapper, and check row 3 (60-character title at 568x320 and 844x390) and row 17 (banner ratio, gaps) with a real browser. The model changed to deepseek/deepseek-flash#high this round because the free route reached its limit.
+END_MEASURE_AGENT_RESULT
