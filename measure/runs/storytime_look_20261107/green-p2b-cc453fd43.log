@@ -1,0 +1,128 @@
+status: blocked
+role: measure-jr-green
+phase: Phase 2b: Brand chrome
+track: storytime_look_20261107
+model: opencode/deepseek-v4.1-flash-free#high
+phase_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: cc453fd43d05d3e51d5a3fad3fd7565337906ee3
+red_commits: 4dca54e79 (tests), cc453fd43 (evidence)
+red_model: opencode/minimax-m3.1-flash-free#high
+tasks: 2b.2 Green, 2b.3 phase check
+commits: 46dbf25ed (code); this commit holds the plan evidence
+
+red_run_before:
+  command: vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts
+  exit: 1
+  test_files: 2 failed (2)
+  tests: 12 failed | 6 passed (18)
+  load_errors: 0
+
+red_run_after:
+  exit: 0
+  test_files: 2 passed (2)
+  tests: 18 passed (18)
+  load_errors: 0
+
+green_test_command:
+  files: 20 (the 19 of test-strategy P2b.3 plus __tests__/look-council-r3.test.tsx)
+  exit: 0
+  test_files: 20 passed (20)
+  tests: 164 passed (164)
+  tests_failed: 0
+  tests_skipped: 0
+
+post_chip_targeted_run:
+  command: vitest run --maxWorkers=1 __tests__/look-council-r2.test.tsx __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts
+  exit: 0
+  test_files: 3 passed (3)
+  tests: 26 passed (26)
+
+full_app_suite:
+  exit: 1
+  test_files: 116, 2 failed | 114 passed
+  tests: 909, 2 failed | 907 passed
+  failure_1: look-council-r2.test.tsx R3, the [data-action-chip] label must be navy
+    fix: the chip label takes var(--st-brown) and R3 expects brown (spec FR-4 (c), Daniel
+         2026-11-10: brown text on amber). Re-run: 3 files, 26 tests, exit 0.
+  failure_2: login-media-sign.test.ts, signed_map_size_expected 70 but the test pins 42
+    state: pre-existing at HEAD. The content commit 345e02ba2 imported the r3 week packages.
+           The phase touches no content and no media sign file. Not edited: outside R-EDIT-2b.
+
+typecheck:
+  command: cd apps/storytime && ../../node_modules/.bin/tsc --noEmit
+  exit: 0
+
+eslint:
+  files: 17 changed .ts and .tsx files, one call
+  exit: 0
+  errors: 0
+  warnings: 2 (pre-existing in look-council-r3.test.tsx)
+
+protected_path_diff:
+  command: git diff --stat 3480f904c -- packages/read-along apps/storytime/lib/highlight-windows.ts apps/storytime/app/look/places
+  exit: 0
+  output: empty
+
+part_a:
+  logo_copy: apps/storytime/app/look/logo/storytime-advantage.svg (18883 bytes, cmp identical)
+  removed: app/look/pieces/q-bar.svg, app/look/pieces/q-crest.svg
+  frame: no game bar, no crest, one visible [data-level-week], one img data-logo
+  css: --st-amber and --st-brown at :root; four chrome families repainted; no [data-game-bar]
+       and no [data-crest] rule; no blue or gold token in a chrome family rule
+  screens: reader.tsx, page.tsx, decodable.tsx, song.tsx, questions.tsx, not-found-view.tsx,
+           week-view.tsx, the teacher day page, st/page.tsx, sign-in/page.tsx, join/page.tsx
+  kept: the two sign-in inputs, the red alert, the amber draft note, the art, the per-word highlight
+
+brand_chrome_followup:
+  mode_button: cream fill stays, label var(--st-brown), council-r1 C1 restated
+  page_counter: cream pill stays, label var(--st-brown), council-r3 C5 restated
+  done_badge: fill var(--st-amber), check var(--st-brown), council-r3 C2 restated
+  action_chip: pale amber fill stays, label var(--st-brown), council-r2 R3 restated
+  contrasts: brown on cream 6.7:1, brown on #fcd34d 4.9:1, brown on #fef3c7 6.4:1.
+             All are 4.5:1 or more.
+  reason: spec FR-4 (c), Daniel 2026-11-10: no blue chrome, and brown text on amber
+
+older_tests_changed:
+  - look-frame.test.tsx F1: bars=0 and labels=1
+  - look-frame.test.tsx F2: the label carries the two route numbers
+  - look-frame.test.tsx F3: one logo img with alt Storytime Advantage, label read once
+  - look-frame.test.tsx the self-test: the fixture reads [data-level-week]
+  - look-council-r1.test.tsx C1: isBrown replaces isNavy, good copy and falsification follow
+  - look-council-r1.test.tsx C2: no game bar, no progressbar, label not hidden
+  - look-council-r2.test.tsx R3: isBrown replaces isNavy, the chip expects brown
+  - look-council-r3.test.tsx C2: amber #fcd34d fill, brown check, 252,211,77
+  - look-council-r3.test.tsx C5: cream pill with a brown label, 4.5:1 or more
+  - look-assets.test.ts: PIECES is the two tips; A4 reads the two tips and no bar or crest rule
+
+ordered_it_counts:
+  look-frame.test.tsx: 8
+  look-council-r1.test.tsx: 8
+  look-council-r2.test.tsx: 8
+  look-council-r3.test.tsx: 7
+  look-assets.test.ts: 11 (three it.each groups)
+
+stay_hits:
+  - root token definitions (--sq-navy, --sq-blue*, --sq-gold*, --sq-plaque, --sq-gold-img)
+  - a:focus-visible outline var(--sq-gold), the focus ring is not a chrome family
+  - text-neutral-600 labels, not a neutral chrome token of the red contract
+  - the two sign-in input borders
+
+role_gate:
+  command: GREEN_TEST_COMMAND=... python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role jr-green --track storytime_look_20261107 --phase "Phase 2b: Brand chrome" --baseline cc453fd43 --log-file measure/runs/storytime_look_20261107/green-p2b-cc453fd43.log
+  exit: 1
+  output: "FAIL: current phase still has 2 non-deferred incomplete tasks"
+  cause: task 2b.1 is still [~] (its Red evidence is committed at 4dca54e79 and 0e8e5cebd) and task 2b.4 is still [ ] (the capture task of a later role). The brief of this role forbids a change to 2b.1 and to 2b.4.
+  state: the Green work is committed and every test, type, lint, and protected-path gate passes. The role gate needs an owner for the two markers.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome
+commits: 46dbf25ed (code); this commit holds the plan evidence
+tests_run: RED before 12 failed | 6 passed (18), exit 1; RED after 18 passed, exit 0; GREEN_TEST_COMMAND 164 passed (20 files), exit 0; post-chip targeted run 26 passed (3 files), exit 0; full app suite 909 tests (2 failed | 907 passed), exit 1
+files_changed: 21 in the code commit (17 modified, 1 logo added, 2 pieces deleted); 5 older test files are in that count
+plan_updates: 2b.2 [x] with Green evidence; 2b.3 [x] with phase check evidence; 2b.1 and 2b.4 untouched
+known_failures: login-media-sign.test.ts signed_map_size_expected 70 vs pinned 42; cause 345e02ba2, an ancestor of the phase base; outside this phase
+handoff: The code commit is 46dbf25ed. The plan-evidence commit holds this log. The role gate exits 1: "current phase still has 2 non-deferred incomplete tasks". The two tasks are 2b.1 [~] and 2b.4 [ ]. My brief forbids me to change either, so I stop for your decision. Question: how do we close the two markers? Options: (a) you mark 2b.1 [x] with its committed evidence (4dca54e79 for the tests, 0e8e5cebd for the browser rows) and you keep 2b.4 open for the capture role; the jr-green gate stays failed until then. (b) you authorize this role to mark 2b.1 [x] and to add a reason to 2b.4, and I amend the plan-evidence commit. (c) another route that you choose. The rest is ready: 2b.2 and 2b.3 are [x] with SHA evidence; GREEN_TEST_COMMAND 164 passed, exit 0; tsc exit 0; ESLint exit 0; the protected-path diff is empty. The one known full-suite failure is login-media-sign.test.ts (70 vs 42), from content commit 345e02ba2, outside this phase.
+END_MEASURE_AGENT_RESULT
