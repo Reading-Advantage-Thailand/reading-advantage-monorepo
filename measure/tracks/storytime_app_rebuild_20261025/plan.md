@@ -2467,7 +2467,75 @@ for every other track.
 - No week file, no received content, no read-along package, and no Primary file changed. The
   report is `measure/runs/storytime_app_rebuild_20261025/green-p4-t46a.log`.
 
-- [ ] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It does not cover task 4.6 or task 4.6a, which do not hold this checkpoint (see the exception in the Phase 3 amendment line).
+- [~] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It does not cover task 4.6 or task 4.6a, which do not hold this checkpoint (see the exception in the Phase 3 amendment line).
+  - Red evidence (task 4.5). Role base `b1d4bc52014e5874ea66878c68ec2e48e388d927`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model: `deepseek/deepseek-flash#high` (a
+    substitution, because MiniMax reached its limit). Red added one file,
+    `apps/storytime/__tests__/phase4-browser-gate.sh`. No production source, no week content, and
+    no shipped file changed.
+  - Scope deviation (orchestrator default): tasks 4.6 and 4.6a are Done (`f162e92cb`, `1d941b665`).
+    One gate therefore covers the task 4.5 rows and the P4.7 rows L1 to L4, S1, and S2. The plan
+    line above says task 4.5 does not cover 4.6 and 4.6a; that sentence now reads as a note on
+    the old scope.
+  - The gate enters `heavy-run.sh` itself with `HEAVY_PRIORITY=p1`. It builds the app once with
+    the teacher flag not set. Then it runs three servers: (a) flag `1` with a draft-loops copy of
+    w01, (b) flag `1` with an approved-loops copy (`date` 2026-11-10 and `words`), and (c) the
+    flag value left out of the environment. Each copy sits in a scratch folder under `/tmp`
+    through `STORYTIME_CONTENT_DIR` (P3.7). The `content/` folder holds no fixture.
+  - The port is free and never 3005 and never 3099. The server stops by its pid file
+    (`port_closed=`), and the exit trap deletes the scratch folder. The sign-in reuses the Phase 3
+    gate method as it is; the password stays in an environment value and no log line prints it.
+  - Command, foreground, shell timeout 0, `HEAVY_HANG_KILL_S=off`
+    (MemAvailable 3361916 kB at the start):
+    `bash apps/storytime/__tests__/phase4-browser-gate.sh`. Exit 1. Run (a) Playwright
+    `PASS=26, FAIL=2`; run (b) `PASS=23, FAIL=1`; run (c) `PASS=12, FAIL=0`; wrapper
+    `PASS=7, FAIL=2`.
+  - Rows at HEAD:
+
+| Row | Value at HEAD | Result |
+|---|---|---|
+| day 1 to 5 at 1920x1080 | `day=1 steps=8`, `day=2 steps=7`, `day=3 steps=7`, `day=4 steps=6`, `day=5 steps=5`; `horizontal_scroll=0` | pass |
+| day 1 to 5 at 1366x768 | the same `steps` values; `horizontal_scroll=0` | pass |
+| flag off, week view | `flag_off_404_week_with_locale=404`, `flag_off_404_week_without_locale=404` (final `/th/teacher/2/1`) | pass |
+| flag off, day routes | `flag_off_404_days_with_locale=5`, `flag_off_404_days_without_locale=5` | pass |
+| flag off, markup | `flag_off_404=12` of 12; `teacher_markup=0` | pass |
+| B1 on B3 | `player_w=976 player_h=588` at both viewports; no horizontal scroll | pass |
+| B1 on D6 | `player_w=976 player_h=1770` at 1920x1080 and at 1366x768. The media box is 942x530 and the lyric list is 1072 px tall | **FAIL** |
+| B2 | `place_kept=4` (`B3,B7,D6,E2`) | pass |
+| B3 | `next_step_visible=1` | pass |
+| B4 | `focus_returned=1`; `player_open_after_escape=0` | pass |
+| L1 | `loop_panels=0`, `recall_days=0`, `step_time_a1=4` | pass |
+| L2 | `soundloop_steps=3`, `blenddrill_steps=1`, `sightwords_steps=2`, `recall_days=4`, `step_time_a1=5` | pass |
+| L3 | `min_font_px=18` over 10 screens; `horizontal_scroll=0` | pass |
+| L4 | `targets=13` (12 drill, 1 recall); `min_side_px=34` (83x34 px); floor 44 | **FAIL** |
+| S1 off | `share_shown_off=0` | pass |
+| S1 on | `share_shown=5` (`A3,B5,C4,D4,D5`); no `D6` | pass |
+| S2 | `share_moment_w=976 share_moment_h=130`; 3 lines; `post_requests=0` | pass |
+
+  - `passes_at_head` rows: all rows above except B1 on D6 and L4. Their falsification evidence:
+    - The gate self-test runs first. Six bad pages must fail their limit, else the gate exits
+      non-zero. The values: `selftest tap_target_min_px=30`, `transferred_bytes=400649`,
+      `contrast_ratio_x100=371`, `min_font_px=12`, `viewport_fit=false` (2000x2000 box),
+      `horizontal_scroll=1` (1608 over 1366). The self-test uses the same functions as L4, the
+      transfer budget, the contrast floor, L3, B1, and the day rows.
+    - L1 and S1-off have a positive control in the same gate: the approved run shows 6 panels and
+      4 recall days, and 5 moments. A selector that finds nothing in both runs fails L2 and S1-on.
+    - The day rows compare the step id list with the week file, so a day with one missing step
+      fails (A4). The list is `A1..A8`, `B1..B7`, `C1..C7`, `D1..D6`, and `E1..E5`.
+    - B2, B3, and B4 read the live DOM: a wrong step after `Close`, a removed `Next step` control,
+      or a lost focus fails the row.
+  - The two failures are real and have no gate defect. B1 D6: the song player region holds the
+    16:9 stage (942x530, inside the viewport) and the 15-line lyric list (1072 px), so the region
+    is 1770 px tall. The row says the player fits the viewport. L4: the clip control is 83x34 px
+    and the strategy floor is 44x44. Green fixes the layout or the orchestrator amends the row.
+  - Anti-patterns: A3 holds (each count is a labeled integer with the same label in the failure
+    message: `day=<n> steps=<n>`, `place_kept=4`, `targets=13`). A4 holds (each "shows nothing"
+    row has a positive control in the other run, and each day row asserts the exact step list).
+    A5 holds (this note gives the exit code, the run counts, and the row counts). A7 holds (no
+    `rg -v` filter). A9 does not apply. A16 holds (no worktree).
+  - No `tsc` run: the role added no TypeScript file (the embedded script is a heredoc inside the
+    `.sh`). No `build-graph update`: no TypeScript structure changed.
+  - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t45.log`.
 
 ## Phase 5: Milestone week integration
 

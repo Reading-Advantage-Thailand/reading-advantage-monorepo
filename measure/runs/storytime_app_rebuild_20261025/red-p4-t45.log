@@ -1,0 +1,162 @@
+# Red report: task 4.5 (Phase 4 browser gate)
+
+## Role
+
+- Track: `storytime_app_rebuild_20261025`.
+- Phase: "Phase 4: Teacher app". Task: 4.5 (`Phase check`).
+- Role: `measure-mid-red`.
+- Model: `deepseek/deepseek-flash#high` (a substitution, because MiniMax reached its limit).
+  Green runs on `volcengine-agent-plan/glm-5.3-flash#high`.
+- `phase_base_sha`: `bfaae8905993076ca1e8a49939c400eb038fe3ae`.
+- `role_base_sha`: `b1d4bc52014e5874ea66878c68ec2e48e388d927` (the HEAD at role start).
+- Branch: `master`. No push.
+
+## Scope
+
+The orchestrator default: tasks 4.6 and 4.6a are Done (`f162e92cb`, `1d941b665`). One gate covers
+the task 4.5 rows and the P4.7 rows L1 to L4, S1, and S2. This is a deviation from the plan line
+that says task 4.5 "does not cover task 4.6 or task 4.6a". The plan records the deviation.
+
+## Deliverable
+
+`apps/storytime/__tests__/phase4-browser-gate.sh`. It adds one test file and changes no production
+source, no week content, and no shipped file.
+
+The gate enters `heavy-run.sh` itself with `HEAVY_PRIORITY=p1`. It builds the production app once
+with the teacher flag not set. Then it runs three servers:
+
+- (a) `STORYTIME_TEACHER_ROUTES=1`, with a copy of the shipped w01 whose loops part is draft;
+- (b) `STORYTIME_TEACHER_ROUTES=1`, with an approved copy of w01 (`date` 2026-11-10, `words`
+  filled), because the contract fails an approved loops part with no date or no words;
+- (c) no `STORYTIME_TEACHER_ROUTES` value in the environment at all, so the default proves itself.
+
+The copies sit in a scratch folder under `/tmp` through `STORYTIME_CONTENT_DIR` (test strategy
+P3.7). No fixture file goes into `content/`. The gate refuses to start when the shipped w01 no
+longer holds a draft loops part.
+
+The port is free and never 3005 and never 3099. The server stops by its pid file and prints
+`port_closed=`. The exit trap deletes the scratch folder and the throwaway database container. The
+sign-in reuses the Phase 3 gate method as it is, with the account `teach-01` (role teacher) in a
+throwaway Postgres. The password stays in an environment value, and no log line prints it.
+
+## Command
+
+MemAvailable was 3361916 kB at the start, above the 1500 MB stop line. The command ran in the
+foreground with the shell timeout 0:
+
+    HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh
+
+- Exit code: **1**.
+- Run (a) Playwright: `PASS=26, FAIL=2`.
+- Run (b) Playwright: `PASS=23, FAIL=1`.
+- Run (c) Playwright: `PASS=12, FAIL=0`.
+- Wrapper: `PASS=7, FAIL=2`.
+- Ports of the run: 35015, 40877, and 44723. Each run printed `port_closed=`.
+
+The exit code is the Red evidence. The gate itself is the deliverable, and the three failing rows
+below are the Red state that Green must close.
+
+## Rows at HEAD
+
+| Row | Labeled value at HEAD | Result |
+|---|---|---|
+| day 1 to 5 at 1920x1080 | `day=1 steps=8`, `day=2 steps=7`, `day=3 steps=7`, `day=4 steps=6`, `day=5 steps=5`, `horizontal_scroll=0` | passes_at_head |
+| day 1 to 5 at 1366x768 | the same `steps` values, `horizontal_scroll=0` | passes_at_head |
+| flag off, week view | `flag_off_404_week_with_locale=404`, `flag_off_404_week_without_locale=404` (final path `/th/teacher/2/1`) | passes_at_head |
+| flag off, day routes | `flag_off_404_days_with_locale=5`, `flag_off_404_days_without_locale=5` | passes_at_head |
+| flag off, markup | `flag_off_404=12` of 12, `locale_after_redirect=1`, `teacher_markup=0` | passes_at_head |
+| B1 on B3 | `player_w=976 player_h=588` at 1920x1080 and at 1366x768, `horizontal_scroll=0` | passes_at_head |
+| B1 on D6 | `player_w=976 player_h=1770` at 1920x1080 (`player_bottom_px=1770`, viewport 1080) and at 1366x768 (viewport 768) | **FAIL** |
+| B2 | `place_kept=4` (`B3,B7,D6,E2`) | passes_at_head |
+| B3 | `next_step_visible=1` (`step=B3`) | passes_at_head |
+| B4 | `focus_returned=1`, `tab_reached_open=1`, `player_open_after_escape=0` | passes_at_head |
+| L1 | `loop_panels=0`, `recall_days=0`, `step_time_a1=4` | passes_at_head |
+| L2 | `soundloop_steps=3`, `blenddrill_steps=1`, `sightwords_steps=2`, `recall_days=4`, `step_time_a1=5` | passes_at_head |
+| L3 | `min_font_px=18` over 10 measured screens, `horizontal_scroll=0` | passes_at_head |
+| L4 | `targets=13` (12 drill, 1 recall), `min_side_px=34` (83x34 px), floor 44 | **FAIL** |
+| S1 with loops off | `share_shown_off=0` | passes_at_head |
+| S1 with loops on | `share_shown=5` (`A3,B5,C4,D4,D5`), no `D6` | passes_at_head |
+| S2 | `share_moment_w=976 share_moment_h=130`, 3 lines, `post_requests=0` | passes_at_head |
+
+## The two failures
+
+1. B1 on D6. The song media box is 942x530 and fits both viewports. The lyric list is 1072 px
+   tall, so the player region is 1770 px. The row says the open player fits the viewport. The
+   cause is the lyric list at class-screen width, not the media box and not the gate.
+2. L4. The clip control is 83x34 px. The "Play clip" control uses `px-2 py-0.5` and no minimum
+   height. The strategy floor is 44x44 px on the laptop view.
+
+## Falsification evidence of the passing rows
+
+- The gate self-test runs first, and a bad page that passes its limit fails the gate. Values:
+  `selftest tap_target_min_px=30` (floor 44), `selftest transferred_bytes=400649` (budget
+  300000), `selftest contrast_ratio_x100=371` (floor 450), `selftest min_font_px=12` (floor 18),
+  `selftest viewport_fit=false` (a 2000x2000 box), and `selftest horizontal_scroll=1` (1608 over
+  1366). The self-test calls the same functions as L4, the transfer budget, the contrast floor,
+  L3, B1, and the day rows. A gate that passes a bad page exits non-zero.
+- L1 and S1-off have a positive control in the same gate: the approved run shows 6 panels, 4
+  recall days, and 5 moments. A selector that finds nothing in both runs fails L2 and S1-on.
+- Each day row compares the step id list with the week file: `A1..A8`, `B1..B7`, `C1..C7`,
+  `D1..D6`, and `E1..E5`. A day with one missing step fails the row (A4).
+- B2, B3, and B4 read the live DOM. A wrong step after `Close`, a removed `Next step` control, or a
+  lost focus fails the row.
+- S2 reads the moment box after a scroll into view and the POST count of the run. A POST from the
+  page fails the row.
+
+## Gate checks
+
+- `bash -n apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+- `node --check` on the embedded Playwright module: exit 0.
+- The gate builds the app once: `PASS: Production build exits 0`.
+- The account `teach-01` exists: `PASS: Local database holds the account teach-01`.
+
+## Anti-patterns
+
+- A3 holds: each count is a labeled integer with the same label in the failure message.
+- A4 holds: each "shows nothing" row has a positive control in the other run.
+- A5 holds: this report gives the exit code, the run counts, and the row counts.
+- A7 holds: no `rg -v` filter.
+- A9 does not apply.
+- A16 holds: no worktree.
+
+## Not run
+
+- No `tsc`: the role added no TypeScript file. The embedded script is a heredoc inside the `.sh`.
+- No `build-graph update`: no TypeScript structure changed.
+- No deploy, no gcloud write, and no secret access.
+
+## Files
+
+- `apps/storytime/__tests__/phase4-browser-gate.sh` (new). Commit `1fc535d26`
+  (`test(storytime): add the phase 4 browser gate`).
+- `measure/tracks/storytime_app_rebuild_20261025/plan.md` (the task 4.5 Red evidence block).
+- `measure/runs/storytime_app_rebuild_20261025/red-p4-t45.log` (this report).
+- The plan and this report sit in one commit after the gate commit. That commit cannot name its
+  own SHA; the orchestrator reads it from `git log`.
+
+## Open question for the orchestrator (default taken)
+
+B1 on D6 and L4 fail at HEAD. Should Green fix both in production code, or should the orchestrator
+amend the two rows? Default, and the one this role took: Green fixes both. The fixes are a compact
+class-screen lyric layout and a 44 px clip control.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_app_rebuild_20261025
+phase: Phase 4: Teacher app
+task: 4.5
+baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: b1d4bc52014e5874ea66878c68ec2e48e388d927
+head_at_start: b1d4bc52014e5874ea66878c68ec2e48e388d927
+gate_exit: 1
+gate_command: HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh
+gate_rows: run_a PASS=26 FAIL=2; run_b PASS=23 FAIL=1; run_c PASS=12 FAIL=0; wrapper PASS=7 FAIL=2
+failing_rows: B1 D6 at 1920x1080 (player_h=1770, lyrics_h=1072); B1 D6 at 1366x768 (player_h=1770); L4 (targets=13, min_side_px=34, floor 44)
+passing_rows: day rows 1-5 at both viewports; flag-off 404 (12 of 12, teacher_markup=0); B1 B3; B2 place_kept=4; B3; B4 focus_returned=1; L1; L2; L3 min_font_px=18; S1 off=0 and on=5; S2 post_requests=0
+tests_added: apps/storytime/__tests__/phase4-browser-gate.sh
+tests_skipped: none
+files_changed: apps/storytime/__tests__/phase4-browser-gate.sh, measure/tracks/storytime_app_rebuild_20261025/plan.md, measure/runs/storytime_app_rebuild_20261025/red-p4-t45.log
+production_changed: no
+question: B1 on D6 and L4 fail at HEAD. Does Green fix both in production code, or does the orchestrator amend the rows? Default: Green fixes both.
+evidence_log: measure/runs/storytime_app_rebuild_20261025/red-p4-t45.log
+END_MEASURE_AGENT_RESULT
