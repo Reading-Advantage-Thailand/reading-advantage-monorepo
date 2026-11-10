@@ -48,8 +48,9 @@ body {
 }
 a:focus-visible,
 button:focus-visible {
-  outline: 4px solid var(--sq-gold);
-  outline-offset: 3px;
+  outline: 3px solid #fff;
+  outline-offset: 0;
+  box-shadow: 0 0 0 6px var(--st-brown);
 }
 
 /* The tap floor of a plain link that a page renders as a direct child of `main` (the sign-in
@@ -196,9 +197,9 @@ header[data-hero] > h1 {
   min-height: 30px;
   padding: 0 16px;
   font-family: var(--sq-display);
-  /* The frame sets the fitted size inline from the title length (finding F-2); 72 px is the
-   * default. The size stays a px value so the rule reads as a plain height rule. */
-  font-size: 72px;
+  /* The frame hands the title length in --title-chars, so the font follows the plaque width
+   * (finding F-2b). The 72 px cap keeps the cover plaque inside its hero. */
+  font-size: clamp(24px, calc((100cqi - 64px) / (var(--title-chars) * 0.68)), 72px);
   font-weight: 600;
   line-height: 1.25;
   color: var(--st-brown);
@@ -465,7 +466,8 @@ main[data-place] button:active:not(:disabled) {
  * `aria-pressed:` class loses to the rule above on specificity, so the look lives here. This
  * selector has more class weight (0,3,2) than the idle rule (0,2,3). */
 [data-part="decodable"] section[aria-label] button[aria-pressed="true"] {
-  background-color: #fbbf24;
+  background-color: #fde68a;
+  color: var(--st-brown);
   background-image: none;
   box-shadow: inset 0 0 0 3px var(--st-brown), 0 2px 0 rgba(58, 24, 4, 0.42);
   translate: 0 3px;
@@ -765,13 +767,14 @@ main[data-place] button:active:not(:disabled) {
     border-radius: 0 0 22px 22px;
   }
   [data-level-week] {
-    left: 12px;
+    left: 72px;
     translate: none;
-    top: 30px;
+    top: 18px;
   }
   /* The plaque grows with the wrapped title: a fixed height cut a 60-character title by 20 px
    * (UX finding F1, task 2.3h). A one-line title still measures the same 40 px. The plaque stays
-   * absolute, so it never grows the hero band. */
+   * absolute, so it never grows the hero band. The block sets its own fitted size from
+   * --title-chars (remediation r2, F-2b and F-3b). */
   header[data-hero] > h1 {
     left: auto;
     right: 22px;
@@ -781,7 +784,7 @@ main[data-place] button:active:not(:disabled) {
     height: auto;
     bottom: -16px;
     padding: 0 18px 2px;
-    font-size: 20px;
+    font-size: clamp(20px, calc((100cqi - 64px) / (var(--title-chars) * 0.68)), 32px);
   }
   main[data-place] {
     gap: 12px;

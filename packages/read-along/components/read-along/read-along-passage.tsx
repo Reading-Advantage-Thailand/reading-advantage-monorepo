@@ -103,7 +103,7 @@ const SentenceView = memo(function SentenceView({
         "font-article rounded px-0.5 text-lg transition-all duration-200 motion-reduce:transition-none md:text-xl",
         active && isCurrent && HIGHLIGHT_CLASSES.playingSentence,
         interactive &&
-          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#92400e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf0]",
       )}
       {...(interactive
         ? {
@@ -164,7 +164,7 @@ const SentenceView = memo(function SentenceView({
                   : target && HIGHLIGHT_CLASSES.hoverWord,
                 interactive &&
                   target &&
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#92400e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf0]",
               )}
               {...(target ? { onClick: tap } : {})}
               {...(interactive && target ? { tabIndex: -1, onKeyDown } : {})}

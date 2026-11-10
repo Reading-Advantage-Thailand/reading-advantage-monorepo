@@ -68,20 +68,8 @@ export function Frame({ level, week, title, variant, locale = "en" }: FrameProps
         {bar}
       </p>
       {/* The logo replaces the sprout crest (AC-4.3, Q44). It carries its own text alternative. */}
-      <img data-logo src={logoSource} alt="Storytime Advantage" width={46} height={46} />
-      <h1
-        lang="en"
-        style={
-          {
-            "--title-chars": title.length,
-            // The font follows the plaque width, so a shipped title stays on one line and a
-            // 60-character title wraps at the 24 px floor (remediation r1, finding F-2).
-            fontSize: `clamp(24px, calc((100cqi - 64px) / (${title.length} * 0.68)), ${
-              variant === "band" ? 44 : 72
-            }px)`,
-          } as CSSProperties
-        }
-      >
+      <img data-logo src={logoSource} alt="Storytime Advantage" width={48} height={48} />
+      <h1 lang="en" style={{ "--title-chars": title.length } as CSSProperties}>
         {title}
       </h1>
     </header>

@@ -17,9 +17,10 @@ afterEach(cleanup);
 const BAND = HIGHLIGHT_CLASSES.playingSentence.split(" ")[0];
 const MARK = HIGHLIGHT_CLASSES.currentWord.split(" ")[0];
 
-/** Text of the elements that carry the word mark. */
+/** Text of the elements that carry the word mark. The class holds `[` and `#`, so the attribute
+ * selector is the valid form (remediation r2, P-1: the mark is the brand brown). */
 function markedWords(container: HTMLElement): string[] {
-  return [...container.querySelectorAll(`.${MARK}`)].map((e) => e.textContent ?? "");
+  return [...container.querySelectorAll(`[class~="${MARK}"]`)].map((e) => e.textContent ?? "");
 }
 
 describe("ReadAlongPassage", () => {
