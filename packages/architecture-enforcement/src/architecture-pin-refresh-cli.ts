@@ -4,15 +4,13 @@ import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { checkArchitectureRepository } from "./architecture-check.js";
-import { selectArchitecturePolicy } from "./policy-selection.js";
 import {
   computeAnalyzerImplementationTreeSha256V2,
   computeReconciliationImplementationTreeSha256V2,
 } from "./reconciliation-manifest.js";
+import { analyzeArchitectureSources } from "./analyzer.js";
 import {
-  computeAnalyzerInputSnapshotSha256,
-  computeAnalyzerReportSha256,
+  computeAnalyzerReconciliationEvidence,
   validateAnalyzerReconciliationManifestV2,
 } from "./v2-manifest-validation.js";
 
@@ -146,31 +144,24 @@ export async function runArchitecturePinRefreshCli(
   const originalBytes = await readFile(manifestPath, "utf8");
   const manifest = JSON.parse(originalBytes) as Record<string, unknown>;
 
-  const policy = selectArchitecturePolicy("v2", options.repoRoot, {
-    validateCurrentState: false,
-  });
-  const report = await checkArchitectureRepository({
-    repoRoot: options.repoRoot,
-    config: policy.config,
-    policyVersion: "v2",
-  });
-  if (report.status === "analysis-error") {
+  const evidence = await computeAnalyzerReconciliationEvidence(
+    options.repoRoot,
+    analyzeArchitectureSources,
+  );
+  if (evidence.report.parseErrors.length > 0) {
     throw new Error(
       "Analyzer input holds parse errors; the manifest was not written",
     );
   }
 
-  const reportHash = await computeAnalyzerReportSha256(options.repoRoot);
   const refreshed: Record<string, unknown> = {
     ...manifest,
-    analyzerInputSnapshotSha256: await computeAnalyzerInputSnapshotSha256(
-      options.repoRoot,
-    ),
+    analyzerInputSnapshotSha256: evidence.inputSnapshotSha256,
     analyzerImplementationTreeSha256:
       await computeAnalyzerImplementationTreeSha256V2(options.repoRoot),
     implementationAndTestTreeSha256:
       await computeReconciliationImplementationTreeSha256V2(options.repoRoot),
-    reportSha256s: [reportHash, reportHash],
+    reportSha256s: [evidence.reportSha256, evidence.reportSha256],
   };
   refreshed.reviewSubjectSha256 = computeReviewSubjectSha256(refreshed);
 
@@ -200,6 +191,7 @@ export async function runArchitecturePinRefreshCli(
   const validation = await validateAnalyzerReconciliationManifestV2({
     repoRoot: options.repoRoot,
     manifest: refreshed,
+    evidence,
   });
   if (!validation.valid) {
     await writeFile(manifestPath, originalBytes, "utf8");

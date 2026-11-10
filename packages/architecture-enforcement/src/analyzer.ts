@@ -1150,6 +1150,8 @@ interface ParsedArchitectureModule {
   sourcePath: string;
   sourceFile: ts.SourceFile;
   evidence: readonly ArchitectureImportEvidence[];
+  /** First static module specifier assigned to each local binding. */
+  bindingModuleSpecifiers: ReadonlyMap<string, string>;
   imports: ImportBinding[];
   reexports: ReexportBinding[];
   localExports: LocalExportBinding[];
@@ -1408,6 +1410,7 @@ function parseArchitectureModule(
     evidence: [...evidenceByKey.values()].filter(
       (evidence) => evidence.sourcePath === sourcePath,
     ),
+    bindingModuleSpecifiers: collectBindingModuleSpecifiers(sourceFile),
     imports,
     reexports,
     localExports,
@@ -1909,39 +1912,36 @@ function collectDrizzleTableExports(
   return exportsByModule;
 }
 
-/** Finds a static module specifier assigned to one local binding. */
-function moduleSpecifierForBinding(
+/** Collects the first static module specifier assigned to each local binding. */
+function collectBindingModuleSpecifiers(
   sourceFile: ts.SourceFile,
-  bindingName: string,
-): string | undefined {
-  let moduleSpecifier: string | undefined;
+): Map<string, string> {
+  const specifiers = new Map<string, string>();
   const visit = (node: ts.Node): void => {
-    if (moduleSpecifier) return;
     if (
       ts.isVariableDeclaration(node) &&
       ts.isIdentifier(node.name) &&
-      node.name.text === bindingName &&
       node.initializer
     ) {
       const initializer = unwrapExpression(node.initializer);
       if (ts.isCallExpression(initializer)) {
         const argument = initializer.arguments[0];
+        const expression = initializer.expression;
         if (
           argument &&
           ts.isStringLiteralLike(argument) &&
-          (initializer.expression.kind === ts.SyntaxKind.ImportKeyword ||
-            (ts.isIdentifier(initializer.expression) &&
-              initializer.expression.text === "require"))
+          (expression.kind === ts.SyntaxKind.ImportKeyword ||
+            (ts.isIdentifier(expression) && expression.text === "require")) &&
+          !specifiers.has(node.name.text)
         ) {
-          moduleSpecifier = argument.text;
-          return;
+          specifiers.set(node.name.text, argument.text);
         }
       }
     }
     ts.forEachChild(node, visit);
   };
   visit(sourceFile);
-  return moduleSpecifier;
+  return specifiers;
 }
 
 /** Returns whether a module specifier selects a configured database module. */
@@ -1996,10 +1996,7 @@ function configuredTableResourceForExpression(
         ? selectsDatabaseModule(config, binding.evidence.importSpecifier)
         : tableExportsByModule.has(binding.evidence.resolvedTarget)),
   );
-  const assignedModule = moduleSpecifierForBinding(
-    module.sourceFile,
-    root.text,
-  );
+  const assignedModule = module.bindingModuleSpecifiers.get(root.text);
   if (policyVersion !== "v2") {
     if (
       !namespaceBinding &&

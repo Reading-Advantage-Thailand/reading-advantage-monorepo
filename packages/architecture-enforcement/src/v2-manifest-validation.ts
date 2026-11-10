@@ -38,6 +38,18 @@ import {
 } from "./workspace-resolution.js";
 import { V1_ARTIFACT_BINDINGS } from "./v1-validation.js";
 
+/** Shared current analyzer evidence for one projection and two report passes. */
+export interface AnalyzerReconciliationEvidence {
+  /** Canonical analyzer source paths used by the report. */
+  sourcePaths: readonly string[];
+  /** Deterministic analyzer report for the canonical source set. */
+  report: ArchitectureAnalysisResult;
+  /** Lowercase SHA-256 of the serialized analyzer report. */
+  reportSha256: string;
+  /** Lowercase SHA-256 of the analyzer input snapshot. */
+  inputSnapshotSha256: string;
+}
+
 /** Input accepted by the v2 candidate and acceptance validator. */
 export interface ValidateAnalyzerReconciliationManifestV2Input {
   /** Repository root containing every bound artifact and evidence file. */
@@ -48,6 +60,8 @@ export interface ValidateAnalyzerReconciliationManifestV2Input {
   validateCurrentState?: boolean;
   /** Whether the analyzer input snapshot pin must match current bytes; defaults to true. */
   validateInputSnapshotPin?: boolean;
+  /** Precomputed current analyzer evidence; skips its own projection and reports. */
+  evidence?: AnalyzerReconciliationEvidence;
 }
 
 /** Result returned after strict v2 manifest validation. */
@@ -806,6 +820,23 @@ function listAnalyzerInputPaths(
   ].sort(compareStableStrings);
 }
 
+/** Hashes the ordered analyzer input paths and exact bytes in one projection. */
+async function computeInputSnapshotForProjection(
+  repoRoot: string,
+  projection: V2EvidenceSourceProjection,
+  sourcePaths: readonly string[],
+): Promise<string> {
+  const files = await Promise.all(
+    listAnalyzerInputPaths(repoRoot, sourcePaths).map(async (path) => ({
+      path,
+      sha256: sha256Bytes(
+        await readFile(resolve(projection.projectedRoot, path)),
+      ),
+    })),
+  );
+  return sha256Text(canonicalJson(files));
+}
+
 /** Hashes the ordered analyzer input paths and exact file bytes.
  * @param repoRoot Repository root containing the analyzer inputs.
  * @param sourcePaths Canonical analyzer source paths used by the report.
@@ -817,15 +848,47 @@ export async function computeAnalyzerInputSnapshotSha256(
 ): Promise<string> {
   const projection = await createV2EvidenceSourceProjection(repoRoot);
   try {
-    const files = await Promise.all(
-      listAnalyzerInputPaths(repoRoot, sourcePaths).map(async (path) => ({
-        path,
-        sha256: sha256Bytes(
-          await readFile(resolve(projection.projectedRoot, path)),
-        ),
-      })),
+    return await computeInputSnapshotForProjection(
+      repoRoot,
+      projection,
+      sourcePaths,
     );
-    return sha256Text(canonicalJson(files));
+  } finally {
+    await projection.dispose();
+  }
+}
+
+/** Computes one projection, two analyzer reports, and the input snapshot over it.
+ * @param repoRoot Repository root containing the analyzer inputs.
+ * @param analyzeSources Analyzer entry point used for both report passes.
+ * @returns Shared evidence for the refresh write and its validation.
+ * @throws When the two analyzer reports are not byte-identical.
+ */
+export async function computeAnalyzerReconciliationEvidence(
+  repoRoot: string,
+  analyzeSources: ArchitectureSourceAnalyzer = analyzeArchitectureSources,
+): Promise<AnalyzerReconciliationEvidence> {
+  const projection = await createV2EvidenceSourceProjection(repoRoot);
+  try {
+    const sourcePaths = projection.sourcePaths;
+    const [reportOne, reportTwo] = await Promise.all([
+      computeCurrentAnalyzerReport(projection, sourcePaths, analyzeSources),
+      computeCurrentAnalyzerReport(projection, sourcePaths, analyzeSources),
+    ]);
+    const reportSource = JSON.stringify(reportOne);
+    if (reportSource !== JSON.stringify(reportTwo)) {
+      throw new Error("Analyzer reports are not byte-identical");
+    }
+    return {
+      sourcePaths,
+      report: reportOne,
+      reportSha256: sha256Text(reportSource),
+      inputSnapshotSha256: await computeInputSnapshotForProjection(
+        repoRoot,
+        projection,
+        sourcePaths,
+      ),
+    };
   } finally {
     await projection.dispose();
   }
@@ -854,14 +917,20 @@ export function computeAnalyzerInputSnapshotSha256Sync(
   }
 }
 
+/** Analyzer entry point shared by one refresh evidence run. */
+export type ArchitectureSourceAnalyzer =
+  typeof import("./analyzer.js")["analyzeArchitectureSources"];
+
 /** Produces the deterministic current analyzer report bytes.
  * @param projection Immutable source projection used by the report.
  * @param sourcePaths Canonical analyzer source paths used by the report.
+ * @param analyzeSources Analyzer entry point used for the report.
  * @returns Deterministic analyzer evidence for the canonical source set.
  */
 async function computeCurrentAnalyzerReport(
   projection: V2EvidenceSourceProjection,
   sourcePaths: readonly string[] = projection.sourcePaths,
+  analyzeSources: ArchitectureSourceAnalyzer = analyzeArchitectureSources,
 ): Promise<ArchitectureAnalysisResult> {
   const repoRoot = projection.projectedRoot;
   const config = architectureConfigSchema.parse(
@@ -875,7 +944,7 @@ async function computeCurrentAnalyzerReport(
       )) as string,
     ),
   );
-  return analyzeArchitectureSources({
+  return analyzeSources({
     repoRoot,
     sourcePaths,
     workspaceTargets: await loadWorkspaceModuleTargets(
@@ -952,14 +1021,15 @@ export function validateAnalyzerReconciliationManifestV2Sync(
           "Implementation and test tree hash does not match current bytes",
         );
       }
-      if (
-        input.validateInputSnapshotPin !== false &&
-        manifest.analyzerInputSnapshotSha256 !==
-          computeAnalyzerInputSnapshotSha256Sync(input.repoRoot, sourcePaths)
-      ) {
-        throw new Error(
-          "Analyzer input snapshot hash does not match current bytes",
-        );
+      if (input.validateInputSnapshotPin !== false) {
+        const expectedInputSnapshot =
+          input.evidence?.inputSnapshotSha256 ??
+          computeAnalyzerInputSnapshotSha256Sync(input.repoRoot, sourcePaths);
+        if (manifest.analyzerInputSnapshotSha256 !== expectedInputSnapshot) {
+          throw new Error(
+            "Analyzer input snapshot hash does not match current bytes",
+          );
+        }
       }
       assertCanonicalManifestSourceSync(input.repoRoot, manifest);
     } else if (
@@ -980,6 +1050,138 @@ export function validateAnalyzerReconciliationManifestV2Sync(
   }
 }
 
+/** Current analyzer values compared once against a committed v2 manifest. */
+interface CurrentAnalyzerEvidence {
+  sourcePaths: readonly string[];
+  report: ArchitectureAnalysisResult;
+  reportSha256: string;
+  inputSnapshotSha256: string;
+  analyzerImplementationTreeSha256: string;
+  implementationAndTestTreeSha256: string;
+}
+
+/** Opens one projection and computes the current analyzer evidence once. */
+async function computeCurrentAnalyzerEvidence(
+  repoRoot: string,
+): Promise<{
+  evidence: CurrentAnalyzerEvidence;
+  dispose: () => Promise<void>;
+}> {
+  const projection = await createV2EvidenceSourceProjection(repoRoot);
+  try {
+    const sourcePaths = projection.sourcePaths;
+    const [
+      analyzerTree,
+      implementationTree,
+      inputSnapshot,
+      reportOne,
+      reportTwo,
+    ] = await Promise.all([
+      computeAnalyzerImplementationTreeSha256V2(repoRoot),
+      computeReconciliationImplementationTreeSha256V2(repoRoot),
+      computeAnalyzerInputSnapshotSha256(repoRoot, sourcePaths),
+      computeCurrentAnalyzerReport(projection, sourcePaths),
+      computeCurrentAnalyzerReport(projection, sourcePaths),
+    ]);
+    const reportOneSource = JSON.stringify(reportOne);
+    if (reportOneSource !== JSON.stringify(reportTwo)) {
+      throw new Error("Analyzer reports are not byte-identical");
+    }
+    return {
+      evidence: {
+        sourcePaths,
+        report: reportOne,
+        reportSha256: sha256Text(reportOneSource),
+        inputSnapshotSha256: inputSnapshot,
+        analyzerImplementationTreeSha256: analyzerTree,
+        implementationAndTestTreeSha256: implementationTree,
+      },
+      dispose: () => projection.dispose(),
+    };
+  } catch (error) {
+    await projection.dispose();
+    throw error;
+  }
+}
+
+/** Compares one committed manifest against one current evidence record. */
+async function assertCurrentAnalyzerEvidence(
+  repoRoot: string,
+  manifest: Record<string, unknown>,
+  evidence: CurrentAnalyzerEvidence,
+  validateInputSnapshotPin: boolean,
+): Promise<void> {
+  if (
+    manifest.analyzerImplementationTreeSha256 !==
+    evidence.analyzerImplementationTreeSha256
+  ) {
+    throw new Error(
+      "Analyzer implementation tree hash does not match current bytes",
+    );
+  }
+  if (
+    manifest.implementationAndTestTreeSha256 !==
+    evidence.implementationAndTestTreeSha256
+  ) {
+    throw new Error(
+      "Implementation and test tree hash does not match current bytes",
+    );
+  }
+  if (
+    validateInputSnapshotPin &&
+    manifest.analyzerInputSnapshotSha256 !== evidence.inputSnapshotSha256
+  ) {
+    throw new Error(
+      "Analyzer input snapshot hash does not match current bytes",
+    );
+  }
+  if (
+    !Array.isArray(manifest.reportSha256s) ||
+    manifest.reportSha256s[0] !== evidence.reportSha256 ||
+    manifest.reportSha256s[1] !== evidence.reportSha256
+  ) {
+    throw new Error(
+      "Analyzer report hashes do not match current byte-identical reports",
+    );
+  }
+  const acceptance = (manifest.acceptance ?? {}) as Record<string, unknown>;
+  if (acceptance.status === "accepted") {
+    if (evidence.report.parseErrors.length !== 0) {
+      throw new Error(
+        "Accepted v2 manifests require zero analyzer parse errors",
+      );
+    }
+    const comparison = compareArchitectureDebt({
+      baselines: {
+        database: architectureBaselineSchema.parse(
+          JSON.parse(
+            await readFile(
+              resolve(
+                repoRoot,
+                "packages/architecture-enforcement/src/config/baselines/database.v2.json",
+              ),
+              "utf8",
+            ),
+          ),
+        ),
+        provider: architectureBaselineSchema.parse(
+          JSON.parse(
+            await readFile(
+              resolve(
+                repoRoot,
+                "packages/architecture-enforcement/src/config/baselines/provider.v2.json",
+              ),
+              "utf8",
+            ),
+          ),
+        ),
+      },
+      findings: evidence.report.findings,
+    });
+    assertAcceptedV2ComparisonIsClean(comparison);
+  }
+}
+
 /** Validates a v2 manifest, its artifact bytes, and current analyzer evidence. */
 export async function validateAnalyzerReconciliationManifestV2(
   input: ValidateAnalyzerReconciliationManifestV2Input,
@@ -993,95 +1195,34 @@ export async function validateAnalyzerReconciliationManifestV2(
     return structural;
   }
   try {
-    const projection = await createV2EvidenceSourceProjection(input.repoRoot);
+    const manifest = input.manifest as Record<string, unknown>;
+    if (input.evidence) {
+      const evidence: CurrentAnalyzerEvidence = {
+        ...input.evidence,
+        analyzerImplementationTreeSha256:
+          await computeAnalyzerImplementationTreeSha256V2(input.repoRoot),
+        implementationAndTestTreeSha256:
+          await computeReconciliationImplementationTreeSha256V2(input.repoRoot),
+      };
+      await assertCurrentAnalyzerEvidence(
+        input.repoRoot,
+        manifest,
+        evidence,
+        input.validateInputSnapshotPin !== false,
+      );
+      return { valid: true };
+    }
+    const current = await computeCurrentAnalyzerEvidence(input.repoRoot);
     try {
-      const manifest = input.manifest as Record<string, unknown>;
-      const sourcePaths = projection.sourcePaths;
-      const [
-        analyzerTree,
-        implementationTree,
-        inputSnapshot,
-        reportOne,
-        reportTwo,
-      ] = await Promise.all([
-        computeAnalyzerImplementationTreeSha256V2(input.repoRoot),
-        computeReconciliationImplementationTreeSha256V2(input.repoRoot),
-        computeAnalyzerInputSnapshotSha256(input.repoRoot, sourcePaths),
-        computeCurrentAnalyzerReport(projection, sourcePaths),
-        computeCurrentAnalyzerReport(projection, sourcePaths),
-      ]);
-      const reportOneSource = JSON.stringify(reportOne);
-      const reportTwoSource = JSON.stringify(reportTwo);
-      if (reportOneSource !== reportTwoSource) {
-        throw new Error("Analyzer reports are not byte-identical");
-      }
-      const reportHash = sha256Text(reportOneSource);
-      if (manifest.analyzerImplementationTreeSha256 !== analyzerTree) {
-        throw new Error(
-          "Analyzer implementation tree hash does not match current bytes",
-        );
-      }
-      if (manifest.implementationAndTestTreeSha256 !== implementationTree) {
-        throw new Error(
-          "Implementation and test tree hash does not match current bytes",
-        );
-      }
-      if (
-        input.validateInputSnapshotPin !== false &&
-        manifest.analyzerInputSnapshotSha256 !== inputSnapshot
-      ) {
-        throw new Error(
-          "Analyzer input snapshot hash does not match current bytes",
-        );
-      }
-      if (
-        !Array.isArray(manifest.reportSha256s) ||
-        manifest.reportSha256s[0] !== reportHash ||
-        manifest.reportSha256s[1] !== reportHash
-      ) {
-        throw new Error(
-          "Analyzer report hashes do not match current byte-identical reports",
-        );
-      }
-      const acceptance = (manifest.acceptance ?? {}) as Record<string, unknown>;
-      if (acceptance.status === "accepted") {
-        if (reportOne.parseErrors.length !== 0) {
-          throw new Error(
-            "Accepted v2 manifests require zero analyzer parse errors",
-          );
-        }
-        const comparison = compareArchitectureDebt({
-          baselines: {
-            database: architectureBaselineSchema.parse(
-              JSON.parse(
-                await readFile(
-                  resolve(
-                    input.repoRoot,
-                    "packages/architecture-enforcement/src/config/baselines/database.v2.json",
-                  ),
-                  "utf8",
-                ),
-              ),
-            ),
-            provider: architectureBaselineSchema.parse(
-              JSON.parse(
-                await readFile(
-                  resolve(
-                    input.repoRoot,
-                    "packages/architecture-enforcement/src/config/baselines/provider.v2.json",
-                  ),
-                  "utf8",
-                ),
-              ),
-            ),
-          },
-          findings: reportOne.findings,
-        });
-        assertAcceptedV2ComparisonIsClean(comparison);
-      }
+      await assertCurrentAnalyzerEvidence(
+        input.repoRoot,
+        manifest,
+        current.evidence,
+        input.validateInputSnapshotPin !== false,
+      );
       return { valid: true };
     } finally {
-      await projection.dispose();
+      await current.dispose();
     }
   } catch (error) {
     return {
