@@ -7,6 +7,8 @@ import { HIGHLIGHT_CLASSES } from "../highlight";
 
 /** The standard Tailwind palette colors that the highlight classes name. */
 const TOKEN_HEX: Record<string, string> = {
+  // The brand brown of the current word (remediation r2, finding P-1).
+  "bg-[#92400e]": "#92400e",
   "bg-blue-500": "#3b82f6",
   "bg-blue-700": "#1d4ed8",
   "bg-blue-400": "#60a5fa",
@@ -69,5 +71,15 @@ describe("the current-word highlight contrast", () => {
       ratio,
       `the current-word ${mode} pair (${text} on ${background}) measures ${ratio.toFixed(2)}:1`,
     ).toBeGreaterThanOrEqual(MIN_RATIO);
+  });
+
+  it("the current word is the brand brown with white text and no blue (finding P-1)", () => {
+    const classes = HIGHLIGHT_CLASSES.currentWord.split(" ");
+    expect(classes, "the current word must name the brown background").toContain("bg-[#92400e]");
+    expect(classes, "the current word must name white text").toContain("text-white");
+    const blue = classes.filter((entry) => /blue/.test(entry));
+    expect(blue, "the current word must hold no blue class").toEqual([]);
+    const ratio = contrastRatio(TOKEN_HEX["text-white"]!, TOKEN_HEX["bg-[#92400e]"]!);
+    expect(ratio, "the brown and white pair must reach 4.5:1").toBeGreaterThanOrEqual(MIN_RATIO);
   });
 });

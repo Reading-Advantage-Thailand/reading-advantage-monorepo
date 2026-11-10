@@ -10,6 +10,7 @@
  * Every scan reads rules, selectors, or JSX class names. No scan reads a word in a comment. Every
  * count is a labeled integer with a floor above zero, so an empty input never passes.
  */
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -398,7 +399,10 @@ function bannerFindings(css: string): {
     textAlign = lastValue(rule, "text-align") ?? textAlign;
     for (const declaration of rule.declarations) {
       if (!["height", "min-height", "font-size"].includes(declaration.property)) continue;
-      if (!/^[0-9]+(\.[0-9]+)?px$/.test(declaration.value)) {
+      // The font size may fit the title length, so it may hold calc(), clamp(), or var()
+      // (remediation r2, A-F4). The heights stay plain px values.
+      const fitted = declaration.property === "font-size" && /(calc|clamp|var)\(/.test(declaration.value);
+      if (!fitted && !/^[0-9]+(\.[0-9]+)?px$/.test(declaration.value)) {
         failures.push(`the banner rule must set ${declaration.property} in px, found ${declaration.value}`);
       } else {
         sizes.push(`${declaration.property}=${declaration.value}`);
@@ -609,6 +613,51 @@ function protectedPathFindings(): {
   return { protected_paths_checked: checked, place_files: places, failures };
 }
 
+/**
+ * Gives the hex of one colour token of the brand, or of one hex colour.
+ * @param value The colour text.
+ * @returns The hex colour, or null for a colour the tables do not hold.
+ */
+function hexFrom(value: string): string | null {
+  const text = value.trim().toLowerCase();
+  if (text === "var(--st-brown)") return "#92400e";
+  if (text === "var(--st-amber)") return "#fcd34d";
+  if (text === "var(--sq-cream)") return "#fffaf0";
+  if (text === "white") return "#ffffff";
+  const match = /^#([0-9a-f]{3}|[0-9a-f]{6})$/.exec(text);
+  if (!match) return null;
+  const digits = match[1]!;
+  if (digits.length === 3) {
+    return `#${digits[0]}${digits[0]}${digits[1]}${digits[1]}${digits[2]}${digits[2]}`;
+  }
+  return `#${digits}`;
+}
+
+/**
+ * Gives the relative luminance of one hex colour (WCAG 2).
+ * @param hex The colour as #rrggbb.
+ * @returns The luminance from 0 to 1.
+ */
+function luminanceOf(hex: string): number {
+  const channels = [0, 2, 4].map((offset) => Number.parseInt(hex.slice(1 + offset, 3 + offset), 16) / 255);
+  const scaled = channels.map((value) =>
+    value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4,
+  );
+  return 0.2126 * scaled[0]! + 0.7152 * scaled[1]! + 0.0722 * scaled[2]!;
+}
+
+/**
+ * Gives the contrast ratio of two hex colours.
+ * @param first The first colour.
+ * @param second The second colour.
+ * @returns The ratio from 1 to 21.
+ */
+function contrastOf(first: string, second: string): number {
+  const one = luminanceOf(first);
+  const other = luminanceOf(second);
+  return (Math.max(one, other) + 0.05) / (Math.min(one, other) + 0.05);
+}
+
 describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => {
   it("S1 the logo file holds the facts of the source logo", () => {
     expect(existsSync(logoPath), "Missing apps/storytime/app/look/logo/storytime-advantage.svg").toBe(true);
@@ -735,8 +784,8 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
 
   it("S10 the banner rule centers the title and uses px values", () => {
     const found = bannerFindings(readLookCss());
-    expect(`banner_height_rule=${found.banner_height_rule}`, "the banner rule must set px values").toMatch(
-      /^banner_height_rule=[a-z-]+=[0-9]+(\.[0-9]+)?px( [a-z-]+=[0-9]+(\.[0-9]+)?px)*$/,
+    expect(`banner_height_rule=${found.banner_height_rule}`, "the banner rule must set a font size").toMatch(
+      /^banner_height_rule=[a-z-]+=.+$/,
     );
     expect(found.failures.join(" | "), "the banner rule").toBe("");
   });
@@ -852,6 +901,206 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
       }
     }
     expect(failures.join(" | "), "the crystal tips").toBe("");
+  });
+
+  it("F-2b the frame hands the title length to the CSS and the plaque rule fits the font (AC-4.6)", () => {
+    const frame = readFileSync(resolve(app, "app/[locale]/frame.tsx"), "utf8");
+    const failures: string[] = [];
+    if (!frame.includes("--title-chars")) {
+      failures.push("the frame must set the title length in --title-chars");
+    }
+    if (/fontSize\s*:/.test(frame)) {
+      failures.push("the frame must set no inline font size");
+    }
+    const css = readLookCss();
+    const plaque = parseCss(css).find((rule) =>
+      selectorParts(rule.selector).some(
+        (part) => part.includes("header[data-hero") && lastCompound(part) === "h1",
+      ),
+    );
+    if (!plaque) {
+      failures.push("the plaque rule must exist");
+    } else {
+      const fontSize = ruleValue(plaque, "font-size");
+      if (fontSize === null || !fontSize.includes("var(--title-chars)")) {
+        failures.push(`the plaque rule must fit the font from var(--title-chars), found ${fontSize ?? "none"}`);
+      }
+      const lineHeight = ruleValue(plaque, "line-height");
+      if (lineHeight === null || Number.parseFloat(lineHeight) !== 1.25) {
+        failures.push(`the plaque rule must set line-height 1.25, found ${lineHeight ?? "none"}`);
+      }
+      const padding = ruleValue(plaque, "padding");
+      if (padding !== null) {
+        const parts = padding.trim().split(/\s+/).filter(Boolean);
+        const vertical = parts.length >= 4 ? parts[1] : parts[0];
+        if (!/^0(px)?$/.test(vertical)) {
+          failures.push(`the plaque rule must set no vertical padding, found ${padding}`);
+        }
+      }
+    }
+    expect(failures.join(" | "), "the fitted plaque rule").toBe("");
+  });
+
+  it("F-3b the landscape block keeps the logo off the label (AC-4.1)", () => {
+    const css = readLookCss();
+    const failures: string[] = [];
+    const rules = parseCss(css);
+    const landscape = rules.filter((rule) =>
+      rule.media.some((condition) => condition.includes("max-height: 500px")),
+    );
+    if (landscape.length < 1) {
+      failures.push("the landscape block must exist");
+    }
+    const heroRule = landscape.find((rule) =>
+      selectorParts(rule.selector).some((part) => part.includes("header[data-hero]")),
+    );
+    const heroHeight = heroRule ? lengthPx(ruleValue(heroRule, "height") ?? "") : null;
+    const merged = (match: (part: string) => boolean): Map<string, string> => {
+      const values = new Map<string, string>();
+      for (const rule of rules) {
+        if (!selectorParts(rule.selector).some(match)) continue;
+        for (const declaration of rule.declarations) values.set(declaration.property, declaration.value);
+      }
+      return values;
+    };
+    const label = merged((part) => part.includes("[data-level-week]"));
+    const logo = merged((part) => part.includes("[data-logo]"));
+    const fontSize = lengthPx(label.get("font-size") ?? "") ?? 0;
+    const lineHeight = Number.parseFloat(label.get("line-height") ?? "1");
+    const padding = (label.get("padding") ?? "").trim().split(/\s+/).filter(Boolean);
+    const side = padding.length === 1 ? padding[0]! : padding.length === 2 ? padding[1]! : padding[1] ?? padding[0]!;
+    const top = padding[0] ?? "0";
+    const bottom = padding.length >= 3 ? padding[2]! : top;
+    const labelLeft = lengthPx(label.get("left") ?? "") ?? 0;
+    const labelTop = lengthPx(label.get("top") ?? "") ?? 0;
+    // The label box holds one character of the label text at the font size, plus the padding.
+    const labelWidth = fontSize + 2 * (lengthPx(side) ?? 0);
+    const labelHeight = fontSize * lineHeight + (lengthPx(top) ?? 0) + (lengthPx(bottom) ?? 0);
+    const logoLeft = lengthPx(logo.get("left") ?? "") ?? 0;
+    const logoHeight = lengthPx(logo.get("height") ?? "") ?? 0;
+    const logoWidth = lengthPx(logo.get("width") ?? "") ?? 0;
+    let logoTop = lengthPx(logo.get("top") ?? "");
+    if (logoTop === null) {
+      const bottomAnchor = lengthPx(logo.get("bottom") ?? "");
+      if (bottomAnchor !== null && heroHeight !== null) logoTop = heroHeight - bottomAnchor - logoHeight;
+    }
+    if (logoTop === null) {
+      failures.push("the logo box of the landscape block must be measurable in px");
+    } else {
+      const width = Math.max(
+        0,
+        Math.min(labelLeft + labelWidth, logoLeft + logoWidth) - Math.max(labelLeft, logoLeft),
+      );
+      const height = Math.max(
+        0,
+        Math.min(labelTop + labelHeight, logoTop + logoHeight) - Math.max(labelTop, logoTop),
+      );
+      if (width * height > 0) {
+        failures.push(
+          `the logo box of the landscape block sits on the label box by ${width} x ${height} px`
+          + ` (logo_box=${logoLeft},${logoTop},${logoWidth},${logoHeight}`
+          + ` label_box=${labelLeft},${labelTop},${labelWidth},${labelHeight})`,
+        );
+      }
+    }
+    expect(failures.join(" | "), "the landscape logo and label boxes").toBe("");
+  });
+
+  it("C-F1 the focus ring is two-tone and reaches 3:1 on the three backgrounds", () => {
+    const css = readLookCss();
+    const failures: string[] = [];
+    const rule = parseCss(css).find((entry) =>
+      selectorParts(entry.selector).some(
+        (part) => part.includes(":focus-visible") && (part.includes("button") || part.includes("a:")),
+      ),
+    );
+    if (!rule) {
+      failures.push("the focus rule must exist");
+    } else {
+      const tones = new Set<string>();
+      for (const declaration of rule.declarations) {
+        if (!["outline", "outline-color", "box-shadow", "border", "border-color"].includes(declaration.property)) {
+          continue;
+        }
+        for (const token of declaration.value.match(/#[0-9a-f]{3,8}|var\(--[a-z0-9-]+\)|\bwhite\b/gi) ?? []) {
+          const hex = hexFrom(token);
+          if (hex) tones.add(hex);
+        }
+      }
+      const list = [...tones];
+      if (!list.includes("#ffffff")) failures.push("the focus rule must name a white tone");
+      if (!list.includes("#92400e")) failures.push("the focus rule must name a brown tone");
+      for (const background of ["#92400e", "#fcd34d", "#fffaf0"]) {
+        const best = list.reduce((top, tone) => Math.max(top, contrastOf(tone, background)), 0);
+        if (best < 3) {
+          failures.push(`the focus ring must reach 3:1 on ${background}, found ${best.toFixed(2)}:1`);
+        }
+      }
+    }
+    const passage = readFileSync(
+      resolve(repo, "packages/read-along/components/read-along/read-along-passage.tsx"),
+      "utf8",
+    );
+    if (!passage.includes("focus-visible:ring-")) {
+      failures.push("the reader word focus must name a ring");
+    }
+    if (!passage.includes("focus-visible:ring-offset-")) {
+      failures.push("the reader word focus must name a ring offset");
+    }
+    expect(failures.join(" | "), "the focus ring").toBe("");
+  });
+
+  it("C-F2 the pressed decodable sound button pair reaches 4.5:1", () => {
+    const css = readLookCss();
+    const rules = parseCss(css);
+    const failures: string[] = [];
+    const pressed = rules.find((rule) =>
+      selectorParts(rule.selector).some(
+        (part) => part.includes('aria-pressed="true"') && part.includes("decodable"),
+      ),
+    );
+    if (!pressed) {
+      failures.push("the pressed decodable sound button rule must exist");
+    } else {
+      const background = ruleValue(pressed, "background-color");
+      const backgroundHex = background === null ? null : hexFrom(background);
+      if (backgroundHex === null) {
+        failures.push(`the pressed sound button must set a hex background, found ${background ?? "none"}`);
+      } else {
+        const base = rules.find((rule) =>
+          selectorParts(rule.selector).some(
+            (part) => part.includes('data-part="decodable"') && lastCompound(part) === "button",
+          ),
+        );
+        const color = ruleValue(pressed, "color") ?? (base ? ruleValue(base, "color") : null);
+        const colorHex = color === null ? null : hexFrom(color);
+        if (colorHex === null) {
+          failures.push(`the pressed sound button must hold a brand label, found ${color ?? "none"}`);
+        } else {
+          const ratio = contrastOf(backgroundHex, colorHex);
+          if (ratio < 4.5) {
+            failures.push(`the pressed sound button pair must reach 4.5:1, found ${ratio.toFixed(2)}:1`);
+          }
+        }
+      }
+    }
+    expect(failures.join(" | "), "the pressed decodable sound button").toBe("");
+  });
+
+  it("F-4 the per-word timing files did not change since the phase base (AC-4.7)", () => {
+    const result = spawnSync(
+      "git",
+      [
+        "diff",
+        "3480f904c509dc2d66fa827dba73df95b3768c65",
+        "--",
+        "packages/read-along/hooks",
+        "apps/storytime/lib/highlight-windows.ts",
+      ],
+      { cwd: repo, encoding: "utf8" },
+    );
+    expect(result.status, "the git diff of the timing files must run").toBe(0);
+    expect(result.stdout.trim(), "the timing files must not change since the phase base").toBe("");
   });
 
   it("S11 the art and the read-along files hold no brand tone (AC-4.7)", () => {

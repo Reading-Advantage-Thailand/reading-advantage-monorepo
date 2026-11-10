@@ -352,7 +352,10 @@ function brandChromeVerdict(v) {
   return v.game_bars === 0 && v.progressbars === 0 && v.band_icons === 0
     && v.crest_elems === 0 && v.logo_elems === 1 && v.logo_name_ok === 1
     && v.level_week_copies === 1 && v.label_hidden === 0
-    && v.logo_title_overlap_px === 0 && v.logo_h_px >= 48;
+    && v.logo_title_overlap_px === 0 && v.logo_h_px >= 48
+    && v.blue_words === 0
+    && (v.current_word_found === 0
+      || (v.current_word_bg === "rgb(146, 64, 14)" && v.current_word_color === "rgb(255, 255, 255)"));
 }
 /** The verdict of the chrome tones: brand pairs above 0, no blue chrome, and 4.5:1 or more. */
 function brandTonesVerdict(v) {
@@ -383,15 +386,37 @@ function brandPagesVerdict(v) {
   return v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
     && v.chrome_contrast_min >= 4.5 && v.chrome_brand_pairs >= 1;
 }
+/** The verdict of the forbidden page: no chrome pair, no blue, no button, and no console error. */
+function brandForbiddenVerdict(v) {
+  return v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
+    && v.chrome_blue_computed === 0 && v.chrome_brand_pairs === 0 && v.buttons === 0;
+}
+/** The verdict of the 404 view: the 404 document load and no other console error. */
+function brandNotFoundVerdict(v) {
+  return v.console_errors === 1 && v.not_found_errors === 1
+    && v.tap_under_48 === 0 && v.page_overflow === 0;
+}
 const goodBrandChrome = {
   game_bars: 0, progressbars: 0, band_icons: 0, crest_elems: 0,
   logo_elems: 1, logo_name_ok: 1, level_week_copies: 1, label_hidden: 0,
   logo_title_overlap_px: 0, logo_h_px: 48,
+  current_word_found: 0, current_word_bg: "", current_word_color: "", blue_words: 0,
 };
 const goodBrandTones = {
   families_checked: 4, chrome_pairs_checked: 4, chrome_blue_computed: 0,
   chrome_contrast_min: 4.5, amber_pairs: 2, brown_pairs: 2, families: [],
 };
+/** The eight shipped titles of the fixture weeks (the weeks 7 to 14 at level 3). */
+const TITLE_WEEKS = [
+  { week: 7, title: "Hello!" },
+  { week: 8, title: "How Many?" },
+  { week: 9, title: "Paint!" },
+  { week: 10, title: "My Family" },
+  { week: 11, title: "I Have Two" },
+  { week: 12, title: "I Can See" },
+  { week: 13, title: "Is It a Ball?" },
+  { week: 14, title: "Unit 1 Review" },
+];
 const goodBrandBanner = {
   text_align: "center", banner_top_gap_px: 0, banner_bottom_gap_px: 1,
   line_count: 1, per_line_ratio: 0.8, clipped_text: 0, page_overflow: 0,
@@ -402,6 +427,13 @@ const goodBrandLongTitle = {
 const goodBrandPages = {
   console_errors: 0, tap_under_48: 0, page_overflow: 0,
   chrome_contrast_min: 4.5, chrome_brand_pairs: 1,
+};
+const goodBrandForbidden = {
+  console_errors: 0, tap_under_48: 0, page_overflow: 0,
+  chrome_blue_computed: 0, chrome_brand_pairs: 0, buttons: 0,
+};
+const goodBrandNotFound = {
+  console_errors: 1, not_found_errors: 1, tap_under_48: 0, page_overflow: 0,
 };
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
@@ -469,6 +501,15 @@ const mutants = [
   brandTonesVerdict({ ...goodBrandTones, chrome_blue_computed: 1 }) === false,
   brandPagesVerdict({ ...goodBrandPages, chrome_brand_pairs: 0 }) === false,
   brandLongTitleVerdict({ ...goodBrandLongTitle, font_px: 20 }) === false,
+  brandChromeVerdict({ ...goodBrandChrome, logo_h_px: 40 }) === false,
+  brandChromeVerdict({ ...goodBrandChrome, blue_words: 1 }) === false,
+  brandChromeVerdict({ ...goodBrandChrome, current_word_found: 1 }) === false,
+  brandChromeVerdict({ ...goodBrandChrome, current_word_found: 1, current_word_bg: "rgb(29, 78, 216)" }) === false,
+  brandForbiddenVerdict({ ...goodBrandForbidden, chrome_brand_pairs: 1 }) === false,
+  brandForbiddenVerdict({ ...goodBrandForbidden, buttons: 1 }) === false,
+  brandForbiddenVerdict({ ...goodBrandForbidden, chrome_blue_computed: 1 }) === false,
+  brandNotFoundVerdict({ ...goodBrandNotFound, console_errors: 2 }) === false,
+  brandNotFoundVerdict({ ...goodBrandNotFound, not_found_errors: 0 }) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -506,6 +547,10 @@ const controls = [
   brandBannerVerdict(goodBrandBanner),
   brandLongTitleVerdict(goodBrandLongTitle),
   brandPagesVerdict(goodBrandPages),
+  brandForbiddenVerdict(goodBrandForbidden),
+  brandNotFoundVerdict(goodBrandNotFound),
+  brandChromeVerdict({ ...goodBrandChrome, current_word_found: 1,
+    current_word_bg: "rgb(146, 64, 14)", current_word_color: "rgb(255, 255, 255)" }),
 ];
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
@@ -2045,6 +2090,7 @@ async function readBrandChrome(page) {
   return page.evaluate(() => {
     const label = document.querySelector("[data-level-week]");
     const logo = document.querySelector("[data-logo]");
+    const plaque = document.querySelector("header[data-hero] > h1");
     const labelText = label ? (label.textContent ?? "").trim() : "";
     let copies = 0;
     if (labelText) {
@@ -2065,6 +2111,27 @@ async function readBrandChrome(page) {
       if (label.getAttribute("aria-hidden") === "true"
         || label.closest("[aria-hidden='true']") !== null || clipped) hidden = 1;
     }
+    // The logo box against the text box of the plaque (finding F-1).
+    let overlapPx = 0;
+    let logoHeight = 0;
+    if (logo && plaque) {
+      const logoBox = logo.getBoundingClientRect();
+      const range = document.createRange();
+      range.selectNodeContents(plaque);
+      const textBox = range.getBoundingClientRect();
+      const width = Math.max(0, Math.min(logoBox.right, textBox.right) - Math.max(logoBox.left, textBox.left));
+      const height = Math.max(0, Math.min(logoBox.bottom, textBox.bottom) - Math.max(logoBox.top, textBox.top));
+      overlapPx = Math.round(width * height);
+      logoHeight = Math.round(logoBox.height);
+    }
+    // The current word of the read-along (finding P-1).
+    const currentWord = document.querySelector("[data-word][aria-current='true']");
+    const wordStyle = currentWord ? getComputedStyle(currentWord) : null;
+    const blueWords = [...document.querySelectorAll("[data-word]")].filter((element) => {
+      const value = getComputedStyle(element).backgroundColor;
+      return value === "rgb(29, 78, 216)" || value === "rgb(37, 99, 235)" || value === "rgb(30, 58, 138)"
+        || value === "rgb(96, 165, 250)" || value === "rgb(23, 37, 84)" || value === "rgb(59, 130, 246)";
+    }).length;
     return {
       game_bars: document.querySelectorAll("[data-game-bar]").length,
       progressbars: document.querySelectorAll('[role="progressbar"]').length,
@@ -2072,6 +2139,12 @@ async function readBrandChrome(page) {
       crest_elems: document.querySelectorAll("[data-crest]").length,
       logo_elems: document.querySelectorAll("[data-logo]").length,
       logo_name_ok: logo && logo.tagName.toLowerCase() === "img" && logo.getAttribute("alt") === "Storytime Advantage" ? 1 : 0,
+      logo_title_overlap_px: overlapPx,
+      logo_h_px: logoHeight,
+      current_word_found: currentWord ? 1 : 0,
+      current_word_bg: wordStyle ? wordStyle.backgroundColor : "",
+      current_word_color: wordStyle ? wordStyle.color : "",
+      blue_words: blueWords,
       level_week_copies: copies,
       label_hidden: hidden,
     };
@@ -2241,19 +2314,24 @@ async function readBrandBanner(page) {
   return page.evaluate(() => {
     const plaque = document.querySelector("header[data-hero] > h1");
     if (!plaque) {
-      return { text_align: "none", banner_top_gap_px: -1, banner_bottom_gap_px: -1, banner_ratio: 0, title_font_px: 0, banner_h_px: 0 };
+      return { text_align: "none", banner_top_gap_px: -1, banner_bottom_gap_px: -1, banner_ratio: 0,
+        line_count: 0, per_line_ratio: 0, title_font_px: 0, banner_h_px: 0 };
     }
     const style = getComputedStyle(plaque);
     const box = plaque.getBoundingClientRect();
     const range = document.createRange();
     range.selectNodeContents(plaque);
     const text = range.getBoundingClientRect();
+    const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
+    const lines = rects.length > 0 ? rects.length : 1;
     const font = parseFloat(style.fontSize);
     return {
       text_align: style.textAlign,
       banner_top_gap_px: Math.round(text.top - box.top),
       banner_bottom_gap_px: Math.round(box.bottom - text.bottom),
       banner_ratio: box.height > 0 ? font / box.height : 0,
+      line_count: lines,
+      per_line_ratio: box.height > 0 ? font / (box.height / lines) : 0,
       title_font_px: font,
       banner_h_px: Math.round(box.height),
     };
@@ -2265,28 +2343,32 @@ await guarded("row 17 brand banner", async () => {
   let ratioMin = 99;
   let ratioMax = 0;
   let sample = "";
-  for (const locale of LOCALES) {
-    const context = await makeContext(VIEWPORTS[0]);
-    const page = await context.newPage();
-    const state = watch(page);
-    await openScreen(page, locale, "week");
-    const found = await readBrandBanner(page);
-    const counts = await checkCounts(page, state);
-    cases += 1;
-    ratioMin = Math.min(ratioMin, found.banner_ratio);
-    ratioMax = Math.max(ratioMax, found.banner_ratio);
-    const ok = brandBannerVerdict({
-      ...found,
-      clipped_text: counts.clipped_text,
-      page_overflow: counts.page_overflow,
-    });
-    if (!ok) {
-      failures += 1;
-      sample = sample || locale + ": " + JSON.stringify(found)
-        + " clipped_text=" + counts.clipped_text + " page_overflow=" + counts.page_overflow;
+  // The eight shipped titles of the fixture weeks, each in the two locales (remediation r2, A-F5).
+  for (const item of TITLE_WEEKS) {
+    for (const locale of LOCALES) {
+      const context = await makeContext(VIEWPORTS[0]);
+      const page = await context.newPage();
+      const state = watch(page);
+      await page.goto(base + "/" + locale + "/st/3/" + item.week, { waitUntil: "load" });
+      await settle(page);
+      const found = await readBrandBanner(page);
+      const counts = await checkCounts(page, state);
+      cases += 1;
+      ratioMin = Math.min(ratioMin, found.per_line_ratio);
+      ratioMax = Math.max(ratioMax, found.per_line_ratio);
+      const ok = brandBannerVerdict({
+        ...found,
+        clipped_text: counts.clipped_text,
+        page_overflow: counts.page_overflow,
+      });
+      if (!ok) {
+        failures += 1;
+        sample = sample || locale + " " + item.title + ": " + JSON.stringify(found)
+          + " clipped_text=" + counts.clipped_text + " page_overflow=" + counts.page_overflow;
+      }
+      await page.close();
+      await context.close();
     }
-    await page.close();
-    await context.close();
   }
   // A 60-character title (the V1 Thai string) steps down one size step and stays inside the plaque.
   const longContext = await makeContext(VIEWPORTS[0]);
@@ -2296,35 +2378,52 @@ await guarded("row 17 brand banner", async () => {
   await settle(longPage);
   await longPage.evaluate((text) => {
     const plaque = document.querySelector("header[data-hero] > h1");
-    if (plaque) plaque.textContent = text;
+    if (plaque) {
+      plaque.textContent = text;
+      // The plaque fits the font from the title length (finding F-2).
+      plaque.style.setProperty("--title-chars", String(text.length));
+    }
   }, THAI_LONG_TITLE);
   await settle(longPage);
+  const longFound = await readBrandBanner(longPage);
   const longPlaque = await measurePlaque(longPage);
   const longCounts = await checkCounts(longPage, longState);
-  if (longPlaque.overflow_px !== 0 || longCounts.clipped_text !== 0) failures += 1;
+  const longOk = brandLongTitleVerdict({
+    per_line_ratio: longFound.per_line_ratio,
+    plaque_overflow_px: longPlaque.overflow_px,
+    clipped_text: longCounts.clipped_text,
+    font_px: longFound.title_font_px,
+  });
+  if (!longOk) {
+    failures += 1;
+    sample = sample || "60 characters: " + JSON.stringify(longFound)
+      + " plaque_overflow_px=" + longPlaque.overflow_px + " clipped_text=" + longCounts.clipped_text;
+  }
   await longPage.close();
   await longContext.close();
   const min = ratioMin === 99 ? 0 : Math.round(ratioMin * 1000) / 1000;
   const max = ratioMax === 0 ? 0 : Math.round(ratioMax * 1000) / 1000;
   emit("banner_ratio_min", min);
   emit("banner_ratio_max", max);
-  row("brand banner", cases === 2 && failures === 0,
+  row("brand banner", cases === TITLE_WEEKS.length * LOCALES.length && failures === 0,
     "brand_banner_cases=" + cases + " brand_banner_failures=" + failures
     + " banner_ratio_min=" + min + " banner_ratio_max=" + max
     + " long_title_overflow_px=" + longPlaque.overflow_px
-    + " long_title_clipped_text=" + longCounts.clipped_text + (sample ? " first=" + sample : ""));
+    + " long_title_clipped_text=" + longCounts.clipped_text
+    + " long_title_font_px=" + longFound.title_font_px
+    + (sample ? " first=" + sample : ""));
 });
 
 // ---- Row 18: the pages of screens 6 to 9 (decision 1). ----
 /** The pages that carry no frame and take the brand tones through their own class names. */
 const BRAND_PAGES = [
-  { label: "teacher week th", path: "/th/teacher/2/1", signedIn: true },
-  { label: "teacher day th", path: "/th/teacher/2/1/1", signedIn: true },
-  { label: "403 page th", path: "/th/teacher/2/2", signedIn: true },
-  { label: "404 view th", path: "/th/st/4/1", signedIn: true },
-  { label: "st fallback th", path: "/th/st", signedIn: true },
-  { label: "sign_in th", path: "/th/sign-in", signedIn: false },
-  { label: "join th", path: "/th/join", signedIn: false },
+  { label: "teacher week th", path: "/th/teacher/2/1", session: "teacher", kind: "page" },
+  { label: "teacher day th", path: "/th/teacher/2/1/1", session: "teacher", kind: "page" },
+  { label: "403 page th", path: "/th/teacher/2/1", session: "family", kind: "forbidden" },
+  { label: "404 view th", path: "/th/st/2/8", session: "family", kind: "notfound" },
+  { label: "st fallback th", path: "/th/st", session: "family", kind: "page" },
+  { label: "sign_in th", path: "/th/sign-in", session: "none", kind: "page" },
+  { label: "join th", path: "/th/join", session: "none", kind: "page" },
 ];
 await guarded("row 18 brand pages", async () => {
   let cases = 0;
@@ -2332,35 +2431,67 @@ await guarded("row 18 brand pages", async () => {
   let pairsMin = 99;
   let contrastMin = 99;
   let sample = "";
+  // The teacher pages need a teacher session (remediation r2, A-F2).
+  if (TEACHER_PASS !== "") {
+    teacherCookies = await signIn(TEACHER_USER, TEACHER_PASS);
+  }
+  emit("teacher_session_cookies", teacherCookies.length);
   for (const item of BRAND_PAGES) {
-    const context = await makeContext(VIEWPORTS[0], { signedIn: item.signedIn });
+    const context = await makeContext(VIEWPORTS[0], { session: item.session });
     const page = await context.newPage();
     const state = watch(page);
     let detail = "";
     let ok = false;
     let pairs = 0;
     let contrast = 0;
+    let blue = 0;
+    let buttons = 0;
+    let status = 0;
     try {
       const response = await page.goto(base + item.path, { waitUntil: "load" });
+      status = response ? response.status() : 0;
       await settle(page);
       const counts = await checkCounts(page, state);
       const summary = brandToneSummary(await readBrandElements(page));
       pairs = summary.chrome_pairs_checked;
       contrast = summary.chrome_contrast_min;
+      blue = summary.chrome_blue_computed;
+      buttons = await page.evaluate(() => document.querySelectorAll("button").length);
       pairsMin = Math.min(pairsMin, pairs);
       contrastMin = contrastMin === 99 ? contrast : Math.min(contrastMin, contrast);
-      ok = brandPagesVerdict({
-        console_errors: counts.console_errors,
-        tap_under_48: counts.tap_under_48,
-        page_overflow: counts.page_overflow,
-        chrome_contrast_min: contrast,
-        chrome_brand_pairs: pairs,
-      });
-      detail = "status=" + (response ? response.status() : 0)
+      const notFoundErrors = state.errors.filter((text) => /404/.test(text)).length;
+      if (item.kind === "forbidden") {
+        ok = brandForbiddenVerdict({
+          console_errors: counts.console_errors,
+          tap_under_48: counts.tap_under_48,
+          page_overflow: counts.page_overflow,
+          chrome_blue_computed: blue,
+          chrome_brand_pairs: pairs,
+          buttons: buttons,
+        });
+      } else if (item.kind === "notfound") {
+        ok = brandNotFoundVerdict({
+          console_errors: counts.console_errors,
+          not_found_errors: notFoundErrors,
+          tap_under_48: counts.tap_under_48,
+          page_overflow: counts.page_overflow,
+        });
+      } else {
+        ok = brandPagesVerdict({
+          console_errors: counts.console_errors,
+          tap_under_48: counts.tap_under_48,
+          page_overflow: counts.page_overflow,
+          chrome_contrast_min: contrast,
+          chrome_brand_pairs: pairs,
+        });
+      }
+      detail = "status=" + status
         + " console_errors=" + counts.console_errors
         + " tap_under_48=" + counts.tap_under_48
         + " page_overflow=" + counts.page_overflow
         + " chrome_brand_pairs=" + pairs
+        + " chrome_blue_computed=" + blue
+        + " buttons=" + buttons
         + " chrome_contrast_min=" + (contrast === 0 ? 0 : Math.round(contrast * 100) / 100);
     } catch (error) {
       detail = "the page raises an error: " + String(error).slice(0, 120);
