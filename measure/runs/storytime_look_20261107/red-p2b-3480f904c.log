@@ -76,6 +76,19 @@ r1_self_test_exit: 0
 r1_selftest_mutants_rejected: 61 of 61
 r1_bash_n_exit: 0
 r1_commit: d2a4ff4c5572b1f3f92108936ed8dd2cd8eb8e10
+r2_red_cases: F-2b the fitted font rule, F-3b the landscape logo, C-F1 the focus ring, C-F2 the pressed sound button, F-4 the timing files
+r2_read_along_cases: the current word is the brand brown
+r2_tests_failed: 4
+r2_tests_passed: 23
+r2_load_errors: 0
+r2_read_along_tests_failed: 1
+r2_read_along_tests_passed: 2
+r2_tsc_exit: 0
+r2_eslint_exit: 0
+r2_self_test_exit: 0
+r2_selftest_mutants_rejected: 70 of 70
+r2_bash_n_exit: 0
+r2_commit: 3ca71c054b0dd7da313e3561ff588b88d09ed623
 END_MEASURE_AGENT_RESULT
 
 # Part 2 (the browser rows of the Phase 2b gate, same role, same phase).
@@ -180,3 +193,83 @@ END_MEASURE_AGENT_RESULT
 #   Files: apps/storytime/__tests__/look-brand-chrome.test.ts,
 #          apps/storytime/__tests__/look-brand-chrome.test.tsx,
 #          apps/storytime/__tests__/look-phase2-browser-gate.sh
+
+#
+# Remediation r2 (automated), same role, same phase. The role base of this round is 4eebabbb2.
+# The findings are A-F1 (the gate readers do not return the new fields), A-F2 (row 18), A-F3 (the
+# landscape block), A-F4 (the fitted font rule), A-F5 (row 17), C-F1 (the focus ring), C-F2 (the
+# pressed sound button), and P-1 (the current word).
+#
+# Red cases added to apps/storytime/__tests__/look-brand-chrome.test.ts:
+#   F-2b the frame hands the title length to the CSS and the plaque rule fits the font (AC-4.6)
+#        Fails at HEAD with "the frame must set no inline font size | the plaque rule must fit the
+#        font from var(--title-chars), found 72px".
+#   F-3b the landscape block keeps the logo off the label (AC-4.1)
+#        Fails at HEAD with "the logo box of the landscape block sits on the label box by 38 x 23 px
+#        (logo_box=16,8,48,48 label_box=12,30,42,23)".
+#   C-F1 the focus ring is two-tone and reaches 3:1 on the three backgrounds
+#        Fails at HEAD with "the focus rule must name a white tone | the focus rule must name a
+#        brown tone | the focus ring must reach 3:1 on #92400e, found 0.00:1 | the focus ring must
+#        reach 3:1 on #fcd34d, found 0.00:1 | the focus ring must reach 3:1 on #fffaf0, found 0.00:1".
+#   C-F2 the pressed decodable sound button pair reaches 4.5:1
+#        Fails at HEAD with "the pressed sound button pair must reach 4.5:1, found 4.25:1".
+#   F-4 the per-word timing files did not change since the phase base (AC-4.7)
+#        Passes at HEAD (characterization): the git diff of packages/read-along/hooks and
+#        apps/storytime/lib/highlight-windows.ts since 3480f904c is empty.
+# S10 is relaxed: the font size of the plaque rule may hold calc(), clamp(), or var().
+#
+# Red case added to packages/read-along/lib/__tests__/highlight-contrast.test.ts:
+#   the current word is the brand brown with white text and no blue (finding P-1)
+#        Fails at HEAD with "the current word must name the brown background: expected
+#        [ 'bg-blue-700', 'text-white', ...(2) ] to include 'bg-[#92400e]'". The hex map of the
+#        file holds the new class "bg-[#92400e]": "#92400e".
+#
+# Red command, run in the foreground through heavy-run:
+#   HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts; cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/read-along && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 lib/__tests__/highlight-contrast.test.ts'
+#   Result at HEAD 4eebabbb2: the storytime files exit=1; Test Files 1 failed | 1 passed;
+#   tests_failed=4; tests_passed=23; load_errors=0. The read-along file exit=1; tests_failed=1;
+#   tests_passed=2; load_errors=0. The five failing cases are the new ones. The other cases of the
+#   council rows that pin navy stay as they are.
+#
+# Gate script changes in apps/storytime/__tests__/look-phase2-browser-gate.sh:
+#   A-F1 the reader of the brand chrome returns logo_title_overlap_px, logo_h_px,
+#     current_word_found, current_word_bg, current_word_color, and blue_words. The reader of the
+#     title plaque returns line_count and per_line_ratio. The verdict of the chrome takes the new
+#     fields, and the verdict of the long title runs in the live row 17.
+#   A-F2 row 18 signs the teacher account in and uses the teacher session for the teacher week and
+#     the teacher day. The 403 page uses the family session and expects no brand pair, no blue
+#     chrome, and no button. The 404 view is the draft week 8 and expects the one console error of
+#     the 404 document load and no other.
+#   A-F5 row 17 walks the eight shipped titles of the fixture weeks (the weeks 7 to 14 at level 3)
+#     in the two locales, with line_count=1 and per_line_ratio from 0.76 to 0.84. The 60-character
+#     title keeps its own ratio, plaque_overflow_px=0, clipped_text=0, and font_px of 24 or more.
+#   P-1 the reader of the chrome counts the blue words of the read-along, and the verdict expects
+#     no blue word and a current word in brown with white text.
+#   Self-test: the good values and the mutants of every verdict run a reader-shaped result. The
+#     new mutants are a logo height of 40 px, a blue word, a current word in blue, a brand pair on
+#     the 403 page, a button on the 403 page, a blue chrome on the 403 page, two console errors on
+#     the 404 view, and a 404 view without the 404 error.
+#
+# No-browser check:
+#   cd apps/storytime && bash __tests__/look-phase2-browser-gate.sh --self-test
+#   Result: exit=0; selftest_controls_ok=1; selftest_mutants_rejected=70 of
+#   selftest_mutants_checked=70; "=== Total: 1 checks (PASS=1, FAIL=0) ===".
+#   bash -n on the script: exit=0.
+# Type gate through heavy-run in apps/storytime: exit=0.
+# Lint gate in apps/storytime on the changed test file: exit=0.
+#
+# Deviations of this round:
+#   The commitlint rule header-max-length rejects the given commit subject (106 characters), so
+#   the subject is "test(look): pin the landscape logo, focus ring, and brown word
+#   (track_id: storytime_look_20261107)" (98 characters).
+#   The package packages/read-along holds no tsconfig and no ESLint configuration, so the type gate
+#   and the lint gate run in apps/storytime only. The read-along test file runs under vitest.
+#   The browser rows of the gate script do not run in this role. The role runs the --self-test mode
+#   only.
+#
+# Remediation r2 commit: 3ca71c054b0dd7da313e3561ff588b88d09ed623
+#   "test(look): pin the landscape logo, focus ring, and brown word
+#   (track_id: storytime_look_20261107)"
+#   Files: apps/storytime/__tests__/look-brand-chrome.test.ts,
+#          apps/storytime/__tests__/look-phase2-browser-gate.sh,
+#          packages/read-along/lib/__tests__/highlight-contrast.test.ts
