@@ -634,6 +634,68 @@ function hexFrom(value: string): string | null {
 }
 
 /**
+ * Gives the colour channels of one hex colour.
+ * @param hex The colour as #rgb or #rrggbb.
+ * @returns The red, green, and blue channels, or null for another text.
+ */
+function hexChannels(hex: string): [number, number, number] | null {
+  const match = /^#([0-9a-f]{3}|[0-9a-f]{6})$/.exec(hex.trim().toLowerCase());
+  if (!match) return null;
+  const digits = match[1]!;
+  const full = digits.length === 3
+    ? `${digits[0]}${digits[0]}${digits[1]}${digits[1]}${digits[2]}${digits[2]}`
+    : digits;
+  return [
+    Number.parseInt(full.slice(0, 2), 16),
+    Number.parseInt(full.slice(2, 4), 16),
+    Number.parseInt(full.slice(4, 6), 16),
+  ];
+}
+
+/**
+ * Tells whether one colour reads as blue: the blue channel is the largest, and it leads by 40.
+ * @param channels The red, green, and blue channels.
+ * @returns Whether the colour reads as blue.
+ */
+function isBlueChannels(channels: [number, number, number]): boolean {
+  const [r, g, b] = channels;
+  return b >= g && b >= r && b - Math.max(r, g) >= 40;
+}
+
+/**
+ * Tells whether one value holds a blue colour.
+ * @param value The value text.
+ * @returns Whether the value holds a blue hex colour or a blue rgb colour.
+ */
+function holdsBlue(value: string): boolean {
+  for (const hex of value.match(/#[0-9a-f]{3,8}/gi) ?? []) {
+    const channels = hexChannels(hex);
+    if (channels && isBlueChannels(channels)) return true;
+  }
+  for (const match of value.matchAll(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/gi)) {
+    const channels = [Number(match[1]), Number(match[2]), Number(match[3])] as [number, number, number];
+    if (isBlueChannels(channels)) return true;
+  }
+  return false;
+}
+
+/**
+ * Tells whether one value holds a brown tone of the brand.
+ * @param value The value text.
+ * @returns Whether the value holds a brown colour.
+ */
+function holdsBrown(value: string): boolean {
+  if (value.includes("var(--st-brown)")) return true;
+  for (const hex of value.match(/#[0-9a-f]{3,8}/gi) ?? []) {
+    const channels = hexChannels(hex);
+    if (!channels) continue;
+    const [r, g, b] = channels;
+    if (r > g && g > b && r >= 100 && g <= 120 && b <= 80) return true;
+  }
+  return false;
+}
+
+/**
  * Gives the relative luminance of one hex colour (WCAG 2).
  * @param hex The colour as #rrggbb.
  * @returns The luminance from 0 to 1.
@@ -1085,6 +1147,69 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
       }
     }
     expect(failures.join(" | "), "the pressed decodable sound button").toBe("");
+  });
+
+  it("P-2 no blue ink or ground stays on the child screens (AC-4.4, AC-4.7)", () => {
+    const css = readLookCss();
+    const failures: string[] = [];
+    const banned = [
+      "--sq-ink",
+      "--sq-ink-soft",
+      "--sq-navy",
+      "--sq-blue",
+      "--sq-blue-top",
+      "--sq-blue-dark",
+      "--sq-ice",
+    ];
+    const rules = parseCss(css);
+    let checked = 0;
+    let blueRefs = 0;
+    const note = (text: string): void => {
+      blueRefs += 1;
+      if (failures.length < 6) failures.push(text);
+    };
+    for (const rule of rules) {
+      if (rule.keyframes) continue;
+      // The token definitions may stay. The rules that use them may not (finding P-2).
+      if (selectorParts(rule.selector).some((part) => part === ":root")) continue;
+      if (isArtRule(rule)) continue;
+      checked += 1;
+      for (const declaration of rule.declarations) {
+        for (const token of banned) {
+          if (declaration.value.includes(token)) {
+            note(`the rule ${rule.selector} names the blue token ${token}`);
+          }
+        }
+        if (holdsBlue(declaration.value)) {
+          note(`the rule ${rule.selector} paints the blue ${declaration.value}`);
+        }
+      }
+    }
+    if (blueRefs > failures.length) {
+      failures.push(`and ${blueRefs - failures.length} more blue references`);
+    }
+    // The ground of the page and the vignette over the place must be brown.
+    const ground = rules.find((rule) => selectorParts(rule.selector).some((part) => part === "html"));
+    const groundValue = ground
+      ? lastValue(ground, "background") ?? lastValue(ground, "background-color")
+      : null;
+    if (groundValue === null || !holdsBrown(groundValue)) {
+      failures.push(`the ground of the page must use a brown tone, found ${groundValue ?? "none"}`);
+    }
+    const vignette = rules.find((rule) =>
+      selectorParts(rule.selector).some(
+        (part) => part.includes("main[data-place]") && part.includes("::after"),
+      ),
+    );
+    const vignetteValue = vignette ? lastValue(vignette, "background") : null;
+    if (vignetteValue === null || !holdsBrown(vignetteValue) || holdsBlue(vignetteValue)) {
+      failures.push(`the vignette over the place must use a brown tone, found ${vignetteValue ?? "none"}`);
+    }
+    expect(`rules_checked=${checked}`, "the blue scan must read the rules of the style sheet").toMatch(
+      /^rules_checked=[1-9][0-9]*$/,
+    );
+    expect(`blue_refs=${blueRefs}`, "the blue references must be counted").toMatch(/^blue_refs=[0-9]+$/);
+    expect(failures.join(" | "), "the blue ink and the blue ground").toBe("");
   });
 
   it("F-4 the per-word timing files did not change since the phase base (AC-4.7)", () => {

@@ -386,6 +386,17 @@ function brandPagesVerdict(v) {
   return v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
     && v.chrome_contrast_min >= 4.5 && v.chrome_brand_pairs >= 1;
 }
+/** The verdict of the blue ink: no visible element holds a blue text colour or a blue ground. */
+function blueInkVerdict(count) {
+  return count === 0;
+}
+/** The verdict of a teacher page: no console error, no overflow, and one brand pair.
+ *  The 48 px tap floor covers the child screens only (decision C-F3), so the teacher pages do not
+ *  check the tap floor. */
+function brandTeacherVerdict(v) {
+  return v.console_errors === 0 && v.page_overflow === 0
+    && v.chrome_contrast_min >= 4.5 && v.chrome_brand_pairs >= 1;
+}
 /** The verdict of the forbidden page: no chrome pair, no blue, no button, and no console error. */
 function brandForbiddenVerdict(v) {
   return v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
@@ -427,6 +438,9 @@ const goodBrandLongTitle = {
 const goodBrandPages = {
   console_errors: 0, tap_under_48: 0, page_overflow: 0,
   chrome_contrast_min: 4.5, chrome_brand_pairs: 1,
+};
+const goodBrandTeacher = {
+  console_errors: 0, page_overflow: 0, chrome_contrast_min: 4.5, chrome_brand_pairs: 1,
 };
 const goodBrandForbidden = {
   console_errors: 0, tap_under_48: 0, page_overflow: 0,
@@ -510,6 +524,10 @@ const mutants = [
   brandForbiddenVerdict({ ...goodBrandForbidden, chrome_blue_computed: 1 }) === false,
   brandNotFoundVerdict({ ...goodBrandNotFound, console_errors: 2 }) === false,
   brandNotFoundVerdict({ ...goodBrandNotFound, not_found_errors: 0 }) === false,
+  blueInkVerdict(1) === false,
+  blueInkVerdict(2) === false,
+  brandTeacherVerdict({ ...goodBrandTeacher, console_errors: 1 }) === false,
+  brandTeacherVerdict({ ...goodBrandTeacher, chrome_brand_pairs: 0 }) === false,
 ];
 const controls = [
   countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
@@ -547,6 +565,8 @@ const controls = [
   brandBannerVerdict(goodBrandBanner),
   brandLongTitleVerdict(goodBrandLongTitle),
   brandPagesVerdict(goodBrandPages),
+  blueInkVerdict(0),
+  brandTeacherVerdict(goodBrandTeacher),
   brandForbiddenVerdict(goodBrandForbidden),
   brandNotFoundVerdict(goodBrandNotFound),
   brandChromeVerdict({ ...goodBrandChrome, current_word_found: 1,
@@ -2178,82 +2198,41 @@ await guarded("row 15 brand chrome", async () => {
     + " label_copies_max=" + copiesMax + (sample ? " first=" + sample : ""));
 });
 
-// ---- Row 16: the chrome tones of the look screens (AC-4.4 and AC-4.5). ----
-/** The four chrome families of the look, with the selectors that read them. */
-const BRAND_FAMILIES = [
-  { name: "banner", selectors: ["header[data-hero] > h1", "main > h1"] },
-  { name: "buttons", selectors: ["button"] },
-  { name: "frames", selectors: ["section[aria-label]", "main > section"] },
-  { name: "cards", selectors: ["ul[data-week-tiles] a", "[data-part=\"song\"] ol", "[data-page-content] > div", "main li", "main a[href]"] },
-];
-/** Reads the chrome elements of the open page: their family, their fill, and their label colour. */
-async function readBrandElements(page) {
-  return page.evaluate((families) => {
-    const seen = new Set();
-    const out = [];
-    for (const family of families) {
-      for (const selector of family.selectors) {
-        for (const element of document.querySelectorAll(selector)) {
-          if (seen.has(element)) continue;
-          seen.add(element);
-          const style = getComputedStyle(element);
-          const box = element.getBoundingClientRect();
-          if (box.width <= 0 || box.height <= 0) continue;
-          if (style.visibility === "hidden" || style.display === "none") continue;
-          out.push({ family: family.name, background: style.backgroundColor, color: style.color });
-        }
+/** Reads the visible elements of the open page and counts the blue text colours and grounds. */
+async function readBlueInk(page) {
+  return page.evaluate(() => {
+    const isBlue = (value) => {
+      const match = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/.exec(value || "");
+      if (!match) return false;
+      const alpha = match[4] === undefined ? 1 : Number(match[4]);
+      if (alpha < 0.05) return false;
+      const r = Number(match[1]);
+      const g = Number(match[2]);
+      const b = Number(match[3]);
+      return b >= g && b >= r && b - Math.max(r, g) >= 40;
+    };
+    let blue = 0;
+    let checked = 0;
+    const elements = [document.documentElement, document.body, ...document.body.querySelectorAll("*")];
+    for (const element of elements) {
+      const style = getComputedStyle(element);
+      if (style.visibility === "hidden" || style.display === "none") continue;
+      const box = element.getBoundingClientRect();
+      if (box.width <= 0 || box.height <= 0) continue;
+      // The art keeps its own colours. The text of the art is still read.
+      const isArt = element.tagName === "IMG" || element.tagName === "PICTURE"
+        || element.closest("picture") !== null;
+      checked += 1;
+      if (isBlue(style.color)) {
+        blue += 1;
+        continue;
       }
+      if (!isArt && isBlue(style.backgroundColor)) blue += 1;
     }
-    return out;
-  }, BRAND_FAMILIES);
+    return { blue_text_or_ground: blue, elements_checked: checked };
+  });
 }
-/** Tells whether one colour holds the channels of one tone. */
-function isRgbOf(color, channels) {
-  return color !== null && color.r === channels[0] && color.g === channels[1] && color.b === channels[2];
-}
-/** The blue tones of the old look, as colour channels. */
-const BRAND_BLUE = [[36, 95, 159], [47, 116, 189], [23, 64, 122], [19, 36, 78], [31, 85, 148]];
-/** The brand tones, as colour channels. */
-const BRAND_AMBER = [252, 211, 77];
-const BRAND_BROWN = [146, 64, 14];
-/** Sums the brand pairs of a list of chrome elements. */
-function brandToneSummary(elements) {
-  const summary = {
-    families_checked: 0, chrome_pairs_checked: 0, chrome_blue_computed: 0,
-    chrome_contrast_min: 0, amber_pairs: 0, brown_pairs: 0, families: [],
-  };
-  const byFamily = new Map();
-  for (const item of elements) {
-    const bg = parseCssColor(item.background);
-    const fg = parseCssColor(item.color);
-    if (!bg || bg.a !== 1) continue;
-    if (!byFamily.has(item.family)) {
-      byFamily.set(item.family, {
-        name: item.family, pairs: 0, chrome_blue_computed: 0,
-        amber_pairs: 0, brown_pairs: 0, contrast_min: 0,
-      });
-    }
-    const family = byFamily.get(item.family);
-    if (BRAND_BLUE.some((channels) => isRgbOf(bg, channels))) {
-      family.chrome_blue_computed += 1;
-      summary.chrome_blue_computed += 1;
-    }
-    const amber = isRgbOf(bg, BRAND_AMBER);
-    const brown = isRgbOf(bg, BRAND_BROWN);
-    if (!amber && !brown) continue;
-    family.pairs += 1;
-    summary.chrome_pairs_checked += 1;
-    if (amber) { family.amber_pairs += 1; summary.amber_pairs += 1; }
-    if (brown) { family.brown_pairs += 1; summary.brown_pairs += 1; }
-    if (!fg) continue;
-    const ratio = contrastOf(bg, fg);
-    family.contrast_min = family.contrast_min === 0 ? ratio : Math.min(family.contrast_min, ratio);
-    summary.chrome_contrast_min = summary.chrome_contrast_min === 0 ? ratio : Math.min(summary.chrome_contrast_min, ratio);
-  }
-  summary.families = [...byFamily.values()];
-  summary.families_checked = byFamily.size;
-  return summary;
-}
+
 await guarded("row 16 brand tones", async () => {
   let cases = 0;
   let failures = 0;
@@ -2263,19 +2242,26 @@ await guarded("row 16 brand tones", async () => {
   let amber = 0;
   let brown = 0;
   let contrastMin = 0;
+  let blueInk = 0;
+  let blueInkMax = 0;
   let sample = "";
   for (const locale of LOCALES) {
     const context = await makeContext(VIEWPORTS[0]);
-    for (const screen of SCREENS) {
+    // The five child screens of spec FR-4 (finding P-2).
+    for (const screen of [...SCREENS, "question"]) {
       const page = await context.newPage();
-      await openScreen(page, locale, screen);
+      if (screen === "question") await openQuestion(page, locale);
+      else await openScreen(page, locale, screen);
       const summary = brandToneSummary(await readBrandElements(page));
+      const ink = await readBlueInk(page);
       cases += 1;
       for (const family of summary.families) families.add(family.name);
       pairs += summary.chrome_pairs_checked;
       blue += summary.chrome_blue_computed;
       amber += summary.amber_pairs;
       brown += summary.brown_pairs;
+      blueInk += ink.blue_text_or_ground;
+      blueInkMax = Math.max(blueInkMax, ink.blue_text_or_ground);
       if (summary.chrome_contrast_min > 0) {
         contrastMin = contrastMin === 0 ? summary.chrome_contrast_min : Math.min(contrastMin, summary.chrome_contrast_min);
       }
@@ -2292,6 +2278,11 @@ await guarded("row 16 brand tones", async () => {
         failures += 1;
         sample = sample || locale + " " + screen + ": " + JSON.stringify(total);
       }
+      // No visible element of a child screen holds a blue text colour or a blue ground.
+      if (!blueInkVerdict(ink.blue_text_or_ground)) {
+        failures += 1;
+        sample = sample || locale + " " + screen + ": blue_text_or_ground=" + ink.blue_text_or_ground;
+      }
       await page.close();
     }
     await context.close();
@@ -2300,43 +2291,17 @@ await guarded("row 16 brand tones", async () => {
   emit("chrome_blue_computed", blue);
   emit("amber_pairs", amber);
   emit("brown_pairs", brown);
-  row("brand tones", cases === 8 && failures === 0,
+  emit("blue_text_or_ground_max", blueInkMax);
+  row("brand tones", cases === 10 && failures === 0,
     "brand_tone_cases=" + cases + " brand_tone_failures=" + failures
     + " families_checked=" + families.size + " chrome_pairs_checked=" + pairs
     + " chrome_blue_computed=" + blue
     + " chrome_contrast_min=" + (contrastMin === 0 ? 0 : Math.round(contrastMin * 100) / 100)
-    + " amber_pairs=" + amber + " brown_pairs=" + brown + (sample ? " first=" + sample : ""));
+    + " amber_pairs=" + amber + " brown_pairs=" + brown
+    + " blue_text_or_ground=" + blueInk + " blue_text_or_ground_max=" + blueInkMax
+    + (sample ? " first=" + sample : ""));
 });
 
-// ---- Row 17: the title plaque of the banner (AC-4.6). ----
-/** Reads the title plaque: the text box against the plaque box, the font size, and the height. */
-async function readBrandBanner(page) {
-  return page.evaluate(() => {
-    const plaque = document.querySelector("header[data-hero] > h1");
-    if (!plaque) {
-      return { text_align: "none", banner_top_gap_px: -1, banner_bottom_gap_px: -1, banner_ratio: 0,
-        line_count: 0, per_line_ratio: 0, title_font_px: 0, banner_h_px: 0 };
-    }
-    const style = getComputedStyle(plaque);
-    const box = plaque.getBoundingClientRect();
-    const range = document.createRange();
-    range.selectNodeContents(plaque);
-    const text = range.getBoundingClientRect();
-    const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
-    const lines = rects.length > 0 ? rects.length : 1;
-    const font = parseFloat(style.fontSize);
-    return {
-      text_align: style.textAlign,
-      banner_top_gap_px: Math.round(text.top - box.top),
-      banner_bottom_gap_px: Math.round(box.bottom - text.bottom),
-      banner_ratio: box.height > 0 ? font / box.height : 0,
-      line_count: lines,
-      per_line_ratio: box.height > 0 ? font / (box.height / lines) : 0,
-      title_font_px: font,
-      banner_h_px: Math.round(box.height),
-    };
-  });
-}
 await guarded("row 17 brand banner", async () => {
   let cases = 0;
   let failures = 0;
@@ -2417,8 +2382,8 @@ await guarded("row 17 brand banner", async () => {
 // ---- Row 18: the pages of screens 6 to 9 (decision 1). ----
 /** The pages that carry no frame and take the brand tones through their own class names. */
 const BRAND_PAGES = [
-  { label: "teacher week th", path: "/th/teacher/2/1", session: "teacher", kind: "page" },
-  { label: "teacher day th", path: "/th/teacher/2/1/1", session: "teacher", kind: "page" },
+  { label: "teacher week th", path: "/th/teacher/2/1", session: "teacher", kind: "teacher" },
+  { label: "teacher day th", path: "/th/teacher/2/1/1", session: "teacher", kind: "teacher" },
   { label: "403 page th", path: "/th/teacher/2/1", session: "family", kind: "forbidden" },
   { label: "404 view th", path: "/th/st/2/8", session: "family", kind: "notfound" },
   { label: "st fallback th", path: "/th/st", session: "family", kind: "page" },
@@ -2476,6 +2441,13 @@ await guarded("row 18 brand pages", async () => {
           tap_under_48: counts.tap_under_48,
           page_overflow: counts.page_overflow,
         });
+      } else if (item.kind === "teacher") {
+        ok = brandTeacherVerdict({
+          console_errors: counts.console_errors,
+          page_overflow: counts.page_overflow,
+          chrome_contrast_min: contrast,
+          chrome_brand_pairs: pairs,
+        });
       } else {
         ok = brandPagesVerdict({
           console_errors: counts.console_errors,
@@ -2485,7 +2457,11 @@ await guarded("row 18 brand pages", async () => {
           chrome_brand_pairs: pairs,
         });
       }
+      const firstError = state.errors.length > 0 ? state.errors[0].slice(0, 90) : "none";
+      const firstFailed = state.failed.length > 0 ? state.failed[0].slice(0, 90) : "none";
       detail = "status=" + status
+        + " first_error=" + firstError
+        + " first_failed=" + firstFailed
         + " console_errors=" + counts.console_errors
         + " tap_under_48=" + counts.tap_under_48
         + " page_overflow=" + counts.page_overflow
