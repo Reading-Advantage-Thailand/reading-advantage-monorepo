@@ -2148,7 +2148,76 @@ for every other track.
   uses no `rg -v` list). A9 does not apply (no archived-track path). A16 holds (no worktree).
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t44.log`.
 
-- [~] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes. Red: `c04bb063b`.
+### Phase 4 task 4.4 Green evidence
+
+- Role base `fa74a33fc9ae10b4342c314cd2b590e5697c0693`. The immutable phase base is
+  `bfaae8905993076ca1e8a49939c400eb038fe3ae`. The Red commit `c04bb063b` sits inside
+  `phase_base_sha..HEAD`.
+- Another session moved HEAD to `745e72ce` during this role. It added the Red file of task 4.6a
+  and changed no file of this task.
+- Implementation commit: `43e0d4067` (`feat(storytime): open the step media in the lesson flow`).
+  Files: `apps/storytime/lib/teacher-media.ts` (new),
+  `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx`,
+  `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx`,
+  `apps/storytime/app/[locale]/st/[level]/[week]/song.tsx`,
+  `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx`, and
+  `apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx`.
+- The module `lib/teacher-media.ts` holds rule D1 in one function, `stepMediaOf(step, week)`. It
+  reads the `materials` list, the fixed key at the start of an entry, and the quoted title at the
+  end. The key `karaoke videos` opens the song, and the key `book audio` opens a book of the week.
+  The first matching entry wins, and the rule never reads a step id. The module also holds
+  `hasSignedMedia(media, mediaUrls)`.
+- The lesson flow takes the optional prop `mediaUrls`. The step screen root carries `data-step-id`
+  and `data-step-index`. A media step shows one control named `Open media`. The control opens the
+  region `The media player`, which holds the media title, the control `Close`, and the at-home
+  player of Phase 3 with the prop `playerMode="class-screen"`. The Escape key closes the player,
+  and the focus returns to the control that opened it. The flow stays mounted, so the step, the
+  Thai toggle, and the control `Next step` keep their place.
+- A part with no signed URL opens no player. The step shows the English message
+  `This media is not available.` and the Thai message `สื่อนี้ยังไม่พร้อม`.
+- The day route signs the week with `signWeekMedia(loaded.week, {})` and passes `mediaUrls` to the
+  flow. No client code builds a URL of the week path.
+- The three Phase 3 players take the optional prop `playerMode?: "at-home" | "class-screen"` with
+  the default `"at-home"`. The class screen is 1920x1080, so the song uses the regular pair and
+  never the phone pair. The at-home markup stays byte for byte the same: the root element carries
+  `data-mode` only in the class-screen mode, so the at-home DOM gains no attribute.
+- The new controls use the brand classes: amber `#fcd34d` with brown `#92400e` text for the
+  `Open media` control, and brown `#92400e` with white text for the `Close` control. No blue class.
+- Gates:
+  - Red command, before the change:
+    `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+    __tests__/phase4-lesson-media.test.tsx`. Exit 1; 1 failed file; 12 failed tests and 0 passed
+    tests. The cause of each failure matches the Red log.
+  - Green command:
+    `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+    __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx
+    __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx`. Exit 0; 4 files;
+    33 passed tests and 0 failed tests. MemAvailable was 2612084 kB, so the command ran directly.
+  - ESLint on the six changed files: exit 0; 0 errors; 0 warnings.
+  - tsc --noEmit in apps/storytime (heavy-run p1) exits 2 with 3 errors, all in
+    __tests__/phase4-share-moment.test.tsx (the task 4.6a Red file, commit 806e8238b, lines 177
+    and 435); the six changed files add no error; the same 3 errors appear with the six files at
+    HEAD. The orchestrator routes those 3 errors to the 4.6a Red role.
+  - Player regression, one run over the phase 3 and look tests of the three players: 16 files;
+    exit 1; 2 failed tests and 74 passed tests. The 2 failures sit in
+    `phase3-readalong-ui.test.tsx` and both read `SyntaxError: Invalid selector .bg-[#92400e]`.
+    The failure is pre-existing and comes from the look-track commit `4da455774`, which changed the
+    current-word class of the read-along package. With the reader at the role base version the
+    same 2 tests fail with the same 2 errors. The orchestrator routes the failure to the look
+    track.
+- Deviation: `build-graph update` did not run. The heavy lock was held by other jobs, and the
+  disk hold stopped a run with exit 77 because the free space was 5861 MB under the 6000 MB
+  floor. The orchestrator runs the graph update through `heavy-run` later.
+- Anti-patterns: A5 holds (the plan note quotes the exit code, the file count, and the test count
+  of each command, and it names the two failures that no change of this task caused). A3 holds
+  (the counts of the Red file stay labeled integers). A4 holds (the positive control of the Red
+  file runs before each detail). A7 holds (no `rg -v` filter changed). A9 does not apply. A16
+  holds (no worktree).
+- No committed Red test changed. No week content, contract, look file, read-along package, or
+  `lib/highlight-windows.ts` changed.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t44.log`.
+
+- [x] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes. Red: `c04bb063b`. Done: `43e0d4067`. Automated: the Green command exits 0 with 4 files and 33 tests; ESLint exits 0 on the six files; tsc --noEmit in apps/storytime (heavy-run p1) exits 2 with 3 errors, all in __tests__/phase4-share-moment.test.tsx (the task 4.6a Red file, commit 806e8238b, lines 177 and 435); the six changed files add no error; the same 3 errors appear with the six files at HEAD.
 - [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [~] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6. Red: `806e8238b`.
   - Red evidence (task 4.6a). Role base `9687d0ce9cd1cb10d45a421c0101bed1d02fd04e`; phase base

@@ -1,0 +1,181 @@
+# Green log: task 4.4 (media in the teacher lesson flow)
+
+Status: complete. This file is the Green report of task 4.4.
+
+- Track: storytime_app_rebuild_20261025.
+- Phase: Phase 4, task 4.4.
+- Role: measure-jr-green.
+- Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash.
+- Immutable phase base: bfaae8905993076ca1e8a49939c400eb038fe3ae.
+- Role base: fa74a33fc9ae10b4342c314cd2b590e5697c0693.
+- Red commit: c04bb063b3e43a015961c252b9e2243470c7164e.
+- MemAvailable at the start: 2612084 kB. The direct-run floor is 1500 MB.
+
+## What the role did
+
+- Read the task 4.4 line of `plan.md`, the Red log
+  `measure/runs/storytime_app_rebuild_20261025/red-p4-t44.log`, the Red test file
+  `apps/storytime/__tests__/phase4-lesson-media.test.tsx`, the P4 and P4.4 sections of
+  `test-strategy.md`, and the source of the teacher flow, the day route, and the three Phase 3
+  players.
+- Checked `git status --short`. The dirty paths of other work stayed untouched.
+- Confirmed that the Red commit sits inside `phase_base_sha..HEAD`, and that the role base
+  matches HEAD at the start of the role.
+- Reran the Red command before the change. The 12 failures matched the Red log.
+- Added `apps/storytime/lib/teacher-media.ts` with rule D1 in the function `stepMediaOf(step,
+  week)`, and the function `hasSignedMedia(media, mediaUrls)`.
+- Changed the lesson flow, the day route, and the three Phase 3 players.
+- Ran the gates, committed the implementation, and wrote the plan evidence.
+- Another session moved HEAD to `745e72ce` during the role. It added the Red file of task 4.6a
+  and changed no file of this task.
+
+## The implementation
+
+- `apps/storytime/lib/teacher-media.ts` (new). The function `stepMediaOf(step, week)` reads the
+  `materials` list of the step, the fixed key at the start of an entry, and the quoted title at
+  the end. The key `karaoke videos` opens the song, and the key `book audio` opens a book of the
+  week. The first matching entry wins. The rule never reads a step id. The function
+  `hasSignedMedia(media, mediaUrls)` reports whether the primary file of a part holds a signed
+  URL.
+- `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx`. The flow takes the
+  optional prop `mediaUrls`. The step screen root carries `data-step-id` and `data-step-index`. A
+  media step shows one control named `Open media`. The control opens the region `The media
+  player`, which holds the media title, the control `Close`, and the at-home player of Phase 3
+  with the prop `playerMode="class-screen"`. The Escape key closes the player, and the focus
+  returns to the control that opened it. The flow stays mounted, so the step, the Thai toggle, and
+  the control `Next step` keep their place. A part with no signed URL opens no player, and the
+  step shows the English message `This media is not available.` and the Thai message
+  `สื่อนี้ยังไม่พร้อม`.
+- `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx`. The route signs the week
+  with `signWeekMedia(loaded.week, {})` and passes `mediaUrls` to the flow. No client code builds
+  a URL of the week path.
+- `apps/storytime/app/[locale]/st/[level]/[week]/song.tsx`,
+  `apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx`, and
+  `apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx`. The three players take the
+  optional prop `playerMode?: "at-home" | "class-screen"` with the default `"at-home"`. The class
+  screen is 1920x1080, so the song uses the regular pair and never the phone pair. The at-home
+  markup stays byte for byte the same: the root element carries `data-mode` only in the
+  class-screen mode, so the at-home DOM gains no attribute.
+- The new controls use the brand classes: amber `#fcd34d` with brown `#92400e` text for the
+  `Open media` control, and brown `#92400e` with white text for the `Close` control. No blue
+  class.
+- No committed Red test changed. No week content, contract, look file, read-along package, or
+  `lib/highlight-windows.ts` changed.
+
+## Commands and results
+
+### Red command before the change
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-media.test.tsx
+```
+
+Exit 1. 1 failed file. 12 failed tests and 0 passed tests. The cause of each failure matches the
+Red log.
+
+### Green command
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx
+```
+
+Exit 0. 4 passed files. 33 passed tests and 0 failed tests. MemAvailable was 2612084 kB at the
+start and 3637348 kB at the run, so the command ran directly without the heavy lock.
+
+### ESLint on the six changed files
+
+```bash
+cd apps/storytime && ../../node_modules/.bin/eslint "lib/teacher-media.ts" "app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx" "app/[locale]/teacher/[level]/[week]/[day]/page.tsx" "app/[locale]/st/[level]/[week]/song.tsx" "app/[locale]/st/[level]/[week]/reader.tsx" "app/[locale]/st/[level]/[week]/decodable.tsx"
+```
+
+Exit 0. 0 errors and 0 warnings.
+
+### Type check through the heavy lock
+
+```bash
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'
+```
+
+The first attempt ended with exit 77: `heavy-run: disk hold — free 5861 MB (min 6000)`. The disk
+hold sits under the 6000 MB floor of the machine. The next attempt waited 10m34s for the disk and
+then ran the type check.
+
+Final run: exit 2. 3 errors, and each error sits in `__tests__/phase4-share-moment.test.tsx` at
+line 177 or line 435. That file is the Red file of task 4.6a, commit `806e8238b`. The six changed
+files add no error.
+
+Proof that the errors are not from this change: with the six files at the HEAD version, the same
+command ends with exit 2 and the same 3 errors. The role made this check by copying the six files
+to a scratch folder, restoring the HEAD version of the five tracked files, moving the new module
+aside, running the command, and copying the six files back. A diff of the restored files against
+the copies showed no change.
+
+The orchestrator routes the 3 errors to the 4.6a Red role.
+
+### Player regression, one run
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-reader-end.test.tsx __tests__/phase3-song-ui.test.tsx __tests__/phase3-adversarial-r2-song-lines.test.tsx __tests__/phase3-decodable-punct.test.tsx __tests__/phase3-decodable-ui.test.tsx __tests__/phase3-readalong-ui.test.tsx __tests__/phase3-media-src-write.test.tsx __tests__/look-reader-gap.test.tsx __tests__/look-reader-highlight.test.tsx __tests__/look-reader-turn.test.tsx __tests__/look-adversarial-reader.test.tsx __tests__/look-adversarial-song.test.tsx __tests__/look-clip-mode-switch.test.tsx __tests__/look-song-line-offset.test.tsx __tests__/look-song-playing.test.tsx __tests__/look-decodable-case.test.tsx
+```
+
+Exit 1. 16 files. 2 failed tests and 74 passed tests. The 2 failures sit in
+`phase3-readalong-ui.test.tsx`: `uses slowFile and slowSentences at playback rate one` and
+`marks one word in the shipped 0.04-second overlap`. Both read
+`SyntaxError: Invalid selector .bg-[#92400e]`.
+
+The failure is pre-existing. With the reader at the role base version, the same file ends with
+exit 1, 2 failed tests and 8 passed tests, and the same 2 errors. The cause is the look-track
+commit `4da455774`, which changed the current-word class of the read-along package to the
+Tailwind value `bg-[#92400e]`. The test builds that class as a CSS selector, and the selector
+parser of jsdom rejects it. The orchestrator routes the failure to the look track.
+
+### Deviation: the graph update
+
+`build-graph update` did not run. The heavy lock was held by other jobs, and the disk hold
+stopped one run with exit 77. The orchestrator runs the graph update through `heavy-run` later.
+
+### Commits
+
+- `43e0d4067` — `feat(storytime): open the step media in the lesson flow (track_id:
+  storytime_app_rebuild_20261025)`. The six implementation files.
+- The commit that carries this log — the plan evidence and this log. It is the second commit of
+  the role.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+track: storytime_app_rebuild_20261025
+phase: P4
+task: 4.4
+baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: fa74a33fc9ae10b4342c314cd2b590e5697c0693
+head: 43e0d406769513fd8528f0ad9019211b6b08301c
+commits: 43e0d4067 (the six implementation files); the commit that carries this log (plan evidence and log)
+files_added: apps/storytime/lib/teacher-media.ts
+files_changed: apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx; apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx; apps/storytime/app/[locale]/st/[level]/[week]/song.tsx; apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx; apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx
+red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-media.test.tsx
+red_exit: 1
+red_tests_failed: 12
+red_tests_passed: 0
+green_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx
+green_exit: 0
+green_test_files: 4
+green_tests_passed: 33
+green_tests_failed: 0
+eslint_exit: 0
+eslint_errors: 0
+eslint_warnings: 0
+tsc_command: HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'
+tsc_exit: 2
+tsc_errors: 3
+tsc_error_files: __tests__/phase4-share-moment.test.tsx (the task 4.6a Red file, commit 806e8238b, lines 177 and 435); the six changed files add no error; the same 3 errors appear with the six files at HEAD
+player_regression_exit: 1
+player_regression_files: 16
+player_regression_tests_failed: 2
+player_regression_tests_passed: 74
+player_regression_failure: phase3-readalong-ui.test.tsx, 2 tests, SyntaxError: Invalid selector .bg-[#92400e]; pre-existing, from the look-track commit 4da455774; the orchestrator routes it to the look track
+build_graph: did not run (the heavy lock and the disk hold); the orchestrator runs it through heavy-run later
+tasks_marked: 4.4 [x] with Done: 43e0d4067
+tests_added_by_green: 0
+END_MEASURE_AGENT_RESULT
