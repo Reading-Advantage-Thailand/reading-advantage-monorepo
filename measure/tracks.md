@@ -73,6 +73,7 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/storytime_look_20261107/](./tracks/storytime_look_20261107/)*
   *Status: active, opened 2026-11-07; Phase 1 (8 council fixes) has its checkpoint dcad011f6 (phase acceptance r3 passed on 2026-11-08); Phase 2 (the look port of option 1) is next | Owner: Monorepo orchestrator | Related: storytime_at_home_release_20261106 (its Phase 3 deploy waits for the Phase 1 checkpoint) | Phase 2 Green starts by 2026-11-12 for the 2026-11-20 release*
   *Note: Daniel 2026-11-07 07:43 ICT: "We had agreed that we would have a theme or look developed in the same vein as our primary advantage program which uses our assets to create a unique and engaging experience for the students". Moved here from Phase 2c and 2d of the at-home plan. PM: M-3 stands, finding 10 dropped, label "Read the words".*
+  *Note 2026-11-10: Phase 2b adds Daniel's brand chrome rules: no game bar, the Storytime Advantage logo, amber and brown chrome, and a large centered banner title.*
 
 - [ ] **Track: Architecture CI input pin** — *created 2026-11-10*
   *Link: [./tracks/architecture_ci_input_pin_20261110/](./tracks/architecture_ci_input_pin_20261110/)*

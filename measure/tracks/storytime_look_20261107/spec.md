@@ -143,6 +143,67 @@ PM decision, 2026-11-09 14:2x, recorded and quoted:
 
 The orchestrator took option (2), because the change is small. `apps/storytime/lib/content.ts` lines 26 to 34 hold `DRAFT_MEDIA_ENV` and `showDraftMedia()`, and `loadVisibleWeek` at lines 107 to 135 already has the branch for `media_not_approved`. Background: Review C found that w02 to w07 are `meta.status: "draft"`, so `readinessBlocker` (`lib/readiness.ts:95`) returns `draft` and `loadVisibleWeek` blocks them even with `STORYTIME_SHOW_DRAFT_MEDIA=1`. The P3.8 browser taps on w02 to w07 cannot run.
 
+### FR-4 Brand chrome (Daniel, 2026-11-10)
+
+**Source:** Daniel's cover notes of 2026-11-10, relayed by the PM, and the PM brief of 2026-11-10. Phase 2b builds this FR. The PM owns the capture check of 2026-11-10 20:00.
+
+**Owner words.** Daniel, 2026-11-10:
+
+```
+we don't have a gaming theme
+the Chrome should match the tone of the logo
+should also fill the Chrome
+```
+
+**PM words** (not Daniel): the text is centered.
+
+**State at the base** (read of the screen files, 2026-11-10):
+
+- `apps/storytime/app/[locale]/frame.tsx` renders the game bar `[data-game-bar]` with its band icons and its progress bar. It renders the level and week label `[data-level-week]` as `aria-hidden`, and the game bar holds the one copy that a screen reader reads. It renders the sprout crest `[data-crest]` (`app/look/pieces/q-crest.svg`) and the title plaque.
+- `apps/storytime/app/look.css` builds the plaque, the buttons, the tiles, and the frames from `--sq-blue`, `--sq-blue-top`, `--sq-blue-dark`, and `--sq-navy`.
+- The frame renders on the week route only. `frame.tsx` has one consumer: `app/[locale]/st/[level]/[week]/page.tsx`.
+
+**Requirement.**
+
+(a) Remove the game bar. No screen renders `[data-game-bar]`, its band icons, or its progress bar. The plain level and week label stays as text: `[data-level-week]` is visible, and a screen reader reads it once. The screen-reader copy moves from the game bar to the label.
+
+(b) The Storytime Advantage logo replaces the sprout crest. The vector source is `/home/daniebo/Desktop/advantage-pr/assets/logos/vector/square/storytime-advantage.svg` (read only; Green copies it into the app). The logo has a text alternative. Every screen that rendered the crest shows the logo.
+
+(c) All chrome takes the logo tones: amber `#fcd34d` and brown `#92400e`. Chrome means the title banners, the buttons, the panel frames, and the section cards. White text sits on brown. Brown text sits on amber. No chrome rule uses a blue token.
+
+(d) The banner title text fills about 80 % of the banner height. The title is centered both ways.
+
+**Keep unchanged:** the art (the place pictures and the story pictures), the read-along behavior, and the per-word highlight. A blue element that is art or that is the per-word highlight is not chrome, and it stays.
+
+**Screens covered** (read of the screen files, 2026-11-10):
+
+1. The week home: `/<locale>/st/<level>/<week>` with no `?part=` value. It holds the title banner, the crest, the three part cards, and the parent panel.
+2. The read-along book: `?part=book`. It is the reader part of the same route.
+3. The decodable page: `?part=decodable`.
+4. The song: `?part=song`.
+5. The question screen of the reader (`questions.tsx`), inside the book part.
+6. The teacher week `/<locale>/teacher/<level>/<week>`, the teacher day, and the 403 page (`teacher/forbidden.tsx`).
+7. The 404 view (`not-found-view.tsx`).
+8. The return fallback `/<locale>/st`.
+9. The sign-in page `/<locale>/sign-in` and the "How to join" page `/<locale>/join`.
+
+The look chrome of `app/look.css` reaches screens 1 to 5, because they render the frame and the look cards. Screens 6 to 9 hold their own header and their own controls. They render no game bar and no crest. They take the chrome tones only through a rule of `app/look.css` that already reaches them.
+
+**Default before Red** (the orchestrator may change it): requirement (c) binds the chrome rules of screens 1 to 5, and the shared rules that reach the other screens. A full restyle of screens 6 to 9 is a separate change, because the sign-in page and the join page belong to the login track and the teacher pages belong to the teacher track.
+
+**Relation to option 1.** This FR replaces the game parts of option 1 "Storybook Quest": the game bar, the crest, and the blue plaques. The rest of option 1 stays, such as the places, the cards, the fonts, and the hero heights of AC-2.6 to AC-2.8.
+
+**Acceptance.**
+
+- AC-4.1 (automated) No screen renders the game bar. A render of screens 1 to 5 in `en` and `th` holds no `[data-game-bar]`, no element with `role="progressbar"`, no `[data-progress]`, and no `[data-band-icon]`. The app sources hold no `data-game-bar` attribute, and `app/look.css` holds no `[data-game-bar]` rule and no `q-bar.svg` reference. The case count is asserted above 0 before the cases run. The test file is `look-brand-chrome.test.tsx`.
+- AC-4.2 (automated) `[data-level-week]` is visible and a screen reader reads it once. The node holds no `aria-hidden="true"`, it is not clipped (no 1 px box and no `clip-path: inset(50%)`), and it holds the level and the week of the route in the words of the interface locale (`Level 2 · Week 1` in `en`, the Thai words in `th`). The rendered frame holds exactly one copy of that text: a text query finds one node, and no other node holds a hidden copy. The test file is `look-brand-chrome.test.tsx`.
+- AC-4.3 (automated) The logo replaces the crest. The app holds one logo file, copied from the read-only source: an SVG with the `viewBox` `0 0 700 700`, the fill `#fcd34d`, and the title "Storytime Advantage". The frame renders one logo element `[data-logo]` with the text alternative "Storytime Advantage", on the `cover` variant and on the `band` variant, in `en` and `th`. The app sources hold no `data-crest` attribute and no `q-crest.svg` reference, and `app/look.css` holds no `[data-crest]` rule. The test file is `look-brand-chrome.test.tsx`.
+- AC-4.4 (automated) The tones. `app/look.css` defines `--st-amber: #fcd34d` and `--st-brown: #92400e` at the root scope. Every chrome rule of the four families uses the two tokens: the title banner, the buttons, the panel frames, and the section cards. No such rule names `--sq-blue`, `--sq-blue-top`, `--sq-blue-dark`, or `--sq-navy`. The rule count is asserted above 0 for each of the four families before the check runs. A blue token that stays sits in an art rule or in the per-word highlight rule, and the test names it in the evidence. The test file is `look-brand-chrome.test.ts`.
+- AC-4.5 (automated) White on brown and brown on amber. Each chrome rule with a `--st-brown` background sets `#fff` as its text color. Each chrome rule with a `--st-amber` background sets `--st-brown` as its text color. The browser capture run of task 2b.4 measures each pair and prints `chrome_contrast_min` of 4.5:1 or more. The test file is `look-brand-chrome.test.ts`. The browser rows sit in `look-phase2-browser-gate.sh`.
+- AC-4.6 (automated) The banner title is centered both ways, and its font size is about 80 % of the banner height. At 390 x 844 in `en` and `th`, with the shipped w01 title, `text-align` is `center`, the text box is centered in the banner within 2 px at the top and at the bottom, and `title_font_px / banner_h_px` sits from 0.76 to 0.84. The same run prints `clipped_text=0` and `page_overflow=0`. The banner height is a value of the rule and not a value of the text. A fixture title of 60 characters may step down one size step, and it must hold `plaque_overflow_px=0` and `clipped_text=0`. The browser rows sit in `look-phase2-browser-gate.sh`.
+- AC-4.7 (automated) The art, the read-along files, and the highlight files are unchanged over the phase range: `packages/read-along/`, `apps/storytime/lib/highlight-windows.ts`, and the place pictures `apps/storytime/app/look/places/*.webp`. The highlight and word-tap proofs of AC-1.11 and AC-1.12 stay green. The Green evidence prints the empty diff of those paths.
+- AC-4.8 (owner-passed) Daniel's look check of the r2 captures passes. The record names the commit, the capture folder `~/Desktop/storytime-preview-20261110/captures/`, and his word.
+
 ## 4. Constraints
 
 - Human gates (`[b] … deferred:daniel`): Daniel's pick, his look check, and every deploy and traffic move. No push and no deploy.
