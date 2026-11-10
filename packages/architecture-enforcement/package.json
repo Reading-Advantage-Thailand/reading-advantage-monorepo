@@ -17,6 +17,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "check": "tsx src/architecture-check-cli.ts",
+    "pin:refresh": "tsx src/architecture-pin-refresh-cli.ts",
     "check-types": "tsc --noEmit",
     "reconcile": "tsx src/architecture-reconciliation-cli.ts",
     "baseline:update": "tsx src/baseline-update-cli.ts",

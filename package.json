@@ -5,6 +5,7 @@
   "packageManager": "pnpm@11.8.0",
   "scripts": {
     "architecture:check": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts",
+    "architecture:pin:refresh": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-pin-refresh-cli.ts",
     "architecture:reconcile": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-reconciliation-cli.ts",
     "architecture:transaction:recover": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/repository-transaction-recovery-cli.ts",
     "architecture:baseline:update": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/baseline-update-cli.ts",

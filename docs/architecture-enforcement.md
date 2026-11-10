@@ -26,6 +26,30 @@ line, column, resolved target, and required status. JSON output contains the
 same bounded, secret-safe facts. Neither format includes source bodies,
 credentials, or absolute machine paths.
 
+## CI mode and the local pin
+
+CI skips only the analyzer input snapshot pin comparison. The local full check
+keeps the pin:
+
+```bash
+pnpm architecture:check --skip-input-snapshot-pin
+pnpm architecture:check
+```
+
+## Refresh the v2 manifest pins
+
+After a change to an analyzed file, refresh the five pinned analyzer values:
+
+```bash
+pnpm architecture:pin:refresh
+pnpm architecture:pin:refresh --acknowledge
+```
+
+The first command prints the old value and the new value of each field. It
+writes nothing and exits non-zero while a value differs. The acknowledged
+command writes the canonical manifest, then validates it. A failed validation
+restores the previous bytes. CI never runs the refresh command.
+
 ## Remediation
 
 Fix a database finding by moving queries and database-client construction into
@@ -66,7 +90,8 @@ evidence.
 
 ## CI and Doctor
 
-GitHub CI and `measure/doctor.sh` invoke the exact same
-`pnpm architecture:check` command. They never invoke the baseline-update
-command. A failing check must be remediated or explicitly reviewed through the
-update workflow; it must not be bypassed with a shell fallback.
+GitHub CI runs `pnpm architecture:check --skip-input-snapshot-pin`.
+`measure/doctor.sh` runs the local full check `pnpm architecture:check`. CI
+never runs the baseline-update or pin-refresh command. A failing check must be
+remediated or explicitly reviewed through the update workflow; it must not be
+bypassed with a shell fallback.
