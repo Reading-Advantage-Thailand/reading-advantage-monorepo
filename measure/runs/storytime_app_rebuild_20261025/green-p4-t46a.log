@@ -1,0 +1,202 @@
+# Green log — Phase 4, task 4.6a (share moment)
+
+- Role: measure-jr-green
+- Track: `storytime_app_rebuild_20261025`
+- Phase: P4 "Teacher app"
+- Task: 4.6a
+- Phase base: `bfaae8905993076ca1e8a49939c400eb038fe3ae`
+- Role base: `7e9dd38954a7a85b83469fe468758064f0eedd63`
+- Red model: `deepseek/deepseek-flash#high`
+- Green model: `minimax-cn-coding-plan/MiniMax-M3.1-Flash`
+- Red test commit: `806e8238bfa5a480605b368997cab4f66029f7a6`
+- Red type fix: `e4fa82cabe32152433a0a922b246cd6da9cac805`
+- Implementation commit: `1d941b6654465d9b0d4499ffa53351308fb75e4a`
+- Plan evidence commit: the commit that carries this log (this line holds no SHA by construction)
+
+## Scope
+
+Green changed three production files and added one:
+
+- `apps/storytime/lib/contracts/week.ts` (changed): the exports `shareShotSchema` and
+  `shareSchema`, and the field `share: shareSchema.optional()` in `scriptSchema`.
+- `apps/storytime/lib/share-moment.ts` (new): the consent line, the media labels, and the rule
+  that finds the shot of a step.
+- `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` (changed): the
+  share moment in the step view.
+
+No committed Red test changed. No week file, no received content, no read-along package, and no
+Primary file changed.
+
+## The contract that Green implemented
+
+1. `lib/contracts/week.ts` exports `shareShotSchema` and `shareSchema`. The script schema holds
+   `share: shareSchema.optional()`. The shot object holds `step` and `media`, and it is strict.
+   The share object holds one or two shots and the caption, and it is strict. The caption uses
+   the shared `biText`.
+2. `lib/share-moment.ts` exports `SHARE_CONSENT_LINE` with `en` and `th` text. It also holds
+   `SHARE_MEDIA_LABELS` and the rule `shareShotAt`.
+3. `TeacherLessonFlow` shows the moment only when `loopsApproved(week)` is true. The rule reads
+   the approval with the module `lib/loops`, so the client screen loads no week contract.
+4. The moment shows only at a step of its own day. A shot that names a step of another day shows
+   nowhere, and the app adds no fallback. The day 5 shot of the shipped week names D6, and day 5
+   holds E1 to E5, so day 5 shows no moment.
+5. The moment carries `data-share-moment`, `data-share-media`, and an element with
+   `data-share-label`. It shows the caption and the consent line in the language of the flow.
+6. The moment holds no control. The app sends no photo and no video.
+
+The eight received week files hold the share field. All of them parse with the new contract.
+
+## Red command before the change
+
+Light and direct, because MemAvailable was 4405388 kB at the start.
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx
+```
+
+Result: exit 1.
+Test files: 1 failed (1).
+Tests: 12 failed, 1 passed (13).
+The causes match the Red log. The missing `lib/share-moment.ts` and the missing `shareSchema`
+are the causes.
+
+## Gate 1: the Green command
+
+Light and direct, because MemAvailable was 4405388 kB at the start.
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx __tests__/phase4-share-moment.test.tsx
+```
+
+Result: exit 0.
+Test files: 5 passed (5).
+Tests: 46 passed, 0 failed (46).
+
+The share moment file alone: exit 0; 1 file; 13 passed tests.
+
+## Gate 2: the contract regression
+
+Every named file exists. The three `release-` files are the only `release-*.test.ts` files.
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase2-contract-hardening.test.ts __tests__/phase2-adversarial.test.ts __tests__/phase2-adversarial-r2.test.ts __tests__/phase3-loop-contract.test.ts __tests__/phase3-loop-receiver.test.ts __tests__/phase3-media-coverage.test.ts __tests__/release-adversarial.test.ts __tests__/release-receipt-pin.test.ts __tests__/release-weeks-readiness.test.ts
+```
+
+Result: exit 0.
+Test files: 9 passed (9).
+Tests: 193 passed, 0 failed (193).
+
+## Gate 3: the type check
+
+Through the heavy lock with priority p1, in the foreground.
+
+```bash
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit; echo "TSC_EXIT=$?"'
+```
+
+Result: exit 0. The command printed `TSC_EXIT=0`. The first run of the same command printed
+nothing, so the second run added the exit code line.
+
+## Gate 4: ESLint on the changed files
+
+```bash
+cd apps/storytime && ../../node_modules/.bin/eslint "lib/contracts/week.ts" "lib/share-moment.ts" "app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx"
+```
+
+Result: exit 0. No error and no warning line.
+
+## The code graph
+
+Through the heavy lock with priority p1, in the foreground.
+
+```bash
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && build-graph update ./graph.db apps/storytime/lib/share-moment.ts apps/storytime/lib/contracts/week.ts "apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx"'
+```
+
+Result: exit 0. The command printed `Updated 3 files (50 -> 98 nodes, 61 -> 108 edges)`.
+The file `graph.db` is ignored by git, so it is not part of any commit.
+The search finds `shareShotAt`, `SHARE_CONSENT_LINE`, `SHARE_MEDIA_LABELS`, and
+`ShareMomentView`. The search does not find `shareSchema` or `shareShotSchema`, and it did not
+find `imageSchema`, `weekSchema`, or `bookSchema` before this change. The rule is a property of
+the file, not of this change.
+
+## The doctor script
+
+```bash
+bash measure/doctor.sh
+```
+
+Result: exit 1. The cause is not this change.
+
+- `tests/orchestrator_catalog.sh` exits 0.
+- `tests/orchestrator_supervisor_invariants.sh` exits 1 with "measure/automation-supervisor.py
+  not found". The file is not in this repository: `git ls-files measure/automation-supervisor.py`
+  returns 0 lines.
+- `tests/orchestrator_marker_vocabulary.sh` exits 1 on the deprecated `[ ]` markers of other
+  tracks and of the older tasks of this track. This round changed no marker of another task.
+- `tests/orchestrator_review_execution_truthfulness.sh` exits 0.
+- `pnpm architecture:check` exits 1 with "V2 reconciliation manifest is invalid: Analyzer
+  implementation tree hash does not match current bytes". That hash covers the files of
+  `packages/architecture-enforcement/src`, and this round changed no file there.
+
+The live gate of the strategy is the targeted Red command, and it exits 0.
+
+## Anti-patterns
+
+- A5 holds. Each note above gives the exit code, the file count, and the test count of its
+  command. No note claims a pass that the command did not give.
+- A3 holds. Each count is a labeled integer, and the test parses it.
+- A4 holds. The approved clone is the positive control that comes before each hidden case.
+- A7 holds. No filter of any test changed.
+- A9 does not apply.
+- A16 holds. This role made no worktree.
+
+## Files added
+
+- `apps/storytime/lib/share-moment.ts`.
+
+## Commits
+
+- Implementation: `1d941b6654465d9b0d4499ffa53351308fb75e4a`.
+- Plan evidence and this log: the next commit.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+track: storytime_app_rebuild_20261025
+phase: P4
+task: 4.6a
+status: success
+baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: 7e9dd38954a7a85b83469fe468758064f0eedd63
+red_model: deepseek/deepseek-flash#high
+red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx __tests__/phase4-share-moment.test.tsx
+red_command_exit_before: 1
+red_command_exit_after: 0
+red_command_files: 5
+red_command_tests_passed: 46
+red_command_tests_failed: 0
+share_file_command_exit: 0
+share_file_command_files: 1
+share_file_command_tests_passed: 13
+contract_regression_exit: 0
+contract_regression_files: 9
+contract_regression_tests_passed: 193
+contract_regression_tests_failed: 0
+tsc_exit: 0 through heavy-run p1
+eslint_exit: 0
+build_graph_exit: 0
+build_graph_nodes: 50 to 98
+build_graph_edges: 61 to 108
+doctor_exit: 1
+doctor_cause: pre-existing; the missing measure/automation-supervisor.py, the deprecated [ ] markers of other tracks, and the analyzer tree hash of packages/architecture-enforcement
+implementation_commit: 1d941b6654465d9b0d4499ffa53351308fb75e4a
+plan_evidence_commit: the commit that carries this log
+files_changed: apps/storytime/lib/contracts/week.ts, apps/storytime/lib/share-moment.ts, apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx
+files_added: apps/storytime/lib/share-moment.ts
+tasks_marked_x: 4.6a (Done: 1d941b6654465d9b0d4499ffa53351308fb75e4a)
+tasks_marked_b: none
+red_tests_changed: none
+end_head: 1d941b6654465d9b0d4499ffa53351308fb75e4a (the implementation commit; the plan evidence commit follows)
+handoff: Task 4.6a is [x] with the implementation commit 1d941b6654465d9b0d4499ffa53351308fb75e4a. No task is [b] and nothing was deferred. The targeted Red command exits 0 with 5 files and 46 tests, the contract regression exits 0 with 9 files and 193 tests, tsc --noEmit exits 0 through heavy-run p1, and ESLint exits 0 on the three changed files. The new file is apps/storytime/lib/share-moment.ts. The changed files are apps/storytime/lib/contracts/week.ts, apps/storytime/lib/share-moment.ts, and apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx. The immutable phase base is bfaae8905993076ca1e8a49939c400eb038fe3ae and the final Green HEAD is 1d941b6654465d9b0d4499ffa53351308fb75e4a. The doctor script exits 1 for a cause that no file of this change holds; the evidence sits in the log. The browser rows S1 and S2 of the strategy, the consent wording check of Daniel, and the task 4.6 loop panels stay with the next roles.
+END_MEASURE_AGENT_RESULT

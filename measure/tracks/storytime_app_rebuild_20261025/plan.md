@@ -2281,7 +2281,7 @@ for every other track.
   - `tsc --noEmit` in `apps/storytime` ran once through `heavy-run.sh` with `HEAVY_PRIORITY=p1`,
     in the foreground. Result: exit 0. The new test file adds no error.
   - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t46.log`.
-- [~] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6. Red: `806e8238b`.
+- [x] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6. Red: `806e8238b`. Done: `1d941b6654465d9b0d4499ffa53351308fb75e4a`. Automated: the Green command exits 0 with 5 files and 46 tests; the contract regression exits 0 with 9 files and 193 tests; tsc --noEmit in apps/storytime (heavy-run p1) exits 0; ESLint exits 0 on the three changed files.
   - Red evidence (task 4.6a). Role base `9687d0ce9cd1cb10d45a421c0101bed1d02fd04e`; phase base
     `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Red added one test file and changed no production
     source, no week content, and no shipped file.
@@ -2337,6 +2337,78 @@ for every other track.
     each clone passes `weekSchema` before it renders). A7 holds (the scan names exact paths and
     uses no `rg -v` list). A9 does not apply. A16 holds (no worktree).
   - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t46a.log`.
+
+### Phase 4 task 4.6a Green evidence
+
+- Role base `7e9dd38954a7a85b83469fe468758064f0eedd63`. The immutable phase base is
+  `bfaae8905993076ca1e8a49939c400eb038fe3ae`. The Red commit `806e8238b` and the Red type fix
+  `e4fa82cab` sit inside `phase_base_sha..HEAD`.
+- Another session moved HEAD to `e84a897cb` during this role. It added the Red file of task 4.6
+  (`phase4-loops-flow.test.tsx`, commit `bb246e066`) and changed no file of this task.
+- Model: `minimax-cn-coding-plan/MiniMax-M3.1-Flash`. The Red family (DeepSeek) was not used, and
+  no coder was delegated.
+- Implementation commit: `1d941b6654465d9b0d4499ffa53351308fb75e4a` (`feat(storytime): show the
+  share moment in the lesson flow`). Files: `apps/storytime/lib/contracts/week.ts`,
+  `apps/storytime/lib/share-moment.ts` (new), and
+  `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx`. No Red test changed.
+- The contract exports `shareShotSchema` and `shareSchema`, and `scriptSchema` holds
+  `share: shareSchema.optional()`. The shot object holds `step` and `media`, and it is strict. The
+  share object holds one or two shots and the caption, and it is strict. The caption uses the
+  shared `biText`. The eight received week files hold the share field, and all of them parse.
+- The module `apps/storytime/lib/share-moment.ts` holds `SHARE_CONSENT_LINE` with `en` and `th`
+  text, the label of each kind of media, and the rule `shareShotAt`, which finds the shot that
+  names the id of the step on the screen. The module holds no file name and no upload path.
+- The flow reads the approval with `loopsApproved(week)` from `lib/loops`, so the client screen
+  loads no week contract. The moment shows only when the loops part is approved. The moment shows
+  only at a step of its own day, and a shot of another day shows nowhere. The moment carries
+  `data-share-moment`, `data-share-media`, and a `data-share-label` element, and it shows the
+  caption and the consent line in the language of the flow.
+- The new controls use the brand classes: brown `#92400e` and amber `#fcd34d`. No blue class.
+- Gates:
+  - Red command before the change: `cd apps/storytime && CI=true ../../node_modules/.bin/vitest
+    run --maxWorkers=1 __tests__/phase4-share-moment.test.tsx`. Exit 1; 1 failed file; 12 failed
+    tests and 1 passed test. The failure causes match the Red log.
+  - Green command: `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+    __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx
+    __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx
+    __tests__/phase4-share-moment.test.tsx`. Exit 0; 5 files; 46 passed tests and 0 failed tests.
+    MemAvailable was 4405388 kB at the start, so the command ran directly.
+  - The share moment file alone: exit 0; 1 file; 13 passed tests.
+  - Contract regression: `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run
+    --maxWorkers=1 __tests__/phase2-contract-hardening.test.ts
+    __tests__/phase2-adversarial.test.ts __tests__/phase2-adversarial-r2.test.ts
+    __tests__/phase3-loop-contract.test.ts __tests__/phase3-loop-receiver.test.ts
+    __tests__/phase3-media-coverage.test.ts __tests__/release-adversarial.test.ts
+    __tests__/release-receipt-pin.test.ts __tests__/release-weeks-readiness.test.ts`. Exit 0; 9
+    files; 193 passed tests. The three `release-` files are the only `release-*.test.ts` files.
+  - `tsc --noEmit` in apps/storytime through heavy-run p1: exit 0.
+  - ESLint on the three changed files: exit 0; 0 errors; 0 warnings.
+  - `build-graph update ./graph.db` over the three changed files through heavy-run.sh: exit 0; 3
+    files; 50 to 98 nodes; 61 to 108 edges. The graph finds `shareShotAt`,
+    `SHARE_CONSENT_LINE`, `SHARE_MEDIA_LABELS`, and `ShareMomentView`. The two schema constants
+    are not indexed, the same as `imageSchema` and `weekSchema` of the same file before this
+    change.
+  - `bash measure/doctor.sh` exits 1, and the cause is not this change. The guard
+    `tests/orchestrator_supervisor_invariants.sh` fails because the file
+    `measure/automation-supervisor.py` is not in this repository (`git ls-files` returns 0). The
+    guard `tests/orchestrator_marker_vocabulary.sh` exits 1 on the deprecated `[ ]` markers of
+    other tracks and of the older tasks of this track. The guards
+    `tests/orchestrator_catalog.sh` and
+    `tests/orchestrator_review_execution_truthfulness.sh` exit 0. The step `pnpm
+    architecture:check` fails with "Analyzer implementation tree hash does not match current
+    bytes". That hash covers the files of `packages/architecture-enforcement/src`, and this round
+    changed no file there. The live gate of the strategy is the targeted Red command, and it
+    exits 0.
+- The moment shows no control, so the walk of the no-upload case clicks no upload control. The
+  test reads `network_calls=0`, `file_inputs=0`, `capture_attributes=0`, `forms=0`, and
+  `upload_hits=0`.
+- Anti-patterns: A5 holds (each note gives the exit code, the file count, and the test count of
+  its command). A3 holds (each count is a labeled integer). A4 holds (the positive control of the
+  approved clone comes before each hidden case). A7 holds (no `rg -v` filter changed). A9 does not
+  apply. A16 holds (this role made no worktree).
+- No week file, no received content, no read-along package, and no Primary file changed. The
+  report is `measure/runs/storytime_app_rebuild_20261025/green-p4-t46a.log`.
+
 - [ ] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It does not cover task 4.6 or task 4.6a, which do not hold this checkpoint (see the exception in the Phase 3 amendment line).
 
 ## Phase 5: Milestone week integration
