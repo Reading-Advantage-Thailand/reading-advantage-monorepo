@@ -1,0 +1,77 @@
+status: complete
+role: measure-jr-green
+phase: Phase 2b: Brand chrome (remediation round 4)
+track: storytime_look_20261107
+model: deepseek/deepseek-flash#high
+phase_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: e18000e5d5098de7457f796b2840ffc621755268
+red_commits: 1204753b5 (tests), e18000e5d (evidence)
+code_commit: a564b0b5b47fc0e43190a7a2494885c80b091567
+
+fixes:
+  A2-F2 / C2-F2: every plaque rule fits the font from --title-chars with its own floor and cap.
+    base: clamp(24px, calc((100cqi - 64px) / (var(--title-chars) * 0.68)), 72px)
+    band: clamp(20px, calc((100cqi - 48px) / (var(--title-chars) * 0.68)), 44px), min-height 26px
+    landscape: clamp(20px, calc((100cqi - 48px) / (var(--title-chars) * 0.68)), 32px)
+    The band comment now names the 20 px floor, not 24 px.
+  A2-F3 / C2-F1: :is(a, button, [tabindex]):focus-visible takes a 3 px white outline and
+    box-shadow 0 0 0 6px var(--st-brown) !important. It wins every rule that sets a box shadow.
+    Contrast on #92400e: white 7.09:1. On #fcd34d: brown 4.92:1. On #fffaf0: brown 10.3:1.
+    The read-along word keeps focus-visible:ring-2, ring-[#92400e], and ring-offset-2.
+  A2-F5 / C2-F4: the comments are true now.
+    packages/read-along/lib/highlight.ts: white on #92400e measures 7.09:1, brown on #fcd34d 4.92:1.
+    look.css header: the hero holds the logo, the label, and the plaque; the bevel is the logo tones.
+    look.css vignette: brown, not navy.
+    look.css done badge: amber badge with a brown check.
+    done-mark.tsx: amber badge with a brown check.
+
+contrast_values:
+  white #ffffff on brown #92400e: 7.09:1
+  brown #92400e on amber #fcd34d: 4.92:1
+
+checks:
+  check_1_storytime:
+    command: heavy-run; vitest run --maxWorkers=1, 22 files
+    exit: 0
+    test_files: 22 passed (22)
+    tests: 188 passed (188)
+    load_errors: 0
+  check_1_readalong:
+    command: heavy-run; packages/read-along, vitest run --maxWorkers=1
+    exit: 0
+    test_files: 9 passed (9)
+    tests: 105 passed (105)
+    load_errors: 0
+  check_2:
+    command: bash apps/storytime/__tests__/look-phase2-browser-gate.sh --self-test
+    exit: 0
+    mutants: 79 of 79 rejected
+    missing_helpers: 0
+  check_3:
+    tsc_noEmit_exit: 0
+    eslint_app_exit: 0 (app/[locale]/st/[level]/[week]/done-mark.tsx)
+    eslint_package: not possible; packages/read-along holds no eslint config
+  check_4:
+    command: git diff --stat 3480f904c -- packages/read-along/hooks apps/storytime/lib/highlight-windows.ts apps/storytime/app/look/places
+    exit: 0
+    output: empty
+
+older_tests_changed: none.
+
+files_changed:
+  - apps/storytime/app/look.css (band and landscape font fit, focus ring, comments)
+  - apps/storytime/app/[locale]/st/[level]/[week]/done-mark.tsx (comment)
+  - packages/read-along/lib/highlight.ts (comment)
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome (remediation round 4)
+commits: a564b0b5b (code); this commit holds the plan evidence
+tests_run: storytime 188 passed (22 files), exit 0; read-along 105 passed (9 files), exit 0; --self-test exit 0 (79 of 79, missing helpers 0); tsc exit 0; ESLint exit 0; protected-path diff empty
+files_changed: look.css, done-mark.tsx, read-along highlight.ts
+plan_updates: remediation r4 appended to 2b.2; 2b.3 unchanged at [x]
+known_failures: none in scope
+handoff: A2-F2, A2-F3, and A2-F5 are fixed in a564b0b5b. All three plaque rules fit the font from --title-chars. The focus ring is !important and two-tone; white on brown measures 7.09:1 and brown on amber 4.92:1. The stale comments now match the code. The browser gate still needs a run for row 19 (brand focus) and row 17 (banner ratio), and row 18 still carries the pre-existing family-picture 404 from round 3.
+END_MEASURE_AGENT_RESULT
