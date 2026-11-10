@@ -152,7 +152,8 @@ describe("Phase 3 Storytime read-along UI", () => {
     expect(audio.playbackRate).toBe(1);
     audio.currentTime = book.audio.slowSentences[0].words[0].start;
     fireEvent.timeUpdate(audio);
-    expect(document.querySelector(`.${HIGHLIGHT_CLASSES.currentWord.split(" ")[0]}`)).toBeInTheDocument();
+    // R-EDIT (post-checkpoint r5): the class holds [ and #, so getElementsByClassName replaces the invalid CSS selector.
+    expect(document.getElementsByClassName(HIGHLIGHT_CLASSES.currentWord.split(" ")[0]).length).toBeGreaterThan(0);
   });
 
   it.each([
@@ -231,7 +232,8 @@ describe("Phase 3 Storytime read-along UI", () => {
       <ReadAlongPassage sentences={[overlapSentence as ReadAlongSentence]} passage="" position={position} active />,
     );
     const marked = HIGHLIGHT_CLASSES.currentWord.split(" ")[0];
-    expect(container.querySelectorAll(`.${marked}`)).toHaveLength(1);
+    // R-EDIT (post-checkpoint r5): the class holds [ and #, so getElementsByClassName replaces the invalid CSS selector.
+    expect(container.getElementsByClassName(marked)).toHaveLength(1);
   });
 
   it("keeps page.tsx on the server and renders the client reader for the book part", () => {
