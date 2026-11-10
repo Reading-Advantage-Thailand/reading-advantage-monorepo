@@ -3,6 +3,7 @@
 > **Track:** `architecture_ci_input_pin_20261110` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
 > **Scope:** Phase 1 `## Phase 1: CI mode and the local pin refresh (target 2026-11-12)` in full (section P1).
 > **Written:** 2026-11-10 at role base `3058dc8d4e98b587e4871b2caa2eaa95ed541898`. Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash.
+> **Amended:** 2026-11-11 at role base `06fcbc4e91bc07a5023dd0234ad285ba6d4d2835`. Model: claude-sonnet-5-5. Cause: the PM decision D-7 added task 1.4a (spec FR-7, AC-6 to AC-8). Section P1.11 and the section 7 line for 1.4a are new. Section 1.1 now names two files outside the wrapper. The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
 > **Spec review:** round 2 passed. The result sits at `measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.json`. Its four Nit findings are fixed in `3058dc8d4`.
 > **No SHA in this file.** The strategy names no `phase_base_sha`. Section 1.5 names the capture point.
 > **No user interface and no route.** The track adds one developer flag, one local refresh command, and one line in a CI workflow file.
@@ -18,7 +19,8 @@
   ```
 
 - One heavy job runs at a time. The machine holds 7.3 GB of RAM.
-- One named test file runs outside the wrapper: `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`.
+- Two named test files run outside the wrapper: `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts` and `packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts` (task 1.4a).
+- From 2026-11-11 every wrapper call also sets `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800`. The PM cap until 2026-11-20 is 1800 s. The plan rules hold the exact form. The wrapper lines of sections P1.1 to P1.4 above predate this cap and read as if the two variables were present.
 - Every other test file of the package runs inside the wrapper through the package suite.
 - Every Vitest command uses `CI=true` and runs in the foreground.
 - A light task needs no lock: reads, `rg -n`, `git show`, `git log`, `git diff`, `git rev-parse`.
@@ -388,9 +390,118 @@ That line closes risk R6.
 - The real analyzer behaviour on a real new file. The AC-2 fixture holds a minimal file with no finding.
 - The behaviour of the CI check on a machine with a dirty working tree. The existing projection test covers that rule, and this track does not change it.
 
+#### P1.11 Task 1.4a: the refresh cost (added 2026-11-11)
+
+Source: spec FR-7, D-7, AC-6 to AC-8, and `measure/runs/architecture_ci_input_pin_20261110/pin-refresh-cost-analysis.md`. The PM words of D-7: "A light Build role adds task 1.4a to this spec and the plan. Red runs on the MiniMax model family with the tree-walk count test. The test reads no clock."
+
+**Risk: high.** The task is a refactor with no change in behavior, inside the analyzer that feeds the report hash. A wrong store changes a finding without a visible error. A wrong shared evidence run skips a comparison of an integrity gate. The task adds no hash field and no manifest key.
+
+**Facts read on 2026-11-11 (no run).** Red and Green measure again.
+
+| # | Fact | Source |
+|---|---|---|
+| N1 | `moduleSpecifierForBinding` is a private function. No test can import it. The walk count therefore needs a seam outside the function. It returns the first matching declaration in depth-first order. | `analyzer.ts:1913-1944` |
+| N2 | The TypeScript namespace object defines its members as getters with `enumerable: true` and no `configurable`. `vi.spyOn(ts, "forEachChild")` can therefore fail with a redefine error. The fallback seam is `vi.mock("typescript", ...)` with a wrapper that counts `forEachChild` calls and delegates to the original. | `node_modules/typescript/lib/typescript.js:22-25` |
+| N3 | `V2_MANIFEST_KEYS` is not exported. The strict check compares the exact key order at `v2-manifest-validation.ts:572`. The key check of AC-8 therefore compares the key list of the written manifest with the key list of the manifest before the refresh, and it requires `valid: true` from the strict validator. | `v2-manifest-validation.ts:92`, `:572` |
+| N4 | `createV2EvidenceSourceProjection` and its sync twin are called inside `v2-manifest-validation.ts`. A spy on the export does not see an internal call. Both functions run `git archive` through `execFileSync`. The count seam is the `git archive` call. | `v2-manifest-validation.ts:262-278`, `:350-372` |
+| N5 | `analyzeArchitectureSources` is called from `v2-manifest-validation.ts:878` and from `architecture-check.ts:210`. A passthrough `vi.mock` of `../analyzer.js` counts both call sites. | `analyzer.ts:2470` |
+| N6 | The refresh cases of the pin file run the CLI in a child process (`spawnSync`, `architecture-ci-input-pin.test.ts:245-251`). A spy cannot see a child process. The cost file calls `runArchitecturePinRefreshCli` in the test process. | `architecture-ci-input-pin.test.ts:245-251` |
+| N7 | The refresh at HEAD makes `analyzer_passes=5`, `projections=5`, and `input_snapshot_hash_runs=3` by the analysis. These values are `[read]`, not measured. The Red evidence records the counts that the seams observe at HEAD. | analysis section 1 |
+
+**The Red command** (the one named file outside heavy-run):
+
+```bash
+CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts
+```
+
+The Red role writes this one file and changes no other path. The Red role runs no package suite. The aggregate suite is not a gate while the Red file is open (section 1.4).
+
+**The cases of the cost file**
+
+| Case | Proves | Falsification condition | Expected at HEAD |
+|---|---|---|---|
+| `cost_fixture_positive_control` | The fixture manifest validates (`valid: true`). Each seam counts at least one event in a control run: `root_walks>=1`, `git_archive_calls>=1`, `analyzer_calls>=1`. | Any seam reads 0 in its control run, or the fixture manifest is invalid. The seam is then dead and every later count of 0 or 1 proves nothing (A4). | pass |
+| `ac6_walks_per_module_is_one` | One fixture module holds `member_access_nodes>=50` call arguments of the form `binding.member`, with `binding` assigned by `require` or by `await import`. The analyzer runs over it. The root walks for the binding store are `walks_per_module<=1`. The value `walks_per_module` is the count of `forEachChild` calls whose first argument is the fixture `SourceFile`, minus the same count for a control module of the same shape with no member-access argument. | At HEAD the delta equals about the member-access count. A store that rebuilds on each lookup, or one that walks again for a second binding, keeps `walks_per_module` above 1. | **fail** |
+| `ac6_walk_count_does_not_grow_with_member_access_nodes` | Two modules of the same shape hold `member_access_nodes=10` and `member_access_nodes=50`. The root-walk totals are equal: `walk_growth=0`. | `walk_growth` is above 0. This case catches a Green change that caps the walk at 1 for a small file but not for a large one. | **fail** |
+| `ac6b_binding_resolution_unchanged` | Characterization. The fixture holds one binding assigned by `require`, one assigned by `await import`, one name with no assignment, and one name declared twice with two different specifiers. The resolved resources equal an explicit expected list written in the test. The first declaration in source order wins. | The store returns the last declaration, returns a value for the unassigned name, or loses the `await import` form. | pass |
+| `ac7_refresh_makes_one_projection_and_two_passes` | The test process runs `runArchitecturePinRefreshCli(["--acknowledge"], ...)` on a fixture with a stale manifest. The seams read `projections=1` and `analyzer_passes=2` for the whole call, with the validation inside it. | A value other than 1 or 2. The expected value at HEAD is 5 and 5 (N7). The Red evidence records what the seams read. | **fail** |
+| `ac7b_preview_run_makes_one_projection_and_two_passes` | The same fixture, run without `--acknowledge`, reads `projections=1` and `analyzer_passes=2`. The preview exits 1 and writes nothing. | A Green change that shares the evidence only on the write path. | **fail** |
+| `ac8_manifest_key_set_unchanged_after_refresh` | After the acknowledged run, `Object.keys` of the written manifest equals `Object.keys` of the manifest before the run, the same order. The count `manifest_fields_changed<=5`. The strict validator returns `valid: true`. A control case writes one extra key and requires the strict validator to reject it. | The refresh writes a sixth field, reorders the keys, or the control manifest with an extra key passes. | pass |
+| `ac8b_new_analyzed_file_still_fails` | AC-2 at the new HEAD. The fixture is refreshed, then one new analyzed file with one exported constant and no finding is added and committed. The CI-mode check reports the report hash error and no input snapshot error. | The shared evidence drops the exact source path list, or the check reuses stale evidence. | pass |
+
+The Red expectation at HEAD is exit 1 with `tests_total=8`, `tests_failed=4`, `tests_passed=4`. The failing cases are the four AC-6 and AC-7 cases above. The passing cases are `cost_fixture_positive_control`, `ac6b_binding_resolution_unchanged`, `ac8_manifest_key_set_unchanged_after_refresh`, and `ac8b_new_analyzed_file_still_fails`. The Red evidence names the last three as characterization cases with their reason: the base code already meets AC-8 and the binding result. A load error of `Cannot find module` or a type error is a defect of the Red test. The Red role may add cases. A floor of the counts below may rise and may not fall.
+
+**The labeled counts of the cost file.** `fixture_positive_control=1`, `ac6_cases=3`, `ac7_cases=2`, `ac8_cases=2`, `member_access_nodes>=50`, `walks_per_module<=1`, `walk_growth=0`, `projections=1`, `analyzer_passes=2`, `manifest_fields_changed<=5`, `manifest_keys_added=0`. The test builds each message as `label=<n>` from a variable of the same name. The test computes `member_access_nodes` by parsing the fixture text with the TypeScript API and counting property-access nodes. It does not take the number from the analyzer.
+
+**The no-clock rule.** No test of the cost file reads clock time. No case uses `Date`, `performance.now`, `process.hrtime`, a timer, or a fake timer, and no case asserts a duration. A per-case timeout argument of `it` is a number for the runner and is allowed. The wall time of 1800 s is proven only by the 1.4 rerun. The detector exits 1:
+
+```bash
+rg -n 'Date\.now|new Date|performance\.now|hrtime|setTimeout|setInterval|useFakeTimers|getTime' packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts
+```
+
+**The fixture rule.** The cost file builds its own temporary repository on the `createMinimalV2EvidenceRepository` pattern (`baseline-validation.test.ts:112-164`), as task 1.1 did. The fixture satisfies `hasFullRepositoryInputSet` (fact M10): `package.json` and `packages/architecture-enforcement/src/analyzer.ts` sit in the root. It holds the real bytes of the v1 and v2 artifact files, one git commit, and a manifest computed with the production helpers. The cost file does not import from the pin test file and does not change it. The fixture is made with `mkdtemp`, and the test removes it in `afterAll`. The seams are set up after the fixture build, and each case clears its counters before the measured run. Each spy or mock is restored in `afterEach`. The cost test never writes into the real repository manifest.
+
+**Anti-pattern coverage for 1.4a**
+
+| Anti-pattern | Defense | Falsification condition |
+|---|---|---|
+| A3 | Every count is `label=<n>`, built from a variable with that name. `member_access_nodes`, `walks_per_module`, `walk_growth`, `projections`, and `analyzer_passes` are labeled integers in each failure message and in each plan note. | A message or a note holds a bare number, or a count check passes on a number with no label. |
+| A4 | The positive control proves that each seam counts. The floor `member_access_nodes>=50` is asserted before the walk assertion. `ac6_walks_per_module_is_one` fails at HEAD with a walk count of at least 50, not 0. Each loop in the file asserts its input size above 0 before it runs. | A walk count of 0 at HEAD, a counter that reads 1 because the spy never fires, or a loop over an empty set. |
+| A5 | A plan note for 1.4a quotes the exit code of each command and the labeled counts. A `heavy-run` timeout or a signal exit is named with its code and is never written as "fail" or "pass" alone. | A note says "pass" with a non-zero exit code. |
+| A9 | The cost file holds no `measure/tracks` and no `measure/runs` path. Detector: `rg -n 'measure/tracks\|measure/runs' <cost file>` exits 1. | The detector exits 0, or it exits 2. |
+| A12 | The key check reads no key list of its own (fact N3). It compares the key list before and after the refresh and uses the strict validator as the oracle. | The cost file holds a literal list of manifest keys. |
+| A14 | Every detector uses `rg -n`. An exit code of 2 is a failure and never "no hit". | A detector exits 2 and the evidence reads "no hit". |
+| A15 | The role receipts hold the commit and the commands. They hold no file hash. | A receipt holds a hash that a later commit changes. |
+
+A1, A2, A8, A11, and A13 are not risks of this task, as in section 1.7. A6 and A7 apply as in section 1.7. A10 applies to the Green commit (see the `build-graph` rule below). A16 holds: no worktree.
+
+**The Green gate for 1.4a.** Every item runs at the Green HEAD of 1.4a. The wrapper prefix is `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600`.
+
+1. `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts` exits 0 with `tests_failed=0`, `tests_skipped=0`, and `tests_total>=8`.
+2. `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts` exits 0 with `tests_total=20` and `tests_failed=0`. The Green change edits no test file.
+3. The package suite through the wrapper exits 0: `CI=true pnpm --filter @reading-advantage/architecture-enforcement test`. The floors are `suite_files>=33` and `suite_tests>=279`, which is 251 base cases plus 20 pin cases plus 8 cost cases. The note quotes the delta against the base of fact M1.
+4. The type check through the wrapper exits 0: `pnpm --filter @reading-advantage/architecture-enforcement check-types`.
+5. Both detectors of this section exit 1.
+6. The Green commit touches only the paths named below.
+
+**The allowed paths for 1.4a**
+
+- Red: `packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts`.
+- Green: `packages/architecture-enforcement/src/analyzer.ts`, `packages/architecture-enforcement/src/v2-manifest-validation.ts`, `packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts`, and the track files under `measure/tracks/architecture_ci_input_pin_20261110/`.
+- Out of scope: the manifest file, the three path lists in `reconciliation-manifest.ts`, the barrel, the archive folder, and both pin and cost test files after Red. A new exported function in `v2-manifest-validation.ts` needs a JSDoc block. `V2_MANIFEST_KEYS` stays unexported unless the orchestrator approves a change.
+- Fact M4 holds: `v2-manifest-validation.ts` is in the analyzer implementation list. The 1.4a Green commit therefore makes the manifest pins stale again. The CI-mode command stays red at the 1.4a HEADs, as the plan rule states. It passes after the 1.4 refresh. A wider skip is a defect.
+
+**The `build-graph` rule.** After the Green commit, `build-graph update ./graph.db packages/architecture-enforcement/src/analyzer.ts packages/architecture-enforcement/src/v2-manifest-validation.ts packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts` runs once, and it runs only through `heavy-run.sh` with `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800` (A10). A run outside the wrapper is a defect.
+
+**The 1.4 rerun rule at the 1.4a HEAD.**
+
+- The rerun runs at the HEAD of the Green commit of 1.4a, or at a later HEAD that changes no analyzer input except the manifest.
+- The command is one job under the same cap: `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:pin:refresh --acknowledge'`.
+- The cap is 1800 s. The role never raises the cap and never retries a timed-out job in the same turn.
+- A timeout or a signal exit stops task 1.4. The role records the exit code, the start time, the stop time, and `git status --short` for the manifest path. The manifest must stay unchanged. The role then reports to the orchestrator. The cost tests prove counts, so they do not prove that two passes fit in 1800 s. The analysis expects about 36 minutes if one pass stays at 18 minutes, so a second timeout is possible. The next step is then an orchestrator decision.
+- When the job exits 0, the role commits only the manifest file, then runs the checks of task 1.4 and the closeout items 4 to 6 of section P1.4.
+
+**Reviews for 1.4a**
+
+| Review | Applies to 1.4a | Scope |
+|---|---|---|
+| Review A (correctness) | **yes (required)** | The store keeps first-declaration-wins (N1). The call at `analyzer.ts:1999` reads the store and holds no whole-file walk. The shared evidence function makes 1 projection and 2 passes, and it exposes `parseErrors` so the refresh still exits 2 on a parse error. The validator option skips its own projection, sync snapshot, and two reports. It keeps the report comparison, the canonical source check, and the debt comparison. The option has a default that keeps the old behavior. |
+| Review B (security) | **yes at phase level (required)** | No separate round for 1.4a. The phase round reads one more point: only the refresh CLI passes the evidence option. The check CLI and `checkArchitectureRepository` never pass it. `ac8b` guards that the CI-mode check still recomputes. |
+| Review C (UX/API) | **yes at phase level (limited)** | No separate round for 1.4a. The task changes no flag and no message. The phase round confirms that the preview lines and exit codes of the refresh stay the same. |
+| Adversarial | **yes at phase level** | Spoof attempt: a stale evidence object passed to the validator must not hide a mismatch. The orchestrator may add this case to the phase round. |
+| Browser review (UX) | no | No page, no component, no route. |
+
+**What the 1.4a tests cannot prove**
+
+- The wall time. The tests read no clock (PM words of D-7). Only the 1.4 rerun proves the 1800 s limit.
+- The secondary candidate of the analysis: the per-module evidence scan at `analyzer.ts:1408-1410`. The spec FR-7 does not name it. No test counts it. A pass that stays slow because of that scan shows up only in the 1.4 rerun.
+- That the findings of the whole repository stay equal. `ac6b` proves the binding rule on a small fixture. The 1.4 refresh and the package suite catch a change in the real report: a changed report hash fails the CI-mode check at the phase check.
+
 ## 7. The labeled counts and the floors of P1
 
 `fixture_positive_control=1`, `ac1_cases=3`, `ac2_cases=2`, `ac3_cases=3`, `ac4_cases=5`, `ac5_cases=5`, `fr6_cases=1`, `other_files_failed=0`, `suite_files>=32`, `suite_tests>=251`, `commands_green=2`, `manifest_fields_changed=5`, `manifest_keys_added=0`, `hash_path_lists_changed=0`, `ci_flag_steps=1`, `ci_refresh_commands=0`, `local_script_flags=0`, `archive_changed_paths=0`, `pin_out_of_scope_paths=0`.
+
+Task 1.4a adds these floors: `fixture_positive_control=1`, `ac6_cases=3`, `ac7_cases=2`, `ac8_cases=2`, `member_access_nodes>=50`, `walks_per_module<=1`, `walk_growth=0`, `projections=1`, `analyzer_passes=2`, `manifest_keys_added=0`, `suite_files>=33`, `suite_tests>=279`, `pin_cases=20`. The `suite_files>=32` and `suite_tests>=251` floors above stay valid for the earlier tasks.
 
 ## 8. Questions for the orchestrator
 
