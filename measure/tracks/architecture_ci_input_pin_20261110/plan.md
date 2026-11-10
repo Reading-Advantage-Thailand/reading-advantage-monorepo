@@ -48,6 +48,8 @@ Blast radius: `packages/architecture-enforcement` and `.github/workflows/ci.yml:
 
 - [ ] 1.4 Refresh the manifest pins at the 1.3 HEAD. Run `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:pin:refresh --acknowledge'`. The command changes five fields in `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`. Commit only that file with `chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)`. Run the local full check through heavy-run: `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:check'`. Expect exit 0. Exit 1 means the debt comparison changed: stop and report. Exit 2 means the manifest is invalid: stop and report. Run the test command. Test command: `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`. Evidence class: automated.
 
+  - Blocked at 08:05 on 2026-11-10. The PM stopped the refresh job to free the heavy lock for two P1 jobs. The job exited 137 and changed no file. The task stays open. Rerun after 22:00 or after both P1 jobs end.
+
 - [ ] 1.5 Phase check at one HEAD. Run one job at a time through heavy-run:
   - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement check-types'`. Expect exit 0.
   - `HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement lint'`. Expect exit 0.
@@ -58,3 +60,5 @@ Blast radius: `packages/architecture-enforcement` and `.github/workflows/ci.yml:
   - `git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/`. Expect an empty list, so the archive is intact.
   - `git show --stat --oneline` for each track commit. Expect no path under `packages/backend/turbo.json` or `packages/webhooks`.
   Record every exit code and the output line count. A non-zero exit stops the phase and goes to the orchestrator. Then the acceptance role checks AC-1 to AC-5 at an immutable HEAD and appends `[checkpoint: <sha>]` to this heading. Evidence class: automated.
+
+  - Blocked at 08:05 on 2026-11-10. The PM stopped all heavy jobs for two P1 jobs of Daniel. No gate of this task has run. The task waits for the heavy-lock window after task 1.4.
