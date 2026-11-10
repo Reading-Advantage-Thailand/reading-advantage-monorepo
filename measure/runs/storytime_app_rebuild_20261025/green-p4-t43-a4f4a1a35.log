@@ -124,6 +124,26 @@ Exit 1. 1 file failed. 1 test failed and 3 tests passed (4 tests). The same asse
 
 The other 19 files of the regression set pass, and every file of the Phase 4 set passes.
 
+## The graph update
+
+Deviation: the first `build-graph update` of this role ran outside `heavy-run.sh`. It ran directly
+with the shell and held 1.6 GB RSS. The PM load rule of 2026-11-10 sends every `build-graph` run
+through `heavy-run.sh` at priority p1. The first run ended, and no build-graph process of this role
+runs now. The update ran again through the heavy lock, and the run below is the one that counts.
+
+```
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c "cd /home/daniebo/Desktop/reading-advantage-monorepo && build-graph update ./graph.db 'apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx' 'apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx'"
+```
+
+Exit 0. The printed line is:
+
+```
+Updated 2 files (28 → 35 nodes, 45 → 45 edges)
+```
+
+`graph.db` is git-ignored, so the graph update gets no commit. The plan evidence of task 4.3 holds
+no graph line, so no plan commit corrects it.
+
 ## Scope check
 
 - The committed Red test did not change.
@@ -156,11 +176,16 @@ regression_tests_failed: 1
 regression_files_passed: 19
 regression_files_failed: 1
 pre_existing_failure: __tests__/login-media-sign.test.ts pins the media count of the shipped week at 42 and finds 70; the same failure holds with the two changed files stashed
+graph_update_command: HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c "cd /home/daniebo/Desktop/reading-advantage-monorepo && build-graph update ./graph.db 'apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx' 'apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx'"
+graph_update_exit_code: 0
+graph_update_printed: Updated 2 files (28 → 35 nodes, 45 → 45 edges)
+deviation: the first build-graph update of this role ran outside heavy-run.sh at 1.6 GB RSS; the run above goes through the heavy lock at p1 and counts
 tasks_done: 4.3
 tasks_blocked: none
 new_files: apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx
 changed_files: apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx
 implementation_commit: 3c82ab25f5300dd8e58c13893dbfdb571c7d4040
-plan_commit: the commit that holds this log (SHA not knowable before the commit)
+plan_commit: c5d224562266eaa2355012ec4524b63ff51d6c6b
+log_commit: the commit that holds this log update (SHA not knowable before the commit)
 report: measure/runs/storytime_app_rebuild_20261025/green-p4-t43-a4f4a1a35.log
 END_MEASURE_AGENT_RESULT
