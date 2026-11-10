@@ -386,6 +386,11 @@ function brandPagesVerdict(v) {
   return v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
     && v.chrome_contrast_min >= 4.5 && v.chrome_brand_pairs >= 1;
 }
+/** The verdict of the focus ring: the brown ring and a white outline of 2 px or more. */
+function brandFocusVerdict(v) {
+  return v.focused === 1 && v.box_shadow.includes("rgb(146, 64, 14)")
+    && v.outline_color === "rgb(255, 255, 255)" && v.outline_width_px >= 2;
+}
 /** The verdict of the blue ink: no visible element holds a blue text colour or a blue ground. */
 function blueInkVerdict(count) {
   return count === 0;
@@ -397,15 +402,19 @@ function brandTeacherVerdict(v) {
   return v.console_errors === 0 && v.page_overflow === 0
     && v.chrome_contrast_min >= 4.5 && v.chrome_brand_pairs >= 1;
 }
-/** The verdict of the forbidden page: no chrome pair, no blue, no button, and no console error. */
+/** The verdict of the forbidden page: the status of the view, no chrome pair, no blue, and no
+ *  button. The app renders the forbidden view with the status 200 (the teacher route returns the
+ *  view, not a notFound), so the status 403 is the other legal answer. */
 function brandForbiddenVerdict(v) {
-  return v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
+  return (v.status === 200 || v.status === 403)
+    && v.console_errors === 0 && v.tap_under_48 === 0 && v.page_overflow === 0
     && v.chrome_blue_computed === 0 && v.chrome_brand_pairs === 0 && v.buttons === 0;
 }
-/** The verdict of the 404 view: the 404 document load and no other console error. */
+/** The verdict of the 404 view: the 404 document load, no other console error, and the brand pair
+ *  of the open-week button. */
 function brandNotFoundVerdict(v) {
   return v.console_errors === 1 && v.not_found_errors === 1
-    && v.tap_under_48 === 0 && v.page_overflow === 0;
+    && v.tap_under_48 === 0 && v.page_overflow === 0 && v.chrome_brand_pairs >= 1;
 }
 const goodBrandChrome = {
   game_bars: 0, progressbars: 0, band_icons: 0, crest_elems: 0,
@@ -443,11 +452,15 @@ const goodBrandTeacher = {
   console_errors: 0, page_overflow: 0, chrome_contrast_min: 4.5, chrome_brand_pairs: 1,
 };
 const goodBrandForbidden = {
-  console_errors: 0, tap_under_48: 0, page_overflow: 0,
+  status: 200, console_errors: 0, tap_under_48: 0, page_overflow: 0,
   chrome_blue_computed: 0, chrome_brand_pairs: 0, buttons: 0,
 };
 const goodBrandNotFound = {
-  console_errors: 1, not_found_errors: 1, tap_under_48: 0, page_overflow: 0,
+  console_errors: 1, not_found_errors: 1, tap_under_48: 0, page_overflow: 0, chrome_brand_pairs: 1,
+};
+const goodBrandFocus = {
+  focused: 1, box_shadow: "rgba(0, 0, 0, 0) 0px 0px 0px 6px rgb(146, 64, 14)",
+  outline_color: "rgb(255, 255, 255)", outline_width_px: 3,
 };
 const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, clipped_text: 0, page_overflow: 0, contrast_fail: 0 };
 const mutants = [
@@ -524,6 +537,11 @@ const mutants = [
   brandForbiddenVerdict({ ...goodBrandForbidden, chrome_blue_computed: 1 }) === false,
   brandNotFoundVerdict({ ...goodBrandNotFound, console_errors: 2 }) === false,
   brandNotFoundVerdict({ ...goodBrandNotFound, not_found_errors: 0 }) === false,
+  brandFocusVerdict({ ...goodBrandFocus, focused: 0 }) === false,
+  brandFocusVerdict({ ...goodBrandFocus, box_shadow: "none" }) === false,
+  brandFocusVerdict({ ...goodBrandFocus, outline_width_px: 1 }) === false,
+  brandForbiddenVerdict({ ...goodBrandForbidden, status: 500 }) === false,
+  brandNotFoundVerdict({ ...goodBrandNotFound, chrome_brand_pairs: 0 }) === false,
   blueInkVerdict(1) === false,
   blueInkVerdict(2) === false,
   brandTeacherVerdict({ ...goodBrandTeacher, console_errors: 1 }) === false,
@@ -566,20 +584,40 @@ const controls = [
   brandLongTitleVerdict(goodBrandLongTitle),
   brandPagesVerdict(goodBrandPages),
   blueInkVerdict(0),
+  brandFocusVerdict(goodBrandFocus),
   brandTeacherVerdict(goodBrandTeacher),
   brandForbiddenVerdict(goodBrandForbidden),
   brandNotFoundVerdict(goodBrandNotFound),
   brandChromeVerdict({ ...goodBrandChrome, current_word_found: 1,
     current_word_bg: "rgb(146, 64, 14)", current_word_color: "rgb(255, 255, 255)" }),
 ];
+/** The helper names that the rows call. The self-test fails when one of them is missing. */
+const ROW_HELPERS = [
+  "readBrandChrome", "readBlueInk", "readBrandElements", "brandToneSummary", "readBrandBanner",
+  "measurePlaque", "checkCounts", "watch", "settle", "openScreen", "openQuestion", "makeContext",
+  "signIn", "signInOnce", "focusWithKeyboard", "brandChromeVerdict", "brandTonesVerdict",
+  "brandBannerVerdict", "brandLongTitleVerdict", "brandPagesVerdict", "brandForbiddenVerdict",
+  "brandNotFoundVerdict", "brandTeacherVerdict", "blueInkVerdict", "brandFocusVerdict",
+];
+/** The helpers that the script does not hold. A lost helper fails the self-test. */
+const missingHelpers = ROW_HELPERS.filter((name) => {
+  try {
+    return typeof eval(name) !== "function";
+  } catch {
+    return true;
+  }
+});
+const helpersOk = missingHelpers.length === 0;
 const controlsOk = controls.every(Boolean);
 const rejected = mutants.filter(Boolean).length;
 emit("selftest_controls_ok", controlsOk ? 1 : 0);
 emit("selftest_mutants_rejected", rejected);
 emit("selftest_mutants_checked", mutants.length);
-const selfOk = controlsOk && rejected === mutants.length;
+emit("selftest_missing_helpers", missingHelpers.length);
+const selfOk = controlsOk && rejected === mutants.length && helpersOk;
 row("row 11 self-test the real verdicts accept the good values and reject the mutants", selfOk,
-  `selftest_mutants_rejected=${rejected} selftest_mutants_checked=${mutants.length}`);
+  `selftest_mutants_rejected=${rejected} selftest_mutants_checked=${mutants.length}`
+  + ` selftest_missing_helpers=${missingHelpers.join(",") || "none"}`);
 if (selfTestOnly) {
   emit("row_count", rowCount);
   process.exit(selfOk ? 0 : 1);
@@ -2170,6 +2208,108 @@ async function readBrandChrome(page) {
     };
   });
 }
+// ---- Row 16: the chrome tones of the look screens (AC-4.4 and AC-4.5). ----
+const BRAND_FAMILIES = [
+  { name: "banner", selectors: ["header[data-hero] > h1", "main > h1"] },
+  { name: "buttons", selectors: ["button"] },
+  { name: "frames", selectors: ["section[aria-label]", "main > section"] },
+  { name: "cards", selectors: ["ul[data-week-tiles] a", "[data-part=\"song\"] ol", "[data-page-content] > div", "main li", "main a[href]"] },
+];
+/** Reads the chrome elements of the open page: their family, their fill, and their label colour. */
+async function readBrandElements(page) {
+  return page.evaluate((families) => {
+    const seen = new Set();
+    const out = [];
+    for (const family of families) {
+      for (const selector of family.selectors) {
+        for (const element of document.querySelectorAll(selector)) {
+          if (seen.has(element)) continue;
+          seen.add(element);
+          const style = getComputedStyle(element);
+          const box = element.getBoundingClientRect();
+          if (box.width <= 0 || box.height <= 0) continue;
+          if (style.visibility === "hidden" || style.display === "none") continue;
+          out.push({ family: family.name, background: style.backgroundColor, color: style.color });
+        }
+      }
+    }
+    return out;
+  }, BRAND_FAMILIES);
+}
+/** Tells whether one colour holds the channels of one tone. */
+function isRgbOf(color, channels) {
+  return color !== null && color.r === channels[0] && color.g === channels[1] && color.b === channels[2];
+}
+/** The blue tones of the old look, as colour channels. */
+const BRAND_BLUE = [[36, 95, 159], [47, 116, 189], [23, 64, 122], [19, 36, 78], [31, 85, 148]];
+/** The brand tones, as colour channels. */
+const BRAND_AMBER = [252, 211, 77];
+const BRAND_BROWN = [146, 64, 14];
+/** Sums the brand pairs of a list of chrome elements. */
+function brandToneSummary(elements) {
+  const summary = {
+    families_checked: 0, chrome_pairs_checked: 0, chrome_blue_computed: 0,
+    chrome_contrast_min: 0, amber_pairs: 0, brown_pairs: 0, families: [],
+  };
+  const byFamily = new Map();
+  for (const item of elements) {
+    const bg = parseCssColor(item.background);
+    const fg = parseCssColor(item.color);
+    if (!bg || bg.a !== 1) continue;
+    if (!byFamily.has(item.family)) {
+      byFamily.set(item.family, {
+        name: item.family, pairs: 0, chrome_blue_computed: 0,
+        amber_pairs: 0, brown_pairs: 0, contrast_min: 0,
+      });
+    }
+    const family = byFamily.get(item.family);
+    if (BRAND_BLUE.some((channels) => isRgbOf(bg, channels))) {
+      family.chrome_blue_computed += 1;
+      summary.chrome_blue_computed += 1;
+    }
+    const amber = isRgbOf(bg, BRAND_AMBER);
+    const brown = isRgbOf(bg, BRAND_BROWN);
+    if (!amber && !brown) continue;
+    family.pairs += 1;
+    summary.chrome_pairs_checked += 1;
+    if (amber) { family.amber_pairs += 1; summary.amber_pairs += 1; }
+    if (brown) { family.brown_pairs += 1; summary.brown_pairs += 1; }
+    if (!fg) continue;
+    const ratio = contrastOf(bg, fg);
+    family.contrast_min = family.contrast_min === 0 ? ratio : Math.min(family.contrast_min, ratio);
+    summary.chrome_contrast_min = summary.chrome_contrast_min === 0 ? ratio : Math.min(summary.chrome_contrast_min, ratio);
+  }
+  summary.families = [...byFamily.values()];
+  summary.families_checked = byFamily.size;
+  return summary;
+}
+async function readBrandBanner(page) {
+  return page.evaluate(() => {
+    const plaque = document.querySelector("header[data-hero] > h1");
+    if (!plaque) {
+      return { text_align: "none", banner_top_gap_px: -1, banner_bottom_gap_px: -1, banner_ratio: 0,
+        line_count: 0, per_line_ratio: 0, title_font_px: 0, banner_h_px: 0 };
+    }
+    const style = getComputedStyle(plaque);
+    const box = plaque.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents(plaque);
+    const text = range.getBoundingClientRect();
+    const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
+    const lines = rects.length > 0 ? rects.length : 1;
+    const font = parseFloat(style.fontSize);
+    return {
+      text_align: style.textAlign,
+      banner_top_gap_px: Math.round(text.top - box.top),
+      banner_bottom_gap_px: Math.round(box.bottom - text.bottom),
+      banner_ratio: box.height > 0 ? font / box.height : 0,
+      line_count: lines,
+      per_line_ratio: box.height > 0 ? font / (box.height / lines) : 0,
+      title_font_px: font,
+      banner_h_px: Math.round(box.height),
+    };
+  });
+}
 await guarded("row 15 brand chrome", async () => {
   let cases = 0;
   let failures = 0;
@@ -2335,6 +2475,35 @@ await guarded("row 17 brand banner", async () => {
       await context.close();
     }
   }
+  // The same eight titles on the book page, where the hero is the band (finding A2-F2).
+  for (const item of TITLE_WEEKS) {
+    for (const locale of LOCALES) {
+      const context = await makeContext(VIEWPORTS[0]);
+      const page = await context.newPage();
+      const state = watch(page);
+      await page.goto(base + "/" + locale + "/st/3/" + item.week + "?part=book", { waitUntil: "load" });
+      await settle(page);
+      const found = await readBrandBanner(page);
+      const chrome = await readBrandChrome(page);
+      const counts = await checkCounts(page, state);
+      cases += 1;
+      ratioMin = Math.min(ratioMin, found.per_line_ratio);
+      ratioMax = Math.max(ratioMax, found.per_line_ratio);
+      const ok = brandBannerVerdict({
+        ...found,
+        clipped_text: counts.clipped_text,
+        page_overflow: counts.page_overflow,
+      }) && chrome.logo_title_overlap_px === 0;
+      if (!ok) {
+        failures += 1;
+        sample = sample || locale + " band " + item.title + ": " + JSON.stringify(found)
+          + " logo_title_overlap_px=" + chrome.logo_title_overlap_px
+          + " clipped_text=" + counts.clipped_text + " page_overflow=" + counts.page_overflow;
+      }
+      await page.close();
+      await context.close();
+    }
+  }
   // A 60-character title (the V1 Thai string) steps down one size step and stays inside the plaque.
   const longContext = await makeContext(VIEWPORTS[0]);
   const longPage = await longContext.newPage();
@@ -2370,7 +2539,7 @@ await guarded("row 17 brand banner", async () => {
   const max = ratioMax === 0 ? 0 : Math.round(ratioMax * 1000) / 1000;
   emit("banner_ratio_min", min);
   emit("banner_ratio_max", max);
-  row("brand banner", cases === TITLE_WEEKS.length * LOCALES.length && failures === 0,
+  row("brand banner", cases === TITLE_WEEKS.length * LOCALES.length * 2 && failures === 0,
     "brand_banner_cases=" + cases + " brand_banner_failures=" + failures
     + " banner_ratio_min=" + min + " banner_ratio_max=" + max
     + " long_title_overflow_px=" + longPlaque.overflow_px
@@ -2427,6 +2596,7 @@ await guarded("row 18 brand pages", async () => {
       const notFoundErrors = state.errors.filter((text) => /404/.test(text)).length;
       if (item.kind === "forbidden") {
         ok = brandForbiddenVerdict({
+          status: status,
           console_errors: counts.console_errors,
           tap_under_48: counts.tap_under_48,
           page_overflow: counts.page_overflow,
@@ -2438,6 +2608,7 @@ await guarded("row 18 brand pages", async () => {
         ok = brandNotFoundVerdict({
           console_errors: counts.console_errors,
           not_found_errors: notFoundErrors,
+          chrome_brand_pairs: pairs,
           tap_under_48: counts.tap_under_48,
           page_overflow: counts.page_overflow,
         });
@@ -2486,6 +2657,75 @@ await guarded("row 18 brand pages", async () => {
     "brand_page_cases=" + cases + " brand_page_failures=" + failures
     + " chrome_brand_pairs_min=" + (pairsMin === 99 ? 0 : pairsMin)
     + " chrome_contrast_min=" + (contrastMin === 99 ? 0 : Math.round(contrastMin * 100) / 100)
+    + (sample ? " first=" + sample : ""));
+});
+
+// ---- Row 19: the focus ring of the keyboard (finding A2-F3). ----
+/** The elements that take the keyboard focus in the row. */
+const FOCUS_TARGETS = [
+  { label: "decodable word button", path: "/th/st/2/1?part=decodable", selector: "[data-part=\"decodable\"] button" },
+  { label: "mode button", path: "/th/st/2/1?part=book", selector: "[data-mode-button]" },
+  { label: "week tile link", path: "/th/st/2/1", selector: "main[data-place] ul[data-week-tiles] a" },
+  { label: "sign_in button", path: "/th/sign-in", selector: "form button[type=\"submit\"]" },
+];
+/** Moves the keyboard focus to one element and reads its focus ring. */
+async function focusWithKeyboard(page, selector) {
+  await page.evaluate(() => {
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    window.scrollTo(0, 0);
+  });
+  for (let step = 0; step < 40; step += 1) {
+    await page.keyboard.press("Tab");
+    const focused = await page.evaluate((sel) => {
+      const element = document.activeElement;
+      return element !== null && element.matches(sel);
+    }, selector);
+    if (!focused) continue;
+    return page.evaluate(() => {
+      const element = document.activeElement;
+      const style = getComputedStyle(element);
+      return {
+        focused: 1,
+        box_shadow: style.boxShadow,
+        outline_color: style.outlineColor,
+        outline_width_px: Math.round(parseFloat(style.outlineWidth) || 0),
+      };
+    });
+  }
+  return { focused: 0, box_shadow: "none", outline_color: "", outline_width_px: 0 };
+}
+await guarded("row 19 brand focus", async () => {
+  let cases = 0;
+  let failures = 0;
+  let sample = "";
+  for (const target of FOCUS_TARGETS) {
+    const context = await makeContext(VIEWPORTS[0]);
+    const page = await context.newPage();
+    let detail = "";
+    let ok = false;
+    try {
+      await page.goto(base + target.path, { waitUntil: "load" });
+      await settle(page);
+      const found = await focusWithKeyboard(page, target.selector);
+      ok = brandFocusVerdict(found);
+      detail = "focused=" + found.focused
+        + " box_shadow=" + found.box_shadow
+        + " outline_color=" + found.outline_color
+        + " outline_width_px=" + found.outline_width_px;
+    } catch (error) {
+      detail = "the page raises an error: " + String(error).slice(0, 120);
+    }
+    cases += 1;
+    if (!ok) {
+      failures += 1;
+      sample = sample || target.label + ": " + detail;
+    }
+    row("brand focus " + target.label, ok, detail);
+    await page.close();
+    await context.close();
+  }
+  row("brand focus total", cases === FOCUS_TARGETS.length && failures === 0,
+    "brand_focus_cases=" + cases + " brand_focus_failures=" + failures
     + (sample ? " first=" + sample : ""));
 });
 

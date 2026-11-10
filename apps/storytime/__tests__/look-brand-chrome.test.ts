@@ -696,6 +696,47 @@ function holdsBrown(value: string): boolean {
 }
 
 /**
+ * Gives the specificity of one selector part: the IDs, the classes, and the elements.
+ * @param part One selector part.
+ * @returns The three counts.
+ */
+function specificityOf(part: string): [number, number, number] {
+  const text = part.replace(/::[\w-]+/g, " ");
+  const ids = (text.match(/#[\w-]+/g) ?? []).length;
+  const classes = (text.match(/\.[\w-]+|\[[^\]]*\]|:(?!:)[\w-]+/g) ?? []).length;
+  const elements = (text.match(/(^|[\s>+~])([a-zA-Z][\w-]*)/g) ?? []).length
+    + (part.match(/::[\w-]+/g) ?? []).length;
+  return [ids, classes, elements];
+}
+
+/**
+ * Gives the strongest specificity of a list of selector parts.
+ * @param parts The selector parts of one rule.
+ * @returns The three counts of the strongest part.
+ */
+function bestSpecificity(parts: string[]): [number, number, number] {
+  let best: [number, number, number] = [0, 0, 0];
+  for (const part of parts) {
+    const spec = specificityOf(part);
+    if (compareSpec(spec, best) > 0) best = spec;
+  }
+  return best;
+}
+
+/**
+ * Compares two specificities.
+ * @param first The first specificity.
+ * @param second The second specificity.
+ * @returns A positive number when the first wins, 0 when they are equal.
+ */
+function compareSpec(first: [number, number, number], second: [number, number, number]): number {
+  for (let index = 0; index < 3; index += 1) {
+    if (first[index] !== second[index]) return first[index]! - second[index]!;
+  }
+  return 0;
+}
+
+/**
  * Gives the relative luminance of one hex colour (WCAG 2).
  * @param hex The colour as #rrggbb.
  * @returns The luminance from 0 to 1.
@@ -975,18 +1016,25 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
       failures.push("the frame must set no inline font size");
     }
     const css = readLookCss();
-    const plaque = parseCss(css).find((rule) =>
+    // Every plaque rule must fit the font: the base, the band, and the landscape block.
+    const plaqueRules = parseCss(css).filter((rule) =>
       selectorParts(rule.selector).some(
         (part) => part.includes("header[data-hero") && lastCompound(part) === "h1",
       ),
     );
-    if (!plaque) {
+    if (plaqueRules.length < 1) {
       failures.push("the plaque rule must exist");
-    } else {
-      const fontSize = ruleValue(plaque, "font-size");
+    }
+    for (const rule of plaqueRules) {
+      const fontSize = ruleValue(rule, "font-size");
       if (fontSize === null || !fontSize.includes("var(--title-chars)")) {
-        failures.push(`the plaque rule must fit the font from var(--title-chars), found ${fontSize ?? "none"}`);
+        failures.push(
+          `the plaque rule ${rule.selector} must fit the font from var(--title-chars), found ${fontSize ?? "none"}`,
+        );
       }
+    }
+    const plaque = plaqueRules[0];
+    if (plaque) {
       const lineHeight = ruleValue(plaque, "line-height");
       if (lineHeight === null || Number.parseFloat(lineHeight) !== 1.25) {
         failures.push(`the plaque rule must set line-height 1.25, found ${lineHeight ?? "none"}`);
@@ -1147,6 +1195,44 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
       }
     }
     expect(failures.join(" | "), "the pressed decodable sound button").toBe("");
+  });
+
+  it("C-F1b the focus ring wins the cascade against the rules that set a box shadow", () => {
+    const css = readLookCss();
+    const failures: string[] = [];
+    const rules = parseCss(css).filter((rule) => !rule.keyframes);
+    const focusIndex = rules.findIndex((rule) =>
+      selectorParts(rule.selector).some((part) => part.includes(":focus-visible")),
+    );
+    if (focusIndex < 1) {
+      failures.push("the focus rule must exist");
+    } else {
+      const focus = rules[focusIndex]!;
+      const shadows = focus.declarations.filter((declaration) => declaration.property === "box-shadow");
+      if (shadows.length < 1) failures.push("the focus rule must set a box shadow ring");
+      const important = shadows.some((declaration) => declaration.important);
+      const focusSpec = bestSpecificity(selectorParts(focus.selector));
+      let lost = 0;
+      rules.forEach((rule, index) => {
+        if (index === focusIndex) return;
+        const ruleShadows = rule.declarations.filter((declaration) => declaration.property === "box-shadow");
+        if (ruleShadows.length < 1) return;
+        if (important && !ruleShadows.some((declaration) => declaration.important)) return;
+        const ruleSpec = bestSpecificity(selectorParts(rule.selector));
+        // The focus rule wins when its specificity is stronger, or when it comes later in the file.
+        const wins = compareSpec(focusSpec, ruleSpec) > 0
+          || (compareSpec(focusSpec, ruleSpec) === 0 && focusIndex > index);
+        if (wins) return;
+        lost += 1;
+        if (failures.length < 6) {
+          failures.push(`the focus ring loses the box shadow of the rule ${rule.selector}`);
+        }
+      });
+      if (lost > failures.length) {
+        failures.push(`and ${lost - failures.length} more rules that set a box shadow`);
+      }
+    }
+    expect(failures.join(" | "), "the focus ring and the box shadow rules").toBe("");
   });
 
   it("P-2 no blue ink or ground stays on the child screens (AC-4.4, AC-4.7)", () => {
