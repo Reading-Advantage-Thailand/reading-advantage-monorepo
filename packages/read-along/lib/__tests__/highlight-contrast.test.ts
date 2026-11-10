@@ -9,6 +9,9 @@ import { HIGHLIGHT_CLASSES } from "../highlight";
 const TOKEN_HEX: Record<string, string> = {
   // The brand brown of the current word (remediation r2, finding P-1).
   "bg-[#92400e]": "#92400e",
+  // The dark pair of the current word: amber with a brown label (finding P-1).
+  "bg-[#fcd34d]": "#fcd34d",
+  "text-[#92400e]": "#92400e",
   "bg-blue-500": "#3b82f6",
   "bg-blue-700": "#1d4ed8",
   "bg-blue-400": "#60a5fa",

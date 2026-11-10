@@ -374,16 +374,20 @@ describe("the brand chrome of the frame (AC-4.1 to AC-4.3)", () => {
   });
 
   it("B6 the per-word highlight keeps the package class and the plain-text rule still holds", async () => {
-    // The per-word highlight is not chrome. It stays in the package of the read-along, so the
-    // class of the package file must not change in this phase (M56).
+    // The per-word highlight is not chrome. It stays in the package of the read-along.
+    // finding P-1, PM 2026-11-10: the current word is the logo brown
     const highlightPath = resolve(app, "../../packages/read-along/lib/highlight.ts");
     expect(existsSync(highlightPath), "Missing packages/read-along/lib/highlight.ts").toBe(true);
     const highlight = readFileSync(highlightPath, "utf8");
-    expect(
-      `current_word_class=${/currentWord:\s*"([^"]*)"/.exec(highlight)?.[1] ?? "none"}`,
-      "the package highlight class must stay the class of M56",
-    ).toContain("bg-blue-700");
-    expect(highlight, "the package highlight class must keep its white label").toContain("text-white");
+    const currentWord = /currentWord:\s*"([^"]*)"/.exec(highlight)?.[1] ?? "none";
+    const classes = currentWord.split(" ");
+    expect(`current_word_class=${currentWord}`, "the current word must name the logo brown").toContain(
+      "bg-[#92400e]",
+    );
+    expect(classes, "the current word must name the white label").toContain("text-white");
+    expect(classes.filter((entry) => /blue/.test(entry)), "the current word must hold no blue class").toEqual(
+      [],
+    );
     // The plain-text rule of AC-2.3: the read-along text carries no decoration class of the look.
     const Reader = await loadReader();
     const book = shipped.books.find((entry) => entry.kind === "readalong")!;
