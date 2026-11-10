@@ -1,8 +1,8 @@
 /*
  * The look of Storytime, option 1 "Storybook Quest" (track storytime_look_20261107, Phase 2,
  * spec FR-2). A painted place sits behind every week screen, a hero window (the frame) holds the
- * game bar, the crest, and the title plaque, and the cards and buttons take the plaque bevel of
- * the cover art. The study CSS is the source; the changes of the port are: the art and the logo
+ * logo, the level and week label, and the title plaque, and the cards and buttons take the bevel
+ * of the logo tones. The study CSS is the source; the changes of the port are: the art and the logo
  * come from `app/look/` through relative url() (never a root-absolute path, M30), the place is
  * carried by `data-place` and `data-hero` on `main` (Q36, no `:has()`), the hero is chosen by
  * `header[data-hero]` (Q24), and no rule selects by Tailwind class text (Q30).
@@ -39,11 +39,12 @@ body {
   background: var(--sq-cream);
   color: var(--st-ink);
 }
-a:focus-visible,
-button:focus-visible {
+/* The two-tone focus ring reaches 3:1 on brown, amber, and cream (finding A2-F3). The ring is
+ * `!important`, so a control rule that sets a box shadow can not hide it. */
+:is(a, button, [tabindex]):focus-visible {
   outline: 3px solid #fff;
   outline-offset: 0;
-  box-shadow: 0 0 0 6px var(--st-brown);
+  box-shadow: 0 0 0 6px var(--st-brown) !important;
 }
 
 /* The tap floor of a plain link that a page renders as a direct child of `main` (the sign-in
@@ -77,7 +78,7 @@ main[data-place]::before {
   background-repeat: no-repeat;
   filter: blur(6px) saturate(1.05);
 }
-/* The navy vignette over the place, so the text ground stays even. */
+/* The brown vignette over the place, so the text ground stays even. */
 main[data-place]::after {
   content: "";
   position: fixed;
@@ -207,12 +208,13 @@ header[data-hero] > h1 {
   border-radius: 12px;
   box-shadow: 0 0 0 4px var(--st-brown), var(--sq-shadow);
 }
-/* The band plaque is slimmer and keeps the floor font at 24 px. */
+/* The band plaque is slimmer: it fits the font from --title-chars with the 20 px floor and the
+ * 44 px cap (finding A2-F2). */
 header[data-hero="band"] > h1 {
-  min-height: 30px;
+  min-height: 26px;
   bottom: -28px;
   padding: 0 16px;
-  font-size: 44px;
+  font-size: clamp(20px, calc((100cqi - 48px) / (var(--title-chars) * 0.68)), 44px);
 }
 
 /* ---- Section titles. ---- */
@@ -357,7 +359,7 @@ main[data-place] ul[data-week-tiles] a::after {
   border: 3px solid var(--st-brown);
   background: var(--st-amber) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 5l7 7-7 7' fill='none' stroke='%2392400e' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 22px no-repeat;
 }
-/* The done card (council round 3, task 2.3g): a 32 CSS px gold badge with a navy check sits
+/* The done card (council round 3, task 2.3g): a 32 CSS px amber badge with a brown check sits
  * where the chevron was, and the chevron goes. The label stays as text for screen readers. */
 main[data-place] ul[data-week-tiles] li {
   position: relative;
@@ -779,7 +781,7 @@ main[data-place] button:active:not(:disabled) {
     height: auto;
     bottom: -16px;
     padding: 0 18px 2px;
-    font-size: clamp(20px, calc((100cqi - 64px) / (var(--title-chars) * 0.68)), 32px);
+    font-size: clamp(20px, calc((100cqi - 48px) / (var(--title-chars) * 0.68)), 32px);
   }
   main[data-place] {
     gap: 12px;

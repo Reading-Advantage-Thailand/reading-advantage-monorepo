@@ -9,6 +9,6 @@ export const HIGHLIGHT_CLASSES = {
   playingSentence: "bg-amber-200 dark:bg-amber-800/60",
   /** A word under the pointer. */
   hoverWord: "hover:bg-emerald-200 dark:hover:bg-emerald-800/50",
-  /** The word that the voice says now. The pair holds the 4.5:1 contrast floor of the app gates (finding F121, finding P-1): white on brown #92400e measures 8.6:1, and brown #92400e on amber #fcd34d measures 4.9:1. */
+  /** The word that the voice says now. The pair holds the 4.5:1 contrast floor of the app gates (finding F121, finding P-1): white on brown #92400e measures 7.09:1, and brown #92400e on amber #fcd34d measures 4.92:1. */
   currentWord: "bg-[#92400e] text-white dark:bg-[#fcd34d] dark:text-[#92400e]",
 } as const;

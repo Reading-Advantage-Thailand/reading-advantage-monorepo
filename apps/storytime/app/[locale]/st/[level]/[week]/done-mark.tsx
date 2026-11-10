@@ -2,7 +2,7 @@
 
 /**
  * The Done mark of a finished part card on the week page (look task 2.3f, council round 2).
- * Round 3 (task 2.3g) turns it into a 32 CSS px gold badge with a navy check in place of the
+ * Round 3 (task 2.3g) turns it into a 32 CSS px amber badge with a brown check in place of the
  * chevron; the localized label stays as text for screen readers.
  *
  * The mark reads the per-device completion record after the first render, so the server HTML and
