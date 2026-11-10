@@ -56,7 +56,7 @@ Roles after Green: Reviews A and C, the adversarial round, the browser review at
 - [b] 2.5 Daniel's look check of the tagged build (AC-2.5). deferred:daniel
   Phase 2 acceptance (2026-11-09): PASS at f1bcd1b7f, round 3 (measure/runs/storytime_look_20261107/phase-acceptance-p2-r3-f1bcd1b7f.json). PM route decision of 2026-11-09: the acceptance ran on kimi-code-plan-cn/k3.1-pro#high, because Kimi wrote no Red and no Green in Phase 2; the PM accepted the small Kimi pace overshoot for this gate. An earlier run on opencode/glm-5.3-flash-free was stopped and voided, because GLM wrote a Phase 2 Green. Round 2 failed on closeout item 8 (build-graph); Green closed it in f1bcd1b7f.
 
-## Phase 2b: Brand chrome
+## Phase 2b: Brand chrome [checkpoint: cc48d29ee]
 
 Why 2b and why this place: the task numbers of Phase 2 and Phase 3 stay as they are. This phase sits directly after Phase 2 because measure-guard allows a new `[~]` task only when the heading right before it carries a checkpoint, and because Phase 3 has no checkpoint yet. Phase 2 carries the checkpoint `f1bcd1b7f`. Phase 3 stays as it is. Phase 3 starts after this heading carries its checkpoint.
 

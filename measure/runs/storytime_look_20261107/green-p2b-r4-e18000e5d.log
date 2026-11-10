@@ -75,3 +75,24 @@ plan_updates: remediation r4 appended to 2b.2; 2b.3 unchanged at [x]
 known_failures: none in scope
 handoff: A2-F2, A2-F3, and A2-F5 are fixed in a564b0b5b. All three plaque rules fit the font from --title-chars. The focus ring is !important and two-tone; white on brown measures 7.09:1 and brown on amber 4.92:1. The stale comments now match the code. The browser gate still needs a run for row 19 (brand focus) and row 17 (banner ratio), and row 18 still carries the pre-existing family-picture 404 from round 3.
 END_MEASURE_AGENT_RESULT
+
+closeout_7:
+  command: build-graph update ./graph.db 'apps/storytime/app/[locale]/frame.tsx'
+  exit: 0
+  printed: Updated 1 files (9 → 9 nodes, 10 → 12 edges)
+  inspect: function:Frame (./apps/storytime/app/[locale]/frame.tsx:55–77)
+  worktrees: git worktree list prints 8 lines, the same count as at the capture (A16)
+  commit: cc48d29ee
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome (remediation round 4, closeout 7)
+commits: a564b0b5b (code), 65b8325b0 (green r4 evidence), cc48d29ee (closeout 7 plan line)
+tests_run: no test command in closeout 7; the graph update and the worktree count ran
+files_changed: measure/tracks/storytime_look_20261107/plan.md
+plan_updates: closeout 7 sentence appended to 2b.2
+known_failures: none
+handoff: The Phase 2b Green graph update is recorded in cc48d29ee. build-graph is current for frame.tsx, and the worktree count matches the capture.
+END_MEASURE_AGENT_RESULT
