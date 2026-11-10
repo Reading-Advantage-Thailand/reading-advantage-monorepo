@@ -1,0 +1,166 @@
+# Green log — task 4.3, teacher lesson flow
+
+- Track: storytime_app_rebuild_20261025
+- Phase: 4 (Teacher app), task 4.3
+- Role: measure-jr-green
+- Phase base: bfaae8905993076ca1e8a49939c400eb038fe3ae
+- Role base: a4f4a1a358c28010af5e80b94901df969a1c8d6d
+- Red log: measure/runs/storytime_app_rebuild_20261025/red-p4-t43-f63f2171.log
+- Red test commit: 2947b9e1e
+- Implementation commit: 3c82ab25f5300dd8e58c13893dbfdb571c7d4040
+- Plan evidence commit: the commit that holds this log (the SHA is not knowable before the commit)
+
+## Scope of the role
+
+- The role owns the code and the tests of task 4.3. It changed two files of `apps/storytime`.
+- The committed Red test `apps/storytime/__tests__/phase4-lesson-flow.test.tsx` did not change.
+- No file of `apps/storytime/app/look.css`, of the look track, or of
+  `measure/runs/storytime_look_20261107` changed.
+- No coder was delegated. The flow is one module, and the depth of the role keeps the work in one
+  session.
+
+## Red check
+
+The Red test file was committed in `2947b9e1e`, which sits inside the phase range
+`bfaae8905993076ca1e8a49939c400eb038fe3ae..HEAD`. The Red log names six tests that fail on the
+missing module.
+
+## Field check of the shipped week
+
+A read of `apps/storytime/content/l2/w01.json` before the edit confirmed the fields of the flow:
+
+- `opening.pa` holds 5 prompts, each with an English text and a Thai text.
+- `scripts` holds 5 lessons. Day 1 holds 8 steps, day 2 holds 7, day 3 holds 7, day 4 holds 6, and
+  day 5 holds 5. Every step holds an id, a title, minutes, an English note, a Thai note, and the
+  three variant lines.
+- `review[]` holds one strip per day. Day 1, day 4, and day 5 hold no card.
+- `check.items` holds 4 items. Three items name their pictures, and one item names a letter.
+
+The first step title of each day holds no word of the opening routine, of the review strip, or of
+the day title. The step content of no day holds the id of another step of that day. The flow shows
+one step on each screen without holding a second step id.
+
+## The implementation
+
+- `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` exports
+  `TeacherLessonFlow` with the props `{ week, day, locale }`. The view is a client view with the
+  screen state and the Thai state.
+- Screen 1 holds the opening routine, the review strip of the day, and the first step. Each later
+  screen holds one step. The control "Next step" moves forward, and the last screen holds no such
+  control.
+- A step screen shows the step id, the step title, `<minutes> min`, the four headings, and the
+  three variant lines. The four headings and the three variant labels stay in English, because they
+  hold no `{ en, th }` field.
+- The last screen of day 5 holds the Friday check. The check shows on day 5 only.
+- The control "ไทย" switches every `{ en, th }` field to its Thai text. A field with no Thai text
+  keeps its English text.
+- Every value comes from the week file. The view holds no string that names a week item. The view
+  uses no next-intl hook.
+- The new controls use the brand classes of the teacher week view: amber `#fcd34d` with brown
+  `#92400e` text for the Thai toggle, and brown `#92400e` with white text for the forward control
+  and the way back to the week. No blue class.
+- `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx` keeps the order of the
+  checks: the session, the teacher switch, the 403 view, the route parse, the week load, and the
+  day check. The route renders the flow after the checks.
+
+## The commit that moved the HEAD
+
+The commit `cc48d29ee` of the look track moved the HEAD while the role worked. It changed one line
+of `measure/tracks/storytime_look_20261107/plan.md`. It changed no file of `apps/storytime` and no
+file of this track. The Green command ran again after that commit and kept exit 0.
+
+## Gates
+
+### Gate 1, the Green command
+
+MemAvailable was 4052716 kB, so the command ran directly.
+
+```
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx
+```
+
+Exit 0. 3 files passed. 21 tests passed. 0 tests failed. No skip.
+
+### Gate 2, the type check
+
+```
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'
+```
+
+Exit 0.
+
+### Gate 3, the lint of the changed files
+
+```
+cd apps/storytime && ../../node_modules/.bin/eslint "app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx" "app/[locale]/teacher/[level]/[week]/[day]/page.tsx"
+```
+
+Exit 0. 0 errors. 0 warnings.
+
+### Gate 4, the login and teacher regression
+
+```
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-*.test.ts __tests__/login-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx'
+```
+
+Exit 1. 20 files. 1 file failed. 1 test failed and 108 tests passed (109 tests).
+
+The failed test is `login-media-sign.test.ts`, the case "signs every file of the week for the private
+bucket with a six-hour expiry". It pins the media count of the shipped week at 42 and finds 70:
+
+```
+AssertionError: signed_map_size_expected: expected 70 to be 42 // Object.is equality
+```
+
+The failure comes from the week content and not from this change. The evidence: with the two
+changed files stashed, the same test fails with the same numbers.
+
+```
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-media-sign.test.ts
+```
+
+Exit 1. 1 file failed. 1 test failed and 3 tests passed (4 tests). The same assertion holds:
+`expected 70 to be 42`.
+
+The other 19 files of the regression set pass, and every file of the Phase 4 set passes.
+
+## Scope check
+
+- The committed Red test did not change.
+- No week content, contract, readiness, receiver, message, deploy, or Docker file changed.
+- No file of the look track and no file under `measure/runs/storytime_look_20261107` changed.
+- No build, no server, and no port ran.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: storytime_app_rebuild_20261025
+phase: 4
+task: 4.3
+status: green
+baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: a4f4a1a358c28010af5e80b94901df969a1c8d6d
+head: 3c82ab25f5300dd8e58c13893dbfdb571c7d4040
+green_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx
+green_exit_code: 0
+tests_passed: 21
+tests_failed: 0
+files_passed: 3
+tsc_exit_code: 0
+eslint_exit_code: 0
+eslint_errors: 0
+eslint_warnings: 0
+regression_command: HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-*.test.ts __tests__/login-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx'
+regression_exit_code: 1
+regression_tests_passed: 108
+regression_tests_failed: 1
+regression_files_passed: 19
+regression_files_failed: 1
+pre_existing_failure: __tests__/login-media-sign.test.ts pins the media count of the shipped week at 42 and finds 70; the same failure holds with the two changed files stashed
+tasks_done: 4.3
+tasks_blocked: none
+new_files: apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx
+changed_files: apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx
+implementation_commit: 3c82ab25f5300dd8e58c13893dbfdb571c7d4040
+plan_commit: the commit that holds this log (SHA not knowable before the commit)
+report: measure/runs/storytime_app_rebuild_20261025/green-p4-t43-a4f4a1a35.log
+END_MEASURE_AGENT_RESULT

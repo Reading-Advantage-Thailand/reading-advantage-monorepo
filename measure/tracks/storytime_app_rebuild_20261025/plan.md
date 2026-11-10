@@ -1968,7 +1968,7 @@ for every other track.
 - The canonical-number rule of the at-home route stays in the at-home route. `lib/teacher.ts` holds its own copy, because the brief keeps the at-home routes unchanged. A later phase may join the two.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-4126421.log`.
 
-- [~] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
+- [x] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
 
 ### Phase 4 task 4.3 Red evidence
 
@@ -2026,6 +2026,55 @@ for every other track.
   not read `recall`, `soundLoop`, `blendDrill`, `sightWords`, or `loopMinutes`, so they pass
   unchanged on a week with no loop field.
 - Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t43-f63f2171.log`.
+
+### Phase 4 task 4.3 Green evidence
+
+- Green started at the role base `a4f4a1a358c28010af5e80b94901df969a1c8d6d`. The immutable phase base is
+  `bfaae8905993076ca1e8a49939c400eb038fe3ae`. The Red commit `2947b9e1e` sits inside the phase range.
+- Red model: `deepseek/deepseek-flash#high` (DeepSeek). Green model:
+  `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax). The two families differ. No coder was
+  delegated: the flow is one module, and the depth of the role keeps the work in one session.
+- The commit `cc48d29ee` of the look track moved the HEAD while the role worked. It changed one line
+  of `measure/tracks/storytime_look_20261107/plan.md`. It changed no file of `apps/storytime` and no
+  file of this track.
+- Implementation commit: `3c82ab25f` (`feat(storytime): add the teacher lesson flow`). Files:
+  `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` and
+  `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx`.
+- The module exports `TeacherLessonFlow` with the props `{ week, day, locale }`. The view holds the
+  screen state and the Thai state, so it is a client view.
+- Screen 1 holds the opening routine, the review strip of the day, and the first step. Each later
+  screen holds one step. The control "Next step" moves to the next screen, and the last screen
+  holds no such control.
+- A step screen shows the step id, the step title, `<minutes> min`, the four headings, and the
+  three variant lines. The headings and the variant labels stay in English, because they hold no
+  `{ en, th }` field.
+- The last screen of day 5 holds the Friday check. The check shows on day 5 only.
+- The control "ไทย" switches every `{ en, th }` field to its Thai text. A field with no Thai text
+  keeps its English text.
+- Every value comes from the week file. The view holds no string that names a week item. The view
+  uses no next-intl hook, the same as the teacher week view of task 4.2.
+- The day route keeps the order of the checks: the session, the teacher switch, the 403 view, the
+  route parse, the week load, and the day check. The route renders the flow after the checks.
+- The new controls use the brand classes of the teacher week view: amber `#fcd34d` with brown
+  `#92400e` text for the Thai toggle, and brown `#92400e` with white text for the forward control
+  and the way back to the week. No blue class.
+- Gates:
+  - Green command: `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+    __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx
+    __tests__/phase4-lesson-flow.test.tsx`. Exit 0; 3 files; 21 tests; no skip. MemAvailable was
+    4052716 kB, so the command ran directly.
+  - `tsc --noEmit` in `apps/storytime` through the heavy lock: exit 0.
+  - ESLint on the two changed files: exit 0; 0 errors; 0 warnings.
+  - Login and teacher regression through the heavy lock: `cd apps/storytime && CI=true
+    ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-*.test.ts
+    __tests__/login-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx`. Exit 1; 20
+    files; 1 failed test and 108 passed tests. The failure is `login-media-sign.test.ts`, which
+    pins the media count of the shipped week at 42 and finds 70. The failure comes from the week
+    content and not from the change: with the two changed files stashed, the same test fails with
+    the same numbers.
+- No committed Red test changed. No week content, contract, look file, or file of
+  `measure/runs/storytime_look_20261107` changed.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t43-a4f4a1a35.log`.
 
 - [ ] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes.
 - [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
