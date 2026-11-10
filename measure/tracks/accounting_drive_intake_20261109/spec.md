@@ -2,12 +2,14 @@
 
 **Track ID:** `accounting_drive_intake_20261109`
 **Type:** feature (classic FR list).
-**Status:** new. Opened 2026-11-09. Amended 2026-11-09 after spec review round 1.
+**Status:** new. Opened 2026-11-09. Amended 2026-11-09 after spec review round 1. Amended 2026-11-11 after the PM structure report (PM hand-off A-52, plan task 5.3): section 8 is filled, and the PM decisions of 2026-11-11 are in section 14.4.
 **Author model:** nvidia/stepfun-ai/step-5-preview
+**Amendment model (2026-11-11):** claude-code/claude-sonnet-5-5#high (Anthropic)
+**Structure report:** 2026-11-11, outside git, with 11 fake fixtures (section 8).
 **Plan:** [plan.md](./plan.md)
 **Depends on:** nothing.
 **Blocks:** the monthly close and the monthly accountant handoff of `apps/accounting`, and the structure report of 2026-11-11.
-**PM request:** A-52. Daniel's answers of 2026-11-09.
+**PM request:** A-52. Daniel's answers of 2026-11-09. PM decisions of 2026-11-11 (section 14.4).
 **Start gate:** The build code starts after 2026-11-20. An earlier start uses only a slot that Storytime does not need. The PM first load of 2026-11-10 and the PM structure report of 2026-11-11 are PM tasks. They are not build work, and they do not wait for the gate.
 
 ## 1. Purpose
@@ -21,8 +23,7 @@ sales invoices.
 This track brings those documents into the app. Each file becomes one pending
 submission with the file as private evidence. A scheduled poll finds new files.
 Gemini on Vertex AI reads the PDFs that are not text, the JPEGs, and the PNGs.
-Text PDFs are read on this machine, and a Google Sheets voucher is exported as
-CSV. The OWNER and the ACCOUNTANT approve or reject submissions, a wider set than
+Text PDFs and the .xlsx voucher workbooks are read on this machine. The OWNER and the ACCOUNTANT approve or reject submissions, a wider set than
 today, because the office assistant does the review. The CSV export does not
 change.
 
@@ -117,11 +118,14 @@ Source commit: `b210c98a45912825f46c4c177b0f93da38e721a5`
 The folder holds:
 
 - the folders `2024` and `2025`, and the 2026 files at the top level.
-- monthly payment voucher Google Sheets.
+- monthly payment voucher files. The PM facts of 2026-11-09 said Google Sheets.
+  The structure report of 2026-11-11 corrects this: they are Excel `.xlsx`
+  workbooks.
 - Google Cloud and Workspace invoice PDFs (text PDFs).
 - other vendor invoices.
-- payslips, since 2026-09.
-- one bank statement.
+- payslips, since 2026-09. The report shows that they are PDF prints of voucher
+  worksheets.
+- one bank statement. It is a password-protected PDF.
 - the accountant's year-end working papers.
 - school sales invoices.
 
@@ -131,6 +135,32 @@ PM runs its own script on this machine on 2026-11-10 at 15:22 and sends a
 structure report by 2026-11-11 (PM-7). The report holds the document types, the
 fields, and the sample shapes. The report holds no real amount. The PM script
 writes no row in the accounting database (D-7 superseded).
+
+**Facts of the structure report (PM, 2026-11-11).** The PM did the first load
+and sent the report with 11 fake fixtures (plan tasks 5.1 and 5.2).
+
+- The first load found 41 files: 38 at the top level of `Accounting`, and 3 in
+  the customer folder `Boonyathat`. The top level also holds the sub-folders
+  `2024`, `2025`, and `Boonyathat`. The 2026 files are in no month folder.
+- The file name does not always give the document month. The month is in the
+  document (section 9a).
+- The files make 10 document types. No file is a receipt photo (JPEG or PNG).
+
+| Type of the report | Files |
+|---|---|
+| payment voucher, `.xlsx` workbook | 10 (one for each month, January to October) |
+| payment voucher, PDF (payslip print) | 4 (September 2, October 2) |
+| Google Cloud and Workspace tax invoice, PDF | 8 |
+| Google Cloud and Workspace payment receipt, PDF | 11 |
+| Google Cloud statement, PDF | 2 |
+| PND.3 withholding filing sheet, PDF | 1 |
+| bank statement, PDF with a password | 1 |
+| foreign vendor invoice, `.xlsx` workbook | 1 |
+| school invoice, Google Sheet | 1 (in `Boonyathat`) |
+| school invoice, PDF | 2 (in `Boonyathat`) |
+
+Section 8 holds the fields of each type. Counts are by file, as the report
+gives them.
 
 ## 3. Roles and permissions
 
@@ -209,6 +239,10 @@ The Drive folder is the intake source. It holds the history (2024, 2025, and the
 layout, the naming rule, the size limit, and the failure rule. The PM facts about
 the folder are in section 2.6.
 
+The customer folder `Boonyathat` is a second intake source (PM-14). It is a
+sub-folder of `Accounting`. Its files are school invoices, which are revenue. The
+app reads it and never writes into it. The app never writes anything into Drive.
+
 ### 4.2 The monthly invoice pull (`deferred:pm`)
 
 The PM builds a job in `advantage-pr`. The job pulls the Google Cloud,
@@ -277,14 +311,17 @@ the owner.
 1. A scheduled poll lists the Drive intake folder. The poll is not in a request
    path.
 2. The poll filters the files. A file passes only when its name matches
-   `YYYY-MM_<document-type>_<counterparty>.<ext>`, its type is one of the eight,
-   and its size is inside the limit (section 5.7).
+   `YYYY-MM_<document-type>_<counterparty>.<ext>`, its type is one of the accepted
+   types of section 6, and its size is inside the limit (section 5.7). A file in a
+   customer folder passes without the naming rule (section 9).
 3. Each new file becomes one pending submission. The Drive file id is the
-   idempotency key.
+   idempotency key. A voucher workbook gives one submission for each voucher
+   worksheet (section 8, note 2).
 4. The poll stores the bytes through the app evidence port. The domain receives
    only the reference.
-5. A text PDF and a Google Sheets voucher are read on this machine. A PDF that
-   is not text, a JPEG, and a PNG are read by Gemini on Vertex AI.
+5. A text PDF and an `.xlsx` workbook are read on this machine. The adapter
+   exports a native Google Sheet as `.xlsx` first (section 6). A PDF that is not
+   text, a JPEG, and a PNG are read by Gemini on Vertex AI.
 6. A repeat poll finds the same Drive file id. The byte comparison of the app
    decides whether the bytes match. Equal bytes give a replay, and the app shows
    the item as a duplicate. A duplicate is not added again.
@@ -318,14 +355,26 @@ passes a `compareEvidence` callback into the domain, exactly as the submissions
 route does at `apps/accounting/app/api/submissions/route.ts:298-309`. The intake
 adds no new comparison helper.
 
+**The PM decision of 2026-11-11 (PM-11).** The PM wrote "dedupe by content hash".
+This section defines no hash. It defines the Drive file id and the byte compare of
+`sameEvidenceBytes` (section 5.5). That byte compare is the content check, and
+it catches a copy of one document under a new Drive file name or id (for example
+a byte-identical Google invoice that carries a new date in its file name). The
+decision adds no hash field, no checksum column, and no manifest. The month of a
+document comes from the document, not from the file name (section 9a).
+
 ### 5.2 The data-out gate
 
 Gemini on Vertex AI (project `reading-advantage`) reads the documents that need
 a model. Daniel approved this data-out gate on 2026-11-09. The gate covers a
 scan and a photo: a PDF that is not text, a JPEG, and a PNG. A text PDF is read
-on this machine. A Google Sheets voucher is exported as CSV and read on this
-machine. No finance document goes to the Aliyun plan, to OpenRouter, or to any
+on this machine. An `.xlsx` workbook is read on this machine too. No finance document goes to the Aliyun plan, to OpenRouter, or to any
 other model route. A test that needs a model uses a fake.
+
+The `.xlsx` voucher workbooks, the `.xlsx` foreign vendor invoice, and the school
+invoice sheet are read on this machine and never go to Vertex. A bank statement
+is decrypted in memory on this machine (PM-13). The decrypted bytes go to Vertex
+only when the decrypted PDF has no text layer, and the gate covers that case.
 
 **The Vertex credential form (PM decision PM-3, 2026-11-09).** The AI adapter
 uses Application Default Credentials. `createAIClient`
@@ -339,7 +388,7 @@ Vertex AI user on the runtime service account is `deferred:pm`.
 
 Every value that the model produces carries a marker. The marker is a field on
 the intake record: `extraction`. A value from the model carries `model`. A value
-read from a text PDF or a Google Sheets voucher carries `local-text`. A value a
+read from a text PDF or an `.xlsx` workbook carries `local-text`. A value a
 person types carries `human`. The app shows the marker next to the value. A
 reviewer sees which numbers came from the model.
 
@@ -443,13 +492,14 @@ the new row.
 ### 5.7 The file-name filter and the `parsed` status
 
 **The file-name filter.** The top level of `Accounting` holds more than the
-eight intake types: the accountant's year-end working papers, the school sales
-invoices, and other files. A file whose name does not match
+intake types: the accountant's year-end working papers and other files. A file
+in a customer folder is not filtered by name (section 9). A file whose name does not match
 `YYYY-MM_<document-type>_<counterparty>.<ext>` is skipped. The poll writes no
 intake row for it and no submission row. The poll logs one safe count line per
 run: the number of skipped files. The count line holds no file name, no payee,
-no amount, and no Drive id. A file passes the filter only when the name matches
-the rule and the type is one of the eight.
+no amount, and no Drive id. A file outside a customer folder passes the filter
+only when the name matches the rule and the type is one of the accepted types of
+section 6.
 
 **The `parsed` status.** A row moves from `pending` to `parsed` when the read
 succeeds and the draft passes its schema. The read is a local text read, a local
@@ -458,9 +508,10 @@ CSV read, or a model read. The rule covers all three paths:
 | Read path | Status after a successful read |
 |---|---|
 | a text PDF, read local | `parsed` |
-| a Google Sheets voucher, exported as CSV and read local | `parsed` |
+| an `.xlsx` workbook (or a native Google Sheet exported as `.xlsx`), read local | `parsed` |
 | a non-text PDF, a JPEG, or a PNG, read by the model | `parsed` |
 | any read that fails | `failed`, with `failure_reason` and `failure_count` |
+| a read that needs a person's check (PM-9; open item Q20) | `failed`, with a `failure_reason` that starts with `review:` |
 | any read that yields a content duplicate | `duplicate`, with `duplicate_of_submission_id` |
 
 A `parsed` row keeps its `submission_id` and its `extraction` marker. A row
@@ -495,26 +546,42 @@ tests (F47).
 
 ## 6. Accepted types
 
+The structure report of 2026-11-11 (section 8) replaced the first list of eight
+types. Section 8 holds the parser, the contract, and the fields of each row.
+
 | Document type | Formats | Read path |
 |---|---|---|
-| receipt | PDF, JPEG, PNG | text PDF local; non-text PDF, JPEG, and PNG to Vertex |
-| tax invoice | PDF | text PDF local; non-text PDF to Vertex |
-| bank statement | PDF | text PDF local; non-text PDF to Vertex |
-| payroll sheet | PDF, JPEG, PNG | text PDF local; non-text PDF, JPEG, and PNG to Vertex |
-| withholding tax certificate | PDF | text PDF local; non-text PDF to Vertex |
-| Google Sheets payment voucher | Google Sheet | exported as CSV, read local |
-| Google Cloud and Workspace invoice | PDF | text PDF local; non-text PDF to Vertex |
-| OpenAI invoice | PDF | text PDF local; non-text PDF to Vertex |
+| payment voucher | `.xlsx` workbook (3 or 4 voucher worksheets and a guide worksheet); text PDF (payslip print) | workbook and text PDF local; non-text PDF to Vertex |
+| Google Cloud and Workspace tax invoice | PDF | text PDF local; non-text PDF to Vertex |
+| Google Cloud and Workspace payment receipt | PDF | text PDF local; non-text PDF to Vertex |
+| Google Cloud statement | PDF | text PDF local; non-text PDF to Vertex |
+| PND.3 withholding filing sheet | PDF | text PDF local; non-text PDF to Vertex |
+| bank statement | PDF with a password | decrypted in memory (PM-13); text PDF local; non-text PDF to Vertex |
+| foreign vendor invoice | `.xlsx` workbook | local |
+| school invoice (revenue, PM-14) | Google Sheet; text PDF | sheet exported as `.xlsx` and read local; text PDF local; non-text PDF to Vertex |
+| receipt (no real sample) | PDF, JPEG, PNG | text PDF local; non-text PDF, JPEG, and PNG to Vertex |
+| OpenAI invoice (no real sample) | PDF | text PDF local; non-text PDF to Vertex |
+| withholding tax certificate (no real sample) | PDF | text PDF local; non-text PDF to Vertex |
+
+The old types "tax invoice" and "payroll sheet" have no row. Section 8, note 1,
+gives the reason.
 
 Human uploads keep the rule of today: PDF and image
-(`apps/accounting/app/api/submissions/route.ts:194-201`). A Google Sheet is an
-intake-only type. A human cannot upload a Sheet through the form.
+(`apps/accounting/app/api/submissions/route.ts:194-201`). A workbook and a Google
+Sheet are intake-only types. A human cannot upload them through the form.
 
-**How a Sheet is read.** The adapter exports the spreadsheet with the Drive
-`files.export` endpoint and `mimeType=text/csv`. The export returns the first
-worksheet. The CSV rows go to the placeholder parser for the payment voucher.
-Default: one voucher per file, so the first worksheet holds the data (open item
-Q5).
+**How a workbook is read (PM-8).** The voucher files are Excel `.xlsx` files, not
+native Google Sheets. The Drive `files.export` endpoint with `text/csv` does not
+work on a binary `.xlsx`, and it returns the first worksheet only. The adapter
+therefore downloads the file bytes with the Drive `files.get` endpoint and
+`alt=media`. The workbook reader reads every voucher worksheet and skips the guide
+worksheet. It reads stored cell values only. It calculates no formula (PM-9).
+
+**How a native Google Sheet is read.** Only the school invoice file is a native
+Google Sheet, and it has 4 tabs. The adapter exports it with `files.export` and
+the `.xlsx` MIME type, and the same workbook reader then reads it. No CSV export
+is used, because the CSV export returns one tab only. This is the default of open
+item Q21.
 
 ## 7. The monthly close
 
@@ -556,24 +623,136 @@ ACCOUNTANT read any close. A CEO listing returns locked closes only, so the CEO
 never reads an open or a signed close. The permission function takes the close
 status, not the actor alone: `canReadMonthlyClose(actor, close)`.
 
-## 8. Document parsing (stub until the structure report)
+**The close notes (PM-10, PM-15).** The open also builds a list of notes for the
+office assistant, and the list is part of the stored report. The list names four
+kinds of item for the period month:
 
-This section is a stub. The structure report of 2026-11-11 fills it in. Each
-document type gets one named placeholder and no field list until then.
+- a gap in the voucher number series (a number that is absent from the series);
+- a month with no tax invoice (the rule is open item Q25);
+- a school invoice that exists in two versions;
+- a school invoice whose total in digits differs from its total in words.
 
-| Document type | Placeholder parser | Placeholder contract |
-|---|---|---|
-| receipt | `parseReceipt` | `receiptDraftSchema` |
-| tax invoice | `parseTaxInvoice` | `taxInvoiceDraftSchema` |
-| bank statement | `parseBankStatement` | `bankStatementDraftSchema` |
-| payroll sheet | `parsePayrollSheet` | `payrollSheetDraftSchema` |
-| withholding tax certificate | `parseWithholdingCertificate` | `withholdingCertificateDraftSchema` |
-| Google Sheets payment voucher | `parsePaymentVoucherSheet` | `paymentVoucherDraftSchema` |
-| Google Cloud and Workspace invoice | `parseCloudInvoice` | `cloudInvoiceDraftSchema` |
-| OpenAI invoice | `parseOpenAiInvoice` | `openAiInvoiceDraftSchema` |
+The close lists each item and changes no value. It has no auto-fix. A person
+decides what to do about each item.
 
-Every draft carries the extraction marker of section 5.3. Plan task 6.2 fills
-this section after the report arrives.
+## 8. Document parsing
+
+The PM structure report of 2026-11-11 (PM hand-off A-52, plan task 5.3) fills this
+section. The report and its 11 fake fixtures are outside git, in
+`~/Desktop/handoff/accounting-structure-report-2026-11-11/`. This section copies
+only what the report holds. It holds no real amount, no real name of a person, no
+tax id, no account number, and no e-mail address.
+
+The table has one row for each document type of the report, and one row for each
+of the three types with no real sample (PM-12). The parser and contract names of
+the first spec stay where a type maps to one. A new type gets a new name in the
+same style. Every draft carries the extraction marker of section 5.3. Plan tasks
+6.1 and 6.2 use this table.
+
+| Document type (report name) | Parser | Contract | Source format | Read path (PM-4, D-13) | Fields (from the report) |
+|---|---|---|---|---|---|
+| payment voucher, workbook (`payment_voucher_xlsx`) | `parsePaymentVoucherSheet` | `paymentVoucherDraftSchema` | `.xlsx` workbook, 3 or 4 voucher worksheets and 1 guide worksheet | local; never Vertex | company name, form title, voucherNo, date, payee, paymentRef, netAmount, lines (docDate, docNo, description, amount), note, subtotal, deductionLabel, deductionRate, deductionAmount, netTotal (cells in note 3) |
+| payment voucher, payslip print (`payment_voucher_pdf`) | `parsePaymentVoucherPdf` | `paymentVoucherDraftSchema` | text PDF, 1 page for each payee | local; Vertex if no text layer | the same fields as the workbook. The PDF has no formula, so it shows the final numbers |
+| Google Cloud and Workspace tax invoice (`cloud_tax_invoice`) | `parseCloudInvoice` | `cloudInvoiceDraftSchema` | text PDF, 2 pages (summary, line detail) | local; Vertex if no text layer (D-13) | invoiceNumber, gstRegNo, billTo, service, invoiceDate, billingId, periodStart, periodEnd, currency, subtotal, gstRate, gst, total. Workspace adds domain and a line (subscription, interval, quantity, amount). Cloud adds accountId and a line (description, amount) |
+| Google Cloud and Workspace payment receipt (`cloud_payment_receipt`) | `parseCloudPaymentReceipt` | `cloudPaymentReceiptDraftSchema` | text PDF, 1 page (browser print, short text layer) | local; Vertex if no text layer | documentTitle, paymentDate, amount, paymentNumber, paymentId (Cloud only), paidBy, paidTo, service, taxIdentificationNo, billingId, paymentMethod |
+| Google Cloud statement (`cloud_statement`) | `parseCloudStatement` | `cloudStatementDraftSchema` | text PDF, 2 pages | local; Vertex if no text layer | documentTitle, to, service, cloudAccountId, paymentsAccountId, paymentsProfileId, statementIssueDate, periodStart, periodEnd, startingBalance, totalNewActivity, totalPaymentsReceived, endingBalance, and the table PAYMENTS RECEIVED (date, description, amount) |
+| PND.3 withholding filing sheet (`wht_filing_pnd3`) | `parseWhtFilingPnd3` | `whtFilingPnd3DraftSchema` | text PDF, 1 page (JasperReports) | local; Vertex if no text layer | header: referenceNumber, withholderTaxId, withholderBranch, sheetNo, sheetsTotal. Row (up to 6 for each sheet): seq, payeeTaxId, payeeName, payeeAddress, paymentDate, incomeType, taxRatePercent, amountPaid, taxWithheld, condition. Totals: total amount paid, total tax withheld |
+| bank statement (`bank_statement_encrypted`) | `parseBankStatement` | `bankStatementDraftSchema` | PDF with a password | decrypted in memory (PM-13), then local; Vertex if no text layer | none known. The report could not open the file. The fixture expects the result `needs_password` and no field |
+| foreign vendor invoice (`foreign_vendor_invoice_xlsx`) | `parseForeignVendorInvoice` | `foreignVendorInvoiceDraftSchema` | `.xlsx` workbook, 1 worksheet, merged text blocks | local; never Vertex | invoiceDate (inside a text), vendor block, billTo block, description, quantity (text), unitPrice (text with `RMB` prefix), amount (text with `RMB` prefix), currency (RMB). The sheet has no invoice number (G17) |
+| school invoice, sheet (`school_invoice_sheet`) | `parseSchoolInvoiceSheet` | `schoolInvoiceDraftSchema` | Google Sheet, 4 tabs (`Receipt Term 1`, `ใบแจ้งหนี้`, `Term 1`, `Term 2`) | exported as `.xlsx`, then local; never Vertex (Q21) | documentTitle, invoiceNo or receiptNo, date, quotationRef, due, issuer block (company names, tax id, branch, contact), customerName, customerAddress, customerTaxId, students, lines (seq, description, unitPrice, quantity, total), subtotal, discounts (label, amount; one or two), netTotal (digits), netTotalInWords (Thai and English), payment block (bank, branch, accountName, accountNo), delivery block, vatNote, terms |
+| school invoice, PDF (`school_invoice_pdf`) | `parseSchoolInvoicePdf` | `schoolInvoiceDraftSchema` | text PDF, 1 page | local; Vertex if no text layer | the same fields as the sheet |
+| receipt (no real sample) | `parseReceipt` | `receiptDraftSchema` | PDF, JPEG, PNG | local text PDF; Vertex for a non-text PDF, a JPEG, and a PNG | no field list in the report (open item Q24) |
+| OpenAI invoice (no real sample) | `parseOpenAiInvoice` | `openAiInvoiceDraftSchema` | text PDF | local; Vertex if no text layer (D-13) | no field list in the report (open item Q24) |
+| withholding tax certificate (no real sample) | `parseWithholdingCertificate` | `withholdingCertificateDraftSchema` | text PDF | local; Vertex if no text layer | no field list in the report (open item Q24) |
+
+The last three rows are synthetic: their fixtures are fake and each is marked "no
+real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows.
+
+**Notes.**
+
+1. **The two retired placeholders.** The first spec held a placeholder for a
+   payroll sheet (`parsePayrollSheet`, `payrollSheetDraftSchema`) and one for a
+   tax invoice (`parseTaxInvoice`, `taxInvoiceDraftSchema`). The payroll sheet has
+   no real sample. The `payslip-*` PDFs are prints of the voucher worksheets (G9),
+   so the two payment voucher parsers serve them. The only tax invoices in the
+   report are the Google ones, so `parseCloudInvoice` serves them. A Thai tax
+   invoice has no real sample (G11). Open item Q15 holds the default.
+2. **One workbook, many vouchers (PM-8).** A voucher workbook has 3 or 4 voucher
+   worksheets and 1 guide worksheet. The guide worksheet holds the Thai SOP text
+   and a total table. It holds no voucher. A worksheet is a voucher worksheet when
+   cell A2 holds the form title `ใบสำคัญจ่าย/PAYMENT  VOUCHER`. The reader skips
+   every other worksheet. The reader never uses a worksheet name as a key,
+   because the names are short nicknames of the payees. The intake writes one
+   intake row and one submission for each voucher worksheet. The key
+   `<Drive file id>#<position of the worksheet>` is the idempotency key and the
+   `drive_file_id` value of the row. Each submission keeps the whole workbook as
+   its evidence. The content-duplicate lookup runs once for the file, before the
+   split, so the vouchers of one workbook are never duplicates of each other (open
+   items Q19 and Q20).
+3. **The voucher cell map.** All voucher worksheets use the same fixed cells:
+   company name A1; form title A2; voucherNo I3; date I4 (text, `d/m/yyyy`,
+   Buddhist Era, not a date serial); payee B5; paymentRef I6 (a PromptPay
+   reference in the cheque number cell, form `PP: ` and 10 digits); netAmount E7;
+   line docDate A10; line docNo B10; line description D10 to D25; line amount I10
+   to I25; note A26 and B26; subtotal I26; deductionLabel G27 (withholding tax or
+   social security); deductionRate H27 (0.03 or 0.05); deductionAmount I27;
+   netTotal I28. The payment-method boxes are a drawing, so the reader cannot read
+   which box is marked. The 4 signature labels hold no value. One variant has
+   several hourly-task lines and no salary line. A payee can have one allowance
+   line. The voucher number has two accepted forms (PM-10): `PV69/M-NNN`, where M
+   is the month number (January to August), and `PV69MM-NNN`, where MM is the
+   month in two digits (October). A gap in the number series is allowed (number
+   002 never appears), and the monthly close lists it (section 7).
+4. **The review list (PM-9).** The review list is the set of intake rows with
+   status `failed` and a `failure_reason` that starts with `review:`. A file goes
+   on the review list, and it writes no submission, in these cases: a required
+   cell of a workbook has no stored formula result (the Openpyxl workbook of
+   September is an example); the date or the number of a voucher shows another
+   month than the file-name month (the August workbook with the July number and
+   date is an example); a date cannot be read; the bank statement needs a password
+   that the app does not hold; a PDF that Google Sheets made has a broken Thai
+   text layer (G15). The reader calculates no formula, and it does not read a PDF
+   copy instead. A silent row is never written.
+5. **Dates and amounts.** One reader serves each date form. The forms are: the
+   voucher date (`d/m/yyyy`, text, Buddhist Era); the PND.3 date (`dd/mm/yyyy`,
+   Buddhist Era); the Google and cloud date (`Mon d, yyyy`, English); the
+   statement payment row (`Mon d`, no year, so the year comes from the statement
+   period); the school date (Thai short month and Buddhist Era year); and the
+   foreign vendor date (`yyyy.mm.dd` inside a text). A Buddhist Era year converts
+   to a Gregorian year by subtracting 543 (open item Q14). The amount forms are:
+   a number cell with the format `#,##0.00`; text such as `THB 1,000.00`; baht and
+   satang in two text cells (PND.3); text with the prefix `฿`, where a discount has
+   a minus sign before it; and text with the prefix `RMB`. Money stays digit text
+   in exact minor units (section 2.1), and each draft holds a currency field.
+6. **The type keys.** The `document_type` column holds a key. The eight keys of
+   `packages/backend/src/modules/accounting/intake-contracts.ts` stay. The keys
+   `payroll-sheet` and `tax-invoice` stay in the contract and in the database
+   check, and they have no parser. The workbook and the PDF of a payment voucher
+   both use `payment-voucher-sheet`. Five new keys are needed:
+   `cloud-payment-receipt`, `cloud-statement`, `wht-filing-pnd3`,
+   `foreign-vendor-invoice`, and `school-invoice`. A migration adds them (open
+   item Q23).
+7. **The three types with no real sample (PM-12).** The report has no OpenAI
+   invoice (G10), no receipt from a Thai vendor, and no per-payee withholding
+   certificate (G11). The monthly PND.3 sheet is a different type, and it has its
+   own row. The fixtures of the three types are synthetic and marked "no real
+   sample".
+8. **The bank statement (PM-13).** The password goes into Secret Manager. Daniel
+   enters it once at setup (`deferred:daniel`). The app decrypts the PDF in memory
+   only. It never stores a decrypted copy, and the stored evidence is the
+   encrypted original. This spec names the secret by its purpose only (the bank
+   statement password) and holds no value. Without the secret the result is
+   `needs_password`, and the file goes on the review list. The field list is
+   unknown until a fake fixture of the decrypted layout exists (open item Q26).
+9. **The fixtures.** The 11 fake fixtures of the report are the source of the test
+   fixtures in plan tasks 6.1 and 6.2. No real file is copied. The files come from
+   five producers (LibreOffice, Chrome, Google Sheets, openpyxl, and
+   JasperReports), and the layout can change from one producer to the next (G19).
+   The tests hold one fixture for each producer that the report names (open item
+   Q18).
+10. **The evidence and the log.** The evidence is the original file as received,
+    and no parser changes it. A log line holds no raw file name, because the bank
+    statement file name holds personal data (G13).
 
 ## 9. SOP facts (for the office assistant)
 
@@ -581,11 +760,16 @@ this section after the report arrives.
   Daniel's existing Drive folder `Accounting` is the intake folder. The 2026
   files sit at the top level of that folder. The folders `2024` and `2025` sit
   there too. From 2027 there is one subfolder per year, as `2024` and `2025` are
-  now.
+  now. The 2026 files are in no month folder (structure report of 2026-11-11).
 - **What the poll reads.** The poll reads the top level of `Accounting`. From
   2027 it also reads the subfolder named for the current year. The poll never
   reads the `2024` and `2025` folders, and it never reads a subfolder of an
-  earlier year. The poll never writes in the folder.
+  earlier year. The poll never writes in Drive (PM-14).
+- **The customer folder (PM-14).** A sub-folder of `Accounting` whose name is not a
+  year is a customer folder. Today it is `Boonyathat`, the folder of the one
+  active school. The poll reads it, and its files are school invoices (revenue).
+  A file in it needs no naming rule, and its month comes from the document. The
+  app reads it and never writes into it (open item Q22).
 - **November 2026.** The November 2026 files go to the top level of
   `Accounting`. The first December poll takes them. No separate November intake
   path is needed.
@@ -595,10 +779,27 @@ this section after the report arrives.
 - **File naming rule.** `YYYY-MM_<document-type>_<counterparty>.<ext>`. Use
   lowercase words and hyphens. Use no spaces. Use at most 120 characters. Put no
   amount in the name. Example: `2026-11_tax-invoice_google-cloud.pdf`.
-- **Accepted types.** PDF, JPEG, PNG, and the Google Sheets payment voucher. The
-  eight document types are receipt, tax invoice, bank statement, payroll sheet,
-  withholding tax certificate, payment voucher (Google Sheet), cloud invoice
-  (Google Cloud and Google Workspace), and OpenAI invoice.
+- **Accepted types.** PDF, JPEG, PNG, the `.xlsx` workbook, and the school invoice
+  Google Sheet. The document types are those of section 6: payment voucher
+  (workbook or payslip PDF), Google Cloud and Workspace tax invoice, payment
+  receipt, and statement, PND.3 withholding filing sheet, bank statement, foreign
+  vendor invoice, school invoice, receipt, OpenAI invoice, and withholding tax
+  certificate.
+- **A voucher file.** One `.xlsx` voucher file holds 3 or 4 vouchers, one on each
+  worksheet, and a guide worksheet. The app reads every voucher worksheet and
+  skips the guide worksheet.
+- **The review list.** Some files need a person. The intake list marks them with
+  the reason `review:`. They are: a workbook with no stored formula result, a
+  voucher whose date or number shows another month than the file name, a bank
+  statement that the app cannot open, and a PDF that Google Sheets made. The app
+  does not guess and writes no submission for them.
+- **The bank statement password.** Daniel enters the password once, at setup, into
+  Secret Manager (`deferred:daniel`). The app opens the PDF in memory and stores
+  no decrypted copy. You do not handle the password.
+- **The monthly close notes.** The monthly close lists these items for you, and it
+  changes no value: a gap in the voucher numbers, a month with no tax invoice, a
+  school invoice that exists in two versions, and a school invoice whose total in
+  digits differs from its total in words.
 - **Size limit.** 20 MB per file. A larger file fails with a visible reason.
 - **When a file fails.** The failed row stays failed with its reason. A re-upload
   creates a new Drive file id, so the new file becomes a new item. The app never
@@ -617,7 +818,8 @@ this section after the report arrives.
   Fix the name and upload the file again.
 - **The 2026 history.** The files from January to October 2026 come into the app
   through the history import. Those files predate the naming rule, so the import
-  reads the month from the folder or the file date and the type from the parser.
+  reads the month from the document and the type from the parser (PM-11). The file
+  name is not the month source.
   A dry-run report runs first. The history rows carry the history marker in the
   intake list, and they start no monthly close, because the external accountant
   closed those months.
@@ -647,8 +849,17 @@ its type this way:
 
 | Field | Source | Fallback |
 |---|---|---|
-| the month | the Drive folder name, when it is `YYYY-MM` | the file's Drive `modifiedTime` |
+| the month | the document: the parser reads it (section 8), for example the voucher date, the invoice date, or the statement issue date | the Drive folder name, when it is `YYYY-MM`; then the file's Drive `modifiedTime` |
 | the document type | the parser that matches the file | none; the file is unmatched |
+
+**The month rule of 2026-11-11 (PM-11).** The structure report shows no month
+folder, and a file name does not always give the month. For example,
+`google-2026-10-01.pdf` is the September invoice again, and `google-2026-06-01.pdf`
+is the May invoice. The month therefore comes from the document. The fallback is
+used only when the parser finds no month in the document. This rule replaces the
+folder-first rule of PM-7 (c) and D-23. For a payment voucher the month in the
+file name is a check: a date or a number with another month goes on the review
+list (PM-9).
 
 A file whose type no parser matches is listed in the dry-run report and is not
 imported. A file whose month cannot be read is listed in the dry-run report and
@@ -660,10 +871,12 @@ duplicate of a history row is found by the same byte-only lookup of section 5.5,
 which covers the history rows (PM condition). No new hash field, no checksum
 column, and no manifest is added. The PM wrote "file hash"; the Drive file id
 plus the byte compare gives the same guarantee, and the AGENTS.md hashing policy
-forbids a new hash field. This is an open note in section 14.3.
+forbids a new hash field. This is an open note in section 14.3. The PM decision of
+2026-11-11 (PM-11) says "content hash" and holds the same reading (section 5.1).
 
 **The history marker.** A history row carries `is_history = true` and a
-`history_source` of `drive-folder` or `drive-modified-date`. A poll row carries
+`history_source` of `document`, `drive-folder`, or `drive-modified-date`. The value
+tells where the month came from (open item Q23). A poll row carries
 `is_history = false` and a null `history_source`. The intake list shows the
 marker, so a reviewer sees which rows came from the history.
 
@@ -678,8 +891,9 @@ no row in the accounting database. The production write runs only after the
 deploy, on Daniel's word (`deferred:daniel`).
 
 **The parser fixtures.** The parser fixtures for the history files come from the
-PM structure report of 2026-11-11. They are fakes only; no real document and no
-real amount enters git, a test, or a log.
+PM structure report of 2026-11-11 (section 8). They are fakes only; no real
+document and no real amount enters git, a test, or a log. The fixtures of the
+three types with no real sample are synthetic and marked "no real sample" (PM-12).
 
 **The `2024` and `2025` folders.** Those folders come in a later phase, after the
 2026 import passes. That is the PM's order of work, not a scope cut. The start is
@@ -710,7 +924,7 @@ real amount enters git, a test, or a log.
   null; `failure_count` integer not null default 0; `sighting_count` integer not
   null default 1; `evidence_byte_size` integer null (the stored byte length, not a
   hash); `is_history` boolean not null default false; `history_source`
-  text null (`drive-folder`, `drive-modified-date`); `first_seen_at` timestamptz
+  text null (`document`, `drive-folder`, `drive-modified-date`; PM-11, open item Q23); `first_seen_at` timestamptz
   not null default now; `last_seen_at` timestamptz not null default now;
   `scope_company_id` uuid not null. A unique index on
   (`scope_company_id`, `drive_file_id`) stops a second row for one file. An index
@@ -783,14 +997,22 @@ real amount enters git, a test, or a log.
   `NAME=SECRET_NAME:latest` form is the `--set-secrets` syntax; it is not valid in
   `--set-env-vars`. Only plain values go through `--set-env-vars`:
   `ACCOUNTING_DRIVE_FOLDER_ID`, `ACCOUNTING_INTAKE_ACTOR_ID`,
-  `ACCOUNTING_DUPLICATE_SCAN_CAP`, and `ACCOUNTING_EXTRACTION_MODEL`.
+  `ACCOUNTING_DUPLICATE_SCAN_CAP`, and `ACCOUNTING_EXTRACTION_MODEL`. The bank
+  statement password (PM-13) is one more Secret Manager reference. Daniel creates
+  and fills that secret once at setup (`deferred:daniel`). The job step adds it to
+  `--set-secrets` in the same form after that setup. This spec names it by its
+  purpose only and holds no value (open item Q26).
 - **FR-11.** The Drive access sits behind a provider-neutral port in the backend
   module. The Google adapter lives in
   `apps/accounting/app/lib/drive-document-source.ts`. The adapter uses
-  `googleapis` with a service account on Cloud Run and no key file.
+  `googleapis` with a service account on Cloud Run and no key file. The port has
+  read calls only: list, download (`files.get` with `alt=media`), and export
+  (`files.export`). It has no create, update, delete, or copy call (PM-14).
 - **FR-12.** The adapter reads the folder id from the config value
   `ACCOUNTING_DRIVE_FOLDER_ID`. The folder is written by name only. No Drive id
-  is written into git, a test, or a log line.
+  is written into git, a test, or a log line. A customer folder is a sub-folder of
+  that folder whose name is not a year (section 9, open item Q22). No second
+  config value names it.
 - **FR-12a.** `apps/accounting/scripts/accounting-runtime-grants.sql` grants
   each new table the least privilege it needs:
   `accounting_intake_documents` SELECT, INSERT, UPDATE; `accounting_monthly_closes`
@@ -809,7 +1031,7 @@ real amount enters git, a test, or a log.
   (`packages/ai/src/providers/vertex.ts:7-18`) makes `clientEmail` and
   `privateKey` optional, so the ADC path type-checks (F33).
 - **FR-15.** A PDF that is not text, a JPEG, and a PNG go to Vertex. A text PDF
-  and a Google Sheets voucher are read on this machine. A test that needs a
+  and an `.xlsx` workbook are read on this machine. A test that needs a
   model uses a fake; no test calls a real model.
 - **FR-16.** Every extracted value carries the marker of section 5.3.
 - **FR-17.** The intake passes the Drive file id as the idempotency key. The
@@ -912,6 +1134,18 @@ real amount enters git, a test, or a log.
   `2026-11`. It is a code constant, not an environment variable. A close open for
   a month before `FIRST_LIVE_MONTH` is refused, so the history import opens no
   close for a past month. A unit test asserts the value and the refusal (F62).
+- **FR-27.** The document parsing follows section 8 and the PM decisions of
+  2026-11-11 (PM-8 to PM-15). The workbook reader reads every voucher worksheet,
+  skips the guide worksheet, reads stored values only, and calculates no formula.
+  A required cell with no stored result, and a voucher date or number whose month
+  differs from the file-name month, put the file on the review list and write no
+  submission (PM-9). The reader accepts both voucher number forms and allows gaps
+  in the series (PM-10). The month of a document comes from the document (PM-11).
+  The three types with no real sample have synthetic fixtures marked "no real
+  sample" (PM-12). An encrypted bank statement is decrypted in memory, and no
+  decrypted copy is stored (PM-13). A file in a customer folder is read only, and
+  the Drive port has no write call (PM-14). The monthly close lists the items of
+  PM-10 and PM-15 and changes no value.
 
 ## 11. Non-functional requirements
 
@@ -921,7 +1155,8 @@ real amount enters git, a test, or a log.
   export, the Vertex response, the Tutor response, and the intake form.
 - Provider SDKs stay behind adapters: Drive, storage, AI.
 - Structured logging records the intake. A log line holds no amount, no payee,
-  no document text, and no Drive id.
+  no document text, no Drive id, and no raw file name (a file name can hold
+  personal data, G13).
 - Audit rows are append-only. The runtime role keeps SELECT and INSERT only
   (`apps/accounting/scripts/accounting-runtime-grants.sql`).
 - Migrations are generated with Drizzle and reviewed before CI runs them.
@@ -955,8 +1190,9 @@ Each criterion has an automated test that can falsify it.
    and a new submission.
 7. Given a text PDF, when the poll runs, then the local reader reads it and the
    Vertex port is never called.
-8. Given a Google Sheets voucher, when the poll runs, then the adapter exports
-   `text/csv`, the parser reads the rows, and the Vertex port is never called.
+8. Given a voucher `.xlsx` workbook, when the poll runs, then the adapter
+   downloads the bytes with `alt=media`, the workbook reader reads the voucher
+   worksheets, and the Vertex port is never called.
 9. Given a PDF with no extractable text, when the poll runs, then the Vertex
    port reads it and the intake row carries `extraction = model`.
 10. Given a JPEG or a PNG receipt, when the poll runs, then the Vertex port
@@ -1077,6 +1313,36 @@ Each criterion has an automated test that can falsify it.
     and only the plain values in `--set-env-vars`; and the scheduler step targets
     the Cloud Run Admin API `:run` endpoint with an OAuth service account and no
     `run.app` URL (F55, F56, F67, F68, D-27, D-32).
+39. Given a voucher workbook with 3 voucher worksheets and 1 guide worksheet, when
+    the poll runs, then the reader reads the 3 voucher worksheets, skips the guide
+    worksheet, writes 3 intake rows and 3 submissions, and the Vertex port is never
+    called. The 3 submissions are not duplicates of each other (PM-8).
+40. Given a voucher workbook with a required cell that has no stored formula
+    result, or with a voucher date or number whose month differs from the
+    file-name month, when the poll runs, then the file is on the review list with
+    a reason that starts with `review:`, and no submission row is written (PM-9).
+41. Given the voucher numbers `PV69/8-001` and `PV69MM-003` and a series with no
+    number 002, when the reader runs, then it accepts both forms and rejects no
+    number for a gap. Given that series, when the close opens, then the close
+    notes list the gap (PM-10).
+42. Given a document whose file-name date differs from its document month, when
+    the intake runs, then `source_month` is the document month. Given two files
+    with equal bytes, then the second is a content duplicate through
+    `sameEvidenceBytes`, and the code adds no hash field (PM-11).
+43. Given an encrypted bank statement and the secret, when the intake runs, then
+    the decrypted bytes exist in memory only, and the stored evidence bytes equal
+    the original bytes. Given no secret, then the result is `needs_password` and
+    the file is on the review list (PM-13).
+44. Given the Drive port and the adapter, when a test reads them, then they hold no
+    create, update, delete, or copy call. Given a file in a customer folder, when
+    the poll runs, then it reads the file as a school invoice and writes nothing
+    into Drive (PM-14).
+45. Given a month with a missing tax invoice, a school invoice in two versions, or
+    a school invoice whose total in digits differs from its total in words, when
+    the close opens, then the close notes list each item and no value changes
+    (PM-15).
+46. Given any intake run, when a test reads the log lines, then they hold no raw
+    file name (G13).
 
 ## 13. Out of scope
 
@@ -1096,10 +1362,12 @@ Each criterion has an automated test that can falsify it.
   (`accounting_dedicated_db_launch_20260830`, decision D-1).
 - Any change to the Accounts issuer, to the company identity database, or to the
   `accounting-web` OIDC client, beyond two new role keys.
-- The parsing rules of section 8. They wait for the structure report of
-  2026-11-11.
+- A parser for a Thai tax invoice and a parser for a payroll sheet. The report
+  shows no real sample of either (open item Q15).
+- The creation of the bank statement password secret. Daniel does it once at setup
+  (`deferred:daniel`, PM-13).
 
-## 14. PM decisions of 2026-11-09 and open items
+## 14. PM decisions of 2026-11-09 and 2026-11-11, and open items
 
 ### 14.1 PM decisions of 2026-11-09 (DECIDED)
 
@@ -1317,11 +1585,14 @@ decision is binding. A reader must not reopen a decision in this section.
   history file takes its month from the Drive folder name when it is `YYYY-MM`,
   otherwise from the file's `modifiedTime`, and its type from the parser. An
   unmatched file is listed in the dry-run report and not imported. Spec section
-  9a, criteria 33 to 35, plan tasks 8.1 and 8.2.
+  9a, criteria 33 to 35, plan tasks 8.1 and 8.2. **SUPERSEDED IN PART by PM-11
+  (PM, 2026-11-11):** the month comes from the document first. The folder name
+  and `modifiedTime` are the fallback only.
 - **D-24 (the history marker). DECIDED (orchestrator, 2026-11-09).** The marker is
   a column: `is_history` boolean, plus `history_source` text with the values
   `drive-folder` and `drive-modified-date`. Spec sections 9a and 10, FR-3, plan
-  tasks 1.5, 1.6, and 8.2.
+  tasks 1.5, 1.6, and 8.2. **EXTENDED by PM-11 (PM, 2026-11-11):** a third value,
+  `document`, tells that the month came from the document (open item Q23).
 - **D-25 (the history close block). DECIDED (orchestrator, 2026-11-09).** The
   history import starts no CEO sign-off and no monthly close for a past month. A
   close open for a month before the first live month is refused. Spec section 9a,
@@ -1432,8 +1703,11 @@ stops for no item in this list.
   submission id (`packages/db/src/accounting/schema/index.ts:116-127`). The
   close gets its own append-only table (FR-5).
 - **Q5. How is a Google Sheet read?**
-  Default: Drive `files.export` with `mimeType=text/csv`, first worksheet, one
-  voucher per file.
+  SUPERSEDED by PM-8 and PM-9 (2026-11-11). The vouchers are `.xlsx` workbooks.
+  The adapter downloads the bytes with `alt=media`. The reader reads every voucher
+  worksheet and skips the guide worksheet. The first default (a CSV export of the
+  first worksheet, one voucher for each file) is void. A native Google Sheet (the
+  school invoice) follows Q21.
 - **Q6. What is the size limit?**
   Default: 20 MB per file.
 - **Q7. What is the file naming rule?**
@@ -1453,8 +1727,8 @@ stops for no item in this list.
   same holds for the Storytime receipts.
 - **Q11. What does the monthly report contain?**
   Default: the period month, the approved submissions of that period, the close
-  row, the report evidence reference, and the close audit rows. No amount
-  appears in a log line.
+  row, the report evidence reference, the close audit rows, and the close notes
+  of PM-10 and PM-15 (section 7). No amount appears in a log line.
 - **Q12. Where does the poll run?**
   Default: a Cloud Run job in `apps/accounting` with the lease row of FR-6. Not
   in a request path. The main `durable_jobs` table is not reused, because it
@@ -1465,7 +1739,131 @@ stops for no item in this list.
   `sameEvidenceBytes` gives the same guarantee with no new hash field, and the
   AGENTS.md hashing policy forbids a new hash field, a checksum column, or a
   manifest. This track therefore adds none (PM-7). If the PM still wants a hash,
-  the change needs a new PM answer and a stop under the hashing policy.
+  the change needs a new PM answer and a stop under the hashing policy. The PM
+  decision of 2026-11-11 (PM-11) says "content hash" and gets the same reading.
+- **Q14. How does the parser read the date forms? (G6)**
+  Default: one reader for each form of section 8, note 5. A Buddhist Era year
+  converts to a Gregorian year by subtracting 543. A date that no reader can read
+  puts the file on the review list. When the document holds no month at all (the
+  foreign vendor invoice has no date field), the history mode uses the fallback
+  of section 9a.
+- **Q15. What happens to the two old placeholders? (G9, G11)**
+  Default: the `payslip-*` PDFs map to the payment voucher type, and the old
+  payroll sheet placeholder (`parsePayrollSheet`) is retired. The old tax invoice
+  placeholder (`parseTaxInvoice`) is retired too, because `parseCloudInvoice`
+  serves the only tax invoices of the report. A Thai tax invoice, which has no
+  real sample, gets a parser when a real sample arrives.
+- **Q16. Who owns the Workspace cost? (G14)**
+  Default: no special rule. The Workspace documents name a private person as
+  bill-to, and the Cloud documents name the company. The parser stores `billTo` as
+  printed. The reviewer sees it on the item. The close adds no note for it.
+- **Q17. How is the foreign vendor invoice read? (G17)**
+  Default: the draft holds a currency field (RMB) and no required invoice number.
+  The date comes from the free text. A date that the reader cannot find puts the
+  file on the review list. The report holds one sample only.
+- **Q18. How many fixtures does a type need? (G19)**
+  Default: one fake fixture for each type, and one for each producer that the
+  report names for that type (LibreOffice, Chrome, Google Sheets, openpyxl, and
+  JasperReports). No fixture copies a real file.
+- **Q19. What is one row for a voucher workbook?**
+  Default: one intake row and one submission for each voucher worksheet. The key
+  `<Drive file id>#<position of the worksheet>` is the idempotency key and the
+  `drive_file_id` value. Each submission keeps the whole workbook as evidence.
+  The content-duplicate lookup runs once for the file, before the split. This
+  default changes the rule "each file becomes one pending submission" for a
+  workbook only.
+- **Q20. How does the reader find the guide worksheet, and what is the review
+  list?**
+  Default: a worksheet is a voucher worksheet when cell A2 holds the form title
+  of the voucher. The reader never uses a worksheet name. The review list is the
+  intake rows with status `failed` and a `failure_reason` that starts with
+  `review:`. No new status and no new column.
+- **Q21. How is the school invoice Google Sheet read? (G15)**
+  Default: the adapter exports it as `.xlsx` with `files.export`, and the workbook
+  reader reads all 4 tabs. A school invoice PDF that Google Sheets made has a
+  broken Thai text layer, so it goes on the review list with the reason
+  `review:text-layer`. A LibreOffice-made PDF has a clean layer and is read
+  local.
+- **Q22. Which sub-folders are customer folders? (G18)**
+  Default: a sub-folder of `Accounting` whose name is not a year is a customer
+  folder, and its files are school invoices without the naming rule. No second
+  config value is added. If the PM wants only `Boonyathat`, a config value or a
+  fixed list is needed.
+- **Q23. How do the type keys and `history_source` change?**
+  Default: the `document_type` keys are additive (section 8, note 6), and
+  `history_source` gains `document`. Both change the contract
+  (`intake-contracts.ts`) and the database check, which plan tasks 1.2 and 1.6
+  already built. A new migration is needed. The plan holds no task for it yet.
+- **Q24. Which fields do the three synthetic types hold?**
+  Default: receipt: vendor, date, amount, currency, and payment method. OpenAI
+  invoice: invoiceNumber, invoiceDate, periodStart, periodEnd, currency,
+  subtotal, tax, and total. Withholding certificate: withholderTaxId, payeeName,
+  payeeTaxId, paymentDate, incomeType, amountPaid, and taxWithheld. The fixtures
+  are marked "no real sample", and a real sample replaces them when it arrives.
+- **Q25. What is a month with a missing tax invoice? (G8)**
+  Default: a month in which a Google Workspace or Google Cloud payment receipt or
+  statement exists, and no tax invoice of the same product exists. The close
+  lists the month and the product. A month with no file at all for a product is
+  not listed, because the app cannot know what is due.
+- **Q26. How does the app hold the bank statement password? (G12)**
+  Default: one Secret Manager reference in the job step (PM-13). Until Daniel
+  fills the secret, a bank statement gives `needs_password` and goes on the review
+  list. A fake fixture of the decrypted layout does not exist yet, so the draft
+  schema holds the extraction marker and a minimal field set until the first
+  decrypted layout is known.
+
+### 14.4 PM decisions of 2026-11-11 (DECIDED)
+
+The PM answered after the structure report of 2026-11-11 (PM hand-off A-52). Each
+decision is binding. A reader must not reopen a decision in this section; a change
+needs a new PM answer. A quote is exact.
+
+- **PM-8 (G1 and G2). DECIDED (PM, 2026-11-11).** "monthly vouchers are .xlsx (not
+  Google Sheets), 3-4 vouchers a file, one per worksheet plus a guide worksheet:
+  read every voucher worksheet, skip the guide." Sections 2.6, 6, 8 (notes 2 and
+  3), 9, FR-27, criteria 8 and 39, plan tasks 6.1 and 6.2.
+- **PM-9 (G3 and G4). DECIDED (PM, 2026-11-11).** "a workbook with no stored formula
+  results or a stale number/date goes to the review list, never a silent row."
+  Sections 5.7, 8 (note 4), 9, FR-27, criterion 40.
+- **PM-10 (G5). DECIDED (PM, 2026-11-11).** "accept both number formats (PV69/M-NNN
+  and PV69MM-NNN); gaps in the number series are allowed and listed in the monthly
+  close." Sections 7, 8 (note 3), FR-27, criterion 41.
+- **PM-11 (G7). DECIDED (PM, 2026-11-11).** "dedupe by content hash; the document
+  month comes from the document, not the file name." The decision uses the content
+  check that section 5.1 already defines, which is the byte compare of
+  `sameEvidenceBytes`. It adds no new hash. Sections 5.1, 5.5, 9, 9a, FR-3,
+  criterion 42.
+- **PM-12 (G9 to G11). DECIDED (PM, 2026-11-11).** "fixtures for the types with no
+  real sample (OpenAI invoice, receipt, withholding certificate) are synthetic and
+  marked "no real sample"." Sections 6, 8 (note 7), 9a, FR-27.
+- **PM-13 (G12 and G13). DECIDED (PM, 2026-11-11).** "the bank statement password
+  goes into Secret Manager; Daniel enters it once at setup (his hands, at deploy
+  time); the app decrypts in memory only and never stores a decrypted copy."
+  Daniel's setup step is a human gate (`deferred:daniel`). The spec names the
+  secret by its purpose only and holds no value. Sections 5.2, 8 (note 8), 9, 11,
+  15, FR-10b, FR-27, criteria 43 and 46.
+- **PM-14 (G18). DECIDED (PM, 2026-11-11).** "The customer folder (Boonyathat) is an
+  intake source of type school invoice (revenue), read-only; the app never writes
+  into Drive." Sections 4.1, 6, 9, FR-11, FR-12, FR-27, criterion 44.
+- **PM-15 (G8, G15, G16). DECIDED (PM, 2026-11-11).** "missing tax invoices; two
+  invoice versions; digits vs words total: the monthly close lists them for the
+  office assistant; no auto-fix." Sections 7, 8, 9, FR-27, criterion 45.
+
+**Effect on earlier rules.** The new decisions change these earlier rules, and
+each change is stated at its place in the spec:
+
+- PM-8 voids the first default of Q5 (a CSV export of the first worksheet) and the
+  rule "one voucher for each file".
+- PM-11 replaces the folder-first month rule of PM-7 (c) and D-23, and it extends
+  D-24 with the value `document`.
+- PM-13 adds an eighth Secret Manager reference to the seven of D-21.
+- PM-14 adds the customer folder to the single intake folder of PM-6.
+- The rule "each file becomes one pending submission" (sections 1 and 5) now holds
+  for each voucher worksheet of a workbook (Q19).
+- The follow-up outside this amendment: plan tasks 1.x (built), 3.x, 8.x, and the
+  close tasks of Phase 2, and `test-strategy.md`, do not yet name the new type
+  keys, the `document` source, the eighth secret, the customer folder, the review
+  list, or the close notes. The PM check and the spec review decide that work.
 
 ## 15. Deferred tasks
 
@@ -1478,7 +1876,8 @@ stops for no item in this list.
 | The `PA-INV` and Storytime receipt sources | `deferred:pm` | The source is not in this repository |
 | The Accounts role seed for `CEO` and `CONTRACTOR` | `deferred:pm` | Accounts belongs to the PM |
 | The first deploy of the Cloud Run job `accounting-intake-poll` and its scheduler | `deferred:daniel` | The job step is deploy config; the job is named in FR-10 and FR-10a |
-| The first load and the structure report | `deferred:pm` | The PM runs its own script on this machine |
+| The first load and the structure report | `deferred:pm` | The PM runs its own script on this machine. Done on 2026-11-11 (plan tasks 5.1 and 5.2) |
+| The bank statement password in Secret Manager | `deferred:daniel` | Daniel enters it once at setup, at deploy time (PM-13); the spec holds no value |
 | The production history write for January to October 2026 | `deferred:daniel` | The dry-run report goes to Daniel first; the write runs on his word |
 | Known limit: a submission typed by hand in the app has no intake row, so pass 2 of the content-duplicate lookup does not cover it; pass 1 (the newest 500) covers it | stated limit (D-33) | A backfill of the hand-made submissions is out of scope; the intake table is new and starts full |
 | The deploy and the traffic move | `deferred:daniel` | Daniel's word |
