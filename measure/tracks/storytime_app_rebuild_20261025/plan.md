@@ -2076,7 +2076,79 @@ for every other track.
   `measure/runs/storytime_look_20261107` changed.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t43-a4f4a1a35.log`.
 
-- [ ] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes.
+### Phase 4 task 4.4 Red evidence
+
+- Mid-Red started at `dc033d091d7aa80f7d131d25b09e65762f9b5c05`. HEAD matched the role base, and the
+  immutable phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae` resolves. No other session
+  committed into `apps/storytime` or this track. The task base is the role base, per P4.0.
+- measure-guard accepted the `[~]` marker on task 4.4 and did not block it.
+- MemAvailable at the start was 2305876 kB. The direct-run floor is 1500 MB, so the light role ran
+  the Red command without the heavy lock.
+- Field check of the shipped `apps/storytime/content/l2/w01.json` before any test: no step holds a
+  `media`, `video`, `audio`, or `player` field, and `materials` holds free text only. Rule D1 (open
+  question 6, default D1) reads the two fixed keys. On w01 it gives `media_steps=4` in B3
+  (`book audio` "Hello!"), B7, D6, and E2 (`karaoke videos` "Hello, I Am Pip"). The entries
+  `big book or screen` of B2, B4, and B6 and the `small books` entries open nothing.
+- Contract for Green, named by the new test file (the file docblock holds the full text):
+  - `apps/storytime/lib/teacher-media.ts` exports `stepMediaOf(step, week)`. It returns `null` or
+    `{ kind: "song" | "readalong" | "decodable", title, files }`. It reads the first matching
+    `materials` entry, the fixed key at the start, and `: "<title>"` at the end. It never reads a
+    step id.
+  - The day page `app/[locale]/teacher/[level]/[week]/[day]/page.tsx` calls
+    `signWeekMedia(loaded.week, {})` and passes `mediaUrls` to the flow.
+  - `TeacherLessonFlow` takes the optional prop `mediaUrls?: Record<string, string>`.
+  - The step screen root carries `data-step-id` and `data-step-index` (0-based).
+  - A media step shows one control named `Open media`. The player is the region
+    `aria-label="The media player"`, holds the media title, the control `Close`, and the Phase 3
+    player with the prop `playerMode="class-screen"`. Escape closes the player, and focus returns
+    to the opener.
+  - `StorytimeSong`, `StorytimeReader`, and `StorytimeDecodable` take the optional prop
+    `playerMode?: "at-home" | "class-screen"`, default `"at-home"`, and put
+    `data-mode={playerMode}` on the root element. The class-screen mode uses the regular media
+    pair and never the phone pair (1920x1080).
+  - The open player never calls `HTMLMediaElement.prototype.play`. Its control `Play` plays.
+  - The player `src` is the `mediaUrls` entry only. A part with no signed URL shows
+    `This media is not available.` and `สื่อนี้ยังไม่พร้อม`, and opens no player.
+- Red added one test file and changed no production source, no week content, and no shipped file.
+- Test commit: `c04bb063b` (`test(storytime): add red tests for the media step`). The plan evidence
+  and the log sit in the next commit.
+- Automated Red command, light and direct (MemAvailable 2560480 kB at the run):
+  `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-media.test.tsx`.
+  Result: exit 1; 1 failed file; 12 failed tests and 0 passed tests. The log holds no
+  `Unhandled`, `SyntaxError`, `Transform failed`, or `Failed to resolve` line, so no entry failed
+  with a load error.
+- Each failure is a named assertion:
+
+| Test | Cause at HEAD | Task |
+|---|---|---|
+| `phase4-lesson-media` applies rule D1 to the shipped week: media_steps=4 in B3, B7, D6, and E2 | `lib/teacher-media.ts` does not exist | 4.4 |
+| `phase4-lesson-media` reads the materials key and the media title, never a step id | `lib/teacher-media.ts` does not exist | 4.4 |
+| `phase4-lesson-media` opens the player for the matched part and takes the title from the week | the flow shows no `data-step-id` and no `Open media` control | 4.4 |
+| `phase4-lesson-media` shows no media control on a step without media | the positive control on B3 finds no `Open media` control | 4.4 |
+| `phase4-lesson-media` marks the open player as class-screen, and only there | the flow shows no `data-step-id`, no player region, and no marker | 4.4 |
+| `phase4-lesson-media` keeps the step and the flow control in the DOM while the player is open | the flow shows no `data-step-id` | 4.4 |
+| `phase4-lesson-media` keeps the place of the step after the player closes | the flow shows no `data-step-id` and no media control | 4.4 |
+| `phase4-lesson-media` keeps the Thai toggle on after the player closes | the flow shows no `data-step-id` | 4.4 |
+| `phase4-lesson-media` closes with the control and with Escape, and returns focus to the opener | the flow shows no `data-step-id` and no close control | 4.4 |
+| `phase4-lesson-media` never plays media when the player opens | the flow shows no `data-step-id` and no media control | 4.4 |
+| `phase4-lesson-media` takes every media URL from the signed map | the flow shows no `data-step-id` and no media control | 4.4 |
+| `phase4-lesson-media` signs the media in the day page and passes the map to the flow | the day page calls no `signWeekMedia` and passes no `mediaUrls` | 4.4 |
+
+- Named characterization: the at-home song player without `playerMode` carries no
+  `data-mode="class-screen"` marker. This case passes at HEAD. It sits in the class-screen test,
+  which fails at HEAD for the reason above.
+- `tsc --noEmit` did not run in this role. The heavy lock was held by the architecture pin refresh
+  (`pnpm architecture:pin:refresh --acknowledge`, p2, started 23:38), so a p1 type check would wait
+  or exit 75. The type check stays with the Green gate.
+- ESLint on the new file: exit 0; 0 errors; 0 warnings.
+- Anti-patterns: A3 holds (the counts are labeled integers `media_steps`, `controls`, `index`,
+  `play_calls`, `players`, and `files_scanned`, and each failure message carries its label). A4
+  holds (a labeled count above 0 and a positive control come before each detail, and every clone
+  passes `weekSchema.parse` before it renders). A7 holds (the source test names one exact file and
+  uses no `rg -v` list). A9 does not apply (no archived-track path). A16 holds (no worktree).
+- Report: `measure/runs/storytime_app_rebuild_20261025/red-p4-t44.log`.
+
+- [~] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes. Red: `c04bb063b`.
 - [ ] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
 - [ ] 4.6a Share moment in the lesson flow (Workbooks hand-off 4, PM 2026-11-08, rule D23). The field is `scripts[].share = { shots: [{ step, media: "photo" or "video" }] (1 or 2 shots), caption: { en, th } }`. Both objects are strict, and the field holds no file path. The lesson flow shows the share moment only when `approval.loops` is approved. It shows the moment at the named step, with the caption in the active language and the consent line. The app uploads no photo and no video. Test: one test reads one real week file that holds `scripts[].share`. It checks that the moment stays hidden while `approval.loops` is draft. On a copy of that file with `approval.loops` approved, it checks that the moment shows at the named step with the consent line, and that the page sends no upload request. Dependency: the received week files hold no `share` field yet (measured 2026-11-08). The field arrives with the next receive of the Workbooks weeks at commit 1d29e893 or later, so the Red role of this task starts after that receive. Target: with task 4.6.
 - [ ] 4.5 Phase check: `tsc`, lint, the changed tests, a change-quality review, and a browser check at 1920x1080 and on a laptop (automated). It does not cover task 4.6 or task 4.6a, which do not hold this checkpoint (see the exception in the Phase 3 amendment line).

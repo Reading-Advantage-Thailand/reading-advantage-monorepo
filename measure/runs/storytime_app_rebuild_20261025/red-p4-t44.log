@@ -1,0 +1,98 @@
+# Red log: task 4.4 (media in the teacher lesson flow)
+
+Status: complete. This file is the Red report of task 4.4.
+
+- Track: storytime_app_rebuild_20261025.
+- Phase: Phase 4, task 4.4.
+- Role: measure-mid-red, light (one test file).
+- Model: deepseek/deepseek-flash#high.
+- Immutable phase base: bfaae8905993076ca1e8a49939c400eb038fe3ae.
+- Role base and task base: dc033d091d7aa80f7d131d25b09e65762f9b5c05.
+- MemAvailable at the start: 2305876 kB. The direct-run floor is 1500 MB.
+- MemAvailable at the Red run: 2560480 kB.
+
+## What the role did
+
+- Read `measure/index.md`, `measure/tracks.md`, the task 4.4 line of `plan.md`, and the P4, P4.0,
+  P4.4, and question 6 sections of `test-strategy.md`.
+- Checked `git status --short`. The dirty paths of other work stayed untouched:
+  `apps/activity-vinext-fixture/next-env.d.ts` and `apps/marketing/next-env.d.ts` (generated),
+  `measure/tracks/primary_in_app_help_20261023/plan.md` (unrelated user work), and the untracked
+  folders and files of other sessions.
+- Marked task 4.4 `[~]` in `plan.md`.
+- Measured the shipped w01: no step holds a media field, and `materials` is free text. Rule D1
+  gives `media_steps=4` in B3, B7, D6, and E2.
+- Wrote `apps/storytime/__tests__/phase4-lesson-media.test.tsx` with 12 tests. The file docblock
+  names the contract for Green: the module `lib/teacher-media.ts`, the export `stepMediaOf`, the
+  optional prop `mediaUrls`, the `data-step-id` and `data-step-index` attributes, the control
+  `Open media`, the player region `The media player`, the control `Close`, the Escape key, the
+  focus return, the prop `playerMode` and the marker `data-mode="class-screen"`, the no-play rule,
+  the signed URL rule, and the English and Thai messages of a missing file.
+- Ran the Red command three times with the same result. The runs hold no load error.
+- ESLint on the new file: exit 0; 0 errors; 0 warnings.
+
+## Commits
+
+- `c04bb063b` — `test(storytime): add red tests for the media step (track_id:
+  storytime_app_rebuild_20261025)`. The test file alone.
+- The commit that carries this log — the plan evidence and this log. It is the second commit of
+  the role.
+
+## Red command
+
+```bash
+cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-media.test.tsx
+```
+
+Result: exit 1; 1 failed file; 12 failed tests and 0 passed tests. The grep for `Unhandled`,
+`SyntaxError`, `Transform failed`, and `Failed to resolve` finds 0 lines.
+
+## Failed tests at HEAD
+
+| Test | Cause at HEAD |
+|---|---|
+| applies rule D1 to the shipped week: media_steps=4 in B3, B7, D6, and E2 | `lib/teacher-media.ts` does not exist |
+| reads the materials key and the media title, never a step id | `lib/teacher-media.ts` does not exist |
+| opens the player for the matched part and takes the title from the week | no `data-step-id`, no `Open media` control |
+| shows no media control on a step without media | the positive control on B3 finds no control |
+| marks the open player as class-screen, and only there | no step id, no player region, no marker |
+| keeps the step and the flow control in the DOM while the player is open | no `data-step-id` |
+| keeps the place of the step after the player closes | no `data-step-id`, no media control |
+| keeps the Thai toggle on after the player closes | no `data-step-id` |
+| closes with the control and with Escape, and returns focus to the opener | no step id, no close control |
+| never plays media when the player opens | no step id, no media control |
+| takes every media URL from the signed map | no step id, no media control |
+| signs the media in the day page and passes the map to the flow | no `signWeekMedia` call, no `mediaUrls` prop |
+
+## Named characterization
+
+The at-home song player without `playerMode` carries no `data-mode="class-screen"` marker. This
+case passes at HEAD. It sits in the class-screen test, which fails at HEAD for the reason above.
+
+## Type check
+
+`tsc --noEmit` did not run in this role. The heavy lock was held by the architecture pin refresh
+(`pnpm architecture:pin:refresh --acknowledge`, p2, started 23:38). A p1 type check would wait or
+exit 75. The type check stays with the Green gate.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+model: deepseek/deepseek-flash#high
+track: storytime_app_rebuild_20261025
+phase: P4
+task: 4.4
+baseline_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: dc033d091d7aa80f7d131d25b09e65762f9b5c05
+head: c04bb063b3e43a015961c252b9e2243470c7164e
+commits: c04bb063b (Red test file); the commit that carries this log (plan evidence and log)
+test_file: apps/storytime/__tests__/phase4-lesson-media.test.tsx
+red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-media.test.tsx
+red_exit: 1
+test_files_failed: 1
+tests_failed: 12
+tests_passed: 0
+load_errors: 0
+remaining_failures: all 12 tests of phase4-lesson-media.test.tsx fail with a named assertion; Green must add lib/teacher-media.ts, mediaUrls on the day page and the flow, data-step-id and data-step-index, the Open media and Close controls, the player region, the playerMode prop and the class-screen marker, the no-play rule, and the signed URL rule
+tsc: not run (heavy lock held by the architecture pin refresh); left to the Green gate
+END_MEASURE_AGENT_RESULT
