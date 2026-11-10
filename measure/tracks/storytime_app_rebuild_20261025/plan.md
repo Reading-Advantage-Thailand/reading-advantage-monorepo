@@ -1968,7 +1968,7 @@ for every other track.
 - The canonical-number rule of the at-home route stays in the at-home route. `lib/teacher.ts` holds its own copy, because the brief keeps the at-home routes unchanged. A later phase may join the two.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-4126421.log`.
 
-- [x] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2.
+- [x] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2. Done: `3c82ab25f`. Automated: the Green command exits 0 with 3 files and 21 tests; `tsc --noEmit` in `apps/storytime` exits 0; ESLint exits 0 on the two changed files.
 
 ### Phase 4 task 4.3 Red evidence
 
