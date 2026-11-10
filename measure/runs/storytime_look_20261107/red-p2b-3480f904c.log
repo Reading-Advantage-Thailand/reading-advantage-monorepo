@@ -66,6 +66,16 @@ part2_self_test_exit: 0
 part2_selftest_mutants_rejected: 58 of 58
 part2_bash_n_exit: 0
 part2_commit: 0e8e5cebdb5c90fe3488a04df57944b83c2d63aa
+r1_red_cases: F-1 the logo band, F-2 the line rule, F-3 the crystal tips, F-2 the title length
+r1_tests_failed: 4
+r1_tests_passed: 18
+r1_load_errors: 0
+r1_tsc_exit: 0
+r1_eslint_exit: 0
+r1_self_test_exit: 0
+r1_selftest_mutants_rejected: 61 of 61
+r1_bash_n_exit: 0
+r1_commit: d2a4ff4c5572b1f3f92108936ed8dd2cd8eb8e10
 END_MEASURE_AGENT_RESULT
 
 # Part 2 (the browser rows of the Phase 2b gate, same role, same phase).
@@ -111,3 +121,62 @@ END_MEASURE_AGENT_RESULT
 # Part 2 commit: 0e8e5cebdb5c90fe3488a04df57944b83c2d63aa
 #   "test(look): add the brand chrome browser rows (track_id: storytime_look_20261107)"
 #   File: apps/storytime/__tests__/look-phase2-browser-gate.sh
+
+#
+# Remediation r1 (automated), same role, same phase. The orchestrator findings of 2026-11-10 15:40
+# are F-1 (the logo sits on the title plaque), F-2 (the title length must reach the CSS and the
+# plaque height must follow the font), F-3 (the crystal tips are game decoration), and F-5 (the
+# teacher pages of row 18 answer 404 in the fixture). The role base of this round is 9f7010299.
+#
+# Red cases added to the vitest files:
+#   F-1 the logo rule keeps the logo out of the plaque box (AC-4.1)
+#        Fails at HEAD with "the logo band of the cover hero sits on the plaque band by 31 px
+#        (logo_plaque_overlap_px=31) | the logo height of the cover hero must be 48 px or more,
+#        found 46 px | the logo band of the band hero sits on the plaque band by 14 px
+#        (logo_plaque_overlap_px=14) | the logo height of the band hero must be 48 px or more,
+#        found 36 px".
+#   F-2 the plaque rule sets a line rule so the height follows the font (AC-4.6)
+#        Fails at HEAD with "the plaque rule must set white-space or another line rule".
+#   F-3 the crystal tips of the plaque are gone (AC-4.6)
+#        Fails at HEAD with "the piece q-tip-l.svg must be gone | the piece q-tip-r.svg must be
+#        gone | look.css names the tip q-tip-l.svg | look.css names the tip q-tip-r.svg | the
+#        plaque pseudo-element paints url("look/pieces/q-tip-l.svg") | the plaque pseudo-element
+#        paints url("look/pieces/q-tip-r.svg")".
+#   F-2 the frame gives the title length to the CSS and the logo stays out of the plaque
+#        Fails at HEAD with "the frame must give the title length 6 to the CSS, found nothing |
+#        the frame must give the title length 19 to the CSS, found nothing".
+#
+# Red command, run in the foreground through heavy-run:
+#   HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-brand-chrome.test.tsx __tests__/look-brand-chrome.test.ts'
+#   Result at HEAD 9f7010299: exit=1; Test Files 2 failed; tests_failed=4; tests_passed=18;
+#   load_errors=0. The four failing cases are the new ones. The eighteen passing cases are the
+#   cases of parts 1 and 2. The cases of the council rows that pin navy stay as they are.
+#
+# Gate script changes in apps/storytime/__tests__/look-phase2-browser-gate.sh:
+#   row 15 brand chrome: logo_title_overlap_px=0 (the intersection of the logo box and the text
+#     box of the plaque) and logo_h_px of 48 or more.
+#   row 17 brand banner: the eight shipped titles of the fixture weeks (the weeks 7 to 14 at
+#     level 3) in en and th at 390x844, line_count=1 and per_line_ratio from 0.76 to 0.84; the
+#     60-character title with per_line_ratio, plaque_overflow_px=0, clipped_text=0, and font_px
+#     of 24 or more.
+#   row 18 brand pages: a teacher session for /th/teacher/2/1 and /th/teacher/2/1/1, a family
+#     session for the 403 page /th/teacher/2/1 and for the 404 view /th/st/2/8, and no session
+#     for /th/st, /th/sign-in, and /th/join.
+#   The fixture: the account row "Teacher One,teacher,teacher", the server variable
+#     STORYTIME_TEACHER_ROUTES=1, and the eight shipped titles as the weeks 7 to 14 at level 3.
+#   Self-test mutants: a logo overlap above 0, a 2-line shipped title, a 0.70 per-line ratio,
+#     and a 20 px floor font.
+#
+# No-browser check:
+#   cd apps/storytime && bash __tests__/look-phase2-browser-gate.sh --self-test
+#   Result: exit=0; selftest_controls_ok=1; selftest_mutants_rejected=61 of
+#   selftest_mutants_checked=61; "=== Total: 1 checks (PASS=1, FAIL=0) ===".
+#   bash -n on the script: exit=0.
+# Type gate through heavy-run: exit=0.
+# Lint gate on the two vitest files: exit=0.
+#
+# Remediation r1 commit: d2a4ff4c5572b1f3f92108936ed8dd2cd8eb8e10
+#   "test(look): pin the logo place and the fitted title (track_id: storytime_look_20261107)"
+#   Files: apps/storytime/__tests__/look-brand-chrome.test.ts,
+#          apps/storytime/__tests__/look-brand-chrome.test.tsx,
+#          apps/storytime/__tests__/look-phase2-browser-gate.sh
