@@ -19,5 +19,13 @@ export default defineConfig({
       "dist/**",
       ".next/**",
     ],
+    server: {
+      deps: {
+        // Vite rewrites the packaged Sales evidence URL into a `/@fs/...`
+        // path. The loader then reads a path that does not exist, so the
+        // package must stay outside the Vite transform.
+        external: [/\/packages\/sales-knowledge\/dist\//],
+      },
+    },
   },
 });
