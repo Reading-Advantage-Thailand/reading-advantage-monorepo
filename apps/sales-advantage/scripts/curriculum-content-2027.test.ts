@@ -119,6 +119,12 @@ const CLAIMS_CONDITIONS = [
   "9. \"Leading\", \"best\", \"#1\", or a percentage with no source.",
 ];
 
+/**
+ * The claims conditions the 7eff8c10 re-pin keeps. Condition 8 is re-pinned, so the
+ * rows S13.7 and S13.9 hold its new text and drop its old text.
+ */
+const CLAIMS_CONDITIONS_KEPT = CLAIMS_CONDITIONS.filter((_, index) => index !== 7);
+
 /** A book name that has no product name in front of it. */
 const BARE_BOOK_NAME =
   /(?<!(?:Primary|Reading) Advantage )(?<!(?:Primary|Reading) Advantage Origins \d(?:\.\d)? and )(?<![\w.])(?:Origins \d(?:\.\d)?|Quest \d)\b/;
@@ -191,9 +197,9 @@ describe("rubric rules (every roleplay)", () => {
     }
   });
 
-  it("lists the 9 claims conditions of the scope document in the claims lesson", () => {
+  it("lists the claims conditions of the scope document in the claims lesson", () => {
     const content = lesson("product-knowledge-2027", "The Words We Use").content;
-    for (const condition of CLAIMS_CONDITIONS) {
+    for (const condition of CLAIMS_CONDITIONS_KEPT) {
       expect(content).toContain(condition);
     }
   });
@@ -231,34 +237,26 @@ describe("S4 — product knowledge matches strategy v1.8", () => {
   const productLesson = () =>
     lesson("product-knowledge-2027", "One Catalogue, Two Channels").content;
 
-  it("uses the canonical product states", () => {
-    for (const line of [
-      "- **Live:** Primary Advantage (one active school), Tutor Advantage, and CodeCamp Advantage (adult bootcamp).",
-      "- **Reading Advantage:** no school uses it; work on the app is deferred. Its books sell through Tutor Advantage.",
-      "- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24).",
-      "- **Planned, no date:** Storytime and STEM Advantage.",
-    ]) {
-      expect(productLesson()).toContain(line);
-    }
-  });
+  // Retarget 1: the product-state case moves into REPIN_ROWS. Rows S1.2, S1.3,
+  // S1.4, S7.1, S7.2 and S7.3 hold the new lines and drop the old ones.
 
-  it("gives the tier prices, the Tutor Advantage price, and the Managed Service line", () => {
+  it("gives the tier prices and the Tutor Advantage price", () => {
     for (const line of [
       "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
       "| **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |",
-      "| **Managed Service** | Not sold today. It launches in 2027 only if 1–2 more schools sign. Never pre-sell it. | No price |",
       "One class package = one printed workbook, about 22–23 hours, from 3,000 baht. The price adapts to the market.",
     ]) {
       expect(productLesson()).toContain(line);
     }
   });
 
+  // Retarget 3: rows 3 and 4 of the placement map move into REPIN_ROWS. Rows
+  // S11.1, S11.2 and S13.5 hold the new sale dates and drop the old ones.
+
   it("shows the placement-to-book map and the print status of each book", () => {
     for (const row of [
       "| 1 | Primary Advantage Origins 1: not printed → offer **Primary Advantage Origins 2** | Pre-A1 | Reading Advantage Origins 1: not printed → offer **Reading Advantage Origins 2** | A1 |",
       "| 2 | **Primary Advantage Origins 2**: printed | Pre-A1 | **Reading Advantage Origins 2**: printed | A1 |",
-      "| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale from about 2026-11-22 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |",
-      "| 4 | Primary Advantage Quest 4: on sale from about 2026-11-22. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |",
     ]) {
       expect(productLesson()).toContain(row);
     }
@@ -464,4 +462,543 @@ describe("S7 — the school sale", () => {
         "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-",
       ))).toBe(true);
   });
+});
+
+// S2 re-pin rows for advantage-pr 7eff8c106c7265b41d584c4ea997d65ea30dadfb.
+// One row per review row of review/repin-7eff8c10.md that needs a seed change.
+// A row proves two facts: the new source text holds, and the old text is gone.
+// When several review sections name one seed line with different document
+// wordings, every such row demands the phrase that all candidate wordings hold,
+// so one correct seed edit satisfies all of them.
+
+/** One review row of the re-pin review. */
+type RepinRow = {
+  section: number;
+  id: string;
+  source: string;
+  newText: string[];
+  oldText: string[];
+};
+
+/** The number of review rows that need a seed change. */
+export const REPIN_ROW_COUNT = 67;
+
+/** The rows of the re-pin, grouped by review section. */
+export const REPIN_ROWS: RepinRow[] = [
+  {
+    section: 1,
+    id: "S1.1",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["Tutor Advantage is the company focus through May 2027."],
+    oldText: ["The direct-to-family channel is the 2027 focus."],
+  },
+  {
+    section: 1,
+    id: "S1.2",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["books are now in Tutor Advantage classes"],
+    oldText: ["- **Reading Advantage:** no school uses it; work on the app is deferred. Its books sell through Tutor Advantage."],
+  },
+  {
+    section: 1,
+    id: "S1.3",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["built from the Primary Advantage base app", "Anuban 2 to P2"],
+    oldText: ["- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24).", "- **Planned, no date:** Storytime and STEM Advantage."],
+  },
+  {
+    section: 1,
+    id: "S1.4",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027."],
+    oldText: ["Primary Advantage Origins 3.2 and Quest 4 are in schools from May 2027."],
+  },
+  {
+    section: 1,
+    id: "S1.5",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 2,
+    id: "S2.1",
+    source: "09-sales-enablement/battle-cards/vs-tutor.md",
+    newText: ["about 2026-11-23 to 2026-11-30"],
+    oldText: ["on sale from about 2026-11-22"],
+  },
+  {
+    section: 2,
+    id: "S2.2",
+    source: "09-sales-enablement/battle-cards/vs-tutor.md",
+    newText: ["built from the Primary Advantage base app"],
+    oldText: ["\"coming programs\" with no date (Q-PR-24)"],
+  },
+  {
+    section: 3,
+    id: "S3.1",
+    source: "09-sales-enablement/demo-scripts-checklist.md",
+    newText: ["sample pages", "iPad"],
+    oldText: [],
+  },
+  {
+    section: 3,
+    id: "S3.2",
+    source: "09-sales-enablement/demo-scripts-checklist.md",
+    newText: ["a direct question"],
+    oldText: ["- One active school today (Kalasin, on Primary Advantage); under 500 students."],
+  },
+  {
+    section: 3,
+    id: "S3.3",
+    source: "09-sales-enablement/demo-scripts-checklist.md",
+    newText: ["Daniel agrees"],
+    oldText: ["- The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).", "The school pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so offer no free period and no discount."],
+  },
+  {
+    section: 3,
+    id: "S3.4",
+    source: "09-sales-enablement/demo-scripts-checklist.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready", "built from the Primary Advantage base app"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign.", "\"coming programs\" with no date (Q-PR-24)"],
+  },
+  {
+    section: 4,
+    id: "S4.1",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["Daniel agrees"],
+    oldText: ["- Offer no discount and no free period. Discount policy is Daniel's decision (Q-SV-05).", "- The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).", "The school pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so offer no free period and no discount."],
+  },
+  {
+    section: 4,
+    id: "S4.2",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 4,
+    id: "S4.3",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["built from the Primary Advantage base app"],
+    oldText: ["\"coming programs\" with no date (Q-PR-24)"],
+  },
+  {
+    section: 4,
+    id: "S4.4",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["since the cutover of 2026-10-20"],
+    oldText: ["Primary Advantage cutover: target weekend of Oct 17/18, last date Oct 20", "Reedy Preview in Primary Advantage: only after the cutover passes"],
+  },
+  {
+    section: 4,
+    id: "S4.5",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["a direct question"],
+    oldText: ["- One active school today (Kalasin, on Primary Advantage); under 500 students.", "Today we have one active school in Thailand, in Kalasin, on Primary Advantage, with under 500 active students.", "We are a Khon Kaen company with one active school and under 500 students today.", "Uses the approved Aka (2019) short form word for word, and states the current scale honestly (1 school, under 500 students)"],
+  },
+  {
+    section: 4,
+    id: "S4.6",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["Both stay on sale until their stock is gone. Then the new editions replace them.", "Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027."],
+    oldText: ["Primary Advantage Origins 3.2 and Quest 4 are in schools from May 2027."],
+  },
+  {
+    section: 4,
+    id: "S4.7",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["sample pages", "iPad"],
+    oldText: [],
+  },
+  {
+    section: 4,
+    id: "S4.8",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["CEFR-aligned levels; the active program covers Pre-A1 to A2."],
+    oldText: ["2. **The catalogue and the channels (15 minutes):** Primary Advantage for schools; the same books reach families through Tutor Advantage; the coming programs have no date."],
+  },
+  {
+    section: 4,
+    id: "S4.9",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 4,
+    id: "S4.10",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["Mastery Advantage is rolling out to all of our products."],
+    oldText: ["Today, Primary Advantage uses FSRS flashcard scheduling; the knowledge-graph layer is not yet in the Primary Advantage app."],
+  },
+  {
+    section: 4,
+    id: "S4.11",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["We are self-funded, with no outside investors, and we have one active school today."],
+    oldText: ["We are: one active school, under 500 students, self-funded. That is why your school matters to us."],
+  },
+  {
+    section: 5,
+    id: "S5.1",
+    source: "09-sales-enablement/distributor-launch-kit.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 5,
+    id: "S5.2",
+    source: "09-sales-enablement/distributor-launch-kit.md",
+    newText: ["Both stay on sale until their stock is gone. Then the new editions replace them.", "Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027."],
+    oldText: ["Primary Advantage Origins 3.2 and Quest 4 are in schools from May 2027."],
+  },
+  {
+    section: 5,
+    id: "S5.3",
+    source: "09-sales-enablement/distributor-launch-kit.md",
+    newText: ["a direct question"],
+    oldText: ["- One active school today (Kalasin, on Primary Advantage); under 500 students.", "Today we have one active school in Thailand, in Kalasin, on Primary Advantage, with under 500 active students."],
+  },
+  {
+    section: 5,
+    id: "S5.4",
+    source: "09-sales-enablement/distributor-launch-kit.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign.", "**If Managed Service comes up:** \"Not sold today. It launches in 2027 only if 1–2 more schools sign.\""],
+  },
+  {
+    section: 5,
+    id: "S5.5",
+    source: "09-sales-enablement/distributor-launch-kit.md",
+    newText: ["Daniel agrees"],
+    oldText: ["- Offer no discount and no free period. Discount policy is Daniel's decision (Q-SV-05).", "- The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).", "The school pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so offer no free period and no discount."],
+  },
+  {
+    section: 7,
+    id: "S7.1",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["books are now in Tutor Advantage classes"],
+    oldText: ["work on the app is deferred", "Its books sell through Tutor Advantage."],
+  },
+  {
+    section: 7,
+    id: "S7.2",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027."],
+    oldText: ["Primary Advantage Origins 3.2 and Quest 4 are in schools from May 2027."],
+  },
+  {
+    section: 7,
+    id: "S7.3",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["Primary Advantage, Tutor Advantage, and CodeCamp Advantage", "books are now in Tutor Advantage classes", "built from the Primary Advantage base app", "Anuban 2 to P2"],
+    oldText: ["- **Live:** Primary Advantage (one active school), Tutor Advantage, and CodeCamp Advantage (adult bootcamp).", "- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24).", "- **Planned, no date:** Storytime and STEM Advantage."],
+  },
+  {
+    section: 7,
+    id: "S7.4",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["Do not give a date for any of these lines."],
+    oldText: ["Do not give a launch date for any planned line."],
+  },
+  {
+    section: 7,
+    id: "S7.5",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 7,
+    id: "S7.6",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["complete curriculum is being brought to market"],
+    oldText: ["Today we have one active school in Thailand, in Kalasin, on Primary Advantage, with under 500 active students.", "We are a Khon Kaen company with one active school and under 500 students today."],
+  },
+  {
+    section: 7,
+    id: "S7.7",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["Give this number only when a director asks, and never inflate it"],
+    oldText: ["Never inflate this number.", "State the company size honestly.", "state the company size honestly"],
+  },
+  {
+    section: 7,
+    id: "S7.8",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["Daniel agrees"],
+    oldText: ["- Offer no discount and no free period. Discount policy is Daniel's decision (Q-SV-05).", "- The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).", "The school pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so offer no free period and no discount."],
+  },
+  {
+    section: 8,
+    id: "S8.1",
+    source: "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
+    newText: ["built from the Primary Advantage base app"],
+    oldText: ["- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24).", "\"coming programs\" with no date (Q-PR-24)"],
+  },
+  {
+    section: 8,
+    id: "S8.2",
+    source: "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 8,
+    id: "S8.3",
+    source: "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
+    newText: ["a direct question about scale with the true count"],
+    oldText: ["- One active school today (Kalasin, on Primary Advantage); under 500 students."],
+  },
+  {
+    section: 8,
+    id: "S8.4",
+    source: "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign.", "**If Managed Service comes up:** \"Not sold today. It launches in 2027 only if 1–2 more schools sign.\""],
+  },
+  {
+    section: 8,
+    id: "S8.5",
+    source: "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["**If Managed Service comes up:** \"Not sold today. It launches in 2027 only if 1–2 more schools sign.\"", "Uses zero banned terms; says only the one Managed Service line if it comes up."],
+  },
+  {
+    section: 8,
+    id: "S8.6",
+    source: "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
+    newText: ["Daniel agrees"],
+    oldText: ["- Offer no discount and no free period. Discount policy is Daniel's decision (Q-SV-05).", "- The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05)."],
+  },
+  {
+    section: 9,
+    id: "S9.1",
+    source: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md",
+    newText: ["answers with the true count and never volunteers it"],
+    oldText: ["State the company size honestly.", "We are a Khon Kaen company with one active school and under 500 students today."],
+  },
+  {
+    section: 9,
+    id: "S9.2",
+    source: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md",
+    newText: ["a direct question about scale with the true count"],
+    oldText: ["Uses the approved Aka (2019) short form word for word, and states the current scale honestly (1 school, under 500 students)"],
+  },
+  {
+    section: 9,
+    id: "S9.3",
+    source: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign.", "**If Managed Service comes up:** \"Not sold today. It launches in 2027 only if 1–2 more schools sign.\""],
+  },
+  {
+    section: 9,
+    id: "S9.4",
+    source: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 10,
+    id: "S10.1",
+    source: "09-sales-enablement/facilitator-recruitment-kit.md",
+    newText: ["After delivery, about 2026-11-23 to 2026-11-30: Primary Advantage Origins 3.2 and Primary Advantage Quest 4"],
+    oldText: ["Primary Advantage Origins 3.2 and Quest 4: on sale from about 2026-11-22", "on sale from about 2026-11-22"],
+  },
+  {
+    section: 11,
+    id: "S11.1",
+    source: "09-sales-enablement/line-trial-facilitator-script.md",
+    newText: ["Primary Advantage Origins 3.2: on sale after delivery, about 2026-11-23 to 2026-11-30"],
+    oldText: ["on sale from about 2026-11-22"],
+  },
+  {
+    section: 11,
+    id: "S11.2",
+    source: "09-sales-enablement/line-trial-facilitator-script.md",
+    newText: ["on sale after delivery, about 2026-11-23 to 2026-11-30"],
+    oldText: ["on sale from about 2026-11-22"],
+  },
+  {
+    section: 11,
+    id: "S11.3",
+    source: "09-sales-enablement/line-trial-facilitator-script.md",
+    newText: ["Every book gets a graph-first rewrite, except Primary Advantage Origins 3.2 and Primary Advantage Quest 4, which need no rewrite.", "Reading Advantage Origins 2 follows the same edition handling.", "there is no automatic cut-over date"],
+    oldText: [],
+  },
+  {
+    section: 12,
+    id: "S12.1",
+    source: "09-sales-enablement/roi-calculator.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 12,
+    id: "S12.2",
+    source: "09-sales-enablement/roi-calculator.md",
+    newText: ["built from the Primary Advantage base app"],
+    oldText: ["\"coming programs\" with no date (Q-PR-24)"],
+  },
+  {
+    section: 13,
+    id: "S13.1",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["A fuller service is in planning; we will share it when it is ready"],
+    oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
+  },
+  {
+    section: 13,
+    id: "S13.2",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["built from the Primary Advantage base app"],
+    oldText: ["\"coming programs\" with no date (Q-PR-24)", "- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24)."],
+  },
+  {
+    section: 13,
+    id: "S13.3",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["Anuban 2 to P2"],
+    oldText: ["- **Planned, no date:** Storytime and STEM Advantage."],
+  },
+  {
+    section: 13,
+    id: "S13.4",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["a direct question"],
+    oldText: ["**Our size:** one active school (in Kalasin, on Primary Advantage) and under 500 active students. Say this honestly.", "Today we have one active school in Thailand, in Kalasin, on Primary Advantage, with under 500 active students.", "We are a Khon Kaen company with one active school and under 500 students today.", "Uses the approved Aka (2019) short form word for word, and states the current scale honestly (1 school, under 500 students)"],
+  },
+  {
+    section: 13,
+    id: "S13.5",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["on sale after delivery, about 2026-11-23 to 2026-11-30"],
+    oldText: ["on sale from about 2026-11-22"],
+  },
+  {
+    section: 13,
+    id: "S13.6",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["Every book gets a graph-first rewrite, except Primary Advantage Origins 3.2 and Primary Advantage Quest 4, which need no rewrite.", "Reading Advantage Origins 2 follows the same edition handling.", "there is no automatic cut-over date"],
+    oldText: [],
+  },
+  {
+    section: 13,
+    id: "S13.7",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["Science, Math, Zhongwen, or Storytime Advantage"],
+    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.", "a Managed Service sale, or a date for Science, Math, or Zhongwen Advantage"],
+  },
+  {
+    section: 13,
+    id: "S13.8",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["Daniel agrees"],
+    oldText: ["- Offer no discount and no free period. Discount policy is Daniel's decision (Q-SV-05).", "- The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).", "The school pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so offer no free period and no discount."],
+  },
+  {
+    section: 13,
+    id: "S13.9",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["Science, Math, Zhongwen, or Storytime Advantage"],
+    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.", "a Managed Service sale, or a date for Science, Math, or Zhongwen Advantage"],
+  },
+  {
+    section: 13,
+    id: "S13.10",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["since the cutover of 2026-10-20", "about 2026-11-23 to 2026-11-30"],
+    oldText: ["Primary Advantage cutover: target weekend of Oct 17/18, last date Oct 20", "Reedy Preview in Primary Advantage: only after the cutover passes", "on sale from about 2026-11-22"],
+  },
+  {
+    section: 14,
+    id: "S14.1",
+    source: "09-sales-enablement/tutor-family-sales-playbook.md",
+    newText: ["Daniel ordered Primary Advantage Origins 3.2 and Primary Advantage Quest 4 on the night of 2026-10-26."],
+    oldText: ["Primary Advantage Origins 3.2 and Quest 4 go on sale from about 2026-11-22."],
+  },
+  {
+    section: 14,
+    id: "S14.2",
+    source: "09-sales-enablement/tutor-family-sales-playbook.md",
+    newText: ["Every book gets a graph-first rewrite, except Primary Advantage Origins 3.2 and Primary Advantage Quest 4, which need no rewrite.", "Reading Advantage Origins 2 follows the same edition handling.", "there is no automatic cut-over date"],
+    oldText: [],
+  },
+  {
+    section: 14,
+    id: "S14.3",
+    source: "09-sales-enablement/tutor-family-sales-playbook.md",
+    newText: ["Primary Advantage Origins 3.2 (after delivery, about 2026-11-23 to 2026-11-30)", "Primary Advantage Quest 4 (after delivery, about 2026-11-23 to 2026-11-30)", "Before delivery: tell the parent you will send a LINE message when it is ready"],
+    oldText: ["on sale from about 2026-11-22", "Before that date: tell the parent that you will send a LINE message when it is ready"],
+  },
+  {
+    section: 14,
+    id: "S14.4",
+    source: "09-sales-enablement/tutor-family-sales-playbook.md",
+    newText: ["Primary Advantage Quest 5: not printed, and no print date", "Tell the parent the next book is not printed yet. Give no date. Promise no notice."],
+    oldText: ["| Primary Advantage Quest 5: not printed |"],
+  },
+  {
+    section: 14,
+    id: "S14.5",
+    source: "09-sales-enablement/tutor-family-sales-playbook.md",
+    newText: ["เล่มต่อไปของชุดนี้ยังไม่ได้พิมพ์ค่ะ ตอนนี้ยังไม่มีกำหนดค่ะ", "The next book in this series is not printed yet. There is no date yet."],
+    oldText: [],
+  },
+  {
+    section: 14,
+    id: "S14.6",
+    source: "09-sales-enablement/tutor-family-sales-playbook.md",
+    newText: ["Primary Advantage Origins 3.2 and Primary Advantage Quest 4 go on sale after delivery, about 2026-11-23 to 2026-11-30."],
+    oldText: ["the books on sale from about 2026-11-22"],
+  },
+];
+
+/** The row count of every review section of the re-pin review. */
+const REPIN_SECTION_COUNTS: Record<number, number> = {
+  1: 5,
+  2: 2,
+  3: 4,
+  4: 11,
+  5: 5,
+  6: 0,
+  7: 8,
+  8: 6,
+  9: 4,
+  10: 1,
+  11: 3,
+  12: 2,
+  13: 10,
+  14: 6,
+};
+
+describe("S2 - the curriculum uses the advantage-pr 7eff8c10 source set", () => {
+  it("holds one row for every review row that needs a seed change", () => {
+    expect(REPIN_ROWS).toHaveLength(REPIN_ROW_COUNT);
+  });
+
+  it("counts the rows of every review section", () => {
+    const counts: Record<number, number> = {};
+    for (const section of Object.keys(REPIN_SECTION_COUNTS).map(Number)) {
+      counts[section] = 0;
+    }
+    for (const entry of REPIN_ROWS) {
+      counts[entry.section] = (counts[entry.section] ?? 0) + 1;
+    }
+    expect(counts).toEqual(REPIN_SECTION_COUNTS);
+  });
+
+  it.each(REPIN_ROWS)(
+    "section $section $id holds the new source text and drops the old text",
+    (entry: RepinRow) => {
+      for (const text of entry.newText) {
+        expect(allText(), `${entry.id}: the new source text is missing`).toContain(text);
+      }
+      for (const text of entry.oldText) {
+        expect(allText(), `${entry.id}: the old text is still in the seed`).not.toContain(text);
+      }
+    },
+  );
 });
