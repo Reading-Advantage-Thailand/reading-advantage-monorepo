@@ -1868,7 +1868,7 @@ Green builds to these rules:
 
 - [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:pm Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
 
-## Phase 4: Teacher app
+## Phase 4: Teacher app [checkpoint: c633a4446]
 
 Deviation (PM order of 2026-11-05, recorded by the P4 Red role): Phase 4 starts while the Phase 3
 tasks 3.7, 3.10, and 3.11 stay open on external inputs (A-42 final pin after the 11-16 check;
