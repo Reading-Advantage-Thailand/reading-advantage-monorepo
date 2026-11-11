@@ -147,7 +147,7 @@ describe("approveAccountingSubmission (red - Task 7)", () => {
     expect(repository.auditEvents[0]).toMatchObject({ action: "approve" });
   });
 
-  it.each(["STAFF", "ACCOUNTANT"] as const)(
+  it.each(["STAFF"] as const)(
     "rejects %s callers with forbidden",
     async (role) => {
       const mod = (await import("../submissions.js")) as Record<string, unknown>;
@@ -167,6 +167,28 @@ describe("approveAccountingSubmission (red - Task 7)", () => {
       expect(repository.auditEvents).toHaveLength(0);
     },
   );
+
+  it("ACCOUNTANT approves a pending submission -> approved + one 'approve' event from the accountant", async () => {
+    const mod = (await import("../submissions.js")) as Record<string, unknown>;
+    expect(mod.approveAccountingSubmission, "approveAccountingSubmission is missing - red phase expected").toBeDefined();
+    if (typeof mod.approveAccountingSubmission !== "function") return;
+    const approve = mod.approveAccountingSubmission as (args: unknown) => Promise<unknown>;
+
+    const repository = createFakeRepository([storedSubmission()]);
+    const result = (await approve({
+      repository,
+      actor: accountantActor,
+      submissionId: SUBMISSION_ID,
+    })) as AccountingSubmission;
+
+    expect(result.status).toBe("approved");
+    expect(repository.auditEvents).toHaveLength(1);
+    expect(repository.auditEvents[0]).toMatchObject({
+      action: "approve",
+      actorAccountId: ACCOUNTANT_ACCOUNT_ID,
+      actorRole: "ACCOUNTANT",
+    });
+  });
 
   it("approving an unknown submission -> not-found with no audit event", async () => {
     const mod = (await import("../submissions.js")) as Record<string, unknown>;
@@ -249,7 +271,7 @@ describe("rejectAccountingSubmission (red - Task 7)", () => {
     expect(repository.auditEvents).toHaveLength(0);
   });
 
-  it.each(["STAFF", "ACCOUNTANT"] as const)(
+  it.each(["STAFF"] as const)(
     "reject rejects %s callers with forbidden",
     async (role) => {
       const mod = (await import("../submissions.js")) as Record<string, unknown>;
@@ -270,6 +292,30 @@ describe("rejectAccountingSubmission (red - Task 7)", () => {
       expect(repository.auditEvents).toHaveLength(0);
     },
   );
+
+  it("ACCOUNTANT rejects with a reason -> rejected + one 'reject' event carrying the reason", async () => {
+    const mod = (await import("../submissions.js")) as Record<string, unknown>;
+    expect(mod.rejectAccountingSubmission, "rejectAccountingSubmission is missing - red phase expected").toBeDefined();
+    if (typeof mod.rejectAccountingSubmission !== "function") return;
+    const rejectFn = mod.rejectAccountingSubmission as (args: unknown) => Promise<unknown>;
+
+    const repository = createFakeRepository([storedSubmission()]);
+    const result = (await rejectFn({
+      repository,
+      actor: accountantActor,
+      submissionId: SUBMISSION_ID,
+      reason: "The amount does not match the evidence",
+    })) as AccountingSubmission;
+
+    expect(result.status).toBe("rejected");
+    expect(repository.auditEvents).toHaveLength(1);
+    expect(repository.auditEvents[0]).toMatchObject({
+      action: "reject",
+      actorAccountId: ACCOUNTANT_ACCOUNT_ID,
+      actorRole: "ACCOUNTANT",
+      reason: "The amount does not match the evidence",
+    });
+  });
 
   it("rejecting an unknown submission -> not-found with no audit event", async () => {
     const mod = (await import("../submissions.js")) as Record<string, unknown>;
