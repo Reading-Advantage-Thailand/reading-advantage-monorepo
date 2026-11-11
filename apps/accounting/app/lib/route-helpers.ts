@@ -94,6 +94,19 @@ export function isForbiddenError(error: unknown): boolean {
 }
 
 /**
+ * Checks whether the error is a domain conflict rejection.
+ * @param error Unknown thrown value.
+ * @returns True when the error is a conflict.
+ */
+export function isConflictError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    error.name === "AccountingSubmissionError" &&
+    (error as { readonly reason?: unknown }).reason === "conflict"
+  );
+}
+
+/**
  * Checks whether the error is a domain not-found rejection.
  * @param error Unknown thrown value.
  * @returns True when the error is not-found.

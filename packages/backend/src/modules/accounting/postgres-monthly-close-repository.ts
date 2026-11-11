@@ -12,6 +12,10 @@ import {
   type AccountingMonthlyCloseAuditEvent,
 } from "./intake-contracts.js";
 import type { AccountingMonthlyCloseRepository } from "./monthly-close.js";
+import { AccountingSubmissionError } from "./submissions.js";
+
+/** PostgreSQL unique violation code. */
+const UNIQUE_VIOLATION_CODE = "23505";
 
 /**
  * Raw `accounting_monthly_closes` row as returned by postgres.js: snake_case
@@ -62,6 +66,21 @@ function toIsoTimestamp(value: Date | string): string {
   return value instanceof Date
     ? value.toISOString()
     : new Date(value).toISOString();
+}
+
+/**
+ * Reports whether the driver error is a unique violation. The close table
+ * holds one row per company and period month, so a second open for one month
+ * reaches the driver as a unique violation.
+ * @param error Unknown thrown value.
+ * @returns True when the driver reported the unique violation code.
+ */
+function isUniqueViolation(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { readonly code?: unknown }).code === UNIQUE_VIOLATION_CODE
+  );
 }
 
 /**
@@ -166,29 +185,37 @@ export function createPostgresAccountingMonthlyCloseRepository(input: {
     async insert(
       close: AccountingMonthlyClose,
     ): Promise<AccountingMonthlyClose> {
-      const rows = await sql<AccountingMonthlyCloseRow[]>`
-        insert into accounting_monthly_closes (
-          id, period_month, status, report_evidence_reference,
-          opened_by_account_id, opened_at, signed_by_account_id,
-          signed_by_role, signed_at, locked_at, scope_company_id
-        ) values (
-          ${close.id},
-          ${close.periodMonth},
-          ${close.status},
-          ${close.reportEvidenceReference},
-          ${close.openedByAccountId},
-          ${close.openedAt},
-          ${close.signedByAccountId},
-          ${close.signedByRole},
-          ${close.signedAt},
-          ${close.lockedAt},
-          ${close.scopeCompanyId}
-        )
-        returning
-          id, period_month, status, report_evidence_reference,
-          opened_by_account_id, opened_at, signed_by_account_id,
-          signed_by_role, signed_at, locked_at, scope_company_id
-      `;
+      let rows: AccountingMonthlyCloseRow[];
+      try {
+        rows = await sql<AccountingMonthlyCloseRow[]>`
+          insert into accounting_monthly_closes (
+            id, period_month, status, report_evidence_reference,
+            opened_by_account_id, opened_at, signed_by_account_id,
+            signed_by_role, signed_at, locked_at, scope_company_id
+          ) values (
+            ${close.id},
+            ${close.periodMonth},
+            ${close.status},
+            ${close.reportEvidenceReference},
+            ${close.openedByAccountId},
+            ${close.openedAt},
+            ${close.signedByAccountId},
+            ${close.signedByRole},
+            ${close.signedAt},
+            ${close.lockedAt},
+            ${close.scopeCompanyId}
+          )
+          returning
+            id, period_month, status, report_evidence_reference,
+            opened_by_account_id, opened_at, signed_by_account_id,
+            signed_by_role, signed_at, locked_at, scope_company_id
+        `;
+      } catch (error) {
+        if (isUniqueViolation(error)) {
+          throw new AccountingSubmissionError("conflict");
+        }
+        throw error;
+      }
       const [row] = rows;
       if (row === undefined) {
         throw new Error("Accounting monthly close insert returned no row");
@@ -216,7 +243,11 @@ export function createPostgresAccountingMonthlyCloseRepository(input: {
 
     async save(
       close: AccountingMonthlyClose,
-    ): Promise<AccountingMonthlyClose> {
+      expectedStatus: string,
+    ): Promise<AccountingMonthlyClose | undefined> {
+      // The expected status is a bound value in the where clause, so a lost
+      // compare-and-swap matches no row. The row returns with `returning *`,
+      // so no column name carries the status text into the statement.
       const rows = await sql<AccountingMonthlyCloseRow[]>`
         update accounting_monthly_closes
         set status = ${close.status},
@@ -227,14 +258,12 @@ export function createPostgresAccountingMonthlyCloseRepository(input: {
           locked_at = ${close.lockedAt}
         where id = ${close.id}
           and scope_company_id = ${close.scopeCompanyId}
-        returning
-          id, period_month, status, report_evidence_reference,
-          opened_by_account_id, opened_at, signed_by_account_id,
-          signed_by_role, signed_at, locked_at, scope_company_id
+          and status = ${expectedStatus}
+        returning *
       `;
       const [row] = rows;
       if (row === undefined) {
-        throw new Error("Accounting monthly close update returned no row");
+        return undefined;
       }
       return toAccountingMonthlyClose(row);
     },

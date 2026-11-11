@@ -13,6 +13,7 @@ import {
 } from "@/app/lib/monthly-close";
 import {
   actorFromUser,
+  isConflictError,
   isForbiddenError,
   isInvalidInputError,
   isNotFoundError,
@@ -95,6 +96,12 @@ export async function POST(request: Request): Promise<Response> {
     }
     if (isForbiddenError(error)) {
       return jsonResponse({ message: "Forbidden" }, 403);
+    }
+    if (isConflictError(error)) {
+      return jsonResponse(
+        { message: "A monthly close already exists for this period month" },
+        409,
+      );
     }
     if (isNotFoundError(error)) {
       return jsonResponse({ message: "Monthly close not found" }, 404);

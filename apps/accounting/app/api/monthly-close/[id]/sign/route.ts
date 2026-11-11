@@ -11,6 +11,7 @@ import { requireAccountingSession } from "@/app/lib/auth";
 import { signMonthlyClose } from "@/app/lib/monthly-close";
 import {
   actorFromUser,
+  isConflictError,
   isForbiddenError,
   isInvalidInputError,
   isNotFoundError,
@@ -59,6 +60,12 @@ export async function POST(
     }
     if (isForbiddenError(error)) {
       return jsonResponse({ message: "Forbidden" }, 403);
+    }
+    if (isConflictError(error)) {
+      return jsonResponse(
+        { message: "The monthly close changed and cannot be signed" },
+        409,
+      );
     }
     if (isNotFoundError(error)) {
       return jsonResponse({ message: "Monthly close not found" }, 404);
