@@ -48,6 +48,7 @@ import {
 const COMPANY_ID = "reading-advantage";
 const STAFF_ACCOUNT_ID = "11111111-1111-4111-8111-111111111111";
 const OTHER_STAFF_ACCOUNT_ID = "22222222-2222-4222-8222-222222222222";
+const CONTRACTOR_ACCOUNT_ID = "33333333-3333-4333-8333-333333333333";
 const SUBMISSION_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const OTHER_SUBMISSION_ID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 const EVIDENCE_REFERENCE =
@@ -57,6 +58,12 @@ const staffActor: AccountingActor = {
   accountId: STAFF_ACCOUNT_ID,
   companyId: COMPANY_ID,
   role: "STAFF",
+};
+
+const contractorActor: AccountingActor = {
+  accountId: CONTRACTOR_ACCOUNT_ID,
+  companyId: COMPANY_ID,
+  role: "CONTRACTOR",
 };
 
 const thbExpenseInput: AccountingSubmissionInput = {
@@ -566,6 +573,18 @@ describe("submitAccountingSubmission", () => {
   });
 });
 
+/** Labeled count of the two new CONTRACTOR rows of plan task 2.1. */
+const CONTRACTOR_ROWS = [
+  "own submissions only",
+  "another account hidden",
+] as const;
+console.log(`contractor_rows=${CONTRACTOR_ROWS.length}`);
+if (CONTRACTOR_ROWS.length !== 2) {
+  throw new Error(
+    `contractor_rows=${CONTRACTOR_ROWS.length} is wrong; plan task 2.1 names two rows.`,
+  );
+}
+
 describe("listAccountingSubmissions", () => {
   const ownSubmission = storedSubmission();
   const otherSubmission = storedSubmission({
@@ -612,5 +631,36 @@ describe("listAccountingSubmissions", () => {
     expect(error).toBeInstanceOf(AccountingSubmissionError);
     expect(error).toMatchObject({ reason: "forbidden" });
     expect(repository.listByScope).not.toHaveBeenCalled();
+  });
+
+  it("returns only the CONTRACTOR actor's own submissions within the company scope", async () => {
+    const contractorOwnSubmission = storedSubmission({
+      submittedByAccountId: CONTRACTOR_ACCOUNT_ID,
+    });
+    const repository = createFakeRepository([
+      contractorOwnSubmission,
+      otherSubmission,
+    ]);
+
+    const submissions = await listAccountingSubmissions({
+      repository,
+      actor: contractorActor,
+    });
+
+    expect(repository.listByScope).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+    });
+    expect(submissions).toEqual([contractorOwnSubmission]);
+  });
+
+  it("hides another account's submissions from a CONTRACTOR", async () => {
+    const repository = createFakeRepository([otherSubmission]);
+
+    const submissions = await listAccountingSubmissions({
+      repository,
+      actor: contractorActor,
+    });
+
+    expect(submissions).toEqual([]);
   });
 });
