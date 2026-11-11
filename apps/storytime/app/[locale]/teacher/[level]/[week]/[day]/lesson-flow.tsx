@@ -132,6 +132,41 @@ function pick(value: Bilingual, thai: boolean): string {
 }
 
 /**
+ * Picks the language mark of a bilingual field in the language of the text that shows.
+ *
+ * An empty Thai text falls back to the English text, so the mark follows the text that shows
+ * and not the toggle (review finding F433a).
+ * @param value The field with its English text and its Thai text.
+ * @param thai `true` when the Thai toggle is on.
+ * @returns `"th"` when the Thai text shows, and `"en"` when the English text shows.
+ */
+function pickLang(value: Bilingual, thai: boolean): "th" | "en" {
+  return pick(value, thai) === value.th && thai ? "th" : "en";
+}
+
+/**
+ * Picks the language mark of each teacher-note array of a step.
+ *
+ * Each of the four arrays falls back on its own (review finding F404), so a mark follows the
+ * array that supplies the lines: an empty Thai array keeps the English mark (review finding
+ * F433a).
+ * @param step The step of the day.
+ * @param thai `true` when the Thai toggle is on.
+ * @returns For each heading key, `"th"` when the Thai array supplies the lines, and `"en"`
+ *   when the English array supplies them.
+ */
+function noteLangsOf(step: LessonStep, thai: boolean): Record<keyof LessonNote, "th" | "en"> {
+  const mark = (lines: string[] | undefined): "th" | "en" =>
+    thai && step.th && (lines?.length ?? 0) > 0 ? "th" : "en";
+  return {
+    teacherActions: mark(step.th?.teacherActions),
+    teacherLanguage: mark(step.th?.teacherLanguage),
+    studentActions: mark(step.th?.studentActions),
+    watchFor: mark(step.th?.watchFor),
+  };
+}
+
+/**
  * Picks the teacher note of a step in the language of the flow.
  *
  * Each of the four arrays falls back on its own: an empty Thai array keeps the English array
@@ -233,22 +268,29 @@ export interface TeacherLessonFlowProps {
 }
 
 /**
- * Renders the share moment of one step (plan task 4.6a, rule D23).
+ * Renders the share moment of one shot (plan task 4.6a, rule D23).
  *
  * The moment names the shot with the id of the step and the kind of the media. It shows the
- * label of the kind, the caption of the day, and the consent line, in the language of the flow.
- * The moment holds no control and sends nothing.
- * @param props The props of the share moment.
- * @returns The share moment of the step.
+ * label of the kind and the caption of the day in the language of the flow, and the consent
+ * line when the prop asks for it. The moment holds no control and sends nothing. The consent
+ * line is a statement for the whole step, so the flow renders it once, in the last moment of
+ * the step (review finding F434).
+ * @param props.share The share part of the day.
+ * @param props.shot The shot of the step.
+ * @param props.thai `true` when the Thai toggle is on.
+ * @param props.consent `true` when the moment holds the consent line of the step.
+ * @returns The share moment of the shot.
  */
 function ShareMomentView({
   share,
   shot,
   thai,
+  consent,
 }: {
   share: ShareMoment;
   shot: ShareShot;
   thai: boolean;
+  consent: boolean;
 }) {
   const labels = SHARE_MEDIA_LABELS[shot.media];
   return (
@@ -258,15 +300,17 @@ function ShareMomentView({
       data-share-media={shot.media}
       className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#fffaf0] p-4"
     >
-      <h3 className="text-lg font-semibold" data-share-label lang={thai ? "th" : "en"}>
+      <h3 className="text-lg font-semibold" data-share-label lang={pickLang(labels, thai)}>
         {pick(labels, thai)}
       </h3>
-      <p className="text-lg" lang={thai ? "th" : "en"}>
+      <p className="text-lg" lang={pickLang(share.caption, thai)}>
         {pick(share.caption, thai)}
       </p>
-      <p className="text-neutral-700" lang={thai ? "th" : "en"}>
-        {pick(SHARE_CONSENT_LINE, thai)}
-      </p>
+      {consent ? (
+        <p className="text-neutral-700" lang={pickLang(SHARE_CONSENT_LINE, thai)}>
+          {pick(SHARE_CONSENT_LINE, thai)}
+        </p>
+      ) : null}
     </section>
   );
 }
@@ -276,8 +320,9 @@ function ShareMomentView({
  *
  * The control shows only when the signed map holds the file. The control plays nothing on
  * render; a click hands the signed URL to the flow, which plays one clip at a time and stops
- * the last clip (review finding F405). The accessible name holds the word and the sound, or the
- * card text, so the controls of a drill stay apart (review finding F401).
+ * the last clip (review finding F405). The accessible name starts with the visible text
+ * "Play clip" and then holds the word and the sound, or the card text, so a speech-input user
+ * matches the name and the controls of a drill stay apart (review findings F401 and F441).
  * @param props.file The bank file of the clip.
  * @param props.mediaUrls The signed media URL of each file name.
  * @param props.label The accessible name of the control.
@@ -343,7 +388,7 @@ function RecallView({ day, recall, thai, mediaUrls, onPlay }: RecallViewProps) {
       <h2 className="text-xl font-semibold" lang="en">
         The recall cards
       </h2>
-      <p className="text-lg" lang={thai ? "th" : "en"}>
+      <p className="text-lg" lang={pickLang(recall.ask, thai)}>
         {pick(recall.ask, thai)}
       </p>
       <ul className="flex flex-wrap gap-2">
@@ -351,6 +396,7 @@ function RecallView({ day, recall, thai, mediaUrls, onPlay }: RecallViewProps) {
           <li
             key={index}
             data-recall-card={index}
+            lang="en"
             className="flex items-center gap-2 rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
           >
             {card.text}
@@ -358,7 +404,7 @@ function RecallView({ day, recall, thai, mediaUrls, onPlay }: RecallViewProps) {
               <ClipControl
                 file={card.audio}
                 mediaUrls={mediaUrls}
-                label={`Play the recording of ${card.text}`}
+                label={`Play clip: the recording of ${card.text}`}
                 onPlay={onPlay}
               />
             ) : null}
@@ -429,6 +475,7 @@ function StepView({
   onPlay,
 }: StepViewProps) {
   const note = noteOf(step, thai);
+  const noteLangs = noteLangsOf(step, thai);
   const drill = panels ? (step.blendDrill ?? null) : null;
   const sound = panels ? (step.soundLoop ?? null) : null;
   const sight = panels ? (step.sightWords ?? null) : null;
@@ -444,7 +491,7 @@ function StepView({
         <span className="rounded-full border border-[#92400e] bg-[#fcd34d] px-3 py-1 text-lg text-[#92400e]">
           {step.id}
         </span>
-        <h2 className="text-2xl font-semibold" lang={thai ? "th" : "en"}>
+        <h2 className="text-2xl font-semibold" lang={pickLang(step.title, thai)}>
           {pick(step.title, thai)}
         </h2>
         <span className="text-lg text-neutral-600" lang="en">
@@ -460,13 +507,13 @@ function StepView({
           <h3 className="text-lg font-semibold" lang="en">
             The sound loop
           </h3>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(sound.correct, thai)}>
             {pick(sound.correct, thai)}
           </p>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(sound.practise, thai)}>
             {pick(sound.practise, thai)}
           </p>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(sound.retest, thai)}>
             {pick(sound.retest, thai)}
           </p>
         </section>
@@ -481,16 +528,16 @@ function StepView({
           <h3 className="text-lg font-semibold" lang="en">
             The blend drill
           </h3>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(drill.model, thai)}>
             {pick(drill.model, thai)}
           </p>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(drill.lead, thai)}>
             {pick(drill.lead, thai)}
           </p>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(drill.test, thai)}>
             {pick(drill.test, thai)}
           </p>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(drill.correction, thai)}>
             {pick(drill.correction, thai)}
           </p>
           <ul className="flex flex-col gap-1">
@@ -502,10 +549,10 @@ function StepView({
                 <span lang="en">{word.sounds.join(" ")}</span>
                 {(word.audio ?? []).map((file, soundIndex) => (
                   <ClipControl
-                    key={file}
+                    key={`${file}-${soundIndex}`}
                     file={file}
                     mediaUrls={mediaUrls}
-                    label={`Play ${word.sounds[soundIndex] ?? word.sounds[0] ?? ""} of ${word.word}`}
+                    label={`Play clip: ${word.sounds[soundIndex] ?? word.sounds[0] ?? ""} of ${word.word}`}
                     onPlay={onPlay}
                   />
                 ))}
@@ -527,22 +574,23 @@ function StepView({
           <p className="text-lg" lang="en">
             {sight.words.join(" · ")}
           </p>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(sight.slide, thai)}>
             {pick(sight.slide, thai)}
           </p>
-          <p className="text-lg" lang={thai ? "th" : "en"}>
+          <p className="text-lg" lang={pickLang(sight.check, thai)}>
             {pick(sight.check, thai)}
           </p>
         </section>
       ) : null}
 
-      {share
-        ? shots.map((shot) => (
+      {share && shots.length > 0
+        ? shots.map((shot, shotIndex) => (
             <ShareMomentView
-              key={`${shot.step}-${shot.media}`}
+              key={shotIndex}
               share={share}
               shot={shot}
               thai={thai}
+              consent={shotIndex === shots.length - 1}
             />
           ))
         : null}
@@ -602,7 +650,7 @@ function StepView({
             </h3>
             <ul className="flex flex-col gap-1">
               {note[heading.key].map((line, index) => (
-                <li key={index} className="text-lg" lang={thai ? "th" : "en"}>
+                <li key={index} className="text-lg" lang={noteLangs[heading.key]}>
                   {line}
                 </li>
               ))}
@@ -620,7 +668,7 @@ function StepView({
             <h3 className="text-lg font-semibold" lang="en">
               {variant.label}
             </h3>
-            <p className="text-lg" lang={thai ? "th" : "en"}>
+            <p className="text-lg" lang={pickLang(step[variant.key], thai)}>
               {pick(step[variant.key], thai)}
             </p>
           </section>
@@ -722,6 +770,8 @@ export function TeacherLessonFlow({
   const [thai, setThai] = useState(false);
   const [player, setPlayer] = useState<PlayerState>("closed");
   const openerRef = useRef<HTMLButtonElement | null>(null);
+  // The focus target of the last screen of the day (review finding F421d).
+  const endRef = useRef<HTMLDivElement | null>(null);
   // One audio element at a time: a new click stops the last clip (review finding F405).
   const clipAudioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -753,6 +803,22 @@ export function TeacherLessonFlow({
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [player]);
+
+  // A clip that plays stops when the flow unmounts, for example on "Back to the week"
+  // (review findings F435 and F443).
+  useEffect(
+    () => () => {
+      clipAudioRef.current?.pause();
+      clipAudioRef.current = null;
+    },
+    [],
+  );
+
+  // The last screen holds no "Next step" control, so the flow moves the focus to its end
+  // region instead of the body (review finding F421d).
+  useEffect(() => {
+    if (last) endRef.current?.focus();
+  }, [last]);
 
   /**
    * Opens the player of the media part of the step. A part with no signed URL opens no player,
@@ -801,7 +867,7 @@ export function TeacherLessonFlow({
     <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 p-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-semibold" lang={thai ? "th" : "en"}>
+          <h1 className="text-3xl font-semibold" lang={script ? pickLang(script.title, thai) : "en"}>
             {script ? pick(script.title, thai) : ""}
           </h1>
           <p className="text-neutral-600" lang="en">
@@ -841,7 +907,7 @@ export function TeacherLessonFlow({
               <li
                 key={index}
                 className="rounded-2xl border border-[#92400e] p-4 text-lg"
-                lang={thai ? "th" : "en"}
+                lang={pickLang(prompt, thai)}
               >
                 {pick(prompt, thai)}
               </li>
@@ -891,7 +957,16 @@ export function TeacherLessonFlow({
         />
       ) : null}
 
-      {day === 5 && last ? <CheckView items={week.check.items} /> : null}
+      {last ? (
+        <div
+          ref={endRef}
+          tabIndex={-1}
+          aria-label="The end of the lesson"
+          className="flex flex-col gap-3 focus:outline-none"
+        >
+          {day === 5 ? <CheckView items={week.check.items} /> : null}
+        </div>
+      ) : null}
 
       {last ? null : (
         <div>

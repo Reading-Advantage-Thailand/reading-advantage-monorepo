@@ -68,6 +68,17 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
 - The build needs no database and no secrets (milestone 1).
 - The image repository is `primary-advantage-repo`; the image name is `storytime-app`.
 
+## The teacher routes flag (2026-11-11)
+
+- The environment variable `STORYTIME_TEACHER_ROUTES` turns the teacher routes
+  (`/<locale>/teacher/...`) on. The on value is `1`. Every other value, and no value, keeps
+  the flag off by default.
+- The flag is off by default, and it is the only access control of the teacher routes until
+  Q1: with the flag off, every signed-in request to a teacher route answers 404. Do not set
+  the flag in the Dockerfile or `cloudbuild.yaml`. Set it on the service with
+  `gcloud run services update --set-env-vars STORYTIME_TEACHER_ROUTES=1` only after
+  Daniel's go.
+
 ## Facts (2026-11-07)
 
 These facts come from the test deploy of 2026-11-07. The tag rule below is in the file
