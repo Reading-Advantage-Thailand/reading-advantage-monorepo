@@ -136,6 +136,8 @@ with the version on its line 3:
 
 **Pin update (PM relay, 2026-10-26):** the source set moved to advantage-pr ec63bc4 (local, not pushed). Five files in 09-sales-enablement/ changed: battle-cards/vs-tutor.md 1.3, tutor-family-sales-playbook.md 1.4, line-trial-facilitator-script.md 1.7, facilitator-recruitment-kit.md 1.5, sales-training-scope-2027.md 1.3. Only the date line changed: "about 2026-11-08" became "about 2026-11-22" (the in-hand date of Primary Advantage Origins 3.2 and Quest 4). The seed text and its content test use the new date; the pins above stay as written.
 
+**Pin update (PM hand-off, 2026-11-11):** advantage-pr `7eff8c106c7265b41d584c4ea997d65ea30dadfb` replaces `e7ee72b682504073654a0b8386819dbc63f50aeb`. The change is the tone fix of 2026-11-11. A count answers a direct question only, and no limit is volunteered. The approved Managed Service line replaces the old condition, and the team size leaves the pitch. The current pin in `apps/sales-advantage/curriculum/release-candidate.json` is `a3c4df08`. Of the 16 pinned documents in `09-sales-enablement/`, 14 changed, and the seed and text-check impact is in `review/repin-7eff8c10.md`.
+
 **PR notes for the seed (2026-10-15):**
 1. The 3 school-sale roleplays (`role-play-scenarios.md`, English) have checklist criteria. The seed turns each into 3–5 weighted criteria plus the claims criterion; PR checks them in the claims review.
 2. The lessons must not settle these open items: Q-SV-05 (pilot paid or free), Q-PR-24 (no date for Science, Math, Zhongwen Advantage), Q-SE-12 (no placement trial tool), Q-SE-13 (the Tutor app shows ฿2,500 and the landing statistics; never show them).
