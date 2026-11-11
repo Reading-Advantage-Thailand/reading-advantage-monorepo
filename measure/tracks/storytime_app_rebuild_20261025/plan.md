@@ -3296,6 +3296,25 @@ for every other track.
     second run gives 15 failures and 32 passes, and every failure names a missing path.
   - No product source was written. No script sits under `apps/storytime/scripts/checks/`. No
     model was called and no money was spent. Evidence class: automated.
+  - Green evidence (task 5.4), 2026-11-12. Role base `a9706907486876fbb0b8af9cc23c2f5ec6d67be3`;
+    phase base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; scripts commit `3243b7020`. `runner.ts`
+    holds `runPreCheck`, the nine-field ledger line of P5.1 in order, the ledger-first order, the
+    refusal of a real client under Vitest, the `mock` and `model pre-check` evidence classes, and
+    the `at=<seconds>` fail detail. `rubrics.ts` holds `RUBRICS` with one rubric for each of the
+    six kinds, the known faults of rule 6.7b, the known bad files, and the files Daniel passed. The
+    set names the four AC-11.2 files by label: BA1 "Hello", `04-n.mp3`, C1W2 cut 1, and the "One
+    sun" gesture thumbnail. The two received paths exist in the hand-off packages
+    (`phonemes/daniel/04-n.mp3` and `l2/media/w02/song-lines/point-up.jpg`); the BA1 and C1W2
+    paths stay empty until the PM answers. The song and the video rubrics hold a placeholder known
+    bad file with an empty path, because no received bad take of those kinds exists. The runner
+    imports no provider SDK and holds no key; the live client comes from the internal adapter
+    `@reading-advantage/ai`, and a mock result never counts as a pre-check (P5.9).
+    `GREEN_TEST_COMMAND` under heavy-run p1 exits 0: 6 files, 47 of 47 passed, 0 failed, 0 skipped.
+    The type check `tsc --noEmit` in `apps/storytime` exits 0; ESLint on the two scripts exits 0
+    with 0 errors and 0 warnings; `build-graph update ./graph.db` exits 0 (2 files, 26 nodes, 24
+    edges) and search finds `runPreCheck`, `ledgerLineOf`, `failureDetailOf`, `isTestProcess`, and
+    `rubricFor`. Unit part evidence class: automated.
+  - Live calibration: waits for the PM answer on the BA1 and C1W2 file paths and for the ledger line; no paid call ran.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
 - [ ] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
