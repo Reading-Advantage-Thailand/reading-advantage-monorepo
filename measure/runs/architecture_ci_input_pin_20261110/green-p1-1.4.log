@@ -46,3 +46,55 @@ plan_updates: task 1.4 stays [~] with the round 4, round 5, and round 6 notes
 known_failures: the refresh stopped by the 5400 s cap with exit 124; the manifest is unchanged; tasks 1.4 and 1.5 stay open
 handoff: option A is spent; the next step is option B (task 1.4b), owned by the orchestrator
 END_MEASURE_AGENT_RESULT
+
+=== round 7: the split pin refresh at the 1.4b Green HEAD ===
+role_base_sha: ca7b1f4e14ff8b2a0e8b80f49ad8ac52d0afd42e
+status: in progress
+model: deepseek/deepseek-flash#high
+
+Pre-run checks on 2026-11-11:
+- git status --short -- packages/architecture-enforcement is empty. OQ-4 holds.
+- MemAvailable is 1836236 kB before run 1. The floor is 1500 MB.
+- The 1.4b Green code e97505b3e7f712cc42c12cc80cb4e70bff56c611 is an ancestor of HEAD.
+- Each run uses HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 and the command pnpm architecture:pin:refresh --acknowledge --budget-s 1500.
+- The run bound is 12.
+
+Run 1
+- Command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:pin:refresh --acknowledge --budget-s 1500'
+- Start: 2026-11-11T08:41:13+0700. End: 2026-11-11T09:11:15+0700.
+- Heavy-run exit: 124. The 1800 s cap stopped the job. The cap did not change.
+- HEAD: ca7b1f4e14ff8b2a0e8b80f49ad8ac52d0afd42e.
+- MemAvailable before the run: 2222536 kB.
+- step=store elapsed_s=0
+- step=projection elapsed_s=9
+- step=prelude pass=1 elapsed_s=58
+- Prelude step time: 58 s. The prelude did not use the budget.
+- modules_total=6936.
+- Batch lines of pass 1: modules_done 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750. Their elapsed_s values are 58, 59, 60, 61, 62, 63, 63, 65, 66, 67, 67, 70, 73, 75, 76.
+- Last completed value: modules_done=3750 of modules_total=6936 at elapsed_s=76.
+- No batch line printed after 76 s. Batch 16 covers indices 3750 to 3999. That batch holds 69 minified game bundles (3049795 bytes). The largest are phaser.esm-kk0bm_Sx.js (1377429 bytes) and hud-CK-u5dw1.js (794685 bytes), under apps/www-reading-advantage/public/experience/assets.
+- Store after the kill (read only): version 1, headCommit ca7b1f4e14ff8b2a0e8b80f49ad8ac52d0afd42e, candidatePaths [], sourcePaths 6936, pass 1 3750 modules, pass 2 0 modules.
+- Manifest unchanged. git status --short -- packages/architecture-enforcement is empty.
+- Projection of runs left at the measured normal rate: 4 runs. That is 1 run for the rest of pass 1 (3186 modules), 2 runs for pass 2 (6936 modules), and 1 run for the combine. The value 4 is under the bound 12. The projection is void because one batch exceeded the 1800 s cap.
+- The rule says exit 124 stops the series. I did not retry and I did not raise the cap.
+
+Series decision for round 7
+- The series stopped at run 1 with exit 124. Task 1.4 stays [~].
+- The commit of this note changes HEAD. The next run discards the 3750-module store (spec OQ-2). The orchestrator decides the next step.
+- No manifest commit. No check ran. The 58 named tests did not run.
+
+MEASURE_AGENT_RESULT
+role: green
+status: blocked
+track: architecture_ci_input_pin_20261110
+phase: P1 task 1.4 round 7
+role_base_sha: ca7b1f4e14ff8b2a0e8b80f49ad8ac52d0afd42e
+commits: none in round 7 except the plan and log note that follows this block; the 1.4b code commit e97505b3e is an ancestor of HEAD
+tests_run: none. The refresh exited 124 at the 1800 s cap inside batch 16, so no check and no test ran.
+files_changed: plan.md and this log only. The manifest and the source stay unchanged.
+plan_updates: task 1.4 stays [~] with the round 7 note
+known_failures: run 1 stored 3750 of 6936 pass-1 modules in 76 s, with a prelude of 58 s. Batch 16, which holds 69 minified game bundles, did not finish within the 1800 s cap. The store holds 3750 modules at ca7b1f4e1. The manifest is unchanged.
+handoff: the series is blocked by one slow batch of minified bundles under apps/www-reading-advantage/public/experience/assets. The orchestrator routes a decision to the PM. Option A: add a task that narrows the analyzer source set to exclude the minified public bundles. Option B: get a PM waiver of the 1800 s cap for the refresh run. The note commit changes HEAD, so the next run discards the store (OQ-2). This role creates no track and changes no source set.
+deferred: none
+question: choose option A or option B for the minified bundle batch, or name another route.
+END_MEASURE_AGENT_RESULT
