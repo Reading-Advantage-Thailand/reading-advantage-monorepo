@@ -82,6 +82,19 @@ function teachingText(slug?: string): string {
   ].join("\n");
 }
 
+/** The teaching text of one lesson: its title, its content, and its quiz answers. */
+function lessonTeachingText(slug: string, title: string): string {
+  const row = lesson(slug, title);
+  const lessonIds = new Set([row.id]);
+  return [
+    row.title,
+    row.content,
+    ...rows.quizQuestions
+      .filter((question) => lessonIds.has(question.lessonId))
+      .flatMap((question) => [question.correctAnswer, question.explanation]),
+  ].join("\n");
+}
+
 /** Every text field in the graph, including scenarios and wrong quiz options. */
 function allText(): string {
   return [
@@ -115,15 +128,9 @@ const CLAIMS_CONDITIONS = [
   "5. Pearson, GSE, or YLE in a line to a parent or a school.",
   "6. A book name without the product name (\"Origins 2\" alone).",
   "7. An earnings figure in a family sale. Commission talk belongs to tutor recruitment only.",
-  "8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.",
+  "8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say.",
   "9. \"Leading\", \"best\", \"#1\", or a percentage with no source.",
 ];
-
-/**
- * The claims conditions the 7eff8c10 re-pin keeps. Condition 8 is re-pinned, so the
- * rows S13.7 and S13.9 hold its new text and drop its old text.
- */
-const CLAIMS_CONDITIONS_KEPT = CLAIMS_CONDITIONS.filter((_, index) => index !== 7);
 
 /** A book name that has no product name in front of it. */
 const BARE_BOOK_NAME =
@@ -198,8 +205,8 @@ describe("rubric rules (every roleplay)", () => {
   });
 
   it("lists the claims conditions of the scope document in the claims lesson", () => {
-    const content = lesson("product-knowledge-2027", "The Words We Use").content;
-    for (const condition of CLAIMS_CONDITIONS_KEPT) {
+    const content = lessonTeachingText("product-knowledge-2027", "The Words We Use");
+    for (const condition of CLAIMS_CONDITIONS) {
       expect(content).toContain(condition);
     }
   });
@@ -515,7 +522,7 @@ export const REPIN_ROWS: RepinRow[] = [
   {
     section: 1,
     id: "S1.5",
-    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    source: "09-sales-enablement/demo-scripts.md",
     newText: ["A fuller service is in planning; we will share it when it is ready"],
     oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign."],
   },
@@ -557,7 +564,7 @@ export const REPIN_ROWS: RepinRow[] = [
   {
     section: 3,
     id: "S3.4",
-    source: "09-sales-enablement/demo-scripts-checklist.md",
+    source: "09-sales-enablement/demo-scripts.md",
     newText: ["A fuller service is in planning; we will share it when it is ready", "built from the Primary Advantage base app"],
     oldText: ["Not sold today. It launches in 2027 only if 1–2 more schools sign.", "\"coming programs\" with no date (Q-PR-24)"],
   },
@@ -810,20 +817,20 @@ export const REPIN_ROWS: RepinRow[] = [
     section: 11,
     id: "S11.1",
     source: "09-sales-enablement/line-trial-facilitator-script.md",
-    newText: ["Primary Advantage Origins 3.2: on sale after delivery, about 2026-11-23 to 2026-11-30"],
+    newText: ["| 3 | **Primary Advantage Origins 3.1** (Pre-A1): printed. Primary Advantage Origins 3.2: on sale after delivery, about 2026-11-23 to 2026-11-30 | Reading Advantage Origins 3.1 and 3.2 (A1): not printed → **Reading Advantage Origins 2** |"],
     oldText: ["on sale from about 2026-11-22"],
   },
   {
     section: 11,
     id: "S11.2",
     source: "09-sales-enablement/line-trial-facilitator-script.md",
-    newText: ["on sale after delivery, about 2026-11-23 to 2026-11-30"],
+    newText: ["| 4 | Primary Advantage Quest 4 (A1): on sale after delivery, about 2026-11-23 to 2026-11-30. Until then → **Primary Advantage Origins 3.1** | Reading Advantage Quest 4 (A2): not printed → **Reading Advantage Origins 2** |"],
     oldText: ["on sale from about 2026-11-22"],
   },
   {
     section: 11,
     id: "S11.3",
-    source: "09-sales-enablement/line-trial-facilitator-script.md",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
     newText: ["Every book gets a graph-first rewrite, except Primary Advantage Origins 3.2 and Primary Advantage Quest 4, which need no rewrite.", "Reading Advantage Origins 2 follows the same edition handling.", "there is no automatic cut-over date"],
     oldText: [],
   },
@@ -873,7 +880,10 @@ export const REPIN_ROWS: RepinRow[] = [
     section: 13,
     id: "S13.5",
     source: "09-sales-enablement/sales-training-scope-2027.md",
-    newText: ["on sale after delivery, about 2026-11-23 to 2026-11-30"],
+    newText: [
+      "| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale after delivery, about 2026-11-23 to 2026-11-30 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |",
+      "| 4 | Primary Advantage Quest 4: on sale after delivery, about 2026-11-23 to 2026-11-30. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |",
+    ],
     oldText: ["on sale from about 2026-11-22"],
   },
   {
@@ -887,8 +897,8 @@ export const REPIN_ROWS: RepinRow[] = [
     section: 13,
     id: "S13.7",
     source: "09-sales-enablement/sales-training-scope-2027.md",
-    newText: ["Science, Math, Zhongwen, or Storytime Advantage"],
-    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.", "a Managed Service sale, or a date for Science, Math, or Zhongwen Advantage"],
+    newText: ["a Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start"],
+    oldText: ["a Managed Service sale, or a date for Science, Math, or Zhongwen Advantage"],
   },
   {
     section: 13,
@@ -901,8 +911,8 @@ export const REPIN_ROWS: RepinRow[] = [
     section: 13,
     id: "S13.9",
     source: "09-sales-enablement/sales-training-scope-2027.md",
-    newText: ["Science, Math, Zhongwen, or Storytime Advantage"],
-    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.", "a Managed Service sale, or a date for Science, Math, or Zhongwen Advantage"],
+    newText: ["8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say."],
+    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage."],
   },
   {
     section: 13,
@@ -997,6 +1007,72 @@ describe("S2 - the curriculum uses the advantage-pr 7eff8c10 source set", () => 
       }
       for (const text of entry.oldText) {
         expect(allText(), `${entry.id}: the old text is still in the seed`).not.toContain(text);
+      }
+    },
+  );
+});
+
+/** One row of the review A repair: a text and the scope that must hold it. */
+type ScopedRow = {
+  id: string;
+  /** The scope that must hold the new text and must not hold the old text. */
+  scope: "claims" | "school-rules" | "family";
+  /** The new text that the scope must hold. */
+  newText: string[];
+  /** The old text that the scope must not hold. */
+  oldText: string[];
+};
+
+/** The number of review A repair rows. */
+export const REVIEW_A_ROW_COUNT = 3;
+
+/** The review A repair rows of the 7eff8c10 re-pin. */
+export const REVIEW_A_ROWS: ScopedRow[] = [
+  {
+    id: "F2b-claims-condition-8",
+    scope: "claims",
+    newText: ["8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say."],
+    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage."],
+  },
+  {
+    id: "F2c-family-books",
+    scope: "family",
+    newText: ["Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2."],
+    oldText: ["Primary Advantage Origins 3.2 and Quest 4 go on sale from about 2026-11-22."],
+  },
+  {
+    id: "F1-school-rules-q7",
+    scope: "school-rules",
+    newText: ["Today we have one active school in Thailand, in Kalasin, on Primary Advantage. We are a Khon Kaen company, self-funded, and our complete curriculum is being brought to market."],
+    oldText: ['"The scale facts answer a direct question only, and a trainee never volunteers them. Name the school, or show its data, only with the school\'s written consent (Q-SE-03); one active school (Boonyathat, Kalasin, on Primary Advantage); under 500 active students."'],
+  },
+];
+
+/** The teaching text of one scope of a review A repair row. */
+function scopedText(scope: ScopedRow["scope"]): string {
+  if (scope === "claims") {
+    return lessonTeachingText("product-knowledge-2027", "The Words We Use");
+  }
+  if (scope === "school-rules") {
+    return lessonTeachingText("school-sale", "The 2027 School Sale: Rules for Every Conversation");
+  }
+  return teachingText("family-sale");
+}
+
+describe("S2 - the review A repair rows hold the source text in their scope", () => {
+  it("holds one row for every review A repair", () => {
+    expect(REVIEW_A_ROWS).toHaveLength(REVIEW_A_ROW_COUNT);
+  });
+
+  it.each(REVIEW_A_ROWS)(
+    "$id holds the new source text and drops the old text in its scope",
+    (entry: ScopedRow) => {
+      const text = scopedText(entry.scope);
+      for (const value of entry.newText) {
+        expect(text, `${entry.id}: the new source text is missing`).toContain(value);
+      }
+      for (const value of entry.oldText) {
+        expect(text, `${entry.id}: the old text is still in the scope`).not.toContain(value);
       }
     },
   );
