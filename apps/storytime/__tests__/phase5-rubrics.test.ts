@@ -10,6 +10,9 @@
 //   - The `kind` field holds one of the six kind names above. Each kind appears once.
 //   - The `knownFaults` field holds the known faults of rule 6.7b for that kind. The value is a
 //     list of short phrases, one per fault, or one text that holds every fault.
+//   - The picture rubric names the named object of rule 6 and the gesture rule of rule 9.1: a
+//     gesture thumbnail is never a line picture. Its text holds the words `gesture` and
+//     `line picture`.
 //   - The `knownBadFiles` field holds the known bad files of that kind. Each entry holds a
 //     `label` and a `path`. The label names the file for the owner, for example the cut-off
 //     "Hello" of BA1. The path is the path of the file inside a hand-off package. The path is
@@ -52,7 +55,7 @@ const KNOWN_FAULTS: Record<string, string[][]> = {
   phoneme: [["right sound"], ["hiss"], ["clipping"], ["extra sound"]],
   song: [["sung as written"], ["instrumental intro"], ["artefact", "artifact"], ["diction"]],
   video: [["beat"], ["named object"], ["motion in time"], ["frozen"], ["hidden figure"]],
-  picture: [["stated count"], ["hands"], ["faces"], ["wrong text"]],
+  picture: [["named object"], ["stated count"], ["hands"], ["faces"], ["wrong text"]],
   "book audio": [["read as written"], ["child speed"], ["question"]],
 };
 
@@ -159,6 +162,16 @@ describe("Phase 5 stage 2 rubrics (rule 6.7b and rule 6.7d)", () => {
         ).toBe(true);
       }
     }
+  });
+
+  it("names the gesture rule of the picture rubric (a gesture thumbnail is never a line picture)", async () => {
+    const rubrics = await readRubrics();
+    expect(rubrics.length, "the rubric set holds no rubric").toBeGreaterThan(0);
+    const rubric = rubrics.find((entry) => entry.kind === "picture");
+    expect(rubric, "the rubric set holds no rubric for the kind picture").toBeTruthy();
+    const faults = faultTextOf(rubric as Rubric);
+    expect(faults, "the rubric for picture names no gesture rule").toContain("gesture");
+    expect(faults, "the rubric for picture names no line picture rule").toContain("line picture");
   });
 
   it("names a known bad file for every kind", async () => {
