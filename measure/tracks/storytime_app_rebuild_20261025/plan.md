@@ -3255,7 +3255,7 @@ for every other track.
     -26.86 dBFS and fails; `wa-pip.mp3` has a noise floor of -75.48 dBFS and passes; `wa-net.mp3`
     holds quiet edges at -76.14 and -inf dBFS. No committed Red test was edited by this role.
     Evidence class: automated.
-- [~] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
+- [x] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2. Commits: `fa8a127c7`, `3243b7020`, `1564b6da6`, `1a612361a`.
   - Red evidence (task 5.4). Role base `1bc95f41828c0360e2c6cdfb27a84ffcbd84a07f`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The Red command is the P5 `RED_TEST_COMMAND` of
     the strategy (test-strategy.md line 946), under heavy-run p1, in the foreground. It exits 1.
@@ -3384,8 +3384,8 @@ for every other track.
     points sit in `measure/runs/storytime_app_rebuild_20261025/calibration-5.4.md`. They state the
     line text "How many suns? One sun!" and the sun in the count of one, and the page text
     "Hello, I am Pat." with Pat, one child, and his teddy bear, both read from the packages. The
-    cost ledger holds one line for each call, with `subscription route, 0 USD`. Task 5.4 stays
-    `[~]` until run 2 returns a fail for the thumbnail and a pass for the page.
+    cost ledger holds one line for each call, with `subscription route, 0 USD`. Task 5.4 stayed
+    `[~]` until run 2 returned a fail for the thumbnail and a pass for the page.
   - Calibration run 2, 2026-11-12 (the orchestrator ran the calls on
     `claude-code/claude-sonnet-5-5#high`, subscription route, 0 USD). Orchestrator deviation,
     recorded: the r4 prompts named the expected answer, so the orchestrator sent a neutral form.
@@ -3414,12 +3414,28 @@ for every other track.
   - Calibration run 3 (prepared, not run): the two neutral prompts with the five fixed points sit
     in `measure/runs/storytime_app_rebuild_20261025/calibration-5.4.md`. They name no expected
     verdict, no owner label, and no pass history. The cost ledger holds one line for each call
-    (`written_at=03:42`). Task 5.4 stays `[~]` until run 3 returns a fail for the thumbnail and a
+    (`written_at=03:42`). Task 5.4 stayed `[~]` until run 3 returned a fail for the thumbnail and a
     pass for the page.
-  - Task 5.4 stays `[~]`: the picture verdicts did not run, so the unit and stage 1 part alone
-    cannot close the task. The implementation commits of the unit part are `3243b7020` and the Red
-    test commit `fa8a127c7`. No file under `measure/runs/` is committed (Git ignores it). Evidence
-    class: automated stage 1 measurement plus the calibration log.
+  - Calibration run 3 results, 2026-11-12 (the orchestrator ran the two neutral prompts on
+    `claude-code/claude-sonnet-5-5#high`, subscription route, 0 USD, after the 03:42 ledger
+    lines). The "One sun" thumbnail **failed** on "the picture shows the named object in the stated
+    count" and "a gesture thumbnail is never a line picture" ("Shows a child pointing up with no
+    sun; it is a gesture thumbnail, not a sun picture."). Book 1 page 1 **passed** with no fault
+    ("One child holds one teddy bear and waves; both hands look normal, one face, no text, not a
+    line picture."). Result: the picture rubric fails its known bad file and passes a file that
+    Daniel passed (rule 6.d; AC-11.2 for the picture kind). Evidence class: model pre-check. This
+    is not acceptance; Daniel's check stays the final gate (task 6.1).
+  - Audio and video stage 2 rubrics: deferred:daniel (PM decision 2026-11-12, metered model; the price report is in calibration-5.4.md). Stage 1 covers audio until then.
+  - Open strategy item for the orchestrator: the stage 1 finding of round r3 stands. The noise
+    check fails both passed word cuts (wa-hello -52.36 dBFS, wa-balls -50.77 dBFS against the -60
+    dBFS ceiling), and the loudness check fails every word cut and the hissy take. Rules 5.2 and
+    5.3 are the song and phoneme rules; a one second 128 kbps cut is judged by rule 10.2 and
+    AC-10.1. The stage 1 column of the media list names loudness and noise on the word-clip rows,
+    so a strategy correction or a per-kind tolerance is needed.
+  - Task 5.4 stayed `[~]` then: the picture verdicts had not run, so the unit and stage 1 part
+    alone could not close the task. The implementation commits of the unit part are `3243b7020`
+    and the Red test commit `fa8a127c7`. No file under `measure/runs/` is committed (Git ignores
+    it). Evidence class: automated stage 1 measurement plus the calibration log.
   - Red round r4, 2026-11-12: the picture rubric misses the named object. The calibration round r3
     ran the two coder calls with the prompts of the orchestrator on
     `claude-code/claude-sonnet-5-5#high`, and the ledger lines came first. The "One sun" gesture
@@ -3453,8 +3469,8 @@ for every other track.
   - The Green role of this phase runs on `deepseek/deepseek-flash#high`. It adds the named object
     and the gesture rule to the picture rubric, and it calibrates the picture kind again. The
     calibration log must show the fail of the gesture thumbnail and the pass of the passed file.
-    No model was called in this round, and no money was spent. Task 5.4 stays `[~]`. Evidence
-    class: automated.
+    No model was called in this round, and no money was spent. Task 5.4 stayed `[~]` at the end of
+    this Red round. Evidence class: automated.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
