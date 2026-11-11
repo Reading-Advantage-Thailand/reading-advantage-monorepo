@@ -5,10 +5,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { StrictMode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import weekJson from "../content/l2/w01.json";
-import {
-  TeacherLessonFlow,
-  splitThaiRuns,
-} from "../app/[locale]/teacher/[level]/[week]/[day]/lesson-flow";
+import { TeacherLessonFlow } from "../app/[locale]/teacher/[level]/[week]/[day]/lesson-flow";
+import { splitThaiRuns } from "../lib/teacher-lang";
 import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
 
 /**
@@ -257,9 +255,10 @@ describe("Phase 4 lesson focus: the language mark of the step id chip (UX findin
   });
 });
 
-describe("Phase 4 lesson focus: the scroll of the end region (F681)", () => {
+describe("Phase 4 lesson focus: the scroll of the end region (F681, F694)", () => {
   /**
-   * Stubs scrollIntoView on Element, which jsdom holds none of.
+   * Stubs scrollIntoView on Element, which jsdom holds none of. The afterEach of this suite
+   * removes the stub, so a failed assertion cannot leak it (review finding F694).
    * @returns The scrollIntoView spy.
    */
   function stubScrollIntoView(): ReturnType<typeof vi.fn> {
@@ -290,6 +289,10 @@ describe("Phase 4 lesson focus: the scroll of the end region (F681)", () => {
     } as DOMRect;
   }
 
+  afterEach(() => {
+    Reflect.deleteProperty(Element.prototype, "scrollIntoView");
+  });
+
   it("scrolls the region into view when its box is below the viewport (F681)", () => {
     const scrollSpy = stubScrollIntoView();
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(() =>
@@ -305,7 +308,6 @@ describe("Phase 4 lesson focus: the scroll of the end region (F681)", () => {
       scrollSpy.mock.calls[0]?.[0],
       "the scroll must hold block nearest, so the page moves as little as it can",
     ).toEqual({ block: "nearest" });
-    Reflect.deleteProperty(Element.prototype, "scrollIntoView");
     view.unmount();
   });
 
@@ -320,7 +322,66 @@ describe("Phase 4 lesson focus: the scroll of the end region (F681)", () => {
       scrollSpy,
       "a region inside the viewport must keep the page still (round 3: scrollY 0 in 36 runs)",
     ).not.toHaveBeenCalled();
-    Reflect.deleteProperty(Element.prototype, "scrollIntoView");
     view.unmount();
+  });
+
+  it("holds the boundary: a box at the viewport height scrolls, one pixel less does not (F694)", () => {
+    const scrollSpy = stubScrollIntoView();
+    const height = window.innerHeight;
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(() =>
+      boxAt(height),
+    );
+    const first = renderDay(week, 1);
+    walkToLastScreen();
+    expect(
+      scrollSpy,
+      "a region whose top equals the viewport height is outside it and must scroll",
+    ).toHaveBeenCalled();
+    first.unmount();
+
+    scrollSpy.mockClear();
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(() =>
+      boxAt(height - 1),
+    );
+    const second = renderDay(week, 1);
+    walkToLastScreen();
+    expect(
+      scrollSpy,
+      "a region whose top sits one pixel inside the viewport must keep the page still",
+    ).not.toHaveBeenCalled();
+    second.unmount();
+  });
+});
+
+describe("Phase 4 lesson focus: the Thai runs of the check and the strip (F671, F693)", () => {
+  it("wraps a Thai run in the Friday check items and the review strip with lang th", () => {
+    const copy = structuredClone(week);
+    const sound = copy.check.items[0]!;
+    expect(sound.kind, "the first check item must hold a sound field").toBe("circle-picture");
+    sound.sound = `${sound.sound}น`;
+    const strip = copy.review.find((entry) => entry.cards.length > 0);
+    expect(strip, "the shipped week must hold a review strip with cards").toBeDefined();
+    strip!.cards[0]!.text = `${strip!.cards[0]!.text} น`;
+
+    const checkView = renderDay(copy, 5);
+    walkToLastScreen();
+    const checkRun = document.querySelector<HTMLElement>(
+      'section[aria-label="The Friday check"] span[lang="th"]',
+    );
+    expect(
+      checkRun?.textContent,
+      "the planted Thai run of the check item must sit in a lang th span (F693)",
+    ).toContain("น");
+    checkView.unmount();
+
+    const stripView = renderDay(copy, 2);
+    const stripRun = document.querySelector<HTMLElement>(
+      'section[aria-label="The review strip"] span[lang="th"]',
+    );
+    expect(
+      stripRun?.textContent,
+      "the planted Thai run of the strip card must sit in a lang th span (F693)",
+    ).toContain("น");
+    stripView.unmount();
   });
 });

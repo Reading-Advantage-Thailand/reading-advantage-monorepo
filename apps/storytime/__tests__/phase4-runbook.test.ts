@@ -328,4 +328,39 @@ describe("Phase 4 runbook: the numbered flag flow of a new build (F641, F661)", 
       "the traffic step must still wait for Daniel's go",
     ).toBe(true);
   });
+
+  it("moves the lookup first and scopes items 5 and 6 to item 4 (F692, F701)", () => {
+    const section = flagSection();
+    const flat = flagSectionFlat();
+    const lookup = section.indexOf("Find the new revision name with");
+    const firstItem = section.indexOf("1. Sign in as the teacher on the tag URL host");
+    expect(
+      lookup > -1 && firstItem > -1 && lookup < firstItem,
+      `lookup_at=${lookup} first_item_at=${firstItem}: the revision lookup must come before item 1 (F701a)`,
+    ).toBe(true);
+    expect(
+      flat.split("When item 4 ran,").length - 1,
+      "items 5 and 6 must apply only when item 4 ran (F692a, F701)",
+    ).toBe(2);
+    expect(
+      flat.includes("If another name differs, stop"),
+      "a differing name other than the flag must stop the flow (F692c, F701b)",
+    ).toBe(true);
+    expect(
+      flat.includes("the traffic step 4 of this runbook"),
+      "step 4 must name the traffic step of this runbook (F692b, F701d)",
+    ).toBe(true);
+    expect(
+      flat.includes("both hold the flag"),
+      "the flow must give the action when the live revision holds the flag too (F701c)",
+    ).toBe(true);
+    expect(
+      flat.includes("prints the name of the off revision"),
+      "item 5 must say where the off revision name comes from (F701)",
+    ).toBe(true);
+    expect(
+      flat.includes("traffic step (step 4)"),
+      "the pinned phrase of the ordering red case must stay",
+    ).toBe(true);
+  });
 });

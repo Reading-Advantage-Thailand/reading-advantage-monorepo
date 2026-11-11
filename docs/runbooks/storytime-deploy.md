@@ -115,7 +115,9 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
   so the off command with the live image does not clear the flag from a new build revision
   that already carries it. Before any traffic step of a new build, compare the environment
   of the new build revision with that of the live revision and check the flag state, in
-  this order:
+  this order. Find the new revision name with
+  `gcloud run revisions list --service storytime-app --project primary-advantage --region asia-southeast1`.
+  The tag URL of the new build has its own host, and items 1 to 5 use that host:
 
   1. Sign in as the teacher on the tag URL host first, because a session cookie is bound to
      one host.
@@ -132,16 +134,20 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
 
      The compare prints the variable names, not their values. Each command prints one line
      with the names separated by `;`. The names compare shows that no env name differs
-     except `STORYTIME_TEACHER_ROUTES`. The flag state shows only through the 200 or 404
+     except `STORYTIME_TEACHER_ROUTES`. If another name differs, stop, give no traffic
+     step, and report the difference to Daniel. The flag state shows only through the 200 or 404
      check of `/th/teacher/2/1` on the tag URL; no command prints a value, so no secret
      value reaches a log.
   4. When the check shows the flag on and the live revision holds no flag, the new build
      does not get traffic as it is: run the off command with `--image` set to the image reference of the new build
-     (read it with the same imageDigest describe command on the new revision).
-  5. Check the tag URL of the revision that this command makes (404 with the flag off) and
-     compare the names of that off revision with the live revision the same way.
-  6. Then name that revision in step 4: the traffic step (step 4) then names that revision,
-     and only Daniel's go starts it.
+     (read it with the same imageDigest describe command on the new revision). When the new
+     build and the live revision both hold the flag, no off command runs: the new build
+     goes to the traffic step 4 of this runbook after items 1 to 3.
+  5. When item 4 ran, check the tag URL of the revision that this command makes (404 with the flag off) and
+     compare the names of that off revision with the live revision the same way. The update
+     command prints the name of the off revision.
+  6. When item 4 ran, name that revision in step 4. That step is the traffic step 4 of this
+     runbook (the traffic step (step 4) in the Steps section), and only Daniel's go starts it.
 
   Find the new revision name with
   `gcloud run revisions list --service storytime-app --project primary-advantage --region asia-southeast1`.

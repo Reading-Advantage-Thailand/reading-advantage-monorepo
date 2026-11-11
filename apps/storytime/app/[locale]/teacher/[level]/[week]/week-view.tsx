@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { mediaUrl } from "../../../../../lib/media/url";
 import type { StorytimeWeek } from "../../../../../lib/contracts/week";
-import { LanguageRuns } from "./[day]/lesson-flow";
+import { LanguageRuns } from "../../../../../lib/teacher-lang";
 
 /**
  * The teacher week view (spec FR-9, plan task 4.2, AC-9.1).
@@ -73,7 +73,7 @@ export function TeacherWeekView({
         <section aria-label="The element of the week" className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold" lang="en">The element of the week</h2>
           <p className="text-3xl font-semibold" lang="en">
-            {element.graphemes.join(" ")}
+            <LanguageRuns text={element.graphemes.join(" ")} lang="en" />
           </p>
           <p className="text-xl" lang="en">
             <LanguageRuns text={element.sound} lang="en" />
@@ -189,14 +189,14 @@ export function TeacherWeekView({
           <li className="flex flex-col gap-1 rounded-2xl border border-[#92400e] p-4">
             <span className="font-semibold" lang="en">The student book</span>
             <span className="text-3xl font-semibold" lang="en">
-              {print?.letterBox?.letter ?? ""}
+              <LanguageRuns text={print?.letterBox?.letter ?? ""} lang="en" />
             </span>
           </li>
           {readAlong ? (
             <li className="flex flex-col gap-1 rounded-2xl border border-[#92400e] p-4">
               <span className="font-semibold" lang="en">The read-along</span>
               <span className="text-lg" lang="en">
-                {readAlong.title}
+                <LanguageRuns text={readAlong.title} lang="en" />
               </span>
             </li>
           ) : null}
@@ -204,7 +204,7 @@ export function TeacherWeekView({
             <li className="flex flex-col gap-1 rounded-2xl border border-[#92400e] p-4">
               <span className="font-semibold" lang="en">The decodable</span>
               <span className="text-lg" lang="en">
-                {decodable.title}
+                <LanguageRuns text={decodable.title} lang="en" />
               </span>
             </li>
           ) : null}
