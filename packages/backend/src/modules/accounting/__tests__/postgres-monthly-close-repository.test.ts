@@ -78,6 +78,25 @@ function rawCloseRow(
   };
 }
 
+/**
+ * Widens the port save to the compare-and-swap shape the reviews require: the
+ * expected status is bound in the where clause. The port does not hold the
+ * second parameter yet, so the cast is narrow and local.
+ * @param repository The PostgreSQL close repository under test.
+ * @returns The save function with the expected status parameter.
+ */
+function saveWithExpectedStatus(
+  repository: ReturnType<typeof createPostgresAccountingMonthlyCloseRepository>,
+): (
+  close: AccountingMonthlyClose,
+  expectedStatus: string,
+) => Promise<AccountingMonthlyClose | undefined> {
+  return repository.save as unknown as (
+    close: AccountingMonthlyClose,
+    expectedStatus: string,
+  ) => Promise<AccountingMonthlyClose | undefined>;
+}
+
 describe("PostgreSQL accounting monthly close repository", () => {
   it("maps a close row to the validated domain close", async () => {
     const close = closeRow();
@@ -147,7 +166,9 @@ describe("PostgreSQL accounting monthly close repository", () => {
       sql: database.sql,
     });
 
-    await expect(repository.save(close)).resolves.toEqual(close);
+    await expect(
+      saveWithExpectedStatus(repository)(close, "signed"),
+    ).resolves.toEqual(close);
     expect(database.calls[0]?.statement.toLowerCase()).toContain("update");
     expect(database.calls[0]?.values).toEqual([
       "locked",
@@ -158,7 +179,67 @@ describe("PostgreSQL accounting monthly close repository", () => {
       signedAt,
       close.id,
       COMPANY_ID,
+      "signed",
     ]);
+  });
+
+  it("updates only when the stored status equals the expected status", async () => {
+    const close = closeRow({
+      status: "signed",
+      signedByAccountId: ACCOUNT_ID,
+      signedByRole: "CEO",
+      signedAt: "2026-11-30T02:03:04.000Z",
+    });
+    const database = sqlDouble([[rawCloseRow(close)]]);
+    const repository = createPostgresAccountingMonthlyCloseRepository({
+      sql: database.sql,
+    });
+
+    await saveWithExpectedStatus(repository)(close, "open");
+
+    const statement = database.calls[0]?.statement ?? "";
+    const lower = statement.toLowerCase();
+    const whereIndex = lower.indexOf("where");
+    expect(whereIndex).toBeGreaterThan(-1);
+    const whereClause = lower.slice(whereIndex);
+    expect(whereClause).toContain("status");
+    expect(whereClause).toContain("id");
+    expect(whereClause).toContain("scope_company_id");
+    expect(database.calls[0]?.values).toContain("open");
+    expect(lower).not.toContain("open");
+  });
+
+  it("reports a save that matched no row", async () => {
+    const close = closeRow({
+      status: "signed",
+      signedByAccountId: ACCOUNT_ID,
+      signedByRole: "CEO",
+      signedAt: "2026-11-30T02:03:04.000Z",
+    });
+    const database = sqlDouble([[]]);
+    const repository = createPostgresAccountingMonthlyCloseRepository({
+      sql: database.sql,
+    });
+
+    await expect(
+      saveWithExpectedStatus(repository)(close, "open"),
+    ).resolves.toBeUndefined();
+  });
+
+  it("maps a unique violation on insert to conflict", async () => {
+    const tagged = vi.fn(async () => {
+      throw Object.assign(
+        new Error("duplicate key value violates unique constraint"),
+        { code: "23505" },
+      );
+    });
+    const repository = createPostgresAccountingMonthlyCloseRepository({
+      sql: tagged as unknown as postgres.Sql,
+    });
+
+    await expect(repository.insert(closeRow())).rejects.toMatchObject({
+      reason: "conflict",
+    });
   });
 
   it("reads the approved submissions of one period month", async () => {

@@ -259,15 +259,21 @@ function createFakeCloseRepository(
             close.id === request.closeId,
         ),
     ),
-    save: vi.fn(async (close: AccountingMonthlyClose) => {
-      const index = closes.findIndex((stored) => stored.id === close.id);
-      if (index >= 0) {
+    save: vi.fn(
+      async (
+        close: AccountingMonthlyClose,
+        expectedStatus?: string,
+      ): Promise<AccountingMonthlyClose | undefined> => {
+        const index = closes.findIndex((stored) => stored.id === close.id);
+        const current = index < 0 ? undefined : closes[index];
+        if (current === undefined) return undefined;
+        if (expectedStatus !== undefined && current.status !== expectedStatus) {
+          return undefined;
+        }
         closes[index] = close;
-      } else {
-        closes.push(close);
-      }
-      return close;
-    }),
+        return close;
+      },
+    ),
     listByScope: vi.fn(
       async (scope: { readonly companyId: string }) =>
         closes.filter((close) => close.scopeCompanyId === scope.companyId),
@@ -508,6 +514,66 @@ describe("signMonthlyClose", () => {
     expect(repository.save).not.toHaveBeenCalled();
     expect(repository.auditEvents).toHaveLength(0);
   });
+
+  it("finishes the lock on a close stranded at status signed", async () => {
+    const signMonthlyClose = requireCloseFunction("signMonthlyClose");
+    const repository = createFakeCloseRepository({
+      closes: [
+        closeRow({
+          status: "signed",
+          signedByAccountId: CEO_ACCOUNT_ID,
+          signedByRole: "CEO",
+          signedAt: "2026-11-30T02:03:04.000Z",
+        }),
+      ],
+    });
+
+    const locked = (await signMonthlyClose({
+      repository,
+      actor: ceoActor,
+      closeId: CLOSE_ID,
+    }).catch((caught: unknown) => caught)) as AccountingMonthlyClose;
+
+    expect(locked).not.toBeInstanceOf(AccountingSubmissionError);
+    expect(locked.status).toBe("locked");
+    expect(locked.lockedAt).not.toBeNull();
+    expect(repository.auditEvents).toHaveLength(1);
+    expect(repository.auditEvents[0]).toMatchObject({
+      action: "monthly-close-lock",
+      actorAccountId: CEO_ACCOUNT_ID,
+    });
+    expect(
+      repository.auditEvents.filter(
+        (event) => event.action === "monthly-close-sign",
+      ),
+    ).toHaveLength(0);
+  });
+
+  it("refuses a sign that lost the compare-and-swap with conflict and no audit row", async () => {
+    const signMonthlyClose = requireCloseFunction("signMonthlyClose");
+    const repository = createFakeCloseRepository({
+      closes: [
+        closeRow({
+          status: "locked",
+          signedByAccountId: CEO_ACCOUNT_ID,
+          signedByRole: "CEO",
+          signedAt: "2026-11-30T02:03:04.000Z",
+          lockedAt: "2026-11-30T02:03:04.000Z",
+        }),
+      ],
+    });
+    vi.mocked(repository.findById).mockResolvedValueOnce(closeRow());
+
+    const error = await signMonthlyClose({
+      repository,
+      actor: ceoActor,
+      closeId: CLOSE_ID,
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "conflict" });
+    expect(repository.auditEvents).toHaveLength(0);
+  });
 });
 
 describe("lockMonthlyClose", () => {
@@ -612,4 +678,51 @@ describe("listMonthlyCloses", () => {
       expect(closes).toEqual([openClose, signedClose, lockedClose]);
     },
   );
+});
+
+const NOT_A_UUID = "not-a-uuid";
+
+describe("close id validation", () => {
+  it("refuses a sign with a close id that is not a UUID and makes no repository call", async () => {
+    const signMonthlyClose = requireCloseFunction("signMonthlyClose");
+    const repository = createFakeCloseRepository({ closes: [closeRow()] });
+
+    const error = await signMonthlyClose({
+      repository,
+      actor: ceoActor,
+      closeId: NOT_A_UUID,
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "invalid-input" });
+    expect(repository.findById).not.toHaveBeenCalled();
+    expect(repository.save).not.toHaveBeenCalled();
+    expect(repository.auditEvents).toHaveLength(0);
+  });
+
+  it("refuses a lock with a close id that is not a UUID and makes no repository call", async () => {
+    const lockMonthlyClose = requireCloseFunction("lockMonthlyClose");
+    const repository = createFakeCloseRepository({
+      closes: [
+        closeRow({
+          status: "signed",
+          signedByAccountId: CEO_ACCOUNT_ID,
+          signedByRole: "CEO",
+          signedAt: "2026-11-30T02:03:04.000Z",
+        }),
+      ],
+    });
+
+    const error = await lockMonthlyClose({
+      repository,
+      actor: ceoActor,
+      closeId: NOT_A_UUID,
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "invalid-input" });
+    expect(repository.findById).not.toHaveBeenCalled();
+    expect(repository.save).not.toHaveBeenCalled();
+    expect(repository.auditEvents).toHaveLength(0);
+  });
 });

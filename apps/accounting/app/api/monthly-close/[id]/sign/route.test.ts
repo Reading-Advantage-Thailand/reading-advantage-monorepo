@@ -99,6 +99,10 @@ const SIGN_ROUTE_ROWS = [
   "staff forbidden",
   "contractor forbidden",
   "second sign writes no second audit row",
+  "post no session 401",
+  "post cross origin 403",
+  "post conflict 409",
+  "post invalid close id 400",
 ] as const;
 const SIGN_DENIED_ROLES = ["OWNER", "ACCOUNTANT", "STAFF", "CONTRACTOR"] as const;
 
@@ -173,6 +177,44 @@ function forbiddenError(): Error {
   return Object.assign(new Error("forbidden"), {
     name: "AccountingSubmissionError",
     reason: "forbidden",
+  });
+}
+
+/**
+ * Builds a conflict domain rejection in the route-ready error shape.
+ * @returns The conflict error.
+ */
+function conflictError(): Error {
+  return Object.assign(new Error("conflict"), {
+    name: "AccountingSubmissionError",
+    reason: "conflict",
+  });
+}
+
+/**
+ * Builds an invalid-input domain rejection carrying field errors.
+ * @returns The invalid-input error.
+ */
+function invalidInputError(): Error {
+  return Object.assign(new Error("Monthly close validation failed"), {
+    name: "AccountingSubmissionError",
+    reason: "invalid-input",
+    fieldErrors: { closeId: ["Invalid uuid"] },
+  });
+}
+
+/**
+ * Answers the mocked session guard with a refusal response.
+ * @param status HTTP status of the refusal.
+ * @param message Message of the refusal body.
+ */
+function guardDenied(status: 401 | 403, message: string): void {
+  mocks.requireAccountingSession.mockResolvedValue({
+    ok: false,
+    response: new Response(JSON.stringify({ message }), {
+      status,
+      headers: { "content-type": "application/json" },
+    }),
   });
 }
 
@@ -266,5 +308,66 @@ describe("POST /api/monthly-close/[id]/sign", () => {
     expect(secondBody).toEqual(firstBody);
     expect(auditRows).toHaveLength(2);
     expect(mocks.signMonthlyClose).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns 401 when the session guard refuses the request", async () => {
+    const POST = await requireSignHandler();
+    if (POST === null) return;
+    guardDenied(401, "Authentication required");
+
+    const response = await POST(signRequest(), signContext());
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({
+      message: "Authentication required",
+    });
+    expect(mocks.signMonthlyClose).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 for a cross-origin POST before touching the domain", async () => {
+    const POST = await requireSignHandler();
+    if (POST === null) return;
+
+    const response = await POST(
+      signRequest(CLOSE_ID, "https://phishing.example"),
+      signContext(),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({
+      message: "Invalid request origin",
+    });
+    expect(mocks.signMonthlyClose).not.toHaveBeenCalled();
+  });
+
+  it("returns 409 with a JSON message when the domain reports a conflict", async () => {
+    const POST = await requireSignHandler();
+    if (POST === null) return;
+    mocks.signMonthlyClose.mockRejectedValue(conflictError());
+
+    const response = await POST(signRequest(), signContext()).catch(
+      (caught: unknown) => caught,
+    );
+
+    expect(response).toBeInstanceOf(Response);
+    if (!(response instanceof Response)) return;
+    expect(response.status).toBe(409);
+    const body = (await response.json()) as { readonly message?: unknown };
+    expect(typeof body.message).toBe("string");
+  });
+
+  it("returns 400 with a JSON body for a close id that is not a UUID", async () => {
+    const POST = await requireSignHandler();
+    if (POST === null) return;
+    mocks.signMonthlyClose.mockRejectedValue(invalidInputError());
+
+    const response = await POST(
+      signRequest("not-a-uuid"),
+      signContext("not-a-uuid"),
+    );
+
+    expect(response.status).toBe(400);
+    const body = (await response.json()) as { readonly message?: unknown };
+    expect(typeof body.message).toBe("string");
   });
 });

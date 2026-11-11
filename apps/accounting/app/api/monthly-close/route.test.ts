@@ -84,6 +84,9 @@ const CLOSE_ROUTE_ROWS = [
   "post ceo forbidden",
   "post staff forbidden",
   "post contractor forbidden",
+  "post no session 401",
+  "post cross origin 403",
+  "post conflict 409",
 ] as const;
 
 console.log(`close_route_rows=${CLOSE_ROUTE_ROWS.length}`);
@@ -152,6 +155,32 @@ function forbiddenError(): Error {
   return Object.assign(new Error("forbidden"), {
     name: "AccountingSubmissionError",
     reason: "forbidden",
+  });
+}
+
+/**
+ * Builds a conflict domain rejection in the route-ready error shape.
+ * @returns The conflict error.
+ */
+function conflictError(): Error {
+  return Object.assign(new Error("conflict"), {
+    name: "AccountingSubmissionError",
+    reason: "conflict",
+  });
+}
+
+/**
+ * Answers the mocked session guard with a refusal response.
+ * @param status HTTP status of the refusal.
+ * @param message Message of the refusal body.
+ */
+function guardDenied(status: 401 | 403, message: string): void {
+  mocks.requireAccountingSession.mockResolvedValue({
+    ok: false,
+    response: new Response(JSON.stringify({ message }), {
+      status,
+      headers: { "content-type": "application/json" },
+    }),
   });
 }
 
@@ -266,4 +295,49 @@ describe("POST /api/monthly-close", () => {
       expect(mocks.listMonthlyCloses).not.toHaveBeenCalled();
     },
   );
+
+  it("returns 401 when the session guard refuses the request", async () => {
+    const POST = await requireHandler("POST");
+    if (POST === null) return;
+    guardDenied(401, "Authentication required");
+
+    const response = await POST(postRequest(), { params: Promise.resolve({}) });
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({
+      message: "Authentication required",
+    });
+    expect(mocks.openMonthlyClose).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 for a cross-origin POST before touching the domain", async () => {
+    const POST = await requireHandler("POST");
+    if (POST === null) return;
+
+    const response = await POST(postRequest("https://phishing.example"), {
+      params: Promise.resolve({}),
+    });
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({
+      message: "Invalid request origin",
+    });
+    expect(mocks.openMonthlyClose).not.toHaveBeenCalled();
+  });
+
+  it("returns 409 with a JSON message when the domain reports a conflict", async () => {
+    const POST = await requireHandler("POST");
+    if (POST === null) return;
+    mocks.openMonthlyClose.mockRejectedValue(conflictError());
+
+    const response = await POST(postRequest(), {
+      params: Promise.resolve({}),
+    }).catch((caught: unknown) => caught);
+
+    expect(response).toBeInstanceOf(Response);
+    if (!(response instanceof Response)) return;
+    expect(response.status).toBe(409);
+    const body = (await response.json()) as { readonly message?: unknown };
+    expect(typeof body.message).toBe("string");
+  });
 });
