@@ -1,0 +1,54 @@
+=== measure strategy amendment: task 1.4d, baseline the pre-existing v1 debt ===
+role: measure-strategy
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: 1.4d (P1.14)
+role_base_sha: 7dd89f20fca790398ad77e420dde0cc845d99404
+model: claude-code/claude-sonnet-5-5
+date: 2026-11-11
+
+## What the role did
+- Read spec D-11, plan task 1.4d and the amendment line under task 1.4, strategy sections 1, 3, 7, 8, P1.11 to P1.13, and the r9 preview log.
+- Read baseline-update.ts, baseline-update-cli.ts, policy-selection.ts, v1-validation.ts, architecture-check.ts, and the four named test files.
+- Wrote section P1.14 and a note in section 3. Added the 1.4d floors to section 7. Added questions Q10 and Q11 to section 8. Added an "Amended" header line.
+- Ran no heavy job, no test, and no write command. The phase_base_sha stays 09168dc422ed48604b8f2f0cb9a23ad4d110543b.
+
+## Guard check of the four named files
+- New finding fails: ratchet.red.test.ts:52, ratchet.test.ts:97, ratchet.test.ts:120. They use hand-built baselines. No case runs an acknowledged update and then checks a new finding. Gap -> Q10.
+- Addition without owner and rationale fails: baseline-update.test.ts:267 and :529. Held.
+- Renamed and exact entries keep metadata: baseline-update.test.ts:215. A removed entry leaves no metadata (:294), so "the 16 removals keep their old metadata" is a wording error in the assignment. The review checks that the 16 are gone and the 161 keep metadata.
+
+## Finding F1: the plan route is blocked (high confidence from code, no run)
+- The default policy is v1 (manifest status=candidate, defaultPolicy=v1; r9 report policyVersion=v1).
+- The v1 baselineFiles are database.v1.json and provider.v1.json (ownership-map.v1.json:1431-1434). Both are in V1_ARTIFACT_BINDINGS (v1-validation.ts:44-53).
+- writeArchitectureBaselines throws "baseline writes cannot target protected v1 artifacts" before any file change. baseline-update.test.ts:349 proves the throw with the real v1 path.
+- A forced edit would break validateV1ArtifactFamilySync for every later policy selection, and would need a new hash.
+- The v2 baselines change only through architecture:reconcile (a four-file transaction). updateArchitectureBaselines rejects policy v2 writes.
+- Plan steps 2 to 4 are expected to exit 2. architecture:check stays red on the v1 comparison.
+
+## Finding F2: plan step 5 expects exit 0, but baseline-validation.test.ts:510 is red until a pin refresh
+- The 1.4c Green notes record tests_failed=1 for the case "rejects stale synchronous v2 implementation and input hashes". Commit de25d49a9 refreshed the pins since then, so the cause may be gone. The strategy tells Green to measure it and not to assume.
+
+## Questions (defaults apply)
+- Q10. No end-to-end "update, then a new finding fails" case exists. Default: add a small Red task 1.4e (one case in baseline-update.test.ts on the live fixture). The orchestrator may drop it.
+- Q11. Which route does the PM choose for F1? Default: hold task 1.4d. Advice: (a) read-only preview with pnpm architecture:check --policy v2, then v2 baselines through architecture:reconcile and the CI step on policy v2. Counts can differ from 332/16/161 under v2. D-11 and plan step 2 need an amendment.
+
+MEASURE_AGENT_RESULT
+status: partial
+role: measure-strategy
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: 1.4d (strategy, section P1.14)
+role_base_sha: 7dd89f20fca790398ad77e420dde0cc845d99404
+strategy_commit: e3c423230132ca6b7938dba83759e83d7af4339b
+phase_base_sha: unchanged, 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+files_changed: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md
+red_command: none. Task 1.4d is Green only and adds no behavior.
+green_gate: baseline update (additions=332, removals=16, renames=161), architecture:baseline:validate exit 0, four named files with --maxWorkers=1 (expect tests_failed=1 for baseline-validation.test.ts:510 unless the pin cause is gone), entry counts database_entries_after=786 and provider_entries_after=90, source_files_changed=0
+risk: high
+reviews: Review A yes; Review B yes; Review C no; adversarial small; browser review no
+order: 1.4d, then 1.4 (pin refresh, architecture:check exit 0, pin test), then 1.5
+handoff: BLOCKER F1. The plan route writes protected v1 baseline files and the code rejects it. Answer Q11 before Green starts. Also decide Q10 (Red task 1.4e). Plan step 5 expects exit 0 but baseline-validation.test.ts:510 may fail (F2). The wording "16 removals keep their old metadata" is wrong: removed entries leave the baseline.
+deferred: plan.md and spec.md edits (D-11 and plan step 2 need an amendment after Q11). The role owns only test-strategy.md.
+question: Which baseline route does the PM choose (Q11)? Default: hold 1.4d.
+END_MEASURE_AGENT_RESULT
