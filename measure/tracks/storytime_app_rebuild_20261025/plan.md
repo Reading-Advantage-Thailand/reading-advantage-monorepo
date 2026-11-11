@@ -3045,6 +3045,92 @@ for every other track.
     filter changed). A16 holds (no worktree).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem9.log`.
 
+### Phase 4 closeout gate (HEAD b9f5439d4)
+
+- Role base `b9f5439d4e38a3a93de1791516c7fea07a2b58a2` (the adversarial r6 test commit); the
+  last code change is `9c735f547` (rem 9). Phase base
+  `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+  `volcengine-agent-plan/glm-5.3-flash#high` (GLM). This role changed no production code, no
+  test, no runbook, and no content; `git status --short apps/storytime` stayed empty for the
+  whole run, and no Storytime commit appeared. Each heavy job ran alone, in the foreground,
+  with the shell timeout 0, under `heavy-run.sh` p1; MemAvailable read 3266988 kB to
+  3358016 kB at the heavy gates.
+- Closeout item 1, the commands of `test-strategy.md`:
+  - The ten-file Green command of line 621: exit 0, 10 files, 181 of 181 tests (the 170 of
+    rem 9 plus the 11 cases of the adversarial commit `b9f5439d4`).
+  - The task commands. The closeout text says "the four task commands of P4.4, P4.6, and
+    P4.6a"; the sections hold one command per task, three in all, and this gate ran all
+    three: P4.4 (`phase4-lesson-media.test.tsx`) exit 0, 13 of 13; P4.6
+    (`phase4-loops-flow.test.tsx`) exit 0, 18 of 18; P4.6a (`phase4-share-moment.test.tsx`)
+    exit 0, 14 of 14.
+  - P1 targeted command (line 95, the full app suite from `apps/storytime`): **exit 1** with
+    2 failed and 1098 passed of 1100 (126 files, 2 failed). Both failures sit in tests of the
+    `storytime_look_20261107` track, not in Phase 4 files:
+    - The known item: `login-media-sign.test.ts` line 84,
+      `AssertionError: signed_map_size_expected: expected 70 to be 42 // Object.is equality`
+      (the content import `345e02ba2`; the orchestrator routed the stale 42 count to the look
+      track in rem 1).
+    - A newly surfaced item: `look-adversarial-p2b.test.ts` M4 "the tab stops of the app
+      sources are the two known read-along sites",
+      `AssertionError: the tab stop sites: expected [ …(2) ] to deeply equal [ Array(1) ]`,
+      which names the new site
+      `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx:1`. The site
+      is the `tabIndex={-1}` end region of the F421d fix (commit `f76d58624`); no full P1 run
+      happened after that commit, so the closeout is the first gate that sees it. The M4
+      comment asks a new tab-stop site to pass a UX review before it joins, and the UX runs
+      of F601 and F681 reviewed exactly this region (the ring and the scroll). The stale pin
+      needs a one-line update in the look track; this round may not edit another track's
+      test, so the orchestrator routes it (close-out record, owner
+      `storytime_look_20261107`).
+  - P2 targeted command (line 196): exit 0, 22 files, 258 of 258.
+  - P3a targeted command (line 325): exit 0, 5 files, 19 of 19.
+  - P3b targeted command (line 333): exit 0, 38 files, 242 of 242 (the root-config alias
+    failures of rem 1 are gone under the amended app-config command).
+  - The read-along root command (line 334): exit 0, 9 files, 105 of 105.
+- Closeout item 2, `bash apps/storytime/__tests__/phase1-quality-gates.sh`: **exit 1** with
+  `Total: 2 checks (PASS=1, FAIL=1)`. The fail check is the app test suite, and it fails on
+  the same two look-track cases as the P1 command, with the same output lines
+  (`signed_map_size_expected: expected 70 to be 42` at `login-media-sign.test.ts:84`, and the
+  M4 tab-stop pin of `look-adversarial-p2b.test.ts:339`). No other check fails. No test was
+  edited.
+- Closeout item 3, the Docker smoke with the flag not set (heavy-run p1,
+  `bash apps/storytime/__tests__/phase4-docker-smoke.sh`): exit 0,
+  `Total: 12 checks (PASS=12, FAIL=0)`. The rows: `teacher_404=13 of 13`;
+  `nosession_flag_off=307 redirect_to_sign_in=1 teacher_markup=0`;
+  `nosession_flag_on=307 redirect_to_sign_in=1 teacher_markup=0`; the flag-on positive
+  control answers 200 with teacher markup on `/th/teacher/2/1` and `/th/teacher/2/1/1`. The
+  smoke containers went in the exit trap; `podman ps -a` holds only the pre-existing
+  `storytime-r9-diag` and `storytime-preview-daniel` containers, and this run touched none of
+  them.
+- Closeout item 4, the browser review: `ux-browser-p4-e7d7e6f65.json` (the full run) and
+  `ux-browser-p4-c58ffe571.json` (the small run) both hold `status: pass` with 0 blocking
+  findings.
+- Closeout item 5: `build-graph update` through heavy-run p1 on the two files changed since
+  rem 9 (the adversarial test files of `b9f5439d4`): exit 0 (0 to 49 nodes, 0 to 67 edges
+  for those files); Review B (`review-b-p4-c58ffe571.json`, 0 findings), Review C
+  (`review-c-p4-c58ffe571.json`), and the adversarial record
+  (`adversarial-p4-c58ffe571.json`) all hold `status: pass` with 0 blocking findings.
+- Close-out record of the nonblocking findings (no new round; the orchestrator routes):
+  - F721, F741, and F751 (one runbook item): item 5 of the flag flow checks the tag URL of
+    the off revision, whose `teacher-flag-off` tag gives its own host; the text must say
+    "items 1 to 3 use that host" and add a sign-in on the off tag host to item 5, because a
+    session cookie is bound to one host and the sign-in redirect comes before the flag 404.
+  - F722: the second copy of the revision-lookup sentence after item 6 is dead text and can
+    be deleted.
+  - F723: the week-view fields that took LanguageRuns in F693 hold no planted-Thai case; a
+    later edit that removes the wrapper there would pass the suite.
+  - F761: English words inside Thai lines (with the toggle on) have no `lang="en"` run; the
+    helper wraps Thai runs inside English lines only, by design.
+  - The PM items from the earlier rounds: F602 (class-screen fit, Daniel judges at Phase 6),
+    F604 (English first, toggle persistence at Phase 6), F606 (the "0 min" steps A8, B7, D6;
+    the PM asks Workbooks), and the w01 content string
+    `scripts[0].steps[1].en.teacherActions[1]` that holds a Thai character inside an English
+    field (Workbooks owns it).
+  - The two look-track test failures of the P1 and quality-gate commands (above), routed to
+    `storytime_look_20261107`.
+- No checkpoint marker is written here; phase acceptance comes first.
+- Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-closeout.log`.
+
 ## Phase 5: Milestone week integration
 
 - [ ] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step.

@@ -1,0 +1,157 @@
+# Green log: Phase 4 closeout gate run at one HEAD (b9f5439d4)
+
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master.
+- Track: storytime_app_rebuild_20261025, phase id P4, phase heading
+  "## Phase 4: Teacher app".
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable).
+- role_base_sha and gate HEAD: b9f5439d4e38a3a93de1791516c7fea07a2b58a2 (the adversarial r6
+  test commit). The last code change is 9c735f547 (rem 9); the only apps/storytime change
+  after it is the adversarial test commit b9f5439d4.
+- Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). This round routed no finding, so no
+  Dispositions line stands in the result block, and this role changed no production code, no
+  test, no runbook, and no content.
+- Guard during the run: `git status --short apps/storytime` read empty after every gate, and
+  `git log --oneline -1 -- apps/storytime` read b9f5439d4 at the end. No Storytime file
+  changed and no new Storytime commit appeared; the stop condition of the brief never hit.
+- Every heavy job ran alone, in the foreground call itself, with the shell timeout 0, through
+  /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh with HEAVY_PRIORITY=p1.
+  MemAvailable read 3266988 kB at the first gate and 3358016 kB before the Docker smoke; the
+  stop rule never came close.
+
+## Closeout item 1: the commands of test-strategy.md (A5: each line holds the exit code and the labeled counts)
+
+1. The ten-file Green command of line 621: exit 0; 10 files; 181 of 181 tests (170 of rem 9
+   plus the 11 cases of adversarial commit b9f5439d4).
+2. The task commands. The closeout text of line 634 says "the four task commands of P4.4,
+   P4.6, and P4.6a"; the three sections hold one targeted command each, three in all, and
+   this gate ran all three:
+   - P4.4 (line 711, phase4-lesson-media.test.tsx): exit 0; 1 file; 13 of 13.
+   - P4.6 (line 785, phase4-loops-flow.test.tsx): exit 0; 1 file; 18 of 18.
+   - P4.6a (line 848, phase4-share-moment.test.tsx): exit 0; 1 file; 14 of 14.
+3. P1 targeted command (line 95, the full app suite from apps/storytime): exit 1; 126 files,
+   2 failed; 1098 of 1100 tests passed. Both failures sit in tests of the
+   storytime_look_20261107 track, not in Phase 4 files:
+   - Known item: FAIL __tests__/login-media-sign.test.ts > login media sign (red) > signs
+     every file of the week for the private bucket with a six-hour expiry;
+     AssertionError: signed_map_size_expected: expected 70 to be 42 // Object.is equality at
+     __tests__/login-media-sign.test.ts:84 (the content import 345e02ba2; routed to the look
+     track in rem 1).
+   - Newly surfaced item: FAIL __tests__/look-adversarial-p2b.test.ts > adversarial brand
+     chrome source cases of Phase 2b > M4 the tab stops of the app sources are the two known
+     read-along sites; AssertionError: the tab stop sites: expected [ …(2) ] to deeply equal
+     [ Array(1) ] at __tests__/look-adversarial-p2b.test.ts:339, which names the new site
+     apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx:1. The site is
+     the tabIndex={-1} end region of the F421d fix (commit f76d58624). No full P1 run
+     happened after that commit, so the closeout is the first gate that sees the stale pin.
+     The M4 comment asks a new tab-stop site to pass a UX review before it joins; the UX runs
+     of F601 and F681 reviewed exactly this region (the ring and the scroll). This round may
+     not edit another track's test, so the orchestrator routes the one-line pin update to the
+     storytime_look_20261107 track. No test was edited here.
+4. P2 targeted command (line 196): exit 0; 22 files; 258 of 258.
+5. P3a targeted command (line 325): exit 0; 5 files; 19 of 19.
+6. P3b targeted command (line 333): exit 0; 38 files; 242 of 242. The root-config alias
+   failures that rem 1 recorded for the old P1/P3 commands do not appear, because the
+   amendment of 2026-11-11 runs these commands from apps/storytime.
+7. The read-along root command (line 334): exit 0; 9 files; 105 of 105.
+
+## Closeout item 2: phase1-quality-gates.sh
+
+- bash apps/storytime/__tests__/phase1-quality-gates.sh: exit 1; Total: 2 checks (PASS=1,
+  FAIL=1). The fail check is the app test suite, and it fails on the same two look-track
+  cases as the P1 command, with the same output lines:
+  storytime:test: AssertionError: signed_map_size_expected: expected 70 to be 42 //
+  Object.is equality (login-media-sign.test.ts:84), and the M4 tab-stop pin of
+  look-adversarial-p2b.test.ts:339. No other check fails. No test was edited.
+
+## Closeout item 3: the Docker smoke with the flag not set
+
+- heavy-run p1: bash apps/storytime/__tests__/phase4-docker-smoke.sh: exit 0; Total: 12
+  checks (PASS=12, FAIL=0). Rows: teacher_404=13 of 13; nosession_flag_off=307
+  redirect_to_sign_in=1 teacher_markup=0; nosession_flag_on=307 redirect_to_sign_in=1
+  teacher_markup=0; flag_on_route=/th/teacher/2/1 status=200 teacher_markup=1;
+  flag_on_route=/th/teacher/2/1/1 status=200 teacher_markup=1. The smoke containers went in
+  the exit trap; podman ps -a holds only the pre-existing storytime-r9-diag and
+  storytime-preview-daniel containers, and this run touched none of them.
+
+## Closeout items 4 and 5: the reviews, the browser runs, and the graph
+
+- Browser review (item 4): ux-browser-p4-e7d7e6f65.json (the full run) and
+  ux-browser-p4-c58ffe571.json (the small run) both hold status: pass with 0 blocking
+  findings.
+- build-graph update (item 5) through heavy-run p1 on the two apps/storytime files changed
+  since rem 9 (the adversarial test files of b9f5439d4): exit 0; updated 2 files (0 to 49
+  nodes, 0 to 67 edges for those files).
+- Review B (review-b-p4-c58ffe571.json): status pass, 0 blocking findings, 0 nonblocking.
+- Review C (review-c-p4-c58ffe571.json): status pass, 0 blocking findings, 1 nonblocking.
+- The adversarial record (adversarial-p4-c58ffe571.json): status pass, 0 blocking findings,
+  1 nonblocking.
+- Review A (review-a-p4-c58ffe571.json): status pass, 0 blocking findings, 3 nonblocking.
+
+## Close-out record (no new round; the orchestrator routes)
+
+- F721, F741, and F751 (one runbook item): item 5 of the flag flow checks the tag URL of the
+  off revision, whose teacher-flag-off tag gives its own host. The text must say "items 1 to
+  3 use that host" and add a sign-in on the off tag host to item 5, because a session cookie
+  is bound to one host and the sign-in redirect comes before the flag 404.
+- F722: the second copy of the revision-lookup sentence after item 6 is dead text and can be
+  deleted.
+- F723: the week-view fields that took LanguageRuns in F693 hold no planted-Thai case; a
+  later edit that removes the wrapper there would pass the suite.
+- F761: English words inside Thai lines (with the toggle on) have no lang=en run; the helper
+  wraps Thai runs inside English lines only, by design.
+- The PM items of the earlier rounds: F602 (class-screen fit; Daniel judges at Phase 6),
+  F604 (English first; toggle persistence at Phase 6), F606 (the "0 min" steps A8, B7, D6;
+  the PM asks Workbooks), and the w01 content string
+  scripts[0].steps[1].en.teacherActions[1] that holds a Thai character inside an English
+  field (Workbooks owns it).
+- The two look-track test failures of the P1 and quality-gate commands (above), routed to
+  storytime_look_20261107.
+
+## Result
+
+Every Phase 4-owned gate exits 0 at one HEAD: the ten-file command, the three task commands,
+P2, P3a, P3b, the read-along command, and the Docker smoke. Two commands of the closeout list
+exit 1 on look-track tests only (the known login-media-sign 42-vs-70 count, and the newly
+surfaced M4 tab-stop pin), recorded above with their exact output lines. The status below is
+partial for exactly that reason; the Phase 4 code and its own gates are green, and the two
+failures need a routed one-line fix in the storytime_look_20261107 track.
+
+MEASURE_AGENT_RESULT
+status: partial
+phase: P4 (Phase 4 closeout gate at HEAD b9f5439d4)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+green_head: b9f5439d4e38a3a93de1791516c7fea07a2b58a2
+implementation_commit: 9c735f547 (the last code change; this round changed no code)
+plan_evidence_commit: (the commit that carries this log; see git log)
+
+handoff:
+- Tasks flipped to [x]: none. Tasks 4.1 to 4.6a keep their [x] markers; the "Phase 4 closeout
+  gate (HEAD b9f5439d4)" evidence block now sits under the Phase 4 evidence with every item,
+  command, exit code, and count. No checkpoint marker is written; phase acceptance comes
+  first.
+- Tasks flipped to [b]: none. No fabrication was needed.
+- Gate results: ten-file exit 0 (181 of 181); P4.4 exit 0 (13 of 13); P4.6 exit 0 (18 of 18);
+  P4.6a exit 0 (14 of 14); P2 exit 0 (258 of 258); P3a exit 0 (19 of 19); P3b exit 0 (242 of
+  242); read-along exit 0 (105 of 105); Docker smoke exit 0 (PASS=12, FAIL=0, teacher_404=13
+  of 13, both nosession rows 307); build-graph update exit 0. The UX runs and Reviews A, B,
+  C and the adversarial record all hold status pass with 0 blocking findings.
+- Open items for the orchestrator (both commands exit 1 on look-track tests only):
+  1. The known login-media-sign.test.ts case (expected 70 to be 42 at line 84, the content
+     import 345e02ba2) stays routed to storytime_look_20261107.
+  2. NEW: look-adversarial-p2b.test.ts M4 pins the app tab-stop sites and now sees the
+     teacher end region tabIndex={-1} of the F421d fix (commit f76d58624, lesson-flow.tsx).
+     The UX reviews of F601 and F681 covered that region, so the pin needs a one-line update
+     that adds the site apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/
+     lesson-flow.tsx. Route to storytime_look_20261107; this round may not edit that test or
+     any code.
+- Close-out record findings for the closeout steward: F721/F741/F751 (one runbook item: item
+  5 needs a sign-in on the teacher-flag-off host), F722 (dead second lookup sentence), F723
+  (no planted-Thai case on the week-view fields), F761 (English words inside Thai lines), the
+  PM items F602, F604, F606, and the w01 content string for Workbooks.
+- Files changed by this round: none. Only measure/tracks/storytime_app_rebuild_20261025/
+  plan.md and measure/runs/storytime_app_rebuild_20261025/green-p4-closeout.log are committed.
+- Question for the PM (default in parentheses): the closeout cannot read exit 0 while the two
+  look-track cases fail. (Default: keep the close-out record as written, route the M4 pin
+  update to storytime_look_20261107, and let phase acceptance proceed on the Phase 4-owned
+  gates, which all exit 0.)
+END_MEASURE_AGENT_RESULT
