@@ -2718,6 +2718,41 @@ for every other track.
        wrapper `PASS=9, FAIL=0`.
     5. `build-graph update` (heavy-run p1) on `lesson-flow.tsx`: exit 0 (86 nodes, 102 edges).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem2.log`.
+  - Phase 4 remediation round 3 evidence. Role base `079ff32e903eda74a60dbccf7141f70b86aa1096`
+    (the adversarial extension commit); phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae`.
+    Model: `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The review rounds A and C ran on
+    Anthropic; the families differ. No coder was delegated.
+  - Implementation commit: `9e2d04418` (`fix(storytime): keep the service env in the flag
+    runbook`). Files: `docs/runbooks/storytime-deploy.md`, `lesson-flow.tsx`, and two new
+    Green-owned test files, `phase4-runbook.test.ts` (4 cases) and
+    `phase4-lesson-focus.test.tsx` (2 cases). No committed Red test changed; the adversarial
+    role owns its two test files in this round.
+  - F481 (Blocker; review A files it as F471): the runbook flag section turns the flag on with
+    `gcloud run services update storytime-app --project primary-advantage --region
+    asia-southeast1 --update-env-vars STORYTIME_TEACHER_ROUTES=1`, holds the way back with
+    `--remove-env-vars STORYTIME_TEACHER_ROUTES` and the same three names, keeps Daniel's go,
+    and explains that `--update-env-vars` keeps the rest of the service environment. The text
+    holds no `--set-env-vars` anywhere. The "off by default" rule of the round 2 text stays.
+  - F472, F482, F483 (one Nit): the end region of the last screen holds `role="region"`, the
+    visible line "This is the last step of the day." (`lang="en"`), and the focus move calls
+    `focus({ preventScroll: true })` and runs only after a "Next step" press (`movedRef`), so
+    a one-step day moves no focus on first render.
+  - Declined: none in this round.
+  - Gates (each gate ran alone, in the foreground, with the shell timeout 0):
+    1. The Phase 4 set plus the two new files through `heavy-run.sh` p1, `--maxWorkers=1`
+       (MemAvailable 2809284 kB): exit 0, 10 files, 124 of 124 tests. The set at the round 2
+       head held 108 tests; the adversarial extension commit `079ff32e9` added 10 cases and
+       this round added 6, so 124 is the expected count. No adversarial case failed.
+    2. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0.
+    3. ESLint on the three changed and new source files: exit 0; 0 errors; 0 warnings. A first
+       run held 1 unused-type warning in the new focus file; removed, second run clean.
+    4. `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+       Run (a) `PASS=28, FAIL=0`; run (b) `PASS=24, FAIL=0`; run (c) `PASS=12, FAIL=0`;
+       wrapper `PASS=9, FAIL=0`. A first capture lost the script exit code behind a grep pipe,
+       so the gate ran a second time with the exit captured directly; both runs gave the same
+       counts.
+    5. `build-graph update` (heavy-run p1) on `lesson-flow.tsx`: exit 0 (86 nodes, 103 edges).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem3.log`.
 
 ## Phase 5: Milestone week integration
 

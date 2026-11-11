@@ -1,0 +1,102 @@
+# Green · P4 rem3 · storytime_app_rebuild
+
+- Track: storytime_app_rebuild_20261025, Phase 4: Teacher app, remediation round 3.
+- Started: 2026-11-11. Model: volcengine-agent-plan/glm-5.3-flash#high (GLM).
+- HEAD at role start: 079ff32e903eda74a60dbccf7141f70b86aa1096 (the adversarial extension
+  commit; the adversarial role added 10 cases to its two files at this commit).
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae. role_base_sha: 079ff32e903eda74a60dbccf7141f70b86aa1096.
+- MemAvailable at start: 2484 MB (floor 1500 MB).
+- Final Green implementation HEAD: 9e2d04418332620f8474d77d1062e05165996d67.
+
+## Dispositions
+
+- F481 FIX. F472 FIX. F482 FIX. F483 FIX. The three Nit ids are one defect; one fix and one
+  test file close all three.
+- Not touched: the two adversarial test files (the adversarial role owns them now) and every
+  other committed Red test.
+
+## Implementation
+
+- Commit: 9e2d04418332620f8474d77d1062e05165996d67
+  `fix(storytime): keep the service env in the flag runbook (track_id: storytime_app_rebuild_20261025)`.
+  Files: `docs/runbooks/storytime-deploy.md`,
+  `app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx`, and two new test files
+  `__tests__/phase4-runbook.test.ts` (4 cases) and `__tests__/phase4-lesson-focus.test.tsx`
+  (2 cases). No coder was delegated.
+- F481, runbook: the flag section now turns the flag on with
+  `gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --update-env-vars STORYTIME_TEACHER_ROUTES=1`,
+  holds the way back with
+  `... --remove-env-vars STORYTIME_TEACHER_ROUTES` and the same service, project, and region,
+  keeps Daniel's go for the step, and explains that `--update-env-vars` keeps the rest of the
+  service environment. The text holds no `--set-env-vars` anywhere. The "off by default" rule
+  of the round 2 text stays, so the committed adversarial runbook case keeps passing.
+- F472 and F482, focus target: the end region holds `role="region"`, keeps
+  `aria-label="The end of the lesson"`, and shows the visible line "This is the last step of
+  the day." (`lang="en"`), so the region is no longer an empty, role-less div.
+- F482, scroll: the focus move calls `focus({ preventScroll: true })`.
+- F483, first render: a `movedRef` records a "Next step" press, and the focus effect runs only
+  when `last` is true and `movedRef.current` is true, so a one-step day moves no focus on
+  first render.
+- New test `phase4-runbook.test.ts`: the runbook names `--update-env-vars` with the flag and
+  names the service, the project, and the region; it holds the removal command with the same
+  three names; it keeps Daniel's go next to the command; and it holds no `--set-env-vars`
+  anywhere, with a positive control that fails on a planted `--set-env-vars` line.
+- New test `phase4-lesson-focus.test.tsx`: a walk through day 1 ends with
+  `document.activeElement` on the region `role="region"`, name "The end of the lesson", with
+  the visible line, and with a `focus({ preventScroll: true })` call on that region; a
+  one-step day clone (parsed with `weekSchema`) shows the region on its first screen with
+  `document.activeElement` still the body.
+
+## Gates
+
+Each gate ran alone, in the foreground, with the shell timeout 0.
+
+1. The Phase 4 set plus the two new files through `heavy-run.sh` p1, `--maxWorkers=1`
+   (MemAvailable 2809284 kB before the run): exit 0, 10 files, 124 of 124 tests. The set at
+   the round 2 head held 108 tests; the adversarial extension commit `079ff32e9` added 10
+   cases and this round added 6, so 124 is the expected count. No adversarial case failed.
+2. `tsc --noEmit` in apps/storytime through heavy-run p1: exit 0.
+3. ESLint on the three changed and new source files: exit 0; 0 errors; 0 warnings. A first
+   run held 1 unused-type warning in the new focus file; removed, second run clean.
+4. `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+   Run (a) PASS=28, FAIL=0; run (b) PASS=24, FAIL=0; run (c) PASS=12, FAIL=0; wrapper PASS=9,
+   FAIL=0. A first capture lost the script exit code behind a grep pipe, so the gate ran a
+   second time with the exit captured directly; both runs gave the same counts.
+5. `build-graph update` through heavy-run p1 on `lesson-flow.tsx`: exit 0 (86 nodes, 103
+   edges).
+
+No exit 75 and no retry was needed. The browser gate stopped its three servers. The scratch
+file `/tmp/opencode/p4gate-rem3.out` is deleted.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-jr-green
+track: storytime_app_rebuild_20261025
+phase: Phase 4: Teacher app (remediation round 3)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: 079ff32e903eda74a60dbccf7141f70b86aa1096
+implementation_commit: 9e2d04418332620f8474d77d1062e05165996d67
+final_head: 9e2d04418332620f8474d77d1062e05165996d67 (before the plan-evidence commit)
+
+summary: F481 and the Nit triple F472/F482/F483 are fixed in one commit. The runbook command
+now uses --update-env-vars with the service, project, and region, holds the --remove-env-vars
+way back, keeps Daniel's go, and holds no --set-env-vars anywhere. The end-of-lesson focus
+target holds role="region" and a visible line, uses preventScroll, and never moves focus on
+first render. Two new Green-owned test files hold 6 cases with a positive control. Gates exit
+0: the Phase 4 set plus the new files 124 of 124 (heavy-run p1), tsc 0, ESLint 0 errors 0
+warnings, the browser gate PASS=28/24/12 wrapper 9 with FAIL=0, build-graph update 0.
+
+tasks_flipped: none; task 4.5 stays [x] and holds the round 3 evidence block with the
+implementation SHA 9e2d04418.
+tasks_blocked: none.
+red_command: no Red case existed for this round; the routed findings came from the review
+roles. The new cases are Green-owned acceptance tests and pass at 9e2d04418.
+new_files: apps/storytime/__tests__/phase4-runbook.test.ts (4 cases) and
+apps/storytime/__tests__/phase4-lesson-focus.test.tsx (2 cases). Reviewers scope their audit
+to these two files, lesson-flow.tsx, and docs/runbooks/storytime-deploy.md at 9e2d04418.
+handoff: the adversarial extension commit 079ff32e9 is inside this round; its 10 new cases
+all pass, so no case name is deferred. The committed adversarial runbook case still passes
+with the rewritten runbook section. No finding stays open for Green in this round.
+
+dispositions: F472=FIX; F481=FIX; F482=FIX; F483=FIX
+END_MEASURE_AGENT_RESULT
