@@ -166,7 +166,8 @@ export async function startClassSession(params: {
           lte(primaryClassLoginSessions.expiresAt, now),
         ),
       );
-    let row: { id: string } | undefined;    try {
+    let row: { id: string } | undefined;
+    try {
       [row] = await tenantDb
         .insert(primaryClassLoginSessions)
         .values({ schoolId: classroom.schoolId, classroomId: classroom.id, teacherId: user.id, codeHash, startsAt: now, expiresAt })

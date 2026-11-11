@@ -385,4 +385,62 @@ describe("ClassSessionControl lifetime choice", () => {
     }
     expect(checked).toBe(30);
   });
+
+  // Remediation round 1 (reviews F121, F125, F141, F144).
+  it("posts until_17 before 17:00 Bangkok", async () => {
+    clock("2026-11-11T09:00:00Z"); // 16:00 Bangkok
+    fetchMock.mockReturnValue(json(200, { sessionId: SESSION_ID, code: "ABCDEF", expiresAt: EXPIRES }));
+    const onChange = vi.fn().mockResolvedValue(undefined);
+    renderControl({ onChange });
+    fireEvent.click(screen.getByRole("radio", { name: "Until 17:00 today" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start class" }));
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    expect(JSON.parse(fetchMock.mock.calls[0]![1].body as string)).toEqual({ classroomId: CLASS_ID, lifetime: "until_17" });
+  });
+
+  it("falls back to 3 hours when the clock passes 17:00 with until_17 selected", async () => {
+    clock("2026-11-11T09:59:59Z"); // 16:59:59 Bangkok
+    fetchMock.mockReturnValue(json(200, { sessionId: SESSION_ID, code: "ABCDEF", expiresAt: EXPIRES }));
+    const onChange = vi.fn().mockResolvedValue(undefined);
+    const { rerender } = renderControl({ onChange });
+    fireEvent.click(screen.getByRole("radio", { name: "Until 17:00 today" }));
+    expect(screen.getByRole("radio", { name: "Until 17:00 today" })).toBeChecked();
+    vi.setSystemTime(new Date("2026-11-11T10:00:00Z")); // 17:00 Bangkok
+    rerender(
+      withMessages(
+        <ClassSessionControl classroomId={CLASS_ID} openSession={null} fetchedAt={1} onChange={onChange} />,
+      ),
+    );
+    expect(screen.getByRole("radio", { name: "3 hours" })).toBeChecked();
+    expect(screen.queryByRole("radio", { name: "Until 17:00 today" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start class" }));
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    expect(JSON.parse(fetchMock.mock.calls[0]![1].body as string)).toEqual({ classroomId: CLASS_ID, lifetime: "3h" });
+  });
+
+  it("clears the lifetime error when the teacher picks another option", async () => {
+    clock("2026-11-11T09:00:00Z"); // 16:00 Bangkok
+    fetchMock.mockReturnValue(json(400, { message: "Choose another time.", code: "invalid_input" }));
+    renderControl();
+    fireEvent.click(screen.getByRole("button", { name: "Start class" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("This choice is not available now. Choose another time.");
+    fireEvent.click(screen.getByRole("radio", { name: "7 days" }));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("names the group with a visible label and describes the 7 day help", () => {
+    clock("2026-11-11T05:00:00Z");
+    const label = messageText(enMessages, "ClassLogin.session.lifetimeLabel");
+    renderControl();
+    expect(screen.getByText(label)).toBeInTheDocument();
+    const group = screen.getByRole("radiogroup", { name: label });
+    expect(group.getAttribute("aria-labelledby")).toBe("class-session-lifetime-label");
+    expect(group.getAttribute("aria-describedby")).toBeNull();
+    fireEvent.click(screen.getByRole("radio", { name: "7 days" }));
+    const describedBy = group.getAttribute("aria-describedby");
+    expect(describedBy).toBe("class-session-lifetime-help");
+    expect(document.getElementById(describedBy!)).toHaveTextContent(
+      messageText(enMessages, "ClassLogin.session.lifetimeHelp7d"),
+    );
+  });
 });

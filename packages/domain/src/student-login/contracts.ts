@@ -34,10 +34,10 @@ const codeSchema = z
 
 const studentIdSchema = z.string().min(1).max(64);
 
-/** Request from a teacher to start a class login session. */
+/** The three lifetime choices of a class sign-in session: 3 hours, until 17:00 Bangkok today, or 7 days. */
 export const classSessionLifetime = z.enum(["3h", "until_17", "7d"]);
 
-/** Choice of how long a class sign-in session stays open: 3 hours, until 17:00 Bangkok today, or 7 days. */
+/** Choice of how long a class sign-in session stays open. */
 export type ClassSessionLifetime = z.infer<typeof classSessionLifetime>;
 
 /** Request from a teacher to start a class login session. A missing `lifetime` gives the 3-hour default. */

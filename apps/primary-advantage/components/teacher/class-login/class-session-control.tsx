@@ -61,12 +61,19 @@ export function ClassSessionControl({ classroomId, openSession, fetchedAt, onCha
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ClassLoginErrorKey | null>(null);
 
+  // The client clock decides which options show; the server stays the authority (OQ-2).
+  const before1700 = minutesOfDay(new Date()) < 17 * 60;
+  const choices = LIFETIME_CHOICES.filter((choice) => choice !== "until_17" || before1700);
+  // A hidden choice falls back to the default, so one radio is always checked and the start
+  // never posts a hidden choice (review F121).
+  const effectiveLifetime: LifetimeChoice = choices.includes(lifetime) ? lifetime : "3h";
+
   async function run(action: "start" | "end") {
     setBusy(true);
     setError(null);
     try {
       if (action === "start") {
-        const result = await postStudentLogin<StartResult>("class-session/start", { classroomId, lifetime });
+        const result = await postStudentLogin<StartResult>("class-session/start", { classroomId, lifetime: effectiveLifetime });
         setStarted({ ...result, at: Date.now() });
       } else {
         await postStudentLogin("class-session/end", { classroomId });
@@ -93,9 +100,6 @@ export function ClassSessionControl({ classroomId, openSession, fetchedAt, onCha
         sameBangkokDay ? { hour: "numeric", minute: "2-digit" } : { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" },
       )
     : "";
-  // The client clock decides which options show; the server stays the authority (OQ-2).
-  const before1700 = minutesOfDay(new Date()) < 17 * 60;
-  const choices = LIFETIME_CHOICES.filter((choice) => choice !== "until_17" || before1700);
 
   return (
     <section className="space-y-4">
@@ -114,22 +118,37 @@ export function ClassSessionControl({ classroomId, openSession, fetchedAt, onCha
       ) : (
         <p>{openSession ? t("session.openNoCode", { time }) : t("session.startHelp")}</p>
       )}
-      <div role="radiogroup" aria-label={t("session.lifetimeLabel")} className="space-y-1">
+      <p id="class-session-lifetime-label" className="font-medium">
+        {t("session.lifetimeLabel")}
+      </p>
+      <div
+        role="radiogroup"
+        aria-labelledby="class-session-lifetime-label"
+        aria-describedby={effectiveLifetime === "7d" ? "class-session-lifetime-help" : undefined}
+        className="space-y-1"
+      >
         {choices.map((choice) => (
           <label key={choice} className="flex min-h-11 items-center gap-2">
             <input
               type="radio"
               name="class-session-lifetime"
               value={choice}
-              checked={lifetime === choice}
+              checked={effectiveLifetime === choice}
               disabled={busy}
-              onChange={() => setLifetime(choice)}
+              onChange={() => {
+                setLifetime(choice);
+                setError(null);
+              }}
             />
             <span>{t(`session.lifetime.${choice}`)}</span>
           </label>
         ))}
       </div>
-      {lifetime === "7d" && <p className="text-muted-foreground text-sm">{t("session.lifetimeHelp7d")}</p>}
+      {effectiveLifetime === "7d" && (
+        <p id="class-session-lifetime-help" className="text-muted-foreground text-sm">
+          {t("session.lifetimeHelp7d")}
+        </p>
+      )}
       <div className="flex flex-wrap gap-2">
         {shown || openSession ? (
           <>
