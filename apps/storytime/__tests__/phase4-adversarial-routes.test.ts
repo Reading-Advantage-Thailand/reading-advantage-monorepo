@@ -603,6 +603,89 @@ describe("Phase 4 adversarial round 3: the runbook text after 9e2d04418", () => 
   });
 });
 
+describe("Phase 4 adversarial round 4: the runbook flag section after 534f9ec41", () => {
+  /** The whole runbook text. */
+  const runbook = (): string => readFileSync(resolve(REPO, "docs/runbooks/storytime-deploy.md"), "utf8");
+
+  /**
+   * Cuts the teacher flag section out of the runbook.
+   * @returns The section text.
+   */
+  function section(): string {
+    const text = runbook();
+    const start = text.indexOf("## The teacher routes flag");
+    expect(start, "the runbook must hold the flag section").toBeGreaterThanOrEqual(0);
+    const rest = text.slice(start + 3);
+    const end = rest.indexOf("\n## ");
+    return end === -1 ? rest : rest.slice(0, end);
+  }
+
+  /**
+   * Lists the lines of a text that start a gcloud services update command.
+   * @param text The text to scan.
+   * @returns The command lines.
+   */
+  function updateLines(text: string): string[] {
+    return text.split("\n").filter((line) => /gcloud run services update(?!-traffic)\b/.test(line));
+  }
+
+  it("holds --no-traffic, a pinned image, and a tag on every services update line of the runbook", () => {
+    const lines = updateLines(runbook());
+    expect(lines.length, `update_lines=${lines.length}: the on and off commands`).toBe(2);
+    for (const line of lines) {
+      expect(line, "every update names --no-traffic").toContain("--no-traffic");
+      expect(line, "every update pins the image").toMatch(/--image=\S+/);
+      expect(line, "every update names a tag").toMatch(/--tag=[a-z][a-z0-9-]*/);
+    }
+    const planted = "gcloud run services update storytime-app --update-env-vars X=1";
+    expect(updateLines(planted).filter((line) => !line.includes("--no-traffic")).length, "the check can fail").toBe(1);
+    expect(section(), "the section holds no gcloud run deploy command").not.toMatch(/gcloud run deploy/);
+    expect(runbook(), "no update sends all traffic to the latest revision").not.toMatch(/--to-latest|latestRevision=true/);
+  });
+
+  it("orders the live read, then the update, then the way back, then the tag URL check, then the traffic step", () => {
+    const text = section();
+    const at = (needle: string): number => {
+      const index = text.indexOf(needle);
+      expect(index, `the section must hold "${needle}"`).toBeGreaterThan(-1);
+      return index;
+    };
+    const readTraffic = at("value(status.traffic)");
+    const readImage = at("value(status.imageDigest)");
+    const turnOn = at("--update-env-vars");
+    const turnOff = at("--remove-env-vars");
+    const tagCheck = at("open the tag URL");
+    const trafficStep = at("traffic step (step 4)");
+    expect(readTraffic, "the traffic read comes first").toBeLessThan(readImage);
+    expect(readImage, "the image read comes before the update").toBeLessThan(turnOn);
+    expect(turnOn, "the update comes before the way back").toBeLessThan(turnOff);
+    expect(turnOff, "the way back comes before the tag URL check").toBeLessThan(tagCheck);
+    expect(tagCheck, "the tag URL check comes before the traffic step").toBeLessThan(trafficStep);
+    expect(text.slice(trafficStep), "the traffic step waits for Daniel's go").toMatch(/Daniel/);
+  });
+
+  it("keeps each flag tag valid, distinct from the build tags, and within the 46 character limit", () => {
+    const tags = [...runbook().matchAll(/--tag=([^\s`]+)/g)].map((match) => match[1]!);
+    const flagTags = tags.filter((tag) => tag.startsWith("teacher-flag"));
+    expect(flagTags.length, `flag_tags=${flagTags.length}`).toBe(2);
+    expect(new Set(flagTags).size, "the on tag and the off tag differ").toBe(2);
+    for (const tag of flagTags) {
+      expect(tag, `tag ${tag} uses lower-case letters, digits, and dashes`).toMatch(/^[a-z][a-z0-9-]*$/);
+      expect(tag.startsWith("st-"), "a flag tag never clashes with an st- build tag").toBe(false);
+      expect(`${tag}${"storytime-app"}`.length, `tag ${tag} plus the service name stays within 46 characters`).toBeLessThanOrEqual(46);
+    }
+    expect(tags.every((tag) => tag.startsWith("teacher-flag") || tag.startsWith("st-")), `every tag of the runbook: ${tags.join(",")}`).toBe(true);
+  });
+
+  it("names the revision in the traffic step and uses update-traffic only for steps 4 and 5", () => {
+    const lines = runbook().split("\n").filter((line) => /update-traffic/.test(line));
+    expect(lines.length, `update_traffic_lines=${lines.length}`).toBe(2);
+    for (const line of lines) {
+      expect(line, "the traffic step names one revision at 100 percent").toMatch(/--to-revisions=[^\s=]*<[a-z -]+>[^\s=]*=100/);
+    }
+  });
+});
+
 describe("Phase 4 adversarial: the signed URL map", () => {
   /** A media part with one primary file. */
   function media(file: string): StepMedia {
