@@ -686,6 +686,148 @@ describe("Phase 4 adversarial round 4: the runbook flag section after 534f9ec41"
   });
 });
 
+describe("Phase 4 adversarial round 5: the runbook flag section after F612 and F621", () => {
+  /** Reads the runbook text. */
+  const runbook = (): string => readFileSync(resolve(REPO, "docs/runbooks/storytime-deploy.md"), "utf8");
+
+  /**
+   * Cuts the teacher flag section out of a runbook text.
+   * @param text The runbook text.
+   * @returns The section text.
+   */
+  function flagSection(text: string): string {
+    const start = text.indexOf("## The teacher routes flag");
+    expect(start, "the runbook must hold the flag section").toBeGreaterThanOrEqual(0);
+    const rest = text.slice(start + 3);
+    const end = rest.indexOf("\n## ");
+    return end === -1 ? rest : rest.slice(0, end);
+  }
+
+  /**
+   * Lists the problems of every `gcloud run services update` line of a text.
+   * @param text The text to scan.
+   * @returns One entry per problem, with the reason.
+   */
+  function updateProblems(text: string): string[] {
+    const out: string[] = [];
+    for (const line of text.split("\n").filter((entry) => /gcloud run services update(?!-traffic)\b/.test(entry))) {
+      if (!line.includes("--no-traffic")) out.push(`no --no-traffic: ${line.trim().slice(0, 60)}`);
+      const image = /--image=(\S+)/.exec(line)?.[1];
+      if (!image || image.startsWith("--")) out.push(`no --image value: ${line.trim().slice(0, 60)}`);
+      else if (/:latest$/.test(image)) out.push(`image uses :latest: ${image}`);
+      if (!/--tag=[a-z][a-z0-9-]*/.test(line)) out.push(`no --tag: ${line.trim().slice(0, 60)}`);
+      if (/--set-env-vars/.test(line)) out.push(`uses --set-env-vars: ${line.trim().slice(0, 60)}`);
+      if (/--(?:to-latest|traffic[= ]|update-tags|set-tags|clear-tags)/.test(line)) out.push(`moves traffic or tags: ${line.trim().slice(0, 60)}`);
+    }
+    return out;
+  }
+
+  /**
+   * Lists the commands of a text that can print an environment value.
+   * @param text The text to scan.
+   * @returns One entry per risky line.
+   */
+  function envPrintProblems(text: string): string[] {
+    const out: string[] = [];
+    const allowed = ["value(status.traffic)", "value(status.imageDigest)", "value(spec.containers[0].env.name)"];
+    for (const line of text.split("\n")) {
+      if (/gcloud run (services|revisions) describe\b/.test(line)) {
+        const format = /--format='([^']*)'/.exec(line)?.[1];
+        if (!format) out.push(`describe with no --format: ${line.trim().slice(0, 70)}`);
+        else if (!allowed.includes(format)) out.push(`format not in the allowed list: ${format}`);
+      }
+      if (/--format=(?:json|yaml|text|export)\b/.test(line)) out.push(`full-resource format: ${line.trim().slice(0, 70)}`);
+      if (/env\.value|env\)|printenv|secrets versions access|--format=.*env(?!\.name)/.test(line) && !/env\.name/.test(line)) {
+        out.push(`prints env values: ${line.trim().slice(0, 70)}`);
+      }
+    }
+    return out;
+  }
+
+  it("keeps --no-traffic, --image, and a tag on every services update line, and catches a planted bad line", () => {
+    const text = runbook();
+    const lines = text.split("\n").filter((entry) => /gcloud run services update(?!-traffic)\b/.test(entry));
+    expect(lines.length, `update_lines=${lines.length}: the on and off commands`).toBe(2);
+    expect(updateProblems(text), "the runbook has no update problem").toEqual([]);
+    const good = lines[0]!;
+    const plants: Array<[string, string]> = [
+      ["no --no-traffic", good.replace(" --no-traffic", "")],
+      ["no --image", good.replace(/ --image=\S+/, "")],
+      ["empty --image value", good.replace(/--image=\S+/, "--image= --x")],
+      ["image :latest", good.replace(/--image=\S+/, "--image=repo/storytime-app:latest")],
+      ["no --tag", good.replace(/ --tag=\S+/, "")],
+      ["--set-env-vars", good.replace("--update-env-vars", "--set-env-vars")],
+      ["--to-latest", `${good} --to-latest`],
+    ];
+    for (const [label, bad] of plants) {
+      expect(updateProblems(`${text}\n${bad}\n`).length, `the check catches the planted line: ${label}`).toBeGreaterThan(0);
+    }
+  });
+
+  it("runs the off command with the image of the new build for a flag-on new build", () => {
+    const section = flagSection(runbook());
+    const bullet = section
+      .split("\n- ")
+      .find((entry) => entry.includes("A revision cannot change"));
+    expect(bullet, "the section holds the flag-on new build bullet").toBeDefined();
+    expect(bullet, "the bullet runs the off command with --image of the new build").toMatch(
+      /off command with `--image` set to the image reference of the new build/,
+    );
+    expect(bullet, "the bullet reads the new build image with the imageDigest describe command").toMatch(/imageDigest describe command on the new revision/);
+    expect(bullet, "the bullet checks the tag URL of the revision that the command makes (404)").toMatch(/revision that this command makes \(404 with the flag off\)/);
+    expect(bullet, "the bullet names that revision in step 4").toMatch(/name that revision in\s+step 4/);
+    expect(bullet, "the bullet gives the new build no traffic as it is").toMatch(/does not get traffic as it is/);
+    const placeholders = [...section.matchAll(/--image=<([^>]+)>/g)].map((match) => match[1]);
+    expect(placeholders.length, `image_placeholders=${placeholders.length}`).toBe(2);
+    expect(new Set(placeholders).size, "both commands use the same placeholder for the full image reference").toBe(1);
+    expect(placeholders[0], "the placeholder names a full reference with its digest").toMatch(/image reference with its digest/);
+  });
+
+  it("prints no environment value with any command, and catches planted print commands", () => {
+    const text = runbook();
+    const section = flagSection(text);
+    expect(envPrintProblems(text), "the runbook has no env print problem").toEqual([]);
+    const describes = section.split("\n").filter((line) => /gcloud run (services|revisions) describe/.test(line));
+    expect(describes.length, `describe_lines=${describes.length}`).toBeGreaterThanOrEqual(4);
+    expect(
+      describes.filter((line) => line.includes("env.name")).length,
+      "the env compare prints names only (two lines)",
+    ).toBe(2);
+    expect(section, "the section says the compare prints names, not values").toMatch(/prints the variable names, not their values/);
+    const plants = [
+      "gcloud run revisions describe <r> --project p --region r",
+      "gcloud run revisions describe <r> --project p --region r --format='value(spec.containers[0].env)'",
+      "gcloud run revisions describe <r> --project p --region r --format='value(spec.containers[0].env.value)'",
+      "gcloud run services describe storytime-app --project p --region r --format=yaml",
+      "gcloud run services describe storytime-app --project p --region r --format='json'",
+      "gcloud run revisions describe <r> --project p --region r --format='value(spec.containers[0].env.name,spec.containers[0].env.value)'",
+    ];
+    for (const plant of plants) {
+      expect(envPrintProblems(`${text}\n${plant}\n`).length, `the check catches: ${plant.slice(-60)}`).toBeGreaterThan(0);
+    }
+  });
+
+  it("moves traffic only in steps 4 and 5, never in the flag section, and catches a planted traffic line", () => {
+    const text = runbook();
+    const section = flagSection(text);
+    const trafficLines = (value: string) =>
+      value.split("\n").filter((line) => /update-traffic|--to-latest|--to-revisions|--to-tags|--set-tags|--update-tags/.test(line));
+    expect(trafficLines(text).length, "traffic_lines=2: steps 4 and 5").toBe(2);
+    expect(trafficLines(section), "the flag section holds no traffic command").toEqual([]);
+    const stepsEnd = text.indexOf("## Facts");
+    const inSteps = trafficLines(text.slice(0, stepsEnd));
+    expect(inSteps.length, "both traffic lines sit before the Facts section, in the numbered steps").toBe(2);
+    const step4 = text.indexOf("4. Move the traffic");
+    const step5 = text.indexOf("5. Rollback");
+    expect(step4, "step 4 exists").toBeGreaterThan(-1);
+    expect(step5, "step 5 follows step 4").toBeGreaterThan(step4);
+    expect(text.slice(step4, step5), "step 4 holds exactly one traffic line").toMatch(/update-traffic[^\n]*--to-revisions=storytime-app-<revision>=100/);
+    const planted = `${section}\n  gcloud run services update-traffic storytime-app --project p --region r --to-latest\n`;
+    expect(trafficLines(planted).length, "the check catches a planted traffic line in a copy of the section").toBe(1);
+    expect(section, "the flag section sends the traffic to step 4").toMatch(/step 4/);
+  });
+});
+
 describe("Phase 4 adversarial: the signed URL map", () => {
   /** A media part with one primary file. */
   function media(file: string): StepMedia {

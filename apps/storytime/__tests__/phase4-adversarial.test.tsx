@@ -2,11 +2,14 @@
 import "@testing-library/jest-dom/vitest";
 
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { StrictMode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import weekJson from "../content/l2/w01.json";
 import w08Json from "../content/l2/w08.json";
 import { TeacherLessonFlow } from "../app/[locale]/teacher/[level]/[week]/[day]/lesson-flow";
+import { TeacherWeekView } from "../app/[locale]/teacher/[level]/[week]/week-view";
 import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
 import { stepMediaOf } from "../lib/teacher-media";
 
@@ -1218,5 +1221,246 @@ describe("Phase 4 adversarial round 3: the end region and the movedRef guard (9e
     fireEvent.click(screen.getByRole("button", { name: THAI_TOGGLE }));
     expect(screen.getByRole("region", { name: END }), "the same region node stays").toBe(region);
     expect(region.querySelector("p")!.getAttribute("lang"), "the fixed English line keeps lang en").toBe("en");
+  });
+});
+
+describe("Phase 4 adversarial round 5: lang marks, tap floor, and focus ring (rem5 and rem6)", () => {
+  /** The facts of one lang scan. */
+  interface LangScan {
+    /** The text nodes with a Latin letter and no Thai letter. */
+    latin: number;
+    /** The text nodes with a Thai letter. */
+    thai: number;
+    /** The text nodes under the wrong language mark. */
+    bad: string[];
+  }
+
+  /**
+   * Scans the text nodes of a root: Latin text needs lang en on its nearest marked ancestor, and
+   * Thai text needs lang th. The page language is Thai, so an unmarked English text inherits th.
+   * @param root The element to scan.
+   * @returns The facts of the scan.
+   */
+  function scanLang(root: HTMLElement): LangScan {
+    const out: LangScan = { latin: 0, thai: 0, bad: [] };
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = (node.textContent ?? "").trim();
+      const parent = node.parentElement;
+      if (text === "" || !parent || parent.closest("[data-mode]")) continue;
+      // A text is Thai when at least 20 percent of its letters are Thai. An English note line
+      // that quotes a Thai letter as a sound guide stays English here (see F671).
+      const thaiLetters = (text.match(/[\u0E00-\u0E7F]/g) ?? []).length;
+      const latinLetters = (text.match(/[A-Za-z]/g) ?? []).length;
+      const hasThai = thaiLetters > 0 && thaiLetters / (thaiLetters + latinLetters) >= 0.2;
+      const hasLatin = latinLetters > 0 && !hasThai;
+      const lang = parent.closest("[lang]")?.getAttribute("lang") ?? null;
+      if (hasThai) {
+        out.thai += 1;
+        if (lang !== "th") out.bad.push(`th text under ${lang}: ${text.slice(0, 30)}`);
+      } else if (hasLatin) {
+        out.latin += 1;
+        if (lang !== "en") out.bad.push(`en text under ${lang}: ${text.slice(0, 30)}`);
+      }
+    }
+    return out;
+  }
+
+  /** The class tokens of an element. */
+  const tokens = (element: Element): string[] => (element.getAttribute("class") ?? "").split(/\s+/);
+
+  /**
+   * Reports whether an element can hold a min-height: a button is inline-block, and a link needs
+   * a block-like class of its own or a flex or grid parent.
+   * @param element The element.
+   * @returns `true` when the min-height class takes effect.
+   */
+  function blockified(element: Element): boolean {
+    if (element.tagName === "BUTTON") return true;
+    const own = tokens(element);
+    if (own.some((token) => ["block", "inline-block", "flex", "inline-flex", "grid"].includes(token))) return true;
+    const parent = element.parentElement ? tokens(element.parentElement) : [];
+    return parent.some((token) => ["flex", "inline-flex", "grid"].includes(token));
+  }
+
+  it("marks every English text lang en and every Thai text lang th on the week view under a Thai page", () => {
+    document.documentElement.lang = "th";
+    try {
+      const view = render(<TeacherWeekView week={week} locale="en" mediaUrls={signedMap(week)} />);
+      const scan = scanLang(view.container);
+      expect(scan.latin, `latin_nodes=${scan.latin}: the view holds English text`).toBeGreaterThan(20);
+      expect(scan.bad, `lang_violations=${scan.bad.length}: ${scan.bad.slice(0, 4).join(" | ")}`).toEqual([]);
+      const family = [...view.container.querySelectorAll<HTMLElement>("[aria-label='The family words'] [aria-label], [aria-label='The family words'] img")];
+      expect(family.length, `family_captions=${family.length}`).toBeGreaterThan(0);
+      for (const node of family) expect(node.getAttribute("lang"), "a family caption carries lang en").toBe("en");
+
+      const planted = view.container.querySelector<HTMLElement>("h2")!;
+      planted.removeAttribute("lang");
+      expect(scanLang(view.container).bad.length, "the scan catches a heading with no lang mark").toBeGreaterThan(0);
+    } finally {
+      document.documentElement.lang = "";
+    }
+  });
+
+  it("marks every English and Thai text of the lesson flow, on all days and screens, with the toggle off and on", () => {
+    document.documentElement.lang = "th";
+    try {
+      const source = approvedClone();
+      let scanned = 0;
+      let thaiNodes = 0;
+      for (const day of DAYS) {
+        for (const thaiOn of [false, true]) {
+          const view = renderDay(source, day);
+          if (thaiOn) fireEvent.click(screen.getByRole("button", { name: THAI_TOGGLE }));
+          for (;;) {
+            const scan = scanLang(view.container);
+            scanned += scan.latin;
+            thaiNodes += scan.thai;
+            expect(scan.bad, `day=${day} thai=${thaiOn} step=${currentStepId()}: ${scan.bad.slice(0, 3).join(" | ")}`).toEqual([]);
+            const next = screen.queryByRole("button", { name: NEXT_STEP });
+            if (!next) break;
+            fireEvent.click(next);
+          }
+          view.unmount();
+        }
+      }
+      expect(scanned, `latin_nodes=${scanned}`).toBeGreaterThan(500);
+      expect(thaiNodes, `thai_nodes=${thaiNodes}: the toggle-on walks hold Thai text`).toBeGreaterThan(100);
+
+      const view = renderDay(source, 1);
+      const chip = view.container.querySelector<HTMLElement>("[data-step-id] header span")!;
+      expect(chip.textContent, "the first span of the step header is the step id chip").toBe("A1");
+      expect(chip.getAttribute("lang"), "the step id chip carries lang en").toBe("en");
+      chip.removeAttribute("lang");
+      expect(scanLang(view.container).bad.length, "the scan catches an unmarked step id chip").toBeGreaterThan(0);
+    } finally {
+      document.documentElement.lang = "";
+    }
+  });
+
+  it("F671: wraps a Thai run inside an English note line in an element with lang th", () => {
+    const source = approvedClone();
+    let mixedLines = 0;
+    const offenders: string[] = [];
+    for (const day of DAYS) {
+      const view = renderDay(source, day);
+      for (;;) {
+        for (const node of view.container.querySelectorAll<HTMLElement>("[data-step-id] li[lang='en'], [data-step-id] p[lang='en']")) {
+          for (const child of node.childNodes) {
+            if (child.nodeType !== Node.TEXT_NODE) continue;
+            const text = child.textContent ?? "";
+            if (/[\u0E00-\u0E7F]/.test(text)) {
+              mixedLines += 1;
+              offenders.push(text.slice(0, 50));
+            }
+          }
+        }
+        const next = screen.queryByRole("button", { name: NEXT_STEP });
+        if (!next) break;
+        fireEvent.click(next);
+      }
+      view.unmount();
+    }
+    expect(
+      mixedLines,
+      `thai_in_english_lines=${mixedLines}: a Thai letter sits in a text node under lang en with no lang th wrapper (WCAG 3.1.2). ${offenders[0] ?? ""}`,
+    ).toBe(0);
+  });
+
+  it("gives every control of the teacher pages a 44 px floor that takes effect", () => {
+    const named = (view: ReturnType<typeof render>) => {
+      const found: Array<[string, Element]> = [];
+      for (const name of [THAI_TOGGLE, NEXT_STEP, OPEN_MEDIA]) {
+        const control = view.queryByRole("button", { name });
+        if (control) found.push([name, control]);
+      }
+      const back = view.queryByRole("link", { name: "Back to the week" });
+      if (back) found.push(["Back to the week", back]);
+      return found;
+    };
+    const flow = renderDay(week, 2);
+    goToStep("B3");
+    const first = named(flow);
+    expect(first.map(([name]) => name).sort(), "the media step shows the four controls").toEqual(
+      [THAI_TOGGLE, NEXT_STEP, OPEN_MEDIA, "Back to the week"].sort(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: OPEN_MEDIA }));
+    const close = screen.getByRole("button", { name: CLOSE });
+    for (const [name, control] of [...first, [CLOSE, close] as [string, Element]]) {
+      expect(tokens(control), `${name} holds min-h-11`).toContain("min-h-11");
+      expect(blockified(control), `${name}: the min height takes effect (not an inline link)`).toBe(true);
+    }
+    cleanup();
+
+    const weekView = render(<TeacherWeekView week={week} locale="en" mediaUrls={signedMap(week)} />);
+    const links = weekView.getAllByRole("link", { name: "Open the lesson" });
+    expect(links.length, `open_lesson_links=${links.length}`).toBe(5);
+    for (const link of links) {
+      expect(tokens(link), "Open the lesson holds min-h-11").toContain("min-h-11");
+      expect(blockified(link), "Open the lesson is a flex item, so min-h-11 takes effect").toBe(true);
+    }
+    cleanup();
+
+    const inline = document.createElement("div");
+    inline.innerHTML = '<a class="min-h-11" href="/x">x</a>';
+    expect(blockified(inline.firstElementChild!), "the check catches an inline link with min-h-11").toBe(false);
+  });
+
+  it("holds the floor on every button and link outside the players, so no control is missed", () => {
+    const missing: string[] = [];
+    let seen = 0;
+    const check = (root: HTMLElement) => {
+      for (const control of root.querySelectorAll("button, a[href]")) {
+        if (control.closest("[data-mode]")) continue;
+        seen += 1;
+        const list = tokens(control);
+        const floor = list.includes("min-h-11") || list.includes("min-h-[44px]");
+        if (!floor) missing.push(`${control.tagName} ${control.textContent?.trim().slice(0, 20)}`);
+      }
+    };
+    const source = approvedClone();
+    for (const day of [1, 2, 4]) {
+      const view = renderDay(source, day);
+      for (;;) {
+        check(view.container);
+        const next = screen.queryByRole("button", { name: NEXT_STEP });
+        if (!next) break;
+        fireEvent.click(next);
+      }
+      view.unmount();
+    }
+    const weekView = render(<TeacherWeekView week={week} locale="en" mediaUrls={signedMap(week)} />);
+    check(weekView.container);
+    expect(seen, `controls_scanned=${seen}`).toBeGreaterThan(40);
+    expect(missing, `controls_without_floor=${missing.length}: ${missing.slice(0, 4).join(" | ")}`).toEqual([]);
+  });
+
+  it("styles the end region focus with a visible two-tone ring that names a defined variable, and keeps preventScroll", () => {
+    renderDay(week, 3);
+    for (;;) {
+      const next = screen.queryByRole("button", { name: NEXT_STEP });
+      if (!next) break;
+      fireEvent.click(next);
+    }
+    const region = screen.getByRole("region", { name: "The end of the lesson" });
+    const list = tokens(region);
+    for (const token of [
+      "focus:outline-3",
+      "focus:outline-white",
+      "focus:outline-offset-0",
+      "focus:[box-shadow:0_0_0_6px_var(--st-brown)]",
+    ]) {
+      expect(list, `the end region holds ${token}`).toContain(token);
+    }
+    expect(list.some((token) => token.includes("outline-none")), "the ring is not removed").toBe(false);
+    expect(
+      list.some((token) => token.startsWith("focus-visible:")),
+      "the ring uses focus:, so a script focus after a mouse click shows it too",
+    ).toBe(false);
+    const css = readFileSync(resolve(import.meta.dirname, "../app/look.css"), "utf8");
+    expect(css, "look.css defines --st-brown").toMatch(/--st-brown:\s*#[0-9a-fA-F]{6}/);
+    const layout = readFileSync(resolve(import.meta.dirname, "../app/[locale]/layout.tsx"), "utf8");
+    expect(layout, "the layout imports look.css").toMatch(/import\s+"\.\.\/look\.css"/);
+    expect(document.activeElement, "the focus sits on the region").toBe(region);
   });
 });
