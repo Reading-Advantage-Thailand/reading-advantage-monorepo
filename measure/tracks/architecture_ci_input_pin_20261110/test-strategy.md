@@ -6,6 +6,7 @@
 > **Amended:** 2026-11-11 at role base `06fcbc4e91bc07a5023dd0234ad285ba6d4d2835`. Model: claude-sonnet-5-5. Cause: the PM decision D-7 added task 1.4a (spec FR-7, AC-6 to AC-8). Section P1.11 and the section 7 line for 1.4a are new. Section 1.1 now names two files outside the wrapper. The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
 > **Amended:** 2026-11-11 at role base `fba3a45f10613f760358abe3178a9cc9e49633c8`. Model: claude-sonnet-5-5 (a substitution for the Opus role-table entry). Cause: the PM decision D-8 added task 1.4b (spec FR-8, AC-9 to AC-17). Section P1.12 and the section 7 line for 1.4b are new. The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
 > **Amended:** 2026-11-11 at role base `756eb027b33d0786846f8a3c5e62b27b965c6960`. Model: claude-sonnet-5-5. Cause: the orchestrator decision D-10 added task 1.4c (spec FR-9, AC-18 to AC-21). Section P1.13 and the section 7 line for 1.4c are new. The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
+> **Amended:** 2026-11-11 at role base `7dd89f20fca790398ad77e420dde0cc845d99404`. Model: claude-sonnet-5-5. Cause: the PM decision D-11 added task 1.4d, a Green-only baseline task. Section P1.14, the section 3 note, the section 7 floors, and questions Q10 and Q11 are new. The strategy found that the plan route is blocked (P1.14 finding F1). The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
 > **Spec review:** round 2 passed. The result sits at `measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.json`. Its four Nit findings are fixed in `3058dc8d4`.
 > **No SHA in this file.** The strategy names no `phase_base_sha`. Section 1.5 names the capture point.
 > **No user interface and no route.** The track adds one developer flag, one local refresh command, and one line in a CI workflow file.
@@ -140,6 +141,8 @@ Red and Green measure the counts again. A fact of this table is not a proof for 
 **Review C applies with a narrow scope.** The phase adds no route, no page, and no public API. It adds two developer command-line surfaces, and one of them carries a consent gate. Review C therefore checks the command-line contract, not a web surface. Its scope is in section P1.5.
 
 **Adversarial testing applies.** The phase adds a flag that a hostile commit or a hostile workflow edit can misuse. The attack surfaces are the near-miss flag spelling, the environment variable attempt, the broadened skip, and the unacknowledged write.
+
+**Task 1.4d (added 2026-11-11).** The task writes the baselines and changes no behavior. Its risk is high (section P1.14). Review A and Review B apply to it. Review C and the browser review do not apply. Adversarial testing applies in a small scope. The phase-level answers in the table do not change.
 
 **The browser review does not apply.** The track changes no page, no component, no style, and no route. No browser renders the new surface, because the new surface is a terminal command and one workflow line. A browser review would have no page to open and no viewport to check, so it adds no evidence. The developer command line replaces it.
 
@@ -730,6 +733,90 @@ A1, A2, A6, A8, A11, and A13 are not risks of this task. A6 applies only if the 
 
 **Task 1.4 note for the next series (spec FR-9.5, OQ-9).** The series starts after the last 1.4c commit, so the store starts empty (OQ-9). The first run prints `modules_total=6866`, which is 6936 minus the 70 public files. Task 1.4 records the real value. A different `modules_total` is a finding: the role stops and reports it to the orchestrator before it accepts the series. Round 7 stored 3750 modules in 76 s, and the prelude took 58 s. The 69 bundles are out of the list, so the series should end in one or two runs under `--budget-s 1500`. This is an expectation and not a gate: a third run is not a defect, and the run limit of the plan rules still holds. OQ-2 applies from the last 1.4c commit.
 
+#### P1.14 Task 1.4d: baseline the pre-existing v1 debt (added 2026-11-11)
+
+Source: spec D-11, plan task 1.4d and its amendment line under task 1.4 (plan commit `7dd89f20f`), and the r9 preview (`measure/runs/architecture_ci_input_pin_20261110/green-p1-1.4-r9.log`, commit `ed10bc39d`): `additions=332` (database 319, provider 13), `removals=16` (all `AI_PROVIDER_BOUNDARY`), `renames=161`, `filesScanned=6868`, `findings=876`, `policyVersion=v1`.
+
+**Risk: high.** The change is data only, but it weakens a CI integrity gate. It accepts 332 findings, and 111 of them belong to auth, identity, and provider-adapter rules. A wrong owner, a wrong rationale, or a wide write turns a red gate green for the wrong reason. The task adds no hash and no manifest key.
+
+**The task is Green only. Why no Red test.** The task adds no behavior: `baseline-update.ts` and `ratchet.ts` stay unchanged. The task writes data with an existing command. A new Red test for a command that does not change would pass at once and prove nothing (A4). The existing ratchet tests are the guard. The Green role writes no test file and no source file.
+
+**The existing guard check.** The strategy role read the four files. The table shows what each file holds and what is missing.
+
+| Need | Case that holds it | What it proves | Gap |
+|---|---|---|---|
+| A new finding fails against a non-empty baseline | `ratchet.red.test.ts:52` ("fails when a new violation increases reviewed debt"); `ratchet.test.ts:97` ("preserves surplus same-semantic instances as new debt"); `ratchet.test.ts:120` (precedence: `new-debt` wins) | `compareArchitectureDebt` returns `status=new-debt` and lists the one added instance. `architectureCheckExitCode` maps every status except `clean` to exit 1 (`architecture-check.ts:251-256`). | These cases build the baseline by hand. **No case runs `updateArchitectureBaselines` with an acknowledged write and then checks a new finding against the written baselines.** |
+| An addition without owner and rationale fails | `baseline-update.test.ts:267` (`createUpdatedArchitectureBaselines` throws `requires --owner and --rationale`; a short rationale and a non-lower-case owner also throw); `baseline-update.test.ts:529` (the live acknowledged write throws and leaves both files unchanged) | The owner regex and the 12-character rationale floor hold, and no file changes on the error. | None. |
+| Exact and renamed entries keep their metadata | `baseline-update.test.ts:215` | Owner and rationale of an exact match and of a rename come from the old entry. The new entry gets the new metadata. | None. |
+| A removal leaves the baseline | `baseline-update.test.ts:294`; `ratchet.red.test.ts:74` | A removed finding drops out. It needs no new metadata. | None. |
+| A preview writes nothing; a concurrent change is not overwritten | `baseline-update.test.ts:309` and `:489` | `wroteBaselines=false` without `--acknowledge`; a baseline that changes after analysis stops the write. | None. |
+| The write refuses protected v1 files | `baseline-update.test.ts:349` | See finding F1. | See finding F1. |
+
+The one gap is the first row: no case proves "update, then a new finding fails". The ratchet is a pure function of the baseline and the findings, so the existing cases cover the logic. Question Q10 asks the orchestrator for a decision.
+
+**Finding F1 (blocker for the plan route).** The plan step 2 cannot write the baselines under policy v1.
+
+- The update CLI passes no `policyVersion` (`baseline-update-cli.ts`). The committed manifest has `acceptance.status=candidate` and `defaultPolicy=v1`, so `selectArchitecturePolicy` selects v1 (`policy-selection.ts`, r9 report: `policyVersion=v1`).
+- The v1 `baselineFiles` are `.../config/baselines/database.v1.json` and `.../provider.v1.json` (`ownership-map.v1.json:1431-1434`). Both paths are in `V1_ARTIFACT_BINDINGS` (`v1-validation.ts:44-53`).
+- `writeArchitectureBaselines` throws `Architecture <domain> baseline writes cannot target protected v1 artifacts` for such a path (`baseline-update.ts`, first loop). The case `baseline-update.test.ts:349` proves this with the real v1 path. The throw comes before the transaction, so no file changes.
+- Even a forced edit of the v1 files breaks `validateV1ArtifactFamilySync`. Every later policy selection then throws `Protected v1 artifacts do not match Gate 1`. A change of `acceptedSha256` is a source change and a hash change, and the hash policy forbids it.
+- The v2 route is also closed: `updateArchitectureBaselines` throws `Policy v2 baseline writes require the complete four-file reconciliation transaction`. The v2 baselines (`database.v2.json`, `provider.v2.json`) change only through `architecture:reconcile`, and the default policy stays v1 while the manifest is a candidate.
+
+The result: the plan steps 2 to 4 are expected to fail with the protected-v1 error (exit 2), and `architecture:check` stays red on the v1 comparison. The plan and spec D-11 do not name this limit. The Green role must not start step 2 before the orchestrator answers question Q11. A single `pnpm architecture:baseline:update --acknowledge ...` run is safe to try once, because the throw comes before any write, but the code reading is conclusive and the run costs a heavy slot of about 4 minutes (r9: 11:04:38 to 11:08:20).
+
+**Finding F2 (a gate in the plan is wrong).** The plan step 5 expects exit 0 for four files that include `baseline-validation.test.ts`. That file holds the case "rejects stale synchronous v2 implementation and input hashes" (`baseline-validation.test.ts:510`). The 1.4c Green notes record it as the one expected failure until a pin refresh runs (plan line 142: `tests_failed=1`). The strategy sets the expected result of step 5 to exit 1 with `tests_failed=1` and the named case, unless the 1.4c failure cause no longer holds at the 1.4d HEAD. The Green role measures the failure and quotes it. Any other failing case stops the task. The pin refresh in commit `de25d49a9` may already have cleared the cause. The Green role records which state holds, and does not assume it.
+
+**The Green gate commands.** These apply only after Q11 names a writable route. The wrapper prefix is `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600`. One heavy job runs at a time.
+
+1. Before the write: `git status --short -- packages/architecture-enforcement` is empty, and `git rev-parse HEAD` goes in the log.
+2. The write: the command of plan step 2, through `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh`. The owner is `monorepo-architecture`. The rationale is the exact plan text (12 to 1000 characters, `contracts.ts:82`). Exit 0 and `wroteBaselines=true`. The log quotes the three counts `additions=332`, `removals=16`, and `renames=161`. A different count stops the task and goes to the orchestrator (plan step 3).
+3. `pnpm architecture:baseline:validate` through the wrapper. Exit 0. A failure with a pin error (a stale manifest pin caused by the write) stops the task and goes to the orchestrator. Task 1.4 owns the pin refresh.
+4. The four named files, outside the wrapper: `CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/ratchet.test.ts packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts packages/architecture-enforcement/src/__tests__/baseline-update.test.ts packages/architecture-enforcement/src/__tests__/baseline-validation.test.ts`. Expected: see finding F2. `tests_skipped=0`. The log quotes `tests_total`, `tests_failed`, and the failing case name.
+5. The entry counts after the write, from a read of the two files: `database_entries_after=786` (467 + 319) and `provider_entries_after=90` (93 + 13 - 16). The renames keep the count. A different value stops the task.
+6. `git diff --stat` over `packages/architecture-enforcement/src` shows only the baseline files of the route (see "The allowed paths").
+7. The Green role runs no `pnpm architecture:pin:refresh` and no `pnpm architecture:check`. Both belong to task 1.4, which runs after this task.
+
+**The allowed paths for 1.4d.** Green may change only these files:
+
+- the two baseline files that `config.baselineFiles` names for the route that Q11 selects. At the plan route (policy v1) they are `packages/architecture-enforcement/src/config/baselines/database.v1.json` and `packages/architecture-enforcement/src/config/baselines/provider.v1.json`, and F1 blocks that write. At a v2 route they are `database.v2.json` and `provider.v2.json`, and the write goes through `architecture:reconcile`, which touches a larger destination set (`V2_RECONCILIATION_DESTINATION_PATHS`);
+- `measure/tracks/architecture_ci_input_pin_20261110/plan.md` (the `[x]` note);
+- the Green log under `measure/runs/architecture_ci_input_pin_20261110/`.
+
+Out of scope: every file under `packages/architecture-enforcement/src` other than the baseline files, the v1 artifact bindings, the manifest file, the ownership maps, the workflow file, and the tests. The count `source_files_changed=0` is a labeled integer.
+
+**The review checks for 1.4d**
+
+| Review | Applies | Scope |
+|---|---|---|
+| Review A (correctness) | **yes (required)** | The `owner` of each new entry is `monorepo-architecture`, and the `rationale` is the exact plan text. The entry total moved by +332 and -16, and no entry outside the 332 is new. The 161 renamed entries keep the owner and rationale of their old entry (`baseline-update.test.ts:215`). The 16 removed entries are gone, and a removal leaves no metadata to keep. No source file changed. The entries are in canonical order (`compareStableStrings` on `instanceKey`). `rulesetHash` did not change. |
+| Review B (security) | **yes (required)** | The write accepts 111 findings of auth, identity, and provider-adapter rules (93 + 5 + 11 + 2). The rationale names the remediation track `architecture_identity_provider_debt_20261111` and the due date 2026-12-15. A new finding of these rules must still fail the check (see Q10). The owner text of the PM is in the rationale, as D-11 requires. |
+| Review C (UX/API) | no | No flag, no message, no page. |
+| Adversarial | small | One surface: an addition that hides in the 332 (a path under `packages/architecture-enforcement`, or a rule outside the six named rules). The reviewer counts the additions by rule: DATABASE_BOUNDARY 205, COMPANY_IDENTITY_PRODUCT_ISOLATION 93, DURABLE_JOB_DATABASE_BOUNDARY 16, AI_PROVIDER_BOUNDARY 11, COMPANY_IDENTITY_DB_BOUNDARY 5, INTEGRATION_PROVIDER_BOUNDARY 2. The count of additions under `packages/architecture-enforcement` is 0. |
+| Browser review (UX) | no | No page, no component, no route. |
+
+**Anti-pattern coverage for 1.4d**
+
+| Anti-pattern | Defense | Falsification condition |
+|---|---|---|
+| A3 | Every count in the log and in the plan note is `label=<n>`: `additions`, `removals`, `renames`, `database_entries_after`, `provider_entries_after`, `tests_total`, `tests_failed`, `source_files_changed`. | A note holds a bare number. |
+| A4 | The expected counts are asserted against the real command output, not against an empty result. A run that prints `wroteBaselines=false` is not a pass. | The task reports "baselined" with `wroteBaselines=false` or with an unchanged baseline file. |
+| A5 | The note quotes the exit code of each step and the one failing case of step 4 by name. A `heavy-run` code is named with its code. The note does not say "all green" when `tests_failed=1`. | A note says "pass" with a non-zero exit, or hides the known failure. |
+| A6 | The registry note says the debt is baselined and the pins are stale until task 1.4. It does not say the CI check is green. | The note claims `architecture:check` passes before task 1.4 runs it. |
+| A7 | The review counts the additions by exact rule id. No filter drops a rule because its name looks like a known one. | A rule outside the six names is in the 332, and the count by rule hides it. |
+| A14 | Every detector uses `rg -n`. An exit code of 2 is a failure. | A detector exits 2 and the evidence reads "no hit". |
+| A15 | The receipts hold the commit and the commands. They hold no file hash. | A receipt holds a hash that a later commit changes. |
+| A16 | No worktree is created. | `git worktree add` runs for this task. |
+
+A1, A2, A8 to A13 are not risks of this task.
+
+**What the 1.4d checks cannot prove**
+
+- That the check is green. The task runs no `architecture:check`. Task 1.4 runs it.
+- That a new finding of the 111 security-relevant findings fails CI after the baseline. The existing cases prove the ratchet logic with hand-built baselines. They do not run an update first (question Q10).
+- That the 332 are correct debt. The review checks the counts and the metadata. The PM decision D-11 accepts the debt.
+
+**The order.** Task 1.4d, then task 1.4 (the pin refresh series, then `pnpm architecture:check` exit 0, then the pin test), then task 1.5. Task 1.4d is blocked until Q11 has an answer.
+
 ## 7. The labeled counts and the floors of P1
 
 `fixture_positive_control=1`, `ac1_cases=3`, `ac2_cases=2`, `ac3_cases=3`, `ac4_cases=5`, `ac5_cases=5`, `fr6_cases=1`, `other_files_failed=0`, `suite_files>=32`, `suite_tests>=251`, `commands_green=2`, `manifest_fields_changed=5`, `manifest_keys_added=0`, `hash_path_lists_changed=0`, `ci_flag_steps=1`, `ci_refresh_commands=0`, `local_script_flags=0`, `archive_changed_paths=0`, `pin_out_of_scope_paths=0`.
@@ -737,6 +824,8 @@ A1, A2, A6, A8, A11, and A13 are not risks of this task. A6 applies only if the 
 Task 1.4a adds these floors: `fixture_positive_control=1`, `ac6_cases=3`, `ac7_cases=2`, `ac8_cases=2`, `member_access_nodes>=50`, `walks_per_module<=1`, `walk_growth=0`, `projections=1`, `analyzer_passes=2`, `manifest_keys_added=0`, `suite_files>=33`, `suite_tests>=279`, `pin_cases=20`. The `suite_files>=32` and `suite_tests>=251` floors above stay valid for the earlier tasks.
 
 Task 1.4c adds these floors: `existing_inventory_cases=8`, `ac18_cases=5`, `ac19_cases=1`, `ac20_cases=4`, `ac21_cases=1`, `variant_rows=3`, `guard_rows=4`, `tests_total=19` (inventory file), `manifest_keys_added=0`, `suite_files>=34`, `suite_tests>=320`, `modules_total=6866` (task 1.4 expectation).
+
+Task 1.4d adds these floors (Green only, no test case is added, so no `suite_tests` floor moves): `baseline_additions=332`, `baseline_removals=16`, `baseline_renames=161`, `database_entries_after=786`, `provider_entries_after=90`, `baseline_files_changed=2`, `source_files_changed=0`, `new_hash_fields=0`, `manifest_keys_added=0`, `named_files=4`, `tests_skipped=0`, `additions_under_architecture_package=0`. The two entry counts are expectations from `467 + 319` and `93 + 13 - 16`. The Green role measures them.
 
 Task 1.4b adds these floors: `resume_control=1`, `ac9_cases=2`, `ac10_cases=3`, `ac11_cases=7`, `ac12_cases=4`, `ac13_cases=3`, `ac14_cases=2`, `ac15_cases=4`, `ac16_cases=3`, `ac17_cases=1`, `fixture_modules>=7`, `runs>=3`, `runs<=12`, `bad_values=5`, `tests_total>=30`, `manifest_keys_added=0`, `suite_files>=34`, `suite_tests>=309`, `cost_cases=8`, `pin_cases=20`.
 
@@ -755,3 +844,5 @@ The default of each row applies if no answer comes. The orchestrator may change 
 | Q7 | The plan line of section P1.8. | The strategy adds that one line to the rules of `plan.md` and commits it with this strategy. The plan change is named in the handoff. |
 | Q8 | The aggregate suite as a gate. | The aggregate suite is not a gate while the Red file of the phase is open. The targeted command of the phase is the gate. At the phase check the aggregate suite runs, and a pre-existing red file outside this track is named with its path and its exit code. |
 | Q9 | The model families of the Red and the Green roles. | The Red and the Green families differ from the family of this strategy role (minimax) and from each other where the quota allows. The orchestrator picks them at the spawn. |
+| Q10 | Task 1.4d, the missing end-to-end case. No existing case writes baselines with `updateArchitectureBaselines`, then checks a new finding against the written files (P1.14, guard check, row 1). | Add a small Red task "1.4e" before 1.4d. It adds one case to `baseline-update.test.ts` on the live fixture (`createLiveBaselineFixture`): acknowledged write with owner and rationale, then `checkArchitectureRepository` returns `clean`, then a second source file with a new import returns `new-debt` and exit 1. The case must fail for the right reason if the update wrote nothing (A4). The orchestrator may drop the task and accept the pure-function cases (`ratchet.red.test.ts:52`, `ratchet.test.ts:97`) as sufficient. |
+| Q11 | Task 1.4d, finding F1. The plan route (policy v1) writes protected v1 baseline files, and the code rejects that write. Which route does the PM choose? (a) Run a read-only preview with `pnpm architecture:check --policy v2` first, then write the v2 baselines through the four-file `architecture:reconcile` transaction and point the CI step at policy v2. (b) Accept policy v2 as the default (manifest `acceptance.status=accepted`), which is a larger change. (c) Change the v1 protection. The strategy advises against (c): it breaks the v1 immutability tests and adds hash changes. | The default is to hold task 1.4d. The orchestrator asks the PM. The Green role does not start. The strategy advises route (a), after the preview shows the v2 counts, because the v2 counts can differ from `additions=332`. The P1.14 gates then apply with the v2 file names, and the D-11 text and the plan step 2 command need an amendment. |
