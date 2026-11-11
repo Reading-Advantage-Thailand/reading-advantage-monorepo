@@ -618,18 +618,20 @@ Reviews run at the Phase 3 checkpoint on the diff `phase_base_sha..HEAD` (tasks 
 **Targeted Red command:**
 
 ```bash
-bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx __tests__/phase4-loops-flow.test.tsx __tests__/phase4-share-moment.test.tsx __tests__/phase4-adversarial.test.tsx __tests__/phase4-adversarial-routes.test.ts'
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx __tests__/phase4-loops-flow.test.tsx __tests__/phase4-share-moment.test.tsx __tests__/phase4-adversarial.test.tsx __tests__/phase4-adversarial-routes.test.ts __tests__/phase4-runbook.test.ts __tests__/phase4-lesson-focus.test.tsx'
 ```
 
 > **Amendment 2026-11-10:** the old command used the glob `apps/storytime/__tests__/phase4-*.test.ts`. The shell expands that glob to the `.ts` files only, so the `.tsx` tests did not run (A4: a gate that skips tests). Each Phase 4 test file now has its own named command. The aggregate list above and the per-task commands in P4.4, P4.6, and P4.6a name every file. A new Phase 4 test file joins this list in the same commit that adds it.
 
 > **Amendment 2026-11-11:** the targeted command above now names the eight Phase 4 test files: `phase4-teacher-flag.test.ts`, `phase4-week-view.test.tsx`, `phase4-lesson-flow.test.tsx`, `phase4-lesson-media.test.tsx`, `phase4-loops-flow.test.tsx`, `phase4-share-moment.test.tsx`, `phase4-adversarial.test.tsx`, and `phase4-adversarial-routes.test.ts`. The adversarial round (commit `80fff5b29`) added the last two files, and a new Phase 4 test file joins the list in the same commit that adds it.
 
+> **Amendment 2026-11-11 (F492):** the targeted command above and Closeout gate item 1 now name ten Phase 4 test files. Green round 3 (commit `9e2d04418`) added `phase4-runbook.test.ts` and `phase4-lesson-focus.test.tsx` to the eight files of the amendment above.
+
 **Green gate:** the targeted Red command exits 0. The browser check at 1920x1080 and on a laptop exits 0 with the flag on.
 
 **Closeout gate:**
 
-1. The Green gate, the targeted command above with its eight files (`phase4-teacher-flag`, `phase4-week-view`, `phase4-lesson-flow`, `phase4-lesson-media`, `phase4-loops-flow`, `phase4-share-moment`, `phase4-adversarial`, and `phase4-adversarial-routes`), the four task commands of P4.4, P4.6, and P4.6a, and the P1 to P3 targeted Vitest commands. **Amendment 2026-11-11:** tasks 4.1 to 4.6a hold one checkpoint. The orchestrator decided this on 2026-11-11, because tasks 4.6 and 4.6a were done before the task 4.5 check. The old text said that tasks 4.6 and 4.6a do not hold the checkpoint (plan amendment). The task commands of 4.6 and 4.6a now join the closeout.
+1. The Green gate, the targeted command above with its ten files (`phase4-teacher-flag`, `phase4-week-view`, `phase4-lesson-flow`, `phase4-lesson-media`, `phase4-loops-flow`, `phase4-share-moment`, `phase4-adversarial`, `phase4-adversarial-routes`, `phase4-runbook`, and `phase4-lesson-focus`), the four task commands of P4.4, P4.6, and P4.6a, and the P1 to P3 targeted Vitest commands. **Amendment 2026-11-11:** tasks 4.1 to 4.6a hold one checkpoint. The orchestrator decided this on 2026-11-11, because tasks 4.6 and 4.6a were done before the task 4.5 check. The old text said that tasks 4.6 and 4.6a do not hold the checkpoint (plan amendment). The task commands of 4.6 and 4.6a now join the closeout.
 2. `bash apps/storytime/__tests__/phase1-quality-gates.sh`.
 3. The Docker smoke with the flag not set. Each teacher route answers 404 from the container.
 4. The browser review (task 4.5).

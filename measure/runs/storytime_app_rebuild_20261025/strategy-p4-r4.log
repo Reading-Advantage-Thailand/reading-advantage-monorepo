@@ -9,6 +9,10 @@ role_base_sha: 80fff5b29356d42b0381de90fc07de031594da03
    player height <= window height, scrollWidth <= innerWidth + 1. Vertical page scroll is not asserted. The row text
    and falsification condition match. One amendment line in the row.
 
+r6 note (F492, 2026-11-11, role base a09f75d21efe4be01a9cd809abe5516f616825dc): Green round 3 (9e2d04418) added
+phase4-runbook.test.ts and phase4-lesson-focus.test.tsx. The P4 targeted command and Closeout gate item 1 now name ten files.
+One new amendment line (F492) follows the eight-file amendment. No test run.
+
 MEASURE_AGENT_RESULT
 role: measure-strategy
 track: storytime_app_rebuild_20261025
@@ -16,5 +20,5 @@ phase: 4
 status: complete
 role_base_sha: 80fff5b29356d42b0381de90fc07de031594da03
 files_changed: measure/tracks/storytime_app_rebuild_20261025/test-strategy.md
-handoff: Targeted command and Closeout gate item 1 name eight files. Row B1 matches the gate code. No question.
+handoff: Targeted command and Closeout gate item 1 name ten files (r6). Row B1 matches the gate code. No question.
 END_MEASURE_AGENT_RESULT
