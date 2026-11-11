@@ -3255,7 +3255,7 @@ for every other track.
     -26.86 dBFS and fails; `wa-pip.mp3` has a noise floor of -75.48 dBFS and passes; `wa-net.mp3`
     holds quiet edges at -76.14 and -inf dBFS. No committed Red test was edited by this role.
     Evidence class: automated.
-- [ ] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
+- [~] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
 - [ ] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
