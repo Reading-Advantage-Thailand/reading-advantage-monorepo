@@ -208,10 +208,12 @@ function approvedSubmission(): AccountingSubmission {
 }
 
 /** Fake close repository port. The close domain reads and writes through it. */
-function createFakeCloseRepository(input: {
-  readonly closes?: readonly AccountingMonthlyClose[];
-  readonly approvedSubmissions?: readonly AccountingSubmission[];
-}) {
+function createFakeCloseRepository(
+  input: {
+    readonly closes?: readonly AccountingMonthlyClose[];
+    readonly approvedSubmissions?: readonly AccountingSubmission[];
+  } = {},
+) {
   const closes = [...(input.closes ?? [])];
   const approvedSubmissions = [...(input.approvedSubmissions ?? [])];
   const auditEvents: AccountingMonthlyCloseAuditEvent[] = [];

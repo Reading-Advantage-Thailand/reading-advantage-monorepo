@@ -38,7 +38,9 @@ import {
 } from "../contracts.js";
 import {
   AccountingSubmissionError,
+  approveAccountingSubmission,
   listAccountingSubmissions,
+  rejectAccountingSubmission,
   submitAccountingSubmission,
   submitAccountingSubmissionWithOutcome,
   type AccountingActor,
@@ -49,8 +51,10 @@ const COMPANY_ID = "reading-advantage";
 const STAFF_ACCOUNT_ID = "11111111-1111-4111-8111-111111111111";
 const OTHER_STAFF_ACCOUNT_ID = "22222222-2222-4222-8222-222222222222";
 const CONTRACTOR_ACCOUNT_ID = "33333333-3333-4333-8333-333333333333";
+const CEO_ACCOUNT_ID = "44444444-4444-4444-8444-444444444444";
 const SUBMISSION_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const OTHER_SUBMISSION_ID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+const REJECTED_SUBMISSION_ID = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
 const EVIDENCE_REFERENCE =
   "private-evidence://reading-advantage/submissions/00000000-0000-4000-8000-000000000001/evidence";
 
@@ -121,6 +125,31 @@ function createFakeRepository(
       },
     ),
     findByIdempotencyKey: vi.fn(async () => undefined),
+    transition: vi.fn(
+      async (input: {
+        readonly scope: { readonly companyId: string };
+        readonly submissionId: string;
+        readonly status: "approved" | "rejected";
+        readonly auditEvent: AccountingSubmissionAuditEvent;
+      }) => {
+        const index = submissions.findIndex(
+          (submission) =>
+            submission.id === input.submissionId &&
+            submission.scope.companyId === input.scope.companyId,
+        );
+        const current = index < 0 ? undefined : submissions[index];
+        if (current === undefined || current.status !== "pending") {
+          return undefined;
+        }
+        const updated = accountingSubmissionSchema.parse({
+          ...current,
+          status: input.status,
+        });
+        submissions[index] = updated;
+        auditEvents.push(input.auditEvent);
+        return updated;
+      },
+    ),
     listByScope: vi.fn(async (scope: { readonly companyId: string }) =>
       submissions.filter(
         (submission) => submission.scope.companyId === scope.companyId,
@@ -662,5 +691,164 @@ describe("listAccountingSubmissions", () => {
     });
 
     expect(submissions).toEqual([]);
+  });
+});
+
+/**
+ * The approve and reject gate of FR-9: an OWNER and an ACCOUNTANT decide, and a
+ * CEO, a STAFF, and a CONTRACTOR are refused with `forbidden`.
+ */
+const GATE_ROLES = [
+  ["OWNER", "may-decide"],
+  ["ACCOUNTANT", "may-decide"],
+  ["CEO", "forbidden"],
+  ["STAFF", "forbidden"],
+  ["CONTRACTOR", "forbidden"],
+] as const;
+
+console.log(`approve_gate_roles=${GATE_ROLES.length}`);
+console.log(`reject_gate_roles=${GATE_ROLES.length}`);
+if (GATE_ROLES.length !== 5) {
+  throw new Error(
+    `gate_roles=${GATE_ROLES.length} is wrong; FR-9 names five roles.`,
+  );
+}
+
+const ceoActor: AccountingActor = {
+  accountId: CEO_ACCOUNT_ID,
+  companyId: COMPANY_ID,
+  role: "CEO",
+};
+
+const REJECT_REASON = "missing receipt";
+
+describe("approveAccountingSubmission", () => {
+  it("lets an OWNER and an ACCOUNTANT approve a pending submission and refuses a CEO, a STAFF, and a CONTRACTOR", async () => {
+    expect(GATE_ROLES).toHaveLength(5);
+    const mismatches: string[] = [];
+
+    for (const [role, expectation] of GATE_ROLES) {
+      const repository = createFakeRepository([storedSubmission()]);
+      const outcome = await approveAccountingSubmission({
+        repository,
+        actor: { ...staffActor, role },
+        submissionId: SUBMISSION_ID,
+      }).then(
+        (approved) => ({ approved }),
+        (caught: unknown) => ({ caught }),
+      );
+      const changed = repository.submissions[0]?.status === "approved";
+
+      if (expectation === "may-decide") {
+        if ("caught" in outcome) {
+          mismatches.push(`${role} was refused; the approve gate must allow it`);
+        } else if (outcome.approved.status !== "approved" || !changed) {
+          mismatches.push(`${role} did not move the submission to approved`);
+        }
+        continue;
+      }
+
+      if (!("caught" in outcome)) {
+        mismatches.push(
+          `${role} approved the submission; the expected result is forbidden`,
+        );
+      } else if (
+        !(outcome.caught instanceof AccountingSubmissionError) ||
+        outcome.caught.reason !== "forbidden"
+      ) {
+        mismatches.push(
+          `${role} was refused for another reason; the expected reason is forbidden`,
+        );
+      } else if (changed) {
+        mismatches.push(
+          `${role} changed the submission; a refused approve must not change it`,
+        );
+      }
+    }
+
+    expect(mismatches).toEqual([]);
+  });
+});
+
+describe("rejectAccountingSubmission", () => {
+  it("lets an OWNER and an ACCOUNTANT reject a pending submission and refuses a CEO, a STAFF, and a CONTRACTOR", async () => {
+    expect(GATE_ROLES).toHaveLength(5);
+    const mismatches: string[] = [];
+
+    for (const [role, expectation] of GATE_ROLES) {
+      const repository = createFakeRepository([storedSubmission()]);
+      const outcome = await rejectAccountingSubmission({
+        repository,
+        actor: { ...staffActor, role },
+        submissionId: SUBMISSION_ID,
+        reason: REJECT_REASON,
+      }).then(
+        (rejected) => ({ rejected }),
+        (caught: unknown) => ({ caught }),
+      );
+      const changed = repository.submissions[0]?.status === "rejected";
+
+      if (expectation === "may-decide") {
+        if ("caught" in outcome) {
+          mismatches.push(`${role} was refused; the reject gate must allow it`);
+        } else if (outcome.rejected.status !== "rejected" || !changed) {
+          mismatches.push(`${role} did not move the submission to rejected`);
+        }
+        continue;
+      }
+
+      if (!("caught" in outcome)) {
+        mismatches.push(
+          `${role} rejected the submission; the expected result is forbidden`,
+        );
+      } else if (
+        !(outcome.caught instanceof AccountingSubmissionError) ||
+        outcome.caught.reason !== "forbidden"
+      ) {
+        mismatches.push(
+          `${role} was refused for another reason; the expected reason is forbidden`,
+        );
+      } else if (changed) {
+        mismatches.push(
+          `${role} changed the submission; a refused reject must not change it`,
+        );
+      }
+    }
+
+    expect(mismatches).toEqual([]);
+  });
+});
+
+describe("listAccountingSubmissions CEO visibility", () => {
+  it("returns the approved submissions only to a CEO and hides the pending and the rejected ones", async () => {
+    const approvedSubmission = storedSubmission({ status: "approved" });
+    const pendingSubmission = storedSubmission({
+      id: OTHER_SUBMISSION_ID,
+      submittedByAccountId: OTHER_STAFF_ACCOUNT_ID,
+    });
+    const rejectedSubmission = storedSubmission({
+      id: REJECTED_SUBMISSION_ID,
+      status: "rejected",
+    });
+    const repository = createFakeRepository([
+      approvedSubmission,
+      pendingSubmission,
+      rejectedSubmission,
+    ]);
+
+    const visible = await listAccountingSubmissions({
+      repository,
+      actor: ceoActor,
+    }).then(
+      (submissions) => ({ submissions }),
+      (caught: unknown) => ({ caught }),
+    );
+
+    expect("submissions" in visible ? "listed" : String(visible.caught)).toBe(
+      "listed",
+    );
+    expect("submissions" in visible ? visible.submissions : []).toEqual([
+      approvedSubmission,
+    ]);
   });
 });
