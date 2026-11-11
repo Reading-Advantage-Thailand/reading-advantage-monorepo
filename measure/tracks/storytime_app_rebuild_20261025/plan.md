@@ -3314,7 +3314,55 @@ for every other track.
     with 0 errors and 0 warnings; `build-graph update ./graph.db` exits 0 (2 files, 26 nodes, 24
     edges) and search finds `runPreCheck`, `ledgerLineOf`, `failureDetailOf`, `isTestProcess`, and
     `rubricFor`. Unit part evidence class: automated.
-  - Live calibration: waits for the PM answer on the BA1 and C1W2 file paths and for the ledger line; no paid call ran.
+  - Live calibration: waits for the PM answer on the BA1 and C1W2 file paths and for the ledger line; no paid call ran. The round r3 block below supersedes this line.
+  - Live calibration round r3, 2026-11-12 (PM decisions 1a and 1b, quoted in
+    `measure/runs/storytime_app_rebuild_20261025/calibration-5.4.md`). Role
+    `deepseek/deepseek-flash#high` (DeepSeek); Red model `minimax-cn-coding-plan/MiniMax-M3.1-Flash`
+    (MiniMax); role base `c0c47f0963928e890ecfaca4f490f7dc22845677`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The PM cancelled the wait for BA1 and C1W2 and
+    asked for two deterministic fixtures from passed files. Both sit in
+    `measure/runs/storytime_app_rebuild_20261025/calibration/`, which Git ignores:
+    `hello-edge.mp3` and `w02-cut1-shift.mp3`. Both keep mp3, 32 kHz, mono, 128 kbps.
+  - Fixture a, `hello-edge.mp3`: `ffmpeg -ss 0.250 -i wa-hello.mp3 -c:a libmp3lame -b:a 128k -ar
+    32000 -ac 1`. Output 0.783313 s, 13868 bytes. Deviation from the PM's 40 ms: the passed cut
+    holds 113.594 ms of leading silence, so a 40 ms cut lands in silence and the start edge reads
+    -125.40 dBFS (no fault). At 0.250 s the start edge reads -6.06 dBFS, the named BA1 fault.
+  - Fixture b, `w02-cut1-shift.mp3`: `ffmpeg -i wa-balls.mp3 -af
+    "adelay=220:all=1,atrim=0:0.940438" -c:a libmp3lame -b:a 128k -ar 32000 -ac 1`. Output
+    0.940438 s, 16748 bytes. Deviation from the PM's 150 ms: the passed cut holds 211 ms of
+    trailing silence, so at 150 ms both edges read -inf and the fixture passes. At 220 ms the end
+    edge reads -32.75 dBFS, the named C1W2 fault.
+  - Stage 1 verdicts (tsx, from `apps/storytime`). `hello-edge` fails `word-edges` at the start
+    edge (-6.06 dBFS, end -187.08) and passes `file-kind` (audio, 13868 bytes). `w02-cut1-shift`
+    fails `word-edges` at the end edge (-32.75 dBFS, start -inf), passes `noise` (-inf), and passes
+    `file-kind` (audio, 16748 bytes). `04-n.mp3` (w01 phonemes) fails `noise` (-26.86 dBFS). The
+    passed originals pass the checks of their kind: `wa-hello` `word-edges` -113.58 dBFS (end
+    -inf), `wa-balls` -89.86 dBFS (end -inf), both `file-kind` pass.
+  - Finding for the strategy. `noise` fails both passed word cuts (wa-hello -52.36 dBFS, wa-balls
+    -50.77 dBFS against the -60 dBFS ceiling), and `loudness` fails every word cut and the hissy
+    take (-17.55, -17.98, -17.80, -18.29, -13.77 LUFS against the ±1 LU tolerance of rule 5.2).
+    Rules 5.2 and 5.3 are the song and phoneme rules; a one second 128 kbps cut is judged by rule
+    10.2 and AC-10.1. The stage 1 column of the media list names loudness and noise on the
+    word-clip rows, so a strategy correction or a per-kind tolerance is needed.
+  - Stage 2 picture rubric: not run. This session cannot start a subagent (the depth limit is 1),
+    so no coder session started and no model was called. The two exact coder prompts sit in
+    `calibration-5.4.md`, and the cost ledger holds the two prepared lines with
+    `subscription route, 0 USD`. No ledger line was written for a call that did not run.
+  - Audio and video rubric report (no call ran). Model `gemini-3.5-flash-lite` (Google paid tier).
+    Price, read 2026-11-12 from https://ai.google.dev/gemini-api/docs/pricing: input $0.30 per 1M
+    tokens (text, image, video, audio), output $2.50 per 1M. One call: about 300 rubric tokens
+    ($0.00009) plus about 200 output tokens ($0.0005) plus the media, at 25 audio tokens per
+    second. Per call: word cut $0.0006, phoneme $0.0006, book audio $0.0008, song $0.0012, video
+    $0.0012 plus the sampled frames. Call count from the media list: 22 word cuts, 9 phonemes, 4
+    book audios, 1 song, and 2 videos. Total about $0.026 for the 36 audio files, plus the video
+    frames. `RUBRICS` names no model; the strategy names DeepSeek as the standing route, and its
+    price page lists vision but no audio input. The Gemini route needs Daniel's go once (a new
+    metered route, P5.1).
+  - Audio stage 2 rubric: deferred:daniel (PM decision 2026-11-12, metered model). Stage 1 covers audio until then.
+  - Task 5.4 stays `[~]`: the picture verdicts did not run, so the unit and stage 1 part alone
+    cannot close the task. The implementation commits of the unit part are `3243b7020` and the Red
+    test commit `fa8a127c7`. No file under `measure/runs/` is committed (Git ignores it). Evidence
+    class: automated stage 1 measurement plus the calibration log.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
