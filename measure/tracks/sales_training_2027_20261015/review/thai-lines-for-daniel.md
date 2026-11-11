@@ -107,4 +107,7 @@ Commit `84b151b7f`. **Updated 2026-10-16 (tone pass, Daniel's feedback):** Part 
 | 51 | tutor-recruitment / Answering a Future Tutor's Questions | หลักสูตรได้มาตรฐานไหม |
 | 52 | tutor-recruitment / Answering a Future Tutor's Questions | หนังสือของเราสอดคล้องกับกรอบ CEFR และหนังสือทุกเล่มระบุระดับ CEFR ไว้ค่ะ |
 | 53 | tutor-recruitment / Roleplay RR2: "Isn't This a Pyramid Scheme?" | ไม่ใช่ค่ะ ค่าคอมมิชชันมาจากแพ็กเกจคลาสที่ครอบครัวจ่ายเงินจริงเท่านั้น ติวเตอร์ที่ไม่มีนักเรียนของตัวเองในเดือนนั้นจะไม่ได้รับเงินในเดือนนั้น |
+| 54 | family-sale / The Next Book | เล่มต่อไปของชุดนี้ยังไม่ได้พิมพ์ค่ะ ตอนนี้ยังไม่มีกำหนดค่ะ |
+
+**Row 54.** English: "The next book in this series is not printed yet. There is no date yet." Source: `09-sales-enablement/tutor-family-sales-playbook.md` section 5 at advantage-pr `7eff8c10`. Seed: `apps/sales-advantage/scripts/static-seed.ts` near line 1399. Review A F3, for Daniel's check.
 
