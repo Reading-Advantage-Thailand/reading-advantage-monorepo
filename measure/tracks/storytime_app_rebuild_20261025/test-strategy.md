@@ -293,7 +293,7 @@ Dates are the latest dates. The PM fixed the dates of tasks 3.8, 3.9, 3.10, and 
 | 3.1 Entry route | 2026-11-06 | high | `phase3-entry-route.test.ts`, `phase3-readiness.test.ts`, `phase3-manifest.test.ts`, changed `phase1-scaffold.test.ts` and `phase1-boundary.test.ts` | AC-2.1, AC-5.1, AC-5.4 |
 | 3.8 part 1 Loop contract, receiver, F99 | 2026-11-09 | high | `phase3-loop-contract.test.ts`, `phase3-f99-page-audio.test.ts`, `phase3-loop-receiver.test.ts`, `phase3-media-coverage.test.ts`, `phase3-receiver-hardening.test.ts` | AC-13.2 to AC-13.5 |
 | 3.2 Tiles and home card | 2026-11-10 | medium | `phase3-home-card.test.tsx`, `phase3-messages.test.ts` | AC-5.2 (browser) |
-| 3.3 Read-along UI | 2026-11-11 | high | `phase3-readalong-ui.test.tsx`; `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx` | AC-6.1 |
+| 3.3 Read-along UI | 2026-11-12 | high | `phase3-readalong-ui.test.tsx`; `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx` | AC-6.1 |
 | 3.4 Decodable UI | 2026-11-13 | medium | `phase3-decodable-ui.test.tsx`, `phase3-phoneme-bank.test.ts` | AC-7.1 |
 | 3.5 Song page | 2026-11-16 | medium | `phase3-song-ui.test.tsx` | AC-8.1, AC-8.2 (browser) |
 | 3.8 part 2 Draft pin receipt | 2026-11-19 (target: 2 days after the pin arrives) | high | `phase3-loop-contract.test.ts`, `phase3-f99-page-audio.test.ts`, `phase3-loop-receiver.test.ts`, `phase3-media-coverage.test.ts`, `phase3-receiver-hardening.test.ts`; the updated P2 tests that name the pin | AC-13.1 |
