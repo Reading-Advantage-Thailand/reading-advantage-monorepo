@@ -3511,6 +3511,15 @@ for every other track.
     `10d5fcfce4b35c30ed4c6c4cf3c901fe23ac918d`. Which commit is the received milestone media?
     Task 5.5 stays `[~]` for stage 2. No model was called, and no money was spent. Evidence
     class: automated stage 1 plus the prepared stage 2 prompt.
+  - Stage 2 picture batch, model 1 (task 5.5), 2026-11-12. Model
+    `claude-code/claude-sonnet-5-5#high`, subscription route, 0 USD (ledger line at 04:38). The
+    orchestrator ran the batch prompt on the 32 pictures. Counts: 32 pictures, 22 pass, 10 fail.
+    The fails: book 1 page 6 (two school bags), the family words `hello`, `goodbye`, and `friend`,
+    the two song posters, and the song-line pictures `point-to-self`, `point-forward`, `clap`, and
+    `hands-out`. The stage 2 JSON, the stage 2 table, and the PM return list sit in
+    `measure/runs/storytime_app_rebuild_20261025/stage-log-w01.md`. Evidence class: model
+    pre-check; Daniel stays the final gate (task 6.1). Rule 6.e model 2 waits for the PM, so task
+    5.5 stays `[~]`.
 - [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
     base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
