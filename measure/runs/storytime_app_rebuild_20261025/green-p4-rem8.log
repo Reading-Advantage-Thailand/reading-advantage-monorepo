@@ -1,0 +1,112 @@
+# Green log: Phase 4 remediation round 8 (F681)
+
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master.
+- Track: storytime_app_rebuild_20261025, phase id P4, phase heading
+  "## Phase 4: Teacher app".
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable).
+- role_base_sha: 205c6ab8a49d5a6041cd7d5113ee29bf1a318d5f (HEAD at the start).
+- Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). Red family: DeepSeek; the families
+  differ, and no DeepSeek model ran in this role. No coder was delegated.
+- Audit input: ux-browser-p4-e7d7e6f65.json (F681) and its captures in ux-p4-e7d7e6f65/.
+- Other tracks commit on master at the same time. This round committed only with its own path
+  list, and git status at the start held no change under apps/storytime.
+
+## Order of work
+
+1. Tests first: two cases in phase4-lesson-focus.test.tsx that mock getBoundingClientRect and
+   stub scrollIntoView in jsdom (jsdom holds no scrollIntoView). No committed Red test
+   changed.
+2. Implementation: the end-region focus effect of lesson-flow.tsx reads the region box and
+   calls scrollIntoView({ block: "nearest" }) only when the box top sits at or below
+   window.innerHeight (commit 54db95c18).
+3. Gates, then the plan evidence and this log.
+
+## Commands and results (A5: each line holds the exit code and the counts)
+
+Heavy vitest and tsc runs went through heavy-run.sh (p1, foreground, shell timeout 0).
+MemAvailable read 1950936 kB at the Green gate, above the floor; the stop rule never came
+close.
+
+1. Focused file first (local vitest, --maxWorkers=1): cd apps/storytime; CI=true
+   ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-focus.test.tsx
+   -> exit 0; 1 file; 9 of 9 (7 cases of rem 7 plus the 2 new cases).
+2. The ten-file Green command of test-strategy.md line 621 (heavy-run, --maxWorkers=1):
+   -> exit 0; 10 files; 167 of 167 tests (165 of rem 7 plus the 2 new cases).
+3. cd apps/storytime && ../../node_modules/.bin/tsc --noEmit (heavy-run p1): -> exit 0.
+4. ESLint on the two changed files: -> exit 0; 0 errors; 0 warnings.
+5. build-graph update ./graph.db on lesson-flow.tsx (heavy-run p1): -> exit 0; updated 1 file
+   (78 -> 93 nodes, 133 edges).
+6. No Docker smoke and no browser gate in this round, per the orchestrator brief; the UX role
+   measures after the reviews and re-measures day 5 at 1366x768 in one small run.
+
+## Fixes in the commit
+
+- F681 (lesson-flow.tsx): the end-region focus effect keeps focus({ preventScroll: true }) and
+  then, only when getBoundingClientRect().top >= window.innerHeight, calls
+  scrollIntoView({ block: "nearest" }) on the region. A region that is already inside the
+  viewport moves no scroll, so the round 3 result (scrollY 0 in all 40 runs) holds for days 1
+  to 4, and on day 5 at 1920x1080 the page stays still. On day 5 at 1366x768, where the UX
+  role measured the region box at 816 to 1388 in a 768 px viewport, the region now scrolls
+  into view, so a keyboard user sees where the focus went.
+- Tests (phase4-lesson-focus.test.tsx): one case mocks the region box below the viewport
+  (top 900 in a 768 px window) and asserts the scrollIntoView call with block "nearest"; one
+  case mocks the box inside the viewport (top 200) and asserts no call. The stub removes
+  itself from Element.prototype after each case.
+
+## Commits
+
+1. Implementation and tests: 54db95c18, fix(storytime): scroll the end region into view
+   (track_id: storytime_app_rebuild_20261025). Two files: lesson-flow.tsx,
+   phase4-lesson-focus.test.tsx.
+2. Plan evidence and this log: the next commit, docs(measure) on the same track id.
+
+## Anti-pattern check
+
+- A3 holds: every count above is a labeled integer.
+- A5 holds: every command line above holds its real exit code; the Green gate exit was
+  captured without a pipe.
+- A6 holds: measure/tracks.md changes only at closeout; this round did not touch it.
+- A7 holds: no rg -v filter changed.
+- A16 holds: this role made no worktree.
+
+## Result
+
+The targeted Red command (the ten-file Green command of test-strategy.md line 621) exits 0 at
+HEAD 54db95c18 with 10 files and 167 of 167 tests. tsc exits 0. ESLint on the changed files
+exits 0. The plan evidence block "Phase 4 remediation round 8" carries the implementation
+commit SHA. No task marker changed in this round.
+
+MEASURE_AGENT_RESULT
+status: complete
+phase: P4 (Phase 4 remediation round 8)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+green_head: 54db95c182f0992a55838350dc485ad39dc18d12
+implementation_commit: 54db95c18
+plan_evidence_commit: (the commit that carries this log; see git log)
+Dispositions: F681 FIX
+
+handoff:
+- Tasks flipped to [x]: none in this round. Tasks 4.1 to 4.6a keep their [x] markers; the
+  "Phase 4 remediation round 8" evidence block now sits under the Phase 4 evidence with
+  implementation commit 54db95c18 and the gate exit codes.
+- Tasks flipped to [b]: none. No fabrication was needed.
+- Targeted Red command: the ten-file Green command of test-strategy.md line 621, run through
+  heavy-run.sh with --maxWorkers=1. Output: exit 0, 10 files, 167 of 167 tests. This round
+  had no committed red case; the two new Green cases assert the scroll behavior and failed
+  conceptually on the old code (no scroll call existed); the focused file run passes only
+  with the fix.
+- Gates: tsc --noEmit exit 0; ESLint on the two changed files exit 0 (0 errors, 0 warnings);
+  build-graph update on lesson-flow.tsx exit 0. No Docker smoke and no browser gate in this
+  round, per the brief; the UX role should re-measure day 5 at 1366x768 in one small run and
+  confirm the region is on screen after the focus move, with days 1 to 4 still at scrollY 0.
+- Files changed by this round (review scope): apps/storytime/app/[locale]/teacher/[level]/
+  [week]/[day]/lesson-flow.tsx (the end-region focus effect), apps/storytime/__tests__/
+  phase4-lesson-focus.test.tsx (two new cases with jsdom stubs). No new file; the ten-file
+  test list of test-strategy.md line 621 stays the list of record.
+- Notes for the reviewers: the scroll check reads window.innerHeight; a server-side render
+  never runs the effect, so no SSR guard is needed. The stub of scrollIntoView is defined on
+  Element.prototype inside the two cases and removed after the assertions, so no other test
+  file sees it.
+- Question for the PM (default in parentheses): none in this round. The finding is fixed with
+  the code and the tests; no user decision is open.
+END_MEASURE_AGENT_RESULT

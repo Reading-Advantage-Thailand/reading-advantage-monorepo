@@ -2951,6 +2951,39 @@ for every other track.
     count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
     filter changed). A16 holds (no worktree).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem7.log`.
+  - Phase 4 remediation round 8 evidence. Role base
+    `205c6ab8a49d5a6041cd7d5113ee29bf1a318d5f`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The UX role ran on another family; no
+    DeepSeek model wrote code in this round. No coder was delegated.
+  - Implementation commit: `54db95c18` (`fix(storytime): scroll the end region into view`).
+    Files: `lesson-flow.tsx` and the Green-owned `phase4-lesson-focus.test.tsx` (8 to 10
+    cases). No committed Red test changed, and no `content/` file changed.
+  - F681: after the focus move with `preventScroll`, the flow reads the end region box with
+    `getBoundingClientRect` and, only when the box top sits at or below the viewport height,
+    calls `scrollIntoView({ block: "nearest" })` on the region. A region that is already
+    inside the viewport moves no scroll, so the round 3 result (scrollY 0 in every run) holds
+    for days 1 to 4. Two new cases mock `getBoundingClientRect` and stub `scrollIntoView` in
+    jsdom: the box below the viewport scrolls with block "nearest", and the box inside the
+    viewport moves no scroll.
+  - Gates (each ran alone, in the foreground, with the shell timeout 0; MemAvailable
+    1950936 kB at the Green gate):
+    1. The focused file first (local vitest, `--maxWorkers=1`): exit 0, 1 file, 9 of 9 (the
+       two new cases pass with the fix).
+    2. The ten-file Green command of `test-strategy.md` line 621 through `heavy-run.sh`:
+       exit 0, 10 files, 167 of 167 tests (165 of rem 7 plus the two new cases).
+    3. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0.
+    4. ESLint on the two changed files: exit 0; 0 errors; 0 warnings.
+    5. `build-graph update` (heavy-run p1) on `lesson-flow.tsx`: exit 0 (78 to 93 nodes,
+       133 edges).
+  - The numeric proof of F681 on a real page (the region on screen after the scroll on day 5
+    at 1366x768) is the small UX run after the reviews, per the brief; this round proves the
+    behavior in jsdom.
+  - No Docker smoke and no browser gate in this round (orchestrator brief).
+  - Anti-patterns: A3 holds (labeled counts). A5 holds (this block gives each exit code and
+    count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
+    filter changed). A16 holds (no worktree).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem8.log`.
 
 ## Phase 5: Milestone week integration
 
