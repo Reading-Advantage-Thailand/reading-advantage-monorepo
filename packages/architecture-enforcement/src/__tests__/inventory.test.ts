@@ -1,10 +1,11 @@
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   inventoryRepository,
   proposeDirectViolations,
+  selectArchitectureSourceFiles,
   serializeDirectViolationReview,
   serializeInventory,
 } from "../inventory.js";
@@ -364,5 +365,151 @@ describe("deterministic architecture inventory", () => {
         proposedDisposition: "baseline-review",
       }),
     ]);
+  });
+});
+
+/** Control source path that every public asset list carries. */
+const CONTROL_SOURCE_PATH = "apps/example/src/x.ts";
+/** Public asset paths that the rule must ignore. */
+const PUBLIC_ASSET_VARIANT_PATHS = [
+  "apps/example/public/a/b/y.mjs",
+  "apps/example/public/z.jsx",
+  "apps/example/public/serwist/sw.js",
+] as const;
+/** Source paths that the rule must keep. */
+const APP_LEVEL_GUARD_PATHS = [
+  "apps/example/src/public/x.ts",
+  "apps/example/src/public.ts",
+  "apps/example/public.ts",
+  "packages/example/public/x.ts",
+] as const;
+/** Exact key list of the v2 manifest, as the spec of task 1.4c states. */
+const V2_MANIFEST_KEY_LIST = [
+  "schemaVersion",
+  "reconciliationId",
+  "v1ManifestSha256",
+  "v1Artifacts",
+  "v2Artifacts",
+  "analyzerImplementationTreeSha256",
+  "implementationAndTestTreeSha256",
+  "analyzerInputSnapshotSha256",
+  "reportSha256s",
+  "reviewSubjectSha256",
+  "reviews",
+  "baselineAdditions",
+  "baselineRemovals",
+  "baselineRenames",
+  "acceptance",
+] as const;
+
+describe("static public assets (AC-18 to AC-21)", () => {
+  it("ac18_public_js_is_not_selected", () => {
+    const publicPath = "apps/example/public/x.js";
+    const selected = selectArchitectureSourceFiles(
+      { trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
+      repoRoot,
+    );
+
+    expect(
+      selected.includes(publicPath),
+      `selected_paths=${selected.length} public_path=${publicPath}`,
+    ).toBe(false);
+  });
+
+  it.each(PUBLIC_ASSET_VARIANT_PATHS)(
+    "ac18_public_variants_are_not_selected: %s",
+    (publicPath) => {
+      expect(
+        PUBLIC_ASSET_VARIANT_PATHS.length,
+        `variant_rows=${PUBLIC_ASSET_VARIANT_PATHS.length}`,
+      ).toBe(3);
+      const selected = selectArchitectureSourceFiles(
+        { trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
+        repoRoot,
+      );
+
+      expect(
+        selected.includes(publicPath),
+        `selected_paths=${selected.length} public_path=${publicPath}`,
+      ).toBe(false);
+    },
+  );
+
+  it("ac18_inventory_scans_only_the_control", async () => {
+    const publicPath = "apps/example/public/x.js";
+    await writeFixture(publicPath, 'import OpenAI from "openai";');
+    await writeFixture(CONTROL_SOURCE_PATH, "export const control = true;\n");
+
+    const result = await inventoryRepository({
+      repoRoot,
+      trackedFiles: [publicPath, CONTROL_SOURCE_PATH],
+    });
+    const publicFacts = result.facts.filter((fact) =>
+      fact.sourcePath.includes("public/"),
+    );
+    const publicParseErrors = result.parseErrors.filter((error) =>
+      error.sourcePath.includes("public/"),
+    );
+
+    expect(
+      result.filesScanned,
+      `files_scanned=${result.filesScanned}`,
+    ).toBe(1);
+    expect(
+      publicFacts.length,
+      `public_facts=${publicFacts.length}`,
+    ).toBe(0);
+    expect(
+      publicParseErrors.length,
+      `public_parse_errors=${publicParseErrors.length}`,
+    ).toBe(0);
+  });
+
+  it("ac19_src_file_is_still_selected", () => {
+    const publicPath = "apps/example/public/x.js";
+    const selected = selectArchitectureSourceFiles(
+      { trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
+      repoRoot,
+    );
+
+    expect(
+      selected.includes(CONTROL_SOURCE_PATH),
+      `selected_paths=${selected.length} control_path=${CONTROL_SOURCE_PATH}`,
+    ).toBe(true);
+  });
+
+  it.each(APP_LEVEL_GUARD_PATHS)(
+    "ac20_app_level_match_only: %s",
+    (guardPath) => {
+      expect(
+        APP_LEVEL_GUARD_PATHS.length,
+        `guard_rows=${APP_LEVEL_GUARD_PATHS.length}`,
+      ).toBe(4);
+      const selected = selectArchitectureSourceFiles(
+        { trackedFiles: [guardPath] },
+        repoRoot,
+      );
+
+      expect(
+        selected.includes(guardPath),
+        `selected_paths=${selected.length} guard_path=${guardPath}`,
+      ).toBe(true);
+    },
+  );
+
+  it("ac21_manifest_key_set_is_unchanged", async () => {
+    const manifest = JSON.parse(
+      await readFile(
+        new URL("../config/analyzer-reconciliation.v2.json", import.meta.url),
+        "utf8",
+      ),
+    ) as Record<string, unknown>;
+    const manifestKeys = Object.keys(manifest);
+
+    expect(manifestKeys).toEqual([...V2_MANIFEST_KEY_LIST]);
+    expect(
+      manifestKeys.length,
+      `manifest_keys=${manifestKeys.length}`,
+    ).toBe(V2_MANIFEST_KEY_LIST.length);
   });
 });
