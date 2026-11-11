@@ -886,9 +886,19 @@ export function TeacherLessonFlow({
 
   // The last screen holds no "Next step" control, so the flow moves the focus to its end
   // region instead of the body (review finding F421d). The move runs only after a "Next step"
-  // press (review finding F483) and keeps the scroll place (review finding F482).
+  // press (review finding F483) and keeps the scroll place (review finding F482). When the
+  // region sits wholly below the viewport, the flow scrolls it into view with block
+  // "nearest", so a keyboard user sees where the focus went (review finding F681); a region
+  // that is already inside the viewport moves no scroll.
   useEffect(() => {
-    if (last && movedRef.current) endRef.current?.focus({ preventScroll: true });
+    if (last && movedRef.current) {
+      const region = endRef.current;
+      region?.focus({ preventScroll: true });
+      const box = region?.getBoundingClientRect();
+      if (region && box && box.top >= window.innerHeight) {
+        region.scrollIntoView({ block: "nearest" });
+      }
+    }
   }, [last]);
 
   /**

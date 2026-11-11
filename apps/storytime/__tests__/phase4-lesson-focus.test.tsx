@@ -256,3 +256,71 @@ describe("Phase 4 lesson focus: the language mark of the step id chip (UX findin
     view.unmount();
   });
 });
+
+describe("Phase 4 lesson focus: the scroll of the end region (F681)", () => {
+  /**
+   * Stubs scrollIntoView on Element, which jsdom holds none of.
+   * @returns The scrollIntoView spy.
+   */
+  function stubScrollIntoView(): ReturnType<typeof vi.fn> {
+    const spy = vi.fn();
+    Object.defineProperty(Element.prototype, "scrollIntoView", {
+      configurable: true,
+      value: spy,
+    });
+    return spy;
+  }
+
+  /**
+   * Builds the box that getBoundingClientRect reports for the end region.
+   * @param top The top edge of the box, in viewport pixels.
+   * @returns The rectangle.
+   */
+  function boxAt(top: number): DOMRect {
+    return {
+      top,
+      bottom: top + 500,
+      left: 0,
+      right: 100,
+      width: 100,
+      height: 500,
+      x: 0,
+      y: top,
+      toJSON: () => ({}),
+    } as DOMRect;
+  }
+
+  it("scrolls the region into view when its box is below the viewport (F681)", () => {
+    const scrollSpy = stubScrollIntoView();
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(() =>
+      boxAt(900),
+    );
+    const view = renderDay(week, 1);
+    walkToLastScreen();
+    expect(
+      scrollSpy,
+      "a region below the viewport must scroll into view after the focus move",
+    ).toHaveBeenCalled();
+    expect(
+      scrollSpy.mock.calls[0]?.[0],
+      "the scroll must hold block nearest, so the page moves as little as it can",
+    ).toEqual({ block: "nearest" });
+    Reflect.deleteProperty(Element.prototype, "scrollIntoView");
+    view.unmount();
+  });
+
+  it("moves no scroll when the region box is inside the viewport (F681)", () => {
+    const scrollSpy = stubScrollIntoView();
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(() =>
+      boxAt(200),
+    );
+    const view = renderDay(week, 1);
+    walkToLastScreen();
+    expect(
+      scrollSpy,
+      "a region inside the viewport must keep the page still (round 3: scrollY 0 in 36 runs)",
+    ).not.toHaveBeenCalled();
+    Reflect.deleteProperty(Element.prototype, "scrollIntoView");
+    view.unmount();
+  });
+});
