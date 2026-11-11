@@ -1,0 +1,111 @@
+=== measure green run: task 1.4 round 9, the v1 debt drift preview ===
+session: Green · P1 1.4 r9 · architecture_ci_input_pin
+role: measure-jr-green
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4 (round 9, read-only preview)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 3474bd24231011a99f8656238a49687c84d7ca4e
+model: deepseek/deepseek-flash#high
+started: 2026-11-11
+status: in progress
+
+Pre-run checks:
+- HEAD is 3474bd24231011a99f8656238a49687c84d7ca4e.
+- git status --short -- packages/architecture-enforcement is empty.
+- MemAvailable is 2763812 kB. The stop rule is 300 MB.
+- PSI memory full avg60 is 0.13 percent. The stop rule is 30 percent.
+- I read packages/architecture-enforcement/src/baseline-update-cli.ts and baseline-update.ts. A run without --acknowledge returns at the guard `!options.acknowledge` with `wroteBaselines: false` before any baseline read or transaction. The CLI writes only its report to stdout. The run cannot write with no --acknowledge.
+- The preview writes one file by shell redirection: measure/runs/architecture_ci_input_pin_20261110/r9-debt-preview.json. It writes no baseline, no manifest, and no source file.
+
+=== preview run ===
+- Command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:baseline:update --format json > /home/daniebo/Desktop/reading-advantage-monorepo/measure/runs/architecture_ci_input_pin_20261110/r9-debt-preview.json'
+- Start: 2026-11-11T11:04:38+0700. End: 2026-11-11T11:08:20+0700.
+- Heavy-run exit: 1. The CLI exit 1 means "preview with pending changes". It is the expected preview result.
+- wroteBaselines: false. The run wrote no baseline.
+- git status --short -- packages/architecture-enforcement is empty after the run. The run wrote no manifest and no source file.
+- The JSON file held 256 trailing bytes after the JSON value: the text "undefined" and the pnpm failure block, which pnpm sent to stdout. I kept the first JSON value and rewrote the file with that value only. The counts below come from that value.
+- Report: status=debt-change, filesScanned=6868, findings=876, parseErrors=0, policyVersion=v1, policyStatus=candidate, defaultPolicy=v1.
+
+Additions, 332 in total
+- By rule:
+  - DATABASE_BOUNDARY (database and tenant boundary): 205.
+  - COMPANY_IDENTITY_PRODUCT_ISOLATION (auth and product isolation): 93.
+  - DURABLE_JOB_DATABASE_BOUNDARY (worker data boundary): 16.
+  - AI_PROVIDER_BOUNDARY (provider adapter): 11.
+  - COMPANY_IDENTITY_DB_BOUNDARY (company identity data boundary): 5.
+  - INTEGRATION_PROVIDER_BOUNDARY (provider adapter): 2.
+- Security-relevant rules, listed apart: COMPANY_IDENTITY_PRODUCT_ISOLATION 93 (auth); COMPANY_IDENTITY_DB_BOUNDARY 5 (auth and data); AI_PROVIDER_BOUNDARY 11 and INTEGRATION_PROVIDER_BOUNDARY 2 (provider adapters); DATABASE_BOUNDARY 205 and DURABLE_JOB_DATABASE_BOUNDARY 16 (tenant and data scope).
+- By domain: database 319, provider 13.
+- By top-level path:
+  - apps/primary-advantage 144
+  - apps/accounts 50
+  - packages/backend 37
+  - packages/domain 19
+  - apps/marketing 18
+  - apps/sales-advantage 13
+  - apps/codecamp-advantage 11
+  - packages/webhooks 11
+  - apps/reading-advantage 11
+  - apps/advantage-games 4
+  - packages/api 3
+  - packages/ai 3
+  - packages/integrations 2
+  - apps/accounting 2
+  - apps/workbooks 1
+  - packages/auth 1
+  - packages/db 1
+  - apps/science-advantage 1
+- By track, from `git log -1 --format=%s` on one sample file of each group:
+  - sso_dev_cookie_prefix_hotfix_20260922: apps/accounting, apps/codecamp-advantage.
+  - accounts_loading_state_correctness_20260919: apps/accounts.
+  - marketing_golive_20260701: apps/marketing.
+  - primary_parity_school_management_20261011: the apps/primary-advantage upload test sample.
+  - sales_advantage_golive_20260701: apps/sales-advantage.
+  - architecture_priorities_20260908: apps/science-advantage.
+  - primary_parity_cleanup_20261011: packages/ai and apps/primary-advantage/utils/openai.ts.
+  - primary_legacy_data_migration_20261004: packages/api.
+  - small_company_admin_privileges_20260722: packages/backend.
+  - company_identity_sso_20260715: packages/db.
+  - monorepo_package_review_20260907: packages/integrations and packages/webhooks.
+  - structural_ux_alignment_20260911: apps/reading-advantage.
+  - A measure chore commit of 2026-09-12 with no track id (6e890c307): apps/advantage-games, packages/auth, packages/domain.
+  - A sync chore commit of 2026-09-12 with no track id (3dd0d39d6): apps/workbooks.
+- No addition names a path under packages/architecture-enforcement. The count of drift paths in this track's package is 0.
+
+Removals, one line
+- The 16 removals are all AI_PROVIDER_BOUNDARY: 15 in apps/primary-advantage and 1 in apps/reading-advantage. The sample files are the primary lesson-chatbot route, story-generator, and utils/openai.ts, and the reading validator-controller. They left when earlier tracks moved AI callers to the adapter or remediated a review finding (primary_parity_cleanup_20261011, primary_broken_ux_fixes_20260912, monorepo_package_review_20260907).
+
+Renames, one line
+- The 161 renames sit on 20 semantic keys, and 108 of them sit on one key. A rename means the same finding moved its line or column. The samples are apps/science-advantage/lib/ai/image-generator.ts, packages/ai/src/client.ts, packages/storage/src/index.ts, and apps/reading-advantage/utils/openai.ts. No finding is new and none is gone.
+
+Was the drift there before this track
+- Yes. The v1 baselines were last written on 2026-07-18 (4ff2caecf, "chore(measure): checkpoint Gate 1"). The v2 baselines were last written on 2026-08-19 (e6f2072b0). The manifest commit 221081178 is from 2026-09-08.
+- Every sampled last-touch commit of a drift file falls between 2026-07-19 and 2026-10-14. All are before this track's phase base of 2026-11-10.
+- No drift path sits under packages/architecture-enforcement. This track changed inventory.ts, analyzer.ts, v2-manifest-validation.ts, architecture-pin-refresh-cli.ts, and the v2 manifest. None of them appears in the additions or the removals.
+- The comparison is the v1 policy. This track changes the v2 manifest pins only. The drift is the gap between the v1 baselines of 2026-07-18 and the tracked source of 2026-11-11.
+
+Round 9 decision
+- The preview wrote nothing. Task 1.4 stays [~].
+- The PM or Daniel must decide on the drift. To accept new debt, the baseline update needs an accountable owner and a rationale.
+- The default of this role: do not accept the drift yet. The PM names the owner and the rationale first, or opens a remediation track.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4 (round 9, read-only preview)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 3474bd24231011a99f8656238a49687c84d7ca4e
+preview: one run, heavy-run exit 1 (preview with pending changes), wroteBaselines=false, no repository file changed
+counts: additions=332 (database 319, provider 13), removals=16 (all AI_PROVIDER_BOUNDARY), renames=161 (20 semantic keys), filesScanned=6868, findings=876, parseErrors=0, policy=v1
+security_rules: COMPANY_IDENTITY_PRODUCT_ISOLATION 93, COMPANY_IDENTITY_DB_BOUNDARY 5, AI_PROVIDER_BOUNDARY 11, INTEGRATION_PROVIDER_BOUNDARY 2, DATABASE_BOUNDARY 205, DURABLE_JOB_DATABASE_BOUNDARY 16
+predates_track: yes. The v1 baselines date to 2026-07-18, the sampled drift commits fall between 2026-07-19 and 2026-10-14, and 0 drift paths sit under packages/architecture-enforcement.
+commits: the measure docs commit with this log and the preview JSON follows this block
+files_changed: measure/runs/architecture_ci_input_pin_20261110/r9-debt-preview.json (new) and measure/runs/architecture_ci_input_pin_20261110/green-p1-1.4-r9.log (new). No baseline, no manifest, no source file.
+plan_updates: none. Task 1.4 stays [~].
+handoff: the PM needs the decision. Option A: accept the 332 additions with a named accountable owner and a rationale, then run the baseline update with --owner and --rationale and re-run the full check. Option B: open a remediation track for the security-relevant rules first, at least COMPANY_IDENTITY_PRODUCT_ISOLATION (93) and the provider-adapter rules (13), then accept the rest. Option C: keep the drift and record it as a known repository condition with a PM waiver. The default of this role is option B for the auth and provider rules and option A for the database rules, but only after the PM names the owner and the rationale.
+deferred: none
+question: which owner and rationale should the baseline update carry, and should the auth and provider-adapter additions be remediated before the update? The default is a remediation track for the auth and provider rules, then an acknowledged update for the database additions with the PM-named owner and rationale.
+END_MEASURE_AGENT_RESULT
