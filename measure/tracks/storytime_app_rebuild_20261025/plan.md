@@ -3256,6 +3256,46 @@ for every other track.
     holds quiet edges at -76.14 and -inf dBFS. No committed Red test was edited by this role.
     Evidence class: automated.
 - [~] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
+  - Red evidence (task 5.4). Role base `1bc95f41828c0360e2c6cdfb27a84ffcbd84a07f`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The Red command is the P5 `RED_TEST_COMMAND` of
+    the strategy (test-strategy.md line 946), under heavy-run p1, in the foreground. It exits 1.
+    Test files: 6. Tests failed: 15. Tests passed: 32. Load errors: 0. The 32 passes are the 4
+    earlier files of tasks 5.1 and 5.3, which stay green. The 15 failures are the 2 new files,
+    and every failure names a missing path: 8 in `phase5-runner.test.ts` name
+    `apps/storytime/scripts/checks/runner.ts` and 7 in `phase5-rubrics.test.ts` name
+    `apps/storytime/scripts/checks/rubrics.ts`. No failure names another cause, and no test file
+    holds a syntax error or an import error. The type check
+    `../../node_modules/.bin/tsc --noEmit` under heavy-run p1 exits 0. Test commit `fa8a127c7`;
+    the commit header is 99 characters, because the header of the assignment was 103 characters
+    and the commitlint hook holds the 100-character rule.
+  - The contracts of the two new test files. `phase5-runner.test.ts` holds the contract of
+    `runPreCheck(options)` in `scripts/checks/runner.ts`: the nine fields of P5.1 in the ledger
+    line as `key=value` pairs separated by ` | `, the ledger line written before the model call,
+    no model call when the ledger line cannot be written, the reason and the time in the file
+    (`at=<seconds>`) in each failure detail, a fail without a time as an error, the evidence
+    class `mock` for a mock client, and no call of a real client inside a test. The test uses a
+    mock client only, so it calls no model and spends no money. `phase5-rubrics.test.ts` holds
+    the contract of `RUBRICS` in `scripts/checks/rubrics.ts`: one rubric for each of the six
+    kinds, the known faults of rule 6.7b for each kind, a known bad file for each kind, the
+    four known bad files of AC-11.2 named by label, and a file that Daniel passed for each kind.
+  - The known bad files and where they live. `04-n.mp3` sits at
+    `phonemes/daniel/04-n.mp3` in the hand-off package
+    `~/Desktop/handoff/w01-storytime-app-package-r4`. The gesture thumbnail for "One sun" sits
+    at `l2/media/w02/song-lines/point-up.jpg` in the package
+    `~/Desktop/handoff/w02-storytime-app-package-r3`. The cut-off "Hello" of BA1 and the week 2
+    cut 1 of C1W2 sit in no hand-off package and in no media root that the test reads. The
+    orchestrator asks the PM where those two files live, for the live calibration of task 5.4.
+    The unit test does not wait for that answer: the rubric set names both files by label, and
+    the test asks for file existence only for a known bad file that holds a path.
+  - The Red fix round 1 of this role. The first run of the Red command gave 12 failures and 35
+    passes. Three of the new cases passed for the wrong reason, and the role fixed them in the
+    test files before the commit. The first case caught any error, so the missing script
+    satisfied it. The second case matched the word "time", which the path of the script holds.
+    The third case took any failure as proof. The fix names the missing path before each case,
+    matches the ledger word and the verdict word, and counts the calls of a real client. The
+    second run gives 15 failures and 32 passes, and every failure names a missing path.
+  - No product source was written. No script sits under `apps/storytime/scripts/checks/`. No
+    model was called and no money was spent. Evidence class: automated.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
 - [ ] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
