@@ -151,13 +151,11 @@ Do not add a field. Do not add a document. Do not widen a hash. `approval` stays
 
 | Gate | Applies | Reason |
 |---|---|---|
-| Review A (contract and correctness) | Yes | Exact literals, the three claim lists, the 20-document list, and the hashing rule need a read-only check. |
-| Review B (spec conformance) | Yes | Each of the 67 rows traces to a review row and to `git show 7eff8c10:<path>`. |
-| Review C (regression and blast radius) | Yes | The seed feeds the content test, the release test, the verify script, and the known red gates. The changed set must stay inside the named files. |
-| Security review | No | No route, auth, permission, secret, SQL, or provider change. The hash fields follow the existing contract; Review A checks them. |
-| UX/API review | No | No API contract, route, component, or message string changes. The seed is content data. |
-| Adversarial testing | Yes | See section 7. The attack surface is a claim guard that passes after the new line lands while an old claim survives elsewhere. |
-| Browser review | No | No rendered surface changes. The owner's curriculum review is S10. The Thai row waits for Daniel through the PM; that is a text gate, not a browser gate. |
+| Review A (`measure-review-a-correctness`) | Yes | Correctness, architecture, callers, blast radius, and test meaning. Exact literals, the three claim lists, the 20-document list, and the hashing rule need a read-only check. Each of the 67 rows traces to a review row and to `git show 7eff8c10:<path>`. The changed set stays inside the named files, and the known red gates stay as they are. |
+| Review B (`measure-review-b-security`) | No | No route, auth, permission, secret, SQL, or provider change. The hash fields follow the existing contract; Review A checks them. |
+| Review C (`measure-review-c-ux-api`) | No | No API contract, route, component, or message string changes. The seed is content data. |
+| Adversarial (`measure-adversarial-testing`) | Yes | See section 7. The attack surface is a claim guard that passes after the new line lands while an old claim survives elsewhere. |
+| UX browser (`measure-ux-browser-review`) | No | No rendered surface changes. The owner's curriculum review is S10. The Thai row waits for Daniel through the PM; that is a text gate, not a browser gate. |
 
 ## 7. Anti-pattern coverage
 
@@ -170,7 +168,7 @@ Each test must have a falsification condition. The table below names the defense
 | A3 | `REPIN_ROW_COUNT = 67` plus a per-section object compared with `toEqual`. | A change to any per-section count fails a named case. |
 | A4 | Every row must fail at the base. A row that passes is vacuous and is re-worded or demoted. | The Red run prints exactly 67 failing row names; a passing row fails the Red gate. |
 | A5 | The plan, the log, and the report state the measured exit code and counts only. "Passes" is written after exit 0. | A claim of pass with exit 1 is a false claim; the log holds the raw tail. |
-| A6 | The plan and `tracks.md` say "re-pinned locally, not deployed" until the text check passes. The candidate is not approved. | A registry line that says "done" before exit 0 fails Review B. |
+| A6 | The plan and `tracks.md` say "re-pinned locally, not deployed" until the text check passes. The candidate is not approved. | A registry line that says "done" before exit 0 fails Review A. |
 | A7 | The old-text check is an exact literal absence over the full graph: `expect(allText()).not.toContain(old)`. No bare English word filter, no negation filter. | A surviving old claim in another lesson fails the row. The Managed Service line is the probe; it sits in nine seed lines. |
 | A8 | The plan task moves to `[~]` and then `[x]`; no `[ ]` marker is added. | The plan marker guard fails on a space marker. |
 | A9 | Not applicable. The two test files reference no archived track path. The approval fixture points at `sales_advantage_golive_20260701`, which is active. | A move of that track to the archive breaks the fixture path; record it as a new risk. |
