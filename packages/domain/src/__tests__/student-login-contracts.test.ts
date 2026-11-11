@@ -16,6 +16,17 @@ import {
 
 const uuid = "123e4567-e89b-42d3-a456-426614174000";
 
+// Rows of the lifetime contract cases. Each row is one case (strategy section 6.2).
+const acceptedLifetimeRows: unknown[][] = [["3h"], ["until_17"], ["7d"]];
+const defaultLifetimeRows: unknown[][] = [
+  ["absent", {}],
+  ["undefined", { lifetime: undefined }],
+];
+const refusedLifetimeRows: unknown[][] = ["1d", "30d", "", 7, null].map((value) => [value]);
+const nearMissLifetimeRows: unknown[][] = ["7D", "UNTIL_17", " 7d", "7d ", ["7d"], {}, "constructor", "__proto__"].map(
+  (value) => [value],
+);
+
 describe("student login contracts", () => {
   it("keeps the code alphabet free of look-alike characters", () => {
     expect(CLASS_CODE_ALPHABET).not.toMatch(/[01OIL]/);
@@ -77,5 +88,50 @@ describe("student login contracts", () => {
     expect(studentSignInOutput.safeParse({ user, authStrength: "full" }).success).toBe(true);
     expect(studentSignInOutput.safeParse({ user, authStrength: "code_only" }).success).toBe(true);
     expect(studentSignInOutput.safeParse({ user, authStrength: "weak" }).success).toBe(false);
+  });
+});
+
+describe("class session lifetime contract", () => {
+  const base = { classroomId: uuid };
+
+  it.each(acceptedLifetimeRows)("accepts the lifetime %s", (lifetime) => {
+    const parsed = classSessionStartInput.parse({ ...base, lifetime });
+    expect(parsed.lifetime).toBe(lifetime);
+  });
+
+  it.each(defaultLifetimeRows)("gives the default 3 hours when lifetime is %s", (_label, extra) => {
+    expect(classSessionStartInput.parse({ ...base, ...(extra as object) }).lifetime).toBe("3h");
+  });
+
+  it("covers the five refused value rows", () => {
+    expect(refusedLifetimeRows).toHaveLength(5);
+  });
+
+  it.each(refusedLifetimeRows)("refuses the lifetime %j", (lifetime) => {
+    expect(classSessionStartInput.safeParse({ ...base, lifetime }).success).toBe(false);
+  });
+
+  it("covers the eight near-miss rows", () => {
+    expect(nearMissLifetimeRows).toHaveLength(8);
+  });
+
+  it.each(nearMissLifetimeRows)("refuses the near-miss lifetime %j", (lifetime) => {
+    expect(classSessionStartInput.safeParse({ ...base, lifetime }).success).toBe(false);
+  });
+
+  it("strips client time fields next to the choice", () => {
+    const parsed = classSessionStartInput.parse({
+      ...base,
+      lifetime: "3h",
+      expiresAt: "2026-11-18T05:00:00Z",
+      minutes: 60,
+    });
+    expect(parsed).not.toHaveProperty("expiresAt");
+    expect(parsed).not.toHaveProperty("minutes");
+  });
+
+  it("keeps the start output to three fields", () => {
+    const parsed = classSessionStartOutput.parse({ sessionId: uuid, code: "ABCD23", expiresAt: new Date(), codeHash: "leak" });
+    expect(Object.keys(parsed).sort()).toEqual(["code", "expiresAt", "sessionId"]);
   });
 });

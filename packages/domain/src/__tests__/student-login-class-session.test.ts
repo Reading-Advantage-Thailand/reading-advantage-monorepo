@@ -3,7 +3,7 @@ import type { DB } from "@reading-advantage/db";
 import { createMockDb } from "./mock-db.js";
 import { makeStore } from "./student-login-helpers.js";
 import { hashClassCode } from "../student-login/codes.js";
-import { CLASS_CODE_ALPHABET, nameListOutput } from "../student-login/contracts.js";
+import { CLASS_CODE_ALPHABET, nameListOutput, type ClassSessionStartInput } from "../student-login/contracts.js";
 import {
   startClassSession,
   endClassSession,
@@ -203,5 +203,216 @@ describe("getNameListForCode", () => {
     store.map.set(`student-code-class:${CLASS_ID}`, { failedCount: STUDENT_LOGIN_LIMITS.classroom.maxAttempts, windowStart: Date.now() });
     const db = createMockDb({ selectSequence: [[session]] });
     await expect(getNameListForCode({ db: asDb(db), store, ip: "5.5.5.5", input: { code: "ABCDEF" }, now: NOW })).rejects.toMatchObject({ code: "rate_limited" });
+  });
+});
+
+// Fixed clocks of the lifetime cases (strategy section 6.2). Bangkok is UTC+7 with no daylight saving.
+const LIFETIME_NOW = new Date("2026-11-11T05:00:00Z"); // 12:00 Bangkok
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+const LIFETIME_SESSION = { id: "33333333-3333-4333-8333-333333333333" };
+
+/** Mocks the select and insert chains of one lifetime start (class read, no missing credential, no collision). */
+function lifetimeDb(overrides: Parameters<typeof createMockDb>[0] = {}) {
+  return createMockDb({
+    selectSequence: [[classRow], [], []],
+    insertReturning: [LIFETIME_SESSION],
+    ...overrides,
+  });
+}
+
+/** Starts a class with a lifetime value that the type does not know at HEAD. */
+function startAt(db: ReturnType<typeof createMockDb>, lifetime: unknown, now: Date = LIFETIME_NOW) {
+  return startClassSession({
+    db: asDb(db),
+    user: teacher,
+    actor,
+    input: { classroomId: CLASS_ID, lifetime } as unknown as ClassSessionStartInput,
+    now,
+  });
+}
+
+/** Reads the values of the last insert call (the session row when the last insert is the session). */
+function lastInsertValues(db: ReturnType<typeof createMockDb>) {
+  return db.insert.mock.results.at(-1)!.value.values.mock.calls[0][0] as { expiresAt: Date; startsAt: Date };
+}
+
+/** Finds the class_start audit call, so a missing call fails before a metadata check passes. */
+function classStartAudit() {
+  return recordAuditEvent.mock.calls.find((call) => call[1].action === "student_login:class_start");
+}
+
+describe("startClassSession lifetime", () => {
+  it.each([
+    ["3h", "2026-11-11T08:00:00.000Z"],
+    ["7d", "2026-11-18T05:00:00.000Z"],
+    ["until_17", "2026-11-11T10:00:00.000Z"],
+  ])("computes the expiry for %s and stores the same value", async (lifetime, expected) => {
+    const db = lifetimeDb();
+    const out = await startAt(db, lifetime);
+    expect(out.expiresAt.toISOString()).toBe(expected);
+    const inserted = lastInsertValues(db);
+    expect(inserted.expiresAt.toISOString()).toBe(expected);
+    expect(inserted.startsAt).toEqual(LIFETIME_NOW);
+    expect(Object.keys(out).sort()).toEqual(["code", "expiresAt", "sessionId"]);
+  });
+
+  it("works at the last second before 17:00 Bangkok", async () => {
+    const out = await startAt(lifetimeDb(), "until_17", new Date("2026-11-11T09:59:59Z"));
+    expect(out.expiresAt.toISOString()).toBe("2026-11-11T10:00:00.000Z");
+  });
+
+  it.each([
+    ["17:00 Bangkok", "2026-11-11T10:00:00Z"],
+    ["23:59 Bangkok", "2026-11-11T16:59:00Z"],
+    ["the last instant before midnight Bangkok", "2026-11-10T16:59:59.999Z"],
+  ])("refuses until_17 at %s with invalid_input", async (_label, iso) => {
+    await expect(startAt(lifetimeDb(), "until_17", new Date(iso))).rejects.toMatchObject({ code: "invalid_input" });
+  });
+
+  it("works at the first instant of the Bangkok day", async () => {
+    const out = await startAt(lifetimeDb(), "until_17", new Date("2026-11-10T17:00:00.000Z"));
+    expect(out.expiresAt.toISOString()).toBe("2026-11-11T10:00:00.000Z");
+  });
+
+  it("uses the Bangkok date when the UTC date still shows the day before", async () => {
+    const out = await startAt(lifetimeDb(), "until_17", new Date("2026-11-11T17:30:00Z"));
+    expect(out.expiresAt.toISOString()).toBe("2026-11-12T10:00:00.000Z");
+  });
+
+  it("accepts only a lifetime inside the 7 day maximum", async () => {
+    const choices = ["3h", "until_17", "7d"];
+    expect(choices).toHaveLength(3);
+    let checked = 0;
+    for (const lifetime of choices) {
+      const out = await startAt(lifetimeDb(), lifetime);
+      const delta = out.expiresAt.getTime() - LIFETIME_NOW.getTime();
+      expect(Number.isFinite(out.expiresAt.getTime())).toBe(true);
+      expect(delta).toBeGreaterThan(0);
+      expect(delta).toBeLessThanOrEqual(7 * DAY_MS);
+      checked += 1;
+    }
+    expect(checked).toBe(3);
+  });
+
+  it.each(["3h", "7d", "until_17"])("records the chosen lifetime %s in the class_start audit line", async (lifetime) => {
+    const db = lifetimeDb();
+    const out = await startAt(db, lifetime);
+    const call = classStartAudit();
+    expect(call).toBeDefined();
+    expect(call![1].metadata).toEqual({
+      sessionId: LIFETIME_SESSION.id,
+      expiresAt: out.expiresAt.toISOString(),
+      lifetime,
+    });
+  });
+
+  it("records the default 3 hours in the audit line", async () => {
+    const out = await startAt(lifetimeDb(), undefined);
+    const call = classStartAudit();
+    expect(call).toBeDefined();
+    expect(call![1].metadata).toEqual({
+      sessionId: LIFETIME_SESSION.id,
+      expiresAt: out.expiresAt.toISOString(),
+      lifetime: "3h",
+    });
+  });
+
+  it("keeps the code and the hashes out of a 7 day audit line", async () => {
+    const out = await startAt(lifetimeDb(), "7d");
+    expect(classStartAudit()).toBeDefined();
+    const text = JSON.stringify(recordAuditEvent.mock.calls);
+    expect(text).not.toContain(out.code);
+    expect(text).not.toMatch(/codeHash/);
+  });
+
+  it("uses the new lifetime on a restart and still closes the old session", async () => {
+    const db = lifetimeDb({ updateReturning: [{ id: "old", expiresAt: new Date(LIFETIME_NOW.getTime() + HOUR_MS) }] });
+    const out = await startAt(db, "7d");
+    const actions = recordAuditEvent.mock.calls.map((call) => call[1].action);
+    expect(actions).toEqual(["student_login:class_end", "student_login:class_start"]);
+    const call = classStartAudit();
+    expect(call).toBeDefined();
+    expect(call![1].metadata).toMatchObject({ sessionId: LIFETIME_SESSION.id, lifetime: "7d" });
+    expect(out.expiresAt.toISOString()).toBe("2026-11-18T05:00:00.000Z");
+  });
+
+  const unknownRows: unknown[][] = ["30d", "1d", "", 7, null, "constructor", "toString", "__proto__", "hasOwnProperty"].map(
+    (value) => [value],
+  );
+
+  it.each(unknownRows)("refuses the unknown lifetime %j with invalid_input and no write", async (lifetime) => {
+    const db = lifetimeDb();
+    await expect(startAt(db, lifetime)).rejects.toMatchObject({ code: "invalid_input" });
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.update).not.toHaveBeenCalled();
+    expect(db.delete).not.toHaveBeenCalled();
+    expect(recordAuditEvent).not.toHaveBeenCalled();
+  });
+
+  // The fixture writes for 3 hours, so a refusal case cannot pass on a fixture that cannot write (A4, F1).
+  function writingDb() {
+    return createMockDb({
+      selectSequence: [[classRow], [{ userId: "stu-new" }], []],
+      updateReturning: [{ id: "old", expiresAt: new Date(LIFETIME_NOW.getTime() + HOUR_MS) }],
+      insertReturning: [LIFETIME_SESSION],
+    });
+  }
+
+  it("control: the writing fixture writes the credential, the old close, and the session", async () => {
+    const db = writingDb();
+    await startAt(db, "3h");
+    expect(db.insert).toHaveBeenCalledTimes(2);
+    expect(db.update).toHaveBeenCalledTimes(2);
+    expect(recordAuditEvent).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([
+    ["17:00 Bangkok", "2026-11-11T10:00:00Z"],
+    ["23:59 Bangkok", "2026-11-11T16:59:00Z"],
+  ])("refuses until_17 at %s before it writes any row", async (_label, iso) => {
+    const db = writingDb();
+    await expect(startAt(db, "until_17", new Date(iso))).rejects.toMatchObject({ code: "invalid_input" });
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.update).not.toHaveBeenCalled();
+    expect(db.delete).not.toHaveBeenCalled();
+    expect(recordAuditEvent).not.toHaveBeenCalled();
+  });
+
+  it("refuses an unknown value before it writes any row", async () => {
+    const db = writingDb();
+    await expect(startAt(db, "30d")).rejects.toMatchObject({ code: "invalid_input" });
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.update).not.toHaveBeenCalled();
+    expect(db.delete).not.toHaveBeenCalled();
+    expect(recordAuditEvent).not.toHaveBeenCalled();
+  });
+
+  it.each([["student", student], ["system", system]])("rejects a %s with 7 days and writes nothing", async (_label, user) => {
+    const db = lifetimeDb();
+    await expect(
+      startClassSession({
+        db: asDb(db),
+        user,
+        actor,
+        input: { classroomId: CLASS_ID, lifetime: "7d" } as unknown as ClassSessionStartInput,
+        now: LIFETIME_NOW,
+      }),
+    ).rejects.toMatchObject({ code: "forbidden" });
+    expect(db.insert).not.toHaveBeenCalled();
+  });
+
+  it("returns not_found for another school with 7 days and writes nothing", async () => {
+    const db = createMockDb({ selectSequence: [[]] });
+    await expect(
+      startClassSession({
+        db: asDb(db),
+        user: teacher,
+        actor,
+        input: { classroomId: CLASS_ID, lifetime: "7d" } as unknown as ClassSessionStartInput,
+        now: LIFETIME_NOW,
+      }),
+    ).rejects.toMatchObject({ code: "not_found" });
+    expect(db.insert).not.toHaveBeenCalled();
   });
 });

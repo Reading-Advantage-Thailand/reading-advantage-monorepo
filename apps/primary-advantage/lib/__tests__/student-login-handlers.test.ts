@@ -300,3 +300,71 @@ describe("one-student password reset handler", () => {
     expect(await res.text()).not.toContain("leak");
   });
 });
+
+describe("class session lifetime handler", () => {
+  const startResult = { sessionId: SESSION_ID, code: "ABCDEF", expiresAt: "2026-11-18T05:00:00.000Z" };
+
+  it("passes the chosen 7 days to the domain", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.startClassSession.mockResolvedValue(startResult);
+    const res = await startClass(post("/x", { classroomId: CLASS_ID, lifetime: "7d" }));
+    expect(res.status).toBe(200);
+    expect(domain.startClassSession).toHaveBeenCalledWith(
+      expect.objectContaining({ input: { classroomId: CLASS_ID, lifetime: "7d" } }),
+    );
+  });
+
+  it("gives the domain the default 3 hours when the body has no lifetime", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.startClassSession.mockResolvedValue(startResult);
+    const res = await startClass(post("/x", { classroomId: CLASS_ID }));
+    expect(res.status).toBe(200);
+    expect(domain.startClassSession).toHaveBeenCalledWith(
+      expect.objectContaining({ input: { classroomId: CLASS_ID, lifetime: "3h" } }),
+    );
+  });
+
+  const refusedBodies: unknown[] = ["30d", "1d", "", 7, null, "constructor"];
+
+  it("covers the six refused body rows", () => {
+    expect(refusedBodies).toHaveLength(6);
+  });
+
+  it.each(refusedBodies.map((value) => [value]))("returns 400 and skips the domain for the lifetime %j", async (lifetime) => {
+    expect(refusedBodies).toHaveLength(6);
+    getCurrentSession.mockResolvedValue(teacherSession);
+    const res = await startClass(post("/x", { classroomId: CLASS_ID, lifetime }));
+    expect(res.status).toBe(400);
+    expect(domain.startClassSession).not.toHaveBeenCalled();
+  });
+
+  it("strips client time fields from the start body", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.startClassSession.mockResolvedValue(startResult);
+    const res = await startClass(post("/x", { classroomId: CLASS_ID, lifetime: "3h", expiresAt: "2026-11-18T05:00:00Z", minutes: 60 }));
+    expect(res.status).toBe(200);
+    const call = domain.startClassSession.mock.calls[0]![0] as { input: Record<string, unknown> };
+    expect(call.input).not.toHaveProperty("expiresAt");
+    expect(call.input).not.toHaveProperty("minutes");
+  });
+
+  it("maps an invalid lifetime error to 400 with its code", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.startClassSession.mockRejectedValue(new studentLogin.StudentLoginError("invalid_input", "Choose another time."));
+    const res = await startClass(post("/x", { classroomId: CLASS_ID, lifetime: "until_17" }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).code).toBe("invalid_input");
+  });
+
+  it("returns 401 without a session when the body asks for 7 days", async () => {
+    getCurrentSession.mockResolvedValue(null);
+    expect((await startClass(post("/x", { classroomId: CLASS_ID, lifetime: "7d" }))).status).toBe(401);
+    expect(domain.startClassSession).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 for a session that is not full when the body asks for 7 days", async () => {
+    getCurrentSession.mockResolvedValue({ ...teacherSession, authStrength: "code_only" });
+    expect((await startClass(post("/x", { classroomId: CLASS_ID, lifetime: "7d" }))).status).toBe(403);
+    expect(domain.startClassSession).not.toHaveBeenCalled();
+  });
+});

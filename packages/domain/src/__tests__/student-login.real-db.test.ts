@@ -321,4 +321,33 @@ describe.skipIf(!url)("student login against Postgres", () => {
 
     await db.delete(schema.accounts).where(inArray(schema.accounts.userId, [`${tag}-s1`, `${tag}-s2`]));
   });
+
+  it("keeps a 7 day session and its card valid until the chosen expiry (AC-5)", async () => {
+    const now = new Date("2026-11-11T05:00:00Z");
+    const start = await sl.startClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1, lifetime: "7d" }, now });
+    const [row] = await db.select().from(schema.primaryClassLoginSessions).where(eq(schema.primaryClassLoginSessions.id, start.sessionId));
+    expect(row!.startsAt.getTime()).toBe(now.getTime());
+    expect(row!.expiresAt.getTime() - row!.startsAt.getTime()).toBe(7 * 24 * 60 * 60 * 1000);
+    const expiresAt = row!.expiresAt;
+
+    // The code lookup is strict at the boundary: open 1 ms before, closed at the instant.
+    expect(await sl.findOpenSession(db, start.code, new Date(expiresAt.getTime() - 1))).toBeDefined();
+    expect(await sl.findOpenSession(db, start.code, expiresAt)).toBeUndefined();
+
+    // A card needs the same open, unexpired class session.
+    const rotated = await sl.rotateCardToken({ db, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } });
+    const scanAt = (at: Date) =>
+      sl.signInWithCardToken({ db, store, meta: { ip: `10.2.0.${Math.floor(Math.random() * 200)}`, userAgent: "vitest" }, input: { token: rotated.token }, now: at });
+    await expect(scanAt(new Date(expiresAt.getTime() - 1))).resolves.toMatchObject({ authStrength: "full" });
+    await expect(scanAt(expiresAt)).rejects.toMatchObject({ code: "invalid_credentials" });
+
+    // A restart replaces the old 7 day code with the new one.
+    const second = await sl.startClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1, lifetime: "7d" }, now });
+    expect(await sl.findOpenSession(db, start.code, new Date(now.getTime() + 1000))).toBeUndefined();
+    expect(await sl.findOpenSession(db, second.code, new Date(now.getTime() + 1000))).toBeDefined();
+
+    // An early end closes the 7 day session, so the new code stops at once.
+    expect(await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 }, now })).toEqual({ closed: 1 });
+    expect(await sl.findOpenSession(db, second.code, new Date(now.getTime() + 1000))).toBeUndefined();
+  });
 });

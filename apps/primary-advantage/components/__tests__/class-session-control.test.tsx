@@ -8,8 +8,11 @@ import "@testing-library/jest-dom/vitest";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ClassSessionControl } from "../teacher/class-login/class-session-control";
-import { renderWithMessages, withMessages } from "./helpers/render-with-messages";
+import { ClassSessionControl, type ClassSessionControlProps } from "../teacher/class-login/class-session-control";
+import { ClassLoginApiError, errorKey } from "../teacher/class-login/api";
+import { allMessages, renderWithMessages, withMessages } from "./helpers/render-with-messages";
+import enMessages from "../../messages/en.json";
+import thMessages from "../../messages/th.json";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
 const SESSION_ID = "33333333-3333-4333-8333-333333333333";
@@ -17,11 +20,53 @@ const EXPIRES = "2026-10-05T07:45:00.000Z";
 const fetchMock = vi.fn();
 const json = (status: number, body: unknown) => Promise.resolve(new Response(JSON.stringify(body), { status }));
 
+/** The six new message keys of plan task 1.9 (strategy sections 6.8 and 7.2). */
+const LIFETIME_MESSAGE_KEYS = [
+  "ClassLogin.session.lifetimeLabel",
+  "ClassLogin.session.lifetime.3h",
+  "ClassLogin.session.lifetime.until_17",
+  "ClassLogin.session.lifetime.7d",
+  "ClassLogin.session.lifetimeHelp7d",
+  "ClassLogin.errors.lifetimeInvalid",
+] as const;
+
+/** Reads a message path and returns undefined for a missing key (strategy section 6.1). */
+function messageAt(tree: unknown, path: string): unknown {
+  return path
+    .split(".")
+    .reduce<unknown>((node, part) => (node && typeof node === "object" ? (node as Record<string, unknown>)[part] : undefined), tree);
+}
+
+/** Reads a message path as text, so a missing key fails with its path and not a TypeError. */
+function messageText(tree: unknown, path: string): string {
+  const value = messageAt(tree, path);
+  expect(typeof value, `message key ${path}`).toBe("string");
+  return value as string;
+}
+
+/** Fixes the clock that the option list and the expiry text read. */
+function clock(iso: string) {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date(iso));
+}
+
+/** Renders the control with the shared props and one message locale. */
+function renderControl(props: Partial<ClassSessionControlProps> = {}, locale: "en" | "th" = "en") {
+  const onChange = props.onChange ?? vi.fn().mockResolvedValue(undefined);
+  return renderWithMessages(
+    <ClassSessionControl classroomId={CLASS_ID} openSession={null} fetchedAt={1} onChange={onChange} {...props} />,
+    { locale },
+  );
+}
+
 beforeEach(() => {
   fetchMock.mockReset();
   vi.stubGlobal("fetch", fetchMock);
 });
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 describe("ClassSessionControl", () => {
   it("starts the class and shows the code and its end time", async () => {
@@ -34,7 +79,7 @@ describe("ClassSessionControl", () => {
     await waitFor(() => expect(onChange).toHaveBeenCalled());
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/auth/student/class-session/start",
-      expect.objectContaining({ method: "POST", body: JSON.stringify({ classroomId: CLASS_ID }) }),
+      expect.objectContaining({ method: "POST", body: JSON.stringify({ classroomId: CLASS_ID, lifetime: "3h" }) }),
     );
     // The roster refresh after the start reports the new open session.
     rerender(withMessages(<ClassSessionControl classroomId={CLASS_ID} openSession={{ id: SESSION_ID, expiresAt: EXPIRES }} fetchedAt={Date.now() + 1000} onChange={onChange} />));
@@ -108,5 +153,236 @@ describe("ClassSessionControl", () => {
   it("shows Thai copy", () => {
     renderWithMessages(<ClassSessionControl classroomId={CLASS_ID} openSession={null} fetchedAt={1} onChange={vi.fn()} />, { locale: "th" });
     expect(screen.getByRole("button", { name: "เริ่มชั้นเรียน" })).toBeInTheDocument();
+  });
+});
+
+describe("ClassSessionControl lifetime choice", () => {
+  it("shows the three lifetime choices in English", () => {
+    clock("2026-11-11T05:00:00Z");
+    renderControl();
+    expect(screen.getByRole("radiogroup", { name: "How long should sign-in stay open?" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "3 hours" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Until 17:00 today" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "7 days" })).toBeInTheDocument();
+  });
+
+  it("shows the three lifetime choices in Thai from the message tree", () => {
+    clock("2026-11-11T05:00:00Z");
+    const label = messageText(thMessages, "ClassLogin.session.lifetimeLabel");
+    const choices = ["3h", "until_17", "7d"].map((key) => messageText(thMessages, `ClassLogin.session.lifetime.${key}`));
+    expect(choices).toHaveLength(3);
+    renderControl({}, "th");
+    expect(screen.getByRole("radiogroup", { name: label })).toBeInTheDocument();
+    for (const choice of choices) expect(screen.getByRole("radio", { name: choice })).toBeInTheDocument();
+  });
+
+  it("selects 3 hours by default", () => {
+    clock("2026-11-11T05:00:00Z");
+    renderControl();
+    expect(screen.getByRole("radio", { name: "3 hours" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Until 17:00 today" })).not.toBeChecked();
+    expect(screen.getByRole("radio", { name: "7 days" })).not.toBeChecked();
+  });
+
+  it("posts the chosen 7 days and exactly the two body keys", async () => {
+    clock("2026-11-11T05:00:00Z");
+    fetchMock.mockReturnValue(json(200, { sessionId: SESSION_ID, code: "ABCDEF", expiresAt: EXPIRES }));
+    const onChange = vi.fn().mockResolvedValue(undefined);
+    renderControl({ onChange });
+    fireEvent.click(screen.getByRole("radio", { name: "7 days" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start class" }));
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    const body = JSON.parse(fetchMock.mock.calls[0]![1].body as string) as Record<string, unknown>;
+    expect(body).toEqual({ classroomId: CLASS_ID, lifetime: "7d" });
+    expect(Object.keys(body).sort()).toEqual(["classroomId", "lifetime"]);
+  });
+
+  it("uses the selected lifetime for a new code", async () => {
+    clock("2026-11-11T05:00:00Z");
+    fetchMock.mockReturnValue(json(200, { sessionId: SESSION_ID, code: "GHJKMN", expiresAt: EXPIRES }));
+    const onChange = vi.fn().mockResolvedValue(undefined);
+    renderControl({ openSession: { id: "44444444-4444-4444-8444-444444444444", expiresAt: EXPIRES }, onChange });
+    fireEvent.click(screen.getByRole("radio", { name: "7 days" }));
+    fireEvent.click(screen.getByRole("button", { name: "New code" }));
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    expect(JSON.parse(fetchMock.mock.calls[0]![1].body as string)).toEqual({ classroomId: CLASS_ID, lifetime: "7d" });
+  });
+
+  it("keeps the choice group beside the Start and New code buttons", async () => {
+    clock("2026-11-11T05:00:00Z");
+    fetchMock.mockReturnValue(json(200, { sessionId: SESSION_ID, code: "ABCDEF", expiresAt: EXPIRES }));
+    const onChange = vi.fn().mockResolvedValue(undefined);
+    const { rerender } = renderControl({ onChange });
+    expect(screen.getByRole("button", { name: "Start class" })).toBeInTheDocument();
+    expect(screen.getByRole("radiogroup", { name: "How long should sign-in stay open?" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start class" }));
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    expect(await screen.findByRole("button", { name: "New code" })).toBeInTheDocument();
+    expect(screen.getByRole("radiogroup", { name: "How long should sign-in stay open?" })).toBeInTheDocument();
+    rerender(
+      withMessages(
+        <ClassSessionControl classroomId={CLASS_ID} openSession={{ id: SESSION_ID, expiresAt: EXPIRES }} fetchedAt={Date.now() + 1000} onChange={onChange} />,
+      ),
+    );
+    expect(screen.getByRole("button", { name: "New code" })).toBeInTheDocument();
+    expect(screen.getByRole("radiogroup", { name: "How long should sign-in stay open?" })).toBeInTheDocument();
+  });
+
+  it("shows Until 17:00 today just before 17:00 Bangkok", () => {
+    clock("2026-11-11T09:59:59Z");
+    renderControl();
+    expect(screen.getByRole("radio", { name: "Until 17:00 today" })).toBeInTheDocument();
+  });
+
+  it.each(["2026-11-11T10:00:00Z", "2026-11-11T16:59:00Z"])("hides Until 17:00 today at %s", (iso) => {
+    clock(iso);
+    renderControl();
+    expect(screen.queryByRole("radio", { name: "Until 17:00 today" })).not.toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "3 hours" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "7 days" })).toBeInTheDocument();
+  });
+
+  it("shows Until 17:00 today when the Bangkok date is the next day", () => {
+    clock("2026-11-11T17:30:00Z");
+    renderControl();
+    expect(screen.getByRole("radio", { name: "Until 17:00 today" })).toBeInTheDocument();
+  });
+
+  async function startAndRead(expiresAt: string, locale: "en" | "th" = "en") {
+    fetchMock.mockReturnValue(json(200, { sessionId: SESSION_ID, code: "ABCDEF", expiresAt }));
+    const onChange = vi.fn().mockResolvedValue(undefined);
+    renderControl({ onChange }, locale);
+    fireEvent.click(screen.getByRole("button", { name: locale === "th" ? "เริ่มชั้นเรียน" : "Start class" }));
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    return screen.findByText(locale === "th" ? /^ใช้ได้ถึง / : /^Open until /);
+  }
+
+  it("shows the server expiry as a time on the same Bangkok day in English", async () => {
+    clock("2026-11-11T05:00:00Z");
+    expect(await startAndRead("2026-11-11T10:00:00.000Z")).toHaveTextContent(/^Open until 5:00\sPM$/);
+  });
+
+  it("shows the server expiry as a time on the same Bangkok day in Thai", async () => {
+    clock("2026-11-11T05:00:00Z");
+    expect(await startAndRead("2026-11-11T10:00:00.000Z", "th")).toHaveTextContent(/^ใช้ได้ถึง 17:00$/);
+  });
+
+  it("shows the date for a 7 day expiry in English", async () => {
+    clock("2026-11-11T05:00:00Z");
+    const text = (await startAndRead("2026-11-18T05:00:00.000Z")).textContent ?? "";
+    expect(text).toMatch(/Nov 18,\s*12:00\s*PM/);
+    expect(text).not.toMatch(/2026|2569/);
+  });
+
+  it("shows the date for a 7 day expiry in Thai", async () => {
+    clock("2026-11-11T05:00:00Z");
+    const text = (await startAndRead("2026-11-18T05:00:00.000Z", "th")).textContent ?? "";
+    expect(text).toMatch(/18 พ\.ย\. 12:00/);
+    expect(text).not.toMatch(/2026|2569/);
+  });
+
+  it("shows the date when the expiry falls on the next Bangkok day", async () => {
+    clock("2026-11-11T16:00:00Z"); // 23:00 Bangkok
+    const text = (await startAndRead("2026-11-11T19:00:00.000Z")).textContent ?? ""; // 02:00 on 12 Nov
+    expect(text).toMatch(/Nov\s+12/);
+    expect(text).toMatch(/2:00\s*AM/);
+  });
+
+  it("shows only the time when the expiry is on the same Bangkok day near midnight", async () => {
+    clock("2026-11-11T17:30:00Z"); // 00:30 on 12 Nov
+    const text = (await startAndRead("2026-11-12T10:00:00.000Z")).textContent ?? ""; // 17:00 on 12 Nov
+    expect(text).toMatch(/^Open until 5:00\sPM$/);
+  });
+
+  it("shows the lifetime error and keeps the choices when the server refuses the start", async () => {
+    clock("2026-11-11T09:00:00Z"); // 16:00 Bangkok: the panel shows until_17, the server may refuse
+    fetchMock.mockReturnValue(json(400, { message: "Choose another time.", code: "invalid_input" }));
+    const onChange = vi.fn();
+    renderControl({ onChange });
+    fireEvent.click(screen.getByRole("button", { name: "Start class" }));
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("This choice is not available now. Choose another time.");
+    expect(alert).not.toHaveTextContent("Something went wrong. Try again.");
+    expect(screen.getByRole("radio", { name: "Until 17:00 today" })).toBeInTheDocument();
+    expect(screen.getByRole("radiogroup", { name: "How long should sign-in stay open?" })).toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: /Class code/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start class" })).toBeEnabled();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("shows the generic error for a contract 400 with no code", async () => {
+    clock("2026-11-11T05:00:00Z");
+    fetchMock.mockReturnValue(json(400, { message: "Invalid input" }));
+    renderControl();
+    fireEvent.click(screen.getByRole("button", { name: "Start class" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Something went wrong. Try again.");
+  });
+
+  it("maps the invalid_input code to the lifetime error key", () => {
+    expect(errorKey(new ClassLoginApiError(400, "invalid_input"))).toBe("lifetimeInvalid");
+    expect(errorKey(new ClassLoginApiError(400))).toBe("generic");
+  });
+
+  it("shows the 7 day help text only when 7 days is selected", () => {
+    clock("2026-11-11T05:00:00Z");
+    const help = messageText(enMessages, "ClassLogin.session.lifetimeHelp7d");
+    expect(help).toBe("Students can use their cards at home until this time. End the class to stop sign-in earlier.");
+    renderControl();
+    expect(screen.queryByText(help)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("radio", { name: "7 days" }));
+    expect(screen.getByText(help)).toBeInTheDocument();
+  });
+
+  it("gives each lifetime option a visible label and a 44 px target class", () => {
+    clock("2026-11-11T05:00:00Z");
+    renderControl();
+    const choices = ["3 hours", "Until 17:00 today", "7 days"];
+    expect(choices).toHaveLength(3);
+    for (const name of choices) {
+      const radio = screen.getByRole("radio", { name }) as HTMLInputElement;
+      const label = radio.labels?.[0] ?? radio.closest("label");
+      expect(label, `${name} label`).not.toBeNull();
+      expect(label!.textContent).toContain(name);
+      let node: HTMLElement | null = label;
+      let hasHeightClass = false;
+      for (let i = 0; i < 4 && node; i++) {
+        if (/(min-h-1[12]|h-1[12])/.test(node.className)) {
+          hasHeightClass = true;
+          break;
+        }
+        node = node.parentElement;
+      }
+      expect(hasHeightClass, `${name} height class`).toBe(true);
+    }
+  });
+
+  it("holds the six new keys in en and th with different text", () => {
+    expect(LIFETIME_MESSAGE_KEYS).toHaveLength(6);
+    let checked = 0;
+    for (const key of LIFETIME_MESSAGE_KEYS) {
+      const en = messageText(enMessages, key);
+      const th = messageText(thMessages, key);
+      expect(en.length, `${key} en`).toBeGreaterThan(0);
+      expect(th.length, `${key} th`).toBeGreaterThan(0);
+      expect(th, `${key} th is not a copy of en`).not.toBe(en);
+      checked += 2;
+    }
+    expect(checked).toBe(12);
+  });
+
+  it("holds every new key in all five locales (orchestrator decision F5)", () => {
+    const locales = ["en", "th", "cn", "tw", "vi"] as const;
+    expect(locales).toHaveLength(5);
+    expect(LIFETIME_MESSAGE_KEYS).toHaveLength(6);
+    let checked = 0;
+    for (const locale of locales) {
+      for (const key of LIFETIME_MESSAGE_KEYS) {
+        const value = messageAt(allMessages[locale], key);
+        expect(typeof value, `${locale} ${key}`).toBe("string");
+        expect((value as string).length, `${locale} ${key}`).toBeGreaterThan(0);
+        checked += 1;
+      }
+    }
+    expect(checked).toBe(30);
   });
 });
