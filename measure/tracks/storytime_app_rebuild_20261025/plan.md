@@ -1966,6 +1966,7 @@ for every other track.
   - Phase 3 regression set: `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx`. Exit 0; 18 files; 179 tests. The at-home routes stay unchanged.
 - No committed Red test changed. No week content, contract, readiness, receiver, message, deploy, or Docker file changed. The at-home routes under `app/[locale]/st/` stay unchanged.
 - The canonical-number rule of the at-home route stays in the at-home route. `lib/teacher.ts` holds its own copy, because the brief keeps the at-home routes unchanged. A later phase may join the two.
+  - Correction (remediation round 1, finding F418b, 2026-11-11): the sentence above is wrong about the copy. `lib/teacher.ts` imports `parseCanonicalNumber` from `lib/route-parse.ts`; it holds no own copy of the rule. The two routes share the one parser.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-4126421.log`.
 
 - [x] 4.3 Lesson flow `/<locale>/teacher/<level>/<week>/<day>`: the opening routine, then one step on each screen. A step shows the title, the minutes, the four headings, and the Easier, Harder, and Group lines. Add the review strip of the day, the Friday check on day 5, and the Thai toggle. Test: AC-9.2. Done: `3c82ab25f`. Automated: the Green command exits 0 with 3 files and 21 tests; `tsc --noEmit` in `apps/storytime` exits 0; ESLint exits 0 on the two changed files.
@@ -2055,6 +2056,10 @@ for every other track.
   uses no next-intl hook, the same as the teacher week view of task 4.2.
 - The day route keeps the order of the checks: the session, the teacher switch, the 403 view, the
   route parse, the week load, and the day check. The route renders the flow after the checks.
+- Note (remediation round 1, finding F407, 2026-11-11): the 403 view is a rendered page, so the
+  HTTP status of the 403 view is 200. The view is `noindex` through `generateMetadata`, and it
+  holds no week content, so no data leaks. The plan records the 200 status as intended for this
+  Next version; the plan and the design keep the name "403 view" for the view itself.
 - The new controls use the brand classes of the teacher week view: amber `#fcd34d` with brown
   `#92400e` text for the Thai toggle, and brown `#92400e` with white text for the forward control
   and the way back to the week. No blue class.
@@ -2594,6 +2599,68 @@ for every other track.
     count). A6 holds (`measure/tracks.md` changes only at closeout, not here). A7 holds. A16
     holds (no worktree).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t45.log`.
+  - Phase 4 remediation round 1 evidence. Role base
+    `295487892b9a60985504c0a2eb8524b996aafd9d`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The Phase 4 Red roles ran on MiniMax and
+    DeepSeek; the families differ. No coder was delegated.
+  - Checkpoint note (orchestrator decision, 2026-11-11): tasks 4.1 to 4.6a hold one checkpoint.
+    The task lines above that say 4.6 and 4.6a do not hold the checkpoint record the old scope;
+    the strategy amendment in `test-strategy.md` (commit `19d14b278`) records the same decision.
+  - Implementation commit: `def174a4f` (`fix(storytime): close the phase 4 review findings`).
+    Files: `lib/teacher.ts`, `lib/share-moment.ts`, the two teacher pages, `lesson-flow.tsx`,
+    `phase4-teacher-flag.test.ts`, `phase4-week-view.test.tsx`, `phase4-lesson-media.test.tsx`,
+    `phase4-share-moment.test.tsx`, `phase4-loops-flow.test.tsx`, and
+    `phase4-docker-smoke.sh`.
+  - Fixes in the code: the guard order (session, flag, role) moved into `guardTeacherPage` in
+    `lib/teacher.ts` and both pages call it (F413, F416); the four Thai note arrays fall back
+    per array (F404); the empty review strip and opening routine headings hide (F403); every
+    clip control holds an accessible name with its word and sound (F401); the flow plays one
+    clip at a time and stops it on "Next step" (F405, F415); the English teacher text and the
+    Thai note lines hold `lang` marks (F402, F421c); the share moment shows every shot of the
+    step (F408, F417); the share types come from the Zod schemas with type-only imports (F417);
+    the decodable branch hands the titled book to the player (F414); the "Open media" control
+    holds the media title in `aria-describedby` (F408).
+  - Fixes in the tests: the clip click case with a positive control for the play spy and the
+    stop-on-next-step checks (F415, F405); the decodable render case (F414); the read-along
+    mutation case (F419); the no-upload scan adds `lib/teacher.ts`, `lib/teacher-media.ts`, and
+    `lib/teacher-loops.ts` (F420); the two-shots-on-one-step case (F408).
+  - Fixes in the smoke: a second container with `STORYTIME_TEACHER_ROUTES=1` holds the positive
+    control, so `/th/teacher/2/1` and `/th/teacher/2/1/1` answer 200 with teacher markup (F411);
+    both containers hold the no-session row of the strategy amendment (commit `19d14b278`):
+    `nosession_flag_off=307` and `nosession_flag_on=307`, each with the sign-in redirect and no
+    teacher markup (F412 test gap). The flag-on container holds the throwaway signer keys of
+    the browser gate, because `signWeekMedia` throws without them.
+  - Red test changes (F413, F416): two source cases of `phase4-teacher-flag.test.ts` are
+    rewritten in place with their names and meaning kept; the case count stays. The routed
+    findings direct the guard extraction and a behavior test, so the source regexes of the flag
+    case cannot stay. Every other Red case is untouched. The report holds the full note.
+  - Declined (F421a, F421b): a previous-step control and a shared class-screen sizing of the
+    reader and the decodable are features for a later phase.
+  - Contested (F412, F406, F501): the check order is a recorded decision — `test-strategy.md`
+    lines 652 and 654 (the AC-9.3 amendment of commit `19d14b278`) and the header comment of
+    the teacher week page. A visitor with no session gets the sign-in redirect in both flag
+    states; the plan and the code record that order. The new no-session rows prove it live.
+  - Contested part of F408: the accessible name of the media control stays "Open media",
+    because the committed Red test pins that exact name; the control gains
+    `aria-describedby` with the title.
+  - Gates (MemAvailable 1829292 kB to 3595484 kB during the round):
+    1. The six Phase 4 files: exit 0, 67 of 67. The P3 player set (6 files that cover the
+       players): exit 0, 27 of 27.
+    2. `tsc --noEmit` in `apps/storytime` (heavy-run p1): exit 0.
+    3. ESLint on the changed files: exit 0; 0 errors; 2 pre-existing warnings.
+    4. `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+       Run (a) `PASS=28, FAIL=0`; run (b) `PASS=24, FAIL=0`; run (c) `PASS=12, FAIL=0`;
+       wrapper `PASS=9, FAIL=0`.
+    5. The Docker smoke (heavy-run p1): exit 0; `PASS=12, FAIL=0`. The first run of the round
+       exit 1 with `PASS=10, FAIL=2` on the missing signer keys; the fix and the second run are
+       in the report.
+    6. `build-graph update` (heavy-run p1) on the 10 changed TypeScript files: exit 0.
+  - Plan notes of this round: the 403 view answers HTTP 200 (F407, note under the day route in
+    the task 4.3 block); the canonical-number correction under the 4.1 and 4.2 Green evidence
+    (F418b). `test-strategy.md` changed in commit `19d14b278` by the strategy role; this round
+    does not edit or commit it.
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem1.log`.
 
 ## Phase 5: Milestone week integration
 

@@ -1,0 +1,137 @@
+# Green · P4 rem1 · storytime_app_rebuild
+
+- Role: measure-jr-green, Phase 4 remediation round 1
+- Model: volcengine-agent-plan/glm-5.3-flash#high (GLM)
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+- role_base_sha: 295487892b9a60985504c0a2eb8524b996aafd9d (git rev-parse HEAD at start; equals the audited head of the reviews)
+- Date: 2026-11-11
+- MemAvailable at start: 1829292 kB (above the 1500 MB gate)
+
+## Status: COMPLETE
+
+- Implementation commit: `def174a4f`.
+- Plan evidence commit: this file and `measure/tracks/storytime_app_rebuild_20261025/plan.md`
+  (the "Phase 4 remediation round 1 evidence" block under task 4.5; 4.5 stays `[x]`).
+- All six gates exited 0 on `def174a4f` (gates 1 to 4 and 6 on the same tree; gate 5 reran the
+  smoke after the signer-key fix, which is part of the implementation commit).
+- Scratch: `/tmp/opencode/p4rem1-*.log` deleted at the end. The gate scripts stop their own
+  servers and containers through their exit traps; `podman ps` holds no storytime smoke or gate
+  container at the end of the round.
+- role_base_sha at the start: `295487892b9a60985504c0a2eb8524b996aafd9d`. Final Green HEAD:
+  the plan evidence commit (the implementation commit is `def174a4f`).
+
+## Dispositions (final)
+
+F411=FIX; F412=CONTEST(test-strategy.md lines 652 and 654, the AC-9.3 amendment of commit
+19d14b278: session first, sign-in redirect for a visitor in both flag states; second record:
+the header comment of the teacher week page) + FIX of the test gap with the two no-session
+smoke rows; F413=FIX; F414=FIX; F415=FIX; F416=FIX; F417=FIX; F418=FIX (part b only: the
+correction note under the 4.1 and 4.2 Green evidence; part a belongs to the strategy role);
+F419=FIX; F420=FIX; F421=DECLINE (parts a and b are features for a later phase; part c is
+fixed with F402); F401=FIX; F402=FIX; F403=FIX; F404=FIX; F405=FIX; F406=CONTEST(same
+evidence as F412); F407=FIX (the plan records that the 403 view answers HTTP 200); F408=FIX
+(the accessible name part is contested: the committed Red test pins the exact name "Open
+media", so the control gains aria-describedby with the title); F417=FIX; F501=CONTEST(same
+evidence as F412).
+
+DECLINE reason for F421: a previous-step control and a shared class-screen sizing of the
+reader and the decodable are features for a later phase, not defects of the shipped Phase 4.
+
+
+## Dispositions decided
+
+- F411=FIX. Add a flag-on container run to phase4-docker-smoke.sh with a positive control: one
+  teacher route answers 200 with teacher markup.
+- F412=CONTEST + FIX of the test gap. CONTEST evidence: test-strategy.md line 652 (the row
+  "AC-9.3 check order (amendment 2026-11-11)") and line 654 (the amendment paragraph), added in
+  commit 19d14b278 by the strategy role. The record fixes the order: session first, then flag; a
+  visitor with no session gets the sign-in redirect in both flag states. Second evidence: the
+  header comment of apps/storytime/app/[locale]/teacher/[level]/[week]/page.tsx (the fixed order
+  session, flag, role). FIX: the smoke gains the no-session row of the amendment
+  (nosession_flag_off, nosession_flag_on), which asserts the sign-in redirect in both flag
+  states and shows no teacher markup.
+- F406=CONTEST. Same evidence as F412 (one item, three ids). No code change; the recorded order
+  is the intended behavior.
+- F501=CONTEST. Same evidence as F412. Review B itself records that the order matches the
+  documented design.
+- F413=FIX. Add a behavior test of the day-route gate that fails on an inverted gate. The
+  committed Red source case at phase4-teacher-flag.test.ts lines 143-155 stays untouched
+  (immutable); the new case is additive.
+- F414=FIX. MediaPart decodable branch: find the book by the media title and hand the decodable
+  a week whose books hold only that book, so the title rule holds. Add a render test with a
+  two-decodable clone whose titled book is the second one; the test fails on the old build.
+- F415=FIX. Add a ClipControl click test with a positive control for the play spy
+  (play_calls=0 on render, then play_calls=1 after one click).
+- F405=FIX. Keep one audio element in the flow: a new click stops the last clip, and
+  "Next step" stops the clip. Test both in the same new case.
+- F401=FIX. Each clip control gets an aria-label that holds the word and the sound
+  ("Play /n/ of net"); a recall control names the card text.
+- F402=FIX. Add lang marks: lang="en" on the English teacher text of lesson-flow.tsx, and
+  lang={thai?"th":"en"} on the Thai note lines (also F421c).
+- F403=FIX. Hide the review strip heading when the day holds no card, and the opening routine
+  heading when the week holds no opening.
+- F404=FIX. noteOf falls back per array: an empty Thai array keeps the English array.
+- F407=FIX. Per Review C's second option, plan.md gains one line that records that the 403 view
+  renders as a normal page and answers HTTP 200, with noindex and no week content.
+- F408=FIX. Show every shot of the step (shareShotsAt returns all matches); two shots on one
+  step both render. The opener control keeps the accessible name "Open media" because the
+  committed Red test pins that exact name (phase4-lesson-media.test.tsx lines 77-78 and the
+  openerButton helper); it gains aria-describedby that holds the media title, and the player
+  region already shows the title.
+- F417=FIX. share-moment.ts derives ShareShot, ShareMoment, and ShareMedia from the Zod schemas
+  with type-only imports, so the client bundle adds no zod.
+- F416=FIX. Extract the guard order (session, flag, role) into lib/teacher.ts as
+  guardTeacherPage(); both pages call it; test it once in phase4-teacher-flag.test.ts.
+- F419=FIX. Add the read-along title mutation to the week view mutation cases (additive).
+- F420=FIX. Add lib/teacher.ts, lib/teacher-media.ts, and lib/teacher-loops.ts to the no-upload
+  scan list (additive).
+- F418(b)=FIX. Add a short correction note under the 4.1 and 4.2 Green evidence in plan.md; the
+  old text stays.
+- F421=DECLINE(a and b). A previous-step control and shared playerMode sizing of the reader and
+  the decodable are features for a later phase, not defects of this phase. F421(c) is fixed
+  under F402.
+- Not mine: F418(a) goes to the strategy role. test-strategy.md is not edited and not committed
+  in this round.
+
+## Work log
+
+- Read the three review files and the plan and strategy records. Chose the dispositions above.
+- Gate 1 (six Phase 4 files, direct run): exit 0, 6 files, 67 tests, 0 failed (was 63; 4 cases
+  are new). P3 player set (`phase3-decodable-ui`, `phase3-decodable-punct`, `phase3-song-ui`,
+  `phase3-home-render`, `phase3-media-src-write`, `phase3-audio-seek-stop`): exit 0, 27 tests.
+- Gate 3 (ESLint on the 13 changed and new files): exit 0, 0 errors; 2 warnings, both
+  pre-existing (the `LOOP_KINDS` type-only use, and the shell file with no ESLint config).
+- Gate 2 (`tsc --noEmit` through heavy-run.sh): exit 0 (`TSC_OK`, `TSC_EXIT=0` in
+  `/tmp/opencode/p4rem1-tsc.log`). The run waited for the architecture pin refresh at p1.
+- Gate 4 (browser gate, `HEAVY_HANG_KILL_S=off`, through its own heavy-run wrapper): exit 0.
+  Run a `PASS=28, FAIL=0`; run b `PASS=24, FAIL=0`; run c `PASS=12, FAIL=0`; wrapper
+  `PASS=9, FAIL=0` (`/tmp/opencode/p4rem1-browser-gate.log`).
+- Gate 5 (Docker smoke, through heavy-run.sh): first run exit 1 with `PASS=10, FAIL=2`: the new
+  positive control answered 500, because the flag-on container held no media signer keys and
+  `signWeekMedia` throws without them. Fix: the flag-on container now holds the same throwaway
+  signer keys as the browser gate (`gate-access-key`, `gate-secret-key`; no real key exists in
+  either script). Second run: exit 0, `PASS=12, FAIL=0`, with `teacher_404=13 of 13`,
+  `nosession_flag_off=307 redirect_to_sign_in=1 teacher_markup=0`,
+  `nosession_flag_on=307 redirect_to_sign_in=1 teacher_markup=0`, and
+  `flag_on_route=/th/teacher/2/1 status=200 teacher_markup=1` and
+  `flag_on_route=/th/teacher/2/1/1 status=200 teacher_markup=1`
+  (`/tmp/opencode/p4rem1-smoke.log`).
+- Gate 6 (`build-graph update` through heavy-run.sh, 10 changed files): exit 0,
+  `Updated 10 files (89 → 284 nodes, 129 → 337 edges)`.
+- Red-case note (F413, F416): two source cases of `phase4-teacher-flag.test.ts` ("reads the flag
+  in both teacher pages before any week content renders" and "answers 404 from every teacher
+  route when the flag is off") pinned the page sources to `teacherRoutesEnabled()`. The routed
+  findings F413 and F416 direct a guard extraction into `lib/teacher.ts` and a behavior test
+  that fails on an inverted gate, so the two cases cannot keep their source-regex form. Both
+  cases were rewritten in place with their names and meaning kept: the flag-off case now proves
+  the behavior (flag off gives the off gate for every session; each page maps
+  `gate.kind === "off"` to `notFound()`) and the flag-read case proves the guard reads the flag
+  before it returns content. The case count and the suite count stay; no case was removed or
+  weakened, and every other Red case is untouched. The re-reviews can read this note and the
+  diff of that one test file.
+- F414 note: the week contract already holds a refine that allows one decodable book per week
+  (`a published week needs one decodable book`), so the two-decodable wrong-book case of the
+  finding is unreachable for a contract-valid week. The fix keeps the title rule airtight
+  (`decodableWeekOf` hands the player a week with the titled book only), and the new test
+  proves the refine and renders the decodable branch from the titled book.
+
