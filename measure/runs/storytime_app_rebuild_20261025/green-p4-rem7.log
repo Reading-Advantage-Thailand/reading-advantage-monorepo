@@ -1,0 +1,154 @@
+# Green log: Phase 4 remediation round 7 (F671, F641/F661)
+
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master.
+- Track: storytime_app_rebuild_20261025, phase id P4, phase heading
+  "## Phase 4: Teacher app".
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable).
+- role_base_sha: 78df5d21d2e12f817bb3b8b472ab0d69a22ff0aa (HEAD at the start; the adversarial
+  test commit that holds the F671 red case).
+- Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). Red family: DeepSeek; the families
+  differ, and no DeepSeek model ran in this role. No coder was delegated.
+- Audit inputs: adversarial-p4-e7d7e6f65.json (F671), review-a-p4-10daba4cd.json (F641),
+  review-c-p4-10daba4cd.json (F661). F641 and F661 are one runbook wording item.
+- Other tracks commit on master at the same time (packages/domain, apps/primary-advantage,
+  measure files of other tracks). This round touched none of those paths and committed only
+  with its own path list.
+- git status at the start held no change under apps/storytime, docs/runbooks, or this track's
+  measure files.
+
+## Order of work
+
+1. Red check: the committed F671 case in phase4-adversarial.test.tsx fails at the role base
+   (exit 1; 1 failed, 46 passed of 47).
+2. Tests: one unit case for the new splitter in phase4-lesson-focus.test.tsx, one new runbook
+   case for the F641/F661 sentences in phase4-runbook.test.ts, and the F621 case of rem 6
+   re-aimed at the replacement sentence. No committed Red test changed.
+3. Implementation: the splitThaiRuns helper and the LanguageRuns renderer in lesson-flow.tsx,
+   used in the flow and the week view; the runbook flag section rewrite (commit 2481aae1a).
+4. Gates, then the plan evidence and this log.
+
+## Commands and results (A5: each line holds the exit code and the counts)
+
+Heavy vitest and tsc runs went through heavy-run.sh (p1, foreground, shell timeout 0).
+MemAvailable read 2998668 kB at the Green gate; the stop rule never came close.
+
+1. Red check of the round: cd apps/storytime; CI=true ../../node_modules/.bin/vitest run
+   --maxWorkers=1 __tests__/phase4-adversarial.test.tsx -> exit 1; 1 file; 1 failed (the
+   F671 case "wraps a Thai run inside an English note line in an element with lang th"),
+   46 passed of 47.
+2. The ten-file Green command of test-strategy.md line 621 (heavy-run, --maxWorkers=1):
+   -> exit 0; 10 files; 165 of 165 tests. The count is exact: 153 of rem 6 plus the 12 cases
+   of the adversarial commit 78df5d21d (the F671 case and its companions), the splitter unit
+   case, and the new runbook case. Two earlier gate runs of the round exit 1 and are
+   recorded below.
+3. cd apps/storytime && ../../node_modules/.bin/tsc --noEmit (heavy-run p1): -> exit 0.
+4. ESLint on the four changed files (two tsx sources, two test files): -> exit 0; 0 errors;
+   0 warnings.
+5. build-graph update ./graph.db on the two changed .tsx files (heavy-run p1): -> exit 0;
+   updated 2 files (78 -> 101 nodes, 112 -> 151 edges).
+6. No Docker smoke and no browser gate in this round, per the orchestrator brief; the UX role
+   measures after the reviews.
+
+## The two recorded gate failures of this round (A5: real exit codes, no silent retry)
+
+- First gate run after the runbook rewrite: exit 1, 3 failed of 165, all in the committed red
+  cases of phase4-adversarial-routes.test.ts. The rewrite had dropped the pinned phrase
+  "open the tag URL" (the item began "Open the tag URL"), replaced the pinned sentence
+  "prints the variable names, not their values", and moved the F612 off-command phrases out
+  of the bullet that holds "A revision cannot change". No committed red test was edited; the
+  runbook text was reworked to hold every pinned phrase, with the numbered list inside the
+  flag-state bullet and the sentence "The compare prints the variable names, not their
+  values." restored next to the new F641 sentences.
+- Second gate run: exit 1, 1 failed of 165. The phrase "A revision cannot change" sat across
+  a line wrap, so the bullet find of the red case missed it. The bullet was rewrapped to hold
+  the phrase on one source line.
+- Third gate run: exit 0, 165 of 165. The lesson: the committed red cases pin whole phrases
+  on one source line; every rewrite of the runbook now checks the pinned phrases before the
+  gate.
+
+## Fixes in the commit
+
+- F671 (lesson-flow.tsx, week-view.tsx): the pure helper splitThaiRuns (next to pickLang and
+  noteLangsOf) splits a string into runs of Thai script (U+0E00 to U+0E7F) and other text;
+  the renderer LanguageRuns wraps each Thai run of an English text in a span with lang="th"
+  and renders a Thai text as one plain run under its own lang="th" element. The flow uses it
+  on every English render of week data (note lines, variant lines, loop panel fields, sight
+  words, share labels and captions, recall ask and cards, opening prompts, step and day
+  titles, media titles); the week view imports it for the title, the sound, the phonemic
+  awareness skill, the frame, the tricky words, the family words and captions, and the lesson
+  titles. content/ is untouched; the committed F671 red case passes without an edit.
+- F641 and F661 (docs/runbooks/storytime-deploy.md, flag section only): the flag flow of a
+  new build is one numbered list inside the flag-state bullet (1. sign in on the tag URL
+  host, 2. open the tag URL of the new build, 3. compare the names, 4. on 200 run the off
+  command with the new build image, 5. check 404 and the names on the off revision, 6. name
+  that revision in step 4). The sentence "The values are compared only for the flag" is
+  replaced by: the names compare shows that no env name differs except
+  STORYTIME_TEACHER_ROUTES, and the flag state shows only through the 200 or 404 check of
+  /th/teacher/2/1 on the tag URL. The text states that each names-only command prints one
+  line with the names separated by ";", and keeps "prints the variable names, not their
+  values". Every command, --no-traffic, the tags, Daniel's go, and the way back stay. No
+  gcloud command ran; the runbook is text only.
+
+## Commits
+
+1. Implementation and tests: 2481aae1a, fix(storytime): close the phase 4 round 7 findings
+   (track_id: storytime_app_rebuild_20261025). Five files: lesson-flow.tsx, week-view.tsx,
+   docs/runbooks/storytime-deploy.md, phase4-lesson-focus.test.tsx, phase4-runbook.test.ts.
+2. Plan evidence and this log: the next commit, docs(measure) on the same track id.
+
+## Anti-pattern check
+
+- A3 holds: every count above is a labeled integer.
+- A5 holds: every command line above holds its real exit code, including the two failed gate
+  runs of the round; the Green gate exit was captured without a pipe.
+- A6 holds: measure/tracks.md changes only at closeout; this round did not touch it.
+- A7 holds: no rg -v filter changed.
+- A16 holds: this role made no worktree.
+
+## Result
+
+The targeted Red command (the ten-file Green command of test-strategy.md line 621) exits 0 at
+HEAD 2481aae1a with 10 files and 165 of 165 tests, above the expected 163. The committed F671
+red case passes. tsc exits 0. ESLint on the changed files exits 0. The plan evidence block
+"Phase 4 remediation round 7" carries the implementation commit SHA. No task marker changed.
+
+MEASURE_AGENT_RESULT
+status: complete
+phase: P4 (Phase 4 remediation round 7)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+green_head: 2481aae1ac4063dc3a0316d7d1a5aeaf49d7a029
+implementation_commit: 2481aae1a
+plan_evidence_commit: (the commit that carries this log; see git log)
+Dispositions: F671 FIX; F641 FIX; F661 FIX
+
+handoff:
+- Tasks flipped to [x]: none in this round. Tasks 4.1 to 4.6a keep their [x] markers; the
+  "Phase 4 remediation round 7" evidence block now sits under the Phase 4 evidence with
+  implementation commit 2481aae1a and the gate exit codes.
+- Tasks flipped to [b]: none. No fabrication was needed.
+- Targeted Red command: the ten-file Green command of test-strategy.md line 621, run through
+  heavy-run.sh with --maxWorkers=1. Output: exit 0, 10 files, 165 of 165 tests. The F671 red
+  case failed alone before the implementation (exit 1, 1 failed of 47), which is the Red
+  proof of this round. Two intermediate gate runs failed on pinned runbook phrases and are
+  recorded in the plan and this log; no committed Red test was edited.
+- Gates: tsc --noEmit exit 0; ESLint on the four changed files exit 0 (0 errors, 0 warnings);
+  build-graph update on the two changed tsx files exit 0 (101 nodes, 151 edges). No Docker
+  smoke and no browser gate in this round, per the brief; the UX role measures after the
+  reviews and should re-check the lang marks on the note lines with Thai runs.
+- Files changed by this round (review scope): apps/storytime/app/[locale]/teacher/[level]/
+  [week]/[day]/lesson-flow.tsx (the exported splitThaiRuns helper and LanguageRuns renderer,
+  used across the flow), apps/storytime/app/[locale]/teacher/[level]/[week]/week-view.tsx
+  (imports LanguageRuns from the day component file), docs/runbooks/storytime-deploy.md (flag
+  section only), apps/storytime/__tests__/phase4-lesson-focus.test.tsx, phase4-runbook.test.ts.
+  No new file; the ten-file test list of test-strategy.md line 621 stays the list of record.
+  No path of the concurrent tracks (packages/domain, apps/primary-advantage) was touched.
+- Notes for the reviewers: the committed red cases of phase4-adversarial-routes.test.ts pin
+  runbook phrases on one source line (the F612 bullet phrases, "open the tag URL" before the
+  traffic step, and "prints the variable names, not their values"). Any later runbook edit
+  must keep those phrases on one line or the red cases fail. The week view now imports
+  LanguageRuns from a "use client" module, so the week page ships one small client
+  component; a reviewer who dislikes the coupling can move the helper to a shared module in
+  a later round.
+- Question for the PM (default in parentheses): none in this round. The three findings are
+  all fixed with the code, the runbook, and the tests; no user decision is open.
+END_MEASURE_AGENT_RESULT

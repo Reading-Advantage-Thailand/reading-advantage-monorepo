@@ -2892,6 +2892,65 @@ for every other track.
     count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
     filter changed). A16 holds (no worktree).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem6.log`.
+  - Phase 4 remediation round 7 evidence. Role base
+    `78df5d21d2e12f817bb3b8b472ab0d69a22ff0aa` (the adversarial test commit); phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The adversarial and review roles ran on
+    other families; no DeepSeek model wrote code in this round. No coder was delegated.
+  - Implementation commit: `2481aae1a` (`fix(storytime): close the phase 4 round 7 findings`).
+    Files: `lesson-flow.tsx`, `week-view.tsx`, `docs/runbooks/storytime-deploy.md`, and the
+    Green-owned test files `phase4-lesson-focus.test.tsx` (7 to 8 cases) and
+    `phase4-runbook.test.ts` (14 to 15 cases). The committed Red cases of
+    `phase4-adversarial.test.tsx` and `phase4-adversarial-routes.test.ts` did not change, and
+    no `content/` file changed.
+  - F671: the flow gains the pure helper `splitThaiRuns` next to `pickLang` and
+    `noteLangsOf`, which splits a string into runs of Thai script (Unicode block U+0E00 to
+    U+0E7F) and other text, and the small renderer `LanguageRuns`, which wraps each Thai run
+    of an English text in a span with `lang="th"`. The flow uses it on every English render of
+    week data (note lines, variant lines, loop panel fields, sight words, share labels and
+    captions, recall ask and cards, opening prompts, step and day titles, media titles), and
+    the week view imports it for the title, the sound, the phonemic awareness skill, the
+    frame, the tricky words, the family words and captions, and the lesson titles. A Thai text
+    renders as one plain run under its own `lang="th"` element. One unit case covers the
+    empty string, a string with no Thai, and a Thai run at the start, in the middle, and at
+    the end. The committed F671 red case passes without an edit.
+  - F641 and F661 (one item, runbook flag section only): the flag flow of a new build is now
+    one numbered list inside the flag-state bullet (sign in on the tag URL host, open the tag
+    URL, compare the names, on 200 run the off command with the new build image, check 404
+    and the names on the off revision, name that revision in step 4). The sentence "The values
+    are compared only for the flag" is replaced: the names compare shows that no env name
+    differs except `STORYTIME_TEACHER_ROUTES`, and the flag state shows only through the 200
+    or 404 check of `/th/teacher/2/1` on the tag URL. The text states that each names-only
+    command prints one line with the names separated by `;`, and keeps "prints the variable
+    names, not their values". Every command, `--no-traffic`, the tags, Daniel's go, and the
+    way back stay. Three committed red cases of `phase4-adversarial-routes.test.ts` pin the
+    wording (the section order with "open the tag URL" before the traffic step, the
+    flag-on-bullet phrases of F612, and the "prints the variable names" sentence), so the
+    rewrite keeps every pinned phrase on one source line. One Green case extends for the new
+    sentences, and the F621 Green case now checks the replacement sentence. No gcloud command
+    ran; the runbook is text only.
+  - Gates (each ran alone, in the foreground, with the shell timeout 0; MemAvailable
+    2998668 kB at the Green gate):
+    1. Red check of the round: `phase4-adversarial.test.tsx` alone (local vitest,
+       `--maxWorkers=1`): exit 1 with 1 failed (the F671 case) and 46 passed of 47.
+    2. The ten-file Green command of `test-strategy.md` line 621 through `heavy-run.sh`:
+       exit 0, 10 files, 165 of 165 tests (153 of rem 6 plus the 12 cases of the adversarial
+       commit `78df5d21d`, including the F671 case, the splitter unit case, and the new
+       runbook case). Two earlier gate runs of the round exit 1 and are recorded: the first
+       rewrite dropped the pinned phrases "open the tag URL", "prints the variable names, not
+       their values", and the F612 bullet phrases (3 failed of 165), and the second run broke
+       the phrase "A revision cannot change" over a line wrap (1 failed of 165). Both runs
+       taught the line-wrap constraint; no Red test was edited.
+    3. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0.
+    4. ESLint on the four changed files: exit 0; 0 errors; 0 warnings.
+    5. `build-graph update` (heavy-run p1) on the two changed `.tsx` files: exit 0 (78 to 101
+       nodes, 112 to 151 edges).
+  - No Docker smoke and no browser gate in this round; the UX role measures after the reviews
+    (orchestrator brief).
+  - Anti-patterns: A3 holds (labeled counts). A5 holds (this block gives each exit code and
+    count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
+    filter changed). A16 holds (no worktree).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem7.log`.
 
 ## Phase 5: Milestone week integration
 
