@@ -3471,7 +3471,7 @@ for every other track.
     calibration log must show the fail of the gesture thumbnail and the pass of the passed file.
     No model was called in this round, and no money was spent. Task 5.4 stayed `[~]` at the end of
     this Red round. Evidence class: automated.
-- [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
+- [~] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
     base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
