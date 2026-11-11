@@ -55,6 +55,8 @@ The PM rule until 2026-11-20, word for word:
 
 Round 6 of task 1.4 was PM option A: one run at p1 with a 5400 s cap. It exited 124. The manifest did not change. This track now applies option B (FR-8).
 
+Round 7 of task 1.4 was the first split refresh (task 1.4b). It stopped with exit 124 inside batch 16, which holds 69 minified game bundles from `apps/www-reading-advantage/public/experience/assets`. This track now narrows the analyzer source set (FR-9, task 1.4c) before task 1.4 runs again.
+
 ## 2. Evidence (read only, 2026-11-10, at 5062b170e)
 
 - **CI step.** `.github/workflows/ci.yml:156-157`. The step name is
@@ -202,6 +204,17 @@ Round 6 of task 1.4 was PM option A: one run at p1 with a 5400 s cap. It exited 
   "partial, run again" is 3. The codes 75, 77, 124, and 201 belong to `heavy-run.sh`
   (`heavy-run.sh:80-84`). The code 2 stays "failure". Code 3 means that the run
   stored at least one new module.
+- **D-10 (static public assets). DECIDED (orchestrator, 2026-11-11, after round 7;
+  details by the Build role).** The architecture inventory ignores every tracked
+  file under `apps/<app>/public/`. The rule is a separate rule in
+  `isIgnoredPath` (`inventory.ts:143-153`), not a new member of
+  `GENERATED_WORKSPACE_DIRECTORIES` (`inventory.ts:16-25`). Reason: the set holds
+  generated or dependency directories, and `public/` holds tracked static assets
+  that an app serves as-is. A member of that set would also ignore `public` under
+  `packages/<name>`, `services/<name>`, and `integrations/<name>`, and no round 7
+  fact supports that change. The rule matches the directory at the app level
+  only. Task 1.4c carries it, before task 1.4 runs again. The rule is input
+  selection, not a finding exemption (see FR-9.4).
 
 ## 4. Functional requirements
 
@@ -429,6 +442,81 @@ projection and no analyzer call. A refresh that fits in one run keeps the FR-7 c
 **FR-8.10 Documentation.** `docs/architecture-enforcement.md` names `--budget-s`, the
 store path, and exit code 3.
 
+### FR-9 Static public assets are not analyzer inputs
+
+The inventory ignores every tracked file under `apps/<app>/public/`. The refresh
+then analyzes fewer modules, and it does not spend its time budget on minified
+bundles.
+
+**Evidence (read only, 2026-11-11, at `ca7b1f4e1`).**
+
+- Round 7 stored 3750 of 6936 pass-1 modules in 76 s, about 5 s for each batch of 250
+  modules. Batch 16 (indices 3750 to 3999) did not finish in the remaining 29 minutes.
+  It holds 69 minified game bundles (3,049,795 bytes), for example
+  `phaser.esm-kk0bm_Sx.js` (1,377,429 bytes) and `hud-CK-u5dw1.js` (794,685 bytes).
+- `git ls-files 'apps/*/public/**/*.js'` and the `.mjs` form list 70 tracked files. The
+  list of all tracked files under `apps/*/public/` that match
+  `SOURCE_FILE_PATTERN` (`inventory.ts:15`, `/\.[cm]?[jt]sx?$/`) holds the same 70
+  files. No tracked file under any other root matches `/public/` and the pattern.
+- No baseline file in `packages/architecture-enforcement/src/config` names a path
+  under `/public/`, so the rule removes no reviewed finding.
+- The only imports of a `public/` path in tracked source are images (`.webp`, `.svg`),
+  for example `apps/reading-advantage/components/ui/toaster.tsx:13-16`. No tracked source
+  imports a `.js` file from `public/`.
+
+| App | Files | Bytes |
+| --- | --- | --- |
+| `www-reading-advantage` (all under `public/experience/assets`) | 69 | 3,049,795 |
+| `primary-advantage` (`public/serwist/sw.js`) | 1 | 3,080 |
+| Total | 70 | 3,052,875 |
+
+**FR-9.1 The rule.** `isIgnoredPath` (`inventory.ts:143-153`) gets one new line after the
+`node_modules` line (`inventory.ts:145`). The line returns true when `segments[0]` is
+`"apps"`, `segments[2]` is `"public"`, and the path holds more than 3 segments. A new
+constant `STATIC_ASSET_DIRECTORY = "public"` sits next to
+`GENERATED_WORKSPACE_DIRECTORIES` (`inventory.ts:16-25`). The set
+`GENERATED_WORKSPACE_DIRECTORIES` does not change. `isIgnoredPath` is the only function
+that changes, and `selectArchitectureSourceFiles` (`inventory.ts:180-197`) calls it, so
+the rule needs no second edit. The JSDoc of `isIgnoredPath` names the new case.
+
+**FR-9.2 The callers.** The analyzer, the v2 source projection
+(`selectV2AnalyzerSourcePaths`, `v2-manifest-validation.ts:762-772`), the check
+(`architecture-check.ts:202`), and the reconciliation (`architecture-reconciliation.ts:304`)
+all take their source list from `selectArchitectureSourceFiles`. They change by the new
+selection and need no edit. The segment filters in `analyzer.ts`
+(`isSafeTrackedResolverPath`, `analyzer.ts:498-507`; `isIgnoredProjectedPath`,
+`analyzer.ts:510-517`; `isSafeProjectedSourcePath`, `analyzer.ts:520-531`) guard resolver
+configuration and projected import targets. They do not select files, and they stay
+unchanged. Task 1.4c Green does not edit `analyzer.ts`.
+
+**FR-9.3 The hand-written file and the trade-off.** One of the 70 files is hand-written:
+`apps/primary-advantage/public/serwist/sw.js` (3,080 bytes, a service worker with its own
+header comment). It loses the architecture checks. It holds no database, provider, or
+`process.env` access (a read of the file found no import, no `require`, and no `process.env`), so the check finds nothing in it today. The
+decision accepts the loss, because `public/` holds static assets that the apps serve
+as-is. Code that needs architecture checks belongs under `app/`, `lib/`, or `src/`.
+Reason for no per-file exception: the 69 bundle names carry content hashes, so a file
+list breaks at the next bundle build. See OQ-7.
+
+**FR-9.4 No finding exemption.** FR-9 selects analyzer inputs. It adds no wildcard
+exception, no directory exemption in a policy file, and no baseline entry
+(`docs/architecture-enforcement.md:78`). The rule applies to minified static assets, and
+no tracked file there carries a reviewed finding.
+
+**FR-9.5 The pins change, the contract stays.** The source list is shorter, so the
+five pin fields of D-3 change at the next refresh. `inventory.ts` is in
+`V2_ANALYZER_IMPLEMENTATION_PATHS` (`reconciliation-manifest.ts:68`), so the committed
+implementation tree hash is stale after the Green commit of task 1.4c, as it is after
+tasks 1.4a and 1.4b. Task 1.4 refreshes it. `V2_MANIFEST_KEYS` and the strict key check do
+not change. AC-2 and AC-8 hold. The expected module count of the next refresh is 6866
+(6936 minus 70). Task 1.4 confirms the count and records it.
+
+**FR-9.6 The CI effect.** CI runs the same analyzer on the same source list
+(`pnpm architecture:check --skip-input-snapshot-pin`, `.github/workflows/ci.yml:157`). The
+rule therefore also cuts the CI check time, for the check's analysis and for its
+validation. The track measures no CI time, and no test reads a clock. The effect is an
+expectation, not an acceptance criterion.
+
 ## 5. Constraints
 
 - Tests first. Red tests fail at HEAD. Green changes the minimum.
@@ -455,7 +543,9 @@ AC-6 to AC-8 have tests in
 `packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts`.
 AC-9 to AC-17 have tests in
 `packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts`.
-No test of AC-9 to AC-17 reads a clock or asserts an `elapsed_s` value. A test that
+AC-18 to AC-21 have tests in
+`packages/architecture-enforcement/src/__tests__/inventory.test.ts`.
+No test of AC-9 to AC-21 reads a clock or asserts an `elapsed_s` value. A test that
 needs a clock passes a stub as `PinRefreshCliDependencies.now`. The stub returns a
 test variable. The test adds a fixed step to that variable inside its `writeStdout`
 hook, each time a line holds `modules_done=`.
@@ -559,6 +649,28 @@ hook, each time a line holds `modules_done=`.
     does not change.
 17. **AC-17 (documentation).** `docs/architecture-enforcement.md` names `--budget-s`,
     `.cache/architecture-pin-refresh/checkpoint.json`, and exit code 3.
+18. **AC-18 (a public asset is not selected).** Given the tracked file list
+    `apps/example/public/x.js` plus the control of AC-19, when
+    `selectArchitectureSourceFiles` runs on that list, then the result does not hold
+    `apps/example/public/x.js`. The same holds for `apps/example/public/a/b/y.mjs`,
+    `apps/example/public/z.jsx`, and `apps/example/public/serwist/sw.js`. When
+    `inventoryRepository` runs on the same list with the files present, then
+    `filesScanned` counts only the control and the result holds no parse error for a
+    `public/` file.
+19. **AC-19 (the positive control).** Given the list of AC-18, then
+    `apps/example/src/x.ts` is still selected. The control stands in the same list as
+    the public file, so the test fails for the right reason at HEAD.
+20. **AC-20 (the rule matches the app-level directory only).** The result still holds
+    `apps/example/src/public/x.ts` (a nested directory named `public`),
+    `apps/example/src/public.ts` and `apps/example/public.ts` (files whose name starts
+    with `public`), and `packages/example/public/x.ts` (another root). An over-broad rule
+    that ignores any `public` segment fails this criterion.
+21. **AC-21 (the manifest contract stays).** The key set of
+    `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json` equals
+    the 15 keys of `V2_MANIFEST_KEYS` (`v2-manifest-validation.ts:109-125`), in order, so
+    no key is new and none is gone. The test holds its own copy of the key list, as
+    `reconciliation-manifest-v2.red.test.ts:24` does. Task 1.4c changes no manifest field.
+    The five pin fields of D-3 change only at task 1.4.
 
 ## 7. Out of scope
 
@@ -571,6 +683,9 @@ hook, each time a line holds `modules_done=`.
   file `pin-refresh-checkpoint.ts` joins no hash list.
 - A checkpoint of the prelude output (see OQ-1).
 - A store key for a hash, a checksum, or a tree identity (see OQ-2).
+- A change to the ignore rule for `public` under `packages`, `services`, or `integrations`
+  (see OQ-8).
+- A per-file exception for a hand-written file under `public/` (see OQ-7).
 
 ## 8. Open questions
 
@@ -609,3 +724,16 @@ item has a default. The Build roles use the default and continue.
 - **OQ-6 (preview runs).** **Default:** a run without `--acknowledge` also stores
   modules, also stops at the budget, and also exits with code 3. A complete preview
   exits 1 or 0 as in FR-4, and it keeps the store.
+- **OQ-7 (the hand-written file under `public/`).** `apps/primary-advantage/public/serwist/sw.js`
+  is one of the 70 files, and a person wrote it (FR-9.3). It loses the architecture checks.
+  **Default:** accept the loss, because `public/` holds static assets that the apps serve
+  as-is. Add no per-file exception. If a later change puts a database, provider, or
+  `process.env` access in a `public/` file, the owner moves that code under `app/`, `lib/`,
+  or `src/`.
+- **OQ-8 (the other roots).** The rule covers `apps/<app>/public/` only. No tracked source
+  file sits under `public/` in `packages`, `services`, or `integrations`. **Default:** keep
+  the rule at the app level. A new task widens it if such a file appears and slows the
+  refresh.
+- **OQ-9 (the 1.4c commits move HEAD).** The Green commit and the evidence commits of task
+  1.4c change HEAD, so the next series starts from an empty store. **Default:** accept it.
+  Task 1.4 starts its series after the last 1.4c commit, and OQ-2 applies from there.
