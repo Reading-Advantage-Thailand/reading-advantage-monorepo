@@ -1,0 +1,65 @@
+# Green log — P1 "Choice of the class session lifetime"
+
+Role: Measure Jr Green for tasks 1.3 to 1.9 and the phase check 1.11. Track: primary_class_session_lifetime_20261111.
+Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). Red ran on deepseek/deepseek-flash#high; no coder was delegated, so no Red-family session was spawned.
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa (immutable)
+role_base_sha: e7d7e6f65d9390205be346850c2f3db70270365c (the last Red commit)
+Final Green HEAD: 78df5d21d2e12f817bb3b8b472ab0d69a22ff0aa (a Storytime test commit landed on master between the Green commits and the phase check; it touches only `apps/storytime/__tests__/` files).
+
+## 1. Red rerun before the implementation
+
+Command: the Red command of tasks 1.1 and 1.2 at `e7d7e6f65`.
+- Domain files: exit 1, tests_total=96, tests_failed=43, tests_passed=53. Matches the Red evidence.
+- App files: exit 1, tests_total=82, tests_failed=29, tests_passed=53. Matches the Red evidence.
+Both fail for the stated reasons (no `lifetime` in the contract, fixed 3-hour expiry, no `invalid_input` status, no radiogroup or `lifetime` body, time-only expiry text, missing message keys).
+
+## 2. Implementation commits
+
+- `2614bdba0` feat(domain): add the lifetime contract — `classSessionLifetime` enum (`3h`, `until_17`, `7d`), field `lifetime` with default `3h`, `ClassSessionStartInput` exported as `z.input` (M7: the optional input type keeps the existing `{ classroomId }` callers compiling), `invalid_input` added to `StudentLoginErrorCode`, `invalid_input: 400` added to `STATUS` in `http.ts`. Gate: contracts test exit 0, tests_total=31, tests_failed=0, tests_skipped=0.
+- `35e99be85` feat(domain): compute the session expiry — private pure function `computeSessionExpiry` (switch, no lookup table, `=== undefined` default, `calendarDayKey` + `SCHOOL_TIME_ZONE` from `../calendar-day.js`, 17:00 Bangkok = Bangkok-midnight + 10 h), refusal check placed after `authorizeClassroom` and before the first row write (F1: before `ensureStudentCredentials`), `startClassSession` uses the computed expiry, audit metadata adds `lifetime`, `CLASS_SESSION_LIFETIME_MS` kept exported, JSDoc updated. Gate: 3 domain files exit 0, tests_total=96, tests_failed=0, tz_runs_green=3.
+- `bd292b853` feat(primary): add the lifetime choice panel — radio group (`radiogroup` + three labeled radios, `min-h-11` labels, default `3h`), `until_17` hidden from 17:00 Bangkok on (client clock via `Intl` with `SCHOOL_TIME_ZONE`; server stays the authority, OQ-2), start and New code bodies send `{ classroomId, lifetime }`, expiry text shows the date for a later Bangkok date (D-6) through `calendarDayNumber`, `lifetimeHelp7d` shows only for `7d`, `errorKey` maps a 400 with code `invalid_input` to `lifetimeInvalid`, and the six keys sit in `messages/en.json`, `th.json`, `cn.json`, `tw.json`, `vi.json` (F5 decision; cn, tw, vi hold the English text as a labeled stopgap). Gates: handler exit 0 (tests_total=42; the handler itself needs no change), control + panel exit 0 (tests_total=40, tz_runs_green=3), json_valid=5, keys_checked=30, key order equal in en and th.
+- Domain dist rebuild (strategy task 1.5b) through heavy-run p2: exit 0, `dist_has_lifetime=2`, before the app gates.
+
+## 3. Phase check (task 1.11) at HEAD `78df5d21d`
+
+One heavy job at a time, all through heavy-run p2 (`HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800`):
+
+1. Domain check-types: exit 0, `typecheck_errors_in_existing_tests=0`.
+2. Domain build: exit 0, `dist_has_lifetime=2`.
+3. App check-types: exit 0. One pre-existing untracked foreign scratch file (`apps/primary-advantage/qa-check-user.tmp.ts`, Sep 15, imports a removed module) was relocated to `/tmp/opencode` for the check and restored byte-identical after it. It is not a track file.
+4. ESLint on the changed files only: domain exit 0, app exit 0, `eslint_new_errors_in_changed_files=0`.
+5. Targeted tests: task 1.1 Red files exit 0 (tests_failed=0; 12 real-db cases skipped without `PG_TEST_URL`); all nine `student-login-*` domain files together exit 0 (tests_total=168, tests_passed=156, tests_skipped=12, tests_failed=0); task 1.2 Red files exit 0 (tests_total=82, tests_failed=0). Time-zone matrix at this HEAD: `tz_runs_green=3` for the class-session file (Asia/Bangkok 53, UTC 53, America/Los_Angeles 53) and for the control file (Asia/Bangkok 32, UTC 32, America/Los_Angeles 32).
+6. Domain aggregate suite: exit 0, suite_files=187, suite_tests=2271, suite_failed=0, `suite_failed_new=0` against the base record (suite_base_files=187, suite_base_tests=2216, suite_base_failed=0, preexisting_red_files=0).
+7. Real-database run: scratch Postgres 16 container (own name `pcls-green-1794384430-4091196`, random host port 43055, never 5432, shared databases unused, container removed by the trap), migrate exit 0, file exit 0, `real_db_ran=1`, real_db_tests_total=12, real_db_tests_failed=0, real_db_tests_passed=12, real_db_skipped_tests=0. The 7-day boundary case passes (row holds 604800000 ms; code and card work at `expiresAt - 1 ms` and fail at `expiresAt`).
+8. `git diff --name-only db8672b04..HEAD -- packages/db`: empty, `db_changed_paths=0` (AC-8).
+9. Untouched-login-files detector: empty, `untouched_login_files_changed=0`.
+10. Scope check over the six track commits: only allowed Red and Green paths, the F5 message paths, and measure files, `lifetime_out_of_scope_paths=0`.
+11. Added-line grep over `sha256|createHash|checksum` outside `measure`: no hit, `added_hash_lines=0`.
+12. `build-graph update ./graph.db` over the six changed source files through heavy-run p2: exit 0, `graph_files_updated=6`, `graph_nodes=155`, `graph_edges=189`.
+13. Strings out: task 1.10 stays `[b] deferred:pm`; the hand-off to the PM orchestrator lists the six keys, the en text, the th draft, and the F5 stopgap note (cn, tw, vi hold English text).
+14. Reviews and browser check: the orchestrator runs them (task 1.12); outside this Green result.
+
+A16 note: `git worktree list --porcelain` shows 7 worktrees of other tracks plus this tree. This track created none and touched none; `worktrees_added_by_this_track=0`.
+
+## 4. New files
+
+None. The Green phase added no file; all changes are edits to the allowed paths of strategy section 6.10.
+
+## 5. Gate command for the orchestrator
+
+GREEN_TEST_COMMAND=cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-class-session.test.ts src/__tests__/student-login-contracts.test.ts src/__tests__/student-login-card.test.ts src/__tests__/student-login.real-db.test.ts && CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-jr-green
+track: primary_class_session_lifetime_20261111
+phase: P1
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+head_sha: 78df5d21d2e12f817bb3b8b472ab0d69a22ff0aa
+commits: 2614bdba0 feat(domain): add the lifetime contract; 35e99be85 feat(domain): compute the session expiry; bd292b853 feat(primary): add the lifetime choice panel; plan-evidence commit follows this log
+tests: domain targeted exit 0 tests_failed=0 (96 rows, tz_runs_green=3); app targeted exit 0 tests_failed=0 (82 rows, tz_runs_green=3); domain suite exit 0 suite_tests=2271 suite_failed=0 suite_failed_new=0; real-db exit 0 real_db_ran=1 tests_total=12 tests_failed=0; detectors db_changed_paths=0 untouched_login_files_changed=0 lifetime_out_of_scope_paths=0 added_hash_lines=0
+files: packages/domain/src/student-login/contracts.ts, packages/domain/src/student-login/errors.ts, packages/domain/src/student-login/class-session.ts, apps/primary-advantage/lib/student-login/http.ts, apps/primary-advantage/components/teacher/class-login/api.ts, apps/primary-advantage/components/teacher/class-login/class-session-control.tsx, apps/primary-advantage/messages/en.json, apps/primary-advantage/messages/th.json, apps/primary-advantage/messages/cn.json, apps/primary-advantage/messages/tw.json, apps/primary-advantage/messages/vi.json, measure/tracks/primary_class_session_lifetime_20261111/plan.md, measure/runs/primary_class_session_lifetime_20261111/green-p1.log
+tasks_flipped: 1.1 and 1.2 to [x] with the Red commit 0c459e9eb after the Green gate; 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, and 1.11 to [x] with the SHAs in the plan notes; 1.10 stays [b] deferred:pm (Thai check); 1.12 to 1.14 untouched
+new_files: none
+handoff: Review A, Review B (security, spec section 9 including OQ-1 as read-only advice), Review C, the adversarial round, and the browser check (strategy section 6.9) are the orchestrator's next steps at this HEAD. OQ-1 stays a PM decision; no code_only refusal was implemented and its ready rows (strategy section 7.1) are inactive. cn, tw, and vi hold the English strings for the six new keys (F5 stopgap); the PM is told through task 1.10. The app check-types reads one pre-existing untracked foreign scratch file (apps/primary-advantage/qa-check-user.tmp.ts) that fails tsc on its own; it is not a track file and an owner may delete it.
+END_MEASURE_AGENT_RESULT
