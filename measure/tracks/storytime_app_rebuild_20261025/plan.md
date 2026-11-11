@@ -3159,6 +3159,18 @@ for every other track.
     measurement says otherwise, so the strategy row needs a correction by the strategy role.
     The test reads only `apps/storytime` and the run folder, so it stays valid after the track
     moves to `measure/archive/` (A9).
+  - Red fix round 1 (task 5.1). The Green role found two defects in the media list test. The fix
+    commit is `8568a8fba`. The first defect: the table parser read the Markdown delimiter row as
+    a data row. The parser now skips a row whose cells hold only dashes, colons, and spaces. The
+    second defect: the bitrate case read the container rate and asked for 128 kbps, while the nine
+    phoneme files hold a 128 kbps audio stream inside a 133 to 145 kbps container. The case now
+    reads the audio stream rate with
+    `ffprobe -select_streams a:0 -show_entries stream=bit_rate` and asks for 128 kbps there, and
+    it also holds that the container rate sits above the stream rate. No assertion was weakened.
+    The P5 `RED_TEST_COMMAND` (strategy line 946) under heavy-run p1 exits 0 with the document of
+    Green in the run folder: 4 files, 32 of 32 passed, 0 failed. The type check
+    `../../node_modules/.bin/tsc --noEmit` under heavy-run p1 exits 0. Evidence class: automated.
+    The task stays `[~]`.
   - Green evidence (blocked), 2026-11-11. Role base `ecf41c04036bb8e2ca19c9744113dec4ba559661`;
     phase base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; implementation commit `2887dc70b` (the
     four scripts under `apps/storytime/scripts/checks/`; no other source file). The document sits
@@ -3192,6 +3204,24 @@ for every other track.
     exits 1 before it (TS2769 at `phase5-measure-file.test.ts:250`, the encoding `utf`). The
     orchestrator found the same defect as finding F862 of the look track final acceptance.
     Evidence class: automated.
+  - Red fix round 1 (task 5.3). The Green role added the four scripts in commit `2887dc70b` and
+    found four defects in the Red test files of this round. The fix commit is `8568a8fba`. The
+    four defects and the fixes: (1) the wrong-type broken copy of `phase5-measure-file.test.ts`
+    ran `ffmpeg -i p01.jpg copy.mp3`, and ffmpeg exited 234 because the mp3 muxer carries no
+    video stream. The copy is now a byte copy of the real picture with a `.mp3` name, so it
+    holds a JPEG with a sound name. (2) The program case of the same file used the same ffmpeg
+    call and got the same byte copy. (3) The table parser of `phase5-media-list.test.ts` read
+    the Markdown delimiter row as a data row. The parser now skips a row whose cells hold only
+    dashes, colons, and spaces. (4) The bitrate case of the same file read the container rate
+    and asked for 128 kbps, while the nine phoneme files hold a 128 kbps audio stream inside a
+    133 to 145 kbps container. The case now reads the audio stream rate with
+    `ffprobe -select_streams a:0 -show_entries stream=bit_rate` and asks for 128 kbps there.
+    The container rate stays in the row of the list, and the case now also holds that the
+    container rate sits above the stream rate. No assertion was weakened: each broken copy
+    still fails its script. The P5 `RED_TEST_COMMAND` (strategy line 946) under heavy-run p1
+    exits 0 with Green's scripts on master: 4 files, 32 of 32 passed, 0 failed. The type check
+    `../../node_modules/.bin/tsc --noEmit` under heavy-run p1 exits 0. Evidence class:
+    automated. Tasks 5.3 and 5.1 stay `[~]`.
   - The four red test files and the contracts they hold:
     `phase5-measure-audio.test.ts` covers `loudness.ts` and `noise.ts`;
     `phase5-measure-word-edges.test.ts` covers `word-edges.ts`;
