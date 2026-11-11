@@ -247,7 +247,7 @@ describe("Phase 5 stage 1 file kind and size check (AC-10.1)", () => {
     const source = media("l2/media/w01/books/1-hello/p01.jpg");
     const copy = resolve(scratch, "program-picture.mp3");
     const made = spawnSync("ffmpeg", ["-hide_banner", "-v", "error", "-y", "-i", source, copy], {
-      encoding: "utf",
+      encoding: "utf8",
     });
     expect(made.status, "the broken copy was not made").toBe(0);
     const program = spawnSync(

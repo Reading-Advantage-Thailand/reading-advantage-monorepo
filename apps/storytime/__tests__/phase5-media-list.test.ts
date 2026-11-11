@@ -135,6 +135,7 @@ function readList(): {
   rows: string[][];
   counts: Map<string, number>;
 } {
+  expect(existsSync(LIST_PATH), `Missing ${LIST_PATH}`).toBe(true);
   const text = readFileSync(LIST_PATH, "utf8");
   const counts = new Map<string, number>();
   for (const line of text.split("\n")) {
