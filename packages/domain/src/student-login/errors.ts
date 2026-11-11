@@ -1,7 +1,12 @@
-/** Reason codes of a student-login failure. Route handlers map them to HTTP status codes. */
+/**
+ * Reason codes of a student-login failure. Route handlers map them to HTTP status codes.
+ * `invalid_input` is a value the caller chose outside what is available now (for example a
+ * session lifetime that the current clock no longer allows).
+ */
 export type StudentLoginErrorCode =
   | "invalid_code"
   | "invalid_credentials"
+  | "invalid_input"
   | "locked"
   | "rate_limited"
   | "forbidden"

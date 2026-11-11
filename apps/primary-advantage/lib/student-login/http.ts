@@ -11,6 +11,7 @@ import { logger } from "@/lib/observability/logger";
 const STATUS: Record<studentLogin.StudentLoginErrorCode, number> = {
   invalid_code: 401,
   invalid_credentials: 401,
+  invalid_input: 400,
   locked: 423,
   rate_limited: 429,
   forbidden: 403,
