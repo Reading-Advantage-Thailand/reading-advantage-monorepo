@@ -56,8 +56,8 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
   (2026-07-13). All 11 source documents changed after that commit.
 - The "9-Product Suite" lesson disagrees with the canonical strategy
   (`advantage-pr/08-strategy/product-strategy-2026-2027.md` v1.8): Tutor and CodeCamp are
-  live, and Math and Zhongwen have no public date. The strategy at `7eff8c10` has no Managed
-  Service sale. The training source set at that pin uses the approved line: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready."
+  live, and Math and Zhongwen have no public date. The 09-sales-enablement documents at
+  `7eff8c10` give the approved line: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready." The strategy and `04-services/pricing.md` at that pin still hold the old Managed Service condition. The training follows the 09-sales-enablement source set.
 - Modules 4–6 sell Reading Advantage to schools. No school uses Reading Advantage today.
 - The course has no Tutor Advantage content. Tutor Advantage is the main business focus
   (break-even: 10 tutors and 300 students by May 2027).
@@ -136,7 +136,7 @@ with the version on its line 3:
 
 **Pin update (PM relay, 2026-10-26):** the source set moved to advantage-pr ec63bc4 (local, not pushed). Five files in 09-sales-enablement/ changed: battle-cards/vs-tutor.md 1.3, tutor-family-sales-playbook.md 1.4, line-trial-facilitator-script.md 1.7, facilitator-recruitment-kit.md 1.5, sales-training-scope-2027.md 1.3. Only the date line changed: "about 2026-11-08" became "about 2026-11-22" (the in-hand date of Primary Advantage Origins 3.2 and Quest 4). The seed text and its content test use the new date; the pins above stay as written.
 
-**Pin update (PM hand-off, 2026-11-11):** advantage-pr `7eff8c106c7265b41d584c4ea997d65ea30dadfb` replaces `e7ee72b682504073654a0b8386819dbc63f50aeb`. The change is the tone fix of 2026-11-11. A count answers a direct question only, and no limit is volunteered. The approved Managed Service line replaces the old condition, and the team size leaves the pitch. The current pin in `apps/sales-advantage/curriculum/release-candidate.json` is `a3c4df08`. Of the 16 pinned documents in `09-sales-enablement/`, 14 changed, and the seed and text-check impact is in `review/repin-7eff8c10.md`. Spec amendment 2026-11-12 (PM decision, adversarial F4): lines 59, 170, and 404 follow the 7eff8c10 text.
+**Pin update (PM hand-off, 2026-11-11):** advantage-pr `7eff8c106c7265b41d584c4ea997d65ea30dadfb` replaces `e7ee72b682504073654a0b8386819dbc63f50aeb`. The change is the tone fix of 2026-11-11. A count answers a direct question only, and no limit is volunteered. The approved Managed Service line replaces the old condition, and the team size leaves the pitch. The current pin in `apps/sales-advantage/curriculum/release-candidate.json` is `a3c4df08`. Of the 16 pinned documents in `09-sales-enablement/`, 14 changed, and the seed and text-check impact is in `review/repin-7eff8c10.md`. Spec amendment 2026-11-12 (PM decision, adversarial F4; corrected after Review A F21 and F22): lines 59, 169, 170, and 404 follow the 7eff8c10 text.
 
 **PR notes for the seed (2026-10-15):**
 1. The 3 school-sale roleplays (`role-play-scenarios.md`, English) have checklist criteria. The seed turns each into 3–5 weighted criteria plus the claims criterion; PR checks them in the claims review.
@@ -166,8 +166,8 @@ with the version on its line 3:
 **So that** I never sell a product or a date that does not exist
 
 **Acceptance Criteria:**
-- Given the product module, When it describes products, Then it uses the strategy v1.8 states: Primary Advantage live at one school, Tutor Advantage live, CodeCamp Advantage live, Reading Advantage with no school users, Science/Math/Zhongwen Advantage as coming programs with no date, Storytime and STEM with no date.
-- Given the tier lesson, When it states prices, Then it gives App-Only ~1,000 ฿, Blended Learning ~1,500 ฿, and Tutor Advantage from 3,000 ฿ for each class package. The lesson has no Managed Service tier. It gives the approved line: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready."
+- Given the product module, When it describes products, Then it uses the states at the `7eff8c10` source set: Primary Advantage, Tutor Advantage, and CodeCamp Advantage live; Reading Advantage not offered to schools now, its books now in Tutor Advantage classes; Science, Math, and Zhongwen Advantage each its own app built from the Primary Advantage base app, no date; Storytime Advantage in the K–6 offer, no date; STEM Advantage planned, no date. It gives no date for any of these lines.
+- Given the tier lesson, When it states prices, Then it gives App-Only ~1,000 ฿, Blended Learning ~1,500 ฿, and Tutor Advantage from 3,000 ฿ for each class package. The tier table keeps the Managed Service row: the approved line "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.", the instruction never to pre-sell it, and no price.
 - Given the claims lesson, When it gives outcome language, Then it uses only the approved forms of the outcome-claims policy, CEFR names only, and no GSE, Pearson, or YLE names.
 - Given a book name, When a lesson uses it, Then it carries the product name ("Primary Advantage Origins 2", never "Origins 2").
 - Given the product lesson, When it describes the books, Then it shows the placement-to-book map (program and book level 1–4) and the print status of each book.
