@@ -1,0 +1,137 @@
+# Green log: Phase 4 remediation round 6 (F611/F631, F612, F621, F632)
+
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master.
+- Track: storytime_app_rebuild_20261025, phase id P4, phase heading
+  "## Phase 4: Teacher app".
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable).
+- role_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa (HEAD at the start; the two commits
+  after 7b441fbe6 belong to another track and touch only its measure files).
+- Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). Red family: DeepSeek; the families
+  differ, and no DeepSeek model ran in this role. No coder was delegated.
+- Reviews of record: review-a-p4-7b441fbe6.json (F611, F612; F495 withdrawn),
+  review-b-p4-7b441fbe6.json (F621), review-c-p4-7b441fbe6.json (F631, F632). F611 and F631
+  are one item.
+- Another track's Red role commits tests in packages/domain and apps/primary-advantage at the
+  same time. This round touched none of those paths and committed only with its own path list.
+- git status at the start held no change under apps/storytime, docs/runbooks, or this track's
+  measure files.
+
+## Order of work
+
+1. Tests first. Four new or extended cases fail on the missing fixes:
+   - phase4-lesson-focus.test.tsx +1 case: min-h-11 on the "Open media" and "Close" controls of
+     a media step (day 2, step B3), with a signed URL map, the play and pause spies, and the
+     matchMedia stub of the task 4.4 test file, so the player opens in jsdom.
+   - phase4-week-view.test.tsx, F605 case extended: lang=en on every shipped family caption
+     (the img alt holder) and on the fallback span of a copy with the first image file removed.
+   - phase4-runbook.test.ts +2 cases: the new-build image in the off command text (F612) and
+     the name-only env compare (F621).
+   No committed Red test changed, and no content/ file changed.
+2. Implementation, smallest change per finding (commit 08c36df04).
+3. Gates, then the plan evidence and this log.
+
+## Commands and results (A5: each line holds the exit code and the counts)
+
+All vitest and tsc runs went through heavy-run.sh (p1, foreground, shell timeout 0). MemAvailable
+read 3582496 kB at the start of the round and 3324504 kB before the Green gate; the stop rule
+never came close.
+
+1. Red check of the round, tests first:
+   bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && CI=true
+   ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-focus.test.tsx
+   __tests__/phase4-week-view.test.tsx __tests__/phase4-runbook.test.ts'
+   -> exit 1; 3 files; 4 failed, 24 passed of 28. The 4 failures are the new and extended
+   cases, and each names its finding (F611/F631, F632, F612, F621).
+2. After the implementation, the same three files: -> exit 0; 3 files; 28 of 28.
+3. The ten-file Green command of test-strategy.md line 621 (heavy-run, --maxWorkers=1):
+   -> exit 0; 10 files; 153 of 153 tests. The count is exact: 150 of rem 5 plus the focus file
+   +1 and the runbook file +2.
+4. cd apps/storytime && ../../node_modules/.bin/tsc --noEmit (heavy-run p1): -> exit 0.
+5. ESLint on the five changed files (two tsx sources, three test files): -> exit 0; 0 errors;
+   0 warnings.
+6. build-graph update ./graph.db on the two changed .tsx files (heavy-run p1): -> exit 0;
+   updated 2 files (78 -> 93 nodes, 112 edges).
+7. No Docker smoke and no browser gate in this round, per the orchestrator brief; the UX role
+   measures after the reviews.
+
+## Fixes in the commit
+
+- F611 and F631 (lesson-flow.tsx): min-h-11 on the "Open media" button and on the "Close"
+  button of the media player. Every teacher control of the flow and the week view now reaches
+  the 44 px floor.
+- F632 (week-view.tsx): lang="en" on the family word picture caption, on the img alt holder
+  and on the fallback span (an entry with no file). The bilingual helpers of the flow do not
+  apply here: the caption is static English week data.
+- F612 (docs/runbooks/storytime-deploy.md, flag section only): the flag-state bullet says that
+  a revision cannot change, so the off command with the live image does not clear the flag
+  from a new build revision that already carries it; a new build that shows the flag on
+  (200 on /th/teacher/2/1 at its tag URL) does not get traffic as it is; the operator runs the
+  off command with --image set to the image reference of the new build (read with the same
+  imageDigest describe command on the new revision), checks the tag URL of the revision that
+  this command makes (404 with the flag off), and names that revision in step 4. The old line
+  "The variables must match, except the flag itself" now gives this action for the case where
+  the new build holds the flag and the live revision does not. --no-traffic, the tags,
+  Daniel's go, and the way back stay.
+- F621 (same section): the env-compare command prints the variable names only
+  (--format='value(spec.containers[0].env.name)'), and one line says the values are compared
+  only for the flag and that the flag value is not a secret. No gcloud command ran; the
+  runbook is text only.
+
+## Commits
+
+1. Implementation and tests: 08c36df04, fix(storytime): close the phase 4 round 6 findings
+   (track_id: storytime_app_rebuild_20261025). Six files: lesson-flow.tsx, week-view.tsx,
+   docs/runbooks/storytime-deploy.md, phase4-lesson-focus.test.tsx, phase4-week-view.test.tsx,
+   phase4-runbook.test.ts.
+2. Plan evidence and this log: the next commit, docs(measure) on the same track id.
+
+## Anti-pattern check
+
+- A3 holds: every count above is a labeled integer.
+- A5 holds: every command line above holds its real exit code; the Green gate exit was
+  captured without a pipe (EXIT=0 straight from heavy-run).
+- A6 holds: measure/tracks.md changes only at closeout; this round did not touch it.
+- A7 holds: no rg -v filter changed.
+- A16 holds: this role made no worktree.
+
+## Result
+
+The targeted Red command (the ten-file Green command of test-strategy.md line 621) exits 0 at
+HEAD 08c36df04 with 10 files and 153 of 153 tests. tsc exits 0. ESLint on the changed files
+exits 0. The plan evidence block "Phase 4 remediation round 6" carries the implementation
+commit SHA. No task marker changed in this round.
+
+MEASURE_AGENT_RESULT
+status: complete
+phase: P4 (Phase 4 remediation round 6)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+green_head: 08c36df045b6ccea770f12f1ce2d62fa5ce7f5b7
+implementation_commit: 08c36df04
+plan_evidence_commit: (the commit that carries this log; see git log)
+Dispositions: F611 FIX; F612 FIX; F621 FIX; F631 FIX; F632 FIX
+
+handoff:
+- Tasks flipped to [x]: none in this round. Tasks 4.1 to 4.6a keep their [x] markers; the
+  "Phase 4 remediation round 6" evidence block now sits under the Phase 4 evidence with
+  implementation commit 08c36df04 and the gate exit codes.
+- Tasks flipped to [b]: none. No fabrication was needed.
+- Targeted Red command: the ten-file Green command of test-strategy.md line 621, run through
+  heavy-run.sh with --maxWorkers=1. Output: exit 0, 10 files, 153 of 153 tests. Before the
+  implementation, the 4 new and extended round cases failed (exit 1, 4 failed of 28 over the
+  three changed files), which is the Red proof of this round.
+- Gates: tsc --noEmit exit 0; ESLint on the five changed files exit 0 (0 errors, 0 warnings);
+  build-graph update on the two changed tsx files exit 0. No Docker smoke and no browser gate
+  in this round, per the brief; the UX role measures after the reviews and should cover the
+  "Open media" and "Close" control heights and the caption lang marks.
+- Files changed by this round (review scope): apps/storytime/app/[locale]/teacher/[level]/
+  [week]/[day]/lesson-flow.tsx, apps/storytime/app/[locale]/teacher/[level]/[week]/
+  week-view.tsx, docs/runbooks/storytime-deploy.md (flag section only), apps/storytime/
+  __tests__/phase4-lesson-focus.test.tsx, phase4-week-view.test.tsx, phase4-runbook.test.ts.
+  No new file; the ten-file test list of test-strategy.md line 621 stays the list of record.
+- Notes for the reviewers: F612 is a text-only change; no gcloud command ran. F621 relies on
+  the gcloud list projection value(spec.containers[0].env.name); the UX or ops reviewer who
+  reads the runbook should confirm the projection prints one name per line on this gcloud
+  version before the next real deploy.
+- Question for the PM (default in parentheses): none in this round. The five findings are all
+  fixed with the code, the runbook, and the tests; no user decision is open.
+END_MEASURE_AGENT_RESULT

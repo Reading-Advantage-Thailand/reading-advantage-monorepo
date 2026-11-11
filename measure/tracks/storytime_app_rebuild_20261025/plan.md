@@ -2841,6 +2841,57 @@ for every other track.
     count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
     filter changed). A16 holds (no worktree).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem5.log`.
+  - Phase 4 remediation round 6 evidence. Role base
+    `db8672b04fdf3f243bb00afed6b8a682811d2caa`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The review roles ran on other families;
+    no DeepSeek model wrote code in this round. No coder was delegated.
+  - Implementation commit: `08c36df04` (`fix(storytime): close the phase 4 round 6 findings`).
+    Files: `lesson-flow.tsx`, `week-view.tsx`, `docs/runbooks/storytime-deploy.md`, and the
+    Green-owned test files `phase4-lesson-focus.test.tsx` (5 to 6 cases),
+    `phase4-week-view.test.tsx` (the F605 case extends), `phase4-runbook.test.ts` (12 to 14
+    cases). No committed Red test changed, and no `content/` file changed.
+  - F611 and F631 (one item): the "Open media" button and the "Close" button of the media
+    player hold `min-h-11`, so every teacher control of the flow reaches the 44 px floor. One
+    new case renders day 2 with a signed URL map, walks to the media step B3, and asserts the
+    class on both controls with the player open.
+  - F632: the family word caption holds `lang="en"` on the image alt holder and on the
+    fallback span (an entry with no file). The F605 case of the week view asserts the mark on
+    every shipped caption and on the fallback span of a copy with the first file removed.
+  - F612: the flag-state bullet of the runbook says that a revision cannot change, so the off
+    command with the live image does not clear the flag from a new build revision that already
+    carries it; a new build that shows the flag on (200 on `/th/teacher/2/1` at its tag URL)
+    does not get traffic as it is; the operator runs the off command with `--image` set to the
+    image reference of the new build (read with the same imageDigest describe command on the
+    new revision), checks the tag URL of the revision that this command makes (404 with the
+    flag off), and names that revision in step 4. The old line "The variables must match,
+    except the flag itself" now gives this action for the case where the new build holds the
+    flag and the live revision does not. `--no-traffic`, the tags, Daniel's go, and the way
+    back stay. One new case checks the new-build image text in that off command.
+  - F621: the env-compare command now prints the variable names only
+    (`--format='value(spec.containers[0].env.name)'`), and the section says in one line that
+    the values are compared only for the flag and that the flag value is not a secret. One new
+    case asserts the name-only projection on both describe lines and that no line prints
+    `spec.containers[0].env)`. No gcloud command ran; the runbook is text only.
+  - Gates (each ran alone, in the foreground, with the shell timeout 0; MemAvailable
+    3582496 kB at the start of the round):
+    1. Red check of the round (tests first): the three changed test files under `heavy-run.sh`
+       p1 with `--maxWorkers=1`: exit 1 with 4 failed and 24 passed of 28. The 4 failures are
+       the new and extended cases, and they fail on the missing fixes.
+    2. After the fix, the same three files: exit 0, 28 of 28.
+    3. The ten-file Green command of `test-strategy.md` line 621 through `heavy-run.sh`:
+       exit 0, 10 files, 153 of 153 tests (150 of rem 5 plus the 3 new and extended case
+       counts: the focus file +1, the runbook file +2).
+    4. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0.
+    5. ESLint on the five changed files: exit 0; 0 errors; 0 warnings.
+    6. `build-graph update` (heavy-run p1) on the two changed `.tsx` files: exit 0 (78 to 93
+       nodes, 112 edges).
+  - No Docker smoke and no browser gate in this round; the UX role measures after the reviews
+    (orchestrator brief).
+  - Anti-patterns: A3 holds (labeled counts). A5 holds (this block gives each exit code and
+    count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
+    filter changed). A16 holds (no worktree).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem6.log`.
 
 ## Phase 5: Milestone week integration
 
