@@ -1020,7 +1020,7 @@ A placement above book level 4 does not exist in the training. A tutor never off
 
 ## Facts that expire
 
-The print status, the "on sale" dates, and the open decisions change. These lessons mark them: the books on sale after delivery, about 2026-11-23 to 2026-11-30, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the coming programs. Before each sales week, ask Daniel or Phikul which of these facts changed.`,
+The print status, the "on sale" dates, and the open decisions change. These lessons mark them: the books on sale after delivery, about 2026-11-23 to 2026-11-30, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the planned Science, Math, and Zhongwen apps. Before each sales week, ask Daniel or Phikul which of these facts changed.`,
         order: 1,
       },
       {

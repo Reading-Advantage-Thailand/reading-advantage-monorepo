@@ -497,14 +497,18 @@ function curriculumClaimStatements(allContent: string): string[] {
     .filter(Boolean);
 }
 
-/** The 2027 condition for Managed Service and The Teaching Advantage, after normalization. */
-const managedServiceCondition = /only if 1 2 more schools sign/;
+/**
+ * Matches the retired 2027 Managed Service condition, after normalization.
+ * The pinned sources no longer state the condition, so the guard bans it.
+ */
+const retiredManagedServiceCondition = /(?:1[\s-]*2|one or two) more schools/;
 
 /**
  * Detects a product lifecycle statement that conflicts with the 2027 strategy.
  * Planned lines (Science, Math, Zhongwen, Storytime, STEM) have no date and are
  * not live; Tutor Advantage is not beta; CodeCamp Advantage is not coming; no
- * product gets a launch year except under the Managed Service condition.
+ * product gets a launch year; and the retired Managed Service condition is
+ * banned.
  * @param statements Normalized curriculum claim statements.
  * @returns Whether a statement gives a product a conflicting state or date.
  */
@@ -512,6 +516,9 @@ function hasConflictingProductStatus(statements: readonly string[]): boolean {
   const negated = /\b(?:no|not|never|without|don't|do not)\b/;
   const year = /\b20\d\d\b/;
   return statements.some((statement) => {
+    if (retiredManagedServiceCondition.test(statement)) {
+      return true;
+    }
     const plannedLine =
       /\b(?:science|math|zhongwen|storytime|stem)\b(?:[\s,]+(?:and|or)?\s*(?:science|math|zhongwen|storytime|stem)\b)*\s+advantage\b/
         .test(statement);
@@ -533,8 +540,7 @@ function hasConflictingProductStatus(statements: readonly string[]): boolean {
     }
     return /\badvantage\b/.test(statement) &&
       /\b(?:launch(?:es|ed|ing)?|release(?:s|d)?)\b/.test(statement) &&
-      year.test(statement) &&
-      !managedServiceCondition.test(statement);
+      year.test(statement);
   });
 }
 
@@ -583,7 +589,6 @@ function hasConflictingTierClaim(statements: readonly string[]): boolean {
 
     if (
       statement.includes("managed service") &&
-      !managedServiceCondition.test(statement) &&
       (
         /\b(?:available|launch(?:es|ed|ing)?|live|release(?:s|d)?)\b/
           .test(statement) ||
