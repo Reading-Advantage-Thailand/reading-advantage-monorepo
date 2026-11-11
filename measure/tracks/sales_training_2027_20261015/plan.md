@@ -61,6 +61,7 @@ _Story ref: spec.md#story-s2-the-curriculum-uses-the-new-pr-source-set_
 _Start gate: the PR source-set commit exists (done: advantage-pr `e6f7cc22e`, 2026-10-15; see spec.md S2). Owner decision 2026-10-15 ("draft now, ship later"): S2–S7 are drafted on the branch only during the freeze; merge, deploy, and database work wait for the freeze end._
 _Pin update (PM relay, 2026-10-26): the source set moved to advantage-pr ec63bc4 (local, not pushed). Five files in 09-sales-enablement/ changed: battle-cards/vs-tutor.md v1.3, tutor-family-sales-playbook.md v1.4, line-trial-facilitator-script.md v1.7, facilitator-recruitment-kit.md v1.5, sales-training-scope-2027.md v1.3. Only the date line changed: "about 2026-11-08" became "about 2026-11-22" (the in-hand date of Primary Advantage Origins 3.2 and Quest 4). The start-gate pin above stays as written._
 _Re-pin commit (PM, 2026-10-26): the re-pin to advantage-pr ec63bc4 landed in commit `2c69dc328`. A storytime commit took the staged sales files from the shared git index. The PM kept that commit as it is (no split). `2c69dc328` is the re-pin commit for this track._
+_Re-pin commit (PM hand-off, 2026-11-11): the source set moves to advantage-pr 7eff8c10, which replaces e7ee72b6; the tone fix of 2026-11-11 applies, and the row review sits in `review/repin-7eff8c10.md`. A count answers a direct question only, no limit is volunteered, the Managed Service line changes, and the team size leaves the pitch._
 _Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/sales-curriculum-production.test.ts` (cardinalities and pinned digest), `scripts/sales-curriculum-reconciliation.test.ts` (approved digest `ccba54…`), `scripts/production-readiness.test.ts` (approved candidate), and 8 tests in `packages/sales-knowledge` (approved coordinates)._
 
 - [x] Task: Contract — the new document list `84b151b7f`
@@ -75,6 +76,11 @@ _Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/
     - [x] `review/tone-pass-proposal.md` (45 rows); PR claims check passed with 3 changes (G3–G8 and G13 removed with no replacement, T4, M2), 1 addition (remove "I am not a teacher"), and no word test
     - [x] Apply to `static-seed.ts`; update the 2 tests of changed strings; Thai check list updated; candidate at advantage-pr `919d1c1`, graph `87d3e04c…`, only existing fields changed (`f572515cc`)
     - [x] PR follow-up (pin `7ed5a4b`): M6.1 TL;DR from the recruitment kit §1; "a small class with a local teacher" in 6 places (R5 line and criterion, M5.3, M2 quiz); candidate graph `f3a56c34…`; R5 rescored on Gemini: new wording 100, old 94, weak 10, Pearson claim 0
+- [ ] Task: Re-pin to advantage-pr 7eff8c10 (PM hand-off 2026-11-11; replaces e7ee72b6; due 2026-11-13 18:00 ICT)
+    - [ ] Red: content test rows in curriculum-content-2027.test.ts for each seed change of review/repin-7eff8c10.md (the new source line holds, the old text is gone), run red, commit alone
+    - [ ] Green: update static-seed.ts per review/repin-7eff8c10.md, then regenerate release-candidate.json against 7eff8c10 (only existing fields change; hashing policy)
+    - [ ] Text check: CI=true pnpm --filter sales-advantage exec vitest run --maxWorkers=1 scripts/curriculum-content-2027.test.ts scripts/curriculum-release.test.ts exits 0
+    - [ ] Thai rows go to the PM for Daniel's Thai check (review/thai-lines-for-daniel.md)
 - [b] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:owner-review-with-s10-approval
     - [ ] Daniel sees the candidate source commit (now `7ed5a4b`, tone pass) and the 20 documents in the approval file at S10
 
