@@ -63,3 +63,22 @@ tasks_flipped: 1.1 and 1.2 to [x] with the Red commit 0c459e9eb after the Green 
 new_files: none
 handoff: Review A, Review B (security, spec section 9 including OQ-1 as read-only advice), Review C, the adversarial round, and the browser check (strategy section 6.9) are the orchestrator's next steps at this HEAD. OQ-1 stays a PM decision; no code_only refusal was implemented and its ready rows (strategy section 7.1) are inactive. cn, tw, and vi hold the English strings for the six new keys (F5 stopgap); the PM is told through task 1.10. The app check-types reads one pre-existing untracked foreign scratch file (apps/primary-advantage/qa-check-user.tmp.ts) that fails tsc on its own; it is not a track file and an owner may delete it.
 END_MEASURE_AGENT_RESULT
+
+# Marker-fix addendum (2026-11-11)
+
+The jr-green gate read stale markers. Fixes (commit "docs(measure): fix the lifetime plan markers", named in the result block below): tasks 1.1 and 1.2 are [x] with the Red commit `0c459e9eb` and the Green-gate proof on each task line; task 1.10 is [b] with `deferred:pm` on the task line; task 1.11 carries the phase-check HEAD `78df5d21d` and the evidence commit `30c48dec0`; task 1.12 is [b] with `deferred:orchestrator`; task 1.13 gains `deferred:orchestrator` (the commits are already on master). No test, detector, or code line changed.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-jr-green
+track: primary_class_session_lifetime_20261111
+phase: P1
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+head_sha: 78df5d21d2e12f817bb3b8b472ab0d69a22ff0aa (the marker-fix commit follows)
+commits: 2614bdba0 contract+error code; 35e99be85 domain expiry; bd292b853 panel+strings; 30c48dec0 plan evidence and log; marker-fix commit plan.md and this log
+tests: unchanged from the first result — domain targeted exit 0 tests_failed=0 tz_runs_green=3; app targeted exit 0 tests_failed=0 tz_runs_green=3; domain suite exit 0 suite_failed_new=0; real-db exit 0 real_db_ran=1 tests_total=12 tests_failed=0; db_changed_paths=0; untouched_login_files_changed=0; lifetime_out_of_scope_paths=0; added_hash_lines=0
+tasks_flipped: 1.1, 1.2 to [x] with the Red commit 0c459e9eb on the task lines; 1.10 to [b] deferred:pm on the task line; 1.11 [x] with the phase-check HEAD 78df5d21d and the evidence commit 30c48dec0 on the task line; 1.12 to [b] deferred:orchestrator; 1.13 gains deferred:orchestrator; 1.3 to 1.9 and 1.11 unchanged; 1.14 untouched
+new_files: none
+handoff: Same hand-off as the first result. The phase now holds no non-deferred incomplete task; the orchestrator runs Reviews A, B, C, the adversarial round, and the browser check, and phase acceptance records the result.
+GREEN_TEST_COMMAND=cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-class-session.test.ts src/__tests__/student-login-contracts.test.ts src/__tests__/student-login-card.test.ts src/__tests__/student-login.real-db.test.ts && CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx
+END_MEASURE_AGENT_RESULT
