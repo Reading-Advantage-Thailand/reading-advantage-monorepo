@@ -16,7 +16,14 @@ import {
   type AccountingSubmissionInput,
   type AccountingSubmissionResult,
 } from "./contracts.js";
-import { canViewOwnAccountingSubmission } from "./permissions.js";
+import {
+  canApproveAccountingSubmission,
+  canRejectAccountingSubmission,
+  canSubmitAccountingSubmission,
+  canViewAllAccountingSubmissions,
+  canViewApprovedAccountingSubmission,
+  canViewOwnAccountingSubmission,
+} from "./permissions.js";
 
 /**
  * SSO-authorized Accounting caller. The actor alone carries the company scope:
@@ -28,7 +35,7 @@ export interface AccountingActor {
   readonly accountId: string;
   /** Company the caller acts within; becomes the persistence scope. */
   readonly companyId: string;
-  /** Company role of the caller; must be STAFF, CONTRACTOR, OWNER, or ACCOUNTANT. */
+  /** Company role of the caller; the permissions module decides what it may do. */
   readonly role: string;
 }
 
@@ -129,12 +136,6 @@ export class AccountingSubmissionError extends Error {
   }
 }
 
-const ACCOUNTING_ROLES: ReadonlySet<string> = new Set([
-  "STAFF",
-  "OWNER",
-  "ACCOUNTANT",
-  "CONTRACTOR",
-]);
 const PRIVATE_EVIDENCE_REFERENCE_PREFIX = "private-evidence://";
 
 type CompareAccountingSubmissionEvidence = (input: {
@@ -142,10 +143,22 @@ type CompareAccountingSubmissionEvidence = (input: {
   readonly storedEvidenceReference: string;
 }) => Promise<boolean>;
 
-function requireAccountingRole(actor: AccountingActor): void {
-  if (!ACCOUNTING_ROLES.has(actor.role)) {
-    throw new AccountingSubmissionError("forbidden");
-  }
+/** Visibility rule of one actor over a submission listing. */
+type AccountingSubmissionVisibility = "all" | "approved" | "own";
+
+/**
+ * Resolves the visibility rule of one actor over a submission listing. The
+ * permissions module holds the role sets; this function only reads them.
+ * @param actor Caller derived from the session.
+ * @returns The visibility rule, or null when the actor may not list.
+ */
+function submissionVisibility(
+  actor: AccountingActor,
+): AccountingSubmissionVisibility | null {
+  if (canViewAllAccountingSubmissions(actor)) return "all";
+  if (canViewOwnAccountingSubmission(actor)) return "own";
+  if (canViewApprovedAccountingSubmission(actor)) return "approved";
+  return null;
 }
 
 function actorScope(actor: AccountingActor): Readonly<FinanceOperationScope> {
@@ -206,7 +219,9 @@ export async function submitAccountingSubmissionWithOutcome(request: {
   readonly idempotencyKey?: string;
   readonly compareEvidence?: CompareAccountingSubmissionEvidence;
 }): Promise<AccountingSubmissionResult> {
-  requireAccountingRole(request.actor);
+  if (!canSubmitAccountingSubmission(request.actor)) {
+    throw new AccountingSubmissionError("forbidden");
+  }
 
   const parsed = accountingSubmissionInputSchema.safeParse(request.input);
   if (!parsed.success) {
@@ -316,51 +331,53 @@ export async function submitAccountingSubmission(request: {
 }
 
 /**
- * Lists submissions inside the actor's company scope. STAFF and CONTRACTOR
- * actors receive only their own submissions; OWNER and ACCOUNTANT actors
- * receive every submission in the scope.
+ * Lists submissions inside the actor's company scope. An OWNER and an
+ * ACCOUNTANT actor receive every submission of the scope. A CEO actor
+ * receives the approved submissions only. A STAFF and a CONTRACTOR actor
+ * receive their own submissions only.
  * @param request Repository port and actor.
  * @returns The submissions visible to the actor.
- * @throws AccountingSubmissionError when the actor lacks an accounting role.
+ * @throws AccountingSubmissionError when the actor holds no list permission.
  */
 export async function listAccountingSubmissions(request: {
   readonly repository: AccountingSubmissionRepository;
   readonly actor: AccountingActor;
 }): Promise<readonly AccountingSubmission[]> {
-  requireAccountingRole(request.actor);
+  const visibility = submissionVisibility(request.actor);
+  if (visibility === null) {
+    throw new AccountingSubmissionError("forbidden");
+  }
 
   const submissions = await request.repository.listByScope(
     actorScope(request.actor),
   );
-  if (canViewOwnAccountingSubmission(request.actor)) {
-    return submissions.filter(
-      (submission) =>
-        submission.submittedByAccountId === request.actor.accountId,
-    );
+  if (visibility === "all") {
+    return submissions;
   }
-  return submissions;
+  if (visibility === "approved") {
+    return submissions.filter((submission) => submission.status === "approved");
+  }
+  return submissions.filter(
+    (submission) => submission.submittedByAccountId === request.actor.accountId,
+  );
 }
 
 const submissionIdSchema = z.string().uuid();
 
-function requireOwnerRole(actor: AccountingActor): void {
-  if (actor.role !== "OWNER") {
-    throw new AccountingSubmissionError("forbidden");
-  }
-}
-
 /**
- * Approves a pending submission. Only OWNER actors may approve.
+ * Approves a pending submission. An OWNER and an ACCOUNTANT actor may approve.
  * @param request Repository port, actor, and submission identifier.
  * @returns The approved submission.
- * @throws AccountingSubmissionError when the actor is not OWNER, the id is invalid, or the submission is unknown or not pending.
+ * @throws AccountingSubmissionError when the actor may not approve, the id is invalid, or the submission is unknown or not pending.
  */
 export async function approveAccountingSubmission(request: {
   readonly repository: AccountingSubmissionRepository;
   readonly actor: AccountingActor;
   readonly submissionId: string;
 }): Promise<AccountingSubmission> {
-  requireOwnerRole(request.actor);
+  if (!canApproveAccountingSubmission(request.actor)) {
+    throw new AccountingSubmissionError("forbidden");
+  }
 
   const parsedId = submissionIdSchema.safeParse(request.submissionId);
   if (!parsedId.success) {
@@ -390,10 +407,11 @@ export async function approveAccountingSubmission(request: {
 }
 
 /**
- * Rejects a pending submission with a reason. Only OWNER actors may reject.
+ * Rejects a pending submission with a reason. An OWNER and an ACCOUNTANT actor
+ * may reject.
  * @param request Repository port, actor, submission identifier, and rejection reason.
  * @returns The rejected submission.
- * @throws AccountingSubmissionError when the actor is not OWNER, the id or reason is invalid, or the submission is unknown or not pending.
+ * @throws AccountingSubmissionError when the actor may not reject, the id or reason is invalid, or the submission is unknown or not pending.
  */
 export async function rejectAccountingSubmission(request: {
   readonly repository: AccountingSubmissionRepository;
@@ -401,7 +419,9 @@ export async function rejectAccountingSubmission(request: {
   readonly submissionId: string;
   readonly reason: string | undefined;
 }): Promise<AccountingSubmission> {
-  requireOwnerRole(request.actor);
+  if (!canRejectAccountingSubmission(request.actor)) {
+    throw new AccountingSubmissionError("forbidden");
+  }
 
   const parsedId = submissionIdSchema.safeParse(request.submissionId);
   if (!parsedId.success) {
