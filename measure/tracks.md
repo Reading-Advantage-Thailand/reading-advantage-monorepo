@@ -80,6 +80,12 @@ This file tracks all major tracks for the project.
   *Status: new, opened 2026-11-10; Phase 1 (Red, Green, refresh, phase check) target 2026-11-12 | Owner: Monorepo orchestrator | Amends the archived backend_architecture_enforcement_20260713 | Priority: TOP (CI is red on every push)*
   *Note: PM decisions of 2026-11-10: "architecture: YES to skipping the pin in CI, in backend_architecture_enforcement_20260713, as a small amendment. The pin stays as a local refresh command. A test must prove that an unlisted new analyzed file still fails." and "Option B. Write a new small track that refers to the archived backend_architecture_enforcement_20260713, and keep the archive intact." CI runs the check with `--skip-input-snapshot-pin`; the pin stays on the local `pnpm architecture:check` and the local `pnpm architecture:pin:refresh`. No push and no deploy.*
 
+- [ ] **Track: Architecture identity and provider debt** — *created 2026-11-11*
+  *Link: [./tracks/architecture_identity_provider_debt_20261111/](./tracks/architecture_identity_provider_debt_20261111/)*
+  *Description: Fix the 111 company identity isolation, company identity database, AI provider, and integration provider findings that the v1 architecture baseline accepts as debt, then remove them from the baseline.*
+  *Status: new, opened 2026-11-11; starts not before 2026-11-21 (after the 2026-11-20 Storytime release); due 2026-12-15 | Owner: Monorepo orchestrator | Depends on: architecture_ci_input_pin_20261110 task 1.4d | Priority: P2*
+  *Note: PM decision of 2026-11-11: the 111 findings (COMPANY_IDENTITY_PRODUCT_ISOLATION 93, COMPANY_IDENTITY_DB_BOUNDARY 5, AI_PROVIDER_BOUNDARY 11, INTEGRATION_PROVIDER_BOUNDARY 2) are accepted as debt only until this track closes. A new finding of these rules still fails CI. No push and no deploy.*
+
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
   *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*

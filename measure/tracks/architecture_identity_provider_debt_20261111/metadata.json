@@ -1,0 +1,44 @@
+{
+  "track_id": "architecture_identity_provider_debt_20261111",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-11-11T00:00:00Z",
+  "updated_at": "2026-11-11T00:00:00Z",
+  "opened": "2026-11-11",
+  "description": "Fix the 111 company identity isolation, company identity database, AI provider, and integration provider findings that the v1 architecture baseline accepts as debt, then remove them from the baseline.",
+  "author_model": "claude-code/claude-sonnet-5-5",
+  "depends_on": "architecture_ci_input_pin_20261110 (task 1.4d)",
+  "priority": "P2",
+  "owner_chain": [
+    "Daniel (owner; deploy gate)",
+    "PM orchestrator (CI process owner; decision of 2026-11-11)",
+    "Monorepo orchestrator (track owner)"
+  ],
+  "decisions": [
+    "PM, 2026-11-11: open a remediation track for the 111 auth/identity and provider-adapter findings: P2, starts after the 11-20 Storytime release, done-when the 111 are fixed and removed from the baseline, due 2026-12-15. A new finding of these rules still fails CI.",
+    "Build role, 2026-11-11: each phase removes its own findings from the v1 baseline, so the architecture step stays green after each phase"
+  ],
+  "dates": {
+    "start_not_before": "2026-11-21",
+    "due": "2026-12-15"
+  },
+  "scope": {
+    "total": 111,
+    "by_rule": {
+      "COMPANY_IDENTITY_PRODUCT_ISOLATION": 93,
+      "COMPANY_IDENTITY_DB_BOUNDARY": 5,
+      "AI_PROVIDER_BOUNDARY": 11,
+      "INTEGRATION_PROVIDER_BOUNDARY": 2
+    },
+    "source": "measure/runs/architecture_ci_input_pin_20261110/r9-debt-preview.json at ed10bc39d, path /report/comparison/additions"
+  },
+  "constraints": [
+    "No change to measure/archive/",
+    "No new hash, checksum, or manifest (AGENTS.md Hashing and Provenance Policy)",
+    "No change to a rule, the ownership map, or the ratchet tests without a reviewed decision",
+    "No push, no deploy, no traffic move"
+  ],
+  "estimated_tasks": 23,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
