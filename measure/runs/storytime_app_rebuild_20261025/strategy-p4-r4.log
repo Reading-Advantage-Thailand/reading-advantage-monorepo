@@ -1,0 +1,20 @@
+Strategy · P4 · storytime_app_rebuild · r4
+role: measure-strategy (Phase 4: Teacher app); edited only test-strategy.md; no test run
+role_base_sha: 80fff5b29356d42b0381de90fc07de031594da03
+
+1. The P4 targeted command named 3 files, not the older "four task commands" set. It now names the eight Phase 4 test files:
+   teacher-flag, week-view, lesson-flow, lesson-media, loops-flow, share-moment, adversarial.test.tsx, adversarial-routes.test.ts.
+   Closeout gate item 1 names the same eight. One amendment line (2026-11-12) follows the 2026-11-10 amendment.
+2. F421 part f: row B1 of P4.7 now says what phase4-browser-gate.sh asserts: player width <= window width,
+   player height <= window height, scrollWidth <= innerWidth + 1. Vertical page scroll is not asserted. The row text
+   and falsification condition match. One amendment line in the row.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: storytime_app_rebuild_20261025
+phase: 4
+status: complete
+role_base_sha: 80fff5b29356d42b0381de90fc07de031594da03
+files_changed: measure/tracks/storytime_app_rebuild_20261025/test-strategy.md
+handoff: Targeted command and Closeout gate item 1 name eight files. Row B1 matches the gate code. No question.
+END_MEASURE_AGENT_RESULT

@@ -618,16 +618,18 @@ Reviews run at the Phase 3 checkpoint on the diff `phase_base_sha..HEAD` (tasks 
 **Targeted Red command:**
 
 ```bash
-bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx'
+bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-teacher-flag.test.ts __tests__/phase4-week-view.test.tsx __tests__/phase4-lesson-flow.test.tsx __tests__/phase4-lesson-media.test.tsx __tests__/phase4-loops-flow.test.tsx __tests__/phase4-share-moment.test.tsx __tests__/phase4-adversarial.test.tsx __tests__/phase4-adversarial-routes.test.ts'
 ```
 
 > **Amendment 2026-11-10:** the old command used the glob `apps/storytime/__tests__/phase4-*.test.ts`. The shell expands that glob to the `.ts` files only, so the `.tsx` tests did not run (A4: a gate that skips tests). Each Phase 4 test file now has its own named command. The aggregate list above and the per-task commands in P4.4, P4.6, and P4.6a name every file. A new Phase 4 test file joins this list in the same commit that adds it.
+
+> **Amendment 2026-11-12:** the targeted command above now names the eight Phase 4 test files: `phase4-teacher-flag.test.ts`, `phase4-week-view.test.tsx`, `phase4-lesson-flow.test.tsx`, `phase4-lesson-media.test.tsx`, `phase4-loops-flow.test.tsx`, `phase4-share-moment.test.tsx`, `phase4-adversarial.test.tsx`, and `phase4-adversarial-routes.test.ts`. The adversarial round (commit `80fff5b29`) added the last two files, and a new Phase 4 test file joins the list in the same commit that adds it.
 
 **Green gate:** the targeted Red command exits 0. The browser check at 1920x1080 and on a laptop exits 0 with the flag on.
 
 **Closeout gate:**
 
-1. The Green gate, the four task commands of P4.4, P4.6, and P4.6a, and the P1 to P3 targeted Vitest commands. **Amendment 2026-11-11:** tasks 4.1 to 4.6a hold one checkpoint. The orchestrator decided this on 2026-11-11, because tasks 4.6 and 4.6a were done before the task 4.5 check. The old text said that tasks 4.6 and 4.6a do not hold the checkpoint (plan amendment). The task commands of 4.6 and 4.6a now join the closeout.
+1. The Green gate, the targeted command above with its eight files (`phase4-teacher-flag`, `phase4-week-view`, `phase4-lesson-flow`, `phase4-lesson-media`, `phase4-loops-flow`, `phase4-share-moment`, `phase4-adversarial`, and `phase4-adversarial-routes`), the four task commands of P4.4, P4.6, and P4.6a, and the P1 to P3 targeted Vitest commands. **Amendment 2026-11-11:** tasks 4.1 to 4.6a hold one checkpoint. The orchestrator decided this on 2026-11-11, because tasks 4.6 and 4.6a were done before the task 4.5 check. The old text said that tasks 4.6 and 4.6a do not hold the checkpoint (plan amendment). The task commands of 4.6 and 4.6a now join the closeout.
 2. `bash apps/storytime/__tests__/phase1-quality-gates.sh`.
 3. The Docker smoke with the flag not set. Each teacher route answers 404 from the container.
 4. The browser review (task 4.5).
@@ -896,7 +898,7 @@ These rows join the task 4.5 browser check. The task 4.5 rows above stay: `PROJE
 
 | Row | Check | Falsification condition |
 |---|---|---|
-| B1 | At 1920x1080 and 1366x768, on a media step (B3 and D6), the open player fits in the viewport with no page scroll. The measured box is logged as `player_w=<n> player_h=<n>`. | The player exceeds the viewport |
+| B1 | At 1920x1080 and 1366x768, on a media step (B3 and D6), the open player fits in the viewport. The gate asserts the player width is at most the window width, the player height is at most the window height, and the page has no horizontal scroll. It does not assert that the page has no vertical scroll. The measured box is logged as `player_w=<n> player_h=<n>`. **Amendment 2026-11-12 (F421 part f):** the old text said "no page scroll", but `phase4-browser-gate.sh` asserts the region size and the horizontal scroll only. | The player is wider or taller than the window, or the page scrolls sideways |
 | B2 | On each of the 4 media steps, open then close: the step id on screen is the same as before (`place_kept=4`) | A close returns to the first step |
 | B3 | While the player is open, the "Next step" control stays in the document | The flow unmounts |
 | B4 | Keyboard: Tab reaches the open control, Enter opens, Escape closes, and focus returns (`focus_returned=1`) | Focus is lost |
