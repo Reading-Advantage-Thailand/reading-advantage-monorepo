@@ -200,8 +200,8 @@ describe("Sales curriculum release contract", () => {
       lesson.title === "One Catalogue, Two Channels"
     )!;
     productLesson.content = productLesson.content.replace(
-      "- **Planned, no date:** Storytime and STEM Advantage.",
-      "- **Live:** Storytime Advantage.",
+      "- **K–6 offer, no date:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits.",
+      "- **Live:** Storytime Advantage for Anuban 2 to P2.",
     );
 
     expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
@@ -410,8 +410,8 @@ describe("Sales curriculum release contract", () => {
       lesson.title === "One Catalogue, Two Channels"
     )!;
     productLesson.content = productLesson.content.replace(
-      "Storytime and STEM Advantage",
-      "Storytime and Speaking Advantage",
+      "STEM Advantage",
+      "Speaking Advantage",
     );
 
     expect(() => buildCurriculumAutomatedReview(rows)).toThrow(

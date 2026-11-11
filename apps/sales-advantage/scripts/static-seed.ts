@@ -52,7 +52,12 @@ type RubricCriterion = {
 export const SALES_CURRICULUM_EXPIRING_FACTS = Object.freeze([
   {
     fact: "Primary Advantage Origins 3.2 and Quest 4 on sale in Tutor Advantage",
-    text: "on sale from about 2026-11-22",
+    text: "delivery, about 2026-11-23 to 2026-11-30",
+    checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
+  },
+  {
+    fact: "Primary Advantage Origins 3.2 and Quest 4 ordered on 2026-10-26",
+    text: "on the night of 2026-10-26",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
   {
@@ -61,8 +66,8 @@ export const SALES_CURRICULUM_EXPIRING_FACTS = Object.freeze([
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
   {
-    fact: "School pilot: paid or free (Q-SV-05)",
-    text: "Whether the pilot is paid or free is not decided (Q-SV-05)",
+    fact: "School pilot: no free term, no discount (Q-SV-05)",
+    text: "The pilot has no free term and no discount.",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
   {
@@ -77,12 +82,12 @@ export const SALES_CURRICULUM_EXPIRING_FACTS = Object.freeze([
   },
   {
     fact: "Primary Advantage cutover (what is live in a school demo)",
-    text: "Primary Advantage cutover: target weekend of Oct 17/18, last date Oct 20",
+    text: "since the cutover of 2026-10-20",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
   {
     fact: "Reedy Preview in Primary Advantage",
-    text: "Reedy Preview in Primary Advantage: only after the cutover passes",
+    text: "in the live build since the cutover of 2026-10-20",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
 ]);
@@ -112,7 +117,7 @@ function claimsCriterion(
 ): RubricCriterion {
   return {
     criterion:
-      `Claims: ${focus} The trainee makes none of these claims: a guarantee or a promise of an outcome (including "รับประกัน" or any percentage gain); false urgency; a promise of Read Along with Reedy, or Tutor Advantage called an AI tutor; a book that is not printed, or a level above book level 4 or above A2; Pearson, GSE, or YLE in a line to a parent or a school; a book name without the product name; ${CHANNEL_CLAIMS[channel]}; a Managed Service sale, or a date for Science, Math, or Zhongwen Advantage; "leading", "best", "#1", or a percentage with no source. Score 100 when the trainee makes none of these claims; score 0 for any one of them.`,
+      `Claims: ${focus} The trainee makes none of these claims: a guarantee or a promise of an outcome (including "รับประกัน" or any percentage gain); false urgency; a promise of Read Along with Reedy, or Tutor Advantage called an AI tutor; a book that is not printed, or a level above book level 4 or above A2; Pearson, GSE, or YLE in a line to a parent or a school; a book name without the product name; ${CHANNEL_CLAIMS[channel]}; a Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start; "leading", "best", "#1", or a percentage with no source. Score 100 when the trainee makes none of these claims; score 0 for any one of them.`,
     weight,
     passingScore: 90,
     sourceRef: CLAIMS_SOURCE_REF,
@@ -970,20 +975,21 @@ A good answer confirms the real budget limit, offers a smaller start at the appr
 | **Blended Learning** | Schools | Workbooks + app + teacher training + Big 4 fidelity observations |
 | **Tutor Advantage** | Families | One class package per workbook, taught by a local tutor in a small group |
 
-The direct-to-family channel is the 2027 focus.
+Tutor Advantage is the company focus through May 2027.
 
 ## What is live (as of October 2026)
 
-- **Live:** Primary Advantage (one active school), Tutor Advantage, and CodeCamp Advantage (adult bootcamp).
-- **Reading Advantage:** no school uses it; work on the app is deferred. Its books sell through Tutor Advantage.
-- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24).
-- **Planned, no date:** Storytime and STEM Advantage.
+- **Live:** Primary Advantage, Tutor Advantage, and CodeCamp Advantage (adult bootcamp).
+- **Reading Advantage:** not offered to schools now; its books are now in Tutor Advantage classes.
+- **Science, Math, and Zhongwen Advantage (Q-PR-24):** each is its own app, built from the Primary Advantage base app. Show them at the visit. No date.
+- **K–6 offer, no date:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits.
+- **Planned, no date:** STEM Advantage.
 
-Do not give a launch date for any planned line.
+Do not give a date for any of these lines.
 
 **Mastery Advantage** is the engine behind every book: Knowledge Space Theory + FSRS. It is in production for CodeCamp Advantage. It is entering Primary Advantage through tagged content; adaptive features are targeted for May 2027.
 
-**Our size:** one active school (in Kalasin, on Primary Advantage) and under 500 active students. Say this honestly. Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03).
+**Our size:** The scale facts answer a direct question only, and a trainee never volunteers them. Name the school, or show its data, only with the school's written consent (Q-SE-03); one active school (Boonyathat, Kalasin, on Primary Advantage); under 500 active students.
 
 ## Tutor Advantage: what the family buys
 
@@ -995,9 +1001,9 @@ Tutor Advantage is a tutor-led class network with a unilevel commission for tuto
 |---|---|---|
 | **App-Only** | Digital platform access | ~1,000 THB/student/year |
 | **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |
-| **Managed Service** | Not sold today. It launches in 2027 only if 1–2 more schools sign. Never pre-sell it. | No price |
+| **Managed Service** | If the school asks, say: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready." Never pre-sell it. | No price |
 
-Blended Learning means physical workbooks + the digital app. Never say "AI + human teacher". The school pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so offer no free period and no discount.
+Blended Learning means physical workbooks + the digital app. Never say "AI + human teacher". The school pilot is one grade level for one semester. The pilot has no free term and no discount. Daniel agrees the pilot start with each school.
 
 ## The books and the placement-to-book map
 
@@ -1007,14 +1013,14 @@ Children use Primary Advantage books. Secondary students use Reading Advantage b
 |---|---|---|---|---|
 | 1 | Primary Advantage Origins 1: not printed → offer **Primary Advantage Origins 2** | Pre-A1 | Reading Advantage Origins 1: not printed → offer **Reading Advantage Origins 2** | A1 |
 | 2 | **Primary Advantage Origins 2**: printed | Pre-A1 | **Reading Advantage Origins 2**: printed | A1 |
-| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale from about 2026-11-22 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |
-| 4 | Primary Advantage Quest 4: on sale from about 2026-11-22. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |
+| 3 | **Primary Advantage Origins 3.1**: printed. Primary Advantage Origins 3.2: on sale after delivery, about 2026-11-23 to 2026-11-30 | Pre-A1 | Reading Advantage Origins 3.1 and 3.2: not printed → offer **Reading Advantage Origins 2** | A1 |
+| 4 | Primary Advantage Quest 4: on sale after delivery, about 2026-11-23 to 2026-11-30. Until then → offer **Primary Advantage Origins 3.1** | A1 | Reading Advantage Quest 4: not printed → offer **Reading Advantage Origins 2** | A2 |
 
 A placement above book level 4 does not exist in the training. A tutor never offers a book that is not printed and never names a level above A2.
 
 ## Facts that expire
 
-The print status, the "on sale" dates, and the open decisions change. These lessons mark them: the books on sale from about 2026-11-22, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the coming programs. Before each sales week, ask Daniel or Phikul which of these facts changed.`,
+The print status, the "on sale" dates, and the open decisions change. These lessons mark them: the books on sale after delivery, about 2026-11-23 to 2026-11-30, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the coming programs. Before each sales week, ask Daniel or Phikul which of these facts changed.`,
         order: 1,
       },
       {
@@ -1062,7 +1068,7 @@ Every roleplay in this course has a claims criterion with passingScore 90. One v
 5. Pearson, GSE, or YLE in a line to a parent or a school.
 6. A book name without the product name ("Origins 2" alone).
 7. An earnings figure in a family sale. Commission talk belongs to tutor recruitment only.
-8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.
+8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say.
 9. "Leading", "best", "#1", or a percentage with no source.
 
 In tutor recruitment, item 7 changes: commission talk is allowed, but a promise of income fails, and every baht figure must be a labeled example from the commission formula. In a school sale, item 7 is: a discount, a free period, or a promised response time.
@@ -1082,7 +1088,7 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
 
 **Parent facts:** Tutor Advantage is a tutor-led class network. It is not an AI tutor. A local tutor teaches a small group from a printed book. Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
 
-**School facts:** For schools, we sell Primary Advantage with Blended Learning (or App-Only). We do not offer a secondary program to schools now; families of secondary students can join a Tutor Advantage class with the Reading Advantage books. Managed Service: "Not sold today. It launches in 2027 only if 1–2 more schools sign." Science, Math, and Zhongwen Advantage are coming programs with no date.
+**School facts:** For schools, we sell Primary Advantage with Blended Learning (or App-Only). We do not offer a secondary program to schools now; families of secondary students can join a Tutor Advantage class with the Reading Advantage books. Managed Service: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready." Science, Math, and Zhongwen Advantage: each is its own app, built from the Primary Advantage base app. Show them at the visit. Give no date (Q-PR-24).
 
 **Success standard:** The buyer has a correct picture of what is live, and agrees one next step.`,
         order: 3,
@@ -1108,7 +1114,7 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
             situation:
               "After a short demo, Director Anong asks three questions: 'Can you also run the English program for our secondary section? Can your company send teachers to run the whole English department? And when does your Math program start?'",
             objective:
-              "Answer each question honestly. Primary Advantage is for primary grades; there is no secondary program for schools now, and families of secondary students can join Tutor Advantage. For the second question, say the Managed Service line only: 'Not sold today. It launches in 2027 only if 1–2 more schools sign.' Give no date for Math Advantage. Then return to her primary-section need.",
+              "Answer each question honestly. Primary Advantage is for primary grades; there is no secondary program for schools now, and families of secondary students can join Tutor Advantage. For the second question, say the Managed Service line only: 'Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.' Give no date for Math Advantage. Then return to her primary-section need.",
             prospectContext:
               "Anong is interested and decisive. She will sign quickly if the trainee says yes to everything, so a weak trainee over-promises.",
             rubric: productRubric("school"),
@@ -1126,14 +1132,14 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
               "A school needs help now and asks for Managed Service. What is the accurate response?",
             options: [
               "Sell Managed Service now at a custom price.",
-              "Recommend Blended Learning now and say: 'Not sold today. It launches in 2027 only if 1–2 more schools sign.'",
+              "Recommend Blended Learning now and say: 'Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.'",
               "Promise our own teachers in the classroom when the contract is signed.",
               "Offer Managed Service at the App-Only price.",
             ],
             correctAnswer:
-              "Recommend Blended Learning now and say: 'Not sold today. It launches in 2027 only if 1–2 more schools sign.'",
+              "Recommend Blended Learning now and say: 'Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.'",
             explanation:
-              "Managed Service is not sold today. Say the one line, and return to Blended Learning.",
+              "Managed Service is one line only. Say the approved line, and return to Blended Learning.",
           },
           {
             question: "Which claim is approved for a sales conversation?",
@@ -1215,7 +1221,7 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
 - **Price:** from 3,000 baht per class package. The price adapts to the market.
 - **The app:** the LINE student app that matches the book: the lesson, flashcards, vocabulary games, progress, and class chat.
 - **Reedy:** Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
-- The books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2. Primary Advantage Origins 3.2 and Quest 4 go on sale from about 2026-11-22. Children use Primary Advantage books. Secondary students use Reading Advantage books.
+- The books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2. Daniel ordered Primary Advantage Origins 3.2 and Primary Advantage Quest 4 on the night of 2026-10-26. Primary Advantage Origins 3.2 and Primary Advantage Quest 4 go on sale after delivery, about 2026-11-23 to 2026-11-30. Children use Primary Advantage books. Secondary students use Reading Advantage books.
 
 Tutor Advantage is a tutor-led class network. It is not an AI tutor.
 
@@ -1267,8 +1273,10 @@ Never talk about tutor commission with a parent. Before you use any photo or vid
 |---|---|---|
 | 1 | Primary Advantage Origins 1 (Pre-A1): not printed → **Primary Advantage Origins 2** | Reading Advantage Origins 1 (A1): not printed → **Reading Advantage Origins 2** |
 | 2 | **Primary Advantage Origins 2** (Pre-A1): printed | **Reading Advantage Origins 2** (A1): printed |
-| 3 | **Primary Advantage Origins 3.1** (Pre-A1): printed. Primary Advantage Origins 3.2: on sale from about 2026-11-22 | Reading Advantage Origins 3.1 and 3.2 (A1): not printed → **Reading Advantage Origins 2** |
-| 4 | Primary Advantage Quest 4 (A1): on sale from about 2026-11-22. Until then → **Primary Advantage Origins 3.1** | Reading Advantage Quest 4 (A2): not printed → **Reading Advantage Origins 2** |
+| 3 | **Primary Advantage Origins 3.1** (Pre-A1): printed. Primary Advantage Origins 3.2: on sale after delivery, about 2026-11-23 to 2026-11-30 | Reading Advantage Origins 3.1 and 3.2 (A1): not printed → **Reading Advantage Origins 2** |
+| 4 | Primary Advantage Quest 4 (A1): on sale after delivery, about 2026-11-23 to 2026-11-30. Until then → **Primary Advantage Origins 3.1** | Reading Advantage Quest 4 (A2): not printed → **Reading Advantage Origins 2** |
+
+**Edition rule (strategy §3.1; trainer only).** Every book gets a graph-first rewrite, except Primary Advantage Origins 3.2 and Primary Advantage Quest 4, which need no rewrite. The printed Primary Advantage Origins 2 and Primary Advantage Origins 3.1 stay on sale until their stock is gone. Daniel confirms when the old stock is gone; there is no automatic cut-over date. Then Tutor Advantage and Primary Advantage cut over to the new editions. A trainee may say the rule and gives no cutover date. Reading Advantage Origins 2 follows the same edition handling. Keep this sentence trainer-only; do not put it in a line that a trainee says.
 
 Check the print status before each trial. It changes when a new book is printed.
 
@@ -1394,10 +1402,14 @@ Never give a print date to a parent.
 | The child finishes | The next printed book | If the next book is not printed |
 |---|---|---|
 | Primary Advantage Origins 2 | Primary Advantage Origins 3.1 | — |
-| Primary Advantage Origins 3.1 | Primary Advantage Origins 3.2 (on sale from about 2026-11-22) | Before that date: tell the parent that you will send a LINE message when it is ready |
-| Primary Advantage Origins 3.2 | Primary Advantage Quest 4 (on sale from about 2026-11-22) | — |
-| Primary Advantage Quest 4 | Primary Advantage Quest 5: not printed | Tell the parent that you will send a LINE message when it is ready |
+| Primary Advantage Origins 3.1 | Primary Advantage Origins 3.2 (after delivery, about 2026-11-23 to 2026-11-30) | Before delivery: tell the parent you will send a LINE message when it is ready |
+| Primary Advantage Origins 3.2 | Primary Advantage Quest 4 (after delivery, about 2026-11-23 to 2026-11-30) | — |
+| Primary Advantage Quest 4 | Primary Advantage Quest 5: not printed, and no print date | Tell the parent the next book is not printed yet. Give no date. Promise no notice. |
 | Reading Advantage Origins 2 | Reading Advantage Origins 3.1: not printed (Q-WB-11) | Tell the parent that you will send a LINE message when it is ready |
+
+> "เล่มต่อไปของชุดนี้ยังไม่ได้พิมพ์ค่ะ ตอนนี้ยังไม่มีกำหนดค่ะ"
+
+> "The next book in this series is not printed yet. There is no date yet."
 
 > "น้องเรียนเล่มนี้ใกล้จบแล้วค่ะ เล่มต่อไปคือ [ชื่อหนังสือเต็ม] ต่อจากบทที่น้องเรียนมา ถ้าคุณพ่อคุณแม่อยากให้น้องเรียนต่อ เราเปิดกลุ่มใหม่ได้เลยค่ะ"
 >
@@ -1815,8 +1827,8 @@ What you do not do: write lesson plans, design the curriculum, or mark every dig
 | The tutor app (lesson hub, prepare, rehearsal, the live lesson, schedule, chat, earnings, network) | The LINE placement trial tool (use the printed-book method, Q-SE-12) |
 | The LINE student app, online payment (PromptPay or card) | Read Along with Reedy (in development, not available) |
 | Reedy voice practice for students with an active class package, on lessons they completed | Automatic progress reports for parents |
-| Printed books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2 | More books, and book lines for the coming programs (no dates) |
-| Primary Advantage Origins 3.2 and Quest 4: on sale from about 2026-11-22 | |
+| Printed books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2 | More books; Science, Math, and Zhongwen book lines (planned, no dates) |
+| After delivery, about 2026-11-23 to 2026-11-30: Primary Advantage Origins 3.2 and Primary Advantage Quest 4 | |
 | Monthly commission settlement | |
 
 ## What we provide
@@ -2216,13 +2228,11 @@ In the recruitment roleplays, commission talk is allowed: say each baht figure a
 
 - Sell **Primary Advantage with Blended Learning** (or App-Only). Reading Advantage is not offered to schools now.
 - Quote App-Only ~1,000 THB/student/year and Blended Learning ~1,500 THB/student/year only.
-- Offer no discount and no free period. Discount policy is Daniel's decision (Q-SV-05).
-- The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).
-- **Managed Service:** one line only. "Not sold today. It launches in 2027 only if 1–2 more schools sign." Never pre-sell it.
-- **Science, Math, and Zhongwen Advantage:** "coming programs" with no date (Q-PR-24).
-- Show only features that are live in the Primary Advantage production app on the day of the demo. Before each demo, ask Daniel or Phikul which facts changed. Two facts decide what is live:
-  - Primary Advantage cutover: target weekend of Oct 17/18, last date Oct 20. Until it passes, the legacy build is production.
-  - Reedy Preview in Primary Advantage: only after the cutover passes. Do not show Reedy in a Primary demo before then.
+- The pilot is **one grade level for one semester**. It has no free term and no discount. Daniel agrees the pilot start with each school.
+- **Managed Service:** one line only, and only if the school asks: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready." Never pre-sell it, and never name a school count.
+- **Science, Math, and Zhongwen Advantage:** each is its own app, built from the Primary Advantage base app. Show them at the visit. Give no date (Q-PR-24).
+- **K–6 scope for the school visits:** Storytime Advantage (Anuban 2 to P2), Primary Advantage (P3 to P6), and Science, Math, and Zhongwen Advantage, each its own app, built from the Primary Advantage base app. Give no date for any of them.
+- Show only features that are live in the Primary Advantage production app on the day of the demo. The new build is live since the cutover of 2026-10-20. Check the scope §8 before each demo. Reedy Preview in Primary Advantage is in the live build since the cutover of 2026-10-20.
 - Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03).
 
 ## Who buys, and when
@@ -2244,9 +2254,9 @@ Every class follows the Big 4, and we observe classes every quarter:
 
 ## Our size
 
-"Today we have one active school in Thailand, in Kalasin, on Primary Advantage, with under 500 active students. We are a Khon Kaen company, self-funded. We build the right product before we grow."
+"The scale facts answer a direct question only, and a trainee never volunteers them. Name the school, or show its data, only with the school's written consent (Q-SE-03); one active school (Boonyathat, Kalasin, on Primary Advantage); under 500 active students."
 
-Never inflate this number. Never call us "leading" or "number one".`,
+Give this number only when a director asks, and never inflate it. Never call us "leading" or "number one".`,
         order: 1,
       },
       {
@@ -2270,7 +2280,7 @@ Never inflate this number. Never call us "leading" or "number one".`,
 - Printed workbooks of 14 lessons, each with a digital twin in the app.
 - Scripted lessons: no lesson planning for your teachers.
 - Quarterly fidelity observations and per-school reporting.
-- One active school today (Kalasin, on Primary Advantage); under 500 students.
+- Give the scale facts only to answer a direct question: one active school in Kalasin, on Primary Advantage; under 500 active students.
 
 **Expected objections and answers:**
 
@@ -2286,11 +2296,11 @@ Never inflate this number. Never call us "leading" or "number one".`,
 
 1. **Agenda (5 minutes):** the Thai classroom problem, the workbook and the app, the research behind the method, and how the school can audit the quality.
 2. **Built for the Thai classroom reality (5 minutes):** scripted workbook lessons, so Thai teachers teach with confidence; classes of 30 or more; a Thai-language interface; a Khon Kaen team with sales and support in Thai.
-3. **The workbook and the app (5 minutes):** each lesson follows the same 13 printed steps, from Before You Read to Lesson Reflection, and has its twin in the app. Printed today: Primary Advantage Origins 2 and Primary Advantage Origins 3.1. Primary Advantage Origins 3.2 and Quest 4 are in schools from May 2027.
+3. **The workbook and the app (5 minutes):** each lesson follows the same 13 printed steps, from Before You Read to Lesson Reflection, and has its twin in the app. Printed today: Primary Advantage Origins 2 and Primary Advantage Origins 3.1. Both stay on sale until their stock is gone. Then the new editions replace them. Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027.
 4. **Research-backed method (5 minutes):** use the Aka (2019) long form, word for word. Then say: "Rather than promise a specific number, we commit to transparent per-school reporting. You'll see pre/post benchmark deltas, total reading volume per student, and Big 4 fidelity scores every quarter."
 5. **Quality you can audit (5 minutes):** name the Big 4: Uninterrupted Reading, Student Agency, Data-Driven Consensus, Workbook-First Protocol. Put the observation form on the table.
 6. **App walkthrough (10 minutes):** live production screens only: a lesson with the article, audio, questions, and vocabulary; a game and the flashcards; the teacher view. Put the printed workbook next to the screen.
-7. **Workbook samples (5 minutes):** printed pages from Primary Advantage Origins 2 and Primary Advantage Origins 3.1.
+7. **Workbook samples (5 minutes):** printed pages from Primary Advantage Origins 2 and Primary Advantage Origins 3.1. For the Primary Advantage books that are not printed yet, show sample pages on the iPad. Say: "These are sample pages of the next books." There is no proof print. Give no date.
 
 **"Parents want native speakers":** "Parents want their children to read and speak English with confidence. A foreign teacher is one way, but it is hard to keep one outside the big cities. Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019). We give you per-school reports to show parents what their children read and learn."
 
@@ -2303,8 +2313,8 @@ Never inflate this number. Never call us "leading" or "number one".`,
 **Objective:** give a school that plans a multi-grade adoption the complete picture. **Audience:** the school director, the academic leadership team, and the IT lead.
 
 1. **The problem (10 minutes):** foreign-teacher turnover, and materials from different publishers that do not match. Directors cannot see how English performs across grades.
-2. **The catalogue and the channels (15 minutes):** Primary Advantage for schools; the same books reach families through Tutor Advantage; the coming programs have no date.
-3. **Mastery Advantage, the engine (20 minutes):** Knowledge Space Theory and FSRS. It is in production for CodeCamp Advantage. It enters Primary Advantage through tagged content: shadow mode in semester 2 of 2026, adaptive features targeted for May 2027. Today, Primary Advantage uses FSRS flashcard scheduling; the knowledge-graph layer is not yet in the Primary Advantage app.
+2. **The catalogue and the channels (15 minutes):** Primary Advantage for schools: CEFR-aligned levels; the active program covers Pre-A1 to A2. The same books reach families through Tutor Advantage. Printed today: Primary Advantage Origins 2 and Primary Advantage Origins 3.1. Both stay on sale until their stock is gone. Then the new editions replace them. Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027. The school buys only printed books.
+3. **Mastery Advantage, the engine (20 minutes):** Knowledge Space Theory and FSRS. It is in production for CodeCamp Advantage. It enters Primary Advantage through tagged content: shadow mode in semester 2 of 2026, adaptive features targeted for May 2027. Mastery Advantage is rolling out to all of our products.
 4. **Per-school data and reporting (15 minutes):** reading volume, comprehension accuracy, vocabulary progress, and Big 4 fidelity scores. Agree the method for baseline and end-of-semester checks with the school before the semester.
 5. **A phased plan (10 minutes):** semester 1 is the pilot (one grade level, Blended Learning); the next school year adds grades with printed books; later, further levels up to A2 as their books are printed.
 6. **The company boilerplate (5 minutes):** read it word for word.
@@ -2313,7 +2323,7 @@ Never inflate this number. Never call us "leading" or "number one".`,
 
 **"Will the next levels arrive on time?":** "We sell only books that are printed. We do not pre-sell books that do not exist."
 
-**"You are very small":** "We are: one active school, under 500 students, self-funded. That is why your school matters to us."`,
+**"You are very small":** "We are self-funded, with no outside investors, and we have one active school today. Our complete curriculum is being brought to market. Your school gets our full attention."`,
         order: 2,
       },
       {
@@ -2506,13 +2516,13 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
       {
         title: "Roleplay: The 30-Minute Demo",
         type: "roleplay" as const,
-        content: `**Method:** Recap the discovery call. Show live production screens, printed pages from Primary Advantage Origins 2 and Primary Advantage Origins 3.1, and the quarterly observation form. Name the Big 4. Use the approved research form. State the company size honestly. Handle at least two objections with approved answers. Close with the pilot.
+        content: `**Method:** Recap the discovery call. Show live production screens, printed pages from Primary Advantage Origins 2 and Primary Advantage Origins 3.1, and the quarterly observation form. Name the Big 4. Use the approved research form. If the director asks about scale, the rep answers with the true count and never volunteers it. Handle at least two objections with approved answers. Close with the pilot.
 
 **Research, word for word:** "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)."
 
-**Our size:** "We are a Khon Kaen company with one active school and under 500 students today."
+**Our size:** "Today we have one active school in Thailand, in Kalasin, on Primary Advantage. We are a Khon Kaen company, self-funded, and our complete curriculum is being brought to market."
 
-**If Managed Service comes up:** "Not sold today. It launches in 2027 only if 1–2 more schools sign."
+**If Managed Service comes up:** "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready."
 
 **The close:** "Try Primary Advantage with Blended Learning for one grade level, for one semester. We train your teachers before it starts and observe the classes. At the end of the semester, we review the data together and plan the next school year."
 
@@ -2525,7 +2535,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
             situation:
               "This is the second meeting. Director Ratana and Khun Somsak, the head of academic affairs, join. A colleague at another school told Ratana about Primary Advantage. Somsak says: 'Technology cannot replace a good teacher. Show me evidence that this works.'",
             objective:
-              "Run a 30-minute version of the standard demo. Name the Big 4, use the Aka (2019) short form word for word, state the company size honestly, handle at least 2 objections with approved answers, and propose the pilot: one grade level for one semester.",
+              "Run a 30-minute version of the standard demo. Name the Big 4, use the Aka (2019) short form word for word, answer a direct question about scale with the true count, handle at least 2 objections with approved answers, and propose the pilot: one grade level for one semester.",
             prospectContext:
               "Ratana is interested but careful with the budget. Somsak challenges the research and asks whether the company can send teachers. Ratana asks about a discount near the end.",
             rubric: [
@@ -2537,7 +2547,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
               },
               {
                 criterion:
-                  "Uses the approved Aka (2019) short form word for word, and states the current scale honestly (1 school, under 500 students)",
+                  "Uses the approved Aka (2019) short form word for word, and answers a direct question about scale with the true count. The rep never volunteers the scale.",
                 weight: 0.2,
                 passingScore: 60,
                 sourceRef: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-2-the-30-minute-demo",
@@ -2557,7 +2567,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
               },
               claimsCriterion(
                 0.2,
-                "Uses zero banned terms; says only the one Managed Service line if it comes up.",
+                "Uses zero banned terms; says only the approved Managed Service line if it comes up.",
                 "school",
               ),
             ],
@@ -2642,7 +2652,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
             ],
             correctAnswer: "One grade level for one semester.",
             explanation:
-              "The pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so the seller quotes the standard prices and asks Daniel about the pilot terms.",
+              "The pilot is one grade level for one semester. The pilot has no free term and no discount, and Daniel agrees the pilot start with each school, so the seller quotes the standard prices and asks Daniel about the pilot terms.",
           },
           {
             question: "Which are the Big 4 of the classroom-fidelity protocol?",

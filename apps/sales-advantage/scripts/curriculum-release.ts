@@ -190,7 +190,7 @@ export const CANONICAL_RUBRIC_SOURCE_REFS = Object.freeze([
   "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-3-the-price-conversation-close",
   "09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md#objection-8-do-you-have-something-for-our-secondary-section",
   "09-sales-enablement/distributor-rep-onboarding/faq.md#q3-what-do-we-sell-and-which-products-are-live-right-now",
-  "09-sales-enablement/distributor-rep-onboarding/faq.md#q4-when-does-managed-service-start-and-what-can-i-say-about-it-now",
+  "09-sales-enablement/distributor-rep-onboarding/faq.md#q4-what-can-i-say-about-managed-service",
   "09-sales-enablement/distributor-rep-onboarding/faq.md#q11-what-if-a-school-asks-for-a-discount-or-a-special-price",
   "06-research-and-evidence/outcome-claims-policy.md#how-to-handle-outcome-questions-in-sales-press-conversations",
   "09-sales-enablement/roi-calculator.md#methodology",
@@ -232,16 +232,18 @@ const forbiddenCurriculumClaims = [
 
 /** Product-list lines from the 2027 sources (faq.md Q3) that the product lesson must state. */
 const canonicalProductListClaims = Object.freeze([
-  "- **Live:** Primary Advantage (one active school), Tutor Advantage, and CodeCamp Advantage (adult bootcamp).",
-  "- **Reading Advantage:** no school uses it; work on the app is deferred. Its books sell through Tutor Advantage.",
-  "- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24).",
-  "- **Planned, no date:** Storytime and STEM Advantage.",
+  "- **Live:** Primary Advantage, Tutor Advantage, and CodeCamp Advantage (adult bootcamp).",
+  "- **Reading Advantage:** not offered to schools now; its books are now in Tutor Advantage classes.",
+  "- **Science, Math, and Zhongwen Advantage (Q-PR-24):** each is its own app, built from the Primary Advantage base app. Show them at the visit. No date.",
+  "- **K–6 offer, no date:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits.",
+  "- **Planned, no date:** STEM Advantage.",
+  "Do not give a date for any of these lines.",
 ]);
 
 const canonicalTierClaims = Object.freeze([
   "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
   "| **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |",
-  "| **Managed Service** | Not sold today. It launches in 2027 only if 1–2 more schools sign. Never pre-sell it. | No price |",
+  "| **Managed Service** | If the school asks, say: \"Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.\" Never pre-sell it. | No price |",
 ]);
 
 const allowedAdvantageNames = new Set([
