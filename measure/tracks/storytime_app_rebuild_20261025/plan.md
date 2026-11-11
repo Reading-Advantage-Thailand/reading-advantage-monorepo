@@ -3359,6 +3359,33 @@ for every other track.
     price page lists vision but no audio input. The Gemini route needs Daniel's go once (a new
     metered route, P5.1).
   - Audio stage 2 rubric: deferred:daniel (PM decision 2026-11-12, metered model). Stage 1 covers audio until then.
+  - Calibration run 1, 2026-11-12 (the orchestrator ran the two r3 prompts on
+    `claude-code/claude-sonnet-5-5#high`, subscription route, 0 USD): the "One sun" gesture
+    thumbnail **passed** with "One character, one face, one hand with one finger raised for
+    'one'; no text appears." That is a miss: the file shows a gesture, not the named object (a
+    sun). Book 1 page 1 passed with "One child waves with two hands and one face. No text
+    appears. Wall animal pictures and the teddy bear are props." That is the expected verdict. The
+    picture rubric held no named-object point, so a gesture with one hand satisfied it. Rule 6
+    (draft) asks for "the named object in the stated count", and rule 9.1 says "A gesture
+    thumbnail is never a 'line picture'". Rule 6.7d applies: fix and calibrate again.
+  - Round r4 fix, 2026-11-12. Red model `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax);
+    Green role `deepseek/deepseek-flash#high` (DeepSeek); role base
+    `f06cc3b1a3dc70167a520269b6a4e552deaf7d6d`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; Red test commit `34725ada2`; Red evidence commit
+    `f06cc3b1a`; fix commit `1564b6da6`. The picture rubric now holds five points: "the picture
+    shows the named object in the stated count", "a gesture thumbnail is never a line picture",
+    "the picture holds no extra hands", "the picture holds no extra faces", and "the picture
+    holds no wrong text". No other kind changed. `GREEN_TEST_COMMAND` under heavy-run p1: exit 0;
+    7 files; 53 passed of 53; 0 failed; 0 skipped. The type check `tsc --noEmit` in
+    `apps/storytime` under heavy-run p1: exit 0. ESLint on `rubrics.ts`: exit 0, 0 errors, 0
+    warnings. `build-graph update ./graph.db` with `rubrics.ts`: exit 0; 1 file; 6 nodes; 5
+    edges.
+  - Calibration run 2 (prepared, not run): two new exact coder prompts with the five picture
+    points sit in `measure/runs/storytime_app_rebuild_20261025/calibration-5.4.md`. They state the
+    line text "How many suns? One sun!" and the sun in the count of one, and the page text
+    "Hello, I am Pat." with Pat, one child, and his teddy bear, both read from the packages. The
+    cost ledger holds one line for each call, with `subscription route, 0 USD`. Task 5.4 stays
+    `[~]` until run 2 returns a fail for the thumbnail and a pass for the page.
   - Task 5.4 stays `[~]`: the picture verdicts did not run, so the unit and stage 1 part alone
     cannot close the task. The implementation commits of the unit part are `3243b7020` and the Red
     test commit `fa8a127c7`. No file under `measure/runs/` is committed (Git ignores it). Evidence
