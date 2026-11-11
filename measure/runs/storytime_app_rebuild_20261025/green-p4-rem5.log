@@ -1,0 +1,172 @@
+# Green log: Phase 4 remediation round 5 (F601, F603, F605, F495, F496; F602, F604, F606 escalate)
+
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master.
+- Track: storytime_app_rebuild_20261025, phase id P4, phase heading
+  "## Phase 4: Teacher app".
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable).
+- role_base_sha: 172c52364b1639f7174d6c66b1fc297fa2840748 (HEAD at the start; no
+  apps/storytime change since e24a1f06c).
+- Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). Red family: DeepSeek; the families
+  differ, and no DeepSeek model ran in this role. No coder was delegated.
+- git status at the start held no change under apps/storytime, docs/runbooks, or this track's
+  measure files. Unrelated dirty files of other tracks stayed untouched.
+- Audit inputs: ux-browser-p4-e24a1f06c.json (F601 to F606), review-a-p4-805559363.json
+  (F495 Important, F496 Nit), review-c-p4-805559363.json (F495 Nit, same id as review A).
+
+## Order of work
+
+1. Tests first. The three Green-owned test files gained 10 cases that fail on the missing
+   fixes: phase4-lesson-focus.test.tsx +3 (the ring classes of the end region, the min-h-11
+   floor of the three flow controls, the lang=en mark of the step id chip),
+   phase4-week-view.test.tsx +2 (the min-h-11 floor of the lesson links, the lang=en mark of
+   the 16 English elements), phase4-runbook.test.ts +5 (one case per new runbook line).
+   No committed Red test changed, and no content/ file changed.
+2. Implementation, smallest change per finding (commit 90b4e22ff).
+3. Gates, then the plan evidence and this log.
+
+## Commands and results (A5: each line holds the exit code and the counts)
+
+All vitest and tsc runs went through heavy-run.sh (p1, foreground, shell timeout 0). MemAvailable
+read 2582500 kB at the start of the round and 3313804 kB before the Green gate; the stop rule
+never came close (full avg60 stayed under 1 percent).
+
+1. Red check of the round, tests first:
+   bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && CI=true
+   ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-lesson-focus.test.tsx
+   __tests__/phase4-week-view.test.tsx __tests__/phase4-runbook.test.ts'
+   -> exit 1; 3 files; 10 failed, 15 passed of 25. The 10 failures are the new cases; each
+   names its finding (F601, F603, F605, F495, F496). Two false starts of the test text (the
+   ring test walked no screens before it read the region, and the week-view test read lang on
+   the anchor while the fix put it on the inner span) were corrected in the test files before
+   the implementation, so the Red check above is the final test state.
+2. After the implementation, the same three files: -> exit 0; 3 files; 25 of 25.
+3. The ten-file Green command of test-strategy.md line 621 (heavy-run, --maxWorkers=1):
+   -> exit 0; 10 files; 150 of 150 tests. The count is exact: the adversarial files hold 64
+   cases at e24a1f06c (4 new over the 60 of rem 4), the six earlier files hold 69 (the two new
+   week-view cases), the runbook file holds 12, and the focus file holds 5. Static count of
+   it() per file agrees with the runner: 10, 8, 6, 13, 18, 14, 41, 23, 12, 5 = 150.
+4. cd apps/storytime && ../../node_modules/.bin/tsc --noEmit (heavy-run p1): -> exit 0.
+5. ESLint on the five changed files (two tsx sources, three test files): -> exit 0; 0 errors;
+   0 warnings.
+6. build-graph update ./graph.db on the two changed .tsx files (heavy-run p1): -> exit 0;
+   updated 2 files (78 -> 93 nodes, 111 -> 112 edges).
+7. No Docker smoke and no browser gate in this round, per the orchestrator brief; the UX role
+   measures in a small run after the reviews.
+
+## Fixes in the commit
+
+- F601 (lesson-flow.tsx): the end region drops focus:outline-none and holds the two-tone ring
+  of the loop panel controls: focus:outline-3 focus:outline-white focus:outline-offset-0
+  focus:[box-shadow:0_0_0_6px_var(--st-brown)]. That is the same 3 px ring that look.css gives
+  :is(a, button, [tabindex]):focus-visible, which the region matches through its tabIndex=-1.
+  The focus move keeps focus({ preventScroll: true }).
+- F603 (lesson-flow.tsx, week-view.tsx): min-h-11 on the Thai toggle, the "Back to the week"
+  link, and the "Next step" control of the flow, and on the five "Open the lesson" links of
+  the week view. No other layout change.
+- F605 (week-view.tsx, lesson-flow.tsx): lang="en" on the 16 English text elements of the week
+  view (the level line, the seven section headings, the five lesson links, and the three
+  material labels) and on the step id chip of the flow. The existing pickLang and noteLangsOf
+  helpers already cover every dynamic bilingual field; the named elements are static English,
+  so they take the literal mark.
+- F495 and F496 (docs/runbooks/storytime-deploy.md, flag section only): the section states
+  that the flag stays in the service template after the on command, that every later build
+  revision carries it, that a traffic rollback does not remove it, and that the operator reads
+  /th/teacher/2/1 on the tag URL before each traffic step and runs the off command to clear
+  the template; it sends the operator to sign in as the teacher on the tag URL host first,
+  because a session cookie is bound to one host; it adds the env compare of the new revision
+  and the live revision (two gcloud run revisions describe lines with
+  --format='value(spec.containers[0].env)'); it renames the image placeholder to
+  <the live revision image reference with its digest> and says the read value goes into
+  --image as it is, a full reference with @sha256:. --no-traffic, the tags, Daniel's go, and
+  the way back stay. No gcloud command ran; the runbook is text only.
+
+## Content handoff (no edit made)
+
+The shipped w01 string scripts[0].steps[1].en.teacherActions[1] holds a Thai character inside
+an English field (the UX role named it, F605). The string is:
+"Say the pure sound: lips a little apart, the tip of the tongue on the bump behind the top
+teeth, voice on, air out through the nose. It is the sound of the Thai letter น (the n in
+\"nok\"), with no vowel after it."
+content/ stays untouched; the PM hands the string to Workbooks.
+
+## Escalations (no code change, PM owns)
+
+- F602: "Next step" sits below the fold on the first screen of each day, even at 1920x1080.
+  Default: Daniel judges the class-screen layout at Phase 6.
+- F604: the th route shows English until the teacher presses the Thai toggle, and the toggle
+  resets on each day page. FR-9 says only "a toggle shows the Thai text". Default: keep
+  English first; keeping the toggle state across pages goes to Phase 6.
+- F606: steps A8, B7, and D6 of w01 print "0 min" (AC-13.8 says the step time equals minutes).
+  Default: the PM asks Workbooks for the real minutes.
+
+## Commits
+
+1. Implementation and tests: 90b4e22ff, fix(storytime): close the phase 4 ux and runbook
+   findings (track_id: storytime_app_rebuild_20261025). Six files: lesson-flow.tsx,
+   week-view.tsx, docs/runbooks/storytime-deploy.md, phase4-lesson-focus.test.tsx,
+   phase4-week-view.test.tsx, phase4-runbook.test.ts.
+2. Plan evidence and this log: the next commit, docs(measure) on the same track id.
+
+## Anti-pattern check
+
+- A3 holds: every count above is a labeled integer.
+- A5 holds: every command line above holds its real exit code; the Green gate exit was
+  captured without a pipe (EXIT=0 straight from heavy-run).
+- A6 holds: measure/tracks.md changes only at closeout; this round did not touch it.
+- A7 holds: no rg -v filter changed.
+- A16 holds: this role made no worktree.
+
+## Result
+
+The targeted Red command (the ten-file Green command of test-strategy.md line 621) exits 0 at
+HEAD 90b4e22ff with 10 files and 150 of 150 tests. tsc exits 0. ESLint on the changed files
+exits 0. The plan evidence block "Phase 4 remediation round 5" carries the implementation
+commit SHA. No task marker changed in this round; tasks 4.1 to 4.6a hold their [x] markers
+from the earlier rounds, and no new [x] claim is added.
+
+MEASURE_AGENT_RESULT
+status: complete
+phase: P4 (Phase 4 remediation round 5)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+green_head: 90b4e22ff7bd98a5955ec7ed1e7903d125e0b2bc
+implementation_commit: 90b4e22ff
+plan_evidence_commit: (the commit that carries this log; see git log)
+Dispositions: F601 FIX; F603 FIX; F605 FIX; F495 FIX; F496 FIX; F602 ESCALATE; F604 ESCALATE; F606 ESCALATE
+
+handoff:
+- Tasks flipped to [x]: none in this round. Tasks 4.1 to 4.6a keep their [x] markers and the
+  round 5 evidence block "Phase 4 remediation round 5" now sits under the Phase 4 evidence
+  with implementation commit 90b4e22ff and the gate exit codes.
+- Tasks flipped to [b]: none. No fabrication was needed.
+- Targeted Red command: the ten-file Green command of test-strategy.md line 621, run through
+  heavy-run.sh with --maxWorkers=1. Output: exit 0, 10 files, 150 of 150 tests (10 passed
+  files). Before the implementation, the 10 new round cases failed (exit 1, 10 failed of 25
+  over the three changed files), which is the Red proof of this round.
+- Gates: tsc --noEmit exit 0; ESLint on the five changed files exit 0 (0 errors, 0 warnings);
+  build-graph update on the two changed tsx files exit 0. No Docker smoke and no browser gate
+  in this round, per the brief; the UX role measures in a small run after the reviews. Review
+  the two new class-level behaviors (the end-region ring, the 44 px controls) in that run.
+- Files changed by this round (review scope): apps/storytime/app/[locale]/teacher/[level]/
+  [week]/[day]/lesson-flow.tsx, apps/storytime/app/[locale]/teacher/[level]/[week]/week-view.tsx,
+  docs/runbooks/storytime-deploy.md (flag section only), apps/storytime/__tests__/
+  phase4-lesson-focus.test.tsx, phase4-week-view.test.tsx, phase4-runbook.test.ts. No new
+  file; the ten-file test list of test-strategy.md line 621 stays the list of record.
+- Content handoff for the PM (Workbooks, F605): the shipped w01 string
+  scripts[0].steps[1].en.teacherActions[1] holds a Thai character inside an English field:
+  "Say the pure sound: lips a little apart, the tip of the tongue on the bump behind the top
+  teeth, voice on, air out through the nose. It is the sound of the Thai letter น (the n in
+  \"nok\"), with no vowel after it."
+- Escalation F602 (default: Daniel judges the class-screen layout at Phase 6): "Next step"
+  sits below the fold on the first screen of each day, even at 1920x1080.
+- Escalation F604 (default: keep English first; toggle persistence goes to Phase 6): the th
+  route shows English until the teacher presses the Thai toggle, and the toggle resets on
+  each day page. FR-9 says only "a toggle shows the Thai text".
+- Escalation F606 (default: the PM asks Workbooks for the real minutes): steps A8, B7, and D6
+  of w01 hold minutes 0 and print "0 min" (AC-13.8 says the step time equals minutes).
+- Question for the PM (default in parentheses): the runbook now says the value from the
+  gcloud read command goes into --image as it is, a full reference with @sha256:, per review
+  A finding F496. Review A wrote that it believes the Cloud Run field holds the full
+  reference but was not certain. If Cloud Run's status.imageDigest ever returns a bare
+  sha256: value on this project, the operator must prefix the repository path by hand.
+  (Default: keep the text as written; a rejected command is safe, as review A noted.)
+END_MEASURE_AGENT_RESULT

@@ -2780,6 +2780,67 @@ for every other track.
     2. ESLint on `phase4-runbook.test.ts`: exit 0; 0 errors; 0 warnings. `tsc --noEmit` in
        apps/storytime (heavy-run p1, a guard for the edited test file): exit 0.
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem4.log`.
+  - Phase 4 remediation round 5 evidence. Role base
+    `172c52364b1639f7174d6c66b1fc297fa2840748`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The UX role and the review roles ran on
+    other families; no DeepSeek model wrote code in this round. No coder was delegated.
+  - Implementation commit: `90b4e22ff` (`fix(storytime): close the phase 4 ux and runbook
+    findings`). Files: `lesson-flow.tsx`, `week-view.tsx`,
+    `docs/runbooks/storytime-deploy.md`, and the Green-owned test files
+    `phase4-lesson-focus.test.tsx` (2 to 5 cases), `phase4-week-view.test.tsx` (6 to 8 cases),
+    `phase4-runbook.test.ts` (7 to 12 cases). No committed Red test changed, and no
+    `content/` file changed.
+  - F601: the end region of the last screen drops `focus:outline-none` and holds the two-tone
+    ring of the loop panel controls (`focus:outline-3 focus:outline-white
+    focus:outline-offset-0 focus:[box-shadow:0_0_0_6px_var(--st-brown)]`, the same 3 px ring
+    that `look.css` gives the panel controls). The focus move keeps `focus({ preventScroll:
+    true })`. One test asserts no `outline-none` and the four ring tokens.
+  - F603: the Thai toggle, the "Back to the week" link, and the "Next step" control of the
+    flow, and the five "Open the lesson" links of the week view, hold `min-h-11`. No other
+    layout change. One flow test and one week-view test assert the class on each control.
+  - F605: the week view marks its 16 English text elements with `lang="en"` (the level line,
+    the seven section headings, the five lesson links, and the three material labels), and the
+    step id chip of the flow holds `lang="en"`. One test asserts all 16 week-view elements and
+    one test asserts the chip. The shipped w01 line `scripts[0].steps[1].en.teacherActions[1]`
+    holds a Thai character inside an English field; `content/` stays untouched, and the
+    handoff names the string for the PM (the content owner is Workbooks).
+  - F495 and F496 (runbook flag section only): the section states that the flag stays in the
+    service template after the on command, that every later build revision carries it, that a
+    traffic rollback does not remove it, and that the operator reads `/th/teacher/2/1` on the
+    tag URL before each traffic step and runs the off command to clear the template; it sends
+    the operator to sign in as the teacher on the tag URL host first, because a session cookie
+    is bound to one host; it adds the env compare of the new revision and the live revision
+    with two `gcloud run revisions describe --format='value(spec.containers[0].env)'` lines;
+    it renames the image placeholder to `<the live revision image reference with its digest>`
+    and says the read value goes into `--image` as it is, a full reference with `@sha256:`.
+    `--no-traffic`, the tags, Daniel's go, and the way back stay. Five new runbook test cases
+    cover the five new lines. No gcloud command ran; the runbook is text only.
+  - Escalated to the PM, no code change (each with its default): F602 (class-screen fit of the
+    first screens; default: Daniel judges at Phase 6), F604 (the th route shows English until
+    the toggle, and the toggle resets per page; default: keep English first, persistence goes
+    to Phase 6), F606 (steps A8, B7, and D6 of w01 print "0 min"; default: the PM asks
+    Workbooks for the real minutes).
+  - Gates (each ran alone, in the foreground, with the shell timeout 0; MemAvailable
+    2582500 kB to 3313804 kB during the round):
+    1. Red check of the round (tests first): the three changed test files under `heavy-run.sh`
+       p1 with `--maxWorkers=1`: exit 1 with 10 failed and 15 passed of 25. The 10 failures
+       are the new cases, and they fail on the missing fixes.
+    2. After the fix, the same three files: exit 0, 25 of 25.
+    3. The ten-file Green command of `test-strategy.md` line 621 through `heavy-run.sh`:
+       exit 0, 10 files, 150 of 150 tests. The count is exact: the adversarial files hold 64
+       cases at `e24a1f06c` (4 new over the 60 of rem 4), the six earlier files hold 69 (the
+       two new week-view cases), the runbook file holds 12, and the focus file holds 5.
+    4. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0.
+    5. ESLint on the five changed files: exit 0; 0 errors; 0 warnings.
+    6. `build-graph update` (heavy-run p1) on the two changed `.tsx` files: exit 0 (78 to 93
+       nodes, 111 to 112 edges).
+  - No Docker smoke and no browser gate in this round; the UX role measures in a small run
+    after the reviews (orchestrator brief).
+  - Anti-patterns: A3 holds (labeled counts). A5 holds (this block gives each exit code and
+    count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
+    filter changed). A16 holds (no worktree).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem5.log`.
 
 ## Phase 5: Milestone week integration
 
