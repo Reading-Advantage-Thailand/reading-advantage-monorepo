@@ -16,6 +16,7 @@ import {
   type AccountingSubmissionInput,
   type AccountingSubmissionResult,
 } from "./contracts.js";
+import { canViewOwnAccountingSubmission } from "./permissions.js";
 
 /**
  * SSO-authorized Accounting caller. The actor alone carries the company scope:
@@ -27,7 +28,7 @@ export interface AccountingActor {
   readonly accountId: string;
   /** Company the caller acts within; becomes the persistence scope. */
   readonly companyId: string;
-  /** Company role of the caller; must be STAFF, OWNER, or ACCOUNTANT. */
+  /** Company role of the caller; must be STAFF, CONTRACTOR, OWNER, or ACCOUNTANT. */
   readonly role: string;
 }
 
@@ -132,6 +133,7 @@ const ACCOUNTING_ROLES: ReadonlySet<string> = new Set([
   "STAFF",
   "OWNER",
   "ACCOUNTANT",
+  "CONTRACTOR",
 ]);
 const PRIVATE_EVIDENCE_REFERENCE_PREFIX = "private-evidence://";
 
@@ -314,9 +316,9 @@ export async function submitAccountingSubmission(request: {
 }
 
 /**
- * Lists submissions inside the actor's company scope. STAFF actors receive only
- * their own submissions; OWNER and ACCOUNTANT actors receive every submission
- * in the scope.
+ * Lists submissions inside the actor's company scope. STAFF and CONTRACTOR
+ * actors receive only their own submissions; OWNER and ACCOUNTANT actors
+ * receive every submission in the scope.
  * @param request Repository port and actor.
  * @returns The submissions visible to the actor.
  * @throws AccountingSubmissionError when the actor lacks an accounting role.
@@ -330,7 +332,7 @@ export async function listAccountingSubmissions(request: {
   const submissions = await request.repository.listByScope(
     actorScope(request.actor),
   );
-  if (request.actor.role === "STAFF") {
+  if (canViewOwnAccountingSubmission(request.actor)) {
     return submissions.filter(
       (submission) =>
         submission.submittedByAccountId === request.actor.accountId,

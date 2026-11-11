@@ -16,13 +16,14 @@ import {
 import { readJson } from "../../../accounts/lib/server/read-json";
 import { formatMinorAmount } from "@/app/lib/format-minor-amount";
 import { derivedRate } from "@/app/lib/derived-rate";
+import type { AccountingRole } from "@/app/lib/company-oidc";
 
 /** Props for the pending submissions list. */
 export interface PendingSubmissionsListProps {
   /** Submissions visible to the signed-in actor. */
   readonly submissions: readonly AccountingSubmission[];
   /** Role of the signed-in accounting actor. */
-  readonly actorRole: "STAFF" | "OWNER" | "ACCOUNTANT";
+  readonly actorRole: AccountingRole;
 }
 
 const controlClassName =

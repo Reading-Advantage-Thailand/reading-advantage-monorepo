@@ -27,7 +27,12 @@ export const ACCOUNTING_TRANSACTION_COOKIE = resolveAccountingCookieName(
 );
 
 /** Accounting application roles issued by Accounts for the accounting audience. */
-export type AccountingRole = "OWNER" | "ACCOUNTANT" | "STAFF";
+export type AccountingRole =
+  | "OWNER"
+  | "CEO"
+  | "ACCOUNTANT"
+  | "CONTRACTOR"
+  | "STAFF";
 
 let config:
   | ReturnType<typeof createCompanyIdentityServiceAuthConfig>
@@ -100,14 +105,17 @@ export function readAccountingCookie(
 
 /**
  * Resolves the strongest exact Accounting role from audience-scoped claims.
+ * The order is OWNER, CEO, ACCOUNTANT, CONTRACTOR, STAFF.
  * @param roles Role keys returned by Accounts introspection.
- * @returns OWNER, ACCOUNTANT, STAFF, or null when Accounting access has been removed.
+ * @returns The strongest Accounting role, or null when the access was removed.
  */
 export function resolveAccountingRole(
   roles: readonly string[],
 ): AccountingRole | null {
   if (roles.includes("OWNER")) return "OWNER";
+  if (roles.includes("CEO")) return "CEO";
   if (roles.includes("ACCOUNTANT")) return "ACCOUNTANT";
+  if (roles.includes("CONTRACTOR")) return "CONTRACTOR";
   if (roles.includes("STAFF")) return "STAFF";
   return null;
 }
