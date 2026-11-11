@@ -13,12 +13,15 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import {
   analyzeArchitectureSources,
+  assembleArchitectureAnalysis,
+  ArchitectureAnalysisStopped,
   type ArchitectureAnalysisResult,
 } from "./analyzer.js";
 import { computeRulesetHash } from "./baseline.js";
 import {
   architectureBaselineSchema,
   architectureConfigSchema,
+  type ArchitectureFinding,
 } from "./contracts.js";
 import { selectArchitectureSourceFiles } from "./inventory.js";
 import {
@@ -216,8 +219,12 @@ function readExactSync(repoRoot: string, path: string): Uint8Array {
   return readFileSync(resolve(repoRoot, path));
 }
 
-/** Lists tracked and untracked bytes owned by this Coding candidate. */
-function listCodingCandidatePaths(repoRoot: string): string[] {
+/**
+ * Lists tracked and untracked bytes owned by this Coding candidate.
+ * @param repoRoot Repository root that holds the Coding candidate.
+ * @returns Sorted exact candidate paths under the Architecture package.
+ */
+export function listCodingCandidatePaths(repoRoot: string): string[] {
   const changedTracked = execFileSync(
     "git",
     ["diff", "--name-only", "HEAD", "--", `${CODING_CANDIDATE_ROOT}/`],
@@ -894,6 +901,202 @@ export async function computeAnalyzerReconciliationEvidence(
         projection,
         sourcePaths,
       ),
+    };
+  } finally {
+    await projection.dispose();
+  }
+}
+
+/** Findings of every finished module of one pass, by source path. */
+export type ArchitectureModuleFindings = ReadonlyMap<
+  string,
+  readonly ArchitectureFinding[]
+>;
+
+/** Named steps of one resumable evidence run. */
+export type ResumableEvidenceStep =
+  | "projection"
+  | "prelude"
+  | "combine"
+  | "input_snapshot";
+
+/** Progress and persistence seams for a resumable evidence run. */
+export interface ResumableAnalyzerEvidenceOptions {
+  /** Analyzer entry point used for each pass that this run touches. */
+  analyzeSources: ArchitectureSourceAnalyzer;
+  /** Finished findings of pass one and pass two, in that order. */
+  done: readonly [ArchitectureModuleFindings, ArchitectureModuleFindings];
+  /** Number of modules analyzed in one batch. */
+  batchModules: number;
+  /** Tests whether the run may start another batch. */
+  shouldContinue: () => boolean;
+  /** Receives the new findings of each finished batch of one pass. */
+  onBatch: (
+    pass: 1 | 2,
+    results: ArchitectureModuleFindings,
+    modulesDone: number,
+    modulesTotal: number,
+  ) => void | Promise<void>;
+  /** Test seam that fires once for each analyzed module. */
+  onModuleAnalyzed?: (pass: 1 | 2, sourcePath: string) => void;
+  /** Receives each completed step of the run, with its pass if any. */
+  onStep?: (step: ResumableEvidenceStep, pass?: 1 | 2) => void;
+  /** True when this run continues an earlier store of the same series. */
+  resumedFromStore: boolean;
+}
+
+/** Outcome of one resumable evidence run. */
+export type ResumableAnalyzerEvidenceResult =
+  | { status: "complete"; evidence: AnalyzerReconciliationEvidence }
+  | {
+      status: "partial";
+      pass: 1 | 2;
+      modulesDone: number;
+      modulesTotal: number;
+      newModules: number;
+    };
+
+/** Loads the strict v2 configuration of one projected analysis pass. */
+async function loadProjectedAnalyzerConfig(
+  projectedRoot: string,
+): Promise<ReturnType<typeof architectureConfigSchema.parse>> {
+  return architectureConfigSchema.parse(
+    JSON.parse(
+      await readFile(
+        resolve(
+          projectedRoot,
+          "packages/architecture-enforcement/src/config/ownership-map.v2.json",
+        ),
+        "utf8",
+      ),
+    ),
+  );
+}
+
+/**
+ * Computes the shared evidence of a resumable refresh series.
+ * @param repoRoot Repository root containing the analyzer inputs.
+ * @param options Analyzer entry point, stored findings, and progress seams.
+ * @returns Complete evidence for the last run, or the partial pass record.
+ * @throws When the two assembled reports are not byte-identical.
+ */
+export async function computeAnalyzerReconciliationEvidenceResumable(
+  repoRoot: string,
+  options: ResumableAnalyzerEvidenceOptions,
+): Promise<ResumableAnalyzerEvidenceResult> {
+  const analyzeSources = options.analyzeSources;
+  const projection = await createV2EvidenceSourceProjection(repoRoot);
+  options.onStep?.("projection");
+  try {
+    const sourcePaths = projection.sourcePaths;
+    const modulesByPass: ArchitectureModuleFindings[] = [
+      new Map(options.done[0]),
+      new Map(options.done[1]),
+    ];
+    const complete = (pass: 1 | 2): boolean =>
+      sourcePaths.every((sourcePath) =>
+        modulesByPass[pass - 1].has(sourcePath),
+      );
+    let newModules = 0;
+    for (const pass of [1, 2] as const) {
+      if (complete(pass)) continue;
+      const passRecord = modulesByPass[pass - 1] as Map<
+        string,
+        readonly ArchitectureFinding[]
+      >;
+      const done = new Map(passRecord);
+      try {
+        let preludeReported = false;
+        const analysis = await analyzeSources({
+          repoRoot: projection.projectedRoot,
+          sourcePaths,
+          workspaceTargets: await loadWorkspaceModuleTargets(
+            projection.projectedRoot,
+            projection.workspaceManifestPaths,
+          ),
+          trackedSourceOnly: true,
+          config: await loadProjectedAnalyzerConfig(projection.projectedRoot),
+          policyVersion: "v2",
+          moduleCheckpoint: {
+            done,
+            batchModules: options.batchModules,
+            shouldContinue: () => {
+              if (!preludeReported) {
+                preludeReported = true;
+                options.onStep?.("prelude", pass);
+              }
+              return options.shouldContinue();
+            },
+            onModuleAnalyzed: (sourcePath: string) => {
+              newModules += 1;
+              options.onModuleAnalyzed?.(pass, sourcePath);
+            },
+            onBatch: async (
+              results: ArchitectureModuleFindings,
+              modulesDone: number,
+              modulesTotal: number,
+            ) => {
+              for (const [sourcePath, findings] of results) {
+                passRecord.set(sourcePath, findings);
+              }
+              await options.onBatch(pass, results, modulesDone, modulesTotal);
+            },
+          },
+        });
+        if (analysis.parseErrors.length > 0) {
+          throw new Error(
+            "Analyzer input holds parse errors; the manifest was not written",
+          );
+        }
+      } catch (error) {
+        if (!(error instanceof ArchitectureAnalysisStopped)) throw error;
+        return {
+          status: "partial",
+          pass,
+          modulesDone: error.modulesDone,
+          modulesTotal: error.modulesTotal,
+          newModules,
+        };
+      }
+    }
+    if (options.resumedFromStore && newModules > 0) {
+      return {
+        status: "partial",
+        pass: 2,
+        modulesDone: sourcePaths.length,
+        modulesTotal: sourcePaths.length,
+        newModules,
+      };
+    }
+    const reportOne = assembleArchitectureAnalysis(
+      sourcePaths,
+      [],
+      modulesByPass[0],
+    );
+    const reportTwo = assembleArchitectureAnalysis(
+      sourcePaths,
+      [],
+      modulesByPass[1],
+    );
+    const reportSource = JSON.stringify(reportOne);
+    if (reportSource !== JSON.stringify(reportTwo)) {
+      throw new Error("Analyzer reports are not byte-identical");
+    }
+    options.onStep?.("combine");
+    const inputSnapshotSha256 = await computeInputSnapshotForProjection(
+      repoRoot,
+      projection,
+      sourcePaths,
+    );
+    options.onStep?.("input_snapshot");
+    return {
+      status: "complete",
+      evidence: {
+        sourcePaths,
+        report: reportOne,
+        reportSha256: sha256Text(reportSource),
+        inputSnapshotSha256,
+      },
     };
   } finally {
     await projection.dispose();

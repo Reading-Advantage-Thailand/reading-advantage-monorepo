@@ -104,12 +104,87 @@ export interface LoadArchitectureSourcesOptions {
   trackedSourceOnly?: boolean;
 }
 
+/** Batch, continuation, and sink seams of a resumable module analysis. */
+export interface ArchitectureModuleCheckpoint {
+  /** Findings of modules that an earlier run finished, by source path. */
+  done: ReadonlyMap<string, readonly ArchitectureFinding[]>;
+  /** Number of modules analyzed in one batch; the default is 250. */
+  batchModules: number;
+  /** Tests whether the run may start another batch. */
+  shouldContinue(): boolean;
+  /** Receives the new findings of each finished batch. */
+  onBatch(
+    results: ReadonlyMap<string, readonly ArchitectureFinding[]>,
+    modulesDone: number,
+    modulesTotal: number,
+  ): void | Promise<void>;
+  /** Test seam that fires once for each module this call analyzes. */
+  onModuleAnalyzed?(sourcePath: string): void;
+}
+
+/** Raised when a resumable analysis stops before its module set is complete. */
+export class ArchitectureAnalysisStopped extends Error {
+  /** Modules of the pass that the store holds at the stop. */
+  readonly modulesDone: number;
+  /** Modules of the pass in total. */
+  readonly modulesTotal: number;
+
+  /**
+   * Records how far the stopped analysis reached.
+   * @param modulesDone Modules of the pass that the store holds.
+   * @param modulesTotal Modules of the pass in total.
+   */
+  constructor(modulesDone: number, modulesTotal: number) {
+    super(
+      `Architecture analysis stopped after ${modulesDone} of ${modulesTotal} modules`,
+    );
+    this.name = "ArchitectureAnalysisStopped";
+    this.modulesDone = modulesDone;
+    this.modulesTotal = modulesTotal;
+  }
+}
+
+/** Shared prelude evidence used to analyze one parsed module. */
+export interface ArchitectureModuleAnalysisContext {
+  /** Strict ownership map used to select and authorize evidence. */
+  config: ArchitectureConfig;
+  /** Policy behavior used for compatibility or current analysis. */
+  policyVersion?: "v1" | "v2";
+  /** Binding origins of each module, keyed by source path. */
+  localsByModule: ReadonlyMap<string, Map<string, Map<string, RuleOrigin>>>;
+  /** Export origins of each module, keyed by source path. */
+  exportsByModule: ReadonlyMap<string, Map<string, Map<string, RuleOrigin>>>;
+  /** Executable import evidence of each module, keyed by source path. */
+  executableEvidenceBySource: ReadonlyMap<
+    string,
+    readonly ArchitectureImportEvidence[]
+  >;
+  /** Environment nodes of each module, keyed by source path. */
+  environmentNodesBySource: ReadonlyMap<
+    string,
+    ReadonlyArray<{ node: ts.Node; resource: string }>
+  >;
+  /** Import evidence nodes of the loaded source set, by evidence key. */
+  evidenceNodes: ReadonlyMap<string, ts.Node>;
+  /** Executable nodes of each module, keyed by source path. */
+  executableNodesBySource: ReadonlyMap<
+    string,
+    readonly (ts.CallExpression | ts.NewExpression)[]
+  >;
+  /** Drizzle table exports of each module, keyed by source path. */
+  tableExportsByModule: TableExportsByModule;
+  /** Ownership decisions shared across the modules of one pass. */
+  ownershipDecisionCache: Map<string, boolean>;
+}
+
 /** Options for policy-driven architecture source analysis. */
 export interface AnalyzeArchitectureSourcesOptions extends LoadArchitectureSourcesOptions {
   /** Strict ownership map used to select and authorize evidence. */
   config: ArchitectureConfig;
   /** Policy behavior used for compatibility or current analysis. */
   policyVersion?: "v1" | "v2";
+  /** Optional batch checkpoint that makes the module loop resumable. */
+  moduleCheckpoint?: ArchitectureModuleCheckpoint;
 }
 
 /** Deterministic policy findings plus fail-closed analyzer diagnostics. */
@@ -1119,14 +1194,14 @@ export async function loadArchitectureSources(
   };
 }
 
-interface RuleOrigin {
+export interface RuleOrigin {
   ruleId: string;
   importSpecifier?: string;
   resource?: string;
   resolvedTarget: string;
 }
 
-interface ImportBinding {
+export interface ImportBinding {
   evidence: ArchitectureImportEvidence;
   node: ts.ImportDeclaration;
   localName?: string;
@@ -1134,7 +1209,7 @@ interface ImportBinding {
   inferredResource?: string;
 }
 
-interface ReexportBinding {
+export interface ReexportBinding {
   evidence: ArchitectureImportEvidence;
   node: ts.ExportDeclaration;
   exportedName: string;
@@ -1146,7 +1221,7 @@ interface LocalExportBinding {
   exportedName: string;
   localName: string;
 }
-interface ParsedArchitectureModule {
+export interface ParsedArchitectureModule {
   sourcePath: string;
   sourceFile: ts.SourceFile;
   evidence: readonly ArchitectureImportEvidence[];
@@ -1157,7 +1232,7 @@ interface ParsedArchitectureModule {
   localExports: LocalExportBinding[];
 }
 
-type TableExportsByModule = ReadonlyMap<string, ReadonlySet<string>>;
+export type TableExportsByModule = ReadonlyMap<string, ReadonlySet<string>>;
 
 const QUERY_METHODS = new Set([
   "delete",
@@ -2520,9 +2595,70 @@ export async function analyzeArchitectureSources(
     modules,
     config,
   );
-  const findingsByKey = new Map<string, ArchitectureFinding>();
+  const moduleContext: ArchitectureModuleAnalysisContext = {
+    config,
+    policyVersion: options.policyVersion,
+    localsByModule,
+    exportsByModule,
+    executableEvidenceBySource,
+    environmentNodesBySource,
+    evidenceNodes: loaded.evidenceNodes,
+    executableNodesBySource: loaded.executableNodesBySource,
+    tableExportsByModule,
+    ownershipDecisionCache: new Map<string, boolean>(),
+  };
+  const checkpoint = options.moduleCheckpoint;
+  if (checkpoint && loaded.parseErrors.length > 0) {
+    return assembleArchitectureAnalysis(
+      loaded.sourcePaths,
+      loaded.parseErrors,
+      new Map<string, readonly ArchitectureFinding[]>(),
+    );
+  }
+  const findingsByModule = new Map<string, readonly ArchitectureFinding[]>();
+  if (checkpoint) {
+    for (const [sourcePath, findings] of checkpoint.done) {
+      findingsByModule.set(sourcePath, findings);
+    }
+    return analyzeArchitectureModuleBatches(
+      modules,
+      loaded.sourcePaths,
+      checkpoint,
+      moduleContext,
+      findingsByModule,
+    );
+  }
+  for (const module of modules) {
+    findingsByModule.set(module.sourcePath, [
+      ...analyzeArchitectureModuleFindings(module, moduleContext).values(),
+    ]);
+  }
+  return assembleArchitectureAnalysis(
+    loaded.sourcePaths,
+    loaded.parseErrors,
+    findingsByModule,
+  );
+}
+
+/**
+ * Analyzes one parsed module with the shared prelude evidence.
+ * @param module Parsed module in the prelude source order.
+ * @param context Shared prelude evidence for this analysis pass.
+ * @returns Findings of this module, keyed by their instance key.
+ */
+export function analyzeArchitectureModuleFindings(
+  module: ParsedArchitectureModule,
+  context: ArchitectureModuleAnalysisContext,
+): Map<string, ArchitectureFinding> {
+  const config = context.config;
   const rulesById = new Map(config.rules.map((rule) => [rule.id, rule]));
-  const ownershipDecisionCache = new Map<string, boolean>();
+  const localsByModule = context.localsByModule;
+  const exportsByModule = context.exportsByModule;
+  const executableEvidenceBySource = context.executableEvidenceBySource;
+  const environmentNodesBySource = context.environmentNodesBySource;
+  const tableExportsByModule = context.tableExportsByModule;
+  const ownershipDecisionCache = context.ownershipDecisionCache;
+  const findingsByKey = new Map<string, ArchitectureFinding>();
   const rawFindingKeys = new Set<string>();
 
   /** Adds one selected origin only when exact ownership policy denies it. */
@@ -2594,273 +2730,354 @@ export async function analyzeArchitectureSources(
     findingsByKey.set(finding.instanceKey, finding);
   };
 
-  for (const module of modules) {
-    const locals =
-      localsByModule.get(module.sourcePath) ??
-      new Map<string, Map<string, RuleOrigin>>();
-    for (const binding of module.imports) {
-      if (
-        !binding.localName ||
-        binding.evidence.resolvedTarget.startsWith("external:")
-      ) {
-        continue;
-      }
-      const origins = locals.get(binding.localName);
-      if (!origins) continue;
+  const locals =
+    localsByModule.get(module.sourcePath) ??
+    new Map<string, Map<string, RuleOrigin>>();
+  for (const binding of module.imports) {
+    if (
+      !binding.localName ||
+      binding.evidence.resolvedTarget.startsWith("external:")
+    ) {
+      continue;
+    }
+    const origins = locals.get(binding.localName);
+    if (!origins) continue;
+    for (const origin of targetExportOrigins(
+      exportsByModule,
+      binding.evidence.resolvedTarget,
+      binding.importedName,
+    )) {
+      addOrigin(origins, origin);
+    }
+  }
+  const lexicalBindings = analyzeLexicalBindings(module, locals);
+  for (const binding of module.imports) {
+    const origins = new Map<string, RuleOrigin>();
+    for (const origin of directBindingOrigins(binding, config.rules))
+      addOrigin(origins, origin);
+    if (
+      origins.size === 0 &&
+      !binding.evidence.resolvedTarget.startsWith("external:")
+    ) {
       for (const origin of targetExportOrigins(
         exportsByModule,
         binding.evidence.resolvedTarget,
         binding.importedName,
-      )) {
+      ))
         addOrigin(origins, origin);
-      }
     }
-    const lexicalBindings = analyzeLexicalBindings(module, locals);
-    for (const binding of module.imports) {
-      const origins = new Map<string, RuleOrigin>();
-      for (const origin of directBindingOrigins(binding, config.rules))
+    if (origins.size === 0) continue;
+    for (const origin of origins.values())
+      addFinding(
+        module.sourcePath,
+        binding.node,
+        module.sourceFile,
+        binding.evidence.evidenceKind,
+        origin,
+        binding.evidence.importSpecifier,
+      );
+  }
+  for (const binding of module.reexports) {
+    const origins = new Map<string, RuleOrigin>();
+    for (const origin of directBindingOrigins(binding, config.rules))
+      addOrigin(origins, origin);
+    if (
+      origins.size === 0 &&
+      !binding.evidence.resolvedTarget.startsWith("external:")
+    ) {
+      for (const origin of targetExportOrigins(
+        exportsByModule,
+        binding.evidence.resolvedTarget,
+        binding.importedName,
+      ))
         addOrigin(origins, origin);
-      if (
-        origins.size === 0 &&
-        !binding.evidence.resolvedTarget.startsWith("external:")
-      ) {
-        for (const origin of targetExportOrigins(
-          exportsByModule,
-          binding.evidence.resolvedTarget,
-          binding.importedName,
-        ))
-          addOrigin(origins, origin);
-      }
-      if (origins.size === 0) continue;
-      for (const origin of origins.values())
-        addFinding(
-          module.sourcePath,
-          binding.node,
-          module.sourceFile,
-          binding.evidence.evidenceKind,
-          origin,
-          binding.evidence.importSpecifier,
-        );
     }
-    for (const binding of module.reexports) {
-      const origins = new Map<string, RuleOrigin>();
-      for (const origin of directBindingOrigins(binding, config.rules))
-        addOrigin(origins, origin);
-      if (
-        origins.size === 0 &&
-        !binding.evidence.resolvedTarget.startsWith("external:")
-      ) {
-        for (const origin of targetExportOrigins(
-          exportsByModule,
-          binding.evidence.resolvedTarget,
-          binding.importedName,
-        ))
-          addOrigin(origins, origin);
-      }
-      if (origins.size === 0) continue;
-      for (const origin of origins.values())
-        addFinding(
-          module.sourcePath,
-          binding.node,
-          module.sourceFile,
-          "re-export",
-          origin,
-          binding.evidence.importSpecifier,
-        );
-    }
+    if (origins.size === 0) continue;
+    for (const origin of origins.values())
+      addFinding(
+        module.sourcePath,
+        binding.node,
+        module.sourceFile,
+        "re-export",
+        origin,
+        binding.evidence.importSpecifier,
+      );
+  }
 
-    for (const evidence of executableEvidenceBySource.get(module.sourcePath) ??
-      []) {
-      const origins = new Map<string, RuleOrigin>();
-      for (const rule of config.rules)
-        if (
-          rule.findingKinds.includes(evidence.evidenceKind) &&
-          directlySelectsImport(rule, evidence)
-        )
-          addOrigin(origins, {
-            ruleId: rule.id,
-            importSpecifier: evidence.importSpecifier,
-            resolvedTarget: evidence.resolvedTarget,
-          });
+  for (const evidence of executableEvidenceBySource.get(module.sourcePath) ??
+    []) {
+    const origins = new Map<string, RuleOrigin>();
+    for (const rule of config.rules)
       if (
-        origins.size === 0 &&
-        !evidence.resolvedTarget.startsWith("external:")
+        rule.findingKinds.includes(evidence.evidenceKind) &&
+        directlySelectsImport(rule, evidence)
       )
-        for (const origin of targetExportOrigins(
-          exportsByModule,
-          evidence.resolvedTarget,
-          "*",
-        ))
-          addOrigin(origins, origin);
-      if (origins.size === 0) continue;
-      const node = loaded.evidenceNodes.get(evidenceKey(evidence));
-      if (!node) {
-        throw new Error(
-          `Architecture evidence node not found at ${evidence.sourcePath}:${evidence.line}:${evidence.column}`,
-        );
-      }
-      for (const origin of origins.values())
+        addOrigin(origins, {
+          ruleId: rule.id,
+          importSpecifier: evidence.importSpecifier,
+          resolvedTarget: evidence.resolvedTarget,
+        });
+    if (
+      origins.size === 0 &&
+      !evidence.resolvedTarget.startsWith("external:")
+    )
+      for (const origin of targetExportOrigins(
+        exportsByModule,
+        evidence.resolvedTarget,
+        "*",
+      ))
+        addOrigin(origins, origin);
+    if (origins.size === 0) continue;
+    const node = context.evidenceNodes.get(evidenceKey(evidence));
+    if (!node) {
+      throw new Error(
+        `Architecture evidence node not found at ${evidence.sourcePath}:${evidence.line}:${evidence.column}`,
+      );
+    }
+    for (const origin of origins.values())
+      addFinding(
+        module.sourcePath,
+        node,
+        module.sourceFile,
+        evidence.evidenceKind,
+        origin,
+        evidence.importSpecifier,
+      );
+  }
+
+  for (const evidence of environmentNodesBySource.get(module.sourcePath) ??
+    []) {
+    for (const rule of config.rules) {
+      if (
+        rule.findingKinds.includes("environment-read") &&
+        directlySelectsResource(rule, evidence.resource)
+      ) {
         addFinding(
           module.sourcePath,
-          node,
+          evidence.node,
           module.sourceFile,
-          evidence.evidenceKind,
-          origin,
-          evidence.importSpecifier,
+          "environment-read",
+          {
+            ruleId: rule.id,
+            resource: evidence.resource,
+            resolvedTarget: "external:environment",
+          },
         );
+      }
     }
+  }
 
-    for (const evidence of environmentNodesBySource.get(module.sourcePath) ??
-      []) {
-      for (const rule of config.rules) {
-        if (
-          rule.findingKinds.includes("environment-read") &&
-          directlySelectsResource(rule, evidence.resource)
-        ) {
+  if (context.policyVersion === "v2") {
+    for (const node of context.executableNodesBySource.get(
+      module.sourcePath,
+    ) ?? []) {
+      const root = rootIdentifier(node.expression);
+      const rootBinding = root
+        ? lexicalBindings.resolveIdentifier(root)
+        : undefined;
+      const origins = rootBinding
+        ? lexicalBindings.originsByBinding.get(rootBinding)
+        : undefined;
+      const isConstruction =
+        ts.isNewExpression(node) ||
+        (ts.isCallExpression(node) &&
+          ts.isIdentifier(node.expression) &&
+          rootBinding !== undefined &&
+          lexicalBindings.clientFactoryBindings.has(rootBinding));
+      if (isConstruction) {
+        for (const origin of origins?.values() ?? []) {
           addFinding(
             module.sourcePath,
-            evidence.node,
+            node,
             module.sourceFile,
-            "environment-read",
-            {
-              ruleId: rule.id,
-              resource: evidence.resource,
-              resolvedTarget: "external:environment",
-            },
+            "client-construction",
+            origin,
+          );
+        }
+        for (const argument of node.arguments ?? []) {
+          const unwrappedArgument = unwrapExpression(argument);
+          if (
+            ts.isIdentifier(unwrappedArgument) &&
+            lexicalBindings.importBindings.has(unwrappedArgument.text) &&
+            lexicalBindings.resolveIdentifier(unwrappedArgument) !==
+              lexicalBindings.importBindings.get(unwrappedArgument.text)
+          ) {
+            continue;
+          }
+          const resources = configuredResourcesForExpression(
+            config,
+            module,
+            argument,
+            context.policyVersion,
+            tableExportsByModule,
+          );
+          for (const resource of resources) {
+            for (const rule of config.rules) {
+              if (
+                rule.findingKinds.includes("client-construction") &&
+                directlySelectsResource(rule, resource)
+              ) {
+                addFinding(
+                  module.sourcePath,
+                  node,
+                  module.sourceFile,
+                  "client-construction",
+                  {
+                    ruleId: rule.id,
+                    resource,
+                    resolvedTarget: "external:database-table",
+                  },
+                );
+              }
+            }
+          }
+        }
+      }
+      if (
+        ts.isCallExpression(node) &&
+        ts.isPropertyAccessExpression(node.expression) &&
+        QUERY_METHODS.has(node.expression.name.text)
+      ) {
+        if (
+          rootBinding !== undefined &&
+          lexicalBindings.queryClientBindings.has(rootBinding)
+        ) {
+          for (const origin of origins?.values() ?? []) {
+            if (rulesById.get(origin.ruleId)?.domain === "database") {
+              addFinding(
+                module.sourcePath,
+                node,
+                module.sourceFile,
+                "query-call",
+                origin,
+              );
+            }
+          }
+        }
+        for (const argument of node.arguments) {
+          const unwrappedArgument = unwrapExpression(argument);
+          if (
+            ts.isIdentifier(unwrappedArgument) &&
+            lexicalBindings.importBindings.has(unwrappedArgument.text) &&
+            lexicalBindings.resolveIdentifier(unwrappedArgument) !==
+              lexicalBindings.importBindings.get(unwrappedArgument.text)
+          ) {
+            continue;
+          }
+          if (ts.isIdentifier(unwrappedArgument)) {
+            const argumentBinding =
+              lexicalBindings.resolveIdentifier(unwrappedArgument);
+            for (const origin of (argumentBinding
+              ? lexicalBindings.originsByBinding.get(argumentBinding)
+              : undefined
+            )?.values() ?? []) {
+              if (
+                origin.resource &&
+                rulesById.get(origin.ruleId)?.domain === "database"
+              ) {
+                addFinding(
+                  module.sourcePath,
+                  node,
+                  module.sourceFile,
+                  "query-call",
+                  origin,
+                );
+              }
+            }
+          }
+          for (const resource of configuredResourcesForExpression(
+            config,
+            module,
+            argument,
+            context.policyVersion,
+            tableExportsByModule,
+          )) {
+            for (const rule of config.rules) {
+              if (
+                rule.findingKinds.includes("query-call") &&
+                directlySelectsResource(rule, resource)
+              ) {
+                addFinding(
+                  module.sourcePath,
+                  node,
+                  module.sourceFile,
+                  "query-call",
+                  {
+                    ruleId: rule.id,
+                    resource,
+                    resolvedTarget: "external:database-table",
+                  },
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+  } else if (locals.size > 0) {
+    for (const node of context.executableNodesBySource.get(
+      module.sourcePath,
+    ) ?? []) {
+      const root = rootIdentifier(node.expression);
+      const rootBinding = root
+        ? lexicalBindings.resolveIdentifier(root)
+        : undefined;
+      const origins = rootBinding
+        ? lexicalBindings.originsByBinding.get(rootBinding)
+        : undefined;
+      const isConstruction =
+        ts.isNewExpression(node) ||
+        (ts.isCallExpression(node) &&
+          ts.isIdentifier(node.expression) &&
+          rootBinding !== undefined &&
+          lexicalBindings.clientFactoryBindings.has(rootBinding));
+      if (isConstruction) {
+        for (const origin of origins?.values() ?? []) {
+          addFinding(
+            module.sourcePath,
+            node,
+            module.sourceFile,
+            "client-construction",
+            origin,
           );
         }
       }
-    }
-
-    if (options.policyVersion === "v2") {
-      for (const node of loaded.executableNodesBySource.get(
-        module.sourcePath,
-      ) ?? []) {
-        const root = rootIdentifier(node.expression);
-        const rootBinding = root
-          ? lexicalBindings.resolveIdentifier(root)
-          : undefined;
-        const origins = rootBinding
-          ? lexicalBindings.originsByBinding.get(rootBinding)
-          : undefined;
-        const isConstruction =
-          ts.isNewExpression(node) ||
-          (ts.isCallExpression(node) &&
-            ts.isIdentifier(node.expression) &&
-            rootBinding !== undefined &&
-            lexicalBindings.clientFactoryBindings.has(rootBinding));
-        if (isConstruction) {
+      if (
+        ts.isCallExpression(node) &&
+        ts.isPropertyAccessExpression(node.expression) &&
+        QUERY_METHODS.has(node.expression.name.text)
+      ) {
+        if (
+          rootBinding !== undefined &&
+          lexicalBindings.queryClientBindings.has(rootBinding)
+        ) {
           for (const origin of origins?.values() ?? []) {
-            addFinding(
-              module.sourcePath,
-              node,
-              module.sourceFile,
-              "client-construction",
-              origin,
-            );
-          }
-          for (const argument of node.arguments ?? []) {
-            const unwrappedArgument = unwrapExpression(argument);
-            if (
-              ts.isIdentifier(unwrappedArgument) &&
-              lexicalBindings.importBindings.has(unwrappedArgument.text) &&
-              lexicalBindings.resolveIdentifier(unwrappedArgument) !==
-                lexicalBindings.importBindings.get(unwrappedArgument.text)
-            ) {
-              continue;
-            }
-            const resources = configuredResourcesForExpression(
-              config,
-              module,
-              argument,
-              options.policyVersion,
-              tableExportsByModule,
-            );
-            for (const resource of resources) {
-              for (const rule of config.rules) {
-                if (
-                  rule.findingKinds.includes("client-construction") &&
-                  directlySelectsResource(rule, resource)
-                ) {
-                  addFinding(
-                    module.sourcePath,
-                    node,
-                    module.sourceFile,
-                    "client-construction",
-                    {
-                      ruleId: rule.id,
-                      resource,
-                      resolvedTarget: "external:database-table",
-                    },
-                  );
-                }
-              }
+            if (rulesById.get(origin.ruleId)?.domain === "database") {
+              addFinding(
+                module.sourcePath,
+                node,
+                module.sourceFile,
+                "query-call",
+                origin,
+              );
             }
           }
         }
-        if (
-          ts.isCallExpression(node) &&
-          ts.isPropertyAccessExpression(node.expression) &&
-          QUERY_METHODS.has(node.expression.name.text)
-        ) {
-          if (
-            rootBinding !== undefined &&
-            lexicalBindings.queryClientBindings.has(rootBinding)
-          ) {
-            for (const origin of origins?.values() ?? []) {
-              if (rulesById.get(origin.ruleId)?.domain === "database") {
-                addFinding(
-                  module.sourcePath,
-                  node,
-                  module.sourceFile,
-                  "query-call",
-                  origin,
-                );
-              }
-            }
-          }
-          for (const argument of node.arguments) {
-            const unwrappedArgument = unwrapExpression(argument);
-            if (
-              ts.isIdentifier(unwrappedArgument) &&
-              lexicalBindings.importBindings.has(unwrappedArgument.text) &&
-              lexicalBindings.resolveIdentifier(unwrappedArgument) !==
-                lexicalBindings.importBindings.get(unwrappedArgument.text)
-            ) {
-              continue;
-            }
-            if (ts.isIdentifier(unwrappedArgument)) {
-              const argumentBinding =
-                lexicalBindings.resolveIdentifier(unwrappedArgument);
-              for (const origin of (argumentBinding
-                ? lexicalBindings.originsByBinding.get(argumentBinding)
-                : undefined
-              )?.values() ?? []) {
-                if (
-                  origin.resource &&
-                  rulesById.get(origin.ruleId)?.domain === "database"
-                ) {
-                  addFinding(
-                    module.sourcePath,
-                    node,
-                    module.sourceFile,
-                    "query-call",
-                    origin,
-                  );
-                }
-              }
-            }
-            for (const resource of configuredResourcesForExpression(
-              config,
-              module,
-              argument,
-              options.policyVersion,
-              tableExportsByModule,
-            )) {
+        const argument = node.arguments[0];
+        if (argument && ts.isIdentifier(argument)) {
+          const argumentBinding = lexicalBindings.resolveIdentifier(argument);
+          const importedBinding = lexicalBindings.importBindings.get(
+            argument.text,
+          );
+          if (argumentBinding && argumentBinding === importedBinding) {
+            const imported = module.imports.find(
+              (binding) => binding.localName === argument.text,
+            );
+            if (imported?.inferredResource) {
               for (const rule of config.rules) {
                 if (
                   rule.findingKinds.includes("query-call") &&
-                  directlySelectsResource(rule, resource)
+                  directlySelectsResource(rule, imported.inferredResource)
                 ) {
                   addFinding(
                     module.sourcePath,
@@ -2869,93 +3086,10 @@ export async function analyzeArchitectureSources(
                     "query-call",
                     {
                       ruleId: rule.id,
-                      resource,
+                      resource: imported.inferredResource,
                       resolvedTarget: "external:database-table",
                     },
                   );
-                }
-              }
-            }
-          }
-        }
-      }
-    } else if (locals.size > 0) {
-      for (const node of loaded.executableNodesBySource.get(
-        module.sourcePath,
-      ) ?? []) {
-        const root = rootIdentifier(node.expression);
-        const rootBinding = root
-          ? lexicalBindings.resolveIdentifier(root)
-          : undefined;
-        const origins = rootBinding
-          ? lexicalBindings.originsByBinding.get(rootBinding)
-          : undefined;
-        const isConstruction =
-          ts.isNewExpression(node) ||
-          (ts.isCallExpression(node) &&
-            ts.isIdentifier(node.expression) &&
-            rootBinding !== undefined &&
-            lexicalBindings.clientFactoryBindings.has(rootBinding));
-        if (isConstruction) {
-          for (const origin of origins?.values() ?? []) {
-            addFinding(
-              module.sourcePath,
-              node,
-              module.sourceFile,
-              "client-construction",
-              origin,
-            );
-          }
-        }
-        if (
-          ts.isCallExpression(node) &&
-          ts.isPropertyAccessExpression(node.expression) &&
-          QUERY_METHODS.has(node.expression.name.text)
-        ) {
-          if (
-            rootBinding !== undefined &&
-            lexicalBindings.queryClientBindings.has(rootBinding)
-          ) {
-            for (const origin of origins?.values() ?? []) {
-              if (rulesById.get(origin.ruleId)?.domain === "database") {
-                addFinding(
-                  module.sourcePath,
-                  node,
-                  module.sourceFile,
-                  "query-call",
-                  origin,
-                );
-              }
-            }
-          }
-          const argument = node.arguments[0];
-          if (argument && ts.isIdentifier(argument)) {
-            const argumentBinding = lexicalBindings.resolveIdentifier(argument);
-            const importedBinding = lexicalBindings.importBindings.get(
-              argument.text,
-            );
-            if (argumentBinding && argumentBinding === importedBinding) {
-              const imported = module.imports.find(
-                (binding) => binding.localName === argument.text,
-              );
-              if (imported?.inferredResource) {
-                for (const rule of config.rules) {
-                  if (
-                    rule.findingKinds.includes("query-call") &&
-                    directlySelectsResource(rule, imported.inferredResource)
-                  ) {
-                    addFinding(
-                      module.sourcePath,
-                      node,
-                      module.sourceFile,
-                      "query-call",
-                      {
-                        ruleId: rule.id,
-                        resource: imported.inferredResource,
-                        resolvedTarget: "external:database-table",
-                      },
-                    );
-                  }
                 }
               }
             }
@@ -2964,10 +3098,78 @@ export async function analyzeArchitectureSources(
       }
     }
   }
+  return findingsByKey;
+}
+
+/**
+ * Analyzes pending modules in bounded batches for a resumable refresh.
+ * @param modules Parsed modules in canonical source order.
+ * @param sourcePaths Exact source paths of the analysis pass.
+ * @param checkpoint Batch size, continuation rule, and batch sink.
+ * @param context Shared prelude evidence for this analysis pass.
+ * @param findingsByModule Stored and new findings, keyed by source path.
+ * @returns The assembled report of this pass.
+ * @throws {ArchitectureAnalysisStopped} When the run must stop before a batch.
+ */
+async function analyzeArchitectureModuleBatches(
+  modules: readonly ParsedArchitectureModule[],
+  sourcePaths: readonly string[],
+  checkpoint: ArchitectureModuleCheckpoint,
+  context: ArchitectureModuleAnalysisContext,
+  findingsByModule: Map<string, readonly ArchitectureFinding[]>,
+): Promise<ArchitectureAnalysisResult> {
+  const batchSize = Math.max(1, Math.floor(checkpoint.batchModules));
+  const modulesTotal = sourcePaths.length;
+  let modulesDone = modules.reduce(
+    (count, module) =>
+      count + (checkpoint.done.has(module.sourcePath) ? 1 : 0),
+    0,
+  );
+  const pending = modules.filter(
+    (module) => !checkpoint.done.has(module.sourcePath),
+  );
+  for (let index = 0; index < pending.length; index += batchSize) {
+    if (!checkpoint.shouldContinue()) {
+      throw new ArchitectureAnalysisStopped(modulesDone, modulesTotal);
+    }
+    const batchResults = new Map<
+      string,
+      readonly ArchitectureFinding[]
+    >();
+    for (const module of pending.slice(index, index + batchSize)) {
+      const moduleFindings = [
+        ...analyzeArchitectureModuleFindings(module, context).values(),
+      ];
+      findingsByModule.set(module.sourcePath, moduleFindings);
+      batchResults.set(module.sourcePath, moduleFindings);
+      checkpoint.onModuleAnalyzed?.(module.sourcePath);
+      modulesDone += 1;
+    }
+    await checkpoint.onBatch(batchResults, modulesDone, modulesTotal);
+  }
+  return assembleArchitectureAnalysis(sourcePaths, [], findingsByModule);
+}
+
+/**
+ * Merges per-module findings into the canonical analyzer report.
+ * @param sourcePaths Exact source paths considered in canonical order.
+ * @param parseErrors Fail-closed prelude diagnostics.
+ * @param findingsByModule Findings of each module, keyed by source path.
+ * @returns The report with the frozen key order of the analyzer result.
+ */
+export function assembleArchitectureAnalysis(
+  sourcePaths: readonly string[],
+  parseErrors: readonly ArchitectureAnalyzerError[],
+  findingsByModule: ReadonlyMap<string, readonly ArchitectureFinding[]>,
+): ArchitectureAnalysisResult {
+  const findings: ArchitectureFinding[] = [];
+  for (const moduleFindings of findingsByModule.values()) {
+    findings.push(...moduleFindings);
+  }
   return {
     schemaVersion: 1,
-    sourcePaths: loaded.sourcePaths,
-    findings: [...findingsByKey.values()].sort(compareFindings),
-    parseErrors: loaded.parseErrors,
+    sourcePaths: [...sourcePaths],
+    findings: findings.sort(compareFindings),
+    parseErrors: [...parseErrors],
   };
 }

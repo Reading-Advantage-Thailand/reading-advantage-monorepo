@@ -43,12 +43,30 @@ After a change to an analyzed file, refresh the five pinned analyzer values:
 ```bash
 pnpm architecture:pin:refresh
 pnpm architecture:pin:refresh --acknowledge
+pnpm architecture:pin:refresh --acknowledge --budget-s 1500
 ```
 
 The first command prints the old value and the new value of each field. It
 writes nothing and exits non-zero while a value differs. The acknowledged
 command writes the canonical manifest, then validates it. A failed validation
 restores the previous bytes. CI never runs the refresh command.
+
+A refresh that needs more time than one run has continues as a series of runs.
+`--budget-s <n>` sets the time budget of one run in whole seconds. The default
+is 1500, so that a run fits the 1800 s job cap with a margin. Each run prints a
+`step=` line for each step and a `modules_done=` line after each module batch.
+
+The run keeps finished module findings in
+`.cache/architecture-pin-refresh/checkpoint.json` under the repository root.
+`.gitignore` ignores `.cache`, so the store is outside git. The store is valid
+for one Git commit. A commit or a change under
+`packages/architecture-enforcement` discards the store, and the next run starts
+from scratch. The store holds no hash and no checksum.
+
+Exit code 0 means the manifest is current or written. Exit code 1 means a
+preview has pending changes. Exit code 2 means a failure. Exit code 3 means a
+partial run: the store holds new modules, and the same command must run again.
+A run that stores no new module exits with code 2.
 
 ## Remediation
 
