@@ -3133,7 +3133,7 @@ for every other track.
 
 ## Phase 5: Milestone week integration
 
-- [x] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step.
+- [x] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step. Commits: `2887dc70b`, `8568a8fba`, `290a66b4b`.
   - The picture file arrives on `books[].cover` and `books[].pages[].image`. For w01 it arrives from 2026-11-06. For w02 to w07 it arrives by 2026-11-16. Source: Workbooks answers Q13 to Q15, through the PM, 2026-11-03. Daniel's picture approvals cover the app.
   - Red evidence (task 5.1). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,
@@ -3190,7 +3190,7 @@ for every other track.
     artifact plus the hand-off record.
   - Hand-off record (task 5.1): The orchestrator sent the list to the PM on 2026-11-11 for Workbooks and Forge, with Daniel's offer to do the phoneme noise step.
 - [b] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price. deferred:daniel
-- [x] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1.
+- [x] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1. Commits: `2887dc70b`, `8568a8fba`, `290a66b4b`.
   - Red evidence (task 5.3). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,
     2026-11-11): the P4 ten-file command exit 0, 10 files, 181 of 181, and
@@ -3374,6 +3374,18 @@ for every other track.
     switch, the five rows, and `port_closed=1`) waits for the orchestrator's scheduled run under
     the heavy lock, and the agent-side open, play, and check (rule 6.5) comes with that run. No
     Next build, dev, or start ran in this round. Evidence class: automated unit and self-test.
+  - Green evidence r2 (tasks 5.6 and 5.7), 2026-11-12. Role `deepseek/deepseek-flash#high`
+    (DeepSeek); Red model `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax); role base
+    `27d2aa690a9e23cbcdfc5d5d9c4378db659d2eed`; Red gate fix `5b6998100`; Red evidence
+    `39203fe6d`; fix commit `7396e8c2c`. Cause: the proxy sent `host: target.host`, so the app read
+    its own origin as the app port while the browser Origin named the review port, and
+    `assertSameOrigin` answered the sign-in with 403. The proxy now keeps the Host header of the
+    browser and sends `x-forwarded-host` and `x-forwarded-proto`. The app auth code is unchanged.
+    `GREEN_TEST_COMMAND` under heavy-run p1: exit 0; 7 files; 52 passed of 52; 0 failed; 0
+    skipped. The type check `tsc --noEmit` in `apps/storytime` under heavy-run p1: exit 0. ESLint
+    on the changed file: exit 0, 0 errors, 0 warnings. `build-graph update ./graph.db`: exit 0;
+    1 file; 37 nodes; 36 edges. The full browser gate waits for the orchestrator's run, so both
+    tasks stay `[~]`. Evidence class: automated unit.
   - Red retry r3, the gate launch defect. The orchestrator run of the gate at the Green commit
     `844bae0ad` exited 1: the review copy did not become ready and the browser rows did not run.
     The cause sat in the launch line: the `&` sent the whole list `cd && ( next start )` to the
