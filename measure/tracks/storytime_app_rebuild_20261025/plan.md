@@ -2984,6 +2984,66 @@ for every other track.
     count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
     filter changed). A16 holds (no worktree).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem8.log`.
+  - Phase 4 remediation round 9 evidence (the last planned round; a later nit goes to the
+    close-out record). Role base `daaee360d89af157c25d1d63f5734bb2131c4e3b`; phase base
+    `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The review roles ran on other families;
+    no DeepSeek model wrote code in this round. No coder was delegated.
+  - Implementation commit: `9c735f547` (`fix(storytime): close the phase 4 round 9 findings`).
+    Files: the new `lib/teacher-lang.tsx`, `lesson-flow.tsx`, `week-view.tsx`,
+    `docs/runbooks/storytime-deploy.md`, and the Green-owned test files
+    `phase4-lesson-focus.test.tsx` (10 to 13 cases) and `phase4-runbook.test.ts` (15 to 16
+    cases). No committed Red test changed, and no `content/` file changed.
+  - F691 and F702 (one item): `splitThaiRuns`, `TextRun`, and `LanguageRuns` move to the new
+    plain module `lib/teacher-lang.tsx`, which holds no `"use client"` directive and keeps its
+    JSDoc. `lesson-flow.tsx` imports from it, and `week-view.tsx` imports from it and no
+    longer imports from `lesson-flow.tsx`, so the week page ships no client chunk of the
+    lesson flow. The test imports point at the new module.
+  - F692 and F701 (one item, runbook flag section only): the revision lookup
+    (`gcloud run revisions list`) and the tag-URL host note move before list item 1; items 5
+    and 6 begin with "When item 4 ran,"; item 3 adds "If another name differs, stop, give no
+    traffic step, and report the difference to Daniel"; item 4 adds the case where the new
+    build and the live revision both hold the flag (no off command; the new build goes to the
+    traffic step 4 of this runbook after items 1 to 3); item 6 names "the traffic step 4 of
+    this runbook" and keeps the pinned phrase "traffic step (step 4)"; item 5 says the update
+    command prints the name of the off revision. Every command, `--no-traffic`, the tags,
+    Daniel's go, and the way back stay. One new case checks the new sentences, the item-4
+    scoping, and the lookup position. The committed red cases of
+    `phase4-adversarial-routes.test.ts` keep passing (the pinned phrases hold on one source
+    line). No gcloud command ran; the runbook is text only.
+  - F693: the remaining English renders of week data take `LanguageRuns`: the Friday check
+    item fields (sound, pictures, answer, word, letter, groups, words), the review strip card
+    text, the graphemes of the element, the letter box letter, and the read-along and
+    decodable titles. The visible text does not change. One new case plants a Thai letter in
+    a check item sound and a strip card and asserts both sit in a span with `lang="th"`.
+  - F694: the scroll cases of F681 remove the `scrollIntoView` stub in a suite-level
+    `afterEach`, so a failed assertion cannot leak it, and the shared `afterEach` keeps
+    restoring the `getBoundingClientRect` spy. One boundary case pins the edge: a box top
+    equal to `window.innerHeight` scrolls, one pixel less does not.
+  - Gates (each ran alone, in the foreground, with the shell timeout 0):
+    1. Check of the touched files: the five touched test files under the local vitest with
+       `--maxWorkers=1` after the implementation: exit 0, 5 files, 109 of 109. This round was
+       a refactor round (module move, runbook wording, test hygiene), so it ran no separate
+       red phase; the new cases assert the fixes directly (the runbook case requires the new
+       sentences, the boundary case pins the scroll edge, the F693 case requires the lang th
+       spans), and the ten-file gate and the production build prove the whole state.
+    2. The ten-file Green command of `test-strategy.md` line 621 through `heavy-run.sh`:
+       exit 0, 10 files, 170 of 170 tests (167 of rem 8 plus the boundary case, the F693
+       case, and the new runbook case).
+    3. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0.
+    4. One production build of apps/storytime (heavy-run p1,
+       `pnpm turbo run build --filter=storytime`): exit 0; 7 of 7 tasks successful, 6 cached;
+       `storytime:build: cache miss, executing` (the app built fresh with the new import
+       graph, Next.js 16.4.1, Turbopack). Review C asked for this proof.
+    5. ESLint on the five changed files: exit 0; 0 errors; 0 warnings.
+    6. `build-graph update` (heavy-run p1) on the three changed `.tsx` files: exit 0 (84 to
+       102 nodes, 150 to 165 edges).
+  - No Docker smoke and no browser gate in this round (orchestrator brief); the UX role
+    measures after the reviews.
+  - Anti-patterns: A3 holds (labeled counts). A5 holds (this block gives each exit code and
+    count). A6 holds (`measure/tracks.md` changes only at closeout). A7 holds (no `rg -v`
+    filter changed). A16 holds (no worktree).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem9.log`.
 
 ## Phase 5: Milestone week integration
 

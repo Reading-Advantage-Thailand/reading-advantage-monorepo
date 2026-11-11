@@ -1,0 +1,140 @@
+# Green log: Phase 4 remediation round 9 (F691/F702, F692/F701, F693, F694)
+
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master.
+- Track: storytime_app_rebuild_20261025, phase id P4, phase heading
+  "## Phase 4: Teacher app".
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae (immutable).
+- role_base_sha: daaee360d89af157c25d1d63f5734bb2131c4e3b (HEAD at the start).
+- Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). Red family: DeepSeek; the families
+  differ, and no DeepSeek model ran in this role. No coder was delegated.
+- Audit inputs: review-a-p4-daaee360d.json (F691, F692, F693, F694),
+  review-c-p4-daaee360d.json (F701, F702). F691 and F702 are one item; F692 and F701 are one
+  item.
+- This is the last planned round; a later nit goes to the close-out record.
+- Other tracks commit on master at the same time. This round committed only with its own path
+  list, and git status at the start held no change under apps/storytime or docs/runbooks.
+
+## Order of work
+
+1. New plain module `lib/teacher-lang.tsx` (no "use client") holding TextRun, splitThaiRuns,
+   and LanguageRuns with their JSDoc; both views import from it, and the week view drops its
+   import of the "use client" lesson-flow module (F691, F702).
+2. The remaining English renders of week data take LanguageRuns (F693), and the two tests of
+   F681 gain failure-safe cleanup and a boundary case (F694).
+3. The runbook flag flow gains the F692/F701 sentences, with the pinned phrases of the
+   committed red cases kept on one source line.
+4. Gates, then the plan evidence and this log. This round is a refactor round, so it ran no
+   separate red phase; the new cases assert the fixes directly, and the gates prove the state.
+
+## Commands and results (A5: each line holds the exit code and the counts)
+
+Heavy vitest, tsc, and build runs went through heavy-run.sh (p1, foreground, shell timeout 0).
+
+1. Check of the touched files (local vitest, --maxWorkers=1): phase4-lesson-focus,
+   phase4-week-view, phase4-runbook, phase4-adversarial, phase4-adversarial-routes
+   -> exit 0; 5 files; 109 of 109.
+2. The ten-file Green command of test-strategy.md line 621 (heavy-run, --maxWorkers=1):
+   -> exit 0; 10 files; 170 of 170 tests (167 of rem 8 plus the boundary case, the F693 case,
+   and the new runbook case).
+3. cd apps/storytime && ../../node_modules/.bin/tsc --noEmit (heavy-run p1): -> exit 0.
+4. One production build (heavy-run p1): cd /home/daniebo/Desktop/reading-advantage-monorepo
+   && pnpm turbo run build --filter=storytime -> exit 0; 7 of 7 tasks successful, 6 cached;
+   "storytime:build: cache miss, executing" with "next build" (Next.js 16.4.1, Turbopack).
+   This proves the server and client imports build with the new module (review C asked for
+   it).
+5. ESLint on the five changed files (the new module, the two views, the two test files):
+   -> exit 0; 0 errors; 0 warnings.
+6. build-graph update ./graph.db on the three changed .tsx files (heavy-run p1): -> exit 0;
+   updated 3 files (84 -> 102 nodes, 150 -> 165 edges).
+7. No Docker smoke and no browser gate in this round, per the orchestrator brief.
+
+## Fixes in the commit
+
+- F691 and F702: the new module apps/storytime/lib/teacher-lang.tsx holds TextRun,
+  splitThaiRuns, and LanguageRuns with no "use client" directive, so the helpers work on the
+  server and in the browser. lesson-flow.tsx imports LanguageRuns from it; week-view.tsx
+  imports it and no longer imports from lesson-flow.tsx, so the week page ships no client
+  chunk of the lesson flow. The test imports point at the new module.
+- F692 and F701 (docs/runbooks/storytime-deploy.md, flag section only): the revision lookup
+  command and the note that the tag URL has its own host move before list item 1; items 5 and
+  6 begin with "When item 4 ran,"; item 3 adds "If another name differs, stop, give no
+  traffic step, and report the difference to Daniel"; item 4 adds the case where the new
+  build and the live revision both hold the flag (no off command; the new build goes to the
+  traffic step 4 of this runbook after items 1 to 3); item 6 names "the traffic step 4 of
+  this runbook", keeps the pinned phrase "traffic step (step 4)", and says only Daniel's go
+  starts it; item 5 says the update command prints the name of the off revision. Every
+  command, --no-traffic, the tags, Daniel's go, and the way back stay. No gcloud command ran.
+- F693 (lesson-flow.tsx, week-view.tsx): LanguageRuns now wraps the Friday check item fields
+  (sound, the picture and word circle lines, the answer lines, the word and letter write
+  fields, the sort groups), the review strip card text, the graphemes of the element, the
+  letter box letter, and the read-along and decodable titles. The visible text does not
+  change.
+- F694 (phase4-lesson-focus.test.tsx): the scroll suite removes the scrollIntoView stub in a
+  suite-level afterEach, so a failed assertion cannot leak the defineProperty value; the
+  shared afterEach keeps restoring the getBoundingClientRect spy. One boundary case pins the
+  edge: a box top equal to window.innerHeight scrolls (the region is outside), one pixel less
+  does not.
+
+## Commits
+
+1. Implementation and tests: 9c735f547, fix(storytime): close the phase 4 round 9 findings
+   (track_id: storytime_app_rebuild_20261025). Six files: lib/teacher-lang.tsx (new),
+   lesson-flow.tsx, week-view.tsx, docs/runbooks/storytime-deploy.md,
+   phase4-lesson-focus.test.tsx, phase4-runbook.test.ts.
+2. Plan evidence and this log: the next commit, docs(measure) on the same track id.
+
+## Anti-pattern check
+
+- A3 holds: every count above is a labeled integer.
+- A5 holds: every command line above holds its real exit code; the gate, build, tsc, and
+  graph exits were captured without a pipe.
+- A6 holds: measure/tracks.md changes only at closeout; this round did not touch it.
+- A7 holds: no rg -v filter changed.
+- A16 holds: this role made no worktree.
+
+## Result
+
+The targeted Red command (the ten-file Green command of test-strategy.md line 621) exits 0 at
+HEAD 9c735f547 with 10 files and 170 of 170 tests. tsc exits 0. The production build exits 0
+with the storytime task executed fresh. ESLint on the changed files exits 0. The plan
+evidence block "Phase 4 remediation round 9" carries the implementation commit SHA. No task
+marker changed in this round.
+
+MEASURE_AGENT_RESULT
+status: complete
+phase: P4 (Phase 4 remediation round 9, the last planned round)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+green_head: 9c735f547fad70eb27b16688d7ef331a19729a3a
+implementation_commit: 9c735f547
+plan_evidence_commit: (the commit that carries this log; see git log)
+Dispositions: F691 FIX; F702 FIX; F692 FIX; F701 FIX; F693 FIX; F694 FIX
+
+handoff:
+- Tasks flipped to [x]: none in this round. Tasks 4.1 to 4.6a keep their [x] markers; the
+  "Phase 4 remediation round 9" evidence block now sits under the Phase 4 evidence with
+  implementation commit 9c735f547 and the gate exit codes.
+- Tasks flipped to [b]: none. No fabrication was needed.
+- Targeted Red command: the ten-file Green command of test-strategy.md line 621, run through
+  heavy-run.sh with --maxWorkers=1. Output: exit 0, 10 files, 170 of 170 tests. This round
+  was a refactor round and ran no separate red phase; the five touched test files passed
+  109 of 109 after the implementation, and the new cases assert the fixes directly.
+- Gates: tsc --noEmit exit 0; the production build (pnpm turbo run build --filter=storytime,
+  heavy-run p1) exit 0 with storytime:build executed fresh, which proves the server and
+  client imports of the new module; ESLint on the five changed files exit 0 (0 errors,
+  0 warnings); build-graph update on the three tsx files exit 0. No Docker smoke and no
+  browser gate in this round, per the brief.
+- Files changed by this round (review scope): apps/storytime/lib/teacher-lang.tsx (new plain
+  module, no "use client"), apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/
+  lesson-flow.tsx, apps/storytime/app/[locale]/teacher/[level]/[week]/week-view.tsx,
+  docs/runbooks/storytime-deploy.md (flag section only), apps/storytime/__tests__/
+  phase4-lesson-focus.test.tsx, phase4-runbook.test.ts. One new file, but it joins no new
+  test file, so the ten-file test list of test-strategy.md line 621 stays the list of record.
+  No path of the concurrent tracks was touched.
+- Notes for the reviewers: the committed red cases of phase4-adversarial-routes.test.ts still
+  pin runbook phrases on one source line, and the rewrite keeps them ("A revision cannot
+  change", the F612 off-command phrases, "open the tag URL", "prints the variable names, not
+  their values", "traffic step (step 4)"). The week view no longer imports any "use client"
+  module. A later nit goes to the close-out record, not to a new round.
+- Question for the PM (default in parentheses): none in this round. The six findings are all
+  fixed with the code, the runbook, and the tests; no user decision is open.
+END_MEASURE_AGENT_RESULT
