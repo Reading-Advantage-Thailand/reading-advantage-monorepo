@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review A round 2 passes Phase 1 of primary_class_session_lifetime_20261111 at 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9. Repository HEAD is b9f5439d4; the commits after 2d05e9e9b change only apps/storytime and measure files. The Green rem1 commits (a3f30a759, 31eef4b5f, 2d05e9e9b) fix F121, F125, F122, F123, F143, and F144. I withdraw F121, F122, F123, and F125. F124 stays open as an ESCALATE item and is not contested. I found no regression in the domain or the handler. I add one new Nit (F171) for the close-out record. No blocking finding.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F124 (ESCALATE per orchestrator, unchanged, not contested): the lifetimeHelp7d text says 'until this time' with no time shown next to the 7-day choice before a start. Daniel decides the wording. The duplicate '3h' default in startClassSession (class-session.ts:127) and computeSessionExpiry (:46) also stays; one default is enough, and it is a Nit.",
+    "F171 (Nit, close-out record): the state value stays 'until_17' while the option is hidden after 17:00 Bangkok. If the page stays open past Bangkok midnight, the option shows again and the radio group selects 'until_17' again with no click. The radio is visibly checked and the server still checks the clock, so the effect is small. Advice if a later round touches the file: when the option hides, call setLifetime('3h') in an effect, or reset the state in run()."
+  ],
+  "evidence": [
+    "F121 withdrawn: class-session-control.tsx:64-69 derives choices from the Bangkok clock and effectiveLifetime = choices.includes(lifetime) ? lifetime : '3h'. The radio checked value uses effectiveLifetime (:136), so one radio is always checked. The start body uses effectiveLifetime (:76). The test 'falls back to 3 hours when the clock passes 17:00 with until_17 selected' selects until_17 at 09:59:59Z, moves the clock to 10:00:00Z, rerenders, asserts '3 hours' is checked and the until_17 radio is gone, and asserts the body is { classroomId, lifetime: '3h' }. Run result: exit 0.",
+    "F121 error clear, verified: the radio onChange calls setLifetime and setError(null) (:139-142). The test 'clears the lifetime error when the teacher picks another option' shows the alert after a 400 with invalid_input and asserts it is gone after a click on '7 days'.",
+    "F125 withdrawn: three new fixed-clock cases exist (posts until_17 before 17:00 Bangkok with body { classroomId, lifetime: 'until_17' }; the fallback case; the error clear case), plus one label case. They use vi.useFakeTimers with Date only and vi.setSystemTime, so the clock is fixed. My run of class-session-control.test.tsx with TZ=America/Los_Angeles: exit 0, tests_total=36, tests_failed=0.",
+    "F122 withdrawn: contracts.ts:37 now reads 'The three lifetime choices of a class sign-in session: 3 hours, until 17:00 Bangkok today, or 7 days.' and the type comment (:40) reads 'Choice of how long a class sign-in session stays open.' No types appear in the JSDoc.",
+    "F123 withdrawn: class-session.ts:169-170 shows 'let row: { id: string } | undefined;' and 'try {' on separate lines. The diff for the file is these two lines only.",
+    "F143 verified: TeacherManual.startClass.step4 changed in en, th, cn, tw, and vi. Each text keeps the tag <ui>{endClass}</ui>. en reads 'At the end of the period, press <ui>{endClass}</ui>. The class also closes by itself at the time you chose: 3 hours, until 17:00 today, or 7 days.' The text is true for the three choices and for an early end. cn, tw, and vi hold the same English text (the F5 stopgap). The th draft uses the same three values. A grep over apps/primary-advantage for '3 hours' and the th, cn, tw, vi forms finds no stale 'after 3 hours' text. The manual page test (app/[locale]/teacher/manual/__tests__/page.test.tsx) exits 0 with tests_total=12, and it asserts that no raw { } < > or TeacherManual. key shows on the page in any locale.",
+    "F144 verified: class-session-control.tsx:121-130 renders a visible <p id='class-session-lifetime-label'> with the lifetimeLabel text and gives the radiogroup aria-labelledby for it. The group has aria-describedby='class-session-lifetime-help' only while effectiveLifetime is '7d' (:126), and the help <p> carries that id (:153-156). The test 'names the group with a visible label and describes the 7 day help' checks the visible text, the aria-labelledby value, the missing aria-describedby by default, and the describedby target text for 7d. The accessible name of the group still equals the label text, so the older tests pass.",
+    "No regression in domain or handler: GREEN_TEST_COMMAND of green-p1-rem1.log at HEAD. Domain four files exit 0, tests_total=108, passed=96, skipped=12 (real-db without PG_TEST_URL), failed=0. App three files exit 0, tests_total=86, passed=86, failed=0. These counts match the Green log (A5 check passed). The domain diff since 9e2bc7492 holds only the JSDoc text and the line break; computeSessionExpiry and the F1 order are unchanged. The handler files are unchanged since 9e2bc7492 (git diff --stat lists no handler or http.ts file).",
+    "Scope: the diff 9e2bc7492..2d05e9e9b in packages and apps/primary-advantage touches class-session-control.tsx and its test, class-session.ts, contracts.ts, and the five message files. No change in packages/db, card-token.ts, picture-password.ts, or rate-limits.ts. The app type check was blocked in the Green log by the foreign scratch file qa-check-user.tmp.ts; I did not rerun it (heavy command). I read the filtered result (other_errors=0) from the log.",
+    "HEAD note: git rev-parse HEAD is b9f5439d4, not 2d05e9e9b. git diff --name-only 2d05e9e9b..HEAD lists only apps/storytime and measure files, so no primary or domain file differs. The brief marks the Storytime commits out of scope."
+  ],
+  "commands": [
+    "git diff 9e2bc7492 2d05e9e9b -- packages apps/primary-advantage (code, tests, messages)",
+    "CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 (four files of GREEN_TEST_COMMAND) -> exit 0, 96 passed, 12 skipped, 0 failed",
+    "CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx -> exit 0, 86 passed, 0 failed",
+    "CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 app/[locale]/teacher/manual/__tests__/page.test.tsx -> exit 0, 12 passed",
+    "TZ=America/Los_Angeles CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 components/__tests__/class-session-control.test.tsx -> exit 0, 36 passed",
+    "git diff --name-only 2d05e9e9b HEAD (later-commit scope check) and grep for stale '3 hours' text"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "audited_head_sha": "2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9",
+  "route": "unknown",
+  "ratings": [
+    { "axis": "correctness", "score": 5, "evidence": "class-session-control.tsx:64-69 derives effectiveLifetime and the fallback case passes at the 17:00 clock change; domain expiry code is unchanged." },
+    { "axis": "test_meaning", "score": 4, "evidence": "Test 'falls back to 3 hours when the clock passes 17:00' fixes the clock and asserts the posted body; the midnight re-select edge (F171) has no test." },
+    { "axis": "scope_discipline", "score": 5, "evidence": "git diff 9e2bc7492..2d05e9e9b shows only the panel, its test, two JSDoc and format lines, and the five message files." },
+    { "axis": "evidence_quality", "score": 5, "evidence": "My runs reproduce the Green counts (96 passed and 12 skipped domain, 86 app, 36 for the control file at TZ=America/Los_Angeles)." }
+  ]
+}

@@ -1,0 +1,20 @@
+Green P1 checkpoint for primary_class_session_lifetime_20261111.
+
+The phase acceptance for Phase 1 passed at commit 1826b382e. The orchestrator
+ran the role gate "role-gate --role phase-acceptance" and it exited 0 with
+"PASS: phase-acceptance gate passed". The acceptance result is
+measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.json.
+
+This session changed only the Phase 1 heading line of plan.md and added the
+checkpoint marker [checkpoint: 1826b382e]. Every other line is unchanged.
+Task 1.12a (browser check) stays deferred:pm to the tower. The checkpoint
+does not close it.
+
+No test run and no build in this session, per the task brief.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+commit: 7d208eed5
+marker: ## Phase 1: Choice of the class session lifetime [checkpoint: 1826b382e]
+END_MEASURE_AGENT_RESULT

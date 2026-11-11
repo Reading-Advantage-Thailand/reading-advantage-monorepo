@@ -1,0 +1,21 @@
+Final acceptance fails two closeout gates. The product work meets the PM request, and every required review passes.
+
+The supplied test command exits 0. Domain tests pass 190 and skip 12. App tests pass 142. The combined run has 332 passed, 12 skipped, and 0 failed.
+
+Both changed-file ESLint commands exit 0. The domain type check exits 0. The Primary type check exits 1 on the foreign qa-check-user.tmp.ts file. This failure is F402.
+
+The doctor exits 1 because measure/automation-supervisor.py is absent. The tech-debt registry records this failure. This failure is F401.
+
+The audited commit is on master. Later commits touch only Storytime files. The packages/db diff is empty. The hash detector returns no path. The A5, A6, and A9 checks pass.
+
+The browser check stays deferred:pm to the tower. It must pass before deploy. The Thai check stays deferred:pm. Deploy stays deferred:daniel.
+
+MEASURE_AGENT_RESULT
+status: complete
+verdict: fail
+summary: Two closeout gates fail despite passing product tests and reviews.
+blocking_findings: F401, F402
+nonblocking_findings: F403, F404, F405, F406, F407, F408
+tests: 332 passed, 12 skipped, 0 failed
+result_json: measure/runs/primary_class_session_lifetime_20261111/final-acceptance-7d208eed5.json
+END_MEASURE_AGENT_RESULT

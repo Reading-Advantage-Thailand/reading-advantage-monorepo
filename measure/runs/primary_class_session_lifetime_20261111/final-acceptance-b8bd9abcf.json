@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Final acceptance r3 passes A-53 at the immutable audited head b8bd9abcfc49190b6698d77f386c7f050b03ff40. The supplied test command exits 0 with domain 190 passed and 12 skipped of 202 and app 142 of 142. The Primary type check exits 0. The marker check for this track exits 0. No A-53 product file changed after the r2 audited head. The doctor gate still exits 1 for repository reasons, and the PM decision of 2026-11-12 accepts F411 for this track and moves the repair to a doctor.sh follow-up track with a done date of 11-14. The new finding F421 records the fourth doctor step, the architecture:check pins, which were already stale before the A-53 Red commit. The three deferred gates stay open.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F421: the fourth doctor step, `pnpm architecture:check`, exits 1 at the audited head with 'Analyzer input snapshot hash does not match current bytes'. With `--skip-input-snapshot-pin` it exits 1 with 'Analyzer report hashes do not match current byte-identical reports'. Both pins hash the whole repository source tree under apps, packages, integrations, and services. The last pin refresh, de25d49a9 of the architecture_ci_input_pin_20261010 track, predates the Storytime commit 08c36df04, which changed an analyzed file under apps/storytime before the A-53 Red commit 0c459e9eb. The pin was therefore already stale before A-53 wrote code, so the failure is repository-wide and not an A-53 defect. The architecture_ci_input_pin_20261010 track records that every later change to an analyzed file breaks the pin and that CI skips it by PM decision. A-53 cannot refresh the pin alone, because three tracks have work in flight. The doctor.sh follow-up track of the PM decision of 2026-11-12 owns the repair, with a done date of 11-14.",
+    "F403: the browser check stays deferred:pm under task 1.12a. The tower must pass it before the Primary deploy. The local UX result stays inconclusive.",
+    "F404: this test run skipped 12 real-database cases without PG_TEST_URL. The Green phase check passed all 12 at 78df5d21d. Later domain changes only split one statement.",
+    "F405: open PM defaults stay unchanged. F142 keeps D-5; F124 and F145 keep the wording; F146 awaits translations; F101 and OQ-1 keep no server refusal.",
+    "F406: task 1.10 keeps the Thai check deferred:pm. Task 1.14 keeps deploy deferred:daniel. This acceptance runs no deploy.",
+    "F407: spec FR-5 still describes a fallback that decision F5 replaced. Closeout should name the English stopgap in cn, tw, and vi.",
+    "F408: closeout nits F171, F181, F201, and F202 keep their recorded defaults. None changes the server choice list or the 7-day maximum."
+  ],
+  "evidence": [
+    "The audited head is b8bd9abcfc49190b6698d77f386c7f050b03ff40. git rev-parse HEAD returned it at the start of the run, and git branch --contains printed master. Other tracks committed after it during the run, so the audit stays on this immutable head.",
+    "git log db8672b04fdf3f243bb00afed6b8a682811d2caa..b8bd9abcfc49190b6698d77f386c7f050b03ff40 and git log 1826b382ed42f5189312a625bb364d20f70344f7..b8bd9abcfc49190b6698d77f386c7f050b03ff40 both list commits, so the track base and the phase-acceptance head are ancestors of the audited head. git merge-base --is-ancestor was refused by the git merge permission pattern, so the log range is the proof.",
+    "The plan holds one phase heading, 'Phase 1: Choice of the class session lifetime [checkpoint: 1826b382e]'. One phase-acceptance result exists for it: phase-acceptance-p1-1826b382e.json, with status pass and audited_head_sha 1826b382e.",
+    "git diff --name-only 9a195d880401a586a767d9f0e5ba18485501e7e8..b8bd9abcfc49190b6698d77f386c7f050b03ff40 -- packages/domain apps/primary-advantage measure/tracks/primary_class_session_lifetime_20261111 returns an empty list. No A-53 product file changed after the r2 audited head.",
+    "git diff --name-only b8bd9abcfc49190b6698d77f386c7f050b03ff40..HEAD over the same paths also returns an empty list. The commits that landed during the run belong to the Storytime, Accounting, and Sales tracks.",
+    "git diff --name-only db8672b04..b8bd9abcf -- packages/domain apps/primary-advantage lists 19 files, all A-53 files: 3 domain source files, 2 app source files, http.ts, 5 message files, and 7 test files. card-token.ts, picture-password.ts, rate-limits.ts, and handlers.ts are not in the list.",
+    "bash tests/orchestrator_marker_vocabulary.sh --track primary_class_session_lifetime_20261111 exits 0 and prints PASS for 1 plan. The grep for deprecated '- [ ]' markers in the A-53 plan returns no match.",
+    "bash measure/doctor.sh exits 1 on deprecated markers in other track plans. The A-53 plan is not in the failure list. The PM decision of 2026-11-12 accepts F411 for this track and counts the single-track marker check as the pass, and opens the doctor.sh follow-up track with a done date of 11-14.",
+    "bash tests/orchestrator_catalog.sh exits 0 with two PASS lines. bash tests/orchestrator_review_execution_truthfulness.sh exits 0 with PASS.",
+    "pnpm architecture:check exits 1 at the audited head. pnpm architecture:check --skip-input-snapshot-pin exits 1 with the report hash error. F421 records the cause and the owner.",
+    "The supplied test command through heavy-run.sh at p2 exits 0. Domain: 4 passed and 1 skipped test files of 5; 190 passed and 12 skipped tests of 202. App: 5 passed test files of 5; 142 passed tests of 142. No failure line. The counts equal the phase-acceptance result and the adversarial result.",
+    "pnpm --filter primary-advantage check-types through heavy-run.sh at p2 exits 0. The pre-existing foreign file apps/primary-advantage/qa-check-user.tmp.ts no longer exists in the tree.",
+    "AC-8: git diff --name-only db8672b04..b8bd9abcf -- packages/db returns an empty list. No migration.",
+    "No hash line: git diff db8672b04..b8bd9abcf -G'sha256|sha1|createHash|checksum|md5|digest' --name-only -- packages apps/primary-advantage returns an empty list.",
+    "A5: the plan holds no 'PASS=N, FAIL=0' text and no 'all checks pass' text. Its recorded counts reconcile with this run. The Green gate 108 domain tests plus the 94 adversarial cases give the 202 measured here. The app 86 plus 44 plus 12 give the 142 measured here.",
+    "A6: the overstatement grep on measure/tracks.md returns no hit. The A-53 registry note states the request and the gates, and it claims no resolved state. The closeout role updates the registry.",
+    "A9: three files under tests/ reference measure/tracks/. Two use a glob over the active plans, and tests/codecamp_pr_release_approval_provenance.sh resolves its track through track_dir_resolve, which prefers measure/archive. No test names an archived track path.",
+    "Plan truthfulness: all 15 task lines of the A-53 plan carry [x] or [b] deferred:<owner>. Each [x] line names a commit SHA: 0c459e9eb, 2614bdba0, 35e99be85, bd292b853, 30c48dec0, a3f30a759, and 31eef4b5f. No line carries [~] or [ ].",
+    "Spot check: contracts.ts:38 holds the enum of three values and :46 the 3h default. class-session.ts:49 computes the expiry, :61 and :66 throw invalid_input, :128 computes the expiry before the first row write, and :180 writes lifetime into the class_start audit metadata. http.ts maps invalid_input to 400.",
+    "Route parity holds. Review A and the phase acceptance of A-53 are Anthropic, Red is DeepSeek, and Green is GLM. Kimi was on WAIT, so this run uses MiniMax M3, which meets rule 4. The orchestrator recorded the deviation.",
+    "MiniMax M3.1 Flash wrote the A-53 adversarial tests, and this final acceptance runs on MiniMax M3. The overlap weakens the independence of the adversarial verdict. The reviewer rating for that role says so."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> b8bd9abcfc49190b6698d77f386c7f050b03ff40",
+    "git branch --contains b8bd9abcfc49190b6698d77f386c7f050b03ff40 -> master",
+    "git log --oneline db8672b04fdf3f243bb00afed6b8a682811d2caa..b8bd9abcfc49190b6698d77f386c7f050b03ff40 -> non-empty; the track base is an ancestor",
+    "git log --oneline 1826b382ed42f5189312a625bb364d20f70344f7..b8bd9abcfc49190b6698d77f386c7f050b03ff40 -> non-empty; the phase-acceptance head is an ancestor",
+    "git merge-base --is-ancestor -> refused by the git merge permission pattern; the log range is the proof",
+    "git diff --name-only 9a195d880401a586a767d9f0e5ba18485501e7e8..b8bd9abcfc49190b6698d77f386c7f050b03ff40 -- packages/domain apps/primary-advantage measure/tracks/primary_class_session_lifetime_20261111 -> empty",
+    "git diff --name-only b8bd9abcfc49190b6698d77f386c7f050b03ff40..HEAD -- packages/domain apps/primary-advantage measure/tracks/primary_class_session_lifetime_20261111 -> empty",
+    "git diff --name-only db8672b04fdf3f243bb00afed6b8a682811d2caa..b8bd9abcfc49190b6698d77f386c7f050b03ff40 -- packages/domain apps/primary-advantage -> 19 A-53 files",
+    "git diff --name-only db8672b04fdf3f243bb00afed6b8a682811d2caa..b8bd9abcfc49190b6698d77f386c7f050b03ff40 -- packages/db -> empty (AC-8)",
+    "git diff db8672b04..b8bd9abcf -G'sha256|sha1|createHash|checksum|md5|digest' --name-only -- packages apps/primary-advantage -> empty",
+    "bash measure/doctor.sh -> exit 1; deprecated [ ] markers in other track plans (the recorded old failure)",
+    "bash tests/orchestrator_marker_vocabulary.sh --track primary_class_session_lifetime_20261111 -> exit 0; PASS for 1 plan",
+    "bash tests/orchestrator_catalog.sh -> exit 0; two PASS lines",
+    "bash tests/orchestrator_review_execution_truthfulness.sh -> exit 0; PASS",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'the supplied ten-file Vitest command' -> exit 0; domain 190 passed and 12 skipped of 202; app 142 passed of 142",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'pnpm --filter primary-advantage check-types' -> exit 0",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'pnpm architecture:check' -> exit 1; Analyzer input snapshot hash does not match current bytes",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'pnpm architecture:check --skip-input-snapshot-pin' -> exit 1; Analyzer report hashes do not match current byte-identical reports",
+    "grep -nE '^- \\[ \\]' measure/tracks/primary_class_session_lifetime_20261111/plan.md -> no matches",
+    "grep -nE 'PASS=[0-9]+.*FAIL=0|all checks pass|all tests pass' measure/tracks/primary_class_session_lifetime_20261111/plan.md -> no matches",
+    "grep -nE 'API-key encryption (was )?resolved|encryption.*resolved|completely fixed|fully solved|all (checks |tests )?pass' measure/tracks.md -> no matches",
+    "grep -rnE 'measure/(tracks|archive)/[a-z_0-9-]+' tests/*.sh -> no hardcoded track path",
+    "grep -nE '^- \\[[ x~b]\\] ' measure/tracks/primary_class_session_lifetime_20261111/plan.md -> 15 task lines, all [x] or [b]",
+    "grep -nE '^##+ ' measure/tracks/primary_class_session_lifetime_20261111/plan.md -> one phase heading"
+  ],
+  "changed_files": [
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-b8bd9abcf.json",
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-b8bd9abcf.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "track_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "phase_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "role_base_sha": "b8bd9abcfc49190b6698d77f386c7f050b03ff40",
+  "audited_head_sha": "b8bd9abcfc49190b6698d77f386c7f050b03ff40",
+  "open_gates": [
+    "1.12a browser check on the tower before the Primary deploy (deferred:pm)",
+    "1.10 Thai check (deferred:pm)",
+    "1.14 deploy (deferred:daniel)",
+    "F421 repository-wide architecture:check pin repair in the doctor.sh follow-up track (PM decision 2026-11-12, done date 11-14)"
+  ],
+  "route": "minimax-cn-coding-plan/MiniMax-M3#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "computeSessionExpiry at packages/domain/src/student-login/class-session.ts:49 gives the three expiry values and refuses before the first row write; F142, F171, and F202 stay recorded panel edge cases."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The plan records failing-first Red evidence of 43 domain and 29 app failures, and this run passes 332 tests; the 12 real-database cases skipped here pass in the Green run at 78df5d21d."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only db8672b04..b8bd9abcf -- packages/domain apps/primary-advantage lists 19 A-53 files only, and the diff from 9a195d880 to the audited head over the same paths is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every verdict here has a fresh command result, but the browser gate has no measurement and ux-browser-p1-e5b97e84c.json stays inconclusive."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Review A's counts match this run after adding the adversarial files, and its rem1 code claims match the recorded diff."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review B correctly passes the security scope and its probes match the diff, but it relies on Green test evidence instead of a new run."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "claude-code/claude-sonnet-5-5#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review C correctly verifies the API and panel wiring against the diff, but it runs neither tests nor a browser."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+      "agreed": true,
+      "score": 4,
+      "evidence": "This run reproduces the adversarial gate counts exactly, with domain 202 total and app 142 total, but MiniMax M3.1 Flash wrote the A-53 adversarial tests and this run is MiniMax M3, so the verdict is less independent than the count match alone suggests."
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review B (security) pass for Phase 1 of primary_class_session_lifetime_20261111 at audited HEAD 9e2bc749258cb6bc1b1fd666c104e932bb978564. The enum is the only input and 7 days is the maximum on every path that writes expiresAt (contracts.ts:38-47, class-session.ts:49-68). The until_17 refusal runs before the first row write (class-session.ts:125-129) with server-time-zone-independent Bangkok math (calendar-day.ts:19-27). Authorization and tenant scoping stay on authorizeClassroom and TenantDB; no new unscoped access. card-token.ts, picture-password.ts, and rate-limits.ts are unchanged. The audit line holds lifetime, sessionId, and expiresAt only; no code, no hash, no token (class-session.ts:179). invalid_input maps to 400 with no internal detail (http.ts:14,40-54); the panel shows message-key text only (class-session-control.tsx:149-153). No new dependency, secret, provider SDK, or hash. OQ-1 (7-day code_only entry) is judged and advised below; it stays a PM decision and is not a defect in this change.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F101 (OQ-1, PM decision, advice only): a class with the picture password off gives a code_only student session, so a 7-day code lets any holder of that code sign in as any student of the class for 7 days with no second factor. The threat is not new: the 3-hour window had the same shape. The 7-day choice extends exposure of a photographed or shared code from hours to days. Mitigations already in place: the code is one of about 1.07e9 values, code-entry rate limits and per-class attempt limits stay (rate-limits.ts unchanged), the teacher can end the session early, and the audit line records the choice. Advice with default: keep the implemented behavior (no server refusal), because the PM request states the picture password and the rate limits stay as they are, and the ready refusal rows (strategy section 7.1) stay inactive. Recommend the PM decide before deploy whether a panel warning next to the 7-day option for code-only classes (the roster already carries picturePasswordEnabled) is enough, or whether the server refusal rows of section 7.1 should be activated as a follow-up track."
+  ],
+  "evidence": [
+    "Probe 1 (enum enforced, 7-day max): contracts.ts:38-47 defines classSessionLifetime as z.enum(['3h','until_17','7d']) with default '3h'; z.object strips extra keys (verified by the Red strip case, contracts test line 126-130). class-session.ts:49-68 is a switch with a '=== undefined' default, so null and every unknown value (including 'constructor', 'toString', '__proto__') throw invalid_input; tests at student-login-class-session.test.ts:340-351 and the 7-day maximum loop at :283-296 (choices_checked=3) cover it. computeSessionExpiry is the only writer of expiresAt (call site class-session.ts:128).",
+    "Probe 2 (until_17 after 17:00 refused before any write): computeSessionExpiry throws at class-session.ts:60-62; the call sits after authorizeClassroom (:125) and before ensureStudentCredentials (:129), the first row writer. The Bangkok date comes from calendarDayKey via Intl with SCHOOL_TIME_ZONE (calendar-day.ts:19-27), so the math is independent of the server time zone; the time-zone matrix (tz_runs_green=3) ran in the Green gate. Tests: student-login-class-session.test.ts:260-281 (boundary 09:59:59Z works, 10:00:00Z and 23:59 refused, day roll) and :370-380 (refusal writes no row, no update, no audit, with a writing-fixture positive control at :362-368).",
+    "Probe 3 (authorization and tenant scope): authorizeClassroom (access.ts:26-61) is unchanged: TEACHER of the class or ADMIN of its school, class read through TenantDB, other-school reads as not_found. startClassSession writes through tenantDb with schoolId from the authorized classroom (class-session.ts:131-135,170-173); the raw-db collision check and findOpenSession span all schools by pre-existing design (documented at :145-146 and :216-218) and are untouched. No new unscoped access was added; the Green log records untouched_login_files_changed=0.",
+    "Probe 4 (code and cards share the session; limits unchanged): card-token.ts holds only the pre-existing expiresAt > now predicate (:70), picture-password.ts has no lifetime reference, rate-limits.ts has no lifetime reference; the phase-check detector untouched_login_files_changed=0 confirms all five files unchanged.",
+    "Probe 5 (OQ-1): picture-password.ts:155-185 gives a code_only session through resolveCode, unchanged; Green implemented no refusal, as instructed. Risk judged in finding F101 with the default advice.",
+    "Probe 6 (audit line holds no secret): class-session.ts:179 writes metadata { sessionId, expiresAt ISO, lifetime }; the test at student-login-class-session.test.ts:321-327 asserts the serialized audit calls contain neither the code nor codeHash.",
+    "Probe 7 (error path): invalid_input maps to 400 (http.ts:14,45); the StudentLoginError body is { message, code } with a message that names no student, class, or internal detail (errors.ts:16-18, class-session.ts:61,66). The contract 400 returns a bare 'Invalid input' with no code; api.ts:83-92 maps only a 400 carrying code invalid_input to lifetimeInvalid; the panel renders t('errors.<key>') text only (class-session-control.tsx:149-153). Tests: handlers test :333-356, control test :322.",
+    "Probe 8 (client sends the enum value as is): class-session-control.tsx:59-69 keeps the radio value in state and posts { classroomId, lifetime }; the start body keys are asserted to be exactly [classroomId, lifetime] (control test :197). The until_17 hide (:96-98) uses the client clock through Intl with SCHOOL_TIME_ZONE as a convenience; the server recomputes from its own clock, so a wrong client clock shows a choice the server then refuses with a clear error (OQ-2, control case at :237-248).",
+    "Probe 9 (no new dependency, secret, provider SDK, or hash): the only new import is ../calendar-day.js, an existing pure module; the phase check records added_hash_lines=0 and lifetime_out_of_scope_paths=0. No new file was added to packages/domain/src/student-login/.",
+    "A2 (consent-blind publish gate): not applicable; this track flips no draft to published status and touches no publish path.",
+    "A6 (registry overstatement): measure/tracks.md:83-87 lists this track as 'new (spec and plan only)', which understates rather than overstates; it claims no resolved security state, so the marketing copy does not outrun the implementation.",
+    "HEAD provenance: audited HEAD 9e2bc749258cb6bc1b1fd666c104e932bb978564 is the last commit of this track (docs(measure): fix the lifetime plan markers). The two later commits on master (54db95c18, daaee360d) are Storytime-only and touch no file of this track's blast radius, so the audited HEAD is current for this review."
+  ],
+  "commands": [
+    "Attempted: GREEN_TEST_COMMAND (vitest for the six named files) — rejected by the environment (shell permission denied for this role); test evidence is taken from the Green phase-check log at HEAD 78df5d21d, which ran the identical commands at exit 0 (domain targeted tests_failed=0, app targeted tests_failed=0, real-db 12/12, tz_runs_green=3 for both clock files).",
+    "File-level verification performed instead: read of contracts.ts, errors.ts, class-session.ts, calendar-day.ts, access.ts, http.ts, handlers.ts, api.ts, class-session-control.tsx; grep over card-token.ts, picture-password.ts, rate-limits.ts (no lifetime references beyond the pre-existing expiresAt predicate); grep over en.json and th.json (six new keys present); read of .git/HEAD, .git/refs/heads/master, and .git/logs/HEAD (commit order and out-of-scope commits after the audited HEAD)."
+  ],
+  "changed_files": [
+    "packages/domain/src/student-login/contracts.ts",
+    "packages/domain/src/student-login/errors.ts",
+    "packages/domain/src/student-login/class-session.ts",
+    "apps/primary-advantage/lib/student-login/http.ts",
+    "apps/primary-advantage/components/teacher/class-login/api.ts",
+    "apps/primary-advantage/components/teacher/class-login/class-session-control.tsx",
+    "apps/primary-advantage/messages/en.json",
+    "apps/primary-advantage/messages/th.json",
+    "apps/primary-advantage/messages/cn.json",
+    "apps/primary-advantage/messages/tw.json",
+    "apps/primary-advantage/messages/vi.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "audited_head_sha": "9e2bc749258cb6bc1b1fd666c104e932bb978564",
+  "route": "kimi-code-plan-cn/kimi-for-coding#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "class-session.ts:49-68 implements exactly D-1 to D-7 (three choices, === undefined default, Bangkok-date until_17, refusal before the first write at :128-129) and the AC table is covered by tests named in the evidence."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "Red failed first at the base with 43 domain and 29 app failures for the stated reasons (red-p1.log sections 2-3), and adversarial rows (prototype keys, null, no-write fixture control, real-database 7-day boundary) exist at student-login-class-session.test.ts:340-380."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "Phase-check step 10 reports lifetime_out_of_scope_paths=0 and step 9 reports untouched_login_files_changed=0 (green-p1.log section 3)."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every claim carries a file:line or a labeled count from the phase-check log; one point down because this role could not re-run the vitest gate itself (shell permission denied) and relied on the Green log's exit codes."
+    }
+  ]
+}

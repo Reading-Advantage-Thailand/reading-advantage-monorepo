@@ -1,0 +1,46 @@
+Measure UX browser review, Phase 1, primary_class_session_lifetime_20261111.
+Audited head: e5b97e84c66237697128c4334bc2678ab9c6b5c3. Phase base: db8672b04fdf3f243bb00afed6b8a682811d2caa.
+
+Result: inconclusive. The PM deferred the UX browser gate of this phase to the tower.
+Reason: host memory and the rule of 2026-11-10 03:20, which forbids a local Primary Next build on this machine.
+The gate stays a carry-forward gate. It must pass before the Primary team deploys this change.
+No browser measurement ran. This audit makes no UX finding and no UX violation.
+
+What the audit read.
+- The spec, the plan with the rem1 evidence, and the test strategy sections 6.8 and 6.9.
+- The browser scope of the last evidence entries of review-c-p1-9e2bc7492.json and review-c-p1-2d05e9e9b.json.
+- The panel code at the audited head: class-session-control.tsx with the radiogroup, the visible label, the effective lifetime, the start post, the 7-day help and the alert. Also class-login-panel.tsx, api.ts, the two student-login handler files, the roster and access modules, the en and th messages, and use-class-login.ts with the 10 s poll.
+
+What the audit ran.
+- The first launch under heavy-run with p2 and a 1800 s limit. The scratch container uxpcls-1794391715-171794 ran on host port 40505. The migration exited 0. The seed wrote one school, one teacher, one class and two students. The shared databases and port 5432 stayed untouched.
+- The Next build then ran for the whole limit and never finished. The exact error line: "heavy-run: time limit 1800 s reached - job stopped (pid 171794)". The build log ends with "Creating an optimized production build ...". MemAvailable fell from 3016 MB to about 500 MB during the build, which points at a heap that was too small and not at a product defect.
+- The second launch waited for the heavy lock, which another p1 job held from 17:16:07. The PM stopped it (pgid 367110) before the lock was free. No server of this run ever started, so no server URL exists for this result.
+
+Unmeasured scope.
+- The radio group label and its accessible name, the 44 px targets, the arrow keys and the focus ring, the default of 3 hours.
+- The posted bodies and the expiry text against the response expiresAt in Asia/Bangkok for the three choices.
+- The 17:00 rule through the page clock, the refusal text for a 400 invalid_input, the 7-day help text and its aria-describedby.
+- End class, new code, the teacher manual page, and the console errors.
+
+Cleanup after the PM stop.
+- podman ps -a lists no container of this run. apps/primary-advantage/.next is absent. No process or port of this run stays.
+- git status --short apps/primary-advantage packages lists only four untracked files of other tracks. The foreign scratch file qa-check-user.tmp.ts was moved aside for the build and restored byte for byte.
+- No file of this run stays in /tmp. The harness stays in measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ for the tower run: seed.mjs, ux.mjs, launch.sh and the out folder with the logs of the two launches.
+
+Handoff: the tower host runs the harness with the same scope, and the PM records the result as the carry-forward gate. No product decision is open from this role.
+
+MEASURE_AGENT_RESULT
+status: blocked
+verdict: inconclusive
+audited_head_sha: e5b97e84c66237697128c4334bc2678ab9c6b5c3
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+blocking_findings: 0
+nonblocking_findings: 1 (F221, deferred gate, not a product defect)
+measured_in_browser: 0 of 7 checks
+webbridge_status: not_run
+pm_decision: the UX browser gate of this phase is deferred:pm to the tower (host memory, rule 11-10). It is a carry-forward gate that must pass before the Primary deploy.
+retry_recommendation: escalate_human
+result_json: measure/runs/primary_class_session_lifetime_20261111/ux-browser-p1-e5b97e84c.json
+log: measure/runs/primary_class_session_lifetime_20261111/ux-browser-p1-e5b97e84c.log
+handoff: the tower host runs measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/launch.sh with the scope of test-strategy section 6.9 (1366x768, th and en, the seven checks). The PM records that run as the carry-forward gate for the Primary deploy. The default is that the tower run writes its own result file under measure/runs/primary_class_session_lifetime_20261111/.
+END_MEASURE_AGENT_RESULT

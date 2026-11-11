@@ -4,4 +4,4 @@
 - [Implementation Plan](./plan.md)
 - [Metadata](./metadata.json)
 - [Spec Review](./spec-review.md)
-- [Related](../primary_student_login_20261003/)
+- [Related](../../tracks/primary_student_login_20261003/)

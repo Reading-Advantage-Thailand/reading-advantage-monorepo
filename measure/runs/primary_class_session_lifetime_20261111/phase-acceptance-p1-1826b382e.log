@@ -1,0 +1,97 @@
+Phase acceptance, Phase 1 ("## Phase 1: Choice of the class session lifetime").
+Track: primary_class_session_lifetime_20261111 (A-53).
+Session: Phase Accept · P1 · primary_class_session_lifetime · r3.
+Route: claude-code/claude-fable-5-2[1m]#high (a substitution; StepFun failed twice at the provider).
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha and audited_head_sha: 1826b382ed42f5189312a625bb364d20f70344f7
+
+1. Verdict
+
+The status is pass. No blocking finding exists, and each violation list is empty.
+One gate stays open by PM decision: the browser check of AC-9 (plan task 1.12a, deferred:pm).
+The browser check must pass on the tower before the Primary deploy.
+This acceptance does not cover the browser check.
+
+2. HEAD and scope
+
+The repository HEAD is 6b8115e86 on master. The audited HEAD is 1826b382e.
+The six commits after 1826b382e belong to three other tracks. They change only measure files of those tracks.
+The working tree holds no tracked change in packages/domain, packages/types, apps/primary-advantage, or the track folder.
+The tested files therefore equal the content of 1826b382e.
+git branch --contains 1826b382e prints master, so the commits are on master (task 1.13).
+
+3. The one test command
+
+I ran the command once, in the foreground, through heavy-run.sh at p2.
+Domain: Test Files 4 passed, 1 skipped (5). Tests 190 passed, 12 skipped (202). 0 failed.
+App: Test Files 5 passed (5). Tests 142 passed (142). 0 failed.
+The skipped file is student-login.real-db.test.ts. PG_TEST_URL is not set, so its 12 cases skip.
+The counts equal the adversarial result. They agree with the Green rem1 claim (108 and 86) plus the adversarial files (94, 44, 12).
+A5: the count claims in the plan agree with this run.
+
+4. Task markers and SHAs
+
+1.1 and 1.2 [x]: 0c459e9eb holds five test files only.
+1.3 and 1.4 [x]: 2614bdba0 holds contracts.ts, errors.ts, and http.ts.
+1.5 [x]: 35e99be85 holds class-session.ts.
+1.6, 1.7, and 1.8 [x]: bd292b853 holds api.ts, class-session-control.tsx, and five message files.
+1.9 [x]: the strings list equals the en.json and th.json diff, word for word.
+1.11 [x]: the evidence commit is 30c48dec0. The rem1 commits are a3f30a759 and 31eef4b5f.
+1.10 [b] deferred:pm. 1.12 [b] deferred:orchestrator. 1.12a [b] deferred:pm (1826b382e).
+1.13 [b] deferred:orchestrator; the commits are on master. 1.14 [b] deferred:daniel.
+Each SHA is in git log db8672b04..1826b382e.
+
+5. The done-when of the PM request
+
+Three choices: the contract enum holds '3h', 'until_17', and '7d'. computeSessionExpiry gives the three expiry values. Tests pass.
+A refused value: the contract refuses it, the handler returns 400, and the domain throws invalid_input with no row write. Tests pass.
+The server list with a 7-day maximum: the enum and the switch default are the only path to expiresAt. Tests pass.
+The audit line records the choice: the class_start metadata holds lifetime. Tests pass.
+Ending early stays: endClassSession has no change in the phase diff. Its tests pass.
+The th and en strings: six new keys and the manual step4 text are in en.json and th.json.
+Review B: both rounds pass with no blocking finding. Round 1 covers spec section 9 and OQ-1.
+
+6. Other checks
+
+AC-8: git diff --name-only db8672b04..1826b382e -- packages/db prints nothing.
+No hash line: the -G search for sha256, sha1, createHash, checksum, md5, and digest prints nothing.
+The reviews match the audited code: no implementation file of this track changed after 2d05e9e9b.
+A3, A4, A6, and A7 do not apply. The phase diff changes no framework file and not measure/tracks.md.
+
+7. Findings (all nonblocking)
+
+F301: the browser check of AC-9 did not run. It is a carry-forward gate (task 1.12a, deferred:pm). Default: the tower runs it before the deploy.
+F302: my run skipped the 12 real-database cases. The AC-5 database proof is the Green log record at 78df5d21d. Default: accept.
+F303: three commits between the review HEAD and the audited HEAD touch measure documents. No implementation file changed. Default: accept.
+F304: spec FR-5 does not show decision F5 (English text in cn, tw, vi). Default: closeout adds one line to the spec.
+F305: one Red commit exists where the plan names two; two named test files did not change. The plan evidence shows the real state. Default: no change.
+F306: Review B and Review C ran no tests; Review A recorded its route as unknown. I did not run the type checks again. Default: no change.
+Carried, open with a default: F142, F124 and F145, F146, F101 and OQ-1, and the Thai check of task 1.10.
+Carried close-out nits: F171, F181, F201, F202.
+
+8. Shell note
+
+The permission mode refused a first compound shell call and a piped form of the test command.
+I then ran each command alone. No test ran twice.
+
+MEASURE_AGENT_RESULT
+status: complete
+verdict: pass
+track_id: primary_class_session_lifetime_20261111
+phase: Phase 1: Choice of the class session lifetime
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha: 1826b382ed42f5189312a625bb364d20f70344f7
+audited_head_sha: 1826b382ed42f5189312a625bb364d20f70344f7
+route: claude-code/claude-fable-5-2[1m]#high
+summary: Phase 1 passes at 1826b382e. Tests: domain 190 passed, 12 skipped, 0 failed (202); app 142 passed (142). The browser check (task 1.12a, deferred:pm) stays open as a carry-forward gate before the Primary deploy.
+blocking_findings: none
+nonblocking_findings: F301, F302, F303, F304, F305, F306; carried F142, F124, F145, F146, F101 (OQ-1), task 1.10 Thai check, F171, F181, F201, F202
+test_strategy_violations: none
+live_contract_violations: none
+prod_wiring_violations: none
+route_parity_violations: none
+retry_recommendation: none
+confidence: high
+changed_files: measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.json, measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.log
+handoff: The orchestrator can start closeout. Keep task 1.12a open until the tower result exists. Send F142, F124, F145, F146, and F101 to the PM with their defaults.
+END_MEASURE_AGENT_RESULT

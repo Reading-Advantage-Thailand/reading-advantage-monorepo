@@ -1,0 +1,41 @@
+# Review A log, round 2 - primary_class_session_lifetime_20261111 Phase 1
+
+Role: Measure Review A (correctness and architecture). Model: claude-code/claude-sonnet-5-5#high.
+role_base_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+audited_head_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+Repository HEAD at audit time: b9f5439d4. The commits after 2d05e9e9b change only apps/storytime and measure files.
+Scope: Green rem1 commits a3f30a759, 31eef4b5f, 2d05e9e9b.
+
+## Verdict
+Pass. No blocking finding. Withdrawn: F121, F122, F123, F125. Open and escalated: F124. New Nit: F171 (close-out record).
+
+## Checks
+1. F121 and F125. effectiveLifetime falls back to '3h' when 'until_17' hides. One radio is always checked. The start posts the effective value. The radio onChange clears the error. Three new fixed-clock cases plus one label case exist and pass. The control file passes 36 tests at TZ=America/Los_Angeles.
+2. F122 and F123. The JSDoc of classSessionLifetime is now correct, and 'try {' sits on its own line.
+3. F143. The step4 text is right in the five message files and keeps the <ui>{endClass}</ui> tag. No stale 'after 3 hours' text remains. The manual page test passes (12 tests).
+4. F144. A visible label with aria-labelledby names the group. aria-describedby points at the help paragraph only while '7d' is selected. The test checks both.
+5. Regression. GREEN_TEST_COMMAND: domain 96 passed, 12 skipped, 0 failed; app 86 passed, 0 failed. The domain and handler code are unchanged apart from the JSDoc and line break.
+
+## Findings
+- F124: ESCALATE per the orchestrator, unchanged.
+- F171: Nit. The state 'until_17' stays after the option hides; after Bangkok midnight on an open page it selects again with no click. Visible and server-checked. Goes to the close-out record.
+
+## Not run
+Type checks, the domain aggregate suite, and the real-database case (heavy commands). I read the Green log for them.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-review-a
+track: primary_class_session_lifetime_20261111
+phase: P1
+round: 2
+role_base_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+audited_head_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+audit_status: pass
+blocking_findings: 0
+nonblocking_findings: 2 (F124 escalated, F171 Nit)
+withdrawn: F121, F122, F123, F125
+result_json: measure/runs/primary_class_session_lifetime_20261111/review-a-p1-2d05e9e9b.json
+retry_recommendation: none
+handoff: Review A round 2 passes. F171 goes to the close-out record (no Green round). F124 goes to Daniel with the other ESCALATE items.
+END_MEASURE_AGENT_RESULT

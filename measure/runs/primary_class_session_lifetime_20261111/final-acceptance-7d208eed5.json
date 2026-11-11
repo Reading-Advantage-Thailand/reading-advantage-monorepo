@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Final acceptance fails two closeout gates. The product tests and reviews pass, but measure/doctor.sh and the Primary type check exit 1.",
+  "blocking_findings": [
+    "F401: `bash measure/doctor.sh` exits 1 because `measure/automation-supervisor.py` is absent. Closeout requires exit 0. `measure/tech-debt.md:49` records this known external failure.",
+    "F402: the Primary type check exits 1 at foreign `qa-check-user.tmp.ts:34`. The file is outside the audited commit. The configured gate still fails, so final acceptance cannot pass."
+  ],
+  "nonblocking_findings": [
+    "F403: the browser check stays deferred:pm under task 1.12a. The tower must pass it before the Primary deploy. The local UX result stays inconclusive.",
+    "F404: this test run skipped 12 real-database cases without PG_TEST_URL. The Green phase check passed all 12 at 78df5d21d. Later domain changes only split one statement.",
+    "F405: open PM defaults stay unchanged. F142 keeps D-5; F124 and F145 keep the wording; F146 awaits translations; F101 and OQ-1 keep no server refusal.",
+    "F406: task 1.10 keeps the Thai check deferred:pm. Task 1.14 keeps deploy deferred:daniel. This acceptance runs no deploy.",
+    "F407: spec FR-5 still describes a fallback that decision F5 replaced. Closeout should name the English stopgap in cn, tw, and vi.",
+    "F408: closeout nits F171, F181, F201, and F202 keep their recorded defaults. None changes the server choice list or the 7-day maximum."
+  ],
+  "evidence": [
+    "The audited commit 7d208eed501ea49ad08425c8b5c2747c7a9eff66 is on master. Current HEAD is 48a851a989681aa7dd2018865a9b52b70f0ac7c2.",
+    "The diff from the audited commit to current HEAD contains two Storytime tests and one Storytime plan. No track file changed after the audited commit.",
+    "Phase 1 has checkpoint 1826b382e and one passing phase-acceptance result. The checkpoint commit adds only that marker to this track plan.",
+    "Reviews A, B, and C pass at 2d05e9e9b. The adversarial result passes there. Later product changes contain only three adversarial test files.",
+    "Every completed task names a commit. Every incomplete task uses [b] with deferred:pm, deferred:orchestrator, or deferred:daniel.",
+    "The PM done-when holds. The diff contains domain code, the teacher panel, th and en strings, refusal tests, and a Review B pass.",
+    "PROJECT_TESTS passed. Domain: 190 passed, 12 skipped, 0 failed. App: 142 passed, 0 failed. Total: 332 passed, 12 skipped, 0 failed.",
+    "PROJECT_LINT passed for every changed TypeScript file in both packages. Both ESLint commands exit 0.",
+    "The domain type check exits 0. The Primary type check exits 1 only on foreign qa-check-user.tmp.ts:34 with TS2307.",
+    "The packages/db diff is empty. The added-hash detector returns no path. The track diff contains only planned paths and recorded F5 or F143 additions.",
+    "AC-1 through AC-7 map to the named tests. AC-8 has an empty packages/db diff. AC-9 has passing reviews and the named browser deferral.",
+    "A5 passes because the reproduced counts match the plan and adversarial counts. A6 passes because the registry claims no adversarial state.",
+    "A9 passes because tests/*.sh contains no measure/tracks/<id>/plan.md reference. The doctor failure is F401, not an A9 violation.",
+    "The final route differs from Review A and phase acceptance. The review routes and verdicts remain independently recorded below."
+  ],
+  "commands": [
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<the supplied ten-file Vitest command>' -> exit 0; domain 190 passed and 12 skipped; app 142 passed",
+    "pnpm --filter @reading-advantage/domain exec eslint <seven changed domain TypeScript files> -> exit 0",
+    "pnpm --filter primary-advantage exec eslint <seven changed app TypeScript files> -> exit 0",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 bash heavy-run.sh -c 'pnpm --filter @reading-advantage/domain check-types' -> exit 0",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 bash heavy-run.sh -c 'pnpm --filter primary-advantage check-types' -> exit 1; qa-check-user.tmp.ts(34,45) TS2307",
+    "bash measure/doctor.sh -> exit 1; FAIL: measure/automation-supervisor.py not found",
+    "git rev-parse HEAD -> 48a851a989681aa7dd2018865a9b52b70f0ac7c2",
+    "git branch --contains 7d208eed501ea49ad08425c8b5c2747c7a9eff66 -> master",
+    "git diff --name-only db8672b04fdf3f243bb00afed6b8a682811d2caa..7d208eed501ea49ad08425c8b5c2747c7a9eff66 -- packages/db -> empty",
+    "git diff <base>..<audited> -G'sha256|sha1|createHash|checksum|md5|digest' --name-only -- packages apps/primary-advantage -> empty",
+    "git diff --name-only 7d208eed501ea49ad08425c8b5c2747c7a9eff66..HEAD -> two Storytime tests and one Storytime plan",
+    "git diff 1826b382ed42f5189312a625bb364d20f70344f7..7d208eed501ea49ad08425c8b5c2747c7a9eff66 -- <track plan> -> checkpoint marker only",
+    "rg -n 'measure/tracks/([a-z_0-9-]+)/plan\\.md' tests/*.sh -> no matches"
+  ],
+  "changed_files": [
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-7d208eed5.json",
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-7d208eed5.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "track_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "phase_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "role_base_sha": "7d208eed501ea49ad08425c8b5c2747c7a9eff66",
+  "audited_head_sha": "7d208eed501ea49ad08425c8b5c2747c7a9eff66",
+  "open_gates": [
+    "F401 doctor repair before closeout",
+    "F402 clean Primary type-check run before closeout",
+    "1.12a browser check on the tower before deploy",
+    "1.10 Thai check deferred:pm",
+    "1.14 deploy deferred:daniel"
+  ],
+  "route": "kimi-code-plan-cn/k3.1-pro#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The three expiry choices and refusal boundaries pass; F142, F171, and F202 remain recorded panel edge cases."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The plan records failing-first Red evidence, and this run passes 332 cases; 12 real-database cases skipped here."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact diff contains planned paths plus recorded F5 and F143 message changes; packages/db stays unchanged."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Each verdict has a command result or file reference, including the two failing closeout gates."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Review A's counts match this run after adding the adversarial files, and its rem1 code claims match the recorded diff."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review B correctly passes the security scope but relies on Green test evidence instead of a new run."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "claude-code/claude-sonnet-5-5#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review C correctly verifies the API and panel wiring but runs neither tests nor a browser."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "This run reproduces the adversarial gate counts exactly: domain 202 total and app 142 total."
+    }
+  ]
+}

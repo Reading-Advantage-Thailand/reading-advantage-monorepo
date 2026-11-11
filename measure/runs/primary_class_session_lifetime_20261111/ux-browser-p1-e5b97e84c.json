@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "status": "inconclusive",
+  "summary": "The PM deferred the UX browser gate of Phase 1 to the tower. The reason is host memory and the rule of 2026-11-10 03:20. That rule forbids a local Primary Next build on this machine. No browser measurement ran, so this audit makes no UX finding. The gate stays a carry-forward gate that must pass before the Primary deploy of this change. The first launch built the app against a scratch database, but the build never finished inside the 1800 s limit. The second launch never took the heavy lock, and the PM stopped it. The audited head e5b97e84c66237697128c4334bc2678ab9c6b5c3 is the current HEAD, and the phase base and role base are recorded. The harness, the seed and the launch script stay in the run folder for the tower.",
+  "role": "measure-ux-browser-review",
+  "track_id": "primary_class_session_lifetime_20261111",
+  "phase": "Phase 1: Choice of the class session lifetime",
+  "phase_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "role_base_sha": "e5b97e84c66237697128c4334bc2678ab9c6b5c3",
+  "audited_head_sha": "e5b97e84c66237697128c4334bc2678ab9c6b5c3",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F221 (deferred gate, not a product defect): the UX browser gate of Phase 1 did not run, so none of the seven checks of test-strategy section 6.9 is measured. The PM deferred the gate to the tower with the reason host memory and the rule of 2026-11-10 03:20, which forbids a local Primary Next build on this machine. The gate must pass on the tower before the Primary team deploys this change. The harness in measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ runs the whole scope and needs a tower host with enough memory for the Next build."
+  ],
+  "evidence": [
+    "Audited head: git rev-parse HEAD returns e5b97e84c66237697128c4334bc2678ab9c6b5c3, the same value as role_base_sha, so the audited HEAD is current. phase_base_sha is db8672b04fdf3f243bb00afed6b8a682811d2caa.",
+    "Routing artifacts read at the audited head: spec.md, plan.md (tasks 1.1 to 1.14 and the rem1 evidence), test-strategy.md sections 6.8 and 6.9, review-c-p1-9e2bc7492.json and review-c-p1-2d05e9e9b.json. The browser scope of the last evidence entries of the two review files matches the seven checks of this brief.",
+    "Implementation read at the audited head: apps/primary-advantage/components/teacher/class-login/class-session-control.tsx (the radiogroup at lines 124 to 146, the visible label at lines 121 to 123, the effective lifetime at line 69, the start post at line 76, the 7-day help at lines 147 to 151, the alert at lines 168 to 172), class-login-panel.tsx, api.ts, lib/student-login/http.ts, lib/student-login/handlers.ts, packages/domain/src/student-login/roster.ts, packages/domain/src/student-login/access.ts, messages/en.json, messages/th.json and use-class-login.ts (the 10 s roster poll).",
+    "Environment facts: podman holds the image postgres:16-alpine; Google Chrome 153.0.8010.52 sits at /opt/google/chrome/chrome; Playwright 1.61.0 sits in the repository root node_modules; MemAvailable was 3016 MB before the first launch and fell to about 500 MB while the build ran.",
+    "First launch under heavy-run with p2 and HEAVY_RUN_TIMEOUT_S=1800: the scratch container uxpcls-1794391715-171794 ran on host port 40505, the migration exited 0, and the seed wrote school f4a93da9-cd55-4b9f-acef-71a9ebf65e1b, teacher f56e5d6e-2203-4794-8aaf-442c3c337dd1, class 8909033a-34c7-42a0-b703-0a2b4d8cd690 and two students. The shared databases and port 5432 were never used.",
+    "Exact build error line of the first launch: out/build.log ends with 'Creating an optimized production build ...' and the job line reads 'heavy-run: time limit 1800 s reached - job stopped (pid 171794)'. The build produced no route output inside the 1800 s limit. The build ran with NODE_OPTIONS=--max-old-space-size=2560 while the host had about 500 MB of MemAvailable, which points at a heap that was too small rather than at a product defect.",
+    "Second launch: the heavy lock was held by another p1 job from 17:16:07, so the launch waited for the lock and the PM stopped it (pgid 367110) before the lock was free. No build of the second launch ran and no server of this run ever started.",
+    "PM decision on 2026-11-11: the UX browser gate of this phase is deferred:pm to the tower, reason host memory and rule 11-10. The gate is a carry-forward gate that must pass before the Primary team deploys this change.",
+    "No product measurement exists. Unmeasured: the radio group label and its accessible name, the 44 px targets, the arrow keys and the focus ring, the default of 3 hours, the posted bodies and the expiry text against expiresAt in Asia/Bangkok for the three choices, the 17:00 rule through the page clock, the refusal text for a 400 invalid_input, the 7-day help text and its aria-describedby, end class, new code, the teacher manual page and the console errors.",
+    "Cleanup verified after the PM stop: podman ps -a lists no container of this run, apps/primary-advantage/.next is absent, and git status --short apps/primary-advantage packages lists only four untracked files of other tracks (cloudbuild-backfill.yaml, qa-check-user.tmp.ts, scripts/seed-qa-users.ts and packages/db/scripts/seed-qa-users.ts). The foreign scratch file qa-check-user.tmp.ts was moved aside for the build and restored byte for byte. No process, port or file of this run stays in /tmp.",
+    "Harness left in place for the tower run: measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ holds seed.mjs (one school, one teacher with an Argon2id hash, one class and two students by raw SQL), ux.mjs (Playwright with /opt/google/chrome/chrome at 1366x768 in th and en, page.clock for the 16:59 and 17:00 Bangkok cases, and a route intercept for the forced 400) and launch.sh (scratch container, migration, seed, build, next start, checks and cleanup). The logs of the two launches sit in the out folder of the same directory.",
+    "No server URL exists for this result. The next start never started, because the build never finished in the first launch and the second launch never took the heavy lock.",
+    "The result carries no UX violation, because no UX defect was observed in a browser. The unmeasured scope stays a gate, not a defect."
+  ],
+  "commands": [
+    "git rev-parse HEAD (e5b97e84c66237697128c4334bc2678ab9c6b5c3), git log --oneline -5, git status --short apps/primary-advantage packages (read)",
+    "read measure/tracks/primary_class_session_lifetime_20261111/{spec.md,plan.md,test-strategy.md}, measure/runs/primary_class_session_lifetime_20261111/review-c-p1-{9e2bc7492,2d05e9e9b}.json (read)",
+    "read apps/primary-advantage/components/teacher/class-login/class-session-control.tsx, class-login-panel.tsx, api.ts, apps/primary-advantage/lib/student-login/{http,handlers}.ts, packages/domain/src/student-login/{roster,access}.ts, apps/primary-advantage/messages/{en,th}.json (read)",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=2000 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /home/daniebo/Desktop/reading-advantage-monorepo/measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/launch.sh' (exit 124: the build hit the 1800 s limit)",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=2000 HEAVY_PREFLIGHT_WAIT_S=3600 HEAVY_MEMORY_MAX=4G HEAVY_HANG_KILL_S=off bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /home/daniebo/Desktop/reading-advantage-monorepo/measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/launch.sh' (stopped by the PM while it waited for the heavy lock, pgid 367110)",
+    "pnpm --filter @reading-advantage/db migrate (exit 0, scratch database uxscratch on port 40505), node seed.mjs (exit 0), node apps/primary-advantage/next build (killed by the 1800 s limit)",
+    "podman ps -a, ss -ltnp, git status --short apps/primary-advantage packages, ls -d apps/primary-advantage/.next (cleanup verified)"
+  ],
+  "changed_files": [
+    "measure/runs/primary_class_session_lifetime_20261111/ux-browser-p1-e5b97e84c.json",
+    "measure/runs/primary_class_session_lifetime_20261111/ux-browser-p1-e5b97e84c.log",
+    "measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/seed.mjs",
+    "measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ux.mjs",
+    "measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/launch.sh",
+    "measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/out/"
+  ],
+  "spec_violations": [],
+  "plan_violations": [],
+  "test_violations": [],
+  "ux_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "low",
+  "questions": [
+    "The UX browser gate must run on the tower host. Who runs the harness in measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ with the same scope (1366x768, th and en, the seven checks of test-strategy section 6.9), and where does the result file go? The default is that the tower run writes its own result file under measure/runs/primary_class_session_lifetime_20261111/ and the PM records it as the carry-forward gate."
+  ]
+}

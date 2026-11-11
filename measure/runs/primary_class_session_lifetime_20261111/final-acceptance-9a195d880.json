@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Final acceptance r2 fails the remaining doctor gate. The stale supervisor check and the foreign-file type error are fixed. Deprecated markers in other tracks still make doctor exit 1.",
+  "blocking_findings": [
+    "F411: the Measure Final Acceptance closeout standard requires `bash measure/doctor.sh` to exit 0. It exits 1 on deprecated `[ ]` markers in other track plans. The A-53 plan has no such marker. The repository-wide rule still blocks closeout."
+  ],
+  "nonblocking_findings": [
+    "F403: the browser check stays deferred:pm under task 1.12a. The tower must pass it before the Primary deploy. The local UX result stays inconclusive.",
+    "F404: this test run skipped 12 real-database cases without PG_TEST_URL. The Green phase check passed all 12 at 78df5d21d. Later domain changes only split one statement.",
+    "F405: open PM defaults stay unchanged. F142 keeps D-5; F124 and F145 keep the wording; F146 awaits translations; F101 and OQ-1 keep no server refusal.",
+    "F406: task 1.10 keeps the Thai check deferred:pm. Task 1.14 keeps deploy deferred:daniel. This acceptance runs no deploy.",
+    "F407: spec FR-5 still describes a fallback that decision F5 replaced. Closeout should name the English stopgap in cn, tw, and vi.",
+    "F408: closeout nits F171, F181, F201, and F202 keep their recorded defaults. None changes the server choice list or the 7-day maximum."
+  ],
+  "evidence": [
+    "The audited HEAD is 9a195d880401a586a767d9f0e5ba18485501e7e8. It is on master. Current HEAD later advanced to a9706907486876fbb0b8af9cc23c2f5ec6d67be3.",
+    "The diff after the audited HEAD contains two Storytime tests and one Storytime plan. No A-53 file changed after the audited HEAD.",
+    "The domain and Primary diff from 7d208eed5 to 9a195d880 is empty. The audited track code is therefore the code of 7d208eed5.",
+    "Commit 31175a24b changes doctor.sh, tech-debt.md, and test_supervisor_integration.py only. The stale automation-supervisor error is gone.",
+    "Doctor now exits 1 only for deprecated markers in other track plans. The A-53 marker grep returns no match.",
+    "The supervisor integration gate exits 0. Python reports 23 tests and OK.",
+    "The Primary type check exits 0 after the foreign file move. No TypeScript error remains.",
+    "The supplied test command exits 0. Domain: 190 passed and 12 skipped. App: 142 passed. Total: 332 passed, 12 skipped, and 0 failed.",
+    "F401's original cause is fixed. F402 is fixed. F411 records the separate repository-wide doctor failure.",
+    "F403 through F408 retain their prior dispositions. The doctor chore and foreign file move do not touch them."
+  ],
+  "commands": [
+    "bash measure/doctor.sh -> exit 1; deprecated [ ] markers in other track plans",
+    "python3 -m unittest measure.tests.evidence_integrity_gates.test_supervisor_integration -> exit 0; Ran 23 tests; OK",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 bash heavy-run.sh -c 'pnpm --filter primary-advantage check-types' -> exit 0",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c '<the supplied ten-file Vitest command>' -> exit 0; domain 190 passed and 12 skipped; app 142 passed",
+    "git rev-parse HEAD -> a9706907486876fbb0b8af9cc23c2f5ec6d67be3",
+    "git branch --contains 9a195d880401a586a767d9f0e5ba18485501e7e8 -> master",
+    "git show --stat --oneline 31175a24b -> doctor.sh, tech-debt.md, and test_supervisor_integration.py only",
+    "git diff --name-only 7d208eed501ea49ad08425c8b5c2747c7a9eff66..9a195d880401a586a767d9f0e5ba18485501e7e8 -- packages/domain apps/primary-advantage -> empty",
+    "git diff --name-only 9a195d880401a586a767d9f0e5ba18485501e7e8..HEAD -> two Storytime tests and one Storytime plan",
+    "grep '^\\s*- \\[ \\]' measure/tracks/primary_class_session_lifetime_20261111/plan.md -> no matches"
+  ],
+  "changed_files": [
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-9a195d880.json",
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-9a195d880.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "track_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "phase_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "role_base_sha": "9a195d880401a586a767d9f0e5ba18485501e7e8",
+  "audited_head_sha": "9a195d880401a586a767d9f0e5ba18485501e7e8",
+  "open_gates": [
+    "F411 repository doctor marker remediation before closeout",
+    "1.12a browser check on the tower before deploy",
+    "1.10 Thai check deferred:pm",
+    "1.14 deploy deferred:daniel"
+  ],
+  "route": "kimi-code-plan-cn/k3.1-pro#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The three expiry choices and refusal boundaries pass; F142, F171, and F202 remain recorded panel edge cases."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The plan records failing-first Red evidence, and this run passes 332 cases; 12 real-database cases skipped here."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "Commit 31175a24b touches only doctor.sh, its gate test, and tech-debt.md; the A-53 product diff stays unchanged."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Each new verdict has a fresh command result, and the track-code identity has an empty diff."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Review A's counts match this run after adding the adversarial files, and its rem1 code claims match the recorded diff."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review B correctly passes the security scope but relies on Green test evidence instead of a new run."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "claude-code/claude-sonnet-5-5#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review C correctly verifies the API and panel wiring but runs neither tests nor a browser."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "This run reproduces the adversarial gate counts exactly: domain 202 total and app 142 total."
+    }
+  ]
+}

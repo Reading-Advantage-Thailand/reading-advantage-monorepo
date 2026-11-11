@@ -1,0 +1,48 @@
+Review C (UX and API contract), Phase 1, primary_class_session_lifetime_20261111.
+Model: claude-code/claude-sonnet-5-5#high. Role: audit only. No code, test, or plan file changed. No commit.
+phase_base_sha=db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha=9e2bc749258cb6bc1b1fd666c104e932bb978564
+audited_head_sha=9e2bc749258cb6bc1b1fd666c104e932bb978564
+repository HEAD=daaee360d. The later commits belong to storytime_app_rebuild_20261025 and are out of scope.
+git diff --stat 9e2bc7492 HEAD over apps/primary-advantage and packages/domain/src/student-login is empty, so the audited files equal the HEAD files.
+Contract applicability: applicable. The phase adds one API field, one error code, and one teacher control.
+
+Verdict: pass. No blocking finding. Six nonblocking findings, F141 to F146.
+
+Check 1, API wiring: complete.
+- Request: class-session-control.tsx:69 posts { classroomId, lifetime } to class-session/start.
+- Route: app/api/auth/student/class-session/start/route.ts:3 exports POST = startClass.
+- Parse: handlers.ts:6-7 uses classSessionStartInput (lifetime enum, default 3h) and parses the output.
+- Response: expiresAt is a Date in the domain and an ISO string in JSON. The panel formats it at class-session-control.tsx:87-95.
+- Error: class-session.ts:61 and :66 throw invalid_input. http.ts:14 gives 400 with the code. api.ts:89 maps it to lifetimeInvalid. class-session-control.tsx:150 shows it in role=alert. en.json:2991 and th.json:2991 hold the text.
+- invalid_input has no other source in packages/domain/src, so no other route shows the lifetime error by mistake.
+- A contract 400 has no code and stays generic.
+
+Check 2, teacher flow: works. Default 3h. The expiry shows time only for the same Bangkok day and date plus time for a later day. 'until_17' hides after 17:00 Bangkok by the client clock.
+- F141: my judgment of Review A F121. Real but recoverable. Advice: derive the effective choice and clear the error on selection.
+- F142: after a reload the group shows 3h while a 7-day session is open. New code then makes a 3-hour session. This follows D-5. Advice for the PM.
+- F143: the teacher manual says the class closes by itself after 3 hours (five message files). The sentence is now wrong. Plan line needed before the deploy.
+
+Check 3, accessibility: radiogroup with aria-label, labels with min-h-11, native keyboard, role=alert, th text marked by the page lang. Gap in F144: no visible group label, and the help text is not tied to the group.
+
+Check 4, strings: six keys in five files, same order in en and th, cn, tw, and vi hold English text (F5). F145 confirms Review A F124 and adds three text points. F146 notes the missing lang mark on the English stopgap text.
+
+Check 5, UX browser role scope: see the last evidence entry of the JSON. Key measurements: option height and width in pixels, native radio size, arrow keys and focus ring, 7-day expiry text against the response in th and en, F142 reload then New code, F141 clock pass 17:00 plus poll, refusal text by route intercept, visible group label, end the class, console errors.
+Setup limits: scratch database, free port (not 3005, not 3099), heavy-run, 1366x768. The real Bangkok time was 15:44 on 2026-11-11 when I wrote this, so the real hide check is possible after 17:00 Bangkok today.
+
+Review A and Review B: F122, F123 were not in my scope. F124 and F125 are confirmed. F101 is not contested.
+
+Tests: not run. The shell refused my vitest call (permission rejected). Review A ran the same Green command with exit 0 on the same files.
+Question to the orchestrator (default given): should F143 become a plan line in this phase? Default: yes, add it before the deploy, and add the th sentence to the task 1.10 hand-off.
+
+MEASURE_AGENT_RESULT
+status: complete
+verdict: pass
+audited_head_sha: 9e2bc749258cb6bc1b1fd666c104e932bb978564
+blocking_findings: 0
+nonblocking_findings: 6 (F141 to F146)
+result_json: measure/runs/primary_class_session_lifetime_20261111/review-c-p1-9e2bc7492.json
+log: measure/runs/primary_class_session_lifetime_20261111/review-c-p1-9e2bc7492.log
+retry_recommendation: none
+handoff: F143 needs a plan line (manual text, five locales) and a th hand-off to the PM. F142, F145, and F101 need a PM text decision. The UX role scope is in check 5.
+END_MEASURE_AGENT_RESULT

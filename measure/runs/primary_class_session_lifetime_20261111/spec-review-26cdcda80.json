@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The spec matches PM request A-53 in full: three server-enforced choices (3h default, until_17 Asia/Bangkok, 7d max), audit records the choice, end early stays, th/en strings, tests for the 3 choices and refused values, Review B required, no deploy, master by 2026-11-18. Every file:line citation in spec section 3 was spot-checked against HEAD (26cdcda80) and is accurate. Security points (7-day code validity, OQ-1 code-only classes, until_17 refusal at 17:00 Bangkok, refusal before the old session closes, unchanged rate limits) are each covered by a named Red case or by the Review B scope of task 1.12. Zero-decision holds: OQ-1 and OQ-2 carry stated defaults and D-6 decides the date display. Every task names its files and its test command; all named-file Vitest commands carry --maxWorkers=1; heavy steps go through heavy-run.sh with HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800. Owner-word quotes use roles; only the allowed name Daniel appears. One Major and three Nits; no Blocker.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Major] plan task 1.5: The plan anchors the 'until_17' throw \"before class-session.ts:86\", but ensureStudentCredentials at class-session.ts:84 runs before line 86 and can insert credential rows, which conflicts with AC-3's \"inserts no row\". Rationale: the plan should anchor the check before the first row write (before line 84), so a refused start changes no row even when the class has students without credentials.",
+    "F2 [Nit] plan task 1.1: The real-db instruction \"keep the real-db file unchanged unless it already has a start call, then extend it\" has its condition true at HEAD (student-login.real-db.test.ts calls startClassSession at lines 70, 82, 89-90, 97-99, 111, 145, 166, 216, 269), but the plan names no cases to add there. Rationale: Red could read \"then extend it\" as an open-ended order; the plan should name the extension or state that the existing calls need no change.",
+    "F3 [Nit] plan task 1.9: The key ClassLogin.session.lifetimeHelp7d is listed \"only when the text is kept after Review B\", so the string set of task 1.8 depends on a later review outcome. Rationale: the plan should state the default (add it now, remove it if Review B refuses) so Green stays deterministic.",
+    "F4 [Nit] spec OQ-3 and plan task 1.7: D-6 decides that an expiry on a later Bangkok date shows the date, but the exact format is left to the implementer (\"follows the existing useIntlFormatter\"); the panel test checks only that a date shows. Rationale: this is a presentational detail, not a product decision; naming the formatter option would close it."
+  ],
+  "evidence": [
+    "audited_head_sha 26cdcda8063c1ff8bbd54fe2ad1c0745affb3396 equals HEAD (git rev-parse HEAD).",
+    "Citations verified at HEAD: class-session.ts:28 (CLASS_SESSION_LIFETIME_MS = 3h), :124 (sole use), :86-95 (old-session close, reason replaced), :101-111 (collision check), :127-130 (insert), :136 (class_start audit {sessionId, expiresAt ISO}), :137 (return), :152-171 (endClassSession, reason ended), :181-198 (findOpenSession).",
+    "Citations verified: card-token.ts:65-70 (join, closedAt IS NULL at :69, expiresAt > now at :70); contracts.ts:38, :44-48, :81, :171, :175; picture-password.ts:155 (signInWithCodeOnly JSDoc: gives a code_only session; code at :185); errors.ts:2-9 (no validation code); audit.ts:5 (typed action).",
+    "Citations verified: handlers.ts:6-8; http.ts:11-19 (STATUS Record), :67-68 (400 Invalid input), :81-96 (teacherHandler); primary.ts:276 (expires_at notNull), :281-283 (open_class_idx); class-session-control.tsx:45, :62; class-login-panel.tsx:74; api.ts errorKey (400 falls through to generic).",
+    "Citations verified: en.json ClassLogin at 2982 with session.startHelp at 2995; th.json session at 2993, startHelp at 2995; keys start, startHelp, codeLabel, codeAria, openUntil, openNoCode, newCode, end all present; cn/tw/vi each carry ClassLogin at line 2982 and fall back as today.",
+    "Citations verified: calendar-day.ts:8 (SCHOOL_TIME_ZONE), :19 (calendarDayKey), no database import; student-login-class-session.test.ts:48 fixes the 3-hour expiry; both packages use vitest run with vitest.config.ts present.",
+    "UTC arithmetic in plan tasks 1.1 and 1.5 is correct: Bangkok is UTC+7 with no DST, so 17:00 Bangkok is 10:00Z; the fixed-clock cases (05:00Z works, 09:59:59Z works, 10:00:00Z refused, 16:59Z refused, 17:30Z next-day) are consistent.",
+    "Zoom-out against A-53: three choices, default 3h, server-enforced enum with 7-day max, audit records the choice, end early stays, th/en strings, tests for the 3 choices and refused values, Review B required, no deploy, master by 2026-11-18. All present in spec sections 4-7 and plan tasks 1.1-1.14.",
+    "Security coverage: 7-day code validity is exercised by the AC-5 expiry tests of task 1.1; OQ-1 is in the Review B scope of task 1.12; the 17:00 boundary and the refusal-before-close have named Red cases; rate limits are unchanged and noted in spec section 9.",
+    "The evidence-base commit 172c52364 in spec section 3 was not verified (shell access denied in this session); all line citations were verified at HEAD instead.",
+    "Owner-word quotes: the A-53 quote and the track notes use roles; the only name is Daniel, which the 2026-11-09 PM rule allows."
+  ],
+  "commands": [],
+  "changed_files": [
+    "measure/runs/primary_class_session_lifetime_20261111/spec-review-26cdcda80.json",
+    "measure/runs/primary_class_session_lifetime_20261111/spec-review-26cdcda80.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "paraphrase": {
+    "proposes": "This track lets the teacher choose the class sign-in session lifetime when class sign-in starts: \"3 hours\" (the default, as today), \"Until 17:00 today\" (Asia/Bangkok), or \"7 days\". The server enforces the choice enum (7 days is the maximum), computes the expiry itself, records the choice in the class_start audit line, and refuses 'until_17' at 17:00 Bangkok or later before any row changes. Ending early and restarting stay as today; the picture password, the rate limits, and the card token logic do not change. One phase changes the contract, the domain function, the teacher panel, and the th/en strings, with tests, Review B (security), and a merge to master by 2026-11-18; no deploy.",
+    "current_system": "Per the spec, startClassSession in packages/domain/src/student-login/class-session.ts fixes the lifetime at 3 hours (CLASS_SESSION_LIFETIME_MS, used only at line 124): it authorizes the teacher, closes any earlier open session of the class, inserts one session row with the code hash, and writes a class_start audit line with sessionId and expiresAt. The class code lookup and the QR card sign-in both join that same session row (closedAt IS NULL, expiresAt > now), so code and cards share one lifetime; there is no separate card lifetime. A class with the picture password off lets the code alone start a code_only student session. The start contract today has only classroomId, StudentLoginErrorCode has no validation code, the startClass handler is a thin teacherHandler that returns 400 \"Invalid input\" on a schema failure, and the teacher panel posts { classroomId } and shows the expiry as hour and minute only."
+  },
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

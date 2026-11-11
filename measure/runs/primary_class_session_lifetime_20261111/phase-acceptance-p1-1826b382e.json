@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase acceptance passes Phase 1 of primary_class_session_lifetime_20261111 at 1826b382ed42f5189312a625bb364d20f70344f7. The one test command passed: domain 202 tests (190 passed, 12 skipped, 0 failed) and app 142 tests (142 passed). The code obeys the PM request: three choices, a refused value, a server list with a 7-day maximum, the audit line with the choice, an unchanged early end, and th and en strings. Review A, Review B (two rounds), Review C, and the adversarial round pass with no blocking finding. packages/db is unchanged (AC-8) and no hash line was added. One gate stays open by PM decision: the browser check of AC-9 (task 1.12a, deferred:pm) must pass on the tower before the Primary deploy. This acceptance does not cover that browser check.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F301 (carry-forward gate, PM decision 2026-11-11): the browser check of AC-9 and of test-strategy section 6.11 item 14 did not run. ux-browser-p1-e5b97e84c.json is inconclusive and its role gate exited 1 (no screenshot, no accessibility snapshot, no interaction evidence). Plan task 1.12a records the deferral as [b] deferred:pm. Not measured in a browser: the 44 px targets in pixels, the focus ring and arrow keys, the expiry text against the server value, and the 17:00 hide rule on a real page. The rendered-component tests and Review C are the UX evidence of this phase. Default: the tower runs the harness in measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ before the Primary deploy, and closeout keeps task 1.12a open until that result exists.",
+    "F302 (evidence limit): my run skipped the 12 cases of student-login.real-db.test.ts because PG_TEST_URL is not set. The real-database proof of AC-5 is the Green log record at HEAD 78df5d21d (12 of 12 passed, plan task 1.11 step 7). After that HEAD, class-session.ts changed by one line split only (a3f30a759), which I read. The real-database case covers the 7d choice only, as test-strategy line 137 defines; the 3h and until_17 choices use the same unchanged expiry predicate. Default: accept; the tower can run the file again with a scratch database.",
+    "F303 (HEAD rule, recorded judgment): the review and adversarial results target 2d05e9e9b. The commits from 2d05e9e9b to 1826b382e are e5b97e84c (three test files of this track), b9f5439d4 (Storytime test files), c633a4446 (Storytime plan and a measure/runs log), c3847bb2a (Sales plan and review document), and 1826b382e (one line in this track's plan.md). Three of them touch measure documents that are not test files and not measure/runs. No implementation file changed: git diff --name-only 2d05e9e9b..1826b382e lists only the three adversarial test files under packages and apps/primary-advantage. I therefore apply the prerequisite results to 1826b382e. Default: accept.",
+    "F304 (stale spec text): spec FR-5 and the text of plan task 1.8 say that cn, tw, and vi fall back as today. The code adds the six keys and the manual step4 text in English to cn.json, tw.json, and vi.json under orchestrator decision F5, which the plan records. The spec text does not show the decision. Default: closeout adds one line to the spec that names decision F5. This item joins F146.",
+    "F305 (plan and commit nit): the plan names two Red commits with the headers 'test(domain): pin the class session lifetime' and 'test(primary): pin the lifetime choice'. The repository holds one Red commit, 0c459e9eb 'test(primary): pin the class session lifetime', with five test files. Tasks 1.1 and 1.2 name student-login-card.test.ts and class-login-panel.test.tsx, and neither file changed (card_file_edit=0, panel_file_edit=0, with the reasons in the plan). The plan evidence shows the real state, so no claim is false. Default: no change.",
+    "F306 (process record): Review B and Review C did not run the tests because the shell refused the vitest call; they used file reads and the Green log. Review A recorded its route as unknown. Review A, the adversarial role, and this role ran the tests, and the counts agree. I did not run the type checks again (budget); the Green rem1 log and the adversarial result record domain check-types exit 0 and app check-types with no error outside the foreign untracked file apps/primary-advantage/qa-check-user.tmp.ts. Default: no change.",
+    "F142 (open PM question, carried): the choice is not kept after a reload. The panel then shows '3 hours' while a 7-day session is open, and New code makes a 3-hour session. Review B judges it a usability point, not a security risk. Default: no change (D-5).",
+    "F124 and F145 (open, for Daniel, carried): the lifetimeHelp7d wording says 'until this time' with no time before a start. Default: the en text stays until Daniel's wording check with the Thai check.",
+    "F146 (open PM question, carried): the English stopgap text in cn, tw, and vi has no lang mark. Default: no change; the real fix is a translation.",
+    "F101 and OQ-1 (open PM question, carried): a code_only class with the 7-day choice gives a 7-day sign-in with no second factor. Default: no server refusal; the PM decides before the deploy.",
+    "Task 1.10 (deferred:pm, carried): the seven th strings (six new keys and TeacherManual.startClass.step4) wait for Daniel's Thai check in the 11-16 package. The th text must not change before the PM returns the check.",
+    "Close-out nits, carried with no change: F171 (the until_17 state can select itself again after Bangkok midnight), F181 (fixed element ids; use useId if a second control instance appears), F201 (two clicks in one React batch send two start requests with the same value), F202 (the panel can post until_17 after 17:00 when no render occurs; the server refuses it)."
+  ],
+  "evidence": [
+    "HEAD and scope: the repository HEAD is 6b8115e86 on master. git log 1826b382e..HEAD lists six commits of sales_training_2027_20261015, storytime_app_rebuild_20261025, and storytime_look_20261107; git diff --name-only 1826b382e..HEAD lists only measure files of those three tracks. git status --porcelain over packages/domain, packages/types, apps/primary-advantage, and the track folder lists no tracked change (three foreign untracked files only). The tested files therefore equal the content of 1826b382e. git branch --contains 1826b382e prints master (task 1.13).",
+    "Test command (run once, foreground, through heavy-run.sh p2): domain Test Files 4 passed, 1 skipped (5); Tests 190 passed, 12 skipped (202). App Test Files 5 passed (5); Tests 142 passed (142). No failure line. The counts equal the adversarial result (202/190/12 and 142) and agree with the Green rem1 claim (108 and 86) plus the adversarial files (94, 44, and 12). A5: the count claims in the plan agree with this run.",
+    "Task markers and SHAs: 1.1 and 1.2 [x] with 0c459e9eb (git show --stat: five test files only). 1.3 and 1.4 [x] with 2614bdba0 (contracts.ts, errors.ts, http.ts). 1.5 [x] with 35e99be85 (class-session.ts). 1.6, 1.7, and 1.8 [x] with bd292b853 (api.ts, class-session-control.tsx, five message files). 1.9 [x]: the six keys and the step4 text in the plan equal the en.json and th.json diff, word for word. 1.11 [x] with evidence commit 30c48dec0. rem1: a3f30a759 and 31eef4b5f. 1.12a [b] with 1826b382e. 1.10, 1.12, 1.13, and 1.14 are [b] with an owner. Every SHA is in git log db8672b04..1826b382e. No Green commit before rem1 touches a test file; a3f30a759 adds 58 lines to the control test and deletes none.",
+    "Three choices and the 7-day maximum: contracts.ts holds classSessionLifetime = z.enum(['3h','until_17','7d']) and lifetime: classSessionLifetime.default('3h'). class-session.ts computeSessionExpiry returns now + 3 h, now + 7 d, or 10:00 UTC of the Bangkok day key, and its default branch throws invalid_input. Tests: 'startClassSession lifetime' in student-login-class-session.test.ts (lines 245-405), including 'accepts only a lifetime inside the 7 day maximum' (line 283).",
+    "Refused value: the contract refuses a value outside the enum; the handler cases at student-login-handlers.test.ts:333 return 400 and skip the domain; the domain rows at student-login-class-session.test.ts:344 and :382 throw invalid_input and write no row. http.ts maps invalid_input to 400. The until_17 refusal runs after authorizeClassroom and before ensureStudentCredentials, so a refused start writes no row.",
+    "Audit line: class-session.ts writes { sessionId, expiresAt, lifetime } for student_login:class_start. Tests at student-login-class-session.test.ts:298, :310, and :321 check each choice, the default, and that no code or hash is in the line.",
+    "Early end stays: endClassSession has no change in git diff db8672b04..1826b382e. The endClassSession cases (student-login-class-session.test.ts:124-141) and the panel case 'ends the class' (class-session-control.test.tsx:135) pass. The real-database case of 0c459e9eb ends a 7-day session early and checks that the code stops.",
+    "Strings: the en.json and th.json diff adds lifetimeLabel, lifetime.3h, lifetime.until_17, lifetime.7d, lifetimeHelp7d, and errors.lifetimeInvalid, and changes TeacherManual.startClass.step4. Panel cases at class-session-control.test.tsx:160, :169, :359, and :373 check en, th, and the five locale files.",
+    "Panel (AC-6): class-session-control.tsx renders a radiogroup with a visible label, selects 3h by default, posts { classroomId, lifetime: effectiveLifetime }, hides until_17 from 17:00 Bangkok, shows the server expiry with the date for a later Bangkok day, and gives each label the class min-h-11. The 35 control cases and the 12 adversarial panel cases pass.",
+    "AC-8: git diff --name-only db8672b04..1826b382e -- packages/db prints nothing.",
+    "No hash line: git diff db8672b04..1826b382e -G'sha256|sha1|createHash|checksum|md5|digest' --name-only -- packages apps/primary-advantage prints nothing.",
+    "Phase diff scope: git diff --name-status db8672b04..1826b382e over packages, apps/primary-advantage, and the track files lists 3 domain source files, 2 app source files (api.ts, class-session-control.tsx), http.ts, 5 message files, 7 test files, plan.md, and 3 run logs. card-token.ts, picture-password.ts, rate-limits.ts, and handlers.ts are not in the list. measure/tracks.md is not in the list.",
+    "Reviews match the audited code: git diff --name-only 2d05e9e9b..1826b382e lists no implementation file of this track. The line references in the review results (effectiveLifetime, the start body, the audit metadata, the line split) agree with the diff that I read. review-b-p1-9e2bc7492.json covers spec section 9, including OQ-1 (F101); review-b-p1-2d05e9e9b.json covers rem1 and F142. Both pass with no blocking finding.",
+    "A3, A4, A6, and A7 do not apply: the phase diff changes no contract-test framework file, no filter, and not measure/tracks.md.",
+    "Families: Red DeepSeek, Green GLM, adversarial MiniMax, Review A Anthropic, Review B Kimi, Review C Anthropic, this role Anthropic. This role's family differs from Red, Green, and the adversarial author. This route replaces StepFun, which failed twice at the provider."
+  ],
+  "commands": [
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<the one test command of the brief: 5 domain files, then 5 app files, CI=true, --maxWorkers=1>' -> domain 190 passed, 12 skipped, 0 failed (202); app 142 passed (142)",
+    "git log --format='%h %s' db8672b04..1826b382e (25 commits; 13 of this track)",
+    "git log --format='%h %s' 1826b382e..HEAD (6 commits of other tracks)",
+    "git diff --name-only 1826b382e..HEAD (measure files of three other tracks only)",
+    "git diff --name-status db8672b04..1826b382e -- packages apps/primary-advantage measure/tracks/primary_class_session_lifetime_20261111 measure/runs/primary_class_session_lifetime_20261111 measure/tracks.md",
+    "git diff --name-only db8672b04..1826b382e -- packages/db (empty)",
+    "git diff db8672b04..1826b382e -G'sha256|sha1|createHash|checksum|md5|digest' --name-only -- packages apps/primary-advantage (empty)",
+    "git diff db8672b04..1826b382e -- packages/domain/src/student-login apps/primary-advantage/lib/student-login apps/primary-advantage/components/teacher/class-login (read)",
+    "git diff db8672b04..1826b382e -- apps/primary-advantage/messages/en.json apps/primary-advantage/messages/th.json (read)",
+    "git diff --name-only 2d05e9e9b..1826b382e (10 paths; 3 test files under packages and apps/primary-advantage)",
+    "git show --stat for 0c459e9eb 10daba4cd e7d7e6f65 2614bdba0 35e99be85 bd292b853 30c48dec0 9e2bc7492 a3f30a759 31eef4b5f 2d05e9e9b e5b97e84c 1826b382e",
+    "git show a3f30a759 -- class-session.ts contracts.ts (one line split and two JSDoc lines)",
+    "git show 0c459e9eb -- packages/domain/src/__tests__/student-login.real-db.test.ts (the 7-day AC-5 case)",
+    "git status --porcelain -- packages/domain packages/types apps/primary-advantage measure/tracks/primary_class_session_lifetime_20261111 (three foreign untracked files)",
+    "git branch --contains 1826b382e (master)",
+    "A first compound shell call and a piped form of the test command were refused by the permission mode; I ran each command alone after that. No test ran twice."
+  ],
+  "changed_files": [
+    "measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.json",
+    "measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "audited_head_sha": "1826b382ed42f5189312a625bb364d20f70344f7",
+  "phase_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "role_base_sha": "1826b382ed42f5189312a625bb364d20f70344f7",
+  "accepted_head_sha": "1826b382ed42f5189312a625bb364d20f70344f7",
+  "allowed_commits_after_review_head": [
+    "e5b97e84c (test files of this track only)",
+    "b9f5439d4 (Storytime test files only)",
+    "c633a4446 (Storytime plan and measure/runs log)",
+    "c3847bb2a (Sales plan and review document)",
+    "1826b382e (one line in this track's plan.md)"
+  ],
+  "open_gates": [
+    "1.12a browser check on the tower (deferred:pm) - must pass before the Primary deploy",
+    "1.10 Thai check (deferred:pm, Daniel, 11-16 package)",
+    "1.14 deploy (deferred:daniel)"
+  ],
+  "route": "claude-code/claude-fable-5-2[1m]#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "computeSessionExpiry in packages/domain/src/student-login/class-session.ts gives the three expiry values and refuses before the first row write; the edge items F142, F171, and F202 stay open as usability points."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The Red run failed first for the stated reasons (43 domain and 29 app failures in the plan record) and 150 adversarial cases pass; the real-db file skipped its 12 cases in my run and no browser measured the 44 px targets."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 4,
+      "evidence": "git diff --name-status db8672b04..1826b382e lists only the planned paths plus cn.json, tw.json, vi.json, and the manual step4 text, which decisions F5 and F143 record; packages/db is unchanged."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "My one test command reproduces the claimed counts (202/190/12 and 142/142); the browser gate has no measurement (ux-browser-p1-e5b97e84c.json is inconclusive)."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Its counts (96 passed and 12 skipped domain, 86 app) agree with my run less the adversarial files, and its claim that a3f30a759 changes class-session.ts by a line split only agrees with git show a3f30a759."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Its probes (the enum as the only input, the refusal before ensureStudentCredentials, the audit metadata) agree with git diff db8672b04..1826b382e; it did not run the tests itself."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "claude-code/claude-sonnet-5-5#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Its wiring chain (the control posts { classroomId, lifetime }, invalid_input maps to lifetimeInvalid in api.ts) agrees with the diff; it ran no test and no browser."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "My run of the same gate gives its exact counts: domain 202 total, 190 passed, 12 skipped; app 142 passed; git show --stat e5b97e84c lists only the three test files."
+    }
+  ]
+}

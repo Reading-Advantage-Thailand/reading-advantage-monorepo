@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review C round 2 passes Phase 1 of primary_class_session_lifetime_20261111 at 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9. The repository HEAD is b9f5439d4 (a Storytime test commit, out of scope); no file under apps/primary-advantage or packages changed after 2d05e9e9b. Green rem1 fixed F141, F143, and F144 as I advised: after 17:00 one radio is checked and the start posts '3h', the alert clears on a new choice, the manual text is changed in five files, and the group has a visible label with aria-labelledby and an aria-describedby for the 7-day help. I withdraw F141, F143, and F144. The API wiring did not change (api.ts, handlers.ts, http.ts, and the route are untouched since round 1). I found no blocking finding, no major finding, and one new nit (F181) for the close-out record. F142, F145, and F146 stay with the user as ESCALATE items. I did not run the tests; the shell refused the vitest call again, and Review A and Review B report their own runs at this HEAD.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F181 (nit, for the close-out record): class-session-control.tsx uses the fixed ids 'class-session-lifetime-label' and 'class-session-lifetime-help' and the fixed radio name 'class-session-lifetime'. Only one ClassSessionControl renders on a page today (class-login-panel.tsx:74 inside one ClassLoginPanel in enhanced-class-roster.tsx:300), so the ids are unique. A second instance on one page would give duplicate ids and one shared radio group. Advice: use useId if a second instance is ever added. Not a defect now."
+  ],
+  "evidence": [
+    "F141 withdrawn: I read class-session-control.tsx at 2d05e9e9b. choices is computed before run() (before1700 from minutesOfDay with SCHOOL_TIME_ZONE), effectiveLifetime = choices.includes(lifetime) ? lifetime : '3h', the radios use checked={effectiveLifetime === choice}, and run('start') posts lifetime: effectiveLifetime. After 17:00 'until_17' is not in choices, so '3 hours' is the one checked radio and the start posts '3h'. The radio onChange calls setLifetime(choice) and setError(null), so the alert clears on a new choice. The poll (10 s) re-renders the control, so the fallback shows within 10 s. A hidden choice never reaches the server. Tests: 'falls back to 3 hours when the clock passes 17:00 with until_17 selected' (rerender across 17:00, '3 hours' checked, body lifetime '3h'), 'clears the lifetime error when the teacher picks another option', and 'posts until_17 before 17:00 Bangkok' (this one also closes Review A F125).",
+    "F143 withdrawn: grep 'after 3 hours|หลัง 3 ชั่วโมง' over apps/primary-advantage finds no match now. The git diff 9e2bc7492..2d05e9e9b shows step4 changed in en.json, th.json, cn.json, tw.json (all line 4380), and vi.json (line 4229). en: 'The class also closes by itself at the time you chose: 3 hours, until 17:00 today, or 7 days.' The other four locales: cn, tw, and vi hold the same English text (decision F5); th: 'ชั้นเรียนปิดเองตามเวลาที่คุณเลือก: 3 ชั่วโมง ถึง 17:00 ของวันนี้ หรือ 7 วัน'. The list in the sentence matches the three option labels in en and th. The five files parse as JSON (python json.load, 5 of 5 ok). The new th sentence must join the plan task 1.10 hand-off for Daniel's Thai check; the th text uses 'คุณ', which Daniel should check.",
+    "F144 withdrawn: the label is now a visible paragraph <p id='class-session-lifetime-label' className='font-medium'> with the lifetimeLabel text. The radiogroup has aria-labelledby='class-session-lifetime-label'. It has aria-describedby='class-session-lifetime-help' only while the effective choice is '7d', and the help paragraph carries that id. Test 'names the group with a visible label and describes the 7 day help' checks getByText(label), the radiogroup name, aria-labelledby, no aria-describedby by default, and the describedby target text after the click on '7 days'. The keys and the text of the label did not change.",
+    "Check 5, API wiring, no regression: git diff --stat 9e2bc7492 2d05e9e9b over api.ts, apps/primary-advantage/lib, and packages/db is empty. The only edits in packages/domain/src are the JSDoc of classSessionLifetime (contracts.ts, F122) and the line split in class-session.ts:169-170 (F123); neither changes behavior. The chain is the same as in round 1: class-session-control.tsx posts { classroomId, lifetime } to class-session/start; route.ts exports POST = startClass; handlers.ts parses with classSessionStartInput; expiresAt reaches the text; invalid_input maps to lifetimeInvalid in api.ts:89 and shows in role=alert. The post body now uses effectiveLifetime, which is always one of the three enum values, so a refusal from the contract cannot come from the panel.",
+    "Check 4, browser scope for the UX role (task 1.12), changed by rem1 in four points. Unchanged: scratch database copy (never the shared primary_advantage), free port (not 3005, not 3099), next build and next start under heavy-run.sh, one viewport 1366x768, th and en, heavy lock priority after Storytime. Changed: (a) item 9 becomes: the group label is a visible line above the radios; record its text, its font weight, its color contrast, and that it is not confused with the startHelp or openNoCode line; read the accessibility tree and confirm the radiogroup name equals the label. (b) F141 check: select 'until_17' at 16:59 Bangkok (page.clock), let the clock pass 17:00 plus the 10 s poll, then record that exactly one radio is checked ('3 hours'), that Start posts lifetime '3h', and that an old lifetime alert clears when a radio is clicked. (c) the help text: when '7 days' is selected the accessibility tree shows the help text as the description of the radiogroup; with another choice there is no description. (d) the manual page (the teacher manual section startClass, step4) shows the new sentence in th and en; one look at the page is enough. Still required: option_min_height_px (44 or more) and label width, radio_input_px, arrow keys and focus ring, '3 hours' checked at the first render, 7-day start body keys (classroomId, lifetime), the expiry text with the date against the response in Bangkok time (en 12-hour, th 24-hour), the class_start audit row lifetime=7d, F142 (reload after a 7-day start, read the checked radio and the text above it, press New code, record the new expiry), the refusal text by route intercept (400, code invalid_input) in th and en, end the class and the class code fails at the student sign-in page, console errors and hydration warnings, text contrast of the help text and the disabled state while busy. The real hide of 'until_17' can run without a clock override at any time after 17:00 Bangkok. Optional second viewport 390x844. Screenshots under /tmp/opencode. Evidence class: automated or person-checked, as the note says. Cleanup: stop the server by the pid from ss -ltnp for its port, remove the scratch database and the build output.",
+    "ESCALATE items carried, unchanged, no new evidence: F142 (the choice is not stored; after a reload the group shows '3 hours' while a 7-day session is open, and New code then makes a 3-hour session; the manual newCode sentence still says only 'The app shows a new code, and the old code stops working'), F145 (lifetimeHelp7d says 'until this time' with no time before a start, names cards only, 'End the class' against the button 'End class', 17:00 against 5:00 PM in en), F146 (English stopgap text in cn, tw, and vi without a lang mark). F101 and F124 were not mine to re-judge beyond round 1. The rem1 change did not touch these texts, so my round 1 judgment stands. F122, F123, and F125 are fixed (contracts.ts JSDoc, class-session.ts line split, the 'posts until_17' test)."
+  ],
+  "commands": [
+    "git diff 9e2bc7492 2d05e9e9b -- apps/primary-advantage/messages packages/domain/src apps/primary-advantage/components/__tests__ (read)",
+    "git diff --stat 9e2bc7492 2d05e9e9b -- apps/primary-advantage/components/teacher/class-login/api.ts apps/primary-advantage/lib packages/db (empty)",
+    "git diff --stat 2d05e9e9b b9f5439d4 -- apps/primary-advantage packages (empty)",
+    "grep 'after 3 hours|หลัง 3 ชั่วโมง' over apps/primary-advantage (no match)",
+    "python3 -I json.load on the five message files at 2d05e9e9b (5 of 5 ok)",
+    "GREEN_TEST_COMMAND of green-p1-rem1.log (NOT RUN: permission rejected by the shell; the Green log records domain 108 total, 96 passed, 12 skipped, 0 failed, app 86 total, 0 failed, control file 36/36/36 in three time zones)"
+  ],
+  "changed_files": [
+    "measure/runs/primary_class_session_lifetime_20261111/review-c-p1-2d05e9e9b.json",
+    "measure/runs/primary_class_session_lifetime_20261111/review-c-p1-2d05e9e9b.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "medium",
+  "audited_head_sha": "2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9",
+  "route": "claude-code/claude-sonnet-5-5#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "effectiveLifetime in class-session-control.tsx drives the checked radio and the posted body; the fallback test crosses 17:00 and expects lifetime '3h'."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Four new cases in class-session-control.test.tsx cover until_17 post, the 17:00 fallback, the error clear, and the label and describedby; the read-only run of the tests was not mine."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff 9e2bc7492..2d05e9e9b shows only the panel, its test, five manual strings, a JSDoc, and a line split."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 3,
+      "evidence": "Each claim has a file:line or a diff, but I did not run the tests (the shell refused the vitest call) and I did not use a browser."
+    }
+  ]
+}

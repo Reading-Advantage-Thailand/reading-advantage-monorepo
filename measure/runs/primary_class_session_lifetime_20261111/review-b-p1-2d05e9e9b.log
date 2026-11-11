@@ -1,0 +1,50 @@
+# Review B log — P1 round 2 "Choice of the class session lifetime" (security and data handling)
+
+Role: Measure Review B (security), round 2. Track: primary_class_session_lifetime_20261111. Phase: P1.
+Model: kimi-code-plan-cn/kimi-for-coding#high. Report only: no code, test, plan, or registry edit; no commit.
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha / audited HEAD: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9 (also the current master HEAD)
+Round scope: Green rem1 — commits a3f30a759 (panel effective choice, error clear, visible group label, aria-describedby, JSDoc, one statement per line), 31eef4b5f (manual close text in five message files), 2d05e9e9b (plan and log). Dispositions carried: F121, F141, F125, F122, F123, F143, F144 = FIX; F146, F142, F124, F145, F101 = ESCALATE.
+
+## 1. Provenance
+
+- .git/refs/heads/master holds exactly 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9. The audited HEAD is the current HEAD.
+- .git/logs/HEAD shows the rem1 code commits a3f30a759 and 31eef4b5f with one Storytime docs commit between 31eef4b5f and 2d05e9e9b; Storytime commits are out of scope and touch no track file.
+- Security applicability: applicable. The round changes the teacher panel input path, two domain files, and teacher-facing message text.
+
+## 2. Test execution
+
+- Attempted the GREEN_TEST_COMMAND of green-p1-rem1.log. The environment rejected pnpm/vitest for this role (permission denied; only read-only shell worked).
+- Gate evidence is taken from green-p1-rem1.log section 2, run at 2d05e9e9b: domain 4 files exit 0 (tests_total=108, tests_passed=96, tests_skipped=12, tests_failed=0); app 3 files exit 0 (tests_total=86, tests_failed=0); tz_runs_green=3 for the control file (36/36/36); json_valid=5; eslint_new_errors_in_changed_files=0.
+- File-level verification covered every changed line.
+
+## 3. Probe results
+
+1. The effective-choice fallback cannot post a value outside the enum. class-session-control.tsx:59-69: state is set only from the rendered choices (all enum members); effectiveLifetime falls back to '3h', an in-enum value; the post body at :76 sends effectiveLifetime. The server stays the authority: contracts.ts:38-47 refuses any value outside the enum, and class-session.ts:49-68 throws invalid_input for unknown values. New tests at class-session-control.test.tsx:390-420 pin the fallback and the error clear.
+2. The class-session.ts change is formatting only. The joined 'let row ... ; try {' became two lines (:169-170). computeSessionExpiry, the refusal placement before the first row write (:125-129), the audit metadata (:180), and the insert values (:171-174) are behavior-equivalent to the round-1 version audited at 9e2bc7492. contracts.ts:37-41 is JSDoc wording only.
+3. The message changes hold no markup injection and no secret. The new TeacherManual.startClass.step4 at en.json:4380, th.json:4380, cn.json:4380, tw.json:4380, vi.json:4229 uses <ui>{endClass}</ui>, the pattern of 47 existing manual strings. manual-guide.tsx:90 renders t.rich with a fixed tag map (ui -> UiLabel); message text never reaches HTML parsing. The text holds no code, hash, or credential.
+4. F142 from a security view: after a reload the panel resets to '3h' (:59), and New code posts '3h', so the server closes the 7-day session and opens a 3-hour one. This only shortens the credential window. The actor is the authenticated teacher of the class; the action is deliberate and audited (class_end 'replaced' plus class_start with lifetime). It cannot extend a session, leak a secret, or cross a tenant. Verdict: usability point only, not a security risk. The D-5 default (no change now) is acceptable from a security standpoint.
+
+A2 (consent-blind publish gate): not applicable; no draft-to-published flip.
+A6 (registry overstatement): no registry claim of a resolved security state in this round.
+
+## 4. Findings and verdict
+
+No new findings (numbering from F161 yields none). No blocking findings. All violations arrays are empty. The ESCALATE items (F146, F142, F124, F145, F101) stay with the orchestrator and the PM with their stated defaults; F142 is confirmed as non-security.
+
+Status: pass.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-review-b-security
+track: primary_class_session_lifetime_20261111
+phase: P1
+round: rem1 (round 2)
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+audited_head_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+result: measure/runs/primary_class_session_lifetime_20261111/review-b-p1-2d05e9e9b.json
+verdict: pass
+findings: none (no new findings from F161; no blocking findings)
+limits: vitest gate not re-run by this role (shell permission denied for pnpm/vitest); gate evidence from green-p1-rem1.log at 2d05e9e9b plus file-level reads of every changed line
+handoff: F142 confirmed as usability-only, not a security risk; D-5 default acceptable. F146, F124, F145, F101 stay ESCALATE with their stated defaults for the PM and Daniel.
+END_MEASURE_AGENT_RESULT

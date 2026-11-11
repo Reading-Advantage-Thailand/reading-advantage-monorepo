@@ -1,0 +1,17 @@
+Final acceptance r2 fails the remaining doctor gate. The original supervisor error and the Primary type error are fixed.
+
+The supervisor integration gate exits 0 with 23 tests. The Primary type check exits 0. The supplied test command exits 0 with 332 passed, 12 skipped, and 0 failed.
+
+Doctor exits 1 on deprecated markers in other track plans. The A-53 plan has no deprecated marker. The closeout standard requires doctor to exit 0. F411 therefore blocks this acceptance.
+
+The audited HEAD is 9a195d880. Its domain and Primary code equals 7d208eed5. Later commits touch Storytime files only. F403 through F408 keep their prior dispositions.
+
+MEASURE_AGENT_RESULT
+status: complete
+verdict: fail
+summary: The remaining repository-wide doctor failure blocks closeout.
+blocking_findings: F411
+nonblocking_findings: F403, F404, F405, F406, F407, F408
+tests: 332 passed, 12 skipped, 0 failed
+result_json: measure/runs/primary_class_session_lifetime_20261111/final-acceptance-9a195d880.json
+END_MEASURE_AGENT_RESULT

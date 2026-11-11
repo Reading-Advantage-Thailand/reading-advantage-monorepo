@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "track_id": "primary_class_session_lifetime_20261111",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-12",
+  "pre_closeout_head": "3c80a09b7b29b82eb826d6e059a56ab45b096b68",
+  "final_acceptance_audited_head_sha": "b8bd9abcfc49190b6698d77f386c7f050b03ff40",
+  "track_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
+  "role_base_sha": "44368d1b4d34a640ce7b976ee39172e981f49395",
+  "lane": "short lane: one spec review, one phase, one phase acceptance, one adversarial round, one UX browser review deferred to the tower, and three final acceptance rounds.",
+  "archive_path": "measure/archive/primary_class_session_lifetime_20261111",
+  "model_routes": [
+    "The spec review, the strategy, the Red phase, and the Green phase ran on the routes recorded in their run files.",
+    "The phase acceptance ran on claude-code/claude-fable-5-2 after two StepFun timeouts.",
+    "The final acceptance r2 ran on kimi-code-plan-cn/k3.1-pro and r3 ran on minimax-cn-coding-plan/MiniMax-M3 with Kimi on WAIT.",
+    "MiniMax M3.1 Flash wrote the A-53 adversarial tests, so the adversarial verdict and the final acceptance r3 share one model family. The reviewer rating for the adversarial role records the loss of independence.",
+    "This closeout ran on minimax-cn-coding-plan/MiniMax-M3.1-Flash."
+  ],
+  "audits": [
+    {
+      "role": "spec-review",
+      "phase": "track setup",
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/spec-review-26cdcda80.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/spec-review-26cdcda80.log",
+      "audited_head_sha": "26cdcda80",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "review-a-correctness",
+      "phase": 1,
+      "round": 1,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/review-a-p1-9e2bc7492.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/review-a-p1-9e2bc7492.log",
+      "audited_head_sha": "9e2bc7492",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 1
+    },
+    {
+      "role": "review-b-security",
+      "phase": 1,
+      "round": 1,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/review-b-p1-9e2bc7492.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/review-b-p1-9e2bc7492.log",
+      "audited_head_sha": "9e2bc7492",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "review-c-ux-api",
+      "phase": 1,
+      "round": 1,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/review-c-p1-9e2bc7492.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/review-c-p1-9e2bc7492.log",
+      "audited_head_sha": "9e2bc7492",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "review-a-correctness",
+      "phase": 1,
+      "round": 2,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/review-a-p1-2d05e9e9b.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/review-a-p1-2d05e9e9b.log",
+      "audited_head_sha": "2d05e9e9b",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "review-b-security",
+      "phase": 1,
+      "round": 2,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/review-b-p1-2d05e9e9b.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/review-b-p1-2d05e9e9b.log",
+      "audited_head_sha": "2d05e9e9b",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "review-c-ux-api",
+      "phase": 1,
+      "round": 2,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/review-c-p1-2d05e9e9b.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/review-c-p1-2d05e9e9b.log",
+      "audited_head_sha": "2d05e9e9b",
+      "status": "pass",
+      "blocking_findings": 0,
+      "open_nits": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 1,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/adversarial-p1-2d05e9e9b.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/adversarial-p1-2d05e9e9b.log",
+      "audited_head_sha": "2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9",
+      "status": "pass",
+      "new_cases": "150 across three new test files",
+      "mutants_rejected": "not applicable; the round adds cases, not mutants",
+      "blocking_findings": 0,
+      "open_nits": 2
+    },
+    {
+      "role": "ux-browser-review",
+      "phase": 1,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/ux-browser-p1-e5b97e84c.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/ux-browser-p1-e5b97e84c.log",
+      "audited_head_sha": "e5b97e84c66237697128c4334bc2678ab9c6b5c3",
+      "status": "inconclusive",
+      "blocking_findings": 0,
+      "open_nits": 0,
+      "note": "The PM deferred the browser gate to the tower. No browser measurement ran, so this audit makes no UX finding. The gate stays a carry-forward gate before the Primary deploy."
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 1,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.log",
+      "audited_head_sha": "1826b382ed42f5189312a625bb364d20f70344f7",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 0,
+      "note": "The checkpoint commit of this phase is 7d208eed5."
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "1",
+      "round": 1,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-7d208eed5.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-7d208eed5.log",
+      "audited_head_sha": "7d208eed501ea49ad08425c8b5c2747c7a9eff66",
+      "status": "fail",
+      "blocking_findings": 1,
+      "note": "Round 1 failed on the repository-wide doctor gate and the foreign scratch file. It stays as a record and is not the acceptance of this track."
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "1",
+      "round": 2,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-9a195d880.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-9a195d880.log",
+      "audited_head_sha": "9a195d880401a586a767d9f0e5ba18485501e7e8",
+      "status": "fail",
+      "blocking_findings": 1,
+      "note": "Round 2 failed on finding F411, the deprecated markers in the plans of other tracks. It stays as a record and is not the acceptance of this track."
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "1",
+      "round": 3,
+      "result_file": "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-b8bd9abcf.json",
+      "log_file": "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-b8bd9abcf.log",
+      "audited_head_sha": "b8bd9abcfc49190b6698d77f386c7f050b03ff40",
+      "status": "pass",
+      "blocking_findings": 0,
+      "violation_arrays_empty": true,
+      "open_nits": 7,
+      "note": "Round 3 is the acceptance of this track. The PM decision of 2026-11-12 accepts F411 for this track and counts the single-track marker check as the pass."
+    }
+  ],
+  "gate_commands": [
+    "git rev-parse HEAD (3c80a09b7b29b82eb826d6e059a56ab45b096b68, exit 0)",
+    "git merge-base --is-ancestor b8bd9abcfc49190b6698d77f386c7f050b03ff40 HEAD (exit 0)",
+    "git diff --name-only b8bd9abcfc49190b6698d77f386c7f050b03ff40..HEAD -- packages/domain apps/primary-advantage measure/tracks/primary_class_session_lifetime_20261111 (no line, exit 0)",
+    "git log --oneline b8bd9abcfc49190b6698d77f386c7f050b03ff40..HEAD (13 commits of other tracks, exit 0)",
+    "git mv measure/tracks/primary_class_session_lifetime_20261111 measure/archive/primary_class_session_lifetime_20261111 (6 renames, exit 0)",
+    "bash tests/orchestrator_marker_vocabulary.sh --track primary_class_session_lifetime_20261111 (exit 0; PASS for 1 plan)",
+    "bash tests/orchestrator_catalog.sh (exit 0; two PASS lines)",
+    "bash tests/orchestrator_review_execution_truthfulness.sh (exit 0; PASS)",
+    "python3 over the task lines of measure/archive/primary_class_session_lifetime_20261111/plan.md (15 task lines: 10 [x] with a commit SHA, 5 [b] with a deferred owner, 0 [~], 0 [ ], exit 0)",
+    "grep -nE 'PASS=[0-9]+.*FAIL=0|all checks pass|all tests pass' measure/archive/primary_class_session_lifetime_20261111/plan.md (no hit, exit 1)",
+    "grep -nE 'API-key encryption (was )?resolved|encryption.*resolved|completely fixed|fully solved|all (checks |tests )?pass' measure/tracks.md (no hit, exit 1)",
+    "grep -n primary_class_session_lifetime measure/tracks.md (one line, the archived entry, exit 0)",
+    "grep -n primary_class_session_lifetime tests/*.sh (no hit, exit 1)",
+    "python3 over measure/tracks.md (the track id is absent from the active section; the archived entry carries the metadata description, exit 0)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track primary_class_session_lifetime_20261111 (exit 0)",
+    "git add -f measure/runs/primary_class_session_lifetime_20261111 (exit 0)",
+    "git add measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md (exit 0)",
+    "git commit -m 'chore(measure): archive the lifetime track (track_id: primary_class_session_lifetime_20261111)' -- measure/tracks/primary_class_session_lifetime_20261111 measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md measure/lessons-learned.md measure/tech-debt.md measure/runs/primary_class_session_lifetime_20261111 (exit 0)",
+    "git show --stat HEAD (the commit names only the four pathspec paths, exit 0)"
+  ],
+  "deferred_tasks": [
+    "1.10 Thai-label hand-off (deferred:pm): the list of task 1.9 goes to the PM for Daniel's Thai check in the 11-16 package.",
+    "1.12 Review and browser gates (deferred:orchestrator): Reviews A, B, and C, the adversarial round, and the phase acceptance ran and passed.",
+    "1.12a Browser check of the teacher panel at the tower (deferred:pm): the gate stays open and must pass before the Primary team deploys this change.",
+    "1.13 Merge to master by 2026-11-18 (deferred:orchestrator): the commits are on master and the phase acceptance confirms it.",
+    "1.14 Deploy of the Primary Advantage app with this change (deferred:daniel): no deploy runs from this track."
+  ],
+  "open_gates": [
+    "1.12a browser check on the tower before the Primary deploy (deferred:pm)",
+    "1.10 Thai check through the PM for Daniel (deferred:pm)",
+    "1.14 Primary Advantage deploy (deferred:daniel)",
+    "F421 repository-wide architecture:check pin repair in the doctor.sh follow-up track (PM decision 2026-11-12, done date 11-14)",
+    "F411 doctor.sh marker rule in the doctor.sh follow-up track (PM decision 2026-11-12, done date 11-14)"
+  ],
+  "plan_state": {
+    "total_tasks": 15,
+    "done_tasks": 10,
+    "deferred_tasks": 5,
+    "in_progress_tasks": 0,
+    "space_marker_tasks": 0,
+    "phase_checkpoints": [
+      "1826b382e"
+    ],
+    "note": "Every done task names a commit SHA. The five human-gated tasks keep a deferred owner."
+  },
+  "retained_evidence": [
+    "measure/runs/primary_class_session_lifetime_20261111/ holds every file of the run folder, the UX harness included. Nothing was deleted.",
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-b8bd9abcf.json and .log (the round 3 final acceptance verdict)",
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-7d208eed5.json and .log (the round 1 record)",
+    "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-9a195d880.json and .log (the round 2 record)",
+    "measure/runs/primary_class_session_lifetime_20261111/phase-acceptance-p1-1826b382e.json and .log (the phase verdict)",
+    "measure/runs/primary_class_session_lifetime_20261111/adversarial-p1-2d05e9e9b.json and .log (the adversarial set)",
+    "measure/runs/primary_class_session_lifetime_20261111/review-a-p1-9e2bc7492, review-b-p1-9e2bc7492, review-c-p1-9e2bc7492, review-a-p1-2d05e9e9b, review-b-p1-2d05e9e9b, and review-c-p1-2d05e9e9b .json and .log (the six review verdicts)",
+    "measure/runs/primary_class_session_lifetime_20261111/ux-browser-p1-e5b97e84c.json and .log (the inconclusive browser audit and its carry-forward note)",
+    "measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ (the harness, the seed, and the launch script for the tower)",
+    "measure/runs/primary_class_session_lifetime_20261111/spec-review-26cdcda80.json and .log (the spec review)",
+    "measure/runs/primary_class_session_lifetime_20261111/red-p1.log, green-p1.log, green-p1-rem1.log, green-p1-checkpoint.log, and strategy-p1.log (the phase work records)",
+    "measure/runs/primary_class_session_lifetime_20261111/closeout-b8bd9abcf.json and .log (this closeout)",
+    "measure/archive/primary_class_session_lifetime_20261111/ holds index.md, metadata.json, plan.md, spec-review.md, spec.md, test-strategy.md, and this manifest"
+  ],
+  "artifact_cleanup": "None. The orchestrator named no artifact for deletion. The closeout deleted no file from the run folder and no file from the archive folder. The UX harness at measure/runs/primary_class_session_lifetime_20261111/ux-p1-e5b97e84c/ stays for the tower run.",
+  "hashing_policy_note": "AGENTS.md hashing policy: this manifest records file names, commit SHAs, audited head SHAs, and the phase checkpoint only. It holds no SHA-256, MD5, tree-hash, or checksum field of any file, of any report, or of the run folder. Commit identity is the provenance of this closeout, and the retained audit files are the correctness evidence.",
+  "open_nits": [
+    "F421, doctor: the fourth doctor step, pnpm architecture:check, exits 1 at the audited head because the architecture pins were stale before the A-53 Red commit. The failure is repository-wide. The doctor.sh follow-up track owns the repair, with a done date of 11-14.",
+    "F411, doctor: the doctor gate exits 1 on deprecated [ ] markers in the plans of other tracks. The PM decision of 2026-11-12 accepts F411 for this track and counts the single-track marker check as the pass. The doctor.sh follow-up track owns the rule, with a done date of 11-14.",
+    "F403, ux: the browser check stays deferred:pm under task 1.12a. The tower must pass it before the Primary deploy. The local UX result stays inconclusive.",
+    "F404, tests: the final acceptance run skipped 12 real-database cases without PG_TEST_URL. The Green phase check passed all 12 at 78df5d21d.",
+    "F405, product: the open PM defaults stay unchanged. F142 keeps D-5, F124 and F145 keep the wording, F146 awaits the translations, and F101 and OQ-1 keep no server refusal.",
+    "F406, deploy: task 1.10 keeps the Thai check deferred:pm, and task 1.14 keeps the deploy deferred:daniel. This closeout runs no deploy.",
+    "F407, spec: spec FR-5 still describes a fallback that decision F5 replaced. The English stopgap in cn, tw, and vi is the six lifetime keys plus the manual close text, all held at the en text until a translation lands.",
+    "F408, closeout: the closeout nits F171, F181, F201, and F202 keep their recorded defaults. None changes the server choice list or the 7-day maximum.",
+    "F201, adversarial: two clicks in one React batch send two start requests with the same value. The server restarts the class, so the second request replaces the first session with the same choice. Default: no change.",
+    "F202, adversarial: the panel posts until_17 after 17:00 Bangkok when no render happens between the clock change and the click. The server refuses the value. Default: no change."
+  ],
+  "anti_pattern_checks": {
+    "a5": "No false-claim text in the plan. The scan for 'PASS=[0-9]+.*FAIL=0', 'all checks pass', and 'all tests pass' found no hit (exit 1). The plan names a commit SHA for each done task and claims no aggregate green result.",
+    "a6": "The registry note of the track names the adversarial state exactly: the round added 150 cases at 2d05e9e9b and every case passes there. The adversarial file holds status pass, so the note overstates nothing. The scan of measure/tracks.md for the overstatement phrases found no hit (exit 1).",
+    "a9": "No test reads the track folder at run time. The scan of tests/*.sh found no hardcoded path of this track. Three files mention measure/tracks/: tests/codecamp_pr_release_approval_provenance.sh resolves its track through track_dir_resolve, and tests/orchestrator_marker_vocabulary.sh and tests/orchestrator_review_execution_truthfulness.sh iterate the wildcard measure/tracks/*/plan.md and name no track id. The archive move breaks no test."
+  },
+  "a9_comment_only_references": [],
+  "stale_links_resolved": [
+    "measure/archive/primary_class_session_lifetime_20261111/index.md line 7 linked to ../primary_student_login_20261003/. The closeout resolved it to ../../tracks/primary_student_login_20261003/, because the parent track is still active.",
+    "measure/archive/primary_class_session_lifetime_20261111/spec.md line 12 linked to ../primary_student_login_20261003/. The closeout resolved it to ../../tracks/primary_student_login_20261003/, because the parent track is still active."
+  ],
+  "registry": {
+    "file": "measure/tracks.md",
+    "section": "Archived Tracks",
+    "link": "./archive/primary_class_session_lifetime_20261111/",
+    "description_matches_metadata": true,
+    "note": "The active section holds no entry of this track after the move. The archived entry holds the [x] marker, the archive link, the metadata description, and the completed status line."
+  },
+  "metadata_updates": {
+    "file": "measure/archive/primary_class_session_lifetime_20261111/metadata.json",
+    "status": "done",
+    "completed": "2026-11-12",
+    "estimated_tasks": 14,
+    "actual_tasks": 15,
+    "final_acceptance": "measure/runs/primary_class_session_lifetime_20261111/final-acceptance-b8bd9abcf.json",
+    "phase_checkpoints": [
+      "1826b382e"
+    ],
+    "description_unchanged": true
+  },
+  "memory_updates": {
+    "lessons_learned": "measure/lessons-learned.md holds one new line under CI & Build: the tower browser gate pattern for a Next.js app on this host. The file stays at 50 lines, the limit of the curated memory.",
+    "tech_debt": "measure/tech-debt.md holds one new row: the teacher panel lifetime keys keep the English text in cn, tw, and vi under orchestrator decision F5, and spec FR-5 still describes the old locale fallback. The file stays at 50 lines, the limit of the curated memory."
+  },
+  "owner_gate": "This track holds five human-gated tasks. The tower browser check, the Thai check, and the deploy stay open after the archive. The closeout claims no browser proof and no deploy of this track as done.",
+  "retry_recommendation": "none"
+}

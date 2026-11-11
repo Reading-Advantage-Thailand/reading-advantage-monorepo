@@ -1,0 +1,61 @@
+# Adversarial log — P1 round 1 "Choice of the class session lifetime"
+
+Role: Measure adversarial testing. Track: primary_class_session_lifetime_20261111.
+Phase: P1 "Choice of the class session lifetime". Audited HEAD: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9.
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa. role_base_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9.
+Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash (MiniMax). The role writes test files only; it changes no production code.
+
+## 1. Scope
+
+The adversarial scope of test-strategy.md section 6.6: the time boundaries, the enum bypass, and the tenant scope of the session. The brief adds the panel value that reaches the server and the double click.
+
+## 2. New test files (commit e5b97e84c66237697128c4334bc2678ab9c6b5c3)
+
+- packages/domain/src/__tests__/student-login-lifetime.adversarial.test.ts: tests_total=94, tests_failed=0. The enum bypass (30 rows at the contract and at the domain), the prototype keys, the extra time fields, the 17:00 and day-roll boundaries with literal expiries, the exact spans, the refusal order with a writing fixture and a positive control, and the tenant scope.
+- apps/primary-advantage/lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts: tests_total=44, tests_failed=0. The refused bodies (27 rows), the broken body, the array body, the extra keys, and the session gate.
+- apps/primary-advantage/components/__tests__/class-session-control.adversarial.test.tsx: tests_total=12, tests_failed=0. The posted value per choice, one checked radio, the hidden choice on a start and on a new code, and the double click.
+
+## 3. Gate
+
+PROJECT_TESTS (the GREEN_TEST_COMMAND of green-p1-rem1.log plus the three new files): exit 0.
+Domain 5 files: tests_total=202, tests_passed=190, tests_skipped=12 (the real-database file without PG_TEST_URL), tests_failed=0.
+App 5 files: tests_total=142, tests_failed=0.
+The counts reproduce the Green log (domain 108 total and 96 passed, app 86 total) and add the new cases (domain 94, app 44 and 12).
+
+Time-zone matrix for the new files: tz_runs_green=4 for each file (Asia/Bangkok, UTC, America/Los_Angeles, Pacific/Kiritimati): the domain file 94 in every zone, the panel file 12 in every zone.
+
+ESLint on the three new files: exit 0 in both packages.
+Domain check-types through heavy-run.sh p2: exit 0.
+App check-types through heavy-run.sh p2: exit 2 from the one pre-existing untracked foreign file apps/primary-advantage/qa-check-user.tmp.ts (TS2307 at its line 34). Errors outside that file=0. Errors in the new files=0. The foreign file was not touched.
+Dist freshness: the dist files carry the mtime 2026-11-11 15:53:26, later than the source mtime 15:49:09, and hold the rem1 code. No domain file changed after the last dist build, so no rebuild ran.
+
+## 4. Findings
+
+- Blocking: none.
+- F201 [Nit]: two clicks in one React batch send two start requests; both bodies hold the same lifetime. The server restarts the class with the same choice. Default: no change.
+- F202 [Nit]: the panel posts until_17 after 17:00 Bangkok when no render happens between the clock change and the click; the server refuses the value with 400 invalid_input. The panel polls every 10 s, so the window is short. Default: no change; this extends the Review A finding F171.
+
+No test stays red on purpose: the round found no Blocker and no Major.
+
+## 5. Result files
+
+measure/runs/primary_class_session_lifetime_20261111/adversarial-p1-2d05e9e9b.json
+measure/runs/primary_class_session_lifetime_20261111/adversarial-p1-2d05e9e9b.log
+Neither file is committed. No plan marker was set.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-adversarial-testing
+track: primary_class_session_lifetime_20261111
+phase: P1
+round: adversarial-1
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+audited_head_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+commit: e5b97e84c66237697128c4334bc2678ab9c6b5c3 test(primary): add lifetime adversarial tests (track_id: primary_class_session_lifetime_20261111)
+tests: PROJECT_TESTS exit 0 — domain 5 files tests_total=202, tests_passed=190, tests_skipped=12, tests_failed=0; app 5 files tests_total=142, tests_failed=0; tz_runs_green=4 for the domain file (94 in each zone) and for the panel file (12 in each zone); eslint exit 0 on the new files; domain check-types exit 0; app check-types blocked only by the foreign scratch file qa-check-user.tmp.ts (errors outside that file=0); no red test kept
+files: packages/domain/src/__tests__/student-login-lifetime.adversarial.test.ts, apps/primary-advantage/lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts, apps/primary-advantage/components/__tests__/class-session-control.adversarial.test.tsx
+new_files: none
+findings: F201 [Nit] the double click in one React batch sends two start requests with the same value; F202 [Nit] the panel posts until_17 after 17:00 Bangkok when no render happens; no Blocker and no Major
+handoff: PROJECT_TESTS = cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-class-session.test.ts src/__tests__/student-login-contracts.test.ts src/__tests__/student-login-card.test.ts src/__tests__/student-login.real-db.test.ts src/__tests__/student-login-lifetime.adversarial.test.ts && CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts components/__tests__/class-session-control.adversarial.test.tsx
+END_MEASURE_AGENT_RESULT

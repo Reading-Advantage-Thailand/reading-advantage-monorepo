@@ -1,0 +1,50 @@
+# Review B log — P1 "Choice of the class session lifetime" (security and data handling)
+
+Role: Measure Review B (security). Track: primary_class_session_lifetime_20261111. Phase: P1.
+Model: kimi-code-plan-cn/kimi-for-coding#high. Report only: no code, test, plan, or registry edit; no commit.
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha: 9e2bc749258cb6bc1b1fd666c104e932bb978564 (audited HEAD)
+
+## 1. Provenance
+
+- Audited HEAD: 9e2bc749258cb6bc1b1fd666c104e932bb978564 (docs(measure): fix the lifetime plan markers), the last commit of this track.
+- The two later commits on master (54db95c18, daaee360d) are Storytime-only. They touch no file of this track's blast radius. The audited HEAD is current for this review.
+- Security applicability: applicable. The phase changes authentication timing (a credential lives up to 7 days), a Zod contract, a new error code, a teacher panel, and message files. The test strategy (section 3) marks the risk high and requires Review B.
+
+## 2. Test execution
+
+- Attempted the GREEN_TEST_COMMAND (the six named vitest files, --maxWorkers=1). The environment rejected the shell for this role (permission denied). Test evidence is taken from the Green phase-check log at HEAD 78df5d21d, which ran the identical commands: domain targeted exit 0 tests_failed=0, app targeted exit 0 tests_failed=0, real-database 12/12 green, tz_runs_green=3 for both clock files.
+- All other checks are file reads and greps, listed in the result JSON.
+
+## 3. Probe results
+
+1. Enum enforced; 7 days is the maximum. contracts.ts:38-47 holds z.enum(['3h','until_17','7d']) with default '3h'. class-session.ts:49-68 is a switch with a '=== undefined' default; null and prototype keys throw invalid_input. computeSessionExpiry is the only writer of expiresAt (:128). Tests: class-session test :283-296 (7-day maximum loop, choices_checked=3) and :340-351 (nine cast values, no write).
+2. until_17 refused after 17:00 Bangkok before any write. The throw sits after authorizeClassroom and before ensureStudentCredentials (:125-129). The Bangkok date comes from calendarDayKey via Intl (calendar-day.ts:19-27), independent of the server zone. Tests: :260-281 and the no-write case :370-380 with a writing-fixture positive control :362-368.
+3. Authorization and tenant scope. authorizeClassroom (access.ts:26-61) is unchanged: teacher of the class or admin of its school, TenantDB class read, other-school reads as not_found. Session writes go through tenantDb with the authorized schoolId (:131-135, :170-173). The raw-db code collision check and findOpenSession span all schools by pre-existing design and are untouched. No new unscoped access.
+4. Code and cards share the session; limits unchanged. card-token.ts:70 keeps only the pre-existing expiresAt > now predicate; picture-password.ts and rate-limits.ts have no lifetime reference. Detector untouched_login_files_changed=0 at the phase check.
+5. OQ-1 (PM decision, open). Green implemented no refusal, as instructed. A class with the picture password off gives a code_only session, so a 7-day code is a 7-day sign-in as any student of that class with no second factor. The threat shape is not new (3 hours had it); the 7-day choice extends exposure of a photographed or shared code. Rate limits stay; the teacher can end early; the audit records the choice. Advice with default: keep the implemented behavior; the PM decides before deploy whether a panel warning for code-only classes is enough or the section 7.1 refusal rows activate as a follow-up. Recorded as finding F101 (nonblocking).
+6. Audit line holds no secret. class-session.ts:179 writes { sessionId, expiresAt ISO, lifetime }; test :321-327 asserts no code and no codeHash in the serialized audit calls.
+7. Error path. invalid_input maps to 400 (http.ts:14,45); the body is { message, code } with no internal detail; the contract 400 is a bare 'Invalid input'. api.ts:83-92 maps only a 400 with code invalid_input to lifetimeInvalid; the panel renders message-key text only.
+8. Client sends the enum value as is. class-session-control.tsx:59-69 posts { classroomId, lifetime }; body keys asserted exactly (control test :197). The until_17 hide uses the client clock as a convenience; the server stays the authority (OQ-2).
+9. No new dependency, secret, provider SDK, or hash. The only new import is the existing pure module calendar-day.js. Phase check: added_hash_lines=0, lifetime_out_of_scope_paths=0. No new file in student-login/.
+
+A2 (consent-blind publish gate): not applicable; no draft-to-published flip in this track.
+A6 (registry overstatement): measure/tracks.md:83-87 understates the state ("new (spec and plan only)") and claims no resolved security state. No overstatement.
+
+## 4. Verdict
+
+Status: pass. No blocking findings. One nonblocking finding (F101, OQ-1 advice with default). All violations arrays are empty.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-review-b-security
+track: primary_class_session_lifetime_20261111
+phase: P1
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+audited_head_sha: 9e2bc749258cb6bc1b1fd666c104e932bb978564
+result: measure/runs/primary_class_session_lifetime_20261111/review-b-p1-9e2bc7492.json
+status_pass: blocking_findings empty, all violations arrays empty
+findings: none blocking; F101 nonblocking (OQ-1 advice: keep no refusal as default; PM decides before deploy whether a panel warning for code-only classes suffices or section 7.1 refusal rows activate)
+limits: vitest gate not re-run by this role (shell permission denied); test evidence taken from the Green phase-check log at 78df5d21d, which ran the identical commands green
+handoff: none. OQ-1 stays a PM decision; F101 carries the default advice.
+END_MEASURE_AGENT_RESULT

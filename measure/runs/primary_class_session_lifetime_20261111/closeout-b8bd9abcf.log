@@ -1,0 +1,28 @@
+Closeout passes for A-53 at the pre-closeout head 3c80a09b7.
+
+The final acceptance round 3 passes at the immutable audited head b8bd9abcf. Its file holds status pass, 0 blocking findings, and four empty violation arrays. The audited head is an ancestor of the pre-closeout head, and the 13 commits between them belong to the storytime, accounting, and sales tracks. Their diff over the track paths is empty, so no A-53 file changed after the audited head.
+
+The plan holds 15 task lines. Ten are done, and each names a commit SHA. Five are human-gated, and each keeps a deferred owner: 1.10 deferred:pm, 1.12 deferred:orchestrator, 1.12a deferred:pm, 1.13 deferred:orchestrator, and 1.14 deferred:daniel. No in-progress task and no space-marker task remain.
+
+The archive move exits 0 with 6 renames. The registry entry moves out of the active section into the Archived Tracks section. The link reads ./archive/primary_class_session_lifetime_20261111/ and the next line holds the metadata description. A python3 check confirms the two descriptions match and that the track id is absent from the active section. The metadata status is done with the completion date 2026-11-12.
+
+The anti-pattern checks hold. A5 finds no count claim and no all-checks-pass text in the plan. A6 finds no overstatement in the registry. A9 finds no test that names a track path. Three files under tests/ mention measure/tracks/. One resolves its track through track_dir_resolve, and two iterate the wildcard measure/tracks/*/plan.md and name no track id, so the archive move breaks no test. The closeout edits no test file.
+
+The route deviations are recorded. The phase acceptance ran on claude-code/claude-fable-5-2 after two StepFun timeouts. The final acceptance r2 ran on kimi-code-plan-cn/k3.1-pro and r3 on minimax-cn-coding-plan/MiniMax-M3 with Kimi on WAIT. MiniMax M3.1 Flash wrote the A-53 adversarial tests, so the adversarial verdict and the final acceptance r3 share one model family.
+
+Five gates stay open after the archive. The tower browser check (1.12a, deferred:pm), the Thai check (1.10, deferred:pm), and the deploy (1.14, deferred:daniel) stay open. F421 and F411 belong to the doctor.sh follow-up track with a done date of 11-14. The closeout runs no deploy.
+
+The run folder stays whole, the UX harness included. The closeout deletes nothing.
+
+MEASURE_AGENT_RESULT
+role: measure-closeout
+status: complete
+track: primary_class_session_lifetime_20261111
+phase: Phase 1: Choice of the class session lifetime [checkpoint: 1826b382e]
+commits: pending (the closeout commit follows)
+tests_run: bash tests/orchestrator_marker_vocabulary.sh --track primary_class_session_lifetime_20261111 (exit 0); bash tests/orchestrator_catalog.sh (exit 0); bash tests/orchestrator_review_execution_truthfulness.sh (exit 0); measure_interphase_checks.py closeout (exit 0)
+files_changed: measure/archive/primary_class_session_lifetime_20261111/ (the archive move, metadata.json, index.md, spec.md, automation-supervisor-closeout-manifest.json), measure/tracks.md, measure/runs/primary_class_session_lifetime_20261111/closeout-b8bd9abcf.json, measure/runs/primary_class_session_lifetime_20261111/closeout-b8bd9abcf.log
+plan_updates: none; the plan moved only
+known_failures: none in this track; the doctor gate and architecture:check stay red for repository reasons and belong to the doctor.sh follow-up track
+handoff: Open gates: 1.12a tower browser check before the Primary deploy (deferred:pm); 1.10 Thai check (deferred:pm); 1.14 deploy (deferred:daniel); F421 and F411 in the doctor.sh follow-up track with a done date of 11-14. The PM decisions of 2026-11-10 and 2026-11-11 (browser gate to the tower) and 2026-11-12 (F411 accepted for this track) are recorded in the metadata and the manifest. The archived registry note names the final acceptance round 3 at b8bd9abcf, the phase checkpoint 1826b382e, and the adversarial result of 150 cases that pass at 2d05e9e9b. No question blocks this closeout.
+END_MEASURE_AGENT_RESULT

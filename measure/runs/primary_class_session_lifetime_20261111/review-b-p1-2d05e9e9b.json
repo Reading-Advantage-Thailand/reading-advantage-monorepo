@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review B (security) round 2 pass for Phase 1 of primary_class_session_lifetime_20261111 at audited HEAD 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9 (the current master HEAD). Scope is Green rem1 (a3f30a759, 31eef4b5f, 2d05e9e9b). Probe 1: the effective-choice fallback maps a hidden until_17 to the in-enum default '3h' and the posted value is always one of the three enum strings; the contract and the domain switch stay the authority. Probe 2: the class-session.ts change is the one-statement-per-line formatting fix only; the refusal order (before the first row write) and the expiry math are unchanged. Probe 3: the five message files hold the new TeacherManual.startClass.step4 text with <ui>{endClass}</ui>, which matches 47 existing strings and renders through a fixed t.rich tag map (manual-guide.tsx:90); no markup injection and no secret. Probe 4 (F142): after a reload, New code posts '3h' and closes the open 7-day session; this only shortens the credential window by a deliberate, audited, authorized teacher action, so it is a usability point, not a security risk. No new security findings from F161.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Probe 1 (fallback cannot leave the enum; server stays authority): class-session-control.tsx:59-69 keeps the radio value in state (set only from choices drawn at :66, all enum members) and computes effectiveLifetime = choices.includes(lifetime) ? lifetime : '3h' at :69; the post body at :76 sends effectiveLifetime. The fallback target '3h' is in the enum. Even a tampered client cannot reach expiresAt: contracts.ts:38-47 refuses any value outside the enum and class-session.ts:49-68 throws invalid_input for unknown values. The new tests at class-session-control.test.tsx:390-420 pin the fallback (clock passes 17:00 with until_17 selected -> 3h posted).",
+    "Probe 2 (formatting only in class-session.ts): the rem1 edit splits the joined 'let row ... ; try {' into two lines (class-session.ts:169-170). computeSessionExpiry, its placement after authorizeClassroom and before ensureStudentCredentials (:125-129), the audit metadata (:180), and the insert values (:171-174) are byte-equivalent in behavior to the round-1 version I audited at 9e2bc7492. contracts.ts:37-41 change is JSDoc wording only (F122); the enum values and the default are unchanged.",
+    "Probe 3 (message files: no injection, no secret): the new step4 text at en.json:4380, th.json:4380, cn.json:4380, tw.json:4380, vi.json:4229 uses <ui>{endClass}</ui>, the same pattern as 47 existing teacher-manual strings. manual-guide.tsx:90 renders t.rich with a fixed tag map (ui -> UiLabel); message text never enters HTML parsing, and the interpolation values come from the component, not from user input. The text holds no code, hash, or credential.",
+    "Probe 4 (F142 security view): after a reload the panel state resets to '3h' (:59), and New code posts '3h', so the server closes the 7-day session and opens a 3-hour one (restart path class-session.ts:131-140 and :170-181). The action requires the authenticated teacher of the class (authorizeClassroom), is deliberate, is audited (class_end reason 'replaced' plus class_start with lifetime), and only shortens the credential window. It cannot extend a session, leak a secret, or cross a tenant. Usability point only; not a security risk. The D-5 default (no change now) is acceptable from a security standpoint.",
+    "Provenance: .git/refs/heads/master holds exactly 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9, so the audited HEAD is the current HEAD. The commit order in .git/logs/HEAD shows the rem1 commits a3f30a759 and 31eef4b5f with only a Storytime docs commit between them and the audited HEAD, which is out of scope and touches no track file.",
+    "Test evidence: the jr-green gate ran the GREEN_TEST_COMMAND at 2d05e9e9b: domain 4 files exit 0 (tests_total=108, tests_passed=96, tests_skipped=12, tests_failed=0), app 3 files exit 0 (tests_total=86, tests_failed=0), tz_runs_green=3 for the control file (36/36/36). This role could not re-run vitest (shell permission denied for pnpm/vitest); file-level verification covered every changed line.",
+    "A2 (consent-blind publish gate): not applicable; no draft-to-published flip in this round.",
+    "A6 (registry overstatement): no registry change in this round claims a security state; the rem1 log lists the ESCALATE items with defaults instead of claiming resolution."
+  ],
+  "commands": [
+    "Attempted: GREEN_TEST_COMMAND from green-p1-rem1.log (domain 4 files + app 3 files, --maxWorkers=1) — rejected by the environment (shell permission denied for pnpm/vitest); gate evidence taken from green-p1-rem1.log section 2, which ran the identical commands at exit 0 at HEAD 2d05e9e9b.",
+    "Executed (read-only shell): cat .git/refs/heads/master (returned 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9); tail -5 .git/logs/HEAD (confirmed the rem1 commit order).",
+    "File-level verification: read of class-session-control.tsx (full), class-session.ts:160-189, contracts.ts:36-50, green-p1-rem1.log (full); grep over en.json, th.json, cn.json, tw.json, vi.json for the new step4 text and the <ui> pattern (48 matches per locale file, all the pre-existing shape); grep of class-session-control.test.tsx for the four new rem1 cases (lines 390, 401, 421, 431)."
+  ],
+  "changed_files": [
+    "apps/primary-advantage/components/teacher/class-login/class-session-control.tsx",
+    "apps/primary-advantage/components/__tests__/class-session-control.test.tsx",
+    "packages/domain/src/student-login/class-session.ts",
+    "packages/domain/src/student-login/contracts.ts",
+    "apps/primary-advantage/messages/en.json",
+    "apps/primary-advantage/messages/th.json",
+    "apps/primary-advantage/messages/cn.json",
+    "apps/primary-advantage/messages/tw.json",
+    "apps/primary-advantage/messages/vi.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "audited_head_sha": "2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9",
+  "route": "kimi-code-plan-cn/kimi-for-coding#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The rem1 fixes do what the dispositions state: effectiveLifetime fallback at class-session-control.tsx:69, visible group label and aria-describedby at :121-151, and the formatting split at class-session.ts:169-170, each pinned by a named test."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "Four new fixed-clock cases cover the fallback, the error clear, the label/describedby, and the until_17 post (class-session-control.test.tsx:390-440), and the jr-green gate ran them green at 2d05e9e9b (tests_total=86, tests_failed=0)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The rem1 commits touch only the panel, its test, the two domain files (formatting and JSDoc), and the five message files, matching the rem1 disposition list exactly."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every claim carries a file:line or a labeled count from the jr-green gate; one point down because this role could not re-run the vitest gate itself (shell permission denied) and relied on the rem1 log's exit codes."
+    }
+  ]
+}

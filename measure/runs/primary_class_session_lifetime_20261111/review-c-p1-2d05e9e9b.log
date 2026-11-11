@@ -1,0 +1,30 @@
+Review C (UX and API contract), Phase 1, round 2, primary_class_session_lifetime_20261111.
+Model: claude-code/claude-sonnet-5-5#high. Role: audit only. No code, test, or plan file changed. No commit.
+role_base_sha=audited_head_sha=2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+Scope: Green rem1, commits a3f30a759, 31eef4b5f, 2d05e9e9b.
+Repository HEAD=b9f5439d4 (Storytime test commit, out of scope). No file under apps/primary-advantage or packages changed after 2d05e9e9b.
+
+Verdict: pass. No blocking finding. No major finding. One new nit, F181, for the close-out record.
+
+Check 1, F141 (teacher flow after 17:00): fixed. The panel derives effectiveLifetime. After 17:00 one radio is checked ('3 hours') and the start posts '3h'. The alert clears when the teacher picks a new option. Tests cover all three. F141 is withdrawn.
+Check 2, F143 (manual text): fixed. No 'after 3 hours' text remains. The step4 sentence now lists the three choices in en, th, cn, tw, and vi. The five files parse as JSON. The new th sentence joins the task 1.10 hand-off for Daniel's Thai check. F143 is withdrawn.
+Check 3, F144 (accessibility): fixed. A visible label paragraph, aria-labelledby on the radiogroup, and aria-describedby for the 7-day help (only while 7d is the effective choice). A test covers it. F144 is withdrawn.
+Check 4, browser scope: updated in four points (visible label, F141 check, help description, manual page look). The full list is in the last-but-one evidence entry of the JSON.
+Check 5, API wiring: no regression. api.ts, handlers.ts, http.ts, and the route are unchanged. The post body is always one of the three enum values.
+
+Other findings of round 1: F122, F123, and F125 are fixed. F142, F145, and F146 stay as ESCALATE items for the user; the rem1 change did not touch them.
+Tests: not run. The shell refused the vitest call. The Green log records exit 0 with no failure.
+
+MEASURE_AGENT_RESULT
+status: complete
+verdict: pass
+audited_head_sha: 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9
+blocking_findings: 0
+nonblocking_findings: 1 (F181, nit, close-out record)
+withdrawn: F141, F143, F144
+escalate_carried: F142, F145, F146
+result_json: measure/runs/primary_class_session_lifetime_20261111/review-c-p1-2d05e9e9b.json
+log: measure/runs/primary_class_session_lifetime_20261111/review-c-p1-2d05e9e9b.log
+retry_recommendation: none
+handoff: The new th manual sentence (messages th.json:4380) must join the task 1.10 hand-off. The UX role uses the updated scope in the JSON.
+END_MEASURE_AGENT_RESULT

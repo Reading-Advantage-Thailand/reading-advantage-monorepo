@@ -1,0 +1,226 @@
+$ tsx scripts/migrate.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_chat_messages_conversation_id_codecamp_chat_conversations_id_fk" will be truncated to "codecamp_chat_messages_conversation_id_codecamp_chat_conversati"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_pr_reviews_exercise_repo_id_codecamp_exercise_repos_id_fk" will be truncated to "codecamp_pr_reviews_exercise_repo_id_codecamp_exercise_repos_id"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "sales_roleplay_attempts_scenario_id_sales_roleplay_scenarios_id_fk" will be truncated to "sales_roleplay_attempts_scenario_id_sales_roleplay_scenarios_id"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_tutor_resource_uses_intervention_resource_action_unique" will be truncated to "codecamp_tutor_resource_uses_intervention_resource_action_uniqu"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_pr_review_objective_evidence_attempt_objective_variant_unique" will be truncated to "codecamp_pr_review_objective_evidence_attempt_objective_variant"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_tutor_interventions_conversation_id_codecamp_chat_conversations_id_fk" will be truncated to "codecamp_tutor_interventions_conversation_id_codecamp_chat_conv"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_tutor_resource_uses_intervention_id_codecamp_tutor_interventions_id_fk" will be truncated to "codecamp_tutor_resource_uses_intervention_id_codecamp_tutor_int"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_tutor_evidence_joins_intervention_id_codecamp_tutor_interventions_id_fk" will be truncated to "codecamp_tutor_evidence_joins_intervention_id_codecamp_tutor_in"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "codecamp_pr_review_objective_evidence_attempt_id_codecamp_pr_review_attempts_id_fk" will be truncated to "codecamp_pr_review_objective_evidence_attempt_id_codecamp_pr_re"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "company_product_principals_organization_id_company_account_id_application_key_pk" will be truncated to "company_product_principals_organization_id_company_account_id_a"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_commitments_successor_batch_digest_unique" will be truncated to "standard_pack_successor_commitments_successor_batch_digest_uniq"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_commitments_candidate_revision_format_check" will be truncated to "standard_pack_successor_commitments_candidate_revision_format_c"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_commitments_successor_release_progress_check" will be truncated to "standard_pack_successor_commitments_successor_release_progress_"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_admission_receipts_actor_idempotency_unique" will be truncated to "standard_pack_successor_admission_receipts_actor_idempotency_un"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_admission_receipts_identity_format_check" will be truncated to "standard_pack_successor_admission_receipts_identity_format_chec"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_admission_receipts_receipt_projection_check" will be truncated to "standard_pack_successor_admission_receipts_receipt_projection_c"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_admission_receipts_commitment_digest_standard_pack_successor_commitments_commitment_digest_fk" will be truncated to "standard_pack_successor_admission_receipts_commitment_digest_st"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_admission_receipts_commitment_candidate_registry_fk" will be truncated to "standard_pack_successor_admission_receipts_commitment_candidate"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "standard_pack_successor_admission_receipts_receipt_contract_check" will be truncated to "standard_pack_successor_admission_receipts_receipt_contract_che"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "finance_records_validate_supersession" for relation "public.finance_records" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "finance_records_append_only" for relation "public.finance_records" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "finance_record_success_audit_outbox_append_only" for relation "public.finance_record_success_audit_outbox" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "primary_class_book_lessons_class_book_id_primary_class_books_id_fk" will be truncated to "primary_class_book_lessons_class_book_id_primary_class_books_id"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "primary_student_lesson_steps_class_book_id_primary_class_books_id_fk" will be truncated to "primary_student_lesson_steps_class_book_id_primary_class_books_"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "primary_active_voice_sessions_voice_session_id_primary_voice_sessions_id_fk" will be truncated to "primary_active_voice_sessions_voice_session_id_primary_voice_se"',
+  file: 'scansup.c',
+  line: '99',
+  routine: 'truncate_identifier'
+}

@@ -9,7 +9,7 @@
 **Program:** Primary Advantage (`apps/primary-advantage`) with the shared domain package (`packages/domain`).
 **Owner chain:** Daniel (owner; deploy gate) → PM orchestrator (request A-53) → Monorepo orchestrator (track owner)
 **Plan:** [plan.md](./plan.md)
-**Related track:** [primary_student_login_20261003](../primary_student_login_20261003/) (built the class session, the QR cards, and the teacher panel).
+**Related track:** [primary_student_login_20261003](../../tracks/primary_student_login_20261003/) (built the class session, the QR cards, and the teacher panel).
 
 ## 1. Purpose
 

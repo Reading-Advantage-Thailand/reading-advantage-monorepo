@@ -201,6 +201,7 @@
     - `build-graph update ./graph.db packages/backend/src/modules/accounting/monthly-close.ts packages/backend/src/modules/accounting/submissions.ts` through heavy-run p2: exit 0. `Updated 2 files (50 → 51 nodes, 61 → 60 edges)`. The wider run over the four changed backend files exits 0 as well.
     - **Phase scope.** The thirteen commits of the phase name seventeen paths. `phase2_out_of_scope_paths=2` against the phase list of test-strategy.md: `apps/accounting/app/_components/pending-submissions-list.tsx` (the type-only change that the orchestrator accepted as a recorded deviation) and `apps/accounting/app/lib/monthly-close.ts` (the app adapter that the Red route tests import and that the orchestrator ordered in this round). Every other path is a track file, a `packages/backend/src/modules/accounting/` path, an `apps/accounting/app/api/monthly-close/` path, or `apps/accounting/app/lib/company-oidc.ts` with its test.
     - **Evidence class:** automated for every command above.
+- [~] 2.6 Remediation of the Phase 2 reviews: Review A F201 and F202, Review B F251 to F254, Review C F271.
 
 ## Phase 3: The Drive intake poll
 

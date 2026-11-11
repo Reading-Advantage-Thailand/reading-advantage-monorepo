@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Adversarial round 1 of Phase 1 (primary_class_session_lifetime_20261111) at audited HEAD 2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9 finds no Blocker and no Major. Three new test files (150 cases) attack the enum bypass at the contract, the handler, and the domain; the time boundaries with a fixed clock; the refusal order; the tenant scope of the session; and the value that the panel posts. Every case passes at 2d05e9e9b, so the track keeps no red test. Two Nits go to the close-out record: F201 (a double click in one React batch sends two start requests with the same value) and F202 (the panel posts until_17 after 17:00 Bangkok when no render happens between the clock change and the click; the server refuses the value). The three new files are committed in e5b97e84c.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F201 [Nit] adversarial-testing: two clicks that land in one React batch send two start requests; the probe counts 1 request for two fireEvent clicks and 2 requests for two clicks dispatched in one act, and both bodies hold the same lifetime. Rationale: the server restarts the class, so the second request replaces the first session with the same choice; the panel disables the button after the first click, and no value outside the choice list ever reaches the server. Default: no change; the orchestrator decides whether the panel guards the start with a ref.",
+    "F202 [Nit] adversarial-testing: the panel posts until_17 after 17:00 Bangkok when the clock passes 17:00 and no render happens before the click; the server then answers 400 with the code invalid_input and the teacher sees the lifetime error. Rationale: the server stays the authority and refuses the value, so no longer session opens; the panel polls every 10 s (ROSTER_POLL_MS = 10000), so the window is short. Default: no change; this extends the Review A finding F171."
+  ],
+  "evidence": [
+    "Gate (GREEN_TEST_COMMAND of green-p1-rem1.log plus the three new files): exit 0. Domain 5 files: tests_total=202, tests_passed=190, tests_skipped=12 (the real-database file without PG_TEST_URL), tests_failed=0. App 5 files: tests_total=142, tests_failed=0. The counts reproduce the Green log (domain 108 total and 96 passed, app 86 total) plus the new cases (domain 94, app 44 and 12).",
+    "New domain file packages/domain/src/__tests__/student-login-lifetime.adversarial.test.ts: 94 tests, exit 0. It holds 30 enum-bypass rows at the contract and at the domain ('7D', '7d ', ' 7d', 'until_17 ', 'UNTIL_17', '168h', '30d', '1d', '3H', '', 604800000, 10800000, 7, 0, -1, true, false, null, NaN, Infinity, ['7d'], [], { value: '7d' }, {}, 'constructor', 'toString', 'valueOf', 'hasOwnProperty', '__proto__', 'prototype'). Each row throws the code invalid_input and writes no row.",
+    "Time boundaries in the domain file: the literal table covers 2026-11-11T09:59:59.999Z (works, expiry 2026-11-11T10:00:00.000Z), 09:59:59.000Z (works), 10:00:00.000Z (refused), 16:59:59.999Z (refused, 23:59:59.999 Bangkok), 2026-11-10T16:59:59.999Z (refused, the Bangkok date of the day before), 2026-11-11T17:00:00.000Z (works, expiry 2026-11-12T10:00:00.000Z, the Bangkok date changes), and 2026-11-10T17:00:00.000Z (works, expiry 2026-11-11T10:00:00.000Z). Every allowed expiry sits at 10:00:00.000 UTC, which is 17:00 Asia/Bangkok.",
+    "Exact spans in the domain file: '7d' gives 604800000 ms at 2026-11-11T05:00:00.000Z, 2026-03-07T12:00:00.000Z, and 2026-11-01T12:00:00.000Z (the weeks of the daylight saving change in America/Los_Angeles); '3h' and a missing lifetime give 10800000 ms; every accepted lifetime keeps 0 < expiry - now <= 604800000.",
+    "Refusal order in the domain file: the fixture holds a class, a student with no credential row, and an open old session, and the control case writes (inserts 2, updates 2, audit lines 2). A refused until_17 at 17:00 and a refused unknown value write nothing (insert 0, update 0, delete 0, audit 0). A student session at 23:59 Bangkok answers forbidden or invalid_input and writes nothing.",
+    "Tenant scope in the domain file: a class outside the school answers not_found, a teacher of another class answers forbidden, and a student session answers forbidden; each writes nothing with 7 days. The session row holds the school and the class of the authorized classroom. A classroom row of another school makes the tenant-scoped insert throw a TenantScopeError and the session row is not written, so the session insert stays on the tenant-scoped handle.",
+    "New handler file apps/primary-advantage/lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts: 44 tests, exit 0. The 27 refused bodies answer 400 with no code field and the domain is not called. A body that carries a prototype key, a broken body, an array body, and a body with no class id answer 400. A body with expiresAt, durationMs, or minutes gives the domain exactly the keys classroomId and lifetime. A body that names the lifetime twice keeps a value inside the choice list. No session answers 401 and a code_only session answers 403 for every choice.",
+    "New panel file apps/primary-advantage/components/__tests__/class-session-control.adversarial.test.tsx: 12 tests, exit 0. Each choice posts itself with the two body keys. One radio stays checked in every state. The group shows three options at 16:59:59.999 Bangkok and two at 17:00:00.000 Bangkok. The hidden until_17 choice never reaches the server on a start and on a new code. A double click sends at most two start requests, and every body holds the same lifetime.",
+    "Time-zone matrix for the new files: domain tz_runs_green=4 (Asia/Bangkok 94, UTC 94, America/Los_Angeles 94, Pacific/Kiritimati 94); panel tz_runs_green=4 (Asia/Bangkok 12, UTC 12, America/Los_Angeles 12, Pacific/Kiritimati 12). The domain file and the panel file hold the same results in every zone.",
+    "Dist freshness: packages/domain/dist/student-login/class-session.js and contracts.js carry the mtime 2026-11-11 15:53:26, later than the source mtime 15:49:09, and the dist holds the rem1 code (the text 'Unknown session lifetime' and the field lifetime in contracts.js). No domain source file changed after the last dist build, so no rebuild ran.",
+    "ESLint on the three new files: the domain package exit 0 and the app package exit 0. The domain check-types through heavy-run.sh p2: exit 0. The app check-types through heavy-run.sh p2: exit 2 from the one pre-existing untracked foreign file apps/primary-advantage/qa-check-user.tmp.ts (TS2307 at its line 34); the filtered run lists no other error and no error in the new files. The foreign file was not touched.",
+    "Probe for F201 and F202 (a temporary file, removed after the run): two fireEvent clicks on Start send 1 request; two clicks dispatched in one act send 2 requests with the bodies { classroomId, lifetime: '3h' } and { classroomId, lifetime: '3h' }. Without a render after the clock passes 17:00, the start body holds lifetime 'until_17', and the server refuses it."
+  ],
+  "commands": [
+    "CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-lifetime.adversarial.test.ts -> exit 0, tests_total=94, tests_failed=0",
+    "for tz in Asia/Bangkok UTC America/Los_Angeles Pacific/Kiritimati: TZ=$tz CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-lifetime.adversarial.test.ts -> exit 0 in 4 zones, 94 tests each",
+    "CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts -> exit 0, tests_total=44, tests_failed=0",
+    "CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 components/__tests__/class-session-control.adversarial.test.tsx -> exit 0, tests_total=12, tests_failed=0",
+    "for tz in Asia/Bangkok UTC America/Los_Angeles Pacific/Kiritimati: TZ=$tz CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 components/__tests__/class-session-control.adversarial.test.tsx -> exit 0 in 4 zones, 12 tests each",
+    "PROJECT_TESTS (gate): CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-class-session.test.ts src/__tests__/student-login-contracts.test.ts src/__tests__/student-login-card.test.ts src/__tests__/student-login.real-db.test.ts src/__tests__/student-login-lifetime.adversarial.test.ts && CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts components/__tests__/class-session-control.adversarial.test.tsx -> exit 0, domain tests_total=202, tests_passed=190, tests_skipped=12, tests_failed=0; app tests_total=142, tests_failed=0",
+    "pnpm --filter @reading-advantage/domain exec eslint src/__tests__/student-login-lifetime.adversarial.test.ts -> exit 0",
+    "pnpm --filter primary-advantage exec eslint components/__tests__/class-session-control.adversarial.test.tsx lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts -> exit 0",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/domain check-types' -> exit 0",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter primary-advantage check-types' -> exit 2; the only error line is qa-check-user.tmp.ts(34,45) TS2307, a pre-existing untracked foreign file; errors outside that file=0; errors in the new files=0",
+    "git commit -m 'test(primary): add lifetime adversarial tests (track_id: primary_class_session_lifetime_20261111)' -- packages/domain/src/__tests__/student-login-lifetime.adversarial.test.ts apps/primary-advantage/lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts apps/primary-advantage/components/__tests__/class-session-control.adversarial.test.tsx -> exit 0, commit e5b97e84c66237697128c4334bc2678ab9c6b5c3"
+  ],
+  "changed_files": [
+    "packages/domain/src/__tests__/student-login-lifetime.adversarial.test.ts",
+    "apps/primary-advantage/lib/__tests__/student-login-lifetime-handlers.adversarial.test.ts",
+    "apps/primary-advantage/components/__tests__/class-session-control.adversarial.test.tsx"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "audited_head_sha": "2d05e9e9bc74c1fbc1d52b59f5ca54aa42b494a9",
+  "route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "150 new cases pass at 2d05e9e9b: 30 enum-bypass rows at the contract and the domain, 7 boundary rows with literal expiries, 27 refused bodies at the handler, and the tenant scope of the session insert (a foreign school row makes the tenant-scoped insert throw a TenantScopeError)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The refusal cases run on a fixture that writes (control: inserts 2, updates 2, audit lines 2) and the double click case counts the requests, so no case passes on a fixture that cannot act."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git show --name-only e5b97e84c lists only the three new test files; the result files stay uncommitted and no production file changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim names a command with its exit code and the labeled counts: gate exit 0 (domain 202 total, 190 passed, 12 skipped, app 142 total), the 4-zone matrix for both new files, ESLint exit 0, and the domain check-types exit 0."
+    }
+  ]
+}

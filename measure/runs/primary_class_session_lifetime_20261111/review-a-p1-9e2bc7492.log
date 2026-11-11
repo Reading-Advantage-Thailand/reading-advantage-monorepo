@@ -1,0 +1,46 @@
+# Review A log - primary_class_session_lifetime_20261111 Phase 1
+
+Role: Measure Review A (correctness and architecture). Model: claude-code/claude-sonnet-5-5#high.
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha: 9e2bc749258cb6bc1b1fd666c104e932bb978564
+audited_head_sha: 9e2bc749258cb6bc1b1fd666c104e932bb978564
+Repository HEAD at audit time: daaee360d. The commits after 9e2bc7492 change only apps/storytime and measure files. The audited track files are the same at HEAD.
+
+## Verdict
+Pass. No blocking finding. Five nonblocking findings (F121 to F125).
+
+## Checks
+1. Correctness. computeSessionExpiry (class-session.ts:46-67) gives now + 3 h, now + 7 d, and 17:00 Bangkok of the Bangkok date. It refuses 'until_17' at 17:00:00 and later. A missing field gives '3h'. It has no dependence on the server time zone. My TZ=America/Los_Angeles runs: domain 53 passed, app 32 passed.
+2. F1. The refusal runs after authorizeClassroom (a read) and before ensureStudentCredentials. The writing fixture has a positive control (insert=2, update=2, audit=2). The refusal tests assert no insert, no update, no delete, no audit.
+3. Callers. One production caller (handlers.ts:6-7). The z.input type keeps the { classroomId } callers compiling.
+4. Error code. One Record (STATUS in http.ts) and it holds invalid_input: 400. Client code maps with if statements. No fall-through.
+5. Panel. Default '3h'. The until_17 option hides from 17:00 Bangkok on. The body holds two keys. D-6 text in en and th is tested. Six keys exist in five locales. Option labels are visible with min-h-11.
+6. Test meaning. Domain 96 passed and 12 skipped. App 82 passed. Nine student-login files: 168 total, 156 passed, 12 skipped. The real-db case was not rerun by me; the Green log records exit 0 with real_db_ran=1.
+7. JSDoc. Present on every new or changed export. The comment of classSessionLifetime is wrong (F122).
+8. Scope. No change in packages/db, card-token.ts, picture-password.ts, rate-limits.ts, codes.ts, credentials.ts, or another app. Added hash lines: 0.
+
+## Findings (all nonblocking)
+- F121: the state 'until_17' stays after the option hides at 17:00. Start posts it and the server refuses it. The teacher can recover.
+- F122: wrong JSDoc text on classSessionLifetime (contracts.ts:37).
+- F123: two statements on one line at class-session.ts:169.
+- F124: the 7-day help text says 'until this time' with no time on screen. The double '3h' default is redundant.
+- F125: no panel test posts 'until_17' and none covers the hidden-but-selected state.
+
+## Not run
+Domain aggregate suite, type checks, and the real-database run (heavy commands). I read their results from green-p1.log.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-review-a
+track: primary_class_session_lifetime_20261111
+phase: P1
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha: 9e2bc749258cb6bc1b1fd666c104e932bb978564
+audited_head_sha: 9e2bc749258cb6bc1b1fd666c104e932bb978564
+audit_status: pass
+blocking_findings: 0
+nonblocking_findings: 5 (F121 to F125)
+result_json: measure/runs/primary_class_session_lifetime_20261111/review-a-p1-9e2bc7492.json
+retry_recommendation: none
+handoff: Review A passes. The five nonblocking findings are optional cleanups (F121, F122, F123 are small code edits). Default if the orchestrator wants no extra round: accept as is and list F121 to F125 in the tech-debt file.
+END_MEASURE_AGENT_RESULT

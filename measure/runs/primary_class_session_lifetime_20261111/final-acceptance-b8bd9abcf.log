@@ -1,0 +1,25 @@
+Final acceptance r3 passes A-53 at the immutable audited head b8bd9abcfc49190b6698d77f386c7f050b03ff40.
+
+The supplied test command exits 0 through heavy-run.sh at p2. The domain run gives 190 passed and 12 skipped tests of 202. The app run gives 142 passed tests of 142. No failure line appears. These counts equal the phase-acceptance result and the adversarial result. The Primary type check exits 0. The pre-existing foreign file apps/primary-advantage/qa-check-user.tmp.ts no longer exists in the tree.
+
+The marker check for this track exits 0. It prints PASS for one plan. The A-53 plan holds no deprecated '- [ ]' marker. The doctor gate still exits 1 on deprecated markers in other track plans. The PM decision of 2026-11-12 accepts F411 for this track and counts the single-track marker check as the pass. The orchestrator opens the doctor.sh follow-up track with a done date of 11-14.
+
+The audited head is b8bd9abcf. Both log ranges are non-empty, so the track base and the phase-acceptance head are ancestors of it. The git merge-base command was refused by the permission pattern. The plan holds one phase heading and one passing phase-acceptance result. The recheck diff from 9a195d880 to the audited head over the track paths is empty. The commits that landed during the run belong to other tracks, and their diff over the same paths is empty.
+
+F421 is new. The fourth doctor step, pnpm architecture:check, exits 1 with the input snapshot error. With the skip flag it exits 1 with the report hash error. Both pins hash the whole repository source tree. The last pin refresh de25d49a9 predates the Storytime commit 08c36df04, which changed an analyzed file before the A-53 Red commit 0c459e9eb. The pin was already stale before A-53 wrote code. The failure is repository-wide. The doctor.sh follow-up track owns the repair.
+
+The anti-pattern checks hold. A5 finds no PASS=N claim and no all-checks-pass text in the plan, and the recorded counts reconcile with this run. A6 finds no overstatement in the registry. A9 finds no test that names an archived track path. The plan holds 15 task lines, all marked [x] or [b] with an owner, and each [x] line names a commit SHA. AC-8 holds because the packages/db diff is empty. No hash line was added. The spot check confirms the enum and the default in contracts.ts, the expiry computation and the refusal before the first row write in class-session.ts, the lifetime in the audit metadata, and the 400 status in http.ts.
+
+Route parity holds under rule 4. MiniMax M3.1 Flash wrote the A-53 adversarial tests, and this run uses MiniMax M3. The reviewer rating for the adversarial role records that overlap.
+
+MEASURE_AGENT_RESULT
+status: complete
+verdict: pass
+summary: The track passes at the audited head b8bd9abcf. The test command and the Primary type check exit 0. The marker check for this track exits 0. The doctor gate stays red for repository reasons under the PM decision of 2026-11-12.
+blocking_findings: none
+nonblocking_findings: F421, F403, F404, F405, F406, F407, F408
+tests: 332 passed, 12 skipped, 0 failed
+known_failures: doctor.sh exits 1 on other tracks; pnpm architecture:check exits 1 on stale repository pins; both belong to the doctor.sh follow-up track
+result_json: measure/runs/primary_class_session_lifetime_20261111/final-acceptance-b8bd9abcf.json
+handoff: Route the track to measure-closeout. Open gates: 1.12a tower browser check (deferred:pm), 1.10 Thai check (deferred:pm), 1.14 deploy (deferred:daniel). F421 belongs to the doctor.sh follow-up track with a done date of 11-14. No question blocks this acceptance.
+END_MEASURE_AGENT_RESULT

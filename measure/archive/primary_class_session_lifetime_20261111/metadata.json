@@ -1,0 +1,44 @@
+{
+  "track_id": "primary_class_session_lifetime_20261111",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-11-11T00:00:00Z",
+  "updated_at": "2026-11-12T00:00:00Z",
+  "opened": "2026-11-11",
+  "completed": "2026-11-12",
+  "description": "Let the teacher choose the class sign-in session lifetime when class sign-in starts: 3 hours (default), until 17:00 today (Asia/Bangkok), or 7 days, enforced by the server and recorded in the audit line.",
+  "author_model": "claude-code/claude-sonnet-5-5",
+  "priority": "P1",
+  "owner_chain": [
+    "Daniel (owner; deploy gate)",
+    "PM orchestrator (request A-53, 2026-11-11)",
+    "Monorepo orchestrator (track owner)"
+  ],
+  "decisions": [
+    "PM, 2026-11-11 (request A-53): the teacher picks 3 hours (default), until 17:00 today, or 7 days; the server enforces the list, 7 days maximum; the audit line records the choice; early end stays; the picture password and the rate limits stay.",
+    "Build brief, 2026-11-11: D-1 to D-8 of the spec (enum field with default 3h, until_17 refused from 17:00 Bangkok, one session for code and cards, lifetime in the audit line, no migration).",
+    "Orchestrator, 2026-11-10 and 2026-11-11: the UX browser gate of Phase 1 moves to the tower (task 1.12a, deferred:pm). It must pass before the Primary team deploys this change. The local run stays inconclusive because a local Primary Next build exceeds the host memory limit.",
+    "PM, 2026-11-12: F411 accepted for this track. The single-track marker check counts as the pass. The doctor.sh follow-up track owns the doctor.sh marker rule and the architecture:check pin repair, with a done date of 11-14."
+  ],
+  "dates": {
+    "target_master": "2026-11-18",
+    "archived": "2026-11-12"
+  },
+  "scope": {
+    "program": "primary",
+    "packages": ["packages/domain"],
+    "apps": ["apps/primary-advantage"],
+    "migration": false
+  },
+  "constraints": [
+    "No database migration",
+    "No change to the picture password, the rate limits, or the card token logic",
+    "No new hash, checksum, or manifest (AGENTS.md Hashing and Provenance Policy)",
+    "Thai labels wait for Daniel's Thai check through the PM (11-16 package)",
+    "No push, no deploy; the deploy waits for Daniel's word",
+    "Storytime keeps the first claim on the heavy lock"
+  ],
+  "estimated_tasks": 14,
+  "actual_tasks": 15,
+  "deviation_notes": "The plan holds 15 task lines: 10 done tasks with a commit SHA and 5 human-gated tasks that stay deferred (1.10 deferred:pm, 1.12 deferred:orchestrator, 1.12a deferred:pm, 1.13 deferred:orchestrator, 1.14 deferred:daniel). The estimate of 14 at creation was stale. Route deviations: the phase acceptance ran on claude-code/claude-fable-5-2 after two StepFun timeouts; the final acceptance r2 ran on kimi-code-plan-cn/k3.1-pro and r3 on minimax-cn-coding-plan/MiniMax-M3 with Kimi on WAIT, and MiniMax M3.1 Flash wrote the A-53 adversarial tests, so the adversarial verdict has less independence. The archived track moved on 2026-11-12. F421 and F411 belong to the doctor.sh follow-up track with a done date of 11-14."
+}
