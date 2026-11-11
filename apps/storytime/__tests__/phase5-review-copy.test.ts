@@ -30,6 +30,16 @@
 //     database.
 //   - When the module runs as a program, it reads `--port`, `--app-url`, and `--answers`, starts
 //     the server, and prints `review_port=<n>`.
+//   - The teacher-app item holds a sign-in line, so Daniel can open that item. The line sits in
+//     an element with the attribute `data-review-signin`, and its text is not empty.
+//   - The launch script lives in `apps/storytime/scripts/review/launch-review-copy.ts`. The flat
+//     path `apps/storytime/scripts/launch-review-copy.ts` is the second accepted path. It exports
+//     `planLaunch(options)`: the options hold `port`, `contentDir`, `answersPath`, `passwordFile`,
+//     `logFile`, and `commit`. The plan holds the same fields and the `url` of the review page.
+//     The plan refuses a port of 3005 and a port of 3099, and it refuses a password file that is
+//     the log file. The function starts no server and touches no database.
+//   - The launch script makes the teacher account, writes the password to the password file,
+//     prints the URL, and records the commit when it runs. The unit test reads the plan only.
 //
 // The page holds no app code path: no file under `apps/storytime/app/` names the review page or
 // the answers file. The page needs no database: the module names no database package and no
@@ -49,6 +59,12 @@ const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const MODULE_PATHS = [
   resolve(app, "scripts", "review", "review-server.ts"),
   resolve(app, "scripts", "review-server.ts"),
+];
+
+/** The two accepted paths of the launch script of the review copy. */
+const LAUNCH_PATHS = [
+  resolve(app, "scripts", "review", "launch-review-copy.ts"),
+  resolve(app, "scripts", "launch-review-copy.ts"),
 ];
 
 /** The name of the answers file of the review page. */
@@ -86,6 +102,28 @@ interface ReviewAnswer {
   comment: string;
 }
 
+/** The options of the launch of the review copy. */
+interface LaunchOptions {
+  /** The port of the review server. */
+  port: number;
+  /** The folder that holds the received weeks. */
+  contentDir: string;
+  /** The path of the answers file. */
+  answersPath: string;
+  /** The path of the file that holds the password of the teacher account. */
+  passwordFile: string;
+  /** The path of the log file of the servers. */
+  logFile: string;
+  /** The Git commit of the tree. */
+  commit: string;
+}
+
+/** The plan of the launch of the review copy. */
+interface LaunchPlan extends LaunchOptions {
+  /** The URL of the review page. */
+  url: string;
+}
+
 /** The folder that holds the answers file of the test. */
 const scratch = mkdtempSync(resolve(tmpdir(), "storytime-phase5-review-"));
 
@@ -112,6 +150,39 @@ function modulePath(): string {
 async function loadModule(): Promise<Record<string, unknown>> {
   const path = modulePath();
   return (await import(/* @vite-ignore */ new URL(`file://${path}`).href)) as Record<string, unknown>;
+}
+
+/**
+ * Gives the path of the launch script of the review copy.
+ * @returns The first path of the two accepted paths that exists.
+ */
+function launchPath(): string {
+  const found = LAUNCH_PATHS.find((path) => existsSync(path));
+  if (!found) {
+    throw new Error(`Missing ${LAUNCH_PATHS.join(" or ")}`);
+  }
+  return found;
+}
+
+/**
+ * Reads the launch script of the review copy.
+ * @returns The exports of the launch script.
+ */
+async function loadLaunchModule(): Promise<Record<string, unknown>> {
+  const path = launchPath();
+  return (await import(/* @vite-ignore */ new URL(`file://${path}`).href)) as Record<string, unknown>;
+}
+
+/**
+ * Gives the text of the element with an attribute in a block of the page.
+ * @param block The text of the block.
+ * @param name The name of the attribute.
+ * @returns The text of the element, with the inner tags removed.
+ */
+function textOfAttribute(block: string, name: string): string {
+  const hit = new RegExp(`${name}[^>]*>([\\s\\S]*?)</[^>]+>`).exec(block);
+  if (!hit) return "";
+  return (hit[1] ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 /**
@@ -330,5 +401,73 @@ describe("Phase 5 review copy and review page (tasks 5.6 and 5.7, spec FR-5 and 
       .map((line) => line.trim())
       .filter((line) => line.length > 0);
     expect(lines.length, "the answer was lost without a database").toBe(1);
+  });
+
+  it("holds a sign-in line in the teacher-app item of the review page", async () => {
+    const module = await loadModule();
+    const blocks = blocksOf(renderPage(module));
+    const block = blocks.get("teacher-app") ?? "";
+    expect(block.length, "the review page holds no block for the item teacher-app").toBeGreaterThan(
+      0,
+    );
+    expect(block, "the teacher-app item holds no sign-in line").toMatch(/data-review-signin/);
+    const text = textOfAttribute(block, "data-review-signin");
+    expect(text.length, "the sign-in line of the teacher-app item holds no text").toBeGreaterThan(0);
+    const tells = ["sign", "teach-01", "/th/sign-in"].some((hint) =>
+      text.toLowerCase().includes(hint.toLowerCase()),
+    );
+    expect(tells, "the sign-in line of the teacher-app item names no sign-in").toBe(true);
+  });
+
+  it("holds a launch script that plans the review copy without a server or a database", async () => {
+    const path = launchPath();
+    expect(existsSync(path), `Missing ${path}`).toBe(true);
+    const module = await loadLaunchModule();
+    const plan = module["planLaunch"] as ((options: LaunchOptions) => LaunchPlan) | undefined;
+    expect(typeof plan, "the launch script exports no function planLaunch").toBe("function");
+    const options: LaunchOptions = {
+      port: 45123,
+      contentDir: "/tmp/storytime-review/content",
+      answersPath: "/tmp/storytime-review/review-answers-p5.json",
+      passwordFile: "/tmp/storytime-review/teacher-password.txt",
+      logFile: "/tmp/storytime-review/servers.log",
+      commit: "0123456789abcdef0123456789abcdef01234567",
+    };
+    const value = (plan as (options: LaunchOptions) => LaunchPlan)(options);
+    expect(value.port, "the plan holds no port").toBe(options.port);
+    expect(value.url, "the URL of the plan holds no port").toContain(String(options.port));
+    expect(value.passwordFile, "the plan holds no password file").toBe(options.passwordFile);
+    expect(value.logFile, "the plan holds no log file").toBe(options.logFile);
+    expect(value.commit, "the plan holds no commit").toBe(options.commit);
+  });
+
+  it("refuses the ports 3005 and 3099, and a password file that is the log file", async () => {
+    const path = launchPath();
+    expect(existsSync(path), `Missing ${path}`).toBe(true);
+    const module = await loadLaunchModule();
+    const plan = module["planLaunch"] as ((options: LaunchOptions) => LaunchPlan) | undefined;
+    expect(typeof plan, "the launch script exports no function planLaunch").toBe("function");
+    const options: LaunchOptions = {
+      port: 45123,
+      contentDir: "/tmp/storytime-review/content",
+      answersPath: "/tmp/storytime-review/review-answers-p5.json",
+      passwordFile: "/tmp/storytime-review/teacher-password.txt",
+      logFile: "/tmp/storytime-review/servers.log",
+      commit: "0123456789abcdef0123456789abcdef01234567",
+    };
+    for (const port of [3005, 3099]) {
+      expect(
+        () => (plan as (options: LaunchOptions) => LaunchPlan)({ ...options, port }),
+        `the plan takes the port ${port}`,
+      ).toThrow(/port/i);
+    }
+    expect(
+      () =>
+        (plan as (options: LaunchOptions) => LaunchPlan)({
+          ...options,
+          passwordFile: options.logFile,
+        }),
+      "the plan puts the password in the log file",
+    ).toThrow();
   });
 });

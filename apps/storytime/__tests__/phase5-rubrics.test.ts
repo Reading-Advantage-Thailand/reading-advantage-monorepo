@@ -13,6 +13,11 @@
 //   - The picture rubric names the named object of rule 6 and the gesture rule of rule 9.1: a
 //     gesture thumbnail is never a line picture. Its text holds the words `gesture` and
 //     `line picture`.
+//   - Each entry of `knownFaults` is a point that must hold for a pass. The script states this
+//     one semantics in its header, and it holds no other.
+//   - The text of a rubric holds the wording of rule 6.7b for its kind. The phoneme rubric names
+//     the hum, the video rubric names the scene that reads as its place, and the book audio
+//     rubric asks for a natural question and answer.
 //   - The `knownBadFiles` field holds the known bad files of that kind. Each entry holds a
 //     `label` and a `path`. The label names the file for the owner, for example the cut-off
 //     "Hello" of BA1. The path is the path of the file inside a hand-off package. The path is
@@ -28,7 +33,7 @@
 //
 // The test reads `apps/storytime` and the hand-off packages only. It reads no track path, so it
 // stays valid after the track moves to `measure/archive/`.
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -172,6 +177,41 @@ describe("Phase 5 stage 2 rubrics (rule 6.7b and rule 6.7d)", () => {
     const faults = faultTextOf(rubric as Rubric);
     expect(faults, "the rubric for picture names no gesture rule").toContain("gesture");
     expect(faults, "the rubric for picture names no line picture rule").toContain("line picture");
+  });
+
+  it("pins the wording of rule 6.7b for the three kinds that drifted", async () => {
+    const rubrics = await readRubrics();
+    expect(rubrics.length, "the rubric set holds no rubric").toBeGreaterThan(0);
+    const phoneme = rubrics.find((rubric) => rubric.kind === "phoneme");
+    const video = rubrics.find((rubric) => rubric.kind === "video");
+    const bookAudio = rubrics.find((rubric) => rubric.kind === "book audio");
+    expect(phoneme, "the rubric set holds no rubric for the kind phoneme").toBeTruthy();
+    expect(video, "the rubric set holds no rubric for the kind video").toBeTruthy();
+    expect(bookAudio, "the rubric set holds no rubric for the kind book audio").toBeTruthy();
+    expect(faultTextOf(phoneme as Rubric), "the rubric for phoneme names no hum").toMatch(/\bhum\b/);
+    expect(
+      faultTextOf(video as Rubric),
+      "the rubric for video names no scene that reads as its place",
+    ).toContain("reads as its place");
+    const bookText = faultTextOf(bookAudio as Rubric);
+    expect(
+      bookText,
+      "the rubric for book audio asks for no natural question and answer",
+    ).toContain("natural question");
+    expect(bookText, "the rubric for book audio keeps the inverted point").not.toContain(
+      "asks no question",
+    );
+  });
+
+  it("states one semantics for the points of a rubric (each entry must hold for a pass)", async () => {
+    expect(existsSync(RUBRICS_PATH), `Missing ${RUBRICS_PATH}`).toBe(true);
+    const source = readFileSync(RUBRICS_PATH, "utf8").toLowerCase();
+    expect(source, "the rubric script states no semantics for the points").toContain(
+      "must hold for a pass",
+    );
+    expect(source, "the rubric script keeps the old semantics of the points").not.toContain(
+      "holds none of them",
+    );
   });
 
   it("names a known bad file for every kind", async () => {

@@ -27,6 +27,10 @@
 //   - The runner refuses a real client when the process runs under Vitest, and it never calls
 //     that client (P5.9). The refusal error names Vitest.
 //   - The runner sends the files, the rubric kind, and the rubric text to the client.
+//   - The runner refuses a call whose client returns fewer verdicts than the files. It throws, or
+//     it reports the gap in `failures`. A file with no verdict never looks clean (A4).
+//   - The ledger line holds the item count of the entry, `entry.itemCount`, when that count and
+//     the count of the files differ.
 //
 // The test uses a mock client only. The test never calls a model and never spends money.
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -300,6 +304,61 @@ function realClient(): { client: ModelClient; calls: () => number } {
   return { client, calls: () => calls };
 }
 
+/**
+ * The mock provider that returns exactly the verdicts it holds.
+ * It never cuts its list, so a test can give the runner fewer verdicts than files.
+ */
+class FixedVerdictProvider implements ModelClient {
+  /** The model id of the mock. */
+  readonly id = "fixed-provider";
+
+  /** The mock flag of the client. */
+  readonly isMock = true;
+
+  /** The number of calls the mock received. */
+  calls = 0;
+
+  /** The files of the last call. */
+  files: string[] = [];
+
+  /** The verdicts the mock gives. */
+  private readonly verdicts: Verdict[];
+
+  /**
+   * Makes the mock provider.
+   * @param verdicts The verdicts the mock gives, with no cut.
+   */
+  constructor(verdicts: Verdict[]) {
+    this.verdicts = verdicts;
+  }
+
+  /**
+   * Gives the verdicts and records the call.
+   * @param request The files, the rubric kind, and the rubric text.
+   * @returns The verdicts of the mock, with no cut.
+   */
+  async check(request: ModelRequest): Promise<Verdict[]> {
+    this.calls += 1;
+    this.files = request.files.slice();
+    return this.verdicts.slice();
+  }
+}
+
+/**
+ * Runs the runner once and gives the outcome.
+ * @param options The options of the run.
+ * @returns The thrown message, or the result of the run.
+ */
+async function outcomeOf(
+  options: RunnerOptions,
+): Promise<{ error: string; result: RunnerResult | null }> {
+  try {
+    return { error: "", result: await runRunner(options) };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error), result: null };
+  }
+}
+
 describe("Phase 5 stage 2 pre-check runner (rule 6.7 and P5.1)", () => {
   it("names the runner script of task 5.4", () => {
     expect(existsSync(RUNNER_PATH), `Missing ${RUNNER_PATH}`).toBe(true);
@@ -467,5 +526,70 @@ describe("Phase 5 stage 2 pre-check runner (rule 6.7 and P5.1)", () => {
     }
     expect(calls(), "the runner called a real client inside a test").toBe(0);
     expect(message, "the runner did not refuse a real client inside a test").not.toBe("");
+  });
+
+  it("refuses a call whose client returns no verdict", async () => {
+    expectRunnerExists();
+    const ledgerPath = resolve(scratch, "ledger-no-verdict.md");
+    const client = new FixedVerdictProvider([]);
+    const outcome = await outcomeOf({
+      ledgerPath,
+      entry: entryOf(),
+      client,
+      files: filesOf(),
+      kind: "word cut",
+      rubricText: "the whole word, no part of the next word",
+    });
+    expect(client.calls, "the runner did not call the model client").toBe(1);
+    const refused = outcome.error !== "" || (outcome.result?.failures ?? []).length > 0;
+    expect(refused, "the runner accepted a call whose client returned no verdict").toBe(true);
+  });
+
+  it("refuses a call whose client returns fewer verdicts than files", async () => {
+    expectRunnerExists();
+    const ledgerPath = resolve(scratch, "ledger-short-verdicts.md");
+    const client = new FixedVerdictProvider([{ pass: true, reason: "ok", atSeconds: null }]);
+    const outcome = await outcomeOf({
+      ledgerPath,
+      entry: entryOf(),
+      client,
+      files: filesOf(),
+      kind: "word cut",
+      rubricText: "the whole word, no part of the next word",
+    });
+    expect(client.calls, "the runner did not call the model client").toBe(1);
+    expect(client.files.length, "the runner sent no files to the client").toBe(filesOf().length);
+    const refused = outcome.error !== "" || (outcome.result?.failures ?? []).length > 0;
+    expect(refused, "the runner accepted a call with fewer verdicts than files").toBe(true);
+  });
+
+  it("writes the item count of the ledger entry when it differs from the count of the files", async () => {
+    expectRunnerExists();
+    const ledgerPath = resolve(scratch, "ledger-item-count.md");
+    const entry = { ...entryOf(), itemCount: 3 };
+    const client = new FixedVerdictProvider([
+      { pass: true, reason: "ok", atSeconds: null },
+      { pass: true, reason: "ok", atSeconds: null },
+    ]);
+    const outcome = await outcomeOf({
+      ledgerPath,
+      entry,
+      client,
+      files: filesOf(),
+      kind: "word cut",
+      rubricText: "the whole word, no part of the next word",
+    });
+    if (outcome.error !== "") {
+      expect(
+        outcome.error,
+        "the runner refused the call for a reason other than the count of the items",
+      ).toMatch(/count|item/i);
+      return;
+    }
+    const values = Object.fromEntries(pairsOf(outcome.result?.ledgerLine ?? ""));
+    expect(
+      values["item_count"],
+      "the ledger line takes the count of the files, not the count of the entry",
+    ).toBe("3");
   });
 });
