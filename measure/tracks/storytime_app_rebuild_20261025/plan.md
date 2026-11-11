@@ -3602,6 +3602,47 @@ for every other track.
     and no expected value changed. `bash -n` on the gate exits 0, and the self-test exits 0 with
     `selftest_good_accepted=6` of 6 and `selftest_mutants_rejected=17` of 17. The full gate did
     not run in this round. Evidence class: automated.
+  - Red round r5, 2026-11-12: the remediation of the Phase 5 reviews. Role base
+    `8e15f353cbac3457dab6a4a105119a1dc6f3adc9`; phase base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`.
+    The role ran on `minimax-cn-coding-plan/MiniMax-M3.1-Flash`. The Green role of this phase runs
+    on `deepseek/deepseek-flash#high`. Review A holds four blocking findings (F901 to F904) and
+    Review C holds one (F972). Review B passed with no finding.
+  - Part 1, the gate script, commit `3e70ea882`. F902: the gate answers file now sits in the
+    temporary folder (`$TMP_DIR/review-answers-p5.json`), so a gate run never writes the file of
+    the run folder and never deletes it. The file `review-answers-p5.json` of the run folder keeps
+    its name for the page of Daniel (task 6.1). The file that the gate runs had written was moved
+    aside, with no delete, to `review-answers-p5.gate-run-20261112.json` in the same folder; it
+    holds the five synthetic pass lines of the orchestrator gate runs. F904: the gate prints
+    `controls_per_item=4`, the count of the four controls of one item, and it keeps the verdict
+    check that every item holds the four controls. No row, no verdict function, and no expected
+    value changed. `bash -n` on the gate exits 0. The self-test exits 0 with
+    `selftest_good_accepted=7` of 7 and `selftest_mutants_rejected=18` of 18. The counts changed
+    from 6 of 6 and 17 of 17: one good case and one broken copy now cover the new function that
+    counts the controls of one item. The full gate did not run in this round.
+  - Part 2, the failing rows, commit `4f00023fe`. The runner test holds three rows: a client that
+    returns no verdict, a client that returns fewer verdicts than the files, and the ledger item
+    count of the entry when it differs from the count of the files. The rubric test holds two
+    rows: the wording of rule 6.7b for the three kinds that drifted, and the one header semantics
+    that each entry of a rubric is a point that must hold for a pass. The review copy test holds
+    three rows: the sign-in line of the teacher-app item, the launch script
+    `apps/storytime/scripts/review/launch-review-copy.ts` with its plan function, and the refusal
+    of the ports 3005 and 3099 and of a password file that is the log file. The unit test starts
+    no server and touches no database.
+  - Automated Red command: the P5 `RED_TEST_COMMAND` of the strategy (test-strategy.md line 946),
+    under heavy-run p1, in the foreground. Result: exit 1; 7 files, 3 failed and 4 passed;
+    61 tests, 8 failed and 53 passed; 0 load errors. The 8 failures are the 8 new rows, and the 53
+    passes are the rows of the earlier rounds. Automated type check: `../../node_modules/.bin/tsc
+    --noEmit` in `apps/storytime` under heavy-run p1. Result: exit 0.
+  - The failing row names: `refuses a call whose client returns no verdict`; `refuses a call whose
+    client returns fewer verdicts than files`; `writes the item count of the ledger entry when it
+    differs from the count of the files`; `pins the wording of rule 6.7b for the three kinds that
+    drifted`; `states one semantics for the points of a rubric (each entry must hold for a pass)`;
+    `holds a sign-in line in the teacher-app item of the review page`; `holds a launch script that
+    plans the review copy without a server or a database`; `refuses the ports 3005 and 3099, and a
+    password file that is the log file`.
+  - Tasks 5.5, 5.6, and 5.7 stay `[~]`. The Green role fixes the runner, the rubric texts, the
+    review page, and the launch script. No product source was written in this round. No model was
+    called and no money was spent. Evidence class: automated.
 - [~] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
   - Red evidence (tasks 5.6 and 5.7): the same round as task 5.6. The unit file
     `apps/storytime/__tests__/phase5-review-copy.test.ts` holds the page contract, and the gate
