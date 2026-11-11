@@ -3159,6 +3159,24 @@ for every other track.
     measurement says otherwise, so the strategy row needs a correction by the strategy role.
     The test reads only `apps/storytime` and the run folder, so it stays valid after the track
     moves to `measure/archive/` (A9).
+  - Green evidence (blocked), 2026-11-11. Role base `ecf41c04036bb8e2ca19c9744113dec4ba559661`;
+    phase base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; implementation commit `2887dc70b` (the
+    four scripts under `apps/storytime/scripts/checks/`; no other source file). The document sits
+    at `measure/runs/storytime_app_rebuild_20261025/media-list-w01.md` (129 lines). The folder is
+    ignored by Git, so the document has no commit. The document holds `media_files=70`,
+    `label_items_missing=6`, `bitrate_deviations=35`, one row for each media file (36 audio, 32
+    pictures, 2 video), six label rows (the tile labels `readalong`, `decodable`, `song` and the
+    home words `net`, `nut`, `nose`), the two recorded deviations, and the line
+    `noise_step=daniel offered`. `GREEN_TEST_COMMAND` exits 1 with 4 files, 28 passed, 4 failed,
+    and 0 skipped: audio 11 of 11, word-edges 5 of 5, file-kind 6 of 8, media-list 6 of 8. The type
+    check `tsc --noEmit` in `apps/storytime` exits 0; ESLint on the four scripts exits 0 with 0
+    errors and 0 warnings; `build-graph update ./graph.db` exits 0 (4 files, 64 nodes, 60 edges)
+    and search finds each parse export. Task stays `[~]`. The two media-list failures are Red
+    defects: the table reader takes the Markdown delimiter row as a data row
+    (`phase5-media-list.test.ts:145-147`), and the bitrate case reads the container rate and
+    asserts 128 kbps while the nine files hold a 128 kbps stream at a 133 to 145 kbps container
+    (`:268-269`). The handoff asks for a Mid Red retry, and neither role edits a committed Red
+    test. Evidence class: automated.
 - [b] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price. deferred:daniel
 - [~] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1.
   - Red evidence (task 5.3). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
@@ -3194,6 +3212,22 @@ for every other track.
     its broken copy, and each broken copy is made in a temporary folder from a real file with one
     change, then removed. The parser control of each script reads a synthetic ffmpeg or ffprobe
     text, so no parser test needs the hand-off folder.
+  - Green evidence (blocked), 2026-11-11. Role base
+    `ecf41c04036bb8e2ca19c9744113dec4ba559661`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; implementation commit `2887dc70b`. The four scripts
+    sit in `apps/storytime/scripts/checks/`. They measure with ffmpeg and ffprobe, add no
+    dependency, and hold JSDoc on every export. `GREEN_TEST_COMMAND` exits 1 with 4 files, 28
+    passed, 4 failed, and 0 skipped: audio 11 of 11, word-edges 5 of 5, file-kind 6 of 8,
+    media-list 6 of 8. `tsc --noEmit` in `apps/storytime` exits 0; ESLint on the four scripts
+    exits 0 with 0 errors and 0 warnings; `build-graph update ./graph.db` exits 0 (4 files, 64
+    nodes, 60 edges) and search finds each parse export. Task stays `[~]`. The two file-kind
+    failures are Red defects: the test makes the broken copy with
+    `ffmpeg -i p01.jpg copy.mp3`, and ffmpeg exits 234 because the mp3 muxer carries no video
+    stream (`phase5-measure-file.test.ts:217-220` and `:249-252`). No implementation can make
+    those cases pass. The live measurements on the real files: `1-hello.mp3` -16.69 LUFS with
+    -1.41 dBTP passes; `04-n.mp3` has a noise floor of -26.86 dBFS and fails; `wa-pip.mp3` has a
+    noise floor of -75.48 dBFS and passes; `wa-net.mp3` holds quiet edges at -76.14 and -inf
+    dBFS. The handoff asks for a Mid Red retry. Evidence class: automated.
 - [ ] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
