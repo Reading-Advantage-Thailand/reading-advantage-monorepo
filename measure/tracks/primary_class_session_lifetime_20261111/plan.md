@@ -18,7 +18,7 @@
 - Respect `AGENTS.md`: business logic stays in the domain package, Zod contracts first, thin handlers and thin UI, JSDoc on every exported function and type, tests with the change.
 - Paths start at the monorepo root.
 
-## Phase 1: Choice of the class session lifetime
+## Phase 1: Choice of the class session lifetime [checkpoint: 1826b382e]
 
 Blast radius: `startClassSession` and `classSessionStartInput` in `packages/domain/src/student-login/`, the `startClass` handler and the `STATUS` map in `apps/primary-advantage/lib/student-login/`, `ClassSessionControl` in `apps/primary-advantage/components/teacher/class-login/`, and the `ClassLogin` messages (`th`, `en`). Check the callers of each exported symbol with `build-graph callers ./graph.db <symbol>` before the edit.
 
