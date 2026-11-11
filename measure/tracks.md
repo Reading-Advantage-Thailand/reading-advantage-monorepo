@@ -80,6 +80,12 @@ This file tracks all major tracks for the project.
   *Status: new, opened 2026-11-10; Phase 1 (Red, Green, refresh, phase check) target 2026-11-12 | Owner: Monorepo orchestrator | Amends the archived backend_architecture_enforcement_20260713 | Priority: TOP (CI is red on every push)*
   *Note: PM decisions of 2026-11-10: "architecture: YES to skipping the pin in CI, in backend_architecture_enforcement_20260713, as a small amendment. The pin stays as a local refresh command. A test must prove that an unlisted new analyzed file still fails." and "Option B. Write a new small track that refers to the archived backend_architecture_enforcement_20260713, and keep the archive intact." CI runs the check with `--skip-input-snapshot-pin`; the pin stays on the local `pnpm architecture:check` and the local `pnpm architecture:pin:refresh`. No push and no deploy.*
 
+- [ ] **Track: Class sign-in session lifetime** — *created 2026-11-11*
+  *Link: [./tracks/primary_class_session_lifetime_20261111/](./tracks/primary_class_session_lifetime_20261111/)*
+  *Description: Let the teacher choose the class sign-in session lifetime when class sign-in starts: 3 hours (default), until 17:00 today (Asia/Bangkok), or 7 days, enforced by the server and recorded in the audit line.*
+  *Status: new (spec and plan only), opened 2026-11-11; target on master by 2026-11-18 | Owner: Monorepo orchestrator | Requested by the PM (A-53, school customer) | Priority: P1*
+  *Note: Thai labels wait for Daniel's Thai check through the PM (11-16 package). The change ships with the next Primary Advantage deploy on Daniel's word; no deploy from this track. Storytime keeps the first claim on the heavy lock.*
+
 - [ ] **Track: Architecture identity and provider debt** — *created 2026-11-11*
   *Link: [./tracks/architecture_identity_provider_debt_20261111/](./tracks/architecture_identity_provider_debt_20261111/)*
   *Description: Fix the 111 company identity isolation, company identity database, AI provider, and integration provider findings that the v1 architecture baseline accepts as debt, then remove them from the baseline.*
