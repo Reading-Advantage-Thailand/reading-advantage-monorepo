@@ -135,3 +135,17 @@ reader and the decodable are features for a later phase, not defects of the ship
   (`decodableWeekOf` hands the player a week with the titled book only), and the new test
   proves the refine and renders the decodable branch from the titled book.
 
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_app_rebuild_20261025
+phase: Phase 4 remediation round 1
+commits: def174a4f (fix(storytime): close the phase 4 review findings), e34a37508 (docs(measure): record the phase 4 review fixes)
+tests_run: the six Phase 4 files, exit 0, 67 of 67; the P3 player set of 6 files, exit 0, 27 of 27; tsc --noEmit in apps/storytime through heavy-run.sh, exit 0; ESLint on the changed files, exit 0, 0 errors; phase4-browser-gate.sh, exit 0, run a PASS=28 FAIL=0, run b PASS=24 FAIL=0, run c PASS=12 FAIL=0, wrapper PASS=9 FAIL=0; phase4-docker-smoke.sh, exit 0, PASS=12 FAIL=0 (first run of the round exit 1 PASS=10 FAIL=2 on the missing signer keys of the flag-on container, fixed in def174a4f); build-graph update through heavy-run.sh on 10 files, exit 0
+files_changed: apps/storytime/lib/teacher.ts, apps/storytime/lib/share-moment.ts, apps/storytime/app/[locale]/teacher/[level]/[week]/page.tsx, apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx, apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx, apps/storytime/__tests__/phase4-teacher-flag.test.ts, apps/storytime/__tests__/phase4-week-view.test.tsx, apps/storytime/__tests__/phase4-lesson-media.test.tsx, apps/storytime/__tests__/phase4-share-moment.test.tsx, apps/storytime/__tests__/phase4-loops-flow.test.tsx, apps/storytime/__tests__/phase4-docker-smoke.sh
+plan_updates: plan.md holds the "Phase 4 remediation round 1 evidence" block under task 4.5, which stays [x]; the 403 view answers HTTP 200 (F407 note under the task 4.3 block); the canonical-number correction under the 4.1 and 4.2 Green evidence (F418 part b); commit e34a37508
+known_failures: none new; the pre-existing root-config alias gap and the login-media-sign count are outside Phase 4 and unchanged
+handoff: re-reviews audit def174a4f..e34a37508; the F408 accessible-name part is contested, because the committed Red test pins the exact name "Open media", so the control holds the title in aria-describedby; F412 takes FIX of the test gap, and the smoke now holds nosession_flag_off=307 and nosession_flag_on=307, each with the sign-in redirect and no teacher markup, plus the flag-on positive control rows that answer 200 with teacher markup; F418 part a stays with the strategy role; the two source cases of phase4-teacher-flag.test.ts were rewritten in place per F413 and F416, names and meaning kept, and every other committed Red case is untouched; test-strategy.md was not edited or committed by this round
+dispositions: F401=FIX; F402=FIX; F403=FIX; F404=FIX; F405=FIX; F406=CONTEST(test-strategy.md lines 652 and 654 from commit 19d14b278 and the header comment of the week page.tsx record the session then flag order); F407=FIX; F408=FIX; F411=FIX; F412=CONTEST(the same record as F406 and two no-session smoke rows now prove the redirect in both flag states); F413=FIX; F414=FIX; F415=FIX; F416=FIX; F417=FIX; F418=FIX; F419=FIX; F420=FIX; F421=DECLINE; F501=CONTEST(the same record as F406)
+END_MEASURE_AGENT_RESULT
