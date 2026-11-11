@@ -216,6 +216,15 @@ Round 7 of task 1.4 was the first split refresh (task 1.4b). It stopped with exi
   only. Task 1.4c carries it, before task 1.4 runs again. The rule is input
   selection, not a finding exemption (see FR-9.4).
 
+- **D-11 (the v1 debt baseline). DECIDED (PM, 2026-11-11, after the r9 preview at `ed10bc39d`).**
+  The PM wrote, word for word: "1. Baseline ALL 332 additions now (with the 16 removals and 161 renames), so the architecture step can go green and per-app CD is not blocked. Owner: \"Monorepo session (architecture owner), approved by the PM 2026-11-11\". Rationale, by class: DATABASE_BOUNDARY 205 + DURABLE_JOB_DATABASE_BOUNDARY 16: pre-existing debt (commits 2026-07-19 to 2026-10-14, before this track), part of the tech-debt entry on the 294 legacy API routes. COMPANY_IDENTITY_PRODUCT_ISOLATION 93 + COMPANY_IDENTITY_DB_BOUNDARY 5 + AI_PROVIDER_BOUNDARY 11 + INTEGRATION_PROVIDER_BOUNDARY 2: pre-existing debt, accepted only until the remediation track below closes; name that track id in the rationale. 2. Open a remediation track (build session: yes, my word) for the 111 auth/identity and provider-adapter findings: P2, starts after the 11-20 Storytime release, done-when the 111 are fixed and removed from the baseline, due 2026-12-15. A new finding of these rules still fails CI (the baseline freezes only the old ones). 3. Then one more pin refresh check, architecture:check, and task 1.5, on the routes your plan names."
+  The baseline command is `pnpm architecture:baseline:update --acknowledge --owner <id> --rationale <text>`.
+  The owner field accepts only a lower-case id (`contracts.ts:7` and `:81`: `/^[a-z0-9][a-z0-9_-]*$/`),
+  so the PM owner text cannot go in the field. **Deviation:** the owner id is `monorepo-architecture`, and
+  the PM owner text goes into the rationale (12 to 1000 characters, `contracts.ts:82`). The remediation
+  track is `architecture_identity_provider_debt_20261111` (P2, start not before 2026-11-21, due 2026-12-15).
+  Task 1.4d carries the baseline step. Task 1.4 then runs its series again (item 3 of the decision).
+
 ## 4. Functional requirements
 
 ### FR-1 CI mode skips only the input snapshot pin
