@@ -26,6 +26,32 @@ const END_REGION = "The end of the lesson";
 /** The visible line of the focus region. */
 const END_LINE = "This is the last step of the day.";
 
+/** The accessible name of the control that opens the media player (F611, F631). */
+const OPEN_MEDIA = "Open media";
+
+/** The accessible name of the control that closes the media player (F611, F631). */
+const CLOSE = "Close";
+
+/**
+ * Builds a signed URL map over the audio and video files of one week, the way the media test
+ * of task 4.4 does, so the player of a media step opens in jsdom.
+ * @param source The week.
+ * @returns A non-empty URL for each media file of the week.
+ */
+function signedUrlsOf(source: StorytimeWeek): Record<string, string> {
+  const urls: Record<string, string> = {};
+  if (source.song) {
+    for (const file of [source.song.audio, source.song.video, source.song.videoPhone, source.song.poster]) {
+      if (file) urls[file] = `https://media.example/${file}`;
+    }
+  }
+  for (const book of source.books) {
+    if (book.audio?.file) urls[book.audio.file] = `https://media.example/${book.audio.file}`;
+    if (book.audio?.slowFile) urls[book.audio.slowFile] = `https://media.example/${book.audio.slowFile}`;
+  }
+  return urls;
+}
+
 /** The shipped milestone week, parsed with the app contract. */
 const week: StorytimeWeek = weekSchema.parse(weekJson) as StorytimeWeek;
 
@@ -151,6 +177,43 @@ describe("Phase 4 lesson focus: the teacher controls of the flow (UX finding F60
         `${label} must hold min-h-11 for the 44 px floor, classes=${node.className}`,
       ).toBe(true);
     }
+    view.unmount();
+  });
+
+  it("holds min-h-11 on the Open media and Close controls of a media step (F611, F631)", () => {
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: (query: string) => ({
+        matches: false,
+        media: query,
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      }),
+    });
+    const view = render(
+      <TeacherLessonFlow week={week} day={2} locale="en" mediaUrls={signedUrlsOf(week)} />,
+    );
+    let moves = 0;
+    while (screen.queryByRole("button", { name: OPEN_MEDIA }) === null) {
+      const next = screen.queryByRole("button", { name: NEXT_STEP });
+      expect(next, `the walk must reach a media step of day 2 after ${moves} moves`).not.toBeNull();
+      moves += 1;
+      expect(moves, "the walk must end").toBeLessThan(20);
+      fireEvent.click(next!);
+    }
+    const open = screen.getByRole("button", { name: OPEN_MEDIA });
+    expect(
+      open.className.includes("min-h-11"),
+      `open_classes=${open.className}: the Open media control must hold min-h-11 (F611, F631)`,
+    ).toBe(true);
+    fireEvent.click(open);
+    const close = screen.getByRole("button", { name: CLOSE });
+    expect(
+      close.className.includes("min-h-11"),
+      `close_classes=${close.className}: the Close control of the player must hold min-h-11 (F611, F631)`,
+    ).toBe(true);
     view.unmount();
   });
 });

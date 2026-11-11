@@ -219,3 +219,65 @@ describe("Phase 4 runbook: the flag carry-over, the env compare, and the image v
     ).toBe(true);
   });
 });
+
+describe("Phase 4 runbook: the new-build flag action and the name-only env compare (F612, F621)", () => {
+  it("gives the new-build image in the off command text when a new build holds the flag (F612)", () => {
+    const section = flagSection();
+    expect(
+      section.includes("revision cannot change"),
+      "the runbook must say a revision cannot change (F612)",
+    ).toBe(true);
+    expect(
+      section.includes("does not get traffic as it is"),
+      "the runbook must say a flag-on new build does not get traffic as it is (F612)",
+    ).toBe(true);
+    expect(
+      section.includes("image reference of the new build"),
+      "the runbook must pin the off command to the image reference of the new build (F612)",
+    ).toBe(true);
+    expect(
+      section.includes("imageDigest describe command on the new revision"),
+      "the runbook must read the new build image with the same imageDigest command (F612)",
+    ).toBe(true);
+    expect(
+      section.includes("revision that this command makes"),
+      "the runbook must check the tag URL of the revision the off command makes (F612)",
+    ).toBe(true);
+    expect(
+      section.includes("name that revision in"),
+      "the runbook must name that revision in step 4 (F612)",
+    ).toBe(true);
+    expect(
+      section.includes("step 4"),
+      "the runbook must point at the traffic step 4 (F612)",
+    ).toBe(true);
+  });
+
+  it("prints the env names only, not the values (F621)", () => {
+    const section = flagSection();
+    const hits = section.split("\n").filter((line) => line.includes("spec.containers[0].env"));
+    expect(
+      hits.length,
+      `env_describe_lines=${hits.length}: the runbook must describe both revisions`,
+    ).toBe(2);
+    for (const line of hits) {
+      expect(
+        line.includes("env.name)"),
+        `env_line=${line.trim()}: the compare must print the names only (F621)`,
+      ).toBe(true);
+    }
+    const valuePrints = section.split("\n").filter((line) => line.includes("containers[0].env)"));
+    expect(
+      valuePrints,
+      `value_print_lines=${valuePrints.length}: no env command may print the values (F621)`,
+    ).toEqual([]);
+    expect(
+      section.includes("values are compared only"),
+      "the runbook must scope the value compare to the flag (F621)",
+    ).toBe(true);
+    expect(
+      section.includes("not a secret"),
+      "the runbook must say the flag value is not a secret (F621)",
+    ).toBe(true);
+  });
+});

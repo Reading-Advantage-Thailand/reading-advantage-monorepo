@@ -281,7 +281,7 @@ describe("Phase 4 teacher week view: the control floor and the language marks (F
   });
 
   it("marks every English text element of the week view with lang=en (F605)", async () => {
-    const { container } = await renderWeekView(week);
+    const { container, unmount } = await renderWeekView(week);
     // The 16 English text elements that the UX role named (ux-browser-p4-e24a1f06c, F605):
     // the level line, the seven section headings, the five lesson links, and the three
     // material labels.
@@ -325,6 +325,33 @@ describe("Phase 4 teacher week view: the control floor and the language marks (F
         node!.getAttribute("lang"),
         `lang=${node!.getAttribute("lang")}: ${label} must hold lang=en (F605)`,
       ).toBe("en");
+    }
+    // The family word picture captions are English (F632): the alt holder of an image entry
+    // and the fallback span of an entry with no file both carry lang=en.
+    const family = week.focus.family;
+    expect(family, "the shipped week must hold the family words").toBeDefined();
+    for (const entry of family!.words) {
+      const caption = entry.image?.caption ?? "";
+      if (caption === "") continue;
+      const node = screen.getByRole("img", { name: caption });
+      expect(
+        node.getAttribute("lang"),
+        `caption_lang=${node.getAttribute("lang")}: the caption ${caption} must hold lang=en (F632)`,
+      ).toBe("en");
+    }
+    // The fallback span: an entry with no file renders its caption as a role=img span.
+    const copy = structuredClone(week);
+    const first = copy.focus.family!.words[0]!;
+    if (first.image?.file) {
+      delete first.image.file;
+      unmount();
+      const fallback = await renderWeekView(copy);
+      const span = screen.getByRole("img", { name: first.image.caption });
+      expect(
+        span.getAttribute("lang"),
+        `fallback_lang=${span.getAttribute("lang")}: the fallback caption span must hold lang=en (F632)`,
+      ).toBe("en");
+      fallback.unmount();
     }
   });
 });

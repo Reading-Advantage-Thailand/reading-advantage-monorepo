@@ -605,7 +605,7 @@ function StepView({
             type="button"
             onClick={onOpen}
             aria-describedby={mediaDescriptionId}
-            className="w-fit rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-[#92400e]"
+            className="min-h-11 w-fit rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-[#92400e]"
           >
             <span lang="en">Open media</span>
           </button>
@@ -633,7 +633,7 @@ function StepView({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
+              className="min-h-11 rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
             >
               <span lang="en">Close</span>
             </button>

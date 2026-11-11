@@ -139,12 +139,14 @@ export function TeacherWeekView({
                       alt={caption}
                       loading="lazy"
                       decoding="async"
+                      lang="en"
                       className="h-24 w-24 rounded-xl object-cover"
                     />
                   ) : (
                     <span
                       role="img"
                       aria-label={caption}
+                      lang="en"
                       className="flex h-24 w-24 items-center justify-center rounded-xl border border-[#92400e] p-2 text-center text-sm"
                     >
                       {caption}
