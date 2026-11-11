@@ -5,6 +5,8 @@
   "status": "closed",
   "completion_date": "2026-11-12",
   "pre_closeout_head": "3c80a09b7b29b82eb826d6e059a56ab45b096b68",
+  "archive_commit_sha": "4b878a6c8bdb5ae49a65c30285080d6efd03dec3",
+  "archive_commit_note": "A parallel role committed the shared index before this role ran its own commit. Commit 4b878a6c8 carries the archive move, the registry update, the memory updates, and the run folder under the subject of the accounting track. The closeout evidence correction landed in a later commit of this track.",
   "final_acceptance_audited_head_sha": "b8bd9abcfc49190b6698d77f386c7f050b03ff40",
   "track_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
   "role_base_sha": "44368d1b4d34a640ce7b976ee39172e981f49395",
@@ -183,8 +185,9 @@
     "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track primary_class_session_lifetime_20261111 (exit 0)",
     "git add -f measure/runs/primary_class_session_lifetime_20261111 (exit 0)",
     "git add measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md (exit 0)",
-    "git commit -m 'chore(measure): archive the lifetime track (track_id: primary_class_session_lifetime_20261111)' -- measure/tracks/primary_class_session_lifetime_20261111 measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md measure/lessons-learned.md measure/tech-debt.md measure/runs/primary_class_session_lifetime_20261111 (exit 0)",
-    "git show --stat HEAD (the commit names only the four pathspec paths, exit 0)"
+    "git commit -m 'chore(measure): archive the lifetime track (track_id: primary_class_session_lifetime_20261111)' -- measure/tracks/primary_class_session_lifetime_20261111 measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md measure/lessons-learned.md measure/tech-debt.md measure/runs/primary_class_session_lifetime_20261111 (the commit ran under the subject of a parallel role, because that role committed the shared index first; exit 0)",
+    "git show --stat HEAD (the commit names only the pathspec paths, exit 0)",
+    "git commit -m 'chore(measure): record the lifetime closeout evidence (track_id: primary_class_session_lifetime_20261111)' -- measure/archive/primary_class_session_lifetime_20261111/automation-supervisor-closeout-manifest.json measure/runs/primary_class_session_lifetime_20261111 (exit 0)"
   ],
   "deferred_tasks": [
     "1.10 Thai-label hand-off (deferred:pm): the list of task 1.9 goes to the PM for Daniel's Thai check in the 11-16 package.",

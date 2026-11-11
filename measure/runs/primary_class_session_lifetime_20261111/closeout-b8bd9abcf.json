@@ -43,7 +43,8 @@
     "Route deviations: the phase acceptance ran on claude-code/claude-fable-5-2 after two StepFun timeouts. The final acceptance r2 ran on kimi-code-plan-cn/k3.1-pro and r3 on minimax-cn-coding-plan/MiniMax-M3 with Kimi on WAIT. MiniMax M3.1 Flash wrote the A-53 adversarial tests, so the adversarial verdict and the final acceptance r3 share one model family, and the reviewer rating for the adversarial role records the loss of independence.",
     "Retained evidence: the whole folder measure/runs/primary_class_session_lifetime_20261111/ stays on disk with every file, the UX harness included. The closeout deleted nothing.",
     "Human gates: this track holds five human-gated tasks. The tower browser check (1.12a, deferred:pm), the Thai check (1.10, deferred:pm), and the deploy (1.14, deferred:daniel) stay open after the archive. The closeout claims no browser proof and no deploy of this track as done.",
-    "Closeout gate: command 'python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track primary_class_session_lifetime_20261111' printed 'PASS: closeout checks passed' (exit 0)."
+    "Closeout gate: command 'python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track primary_class_session_lifetime_20261111' printed 'PASS: closeout checks passed' (exit 0).",
+    "Parallel commit: a parallel role committed the shared index before this role ran its own commit. Commit 4b878a6c8 carries the archive move, the registry update, the memory updates, and the run folder under the subject of the accounting track. The tree state is correct and the closeout gate passes on it. The closeout evidence correction lands in a later commit of this track."
   ],
   "commands": [
     "git rev-parse HEAD (3c80a09b7b29b82eb826d6e059a56ab45b096b68, exit 0)",
@@ -63,8 +64,9 @@
     "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track primary_class_session_lifetime_20261111 (PASS: closeout checks passed, exit 0)",
     "git add -f measure/runs/primary_class_session_lifetime_20261111 (exit 0)",
     "git add measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md (exit 0)",
-    "git commit -m 'chore(measure): archive the lifetime track (track_id: primary_class_session_lifetime_20261111)' -- measure/tracks/primary_class_session_lifetime_20261111 measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md measure/lessons-learned.md measure/tech-debt.md measure/runs/primary_class_session_lifetime_20261111 (exit 0)",
-    "git show --stat HEAD (the commit names only the four pathspec paths, exit 0)"
+    "git commit -m 'chore(measure): archive the lifetime track (track_id: primary_class_session_lifetime_20261111)' -- measure/tracks/primary_class_session_lifetime_20261111 measure/archive/primary_class_session_lifetime_20261111 measure/tracks.md measure/lessons-learned.md measure/tech-debt.md measure/runs/primary_class_session_lifetime_20261111 (the commit ran under the subject of a parallel role, because that role committed the shared index first; exit 0)",
+    "git show --stat HEAD (the commit names only the pathspec paths, exit 0)",
+    "git commit -m 'chore(measure): record the lifetime closeout evidence (track_id: primary_class_session_lifetime_20261111)' -- measure/archive/primary_class_session_lifetime_20261111/automation-supervisor-closeout-manifest.json measure/runs/primary_class_session_lifetime_20261111 (exit 0)"
   ],
   "changed_files": [
     "measure/tracks/primary_class_session_lifetime_20261111/ (moved to measure/archive/primary_class_session_lifetime_20261111/)",
@@ -91,6 +93,8 @@
   "phase_base_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
   "role_base_sha": "3c80a09b7b29b82eb826d6e059a56ab45b096b68",
   "baseline_sha": "db8672b04fdf3f243bb00afed6b8a682811d2caa",
-  "audited_head_sha": "3c80a09b7b29b82eb826d6e059a56ab45b096b68",
+  "audited_head_sha": "4b878a6c8bdb5ae49a65c30285080d6efd03dec3",
+  "archive_commit_sha": "4b878a6c8bdb5ae49a65c30285080d6efd03dec3",
+  "archive_commit_note": "A parallel role committed the shared index before this role ran its own commit. Commit 4b878a6c8 carries the archive move, the registry update, the memory updates, and the run folder under the subject of the accounting track. The closeout evidence correction landed in a later commit of this track.",
   "model_route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash"
 }

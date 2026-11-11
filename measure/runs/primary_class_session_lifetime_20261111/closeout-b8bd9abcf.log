@@ -19,7 +19,7 @@ role: measure-closeout
 status: complete
 track: primary_class_session_lifetime_20261111
 phase: Phase 1: Choice of the class session lifetime [checkpoint: 1826b382e]
-commits: pending (the closeout commit follows)
+commits: 4b878a6c8 (the archive move, the registry update, the memory updates, and the run folder); a parallel role committed the shared index first, so that commit carries the archive under the subject of the accounting track. This evidence commit corrects the record.
 tests_run: bash tests/orchestrator_marker_vocabulary.sh --track primary_class_session_lifetime_20261111 (exit 0); bash tests/orchestrator_catalog.sh (exit 0); bash tests/orchestrator_review_execution_truthfulness.sh (exit 0); measure_interphase_checks.py closeout (exit 0)
 files_changed: measure/archive/primary_class_session_lifetime_20261111/ (the archive move, metadata.json, index.md, spec.md, automation-supervisor-closeout-manifest.json), measure/tracks.md, measure/runs/primary_class_session_lifetime_20261111/closeout-b8bd9abcf.json, measure/runs/primary_class_session_lifetime_20261111/closeout-b8bd9abcf.log
 plan_updates: none; the plan moved only
