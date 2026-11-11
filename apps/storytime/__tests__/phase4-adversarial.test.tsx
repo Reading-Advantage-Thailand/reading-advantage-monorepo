@@ -2,6 +2,7 @@
 import "@testing-library/jest-dom/vitest";
 
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { StrictMode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import weekJson from "../content/l2/w01.json";
 import w08Json from "../content/l2/w08.json";
@@ -866,5 +867,231 @@ describe("Phase 4 adversarial: rapid taps and step changes", () => {
       `key_warnings=${keyWarnings.length}: the clip key is the file name, so a word with a repeated sound repeats a key (F451). ${keyWarnings[0] ?? ""}`,
     ).toBe(0);
     view.unmount();
+  });
+});
+
+/** The Thai script range. */
+const THAI = /[\u0E00-\u0E7F]/;
+
+/**
+ * Blanks every Thai text of the lesson scripts of a week, in place.
+ * @param value The part of the week to walk.
+ */
+function blankThai(value: unknown): void {
+  if (Array.isArray(value)) {
+    value.forEach(blankThai);
+    return;
+  }
+  if (!value || typeof value !== "object") return;
+  const record = value as Record<string, unknown>;
+  if (typeof record.en === "string" && typeof record.th === "string") record.th = "";
+  Object.values(record).forEach(blankThai);
+}
+
+describe("Phase 4 adversarial round 2: the delta of f76d58624", () => {
+  it("marks every text with the language that shows, with Thai on, for full and for blank Thai texts", () => {
+    const marks = (): { th: number; en: number; wrongTh: string[]; wrongEn: string[] } => {
+      const out = { th: 0, en: 0, wrongTh: [] as string[], wrongEn: [] as string[] };
+      for (const node of document.querySelectorAll<HTMLElement>("[lang]")) {
+        const lang = node.getAttribute("lang");
+        const text = (node.textContent ?? "").trim();
+        if (text === "") continue;
+        if (lang === "th") {
+          out.th += 1;
+          if (!THAI.test(text)) out.wrongTh.push(text.slice(0, 40));
+        } else if (lang === "en") {
+          out.en += 1;
+          if (THAI.test(text)) out.wrongEn.push(text.slice(0, 40));
+        }
+      }
+      return out;
+    };
+    const walkThai = (source: StorytimeWeek) => {
+      const total = { th: 0, en: 0, wrongTh: [] as string[], wrongEn: [] as string[] };
+      for (const day of DAYS) {
+        const view = renderDay(source, day);
+        fireEvent.click(screen.getByRole("button", { name: THAI_TOGGLE }));
+        for (;;) {
+          const facts = marks();
+          total.th += facts.th;
+          total.en += facts.en;
+          total.wrongTh.push(...facts.wrongTh);
+          total.wrongEn.push(...facts.wrongEn);
+          const next = screen.queryByRole("button", { name: NEXT_STEP });
+          if (!next) break;
+          fireEvent.click(next);
+        }
+        view.unmount();
+      }
+      return total;
+    };
+
+    const full = walkThai(approvedClone());
+    expect(full.th, `lang_th_nodes=${full.th}: the positive control must find Thai text`).toBeGreaterThan(40);
+    expect(full.wrongTh, `mislabeled_th_full=${full.wrongTh.length}`).toEqual([]);
+    expect(full.wrongEn, `mislabeled_en_full=${full.wrongEn.length}`).toEqual([]);
+
+    const blank = approvedClone();
+    for (const script of blank.scripts) blankThai(script);
+    const partial = scriptOf(blank, 1).steps[0]!;
+    partial.th = { ...partial.en, teacherActions: [], teacherLanguage: partial.en.teacherLanguage.map(() => "ก"), studentActions: [], watchFor: [] };
+    delete scriptOf(blank, 2).steps[0]!.th;
+    expectWeek(blank, "the clone with blank Thai texts and partial Thai notes");
+    const result = walkThai(blank);
+    expect(result.en, `lang_en_nodes=${result.en}: the fallback texts must show`).toBeGreaterThan(40);
+    expect(
+      result.wrongTh,
+      `mislabeled_th_blank=${result.wrongTh.length}: a text with no Thai letter carries lang th. ${result.wrongTh.slice(0, 3).join(" | ")}`,
+    ).toEqual([]);
+    expect(result.wrongEn, `mislabeled_en_blank=${result.wrongEn.length}`).toEqual([]);
+  });
+
+  it("keeps every React key unique on a hostile clone: repeated sounds, repeated words, repeated cards, repeated shots", () => {
+    const copy = approvedClone();
+    const drill = stepOf(copy, 1, "A4").blendDrill!;
+    const n = "phonemes/daniel/04-n.mp3";
+    drill.words[0] = { ...drill.words[0]!, word: "nan", sounds: ["/n/", "/a/", "/n/"], audio: [n, "phonemes/daniel/26-a-short.mp3", n] };
+    drill.words[1] = structuredClone(drill.words[0]!);
+    const recall = scriptOf(copy, 2).recall!;
+    recall.items[1] = structuredClone(recall.items[0]!);
+    scriptOf(copy, 1).share!.shots = [
+      { step: "A3", media: "video" },
+      { step: "A3", media: "video" },
+    ];
+    expectWeek(copy, "the hostile clone");
+    const facts = walkWeek(copy);
+    expect(facts.length, `screens=${facts.length}`).toBeGreaterThan(20);
+    const clipsA4 = facts.find((entry) => entry.stepId === "A4" && entry.day === 1);
+    expect(clipsA4?.panels, "the drill panel must show on A4 (positive control)").toBeGreaterThan(0);
+    expect(facts.reduce((sum, entry) => sum + entry.shares, 0), "share_shown_total").toBe(6);
+    const warnings = consoleErrors.filter((line) => /same key|unique "key"|unique key/i.test(line));
+    expect(warnings.length, `key_warnings=${warnings.length}: ${warnings[0] ?? ""}`).toBe(0);
+  });
+
+  it("starts the name of every clip control with its visible text and keeps recall names apart", () => {
+    const copy = approvedClone();
+    renderDay(copy, 1);
+    goToStep("A4");
+    const drill = [...document.querySelectorAll<HTMLElement>("[data-clip-path]")];
+    expect(drill.length, `drill_clips=${drill.length}`).toBe(12);
+    cleanup();
+    renderDay(copy, 2);
+    const recall = [...document.querySelectorAll<HTMLElement>("[data-clip-path]")];
+    expect(recall.length, `recall_clips=${recall.length}: day 2 holds one recorded card`).toBeGreaterThan(0);
+    for (const control of [...drill, ...recall]) {
+      const name = control.getAttribute("aria-label") ?? "";
+      const visible = (control.textContent ?? "").trim();
+      expect(name.startsWith(`${visible}:`), `name "${name}" must start with "${visible}:"`).toBe(true);
+    }
+    const names = recall.map((control) => control.getAttribute("aria-label"));
+    expect(new Set(names).size, `recall_names=${names.length}`).toBe(names.length);
+  });
+
+  it("pauses the clip on unmount under StrictMode, and survives a play that rejects after the unmount", async () => {
+    const copy = approvedClone();
+    const view = render(
+      <StrictMode>
+        <TeacherLessonFlow week={copy} day={1} locale="en" mediaUrls={signedMap(copy)} />
+      </StrictMode>,
+    );
+    goToStep("A4");
+    fireEvent.click(document.querySelector<HTMLElement>("[data-clip-path]")!);
+    expect(playing.size, "the positive control: one clip plays under StrictMode").toBe(1);
+    view.unmount();
+    expect(playing.size, "the clip must stop on unmount").toBe(0);
+
+    vi.mocked(HTMLMediaElement.prototype.play).mockImplementation(function (this: HTMLMediaElement) {
+      return Promise.reject(new DOMException("interrupted", "AbortError"));
+    });
+    const second = renderDay(copy, 1);
+    goToStep("A4");
+    fireEvent.click(document.querySelector<HTMLElement>("[data-clip-path]")!);
+    second.unmount();
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(() => cleanup()).not.toThrow();
+    const none = renderDay(copy, 1);
+    expect(() => none.unmount(), "an unmount with no clip must not throw").not.toThrow();
+  });
+
+  it("shows the consent line once per step, in the last moment, in the active language", () => {
+    const copy = approvedClone();
+    scriptOf(copy, 1).share!.shots = [
+      { step: "A3", media: "video" },
+      { step: "A3", media: "photo" },
+    ];
+    expectWeek(copy, "the clone with two shots on A3");
+    renderDay(copy, 1);
+    goToStep("A3");
+    const moments = [...document.querySelectorAll<HTMLElement>("[data-share-moment='A3']")];
+    expect(moments.length, `share_shown_a3=${moments.length}`).toBe(2);
+    const hasConsent = (node: HTMLElement) => /The app sends nothing\./.test(node.textContent ?? "");
+    expect(moments.map(hasConsent), "only the last moment holds the consent line").toEqual([false, true]);
+    expect(moments[0]!.querySelector("[data-share-label]")!.textContent).not.toBe(
+      moments[1]!.querySelector("[data-share-label]")!.textContent,
+    );
+    fireEvent.click(screen.getByRole("button", { name: THAI_TOGGLE }));
+    const thaiMoments = [...document.querySelectorAll<HTMLElement>("[data-share-moment='A3']")];
+    const thaiConsent = thaiMoments.filter((node) => /ทางแอปไม่ส่งอะไรออกไป/.test(node.textContent ?? ""));
+    expect(thaiConsent.length, "consent_lines_thai=1").toBe(1);
+    expect(thaiConsent[0], "the Thai consent line sits in the last moment").toBe(thaiMoments[1]);
+    expect(thaiConsent[0]!.querySelector("p:last-child")!.getAttribute("lang")).toBe("th");
+
+    cleanup();
+    renderDay(approvedClone(), 4);
+    for (const id of ["D4", "D5"]) {
+      goToStep(id);
+      const only = document.querySelectorAll(`[data-share-moment='${id}']`);
+      expect(only.length, `share_shown_${id}=1`).toBe(1);
+      expect(hasConsent(only[0] as HTMLElement), `a single shot on ${id} keeps its consent line`).toBe(true);
+    }
+  });
+
+  it("moves the focus to the end region on the last screen, and nowhere else", () => {
+    renderDay(week, 4);
+    expect(document.activeElement, "no focus steal on a first screen of a long day").toBe(document.body);
+    const toggle = screen.getByRole("button", { name: THAI_TOGGLE });
+    toggle.focus();
+    fireEvent.click(toggle);
+    expect(document.activeElement, "a toggle click keeps the focus on the toggle").toBe(toggle);
+    goToStep("D6");
+    const end = document.querySelector<HTMLElement>("[aria-label='The end of the lesson']");
+    expect(end, "the last screen must hold the end region").not.toBeNull();
+    expect(document.activeElement, "the focus moves to the end region on the last screen").toBe(end);
+    expect(end!.getAttribute("tabindex"), "the region is a script focus target only").toBe("-1");
+    toggle.focus();
+    fireEvent.click(toggle);
+    expect(document.activeElement, "a toggle click on the last screen must not pull the focus back").toBe(toggle);
+    fireEvent.click(screen.getByRole("button", { name: OPEN_MEDIA }));
+    fireEvent.click(screen.getByRole("button", { name: CLOSE }));
+    expect(document.activeElement, "Close returns the focus to the opener, not the end region").toBe(
+      screen.getByRole("button", { name: OPEN_MEDIA }),
+    );
+  });
+
+  it("F462: exposes the name of the end region through a role", () => {
+    renderDay(week, 4);
+    goToStep("D6");
+    const named =
+      screen.queryByRole("region", { name: "The end of the lesson" }) ??
+      screen.queryByRole("group", { name: "The end of the lesson" });
+    expect(
+      named,
+      "the end region carries aria-label on a div with no role; ARIA 1.2 prohibits aria-label on a generic element, so a screen reader may not announce it (F462)",
+    ).not.toBeNull();
+  });
+
+  it("F463: moves no focus on load for a day that holds one step", () => {
+    const copy = structuredClone(week);
+    const script = scriptOf(copy, 1);
+    script.steps = [script.steps[0]!];
+    expectWeek(copy, "the clone with a one-step day");
+    renderDay(copy, 1);
+    expect(screen.queryByRole("button", { name: NEXT_STEP }), "a one-step day has no forward control").toBeNull();
+    expect(
+      document.activeElement,
+      "the focus must stay on the body at load; the end-region effect runs on mount when the first screen is the last (F463)",
+    ).toBe(document.body);
   });
 });

@@ -506,6 +506,43 @@ describe("Phase 4 adversarial: build and source facts of the flag", () => {
   });
 });
 
+describe("Phase 4 adversarial round 2: the runbook section of the teacher flag", () => {
+  /**
+   * Reads the teacher flag section of the deploy runbook.
+   * @returns The text from the heading of the section to the next level 2 heading.
+   */
+  function flagSection(): string {
+    const text = readFileSync(resolve(REPO, "docs/runbooks/storytime-deploy.md"), "utf8");
+    const start = text.indexOf("## The teacher routes flag");
+    expect(start, "the runbook must hold a section for the teacher routes flag").toBeGreaterThanOrEqual(0);
+    const rest = text.slice(start + 3);
+    const end = rest.indexOf("\n## ");
+    return end === -1 ? rest : rest.slice(0, end);
+  }
+
+  it("names the flag, the on value 1, and the default off", () => {
+    const section = flagSection();
+    expect(section.includes(FLAG_ENV), "the section names the flag").toBe(true);
+    expect(section, "the section names the on value 1").toMatch(/on value is `1`/);
+    expect(section, "the section says the default is off").toMatch(/off by default/i);
+    expect(section, "the section says that no Dockerfile or build file sets the flag").toMatch(/Dockerfile/);
+  });
+
+  it("F461: gives a command that keeps the other variables of the service", () => {
+    const section = flagSection();
+    const command = /gcloud run services update[^`]*/.exec(section)?.[0] ?? "";
+    expect(command, "the section must hold one gcloud update command").not.toBe("");
+    expect(
+      command.includes("--set-env-vars"),
+      `the command "${command}" uses --set-env-vars, which removes every other variable of the service first, such as STORYTIME_MEDIA_BASE (F461). Use --update-env-vars.`,
+    ).toBe(false);
+    expect(command, "the command must use --update-env-vars").toMatch(/--update-env-vars/);
+    expect(command, "the command must name the service, the project, and the region like the other commands of the runbook").toMatch(
+      /storytime-app[\s\S]*--project primary-advantage[\s\S]*--region asia-southeast1/,
+    );
+  });
+});
+
 describe("Phase 4 adversarial: the signed URL map", () => {
   /** A media part with one primary file. */
   function media(file: string): StepMedia {
