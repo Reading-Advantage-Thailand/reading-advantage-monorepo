@@ -3363,6 +3363,41 @@ for every other track.
     cannot close the task. The implementation commits of the unit part are `3243b7020` and the Red
     test commit `fa8a127c7`. No file under `measure/runs/` is committed (Git ignores it). Evidence
     class: automated stage 1 measurement plus the calibration log.
+  - Red round r4, 2026-11-12: the picture rubric misses the named object. The calibration round r3
+    ran the two coder calls with the prompts of the orchestrator on
+    `claude-code/claude-sonnet-5-5#high`, and the ledger lines came first. The "One sun" gesture
+    thumbnail (`l2/media/w02/song-lines/point-up.jpg` in the w02 package), a known bad file of
+    AC-11.2, came back as a pass:
+    ```
+    {"verdict":"pass","faults":[],"reason":"One character, one face, one hand with one finger raised for 'one'; no text appears."}
+    ```
+    The expected verdict is a fail. The passed book 1 page 1 (`l2/media/w01/books/1-hello/p01.jpg`
+    in the w01 package) came back as a pass, and a pass is the expected verdict there. The cause
+    sits in `apps/storytime/scripts/checks/rubrics.ts` lines 115 to 118: the picture rubric names
+    the count, the hands, the faces, and the wrong text, but not the named object. Draft rule 6
+    (`measure/tracks/storytime_app_rebuild_20261025/docs/generation-rules-draft2.md` line 98) says
+    "Picture: the named object in the stated count, no deformed hands or faces, no wrong text", and
+    rule 9.1 (line 136) says "Every song line and every book page that names an object shows that
+    object. A gesture thumbnail is never a "line picture"." Rule 6.d says that a rubric that passes
+    a known bad file is fixed and calibrated again.
+  - The Red test of this round. Role base `749cfc7891b779494de4f9e78a8fb5ca5240c4b7`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
+    `minimax-cn-coding-plan/MiniMax-M3.1-Flash`. The test commit is `34725ada2`. The file
+    `apps/storytime/__tests__/phase5-rubrics.test.ts` names the named object in the picture row of
+    `KNOWN_FAULTS`, and one new case holds that the picture rubric names the gesture rule. No
+    other row and no other kind changed.
+  - Automated Red command: the P5 `RED_TEST_COMMAND` of the strategy (test-strategy.md line 946),
+    under heavy-run p1, in the foreground. Result: exit 1; 7 files, 1 failed and 6 passed;
+    53 tests, 2 failed and 51 passed; 0 load errors. The 2 failures are the 2 cases of the picture
+    rubric in `phase5-rubrics.test.ts`: the known faults of rule 6.7b, where the message names the
+    missing named object, and the new gesture rule, where the message names the missing gesture
+    rule. The 51 passes are the 6 other files, and they stay green. No test file holds a load
+    error, and no test fails for another cause.
+  - The Green role of this phase runs on `deepseek/deepseek-flash#high`. It adds the named object
+    and the gesture rule to the picture rubric, and it calibrates the picture kind again. The
+    calibration log must show the fail of the gesture thumbnail and the pass of the passed file.
+    No model was called in this round, and no money was spent. Task 5.4 stays `[~]`. Evidence
+    class: automated.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
