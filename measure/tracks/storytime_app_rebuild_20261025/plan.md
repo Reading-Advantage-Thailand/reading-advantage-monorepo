@@ -3317,7 +3317,45 @@ for every other track.
   - Live calibration: waits for the PM answer on the BA1 and C1W2 file paths and for the ledger line; no paid call ran.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
+  - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
+    base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
+    `minimax-cn-coding-plan/MiniMax-M3.1-Flash`. Test commit `016d899a2`.
+  - The two test files are `apps/storytime/__tests__/phase5-review-copy.test.ts` and
+    `apps/storytime/__tests__/phase5-browser-gate.sh`. The unit file holds the contract of the
+    review server module. The gate holds the browser rows and the self-test of its verdicts.
+  - Automated Red command: the P5 `RED_TEST_COMMAND` of the strategy (test-strategy.md line 946),
+    under heavy-run p1, in the foreground. Result: exit 1; 7 files, 1 failed and 6 passed;
+    52 tests, 5 failed and 47 passed; 0 load errors. The 47 passes are the 6 earlier files of
+    tasks 5.1, 5.3, and 5.4, and they stay green. The 5 failures are the 5 cases of the new
+    file, and each one names the missing review server module. No test file holds a load error,
+    and no test fails for another cause.
+  - Automated type check: `../../node_modules/.bin/tsc --noEmit` in `apps/storytime` under
+    heavy-run p1. Result: exit 0.
+  - Automated syntax check: `bash -n apps/storytime/__tests__/phase5-browser-gate.sh`. Result:
+    exit 0. The self-test `bash apps/storytime/__tests__/phase5-browser-gate.sh --self-test`
+    exits 0 with `selftest_good_accepted=6` of 6 good values and `selftest_mutants_rejected=17`
+    of 17 broken copies. The full browser gate did not run in this round, because a Red round
+    holds no Next build.
+  - The contract default of this round. The Green role writes one module at
+    `apps/storytime/scripts/review/review-server.ts`, and the flat path
+    `apps/storytime/scripts/review-server.ts` is the second accepted path. The module exports
+    `REVIEW_ITEMS` (the five items of FR-12 with their routes of the milestone week),
+    `REVIEW_ANSWERS_FILE_NAME` (`review-answers-p5.json`), `renderReviewPage()`,
+    `appendReviewAnswer(answersPath, answer)`, and `startReviewServer(options)`. The page
+    answers at `/review`, the answer endpoint is `POST /review/answer`, and the command-line
+    flags are `--port`, `--app-url`, and `--answers`. The page holds no app code path and needs
+    no database. The gate starts `next start` itself with `STORYTIME_SHOW_DRAFT_MEDIA=1`, and
+    the module proxies the app to it.
+  - The five failing cases: the module path, the five items with the four controls, the answers
+    file, no app code path, and no database. The Green role turns them green.
+  - No product source was written. No file sits under `apps/storytime/scripts/review/`. No model
+    was called and no money was spent. Evidence class: automated.
 - [~] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
+  - Red evidence (tasks 5.6 and 5.7): the same round as task 5.6. The unit file
+    `apps/storytime/__tests__/phase5-review-copy.test.ts` holds the page contract, and the gate
+    `apps/storytime/__tests__/phase5-browser-gate.sh` holds the browser rows of the page. The
+    gate prints `items_checked=5` and `port_closed=1` on a pass, and it prints the labeled
+    values `items_listed`, `controls_per_item`, `answered`, `answers_written`, and `draft_week`.
 
 ## Phase 6: Daniel's milestone judgment
 
