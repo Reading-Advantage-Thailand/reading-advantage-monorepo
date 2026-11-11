@@ -1,0 +1,100 @@
+# Green · P4 rem4 · storytime_app_rebuild
+
+- Track: storytime_app_rebuild_20261025, Phase 4: Teacher app, remediation round 4 (runbook
+  text fix).
+- Started: 2026-11-11. Model: volcengine-agent-plan/glm-5.3-flash#high (GLM).
+- HEAD at role start: d8d3ac73a09c026db53b56cfb140863dd98eeae7 (the adversarial extension
+  commit that holds the F475 red case).
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae. role_base_sha: d8d3ac73a09c026db53b56cfb140863dd98eeae7.
+- MemAvailable at start: 1611 MB (floor 1500 MB).
+- Final Green implementation HEAD: 534f9ec4102ab6efb3948db79d825c21aa838747.
+
+## Dispositions
+
+- F475 FIX. F491 FIX. One defect, two ids; one runbook rewrite and one test extension close
+  both.
+
+## Implementation
+
+- Commit: 534f9ec4102ab6efb3948db79d825c21aa838747
+  `docs(storytime): check the image in the flag runbook (track_id: storytime_app_rebuild_20261025)`.
+  Files: `docs/runbooks/storytime-deploy.md` and `__tests__/phase4-runbook.test.ts` (a
+  Green-owned file). No adversarial test file changed. No production source changed, so the
+  browser gate and build-graph were not needed; tsc still ran as a guard for the edited test
+  file and exited 0.
+- Runbook rewrite (the flag section of `storytime-deploy.md`):
+  - A new bullet states the defect: a services update builds the new revision from the
+    template of the latest revision, not from the revision that serves the traffic, and the
+    build workflow deploys every push with `--no-traffic`, so the latest revision can be a
+    build that Daniel has not approved.
+  - A new code block reads the traffic split and the image of the live revision before the
+    flag commands:
+    `gcloud run services describe storytime-app --project primary-advantage --region asia-southeast1 --format='value(status.traffic)'`
+    and
+    `gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(status.imageDigest)'`.
+  - Both flag commands now carry `--image=<the live revision image digest>`, `--no-traffic`,
+    and a tag (`--tag=teacher-flag-on`, `--tag=teacher-flag-off`), with the service, the
+    project, and the region, and keep `--update-env-vars` and `--remove-env-vars`.
+  - The words "traffic-neutral" are gone. A new bullet says the commands do not keep the
+    traffic place by themselves and hold no traffic only because of `--no-traffic`.
+  - A new bullet sends the operator to the tag URL of the new revision before the traffic
+    step (`/th/teacher/2/1` answers 200 with a teacher session and the flag on, 404 with the
+    flag off), names the revision list command, and keeps Daniel's go for the traffic step.
+- Test extension (`phase4-runbook.test.ts`, 4 to 7 cases): both flag command lines must hold
+  `--image=`, `--no-traffic`, and `--tag=`; the section must hold the two live-revision read
+  commands; the section must hold no "traffic-neutral", must tag the revision, must name the
+  tag URL check, and must keep Daniel's go. The positive control for the `--set-env-vars`
+  check stays.
+- Two fix-ups during the round: the prose no longer holds the literal phrase
+  "gcloud run services update" outside a code block (the committed F461 case extracts the
+  first match up to a backtick and read the prose), and the negated "traffic-neutral"
+  sentence is reworded, so the phrase holds nowhere in the document.
+
+## Gates
+
+Each gate ran alone, in the foreground, with the shell timeout 0.
+
+1. The ten Phase 4 files through `heavy-run.sh` p1, `--maxWorkers=1`
+   (MemAvailable 2602264 kB before the run): exit 0, 10 files, 136 of 136 tests. The brief
+   expected 133; the count is exact at 136: the two adversarial files hold 60 cases at
+   `d8d3ac73a` (51 at `079ff32e9`, so 9 new cases), the six earlier Phase 4 files hold 67,
+   the runbook file holds 7 (4 plus 3 new), and the focus file holds 2. No adversarial case
+   failed. The F475 red case passes with the rewritten section.
+2. ESLint on `phase4-runbook.test.ts`: exit 0; 0 errors; 0 warnings. `tsc --noEmit` in
+   apps/storytime (heavy-run p1, a guard for the edited test file): exit 0.
+
+No exit 75 and no retry was needed. No server started; no scratch file was created.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-jr-green
+track: storytime_app_rebuild_20261025
+phase: Phase 4: Teacher app (remediation round 4)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: d8d3ac73a09c026db53b56cfb140863dd98eeae7
+implementation_commit: 534f9ec4102ab6efb3948db79d825c21aa838747
+final_head: 534f9ec41 (before the plan-evidence commit)
+
+summary: F475 and F491 are fixed with a runbook rewrite and a test extension in one commit.
+The flag section now reads the traffic split and the live revision image before the
+commands, pins --image of the live revision on both flag commands with --no-traffic and a
+tag, sends the operator to the tag URL before the traffic step, drops the traffic-neutral
+claim, and keeps Daniel's go. The F475 red case passes. Gates exit 0: the ten Phase 4 files
+136 of 136 (heavy-run p1; 136 is exact, see the log), ESLint 0/0 on the changed test file,
+tsc 0 as a guard.
+
+tasks_flipped: none; task 4.5 stays [x] and holds the round 4 evidence block with the
+implementation SHA 534f9ec41.
+tasks_blocked: none.
+red_command: CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+__tests__/phase4-adversarial-routes.test.ts — the F475 case failed at the role base (the
+section held no latest-revision, live-revision, or --image text) and passes at 534f9ec41.
+new_files: none. Reviewers scope their audit to docs/runbooks/storytime-deploy.md and
+__tests__/phase4-runbook.test.ts at 534f9ec41.
+handoff: the count 136 differs from the expected 133 because the adversarial extension
+commit d8d3ac73a added 9 cases, not 6; all 136 pass, so no case name is deferred. The
+committed F461 and F452 runbook cases still pass with the rewritten section. No finding
+stays open for Green in this round.
+
+dispositions: F475=FIX; F491=FIX
+END_MEASURE_AGENT_RESULT

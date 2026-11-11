@@ -2753,6 +2753,33 @@ for every other track.
        counts.
     5. `build-graph update` (heavy-run p1) on `lesson-flow.tsx`: exit 0 (86 nodes, 103 edges).
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem3.log`.
+  - Phase 4 remediation round 4 evidence (runbook text fix). Role base
+    `d8d3ac73a09c026db53b56cfb140863dd98eeae7` (the adversarial extension commit that holds
+    the F475 red case); phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The reviews and the adversarial round
+    ran on Anthropic; the families differ. No coder was delegated.
+  - Implementation commit: `534f9ec41` (`docs(storytime): check the image in the flag
+    runbook`). Files: `docs/runbooks/storytime-deploy.md` and the Green-owned
+    `phase4-runbook.test.ts` (4 to 7 cases). No adversarial test file and no production
+    source changed, so the browser gate and build-graph were not needed.
+  - F475 and F491: the flag section now states that a services update builds the new
+    revision from the template of the latest revision, which a no-traffic build can own; a
+    code block reads the traffic split and the live revision image before the commands; both
+    flag commands carry `--image=<the live revision image digest>`, `--no-traffic`, and a
+    tag (`teacher-flag-on`, `teacher-flag-off`) with the service, project, and region, and
+    keep `--update-env-vars` and `--remove-env-vars`; a bullet sends the operator to the tag
+    URL of the new revision before the traffic step and names the revision list command; the
+    words "traffic-neutral" hold nowhere; Daniel's go stays before any traffic step. The
+    committed F452 and F461 runbook cases still pass.
+  - Gates (each gate ran alone, in the foreground, with the shell timeout 0):
+    1. The ten Phase 4 files through `heavy-run.sh` p1, `--maxWorkers=1`
+       (MemAvailable 2602264 kB): exit 0, 10 files, 136 of 136 tests. The brief expected
+       133; 136 is exact: the adversarial files hold 60 cases at `d8d3ac73a` (9 new over the
+       51 at `079ff32e9`), the six earlier Phase 4 files hold 67, the runbook file holds 7,
+       and the focus file holds 2. The F475 red case passes.
+    2. ESLint on `phase4-runbook.test.ts`: exit 0; 0 errors; 0 warnings. `tsc --noEmit` in
+       apps/storytime (heavy-run p1, a guard for the edited test file): exit 0.
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem4.log`.
 
 ## Phase 5: Milestone week integration
 
