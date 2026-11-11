@@ -5,6 +5,7 @@
 > **Written:** 2026-11-10 at role base `3058dc8d4e98b587e4871b2caa2eaa95ed541898`. Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash.
 > **Amended:** 2026-11-11 at role base `06fcbc4e91bc07a5023dd0234ad285ba6d4d2835`. Model: claude-sonnet-5-5. Cause: the PM decision D-7 added task 1.4a (spec FR-7, AC-6 to AC-8). Section P1.11 and the section 7 line for 1.4a are new. Section 1.1 now names two files outside the wrapper. The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
 > **Amended:** 2026-11-11 at role base `fba3a45f10613f760358abe3178a9cc9e49633c8`. Model: claude-sonnet-5-5 (a substitution for the Opus role-table entry). Cause: the PM decision D-8 added task 1.4b (spec FR-8, AC-9 to AC-17). Section P1.12 and the section 7 line for 1.4b are new. The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
+> **Amended:** 2026-11-11 at role base `756eb027b33d0786846f8a3c5e62b27b965c6960`. Model: claude-sonnet-5-5. Cause: the orchestrator decision D-10 added task 1.4c (spec FR-9, AC-18 to AC-21). Section P1.13 and the section 7 line for 1.4c are new. The phase base stays `09168dc422ed48604b8f2f0cb9a23ad4d110543b`.
 > **Spec review:** round 2 passed. The result sits at `measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.json`. Its four Nit findings are fixed in `3058dc8d4`.
 > **No SHA in this file.** The strategy names no `phase_base_sha`. Section 1.5 names the capture point.
 > **No user interface and no route.** The track adds one developer flag, one local refresh command, and one line in a CI workflow file.
@@ -20,7 +21,7 @@
   ```
 
 - One heavy job runs at a time. The machine holds 7.3 GB of RAM.
-- Three named test files run outside the wrapper: `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`, `packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts` (task 1.4a), and `packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts` (task 1.4b, with `--maxWorkers=1`).
+- Four named test files run outside the wrapper (task 1.4c adds `packages/architecture-enforcement/src/__tests__/inventory.test.ts`, with `--maxWorkers=1`). The first three are: `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`, `packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts` (task 1.4a), and `packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts` (task 1.4b, with `--maxWorkers=1`).
 - From 2026-11-11 every wrapper call also sets `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800`. The PM cap until 2026-11-20 is 1800 s. The plan rules hold the exact form. The wrapper lines of sections P1.1 to P1.4 above predate this cap and read as if the two variables were present.
 - Every other test file of the package runs inside the wrapper through the package suite.
 - Every Vitest command uses `CI=true` and runs in the foreground.
@@ -655,11 +656,87 @@ Points for the orchestrator and the PM:
 - Cleanup: the role removes the worktree with `git worktree remove <path>` and then `git worktree prune`, or deletes the clone folder, in the same turn as the manifest commit (AGENTS.md cleanup rule). It reports `git worktree list` at the end.
 - If the PM rejects both, the default of spec OQ-2 stays: print HEAD before each run, tell the PM at the first `head_changed` discard, and stop at the second.
 
+#### P1.13 Task 1.4c: static public assets are not analyzer inputs (added 2026-11-11)
+
+Source: spec FR-9, D-10, AC-18 to AC-21, OQ-7 to OQ-9, and plan task 1.4c (plan commit `756eb027b`). Round 7 of task 1.4 stopped inside batch 16, which holds 69 minified bundles under `apps/www-reading-advantage/public/experience/assets`.
+
+**Risk: medium.** The change is one rule in `isIgnoredPath` in `inventory.ts`. It selects analyzer inputs. It is not a finding exemption (FR-9.4), and it adds no baseline entry. A rule that is too wide drops real source from the architecture checks without a visible error. A rule that is too narrow keeps the slow bundles. The task adds no hash and no manifest key. `inventory.ts` is in `V2_ANALYZER_IMPLEMENTATION_PATHS`, so the Green commit makes the pins stale until task 1.4.
+
+**The Red command** (a named file outside heavy-run):
+
+```bash
+CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/inventory.test.ts
+```
+
+Red adds one `describe` block, "static public assets (AC-18 to AC-21)", to this file and changes no other path. Red adds no clock read, no spy on the analyzer, and no hash. Then the package type check through the wrapper, with exit 0: `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement check-types'`. The aggregate suite is not a gate while the Red file is open (section 1.4).
+
+**The expected Red state.** Exit 1. The counts are `tests_total=19`, `tests_failed=5`, and `tests_passed=14`: 8 existing cases plus 11 new cases. The 5 failing cases are the AC-18 group (`ac18_public_js_is_not_selected` 1, `ac18_public_variants_are_not_selected` 3 rows, `ac18_inventory_scans_only_the_control` 1). Each fails because the base code selects or scans the public file. The 6 guard cases pass at HEAD: `ac19_src_file_is_still_selected` 1, `ac20_app_level_match_only` 4 rows, and `ac21_manifest_key_set_is_unchanged` 1. Red names each guard with its reason: the base code already meets it. A failure for a syntax error or an import error is not a valid Red. Red records the real counts.
+
+**The cases and their falsification conditions**
+
+| AC | Cases | What the cases prove | Falsification condition | At HEAD |
+|---|---|---|---|---|
+| AC-18 | `ac18_public_js_is_not_selected`, `ac18_public_variants_are_not_selected` (3 rows: `public/a/b/y.mjs`, `public/z.jsx`, `public/serwist/sw.js`), `ac18_inventory_scans_only_the_control` | `selectArchitectureSourceFiles` on a list that holds a public file and the control `apps/example/src/x.ts` does not return the public path. `inventoryRepository` on the same files, where the public file holds `import OpenAI from "openai";`, returns `filesScanned=1`, no fact with a `public/` source path, and no parse error with a `public/` source path. | The result holds a public path. `filesScanned` is not 1. A fact or a parse error names a `public/` path. A row list is empty (the case asserts `variant_rows=3` before the loop, A4). | fail |
+| AC-19 | `ac19_src_file_is_still_selected` | The control `apps/example/src/x.ts` stands in the same list as the public file and stays selected. A rule that ignores a whole app fails here. | The control is missing from the result. | **pass (guard)** |
+| AC-20 | `ac20_app_level_match_only` (4 rows) | The result still holds `apps/example/src/public/x.ts` (nested directory), `apps/example/src/public.ts` and `apps/example/public.ts` (names that start with `public`), and `packages/example/public/x.ts` (another root). A rule that ignores any `public` segment, or a prefix match on the text, fails. | One of the four paths is missing from the result. The row list has fewer than 4 rows (`guard_rows=4`). | **pass (guard)** |
+| AC-21 | `ac21_manifest_key_set_is_unchanged` | The key list of `src/config/analyzer-reconciliation.v2.json`, read with `new URL("../config/analyzer-reconciliation.v2.json", import.meta.url)`, equals the test's own copy of the 15 keys of `V2_MANIFEST_KEYS`, in order. Task 1.4c changes no manifest field. The own copy follows `reconciliation-manifest-v2.red.test.ts:24`, as the spec says. | A key is new, missing, or in another order. The test reads a key list from the production module and compares it with itself (a test that cannot fail). | **pass (guard)** |
+
+The own key list in AC-21 is a spec choice and differs from the A12 rule of the cost and resume files. The guard exists to stop a task that edits the manifest. A12 asks that a check never drifts from the module. The two aims meet if the list has exactly the 15 keys of `V2_MANIFEST_KEYS` at this HEAD. Review A checks the list once against `v2-manifest-validation.ts:109-125`.
+
+**Fixtures and mocks.** The cases use the `writeFixture` helper and the `trackedFiles` option of the existing cases (`inventory.test.ts:30-181`). No real repository file is read except the manifest file of AC-21. No network, no heavy job, no clock, and no mock. The AC-18 and AC-19 cases put the public file and the control in one list, so the case fails for the right reason at HEAD.
+
+**The Green gate.** One job at a time. The wrapper prefix is `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600`.
+
+1. The four named files, outside the wrapper: `CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/inventory.test.ts packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`. Exit 0 with `tests_failed=0` and `tests_skipped=0`. The count of the inventory file is `tests_total=19`.
+2. The package suite through the wrapper: `CI=true pnpm --filter @reading-advantage/architecture-enforcement test`. The 1.4b Green note quotes `suite_files=34` and `suite_tests=309`, and the Red file adds 11 cases, so the floors are `suite_files>=34` and `suite_tests>=320`. The one expected failure is the `baseline-validation.test.ts` case "rejects stale synchronous v2 implementation and input hashes" (`tests_failed=1`). The cause is the stale implementation tree hash, which stays until task 1.4. Any other failure stops the task. The note quotes the delta.
+3. `pnpm --filter @reading-advantage/architecture-enforcement check-types` through the wrapper. Exit 0.
+4. `pnpm --filter @reading-advantage/architecture-enforcement lint` through the wrapper. Exit 0.
+5. `build-graph update ./graph.db packages/architecture-enforcement/src/inventory.ts` through the wrapper only (A10).
+6. The Green commit touches `packages/architecture-enforcement/src/inventory.ts` only. The Green role runs no `pnpm architecture:pin:refresh`.
+
+**The allowed paths for 1.4c.** Red: `packages/architecture-enforcement/src/__tests__/inventory.test.ts`. Green: `packages/architecture-enforcement/src/inventory.ts`. Out of scope: `analyzer.ts`, `v2-manifest-validation.ts`, the manifest file, `.gitignore`, the docs, the other test files, and the archive. The set `GENERATED_WORKSPACE_DIRECTORIES` does not change (D-10). The CI-mode command stays red at the 1.4c HEADs, as the plan rule states.
+
+**Reviews for 1.4c**
+
+| Review | Applies | Scope |
+|---|---|---|
+| Review A (correctness) | **yes (required)** | The new line sits after the `node_modules` line. It tests `segments[0] === "apps"`, `segments[2] === STATIC_ASSET_DIRECTORY`, and `segments.length > 3`. The constant sits next to the set and the set is unchanged. The JSDoc names the new case. The `isIgnoredPath` function is the only function that changes. Check once that the module count falls by the 70 tracked files, and that no tracked source imports a `.js` file from `public/` (FR-9 evidence). |
+| Review B (security) | small, at phase level | One point: the rule removes the architecture checks for files under `apps/<app>/public/`. The loss of `apps/primary-advantage/public/serwist/sw.js` is accepted (OQ-7). The rule adds no wildcard, no policy exemption, and no baseline entry (FR-9.4). Review B reads the rule width: any `apps/<app>/public/**` file is out, and nothing else. |
+| Review C (UX/API) | no | No flag, no message, no page, and no public API. |
+| Adversarial | small, at phase level | One surface: a path that tries to use the rule to hide source. The cases are `apps/example/src/public/x.ts`, `apps/example/public.ts`, and `packages/example/public/x.ts` (AC-20). The phase round may add `apps/public/x.ts` (an app named `public`) and a path with a doubled slash. |
+| Browser review (UX) | no | No page, no component, no route. |
+
+**Anti-pattern coverage for 1.4c**
+
+| Anti-pattern | Defense | Falsification condition |
+|---|---|---|
+| A3 | Every count in a message and in a plan note is `label=<n>`: `tests_total`, `tests_failed`, `tests_passed`, `variant_rows`, `guard_rows`, `files_scanned`, `suite_files`, `suite_tests`. | A message or a note holds a bare number. |
+| A4 | The control `apps/example/src/x.ts` stands in each list. `variant_rows=3` and `guard_rows=4` are asserted before the `it.each` loops. The 5 AC-18 cases fail at HEAD because the public path is selected, not because the fixture is empty. | A loop runs over an empty set. A case fails at HEAD for a missing fixture. A guard that cannot fail (AC-21 compares a list with itself). |
+| A5 | The Red and Green notes quote the exit code and the counts. The one known `baseline-validation` failure is named with its exit code and `tests_failed=1`. A `heavy-run` code is named with its code. | A note says "pass" with a non-zero exit, or hides the known failure. |
+| A7 | The AC-20 rows are exact paths, and no row is a pattern. A name that starts with `public` is a positive case that must stay selected. | A prefix match drops `public.ts`. The rule accepts any segment named `public`. |
+| A9 | The Red cases hold no `measure/tracks` and no `measure/runs` path. Detector: `rg -n 'measure/tracks\|measure/runs' packages/architecture-enforcement/src/__tests__/inventory.test.ts` exits 1. | The detector exits 0 or 2. |
+| A10 | After the Green commit, `build-graph update ./graph.db packages/architecture-enforcement/src/inventory.ts` runs once through the wrapper. | The graph stays stale, or the call runs outside the wrapper. |
+| A14 | Every detector uses `rg -n`. An exit code of 2 is a failure and never "no hit". | A detector exits 2 and the evidence reads "no hit". |
+| A15 | The receipts hold the commit and the commands, and no file hash. | A receipt holds a hash that a later commit changes. |
+| A16 | No worktree is created. | `git worktree add` runs for this task. |
+
+A1, A2, A6, A8, A11, and A13 are not risks of this task. A6 applies only if the registry note claims the pin is fresh: it is not, until task 1.4.
+
+**What the 1.4c tests cannot prove**
+
+- The wall time. No test reads a clock. Only the 1.4 series proves that the next series ends within its runs.
+- The module count of 6866. The fixture is small. Task 1.4 reads `modules_total` from the real series.
+- That the CI check gets faster (FR-9.6). No test measures it.
+
+**Task 1.4 note for the next series (spec FR-9.5, OQ-9).** The series starts after the last 1.4c commit, so the store starts empty (OQ-9). The first run prints `modules_total=6866`, which is 6936 minus the 70 public files. Task 1.4 records the real value. A different `modules_total` is a finding: the role stops and reports it to the orchestrator before it accepts the series. Round 7 stored 3750 modules in 76 s, and the prelude took 58 s. The 69 bundles are out of the list, so the series should end in one or two runs under `--budget-s 1500`. This is an expectation and not a gate: a third run is not a defect, and the run limit of the plan rules still holds. OQ-2 applies from the last 1.4c commit.
+
 ## 7. The labeled counts and the floors of P1
 
 `fixture_positive_control=1`, `ac1_cases=3`, `ac2_cases=2`, `ac3_cases=3`, `ac4_cases=5`, `ac5_cases=5`, `fr6_cases=1`, `other_files_failed=0`, `suite_files>=32`, `suite_tests>=251`, `commands_green=2`, `manifest_fields_changed=5`, `manifest_keys_added=0`, `hash_path_lists_changed=0`, `ci_flag_steps=1`, `ci_refresh_commands=0`, `local_script_flags=0`, `archive_changed_paths=0`, `pin_out_of_scope_paths=0`.
 
 Task 1.4a adds these floors: `fixture_positive_control=1`, `ac6_cases=3`, `ac7_cases=2`, `ac8_cases=2`, `member_access_nodes>=50`, `walks_per_module<=1`, `walk_growth=0`, `projections=1`, `analyzer_passes=2`, `manifest_keys_added=0`, `suite_files>=33`, `suite_tests>=279`, `pin_cases=20`. The `suite_files>=32` and `suite_tests>=251` floors above stay valid for the earlier tasks.
+
+Task 1.4c adds these floors: `existing_inventory_cases=8`, `ac18_cases=5`, `ac19_cases=1`, `ac20_cases=4`, `ac21_cases=1`, `variant_rows=3`, `guard_rows=4`, `tests_total=19` (inventory file), `manifest_keys_added=0`, `suite_files>=34`, `suite_tests>=320`, `modules_total=6866` (task 1.4 expectation).
 
 Task 1.4b adds these floors: `resume_control=1`, `ac9_cases=2`, `ac10_cases=3`, `ac11_cases=7`, `ac12_cases=4`, `ac13_cases=3`, `ac14_cases=2`, `ac15_cases=4`, `ac16_cases=3`, `ac17_cases=1`, `fixture_modules>=7`, `runs>=3`, `runs<=12`, `bad_values=5`, `tests_total>=30`, `manifest_keys_added=0`, `suite_files>=34`, `suite_tests>=309`, `cost_cases=8`, `pin_cases=20`.
 

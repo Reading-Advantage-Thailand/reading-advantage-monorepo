@@ -1,0 +1,39 @@
+# Strategy amendment for task 1.4c
+
+Track: architecture_ci_input_pin_20261110. Role: Measure strategy. Date: 2026-11-11. Model: claude-sonnet-5-5.
+role_base_sha: 756eb027b33d0786846f8a3c5e62b27b965c6960
+Phase base (unchanged): 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Path in the commit: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md (1 file) and this log.
+No test run, no heavy job, no build, no worktree. Reads only.
+
+## What changed in the strategy file
+- Header: one `Amended` line. Section 1.1: four named files outside the wrapper.
+- New section P1.13 (task 1.4c): risk medium; the Red command; the expected Red state (tests_total=19, tests_failed=5, tests_passed=14); one row each for AC-18 to AC-21 with a falsification condition; fixtures; the Green gate (6 items); the allowed paths; the review table; the anti-pattern table; the limits of the tests; the task 1.4 note (modules_total=6866, one or two runs).
+- Section 7: the 1.4c floors.
+
+## Findings that shaped the rows (read, not run)
+- The existing inventory.test.ts holds 8 cases, as the plan says. The plan counts match: 5 AC-18 cases fail at HEAD (1 + 3 rows + 1), 6 guards pass (1 + 4 rows + 1), 19 in total.
+- The suite floor follows from the 1.4b Green note (suite_files=34, suite_tests=309) plus 11 new cases: suite_tests>=320.
+- The spec asks AC-21 to hold its own copy of the 15 manifest keys. This differs from the A12 rule of the cost and resume files. The strategy keeps the spec choice, explains why, and asks Review A to check the list once against v2-manifest-validation.ts:109-125.
+
+## Questions for the orchestrator (defaults apply)
+- Q21. AC-21 uses a literal key list (spec choice) while A12 asks for none. Default: keep the literal list, because the guard stops a task that edits the manifest. Review A checks the list.
+- Q22. The task 1.4 note treats modules_total=6866 as an expectation. A different value makes the 1.4 role stop and report before it accepts the series. A third run is not a defect. Default: as written.
+- Q23. The plan needs no change.
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-strategy
+track: architecture_ci_input_pin_20261110
+task: 1.4c (strategy)
+role_base_sha: 756eb027b33d0786846f8a3c5e62b27b965c6960
+commit: see the git log entry with the header "docs(measure): add the 1.4c test strategy"
+files_changed: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md
+phase_base_sha: unchanged, 09168dc422ed48604b8f2f0cb9a23ad4d110543b (Phase 1 already running; no new capture is needed for 1.4c)
+red_command: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/inventory.test.ts
+red_expected: exit 1, tests_total=19, tests_failed=5, tests_passed=14 (5 AC-18 cases fail; guards ac19 1, ac20 4, ac21 1 and 8 existing cases pass)
+green_gate: four named files with --maxWorkers=1; package suite (suite_files>=34, suite_tests>=320, one expected baseline-validation failure until task 1.4); check-types; lint; build-graph update on inventory.ts, all through heavy-run with HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800
+risk: medium
+reviews: Review A yes; Review B small (phase level); Review C no; adversarial small (phase level); browser review no
+handoff: Questions Q21 to Q23 in this log. Defaults apply. The plan needs no change. Task 1.4 note: the next series expects modules_total=6866 and should end in one or two runs.
+END_MEASURE_AGENT_RESULT
