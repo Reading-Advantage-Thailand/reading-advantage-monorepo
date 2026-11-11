@@ -23,6 +23,8 @@ const GENERATED_WORKSPACE_DIRECTORIES = new Set([
   "playwright-report",
   "test-results",
 ]);
+/** App-level directory that holds static assets served as-is. */
+const STATIC_ASSET_DIRECTORY = "public";
 const DEFAULT_ROOTS = ["apps", "integrations", "packages", "services"] as const;
 const QUERY_METHODS = new Set(["delete", "from", "insert", "update"]);
 
@@ -137,12 +139,21 @@ function isIncludedRoot(path: string, roots: readonly string[]): boolean {
 
 /**
  * Determines whether generated or dependency directories own a source path.
+ * An app-level `public` directory holds static assets that the app serves
+ * as-is, so its files are not architecture inputs.
  * @param path Safe repository-relative source path.
  * @returns True when the inventory must ignore the file.
  */
 function isIgnoredPath(path: string): boolean {
   const segments = path.split("/");
   if (segments.includes("node_modules")) return true;
+  if (
+    segments[0] === "apps" &&
+    segments[2] === STATIC_ASSET_DIRECTORY &&
+    segments.length > 3
+  ) {
+    return true;
+  }
   const generatedDirectoryIndex =
     segments[0] === "packages" && segments[1] === "integrations" ? 3 : 2;
   const generatedDirectory = segments[generatedDirectoryIndex];
