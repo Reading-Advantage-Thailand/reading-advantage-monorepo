@@ -5,6 +5,8 @@
  * The set holds one rubric for each of the six kinds of the media list: `word cut`, `phoneme`,
  * `song`, `video`, `picture`, and `book audio`. Each rubric holds the known faults of rule 6.7b
  * for its kind, the known bad files of that kind, and the files of that kind that Daniel passed.
+ * Each entry of a rubric is one point that must hold for a pass. This script states that one
+ * semantics for the points, and it holds no other.
  *
  * A rubric counts only after the live calibration fails its known bad files and passes a file that
  * Daniel passed (rule 6.7d). This script holds the shape of the set and the file paths. The live
@@ -45,7 +47,7 @@ export interface KnownBadFile {
 export interface Rubric {
   /** The kind of the rubric. */
   kind: RubricKind;
-  /** The known faults of rule 6.7b for the kind. A pass holds none of them. */
+  /** The points of rule 6.7b for the kind. Each entry is a point that must hold for a pass. */
   knownFaults: string[];
   /** The known bad files of the kind, for the calibration of rule 6.7d. */
   knownBadFiles: KnownBadFile[];
@@ -68,8 +70,7 @@ export const RUBRICS: Rubric[] = [
     kind: "phoneme",
     knownFaults: [
       "the take gives the right sound",
-      "the take holds no hiss",
-      "the take holds no clipping",
+      "the take holds no hiss, hum, or clipping",
       "the take holds no extra sound",
     ],
     knownBadFiles: [{ label: "the hissy 04-n.mp3", path: "phonemes/daniel/04-n.mp3" }],
@@ -95,11 +96,11 @@ export const RUBRICS: Rubric[] = [
   {
     kind: "video",
     knownFaults: [
-      "the motion lands on the beat",
-      "the named object shows",
-      "the motion in time with the song is smooth",
-      "no frame is frozen",
-      "no hidden figure shows",
+      "the cuts land on the beat",
+      "the named object is visible after the question",
+      "the scene reads as its place",
+      "the motion in time with the music",
+      "no frozen or hidden figure",
     ],
     knownBadFiles: [
       {
@@ -128,7 +129,7 @@ export const RUBRICS: Rubric[] = [
     knownFaults: [
       "the page is read as written",
       "the reading is at child speed",
-      "the reading asks no question",
+      "the reading asks a natural question and answers it",
     ],
     knownBadFiles: [{ label: 'BA1 "Hello", the cut-off take', path: "" }],
     passedFiles: ["l2/media/w01/books/1-hello.mp3"],

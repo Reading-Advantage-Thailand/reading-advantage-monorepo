@@ -12,6 +12,9 @@
  * The module holds the page only. No file under `apps/storytime/app/` names the page, and the
  * page holds no app code. The server uses the Node standard library only.
  *
+ * Each answer line also records the time of the answer and the Git commit of the review copy. The
+ * read rule of the answers file: the last line per `itemId` wins, and an item with no line is open.
+ *
  * The port is never 3005 and never 3099 (P5.8). The gate picks a free port and passes it in.
  */
 import { appendFileSync, mkdirSync } from "node:fs";
@@ -61,6 +64,10 @@ export interface ReviewAnswer {
   verdict: "pass" | "fail";
   /** The comment of the owner. */
   comment: string;
+  /** The time the answer was written, as an ISO 8601 UTC text; the writer sets it. */
+  answeredAt?: string;
+  /** The Git commit of the review copy; the launch script sets it. */
+  commit?: string;
 }
 
 /** The options of the review server. */
@@ -71,6 +78,8 @@ export interface ReviewServerOptions {
   appUrl: string;
   /** The path of the answers file. */
   answersPath: string;
+  /** The Git commit of the review copy, which every answer line then records. */
+  commit?: string;
 }
 
 /** One running review server. */
@@ -109,20 +118,26 @@ export function renderReviewPage(): string {
     const links = item.paths
       .map(
         (path) =>
-          `<a data-review-path="${escapeHtml(path)}" href="${escapeHtml(path)}">` +
-          `${escapeHtml(path)}</a>`,
+          `<a data-review-path="${escapeHtml(path)}" href="${escapeHtml(path)}" ` +
+          `target="_blank" rel="noopener">${escapeHtml(path)}</a>`,
       )
       .join("\n        ");
+    const signIn =
+      item.id === "teacher-app"
+        ? '        <p class="signin" data-review-signin>Sign in at /th/sign-in as the teacher ' +
+          "account teach-01. The launcher writes its password to the password file.</p>"
+        : "";
     return [
       `<section class="item" data-review-item="${escapeHtml(item.id)}">`,
       `        <h2>${escapeHtml(item.label)}</h2>`,
       `        <p class="routes">${links}</p>`,
+      ...(signIn === "" ? [] : [signIn]),
       '        <div class="controls">',
-      '          <button type="button" data-review-action="pass">Pass</button>',
-      '          <button type="button" data-review-action="fail">Fail</button>',
+      '          <button type="button" data-review-action="pass" aria-pressed="false">Pass</button>',
+      '          <button type="button" data-review-action="fail" aria-pressed="false">Fail</button>',
       '          <textarea data-review-comment rows="2" placeholder="Comment"></textarea>',
       '          <button type="button" data-review-action="send">Send</button>',
-      '          <span class="status" data-review-status></span>',
+      '          <span class="status" data-review-status role="status" aria-live="polite"></span>',
       "        </div>",
       "      </section>",
     ].join("\n");
@@ -144,7 +159,9 @@ export function renderReviewPage(): string {
       .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
       textarea { flex: 1 1 16rem; min-height: 2.5rem; }
       button { min-height: 44px; min-width: 44px; padding: 0 1rem; }
+      button[aria-pressed="true"] { outline: 3px solid #333; outline-offset: 2px; font-weight: 700; }
       .status { color: #444; }
+      .signin { background: #f4f4f4; border-radius: 6px; padding: 0.5rem 0.75rem; }
     </style>
   </head>
   <body>
@@ -160,14 +177,19 @@ export function renderReviewPage(): string {
           var verdict = '';
           var comment = block.querySelector('[data-review-comment]');
           var status = block.querySelector('[data-review-status]');
+          var pass = block.querySelector('[data-review-action="pass"]');
+          var fail = block.querySelector('[data-review-action="fail"]');
           function choose(value) {
             verdict = value;
+            status.textContent = '';
             block.setAttribute('data-review-choice', value);
+            pass.setAttribute('aria-pressed', String(value === 'pass'));
+            fail.setAttribute('aria-pressed', String(value === 'fail'));
           }
-          block.querySelector('[data-review-action="pass"]').addEventListener('click', function () {
+          pass.addEventListener('click', function () {
             choose('pass');
           });
-          block.querySelector('[data-review-action="fail"]').addEventListener('click', function () {
+          fail.addEventListener('click', function () {
             choose('fail');
           });
           block.querySelector('[data-review-action="send"]').addEventListener('click', function () {
@@ -175,10 +197,15 @@ export function renderReviewPage(): string {
               status.textContent = 'Choose Pass or Fail first.';
               return;
             }
+            var text = comment ? comment.value.trim() : '';
+            if (verdict === 'fail' && text.length === 0) {
+              status.textContent = 'Write a comment for a fail.';
+              return;
+            }
             var answer = {
               itemId: block.getAttribute('data-review-item'),
               verdict: verdict,
-              comment: comment ? comment.value : ''
+              comment: text
             };
             fetch('/review/answer', {
               method: 'POST',
@@ -211,6 +238,8 @@ export function appendReviewAnswer(answersPath: string, answer: ReviewAnswer): v
     itemId: answer.itemId,
     verdict: answer.verdict,
     comment: answer.comment,
+    answeredAt: answer.answeredAt ?? new Date().toISOString(),
+    ...(answer.commit === undefined ? {} : { commit: answer.commit }),
   });
   mkdirSync(dirname(answersPath), { recursive: true });
   appendFileSync(answersPath, `${line}\n`, "utf8");
@@ -369,7 +398,7 @@ async function handleRequest(
       sendText(response, 400, message);
       return;
     }
-    appendReviewAnswer(options.answersPath, answer);
+    appendReviewAnswer(options.answersPath, { ...answer, commit: options.commit });
     response.writeHead(204, { "cache-control": "no-store" });
     response.end();
     return;
@@ -425,15 +454,27 @@ export async function startReviewServer(options: ReviewServerOptions): Promise<R
  * @throws When the arguments hold no value for the name.
  */
 function valueOf(argv: string[], name: string): string {
-  const index = argv.indexOf(name);
-  const value = index >= 0 ? argv[index + 1] : undefined;
-  if (value === undefined || value === "") throw new Error(`the arguments hold no ${name} value`);
+  const value = optionalValueOf(argv, name);
+  if (value === undefined) throw new Error(`the arguments hold no ${name} value`);
   return value;
 }
 
 /**
+ * Gives the value of one optional named argument.
+ * @param argv The arguments of the script.
+ * @param name The name of the argument, for example `--commit`.
+ * @returns The value that follows the name, or undefined when the arguments hold no name.
+ */
+function optionalValueOf(argv: string[], name: string): string | undefined {
+  const index = argv.indexOf(name);
+  const value = index >= 0 ? argv[index + 1] : undefined;
+  return value === undefined || value === "" ? undefined : value;
+}
+
+/**
  * Runs the review server as a program.
- * @param argv The arguments, which hold `--port`, `--app-url`, and `--answers`.
+ * @param argv The arguments, which hold `--port`, `--app-url`, and `--answers`, and may hold
+ *   `--commit`.
  * @returns 0 when the server started, and 2 when an argument is missing or refused.
  */
 export async function main(argv: string[]): Promise<number> {
@@ -442,6 +483,7 @@ export async function main(argv: string[]): Promise<number> {
       port: Number(valueOf(argv, "--port")),
       appUrl: valueOf(argv, "--app-url"),
       answersPath: resolve(valueOf(argv, "--answers")),
+      commit: optionalValueOf(argv, "--commit"),
     });
     console.log(`review_port=${server.port}`);
     console.log(`review_url=${server.url}`);

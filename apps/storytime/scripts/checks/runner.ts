@@ -14,7 +14,12 @@
  * never calls that client.
  *
  * A fail verdict must name the time in the file, or the runner throws (rule 6.7c). Each failure
- * detail names the file, the reason, and the time as `at=<seconds>`.
+ * detail names the file, the reason, and the time as `at=<seconds>`. A picture has no time in the
+ * file, so a picture fail carries `at=none` instead.
+ *
+ * The runner refuses a client that returns fewer verdicts than files: each file with no verdict
+ * gets its own failure detail, so it never looks clean (A4). The ledger line takes the item count
+ * of the entry, `entry.itemCount`.
  */
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
@@ -174,12 +179,14 @@ function writeLedgerLine(ledgerPath: string, line: string): void {
  * Builds the failure detail of one fail verdict.
  * @param file The file of the verdict.
  * @param verdict The fail verdict.
+ * @param kind The rubric kind of the call, or undefined when the kind is unknown.
  * @returns The file, the time in the file as `at=<seconds>`, and the reason.
- * @throws When the verdict holds no time in the file (rule 6.7c).
+ * @throws When the verdict holds no time in the file and the kind is not `picture` (rule 6.7c).
  */
-export function failureDetailOf(file: string, verdict: Verdict): string {
+export function failureDetailOf(file: string, verdict: Verdict, kind?: string): string {
   const at = verdict.atSeconds;
   if (at === null || at === undefined || !Number.isFinite(at)) {
+    if (kind === "picture") return `${file} at=none: ${verdict.reason}`;
     throw new Error(`the fail verdict for ${file} holds no time in the file (rule 6.7c)`);
   }
   return `${file} at=${at}: ${verdict.reason}`;
@@ -189,8 +196,8 @@ export function failureDetailOf(file: string, verdict: Verdict): string {
  * Runs one stage 2 pre-check and writes its ledger line first.
  * @param options The ledger path, the entry, the client, the files, the kind, and the rubric text.
  * @returns The ledger line, the call flag, the verdicts, the failures, and the evidence class.
- * @throws When a real client runs under Vitest, when the ledger line cannot be written, or when a
- *   fail verdict holds no time in the file.
+ * @throws When a real client runs under Vitest, when the ledger line cannot be written, when the
+ *   client returns more verdicts than files, or when a fail verdict holds no time in the file.
  */
 export async function runPreCheck(options: PreCheckOptions): Promise<PreCheckResult> {
   const { ledgerPath, entry, client, files, kind, rubricText } = options;
@@ -202,16 +209,26 @@ export async function runPreCheck(options: PreCheckOptions): Promise<PreCheckRes
     );
   }
 
-  const ledgerLine = ledgerLineOf(entry, files.length);
+  const ledgerLine = ledgerLineOf(entry, entry.itemCount);
   writeLedgerLine(ledgerPath, ledgerLine);
 
   const verdicts = await client.check({ files, kind, rubricText });
+  if (verdicts.length > files.length) {
+    throw new Error(
+      `the model client returned ${verdicts.length} verdicts for ${files.length} files`,
+    );
+  }
   const failures: string[] = [];
   verdicts.forEach((verdict, index) => {
     if (verdict.pass) return;
     const file = files[index] ?? `item ${index + 1}`;
-    failures.push(failureDetailOf(file, verdict));
+    failures.push(failureDetailOf(file, verdict, kind));
   });
+  for (let index = verdicts.length; index < files.length; index += 1) {
+    failures.push(
+      `${files[index]} at=none: the model client returned no verdict for this file (A4)`,
+    );
+  }
 
   return {
     ledgerLine,
