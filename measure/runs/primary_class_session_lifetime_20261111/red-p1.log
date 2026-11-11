@@ -28,7 +28,10 @@ tests_total=108, tests_failed=43, tests_passed=53, tests_skipped=12, red_failure
 - The handler-independent `invalid_input` code does not exist, so a refusal resolves instead of throwing.
 - Characterization cases that pass at the base (characterization_cases=11): the `3h` expiry row, the 7-day maximum, the audit with no secret, the positive write control, the student and system refusals, the other-school refusal, the contract strip case, and the three-field output case.
 - card_file_edit=0: strategy section 4.1 and finding F7. A mock database cannot run the `expiresAt > now` predicate, so a card case there would be a vacuous "expired" proof. The real-database case carries the boundary instead.
-- Real database: real_db_ran=0, real_db_skipped_tests=12.
+- Real database: real_db_ran=1. A scratch Postgres 16 container ran inside heavy-run.sh p2 with its own name and a random host port (35569). The shared databases were unused, and the container was removed after the run. The migrate step exits 0. The real-db file exits 1 with real_db_tests_total=12, real_db_tests_failed=1, real_db_tests_passed=11, real_db_skipped_tests=0. The one failure is the new AC-5 case at step 1: the row holds 10800000 ms (3 hours) where the test expects 604800000 ms (7 days). The reason is the fixed lifetime, not an import or a database error.
+
+Real-database command (the script starts the container, migrates it, runs the file, and removes the container in a trap):
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /tmp/opencode/pcls-real-db.sh'
 
 ## 3. Task 1.2 Red — handler and control
 
@@ -60,9 +63,9 @@ role: measure-mid-red
 track: primary_class_session_lifetime_20261111
 phase: P1
 baseline_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
-head_sha: 0c459e9eb (test commit; the evidence commit is on top of it)
+head_sha: 10daba4cd (the test commit and the evidence commit; this real-db addendum follows)
 commits: 0c459e9eb test(primary): pin the class session lifetime
-tests: domain tests_total=108, tests_failed=43, tests_passed=53, tests_skipped=12; app tests_total=82, tests_failed=29, tests_passed=53, tests_skipped=0; red_failures_bad_reason=0
+tests: domain tests_total=108, tests_failed=43, tests_passed=53, tests_skipped=12; app tests_total=82, tests_failed=29, tests_passed=53, tests_skipped=0; real-db tests_total=12, tests_failed=1, tests_passed=11; red_failures_bad_reason=0
 files: packages/domain/src/__tests__/student-login-contracts.test.ts, packages/domain/src/__tests__/student-login-class-session.test.ts, packages/domain/src/__tests__/student-login.real-db.test.ts, apps/primary-advantage/lib/__tests__/student-login-handlers.test.ts, apps/primary-advantage/components/__tests__/class-session-control.test.tsx, measure/tracks/primary_class_session_lifetime_20261111/plan.md, measure/runs/primary_class_session_lifetime_20261111/red-p1.log
-remaining_failures: 43 domain cases and 29 app cases, all for the expected reasons (missing lifetime field, fixed 3-hour expiry, missing invalid_input status, missing radiogroup and lifetime body, time-only expiry text, missing message keys); the real-database case is skipped (real_db_ran=0)
+remaining_failures: 43 domain cases, 29 app cases, and 1 real-database case, all for the expected reasons (missing lifetime field, fixed 3-hour expiry, missing invalid_input status, missing radiogroup and lifetime body, time-only expiry text, missing message keys, and the 3-hour row where 7 days is expected)
 END_MEASURE_AGENT_RESULT
