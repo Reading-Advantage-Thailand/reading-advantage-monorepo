@@ -26,7 +26,7 @@
 // broken copies are made in a temporary folder from a real file, one change each, and the
 // folder is removed when the file ends.
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { copyFileSync, existsSync, mkdtempSync, rmSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -214,10 +214,8 @@ describe("Phase 5 stage 1 file kind and size check (AC-10.1)", () => {
     const script = await loadScript("file-kind");
     const source = media("l2/media/w01/books/1-hello/p01.jpg");
     const copy = resolve(scratch, "picture-named-mp3.mp3");
-    const made = spawnSync("ffmpeg", ["-hide_banner", "-v", "error", "-y", "-i", source, copy], {
-      encoding: "utf8",
-    });
-    expect(made.status, "the broken copy was not made").toBe(0);
+    copyFileSync(source, copy);
+    expect(existsSync(copy), "the broken copy was not made").toBe(true);
     const size = sizeOf(copy);
     const run = runMain(script, copy, "audio", size);
     expect(labeledWord(run.output, "file_kind"), "the script reads the name instead of the content").toBe(
@@ -246,10 +244,8 @@ describe("Phase 5 stage 1 file kind and size check (AC-10.1)", () => {
     const script = await loadScript("file-kind");
     const source = media("l2/media/w01/books/1-hello/p01.jpg");
     const copy = resolve(scratch, "program-picture.mp3");
-    const made = spawnSync("ffmpeg", ["-hide_banner", "-v", "error", "-y", "-i", source, copy], {
-      encoding: "utf8",
-    });
-    expect(made.status, "the broken copy was not made").toBe(0);
+    copyFileSync(source, copy);
+    expect(existsSync(copy), "the broken copy was not made").toBe(true);
     const program = spawnSync(
       resolve(repoRoot, "node_modules/.bin/tsx"),
       ["scripts/checks/file-kind.ts", "--file", copy, "--kind", "audio", "--size", String(sizeOf(copy))],

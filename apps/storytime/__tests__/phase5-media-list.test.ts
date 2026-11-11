@@ -91,14 +91,32 @@ function sizeOf(file: string): number {
 }
 
 /**
- * Reads the bitrate of a media file of the package in bits per second.
+ * Reads the container bitrate of a media file of the package in bits per second.
+ *
+ * The container rate holds the audio stream and the tags, so it sits above the stream rate.
  * @param file The path of the file inside the package.
- * @returns The bitrate of the file.
+ * @returns The container bitrate of the file.
  */
 function bitrateOf(file: string): number {
   const run = spawnSync(
     "ffprobe",
     ["-v", "error", "-select_streams", "a:0", "-show_entries", "format=bit_rate", "-of", "csv=p=0", resolve(MEDIA_ROOT, file)],
+    { encoding: "utf8" },
+  );
+  return Number((run.stdout ?? "").trim());
+}
+
+/**
+ * Reads the bitrate of the audio stream of a media file of the package in bits per second.
+ *
+ * The rule 5.3 rate names the audio stream, not the container.
+ * @param file The path of the file inside the package.
+ * @returns The bitrate of the audio stream.
+ */
+function streamBitrateOf(file: string): number {
+  const run = spawnSync(
+    "ffprobe",
+    ["-v", "error", "-select_streams", "a:0", "-show_entries", "stream=bit_rate", "-of", "csv=p=0", resolve(MEDIA_ROOT, file)],
     { encoding: "utf8" },
   );
   return Number((run.stdout ?? "").trim());
@@ -144,8 +162,19 @@ function readList(): {
   }
   const lines = text.split("\n").filter((line) => line.trim().startsWith("|"));
   const header = lines.length > 0 ? cellsOf(lines[0]) : [];
-  const rows = lines.slice(1).map(cellsOf);
+  const rows = lines.slice(1).map(cellsOf).filter((cells) => !isDelimiterRow(cells));
   return { header, rows, counts };
+}
+
+/**
+ * Tells whether one row is the delimiter row of a Markdown table.
+ *
+ * The delimiter row holds only dashes, colons, and spaces. A data row holds a file name.
+ * @param cells The cells of the row.
+ * @returns True when the row is the delimiter row.
+ */
+function isDelimiterRow(cells: string[]): boolean {
+  return cells.length > 0 && cells.every((cell) => /^[-: ]*$/.test(cell));
 }
 
 /**
@@ -265,8 +294,12 @@ describe("Phase 5 media list of the milestone week (task 5.1)", () => {
       const listed = list.rows.find((entry) => entry[fileColumn] === row.file);
       expect(listed, `the media list misses the phoneme file ${row.file}`).toBeDefined();
       const text = (listed ?? []).join(" ");
-      const kbps = Math.round(bitrateOf(row.file) / 1000);
-      expect(kbps, `the phoneme file ${row.file} does not sit at 128 kbps`).toBe(128);
+      const kbps = Math.round(streamBitrateOf(row.file) / 1000);
+      expect(kbps, `the phoneme file ${row.file} does not sit at a 128 kbps audio stream`).toBe(128);
+      expect(
+        Math.round(bitrateOf(row.file) / 1000),
+        `the container of the phoneme file ${row.file} does not sit above its stream`,
+      ).toBeGreaterThan(kbps);
       expect(
         new RegExp(`(^|\\D)${kbps}(\\D|$)`).test(text),
         `the row of ${row.file} hides its bitrate of ${kbps} kbps`,
