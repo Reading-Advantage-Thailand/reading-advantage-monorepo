@@ -1,0 +1,45 @@
+role: measure strategy, phase P1 ("Phase 1: Choice of the class session lifetime")
+track: primary_class_session_lifetime_20261111
+model: claude-sonnet-5-5
+date: 2026-11-11
+head_at_start: 7b441fbe6b6a993e4e1af714065e16a75d4262c3
+strategy_commit: 4011b8e655a50dd1ced063549876c3c5c35bd420
+strategy_file: measure/tracks/primary_class_session_lifetime_20261111/test-strategy.md
+
+read: spec.md, plan.md, spec-review-26cdcda80.json, AGENTS.md (testing, audit, tenancy), anti-patterns.md,
+  the strategy of architecture_ci_input_pin_20261110 (pattern), class-session.ts, credentials.ts, errors.ts,
+  contracts.ts, calendar-day.ts, card-token.ts, handlers.ts, http.ts, class-session-control.tsx, api.ts,
+  intl-locale.ts, i18n/request.ts, the named test files, mock-db.ts, the message files.
+commands run: read-only (cat, sed, rg, ls, stat, git log, one node Intl probe). No Vitest run, no heavy job.
+
+key findings written into the strategy:
+- F1 (spec review, Major): check runs before the first row write (before class-session.ts:84), proved by a
+  case with a credential-less student, an open old session, and a positive control that inserts.
+- M4: the app resolves @reading-advantage/domain through the git-ignored dist. Task 1.5b (domain build) added.
+- M7: with a Zod default the inferred type makes lifetime required; check-types compiles existing tests.
+- F5 (Major, spec FR-5): cn, tw, vi have full ClassLogin trees and no fallback; new keys would show as raw text.
+  Ready row 7.2 is inactive until the orchestrator decides.
+- Time zone matrix (machine zone is UTC+7, so a local-time bug passes there): UTC and America/Los_Angeles runs.
+- A mock database cannot prove expiry; the proof is the real-database case (PG_TEST_URL) plus a detector.
+- OQ-1 rows are ready and inactive (section 7.1).
+- phase_base_sha: not embedded. The value in the role request (90b4e22ff) predates the strategy commit.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-strategy
+track: primary_class_session_lifetime_20261111
+phase: P1
+strategy_file: measure/tracks/primary_class_session_lifetime_20261111/test-strategy.md
+strategy_commit: 4011b8e655a50dd1ced063549876c3c5c35bd420
+phase_base_sha_capture: run git rev-parse HEAD after the strategy commit and the strategy log commit, before Red starts; the commit must contain test-strategy.md
+risk: high
+reviews: review_a=yes review_b=yes review_c=yes adversarial=yes_small browser=yes_one_viewport_1366x768_th_en
+heavy_jobs_run: 0
+handoff: |
+  Questions for the orchestrator (defaults stated):
+  1. F5 (Major, spec FR-5 and plan 1.8): cn, tw, vi have no fallback for ClassLogin keys, so a new key in th and en only shows as raw text in those locales. Fill the six keys in cn, tw, vi with English text (strategy 7.2), or accept the gap? Default: plan scope (th and en only), row inactive. Recommendation: activate.
+  2. OQ-1 (PM): refuse 7d for a class with the picture password off? Default: no refusal; Review B advises. Ready Red rows are in strategy 7.1, inactive.
+  3. phase_base_sha: the request names 90b4e22ff, which predates the strategy commit. The role rule says to capture after the strategy commit. The strategy follows the role rule.
+  4. Plan additions by the strategy: task 1.5b (domain build before the app gates, F6); the base run of the domain suite before Red (1.4); one real-database case, run only when a scratch PG_TEST_URL exists (6.3); the card test file stays unedited by default (F7).
+  5. A Green role needs the domain build between tasks 1.5 and 1.6. Without it the app tests read the old dist.
+END_MEASURE_AGENT_RESULT
