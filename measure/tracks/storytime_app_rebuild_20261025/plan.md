@@ -3133,7 +3133,7 @@ for every other track.
 
 ## Phase 5: Milestone week integration
 
-- [~] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step.
+- [x] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step.
   - The picture file arrives on `books[].cover` and `books[].pages[].image`. For w01 it arrives from 2026-11-06. For w02 to w07 it arrives by 2026-11-16. Source: Workbooks answers Q13 to Q15, through the PM, 2026-11-03. Daniel's picture approvals cover the app.
   - Red evidence (task 5.1). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,
@@ -3170,27 +3170,27 @@ for every other track.
     The P5 `RED_TEST_COMMAND` (strategy line 946) under heavy-run p1 exits 0 with the document of
     Green in the run folder: 4 files, 32 of 32 passed, 0 failed. The type check
     `../../node_modules/.bin/tsc --noEmit` under heavy-run p1 exits 0. Evidence class: automated.
-    The task stays `[~]`.
-  - Green evidence (blocked), 2026-11-11. Role base `ecf41c04036bb8e2ca19c9744113dec4ba559661`;
-    phase base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; implementation commit `2887dc70b` (the
-    four scripts under `apps/storytime/scripts/checks/`; no other source file). The document sits
-    at `measure/runs/storytime_app_rebuild_20261025/media-list-w01.md` (129 lines). The folder is
-    ignored by Git, so the document has no commit. The document holds `media_files=70`,
-    `label_items_missing=6`, `bitrate_deviations=35`, one row for each media file (36 audio, 32
-    pictures, 2 video), six label rows (the tile labels `readalong`, `decodable`, `song` and the
-    home words `net`, `nut`, `nose`), the two recorded deviations, and the line
-    `noise_step=daniel offered`. `GREEN_TEST_COMMAND` exits 1 with 4 files, 28 passed, 4 failed,
-    and 0 skipped: audio 11 of 11, word-edges 5 of 5, file-kind 6 of 8, media-list 6 of 8. The type
-    check `tsc --noEmit` in `apps/storytime` exits 0; ESLint on the four scripts exits 0 with 0
-    errors and 0 warnings; `build-graph update ./graph.db` exits 0 (4 files, 64 nodes, 60 edges)
-    and search finds each parse export. Task stays `[~]`. The two media-list failures are Red
-    defects: the table reader takes the Markdown delimiter row as a data row
-    (`phase5-media-list.test.ts:145-147`), and the bitrate case reads the container rate and
-    asserts 128 kbps while the nine files hold a 128 kbps stream at a 133 to 145 kbps container
-    (`:268-269`). The handoff asks for a Mid Red retry, and neither role edits a committed Red
-    test. Evidence class: automated.
+    The Green evidence below closes the round.
+  - Green evidence (task 5.1), 2026-11-11. Role base
+    `ecf41c04036bb8e2ca19c9744113dec4ba559661`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; scripts commit `2887dc70b`; Red fix commits
+    `8568a8fba` and `290a66b4b`. The document sits at
+    `measure/runs/storytime_app_rebuild_20261025/media-list-w01.md` (129 lines). The folder is
+    ignored by Git, so the document has no commit. It holds one Markdown table with the eight
+    columns, 70 media rows (36 audio, 32 pictures, 2 video), six label rows (the tile labels
+    `readalong`, `decodable`, `song` and the home words `net`, `nut`, `nose`), and the counts
+    `media_files=70`, `label_items_missing=6`, `bitrate_deviations=35`. The two recorded
+    deviations sit in the document: the PM decision of 2026-11-11 accepts `song.mp3` at -11.89
+    LUFS and +0.11 dBTP with no re-render, and the orchestrator decision of 2026-11-11 keeps the
+    128 kbps phoneme bank as a known deviation for new production files only.
+    `GREEN_TEST_COMMAND` at HEAD `290a66b4b` exits 0 with 4 files, 32 of 32 passed, 0 failed, and
+    0 skipped. The type check `tsc --noEmit` in `apps/storytime` exits 0; ESLint on the four
+    scripts exits 0 with 0 errors and 0 warnings; `build-graph update ./graph.db` exits 0 (4
+    files, 64 nodes, 60 edges) and search finds each parse export. Evidence class: automated
+    artifact plus the hand-off record.
+  - Hand-off record (task 5.1): The orchestrator sent the list to the PM on 2026-11-11 for Workbooks and Forge, with Daniel's offer to do the phoneme noise step.
 - [b] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price. deferred:daniel
-- [~] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1.
+- [x] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1.
   - Red evidence (task 5.3). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,
     2026-11-11): the P4 ten-file command exit 0, 10 files, 181 of 181, and
@@ -3221,7 +3221,7 @@ for every other track.
     still fails its script. The P5 `RED_TEST_COMMAND` (strategy line 946) under heavy-run p1
     exits 0 with Green's scripts on master: 4 files, 32 of 32 passed, 0 failed. The type check
     `../../node_modules/.bin/tsc --noEmit` under heavy-run p1 exits 0. Evidence class:
-    automated. Tasks 5.3 and 5.1 stay `[~]`.
+    automated. The Green evidence below closes both tasks.
   - The four red test files and the contracts they hold:
     `phase5-measure-audio.test.ts` covers `loudness.ts` and `noise.ts`;
     `phase5-measure-word-edges.test.ts` covers `word-edges.ts`;
@@ -3242,22 +3242,19 @@ for every other track.
     its broken copy, and each broken copy is made in a temporary folder from a real file with one
     change, then removed. The parser control of each script reads a synthetic ffmpeg or ffprobe
     text, so no parser test needs the hand-off folder.
-  - Green evidence (blocked), 2026-11-11. Role base
+  - Green evidence (task 5.3), 2026-11-11. Role base
     `ecf41c04036bb8e2ca19c9744113dec4ba559661`; phase base
-    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; implementation commit `2887dc70b`. The four scripts
-    sit in `apps/storytime/scripts/checks/`. They measure with ffmpeg and ffprobe, add no
-    dependency, and hold JSDoc on every export. `GREEN_TEST_COMMAND` exits 1 with 4 files, 28
-    passed, 4 failed, and 0 skipped: audio 11 of 11, word-edges 5 of 5, file-kind 6 of 8,
-    media-list 6 of 8. `tsc --noEmit` in `apps/storytime` exits 0; ESLint on the four scripts
-    exits 0 with 0 errors and 0 warnings; `build-graph update ./graph.db` exits 0 (4 files, 64
-    nodes, 60 edges) and search finds each parse export. Task stays `[~]`. The two file-kind
-    failures are Red defects: the test makes the broken copy with
-    `ffmpeg -i p01.jpg copy.mp3`, and ffmpeg exits 234 because the mp3 muxer carries no video
-    stream (`phase5-measure-file.test.ts:217-220` and `:249-252`). No implementation can make
-    those cases pass. The live measurements on the real files: `1-hello.mp3` -16.69 LUFS with
-    -1.41 dBTP passes; `04-n.mp3` has a noise floor of -26.86 dBFS and fails; `wa-pip.mp3` has a
-    noise floor of -75.48 dBFS and passes; `wa-net.mp3` holds quiet edges at -76.14 and -inf
-    dBFS. The handoff asks for a Mid Red retry. Evidence class: automated.
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; scripts commit `2887dc70b`; Red fix commits
+    `8568a8fba` and `290a66b4b`. The four scripts sit in `apps/storytime/scripts/checks/`. They
+    measure with ffmpeg and ffprobe, add no dependency, and hold JSDoc on every export.
+    `GREEN_TEST_COMMAND` at HEAD `290a66b4b` exits 0 with 4 files, 32 of 32 passed, 0 failed, and
+    0 skipped. The type check `tsc --noEmit` in `apps/storytime` exits 0; ESLint on the four
+    scripts exits 0 with 0 errors and 0 warnings; `build-graph update ./graph.db` exits 0 (4
+    files, 64 nodes, 60 edges) and search finds each parse export. The live measurements on the
+    real files: `1-hello.mp3` -16.69 LUFS with -1.41 dBTP passes; `04-n.mp3` has a noise floor of
+    -26.86 dBFS and fails; `wa-pip.mp3` has a noise floor of -75.48 dBFS and passes; `wa-net.mp3`
+    holds quiet edges at -76.14 and -inf dBFS. No committed Red test was edited by this role.
+    Evidence class: automated.
 - [ ] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
