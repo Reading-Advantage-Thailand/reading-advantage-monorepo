@@ -75,19 +75,43 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
   the flag off by default.
 - The flag is off by default, and it is the only access control of the teacher routes until
   Q1: with the flag off, every signed-in request to a teacher route answers 404. Do not set
-  the flag in the Dockerfile or `cloudbuild.yaml`. Set it on the service with
-  `gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --update-env-vars STORYTIME_TEACHER_ROUTES=1`
-  only after Daniel's go. `--update-env-vars` adds or changes the one variable and keeps the
-  rest of the service environment. Do not replace the whole variable set of the service: the
-  sign-in and the media stop without their variables.
-- The way back removes the one variable and keeps the rest:
+  the flag in the Dockerfile or `cloudbuild.yaml`.
+- A services update builds the new revision from the template of the latest
+  revision, not from the revision that serves the traffic. The build workflow deploys every
+  push with `--no-traffic`, so the latest revision can be a build that Daniel has not
+  approved. Before the flag commands, read the traffic split and the image of the live
+  revision:
 
   ```
-  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars STORYTIME_TEACHER_ROUTES
+  gcloud run services describe storytime-app --project primary-advantage --region asia-southeast1 --format='value(status.traffic)'
+  gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(status.imageDigest)'
   ```
 
-  Both commands are traffic-neutral revision updates; a traffic move still waits for Daniel's
-  go (step 4).
+- Turn the flag on with one variable change, the image of the live revision pinned, no
+  traffic, and a new tag. Daniel gives the go for this update:
+
+  ```
+  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --update-env-vars STORYTIME_TEACHER_ROUTES=1 --image=<the live revision image digest> --no-traffic --tag=teacher-flag-on
+  ```
+
+- The way back removes the one variable and pins the same live image:
+
+  ```
+  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars STORYTIME_TEACHER_ROUTES --image=<the live revision image digest> --no-traffic --tag=teacher-flag-off
+  ```
+
+- `--update-env-vars` adds or changes the one variable and keeps the rest of the service
+  environment. Do not replace the whole variable set of the service: the sign-in and the
+  media stop without their variables.
+- The commands do not keep the traffic place by themselves: a services update makes a
+  revision, and that revision serves traffic at once when the service sends its traffic to
+  the latest revision. They hold no traffic only because of the `--no-traffic` flag on each
+  command.
+  Before the traffic step, open the tag URL of the new revision and check it the way step 3
+  checks a tagged build: `/th/teacher/2/1` answers 200 with a teacher session and the flag
+  on, and 404 with the flag off. Find the new revision name with
+  `gcloud run revisions list --service storytime-app --project primary-advantage --region asia-southeast1`.
+  The traffic step (step 4) then names that revision, and only Daniel's go starts it.
 
 ## Facts (2026-11-07)
 

@@ -37,7 +37,7 @@ function envVarFlagLines(source: string): string[] {
   return hits;
 }
 
-describe("Phase 4 runbook: the teacher routes flag command (F481)", () => {
+describe("Phase 4 runbook: the teacher routes flag command (F481, F491)", () => {
   it("turns the flag on with --update-env-vars and names the service, project, and region", () => {
     const line = text
       .split("\n")
@@ -46,6 +46,32 @@ describe("Phase 4 runbook: the teacher routes flag command (F481)", () => {
     expect(line ?? "", "the command must name the service").toContain("storytime-app");
     expect(line ?? "", "the command must name the project").toContain("--project primary-advantage");
     expect(line ?? "", "the command must name the region").toContain("--region asia-southeast1");
+  });
+
+  it("pins the live image, no traffic, and a tag on both flag commands (F491)", () => {
+    const lines = text
+      .split("\n")
+      .filter((entry) => /--(update|remove)-env-vars/.test(entry) && entry.includes(FLAG));
+    expect(
+      lines.length,
+      `flag_command_lines=${lines.length}: the runbook must hold the on and off commands`,
+    ).toBe(2);
+    for (const [index, line] of lines.entries()) {
+      expect(line, `the command ${index} must pin the live image`).toContain("--image=");
+      expect(line, `the command ${index} must hold --no-traffic`).toContain("--no-traffic");
+      expect(line, `the command ${index} must hold a tag`).toContain("--tag=");
+    }
+  });
+
+  it("reads the image of the live revision before the flag commands (F491)", () => {
+    expect(
+      text.includes("--format='value(status.traffic)'"),
+      "the runbook must read the traffic split of the live service",
+    ).toBe(true);
+    expect(
+      text.includes("--format='value(status.imageDigest)'"),
+      "the runbook must read the image digest of the live revision",
+    ).toBe(true);
   });
 
   it("holds the removal command as the documented way back", () => {
@@ -67,6 +93,22 @@ describe("Phase 4 runbook: the teacher routes flag command (F481)", () => {
     expect(at, "the runbook must hold the --update-env-vars command").toBeGreaterThan(-1);
     const near = text.slice(Math.max(0, at - 600), at + 600);
     expect(near, "the flag step must wait for Daniel's go").toMatch(/Daniel/);
+  });
+
+  it("names the tag URL check before the traffic step, with no traffic-neutral claim (F491)", () => {
+    expect(
+      text.includes("traffic-neutral"),
+      "the runbook must not call the flag commands traffic-neutral (F491)",
+    ).toBe(false);
+    const start = text.indexOf("## The teacher routes flag");
+    const rest = text.slice(Math.max(0, start));
+    const section = rest.slice(0, rest.indexOf("\n## ") === -1 ? undefined : rest.indexOf("\n## "));
+    expect(section, "the flag section must exist").toBeDefined();
+    expect(section.includes("teacher-flag-on"), "the runbook must tag the flag revision").toBe(true);
+    expect(section, "the section must send the operator to the tag URL before the traffic step").toMatch(
+      /tag URL/,
+    );
+    expect(section, "the traffic step must wait for Daniel's go").toMatch(/Daniel/);
   });
 
   it("holds no --set-env-vars anywhere, with a positive control that can fail", () => {
