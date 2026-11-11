@@ -110,3 +110,61 @@ describe("Phase 4 lesson focus: the end region of the last screen (F472, F482, F
     view.unmount();
   });
 });
+
+describe("Phase 4 lesson focus: the visible focus of the end region (UX finding F601)", () => {
+  it("holds no outline-none and the 3 px ring classes on the end region", () => {
+    const view = renderDay(week, 1);
+    walkToLastScreen();
+    const region = document.querySelector(`[aria-label="${END_REGION}"]`);
+    expect(region, "the last-screen region must exist after the walk").not.toBeNull();
+    const className = region!.className;
+    expect(
+      className.includes("outline-none"),
+      `region_classes=${className}: the region must not hide the focus (F601)`,
+    ).toBe(false);
+    for (const token of [
+      "outline-3",
+      "outline-white",
+      "outline-offset-0",
+      "box-shadow:0_0_0_6px_var(--st-brown)",
+    ]) {
+      expect(
+        className.includes(token),
+        `region_classes=${className}: the region must hold the ring token ${token} of the loop panel controls`,
+      ).toBe(true);
+    }
+    view.unmount();
+  });
+});
+
+describe("Phase 4 lesson focus: the teacher controls of the flow (UX finding F603)", () => {
+  it("holds min-h-11 on the Thai toggle, the back link, and the Next step control", () => {
+    const view = renderDay(week, 1);
+    const targets: Array<[HTMLElement, string]> = [
+      [screen.getByRole("button", { name: "ไทย" }), "the Thai toggle"],
+      [screen.getByRole("link", { name: "Back to the week" }), "the back link"],
+      [screen.getByRole("button", { name: NEXT_STEP }), "the Next step control"],
+    ];
+    for (const [node, label] of targets) {
+      expect(
+        node.className.includes("min-h-11"),
+        `${label} must hold min-h-11 for the 44 px floor, classes=${node.className}`,
+      ).toBe(true);
+    }
+    view.unmount();
+  });
+});
+
+describe("Phase 4 lesson focus: the language mark of the step id chip (UX finding F605)", () => {
+  it("marks the step id chip with lang=en", () => {
+    const view = renderDay(week, 1);
+    const chip = document.querySelector<HTMLElement>('section[data-step-id] header > span');
+    const stepId = week.scripts.find((entry) => entry.day === 1)!.steps[0]!.id;
+    expect(chip?.textContent, "the first span of the step header is the id chip").toBe(stepId);
+    expect(
+      chip?.getAttribute("lang"),
+      `chip_lang=${chip?.getAttribute("lang")}: the step id chip must hold lang=en (F605)`,
+    ).toBe("en");
+    view.unmount();
+  });
+});

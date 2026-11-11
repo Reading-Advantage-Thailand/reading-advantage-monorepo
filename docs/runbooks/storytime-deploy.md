@@ -87,17 +87,20 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
   gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(status.imageDigest)'
   ```
 
+  The read command prints the image of the live revision as a full reference with its
+  `@sha256:` digest. Paste the value into `--image` as it is.
+
 - Turn the flag on with one variable change, the image of the live revision pinned, no
   traffic, and a new tag. Daniel gives the go for this update:
 
   ```
-  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --update-env-vars STORYTIME_TEACHER_ROUTES=1 --image=<the live revision image digest> --no-traffic --tag=teacher-flag-on
+  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --update-env-vars STORYTIME_TEACHER_ROUTES=1 --image=<the live revision image reference with its digest> --no-traffic --tag=teacher-flag-on
   ```
 
 - The way back removes the one variable and pins the same live image:
 
   ```
-  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars STORYTIME_TEACHER_ROUTES --image=<the live revision image digest> --no-traffic --tag=teacher-flag-off
+  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars STORYTIME_TEACHER_ROUTES --image=<the live revision image reference with its digest> --no-traffic --tag=teacher-flag-off
   ```
 
 - `--update-env-vars` adds or changes the one variable and keeps the rest of the service
@@ -107,9 +110,22 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
   revision, and that revision serves traffic at once when the service sends its traffic to
   the latest revision. They hold no traffic only because of the `--no-traffic` flag on each
   command.
-  Before the traffic step, open the tag URL of the new revision and check it the way step 3
-  checks a tagged build: `/th/teacher/2/1` answers 200 with a teacher session and the flag
-  on, and 404 with the flag off. Find the new revision name with
+- The flag stays in the service template after the on command: every later build revision
+  carries `STORYTIME_TEACHER_ROUTES=1`, and a traffic rollback does not remove it. Before
+  each traffic step of a later build, read `/th/teacher/2/1` on the tag URL to see the
+  flag state, and run the off command to clear the template.
+- Before the traffic step, sign in as the teacher on the tag URL host first, because a
+  session cookie is bound to one host. Then open the tag URL of the new revision and check
+  it the way step 3 checks a tagged build: `/th/teacher/2/1` answers 200 with a teacher
+  session and the flag on, and 404 with the flag off. Also compare the environment of the
+  new revision with that of the live revision:
+
+  ```
+  gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env)'
+  gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env)'
+  ```
+
+  The variables must match, except the flag itself. Find the new revision name with
   `gcloud run revisions list --service storytime-app --project primary-advantage --region asia-southeast1`.
   The traffic step (step 4) then names that revision, and only Daniel's go starts it.
 

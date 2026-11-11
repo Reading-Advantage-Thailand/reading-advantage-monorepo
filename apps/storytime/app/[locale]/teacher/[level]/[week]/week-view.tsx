@@ -63,14 +63,14 @@ export function TeacherWeekView({
         <h1 className="text-3xl font-semibold" lang="en">
           {week.meta.title}
         </h1>
-        <p className="text-neutral-600">
+        <p className="text-neutral-600" lang="en">
           Level {level}, week {weekNumber}
         </p>
       </header>
 
       {element ? (
         <section aria-label="The element of the week" className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold">The element of the week</h2>
+          <h2 className="text-xl font-semibold" lang="en">The element of the week</h2>
           <p className="text-3xl font-semibold" lang="en">
             {element.graphemes.join(" ")}
           </p>
@@ -91,7 +91,7 @@ export function TeacherWeekView({
 
       {paSkill ? (
         <section aria-label="The phonemic awareness skill" className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold">The phonemic awareness skill</h2>
+          <h2 className="text-xl font-semibold" lang="en">The phonemic awareness skill</h2>
           <p className="text-lg" lang="en">
             {paSkill.en}
           </p>
@@ -99,7 +99,7 @@ export function TeacherWeekView({
       ) : null}
 
       <section aria-label="The tricky words" className="flex flex-col gap-2">
-        <h2 className="text-xl font-semibold">The tricky words</h2>
+        <h2 className="text-xl font-semibold" lang="en">The tricky words</h2>
         <ul className="flex flex-wrap gap-2">
           {week.focus.trickyWords.map((word) => (
             <li
@@ -115,7 +115,7 @@ export function TeacherWeekView({
 
       {frame ? (
         <section aria-label="The frame" className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold">The frame</h2>
+          <h2 className="text-xl font-semibold" lang="en">The frame</h2>
           <p className="text-lg" lang="en">
             {frame}
           </p>
@@ -124,7 +124,7 @@ export function TeacherWeekView({
 
       {family ? (
         <section aria-label="The family words" className="flex flex-col gap-3">
-          <h2 className="text-xl font-semibold">The family words</h2>
+          <h2 className="text-xl font-semibold" lang="en">The family words</h2>
           <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {family.words.map((entry) => {
               const caption = entry.image?.caption ?? "";
@@ -158,7 +158,7 @@ export function TeacherWeekView({
       ) : null}
 
       <section aria-label="The five lessons" className="flex flex-col gap-3">
-        <h2 className="text-xl font-semibold">The five lessons</h2>
+        <h2 className="text-xl font-semibold" lang="en">The five lessons</h2>
         <ol className="flex flex-col gap-3">
           {week.scripts.map((script) => (
             <li
@@ -170,7 +170,8 @@ export function TeacherWeekView({
               </span>
               <Link
                 href={`/${locale}/teacher/${level}/${weekNumber}/${script.day}`}
-                className="rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
+                className="min-h-11 rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
+                lang="en"
               >
                 Open the lesson
               </Link>
@@ -180,17 +181,17 @@ export function TeacherWeekView({
       </section>
 
       <section aria-label="The three materials" className="flex flex-col gap-3">
-        <h2 className="text-xl font-semibold">The three materials</h2>
+        <h2 className="text-xl font-semibold" lang="en">The three materials</h2>
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <li className="flex flex-col gap-1 rounded-2xl border border-[#92400e] p-4">
-            <span className="font-semibold">The student book</span>
+            <span className="font-semibold" lang="en">The student book</span>
             <span className="text-3xl font-semibold" lang="en">
               {print?.letterBox?.letter ?? ""}
             </span>
           </li>
           {readAlong ? (
             <li className="flex flex-col gap-1 rounded-2xl border border-[#92400e] p-4">
-              <span className="font-semibold">The read-along</span>
+              <span className="font-semibold" lang="en">The read-along</span>
               <span className="text-lg" lang="en">
                 {readAlong.title}
               </span>
@@ -198,7 +199,7 @@ export function TeacherWeekView({
           ) : null}
           {decodable ? (
             <li className="flex flex-col gap-1 rounded-2xl border border-[#92400e] p-4">
-              <span className="font-semibold">The decodable</span>
+              <span className="font-semibold" lang="en">The decodable</span>
               <span className="text-lg" lang="en">
                 {decodable.title}
               </span>

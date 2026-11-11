@@ -129,3 +129,93 @@ describe("Phase 4 runbook: the teacher routes flag command (F481, F491)", () => 
     );
   });
 });
+
+/** Returns the flag section of the runbook, cut at the next top heading. */
+function flagSection(): string {
+  const start = text.indexOf("## The teacher routes flag");
+  expect(start, "the flag section must exist").toBeGreaterThan(-1);
+  const rest = text.slice(start);
+  const stop = rest.indexOf("\n## ");
+  return stop === -1 ? rest : rest.slice(0, stop);
+}
+
+describe("Phase 4 runbook: the flag carry-over, the env compare, and the image value (F495, F496)", () => {
+  it("states that the flag stays in the service template and names the off command as the clear (F495)", () => {
+    const section = flagSection();
+    expect(
+      section,
+      "the runbook must say the flag stays in the service template after the on command",
+    ).toMatch(/service template/);
+    expect(
+      section,
+      "the runbook must say a traffic rollback does not remove the flag",
+    ).toMatch(/traffic rollback/);
+    expect(section, "the runbook must send the operator to the off command to clear the template").toMatch(
+      /off command/,
+    );
+  });
+
+  it("reads the flag state on the tag URL before each traffic step (F495)", () => {
+    const section = flagSection();
+    expect(section.includes("/th/teacher/2/1"), "the runbook must name the check route").toBe(true);
+    expect(section.includes("tag URL"), "the runbook must read the state on the tag URL").toBe(true);
+    expect(section.includes("flag state"), "the runbook must name the flag state").toBe(true);
+  });
+
+  it("compares the env of the new revision with the live revision before the traffic step (F495, review C)", () => {
+    const section = flagSection();
+    expect(
+      section,
+      "the runbook must send the operator to compare the environments",
+    ).toMatch(/compare the environment/);
+    const hits = section.split("\n").filter((line) => line.includes("spec.containers[0].env"));
+    expect(
+      hits.length,
+      `env_describe_lines=${hits.length}: the runbook must describe both revisions`,
+    ).toBe(2);
+    for (const line of hits) {
+      expect(line, "each describe line must name the service").toContain(
+        "revisions describe",
+      );
+      expect(line, "each describe line must name the project").toContain(
+        "--project primary-advantage",
+      );
+      expect(line, "each describe line must name the region").toContain("--region asia-southeast1");
+    }
+  });
+
+  it("says the operator signs in on the tag URL host first (F495, review C)", () => {
+    const section = flagSection();
+    expect(section.includes("tag URL host"), "the runbook must name the tag URL host").toBe(true);
+    expect(
+      section.includes("session cookie"),
+      "the runbook must explain the host binding of the session cookie",
+    ).toBe(true);
+  });
+
+  it("names the image placeholder as a full reference and says the value goes into --image as it is (F496)", () => {
+    const section = flagSection();
+    const hits = section.split("\n").filter((line) =>
+      line.includes("<the live revision image reference with its digest>"),
+    );
+    expect(
+      hits.length,
+      `image_placeholders=${hits.length}: both flag commands must hold the named placeholder`,
+    ).toBe(2);
+    for (const line of hits) {
+      expect(line, "each placeholder line must pass the value into --image").toContain("--image=");
+    }
+    expect(
+      section.includes("<the live revision image digest>"),
+      "the old bare-digest placeholder must not stay (F496)",
+    ).toBe(false);
+    expect(
+      section.includes("as it is"),
+      "the runbook must say the read value goes into --image as it is",
+    ).toBe(true);
+    expect(
+      section.includes("@sha256:"),
+      "the runbook must name the full reference form with @sha256:",
+    ).toBe(true);
+  });
+});

@@ -488,7 +488,10 @@ function StepView({
       className="flex flex-col gap-4"
     >
       <header className="flex flex-wrap items-baseline gap-3">
-        <span className="rounded-full border border-[#92400e] bg-[#fcd34d] px-3 py-1 text-lg text-[#92400e]">
+        <span
+          className="rounded-full border border-[#92400e] bg-[#fcd34d] px-3 py-1 text-lg text-[#92400e]"
+          lang="en"
+        >
           {step.id}
         </span>
         <h2 className="text-2xl font-semibold" lang={pickLang(step.title, thai)}>
@@ -885,13 +888,13 @@ export function TeacherLessonFlow({
             onClick={() => setThai((value) => !value)}
             aria-pressed={thai}
             lang="th"
-            className="rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-[#92400e]"
+            className="min-h-11 rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-[#92400e]"
           >
             ไทย
           </button>
           <Link
             href={`/${locale}/teacher/${week.meta.level}/${week.meta.week}`}
-            className="rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
+            className="min-h-11 rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
           >
             <span lang="en">Back to the week</span>
           </Link>
@@ -968,7 +971,7 @@ export function TeacherLessonFlow({
           role="region"
           tabIndex={-1}
           aria-label="The end of the lesson"
-          className="flex flex-col gap-3 focus:outline-none"
+          className="flex flex-col gap-3 focus:outline-3 focus:outline-white focus:outline-offset-0 focus:[box-shadow:0_0_0_6px_var(--st-brown)]"
         >
           <p className="text-lg font-semibold" lang="en">
             This is the last step of the day.
@@ -982,7 +985,7 @@ export function TeacherLessonFlow({
           <button
             type="button"
             onClick={nextScreen}
-            className="w-fit rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
+            className="min-h-11 w-fit rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
           >
             <span lang="en">Next step</span>
           </button>

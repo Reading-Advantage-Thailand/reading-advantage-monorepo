@@ -261,3 +261,70 @@ describe("Phase 4 teacher week view (AC-9.1)", () => {
     }
   });
 });
+
+describe("Phase 4 teacher week view: the control floor and the language marks (F603, F605)", () => {
+  it("holds min-h-11 on every Open the lesson link (F603)", async () => {
+    const { container } = await renderWeekView(week);
+    const links = Array.from(container.querySelectorAll("a")).filter((node) =>
+      node.textContent?.includes("Open the lesson"),
+    );
+    expect(
+      links.length,
+      `lesson_links=${links.length}: the shipped week must hold one link per day`,
+    ).toBe(week.scripts.length);
+    for (const node of links) {
+      expect(
+        node.className.includes("min-h-11"),
+        `link_classes=${node.className}: each Open the lesson link must hold min-h-11 (F603)`,
+      ).toBe(true);
+    }
+  });
+
+  it("marks every English text element of the week view with lang=en (F605)", async () => {
+    const { container } = await renderWeekView(week);
+    // The 16 English text elements that the UX role named (ux-browser-p4-e24a1f06c, F605):
+    // the level line, the seven section headings, the five lesson links, and the three
+    // material labels.
+    const levelLine = container.querySelector("main > header > p");
+    expect(levelLine?.textContent).toContain(`Level ${week.meta.level}, week ${week.meta.week}`);
+    const sectionNames = [
+      "The element of the week",
+      "The phonemic awareness skill",
+      "The tricky words",
+      "The frame",
+      "The family words",
+      "The five lessons",
+      "The three materials",
+    ];
+    const checked: Array<[Element | null, string]> = [
+      [levelLine, "the level line"],
+      ...sectionNames.map(
+        (name) =>
+          [
+            container.querySelector(`section[aria-label="${name}"] > h2`),
+            `the heading of ${name}`,
+          ] as [Element | null, string],
+      ),
+      ...Array.from(
+        container.querySelectorAll('section[aria-label="The five lessons"] a'),
+      ).map((node) => [node, `the link ${node.textContent}`] as [Element, string]),
+      ...["The student book", "The read-along", "The decodable"].map(
+        (label) =>
+          [
+            Array.from(container.querySelectorAll("span")).find(
+              (node) => node.textContent === label,
+            ) ?? null,
+            `the material label ${label}`,
+          ] as [Element | null, string],
+      ),
+    ];
+    expect(checked.length, `english_elements=${checked.length}`).toBe(16);
+    for (const [node, label] of checked) {
+      expect(node, `the week view must render ${label}`).not.toBeNull();
+      expect(
+        node!.getAttribute("lang"),
+        `lang=${node!.getAttribute("lang")}: ${label} must hold lang=en (F605)`,
+      ).toBe("en");
+    }
+  });
+});
