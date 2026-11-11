@@ -1,0 +1,45 @@
+# Strategy amendment for task 1.4b
+
+Track: architecture_ci_input_pin_20261110. Role: Measure strategy. Session: Strategy · P1 1.4b · architecture_ci_input_pin. Date: 2026-11-11. Model: claude-code/claude-sonnet-5-5#high (a substitution: the role table says Opus).
+role_base_sha: fba3a45f10613f760358abe3178a9cc9e49633c8
+Phase base (unchanged): 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Path in the commit: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md (1 file) and this log.
+No test run, no heavy job, no build, no worktree, no /tmp scratch. Reads only.
+
+## What changed in the strategy file
+- Header: one `Amended` line. Section 1.1: three named files outside the wrapper.
+- New section P1.12 (task 1.4b): risk high; facts S1 to S7 (read); the Red command with --maxWorkers=1; the fixture rules (no network, no heavy job, no time budget, injected stub clock, run-loop cap, equal clones); one row for each of AC-9 to AC-17 with proof, falsification condition, and state at HEAD; the expected Red state; the labeled counts; the no-clock detectors; 17 mutants; the anti-pattern table; the Green gate (8 items); the allowed paths; the review table; the limits of the tests; the task 1.4 note for OQ-2.
+- Section 7: the 1.4b floors.
+
+## Findings that shaped the rows (read, not run)
+- S1: at HEAD `parsePinRefreshArguments` rejects `--budget-s`. This is the Red failure reason for most cases.
+- S3: the fixture copies the real package src, so the module count is not fixed. The test reads it from `selectV2AnalyzerSourcePaths` and asserts the floor, and the run loop has a cap (runs<=50) and a bound (3 to 12).
+- S4/S5: the store sits outside the candidate root, so it does not trigger candidate_overlay. The fixture needs no .gitignore.
+- S7: a source path key can hold the text `hash`, so the AC-10 key scan skips the keys inside `modules` (A7).
+- Strategy additions to the plan's 25 cases: `resume_fixture_positive_control` (A4) and `ac11_candidate_overlay_prints_checkpoint_off` (the plan guard for the overlay cannot see the FR-8.4 line at HEAD). Expected Red: tests_total>=30, tests_failed>=25, tests_passed>=5 (five named guards).
+- The zero-progress case needs the stub clock to jump on the `step=prelude` line. This is a test variable, not a real clock.
+
+## Questions for the orchestrator (defaults apply)
+- Q15. A16 conflict. The default for task 1.4 is a snapshot worktree. `measure/anti-patterns.md` A16 forbids `git worktree add`. Default: the PM records a waiver of A16 for this one use. Alternative that meets A16: a detached local clone under /tmp (not a registered worktree); it needs node_modules, so measure the cost first. If the PM rejects both, spec OQ-2 stays (stop at the second head_changed discard).
+- Q16. The snapshot run changes the manifest in the snapshot. Task 1.4 must copy only that manifest file to master and commit it there, and only if master holds no analyzer-input change since the snapshot commit. Default: as written in P1.12.
+- Q17. The `input_snapshot` run count (once, in the last run) has no seam. The step line proves it in the output only. Default: Review A reads the code. The limit is named in the strategy.
+- Q18. A forged store with equal pass 1 and pass 2 lists passes the byte-identity compare. Default: accept as a named limit; the CI report-hash compare is the later defense.
+- Q19. No new walk-count case for AC-6 over the series. AC-6 stays proven by the cost file in Gate items 2 and 4. Default: as written.
+- Q20. The plan needs no change. The plan's Red names and gates match this strategy. The Gate 4 floor suite_tests>=309 and suite_files>=34 is new.
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-strategy
+track: architecture_ci_input_pin_20261110
+task: 1.4b (strategy)
+role_base_sha: fba3a45f10613f760358abe3178a9cc9e49633c8
+commit: see the git log entry with the header "docs(measure): add the 1.4b test strategy"
+files_changed: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md
+phase_base_sha: unchanged, 09168dc422ed48604b8f2f0cb9a23ad4d110543b (Phase 1 already running; no new capture is needed for 1.4b)
+red_command: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts
+red_expected: exit 1, tests_total>=30, tests_failed>=25, tests_passed>=5 (guards: resume_fixture_positive_control, ac10_store_path_is_git_ignored, ac11_changed_candidate_root_bypasses_store, ac14_key_set_equals_v2_manifest_keys, ac15_unsplit_refresh_keeps_fr7_counts)
+green_gate: targeted file, cost file, pin file (each --maxWorkers=1, outside heavy-run); then package suite (suite_files>=34, suite_tests>=309, one expected baseline-validation failure), check-types, lint, build-graph update through heavy-run with HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800
+risk: high
+reviews: Review A yes; Review B yes; Review C yes (limited); adversarial yes; browser review no
+handoff: Questions Q15 to Q20 in this log. Q15 needs the PM: the task 1.4 snapshot worktree conflicts with A16. Defaults apply for the others. The plan needs no change.
+END_MEASURE_AGENT_RESULT
