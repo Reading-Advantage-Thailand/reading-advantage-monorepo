@@ -3135,8 +3135,65 @@ for every other track.
 
 - [~] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step.
   - The picture file arrives on `books[].cover` and `books[].pages[].image`. For w01 it arrives from 2026-11-06. For w02 to w07 it arrives by 2026-11-16. Source: Workbooks answers Q13 to Q15, through the PM, 2026-11-03. Daniel's picture approvals cover the app.
+  - Red evidence (task 5.1). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,
+    2026-11-11): the P4 ten-file command exit 0, 10 files, 181 of 181, and
+    `bash apps/storytime/__tests__/phase1-quality-gates.sh` exit 0, `PASS=2 FAIL=0`, Storytime
+    126 files, 1100 of 1100. Red command: the P5 `RED_TEST_COMMAND` of the strategy (line 946),
+    exit 1, 4 files, 28 failed of 32, 4 passed, 0 load errors. Every failure names a missing
+    path: `scripts/checks/loudness.ts`, `scripts/checks/noise.ts`,
+    `scripts/checks/word-edges.ts`, `scripts/checks/file-kind.ts`, and the run folder document
+    `measure/runs/storytime_app_rebuild_20261025/media-list-w01.md`. The four passing cases are
+    the package and folder guards. Test commit `811a9d811`, the type fix commit `5e5bebff4`.
+    Evidence class: automated. The document holds one table with the columns `label`, `file`,
+    `kind`, `rule`, `stage1_check`, `stage2_rubric`, `size_bytes`, and `type`, one row per media
+    file of the receiver output at `953f798e` (70 files: 36 audio, 32 pictures, 2 video), six label
+    rows with no file (three tile labels and the three home words `net`, `nut`, `nose`), and the
+    labeled counts `media_files=70`, `label_items_missing=6`, and `bitrate_deviations=<n>`. The
+    received phoneme bank of nine files sits at 128 kbps, so each of those rows names 128 and
+    none names 192 (rule 5.3). The orchestrator routes the media finding on the song to the PM:
+    the received `song.mp3` measures -11.89 LUFS and +0.11 dBTP, so it fails rule 5.2, while
+    `books/1-hello.mp3` measures -16.69 LUFS and -1.41 dBTP and passes. The test uses the book
+    audio as the compliant file for the loudness case. This conflicts with the P5.6 row of the
+    strategy (line 994), which says `song.mp3` passes the loudness and true-peak check. The
+    measurement says otherwise, so the strategy row needs a correction by the strategy role.
+    The test reads only `apps/storytime` and the run folder, so it stays valid after the track
+    moves to `measure/archive/` (A9).
 - [b] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price. deferred:daniel
 - [~] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1.
+  - Red evidence (task 5.3). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,
+    2026-11-11): the P4 ten-file command exit 0, 10 files, 181 of 181, and
+    `bash apps/storytime/__tests__/phase1-quality-gates.sh` exit 0, `PASS=2 FAIL=0`, Storytime
+    126 files, 1100 of 1100. Red command: the P5 `RED_TEST_COMMAND` of the strategy (line 946),
+    exit 1, 4 files, 28 failed of 32, 4 passed, 0 load errors. Every failure names a missing
+    path under `apps/storytime/scripts/checks/`, so no test fails for a reason other than the
+    absent scripts. The four passing cases are the package and folder guards. Test commit
+    `811a9d811`; the type fix commit `5e5bebff4`. The type check
+    `../../node_modules/.bin/tsc --noEmit` under heavy-run p1 exits 0 after that fix, and it
+    exits 1 before it (TS2769 at `phase5-measure-file.test.ts:250`, the encoding `utf`). The
+    orchestrator found the same defect as finding F862 of the look track final acceptance.
+    Evidence class: automated.
+  - The four red test files and the contracts they hold:
+    `phase5-measure-audio.test.ts` covers `loudness.ts` and `noise.ts`;
+    `phase5-measure-word-edges.test.ts` covers `word-edges.ts`;
+    `phase5-measure-file.test.ts` covers `file-kind.ts`;
+    `phase5-media-list.test.ts` covers the media list document of task 5.1.
+  - The measured facts the contracts rest on (ffmpeg on the hand-off package
+    `~/Desktop/handoff/w01-storytime-app-package-r4`, 2026-11-11):
+    `l2/media/w01/books/1-hello.mp3` is -16.69 LUFS with -1.41 dBTP, so it passes rule 5.2.
+    `l2/media/w01/song.mp3` is -11.89 LUFS with +0.11 dBTP, so it fails rule 5.2. The received
+    `phonemes/daniel/04-n.mp3` has a noise floor of -26.86 dBFS, so it fails rule 5.3, and
+    `l2/media/w01/words/wa-pip.mp3` has a noise floor of -75.48 dBFS with a peak of -3.39 dBFS,
+    so it passes. The nine `phonemes/daniel/*.mp3` files sit at 128 kbps, the 22
+    `l2/media/w01/words/*.mp3` files at 128 kbps, the four book audio files at 51 to 56 kbps, and
+    `song.mp3` at 192 kbps. The nine bank files are the known deviation of rule 5.3, and the
+    bitrate check applies to new production files only (orchestrator decision of 2026-11-11).
+  - The contract of each script (the parse function, the arguments, the printed labels, and the
+    exit code) sits in the header comment of its test file. Each test proves that the script fails
+    its broken copy, and each broken copy is made in a temporary folder from a real file with one
+    change, then removed. The parser control of each script reads a synthetic ffmpeg or ffprobe
+    text, so no parser test needs the hand-off folder.
 - [ ] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
 - [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
