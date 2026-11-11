@@ -2988,6 +2988,7 @@
       "notFound": "We cannot find this class or student.",
       "rateLimited": "Too many tries. Wait a few minutes and try again.",
       "unavailable": "No free code right now. Try again.",
+      "lifetimeInvalid": "This choice is not available now. Choose another time.",
       "generic": "Something went wrong. Try again."
     },
     "session": {
@@ -2998,7 +2999,14 @@
       "openUntil": "Open until {time}",
       "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
       "newCode": "New code",
-      "end": "End class"
+      "end": "End class",
+      "lifetimeLabel": "How long should sign-in stay open?",
+      "lifetime": {
+        "3h": "3 hours",
+        "until_17": "Until 17:00 today",
+        "7d": "7 days"
+      },
+      "lifetimeHelp7d": "Students can use their cards at home until this time. End the class to stop sign-in earlier."
     },
     "backToClass": "Back to class",
     "links": {

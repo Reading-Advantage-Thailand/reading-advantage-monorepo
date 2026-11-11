@@ -2988,6 +2988,7 @@
       "notFound": "找不到這個班級或學生。",
       "rateLimited": "嘗試次數過多。請等幾分鐘後再試。",
       "unavailable": "目前沒有可用的代碼。請再試一次。",
+      "lifetimeInvalid": "This choice is not available now. Choose another time.",
       "generic": "發生錯誤。請再試一次。"
     },
     "session": {
@@ -2998,7 +2999,14 @@
       "openUntil": "開放至 {time}",
       "openNoCode": "班級開放至 {time}。代碼只會顯示一次。按「新代碼」即可顯示代碼。",
       "newCode": "新代碼",
-      "end": "結束上課"
+      "end": "結束上課",
+      "lifetimeLabel": "How long should sign-in stay open?",
+      "lifetime": {
+        "3h": "3 hours",
+        "until_17": "Until 17:00 today",
+        "7d": "7 days"
+      },
+      "lifetimeHelp7d": "Students can use their cards at home until this time. End the class to stop sign-in earlier."
     },
     "backToClass": "返回班級",
     "links": {

@@ -2988,6 +2988,7 @@
       "notFound": "Chúng tôi không tìm thấy lớp hoặc học sinh này.",
       "rateLimited": "Thử quá nhiều lần. Hãy chờ vài phút rồi thử lại.",
       "unavailable": "Hiện chưa có mã trống. Hãy thử lại.",
+      "lifetimeInvalid": "This choice is not available now. Choose another time.",
       "generic": "Đã xảy ra lỗi. Hãy thử lại."
     },
     "session": {
@@ -2998,7 +2999,14 @@
       "openUntil": "Mở đến {time}",
       "openNoCode": "Lớp đang mở đến {time}. Mã chỉ hiện một lần. Nhấn Mã mới để hiện mã.",
       "newCode": "Mã mới",
-      "end": "Kết thúc lớp"
+      "end": "Kết thúc lớp",
+      "lifetimeLabel": "How long should sign-in stay open?",
+      "lifetime": {
+        "3h": "3 hours",
+        "until_17": "Until 17:00 today",
+        "7d": "7 days"
+      },
+      "lifetimeHelp7d": "Students can use their cards at home until this time. End the class to stop sign-in earlier."
     },
     "backToClass": "Quay lại lớp",
     "links": {

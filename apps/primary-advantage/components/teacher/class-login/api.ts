@@ -25,7 +25,14 @@ export interface Lockout {
 }
 
 /** Keys under `ClassLogin.errors` in the message files. */
-export type ClassLoginErrorKey = "signedOut" | "forbidden" | "notFound" | "rateLimited" | "unavailable" | "generic";
+export type ClassLoginErrorKey =
+  | "signedOut"
+  | "forbidden"
+  | "notFound"
+  | "rateLimited"
+  | "unavailable"
+  | "lifetimeInvalid"
+  | "generic";
 
 /** A failed call to a student-login API route. */
 export class ClassLoginApiError extends Error {
@@ -70,13 +77,16 @@ export async function postStudentLogin<T>(path: string, body: unknown): Promise<
 /**
  * Maps a failed call to the message key that explains it to the teacher.
  * @param error The thrown value.
- * @returns A key under `ClassLogin.errors`.
+ * @returns A key under `ClassLogin.errors`. A 400 with the `invalid_input` code is a lifetime
+ * choice that the server refuses now; another 400 is a contract failure and stays generic.
  */
 export function errorKey(error: unknown): ClassLoginErrorKey {
-  const status = error instanceof ClassLoginApiError ? error.status : 0;
+  const failure = error instanceof ClassLoginApiError ? error : null;
+  const status = failure?.status ?? 0;
   if (status === 401) return "signedOut";
   if (status === 403) return "forbidden";
   if (status === 404) return "notFound";
+  if (status === 400 && failure?.code === "invalid_input") return "lifetimeInvalid";
   if (status === 429) return "rateLimited";
   if (status === 503) return "unavailable";
   return "generic";

@@ -2,12 +2,34 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { calendarDayNumber, SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 import { useIntlFormatter } from "@/lib/intl-locale";
 import { Button } from "@/components/ui/button";
 import { errorKey, postStudentLogin, type ClassLoginErrorKey, type ClassRoster } from "./api";
 
 /** Result of the start route: the one-time code of the new session and its end time. */
 type StartResult = { sessionId: string; code: string; expiresAt: string };
+
+/** Lifetime choices of the start control, in display order. The server owns the time values. */
+const LIFETIME_CHOICES = ["3h", "until_17", "7d"] as const;
+
+type LifetimeChoice = (typeof LIFETIME_CHOICES)[number];
+
+/**
+ * Reads the minutes since midnight in the school time zone from the client clock.
+ * @param date The instant to read.
+ * @returns Minutes from 0 (midnight) to 1439.
+ */
+function minutesOfDay(date: Date): number {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: SCHOOL_TIME_ZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const read = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find((part) => part.type === type)?.value ?? 0);
+  return read("hour") * 60 + read("minute");
+}
 
 /** Props of {@link ClassSessionControl}. */
 export interface ClassSessionControlProps {
@@ -26,13 +48,15 @@ export interface ClassSessionControlProps {
  * board, with its end time. New code replaces the open code. The new code stays on screen until a
  * successful roster read after the start reports another session or none, so a failed read does not
  * hide it. The server stores only a hash of the code, so after a page reload the control asks the
- * teacher to make a new code.
+ * teacher to make a new code. Before a start the control offers the session lifetime (FR-4); the
+ * server computes the expiry and the control hides "until 17:00" from 17:00 Bangkok on.
  * @param props The class, its open session, the time of the last roster read, and the refresh callback.
  * @returns The control.
  */
 export function ClassSessionControl({ classroomId, openSession, fetchedAt, onChange }: ClassSessionControlProps) {
   const t = useTranslations("ClassLogin");
   const format = useIntlFormatter();
+  const [lifetime, setLifetime] = useState<LifetimeChoice>("3h");
   const [started, setStarted] = useState<(StartResult & { at: number }) | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ClassLoginErrorKey | null>(null);
@@ -42,7 +66,7 @@ export function ClassSessionControl({ classroomId, openSession, fetchedAt, onCha
     setError(null);
     try {
       if (action === "start") {
-        const result = await postStudentLogin<StartResult>("class-session/start", { classroomId });
+        const result = await postStudentLogin<StartResult>("class-session/start", { classroomId, lifetime });
         setStarted({ ...result, at: Date.now() });
       } else {
         await postStudentLogin("class-session/end", { classroomId });
@@ -59,7 +83,19 @@ export function ClassSessionControl({ classroomId, openSession, fetchedAt, onCha
   // Show the code until a successful roster read made after the start reports another session or none.
   const shown = started && (busy || fetchedAt <= started.at || openSession?.id === started.sessionId) ? started : null;
   const expiresAt = shown?.expiresAt ?? openSession?.expiresAt;
-  const time = expiresAt ? format.dateTime(new Date(expiresAt), { hour: "numeric", minute: "2-digit" }) : "";
+  // A later Bangkok date shows the date with the time, so a 7-day session is not ambiguous (D-6).
+  const sameBangkokDay = expiresAt
+    ? calendarDayNumber(new Date()) === calendarDayNumber(new Date(expiresAt))
+    : true;
+  const time = expiresAt
+    ? format.dateTime(
+        new Date(expiresAt),
+        sameBangkokDay ? { hour: "numeric", minute: "2-digit" } : { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" },
+      )
+    : "";
+  // The client clock decides which options show; the server stays the authority (OQ-2).
+  const before1700 = minutesOfDay(new Date()) < 17 * 60;
+  const choices = LIFETIME_CHOICES.filter((choice) => choice !== "until_17" || before1700);
 
   return (
     <section className="space-y-4">
@@ -78,6 +114,22 @@ export function ClassSessionControl({ classroomId, openSession, fetchedAt, onCha
       ) : (
         <p>{openSession ? t("session.openNoCode", { time }) : t("session.startHelp")}</p>
       )}
+      <div role="radiogroup" aria-label={t("session.lifetimeLabel")} className="space-y-1">
+        {choices.map((choice) => (
+          <label key={choice} className="flex min-h-11 items-center gap-2">
+            <input
+              type="radio"
+              name="class-session-lifetime"
+              value={choice}
+              checked={lifetime === choice}
+              disabled={busy}
+              onChange={() => setLifetime(choice)}
+            />
+            <span>{t(`session.lifetime.${choice}`)}</span>
+          </label>
+        ))}
+      </div>
+      {lifetime === "7d" && <p className="text-muted-foreground text-sm">{t("session.lifetimeHelp7d")}</p>}
       <div className="flex flex-wrap gap-2">
         {shown || openSession ? (
           <>

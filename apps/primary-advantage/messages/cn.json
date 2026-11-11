@@ -2988,6 +2988,7 @@
       "notFound": "我们找不到这个班级或学生。",
       "rateLimited": "尝试次数太多。请等几分钟再试。",
       "unavailable": "现在没有可用的代码。请再试一次。",
+      "lifetimeInvalid": "This choice is not available now. Choose another time.",
       "generic": "出错了。请再试一次。"
     },
     "session": {
@@ -2998,7 +2999,14 @@
       "openUntil": "开放至 {time}",
       "openNoCode": "班级开放至 {time}。代码只显示一次。点击“新代码”可显示代码。",
       "newCode": "新代码",
-      "end": "结束上课"
+      "end": "结束上课",
+      "lifetimeLabel": "How long should sign-in stay open?",
+      "lifetime": {
+        "3h": "3 hours",
+        "until_17": "Until 17:00 today",
+        "7d": "7 days"
+      },
+      "lifetimeHelp7d": "Students can use their cards at home until this time. End the class to stop sign-in earlier."
     },
     "backToClass": "返回班级",
     "links": {
