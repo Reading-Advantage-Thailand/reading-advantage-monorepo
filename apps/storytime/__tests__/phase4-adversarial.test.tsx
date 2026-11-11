@@ -1095,3 +1095,128 @@ describe("Phase 4 adversarial round 2: the delta of f76d58624", () => {
     ).toBe(document.body);
   });
 });
+
+describe("Phase 4 adversarial round 3: the end region and the movedRef guard (9e2d04418)", () => {
+  /** The accessible name of the end region. */
+  const END = "The end of the lesson";
+
+  it("shows one named end region on the last screen of each day only, with the Friday check on day 5", () => {
+    for (const day of DAYS) {
+      const view = renderDay(week, day);
+      let screens = 0;
+      for (;;) {
+        screens += 1;
+        const regions = document.querySelectorAll(`[aria-label="${END}"]`).length;
+        const next = screen.queryByRole("button", { name: NEXT_STEP });
+        expect(regions, `day=${day} screen=${screens} end_regions`).toBe(next ? 0 : 1);
+        if (!next) break;
+        fireEvent.click(next);
+      }
+      expect(screens, `day=${day} screens=${screens}`).toBe(scriptOf(week, day).steps.length);
+      const region = screen.getByRole("region", { name: END });
+      expect(region.textContent, `day=${day}: the region holds its visible line`).toContain(
+        "This is the last step of the day.",
+      );
+      expect(
+        !!region.querySelector("[aria-label='The Friday check']"),
+        `day=${day}: the Friday check sits in the region on day 5 only`,
+      ).toBe(day === 5);
+      view.unmount();
+    }
+  });
+
+  it("moves the focus once, with preventScroll, after a real focused Next step press, in and out of StrictMode", () => {
+    for (const strict of [false, true]) {
+      const flow = <TeacherLessonFlow week={week} day={1} locale="en" mediaUrls={{}} />;
+      const view = render(strict ? <StrictMode>{flow}</StrictMode> : flow);
+      const focusSpy = vi.spyOn(HTMLElement.prototype, "focus");
+      for (;;) {
+        const next = screen.queryByRole("button", { name: NEXT_STEP });
+        if (!next) break;
+        next.focus();
+        expect(document.activeElement, "the Next step control holds the focus before the press").toBe(next);
+        fireEvent.click(next);
+      }
+      const region = screen.getByRole("region", { name: END });
+      expect(document.activeElement, `strict=${strict}: the focus lands on the end region`).toBe(region);
+      const onRegion = focusSpy.mock.contexts
+        .map((instance, index) => ({ instance, options: focusSpy.mock.calls[index]?.[0] }))
+        .filter((entry) => entry.instance === region);
+      expect(onRegion.length, `strict=${strict} region_focus_calls=${onRegion.length}`).toBe(1);
+      expect(onRegion[0]!.options?.preventScroll, "the move keeps the scroll place").toBe(true);
+      focusSpy.mockRestore();
+      view.unmount();
+    }
+  });
+
+  it("keeps the guard per instance: a keyed remount to a one-step day moves no focus", () => {
+    const one = structuredClone(week);
+    const script = scriptOf(one, 1);
+    script.steps = [script.steps[0]!];
+    expectWeek(one, "the one-step clone");
+    const view = render(<TeacherLessonFlow key="a" week={week} day={1} locale="en" mediaUrls={{}} />);
+    for (;;) {
+      const next = screen.queryByRole("button", { name: NEXT_STEP });
+      if (!next) break;
+      fireEvent.click(next);
+    }
+    expect(document.activeElement, "the positive control: the first instance moved the focus").toBe(
+      screen.getByRole("region", { name: END }),
+    );
+    view.rerender(<TeacherLessonFlow key="b" week={one} day={1} locale="en" mediaUrls={{}} />);
+    expect(screen.queryByRole("button", { name: NEXT_STEP }), "the new instance holds one step").toBeNull();
+    expect(
+      document.activeElement,
+      "a remount must not inherit the moved flag of the old instance",
+    ).not.toBe(screen.getByRole("region", { name: END }));
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it("ignores a second press on a stale Next step node, and moves the focus once", () => {
+    renderDay(week, 3);
+    const last = scriptOf(week, 3).steps.length - 1;
+    for (let tap = 0; tap < last - 1; tap += 1) {
+      fireEvent.click(screen.getByRole("button", { name: NEXT_STEP }));
+    }
+    const stale = screen.getByRole("button", { name: NEXT_STEP });
+    const focusSpy = vi.spyOn(HTMLElement.prototype, "focus");
+    fireEvent.click(stale);
+    fireEvent.click(stale);
+    expect(currentStepId(), "the second press on the detached node changes nothing").toBe(
+      scriptOf(week, 3).steps.at(-1)!.id,
+    );
+    const region = screen.getByRole("region", { name: END });
+    const calls = focusSpy.mock.contexts.filter((instance) => instance === region).length;
+    expect(calls, `region_focus_calls=${calls}`).toBe(1);
+    expect(document.activeElement).toBe(region);
+  });
+
+  it("closes an open player and still moves the focus when Next step reaches the last screen", () => {
+    const copy = structuredClone(week);
+    const e4 = stepOf(copy, 5, "E4");
+    e4.materials = [...e4.materials, 'karaoke videos: "Hello, I Am Pip"'];
+    expectWeek(copy, "the clone with media on the step before the last");
+    renderDay(copy, 5);
+    goToStep("E4");
+    fireEvent.click(screen.getByRole("button", { name: OPEN_MEDIA }));
+    expect(screen.queryAllByLabelText(PLAYER).length, "players=1 (positive control)").toBe(1);
+    fireEvent.click(screen.getByRole("button", { name: NEXT_STEP }));
+    expect(currentStepId()).toBe("E5");
+    expect(screen.queryAllByLabelText(PLAYER).length, "players=0 on the last screen").toBe(0);
+    expect(document.activeElement).toBe(screen.getByRole("region", { name: END }));
+  });
+
+  it("keeps the focus on the region when the Thai toggle changes the language of the last screen", () => {
+    renderDay(week, 2);
+    for (;;) {
+      const next = screen.queryByRole("button", { name: NEXT_STEP });
+      if (!next) break;
+      fireEvent.click(next);
+    }
+    const region = screen.getByRole("region", { name: END });
+    expect(document.activeElement).toBe(region);
+    fireEvent.click(screen.getByRole("button", { name: THAI_TOGGLE }));
+    expect(screen.getByRole("region", { name: END }), "the same region node stays").toBe(region);
+    expect(region.querySelector("p")!.getAttribute("lang"), "the fixed English line keeps lang en").toBe("en");
+  });
+});

@@ -543,6 +543,66 @@ describe("Phase 4 adversarial round 2: the runbook section of the teacher flag",
   });
 });
 
+describe("Phase 4 adversarial round 3: the runbook text after 9e2d04418", () => {
+  /**
+   * Lists the lines of the text files of the given folders that hold a gcloud env-var setter.
+   * @param roots The folders to scan, relative to the repository root.
+   * @returns One entry per line, with the file and the text.
+   */
+  function setterLines(roots: string[]): string[] {
+    const hits: string[] = [];
+    const skip = new Set(["node_modules", ".next", "__tests__", ".git"]);
+    const walk = (dir: string): void => {
+      if (!existsSync(dir)) return;
+      for (const entry of readdirSync(dir)) {
+        const path = join(dir, entry);
+        if (statSync(path).isDirectory()) {
+          if (!skip.has(entry)) walk(path);
+        } else if (/\.(md|yaml|yml|sh|json|ts|tsx)$/.test(entry)) {
+          readFileSync(path, "utf8")
+            .split("\n")
+            .forEach((line, index) => {
+              if (/--set-env-vars/.test(line)) hits.push(`${path.slice(REPO.length + 1)}:${index + 1}: ${line.trim()}`);
+            });
+        }
+      }
+    };
+    for (const root of roots) walk(resolve(REPO, root));
+    return hits;
+  }
+
+  it("holds no --set-env-vars line for the storytime service in docs, workflows, or the app", () => {
+    const hits = setterLines(["docs", ".github", "apps/storytime"]);
+    const storytime = hits.filter((line) => /storytime/i.test(line));
+    expect(storytime, `storytime_set_env_vars_lines=${storytime.length}`).toEqual([]);
+    expect(hits.length, `all_set_env_vars_lines=${hits.length}: the scan reads files (the Codecamp doc holds some)`).toBeGreaterThan(0);
+    expect(
+      hits.every((line) => line.startsWith("docs/deployment/")),
+      `every remaining setter is in the generic deployment doc: ${hits.filter((line) => !line.startsWith("docs/deployment/")).join(" | ")}`,
+    ).toBe(true);
+  });
+
+  it("sets exactly one variable on the update command and removes exactly one on the way back", () => {
+    const text = readFileSync(resolve(REPO, "docs/runbooks/storytime-deploy.md"), "utf8");
+    const update = /--update-env-vars ([^\s`]+)/.exec(text)?.[1];
+    const remove = /--remove-env-vars ([^\s`]+)/.exec(text)?.[1];
+    expect(update, "the update command sets one pair with no comma").toBe(`${FLAG_ENV}=1`);
+    expect(remove, "the removal command names the flag only").toBe(FLAG_ENV);
+  });
+
+  it("F475: warns that the update copies the latest revision, or pins the approved image", () => {
+    const text = readFileSync(resolve(REPO, "docs/runbooks/storytime-deploy.md"), "utf8");
+    const start = text.indexOf("## The teacher routes flag");
+    const rest = text.slice(start + 3);
+    const section = rest.slice(0, rest.indexOf("\n## ") === -1 ? undefined : rest.indexOf("\n## "));
+    expect(section, "the flag section must hold the update command").toMatch(/--update-env-vars/);
+    expect(
+      section,
+      "the update command makes a new revision from the template of the LATEST revision, which can be a no-traffic build that Daniel has not approved; the section must say so, check the latest revision against the live revision, or pass --image of the live revision (F475)",
+    ).toMatch(/latest revision|live revision|--image/i);
+  });
+});
+
 describe("Phase 4 adversarial: the signed URL map", () => {
   /** A media part with one primary file. */
   function media(file: string): StepMedia {
