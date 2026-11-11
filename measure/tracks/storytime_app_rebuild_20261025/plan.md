@@ -3386,6 +3386,36 @@ for every other track.
     "Hello, I am Pat." with Pat, one child, and his teddy bear, both read from the packages. The
     cost ledger holds one line for each call, with `subscription route, 0 USD`. Task 5.4 stays
     `[~]` until run 2 returns a fail for the thumbnail and a pass for the page.
+  - Calibration run 2, 2026-11-12 (the orchestrator ran the calls on
+    `claude-code/claude-sonnet-5-5#high`, subscription route, 0 USD). Orchestrator deviation,
+    recorded: the r4 prompts named the expected answer, so the orchestrator sent a neutral form.
+    The sent contexts: call 1 "it is the line picture for this lyric line of the week 2 song: 'How
+    many suns? One sun!' The line names one sun, in the stated count of one."; call 2 "it is the
+    picture for page 1 of book 1 'Hello!' of the milestone week (level 2, week 1). The page text is
+    'Hello, I am Pat.' The page names Pat, one child, who holds his small brown teddy bear and
+    waves at the green door of a bright kindergarten classroom." Verdicts: the "One sun" thumbnail
+    **failed** on "the picture shows the named object in the stated count" and "a gesture thumbnail
+    is never a line picture" ("Picture shows a character pointing up, with no sun. It is a gesture
+    thumbnail, not a sun picture."), as expected; book 1 page 1 **failed** on "the picture holds no
+    extra faces" ("Three framed animal faces (lion, elephant, frog) hang on the wall, besides Pat's
+    face and the teddy bear."), a false fail.
+  - Round r5 fix, 2026-11-12. Red model `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax); Green
+    role `deepseek/deepseek-flash#high` (DeepSeek); role base
+    `df9f240ec3daed998428fd6ce17771345b5ac0b7`; fix commit `1a612361a`. Cause: draft rule 6
+    (`generation-rules-draft2.md:98`) says "no deformed hands or faces"; the rubric said "no extra
+    hands" and "no extra faces", so wall pictures and props counted as faces. The two points now
+    read "a figure holds no deformed or extra hands" and "a figure holds no deformed or extra
+    faces; pictures, toys, and decorations in the scene do not count". The words "hands" and
+    "faces" stay, because the Red test pins them. No other point and no other kind changed.
+    `GREEN_TEST_COMMAND` under heavy-run p1: exit 0; 7 files; 53 passed of 53; 0 failed; 0 skipped.
+    The type check `tsc --noEmit` in `apps/storytime`: exit 0. ESLint on `rubrics.ts`: exit 0, 0
+    errors, 0 warnings. `build-graph update ./graph.db` with `rubrics.ts`: exit 0; 1 file; 6 nodes;
+    5 edges.
+  - Calibration run 3 (prepared, not run): the two neutral prompts with the five fixed points sit
+    in `measure/runs/storytime_app_rebuild_20261025/calibration-5.4.md`. They name no expected
+    verdict, no owner label, and no pass history. The cost ledger holds one line for each call
+    (`written_at=03:42`). Task 5.4 stays `[~]` until run 3 returns a fail for the thumbnail and a
+    pass for the page.
   - Task 5.4 stays `[~]`: the picture verdicts did not run, so the unit and stage 1 part alone
     cannot close the task. The implementation commits of the unit part are `3243b7020` and the Red
     test commit `fa8a127c7`. No file under `measure/runs/` is committed (Git ignores it). Evidence
