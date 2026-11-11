@@ -3350,12 +3350,43 @@ for every other track.
     file, no app code path, and no database. The Green role turns them green.
   - No product source was written. No file sits under `apps/storytime/scripts/review/`. No model
     was called and no money was spent. Evidence class: automated.
+  - Green evidence, tasks 5.6 and 5.7 (2026-11-12). Role `deepseek/deepseek-flash#high` (DeepSeek);
+    Red model `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax); role base
+    `4e678d0c506de2bd3782a125553a79f925e1be04`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; Red commits `016d899a2` and `cccd3f510`;
+    implementation commit `844bae0ad`. The module `apps/storytime/scripts/review/review-server.ts`
+    holds `REVIEW_ITEMS` (the five items of FR-12 with their milestone-week routes),
+    `REVIEW_ANSWERS_FILE_NAME`, `renderReviewPage()`, `appendReviewAnswer(path, answer)`,
+    `startReviewServer(options)`, `main(argv)`, and `checkedPort(port)`. It serves `/review`, takes
+    `POST /review/answer`, proxies every other path to `--app-url`, and reads the flags `--port`,
+    `--app-url`, and `--answers`. It uses the Node standard library only, adds no dependency,
+    names no database, and sits under no `apps/storytime/app/` route. The port check refuses 3005
+    and 3099. Every export holds JSDoc.
+  - Gates for tasks 5.6 and 5.7. `GREEN_TEST_COMMAND` under heavy-run p1, foreground: exit 0;
+    7 files; 52 passed of 52; 0 failed; 0 skipped. The type check `tsc --noEmit` in
+    `apps/storytime` under heavy-run p1: exit 0. ESLint on the new file: exit 0, 0 errors, 0
+    warnings. The browser gate self-test
+    `bash apps/storytime/__tests__/phase5-browser-gate.sh --self-test`: exit 0;
+    `selftest_good_accepted=6` of 6 and `selftest_mutants_rejected=17` of 17; `PASS=1 FAIL=0`.
+    `build-graph update ./graph.db` with the file: exit 0; 1 file; 37 nodes; 36 edges; search
+    finds `startReviewServer`, `renderReviewPage`, `appendReviewAnswer`, and `checkedPort`.
+  - Still open, so both tasks stay `[~]`: the full browser gate (`next start` with the draft
+    switch, the five rows, and `port_closed=1`) waits for the orchestrator's scheduled run under
+    the heavy lock, and the agent-side open, play, and check (rule 6.5) comes with that run. No
+    Next build, dev, or start ran in this round. Evidence class: automated unit and self-test.
 - [~] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
   - Red evidence (tasks 5.6 and 5.7): the same round as task 5.6. The unit file
     `apps/storytime/__tests__/phase5-review-copy.test.ts` holds the page contract, and the gate
     `apps/storytime/__tests__/phase5-browser-gate.sh` holds the browser rows of the page. The
     gate prints `items_checked=5` and `port_closed=1` on a pass, and it prints the labeled
     values `items_listed`, `controls_per_item`, `answered`, `answers_written`, and `draft_week`.
+  - Green evidence (task 5.7): the same round as task 5.6, commit `844bae0ad`. The page at
+    `/review` holds the five item blocks of FR-12, each with the four controls and the routes of
+    the item, and it shows no answer before an answer. One Send writes one JSON line at
+    `POST /review/answer`. The unit file exits 0 with 5 of 5 cases. The browser rows
+    (`items_listed=5`, `controls_per_item=4`, `answered=0`, `items_checked=5`,
+    `answers_written=5`, `draft_week=200`, and `port_closed=1`) wait for the full gate run, so
+    the task stays `[~]`. Evidence class: automated unit and self-test.
 
 ## Phase 6: Daniel's milestone judgment
 
