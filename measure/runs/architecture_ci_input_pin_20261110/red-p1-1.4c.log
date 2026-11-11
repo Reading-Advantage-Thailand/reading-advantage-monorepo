@@ -1,0 +1,48 @@
+=== measure red run: task 1.4c ===
+session: Red · P1 1.4c · architecture_ci_input_pin
+role: measure-mid-red
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4c
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: e302f433c9e2e060cdc56b0e6f8b748618a80a70
+model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+started: 2026-11-11
+finished: 2026-11-11
+
+=== commands ===
+red command: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/inventory.test.ts
+red command exit code: 1
+red counts: tests_total=19, tests_failed=5, tests_passed=14
+red duration: 2.52 s
+type check command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement check-types'
+type check exit code: 0
+detector exit codes: 1 for measure/tracks|measure/runs, 1 for the clock pattern
+
+=== failing cases at the red head ===
+ac18_public_js_is_not_selected: selected_paths=2
+ac18_public_variants_are_not_selected: apps/example/public/a/b/y.mjs, selected_paths=2
+ac18_public_variants_are_not_selected: apps/example/public/z.jsx, selected_paths=2
+ac18_public_variants_are_not_selected: apps/example/public/serwist/sw.js, selected_paths=2
+ac18_inventory_scans_only_the_control: files_scanned=2
+
+=== passing guards at the red head ===
+ac19_src_file_is_still_selected
+ac20_app_level_match_only: apps/example/src/public/x.ts
+ac20_app_level_match_only: apps/example/src/public.ts
+ac20_app_level_match_only: apps/example/public.ts
+ac20_app_level_match_only: packages/example/public/x.ts
+ac21_manifest_key_set_is_unchanged
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: done
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+commits: 386eb2ad52fe8c08df548e2088b29da9a8278e74 test(architecture): pin the public asset rule (track_id: architecture_ci_input_pin_20261110); 9560f56aff462926e1e9e7bdb819d83eece4f1b1 test(architecture): pin the public asset rule (track_id: architecture_ci_input_pin_20261110), the follow-up that gives the option its repoRoot field; the measure docs commit with this log and the plan note follows this block
+tests_run: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/inventory.test.ts -> exit 1, tests_total=19, tests_failed=5, tests_passed=14; the package check-types through heavy-run -> exit 0
+files_changed: packages/architecture-enforcement/src/__tests__/inventory.test.ts, measure/tracks/architecture_ci_input_pin_20261110/plan.md, measure/runs/architecture_ci_input_pin_20261110/red-p1-1.4c.log
+plan_updates: task 1.4c marked [~] with the red evidence: the test sha 9560f56aff462926e1e9e7bdb819d83eece4f1b1, the first test sha 386eb2ad52fe8c08df548e2088b29da9a8278e74, the red command, exit 1, tests_total=19, tests_failed=5, tests_passed=14, the five failing AC-18 cases, the six guard names with their reason, and the check-types exit code 0
+known_failures: 5 cases fail at the red head for the missing behavior. The four selection cases report selected_paths=2, and the inventory case reports files_scanned=2. The base code selects and scans the public files. No case fails for a syntax error, an import error, or a type error.
+handoff: green runs next on the deepseek family and changes packages/architecture-enforcement/src/inventory.ts only. Green adds the constant STATIC_ASSET_DIRECTORY and one line in isIgnoredPath after the node_modules line. The set GENERATED_WORKSPACE_DIRECTORIES stays unchanged. Green edits no test file and runs no real refresh. The green gate runs the four named files, the package suite, check-types, lint, and build-graph through heavy-run. The next series of task 1.4 starts after the last 1.4c commit and expects modules_total=6866. The red file keeps the 8 existing cases unchanged and adds one describe block with 11 cases.
+END_MEASURE_AGENT_RESULT
