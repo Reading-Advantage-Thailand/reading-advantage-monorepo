@@ -45,7 +45,8 @@ ANSWERS_FILE="$RUN_FOLDER/review-answers-p5.json"
 TMP_DIR="$(mktemp -d -t storytime-phase5-XXXXXX)"
 FIXTURE="$TMP_DIR/content"
 FIXTURE_WEEK="$FIXTURE/l2/w01.json"
-SERVER_LOG="$TMP_DIR/server.log"
+NEXT_LOG="$TMP_DIR/next.log"
+REVIEW_LOG="$TMP_DIR/review.log"
 SERVER_PID_FILE="$TMP_DIR/server.pid"
 PLAYWRIGHT="$APP/.next/phase5-browser-gate-$$.mjs"
 DB_CONTAINER="storytime-phase5-gate-db-$$"
@@ -587,8 +588,13 @@ while [ "$SERVER_PORT" = "$APP_PORT" ]; do SERVER_PORT="$(pick_port)"; done
 mkdir -p "$RUN_FOLDER"
 rm -f "$ANSWERS_FILE"
 : > "$SERVER_PID_FILE"
-: > "$SERVER_LOG"
-setsid bash -c "echo \$\$ > '$SERVER_PID_FILE'; cd '$APP' && (STORYTIME_CONTENT_DIR='$FIXTURE' STORYTIME_DATABASE_URL='$DB_URL' STORYTIME_MEDIA_BASE='gs://storytime-app-media' STORYTIME_STORAGE_ENDPOINT='http://127.0.0.1:$APP_PORT' STORYTIME_STORAGE_ACCESS_KEY='gate-access-key' STORYTIME_STORAGE_SECRET_KEY='gate-secret-key' STORYTIME_SHOW_DRAFT_MEDIA=1 STORYTIME_TEACHER_ROUTES=1 exec ../../node_modules/.bin/next start --hostname 127.0.0.1 --port '$APP_PORT' >'$SERVER_LOG' 2>&1) & exec ../../node_modules/.bin/tsx scripts/review/review-server.ts --port '$SERVER_PORT' --app-url 'http://127.0.0.1:$APP_PORT' --answers '$ANSWERS_FILE' >>'$SERVER_LOG' 2>&1" &
+: > "$NEXT_LOG"
+: > "$REVIEW_LOG"
+# The `cd` must apply to both servers. A `&` after the `cd` sends the whole list to the
+# background, so the review server would run in the folder of the caller and its relative paths
+# would not resolve. Each server writes its own log, so neither overwrites the other.
+REVIEW_SERVER_REL="${REVIEW_SERVER#"$APP"/}"
+setsid bash -c "echo \$\$ > '$SERVER_PID_FILE'; cd '$APP' || exit 1; (STORYTIME_CONTENT_DIR='$FIXTURE' STORYTIME_DATABASE_URL='$DB_URL' STORYTIME_MEDIA_BASE='gs://storytime-app-media' STORYTIME_STORAGE_ENDPOINT='http://127.0.0.1:$APP_PORT' STORYTIME_STORAGE_ACCESS_KEY='gate-access-key' STORYTIME_STORAGE_SECRET_KEY='gate-secret-key' STORYTIME_SHOW_DRAFT_MEDIA=1 STORYTIME_TEACHER_ROUTES=1 exec ../../node_modules/.bin/next start --hostname 127.0.0.1 --port '$APP_PORT' >'$NEXT_LOG' 2>&1) & exec ../../node_modules/.bin/tsx '$REVIEW_SERVER_REL' --port '$SERVER_PORT' --app-url 'http://127.0.0.1:$APP_PORT' --answers '$ANSWERS_FILE' >'$REVIEW_LOG' 2>&1" &
 for _ in $(seq 1 20); do
   [ -s "$SERVER_PID_FILE" ] && break
   sleep 0.2
@@ -606,7 +612,10 @@ if [ "$READY" -eq 1 ]; then
   pass "The review copy answers on port $SERVER_PORT"
 else
   fail "The review copy did not become ready on port $SERVER_PORT"
-  cat "$SERVER_LOG"
+  echo "--- the next start log ---"
+  cat "$NEXT_LOG"
+  echo "--- the review server log ---"
+  cat "$REVIEW_LOG"
 fi
 
 echo "=== Run the browser rows on the review page ==="
