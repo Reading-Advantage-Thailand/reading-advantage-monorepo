@@ -293,7 +293,7 @@ Dates are the latest dates. The PM fixed the dates of tasks 3.8, 3.9, 3.10, and 
 | 3.1 Entry route | 2026-11-06 | high | `phase3-entry-route.test.ts`, `phase3-readiness.test.ts`, `phase3-manifest.test.ts`, changed `phase1-scaffold.test.ts` and `phase1-boundary.test.ts` | AC-2.1, AC-5.1, AC-5.4 |
 | 3.8 part 1 Loop contract, receiver, F99 | 2026-11-09 | high | `phase3-loop-contract.test.ts`, `phase3-f99-page-audio.test.ts`, `phase3-loop-receiver.test.ts`, `phase3-media-coverage.test.ts`, `phase3-receiver-hardening.test.ts` | AC-13.2 to AC-13.5 |
 | 3.2 Tiles and home card | 2026-11-10 | medium | `phase3-home-card.test.tsx`, `phase3-messages.test.ts` | AC-5.2 (browser) |
-| 3.3 Read-along UI | 2026-11-12 | high | `phase3-readalong-ui.test.tsx`; `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx` | AC-6.1 |
+| 3.3 Read-along UI | 2026-11-11 | high | `phase3-readalong-ui.test.tsx`; `packages/read-along/components/read-along/__tests__/phase3-a11y.test.tsx` | AC-6.1 |
 | 3.4 Decodable UI | 2026-11-13 | medium | `phase3-decodable-ui.test.tsx`, `phase3-phoneme-bank.test.ts` | AC-7.1 |
 | 3.5 Song page | 2026-11-16 | medium | `phase3-song-ui.test.tsx` | AC-8.1, AC-8.2 (browser) |
 | 3.8 part 2 Draft pin receipt | 2026-11-19 (target: 2 days after the pin arrives) | high | `phase3-loop-contract.test.ts`, `phase3-f99-page-audio.test.ts`, `phase3-loop-receiver.test.ts`, `phase3-media-coverage.test.ts`, `phase3-receiver-hardening.test.ts`; the updated P2 tests that name the pin | AC-13.1 |
@@ -623,7 +623,7 @@ bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Deskt
 
 > **Amendment 2026-11-10:** the old command used the glob `apps/storytime/__tests__/phase4-*.test.ts`. The shell expands that glob to the `.ts` files only, so the `.tsx` tests did not run (A4: a gate that skips tests). Each Phase 4 test file now has its own named command. The aggregate list above and the per-task commands in P4.4, P4.6, and P4.6a name every file. A new Phase 4 test file joins this list in the same commit that adds it.
 
-> **Amendment 2026-11-12:** the targeted command above now names the eight Phase 4 test files: `phase4-teacher-flag.test.ts`, `phase4-week-view.test.tsx`, `phase4-lesson-flow.test.tsx`, `phase4-lesson-media.test.tsx`, `phase4-loops-flow.test.tsx`, `phase4-share-moment.test.tsx`, `phase4-adversarial.test.tsx`, and `phase4-adversarial-routes.test.ts`. The adversarial round (commit `80fff5b29`) added the last two files, and a new Phase 4 test file joins the list in the same commit that adds it.
+> **Amendment 2026-11-11:** the targeted command above now names the eight Phase 4 test files: `phase4-teacher-flag.test.ts`, `phase4-week-view.test.tsx`, `phase4-lesson-flow.test.tsx`, `phase4-lesson-media.test.tsx`, `phase4-loops-flow.test.tsx`, `phase4-share-moment.test.tsx`, `phase4-adversarial.test.tsx`, and `phase4-adversarial-routes.test.ts`. The adversarial round (commit `80fff5b29`) added the last two files, and a new Phase 4 test file joins the list in the same commit that adds it.
 
 **Green gate:** the targeted Red command exits 0. The browser check at 1920x1080 and on a laptop exits 0 with the flag on.
 
@@ -898,7 +898,7 @@ These rows join the task 4.5 browser check. The task 4.5 rows above stay: `PROJE
 
 | Row | Check | Falsification condition |
 |---|---|---|
-| B1 | At 1920x1080 and 1366x768, on a media step (B3 and D6), the open player fits in the viewport. The gate asserts the player width is at most the window width, the player height is at most the window height, and the page has no horizontal scroll. It does not assert that the page has no vertical scroll. The measured box is logged as `player_w=<n> player_h=<n>`. **Amendment 2026-11-12 (F421 part f):** the old text said "no page scroll", but `phase4-browser-gate.sh` asserts the region size and the horizontal scroll only. | The player is wider or taller than the window, or the page scrolls sideways |
+| B1 | At 1920x1080 and 1366x768, on a media step (B3 and D6), the open player fits in the viewport. The gate asserts the player width is at most the window width, the player height is at most the window height, and the page has no horizontal scroll. It does not assert that the page has no vertical scroll. The measured box is logged as `player_w=<n> player_h=<n>`. **Amendment 2026-11-11 (F421 part f):** the old text said "no page scroll", but `phase4-browser-gate.sh` asserts the region size and the horizontal scroll only. | The player is wider or taller than the window, or the page scrolls sideways |
 | B2 | On each of the 4 media steps, open then close: the step id on screen is the same as before (`place_kept=4`) | A close returns to the first step |
 | B3 | While the player is open, the "Next step" control stays in the document | The flow unmounts |
 | B4 | Keyboard: Tab reaches the open control, Enter opens, Escape closes, and focus returns (`focus_returned=1`) | Focus is lost |
