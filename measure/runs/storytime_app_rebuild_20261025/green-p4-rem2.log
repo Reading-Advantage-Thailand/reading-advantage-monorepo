@@ -1,0 +1,121 @@
+# Green · P4 rem2 · storytime_app_rebuild
+
+- Track: storytime_app_rebuild_20261025, Phase 4: Teacher app, remediation round 2.
+- Started: 2026-11-11. Model: volcengine-agent-plan/glm-5.3-flash#high (GLM).
+- HEAD at role start: 80fff5b29356d42b0381de90fc07de031594da03 (the adversarial test commit).
+- phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae. role_base_sha: 80fff5b29356d42b0381de90fc07de031594da03.
+- MemAvailable at start: 2414 MB (floor 1500 MB).
+- Final Green HEAD: f76d58624a460cb634129283cd1c8dc4a86b6d0b.
+
+## Red confirmation
+
+- Commit 80fff5b29 added `apps/storytime/__tests__/phase4-adversarial.test.tsx` (870 lines) and
+  `phase4-adversarial-routes.test.ts` (524 lines) inside `phase_base_sha..HEAD`. The two files
+  are the committed Red change of this round. `git diff --stat b8310e990 80fff5b29 -- apps/storytime`
+  shows only the two test files.
+- Targeted Red command before the fix:
+  `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase4-adversarial.test.tsx __tests__/phase4-adversarial-routes.test.ts`
+  gave 8 failed, 33 passed (the 8 red cases of the adversarial record). After the fix the same
+  command gave 41 passed, 0 failed.
+
+## Dispositions
+
+- F451 FIX. F452 FIX. F433 FIX. F434 FIX. F435 FIX (same defect as F443, one fix). F441 FIX.
+  F442 FIX. F443 FIX. F418 FIX (three correction notes, parts c, d, e). F432 FIX (one
+  correction note). F421 FIX (part d fixed in code; part e declined by default; part f routed
+  to the strategy role).
+- F421e decline reason: the 44dvh class-screen song stage cap is the approved B1 design of the
+  remediation round 1 fix (plan task 4.5, commit `3a9f14cbd`), not a defect.
+- Not mine, untouched: F436 (spec AC-9.3, build session), the strategy list, and row B1
+  (strategy role). `spec.md` and `test-strategy.md` did not change.
+
+## Implementation
+
+- Commit: f76d58624a460cb634129283cd1c8dc4a86b6d0b
+  `fix(storytime): close the phase 4 adversarial findings (track_id: storytime_app_rebuild_20261025)`.
+  Files: `apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx` and
+  `docs/runbooks/storytime-deploy.md`. No coder was delegated. No committed Red test changed.
+- Fixes in `lesson-flow.tsx`:
+  - F451: each drill clip control keys by `` `${file}-${soundIndex}` ``, so a word with a
+    repeated sound repeats no key.
+  - F433b and F441: each clip accessible name starts with the visible text, `Play clip: <sound>
+    of <word>` on a drill and `Play clip: the recording of <card text>` on a recall card. The
+    committed loops case (names hold the word and the sound, all distinct) still passes.
+  - F442: the recall card `li` holds `lang="en"`.
+  - F434: the share moments key by the shot index, and the consent line shows once per step.
+    The consent line sits in the last moment of the step, because the committed share-moment
+    case reads the consent line from the text of a `[data-share-moment]` element.
+  - F435 and F443: one cleanup effect pauses `clipAudioRef` and clears it on unmount.
+  - F433a: new helper `pickLang(value, thai)` returns the language of the text that shows; new
+    helper `noteLangsOf(step, thai)` returns the language of the array that supplied each
+    teacher-note array. Every `pick` site now marks `lang` from the text that shows, not from
+    the toggle. The h1 guards the absent script.
+  - F421d: the last screen of a day holds a focus target (`endRef`, `tabIndex={-1}`, aria-label
+    "The end of the lesson"), and an effect moves the focus there when the last screen shows.
+- Fix in the runbook (F452): a new section "The teacher routes flag (2026-11-11)" names
+  `STORYTIME_TEACHER_ROUTES`, the on value `1`, the off-by-default rule, and states that the
+  flag is the only access control of the teacher routes until Q1. It says not to set the flag
+  in the Dockerfile or `cloudbuild.yaml`, and to set it on the service only after Daniel's go.
+- Plan updates (separate evidence commit): one correction note each for F418c, F418d, F418e,
+  and F432, each under its evidence, with no old text rewritten; and the "Phase 4 remediation
+  round 2" evidence block under task 4.5. Task 4.5 stays `[x]`.
+
+## Gates
+
+Each gate ran alone, in the foreground, with the shell timeout 0. MemAvailable before the
+browser gate: 2262 MB.
+
+1. The 8 Phase 4 files through `heavy-run.sh` p1, `--maxWorkers=1`: exit 0, 8 files, 108 of 108
+   tests. The P3 player set (6 files: `phase3-decodable-ui`, `phase3-decodable-punct`,
+   `phase3-song-ui`, `phase3-home-render`, `phase3-media-src-write`, `phase3-audio-seek-stop`)
+   through heavy-run p1: exit 0, 27 of 27.
+2. `tsc --noEmit` in apps/storytime through heavy-run p1: exit 0.
+3. ESLint on `lesson-flow.tsx`: exit 0, 0 errors, 0 warnings.
+4. `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+   Run (a) PASS=28, FAIL=0. Run (b) PASS=24, FAIL=0. Run (c) PASS=12, FAIL=0. Wrapper PASS=9,
+   FAIL=0. The gate stopped its three servers (`port_closed=` lines) and removed its scratch.
+5. `build-graph update` through heavy-run p1 on `lesson-flow.tsx`: exit 0 (86 nodes, 102 edges).
+
+No exit 75 and no retry was needed. No server stays running. The scratch of this round is the
+log file itself; no `/tmp` file was created outside the gate script, which cleans its own.
+
+MEASURE_AGENT_RESULT
+status: success
+role: measure-jr-green
+track: storytime_app_rebuild_20261025
+phase: Phase 4: Teacher app (remediation round 2)
+phase_base_sha: bfaae8905993076ca1e8a49939c400eb038fe3ae
+role_base_sha: 80fff5b29356d42b0381de90fc07de031594da03
+implementation_commit: f76d58624a460cb634129283cd1c8dc4a86b6d0b
+final_head: f76d58624a460cb634129283cd1c8dc4a86b6d0b (before the plan-evidence commit)
+
+summary: All 8 red cases of the adversarial round pass with production changes only. One
+implementation commit f76d58624 changes lesson-flow.tsx and docs/runbooks/storytime-deploy.md;
+no committed Red test changed. Gates: the 8 Phase 4 files 108 of 108 (heavy-run p1), the P3
+player set 27 of 27, tsc exit 0, ESLint 0 errors 0 warnings, the browser gate exit 0 with
+PASS=28/24/12 and wrapper PASS=9, FAIL=0 everywhere, build-graph update exit 0. The plan
+gains four correction notes (F418c, F418d, F418e, F432) and the remediation round 2 evidence
+block under task 4.5; task 4.5 stays [x].
+
+tasks_flipped: none flipped to [x] this round; task 4.5 was already [x] and holds the new
+evidence block with the implementation SHA f76d58624.
+
+tasks_blocked: none. No task holds a human-gated [b] marker from this round.
+
+red_command: cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+__tests__/phase4-adversarial.test.tsx __tests__/phase4-adversarial-routes.test.ts — before the
+fix: 8 failed, 33 passed; after the fix: 41 passed, 0 failed.
+
+new_files: none. The round changed two existing files only, so reviewers audit
+lesson-flow.tsx and docs/runbooks/storytime-deploy.md at f76d58624.
+
+handoff: F421 carries one FIX disposition with three parts. Part d is fixed (the last screen
+holds the focus target "The end of the lesson"). Part e is declined: the 44dvh class-screen
+song stage cap is the approved B1 design of the round 1 fix. Part f (row B1 wording) goes to
+the strategy role. F436 (spec AC-9.3) and the strategy list go to their named roles; this
+round changed no spec.md and no test-strategy.md. The correction notes of F418c, F418d, F418e,
+and F432 sit in plan.md under their evidence; the old text stays. The 8 red cases now pass,
+so the P4 aggregate gate is green at f76d58624.
+
+dispositions: F418=FIX; F421=FIX; F432=FIX; F433=FIX; F434=FIX; F435=FIX; F441=FIX; F442=FIX; F443=FIX; F451=FIX; F452=FIX
+END_MEASURE_AGENT_RESULT

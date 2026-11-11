@@ -2223,6 +2223,10 @@ for every other track.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-t44.log`.
 
 - [x] 4.4 Media in the flow: a step with media opens the at-home player in class-screen mode (1920x1080), and the flow stays open. Test: the step keeps its place after the player closes. Red: `c04bb063b`. Done: `43e0d4067`. Automated: the Green command exits 0 with 4 files and 33 tests; ESLint exits 0 on the six files; tsc --noEmit in apps/storytime (heavy-run p1) exits 2 with 3 errors, all in __tests__/phase4-share-moment.test.tsx (the task 4.6a Red file, commit 806e8238b, lines 177 and 435); the six changed files add no error; the same 3 errors appear with the six files at HEAD.
+  - Note (remediation round 2, finding F418d, 2026-11-11): the `tsc` exit 2 above records the
+    state at commit `43e0d4067`, when the task 4.6a Red file still held its 3 type errors. Every
+    later gate records `tsc --noEmit` exit 0 (the task 4.5 gates, the remediation round 1 gate,
+    and the remediation round 2 gate at `f76d58624`).
 - [x] 4.6 Teacher loops in the lesson flow: the recall cards at the day opening (none on week 1 day 1), soundLoop on steps A1 to A3, blendDrill on step A4 (model, lead, and test, with bank clips), the sightWords timed card on steps A6 and D2, and the step time loopMinutes ?? minutes, under the same approval and level rule. The app shows the recall that an approved week 1 day 1 script holds. Tests: AC-13.7, AC-13.8. Red: `bb246e066`. Done: `f162e92cb`. Target: before the Storytime release 1 delivery of 2026-12-01 (internal).
   - Red evidence (task 4.6). Role base `623b326920efb7962a56b12bb587c7082be7ef7e`; phase base
     `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Red added one test file and changed no
@@ -2635,6 +2639,13 @@ for every other track.
     rewritten in place with their names and meaning kept; the case count stays. The routed
     findings direct the guard extraction and a behavior test, so the source regexes of the flag
     case cannot stay. Every other Red case is untouched. The report holds the full note.
+  - Correction (remediation round 2, finding F432, 2026-11-11): the sentence "Every other Red
+    case is untouched" above is not exact. The share-moment source-scan case ("keeps every
+    teacher source free of an upload path") also changed in place: its file list gained
+    `lib/teacher.ts`, `lib/teacher-media.ts`, and `lib/teacher-loops.ts`, and its
+    `files_scanned` floor moved from 4 to 7. The round holds three in-place edits: the two flag
+    cases of `phase4-teacher-flag.test.ts` and this one scan case. The scan change only
+    strengthens the case and keeps its meaning.
   - Declined (F421a, F421b): a previous-step control and a shared class-screen sizing of the
     reader and the decodable are features for a later phase.
   - Contested (F412, F406, F501): the check order is a recorded decision — `test-strategy.md`
@@ -2660,7 +2671,53 @@ for every other track.
     the task 4.3 block); the canonical-number correction under the 4.1 and 4.2 Green evidence
     (F418b). `test-strategy.md` changed in commit `19d14b278` by the strategy role; this round
     does not edit or commit it.
+  - Correction (remediation round 2, finding F418e, 2026-11-11): the "A16 holds (no worktree)"
+    notes of this track mean that no role of this track made a worktree. The repository holds
+    auxiliary worktrees of other tracks and other owners, so their existence does not
+    contradict the notes.
   - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem1.log`.
+  - Phase 4 remediation round 2 evidence. Role base `80fff5b29356d42b0381de90fc07de031594da03`
+    (the adversarial test commit); phase base `bfaae8905993076ca1e8a49939c400eb038fe3ae`. Model:
+    `volcengine-agent-plan/glm-5.3-flash#high` (GLM). The adversarial round ran on Anthropic;
+    the families differ. No coder was delegated.
+  - Correction (remediation round 2, finding F418c, 2026-11-11): the task line above says this
+    checkpoint does not cover 4.6 and 4.6a; that sentence records the old scope. The checkpoint
+    note (orchestrator decision, 2026-11-11) and the strategy amendment of `19d14b278` record
+    that tasks 4.1 to 4.6a hold one checkpoint. The named change-quality review ran as the
+    review rounds: review A and review C round 2 passed at `b8310e990`
+    (`review-a-p4-b8310e990.json`, `review-c-p4-b8310e990.json`).
+  - Implementation commit: `f76d58624` (`fix(storytime): close the phase 4 adversarial
+    findings`). Files: `lesson-flow.tsx` and `docs/runbooks/storytime-deploy.md`. The two
+    adversarial test files of commit `80fff5b29` did not change.
+  - Fixes in `lesson-flow.tsx`: the drill clip controls key by `` `${file}-${soundIndex}` ``, so
+    a word with a repeated sound repeats no key (F451); each clip accessible name starts with
+    the visible text "Play clip" (F433b, F441); the recall card text holds `lang="en"` (F442);
+    the share moments key by the shot index, and the consent line shows once per step, in the
+    last moment of the step (F434); a cleanup effect pauses the clip on unmount (F435, F443);
+    every `lang` mark follows the text that shows, and the note lines carry the language of the
+    array that supplied them (F433a); the last screen of a day holds a focus target, so the
+    focus does not fall to the body when "Next step" leaves the DOM (F421d).
+  - Fix in the runbook: a new section names `STORYTIME_TEACHER_ROUTES`, the on value `1`, and
+    the off-by-default rule, and states that the flag is the only access control of the teacher
+    routes until Q1 (F452).
+  - Declined (F421e): the 44dvh class-screen song stage cap is the approved B1 design of the
+    remediation round 1 fix, not a defect. Routed out of Green (F421f, F436, the strategy
+    list, and row B1): the strategy role owns the row wording, and a build session owns the
+    spec line. This round changed no `spec.md` and no `test-strategy.md`.
+  - Gates (MemAvailable 2414 MB at the start; each gate ran alone, in the foreground, with the
+    shell timeout 0):
+    1. The 8 Phase 4 files through `heavy-run.sh` p1 with `--maxWorkers=1`: exit 0, 8 files,
+       108 of 108 tests. The 8 red cases of the adversarial round now pass. The P3 player set
+       (6 files: `phase3-decodable-ui`, `phase3-decodable-punct`, `phase3-song-ui`,
+       `phase3-home-render`, `phase3-media-src-write`, `phase3-audio-seek-stop`; heavy-run p1):
+       exit 0, 27 of 27.
+    2. `tsc --noEmit` in apps/storytime (heavy-run p1): exit 0.
+    3. ESLint on `lesson-flow.tsx`: exit 0; 0 errors; 0 warnings.
+    4. `HEAVY_HANG_KILL_S=off bash apps/storytime/__tests__/phase4-browser-gate.sh`: exit 0.
+       Run (a) `PASS=28, FAIL=0`; run (b) `PASS=24, FAIL=0`; run (c) `PASS=12, FAIL=0`;
+       wrapper `PASS=9, FAIL=0`.
+    5. `build-graph update` (heavy-run p1) on `lesson-flow.tsx`: exit 0 (86 nodes, 102 edges).
+  - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-rem2.log`.
 
 ## Phase 5: Milestone week integration
 
