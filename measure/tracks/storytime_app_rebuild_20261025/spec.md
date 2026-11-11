@@ -223,7 +223,7 @@ Acceptance:
 
 - AC-9.1 (automated) Tests against the shipped milestone file show every item of the week view.
 - AC-9.2 (automated) For each day, a test compares the steps on screen with the steps in the file. Each step has the four headings and the three variant lines.
-- AC-9.3 (automated) With the flag off, every teacher route answers 404.
+- AC-9.3 (automated) With the flag off, every teacher route answers 404. This holds for every request that has a session. A request without a session gets the sign-in redirect in both flag states (strategy amendment of 2026-11-11, commit 19d14b278).
 
 ### FR-10 Milestone media
 
