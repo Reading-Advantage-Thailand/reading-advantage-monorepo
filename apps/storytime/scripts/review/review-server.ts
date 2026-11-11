@@ -6,7 +6,8 @@
  * routes on the milestone week (level 2, week 1) and four controls: Pass, Fail, a comment, and
  * Send. One answer lands at `POST /review/answer` as one JSON line in a plain file, so the page
  * needs no database. Every other path is proxied to the app review copy, which runs `next start`
- * with `STORYTIME_SHOW_DRAFT_MEDIA=1`.
+ * with `STORYTIME_SHOW_DRAFT_MEDIA=1`. The proxy keeps the Host header of the browser, because the
+ * app reads its own origin from that header and the sign-in then accepts the review origin.
  *
  * The module holds the page only. No file under `apps/storytime/app/` names the page, and the
  * page holds no app code. The server uses the Node standard library only.
@@ -278,19 +279,30 @@ function sendText(response: ServerResponse, status: number, text: string): void 
 
 /**
  * Proxies one request to the app review copy.
+ *
+ * The proxy keeps the Host header of the browser. The app reads its own origin from that header
+ * (`lib/auth/same-origin.ts`), so the sign-in accepts the review origin for the Origin header of
+ * the browser. The host of the app goes to `x-forwarded-host`, and the scheme goes to
+ * `x-forwarded-proto`.
  * @param request The incoming request.
  * @param response The response to write.
  * @param appUrl The URL of the app review copy.
  */
 function proxyToApp(request: IncomingMessage, response: ServerResponse, appUrl: string): void {
   const target = new URL(appUrl);
+  const host = request.headers.host ?? target.host;
   const upstream = httpRequest(
     {
       hostname: target.hostname,
       port: target.port === "" ? 80 : Number(target.port),
       path: request.url ?? "/",
       method: request.method,
-      headers: { ...request.headers, host: target.host },
+      headers: {
+        ...request.headers,
+        host,
+        "x-forwarded-host": host,
+        "x-forwarded-proto": "http",
+      },
     },
     (upstreamResponse) => {
       response.writeHead(upstreamResponse.statusCode ?? 502, upstreamResponse.headers);
