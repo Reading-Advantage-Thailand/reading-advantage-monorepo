@@ -114,8 +114,8 @@ export const RUBRICS: Rubric[] = [
     knownFaults: [
       "the picture shows the named object in the stated count",
       "a gesture thumbnail is never a line picture",
-      "the picture holds no extra hands",
-      "the picture holds no extra faces",
+      "a figure holds no deformed or extra hands",
+      "a figure holds no deformed or extra faces; pictures, toys, and decorations in the scene do not count",
       "the picture holds no wrong text",
     ],
     knownBadFiles: [
