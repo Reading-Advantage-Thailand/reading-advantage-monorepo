@@ -29,6 +29,57 @@ GATE_TRACK = "measure_apk_evidence_integrity_gates_20260712"
 OWNER_DELEGATION_TEXT = (
     "For this project, YOU are the orchestrator, therefore YOU are acting as the owner."
 )
+FIXTURE_SUPERVISOR_SOURCE = '''"""Fixture supervisor for the isolated evidence-integrity gate repository.
+
+The production supervisor file was removed in commit 49d6aeaa4. The accepted gate
+contract still lists this path, so the test writes this fixture in its place. The
+fixture runs the real gate with an unavailable live provider session and prints the
+gate status.
+"""
+
+import os
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(os.environ.get("MEASURE_REPO_ROOT", ".")).resolve()
+sys.path.insert(0, str(REPO_ROOT))
+
+from measure.evidence_integrity_gates.opencode_provenance import ProvenanceError
+from measure.evidence_integrity_gates.supervisor_gate import validate_supervisor_completion
+
+
+class UnavailableProviderSession:
+    """Stands in for a live provider session that cannot be exported."""
+
+    def resolve(self, session_id: str) -> bytes:
+        """Fails closed for every session because the live provider is unavailable.
+
+        @param session_id Provider session identifier.
+        @returns Nothing.
+        @throws ProvenanceError When the live provider session is unavailable.
+        """
+        raise ProvenanceError("live provider session is unavailable")
+
+
+def main() -> int:
+    """Prints the gate status for one track and fails closed when the gate blocks."""
+    arguments = sys.argv[1:]
+    track = "product_track"
+    if "--track" in arguments:
+        track = arguments[arguments.index("--track") + 1].strip("^$")
+    report = validate_supervisor_completion(
+        REPO_ROOT, track, trusted_resolver=UnavailableProviderSession()
+    )
+    if report.get("ok"):
+        print("Evidence gate status: OK")
+        return 0
+    print("Evidence gate status: BLOCKED")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+'''
 
 
 class FixtureTrustedResolver:
@@ -67,7 +118,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
         (self.repo / "measure" / "generated").mkdir(parents=True)
         (self.repo / "measure" / "evidence_integrity_gates").mkdir(parents=True)
         (self.repo / "tests").mkdir()
-        shutil.copy(REPO_ROOT / "measure" / "automation-supervisor.py", self.repo / "measure" / "automation-supervisor.py")
+        self._write("measure/automation-supervisor.py", FIXTURE_SUPERVISOR_SOURCE)
         for source in (REPO_ROOT / "measure" / "evidence_integrity_gates").glob("*.py"):
             shutil.copy(source, self.repo / "measure" / "evidence_integrity_gates" / source.name)
         self._write("measure/tracks.md", "# Tracks\n\n- product_track\n- measure_apk_evidence_integrity_gates_20260712\n\n## Archived Tracks\n")
