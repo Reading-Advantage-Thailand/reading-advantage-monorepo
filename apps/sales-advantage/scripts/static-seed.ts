@@ -2254,7 +2254,9 @@ Every class follows the Big 4, and we observe classes every quarter:
 
 ## Our size
 
-"The scale facts answer a direct question only, and a trainee never volunteers them. Name the school, or show its data, only with the school's written consent (Q-SE-03); one active school (Boonyathat, Kalasin, on Primary Advantage); under 500 active students."
+The scale facts answer a direct question only, and a trainee never volunteers them. Name the school, or show its data, only with the school's written consent (Q-SE-03).
+
+"Today we have one active school in Thailand, in Kalasin, on Primary Advantage. We are a Khon Kaen company, self-funded, and our complete curriculum is being brought to market."
 
 Give this number only when a director asks, and never inflate it. Never call us "leading" or "number one".`,
         order: 1,
