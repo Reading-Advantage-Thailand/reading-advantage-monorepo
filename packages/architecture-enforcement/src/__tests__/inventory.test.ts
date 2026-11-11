@@ -406,7 +406,7 @@ describe("static public assets (AC-18 to AC-21)", () => {
   it("ac18_public_js_is_not_selected", () => {
     const publicPath = "apps/example/public/x.js";
     const selected = selectArchitectureSourceFiles(
-      { trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
+      { repoRoot, trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
       repoRoot,
     );
 
@@ -424,7 +424,7 @@ describe("static public assets (AC-18 to AC-21)", () => {
         `variant_rows=${PUBLIC_ASSET_VARIANT_PATHS.length}`,
       ).toBe(3);
       const selected = selectArchitectureSourceFiles(
-        { trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
+        { repoRoot, trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
         repoRoot,
       );
 
@@ -468,7 +468,7 @@ describe("static public assets (AC-18 to AC-21)", () => {
   it("ac19_src_file_is_still_selected", () => {
     const publicPath = "apps/example/public/x.js";
     const selected = selectArchitectureSourceFiles(
-      { trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
+      { repoRoot, trackedFiles: [publicPath, CONTROL_SOURCE_PATH] },
       repoRoot,
     );
 
@@ -486,7 +486,7 @@ describe("static public assets (AC-18 to AC-21)", () => {
         `guard_rows=${APP_LEVEL_GUARD_PATHS.length}`,
       ).toBe(4);
       const selected = selectArchitectureSourceFiles(
-        { trackedFiles: [guardPath] },
+        { repoRoot, trackedFiles: [guardPath] },
         repoRoot,
       );
 
