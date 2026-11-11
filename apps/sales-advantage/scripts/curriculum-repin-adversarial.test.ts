@@ -153,6 +153,69 @@ describe("S2 adversarial - the production claim guard against a surviving old cl
   });
 });
 
+// Round 2: the ban `retiredManagedServiceCondition` in curriculum-release.ts is
+// a regex on one normalized statement. The cases below probe spellings that it
+// must catch, the approved line that it must let pass, and spellings or
+// near-matches that it misses or over-matches. `it.fails` records a known
+// weakness: the case passes while the weakness exists and fails when the ban is
+// fixed. None of these weaknesses lets the exact old line through.
+describe("S2 adversarial round 2 - the ban on the retired Managed Service condition", () => {
+  /** Builds a probe line that holds only the condition, with no launch word and no year. */
+  const probeLine = (condition: string): string =>
+    `A fuller service waits until ${condition} sign.`;
+
+  it.each([
+    "1 – 2 more schools",
+    "1-2 more schools",
+    "1 2 more schools",
+    "one or two more schools",
+    "ONE OR TWO MORE SCHOOLS",
+    "1 – 2 more schools",
+  ])("rejects the spelling: %s", (condition) => {
+    const mutated = withExtraParagraph(probeLine(condition));
+    expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  it("lets the approved Managed Service sentence pass in a new lesson", () => {
+    const mutated = withExtraParagraph(`If the school asks, say: "${MANAGED_LINE}"`);
+    expect(() => buildCurriculumAutomatedReview(mutated)).not.toThrow();
+  });
+
+  it("lets two unrelated school counts pass", () => {
+    const mutated = withExtraParagraph(
+      "A pilot covers 1 grade level. Two schools in Kalasin asked for a visit.",
+    );
+    expect(() => buildCurriculumAutomatedReview(mutated)).not.toThrow();
+  });
+
+  // Variant spellings of the retired condition that the regex does not hold.
+  for (const condition of [
+    "1 to 2 more schools",
+    "one to two more schools",
+    "1 or 2 more schools",
+    "1‑2 more schools",
+    "1–2\nmore schools",
+    "1–2 further schools",
+  ]) {
+    it.fails(`misses the spelling: ${JSON.stringify(condition)}`, () => {
+      const mutated = withExtraParagraph(probeLine(condition));
+      expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+        /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+      );
+    });
+  }
+
+  // The regex has no word boundary, so a longer number holds the match too.
+  for (const text of ["Twelve classes need 12 more schools to join.", "A list holds 112 more schools."]) {
+    it.fails(`over-matches a number that ends in 12: ${JSON.stringify(text)}`, () => {
+      const mutated = withExtraParagraph(text);
+      expect(() => buildCurriculumAutomatedReview(mutated)).not.toThrow();
+    });
+  }
+});
+
 describe("S2 adversarial - old claim families, with case, dash, and white space folded", () => {
   it.each([
     ["the Managed Service launch condition", /launch(?:es|ed|ing)? in 2027|1\s*-\s*2 more schools|one or two more schools/],
