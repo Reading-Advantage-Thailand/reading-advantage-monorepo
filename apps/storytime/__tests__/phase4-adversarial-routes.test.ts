@@ -828,6 +828,192 @@ describe("Phase 4 adversarial round 5: the runbook flag section after F612 and F
   });
 });
 
+describe("Phase 4 adversarial round 6: the runbook flag flow as a numbered list (rem9)", () => {
+  /** Reads the runbook text. */
+  const runbook = (): string => readFileSync(resolve(REPO, "docs/runbooks/storytime-deploy.md"), "utf8");
+
+  /**
+   * Cuts the teacher flag section out of a runbook text.
+   * @param text The runbook text.
+   * @returns The section text.
+   */
+  function section(text: string): string {
+    const start = text.indexOf("## The teacher routes flag");
+    if (start < 0) return "";
+    const rest = text.slice(start + 3);
+    const end = rest.indexOf("\n## ");
+    return end === -1 ? rest : rest.slice(0, end);
+  }
+
+  /**
+   * Returns the text of one numbered item of the flag list.
+   * @param text The runbook text.
+   * @param number The item number.
+   * @returns The item text, or an empty text when the item is missing.
+   */
+  function item(text: string, number: number): string {
+    const body = section(text);
+    const match = new RegExp(`\\n {2}${number}\\. ([\\s\\S]*?)(?=\\n {2}${number + 1}\\. |\\n\\n {2}Find the new revision name|$)`).exec(body);
+    return match?.[1] ?? "";
+  }
+
+  /**
+   * Lists the problems of every services update line.
+   * @param text The text to scan.
+   * @returns One entry per problem.
+   */
+  function updateProblems(text: string): string[] {
+    const out: string[] = [];
+    for (const line of text.split("\n").filter((entry) => /gcloud run services update(?!-traffic)\b/.test(entry))) {
+      if (!line.includes("--no-traffic")) out.push(`no --no-traffic: ${line.trim().slice(0, 50)}`);
+      if (!/--image=(?!--)\S+/.test(line)) out.push(`no --image: ${line.trim().slice(0, 50)}`);
+      if (!/--tag=[a-z][a-z0-9-]*/.test(line)) out.push(`no --tag: ${line.trim().slice(0, 50)}`);
+    }
+    return out;
+  }
+
+  /**
+   * Lists the commands that print an environment value.
+   * @param text The text to scan.
+   * @returns One entry per risky line.
+   */
+  function envProblems(text: string): string[] {
+    const out: string[] = [];
+    const allowed = ["value(status.traffic)", "value(status.imageDigest)", "value(spec.containers[0].env.name)"];
+    for (const line of text.split("\n")) {
+      if (/gcloud run (services|revisions) describe\b/.test(line)) {
+        const format = /--format='([^']*)'/.exec(line)?.[1];
+        if (!format) out.push(`no --format: ${line.trim().slice(0, 60)}`);
+        else if (!allowed.includes(format)) out.push(`format not allowed: ${format}`);
+      }
+      if (/--format=(?:json|yaml|text|export)\b|env\.value|printenv|secrets versions access/.test(line)) out.push(`prints values: ${line.trim().slice(0, 60)}`);
+    }
+    return out;
+  }
+
+  /**
+   * Lists the traffic commands outside the traffic step and the rollback step.
+   * @param text The runbook text.
+   * @returns One entry per traffic line outside steps 4 and 5, and one when the two lines are not both inside.
+   */
+  function trafficProblems(text: string): string[] {
+    const from = text.indexOf("4. Move the traffic");
+    const to = text.indexOf("\n## Facts");
+    const out: string[] = [];
+    let inside = 0;
+    let offset = 0;
+    for (const line of text.split("\n")) {
+      if (/update-traffic|--to-latest|--to-revisions|--to-tags|--set-tags|--update-tags/.test(line)) {
+        if (offset >= from && offset < to) inside += 1;
+        else out.push(`traffic line outside steps 4 and 5: ${line.trim().slice(0, 60)}`);
+      }
+      offset += line.length + 1;
+    }
+    if (inside !== 2) out.push(`traffic lines inside steps 4 and 5: ${inside}, expected 2`);
+    return out;
+  }
+
+  /**
+   * Lists the problems of the off command item for a flag-on new build.
+   * @param text The runbook text.
+   * @returns One entry per problem.
+   */
+  function newBuildOffProblems(text: string): string[] {
+    const four = item(text, 4);
+    const out: string[] = [];
+    if (four === "") return ["item 4 is missing"];
+    if (!/off command with `--image` set to the image reference of the new build/.test(four)) out.push("item 4 does not set --image to the new build image");
+    if (/live (?:revision )?image|image of the live revision|image reference of the live revision/i.test(four)) out.push("item 4 names the live image for the off command");
+    if (!/does not get traffic as it is/.test(four)) out.push("item 4 does not hold the new build back");
+    return out;
+  }
+
+  /**
+   * Lists the problems of the stop rule of the env compare.
+   * @param text The runbook text.
+   * @returns One entry per problem.
+   */
+  function stopRuleProblems(text: string): string[] {
+    const three = item(text, 3).replace(/\s+/g, " ");
+    return /If another name differs, stop, give no traffic step, and report the difference to Daniel/.test(three)
+      ? []
+      : ["item 3 holds no stop rule"];
+  }
+
+  it("holds six numbered items in order on the tag URL flow, with the stop rule, and every check is clean on the runbook", () => {
+    const text = runbook();
+    const body = section(text);
+    const numbers = [...body.matchAll(/\n {2}(\d)\. /g)].map((match) => Number(match[1]));
+    expect(numbers, `list_items=${numbers.length}`).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(updateProblems(text), "update lines are clean").toEqual([]);
+    expect(envProblems(text), "no env print").toEqual([]);
+    expect(trafficProblems(text), "traffic lines are clean").toEqual([]);
+    expect(newBuildOffProblems(text), "the new build off item is clean").toEqual([]);
+    expect(stopRuleProblems(text), "the stop rule is present").toEqual([]);
+    expect(item(text, 6), "item 6 names the revision in step 4 and waits for Daniel").toMatch(/name that revision in step 4[\s\S]*Daniel/);
+  });
+
+  it("catches a planted update line without --no-traffic, --image, or a tag, in a copy", () => {
+    const text = runbook();
+    const good = text.split("\n").find((line) => /gcloud run services update(?!-traffic)\b/.test(line) && line.includes("--update-env-vars"))!;
+    for (const [label, bad] of [
+      ["no --no-traffic", good.replace(" --no-traffic", "")],
+      ["no --image", good.replace(/ --image=<[^>]*>/, "")],
+      ["no --tag", good.replace(/ --tag=\S+/, "")],
+    ] as const) {
+      expect(updateProblems(`${text}\n${bad}\n`).length, `caught: ${label}`).toBeGreaterThan(0);
+    }
+    const changed = text.replace(good, good.replace(" --no-traffic", ""));
+    expect(changed, "the copy differs from the runbook").not.toBe(text);
+    expect(updateProblems(changed).length, "caught inside the copied runbook").toBeGreaterThan(0);
+  });
+
+  it("catches a planted env print command, in several forms, in a copy", () => {
+    const text = runbook();
+    for (const plant of [
+      "gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1",
+      "gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.value)'",
+      "gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env)'",
+      "gcloud run services describe storytime-app --project primary-advantage --region asia-southeast1 --format=yaml",
+      "gcloud secrets versions access latest --secret=X",
+    ]) {
+      expect(envProblems(`${text.replace("5. Rollback", `${plant}\n5. Rollback`)}`).length, `caught: ${plant.slice(0, 60)}`).toBeGreaterThan(0);
+    }
+  });
+
+  it("catches a planted traffic line in the steps, the Facts section, a list item, and the flag code block", () => {
+    const text = runbook();
+    const line = "gcloud run services update-traffic storytime-app --project primary-advantage --region asia-southeast1 --to-latest";
+    const plants: Array<[string, string]> = [
+      ["before step 4", text.replace("4. Move the traffic", `${line}\n4. Move the traffic`)],
+      ["in the Facts section", text.replace("## Facts\n", `## Facts\n${line}\n`)],
+      ["in list item 2", text.replace("  2. In the signed-in browser", `  ${line}\n  2. In the signed-in browser`)],
+      ["in the flag code block", text.replace("  gcloud run services describe storytime-app", `  ${line}\n  gcloud run services describe storytime-app`)],
+      ["after the flag section", `${text}\n${line}\n`],
+    ];
+    for (const [label, bad] of plants) {
+      expect(bad, `the plant changes the text: ${label}`).not.toBe(text);
+      expect(trafficProblems(bad).length, `caught: ${label}`).toBeGreaterThan(0);
+    }
+    expect(trafficProblems(text.replace(/^.*--to-revisions=<previous-revision>=100.*$/m, "")).length, "a missing rollback line is caught too").toBeGreaterThan(0);
+  });
+
+  it("catches an off command for a flag-on new build that uses the live image, and a missing stop rule", () => {
+    const text = runbook();
+    const live = text.replace("`--image` set to the image reference of the new build", "`--image` set to the image reference of the live revision");
+    expect(live, "the plant changes the text").not.toBe(text);
+    expect(newBuildOffProblems(live).length, "caught: the live image in item 4").toBeGreaterThan(0);
+    const worded = text.replace("set to the image reference of the new build", "set to the live image");
+    expect(newBuildOffProblems(worded).length, "caught: a live image wording").toBeGreaterThan(0);
+    const noHold = text.replace("does not get traffic as it is", "may get traffic");
+    expect(newBuildOffProblems(noHold).length, "caught: the new build is not held back").toBeGreaterThan(0);
+    const noStop = text.replace("If another name differs, stop, give no traffic", "If another name differs, note it, give no traffic");
+    expect(noStop, "the stop plant changes the text").not.toBe(text);
+    expect(stopRuleProblems(noStop).length, "caught: no stop rule").toBeGreaterThan(0);
+    expect(newBuildOffProblems(text.replace(/\n {2}4\. /, "\n  4 ")).length, "caught: item 4 gone").toBeGreaterThan(0);
+  });
+});
+
 describe("Phase 4 adversarial: the signed URL map", () => {
   /** A media part with one primary file. */
   function media(file: string): StepMedia {

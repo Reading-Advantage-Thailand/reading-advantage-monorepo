@@ -9,6 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import weekJson from "../content/l2/w01.json";
 import w08Json from "../content/l2/w08.json";
 import { TeacherLessonFlow } from "../app/[locale]/teacher/[level]/[week]/[day]/lesson-flow";
+import { LanguageRuns, splitThaiRuns } from "../lib/teacher-lang";
 import { TeacherWeekView } from "../app/[locale]/teacher/[level]/[week]/week-view";
 import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
 import { stepMediaOf } from "../lib/teacher-media";
@@ -1462,5 +1463,317 @@ describe("Phase 4 adversarial round 5: lang marks, tap floor, and focus ring (re
     const layout = readFileSync(resolve(import.meta.dirname, "../app/[locale]/layout.tsx"), "utf8");
     expect(layout, "the layout imports look.css").toMatch(/import\s+"\.\.\/look\.css"/);
     expect(document.activeElement, "the focus sits on the region").toBe(region);
+  });
+});
+
+describe("Phase 4 adversarial round 6: splitThaiRuns, LanguageRuns, and the scroll condition (rem7 to rem9)", () => {
+  /**
+   * Checks the run invariants of one split: no character lost, no empty run, runs alternate, and
+   * the flag of each run matches every code point in it.
+   * @param text The text that was split.
+   * @returns The runs.
+   */
+  function checkRuns(text: string) {
+    const runs = splitThaiRuns(text);
+    expect(runs.map((run) => run.text).join(""), `no character lost for ${JSON.stringify(text.slice(0, 20))}`).toBe(text);
+    runs.forEach((run, index) => {
+      expect(run.text.length, "no empty run").toBeGreaterThan(0);
+      if (index > 0) expect(run.thai, "runs alternate").toBe(!runs[index - 1]!.thai);
+      for (const char of run.text) {
+        const code = char.codePointAt(0)!;
+        expect(run.thai, `code point U+${code.toString(16)} sits in the right run`).toBe(code >= 0x0e00 && code <= 0x0e7f);
+      }
+    });
+    return runs;
+  }
+
+  it("splits at the block edges, around surrogate pairs and combining marks, and keeps every character", () => {
+    expect(splitThaiRuns(""), "an empty text gives no run").toEqual([]);
+    expect(checkRuns("\u0E00").map((run) => run.thai), "U+0E00 is the first Thai code point").toEqual([true]);
+    expect(checkRuns("\u0E7F").map((run) => run.thai), "U+0E7F is the last Thai code point").toEqual([true]);
+    expect(checkRuns("\u0DFF").map((run) => run.thai), "U+0DFF is outside the block").toEqual([false]);
+    expect(checkRuns("\u0E80").map((run) => run.thai), "U+0E80 (Lao) is outside the block").toEqual([false]);
+    expect(checkRuns("a\u0E00b\u0E7Fc").map((run) => run.thai), "the edges split the text").toEqual([false, true, false, true, false]);
+    expect(checkRuns("\u0E50\u0E51\u0E59").map((run) => run.thai), "Thai digits are Thai").toEqual([true]);
+    expect(checkRuns("0123456789").map((run) => run.thai), "ASCII digits are not Thai").toEqual([false]);
+    expect(checkRuns("\u0E3F100").map((run) => run.text), "the baht sign is in the block").toEqual(["\u0E3F", "100"]);
+    expect(checkRuns("\u0E01\u0E02\u0E03").length, "a string of only Thai is one run").toBe(1);
+    const emoji = checkRuns("\u0E01\u{1F600}\u0E01");
+    expect(emoji.map((run) => run.text), "a surrogate pair stays whole").toEqual(["\u0E01", "\u{1F600}", "\u0E01"]);
+    expect(checkRuns("\u{1F600}\u{1F600}").length, "two pairs form one run").toBe(1);
+    expect(checkRuns("\u{1F469}\u200D\u{1F469}").length, "a joiner sequence stays one run").toBe(1);
+    expect(checkRuns("e\u0301").length, "a Latin combining mark stays with its letter").toBe(1);
+    expect(checkRuns("\u0E01\u0E31\u0E48").length, "a Thai letter with its Thai marks is one run").toBe(1);
+    expect(checkRuns("\uD800").length, "a lone surrogate is kept").toBe(1);
+    expect(checkRuns("a\uDC00\u0E01").map((run) => run.thai), "a lone low surrogate is kept before Thai").toEqual([false, true]);
+    expect(checkRuns("\u0000\u0E01\u0000").length, "a NUL does not break the split").toBe(3);
+  });
+
+  it("keeps the invariants on 300 seeded random strings and on very long strings", () => {
+    const alphabet = ["a", "Z", " ", "1", ".", "\u0E00", "\u0E01", "\u0E31", "\u0E50", "\u0E7F", "\u0DFF", "\u0E80", "\u{1F600}", "\u0301", "\u200D", "\uD800", "\uDC00", "\u0000"];
+    let seed = 20261111;
+    const next = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 2 ** 32;
+    };
+    let thaiRuns = 0;
+    for (let index = 0; index < 300; index += 1) {
+      const length = Math.floor(next() * 60);
+      let text = "";
+      for (let at = 0; at < length; at += 1) text += alphabet[Math.floor(next() * alphabet.length)]!;
+      thaiRuns += checkRuns(text).filter((run) => run.thai).length;
+    }
+    expect(thaiRuns, `thai_runs=${thaiRuns}: the fuzz reaches Thai runs`).toBeGreaterThan(300);
+
+    const started = Date.now();
+    const million = "\u0E01".repeat(1_000_000);
+    const long = splitThaiRuns(million);
+    expect(long.length, "a million Thai letters are one run").toBe(1);
+    expect(long[0]!.text.length).toBe(1_000_000);
+    const alternating = "a\u0E01".repeat(100_000);
+    const many = splitThaiRuns(alternating);
+    expect(many.length, "alternating text gives one run per character").toBe(200_000);
+    expect(many.map((run) => run.text).join("")).toBe(alternating);
+    expect(Date.now() - started, "the long splits run in under 5 seconds").toBeLessThan(5000);
+  });
+
+  /** The suffix with Thai letters and a Thai digit. */
+  const SUFFIX = " \u0E01\u0E02\u0E03\u0E51";
+  /** The keys of the week data whose English strings the flow and the view show. */
+  const KEYS = new Set([
+    "en", "text", "word", "sound", "letter", "caption", "frame", "title", "graphemes", "sounds", "pictures",
+    "words", "trickyWords", "teacherActions", "teacherLanguage", "studentActions", "watchFor",
+  ]);
+
+  /**
+   * Appends the Thai suffix to every English display string of a week part, in place.
+   * @param value The part to walk.
+   * @param key The key of the part.
+   * @returns The changed part.
+   */
+  function plantThai(value: unknown, key?: string): unknown {
+    if (typeof value === "string") return key && KEYS.has(key) ? `${value}${SUFFIX}` : value;
+    if (Array.isArray(value)) return value.map((entry) => plantThai(entry, key));
+    if (value && typeof value === "object") {
+      const record = value as Record<string, unknown>;
+      for (const name of Object.keys(record)) {
+        if (name === "th" || name === "materials" || name === "audio" || name === "image") continue;
+        record[name] = plantThai(record[name], name);
+      }
+    }
+    return value;
+  }
+
+  /**
+   * Lists the text nodes that hold a Thai letter and sit under a mark other than lang th.
+   * @param root The element to scan.
+   * @returns The unwrapped text nodes, and the spans with lang th that wrap non-Thai text.
+   */
+  function unwrapped(root: HTMLElement): { bad: string[]; spans: number; badSpans: string[] } {
+    const out = { bad: [] as string[], spans: 0, badSpans: [] as string[] };
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const parent = node.parentElement;
+      const text = node.textContent ?? "";
+      if (!parent || parent.closest("[data-mode]")) continue;
+      if (/[\u0E00-\u0E7F]/.test(text) && parent.closest("[lang]")?.getAttribute("lang") !== "th") {
+        out.bad.push(text.trim().slice(0, 40));
+      }
+    }
+    for (const span of root.querySelectorAll<HTMLElement>("span[lang='th']")) {
+      if (span.closest("[data-mode]")) continue;
+      out.spans += 1;
+      if (!/^[\u0E00-\u0E7F]+$/.test(span.textContent ?? "") && span.parentElement?.closest("[lang]")?.getAttribute("lang") !== "th") {
+        out.badSpans.push(span.textContent ?? "");
+      }
+    }
+    return out;
+  }
+
+  it("wraps every Thai run of every English text of the flow and the week view, with no character lost", () => {
+    const planted = approvedClone();
+    plantThai(planted.scripts);
+    plantThai(planted.review);
+    plantThai(planted.check);
+    plantThai(planted.opening);
+    const parsed = weekSchema.safeParse(planted);
+    expect(parsed.success, `the planted week passes the contract. ${parsed.success ? "" : parsed.error.issues.map((issue) => issue.path.join(".") + ": " + issue.message).slice(0, 3).join("; ")}`).toBe(true);
+
+    const blank = structuredClone(planted);
+    for (const script of blank.scripts) blankThai(script);
+    let wrapped = 0;
+    let screens = 0;
+    for (const [label, source] of [["full Thai", planted], ["blank Thai", blank]] as const) {
+      for (const day of DAYS) {
+        for (const thaiOn of [false, true]) {
+          const view = renderDay(source, day);
+          if (thaiOn) fireEvent.click(screen.getByRole("button", { name: THAI_TOGGLE }));
+          for (;;) {
+            const facts = unwrapped(view.container);
+            screens += 1;
+            wrapped += facts.spans;
+            expect(facts.bad, `${label} day=${day} thai=${thaiOn} step=${currentStepId()}: Thai text outside a lang th mark`).toEqual([]);
+            expect(facts.badSpans, "a lang th span holds only Thai letters").toEqual([]);
+            const next = screen.queryByRole("button", { name: NEXT_STEP });
+            if (!next) break;
+            fireEvent.click(next);
+          }
+          view.unmount();
+        }
+      }
+    }
+    expect(screens, `screens=${screens}`).toBeGreaterThan(100);
+    expect(wrapped, `wrapped_thai_spans=${wrapped}: the positive control must find wrapped runs`).toBeGreaterThan(200);
+
+    const first = renderDay(planted, 1);
+    const title = scriptOf(planted, 1).title.en;
+    const stepTitle = scriptOf(planted, 1).steps[0]!.title.en;
+    const note = scriptOf(planted, 1).steps[0]!.en.teacherActions[0]!;
+    for (const text of [title, stepTitle, note]) {
+      expect(document.body.textContent, `no character lost: ${text.slice(0, 30)}`).toContain(text);
+    }
+    const spanText = [...first.container.querySelectorAll("span[lang='th']")].map((span) => span.textContent);
+    expect(spanText, "the suffix digit stays inside a Thai span").toContain("\u0E01\u0E02\u0E03\u0E51");
+    first.unmount();
+
+    const drillStep = renderDay(planted, 1);
+    goToStep("A4");
+    const drill = stepOf(planted, 1, "A4").blendDrill!;
+    expect(document.body.textContent, "the drill word keeps every character").toContain(drill.words[0]!.word);
+    expect(document.body.textContent, "the sound labels keep every character").toContain(drill.words[0]!.sounds.join(" "));
+    drillStep.unmount();
+
+    const planWeek = structuredClone(week);
+    plantThai(planWeek.focus);
+    for (const book of planWeek.books) book.title = `${book.title}${SUFFIX}`;
+    planWeek.meta.title = `${planWeek.meta.title}${SUFFIX}`;
+    for (const script of planWeek.scripts) script.title.en = `${script.title.en}${SUFFIX}`;
+    expectWeek(planWeek, "the planted week for the week view");
+    document.documentElement.lang = "th";
+    try {
+      const view = render(<TeacherWeekView week={planWeek} locale="en" mediaUrls={signedMap(planWeek)} />);
+      const facts = unwrapped(view.container);
+      expect(facts.spans, `week_view_wrapped_spans=${facts.spans}`).toBeGreaterThan(10);
+      expect(facts.bad, "the week view holds no Thai text outside a lang th mark").toEqual([]);
+      expect(view.container.textContent, "the week title keeps every character").toContain(planWeek.meta.title);
+      expect(view.container.textContent, "the read-along title keeps every character").toContain(planWeek.books[0]!.title);
+    } finally {
+      document.documentElement.lang = "";
+    }
+
+    const probe = document.createElement("div");
+    probe.innerHTML = '<p lang="en">Say \u0E01\u0E02</p><p lang="en">Say <span lang="th">\u0E01</span></p>';
+    expect(unwrapped(probe).bad.length, "the scan catches an unwrapped Thai run under lang en").toBe(1);
+  });
+
+  it("wraps the Thai run of a media title in the open player header and in the media description", () => {
+    const copy = structuredClone(week);
+    const title = `${copy.song!.title}${SUFFIX}`;
+    for (const script of copy.scripts) {
+      for (const step of script.steps) {
+        step.materials = step.materials.map((entry) =>
+          entry.includes(`"${copy.song!.title}"`) ? entry.replace(`"${copy.song!.title}"`, `"${title}"`) : entry,
+        );
+      }
+    }
+    copy.song!.title = title;
+    expectWeek(copy, "the clone with a Thai run in the song title");
+    const view = renderDay(copy, 2);
+    goToStep("B7");
+    fireEvent.click(screen.getByRole("button", { name: OPEN_MEDIA }));
+    const facts = unwrapped(view.container);
+    expect(facts.bad, "the media title holds no Thai outside lang th").toEqual([]);
+    expect(facts.spans, `media_title_spans=${facts.spans}: the header and the description each wrap one run`).toBeGreaterThanOrEqual(2);
+    expect(view.container.querySelector("[aria-label='The media player'] h3")!.textContent, "the header keeps every character").toBe(title);
+  });
+
+  it("scrolls the end region into view only when its top is at or below the viewport bottom", () => {
+    const cases: Array<{ label: string; innerHeight: number; top: number; height: number; scrolls: boolean }> = [
+      { label: "top equals the viewport height", innerHeight: 768, top: 768, height: 200, scrolls: true },
+      { label: "top one pixel inside", innerHeight: 768, top: 767, height: 200, scrolls: false },
+      { label: "top one pixel outside", innerHeight: 768, top: 769, height: 200, scrolls: true },
+      { label: "far below", innerHeight: 768, top: 5000, height: 200, scrolls: true },
+      { label: "inside the viewport", innerHeight: 768, top: 100, height: 200, scrolls: false },
+      { label: "above the viewport", innerHeight: 768, top: -300, height: 200, scrolls: false },
+      { label: "zero height at the bottom edge", innerHeight: 768, top: 768, height: 0, scrolls: true },
+      { label: "zero height inside", innerHeight: 768, top: 0, height: 0, scrolls: false },
+      { label: "top is NaN", innerHeight: 768, top: Number.NaN, height: 10, scrolls: false },
+      { label: "a zero-height window", innerHeight: 0, top: 0, height: 10, scrolls: true },
+      { label: "a small window", innerHeight: 100, top: 100, height: 10, scrolls: true },
+    ];
+    const originalHeight = window.innerHeight;
+    let scrolled = 0;
+    for (const entry of cases) {
+      Object.defineProperty(window, "innerHeight", { configurable: true, value: entry.innerHeight });
+      const scrollSpy = vi.fn();
+      Object.defineProperty(HTMLElement.prototype, "scrollIntoView", { configurable: true, value: scrollSpy });
+      const rect = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+        const region = this.getAttribute("aria-label") === "The end of the lesson";
+        const top = region ? entry.top : 0;
+        const height = region ? entry.height : 0;
+        return { top, bottom: top + height, left: 0, right: 0, width: 0, height, x: 0, y: top, toJSON: () => ({}) } as DOMRect;
+      });
+      const focusSpy = vi.spyOn(HTMLElement.prototype, "focus");
+      const view = renderDay(week, 3);
+      for (;;) {
+        const next = screen.queryByRole("button", { name: NEXT_STEP });
+        if (!next) break;
+        fireEvent.click(next);
+      }
+      const region = screen.getByRole("region", { name: "The end of the lesson" });
+      expect(document.activeElement, `${entry.label}: the focus sits on the region`).toBe(region);
+      expect(scrollSpy.mock.calls.length, `${entry.label}: scroll_calls`).toBe(entry.scrolls ? 1 : 0);
+      if (entry.scrolls) {
+        scrolled += 1;
+        expect(scrollSpy.mock.calls[0]![0], `${entry.label}: block nearest`).toEqual({ block: "nearest" });
+        expect(scrollSpy.mock.contexts[0], `${entry.label}: the region scrolls`).toBe(region);
+      }
+      const onRegion = focusSpy.mock.contexts.map((instance, index) => ({ instance, options: focusSpy.mock.calls[index]?.[0] })).filter((call) => call.instance === region);
+      expect(onRegion.length, `${entry.label}: one focus call on the region`).toBe(1);
+      expect(onRegion[0]!.options?.preventScroll, `${entry.label}: preventScroll`).toBe(true);
+      fireEvent.click(screen.getByRole("button", { name: THAI_TOGGLE }));
+      expect(scrollSpy.mock.calls.length, `${entry.label}: a Thai toggle on the last screen scrolls no more`).toBe(entry.scrolls ? 1 : 0);
+      view.unmount();
+      rect.mockRestore();
+      focusSpy.mockRestore();
+      delete (HTMLElement.prototype as unknown as Record<string, unknown>).scrollIntoView;
+    }
+    Object.defineProperty(window, "innerHeight", { configurable: true, value: originalHeight });
+    expect(scrolled, `scrolling_cases=${scrolled}: the positive controls scroll`).toBe(6);
+  });
+
+  it("scrolls once under StrictMode, and never on first render of a one-step day", () => {
+    const scrollSpy = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", { configurable: true, value: scrollSpy });
+    const rect = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      const top = this.getAttribute("aria-label") === "The end of the lesson" ? 5000 : 0;
+      return { top, bottom: top, left: 0, right: 0, width: 0, height: 0, x: 0, y: top, toJSON: () => ({}) } as DOMRect;
+    });
+    try {
+      const view = render(
+        <StrictMode>
+          <TeacherLessonFlow week={week} day={3} locale="en" mediaUrls={{}} />
+        </StrictMode>,
+      );
+      for (;;) {
+        const next = screen.queryByRole("button", { name: NEXT_STEP });
+        if (!next) break;
+        fireEvent.click(next);
+      }
+      expect(scrollSpy.mock.calls.length, "scroll_calls=1 under StrictMode").toBe(1);
+      view.unmount();
+
+      scrollSpy.mockClear();
+      const one = structuredClone(week);
+      const script = scriptOf(one, 1);
+      script.steps = [script.steps[0]!];
+      expectWeek(one, "the one-step clone");
+      renderDay(one, 1);
+      expect(screen.queryByRole("region", { name: "The end of the lesson" }), "the one-step day starts on its last screen").not.toBeNull();
+      expect(scrollSpy.mock.calls.length, "a first render scrolls nothing even when the region is below the fold").toBe(0);
+    } finally {
+      rect.mockRestore();
+      delete (HTMLElement.prototype as unknown as Record<string, unknown>).scrollIntoView;
+    }
   });
 });
