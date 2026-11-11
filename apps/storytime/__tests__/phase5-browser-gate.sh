@@ -41,8 +41,11 @@ fail() { RESULTS+=("FAIL: $1"); FAIL_COUNT=$((FAIL_COUNT + 1)); FAILED=1; }
 ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 APP="$ROOT/apps/storytime"
 RUN_FOLDER="$ROOT/measure/runs/storytime_app_rebuild_20261025"
-ANSWERS_FILE="$RUN_FOLDER/review-answers-p5.json"
 TMP_DIR="$(mktemp -d -t storytime-phase5-XXXXXX)"
+# The gate answers go into the temporary folder. The file of the run folder keeps the name
+# `review-answers-p5.json` for the page of Daniel (task 6.1), and the gate never writes it
+# (review A, finding F902).
+ANSWERS_FILE="$TMP_DIR/review-answers-p5.json"
 FIXTURE="$TMP_DIR/content"
 FIXTURE_WEEK="$FIXTURE/l2/w01.json"
 NEXT_LOG="$TMP_DIR/next.log"
@@ -160,6 +163,18 @@ function controlsVerdict(block) {
     && /data-review-comment/.test(block);
 }
 
+/** Gives the count of the controls of one item block: pass, fail, comment, and send. */
+function controlCountOf(block) {
+  if (typeof block !== 'string') return 0;
+  const has = (name, value) => new RegExp(`${name}=["']${value}["']`).test(block);
+  let count = 0;
+  if (has('data-review-action', 'pass')) count += 1;
+  if (has('data-review-action', 'fail')) count += 1;
+  if (has('data-review-action', 'send')) count += 1;
+  if (/data-review-comment/.test(block)) count += 1;
+  return count;
+}
+
 /** Reports whether no item shows an answer before an answer. */
 function answeredVerdict(answered) {
   return Number(answered) === 0;
@@ -225,6 +240,12 @@ const cases = [
     expect: false,
   },
   { name: 'an item block with the four controls', actual: controlsVerdict(goodBlock), expect: true },
+  { name: 'the control count of a good item block', actual: controlCountOf(goodBlock) === 4, expect: true },
+  {
+    name: 'the control count of an item block with no send control',
+    actual: controlCountOf(goodBlock.replace('data-review-action="send"', 'data-marker="send"')) === 4,
+    expect: false,
+  },
   {
     name: 'an item block with no send control',
     actual: controlsVerdict(goodBlock.replace('data-review-action="send"', 'data-marker="send"')),
@@ -392,10 +413,11 @@ await runCheck('the review page answers 200 and holds the five items of FR-12', 
     const status = response ? response.status() : 0;
     items = await readItems(page);
     const controls = items.filter((item) => controlsVerdict(item.html)).length;
+    const perItem = items.length > 0 ? controlCountOf(items[0].html) : 0;
     emit('items_listed', items.length);
-    emit('controls_per_item', items.length > 0 ? controls / items.length : 0);
+    emit('controls_per_item', perItem);
     const ok = status === 200 && itemsVerdict(items) && controls === items.length;
-    return { ok, detail: `status=${status} items_listed=${items.length} controls=${controls}` };
+    return { ok, detail: `status=${status} items_listed=${items.length} controls_per_item=${perItem}` };
   } finally {
     await page.close();
   }
@@ -586,6 +608,8 @@ APP_PORT="$(pick_port)"
 SERVER_PORT="$(pick_port)"
 while [ "$SERVER_PORT" = "$APP_PORT" ]; do SERVER_PORT="$(pick_port)"; done
 mkdir -p "$RUN_FOLDER"
+# The answers of the gate go into the temporary folder, so a rerun never touches the file of the
+# run folder (review A, finding F902).
 rm -f "$ANSWERS_FILE"
 : > "$SERVER_PID_FILE"
 : > "$NEXT_LOG"
