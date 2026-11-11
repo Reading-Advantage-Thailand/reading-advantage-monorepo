@@ -1,0 +1,68 @@
+# Red log — P1 "Choice of the class session lifetime"
+
+Role: Measure Mid Red. Track: primary_class_session_lifetime_20261111.
+Model: deepseek/deepseek-flash#high. Green runs on the GLM family.
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+role_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+Test commit: 0c459e9eb (five test files only). The plan evidence and this log follow in a second commit.
+Tasks 1.1 and 1.2 stay [~]. They become [x] after Green.
+
+## 1. Base record (strategy section 6.1)
+
+- Targeted domain files, exit 0: tests_total=42, tests_failed=0, tests_passed=42.
+- Targeted app files, exit 0: tests_total=46, tests_failed=0, tests_passed=46.
+- Domain aggregate suite inside heavy-run.sh p2, exit 0: suite_base_files=187, suite_base_tests=2216, suite_base_failed=0, preexisting_red_files=0.
+- Domain dist rebuild inside heavy-run.sh p2, exit 0: dist_rebuilt=1, dist_has_lifetime=0.
+
+## 2. Task 1.1 Red — domain
+
+Command:
+CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-class-session.test.ts src/__tests__/student-login-contracts.test.ts src/__tests__/student-login-card.test.ts src/__tests__/student-login.real-db.test.ts
+
+Result: exit 1.
+tests_total=108, tests_failed=43, tests_passed=53, tests_skipped=12, red_failures_bad_reason=0.
+
+- New cases: new_cases_contracts=20, new_cases_class_session=32.
+- The contract cases fail because the contract strips the unknown `lifetime` key.
+- The domain cases fail because the row keeps the fixed 3 hours: the `7d` and `until_17` expiry rows, the 17:00, 23:59, and day-roll refusals, the audit `lifetime` rows, the 9 cast values, the restart row, and the no-write rows.
+- The handler-independent `invalid_input` code does not exist, so a refusal resolves instead of throwing.
+- Characterization cases that pass at the base (characterization_cases=11): the `3h` expiry row, the 7-day maximum, the audit with no secret, the positive write control, the student and system refusals, the other-school refusal, the contract strip case, and the three-field output case.
+- card_file_edit=0: strategy section 4.1 and finding F7. A mock database cannot run the `expiresAt > now` predicate, so a card case there would be a vacuous "expired" proof. The real-database case carries the boundary instead.
+- Real database: real_db_ran=0, real_db_skipped_tests=12.
+
+## 3. Task 1.2 Red — handler and control
+
+Command:
+CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx
+
+Result: exit 1.
+tests_total=82, tests_failed=29, tests_passed=53, tests_skipped=0, red_failures_bad_reason=0.
+
+- New cases: new_cases_handler=13, new_cases_control=23. existing_assertions_changed=1 (the start body assertion of the first control case now expects `{ classroomId, lifetime: '3h' }`).
+- The handler cases fail because the handler passes `{ classroomId }` without `lifetime`, and it answers 200 for the refused bodies and for `invalid_input` (the `STATUS` map has no code).
+- The control cases fail because there is no `radiogroup`, the start body has no `lifetime`, the expiry text has no date, and a 400 maps to `generic`.
+- Characterization cases that pass at the base (characterization_cases=8): the handler strip case, 401, 403, and the six-row count; the control same-day `en` and `th` texts, the no-date near-midnight text, and the contract 400 generic text.
+- panel_file_edit=0: no new case needs class-login-panel.test.tsx.
+- Orchestrator decision F5 (2026-11-11): the six new keys also go into messages/cn.json, tw.json, and vi.json with the English text, because i18n/request.ts loads only messages/<locale>.json. One Red artifact case covers en, th, cn, tw, and vi with keys_checked=30. Green task 1.8 adds the keys to five message files. The PM is told that these three locales hold English text.
+
+## 4. Evidence limits
+
+- No TypeScript check ran at Red on purpose (strategy M7). The Green phase check compiles the test files.
+- The time-zone matrix is a Green gate (strategy section 1.6). Red does not run it.
+
+## 5. Gate command for the orchestrator
+
+RED_TEST_COMMAND=cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-class-session.test.ts src/__tests__/student-login-contracts.test.ts src/__tests__/student-login-card.test.ts src/__tests__/student-login.real-db.test.ts && CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-mid-red
+track: primary_class_session_lifetime_20261111
+phase: P1
+baseline_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+head_sha: 0c459e9eb (test commit; the evidence commit is on top of it)
+commits: 0c459e9eb test(primary): pin the class session lifetime
+tests: domain tests_total=108, tests_failed=43, tests_passed=53, tests_skipped=12; app tests_total=82, tests_failed=29, tests_passed=53, tests_skipped=0; red_failures_bad_reason=0
+files: packages/domain/src/__tests__/student-login-contracts.test.ts, packages/domain/src/__tests__/student-login-class-session.test.ts, packages/domain/src/__tests__/student-login.real-db.test.ts, apps/primary-advantage/lib/__tests__/student-login-handlers.test.ts, apps/primary-advantage/components/__tests__/class-session-control.test.tsx, measure/tracks/primary_class_session_lifetime_20261111/plan.md, measure/runs/primary_class_session_lifetime_20261111/red-p1.log
+remaining_failures: 43 domain cases and 29 app cases, all for the expected reasons (missing lifetime field, fixed 3-hour expiry, missing invalid_input status, missing radiogroup and lifetime body, time-only expiry text, missing message keys); the real-database case is skipped (real_db_ran=0)
+END_MEASURE_AGENT_RESULT
