@@ -3316,8 +3316,8 @@ for every other track.
     `rubricFor`. Unit part evidence class: automated.
   - Live calibration: waits for the PM answer on the BA1 and C1W2 file paths and for the ledger line; no paid call ran.
 - [ ] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
-- [ ] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
-- [ ] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
+- [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
+- [~] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
 
 ## Phase 6: Daniel's milestone judgment
 
