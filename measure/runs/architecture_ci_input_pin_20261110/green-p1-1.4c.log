@@ -1,0 +1,97 @@
+=== measure green run: task 1.4c ===
+session: Green · P1 1.4c · architecture_ci_input_pin
+role: measure-jr-green
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4c
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: a09f75d21efe4be01a9cd809abe5516f616825dc
+model: deepseek/deepseek-flash#high
+red_model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+red_commits: 386eb2ad5 and 9560f56af (tests), a09f75d21 (evidence)
+started: 2026-11-11
+status: in progress
+
+Pre-run checks:
+- HEAD is a09f75d21efe4be01a9cd809abe5516f616825dc. It equals role_base_sha.
+- git status --short -- packages/architecture-enforcement is empty.
+- MemAvailable is 2139600 kB. The floor is 1500 MB.
+- The Red state is exit 1, tests_total=19, tests_failed=5, tests_passed=14. The Red gate passed.
+
+Plan:
+1. Add STATIC_ASSET_DIRECTORY and the app-level public rule in isIgnoredPath.
+2. Gate 1 on the four named files. Expect 77 of 77.
+3. Commit the code as soon as gate 1 is green.
+4. Gates 2a to 2d through heavy-run, one at a time.
+5. Mark task 1.4c and commit the plan and this log.
+
+=== changes ===
+- packages/architecture-enforcement/src/inventory.ts adds STATIC_ASSET_DIRECTORY = "public" with a JSDoc comment.
+- isIgnoredPath returns true when segments[0] is "apps", segments[2] is "public", and the path holds more than 3 segments.
+- The JSDoc of isIgnoredPath names the static asset case.
+- The change touches no test file, no manifest, no analyzer.ts, no docs, and no archive file.
+
+=== gate 1: the four named files, outside heavy-run ===
+command: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/inventory.test.ts packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts
+exit code: 0
+counts: tests_total=77, tests_failed=0, test_files=4
+per file: inventory 19, resume 30, cost 8, pin 20
+MemAvailable before the run: 2431000 kB
+duration: 170.74 s
+
+=== code commit ===
+aa1d713351e65cd723840b9e99b4d6809bb83bba
+feat(architecture): skip static public assets (track_id: architecture_ci_input_pin_20261110)
+The commit holds one path: packages/architecture-enforcement/src/inventory.ts.
+
+=== gate 2a: the package suite through heavy-run p2 ===
+command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter @reading-advantage/architecture-enforcement test'
+exit code: 1
+counts: suite_files=34, suite_tests=320, tests_failed=1
+The one failure is the known baseline-validation.test.ts case "rejects stale synchronous v2 implementation and input hashes". The stale implementation tree hash stays until task 1.4. No other test fails. The floors hold: suite_files=34 >= 34 and suite_tests=320 >= 320.
+MemAvailable before the run: 2165788 kB
+
+=== gate 2b: check-types through heavy-run p2 ===
+command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement check-types'
+exit code: 0
+MemAvailable before the run: 2854556 kB
+
+=== gate 2c: lint through heavy-run p2 ===
+command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement lint'
+exit code: 0
+lint_errors=0, lint_warnings=1
+The one warning is the pre-existing prefer-const warning in the Red test file. Green may not edit that file.
+MemAvailable before the run: 2738112 kB
+
+=== gate 2d: build-graph update through heavy-run p2 ===
+command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'build-graph update ./graph.db packages/architecture-enforcement/src/inventory.ts'
+exit code: 0
+counts: graph_nodes 61 -> 61, graph_edges 66 -> 64
+The job first waited for another heavy job under the same lock.
+graph.db stays ignored by .gitignore:48.
+MemAvailable before the run: 1993584 kB
+
+=== task state ===
+Task 1.4c is [x] with "Done: aa1d713351e65cd723840b9e99b4d6809bb83bba." on the task line.
+Task 1.4 stays [~]. Task 1.4c ran no refresh. Task 1.4 starts its series after this task.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: done
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4c
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: a09f75d21efe4be01a9cd809abe5516f616825dc
+code_commit: aa1d713351e65cd723840b9e99b4d6809bb83bba
+green_head: the evidence commit that follows this block
+commits: aa1d713351e65cd723840b9e99b4d6809bb83bba feat(architecture): skip static public assets; the measure docs commit with this log and the plan evidence follows this block
+tasks_flipped: 1.4c [x] with Done: aa1d713351e65cd723840b9e99b4d6809bb83bba on the task line
+tests_run: gate 1 CI=true pnpm exec vitest run --maxWorkers=1 on the inventory, resume, cost, and pin files -> exit 0, tests_total=77, tests_failed=0, test_files=4; gate 2a package suite through heavy-run p2 -> exit 1, suite_files=34, suite_tests=320, tests_failed=1, the known baseline-validation case only; gate 2b check-types -> exit 0; gate 2c lint -> exit 0, lint_errors=0, lint_warnings=1 in the Red test; gate 2d build-graph update -> exit 0, graph_nodes 61 -> 61, graph_edges 66 -> 64
+files_changed: packages/architecture-enforcement/src/inventory.ts, measure/tracks/architecture_ci_input_pin_20261110/plan.md, measure/runs/architecture_ci_input_pin_20261110/green-p1-1.4c.log
+plan_updates: task 1.4c is [x] with the code sha on the task line and a Green evidence bullet with each command, its exit code, and its counts
+known_failures: the baseline-validation.test.ts case "rejects stale synchronous v2 implementation and input hashes" fails on the stale implementation tree hash until task 1.4, as the plan allows
+handoff: task 1.4 starts its series at the evidence HEAD after this commit. The rule ignores apps/<app>/public/ only. The expected module count of the next refresh is 6866, per the spec. Task 1.4c ran no refresh. No user decision was needed.
+deferred: none
+question: none
+END_MEASURE_AGENT_RESULT
