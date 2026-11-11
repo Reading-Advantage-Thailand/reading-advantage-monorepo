@@ -81,20 +81,22 @@ describe("login media sign (red)", () => {
         .map((entry) => entry.file),
     );
     console.log(`signed_map_size_expected=${expected.size}`);
-    expect(expected.size, "signed_map_size_expected").toBe(42);
+    // The r3 import of commit 345e02ba2 added the word clips and the family pictures to w01.
+    // The count below comes from the shipped week file, through the walker of the receiver.
+    expect(expected.size, "signed_map_size_expected").toBe(70);
 
-    // F7g positive control: the old pin signed only the `file` fields (26 of the 42), so the
-    // unsigned check must report the 16 media paths that the old pin misses.
+    // F7g positive control: the old pin signed only the `file` fields (32 of the 70), so the
+    // unsigned check must report the 38 media paths that the old pin misses.
     const fileOnly = new Set(
       mediaPathsOf(week)
         .filter((entry) => entry.path.endsWith(".file") && !entry.path.startsWith("approval."))
         .map((entry) => entry.file),
     );
     console.log(`file_only_map_size=${fileOnly.size}`);
-    expect(fileOnly.size, "file_only_map_size").toBe(26);
+    expect(fileOnly.size, "file_only_map_size").toBe(32);
     const unsignedUnderOldPin = [...expected].filter((file) => !fileOnly.has(file));
     console.log(`old_pin_unsigned=${unsignedUnderOldPin.length}`);
-    expect(unsignedUnderOldPin, "the old `file`-only map leaves 16 unsigned").toHaveLength(16);
+    expect(unsignedUnderOldPin, "the old `file`-only map leaves 38 unsigned").toHaveLength(38);
 
     const map = await sign.signWeekMedia(week, { storage, mediaBase: MEDIA_BASE });
     const mediaUrlsFound = Object.keys(map).length;

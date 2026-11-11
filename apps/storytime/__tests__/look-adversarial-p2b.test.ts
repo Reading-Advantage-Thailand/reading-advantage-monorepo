@@ -10,7 +10,7 @@
  *   M1 the current word holds its brand pair in both themes, and the dark band keeps the text readable.
  *   M2 the look sheet is unlayered, so it beats the Tailwind utilities of the package words.
  *   M3 no control rule, no inline style, and no important utility can hide the focus ring.
- *   M4 the tab stops of the app sources are the two known read-along sites.
+ *   M4 the tab stops of the app sources are the two known files.
  *   M5 the source checks reject broken copies (self-test).
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -331,12 +331,17 @@ describe("adversarial brand chrome source cases of Phase 2b", () => {
     expect(sourceRingFindings(files).join(" | "), "the sources and the ring").toBe("");
   });
 
-  it("M4 the tab stops of the app sources are the two known read-along sites", () => {
+  it("M4 the tab stops of the app sources are the two known files", () => {
     const files = sourceFiles().map((path) => ({ name: relative(repo, path), text: readFileSync(path, "utf8") }));
     const sites = tabIndexSites(files);
     // The ring rule names [tabindex]. A new tab stop on a container would draw the 6 px ring around
     // the container, so a new site must pass a UX review before it joins this list (Review C C3-F1).
-    expect(sites, "the tab stop sites").toEqual(["packages/read-along/components/read-along/read-along-passage.tsx:2"]);
+    // The teacher end region of commit f76d58624 holds tabIndex={-1}. It is a focus target after a
+    // lesson ends, and it takes no place in the tab order. The UX review of that region passed.
+    expect(sites, "the tab stop sites").toEqual([
+      "apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx:1",
+      "packages/read-along/components/read-along/read-along-passage.tsx:2",
+    ]);
   });
 
   it("M5 the source checks reject broken copies (self-test)", async () => {
