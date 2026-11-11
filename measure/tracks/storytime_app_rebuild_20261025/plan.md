@@ -3374,6 +3374,18 @@ for every other track.
     switch, the five rows, and `port_closed=1`) waits for the orchestrator's scheduled run under
     the heavy lock, and the agent-side open, play, and check (rule 6.5) comes with that run. No
     Next build, dev, or start ran in this round. Evidence class: automated unit and self-test.
+  - Red retry r3, the gate launch defect. The orchestrator run of the gate at the Green commit
+    `844bae0ad` exited 1: the review copy did not become ready and the browser rows did not run.
+    The cause sat in the launch line: the `&` sent the whole list `cd && ( next start )` to the
+    background, so the `cd` never reached the review server, and the server ran in the folder of
+    the caller with paths that did not resolve. A second defect hid the error, because the next
+    start and the review server wrote one log file and the next output covered the error of the
+    review server. The fix commit `5b6998100` moves the `cd` in front of the background subshell,
+    gives each server its own log file in the temporary folder (`next.log` and `review.log`), and
+    prints both logs when the review copy is not ready. No row, no verdict function, no count,
+    and no expected value changed. `bash -n` on the gate exits 0, and the self-test exits 0 with
+    `selftest_good_accepted=6` of 6 and `selftest_mutants_rejected=17` of 17. The full gate did
+    not run in this round. Evidence class: automated.
 - [~] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
   - Red evidence (tasks 5.6 and 5.7): the same round as task 5.6. The unit file
     `apps/storytime/__tests__/phase5-review-copy.test.ts` holds the page contract, and the gate
