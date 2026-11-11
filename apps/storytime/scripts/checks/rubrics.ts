@@ -112,7 +112,8 @@ export const RUBRICS: Rubric[] = [
   {
     kind: "picture",
     knownFaults: [
-      "the picture shows the stated count",
+      "the picture shows the named object in the stated count",
+      "a gesture thumbnail is never a line picture",
       "the picture holds no extra hands",
       "the picture holds no extra faces",
       "the picture holds no wrong text",
