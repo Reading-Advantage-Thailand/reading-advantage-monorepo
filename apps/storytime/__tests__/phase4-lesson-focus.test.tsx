@@ -5,7 +5,10 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { StrictMode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import weekJson from "../content/l2/w01.json";
-import { TeacherLessonFlow } from "../app/[locale]/teacher/[level]/[week]/[day]/lesson-flow";
+import {
+  TeacherLessonFlow,
+  splitThaiRuns,
+} from "../app/[locale]/teacher/[level]/[week]/[day]/lesson-flow";
 import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
 
 /**
@@ -215,6 +218,28 @@ describe("Phase 4 lesson focus: the teacher controls of the flow (UX finding F60
       `close_classes=${close.className}: the Close control of the player must hold min-h-11 (F611, F631)`,
     ).toBe(true);
     view.unmount();
+  });
+});
+
+describe("Phase 4 lesson focus: the Thai run splitter (F671)", () => {
+  it("splits a string into Thai script runs and other runs", () => {
+    expect(splitThaiRuns(""), "an empty string holds no run").toEqual([]);
+    expect(splitThaiRuns("no Thai here"), "a string with no Thai holds one run").toEqual([
+      { text: "no Thai here", thai: false },
+    ]);
+    expect(splitThaiRuns("น ok"), "a Thai run at the start splits first").toEqual([
+      { text: "น", thai: true },
+      { text: " ok", thai: false },
+    ]);
+    expect(splitThaiRuns("the letter น is n"), "a Thai run in the middle splits between").toEqual([
+      { text: "the letter ", thai: false },
+      { text: "น", thai: true },
+      { text: " is n", thai: false },
+    ]);
+    expect(splitThaiRuns("the letter น"), "a Thai run at the end splits last").toEqual([
+      { text: "the letter ", thai: false },
+      { text: "น", thai: true },
+    ]);
   });
 });
 

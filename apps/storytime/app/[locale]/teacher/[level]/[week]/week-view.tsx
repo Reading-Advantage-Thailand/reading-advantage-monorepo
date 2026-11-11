@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { mediaUrl } from "../../../../../lib/media/url";
 import type { StorytimeWeek } from "../../../../../lib/contracts/week";
+import { LanguageRuns } from "./[day]/lesson-flow";
 
 /**
  * The teacher week view (spec FR-9, plan task 4.2, AC-9.1).
@@ -61,7 +62,7 @@ export function TeacherWeekView({
     <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-8 p-6">
       <header className="flex flex-col gap-1">
         <h1 className="text-3xl font-semibold" lang="en">
-          {week.meta.title}
+          <LanguageRuns text={week.meta.title} lang="en" />
         </h1>
         <p className="text-neutral-600" lang="en">
           Level {level}, week {weekNumber}
@@ -75,7 +76,7 @@ export function TeacherWeekView({
             {element.graphemes.join(" ")}
           </p>
           <p className="text-xl" lang="en">
-            {element.sound}
+            <LanguageRuns text={element.sound} lang="en" />
           </p>
           {element.audio ? (
             <audio
@@ -93,7 +94,7 @@ export function TeacherWeekView({
         <section aria-label="The phonemic awareness skill" className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold" lang="en">The phonemic awareness skill</h2>
           <p className="text-lg" lang="en">
-            {paSkill.en}
+            <LanguageRuns text={paSkill.en} lang="en" />
           </p>
         </section>
       ) : null}
@@ -107,7 +108,7 @@ export function TeacherWeekView({
               className="rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
               lang="en"
             >
-              {word}
+              <LanguageRuns text={word} lang="en" />
             </li>
           ))}
         </ul>
@@ -117,7 +118,7 @@ export function TeacherWeekView({
         <section aria-label="The frame" className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold" lang="en">The frame</h2>
           <p className="text-lg" lang="en">
-            {frame}
+            <LanguageRuns text={frame} lang="en" />
           </p>
         </section>
       ) : null}
@@ -131,7 +132,7 @@ export function TeacherWeekView({
               return (
                 <li key={entry.word} className="flex flex-col gap-2">
                   <span className="text-lg font-semibold" lang="en">
-                    {entry.word}
+                    <LanguageRuns text={entry.word} lang="en" />
                   </span>
                   {entry.image?.file ? (
                     <img
@@ -149,7 +150,7 @@ export function TeacherWeekView({
                       lang="en"
                       className="flex h-24 w-24 items-center justify-center rounded-xl border border-[#92400e] p-2 text-center text-sm"
                     >
-                      {caption}
+                      <LanguageRuns text={caption} lang="en" />
                     </span>
                   )}
                 </li>
@@ -168,7 +169,7 @@ export function TeacherWeekView({
               className="flex items-center justify-between gap-4 rounded-2xl border border-[#92400e] p-4"
             >
               <span className="text-lg font-semibold" lang="en">
-                {script.title.en}
+                <LanguageRuns text={script.title.en} lang="en" />
               </span>
               <Link
                 href={`/${locale}/teacher/${level}/${weekNumber}/${script.day}`}

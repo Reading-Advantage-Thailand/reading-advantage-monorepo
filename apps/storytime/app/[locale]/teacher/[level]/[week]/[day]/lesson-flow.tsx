@@ -166,6 +166,68 @@ function noteLangsOf(step: LessonStep, thai: boolean): Record<keyof LessonNote, 
   };
 }
 
+/** One run of a split text: Thai script, or other text. */
+export interface TextRun {
+  /** The characters of the run. */
+  text: string;
+  /** `true` when the run is Thai script (Unicode block U+0E00 to U+0E7F). */
+  thai: boolean;
+}
+
+/**
+ * Splits a string into runs of Thai script and other text (review finding F671).
+ *
+ * The English teacher notes quote Thai letters as sound guides, so an English line can hold
+ * Thai runs. The flow and the week view render each Thai run in its own element with
+ * `lang="th"`, so a screen reader reads the run with the Thai voice (WCAG 3.1.2).
+ * @param text The text to split.
+ * @returns One run per block of Thai script or other text, in order; empty for an empty text.
+ */
+export function splitThaiRuns(text: string): TextRun[] {
+  const runs: TextRun[] = [];
+  for (const char of text) {
+    const thai = char >= "\u0E00" && char <= "\u0E7F";
+    const last = runs[runs.length - 1];
+    if (last && last.thai === thai) last.text += char;
+    else runs.push({ text: char, thai });
+  }
+  return runs;
+}
+
+/**
+ * Renders a text in one language, and wraps every Thai run of an English text in a span with
+ * `lang="th"` (review finding F671).
+ *
+ * A Thai text renders as one plain run, because its element already carries `lang="th"`. An
+ * English text renders as plain runs with each Thai run wrapped, so the Thai run reads with
+ * the Thai voice and the English runs read with the voice of the English element around them.
+ * @param props.text The text to render.
+ * @param props.lang The language of the text, as the element around it marks it.
+ * @returns The runs of the text.
+ */
+export function LanguageRuns({
+  text,
+  lang,
+}: {
+  text: string;
+  lang: "en" | "th";
+}) {
+  if (lang === "th") return <>{text}</>;
+  return (
+    <>
+      {splitThaiRuns(text).map((run, index) =>
+        run.thai ? (
+          <span key={index} lang="th">
+            {run.text}
+          </span>
+        ) : (
+          run.text
+        ),
+      )}
+    </>
+  );
+}
+
 /**
  * Picks the teacher note of a step in the language of the flow.
  *
@@ -301,14 +363,14 @@ function ShareMomentView({
       className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#fffaf0] p-4"
     >
       <h3 className="text-lg font-semibold" data-share-label lang={pickLang(labels, thai)}>
-        {pick(labels, thai)}
+        <LanguageRuns text={pick(labels, thai)} lang={pickLang(labels, thai)} />
       </h3>
       <p className="text-lg" lang={pickLang(share.caption, thai)}>
-        {pick(share.caption, thai)}
+        <LanguageRuns text={pick(share.caption, thai)} lang={pickLang(share.caption, thai)} />
       </p>
       {consent ? (
         <p className="text-neutral-700" lang={pickLang(SHARE_CONSENT_LINE, thai)}>
-          {pick(SHARE_CONSENT_LINE, thai)}
+          <LanguageRuns text={pick(SHARE_CONSENT_LINE, thai)} lang={pickLang(SHARE_CONSENT_LINE, thai)} />
         </p>
       ) : null}
     </section>
@@ -389,7 +451,7 @@ function RecallView({ day, recall, thai, mediaUrls, onPlay }: RecallViewProps) {
         The recall cards
       </h2>
       <p className="text-lg" lang={pickLang(recall.ask, thai)}>
-        {pick(recall.ask, thai)}
+        <LanguageRuns text={pick(recall.ask, thai)} lang={pickLang(recall.ask, thai)} />
       </p>
       <ul className="flex flex-wrap gap-2">
         {recall.items.map((card, index) => (
@@ -399,7 +461,7 @@ function RecallView({ day, recall, thai, mediaUrls, onPlay }: RecallViewProps) {
             lang="en"
             className="flex items-center gap-2 rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
           >
-            {card.text}
+            <LanguageRuns text={card.text} lang="en" />
             {card.audio ? (
               <ClipControl
                 file={card.audio}
@@ -495,7 +557,7 @@ function StepView({
           {step.id}
         </span>
         <h2 className="text-2xl font-semibold" lang={pickLang(step.title, thai)}>
-          {pick(step.title, thai)}
+          <LanguageRuns text={pick(step.title, thai)} lang={pickLang(step.title, thai)} />
         </h2>
         <span className="text-lg text-neutral-600" lang="en">
           {stepTimeMinutes(step, loops)} min
@@ -511,13 +573,13 @@ function StepView({
             The sound loop
           </h3>
           <p className="text-lg" lang={pickLang(sound.correct, thai)}>
-            {pick(sound.correct, thai)}
+            <LanguageRuns text={pick(sound.correct, thai)} lang={pickLang(sound.correct, thai)} />
           </p>
           <p className="text-lg" lang={pickLang(sound.practise, thai)}>
-            {pick(sound.practise, thai)}
+            <LanguageRuns text={pick(sound.practise, thai)} lang={pickLang(sound.practise, thai)} />
           </p>
           <p className="text-lg" lang={pickLang(sound.retest, thai)}>
-            {pick(sound.retest, thai)}
+            <LanguageRuns text={pick(sound.retest, thai)} lang={pickLang(sound.retest, thai)} />
           </p>
         </section>
       ) : null}
@@ -532,24 +594,26 @@ function StepView({
             The blend drill
           </h3>
           <p className="text-lg" lang={pickLang(drill.model, thai)}>
-            {pick(drill.model, thai)}
+            <LanguageRuns text={pick(drill.model, thai)} lang={pickLang(drill.model, thai)} />
           </p>
           <p className="text-lg" lang={pickLang(drill.lead, thai)}>
-            {pick(drill.lead, thai)}
+            <LanguageRuns text={pick(drill.lead, thai)} lang={pickLang(drill.lead, thai)} />
           </p>
           <p className="text-lg" lang={pickLang(drill.test, thai)}>
-            {pick(drill.test, thai)}
+            <LanguageRuns text={pick(drill.test, thai)} lang={pickLang(drill.test, thai)} />
           </p>
           <p className="text-lg" lang={pickLang(drill.correction, thai)}>
-            {pick(drill.correction, thai)}
+            <LanguageRuns text={pick(drill.correction, thai)} lang={pickLang(drill.correction, thai)} />
           </p>
           <ul className="flex flex-col gap-1">
             {drill.words.map((word, wordIndex) => (
               <li key={wordIndex} className="flex flex-wrap items-center gap-2 text-lg">
                 <span className="font-semibold" lang="en">
-                  {word.word}
+                  <LanguageRuns text={word.word} lang="en" />
                 </span>
-                <span lang="en">{word.sounds.join(" ")}</span>
+                <span lang="en">
+                  <LanguageRuns text={word.sounds.join(" ")} lang="en" />
+                </span>
                 {(word.audio ?? []).map((file, soundIndex) => (
                   <ClipControl
                     key={`${file}-${soundIndex}`}
@@ -575,13 +639,13 @@ function StepView({
             The sight words
           </h3>
           <p className="text-lg" lang="en">
-            {sight.words.join(" · ")}
+            <LanguageRuns text={sight.words.join(" · ")} lang="en" />
           </p>
           <p className="text-lg" lang={pickLang(sight.slide, thai)}>
-            {pick(sight.slide, thai)}
+            <LanguageRuns text={pick(sight.slide, thai)} lang={pickLang(sight.slide, thai)} />
           </p>
           <p className="text-lg" lang={pickLang(sight.check, thai)}>
-            {pick(sight.check, thai)}
+            <LanguageRuns text={pick(sight.check, thai)} lang={pickLang(sight.check, thai)} />
           </p>
         </section>
       ) : null}
@@ -610,7 +674,7 @@ function StepView({
             <span lang="en">Open media</span>
           </button>
           <span id={mediaDescriptionId} className="sr-only" lang="en">
-            {media.title}
+            <LanguageRuns text={media.title} lang="en" />
           </span>
           {player === "missing" ? (
             <p role="alert" className="text-lg text-[#92400e]">
@@ -628,7 +692,7 @@ function StepView({
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-xl font-semibold" lang="en">
-              {media.title}
+              <LanguageRuns text={media.title} lang="en" />
             </h3>
             <button
               type="button"
@@ -654,7 +718,7 @@ function StepView({
             <ul className="flex flex-col gap-1">
               {note[heading.key].map((line, index) => (
                 <li key={index} className="text-lg" lang={noteLangs[heading.key]}>
-                  {line}
+                  <LanguageRuns text={line} lang={noteLangs[heading.key]} />
                 </li>
               ))}
             </ul>
@@ -672,7 +736,7 @@ function StepView({
               {variant.label}
             </h3>
             <p className="text-lg" lang={pickLang(step[variant.key], thai)}>
-              {pick(step[variant.key], thai)}
+              <LanguageRuns text={pick(step[variant.key], thai)} lang={pickLang(step[variant.key], thai)} />
             </p>
           </section>
         ))}
@@ -876,7 +940,11 @@ export function TeacherLessonFlow({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-semibold" lang={script ? pickLang(script.title, thai) : "en"}>
-            {script ? pick(script.title, thai) : ""}
+            {script ? (
+              <LanguageRuns text={pick(script.title, thai)} lang={pickLang(script.title, thai)} />
+            ) : (
+              ""
+            )}
           </h1>
           <p className="text-neutral-600" lang="en">
             Day {day}
@@ -917,7 +985,7 @@ export function TeacherLessonFlow({
                 className="rounded-2xl border border-[#92400e] p-4 text-lg"
                 lang={pickLang(prompt, thai)}
               >
-                {pick(prompt, thai)}
+                <LanguageRuns text={pick(prompt, thai)} lang={pickLang(prompt, thai)} />
               </li>
             ))}
           </ol>

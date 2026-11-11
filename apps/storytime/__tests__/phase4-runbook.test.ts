@@ -139,6 +139,15 @@ function flagSection(): string {
   return stop === -1 ? rest : rest.slice(0, stop);
 }
 
+/**
+ * Returns the flag section with line breaks and runs of spaces collapsed to one space, so a
+ * phrase check matches wrapped prose.
+ * @returns The flat text of the flag section.
+ */
+function flagSectionFlat(): string {
+  return flagSection().replace(/\s+/g, " ");
+}
+
 describe("Phase 4 runbook: the flag carry-over, the env compare, and the image value (F495, F496)", () => {
   it("states that the flag stays in the service template and names the off command as the clear (F495)", () => {
     const section = flagSection();
@@ -222,7 +231,7 @@ describe("Phase 4 runbook: the flag carry-over, the env compare, and the image v
 
 describe("Phase 4 runbook: the new-build flag action and the name-only env compare (F612, F621)", () => {
   it("gives the new-build image in the off command text when a new build holds the flag (F612)", () => {
-    const section = flagSection();
+    const section = flagSectionFlat();
     expect(
       section.includes("revision cannot change"),
       "the runbook must say a revision cannot change (F612)",
@@ -255,6 +264,7 @@ describe("Phase 4 runbook: the new-build flag action and the name-only env compa
 
   it("prints the env names only, not the values (F621)", () => {
     const section = flagSection();
+    const flat = flagSectionFlat();
     const hits = section.split("\n").filter((line) => line.includes("spec.containers[0].env"));
     expect(
       hits.length,
@@ -272,12 +282,50 @@ describe("Phase 4 runbook: the new-build flag action and the name-only env compa
       `value_print_lines=${valuePrints.length}: no env command may print the values (F621)`,
     ).toEqual([]);
     expect(
-      section.includes("values are compared only"),
-      "the runbook must scope the value compare to the flag (F621)",
+      flat.includes("no env name differs"),
+      "the runbook must scope the names compare to the flag (F621)",
     ).toBe(true);
     expect(
-      section.includes("not a secret"),
-      "the runbook must say the flag value is not a secret (F621)",
+      flat.includes("no command prints a value"),
+      "the runbook must say that no command prints a value (F621)",
+    ).toBe(true);
+  });
+});
+
+describe("Phase 4 runbook: the numbered flag flow of a new build (F641, F661)", () => {
+  it("writes the new-build flow as one numbered list with the off-revision names compare (F641, F661)", () => {
+    const flat = flagSectionFlat();
+    expect(
+      flat.includes("1. Sign in as the teacher on the tag URL host"),
+      "the flow must start with the sign-in on the tag URL host (F661a)",
+    ).toBe(true);
+    expect(
+      flat.includes("2. In the signed-in browser, open the tag URL of the new build"),
+      "the flow must open the tag URL of the new build before the compare (F661a)",
+    ).toBe(true);
+    expect(
+      flat.includes("one line with the names separated by"),
+      "the runbook must state the one-line semicolon output (F641)",
+    ).toBe(true);
+    expect(
+      flat.includes("no env name differs except"),
+      "the names compare must allow only the flag name to differ (F641, F661c)",
+    ).toBe(true);
+    expect(
+      flat.includes("only through the 200 or 404 check"),
+      "the flag state must show only through the tag URL check (F641, F661c)",
+    ).toBe(true);
+    expect(
+      flat.includes("compare the names of that off revision"),
+      "the flow must ask for the names compare on the off revision too (F661b)",
+    ).toBe(true);
+    expect(
+      flat.includes("name that revision in step 4"),
+      "the flow must end with naming the revision in step 4 (F661)",
+    ).toBe(true);
+    expect(
+      flat.includes("Daniel's go"),
+      "the traffic step must still wait for Daniel's go",
     ).toBe(true);
   });
 });

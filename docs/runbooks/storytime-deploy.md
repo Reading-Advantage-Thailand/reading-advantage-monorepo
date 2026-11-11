@@ -111,33 +111,40 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
   the latest revision. They hold no traffic only because of the `--no-traffic` flag on each
   command.
 - The flag stays in the service template after the on command: every later build revision
-  carries `STORYTIME_TEACHER_ROUTES=1`, and a traffic rollback does not remove it. Before
-  each traffic step of a later build, read `/th/teacher/2/1` on the tag URL to see the
-  flag state. A revision cannot change, so the off command with the live image does not
-  clear the flag from a new build revision that already carries it. A new build that shows
-  the flag on (200 on `/th/teacher/2/1` at its tag URL) does not get traffic as it is: run
-  the off command with `--image` set to the image reference of the new build (read it with
-  the same imageDigest describe command on the new revision), check the tag URL of the
-  revision that this command makes (404 with the flag off), and name that revision in
-  step 4.
-- Before the traffic step, sign in as the teacher on the tag URL host first, because a
-  session cookie is bound to one host. Then open the tag URL of the new revision and check
-  it the way step 3 checks a tagged build: `/th/teacher/2/1` answers 200 with a teacher
-  session and the flag on, and 404 with the flag off. Also compare the environment of the
-  new revision with that of the live revision:
+  carries `STORYTIME_TEACHER_ROUTES=1`, and a traffic rollback does not remove it. A revision cannot change,
+  so the off command with the live image does not clear the flag from a new build revision
+  that already carries it. Before any traffic step of a new build, compare the environment
+  of the new build revision with that of the live revision and check the flag state, in
+  this order:
 
-  ```
-  gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
-  gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
-  ```
+  1. Sign in as the teacher on the tag URL host first, because a session cookie is bound to
+     one host.
+  2. In the signed-in browser, open the tag URL of the new build and check `/th/teacher/2/1`
+     the way step 3 checks a tagged build: 200 with a teacher session and the flag on, and
+     404 with the flag off.
+  3. Compare the names in the environment of the new build revision and of the live
+     revision:
 
-  The compare prints the variable names, not their values. The values are compared only
-  for the flag; the flag value is not a secret. The names must match, except the flag
-  itself. When the new build holds the flag and the live revision does not, the off
-  command runs with the image reference of the new build before any traffic step (see the
-  flag-state bullet above). Find the new revision name with
+     ```
+     gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
+     gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
+     ```
+
+     The compare prints the variable names, not their values. Each command prints one line
+     with the names separated by `;`. The names compare shows that no env name differs
+     except `STORYTIME_TEACHER_ROUTES`. The flag state shows only through the 200 or 404
+     check of `/th/teacher/2/1` on the tag URL; no command prints a value, so no secret
+     value reaches a log.
+  4. When the check shows the flag on and the live revision holds no flag, the new build
+     does not get traffic as it is: run the off command with `--image` set to the image reference of the new build
+     (read it with the same imageDigest describe command on the new revision).
+  5. Check the tag URL of the revision that this command makes (404 with the flag off) and
+     compare the names of that off revision with the live revision the same way.
+  6. Then name that revision in step 4: the traffic step (step 4) then names that revision,
+     and only Daniel's go starts it.
+
+  Find the new revision name with
   `gcloud run revisions list --service storytime-app --project primary-advantage --region asia-southeast1`.
-  The traffic step (step 4) then names that revision, and only Daniel's go starts it.
 
 ## Facts (2026-11-07)
 
