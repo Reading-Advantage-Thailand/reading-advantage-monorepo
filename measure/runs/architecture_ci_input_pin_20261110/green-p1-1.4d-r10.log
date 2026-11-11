@@ -1,0 +1,117 @@
+=== measure green run: task 1.4d round 10, read-only v2 route facts ===
+session: Green · P1 1.4d r10 · architecture_ci_input_pin
+role: measure-jr-green
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4d (read-only preview)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 246e68ffc13cc856770596f2542bcde93de94419
+model: deepseek/deepseek-flash#high
+started: 2026-11-11
+status: in progress
+
+Pre-run checks:
+- HEAD is 246e68ffc13cc856770596f2542bcde93de94419.
+- git status --short -- packages/architecture-enforcement .github is empty.
+- MemAvailable is 2275556 kB. The stop rule is 300 MB.
+- PSI memory full avg60 is 2.86 percent. The stop rule is 30 percent.
+- I did not run task 1.4d as written. I read the code only. The v1 baselines are protected v1 artifacts, and writeArchitectureBaselines throws on them (baseline-update.ts:246-252). I wrote no baseline, manifest, policy, workflow, or source file.
+
+Code facts with file:line
+(a) Default policy
+- policy-selection.ts:130-152 selects `--policy`, or the committed default when no flag is present.
+- policy-selection.ts:110-116: a candidate v2 manifest must keep v1 as the default.
+- analyzer-reconciliation.v2.json: acceptance.status is "candidate" and acceptance.defaultPolicy is "v1". The effective default is v1.
+- policy-selection.ts:58-64 first validates the protected v1 artifact family, so a changed v1 artifact fails policy selection for either policy.
+(b) Baseline files of policy v2
+- ownership-map.v2.json baselineFiles: packages/architecture-enforcement/src/config/baselines/database.v2.json and packages/architecture-enforcement/src/config/baselines/provider.v2.json.
+- Policy v2 also reads analyzer-reconciliation.v2.json and ownership-map.v2.json. It does not read database.v1.json or provider.v1.json.
+(c) What architecture:reconcile writes and what apply needs
+- policy-write-guard.ts:2-7 names the four files: analyzer-reconciliation.v2.json, ownership-map.v2.json, baselines/database.v2.json, and baselines/provider.v2.json.
+- architecture-reconciliation-cli.ts:190-205: a preview with no --acknowledge builds the plan, prints it, prints "preview wrote nothing" to stderr, and returns 1. It does not apply.
+- parseArchitectureReconciliationArguments requires --acknowledge and --expected-plan-hash together. No owner, rationale, or receipt flag exists.
+- architecture-reconciliation.ts:1025-1035: an acknowledged apply of v2 throws "Candidate v2 reconciliation cannot write before acceptance" while the manifest status is candidate.
+- v2-manifest-validation.ts:683-730: an accepted manifest requires every review role and an owner binding. The binding holds the owner id, the owner receipt path, the receipt hash, and the review subject. The receipt path is measure/tracks/durable_job_worker_platform_20260713/owner-receipt.json. A person supplies the reviews and the owner receipt.
+- The apply itself takes --acknowledge and --expected-plan-hash only. It accepts no per-entry owner or rationale. The v2 debt record lives in the manifest baselineAdditions, baselineRemovals, and baselineRenames, and all three are empty today. The v1 update path has --owner and --rationale (baseline-update.ts:35-38 and :129), but it cannot target the protected v1 baselines (baseline-update.ts:246-252).
+(d) The CI step
+- .github/workflows/ci.yml:156-157 runs `pnpm architecture:check --skip-input-snapshot-pin` with no --policy, so CI uses the committed default policy, v1.
+
+=== previews ===
+Preview A: the v2 check
+- Command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:check --policy v2 --skip-input-snapshot-pin --format json > .../r10-check-v2.json'
+- Start: 2026-11-11T11:33:09+0700. End: 2026-11-11T11:44:17+0700.
+- Heavy-run exit: 1.
+- Report: status=debt-change, filesScanned=6868, findings=792, parseErrors=0, policyVersion=v2, policyStatus=candidate, defaultPolicy=v1.
+- Comparison: new-debt, additions=248, removals=16, renames=161.
+- Additions by rule: DATABASE_BOUNDARY 205, DURABLE_JOB_DATABASE_BOUNDARY 14, COMPANY_IDENTITY_PRODUCT_ISOLATION 11, AI_PROVIDER_BOUNDARY 11, COMPANY_IDENTITY_DB_BOUNDARY 5, INTEGRATION_PROVIDER_BOUNDARY 2.
+- Additions by top-level path, the largest: apps/primary-advantage 144, apps/accounts 16, apps/marketing 16, packages/domain 12, apps/sales-advantage 11, packages/webhooks 11, apps/reading-advantage 11, apps/codecamp-advantage 10.
+- Removals: all 16 are AI_PROVIDER_BOUNDARY, the same 16 as the v1 preview.
+- Renames: 161 on 20 semantic keys.
+- The redirect caught 297 trailing bytes from pnpm on stdout. I kept the first JSON value only.
+
+Preview B: the default reconcile command with no --policy and no --acknowledge
+- Command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:reconcile --format json > .../r10-reconcile-preview.json'
+- Start: 2026-11-11T11:44:43+0700. End: 2026-11-11T11:45:07+0700.
+- Heavy-run exit: 1. The command failed before a preview.
+- Error: "Architecture reconciliation failed: Reconciliation exact exception already exists: AI_PROVIDER_BOUNDARY packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts".
+- Reason: the default policy is v1, and the v1 preview path rejects the current input. The default reconcile command cannot preview this repository today. It wrote nothing.
+
+Preview B2: the v2 reconcile preview, the route under decision
+- Command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:reconcile --policy v2 --format json > .../r10-reconcile-preview.json'
+- Start: 2026-11-11T11:45:22+0700. End: 2026-11-11T11:47:37+0700.
+- Heavy-run exit: 1 (preview with a pending plan). stderr: "Architecture reconciliation preview wrote nothing; review the plan hash and rerun with explicit acknowledgement."
+- State: preview-required.
+- reconciliationPlanHash: c9be44a5bd8c71ed7c9477cc77d0457e2b9f0d58f9eb8cfc06f81e5a05948a34.
+- transactionPlanHash: cb5f47e47e5e93939cb1b784c83ceb3a6661915f4c518c705af01382ecd36ce8.
+- Counts: databaseEntries=467, providerEntries=93, productionAdditions=0, exactExceptionAdditions=1, coveredTestFindings=0, removals=0, renames=0.
+- beforeFileHashes equals proposedFileHashes for the ownership map and both baselines. The plan rewrites the same bytes. Reconcile alone clears no debt.
+- Files it would write: analyzer-reconciliation.v2.json, ownership-map.v2.json, baselines/database.v2.json, baselines/provider.v2.json.
+- An acknowledged apply needs --acknowledge and --expected-plan-hash c9be44a5.... It also needs manifest status "accepted". The manifest is "candidate", so apply throws (architecture-reconciliation.ts:1025-1035).
+- New-debt metadata: the reconcile command takes none. productionAdditions is 0. The v2 command cannot record the 248 additions.
+- r10-reconcile-preview.json holds this v2 preview. The default-run output was not JSON, so I replaced it with the working v2 preview.
+
+Status after both runs
+- git status --short -- packages/architecture-enforcement .github is empty. No baseline, manifest, policy, workflow, or source file changed.
+
+Three routes for the PM
+
+Route A: the v2 route, then CI on policy v2
+- Facts: the v2 debt is smaller than the v1 debt: additions=248 against 332, removals=16, renames=161. The v2 baselines date to 2026-08-19.
+- The reconcile v2 preview is a no-op write of the same four files. It does not add the 248 findings.
+- To make v2 clean, the accepted manifest needs baselineAdditions for the 248 findings (owner and rationale review metadata in each baseline entry), all review roles, and the owner binding with the owner receipt at measure/tracks/durable_job_worker_platform_20260713/owner-receipt.json. The manifest holds 0 reviews and 0 baselineAdditions now.
+- No production command builds those manifest additions. buildAnalyzerReconciliationManifest is exported (reconciliation-manifest-builder.ts:510) and has no caller outside its test.
+- CI change: .github/workflows/ci.yml:157 must become `pnpm architecture:check --policy v2 --skip-input-snapshot-pin`.
+- Cost: new builder work, a full review set, and an owner receipt. It is the durable route but not a short one.
+
+Route B: a code change that allows an acknowledged v1 baseline update
+- Facts: writeArchitectureBaselines refuses the protected v1 baselines (baseline-update.ts:246-252).
+- What breaks: V1_ARTIFACT_BINDINGS fixed accepted hashes (v1-validation.ts:33+), validateV1ArtifactFamilySync (v1-validation.ts:70+), the fixed V1_MANIFEST_SHA256 (policy-selection.ts:52-53), and the v2 manifest field v1ManifestSha256. policy-selection.ts:58-64 validates the v1 family for every policy, so both policies fail until the fixed hashes change.
+- The v2 manifest also binds the v1 manifest hash, so a changed v1 family needs a v2 manifest update and re-acceptance.
+- The v1 update accepts new debt only with --owner and --rationale (baseline-update.ts:35-38 and :129). The 332 additions need both.
+- The v2 branch of baseline-update stays blocked: "Policy v2 baseline writes require the complete four-file reconciliation transaction" (baseline-update.ts:325-330).
+
+Route C: keep CI red on the debt step until a remediation track and a later route
+- Facts: the input pin is fixed. The CI step at .github/workflows/ci.yml:157 still exits 1 on v1 debt.
+- The drift sits in other tracks' files (primary-advantage 144, accounts 50, marketing 18, sales 13, codecamp 11, reading 11). A remediation track has the most room to reduce it.
+- Cost: the architecture job stays red. The other CI steps and the guards still run. A later route (A or B) lands after remediation.
+
+Default of this role: route C for task 1.4 now, with route A opened as a separate task. Reasons: route C changes no contract and no protected artifact. Route A is the durable fix but needs an owner receipt, a full review set, and a manifest builder that does not exist outside its test. Route B breaks the protected v1 family and forces a v2 re-acceptance.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4d (round 10, read-only facts)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 246e68ffc13cc856770596f2542bcde93de94419
+previews: v2 check -> exit 1, debt-change, additions=248, removals=16, renames=161, filesScanned=6868, findings=792, parseErrors=0; default reconcile -> exit 1 before a preview (exact exception already exists in the v1 path); v2 reconcile -> exit 1 preview, plan hash c9be44a5bd8c71ed7c9477cc77d0457e2b9f0d58f9eb8cfc06f81e5a05948a34, productionAdditions=0, before and proposed hashes equal
+files_changed: measure/runs/architecture_ci_input_pin_20261110/r10-check-v2.json (new), measure/runs/architecture_ci_input_pin_20261110/r10-reconcile-preview.json (new), measure/runs/architecture_ci_input_pin_20261110/green-p1-1.4d-r10.log (new). No baseline, manifest, policy, workflow, or source file changed.
+post_run_status: git status --short -- packages/architecture-enforcement .github is empty
+commits: the measure docs commit with the two previews and this log follows this block
+plan_updates: none. Task 1.4d stays [ ].
+routes: A = reconcile and CI on policy v2, which needs an accepted manifest with 248 baselineAdditions, a full review set, an owner receipt, and a manifest builder; B = a code change for an acknowledged v1 update, which breaks V1_ARTIFACT_BINDINGS, validateV1ArtifactFamilySync, V1_MANIFEST_SHA256, and the v2 v1ManifestSha256 binding; C = keep CI red on the debt step until a remediation track and a later route.
+handoff: the PM chooses the route. Route A is the durable fix but needs an owner receipt, a full review set, and new builder work. Route B breaks the protected v1 family. Route C defers. The default of this role is route C for task 1.4 now, plus route A as a separate task.
+deferred: none
+question: which route should the repository take for the debt step (A, B, or C), and for route A, who is the accountable owner and what is the rationale for the 248 v2 additions? The default is route C now and route A as a separate task.
+END_MEASURE_AGENT_RESULT

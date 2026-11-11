@@ -1,0 +1,41 @@
+{
+  "state": "preview-required",
+  "summary": {
+    "schemaVersion": 1,
+    "reconciliationPlanHash": "c9be44a5bd8c71ed7c9477cc77d0457e2b9f0d58f9eb8cfc06f81e5a05948a34",
+    "manifestHash": "0433f8a832313c837e37128fae4d7080122c9663fea6e8ff40e7173989389b42",
+    "transactionPlanHash": "cb5f47e47e5e93939cb1b784c83ceb3a6661915f4c518c705af01382ecd36ce8",
+    "analyzerImplementationTreeHash": "1ad7a5d1f21d3c92c98892f346bd68ef42aac14fc6cb67d4b9b06d246f20c8e0",
+    "reconciliationImplementationTreeHash": "ae7ccdc4d9e6844fb9f5828c5fed1eeb029f919ff9548a2e8773447f66e43f48",
+    "architectureInputSnapshotHash": "01d7bc12a6ced0bba70a7de39eb5a35587e960854b494ed4a779ac6b367bf8f4",
+    "beforeFileHashes": {
+      "ownershipMap": "361fe1a887d38f558032d9ef55198abc622af12c7cda5c201ce42fe648111677",
+      "databaseBaseline": "72fabd22dbb881b298ba1cb9d731751f94989aad83dbc6bac810c381c09be235",
+      "providerBaseline": "7137e81c662f25073e233144a585178fdd19ec324630f58cc5a807de42b4ace5"
+    },
+    "proposedFileHashes": {
+      "ownershipMap": "361fe1a887d38f558032d9ef55198abc622af12c7cda5c201ce42fe648111677",
+      "databaseBaseline": "72fabd22dbb881b298ba1cb9d731751f94989aad83dbc6bac810c381c09be235",
+      "providerBaseline": "7137e81c662f25073e233144a585178fdd19ec324630f58cc5a807de42b4ace5"
+    },
+    "rulesetHashes": {
+      "database": "73781410306e2aa711ac536b3f5e451a82a301b37a45e21a7a36ba2d48f9cb0d",
+      "provider": "1f26b6b7bd73ab2ce7ca38f182206dd8d41995f566733bd2ef4059d950ad9e67"
+    },
+    "exactExceptionPairs": [
+      {
+        "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+        "sourcePath": "packages/domain/src/tenant-registry.ts"
+      }
+    ],
+    "counts": {
+      "databaseEntries": 467,
+      "providerEntries": 93,
+      "productionAdditions": 0,
+      "exactExceptionAdditions": 1,
+      "coveredTestFindings": 0,
+      "removals": 0,
+      "renames": 0
+    }
+  }
+}
