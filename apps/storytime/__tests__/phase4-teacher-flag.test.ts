@@ -22,9 +22,12 @@ import { afterEach, describe, expect, it } from "vitest";
  * - the rule module `apps/storytime/lib/teacher.ts` exports `TEACHER_ROUTES_ENV` (the name
  *   `STORYTIME_TEACHER_ROUTES`) and `teacherRoutesEnabled()` with the exact-`1` rule;
  * - the pages `app/[locale]/teacher/[level]/[week]/page.tsx` and
- *   `app/[locale]/teacher/[level]/[week]/[day]/page.tsx` call `teacherRoutesEnabled()`, call
- *   `notFound()` when it is false, load the week through `loadWeek`, and answer 404 for an
- *   unknown level, week, or day.
+ *   `app/[locale]/teacher/[level]/[week]/[day]/page.tsx` run the fixed guard order through
+ *   `guardTeacherPage` of `lib/teacher.ts` (session, flag, role; the remediation round 1 of
+ *   finding F416 replaced the inline sequence), call `notFound()` for the off gate, and answer
+ *   404 for an unknown level, week, or day. The behavior cases of this file replaced the two
+ *   source regexes of the flag-off case and the flag-read case (finding F413); the meaning of
+ *   both cases stays.
  */
 
 const app = resolve(import.meta.dirname, "..");
@@ -98,7 +101,34 @@ describe("Phase 4 teacher route group and flag (AC-9.3)", () => {
     ).toBe("function");
   });
 
-  it("reads the flag in both teacher pages before any week content renders", () => {
+  it("reads the flag in both teacher pages before any week content renders", async () => {
+    const rule = await loadRule();
+    expect(
+      typeof rule.guardTeacherPage,
+      "lib/teacher.ts must export guardTeacherPage for the flag check of the pages",
+    ).toBe("function");
+    // Behavior: the guard of the pages reads the flag before it returns any content, so a
+    // teacher session with the flag off gets no content (the pages map the off gate to 404).
+    process.env[FLAG_ENV] = "1";
+    const ok = await rule.guardTeacherPage(async () => ({
+      id: "u-teach",
+      username: "teach-01",
+      role: "teacher",
+    }), "/th/teacher/2/1");
+    expect(ok, "the guard must pass a teacher session with the flag on").toEqual({
+      kind: "ok",
+      teacher: { id: "u-teach", username: "teach-01", role: "teacher" },
+    });
+    delete process.env[FLAG_ENV];
+    const off = await rule.guardTeacherPage(async () => ({
+      id: "u-teach",
+      username: "teach-01",
+      role: "teacher",
+    }), "/th/teacher/2/1");
+    expect(
+      off,
+      "the guard must read the flag before it returns content, even for a teacher session",
+    ).toEqual({ kind: "off" });
     for (const [path, label] of [
       [weekPage, "teacher week view"],
       [dayPage, "teacher lesson flow"],
@@ -106,8 +136,8 @@ describe("Phase 4 teacher route group and flag (AC-9.3)", () => {
       const source = readRequired(path, label);
       expect(
         source,
-        `${label} must read the server-side teacher flag`,
-      ).toMatch(/teacherRoutesEnabled|TEACHER_ROUTES_ENV/);
+        `${label} must run the flag check through the guard of lib/teacher.ts`,
+      ).toMatch(/guardTeacherPage/);
     }
   });
 
@@ -140,17 +170,88 @@ describe("Phase 4 teacher route group and flag (AC-9.3)", () => {
     ).toMatch(/process\.env\[DRAFT_MEDIA_ENV\]\s*===\s*"1"/);
   });
 
-  it("answers 404 from every teacher route when the flag is off", () => {
+  it("answers 404 from every teacher route when the flag is off", async () => {
+    const rule = await loadRule();
+    expect(
+      typeof rule.guardTeacherPage,
+      "lib/teacher.ts must export guardTeacherPage for the flag-off rule",
+    ).toBe("function");
+    // Behavior (finding F413 replaced the source regex of this case; the meaning stays):
+    // with the flag off the guard answers off for every session, and each page maps the off
+    // gate to notFound, so every teacher route answers 404.
+    let sessionCalls = 0;
+    const off = await rule.guardTeacherPage(async () => {
+      sessionCalls += 1;
+      return { id: "u-teach", username: "teach-01", role: "teacher" };
+    }, "/th/teacher/2/1/1");
+    expect(off, "the day route must be off with the flag off, for every session").toEqual({
+      kind: "off",
+    });
+    expect(
+      sessionCalls,
+      "the session check must still run before the flag check (the recorded order)",
+    ).toBe(1);
     for (const [path, label] of [
       [weekPage, "teacher week view"],
       [dayPage, "teacher lesson flow"],
     ] as const) {
       const source = readRequired(path, label);
-      expect(source, `${label} must call notFound when the flag is off`).toMatch(/notFound/);
       expect(
         source,
-        `${label} must gate on the flag before the week content renders`,
-      ).toMatch(/teacherRoutesEnabled\(\)[\s\S]*notFound|notFound[\s\S]*teacherRoutesEnabled\(\)/);
+        `${label} must map the off gate to notFound`,
+      ).toMatch(/gate\.kind === "off"\s*\)\s*notFound\(\)/);
+    }
+  });
+
+  it("runs the day-route guard in the recorded order session, flag, role (behavior)", async () => {
+    const rule = await loadRule();
+    expect(
+      typeof rule.guardTeacherPage,
+      "lib/teacher.ts must export guardTeacherPage for the fixed guard order",
+    ).toBe("function");
+    const teacher = { id: "u-teach", username: "teach-01", role: "teacher" as const };
+    let sessionCalls = 0;
+    const requireTeacher = async () => {
+      sessionCalls += 1;
+      return teacher;
+    };
+
+    process.env[FLAG_ENV] = "1";
+    const ok = await rule.guardTeacherPage(requireTeacher, "/th/teacher/2/1/1");
+    expect(sessionCalls, "the guard must read the session once").toBe(1);
+    expect(
+      ok,
+      "a teacher session with the flag on must pass the guard",
+    ).toEqual({ kind: "ok", teacher });
+
+    delete process.env[FLAG_ENV];
+    sessionCalls = 0;
+    const off = await rule.guardTeacherPage(requireTeacher, "/th/teacher/2/1/1");
+    expect(
+      sessionCalls,
+      "the session check must come before the flag check, so a flag-off request still reads the session",
+    ).toBe(1);
+    expect(
+      off,
+      "the day route must be off with the flag off (an inverted gate fails here)",
+    ).toEqual({ kind: "off" });
+
+    process.env[FLAG_ENV] = "1";
+    const forbidden = await rule.guardTeacherPage(async () => null, "/th/teacher/2/1/1");
+    expect(
+      forbidden,
+      "a session of another role must get the 403 view with the flag on",
+    ).toEqual({ kind: "forbidden" });
+
+    for (const [path, label] of [
+      [weekPage, "teacher week view"],
+      [dayPage, "teacher lesson flow"],
+    ] as const) {
+      const source = readRequired(path, label);
+      expect(
+        source,
+        `${label} must run its checks through the one guard of lib/teacher.ts`,
+      ).toMatch(/guardTeacherPage/);
     }
   });
 

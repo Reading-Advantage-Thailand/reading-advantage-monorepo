@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { loadWeek } from "../../../../../lib/content";
-import { parseTeacherRoute, teacherRoutesEnabled } from "../../../../../lib/teacher";
+import {
+  guardTeacherPage,
+  parseTeacherRoute,
+} from "../../../../../lib/teacher";
 import { requireRole } from "../../../../../lib/auth";
 import { signWeekMedia } from "../../../../../lib/media/sign";
 import TeacherForbidden from "../../forbidden";
@@ -49,9 +52,9 @@ export default async function TeacherWeekPage({
 }) {
   const { locale, level: levelSegment, week: weekSegment } = await params;
   const returnPath = `/${locale}/teacher/${levelSegment}/${weekSegment}`;
-  const teacher = await requireRole("teacher", returnPath);
-  if (!teacherRoutesEnabled()) notFound();
-  if (!teacher) {
+  const gate = await guardTeacherPage((path) => requireRole("teacher", path), returnPath);
+  if (gate.kind === "off") notFound();
+  if (gate.kind === "forbidden") {
     const translate = await getTranslations({ locale });
     const t = (key: string) => translate(key);
     return (

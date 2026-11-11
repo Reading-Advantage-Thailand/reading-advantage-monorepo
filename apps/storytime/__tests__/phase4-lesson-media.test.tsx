@@ -561,6 +561,51 @@ describe("Phase 4 task 4.4: the media step of the lesson flow", () => {
     ).toContain("ZZZ Book ZZZ");
   });
 
+  it("renders the decodable branch of the titled book, and the contract holds one decodable per week", async () => {
+    // The week contract holds one decodable book per week, so a clone with a second decodable
+    // must fail the contract (A4). The decodable branch can therefore never open another book
+    // than the one decodable that the step names (finding F414).
+    const first = week.books.find((entry) => entry.kind === "decodable");
+    expect(first?.audio.file, "the shipped decodable must hold a recorded file").toBeDefined();
+    const second = structuredClone(first!);
+    second.title = "ZZZ Second Decodable ZZZ";
+    second.audio.file = "l2/media/w01/books/zz-second-decodable.mp3";
+    const twoDecodables = structuredClone(week);
+    twoDecodables.books.push(second);
+    expect(() => weekSchema.parse(twoDecodables)).toThrow(/one decodable book/);
+
+    // Render test of the branch: the step names the decodable by title, and the player shows
+    // the decodable region with the page text of that book, not the read-along.
+    const readAlong = week.books.find((entry) => entry.kind === "readalong");
+    expect(
+      readAlong?.pages[0]?.text,
+      "the shipped read-along must hold a page text for the negative check",
+    ).toBeDefined();
+    const copy = structuredClone(week);
+    stepOf(copy, 1, "A1").materials = [`book audio: "${first!.title}"`];
+    expect(
+      () => weekSchema.parse(copy),
+      "the clone must pass the week contract before it renders (A4)",
+    ).not.toThrow();
+
+    const view = await renderAtStep(1, "A1", { source: copy });
+    fireEvent.click(openerButton());
+    const player = playerRegion();
+    expect(
+      player.querySelector("[data-phoneme-bank]"),
+      "the decodable branch must render the decodable player",
+    ).not.toBeNull();
+    expect(
+      player.textContent,
+      "the decodable branch must show the page text of the titled decodable",
+    ).toContain(first!.pages[0]!.text);
+    expect(
+      player.textContent,
+      "the decodable player must not show the page text of the read-along",
+    ).not.toContain(readAlong!.pages[0]!.text);
+    view.unmount();
+  });
+
   it("shows no media control on a step without media", async () => {
     const positive = await renderAtStep(2, "B3");
     expect(

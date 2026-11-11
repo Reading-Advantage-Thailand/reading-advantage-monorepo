@@ -6,7 +6,7 @@ import type { StorytimeWeek } from "../../../../../../lib/contracts/week";
 import { loopsApproved } from "../../../../../../lib/loops";
 import { loopPanelsShow, loopsShow, stepTimeMinutes } from "../../../../../../lib/teacher-loops";
 import {
-  shareShotAt,
+  shareShotsAt,
   SHARE_CONSENT_LINE,
   SHARE_MEDIA_LABELS,
   type ShareMoment,
@@ -39,14 +39,16 @@ import { StorytimeSong } from "../../../../st/[level]/[week]/song";
  * focus returns to the control that opened it.
  *
  * A step of an approved week holds the share moment (plan task 4.6a, rule D23). The moment
- * shows at the step that its shot names, with the caption and the consent line in the language
- * of the flow. The moment shows only when the loops part of the week is approved, and it shows
- * only at a step of its own day. The app sends no photo and no video.
+ * shows at the steps that its shots name, with the caption and the consent line in the language
+ * of the flow; two shots on one step both render. The moment shows only when the loops part of
+ * the week is approved, and it shows only at a step of its own day. The app sends no photo and
+ * no video.
  *
  * An approved week of level 2, 3, or 4 holds the teacher loops (plan task 4.6, spec AC-13.7 and
  * AC-13.8). The opening screen shows the recall cards of the day, a step field shows its loop
  * panel by the field, and the step time is `loopMinutes ?? minutes`. A review week holds only
- * the recall and the step time. Every clip plays from the signed map, and nothing autoplays.
+ * the recall and the step time. Every clip plays from the signed map, nothing autoplays, and
+ * one clip plays at a time: a new click stops the last clip, and "Next step" stops the clip.
  *
  * Every value comes from the week file. The view holds no string that names a week item, so the
  * flow of a draft week and the flow of a published week differ only by their data.
@@ -131,14 +133,24 @@ function pick(value: Bilingual, thai: boolean): string {
 
 /**
  * Picks the teacher note of a step in the language of the flow.
+ *
+ * Each of the four arrays falls back on its own: an empty Thai array keeps the English array
+ * (review finding F404), so a partial Thai note shows no empty heading.
  * @param step The step of the day.
  * @param thai `true` when the Thai toggle is on.
- * @returns The Thai note when the toggle is on and the step holds one, and the English note
- *   otherwise.
+ * @returns The note of the step in the language of the flow.
  */
 function noteOf(step: LessonStep, thai: boolean): LessonNote {
-  if (!thai) return step.en;
-  return step.th ?? step.en;
+  if (!thai || !step.th) return step.en;
+  const th = step.th;
+  const take = (thLines: string[], enLines: string[]): string[] =>
+    thLines.length > 0 ? thLines : enLines;
+  return {
+    teacherActions: take(th.teacherActions, step.en.teacherActions),
+    teacherLanguage: take(th.teacherLanguage, step.en.teacherLanguage),
+    studentActions: take(th.studentActions, step.en.studentActions),
+    watchFor: take(th.watchFor, step.en.watchFor),
+  };
 }
 
 /**
@@ -184,12 +196,28 @@ function MediaPart({
   }
   return (
     <StorytimeDecodable
-      week={week}
+      week={decodableWeekOf(week, media.title)}
       locale={locale}
       mediaUrls={mediaUrls}
       playerMode="class-screen"
     />
   );
+}
+
+/**
+ * Narrows the week to the decodable book that the media title names.
+ *
+ * `StorytimeDecodable` shows the first decodable book of the week it gets. The teacher flow
+ * picks the book by the title of the materials entry (rule D1), so the flow hands the player a
+ * week whose books hold only that book. A week with two decodables then opens the titled book,
+ * not the first one (review finding F414).
+ * @param week The week of the lesson day.
+ * @param title The book title that the step names.
+ * @returns The week with the titled decodable book only.
+ */
+function decodableWeekOf(week: StorytimeWeek, title: string): StorytimeWeek {
+  const book = week.books.find((entry) => entry.kind === "decodable" && entry.title === title);
+  return book ? { ...week, books: [book] } : week;
 }
 
 /** The props of the teacher lesson flow. */
@@ -247,17 +275,25 @@ function ShareMomentView({
  * Renders the play control of one bank clip.
  *
  * The control shows only when the signed map holds the file. The control plays nothing on
- * render; a click plays the signed URL once.
+ * render; a click hands the signed URL to the flow, which plays one clip at a time and stops
+ * the last clip (review finding F405). The accessible name holds the word and the sound, or the
+ * card text, so the controls of a drill stay apart (review finding F401).
  * @param props.file The bank file of the clip.
  * @param props.mediaUrls The signed media URL of each file name.
+ * @param props.label The accessible name of the control.
+ * @param props.onPlay The action that plays one clip of the flow.
  * @returns The clip control, or `null` when the map holds no signed URL.
  */
 function ClipControl({
   file,
   mediaUrls,
+  label,
+  onPlay,
 }: {
   file: string;
   mediaUrls: Record<string, string>;
+  label: string;
+  onPlay: (url: string) => void;
 }) {
   const url = mediaUrls[file];
   if (!url) return null;
@@ -266,10 +302,11 @@ function ClipControl({
       type="button"
       data-clip-path={file}
       data-clip-url={url}
-      onClick={() => void new Audio(url).play().catch(() => {})}
+      aria-label={label}
+      onClick={() => onPlay(url)}
       className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-[#92400e] bg-[#fcd34d] px-3 text-[#92400e]"
     >
-      Play clip
+      <span lang="en">Play clip</span>
     </button>
   );
 }
@@ -284,6 +321,8 @@ interface RecallViewProps {
   thai: boolean;
   /** The signed media URL of each file name. */
   mediaUrls: Record<string, string>;
+  /** The action that plays one clip of the flow. */
+  onPlay: (url: string) => void;
 }
 
 /**
@@ -294,14 +333,16 @@ interface RecallViewProps {
  * @param props The props of the recall view.
  * @returns The recall region of the day.
  */
-function RecallView({ day, recall, thai, mediaUrls }: RecallViewProps) {
+function RecallView({ day, recall, thai, mediaUrls, onPlay }: RecallViewProps) {
   return (
     <section
       aria-label="The recall cards"
       data-recall-day={day}
       className="flex flex-col gap-3 rounded-2xl border border-[#92400e] bg-[#fffaf0] p-4"
     >
-      <h2 className="text-xl font-semibold">The recall cards</h2>
+      <h2 className="text-xl font-semibold" lang="en">
+        The recall cards
+      </h2>
       <p className="text-lg" lang={thai ? "th" : "en"}>
         {pick(recall.ask, thai)}
       </p>
@@ -313,7 +354,14 @@ function RecallView({ day, recall, thai, mediaUrls }: RecallViewProps) {
             className="flex items-center gap-2 rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
           >
             {card.text}
-            {card.audio ? <ClipControl file={card.audio} mediaUrls={mediaUrls} /> : null}
+            {card.audio ? (
+              <ClipControl
+                file={card.audio}
+                mediaUrls={mediaUrls}
+                label={`Play the recording of ${card.text}`}
+                onPlay={onPlay}
+              />
+            ) : null}
           </li>
         ))}
       </ul>
@@ -347,12 +395,14 @@ interface StepViewProps {
   locale: string;
   /** The share of the lesson day, or `null` when the week holds none. */
   share: ShareMoment | null;
-  /** The shot of the step, or `null` when no shot names the step. */
-  shot: ShareShot | null;
+  /** The shots of the step, in the order of the week; empty when no shot names the step. */
+  shots: ShareShot[];
   /** `true` when the loops of the week show, so the step shows the loop minutes. */
   loops: boolean;
   /** `true` when the loop panels show, so a step field shows its panel. */
   panels: boolean;
+  /** The action that plays one clip of the flow. */
+  onPlay: (url: string) => void;
 }
 
 /**
@@ -373,14 +423,16 @@ function StepView({
   week,
   locale,
   share,
-  shot,
+  shots,
   loops,
   panels,
+  onPlay,
 }: StepViewProps) {
   const note = noteOf(step, thai);
   const drill = panels ? (step.blendDrill ?? null) : null;
   const sound = panels ? (step.soundLoop ?? null) : null;
   const sight = panels ? (step.sightWords ?? null) : null;
+  const mediaDescriptionId = `open-media-title-${step.id}`;
   return (
     <section
       aria-label={`The step ${step.id}`}
@@ -395,7 +447,9 @@ function StepView({
         <h2 className="text-2xl font-semibold" lang={thai ? "th" : "en"}>
           {pick(step.title, thai)}
         </h2>
-        <span className="text-lg text-neutral-600">{stepTimeMinutes(step, loops)} min</span>
+        <span className="text-lg text-neutral-600" lang="en">
+          {stepTimeMinutes(step, loops)} min
+        </span>
       </header>
 
       {sound ? (
@@ -403,7 +457,9 @@ function StepView({
           data-loop="sound-loop"
           className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#fcd34d] p-4 text-[#92400e]"
         >
-          <h3 className="text-lg font-semibold">The sound loop</h3>
+          <h3 className="text-lg font-semibold" lang="en">
+            The sound loop
+          </h3>
           <p className="text-lg" lang={thai ? "th" : "en"}>
             {pick(sound.correct, thai)}
           </p>
@@ -422,7 +478,9 @@ function StepView({
           data-drill-repeats={drill.repeats}
           className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#fcd34d] p-4 text-[#92400e]"
         >
-          <h3 className="text-lg font-semibold">The blend drill</h3>
+          <h3 className="text-lg font-semibold" lang="en">
+            The blend drill
+          </h3>
           <p className="text-lg" lang={thai ? "th" : "en"}>
             {pick(drill.model, thai)}
           </p>
@@ -438,10 +496,18 @@ function StepView({
           <ul className="flex flex-col gap-1">
             {drill.words.map((word, wordIndex) => (
               <li key={wordIndex} className="flex flex-wrap items-center gap-2 text-lg">
-                <span className="font-semibold">{word.word}</span>
-                <span>{word.sounds.join(" ")}</span>
-                {(word.audio ?? []).map((file) => (
-                  <ClipControl key={file} file={file} mediaUrls={mediaUrls} />
+                <span className="font-semibold" lang="en">
+                  {word.word}
+                </span>
+                <span lang="en">{word.sounds.join(" ")}</span>
+                {(word.audio ?? []).map((file, soundIndex) => (
+                  <ClipControl
+                    key={file}
+                    file={file}
+                    mediaUrls={mediaUrls}
+                    label={`Play ${word.sounds[soundIndex] ?? word.sounds[0] ?? ""} of ${word.word}`}
+                    onPlay={onPlay}
+                  />
                 ))}
               </li>
             ))}
@@ -455,8 +521,12 @@ function StepView({
           data-sight-seconds={sight.seconds}
           className="flex flex-col gap-2 rounded-2xl border border-[#92400e] bg-[#92400e] p-4 text-white"
         >
-          <h3 className="text-lg font-semibold">The sight words</h3>
-          <p className="text-lg">{sight.words.join(" · ")}</p>
+          <h3 className="text-lg font-semibold" lang="en">
+            The sight words
+          </h3>
+          <p className="text-lg" lang="en">
+            {sight.words.join(" · ")}
+          </p>
           <p className="text-lg" lang={thai ? "th" : "en"}>
             {pick(sight.slide, thai)}
           </p>
@@ -466,7 +536,16 @@ function StepView({
         </section>
       ) : null}
 
-      {shot && share ? <ShareMomentView share={share} shot={shot} thai={thai} /> : null}
+      {share
+        ? shots.map((shot) => (
+            <ShareMomentView
+              key={`${shot.step}-${shot.media}`}
+              share={share}
+              shot={shot}
+              thai={thai}
+            />
+          ))
+        : null}
 
       {media ? (
         <div className="flex flex-col gap-3">
@@ -474,10 +553,14 @@ function StepView({
             ref={openerRef}
             type="button"
             onClick={onOpen}
+            aria-describedby={mediaDescriptionId}
             className="w-fit rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-[#92400e]"
           >
-            Open media
+            <span lang="en">Open media</span>
           </button>
+          <span id={mediaDescriptionId} className="sr-only" lang="en">
+            {media.title}
+          </span>
           {player === "missing" ? (
             <p role="alert" className="text-lg text-[#92400e]">
               <span lang="en">{MEDIA_MISSING_EN}</span>{" "}
@@ -501,7 +584,7 @@ function StepView({
               onClick={onClose}
               className="rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
             >
-              Close
+              <span lang="en">Close</span>
             </button>
           </div>
           <MediaPart media={media} week={week} locale={locale} mediaUrls={mediaUrls} />
@@ -514,10 +597,12 @@ function StepView({
             key={heading.key}
             className="flex flex-col gap-2 rounded-2xl border border-[#92400e] p-4"
           >
-            <h3 className="text-lg font-semibold">{heading.label}</h3>
+            <h3 className="text-lg font-semibold" lang="en">
+              {heading.label}
+            </h3>
             <ul className="flex flex-col gap-1">
               {note[heading.key].map((line, index) => (
-                <li key={index} className="text-lg">
+                <li key={index} className="text-lg" lang={thai ? "th" : "en"}>
                   {line}
                 </li>
               ))}
@@ -532,7 +617,9 @@ function StepView({
             key={variant.key}
             className="flex flex-col gap-2 rounded-2xl border border-[#92400e] p-4"
           >
-            <h3 className="text-lg font-semibold">{variant.label}</h3>
+            <h3 className="text-lg font-semibold" lang="en">
+              {variant.label}
+            </h3>
             <p className="text-lg" lang={thai ? "th" : "en"}>
               {pick(step[variant.key], thai)}
             </p>
@@ -601,7 +688,7 @@ function CheckItemView({ item }: { item: CheckItem }) {
  */
 function CheckView({ items }: { items: CheckItem[] }) {
   return (
-    <section aria-label="The Friday check" className="flex flex-col gap-3">
+    <section aria-label="The Friday check" className="flex flex-col gap-3" lang="en">
       <h2 className="text-xl font-semibold">The Friday check</h2>
       <ol className="flex flex-col gap-3">
         {items.map((item, index) => (
@@ -635,6 +722,8 @@ export function TeacherLessonFlow({
   const [thai, setThai] = useState(false);
   const [player, setPlayer] = useState<PlayerState>("closed");
   const openerRef = useRef<HTMLButtonElement | null>(null);
+  // One audio element at a time: a new click stops the last clip (review finding F405).
+  const clipAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const script = week.scripts.find((entry) => entry.day === day);
   const steps = script?.steps ?? [];
@@ -645,7 +734,10 @@ export function TeacherLessonFlow({
   const available = media !== null && hasSignedMedia(media, mediaUrls);
   // The share moment shows only when the loops part of the week is approved (rule D23).
   const share = loopsApproved(week) ? (script?.share ?? null) : null;
-  const shot = shareShotAt(share ?? undefined, step?.id);
+  // Every shot that names the step shows, so two shots on one step both render (F408).
+  const shots = shareShotsAt(share ?? undefined, step?.id);
+  const openingPrompts = week.opening?.pa ?? [];
+  const stripCards = strip?.cards ?? [];
   // The teacher loops show only under the approval and level rule (plan task 4.6).
   const loops = loopsShow(week);
   const panels = loopPanelsShow(week);
@@ -675,14 +767,32 @@ export function TeacherLessonFlow({
     setPlayer("open");
   }
 
+  /**
+   * Plays one signed clip. The flow holds one audio element, so a new click stops the last
+   * clip and no two clips overlap.
+   */
+  function playClip(url: string): void {
+    clipAudioRef.current?.pause();
+    const audio = new Audio(url);
+    clipAudioRef.current = audio;
+    void audio.play().catch(() => {});
+  }
+
+  /** Stops the clip that plays, if one plays. */
+  function stopClip(): void {
+    clipAudioRef.current?.pause();
+    clipAudioRef.current = null;
+  }
+
   /** Closes the player and gives the focus back to the control that opened it. */
   function closeMedia(): void {
     setPlayer("closed");
     openerRef.current?.focus();
   }
 
-  /** Moves to the next screen of the day and closes the player. */
+  /** Moves to the next screen of the day, stops the clip, and closes the player. */
   function nextScreen(): void {
+    stopClip();
     setPlayer("closed");
     setScreen((value) => value + 1);
   }
@@ -694,13 +804,16 @@ export function TeacherLessonFlow({
           <h1 className="text-3xl font-semibold" lang={thai ? "th" : "en"}>
             {script ? pick(script.title, thai) : ""}
           </h1>
-          <p className="text-neutral-600">Day {day}</p>
+          <p className="text-neutral-600" lang="en">
+            Day {day}
+          </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={() => setThai((value) => !value)}
             aria-pressed={thai}
+            lang="th"
             className="rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-[#92400e]"
           >
             ไทย
@@ -709,46 +822,51 @@ export function TeacherLessonFlow({
             href={`/${locale}/teacher/${week.meta.level}/${week.meta.week}`}
             className="rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
           >
-            Back to the week
+            <span lang="en">Back to the week</span>
           </Link>
         </div>
       </header>
 
       {screen === 0 && loops && script?.recall ? (
-        <RecallView day={day} recall={script.recall} thai={thai} mediaUrls={mediaUrls} />
+        <RecallView day={day} recall={script.recall} thai={thai} mediaUrls={mediaUrls} onPlay={playClip} />
       ) : null}
 
-      {screen === 0 ? (
-        <>
-          <section aria-label="The opening routine" className="flex flex-col gap-3">
-            <h2 className="text-xl font-semibold">The opening routine</h2>
-            <ol className="flex flex-col gap-2">
-              {(week.opening?.pa ?? []).map((prompt, index) => (
-                <li
-                  key={index}
-                  className="rounded-2xl border border-[#92400e] p-4 text-lg"
-                  lang={thai ? "th" : "en"}
-                >
-                  {pick(prompt, thai)}
-                </li>
-              ))}
-            </ol>
-          </section>
+      {screen === 0 && openingPrompts.length > 0 ? (
+        <section aria-label="The opening routine" className="flex flex-col gap-3">
+          <h2 className="text-xl font-semibold" lang="en">
+            The opening routine
+          </h2>
+          <ol className="flex flex-col gap-2">
+            {openingPrompts.map((prompt, index) => (
+              <li
+                key={index}
+                className="rounded-2xl border border-[#92400e] p-4 text-lg"
+                lang={thai ? "th" : "en"}
+              >
+                {pick(prompt, thai)}
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
 
-          <section aria-label="The review strip" className="flex flex-col gap-3">
-            <h2 className="text-xl font-semibold">The review strip</h2>
-            <ul className="flex flex-wrap gap-2">
-              {(strip?.cards ?? []).map((card, index) => (
-                <li
-                  key={index}
-                  className="rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
-                >
-                  {card.text}
-                </li>
-              ))}
-            </ul>
-          </section>
-        </>
+      {screen === 0 && stripCards.length > 0 ? (
+        <section aria-label="The review strip" className="flex flex-col gap-3">
+          <h2 className="text-xl font-semibold" lang="en">
+            The review strip
+          </h2>
+          <ul className="flex flex-wrap gap-2">
+            {stripCards.map((card, index) => (
+              <li
+                key={index}
+                className="rounded-full border border-[#92400e] bg-[#fcd34d] px-4 py-2 text-lg text-[#92400e]"
+                lang="en"
+              >
+                {card.text}
+              </li>
+            ))}
+          </ul>
+        </section>
       ) : null}
 
       {step ? (
@@ -766,9 +884,10 @@ export function TeacherLessonFlow({
           week={week}
           locale={locale}
           share={share}
-          shot={shot}
+          shots={shots}
           loops={loops}
           panels={panels}
+          onPlay={playClip}
         />
       ) : null}
 
@@ -781,7 +900,7 @@ export function TeacherLessonFlow({
             onClick={nextScreen}
             className="w-fit rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
           >
-            Next step
+            <span lang="en">Next step</span>
           </button>
         </div>
       )}

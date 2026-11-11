@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-# The Phase 4 Docker smoke of the teacher routes (test strategy P4 closeout item 3, task 4.5).
+# The Phase 4 Docker smoke of the teacher routes (test strategy P4 closeout item 3, task 4.5,
+# and the remediation round 1 of the phase reviews).
 #
-# The image builds once from the monorepo root, and one container runs with no
-# STORYTIME_TEACHER_ROUTES value in its environment at all, so the default proves itself. Every
-# teacher route answers 404 from the container, with the locale segment and without it. The
-# pattern follows phase3-docker-smoke.sh and its sign-in: the auth middleware answers a stranger
-# with the sign-in redirect, so the rows carry the session cookie of the teacher account
-# teach-01 in a throwaway Postgres. The flag check answers 404 before any content read. The
-# password stays in a shell value and no log line prints it. The port is free and never 3005 and
-# never 3099. The containers stop by their names in the exit trap. The caller runs this script
-# through heavy-run.sh, and this script prints one row per route.
+# The image builds once from the monorepo root. One container runs with no
+# STORYTIME_TEACHER_ROUTES value in its environment at all, so the default proves itself: every
+# teacher route answers 404 from the container, with the locale segment and without it. The gate
+# runs a second container with the flag on, and it holds the positive control of those rows: the
+# week route and the day route answer 200 with teacher markup, so an image with no teacher route
+# cannot pass the smoke. The flag-on container signs the media of the week,
+# so it holds the same throwaway signer keys as the browser gate (gate-access-key and
+# gate-secret-key; no real key exists in either script). Both containers hold the no-session row
+# of the strategy amendment (2026-11-11): a request with no session gets the sign-in redirect
+# with no teacher markup, in both flag states. The pattern follows phase3-docker-smoke.sh and
+# its sign-in: the auth middleware answers a stranger with the sign-in redirect, so the rows
+# carry the session cookie
+# of the teacher account teach-01 in a throwaway Postgres. The flag check answers 404 before any
+# content read. The password stays in a shell value and no log line prints it. The port is free
+# and never 3005 and never 3099. The containers stop by their names in the exit trap. The caller
+# runs this script through heavy-run.sh, and this script prints one row per route.
 
 FAILED=0; PASS_COUNT=0; FAIL_COUNT=0; RESULTS=()
 pass() { RESULTS+=("PASS: $1"); PASS_COUNT=$((PASS_COUNT + 1)); }
@@ -21,6 +29,7 @@ ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 APP="$ROOT/apps/storytime"
 IMAGE="storytime-phase1-local:$(git -C "$ROOT" rev-parse --short HEAD)"
 C1=""
+C2=""
 DB_CONTAINER="storytime-p4smoke-db-$$"
 DB_URL=""
 COOKIE=""
@@ -28,10 +37,31 @@ TMP_DIR="$(mktemp -d -t storytime-p4smoke-XXXXXX)"
 
 cleanup() {
   [ -n "$C1" ] && podman rm -f "$C1" >/dev/null 2>&1
+  [ -n "$C2" ] && podman rm -f "$C2" >/dev/null 2>&1
   podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT INT TERM
+
+# Checks one request with no session cookie (test strategy amendment 2026-11-11): the proxy
+# sends a visitor to the sign-in page in both flag states, and the answer holds no teacher
+# markup. $1 base URL, $2 path, $3 label (flag_off or flag_on).
+check_visitor() {
+  local base="$1" path="$2" label="$3" status location body_file hits to_sign_in=0
+  body_file="$TMP_DIR/nosession-$label.html"
+  status="$(curl --silent --output "$body_file" --write-out '%{http_code}' "$base$path" 2>/dev/null)" || true
+  location="$(curl --silent --output /dev/null --write-out '%{redirect_url}' "$base$path" 2>/dev/null)" || true
+  hits=0
+  if grep -q -e 'data-step-id' -e 'The five lessons' "$body_file" 2>/dev/null; then hits=1; fi
+  rm -f "$body_file"
+  case "$location" in *sign-in*) to_sign_in=1;; esac
+  printf 'nosession_%s=%s redirect_to_sign_in=%s teacher_markup=%s\n' "$label" "$status" "$to_sign_in" "$hits"
+  if [ "$status" = "307" ] && [ "$to_sign_in" -eq 1 ] && [ "$hits" -eq 0 ]; then
+    pass "A visitor with no session gets the sign-in redirect with no teacher markup ($label)"
+  else
+    fail "The no-session request on $path did not redirect to the sign-in page ($label status=$status location=$location markup=$hits)"
+  fi
+}
 
 free_port() {
   node -e 'const s=require("node:net").createServer();s.listen(0,"127.0.0.1",()=>{console.log(s.address().port);s.close();});'
@@ -152,6 +182,65 @@ if [ -n "$COOKIE" ]; then
   else
     fail "Some teacher routes did not answer 404 (teacher_404=$OK404 of $TOTAL)"
   fi
+
+  echo "=== A visitor with no session gets the sign-in redirect while the flag is off ==="
+  check_visitor "http://127.0.0.1:$PORT" "/th/teacher/2/1" "flag_off"
+fi
+
+echo "=== Positive control: a second container with STORYTIME_TEACHER_ROUTES=1 ==="
+READY2=""
+PORT2=""
+if [ "$SEED_OK" -eq 1 ] && [ -n "$COOKIE" ]; then
+  PORT2="$(free_port)"
+  while [ "$PORT2" = "3005" ] || [ "$PORT2" = "3099" ]; do PORT2="$(free_port)"; done
+  C2="$(podman run --detach --network=host --env "PORT=$PORT2" --env HOSTNAME=127.0.0.1 \
+    --env "STORYTIME_DATABASE_URL=$DB_URL" --env STORYTIME_MEDIA_BASE=gs://storytime-app-media \
+    --env STORYTIME_STORAGE_ACCESS_KEY=gate-access-key \
+    --env STORYTIME_STORAGE_SECRET_KEY=gate-secret-key \
+    --env STORYTIME_TEACHER_ROUTES=1 "$IMAGE")" || C2=""
+  if [ -n "$C2" ]; then
+    pass "The flag-on container starts on port $PORT2"
+  else
+    fail "The flag-on container cannot start"
+  fi
+fi
+
+if [ -n "$C2" ]; then
+  tries=0
+  while [ "$tries" -lt 90 ]; do
+    status="$(curl --silent --output /dev/null --write-out '%{http_code}' "http://127.0.0.1:$PORT2/th/join" 2>/dev/null)" || true
+    [ "$status" != "000" ] && { READY2=1; break; }
+    sleep 1; tries=$((tries + 1))
+  done
+  if [ -n "$READY2" ]; then
+    pass "The flag-on container answers on port $PORT2"
+  else
+    fail "The flag-on container never answers on port $PORT2"
+  fi
+fi
+
+if [ -n "$READY2" ]; then
+  echo "=== A visitor with no session gets the sign-in redirect while the flag is on ==="
+  check_visitor "http://127.0.0.1:$PORT2" "/th/teacher/2/1" "flag_on"
+fi
+
+if [ -n "$READY2" ] && [ -n "$COOKIE" ]; then
+  echo "=== The flag-on image renders the teacher routes (positive control of the 404 rows) ==="
+  check_teacher_page() {
+    local path="$1" status body_file hits=0
+    body_file="$TMP_DIR/teacher-page.html"
+    status="$(curl --silent --output "$body_file" --write-out '%{http_code}' -H "Cookie: $COOKIE" "http://127.0.0.1:$PORT2$path" 2>/dev/null)" || true
+    if grep -q -e 'data-step-id' -e 'The five lessons' "$body_file" 2>/dev/null; then hits=1; fi
+    rm -f "$body_file"
+    printf 'flag_on_route=%s status=%s teacher_markup=%s\n' "$path" "$status" "$hits"
+    if [ "$status" = "200" ] && [ "$hits" -eq 1 ]; then
+      pass "The teacher route $path answers 200 with teacher markup on the flag-on image"
+    else
+      fail "The teacher route $path answered $status with markup=$hits on the flag-on image (expected 200 with markup)"
+    fi
+  }
+  check_teacher_page "/th/teacher/2/1"
+  check_teacher_page "/th/teacher/2/1/1"
 fi
 
 for row in "${RESULTS[@]}"; do echo "$row"; done

@@ -13,6 +13,7 @@
 
 import { LEVEL_MAX, WEEK_MAX } from "./contracts/week";
 import { parseCanonicalNumber } from "./route-parse";
+import type { StorytimeUser } from "./auth";
 
 /** The environment value that turns the teacher routes on. */
 export const TEACHER_ROUTES_ENV = "STORYTIME_TEACHER_ROUTES";
@@ -56,4 +57,37 @@ export function parseTeacherRoute(level: string, week: string): TeacherRoute | n
  */
 export function parseTeacherDay(day: string): number | null {
   return parseCanonicalNumber(day, DAY_MAX);
+}
+
+/** The result of the guard of one teacher page. */
+export type TeacherGate =
+  | { kind: "off" }
+  | { kind: "forbidden" }
+  | { kind: "ok"; teacher: StorytimeUser };
+
+/**
+ * Runs the fixed guard order of the teacher pages (plan task 4.1, AC-4.6, AC-9.3).
+ *
+ * The order is a recorded rule of the product (test strategy P4, amendment 2026-11-11): the
+ * session first, so a visitor without a session goes to the sign-in page through the session
+ * read; then the teacher switch, which answers 404 for every session while the flag is off;
+ * then the role, which answers the 403 page for a session of another role. The pages render
+ * the 403 view and call `notFound()` from the result.
+ *
+ * The session read is a parameter, so the rule is one behavior-testable function and the pages
+ * stay thin. `requireRole` is the production session read; it redirects a visitor without a
+ * session and returns `null` for a session of another role.
+ * @param requireTeacher The session read of the route, in the order of the rule.
+ * @param returnPath The path the visitor came from.
+ * @returns `off` when the flag is off, `forbidden` for a session of another role, and `ok`
+ *   with the teacher for a teacher session.
+ */
+export async function guardTeacherPage(
+  requireTeacher: (returnPath: string) => Promise<StorytimeUser | null>,
+  returnPath: string,
+): Promise<TeacherGate> {
+  const teacher = await requireTeacher(returnPath);
+  if (!teacherRoutesEnabled()) return { kind: "off" };
+  if (!teacher) return { kind: "forbidden" };
+  return { kind: "ok", teacher };
 }

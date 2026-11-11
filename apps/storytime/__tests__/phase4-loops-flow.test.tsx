@@ -1103,4 +1103,124 @@ describe("Phase 4 teacher loops in the lesson flow (AC-13.7, AC-13.8)", () => {
       "a clip with no signed URL must not autoplay",
     ).toBe("play_calls=0");
   });
+
+  it("plays one clip per click under its own name, stops the last clip on a new click, and stops it on Next step", async () => {
+    const playSpy = vi
+      .spyOn(HTMLMediaElement.prototype, "play")
+      .mockImplementation(() => Promise.resolve());
+    const pauseSpy = vi
+      .spyOn(HTMLMediaElement.prototype, "pause")
+      .mockImplementation(() => undefined);
+    const approved = approvedClone();
+    const urls = mediaUrlsFor(approved);
+    const drill = blendDrillOf(approved, 1, "A4");
+    const firstWord = drill.words[0]!;
+    expect(
+      firstWord.audio?.length ?? 0,
+      `drill_clips=${firstWord.audio?.length ?? 0}: the first word of the drill must hold clips for the click case (A4)`,
+    ).toBeGreaterThan(0);
+
+    const TeacherLessonFlow = await loadLessonFlow();
+    const { container, unmount } = render(
+      <TeacherLessonFlow week={approved} day={1} locale="en" mediaUrls={urls} />,
+    );
+    try {
+      const currentId = () =>
+        container.querySelector<HTMLElement>("[data-step-id]")?.dataset.stepId ?? "";
+      let moves = 0;
+      while (currentId() !== "A4") {
+        fireEvent.click(screen.getByRole("button", { name: NEXT_STEP }));
+        moves += 1;
+        expect(moves, "the flow must reach the step A4 of day 1").toBeLessThan(20);
+      }
+      const stepNode = container.querySelector<HTMLElement>('[data-step-id="A4"]');
+      expect(stepNode, "the flow must show the step A4 for the click case").not.toBeNull();
+      const panel = panelOf(stepNode!, "blend-drill", "day=1 step=A4 click case");
+      const controls = Array.from(panel.querySelectorAll<HTMLElement>("[data-clip-path]"));
+      expect(
+        controls.length,
+        `clip_controls=${controls.length}: the click case needs at least two clip controls`,
+      ).toBeGreaterThanOrEqual(2);
+
+      // F401: every control of the drill names its word and its sound, and no two are equal.
+      // The clip files repeat across the words, so the check follows the DOM order of the
+      // controls and the order of the word audio lists.
+      const expectedLabels = drill.words.flatMap((word) =>
+        (word.audio ?? []).map((file, soundIndex) => ({
+          file,
+          word: word.word,
+          sound: word.sounds[soundIndex] ?? "",
+        })),
+      );
+      expect(
+        controls.length,
+        `clip_controls=${controls.length}: the drill must render one control for each word clip (${expectedLabels.length})`,
+      ).toBe(expectedLabels.length);
+      const names = controls.map((control) => control.getAttribute("aria-label") ?? "");
+      for (const [index, expected] of expectedLabels.entries()) {
+        expect(
+          names[index] ?? "",
+          `the control of ${expected.file} must hold an accessible name`,
+        ).not.toBe("");
+        expect(
+          names[index] ?? "",
+          `the control of ${expected.file} must name the word ${expected.word}`,
+        ).toContain(expected.word);
+        expect(
+          names[index] ?? "",
+          `the control of ${expected.file} must name the sound ${expected.sound}`,
+        ).toContain(expected.sound);
+      }
+      expect(
+        new Set(names).size,
+        `clip_names=${new Set(names).size} of ${names.length}: every clip control of the drill must name its word and sound`,
+      ).toBe(names.length);
+
+      // Positive control for the spy: nothing plays on render or on navigation (AC-8.1).
+      expect(
+        `play_calls=${playSpy.mock.calls.length}`,
+        "the flow must not autoplay a clip before the click case",
+      ).toBe("play_calls=0");
+
+      // One click plays one clip, and the clip is the signed URL of the control.
+      fireEvent.click(controls[0]!);
+      expect(
+        `play_calls=${playSpy.mock.calls.length}`,
+        "one click on a clip control must play one clip",
+      ).toBe("play_calls=1");
+      const firstPlayed = playSpy.mock.contexts[0] as HTMLMediaElement | undefined;
+      expect(
+        firstPlayed?.src ?? "",
+        "the played clip must be the signed URL that the control holds",
+      ).toBe(controls[0]!.dataset.clipUrl);
+
+      // A second click stops the first clip, so no two clips overlap (F405).
+      fireEvent.click(controls[1]!);
+      expect(
+        `play_calls=${playSpy.mock.calls.length}`,
+        "the second click must play the second clip",
+      ).toBe("play_calls=2");
+      expect(
+        `pause_calls=${pauseSpy.mock.calls.length}`,
+        "a new click must stop the clip that plays",
+      ).toBe("pause_calls=1");
+      expect(
+        pauseSpy.mock.contexts[0],
+        "the stopped clip must be the clip of the first click",
+      ).toBe(firstPlayed);
+
+      // The next step stops the clip that plays.
+      fireEvent.click(screen.getByRole("button", { name: NEXT_STEP }));
+      expect(
+        `pause_calls=${pauseSpy.mock.calls.length}`,
+        "the next step must stop the clip that plays",
+      ).toBe("pause_calls=2");
+      expect(
+        pauseSpy.mock.contexts[1],
+        "the next step must stop the clip of the second click",
+      ).toBe(playSpy.mock.contexts[1]);
+    } finally {
+      unmount();
+    }
+  });
 });

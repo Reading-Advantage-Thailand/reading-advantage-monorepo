@@ -904,6 +904,34 @@ describe("Phase 4 share moment (task 4.6a, rule D23)", () => {
     expect(forms, `${label("forms", forms)}: the app must hold no upload form`).toBe(0);
   });
 
+  it("shows every shot of a step, so two shots on one step both render (finding F408)", async () => {
+    const twoShots = approvedClone();
+    const dayOneShare = shareOf(twoShots, 1);
+    expect(
+      dayOneShare.shots.length,
+      `base_shots=${dayOneShare.shots.length}: the day 1 share must hold one shot before the clone adds the second`,
+    ).toBe(1);
+    dayOneShare.shots.push({ step: "A3", media: "photo" });
+    expect(
+      weekSchema.safeParse(twoShots).success,
+      "the clone with two shots on one step must pass the week schema before it renders (A4)",
+    ).toBe(true);
+
+    const shown = await openDayAtStep(1, "A3", twoShots as unknown as StorytimeWeek);
+    const nodes = Array.from(
+      shown.container.querySelectorAll<HTMLElement>('[data-share-moment="A3"]'),
+    );
+    expect(
+      `share_shown_a3=${nodes.length}`,
+      "both shots of the step must render, in the order of the week",
+    ).toBe("share_shown_a3=2");
+    expect(
+      nodes.map((node) => node.getAttribute("data-share-media")),
+      "the two shots must keep their media kinds",
+    ).toEqual(["video", "photo"]);
+    shown.unmount();
+  });
+
   it("keeps every teacher source free of an upload path, with a planted positive control", () => {
     const cwd = process.cwd();
     const appRoot = existsSync(join(cwd, "app")) ? cwd : join(cwd, "apps/storytime");
@@ -914,13 +942,20 @@ describe("Phase 4 share moment (task 4.6a, rule D23)", () => {
     ).toBe(true);
 
     const teacherSources = walkSource(join(appRoot, "app/[locale]/teacher"));
-    const files = [...teacherSources, shareModule, join(appRoot, "lib/contracts/week.ts")];
+    const files = [
+      ...teacherSources,
+      shareModule,
+      join(appRoot, "lib/contracts/week.ts"),
+      join(appRoot, "lib/teacher.ts"),
+      join(appRoot, "lib/teacher-media.ts"),
+      join(appRoot, "lib/teacher-loops.ts"),
+    ];
     const filesScanned = files.length;
     console.log(label("files_scanned", filesScanned));
     expect(
       filesScanned,
-      `${label("files_scanned", filesScanned)}: the scan must read at least 4 teacher files`,
-    ).toBeGreaterThanOrEqual(4);
+      `${label("files_scanned", filesScanned)}: the scan must read at least 7 teacher files`,
+    ).toBeGreaterThanOrEqual(7);
 
     const hits = uploadHits(files);
     expect(

@@ -231,6 +231,16 @@ describe("Phase 4 teacher week view (AC-9.1)", () => {
         marker: "ZZZ Unique Decodable ZZZ",
       },
       {
+        label: "the read-along material title",
+        make: () => {
+          const copy = structuredClone(week);
+          const book = copy.books.find((entry) => entry.kind === "readalong")!;
+          book.title = "ZZZ Unique Read-Along ZZZ";
+          return copy;
+        },
+        marker: "ZZZ Unique Read-Along ZZZ",
+      },
+      {
         label: "the student book letter of the print part",
         make: () => {
           const copy = structuredClone(week) as unknown as PrintShape;

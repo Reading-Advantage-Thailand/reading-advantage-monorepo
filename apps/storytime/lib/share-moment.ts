@@ -3,30 +3,27 @@
  *
  * The week file holds the share of each lesson day: the shots that the teacher takes at home and
  * the caption for the parents. The module holds the consent line, the label of each kind of
- * media, and the rule that picks the shot of a step.
+ * media, and the rule that picks the shots of a step.
+ *
+ * The shot and the share types come from the Zod schemas of the week contract (AGENTS.md: infer
+ * types from Zod), so a schema change fails the build here too. The imports are type-only, so
+ * the client bundle gains no zod.
  *
  * The app sends nothing. The module holds no file name and no upload path, and a shot names a
  * step of its own day only.
  */
 
+import type { z } from "zod";
+import type { shareSchema, shareShotSchema } from "./contracts/week";
+
+/** One shot of a share moment, as the week contract holds it. */
+export type ShareShot = z.infer<typeof shareShotSchema>;
+
+/** The share of one lesson day, as the week contract holds it. */
+export type ShareMoment = z.infer<typeof shareSchema>;
+
 /** The kind of the media of one shot. */
-export type ShareMedia = "photo" | "video";
-
-/** One shot of a share moment. */
-export interface ShareShot {
-  /** The id of the step of the day. */
-  step: string;
-  /** The kind of the media of the shot. */
-  media: ShareMedia;
-}
-
-/** The share of one lesson day. */
-export interface ShareMoment {
-  /** One or two shots of the day. */
-  shots: ShareShot[];
-  /** The caption for the parents. */
-  caption: { en: string; th: string };
-}
+export type ShareMedia = ShareShot["media"];
 
 /**
  * The consent line that the teacher reads to the parents.
@@ -46,18 +43,20 @@ export const SHARE_MEDIA_LABELS: Record<ShareMedia, { en: string; th: string }> 
 };
 
 /**
- * Finds the shot of one step of the day.
+ * Lists the shots of one step of the day.
  *
- * The rule reads the step id of the shot and the step id of the screen. A shot that names a step
- * of another day names no step here, so it shows nowhere. The app adds no fallback.
+ * The rule reads the step id of each shot and the step id of the screen. A shot that names a
+ * step of another day names no step here, so it shows nowhere. Every shot that names the step
+ * shows, so two shots on one step both render (review finding F408); the schema strictness of
+ * distinct steps belongs to Workbooks. The app adds no fallback.
  * @param share The share of the lesson day.
  * @param stepId The id of the step on the screen.
- * @returns The shot that names the step, or `null` when no shot names it.
+ * @returns The shots that name the step, in the order of the week; empty when no shot names it.
  */
-export function shareShotAt(
+export function shareShotsAt(
   share: ShareMoment | undefined,
   stepId: string | undefined,
-): ShareShot | null {
-  if (!share || !stepId) return null;
-  return share.shots.find((shot) => shot.step === stepId) ?? null;
+): ShareShot[] {
+  if (!share || !stepId) return [];
+  return share.shots.filter((shot) => shot.step === stepId);
 }
