@@ -3643,6 +3643,55 @@ for every other track.
   - Tasks 5.5, 5.6, and 5.7 stay `[~]`. The Green role fixes the runner, the rubric texts, the
     review page, and the launch script. No product source was written in this round. No model was
     called and no money was spent. Evidence class: automated.
+  - Green round r5, 2026-11-12: the remediation of the Phase 5 reviews. Role
+    `deepseek/deepseek-flash#high` (DeepSeek); Red model
+    `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax); role base
+    `b9c8384028486e9d6b7659704e2cbefefcc77c4c`; phase base
+    `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; implementation commit `a3ea15b91`. The Red range
+    `6b8115e86..b9c838402` holds the Red commits `3e70ea882`, `4f00023fe`, and `b9c838402`. The
+    eight failing rows ran before the change and exited 1.
+  - F901 (runner). `runPreCheck` writes `entry.itemCount` to the ledger line. It reports one
+    failure detail for each file with no verdict, so a file with no verdict never looks clean. It
+    throws when the client returns more verdicts than files. A picture fail carries `at=none`,
+    because a picture has no time in the file (F906).
+  - F903 (rubrics). The phoneme point names "no hiss, hum, or clipping"; the video point names
+    "the scene reads as its place"; the book audio point asks for "a natural question and answers
+    it". The header states one semantics: each entry is a point that must hold for a pass. The
+    picture points are unchanged.
+  - F972 (review copy). The teacher-app item holds the line `data-review-signin` with the sign-in
+    path and the account `teach-01`. The new script
+    `apps/storytime/scripts/review/launch-review-copy.ts` exports `planLaunch`. It refuses the
+    ports 3005 and 3099 and a password file that is the log file. The program path makes the
+    `teach-01` account, writes the password to the password file with mode 0600, keeps the
+    password out of the log, prints the URL and the commit, and starts the app copy and the review
+    server on free local ports. Green did not run the launcher, started no server, and touched no
+    database.
+  - F971 and F975 (review page). The route links open in a new tab with `rel="noopener"`, so the
+    page keeps its state. The chosen button shows a pressed state with `aria-pressed`; the status
+    span holds `role="status"` and `aria-live`; a verdict change clears the status; a fail with no
+    comment asks for a comment.
+  - F974 (answer record). Each answer line holds `answeredAt` and the review-copy commit. The
+    plan note of task 6.1 states the read rule: the last line per item wins, and an absent item is
+    open.
+  - F902 and F904 were fixed by Red in `3e70ea882`: the gate answers file sits in the temporary
+    folder, and `controls_per_item` counts the four controls of one item.
+  - Declined, with the reason: F905 (the live client belongs to a later task), F907 (the
+    measurement scripts and their tests are outside this round), F908 (the fix needs an edit to a
+    committed Red test), F909 (the stream-type check needs new tests), F910 (the noise label and
+    the clip comparison are outside this round), F911 (the loopback bind follows the desktop-only
+    decision, and the missing endpoint tests are Red work), F912 (the gate rows are Red-owned),
+    F913 (the stage 2 record needs a text-only rerun), F914 (the 5.4 marker follows the PM
+    decision, and the remaining calibration is deferred:daniel), F915 (the PM owns the re-send),
+    F973 (phone access stays desktop only, with no tunnel without Daniel's go), and F976 (the Thai
+    text and the strategy line need a PM decision).
+  - Gates. `GREEN_TEST_COMMAND` under heavy-run p1, foreground: exit 0; 7 files; 61 passed of 61;
+    0 failed; 0 skipped. The type check `tsc --noEmit` in `apps/storytime` under heavy-run p1:
+    exit 0. ESLint on the four changed files: exit 0, 0 errors, 0 warnings. `bash -n` on the
+    gate: exit 0. The gate self-test: exit 0; `selftest_good_accepted=7` of 7 and
+    `selftest_mutants_rejected=18` of 18; `PASS=1 FAIL=0`. `build-graph update ./graph.db` with
+    the four files: exit 0; 4 files; 63 to 91 nodes; 60 to 88 edges.
+  - Tasks 5.5, 5.6, and 5.7 stay `[~]`. Task 5.6 needs the reviews again. No Next build, dev, or
+    start ran in this round. Evidence class: automated unit and self-test.
 - [~] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
   - Red evidence (tasks 5.6 and 5.7): the same round as task 5.6. The unit file
     `apps/storytime/__tests__/phase5-review-copy.test.ts` holds the page contract, and the gate
@@ -3660,6 +3709,8 @@ for every other track.
 ## Phase 6: Daniel's milestone judgment
 
 - [b] 6.1 Daniel judges the five items on the review page, with the sound and touch checks on a real iPhone and a low-cost Android phone. A section without an answer is open. AC-12.1. deferred:daniel
+  - Answer read rule: the last line per `itemId` wins, and an item with no line is open. Each line
+    records the answer time and the review-copy commit.
 - [ ] 6.2 Fix each finding from Daniel. Repeat stages 1 and 2 for each changed file. Put the changed items in a new page section.
 - [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:pm
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel
