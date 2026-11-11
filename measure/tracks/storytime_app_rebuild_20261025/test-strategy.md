@@ -915,66 +915,172 @@ These rows join the task 4.5 browser check. The task 4.5 rows above stay: `PROJE
 
 ## P5: Milestone week integration
 
-**Risk:** high. The phase runs model pre-checks with a cost, receives media from two production sides, and makes the review copy for Daniel. Task 5.2 (paid generation) is a human gate.
+**Revision 2026-11-11.** This text replaces the P5 text of the first strategy run (2026-10-26). Role base `2399d3075888275c937cd98dc78dab5a9e664fd0` (the Phase 4 checkpoint `c633a4446`, commit `2399d3075`). The old text named a broken command: the root vitest config holds no `@` alias, and `apps/storytime/scripts/checks` is not a test file. It named no cost rule, no port rule, and no hand-off record. The milestone week is level 2 week 1, `apps/storytime/content/l2/w01.json`, at Workbooks `953f798e` (spec line 71, FR-3).
 
-**Human gate:** task 5.2 is `[b] … deferred:daniel`. No automated gate covers it. The orchestrator never runs it.
+**Risk:** high. Phase 5 runs model pre-checks that cost money, receives media from Workbooks and Forge, and makes the review copy that Daniel judges. A weak gate sends a broken file to Daniel. A wrong server shows a draft week to a child.
 
-**Targeted Red command:**
+**Human gates (not automated gates):**
+
+- Task 5.2 (paid generation, new Lyria 3 Pro takes, S16) is `[b] … deferred:daniel`. The orchestrator never runs it. Daniel gives the go and the price.
+- Task 5.4 (model pre-checks) costs money. DeepSeek is an approved standing route, so it needs a ledger line and no new go. Any other metered route needs Daniel's go, and the orchestrator asks through the PM (P5.1).
+- Task 5.7 makes the page only. Daniel judges the page at task 6.1 (Phase 6).
+
+### P5.1 Cost ledger and the go rule
+
+- One ledger for the phase: `measure/runs/storytime_app_rebuild_20261025/cost-ledger.md`. One line for each paid call, written before the call.
+- A line holds: date (UTC), task, purpose, model id, unit price and the date the role read it, item count, estimated total, and the approval owner. No hash and no checksum (AGENTS.md hashing policy).
+- A run with no ledger line is a gate failure. `phase5-runner.test.ts` proves the order: no line, no model call.
+- A release file gets a second model from another provider (rule 6.7e). That provider is a new metered route, so it follows the go rule once.
+
+### P5.2 Phase base and the base run
+
+- The orchestrator captures `phase_base_sha` with `git rev-parse HEAD` after the commit of this section and before the Red role of task 5.3 starts. It records the full SHA in the Red evidence of task 5.3 in `plan.md`.
+- The base run at that SHA: the P4 targeted command (ten files, section P4) and `bash apps/storytime/__tests__/phase1-quality-gates.sh`. The orchestrator records the exit code and the labeled counts. A Phase 5 change that breaks a P1 to P4 test shows against this record.
+- This section holds no SHA. `2399d3075` is the role base, and it predates the commit of this section.
+
+### P5.3 Commands
+
+`RED_TEST_COMMAND` is the block below. `GREEN_TEST_COMMAND` is the same block, and it exits 0 on Green.
 
 ```bash
-bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm exec vitest run --maxWorkers=1 apps/storytime/__tests__/phase5-*.test.ts apps/storytime/scripts/checks'
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase5-measure-audio.test.ts __tests__/phase5-measure-word-edges.test.ts __tests__/phase5-measure-file.test.ts __tests__/phase5-runner.test.ts __tests__/phase5-rubrics.test.ts __tests__/phase5-media-list.test.ts __tests__/phase5-review-copy.test.ts'
 ```
 
-Each measurement script also runs once on its broken copy under `heavy-run.sh` and must exit non-zero.
+- Run from `apps/storytime` (the root config has no `@` alias). Name every Phase 5 file. No glob. `CI=true`. `--maxWorkers=1`.
+- The command runs inside `heavy-run.sh`, in the foreground call. The role waits in that call only. `HEAVY_PRIORITY=p1` is allowed for Storytime. One heavy job at a time, on a 7 GB box.
+- A new Phase 5 test file joins this line in the same commit that adds it.
+- The browser gate is `bash apps/storytime/__tests__/phase5-browser-gate.sh`. The script enters `heavy-run.sh` itself, as the Phase 4 gate does. Run it plain. It picks a free port, never 3005 and never 3099 (P5.8).
 
-**Green gate:** the targeted Red command exits 0. Each measurement script fails its broken copy and passes a good file. Each rubric fails its known bad files and passes one file that Daniel passed.
+### P5.4 Task map: code, not code, and order
 
-**Closeout gate:**
+| Task | Code? | Red test file | Evidence class | The record that closes it |
+|---|---|---|---|---|
+| 5.1 media list | no (the receiver lists the files) | `phase5-media-list.test.ts` | automated artifact plus the hand-off record | the document at the hand-off commit, plus the orchestrator send line |
+| 5.2 paid generation | no, and no test | none | owner-passed | Daniel's go and the ledger line |
+| 5.3 measurement scripts | yes, `apps/storytime/scripts/checks/` | `phase5-measure-audio.test.ts`, `phase5-measure-word-edges.test.ts`, `phase5-measure-file.test.ts` | automated (live measurement on real files) | `RED_TEST_COMMAND` exits 0, and each script fails its broken copy |
+| 5.4 runner and rubrics | yes, the same folder | `phase5-runner.test.ts`, `phase5-rubrics.test.ts` | model pre-check (calibration log) | the calibration log, plus the ledger lines |
+| 5.5 receive and run the stages | no | none (the stage log is the record) | automated stage 1, model pre-check stage 2 | the stage log of each file, plus the PM return line |
+| 5.6 review copy | no | `phase5-browser-gate.sh`, `phase5-review-copy.test.ts` | automated browser rows, person-checked by the agent side (rule 6.5) | the gate exits 0, plus the URL and commit record |
+| 5.7 review page | no (`apps/` holds no new page) | `phase5-review-copy.test.ts` | automated page check, then owner-passed at 6.1 | the page test, plus the UX browser review |
 
-1. The Green gate, and the P1 to P4 targeted Vitest commands.
-2. `bash apps/storytime/__tests__/phase1-quality-gates.sh`.
-3. Stages 1 and 2 on every received milestone file, with the run log and the cost ledger lines.
-4. The agent playthrough of every part on the review copy (task 5.6, rule 6.5).
-5. `build-graph update`, the change-quality review, Review B, Review C, and the adversarial record.
+**Order.** Red tests task 5.3 first, then task 5.4. The test of task 5.1 lands with the first test of 5.3, because both read the same receiver output. The Red role commits the test files alone. It writes no product source, no week file, and no media file.
 
-**Fixtures and live proof:**
+### P5.5 Tasks 5.1 and 5.5: the media list and the received files (not code)
 
-- Broken copies are made from real files by one change each: a cut-off edge, added noise, clipping, a wrong size, or a wrong type. The known bad files are BA1 "Hello", `04-n.mp3`, C1W2 cut 1, and the "One sun" thumbnail.
-- The model pre-check never runs in Vitest. A unit test can mock the model client to test the runner logic only. A mock result never counts as a pre-check.
-- Live proof: the measurement output on the real milestone files, and the model output log with the model name and the price.
-
-**Tests and falsification conditions:**
+- The list starts from the receiver output at `953f798e` for w01. It never runs the import. P5 reads the received weeks and the hand-off packages. It never writes `apps/storytime/content/` and never changes `source.json`.
+- w02 to w07 stay draft until Daniel's Thai check on 2026-11-16. Their import belongs to track `storytime_look_20261107`. Phase 5 does not overlap it.
+- The document: `measure/runs/storytime_app_rebuild_20261025/media-list-w01.md`. One row for each file.
+- A row holds: file, kind, rule (from `MEDIA_RULES`), the stage 1 check, the stage 2 rubric kind, the size, and the type.
+- Hand-off: the orchestrator sends the list to Workbooks and Forge through the PM. The evidence is the orchestrator send line with the date and the document path. The plan note of 5.1 quotes that line. The send names Daniel's offer to do the phoneme noise step (rule 5.1) on the phoneme rows.
 
 | Test | Proves | Falsification condition |
 |---|---|---|
-| AC-11.1 each script | Each measurement script fails its broken copy before it counts | A script passes a broken copy |
-| AC-6.2 word edges | Each word cut has no sound at either edge. The script fails BA1 "Hello". | The script passes BA1 |
-| AC-7.2 phoneme gate | Noise floor below -60 dBFS, no clipping, and the rule 5.2 loudness target | The script passes `04-n.mp3` with its hiss |
-| AC-10.1 media list | Every listed file exists with its size and type | A missing file passes, or the list is empty (A4) |
-| AC-11.2 calibration | Each rubric fails its known bad files and passes one passed file | A rubric passes a known bad file |
-| Cost ledger | The model and its price are logged before each run. Release files get a second provider. | A run starts with no ledger line |
-| AC-6.3, AC-7.3, AC-10.2 | Every milestone file passes its rubric, and the log goes with the delivery | A file reaches the review page with no stage 2 log line |
-| FR-12 review page | Five items, each with Pass, Fail, a comment, and Send | An item has no Send, or an item has no answer and shows as passed |
+| List count | `media_files=70` on w01 at `953f798e`: 36 audio, 32 pictures, 2 video (measured 2026-11-11) | A count differs, or the list is empty (A4) |
+| Each row | Each row holds the six fields of the list | A row misses a field, or a kind has no rule |
+| Missing picture | A clone of w01 with one page `file` deleted gives `picture_missing=1` and names the place | A missing picture counts as a file |
+| Labels | `label_items_missing=6`: three tile labels and three home words (`net`, `nut`, `nose`), each with no file (open question 4) | A label row names a file that no production side made |
+| Bitrate deviation | Each file under 192 kbps has a row with `bitrate_deviations=<n>`; the phoneme bank of 9 files at 128 kbps is the measured case (rule 5.3) | The list hides the deviation, or claims 192 kbps |
 
-**Anti-pattern coverage:** A2 (a file reaches Daniel only after stages 1 and 2 pass; the review page never marks an item passed without his answer), A3 (`noise_floor_dbfs=<n>`, `true_peak_dbtp=<n>`, `edge_rms_dbfs=<n>`), A4 (non-empty media list and file set), A5 (an automated count never closes a media acceptance check, rule 6.2), A7 (the media list filter names exact kinds).
+The bitrate check applies to new production files. The received phoneme bank stays a known deviation with the noise step as its closing item. The orchestrator sends that item to the PM.
 
-**Architecture guardrails:**
+### P5.6 Task 5.3: measurement scripts (code)
 
-- The scripts live in `apps/storytime/scripts/checks/`.
-- A model call goes through the internal AI adapter (`packages/ai`). A bucket write goes through `@reading-advantage/storage`.
-- The review copy serves media from local files. The production bucket receives files only with a deploy.
+- Location `apps/storytime/scripts/checks/`: `loudness.ts`, `noise.ts`, `word-edges.ts`, `file-kind.ts`. Each holds a pure parse function with JSDoc that takes the ffprobe or ffmpeg text.
+- Rule 5.2: `-16 LUFS` integrated and true peak at or below `-1 dBTP`. Rule 5.3: noise floor below `-60 dBFS`, no clipping, 10 ms fades, one sample rate. Rule 10.2: the word end is the energy drop, never the start of the next word.
+- Each script exits non-zero on a fail and prints its labeled numbers.
+
+| Test | Proves | Falsification condition |
+|---|---|---|
+| Rule 5.2 | `song.mp3` passes the loudness and true-peak check | A file at `-13 LUFS` passes |
+| Rule 5.3 | `04-n.mp3` fails on its noise floor, and a clipped copy fails | A hissy file passes |
+| Rule 10.2 | A cut with sound at an edge fails; BA1 "Hello" fails (AC-6.2) | The script reads the next word start as the end |
+| File check | Size and type per kind; a `.png` named `.mp3` fails (AC-10.1) | A wrong type passes |
+| Broken copy (AC-11.1) | Each script exits non-zero on one broken copy of a real file: a cut edge, added noise, clipping, a wrong size, a wrong type | A script passes a broken copy |
+| Parser control | A synthetic input proves the parser with no media folder | The parser test needs the hand-off folder |
+
+### P5.7 Task 5.4: the runner and the rubrics (code)
+
+| Test | Proves | Falsification condition |
+|---|---|---|
+| Runner order | No ledger line, no model call; the log line comes first | A call starts with no ledger line |
+| Rubric set | One rubric for each of the six kinds, with the known faults of rule 6.7b | A kind has no rubric |
+| Known bad files (AC-11.2) | Each rubric fails its known bad file: BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail | A rubric passes a known bad file |
+| Passed file | Each rubric passes one file that Daniel passed | A rubric fails every file |
+| Fail detail | A fail holds the reason and the time in the file, `at=<seconds>` | A fail holds no time |
+| Mock | `MockProvider` gives a fixed verdict for the runner test only | A plan note cites a mock result as the pre-check |
+
+### P5.8 Tasks 5.6 and 5.7: the review copy and the page (not code)
+
+- The review copy runs `next start` of the production build with `STORYTIME_SHOW_DRAFT_MEDIA=1`. It reads local media through `STORYTIME_CONTENT_DIR` and `STORYTIME_MEDIA_BASE` (P3.7).
+- Port rule: a free port, picked at run time, never 3005 and never 3099. The server runs in its own process group. The exit trap stops the group, waits, and prints `port_closed=1`. A pid file holds the group id.
+- The review page is one page served by the same server. It holds the five items of FR-12, each with Pass, Fail, a comment, and Send. Each answer appends to `review-answers-p5.json` in the run folder. There is no app code, no route in `apps/`, and no database.
+- The browser gate runs the P3 and P4 viewports. It records `PROJECT_DEV_URL`, the port, and the commit.
+
+| Test | Proves | Falsification condition |
+|---|---|---|
+| Draft switch | The review copy sets the switch; the deploy files never set it (AC-5.5) | A deploy file holds the name |
+| Server rule | A free port, never 3005 and never 3099; the trap prints `port_closed=1` | The port is 3005, or a server stays after the gate |
+| Agent rows (rule 6.5) | Each of the five items opens, plays, and checks: `items_checked=5` | An item is not checked, or the count is 0 (A4) |
+| Review page | Five items, each with the four controls; `answered=0` before an answer | An item shows as passed, or holds no Send |
+| Answers | Each Send writes one line to the JSON file | An answer is lost, or the page needs a database |
+
+### P5.9 Fixtures, mocks, live proof, and the red aggregate
+
+- The media root is the hand-off package `~/Desktop/handoff/w01-storytime-app-package-r4` (2026-11-11). A test names the folder and fails with a named message when it is absent. It never skips.
+- A broken copy is made in `/tmp` from a real file by one change. No broken media file is committed.
+- A mock is only the model client (`MockProvider`) and the audio element. No test mocks a measurement function (rule 11.4).
+- Live proof: the ffprobe and ffmpeg numbers on real files, the model log with the model id and the price, the browser network log, and the review server URL with its commit.
+- An artifact test (the media list, the ledger, the page text) never closes AC-6.3, AC-7.3, AC-10.2, AC-11.1, or AC-11.2. Those need a live measurement or a model run (rule 6.2).
+- Between the Red commit and the Green commit, each new Phase 5 file is intentionally red. The plan Red evidence holds one line for each failing test, its cause, and its task. The root aggregate suite never runs as a gate (section 1.4).
+
+### P5.10 Anti-pattern coverage
+
+| ID | Defense | Falsification condition |
+|---|---|---|
+| A1, A8 | 5.2 stays `[b] … deferred:daniel`. No check reads the word "deferred" in prose. | A `[~]` row holds "deferred" and counts as blocked |
+| A2 | A file reaches the review page only after stage 1 and stage 2 pass. The page never marks an item passed without Daniel's answer. | A broken file shows on the page, or an item shows as passed |
+| A3 | Each count is a labeled integer that the test parses: `media_files=<n>`, `label_items_missing=<n>`, `bitrate_deviations=<n>`, `loudness_lufs`, `true_peak_dbtp=<n>`, `noise_floor_dbfs=<n>`, `edge_dbfs=<n>`, `items_checked=<n>`, `port_closed=<n>` | A check passes on a date or a revision number |
+| A4 | Each test asserts its input set is not empty first: files, rows, and items above 0 | A test passes with zero files or zero items |
+| A5 | A plan note quotes the exit code and the labeled counts of the command it cites | The plan says "pass" and the cited command is red |
+| A6 | The plan and `measure/tracks.md` say "passed by Daniel" only after task 6.1 | The registry says the milestone passed before 6.1 |
+| A7 | A scan names exact paths and exact file kinds. No `rg -v` list and no English word as a filter | A filter hides a real media file |
+| A9 | The Phase 5 tests read `apps/storytime` and the run folder only. No `measure/tracks/…` path | A test fails after the track moves to `measure/archive/` |
+| A10 | After a structural edit, Green runs `build-graph update ./graph.db <files>` through `heavy-run.sh`, and `build-graph search` finds each new export | A phase closes with a new export that search does not find |
+| A14 | A detector uses `rg -n '<regex>'`. Exit code 2 is a failure | A detector with a bad option reports zero hits |
+| A15 | No hash or checksum enters a test, the media list, or the ledger. Provenance is the Git commit and the hand-off commit | A SHA-256 field appears in a track file |
+| A16 | All work runs in the shared master tree | A role adds a worktree |
+
+A11 and A13 apply at the track closeout only.
+
+### P5.11 Architecture guardrails and changed contracts
+
+- The scripts sit in `apps/storytime/scripts/checks/` and export a pure parse function. No app route reads that folder.
+- A model call goes through `packages/ai`. No provider SDK in the script.
+- Stage 1 runs on local files. Phase 5 writes no bucket. The production bucket receives files with a deploy, on Daniel's go.
+- The review copy serves local media. The draft switch is a server-side value, never `NEXT_PUBLIC_`.
 - No song audio goes to a hosted separation service (S28 default).
+- Changed contract: the media list becomes the hand-off contract with Workbooks and Forge. A kind without a rule or a rubric makes a file unknown to both stages.
+- Changed contract: a rubric change after calibration makes the calibration void. The rubric runs its calibration again, or it does not count.
+- Changed contract: the 128 kbps phoneme bank is a known deviation of rule 5.3. A new file that copies it fails stage 1. Daniel's phoneme noise step is the offer that closes it (rule 5.1).
 
-**Changed-contract risks:** the media list format becomes the hand-off contract with Workbooks and Forge. A rubric change after calibration makes its calibration void, so the rubric runs its calibration again.
+### P5.12 Review applicability
 
-**Review applicability:**
+- Review A (`measure-review-a-correctness`): yes. The parse functions, the ledger order, and the rubric calibration are correctness claims that a loose test can miss.
+- Review B (`measure-review-b-security`): yes. The runner sends media to a model provider with an API key, and the run logs and the ledger must hold no key. The review checks the switch and the key handling.
+- Review C (`measure-review-c-ux-api`): yes. The review page is the interface for Daniel's judgment (FR-12). The five items, the four controls, and the Thai and English text are new surface.
+- Adversarial (`measure-adversarial-testing`): yes. A broken copy, a renamed type, a missing file, a duplicated file, a very long file name, and a model answer with no time attack the gates.
+- UX browser (`measure-ux-browser-review`): yes. The agent side opens, plays, and checks each part on the review copy before the page goes to Daniel (rule 6.5). Viewports: the P3 and P4 sets. `PROJECT_DEV_URL` is the review copy.
 
-- Review B: yes. The runner sends media to a model provider with an API key, and the stage logs can hold keys. The review checks key handling and the cost ledger.
-- Review C: yes. The FR-12 review page is the interface for Daniel's judgment.
-- Adversarial: yes. Broken copies and known bad files attack each gate (rule 11.1).
-- Browser review: yes. The agent side opens, plays, and checks every part on the review copy before Daniel (rule 6.5).
-  - `PROJECT_DEV_URL` source: the review copy on a local server on the office network with local media (task 5.6). The orchestrator records the URL and the commit.
-  - Viewports: the P3 and P4 sets.
+### P5.13 Closeout gate
+
+1. `GREEN_TEST_COMMAND` exits 0 with the seven files, and the P1 to P4 targeted commands exit 0.
+2. `bash apps/storytime/__tests__/phase1-quality-gates.sh` exits 0.
+3. Each measurement script fails its broken copy and passes a good file (AC-11.1). Each rubric fails its known bad files and passes one passed file (AC-11.2), with the calibration log.
+4. Stages 1 and 2 on each milestone file, with the run log, the labeled counts, and the ledger lines.
+5. `phase5-browser-gate.sh` exits 0: `items_checked=5`, `port_closed=1`, and the review page rows.
+6. The 5.1 hand-off record: the orchestrator send line with the date, the document path, and the `noise_step=daniel offered` item.
+7. `build-graph update` (A10), Review A, Review B, Review C, and the adversarial record, each `status: pass`.
+8. `git diff --stat <phase base>..HEAD -- apps/storytime/content apps/primary-advantage packages/read-along` is empty.
 
 ## P6: Daniel's milestone judgment
 
