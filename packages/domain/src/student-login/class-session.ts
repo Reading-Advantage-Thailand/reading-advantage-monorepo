@@ -9,12 +9,14 @@ import {
 } from "@reading-advantage/db/schema";
 import type { RateLimitStore, UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
+import { calendarDayKey, SCHOOL_TIME_ZONE } from "../calendar-day.js";
 import { authorizeClassroom } from "./access.js";
 import { auditStudentLogin, type StudentLoginActor } from "./audit.js";
 import { generateClassCode, hashClassCode } from "./codes.js";
 import {
   nameListOutput,
   type ClassSessionEndInput,
+  type ClassSessionLifetime,
   type ClassSessionStartInput,
   type ClassSessionStartOutput,
   type CodeEntryInput,
@@ -26,6 +28,44 @@ import { guardClassAttempt, guardCodeEntry, recordCodeMiss } from "./rate-limits
 
 /** Lifetime of a class code (spec: after 3 hours). */
 export const CLASS_SESSION_LIFETIME_MS = 3 * 60 * 60 * 1000;
+
+/** Lifetime of a class code with the 7-day choice (the maximum). */
+const CLASS_SESSION_LIFETIME_7D_MS = 7 * 24 * 60 * 60 * 1000;
+
+/** Milliseconds from Bangkok midnight to 17:00 (Thailand sits at UTC+7 with no daylight saving). */
+const BANGKOK_17_UTC_MS = 10 * 60 * 60 * 1000;
+
+/**
+ * Computes the expiry instant of a class session from the chosen lifetime and `now`. The server
+ * is the authority: a caller can send only one of the three choices, never a time or a duration.
+ * `undefined` gives the 3-hour default; `null` and every unknown value (including object
+ * prototype keys) are refused. For `until_17` the expiry is 17:00 `SCHOOL_TIME_ZONE` on the
+ * Bangkok calendar date of `now`, and the choice is refused from 17:00 on.
+ * @param lifetime The chosen lifetime, or undefined for the default.
+ * @param now Current time.
+ * @returns The expiry instant.
+ * @throws {StudentLoginError} `invalid_input` for `until_17` at 17:00 Bangkok or later, and for an unknown value.
+ */
+function computeSessionExpiry(lifetime: ClassSessionLifetime | undefined, now: Date): Date {
+  const choice = lifetime === undefined ? "3h" : lifetime;
+  switch (choice) {
+    case "3h":
+      return new Date(now.getTime() + CLASS_SESSION_LIFETIME_MS);
+    case "7d":
+      return new Date(now.getTime() + CLASS_SESSION_LIFETIME_7D_MS);
+    case "until_17": {
+      const dayKey = calendarDayKey(now, SCHOOL_TIME_ZONE);
+      // 17:00 Asia/Bangkok is 10:00 UTC on the same Bangkok calendar date.
+      const expiresAt = new Date(Date.parse(`${dayKey}T00:00:00Z`) + BANGKOK_17_UTC_MS);
+      if (now.getTime() >= expiresAt.getTime()) {
+        throw new StudentLoginError("invalid_input", "The 17:00 choice is not available now. Choose another time.");
+      }
+      return expiresAt;
+    }
+    default:
+      throw new StudentLoginError("invalid_input", "Unknown session lifetime.");
+  }
+}
 
 const MAX_CODE_ATTEMPTS = 10;
 
@@ -61,14 +101,16 @@ function isUniqueViolation(error: unknown): boolean {
  * Starts a class login session: makes a fresh code, stores only its hash, and closes an
  * earlier open session of the class (a restart replaces the old code). Students of the class
  * that have no credential row get one. The code is unique among all open sessions of all schools.
+ * The expiry comes from the chosen lifetime: 3 hours (the default), 17:00 Bangkok on the current
+ * Bangkok date, or 7 days. The lifetime check runs before any row write.
  * @param params.db Database client.
  * @param params.user The teacher of the class, or an admin of its school.
  * @param params.actor Client IP and user agent for the audit entry.
- * @param params.input The class to start.
+ * @param params.input The class to start, and the chosen lifetime. A missing lifetime gives 3 hours.
  * @param params.now Current time. Tests replace it.
  * @param params.pick Random integer source for the code. Tests replace it.
  * @returns The session id, the code (shown once), and the expiry time.
- * @throws {StudentLoginError} `forbidden`, `not_found`, or `unavailable` when no free code is found.
+ * @throws {StudentLoginError} `invalid_input` for `until_17` at 17:00 Bangkok or later and for an unknown lifetime, `forbidden`, `not_found`, or `unavailable` when no free code is found.
  */
 export async function startClassSession(params: {
   db: DB;
@@ -81,6 +123,9 @@ export async function startClassSession(params: {
   const { db, user, actor, input } = params;
   const now = params.now ?? new Date();
   const { classroom, tenantDb } = await authorizeClassroom(db, user, input.classroomId);
+  // The lifetime check runs before the first row write: ensureStudentCredentials can insert rows.
+  const lifetime = input.lifetime === undefined ? "3h" : input.lifetime;
+  const expiresAt = computeSessionExpiry(lifetime, now);
   await ensureStudentCredentials(db, classroom.schoolId, classroom.id);
 
   const closed = await tenantDb
@@ -121,9 +166,7 @@ export async function startClassSession(params: {
           lte(primaryClassLoginSessions.expiresAt, now),
         ),
       );
-    const expiresAt = new Date(now.getTime() + CLASS_SESSION_LIFETIME_MS);
-    let row: { id: string } | undefined;
-    try {
+    let row: { id: string } | undefined;    try {
       [row] = await tenantDb
         .insert(primaryClassLoginSessions)
         .values({ schoolId: classroom.schoolId, classroomId: classroom.id, teacherId: user.id, codeHash, startsAt: now, expiresAt })
@@ -133,7 +176,7 @@ export async function startClassSession(params: {
       throw error;
     }
     if (!row) continue;
-    await auditStudentLogin(auditActor(user, actor), "student_login:class_start", { type: "classroom", id: classroom.id }, { sessionId: row.id, expiresAt: expiresAt.toISOString() });
+    await auditStudentLogin(auditActor(user, actor), "student_login:class_start", { type: "classroom", id: classroom.id }, { sessionId: row.id, expiresAt: expiresAt.toISOString(), lifetime });
     return { sessionId: row.id, code, expiresAt };
   }
   throw new StudentLoginError("unavailable", "No free class code. Try again.");
