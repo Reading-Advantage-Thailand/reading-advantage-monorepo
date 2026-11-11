@@ -772,6 +772,9 @@ export function TeacherLessonFlow({
   const openerRef = useRef<HTMLButtonElement | null>(null);
   // The focus target of the last screen of the day (review finding F421d).
   const endRef = useRef<HTMLDivElement | null>(null);
+  // `true` after the first "Next step" press, so the focus move never runs on first render
+  // (review finding F483).
+  const movedRef = useRef(false);
   // One audio element at a time: a new click stops the last clip (review finding F405).
   const clipAudioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -815,9 +818,10 @@ export function TeacherLessonFlow({
   );
 
   // The last screen holds no "Next step" control, so the flow moves the focus to its end
-  // region instead of the body (review finding F421d).
+  // region instead of the body (review finding F421d). The move runs only after a "Next step"
+  // press (review finding F483) and keeps the scroll place (review finding F482).
   useEffect(() => {
-    if (last) endRef.current?.focus();
+    if (last && movedRef.current) endRef.current?.focus({ preventScroll: true });
   }, [last]);
 
   /**
@@ -858,6 +862,7 @@ export function TeacherLessonFlow({
 
   /** Moves to the next screen of the day, stops the clip, and closes the player. */
   function nextScreen(): void {
+    movedRef.current = true;
     stopClip();
     setPlayer("closed");
     setScreen((value) => value + 1);
@@ -960,10 +965,14 @@ export function TeacherLessonFlow({
       {last ? (
         <div
           ref={endRef}
+          role="region"
           tabIndex={-1}
           aria-label="The end of the lesson"
           className="flex flex-col gap-3 focus:outline-none"
         >
+          <p className="text-lg font-semibold" lang="en">
+            This is the last step of the day.
+          </p>
           {day === 5 ? <CheckView items={week.check.items} /> : null}
         </div>
       ) : null}

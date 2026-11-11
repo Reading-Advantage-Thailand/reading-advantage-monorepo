@@ -76,8 +76,18 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
 - The flag is off by default, and it is the only access control of the teacher routes until
   Q1: with the flag off, every signed-in request to a teacher route answers 404. Do not set
   the flag in the Dockerfile or `cloudbuild.yaml`. Set it on the service with
-  `gcloud run services update --set-env-vars STORYTIME_TEACHER_ROUTES=1` only after
-  Daniel's go.
+  `gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --update-env-vars STORYTIME_TEACHER_ROUTES=1`
+  only after Daniel's go. `--update-env-vars` adds or changes the one variable and keeps the
+  rest of the service environment. Do not replace the whole variable set of the service: the
+  sign-in and the media stop without their variables.
+- The way back removes the one variable and keeps the rest:
+
+  ```
+  gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars STORYTIME_TEACHER_ROUTES
+  ```
+
+  Both commands are traffic-neutral revision updates; a traffic move still waits for Daniel's
+  go (step 4).
 
 ## Facts (2026-11-07)
 
