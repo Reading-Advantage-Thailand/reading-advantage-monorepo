@@ -1,0 +1,64 @@
+# Green log — P1 remediation round 1 (rem1) "Choice of the class session lifetime"
+
+Role: Measure Jr Green, remediation round 1. Track: primary_class_session_lifetime_20261111.
+Model: volcengine-agent-plan/glm-5.3-flash#high (GLM). Red family: DeepSeek; no coder was delegated.
+role_base_sha (start of this round): daaee360d89af157c25d1d63f5734bb2131c4e3b
+Reviews: A, B, and C passed at 9e2bc749258cb6bc1b1fd666c104e932bb978564 with nonblocking findings.
+
+Dispositions: F121 FIX; F141 FIX; F125 FIX; F122 FIX; F123 FIX; F143 FIX; F144 FIX; F146 ESCALATE; F142 ESCALATE; F124 ESCALATE; F145 ESCALATE; F101 ESCALATE
+
+## 1. FIX items
+
+- F121 and F141 (one item), commit `a3f30a759`: `class-session-control.tsx` derives `effectiveLifetime = choices.includes(lifetime) ? lifetime : "3h"` before the action callbacks. A hidden `until_17` (Bangkok 17:00 or later) falls back to `3h`, so one radio is always checked and Start and New code never post a hidden choice. The radio `onChange` also clears the error alert (`setError(null)`), so the lifetimeInvalid text leaves the screen when the teacher picks another option.
+- F125, commit `a3f30a759`: three new cases in `components/__tests__/class-session-control.test.tsx`, all with a fixed clock:
+  - "posts until_17 before 17:00 Bangkok" (clock 09:00Z = 16:00 Bangkok; body equals `{ classroomId, lifetime: "until_17" }`).
+  - "falls back to 3 hours when the clock passes 17:00 with until_17 selected" (clock 09:59:59Z, select `until_17`, `vi.setSystemTime` to 10:00:00Z, rerender: `3h` is checked, the `until_17` radio is gone, Start posts `3h`).
+  - "clears the lifetime error when the teacher picks another option" (400 with `invalid_input`, the alert shows, a click on `7 days` removes it).
+- F122, commit `a3f30a759`: the JSDoc of `classSessionLifetime` now reads "The three lifetime choices of a class sign-in session: 3 hours, until 17:00 Bangkok today, or 7 days." The type comment moved to the type. No types in the JSDoc.
+- F123, commit `a3f30a759`: `packages/domain/src/student-login/class-session.ts` holds one statement per line again where the edit had left `let row ... ; try {` together.
+- F143, commit `31eef4b5f` (orchestrator decision, recorded under task 1.8): the teacher-manual sentence `TeacherManual.startClass.step4` changed in all five message files. New en text: "At the end of the period, press <ui>{endClass}</ui>. The class also closes by itself at the time you chose: 3 hours, until 17:00 today, or 7 days." cn, tw, and vi hold the same English text (the F5 stopgap). The th draft is "เมื่อจบคาบ กด <ui>{endClass}</ui> ชั้นเรียนปิดเองตามเวลาที่คุณเลือก: 3 ชั่วโมง ถึง 17:00 ของวันนี้ หรือ 7 วัน" and sits as the seventh line of the plan task 1.9 list for Daniel's check.
+- F144, commit `a3f30a759`: the radio group is named by a visible label — a `<p>` with the `lifetimeLabel` text and `aria-labelledby="class-session-lifetime-label"` on the group — and the 7-day help paragraph carries `id="class-session-lifetime-help"` and is tied to the group with `aria-describedby` only while it shows. One new test ("names the group with a visible label and describes the 7 day help") checks the visible text, the `aria-labelledby` value, the absent `aria-describedby` for the default, and the described help content for `7d`.
+
+## 2. Gates (one heavy job at a time; heavy jobs through `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800`)
+
+- Panel, handler, and control tests (light, before the dist rebuild): exit 0, tests_total=86, tests_failed=0 (82 before + 4 new).
+- Domain dist rebuild through heavy-run p2: exit 0, `dist_has_lifetime=3`.
+- GREEN_TEST_COMMAND after the rebuild: domain 4 files exit 0, tests_total=108, tests_passed=96, tests_skipped=12 (real-db skipped without `PG_TEST_URL`), tests_failed=0; app 3 files exit 0, tests_total=86, tests_failed=0.
+- TZ matrix for the control file: tz_runs_green=3 (Asia/Bangkok 36 passed, UTC 36 passed, America/Los_Angeles 36 passed).
+- JSON validity: `json_valid=5` (en, th, cn, tw, vi parse).
+- Domain check-types through heavy-run p2: exit 0.
+- App check-types: blocked by the pre-existing untracked foreign scratch file `apps/primary-advantage/qa-check-user.tmp.ts` (untouched, per the round rule). Its one error: `qa-check-user.tmp.ts(34,45): error TS2307: Cannot find module '@reading-advantage/api/routes/auth/enrich.js' or its corresponding type declarations.` The filtered tsc run through heavy-run p2 (`grep -v '^qa-check-user.tmp.ts'`) lists other_errors=0, so no change of this round adds a type error.
+- ESLint on the changed files only: domain exit 0 (`contracts.ts`, `class-session.ts`), app exit 0 (`class-session-control.tsx`, `class-session-control.test.tsx`), eslint_new_errors_in_changed_files=0.
+- build-graph update through heavy-run p2 over the three changed source files: exit 0, `graph_nodes=122`, `graph_edges=153`.
+
+## 3. ESCALATE items (no code change; each with its default for the orchestrator)
+
+- F146: the F5 stopgap English text in cn, tw, and vi carries no `lang="en"` mark. Default: the real fix is a translation; the PM decides.
+- F142: the choice is not stored, so after a reload the panel shows `3 hours` while a 7-day session is open, and New code then makes a 3-hour session. Default: no change now (D-5); the PM decides whether the panel derives the open session's choice.
+- F124 and F145: the `lifetimeHelp7d` text says "until this time" with no time shown before a start and names cards only. Default: Daniel decides the wording in his Thai check; the en text stays. The th text does not change before the PM returns the check (task 1.10).
+- F101: OQ-1 advice — a 7-day code gives a 7-day code_only entry for a class with the picture password off. Default: no refusal; the PM decides before the deploy.
+
+## 4. Commits
+
+- `a3f30a759` fix(primary): close the rem1 findings — class-session-control.tsx, class-session-control.test.tsx, class-session.ts, contracts.ts.
+- `31eef4b5f` fix(primary): fix the manual close text — en.json, th.json, cn.json, tw.json, vi.json.
+- The plan rem1 block and this log follow in a docs commit.
+
+## 5. Gate command for the orchestrator
+
+GREEN_TEST_COMMAND=cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter @reading-advantage/domain exec vitest run --maxWorkers=1 src/__tests__/student-login-class-session.test.ts src/__tests__/student-login-contracts.test.ts src/__tests__/student-login-card.test.ts src/__tests__/student-login.real-db.test.ts && CI=true pnpm --filter primary-advantage exec vitest run --maxWorkers=1 lib/__tests__/student-login-handlers.test.ts components/__tests__/class-session-control.test.tsx components/__tests__/class-login-panel.test.tsx
+
+MEASURE_AGENT_RESULT
+status: complete
+role: measure-jr-green
+track: primary_class_session_lifetime_20261111
+phase: P1
+round: rem1
+phase_base_sha: db8672b04fdf3f243bb00afed6b8a682811d2caa
+head_sha: 31eef4b5f (the plan-and-log commit follows)
+commits: a3f30a759 fix(primary): close the rem1 findings; 31eef4b5f fix(primary): fix the manual close text; plan rem1 evidence and this log follow
+tests: GREEN_TEST_COMMAND exit 0 — domain 4 files tests_total=108, tests_passed=96, tests_skipped=12, tests_failed=0; app 3 files tests_total=86, tests_failed=0; tz_runs_green=3 for the control file (36/36/36); json_valid=5; domain check-types exit 0; dist_has_lifetime=3; app check-types blocked only by the foreign scratch file qa-check-user.tmp.ts (other_errors=0 in the filtered tsc run); eslint_new_errors_in_changed_files=0; build-graph update exit 0
+files: apps/primary-advantage/components/teacher/class-login/class-session-control.tsx, apps/primary-advantage/components/__tests__/class-session-control.test.tsx, packages/domain/src/student-login/class-session.ts, packages/domain/src/student-login/contracts.ts, apps/primary-advantage/messages/en.json, apps/primary-advantage/messages/th.json, apps/primary-advantage/messages/cn.json, apps/primary-advantage/messages/tw.json, apps/primary-advantage/messages/vi.json, measure/tracks/primary_class_session_lifetime_20261111/plan.md, measure/runs/primary_class_session_lifetime_20261111/green-p1-rem1.log
+new_files: none
+handoff: The four ESCALATE items go to the orchestrator with their defaults: F146 (lang="en" mark on the stopgap English text; the PM decides), F142 (the panel does not store the choice across a reload; D-5 default, the PM decides whether to derive the open session's choice), F124/F145 (lifetimeHelp7d wording; Daniel decides with the Thai check), F101 (OQ-1 code-only advice; default no refusal, the PM decides before the deploy). The new th draft for TeacherManual.startClass.step4 joins the task 1.10 hand-off to Daniel. The app check-types stays blocked by the pre-existing untracked foreign scratch file apps/primary-advantage/qa-check-user.tmp.ts; the filtered tsc run lists no other error.
+END_MEASURE_AGENT_RESULT
