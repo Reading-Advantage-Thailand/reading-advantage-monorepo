@@ -4377,7 +4377,7 @@
       "step1": "On the class page, in the <ui>{classCard}</ui> card, press <ui>{startClass}</ui>.",
       "step2": "Write the 6-character code under <ui>{classCode}</ui> on the board. The code shows only once. The student screen calls this code <ui>{studentCode}</ui>.",
       "step3": "The students sign in with the “Student sign-in” sheet. The teacher sees the count at <ui>{signedInCount}</ui>.",
-      "step4": "At the end of the period, press <ui>{endClass}</ui>. The class also closes by itself after 3 hours.",
+      "step4": "At the end of the period, press <ui>{endClass}</ui>. The class also closes by itself at the time you chose: 3 hours, until 17:00 today, or 7 days.",
       "newCode": "To see a code again, press <ui>{newCode}</ui>. The app shows a new code, and the old code stops working.",
       "pictureSetting": "You can turn off <ui>{pictureSetting}</ui>. Then students sign in with the code and the name only. Some features, such as Reedy, need a full sign-in.",
       "helpTitle": "One student cannot sign in",
