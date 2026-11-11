@@ -1,0 +1,87 @@
+=== measure green run: task 1.4 round 8 ===
+session: Green · P1 1.4 r8 · architecture_ci_input_pin
+role: measure-jr-green
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4 (round 8)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: e24a1f06c6d3f137c847cae2d8259a4341119ecd
+model: deepseek/deepseek-flash#high
+red_model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+started: 2026-11-11
+status: in progress
+
+Pre-run checks:
+- HEAD is e24a1f06c6d3f137c847cae2d8259a4341119ecd. It equals role_base_sha.
+- git status --short -- packages/architecture-enforcement is empty. OQ-4 holds.
+- MemAvailable is 2124684 kB. The heavy floor is 1500 MB. The stop rule is 300 MB.
+- PSI memory full avg60 is 0.39 percent. The stop rule is 30 percent.
+- Task 1.4c is [x]. The public bundles under apps/*/public are out of the source set. The expected modules_total is 6866.
+- Each run uses HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 and the command pnpm architecture:pin:refresh --acknowledge --budget-s 1500.
+- Exit 3 means run again. Exit 0 ends the series. Exit 1, exit 2, or heavy-run exit 124 stops the series.
+
+=== runs ===
+Run 1
+- Command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:pin:refresh --acknowledge --budget-s 1500'
+- Start: 2026-11-11T10:39:18+0700. End: 2026-11-11T10:45:13+0700.
+- Heavy-run exit: 0. The series ends at run 1.
+- HEAD: e24a1f06c6d3f137c847cae2d8259a4341119ecd.
+- MemAvailable before the run: 2571656 kB.
+- modules_total=6868. The spec expected 6866. The real count is 2 more.
+- Pass 1 stored every module: the last line is step=modules pass=1 modules_done=6868 modules_total=6868 elapsed_s=67.
+- Pass 2 started after its own prelude: step=prelude pass=2 elapsed_s=100. The last line is step=modules pass=2 modules_done=6868 modules_total=6868 elapsed_s=126.
+- The tail of the captured output starts at pass 1 modules_done=1750 (elapsed_s=46). The store, projection, and prelude pass=1 lines scrolled out of the 60-line tail. No checkpoint discard line appeared in the captured output.
+- Later step lines: step=combine elapsed_s=126, step=input_snapshot elapsed_s=127, step=trees elapsed_s=128, step=validate elapsed_s=129, then "written".
+- The five changed values: analyzerInputSnapshotSha256, analyzerImplementationTreeSha256, implementationAndTestTreeSha256, reportSha256s, and reviewSubjectSha256.
+- No checkpoint=discarded line appeared in the captured output. The store was deleted after the write.
+
+Manifest commit
+- SHA: de25d49a9f25f49472baa10a1919341606f786fe
+- Message: chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)
+- The commit holds one path: packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json.
+- Diff check before the commit: `changed_fields=5` (analyzerInputSnapshotSha256, analyzerImplementationTreeSha256, implementationAndTestTreeSha256, reportSha256s, reviewSubjectSha256). `keys_old=15`, `keys_new=15`, and the key order is equal. No key is new and none is gone.
+
+Full check attempt 1
+- Command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:check'
+- Start: 2026-11-11T10:46:04+0700. End: 2026-11-11T10:55:05+0700.
+- Heavy-run exit: 1. The output held rename preview lines. The head of the report was not captured.
+
+Full check attempt 2, to capture the full report (same command, same HEAD, read-only)
+- Start: 2026-11-11T10:55:59+0700. End: 2026-11-11T10:59:40+0700.
+- Heavy-run exit: 1.
+- "architecture check: debt-change (files=6868, findings=876, parseErrors=0)"
+- "architecture policy: v1 (status=candidate, default=v1)"
+- "architecture debt: new-debt (additions=332, removals=16, renames=161)"
+- The additions name files that this task did not touch. Examples: packages/backend/src/modules/company-identity/service.ts, apps/accounts/app/page.tsx, apps/codecamp-advantage/lib/company-oidc.ts, packages/domain/src/sales/mutations.ts, apps/workbooks/app/lib/company-oidc.ts, and packages/webhooks/src/review-worker.ts.
+- The v2 manifest validation passed: the report holds files=6868 and parseErrors=0, so the refreshed pins are valid. The failure is the v1 debt comparison.
+- The plan rule says exit 1 stops the task: the debt comparison changed. I did not update a baseline and I did not retry the check.
+
+Pin test at the new HEAD
+- Command: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts
+- Exit code: 0. tests_total=20, tests_failed=0.
+- MemAvailable before the run: 3271240 kB.
+
+Round 8 decision
+- The refresh series ended in one run with exit 0. The manifest commit is de25d49a9.
+- The full check exits 1 on v1 debt drift that this task did not cause. Task 1.4 stays [~].
+- No checkpoint discard line appeared in the captured output. The store was deleted after the successful write.
+- The next step needs an orchestrator decision on the v1 debt drift.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4 (round 8)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: e24a1f06c6d3f137c847cae2d8259a4341119ecd
+series: one run, exit 0, modules_total=6868, pass 1 done at elapsed_s=67, pass 2 done at elapsed_s=126, validate at elapsed_s=129, no checkpoint discard
+commits: de25d49a9f25f49472baa10a1919341606f786fe chore(architecture): refresh the v2 manifest pins; the measure docs commit with this log and the plan note follows this block
+tests_run: pin file CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts -> exit 0, tests_total=20, tests_failed=0; full check pnpm architecture:check through heavy-run -> exit 1 twice, debt-change, files=6868, findings=876, parseErrors=0, additions=332, removals=16, renames=161, policy v1
+files_changed: packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json, measure/tracks/architecture_ci_input_pin_20261110/plan.md, measure/runs/architecture_ci_input_pin_20261110/green-p1-1.4-r8.log
+plan_updates: task 1.4 stays [~] with the round 8 note. It is not marked [x] because the full check exits 1.
+known_failures: the full check reports new v1 debt (additions=332, removals=16, renames=161) in files of other tracks. The refreshed v2 manifest is valid. The CI pin contract passes 20 of 20 at the new HEAD.
+handoff: the orchestrator routes a decision on the v1 debt drift to the PM. Option A: add a separate reviewed baseline-update task for the v1 baselines and run the full check again. Option B: get a PM decision that the v1 debt drift is out of scope for this track, and record the check as a known repository condition. The default of this role is option A. Do not start a refresh again before the decision: the store is deleted and HEAD moved.
+deferred: none
+question: how should the v1 debt drift (additions=332, removals=16, renames=161) be cleared before task 1.4 closes? The default is a separate reviewed baseline-update task.
+END_MEASURE_AGENT_RESULT
