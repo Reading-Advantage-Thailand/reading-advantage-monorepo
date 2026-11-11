@@ -1,0 +1,40 @@
+=== measure red run: task 1.4b ===
+session: Red · P1 1.4b · architecture_ci_input_pin
+role: measure-mid-red
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4b
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 09df2512f5f9e4da1bd9eefbc4808c08b3fb62db
+model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+started: 2026-11-11
+finished: 2026-11-11
+
+=== commands ===
+red command: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts
+red command exit code: 1
+red counts: tests_total=30, tests_failed=25, tests_passed=5
+red duration: 12.32 s
+type check command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter @reading-advantage/architecture-enforcement check-types'
+type check exit code: 0
+detector exit codes: 1 for measure/tracks|measure/runs, 1 for the clock pattern, 1 for elapsed_s=[0-9]
+
+=== passing guards at the red head ===
+resume_fixture_positive_control
+ac10_store_path_is_git_ignored
+ac11_changed_candidate_root_bypasses_store
+ac14_key_set_equals_v2_manifest_keys
+ac15_unsplit_refresh_keeps_fr7_counts
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: done
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+commits: 64d67c6e5ddc1f31303738e08f42d96d279ec7b1 test(architecture): pin the resumable refresh (track_id: architecture_ci_input_pin_20261110); the measure docs commit with this log and the plan note follows this block
+tests_run: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts -> exit 1, tests_total=30, tests_failed=25, tests_passed=5; the package check-types through heavy-run -> exit 0
+files_changed: packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-resume.test.ts, measure/tracks/architecture_ci_input_pin_20261110/plan.md, measure/runs/architecture_ci_input_pin_20261110/red-p1-1.4b.log
+plan_updates: task 1.4b marked [~] with the red evidence: test sha 64d67c6e5ddc1f31303738e08f42d96d279ec7b1, the red command, exit 1, tests_total=30, tests_failed=25, tests_passed=5, the five guard names with their reason, and the check-types exit code 0
+known_failures: 25 cases fail at the red head for the missing behavior. 19 cases report Error: Unsupported architecture pin refresh argument: --budget-s. 6 cases report a missing step line, a missing batch line, a missing checkpoint=off line, a missing budgetSeconds, a missing store file, or a missing --budget-s text in the documentation. No case fails for a load error, a missing module, or a type error.
+handoff: green runs next on the deepseek family and changes packages/architecture-enforcement/src/analyzer.ts, packages/architecture-enforcement/src/pin-refresh-checkpoint.ts (new), packages/architecture-enforcement/src/v2-manifest-validation.ts, packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts, docs/architecture-enforcement.md, and the track files. Green edits no test file and runs no real refresh. The fixture needs its gitignore rule for the ignored candidate files, or the store is bypassed. The series belongs to task 1.4. The red file expects about 5 to 6 runs over 38 modules with --budget-s 8 and batch size 2, and the runs bound is 12.
+END_MEASURE_AGENT_RESULT
