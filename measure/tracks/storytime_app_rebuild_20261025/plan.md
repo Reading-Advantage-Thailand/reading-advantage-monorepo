@@ -3484,7 +3484,7 @@ for every other track.
     calibration log must show the fail of the gesture thumbnail and the pass of the passed file.
     No model was called in this round, and no money was spent. Task 5.4 stayed `[~]` at the end of
     this Red round. Evidence class: automated.
-- [~] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2.
+- [x] 5.5 Receive the milestone media at the handed-off commits. Run stages 1 and 2. Send each failure back through the PM orchestrator with the reason and the time in the file. Tests: AC-6.3, AC-7.3, AC-10.2. Evidence commit `a3ea15b91` (the runner and the rubric texts); the run records sit in `measure/runs/storytime_app_rebuild_20261025/stage-log-w01.md` and `cost-ledger.md`. Deferred:daniel: the audio and video stage 2 rubrics (PM decision 1b of 2026-11-12: a metered audio model does not run; stage 1 covers audio until then).
   - Stage 1 evidence (task 5.5), 2026-11-12. Role `deepseek/deepseek-flash#high` (DeepSeek);
     Red model `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (MiniMax); role base
     `44368d1b4d34a640ce7b976ee39172e981f49395`; phase base
@@ -3518,8 +3518,41 @@ for every other track.
     the two song posters, and the song-line pictures `point-to-self`, `point-forward`, `clap`, and
     `hands-out`. The stage 2 JSON, the stage 2 table, and the PM return list sit in
     `measure/runs/storytime_app_rebuild_20261025/stage-log-w01.md`. Evidence class: model
-    pre-check; Daniel stays the final gate (task 6.1). Rule 6.e model 2 waits for the PM, so task
-    5.5 stays `[~]`.
+    pre-check; Daniel stays the final gate (task 6.1).
+  - Stage 2 picture batch, text-only rerun of items 19, 20, and 23 (task 5.5), 2026-11-12, r7.
+    Model `claude-code/claude-sonnet-5-5#high`, coder session
+    `ses_e32f18dcaffeTXiAF40KHq9LqC`, 1 call, 3 pictures, subscription route, 0 USD. The prompt is
+    `stage2-rerun-family-prompt.md`. It named each picture path and its family word text only. All
+    three passed. The new model 1 counts are 32 pictures, 25 pass, and 7 fail. The JSON and the
+    three-row table sit in the stage log.
+  - Rule 6.e model choice (task 5.5), 2026-11-12, r8. The second model comes from the ra-quota
+    pick at spawn time, and Anthropic is excluded as the model 1 family. Two capability checks ran
+    on `hello.jpg` with one read each. `kimi-code-plan-cn/kimi-for-coding` (coder session
+    `ses_e32998476ffeCpyGajp4Ziimyu`) answered `image_received=yes` and "A family of four stands
+    close together outdoors, smiling toward the camera." The picture shows one girl who waves, so
+    Kimi failed the check and is not used for pictures.
+    `minimax-cn-coding-plan/MiniMax-M3.1-Flash` (coder session
+    `ses_e327d11bdffe4D5Mn4y2xW2sXe`) answered `image_received=yes` and "One cartoon girl with
+    brown pigtails wears an orange star shirt and red shorts, waving her raised hand." It passed
+    the check. The chosen model is `minimax-cn-coding-plan/MiniMax-M3.1-Flash`, subscription route,
+    0 USD. The two call blocks sit in `stage2-model2-prompt.md`.
+  - Stage 2 model 2 (task 5.5), 2026-11-12, r9. Model
+    `minimax-cn-coding-plan/MiniMax-M3.1-Flash`, subscription route, 0 USD. Call 1 held items 1 to
+    16 (coder session `ses_e3274cc27ffeMhkEk0rs8vpDw7`). Call 2 held items 17 to 32 (coder session
+    `ses_e32725935ffeeRP0uUtBTkcZPS`). Counts: 32 pictures, 26 pass, and 6 fail.
+  - Rule 6.e combined result (task 5.5). A file passes only when model 1 (after the text-only
+    rerun) and model 2 both pass. Counts: 32 pictures, 24 pass, and 8 fail. The 8 fails: book 1
+    page 6, book 2 page 5, the two song posters, `point-to-self`, `point-forward`, `clap`, and
+    `hands-out`. The two models disagree on three files: book 2 page 5 (model 1 pass, model 2
+    fail), `point-forward` (model 1 fail, model 2 pass), and `hands-out` (model 1 fail, model 2
+    pass). The combined table, the replies, and the PM return list sit in the stage log. Evidence
+    class: model pre-check; Daniel stays the final gate (task 6.1). The audio and video stage 2
+    rubrics stay deferred:daniel (PM decision 1b of 2026-11-12: a metered audio model does not
+    run; stage 1 covers audio until then).
+  - Media list check (task 5.5). `media-list-w01.md` holds picture, audio, and video rows only. It
+    names no text kind, so no stage 2 text rubric is needed. The picture kind is the only stage 2
+    kind that is not deferred:daniel, and it has run with two models. Task 5.5 is `[x]`, with the
+    deferred audio and video part named on the task line.
 - [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
     base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
