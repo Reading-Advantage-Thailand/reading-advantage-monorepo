@@ -4,6 +4,10 @@
   "role": "measure-closeout",
   "status": "closed",
   "completion_date": "2026-11-13",
+  "commits": [
+    "2ef97ee1006281c50a9dc27f35559a8c00973e3f (the archive move, the registry entry, the metadata, the manifest, and the run folder)",
+    "the second closeout commit removes the stale folder under measure/tracks/ and records both commits; its SHA is in the final reply of the role"
+  ],
   "pre_closeout_head": "a8a336ea82b3ffdb869732fd6669f06bf321dc90",
   "final_acceptance_audited_head_sha": "a8a336ea82b3ffdb869732fd6669f06bf321dc90",
   "final_acceptance_head_equals_pre_closeout_head": true,
@@ -158,6 +162,8 @@
   "gate_commands": [
     "git rev-parse HEAD -> a8a336ea82b3ffdb869732fd6669f06bf321dc90 (exit 0, at the start and before the closeout commit)",
     "git mv measure/tracks/doctor_gate_repair_20261112 measure/archive/doctor_gate_repair_20261112 (exit 0)",
+    "git commit -- measure/archive/doctor_gate_repair_20261112 measure/tracks.md measure/runs/doctor_gate_repair_20261112 -> 2ef97ee10 (the pathspec carried the archive folder, the registry entry, the metadata, the manifest, and the run folder; it did not carry the staged deletions of the old folder)",
+    "git commit -- measure/tracks/doctor_gate_repair_20261112 measure/archive/doctor_gate_repair_20261112/automation-supervisor-closeout-manifest.json measure/runs/doctor_gate_repair_20261112/closeout-a8a336ea8.json measure/runs/doctor_gate_repair_20261112/closeout-a8a336ea8.log -> the second closeout commit (the removal of the stale folder under measure/tracks/ and the record of both commits)",
     "python3 over the archived plan task lines: 15 task lines = 15 [x], 0 [~], 0 [ ], 0 [b] (exit 0)",
     "grep -nE '^- \\[ \\] |^- \\[~\\] |^- \\[b\\] ' measure/archive/doctor_gate_repair_20261112/plan.md (no hit)",
     "rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' measure/archive/doctor_gate_repair_20261112/plan.md (no hit, A5)",
@@ -187,7 +193,7 @@
       "5293392b8",
       "a02662e09"
     ],
-    "note": "Every done task names a commit SHA. No task carries the pending marker, the in-progress marker, or a human gate. The closeout commit holds the archive move, the two closeout text changes, the registry entry, and the metadata."
+    "note": "Every done task names a commit SHA. No task carries the pending marker, the in-progress marker, or a human gate. The closeout holds two commits: the archive move with the registry entry, the metadata, the manifest, and the run folder, and the removal of the stale folder under measure/tracks/."
   },
   "retained_evidence": [
     "measure/runs/doctor_gate_repair_20261112/ (about 450 KB; the .gitignore lists measure/runs/, so the closeout commit adds the folder with git add -f and an explicit path list): the spec reviews, the phase acceptances, the reviews, the adversarial sets, the red and green logs, the doctor run logs, and this closeout.",
