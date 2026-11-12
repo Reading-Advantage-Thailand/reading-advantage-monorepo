@@ -19,6 +19,7 @@ import {
 import { createAccountingRuntimeClient } from "@reading-advantage/db/accounting/runtime";
 import type { ZodIssue } from "zod";
 
+import { haveSameBytes } from "./accounting-evidence-store";
 import {
   putPrivateEvidence,
   readPrivateEvidence,
@@ -50,20 +51,6 @@ async function createRepository(): Promise<AccountingMonthlyCloseRepository> {
 function getRepository(): Promise<AccountingMonthlyCloseRepository> {
   repositoryPromise ??= createRepository();
   return repositoryPromise;
-}
-
-/**
- * Compares two evidence byte arrays without creating a derived artifact.
- * @param left First byte array.
- * @param right Second byte array.
- * @returns True when both arrays hold equal bytes.
- */
-function haveSameBytes(left: Uint8Array, right: Uint8Array): boolean {
-  if (left.byteLength !== right.byteLength) return false;
-  for (let index = 0; index < left.byteLength; index += 1) {
-    if (left[index] !== right[index]) return false;
-  }
-  return true;
 }
 
 /**

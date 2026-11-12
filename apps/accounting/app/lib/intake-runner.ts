@@ -46,12 +46,6 @@ interface IntakeLeaseRow {
   readonly claimed_at: Date | string;
 }
 
-/** Raw principal row used to resolve the poll actor. */
-interface PollPrincipalRow {
-  readonly organization_id: string;
-  readonly role_key: string;
-}
-
 /**
  * Maps one raw lease row to the domain lease row.
  * @param row Raw snake_case lease row.
@@ -70,11 +64,11 @@ function toIntakeLease(row: Readonly<IntakeLeaseRow>): AccountingIntakeLease {
 /**
  * Builds the Postgres lease repository over the Accounting runtime client.
  * The claim is a compare-and-swap on the lease token: the update applies only
- * when the stored lease has expired.
+ * when the stored lease has expired (FR-6, Review A F309).
  * @param sql Accounting database client.
  * @returns The lease repository port.
  */
-function createPostgresIntakeLeaseRepository(
+export function createPostgresIntakeLeaseRepository(
   sql: postgres.Sql,
 ): AccountingIntakeLeaseRepository {
   return {
@@ -207,67 +201,65 @@ const unavailableExtraction: AccountingDocumentExtractionPort = {
 };
 
 /**
- * Resolves the poll actor from the runtime principal mapping. The job sets one
- * stable account, and the company scope and role come from its principal row.
- * @param sql Accounting database client.
- * @param accountId Local account id of the poll.
+ * Reads the poll actor from one environment. The actor id comes from
+ * `ACCOUNTING_INTAKE_ACTOR_ID`, the company id comes from
+ * `ACCOUNTING_INTAKE_COMPANY_ID` parsed as a UUID, and the role is the fixed
+ * `ACCOUNTANT` (PM-21, Review A F304). The read makes no database call.
+ * @param env Environment of the run.
  * @returns The poll actor.
- * @throws When the account holds no accounting principal row.
+ * @throws When the actor id is blank or the company id is blank or not a
+ *   UUID. The error holds no environment value.
  */
-async function resolvePollActor(
-  sql: postgres.Sql,
-  accountId: string,
-): Promise<AccountingActor> {
-  const rows = await sql<PollPrincipalRow[]>`
-    select organization_id, role_key
-    from company_product_principals
-    where application_key = 'accounting'
-      and local_user_id = ${accountId}
-    limit 1
-  `;
-  const [row] = rows;
-  if (row === undefined) {
-    throw new Error("The intake actor holds no accounting principal");
+export function readIntakePollActor(env: NodeJS.ProcessEnv): AccountingActor {
+  const accountId = env.ACCOUNTING_INTAKE_ACTOR_ID?.trim() ?? "";
+  if (accountId === "") {
+    throw new Error("The intake actor id is not configured");
   }
-  return {
-    accountId,
-    companyId: row.organization_id,
-    role: row.role_key,
-  };
+  const companyId = env.ACCOUNTING_INTAKE_COMPANY_ID?.trim() ?? "";
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu.test(
+      companyId,
+    )
+  ) {
+    throw new Error("The intake company id is not a valid company id");
+  }
+  return { accountId, companyId, role: "ACCOUNTANT" };
 }
 
 /**
  * Builds the runtime dependencies of the poll from the job environment.
+ * The actor and the folder id are read before the database client is made,
+ * so a misconfiguration fails with its own message (PM-21, Review B F305).
  * @returns The poll dependencies.
- * @throws When a required environment value is absent.
+ * @throws When the actor, the folder id, or a required environment value is
+ *   absent.
  */
 async function createRuntimeIntakePollDependencies(): Promise<IntakePollDependencies> {
+  const actor = readIntakePollActor(process.env);
+  // The Drive, storage, and row adapters load on demand, so the `--help` dry
+  // start and the lease rows pay no `googleapis` or storage import cost (D-27).
+  const { createDriveDocumentSource, readIntakeFolderId } = await import(
+    "./drive-document-source.js"
+  );
+  const folderId = readIntakeFolderId();
   const sql = await createAccountingRuntimeClient({
     databaseUrl: process.env.ACCOUNTING_DATABASE_URL ?? "",
   });
-  const accountId = process.env.ACCOUNTING_INTAKE_ACTOR_ID;
-  if (accountId === undefined || accountId.trim() === "") {
-    throw new Error("The intake actor id is not configured");
-  }
   const rawCap = process.env.ACCOUNTING_DUPLICATE_SCAN_CAP;
   const duplicateScanCap =
     rawCap === undefined || rawCap.trim() === ""
       ? undefined
       : Number.parseInt(rawCap, 10);
-  // The Drive, storage, and row adapters load on demand, so the `--help` dry
-  // start and the lease rows pay no `googleapis` or storage import cost (D-27).
   const [
-    { createDriveDocumentSource },
     { createAccountingEvidenceStore },
     { createAccountingIntakeDocumentRepository },
   ] = await Promise.all([
-    import("./drive-document-source.js"),
     import("./accounting-evidence-store.js"),
     import("./accounting-intake-document-repository.js"),
   ]);
   return {
-    actor: await resolvePollActor(sql, accountId),
-    folderId: process.env.ACCOUNTING_DRIVE_FOLDER_ID ?? "",
+    actor,
+    folderId,
     source: createDriveDocumentSource(),
     evidenceStore: createAccountingEvidenceStore(),
     intakeRepository: createAccountingIntakeDocumentRepository({ sql }),
@@ -356,9 +348,34 @@ export async function runIntakePoll(
   }
 }
 
+/**
+ * Runs one intake poll entry and turns a failure into one safe log line and
+ * the exit code 1 (F313, Review B F307). The log line holds the event name
+ * and the error name only, so no Drive id, no request URL, and no error body
+ * reaches the log.
+ * @param argv Argument list of the run; `--help` makes a dry start.
+ * @param dependencies Optional injected ports; the runtime builds them when
+ *   absent.
+ * @returns 0 when the poll ran and 1 when it failed.
+ */
+export async function runIntakePollEntry(
+  argv: readonly string[] = process.argv.slice(2),
+  dependencies?: IntakePollDependencies,
+): Promise<number> {
+  try {
+    return await runIntakePoll(argv, dependencies);
+  } catch (error) {
+    logRunnerLine({
+      event: "intake_poll_failed",
+      error_name: error instanceof Error ? error.name : "Error",
+    });
+    return 1;
+  }
+}
+
 const entryPath = process.argv[1];
 if (entryPath !== undefined && import.meta.url === pathToFileURL(entryPath).href) {
-  void runIntakePoll(process.argv.slice(2)).then((code) => {
+  void runIntakePollEntry(process.argv.slice(2)).then((code) => {
     process.exitCode = code;
   });
 }

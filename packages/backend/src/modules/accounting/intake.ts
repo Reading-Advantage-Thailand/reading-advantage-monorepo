@@ -1016,34 +1016,28 @@ async function readDocument(input: {
 
 /**
  * Claims the intake poll lease of one queue with a compare-and-swap on the
- * lease token. A live lease of another worker is not taken.
+ * lease token. A live lease of another worker is not taken. The request takes
+ * the one member `repository` and a required company scope; the alias names
+ * and the blank company fallback are gone (F310, PM-21).
  * @param request Lease repository port, company scope, queue, worker, token,
  *   and expiry.
  * @returns The claimed lease, or undefined when a live lease holds it.
- * @throws AccountingSubmissionError when no repository port is given.
+ * @throws AccountingSubmissionError when the repository or the scope is
+ *   absent.
  */
 export async function claimIntakeLease(request: {
-  readonly repository?: AccountingIntakeLeaseRepository;
-  readonly leaseRepository?: AccountingIntakeLeaseRepository;
-  readonly intakeLeaseRepository?: AccountingIntakeLeaseRepository;
-  readonly scope?: Readonly<FinanceOperationScope>;
-  readonly companyId?: string;
+  readonly repository: AccountingIntakeLeaseRepository;
+  readonly scope: Readonly<FinanceOperationScope>;
   readonly queueName: string;
   readonly workerId: string;
   readonly leaseToken: string;
   readonly leaseExpiresAt: Date | number;
 }): Promise<AccountingIntakeLease | undefined> {
-  const repository =
-    request.repository ??
-    request.leaseRepository ??
-    request.intakeLeaseRepository;
-  if (repository === undefined) {
+  if (request.repository === undefined || request.scope === undefined) {
     throw new AccountingSubmissionError("invalid-input");
   }
-  const scope: Readonly<FinanceOperationScope> =
-    request.scope ?? { companyId: request.companyId ?? "" };
-  return repository.claim({
-    scope,
+  return request.repository.claim({
+    scope: request.scope,
     queueName: request.queueName,
     workerId: request.workerId,
     leaseToken: request.leaseToken,

@@ -193,12 +193,3 @@ export function createDriveDocumentSource(input?: {
     },
   };
 }
-
-/**
- * Returns the MIME type of a native Google Sheet, for a caller that decides
- * between `download` and `export`.
- * @returns The native Google Sheet MIME type.
- */
-export function googleSheetMimeType(): string {
-  return GOOGLE_SHEET_MIME_TYPE;
-}
