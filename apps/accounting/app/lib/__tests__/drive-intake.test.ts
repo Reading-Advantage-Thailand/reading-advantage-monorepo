@@ -329,7 +329,9 @@ function findNamedIn(
 }
 
 /**
- * Finds the first byte buffer inside one argument list.
+ * Finds the first byte buffer inside one argument list. The buffer sits in a
+ * named field of one object argument, because spec section 5.4 gives `put` and
+ * `read` one object input. A top-level buffer stays supported.
  * @param args Arguments of one call.
  * @returns The first byte buffer, or undefined.
  */
@@ -341,6 +343,17 @@ function findBytes(args: readonly unknown[]): Uint8Array | undefined {
         arg.buffer,
         arg.byteOffset,
         arg.byteLength,
+      );
+    }
+  }
+  for (const arg of args) {
+    const named = findNamed([arg], ["body", "bytes", "buffer"]);
+    if (named instanceof Uint8Array) return named;
+    if (ArrayBuffer.isView(named)) {
+      return new Uint8Array(
+        named.buffer,
+        named.byteOffset,
+        named.byteLength,
       );
     }
   }
@@ -666,9 +679,12 @@ function createFakeIntakeRepository(
 }
 
 /**
- * Builds the fake submission repository.
+ * Builds the fake submission repository. The seeded submissions stay in the
+ * repository and the lookups see them. The `stored` list holds the
+ * submissions the poll wrote, so a row that counts the writes of one poll
+ * counts no seeded submission.
  * @param seed The submissions the repository holds before the poll.
- * @returns The port, its recorded calls, its rows, and its audit events.
+ * @returns The port, its recorded calls, the written submissions, and the audit events.
  */
 function createFakeSubmissionRepository(seed: readonly FakeSubmission[] = []): {
   readonly port: Record<string, unknown>;
@@ -677,7 +693,9 @@ function createFakeSubmissionRepository(seed: readonly FakeSubmission[] = []): {
   readonly auditEvents: { readonly action: string; readonly submissionId: string }[];
   readonly keys: Map<string, string>;
 } {
-  const stored: FakeSubmission[] = seed.map((row) => ({ ...row }));
+  const seeded: FakeSubmission[] = seed.map((row) => ({ ...row }));
+  const stored: FakeSubmission[] = [];
+  const rows = (): FakeSubmission[] => [...seeded, ...stored];
   const keys = new Map<string, string>();
   const auditEvents: { action: string; submissionId: string }[] = [];
   const { port, calls } = createRecordingPort({
@@ -701,13 +719,13 @@ function createFakeSubmissionRepository(seed: readonly FakeSubmission[] = []): {
     },
     findByIdempotencyKey: (args) => {
       const key = findNamed(args, ["idempotencyKey", "idempotency_key"]);
-      return stored.find((row) => keys.get(row.id) === key);
+      return rows().find((row) => keys.get(row.id) === key);
     },
     findById: (args) => {
       const id = findNamed(args, ["submissionId", "submission_id", "id"]);
-      return stored.find((row) => row.id === id);
+      return rows().find((row) => row.id === id);
     },
-    listByScope: () => stored,
+    listByScope: () => rows(),
     transition: () => undefined,
   });
   return { port, calls, stored, auditEvents, keys };
