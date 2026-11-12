@@ -47,7 +47,7 @@ Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 5
     - Case `track_archive_first_exits_1`: FAIL (expected exit 1, got exit 0).
     - `failed_cases=clean_active_exits_0,unknown_marker_exits_1,markers_outside_set_exit_1,two_offenders_two_fail_lines,fail_on_stderr_pass_on_stdout,two_plans_count_two,track_archive_first_exits_1`.
     - No fixture entered `measure/tracks/`. Each case removed its own `<tmp>` root. The test file holds no production change.
-- [~] 1.2 Green: the guard predicate and its two messages. In `tests/orchestrator_marker_vocabulary.sh`:
+- [x] 1.2 Green: the guard predicate and its two messages. Commit `150e22e9d` (automated evidence). In `tests/orchestrator_marker_vocabulary.sh`:
   - Change the line-55 predicate to `grep -nE '^- \[[^ ~xb]\] ' "$plan" >/tmp/orchestrator-marker-hits.$$`. The guard then fails only a marker outside the set {` `, `~`, `x`, `b`}.
   - Replace the per-plan FAIL line with one line for each hit, on stderr. The exact FAIL line reads `FAIL: unsupported task marker [<marker>] in <plan>; use [ ], [~], [x], or [b] deferred:<owner>`. Read `<marker>` from the hit line between its first `[` and the next `]`. Keep `status=1` and the exit code 1.
   - Replace the PASS line with the exact text `PASS: all active track plans use only [ ], [~], [x], or [b] task markers (%d plans checked)`. Pass `${#plans[@]}` as the count.
@@ -57,11 +57,26 @@ Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 5
   - Check: `bash tests/orchestrator_marker_vocabulary.sh` exits 0. Record the count from its `(N plans checked)` text at run time and record the exit code. Do not write a fixed count: the count was 93 at `e6dc5b067` and it moves with each new plan. Do not record a fail-line count, because the guard prints no such number.
   - Check: `bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112` exits 0. The PM decision of 2026-11-12 counts this single-track check as the pass.
   - Commit: `fix(measure): accept the pending marker in the guard (track_id: doctor_gate_repair_20261112)`.
-- [ ] 1.3 Green: catalog entry A8. Reword entry A8 in `measure/anti-patterns.md` so its text names the accepted marker set and the pending marker. Keep the heading `## A8 — …`. Keep the `**Guard:**` line that points at `tests/orchestrator_marker_vocabulary.sh`, because the catalog test scans that line for a live file.
+  - Evidence of the Green round (role: Measure Jr Green; model: claude-sonnet-5-5; `phase_base_sha=088efb891a20a2be2619b839812ad8ee13bac562`; `role_base_sha=d8b60a75ccdcb6de4d0b95c3d170358fd06deb3b`; commit `150e22e9d41043936b10a765e92610924a5376a1`):
+    - `bash -n tests/orchestrator_marker_vocabulary.sh` exits 0.
+    - `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0. `cases_total=14 cases_failed=0`.
+    - `bash tests/orchestrator_marker_vocabulary.sh` exits 0, with `(93 plans checked)` at run time.
+    - `bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112` exits 0, with `(1 plans checked)`.
+    - The commit holds `tests/orchestrator_marker_vocabulary.sh` only. The Red test file did not change.
+- [x] 1.3 Green: catalog entry A8. Commit `14a501a77` (automated evidence). Reword entry A8 in `measure/anti-patterns.md` so its text names the accepted marker set and the pending marker. Keep the heading `## A8 — …`. Keep the `**Guard:**` line that points at `tests/orchestrator_marker_vocabulary.sh`, because the catalog test scans that line for a live file.
   - Check: `bash tests/orchestrator_catalog.sh` exits 0, with the line `PASS: measure anti-pattern catalog exists with A1-A15`.
   - Check: `bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112` exits 0.
   - Commit: `docs(measure): state the marker set in catalog A8 (track_id: doctor_gate_repair_20261112)`.
-- [ ] 1.4 Phase check at one HEAD. Run `bash tests/orchestrator_catalog.sh`, `bash tests/orchestrator_marker_vocabulary.sh`, and `bash tests/orchestrator_marker_vocabulary_cases.sh`. Record each exit code and the printed plan count. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`, `measure/anti-patterns.md`, and files under `measure/tracks/doctor_gate_repair_20261112/`. The track plan is in the list because its own task markers changed. Record the result as automated.
+  - Evidence: before the commit, `bash tests/orchestrator_catalog.sh` exited 0 with `PASS: measure anti-pattern catalog exists with A1-A15`. `bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112` exited 0. The commit holds `measure/anti-patterns.md` only. The heading and the `**Guard:**` line stay.
+- [x] 1.4 Phase check at one HEAD `14a501a77` (automated evidence). Run `bash tests/orchestrator_catalog.sh`, `bash tests/orchestrator_marker_vocabulary.sh`, and `bash tests/orchestrator_marker_vocabulary_cases.sh`. Record each exit code and the printed plan count. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`, `measure/anti-patterns.md`, and files under `measure/tracks/doctor_gate_repair_20261112/`. The track plan is in the list because its own task markers changed. Record the result as automated.
+  - Evidence at `HEAD=14a501a77d897f15a0a4a1cccecb25fdbee06065` (the HEAD did not move during the check):
+    - `bash -n tests/orchestrator_marker_vocabulary.sh` exits 0.
+    - `bash tests/orchestrator_catalog.sh` exits 0, with `PASS: measure anti-pattern catalog exists with A1-A15`.
+    - `bash tests/orchestrator_marker_vocabulary.sh` exits 0, with `(93 plans checked)` at run time.
+    - `bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112` exits 0, with `(1 plans checked)`.
+    - `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0, with `cases_total=14 cases_failed=0`.
+    - `git log 088efb891..HEAD` lists four commits, all with `track_id: doctor_gate_repair_20261112`: `0088e86c8`, `d8b60a75c`, `150e22e9d`, `14a501a77`. No other track committed in the range.
+    - `git diff --name-only 088efb891..HEAD`: `measure/anti-patterns.md`, `measure/tracks/doctor_gate_repair_20261112/plan.md`, `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`. The list matches the allowed set.
 
 ## Phase 2: F421, the gate records the architecture verdict
 
