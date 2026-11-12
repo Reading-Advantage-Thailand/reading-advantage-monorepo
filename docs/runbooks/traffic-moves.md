@@ -203,7 +203,10 @@ Substitution: `_RELEASE_COMMIT_SHA`, the release commit. The traffic goes to the
 `apps/codecamp-advantage/cloudbuild.yaml` holds no database step. The new revision must start
 against the old schema.
 
-Steps, in order: `bind-release-source`, `migrate-db`, `doctor-check`, `update-traffic`.
+Steps, in order: `bind-release-source`, `migrate-db`, `doctor-check`,
+`configure-review-worker-scheduler`, `update-traffic`.
+
+Order: release source bind, migrate, doctor check, review worker scheduler, traffic move.
 
 - `bind-release-source` is the first step. It runs `scripts/ci/verify-traffic-source.sh` with
   `_RELEASE_COMMIT_SHA`. The script loads the upstream `master` from GitHub and proves that the
@@ -225,6 +228,18 @@ Steps, in order: `bind-release-source`, `migrate-db`, `doctor-check`, `update-tr
   that holds `git` and `bash`, written in the same quoted-tag form with no digest.
 - Start from a clean checkout of the release commit. An untracked file in the upload stops the
   build, because the step compares every uploaded file with the commit.
+- `configure-review-worker-scheduler` runs
+  `apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh` with `PROJECT_ID` and the
+  secret `CODECAMP_REVIEW_WORKER_TICK_TOKEN` in `secretEnv`. It creates or updates the Cloud
+  Scheduler job `codecamp-review-worker-tick`. That job calls the live host every 2 minutes.
+  - The step needs `cloudscheduler.jobs.get`, `cloudscheduler.jobs.create`, and
+    `cloudscheduler.jobs.update` for the Cloud Build service account of project
+    `reading-advantage`. The grant is a precondition of the first traffic move. Plan task 1.7
+    (`deferred:pm`) makes the narrowest grant that covers the three permissions. The PM records
+    the command. That task has not run yet.
+  - Without the grant, the run stops after `doctor-check`. The database is then migrated, and the
+    traffic stays on the old revision. A failed traffic move already allows that state.
+  - Daniel's gate at the traffic move is only his traffic word.
 
 Find the tag after a push: the tag is the fixed name `sso-candidate`. No tag substitution is
 needed.
