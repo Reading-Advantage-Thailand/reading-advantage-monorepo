@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Dry-run characterization cases for Phase 4 task 4.1 of the track
  * `per_app_cicd_20261107`.
@@ -177,8 +176,8 @@ describe("Phase 4 dry run of the three workflows on fake ranges", () => {
       const cdApps = matrixIds(apps, `${caseId} cd-apps`);
       const ciIds = matrixIds(ci, `${caseId} ci`);
       const cdWww = www.outputs.www ?? "missing";
-      const expectedWww = mode === "direct" ? "yes" : "no";
-      const expectedApps = mode === "gated" ? [id] : [];
+      const expectedWww = id === "www-reading-advantage" && mode === "direct" ? "yes" : "no";
+      const expectedApps = id !== "www-reading-advantage" && ["gated", "direct"].includes(mode) ? [id] : [];
       const gcloudCalls = www.gcloudCalls.length + apps.gcloudCalls.length + ci.gcloudCalls.length;
 
       const line =

@@ -1150,10 +1150,10 @@ describe("P1 group B: the cases from the measured facts", () => {
         expect("tagLength" in row, `B-21 row=${row.id}`).toBe(false);
       }
     }
-    expect(direct, "B-21 direct=1").toBe(1);
-    expect(gated, "B-21 gated=6").toBe(6);
+    expect(direct, "B-21 direct=2").toBe(2);
+    expect(gated, "B-21 gated=5").toBe(5);
     expect(excluded, "B-21 excluded=3").toBe(3);
-    expect(ids.has("www-reading-advantage"), "B-21 direct row").toBe(true);
+    expect(rows.filter((row) => row.mode === "direct").map((row) => row.id).sort(), "B-21 direct rows").toEqual(["primary-advantage", "www-reading-advantage"]);
     expect(ids.has("reading-advantage"), "B-21 excluded row").toBe(true);
     expect(ids.has("sales-advantage"), "B-21 excluded row").toBe(true);
     expect(ids.has("workbooks"), "B-21 excluded row").toBe(true);

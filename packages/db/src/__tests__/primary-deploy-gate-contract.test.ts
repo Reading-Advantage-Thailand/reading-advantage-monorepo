@@ -4,18 +4,15 @@
  * (primary_cutover_blockers_20261003, FR-4).
  */
 import { describe, it, expect } from "vitest";
+import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { sentinelProbes } from "../sentinels";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const PUSH = readFileSync(
-  join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild.yaml"),
-  "utf8",
-);
 const CLOUDBUILD = readFileSync(
-  join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild-traffic.yaml"),
+  join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild.yaml"),
   "utf8",
 );
 const JOURNAL = JSON.parse(
@@ -45,12 +42,13 @@ describe("Primary Cloud Build migration gate", () => {
     expect(guard).toMatch(/secretEnv:\s*\n\s*-\s*"DATABASE_URL"/);
     const migrate = ids.indexOf("migrate-db");
     const doctor = ids.indexOf("doctor-check");
-    const deploy = ids.indexOf("update-traffic");
+    const deploy = ids.indexOf("deploy-cloudrun");
     expect(migrate).toBeGreaterThanOrEqual(0);
     expect(doctor).toBeGreaterThan(migrate);
     expect(deploy).toBeGreaterThan(doctor);
-    // D1: the push file holds no database step.
-    expect(PUSH).not.toMatch(/id:\s*"(refuse-legacy-db|migrate-db|doctor-check)"/);
+    expect(ids.indexOf("update-traffic")).toBeGreaterThan(deploy);
+    expect(stepBlocks().get("deploy-cloudrun")).not.toContain("--no-traffic");
+    expect(stepBlocks().get("update-traffic")).toContain("--to-latest");
   });
 
   it("runs `pnpm --filter @reading-advantage/db migrate` with the DB secret", () => {
@@ -98,8 +96,28 @@ describe("Primary Cloud Build migration gate", () => {
     }
   });
 
+  it("passes the DATABASE_URL secret unchanged through Bash expansion", () => {
+    const fixtureUrl = "postgresql://fixture:dummy@localhost/fixture?host=/cloudsql/fixture";
+    for (const id of ["refuse-legacy-db", "migrate-db", "doctor-check"]) {
+      const block = stepBlocks().get(id) ?? "";
+      const scalar = block.split("\n").map((line) => line.trim()).find(
+        (line) => line.startsWith('- "set -euo pipefail') && line.includes("export DIRECT_DATABASE_URL="),
+      );
+      expect(scalar, id).toBeDefined();
+      const command = JSON.parse(scalar!.slice(2)) as string;
+      const exportCommand = command.match(/export DIRECT_DATABASE_URL=.*?(?= && pnpm)/)?.[0];
+      expect(exportCommand, id).toBeDefined();
+      const result = spawnSync("bash", ["-c", `${exportCommand!.replaceAll("$$DATABASE_URL", "$DATABASE_URL")}; printf '%s' "$DIRECT_DATABASE_URL"`], {
+        encoding: "utf8",
+        env: { ...process.env, DATABASE_URL: fixtureUrl },
+      });
+      expect(result.status, `${id}: ${result.stderr}`).toBe(0);
+      expect(result.stdout, id).toBe(fixtureUrl);
+    }
+  });
+
   it("mounts the Cloud SQL instance on the Cloud Run service for the socket URL", () => {
-    expect(stepBlocks(PUSH).get("deploy-cloudrun")).toContain(
+    expect(stepBlocks().get("deploy-cloudrun")).toContain(
       "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql",
     );
   });

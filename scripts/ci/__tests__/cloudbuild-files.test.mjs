@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Red tests for Phase 2 of the track `per_app_cicd_20261107`.
  *
@@ -53,24 +52,17 @@ function guardRule(steps) {
 }
 
 describe("F: Cloud Build files", () => {
-  it("F-01 the primary push file holds no database step", () => {
+  it("F-01 the primary push guards and migrates before deploying and restoring latest traffic", () => {
     const doc = cloudbuild("apps/primary-advantage/cloudbuild.yaml");
     const steps = doc.steps ?? [];
     must(steps.length >= 1, "push_steps=0");
-    const bad = [];
-    for (const step of steps) {
-      if (["refuse-legacy-db", "migrate-db", "doctor-check"].includes(String(step.id ?? ""))) {
-        bad.push(String(step.id));
-      }
-      if (dbToken(step)) bad.push(String(step.id ?? ""));
-    }
-    const ids = [...new Set(bad)];
-    must(
-      ids.length === 0,
-      `primary push file holds database steps: ${ids.join(",")}`,
-    );
-    const found = databaseSteps(doc);
-    must(found.length === 0, `db_steps_found=${found.length}`);
+    const ids = ordered(doc, ["refuse-legacy-db", "migrate-db", "doctor-check", "deploy-cloudrun", "update-traffic"], "primary push");
+    must(guardRule(steps), "primary database steps bypass the legacy guard");
+    must(databaseSteps(doc).length === 3, "primary must retain its three database checks");
+    must(!stepText(deployStep(doc)).includes("--no-traffic"), "primary deploy still suppresses traffic");
+    const traffic = steps.find((step) => step.id === "update-traffic");
+    must(stepText(traffic).includes("--to-latest"), "primary does not restore latest-revision routing");
+    must(ids.at(-1) === "update-traffic", "primary traffic is not last");
   });
 
   it("F-02 the guard rule on a fixture", () => {
@@ -170,9 +162,9 @@ describe("F: Cloud Build files", () => {
     }
   });
 
-  it("F-08 the 9 push files other than the legacy reading-advantage file hold no database step", () => {
-    const rows = readTable().filter((row) => row.id !== "reading-advantage");
-    must(rows.length === 9, `files_checked=${rows.length}`);
+  it("F-08 the 8 push files other than Primary and legacy reading hold no database step", () => {
+    const rows = readTable().filter((row) => !["primary-advantage", "reading-advantage"].includes(row.id));
+    must(rows.length === 8, `files_checked=${rows.length}`);
     const withSteps = [];
     for (const row of rows) {
       const doc = cloudbuild(String(row.cloudbuild));
@@ -183,7 +175,7 @@ describe("F: Cloud Build files", () => {
     }
     must(
       withSteps.length === 0,
-      `files_with_db_steps=${withSteps.length} files_checked=9: ${withSteps.join(",")}`,
+      `files_with_db_steps=${withSteps.length} files_checked=8: ${withSteps.join(",")}`,
     );
   });
 
@@ -405,8 +397,8 @@ describe("F: Cloud Build files", () => {
     const sections = [
       {
         id: "primary-advantage",
-        file: "apps/primary-advantage/cloudbuild-traffic.yaml",
-        steps: ["refuse-legacy-db", "migrate-db", "doctor-check", "update-traffic"],
+        file: "apps/primary-advantage/cloudbuild.yaml",
+        steps: ["refuse-legacy-db", "migrate-db", "doctor-check", "deploy-cloudrun", "update-traffic"],
       },
       {
         id: "accounts",
@@ -459,7 +451,7 @@ describe("F: Cloud Build files", () => {
       if (body === "") continue;
       if (!body.includes(section.file)) continue;
       if (section.steps.some((step) => !body.includes(step))) continue;
-      if (!/old schema/i.test(body)) continue;
+      if (section.id === "primary-advantage" ? !body.includes("--to-latest") : !/old schema/i.test(body)) continue;
       complete += 1;
     }
     must(complete === 6, `traffic_runbook_sections=${complete}`);

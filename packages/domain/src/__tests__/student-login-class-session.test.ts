@@ -38,16 +38,17 @@ beforeEach(() => {
 
 describe("startClassSession", () => {
   // select order: classroom, missing credentials, code collision
-  it("starts a session for the class teacher and stores only the code hash", async () => {
+  it("starts a six-hour session for the class teacher and stores only the code hash", async () => {
     const db = createMockDb({
       selectSequence: [[classRow], [], []],
       insertReturning: [{ id: "33333333-3333-4333-8333-333333333333" }],
     });
     const out = await startClassSession({ db: asDb(db), user: teacher, actor, input: { classroomId: CLASS_ID }, now: NOW });
     expect([...out.code].every((c) => CLASS_CODE_ALPHABET.includes(c))).toBe(true);
-    expect(out.expiresAt.getTime()).toBe(NOW.getTime() + 3 * 60 * 60 * 1000);
+    expect(out.expiresAt.getTime()).toBe(NOW.getTime() + 6 * 60 * 60 * 1000);
     const inserted = db.insert.mock.results.at(-1)!.value.values.mock.calls[0][0];
     expect(inserted.codeHash).toBe(hashClassCode(out.code));
+    expect(inserted.expiresAt).toEqual(out.expiresAt);
     expect(JSON.stringify(inserted)).not.toContain(out.code);
     expect(inserted).toMatchObject({ schoolId: SCHOOL, classroomId: CLASS_ID, teacherId: "t1" });
     expect(recordAuditEvent).toHaveBeenCalledWith(

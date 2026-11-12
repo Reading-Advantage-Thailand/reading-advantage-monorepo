@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Adversarial tests for Phase 2 of the track `per_app_cicd_20261107`.
  *
@@ -225,20 +224,20 @@ describe("A: per-app CD adversarial", () => {
 
   it("A-P2-08 only marketing gets the pushed commit as its release substitution", () => {
     const rows = gatedRows();
-    must(rows.length === 6, `gated_rows=${rows.length}`);
+    must(rows.length === 5, `gated_rows=${rows.length}`);
     const files = {};
     for (const row of rows) files[String(row.cloudbuild)] = readText(String(row.cloudbuild));
-    must(Object.keys(files).length === 6, `push_files=${Object.keys(files).length}`);
+    must(Object.keys(files).length === 5, `push_files=${Object.keys(files).length}`);
     const write = {};
     for (const row of rows) write[`${row.path}/src/adversarial-probe.ts`] = "export const x = 1;\n";
     const { dir, base } = planRepoWith(files);
     const head = commitChanges(dir, { write });
     const changed = changedFileCount(dir, base, head);
-    must(changed === 6, `changed_files=${changed}`);
+    must(changed === 5, `changed_files=${changed}`);
     const result = runSelect(APPS, dir, base, head);
     must(result.status === 0, `select step failed: ${result.stderr.trim()}`);
     const matrix = JSON.parse(result.outputs.matrix ?? "null");
-    must(Array.isArray(matrix) && matrix.length === 6, `jobs_planned=${matrix?.length}`);
+    must(Array.isArray(matrix) && matrix.length === 5, `jobs_planned=${matrix?.length}`);
     const byId = new Map(matrix.map((entry) => [String(entry.id), entry]));
     let passedTo = 0;
     for (const row of rows) {

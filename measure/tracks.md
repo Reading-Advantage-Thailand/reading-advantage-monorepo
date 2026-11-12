@@ -44,6 +44,10 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [x] **Track: Primary class code: six hours** — *created 2026-11-12*
+  *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*
+  *Status: complete; six-hour codes and automatic latest routing live, isolated production QA fixture created, actual Class sign-in screenshot captured (13:30 to19:30 Bangkok).*
+
 - [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
   *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
   *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*

@@ -26,8 +26,8 @@ import { ensureStudentCredentials } from "./credentials.js";
 import { StudentLoginError } from "./errors.js";
 import { guardClassAttempt, guardCodeEntry, recordCodeMiss } from "./rate-limits.js";
 
-/** Lifetime of a class code (spec: after 3 hours). */
-export const CLASS_SESSION_LIFETIME_MS = 3 * 60 * 60 * 1000;
+/** Lifetime of a class code: six hours after starting or restarting the class. */
+export const CLASS_SESSION_LIFETIME_MS = 6 * 60 * 60 * 1000;
 
 /** Lifetime of a class code with the 7-day choice (the maximum). */
 const CLASS_SESSION_LIFETIME_7D_MS = 7 * 24 * 60 * 60 * 1000;

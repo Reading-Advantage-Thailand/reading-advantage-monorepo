@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Red tests for Phase 2 of the track `per_app_cicd_20261107`.
  *
@@ -175,8 +174,8 @@ describe("W: per-app CD workflows", () => {
     must(result.outputs.www === "no", `www=${result.outputs.www} expected=no`);
   });
 
-  it("W-05 each gated row plans exactly one job", () => {
-    const rows = gatedRows();
+  it("W-05 each matrix app plans exactly one job", () => {
+    const rows = readTable().filter((row) => row.id !== "www-reading-advantage" && ["gated", "direct"].includes(row.mode));
     must(rows.length === 6, `gated_rows=${rows.length}`);
     for (const row of rows) {
       const range = planRepo({ write: { [`${row.path}/src/red-probe-${row.id}.ts`]: "export const x = 1;\n" } });
@@ -250,7 +249,7 @@ describe("W: per-app CD workflows", () => {
 
   it("W-10 tag math over the gated rows", () => {
     const rows = gatedRows();
-    must(rows.length === 6, `rows_checked=${rows.length}`);
+    must(rows.length === 5, `rows_checked=${rows.length}`);
     let max = 0;
     for (const row of rows) {
       const tag = tagFor(row);
@@ -265,12 +264,19 @@ describe("W: per-app CD workflows", () => {
     must(max <= 46, `max_combined=${max} limit=46`);
   });
 
-  it("W-11-primary primary deploy step holds pa- and the build id slice", () => {
-    const row = gatedRows().find((entry) => entry.id === "primary-advantage");
+  it("W-11-primary primary push opens the guarded deploy and restores latest routing", () => {
+    const row = readTable().find((entry) => entry.id === "primary-advantage");
+    must(row?.mode === "direct", "primary is not an automatic deploy row");
     const doc = workflowTextTable(row);
-    const step = doc.steps.find((entry) => String(entry.id ?? "").startsWith("deploy"));
-    assertEscapedTag(step, "pa", "primary-advantage");
-    must(stepText(step).includes("--no-traffic"), "primary deploy step has no --no-traffic");
+    const ids = doc.steps.map((entry) => entry.id);
+    const deployIndex = ids.indexOf("deploy-cloudrun");
+    const doctorIndex = ids.indexOf("doctor-check");
+    const moveIndex = ids.indexOf("update-traffic");
+    must(doctorIndex >= 0 && deployIndex > doctorIndex && moveIndex > deployIndex, "primary deployment bypasses its database checks");
+    const step = doc.steps[deployIndex];
+    must(!stepText(step).includes("--no-traffic"), "primary deploy still suppresses traffic");
+    must(!stepText(step).includes("--tag="), "primary automatic deploy still depends on a candidate tag");
+    must(stepText(doc.steps[moveIndex]).includes("--to-latest"), "primary does not restore latest-revision routing");
   });
 
   it("W-11-storytime storytime deploy step holds st- and the build id slice", () => {
@@ -331,7 +337,7 @@ describe("W: per-app CD workflows", () => {
   });
 
   it("W-12 each deploy step names the row service", () => {
-    const rows = gatedRows();
+    const rows = readTable().filter((row) => row.id !== "www-reading-advantage" && ["gated", "direct"].includes(row.mode));
     must(rows.length === 6, `services_checked=${rows.length}`);
     for (const row of rows) {
       const doc = workflowTextTable(row);
@@ -473,7 +479,7 @@ describe("W: per-app CD workflows", () => {
 
   it("W-21 the input-size guards", () => {
     const rows = gatedRows();
-    must(rows.length === 6, `gated_rows=${rows.length}`);
+    must(rows.length === 5, `gated_rows=${rows.length}`);
     const ranges = 6;
     must(ranges >= 6, `ranges=${ranges}`);
     const table = readTable();

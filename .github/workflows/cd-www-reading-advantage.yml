@@ -46,7 +46,7 @@ jobs:
             const ids = JSON.parse(process.env.AFFECTED_IDS);
             const rows = JSON.parse(readFileSync("scripts/ci/apps.json", "utf8"));
             const hit = (row) => ids.includes(row.id);
-            const www = rows.some((row) => row.mode === "direct" && hit(row));
+            const www = rows.some((row) => row.id === "www-reading-advantage" && row.mode === "direct" && hit(row));
             // A push file may declare a REQUIRED_ default for _RELEASE_COMMIT_SHA. The job passes the
             // pushed commit only when that is the one such default in the file (other defaults would
             // still fail the build, and Cloud Build refuses a substitution that the file does not declare).
@@ -58,7 +58,7 @@ jobs:
               return only ? "--substitutions=_RELEASE_COMMIT_SHA=" + process.env.HEAD_SHA : "";
             };
             const matrix = rows
-              .filter((row) => row.mode === "gated" && hit(row))
+              .filter((row) => row.id !== "www-reading-advantage" && ["direct", "gated"].includes(row.mode) && hit(row))
               .map(({ id, service, project, cloudbuild }) => ({
                 id,
                 service,
