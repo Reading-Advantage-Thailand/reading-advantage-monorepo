@@ -158,7 +158,7 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
     - The range also holds `e3fd1aa38` (storytime_app_rebuild_20261025) and `09bb8e109` (accounting_drive_intake_20261109). Those paths belong to other tracks and are not listed.
     - `git worktree list --porcelain` shows 7 worktrees. This track created none of the six other worktrees.
 
-- [ ] 2.5 Remediation of the Phase 2 reviews: Review A F201, F202, and F203; Review B F251.
+- [~] 2.5 Remediation of the Phase 2 reviews: Review A F201, F202, and F203; Review B F251.
   - The defect: `package.json` line 7 holds `pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts`. On master the CLI exits 2 through the catch block of `architecture-check-cli.ts` lines 143 to 149 and prints `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports`. Two pnpm layers report exit 1 for that failed child. Step 4 therefore records exit 1, prints a boundary verdict, and the tool-failure rule of FR-3 cannot fire for a real CLI exit 2. The stub `pnpm` returns the code directly, so the 22 cases cannot see the mapping.
   - Red: model the real call path with a stub `tsx`, not a stub `pnpm`.
     - Each case that sets a code writes `<tmp>/node_modules/.bin/tsx`. The step 4 command `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)` resolves that file, so the case needs `<tmp>/packages/architecture-enforcement` too.
@@ -190,6 +190,32 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
   - Check: the full run exits 0. Its output holds the known-drift ARCHITECTURE line and `DOCTOR: the three structural guard steps gate this exit code`. Record the CLI exit, the four step exit codes, and `step4_seconds`.
   - Check: the per-commit scope check of test-strategy section 1.5 gives `doctor_out_of_scope_paths=0`.
   - Commit: `fix(measure): read the real architecture exit in doctor (track_id: doctor_gate_repair_20261112)`, with `tests/orchestrator_doctor_gate.sh`, `measure/doctor.sh`, `doctor-gate-evidence.md`, and this plan.
+  - Evidence of the Red round (role: Measure Mid Red; model: minimax-cn-coding-plan/MiniMax-M3.1-Flash):
+    - `phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec`; `role_base_sha=ad72cee7a36615704ed955f4d4feb03e951ae5b5`; commit `50db02a6338faf65c891bb2b1f7b7701e8290df8`.
+    - The file follows the amended test-strategy.md section 6.5. Each case builds its own root in `<tmp>`, copies `measure/doctor.sh` into `<tmp>/measure/`, writes three stub guards into `<tmp>/tests/`, creates `<tmp>/packages/architecture-enforcement/`, and writes the stub `tsx` into `<tmp>/node_modules/.bin/tsx`. The stub logs its argv in `<tmp>/tsx.log` and prints the case message on stderr. The harness writes no `pnpm` stub, and the `PATH` of every run is `<tmp>/bin:/usr/bin:/bin`. Each case removes its own `<tmp>` root. No fixture enters the repository.
+    - Command: `bash tests/orchestrator_doctor_gate.sh --part a`. Exit 1 at the base. `cases_total=12 cases_failed=7`. The floor of 12 is met.
+    - Command: `bash tests/orchestrator_doctor_gate.sh --part b`. Exit 1 at the base. `cases_total=12 cases_failed=3`.
+    - Command: `bash tests/orchestrator_doctor_gate.sh`. Exit 1 at the base. `cases_total=24 cases_failed=10`.
+    - Command: `bash -n tests/orchestrator_doctor_gate.sh`. Exit 0.
+    - Case `tsx_exit_1_gate_exits_0`: FAIL (expected gate exit 0, got exit 1).
+    - Case `tsx_exit_0_gate_exits_0`: FAIL (expected gate exit 0, got exit 1).
+    - Case `guard_catalog_failure_gate_exits_1`: PASS. Case `guard_marker_failure_gate_exits_1`: PASS. Case `guard_truthfulness_failure_gate_exits_1`: PASS. These three are the named characterization cases.
+    - Case `tsx_exit_2_manifest_drift_gate_exits_0`: FAIL (expected gate exit 0, got exit 1).
+    - Case `tsx_exit_2_other_line_gate_exits_1`: FAIL (the tool failure ARCHITECTURE line is missing).
+    - Case `tsx_exit_127_gate_exits_1`: PASS. This is the named characterization case.
+    - Case `tsx_argv_exact`: FAIL (tsx_calls=0 expected=1).
+    - Case `tool_failure_codes`: FAIL (code 2: the tool failure ARCHITECTURE line is missing). The loop asserts `codes_checked=5` before it runs.
+    - Case `architecture_line_shows_code`: FAIL (the ARCHITECTURE line does not hold the code 0).
+    - Case `no_write_in_root`: PASS. This is the named characterization case.
+    - Part B cases `record_file_present`, `record_step_lines`, `record_step_exit_codes`, `record_verdict_line`, `record_verdict_code_matches_step4`, `record_owner_line`, `record_doctor_line`, `record_head_line`, and `record_lines_floor`: PASS. The record of task 2.3 exists, and it holds `record_lines_checked=14` against the floor of 8.
+    - Part B case `record_step_commands`: FAIL (the STEP 4 command text is not the planned literal). The record holds `pnpm architecture:check --skip-input-snapshot-pin`.
+    - Part B case `record_duration_line`: FAIL (the record holds no DURATION line with a source run).
+    - Part B case `record_duration_sha_matches_head`: FAIL (the record holds no DURATION line with a source run).
+    - F203: the 127 case and the 127 branch of `tool_failure_codes` assert `tsx_absent=1` before the gate runs. The assertion reads `test -x <tmp>/node_modules/.bin/tsx`.
+    - The base `doctor.sh` calls `pnpm architecture:check --skip-input-snapshot-pin`. The harness holds no `pnpm`, so the base prints the tool-failure line with 127 in every case.
+    - A scratch copy of the test file, a scratch copy of `measure/doctor.sh` that holds the planned behavior of task 2.5, and a scratch record in the planned form make all 24 cases pass with exit 0. The scratch root sat outside the repository and was removed. The real `measure/doctor.sh` and the real record did not change.
+    - The scratch copy also kills two mutants of test-strategy section 7.2. A drift match on the shorter prefix `Architecture check failed:` fails `tsx_exit_2_other_line_gate_exits_1`. A branch that gives every exit 2 the tool-failure line fails `tsx_exit_2_manifest_drift_gate_exits_0`.
+    - The commit holds `tests/orchestrator_doctor_gate.sh` only. No production file changed.
 
 ## Phase 3: The gate is green on master
 
