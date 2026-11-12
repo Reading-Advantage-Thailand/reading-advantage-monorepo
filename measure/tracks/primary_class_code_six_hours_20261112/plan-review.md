@@ -1,0 +1,9 @@
+# Review
+
+Separate agent reviewed the diff against 17ab2d5ac4167aaddc6363e82741c5ebc3ab4b40.
+No Critical, High, or Medium findings. Low: the code-hash JSDoc still described three
+hours; corrected to six hours. Focused ESLint, domain type check, 21 session tests,
+locale JSON parsing, and diff whitespace check passed.
+
+The owning constant covers Start class and New code. End class remains immediate.
+Existing database expiry rows and the separate student session policy are unchanged.

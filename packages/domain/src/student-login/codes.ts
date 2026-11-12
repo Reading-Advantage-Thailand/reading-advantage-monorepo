@@ -17,7 +17,7 @@ export function generateClassCode(pick: (max: number) => number = randomInt): st
 }
 
 /**
- * Hashes a class code for storage and lookup. SHA-256 is enough: a code lives 3 hours
+ * Hashes a class code for storage and lookup. SHA-256 is enough: a code lives six hours
  * and every lookup path is rate limited.
  * @param code A validated, upper-case class code.
  * @returns The hex SHA-256 digest.
