@@ -47,9 +47,9 @@ const BANGKOK_17_UTC_MS = 10 * 60 * 60 * 1000;
  * @throws {StudentLoginError} `invalid_input` for `until_17` at 17:00 Bangkok or later, and for an unknown value.
  */
 function computeSessionExpiry(lifetime: ClassSessionLifetime | undefined, now: Date): Date {
-  const choice = lifetime === undefined ? "3h" : lifetime;
+  const choice = lifetime === undefined ? "6h" : lifetime;
   switch (choice) {
-    case "3h":
+    case "6h":
       return new Date(now.getTime() + CLASS_SESSION_LIFETIME_MS);
     case "7d":
       return new Date(now.getTime() + CLASS_SESSION_LIFETIME_7D_MS);
@@ -101,12 +101,12 @@ function isUniqueViolation(error: unknown): boolean {
  * Starts a class login session: makes a fresh code, stores only its hash, and closes an
  * earlier open session of the class (a restart replaces the old code). Students of the class
  * that have no credential row get one. The code is unique among all open sessions of all schools.
- * The expiry comes from the chosen lifetime: 3 hours (the default), 17:00 Bangkok on the current
+ * The expiry comes from the chosen lifetime: 6 hours (the default), 17:00 Bangkok on the current
  * Bangkok date, or 7 days. The lifetime check runs before any row write.
  * @param params.db Database client.
  * @param params.user The teacher of the class, or an admin of its school.
  * @param params.actor Client IP and user agent for the audit entry.
- * @param params.input The class to start, and the chosen lifetime. A missing lifetime gives 3 hours.
+ * @param params.input The class to start, and the chosen lifetime. A missing lifetime gives 6 hours.
  * @param params.now Current time. Tests replace it.
  * @param params.pick Random integer source for the code. Tests replace it.
  * @returns The session id, the code (shown once), and the expiry time.
@@ -124,7 +124,7 @@ export async function startClassSession(params: {
   const now = params.now ?? new Date();
   const { classroom, tenantDb } = await authorizeClassroom(db, user, input.classroomId);
   // The lifetime check runs before the first row write: ensureStudentCredentials can insert rows.
-  const lifetime = input.lifetime === undefined ? "3h" : input.lifetime;
+  const lifetime = input.lifetime === undefined ? "6h" : input.lifetime;
   const expiresAt = computeSessionExpiry(lifetime, now);
   await ensureStudentCredentials(db, classroom.schoolId, classroom.id);
 

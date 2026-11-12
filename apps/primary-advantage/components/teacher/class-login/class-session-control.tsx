@@ -11,7 +11,7 @@ import { errorKey, postStudentLogin, type ClassLoginErrorKey, type ClassRoster }
 type StartResult = { sessionId: string; code: string; expiresAt: string };
 
 /** Lifetime choices of the start control, in display order. The server owns the time values. */
-const LIFETIME_CHOICES = ["3h", "until_17", "7d"] as const;
+const LIFETIME_CHOICES = ["6h", "until_17", "7d"] as const;
 
 type LifetimeChoice = (typeof LIFETIME_CHOICES)[number];
 
@@ -56,7 +56,7 @@ export interface ClassSessionControlProps {
 export function ClassSessionControl({ classroomId, openSession, fetchedAt, onChange }: ClassSessionControlProps) {
   const t = useTranslations("ClassLogin");
   const format = useIntlFormatter();
-  const [lifetime, setLifetime] = useState<LifetimeChoice>("3h");
+  const [lifetime, setLifetime] = useState<LifetimeChoice>("6h");
   const [started, setStarted] = useState<(StartResult & { at: number }) | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ClassLoginErrorKey | null>(null);
@@ -66,7 +66,7 @@ export function ClassSessionControl({ classroomId, openSession, fetchedAt, onCha
   const choices = LIFETIME_CHOICES.filter((choice) => choice !== "until_17" || before1700);
   // A hidden choice falls back to the default, so one radio is always checked and the start
   // never posts a hidden choice (review F121).
-  const effectiveLifetime: LifetimeChoice = choices.includes(lifetime) ? lifetime : "3h";
+  const effectiveLifetime: LifetimeChoice = choices.includes(lifetime) ? lifetime : "6h";
 
   async function run(action: "start" | "end") {
     setBusy(true);

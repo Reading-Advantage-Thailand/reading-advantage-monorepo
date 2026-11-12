@@ -34,8 +34,8 @@ const codeSchema = z
 
 const studentIdSchema = z.string().min(1).max(64);
 
-/** The three lifetime choices of a class sign-in session: 3 hours, until 17:00 Bangkok today, or 7 days. */
-export const classSessionLifetime = z.enum(["3h", "until_17", "7d"]);
+/** The three lifetime choices of a class sign-in session: 6 hours, until 17:00 Bangkok today, or 7 days. */
+export const classSessionLifetime = z.enum(["6h", "until_17", "7d"]);
 
 /** Choice of how long a class sign-in session stays open. */
 export type ClassSessionLifetime = z.infer<typeof classSessionLifetime>;
@@ -43,7 +43,7 @@ export type ClassSessionLifetime = z.infer<typeof classSessionLifetime>;
 /** Request from a teacher to start a class login session. A missing `lifetime` gives the 3-hour default. */
 export const classSessionStartInput = z.object({
   classroomId: z.string().uuid(),
-  lifetime: classSessionLifetime.default("3h"),
+  lifetime: classSessionLifetime.default("6h"),
 });
 
 /** Request from a teacher to end the open class login session. */
@@ -176,7 +176,7 @@ export const studentSignInOutput = z.object({
   authStrength: authStrengthSchema,
 });
 
-/** Input type of {@link classSessionStartInput}. The `lifetime` field is optional before the parse; the contract gives it the `3h` default. */
+/** Input type of {@link classSessionStartInput}. The `lifetime` field is optional before the parse; the contract gives it the `6h` default. */
 export type ClassSessionStartInput = z.input<typeof classSessionStartInput>;
 /** Input type of {@link classSessionEndInput}. */
 export type ClassSessionEndInput = z.infer<typeof classSessionEndInput>;
