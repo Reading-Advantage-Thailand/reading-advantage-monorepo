@@ -10,72 +10,100 @@
 - Red runs on a model family other than the Green family. The orchestrator sets the models.
 - Stage named paths only. Never run `git add -A`, `git add .`, or `git add -u`. Commit with a pathspec: `git commit -m <msg> -- <paths>`.
 - No push, no deploy, no amend, no `--no-verify`, no `git reset`, `checkout`, `restore`, `revert`, or `stash`, and no `git worktree add`.
-- Allowed write paths: `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`, `tests/orchestrator_doctor_gate.sh`, `measure/doctor.sh`, `measure/anti-patterns.md`, this track folder, and `measure/tracks.md`.
+- Allowed write paths: `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`, `tests/orchestrator_doctor_gate.sh`, `measure/doctor.sh`, `measure/anti-patterns.md`, this track folder, `measure/runs/doctor_gate_repair_20261112/`, and `measure/tracks.md`.
 - No product file changes. No path under `apps/`, `packages/`, or `services/`. The manifest `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json` does not change. No pin refresh runs.
 - No new hash, checksum, or manifest (`AGENTS.md`, Hashing and Provenance Policy).
 - No change to any file under `measure/evidence_integrity_gates/` and no change to any file under `~/.config/opencode/agents/`.
 - The doctor gate reads and runs; it does not write a hash and it does not refresh a pin.
 - Commit headers are 100 characters or less and use a lower-case subject. Each header carries `(track_id: doctor_gate_repair_20261112)`.
 - The full doctor run goes through the heavy-run prefix, in the foreground: `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'`. The three shell guards run as plain commands.
+- If the heavy run ends with exit 124, the task stops. The orchestrator reports the stop and asks the owner for the next action. No retry runs with a longer timeout before that answer.
 
 ## Phase 1: F411, the marker guard accepts the pending marker
 
 Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 55, the comment at lines 32 to 39, and the two messages), entry A8 of `measure/anti-patterns.md`, and step 2 of `measure/doctor.sh`. The catalog test reads the A8 Guard line. No product symbol changes.
 
-- [ ] 1.1 Red: the marker guard cases. Create `tests/orchestrator_marker_vocabulary_cases.sh`. The test copies the guard into a temporary root and writes fixture plans there. No fixture enters `measure/tracks/`. The cases:
-  - A fixture plan with a top-level `- [ ] 1.1 task` line passes with exit 0. This case fails at the base.
-  - A fixture plan with a top-level `- [?] 1.1 task` line fails with exit 1, and the message names the plan and the marker.
-  - A fixture plan with `- [~]`, `- [x]`, and `- [b]` lines passes with exit 0.
-  - `--track <id>` reads that one track only and passes when that track is clean.
-  - A fixture plan under `measure/archive/<id>/` passes, so the archive exclusion holds.
-  - Check: `bash tests/orchestrator_marker_vocabulary_cases.sh`. Expect exit 1 at the base, with case 1 as the failing case. Red is not a syntax or a copy error.
+- [ ] 1.1 Red: the marker guard cases. Create `tests/orchestrator_marker_vocabulary_cases.sh`. Each case builds its own root in `<tmp>`, copies `tests/orchestrator_marker_vocabulary.sh` to `<tmp>/tests/`, and writes fixture plans under `<tmp>/measure/tracks/<fixture-id>/plan.md`. The guard sets `ROOT` from `BASH_SOURCE` (line 4), so the copy reads `<tmp>/measure/`. The test removes `<tmp>` when it ends. No fixture enters `measure/tracks/`.
+  - Case `clean_active_exits_0`: the one active fixture holds `- [ ] 1.1 task`. Expect exit 0 and the literal substring `PASS: all active track plans use only [ ], [~], [x], or [b] task markers (1 plans checked)`.
+  - Case `unknown_marker_exits_1`: the one active fixture holds `- [?] 1.1 task`. Expect exit 1 and the literal substrings `FAIL: unsupported task marker [?] in` and `measure/tracks/fixture_unknown_20260101/plan.md`.
+  - Case `canonical_markers_exit_0`: the one active fixture holds `- [~] 1.1 task`, `- [x] 1.2 task`, and `- [b] deferred:daniel 1.3 task`. Expect exit 0 and no literal substring `FAIL:` in the output.
+  - Case `track_scope_exits_0`: two active fixtures. The clean one holds `- [x] 1.1 task`. The other holds `- [?] 1.1 task`. Run `--track <clean-id>`. Expect exit 0 and no `FAIL:` in the output.
+  - Case `archive_excluded_exits_0`: `<tmp>/measure/archive/fixture_archived_20260103/plan.md` holds `- [?] 1.1 task`. The active fixture holds `- [x] 1.1 task`. Run with no argument. Expect exit 0 and no `FAIL:` in the output. The archive id differs from every active id, because `track_dir_resolve` (lines 9 to 16) reads `measure/archive/<id>` first.
+  - Expected result at the base: exit 1. Cases `clean_active_exits_0` and `unknown_marker_exits_1` fail. The base predicate `grep -n '^- \[ \] '` (line 55) rejects `- [ ] ` and accepts `[?]`. Cases `canonical_markers_exit_0`, `track_scope_exits_0`, and `archive_excluded_exits_0` pass. Red is not a syntax error and not a copy error.
+  - Check: `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 1 at the base, with the two named cases failing.
   - Commit: `test(measure): pin the marker guard cases (track_id: doctor_gate_repair_20261112)`, with the test file only.
-- [ ] 1.2 Green: the guard predicate. In `tests/orchestrator_marker_vocabulary.sh`, change the line-55 predicate to `grep -nE '^- \[[^ ~xb]\] ' "$plan"`. The guard then fails only a marker outside the set {` `, `~`, `x`, `b`}. Rewrite the comment at lines 32 to 39 to state that set and the archive exclusion. Keep the `--track <track-id>` scope. Keep exit code 1 and the message that names the plan and the marker. Update the PASS message to name the accepted set.
+- [ ] 1.2 Green: the guard predicate and its two messages. In `tests/orchestrator_marker_vocabulary.sh`:
+  - Change the line-55 predicate to `grep -nE '^- \[[^ ~xb]\] ' "$plan" >/tmp/orchestrator-marker-hits.$$`. The guard then fails only a marker outside the set {` `, `~`, `x`, `b`}.
+  - Replace the per-plan FAIL line with one line for each hit, on stderr. The exact FAIL line reads `FAIL: unsupported task marker [<marker>] in <plan>; use [ ], [~], [x], or [b] deferred:<owner>`. Read `<marker>` from the hit line between its first `[` and the next `]`. Keep `status=1` and the exit code 1.
+  - Replace the PASS line with the exact text `PASS: all active track plans use only [ ], [~], [x], or [b] task markers (%d plans checked)`. Pass `${#plans[@]}` as the count.
+  - Rewrite the comment at lines 32 to 39 to state the accepted set {` `, `~`, `x`, `b`}, the pending meaning of `[ ]`, the closeout rule, and the archive exclusion.
+  - Keep the `--track <track-id>` scope, the usage error with exit 2, and the hits file removal.
   - Check: `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0.
-  - Check: `bash tests/orchestrator_marker_vocabulary.sh` exits 0. Record `plans_checked=92` and `fail_lines=0`.
+  - Check: `bash tests/orchestrator_marker_vocabulary.sh` exits 0. Record the count from its `(N plans checked)` text at run time and record the exit code. Do not write a fixed count: the count was 93 at `e6dc5b067` and it moves with each new plan. Do not record a fail-line count, because the guard prints no such number.
   - Check: `bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112` exits 0. The PM decision of 2026-11-12 counts this single-track check as the pass.
   - Commit: `fix(measure): accept the pending marker in the guard (track_id: doctor_gate_repair_20261112)`.
 - [ ] 1.3 Green: catalog entry A8. Reword entry A8 in `measure/anti-patterns.md` so its text names the accepted marker set and the pending marker. Keep the heading `## A8 — …`. Keep the `**Guard:**` line that points at `tests/orchestrator_marker_vocabulary.sh`, because the catalog test scans that line for a live file.
   - Check: `bash tests/orchestrator_catalog.sh` exits 0, with the line `PASS: measure anti-pattern catalog exists with A1-A15`.
   - Check: `bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112` exits 0.
   - Commit: `docs(measure): state the marker set in catalog A8 (track_id: doctor_gate_repair_20261112)`.
-- [ ] 1.4 Phase check at one HEAD. Run `bash tests/orchestrator_catalog.sh`, `bash tests/orchestrator_marker_vocabulary.sh`, and `bash tests/orchestrator_marker_vocabulary_cases.sh`. Record each exit code. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`, and `measure/anti-patterns.md`. Record the result as automated.
+- [ ] 1.4 Phase check at one HEAD. Run `bash tests/orchestrator_catalog.sh`, `bash tests/orchestrator_marker_vocabulary.sh`, and `bash tests/orchestrator_marker_vocabulary_cases.sh`. Record each exit code and the printed plan count. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`, `measure/anti-patterns.md`, and files under `measure/tracks/doctor_gate_repair_20261112/`. The track plan is in the list because its own task markers changed. Record the result as automated.
 
 ## Phase 2: F421, the gate records the architecture verdict
 
 Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_gate.sh` and `doctor-gate-evidence.md`. Step 4 keeps the boundary check. The gate exit code no longer depends on it.
 
-- [ ] 2.1 Red: the doctor gate shape. Create `tests/orchestrator_doctor_gate.sh`. The test reads `measure/doctor.sh` as text and holds these facts:
-  - The three structural guard scripts run as bare gating steps.
-  - The architecture step runs `pnpm architecture:check --skip-input-snapshot-pin`.
-  - The architecture exit code goes into a variable, and the script does not exit on that code.
-  - The script prints a line with the step name and the architecture exit code.
-  - The gate record `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md` holds one line for each of the four steps, with its exit code, the verdict message, and the owner track `architecture_ci_input_pin_20261110`.
-  - Check: `bash tests/orchestrator_doctor_gate.sh`. Expect exit 1 at the base, on the missing capture and the missing record. Red is not a syntax error.
-  - Commit: `test(measure): pin the doctor gate shape (track_id: doctor_gate_repair_20261112)`, with the test file only.
-- [ ] 2.2 Green: `measure/doctor.sh`. Keep `set -euo pipefail` and the three guard steps. Run the architecture step inside a capture block: `set +e`, `pnpm architecture:check --skip-input-snapshot-pin`, `architecture_status=$?`, `set -e`. Print `ARCHITECTURE: step 4 exits <code>; the owner of the remaining drift is architecture_ci_input_pin_20261110`. Print `DOCTOR: the three structural guard steps gate this exit code`. Exit 0 when the three guard steps pass.
+- [ ] 2.1 Red: the doctor gate behavior and the gate record. Create `tests/orchestrator_doctor_gate.sh` with two parts.
+  - Part A, the gate behavior. Each case builds its own root in `<tmp>`. It writes these files: `<tmp>/measure/doctor.sh` (a copy of `measure/doctor.sh`), `<tmp>/tests/orchestrator_catalog.sh`, `<tmp>/tests/orchestrator_marker_vocabulary.sh`, and `<tmp>/tests/orchestrator_review_execution_truthfulness.sh` (stub guards that print a PASS line and exit 0), and `<tmp>/bin/pnpm` (an executable stub whose exit code the case sets). Each case runs `cd <tmp>`, `PATH=<tmp>/bin:$PATH`, `bash measure/doctor.sh 2>&1`, and captures the exit code and the output. The case name states the expected exit.
+  - Case `pnpm_exit_1_gate_exits_0`: the stubs exit 0 and the pnpm stub exits 1. Expect exit 0. The output holds `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`.
+  - Case `pnpm_exit_0_gate_exits_0`: the pnpm stub exits 0. Expect exit 0. The output holds `ARCHITECTURE: step 4 exits 0; the owner of the remaining drift is architecture_ci_input_pin_20261110`.
+  - Case `guard_failure_gate_exits_1`: the marker guard stub exits 1 and the pnpm stub exits 0. Expect exit 1. The output holds no `DOCTOR: the three structural guard steps gate this exit code`.
+  - Case `pnpm_exit_2_gate_exits_1`: the pnpm stub exits 2. Expect exit 1. The output holds `ARCHITECTURE: step 4 exits 2; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`.
+  - Case `pnpm_exit_127_gate_exits_1`: `<tmp>/bin` holds no pnpm executable, so the shell returns 127. Expect exit 1. The output holds `ARCHITECTURE: step 4 exits 127; this is a tool failure, not a boundary verdict`.
+  - Part B, the gate record. The test reads `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md`. Four lines match `^- STEP [1-4]: .+, exit [0-9]+, [0-9]{4}-[0-9]{2}-[0-9]{2}$`, one line for each step number. One line starts `- VERDICT: ARCHITECTURE: step 4 exits ` and holds `; the owner of the remaining drift is architecture_ci_input_pin_20261110`. One line holds `OWNER: architecture_ci_input_pin_20261110 owns tasks 1.4 (pin refresh) and 1.4d (debt baseline)`.
+  - Tokens the test matches: `STEP 1:`, `STEP 2:`, `STEP 3:`, `STEP 4:`, `, exit `, `VERDICT: ARCHITECTURE: step 4 exits`, and `OWNER: architecture_ci_input_pin_20261110 owns tasks 1.4 (pin refresh) and 1.4d (debt baseline)`.
+  - Expected result at the base: exit 1. Four behavior cases fail. `pnpm_exit_1_gate_exits_0` gets the gate exit 1 from `set -euo pipefail` and no ARCHITECTURE line. `pnpm_exit_0_gate_exits_0` misses the ARCHITECTURE line. `pnpm_exit_2_gate_exits_1` exits 2. `pnpm_exit_127_gate_exits_1` exits 127. `guard_failure_gate_exits_1` passes at the base. Part B fails because the record is absent. Red is not a syntax error.
+  - Check: `bash tests/orchestrator_doctor_gate.sh` exits 1 at the base, with the four named behavior cases and part B failing.
+  - Commit: `test(measure): pin the doctor gate behavior (track_id: doctor_gate_repair_20261112)`, with the test file only.
+- [ ] 2.2 Green: `measure/doctor.sh`. Keep `set -euo pipefail` and the three guard steps as bare lines. Then:
+  - Run the architecture step inside a capture block: `set +e`, `pnpm architecture:check --skip-input-snapshot-pin`, `architecture_status=$?`, `set -e`.
+  - Print one ARCHITECTURE line. For an exit code of 0 or 1, the line reads `ARCHITECTURE: step 4 exits <code>; the owner of the remaining drift is architecture_ci_input_pin_20261110`.
+  - For any other exit code (2, 127, and every code other than 0 or 1), print `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict`, then print `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`, then exit 1. A tool crash never passes the gate.
+  - For an exit code of 0 or 1, print `DOCTOR: the three structural guard steps gate this exit code` and exit 0.
   - Check: `bash tests/orchestrator_doctor_gate.sh` exits 0.
-  - Check: the full doctor run through the heavy-run prefix. Record the exit code of each of the four steps and the architecture verdict line.
+  - Check: record the seconds of step 4 from one plain local run of `time pnpm architecture:check --skip-input-snapshot-pin`. This run is a measurement, not the gate proof.
+  - Check: the full doctor run through the heavy-run prefix. Record the exit code of each of the four steps, the architecture verdict line, and the measured seconds.
+  - If the heavy run exits 124, stop the task. The orchestrator reports the stop and asks the owner for the next action.
   - Commit: `fix(measure): record the architecture verdict in doctor (track_id: doctor_gate_repair_20261112)`.
-- [ ] 2.3 Green: the gate record. Write `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md`. It holds one line for each step: the step name, the command, the exit code, and the date. It holds the architecture verdict message and the owner track `architecture_ci_input_pin_20261110`. It states that task 1.4 and task 1.4d of that track own the pin refresh and the debt baseline.
-  - Check: `bash tests/orchestrator_doctor_gate.sh` exits 0 and reports the four step lines and the owner track.
+- [ ] 2.3 Green: the gate record. Write `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md` with these lines:
+  - `- HEAD: <short-sha>` and `- DATE: <YYYY-MM-DD>`.
+  - `- STEP 1: bash tests/orchestrator_catalog.sh, exit <code>, <YYYY-MM-DD>`
+  - `- STEP 2: bash tests/orchestrator_marker_vocabulary.sh, exit <code>, <YYYY-MM-DD>`
+  - `- STEP 3: bash tests/orchestrator_review_execution_truthfulness.sh, exit <code>, <YYYY-MM-DD>`
+  - `- STEP 4: pnpm architecture:check --skip-input-snapshot-pin, exit <code>, <YYYY-MM-DD>`
+  - `- VERDICT: ARCHITECTURE: step 4 exits <code>; the owner of the remaining drift is architecture_ci_input_pin_20261110`. Copy the printed ARCHITECTURE line after the `VERDICT: ` prefix.
+  - `- DURATION: step 4 took <N> s`
+  - `- OWNER: architecture_ci_input_pin_20261110 owns tasks 1.4 (pin refresh) and 1.4d (debt baseline)`. The owner track owns the pin refresh and the debt baseline.
+  - `- DOCTOR: the three structural guard steps gate this exit code`
+  - Check: `bash tests/orchestrator_doctor_gate.sh` exits 0 and reports the four step lines, the verdict line, and the owner line.
   - Commit: `docs(measure): record the doctor gate evidence (track_id: doctor_gate_repair_20261112)`.
-- [ ] 2.4 Phase check at one HEAD. Run `bash tests/orchestrator_doctor_gate.sh` and the full doctor run through the heavy-run prefix at one HEAD. Record each exit code. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, and the track record. Record the result as automated.
+- [ ] 2.4 Phase check at one HEAD. Run `bash tests/orchestrator_doctor_gate.sh` and the full doctor run through the heavy-run prefix at one HEAD. Record each exit code and the step 4 seconds. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, and files under `measure/tracks/doctor_gate_repair_20261112/`. Record the result as automated.
 
 ## Phase 3: The gate is green on master
 
 Blast radius: the registry entry in `measure/tracks.md` and the track record. No code path changes.
 
-- [ ] 3.1 Green: the registry entry. Read `measure/tracks.md`. The entry for `doctor_gate_repair_20261112` names the status, the due date of 2026-11-14, the owner chain, finding F411, and finding F421. Correct the entry in place when a field is absent.
+- [ ] 3.1 Green: the registry status text. The entry in `measure/tracks.md` already holds the due date, the owner chain, F411, and F421, so this task makes one change: the `Status:` text moves from `new (spec and plan only; due 2026-11-14)` to `implemented (doctor gate green at <short-sha>; due 2026-11-14)`. Add no other field.
   - Check: `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` shows the link line and the status line. `bash tests/orchestrator_catalog.sh` exits 0.
   - Commit: `docs(measure): state the doctor gate track status (track_id: doctor_gate_repair_20261112)`.
-- [ ] 3.2 Reviews. Run Review A (correctness) on the diff. Run Review B (security): the gate must not hide a real failure, and the guard must not accept a marker that hides work. Review C records "not applicable", because no route and no UI change. Record the review result files in the track folder.
+- [ ] 3.2 Reviews. Run Review A (correctness) on the diff. Run Review B (security): the gate must not hide a real failure, and the guard must not accept a marker that hides work. Review C records "not applicable", because no route and no UI change. Each result file goes in `measure/runs/doctor_gate_repair_20261112/` with the role and the short HEAD: `review-a-<short-head>.json`, `review-b-<short-head>.json`, and `review-c-<short-head>.json`.
   - Check: each review result file names a verdict and its findings.
 - [ ] 3.3 Phase acceptance at an immutable HEAD. Record `git rev-parse HEAD` and the review verdicts. No Critical or High finding stays open.
 - [ ] 3.4 Final task: the doctor gate exits 0 on master. Run the full doctor command through the heavy-run prefix at one HEAD:
   `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'`
-  - Check: the exit code is 0. The output holds the step 1 PASS line, no `FAIL: deprecated [ ] markers` line, the step 3 PASS line, the architecture verdict line, and the `DOCTOR:` line. Record `git rev-parse HEAD`, the four step exit codes, and the architecture verdict message in `doctor-gate-evidence.md`.
+  - Check: the exit code is 0. The output holds the step 1 PASS line, no `FAIL: unsupported task marker` line, the step 3 PASS line, the architecture verdict line, and the `DOCTOR:` line. Record `git rev-parse HEAD`, the four step exit codes, the architecture verdict message, and the step 4 seconds in `doctor-gate-evidence.md`.
+  - If the run exits 124, stop the task. The orchestrator reports the stop and asks the owner for the next action.
   - Evidence class: automated.
+  - Commit: `docs(measure): record the doctor gate run (track_id: doctor_gate_repair_20261112)`, with this track folder.
 
 ## Verification commands
 
@@ -93,6 +121,8 @@ The full gate, through the heavy-run prefix:
 ```bash
 HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'
 ```
+
+The full gate records the four step exit codes and the step 4 seconds. Exit 124 stops the task. The orchestrator then asks the owner for the next action.
 
 ## Out of scope
 
