@@ -3,5 +3,5 @@
   "type": "fix",
   "status": "in_progress",
   "created_at": "2026-11-12",
-  "description": "Extend Primary class sign-in codes to six hours and deploy."
+  "description": "Extend Primary class sign-in codes to six hours, restore automatic push deployment and latest-revision traffic, and deploy to production."
 }

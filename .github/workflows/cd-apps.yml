@@ -1,7 +1,7 @@
-name: CD — gated apps
+name: CD — apps
 
-# A push builds a new revision of each affected gated app with no traffic and a tag.
-# A person starts the traffic files by hand. No job here moves traffic.
+# Primary deploys live after its database checks. Other gated apps keep their
+# separate manual traffic step. This workflow selects only affected apps.
 on:
   push:
     branches:
@@ -51,7 +51,7 @@ jobs:
             const ids = JSON.parse(process.env.AFFECTED_IDS);
             const rows = JSON.parse(readFileSync("scripts/ci/apps.json", "utf8"));
             const hit = (row) => ids.includes(row.id);
-            const www = rows.some((row) => row.mode === "direct" && hit(row));
+            const www = rows.some((row) => row.id === "www-reading-advantage" && row.mode === "direct" && hit(row));
             // A push file may declare a REQUIRED_ default for _RELEASE_COMMIT_SHA. The job passes the
             // pushed commit only when that is the one such default in the file (other defaults would
             // still fail the build, and Cloud Build refuses a substitution that the file does not declare).
@@ -63,7 +63,7 @@ jobs:
               return only ? "--substitutions=_RELEASE_COMMIT_SHA=" + process.env.HEAD_SHA : "";
             };
             const matrix = rows
-              .filter((row) => row.mode === "gated" && hit(row))
+              .filter((row) => row.id !== "www-reading-advantage" && ["direct", "gated"].includes(row.mode) && hit(row))
               .map(({ id, service, project, cloudbuild }) => ({
                 id,
                 service,
@@ -82,10 +82,13 @@ jobs:
           ' >> "$GITHUB_OUTPUT"
 
   build:
-    name: Build ${{ matrix.id }} with no traffic
+    name: Build and deploy ${{ matrix.id }}
     needs: select
     if: needs.select.outputs.matrix != '[]'
     runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-${{ matrix.id }}
+      cancel-in-progress: false
     strategy:
       fail-fast: false
       matrix:

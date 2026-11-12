@@ -19,7 +19,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { delimiter, dirname, join } from "node:path";
 import { parse } from "yaml";
 import {
   ROOT,
@@ -417,7 +417,7 @@ export function runSelect(name, repo, base, head) {
     HEAD_SHA: head,
     GITHUB_OUTPUT: output,
     GCLOUD_LOG: gcloudLog,
-    PATH: `${bin}:${process.env.PATH ?? ""}`,
+    PATH: `${bin}${delimiter}${process.env.PATH ?? ""}`,
   };
   const result = spawnSync("bash", ["-e", script], {
     cwd: repo,

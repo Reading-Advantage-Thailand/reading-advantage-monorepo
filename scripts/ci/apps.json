@@ -16,10 +16,8 @@
     "project": "primary-advantage",
     "region": "asia-southeast1",
     "cloudbuild": "apps/primary-advantage/cloudbuild.yaml",
-    "mode": "gated",
-    "tagPrefix": "pa",
-    "tag": "pa-${BUILD_ID:0:8}",
-    "tagLength": 11
+    "mode": "direct",
+    "tagPrefix": ""
   },
   {
     "id": "storytime",

@@ -59,10 +59,8 @@ export const TABLE_ROWS = [
     project: "primary-advantage",
     region: "asia-southeast1",
     cloudbuild: "apps/primary-advantage/cloudbuild.yaml",
-    mode: "gated",
-    tagPrefix: "pa",
-    tag: "pa-${BUILD_ID:0:8}",
-    tagLength: 11,
+    mode: "direct",
+    tagPrefix: "",
   },
   {
     id: "storytime",
@@ -506,7 +504,7 @@ export function workspaceManifestPaths() {
     if (!existsSync(folder)) continue;
     for (const entry of readdirSync(folder, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;
-      const manifest = join(...parts.slice(0, -1), entry.name, "package.json");
+      const manifest = [...parts.slice(0, -1), entry.name, "package.json"].join("/");
       if (existsSync(join(ROOT, manifest))) paths.push(manifest);
     }
   }

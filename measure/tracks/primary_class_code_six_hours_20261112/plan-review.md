@@ -7,3 +7,11 @@ locale JSON parsing, and diff whitespace check passed.
 
 The owning constant covers Start class and New code. End class remains immediate.
 Existing database expiry rows and the separate student session policy are unchanged.
+
+## Automatic release restoration
+
+Independent runtime review found no Critical, High, Medium, or Low issues. The
+Primary database guard, migration, doctor0074, V2secret and proxy remain intact;
+`--to-latest` follows a successful deployment. Primary stays selected in the app
+matrix, WWW selection remains specific to WWW, and per-app concurrency preserves
+an active deployment. Other app configs and the manual fallback are unchanged.
