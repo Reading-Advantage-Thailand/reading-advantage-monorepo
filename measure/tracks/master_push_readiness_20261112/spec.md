@@ -50,7 +50,9 @@ In each run, only the codecamp-advantage matrix job fails. It fails at the step 
 
 Build step 4 has the id `configure-review-worker-scheduler` (`apps/codecamp-advantage/cloudbuild.yaml` lines 53 to 62). It runs `apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh`. The scheduler job `codecamp-review-worker-tick` does not exist in `asia-southeast1`, so the script takes the create branch. The create call fails with this error:
 
-`ERROR: (gcloud.scheduler.jobs.create.http) PERMISSION_DENIED: The principal (user or service account) lacks IAM permission "cloudscheduler.jobs.create" for the resource "projects/reading-advantage/locations/asia-southeast1" (or the resource may not exist). This command is authenticated as` the Cloud Build service account.
+`ERROR: (gcloud.scheduler.jobs.create.http) PERMISSION_DENIED: The principal (user or service account) lacks IAM permission "cloudscheduler.jobs.create" for the resource "projects/reading-advantage/locations/asia-southeast1" (or the resource may not exist). This command is authenticated as`
+
+The build log names the Cloud Build service account of project `reading-advantage` as that principal. The same account runs the steps of the manual traffic build, because no traffic file sets `options.serviceAccount`.
 
 Steps 0 to 3 pass. The candidate revision `codecamp-advantage-00016-qoc` sits on the tag `sso-candidate` with 0 % traffic. Live traffic (100 %) stays on `codecamp-advantage-00010-ts6`.
 
@@ -68,7 +70,8 @@ Decision D7 of `per_app_cicd_20261107` keeps live-changing steps in the traffic 
 ### 2.5 Files that read the affected build files
 
 - `apps/codecamp-advantage/lib/__tests__/review-worker-deployment-contract.test.ts`: the test "binds the route token from the canonical Secret Manager secret" reads `cloudbuild.yaml` for the `availableSecrets` entry of the tick token.
-- `scripts/ci/__tests__/cloudbuild-files.test.mjs`: cases F-11 and F-16 list the codecamp traffic steps `migrate-db`, `doctor-check`, and `update-traffic`.
+- `scripts/ci/__tests__/cloudbuild-files.test.mjs`: cases F-11 and F-16 list the codecamp traffic steps `migrate-db`, `doctor-check`, and `update-traffic`. The helper `ordered` in `scripts/ci/__tests__/helpers/plan.mjs` requires `update-traffic` as the last step of a traffic file. Line 17 of `docs/runbooks/traffic-moves.md` and AC-2.12 of `measure/archive/per_app_cicd_20261107` state the same rule.
+- `packages/db/src/__tests__/deploy-gate-contract.test.ts`, `packages/db/src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts`, and `apps/accounts/scripts/production-readiness.test.ts` also read the codecamp push file or the traffic file.
 - `docs/runbooks/traffic-moves.md`: the codecamp section (line 198 and later) is checked by F-16.
 
 ### 2.6 Interface with an active track
@@ -82,6 +85,8 @@ Commit `fd6a99142` of the track `accounting_drive_intake_20261109` (A-52) adds t
 - (a) The step `schedule-intake-job` needs the same scheduler permission for the Cloud Build service account. Without the grant, the accounting job of `cd-apps` fails at that step after the first push of master.
 - (b) The step runs only `jobs create`. A second push fails when the job exists.
 - (c) These two points belong to A-52. The orchestrator gives them to the A-52 Phase 3 reviews. This track does not edit accounting files.
+- (d) Review A of A-52 Phase 3 holds this risk as finding F301 (`measure/runs/accounting_drive_intake_20261109/review-a-p3-05ae3b335.json`). Its default moves the accounting job and scheduler steps to a manual file.
+- (e) Plan task 1.9 checks the state of this risk before the deploy word list goes to Daniel.
 
 ## 3. Decisions
 
@@ -89,7 +94,7 @@ Commit `fd6a99142` of the track `accounting_drive_intake_20261109` (A-52) adds t
 
 - Remove the step `configure-review-worker-scheduler` and its `availableSecrets` entry from `apps/codecamp-advantage/cloudbuild.yaml`.
 - Keep `REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest` in the `--set-secrets` of the push deploy, because the runtime needs it.
-- Add the step to `apps/codecamp-advantage/cloudbuild-traffic.yaml` after `update-traffic`, with the secret in that file's `availableSecrets`. Keep `bind-release-source` first.
+- Add the step to `apps/codecamp-advantage/cloudbuild-traffic.yaml` directly before `update-traffic`, after `doctor-check`, with the secret in that file's `availableSecrets`. Keep `bind-release-source` first. The traffic move stays the last step.
 - Update the contract test to read the traffic file for the step and the secret.
 - Update F-11 and F-16 for the new step. Add a check that the push file `apps/codecamp-advantage/cloudbuild.yaml` does not call `gcloud scheduler`.
 - Update the codecamp section of `docs/runbooks/traffic-moves.md`: name the step and its IAM precondition.
@@ -112,15 +117,15 @@ The PM decision 3 says the Primary failures are not a push blocker, because live
 
 ### FR-1 The push file holds no scheduler step
 
-After the change, `apps/codecamp-advantage/cloudbuild.yaml` holds no step with the id `configure-review-worker-scheduler`, no `secretEnv`, and no `availableSecrets` entry for the tick token. The `--set-secrets` list of `deploy-cloudrun` keeps `REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest`.
+After the change, `apps/codecamp-advantage/cloudbuild.yaml` holds no step with the id `configure-review-worker-scheduler`, no `secretEnv`, and no `availableSecrets` entry for the tick token. The `--set-secrets` list of `deploy-cloudrun` keeps `REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest`. Case F-21 fails when the push file holds a `secretEnv` entry or an `availableSecrets` entry for `CODECAMP_REVIEW_WORKER_TICK_TOKEN`, and it keeps the `--set-secrets` entry checked.
 
 ### FR-2 The traffic file holds the scheduler step
 
-`apps/codecamp-advantage/cloudbuild-traffic.yaml` holds the step `configure-review-worker-scheduler` after `update-traffic`. `bind-release-source` stays the first step. The step runs the existing script with `PROJECT_ID` and the secret `CODECAMP_REVIEW_WORKER_TICK_TOKEN`. The file's `availableSecrets` holds the entry for that secret next to the database URL entry.
+`apps/codecamp-advantage/cloudbuild-traffic.yaml` holds the step `configure-review-worker-scheduler` directly before `update-traffic`, after `doctor-check`. `bind-release-source` stays the first step, and `update-traffic` stays the last step. The helper `ordered`, the runbook rule at line 17, and AC-2.12 of `per_app_cicd_20261107` stay unchanged. The order line of the file header and of the runbook is: "Order: release source bind, migrate, doctor check, review worker scheduler, traffic move." The step runs the existing script with `PROJECT_ID` and the secret `CODECAMP_REVIEW_WORKER_TICK_TOKEN`. The file's `availableSecrets` holds the entry for that secret next to the database URL entry.
 
 ### FR-3 The codecamp push file calls no gcloud scheduler
 
-A test fails when `apps/codecamp-advantage/cloudbuild.yaml` calls `gcloud scheduler`, or runs a script that calls it. The test names the offending file in its message. The check covers that one file only, because the A-52 step `schedule-intake-job` in `apps/accounting/cloudbuild.yaml` is part of the A-52 design (section 2.7).
+A test fails when `apps/codecamp-advantage/cloudbuild.yaml` calls `gcloud scheduler`, or runs a script that calls it. The case has the id F-20. It reads the file, resolves each script path that a step runs to the repository file, and fails when the step text or that script file holds `gcloud scheduler`. The helper sits in `scripts/ci/__tests__/helpers/plan.mjs`. A fixture case with an inline YAML string and an inline script text proves that the check fails. The test names the offending file in its message. The check covers that one file only, because the A-52 step `schedule-intake-job` in `apps/accounting/cloudbuild.yaml` is part of the A-52 design (section 2.7).
 
 ### FR-4 The contract test follows the move
 
@@ -128,7 +133,7 @@ A test fails when `apps/codecamp-advantage/cloudbuild.yaml` calls `gcloud schedu
 
 ### FR-5 The cloudbuild file test follows the move
 
-Cases F-11 and F-16 of `scripts/ci/__tests__/cloudbuild-files.test.mjs` list the new codecamp step. Each case still checks the order, with `update-traffic` before the scheduler step and `bind-release-source` first.
+Cases F-11 and F-16 of `scripts/ci/__tests__/cloudbuild-files.test.mjs` list the new codecamp step. The codecamp steps read `migrate-db`, `doctor-check`, `configure-review-worker-scheduler`, `update-traffic`. Each case still checks the order, with `bind-release-source` first and `update-traffic` last.
 
 ### FR-6 The runbook names the step and its precondition
 
@@ -157,7 +162,7 @@ Task 2.0 lists each failing test and each suite that does not load, by file and 
 ## 6. Acceptance criteria
 
 1. **AC-1.** The contract test `review-worker-deployment-contract.test.ts` passes.
-2. **AC-2.** `scripts/ci/__tests__/cloudbuild-files.test.mjs` passes, with F-11 and F-16 listing the new step.
+2. **AC-2.** `scripts/ci/__tests__/cloudbuild-files.test.mjs` passes, with F-11 and F-16 listing the new step, and with the new cases F-20 and F-21.
 3. **AC-3.** The new FR-3 check passes, and it fails on a fixture push file that calls `gcloud scheduler`.
 4. **AC-4.** `grep -n "gcloud scheduler" apps/codecamp-advantage/cloudbuild.yaml` prints no line.
 5. **AC-5.** The runbook section of FR-6 holds the step name and the three permissions.
@@ -177,5 +182,5 @@ Task 2.0 lists each failing test and each suite that does not load, by file and 
 Each item has a default. The track proceeds with the default unless the PM says otherwise.
 
 - **OQ-1, option A or option B.** Default: option B (D-1). The PM can choose option A (D-2).
-- **OQ-2, the order of the scheduler step.** Default: after `update-traffic`, so the live host serves the new revision before the job calls it.
+- **OQ-2, the order of the scheduler step.** Default: directly before `update-traffic`, after `doctor-check`. Reason: the traffic move must stay the last step (helper `ordered`, runbook line 17, AC-2.12 of `per_app_cicd_20261107`). The scheduler then calls the live host for a few seconds before the traffic move, in a one-time manual run. The review of round 1 finding F6 (the general runbook rule) drops, because line 17 stays true.
 - **OQ-3, the Phase 2 start.** Default: Phase 2 starts after the deploy word list of the push goes to Daniel.

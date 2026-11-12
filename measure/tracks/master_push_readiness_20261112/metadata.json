@@ -31,6 +31,7 @@
       "apps/codecamp-advantage/cloudbuild-traffic.yaml",
       "apps/codecamp-advantage/lib/__tests__/review-worker-deployment-contract.test.ts",
       "scripts/ci/__tests__/cloudbuild-files.test.mjs",
+      "scripts/ci/__tests__/helpers/plan.mjs",
       "docs/runbooks/traffic-moves.md",
       "measure/tracks/master_push_readiness_20261112",
       "measure/tracks.md"
