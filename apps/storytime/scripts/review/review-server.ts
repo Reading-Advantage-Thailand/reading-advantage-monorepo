@@ -167,6 +167,7 @@ export function renderReviewPage(): string {
   <body>
     <h1>Storytime milestone review</h1>
     <p class="note">Open each item, then press Pass or Fail, write a comment, and press Send.</p>
+    <p class="signin" data-review-signin-all>Sign in once at /th/sign-in with the teacher account that the orchestrator gives: one sign-in opens all five items.</p>
     <main>
       ${blocks}
     </main>
