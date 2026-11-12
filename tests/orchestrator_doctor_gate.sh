@@ -218,8 +218,11 @@ case_tsx_exit_1_gate_exits_0() {
   fi
 }
 
-# Case tsx_exit_0_gate_exits_0: a boundary verdict of 0 does not gate.
+# Case tsx_exit_0_gate_exits_0: a boundary verdict of 0 does not gate. The
+# case calls reset_tsx first, so the stub prints no verdict line on either
+# stream and the case proves that an exit 0 with no verdict line still exits 0.
 case_tsx_exit_0_gate_exits_0() {
+  reset_tsx
   write_all_guards 0
   write_stub_tsx 0
   run_gate
@@ -604,16 +607,36 @@ case_step4_cd_fails_gate_exits_1() {
 
 # Case tsx_exit_1_verdict_line_gate_exits_0: the positive control. The stub
 # exits 1 and prints three lines on stdout. The verdict line sits in the
-# middle. The gate exit is 0.
+# middle. The loop runs two valid verdict lines with different counts, so a
+# pattern that hard-codes one count set fails. The gate exit is 0 for each.
 case_tsx_exit_1_verdict_line_gate_exits_0() {
-  write_all_guards 0
-  reset_tsx
-  write_stub_tsx 1
-  export DOCTOR_GATE_TSX_STDOUT="build output line
+  local fixtures=(
+    "build output line
 ${VERDICT_LINE}
 architecture policy: v2 (status=ok, default=deny)"
-  run_gate
-  assert_boundary_lines 'ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110'
+    "architecture check: debt-change (files=1200, findings=17, parseErrors=2)"
+  )
+  local fixtures_checked=0
+  if [ "${#fixtures[@]}" -ne 2 ]; then
+    case_fail_reason="fixtures_checked=${#fixtures[@]} expected=2"
+    return
+  fi
+  local fixture
+  for fixture in "${fixtures[@]}"; do
+    reset_tsx
+    write_all_guards 0
+    write_stub_tsx 1
+    export DOCTOR_GATE_TSX_STDOUT="$fixture"
+    run_gate
+    fixtures_checked=$((fixtures_checked + 1))
+    if ! assert_boundary_lines 'ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110'; then
+      case_fail_reason="fixture_index=${fixtures_checked}: ${case_fail_reason}"
+      return
+    fi
+  done
+  if [ "$fixtures_checked" -ne 2 ]; then
+    case_fail_reason="fixtures_checked=${fixtures_checked} expected=2"
+  fi
 }
 
 # Case tsx_exit_1_verdict_in_longer_line_gate_exits_1: the verdict line must
