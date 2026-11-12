@@ -79,7 +79,7 @@ Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 5
     - `git diff --name-only 088efb891..HEAD`: `measure/anti-patterns.md`, `measure/tracks/doctor_gate_repair_20261112/plan.md`, `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`. The list matches the allowed set.
     - Phase 1 accepted at 247330b27 (phase acceptance r1 pass, MiniMax M3.1 Flash); reviews A and B pass; adversarial 18 of 18 mutants killed; Review C and UX browser review not applicable.
 
-## Phase 2: F421, the gate records the architecture verdict
+## Phase 2: F421, the gate records the architecture verdict [checkpoint: 5293392b8]
 
 PM decision of 2026-11-12, quoted word for word: "1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision." Task 2.5 applies it.
 
@@ -233,17 +233,40 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
     - Finding F204 (Review A): FIX. Task 2.4 holds a correction note. The new saved logs are at `bbe5e5860`.
     - Finding F205 (Review A): DECLINE. The spec pins the owner text for exit 0 (Nit).
     - Finding F251 (Review B): FIX. The gate reads the real CLI exit, so a tool failure exits 1.
-    - Residual risk: the CLI contract gives exit 1 for a boundary failure. A failure of the `cd` in the step 4 command, or an uncaught Node exception, also gives exit 1, and the gate records it as a boundary verdict. FR-3 pins the command text, so this task does not change it.
+    - Residual risk: the CLI contract gives exit 1 for a boundary failure. A failure of the `cd` in the step 4 command, or an uncaught Node exception, also gives exit 1, and the gate records it as a boundary verdict. FR-3 pins the command text, so this task does not change it. The PM decision of 2026-11-12 moves the fix to Phase 3, tasks 3.0a and 3.0b.
+
+Phase 2 acceptance note, 2026-11-12:
+
+- Result file: `measure/runs/doctor_gate_repair_20261112/phase-acceptance-p2-5293392b8.json`.
+- Route: `nvidia/stepfun-ai/step-5-preview#high`. Status: pass. Audited head: `5293392b8beda8b72cb6de59cf9f6a145df0b5c2`.
+- Gate line: "PASS: phase-acceptance gate passed".
+- Reviews A and B r2 pass at `af66a6d66`. The adversarial run passes. It kills 28 of 29 mutants. The survivor `m-x` dies under the case `drift_match_requires_whole_line` in `5293392b8`.
+- Open item F207 moves to Phase 3 by the PM decision of 2026-11-12. Open item F208 is fixed in this spec edit.
 
 ## Phase 3: The gate is green on master
 
-Blast radius: the registry entry in `measure/tracks.md` and the track record. No code path changes.
+Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the registry entry in `measure/tracks.md`, and the track record. Tasks 3.0a and 3.0b change the exit 1 rule of `measure/doctor.sh`. The other tasks change no code path.
 
+- [ ] 3.0a Red: the exit 1 verdict rule. Add the cases to `tests/orchestrator_doctor_gate.sh` part A.
+  - Case 1: the stub CLI exits 1 and prints no verdict line. Expect gate exit 1. The output holds `ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`.
+  - Case 2, the m-cd case: the `cd` of the step 4 command fails in the scratch root. Expect gate exit 1. The output holds the two tool-failure lines.
+  - Case 3, the positive control: the stub exits 1 and prints a whole verdict line. Expect gate exit 0. The output holds `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`.
+  - Cases 1 and 2 fail at the base. Case 3 passes at the base. The base maps every exit 1 to a boundary verdict.
+  - Red command: `bash tests/orchestrator_doctor_gate.sh --part a`. It must exit 1 at the base.
+  - Commit: `test(measure): pin the doctor exit 1 verdict rule (track_id: doctor_gate_repair_20261112)`.
+- [ ] 3.0b Green: the exit 1 rule of `measure/doctor.sh`.
+  - Count exit 1 as a boundary verdict only when the step 4 output holds the verdict line. Match that line as a whole line, in the same kind as the `grep -qxF` match of the drift rule, with a pattern that holds the counts: `architecture check: [^ ]+ \(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\)`.
+  - Change no other rule. The exit 0 rule, the exit 2 rules, and the printed text of every rule stay as FR-3 states.
+  - Check: `bash tests/orchestrator_doctor_gate.sh` exits 0.
+  - Check: `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0.
+  - Check: `bash tests/orchestrator_catalog.sh` exits 0.
+  - Commit: `fix(measure): count doctor exit 1 only with the verdict line (track_id: doctor_gate_repair_20261112)`.
 - [ ] 3.1 Green: the registry status text. The entry in `measure/tracks.md` already holds the due date, the owner chain, F411, and F421, so this task makes one change: the `Status:` text moves from `new (spec and plan only; due 2026-11-14)` to `implemented (doctor gate green at <short-sha>; due 2026-11-14)`. Add no other field.
   - Check: `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` shows the link line and the status line. `bash tests/orchestrator_catalog.sh` exits 0.
   - Commit: `docs(measure): state the doctor gate track status (track_id: doctor_gate_repair_20261112)`.
-- [ ] 3.2 Reviews. Run Review A (correctness) on the diff. Run Review B (security): the gate must not hide a real failure, and the guard must not accept a marker that hides work. Review C records "not applicable", because no route and no UI change. Each result file goes in `measure/runs/doctor_gate_repair_20261112/` with the role and the short HEAD: `review-a-<short-head>.json`, `review-b-<short-head>.json`, and `review-c-<short-head>.json`.
+- [ ] 3.2 Reviews. Run Review A (correctness) on the diff. Run Review B (security): the gate must not hide a real failure, and the guard must not accept a marker that hides work. Review C records "not applicable", because no route and no UI change. Run adversarial testing for the exit 1 rule, because tasks 3.0a and 3.0b change a script with a boolean outcome. Each result file goes in `measure/runs/doctor_gate_repair_20261112/` with the role and the short HEAD: `review-a-<short-head>.json`, `review-b-<short-head>.json`, `review-c-<short-head>.json`, and `adversarial-p3-<short-head>.json`.
   - Check: each review result file names a verdict and its findings.
+  - Check: the adversarial result file names the mutants of the exit 1 rule and the case that kills each one.
 - [ ] 3.3 Phase acceptance at an immutable HEAD. Record `git rev-parse HEAD` and the review verdicts. No Critical or High finding stays open.
 - [ ] 3.4 Final task: the doctor gate exits 0 on master. Run the full doctor command through the heavy-run prefix at one HEAD:
   `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'`
