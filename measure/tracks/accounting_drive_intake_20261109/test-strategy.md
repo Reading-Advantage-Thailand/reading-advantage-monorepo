@@ -417,6 +417,13 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 - A bundle outfile that differs from the `COPY` source path. Rejected.
 - A job step that puts a secret reference in `--set-env-vars`. Rejected.
 
+**Voucher file name cases (PM-16, 2026-11-12)**
+
+- A file named `ใบสำคัญจ่าย 2026-11.xlsx` with the `.xlsx` MIME type passes the name rule and writes one intake row with the month 2026-11.
+- The type of that row comes from the MIME type and the worksheet layout, not from the name.
+- A file named `ใบสำคัญจ่าย 2026-13.xlsx` is skipped and writes no intake row and one count log line.
+- A poll that calls the extraction port for an `.xlsx` voucher. Rejected.
+
 **Labeled counts and floors**
 
 `acceptance_rows>=14`, `duplicate_passes=2`, `scan_cap_default=500`, `lease_cases>=4`, `dry_start_cases=1`, `image_assertions>=12`, `stage_names=5`, `package_deps_added=3`, `job_secrets=7`, `job_env_vars=4`, `scheduler_grant_steps=0`.

@@ -311,9 +311,10 @@ the owner.
 1. A scheduled poll lists the Drive intake folder. The poll is not in a request
    path.
 2. The poll filters the files. A file passes only when its name matches
-   `YYYY-MM_<document-type>_<counterparty>.<ext>`, its type is one of the accepted
-   types of section 6, and its size is inside the limit (section 5.7). A file in a
-   customer folder passes without the naming rule (section 9).
+   `YYYY-MM_<document-type>_<counterparty>.<ext>` or the voucher name of section
+   5.7, its type is one of the accepted types of section 6, and its size is
+   inside the limit (section 5.7). A file in a customer folder passes without the
+   naming rule (section 9).
 3. Each new file becomes one pending submission. The Drive file id is the
    idempotency key. A voucher workbook gives one submission for each voucher
    worksheet (section 8, note 2).
@@ -500,6 +501,15 @@ run: the number of skipped files. The count line holds no file name, no payee,
 no amount, and no Drive id. A file outside a customer folder passes the filter
 only when the name matches the rule and the type is one of the accepted types of
 section 6.
+
+**The voucher file name (PM-16, 2026-11-12).** The PM note of 2026-11-12 says:
+"PM → Monorepo (note for A-52 Phase 3, no reply needed): the voucher file name for the Drive intake is `ใบสำคัญจ่าย YYYY-MM.xlsx`, the name of the 10 history files (structure report row payment_voucher_xlsx). PR writes it into the SOP. Accept that name pattern in the poll tests; classification stays by MIME and worksheet layout."
+
+A file name that matches `ใบสำคัญจ่าย YYYY-MM.xlsx` is accepted. The name has
+one space after the Thai word, a four-digit year, a two-digit month from 01 to
+12, and the extension `.xlsx`. The month of that name is `YYYY-MM`. The name sets
+no document type. The type comes from the MIME type and the worksheet layout.
+Every other name keeps the rule above.
 
 **The `parsed` status.** A row moves from `pending` to `parsed` when the read
 succeeds and the draft passes its schema. The read is a local text read, a local
@@ -779,6 +789,11 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
 - **File naming rule.** `YYYY-MM_<document-type>_<counterparty>.<ext>`. Use
   lowercase words and hyphens. Use no spaces. Use at most 120 characters. Put no
   amount in the name. Example: `2026-11_tax-invoice_google-cloud.pdf`.
+- **A voucher file name.** `ใบสำคัญจ่าย YYYY-MM.xlsx`. The name has one space
+  after the Thai word, a four-digit year, a two-digit month from 01 to 12, and the
+  extension `.xlsx`. The month of that name is `YYYY-MM`. The name sets no
+  document type. The type comes from the MIME type and the worksheet layout
+  (PM-16, 2026-11-12).
 - **Accepted types.** PDF, JPEG, PNG, the `.xlsx` workbook, and the school invoice
   Google Sheet. The document types are those of section 6: payment voucher
   (workbook or payslip PDF), Google Cloud and Workspace tax invoice, payment
@@ -813,7 +828,7 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
   content-duplicate row have no submission of their own, so they appear in the
   intake list and not in the submission lists. The OWNER and the ACCOUNTANT see
   every intake row.
-- **A file with a name that does not match the rule.** The poll skips it. The
+- **A file with a name that matches neither name rule.** The poll skips it. The
   app shows no row for it, and the run logs one count line with no file name.
   Fix the name and upload the file again.
 - **The 2026 history.** The files from January to October 2026 come into the app
@@ -1228,10 +1243,10 @@ Each criterion has an automated test that can falsify it.
     close.
 20. Given the four accounting tables, when a test reads the tenant registry,
     then every new table is classified and `tenant-coverage.test.ts` passes.
-21. Given a file whose name does not match
-    `YYYY-MM_<document-type>_<counterparty>.<ext>`, when the poll runs, then it
-    writes no intake row and no submission row, and it logs one count line with
-    no file name, no amount, and no Drive id.
+21. Given a file whose name matches neither
+    `YYYY-MM_<document-type>_<counterparty>.<ext>` nor `ใบสำคัญจ่าย YYYY-MM.xlsx`,
+    when the poll runs, then it writes no intake row and no submission row, and it
+    logs one count line with no file name, no amount, and no Drive id.
 22. Given a row in status `pending` that a read completes, when the draft passes
     its schema, then the row moves to `parsed` and keeps its `submission_id` and
     its `extraction` marker. A row never moves from `parsed` to `pending`.
@@ -1343,6 +1358,13 @@ Each criterion has an automated test that can falsify it.
     (PM-15).
 46. Given any intake run, when a test reads the log lines, then they hold no raw
     file name (G13).
+47. Given a file named `ใบสำคัญจ่าย 2026-11.xlsx` with the `.xlsx` MIME type, when
+    the poll runs, then the file passes the name rule and writes one intake row
+    with the month 2026-11, and the type of that row comes from the MIME type and
+    the worksheet layout and not from the name. Given a file named
+    `ใบสำคัญจ่าย 2026-13.xlsx`, when the poll runs, then the file is skipped and
+    it writes no intake row and one count log line, because 13 is not a month
+    (PM-16).
 
 ## 13. Out of scope
 
@@ -1367,7 +1389,7 @@ Each criterion has an automated test that can falsify it.
 - The creation of the bank statement password secret. Daniel does it once at setup
   (`deferred:daniel`, PM-13).
 
-## 14. PM decisions of 2026-11-09 and 2026-11-11, and open items
+## 14. PM decisions of 2026-11-09, 2026-11-11, and 2026-11-12, and open items
 
 ### 14.1 PM decisions of 2026-11-09 (DECIDED)
 
@@ -1712,7 +1734,8 @@ stops for no item in this list.
   Default: 20 MB per file.
 - **Q7. What is the file naming rule?**
   Default: `YYYY-MM_<document-type>_<counterparty>.<ext>`, lowercase, hyphens,
-  no spaces, at most 120 characters, no amount in the name.
+  no spaces, at most 120 characters, no amount in the name. A voucher file uses
+  the second name `ใบสำคัญจ่าย YYYY-MM.xlsx` (PM-16, 2026-11-12).
 - **Q8. Which Vertex model reads the documents?**
   Default: a Gemini model on Vertex AI in project `reading-advantage`. The model
   id comes from the environment variable `ACCOUNTING_EXTRACTION_MODEL`. The
@@ -1864,6 +1887,19 @@ each change is stated at its place in the spec:
   close tasks of Phase 2, and `test-strategy.md`, do not yet name the new type
   keys, the `document` source, the eighth secret, the customer folder, the review
   list, or the close notes. The PM check and the spec review decide that work.
+
+### 14.5 PM decision of 2026-11-12 (DECIDED)
+
+The PM sent one note for the Drive intake. The note is binding. A quote is exact.
+
+- **PM-16 (the voucher file name). DECIDED (PM, 2026-11-12).** "PM → Monorepo (note for A-52 Phase 3, no reply needed): the voucher file name for the Drive intake is `ใบสำคัญจ่าย YYYY-MM.xlsx`, the name of the 10 history files (structure report row payment_voucher_xlsx). PR writes it into the SOP. Accept that name pattern in the poll tests; classification stays by MIME and worksheet layout."
+
+**Effect on earlier rules.**
+
+- PM-16 adds a second accepted file name. The rule of section 5.7 and criterion 21 keeps its text for every other name.
+- The month of a voucher name is `YYYY-MM`. The name sets no document type. The type comes from the MIME type and the worksheet layout (sections 6 and 8).
+- The 10 history files carry that name. The history mode does not apply the filter of section 5.7, so the rule changes no history row (section 9a).
+- The SOP of section 9 holds the name, and the poll tests of plan task 3.1 hold the cases.
 
 ## 15. Deferred tasks
 
