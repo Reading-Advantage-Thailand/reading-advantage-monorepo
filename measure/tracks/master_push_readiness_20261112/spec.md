@@ -75,6 +75,14 @@ Decision D7 of `per_app_cicd_20261107` keeps live-changing steps in the traffic 
 
 The track `codecamp_pr_review_recovery_20260820` owns `apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh` and the contract test. Its Phase 4 production verification waits for the deploy. This track edits the contract test only to move its file reference. It does not edit the script, and it does not edit the plan of that track. The Monorepo orchestrator tells the owner of that track about the change when the Green task ends.
 
+### 2.7 Interface with the accounting push file (A-52)
+
+Commit `fd6a99142` of the track `accounting_drive_intake_20261109` (A-52) adds two steps to `apps/accounting/cloudbuild.yaml`: `deploy-intake-job` (`gcloud run jobs deploy accounting-intake-poll`) and `schedule-intake-job` (`gcloud scheduler jobs create http accounting-intake-poll`). The A-52 spec asks for them (decisions D-12 and D-20, acceptance row 38). The PM deploy list of the push names "the intake job and the scheduler start" for accounting. The accounting build runs in project `reading-advantage` (`scripts/ci/apps.json`). Three facts follow:
+
+- (a) The step `schedule-intake-job` needs the same scheduler permission for the Cloud Build service account. Without the grant, the accounting job of `cd-apps` fails at that step after the first push of master.
+- (b) The step runs only `jobs create`. A second push fails when the job exists.
+- (c) These two points belong to A-52. The orchestrator gives them to the A-52 Phase 3 reviews. This track does not edit accounting files.
+
 ## 3. Decisions
 
 ### D-1 Default: option B, move the scheduler step to the traffic file
@@ -83,7 +91,7 @@ The track `codecamp_pr_review_recovery_20260820` owns `apps/codecamp-advantage/s
 - Keep `REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest` in the `--set-secrets` of the push deploy, because the runtime needs it.
 - Add the step to `apps/codecamp-advantage/cloudbuild-traffic.yaml` after `update-traffic`, with the secret in that file's `availableSecrets`. Keep `bind-release-source` first.
 - Update the contract test to read the traffic file for the step and the secret.
-- Update F-11 and F-16 for the new step. Add a check that no push file under `apps/*/cloudbuild.yaml` calls `gcloud scheduler`.
+- Update F-11 and F-16 for the new step. Add a check that the push file `apps/codecamp-advantage/cloudbuild.yaml` does not call `gcloud scheduler`.
 - Update the codecamp section of `docs/runbooks/traffic-moves.md`: name the step and its IAM precondition.
 
 Reasons: the push stays a no-traffic build, the fix follows decision D7, and the push no longer needs a new IAM grant.
@@ -110,9 +118,9 @@ After the change, `apps/codecamp-advantage/cloudbuild.yaml` holds no step with t
 
 `apps/codecamp-advantage/cloudbuild-traffic.yaml` holds the step `configure-review-worker-scheduler` after `update-traffic`. `bind-release-source` stays the first step. The step runs the existing script with `PROJECT_ID` and the secret `CODECAMP_REVIEW_WORKER_TICK_TOKEN`. The file's `availableSecrets` holds the entry for that secret next to the database URL entry.
 
-### FR-3 No push file calls gcloud scheduler
+### FR-3 The codecamp push file calls no gcloud scheduler
 
-A test fails when any `apps/*/cloudbuild.yaml` calls `gcloud scheduler`, or runs a script that calls it. The test names the offending file in its message.
+A test fails when `apps/codecamp-advantage/cloudbuild.yaml` calls `gcloud scheduler`, or runs a script that calls it. The test names the offending file in its message. The check covers that one file only, because the A-52 step `schedule-intake-job` in `apps/accounting/cloudbuild.yaml` is part of the A-52 design (section 2.7).
 
 ### FR-4 The contract test follows the move
 
@@ -151,7 +159,7 @@ Task 2.0 lists each failing test and each suite that does not load, by file and 
 1. **AC-1.** The contract test `review-worker-deployment-contract.test.ts` passes.
 2. **AC-2.** `scripts/ci/__tests__/cloudbuild-files.test.mjs` passes, with F-11 and F-16 listing the new step.
 3. **AC-3.** The new FR-3 check passes, and it fails on a fixture push file that calls `gcloud scheduler`.
-4. **AC-4.** `grep -n scheduler apps/*/cloudbuild.yaml` prints no `gcloud scheduler` call.
+4. **AC-4.** `grep -n "gcloud scheduler" apps/codecamp-advantage/cloudbuild.yaml` prints no line.
 5. **AC-5.** The runbook section of FR-6 holds the step name and the three permissions.
 6. **AC-6 (deferred:daniel).** The IAM grant exists before the first codecamp traffic move.
 7. **AC-7 (deferred:daniel-push).** After Daniel's push word, the next `cd-apps` run ends in `success` for codecamp-advantage.
