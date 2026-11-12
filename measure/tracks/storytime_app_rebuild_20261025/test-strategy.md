@@ -943,7 +943,7 @@ These rows join the task 4.5 browser check. The task 4.5 rows above stay: `PROJE
 `RED_TEST_COMMAND` is the block below. `GREEN_TEST_COMMAND` is the same block, and it exits 0 on Green.
 
 ```bash
-HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase5-measure-audio.test.ts __tests__/phase5-measure-word-edges.test.ts __tests__/phase5-measure-file.test.ts __tests__/phase5-runner.test.ts __tests__/phase5-rubrics.test.ts __tests__/phase5-media-list.test.ts __tests__/phase5-review-copy.test.ts'
+HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase5-measure-audio.test.ts __tests__/phase5-measure-word-edges.test.ts __tests__/phase5-measure-file.test.ts __tests__/phase5-runner.test.ts __tests__/phase5-rubrics.test.ts __tests__/phase5-media-list.test.ts __tests__/phase5-review-copy.test.ts __tests__/phase5-adversarial.test.ts'
 ```
 
 - Run from `apps/storytime` (the root config has no `@` alias). Name every Phase 5 file. No glob. `CI=true`. `--maxWorkers=1`.
