@@ -1,0 +1,127 @@
+Adversarial testing for P3 of doctor_gate_repair_20261112. Role:
+measure-adversarial-testing. Route: deepseek/deepseek-flash#high. Round r1.
+
+Provenance.
+- phase_base_sha: 6a059f1a909ce58db31533a8c81a28db62626fc1
+- role_base_sha: 5af528e2fa26c503f812ce9ec4a43c795ca70812 (held at the start)
+- test commit and audited head: 4d0b4e6b323c9693fc6e28997b97855658f1e7e1
+- Another track committed 03d7393fb while I worked. My commit sits on top of it.
+- git diff a284de0b0..HEAD -- measure/doctor.sh is empty. The script under test
+  is the reviewed script.
+
+Method.
+Each mutant ran in its own scratch root under /tmp/opencode/doctor-adv-p3. The
+root held the mutant at measure/doctor.sh and an unchanged copy of
+tests/orchestrator_doctor_gate.sh (or the mutated test for p3-22). Every mutant
+passed bash -n first. Every run used --part a. A mutant is killed when the case
+suite exits nonzero with cases_failed greater than 0. measure/doctor.sh itself
+did not run; the full gate belongs to task 3.4.
+
+Baseline before my test change.
+- cases_total=19 cases_failed=0 against the unmodified test file.
+- 20 of 22 section 7.4 mutants died.
+- p3-20 survived (cases_total=19 cases_failed=0). This is Review A A209 and
+  Review B B215: the stub message leaks from tsx_exit_1_gate_exits_0 into
+  tsx_exit_0_gate_exits_0, so the exit 0 case still holds a verdict line.
+- Extra probe p3-23 survived (cases_total=19 cases_failed=0). This is A210: the
+  positive control held one count set, so a hard-coded count pattern passed.
+
+Test change and commit 4d0b4e6b3 (tests/orchestrator_doctor_gate.sh only).
+- case_tsx_exit_0_gate_exits_0 calls reset_tsx first (line 225). The stub now
+  prints nothing, so the case proves that an exit 0 with no verdict line exits 0.
+- case_tsx_exit_1_verdict_line_gate_exits_0 loops over two valid verdict lines
+  (lines 608-643): the original three-line stdout fixture, and a second line
+  'architecture check: debt-change (files=1200, findings=17, parseErrors=2)'.
+  It asserts fixtures_checked=2 before and after the loop.
+- No assertion is removed or relaxed. The diff is 31 insertions and 8 deletions.
+- part_a_cases=19 and part_a_floor=19. My change adds no case, so the count and
+  the floor stay equal. A deleted case still fails the floor.
+
+Final mutant results after the change (all 22 killed):
+- p3-01 -> tsx_exit_1_no_verdict_gate_exits_1 (4 cases fail)
+- p3-02 -> tsx_exit_1_no_verdict_gate_exits_1 (2 cases fail)
+- p3-03 -> tsx_exit_1_gate_exits_0 (3)
+- p3-04 -> tsx_exit_1_verdict_in_longer_line_gate_exits_1 (2)
+- p3-05 -> tsx_exit_1_malformed_verdict_gate_exits_1 (1)
+- p3-06 -> tsx_exit_1_verdict_in_longer_line_gate_exits_1 (2)
+- p3-07 -> tsx_exit_1_verdict_in_longer_line_gate_exits_1 (2)
+- p3-08 -> tsx_exit_1_malformed_verdict_gate_exits_1 (1)
+- p3-09 -> tsx_exit_1_malformed_verdict_gate_exits_1 (1)
+- p3-10 -> tsx_exit_1_malformed_verdict_gate_exits_1 (1)
+- p3-11 -> tsx_exit_1_verdict_in_longer_line_gate_exits_1 (1)
+- p3-12 -> tsx_exit_1_verdict_in_longer_line_gate_exits_1 (1)
+- p3-13 -> tsx_exit_1_verdict_in_longer_line_gate_exits_1 (1)
+- p3-14 -> tsx_exit_1_gate_exits_0 (3)
+- p3-15 -> tsx_exit_1_verdict_line_gate_exits_0 (1)
+- p3-16 -> tsx_exit_1_verdict_line_gate_exits_0 (1)
+- p3-17 -> tsx_exit_1_gate_exits_0 (3)
+- p3-18 -> tsx_exit_0_gate_exits_0 (11)
+- p3-19 -> tsx_exit_1_no_verdict_gate_exits_1 (4)
+- p3-20 -> tsx_exit_0_gate_exits_0 (1): 'expected gate exit 0, got exit 1'
+- p3-21 -> tsx_exit_2_verdict_line_gate_exits_1 (1)
+- p3-22 -> tsx_exit_1_no_verdict_gate_exits_1 (the tsx_message_set=0 assertion)
+
+Extra probes:
+- p3-23 (hard-coded files=12, findings=3, parseErrors=0) is killed by
+  tsx_exit_1_verdict_line_gate_exits_0 at fixture_index=2.
+- p3-24 (hard-coded status debt-change) survives, cases_total=19 cases_failed=0.
+  The CLI gives exit 1 only for debt-change (architecture-check.ts:237,251-256),
+  so a realistic second status does not exist. Nonblocking residual N1.
+
+Some kills land on an earlier case than the section 7.4 table names, because the
+suite is stronger than the table: p3-04, p3-06, and p3-07 fail at case 4 (a
+longer line), and p3-18 fails at the exit 0 case. Every listed mutant still
+dies, and no kill rests on a substring match or a negated text.
+
+Required commands after the change.
+- bash tests/orchestrator_doctor_gate.sh: exit 0, cases_total=31 cases_failed=0.
+- bash tests/orchestrator_marker_vocabulary_cases.sh: exit 0, 15 cases, 0 fail.
+- bash tests/orchestrator_catalog.sh: exit 0, 'PASS: measure anti-pattern
+  catalog exists with A1-A15'.
+- bash -n tests/orchestrator_doctor_gate.sh: exit 0.
+
+A4 floor probe.
+A scratch copy with one run_case line removed printed cases_total=18
+cases_failed=0 and 'FAIL: cases_total=18 is below the floor of 19', exit 1. A
+deleted case cannot pass.
+
+A5 check.
+Plan tasks 3.0a and 3.0b cite the green command. It exits 0 with
+cases_total=31 cases_failed=0, so the labeled claim matches the live run. Plan
+task 3.1 still holds a grep check that cannot pass (carried finding N3).
+
+Residuals (nonblocking).
+- N1: the hard-coded-status probe p3-24 survives. No realistic fixture closes it.
+- N2: test-strategy.md:143 says the verdict literal is one line, and section 7.4
+  does not name the reset_tsx fix. The phase owner should amend the two
+  sentences at closeout. Default: adopt the committed test.
+- N3: plan.md:289 keeps a grep check that shows one line (review A A211).
+- N4: Review B B214 newline residual stands. No mutant reaches that path.
+
+No blocking finding. No real defect of measure/doctor.sh surfaced. No production
+file changed.
+
+Artifacts:
+- measure/runs/doctor_gate_repair_20261112/adversarial-p3-4d0b4e6b3.json
+- measure/runs/doctor_gate_repair_20261112/adversarial-p3-4d0b4e6b3.log
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: doctor_gate_repair_20261112
+phase: P3
+round: r1
+route: deepseek/deepseek-flash#high
+audited_head: 4d0b4e6b323c9693fc6e28997b97855658f1e7e1
+commit: 4d0b4e6b3
+verdict: pass
+status: pass
+mutants_run: 22
+mutants_killed: 22
+p3_mutants: 22
+p3_mutants_killed: 22
+p3_mutants_survived: 0
+extra_probes: 2 (p3-23 killed, p3-24 survived)
+part_a_cases: 19
+part_a_floor: 19
+blocking_findings: 0
+END_MEASURE_AGENT_RESULT

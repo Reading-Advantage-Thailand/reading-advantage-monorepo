@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P1",
+  "phase_base_sha": "088efb891a20a2be2619b839812ad8ee13bac562",
+  "audited_head_sha": "ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "All 18 mutants of strategy section 7.1 are killed: each mutant guard passed bash -n, and the unchanged cases file printed CASE FAIL lines for it. 0 mutants survived and 0 mutants broke the harness. The kill attribution matches the strategy table for every row. I added one adversarial case, track_traversal_outside_root_exits_1, for the --track traversal boundary (F153); it passes on the real guard. The case file now holds 15 cases and PROJECT_TESTS exits 0 at commit 247330b27. The two-or-more-character marker gap (F3, also review finding F151) is recorded as a residual, not as a missed mutant.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F3/F151 residual (recorded as instructed, not a missed mutant): the predicate '^- \\[[^ ~xb]\\] ' matches exactly one marker character. A marker of two or more characters (for example '- [xx] 1.1 task' or '- []') is not flagged and passes the guard. The base guard had the same shape, so the phase did not drop gate strength. No active plan carries such a marker: grep -rnE '^- \\[.{2,}\\] ' measure/tracks/*/plan.md returns no hit.",
+    "F153 partial: the new case track_traversal_outside_root_exits_1 pins that a --track value resolving outside measure/tracks cannot exit 0 with a PASS line for an offending fixture. The guard still does not validate the track id, so a traversal value pointing at a clean plan outside the root would print PASS. Recommend a later phase that rejects any id containing a path separator, with a pinned case."
+  ],
+  "evidence": [
+    "m01 base predicate 'grep -n '^- \\[ \\] ' stays': bash -n exit 0; killed by clean_active_exits_0, unknown_marker_exits_1, markers_outside_set_exit_1, two_offenders_two_fail_lines, fail_on_stderr_pass_on_stdout, two_plans_count_two, track_archive_first_exits_1 (cases_failed=7).",
+    "m02 class '[^~xb]' (space dropped): bash -n exit 0; killed by clean_active_exits_0 (a '- [ ] 1.1 task' fixture exits 1), with fail_on_stderr_pass_on_stdout and two_plans_count_two (cases_failed=3).",
+    "m03a class '[^ xb]' ([~] dropped): bash -n exit 0; killed by canonical_markers_exit_0 (the [~] line fails the fixture).",
+    "m03b class '[^ ~b]' ([b] dropped): bash -n exit 0; killed by canonical_markers_exit_0, track_scope_exits_0, archive_excluded_exits_0, prose_bracket_not_flagged, indented_marker_ignored (cases_failed=5).",
+    "m03c class '[^ ~x]' ([x] dropped): bash -n exit 0; killed by canonical_markers_exit_0.",
+    "m04 grep -i (case-fold): bash -n exit 0; killed by markers_outside_set_exit_1 (marker [X] passes with exit 0).",
+    "m05 literal '\\[\\?\\]' predicate: bash -n exit 0; killed by markers_outside_set_exit_1 (marker [X] passes) and two_offenders_two_fail_lines (fail_lines=1).",
+    "m06 anchor '^- ' dropped: bash -n exit 0; killed by prose_bracket_not_flagged and indented_marker_ignored.",
+    "m07 FAIL line prints and status stays 0: bash -n exit 0; killed by unknown_marker_exits_1, markers_outside_set_exit_1, two_offenders_two_fail_lines, fail_on_stderr_pass_on_stdout (offending run), track_archive_first_exits_1 (all exit 0 instead of 1; cases_failed=5).",
+    "m08 FAIL line goes to stdout: bash -n exit 0; killed by unknown_marker_exits_1, markers_outside_set_exit_1, two_offenders_two_fail_lines, fail_on_stderr_pass_on_stdout, track_archive_first_exits_1 (no FAIL line on stderr; cases_failed=5).",
+    "m09 the FAIL line marker is the fixed text [?]: bash -n exit 0; killed by markers_outside_set_exit_1 (marker [X] run: no pinned FAIL line) and two_offenders_two_fail_lines (no FAIL line for [!]).",
+    "m10 the loop stops at the first hit of a plan: bash -n exit 0; killed by two_offenders_two_fail_lines (fail_lines=1 expected=2).",
+    "m11 the PASS count is a fixed number (2 plans checked): bash -n exit 0; killed by clean_active_exits_0 (the pinned (1 plans checked) line is missing).",
+    "m12 the glob reads measure/*/plan.md (archive included): bash -n exit 0; killed by archive_excluded_exits_0 among 10 failing cases (the archive fixture with [?] is swept in; cases_failed=10).",
+    "m13 --track is ignored: bash -n exit 0; killed by track_scope_exits_0 (the dirty sibling plan fails the sweep) and track_archive_first_exits_1 (cases_failed=2).",
+    "m14 an empty scope prints PASS: bash -n exit 0; killed by empty_scope_exits_1 (exit 0 instead of 1).",
+    "m15 the usage exit is 1: bash -n exit 0; killed by usage_error_exits_2 (exit 1 instead of 2).",
+    "m16 the archive-first resolution is removed: bash -n exit 0; killed by track_archive_first_exits_1 (no pinned FAIL line for [?]).",
+    "New case track_traversal_outside_root_exits_1 passes on the real guard: --track ../escapee_20260111 resolves through measure/tracks/../ to a fixture plan outside the tracks root and exits 1 with no PASS line.",
+    "PROJECT_TESTS at commit 247330b27: bash tests/orchestrator_marker_vocabulary_cases.sh prints cases_total=15 cases_failed=0; bash tests/orchestrator_marker_vocabulary.sh prints PASS with (93 plans checked); bash tests/orchestrator_catalog.sh prints PASS; the chain exits 0.",
+    "F3 residual check: grep -rnE '^- \\[.{2,}\\] ' measure/tracks/*/plan.md returns no hit, so the two-or-more-character marker gap hides no live wrong marker today.",
+    "No mutant entered the repository: each mutant was written to /tmp/adv-m*.sh, run through a scratch root by /tmp/adv-run-mutant.sh (mktemp under /tmp), and every scratch folder and mutant file was removed after its run."
+  ],
+  "commands": [
+    "git rev-parse HEAD (before the case commit: ddd74291f5eb64c72bc807e37ef62bb295f635aa)",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh (baseline at ddd74291f: 14 PASS, cases_failed=0)",
+    "bash /tmp/adv-run-mutant.sh /tmp/adv-m01.sh (mutant runs m01 to m16; each printed MUTANT-free CASE FAIL lines and cases_failed above 0)",
+    "grep -rnE '^- \\[.{2,}\\] ' measure/tracks/*/plan.md (no hit)",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_catalog.sh (exit 0 at commit 247330b27)",
+    "git diff --cached --name-only (empty before staging)",
+    "git add tests/orchestrator_marker_vocabulary_cases.sh",
+    "git commit -m \"test(measure): add the phase 1 adversarial guard cases (track_id: doctor_gate_repair_20261112)\" -- tests/orchestrator_marker_vocabulary_cases.sh (commit 247330b27)"
+  ],
+  "changed_files": [
+    "tests/orchestrator_marker_vocabulary_cases.sh",
+    "measure/runs/doctor_gate_repair_20261112/adversarial-p1-ddd74291f.json",
+    "measure/runs/doctor_gate_repair_20261112/adversarial-p1-ddd74291f.log"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "Phase 1 adversarial testing passes. All 18 mutants of strategy section 7.1 are killed with the kill attribution the strategy table names; no mutant survived and none broke the harness. I added one case, track_traversal_outside_root_exits_1, for the --track traversal boundary (F153); it passes on the real guard and is committed as 247330b27 (cases file only, pathspec commit). PROJECT_TESTS exits 0 at that commit: 15 cases, sweep (93 plans checked), catalog PASS. Record F3 (a marker of two or more characters passes the predicate) as a residual per the strategy; review finding F151 is the same gap. Two hardening items stay for a later phase: reject a --track id that holds a path separator (today a traversal pointing at a clean outside plan would print PASS), and use mktemp for the hits file (F152). No question needs the owner.",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "tests/orchestrator_marker_vocabulary.sh:56 rejects every single-character marker outside {space, ~, x, b} and accepts the canonical set; all 18 section 7.1 mutants die on the unchanged cases file."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Each mutant prints a named CASE FAIL line (for example m04 dies only on markers_outside_set_exit_1 with marker [X]); the two-or-more-character marker path is untested by design (F3 residual)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The only repository change is tests/orchestrator_marker_vocabulary_cases.sh in commit 247330b27 (pathspec commit); mutants lived and died under /tmp."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every one of the 18 mutant runs records bash -n, the failing case names, and cases_failed; PROJECT_TESTS exits 0 at 247330b27 with (93 plans checked)."
+    }
+  ]
+}

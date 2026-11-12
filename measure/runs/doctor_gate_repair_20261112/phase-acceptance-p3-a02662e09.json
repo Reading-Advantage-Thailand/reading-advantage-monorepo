@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P3",
+  "phase_base_sha": "6a059f1a909ce58db31533a8c81a28db62626fc1",
+  "audited_head_sha": "a02662e09cdda32755c855dd9a0aa6f0090b2407",
+  "route": "nvidia/stepfun-ai/step-5-preview#high",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Phase 3 is complete. This acceptance judges HEAD a02662e09cdda32755c855dd9a0aa6f0090b2407. Master moved to 6199abbcc during the audit, and git diff --name-only a02662e09..6199abbcc over the doctor paths returns no output, so no later commit touches measure/doctor.sh, tests/orchestrator_doctor_gate.sh, tests/orchestrator_marker_vocabulary.sh, tests/orchestrator_marker_vocabulary_cases.sh, tests/orchestrator_catalog.sh, measure/anti-patterns.md, measure/tracks.md, or the track folder. Every prerequisite result still applies: Review A and Review B at a284de0b0, Review C and adversarial at 4d0b4e6b3. The only commits between those HEADs that touch a doctor path are the test-only commit 4d0b4e6b3 (tests/orchestrator_doctor_gate.sh) and three documentation commits (the record, the registry, the plan). Tasks 3.0a, 3.0b, 3.1, 3.2, and 3.4 are [x] with commits; task 3.3 is [b] deferred:phase-acceptance, and this verdict closes it. The three gate commands run clean in this session: tests/orchestrator_doctor_gate.sh exits 0 with cases_total=31 cases_failed=0 (part A 19 with floor 19, part B 12 with record floor 8), tests/orchestrator_marker_vocabulary_cases.sh exits 0 with cases_total=15 cases_failed=0, and tests/orchestrator_catalog.sh exits 0 with the A1-A15 PASS line. The repository sweep exits 0 with (95 plans checked) and the single-track scope exits 0 with (1 plans checked). measure/doctor.sh changed by one branch only: exit 1 is a boundary verdict only when the merged step 4 output holds a whole line that matches the CLI verdict pattern. The saved doctor run at 4d0b4e6b3 exits 0 with steps 1 to 3 at exit 0, step 4 at exit 2, and the known-manifest-drift line, which proves the task 3.0b script live. The registry status text (A6) matches that run. No blocking finding is open. Four nonblocking items stay open, two of them as closeout items under PM decision 6 of 2026-11-12.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N41 [open, Nit, plan check text, carried from Review A A211 and adversarial N3]: plan.md line 289 (task 3.1) states that `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` shows the link line and the status line. The status line holds no track id, so the command prints one line (measure/tracks.md:1670). The check cannot pass as written. Task 3.1 is [x] and its evidence line states the one-line truth, so no claim is false. CLOSEOUT ITEM: reword the check to the form of test-strategy section 6.9.",
+    "N42 [open, Nit, closeout item under PM decision 6 of 2026-11-12]: test-strategy.md line 143 says the verdict literal in every case is the single line with files=12, findings=3, parseErrors=0, and section 7.4 names no reset_tsx note for p3-20. Commit 4d0b4e6b3 added a second valid verdict line (tests/orchestrator_doctor_gate.sh:617, files=1200, findings=17, parseErrors=2) and reset_tsx now runs in case tsx_exit_0_gate_exits_0 (line 225), so both sentences are stale. PM decision 6 accepts the amendment at closeout. CLOSEOUT ITEM: amend the two sentences only. The test and the production rule stay as committed.",
+    "N43 [open, Low, record coverage gap]: part B of tests/orchestrator_doctor_gate.sh validates only the first record block of doctor-gate-evidence.md. case_record_head_line (line 1058) asserts exactly one line that matches `^- HEAD: [0-9a-f]{7,12}$`, and the Phase 3 block holds the full 40-character HEAD (doctor-gate-evidence.md:23), so no part B case reads the Phase 3 block. I verified that block line by line against the saved run log doctor-run-4d0b4e6b3.log (HEAD, the four STEP lines, the VERDICT line, the DOCTOR line, and the 1530 s duration). No value is false; the current block is not test-pinned.",
+    "N44 [open, Low, carried residual]: Review B B214 and adversarial N1 stay open. A whole line in the verdict shape can be forged only on a crash exit 1 whose output embeds a newline inside an echoed field, and a mutant pattern that hard-codes the status `debt-change` survives all 19 part A cases (p3-24) because the CLI gives exit 1 only for that status. The CI push gate fails the same run. Both are test-generality residuals, not gate defects."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 6199abbccfdf62423fa34639c49519f19836a43d during the audit. This acceptance judges audited_head a02662e09cdda32755c855dd9a0aa6f0090b2407, per the brief. git diff --name-only a02662e09..HEAD over measure/doctor.sh, tests/orchestrator_doctor_gate.sh, tests/orchestrator_marker_vocabulary.sh, tests/orchestrator_marker_vocabulary_cases.sh, tests/orchestrator_catalog.sh, measure/anti-patterns.md, measure/tracks.md, and measure/tracks/doctor_gate_repair_20261112/ returned no output, and git status --porcelain over those paths returned no output. The later master commits touch only apps/accounting, packages/backend, pnpm-lock.yaml, and two other track folders. No later commit touches a doctor path.",
+    "Prerequisite heads: Review A and Review B at a284de0b0, Review C and the adversarial run at 4d0b4e6b3, the doctor run at 4d0b4e6b3. The commits between a284de0b0 and the audited HEAD are a284de0b0..4f9ea0bd6, 5af528e2f, 03d7393fb, b691690b4, 4d0b4e6b3, 890c0f76a, 24d032bc5, and a02662e09. Of those, 4d0b4e6b3 touches tests/orchestrator_doctor_gate.sh only, and 890c0f76a, 24d032bc5, and a02662e09 touch the record, the registry, and the plan. The implementation content of measure/doctor.sh is unchanged after d16ab8b01, so the Review A, Review B, Review C, and adversarial results still apply. This acceptance accepts HEAD a02662e09 and allows the test-only commit 4d0b4e6b3 and the three documentation commits.",
+    "Plan markers at the audited HEAD: tasks 3.0a, 3.0b, 3.1, 3.2, and 3.4 are [x] with commits (90a3abbd8, d16ab8b01, 24d032bc5, 4d0b4e6b3, 890c0f76a), and task 3.3 is [b] deferred:phase-acceptance. git cat-file --batch-check confirms that 6a059f1a, 90a3abbd8, d16ab8b01, 4d0b4e6b3, 890c0f76a, 24d032bc5, a02662e09, and a284de0b0 are commits. No plan SHA is missing.",
+    "Per-commit scope check over 6a059f1a..a02662e09: nine commits carry (track_id: doctor_gate_repair_20261112). Their paths are measure/tracks/doctor_gate_repair_20261112/test-strategy.md, tests/orchestrator_doctor_gate.sh (twice), measure/tracks/doctor_gate_repair_20261112/plan.md (three times), measure/doctor.sh, measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md, and measure/tracks.md. doctor_out_of_scope_paths=0. No path under apps/, packages/, or services/ (AC-7).",
+    "The phase diff of measure/doctor.sh is one branch: the condition reads `[ \"$architecture_status\" -eq 1 ] && grep -qxE -- \"$verdict_line_pattern\" <<<\"$architecture_output\"` with the pattern `architecture check: [^ ]+ \\(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\\)`. The exit 0 rule, the exit 2 rules, and the printed text of every rule are unchanged.",
+    "bash tests/orchestrator_doctor_gate.sh exits 0 (rc=0) with cases_total=31 cases_failed=0. Part A prints 19 PASS lines and holds PART_A_FLOOR=19 (line 17); part B prints 12 PASS lines with RECORD_LINES_FLOOR=8 (line 18). CASE tsx_exit_1_no_verdict_gate_exits_1, CASE step4_cd_fails_gate_exits_1, CASE tsx_exit_1_verdict_in_longer_line_gate_exits_1, and CASE tsx_exit_1_malformed_verdict_gate_exits_1 all PASS, so the PM rule of F207 holds.",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh exits 0 (rc=0) with cases_total=15 cases_failed=0. bash tests/orchestrator_catalog.sh exits 0 (rc=0) and prints 'PASS: A12/A13 guard declarations and archive directories verified (6 guards)' and 'PASS: measure anti-pattern catalog exists with A1-A15'. bash tests/orchestrator_marker_vocabulary.sh exits 0 with 'PASS: all active track plans use only [ ], [~], [x], or [b] task markers (95 plans checked)'. bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112 exits 0 with (1 plans checked). bash -n exits 0 for measure/doctor.sh and tests/orchestrator_doctor_gate.sh.",
+    "The saved run doctor-run-4d0b4e6b3.log shows doctor_exit=0 (heavy_rc=0) at HEAD 4d0b4e6b323c9693fc6e28997b97855658f1e7e1, with the step 1 PASS line, no 'FAIL: unsupported task marker' line, the step 3 PASS line, 'ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110', and 'DOCTOR: the three structural guard steps gate this exit code'. Steps 1 to 3 exit 0 and step 4 exits 2. This run used the task 3.0b script, so it proves AC-1 for the current gate.",
+    "A6 clean: measure/tracks.md line 1671 states 'implemented (doctor gate green at 4d0b4e6b3; due 2026-11-14)'. The saved run at that HEAD exited 0, so the registry does not overstate. grep -n 'doctor_gate_repair_20261112' measure/tracks.md prints one line (line 1670), as the task 3.1 evidence records (N41).",
+    "A3 clean for this phase diff: no count or baseline assertion uses a digit-only probe. Every digit pattern in the changed shell files is a labeled full-line shape: tests/orchestrator_doctor_gate.sh:803 (the DURATION line), :852 (the STEP line), :1020 (the seconds parse), and measure/doctor.sh:22 (the verdict line with the three counts). Every count prints as a labeled integer (cases_total, cases_failed, part_a_floor, shapes_checked, fixtures_checked, codes_checked, tsx_calls, arch_dir_absent, tsx_message_set, record_lines_checked, doctor_out_of_scope_paths).",
+    "A4 clean for this phase diff: the phase diff adds no 'markers consistent' check, so no vacuous pass on a phase with zero [x] tasks exists. The anti-pattern recipe of measure/anti-patterns.md (A4) targets tests/mr_p1.sh to tests/mr_p4.sh, and none of those files exists. The two floors prevent a vacuous pass in the changed tests: a deleted part A case fails the floor of 19 (tests/orchestrator_doctor_gate.sh:1207), and a short record fails the floor of 8 (line 1080). phase_counts of the role-gate script counts non-deferred incomplete tasks, and the phase has five [x] tasks and zero non-deferred incomplete tasks.",
+    "A5 clean: every PASS claim in the plan matches a command result. Task 3.0b evidence claims the full command exits 0 with cases_total=31 cases_failed=0 (verified), task 3.1 claims the status text (verified at measure/tracks.md:1671), task 3.2 claims the four review and adversarial verdicts (verified in the four result files), and task 3.4 claims doctor exit 0 with the recorded step exits and the run log (verified in doctor-run-4d0b4e6b3.log). The one inaccurate sentence is the task 3.1 check text at plan.md:289 (N41).",
+    "A7 clean: the phase diff adds no banned-term filter. The marker predicate is an allow-list (tests/orchestrator_marker_vocabulary.sh:56), so it fails any marker outside the set and cannot drop a real hit. The case markers_outside_set_exit_1 passes with markers_checked=7 (markers ?, X, !, -, ., 1, and a).",
+    "No fake-gate masking: the exit 1 rule is proven by function-level live tests with a stub tsx at the real relative call path, and test-strategy section 6.8b declares the live-proof limit (the real CLI exits 2 on master today, so no live run reaches the exit 1 branch). The artifact-only part B is declared an artifact check in test-strategy section 1.3. No test claims live proof that it does not have.",
+    "No stale intentional-red test in an aggregate suite: no runner globs tests/orchestrator_*.sh. A grep of package.json, .github/workflows/, Makefile, and makefile returns no match.",
+    "No missing caller update: measure/doctor.sh lines 4 to 6 call tests/orchestrator_catalog.sh, tests/orchestrator_marker_vocabulary.sh, and tests/orchestrator_review_execution_truthfulness.sh. All three files exist, and node_modules/.bin/tsx is the executable symlink that the step 4 command resolves.",
+    "git worktree list shows 7 worktrees, which matches the plan evidence of task 2.4. This track created none of the six other worktrees.",
+    "F207 (the Phase 2 residual) is closed: measure/doctor.sh line 24 requires the whole verdict line for an exit 1, and the saved run plus the four PASS cases prove the rule. F208 (the stale spec value) is closed: spec.md line 270 now states 175.150 s from the timing run at bbe5e5860, which matches timing-run-bbe5e5860.log and doctor-gate-evidence.md line 14.",
+    "PM decision 6 of 2026-11-12 is applied: N42 records the two test-strategy sentences as a closeout item, and this acceptance does not block on them."
+  ],
+  "commands": [
+    "git rev-parse HEAD (6199abbccfdf62423fa34639c49519f19836a43d)",
+    "git diff --name-only a02662e09cdda32755c855dd9a0aa6f0090b2407..HEAD (13 paths, none a doctor path)",
+    "git diff --name-only a02662e09cdda32755c855dd9a0aa6f0090b2407..HEAD -- measure/doctor.sh tests/orchestrator_doctor_gate.sh tests/orchestrator_marker_vocabulary.sh tests/orchestrator_marker_vocabulary_cases.sh measure/anti-patterns.md measure/tracks/doctor_gate_repair_20261112/ measure/tracks.md (no output)",
+    "git status --porcelain -- measure/doctor.sh tests/ measure/tracks/doctor_gate_repair_20261112/ measure/tracks.md measure/anti-patterns.md (no output)",
+    "git log 6a059f1a909ce58db31533a8c81a28db62626fc1..a02662e09cdda32755c855dd9a0aa6f0090b2407 --format='%H %s' (30 commits)",
+    "git log 6a059f1a909ce58db31533a8c81a28db62626fc1..a02662e09cdda32755c855dd9a0aa6f0090b2407 --fixed-strings --grep='track_id: doctor_gate_repair_20261112' (9 commits)",
+    "git show --name-only --format= for each of the 9 doctor-track commits (doctor_out_of_scope_paths=0)",
+    "git cat-file --batch-check for 6a059f1a, 90a3abbd8, d16ab8b01, 4d0b4e6b3, 890c0f76a, 24d032bc5, a02662e09, and a284de0b0 (all commits)",
+    "git diff 6a059f1a909ce58db31533a8c81a28db62626fc1..a02662e09cdda32755c855dd9a0aa6f0090b2407 -- measure/doctor.sh (one branch change)",
+    "bash tests/orchestrator_doctor_gate.sh; echo rc=$? (rc=0, cases_total=31 cases_failed=0)",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh; echo rc=$? (rc=0, cases_total=15 cases_failed=0)",
+    "bash tests/orchestrator_catalog.sh; echo rc=$? (rc=0, two PASS lines)",
+    "bash tests/orchestrator_marker_vocabulary.sh; echo rc=$? (rc=0, 95 plans checked)",
+    "bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112; echo rc=$? (rc=0, 1 plans checked)",
+    "bash -n measure/doctor.sh (rc=0); bash -n tests/orchestrator_doctor_gate.sh (rc=0)",
+    "grep -n 'grep -nE' tests/orchestrator_marker_vocabulary.sh (line 56, the allow-list predicate)",
+    "awk A8 token detector on measure/anti-patterns.md (a8_tokens=4)",
+    "rg -n '^\\*\\*Guard:\\*\\*.*tests/orchestrator_marker_vocabulary\\.sh' measure/anti-patterns.md (one hit, line 252)",
+    "read measure/runs/doctor_gate_repair_20261112/doctor-run-4d0b4e6b3.log (18 lines, doctor_exit=0)",
+    "read measure/tracks.md lines 1670 to 1671 (the registry entry)",
+    "read measure/runs/doctor_gate_repair_20261112/red-p3.log, green-p3.log, green-p3-r2.log, review-a-p3-a284de0b0.json, review-b-p3-a284de0b0.json, review-c-p3-4d0b4e6b3.json, and adversarial-p3-4d0b4e6b3.json",
+    "git worktree list --porcelain (7 worktrees)",
+    "measure/doctor.sh was not run: the brief forbids a second heavy run, and the saved log at 4d0b4e6b3 proves the live run."
+  ],
+  "changed_files": [
+    "measure/doctor.sh",
+    "tests/orchestrator_doctor_gate.sh",
+    "measure/tracks.md",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "measure/tracks/doctor_gate_repair_20261112/test-strategy.md",
+    "measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "handoff": "Phase 3 passes at HEAD a02662e09cdda32755c855dd9a0aa6f0090b2407. Master moved to 6199abbcc during the audit; no later commit touches a doctor path, so the audited content stands. No blocking finding. Task 3.3 is [b] deferred:phase-acceptance, and this verdict accepts it, so the orchestrator routes the plan mark. QUESTION FOR THE PM (via the orchestrator), with my default, from PM decision 6 of 2026-11-12: the two stale test-strategy sentences (line 143, the single verdict fixture, and section 7.4, the reset_tsx note for p3-20) stay open as a closeout item. Option 1 (DEFAULT): the strategy owner amends the two sentences at closeout and changes nothing else. Option 2: amend them now in a small follow-up commit. No other question is open. Two carried residuals (B214 and p3-24) stay nonblocking. Closeout items: N41 (the plan task 3.1 check text), N42 (the two test-strategy sentences), N43 (part B does not pin the Phase 3 record block), and N44 (the two residuals).",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "measure/doctor.sh line 24 applies the whole-line verdict match to exit 1 only, the saved run doctor-run-4d0b4e6b3.log shows doctor_exit=0 with the known-drift line, and the four gate commands run clean in this session."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "red-p3.log shows cases_total=19 cases_failed=4 at the base for the exit 1 rule, and my live run shows cases_total=31 cases_failed=0 at the audited head, so each new claim has a failing-first test."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The nine doctor-track commits in 6a059f1a..a02662e09 touch only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, measure/tracks.md, and the track folder; doctor_out_of_scope_paths=0."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every record value traces to doctor-run-4d0b4e6b3.log or timing-run-bbe5e5860.log, and every claim in this result names a command result with its exit code or a file line."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "deepseek/deepseek-flash#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "I re-checked the exit 1 rule at measure/doctor.sh:22-24 and the four failing cases from red-p3.log, and I confirmed the A209 reset_tsx fix at tests/orchestrator_doctor_gate.sh:225 and the second verdict fixture at line 617, so the pass verdict and the four nonblocking items hold."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "I re-read the grep -qxE whole-line match at measure/doctor.sh:24 and confirmed the three guards stay bare at lines 4 to 6 with set -euo pipefail, so the F207 fix and the pass verdict are correct."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "nvidia/stepfun-ai/step-5-preview#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "git show --name-only for the nine doctor-track commits lists no route, page, API handler, component, or message file, so the not-applicable verdict is right."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "deepseek/deepseek-flash#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "I re-checked the kill mechanism through red-p3.log (cases_failed=4 at the base) and my live run (cases_total=31 cases_failed=0), but the shell tool denied the scratch-root mutation in this session, so I did not re-run each of the 22 mutants myself."
+    }
+  ]
+}

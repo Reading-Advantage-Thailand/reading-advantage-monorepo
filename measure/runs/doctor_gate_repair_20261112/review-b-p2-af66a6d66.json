@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P2",
+  "phase_base_sha": "e592f824607cc220c02096e0a66d3174d1fe78ec",
+  "audited_head_sha": "af66a6d661965ce500c2f7a7b9d2a3c6611f9c59",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "round": "r2",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "F251 is fixed and withdrawn. measure/doctor.sh now calls the architecture CLI directly with no pnpm wrapper, reads the real CLI exit, and classifies exit 2 by an exact whole-line match of the known manifest drift. The saved run at bbe5e5860 records cli_exit=2 reaching the gate, and the 24-case harness passes. The F207 residual (a failed cd or an uncaught Node exception gives exit 1, which maps to a boundary verdict) hides a real failure in mechanism but stays Medium and nonblocking for the gate's purpose. set -euo pipefail, the bare guards, the capture block, the harness PATH isolation, and the record provenance all hold. No new blocking findings.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F207 [Medium, residual, concurs with Review A r2]: measure/doctor.sh lines 15 and 20 map exit 1 to a boundary verdict and exit 0. A failed cd in the step 4 subshell, or an uncaught Node exception at module load before the CLI catch block, also gives exit 1. Such a real step 4 failure would be recorded as a boundary verdict and the gate would exit 0. Severity for the gate's purpose: Medium. The likelihood is low (the three guards run first with the same cwd-relative paths, so a wrong working directory fails the gate before step 4; the CI push gate runs the same CLI and fails on any non-zero), and the impact is bounded (doctor is a local health signal; the boundary check keeps gating every push in CI per spec D-3). The closeout role reads the doctor exit code, so a false green weakens closeout integrity; that keeps this above Low. Hardening per Review A option 2 needs a spec amendment and belongs to a later task. Not blocking for Phase 2.",
+    "N3 [test-meaning nit]: no case in tests/orchestrator_doctor_gate.sh kills a mutant that drops the whole-line flag from the drift match (grep -qxF at measure/doctor.sh:26 changed to grep -qF). With a substring match, an exit 2 whose output merely contains the drift line, for example a crash report that quotes the manifest error among other lines, would be accepted as known drift. The implementation as written is exact and correct; this is a coverage note for the adversarial role, not a gate defect."
+  ],
+  "evidence": [
+    "F251 withdrawn: measure/doctor.sh:15 now runs (cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin) with no pnpm layer, and line 16 reads the real CLI exit. The two pnpm layers that mapped exit 2 to 1 are gone from the call path.",
+    "F251 withdrawn: the saved run measure/runs/doctor_gate_repair_20261112/doctor-run-bbe5e5860.log:9 records 'ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110', line 12 records doctor_exit=0, and line 14 records step 4 cli_exit=2; the real CLI exit 2 reached the gate and was classified by the exact drift line at log:8.",
+    "F251 withdrawn: the timing run measure/runs/doctor_gate_repair_20261112/timing-run-bbe5e5860.log:10 records cli_exit=2 (heavy_rc=2) for the direct CLI command, so no wrapper collapse remains on the real path.",
+    "F251 withdrawn: the harness models the real call path with a stub tsx at <tmp>/node_modules/.bin/tsx, resolved by the step 4 command itself; live run of bash tests/orchestrator_doctor_gate.sh prints cases_total=24 cases_failed=0.",
+    "Check 2 pass: the known-drift match at measure/doctor.sh:26 is grep -qxF, a whole-line fixed-string match of the exact drift line; an exit 2 with any other output falls to the tool-failure branch at lines 32-34 and the gate exits 1.",
+    "Check 2 pass: case tsx_exit_2_manifest_drift_gate_exits_0 asserts gate exit 0 with the exact drift line; case tsx_exit_2_other_line_gate_exits_1 sets a line that shares the 'Architecture check failed:' prefix and asserts gate exit 1 with both tool-failure lines, which kills the shorter-prefix mutant named in test-strategy.md:461; the tool_failure_codes loop runs codes 2, 3, 126, 137 with no message and 127 with no stub.",
+    "Check 3: F207 mechanism confirmed from code. A failed cd yields the cd exit status 1 in the substitution at doctor.sh:15, and a Node module-load crash exits 1 before the CLI catch block; line 20 then maps status 1 to the boundary-verdict branch and exit 0. No saved run hits this path, and no part A case covers it.",
+    "Check 4 pass: measure/doctor.sh:2 holds set -euo pipefail; the three guard steps stay bare lines 4-6; the capture block at lines 14-17 runs set +e, the command, the status capture, then set -e; nothing after line 17 runs with errexit off.",
+    "Check 5 pass: run_gate sets PATH=<tmp>/bin:/usr/bin:/bin and the step 4 command resolves tsx by a repo-relative path inside the scratch root, so the real tsx and pnpm cannot run; the 127 case and the 127 branch of tool_failure_codes assert tsx_is_absent with test -x before the gate runs; ls -d /tmp/orchestrator-doctor-gate.* finds no leftover root after my run.",
+    "Record provenance pass: every record value traces to the two saved logs at HEAD bbe5e5860 - HEAD, DATE, and the PASS lines from doctor-run-bbe5e5860.log, STEP 4 exit 2 and the VERDICT line from log:9 and log:14, DURATION 175.150 s from timing-run-bbe5e5860.log:11, whose source sha bbe5e5860 equals the record HEAD line; catalog A5 holds.",
+    "A6 pass: measure/tracks.md:1667 still says 'new (spec and plan only)'; the registry does not overstate the phase state. A2 does not apply: this track has no publish gate.",
+    "Scope pass: commits bbe5e5860, af66a6d66, 50db02a63, 68e7ee750, and ad72cee7a touch only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the track folder; doctor_out_of_scope_paths=0.",
+    "Audited HEAD is current: git rev-parse HEAD returns af66a6d661965ce500c2f7a7b9d2a3c6611f9c59. Plan task 2.5 is marked [x] at bbe5e5860."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git show ad72cee7a --stat",
+    "git show ad72cee7a -- measure/tracks/doctor_gate_repair_20261112/spec.md",
+    "git show ad72cee7a -- measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "git log --oneline b6a2531c5..af66a6d66 -- tests/orchestrator_doctor_gate.sh",
+    "git diff b6a2531c5..50db02a63 -- tests/orchestrator_doctor_gate.sh",
+    "git show --name-only --format= bbe5e5860 af66a6d66 50db02a63 68e7ee750 ad72cee7a",
+    "bash tests/orchestrator_doctor_gate.sh",
+    "ls -d /tmp/orchestrator-doctor-gate.* (no leftover root)"
+  ],
+  "changed_files": [
+    "measure/doctor.sh",
+    "tests/orchestrator_doctor_gate.sh",
+    "measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "measure/tracks/doctor_gate_repair_20261112/spec.md",
+    "measure/tracks/doctor_gate_repair_20261112/test-strategy.md",
+    "measure/tracks/doctor_gate_repair_20261112/metadata.json"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "F251 is withdrawn: the direct tsx call reads the real CLI exit, the saved run at bbe5e5860 records cli_exit=2 reaching the gate, and the 24-case harness passes. Check 2 holds: the drift match is whole-line and exact, and the shorter-prefix case exits 1. Check 3 decision: yes, the F207 residual lets a real failure hide behind exit 0 in mechanism (failed cd or module-load crash gives exit 1, mapped to a boundary verdict). Severity for the gate's purpose: Medium, concurring with Review A r2 - low likelihood, bounded impact, CI still gates every push. Not blocking for Phase 2. The PM question on F207 already travels with Review A r2 (default option 1, accept with a caveat; option 2 hardening later); I add no new escalation. One test-meaning nit (N3): no case kills a mutant that drops grep -x from the drift match; the implementation is exact as written, and this note goes to the adversarial role. Checks 1, 4, 5 pass; the record traces only to the saved logs (A5); the registry does not overstate (A6).",
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "The four FR-3 classification rules match the amended spec word for word, and the saved run at bbe5e5860 proves the real CLI exit 2 reaches the gate (doctor-run-bbe5e5860.log:9,14)."},
+    {"axis": "test_meaning", "score": 4, "evidence": "24 real failing-first cases pass and the mutant map names each kill, but no case kills a mutant that drops the whole-line flag from the drift match (N3)."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The five r2 commits touch only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the track folder; doctor_out_of_scope_paths=0."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Every claim traces to a saved log line, a code line, or a live command result such as cases_total=24 cases_failed=0."}
+  ]
+}

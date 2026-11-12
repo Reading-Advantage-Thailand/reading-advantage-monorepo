@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P2",
+  "phase_base_sha": "e592f824607cc220c02096e0a66d3174d1fe78ec",
+  "audited_head_sha": "4d38613725e981ebf35a085f642494bd3f8632fd",
+  "route": "claude-code/claude-sonnet-5-5#high",
+  "round": "r1",
+  "verdict": "fail",
+  "status": "fail",
+  "summary": "doctor.sh matches FR-3 to the letter, and all 22 cases pass. But the saved run shows that the real architecture CLI exited 2 (analysis failure), and the pnpm wrappers turned that into exit 1. So doctor.sh records a tool failure as a boundary verdict, the FR-3 tool-failure branch cannot fire for a real CLI failure, and the gate record states a false verdict. The stub tests cannot see this gap. Fixing it changes the result of AC-1 on master today, so the fix needs a PM decision.",
+  "blocking_findings": [
+    "F201 (High, correctness and A5 false claim): the real CLI exit 2 is recorded as exit 1 with the line 'ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110'. Evidence in measure/runs/doctor_gate_repair_20261112/doctor-run-49f96a7d8.log: line 13 'Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports' (the catch block of architecture-check-cli.ts lines 143 to 149, which returns 2); line 16 '[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 2: tsx src/architecture-check-cli.ts --skip-input-snapshot-pin'; line 17 '[ELIFECYCLE] Command failed with exit code 1.'; line 18 the ARCHITECTURE line with exit 1. The CLI printed no boundary or debt report. The root script (package.json line 7) is 'pnpm --filter ... exec tsx ...', so two pnpm layers sit between the CLI and doctor.sh, and each layer reports exit 1 for a failed child. Result: (a) the real CLI exit was 2 with an analysis-failure message; (b) pnpm does not pass the exit code through; (c) the exit 1 that doctor.sh reads can mean CLI exit 1 (debt change), CLI exit 2 (analysis failure), or a pnpm error. The FR-3 tool-failure rule (doctor.sh lines 22 to 24) is reachable only for codes that pnpm itself produces, such as 127, and never for a CLI exit 2. The record doctor-gate-evidence.md lines 'STEP 4 ... exit 1' and 'VERDICT: ARCHITECTURE: step 4 exits 1; ...' and the plan task 2.2 line 'Outcome table row 1 applies' state a boundary verdict that the run did not produce. Test-strategy section 6.6 says that a CLI exit 2 means 'A tool failure. Stop.', so by the strategy's own table the recorded run is row 3, not row 1. The root cause is the premise in test-strategy M6 and M11 and spec FR-3 that pnpm passes the CLI exit code through. No Red case checks that premise.",
+    "F202 (High, shallow test, same root as F201): the stub pnpm in tests/orchestrator_doctor_gate.sh lines 82 to 94 exits with the code that the case sets. The real wrapper chain turns 2 into 1. All 11 part A cases and the 11 part B cases pass while the real gate misclassifies the real failure. Part B case record_step_exit_codes (lines 537 to 565) accepts STEP 4 exit 0 or 1 only, so it also cannot detect the false record. No case covers the real exit-code path from the CLI to doctor.sh. Route to Red with F201."
+  ],
+  "nonblocking_findings": [
+    "F203 (Medium, A4 order): in case pnpm_exit_127_gate_exits_1 (lines 262 to 284) and in the 127 branch of tool_failure_codes (lines 320 to 325), the case calls run_gate no_stub BEFORE it asserts pnpm_is_absent. Test-strategy section 6.5 says the case asserts first. On a machine that has pnpm in /usr/bin or /bin, the real heavy architecture check would run before the assertion fails. On this machine pnpm sits in /home/daniebo/.local/bin, so the PATH is safe today. Move the assertion before the run.",
+    "F204 (Low, stale plan evidence, A5): plan task 2.4 says the full doctor run through HEAVY ran at HEAD 657059226 and that 'both runs ran at this HEAD'. The only saved full-run output is doctor-run-49f96a7d8.log, and its header says HEAD 49f96a7d845ccafca56c50ff5b1efddabad06691. No saved log exists for a run at 657059226, and no saved log exists for the timing run (165.684 s is a header comment of the doctor run log). The risk is low, because 657059226 added only the record file and doctor.sh did not change between the two commits.",
+    "F205 (Nit, known): the line 'the owner of the remaining drift is architecture_ci_input_pin_20261110' also prints for exit 0, where no drift remains. The spec pins the text (test-strategy Review B reading point 7).",
+    "F206 (Note): the record header says every value comes from the saved output. The values for STEP 1 to STEP 3 match the PASS lines at log lines 8 to 11, and DURATION matches log line 6. The HEAD line is the HEAD of the run, not of the record commit, and the plan says task 3.4 refreshes it. These points are consistent. Only STEP 4 and VERDICT carry the F201 defect."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 4d38613725e981ebf35a085f642494bd3f8632fd, equal to audited_head_sha.",
+    "bash -n measure/doctor.sh exited 0.",
+    "bash tests/orchestrator_doctor_gate.sh exited 0 with cases_total=22 cases_failed=0 (part A floor 11 met, 11 part A cases and 11 part B cases).",
+    "measure/doctor.sh keeps 'set -euo pipefail' at line 2 and the three guard steps as bare lines 4 to 6, with no '|| true'.",
+    "The capture block is lines 11 to 14: set +e, pnpm architecture:check --skip-input-snapshot-pin, architecture_status=$?, set -e. The flag is present and the command is not architecture:pin:refresh.",
+    "The ARCHITECTURE and DOCTOR lines at doctor.sh lines 17, 18, 22, and 23 equal the text of spec FR-3 word for word. The branch for codes 0 and 1 exits 0. Every other code exits 1.",
+    "The restore-condition comment at doctor.sh lines 8 to 10 names the close of task 1.4d of architecture_ci_input_pin_20261110 and the owner, the Monorepo orchestrator.",
+    "Each Red case compares exit codes as integers ([ \"$gate_rc\" -ne N ]) and does not match a substring for an exit (catalog A1). The count loops assert codes_checked=5 and the labeled integers pnpm_calls and pnpm_absent. Cases named in the strategy mutant table 7.2 map to a named case.",
+    "Record values: STEP 1 to STEP 3 exit 0 match log lines 8 to 11. DURATION 165.684 matches log header line 6. STEP 4 exit 1 matches log line 18. The values come from the saved run (A5), but the STEP 4 value is false for the CLI (F201).",
+    "Record path: tests/orchestrator_doctor_gate.sh lines 44 to 53 and 393 to 403 resolve the record through track_dir_resolve, archive first (A9).",
+    "No file under apps/, packages/, or services/ changed in git diff --stat e592f8246..4d3861372 for the paths of this track (doctor.sh, the test, the plan, the record).",
+    "build-graph was not used: the change is a shell script and a shell test with no exported TypeScript symbol. The only caller of measure/doctor.sh named in the spec is the closeout role file outside the repository."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --stat e592f8246..4d3861372 -- measure/doctor.sh tests/orchestrator_doctor_gate.sh measure/tracks/doctor_gate_repair_20261112 measure/runs/doctor_gate_repair_20261112",
+    "git diff e592f8246..4d3861372 -- measure/doctor.sh",
+    "git diff e592f8246..4d3861372 -- measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md",
+    "git log --oneline e592f8246..4d3861372 -- tests/orchestrator_doctor_gate.sh measure/doctor.sh",
+    "bash -n measure/doctor.sh",
+    "bash tests/orchestrator_doctor_gate.sh",
+    "grep -n architecture package.json"
+  ],
+  "changed_files": [],
+  "retry_recommendation": "escalate_human",
+  "handoff": "QUESTION FOR THE PM (via the orchestrator): the real architecture CLI exits 2 on master today (analysis failure: 'V2 reconciliation manifest is invalid: Analyzer report hashes do not match'), and pnpm turns it into exit 1. Spec FR-3 and test-strategy M11 assume exit 1 means a boundary verdict. Which result do you want? Option 1: doctor.sh detects the CLI exit 2 and applies the tool-failure rule. The doctor gate then exits 1 on master until architecture_ci_input_pin_20261110 closes tasks 1.4 and 1.4d, and AC-1 cannot pass today. Option 2: the manifest-drift analysis failure counts as the recorded drift (this is exactly F421). Then spec FR-3, M6, M11, the VERDICT text, and the record must say so, and doctor.sh must keep CLI exit 2 for real tool crashes. Option 3: keep the code as it is and change only the record and the messages so they do not claim a boundary verdict (weakest, because FR-3 stays unreachable for CLI crashes). DEFAULT if no answer: Option 2. Whatever the choice, Green needs a way to read the real CLI exit code (for example run the CLI without the two pnpm wrappers, or read the 'Architecture check failed:' line from captured output), and Red needs one case that models the wrapper (stub exit 1 plus the CLI failure text). Return to Green for retry_implementation after the PM answer. Also fix F203 (assert pnpm_absent before the run) in the same round."
+  ,
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 2, "evidence": "measure/doctor.sh lines 16 to 24 record CLI exit 2 as 'step 4 exits 1' (doctor-run-49f96a7d8.log lines 13 to 18)."},
+    {"axis": "test_meaning", "score": 3, "evidence": "tests/orchestrator_doctor_gate.sh: 22 integer-exit cases pass, but the stub pnpm lines 82 to 94 hide the wrapper exit-code mapping (F202)."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "git diff --stat e592f8246..4d3861372 lists doctor.sh, the test, the plan, and the record only; no apps/, packages/, or services/ path."},
+    {"axis": "evidence_quality", "score": 3, "evidence": "The record values come from doctor-run-49f96a7d8.log, but plan task 2.4 cites a run at 657059226 that has no saved log (F204), and the STEP 4 value is false (F201)."}
+  ]
+}

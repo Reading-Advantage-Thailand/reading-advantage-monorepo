@@ -1,0 +1,42 @@
+# Spec review round 2 log — doctor_gate_repair_20261112
+
+Audited head: 0b3d04ac01ea91024009aaa7bc71f21fa1baa0a2 (confirmed as HEAD)
+Route: kimi-code-plan-cn/kimi-for-coding. Round: r2. Reviewer family: Kimi (round 1 was Anthropic).
+Standard: /home/daniebo/.agents/skills/measure/references/spec-review.md
+
+### What this track proposes
+
+The track makes the marker vocabulary guard accept the canonical pending marker `- [ ] ` and fail only a marker outside {space, ~, x, b}, and it rewords catalog entry A8 to state that set. It changes measure/doctor.sh so step 4 runs the architecture check in CI mode with a captured exit code, prints the verdict and the owner track, and no longer sets the gate exit code for a verdict of 0 or 1; a tool failure, any code other than 0 or 1, still fails the gate. The three structural guard steps keep gating the exit code. The track adds two guard tests, a gate record file, and a registry status update, and it changes no product file, no manifest, no gate file, and no PM role file. The goal is `bash measure/doctor.sh` exits 0 on master by 2026-11-14. Option (C) is a default that waits for the PM confirmation.
+
+### How the current system works, per this spec
+
+doctor.sh runs four steps under set -euo pipefail: the catalog test, the marker vocabulary guard, the review truthfulness test, and pnpm architecture:check. Step 2 fails today because the guard rejects the pending marker that the framework writes for every new task; 56 active plans (57 with this track's plan) hold 760 such lines. Step 4 fails next because the committed manifest hashes are stale after the Storytime commit 08c36df04; the CLI returns 1 for a boundary failure and 2 for a tool failure. The sibling track architecture_ci_input_pin_20261110 owns the pin refresh (task 1.4, in progress) and the debt baseline (task 1.4d, pending). CI already runs the check with --skip-input-snapshot-pin.
+
+### Findings
+
+- None. Round 1 findings F1 to F12 are all resolved and withdrawn (see evidence in the result JSON).
+- No new finding. The amended plan passes the zero-decision check and the zoom-out check.
+
+Fact checks this round (read-only, no doctor.sh, no tests):
+- Guard: line 55 predicate, line 45 glob, lines 32-39 comment, lines 9-16 track_dir_resolve, line 56 FAIL text, line 67 PASS text. All hold.
+- doctor.sh: 7 lines, 4 steps. Holds.
+- architecture-check-cli.ts lines 135-150: mainArchitectureCheckCli returns 0|1|2; catch returns 2. Holds.
+- 08c36df04 stat: storytime lesson-flow.tsx and week-view.tsx plus three test files. Spec path after the F11 fix holds.
+- contracts.py:649 validate_plan_marker. Holds.
+- supervisor_gate.py:25 lists the deleted supervisor file. Holds.
+- tracks.md entry holds the due date, the owner chain, F411, and F421; the task 3.1 from-text matches.
+- 57 active plans fail the guard at HEAD. Consistent with the measured history.
+- No live caller depends on the old guard messages.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+phase: track
+status: pass
+verdict: pass
+round: r2
+blocking_findings: 0
+nonblocking_findings: 0
+retry_recommendation: none
+confidence: high
+handoff: Verdict pass. All 12 round 1 findings are resolved and withdrawn; no new finding. The plan is ready for Red. One PM question stays open and does not block the verdict: confirm option (C) of spec D-3 (the doctor gate records the architecture verdict and does not gate on it). The default stands, and the restore condition and owner are named in D-3.
+END_MEASURE_AGENT_RESULT

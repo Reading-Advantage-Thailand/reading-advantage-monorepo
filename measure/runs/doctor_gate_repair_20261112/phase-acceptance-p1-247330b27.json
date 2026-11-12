@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "Phase 1: F411, the marker guard accepts the pending marker",
+  "phase_base_sha": "088efb891a20a2be2619b839812ad8ee13bac562",
+  "audited_head_sha": "247330b273734060b758163d73521a33d60b44c9",
+  "route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "Phase 1 passes at the audited HEAD 247330b27. The guard accepts the pending marker and fails every single-character marker outside the set. The cases file passes with 15 cases and no failure. The sweep, the single-track check, the catalog test, and the detector test all exit 0. The six track commits touch only allowed paths. Each of the four [x] tasks names its commit. The Phase 1 criteria AC-2, AC-3, AC-4, and AC-7 hold. The five nonblocking findings carry forward to a later phase.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F151 with F3: the predicate at tests/orchestrator_marker_vocabulary.sh:56 matches one marker character only. A marker of two or more characters, for example - [xx] task, passes the guard, so FR-1 is not met literally for that shape. No live plan carries such a marker. The base guard had the same shape. The strategy finding F3 and both reviews record the gap as a deferred residual. Route: a later phase, with a case that pins the wider class.",
+    "F152: the hits file at tests/orchestrator_marker_vocabulary.sh:56 uses the fixed prefix /tmp/orchestrator-marker-hits.$$ and does not use mktemp. Another user on this shared machine can pre-create that name as a symlink. The file is removed on every normal path at line 64. Route: a later phase, with mktemp and a trap.",
+    "F153 partial: the guard does not validate the --track value, so track_dir_resolve at tests/orchestrator_marker_vocabulary.sh:9 joins a path separator into the scope. The new case track_traversal_outside_root_exits_1 pins that a traversal to an offending plan outside the root prints no PASS line. A traversal to a clean plan outside the root still prints PASS. Route: a later phase, with a case that rejects any id holding a separator.",
+    "A16: git worktree list --porcelain shows 7 worktrees, not the 1 that the P1 closeout gate in test-strategy.md section 6.4 names. The six auxiliary worktrees were created on 2026-11-11 at 03:22, before the phase base commit of 2026-11-12 at 07:41. The six commits of this track create no worktree, and the track cannot remove worktrees that other tracks own. Route: the orchestrator of the shared tree.",
+    "Plan currency: the note of task 1.4 in plan.md states cases_total=14 at the HEAD it names, 14a501a77. The adversarial commit 247330b27 added one case, so the count at the audited HEAD is 15. The note stays true for its own HEAD. Route: the next phase check, which should record the count at the acceptance HEAD."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 247330b273734060b758163d73521a33d60b44c9, which equals the audited HEAD. The HEAD did not move during the audit.",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh exited 0. It printed 15 CASE lines, all PASS, then cases_total=15 cases_failed=0. The floor of 14 holds.",
+    "bash tests/orchestrator_marker_vocabulary.sh exited 0. It printed PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked). No FAIL line appeared.",
+    "bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112 exited 0. It printed (1 plans checked).",
+    "bash tests/orchestrator_catalog.sh exited 0. It printed PASS: A12/A13 guard declarations and archive directories verified (6 guards) and PASS: measure anti-pattern catalog exists with A1-A15.",
+    "bash tests/orchestrator_detector_syntax.sh exited 0 and printed PASS: orchestrator detector recipes use executable ripgrep option syntax.",
+    "bash tests/orchestrator_review_execution_truthfulness.sh exited 0 and printed PASS: executed review tracks are not fully blocked by deferred:review-execution. The third doctor step still passes.",
+    "The A8 token detector printed a8_tokens=4. The Guard line detector returned one hit at measure/anti-patterns.md:252, and the A8 heading stays at line 232.",
+    "bash -n exited 0 for tests/orchestrator_marker_vocabulary.sh and for tests/orchestrator_marker_vocabulary_cases.sh.",
+    "Path check: git diff --name-only 088efb891..HEAD listed measure/anti-patterns.md, measure/tracks/doctor_gate_repair_20261112/plan.md, tests/orchestrator_marker_vocabulary.sh, and tests/orchestrator_marker_vocabulary_cases.sh. Every path is an allowed write path of plan rule 13. No path sits under apps/, packages/, or services/. The label is doctor_out_of_scope_paths=0.",
+    "Per-commit path check: git show --name-only for 0088e86c8, d8b60a75c, 150e22e9d, 14a501a77, ddd74291f, and 247330b27 showed one planned path each, and no other path.",
+    "SHA check: git log 088efb891..HEAD listed six commits, and every subject carries track_id: doctor_gate_repair_20261112. No other track committed in the range.",
+    "SHA check: each [x] task of plan.md names its commit. Task 1.1 names 0088e86c8, task 1.2 names 150e22e9d, task 1.3 names 14a501a77, and task 1.4 names the HEAD 14a501a77.",
+    "SHA check: git rev-parse resolved 0088e86c8, 150e22e9d, 14a501a77, ddd74291f, and 247330b27. Every commit header is 81 to 94 characters, starts in lower case, and carries the track id.",
+    "Head currency: git diff --name-only ddd74291f..247330b27 listed only tests/orchestrator_marker_vocabulary_cases.sh. The guard and the catalog bytes are unchanged since the Green commits, so the prerequisite results still apply. The allowed test-only commit is 247330b27.",
+    "Criteria check, AC-2: the cases file exits 0. The case clean_active_exits_0 holds a fixture with - [ ] 1.1 task and expects exit 0. The case unknown_marker_exits_1 holds a fixture with - [?] 1.1 task and expects exit 1 with the pinned FAIL line.",
+    "Criteria check, AC-3: the sweep exits 0 and its output holds no FAIL: unsupported task marker line.",
+    "Criteria check, AC-4: the catalog test exits 0 and its output names entries A1 to A15.",
+    "Criteria check, AC-7: the path list holds no path under apps/, packages/, or services/. The per-commit scope check gives doctor_out_of_scope_paths=0.",
+    "Criteria scope: AC-1, AC-5, and AC-6 belong to Phase 2 and Phase 3. AC-8 already holds, because measure/tracks.md:1665 to 1667 names the due date of 2026-11-14, the owner chain, and the findings F411 and F421.",
+    "Red claim check: the base guard at 088efb891 holds the predicate grep -n '^- \\[ \\] '. It rejects the pending line and ignores every other marker. Seven cases therefore fail at the base, and the adversarial run of that same predicate reported cases_failed=7 with the same seven names.",
+    "Implementation check: git diff 088efb891..150e22e9d shows the predicate, the comment, and the two messages of the guard, and every line matches plan task 1.2 word for word.",
+    "Catalog check: git diff 088efb891..14a501a77 shows the A8 text. The heading and the Guard line stay, and the text names the accepted set and the pending marker.",
+    "Caller check: measure/doctor.sh is unchanged in the phase range and calls the guard at line 5 with no argument. The interface and the exit code are unchanged, so no caller update is needed.",
+    "Isolation check: no fixture directory named fixture remains in measure/tracks or in measure/archive. No scratch root and no hits file remain under /tmp.",
+    "A6 check: the registry entry states F411 as a requirement and does not claim that F411 is resolved. The cited adversarial test passes, so the registry does not outrun the implementation.",
+    "A14 check: the new test files hold no rg -nE recipe, and the detector syntax test exits 0.",
+    "Aggregate check: no file in package.json or in .github/workflows names the marker guard or the cases file, so the cases file cannot sit red inside a shared suite.",
+    "Scope check: the six auxiliary worktrees under /home/daniebo/Desktop/rama-worktrees carry a creation date of 2026-11-11 at 03:22, which is before the phase base commit."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log --oneline -12",
+    "git log --oneline 088efb891..HEAD",
+    "git log 088efb891..HEAD --format=%H --fixed-strings --grep=track_id: doctor_gate_repair_20261112",
+    "git diff --name-only 088efb891..HEAD",
+    "git show --stat --format= 247330b273734060b758163d73521a33d60b44c9",
+    "git show --name-only --format= for 0088e86c8, d8b60a75c, 150e22e9d, 14a501a77, ddd74291f, 247330b27",
+    "git diff 0088e86c8 247330b27 -- tests/orchestrator_marker_vocabulary_cases.sh",
+    "git diff 088efb891 150e22e9d -- tests/orchestrator_marker_vocabulary.sh",
+    "git diff 088efb891 14a501a77 -- measure/anti-patterns.md",
+    "git show 088efb891:tests/orchestrator_marker_vocabulary.sh",
+    "git diff --name-only ddd74291f 247330b27",
+    "git diff --name-only 14a501a77 247330b27",
+    "git diff ddd74291f 247330b27 -- measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "git diff --name-only 088efb891 HEAD -- measure/doctor.sh",
+    "git rev-parse 0088e86c8 150e22e9d 14a501a77 ddd74291f 247330b27",
+    "git log --format=%s 088efb891..HEAD with a length count per subject",
+    "git worktree list --porcelain",
+    "git worktree list",
+    "ls -la --time-style=long-iso .git/worktrees/",
+    "git status --porcelain",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112",
+    "bash tests/orchestrator_catalog.sh",
+    "bash tests/orchestrator_detector_syntax.sh",
+    "bash tests/orchestrator_review_execution_truthfulness.sh",
+    "bash -n tests/orchestrator_marker_vocabulary.sh",
+    "bash -n tests/orchestrator_marker_vocabulary_cases.sh",
+    "awk over measure/anti-patterns.md for the A8 token count",
+    "grep -n for the A8 Guard line in measure/anti-patterns.md",
+    "grep -n for rg -nE in measure/anti-patterns.md",
+    "grep -n for rg -nE in the two guard test files",
+    "grep -n for doctor_gate_repair_20261112 in measure/tracks.md",
+    "ls measure/tracks/ with a count of fixture names",
+    "ls measure/archive/ with a count of fixture names",
+    "ls -d /tmp/orchestrator-marker-cases.* with a count",
+    "ls /tmp/orchestrator-marker-hits.* with a count"
+  ],
+  "changed_files": [
+    "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p1-247330b27.json",
+    "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p1-247330b27.log"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "Phase 1 passes at the audited HEAD 247330b27, with no blocking finding. The next phase is Phase 2 (F421). Two items stay open for the orchestrator. First, question Q1 of test-strategy.md section 8 waits for the PM: the doctor gate records the architecture verdict and does not gate on it, which is the default of spec D-3 option (C). My default is option (C). Hold task 2.1 until the PM answers, or order the Red role on the default, because the due date is 2026-11-14. Second, the A16 worktree finding: the strategy closeout gate names one worktree, and the repository holds seven. My default is that the per-commit scope check replaces the shared-state check, as section 1.5 already does for the path list. The orchestrator should record the six worktrees and name their owning tracks, and the owner of each worktree should prune it after its merge. Four residuals move to a later phase: the wider marker class with a case, the mktemp hits path, the --track separator rule with a case, and the count of 15 in the next phase check. The acceptance records the HEAD it accepted as 247330b273734060b758163d73521a33d60b44c9, and it allows the test-only commit 247330b27 after the review head ddd74291f.",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "tests/orchestrator_marker_vocabulary.sh:56 matches one marker character, so a marker of two or more characters passes and FR-1 does not hold literally for that shape."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "bash tests/orchestrator_marker_vocabulary_cases.sh exits 0 with cases_total=15 cases_failed=0, and each Red claim has a case that failed at the base, but the multi-character marker path has no case."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git show --name-only for the six commits shows one planned path each, and every path sits in the allowed write set of plan rule 13."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every plan claim was re-run at the audited HEAD, and each evidence entry names a command with its exit and its printed count or a file line."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 4,
+      "evidence": "The verdict pass matches my own checks of the predicate, the two messages, the path list, and the base guard, but the review names neither the worktree state nor the count of 15."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "nvidia/stepfun-ai/step-5-preview#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "The verdict pass matches my own run of the cases file and the sweep, and I confirmed F152 and F153 at tests/orchestrator_marker_vocabulary.sh:56 and :9, but the review names no worktree state."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The kill attribution of the 18 mutants matches the table of test-strategy.md section 7.1, and I re-ran the case file at HEAD and confirmed 15 cases with no failure."
+    }
+  ]
+}

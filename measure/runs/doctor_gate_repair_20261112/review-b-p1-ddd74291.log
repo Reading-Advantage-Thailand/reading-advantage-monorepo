@@ -1,0 +1,52 @@
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-review-b-security",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P1",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "confidence": "high",
+  "retry_recommendation": "none",
+  "artifact": "measure/runs/doctor_gate_repair_20261112/review-b-p1-ddd74291.json",
+  "summary": "The guard accepts the pending marker and still fails each single-character marker outside the set. I audited the guard at commit 150e22e9d and the cases file at commit 0088e86c8. Base guard 088efb89 rejected only the literal '- [ ] ' line and passed '- [?] '. New guard ddd74291f rejects every single-character marker outside {space, ~, x, b}. Commands: cases script 14 of 14 PASS, exit 0; guard exit 0 with (93 plans checked); traversal probes exit 1 with no plan.md at the path. Audited HEAD is current. Three nonblocking findings (F151, F152, F153). No blocking findings. A2 not applicable. A6 satisfied.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F151 (known gap, recorded): the predicate matches exactly one marker character, so a marker of two or more characters (for example `- [xx] 1.1 task`) is not flagged. No active plan carries such a marker (grep over measure/tracks/*/plan.md returns no hit), so no real wrong marker passes. The base guard had the same shape weakness.",
+    "F152: the hits file path /tmp/orchestrator-marker-hits.$$ is a fixed prefix plus the process id and is not made with mktemp, so another user on a shared machine can pre-create a symlink at that path. The name is unique per process and the file is removed after the read loop for each plan (tests/orchestrator_marker_vocabulary.sh:56, :64), including the early loop exit; an abnormal kill of the process is the only path that leaves it.",
+    "F153: no adversarial case pins the --track boundary. track_dir_resolve joins an unvalidated argument into measure/archive/$track_id or measure/tracks/$track_id (tests/orchestrator_marker_vocabulary.sh:9-16), so `../foo` builds a path outside the guarded roots. In this run both `--track ../../etc` and `--track ../doctor_gate_repair_20261112` exit 1 with 'FAIL: no plan.md found for requested scope', because no plan.md sits at those paths. The cases file holds 14 cases and none probes `--track ../`."
+  ],
+  "evidence": [
+    "git show 150e22e9d: predicate becomes `grep -nE '^- \\[^ ~xb\\] '`; both messages name the set {` `, `~`, `x`, `b`}.",
+    "git show 088efb891a20a2be2619b839812ad8ee13bac562:tests/orchestrator_marker_vocabulary.sh: predicate `grep -n '^- \\[ \\] '` rejected only the literal pending line.",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh at ddd74291f: 14 CASE lines PASS, cases_total=14 cases_failed=0, exit 0.",
+    "bash tests/orchestrator_marker_vocabulary.sh at ddd74291f: PASS with (93 plans checked), exit 0.",
+    "grep -rnE '^- \\[^ ~xb\\] ' measure/tracks/*/plan.md: no hit. grep -rnE '^- \\[^ ~xb]{2,}\\] ' measure/tracks/*/plan.md: no hit.",
+    "git status --porcelain measure: only ' M measure/tracks/primary_in_app_help_20261023/plan.md' (an unrelated edit outside this phase); the audited files are clean.",
+    "git diff --name-only 088efb891..ddd74291: measure/anti-patterns.md, measure/tracks/doctor_gate_repair_20261112/plan.md, tests/orchestrator_marker_vocabulary.sh, tests/orchestrator_marker_vocabulary_cases.sh. This matches the declared blast radius.",
+    "tests/orchestrator_marker_vocabulary_cases.sh: mktemp -d per case, fixtures under $tmp_root/measure/, rm -rf $tmp_root in run_case on every path. No fixture enters measure/tracks.",
+    "Quoting: the guard quotes $plan, $track_dir, and the glob; the cases file quotes $tmp_root in write_plan, has_literal, and run_guard.",
+    "A6: measure/tracks.md:1667 F411 wording matches a green adversarial test (14 of 14 cases, guard exit 0).",
+    "A2: not applicable. The diff holds no draft-to-published flip and no consent or anonymization logic."
+  ],
+  "commands": [
+    "git show 150e22e9d",
+    "git show 0088e86c8",
+    "git show 088efb891a20a2be2619b839812ad8ee13bac562:tests/orchestrator_marker_vocabulary.sh",
+    "bash -n tests/orchestrator_marker_vocabulary_cases.sh",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ../../etc",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ../doctor_gate_repair_20261112",
+    "git status --porcelain measure",
+    "git diff --name-only 088efb891a20a2be2619b839812ad8ee13bac562 ddd74291f5eb64c72bc807e37ef62bb295f635aa"
+  ],
+  "changed_files": [
+    "tests/orchestrator_marker_vocabulary.sh",
+    "tests/orchestrator_marker_vocabulary_cases.sh",
+    "measure/anti-patterns.md",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md"
+  ],
+  "handoff": "Review B (security) passes Phase 1. No contest items, no question needed. Security applicability is 'applicable' for the guard script itself. Suggested later-phase work: mktemp for the hits path, a --track traversal case, and a two-or-more-character marker case."
+}
+END_MEASURE_AGENT_RESULT

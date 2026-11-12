@@ -1,0 +1,109 @@
+# Review B (security, gate integrity, validation), Phase 2, round r2
+# Track: doctor_gate_repair_20261112, phase P2
+# Route: kimi-code-plan-cn/kimi-for-coding
+# phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec
+# audited_head_sha=af66a6d661965ce500c2f7a7b9d2a3c6611f9c59 (confirmed current)
+
+## Verdict: pass — F251 withdrawn, no new blocking findings
+
+## Re-review of round r1 finding F251: WITHDRAWN.
+# measure/doctor.sh:15 now runs the CLI directly:
+#   (cd packages/architecture-enforcement && ../../node_modules/.bin/tsx
+#    src/architecture-check-cli.ts --skip-input-snapshot-pin)
+# No pnpm layer sits in the call path. Line 16 reads the real CLI exit.
+# The saved run doctor-run-bbe5e5860.log:9 records 'step 4 exits 2', line 12
+# records doctor_exit=0, and line 14 records step 4 cli_exit=2. The real
+# exit 2 reached the gate. The timing run timing-run-bbe5e5860.log:10
+# records cli_exit=2 (heavy_rc=2) for the direct command. The harness
+# models the real path with a stub tsx at <tmp>/node_modules/.bin/tsx.
+# Live run: bash tests/orchestrator_doctor_gate.sh ->
+# cases_total=24 cases_failed=0.
+
+## Check 2: the known-drift match is exact. PASS.
+# doctor.sh:26 uses grep -qxF: a whole-line, fixed-string match of the exact
+# drift line. An exit 2 with any other output falls to the tool-failure
+# branch at lines 32-34 and the gate exits 1. Case
+# tsx_exit_2_manifest_drift_gate_exits_0 asserts exit 0 with the exact
+# line. Case tsx_exit_2_other_line_gate_exits_1 sets a line that shares
+# the 'Architecture check failed:' prefix and asserts exit 1 with both
+# tool-failure lines; this kills the shorter-prefix mutant named in
+# test-strategy.md:461. The tool_failure_codes loop runs 2, 3, 126, 137
+# with no message and 127 with no stub. PASS.
+# Nit N3: no case kills a mutant that drops grep -x (whole-line). The
+# implementation as written is exact; the note goes to the adversarial
+# role.
+
+## Check 3: the F207 residual. Medium, nonblocking.
+# Decision: yes, in mechanism, a real failure can hide behind exit 0. A
+# failed cd in the step 4 subshell (doctor.sh:15) yields status 1, and an
+# uncaught Node exception at module load exits 1 before the CLI catch
+# block. Line 20 maps status 1 to the boundary-verdict branch, and the
+# gate exits 0.
+# Severity for the gate's purpose: Medium. I concur with Review A r2.
+# Likelihood is low. The three guards run first with the same
+# cwd-relative paths, so a wrong working directory fails the gate before
+# step 4. Impact is bounded. Doctor is a local health signal; the
+# boundary check keeps gating every push in CI (spec D-3). The closeout
+# role reads the doctor exit code, so a false green weakens closeout
+# integrity; that keeps this above Low. Hardening (Review A option 2)
+# needs a spec amendment and belongs to a later task. Not blocking.
+
+## Check 4: gate hygiene. PASS.
+# doctor.sh:2 holds set -euo pipefail. The three guard steps stay bare
+# lines 4-6. The capture block at lines 14-17 runs set +e, the command,
+# the status capture, then set -e. Nothing after line 17 runs with
+# errexit off. The exit-0 and exit-1 branches (lines 20-24) print and
+# exit inside the script; errexit cannot skip them.
+
+## Check 5: harness isolation and record provenance. PASS.
+# run_gate sets PATH=<tmp>/bin:/usr/bin:/bin. The step 4 command resolves
+# tsx by a repo-relative path inside the scratch root, so the real tsx
+# and pnpm cannot run. The 127 case and the 127 branch assert
+# tsx_is_absent with test -x before the gate runs. ls -d
+# /tmp/orchestrator-doctor-gate.* finds no leftover root after my run.
+# Every record value traces to the two saved logs at HEAD bbe5e5860:
+# HEAD, DATE, the PASS lines, STEP 4 exit 2, the VERDICT line, and the
+# DURATION 175.150 s from timing-run-bbe5e5860.log:11, whose source sha
+# equals the record HEAD line. Catalog A5 holds.
+# A6: measure/tracks.md:1667 still says 'new (spec and plan only)'. No
+# overstatement. A2 does not apply; no publish gate exists in this track.
+
+## Scope: PASS.
+# Commits bbe5e5860, af66a6d66, 50db02a63, 68e7ee750, ad72cee7a touch
+# only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the
+# track folder. doctor_out_of_scope_paths=0.
+
+MEASURE_AGENT_RESULT
+status: pass
+verdict: pass
+role: measure-review-b-security
+track: doctor_gate_repair_20261112
+phase: P2
+round: r2
+phase_base_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+audited_head_sha: af66a6d661965ce500c2f7a7b9d2a3c6611f9c59
+route: kimi-code-plan-cn/kimi-for-coding
+f251: withdrawn (direct CLI call reads the real exit; saved run records
+  cli_exit=2 at the gate; 24 of 24 cases pass)
+blocking_findings: 0
+nonblocking_findings: 2 (F207 Medium residual, concurring with Review A
+  r2; N3 test-meaning nit on the un-killed grep -x mutant)
+commands_run:
+  - git rev-parse HEAD
+  - git show ad72cee7a (spec and plan amendments)
+  - git log b6a2531c5..af66a6d66 -- tests/orchestrator_doctor_gate.sh
+  - git diff b6a2531c5..50db02a63 -- tests/orchestrator_doctor_gate.sh
+  - git show --name-only (five r2 commits)
+  - bash tests/orchestrator_doctor_gate.sh -> cases_total=24 cases_failed=0
+  - ls -d /tmp/orchestrator-doctor-gate.* -> no leftover root
+f207_decision: yes, in mechanism, a failed cd or a module-load crash
+  gives exit 1, which the gate maps to a boundary verdict and exit 0.
+  Severity for the gate's purpose: Medium. Not blocking for Phase 2.
+retry_recommendation: none
+handoff: F251 withdrawn. The PM question on F207 already travels with
+  Review A r2 (default option 1, accept with a caveat; option 2 hardening
+  later); I add no new escalation. N3 goes to the adversarial role. The
+  gate hygiene, the harness isolation, the record provenance (A5), and
+  the registry state (A6) all pass.
+confidence: high
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P1",
+  "phase_base_sha": "088efb891a20a2be2619b839812ad8ee13bac562",
+  "role_base_sha": "088efb891a20a2be2619b839812ad8ee13bac562",
+  "audited_head_sha": "ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "Phase 1 implements FR-1 and FR-2 exactly as planned. The guard predicate, the FAIL line, and the PASS line match the plan and the spec word for word. FAIL lines go to stderr, one per hit; the PASS line goes to stdout. The --track scope, the usage error with exit 2, the archive exclusion, and the hits file removal all hold. Catalog A8 keeps its heading and Guard line and names the accepted set. All 14 cases pass, the sweep passes with 93 plans, the single-track check passes, and the catalog test exits 0. No other live caller of the guard breaks; doctor.sh step 2 now passes and step 4 is untouched. The closeout rule stays a separate installed rule.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1: The predicate '^- \\[[^ ~xb]\\] ' does not match a marker of two or more characters, so '- [xx] task' and '- []' pass the guard. The base guard accepted them too, so this is not a regression. Test-strategy finding F3 records it as a known residual for Review B.",
+    "N2: The guard comment at tests/orchestrator_marker_vocabulary.sh lines 32 to 40 now names the closeout rule (no [ ] or [~] task at archive), which is an installed-role rule and stays outside this track. The comment states it; nothing enforces it here."
+  ],
+  "evidence": [
+    "audited_head_sha ddd74291f5eb64c72bc807e37ef62bb295f635aa equals git rev-parse HEAD.",
+    "git diff --name-only 088efb891..ddd74291f lists only measure/anti-patterns.md, measure/tracks/doctor_gate_repair_20261112/plan.md, tests/orchestrator_marker_vocabulary.sh, tests/orchestrator_marker_vocabulary_cases.sh. All are allowed write paths of plan rule 13. No product file changed.",
+    "git show --name-only per commit: 0088e86c8 holds the cases file only; d8b60a75c holds plan.md only; 150e22e9d holds the guard only; 14a501a77 holds measure/anti-patterns.md only; ddd74291f holds plan.md only. Staging discipline holds.",
+    "Guard line 56 is grep -nE '^- \\[[^ ~xb]\\] ' \"$plan\" >/tmp/orchestrator-marker-hits.$$, the exact predicate of plan task 1.2.",
+    "Guard line 60 prints the FAIL line 'FAIL: unsupported task marker [%s] in %s; use [ ], [~], [x], or [b] deferred:<owner>' to stderr, one line per hit, with the marker read from the hit line. Guard line 71 prints the PASS line 'PASS: all active track plans use only [ ], [~], [x], or [b] task markers (%d plans checked)' to stdout. Both match FR-1 word for word.",
+    "The usage error exits 2 (guard lines 21 to 30), the --track scope uses track_dir_resolve with archive first (lines 9 to 16, 41 to 43), the active glob reads only measure/tracks/*/plan.md (line 46), and the hits file is removed per plan (line 64).",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh exits 0 with cases_total=14 cases_failed=0. The empty-scope case proves the no-plan check fails closed (A4), and all counts are labeled (A3).",
+    "bash tests/orchestrator_marker_vocabulary.sh exits 0 with (93 plans checked); bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112 exits 0 with (1 plans checked). Both match the Green evidence claims in plan task 1.2.",
+    "bash tests/orchestrator_catalog.sh exits 0 with PASS lines for A12/A13 guards and A1-A15, so the A8 Guard line still resolves to a live file.",
+    "The A8 token detector prints a8_tokens=4, so the A8 text names [ ], [~], [x], and [b]. The heading '## A8 — `[ ]` (space) marker ambiguity (legacy)' at measure/anti-patterns.md line 232 and the Guard line at line 252 are kept.",
+    "Red evidence verified: git show of the base guard at 088efb891 confirms the predicate 'grep -n '^- \\[ \\] '', which rejects [ ] and ignores every other marker, so exactly the seven cases the plan names fail at the base (clean_active, unknown_marker, markers_outside_set, two_offenders, fail_on_stderr clean part, two_plans_count, track_archive_first) and the seven named characterization cases pass. The plan's Red claim cases_total=14 cases_failed=7 is consistent with the base predicate.",
+    "No other live caller of the guard: measure/doctor.sh line 5 calls it with no argument (unchanged), tests/orchestrator_catalog.sh reads the A8 Guard line (passes), no .github/workflows reference. The truthfulness guard counts only [~xb] lines and is unaffected (strategy M7).",
+    "doctor.sh is unchanged in this range: step 2 now exits 0 because the sweep passes; step 4 still runs 'pnpm architecture:check' with no flag, so the full doctor run stays red by design until Phase 2 (strategy section 1.4). No doctor.sh run was needed for this phase."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log --oneline 088efb891..ddd74291f",
+    "git diff --name-only 088efb891a20a2be2619b839812ad8ee13bac562..ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+    "git diff 088efb891..ddd74291f -- tests/orchestrator_marker_vocabulary.sh",
+    "git diff 088efb891..ddd74291f -- measure/anti-patterns.md",
+    "git show --name-only --format='%h %s' 0088e86c8 d8b60a75c 150e22e9d 14a501a77 ddd74291f",
+    "git show 088efb891a20a2be2619b839812ad8ee13bac562:tests/orchestrator_marker_vocabulary.sh",
+    "git log 088efb891..ddd74291f --format='%s'",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112",
+    "bash tests/orchestrator_catalog.sh",
+    "awk a8 token detector over measure/anti-patterns.md"
+  ],
+  "changed_files": [
+    "measure/anti-patterns.md",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "tests/orchestrator_marker_vocabulary.sh",
+    "tests/orchestrator_marker_vocabulary_cases.sh"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "Phase 1 passes Review A. No blocking findings. Hand to Phase 2 (F421). Note Q1 of test-strategy.md (PM confirmation of spec D-3 option C) stays open and gates task 2.1; the orchestrator should send that question to the PM now because the due date is 2026-11-14. Nonblocking residuals N1 (two-character markers pass) and N2 (closeout rule stated only in a comment) go to Review B at task 3.2 per strategy F3.",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "tests/orchestrator_marker_vocabulary_cases.sh exits 0 with cases_total=14 cases_failed=0 and the sweep passes with (93 plans checked); the predicate and both messages match plan task 1.2 and FR-1 word for word."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "Each Red claim is a failing-first case: the base predicate at 088efb891 confirms exactly the seven named cases fail for the named reasons."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git show --name-only per commit shows each commit holds only its planned paths, all inside the allowed write set of plan rule 13."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every plan claim was re-run at HEAD ddd74291f: the four verification commands, the per-commit scope check, and the a8_tokens=4 detector."
+    }
+  ]
+}

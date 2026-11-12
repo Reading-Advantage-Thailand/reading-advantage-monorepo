@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P2",
+  "phase_base_sha": "e592f824607cc220c02096e0a66d3174d1fe78ec",
+  "audited_head_sha": "af66a6d661965ce500c2f7a7b9d2a3c6611f9c59",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "All 29 mutants of test-strategy sections 7.2 and 7.3 plus m-x and m-cd were run in scratch roots; 28 are killed and 1 (m-cd) confirms the known F207 residual. The 21 doctor.sh mutants of section 7.2, the 127-case test mutant, and all 5 record mutants of section 7.3 died on first run. Mutant m-x (grep -qF instead of grep -qxF in the drift match) survived the 24-case suite, as Review B N3 predicted; the new case drift_match_requires_whole_line kills it and passes on the real doctor.sh. Mutant m-cd (a step 4 command whose cd fails) gives exit 1, and the gate records a boundary verdict and exits 0, which confirms F207; no case can pin it without a change of doctor.sh, so it is a PM finding, not a missed mutant. The new case is committed in 5293392b8, and PROJECT_TESTS exits 0.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F207 pin check (concurs with Review A r2 and Review B r2): m-cd confirms the mechanism. In a scratch root without packages/architecture-enforcement, the cd fails, the subshell gives exit 1, and measure/doctor.sh prints 'ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110' and exits 0. No case of tests/orchestrator_doctor_gate.sh can pin this today, because pinning needs doctor.sh to distinguish a failed cd from a CLI boundary exit 1, and that is a change of doctor.sh plus a spec amendment. This is not counted as a missed mutant."
+  ],
+  "evidence": [
+    "m01_no_set_plus_e: KILLED by tsx_exit_1_gate_exits_0 (expected gate exit 0, got exit 1)",
+    "m02_or_true: KILLED by tsx_exit_1_gate_exits_0 (the ARCHITECTURE line for exit 1 is missing)",
+    "m03_pnpm_architecture_check: KILLED by tsx_exit_1_gate_exits_0 (expected gate exit 0, got exit 1)",
+    "m04_code1_tool_failure: KILLED by tsx_exit_1_gate_exits_0 (expected gate exit 0, got exit 1)",
+    "m05_all_exit2_drift: KILLED by tsx_exit_2_other_line_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m06_all_exit2_tool_failure: KILLED by tsx_exit_2_manifest_drift_gate_exits_0 (expected gate exit 0, got exit 1)",
+    "m07_prefix_drift_match: KILLED by tsx_exit_2_other_line_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m08_only_code2_tool_failure: KILLED by tsx_exit_127_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m09_catalog_guard_or_true: KILLED by guard_catalog_failure_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m10_marker_guard_or_true: KILLED by guard_marker_failure_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m11_truthfulness_guard_or_true: KILLED by guard_truthfulness_failure_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m12_no_set_e: KILLED by guard_catalog_failure_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m13_step_before_guards: KILLED by guard_catalog_failure_gate_exits_1 (tsx_calls=1 expected=0)",
+    "m14_flag_dropped: KILLED by tsx_argv_exact (the tsx log does not hold the pinned argv)",
+    "m15_pin_refresh: KILLED by tsx_exit_1_gate_exits_0 (expected gate exit 0, got exit 1)",
+    "m16_command_twice: KILLED by tsx_argv_exact (tsx_calls=2 expected=1)",
+    "m17_fixed_code_1: KILLED by tsx_exit_0_gate_exits_0 (the ARCHITECTURE line for exit 0 is missing)",
+    "m18_toolfail_prints_gate_line: KILLED by tsx_exit_2_other_line_gate_exits_1 (the tool failure DOCTOR line is missing)",
+    "m19_verdict_prints_toolfail_line: KILLED by tsx_exit_1_gate_exits_0 (the DOCTOR gate line is missing)",
+    "m20_toolfail_exits_0: KILLED by tsx_exit_2_other_line_gate_exits_1 (expected gate exit 1, got exit 0)",
+    "m21_writes_file: KILLED by no_write_in_root (the file list of the root changed during the run)",
+    "m22_127_case_real_executable (test mutant of 7.2): KILLED by the tsx_absent assertion; without it the case runs a stub, the gate exits 0, and the case fails (expected gate exit 1, got exit 0)",
+    "m_x_drift_match_no_whole_line: SURVIVED the 24-case suite, then KILLED by the new case drift_match_requires_whole_line (expected gate exit 1, got exit 0); the new case passes on the real doctor.sh",
+    "m_cd_step4_cd_fails: mechanism confirmed, gate exit 0 with the boundary line for exit 1; not killable without a doctor.sh change, recorded as the F207 PM finding",
+    "r1_step2_exit_1: KILLED by record_step_exit_codes (the STEP 2 exit code is 1, expected 0)",
+    "r2_verdict_code_differs: KILLED by record_verdict_code_matches_step4 (the VERDICT code 1 differs from the STEP 4 code 2)",
+    "r3_step_command_changed: KILLED by record_step_commands (the STEP 3 command text is not the planned literal)",
+    "r4_owner_other_track: KILLED by record_owner_line (the record does not hold the owner line)",
+    "r5_record_absent: KILLED by record_file_present (the record file is absent)",
+    "Every mutant passed bash -n before its run; no syntax-error mutant was counted as a kill.",
+    "Every scratch root was removed after its run; leftover_roots=0 at the end of each driver run."
+  ],
+  "commands": [
+    "git rev-parse HEAD (role base af66a6d66; HEAD 413bb5bb1 with no change to measure/doctor.sh, tests/orchestrator_doctor_gate.sh, or the track folder after the audited head)",
+    "python3 /tmp/opencode/driver-p2.py (28 file and record mutants in scratch roots, run with --part a and --part b)",
+    "python3 /tmp/opencode/driver-p2-extra.py (the 127-case test mutant and the m-cd mechanism check)",
+    "bash tests/orchestrator_doctor_gate.sh --part a (13 cases, cases_failed=0, with the new case on the real doctor.sh)",
+    "bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh (all exit 0)",
+    "git commit -m \"test(measure): add the phase 2 adversarial doctor cases (track_id: doctor_gate_repair_20261112)\" -- tests/orchestrator_doctor_gate.sh (5293392b8)"
+  ],
+  "changed_files": [
+    "tests/orchestrator_doctor_gate.sh"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "QUESTION FOR THE PM (via the orchestrator), with my default. F207 cannot be pinned by a test case today: a failed cd or an uncaught Node exception gives exit 1, and measure/doctor.sh records it as a boundary verdict and exits 0 (m-cd proves it). Pinning needs doctor.sh to tell a failed cd from a CLI exit 1, for example by sending an exit 1 with no boundary report text down the tool-failure path (Review A option 2). Option 1: accept the residual with the caveat sentence of Review A r2 (default). Option 2: harden doctor.sh in a later task with a spec amendment; the hardened rule is testable, and the harness of tests/orchestrator_doctor_gate.sh can pin it with a stub exit 1 that prints no boundary report. DEFAULT if no answer: option 1. m-x is closed: the new case drift_match_requires_whole_line kills it and passes on the real doctor.sh (commit 5293392b8). No missed mutant remains. Any later change of measure/doctor.sh or the record invalidates the kills and reruns this gate.",
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "All 28 killable mutants of sections 7.2 and 7.3 plus m-x and m22 die, and m-cd confirms the known F207 residual without a missed mutant."},
+    {"axis": "test_meaning", "score": 4, "evidence": "Each kill names its case and reason; one survivor (m-x) needed the new case drift_match_requires_whole_line, committed in 5293392b8."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "Only tests/orchestrator_doctor_gate.sh changed, committed by name; no mutant or scratch file entered the repository."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Every mutant has a CASE line and a driver result; PROJECT_TESTS exits 0 after the new case."}
+  ]
+}

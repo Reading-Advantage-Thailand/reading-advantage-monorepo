@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P2",
+  "phase_base_sha": "e592f824607cc220c02096e0a66d3174d1fe78ec",
+  "audited_head_sha": "4d38613725e981ebf35a085f642494bd3f8632fd",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "round": "r1",
+  "verdict": "fail",
+  "status": "fail",
+  "summary": "The implementation matches spec FR-3 and the 22-case harness passes, but the gate hides a real failure on the real invocation path. The saved run proves the CLI tool-failure code 2 reached the gate as 1 through the pnpm wrapper, was recorded as a boundary verdict, and doctor exited 0. The structural guards still gate, the capture block restores errexit, the record traces to the saved output, and the harness writes only in its temp roots.",
+  "blocking_findings": [
+    "F251: the gate records a tool failure as a boundary verdict on the real path, so a real failure hides behind doctor exit 0. The CLI contract returns 2 for a tool failure (packages/architecture-enforcement/src/architecture-check-cli.ts:135-150 and architecture-check.ts:251-256). The saved log shows the CLI took the catch path (stderr 'Architecture check failed: V2 reconciliation manifest is invalid...', doctor-run-49f96a7d8.log:13) and the inner tsx exited 2 (log:16, ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL). The wrapper chain 'pnpm run architecture:check' (package.json:7) then collapsed the code to 1 (log:17, '[ELIFECYCLE] Command failed with exit code 1.'), the gate saw 1, printed the boundary-verdict line (log:18), and the run ended with doctor exit 0 (log:5). The tool-failure branch of measure/doctor.sh:22-24 is unreachable in production for the CLI's own failure signal: any future CLI analysis failure, including a genuine analyzer crash, arrives as 1 and is recorded as benign drift owned by architecture_ci_input_pin_20261110. The R10 defense (the tool_failure_codes loop) passes only because the stub pnpm returns faithful codes the real wrapper destroys, so the test proves a property the production path does not have. Mitigants: the boundary check still gates every push in CI (spec D-3), and this specific error is the known sibling-owned drift the strategy outcome table expects on master (test-strategy.md:330-334); the defect is that the mechanism cannot distinguish that drift from any other tool failure. Green must repair the code mapping so the CLI verdict reaches the gate, or the gate must not claim a tool-failure protection it lacks."
+  ],
+  "nonblocking_findings": [
+    "N1 (nit, strategy finding F8): the ARCHITECTURE line names 'the owner of the remaining drift' also when step 4 exits 0, where no drift remains. The spec pins the text; the strategy default keeps it. Recorded, not blocking.",
+    "N2 (nit): the DURATION value in the record comes from the separate timing run, not the gate run itself. The saved log marks that source (doctor-run-49f96a7d8.log:6); the record does not. Catalog A5 still holds because the value sits in the saved output."
+  ],
+  "evidence": [
+    "Audited HEAD is current: git rev-parse HEAD returns 4d38613725e981ebf35a085f642494bd3f8632fd.",
+    "Check 1 pass: measure/doctor.sh:2 holds 'set -euo pipefail'; the three guard calls at lines 4-6 run under errexit before 'set +e' at line 11, so a failing guard aborts the gate and the architecture step never runs.",
+    "Check 1 pass: live run of bash tests/orchestrator_doctor_gate.sh prints cases_total=22 cases_failed=0, including the three guard-failure cases with pnpm_calls=0 and no ARCHITECTURE line.",
+    "Check 2 fail: doctor-run-49f96a7d8.log:13 matches the CLI catch-block message format at architecture-check-cli.ts:144-148, which returns 2 per line 149.",
+    "Check 2 fail: log:16 reports 'Command failed with exit code 2: tsx src/architecture-check-cli.ts'; log:17 reports '[ELIFECYCLE] Command failed with exit code 1.'; log:18 shows the gate recorded 'step 4 exits 1'; log:5 shows doctor exit 0.",
+    "Check 2 fail: the Green report itself states 'The inner tsx exits 2, the pnpm wrapper maps it to exit 1' (green-p2.log:29-30), so the collapse is known and reproduced in the saved output.",
+    "Check 3 pass: doctor.sh:11-14 runs 'set +e', the pnpm call, the capture, then 'set -e'; every later command runs with errexit on.",
+    "Check 4 pass: every record value traces to the saved log - HEAD from log:2, DATE from log:3, steps 1-3 exit 0 from the PASS lines log:8-11 plus doctor exit 0 under errexit, STEP 4 and VERDICT from log:18, DURATION from log:6, DOCTOR from log:19; no value comes from memory (catalog A5).",
+    "Check 5 pass: run_case (tests/orchestrator_doctor_gate.sh:690-709) builds one mktemp root per case, writes only inside it, and removes it; ls -d /tmp/orchestrator-doctor-gate.* finds no leftover root after the run.",
+    "Check 5 pass: the 127 case uses PATH=<tmp>/bin:/usr/bin:/bin and asserts pnpm_is_absent before it runs (test-strategy.md:267, fact M4: the real pnpm lives at /home/daniebo/.local/bin, outside that PATH); stub mode puts the stub first on PATH.",
+    "A6 pass: measure/tracks.md:1667 still says 'new (spec and plan only)'; the registry does not overstate the phase state.",
+    "Scope pass: the five track commits in e592f8246..4d3861372 touch only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the track folder; doctor_out_of_scope_paths=0. Commits 09bb8e109 and e3fd1aa38 belong to other tracks and are outside this audit."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git show 49f96a7d8 -- measure/doctor.sh",
+    "git show b6a2531c5 --stat",
+    "git log --oneline e592f8246..4d3861372",
+    "git diff --stat e592f8246..4d3861372 -- measure/doctor.sh tests/orchestrator_doctor_gate.sh measure/tracks/doctor_gate_repair_20261112 measure/runs/doctor_gate_repair_20261112",
+    "git log e592f8246..4d3861372 --format=%H --fixed-strings --grep='track_id: doctor_gate_repair_20261112'",
+    "git show --name-only --format= 4d3861372 657059226 49f96a7d8 02e9ee7e3 b6a2531c5",
+    "bash tests/orchestrator_doctor_gate.sh",
+    "ls -d /tmp/orchestrator-doctor-gate.* (no leftover root)",
+    "git status --porcelain measure/runs/doctor_gate_repair_20261112/"
+  ],
+  "changed_files": [
+    "measure/doctor.sh",
+    "tests/orchestrator_doctor_gate.sh",
+    "measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md"
+  ],
+  "retry_recommendation": "retry_implementation",
+  "handoff": "Answer to the orchestrator question 2: yes. From the saved output and the code, the gate can and did record a tool failure as a boundary verdict, and a real failure hid behind exit 0 in the saved run itself. The CLI returned 2 (tool failure per its contract), the pnpm wrapper collapsed it to 1, the gate recorded the drift-owner verdict, and doctor exited 0. Route F251 to Green: make the CLI verdict survive the wrapper (or change the wrapper invocation) so exit 2 reaches the gate, or drop the tool-failure claim. The PM should see this evidence before confirming spec D-3 option (C): with the wrapper collapse, a swallowed tool failure yields a false-green doctor, and only the CI push gate still catches the failure. Checks 1, 3, 4, 5 pass; the record is honest about what the gate saw (A5 holds). N1 and N2 are nits. No question needs the user now; the orchestrator carries F251 and the option (C) evidence to Green and the PM.",
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 3, "evidence": "doctor.sh matches spec FR-3 and 22 of 22 cases pass, but the real wrapper path defeats the tool-failure rule (doctor-run-49f96a7d8.log:16-18)."},
+    {"axis": "test_meaning", "score": 3, "evidence": "Real failing-first cases (red-p2: 7 cases fail at the base) and a full mutant map, but the R10 tool-failure defense is vacuous on the real path because the stub preserves codes the wrapper collapses."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The per-commit scope check lists only this track's files and doctor_out_of_scope_paths=0 (git show --name-only over the five track commits)."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Every claim traces to a saved log line, a code line, or a live command result such as cases_total=22 cases_failed=0."}
+  ]
+}

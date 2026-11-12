@@ -1,0 +1,48 @@
+Review A (correctness and architecture), Phase 2, track doctor_gate_repair_20261112.
+Route: claude-code/claude-sonnet-5-5#high
+phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec
+audited_head_sha=4d38613725e981ebf35a085f642494bd3f8632fd (equals HEAD)
+
+Checks that pass:
+- bash -n measure/doctor.sh: exit 0.
+- bash tests/orchestrator_doctor_gate.sh: exit 0, cases_total=22 cases_failed=0.
+- doctor.sh keeps set -euo pipefail and the three guard steps as bare lines (lines 2, 4 to 6).
+- The capture block (lines 11 to 14) and the exact ARCHITECTURE and DOCTOR lines equal spec FR-3.
+- The restore-condition comment (lines 8 to 10) names task 1.4d and the owner.
+- Red cases compare exit codes as integers (A1). Counts use labeled integers (A3).
+- The record path resolves archive first (A9).
+- No product file changed.
+
+Settled point (exit code of the real CLI):
+(a) The real CLI exit was 2 with the message "Architecture check failed: V2 reconciliation manifest
+    is invalid: Analyzer report hashes do not match current byte-identical reports"
+    (doctor-run-49f96a7d8.log line 13; architecture-check-cli.ts lines 143 to 149).
+(b) pnpm does not pass the code through. Line 16: ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL, child exit 2.
+    Line 17: ELIFECYCLE exit 1. Line 18: doctor.sh prints "step 4 exits 1".
+(c) The stub tests cannot see this gap. The stub pnpm exits with the code that the case sets.
+
+Findings:
+F201 High (blocking): doctor.sh records a CLI analysis failure as a boundary verdict. The FR-3
+  tool-failure branch cannot fire for a real CLI exit 2. The record and the plan claim a boundary
+  verdict that the run did not produce (A5).
+F202 High (blocking): the stub tests and part B accept the false record (shallow test).
+F203 Medium: the 127 cases assert pnpm_absent after the run, not before.
+F204 Low: plan task 2.4 cites a run at 657059226 with no saved log.
+F205 Nit: the owner clause also prints for exit 0 (known, pinned by the spec).
+
+Verdict: fail. Fix needs a PM decision (see handoff).
+
+MEASURE_AGENT_RESULT
+status: blocked
+role: measure-review-a-correctness
+track: doctor_gate_repair_20261112
+phase: P2
+phase_base_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+audited_head_sha: 4d38613725e981ebf35a085f642494bd3f8632fd
+verdict: fail
+blocking_findings: F201, F202
+nonblocking_findings: F203, F204, F205, F206
+retry_recommendation: escalate_human
+result_json: measure/runs/doctor_gate_repair_20261112/review-a-p2-4d3861372.json
+handoff: QUESTION FOR THE PM via the orchestrator. The real architecture CLI exits 2 on master (analysis failure, manifest invalid) and pnpm turns it into exit 1. Spec FR-3 assumes exit 1 is a boundary verdict. Option 1: apply the tool-failure rule to CLI exit 2; the gate exits 1 on master until the sibling track closes tasks 1.4 and 1.4d; AC-1 fails today. Option 2 (DEFAULT): count the manifest-drift analysis failure as the recorded drift; amend FR-3, M6, M11, the VERDICT text, and the record; keep CLI exit 2 from a real crash as a tool failure. Option 3: change only the record and messages (weakest). Any option needs a way to read the real CLI exit code and one Red case that models the pnpm wrapper. Fix F203 in the same round.
+END_MEASURE_AGENT_RESULT

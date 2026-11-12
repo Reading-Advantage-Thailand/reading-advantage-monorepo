@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P2",
+  "phase_base_sha": "e592f824607cc220c02096e0a66d3174d1fe78ec",
+  "audited_head_sha": "5293392b8beda8b72cb6de59cf9f6a145df0b5c2",
+  "route": "nvidia/stepfun-ai/step-5-preview#high",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Phase 2 is complete at HEAD 5293392b8beda8b72cb6de59cf9f6a145df0b5c2, which is current. Tasks 2.1 to 2.5 are [x] with commits and evidence, and the evidence matches the saved logs. measure/doctor.sh holds the four exit rules of FR-3 verbatim, calls tsx directly with no pnpm layer, and matches the spec text. The four commands run clean: tests/orchestrator_doctor_gate.sh exits 0 with cases_total=25 cases_failed=0, tests/orchestrator_marker_vocabulary_cases.sh exits 0 with cases_total=15 cases_failed=0, tests/orchestrator_catalog.sh exits 0 with the A1-A15 PASS line, and tests/orchestrator_marker_vocabulary.sh exits 0 with (93 plans checked). The doctor-run and timing logs at bbe5e5860 match every value of doctor-gate-evidence.md. The per-commit scope check gives doctor_out_of_scope_paths=0. Reviews A and B pass, the adversarial run killed 28 of 29 mutants, and the one survivor (m-x) died under the new case drift_match_requires_whole_line. F207 and F208 stay open and nonblocking, with F207 as an open PM question that has a default. One new nonblocking finding records the three-commit split of task 2.5.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F207 [open, Medium, residual tool-failure hazard, nonblocking]: measure/doctor.sh lines 15 to 20 capture the exit of the step 4 subshell and map exit 1 to a boundary verdict. A failed cd, or an uncaught Node exception before the CLI catch block, also gives exit 1, and the gate then prints the owner line and exits 0. Review A r2 names the hazard, Review B r2 concurs, and the adversarial case m-cd confirms the mechanism in a scratch root. No case of tests/orchestrator_doctor_gate.sh can pin it without a change of doctor.sh plus a spec amendment. The PM question travels with Review A r2. DEFAULT if no answer: option 1, accept the residual and add one caveat sentence to spec D-3 and one line to the gate record at task 3.4.",
+    "F208 [open, Low, stale spec value, nonblocking]: spec.md line 265 (section 8, OQ-3) still states the step 4 time as 165.684 s. That number came from the pnpm timing run of task 2.2. The run at the record HEAD measures 175.150 s in measure/runs/doctor_gate_repair_20261112/timing-run-bbe5e5860.log line 11, and the gate record holds the correct value. The spec sentence is the only stale place.",
+    "N4 [Low, observation, nonblocking]: task 2.5 landed in three commits (bbe5e5860 for measure/doctor.sh, af66a6d66 for the record and the plan, 5293392b8 for the test file) and not in the one commit that the task names. The plan evidence at task 2.5 states the reason: the record needs the saved logs of runs at the fix HEAD. Every commit header carries (track_id: doctor_gate_repair_20261112) and no path is out of scope, so the deviation is documented and not a false claim.",
+    "N5 [Low, observation, nonblocking]: the plan evidence of task 2.4 reports cases_total=22 and the Green evidence of task 2.5 reports cases_total=24 for tests/orchestrator_doctor_gate.sh. The current file reports 25, because the adversarial commit 5293392b8 added the case drift_match_requires_whole_line after those runs. Each count is a labeled integer tied to its own HEAD, and the test exits 0 today, so no claim is false."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 5293392b8beda8b72cb6de59cf9f6a145df0b5c2, equal to audited_head_sha. git diff --name-only 5293392b8beda8b72cb6de59cf9f6a145df0b5c2..HEAD returned no output, so no later commit exists.",
+    "Every commit between the prerequisite result HEAD af66a6d66 and the audited HEAD touches no doctor path: 5293392b8 touches tests/orchestrator_doctor_gate.sh only, and 3179c233e, 413bb5bb1, and a00c4471c touch the plans and specs of two other tracks. The implementation content of measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the track folder is unchanged, so the Review A, Review B, and adversarial results at af66a6d66 still apply. This acceptance accepts HEAD 5293392b8 and allows the test-only commit 5293392b8.",
+    "Tasks 2.1 to 2.5 of plan.md are [x], each with a commit SHA and evidence: 2.1 b6a2531c5, 2.2 49f96a7d8, 2.3 657059226, 2.4 657059226, 2.5 bbe5e5860. All five SHAs exist in git log e592f8246..5293392b8.",
+    "FR-3 and the four exit rules match the spec text: measure/doctor.sh line 2 keeps set -euo pipefail, lines 4 to 6 hold the three guard steps as bare lines, lines 8 to 12 hold the restore comment, line 15 runs (cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin) with no pnpm layer, line 16 captures the status, line 18 writes the output to the terminal, line 26 matches the drift line with grep -qxF (whole line), and lines 20 to 34 print the four rule texts word for word from spec FR-3.",
+    "bash tests/orchestrator_doctor_gate.sh exits 0 (rc=0) with cases_total=25 cases_failed=0. Part A holds 13 cases (floor 12, tests/orchestrator_doctor_gate.sh line 17) and part B holds 12 cases (RECORD_LINES_FLOOR=8, line 18).",
+    "bash tests/orchestrator_doctor_gate.sh --part a exits 0 with cases_total=13 cases_failed=0. bash tests/orchestrator_doctor_gate.sh --part b exits 0 with cases_total=12 cases_failed=0.",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh exits 0 (rc=0) with cases_total=15 cases_failed=0.",
+    "bash tests/orchestrator_catalog.sh exits 0 (rc=0) and prints 'PASS: A12/A13 guard declarations and archive directories verified (6 guards)' and 'PASS: measure anti-pattern catalog exists with A1-A15'.",
+    "bash tests/orchestrator_marker_vocabulary.sh exits 0 (rc=0) and prints 'PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked)'.",
+    "measure/doctor.sh was not run. The full doctor run is heavy and belongs to task 3.4, per the brief and test-strategy section 1.4.",
+    "The record doctor-gate-evidence.md matches the saved logs: HEAD bbe5e5860, DATE 2026-11-12, STEP 1 to 3 exit 0 (doctor-run-bbe5e5860.log lines 4 to 7), STEP 4 exit 2 with the command text of FR-3 (log line 8 and log line 14), VERDICT copied from log line 9, DURATION 175.150 s from timing-run-bbe5e5860.log line 11, OWNER, and DOCTOR from log line 10.",
+    "Per-commit scope check: git log e592f8246..5293392b8 --grep='track_id: doctor_gate_repair_20261112' lists 11 commits. git show --name-only for each gives tests/orchestrator_doctor_gate.sh, measure/doctor.sh, and files under measure/tracks/doctor_gate_repair_20261112/ only. doctor_out_of_scope_paths=0.",
+    "The range also holds five commits of accounting_drive_intake_20261109 and two of storytime_app_rebuild_20261025. Those paths belong to other tracks, so git diff --name-only e592f8246..5293392b8 lists apps/accounting test files. That is the F6 default of test-strategy section 1.5, and the per-commit scope check is the gate.",
+    "A3 clean for this phase diff: no count or baseline assertion uses a digit-only probe. The regexes at tests/orchestrator_doctor_gate.sh lines 544, 593, 761, and 803 parse a full labeled line shape, and every count prints as a labeled integer (cases_total, cases_failed, codes_checked=5, tsx_calls, record_lines_checked, PART_A_TOTAL).",
+    "A4 clean for this phase diff: the part A floor of 12 fails when part A runs fewer cases (line 942), and Review A showed with a scratch root that a missing record fails all 12 part B cases and exits 1.",
+    "A5 clean: no plan text claims a pass without a command result. The task 2.5 and task 2.4 evidence quote exit codes, case counts, and step4_seconds=175.150, and each count is a labeled integer.",
+    "A6 not applicable: the phase diff touches no tracks registry file. measure/tracks.md line 1667 still reads 'new (spec and plan only; due 2026-11-14)', so the registry does not overstate the phase state.",
+    "A7 not applicable: the phase diff adds no banned-term filter.",
+    "Review A r2 at af66a6d66: verdict pass, no blocking findings. Review B r2 at af66a6d66: verdict pass, no blocking findings. Adversarial r1 at af66a6d66: verdict pass, 28 of 29 mutants killed, and the survivor m-x died under the new case drift_match_requires_whole_line in commit 5293392b8.",
+    "tests/orchestrator_doctor_gate.sh line 443 sets DOCTOR_GATE_TSX_MESSAGE with the drift text inside a longer line, so the new case proves the whole-line match: an exit 2 whose output only contains the drift text gives gate exit 1 (case PASS, live run)."
+  ],
+  "commands": [
+    "git rev-parse HEAD (5293392b8beda8b72cb6de59cf9f6a145df0b5c2)",
+    "git diff --name-only 5293392b8beda8b72cb6de59cf9f6a145df0b5c2..HEAD (no output)",
+    "git log --format='%H %s' e592f824607cc220c02096e0a66d3174d1fe78ec..5293392b8beda8b72cb6de59cf9f6a145df0b5c2 (20 commits)",
+    "git diff --name-only e592f824607cc220c02096e0a66d3174d1fe78ec..5293392b8beda8b72cb6de59cf9f6a145df0b5c2 (12 paths)",
+    "git log --format=%H e592f824607cc220c02096e0a66d3174d1fe78ec..5293392b8beda8b72cb6de59cf9f6a145df0b5c2 --fixed-strings --grep='track_id: doctor_gate_repair_20261112' (11 commits)",
+    "git show --name-only --format= for 5293392b8, af66a6d66, bbe5e5860, 68e7ee750, 50db02a63, ad72cee7a, 4d3861372, 657059226, 49f96a7d8, 02e9ee7e3, b6a2531c5 (each in scope)",
+    "git show --name-only --format= for 3179c233e, 413bb5bb1, a00c4471c (other tracks)",
+    "bash tests/orchestrator_doctor_gate.sh; echo rc=$? (rc=0, cases_total=25 cases_failed=0)",
+    "bash tests/orchestrator_doctor_gate.sh --part a; echo rc=$? (rc=0, cases_total=13 cases_failed=0)",
+    "bash tests/orchestrator_doctor_gate.sh --part b; echo rc=$? (rc=0, cases_total=12 cases_failed=0)",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh; echo rc=$? (rc=0, cases_total=15 cases_failed=0)",
+    "bash tests/orchestrator_catalog.sh; echo rc=$? (rc=0, two PASS lines)",
+    "bash tests/orchestrator_marker_vocabulary.sh; echo rc=$? (rc=0, 93 plans checked)",
+    "git log -1 --format=%cd 5293392b8beda8b72cb6de59cf9f6a145df0b5c2 (Thu Nov 12 15:00:23 2026 +0700)"
+  ],
+  "changed_files": [
+    "tests/orchestrator_doctor_gate.sh",
+    "measure/doctor.sh",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "measure/tracks/doctor_gate_repair_20261112/spec.md",
+    "measure/tracks/doctor_gate_repair_20261112/test-strategy.md",
+    "measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md",
+    "measure/tracks/doctor_gate_repair_20261112/metadata.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "handoff": "No escalation. Phase 2 passes at HEAD 5293392b8beda8b72cb6de59cf9f6a145df0b5c2. QUESTION FOR THE PM (via the orchestrator), carried from Review A r2, Review B r2, and the adversarial run, with my default: F207 lets a real step 4 failure pass the gate as a boundary verdict, because a failed cd or an uncaught Node exception gives exit 1 and doctor.sh maps exit 1 to a boundary verdict. Option 1 (DEFAULT if no answer): accept the residual, add one caveat sentence to spec D-3, and add one line to the gate record at task 3.4. Option 2: harden doctor.sh in a later task with a spec amendment, so an exit 1 with no boundary report text goes down the tool-failure path. The test harness can pin the hardened rule with a stub exit 1 that prints no boundary report. I block nothing and send no PM question of my own. Phase 3 may start at HEAD 5293392b8.",
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "measure/doctor.sh lines 20 to 34 hold the four FR-3 exit rules word for word, and the saved run doctor-run-bbe5e5860.log line 9 shows the known-drift line with doctor_exit=0."},
+    {"axis": "test_meaning", "score": 4, "evidence": "bash tests/orchestrator_doctor_gate.sh exits 0 with cases_total=25 cases_failed=0, and each case failed first at the base; no case pins the exit 1 hazard of F207."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The 11 doctor commits in e592f8246..5293392b8 touch only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the track folder; doctor_out_of_scope_paths=0."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Every record value traces to doctor-run-bbe5e5860.log or timing-run-bbe5e5860.log, and every acceptance claim in this result names a command result or a file line."}
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "nvidia/stepfun-ai/step-5-preview#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "I re-checked the claim of F201 fixed at measure/doctor.sh:15 (no pnpm layer, the status read at line 16) and the F207 mechanism at lines 15 and 20, and the verdict pass with no blocker holds."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 5,
+      "evidence": "I re-read the drift match at measure/doctor.sh:26 and confirmed grep -qxF is a whole-line fixed-string match, so the N3 note and the pass verdict are correct."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 5,
+      "evidence": "live run of bash tests/orchestrator_doctor_gate.sh --part a gives cases_total=13 cases_failed=0, which includes CASE drift_match_requires_whole_line: PASS, so the m-x kill and the pass verdict hold."
+    }
+  ]
+}

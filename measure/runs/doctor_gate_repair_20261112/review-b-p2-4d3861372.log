@@ -1,0 +1,120 @@
+# Review B (security, gate integrity, validation), Phase 2
+# Track: doctor_gate_repair_20261112, phase P2
+# Route: kimi-code-plan-cn/kimi-for-coding
+# phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec
+# audited_head_sha=4d38613725e981ebf35a085f642494bd3f8632fd (confirmed current via git rev-parse HEAD)
+
+## Verdict: fail — one blocking finding (F251)
+
+## Check 1: the structural guards still gate. PASS.
+# measure/doctor.sh:2 holds 'set -euo pipefail'. The three guard calls at
+# lines 4-6 run under errexit before 'set +e' at line 11. A failing guard
+# aborts the script with the guard exit code. The architecture step never
+# runs. Live proof: bash tests/orchestrator_doctor_gate.sh prints
+# cases_total=22 cases_failed=0. The three guard-failure cases assert
+# gate exit 1, pnpm_calls=0, and no ARCHITECTURE line. They pass.
+
+## Check 2: the tool-failure rule on the real path. FAIL (F251, blocking).
+# The CLI contract: exit 0 clean, exit 1 boundary, exit 2 tool failure
+# (architecture-check.ts:251-256, architecture-check-cli.ts:135-150,
+# catch block returns 2 at line 149).
+# The saved run proves the collapse:
+# - doctor-run-49f96a7d8.log:13 matches the catch-block message
+#   'Architecture check failed: V2 reconciliation manifest is invalid...'.
+# - log:16 reports 'Command failed with exit code 2: tsx ...'.
+# - log:17 reports '[ELIFECYCLE] Command failed with exit code 1.'.
+# - log:18 shows the gate recorded 'step 4 exits 1; the owner of the
+#   remaining drift is architecture_ci_input_pin_20261110'.
+# - log:5 shows '# doctor exit: 0'.
+# So: yes. The gate recorded a tool failure as a boundary verdict, and a
+# real failure hid behind exit 0. The wrapper chain
+# 'pnpm run architecture:check' (package.json:7) collapses the CLI code 2
+# to 1 before the gate reads it. The gate branch at doctor.sh:22-24 is
+# unreachable in production for the CLI's failure signal. The R10 defense
+# (tool_failure_codes) passes only because the stub pnpm returns faithful
+# codes the real wrapper destroys. Green stated the same fact at
+# green-p2.log:29-30.
+# Mitigants: the boundary check still gates every push in CI (spec D-3),
+# and this specific error is the known sibling-owned drift the outcome
+# table expects on master (test-strategy.md:330-334). The defect is
+# mechanistic: the gate cannot tell that drift apart from any future
+# genuine analyzer failure. A false-green doctor weakens closeout, which
+# reads the doctor exit code.
+
+## Check 3: the capture block restores errexit. PASS.
+# doctor.sh:11-14: set +e, the pnpm call, architecture_status=$?, set -e.
+# Every later command runs with errexit on. No command after the capture
+# runs with errexit off.
+
+## Check 4: the record holds only saved-output values. PASS (catalog A5).
+# HEAD 49f96a7d8 from log:2. DATE from log:3. Steps 1-3 exit 0 from the
+# PASS lines at log:8-11 plus doctor exit 0 under errexit. STEP 4 and the
+# VERDICT line from log:18. DURATION 165.684 s from log:6. DOCTOR line
+# from log:19. The OWNER line names the sibling track per spec D-4. No
+# value comes from memory.
+
+## Check 5: harness writes and PATH isolation. PASS.
+# run_case (tests/orchestrator_doctor_gate.sh:690-709) builds one mktemp
+# root per case, writes only inside it, and removes it at the end. Part B
+# reads only the record. After my live run, ls -d /tmp/orchestrator-doctor-gate.*
+# finds no leftover root. The 127 case uses PATH=<tmp>/bin:/usr/bin:/bin
+# and asserts pnpm_is_absent first. Fact M4: the real pnpm lives at
+# /home/daniebo/.local/bin, outside that PATH. Stub mode puts the stub
+# first, so the real pnpm stays shadowed.
+
+## A6 registry overstatement: not present. PASS.
+# measure/tracks.md:1667 still says 'new (spec and plan only)'. The status
+# change is Phase 3 task 3.1. The registry does not overstate this phase.
+# A2 consent-blind publish: not applicable. This track has no publish gate.
+
+## Scope discipline: PASS.
+# The five track commits in e592f8246..4d3861372 touch only
+# measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the track
+# folder. doctor_out_of_scope_paths=0. Commits 09bb8e109 and e3fd1aa38
+# belong to other tracks and are outside this audit.
+
+## Nonblocking findings
+# N1 (nit, strategy finding F8): the ARCHITECTURE line names the drift
+# owner also for exit 0, where no drift remains. The spec pins the text.
+# N2 (nit): the DURATION value comes from the separate timing run. The
+# saved log marks the source; the record does not. A5 still holds.
+
+MEASURE_AGENT_RESULT
+status: fail
+verdict: fail
+role: measure-review-b-security
+track: doctor_gate_repair_20261112
+phase: P2
+round: r1
+phase_base_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+audited_head_sha: 4d38613725e981ebf35a085f642494bd3f8632fd
+route: kimi-code-plan-cn/kimi-for-coding
+blocking_findings: 1 (F251)
+nonblocking_findings: 2 (N1, N2)
+commands_run:
+  - git rev-parse HEAD
+  - git show 49f96a7d8 -- measure/doctor.sh
+  - git show b6a2531c5 --stat
+  - git log --oneline e592f8246..4d3861372
+  - git diff --stat e592f8246..4d3861372 (scoped paths)
+  - git log --fixed-strings --grep track scope check
+  - git show --name-only (five track commits)
+  - bash tests/orchestrator_doctor_gate.sh -> cases_total=22 cases_failed=0
+  - ls -d /tmp/orchestrator-doctor-gate.* -> no leftover root
+  - git status --porcelain measure/runs/doctor_gate_repair_20261112/
+answer_to_orchestrator_question_2: yes. From the saved output and the
+  code, the gate can and did record a tool failure as a boundary verdict.
+  The CLI returned 2, the pnpm wrapper collapsed it to 1, the gate recorded
+  the drift-owner verdict, and doctor exited 0 (doctor-run-49f96a7d8.log:5,
+  :13, :16, :17, :18).
+retry_recommendation: retry_implementation
+handoff: Route F251 to Green. Make the CLI verdict survive the wrapper, or
+  change the wrapper invocation, so exit 2 reaches the gate; otherwise drop
+  the tool-failure claim. The PM should see this evidence before confirming
+  spec D-3 option (C): with the wrapper collapse, a swallowed tool failure
+  yields a false-green doctor, and only the CI push gate still catches the
+  failure. Checks 1, 3, 4, 5 pass. The record is honest about what the gate
+  saw (A5 holds). No user question is open; the orchestrator carries F251
+  and the option (C) evidence to Green and the PM.
+confidence: high
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "track_id": "doctor_gate_repair_20261112",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-13",
+  "pre_closeout_head": "a8a336ea82b3ffdb869732fd6669f06bf321dc90",
+  "final_acceptance_audited_head_sha": "a8a336ea82b3ffdb869732fd6669f06bf321dc90",
+  "final_acceptance_head_equals_pre_closeout_head": true,
+  "track_base_sha": "97d86a413c7f893ad780e4cbdec933550279bbff",
+  "lane": "full lane: a spec review, three phases, a phase acceptance per phase, reviews A and B per phase, Review C once, an adversarial set per phase, and a final acceptance.",
+  "archive_path": "measure/archive/doctor_gate_repair_20261112",
+  "audits": [
+    {
+      "role": "spec-review",
+      "phase": "spec",
+      "result_file": "measure/runs/doctor_gate_repair_20261112/spec-review-0b3d04ac0.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/spec-review-0b3d04ac0.log",
+      "audited_head_sha": "0b3d04ac01ea91024009aaa7bc71f21fa1baa0a2",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 1,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p1-247330b27.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p1-247330b27.log",
+      "audited_head_sha": "247330b273734060b758163d73521a33d60b44c9",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 2,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p2-5293392b8.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p2-5293392b8.log",
+      "audited_head_sha": "5293392b8beda8b72cb6de59cf9f6a145df0b5c2",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 3,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p3-a02662e09.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/phase-acceptance-p3-a02662e09.log",
+      "audited_head_sha": "a02662e09cdda32755c855dd9a0aa6f0090b2407",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "track",
+      "result_file": "measure/runs/doctor_gate_repair_20261112/final-acceptance-a8a336ea8.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/final-acceptance-a8a336ea8.log",
+      "audited_head_sha": "a8a336ea82b3ffdb869732fd6669f06bf321dc90",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 1,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/adversarial-p1-ddd74291f.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/adversarial-p1-ddd74291f.log",
+      "audited_head_sha": "ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 2,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/adversarial-p2-af66a6d66.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/adversarial-p2-af66a6d66.log",
+      "audited_head_sha": "af66a6d661965ce500c2f7a7b9d2a3c6611f9c59",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 3,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/adversarial-p3-4d0b4e6b3.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/adversarial-p3-4d0b4e6b3.log",
+      "audited_head_sha": "4d0b4e6b323c9693fc6e28997b97855658f1e7e1",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "review-a",
+      "phase": 3,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/review-a-p3-a284de0b0.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/review-a-p3-a284de0b0.log",
+      "audited_head_sha": "a284de0b0cd16da8b05340235793f815888ba37b",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "review-b",
+      "phase": 3,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/review-b-p3-a284de0b0.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/review-b-p3-a284de0b0.log",
+      "audited_head_sha": "a284de0b0cd16da8b05340235793f815888ba37b",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "review-c",
+      "phase": 3,
+      "result_file": "measure/runs/doctor_gate_repair_20261112/review-c-p3-4d0b4e6b3.json",
+      "log_file": "measure/runs/doctor_gate_repair_20261112/review-c-p3-4d0b4e6b3.log",
+      "audited_head_sha": "4d0b4e6b323c9693fc6e28997b97855658f1e7e1",
+      "status": "pass",
+      "blocking_findings": 0
+    }
+  ],
+  "final_acceptance_rounds": [
+    {
+      "round": 1,
+      "file": "measure/runs/doctor_gate_repair_20261112/final-acceptance-a8a336ea8.json",
+      "status": "pass",
+      "note": "one round; the orchestrator gate printed PASS: final-acceptance gate passed (exit 0) at a8a336ea8"
+    }
+  ],
+  "pm_rulings": [
+    {
+      "finding": "PM decision 6 of 2026-11-12, confirmed 2026-11-13",
+      "date": "2026-11-12",
+      "text": "N41 and N42 are closeout items. N41 is the check sentence of plan task 3.1. N42 is the verdict literal sentence of test-strategy.md line 143 and the reset_tsx note of p3-20 in section 7.4.",
+      "effect": "closed in this closeout: two text changes in the track files, and no other change to the track files"
+    },
+    {
+      "finding": "PM ruling of 2026-11-13",
+      "date": "2026-11-13",
+      "text": "A later commit covers a track when it changes no path of the track under review, or only its plan and evidence files. A16 counts only the worktrees of the track under review.",
+      "effect": "the six worktrees of other owners do not block this closeout; this track created no worktree"
+    }
+  ],
+  "closeout_items": [
+    {
+      "id": "N41",
+      "file": "measure/archive/doctor_gate_repair_20261112/plan.md",
+      "task": "3.1",
+      "before": "Check: `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` shows the link line and the status line. `bash tests/orchestrator_catalog.sh` exits 0.",
+      "after": "Check: `grep -n 'implemented (doctor gate green at' measure/tracks.md && bash tests/orchestrator_catalog.sh` exits 0. The grep prints one hit, the status line.",
+      "reason": "the status line holds no track id, so the old command printed one line. The new command has the form of test-strategy.md section 6.9 and prints the status line.",
+      "verified": "`grep -n 'implemented (doctor gate green at' measure/tracks.md` prints one hit, and `bash tests/orchestrator_catalog.sh` exits 0"
+    },
+    {
+      "id": "N42",
+      "file": "measure/archive/doctor_gate_repair_20261112/test-strategy.md",
+      "task": "section 4.1 and section 7.4",
+      "before": "The verdict literal in every case is `architecture check: debt-change (files=12, findings=3, parseErrors=0)`.",
+      "after": "The verdict literal in every case is `architecture check: debt-change (files=12, findings=3, parseErrors=0)`; the positive control `tsx_exit_1_verdict_line_gate_exits_0` also runs the valid line `architecture check: debt-change (files=1200, findings=17, parseErrors=2)`.",
+      "second_before": "| p3-20 | the verdict match also applies to exit 0 (an exit 0 with no verdict line gates) | `tsx_exit_0_gate_exits_0` (unchanged) |",
+      "second_after": "| p3-20 | the verdict match also applies to exit 0 (an exit 0 with no verdict line gates) | `tsx_exit_0_gate_exits_0` (the case calls `reset_tsx` first, so the stub prints no verdict line) |",
+      "reason": "commit 4d0b4e6b3 added the second valid verdict line and the reset_tsx call in the case that kills p3-20. The test and measure/doctor.sh stay as committed.",
+      "verified": "`bash tests/orchestrator_doctor_gate.sh` exits 0 with cases_total=31 cases_failed=0 after both changes"
+    }
+  ],
+  "gate_commands": [
+    "git rev-parse HEAD -> a8a336ea82b3ffdb869732fd6669f06bf321dc90 (exit 0, at the start and before the closeout commit)",
+    "git mv measure/tracks/doctor_gate_repair_20261112 measure/archive/doctor_gate_repair_20261112 (exit 0)",
+    "python3 over the archived plan task lines: 15 task lines = 15 [x], 0 [~], 0 [ ], 0 [b] (exit 0)",
+    "grep -nE '^- \\[ \\] |^- \\[~\\] |^- \\[b\\] ' measure/archive/doctor_gate_repair_20261112/plan.md (no hit)",
+    "rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' measure/archive/doctor_gate_repair_20261112/plan.md (no hit, A5)",
+    "rg -n 'API-key encryption (was )?resolved|encryption.*resolved|completely fixed|fully solved|all (checks |tests )?pass' measure/tracks.md (no hit, A6)",
+    "rg -n 'measure/tracks/([a-z_0-9-]+)/plan\\.md' tests/*.sh (only fixture ids in tests/orchestrator_marker_vocabulary_cases.sh, none for this track)",
+    "rg -n 'doctor_gate_repair_20261112' tests/ (one hit: TRACK_ID in tests/orchestrator_doctor_gate.sh; the test resolves the record with track_dir_resolve, so the archive move does not break it, A9)",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh -> exit 0, cases_total=15 cases_failed=0",
+    "bash tests/orchestrator_doctor_gate.sh -> exit 0, cases_total=31 cases_failed=0 (part A 19, part B 12), after the archive move",
+    "bash tests/orchestrator_catalog.sh -> exit 0, PASS: measure anti-pattern catalog exists with A1-A15",
+    "bash tests/orchestrator_marker_vocabulary.sh -> exit 0, PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked)",
+    "bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112 -> exit 0, PASS: ... (1 plans checked)",
+    "bash tests/orchestrator_review_execution_truthfulness.sh -> exit 0, PASS: executed review tracks are not fully blocked by deferred:review-execution",
+    "bash -n measure/doctor.sh && bash -n tests/orchestrator_doctor_gate.sh && bash -n tests/orchestrator_marker_vocabulary.sh && bash -n tests/orchestrator_marker_vocabulary_cases.sh -> exit 0",
+    "the full doctor run through the heavy-run prefix at the closeout state -> doctor_exit=0 (heavy_rc=0); steps 1 to 3 exit 0; step 4 CLI exit 2 with the known manifest drift line; the ARCHITECTURE line and the DOCTOR line printed; saved in measure/runs/doctor_gate_repair_20261112/doctor-run-closeout-a8a336ea8.log",
+    "git diff --name-only 4d0b4e6b3..HEAD -- measure/doctor.sh tests/orchestrator_doctor_gate.sh tests/orchestrator_marker_vocabulary.sh tests/orchestrator_marker_vocabulary_cases.sh measure/anti-patterns.md (no list; no doctor path changed after the recorded green run)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track doctor_gate_repair_20261112 (run after this manifest; see the closeout log)"
+  ],
+  "deferred_tasks": [],
+  "plan_state": {
+    "total_tasks": 15,
+    "done_tasks": 15,
+    "deferred_tasks": 0,
+    "in_progress_tasks": 0,
+    "space_marker_tasks": 0,
+    "phase_checkpoints": [
+      "247330b27",
+      "5293392b8",
+      "a02662e09"
+    ],
+    "note": "Every done task names a commit SHA. No task carries the pending marker, the in-progress marker, or a human gate. The closeout commit holds the archive move, the two closeout text changes, the registry entry, and the metadata."
+  },
+  "retained_evidence": [
+    "measure/runs/doctor_gate_repair_20261112/ (about 450 KB; the .gitignore lists measure/runs/, so the closeout commit adds the folder with git add -f and an explicit path list): the spec reviews, the phase acceptances, the reviews, the adversarial sets, the red and green logs, the doctor run logs, and this closeout.",
+    "measure/runs/doctor_gate_repair_20261112/final-acceptance-a8a336ea8.json and .log (the final acceptance verdict)",
+    "measure/runs/doctor_gate_repair_20261112/closeout-a8a336ea8.json and .log (this closeout)",
+    "measure/runs/doctor_gate_repair_20261112/doctor-run-closeout-a8a336ea8.log (the doctor run of the closeout, doctor_exit=0)",
+    "measure/runs/doctor_gate_repair_20261112/doctor-run-4d0b4e6b3.log (the recorded green run of task 3.4, doctor_exit=0)"
+  ],
+  "artifact_cleanup": "None. The orchestrator named no artifact for deletion. The whole run folder stays on disk and in the commit.",
+  "open_nits": [
+    "N43 [open, Low, residual from phase acceptance p3]: part B of tests/orchestrator_doctor_gate.sh validates only the first record block of doctor-gate-evidence.md, so the Phase 3 block is not test-pinned. The phase acceptance verified that block line by line against doctor-run-4d0b4e6b3.log. No value is false.",
+    "N44 [open, Low, residual from Review B B214 and adversarial p3 N1]: a whole line in the verdict shape can be forged only on a crash exit 1 whose output embeds a newline inside an echoed field, and mutant p3-24 (a pattern that hard-codes the status debt-change) survives the part A cases. Both are test-generality residuals.",
+    "test-strategy.md section 4.1 keeps the sentence 'tsx_exit_0_gate_exits_0 stays unchanged'. The case now calls reset_tsx, as commit 4d0b4e6b3 shows. The PM decision of 2026-11-12 limits this closeout to two sentences, so the sentence stays and the reset_tsx note sits in section 7.4.",
+    "Review A A212 (spec FR-3 says the CLI exits 1 for any status other than clean; the CLI returns 2 for the status analysis-error) stays open as a spec text item. The script behavior is correct and the closeout does not edit the spec.",
+    "Review B B214 and adversarial p3 N4 stay open as the recorded residuals of N44."
+  ],
+  "anti_pattern_checks": {
+    "a5": "The archived plan holds no PASS=n, FAIL=0 text and no 'all checks pass' text. The detector returns no hit. Every count of the current closeout state was re-run in real mode: marker cases 15 of 15, doctor gate 31 of 31, catalog PASS, sweep 93 plans.",
+    "a6": "The archived registry entry names the sha 4d0b4e6b3. The saved run doctor-run-4d0b4e6b3.log holds doctor_exit=0 and the adversarial p3 result at that head passes 22 of 22 mutants. The entry states the archive date and the final acceptance sha. No claim goes beyond the recorded audits.",
+    "a9": "No test in tests/*.sh holds a hardcoded path measure/tracks/doctor_gate_repair_20261112/. Part B of the doctor gate test resolves the record with track_dir_resolve, which prefers measure/archive/<id>. The test passes after the archive move. No test edit was needed.",
+    "a13": "The move left no directory under measure/tracks/. The catalog test prints PASS: A12/A13 guard declarations and archive directories verified (6 guards).",
+    "a16": "This track created no worktree. The six worktrees of other owners (book-editions, forge-filled-shelves, monorepo-boundaries, primary-build-info, sales-january-course, www-real-logos) do not block the closeout under the PM ruling of 2026-11-13."
+  },
+  "a9_comment_only_references": [],
+  "stale_links_outside_the_track": [
+    "measure/tracks/master_push_readiness_20261112/plan.md line 56 names the track id `doctor_gate_repair_20261112` in text only. It holds no link and no path, so no link breaks. The file belongs to another track, so the closeout did not edit it.",
+    "The archived track files hold the old path measure/tracks/doctor_gate_repair_20261112/ in historical command text (test-strategy.md lines 53 and 57, the A13 row of section 10, plan.md lines 71, 79, 95, 138, 150, 151, 157, 259, spec-review.md line 23, spec.md line 224, metadata.json scope.files). These are records of commands that ran during the track, not links. The PM decision limits the track file changes to two sentences, so the text stays."
+  ],
+  "registry": {
+    "file": "measure/tracks.md",
+    "section": "Archived Tracks",
+    "link": "./archive/doctor_gate_repair_20261112/",
+    "description_matches_metadata": true,
+    "note": "The entry left the tail of the file and sits first under '## Archived Tracks'. The entry carries the marker [x], the link to the archive folder, the description of the metadata, the status line with the sha 4d0b4e6b3, and the archive note."
+  },
+  "metadata_updates": {
+    "file": "measure/archive/doctor_gate_repair_20261112/metadata.json",
+    "status": "done",
+    "completed": "2026-11-13",
+    "updated_at": "2026-11-13T00:00:00Z",
+    "estimated_tasks": 12,
+    "actual_tasks": 15,
+    "description_unchanged": true
+  },
+  "lessons_learned_and_tech_debt": "No update. Both files hold 50 lines, the limit of each file. The track records its process lessons in its own plan, test strategy, and this manifest. The PM owns the placement of any new row.",
+  "owner_gate": "None. The track holds no task with the human-gate marker [b], so no owner item stays open and no deferred owner is informed.",
+  "retry_recommendation": "none"
+}

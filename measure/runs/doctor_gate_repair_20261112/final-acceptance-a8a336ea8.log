@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: final-acceptance
+track: doctor_gate_repair_20261112
+phase: track
+track_base_sha: 97d86a413c7f893ad780e4cbdec933550279bbff
+role_base_sha: a8a336ea82b3ffdb869732fd6669f06bf321dc90
+audited_head_sha: a8a336ea82b3ffdb869732fd6669f06bf321dc90
+route: volcengine-agent-plan/glm-latest#high
+verdict: pass
+status: pass
+blocking_findings: []
+nonblocking_findings: [N41 plan task 3.1 grep check text — carried to closeout per PM decision 6 of 2026-11-12; N42 test-strategy.md line 143 and section 7.4 stale sentences — carried to closeout per PM decision 6; N43 part B pins only the first record block (Low residual, verified line by line against doctor-run-4d0b4e6b3.log); N44 B214 newline-spoof edge and adversarial probe p3-24 survive (Low test-generality residuals, the CI push gate fails the same run)]
+retry_recommendation: none
+handoff: Route to measure-closeout. Later commits a8a336ea8, 639eaef2c, and c5679d154 are covered under the PM ruling of 2026-11-13: the path diff a02662e09..HEAD over the track scope shows only plan.md (the checkpoint record) and measure/tracks.md rows of other tracks; no doctor_gate_repair row changed. N41 and N42 are the two closeout edits. The closeout role also updates the registry status and moves the track to measure/archive/ (A13), which makes the part B track_dir_resolve path active.
+END_MEASURE_AGENT_RESULT

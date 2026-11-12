@@ -1,0 +1,11 @@
+HEAD: bbe5e5860
+command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/architecture-enforcement && time ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin'
+--- output ---
+Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports
+
+real	2m55.150s
+user	2m39.719s
+sys	0m11.703s
+--- end output ---
+cli_exit=2 (heavy_rc=2)
+step4_seconds=175.150

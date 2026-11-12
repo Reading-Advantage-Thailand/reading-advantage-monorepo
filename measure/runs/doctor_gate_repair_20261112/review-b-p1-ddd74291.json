@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P1",
+  "phase_base_sha": "088efb891a20a2be2619b839812ad8ee13bac562",
+  "role_base_sha": "088efb891a20a2be2619b839812ad8ee13bac562",
+  "audited_head_sha": "ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+  "route": "nvidia/stepfun-ai/step-5-preview#high",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "The guard accepts the pending marker and still fails each single-character marker outside the set. I audited the guard at commit 150e22e9d and the cases file at commit 0088e86c8. The gate strength stayed at the plan intent. I ran the cases file and the guard at the audited HEAD: 14 of 14 cases pass and the guard prints (93 plans checked). The base guard at phase_base_sha rejected only the literal '- [ ] ' line, so the same base failed 7 cases. The working tree is clean for the four audited files; one unrelated plan.md edit exists in another track and it is outside this phase. Security applicability is 'applicable' for the guard script itself, because it reads plan paths and writes one temporary file. Three nonblocking findings remain: the known two-or-more-character marker gap, the predictable /tmp hits path, and no adversarial case for the --track path boundary. The audited HEAD is current: git rev-parse HEAD returns ddd74291f5eb64c72bc807e37ef62bb295f635aa.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F151 (known gap, recorded as instructed): the new predicate `grep -nE '^- \\[^ ~xb\\] '` matches exactly one marker character, so a marker of two or more characters (for example `- [xx] 1.1 task`) is not flagged and a wrong marker of that shape passes the guard. It does not let a real wrong marker pass in this repository: `grep -rnE '^- \\[^ ~xb]{2,}\\] ' measure/tracks/*/plan.md` returns no hit, and `bash tests/orchestrator_marker_vocabulary.sh` exits 0 with (93 plans checked). The base guard had the same shape weakness (it matched only the literal `- [ ] `), so this phase did not drop the gate strength. Recommend a follow-up task that widens the class and pins it with a case, or a documented acceptance of the gap in entry A8 of measure/anti-patterns.md.",
+    "F152: the hits file path is predictable. `tests/orchestrator_marker_vocabulary.sh` line 56 writes to `/tmp/orchestrator-marker-hits.$$`, a name that another user on a shared machine can pre-create as a symlink, because the name is a fixed prefix plus the process id and the script does not use `mktemp`. The file name is unique per process and the file is removed on every exit path I traced: after the read loop (line 64) for each plan, and also when the read loop exits early, because the loop is inside the same plan iteration and `rm -f` runs afterwards. File: tests/orchestrator_marker_vocabulary.sh:56 and :64. Recommend `mktemp` and a trap for the abnormal kill case.",
+    "F153: no adversarial case pins the --track boundary. `track_dir_resolve` at tests/orchestrator_marker_vocabulary.sh:9-16 joins an unvalidated argument into `measure/archive/$track_id` or `measure/tracks/$track_id`, so a value such as `../foo` builds a path that resolves outside measure/tracks and measure/archive. In this run the boundary held: `bash tests/orchestrator_marker_vocabulary.sh --track ../../etc` and `--track ../doctor_gate_repair_20261112` both print 'FAIL: no plan.md found for requested scope' and exit 1, because no plan.md sits at those paths. The cases file has 14 cases and none of them probes `--track ../`. Recommend a case that asserts exit 2 or exit 1 for a traversal value and asserts that the resolved path stays under measure/tracks or measure/archive."
+  ],
+  "evidence": [
+    "git show 150e22e9d: the predicate changes from `grep -n '^- \\[ \\] '` to `grep -nE '^- \\[^ ~xb\\] '`, and the two messages change to name the full set {` `, `~`, `x`, `b`}. PASS line: 'all active track plans use only [ ], [~], [x], or [b] task markers (%d plans checked)'.",
+    "git show 088efb891a20a2be2619b839812ad8ee13bac562:tests/orchestrator_marker_vocabulary.sh (the base guard): predicate `grep -n '^- \\[ \\] '` rejected only the literal pending line, so the base passed a plan with `- [?] ` and failed a plan with `- [ ] `.",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh at ddd74291f: 14 CASE lines PASS, then `cases_total=14 cases_failed=0`, exit 0. This is the adversarial proof for F411, because the same script failed 7 cases at the base per the plan evidence at measure/tracks/doctor_gate_repair_20261112/plan.md.",
+    "bash tests/orchestrator_marker_vocabulary.sh at ddd74291f: 'PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked)', exit 0.",
+    "grep -rnE '^- \\[^ ~xb\\] ' measure/tracks/*/plan.md: no hit, so no active plan carries an unsupported single-character marker. grep -rnE '^- \\[^ ~xb]{2,}\\] ' measure/tracks/*/plan.md: no hit, so the F151 gap hides no live wrong marker.",
+    "bash -n tests/orchestrator_marker_vocabulary_cases.sh: exit 0 (syntax check).",
+    "git status --porcelain measure: only ' M measure/tracks/primary_in_app_help_20261023/plan.md', which is an unrelated edit outside this phase; the four audited files are clean.",
+    "git diff --name-only 088efb891a20a2be2619b839812ad8ee13bac562 ddd74291f5eb64c72bc807e37ef62bb295f635aa: measure/anti-patterns.md, measure/tracks/doctor_gate_repair_20261112/plan.md, tests/orchestrator_marker_vocabulary.sh, tests/orchestrator_marker_vocabulary_cases.sh. The changed set matches the declared blast radius.",
+    "tests/orchestrator_marker_vocabulary_cases.sh: each case calls `mktemp -d /tmp/orchestrator-marker-cases.XXXXXX`, writes fixtures under $tmp_root/measure/, and `run_case` removes $tmp_root with `rm -rf` on the way out, including the usage-error and empty-scope cases. No case writes into measure/tracks of the real repository.",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ../../etc and --track ../doctor_gate_repair_20261112: both print 'FAIL: no plan.md found for requested scope' and exit 1, so a traversal value does not escape the guarded roots in this run.",
+    "F151 withdrawn: not applicable, this is round r1 and there is no earlier finding.",
+    "A2 (consent-blind publish gate): not applicable. The phase diff contains no status change from draft to published and no consent, personal-data, or anonymization logic; the four changed files are two shell scripts, one plan.md, and one catalog entry.",
+    "A6 (registry overstatement): applicable and checked. measure/tracks.md:1667 states the F411 claim ('the marker guard accepts the canonical pending marker `- [ ] ` and fails only a marker outside {` `, `~`, `x`, `b`}'). The adversarial test for that claim is green (14 of 14 cases, guard exit 0), so the copy does not outrun the implementation for single-character markers. The residual wording gap is the same two-or-more-character gap recorded as F151.",
+    "Quoting: the guard quotes every plan path ('$plan', $track_dir, \"$track_dir/plan.md\", measure/tracks/*/plan.md) and the cases file quotes $tmp_root in write_plan, has_literal, and run_guard, so a plan path with a space is handled. No case pins a path with a space, which is part of F153.",
+    "Secret handling, persistence, migration safety, tenant scoping, and auth boundaries: not applicable. The diff touches no database schema, no session or auth code, no secret store, and no route handler; it is a shell guard and its shell test."
+  ],
+  "commands": [
+    "git show 150e22e9d",
+    "git show 0088e86c8",
+    "git show 088efb891a20a2be2619b839812ad8ee13bac562:tests/orchestrator_marker_vocabulary.sh",
+    "git diff --name-only 088efb891a20a2be2619b839812ad8ee13bac562 ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+    "git diff --stat 088efb891a20a2be2619b839812ad8ee13bac562 ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+    "git status --porcelain measure",
+    "git rev-parse HEAD",
+    "git log --oneline 088efb891a20a2be2619b839812ad8ee13bac562..ddd74291f5eb64c72bc807e37ef62bb295f635aa",
+    "bash -n tests/orchestrator_marker_vocabulary_cases.sh",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ../../etc",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ../doctor_gate_repair_20261112",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ..",
+    "bash tests/orchestrator_marker_vocabulary.sh --track .",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ./",
+    "bash tests/orchestrator_marker_vocabulary.sh --track ../../..",
+    "grep -rnE '^- \\[^ ~xb\\] ' measure/tracks/*/plan.md",
+    "grep -rnE '^- \\[^ ~xb]{2,}\\] ' measure/tracks/*/plan.md",
+    "grep -rnE '^- \\[.{2,}\\] ' measure/tracks/*/plan.md"
+  ],
+  "changed_files": [
+    "tests/orchestrator_marker_vocabulary.sh",
+    "tests/orchestrator_marker_vocabulary_cases.sh",
+    "measure/anti-patterns.md",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "Review B (security) passes Phase 1. I keep no finding for a contest and I ask no question. The audited HEAD is current and the audited HEAD is a descendant of phase_base_sha. Security applicability is 'applicable' for the guard script itself. The gate strength is right at the plan intent: base 088efb89 rejected only the literal '- [ ] ' line and passed '- [?] ', and the new predicate rejects every single-character marker outside {space, ~, x, b}. Proof: 14 of 14 cases pass at ddd74291f and the guard prints (93 plans checked). The temp hits file has a unique name per process and it is removed on the normal path and on the grep-failure path; it is not removed on an abnormal kill of the process, which is one of the three nonblocking findings. The cases file uses mktemp for its own roots and writes no fixture into measure/tracks. A2 (consent-blind publish gate) is not applicable, because the diff holds no draft-to-published flip and no consent logic. A6 is satisfied: the tracks.md F411 wording matches a green adversarial test. Routing note for the orchestrator: my default for a product question would be 'accept the F151 gap for Phase 1 and open a follow-up track', but no question is needed now. Fix the three nonblocking items in a later phase: mktemp for the hits path, a --track traversal case, and a two-or-more-character marker case.",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The guard predicate at tests/orchestrator_marker_vocabulary.sh:56 now rejects each single-character marker outside the set, and `bash tests/orchestrator_marker_vocabulary.sh` exits 0 with (93 plans checked) at ddd74291f."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "`bash tests/orchestrator_marker_vocabulary_cases.sh` prints 14 PASS lines and cases_failed=0, but case markers_outside_set_exit_1 pins only single-character near-misses, so the two-character marker path is untested (finding F151)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --name-only 088efb891a20a2be2619b839812ad8ee13bac562 ddd74291f5eb64c72bc807e37ef62bb295f635aa` lists only the four files of the declared blast radius, and `git status --porcelain measure` shows the audited files clean."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "The plan records each command result with the commit and the exit code, and I re-ran the cases file and the guard at the audited HEAD; the counts (93 plans, 14 of 14 cases) come from my own command output."
+    }
+  ]
+}

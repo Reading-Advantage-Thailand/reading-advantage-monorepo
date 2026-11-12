@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P3",
+  "phase_base_sha": "6a059f1a909ce58db31533a8c81a28db62626fc1",
+  "role_base_sha": "a284de0b0cd16da8b05340235793f815888ba37b",
+  "audited_head_sha": "a284de0b0cd16da8b05340235793f815888ba37b",
+  "route": "kimi-code-plan-cn/kimi-for-coding#high",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "F207 is fixed and withdrawn. measure/doctor.sh:22-24 counts an exit 1 as a boundary verdict only when the step 4 output holds a whole line that matches the CLI verdict pattern (grep -qxE, case-sensitive, three digit counts). My scratch probe proves the flip: at the phase base all five exit 1 tool-failure scenarios give gate exit 0, and at the audited head each gives gate exit 1, while the true boundary verdict (exit 1 with the whole verdict line) still gives exit 0. The m-cd case of the PM decision exists (case_step4_cd_fails_gate_exits_1) and gates. The verdict match cannot be spoofed by any line the CLI prints by design: the diagnostic lines start with '! ', '+ ', '- ', or '~ '. The three structural guards stay bare at lines 4-6 and set -euo pipefail holds. No step writes a file in the repository and no step reads a secret. The Phase 1 marker guard still refuses markers that hide work (15 cases pass). A2 does not apply. The registry does not overstate the phase state. No blocking findings.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "B214 [Low, residual, spoof edge on a crash path]: the verdict pattern matches any whole line in the merged step 4 output. The CLI's own lines cannot forge it: parse error lines start with '! ' (architecture-check.ts:286), comparison lines start with '+ ', '- ', or '~ ' (ratchet.ts:363-378), and the error line starts with 'Architecture check failed:' (architecture-check-cli.ts:146). The one forge path is an echoed field (sourcePath or resolvedTarget) that holds a newline, which would split a diagnostic line and could leave a whole line in the verdict shape. That forge needs a crash exit 1 whose output embeds attacker-controlled text with a newline, because a real CLI exit 1 prints the true verdict line as well. The CI push gate runs the same CLI and fails on a debt-change exit 1, so the forge would fool only the local doctor signal. Likelihood very low; impact bounded. Not blocking.",
+    "B215 [Nit, concurs with Review A A209]: case_tsx_exit_1_gate_exits_0 exports DOCTOR_GATE_TSX_MESSAGE at tests/orchestrator_doctor_gate.sh:198, and case_tsx_exit_0_gate_exits_0 at line 222 calls no reset_tsx, so the exit 0 case runs with a leaked verdict line on stderr. The production exit 0 rule is correct; the case lost its no-verdict proof, and mutant p3-20 survives. One reset_tsx call at the start of the case restores the kill. Test-meaning only; no gate defect."
+  ],
+  "evidence": [
+    "F207 withdrawn: measure/doctor.sh:22 holds the pattern 'architecture check: [^ ]+ \\(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\\)', and line 24 accepts exit 0, or exit 1 with a whole-line grep -qxE match. Exit 1 without the line falls to the tool-failure branch at lines 36-38 and the gate exits 1. This matches spec FR-3 (spec.md:215-216) and the PM decision of 2026-11-12 word for word.",
+    "F207 withdrawn: my scratch probe ran the phase-base doctor.sh copy against stub guards and a stub tsx. The base gives gate exit 0 for all five tool-failure scenarios (exit1_no_output, exit1_verdict_in_longer_line, exit1_malformed, exit1_cd_fails, plus the leak-prone exit1 paths). The audited head gives gate exit 1 for each, and exit 0 only for the true boundary verdict (exit1_verdict_line) and exit 0. The m-cd scenario (packages directory removed, stub prints a verdict line) gates at the head.",
+    "F207 withdrawn: the m-cd case exists as case_step4_cd_fails_gate_exits_1 at tests/orchestrator_doctor_gate.sh:581. It asserts arch_dir_absent=1 before the run and tsx_calls=0 after, then asserts the two tool-failure lines. The PM decision asked for this case; it is present and passes.",
+    "N3 withdrawn: case_drift_match_requires_whole_line at tests/orchestrator_doctor_gate.sh:484 runs an exit 2 whose output holds the drift text inside a longer line and asserts gate exit 1. This kills the mutant that drops the whole-line flag from the drift match, which was the N3 coverage gap of the P2 round.",
+    "Check 1 pass: an empty output, a longer-line verdict, a malformed verdict, a failed cd, and a missing tsx each give gate exit 1 at the head (probe results and cases tsx_exit_1_no_verdict_gate_exits_1, tsx_exit_1_verdict_in_longer_line_gate_exits_1, tsx_exit_1_malformed_verdict_gate_exits_1, step4_cd_fails_gate_exits_1, tsx_exit_127_gate_exits_1). A signal exit and other codes give gate exit 1 (tool_failure_codes runs 2, 3, 126, 137 with a stub and 127 with no stub). An exit 1 from tsx itself with no verdict line is the no-output case and gates.",
+    "Check 1 residual: a crash that prints a real verdict line before it dies still passes the gate. That is the spec design (FR-3 exit 1 with the verdict line is a boundary verdict), and the printed verdict means the analysis completed. Not a finding.",
+    "Check 2 pass: the CLI echo lines cannot forge the verdict pattern. Parse error lines start with '! ' (packages/architecture-enforcement/src/architecture-check.ts:286), comparison lines start with '+ ', '- ', or '~ ' (packages/architecture-enforcement/src/ratchet.ts:363-378), and the caught-error line starts with 'Architecture check failed:' on stderr (packages/architecture-enforcement/src/architecture-check-cli.ts:146). The match is whole-line and case-sensitive, so a substring or a different case cannot pass. The residual newline-in-echoed-field edge is B214.",
+    "Check 3 pass: measure/doctor.sh:2 holds set -euo pipefail; the three structural guard steps stay bare lines 4-6; the capture block at lines 14-17 runs set +e, the command, the status capture, then set -e; the exit 1 grep sits inside an if condition, so a no-hit does not abort under set -e. The guard failure cases prove a guard failure stops step 4 and gates the exit.",
+    "Check 4 pass: the three guard scripts write only /tmp temp files (tests/orchestrator_marker_vocabulary.sh:56,64 and tests/orchestrator_supervisor_invariants.sh is not called by doctor.sh); the grep for env, SECRET, TOKEN, KEY reads in doctor.sh and the three guards finds only the '#!/usr/bin/env bash' shebang lines. The no_write_in_root case asserts the gate writes no file in its root.",
+    "Check 5 pass: bash tests/orchestrator_marker_vocabulary_cases.sh exits 0 with cases_total=15 cases_failed=0, including unknown_marker_exits_1, markers_outside_set_exit_1, track_traversal_outside_root_exits_1, and indented_marker_ignored. The guard still refuses a marker that hides work.",
+    "Required commands pass: bash tests/orchestrator_doctor_gate.sh exits 0 with cases_total=31 cases_failed=0; bash tests/orchestrator_catalog.sh exits 0 and names entries A1 to A15; bash -n measure/doctor.sh exits 0. I did not run measure/doctor.sh itself (task 3.4).",
+    "Tests first: the Red commit 90a3abbd8 touches only tests/orchestrator_doctor_gate.sh, and the Green commit d16ab8b01 touches only measure/doctor.sh. The phase diff for measure/doctor.sh is the exit 1 condition plus its comment; the exit 0, exit 2, and other-code rules and every printed string are unchanged.",
+    "Audited HEAD provenance: git rev-parse HEAD returns 4f9ea0bd667d095b0054043b6809c7fba960a841. The audited head a284de0b0cd16da8b05340235793f815888ba37b is its parent; the one commit past it (4f9ea0bd6) touches only apps/primary-advantage and packages/domain student-login paths. The audited paths at HEAD equal the audited head.",
+    "A6 pass: measure/tracks.md:1671 still reads 'new (spec and plan only; due 2026-11-14)'. The registry does not claim a resolved security state; the status waits for the task 3.4 live run per test-strategy section 6.9. A2 does not apply: this track has no publish gate and no named-subject data.",
+    "Scope pass: the doctor commits ca7b9cff8, 90a3abbd8, afa9d7308, d16ab8b01, and 991b02852 touch only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, plan.md, and test-strategy.md. The other files in the phase range belong to other tracks and the merge 9734e0187."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff 6a059f1a909ce58db31533a8c81a28db62626fc1..a284de0b0cd16da8b05340235793f815888ba37b -- measure/doctor.sh",
+    "git show --name-only --format='%h %s' 90a3abbd8 d16ab8b01",
+    "git show --name-only --format='%h %s' 4f9ea0bd667d095b0054043b6809c7fba960a841",
+    "bash tests/orchestrator_doctor_gate.sh",
+    "bash tests/orchestrator_marker_vocabulary_cases.sh",
+    "bash tests/orchestrator_catalog.sh",
+    "bash -n measure/doctor.sh",
+    "scratch probe (measure/runs scratch, removed after the run): phase-base doctor.sh copy and HEAD doctor.sh against stub guards and a stub tsx, seven scenarios each"
+  ],
+  "changed_files": [
+    "measure/doctor.sh",
+    "tests/orchestrator_doctor_gate.sh",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "measure/tracks/doctor_gate_repair_20261112/test-strategy.md"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "F207 is fixed: exit 1 without a whole verdict line now gates (gate exit 1), the m-cd case exists and passes, and my probe shows the phase base passed all five tool-failure scenarios while the head gates each. N3 is withdrawn: the whole-line drift case kills the grep -qF mutant. No blocking findings. Two nonblocking items: B214, a Low residual spoof edge that needs a newline inside an echoed field on a crash path (the CI gate still fails the same run); B215, my concurrence with Review A A209 that one reset_tsx call restores the p3-20 kill. No question for the orchestrator. The gate will report open tasks 3.1 to 3.4; that is expected at this step.",
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "measure/doctor.sh:22-24 matches FR-3 word for word, and my probe proves the base-to-head flip on all five exit 1 tool-failure scenarios."},
+    {"axis": "test_meaning", "score": 4, "evidence": "31 cases pass and the Red commit 90a3abbd8 precedes the Green commit d16ab8b01, but the leaked stub message lets mutant p3-20 survive (B215, concurs with A209)."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The five doctor commits touch only measure/doctor.sh, tests/orchestrator_doctor_gate.sh, plan.md, and test-strategy.md."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Every claim traces to a file:line or a live command result, including the scratch probe base-versus-head gate exit codes."}
+  ]
+}

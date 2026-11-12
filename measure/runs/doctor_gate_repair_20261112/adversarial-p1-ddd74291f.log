@@ -1,0 +1,74 @@
+# Adversarial testing log: doctor_gate_repair_20261112 P1
+
+Role: measure-adversarial-testing. Route: kimi-code-plan-cn/kimi-for-coding.
+Phase base: 088efb891a20a2be2619b839812ad8ee13bac562.
+Audited head: ddd74291f5eb64c72bc807e37ef62bb295f635aa.
+Round: r1.
+
+Method: per strategy section 7. Each mutant guard was written to
+/tmp/adv-m<NN>.sh, never to the repository. A driver copied the mutant to
+<scratch>/tests/orchestrator_marker_vocabulary.sh, copied the unchanged cases
+file beside it, ran bash -n on the mutant, then ran the cases file in the
+scratch root. A kill is a CASE <name>: FAIL line and cases_failed above 0.
+Each scratch folder and each mutant file was removed after its run.
+
+Results (18 mutants, 18 killed, 0 survived, 0 harness breaks):
+
+- m01 base predicate '^- \[ \] ' stays: bash -n ok; killed by
+  clean_active_exits_0, unknown_marker_exits_1,
+  markers_outside_set_exit_1, two_offenders_two_fail_lines,
+  fail_on_stderr_pass_on_stdout, two_plans_count_two,
+  track_archive_first_exits_1. cases_failed=7.
+- m02 class [^~xb] (space dropped): bash -n ok; killed by
+  clean_active_exits_0 (+ fail_on_stderr_pass_on_stdout,
+  two_plans_count_two). cases_failed=3.
+- m03a class [^ xb]: bash -n ok; killed by canonical_markers_exit_0.
+- m03b class [^ ~b]: bash -n ok; killed by canonical_markers_exit_0
+  (+ 4 more). cases_failed=5.
+- m03c class [^ ~x]: bash -n ok; killed by canonical_markers_exit_0.
+- m04 grep -i: bash -n ok; killed by markers_outside_set_exit_1 (marker [X]).
+- m05 literal \[\?\] predicate: bash -n ok; killed by
+  markers_outside_set_exit_1 ([X]) and two_offenders_two_fail_lines.
+- m06 anchor ^- dropped: bash -n ok; killed by prose_bracket_not_flagged
+  and indented_marker_ignored.
+- m07 FAIL prints, status stays 0: bash -n ok; killed by 5 exit assertions
+  (unknown_marker_exits_1 and others all exit 0).
+- m08 FAIL line to stdout: bash -n ok; killed by 5 cases (no FAIL on stderr).
+- m09 FAIL line marker fixed to [?]: bash -n ok; killed by
+  markers_outside_set_exit_1 ([X]) and two_offenders_two_fail_lines ([!]).
+- m10 loop stops at first hit: bash -n ok; killed by
+  two_offenders_two_fail_lines (fail_lines=1 expected=2).
+- m11 PASS count fixed to 2: bash -n ok; killed by clean_active_exits_0.
+- m12 glob measure/*/plan.md: bash -n ok; killed by archive_excluded_exits_0
+  among 10 failing cases.
+- m13 --track ignored: bash -n ok; killed by track_scope_exits_0 and
+  track_archive_first_exits_1.
+- m14 empty scope prints PASS: bash -n ok; killed by empty_scope_exits_1.
+- m15 usage exit 1: bash -n ok; killed by usage_error_exits_2.
+- m16 archive-first resolution removed: bash -n ok; killed by
+  track_archive_first_exits_1.
+
+New case (F153): track_traversal_outside_root_exits_1 asserts that a
+--track value resolving outside measure/tracks cannot exit 0 with a PASS
+line. It passes on the real guard. Committed as 247330b27 (cases file only).
+
+Residuals: F3 (a marker of two or more characters passes the predicate;
+not a missed mutant; no live plan carries one). F153 hardening: the id is
+still unvalidated, so a traversal pointing at a clean outside plan prints
+PASS. F152 (predictable /tmp hits path) stands from review B.
+
+PROJECT_TESTS at 247330b27: cases_total=15 cases_failed=0; sweep PASS with
+(93 plans checked); catalog PASS; chain exit 0.
+
+MEASURE_AGENT_RESULT
+status: pass
+verdict: pass
+track: doctor_gate_repair_20261112
+phase: P1
+audited_head: ddd74291f5eb64c72bc807e37ef62bb295f635aa
+case_commit: 247330b273734060b758163d73521a33d60b44c9
+mutants: killed=18 total=18 survived=0
+new_case: track_traversal_outside_root_exits_1
+retry_recommendation: none
+handoff: see adversarial-p1-ddd74291f.json
+END_MEASURE_AGENT_RESULT

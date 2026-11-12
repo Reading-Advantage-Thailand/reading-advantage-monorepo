@@ -1,0 +1,44 @@
+Green log, Phase 3 task 3.0b, track doctor_gate_repair_20261112
+status: complete
+model: claude-code/claude-sonnet-5-5
+phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1
+role_base_sha=afa9d73080a21025b5f6a6d46bb48a3ffc8faae6
+fix_commit=d16ab8b01cea64271d59fc0b1eee6ef4069f99eb
+plan_evidence_commit=991b02852476449663f8da4f63f3f136ee1c69a1
+final_green_head=991b02852476449663f8da4f63f3f136ee1c69a1
+
+Change: measure/doctor.sh only. Exit 1 counts as a boundary verdict only when the step 4
+output holds a whole line that matches
+architecture check: [^ ]+ \(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\)
+(grep -qxE, case-sensitive, inside an if condition, so set -e does not abort on no match).
+Exit 1 without that line takes the existing tool-failure path. No other rule changed.
+
+Before the fix: bash tests/orchestrator_doctor_gate.sh exit 1, cases_total=31 cases_failed=4
+(tsx_exit_1_no_verdict_gate_exits_1, step4_cd_fails_gate_exits_1,
+tsx_exit_1_verdict_in_longer_line_gate_exits_1, tsx_exit_1_malformed_verdict_gate_exits_1).
+
+GREEN_TEST_COMMAND: bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh
+exit 0
+doctor gate: cases_total=31 cases_failed=0 (part A 19, part B 12)
+marker vocabulary cases: cases_total=15 cases_failed=0
+catalog: PASS (A1-A15)
+bash -n measure/doctor.sh: exit 0
+measure/doctor.sh itself: not run (task 3.4).
+
+Tasks flipped to [x]: 3.0a (90a3abbd8), 3.0b (d16ab8b01).
+Tasks flipped to [b]: none.
+New files: none in the commits. This log is the only new file and is not committed.
+
+MEASURE_AGENT_RESULT
+status: green
+role: jr-green
+track: doctor_gate_repair_20261112
+phase: Phase 3: The gate is green on master
+phase_base_sha: 6a059f1a909ce58db31533a8c81a28db62626fc1
+role_base_sha: afa9d73080a21025b5f6a6d46bb48a3ffc8faae6
+implementation_commit: d16ab8b01cea64271d59fc0b1eee6ef4069f99eb
+plan_evidence_commit: 991b02852476449663f8da4f63f3f136ee1c69a1
+final_green_head: 991b02852476449663f8da4f63f3f136ee1c69a1
+dispositions: F207=FIX
+handoff: Task 3.0b done. measure/doctor.sh holds the exit 1 verdict-line rule. Green command exit 0; doctor gate cases_total=31 cases_failed=0; marker cases 15/0; catalog PASS; bash -n exit 0. Tasks 3.0a and 3.0b are [x]. No [b] task. Next: tasks 3.1 to 3.4.
+END_MEASURE_AGENT_RESULT

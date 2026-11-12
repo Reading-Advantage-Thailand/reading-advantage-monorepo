@@ -1,0 +1,39 @@
+Green checkpoint record, Phase 1 (P1), track doctor_gate_repair_20261112. The plan holds the Phase 1 checkpoint tag and the Phase 1 acceptance evidence.
+
+Role: Measure Jr Green. Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash. Red model: deepseek-flash (DeepSeek).
+
+Commit:
+- e05707b36 docs(measure): record the doctor phase 1 checkpoint
+
+Plan change, two lines:
+- The Phase 1 heading now reads `## Phase 1: F411, the marker guard accepts the pending marker [checkpoint: 247330b27]`.
+- Task 1.4 holds one evidence line for the Phase 1 acceptance.
+
+No test ran. No implementation file changed. No Red test changed. No coder delegation.
+The log file is not committed.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: Measure Jr Green
+track: doctor_gate_repair_20261112
+phase: P1
+phase_base_sha: 088efb891a20a2be2619b839812ad8ee13bac562
+role_base_sha: 247330b273734060b758163d73521a33d60b44c9
+green_head: e05707b368e31da104fe3fdef659c80fb03686ab
+checkpoint_commit: e05707b368e31da104fe3fdef659c80fb03686ab
+accepted_head: 247330b273734060b758163d73521a33d60b44c9
+tasks_done: none (the checkpoint records the accepted Phase 1; tasks 1.1 to 1.4 stay [x])
+tasks_deferred: none
+targeted_red_command: not run (the brief forbids test runs; the phase acceptance at 247330b27 holds the passing result)
+phase_acceptance: pass at 247330b27 (round r1, MiniMax M3.1 Flash)
+review_a: pass at ddd74291f (Kimi)
+review_b: pass at ddd74291f (StepFun)
+adversarial: pass, 18 of 18 mutants killed
+review_c: not applicable, because no route and no UI changed
+ux_browser_review: not applicable, because no route and no UI changed
+changed_files:
+  - measure/tracks/doctor_gate_repair_20261112/plan.md
+new_files:
+  - measure/runs/doctor_gate_repair_20261112/green-p1-checkpoint.log (not committed)
+handoff: The next roles scope the audit to the plan file. The Phase 1 implementation commits stay unchanged. The five nonblocking findings of the phase acceptance carry forward to Phase 2 and Phase 3.
+END_MEASURE_AGENT_RESULT

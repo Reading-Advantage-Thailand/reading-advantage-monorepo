@@ -1,0 +1,19 @@
+heavy-run: load hold — load 6.23 over 6
+heavy-run: load hold — load 6.25 over 6
+PASS: A12/A13 guard declarations and archive directories verified (6 guards)
+PASS: measure anti-pattern catalog exists with A1-A15
+PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked)
+PASS: executed review tracks are not fully blocked by deferred:review-execution
+Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports
+ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110
+DOCTOR: the three structural guard steps gate this exit code
+heavy_rc=0
+
+# closeout note (2026-11-13)
+run_head=a8a336ea82b3ffdb869732fd6669f06bf321dc90
+run_state=after the archive move and the N41 and N42 text changes; the working tree held no other change of this track
+doctor_exit=0 (heavy_rc=0)
+step1=PASS A12/A13 guard declarations and archive directories verified (6 guards)
+step2=PASS all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked)
+step3=PASS executed review tracks are not fully blocked by deferred:review-execution
+step4_cli_exit=2 (the known manifest drift line; ARCHITECTURE and DOCTOR lines printed)

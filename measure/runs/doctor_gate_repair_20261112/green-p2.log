@@ -1,0 +1,171 @@
+Green round, Phase 2 (P2), track doctor_gate_repair_20261112, tasks 2.2, 2.3, 2.4.
+Role: Measure Jr Green. Model: deepseek/deepseek-flash (DeepSeek). Red model: minimax-cn-coding-plan/MiniMax-M3.1-Flash (MiniMax).
+phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec
+role_base_sha=02e9ee7e3d113269777d829ac7054e9dc0850e6b
+
+Commits:
+- 49f96a7d8 fix(measure): record the architecture verdict in doctor (track_id: doctor_gate_repair_20261112)
+- 657059226 docs(measure): record the doctor gate evidence (track_id: doctor_gate_repair_20261112)
+- 4d3861372 docs(measure): log the doctor phase 2 green evidence (track_id: doctor_gate_repair_20261112)
+
+Red re-run at the role base:
+- bash tests/orchestrator_doctor_gate.sh --part a: exit 1, cases_total=11 cases_failed=7.
+- The 7 failing cases: pnpm_exit_1_gate_exits_0, pnpm_exit_0_gate_exits_0, pnpm_exit_2_gate_exits_1,
+  pnpm_exit_127_gate_exits_1, architecture_argv_exact, tool_failure_codes, architecture_line_shows_code.
+- The 4 passing cases at the base are the named characterization cases (3 guard failures, no_write_in_root).
+
+Task 2.2 implementation:
+- measure/doctor.sh keeps set -euo pipefail and the three bare guard lines.
+- The architecture step runs inside set +e / set -e and reads architecture_status=$?.
+- Exit 0 or 1: the ARCHITECTURE verdict line, the DOCTOR gate line, exit 0.
+- Any other code: the tool-failure line, the tool-failure DOCTOR line, exit 1.
+- One comment names the restore condition and its owner: doctor gates again when
+  architecture_ci_input_pin_20261110 closes task 1.4d; owner: the Monorepo orchestrator.
+
+Task 2.2 checks:
+- bash -n measure/doctor.sh: exit 0.
+- bash tests/orchestrator_doctor_gate.sh --part a: exit 0, cases_total=11 cases_failed=0.
+- Timing run through HEAVY: time pnpm architecture:check --skip-input-snapshot-pin: exit 1,
+  real 2m45.684s, user 2m53.026s, sys 0m14.332s. step4_seconds=165.684. The inner tsx exits 2,
+  the pnpm wrapper maps it to exit 1.
+- Full run through HEAVY at HEAD 49f96a7d845ccafca56c50ff5b1efddabad06691: doctor exit 0.
+  step 1 exit 0: PASS: A12/A13 guard declarations and archive directories verified (6 guards);
+  PASS: measure anti-pattern catalog exists with A1-A15.
+  step 2 exit 0: PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked).
+  step 3 exit 0: PASS: executed review tracks are not fully blocked by deferred:review-execution.
+  step 4 exit 1: ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110.
+  DOCTOR: the three structural guard steps gate this exit code.
+- Saved output: measure/runs/doctor_gate_repair_20261112/doctor-run-49f96a7d8.log (not committed).
+- Outcome table row 1: step 4 exit 1, doctor exit 0.
+
+Task 2.3 checks:
+- The record measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md holds
+  HEAD: 49f96a7d8, DATE: 2026-11-12, STEP 1 to STEP 3 at exit 0, STEP 4 at exit 1,
+  the VERDICT line for code 1, DURATION: step 4 took 165.684 s, the OWNER line, and the DOCTOR line.
+- bash tests/orchestrator_doctor_gate.sh: exit 0 at HEAD 657059226f488c4af177067ad19d12434ed634f7,
+  cases_total=22 cases_failed=0.
+- Every value comes from the saved output of the full run at 49f96a7d8. No value comes from memory.
+
+Task 2.4 phase check at HEAD 657059226f488c4af177067ad19d12434ed634f7 (both runs ran at this HEAD):
+- bash tests/orchestrator_doctor_gate.sh: exit 0, cases_total=22 cases_failed=0.
+- bash -n measure/doctor.sh: exit 0. bash -n tests/orchestrator_doctor_gate.sh: exit 0.
+- Full run through HEAVY: doctor exit 0. Steps 1 to 3 exit 0 with their PASS lines. Step 4 exit 1.
+  ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110.
+  DOCTOR: the three structural guard steps gate this exit code. step4_seconds=165.684 (task 2.2 timing run).
+- bash tests/orchestrator_marker_vocabulary_cases.sh: exit 0, cases_total=15 cases_failed=0.
+- bash tests/orchestrator_catalog.sh: exit 0, PASS: measure anti-pattern catalog exists with A1-A15.
+- bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112: exit 0 (1 plans checked).
+- HEAD moved after the check: 09bb8e109 (accounting_drive_intake_20261109) and 4d3861372 (this track's plan commit).
+- Final run of bash tests/orchestrator_doctor_gate.sh at HEAD 4d38613725e981ebf35a085f642494bd3f8632fd:
+  exit 0, cases_total=22 cases_failed=0.
+
+This track's paths in git diff --name-only e592f8246..HEAD:
+- measure/doctor.sh
+- measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md
+- measure/tracks/doctor_gate_repair_20261112/plan.md
+- tests/orchestrator_doctor_gate.sh
+The range also holds e3fd1aa38 (storytime_app_rebuild_20261025) and 09bb8e109 (accounting_drive_intake_20261109).
+No path under apps/, packages/, or services/. doctor_out_of_scope_paths=0.
+git worktree list --porcelain shows 7 worktrees. This track created none of the six other worktrees.
+
+Working tree: the Red test file tests/orchestrator_doctor_gate.sh is unchanged by this role.
+The record's HEAD line is the HEAD of the run that produced its values (49f96a7d8), not the record commit.
+Task 3.4 refreshes the record at its own HEAD.
+No coder delegation. No deploy, no gcloud, no secret read, no paid model call, no pin refresh.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: Measure Jr Green
+track: doctor_gate_repair_20261112
+phase: P2
+phase_base_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+role_base_sha: 02e9ee7e3d113269777d829ac7054e9dc0850e6b
+green_head: 4d38613725e981ebf35a085f642494bd3f8632fd
+implementation_commits: 49f96a7d845ccafca56c50ff5b1efddabad06691, 657059226f488c4af177067ad19d12434ed634f7
+plan_evidence_commit: 4d38613725e981ebf35a085f642494bd3f8632fd
+tasks_done: 2.2 (49f96a7d8), 2.3 (657059226), 2.4 (check at 657059226)
+tasks_deferred: none
+targeted_red_command: bash tests/orchestrator_doctor_gate.sh --part a -> exit 0, cases_total=11 cases_failed=0
+full_test_command: bash tests/orchestrator_doctor_gate.sh -> exit 0, cases_total=22 cases_failed=0
+step4_seconds: 165.684
+doctor_exit: 0
+doctor_steps: step 1 exit 0; step 2 exit 0; step 3 exit 0; step 4 exit 1
+architecture_line: ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110
+saved_run_log: measure/runs/doctor_gate_repair_20261112/doctor-run-49f96a7d8.log
+new_files: measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md, measure/runs/doctor_gate_repair_20261112/doctor-run-49f96a7d8.log (uncommitted), measure/runs/doctor_gate_repair_20261112/green-p2.log (uncommitted)
+handoff: Review roles scope the audit to measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the two files under measure/tracks/doctor_gate_repair_20261112/. The Red test file is unchanged. The record is current for HEAD 49f96a7d8 and task 3.4 refreshes it. The full run at 657059226 exited 0 with step 4 exit 1. The machine has 7 worktrees; this track created none of the six other worktrees.
+END_MEASURE_AGENT_RESULT
+
+==================== Round r2 ====================
+Green round r2, Phase 2 (P2), task 2.5, track doctor_gate_repair_20261112: remediation of the Phase 2 reviews.
+Role: Measure Jr Green. Model: claude-code/claude-sonnet-5-5#high (Anthropic). Red model: minimax-cn-coding-plan/MiniMax-M3.1-Flash (MiniMax).
+phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec
+role_base_sha=68e7ee750dc92f6b0affcf3c2c1e5af56e63dcd0
+Red commits of task 2.5: 50db02a63 (test), 68e7ee750 (plan evidence). Both lie inside phase_base_sha..HEAD.
+
+Commits:
+- bbe5e5860 fix(measure): read the real architecture exit in doctor (measure/doctor.sh only)
+- af66a6d66 docs(measure): log the doctor task 2.5 green evidence (record and plan)
+Deviation from the brief: the brief asked for one commit with three paths. The record needs the saved logs of runs at the fix
+HEAD, and a commit cannot hold its own SHA. So the fix commit came first, the live runs ran at bbe5e5860, and the record and
+plan went in the second commit. The Red test file did not change.
+
+Step 1: measure/doctor.sh runs (cd packages/architecture-enforcement && ../../node_modules/.bin/tsx
+  src/architecture-check-cli.ts --skip-input-snapshot-pin) with no pnpm wrapper, captures exit code and output, prints the
+  output, and applies the four FR-3 rules. set -euo pipefail, the three bare guard lines, and the restore-condition comment stay.
+- bash -n measure/doctor.sh: exit 0.
+- bash tests/orchestrator_doctor_gate.sh --part a: exit 0, cases_total=12 cases_failed=0.
+
+Step 2 live runs (heavy-run prefix, foreground):
+- Timing run at bbe5e5860: the CLI exits 2 and prints the known manifest drift line. real 2m55.150s. step4_seconds=175.150.
+  Saved: measure/runs/doctor_gate_repair_20261112/timing-run-bbe5e5860.log (not committed).
+- Full doctor run at bbe5e5860: doctor exit 0. Steps 1 to 3 print their PASS lines.
+  The CLI output line "Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports" shows real CLI exit 2.
+  ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110
+  DOCTOR: the three structural guard steps gate this exit code
+  Saved: measure/runs/doctor_gate_repair_20261112/doctor-run-bbe5e5860.log (not committed).
+- No exit 124.
+
+Step 3: the record doctor-gate-evidence.md holds HEAD: bbe5e5860, the STEP 4 line with the FR-3 command text and exit 2, the VERDICT line
+  copied from the ARCHITECTURE line, and DURATION: step 4 took 175.150 s, from the timing run at bbe5e5860.
+- bash tests/orchestrator_doctor_gate.sh: exit 0, cases_total=24 cases_failed=0 (checked before and after the second commit).
+
+Step 5 checks:
+- bash -n measure/doctor.sh: exit 0. bash -n tests/orchestrator_doctor_gate.sh: exit 0.
+- bash tests/orchestrator_marker_vocabulary_cases.sh: exit 0, cases_total=15 cases_failed=0.
+- bash tests/orchestrator_catalog.sh: exit 0, PASS: measure anti-pattern catalog exists with A1-A15.
+- bash tests/orchestrator_marker_vocabulary.sh: exit 0 (93 plans checked).
+- doctor_out_of_scope_paths=0: this track's paths in the range are measure/doctor.sh, tests/orchestrator_doctor_gate.sh, and the track folder.
+  Other paths in the range belong to accounting_drive_intake_20261109 and storytime_app_rebuild_20261025.
+
+Residual risk: exit 1 from the CLI means a boundary failure by contract. A failure of the cd, or an uncaught Node exception, also gives
+exit 1 and the gate records it as a boundary verdict. FR-3 pins the command text, so this round did not change it.
+
+No coder delegation. No deploy, no gcloud, no secret read, no paid model call, no pin refresh, no write outside the allowed paths.
+
+disposition_reasons: F201 fixed by the real CLI exit in the record and the gate. F202 fixed by the Red stub tsx cases (all pass). F203 fixed by the Red tsx_absent assertion before the 127 run. F204 fixed by the correction note under task 2.4 and the new saved logs at bbe5e5860. F205 declined (Nit): the spec pins the owner text for exit 0. F251 fixed because the gate reads the real CLI exit, so a tool failure exits 1.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: Measure Jr Green
+track: doctor_gate_repair_20261112
+phase: P2
+task: 2.5
+phase_base_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+role_base_sha: 68e7ee750dc92f6b0affcf3c2c1e5af56e63dcd0
+green_head: af66a6d661965ce500c2f7a7b9d2a3c6611f9c59
+implementation_commits: bbe5e58601dcb7def194326146bd84e4019235bd
+plan_evidence_commit: af66a6d661965ce500c2f7a7b9d2a3c6611f9c59
+tasks_done: 2.5 (bbe5e5860)
+tasks_deferred: none
+targeted_red_command: bash tests/orchestrator_doctor_gate.sh --part a -> exit 0, cases_total=12 cases_failed=0
+full_test_command: bash tests/orchestrator_doctor_gate.sh -> exit 0, cases_total=24 cases_failed=0
+cli_exit: 2
+step4_seconds: 175.150
+doctor_exit: 0
+architecture_line: ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110
+saved_run_logs: measure/runs/doctor_gate_repair_20261112/doctor-run-bbe5e5860.log, measure/runs/doctor_gate_repair_20261112/timing-run-bbe5e5860.log (uncommitted)
+new_files: none committed beyond edits; uncommitted logs: doctor-run-bbe5e5860.log, timing-run-bbe5e5860.log, green-p2.log
+dispositions: F201=FIX; F202=FIX; F203=FIX; F204=FIX; F205=DECLINE; F251=FIX
+handoff: Reviewers scope the audit to measure/doctor.sh (commit bbe5e5860) and the record and plan (commit af66a6d66). The Red test file is unchanged. The record holds HEAD bbe5e5860; task 3.4 refreshes it at its own HEAD. The known manifest drift is the true state of master and belongs to architecture_ci_input_pin_20261110. Residual risk: a cd failure or uncaught Node exception gives CLI exit 1 and records as a boundary verdict; FR-3 pins the command text.
+END_MEASURE_AGENT_RESULT

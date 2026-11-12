@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "role": "final-acceptance",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "track",
+  "track_base_sha": "97d86a413c7f893ad780e4cbdec933550279bbff",
+  "role_base_sha": "a8a336ea82b3ffdb869732fd6669f06bf321dc90",
+  "audited_head_sha": "a8a336ea82b3ffdb869732fd6669f06bf321dc90",
+  "route": "volcengine-agent-plan/glm-latest#high",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "All three phases hold exactly one passing phase-acceptance result (p1 at 247330b27, p2 at 5293392b8, p3 at a02662e09); every baseline is an ancestor of its audited HEAD, and the audited HEAD a8a336ea8 is current HEAD. The path diff a02662e09..HEAD over the track paths shows only measure/tracks/doctor_gate_repair_20261112/plan.md (commit c5679d154, the checkpoint record) and measure/tracks.md (commits a8a336ea8 and 639eaef2c, rows of other tracks); no doctor_gate_repair row changed, so all later commits are covered under the PM ruling of 2026-11-13. All four gates exit 0 at the audited HEAD. Every FR and AC of spec.md has evidence; every plan task is [x] with a commit SHA (no [ ], [~], or [b] task remains); all metadata constraints hold (the per-commit scope check over the 31 track commits lists only allowed write paths, no path under apps/, packages/, or services/, no manifest, no evidence_integrity_gates change, no new hash). The pre-closeout anti-pattern audit passes: A5 (no PASS=N/FAIL=0 or all-checks-pass text; every current cases_total/cases_failed claim re-run and confirmed), A6 (the registry note 'implemented (doctor gate green at 4d0b4e6b3)' matches the saved run doctor-run-4d0b4e6b3.log with doctor_exit=0 and the adversarial p3 pass at the same HEAD), A9 (no test in tests/*.sh references an archived track path; part B uses track_dir_resolve), A16 (per the PM ruling of 2026-11-13 the six other worktrees of other owners do not block; this track created none).",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N41 [carried to closeout per PM decision 6 of 2026-11-12, confirmed 2026-11-13]: plan.md line 289 (task 3.1) states that `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` shows the link line and the status line. The status line holds no track id, so the command prints one line. CLOSEOUT ITEM: reword the check to the form of test-strategy.md section 6.9.",
+    "N42 [carried to closeout per PM decision 6 of 2026-11-12, confirmed 2026-11-13]: test-strategy.md line 143 says the verdict literal in every case is the single line with files=12, findings=3, parseErrors=0, and section 7.4 names no reset_tsx note for p3-20. Commit 4d0b4e6b3 added a second valid verdict line and reset_tsx now runs in case tsx_exit_0_gate_exits_0, so both sentences are stale. CLOSEOUT ITEM: amend the two sentences only. The test and the production rule stay as committed.",
+    "N43 [open, Low, residual from phase acceptance p3]: part B of tests/orchestrator_doctor_gate.sh validates only the first record block of doctor-gate-evidence.md, so the Phase 3 block is not test-pinned. The phase acceptance verified that block line by line against doctor-run-4d0b4e6b3.log; no value is false.",
+    "N44 [open, Low, residual from Review B B214 and adversarial p3 N1]: a whole line in the verdict shape can be forged only on a crash exit 1 whose output embeds a newline inside an echoed field, and mutant p3-24 (a pattern that hard-codes the status debt-change) survives the part A cases. Both are test-generality residuals; the CI push gate fails the same run."
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "commands": [
+    "git rev-parse HEAD -> a8a336ea82b3ffdb869732fd6669f06bf321dc90 (at start and at end; unchanged)",
+    "git diff --name-only a02662e09..HEAD -- <the 7 track scope paths> -> measure/tracks.md, measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "git diff a02662e09..HEAD -- measure/tracks.md -> hunks touch only the storytime_look_20261107 rows (a8a336ea8) and the master_push_readiness_20261112 row (639eaef2c); no doctor_gate_repair row changed (grep of the diff for doctor_gate_repair: no hit)",
+    "git log a02662e09..HEAD --oneline -- <track paths> -> c5679d154 (plan.md), 639eaef2c (tracks.md, other track), a8a336ea8 (tracks.md, other track)",
+    "PROJECT_LINT: bash -n measure/doctor.sh && bash -n tests/orchestrator_doctor_gate.sh && bash -n tests/orchestrator_marker_vocabulary.sh && bash -n tests/orchestrator_marker_vocabulary_cases.sh -> exit 0",
+    "PROJECT_CHECKS: bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112 && bash tests/orchestrator_catalog.sh -> exit 0; PASS: ... (1 plans checked); PASS: A12/A13 ... (6 guards); PASS: measure anti-pattern catalog exists with A1-A15",
+    "PROJECT_TESTS: bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_doctor_gate.sh -> exit 0; cases_total=15 cases_failed=0; cases_total=31 cases_failed=0 (part A 19, part B 12)",
+    "git log 97d86a413..a02662e09 --grep='track_id: doctor_gate_repair_20261112' --format='' --name-only | sort -u -> only the 7 allowed write paths (measure/anti-patterns.md, measure/doctor.sh, this track folder, measure/tracks.md, and the 3 test files)",
+    "ancestor checks via git log: 97d86a413 in history of 247330b27, 5293392b8, a02662e09; 247330b27 in 5293392b8; 5293392b8 in a02662e09; a02662e09 in a8a336ea8; 4d0b4e6b3 in a02662e09: all REACHABLE",
+    "awk A8 token detector over measure/anti-patterns.md -> a8_tokens=4",
+    "grep -cF of the verdict template in packages/architecture-enforcement/src/architecture-check.ts -> 1 (exit 0, format_source_hits=1)",
+    "grep -cE '^- \\[ \\] |^- \\[~\\] |^- \\[b\\] ' measure/tracks/doctor_gate_repair_20261112/plan.md -> 0, 0, 0 (no open, in-progress, or blocked task remains)",
+    "git worktree list -> the shared master tree plus 6 worktrees of other owners (book-editions, forge-filled-shelves, monorepo-boundaries, primary-build-info, sales-january-course, www-real-logos); not blockers under the PM ruling of 2026-11-13"
+  ],
+  "evidence": [
+    "FR-1: tests/orchestrator_marker_vocabulary_cases.sh, 15 cases, 0 failed (re-run at a8a336ea8, exit 0); the guard predicate at tests/orchestrator_marker_vocabulary.sh fails only a marker outside { , ~, x, b}.",
+    "FR-2: measure/anti-patterns.md A8 keeps its heading and Guard line, names the accepted set (a8_tokens=4); bash tests/orchestrator_catalog.sh exits 0 with A1-A15.",
+    "FR-3: measure/doctor.sh matches every rule of spec FR-3 line by line: the tsx call with no pnpm wrapper, the captured exit and output, the exit 0 rule, the exit 1 whole-verdict-line rule (grep -qxE with the three counts), the exit 2 known-drift rule (grep -qxF), the tool-failure rule for every other outcome, and the restore comment naming task 1.4d and the Monorepo orchestrator.",
+    "FR-4: doctor-gate-evidence.md holds the two record blocks (bbe5e5860 and 4d0b4e6b3), each with the four STEP lines, the VERDICT line, the DURATION line, the OWNER line, and the DOCTOR line; each value traces to a saved run log.",
+    "FR-5 and AC-8: measure/tracks.md line 1670 to 1673 carries the entry with Status, the due date 2026-11-14, the owner chain, F411, and F421.",
+    "AC-1: the recorded full run measure/runs/doctor_gate_repair_20261112/doctor-run-4d0b4e6b3.log at HEAD 4d0b4e6b3 shows doctor_exit=0 (heavy_rc=0), steps 1 to 3 exit 0, step 4 CLI exit 2 with the known-drift line; `git diff --name-only 4d0b4e6b3..HEAD` over the five code paths is empty, so no doctor path changed after the run.",
+    "AC-2 to AC-6: re-run at a8a336ea8 (marker cases 15/0, doctor gate 31/0, catalog PASS, single-track sweep PASS per PM decision 3).",
+    "AC-7: the per-commit scope check over all 31 track commits (test-strategy.md section 1.5) lists no path under apps/, packages/, or services/; the raw full-range diff 97d86a413..a02662e09 holds other tracks' paths, which test-strategy.md finding F6 records as the reason the per-commit check is the gate.",
+    "Constraint checks: no change to measure/evidence_integrity_gates/, no manifest change (analyzer-reconciliation.v2.json untouched), no new hash or checksum file, no other-track plan edited, commit subjects 100 characters or less with the track_id reference (verified by awk over git log).",
+    "A5 audit: grep of plan.md for PASS=N.*FAIL=0 and 'all checks pass' finds no hit; every current labeled-count claim (cases_total=15, cases_total=31) was re-run and matches; historical Red-round claims at earlier HEADs carry their failing-case lists and were accepted by the phase acceptances.",
+    "A6 audit: the registry status names 4d0b4e6b3, the HEAD of the recorded run with exit 0; the adversarial p3 result at that HEAD passes 22 of 22 mutants (probe p3-24 survives as a recorded residual).",
+    "A9 audit: the only measure/tracks/<id>/plan.md literals in tests/*.sh are fixture ids (fixture_*_2026*); no referenced id is archived without a live dir; part B of the doctor gate test resolves the record through track_dir_resolve."
+  ],
+  "changed_files": [
+    "measure/runs/doctor_gate_repair_20261112/final-acceptance-a8a336ea8.json",
+    "measure/runs/doctor_gate_repair_20261112/final-acceptance-a8a336ea8.log"
+  ],
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "measure/doctor.sh implements all five outcome rules of spec FR-3 verbatim (verified line by line), the guard predicate matches FR-1, and the 31 doctor-gate cases plus 15 marker cases all pass at a8a336ea8."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Each Red round lists its named failing cases with base SHAs (plan.md tasks 1.1, 2.1, 2.5, 3.0a) and adversarial runs kill 18/18, 28/29, and 22/22 mutants, but two test-generality residuals (p3-24, the B214 newline spoof) survive as recorded gaps (N44)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git log 97d86a413..a02662e09 --grep='track_id: doctor_gate_repair_20261112' --name-only lists exactly the 7 allowed write paths and nothing else."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every plan [x] task names its commit SHA, command, exit code, and saved log; I re-ran all four gates and both artifact detectors and every current claim reproduced."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-p1-ddd74291f.json: pass with 2 nonblocking findings; the N1 two-character-marker residual matches test-strategy finding F3 and is not a regression."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "nvidia/stepfun-ai/step-5-preview#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-b-p1-ddd74291.json: pass with 3 real findings; F153 was partially closed by the case track_traversal_outside_root_exits_1, which I saw pass in my run."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p1-ddd74291f.json: pass, 18 of 18 mutants killed with each mutant attributed to a case; it correctly recorded the F3 residual as not a missed mutant."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "nvidia/stepfun-ai/step-5-preview#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-a-p2-af66a6d66.json: pass and it found F207, the exit-1 tool-failure hazard the PM then moved to Phase 3 tasks 3.0a/3.0b, which I verified implemented in measure/doctor.sh."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-b-p2-af66a6d66.json: pass, concurs on F207; its N3 (no whole-line drift case) was closed by drift_match_requires_whole_line, which passed in my run."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding",
+      "agreed": true,
+      "score": 5,
+      "evidence": "adversarial-p2-af66a6d66.json: pass, 28 of 29 mutants killed and the m-cd mechanism confirmed; the m-x survivor was killed by drift_match_requires_whole_line at 5293392b8 per the plan note."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "deepseek/deepseek-flash#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-p3-a284de0b0.json: pass; A209 and A210 were closed by the adversarial commit 4d0b4e6b3 (reset_tsx and the second verdict line), A211 became the closeout item N41, and A213 records the one-commit provenance deviation honestly."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "kimi-code-plan-cn/kimi-for-coding#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-b-p3-a284de0b0.json: pass; B215 concurs with A209 (closed), and B214 is a real, narrow spoof residual that I carried as N44."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "nvidia/stepfun-ai/step-5-preview#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-p3-4d0b4e6b3.json: pass, not applicable; the track changes no route and no UI file, which the track diff confirms."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "deepseek/deepseek-flash#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p3-4d0b4e6b3.json: pass, 22 of 22 mutants killed with the p3-24 probe recorded as a residual; its N2 became the closeout item N42."
+    }
+  ],
+  "handoff": ""
+}

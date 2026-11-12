@@ -675,6 +675,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ## Archived Tracks
 
+- [x] **Track: Doctor gate repair** — *created 2026-11-12, archived 2026-11-13*
+  *Link: [./archive/doctor_gate_repair_20261112/](./archive/doctor_gate_repair_20261112/)*
+  *Repair the doctor gate on master: the marker vocabulary guard accepts the canonical pending marker, and the doctor gate records the architecture verdict without gating on stale manifest hashes.*
+  *Status: implemented (doctor gate green at 4d0b4e6b3; due 2026-11-14); archived 2026-11-13, final acceptance at a8a336ea8 | Chore, findings F411 and F421 of the PM decisions of 2026-11-12 | Owner chain: Daniel (owner; deploy gate) → Monorepo orchestrator (track owner) → PM orchestrator (decisions of 2026-11-12) | F411: the marker guard accepts the canonical pending marker `- [ ] ` and fails only a marker outside {` `, `~`, `x`, `b`} | F421: the doctor gate runs the architecture check in CI mode, records the verdict, and names the owner track architecture_ci_input_pin_20261110 | The pin refresh and the debt baseline stay with architecture_ci_input_pin_20261110 (tasks 1.4 and 1.4d) | The doctor gate exits 0 on master at 4d0b4e6b3 (the saved run doctor-run-4d0b4e6b3.log)*
+  *Note: The final acceptance passed at a8a336ea8. The closeout items N41 and N42 of the PM decision 6 of 2026-11-12 changed the plan and the test strategy. N43 and N44 stay recorded residuals. No push and no deploy from this track.*
+
 - [x] **Track: Storytime look and council fixes** — *created 2026-11-07, archived 2026-11-13*
   *Link: [./archive/storytime_look_20261107/](./archive/storytime_look_20261107/)*
   *Fix eleven UI council findings on the Storytime week pages (Phase 1), then port the look of the option that Daniel picks from the look study (Phase 2), so that Storytime has a look in the vein of Primary Advantage. Phase 3 imports the Storytime app packages r3 (weeks 1 to 7) with the word clips and the song lead-in.*
@@ -1667,10 +1673,6 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 - [ ] **Track: Accounting Drive intake** — *created 2026-11-09*
   *Link: [./tracks/accounting_drive_intake_20261109/](./tracks/accounting_drive_intake_20261109/)*
   *Status: new (spec and plan only) | Feature, PM request A-52 | Build starts after 2026-11-20, or earlier only in a slot that Storytime does not need | Drive intake poll, Gemini on Vertex for non-text PDFs, a CEO monthly close with a lock and an audit row, a read-only Tutor settlement proposal, and a stub parsing section until the structure report of 2026-11-11 | Deferred: `deferred:pm` for the first load, the structure report, the invoice pull job, the Tutor endpoints, the Drive IAM grant, the PA-INV and Storytime sources, and the Accounts role seed; `deferred:daniel` for the deploy and the traffic move*
-
-- [ ] **Track: Doctor gate repair** — *created 2026-11-12*
-  *Link: [./tracks/doctor_gate_repair_20261112/](./tracks/doctor_gate_repair_20261112/)*
-  *Status: implemented (doctor gate green at 4d0b4e6b3; due 2026-11-14) | Chore, findings F411 and F421 of the PM decisions of 2026-11-12 | Owner chain: Daniel (owner; deploy gate) → Monorepo orchestrator (track owner) → PM orchestrator (decisions of 2026-11-12) | F411: the marker guard accepts the canonical pending marker `- [ ] ` and fails only a marker outside {` `, `~`, `x`, `b`} | F421: the doctor gate runs the architecture check in CI mode, records the verdict, and names the owner track architecture_ci_input_pin_20261110 | The pin refresh and the debt baseline stay with architecture_ci_input_pin_20261110 (tasks 1.4 and 1.4d) | Done when `bash measure/doctor.sh` exits 0 on master*
 
 - [ ] **Track: Master push readiness** — *created 2026-11-12*
   *Link: [./tracks/master_push_readiness_20261112/](./tracks/master_push_readiness_20261112/)*

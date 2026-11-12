@@ -1,0 +1,18 @@
+HEAD: 4d0b4e6b323c9693fc6e28997b97855658f1e7e1 (git rev-parse HEAD just before the run)
+date: 2026-11-12
+command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'
+--- output ---
+heavy-run: lock wait over 600 s — priority p2 — holder PID 1648320: flock -n -E 201 /home/daniebo/Desktop/primary-parity-progress/heavy.lock /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh --locked -c cd /home/daniebo/Desktop/reading-advantage-monorepo && build-graph update ./graph.db packages/backend/src/modules/accounting/intake.ts apps/accounting/app/lib/intake-runner.ts; echo "EXIT_GRAPH=$?" 
+PASS: A12/A13 guard declarations and archive directories verified (6 guards)
+PASS: measure anti-pattern catalog exists with A1-A15
+PASS: all active track plans use only [ ], [~], [x], or [b] task markers (95 plans checked)
+PASS: executed review tracks are not fully blocked by deferred:review-execution
+Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports
+ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110
+DOCTOR: the three structural guard steps gate this exit code
+--- end output ---
+doctor_exit=0 (heavy_rc=0)
+total_seconds=1530 (wall clock of the whole heavy-run command, with a lock wait of more than 600 s; step 4 alone was not timed in this run)
+steps 1 to 3 exit 0 (the script holds set -e, and the run reached step 4)
+step 4 cli_exit=2 (the ARCHITECTURE line states it; the line above it is the CLI output)
+head_after_run=b691690b4 (another track committed master_push_readiness_20261112; no change to measure/doctor.sh, tests/, or measure/anti-patterns.md between 4d0b4e6b3 and b691690b4)

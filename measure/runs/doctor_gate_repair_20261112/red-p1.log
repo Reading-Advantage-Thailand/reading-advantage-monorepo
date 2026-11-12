@@ -1,0 +1,92 @@
+# Red round log, Phase 1 task 1.1
+
+Track: `doctor_gate_repair_20261112`
+Phase: P1, F411, the marker guard accepts the pending marker
+Task: 1.1 Red
+Role: Measure Mid Red
+Model: deepseek-flash
+Round: 1
+
+## Bases
+
+- `phase_base_sha=088efb891a20a2be2619b839812ad8ee13bac562` (resolved)
+- `role_base_sha=088efb891a20a2be2619b839812ad8ee13bac562` (resolved)
+- Both values resolve to the same commit.
+
+## Commits
+
+- `0088e86c8674bd03b8e575e0e72c90ed22668cad` — `test(measure): pin the marker guard cases (track_id: doctor_gate_repair_20261112)`. Test file only.
+- `d8b60a75ccdcb6de4d0b95c3d170358fd06deb3b` — `docs(measure): log the doctor phase 1 red evidence (track_id: doctor_gate_repair_20261112)`. Plan file only.
+
+## Command
+
+`bash tests/orchestrator_marker_vocabulary_cases.sh`
+
+- Exit at the base: 1.
+- `cases_total=14 cases_failed=7`. The floor of 14 is met.
+- `bash -n tests/orchestrator_marker_vocabulary_cases.sh` exits 0. Red is not a syntax error and not a copy error.
+
+## Case results at the base
+
+| Case | Result | Reason |
+|---|---|---|
+| `clean_active_exits_0` | FAIL | expected exit 0, got exit 1 |
+| `unknown_marker_exits_1` | FAIL | expected exit 1, got exit 0 |
+| `canonical_markers_exit_0` | PASS | characterization |
+| `track_scope_exits_0` | PASS | characterization |
+| `archive_excluded_exits_0` | PASS | characterization |
+| `markers_outside_set_exit_1` | FAIL | marker [?]: expected exit 1, got exit 0 |
+| `two_offenders_two_fail_lines` | FAIL | expected exit 1, got exit 0 |
+| `fail_on_stderr_pass_on_stdout` | FAIL | clean run: expected exit 0, got exit 1 |
+| `two_plans_count_two` | FAIL | expected exit 0, got exit 1 |
+| `prose_bracket_not_flagged` | PASS | characterization |
+| `indented_marker_ignored` | PASS | characterization |
+| `usage_error_exits_2` | PASS | characterization |
+| `empty_scope_exits_1` | PASS | characterization |
+| `track_archive_first_exits_1` | FAIL | expected exit 1, got exit 0 |
+
+`failed_cases=clean_active_exits_0,unknown_marker_exits_1,markers_outside_set_exit_1,two_offenders_two_fail_lines,fail_on_stderr_pass_on_stdout,two_plans_count_two,track_archive_first_exits_1`.
+
+The two plan cases `clean_active_exits_0` and `unknown_marker_exits_1` fail as the plan states. The five plan cases and the nine strategy cases are all present.
+
+## Scope
+
+- The test file holds the 14 cases and no production change.
+- No fixture entered `measure/tracks/`. Each case built its own root under `/tmp` and removed it.
+- The dirty paths in `git status --short` before the work were unrelated user work. This role did not touch them.
+
+## Next
+
+Task 1.2 is `[~]` and waits for the Green role on another model family.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: doctor_gate_repair_20261112
+phase: P1
+task: 1.1
+baseline_sha: 088efb891a20a2be2619b839812ad8ee13bac562
+role_base_sha: 088efb891a20a2be2619b839812ad8ee13bac562
+head: d8b60a75ccdcb6de4d0b95c3d170358fd06deb3b
+commits:
+  - 0088e86c8674bd03b8e575e0e72c90ed22668cad
+  - d8b60a75ccdcb6de4d0b95c3d170358fd06deb3b
+tests:
+  - tests/orchestrator_marker_vocabulary_cases.sh
+files_changed:
+  - tests/orchestrator_marker_vocabulary_cases.sh
+  - measure/tracks/doctor_gate_repair_20261112/plan.md
+  - measure/runs/doctor_gate_repair_20261112/red-p1.log (uncommitted)
+red_command: bash tests/orchestrator_marker_vocabulary_cases.sh
+red_exit: 1
+cases_total: 14
+cases_failed: 7
+remaining_failures:
+  - clean_active_exits_0
+  - unknown_marker_exits_1
+  - markers_outside_set_exit_1
+  - two_offenders_two_fail_lines
+  - fail_on_stderr_pass_on_stdout
+  - two_plans_count_two
+  - track_archive_first_exits_1
+status: complete
+END_MEASURE_AGENT_RESULT

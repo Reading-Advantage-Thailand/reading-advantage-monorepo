@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track_id": "doctor_gate_repair_20261112",
+  "phase": "P2",
+  "phase_base_sha": "e592f824607cc220c02096e0a66d3174d1fe78ec",
+  "audited_head_sha": "af66a6d661965ce500c2f7a7b9d2a3c6611f9c59",
+  "route": "nvidia/stepfun-ai/step-5-preview#high",
+  "round": "r2",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "HEAD equals af66a6d661965ce500c2f7a7b9d2a3c6611f9c59, the audited head. Round 1 findings F201 to F204 are fixed. measure/doctor.sh calls the architecture CLI directly, so no pnpm layer maps a CLI exit 2 to 1. The saved run at bbe5e5860 shows a CLI exit of 2 with the known manifest drift, and the gate exits 0. tests/orchestrator_doctor_gate.sh passes 24 cases, and its stub tsx models the real call path. The gate record reads every value from the two saved logs. F205 is withdrawn. Two nonblocking items stay open: the exit 1 residual of F207 and the stale step 4 seconds in spec OQ-3.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F207 [open, Medium, residual tool-failure hazard]: measure/doctor.sh lines 15 to 20 capture the exit of the step 4 subshell and map 0 and 1 to a boundary verdict. test-strategy M6 documents the CLI contract, and a failed cd or an uncaught Node exception gives exit 1. The gate then prints the owner line and exits 0, so a real crash passes the gate. The saved run at bbe5e5860 does not hit this path, and no case in part A covers it. Plan task 2.5 names the same residual.",
+    "F208 [open, Low, stale spec value]: spec section 8 OQ-3 still states the step 4 time as 165.684 s. That number came from the pnpm timing run of task 2.2. The run at the record HEAD measures 175.150 s in measure/runs/doctor_gate_repair_20261112/timing-run-bbe5e5860.log. The correct value sits in the gate record, so the spec sentence is the only stale place."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned af66a6d661965ce500c2f7a7b9d2a3c6611f9c59, equal to audited_head_sha.",
+    "F201 resolved: measure/doctor.sh line 15 runs ../../node_modules/.bin/tsx directly, with no pnpm layer. Line 12 prints the captured output. The saved log doctor-run-bbe5e5860.log holds 'Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports' at line 12 and 'step 4 cli_exit=2' at line 18.",
+    "F202 resolved: tests/orchestrator_doctor_gate.sh write_stub_tsx (lines 90 to 108) writes the stub at <tmp>/node_modules/.bin/tsx, and run_case (line 690) creates <tmp>/packages/architecture-enforcement. The header comment at lines 3 to 8 states that no pnpm layer sits between the stub and the gate. Part A holds 12 cases and all pass.",
+    "F203 resolved: case_tsx_exit_127_gate_exits_1 (lines 320 to 343) calls reset_tsx, asserts tsx_is_absent, then runs the gate. The 127 branch of tool_failure_codes (lines 356 to 362) asserts tsx_is_absent before the run. My fixture proves the check: a scratch root with no record makes all 12 part B cases fail, and a scratch root with no stub gives the 127 result.",
+    "F204 resolved: the record doctor-gate-evidence.md names both saved logs and the HEAD bbe5e5860. STEP 1 to 3 exit 0 match the log PASS lines. STEP 4 exit 2 and the VERDICT line match line 19 of the log. DURATION 175.150 s and the timing sha bbe5e5860 match timing-run-bbe5e5860.log lines 5 and 6.",
+    "F205 withdrawn: spec FR-3 pins the exit 0 and exit 1 ARCHITECTURE lines word for word, and measure/doctor.sh prints that text. The wording tension belongs to the spec, not to this phase.",
+    "F206 withdrawn: the record header names both saved logs, and every value in it matches a saved line.",
+    "The four rules of FR-3 hold: lines 23 to 26 for 0 and 1, lines 28 to 31 for the known drift, lines 33 to 36 for every other code. set -euo pipefail stays at line 2, the three guard steps stay as bare lines 4 to 6, and the restore comment stays at lines 8 to 10.",
+    "A3 clean: every count is a labeled integer. cases_total, cases_failed, codes_checked=5, tsx_calls, record_lines_checked, and PART_A_TOTAL. Exit codes compare as integers, so no case proves an exit with a substring.",
+    "A4 clean: the missing-record fixture above fails all 12 part B cases and the script exits 1. Part A floor 12 holds. record_step_exit_codes fails a STEP 4 code of 3 or 127.",
+    "A5 clean: the task 2.5 Green evidence quotes the exit codes, the four step results, and step4_seconds=175.150. No text claims a pass without a command result.",
+    "Per-commit scope: git log --grep=doctor_gate_repair_20261112 lists ten commits. Each commits only its allowed paths. doctor_out_of_scope_paths=0.",
+    "build-graph was not used: the change is a shell script and a shell test. No exported TypeScript symbol changed. No caller of measure/doctor.sh sits in the repository.",
+    "bash -n measure/doctor.sh exits 0. bash -n tests/orchestrator_doctor_gate.sh exits 0.",
+    "bash tests/orchestrator_doctor_gate.sh exits 0 with cases_total=24 cases_failed=0. Part A holds 12 cases against a floor of 12.",
+    "No doctor.sh, no pnpm, and no tsx ran from this session. The architecture check ran only inside the stub roots of the recorded Green runs."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git show --stat af66a6d661965ce500c2f7a7b9d2a3c6611f9c59",
+    "git diff --stat e592f824607cc220c02096e0a66d3174d1fe78ec af66a6d661965ce500c2f7a7b9d2a3c6611f9c59",
+    "git show bbe5e5860:measure/doctor.sh",
+    "git show 50db02a63:tests/orchestrator_doctor_gate.sh",
+    "git show --name-only --format= bbe5e5860",
+    "git show --name-only --format= 50db02a63",
+    "git show --name-only --format= ad72cee7a",
+    "git show --stat ad72cee7a",
+    "git log --format=%H e592f824607cc220c02096e0a66d3174d1fe78ec..af66a6d661965ce500c2f7a7b9d2a3c6611f9c59 --grep=doctor_gate_repair_20261112",
+    "git show af66a6d661965ce500c2f7a7b9d2a3c6611f9c59 -- measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md",
+    "bash tests/orchestrator_doctor_gate.sh",
+    "bash -n measure/doctor.sh",
+    "bash -n tests/orchestrator_doctor_gate.sh",
+    "bash /home/daniebo/Desktop/reading-advantage-monorepo/measure/runs/doctor_gate_repair_20261112/a4scratch/tests/orchestrator_doctor_gate.sh --part b"
+  ],
+  "changed_files": [
+    "measure/doctor.sh",
+    "tests/orchestrator_doctor_gate.sh",
+    "measure/tracks/doctor_gate_repair_20261112/plan.md",
+    "measure/tracks/doctor_gate_repair_20261112/spec.md",
+    "measure/tracks/doctor_gate_repair_20261112/test-strategy.md",
+    "measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md",
+    "measure/tracks/doctor_gate_repair_20261112/metadata.json"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "QUESTION FOR THE PM (via the orchestrator), with my default. The Green residual note of plan task 2.5 is open as F207. measure/doctor.sh maps a CLI exit 1 to a boundary verdict, and a failed cd or an uncaught Node exception also gives exit 1. Option 1: accept the residual. test-strategy M6 documents the CLI contract, FR-3 pins the command text, and the current master state does not hit the path. Add one caveat sentence to spec D-3 and one line to the gate record at task 3.4. Option 2: harden the rule. The script reads the captured output, and a boundary verdict always prints its own report. A crash prints no such report. doctor.sh then sends an exit 1 with no boundary text down the tool-failure path. This change needs a spec amendment, so it belongs to a later task, not to this phase. DEFAULT if no answer: option 1. No Green retry is needed. The orchestrator records the answer in spec section 3. F205 stays withdrawn. F207 and F208 do not block Phase 2.",
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 4, "evidence": "measure/doctor.sh line 15 calls tsx directly, and the four FR-3 rules match spec FR-3 word for word; the exit 1 residual of F207 stays open."},
+    {"axis": "test_meaning", "score": 4, "evidence": "bash tests/orchestrator_doctor_gate.sh exits 0 with cases_total=24 cases_failed=0; no case covers a crash that gives exit 1 (F207)."},
+    {"axis": "scope_discipline", "score": 4, "evidence": "The ten doctor commits touch only allowed paths; doctor_out_of_scope_paths=0."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "Every record value matches doctor-run-bbe5e5860.log or timing-run-bbe5e5860.log; spec OQ-3 still holds 165.684 s (F208)."}
+  ]
+}

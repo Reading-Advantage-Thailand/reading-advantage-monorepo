@@ -1,0 +1,158 @@
+Phase acceptance log, Phase 3 of track doctor_gate_repair_20261112
+Phase heading (exact): Phase 3: The gate is green on master
+Role: measure-phase-acceptance
+Route: nvidia/stepfun-ai/step-5-preview#high
+Date: 2026-11-13
+phase_base_sha: 6a059f1a909ce58db31533a8c81a28db62626fc1
+audited_head_sha: a02662e09cdda32755c855dd9a0aa6f0090b2407
+Result file: measure/runs/doctor_gate_repair_20261112/phase-acceptance-p3-a02662e09.json
+
+## HEAD currency
+
+git rev-parse HEAD returned 6199abbccfdf62423fa34639c49519f19836a43d during this audit.
+Master moved while the audit ran. This acceptance judges a02662e09, as the brief names.
+git diff --name-only a02662e09..HEAD over the doctor paths returned no output:
+  measure/doctor.sh
+  tests/orchestrator_doctor_gate.sh
+  tests/orchestrator_marker_vocabulary.sh
+  tests/orchestrator_marker_vocabulary_cases.sh
+  tests/orchestrator_catalog.sh
+  measure/anti-patterns.md
+  measure/tracks.md
+  measure/tracks/doctor_gate_repair_20261112/
+git status --porcelain over the same paths returned no output.
+The later master commits touch apps/accounting, packages/backend, pnpm-lock.yaml, and the
+folders of two other tracks. No later commit touches a doctor path.
+
+## Prerequisites
+
+Review A: pass at a284de0b0 (measure/runs/doctor_gate_repair_20261112/review-a-p3-a284de0b0.json).
+Review B: pass at a284de0b0 (review-b-p3-a284de0b0.json).
+Review C: pass, not applicable, at 4d0b4e6b3 (review-c-p3-4d0b4e6b3.json).
+Adversarial: pass, 22 of 22 mutants killed, at 4d0b4e6b3 (adversarial-p3-4d0b4e6b3.json).
+Red: red-p3.log, exit 1 at the base with cases_total=19 cases_failed=4.
+Green: green-p3.log and green-p3-r2.log. The gate command exits 0, and the doctor run exits 0.
+Doctor run of task 3.4: doctor-run-4d0b4e6b3.log, doctor_exit=0.
+
+The commits between the prerequisite HEADs and the audited HEAD that touch a doctor path:
+  4d0b4e6b3  tests/orchestrator_doctor_gate.sh only (test-only)
+  890c0f76a  the gate record and the plan (documentation)
+  24d032bc5  measure/tracks.md (documentation)
+  a02662e09  the plan (documentation)
+The other commits in the range belong to other tracks. The implementation content of
+measure/doctor.sh is unchanged since d16ab8b01, so every prerequisite result still applies.
+This acceptance accepts HEAD a02662e09 and allows the test-only commit 4d0b4e6b3 and the
+three documentation commits.
+
+## Plan state at the audited HEAD
+
+3.0a [x] commit 90a3abbd8
+3.0b [x] commit d16ab8b01
+3.1  [x] commit 24d032bc5
+3.2  [x] commit 4d0b4e6b3
+3.3  [b] deferred:phase-acceptance
+3.4  [x] commit 890c0f76a
+
+git cat-file --batch-check confirms that 6a059f1a, 90a3abbd8, d16ab8b01, 4d0b4e6b3,
+890c0f76a, 24d032bc5, a02662e09, and a284de0b0 are commits. No plan SHA is missing.
+
+## Commands run in this session
+
+bash tests/orchestrator_doctor_gate.sh                      rc=0  cases_total=31 cases_failed=0
+bash tests/orchestrator_marker_vocabulary_cases.sh          rc=0  cases_total=15 cases_failed=0
+bash tests/orchestrator_catalog.sh                          rc=0  A1-A15 PASS and the A12/A13 PASS line
+bash tests/orchestrator_marker_vocabulary.sh                rc=0  (95 plans checked)
+bash tests/orchestrator_marker_vocabulary.sh --track ...    rc=0  (1 plans checked)
+bash -n measure/doctor.sh                                   rc=0
+bash -n tests/orchestrator_doctor_gate.sh                   rc=0
+
+Part A prints 19 PASS lines and holds PART_A_FLOOR=19 (tests/orchestrator_doctor_gate.sh:17).
+Part B prints 12 PASS lines and holds RECORD_LINES_FLOOR=8 (line 18).
+measure/doctor.sh did not run. The brief forbids a second heavy run, and the saved log at
+4d0b4e6b3 proves the live run.
+
+## Anti-pattern checks
+
+A3 clean. No count or baseline assertion uses a digit-only probe. Every digit pattern in the
+changed shell files is a labeled full-line shape: tests/orchestrator_doctor_gate.sh:803,
+:852, and :1020, and measure/doctor.sh:22.
+A4 clean. The phase diff adds no "markers consistent" check. The floors at
+tests/orchestrator_doctor_gate.sh:1207 and :1080 prevent a vacuous pass. The role-gate counts
+non-deferred incomplete tasks, and this phase holds five [x] tasks and none incomplete.
+A5 clean. Every plan claim matches a command result. One inaccurate sentence stays:
+plan.md:289 (task 3.1) says the grep shows the link line and the status line. It prints one
+line, measure/tracks.md:1670. The [x] evidence states the truth, so no claim is false.
+A6 clean. measure/tracks.md:1671 states "implemented (doctor gate green at 4d0b4e6b3;
+due 2026-11-14)". The saved run at that HEAD exited 0.
+A7 clean. The phase diff adds no banned-term filter. The marker predicate is an allow-list at
+tests/orchestrator_marker_vocabulary.sh:56, so it fails any marker outside the set.
+A8 clean. The A8 entry names the set, the pending meaning, and the closeout rule, and its
+Guard line points at the live guard. The token detector prints a8_tokens=4.
+
+## Scope
+
+The nine doctor-track commits in 6a059f1a..a02662e09 touch only measure/doctor.sh,
+tests/orchestrator_doctor_gate.sh, measure/tracks.md, and the track folder.
+doctor_out_of_scope_paths=0. No path under apps/, packages/, or services/ (AC-7).
+git worktree list shows 7 worktrees, which matches the plan evidence of task 2.4.
+
+## Live record check
+
+doctor-run-4d0b4e6b3.log shows doctor_exit=0 (heavy_rc=0) at HEAD 4d0b4e6b3. It holds the
+step 1 PASS line, no "FAIL: unsupported task marker" line, the step 3 PASS line, the line
+"ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by
+architecture_ci_input_pin_20261110", and the line "DOCTOR: the three structural guard steps
+gate this exit code". Steps 1 to 3 exit 0 and step 4 exits 2. That run used the task 3.0b
+script, so it proves the current gate live.
+
+## Phase 3 record block
+
+doctor-gate-evidence.md lines 18 to 33 hold the Phase 3 block. I checked each value against
+doctor-run-4d0b4e6b3.log: the HEAD, the four STEP lines with their exit codes, the VERDICT
+line, the DOCTOR line, and the 1530 s duration. No value is false. Part B of the gate test
+does not read that block, because case_record_head_line (line 1058) asserts exactly one
+"- HEAD:" line with a short sha and the Phase 3 block holds the full 40-character value.
+That gap is finding N43.
+
+## Closed items from Phase 2
+
+F207 is closed. measure/doctor.sh line 24 needs the whole verdict line for an exit 1, and the
+four PASS cases plus the saved run prove the rule.
+F208 is closed. spec.md line 270 now states 175.150 s from the timing run at bbe5e5860.
+
+## Findings
+
+Blocking findings: none.
+
+N41 [open, Nit, carried from Review A A211 and adversarial N3]: plan.md:289 keeps a grep
+check that cannot show the status line. Closeout item.
+N42 [open, Nit, closeout item under PM decision 6 of 2026-11-12]: test-strategy.md:143 and
+section 7.4 name the single verdict fixture and no reset_tsx note. Closeout item.
+N43 [open, Low, record coverage gap]: part B validates only the first record block.
+N44 [open, Low, carried residual]: Review B B214 and adversarial N1 stay open.
+
+## Verdict
+
+Phase 3 passes at HEAD a02662e09cdda32755c855dd9a0aa6f0090b2407. No Critical or High finding
+is open. Task 3.3 is [b] deferred:phase-acceptance, and this verdict accepts it, so the
+orchestrator routes the plan mark. Phase 4 does not exist in this plan; the track moves to
+final acceptance and closeout.
+
+MEASURE_AGENT_RESULT
+status: pass
+role: phase-acceptance
+track: doctor_gate_repair_20261112
+phase: Phase 3: The gate is green on master
+phase_base_sha: 6a059f1a909ce58db31533a8c81a28db62626fc1
+audited_head_sha: a02662e09cdda32755c855dd9a0aa6f0090b2407
+head_at_audit_time: 6199abbccfdf62423fa34639c49519f19836a43d
+route: nvidia/stepfun-ai/step-5-preview#high
+result_file: measure/runs/doctor_gate_repair_20261112/phase-acceptance-p3-a02662e09.json
+blocking_findings: 0
+nonblocking_findings: 4
+gates: tests/orchestrator_doctor_gate.sh rc=0 cases_total=31 cases_failed=0; tests/orchestrator_marker_vocabulary_cases.sh rc=0 cases_total=15 cases_failed=0; tests/orchestrator_catalog.sh rc=0; tests/orchestrator_marker_vocabulary.sh rc=0 (95 plans checked)
+task_3_3: accepted by this verdict; the orchestrator routes the plan mark
+closeout_items: N41 plan task 3.1 check text; N42 test-strategy.md:143 and section 7.4; N43 part B does not pin the Phase 3 record block; N44 B214 and p3-24 residuals
+retry_recommendation: none
+handoff: Phase 3 passes at HEAD a02662e09. Master moved to 6199abbcc during the audit; no later commit touches a doctor path. No blocking finding. QUESTION FOR THE PM (via the orchestrator), with my default: the two stale test-strategy sentences stay open as a closeout item. Option 1 (DEFAULT): the strategy owner amends them at closeout. Option 2: amend them now in a small follow-up commit. The next step is final acceptance and closeout.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,114 @@
+# Review A, Phase 3, track doctor_gate_repair_20261112
+
+Role: Measure Review A (correctness, architecture, callers, test meaning).
+Model route: deepseek/deepseek-flash#high.
+Date: 2026-11-12.
+Report: audit only. I changed no code, test, plan, spec, or registry file. I wrote only this log and the result JSON under measure/runs/.
+
+## Provenance
+
+- phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1
+- role_base_sha=a284de0b0cd16da8b05340235793f815888ba37b (the orchestrator baseline)
+- audited_head_sha=a284de0b0cd16da8b05340235793f815888ba37b
+- HEAD at review: 4f9ea0bd667d095b0054043b6809c7fba960a841
+
+HEAD does not equal audited_head_sha. One commit follows the audited head: 4f9ea0bd6, a primary-track change. It touches apps/primary-advantage paths and packages/domain paths only. `git diff a284de0b0 -- measure/doctor.sh tests/orchestrator_doctor_gate.sh` is empty, and `git status --short` for the audited paths is empty. I audited the exact 6a059f1a9..a284de0b0 diff (finding A213).
+
+## 1. The exit 1 rule in measure/doctor.sh
+
+The script carries two new lines and one changed condition (5 insertions, 1 deletion at d16ab8b01).
+
+- Line 22 holds `verdict_line_pattern='architecture check: [^ ]+ \(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\)'`. The pattern is the literal of plan task 3.0b.
+- Line 24 accepts the boundary path for exit 0, or for exit 1 with a `grep -qxE` whole-line match on the captured output.
+- Lines 36 to 38 hold the tool-failure path, and it is unchanged.
+
+Findings:
+
+1. Whole-line and case-sensitive: `grep -x` requires the whole line, and `grep` without `-i` is case-sensitive. Shape g of case 5 (capital A) fails, so the case proves it.
+2. Digit counts: each count requires `[0-9]+`. Shapes b and c (empty and non-digit counts) fail, so the case proves it.
+3. No abort under `set -e`: the grep sits in an `if` condition, so a no-hit returns 1 and does not stop the script. Case 1 asserts the two tool-failure lines, so a `set -e` abort fails it. Mutant p3-18 is therefore covered.
+4. Stream: `measure/doctor.sh:15` captures `2>&1`. `architecture-check-cli.ts:127` writes the verdict line through `writeProcessStdout`, so the real line goes to stdout. Both streams reach the match. Case 3 uses stdout, and the changed `tsx_exit_1_gate_exits_0` uses stderr.
+5. Format: `architecture-check.ts:278` builds `architecture check: ${report.status} (files=..., findings=..., parseErrors=...)`. The statuses are clean, debt-change, and analysis-error. `architectureCheckExitCode` gives 0 for clean, 2 for analysis-error, and 1 for debt-change. A real exit 1 line always has status debt-change and always holds the three counts. The pattern matches it.
+6. The exit 0 rule, the exit 2 drift rule, the other-code rule, and every printed string did not change. The diff holds only the added comment, the pattern line, and the changed condition.
+
+F207 is closed. A failed `cd` gives exit 1 with no output. An uncaught Node error before the catch block gives exit 1. Both take the tool-failure path and the gate exits 1. Case 2 (the m-cd case) proves the failed `cd`, and it asserts `tsx_calls=0`. Case 1 proves the empty exit 1.
+
+## 2. Test meaning
+
+I ran `bash tests/orchestrator_doctor_gate.sh`. Exit 0, cases_total=31 cases_failed=0 (part A 19, part B 12). `bash tests/orchestrator_marker_vocabulary_cases.sh` gives exit 0, cases_total=15 cases_failed=0. `bash tests/orchestrator_catalog.sh` gives exit 0 with `PASS: measure anti-pattern catalog exists with A1-A15`. `bash -n measure/doctor.sh` gives exit 0.
+
+I built scratch copies under /tmp/opencode (outside the repository) and ran part A against edited doctor.sh copies. I did not run measure/doctor.sh itself; the live four-step run belongs to task 3.4. Results:
+
+| Mutant | Result |
+|---|---|
+| p3-01 base rule | 19 cases, 4 failed: cases 1, 2, 4, 5 |
+| p3-02 empty exit 1 as boundary | 19 cases, 2 failed: cases 1, 2 |
+| p3-03 every exit 1 is a tool failure | 19 cases, 3 failed: `tsx_exit_1_gate_exits_0`, `architecture_line_shows_code`, case 3 |
+| p3-08 status `[^ ]*` | 19 cases, 1 failed: case 5 |
+| p3-11 `grep -qE` without `-x` | 19 cases, 1 failed: case 4 |
+| p3-14 drop `2>&1` | 19 cases, 3 failed: `tsx_exit_1_gate_exits_0`, `tsx_exit_2_manifest_drift_gate_exits_0`, `architecture_line_shows_code` |
+| p3-17 pattern that never matches | 19 cases, 3 failed: `tsx_exit_1_gate_exits_0`, `architecture_line_shows_code`, case 3 |
+| p3-21 exit 2 with the verdict line | 19 cases, 1 failed: case 6 |
+| p3-22 reset_tsx leak | 19 cases, 1 failed: case 1 |
+| hard-coded count literal (not in the table) | 19 cases, 0 failed (survives) |
+| p3-20 exit 0 also needs the verdict line | 19 cases, 0 failed (survives) |
+| one run_case line deleted | 18 cases, 0 failed, `FAIL: cases_total=18 is below the floor of 19`, exit 1 |
+
+The six new cases each fail on the mutant they name. The three changed old cases still test the boundary text: `tsx_exit_1_gate_exits_0` keeps the stderr probe, `architecture_line_shows_code` adds the owner clause for code 1, and `no_write_in_root` keeps the file-list check on the boundary path.
+
+The missing-deliverable fixture: a scratch root with no `doctor-gate-evidence.md` gives `--part b` exit 1 and cases_total=12 cases_failed=12. Each case names the absent record. The check does not pass on a missing deliverable.
+
+### A209, the leaked stub message
+
+`case_tsx_exit_1_gate_exits_0` exports `DOCTOR_GATE_TSX_MESSAGE` at line 198. `run_case` does not unset it at line 1064, and `tsx_exit_0_gate_exits_0` follows in the run order. Its stub therefore prints the verdict line from the earlier case. The case comment says it proves that an exit 0 with no verdict line still exits 0; the fixture no longer holds that input.
+
+Proof: mutant p3-20 survives on the phase head (cases_total=19 cases_failed=0). At the phase base the same mutant dies (cases_total=13 cases_failed=2), so Phase 3 caused the loss. Adding `reset_tsx` at the start of the case kills the mutant again (cases_total=19 cases_failed=1).
+
+Effect: the production exit 0 rule is correct, but section 7.4 of test-strategy.md claims a p3-20 kill it does not have. The P3 adversarial run will report one survivor. Severity: Minor, nonblocking. The fix is one test line, and it belongs to the Red side before the adversarial run.
+
+### A210, the single positive fixture
+
+`VERDICT_LINE` at line 23 is the only valid verdict fixture. The seven malformed shapes and the two longer-line fixtures all sit around that one count set. A mutant pattern that hard-codes `debt-change (files=12, findings=3, parseErrors=0)` passes all 19 cases. A second valid line with different counts would kill it. Severity: Nit.
+
+## 3. Plan, spec, and registry
+
+- FR-3 (spec.md:204-220) states the exit 1 rule, and the script matches it word for word.
+- D-3 (spec.md:151-180) holds the F207 close line, and it agrees with the rule.
+- AC-5 (spec.md:250) lists the four exit outcomes and the no-gate cases. It agrees.
+- OQ-1 and OQ-3 (spec.md:266-270) record the PM decision and the 175.150 s timing. Task 3.0b did not change the timing.
+- Plan tasks 3.0a and 3.0b are `[x]` with commits 90a3abbd8 and d16ab8b01. Their evidence matches red-p3.log and green-p3.log: 19/4 at the base, 31/0 at the Green head, part B 12/0 at the base.
+- Tasks 3.1 to 3.4 stay `[ ]`, which is the PM-accepted default of test-strategy section 6.9: the registry status waits for the task 3.4 run. The claim in plan task 3.1 that the grep shows the link line and the status line is false (A211), because the status line holds no track id.
+- spec FR-3 (spec.md:210) says the CLI exits 1 for any status other than clean. `architectureCheckExitCode` returns 2 for analysis-error (A212). The script behavior is correct; the sentence is wrong.
+- Registry: measure/tracks.md:1670 holds the link line, and the status line still says `new (spec and plan only; due 2026-11-14)`. This matches the design.
+- Scope: the five doctor commits touch only test-strategy.md, tests/orchestrator_doctor_gate.sh, plan.md, and measure/doctor.sh. `doctor_out_of_scope_paths=0`. The track adds no hash, checksum, or manifest.
+- Callers: no repository caller of measure/doctor.sh exists. `.github/workflows/ci.yml:17` lists the path in a paths filter only. build-graph does not apply to shell scripts, and no TypeScript symbol changed.
+
+## 4. Anti-pattern checks
+
+- A1: exit codes are compared as integers in every P3 case. Substrings prove the printed lines only.
+- A3: counts are integers and carry labels: tsx_message_set, tsx_calls, fixtures_checked=2, shapes_checked=7, codes_checked=5, cases_total, cases_failed, and the record line count. No count check matches bare digits in text.
+- A4: the part A floor equals the count of 19. A deleted case fails the floor. Each loop asserts its size before it runs. The m-cd case asserts arch_dir_absent=1 and tsx_calls=0. The missing record fails every part B case.
+- A5: the plan evidence quotes exit codes and labeled counts. No plan text claims a pass without a command result. The `bash` commands in this review match the plan claims.
+- A6: the registry does not claim a green run. The status still says new.
+
+## 5. Verdict
+
+Pass. No blocking finding. The production rule matches FR-3, the six new cases are meaningful, the floor and the missing-deliverable checks hold, and the plan evidence matches the logs. Five nonblocking items stay open: A209 (Minor), A210 to A213 (Nit). retry_recommendation=none.
+
+Question for the orchestrator, with my default: a one-line `reset_tsx` call in `case_tsx_exit_0_gate_exits_0` before the task 3.2 adversarial run restores the p3-20 kill (option 1, default). Option 2 is to accept p3-20 as a documented residual.
+
+MEASURE_AGENT_RESULT
+status: pass
+role: review-a
+track: doctor_gate_repair_20261112
+phase: P3
+phase_base_sha: 6a059f1a909ce58db31533a8c81a28db62626fc1
+role_base_sha: a284de0b0cd16da8b05340235793f815888ba37b
+audited_head_sha: a284de0b0cd16da8b05340235793f815888ba37b
+head_at_review: 4f9ea0bd667d095b0054043b6809c7fba960a841
+verdict: pass
+blocking_findings: 0
+nonblocking_findings: A209,A210,A211,A212,A213
+retry_recommendation: none
+result_file: measure/runs/doctor_gate_repair_20261112/review-a-p3-a284de0b0.json
+END_MEASURE_AGENT_RESULT

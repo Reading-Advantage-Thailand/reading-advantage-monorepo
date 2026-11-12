@@ -1,0 +1,52 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+track_id: doctor_gate_repair_20261112
+phase: P1 (F411, the marker guard accepts the pending marker)
+round: r1
+phase_base_sha: 088efb891a20a2be2619b839812ad8ee13bac562
+role_base_sha: 088efb891a20a2be2619b839812ad8ee13bac562
+audited_head_sha: ddd74291f5eb64c72bc807e37ef62bb295f635aa
+route: kimi-code-plan-cn/kimi-for-coding
+verdict: pass
+status: pass
+blocking_findings: none
+nonblocking_findings:
+  - N1: the predicate does not match a two-character marker; known residual per strategy F3, base behavior, not a regression.
+  - N2: the closeout rule is stated in the guard comment only; the enforcing rule stays in the installed role file, outside this track.
+
+Scope read: 088efb891..ddd74291f changes only tests/orchestrator_marker_vocabulary.sh,
+tests/orchestrator_marker_vocabulary_cases.sh, measure/anti-patterns.md, and this track's
+plan.md. Per-commit staging matches the plan. No product file changed.
+
+Correctness checks:
+  - Guard line 56 predicate matches plan task 1.2 word for word.
+  - FAIL line (line 60) and PASS line (line 71) match FR-1 word for word; FAIL goes to
+    stderr one line per hit; PASS goes to stdout.
+  - Usage error exits 2; --track scope and archive-first resolution hold; the active glob
+    reads only measure/tracks/*/plan.md; the hits file is removed.
+  - Catalog A8 keeps its heading and Guard line; the text names the accepted set and the
+    pending meaning; a8_tokens=4.
+  - Red evidence verified: the base predicate at 088efb891 rejects [ ] and ignores every
+    other marker, so exactly the seven cases the plan names fail at the base.
+
+Callers: measure/doctor.sh step 2 calls the guard unchanged and now passes. The catalog
+test reads the A8 Guard line and passes. The truthfulness guard counts only [~xb] lines
+and is unaffected. No CI workflow references the guard. doctor.sh step 4 is untouched;
+the full doctor run stays red by design until Phase 2 (strategy section 1.4).
+
+Commands run (all at HEAD ddd74291f):
+  bash tests/orchestrator_marker_vocabulary_cases.sh   -> exit 0, cases_total=14 cases_failed=0
+  bash tests/orchestrator_marker_vocabulary.sh          -> exit 0, (93 plans checked)
+  bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112 -> exit 0, (1 plans checked)
+  bash tests/orchestrator_catalog.sh                    -> exit 0, A1-A15 present
+  git rev-parse HEAD                                    -> ddd74291f5eb64c72bc807e37ef62bb295f635aa (matches audited_head_sha)
+  git diff --name-only 088efb891..ddd74291f             -> 4 files, all allowed
+  git show --name-only per commit                       -> each commit holds its planned paths only
+  awk a8 token detector                                 -> a8_tokens=4
+
+retry_recommendation: none
+confidence: high
+handoff: proceed to Phase 2. The PM question Q1 (spec D-3 option C) still gates task 2.1;
+send it to the PM now. N1 and N2 go to Review B at task 3.2.
+result_file: measure/runs/doctor_gate_repair_20261112/review-a-p1-ddd74291f.json
+END_MEASURE_AGENT_RESULT

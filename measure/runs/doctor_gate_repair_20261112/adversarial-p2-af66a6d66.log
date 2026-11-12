@@ -1,0 +1,75 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: doctor_gate_repair_20261112
+phase: P2
+round: r1
+route: kimi-code-plan-cn/kimi-for-coding
+audited_head: af66a6d661965ce500c2f7a7b9d2a3c6611f9c59
+verdict: pass
+status: pass
+mutants_run: 29
+mutants_killed: 28
+mutants_not_counted: 1 (m-cd, the F207 residual; pinning needs a change of doctor.sh)
+
+Method. Each mutant ran in a scratch root under /tmp/opencode: the mutant at
+<scratch>/measure/doctor.sh, an unchanged copy of tests/orchestrator_doctor_gate.sh,
+run with --part a. Record mutants ran as a mutated copy of
+doctor-gate-evidence.md in the scratch track folder, run with --part b. Every
+mutant passed bash -n first. Every scratch root was removed after its run.
+
+Section 7.2 mutants of measure/doctor.sh (all KILLED):
+- m01_no_set_plus_e -> tsx_exit_1_gate_exits_0
+- m02_or_true -> tsx_exit_1_gate_exits_0
+- m03_pnpm_architecture_check -> tsx_exit_1_gate_exits_0
+- m04_code1_tool_failure -> tsx_exit_1_gate_exits_0
+- m05_all_exit2_drift -> tsx_exit_2_other_line_gate_exits_1
+- m06_all_exit2_tool_failure -> tsx_exit_2_manifest_drift_gate_exits_0
+- m07_prefix_drift_match -> tsx_exit_2_other_line_gate_exits_1
+- m08_only_code2_tool_failure -> tsx_exit_127_gate_exits_1
+- m09_catalog_guard_or_true -> guard_catalog_failure_gate_exits_1
+- m10_marker_guard_or_true -> guard_marker_failure_gate_exits_1
+- m11_truthfulness_guard_or_true -> guard_truthfulness_failure_gate_exits_1
+- m12_no_set_e -> guard_catalog_failure_gate_exits_1
+- m13_step_before_guards -> guard_catalog_failure_gate_exits_1 (tsx_calls=1)
+- m14_flag_dropped -> tsx_argv_exact
+- m15_pin_refresh -> tsx_exit_1_gate_exits_0
+- m16_command_twice -> tsx_argv_exact (tsx_calls=2)
+- m17_fixed_code_1 -> tsx_exit_0_gate_exits_0
+- m18_toolfail_prints_gate_line -> tsx_exit_2_other_line_gate_exits_1
+- m19_verdict_prints_toolfail_line -> tsx_exit_1_gate_exits_0
+- m20_toolfail_exits_0 -> tsx_exit_2_other_line_gate_exits_1
+- m21_writes_file -> no_write_in_root
+- m22 127-case test mutant -> the tsx_absent assertion (case fails without it)
+
+Extra mutants:
+- m_x (drift match without -x, grep -qF): SURVIVED the 24-case suite, as
+  Review B N3 predicted. Added case drift_match_requires_whole_line: an exit 2
+  whose output holds the drift text inside a longer line is a tool failure.
+  The case kills m_x and passes on the real doctor.sh.
+- m_cd (step 4 command whose cd fails): the cd error is captured, the
+  subshell gives exit 1, the gate prints the boundary line and exits 0.
+  This confirms F207. No case can pin it today: pinning needs doctor.sh to
+  distinguish a failed cd from a CLI exit 1, which is a change of doctor.sh
+  and a spec amendment. Recorded as the F207 PM finding, not a missed mutant.
+
+Section 7.3 record mutants (all KILLED with --part b):
+- r1_step2_exit_1 -> record_step_exit_codes
+- r2_verdict_code_differs -> record_verdict_code_matches_step4
+- r3_step_command_changed -> record_step_commands
+- r4_owner_other_track -> record_owner_line
+- r5_record_absent -> record_file_present
+
+Verification after the new case:
+- bash tests/orchestrator_doctor_gate.sh --part a: 13 cases, cases_failed=0
+- bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh: exit 0
+- Commit 5293392b8, pathspec tests/orchestrator_doctor_gate.sh only
+
+Handoff. F207 goes to the PM with Review A r2 (option 1 accept with a caveat
+is my default; option 2 hardening belongs to a later task and is testable).
+Any later change of measure/doctor.sh or the record invalidates the kills and
+reruns this gate.
+
+Artifacts:
+- measure/runs/doctor_gate_repair_20261112/adversarial-p2-af66a6d66.json
+- measure/runs/doctor_gate_repair_20261112/adversarial-p2-af66a6d66.log
+END_MEASURE_AGENT_RESULT

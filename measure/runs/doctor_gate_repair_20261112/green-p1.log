@@ -1,0 +1,42 @@
+Green round, Phase 1 (P1), track doctor_gate_repair_20261112, tasks 1.2, 1.3, 1.4.
+Role: Measure Jr Green. Model: claude-sonnet-5-5 (Anthropic). Red model: deepseek-flash (DeepSeek).
+
+Commits:
+- 150e22e9d fix(measure): accept the pending marker in the guard
+- 14a501a77 docs(measure): state the marker set in catalog A8
+- ddd74291f docs(measure): log the doctor phase 1 green evidence
+
+Checks at HEAD 14a501a77 (the HEAD did not move during the check):
+- bash -n tests/orchestrator_marker_vocabulary.sh: exit 0
+- bash tests/orchestrator_catalog.sh: exit 0 (PASS: measure anti-pattern catalog exists with A1-A15)
+- bash tests/orchestrator_marker_vocabulary.sh: exit 0 (93 plans checked)
+- bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112: exit 0 (1 plans checked)
+- bash tests/orchestrator_marker_vocabulary_cases.sh: exit 0 (cases_total=14 cases_failed=0)
+GREEN_TEST_COMMAND chain: exit 0.
+
+git diff --name-only 088efb891..14a501a77:
+- measure/anti-patterns.md
+- measure/tracks/doctor_gate_repair_20261112/plan.md
+- tests/orchestrator_marker_vocabulary.sh
+- tests/orchestrator_marker_vocabulary_cases.sh
+
+No doctor.sh run. No pnpm run. No Red test edit. No coder delegation.
+
+MEASURE_AGENT_RESULT
+status: complete
+role: Measure Jr Green
+track: doctor_gate_repair_20261112
+phase: P1
+phase_base_sha: 088efb891a20a2be2619b839812ad8ee13bac562
+role_base_sha: d8b60a75ccdcb6de4d0b95c3d170358fd06deb3b
+green_head: ddd74291f5eb64c72bc807e37ef62bb295f635aa
+implementation_commits: 150e22e9d41043936b10a765e92610924a5376a1, 14a501a77d897f15a0a4a1cccecb25fdbee06065
+plan_evidence_commit: ddd74291f5eb64c72bc807e37ef62bb295f635aa
+tasks_done: 1.2 (150e22e9d), 1.3 (14a501a77), 1.4 (check at 14a501a77)
+tasks_deferred: none
+targeted_red_command: bash tests/orchestrator_marker_vocabulary_cases.sh -> exit 0, cases_total=14 cases_failed=0
+guard_runs: all active plans exit 0 (93 plans checked); --track doctor_gate_repair_20261112 exit 0 (1 plans checked)
+catalog_run: exit 0 with the A1-A15 PASS line
+new_files: none (changed: tests/orchestrator_marker_vocabulary.sh, measure/anti-patterns.md, plan.md)
+handoff: Review roles scope the audit to the 4 paths in the diff list above. The Red test file is unchanged.
+END_MEASURE_AGENT_RESULT

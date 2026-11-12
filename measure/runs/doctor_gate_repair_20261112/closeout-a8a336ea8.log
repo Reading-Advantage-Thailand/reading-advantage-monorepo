@@ -1,0 +1,52 @@
+Measure closeout log for the track doctor_gate_repair_20261112.
+
+Pre-closeout head: a8a336ea82b3ffdb869732fd6669f06bf321dc90
+Final acceptance: pass, measure/runs/doctor_gate_repair_20261112/final-acceptance-a8a336ea8.json
+Orchestrator gate line: PASS: final-acceptance gate passed (exit 0) at a8a336ea8.
+
+Plan state at the closeout: 15 task lines, 15 [x], 0 [~], 0 [ ], 0 [b]. Every done task names a commit SHA.
+
+Closeout items of the PM decision 6 of 2026-11-12 (confirmed 2026-11-13):
+1. N41, plan.md task 3.1: the check sentence now reads
+   Check: `grep -n 'implemented (doctor gate green at' measure/tracks.md && bash tests/orchestrator_catalog.sh` exits 0. The grep prints one hit, the status line.
+2. N42, test-strategy.md line 143 and the p3-20 row of section 7.4: the two sentences now read
+   The verdict literal in every case is `architecture check: debt-change (files=12, findings=3, parseErrors=0)`; the positive control `tsx_exit_1_verdict_line_gate_exits_0` also runs the valid line `architecture check: debt-change (files=1200, findings=17, parseErrors=2)`.
+   | p3-20 | the verdict match also applies to exit 0 (an exit 0 with no verdict line gates) | `tsx_exit_0_gate_exits_0` (the case calls `reset_tsx` first, so the stub prints no verdict line) |
+The test file and measure/doctor.sh stay as committed. N43 and N44 stay recorded residuals.
+
+Commands and results:
+- git rev-parse HEAD -> a8a336ea82b3ffdb869732fd6669f06bf321dc90 (exit 0).
+- git mv measure/tracks/doctor_gate_repair_20261112 measure/archive/doctor_gate_repair_20261112 (exit 0).
+- bash tests/orchestrator_marker_vocabulary_cases.sh -> exit 0, cases_total=15 cases_failed=0.
+- bash tests/orchestrator_doctor_gate.sh -> exit 0, cases_total=31 cases_failed=0 (part A 19, part B 12).
+- bash tests/orchestrator_catalog.sh -> exit 0, PASS: measure anti-pattern catalog exists with A1-A15.
+- bash tests/orchestrator_marker_vocabulary.sh -> exit 0, PASS: ... (93 plans checked).
+- bash tests/orchestrator_marker_vocabulary.sh --track doctor_gate_repair_20261112 -> exit 0, PASS: ... (1 plans checked).
+- bash tests/orchestrator_review_execution_truthfulness.sh -> exit 0, PASS: executed review tracks are not fully blocked by deferred:review-execution.
+- bash -n on the four shell scripts -> exit 0.
+- the full doctor run through the heavy-run prefix at the closeout state -> doctor_exit=0 (heavy_rc=0); steps 1 to 3 exit 0; step 4 CLI exit 2 with the known manifest drift line; saved in measure/runs/doctor_gate_repair_20261112/doctor-run-closeout-a8a336ea8.log.
+- the A5 and A6 detectors -> no hit.
+- the A9 detector over tests/*.sh -> only fixture ids; no test holds a path of this track.
+- python3 measure_interphase_checks.py closeout --repo . --track doctor_gate_repair_20261112 -> PASS (run after the manifest).
+
+Broken links outside the track: none. The entry of measure/tracks.md now points to ./archive/doctor_gate_repair_20261112/. The plan of master_push_readiness_20261112 names the track id in text only.
+
+Worktrees: this track created none. The 6 worktrees of other owners (book-editions, forge-filled-shelves, monorepo-boundaries, primary-build-info, sales-january-course, www-real-logos) stay untouched.
+
+MEASURE_AGENT_RESULT
+role: measure-closeout
+track: doctor_gate_repair_20261112
+phase: closeout
+role_base_sha: a8a336ea82b3ffdb869732fd6669f06bf321dc90
+audited_head_sha: a8a336ea82b3ffdb869732fd6669f06bf321dc90
+route: opencode/minimax-m3.1-flash-free#high
+status: complete
+commits: this closeout commit (the SHA is in the final reply of the role); the pre-closeout HEAD is a8a336ea82b3ffdb869732fd6669f06bf321dc90
+archive_path: measure/archive/doctor_gate_repair_20261112
+blocking_findings: none
+nonblocking_findings: N43 (part B checks only the first record block), N44 (verdict shape spoof residual and the p3-24 probe), the stale sentence of test-strategy.md section 4.1 (the PM decision limits the change to two sentences), Review A A212 (spec FR-3 text), and the historical path text in the archived files
+retry_recommendation: none
+result: measure/runs/doctor_gate_repair_20261112/closeout-a8a336ea8.json
+dispositions: none
+handoff: The track is archived and the metadata is done. The closeout items N41 and N42 are applied. Run the closeout gate on measure/runs/doctor_gate_repair_20261112/closeout-a8a336ea8.json and closeout-a8a336ea8.log. No broken link exists in another track. The heavy doctor run of the closeout exits 0 and its log is in the run folder. No push and no deploy. The commit header is chore(measure): archive the doctor gate repair track (track_id: doctor_gate_repair_20261112).
+END_MEASURE_AGENT_RESULT

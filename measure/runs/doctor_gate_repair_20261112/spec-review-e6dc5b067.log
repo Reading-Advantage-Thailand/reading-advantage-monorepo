@@ -1,0 +1,33 @@
+Spec review, round r1, track doctor_gate_repair_20261112
+audited_head_sha: e6dc5b067e7e9cc58c7bd1afc441fab49d49b127 (equals HEAD)
+route: claude-code/claude-sonnet-5-5#high
+standard: /home/daniebo/.agents/skills/measure/references/spec-review.md
+
+Checks run (read-only):
+- git rev-parse HEAD -> e6dc5b067e7e9cc58c7bd1afc441fab49d49b127
+- bash tests/orchestrator_catalog.sh -> exit 0 (PASS, 6 guards, A1-A15)
+- bash tests/orchestrator_review_execution_truthfulness.sh -> exit 0 (PASS)
+- bash tests/orchestrator_marker_vocabulary.sh -> exit 1, 57 plans fail (56 of the spec plus the track plan); 93 active plans
+- grep for top-level markers outside {space,~,x,b} under measure/tracks -> none
+- git show --stat 08c36df04 and de25d49a9 -> dates and files as the spec states; path typo in spec 2.3 (F11)
+- Full bash measure/doctor.sh through the heavy-run prefix: NOT run. The permission system rejected the shell call. No retry.
+
+Verdict: fail
+Blocking: F1 (guard message text), F2 (gate record line format)
+Major: F3 to F10. Nit: F11, F12.
+Details: see spec-review-e6dc5b067.json.
+Note: the edit of measure/tracks/doctor_gate_repair_20261112/spec-review.md was rejected by the permission system. The review section is not in that file. The orchestrator copies it from the JSON.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+phase: track setup
+status: fail
+verdict: fail
+round: r1
+audited_head_sha: e6dc5b067e7e9cc58c7bd1afc441fab49d49b127
+result_path: measure/runs/doctor_gate_repair_20261112/spec-review-e6dc5b067.json
+log_path: measure/runs/doctor_gate_repair_20261112/spec-review-e6dc5b067.log
+blocking_findings: F1, F2
+retry_recommendation: escalate_human
+handoff: Fix F1 and F2 in plan.md, then run round 2. Answer Q1 (option C with PM), Q2 (step 4 runtime), Q3 (temporary-root copy; default and view: copy, no flag).
+END_MEASURE_AGENT_RESULT

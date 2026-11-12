@@ -1,0 +1,62 @@
+strategy role log: P3 amendment, track doctor_gate_repair_20261112
+role: measure strategy subagent. Route claude-code/claude-sonnet-5-5#high (recorded substitution for the Opus role)
+role_base_sha=83fbafe990241cdf5da38688aceb2daca512eab4
+phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1 (set by the orchestrator; recorded in section 1.5)
+strategy_commit=ca7b9cff849e22860efbf49e3167551523229ef3
+commit_subject=docs(measure): add the doctor p3 exit 1 strategy (track_id: doctor_gate_repair_20261112)
+status=pass
+
+changed_files:
+- measure/tracks/doctor_gate_repair_20261112/test-strategy.md (170 insertions, 18 deletions)
+
+checks:
+- bash tests/orchestrator_doctor_gate.sh --part a before the edit: cases_total=13 cases_failed=0 (confirms part_a_cases=13)
+- bash tests/orchestrator_marker_vocabulary.sh: exit 0, PASS (93 plans checked)
+- format source check: grep -cF of the verdict template in architecture-check.ts line 278 gives format_source_hits=1
+- git diff --cached --name-only before the commit: only test-strategy.md
+- git show --name-only HEAD: only test-strategy.md
+
+p3_risk=high for tasks 3.0a and 3.0b; low for tasks 3.1 to 3.4
+reviews: Review A yes; Review B yes (required); adversarial yes (required); Review C not applicable; browser review no
+part_a_floor=19 (13 existing + 6 new); no-argument run cases_total=31 (part A 19, part B 12)
+
+cases (section 4.1):
+1 tsx_exit_1_no_verdict_gate_exits_1 (plan case 1; fails at base)
+2 step4_cd_fails_gate_exits_1 (plan case 2, the m-cd case; fails at base)
+3 tsx_exit_1_verdict_line_gate_exits_0 (plan case 3, positive control; passes at base)
+4 tsx_exit_1_verdict_in_longer_line_gate_exits_1 (new, Red; fails at base)
+5 tsx_exit_1_malformed_verdict_gate_exits_1 (new, shapes_checked=7; fails at base)
+6 tsx_exit_2_verdict_line_gate_exits_1 (new, characterization; passes at base)
+Red at base: cases_total=19 cases_failed=4 (cases 1, 2, 4, 5)
+
+changed contract: three existing cases (tsx_exit_1_gate_exits_0, architecture_line_shows_code, no_write_in_root) use a stub exit 1 with no verdict line. The Red commit changes their fixture. The stub gains DOCTOR_GATE_TSX_STDOUT.
+
+p3_mutants=22 (section 7.4, rows p3-01 to p3-22)
+
+commands:
+RED_TEST_COMMAND=bash tests/orchestrator_doctor_gate.sh --part a   (exit 1 at the base)
+GREEN_TEST_COMMAND=bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh   (exit 0)
+measure/doctor.sh itself: task 3.4 only, through HEAVY. Not run by this role.
+
+findings and questions (section 8):
+F9 old cases contradict the rule; F10 stub has no stdout; F11 six cases not three; F12 registry sha order (default: write 3.1 after the 3.4 run); F13 env variable leak; F14 exit 0 stays 0.
+Q4 phase_base_sha 6a059f1a9 predates the amended strategy commit. Default: keep it as the scope base.
+
+not done: no script, test, spec, or plan changed. measure/doctor.sh not run. No push.
+
+MEASURE_AGENT_RESULT
+status: pass
+role: strategy
+phase: P3
+track: doctor_gate_repair_20261112
+commit: ca7b9cff849e22860efbf49e3167551523229ef3
+role_base_sha: 83fbafe990241cdf5da38688aceb2daca512eab4
+phase_base_sha: 6a059f1a909ce58db31533a8c81a28db62626fc1
+risk: high (3.0a, 3.0b); low (3.1 to 3.4)
+part_a_floor: 19
+red_test_command: bash tests/orchestrator_doctor_gate.sh --part a
+green_test_command: bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh
+changed_files: measure/tracks/doctor_gate_repair_20261112/test-strategy.md
+log: measure/runs/doctor_gate_repair_20261112/strategy-p3.log
+handoff: Two questions with defaults, F12 (registry sha order) and Q4 (phase_base_sha predates this commit). The Red role must change three old cases and the stub.
+END_MEASURE_AGENT_RESULT

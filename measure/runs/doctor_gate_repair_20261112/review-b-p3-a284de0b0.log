@@ -1,0 +1,59 @@
+Review B (security) — doctor_gate_repair_20261112, Phase 3, r1
+Route: kimi-code-plan-cn/kimi-for-coding#high
+phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1
+audited_head_sha=a284de0b0cd16da8b05340235793f815888ba37b
+git rev-parse HEAD = 4f9ea0bd667d095b0054043b6809c7fba960a841 (one primary-track commit past the audited head; audited paths unchanged)
+
+Check 1 — can a real step 4 failure still pass the gate?
+No at the audited head. Scratch probe (stub guards, stub tsx at the relative path):
+  base exit1_no_output gate_rc=0            head gate_rc=1
+  base exit1_verdict_line gate_rc=0         head gate_rc=0 (true boundary verdict)
+  base exit1_verdict_in_longer_line gate_rc=0  head gate_rc=1
+  base exit1_malformed gate_rc=0            head gate_rc=1
+  base exit1_cd_fails gate_rc=0             head gate_rc=1 (the m-cd case)
+  base exit2_verdict_line gate_rc=1         head gate_rc=1
+  base exit0 gate_rc=0                      head gate_rc=0
+The phase base passed all five exit 1 tool-failure scenarios (the F207 bug). The head gates each.
+Covered vectors: empty output, longer-line verdict, malformed verdict, failed cd, missing tsx (127), signal and other codes (2, 3, 126, 137), exit 1 from tsx itself.
+Residual by design: a crash after the CLI prints its real verdict line still passes (FR-3 exit 1 with the verdict line). B214 logs the newline-in-echoed-field spoof edge (Low).
+
+Check 2 — verdict match spoofing
+The match is whole-line and case-sensitive (grep -qxE). CLI echo lines cannot forge it: parse errors start with '! ' (architecture-check.ts:286), comparison lines start with '+ ', '- ', '~ ' (ratchet.ts:363-378), the caught-error line starts with 'Architecture check failed:' (architecture-check-cli.ts:146). No line the CLI prints by design matches the pattern. Residual: B214.
+
+Check 3 — structural guards and set -euo pipefail
+measure/doctor.sh:2 set -euo pipefail; guards bare at lines 4-6; capture block lines 14-17 (set +e, command, status, set -e); the exit 1 grep sits in an if condition. Guard failure cases prove a guard failure stops step 4 and gates the exit.
+
+Check 4 — writes and secrets
+The three guards write only /tmp temp files, removed after use. No env, SECRET, TOKEN, KEY reads in doctor.sh or the three guards (grep finds only shebang lines). The no_write_in_root case passes.
+
+Check 5 — Phase 1 marker guard
+bash tests/orchestrator_marker_vocabulary_cases.sh: cases_total=15 cases_failed=0. Unknown markers, markers outside the set, and traversal outside the root each exit 1. The guard still refuses a marker that hides work.
+
+Required commands
+bash tests/orchestrator_doctor_gate.sh: exit 0, cases_total=31 cases_failed=0
+bash tests/orchestrator_marker_vocabulary_cases.sh: exit 0, cases_total=15 cases_failed=0
+bash tests/orchestrator_catalog.sh: exit 0, names A1-A15
+bash -n measure/doctor.sh: exit 0
+measure/doctor.sh itself not run (task 3.4).
+
+Tests first
+90a3abbd8 touches only tests/orchestrator_doctor_gate.sh (Red). d16ab8b01 touches only measure/doctor.sh (Green).
+
+A2: not applicable, no publish gate. A6: measure/tracks.md:1671 still reads 'new (spec and plan only; due 2026-11-14)'; no overstatement.
+
+Withdrawn: F207 (fixed, probe-proven), N3 (case_drift_match_requires_whole_line kills the grep -qF mutant).
+New nonblocking: B214 (Low spoof edge), B215 (concurs with A209 on the p3-20 leak).
+Verdict: pass. No blocking findings. No question for the orchestrator.
+
+MEASURE_AGENT_RESULT
+role: review-b
+track: doctor_gate_repair_20261112
+phase: P3
+verdict: pass
+status: pass
+blocking_findings: none
+nonblocking_findings: B214 (Low, spoof edge on a crash path), B215 (nit, concurs with A209)
+result_file: measure/runs/doctor_gate_repair_20261112/review-b-p3-a284de0b0.json
+log_file: measure/runs/doctor_gate_repair_20261112/review-b-p3-a284de0b0.log
+question: none
+END_MEASURE_AGENT_RESULT

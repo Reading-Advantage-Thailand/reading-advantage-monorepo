@@ -1,0 +1,294 @@
+# Red round log, Phase 2 task 2.1
+
+Track: `doctor_gate_repair_20261112`
+Phase: P2, F421, the gate records the architecture verdict
+Task: 2.1 Red
+Role: Measure Mid Red
+Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+Round: 1
+
+## Bases
+
+- `phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec` (resolved)
+- `role_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec` (resolved)
+- Both values resolve to the same commit.
+
+## Commits
+
+- `b6a2531c597a700c1df08a184f3f908d450b8553` — `test(measure): pin the doctor gate behavior (track_id: doctor_gate_repair_20261112)`. Test file only.
+- `02e9ee7e3d113269777d829ac7054e9dc0850e6b` — `docs(measure): log the doctor phase 2 red evidence (track_id: doctor_gate_repair_20261112)`. Plan file only.
+
+## Option of the run
+
+The orchestrator ordered the Red round on the default of 2026-11-12, which is option (C) of spec D-3. The PM has not confirmed the option. The inactive branch of test-strategy.md section 9 is not written. The cases `pnpm_exit_1_gate_exits_0` and `pnpm_exit_0_gate_exits_0` hold the option (C) expectation.
+
+## Commands
+
+`bash tests/orchestrator_doctor_gate.sh --part a`
+
+- Exit at the base: 1.
+- `cases_total=11 cases_failed=7`. The floor of 11 is met.
+
+`bash tests/orchestrator_doctor_gate.sh --part b`
+
+- Exit at the base: 1.
+- `cases_total=11 cases_failed=11`. The gate record is absent.
+
+`bash tests/orchestrator_doctor_gate.sh`
+
+- Exit at the base: 1.
+- `cases_total=22 cases_failed=18`.
+
+`bash -n tests/orchestrator_doctor_gate.sh` exits 0. Red is not a syntax error and not a copy error.
+
+## Part A case results at the base
+
+| Case | Result | Reason |
+|---|---|---|
+| `pnpm_exit_1_gate_exits_0` | FAIL | expected gate exit 0, got exit 1 |
+| `pnpm_exit_0_gate_exits_0` | FAIL | the ARCHITECTURE line for exit 0 is missing |
+| `guard_catalog_failure_gate_exits_1` | PASS | characterization |
+| `guard_marker_failure_gate_exits_1` | PASS | characterization |
+| `guard_truthfulness_failure_gate_exits_1` | PASS | characterization |
+| `pnpm_exit_2_gate_exits_1` | FAIL | expected gate exit 1, got exit 2 |
+| `pnpm_exit_127_gate_exits_1` | FAIL | expected gate exit 1, got exit 127 |
+| `architecture_argv_exact` | FAIL | the pnpm log does not hold the pinned argv |
+| `tool_failure_codes` | FAIL | code 2: expected gate exit 1, got exit 2 |
+| `architecture_line_shows_code` | FAIL | the ARCHITECTURE line does not hold the code 0 |
+| `no_write_in_root` | PASS | characterization |
+
+`failed_cases=pnpm_exit_1_gate_exits_0,pnpm_exit_0_gate_exits_0,pnpm_exit_2_gate_exits_1,pnpm_exit_127_gate_exits_1,architecture_argv_exact,tool_failure_codes,architecture_line_shows_code`.
+
+The four plan behavior cases and the three added cases fail. The base runs `pnpm architecture:check` with no flag, and `set -euo pipefail` stops the script at the first non-zero exit.
+
+## Part B case results at the base
+
+| Case | Result | Reason |
+|---|---|---|
+| `record_file_present` | FAIL | the record file is absent |
+| `record_step_lines` | FAIL | the record file is absent |
+| `record_step_commands` | FAIL | the record file is absent |
+| `record_step_exit_codes` | FAIL | the record file is absent |
+| `record_verdict_line` | FAIL | the record file is absent |
+| `record_verdict_code_matches_step4` | FAIL | the record file is absent |
+| `record_owner_line` | FAIL | the record file is absent |
+| `record_doctor_line` | FAIL | the record file is absent |
+| `record_duration_line` | FAIL | the record file is absent |
+| `record_head_line` | FAIL | the record file is absent |
+| `record_lines_floor` | FAIL | the record file is absent |
+
+## Harness notes
+
+- Each case builds its own root under `/tmp` with `mktemp -d`, copies `measure/doctor.sh` into `<tmp>/measure/`, writes three stub guards into `<tmp>/tests/`, and writes a stub `pnpm` into `<tmp>/bin/`. The stub logs its argv in `<tmp>/pnpm.log`.
+- The 127 case and the 127 run of the tool-failure loop use `PATH=<tmp>/bin:/usr/bin:/bin`. Each asserts `pnpm_absent=1` before the run, so no real `pnpm` runs.
+- The exit codes are asserted as integers. The counts carry a label: `cases_total`, `cases_failed`, `pnpm_calls`, `codes_checked`, `pnpm_absent`, `record_lines_checked`.
+- Part B reads the record through the `track_dir_resolve` helper, which prefers `measure/archive/<id>` over `measure/tracks/<id>`.
+- Each case removes its own root. No fixture entered the repository. No production file changed.
+
+## Sanity check of the test
+
+A scratch copy of the test file, a scratch copy of `measure/doctor.sh` that holds the planned behavior of plan task 2.2, and a scratch record in the planned form of plan task 2.3 make all 22 cases pass with exit 0. The scratch root sat outside the repository and was removed. The real `measure/doctor.sh` and the real record did not change.
+
+The scratch record also proves the Part B checks bite. A record with `STEP 2 ... exit 1` fails `record_step_exit_codes`. A record whose VERDICT code differs from the STEP 4 code fails `record_verdict_code_matches_step4`. A record with a changed STEP command text fails `record_step_commands`. A record that names another owner fails `record_owner_line`. A record under `measure/archive/<id>` is still read.
+
+## Scope
+
+- The dirty paths in `git status --short` before the work were unrelated user work of other tracks and generated artifacts. This role did not touch them.
+- The two commits hold `tests/orchestrator_doctor_gate.sh` and `measure/tracks/doctor_gate_repair_20261112/plan.md`. No path under `apps/`, `packages/`, or `services/` changed.
+
+## Next
+
+Task 2.2 is `[~]` and waits for the Green role on another model family. The Green check is `bash tests/orchestrator_doctor_gate.sh --part a` with exit 0.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: doctor_gate_repair_20261112
+phase: P2
+task: 2.1
+baseline_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+role_base_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+head: 02e9ee7e3d113269777d829ac7054e9dc0850e6b
+commits:
+  - b6a2531c597a700c1df08a184f3f908d450b8553
+  - 02e9ee7e3d113269777d829ac7054e9dc0850e6b
+tests:
+  - tests/orchestrator_doctor_gate.sh
+files_changed:
+  - tests/orchestrator_doctor_gate.sh
+  - measure/tracks/doctor_gate_repair_20261112/plan.md
+  - measure/runs/doctor_gate_repair_20261112/red-p2.log (uncommitted)
+red_command: bash tests/orchestrator_doctor_gate.sh --part a
+red_exit: 1
+cases_total: 11
+cases_failed: 7
+part_b_command: bash tests/orchestrator_doctor_gate.sh --part b
+part_b_exit: 1
+part_b_cases_total: 11
+part_b_cases_failed: 11
+remaining_failures:
+  - pnpm_exit_1_gate_exits_0
+  - pnpm_exit_0_gate_exits_0
+  - pnpm_exit_2_gate_exits_1
+  - pnpm_exit_127_gate_exits_1
+  - architecture_argv_exact
+  - tool_failure_codes
+  - architecture_line_shows_code
+  - record_file_present
+  - record_step_lines
+  - record_step_commands
+  - record_step_exit_codes
+  - record_verdict_line
+  - record_verdict_code_matches_step4
+  - record_owner_line
+  - record_doctor_line
+  - record_duration_line
+  - record_head_line
+  - record_lines_floor
+status: complete
+END_MEASURE_AGENT_RESULT
+
+# Red round log, Phase 2 task 2.5, round 2
+
+Track: `doctor_gate_repair_20261112`
+Phase: P2, F421, the gate records the architecture verdict
+Task: 2.5 Red, the remediation of the Phase 2 reviews
+Role: Measure Mid Red
+Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+Round: 2
+
+## Bases
+
+- `phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec` (resolved)
+- `role_base_sha=ad72cee7a36615704ed955f4d4feb03e951ae5b5` (resolved, the amendment commit)
+
+## Commits
+
+- `50db02a6338faf65c891bb2b1f7b7701e8290df8` — `test(measure): pin the real architecture exit path (track_id: doctor_gate_repair_20261112)`. Test file only.
+- `68e7ee750dc92f6b0affcf3c2c1e5af56e63dcd0` — `docs(measure): log the doctor task 2.5 red evidence (track_id: doctor_gate_repair_20261112)`. Plan file only.
+
+## Defect of the reviews
+
+The real architecture CLI exits 2 on master. The root script `architecture:check` holds two pnpm layers, and each layer reports 1 for a failed child. The gate read the exit of the wrapper, so it recorded a tool failure as a boundary verdict. The stub of round 1 returned the code of the case directly, so the harness could not see the mapping.
+
+The amendment commit `ad72cee7a` rewrote spec.md FR-3, AC-5, and AC-6, plan.md task 2.5, and test-strategy.md. The Red role of this round follows the amended files.
+
+## Harness change
+
+- The stub of step 4 is now `tsx` at `<tmp>/node_modules/.bin/tsx`. The step 4 command changes into `<tmp>/packages/architecture-enforcement`, so the relative path `../../node_modules/.bin/tsx` resolves the stub. The harness models the real call path with no pnpm layer.
+- The stub logs its argv in `<tmp>/tsx.log` and exits with the code of the case. It prints the case message on stderr when the case sets one.
+- The harness writes no `pnpm` stub. The `PATH` of every run is `<tmp>/bin:/usr/bin:/bin`, so the real `pnpm` never runs.
+- The 127 case and the 127 branch of `tool_failure_codes` assert `tsx_absent=1` before the gate runs. The assertion reads `test -x <tmp>/node_modules/.bin/tsx`. This is the fix of Review A F203.
+- Each case removes its own root. No fixture entered the repository. No production file changed.
+
+## Commands
+
+`bash tests/orchestrator_doctor_gate.sh --part a`
+
+- Exit at the base: 1.
+- `cases_total=12 cases_failed=7`. The floor of 12 is met.
+
+`bash tests/orchestrator_doctor_gate.sh --part b`
+
+- Exit at the base: 1.
+- `cases_total=12 cases_failed=3`.
+
+`bash tests/orchestrator_doctor_gate.sh`
+
+- Exit at the base: 1.
+- `cases_total=24 cases_failed=10`.
+
+`bash -n tests/orchestrator_doctor_gate.sh` exits 0. Red is not a syntax error and not a copy error.
+
+## Part A case results at the base
+
+| Case | Result | Reason |
+|---|---|---|
+| `tsx_exit_1_gate_exits_0` | FAIL | expected gate exit 0, got exit 1 |
+| `tsx_exit_0_gate_exits_0` | FAIL | expected gate exit 0, got exit 1 |
+| `guard_catalog_failure_gate_exits_1` | PASS | characterization |
+| `guard_marker_failure_gate_exits_1` | PASS | characterization |
+| `guard_truthfulness_failure_gate_exits_1` | PASS | characterization |
+| `tsx_exit_2_manifest_drift_gate_exits_0` | FAIL | expected gate exit 0, got exit 1 |
+| `tsx_exit_2_other_line_gate_exits_1` | FAIL | the tool failure ARCHITECTURE line is missing |
+| `tsx_exit_127_gate_exits_1` | PASS | characterization |
+| `tsx_argv_exact` | FAIL | tsx_calls=0 expected=1 |
+| `tool_failure_codes` | FAIL | code 2: the tool failure ARCHITECTURE line is missing |
+| `architecture_line_shows_code` | FAIL | the ARCHITECTURE line does not hold the code 0 |
+| `no_write_in_root` | PASS | characterization |
+
+`failed_cases=tsx_exit_1_gate_exits_0,tsx_exit_0_gate_exits_0,tsx_exit_2_manifest_drift_gate_exits_0,tsx_exit_2_other_line_gate_exits_1,tsx_argv_exact,tool_failure_codes,architecture_line_shows_code`.
+
+The base `measure/doctor.sh` calls `pnpm architecture:check --skip-input-snapshot-pin`. The harness holds no `pnpm`, so the base prints the tool-failure line with 127 in every case. The five characterization cases pass at the base.
+
+## Part B case results at the base
+
+| Case | Result | Reason |
+|---|---|---|
+| `record_file_present` | PASS | the record of task 2.3 exists |
+| `record_step_lines` | PASS | the four STEP lines hold the planned form |
+| `record_step_commands` | FAIL | the STEP 4 command text is not the planned literal |
+| `record_step_exit_codes` | PASS | the STEP 4 exit code is 1 |
+| `record_verdict_line` | PASS | the VERDICT line holds the owner clause |
+| `record_verdict_code_matches_step4` | PASS | the VERDICT code is 1 |
+| `record_owner_line` | PASS | the owner line holds |
+| `record_doctor_line` | PASS | the DOCTOR line holds |
+| `record_duration_line` | FAIL | the record holds no DURATION line with a source run |
+| `record_duration_sha_matches_head` | FAIL | the record holds no DURATION line with a source run |
+| `record_head_line` | PASS | the HEAD line holds a short sha |
+| `record_lines_floor` | PASS | record_lines_checked=14, the floor of 8 is met |
+
+The record of task 2.3 holds the STEP 4 command text `pnpm architecture:check --skip-input-snapshot-pin` and the DURATION line `- DURATION: step 4 took 165.684 s`. Both differ from the amended rules.
+
+## Sanity check of the test
+
+A scratch copy of the test file, a scratch copy of `measure/doctor.sh` that holds the planned behavior of task 2.5, and a scratch record in the planned form make all 24 cases pass with exit 0. The scratch root sat outside the repository and was removed. The real `measure/doctor.sh` and the real record did not change.
+
+The scratch copy also kills two mutants of test-strategy section 7.2. A drift match on the shorter prefix `Architecture check failed:` fails `tsx_exit_2_other_line_gate_exits_1`. A branch that gives every exit 2 the tool-failure line fails `tsx_exit_2_manifest_drift_gate_exits_0`.
+
+## Scope
+
+- The dirty paths in `git status --short` before the work were unrelated user work of other tracks and generated artifacts. This role did not touch them.
+- The two commits hold `tests/orchestrator_doctor_gate.sh` and `measure/tracks/doctor_gate_repair_20261112/plan.md`. No path under `apps/`, `packages/`, or `services/` changed.
+
+## Next
+
+Task 2.5 stays `[~]`. The Green role runs on deepseek/deepseek-flash. Its check is `bash tests/orchestrator_doctor_gate.sh --part a` with exit 0, then the full file with exit 0.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: doctor_gate_repair_20261112
+phase: P2
+task: 2.5
+baseline_sha: e592f824607cc220c02096e0a66d3174d1fe78ec
+role_base_sha: ad72cee7a36615704ed955f4d4feb03e951ae5b5
+head: 68e7ee750dc92f6b0affcf3c2c1e5af56e63dcd0
+commits:
+  - 50db02a6338faf65c891bb2b1f7b7701e8290df8
+  - 68e7ee750dc92f6b0affcf3c2c1e5af56e63dcd0
+tests:
+  - tests/orchestrator_doctor_gate.sh
+files_changed:
+  - tests/orchestrator_doctor_gate.sh
+  - measure/tracks/doctor_gate_repair_20261112/plan.md
+  - measure/runs/doctor_gate_repair_20261112/red-p2.log (uncommitted)
+red_command: bash tests/orchestrator_doctor_gate.sh --part a
+red_exit: 1
+cases_total: 12
+cases_failed: 7
+part_b_command: bash tests/orchestrator_doctor_gate.sh --part b
+part_b_exit: 1
+part_b_cases_total: 12
+part_b_cases_failed: 3
+remaining_failures:
+  - tsx_exit_1_gate_exits_0
+  - tsx_exit_0_gate_exits_0
+  - tsx_exit_2_manifest_drift_gate_exits_0
+  - tsx_exit_2_other_line_gate_exits_1
+  - tsx_argv_exact
+  - tool_failure_codes
+  - architecture_line_shows_code
+  - record_step_commands
+  - record_duration_line
+  - record_duration_sha_matches_head
+status: complete
+END_MEASURE_AGENT_RESULT

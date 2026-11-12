@@ -1,0 +1,120 @@
+Measure Review A, round r2, Phase 2 (P2, F421)
+Track: doctor_gate_repair_20261112
+Role: measure-review-a-correctness
+Route: nvidia/stepfun-ai/step-5-preview#high
+Audited head: af66a6d661965ce500c2f7a7b9d2a3c6611f9c59
+Phase base: e592f824607cc220c02096e0a66d3174d1fe78ec
+
+VERDICT: pass. STATUS: pass. No blocking finding.
+
+## Round 1 findings, item by item
+
+F201 [resolved]. measure/doctor.sh at bbe5e5860 line 15:
+  architecture_output="$(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin 2>&1)"
+No pnpm layer sits between the CLI and the gate. Lines 20 and 21 print the
+captured output, so nothing is lost. The saved run
+measure/runs/doctor_gate_repair_20261112/doctor-run-bbe5e5860.log holds the
+manifest-drift line at line 12 and "step 4 cli_exit=2" at line 18. The gate
+printed "ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by
+architecture_ci_input_pin_20261110" and "doctor_exit=0 (heavy_rc=0)". The
+record STEP 4 line holds the real command text with exit 2, and the VERDICT
+line holds the known-drift text.
+
+F202 [resolved]. tests/orchestrator_doctor_gate.sh at 50db02a63. The header
+comment at lines 3 to 8 states that the stub tsx models the real call path and
+that no pnpm layer sits between the stub and the gate. write_stub_tsx (lines
+90 to 108) writes the stub at <tmp>/node_modules/.bin/tsx, and run_case
+(line 690) creates <tmp>/packages/architecture-enforcement. The four tsx
+cases are tsx_exit_1_gate_exits_0, tsx_exit_0_gate_exits_0,
+tsx_exit_2_manifest_drift_gate_exits_0, and tsx_exit_2_other_line_gate_exits_1.
+run_gate (lines 118 to 123) sets PATH=<tmp>/bin:/usr/bin:/bin, so no real
+pnpm or tsx runs.
+
+F203 [resolved]. case_tsx_exit_127_gate_exits_1 (lines 320 to 343): the order
+is reset_tsx, the tsx_is_absent assertion, then run_gate. The 127 branch of
+tool_failure_codes (lines 356 to 362) asserts tsx_is_absent before the run.
+
+F204 [resolved]. Both saved logs exist at the record HEAD bbe5e5860, and the
+record header names them. STEP 1 to STEP 3 exit 0 match the PASS lines of the
+log. STEP 4 exit 2 and the VERDICT line match line 19. DURATION 175.150 s and
+the timing sha bbe5e5860 match timing-run-bbe5e5860.log lines 5 and 6. Plan
+task 2.4 holds the correction note that names these two logs.
+
+F205 [withdrawn]. spec FR-3 pins the exit 0 and exit 1 ARCHITECTURE lines word
+for word, and measure/doctor.sh prints that text. The wording tension belongs
+to the spec, not to this phase.
+
+F206 (round 1 note) [withdrawn]. The record header now names both saved logs,
+and every value in it matches a saved line.
+
+## The four rules of FR-3 in measure/doctor.sh
+
+- set -euo pipefail at line 2. The three guard steps stay as bare lines 4 to 6.
+- The restore-condition comment stays at lines 8 to 10. It names the close of
+  task 1.4d of architecture_ci_input_pin_20261110 and the Monorepo orchestrator.
+- Lines 23 to 26: a code of 0 or 1 prints the owner line and the gate line, and exits 0.
+- Lines 28 to 31: a code of 2 with a whole-line match of the known drift line
+  prints the known-drift line and the gate line, and exits 0.
+- Lines 33 to 36: every other code, and a code of 2 with any other output,
+  prints the tool-failure lines and exits 1.
+
+## The record against the saved logs
+
+doctor-gate-evidence.md at af66a6d66 holds HEAD bbe5e5860, four STEP lines,
+the known-drift VERDICT line, DURATION 175.150 s from the timing run at
+bbe5e5860, the OWNER line, and the DOCTOR line. Every value comes from a log.
+No value comes from memory.
+
+## Anti-pattern checks
+
+A3 (digit-only count). Clean. Every count is a labeled integer: cases_total,
+cases_failed, codes_checked=5, tsx_calls, record_lines_checked. Exit codes
+compare with [ "$code" -ne N ] and with the step_exit_code parser. No case
+proves an exit with a bare digit match.
+
+A4 (vacuous pass). Clean. I built the missing-deliverable fixture. A scratch
+root at measure/runs/doctor_gate_repair_20261112/a4scratch held a copy of the
+test and a copy of doctor.sh, and no record file. I ran
+bash <scratch>/tests/orchestrator_doctor_gate.sh --part b. The result was
+cases_total=12 cases_failed=12, with the reason "the record file is absent" in
+every case, and exit 1. Part A holds its floor of 12.
+
+A5 (false claim). Clean. The task 2.5 Green evidence quotes the four step
+results, the architecture CLI exit, the verdict line, and step4_seconds=175.150.
+No line claims a pass with no command behind it.
+
+Framework-wide checks apply: the phase changed the orchestration script
+measure/doctor.sh and the contract test.
+
+## Scope
+
+The phase range also holds commits of accounting_drive_intake_20261109 and
+storytime_app_rebuild_20261025. Those paths belong to other tracks, as plan
+task 2.4 says. The per-commit scope check over the ten doctor commits gives
+doctor_out_of_scope_paths=0. No path under apps/, packages/, or services/
+changed in a doctor commit.
+
+## Commands and results
+
+git rev-parse HEAD -> af66a6d661965ce500c2f7a7b9d2a3c6611f9c59 (equals audited_head_sha)
+bash tests/orchestrator_doctor_gate.sh -> exit 0, cases_total=24 cases_failed=0
+bash -n measure/doctor.sh -> exit 0
+bash -n tests/orchestrator_doctor_gate.sh -> exit 0
+bash <scratch>/tests/orchestrator_doctor_gate.sh --part b -> exit 1, cases_total=12 cases_failed=12 (A4 fixture)
+
+No doctor.sh, no pnpm, and no tsx ran from this session. The architecture
+check ran only inside the stub roots of the recorded Green runs.
+
+MEASURE_AGENT_RESULT
+verdict: pass
+status: pass
+blocking_findings: none
+nonblocking_findings:
+  F207 [open, Medium] residual tool-failure hazard. measure/doctor.sh maps a CLI exit 1 to a boundary verdict, and a failed cd or an uncaught Node exception also gives exit 1. No part A case covers that path. Plan task 2.5 names the same residual.
+  F208 [open, Low] stale spec value. spec section 8 OQ-3 still says the step 4 time is 165.684 s, from the pnpm timing run of task 2.2. The run at the record HEAD measures 175.150 s in measure/runs/doctor_gate_repair_20261112/timing-run-bbe5e5860.log.
+withdrawn: F205 (spec FR-3 pins the owner text for exit 0 and exit 1), F206 (round 1 note; the record header now names both saved logs)
+round 1 findings: F201 resolved, F202 resolved, F203 resolved, F204 resolved
+result_artifact: measure/runs/doctor_gate_repair_20261112/review-a-p2-af66a6d66.json
+log_artifact: measure/runs/doctor_gate_repair_20261112/review-a-p2-af66a6d66.log
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

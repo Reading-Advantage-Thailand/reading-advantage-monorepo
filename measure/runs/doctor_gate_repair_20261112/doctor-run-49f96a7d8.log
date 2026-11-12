@@ -1,0 +1,19 @@
+# Doctor gate run, task 2.2, phase 2
+# HEAD: 49f96a7d845ccafca56c50ff5b1efddabad06691
+# date: 2026-11-12
+# command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'
+# doctor exit: 0
+# step4_seconds: 165.684 (from the timing run: real 2m45.684s, exit 1)
+
+PASS: A12/A13 guard declarations and archive directories verified (6 guards)
+PASS: measure anti-pattern catalog exists with A1-A15
+PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked)
+PASS: executed review tracks are not fully blocked by deferred:review-execution
+$ pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts --skip-input-snapshot-pin
+Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports
+undefined
+/home/daniebo/Desktop/reading-advantage-monorepo/packages/architecture-enforcement:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 2: tsx src/architecture-check-cli.ts --skip-input-snapshot-pin
+[ELIFECYCLE] Command failed with exit code 1.
+ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110
+DOCTOR: the three structural guard steps gate this exit code

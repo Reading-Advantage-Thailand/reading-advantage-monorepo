@@ -1,0 +1,146 @@
+# Red round log, Phase 3 task 3.0a
+
+Track: `doctor_gate_repair_20261112`
+Phase: P3, F207, the exit 1 verdict rule
+Task: 3.0a Red
+Role: Measure Mid Red
+Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+Round: 1
+
+## Bases
+
+- `phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1` (resolved)
+- `role_base_sha=ce06cba2ee6152edf8180aa6d8ac5cb6a7c464be` (resolved)
+- The role base is above the phase base. The phase base holds the Phase 2 acceptance and the F207 tasks.
+
+## Strategy check before the work
+
+- `git log -1 --format=%s -- measure/tracks/doctor_gate_repair_20261112/test-strategy.md` printed `docs(measure): add the doctor p3 exit 1 strategy (track_id: doctor_gate_repair_20261112)`.
+
+## Commits
+
+- `90a3abbd83129af288862d9a05fab1d9708e038c` — `test(measure): pin the doctor exit 1 verdict rule (track_id: doctor_gate_repair_20261112)`. Test file only.
+- `afa9d73080a21025b5f6a6d46bb48a3ffc8faae6` — `docs(measure): log the doctor p3 red evidence (track_id: doctor_gate_repair_20261112)`. Plan file only.
+
+## The rule under test
+
+The PM decision of 2026-11-12 states the rule, quoted word for word: "2. Doctor F207: fix it in Phase 3 (due 11-14). doctor.sh counts exit 1 as a boundary verdict only when the CLI output holds its verdict line; exit 1 without that line is a tool failure (gate exit 1). Add the m-cd case."
+
+The base `measure/doctor.sh` maps every exit 1 to a boundary verdict. The Red cases pin the rule of FR-3.
+
+## Commands
+
+`bash tests/orchestrator_doctor_gate.sh --part a`
+
+- Exit at the base: 1.
+- `cases_total=19 cases_failed=4`. The floor of 19 is met.
+- `failed_cases=tsx_exit_1_no_verdict_gate_exits_1,step4_cd_fails_gate_exits_1,tsx_exit_1_verdict_in_longer_line_gate_exits_1,tsx_exit_1_malformed_verdict_gate_exits_1`.
+
+`bash tests/orchestrator_doctor_gate.sh --part b`
+
+- Exit at the base: 0.
+- `cases_total=12 cases_failed=0`.
+
+`bash -n tests/orchestrator_doctor_gate.sh` exits 0. Red is not a syntax error and not a copy error.
+
+## Part A case results at the base
+
+| Case | Result | Reason |
+|---|---|---|
+| `tsx_exit_1_gate_exits_0` | PASS | characterization. The stub prints the verdict line on stderr. |
+| `tsx_exit_0_gate_exits_0` | PASS | characterization |
+| `guard_catalog_failure_gate_exits_1` | PASS | characterization |
+| `guard_marker_failure_gate_exits_1` | PASS | characterization |
+| `guard_truthfulness_failure_gate_exits_1` | PASS | characterization |
+| `tsx_exit_2_manifest_drift_gate_exits_0` | PASS | characterization |
+| `tsx_exit_2_other_line_gate_exits_1` | PASS | characterization |
+| `tsx_exit_127_gate_exits_1` | PASS | characterization |
+| `tsx_argv_exact` | PASS | characterization |
+| `tool_failure_codes` | PASS | characterization |
+| `architecture_line_shows_code` | PASS | characterization |
+| `no_write_in_root` | PASS | characterization |
+| `drift_match_requires_whole_line` | PASS | characterization |
+| `tsx_exit_1_no_verdict_gate_exits_1` | FAIL | expected gate exit 1, got exit 0 |
+| `step4_cd_fails_gate_exits_1` | FAIL | expected gate exit 1, got exit 0 |
+| `tsx_exit_1_verdict_line_gate_exits_0` | PASS | characterization |
+| `tsx_exit_1_verdict_in_longer_line_gate_exits_1` | FAIL | fixture_index=1: expected gate exit 1, got exit 0 |
+| `tsx_exit_1_malformed_verdict_gate_exits_1` | FAIL | shape_index=1: expected gate exit 1, got exit 0 |
+| `tsx_exit_2_verdict_line_gate_exits_1` | PASS | characterization |
+
+The four failing cases fail for the reason the task names. The base treats every exit 1 as a boundary verdict, so the gate exits 0 in each of them.
+
+## Labeled counts
+
+- `part_a_floor=19`, `cases_total=19`, `cases_failed=4`.
+- `tsx_message_set=0` in `tsx_exit_1_no_verdict_gate_exits_1`. The case asserts it before the run.
+- `arch_dir_absent=1` and `tsx_calls=0` in `step4_cd_fails_gate_exits_1`.
+- `fixtures_checked=2` in `tsx_exit_1_verdict_in_longer_line_gate_exits_1`.
+- `shapes_checked=7` in `tsx_exit_1_malformed_verdict_gate_exits_1`.
+- `codes_checked=5` in `tool_failure_codes`.
+- Part B holds `cases_total=12 cases_failed=0` and `record_lines_checked=14` against the floor of 8.
+
+## Contract changes in the test file
+
+- The stub `tsx` prints the value of `DOCTOR_GATE_TSX_STDOUT` on stdout, one line for each line of the value. The real CLI writes the verdict line to stdout.
+- `reset_tsx` unsets `DOCTOR_GATE_TSX_MESSAGE` and `DOCTOR_GATE_TSX_STDOUT`. Each new case calls `reset_tsx` first.
+- The three old cases `tsx_exit_1_gate_exits_0`, `architecture_line_shows_code`, and `no_write_in_root` print the whole verdict line on stderr. The last one also asserts the boundary clause for the code 1 run.
+- The verdict literal of every new case is `architecture check: debt-change (files=12, findings=3, parseErrors=0)`.
+- The pinned lines of FR-3 are asserted as whole lines. Every tool failure case asserts that the output holds no boundary gate line. Every boundary case asserts that the output holds no tool failure text.
+
+## Harness notes
+
+- Each case builds its own root under `/tmp` with `mktemp -d`, copies `measure/doctor.sh` into `<tmp>/measure/`, writes three stub guards into `<tmp>/tests/`, and writes the stub `tsx` into `<tmp>/node_modules/.bin/tsx`. The stub logs its argv in `<tmp>/tsx.log`.
+- The `PATH` of every run is `<tmp>/bin:/usr/bin:/bin`. No real `pnpm` and no real `tsx` runs.
+- The exit codes are asserted as integers. Each count carries a label.
+- Part B reads the record through the `track_dir_resolve` helper, which prefers `measure/archive/<id>` over `measure/tracks/<id>`.
+- Each case removes its own root. No fixture entered the repository. No production file changed.
+
+## Sanity check of the test
+
+A scratch copy of the test file and a scratch copy of `measure/doctor.sh` that holds the planned rule of task 3.0b make all 19 cases pass with `cases_total=19 cases_failed=0`. The scratch root sat outside the repository and was removed. The real `measure/doctor.sh` did not change.
+
+The Red state is satisfiable. The four failing cases fail for the rule of F207 alone.
+
+## Scope
+
+- The dirty paths in `git status --short` before the work were unrelated user work of other tracks and generated artifacts. This role did not touch them.
+- The two commits hold `tests/orchestrator_doctor_gate.sh` and `measure/tracks/doctor_gate_repair_20261112/plan.md`. No path under `apps/`, `packages/`, or `services/` changed.
+
+## Next
+
+Task 3.0a stays `[~]`. Task 3.0b is the Green task on another model family. Its command is `bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh`. The Green commit changes `measure/doctor.sh` only.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: doctor_gate_repair_20261112
+phase: P3
+task: 3.0a
+baseline_sha: 6a059f1a909ce58db31533a8c81a28db62626fc1
+role_base_sha: ce06cba2ee6152edf8180aa6d8ac5cb6a7c464be
+head: afa9d73080a21025b5f6a6d46bb48a3ffc8faae6
+commits:
+  - 90a3abbd83129af288862d9a05fab1d9708e038c
+  - afa9d73080a21025b5f6a6d46bb48a3ffc8faae6
+tests:
+  - tests/orchestrator_doctor_gate.sh
+files_changed:
+  - tests/orchestrator_doctor_gate.sh
+  - measure/tracks/doctor_gate_repair_20261112/plan.md
+  - measure/runs/doctor_gate_repair_20261112/red-p3.log (uncommitted)
+red_command: bash tests/orchestrator_doctor_gate.sh --part a
+red_exit: 1
+cases_total: 19
+cases_failed: 4
+part_b_command: bash tests/orchestrator_doctor_gate.sh --part b
+part_b_exit: 0
+part_b_cases_total: 12
+part_b_cases_failed: 0
+syntax_command: bash -n tests/orchestrator_doctor_gate.sh
+syntax_exit: 0
+remaining_failures:
+  - tsx_exit_1_no_verdict_gate_exits_1
+  - step4_cd_fails_gate_exits_1
+  - tsx_exit_1_verdict_in_longer_line_gate_exits_1
+  - tsx_exit_1_malformed_verdict_gate_exits_1
+dispositions: none
+END_MEASURE_AGENT_RESULT
