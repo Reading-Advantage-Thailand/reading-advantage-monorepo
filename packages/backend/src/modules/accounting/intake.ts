@@ -210,14 +210,22 @@ export interface AccountingIntakeDocumentRepository {
   }): Promise<AccountingIntakeDocument | undefined>;
 
   /**
-   * Lists the newest rows that hold evidence, for the first duplicate pass.
+   * Lists the newest submissions that hold evidence, for the first duplicate
+   * pass. The rows carry the submission id and its evidence reference, newest
+   * first, so the pass compares bytes against submissions and not against
+   * intake rows (Review A F303, PM-22).
    * @param input Company scope and the pass cap.
-   * @returns The newest rows that hold evidence, at most `limit` rows.
+   * @returns The newest submission evidence rows, at most `limit` rows.
    */
-  listRecentWithEvidence(input: {
+  listRecentSubmissionEvidence(input: {
     readonly scope: Readonly<FinanceOperationScope>;
     readonly limit: number;
-  }): Promise<readonly AccountingIntakeDocument[]>;
+  }): Promise<
+    readonly {
+      readonly submissionId: string;
+      readonly evidenceReference: string;
+    }[]
+  >;
 
   /**
    * Lists every row whose stored evidence byte size equals one size.
@@ -240,10 +248,11 @@ export interface AccountingIntakeDocumentRepository {
 
   /**
    * Marks one row a content duplicate of an earlier submission.
-   * @param input Row id, earlier submission id, and the reason.
+   * @param input Company scope, row id, earlier submission id, and the reason.
    * @returns The updated row, or undefined when no row matched.
    */
   markDuplicate(input: {
+    readonly scope: Readonly<FinanceOperationScope>;
     readonly id: string;
     readonly duplicateOfSubmissionId: string;
     readonly failureReason: string;
@@ -251,10 +260,12 @@ export interface AccountingIntakeDocumentRepository {
 
   /**
    * Marks one row parsed after a successful read.
-   * @param input Row id, submission id, and the extraction marker.
+   * @param input Company scope, row id, submission id, and the extraction
+   *   marker.
    * @returns The updated row, or undefined when no row matched.
    */
   markParsed(input: {
+    readonly scope: Readonly<FinanceOperationScope>;
     readonly id: string;
     readonly submissionId: string;
     readonly extraction: "human" | "local-text" | "model";
@@ -262,20 +273,22 @@ export interface AccountingIntakeDocumentRepository {
 
   /**
    * Marks one row failed and increases its failure count.
-   * @param input Row id and the safe failure reason.
+   * @param input Company scope, row id, and the safe failure reason.
    * @returns The updated row, or undefined when no row matched.
    */
   markFailed(input: {
+    readonly scope: Readonly<FinanceOperationScope>;
     readonly id: string;
     readonly failureReason: string;
   }): Promise<AccountingIntakeDocument | undefined>;
 
   /**
    * Increases the sighting count of a repeated file id.
-   * @param input Row id, the new count, and the new last-seen instant.
+   * @param input Company scope, row id, the new count, and the new instant.
    * @returns The updated row, or undefined when no row matched.
    */
   bumpSighting(input: {
+    readonly scope: Readonly<FinanceOperationScope>;
     readonly id: string;
     readonly sightingCount: number;
     readonly lastSeenAt: string;
@@ -470,6 +483,19 @@ async function fetchDocumentBytes(
 }
 
 /**
+ * Returns the content type under which one file's bytes are stored. A native
+ * Google Sheet is exported as an `.xlsx` workbook, so its bytes are stored
+ * with the `.xlsx` MIME type and never with the Google Sheet type (F312).
+ * @param fileMimeType Declared MIME type of the Drive file.
+ * @returns The storage content type.
+ */
+function intakeContentType(fileMimeType: string): string {
+  return fileMimeType.toLowerCase() === GOOGLE_SHEET_MIME_TYPE
+    ? XLSX_MIME_TYPE
+    : fileMimeType;
+}
+
+/**
  * Converts one reader draft into a validated submission input. The domain
  * submission schema remains the validation authority.
  * @param draft Draft the reader returned.
@@ -546,26 +572,59 @@ function buildIntakeRow(input: {
 }
 
 /**
- * Finds the first content duplicate of one candidate inside one list of rows.
- * The comparison calls `sameEvidenceBytes` alone and never reads a parsed
- * scalar field (F48).
- * @param input Evidence store, company scope, candidate reference, and rows.
- * @returns The first row with equal bytes, or undefined when none matches.
+ * Finds the submission id of the first byte-equal submission in the pass 1
+ * list. The comparison calls `sameEvidenceBytes` alone and never reads a
+ * parsed scalar field (F48).
+ * @param input Evidence store, company scope, candidate reference, and the
+ *   newest submission evidence rows.
+ * @returns The submission id of the first byte match, or undefined when none
+ *   matches.
  */
-async function findFirstByteMatch(input: {
+async function findPassOneDuplicate(input: {
   readonly evidenceStore: AccountingEvidenceStore;
   readonly companyId: string;
   readonly candidateEvidenceReference: string;
-  readonly rows: readonly AccountingIntakeDocument[];
-}): Promise<AccountingIntakeDocument | undefined> {
+  readonly rows: readonly {
+    readonly submissionId: string;
+    readonly evidenceReference: string;
+  }[];
+}): Promise<string | undefined> {
   for (const row of input.rows) {
-    if (row.evidenceReference === null) continue;
     const same = await input.evidenceStore.sameEvidenceBytes({
       companyId: input.companyId,
       leftEvidenceReference: input.candidateEvidenceReference,
       rightEvidenceReference: row.evidenceReference,
     });
-    if (same) return row;
+    if (same) return row.submissionId;
+  }
+  return undefined;
+}
+
+/**
+ * Finds the submission id of the first byte-equal intake row in the pass 2
+ * list. The row target is `submissionId ?? duplicateOfSubmissionId`; a row
+ * that holds neither id is skipped before the byte compare (F302). The
+ * comparison calls `sameEvidenceBytes` alone (F48).
+ * @param input Evidence store, company scope, candidate reference, and the
+ *   rows of the candidate byte size.
+ * @returns The submission id of the first byte match, or undefined when none
+ *   matches.
+ */
+async function findPassTwoDuplicate(input: {
+  readonly evidenceStore: AccountingEvidenceStore;
+  readonly companyId: string;
+  readonly candidateEvidenceReference: string;
+  readonly rows: readonly AccountingIntakeDocument[];
+}): Promise<string | undefined> {
+  for (const row of input.rows) {
+    const submissionId = row.submissionId ?? row.duplicateOfSubmissionId;
+    if (submissionId === null || row.evidenceReference === null) continue;
+    const same = await input.evidenceStore.sameEvidenceBytes({
+      companyId: input.companyId,
+      leftEvidenceReference: input.candidateEvidenceReference,
+      rightEvidenceReference: row.evidenceReference,
+    });
+    if (same) return submissionId;
   }
   return undefined;
 }
@@ -683,6 +742,7 @@ async function processFile(input: {
     const body = await fetchDocumentBytes(request.source, file);
     if (existing.evidenceReference === null) {
       await request.intakeRepository.bumpSighting({
+        scope,
         id: existing.id,
         sightingCount: existing.sightingCount + 1,
         lastSeenAt: new Date().toISOString(),
@@ -691,7 +751,7 @@ async function processFile(input: {
     }
     const stored = await request.evidenceStore.put({
       companyId,
-      contentType: file.mimeType,
+      contentType: intakeContentType(file.mimeType),
       body,
     });
     const same = await request.evidenceStore.sameEvidenceBytes({
@@ -701,6 +761,7 @@ async function processFile(input: {
     });
     if (!same) throw new AccountingSubmissionError("conflict");
     await request.intakeRepository.bumpSighting({
+      scope,
       id: existing.id,
       sightingCount: existing.sightingCount + 1,
       lastSeenAt: new Date().toISOString(),
@@ -746,34 +807,38 @@ async function processFile(input: {
 
   const stored = await request.evidenceStore.put({
     companyId,
-    contentType: file.mimeType,
+    contentType: intakeContentType(file.mimeType),
     body,
   });
 
-  const passOneRows = await request.intakeRepository.listRecentWithEvidence({
-    scope,
-    limit: input.cap,
-  });
-  const passTwoRows = await request.intakeRepository.findByEvidenceByteSize({
-    scope,
-    evidenceByteSize: body.byteLength,
-  });
-  const passOneMatch = await findFirstByteMatch({
+  // Pass 1 reads the newest submissions that hold evidence, at most the cap
+  // count (spec section 5.5). Pass 2 runs only when pass 1 finds no match.
+  const passOneRows = await request.intakeRepository.listRecentSubmissionEvidence(
+    {
+      scope,
+      limit: input.cap,
+    },
+  );
+  let duplicateSubmissionId = await findPassOneDuplicate({
     evidenceStore: request.evidenceStore,
     companyId,
     candidateEvidenceReference: stored.evidenceReference,
     rows: passOneRows,
   });
-  const match =
-    passOneMatch ??
-    (await findFirstByteMatch({
+  if (duplicateSubmissionId === undefined) {
+    const passTwoRows = await request.intakeRepository.findByEvidenceByteSize({
+      scope,
+      evidenceByteSize: body.byteLength,
+    });
+    duplicateSubmissionId = await findPassTwoDuplicate({
       evidenceStore: request.evidenceStore,
       companyId,
       candidateEvidenceReference: stored.evidenceReference,
       rows: passTwoRows,
-    }));
+    });
+  }
 
-  if (match !== undefined && match.submissionId !== null) {
+  if (duplicateSubmissionId !== undefined) {
     const row = buildIntakeRow({
       companyId,
       file,
@@ -787,8 +852,9 @@ async function processFile(input: {
     });
     const inserted = await request.intakeRepository.insert(row);
     await request.intakeRepository.markDuplicate({
+      scope,
       id: inserted.id,
-      duplicateOfSubmissionId: match.submissionId,
+      duplicateOfSubmissionId: duplicateSubmissionId,
       failureReason: "A content duplicate of an earlier submission",
     });
     return "duplicate";
@@ -832,6 +898,7 @@ async function processFile(input: {
     });
     const inserted = await request.intakeRepository.insert(row);
     await request.intakeRepository.markParsed({
+      scope,
       id: inserted.id,
       submissionId: submission.submission.id,
       extraction,
@@ -857,6 +924,7 @@ async function processFile(input: {
     });
     const inserted = await request.intakeRepository.insert(row);
     await request.intakeRepository.markFailed({
+      scope,
       id: inserted.id,
       failureReason: safeFailureReason(),
     });
@@ -890,6 +958,7 @@ async function failFile(input: {
   });
   const inserted = await input.request.intakeRepository.insert(row);
   await input.request.intakeRepository.markFailed({
+    scope: { companyId: input.request.actor.companyId },
     id: inserted.id,
     failureReason: input.failureReason,
   });
@@ -897,11 +966,16 @@ async function failFile(input: {
 }
 
 /**
- * Reads one document through the local reader or the model reader. A text PDF,
- * an `.xlsx` workbook, and a native Google Sheet stay local; a non-text PDF,
- * a JPEG, and a PNG go to the model (spec section 6).
+ * Reads one document through the local reader or the model reader. A text PDF
+ * stays local; a non-text PDF, a JPEG, and a PNG go to the model (spec
+ * section 6). A `needs-model` result goes to the extraction port only for
+ * `application/pdf`; an `.xlsx` workbook and a native Google Sheet fail with
+ * a `review:` reason (spec section 5.2). A read result with no draft field
+ * fails with a `review:` reason (F307, F310).
  * @param input Poll request, company scope, file, and bytes.
  * @returns The draft and its extraction marker.
+ * @throws When the file type may not reach the model or the read result holds
+ *   no draft field.
  */
 async function readDocument(input: {
   readonly request: AccountingIntakeDriveDocumentRequest;
@@ -913,37 +987,31 @@ async function readDocument(input: {
   readonly extraction: "local-text" | "model";
 }> {
   const mimeType = input.file.mimeType.toLowerCase();
-  if (mimeType.startsWith("image/")) {
-    const model = await input.request.extraction.extract({
+  if (!mimeType.startsWith("image/")) {
+    const local = await input.request.localReader.read({
       companyId: input.companyId,
       mimeType: input.file.mimeType,
       body: input.body,
     });
-    return {
-      draft: model.draft ?? (model as unknown as AccountingIntakeDraft),
-      extraction: "model",
-    };
-  }
-  const local = await input.request.localReader.read({
-    companyId: input.companyId,
-    mimeType: input.file.mimeType,
-    body: input.body,
-  });
-  if (local.kind === "text") {
-    return {
-      draft: local.draft ?? (local as unknown as AccountingIntakeDraft),
-      extraction: "local-text",
-    };
+    if (local.kind === "text") {
+      if (local.draft === undefined) {
+        throw new Error("review: the local read returned no draft");
+      }
+      return { draft: local.draft, extraction: "local-text" };
+    }
+    if (mimeType !== "application/pdf") {
+      throw new Error("review: the workbook needs a manual read");
+    }
   }
   const model = await input.request.extraction.extract({
     companyId: input.companyId,
     mimeType: input.file.mimeType,
     body: input.body,
   });
-  return {
-    draft: model.draft ?? (model as unknown as AccountingIntakeDraft),
-    extraction: "model",
-  };
+  if (model.draft === undefined) {
+    throw new Error("review: the model read returned no draft");
+  }
+  return { draft: model.draft, extraction: "model" };
 }
 
 /**

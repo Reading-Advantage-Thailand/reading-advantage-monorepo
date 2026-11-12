@@ -74,6 +74,14 @@ function toIntakeDocument(
   });
 }
 
+/** Raw submission evidence row as postgres.js returns it. */
+interface SubmissionEvidenceRow {
+  /** Submission id. */
+  readonly id: string;
+  /** Private evidence reference of the submission; never null in this query. */
+  readonly evidence_reference: string;
+}
+
 /**
  * Builds the Postgres intake repository over one client.
  * @param input The Accounting database client.
@@ -142,23 +150,30 @@ export function createAccountingIntakeDocumentRepository(input: {
     },
 
     /**
-     * Lists the newest rows that hold evidence, for the first duplicate pass.
+     * Lists the newest submissions that hold evidence, for the first duplicate
+     * pass. The rows carry the submission id and its evidence reference,
+     * newest first (Review A F303, PM-22).
      * @param request Company scope and the pass cap.
-     * @returns The newest rows that hold evidence.
+     * @returns The newest submission evidence rows, newest first.
      */
-    async listRecentWithEvidence(request: {
+    async listRecentSubmissionEvidence(request: {
       readonly scope: Readonly<FinanceOperationScope>;
       readonly limit: number;
-    }): Promise<readonly AccountingIntakeDocument[]> {
-      const rows = await database<AccountingIntakeDocumentRow[]>`
-        select *
-        from accounting_intake_documents
+    }): Promise<
+      readonly { readonly submissionId: string; readonly evidenceReference: string }[]
+    > {
+      const rows = await database<SubmissionEvidenceRow[]>`
+        select id, evidence_reference
+        from accounting_submissions
         where scope_company_id = ${request.scope.companyId}
           and evidence_reference is not null
-        order by last_seen_at desc
+        order by submitted_at desc, id desc
         limit ${request.limit}
       `;
-      return rows.map(toIntakeDocument);
+      return rows.map((row) => ({
+        submissionId: row.id,
+        evidenceReference: row.evidence_reference,
+      }));
     },
 
     /**
@@ -197,11 +212,15 @@ export function createAccountingIntakeDocumentRepository(input: {
     },
 
     /**
-     * Marks one row a content duplicate of an earlier submission.
-     * @param request Row id, earlier submission id, and the reason.
+     * Marks one row a content duplicate of an earlier submission. The update
+     * binds the company scope beside the row id, so a row id of another
+     * company never matches (Review B F304).
+     * @param request Company scope, row id, earlier submission id, and the
+     *   reason.
      * @returns The updated row, or undefined when no row matched.
      */
     async markDuplicate(request: {
+      readonly scope: Readonly<FinanceOperationScope>;
       readonly id: string;
       readonly duplicateOfSubmissionId: string;
       readonly failureReason: string;
@@ -211,7 +230,8 @@ export function createAccountingIntakeDocumentRepository(input: {
         set status = 'duplicate',
             duplicate_of_submission_id = ${request.duplicateOfSubmissionId},
             failure_reason = ${request.failureReason}
-        where id = ${request.id}
+        where scope_company_id = ${request.scope.companyId}
+          and id = ${request.id}
         returning *
       `;
       const [row] = rows;
@@ -219,11 +239,14 @@ export function createAccountingIntakeDocumentRepository(input: {
     },
 
     /**
-     * Marks one row parsed after a successful read.
-     * @param request Row id, submission id, and the extraction marker.
+     * Marks one row parsed after a successful read. The update binds the
+     * company scope beside the row id (Review B F304).
+     * @param request Company scope, row id, submission id, and the extraction
+     *   marker.
      * @returns The updated row, or undefined when no row matched.
      */
     async markParsed(request: {
+      readonly scope: Readonly<FinanceOperationScope>;
       readonly id: string;
       readonly submissionId: string;
       readonly extraction: "human" | "local-text" | "model";
@@ -233,7 +256,8 @@ export function createAccountingIntakeDocumentRepository(input: {
         set status = 'parsed',
             submission_id = ${request.submissionId},
             extraction = ${request.extraction}
-        where id = ${request.id}
+        where scope_company_id = ${request.scope.companyId}
+          and id = ${request.id}
         returning *
       `;
       const [row] = rows;
@@ -241,11 +265,13 @@ export function createAccountingIntakeDocumentRepository(input: {
     },
 
     /**
-     * Marks one row failed and increases its failure count.
-     * @param request Row id and the safe failure reason.
+     * Marks one row failed and increases its failure count. The update binds
+     * the company scope beside the row id (Review B F304).
+     * @param request Company scope, row id, and the safe failure reason.
      * @returns The updated row, or undefined when no row matched.
      */
     async markFailed(request: {
+      readonly scope: Readonly<FinanceOperationScope>;
       readonly id: string;
       readonly failureReason: string;
     }): Promise<AccountingIntakeDocument | undefined> {
@@ -254,7 +280,8 @@ export function createAccountingIntakeDocumentRepository(input: {
         set status = 'failed',
             failure_reason = ${request.failureReason},
             failure_count = failure_count + 1
-        where id = ${request.id}
+        where scope_company_id = ${request.scope.companyId}
+          and id = ${request.id}
         returning *
       `;
       const [row] = rows;
@@ -262,11 +289,14 @@ export function createAccountingIntakeDocumentRepository(input: {
     },
 
     /**
-     * Increases the sighting count of a repeated file id.
-     * @param request Row id, the new count, and the new last-seen instant.
+     * Increases the sighting count of a repeated file id. The update binds the
+     * company scope beside the row id (Review B F304).
+     * @param request Company scope, row id, the new count, and the new
+     *   last-seen instant.
      * @returns The updated row, or undefined when no row matched.
      */
     async bumpSighting(request: {
+      readonly scope: Readonly<FinanceOperationScope>;
       readonly id: string;
       readonly sightingCount: number;
       readonly lastSeenAt: string;
@@ -275,7 +305,8 @@ export function createAccountingIntakeDocumentRepository(input: {
         update accounting_intake_documents
         set sighting_count = ${request.sightingCount},
             last_seen_at = ${request.lastSeenAt}
-        where id = ${request.id}
+        where scope_company_id = ${request.scope.companyId}
+          and id = ${request.id}
         returning *
       `;
       const [row] = rows;
