@@ -29,14 +29,15 @@ elif [ "$#" -ne 0 ]; then
   exit 2
 fi
 
-# A8 guard: NO plan.md under measure/tracks/ (active) may use the deprecated
-# `[ ]` (space) marker. The supervisor regex `^- \[([~xb])\]` intentionally
-# ignores `[ ]`, so a stale `[ ]` task is invisible to the supervisor (silently
-# dropped from the incomplete-task count) while a separate status checker may
-# still count it as incomplete — an ambiguity that inflates status reports.
-# This guard must cover EVERY active track, not just review tracks, or product
-# tracks regress silently. Archived plans (measure/archive/) are frozen
-# historical snapshots and are intentionally excluded.
+# A8 guard: every top-level task line of a plan.md under measure/tracks/ (active)
+# must use a marker from the set {` `, `~`, `x`, `b`}. `[ ]` (space) means
+# pending: the task did not start. `[~]` means in progress, `[x]` means done,
+# and `[b]` means blocked at a human gate (`deferred:<owner>`). Any other marker
+# fails, because the supervisor and the status checker would read it differently.
+# A closeout rule applies: a track moves to archive only when no task stays `[ ]`
+# or `[~]`. This guard covers EVERY active track, not just review tracks.
+# Archived plans (measure/archive/) are frozen historical snapshots and are
+# excluded.
 if [ -n "$track_id" ]; then
   track_dir="$(track_dir_resolve "$track_id")"
   plans=( "$track_dir/plan.md" )
@@ -52,9 +53,12 @@ if [ "${#plans[@]}" -eq 0 ] || [ ! -f "${plans[0]}" ]; then
 fi
 
 for plan in "${plans[@]}"; do
-  if grep -n '^- \[ \] ' "$plan" >/tmp/orchestrator-marker-hits.$$; then
-    printf 'FAIL: deprecated [ ] markers in %s; use [~], [x], or [b] deferred:<owner>\n' "$plan" >&2
-    cat /tmp/orchestrator-marker-hits.$$ >&2
+  if grep -nE '^- \[[^ ~xb]\] ' "$plan" >/tmp/orchestrator-marker-hits.$$; then
+    while IFS= read -r hit; do
+      marker="${hit#*[}"
+      marker="${marker%%]*}"
+      printf 'FAIL: unsupported task marker [%s] in %s; use [ ], [~], [x], or [b] deferred:<owner>\n' "$marker" "$plan" >&2
+    done </tmp/orchestrator-marker-hits.$$
     status=1
   fi
   rm -f /tmp/orchestrator-marker-hits.$$
@@ -64,4 +68,4 @@ if [ "$status" -ne 0 ]; then
   exit "$status"
 fi
 
-printf 'PASS: all active track plans use only [~]/[x]/[b] task markers (%d plans checked)\n' "${#plans[@]}"
+printf 'PASS: all active track plans use only [ ], [~], [x], or [b] task markers (%d plans checked)\n' "${#plans[@]}"
