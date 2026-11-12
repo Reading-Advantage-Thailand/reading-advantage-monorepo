@@ -243,7 +243,7 @@ Phase 2 acceptance note, 2026-11-12:
 - Reviews A and B r2 pass at `af66a6d66`. The adversarial run passes. It kills 28 of 29 mutants. The survivor `m-x` dies under the case `drift_match_requires_whole_line` in `5293392b8`.
 - Open item F207 moves to Phase 3 by the PM decision of 2026-11-12. Open item F208 is fixed in this spec edit.
 
-## Phase 3: The gate is green on master
+## Phase 3: The gate is green on master [checkpoint: a02662e09]
 
 Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the registry entry in `measure/tracks.md`, and the track record. Tasks 3.0a and 3.0b change the exit 1 rule of `measure/doctor.sh`. The other tasks change no code path.
 
@@ -297,7 +297,7 @@ Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the regi
     - Review B: `measure/runs/doctor_gate_repair_20261112/review-b-p3-a284de0b0.json`. Verdict: pass. F207 is withdrawn. B214 is a Low residual. B215 is closed.
     - Review C: `measure/runs/doctor_gate_repair_20261112/review-c-p3-4d0b4e6b3.json`. Verdict: pass, not applicable (no route and no UI change).
     - Adversarial: `measure/runs/doctor_gate_repair_20261112/adversarial-p3-4d0b4e6b3.json`. Verdict: pass. 22 of 22 mutants killed (commit 4d0b4e6b3). The probe p3-24 survives as a residual. Gate line: `PASS: adversarial-testing gate passed`.
-- [b] 3.3 Phase acceptance at an immutable HEAD. Record `git rev-parse HEAD` and the review verdicts. No Critical or High finding stays open. deferred:phase-acceptance
+- [x] 3.3 Phase acceptance at an immutable HEAD. Record `git rev-parse HEAD` and the review verdicts. No Critical or High finding stays open. Accepted at `a02662e09` (phase acceptance pass, 2026-11-13).
   - The phase acceptance role runs after the task 3.4 record commit, at an immutable HEAD. The final acceptance records its result here.
 - [x] 3.4 Final task: (run at HEAD 4d0b4e6b3; record in commit 890c0f76a) the doctor gate exits 0 on master. Run the full doctor command through the heavy-run prefix at one HEAD:
   `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'`
@@ -310,6 +310,14 @@ Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the regi
     - Step exits: steps 1 to 3 exit 0; step 4 exits 2.
     - Seconds: the whole heavy-run command took 1530 s, with a lock wait of more than 600 s. The run did not time step 4 alone. The Phase 2 timing run measured step 4 at 175.150 s.
     - Run log: `measure/runs/doctor_gate_repair_20261112/doctor-run-4d0b4e6b3.log`. Record: `doctor-gate-evidence.md`.
+
+Phase 3 acceptance note, 2026-11-13:
+
+- Result file: `measure/runs/doctor_gate_repair_20261112/phase-acceptance-p3-a02662e09.json`.
+- Route: `nvidia/stepfun-ai/step-5-preview#high`. Status: pass. Audited head: `a02662e09cdda32755c855dd9a0aa6f0090b2407`.
+- Gate line: "PASS: phase-acceptance gate passed".
+- Reviews A and B pass at `a284de0b0`. Review C and the adversarial run pass at `4d0b4e6b3`. The Green gate passed at `a02662e09`.
+- Nonblocking findings N41 to N44. N41 (the task 3.1 grep check) and N42 (test-strategy.md line 143 and section 7.4) are closeout items by the PM decision of 2026-11-12 (decision 6), confirmed 2026-11-13.
 
 ## Verification commands
 
