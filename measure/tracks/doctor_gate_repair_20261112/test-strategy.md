@@ -1,11 +1,12 @@
 # Test strategy: doctor gate repair
 
 > **Track:** `doctor_gate_repair_20261112` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
-> **Scope:** Phase 1 (F411, the marker guard), Phase 2 (F421, the architecture verdict), Phase 3 (the gate is green on master). All tasks 1.1 to 3.4.
+> **Scope:** Phase 1 (F411, the marker guard), Phase 2 (F421, the architecture verdict), Phase 3 (the exit 1 rule of F207, then the gate is green on master). All tasks 1.1 to 3.4.
 > **Written:** 2026-11-12 at role base `0b3d04ac0` (the amendment commit). Model: claude-sonnet-5-5.
 > **Amended:** 2026-11-12 after the failed Phase 2 reviews (Review A F201 to F205, Review B F251, N1, N2) and the PM decision of 2026-11-12. Model: deepseek-flash.
+> **Amended (P3):** 2026-11-12 after the PM decision on F207. The amendment adds tasks 3.0a and 3.0b (sections 6.8a and 6.8b), the P3 cases (section 4.1), the P3 mutants (section 7.4), and the part A floor of 19. Model: claude-sonnet-5-5.
 > **Spec review:** pass at `measure/runs/doctor_gate_repair_20261112/spec-review-0b3d04ac0.json` (round 2, Kimi).
-> **No SHA in this file.** The strategy names no `phase_base_sha`. Section 1.5 names each capture point.
+> **One SHA in this file.** Section 1.5 records the `phase_base_sha` of Phase 3, which the orchestrator set. The other phases name no SHA. Section 1.5 names each capture point.
 > **No hash, no checksum, no manifest.** The track adds none (AGENTS.md, Hashing and Provenance Policy). Git commit identity is the only provenance.
 
 ## 1. Rules for the track
@@ -51,7 +52,9 @@
 - This file embeds no `phase_base_sha`. A value from before the commit of this strategy is not valid.
 - **Phase 1:** the orchestrator captures `git rev-parse HEAD` **after** the commit of this strategy and **after** any commit of a strategy log, and **before** task 1.1 (Red) starts. The captured commit must contain this file: `git cat-file -e <sha>:measure/tracks/doctor_gate_repair_20261112/test-strategy.md` exits 0.
 - **Phase 2:** capture after the Phase 1 acceptance commit and before task 2.1 starts.
-- **Phase 3:** capture after the Phase 2 acceptance commit and before task 3.1 starts.
+- **Phase 3:** `phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1`. The orchestrator set this value. It is the commit after the Phase 2 acceptance that adds the Phase 2 checkpoint and the F207 tasks. It is the scope base for the check below.
+  - This value predates the commit of the P3 amendment of this file. That commit writes only the track folder, so `doctor_out_of_scope_paths` stays 0. See question Q4.
+  - The first task of the phase is 3.0a (Red). Before 3.0a starts, the orchestrator confirms that `git log -1 --format=%s -- measure/tracks/doctor_gate_repair_20261112/test-strategy.md` prints `docs(measure): add the doctor p3 exit 1 strategy (track_id: doctor_gate_repair_20261112)`. The Red role then works from the amended strategy.
 - The orchestrator records each full value in the Red or first-task evidence of its phase.
 - Master is shared with other tracks. `git diff --name-only <phase_base_sha>..HEAD` (plan tasks 1.4 and 2.4, AC-7) lists the paths of every track and so fails for a reason that this track does not own. The gate is the per-commit scope check:
 
@@ -67,6 +70,7 @@
 - A count that measures work has a floor, stated before the loop runs. A loop over an empty set is a defect (A4). Each loop asserts its input size first.
 - A Red file fails at least one case at the base for the reason the task names. A case that passes at the base is a named characterization case. The Red evidence lists each one with its reason.
 - A Green run quotes the exit code, the case counts, and the labeled counts.
+- **The part A floor of P3.** Part A holds `part_a_cases=13` today. A run of `bash tests/orchestrator_doctor_gate.sh --part a` on 2026-11-12 printed `cases_total=13 cases_failed=0`. Task 3.0a adds 6 cases: the 3 cases of the plan and 3 cases of this strategy (section 4.1). The new floor is `part_a_floor=19`. The constant `PART_A_FLOOR` moves from 12 to 19 in the Red commit. The floor equals the count, so a deleted case fails the floor check (A4). The run with no argument holds `cases_total=31` (part A 19, part B 12).
 
 ### 1.7 Output contract of the two new test files (the strategy adds this)
 
@@ -74,7 +78,7 @@ The adversarial role must attribute a mutant to a case. Both new files therefore
 
 - one line per case: `CASE <name>: PASS` or `CASE <name>: FAIL (<reason>)`;
 - one summary line: `cases_total=<n> cases_failed=<n>`;
-- exit 1 when `cases_failed` is above 0, and exit 1 when `cases_total` is below the floor of its file (A4). The floor is `cases_total>=14` for the marker cases file and `cases_total>=12` for part A of the doctor gate file.
+- exit 1 when `cases_failed` is above 0, and exit 1 when `cases_total` is below the floor of its file (A4). The floor is `cases_total>=14` for the marker cases file. The floor of part A of the doctor gate file is `cases_total>=12` through Phase 2, and `cases_total>=19` from task 3.0a (section 1.6).
 
 Both files derive `ROOT` from `BASH_SOURCE` (the idiom of line 4 of the guard). They hold no absolute repository path. A scratch repository layout then tests the copy that sits beside it (section 7). The case-file copy rule: each case builds its own root, copies the script under test from its own `ROOT`, and removes the scratch root when it ends. No fixture enters `measure/tracks/`.
 
@@ -101,21 +105,21 @@ Both files derive `ROOT` from `BASH_SOURCE` (the idiom of line 4 of the guard). 
 |---|---|---|---|---|---|---|
 | P1 F411: the marker guard accepts the pending marker | **medium** | yes | yes | no | yes (small scope) | no |
 | P2 F421: the gate records the architecture verdict | **high** | yes | **yes (required)** | no | **yes (required)** | no |
-| P3 The gate is green on master | **low** | yes (owns the track-level run) | yes (owns the track-level run) | records "not applicable" | no | no |
+| P3 The exit 1 rule (tasks 3.0a, 3.0b), then the gate is green on master | **high** (tasks 3.1 to 3.4 stay low) | yes (owns the track-level run) | **yes (required)** | records "not applicable" | **yes (required)** | no |
 
 **Why P1 is medium.** The change loosens a gate. A predicate that is too wide hides a bad marker, and a predicate that is too narrow keeps the gate red for 57 plans. The change touches no product file. The blast radius is the plan-marker check of every active plan.
 
 **Why P2 is high.** The change turns the architecture step from a gating step into a recorded step. A defect there hides a real failure: a swallowed guard, a swallowed tool crash, or a call that rewrites the manifest. The installed closeout role reads the doctor exit code (spec section 1.3). A false green weakens every later closeout.
 
-**Why P3 is low.** The phase edits one registry status text and records reviews and one live run. It changes no script.
+**Why P3 is high.** Tasks 3.0a and 3.0b change `measure/doctor.sh`, the script of P2. The new rule decides when an exit 1 hides a real failure. A rule that is too loose repeats F207: a failed `cd` or a crash counts as a boundary verdict, and the gate exits 0. A rule that is too strict turns the gate red for a real boundary verdict. The installed closeout role reads the doctor exit code (spec section 1.3). The blast radius is small: one branch of one script. Tasks 3.1 to 3.4 edit one registry status text and record reviews and one live run. They change no script, so they stay low.
 
 **Review A (correctness) applies to every phase.** The reviews run at task 3.2 on the full track diff (plan). The orchestrator may also run Review A at the acceptance of P1 and P2 over the phase range. The default is the plan: one run at task 3.2. See question Q2.
 
-**Review B (security) applies to P1, P2, and P3 and is required for P2.** The scope is the two sentences of plan task 3.2: the gate must not hide a real failure, and the guard must not accept a marker that hides work. Section 6 lists the reading points.
+**Review B (security) applies to P1, P2, and P3 and is required for P2 and P3.** The scope is the two sentences of plan task 3.2: the gate must not hide a real failure, and the guard must not accept a marker that hides work. Section 6 lists the reading points.
 
 **Review C does not apply.** The track has no route, no UI, no API, and no message file. The guard FAIL and PASS lines and the DOCTOR lines are pinned strings. The tests assert them. Review C writes `review-c-<short-head>.json` with the verdict "not applicable" and that reason (plan task 3.2).
 
-**Adversarial testing applies to P1 (small) and P2 (required).** Both phases hold a script with a boolean outcome that a mutant can invert. Section 7 lists the mutants. P3 has no behavior to mutate.
+**Adversarial testing applies to P1 (small), P2 (required), and P3 (required).** Each phase holds a script with a boolean outcome that a mutant can invert. Section 7 lists the mutants. Section 7.4 lists the P3 mutants of the exit 1 rule. Tasks 3.1 to 3.4 have no behavior to mutate.
 
 **The UX browser review does not apply to any phase.** The track changes shell scripts, a catalog entry, a record file, and a registry line. No page, no route, and no component changes. Nothing renders in a browser.
 
@@ -131,6 +135,44 @@ Both files derive `ROOT` from `BASH_SOURCE` (the idiom of line 4 of the guard). 
 | AC-6 | the gate record is complete | `bash tests/orchestrator_doctor_gate.sh --part b` | artifact test |
 | AC-7 | no product file changed | the per-commit scope check of section 1.5 | command run |
 | AC-8 | the registry carries the track | `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` | artifact check |
+
+### 4.1 Cases of AC-5 for the FR-3 exit 1 rule (P3, task 3.0a)
+
+The PM rule of 2026-11-12, quoted word for word: "doctor.sh counts exit 1 as a boundary verdict only when the CLI output holds its verdict line; exit 1 without that line is a tool failure (gate exit 1). Add the m-cd case."
+
+The verdict literal in every case is `architecture check: debt-change (files=12, findings=3, parseErrors=0)`. The test copies it from the template at `packages/architecture-enforcement/src/architecture-check.ts` line 278. The stub prints it. The test never computes it with the code under test.
+
+The tool-failure pair for code 1 is these two lines, word for word:
+
+- `ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict`
+- `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`
+
+The boundary pair for code 1 is these two lines, word for word:
+
+- `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110`
+- `DOCTOR: the three structural guard steps gate this exit code`
+
+Every tool-failure case also asserts that the output holds no boundary pair line, so the gate line `DOCTOR: the three structural guard steps gate this exit code` is absent (R15). Every boundary case asserts that the output holds no `tool failure` text and no `did not produce a boundary verdict` text.
+
+| Case (the name states the gate exit) | Setup | Gate exit | Printed lines | At the base |
+|---|---|---|---|---|
+| 1 `tsx_exit_1_no_verdict_gate_exits_1` | The guards pass. The stub `tsx` exits 1 and prints nothing on either stream. The case first asserts `tsx_message_set=0` (no message variable leaks from an earlier case). | 1 | the tool-failure pair for code 1 | **fails** (the base exits 0 and prints the boundary pair) |
+| 2 `step4_cd_fails_gate_exits_1` (the m-cd case) | The guards pass. The stub `tsx` exists, exits 1, and prints the whole verdict line on stdout (a trap). The case removes `<tmp>/packages`, so the `cd` of the step 4 command fails. It asserts `arch_dir_absent=1` before the run and `tsx_calls=0` after the run. | 1 | the tool-failure pair for code 1 | **fails** (the base exits 0 and prints the boundary pair) |
+| 3 `tsx_exit_1_verdict_line_gate_exits_0` (the positive control) | The guards pass. The stub `tsx` exits 1 and prints three lines on stdout: `build output line`, the whole verdict line, and `architecture policy: v2 (status=ok, default=deny)`. The verdict line sits in the middle. | 0 | the boundary pair for code 1 | passes (characterization) |
+| 4 `tsx_exit_1_verdict_in_longer_line_gate_exits_1` | A loop with `fixtures_checked=2`, asserted before the loop. The stub exits 1. Fixture A prints `crash: ` before the verdict line on the same line. Fixture B prints ` (uncaught exception)` after the verdict line on the same line. | 1 for each fixture | the tool-failure pair for code 1 | **fails** (the base exits 0) |
+| 5 `tsx_exit_1_malformed_verdict_gate_exits_1` | A loop with `shapes_checked=7`, asserted before the loop. The stub exits 1. Shape a: `architecture check: failed` (prefix only). Shape b: empty counts, `(files=, findings=, parseErrors=)`. Shape c: non-digit counts, `(files=x, findings=y, parseErrors=z)`. Shape d: one count missing, `(files=12, findings=3)`. Shape e: empty status, `architecture check:  (files=12, findings=3, parseErrors=0)`. Shape f: a status with a space, `debt change`. Shape g: a capital letter, `Architecture check: debt-change (files=12, findings=3, parseErrors=0)`. | 1 for each shape | the tool-failure pair for code 1 | **fails** (the base exits 0) |
+| 6 `tsx_exit_2_verdict_line_gate_exits_1` | The guards pass. The stub exits 2 and prints the whole verdict line on stdout. | 1 | `ARCHITECTURE: step 4 exits 2; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1` | passes (characterization of the unchanged exit 2 rule) |
+
+**Cases 1, 2, and 3 are the cases of plan task 3.0a.** Cases 4, 5, and 6 are new in this strategy. Case 4 is Red, not only adversarial. The whole-line rule is in plan task 3.0b, and the P2 mutant `m-x` survived until a late case killed it. Case 5 pins the three counts that FR-3 and plan task 3.0b require. Case 6 pins the rule that the match changes no exit 2 rule.
+
+**The existing cases that the P3 rule changes (a changed contract).** A stub exit 1 with no verdict line is now a tool failure. Three existing part A cases use that fixture. The Red commit must change them. If the Red commit leaves them, task 3.0b fails the Green run (R27).
+
+- `tsx_exit_1_gate_exits_0` keeps its name. Its stub keeps exit 1 and now prints the whole verdict line through the existing stderr message variable `DOCTOR_GATE_TSX_MESSAGE`. It stays the probe of the stderr stream.
+- `architecture_line_shows_code` sets the same stderr message for its code 1 run. It then also asserts the boundary clause `; the owner of the remaining drift is architecture_ci_input_pin_20261110` for code 1. Without this change the printed code 1 comes from the tool-failure line and the case stops pinning the boundary line.
+- `no_write_in_root` sets the same stderr message, so the file list check covers the boundary path.
+- `tsx_exit_0_gate_exits_0` stays unchanged. An exit 0 with no verdict line still exits 0 (the orchestrator default, spec FR-3). The PM has not changed the exit 0 rule.
+
+**The stub gains a stdout message.** The real CLI writes the verdict line to stdout (`architecture-check-cli.ts` line 41) and the error line to stderr (line 46). The stub today writes only to stderr. The new variable `DOCTOR_GATE_TSX_STDOUT` makes the stub print its value on stdout, one line for each line of the value. Case 3 and case 6 use stdout. The changed `tsx_exit_1_gate_exits_0` uses stderr. The two streams are then both pinned. Each new case calls `reset_tsx` first, and `reset_tsx` unsets both message variables (R26).
 
 ## 5. Risks and defenses
 
@@ -157,6 +199,13 @@ Both files derive `ROOT` from `BASH_SOURCE` (the idiom of line 4 of the guard). 
 | R19 | P2 | The full run kills the machine. | The architecture check runs outside `HEAVY` and the Postgres process dies. | Every architecture run, including the timing run, goes through `HEAVY` (finding F4). |
 | R20 | P3 | The registry overstates (A6). | The status says "green at <sha>" for a sha with no green run. | The registry sha is the HEAD of a recorded run with exit 0. Section 6, P3 holds the detector. |
 | R21 | all | A hidden product change. | A path under `apps/`, `packages/`, or `services/` changes. | The per-commit scope check of section 1.5. |
+| R22 | P3 | An exit 1 with no boundary verdict still gates as a boundary verdict (F207). | A failed `cd`, an uncaught Node exception, or a crash gives exit 1 and the gate exits 0. | Case 1 (`tsx_exit_1_no_verdict_gate_exits_1`) and case 2 (`step4_cd_fails_gate_exits_1`, the m-cd case). |
+| R23 | P3 | The verdict match is too loose. | A prefix, a substring, a line with no counts, or a line with empty counts counts as the verdict line. | Case 4 (whole line) and case 5 (`shapes_checked=7`). |
+| R24 | P3 | The verdict match is too strict or reads the wrong stream. | A real boundary verdict turns the gate red. The match reads one stream only, or one line only. | Case 3 (verdict on stdout, in the middle of three lines) and the changed `tsx_exit_1_gate_exits_0` (verdict on stderr). |
+| R25 | P3 | The stub format and the real CLI format drift apart. | `formatArchitectureCheckReport` changes its line. The stub cases stay green, and the real gate turns red. | The artifact check of section 6.8b (`format_source_hits=1`). The red direction is loud and safe. |
+| R26 | P3 | A message variable leaks between cases. | `run_case` does not unset the exported `DOCTOR_GATE_TSX_MESSAGE`. An earlier case leaves a verdict line, and case 1 sees it. | Each new case calls `reset_tsx` first. Case 1 asserts `tsx_message_set=0`. |
+| R27 | P3 | An old case contradicts the new rule. | `tsx_exit_1_gate_exits_0` keeps a stub exit 1 with no line, so the Green run fails or the Green role edits the test. | The Red commit changes the three old cases (section 4.1). The Green commit changes `measure/doctor.sh` only. |
+| R28 | P3 | The new rule changes another rule. | The match applies to exit 0 or to exit 2, or the printed text of a rule changes. | `tsx_exit_0_gate_exits_0` (unchanged) and case 6 (`tsx_exit_2_verdict_line_gate_exits_1`). |
 
 ## 6. The per-phase strategy
 
@@ -285,7 +334,7 @@ The file accepts `--part a`, `--part b`, and no argument (both parts). See findi
 | `architecture_line_shows_code` | the stub exits 0, then 1 | the first run holds `step 4 exits 0;`, the second holds `step 4 exits 1;` (kills a hard-coded code) | fails |
 | `no_write_in_root` | the guards pass, the stub `tsx` exits 1 | the sorted `find <tmp> -type f` list before and after the run is equal, apart from `tsx.log` | passes (characterization) |
 
-`cases_total` for part A is at least 12 (2 `tsx` exit cases, 3 guard cases, 2 exit-2 cases, the 127 case, 3 added cases, and the characterization case). The floor in section 1.7 is 12.
+`cases_total` for part A is at least 12 (2 `tsx` exit cases, 3 guard cases, 2 exit-2 cases, the 127 case, 3 added cases, and the characterization case). The floor in section 1.7 is 12 through Phase 2. Task 3.0a raises it to 19 (section 1.6).
 
 **Part B rules (the record).** Part B reads the record with the `track_dir_resolve` helper of the guard (archive first, then `measure/tracks`), so the test survives the archive move (R18, A9). It keeps the plan checks:
 
@@ -374,9 +423,62 @@ and the full doctor run through `HEAVY` (section 1.1), and the per-commit scope 
 
 Restore line (unchanged): the architecture step gates the doctor exit code again when `architecture_ci_input_pin_20261110` closes its pin refresh task 1.4d. Owner: the Monorepo orchestrator. The orchestrator watches the close of task 1.4d and opens the follow-up change.
 
-### P3: the gate is green on master
+### P3: the exit 1 rule, then the gate is green on master
 
-**Risk: low.** Review A and Review B own the track-level run at task 3.2. Review C records "not applicable". Adversarial and the browser review do not apply.
+**Risk: high for tasks 3.0a and 3.0b. Low for tasks 3.1 to 3.4.** Review A, Review B (required), and adversarial (required) apply. Review C records "not applicable". The browser review does not apply (section 3).
+
+#### 6.8a Task 3.0a: Red
+
+**RED_TEST_COMMAND:**
+
+```bash
+bash tests/orchestrator_doctor_gate.sh --part a
+```
+
+**Expected result at the base.** Exit 1. The base is the `measure/doctor.sh` of P2. It maps every exit 1 to a boundary verdict. The output holds `cases_total=19 cases_failed=4` and `failed_cases=tsx_exit_1_no_verdict_gate_exits_1,step4_cd_fails_gate_exits_1,tsx_exit_1_verdict_in_longer_line_gate_exits_1,tsx_exit_1_malformed_verdict_gate_exits_1`. The new cases run after `drift_match_requires_whole_line`, in the order of section 4.1.
+
+**Characterization cases (they pass at the base).**
+
+- `tsx_exit_1_verdict_line_gate_exits_0` and `tsx_exit_2_verdict_line_gate_exits_1`. The base and the new rule give the same result for these two fixtures.
+- The 13 existing cases. Three of them hold the changed fixture of section 4.1.
+
+Red is not a syntax error and not a copy error. `bash -n tests/orchestrator_doctor_gate.sh` exits 0, and the run prints `cases_total=19`. A Red run with `cases_failed` other than 4 goes back to the Red role.
+
+**The Red commit holds these changes, in `tests/orchestrator_doctor_gate.sh` only.**
+
+- `PART_A_FLOOR` moves from 12 to 19.
+- The stub `tsx` helper prints `DOCTOR_GATE_TSX_STDOUT` on stdout. `reset_tsx` unsets both message variables.
+- The three old cases of section 4.1 print the whole verdict line for their stub exit 1.
+- The six new cases of section 4.1 join `run_part_a`.
+- The m-cd case removes `<tmp>/packages` and asserts `arch_dir_absent=1` before the run.
+
+**Falsification condition.** A `measure/doctor.sh` that keeps the base rule fails cases 1, 2, 4, and 5. A `measure/doctor.sh` that exits 1 for every exit 1 fails case 3 and `tsx_exit_1_gate_exits_0`. A test that deletes a case fails the floor check of 19 (A4).
+
+**Red commit:** `test(measure): pin the doctor exit 1 verdict rule (track_id: doctor_gate_repair_20261112)`. Test file only.
+
+#### 6.8b Task 3.0b: Green
+
+**GREEN_TEST_COMMAND:**
+
+```bash
+bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh
+```
+
+All three exit 0. The first command prints `cases_total=31 cases_failed=0` (part A 19, part B 12). The second prints `cases_failed=0`. The third prints `PASS: measure anti-pattern catalog exists with A1-A15`.
+
+**The Green commit changes `measure/doctor.sh` only.** It changes the exit 1 rule only: exit 1 counts as a boundary verdict only when the step 4 output holds the whole verdict line (the pattern of plan task 3.0b, matched as a whole line). It changes no test. The exit 0 rule, the exit 2 rules, and the printed text of every rule stay as FR-3 states. A case that the Green role cannot pass goes back to the strategy role, and the Green role does not edit the case.
+
+**The artifact check of R25.** It reads the template that the stub copies, and it proves that the real line shape still exists in the source:
+
+```bash
+grep -cF 'architecture check: ${report.status} (files=${report.filesScanned}, findings=${report.findings.length}, parseErrors=${report.parseErrors.length})' packages/architecture-enforcement/src/architecture-check.ts
+```
+
+It prints `1` and exits 0 (`format_source_hits=1`). A hit count of 0 means the real format changed. The gate then turns red for a real boundary verdict, and the strategy role revises the verdict literal.
+
+**Live proof limit.** The real CLI exits 2 on master today (M11), so no live run reaches the exit 1 branch. The stub cases are the proof of the exit 1 rule. They are function-level live tests with test doubles. Task 3.4 proves the known-drift exit 2 path live. `measure/doctor.sh` itself is not part of the Green command. It runs only at task 3.4 through `HEAVY`.
+
+**Commit:** `fix(measure): count doctor exit 1 only with the verdict line (track_id: doctor_gate_repair_20261112)`.
 
 #### 6.9 Task 3.1: Green, the registry status
 
@@ -398,13 +500,17 @@ Both exit 0. The `grep` returns one hit. The command `grep -c 'new (spec and pla
 
 **A6 rule (the registry must not overstate).** The status text names `<short-sha>`. That sha must be the HEAD that the saved output of a full doctor run with exit 0 records (the run of task 2.4). The detector: the `- HEAD:` line of `doctor-gate-evidence.md` and the sha in the registry line are equal at the time of task 3.1. Task 3.1 runs before task 3.4. The status text is therefore true only if the run of task 2.4 exited 0. If task 3.4 or an earlier run exits non-zero, the orchestrator corrects the registry line in the same turn (A6). The registry entry holds no other change (plan task 3.1).
 
+**P3 correction of the A6 rule (finding F12).** Task 3.0b changes `measure/doctor.sh` after the run of task 2.4. That run therefore does not prove the gate of the new script. The registry sha must be the HEAD of a full run with exit 0 that used the task 3.0b script. No such run exists before task 3.4. **Default:** the orchestrator writes the task 3.1 status after the task 3.4 run and uses the HEAD of that run. Only the order of two commits changes (the record commit of 3.4, then the registry commit of 3.1). Plan task numbers and commit texts stay.
+
 **Commit:** `docs(measure): state the doctor gate track status (track_id: doctor_gate_repair_20261112)`.
 
 #### 6.10 Task 3.2 and 3.3: reviews and acceptance
 
 - Review A and Review B run on the full track diff at one HEAD. Each result file goes to `measure/runs/doctor_gate_repair_20261112/review-<a|b|c>-<short-head>.json` (plan task 3.2). Review C holds the verdict "not applicable" and the reason in section 3.
-- The adversarial result goes to `measure/runs/doctor_gate_repair_20261112/adversarial-<phase>-<short-head>.json` for P1 and for P2.
+- The adversarial result goes to `measure/runs/doctor_gate_repair_20261112/adversarial-<phase>-<short-head>.json` for P1, P2, and P3 (`adversarial-p3-<short-head>.json`). The P3 run uses the mutants of section 7.4. A later change of `measure/doctor.sh` or of `tests/orchestrator_doctor_gate.sh` invalidates the kills, and the run repeats.
 - No Critical and no High finding stays open at task 3.3.
+
+**Review B reading points (P3).** (1) The pattern holds the status and all three counts, and no count accepts an empty string. (2) The match is a whole-line match. (3) The match reads the same merged output that the exit 2 rule reads, so it sees both streams. (4) A `grep` with no hit does not stop the script under `set -e`. The tool-failure lines print. (5) The exit 0 rule and the exit 2 rules are unchanged. An exit 0 with no verdict line still exits 0 (orchestrator default, spec FR-3). Review B records it as a residual. (6) The residual that a tool could print a whole verdict line and then fail. The real CLI prints the report and then returns its code, so the residual is small. Review B records it. (7) The `cd` of the step 4 command is inside the capture subshell. Its error text goes to the stderr of the gate, not to the capture. The case `step4_cd_fails_gate_exits_1` proves the gate exit 1.
 
 #### 6.11 Task 3.4: the final run
 
@@ -414,7 +520,7 @@ Both exit 0. The `grep` returns one hit. The command `grep -c 'new (spec and pla
 HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'
 ```
 
-**CLOSEOUT_GATE (track):** the exit code is 0. The output holds the step 1 PASS line, no `FAIL: unsupported task marker` line, the step 3 PASS line, the ARCHITECTURE line, and the `DOCTOR:` line. Then `bash tests/orchestrator_doctor_gate.sh` exits 0 at the same HEAD (the record is current), and the per-commit scope check over the whole track gives `doctor_out_of_scope_paths=0`. The note records `git rev-parse HEAD`, the four step results, the verdict line, and `step4_seconds`. The evidence class is automated. On exit 124, stop (plan rule 20).
+**CLOSEOUT_GATE (track):** the exit code is 0. The output holds the step 1 PASS line, no `FAIL: unsupported task marker` line, the step 3 PASS line, the ARCHITECTURE line, and the `DOCTOR:` line. Then `bash tests/orchestrator_doctor_gate.sh` exits 0 at the same HEAD (the record is current), and the per-commit scope check over the whole track gives `doctor_out_of_scope_paths=0`. The note records `git rev-parse HEAD`, the four step results, the verdict line, and `step4_seconds`. The evidence class is automated. On exit 124, stop (plan rule 20). The run proves the exit 2 known-drift path of the task 3.0b script live. It does not reach the exit 1 branch (section 6.8b). The note says so.
 
 **Commit:** `docs(measure): record the doctor gate run (track_id: doctor_gate_repair_20261112)`, with this track folder.
 
@@ -424,6 +530,7 @@ HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIG
 
 - P1: `<scratch>/tests/orchestrator_marker_vocabulary.sh` (the mutant), `<scratch>/tests/orchestrator_marker_vocabulary_cases.sh` (an unchanged copy).
 - P2: `<scratch>/measure/doctor.sh` (the mutant), `<scratch>/tests/orchestrator_doctor_gate.sh` (an unchanged copy), run with `--part a`.
+- P3: the same layout as P2. The test copy is the P3 version of `tests/orchestrator_doctor_gate.sh` (19 cases in part A). The mutant file is a copy of the task 3.0b `measure/doctor.sh` with one edit. Run with `--part a`.
 
 It runs the copy of the test file. A mutant is killed when the named case prints `CASE <name>: FAIL` and the summary shows `cases_failed` above 0. This works because both test files derive `ROOT` from `BASH_SOURCE` and copy the script under test from beside themselves (section 1.7). A mutant that no case kills is a finding. A mutant that breaks the harness (a syntax error in the mutant) is not a kill. The role checks that the mutant file passes `bash -n` first.
 
@@ -487,6 +594,37 @@ The adversarial role also edits a scratch copy of the record, never the real one
 | the owner line names another track | the owner line match |
 | the file is absent | the file check (`--part b` exits 1) |
 
+### 7.4 P3 mutants (the exit 1 rule of doctor.sh)
+
+The case names are the short names of section 4.1: case 1 `tsx_exit_1_no_verdict_gate_exits_1`, case 2 `step4_cd_fails_gate_exits_1`, case 3 `tsx_exit_1_verdict_line_gate_exits_0`, case 4 `tsx_exit_1_verdict_in_longer_line_gate_exits_1`, case 5 `tsx_exit_1_malformed_verdict_gate_exits_1`, case 6 `tsx_exit_2_verdict_line_gate_exits_1`. The count of mutants is `p3_mutants=22` (rows p3-01 to p3-22 below). The role runs each one and reports `p3_mutants_killed=<n>`.
+
+| ID | Mutant | Killed by |
+|---|---|---|
+| p3-01 | the base rule: every exit 1 is a boundary verdict | case 1 and case 2 (and cases 4 and 5) |
+| p3-02 | the m-cd mutant: a failed `cd` counts as a boundary verdict | case 2 |
+| p3-03 | every exit 1 is a tool failure (the rule is removed) | case 3 and `tsx_exit_1_gate_exits_0` |
+| p3-04 | a prefix-only match, `grep -qF 'architecture check:'` or `^architecture check: ` | case 5, shape a |
+| p3-05 | a count pattern that accepts no digits, `[0-9]*` | case 5, shape b |
+| p3-06 | a count pattern `.*`, or a pattern that checks `files=` only | case 5, shapes c and d |
+| p3-07 | the third count (`parseErrors`) is dropped from the pattern | case 5, shape d |
+| p3-08 | a status pattern that accepts an empty status, `[^ ]*` | case 5, shape e |
+| p3-09 | a status pattern that accepts a space, `.+` | case 5, shape f |
+| p3-10 | a case-fold match, `grep -i` | case 5, shape g |
+| p3-11 | a match that is not whole-line (no `-x`, no anchors) | case 4, both fixtures |
+| p3-12 | a match anchored at the start only | case 4, fixture B |
+| p3-13 | a match anchored at the end only | case 4, fixture A |
+| p3-14 | a match against stdout only (the capture drops `2>&1`, or uses `2>/dev/null`) | `tsx_exit_1_gate_exits_0` (verdict on stderr) |
+| p3-15 | a match against stderr only (`2>&1 >/dev/null`) | case 3 (verdict on stdout) |
+| p3-16 | a match against the first line only (`head -n 1`), or the last line only (`tail -n 1`) | case 3 (verdict in the middle of three lines) |
+| p3-17 | a pattern that never matches (a BRE with `\(`, or an unescaped bracket) | case 3 and `tsx_exit_1_gate_exits_0` |
+| p3-18 | the match runs under `set -e` with no guard, so a no-hit stops the script before the tool-failure lines print | case 1 and case 2 (line assertions) |
+| p3-19 | the exit 1 tool-failure path prints the boundary pair, or the boundary path prints the tool-failure pair | case 1, case 2, case 4, case 5 (negative assertions), and case 3 |
+| p3-20 | the verdict match also applies to exit 0 (an exit 0 with no verdict line gates) | `tsx_exit_0_gate_exits_0` (unchanged) |
+| p3-21 | the verdict match also applies to exit 2 (an exit 2 with a verdict line is a boundary verdict) | case 6 |
+| p3-22 | a test mutant: `reset_tsx` does not unset the message variables, so an earlier verdict line leaks into case 1 | the `tsx_message_set=0` assertion of case 1 |
+
+A mutant that no case kills is a finding. The role checks `bash -n` on each mutant first. A prefix pattern combined with `-x` is not a mutant: the pattern never matches, and p3-17 covers it.
+
 ## 8. Findings and questions for the orchestrator
 
 - **F1 (Major, plan task 2.1, case `tsx_exit_127_gate_exits_1`): the 127 case cannot use the normal `PATH`.** The plan sets `PATH=<tmp>/bin:$PATH`, and says an empty `<tmp>/bin` gives 127. `pnpm` lives in `/home/daniebo/.local/bin`, so the real `pnpm` is found and the case runs the real check, with an unknown exit code and a heavy run. Rule: the case uses `PATH=<tmp>/bin:/usr/bin:/bin` and asserts that no step 4 tool exists at `<tmp>/node_modules/.bin/tsx` (section 6.5). This is a plan correction. It does not change a pinned string.
@@ -500,6 +638,16 @@ The adversarial role also edits a scratch copy of the record, never the real one
 - **Q1 (PM, decided 2026-11-12): option (C) of spec D-3.** The doctor gate records the architecture verdict and does not gate on it. The PM decided Q1, quoted word for word: "1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision." Option 2 holds the known manifest drift as the recorded drift, and it keeps every other CLI exit 2 a tool failure. The alternative, option (A), stays inactive (section 9).
 - **Q2 (orchestrator): when do Review A and Review B run?** **Default:** once, at task 3.2, on the full track diff (the plan). The orchestrator may add a Review B run at the P2 acceptance, because P2 is high risk.
 - **Q3 (orchestrator): the strategy adds cases to both test files** (section 6.1 and section 6.5). **Default:** the Red roles write all the added cases. A plan case that the Red role cannot write as stated goes back to the strategy role.
+
+**P3 findings and questions (PM decision on F207, 2026-11-12).**
+
+- **F9 (Major, plan task 3.0a): three existing cases contradict the new rule.** `tsx_exit_1_gate_exits_0`, `architecture_line_shows_code`, and `no_write_in_root` use a stub exit 1 with no verdict line. After task 3.0b that fixture is a tool failure, so the Green run would fail. **Default:** the Red commit changes the fixture of the three cases (section 4.1). The Green role edits no test.
+- **F10 (Minor, plan task 3.0a): the stub prints only on stderr, and the real CLI prints the verdict on stdout.** A stderr-only stub cannot kill a mutant that reads stderr only. **Default:** the stub gains `DOCTOR_GATE_TSX_STDOUT`. Case 3 and case 6 use stdout, and `tsx_exit_1_gate_exits_0` keeps stderr.
+- **F11 (Minor, plan task 3.0a): the plan lists 3 cases, and the strategy adds 3.** Cases 4, 5, and 6 of section 4.1 pin the whole-line rule, the three counts, and the unchanged exit 2 rule. The part A floor is 19, not 16. **Default:** adopt the six cases (Q3 of this section already lets the Red role write the cases of the strategy).
+- **F12 (Minor, plan task 3.1): the registry status names a sha before the new script has a green run.** See the P3 correction of the A6 rule in section 6.9. **Default:** write the registry status after the task 3.4 run.
+- **F13 (Minor, test file): `run_case` does not unset `DOCTOR_GATE_TSX_MESSAGE`.** The variable stays exported between cases. **Default:** each new case calls `reset_tsx` first, and case 1 asserts `tsx_message_set=0`.
+- **F14 (Nit, spec FR-3): an exit 0 with no verdict line still exits 0.** The PM decision names exit 1 only. **Default:** keep it. The unchanged case `tsx_exit_0_gate_exits_0` pins it (mutant p3-20). A PM change to the exit 0 rule needs a new strategy revision.
+- **Q4 (orchestrator): the `phase_base_sha` of Phase 3 predates the amended strategy.** The orchestrator set `6a059f1a909ce58db31533a8c81a28db62626fc1`, the commit before this amendment. **Default:** keep that value as the scope base, and confirm the amendment commit through the `git log -1 --format=%s` check of section 1.5 before task 3.0a. If the orchestrator wants a base that contains the amendment, it captures `git rev-parse HEAD` after the amendment commit and before task 3.0a, and it records the new value in section 1.5.
 
 ## 9. Inactive branch: option (A)
 
@@ -516,13 +664,13 @@ The catalog is `measure/anti-patterns.md` (A1 to A16). Per phase, each row names
 
 | ID | P1 | P2 | P3 | Defense and falsification |
 |---|---|---|---|---|
-| A1 | yes | yes | no | Exit codes are integers (`gate_exit`, the case exit), never a substring. The catalog test does not read the A8 text, so the A8 token detector reads it. Falsification: a guard that prints PASS and exits 1 passes a substring-only test. |
+| A1 | yes | yes | yes | Exit codes are integers (`gate_exit`, the case exit), never a substring. In P3 each case asserts `gate_exit` as an integer next to the printed lines. The catalog test does not read the A8 text, so the A8 token detector reads it. Falsification: a guard that prints PASS and exits 1 passes a substring-only test. |
 | A2 | no | no | no | No publish gate in this track. |
-| A3 | yes | yes | yes | Every count is `label=<n>`: `cases_total`, `cases_failed`, `plans_checked`, `fail_lines`, `markers_checked`, `codes_checked`, `tsx_calls`, `a8_tokens`, `step4_seconds`, `doctor_out_of_scope_paths`. A count check parses the label. Falsification: a date or a bare number passes a count check. |
-| A4 | yes | yes | no | Floors on `cases_total`. Each loop asserts its size first. Every exit-0 case has a plan count of at least 1. The 127 case asserts `tsx_absent=1`. The guard failure cases assert `tsx_calls=0` against a fixture where the control writes a call. Falsification: a loop runs over an empty list, or a case passes with a real executable. |
+| A3 | yes | yes | yes | Every count is `label=<n>`: `cases_total`, `cases_failed`, `plans_checked`, `fail_lines`, `markers_checked`, `codes_checked`, `tsx_calls`, `a8_tokens`, `step4_seconds`, `doctor_out_of_scope_paths`, and in P3 `part_a_floor`, `shapes_checked`, `fixtures_checked`, `tsx_message_set`, `arch_dir_absent`, `format_source_hits`, `p3_mutants`. A count check parses the label. Falsification: a date or a bare number passes a count check. |
+| A4 | yes | yes | yes | In P3 the part A floor is `part_a_floor=19`, the loops assert `shapes_checked=7` and `fixtures_checked=2` first, and the m-cd case asserts `arch_dir_absent=1` and `tsx_calls=0`. Floors on `cases_total`. Each loop asserts its size first. Every exit-0 case has a plan count of at least 1. The 127 case asserts `tsx_absent=1`. The guard failure cases assert `tsx_calls=0` against a fixture where the control writes a call. Falsification: a loop runs over an empty list, or a case passes with a real executable. |
 | A5 | yes | yes | yes | A plan note quotes the exit code and the labeled counts. A record STEP line needs the PASS line in the saved output. Part B cross-checks the codes. Falsification: a record says `exit 0` for a step that exited 1. |
 | A6 | no | no | yes | The registry sha is the HEAD of a run with exit 0 (section 6.9). Falsification: the registry says green for a sha with no green run. |
-| A7 | yes | no | no | The marker loop holds near-misses (`X`, `!`, `-`, `.`, `1`, `a`). No filter uses a bare word as an exclusion token. Falsification: a near-miss marker passes the guard. |
+| A7 | yes | no | yes | In P3 the shape loop of case 5 holds near-misses of the verdict line (prefix only, empty counts, one count missing, a capital letter). The marker loop holds near-misses (`X`, `!`, `-`, `.`, `1`, `a`). No filter uses a bare word as an exclusion token. Falsification: a near-miss marker passes the guard. |
 | A8 | yes | no | no | The subject of Phase 1. The guard and the A8 text state the same set {`[ ]`, `[~]`, `[x]`, `[b]`}. Falsification: the A8 token detector prints `a8_tokens` below 4, or the guard rejects a marker of the set. The pending marker stays a closeout defect per track. |
 | A9 | yes | yes | no | Part B resolves the record with `track_dir_resolve`, so the archive move does not break it. The case files use fixture ids that match no repository track. Falsification: Part B fails after the closeout move. |
 | A10 | no | no | no | No TypeScript symbol changes. `build-graph update` is not needed. |
@@ -550,7 +698,11 @@ bash tests/orchestrator_doctor_gate.sh --part a
 bash tests/orchestrator_doctor_gate.sh --part a
 # P2 Green 2.3 and closeout 2.4
 bash tests/orchestrator_doctor_gate.sh
-# P3 Green 3.1
+# P3 Red 3.0a (exit 1 at the base: cases_total=19 cases_failed=4)
+bash tests/orchestrator_doctor_gate.sh --part a
+# P3 Green 3.0b (exit 0: cases_total=31 cases_failed=0 for the first command)
+bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh
+# P3 Green 3.1 (after the task 3.4 run, finding F12)
 grep -n 'implemented (doctor gate green at' measure/tracks.md && bash tests/orchestrator_catalog.sh
 # P2 and P3 full run (heavy), tasks 2.2, 2.4, 3.4
 HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'
