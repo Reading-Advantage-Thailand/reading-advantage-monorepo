@@ -3268,7 +3268,7 @@ for every other track.
     -26.86 dBFS and fails; `wa-pip.mp3` has a noise floor of -75.48 dBFS and passes; `wa-net.mp3`
     holds quiet edges at -76.14 and -inf dBFS. No committed Red test was edited by this role.
     Evidence class: automated.
-- [x] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2. Commits: `fa8a127c7`, `3243b7020`, `1564b6da6`, `1a612361a`.
+- [x] 5.4 Stage 2 pre-check runner and one rubric for each kind (word cut, phoneme, song, video, picture, book audio). Calibrate on the known bad files (BA1 "Hello", `04-n.mp3`, C1W2 cut 1, the "One sun" thumbnail) and one file that Daniel passed. Name the model and its price, and log them in the cost ledger before each run. Test: AC-11.2. Commits: `fa8a127c7`, `3243b7020`, `1564b6da6`, `1a612361a`. The calibration ran for the picture kind only. Deferred:daniel: the calibration of the word cut, phoneme, song, video, and book audio rubrics (PM decision 1b of 2026-11-12: a metered audio model does not run; stage 1 covers audio until then).
   - Red evidence (task 5.4). Role base `1bc95f41828c0360e2c6cdfb27a84ffcbd84a07f`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The Red command is the P5 `RED_TEST_COMMAND` of
     the strategy (test-strategy.md line 946), under heavy-run p1, in the foreground. It exits 1.
@@ -3553,6 +3553,14 @@ for every other track.
     names no text kind, so no stage 2 text rubric is needed. The picture kind is the only stage 2
     kind that is not deferred:daniel, and it has run with two models. Task 5.5 is `[x]`, with the
     deferred audio and video part named on the task line.
+  - Send record (task 5.5), 2026-11-12: the orchestrator sent the PM return list in its report to
+    the PM after the r9 record (the model 2 run line of 09:36). The report held the 13 stage 1
+    failures: 3 book audio files outside the loudness target, and `1-hello-slow.mp3` clipped at
+    21.133 s; the 9 phoneme files on the noise floor, 7 of them also outside the loudness target;
+    and `song.mp3` outside the loudness target and clipped at 76.095 s, the recorded deviation.
+    The report also held the 8 combined stage 2 picture failures with the model that failed each.
+    The list sits in `measure/runs/storytime_app_rebuild_20261025/stage-log-w01.md` under "The PM
+    return list".
 - [x] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5). Commit `a3ea15b91`. Daniel's look copy is a tagged no-traffic revision (PM 2026-11-12), deferred:daniel-deploy-word.
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
     base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
