@@ -1,0 +1,98 @@
+# The Cloud Build file of the Accounting intake job and its scheduler.
+#
+# No workflow runs this file. The session runs it after Daniel's deploy word
+# for the intake start (plan task 9.7), with the six substitution values on
+# the `gcloud builds submit --substitutions=...` command line. The push file
+# `cloudbuild.yaml` holds no job step and no scheduler step.
+#
+# The six substitutions _ACCOUNTING_IMAGE, _ACCOUNTING_DRIVE_FOLDER_ID,
+# _ACCOUNTING_INTAKE_ACTOR_ID, _ACCOUNTING_INTAKE_COMPANY_ID,
+# _ACCOUNTING_DUPLICATE_SCAN_CAP, and _ACCOUNTING_EXTRACTION_MODEL hold no
+# default here: every value arrives on the submit command line, so no Drive
+# id and no model id enter git (FR-12).
+
+steps:
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "guard-intake-values"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        if [ -z "${_ACCOUNTING_IMAGE}" ]; then
+          echo "ACCOUNTING_IMAGE" >&2
+          exit 1
+        fi
+        if [ -z "${_ACCOUNTING_DRIVE_FOLDER_ID}" ]; then
+          echo "ACCOUNTING_DRIVE_FOLDER_ID" >&2
+          exit 1
+        fi
+        if [ -z "${_ACCOUNTING_INTAKE_ACTOR_ID}" ]; then
+          echo "ACCOUNTING_INTAKE_ACTOR_ID" >&2
+          exit 1
+        fi
+        if [ -z "${_ACCOUNTING_INTAKE_COMPANY_ID}" ]; then
+          echo "ACCOUNTING_INTAKE_COMPANY_ID" >&2
+          exit 1
+        fi
+        if [ -z "${_ACCOUNTING_DUPLICATE_SCAN_CAP}" ]; then
+          echo "ACCOUNTING_DUPLICATE_SCAN_CAP" >&2
+          exit 1
+        fi
+        if [ -z "${_ACCOUNTING_EXTRACTION_MODEL}" ]; then
+          echo "ACCOUNTING_EXTRACTION_MODEL" >&2
+          exit 1
+        fi
+        if ! printf '%s' "${_ACCOUNTING_DUPLICATE_SCAN_CAP}" | grep -Eq '^[1-9][0-9]*$'; then
+          echo "ACCOUNTING_DUPLICATE_SCAN_CAP" >&2
+          exit 1
+        fi
+        case "${_ACCOUNTING_IMAGE}" in
+          asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:*) ;;
+          *)
+            echo "ACCOUNTING_IMAGE" >&2
+            exit 1
+            ;;
+        esac
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-intake-job"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        gcloud run jobs deploy accounting-intake-poll \
+          "--image=${_ACCOUNTING_IMAGE}" \
+          "--region=asia-southeast1" \
+          "--service-account=accounting-cloud-run@$PROJECT_ID.iam.gserviceaccount.com" \
+          "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql" \
+          "--command=node" \
+          "--args=dist/intake-runner.mjs" \
+          "--set-secrets=ACCOUNTING_DATABASE_URL=ACCOUNTING_DATABASE_URL:latest,STORAGE_ENDPOINT=ACCOUNTING_STORAGE_ENDPOINT:latest,STORAGE_REGION=ACCOUNTING_STORAGE_REGION:latest,STORAGE_BUCKET=ACCOUNTING_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=ACCOUNTING_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=ACCOUNTING_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=ACCOUNTING_STORAGE_PUBLIC_BASE_URL:latest" \
+          "--set-env-vars=ACCOUNTING_DRIVE_FOLDER_ID=${_ACCOUNTING_DRIVE_FOLDER_ID},ACCOUNTING_INTAKE_ACTOR_ID=${_ACCOUNTING_INTAKE_ACTOR_ID},ACCOUNTING_INTAKE_COMPANY_ID=${_ACCOUNTING_INTAKE_COMPANY_ID},ACCOUNTING_DUPLICATE_SCAN_CAP=${_ACCOUNTING_DUPLICATE_SCAN_CAP},ACCOUNTING_EXTRACTION_MODEL=${_ACCOUNTING_EXTRACTION_MODEL}"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "schedule-intake-job"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        scheduler_args=(
+          "--location=asia-southeast1"
+          "--schedule=0 6 * * *"
+          "--time-zone=Asia/Bangkok"
+          "--uri=https://run.googleapis.com/v2/projects/$PROJECT_ID/locations/asia-southeast1/jobs/accounting-intake-poll:run"
+          "--http-method=POST"
+          "--oauth-service-account-email=accounting-scheduler@$PROJECT_ID.iam.gserviceaccount.com"
+          "--attempt-deadline=1800s"
+        )
+        if gcloud scheduler jobs describe accounting-intake-poll --location=asia-southeast1 >/dev/null 2>&1; then
+          gcloud scheduler jobs update http accounting-intake-poll "$${scheduler_args[@]}"
+        else
+          gcloud scheduler jobs create http accounting-intake-poll "$${scheduler_args[@]}"
+        fi
+
+options:
+  logging: CLOUD_LOGGING_ONLY

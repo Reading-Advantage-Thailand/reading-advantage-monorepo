@@ -46,39 +46,6 @@ steps:
         fi
 
   - name: "gcr.io/cloud-builders/gcloud"
-    id: "deploy-intake-job"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - |
-        set -euo pipefail
-        gcloud run jobs deploy accounting-intake-poll \
-          "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID" \
-          "--region=asia-southeast1" \
-          "--service-account=accounting-cloud-run@$PROJECT_ID.iam.gserviceaccount.com" \
-          "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql" \
-          "--command=node" \
-          "--args=dist/intake-runner.mjs" \
-          "--set-secrets=ACCOUNTING_DATABASE_URL=ACCOUNTING_DATABASE_URL:latest,STORAGE_ENDPOINT=ACCOUNTING_STORAGE_ENDPOINT:latest,STORAGE_REGION=ACCOUNTING_STORAGE_REGION:latest,STORAGE_BUCKET=ACCOUNTING_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=ACCOUNTING_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=ACCOUNTING_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=ACCOUNTING_STORAGE_PUBLIC_BASE_URL:latest" \
-          "--set-env-vars=ACCOUNTING_DRIVE_FOLDER_ID=,ACCOUNTING_INTAKE_ACTOR_ID=,ACCOUNTING_DUPLICATE_SCAN_CAP=500,ACCOUNTING_EXTRACTION_MODEL="
-
-  - name: "gcr.io/cloud-builders/gcloud"
-    id: "schedule-intake-job"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - |
-        set -euo pipefail
-        gcloud scheduler jobs create http accounting-intake-poll \
-          "--location=asia-southeast1" \
-          "--schedule=0 6 * * *" \
-          "--time-zone=Asia/Bangkok" \
-          "--uri=https://run.googleapis.com/v2/projects/$PROJECT_ID/locations/asia-southeast1/jobs/accounting-intake-poll:run" \
-          "--http-method=POST" \
-          "--oauth-service-account-email=accounting-scheduler@$PROJECT_ID.iam.gserviceaccount.com" \
-          "--attempt-deadline=1800s"
-
-  - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-build-invoker"
     args:
       - "run"
