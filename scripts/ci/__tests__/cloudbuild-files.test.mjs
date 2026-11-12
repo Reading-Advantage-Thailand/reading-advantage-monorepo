@@ -239,7 +239,7 @@ describe("F: Cloud Build files", () => {
         id: "codecamp-advantage",
         push: "apps/codecamp-advantage/cloudbuild.yaml",
         traffic: "apps/codecamp-advantage/cloudbuild-traffic.yaml",
-        steps: ["migrate-db", "doctor-check", "update-traffic"],
+        steps: ["migrate-db", "doctor-check", "configure-review-worker-scheduler", "update-traffic"],
       },
       {
         id: "marketing",
@@ -282,6 +282,12 @@ describe("F: Cloud Build files", () => {
         continue;
       }
       ordered(traffic, row.steps, `${row.id} traffic`);
+      if (row.id === "codecamp-advantage") {
+        const schedulerSteps = stepIds(traffic).filter(
+          (id) => id === "configure-review-worker-scheduler",
+        ).length;
+        must(schedulerSteps === 1, `scheduler_steps=${schedulerSteps} expected scheduler_steps=1`);
+      }
     }
     must(
       missing.length === 0 && pushProblems.length === 0,
@@ -423,7 +429,7 @@ describe("F: Cloud Build files", () => {
       {
         id: "codecamp-advantage",
         file: "apps/codecamp-advantage/cloudbuild-traffic.yaml",
-        steps: ["migrate-db", "doctor-check", "update-traffic"],
+        steps: ["migrate-db", "doctor-check", "configure-review-worker-scheduler", "update-traffic"],
       },
       {
         id: "marketing",
@@ -449,15 +455,27 @@ describe("F: Cloud Build files", () => {
     ];
     must(sections.length === 6, `traffic_runbook_sections=${sections.length}`);
     let complete = 0;
+    const incomplete = [];
     for (const section of sections) {
       const body = sectionText(text, section.id);
       if (body === "") continue;
       if (!body.includes(section.file)) continue;
       if (section.steps.some((step) => !body.includes(step))) continue;
       if (section.id === "primary-advantage" ? !body.includes("--to-latest") : !/old schema/i.test(body)) continue;
+      if (section.id === "codecamp-advantage") {
+        const permissions = ["cloudscheduler.jobs.get", "cloudscheduler.jobs.create", "cloudscheduler.jobs.update"];
+        const iamPermissions = permissions.filter((name) => body.includes(name)).length;
+        const orderLine =
+          "Order: release source bind, migrate, doctor check, review worker scheduler, traffic move.";
+        if (iamPermissions !== 3 || !body.includes(orderLine)) {
+          incomplete.push(`codecamp-advantage: iam_permissions=${iamPermissions} expected iam_permissions=3`);
+          if (!body.includes(orderLine)) incomplete.push(`codecamp-advantage: the order line is missing`);
+          continue;
+        }
+      }
       complete += 1;
     }
-    must(complete === 6, `traffic_runbook_sections=${complete}`);
+    must(complete === 6, `traffic_runbook_sections=${complete} ${incomplete.join("; ")}`);
   });
 
   it("F-19 the sales traffic file moves to the candidate of the pushed build", () => {

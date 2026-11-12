@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 const appRoot = resolve(import.meta.dirname, "../..");
 const workerRoute = resolve(appRoot, "app/api/internal/review-worker-tick/route.ts");
 const cloudbuild = resolve(appRoot, "cloudbuild.yaml");
+const trafficBuild = resolve(appRoot, "cloudbuild-traffic.yaml");
 const schedulerConfig = resolve(
   appRoot,
   "scripts/configure-review-worker-scheduler.sh",
@@ -32,14 +33,22 @@ describe("Codecamp PR-review worker deployment contract", () => {
   });
 
   it("binds the route token from the canonical Secret Manager secret", () => {
+    // The push file keeps the runtime binding. The traffic file holds the scheduler step
+    // and the Cloud Build secret entry (track master_push_readiness_20261112).
     const source = readArtifact(cloudbuild);
     expect(source).toContain(
       "REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest",
     );
-    expect(source).toContain(
+    expect(existsSync(trafficBuild), `missing traffic file: ${trafficBuild}`).toBe(true);
+    const traffic = readArtifact(trafficBuild);
+    expect(traffic).toContain('id: "configure-review-worker-scheduler"');
+    expect(traffic).toContain(
+      "./apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh",
+    );
+    expect(traffic).toContain(
       "projects/$PROJECT_ID/secrets/CODECAMP_REVIEW_WORKER_TICK_TOKEN/versions/latest",
     );
-    expect(source).toContain('env: "CODECAMP_REVIEW_WORKER_TICK_TOKEN"');
+    expect(traffic).toContain('env: "CODECAMP_REVIEW_WORKER_TICK_TOKEN"');
   });
 
   it("deploys an isolated, approved OpenRouter candidate in the production region", () => {
