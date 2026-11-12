@@ -260,7 +260,7 @@ async function createRuntimeIntakePollDependencies(): Promise<IntakePollDependen
   return {
     actor,
     folderId,
-    source: createDriveDocumentSource(),
+    source: await createDriveDocumentSource(),
     evidenceStore: createAccountingEvidenceStore(),
     intakeRepository: createAccountingIntakeDocumentRepository({ sql }),
     submissionRepository: createPostgresAccountingSubmissionRepository({ sql }),

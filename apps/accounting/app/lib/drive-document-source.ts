@@ -7,15 +7,12 @@
  * Application Default Credentials on the Cloud Run runtime service account and
  * holds no key file.
  */
-import { google, type drive_v3 } from "googleapis";
+import type { drive_v3 } from "googleapis";
 
 import type {
   AccountingDocumentSourcePort,
   AccountingDriveFile,
 } from "@reading-advantage/backend/accounting";
-
-/** MIME type of a native Google Sheet. */
-const GOOGLE_SHEET_MIME_TYPE = "application/vnd.google-apps.spreadsheet";
 
 /** MIME type of an `.xlsx` workbook. */
 const XLSX_MIME_TYPE =
@@ -103,6 +100,22 @@ async function listFolderEntries(
 }
 
 /**
+ * Builds the authenticated Drive client on Application Default Credentials.
+ * The `googleapis` package loads on first use, so a module that imports this
+ * adapter and reads the folder id pays no provider import cost (D-27).
+ * @returns The authenticated Drive client.
+ */
+async function createDriveClient(): Promise<drive_v3.Drive> {
+  const { google } = await import("googleapis");
+  return google.drive({
+    version: "v3",
+    auth: new google.auth.GoogleAuth({
+      scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+    }),
+  });
+}
+
+/**
  * Builds the read-only Drive port of the intake poll.
  * @param input Optional injected Drive client and clock year; tests and the
  *   runner leave them absent.
@@ -110,17 +123,12 @@ async function listFolderEntries(
  */
 export function createDriveDocumentSource(input?: {
   readonly drive?: drive_v3.Drive;
-}): AccountingDocumentSourcePort {
-  const drive =
-    input?.drive ??
-    google.drive({
-      version: "v3",
-      auth: new google.auth.GoogleAuth({
-        scopes: ["https://www.googleapis.com/auth/drive.readonly"],
-      }),
-    });
-
-  return {
+}): Promise<AccountingDocumentSourcePort> {
+  const drivePromise =
+    input?.drive !== undefined
+      ? Promise.resolve(input.drive)
+      : createDriveClient();
+  return drivePromise.then((drive) => ({
     /**
      * Lists the top level of the intake folder and, from 2027, the subfolder
      * of the current year. It never lists the `2024` and `2025` folders
@@ -191,5 +199,5 @@ export function createDriveDocumentSource(input?: {
       );
       return toBytes(response.data as ArrayBuffer | Uint8Array);
     },
-  };
+  }));
 }
