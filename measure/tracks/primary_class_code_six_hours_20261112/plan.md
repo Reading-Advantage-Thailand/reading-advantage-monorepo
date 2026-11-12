@@ -10,17 +10,17 @@
   the database guard, migration and doctor checks, then deploy and restore latest-revision
   routing with `update-traffic --to-latest`. Update the app selector, contracts, and runbook
   for Primary only.
-- [~] Run the affected deployment contract tests and separate review, then push the
+- [x] Run the affected deployment contract tests and separate review, then push the
   workflow change to `master` so the existing GitHub deployment identity runs it.
-- [ ] Follow Cloud Build through the database gates, deploy, and automatic traffic move;
+- [x] Follow Cloud Build through the database gates, deploy, and automatic traffic move;
   verify the six-hour release on the public host and 100% latest-revision traffic.
-- [ ] Retry the requested browser screenshot after production verification. The earlier
-  attempt stopped because Computer Use could not establish the Windows browser URL.
+- [x] Capture the requested browser screenshot after production verification; the
+  Cloud Run console shows the serving revision at `100% (to latest)`.
 
 Deployment and browser verification are authorized by the owner's request. The owner
 explicitly restored push-to-production and automatic traffic routing on 2026-11-12,
-superseding the earlier manual-only Primary release decision. Tests and production
-deployment of that workflow update are pending.
+superseding the earlier manual-only Primary release decision. The workflow update
+is deployed and production verification is complete.
 
 Validation so far: the changed six-hour assertion failed against the three-hour
 implementation, then all 102 student-login domain tests and 38 Primary handler and
@@ -30,8 +30,11 @@ All five locale JSON files parse and explain six hours. Production build passed 
 evidence fixtures; no tracked Sales changes are part of the patch. The existing
 four dynamic filesystem tracing warnings remain unrelated to this change.
 
-The browser screenshot tool stopped because it could not establish the current
-Windows browser URL. No browser authentication or class mutation was performed.
+The earlier browser attempt could not establish the Windows browser URL. The
+later verification used the existing signed-in Cloud console and saved
+`Primary_AutoDeploy_6h_Traffic.jpg` as a delivered artifact. No class mutation was
+performed; new Start class / New code values use six hours, while existing expiry
+rows retain their stored times.
 
 Candidate checks: `/en` and `/en/auth/signin` both returned 200 and embedded the
 six-hour teacher-manual sentence; the old three-hour sentence was absent.
@@ -52,10 +55,33 @@ are identical to the base. Base commit 17ab2d5 already had red CI, stopping earl
 in an activity-runtime package-entry test; the same two outcomes were not observed
 on that earlier run. The six-hour domain, handler, and UI tests passed locally.
 
-Automatic release validation: Primary database contracts passed9/9, Cloud Build
-artifact checks passed18/18, and the real workflow selector correctly selects each
+Automatic release validation: Primary database contracts passed 9/9, Cloud Build
+artifact checks passed 18/18, and the real workflow selector correctly selects each
 of the six deploy-matrix apps individually, including direct Primary. The Primary
 workflow contract confirms database doctor, deploy, then `--to-latest`. Separate
-runtime review found no actionable findings. A full Windows Git-fixture run is
-still being checked (affected-apps44passed/4failed); Linux CI is the authoritative
-full selector run. No production traffic change has occurred yet.
+runtime review found no actionable findings. Windows manifest regressions B10,
+B15, and B18 passed after portable fixture-path corrections. The full Linux
+`CI selector tests` step passed for commit 2b8c25d9 in CI run 43160466991.
+
+That CI run's Core job stopped afterward on the existing architecture analyzer
+snapshot mismatch, also observed before this workflow change and documented in
+`measure/archive/per_app_cicd_20261107/plan.md`. The Primary job stopped only in
+the unchanged Company Identity route-binding test (expected
+ERR_PACKAGE_PATH_NOT_EXPORTED, received ERR_MODULE_NOT_FOUND): 602 backend tests
+passed, 1 failed, and 52 skipped. Concurrent administrator safety tests passed in
+this run. No architecture manifest or unrelated backend code was changed.
+
+The automatic release workflow was pushed to `master` as 2b8c25d9. Its Primary
+Cloud Build bf383284-a9cb-4ef0-8717-c02794cf40da completed successfully at
+2026-11-12 05:34:51 UTC. All seven steps passed, including refuse-legacy-db,
+migrate-db, doctor-check, deploy-cloudrun, and update-traffic. The Primary GitHub
+CD job 130990422868 also completed successfully.
+
+Production is Ready on revision `primary-advantage-app-00140-fhl`; its image
+matches this build's pushed image. Both configured and serving traffic have
+`latestRevision: true` and `percent: 100`, restoring automatic routing for later
+affected pushes. Public `/en`, `/en/auth/signin`, and `/th/auth/signin` returned
+200. English pages contain the six-hour manual sentence and omit the old
+three-hour sentence. An unauthenticated POST to class-session/start returned 401.
+The requested screenshot shows the new revision at `100% (to latest)` and the
+previous serving revision at 0%.

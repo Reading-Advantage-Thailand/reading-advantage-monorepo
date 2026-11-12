@@ -1,7 +1,7 @@
 {
   "track_id": "primary_class_code_six_hours_20261112",
   "type": "fix",
-  "status": "in_progress",
+  "status": "completed",
   "created_at": "2026-11-12",
   "description": "Extend Primary class sign-in codes to six hours, restore automatic push deployment and latest-revision traffic, and deploy to production."
 }
