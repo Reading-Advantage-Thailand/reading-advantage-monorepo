@@ -307,6 +307,25 @@ run_case() {
   rm -rf "$tmp_root"
 }
 
+# Adversarial cases (Phase 1)
+
+# Case track_traversal_outside_root_exits_1: a --track value that resolves
+# outside measure/tracks must not pass silently (finding F153). The fixture
+# plan sits at <tmp>/measure/escapee_20260111/plan.md. The value
+# ../escapee_20260111 resolves through measure/tracks/../ and leaves the
+# tracks root. The guard must not print PASS for it.
+case_track_traversal_outside_root_exits_1() {
+  write_plan "measure/escapee_20260111/plan.md" "- [?] 1.1 task"
+  run_guard --track ../escapee_20260111
+  if [ "$guard_rc" -eq 0 ]; then
+    case_fail_reason="traversal run: expected a non-zero exit, got exit 0"
+    return
+  fi
+  if has_literal "$tmp_root/stdout.txt" 'PASS:'; then
+    case_fail_reason="traversal run: PASS line printed on stdout"
+  fi
+}
+
 run_case clean_active_exits_0
 run_case unknown_marker_exits_1
 run_case canonical_markers_exit_0
@@ -321,6 +340,7 @@ run_case indented_marker_ignored
 run_case usage_error_exits_2
 run_case empty_scope_exits_1
 run_case track_archive_first_exits_1
+run_case track_traversal_outside_root_exits_1
 
 printf 'cases_total=%d cases_failed=%d\n' "$CASES_TOTAL" "$CASES_FAILED"
 if [ -n "$FAILED_NAMES" ]; then
