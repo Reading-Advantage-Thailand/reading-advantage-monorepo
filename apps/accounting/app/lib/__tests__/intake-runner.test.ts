@@ -24,11 +24,18 @@
  * Every port is a fake. No test opens a database connection, calls Drive, or
  * reaches the network. The queue name, the worker id, the lease token, and the
  * folder id are fakes.
+ *
+ * Remediation r1 (plan task 3.10) pins three more exports of the runner:
+ * `readIntakePollActor(env)`, `createPostgresIntakeLeaseRepository(sql)`, and
+ * `runIntakePollEntry(argv, dependencies?)`. It also pins the folder id read
+ * (`readIntakeFolderId` before the database client), the lease release on a
+ * trap, the lease SQL, the safe entry log, the one lease-call shape of
+ * `claimIntakeLease`, and the one `haveSameBytes` definition of the app.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /** Fake company id of every fixture. */
 const COMPANY_ID = "33333333-3333-4333-8333-333333333333";
@@ -66,6 +73,27 @@ const LEASE_CASES = [
   "reclaims an expired lease",
   "leaves the lease row reclaimable when a run traps",
 ] as const;
+/** The names of the lease SQL rows of this file. */
+const LEASE_SQL_CASES = [
+  "binds the claim statement with the conflict update, the expiry guard, and returning",
+  "returns undefined for an empty claim response",
+  "binds the release statement with the scope, the queue, and the token",
+] as const;
+/** Fake account id of the poll actor. */
+const ACCOUNT_ID = "99999999-9999-4999-8999-999999999999";
+/** Fake Drive folder id of the entry row; no real id enters this file. */
+const FAKE_FOLDER_ID = "fake-folder-id-0001";
+/** The message of `readIntakeFolderId` for a blank folder id. */
+const FOLDER_ID_MESSAGE = "The intake folder id is not configured";
+/** The environment names the runner reads. */
+const RUNNER_ENV_NAMES = [
+  "ACCOUNTING_DATABASE_URL",
+  "ACCOUNTING_DRIVE_FOLDER_ID",
+  "ACCOUNTING_INTAKE_ACTOR_ID",
+  "ACCOUNTING_INTAKE_COMPANY_ID",
+  "ACCOUNTING_DUPLICATE_SCAN_CAP",
+  "ACCOUNTING_EXTRACTION_MODEL",
+] as const;
 /** The names of the dry-start rows of this file. */
 const DRY_START_CASES = [
   "prints the usage and exits 0 on a dry start with no Drive call, no database call, and no network call",
@@ -76,6 +104,7 @@ if (LEASE_CASES.length < 4) {
   throw new Error(`lease_cases=${LEASE_CASES.length} is below the floor of 4.`);
 }
 console.log(`dry_start_cases=${DRY_START_CASES.length}`);
+console.log(`lease_sql_cases_defined=${LEASE_SQL_CASES.length}`);
 
 /** One recorded call of a fake port. */
 interface RecordedCall {
@@ -405,6 +434,188 @@ function countMatches(text: string, pattern: RegExp): number {
   return text.match(new RegExp(pattern.source, flags))?.length ?? 0;
 }
 
+
+/**
+ * Resolves one export of the runner module.
+ * @param name Export name.
+ * @returns The export as a function, or null after a failed assertion.
+ */
+async function requireRunnerExport(
+  name: string,
+): Promise<((...args: never[]) => unknown) | null> {
+  const module = await loadRunnerModule();
+  expect(
+    module,
+    "The runner module apps/accounting/app/lib/intake-runner.ts is missing",
+  ).not.toBeNull();
+  if (module === null) return null;
+  expect(
+    typeof module[name],
+    `The runner module does not export ${name}`,
+  ).toBe("function");
+  if (typeof module[name] !== "function") return null;
+  return module[name] as (...args: never[]) => unknown;
+}
+
+/**
+ * Runs one body with the runner environment names set, then restores them.
+ * @param values The value of each environment name; a missing name is deleted.
+ * @param body The body to run.
+ * @returns The result of the body.
+ */
+async function withRunnerEnv<T>(
+  values: Partial<Record<(typeof RUNNER_ENV_NAMES)[number], string>>,
+  body: () => Promise<T>,
+): Promise<T> {
+  const previous = new Map<string, string | undefined>();
+  for (const name of RUNNER_ENV_NAMES) {
+    previous.set(name, process.env[name]);
+    const value = values[name];
+    if (value === undefined) delete process.env[name];
+    else process.env[name] = value;
+  }
+  try {
+    return await body();
+  } finally {
+    for (const [name, value] of previous) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  }
+}
+
+/**
+ * Captures every console and standard error write during one run.
+ * @param run The run to capture.
+ * @returns The result, the error, and the captured text lines.
+ */
+async function captureOutput<T>(run: () => Promise<T>): Promise<{
+  readonly result: T | undefined;
+  readonly error: unknown;
+  readonly lines: readonly string[];
+}> {
+  const lines: string[] = [];
+  const record = (...args: unknown[]): void => {
+    lines.push(args.map((arg) => String(arg)).join(" "));
+  };
+  const original = {
+    log: console.log,
+    info: console.info,
+    warn: console.warn,
+    error: console.error,
+    stderr: process.stderr.write,
+  };
+  console.log = record;
+  console.info = record;
+  console.warn = record;
+  console.error = record;
+  process.stderr.write = ((chunk: unknown) => {
+    lines.push(String(chunk));
+    return true;
+  }) as typeof process.stderr.write;
+  try {
+    const result = await run();
+    return { result, error: undefined, lines };
+  } catch (error) {
+    return { result: undefined, error, lines };
+  } finally {
+    console.log = original.log;
+    console.info = original.info;
+    console.warn = original.warn;
+    console.error = original.error;
+    process.stderr.write = original.stderr;
+  }
+}
+
+/**
+ * Builds the injected dependencies of one poll run. Only the source and the
+ * lease repository work; the other ports are never reached because the source
+ * listing throws first.
+ * @param source The fake Drive source port.
+ * @param leaseRepository The fake lease repository port.
+ * @returns The dependencies.
+ */
+function buildPollDependencies(
+  source: Record<string, unknown>,
+  leaseRepository: Record<string, unknown>,
+): Record<string, unknown> {
+  return {
+    actor: { accountId: ACCOUNT_ID, companyId: COMPANY_ID, role: "ACCOUNTANT" },
+    folderId: FAKE_FOLDER_ID,
+    source,
+    evidenceStore: {},
+    intakeRepository: {},
+    submissionRepository: {},
+    localReader: {},
+    extraction: {},
+    leaseRepository,
+  };
+}
+
+/** One recorded SQL call. */
+interface SqlCall {
+  /** The joined statement text; each bound value shows as `?`. */
+  readonly statement: string;
+  /** The bound values in order. */
+  readonly values: readonly unknown[];
+}
+
+/**
+ * Creates a tagged SQL double with ordered query responses and captured bindings.
+ * @param responses The row list that each statement returns, in order.
+ * @returns The recorded calls and the SQL double.
+ */
+function sqlDouble(responses: readonly (readonly Record<string, unknown>[])[]): {
+  readonly calls: SqlCall[];
+  readonly sql: unknown;
+} {
+  const pending = [...responses];
+  const calls: SqlCall[] = [];
+  const tagged = vi.fn(
+    async (strings: TemplateStringsArray, ...values: readonly unknown[]) => {
+      calls.push({ statement: strings.join("?"), values });
+      const response = pending.shift();
+      if (response === undefined) throw new Error("Unexpected SQL statement.");
+      return response;
+    },
+  );
+  return { calls, sql: tagged };
+}
+
+/**
+ * Collapses the whitespace of one statement and lowercases it.
+ * @param statement The joined statement text.
+ * @returns The normalized statement.
+ */
+function normalizeStatement(statement: string): string {
+  return statement.replace(/\s+/gu, " ").trim().toLowerCase();
+}
+
+/**
+ * Runs one body and returns the error it throws or rejects with.
+ * @param body The body to run.
+ * @returns The error, or undefined when the body completes.
+ */
+async function captureError(body: () => unknown): Promise<unknown> {
+  try {
+    await body();
+    return undefined;
+  } catch (error) {
+    return error;
+  }
+}
+
+/**
+ * Reads the source text of one app file.
+ * @param relativePath Path relative to the `app/lib` folder.
+ * @returns The source text, or an empty string when the file is missing.
+ */
+function readLibSource(relativePath: string): string {
+  const path = new URL(`../${relativePath}`, import.meta.url);
+  if (!existsSync(path)) return "";
+  return readFileSync(path, "utf8");
+}
+
 describe("the intake runner lease", () => {
   it("claims the lease row of FR-6 for the intake queue", async () => {
     const claim = await requireLeaseClaim();
@@ -517,13 +728,14 @@ describe("the intake runner surface", () => {
     expect(hits).toEqual([]);
   });
 
-  it("reads the Drive folder id from ACCOUNTING_DRIVE_FOLDER_ID and holds no Drive id literal in the runner source", () => {
+  it("reads the Drive folder id through readIntakeFolderId with no blank default and holds no Drive id literal in the runner source", () => {
     const source = readRunnerSource();
     expect(
       source,
       "The runner source apps/accounting/app/lib/intake-runner.ts is missing",
     ).not.toBe("");
-    expect(source).toContain("process.env.ACCOUNTING_DRIVE_FOLDER_ID");
+    expect(source).toContain("readIntakeFolderId(");
+    expect(source).not.toMatch(/ACCOUNTING_DRIVE_FOLDER_ID\s*\?\?\s*""/u);
     expect(countMatches(source, /["'][A-Za-z0-9_-]{28,}["']/u)).toBe(0);
   });
 
@@ -567,5 +779,371 @@ describe("the intake runner surface", () => {
     const exitCode = exitCodes.length === 0 ? 0 : exitCodes[0];
     expect(exitCode).toBe(0);
     expect(output.join("\n")).toMatch(/usage/iu);
+  });
+});
+
+describe("the intake runner actor and folder id", () => {
+  it("returns the actor with the fixed role ACCOUNTANT and makes no database call (F304)", async () => {
+    const readActor = await requireRunnerExport("readIntakePollActor");
+    if (readActor === null) return;
+    // The environment holds no database URL, so a database call would fail.
+    const env = {
+      ACCOUNTING_INTAKE_ACTOR_ID: ACCOUNT_ID,
+      ACCOUNTING_INTAKE_COMPANY_ID: COMPANY_ID,
+    } as never;
+
+    const actor = await Promise.resolve(readActor(env));
+
+    expect(actor).toEqual({
+      accountId: ACCOUNT_ID,
+      companyId: COMPANY_ID,
+      role: "ACCOUNTANT",
+    });
+  });
+
+  it("throws a safe error for a blank company id, a company id that is not a UUID, and a blank actor id (F304)", async () => {
+    const readActor = await requireRunnerExport("readIntakePollActor");
+    if (readActor === null) return;
+    const notUuid = "fake-company-not-a-uuid-0002";
+    const cases = [
+      {
+        label: "blank company id",
+        env: {
+          ACCOUNTING_INTAKE_ACTOR_ID: ACCOUNT_ID,
+          ACCOUNTING_INTAKE_COMPANY_ID: "  ",
+        },
+        value: "",
+      },
+      {
+        label: "company id that is not a UUID",
+        env: {
+          ACCOUNTING_INTAKE_ACTOR_ID: ACCOUNT_ID,
+          ACCOUNTING_INTAKE_COMPANY_ID: notUuid,
+        },
+        value: notUuid,
+      },
+      {
+        label: "blank actor id",
+        env: {
+          ACCOUNTING_INTAKE_ACTOR_ID: "",
+          ACCOUNTING_INTAKE_COMPANY_ID: COMPANY_ID,
+        },
+        value: COMPANY_ID,
+      },
+    ];
+    for (const item of cases) {
+      const error = await captureError(() => readActor(item.env as never));
+
+      expect(error, item.label).toBeInstanceOf(Error);
+      const message = (error as Error).message;
+      expect(message.length, item.label).toBeGreaterThan(0);
+      if (item.value !== "") {
+        expect(message, item.label).not.toContain(item.value);
+      }
+    }
+  });
+
+  it("holds no company_product_principals token in the runner source (F304)", () => {
+    const source = readRunnerSource();
+    expect(source).not.toBe("");
+    expect(countMatches(source, /company_product_principals/u)).toBe(0);
+  });
+
+  it("rejects runIntakePoll with the message of readIntakeFolderId for a blank folder id and reads it before the database client (Review B F305)", async () => {
+    const run = await requireRunnerExport("runIntakePoll");
+    if (run === null) return;
+    // The adapter holds the message of readIntakeFolderId.
+    expect(readLibSource("drive-document-source.ts")).toContain(
+      FOLDER_ID_MESSAGE,
+    );
+    // The database URL stays blank, so any database call before the folder id
+    // read fails with a database message and not with the folder id message.
+    const error = await withRunnerEnv(
+      {
+        ACCOUNTING_DATABASE_URL: "",
+        ACCOUNTING_DRIVE_FOLDER_ID: "",
+        ACCOUNTING_INTAKE_ACTOR_ID: ACCOUNT_ID,
+        ACCOUNTING_INTAKE_COMPANY_ID: COMPANY_ID,
+        ACCOUNTING_DUPLICATE_SCAN_CAP: "500",
+        ACCOUNTING_EXTRACTION_MODEL: "fake-model-name-0003",
+      },
+      () => captureError(() => (run as (argv: string[]) => unknown)([])),
+    );
+
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toBe(FOLDER_ID_MESSAGE);
+  });
+
+  it("reads the actor before the database client for a blank company id (PM-21)", async () => {
+    const run = await requireRunnerExport("runIntakePoll");
+    if (run === null) return;
+    const error = await withRunnerEnv(
+      {
+        ACCOUNTING_DATABASE_URL: "",
+        ACCOUNTING_DRIVE_FOLDER_ID: "fake-intake-folder-id",
+        ACCOUNTING_INTAKE_ACTOR_ID: ACCOUNT_ID,
+        ACCOUNTING_INTAKE_COMPANY_ID: "",
+      },
+      () => captureError(() => (run as (argv: string[]) => unknown)([])),
+    );
+
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).not.toMatch(/database/iu);
+  });
+});
+
+describe("the intake runner trap and lease SQL", () => {
+  it("releases the lease once with the claimed token when the poll throws (F309)", async () => {
+    const run = await requireRunnerExport("runIntakePoll");
+    if (run === null) return;
+    const lease = createFakeLeaseRepository();
+    const source = {
+      list: async () => {
+        throw new Error("fake drive failure");
+      },
+      download: async () => new Uint8Array(),
+      export: async () => new Uint8Array(),
+    };
+    const dependencies = buildPollDependencies(source, lease.port);
+
+    const { error } = await captureOutput(() =>
+      (run as (argv: string[], deps: unknown) => Promise<unknown>)(
+        [],
+        dependencies,
+      ),
+    );
+
+    expect(error).toBeInstanceOf(Error);
+    const claimCalls = lease.calls.filter((call) => call.method === "claim");
+    const releaseCalls = lease.calls.filter((call) => call.method === "release");
+    console.log(`release_calls=${releaseCalls.length}`);
+    expect(claimCalls.length).toBe(1);
+    expect(releaseCalls.length).toBe(1);
+    const claimedToken = findNamed(claimCalls[0]?.args ?? [], ["leaseToken"]);
+    expect(typeof claimedToken).toBe("string");
+    expect(findNamed(releaseCalls[0]?.args ?? [], ["leaseToken"])).toBe(
+      claimedToken,
+    );
+  });
+
+  it("binds the claim statement with the conflict update, the expiry guard, and returning (F309)", async () => {
+    const create = await requireRunnerExport("createPostgresIntakeLeaseRepository");
+    if (create === null) return;
+    const claimedAt = "2026-11-13T02:00:00.000Z";
+    const double = sqlDouble([
+      [
+        {
+          queue_name: QUEUE_NAME,
+          lease_token: LEASE_TOKEN,
+          worker_id: WORKER_ID,
+          lease_expires_at: "2026-11-13T02:30:00.000Z",
+          claimed_at: claimedAt,
+        },
+      ],
+    ]);
+    const repository = (create as (sql: unknown) => Record<string, (input: unknown) => Promise<unknown>>)(
+      double.sql,
+    );
+
+    const lease = (await repository.claim?.({
+      scope: { companyId: COMPANY_ID },
+      queueName: QUEUE_NAME,
+      workerId: WORKER_ID,
+      leaseToken: LEASE_TOKEN,
+      leaseExpiresAt: new Date("2026-11-13T02:30:00.000Z"),
+      now: Date.parse(claimedAt),
+    })) as { readonly leaseToken?: string } | undefined;
+
+    expect(double.calls.length).toBe(1);
+    const statement = normalizeStatement(double.calls[0]?.statement ?? "");
+    expect(statement).toContain(
+      "on conflict (scope_company_id, queue_name) do update",
+    );
+    expect(statement).toContain(
+      "where accounting_intake_leases.lease_expires_at <= excluded.claimed_at",
+    );
+    expect(statement).toContain("returning");
+    for (const bound of [COMPANY_ID, QUEUE_NAME, WORKER_ID, LEASE_TOKEN]) {
+      expect(double.calls[0]?.values).toContain(bound);
+    }
+    expect(lease?.leaseToken).toBe(LEASE_TOKEN);
+  });
+
+  it("returns undefined for an empty claim response (F309)", async () => {
+    const create = await requireRunnerExport("createPostgresIntakeLeaseRepository");
+    if (create === null) return;
+    const double = sqlDouble([[]]);
+    const repository = (create as (sql: unknown) => Record<string, (input: unknown) => Promise<unknown>>)(
+      double.sql,
+    );
+
+    const lease = await repository.claim?.({
+      scope: { companyId: COMPANY_ID },
+      queueName: QUEUE_NAME,
+      workerId: WORKER_ID,
+      leaseToken: LEASE_TOKEN,
+      leaseExpiresAt: new Date(Date.now() + 60_000),
+    });
+
+    expect(double.calls.length).toBe(1);
+    expect(lease).toBeUndefined();
+  });
+
+  it("binds the release statement with the scope, the queue, and the token (F309)", async () => {
+    const create = await requireRunnerExport("createPostgresIntakeLeaseRepository");
+    if (create === null) return;
+    const double = sqlDouble([[]]);
+    const repository = (create as (sql: unknown) => Record<string, (input: unknown) => Promise<unknown>>)(
+      double.sql,
+    );
+
+    await repository.release?.({
+      scope: { companyId: COMPANY_ID },
+      queueName: QUEUE_NAME,
+      leaseToken: LEASE_TOKEN,
+    });
+
+    expect(double.calls.length).toBe(1);
+    const statement = normalizeStatement(double.calls[0]?.statement ?? "");
+    expect(statement.startsWith("update accounting_intake_leases")).toBe(true);
+    const where = statement.slice(statement.lastIndexOf(" where ") + 7);
+    expect(where).toMatch(/scope_company_id\s*=\s*\?/u);
+    expect(where).toMatch(/queue_name\s*=\s*\?/u);
+    expect(where).toMatch(/lease_token\s*=\s*\?/u);
+    for (const bound of [COMPANY_ID, QUEUE_NAME, LEASE_TOKEN]) {
+      expect(double.calls[0]?.values).toContain(bound);
+    }
+    console.log(`lease_sql_cases=${LEASE_SQL_CASES.length}`);
+  });
+});
+
+describe("the intake runner entry", () => {
+  it("returns 1 and logs one line with the event and the error name only when the listing throws an error with a folder id (F313, Review B F307)", async () => {
+    const entry = await requireRunnerExport("runIntakePollEntry");
+    if (entry === null) return;
+    const url = `https://www.googleapis.com/drive/v3/files?q=%27${FAKE_FOLDER_ID}%27+in+parents`;
+    class FakeDriveError extends Error {
+      /** Request configuration that a real client error carries. */
+      readonly config = { url };
+
+      constructor() {
+        super(`Request failed for ${url}`);
+        this.name = "FakeDriveError";
+      }
+    }
+    const lease = createFakeLeaseRepository();
+    const source = {
+      list: async () => {
+        throw new FakeDriveError();
+      },
+      download: async () => new Uint8Array(),
+      export: async () => new Uint8Array(),
+    };
+    const dependencies = buildPollDependencies(source, lease.port);
+
+    const { result, error, lines } = await captureOutput(() =>
+      (entry as (argv: string[], deps: unknown) => Promise<unknown>)(
+        [],
+        dependencies,
+      ),
+    );
+
+    expect(error).toBeUndefined();
+    expect(result).toBe(1);
+    const text = lines.join("\n");
+    expect(text).not.toContain(FAKE_FOLDER_ID);
+    expect(text).not.toContain("Request failed");
+    const failedLines = text
+      .split("\n")
+      .filter((line) => line.includes("intake_poll_failed"));
+    console.log(`entry_error_cases=${failedLines.length}`);
+    expect(failedLines.length).toBe(1);
+    const record = JSON.parse(failedLines[0] ?? "{}") as Record<string, unknown>;
+    expect(Object.keys(record).sort()).toEqual(["error_name", "event"]);
+    expect(record.event).toBe("intake_poll_failed");
+    expect(record.error_name).toBe("FakeDriveError");
+  });
+
+  it("calls runIntakePollEntry from the module entry block and sets process.exitCode (F313)", () => {
+    const source = readRunnerSource();
+    expect(source).not.toBe("");
+    const entryBlock = source.slice(source.lastIndexOf("import.meta.url"));
+    expect(entryBlock).toContain("runIntakePollEntry(");
+    expect(entryBlock).toContain("process.exitCode");
+  });
+});
+
+describe("the intake lease call and the shared helpers", () => {
+  it("throws invalid-input and makes no claim call for a request with no scope (F310)", async () => {
+    const intake = await loadIntakeModule();
+    expect(
+      intake,
+      "The module packages/backend/src/modules/accounting/intake.ts is missing",
+    ).not.toBeNull();
+    const claim = intake?.claimIntakeLease as
+      | ((request: unknown) => Promise<unknown>)
+      | undefined;
+    expect(typeof claim).toBe("function");
+    if (claim === undefined) return;
+    const base = {
+      queueName: QUEUE_NAME,
+      workerId: WORKER_ID,
+      leaseToken: LEASE_TOKEN,
+      leaseExpiresAt: Date.now() + 60_000,
+    };
+    const cases = [
+      { label: "no scope and no company", request: (port: unknown) => ({ ...base, repository: port }) },
+      { label: "company id only", request: (port: unknown) => ({ ...base, repository: port, companyId: COMPANY_ID }) },
+      { label: "alias leaseRepository only", request: (port: unknown) => ({ ...base, leaseRepository: port, scope: { companyId: COMPANY_ID } }) },
+      { label: "alias intakeLeaseRepository only", request: (port: unknown) => ({ ...base, intakeLeaseRepository: port, scope: { companyId: COMPANY_ID } }) },
+    ];
+    for (const item of cases) {
+      const lease = createFakeLeaseRepository();
+
+      const error = await captureError(() => claim(item.request(lease.port)));
+
+      expect(error, item.label).toBeInstanceOf(Error);
+      expect((error as { reason?: string }).reason, item.label).toBe("invalid-input");
+      expect(lease.calls.length, item.label).toBe(0);
+    }
+    const accepted = createFakeLeaseRepository();
+    await claim({
+      ...base,
+      repository: accepted.port,
+      scope: { companyId: COMPANY_ID },
+    });
+    expect(accepted.calls.filter((call) => call.method === "claim").length).toBe(1);
+  });
+
+  it("exports no googleSheetMimeType from the Drive adapter (F310)", () => {
+    const source = readLibSource("drive-document-source.ts");
+    expect(source).not.toBe("");
+    expect(source).toMatch(/export\s+function\s+createDriveDocumentSource\b/u);
+    expect(source).not.toMatch(
+      /export\s+(?:async\s+)?(?:const|let|var|function)\s+googleSheetMimeType\b/u,
+    );
+    expect(source).not.toMatch(/export\s*\{[^}]*googleSheetMimeType/u);
+  });
+
+  it("holds exactly one haveSameBytes definition in the app, in the evidence store, and monthly-close imports it (F311)", () => {
+    const appFolder = new URL("../..", import.meta.url).pathname;
+    const files = listFiles(appFolder).filter((path) =>
+      /\.(ts|tsx)$/u.test(path),
+    );
+    console.log(`files_scanned=${files.length}`);
+    expect(files.length).toBeGreaterThanOrEqual(10);
+    const definitions = files.filter((path) =>
+      /\b(?:function\s+haveSameBytes\b|const\s+haveSameBytes\s*=)/u.test(
+        readFileSync(path, "utf8"),
+      ),
+    );
+    console.log(`have_same_bytes_definitions=${definitions.length}`);
+    expect(definitions.length).toBe(1);
+    expect(definitions[0]?.endsWith("/lib/accounting-evidence-store.ts")).toBe(true);
+    const monthlyClose = readLibSource("monthly-close.ts");
+    expect(monthlyClose).not.toBe("");
+    expect(monthlyClose).toMatch(
+      /import\s*\{[^}]*\bhaveSameBytes\b[^}]*\}\s*from\s*["']\.\/accounting-evidence-store(?:\.js)?["']/u,
+    );
   });
 });
