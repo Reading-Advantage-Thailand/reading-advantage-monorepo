@@ -14,12 +14,13 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DOCTOR_SRC="$ROOT/measure/doctor.sh"
 TRACK_ID="doctor_gate_repair_20261112"
-PART_A_FLOOR=12
+PART_A_FLOOR=19
 RECORD_LINES_FLOOR=8
 TSX_ARGV="src/architecture-check-cli.ts --skip-input-snapshot-pin"
 CLI_COMMAND="(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)"
 DRIFT_LINE="Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports"
 OTHER_LINE="Architecture check failed: another failure"
+VERDICT_LINE="architecture check: debt-change (files=12, findings=3, parseErrors=0)"
 OWNER_CLAUSE="; the owner of the remaining drift is architecture_ci_input_pin_20261110"
 KNOWN_DRIFT_CLAUSE="; the known manifest drift is owned by architecture_ci_input_pin_20261110"
 
@@ -88,7 +89,8 @@ write_all_guards() {
 # write_stub_tsx: the stub tsx sits at the path of the real step 4 command.
 # It logs its argv in tsx.log at the root of the scratch tree and exits with
 # the code that the case sets. It prints the case message on stderr when the
-# case sets one.
+# case sets one, and the case stdout message when the case sets one. The real
+# CLI writes the verdict line to stdout and the error line to stderr.
 write_stub_tsx() {
   local tsx_code="$1"
   local tsx_path="$tmp_root/node_modules/.bin/tsx"
@@ -100,16 +102,20 @@ printf '%s\n' "\$*" >>"$tmp_root/tsx.log"
 if [ -n "\${DOCTOR_GATE_TSX_MESSAGE:-}" ]; then
   printf '%s\n' "\$DOCTOR_GATE_TSX_MESSAGE" >&2
 fi
+if [ -n "\${DOCTOR_GATE_TSX_STDOUT:-}" ]; then
+  printf '%s\n' "\$DOCTOR_GATE_TSX_STDOUT"
+fi
 exit $tsx_code
 EOF
   } >"$tsx_path"
   chmod +x "$tsx_path"
 }
 
-# reset_tsx: remove the stub tsx and its log, and clear the case message.
+# reset_tsx: remove the stub tsx and its log, and clear both case messages.
 reset_tsx() {
   rm -rf "$tmp_root/node_modules" "$tmp_root/tsx.log"
   unset DOCTOR_GATE_TSX_MESSAGE
+  unset DOCTOR_GATE_TSX_STDOUT
 }
 
 # run_gate: run the copy of doctor.sh in the scratch root. The PATH holds no
@@ -132,6 +138,32 @@ output_has() {
     *"$1"*) return 0 ;;
     *) return 1 ;;
   esac
+}
+
+# output_has_line: the output holds a line that equals the literal. The
+# pinned lines of FR-3 are whole lines.
+output_has_line() {
+  local wanted="$1"
+  local line
+  while IFS= read -r line; do
+    if [ "$line" = "$wanted" ]; then
+      return 0
+    fi
+  done <<<"$gate_output"
+  return 1
+}
+
+# tsx_message_set_count: the number of stub message variables that hold a
+# value. A count of 0 proves that no message leaks from an earlier case.
+tsx_message_set_count() {
+  local count=0
+  if [ -n "${DOCTOR_GATE_TSX_MESSAGE:-}" ]; then
+    count=$((count + 1))
+  fi
+  if [ -n "${DOCTOR_GATE_TSX_STDOUT:-}" ]; then
+    count=$((count + 1))
+  fi
+  printf '%d\n' "$count"
 }
 
 tsx_call_count() {
@@ -157,10 +189,13 @@ list_root_files() {
   printf '%s' "$out"
 }
 
-# Case tsx_exit_1_gate_exits_0: a boundary verdict of 1 does not gate.
+# Case tsx_exit_1_gate_exits_0: a boundary verdict of 1 does not gate. The
+# stub prints the whole verdict line on stderr, so the case probes the stderr
+# stream.
 case_tsx_exit_1_gate_exits_0() {
   write_all_guards 0
   write_stub_tsx 1
+  export DOCTOR_GATE_TSX_MESSAGE="$VERDICT_LINE"
   run_gate
   if [ "$gate_rc" -ne 0 ]; then
     case_fail_reason="expected gate exit 0, got exit ${gate_rc}"
@@ -394,7 +429,8 @@ case_tool_failure_codes() {
 }
 
 # Case architecture_line_shows_code: the ARCHITECTURE line holds the code of
-# the run, not a fixed code.
+# the run, not a fixed code. The code 1 run prints the whole verdict line on
+# stderr, so the line holds the boundary clause.
 case_architecture_line_shows_code() {
   write_all_guards 0
   write_stub_tsx 0
@@ -405,16 +441,24 @@ case_architecture_line_shows_code() {
   fi
   reset_tsx
   write_stub_tsx 1
+  export DOCTOR_GATE_TSX_MESSAGE="$VERDICT_LINE"
   run_gate
   if ! output_has 'step 4 exits 1;'; then
     case_fail_reason="the ARCHITECTURE line does not hold the code 1"
+    return
+  fi
+  if ! output_has "$OWNER_CLAUSE"; then
+    case_fail_reason="the ARCHITECTURE line for exit 1 does not hold the boundary clause"
   fi
 }
 
-# Case no_write_in_root: the gate writes no file in its root.
+# Case no_write_in_root: the gate writes no file in its root. The stub prints
+# the whole verdict line on stderr, so the file list check covers the boundary
+# path.
 case_no_write_in_root() {
   write_all_guards 0
   write_stub_tsx 1
+  export DOCTOR_GATE_TSX_MESSAGE="$VERDICT_LINE"
   local before
   before="$(list_root_files)"
   run_gate
@@ -457,6 +501,198 @@ case_drift_match_requires_whole_line() {
   if output_has 'DOCTOR: the three structural guard steps gate this exit code'; then
     case_fail_reason="the output holds the gate line for a substring drift match"
   fi
+}
+
+# ---------------------------------------------------------------------------
+# Adversarial cases (Phase 3, the exit 1 verdict rule)
+# ---------------------------------------------------------------------------
+
+# assert_tool_failure_lines: the gate exit is 1. The output holds the two
+# tool failure lines and no boundary gate line.
+assert_tool_failure_lines() {
+  local architecture_line="$1"
+  if [ "$gate_rc" -ne 1 ]; then
+    case_fail_reason="expected gate exit 1, got exit ${gate_rc}"
+    return 1
+  fi
+  if ! output_has_line "$architecture_line"; then
+    case_fail_reason="the tool failure ARCHITECTURE line is missing"
+    return 1
+  fi
+  if ! output_has_line 'DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1'; then
+    case_fail_reason="the tool failure DOCTOR line is missing"
+    return 1
+  fi
+  if output_has 'DOCTOR: the three structural guard steps gate this exit code'; then
+    case_fail_reason="the output holds the gate line on the tool failure path"
+    return 1
+  fi
+  return 0
+}
+
+# assert_boundary_lines: the gate exit is 0. The output holds the two boundary
+# lines and no tool failure text.
+assert_boundary_lines() {
+  local architecture_line="$1"
+  if [ "$gate_rc" -ne 0 ]; then
+    case_fail_reason="expected gate exit 0, got exit ${gate_rc}"
+    return 1
+  fi
+  if ! output_has_line "$architecture_line"; then
+    case_fail_reason="the boundary ARCHITECTURE line is missing"
+    return 1
+  fi
+  if ! output_has_line 'DOCTOR: the three structural guard steps gate this exit code'; then
+    case_fail_reason="the DOCTOR gate line is missing"
+    return 1
+  fi
+  if output_has 'tool failure'; then
+    case_fail_reason="the output holds a tool failure text"
+    return 1
+  fi
+  if output_has 'did not produce a boundary verdict'; then
+    case_fail_reason="the output holds a boundary verdict failure text"
+    return 1
+  fi
+  return 0
+}
+
+# Case tsx_exit_1_no_verdict_gate_exits_1: an exit 1 with no verdict line is
+# a tool failure, not a boundary verdict. The stub prints nothing on either
+# stream. The case asserts that no stub message leaks from an earlier case.
+case_tsx_exit_1_no_verdict_gate_exits_1() {
+  write_all_guards 0
+  reset_tsx
+  write_stub_tsx 1
+  local message_set
+  message_set="$(tsx_message_set_count)"
+  if [ "$message_set" -ne 0 ]; then
+    case_fail_reason="tsx_message_set=${message_set} expected=0"
+    return
+  fi
+  run_gate
+  assert_tool_failure_lines 'ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict'
+}
+
+# Case step4_cd_fails_gate_exits_1: the m-cd case. The stub tsx exists and
+# prints a whole verdict line on stdout. The case removes the packages
+# directory, so the cd of the step 4 command fails. The case asserts
+# arch_dir_absent=1 before the run and tsx_calls=0 after the run.
+case_step4_cd_fails_gate_exits_1() {
+  write_all_guards 0
+  reset_tsx
+  write_stub_tsx 1
+  export DOCTOR_GATE_TSX_STDOUT="$VERDICT_LINE"
+  rm -rf "$tmp_root/packages"
+  local arch_dir_absent=0
+  if [ ! -d "$tmp_root/packages/architecture-enforcement" ]; then
+    arch_dir_absent=1
+  fi
+  if [ "$arch_dir_absent" -ne 1 ]; then
+    case_fail_reason="arch_dir_absent=${arch_dir_absent} expected=1"
+    return
+  fi
+  run_gate
+  local calls
+  calls="$(tsx_call_count)"
+  if [ "$calls" -ne 0 ]; then
+    case_fail_reason="tsx_calls=${calls} expected=0"
+    return
+  fi
+  assert_tool_failure_lines 'ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict'
+}
+
+# Case tsx_exit_1_verdict_line_gate_exits_0: the positive control. The stub
+# exits 1 and prints three lines on stdout. The verdict line sits in the
+# middle. The gate exit is 0.
+case_tsx_exit_1_verdict_line_gate_exits_0() {
+  write_all_guards 0
+  reset_tsx
+  write_stub_tsx 1
+  export DOCTOR_GATE_TSX_STDOUT="build output line
+${VERDICT_LINE}
+architecture policy: v2 (status=ok, default=deny)"
+  run_gate
+  assert_boundary_lines 'ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110'
+}
+
+# Case tsx_exit_1_verdict_in_longer_line_gate_exits_1: the verdict line must
+# be a whole line. The loop runs two fixtures. Each fixture holds the verdict
+# line inside a longer line.
+case_tsx_exit_1_verdict_in_longer_line_gate_exits_1() {
+  local fixtures=(
+    "crash: ${VERDICT_LINE}"
+    "${VERDICT_LINE} (uncaught exception)"
+  )
+  local fixtures_checked=0
+  if [ "${#fixtures[@]}" -ne 2 ]; then
+    case_fail_reason="fixtures_checked=${#fixtures[@]} expected=2"
+    return
+  fi
+  local fixture
+  for fixture in "${fixtures[@]}"; do
+    reset_tsx
+    write_all_guards 0
+    write_stub_tsx 1
+    export DOCTOR_GATE_TSX_STDOUT="$fixture"
+    run_gate
+    fixtures_checked=$((fixtures_checked + 1))
+    if ! assert_tool_failure_lines 'ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict'; then
+      case_fail_reason="fixture_index=${fixtures_checked}: ${case_fail_reason}"
+      return
+    fi
+  done
+  if [ "$fixtures_checked" -ne 2 ]; then
+    case_fail_reason="fixtures_checked=${fixtures_checked} expected=2"
+  fi
+}
+
+# Case tsx_exit_1_malformed_verdict_gate_exits_1: the verdict line must hold
+# a status and three counts. The loop runs seven malformed shapes. Each shape
+# is a tool failure.
+case_tsx_exit_1_malformed_verdict_gate_exits_1() {
+  local shapes=(
+    "architecture check: failed"
+    "architecture check: debt-change (files=, findings=, parseErrors=)"
+    "architecture check: debt-change (files=x, findings=y, parseErrors=z)"
+    "architecture check: debt-change (files=12, findings=3)"
+    "architecture check:  (files=12, findings=3, parseErrors=0)"
+    "architecture check: debt change (files=12, findings=3, parseErrors=0)"
+    "Architecture check: debt-change (files=12, findings=3, parseErrors=0)"
+  )
+  local shapes_checked=0
+  if [ "${#shapes[@]}" -ne 7 ]; then
+    case_fail_reason="shapes_checked=${#shapes[@]} expected=7"
+    return
+  fi
+  local shape
+  for shape in "${shapes[@]}"; do
+    reset_tsx
+    write_all_guards 0
+    write_stub_tsx 1
+    export DOCTOR_GATE_TSX_STDOUT="$shape"
+    run_gate
+    shapes_checked=$((shapes_checked + 1))
+    if ! assert_tool_failure_lines 'ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict'; then
+      case_fail_reason="shape_index=${shapes_checked}: ${case_fail_reason}"
+      return
+    fi
+  done
+  if [ "$shapes_checked" -ne 7 ]; then
+    case_fail_reason="shapes_checked=${shapes_checked} expected=7"
+  fi
+}
+
+# Case tsx_exit_2_verdict_line_gate_exits_1: the exit 1 rule changes no exit
+# 2 rule. The stub exits 2 and prints the whole verdict line on stdout. The
+# gate exit is 1.
+case_tsx_exit_2_verdict_line_gate_exits_1() {
+  write_all_guards 0
+  reset_tsx
+  write_stub_tsx 2
+  export DOCTOR_GATE_TSX_STDOUT="$VERDICT_LINE"
+  run_gate
+  assert_tool_failure_lines 'ARCHITECTURE: step 4 exits 2; this is a tool failure, not a boundary verdict'
 }
 
 # Part B helpers
@@ -862,6 +1098,12 @@ run_part_a() {
   run_case architecture_line_shows_code
   run_case no_write_in_root
   run_case drift_match_requires_whole_line
+  run_case tsx_exit_1_no_verdict_gate_exits_1
+  run_case step4_cd_fails_gate_exits_1
+  run_case tsx_exit_1_verdict_line_gate_exits_0
+  run_case tsx_exit_1_verdict_in_longer_line_gate_exits_1
+  run_case tsx_exit_1_malformed_verdict_gate_exits_1
+  run_case tsx_exit_2_verdict_line_gate_exits_1
   PART_A_TOTAL=$((CASES_TOTAL - total_before))
   PART_A_FAILED=$((CASES_FAILED - failed_before))
 }
