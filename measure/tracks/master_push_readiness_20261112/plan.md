@@ -58,5 +58,5 @@ Context: the Primary vitest run of 2026-11-12, after merge `9734e0187`, showed 4
   - A test defect: the test asserts old behavior that the product changed on purpose.
   - A product defect: the product breaks a stated rule or contract.
   - An environment defect: the failure depends on the machine, a missing service, or a missing file outside git.
-- [ ] 2.2 Add tasks after task 2.1: one Red task and one Green task for each test defect and each product defect, and one task for each environment defect that records the cause and the fix of the setup. A Red task writes or repairs the test first and shows it fail for the stated reason. A Green task makes the least change that passes. Each added task names its file and test name.
+- [ ] 2.2 Add tasks after task 2.1: one Red task and one Green task for each test defect and each product defect, and one task for each environment defect that records the cause and the fix of the setup. A Red task writes or repairs the test first and shows it fail for the stated reason. A Green task makes the least change that passes. Each added Red or Green task names its file and test name. Each environment-defect task names the failing file and the setup item that it fixes.
 - [ ] 2.3 Phase check: run the command of task 2.0 again. The run shows no failing test and no suite that does not load. Record the exit code.

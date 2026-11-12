@@ -5,7 +5,7 @@
 **Status:** new. Opened 2026-11-12.
 **Author model:** claude-code/claude-sonnet-5-5
 **Due:** 2026-11-15 for Phase 1 (PM decision 2). Phase 2 has no date; it starts after the deploy word list goes to Daniel.
-**Owner chain:** Daniel (owner; deploy gate and push word) → Monorepo orchestrator (track owner) → PM orchestrator (assignment A-55)
+**Owner chain:** Daniel (owner; push word, traffic word) → Monorepo orchestrator (track owner) → PM orchestrator (assignment A-55)
 **Plan:** [plan.md](./plan.md)
 **Depends on:** none. This track reads `codecamp_pr_review_recovery_20260820` and `per_app_cicd_20261107`. It does not edit their plans.
 
@@ -147,7 +147,7 @@ The codecamp section of `docs/runbooks/traffic-moves.md` names the step `configu
 
 ### FR-8 Phase 2 lists and classifies each Primary item
 
-Task 2.0 lists each failing test and each suite that does not load, by file and test name, with the failure reason. Later tasks classify each item and fix it test-first.
+Task 2.0 lists each failing test and each suite that does not load, by file and test name, with the failure reason. Later tasks classify each item. They fix each test defect and each product defect test-first. For each environment defect, a task records the cause and the setup fix.
 
 ## 5. Constraints
 
