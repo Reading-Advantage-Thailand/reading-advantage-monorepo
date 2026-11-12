@@ -239,14 +239,17 @@ rg -n 'r"\^\- \[\(\[ ~x\]\)\]' measure/automation-supervisor.py
 ```
 
 **Symptoms:** The supervisor's task regex `r"^- \[([ ~x])\] (.+)"` accepts a space
-character. A `[ ]` (space) marker is counted as in-progress.
+character. A `[ ]` (space) marker is counted as in-progress, although it means pending.
 
-**Fix:** Standardize on `r"^- \[([~xb])\] (.+)"`; the supervisor's incomplete-count
-predicate should be `status in ("~", "b") and not is_task_structurally_blocked(task)`.
-Project plans that still use `[ ]` must be converted by the plan-update role before
-supervisor execution, because the fixed supervisor intentionally ignores `[ ]` tasks.
+**Fix:** The accepted marker set is {` `, `~`, `x`, `b`}. `[ ]` (space) is the pending
+marker: the task did not start. `[~]` is in progress, `[x]` is done, and `[b]` is blocked
+at a human gate (`deferred:<owner>`). The supervisor regex stays `r"^- \[([~xb])\] (.+)"`
+and its incomplete-count predicate stays
+`status in ("~", "b") and not is_task_structurally_blocked(task)`. The supervisor
+intentionally ignores a pending `[ ]` task, so a track must have no `[ ]` task left at
+closeout. A marker outside the set (for example `[?]` or `[X]`) is an error.
 
-**Guard:** `tests/orchestrator_marker_vocabulary.sh` for planning-review tracks; static supervisor regex check in `measure-orchestrator-audit`.
+**Guard:** `tests/orchestrator_marker_vocabulary.sh` fails each marker outside the set for every active track; static supervisor regex check in `measure-orchestrator-audit`.
 
 ---
 
