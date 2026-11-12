@@ -1,5 +1,6 @@
 /** Public contracts for the Accounting application. */
 export * from "./contracts.js";
+export * from "./intake.js";
 export * from "./intake-contracts.js";
 export * from "./monthly-close.js";
 export * from "./permissions.js";

@@ -18,6 +18,7 @@ import {
   readPrivateEvidence,
   putPrivateEvidence,
 } from "@/app/lib/private-evidence-storage";
+import { haveSameBytes } from "@/app/lib/accounting-evidence-store";
 import {
   listAccountingSubmissions,
   submitAccountingSubmissionWithOutcome,
@@ -103,15 +104,6 @@ function snapshotAccountingError(error: unknown): AccountingErrorSnapshot {
   } catch {
     return { reason: "unknown" };
   }
-}
-
-/** Compares two evidence byte arrays without creating a derived artifact. */
-function haveSameBytes(left: Uint8Array, right: Uint8Array): boolean {
-  if (left.byteLength !== right.byteLength) return false;
-  for (let index = 0; index < left.byteLength; index += 1) {
-    if (left[index] !== right[index]) return false;
-  }
-  return true;
 }
 
 type ReconciliationEvent = "cleanup_failed" | "outcome_unresolved";

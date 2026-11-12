@@ -24,6 +24,13 @@ ENV NODE_ENV=production
 
 RUN pnpm turbo run build --filter=accounting
 
+FROM deps AS runner-bundle
+
+RUN pnpm --filter accounting exec esbuild app/lib/intake-runner.ts \
+    --bundle --platform=node --format=esm --target=node22 \
+    --banner:js='import{createRequire as __cr}from"node:module";const require=__cr(import.meta.url);' \
+    --outfile=/app/dist/intake-runner.mjs
+
 FROM node:22-alpine AS runner
 
 ENV HOSTNAME=0.0.0.0
@@ -38,6 +45,7 @@ RUN addgroup --system --gid 1001 nodejs && \
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/accounting/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/accounting/.next/static ./apps/accounting/.next/static
+COPY --from=runner-bundle --chown=nextjs:nodejs /app/dist/intake-runner.mjs ./dist/intake-runner.mjs
 
 USER nextjs
 
