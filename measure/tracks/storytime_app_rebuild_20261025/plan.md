@@ -3553,7 +3553,7 @@ for every other track.
     names no text kind, so no stage 2 text rubric is needed. The picture kind is the only stage 2
     kind that is not deferred:daniel, and it has run with two models. Task 5.5 is `[x]`, with the
     deferred audio and video part named on the task line.
-- [~] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5).
+- [x] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5). Commit `a3ea15b91`. Daniel's look copy is a tagged no-traffic revision (PM 2026-11-12), deferred:daniel-deploy-word.
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
     base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
     `minimax-cn-coding-plan/MiniMax-M3.1-Flash`. Test commit `016d899a2`.
@@ -3725,7 +3725,36 @@ for every other track.
     the four files: exit 0; 4 files; 63 to 91 nodes; 60 to 88 edges.
   - Tasks 5.5, 5.6, and 5.7 stay `[~]`. Task 5.6 needs the reviews again. No Next build, dev, or
     start ran in this round. Evidence class: automated unit and self-test.
-- [~] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
+  - Close evidence for task 5.6 (2026-11-12). PM decision 2026-11-12, quoted word for word:
+    "2. Storytime review copy for 5.6/5.7: yes for the agent-side rule 6.5 check, as ONE heavy job
+    through heavy-run.sh (start, check, stop in the same job). Do not leave it running. Run it when
+    the heavy lock is free after the Workbooks gate run (Workbooks stops at 12:30 at the latest);
+    stop it if MemAvailable falls under 800 MB. Daniel's look copy for 11-18 is a tagged
+    no-traffic revision, not a local server. The PM asks Daniel for that push word in the 20:00
+    status."
+  - P5 browser gate at the code commit `a3ea15b91` (orchestrator run, 2026-11-12, through
+    heavy-run p1): PASS=5 FAIL=0 for the steps and PASS=6 FAIL=0 for the rows. The rows:
+    `items_listed=5`, `controls_per_item=4`, `answered=0`, `items_checked=5`, `answers_written=5`,
+    `draft_week=200`, and `port_closed=1` (port 46185). The answers went to the temporary folder
+    (F902).
+  - Rule 6.5 agent-side check, UX browser review r2, 2026-11-12: model
+    `claude-code/claude-sonnet-5-5#high`, session `ses_e31d15a50fferBT9LMigLfghJm`. The result
+    `measure/runs/storytime_app_rebuild_20261025/ux-browser-review-p5-af66a6d66.json` holds
+    verdict pass, status pass, and no blocking finding. The orchestrator ux-browser-review gate
+    passed. The run used one heavy job. Run 3 used the real media of
+    `~/Desktop/handoff/w01-storytime-app-package-r4` (read only; 37 requests for 19 files, 0
+    stand-ins, 0 missing). The five FR-12 items opened with status 200 on desktop and on a 390 px
+    phone. The real pictures, audio, and video played with no media error. The run holds 24
+    screenshots and 24 accessibility snapshots in `ux-p5/run3/`. All 8 lesson-day screens opened.
+    The song button read หยุด 1.5 s after a real click. `port_closed=1`, `db_container_left=0`, and
+    the lowest MemAvailable was 1399 MB. The review URL was `http://127.0.0.1:40741/review` at the
+    audited head `af66a6d66`, and the copy was stopped in the same job.
+  - Open nonblocking notes: F982 (empty page title on every app route), F983 (voice, loudness, and
+    lyric timing stay with Daniel in task 6.1; the draft switch had no visible effect this week,
+    because the week marks only loops as draft), and F985 (the week view shows 0:00 / 0:00 before
+    the clip loads). Task 5.6 is `[x]`. The look copy for Daniel waits as a tagged no-traffic
+    revision, `deferred:daniel-deploy-word`.
+- [x] 5.7 Live review page with the five items of FR-12: the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song. Commit `a3ea15b91`.
   - Red evidence (tasks 5.6 and 5.7): the same round as task 5.6. The unit file
     `apps/storytime/__tests__/phase5-review-copy.test.ts` holds the page contract, and the gate
     `apps/storytime/__tests__/phase5-browser-gate.sh` holds the browser rows of the page. The
@@ -3738,6 +3767,13 @@ for every other track.
     (`items_listed=5`, `controls_per_item=4`, `answered=0`, `items_checked=5`,
     `answers_written=5`, `draft_week=200`, and `port_closed=1`) wait for the full gate run, so
     the task stays `[~]`. Evidence class: automated unit and self-test.
+  - Close evidence (task 5.7), 2026-11-12. The P5 browser gate at `a3ea15b91` passed the rows:
+    `items_listed=5`, `controls_per_item=4`, `answered=0`, `items_checked=5`, `answers_written=5`,
+    `draft_week=200`, and `port_closed=1` (port 46185). The rule 6.5 UX browser review r2 opened
+    the five FR-12 items with status 200 on desktop and on a 390 px phone, played the real
+    pictures, audio, and video with no media error, and stopped the copy in the same job
+    (`port_closed=1`, `db_container_left=0`). The page holds the five items and the four controls,
+    and one Send writes one JSON line. Task 5.7 is `[x]`.
 
 ## Phase 6: Daniel's milestone judgment
 
