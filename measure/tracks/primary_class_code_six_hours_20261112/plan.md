@@ -1,10 +1,23 @@
 # Primary class code: six hours
 
-- [~] Add the owner-authorized isolated production QA teacher/school/class fixture,
+- [x] Add the owner-authorized isolated production QA teacher/school/class fixture,
   sign in through the public production host, open its class code through Start
   class, and capture the actual Class sign-in screen with expiry timing evidence.
   Remove the one-time workflow after it runs. The earlier Cloud Run screenshot
   proves deployment only and does not satisfy this follow-up.
+
+Production Class sign-in proof: temporary workflow f353696c1 ran successfully
+as GitHub run 43168271198 / job 131015167463. Cloud Build
+ca31d5ee-2931-42b2-81f9-72fc65761eb2 committed the five fresh QA fixture records
+in primary_v2 at 2026-11-12 06:28:29 UTC. No real students or pre-existing records
+were changed. The temporary workflow is removed after its successful run.
+
+The QA teacher then signed in on primary.reading-advantage.com, opened its new
+classroom, and pressed Start class. The click was observed at 13:30:29 Bangkok
+time; the actual Class sign-in panel displayed Open until 7:30 PM (19:30).
+The screenshot Primary_ClassSignIn_Live_6h.jpg shows the real generated code and
+expiry. No expiry was inserted by the seed and no DOM was modified for proof.
+The isolated QA school, teacher, and classroom remain as the owner requested.
 
 - [x] Change the expiry regression check to six hours; confirm it fails, then update
   the owning constant and current documentation.
