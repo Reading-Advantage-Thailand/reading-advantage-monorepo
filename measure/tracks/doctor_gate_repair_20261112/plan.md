@@ -247,7 +247,7 @@ Phase 2 acceptance note, 2026-11-12:
 
 Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the registry entry in `measure/tracks.md`, and the track record. Tasks 3.0a and 3.0b change the exit 1 rule of `measure/doctor.sh`. The other tasks change no code path.
 
-- [~] 3.0a Red: the exit 1 verdict rule. Add the cases to `tests/orchestrator_doctor_gate.sh` part A.
+- [x] 3.0a Red: the exit 1 verdict rule. Add the cases to `tests/orchestrator_doctor_gate.sh` part A. (commit 90a3abbd8)
   - Case 1: the stub CLI exits 1 and prints no verdict line. Expect gate exit 1. The output holds `ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`.
   - Case 2, the m-cd case: the `cd` of the step 4 command fails in the scratch root. Expect gate exit 1. The output holds the two tool-failure lines.
   - Case 3, the positive control: the stub exits 1 and prints a whole verdict line. Expect gate exit 0. The output holds `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`.
@@ -270,13 +270,21 @@ Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the regi
     - `failed_cases=tsx_exit_1_no_verdict_gate_exits_1,step4_cd_fails_gate_exits_1,tsx_exit_1_verdict_in_longer_line_gate_exits_1,tsx_exit_1_malformed_verdict_gate_exits_1`.
     - A scratch copy of the test file and a scratch copy of `measure/doctor.sh` that holds the planned rule of task 3.0b make all 19 cases pass with `cases_total=19 cases_failed=0`. The scratch root sat outside the repository and was removed. The real `measure/doctor.sh` did not change.
     - The stub gains `DOCTOR_GATE_TSX_STDOUT`. The real CLI writes the verdict line to stdout. `reset_tsx` unsets both message variables, and each new case calls it first.
-- [ ] 3.0b Green: the exit 1 rule of `measure/doctor.sh`.
+- [x] 3.0b Green: the exit 1 rule of `measure/doctor.sh`. (commit d16ab8b01)
   - Count exit 1 as a boundary verdict only when the step 4 output holds the verdict line. Match that line as a whole line, in the same kind as the `grep -qxF` match of the drift rule, with a pattern that holds the counts: `architecture check: [^ ]+ \(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\)`.
   - Change no other rule. The exit 0 rule, the exit 2 rules, and the printed text of every rule stay as FR-3 states.
   - Check: `bash tests/orchestrator_doctor_gate.sh` exits 0.
   - Check: `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0.
   - Check: `bash tests/orchestrator_catalog.sh` exits 0.
   - Commit: `fix(measure): count doctor exit 1 only with the verdict line (track_id: doctor_gate_repair_20261112)`.
+  - Evidence of the Green round (role: Measure Jr Green; model: claude-code/claude-sonnet-5-5):
+    - `phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1`; `role_base_sha=afa9d73080a21025b5f6a6d46bb48a3ffc8faae6`; fix commit `d16ab8b01cea64271d59fc0b1eee6ef4069f99eb`.
+    - The commit holds `measure/doctor.sh` only (5 insertions, 1 deletion). No test file changed.
+    - Before the fix, `bash tests/orchestrator_doctor_gate.sh` exited 1 with `cases_total=31 cases_failed=4`. The four failed cases matched the Red evidence.
+    - Command: `bash tests/orchestrator_doctor_gate.sh && bash tests/orchestrator_marker_vocabulary_cases.sh && bash tests/orchestrator_catalog.sh`. Exit 0.
+    - Labeled counts: doctor gate `cases_total=31 cases_failed=0` (part A 19, part B 12); marker vocabulary cases `cases_total=15 cases_failed=0`; catalog `PASS` (A1-A15).
+    - Command: `bash -n measure/doctor.sh`. Exit 0.
+    - `measure/doctor.sh` itself did not run. Task 3.4 runs it.
 - [ ] 3.1 Green: the registry status text. The entry in `measure/tracks.md` already holds the due date, the owner chain, F411, and F421, so this task makes one change: the `Status:` text moves from `new (spec and plan only; due 2026-11-14)` to `implemented (doctor gate green at <short-sha>; due 2026-11-14)`. Add no other field.
   - Check: `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` shows the link line and the status line. `bash tests/orchestrator_catalog.sh` exits 0.
   - Commit: `docs(measure): state the doctor gate track status (track_id: doctor_gate_repair_20261112)`.
