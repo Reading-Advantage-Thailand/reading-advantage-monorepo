@@ -314,13 +314,13 @@ describe("class session lifetime handler", () => {
     );
   });
 
-  it("gives the domain the default 3 hours when the body has no lifetime", async () => {
+  it("gives the domain the default 6 hours when the body has no lifetime", async () => {
     getCurrentSession.mockResolvedValue(teacherSession);
     domain.startClassSession.mockResolvedValue(startResult);
     const res = await startClass(post("/x", { classroomId: CLASS_ID }));
     expect(res.status).toBe(200);
     expect(domain.startClassSession).toHaveBeenCalledWith(
-      expect.objectContaining({ input: { classroomId: CLASS_ID, lifetime: "3h" } }),
+      expect.objectContaining({ input: { classroomId: CLASS_ID, lifetime: "6h" } }),
     );
   });
 
@@ -341,7 +341,7 @@ describe("class session lifetime handler", () => {
   it("strips client time fields from the start body", async () => {
     getCurrentSession.mockResolvedValue(teacherSession);
     domain.startClassSession.mockResolvedValue(startResult);
-    const res = await startClass(post("/x", { classroomId: CLASS_ID, lifetime: "3h", expiresAt: "2026-11-18T05:00:00Z", minutes: 60 }));
+    const res = await startClass(post("/x", { classroomId: CLASS_ID, lifetime: "6h", expiresAt: "2026-11-18T05:00:00Z", minutes: 60 }));
     expect(res.status).toBe(200);
     const call = domain.startClassSession.mock.calls[0]![0] as { input: Record<string, unknown> };
     expect(call.input).not.toHaveProperty("expiresAt");

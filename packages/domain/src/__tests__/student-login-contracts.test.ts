@@ -17,7 +17,7 @@ import {
 const uuid = "123e4567-e89b-42d3-a456-426614174000";
 
 // Rows of the lifetime contract cases. Each row is one case (strategy section 6.2).
-const acceptedLifetimeRows: unknown[][] = [["3h"], ["until_17"], ["7d"]];
+const acceptedLifetimeRows: unknown[][] = [["6h"], ["until_17"], ["7d"]];
 const defaultLifetimeRows: unknown[][] = [
   ["absent", {}],
   ["undefined", { lifetime: undefined }],
@@ -99,8 +99,8 @@ describe("class session lifetime contract", () => {
     expect(parsed.lifetime).toBe(lifetime);
   });
 
-  it.each(defaultLifetimeRows)("gives the default 3 hours when lifetime is %s", (_label, extra) => {
-    expect(classSessionStartInput.parse({ ...base, ...(extra as object) }).lifetime).toBe("3h");
+  it.each(defaultLifetimeRows)("gives the default 6 hours when lifetime is %s", (_label, extra) => {
+    expect(classSessionStartInput.parse({ ...base, ...(extra as object) }).lifetime).toBe("6h");
   });
 
   it("covers the five refused value rows", () => {
@@ -122,7 +122,7 @@ describe("class session lifetime contract", () => {
   it("strips client time fields next to the choice", () => {
     const parsed = classSessionStartInput.parse({
       ...base,
-      lifetime: "3h",
+      lifetime: "6h",
       expiresAt: "2026-11-18T05:00:00Z",
       minutes: 60,
     });

@@ -245,7 +245,7 @@ function classStartAudit() {
 
 describe("startClassSession lifetime", () => {
   it.each([
-    ["3h", "2026-11-11T08:00:00.000Z"],
+    ["6h", "2026-11-11T11:00:00.000Z"],
     ["7d", "2026-11-18T05:00:00.000Z"],
     ["until_17", "2026-11-11T10:00:00.000Z"],
   ])("computes the expiry for %s and stores the same value", async (lifetime, expected) => {
@@ -282,7 +282,7 @@ describe("startClassSession lifetime", () => {
   });
 
   it("accepts only a lifetime inside the 7 day maximum", async () => {
-    const choices = ["3h", "until_17", "7d"];
+    const choices = ["6h", "until_17", "7d"];
     expect(choices).toHaveLength(3);
     let checked = 0;
     for (const lifetime of choices) {
@@ -296,7 +296,7 @@ describe("startClassSession lifetime", () => {
     expect(checked).toBe(3);
   });
 
-  it.each(["3h", "7d", "until_17"])("records the chosen lifetime %s in the class_start audit line", async (lifetime) => {
+  it.each(["6h", "7d", "until_17"])("records the chosen lifetime %s in the class_start audit line", async (lifetime) => {
     const db = lifetimeDb();
     const out = await startAt(db, lifetime);
     const call = classStartAudit();
@@ -308,14 +308,14 @@ describe("startClassSession lifetime", () => {
     });
   });
 
-  it("records the default 3 hours in the audit line", async () => {
+  it("records the default 6 hours in the audit line", async () => {
     const out = await startAt(lifetimeDb(), undefined);
     const call = classStartAudit();
     expect(call).toBeDefined();
     expect(call![1].metadata).toEqual({
       sessionId: LIFETIME_SESSION.id,
       expiresAt: out.expiresAt.toISOString(),
-      lifetime: "3h",
+      lifetime: "6h",
     });
   });
 
@@ -351,7 +351,7 @@ describe("startClassSession lifetime", () => {
     expect(recordAuditEvent).not.toHaveBeenCalled();
   });
 
-  // The fixture writes for 3 hours, so a refusal case cannot pass on a fixture that cannot write (A4, F1).
+  // The fixture writes for 6 hours, so a refusal case cannot pass on a fixture that cannot write (A4, F1).
   function writingDb() {
     return createMockDb({
       selectSequence: [[classRow], [{ userId: "stu-new" }], []],
@@ -362,7 +362,7 @@ describe("startClassSession lifetime", () => {
 
   it("control: the writing fixture writes the credential, the old close, and the session", async () => {
     const db = writingDb();
-    await startAt(db, "3h");
+    await startAt(db, "6h");
     expect(db.insert).toHaveBeenCalledTimes(2);
     expect(db.update).toHaveBeenCalledTimes(2);
     expect(recordAuditEvent).toHaveBeenCalledTimes(2);

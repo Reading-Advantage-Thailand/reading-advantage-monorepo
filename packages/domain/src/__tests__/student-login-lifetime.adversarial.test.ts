@@ -28,11 +28,11 @@ const classRow = { id: CLASS_ID, schoolId: SCHOOL, teacherId: "t1", archived: fa
 const SESSION = { id: "33333333-3333-4333-8333-333333333333" };
 const NOW = new Date("2026-11-11T05:00:00.000Z"); // 12:00 Bangkok
 const HOUR_MS = 3_600_000;
-const THREE_HOURS_MS = 10_800_000;
+const SIX_HOURS_MS = 21_600_000;
 const SEVEN_DAYS_MS = 604_800_000;
 
 /** The three values a caller may use. Every other value must be refused. */
-const ALLOWED_LIFETIMES = ["3h", "until_17", "7d"] as const;
+const ALLOWED_LIFETIMES = ["6h", "until_17", "7d"] as const;
 
 /**
  * Values that no caller may use as a lifetime. The list holds the near misses of the three
@@ -123,8 +123,8 @@ describe("lifetime contract: the enum bypass", () => {
   });
 
   it("gives the default only for a missing lifetime", () => {
-    expect(classSessionStartInput.parse({ classroomId: CLASS_ID }).lifetime).toBe("3h");
-    expect(classSessionStartInput.parse({ classroomId: CLASS_ID, lifetime: undefined }).lifetime).toBe("3h");
+    expect(classSessionStartInput.parse({ classroomId: CLASS_ID }).lifetime).toBe("6h");
+    expect(classSessionStartInput.parse({ classroomId: CLASS_ID, lifetime: undefined }).lifetime).toBe("6h");
     expect(classSessionStartInput.safeParse({ classroomId: CLASS_ID, lifetime: null }).success).toBe(false);
   });
 
@@ -167,7 +167,7 @@ describe("lifetime contract: the enum bypass", () => {
 describe("lifetime domain: the enum bypass", () => {
   it("control: the writing fixture writes the credential, the old close, and the session", async () => {
     const db = writingDb();
-    await startAt(db, "3h");
+    await startAt(db, "6h");
     expect(db.insert).toHaveBeenCalledTimes(2);
     expect(db.update).toHaveBeenCalledTimes(2);
     expect(recordAuditEvent).toHaveBeenCalledTimes(2);
@@ -236,9 +236,9 @@ describe("lifetime domain: the time boundaries", () => {
     expect(lastInsertValues(db).expiresAt.getTime() - now.getTime()).toBe(SEVEN_DAYS_MS);
   });
 
-  it("gives 3 hours exactly for the choice and for a missing lifetime", async () => {
-    const chosen = await startAt(plainDb(), "3h", NOW);
-    expect(chosen.expiresAt.getTime() - NOW.getTime()).toBe(THREE_HOURS_MS);
+  it("gives 6 hours exactly for the choice and for a missing lifetime", async () => {
+    const chosen = await startAt(plainDb(), "6h", NOW);
+    expect(chosen.expiresAt.getTime() - NOW.getTime()).toBe(SIX_HOURS_MS);
     const missing = await startClassSession({
       db: asDb(plainDb()),
       user: teacher,
@@ -246,7 +246,7 @@ describe("lifetime domain: the time boundaries", () => {
       input: { classroomId: CLASS_ID },
       now: NOW,
     });
-    expect(missing.expiresAt.getTime() - NOW.getTime()).toBe(THREE_HOURS_MS);
+    expect(missing.expiresAt.getTime() - NOW.getTime()).toBe(SIX_HOURS_MS);
   });
 
   it("keeps every accepted lifetime inside the 7 day maximum", async () => {

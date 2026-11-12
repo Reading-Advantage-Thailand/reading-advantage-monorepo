@@ -59,7 +59,7 @@ const REFUSED_BODIES: unknown[] = [
 ];
 
 /** The three values a body may carry. */
-const ALLOWED_BODIES = ["3h", "until_17", "7d"] as const;
+const ALLOWED_BODIES = ["6h", "until_17", "7d"] as const;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -143,10 +143,10 @@ describe("class session lifetime handler: the accepted bodies", () => {
     },
   );
 
-  it("gives the domain the default 3 hours when the body has no lifetime", async () => {
+  it("gives the domain the default 6 hours when the body has no lifetime", async () => {
     const res = await startClass(post({ classroomId: CLASS_ID }));
     expect(res.status).toBe(200);
-    expect(domainInput()).toEqual({ classroomId: CLASS_ID, lifetime: "3h" });
+    expect(domainInput()).toEqual({ classroomId: CLASS_ID, lifetime: "6h" });
   });
 
   it("keeps a client time field out of the domain input", async () => {
@@ -169,13 +169,13 @@ describe("class session lifetime handler: the accepted bodies", () => {
 
   it("keeps the last lifetime of a body that names it twice inside the choice list", async () => {
     const body = JSON.parse(
-      `{"classroomId":"${CLASS_ID}","lifetime":"3h","lifetime":"7d"}`,
+      `{"classroomId":"${CLASS_ID}","lifetime":"6h","lifetime":"7d"}`,
     );
     const res = await startClass(post(body));
     expect(res.status).toBe(200);
     const input = domainInput();
     expect(Object.keys(input).sort()).toEqual(["classroomId", "lifetime"]);
-    expect(["3h", "until_17", "7d"]).toContain(input.lifetime);
+    expect(["6h", "until_17", "7d"]).toContain(input.lifetime);
   });
 
   it("answers 400 with the invalid_input code when the domain refuses the choice", async () => {

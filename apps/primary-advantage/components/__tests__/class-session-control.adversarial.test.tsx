@@ -20,11 +20,11 @@ const fetchMock = vi.fn();
 const json = (status: number, body: unknown) => Promise.resolve(new Response(JSON.stringify(body), { status }));
 
 /** The three choices the server accepts. */
-const ALLOWED_LIFETIMES = ["3h", "until_17", "7d"] as const;
+const ALLOWED_LIFETIMES = ["6h", "until_17", "7d"] as const;
 
 /** The radio label of each choice, in English. */
 const CHOICE_LABELS: Record<(typeof ALLOWED_LIFETIMES)[number], string> = {
-  "3h": "3 hours",
+  "6h": "6 hours",
   until_17: "Until 17:00 today",
   "7d": "7 days",
 };

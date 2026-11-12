@@ -23,7 +23,7 @@ const json = (status: number, body: unknown) => Promise.resolve(new Response(JSO
 /** The six new message keys of plan task 1.9 (strategy sections 6.8 and 7.2). */
 const LIFETIME_MESSAGE_KEYS = [
   "ClassLogin.session.lifetimeLabel",
-  "ClassLogin.session.lifetime.3h",
+  "ClassLogin.session.lifetime.6h",
   "ClassLogin.session.lifetime.until_17",
   "ClassLogin.session.lifetime.7d",
   "ClassLogin.session.lifetimeHelp7d",
@@ -79,7 +79,7 @@ describe("ClassSessionControl", () => {
     await waitFor(() => expect(onChange).toHaveBeenCalled());
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/auth/student/class-session/start",
-      expect.objectContaining({ method: "POST", body: JSON.stringify({ classroomId: CLASS_ID, lifetime: "3h" }) }),
+      expect.objectContaining({ method: "POST", body: JSON.stringify({ classroomId: CLASS_ID, lifetime: "6h" }) }),
     );
     // The roster refresh after the start reports the new open session.
     rerender(withMessages(<ClassSessionControl classroomId={CLASS_ID} openSession={{ id: SESSION_ID, expiresAt: EXPIRES }} fetchedAt={Date.now() + 1000} onChange={onChange} />));
@@ -161,7 +161,7 @@ describe("ClassSessionControl lifetime choice", () => {
     clock("2026-11-11T05:00:00Z");
     renderControl();
     expect(screen.getByRole("radiogroup", { name: "How long should sign-in stay open?" })).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: "3 hours" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "6 hours" })).toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "Until 17:00 today" })).toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "7 days" })).toBeInTheDocument();
   });
@@ -169,17 +169,17 @@ describe("ClassSessionControl lifetime choice", () => {
   it("shows the three lifetime choices in Thai from the message tree", () => {
     clock("2026-11-11T05:00:00Z");
     const label = messageText(thMessages, "ClassLogin.session.lifetimeLabel");
-    const choices = ["3h", "until_17", "7d"].map((key) => messageText(thMessages, `ClassLogin.session.lifetime.${key}`));
+    const choices = ["6h", "until_17", "7d"].map((key) => messageText(thMessages, `ClassLogin.session.lifetime.${key}`));
     expect(choices).toHaveLength(3);
     renderControl({}, "th");
     expect(screen.getByRole("radiogroup", { name: label })).toBeInTheDocument();
     for (const choice of choices) expect(screen.getByRole("radio", { name: choice })).toBeInTheDocument();
   });
 
-  it("selects 3 hours by default", () => {
+  it("selects 6 hours by default", () => {
     clock("2026-11-11T05:00:00Z");
     renderControl();
-    expect(screen.getByRole("radio", { name: "3 hours" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "6 hours" })).toBeChecked();
     expect(screen.getByRole("radio", { name: "Until 17:00 today" })).not.toBeChecked();
     expect(screen.getByRole("radio", { name: "7 days" })).not.toBeChecked();
   });
@@ -238,7 +238,7 @@ describe("ClassSessionControl lifetime choice", () => {
     clock(iso);
     renderControl();
     expect(screen.queryByRole("radio", { name: "Until 17:00 today" })).not.toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: "3 hours" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "6 hours" })).toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "7 days" })).toBeInTheDocument();
   });
 
@@ -336,7 +336,7 @@ describe("ClassSessionControl lifetime choice", () => {
   it("gives each lifetime option a visible label and a 44 px target class", () => {
     clock("2026-11-11T05:00:00Z");
     renderControl();
-    const choices = ["3 hours", "Until 17:00 today", "7 days"];
+    const choices = ["6 hours", "Until 17:00 today", "7 days"];
     expect(choices).toHaveLength(3);
     for (const name of choices) {
       const radio = screen.getByRole("radio", { name }) as HTMLInputElement;
@@ -398,7 +398,7 @@ describe("ClassSessionControl lifetime choice", () => {
     expect(JSON.parse(fetchMock.mock.calls[0]![1].body as string)).toEqual({ classroomId: CLASS_ID, lifetime: "until_17" });
   });
 
-  it("falls back to 3 hours when the clock passes 17:00 with until_17 selected", async () => {
+  it("falls back to 6 hours when the clock passes 17:00 with until_17 selected", async () => {
     clock("2026-11-11T09:59:59Z"); // 16:59:59 Bangkok
     fetchMock.mockReturnValue(json(200, { sessionId: SESSION_ID, code: "ABCDEF", expiresAt: EXPIRES }));
     const onChange = vi.fn().mockResolvedValue(undefined);
@@ -411,11 +411,11 @@ describe("ClassSessionControl lifetime choice", () => {
         <ClassSessionControl classroomId={CLASS_ID} openSession={null} fetchedAt={1} onChange={onChange} />,
       ),
     );
-    expect(screen.getByRole("radio", { name: "3 hours" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "6 hours" })).toBeChecked();
     expect(screen.queryByRole("radio", { name: "Until 17:00 today" })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Start class" }));
     await waitFor(() => expect(onChange).toHaveBeenCalled());
-    expect(JSON.parse(fetchMock.mock.calls[0]![1].body as string)).toEqual({ classroomId: CLASS_ID, lifetime: "3h" });
+    expect(JSON.parse(fetchMock.mock.calls[0]![1].body as string)).toEqual({ classroomId: CLASS_ID, lifetime: "6h" });
   });
 
   it("clears the lifetime error when the teacher picks another option", async () => {
