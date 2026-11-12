@@ -23,7 +23,7 @@
 
 Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 55, the comment at lines 32 to 39, and the two messages), entry A8 of `measure/anti-patterns.md`, and step 2 of `measure/doctor.sh`. The catalog test reads the A8 Guard line. No product symbol changes.
 
-- [ ] 1.1 Red: the marker guard cases. Create `tests/orchestrator_marker_vocabulary_cases.sh`. Each case builds its own root in `<tmp>`, copies `tests/orchestrator_marker_vocabulary.sh` to `<tmp>/tests/`, and writes fixture plans under `<tmp>/measure/tracks/<fixture-id>/plan.md`. The guard sets `ROOT` from `BASH_SOURCE` (line 4), so the copy reads `<tmp>/measure/`. The test removes `<tmp>` when it ends. No fixture enters `measure/tracks/`.
+- [x] 1.1 Red: the marker guard cases. Create `tests/orchestrator_marker_vocabulary_cases.sh`. Commit `0088e86c8` (automated evidence). Each case builds its own root in `<tmp>`, copies `tests/orchestrator_marker_vocabulary.sh` to `<tmp>/tests/`, and writes fixture plans under `<tmp>/measure/tracks/<fixture-id>/plan.md`. The guard sets `ROOT` from `BASH_SOURCE` (line 4), so the copy reads `<tmp>/measure/`. The test removes `<tmp>` when it ends. No fixture enters `measure/tracks/`.
   - Case `clean_active_exits_0`: the one active fixture holds `- [ ] 1.1 task`. Expect exit 0 and the literal substring `PASS: all active track plans use only [ ], [~], [x], or [b] task markers (1 plans checked)`.
   - Case `unknown_marker_exits_1`: the one active fixture holds `- [?] 1.1 task`. Expect exit 1 and the literal substrings `FAIL: unsupported task marker [?] in` and `measure/tracks/fixture_unknown_20260101/plan.md`.
   - Case `canonical_markers_exit_0`: the one active fixture holds `- [~] 1.1 task`, `- [x] 1.2 task`, and `- [b] deferred:daniel 1.3 task`. Expect exit 0 and no literal substring `FAIL:` in the output.
@@ -32,7 +32,22 @@ Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 5
   - Expected result at the base: exit 1. Cases `clean_active_exits_0` and `unknown_marker_exits_1` fail. The base predicate `grep -n '^- \[ \] '` (line 55) rejects `- [ ] ` and accepts `[?]`. Cases `canonical_markers_exit_0`, `track_scope_exits_0`, and `archive_excluded_exits_0` pass. Red is not a syntax error and not a copy error.
   - Check: `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 1 at the base, with the two named cases failing.
   - Commit: `test(measure): pin the marker guard cases (track_id: doctor_gate_repair_20261112)`, with the test file only.
-- [ ] 1.2 Green: the guard predicate and its two messages. In `tests/orchestrator_marker_vocabulary.sh`:
+  - Evidence of the Red round (role: Measure Mid Red; model: deepseek-flash):
+    - `phase_base_sha=088efb891a20a2be2619b839812ad8ee13bac562`; `role_base_sha=088efb891a20a2be2619b839812ad8ee13bac562`; commit `0088e86c8674bd03b8e575e0e72c90ed22668cad`.
+    - Command: `bash tests/orchestrator_marker_vocabulary_cases.sh`. Exit 1 at the base. `cases_total=14 cases_failed=7`. Floor of 14 met.
+    - `bash -n tests/orchestrator_marker_vocabulary_cases.sh` exits 0.
+    - Case `clean_active_exits_0`: FAIL (expected exit 0, got exit 1).
+    - Case `unknown_marker_exits_1`: FAIL (expected exit 1, got exit 0).
+    - Case `canonical_markers_exit_0`: PASS. Case `track_scope_exits_0`: PASS. Case `archive_excluded_exits_0`: PASS. These three are the named characterization cases.
+    - Case `markers_outside_set_exit_1`: FAIL (marker [?]: expected exit 1, got exit 0).
+    - Case `two_offenders_two_fail_lines`: FAIL (expected exit 1, got exit 0).
+    - Case `fail_on_stderr_pass_on_stdout`: FAIL (clean run: expected exit 0, got exit 1).
+    - Case `two_plans_count_two`: FAIL (expected exit 0, got exit 1).
+    - Case `prose_bracket_not_flagged`: PASS. Case `indented_marker_ignored`: PASS. Case `usage_error_exits_2`: PASS. Case `empty_scope_exits_1`: PASS. These four are characterization cases.
+    - Case `track_archive_first_exits_1`: FAIL (expected exit 1, got exit 0).
+    - `failed_cases=clean_active_exits_0,unknown_marker_exits_1,markers_outside_set_exit_1,two_offenders_two_fail_lines,fail_on_stderr_pass_on_stdout,two_plans_count_two,track_archive_first_exits_1`.
+    - No fixture entered `measure/tracks/`. Each case removed its own `<tmp>` root. The test file holds no production change.
+- [~] 1.2 Green: the guard predicate and its two messages. In `tests/orchestrator_marker_vocabulary.sh`:
   - Change the line-55 predicate to `grep -nE '^- \[[^ ~xb]\] ' "$plan" >/tmp/orchestrator-marker-hits.$$`. The guard then fails only a marker outside the set {` `, `~`, `x`, `b`}.
   - Replace the per-plan FAIL line with one line for each hit, on stderr. The exact FAIL line reads `FAIL: unsupported task marker [<marker>] in <plan>; use [ ], [~], [x], or [b] deferred:<owner>`. Read `<marker>` from the hit line between its first `[` and the next `]`. Keep `status=1` and the exit code 1.
   - Replace the PASS line with the exact text `PASS: all active track plans use only [ ], [~], [x], or [b] task markers (%d plans checked)`. Pass `${#plans[@]}` as the count.
