@@ -157,8 +157,9 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
     - This track's paths in `git diff --name-only e592f8246..HEAD`: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, `measure/tracks/doctor_gate_repair_20261112/plan.md`, and `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md`. No path under `apps/`, `packages/`, or `services/`.
     - The range also holds `e3fd1aa38` (storytime_app_rebuild_20261025) and `09bb8e109` (accounting_drive_intake_20261109). Those paths belong to other tracks and are not listed.
     - `git worktree list --porcelain` shows 7 worktrees. This track created none of the six other worktrees.
+    - Correction (F204 of Review A, task 2.5): the evidence of this task is superseded. No saved log exists for a full run at `657059226`, and no saved log exists for the timing run. The saved runs that support the record are `doctor-run-bbe5e5860.log` and `timing-run-bbe5e5860.log`, at the fix commit of task 2.5.
 
-- [~] 2.5 Remediation of the Phase 2 reviews: Review A F201, F202, and F203; Review B F251.
+- [x] 2.5 Remediation of the Phase 2 reviews: Review A F201, F202, and F203; Review B F251. Commit `bbe5e5860` (automated evidence).
   - The defect: `package.json` line 7 holds `pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts`. On master the CLI exits 2 through the catch block of `architecture-check-cli.ts` lines 143 to 149 and prints `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports`. Two pnpm layers report exit 1 for that failed child. Step 4 therefore records exit 1, prints a boundary verdict, and the tool-failure rule of FR-3 cannot fire for a real CLI exit 2. The stub `pnpm` returns the code directly, so the 22 cases cannot see the mapping.
   - Red: model the real call path with a stub `tsx`, not a stub `pnpm`.
     - Each case that sets a code writes `<tmp>/node_modules/.bin/tsx`. The step 4 command `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)` resolves that file, so the case needs `<tmp>/packages/architecture-enforcement` too.
@@ -216,6 +217,23 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
     - A scratch copy of the test file, a scratch copy of `measure/doctor.sh` that holds the planned behavior of task 2.5, and a scratch record in the planned form make all 24 cases pass with exit 0. The scratch root sat outside the repository and was removed. The real `measure/doctor.sh` and the real record did not change.
     - The scratch copy also kills two mutants of test-strategy section 7.2. A drift match on the shorter prefix `Architecture check failed:` fails `tsx_exit_2_other_line_gate_exits_1`. A branch that gives every exit 2 the tool-failure line fails `tsx_exit_2_manifest_drift_gate_exits_0`.
     - The commit holds `tests/orchestrator_doctor_gate.sh` only. No production file changed.
+  - Evidence of the Green round (role: Measure Jr Green; model: claude-code/claude-sonnet-5-5#high; `phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec`; `role_base_sha=68e7ee750dc92f6b0affcf3c2c1e5af56e63dcd0`; fix commit `bbe5e58601dcb7def194326146bd84e4019235bd`):
+    - The fix commit holds `measure/doctor.sh` only. It runs the step 4 command without a pnpm wrapper, captures the exit code and the output, and applies the four rules of FR-3. The Red test file did not change. The record and this plan went in a later commit, because the record needs the saved logs of runs at the fix HEAD.
+    - `bash -n measure/doctor.sh` exits 0. `bash -n tests/orchestrator_doctor_gate.sh` exits 0.
+    - `bash tests/orchestrator_doctor_gate.sh --part a` exits 0. `cases_total=12 cases_failed=0`.
+    - `bash tests/orchestrator_doctor_gate.sh` exits 0. `cases_total=24 cases_failed=0`.
+    - `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0. `cases_total=15 cases_failed=0`. `bash tests/orchestrator_catalog.sh` exits 0.
+    - Timing run through HEAVY at `bbe5e5860`: the step 4 command exits 2 and prints `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports`. `real 2m55.150s`. `step4_seconds=175.150`. Saved in `measure/runs/doctor_gate_repair_20261112/timing-run-bbe5e5860.log`.
+    - Full run through HEAVY at `bbe5e5860`: doctor exits 0. Steps 1 to 3 exit 0 and print their PASS lines. The real CLI exit of step 4 is 2. The output holds `ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`. Saved in `measure/runs/doctor_gate_repair_20261112/doctor-run-bbe5e5860.log`. The logs are not committed.
+    - Outcome table row for exit 2 with the known manifest drift applies: doctor exit 0 with the known-drift line (M11).
+    - The record `doctor-gate-evidence.md` holds `HEAD: bbe5e5860`, the STEP 4 command text of FR-3 with exit 2, the VERDICT line copied from the ARCHITECTURE line, and `DURATION: step 4 took 175.150 s, from the timing run at bbe5e5860`.
+    - Finding F201 (Review A): FIX. The record holds the real CLI exit 2 and the known-drift line.
+    - Finding F202 (Review A): FIX. The Red cases use a stub tsx at the real call path. Part A passes.
+    - Finding F203 (Review A): FIX. The Red 127 cases assert `tsx_absent=1` before the run. The gate returns 127.
+    - Finding F204 (Review A): FIX. Task 2.4 holds a correction note. The new saved logs are at `bbe5e5860`.
+    - Finding F205 (Review A): DECLINE. The spec pins the owner text for exit 0 (Nit).
+    - Finding F251 (Review B): FIX. The gate reads the real CLI exit, so a tool failure exits 1.
+    - Residual risk: the CLI contract gives exit 1 for a boundary failure. A failure of the `cd` in the step 4 command, or an uncaught Node exception, also gives exit 1, and the gate records it as a boundary verdict. FR-3 pins the command text, so this task does not change it.
 
 ## Phase 3: The gate is green on master
 
