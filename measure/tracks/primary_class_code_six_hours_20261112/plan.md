@@ -1,5 +1,11 @@
 # Primary class code: six hours
 
+- [~] Add the owner-authorized isolated production QA teacher/school/class fixture,
+  sign in through the public production host, open its class code through Start
+  class, and capture the actual Class sign-in screen with expiry timing evidence.
+  Remove the one-time workflow after it runs. The earlier Cloud Run screenshot
+  proves deployment only and does not satisfy this follow-up.
+
 - [x] Change the expiry regression check to six hours; confirm it fails, then update
   the owning constant and current documentation.
 - [x] Run the student login tests, affected type checks and production build; review

@@ -1,0 +1,169 @@
+name: Primary class sign-in proof (temporary)
+
+on:
+  workflow_dispatch:
+    inputs:
+      fixture:
+        description: Base64 JSON for the isolated QA fixture; password hash only
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: primary-class-signin-proof
+      cancel-in-progress: false
+    steps:
+      - name: Authenticate with existing deployment identity
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2.1.13
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@e427ad8a34f8676edf47cf7d7925499adf3eb74f # v2.2.1
+        with:
+          project_id: primary-advantage
+      - name: Prepare one-time transactional fixture
+        env:
+          QA_FIXTURE: ${{ inputs.fixture }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const fixture = JSON.parse(Buffer.from(process.env.QA_FIXTURE, 'base64').toString('utf8'));
+          if (typeof fixture.passwordHash !== 'string') throw new Error('Missing password hash');
+          console.log('::add-mask::' + fixture.passwordHash);
+
+          /** Creates only the fresh QA school, teacher, credential, class, and teacher link. */
+          async function seedFixture() {
+            const postgres = require('/tmp/primary-qa/node_modules/postgres');
+            const input = JSON.parse(Buffer.from(process.env.QA_FIXTURE, 'base64').toString('utf8'));
+            const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+            for (const key of ['schoolId', 'teacherId', 'accountId', 'classroomId', 'teacherLinkId']) {
+              if (!uuid.test(input[key])) throw new Error('Invalid fresh fixture ID: ' + key);
+            }
+            if (!/^qa-class6h-20261112-[0-9a-f]{8}$/.test(input.username)
+              || input.schoolName !== 'Primary QA - Class sign-in proof'
+              || input.teacherName !== 'QA Teacher - Six-hour check'
+              || input.classroomName !== 'QA Class - 6-hour sign-in'
+              || !input.passwordHash.startsWith('$argon2id$v=19$m=19456,t=2,p=1$')) {
+              throw new Error('Unexpected fixture namespace or credential format');
+            }
+            const connection = new URL(process.env.DATABASE_URL);
+            if (decodeURIComponent(connection.pathname) !== '/primary_v2') {
+              throw new Error('Refusing a database other than primary_v2');
+            }
+            const socket = connection.searchParams.get('host');
+            if (socket !== '/cloudsql/reading-advantage:asia-southeast1:cloud-sql') {
+              throw new Error('Unexpected Primary Cloud SQL socket');
+            }
+            connection.searchParams.delete('host');
+            const sql = postgres(connection.toString(), {
+              path: socket + '/.s.PGSQL.' + (connection.port || '5432'),
+              max: 1, prepare: false, connect_timeout: 20,
+            });
+            try {
+              await sql.begin(async (tx) => {
+                await tx.unsafe('SET LOCAL search_path = public');
+                const [target] = await tx.unsafe('SELECT current_database() AS name');
+                if (target.name !== 'primary_v2') throw new Error('Unexpected connected database');
+                const legacy = await tx.unsafe(
+                  "SELECT 'article' AS table_name WHERE to_regclass('public.article') IS NOT NULL "
+                  + "UNION ALL SELECT '_prisma_migrations' WHERE to_regclass('public._prisma_migrations') IS NOT NULL"
+                );
+                if (legacy.length) throw new Error('Refusing legacy Prisma database');
+                for (const table of ['schools', 'users', 'accounts', 'classrooms', 'classroom_teachers', 'primary_help_events']) {
+                  const [present] = await tx.unsafe('SELECT to_regclass($1) AS relation', ['public.' + table]);
+                  if (!present.relation) throw new Error('Missing current schema table: ' + table);
+                }
+                await tx.unsafe(
+                  'INSERT INTO schools (id,name) VALUES ($1,$2) ON CONFLICT (id) DO NOTHING',
+                  [input.schoolId, input.schoolName]
+                );
+                await tx.unsafe(
+                  'INSERT INTO users (id,username,display_username,name,role,school_id) '
+                  + "VALUES ($1,$2,$2,$3,'TEACHER',$4) ON CONFLICT (id) DO NOTHING",
+                  [input.teacherId, input.username, input.teacherName, input.schoolId]
+                );
+                await tx.unsafe(
+                  'INSERT INTO accounts (id,user_id,provider_id,password,temporary_password_issued_at) '
+                  + "VALUES ($1,$2,'credential',$3,NULL) ON CONFLICT (id) DO NOTHING",
+                  [input.accountId, input.teacherId, input.passwordHash]
+                );
+                await tx.unsafe(
+                  'INSERT INTO classrooms (id,name,school_id,teacher_id,grade,archived,picture_password_enabled) '
+                  + 'VALUES ($1,$2,$3,$4,4,false,false) ON CONFLICT (id) DO NOTHING',
+                  [input.classroomId, input.classroomName, input.schoolId, input.teacherId]
+                );
+                await tx.unsafe(
+                  'INSERT INTO classroom_teachers (id,classroom_id,teacher_id) VALUES ($1,$2,$3) ON CONFLICT (id) DO NOTHING',
+                  [input.teacherLinkId, input.classroomId, input.teacherId]
+                );
+                const rows = await tx.unsafe(
+                  'SELECT s.name AS school_name,u.username,u.role,u.name AS teacher_name,u.school_id,'
+                  + 'a.password,a.provider_id,a.temporary_password_issued_at,c.name AS class_name,'
+                  + 'c.teacher_id,c.school_id AS class_school_id,c.archived,c.picture_password_enabled '
+                  + 'FROM schools s JOIN users u ON u.school_id=s.id '
+                  + 'JOIN accounts a ON a.user_id=u.id JOIN classrooms c ON c.teacher_id=u.id '
+                  + 'JOIN classroom_teachers ct ON ct.classroom_id=c.id AND ct.teacher_id=u.id '
+                  + 'WHERE s.id=$1 AND u.id=$2 AND a.id=$3 AND c.id=$4 AND ct.id=$5',
+                  [input.schoolId,input.teacherId,input.accountId,input.classroomId,input.teacherLinkId]
+                );
+                const saved = rows[0];
+                if (rows.length !== 1 || saved.school_name !== input.schoolName
+                  || saved.username !== input.username || saved.role !== 'TEACHER'
+                  || saved.teacher_name !== input.teacherName || saved.school_id !== input.schoolId
+                  || saved.password !== input.passwordHash || saved.provider_id !== 'credential'
+                  || saved.temporary_password_issued_at !== null || saved.class_name !== input.classroomName
+                  || saved.teacher_id !== input.teacherId || saved.class_school_id !== input.schoolId
+                  || saved.archived !== false || saved.picture_password_enabled !== false) {
+                  throw new Error('Fixture verification failed; rolling back transaction');
+                }
+              });
+              console.log(JSON.stringify({
+                fixtureReady: true, database: 'primary_v2', schoolId: input.schoolId,
+                teacherId: input.teacherId, username: input.username, classroomId: input.classroomId,
+                records: 5, students: 0,
+              }));
+            } finally {
+              await sql.end();
+            }
+          }
+          const shell = [
+            'set -euo pipefail',
+            'apt-get update -qq',
+            'apt-get install -y -qq curl ca-certificates >/dev/null',
+            'curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64',
+            'chmod +x /usr/local/bin/cloud-sql-proxy',
+            'mkdir -p /cloudsql /tmp/primary-qa',
+            'cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &',
+            'proxy_pid=$!',
+            'trap \'kill "$proxy_pid" 2>/dev/null || true\' EXIT',
+            'sleep 5',
+            'npm install --prefix /tmp/primary-qa --ignore-scripts --no-audit --no-fund postgres@3.4.9',
+            "node <<'SEED_NODE'",
+            '(' + seedFixture.toString() + ')().catch(error => { console.error(error.message); process.exitCode = 1; });',
+            'SEED_NODE',
+          ].join('\n');
+          const config = {
+            steps: [{
+              name: 'node:22-slim', id: 'seed-isolated-primary-proof', entrypoint: 'bash',
+              args: ['-c', shell.replaceAll('$', () => '$$')],
+              env: ['QA_FIXTURE=' + process.env.QA_FIXTURE], secretEnv: ['DATABASE_URL'],
+            }],
+            availableSecrets: {secretManager: [{
+              versionName: 'projects/$PROJECT_ID/secrets/PRIMARY_V2_DATABASE_URL/versions/latest',
+              env: 'DATABASE_URL',
+            }]},
+            options: {logging: 'CLOUD_LOGGING_ONLY'},
+            timeout: '600s',
+          };
+          fs.writeFileSync(path.join(process.env.RUNNER_TEMP, 'primary-class-signin-proof.json'), JSON.stringify(config));
+          NODE
+      - name: Create only the isolated mock data
+        run: |
+          gcloud builds submit --no-source --project=primary-advantage --config="$RUNNER_TEMP/primary-class-signin-proof.json"

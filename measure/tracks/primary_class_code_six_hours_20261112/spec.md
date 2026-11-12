@@ -31,3 +31,21 @@ The manual Primary traffic file remains an optional fallback, including its exis
 release-source binding. Normal pushes do not call it. Verify the six-hour release on the
 public production host and confirm 100 percent traffic follows the latest revision.
 The requested browser screenshot is still part of delivery; retry capture after deployment.
+
+## Owner update: isolated production mock for the screenshot
+
+Owner request, 2026-11-12:
+
+> ขอ screenshot หน้า Class sign-in บนเว็บจริงด้วย ให้เห็นว่ารหัสเปิดได้ 6 ชม.แล้ว
+
+After teacher authentication was unavailable:
+
+> ลองทำเป็น mock data หน่อย เพิ่มใน Database เลย
+
+Create an isolated QA school, a TEACHER credential, and a classroom in the existing
+Primary V2 database, with no real student data. Use a fresh random password and the
+existing Argon2id format. Create the class code through the deployed Start class
+control; do not seed an artificial expiry or edit the browser DOM. Verify and
+capture the actual Class sign-in panel, comparing its expiry with Bangkok time.
+Use the existing deployment identity for the one-time transactional insert, then
+remove the temporary workflow. No IAM or runtime deployment changes are needed.
