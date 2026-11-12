@@ -3131,7 +3131,7 @@ for every other track.
 - No checkpoint marker is written here; phase acceptance comes first.
 - Report: `measure/runs/storytime_app_rebuild_20261025/green-p4-closeout.log`.
 
-## Phase 5: Milestone week integration
+## Phase 5: Milestone week integration [checkpoint: 2e37ba62c]
 
 - [x] 5.1 Media list of the milestone week from the receiving step: each file, its kind, its rule, and its check. This includes the tile labels and the home words. Send the list through the PM orchestrator to Workbooks and Forge. Name Daniel's offer to do the phoneme noise step. Commits: `2887dc70b`, `8568a8fba`, `290a66b4b`.
   - The picture file arrives on `books[].cover` and `books[].pages[].image`. For w01 it arrives from 2026-11-06. For w02 to w07 it arrives by 2026-11-16. Source: Workbooks answers Q13 to Q15, through the PM, 2026-11-03. Daniel's picture approvals cover the app.
