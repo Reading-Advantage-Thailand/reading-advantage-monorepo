@@ -19,7 +19,7 @@
 - The full doctor run goes through the heavy-run prefix, in the foreground: `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'`. The three shell guards run as plain commands.
 - If the heavy run ends with exit 124, the task stops. The orchestrator reports the stop and asks the owner for the next action. No retry runs with a longer timeout before that answer.
 
-## Phase 1: F411, the marker guard accepts the pending marker
+## Phase 1: F411, the marker guard accepts the pending marker [checkpoint: 247330b27]
 
 Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 55, the comment at lines 32 to 39, and the two messages), entry A8 of `measure/anti-patterns.md`, and step 2 of `measure/doctor.sh`. The catalog test reads the A8 Guard line. No product symbol changes.
 
@@ -77,6 +77,7 @@ Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 5
     - `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0, with `cases_total=14 cases_failed=0`.
     - `git log 088efb891..HEAD` lists four commits, all with `track_id: doctor_gate_repair_20261112`: `0088e86c8`, `d8b60a75c`, `150e22e9d`, `14a501a77`. No other track committed in the range.
     - `git diff --name-only 088efb891..HEAD`: `measure/anti-patterns.md`, `measure/tracks/doctor_gate_repair_20261112/plan.md`, `tests/orchestrator_marker_vocabulary.sh`, `tests/orchestrator_marker_vocabulary_cases.sh`. The list matches the allowed set.
+    - Phase 1 accepted at 247330b27 (phase acceptance r1 pass, MiniMax M3.1 Flash); reviews A and B pass; adversarial 18 of 18 mutants killed; Review C and UX browser review not applicable.
 
 ## Phase 2: F421, the gate records the architecture verdict
 
