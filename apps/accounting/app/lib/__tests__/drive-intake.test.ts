@@ -26,6 +26,12 @@
  * The request also carries the alias names of the same ports, so a naming
  * drift in the Green task does not hide a behavior failure.
  *
+ * Remediation r1 (plan task 3.8): pass 1 of the duplicate lookup reads the
+ * newest submissions through `listRecentSubmissionEvidence({ scope, limit })`.
+ * The fake intake repository returns the seeded submissions, then the
+ * submissions that the poll wrote, as `{ submissionId, evidenceReference }`,
+ * newest first. The member `listRecentWithEvidence` no longer exists.
+ *
  * The read path has two ports. The local reader reads a text PDF, a Google
  * Sheet, and an `.xlsx` workbook on this machine. The extraction port reads a
  * non-text PDF, a JPEG, and a PNG on Vertex AI. The local reader returns
@@ -120,6 +126,14 @@ const ACCEPTANCE_ROWS = [
   "holds no file name, no payee, no amount, and no Drive id in the failure record",
   "reads the Drive folder id from ACCOUNTING_DRIVE_FOLDER_ID and holds no Drive id literal in the adapter source",
   "runs the duplicate lookup in two passes",
+  "reads pass 1 through listRecentSubmissionEvidence with the company scope and not through listRecentWithEvidence",
+  "gives a third byte-equal copy the original submission when the newest byte-equal row is a duplicate row (F302)",
+  "skips a failed row with neither id in pass 2 without a byte compare and continues the scan (F302)",
+  "finds a hand-made submission with no intake row in pass 1 and writes no second submission (F303)",
+  "never sends an .xlsx file or a Google Sheet to the extraction port and marks the row failed with a review reason (F307)",
+  "marks the row failed with a review reason for a read result with no draft field (F310)",
+  "stores a native Google Sheet with the .xlsx MIME type and a PDF with the PDF type (F312)",
+  "passes the actor company scope to every mark and bump call (Review B F304)",
 ] as const;
 
 console.log(`acceptance_rows=${ACCEPTANCE_ROWS.length}`);
@@ -632,10 +646,12 @@ function applyMark(
 /**
  * Builds the fake intake document repository.
  * @param seed The rows the repository holds before the poll.
+ * @param listSubmissions The submissions that pass 1 reads, newest first.
  * @returns The port, its recorded calls, and its rows.
  */
 function createFakeIntakeRepository(
   seed: readonly FakeIntakeRow[] = [],
+  listSubmissions: () => readonly FakeSubmission[] = () => [],
 ): {
   readonly port: Record<string, unknown>;
   readonly calls: RecordedCall[];
@@ -659,11 +675,14 @@ function createFakeIntakeRepository(
       const id = findNamed(args, ["driveFileId", "drive_file_id", "fileId"]);
       return rows.find((row) => row.driveFileId === id);
     },
-    listRecentWithEvidence: (args) => {
+    listRecentSubmissionEvidence: (args) => {
       const limit = collectNumbers(args)[0] ?? SCAN_CAP_DEFAULT;
-      return rows
-        .filter((row) => row.evidenceReference !== null)
-        .slice(0, limit);
+      return listSubmissions()
+        .slice(0, limit)
+        .map((submission) => ({
+          submissionId: submission.id,
+          evidenceReference: submission.evidenceReference,
+        }));
     },
     findByEvidenceByteSize: (args) => {
       const size = collectNumbers(args)[0];
@@ -919,7 +938,8 @@ interface PollFakes {
  * Builds the fake ports of one poll run.
  * @param files The fake Drive listing.
  * @param intakeSeed The intake rows the repository holds before the poll.
- * @param submissionSeed The submissions the repository holds before the poll.
+ * @param submissionSeed The submissions the repository holds before the poll,
+ *   newest first. Pass 1 of the duplicate lookup reads them.
  * @returns The fake ports.
  */
 function createPollFakes(
@@ -927,11 +947,18 @@ function createPollFakes(
   intakeSeed: readonly FakeIntakeRow[] = [],
   submissionSeed: readonly FakeSubmission[] = [],
 ): PollFakes {
+  const submissionRepository = createFakeSubmissionRepository(submissionSeed);
+  // Newest first: the submissions that the poll wrote, then the seed. The seed
+  // array is already ordered newest first.
+  const listSubmissions = (): readonly FakeSubmission[] => [
+    ...[...submissionRepository.stored].reverse(),
+    ...submissionSeed,
+  ];
   return {
     source: createFakeSourcePort(files),
     evidenceStore: createFakeEvidenceStore(),
-    intakeRepository: createFakeIntakeRepository(intakeSeed),
-    submissionRepository: createFakeSubmissionRepository(submissionSeed),
+    intakeRepository: createFakeIntakeRepository(intakeSeed, listSubmissions),
+    submissionRepository,
     localReader: createFakeLocalReader(),
     extraction: createFakeExtractionPort(),
   };
@@ -1400,31 +1427,23 @@ describe("the Drive intake poll", () => {
       bodyText,
     });
     const reference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
-    const seed: FakeIntakeRow[] = [];
+    const submissionSeed: FakeSubmission[] = [];
     for (let index = 0; index < 600; index += 1) {
-      seed.push(
-        makeIntakeRow({
-          driveFileId: `fake-old-file-id-${index}`,
-          status: "parsed",
+      submissionSeed.push(
+        makeSubmission({
           evidenceReference: `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`,
-          evidenceByteSize: 1000 + index,
         }),
       );
     }
-    const matchingRow = makeIntakeRow({
-      driveFileId: "fake-matching-file-id",
-      status: "parsed",
-      evidenceReference: reference,
-      evidenceByteSize: file.body.byteLength,
-    });
-    seed.unshift(matchingRow);
-    const fakes = createPollFakes([file], seed);
+    const matchingSubmission = makeSubmission({ evidenceReference: reference });
+    submissionSeed.unshift(matchingSubmission);
+    const fakes = createPollFakes([file], [], submissionSeed);
     fakes.evidenceStore.objects.set(reference, file.body);
 
     await runPoll(fakes);
 
     const passOne = fakes.intakeRepository.calls.find(
-      (call) => call.method === "listRecentWithEvidence",
+      (call) => call.method === "listRecentSubmissionEvidence",
     );
     expect(passOne).toBeDefined();
     expect(collectNumbers(passOne?.args ?? [])[0]).toBe(SCAN_CAP_DEFAULT);
@@ -1446,15 +1465,10 @@ describe("the Drive intake poll", () => {
     const references = [0, 1, 2].map(
       () => `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`,
     );
-    const seed = references.map((reference, index) =>
-      makeIntakeRow({
-        driveFileId: `fake-candidate-file-id-${index}`,
-        status: "parsed",
-        evidenceReference: reference,
-        evidenceByteSize: file.body.byteLength,
-      }),
+    const submissionSeed = references.map((reference) =>
+      makeSubmission({ evidenceReference: reference }),
     );
-    const fakes = createPollFakes([file], seed);
+    const fakes = createPollFakes([file], [], submissionSeed);
     fakes.evidenceStore.objects.set(references[0], file.body);
     fakes.evidenceStore.objects.set(references[1], file.body);
     fakes.evidenceStore.objects.set(references[2], file.body);
@@ -1465,6 +1479,17 @@ describe("the Drive intake poll", () => {
       (call) => call.method === "sameEvidenceBytes",
     );
     expect(compares.length).toBe(1);
+    // Pass 2 runs only when pass 1 finds no match.
+    expect(
+      fakes.intakeRepository.calls.filter(
+        (call) => call.method === "findByEvidenceByteSize",
+      ).length,
+    ).toBe(0);
+    const row = fakes.intakeRepository.rows.find(
+      (candidate) => candidate.driveFileId === file.id,
+    );
+    expect(row?.status).toBe("duplicate");
+    expect(row?.duplicateOfSubmissionId).toBe(submissionSeed[0]?.id);
   });
 
   it("takes the scan cap from ACCOUNTING_DUPLICATE_SCAN_CAP", async () => {
@@ -1488,7 +1513,7 @@ describe("the Drive intake poll", () => {
     }
 
     const passOne = fakes.intakeRepository.calls.find(
-      (call) => call.method === "listRecentWithEvidence",
+      (call) => call.method === "listRecentSubmissionEvidence",
     );
     expect(passOne).toBeDefined();
     expect(collectNumbers(passOne?.args ?? [])[0]).toBe(7);
@@ -1505,6 +1530,8 @@ describe("the Drive intake poll", () => {
     const reference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
     const historySubmission = makeSubmission({ evidenceReference: reference });
     const seed: FakeIntakeRow[] = [];
+    // 600 newer submissions fill pass 1 up to the cap; the history submission is older.
+    const submissionSeed: FakeSubmission[] = [];
     for (let index = 0; index < 600; index += 1) {
       seed.push(
         makeIntakeRow({
@@ -1514,7 +1541,13 @@ describe("the Drive intake poll", () => {
           evidenceByteSize: 2000 + index,
         }),
       );
+      submissionSeed.push(
+        makeSubmission({
+          evidenceReference: `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`,
+        }),
+      );
     }
+    submissionSeed.push(historySubmission);
     const historyRow = makeIntakeRow({
       driveFileId: "fake-history-row-file-id",
       status: "parsed",
@@ -1525,7 +1558,7 @@ describe("the Drive intake poll", () => {
       evidenceByteSize: file.body.byteLength,
     });
     seed.push(historyRow);
-    const fakes = createPollFakes([file], seed, [historySubmission]);
+    const fakes = createPollFakes([file], seed, submissionSeed);
     fakes.evidenceStore.objects.set(reference, file.body);
 
     await runPoll(fakes);
@@ -1643,7 +1676,8 @@ describe("the Drive intake poll", () => {
       evidenceReference: reference,
       evidenceByteSize: file.body.byteLength,
     });
-    const fakes = createPollFakes([file], [historyRow], [historySubmission]);
+    // The history submission is not in the newest submissions of pass 1, so pass 2 finds it.
+    const fakes = createPollFakes([file], [historyRow], []);
     fakes.evidenceStore.objects.set(reference, file.body);
 
     await runPoll(fakes);
@@ -1750,9 +1784,11 @@ describe("the Drive intake poll", () => {
       bodyText,
     });
     const reference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
+    const earlierSubmissionId = randomUUID();
     const earlierRow = makeIntakeRow({
       driveFileId: "fake-two-pass-earlier-file-id",
       status: "parsed",
+      submissionId: earlierSubmissionId,
       evidenceReference: reference,
       evidenceByteSize: file.body.byteLength,
     });
@@ -1761,11 +1797,378 @@ describe("the Drive intake poll", () => {
 
     await runPoll(fakes);
 
-    const methods = new Set(
-      fakes.intakeRepository.calls.map((call) => call.method),
+    const methods = fakes.intakeRepository.calls.map((call) => call.method);
+    expect(methods).toContain("listRecentSubmissionEvidence");
+    expect(methods).toContain("findByEvidenceByteSize");
+    expect(methods).not.toContain("listRecentWithEvidence");
+    expect(methods.indexOf("listRecentSubmissionEvidence")).toBeLessThan(
+      methods.indexOf("findByEvidenceByteSize"),
     );
-    expect(methods.has("listRecentWithEvidence")).toBe(true);
-    expect(methods.has("findByEvidenceByteSize")).toBe(true);
+    const row = fakes.intakeRepository.rows.find(
+      (candidate) => candidate.driveFileId === file.id,
+    );
+    expect(row?.status).toBe("duplicate");
+    expect(row?.duplicateOfSubmissionId).toBe(earlierSubmissionId);
     expect(DUPLICATE_PASSES).toBe(2);
+  });
+
+  it("reads pass 1 through listRecentSubmissionEvidence with the company scope and not through listRecentWithEvidence", async () => {
+    const file = makeFile({
+      id: "fake-pass-one-member-file-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 pass-one-member",
+    });
+    const fakes = createPollFakes([file]);
+
+    await runPoll(fakes);
+
+    const passOneCalls = fakes.intakeRepository.calls.filter(
+      (call) => call.method === "listRecentSubmissionEvidence",
+    );
+    expect(passOneCalls.length).toBe(1);
+    expect(
+      fakes.intakeRepository.calls.filter(
+        (call) => call.method === "listRecentWithEvidence",
+      ).length,
+    ).toBe(0);
+    const scope = findNamed(passOneCalls[0]?.args ?? [], ["scope"]) as
+      | { readonly companyId?: string }
+      | undefined;
+    expect(scope?.companyId).toBe(COMPANY_ID);
+    expect(collectNumbers(passOneCalls[0]?.args ?? [])[0]).toBe(
+      SCAN_CAP_DEFAULT,
+    );
+  });
+
+  it("gives a third byte-equal copy the original submission when the newest byte-equal row is a duplicate row (F302)", async () => {
+    const file = makeFile({
+      id: "fake-f302-file-3",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 same bytes",
+    });
+    const originalReference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
+    const copyReference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
+    const originalSubmissionId = randomUUID();
+    const duplicateRow = makeIntakeRow({
+      driveFileId: "fake-f302-file-2",
+      status: "duplicate",
+      submissionId: null,
+      duplicateOfSubmissionId: originalSubmissionId,
+      evidenceReference: copyReference,
+      evidenceByteSize: file.body.byteLength,
+    });
+    const originalRow = makeIntakeRow({
+      driveFileId: "fake-f302-file-1",
+      status: "parsed",
+      submissionId: originalSubmissionId,
+      evidenceReference: originalReference,
+      evidenceByteSize: file.body.byteLength,
+    });
+    // The original submission is older than the newest submissions of pass 1,
+    // so only pass 2 can reach it (limit D-33).
+    const newerSubmissions = [0, 1].map(() =>
+      makeSubmission({
+        evidenceReference: `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`,
+      }),
+    );
+    const fakes = createPollFakes(
+      [file],
+      [duplicateRow, originalRow],
+      newerSubmissions,
+    );
+    fakes.evidenceStore.objects.set(originalReference, file.body);
+    fakes.evidenceStore.objects.set(copyReference, file.body);
+
+    await runPoll(fakes);
+
+    const third = fakes.intakeRepository.rows.find(
+      (candidate) => candidate.driveFileId === file.id,
+    );
+    console.log(
+      `f302_third_status=${third?.status} f302_new_submissions=${fakes.submissionRepository.stored.length}`,
+    );
+    expect(third?.status).toBe("duplicate");
+    expect(third?.duplicateOfSubmissionId).toBe(originalSubmissionId);
+    expect(fakes.submissionRepository.stored.length).toBe(0);
+  });
+
+  it("skips a failed row with neither id in pass 2 without a byte compare and continues the scan (F302)", async () => {
+    const file = makeFile({
+      id: "fake-f302-skip-file-3",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 skip bytes",
+    });
+    const failedReference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
+    const olderReference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
+    const originalSubmissionId = randomUUID();
+    const failedRow = makeIntakeRow({
+      driveFileId: "fake-f302-skip-file-2",
+      status: "failed",
+      failureReason: "review: the document read failed",
+      failureCount: 1,
+      submissionId: null,
+      duplicateOfSubmissionId: null,
+      evidenceReference: failedReference,
+      evidenceByteSize: file.body.byteLength,
+    });
+    const olderRow = makeIntakeRow({
+      driveFileId: "fake-f302-skip-file-1",
+      status: "parsed",
+      submissionId: originalSubmissionId,
+      evidenceReference: olderReference,
+      evidenceByteSize: file.body.byteLength,
+    });
+    const fakes = createPollFakes([file], [failedRow, olderRow]);
+    fakes.evidenceStore.objects.set(failedReference, file.body);
+    fakes.evidenceStore.objects.set(olderReference, file.body);
+
+    await runPoll(fakes);
+
+    const row = fakes.intakeRepository.rows.find(
+      (candidate) => candidate.driveFileId === file.id,
+    );
+    expect(row?.status).toBe("duplicate");
+    expect(row?.duplicateOfSubmissionId).toBe(originalSubmissionId);
+    expect(fakes.submissionRepository.stored.length).toBe(0);
+    const compares = fakes.evidenceStore.calls.filter(
+      (call) => call.method === "sameEvidenceBytes",
+    );
+    expect(compares.length).toBeGreaterThan(0);
+    expect(
+      compares.filter((call) =>
+        collectStrings(call.args).includes(failedReference),
+      ).length,
+    ).toBe(0);
+  });
+
+  it("finds a hand-made submission with no intake row in pass 1 and writes no second submission (F303)", async () => {
+    const file = makeFile({
+      id: "fake-f303-file-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 hand made",
+    });
+    const handReference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
+    const handSubmission = makeSubmission({ evidenceReference: handReference });
+    const fakes = createPollFakes([file], [], [handSubmission]);
+    fakes.evidenceStore.objects.set(handReference, file.body);
+
+    await runPoll(fakes);
+
+    const created = fakes.intakeRepository.rows.find(
+      (candidate) => candidate.driveFileId === file.id,
+    );
+    console.log(
+      `f303_status=${created?.status} f303_new_submissions=${fakes.submissionRepository.stored.length}`,
+    );
+    expect(created?.status).toBe("duplicate");
+    expect(created?.duplicateOfSubmissionId).toBe(handSubmission.id);
+    expect(fakes.submissionRepository.stored.length).toBe(0);
+  });
+
+  it("never sends an .xlsx file or a Google Sheet to the extraction port and marks the row failed with a review reason (F307)", async () => {
+    const cases = [
+      {
+        label: "xlsx workbook",
+        mimeType:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+      {
+        label: "Google Sheet",
+        mimeType: "application/vnd.google-apps.spreadsheet",
+      },
+    ] as const;
+    let xlsxModelCalls = 0;
+    for (const item of cases) {
+      const file = makeFile({
+        id: `fake-f307-${item.label.replace(" ", "-")}-id`,
+        name: "2026-11_cloud-invoice_Test Counterparty.xlsx",
+        mimeType: item.mimeType,
+        bodyText: `PK ${item.label} workbook bytes`,
+      });
+      const needsModelReader = createRecordingPort({}, () =>
+        localNeedsModelResult(),
+      );
+      const fakes: PollFakes = {
+        ...createPollFakes([file]),
+        localReader: needsModelReader,
+      };
+
+      await runPoll(fakes);
+
+      xlsxModelCalls += fakes.extraction.calls.length;
+      expect(needsModelReader.calls.length, item.label).toBeGreaterThan(0);
+      expect(fakes.submissionRepository.stored.length, item.label).toBe(0);
+      expect(fakes.intakeRepository.rows.length, item.label).toBe(1);
+      const row = fakes.intakeRepository.rows[0];
+      expect(row?.status, item.label).toBe("failed");
+      expect(row?.failureReason ?? "", item.label).toMatch(/^review:/u);
+    }
+    console.log(`xlsx_model_calls=${xlsxModelCalls}`);
+    expect(xlsxModelCalls).toBe(0);
+  });
+
+  it("marks the row failed with a review reason for a read result with no draft field (F310)", async () => {
+    const withoutDraft = { ...FAKE_DRAFT, kind: "text" };
+    const modelWithoutDraft = { ...FAKE_DRAFT, kind: "model", outcome: "model" };
+    const cases = [
+      {
+        label: "local text result with no draft",
+        file: makeFile({
+          id: "fake-f310-local-file-id",
+          name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+          mimeType: "application/pdf",
+          bodyText: "%PDF-1.4 local no draft",
+        }),
+        localReader: createRecordingPort({}, () => withoutDraft),
+        extraction: createFakeExtractionPort(),
+      },
+      {
+        label: "model result for a non-text PDF with no draft",
+        file: makeFile({
+          id: "fake-f310-model-pdf-file-id",
+          name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+          mimeType: "application/pdf",
+          bodyText: "%PDF-1.4 model no draft",
+        }),
+        localReader: createRecordingPort({}, () => localNeedsModelResult()),
+        extraction: createRecordingPort({}, () => modelWithoutDraft),
+      },
+      {
+        label: "model result for a JPEG with no draft",
+        file: makeFile({
+          id: "fake-f310-model-jpeg-file-id",
+          name: "2026-11_receipt_Test Counterparty.jpg",
+          mimeType: "image/jpeg",
+          bodyText: "\xFF\xD8\xFF model no draft",
+        }),
+        localReader: createFakeLocalReader(),
+        extraction: createRecordingPort({}, () => modelWithoutDraft),
+      },
+    ];
+    for (const item of cases) {
+      const fakes: PollFakes = {
+        ...createPollFakes([item.file]),
+        localReader: item.localReader,
+        extraction: item.extraction,
+      };
+
+      await runPoll(fakes);
+
+      expect(fakes.submissionRepository.stored.length, item.label).toBe(0);
+      expect(fakes.intakeRepository.rows.length, item.label).toBe(1);
+      const row = fakes.intakeRepository.rows[0];
+      expect(row?.status, item.label).toBe("failed");
+      expect(row?.failureReason ?? "", item.label).toMatch(/^review:/u);
+    }
+  });
+
+  it("stores a native Google Sheet with the .xlsx MIME type and a PDF with the PDF type (F312)", async () => {
+    const xlsxMimeType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    const sheet = makeFile({
+      id: "fake-f312-sheet-file-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.xlsx",
+      mimeType: "application/vnd.google-apps.spreadsheet",
+      bodyText: "PK exported sheet bytes",
+    });
+    const pdf = makeFile({
+      id: "fake-f312-pdf-file-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 content type",
+    });
+    const sheetFakes = createPollFakes([sheet]);
+    const pdfFakes = createPollFakes([pdf]);
+
+    await runPoll(sheetFakes);
+    await runPoll(pdfFakes);
+
+    const sheetPuts = sheetFakes.evidenceStore.calls.filter(
+      (call) => call.method === "put",
+    );
+    expect(sheetPuts.length).toBeGreaterThan(0);
+    for (const call of sheetPuts) {
+      expect(findNamed(call.args, ["contentType"])).toBe(xlsxMimeType);
+      expect(
+        collectStrings(call.args).filter((value) =>
+          value.includes("google-apps"),
+        ),
+      ).toEqual([]);
+    }
+    const pdfPuts = pdfFakes.evidenceStore.calls.filter(
+      (call) => call.method === "put",
+    );
+    expect(pdfPuts.length).toBeGreaterThan(0);
+    for (const call of pdfPuts) {
+      expect(findNamed(call.args, ["contentType"])).toBe("application/pdf");
+    }
+  });
+
+  it("passes the actor company scope to every mark and bump call (Review B F304)", async () => {
+    const parsedFile = makeFile({
+      id: "fake-scope-parsed-file-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 scope bytes",
+    });
+    const duplicateFile = makeFile({
+      id: "fake-scope-duplicate-file-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 scope bytes",
+    });
+    const failedFile = makeFile({
+      id: "fake-scope-failed-file-id",
+      name: "2026-11_receipt_Test Counterparty.txt",
+      mimeType: "text/plain",
+      bodyText: "plain text",
+    });
+    const replayFile = makeFile({
+      id: "fake-scope-replay-file-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 replay bytes",
+    });
+    const replayReference = `private-evidence://${COMPANY_ID}/submissions/${randomUUID()}/evidence`;
+    const replayRow = makeIntakeRow({
+      driveFileId: replayFile.id,
+      status: "parsed",
+      submissionId: randomUUID(),
+      evidenceReference: replayReference,
+      evidenceByteSize: replayFile.body.byteLength,
+    });
+    const fakes = createPollFakes(
+      [parsedFile, duplicateFile, failedFile, replayFile],
+      [replayRow],
+    );
+    fakes.evidenceStore.objects.set(replayReference, replayFile.body);
+
+    await runPoll(fakes);
+
+    const markMethods = [
+      "markDuplicate",
+      "markParsed",
+      "markFailed",
+      "bumpSighting",
+    ];
+    const markCalls = fakes.intakeRepository.calls.filter((call) =>
+      markMethods.includes(call.method),
+    );
+    const scopedCalls = markCalls.filter((call) => {
+      const scope = findNamed(call.args, ["scope"]) as
+        | { readonly companyId?: string }
+        | undefined;
+      return scope?.companyId === COMPANY_ID;
+    });
+    console.log(`scoped_mark_calls=${scopedCalls.length}`);
+    expect(new Set(markCalls.map((call) => call.method))).toEqual(
+      new Set(markMethods),
+    );
+    expect(markCalls.length).toBeGreaterThanOrEqual(4);
+    expect(scopedCalls.length).toBe(markCalls.length);
   });
 });
