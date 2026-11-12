@@ -429,6 +429,36 @@ case_no_write_in_root() {
   fi
 }
 
+# ---------------------------------------------------------------------------
+# Adversarial cases (Phase 2)
+# ---------------------------------------------------------------------------
+
+# Case drift_match_requires_whole_line: an exit 2 whose output holds the drift
+# text inside a longer line is a tool failure, not the known drift. The real
+# match is a whole-line match (grep -qxF). A mutant that drops the whole-line
+# flag (grep -qF) accepts this run as the known drift and exits 0.
+case_drift_match_requires_whole_line() {
+  write_all_guards 0
+  write_stub_tsx 2
+  export DOCTOR_GATE_TSX_MESSAGE="crash context: $DRIFT_LINE (uncaught exception)"
+  run_gate
+  if [ "$gate_rc" -ne 1 ]; then
+    case_fail_reason="expected gate exit 1, got exit ${gate_rc}"
+    return
+  fi
+  if ! output_has 'ARCHITECTURE: step 4 exits 2; this is a tool failure, not a boundary verdict'; then
+    case_fail_reason="the tool failure ARCHITECTURE line is missing"
+    return
+  fi
+  if ! output_has 'DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1'; then
+    case_fail_reason="the tool failure DOCTOR line is missing"
+    return
+  fi
+  if output_has 'DOCTOR: the three structural guard steps gate this exit code'; then
+    case_fail_reason="the output holds the gate line for a substring drift match"
+  fi
+}
+
 # Part B helpers
 
 load_record() {
@@ -831,6 +861,7 @@ run_part_a() {
   run_case tool_failure_codes
   run_case architecture_line_shows_code
   run_case no_write_in_root
+  run_case drift_match_requires_whole_line
   PART_A_TOTAL=$((CASES_TOTAL - total_before))
   PART_A_FAILED=$((CASES_FAILED - failed_before))
 }
