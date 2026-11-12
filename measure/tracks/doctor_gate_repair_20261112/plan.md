@@ -285,19 +285,31 @@ Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the regi
     - Labeled counts: doctor gate `cases_total=31 cases_failed=0` (part A 19, part B 12); marker vocabulary cases `cases_total=15 cases_failed=0`; catalog `PASS` (A1-A15).
     - Command: `bash -n measure/doctor.sh`. Exit 0.
     - `measure/doctor.sh` itself did not run. Task 3.4 runs it.
-- [ ] 3.1 Green: the registry status text. The entry in `measure/tracks.md` already holds the due date, the owner chain, F411, and F421, so this task makes one change: the `Status:` text moves from `new (spec and plan only; due 2026-11-14)` to `implemented (doctor gate green at <short-sha>; due 2026-11-14)`. Add no other field.
+- [x] 3.1 Green: the registry status text. (automated evidence; the `docs(measure): state the doctor gate track status` commit follows the record commit) The entry in `measure/tracks.md` already holds the due date, the owner chain, F411, and F421, so this task makes one change: the `Status:` text moves from `new (spec and plan only; due 2026-11-14)` to `implemented (doctor gate green at <short-sha>; due 2026-11-14)`. Add no other field.
   - Check: `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` shows the link line and the status line. `bash tests/orchestrator_catalog.sh` exits 0.
   - Commit: `docs(measure): state the doctor gate track status (track_id: doctor_gate_repair_20261112)`.
-- [ ] 3.2 Reviews. Run Review A (correctness) on the diff. Run Review B (security): the gate must not hide a real failure, and the guard must not accept a marker that hides work. Review C records "not applicable", because no route and no UI change. Run adversarial testing for the exit 1 rule, because tasks 3.0a and 3.0b change a script with a boolean outcome. Each result file goes in `measure/runs/doctor_gate_repair_20261112/` with the role and the short HEAD: `review-a-<short-head>.json`, `review-b-<short-head>.json`, `review-c-<short-head>.json`, and `adversarial-p3-<short-head>.json`.
+  - Evidence: the status text now reads `implemented (doctor gate green at 4d0b4e6b3; due 2026-11-14)`. `grep -n 'doctor_gate_repair_20261112' measure/tracks.md` prints one line, the link line, because the status line holds no track id (Review A A211). `bash tests/orchestrator_catalog.sh` exits 0.
+- [x] 3.2 Reviews. Run Review A (correctness) on the diff. Run Review B (security): the gate must not hide a real failure, and the guard must not accept a marker that hides work. Review C records "not applicable", because no route and no UI change. Run adversarial testing for the exit 1 rule, because tasks 3.0a and 3.0b change a script with a boolean outcome. Each result file goes in `measure/runs/doctor_gate_repair_20261112/` with the role and the short HEAD: `review-a-<short-head>.json`, `review-b-<short-head>.json`, `review-c-<short-head>.json`, and `adversarial-p3-<short-head>.json`.
   - Check: each review result file names a verdict and its findings.
   - Check: the adversarial result file names the mutants of the exit 1 rule and the case that kills each one.
-- [ ] 3.3 Phase acceptance at an immutable HEAD. Record `git rev-parse HEAD` and the review verdicts. No Critical or High finding stays open.
-- [ ] 3.4 Final task: the doctor gate exits 0 on master. Run the full doctor command through the heavy-run prefix at one HEAD:
+  - Evidence (automated; role results of the orchestrator):
+    - Review A: `measure/runs/doctor_gate_repair_20261112/review-a-p3-a284de0b0.json`. Verdict: pass. A209 to A213 are nonblocking. The adversarial commit closed A209 and A210.
+    - Review B: `measure/runs/doctor_gate_repair_20261112/review-b-p3-a284de0b0.json`. Verdict: pass. F207 is withdrawn. B214 is a Low residual. B215 is closed.
+    - Review C: `measure/runs/doctor_gate_repair_20261112/review-c-p3-4d0b4e6b3.json`. Verdict: pass, not applicable (no route and no UI change).
+    - Adversarial: `measure/runs/doctor_gate_repair_20261112/adversarial-p3-4d0b4e6b3.json`. Verdict: pass. 22 of 22 mutants killed (commit 4d0b4e6b3). The probe p3-24 survives as a residual. Gate line: `PASS: adversarial-testing gate passed`.
+- [b] 3.3 Phase acceptance at an immutable HEAD. Record `git rev-parse HEAD` and the review verdicts. No Critical or High finding stays open. deferred:phase-acceptance
+  - The phase acceptance role runs after the task 3.4 record commit, at an immutable HEAD. The final acceptance records its result here.
+- [x] 3.4 Final task: the doctor gate exits 0 on master. Run the full doctor command through the heavy-run prefix at one HEAD:
   `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash measure/doctor.sh'`
   - Check: the exit code is 0. The output holds the step 1 PASS line, no `FAIL: unsupported task marker` line, the step 3 PASS line, the architecture verdict line, and the `DOCTOR:` line. Record `git rev-parse HEAD`, the four step exit codes, the architecture verdict message, and the step 4 seconds in `doctor-gate-evidence.md`.
   - If the run exits 124, stop the task. The orchestrator reports the stop and asks the owner for the next action.
   - Evidence class: automated.
   - Commit: `docs(measure): record the doctor gate run (track_id: doctor_gate_repair_20261112)`, with this track folder.
+  - Evidence (role: Measure Jr Green; model: claude-code/claude-sonnet-5-5): run HEAD `4d0b4e6b323c9693fc6e28997b97855658f1e7e1`, date 2026-11-12. The doctor exited 0 (`heavy_rc=0`).
+    - The output holds the step 1 PASS line, no `FAIL: unsupported task marker` line, the step 3 PASS line, the line `ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110`, and the line `DOCTOR: the three structural guard steps gate this exit code`.
+    - Step exits: steps 1 to 3 exit 0; step 4 exits 2.
+    - Seconds: the whole heavy-run command took 1530 s, with a lock wait of more than 600 s. The run did not time step 4 alone. The Phase 2 timing run measured step 4 at 175.150 s.
+    - Run log: `measure/runs/doctor_gate_repair_20261112/doctor-run-4d0b4e6b3.log`. Record: `doctor-gate-evidence.md`.
 
 ## Verification commands
 
