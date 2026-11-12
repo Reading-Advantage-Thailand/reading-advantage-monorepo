@@ -141,7 +141,7 @@ Red and Green measure the counts again. A fact of this table is not a proof for 
 
 Review B is required for every phase that touches roles, the close sign-off, IAM-adjacent config, secrets, the Drive read, the Vertex route, or finance data. The reason of each row sits in the phase table of section 4.
 
-The browser review applies to Phase 7 only. The intake list is the only new surface of this track. The other phases change no page.
+The browser review applies to Phase 7 only. The intake list and the close controls are the new surfaces of this track, and both sit in Phase 7. The other phases change no page.
 
 ## 4. The per-phase strategy
 
@@ -655,7 +655,7 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | Review B (security) | **yes (required)** | The phase touches roles (the OWNER and the ACCOUNTANT see every row, the CEO sees none of the pending rows) and holds the two security guards (the non-Vertex route and the no-hash rule). Review B reads the scanner logic for an over-broad filter and reads the role rule of the list. |
 | Review C (UX/API) | yes | The intake list is a new surface for a reviewer. Review C checks the status labels, the reason text, the marker next to each value, and the link of a content duplicate. |
 | Adversarial testing | yes | A row with a hostile reason text, a row with a hostile link target, a marker value that is not in the enum, and a scanner input with a hidden banned token. |
-| Browser review (UX) | **yes (required)** | The intake list renders on the main page. The browser run proves the labels, the marker, the link, and the empty state. |
+| Browser review (UX) | **yes (required)** | The intake list and the close controls render on the main page. The browser run proves the labels, the marker, the link, the empty state, and the close controls. |
 
 **Red command per task**
 
@@ -666,6 +666,19 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 
 # 7.3 the guards
 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/intake-architecture-guards.test.ts'
+
+# 7.4a the document month and the zone
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/monthly-close.test.ts src/modules/accounting/__tests__/postgres-monthly-close-repository.test.ts'
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/api/submissions/export/route.test.ts'
+
+# 7.4c the transaction
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/monthly-close.test.ts src/modules/accounting/__tests__/postgres-monthly-close-repository.test.ts'
+
+# 7.4e the close notes
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/monthly-close-notes.test.ts'
+
+# 7.4g the close controls
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/_components/monthly-close-controls.test.tsx app/_components/pending-submissions-list.test.tsx "app/api/monthly-close/[id]/report/route.test.ts"'
 ```
 
 **Expected failure at the base**
@@ -675,10 +688,14 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | 7.1 | `intake-contracts.test.ts` | Exit 1 on the three new marker rows. The earlier rows of the file stay green. | `marker_values=3`, `marker_cases>=3` |
 | 7.1 | `intake-documents-list.test.tsx` | Exit 1. The message names the missing component `app/_components/intake-documents-list.tsx`. | `list_rows>=5`, `list_roles=2` |
 | 7.3 | `intake-architecture-guards.test.ts` | Exit 1. The message names the missing guard module `packages/backend/src/modules/accounting/intake-architecture-guards.ts`. | `guard_scanners=3`, `counterexample_fixtures=3`, `fixtures_detected=3` |
+| 7.4a | `monthly-close.test.ts`, `postgres-monthly-close-repository.test.ts`, `app/api/submissions/export/route.test.ts` | Exit 1. The message names the missing export `accountingMonthInBangkok`, and the repository row names the missing join on `source_month`. | `document_month_rows>=4`, `bangkok_month_cases>=2`, `export_month_rows>=2`, `history_month_rows=1` |
+| 7.4c | `monthly-close.test.ts`, `postgres-monthly-close-repository.test.ts` | Exit 1. The message names the missing port member `saveWithAuditEvent`, and the domain row names the missing transaction member of the fake. | `transaction_rows>=3` |
+| 7.4e | `monthly-close-notes.test.ts` | Exit 1. The message names the missing export `buildMonthlyCloseNotes`. | `close_note_rows>=7`, `close_note_kinds=4` |
+| 7.4g | `monthly-close-controls.test.tsx`, `pending-submissions-list.test.tsx`, `app/api/monthly-close/[id]/report/route.test.ts` | Exit 1. The message names the missing component `app/_components/monthly-close-controls.tsx` and the missing route file. | `close_control_rows>=6`, `accountant_control_rows=2`, `double_click_rows>=1` |
 
 **Green gate**
 
-- The three commands exit 0 with `tests_failed=0` and `tests_skipped=0`.
+- The commands of the Red block exit 0 with `tests_failed=0` and `tests_skipped=0`.
 - The backend accounting suite exits 0. The base is M3.
 - The app suite exits 0. The base is M1.
 - The app-wide `tsc`, the lint run, and the app build run exit 0.
@@ -687,18 +704,21 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 **Closeout gate**
 
 1. The Green gate of this phase holds with the quoted counts.
-2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `packages/backend/src/modules/accounting/{intake-architecture-guards.ts,intake-contracts.ts,intake.ts,index.ts,__tests__/**}`, `packages/backend/src/modules/accounting/__tests__/__fixtures__/**`, `apps/accounting/app/_components/{intake-documents-list.tsx,intake-documents-list.test.tsx,pending-submissions-list.tsx,pending-submissions-list.test.tsx,submission-history-list.tsx,submission-history-list.test.tsx}`, `apps/accounting/app/page.tsx`, and the track files.
+2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `packages/backend/src/modules/accounting/{intake-architecture-guards.ts,intake-contracts.ts,intake.ts,monthly-close.ts,postgres-monthly-close-repository.ts,index.ts,__tests__/**}`, `packages/backend/src/modules/accounting/__tests__/__fixtures__/**`, `apps/accounting/app/_components/{intake-documents-list.tsx,intake-documents-list.test.tsx,pending-submissions-list.tsx,pending-submissions-list.test.tsx,submission-history-list.tsx,submission-history-list.test.tsx,monthly-close-controls.tsx,monthly-close-controls.test.tsx}`, `apps/accounting/app/api/monthly-close/[id]/report/route.ts`, `apps/accounting/app/api/submissions/export/route.ts`, `apps/accounting/app/api/submissions/export/route.test.ts`, `apps/accounting/app/lib/monthly-close.ts`, `apps/accounting/app/page.tsx`, and the track files.
 3. Every row of spec section 12 has a named test file. The count `acceptance_rows_without_test=0` is a labeled integer.
 4. Each scanner rejects its own counterexample fixture. The count `fixtures_detected=3` is a labeled integer. A scanner that reports zero hits on its fixture fails the phase.
 5. The browser run of the intake list exits 0 with `FAIL=0` and `console_errors=0`.
 6. The detector of section 1.7 for A9 exits 1.
 7. `build-graph update ./graph.db packages/backend/src/modules/accounting/intake-architecture-guards.ts` runs once (A10).
+8. The export route changed in this phase, because the zone step of PM-17 reads the fixed zone `Asia/Bangkok`. The CSV text and the ten headers stay unchanged, and the count `export_headers_changed=0` is a labeled integer.
 
 **Fixtures and mocks**
 
 - The counterexample fixtures live under `packages/backend/src/modules/accounting/__tests__/__fixtures__/`. They are test data. No product code imports them.
 - The three fixtures are: a source file that names a banned provider token, a source file with an export that has no JSDoc block, and a migration fragment that holds a checksum column.
 - The list test renders the component with fake rows. Each fake row holds a fake status, a fake marker, a fake reason, a fake sighting count, and a fake history marker.
+- The close repository fake holds one transaction member for the sign and the lock. The member stages the status change and the audit row, and it applies both or neither.
+- The note items are fakes. Each item holds a fake voucher number, a fake tax invoice flag, a fake school invoice version, and a fake total in digits and in words.
 - The browser run reads the main page with a signed-in OWNER session. It uses a throwaway database and a seeded account, the pattern of the existing signed-in scripts.
 
 **Mutants**
@@ -711,14 +731,19 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 - A list that shows an approve action on a failed row. Rejected.
 - A list that shows a pending row to the CEO. Rejected.
 - A marker that renders as an empty cell. Rejected.
+- A close that reads `submitted_at`. Rejected.
+- A month step in UTC. Rejected.
+- A status write outside the transaction. Rejected.
+- A missing ACCOUNTANT control. Rejected.
 
 **Labeled counts and floors**
 
-`guard_scanners=3`, `counterexample_fixtures=3`, `fixtures_detected=3`, `guard_hits=0`, `marker_values=3`, `marker_cases>=3`, `list_rows>=5`, `list_roles=2`, `acceptance_rows_without_test=0`.
+`guard_scanners=3`, `counterexample_fixtures=3`, `fixtures_detected=3`, `guard_hits=0`, `marker_values=3`, `marker_cases>=3`, `list_rows>=5`, `list_roles=2`, `acceptance_rows_without_test=0`, `document_month_rows>=4`, `bangkok_month_cases>=2`, `export_month_rows>=2`, `history_month_rows=1`, `transaction_rows>=3`, `close_note_rows>=7`, `close_note_kinds=4`, `close_control_rows>=6`, `accountant_control_rows=2`, `double_click_rows>=1`, `export_headers_changed=0`.
 
 **What the tests cannot prove**
 
 - The browser layout of the intake list. The component test is a jsdom test. The browser run proves the layout.
+- The browser layout of the close controls. The component test is a jsdom test, and the browser gate script of the phase proves the layout.
 - The scanner catches a banned token that hides inside a comment. The scanner strips comments, so a banned token in a comment is not a hit by design. The rule holds: the product code must not name a banned route in a comment either, and the reviewer reads the comments.
 - The JSDoc scanner proves that a block sits above a symbol. It does not prove that the text of the block is correct.
 
@@ -729,6 +754,10 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | 7.1 | A3, A4 | `list_rows>=5` and `marker_values=3` are parsed from the label. The role rows are positive cases. | A status renders with no label, or a role case is absent. |
 | 7.3 | A2, A4, A7 | Each scanner runs over its own counterexample fixture, so a scanner that reports zero hits fails the test. The exclusion filter names no English word. | A scanner passes on its own fixture, or a banned line with the word "never" is skipped. |
 | 7.4 | A6 | The guard run reports `guard_hits=0` and the fixture detection count. The note never claims that the scanner proves the whole file. | The note says the track holds no hash field without the scanner count. |
+| 7.4a | A3, A4, A5 | `document_month_rows>=4` and `bangkok_month_cases>=2` are parsed from the label. The zone row names the instant and the expected month. | The close reads `submitted_at`, or the month step runs in UTC. |
+| 7.4c | A4, A5 | `transaction_rows>=3` is parsed from the label. The fake models one transaction member, and the rollback row asserts the stored status and the audit row count. | A status change lands with no audit row. |
+| 7.4e | A3, A4 | `close_note_rows>=7` and `close_note_kinds=4` are parsed from the label. Each kind has one positive row, and the empty case is a positive row. | A kind of item has no row, or a note changes a value. |
+| 7.4g | A4, A5 | `close_control_rows>=6` and `accountant_control_rows=2` are parsed from the label. The double-click row counts the requests. | The ACCOUNTANT sees no control, or a double click sends two requests. |
 | 7.5 | A5 | The phase check names the test file of every acceptance row of section 12. | An acceptance row has no named test file. |
 
 ### P8: The history import

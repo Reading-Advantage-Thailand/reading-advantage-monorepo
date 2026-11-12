@@ -596,7 +596,8 @@ item Q21.
 ## 7. The monthly close
 
 1. The OWNER or the ACCOUNTANT opens a close for one period month (`YYYY-MM`).
-2. The open collects the approved submissions of that period.
+2. The open collects the approved submissions whose document month equals the
+   close period (PM-17, section 14.6).
 3. The open builds the report from those submissions and stores it as private
    evidence. The report evidence reference is set at open (F32, F54).
 4. The CEO signs the report. The sign writes `signed_at`, `signed_by_account_id`,
@@ -1900,6 +1901,97 @@ The PM sent one note for the Drive intake. The note is binding. A quote is exact
 - The month of a voucher name is `YYYY-MM`. The name sets no document type. The type comes from the MIME type and the worksheet layout (sections 6 and 8).
 - The 10 history files carry that name. The history mode does not apply the filter of section 5.7, so the rule changes no history row (section 9a).
 - The SOP of section 9 holds the name, and the poll tests of plan task 3.1 hold the cases.
+
+### 14.6 PM decisions of 2026-11-12 (the close rules) (DECIDED)
+
+The PM answered the three open decisions of the Phase 2 acceptance of 2026-11-12.
+The decisions are PA202 with F205 and N5, F221 with F255 and N1, and PA203 with
+F277. Each decision is binding. A quote is exact.
+
+- **PM-17 (the close period rule). DECIDED (PM, 2026-11-12).** "3. A-52 PA202: the close uses the DOCUMENT month (the period the document covers), and every date-to-month step uses Asia/Bangkok, in the close and the export. Add the task before Phase 8."
+
+  **The rules.**
+
+  - The close collects the approved submissions whose document month equals the
+    close period.
+  - The field that holds the document month is
+    `accounting_intake_documents.source_month`
+    (`packages/db/src/accounting/schema/index.ts:163`, the Drizzle field
+    `sourceMonth`). PM-11 and criterion 42 set that field to the document month.
+    The table `accounting_submissions` holds no document month column, so the
+    close reads the document month through the intake row. The join runs on
+    `accounting_intake_documents.submission_id` and on
+    `accounting_intake_documents.scope_company_id`. The track adds no column,
+    and no schema change is needed.
+  - A submission typed by hand has no intake row and no document month. It
+    enters no close. That is the limit of D-33.
+  - Every date-to-month step of the export uses the zone `Asia/Bangkok`. The step
+    sits in `businessDate`
+    (`apps/accounting/app/api/submissions/export/route.ts:16-24`). The step reads
+    the fixed zone, and the environment value `ACCOUNTING_TIME_ZONE` no longer
+    selects it. The CSV text, the ten headers, and the role test of the route
+    stay unchanged (criterion 23, FR-20).
+  - The close holds no date-to-month step after this rule. The stored document
+    month is the month. The date-to-month step of the intake keeps the rule of
+    PM-11 and open item Q14, and this decision names the close and the export.
+  - A date of `2026-10-31T23:30:00Z` is the month `2026-11` in `Asia/Bangkok`
+    and the month `2026-10` in UTC. The worked example holds in the close and in
+    the export.
+  - The task runs before Phase 8 and before the first live close.
+
+- **PM-18 (the sign and the lock in one transaction). DECIDED (PM, 2026-11-12).**
+  "4. A-52 F221/F255/N1: do not accept the gap. Add a task that puts the status
+  write and the audit write in one transaction, before the first live close
+  (before the Phase 9 deploy)."
+
+  **The rules.**
+
+  - The sign writes the status change and the sign audit row in one database
+    transaction. The lock writes the status change and the lock audit row in one
+    database transaction. A failure leaves no status change without its audit
+    row.
+  - The port change: the port `AccountingMonthlyCloseRepository`
+    (`packages/backend/src/modules/accounting/monthly-close.ts:46-114`) gains one
+    member `saveWithAuditEvent(close, expectedStatus, event)`. The member writes
+    the status change and the audit row in one transaction. It returns the
+    stored close, or `undefined` when the compare-and-swap matched no row. The
+    member `save` leaves the port, so no caller writes a status change without
+    its audit row.
+  - The member `recordAuditEvent` stays in the port for the open. The open
+    inserts the close row and then writes the open audit row, and no status
+    change happens there. A failure between the two calls leaves an open close
+    with no open audit row. That gap is a stated limit.
+  - The task runs before the deploy of task 9.7 and before the first live close.
+
+- **PM-19 (the close notes and the close controls). DECIDED (PM, 2026-11-12).**
+  "5. A-52 PA203/F277: your default (close-note tasks before 7.5, one UI task
+  before final acceptance)."
+
+  **The rules.**
+
+  - The close notes of criteria 41 and 45 are one task pair before the phase
+    check 7.5. The notes name the four kinds of item of section 7. The notes
+    change no value.
+  - The close controls are one task before the final acceptance. The task holds the
+    open control, the sign control, the CEO list of locked closes, and the report
+    read. The ACCOUNTANT approve and reject control of the note under task 7.2
+    joins that task.
+  - The control shows the 409 message text of the close routes. The control sends
+    one request, and it does not retry on a double click.
+  - The browser review of Phase 7 covers the close controls.
+
+**Effect on earlier rules.**
+
+- PM-17 replaces the period rule of section 7 item 2 with the document month
+  rule, and it fixes the zone of the export step of FR-20. The CSV text and the
+  ten headers stay unchanged.
+- PM-18 changes the close repository port of section 7. The member `save` leaves
+  the port, and the member `saveWithAuditEvent` enters it.
+- PM-19 gives the close notes of criteria 41 and 45 a task pair, and it gives the
+  close controls of F277 and the ACCOUNTANT control of F206 one task. The rules
+  of section 7 and of criteria 41 and 45 do not change.
+- The plan tasks are 7.4a and 7.4b for PM-17, 7.4c and 7.4d for PM-18, and
+  7.4e to 7.4h for PM-19.
 
 ## 15. Deferred tasks
 
