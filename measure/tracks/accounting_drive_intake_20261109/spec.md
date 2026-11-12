@@ -434,10 +434,19 @@ company's earlier submissions, newest first. The lookup stops at the first
 match, or at the cap.
 
 - **The two passes.** Pass 1 reads the newest `ACCOUNTING_DUPLICATE_SCAN_CAP`
-  rows of the company that hold evidence, default 500. Pass 2 reads every row,
-  history rows included, whose stored evidence byte size equals the candidate
-  byte length. A size column is stored; a hash column is not (AGENTS.md hashing
-  policy). Both passes run `sameEvidenceBytes` and stop at the first match.
+  submissions of the company in `accounting_submissions`, default 500. Every
+  submission holds evidence, because `evidence_reference` is `NOT NULL`. Pass 1
+  therefore covers a hand-made submission and a poll submission alike (PM-22,
+  2026-11-13). Pass 2 reads every intake row, history rows included, whose stored
+  evidence byte size equals the candidate byte length. A size column is stored; a
+  hash column is not (AGENTS.md hashing policy). Both passes run
+  `sameEvidenceBytes` and stop at the first match that names a submission.
+- **The match target (Review A P3 F302).** A pass 1 match names its own
+  submission id. A pass 2 match names `submissionId ?? duplicateOfSubmissionId`
+  of the intake row. A pass 2 row that holds neither id (a failed row) is skipped
+  before the byte compare, and the scan continues. A third byte-equal copy of one
+  document is therefore a duplicate of the first submission, and no copy becomes
+  a second submission.
 - **Past the cap.** Pass 1 stops at the cap. Pass 2 has no cap, because the size
   test is one indexed integer compare and only the rows of the same size are
   read. Every history row therefore stays a duplicate candidate, and a history
@@ -451,9 +460,11 @@ match, or at the cap.
   poll rows and the history rows. That is the scope of the PM-7 condition. A
   submission that a person makes by hand in the app has **no** intake row and no
   `evidence_byte_size`, so pass 2 does not cover it. Such a submission is a
-  duplicate candidate through pass 1 only, that is the newest 500 rows. This is
-  a stated limit, not a defect; it is listed in section 15 (D-33).
-- **The cost.** Pass 1 reads at most 500 objects. Pass 2 reads only the rows
+  duplicate candidate through pass 1 only, that is the newest 500 submissions of
+  the company. A hand-made submission older than the newest 500 submissions is
+  not found. This is a stated limit, not a defect; it is listed in section 15
+  (D-33, PM-22).
+- **The cost.** Pass 1 compares at most 500 objects. Pass 2 reads only the rows
   whose byte size equals the candidate size, which is normally a handful. A read
   is one storage `get` of one private object. The poll runs once a day on a
   schedule outside the request path, so the cost lands on the job and not on a
@@ -542,14 +553,18 @@ file. It holds these members:
 `submitAccountingSubmissionWithOutcome`, which already writes it, so one submit
 request gives one audit row, F61); `findByDriveFileId` (one row by the Drive file
 id inside the company scope);
-`listRecentWithEvidence` (the newest rows that hold evidence, bounded by a
-limit, for pass 1 of the content-duplicate lookup); `listByScope` (every row for
+`listRecentSubmissionEvidence` (the newest submissions of the company in
+`accounting_submissions`, each with its id and its evidence reference, bounded
+by a limit, for pass 1 of the content-duplicate lookup; it replaces the member
+`listRecentWithEvidence`, PM-22, 2026-11-13); `listByScope` (every row for
 the intake list); `findByEvidenceByteSize` (the rows whose stored evidence byte
 size equals a given size, for pass 2 of the content-duplicate lookup); `markDuplicate` (set `status = duplicate`,
 `duplicate_of_submission_id`, and the reason); `markParsed` (set
 `status = parsed`); `markFailed` (set `status = failed`, `failure_reason`, and
 increase `failure_count`); and `bumpSighting` (increase `sighting_count` and set
-`last_seen_at`). The Postgres implementation is
+`last_seen_at`). Each of the four mark and bump members takes the company scope,
+and its `UPDATE` binds `scope_company_id` in the `WHERE` clause beside the row id
+(Review B P3 F304). The Postgres implementation is
 `apps/accounting/app/lib/accounting-intake-document-repository.ts`. `intakeDriveDocument`
 and the intake list both receive the port, and a fake implementation serves the
 tests (F47).
@@ -993,14 +1008,31 @@ three types with no real sample are synthetic and marked "no real sample" (PM-12
   on the schedule `0 6 * * *` (06:00 Asia/Bangkok daily) under the runtime
   service account `accounting-cloud-run`. The job claims the lease row of
   FR-6 with a compare-and-swap, so two runs never read the same file. The job
-  step itself is deploy config, and the first deploy is `deferred:daniel`.
+  step itself is deploy config. **The job step and the scheduler step sit in the
+  separate build file `apps/accounting/cloudbuild-intake-job.yaml` (PM-20,
+  2026-11-13).** The push file `apps/accounting/cloudbuild.yaml` holds no
+  `gcloud run jobs deploy` step and no `gcloud scheduler` step, so a push of
+  master creates no job and no scheduler. No workflow runs the new file. The
+  session runs it after Daniel's deploy word for the intake start (plan task
+  9.7); Daniel does not run it by hand. The first deploy stays gated by that
+  word (`deferred:daniel`).
 - **FR-10a.** Cloud Scheduler starts the job through the Cloud Run Admin API
   run endpoint
   `https://run.googleapis.com/v2/projects/<project>/locations/asia-southeast1/jobs/accounting-intake-poll:run`
   with `--http-method=POST` and an OAuth token of the scheduler service account
   `accounting-scheduler`. That account holds `roles/run.invoker` on the job and
   `roles/iam.serviceAccountTokenCreator` on `accounting-cloud-run`. A Cloud Run
-  job has no HTTP run URL, so the scheduler names no `run.app` address.
+  job has no HTTP run URL, so the scheduler names no `run.app` address. The
+  scheduler step of `apps/accounting/cloudbuild-intake-job.yaml` runs after the
+  job step. It first runs `gcloud scheduler jobs describe accounting-intake-poll`.
+  When the job exists, it runs `gcloud scheduler jobs update http`; else it runs
+  `gcloud scheduler jobs create http`, with the same flags (Review A P3 F301,
+  Review B P3 F303). A second run of the file therefore does not fail on
+  `ALREADY_EXISTS`. The Cloud Build service account needs the scheduler
+  permission for that step: `cloudscheduler.jobs.get`, `cloudscheduler.jobs.create`,
+  and `cloudscheduler.jobs.update` in project `reading-advantage`, and the
+  `actAs` permission on `accounting-scheduler`. That grant is a `deferred:pm` IAM
+  setup item (PM-23, plan task 9.3b).
 - **FR-10b.** The job takes **every** Secret Manager reference through
   `--set-secrets`, with the exact form of `apps/accounting/cloudbuild.yaml:40`:
   `ACCOUNTING_DATABASE_URL=ACCOUNTING_DATABASE_URL:latest`,
@@ -1011,9 +1043,24 @@ three types with no real sample are synthetic and marked "no real sample" (PM-12
   `STORAGE_SECRET_KEY=ACCOUNTING_STORAGE_SECRET_KEY:latest`, and
   `STORAGE_PUBLIC_BASE_URL=ACCOUNTING_STORAGE_PUBLIC_BASE_URL:latest`. The
   `NAME=SECRET_NAME:latest` form is the `--set-secrets` syntax; it is not valid in
-  `--set-env-vars`. Only plain values go through `--set-env-vars`:
-  `ACCOUNTING_DRIVE_FOLDER_ID`, `ACCOUNTING_INTAKE_ACTOR_ID`,
-  `ACCOUNTING_DUPLICATE_SCAN_CAP`, and `ACCOUNTING_EXTRACTION_MODEL`. The bank
+  `--set-env-vars`. Only plain values go through `--set-env-vars`, and they are
+  five (PM-21, 2026-11-13): `ACCOUNTING_DRIVE_FOLDER_ID`,
+  `ACCOUNTING_INTAKE_ACTOR_ID`, `ACCOUNTING_INTAKE_COMPANY_ID`,
+  `ACCOUNTING_DUPLICATE_SCAN_CAP`, and `ACCOUNTING_EXTRACTION_MODEL`. The runner
+  builds the poll actor from `ACCOUNTING_INTAKE_ACTOR_ID`,
+  `ACCOUNTING_INTAKE_COMPANY_ID`, and the fixed role `ACCOUNTANT` (open item Q3).
+  It reads no `company_product_principals` table, because that table sits in the
+  main product database and not in the accounting database (Review A P3 F304).
+  A blank or malformed company id stops the run before the lease claim. **Each
+  plain value comes from a Cloud Build substitution with no default value**:
+  `_ACCOUNTING_DRIVE_FOLDER_ID`, `_ACCOUNTING_INTAKE_ACTOR_ID`,
+  `_ACCOUNTING_INTAKE_COMPANY_ID`, `_ACCOUNTING_DUPLICATE_SCAN_CAP`, and
+  `_ACCOUNTING_EXTRACTION_MODEL`, plus `_ACCOUNTING_IMAGE` for the approved
+  candidate image. The file holds no `substitutions:` default for these keys. The
+  first step of the file is a guard step that stops the build with exit 1 when one
+  value is empty, and it prints only the name of the empty key, never a value
+  (Review A P3 F305). A run of the file therefore never writes an empty value over
+  a set value, and no Drive id enters git (FR-12). The bank
   statement password (PM-13) is one more Secret Manager reference. Daniel creates
   and fills that secret once at setup (`deferred:daniel`). The job step adds it to
   `--set-secrets` in the same form after that setup. This spec names it by its
@@ -1328,7 +1375,11 @@ Each criterion has an automated test that can falsify it.
     the `NAME=SECRET_NAME:latest` form of `apps/accounting/cloudbuild.yaml:40`,
     and only the plain values in `--set-env-vars`; and the scheduler step targets
     the Cloud Run Admin API `:run` endpoint with an OAuth service account and no
-    `run.app` URL (F55, F56, F67, F68, D-27, D-32).
+    `run.app` URL (F55, F56, F67, F68, D-27, D-32). The job step and the
+    scheduler step sit in `apps/accounting/cloudbuild-intake-job.yaml`, the push
+    file `apps/accounting/cloudbuild.yaml` holds neither, the first step of the
+    new file is the empty-value guard, and the scheduler step runs describe, then
+    update or create (PM-20, FR-10a, FR-10b).
 39. Given a voucher workbook with 3 voucher worksheets and 1 guide worksheet, when
     the poll runs, then the reader reads the 3 voucher worksheets, skips the guide
     worksheet, writes 3 intake rows and 3 submissions, and the Vertex port is never
@@ -1390,7 +1441,7 @@ Each criterion has an automated test that can falsify it.
 - The creation of the bank statement password secret. Daniel does it once at setup
   (`deferred:daniel`, PM-13).
 
-## 14. PM decisions of 2026-11-09, 2026-11-11, and 2026-11-12, and open items
+## 14. PM decisions of 2026-11-09, 2026-11-11, 2026-11-12, and 2026-11-13, and open items
 
 ### 14.1 PM decisions of 2026-11-09 (DECIDED)
 
@@ -1538,6 +1589,11 @@ decision is binding. A reader must not reopen a decision in this section.
   schedule is `0 6 * * *` under the service account `accounting-cloud-run`. The
   job step is deploy config, and the first deploy is `deferred:daniel`. FR-10,
   FR-10a, FR-10b, FR-24, FR-25, criteria 36, plan tasks 3.3, 3.4, and 9.7.
+  **REVISED by PM-20 (PM, 2026-11-13).** The job step and the scheduler step
+  move out of the push file into `apps/accounting/cloudbuild-intake-job.yaml`.
+  The session runs that file after Daniel's deploy word for the intake start
+  (plan task 9.7). Daniel's word is the gate; Daniel does not run the file by
+  hand. Plan tasks 3.6 and 3.7.
 - **D-13 (the two invoice types). DECIDED (orchestrator, 2026-11-09).** A
   non-text Google Cloud, Workspace, or OpenAI invoice goes to Vertex like any
   non-text PDF. Sections 5.2 and 6, criterion 9, plan tasks 3.1 and 6.2.
@@ -1583,7 +1639,14 @@ decision is binding. A reader must not reopen a decision in this section.
   `apps/accounting/cloudbuild.yaml:48-57` already holds the `allow-build-invoker`
   `gcloud run services add-iam-policy-binding` step for the Cloud Build service
   account, and that existing step stays unchanged (F76). Spec FR-10a, criterion
-  36, plan task 9.3 (deferred:pm).
+  36, plan task 9.3 (deferred:pm). **REVISED by PM-20 and PM-23 (PM,
+  2026-11-13).** The scheduler step sits in
+  `apps/accounting/cloudbuild-intake-job.yaml`, after the job step, and it runs
+  describe, then update or create. The new file holds no grant step. The Cloud
+  Build service account needs the scheduler permission for that step. That grant
+  is a third `deferred:pm` IAM setup item, of the same kind as the two grants
+  above: the session grants the narrowest role that works before the first run of
+  the new file, logs the exact command, and the PM records it (plan task 9.3b).
 - **D-21 (the job secrets). DECIDED (orchestrator, 2026-11-09), corrected
   2026-11-09 after round 5 (F70).** **Every** Secret Manager reference goes
   through `--set-secrets`, in the exact `NAME=SECRET_NAME:latest` form of
@@ -1594,7 +1657,14 @@ decision is binding. A reader must not reopen a decision in this section.
   `ACCOUNTING_INTAKE_ACTOR_ID`, `ACCOUNTING_DUPLICATE_SCAN_CAP`, and
   `ACCOUNTING_EXTRACTION_MODEL`. The round-4 text of this decision named three
   secrets and put the other four in `--set-env-vars`; that text was wrong and is
-  replaced here. Spec FR-10b, FR-25, criterion 36, plan task 3.4.
+  replaced here. Spec FR-10b, FR-25, criterion 36, plan task 3.4. **REVISED by
+  PM-21 (PM, 2026-11-13).** The plain values are five: the four above plus
+  `ACCOUNTING_INTAKE_COMPANY_ID`. The poll actor takes its company from
+  `ACCOUNTING_INTAKE_COMPANY_ID` and the fixed role `ACCOUNTANT`, and the runner
+  reads no `company_product_principals` table (Review A P3 F304). Each plain
+  value comes from a Cloud Build substitution with no default value, and a guard
+  step stops the build when one value is empty (Review A P3 F305). The seven
+  `--set-secrets` references do not change. Plan tasks 3.6, 3.7, 3.10, and 3.11.
 - **D-22 (the intake document repository). DECIDED (orchestrator, 2026-11-09).**
   The port `AccountingIntakeDocumentRepository` lives in
   `packages/backend/src/modules/accounting/intake.ts`, in the **same pattern** as
@@ -1681,7 +1751,12 @@ decision is binding. A reader must not reopen a decision in this section.
   the history rows; that is the scope of the PM-7 condition. A submission that a
   person types by hand in the app has no intake row and is covered by pass 1
   only (the newest 500). This is a stated limit, and section 15 lists it. Spec
-  sections 5.5 and 15, FR-3, plan tasks 3.1 and 3.2.
+  sections 5.5 and 15, FR-3, plan tasks 3.1 and 3.2. **REVISED by PM-22 (PM,
+  2026-11-13).** Pass 1 reads the newest 500 submissions of the company in
+  `accounting_submissions`, not the newest intake rows. A hand-made submission is
+  therefore a real candidate of pass 1. The stated limit is now narrower: a
+  hand-made submission older than the newest 500 submissions is not found
+  (Review A P3 F303). Plan tasks 3.8 and 3.9.
 - **D-34 (the two Red rows for the PM-7 condition). DECIDED (orchestrator,
   2026-11-09).** The PM-7 condition keeps **two** Red rows on purpose: task 3.1
   proves the condition on the poll path, where the new file arrives through the
@@ -1720,7 +1795,9 @@ stops for no item in this list.
   Default: the office assistant's ACCOUNTANT account. The environment variable
   `ACCOUNTING_INTAKE_ACTOR_ID` names it. Reason: the idempotency key is scoped
   by submitter (`packages/db/src/accounting/schema/index.ts:102-106`), and the
-  brief says the app takes the office assistant's uploads.
+  brief says the app takes the office assistant's uploads. PM-21 (2026-11-13)
+  fixes the role `ACCOUNTANT` in the runner and adds the plain value
+  `ACCOUNTING_INTAKE_COMPANY_ID` for the company scope.
 - **Q4. Does the close reuse the submission audit table?**
   Default: no. A close is not a submission, and that table requires a
   submission id (`packages/db/src/accounting/schema/index.ts:116-127`). The
@@ -1993,6 +2070,44 @@ F277. Each decision is binding. A quote is exact.
 - The plan tasks are 7.4a and 7.4b for PM-17, 7.4c and 7.4d for PM-18, and
   7.4e to 7.4h for PM-19.
 
+### 14.7 PM decisions of 2026-11-13 (the Phase 3 reviews) (DECIDED)
+
+The PM answered the Phase 3 reviews of 2026-11-13 (A-52). The sources are
+`measure/runs/accounting_drive_intake_20261109/review-a-p3-05ae3b335.json` and
+`measure/runs/accounting_drive_intake_20261109/review-b-p3-05ae3b335.json`. Each
+decision is binding. A quote is exact.
+
+- **PM-20 (Review A F301 and F305, Review B F301 to F303). DECIDED (PM,
+  2026-11-13).** "3. A-52 F301 + F305 (job and scheduler steps): accepted to move
+  them out of the push file into a separate build file, but it is NOT run by
+  Daniel's hands. The session runs it after Daniel's deploy word for the intake
+  start (task 9.7). Change the plan text to that." The new file is
+  `apps/accounting/cloudbuild-intake-job.yaml`. Sections FR-10, FR-10a, FR-10b,
+  D-12, D-20, 15, criterion 36, plan tasks 3.6, 3.7, and 9.7.
+- **PM-21 (Review A F304). DECIDED (PM, 2026-11-13).** "4. A-52 F304:
+  ACCOUNTING_INTAKE_COMPANY_ID + the fixed role ACCOUNTANT: accepted (FR-10b and
+  D-21 change in the spec)." Sections FR-10b, D-21, Q3, plan tasks 3.10 and 3.11.
+- **PM-22 (Review A F303). DECIDED (PM, 2026-11-13).** "5. A-52 F303: the first
+  duplicate check reads the newest submissions that hold evidence: accepted."
+  Sections 5.5, 5.8, D-33, 15, plan tasks 3.8 and 3.9.
+- **PM-23 (the Cloud Build scheduler permission). DECIDED (PM, 2026-11-13), for
+  the track `master_push_readiness_20261112`, and applied here the same way.**
+  "The scheduler permission is NOT deferred:daniel: it is an IAM setup item, so
+  mark it deferred:pm. The session grants the narrowest role that works (for
+  example roles/cloudscheduler.admin for the Cloud Build service account, on the
+  codecamp project only), at the task before the first codecamp traffic move,
+  logs the exact command, and the PM records it." In this track the grant covers
+  project `reading-advantage`, where the accounting app runs
+  (`scripts/ci/apps.json`). The session makes the grant at plan task 9.3b, before
+  the first run of `apps/accounting/cloudbuild-intake-job.yaml` at task 9.7.
+  Sections FR-10a, D-20, 15, plan task 9.3b.
+
+**Effect on earlier rules.** PM-20 replaces the push-file job step and scheduler
+step of plan task 3.4. PM-21 replaces the principal-table read of the runner.
+PM-22 replaces the pass 1 source of section 5.5 and the member
+`listRecentWithEvidence` of section 5.8. PM-23 adds one `deferred:pm` IAM setup
+item. No other decision of section 14 changes.
+
 ## 15. Deferred tasks
 
 | Task | Owner | Reason |
@@ -2003,9 +2118,10 @@ F277. Each decision is binding. A quote is exact.
 | The Tutor read endpoints and the service-identity gate | `deferred:pm` | The Tutor developer owns that repository |
 | The `PA-INV` and Storytime receipt sources | `deferred:pm` | The source is not in this repository |
 | The Accounts role seed for `CEO` and `CONTRACTOR` | `deferred:pm` | Accounts belongs to the PM |
-| The first deploy of the Cloud Run job `accounting-intake-poll` and its scheduler | `deferred:daniel` | The job step is deploy config; the job is named in FR-10 and FR-10a |
+| The first deploy of the Cloud Run job `accounting-intake-poll` and its scheduler | `deferred:daniel` | The job step is deploy config; the job is named in FR-10 and FR-10a. Daniel's deploy word for the intake start is the gate. The session then runs `apps/accounting/cloudbuild-intake-job.yaml`; Daniel does not run it by hand (PM-20, plan task 9.7) |
+| The scheduler permission of the Cloud Build service account for `apps/accounting/cloudbuild-intake-job.yaml` | `deferred:pm` | An IAM setup item, not Daniel's gate. The session grants the narrowest role that works in project `reading-advantage`, logs the exact command, and the PM records it (PM-23, plan task 9.3b) |
 | The first load and the structure report | `deferred:pm` | The PM runs its own script on this machine. Done on 2026-11-11 (plan tasks 5.1 and 5.2) |
 | The bank statement password in Secret Manager | `deferred:daniel` | Daniel enters it once at setup, at deploy time (PM-13); the spec holds no value |
 | The production history write for January to October 2026 | `deferred:daniel` | The dry-run report goes to Daniel first; the write runs on his word |
-| Known limit: a submission typed by hand in the app has no intake row, so pass 2 of the content-duplicate lookup does not cover it; pass 1 (the newest 500) covers it | stated limit (D-33) | A backfill of the hand-made submissions is out of scope; the intake table is new and starts full |
+| Known limit: a submission typed by hand in the app has no intake row, so pass 2 of the content-duplicate lookup does not cover it; pass 1 reads the newest 500 submissions of the company and covers it there; a hand-made submission older than the newest 500 submissions is not found | stated limit (D-33, PM-22) | A backfill of the hand-made submissions is out of scope; the intake table is new and starts full |
 | The deploy and the traffic move | `deferred:daniel` | Daniel's word |

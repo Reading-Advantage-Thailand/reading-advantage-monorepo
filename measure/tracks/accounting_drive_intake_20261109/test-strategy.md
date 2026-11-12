@@ -5,6 +5,7 @@
 > **Written:** 2026-11-09. Model: minimax-cn-coding-plan/MiniMax-M3. The route table names claude-opus-5-5, and the 11-10 15:22 Claude reset holds that route.
 > **Role base:** `git rev-parse HEAD` returned `f438d09d72328a94ba04888358d8455419756ea4` when this role started. The assignment named `9f784b842864fcb8bcaa25d08429e7c2971743f8` as the role base. That commit is the spec-review commit, and it is an ancestor of the role base. Another session committed on master during this role, so the role base moved. Section 1.5 holds the capture point of `phase_base_sha`.
 > **Spec review:** round 7 passed. The result sits at `measure/runs/accounting_drive_intake_20261109/spec-review-9f784b842.json`. The result line sits in [spec-review.md](./spec-review.md).
+> **Amendment P3 r1 (2026-11-13).** Route `claude-code/claude-opus-5-5[1m]#high`. The P3 section gains the subsection "P3 remediation r1" for Review A P3 and Review B P3 at `05ae3b335` and the PM decisions PM-20 to PM-23 (spec section 14.7). The P3 allowed list gains `pnpm-lock.yaml` (Review A P3 F314). The Phase 3 `phase_base_sha` does not move. The capture point of the r1 base is in the subsection.
 > **Amendment r2 (2026-11-09).** PM decision of 2026-11-09 after Review A P1. The Phase 1 allowed path list of section 4 gains three paths: `packages/domain/src/__tests__/accounting-tenant-classification.test.ts`, `packages/db/src/accounting/__tests__/schema-parity.test.ts`, and `packages/db/tsconfig.build.json`. The count `intake_out_of_scope_paths=0` now holds for the real Phase 1 commits. The Phase 1 base of section 1.5 does not move.
 
 ## 1. Rules for every phase of this track
@@ -387,7 +388,7 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 **Closeout gate**
 
 1. The Green gate of this phase holds with the quoted counts.
-2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `apps/accounting/app/lib/{drive-document-source.ts,intake-runner.ts,accounting-evidence-store.ts,accounting-intake-document-repository.ts}`, `apps/accounting/app/lib/__tests__/{drive-intake.test.ts,intake-runner.test.ts,intake-runner-image.red.test.ts}`, `packages/backend/src/modules/accounting/{intake.ts,intake-contracts.ts,index.ts,__tests__/**}`, `apps/accounting/app/api/submissions/route.ts` (the byte compare moves into the adapter), `apps/accounting/package.json`, `apps/accounting/Dockerfile`, `apps/accounting/cloudbuild.yaml`, and the track files.
+2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `apps/accounting/app/lib/{drive-document-source.ts,intake-runner.ts,accounting-evidence-store.ts,accounting-intake-document-repository.ts}`, `apps/accounting/app/lib/__tests__/{drive-intake.test.ts,intake-runner.test.ts,intake-runner-image.red.test.ts}`, `packages/backend/src/modules/accounting/{intake.ts,intake-contracts.ts,index.ts,__tests__/**}`, `apps/accounting/app/api/submissions/route.ts` (the byte compare moves into the adapter), `apps/accounting/package.json`, `pnpm-lock.yaml` (the lockfile change of the three planned dependencies, Review A P3 F314), `apps/accounting/Dockerfile`, `apps/accounting/cloudbuild.yaml`, and the track files.
 3. `apps/accounting/package.json` gains exactly three dependencies: `googleapis`, `@reading-advantage/ai`, and `esbuild` at `0.28.1`. The count `package_deps_added=3` is a labeled integer.
 4. The build file holds no new grant command for the two scheduler grants. The existing `allow-build-invoker` step stays byte-identical (D-20). A byte compare of that step names the count `scheduler_grant_steps=0`.
 5. The job step holds all seven secret references in `--set-secrets` and the four plain values in `--set-env-vars`. The counts are `job_secrets=7` and `job_env_vars=4`.
@@ -447,6 +448,106 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | 3.3 | A3, A4, A5 | `image_assertions>=12` and `stage_names=5` are labeled. The stage names are unique and the last stage is the web stage. | A second stage named `runner` passes, or the last stage is not the web stage. |
 | 3.3 | A5, A6 | The bundle run proves exit 0 on the real bundle. A jsdom or text-only pass never claims that the bundle holds every import. | The note says "the bundle is self-contained" on the strength of the text test alone. |
 | 3.4 | A5 | The build file holds no new grant command, and the existing invoker step is byte-identical. | A new grant command sits in the build file. |
+
+#### P3 remediation r1 (Review A P3 and Review B P3 at `05ae3b335`)
+
+**Risk: critical.** The group moves live-changing deploy steps out of the push path, changes the duplicate lookup that decides whether a finance document becomes a submission, changes the tenant scope of four `UPDATE` statements, and changes the actor that the poll writes as. The plan holds the tasks 3.6 to 3.12, the finding-to-task map, and the deferred findings with their reasons.
+
+**Base capture.** The Phase 3 `phase_base_sha` stays the value that the orchestrator captured for this phase (`7262366f866462c6efdde55f22b993645a93c65c`). This group does not move it. The orchestrator captures one more value, `r1_base_sha`, with `git rev-parse HEAD` immediately after the commit of this strategy (header `docs(measure): plan the a-52 p3 remediation (track_id: accounting_drive_intake_20261109)`) and before the Red role of task 3.6 starts. A value from before that commit is not valid. The Red evidence of task 3.6 records the full value as its `role_base_sha`.
+
+**Model families.** The Red role of tasks 3.6, 3.8, and 3.10 runs on a model family other than the Green family of tasks 3.7, 3.9, and 3.11. The orchestrator sets the models. The three Red tasks may run in one Red round with three commits, and the three Green tasks in one Green round with three commits, in task order.
+
+**Review applicability for r1**
+
+| Review | Applies | Reason and scope |
+|---|---|---|
+| Review A (code) | yes | Review A checks the moved steps, the match target of both passes, the pass 1 source, the `application/pdf` gate, the removed casts and aliases, the actor source, the entry catch, and the one `haveSameBytes` definition. |
+| Review B (security) | **yes (required)** | The group changes IAM-adjacent deploy config (the new build file and its scheduler step), the tenant scope of four `UPDATE` statements, the poll actor, the data-out gate to Vertex, and the log content of a failed run. Review B checks that a push creates no job and no scheduler, that no Drive id enters git or a log, that neither build file holds a grant, and that every intake `UPDATE` binds `scope_company_id`. |
+| Review C (UX/API) | no | The group adds no route and no page. |
+| Adversarial testing | yes | A third byte-equal copy, a failed row first in the scan, a hand-made submission copy, an `.xlsx` that a reader sends to the model, an empty substitution, a malformed scan cap, an existing scheduler job, a Drive error that carries an id, a cross-company row id. |
+| Browser review (UX) | no | The group changes no page. |
+
+**Red command per task** (the form of plan task 3.1)
+
+```bash
+# 3.6 the build file rows
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/intake-runner-image.red.test.ts'
+
+# 3.8 the lookup, the data-out, and the intake repository rows
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/drive-intake.test.ts app/lib/__tests__/accounting-intake-document-repository.test.ts'
+
+# 3.10 the runner rows
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/intake-runner.test.ts'
+```
+
+Run each command as its own heavy-run call. Do not chain two stages with `&&`, because an exit 1 of the first stage skips the second stage.
+
+**Expected failure at Red**
+
+| Task | Expected at Red | Labeled counts at Green |
+|---|---|---|
+| 3.6 | Exit 1. The moved rows fail on the missing file `apps/accounting/cloudbuild-intake-job.yaml`. The push-file row fails on the two steps that the push file still holds. | `push_job_steps=0`, `push_scheduler_steps=0`, `intake_file_steps=3`, `intake_file_grant_steps=0`, `substitution_defaults=0`, `guard_empty_cases=6`, `scheduler_branch_cases=2`, `job_secrets=7`, `job_env_vars=5` |
+| 3.8 | Exit 1. The F302 rows give `f302_third_status=parsed` or `f302_new_submissions=1`; the F303 row gives `f303_status=parsed`; the `.xlsx` row counts a model call; the scope rows find no `scope_company_id` in the four `UPDATE` statements. | `f302_third_status=duplicate`, `f302_new_submissions=0`, `f303_status=duplicate`, `f303_new_submissions=0`, `xlsx_model_calls=0`, `scoped_mark_calls>=4`, `scoped_updates=4`, `duplicate_passes=2`, `scan_cap_default=500` |
+| 3.10 | Exit 1. The rows fail on the missing exports `readIntakePollActor`, `createPostgresIntakeLeaseRepository`, and `runIntakePollEntry`, or on an assertion. | `lease_cases>=4`, `lease_sql_cases>=3`, `release_calls=1`, `entry_error_cases>=1`, `have_same_bytes_definitions=1`, `files_scanned>=10` |
+
+A row that passes at Red is a named characterization row, and the Red evidence lists it with its reason. No row may fail on a load error or a type error.
+
+**Green gate r1**
+
+- The three Red commands exit 0 with `tests_failed=0` and `tests_skipped=0`, and quote the labeled counts above.
+- The original Phase 3 command of plan task 3.1 exits 0. It now also runs the new file `accounting-intake-document-repository.test.ts`.
+- `app/lib/__tests__/cloudbuild.red.test.ts` and `app/lib/__tests__/deployment-gates.adversarial.test.ts` exit 0, so the push file still passes its own gates.
+- The bundle run of the P3 Green gate exits 0 and prints the usage line.
+
+**Closeout gate r1 (task 3.12)**
+
+1. The Green gate r1 holds. The app suite, the backend accounting suite, the db accounting suite with the journal test, and the direct-SDK guard exit 0, and the note quotes each count and its delta.
+2. `tsc --noEmit` in `apps/accounting` and in `packages/backend`, ESLint on the changed files, and `pnpm --filter accounting build` exit 0.
+3. `intake_out_of_scope_paths=0` for the r1 commits (the `--grep` rule of section 1.5, from `r1_base_sha`). The r1 allowed paths: `apps/accounting/cloudbuild.yaml`, `apps/accounting/cloudbuild-intake-job.yaml`, `apps/accounting/app/lib/{intake-runner.ts,drive-document-source.ts,accounting-intake-document-repository.ts,monthly-close.ts}`, `packages/backend/src/modules/accounting/intake.ts`, `apps/accounting/app/lib/__tests__/{intake-runner-image.red.test.ts,drive-intake.test.ts,intake-runner.test.ts,accounting-intake-document-repository.test.ts}`, and the track files. A path outside the list needs an orchestrator line in the plan.
+4. `rg -n 'gcloud run jobs|gcloud scheduler' apps/accounting/cloudbuild.yaml` exits 1. `rg -n 'add-iam-policy-binding' apps/accounting/cloudbuild-intake-job.yaml` exits 1. An exit code of 2 is a failure (A14).
+5. `rg -n 'company_product_principals' apps/accounting/app/lib/intake-runner.ts` exits 1.
+6. The A9 detector `rg -n 'measure/tracks|measure/runs' apps/accounting/app/lib/__tests__ packages/backend/src/modules/accounting` exits 1. The Review A scratch fixture stays under `measure/runs` and no test imports it.
+7. `build-graph update ./graph.db` runs once over the changed source files (A10).
+8. No task of Phase 9 is marked. Tasks 9.3b and 9.7 stay `[ ]`.
+
+**Fixtures and mocks**
+
+- The intake repository fake holds intake rows and seeded submissions, and it returns the submissions through `listRecentSubmissionEvidence`, newest first. It counts the calls of each member and records the `scope` of each mark and bump call.
+- The evidence store fake keeps the Phase 3 r2 rule: it reads the object body of spec section 5.4 and compares the bytes.
+- The SQL double follows `packages/backend/src/modules/accounting/__tests__/postgres-submission-repository.test.ts:24-40`: it records the joined statement text and the bound values.
+- The guard row and the scheduler row run the step scripts with fake values and a stub `gcloud` in a `mkdtemp` folder. No row calls the real `gcloud`, the network, or Google Cloud. The folder is removed after the row.
+- The fake Drive id of the entry row is `fake-folder-id-0001`. No real id, amount, or payee enters a fixture.
+
+**Artifact tests and live behavior tests in r1**
+
+- Artifact rows: the step reads, the step order, the substitution defaults, the grant counts, the source token rows (`company_product_principals`, `readIntakeFolderId(`, the entry call), the export list row, and the `haveSameBytes` definition count. They prove file text only.
+- Function-level live rows: the guard script run, the scheduler script run with the stub, the F302, F303, F307, F310, and F312 poll rows, the scope rows, the SQL double rows, `readIntakePollActor`, the folder-id rejection, the trap release, and the entry catch. They prove behavior in the test runtime. None proves the real Cloud Build, the real scheduler, the real IAM state, or a real Drive error shape.
+
+**Mutants for r1**
+
+- A push file that keeps either intake step. Rejected by the push-file row.
+- A guard that skips one key, or prints a value. Rejected by the six empty-key runs.
+- A scheduler step that runs `create` only. Rejected by the describe-success branch.
+- A pass 2 that stops on a row with no submission id, or that takes `submissionId` only. Rejected by the F302 rows.
+- A pass 1 that reads intake rows instead of submissions. Rejected by the F303 row.
+- A `readDocument` that sends an `.xlsx` or a Google Sheet to the model. Rejected by the F307 row.
+- An `UPDATE` that binds the row id only. Rejected by the SQL double row.
+- A runner that reads the principal table, or takes the role from a value other than the fixed `ACCOUNTANT`. Rejected by the F304 rows.
+- An entry with no catch, or a catch that prints the error object. Rejected by the entry row.
+- A second `haveSameBytes` definition in `apps/accounting/app`. Rejected by the F311 row.
+
+**Anti-pattern coverage for r1**
+
+| Task | Anti-patterns | Defense | Falsification condition |
+|---|---|---|---|
+| 3.6 | A3, A4 | Every count is `label=<n>`. The guard row runs six empty-key cases and asserts `guard_empty_cases=6` before the loop. The step reader returns an empty string for a missing step, and each row first asserts that its step text is not empty. | A row passes over an empty step text, or the loop runs zero cases. |
+| 3.6 | A5, A7 | The push-file row searches the whole push file for the two command tokens, not only the old step ids. | A renamed step that still runs `gcloud scheduler` passes the row. |
+| 3.8 | A4 | The F302 and F303 rows assert the status and `new_submissions=0`, not only the call counts. The scratch rows proved that the call-count rows pass with the defect. | The F302 row passes against the code at `05ae3b335`. |
+| 3.8 | A5, A6 | The spec states the narrower D-33 limit (a hand-made submission older than the newest 500 submissions). No note claims a full coverage of hand-made submissions. | A note or the registry claims that every hand-made submission is found. |
+| 3.8 | A1 | The scope rows read the bound values of the SQL double, not a word in the statement text alone. | A statement with `scope_company_id` in a comment passes. |
+| 3.10 | A4, A5 | The trap row asserts `release_calls=1` after a real rejected run, not the lease expiry only. | The trap row passes with no `runIntakePoll` call. |
+| 3.10 | A7 | The F311 row scans every `.ts` file of `apps/accounting/app` and asserts `files_scanned>=10` before the count. | The scan reads zero files and reports one definition. |
+| 3.12 | A9, A10, A14 | Closeout items 4 to 7. | A detector exits 2 and the note reads "no hit", or the graph stays stale. |
 
 ### P4: The Vertex route and the extraction adapter
 
@@ -927,7 +1028,8 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | The Accounts role seed for `CEO` and `CONTRACTOR` | `deferred:pm` | No test proves the seed. The role test uses a fake claim list. |
 | The two scheduler IAM grants | `deferred:pm` | No test proves the grants. The build-file test proves that no grant command sits in the build file. |
 | The first load and the structure report | `deferred:pm` | No test reads the report. The parser fixtures come from it as fakes. |
-| The first deploy of the Cloud Run job and its scheduler | `deferred:daniel` | No test proves the deploy. The image test reads text and the bundle run proves the file. |
+| The first deploy of the Cloud Run job and its scheduler | `deferred:daniel` | No test proves the deploy. The image test reads text, the bundle run proves the file, and the guard and scheduler rows of task 3.6 run the step scripts with fake values and a stub `gcloud`. Daniel's deploy word is the gate; the session then runs `apps/accounting/cloudbuild-intake-job.yaml` (PM-20, task 9.7). |
+| The scheduler permission of the Cloud Build service account | `deferred:pm` | No test proves the grant. The build-file rows prove that neither build file holds a grant command (PM-23, task 9.3b). |
 | The production history write for January to October 2026 | `deferred:daniel` | No test writes a history row. The dry-run test proves that the dry run writes none. |
 | The deploy and the traffic move | `deferred:daniel` | No test of this track moves traffic. |
 
