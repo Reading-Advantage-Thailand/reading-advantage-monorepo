@@ -81,6 +81,8 @@ Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 5
 
 ## Phase 2: F421, the gate records the architecture verdict
 
+PM decision of 2026-11-12, quoted word for word: "1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision." Task 2.5 applies it.
+
 Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_gate.sh` and `doctor-gate-evidence.md`. Step 4 keeps the boundary check. The gate exit code no longer depends on it.
 
 - [x] 2.1 Red: the doctor gate behavior and the gate record. Create `tests/orchestrator_doctor_gate.sh` with two parts. Commit `b6a2531c5` (automated evidence).
@@ -155,6 +157,39 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
     - This track's paths in `git diff --name-only e592f8246..HEAD`: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, `measure/tracks/doctor_gate_repair_20261112/plan.md`, and `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md`. No path under `apps/`, `packages/`, or `services/`.
     - The range also holds `e3fd1aa38` (storytime_app_rebuild_20261025) and `09bb8e109` (accounting_drive_intake_20261109). Those paths belong to other tracks and are not listed.
     - `git worktree list --porcelain` shows 7 worktrees. This track created none of the six other worktrees.
+
+- [ ] 2.5 Remediation of the Phase 2 reviews: Review A F201, F202, and F203; Review B F251.
+  - The defect: `package.json` line 7 holds `pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts`. On master the CLI exits 2 through the catch block of `architecture-check-cli.ts` lines 143 to 149 and prints `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports`. Two pnpm layers report exit 1 for that failed child. Step 4 therefore records exit 1, prints a boundary verdict, and the tool-failure rule of FR-3 cannot fire for a real CLI exit 2. The stub `pnpm` returns the code directly, so the 22 cases cannot see the mapping.
+  - Red: model the real call path with a stub `tsx`, not a stub `pnpm`.
+    - Each case that sets a code writes `<tmp>/node_modules/.bin/tsx`. The step 4 command `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)` resolves that file, so the case needs `<tmp>/packages/architecture-enforcement` too.
+    - The stub logs its argv in `<tmp>/tsx.log` and exits with the code that the case sets. The case asserts `tsx_calls=1`.
+    - Case `tsx_exit_2_manifest_drift_gate_exits_0`: the stub exits 2 and prints the line `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports` on stderr. Expect gate exit 0 and `ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110`.
+    - Case `tsx_exit_2_other_line_gate_exits_1`: the stub exits 2 and prints another line. Expect gate exit 1, `ARCHITECTURE: step 4 exits 2; this is a tool failure, not a boundary verdict`, and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`.
+    - Case `tsx_exit_1_gate_exits_0`: the stub exits 1. Expect gate exit 0 and `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110`.
+    - Case `tsx_exit_0_gate_exits_0`: the stub exits 0. Expect gate exit 0 and `ARCHITECTURE: step 4 exits 0; the owner of the remaining drift is architecture_ci_input_pin_20261110`.
+    - Keep the three guard failure cases, the `tool_failure_codes` loop, the `architecture_line_shows_code` case, and the `no_write_in_root` case. The loop runs codes 2 (no output line), 3, 126, and 137 with a stub, and code 127 with no stub.
+    - F203: the 127 case and the 127 branch of `tool_failure_codes` assert that `<tmp>/node_modules/.bin/tsx` is absent before the gate runs, with `test -x`. The gate then returns 127.
+    - The stubs model the real call path. A `pnpm` stub is no longer the step 4 stub. A case that returns a code from a `pnpm` stub proves nothing about step 4.
+    - Check: `bash tests/orchestrator_doctor_gate.sh --part a` exits 1 at the base, with the new cases failing. Record the failing case list.
+  - Green: `measure/doctor.sh` per FR-3.
+    - Keep `set -euo pipefail` at line 2 and the three guard steps as bare lines 4 to 6.
+    - Replace the capture block with `set +e`, `architecture_output="$( cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin 2>&1 )"`, `architecture_status=$?`, `set -e`, then `printf '%s\n' "$architecture_output"`. The output reaches the terminal, and the script holds the exit code and the text.
+    - For a code of 0 or 1, print `ARCHITECTURE: step 4 exits <code>; the owner of the remaining drift is architecture_ci_input_pin_20261110`, print `DOCTOR: the three structural guard steps gate this exit code`, and exit 0.
+    - For a code of 2 with a whole-line match of `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports` in `$architecture_output`, print `ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110`, print `DOCTOR: the three structural guard steps gate this exit code`, and exit 0.
+    - For every other code, and for a code of 2 with any other output, print `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict`, print `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`, and exit 1.
+    - Keep the restore-condition comment at lines 8 to 10. It names the close of task 1.4d of `architecture_ci_input_pin_20261110` and the Monorepo orchestrator.
+    - Run a new full doctor run through the heavy-run prefix at one HEAD. Save the output to `measure/runs/doctor_gate_repair_20261112/doctor-run-<short-head>.log`.
+    - Run one timing run of the step 4 command through the heavy-run prefix at the same HEAD. Save the output to `measure/runs/doctor_gate_repair_20261112/step4-timing-<short-head>.log`. Record `step4_seconds` from that log.
+  - The record (`doctor-gate-evidence.md`) per FR-4:
+    - The STEP 4 line records the real CLI exit and the command text `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)`.
+    - The VERDICT line copies the ARCHITECTURE line of the saved run.
+    - The DURATION line names its source run: `- DURATION: step 4 took <N> s, from the timing run at <short-sha>`. The sha equals the `- HEAD:` value.
+    - Each value comes from a saved run log at the record HEAD.
+  - Check: `bash tests/orchestrator_doctor_gate.sh` exits 0, with `cases_total=<n> cases_failed=0`.
+  - Check: `bash -n measure/doctor.sh` exits 0 and `bash -n tests/orchestrator_doctor_gate.sh` exits 0.
+  - Check: the full run exits 0. Its output holds the known-drift ARCHITECTURE line and `DOCTOR: the three structural guard steps gate this exit code`. Record the CLI exit, the four step exit codes, and `step4_seconds`.
+  - Check: the per-commit scope check of test-strategy section 1.5 gives `doctor_out_of_scope_paths=0`.
+  - Commit: `fix(measure): read the real architecture exit in doctor (track_id: doctor_gate_repair_20261112)`, with `tests/orchestrator_doctor_gate.sh`, `measure/doctor.sh`, `doctor-gate-evidence.md`, and this plan.
 
 ## Phase 3: The gate is green on master
 

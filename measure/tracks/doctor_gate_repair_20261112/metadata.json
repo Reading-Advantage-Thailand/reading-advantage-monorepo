@@ -18,8 +18,9 @@
   "decisions": [
     "PM, 2026-11-12: \"3. F411: accepted. The marker check for one track counts as the pass. Open the doctor.sh follow-up track with a done date of 11-14.\"",
     "PM, 2026-11-12: \"4. Gate manifest: accepted (unchanged; separate track).\"",
+    "PM, 2026-11-12: \"1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision.\"",
     "Spec D-1 and D-2: the guard is the wrong side. Option (a), the guard accepts the pending marker, is the default.",
-    "Spec D-3: option (C) is the default. The doctor gate runs the architecture check in CI mode, records the verdict and its owner, and leaves the gate exit code to the three structural guard tests.",
+    "Spec D-3: option (C) is the PM decision of 2026-11-12. The doctor gate runs the architecture check in CI mode, records the verdict and its owner, and leaves the gate exit code to the three structural guard tests. The known manifest drift counts as the recorded drift, and any other CLI exit 2 is a tool failure.",
     "Spec D-4: the pin refresh and the debt baseline stay with architecture_ci_input_pin_20261110 (tasks 1.4 and 1.4d)."
   ],
   "dates": {

@@ -3,6 +3,7 @@
 > **Track:** `doctor_gate_repair_20261112` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
 > **Scope:** Phase 1 (F411, the marker guard), Phase 2 (F421, the architecture verdict), Phase 3 (the gate is green on master). All tasks 1.1 to 3.4.
 > **Written:** 2026-11-12 at role base `0b3d04ac0` (the amendment commit). Model: claude-sonnet-5-5.
+> **Amended:** 2026-11-12 after the failed Phase 2 reviews (Review A F201 to F205, Review B F251, N1, N2) and the PM decision of 2026-11-12. Model: deepseek-flash.
 > **Spec review:** pass at `measure/runs/doctor_gate_repair_20261112/spec-review-0b3d04ac0.json` (round 2, Kimi).
 > **No SHA in this file.** The strategy names no `phase_base_sha`. Section 1.5 names each capture point.
 > **No hash, no checksum, no manifest.** The track adds none (AGENTS.md, Hashing and Provenance Policy). Git commit identity is the only provenance.
@@ -73,7 +74,7 @@ The adversarial role must attribute a mutant to a case. Both new files therefore
 
 - one line per case: `CASE <name>: PASS` or `CASE <name>: FAIL (<reason>)`;
 - one summary line: `cases_total=<n> cases_failed=<n>`;
-- exit 1 when `cases_failed` is above 0, and exit 1 when `cases_total` is below the floor of its file (A4). The floor is `cases_total>=14` for the marker cases file and `cases_total>=11` for part A of the doctor gate file.
+- exit 1 when `cases_failed` is above 0, and exit 1 when `cases_total` is below the floor of its file (A4). The floor is `cases_total>=14` for the marker cases file and `cases_total>=12` for part A of the doctor gate file.
 
 Both files derive `ROOT` from `BASH_SOURCE` (the idiom of line 4 of the guard). They hold no absolute repository path. A scratch repository layout then tests the copy that sits beside it (section 7). The case-file copy rule: each case builds its own root, copies the script under test from its own `ROOT`, and removes the scratch root when it ends. No fixture enters `measure/tracks/`.
 
@@ -86,12 +87,12 @@ Both files derive `ROOT` from `BASH_SOURCE` (the idiom of line 4 of the guard). 
 | M3 | The guard sets `ROOT` from `BASH_SOURCE`. A copy at `<tmp>/tests/` reads `<tmp>/measure/`. `--track <id>` resolves `measure/archive/<id>` first. | guard lines 4, 9 to 16 |
 | M4 | `pnpm` lives at `/home/daniebo/.local/bin/pnpm`. A `PATH` of `<tmp>/bin:$PATH` finds it. The plan sentence "`<tmp>/bin` holds no pnpm, so the shell returns 127" is therefore false with that `PATH`. See finding F1. | `command -v pnpm` on 2026-11-12 |
 | M5 | `doctor.sh` calls the guards as `bash tests/<name>.sh`. The call needs the repository root as the working directory. A scratch root works when the case runs `cd <tmp>`. | `measure/doctor.sh` |
-| M6 | The CLI returns 0 for a pass, 1 for a boundary failure, and 2 for a tool failure. A missing `pnpm` gives 127. An out-of-memory kill gives 137. | `architecture-check-cli.ts:135-150`, spec review r2 |
+| M6 | The CLI returns 0 for a pass, 1 for a boundary failure, and 2 for a tool failure. The catch block at `architecture-check-cli.ts` lines 143 to 149 returns 2 for every error, so exit 2 covers the known manifest drift and every other tool failure. The root script `architecture:check` holds two pnpm layers, and each layer reports 1 for a failed child. The gate must call `node_modules/.bin/tsx` directly to read the real CLI exit. The local path exists: `node_modules/.bin/tsx` is an executable symlink to `../tsx/dist/cli.mjs`. No `tsx` exists under `packages/architecture-enforcement/node_modules/.bin/`. | `architecture-check-cli.ts:135-150`, `package.json:7`, `ls -l node_modules/.bin/tsx` |
 | M7 | The guard test and the truthfulness guard both read plans. The truthfulness guard counts only `[~xb]` lines. It is unaffected by the guard change. | `tests/orchestrator_review_execution_truthfulness.sh:18` |
 | M8 | The catalog test scans each `**Guard:**` line for `tests/...sh` paths and fails when one is missing. | `tests/orchestrator_catalog.sh:22-35` |
 | M9 | `tests/orchestrator_detector_syntax.sh` exists and guards A14. An A8 reword must not add `rg -nE`. | `tests/` |
 | M10 | The Part B record path sits under `measure/tracks/`. Closeout moves the track to `measure/archive/`. A path that is not resolved with `track_dir_resolve` breaks at the archive move (A9). | spec section 5, AGENTS.md closeout rule |
-| M11 | The sibling track `architecture_ci_input_pin_20261110` keeps the architecture check red on master (task 1.4 is `[~]`, task 1.4d is `[ ]`). The expected exit of step 4 on master today is 1. | spec section 2.3 |
+| M11 | The sibling track `architecture_ci_input_pin_20261110` keeps the architecture check red on master (task 1.4 is `[~]`, task 1.4d is `[ ]`). The expected CLI exit of step 4 on master today is 2 with the line `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports`. The pnpm wrapper reported that exit as 1, so the record of task 2.3 holds a false boundary verdict (Review A F201). After task 2.5 the expected gate result is exit 0 with the known-drift line. | spec sections 2.3 and 3, `doctor-run-49f96a7d8.log:13-18` |
 | M12 | Plan task 2.2 checks `bash tests/orchestrator_doctor_gate.sh` exits 0. That file holds part B, and the record that part B reads is written only in task 2.3. The check cannot pass at task 2.2. See finding F2. | `plan.md` tasks 2.1 to 2.3 |
 
 ## 3. Phase summary and review applicability
@@ -145,12 +146,12 @@ Both files derive `ROOT` from `BASH_SOURCE` (the idiom of line 4 of the guard). 
 | R8 | P1 | A vacuous pass on a plan that no one scanned. | An empty scope prints PASS. | The case `empty_scope_exits_1` and the plan count floor of 1. |
 | R9 | P2 | A guard failure is swallowed. | One of three guards gets `|| true`, or `set -e` is gone. | One failure case for each of the three guards. |
 | R10 | P2 | A tool crash passes the gate. | Code 2, 3, 126, 127, or 137 gives exit 0. | The loop `tool_failure_codes` with `codes_checked=5`. |
-| R11 | P2 | A boundary verdict gates the exit. | Code 1 gives exit 1. | The cases `pnpm_exit_1_gate_exits_0` and `pnpm_exit_0_gate_exits_0`. |
-| R12 | P2 | The architecture command is wrong. | The flag is dropped, or `architecture:pin:refresh` runs. The refresh writes five hash fields of the manifest. | The stub records its argv. The case asserts the exact argv and `pnpm_calls=1`. |
-| R13 | P2 | The architecture step runs after a failed guard. | The step runs on its own and prints a verdict next to a red guard. | The guard failure cases assert `pnpm_calls=0` and no ARCHITECTURE line. |
+| R11 | P2 | A boundary verdict gates the exit. | Code 1 gives exit 1. | The cases `tsx_exit_1_gate_exits_0` and `tsx_exit_0_gate_exits_0`. |
+| R12 | P2 | The architecture command is wrong. | The flag is dropped, or `architecture:pin:refresh` runs. The refresh writes five hash fields of the manifest. | The stub records its argv. The case asserts the exact argv and `tsx_calls=1`. |
+| R13 | P2 | The architecture step runs after a failed guard. | The step runs on its own and prints a verdict next to a red guard. | The guard failure cases assert `tsx_calls=0` and no ARCHITECTURE line. |
 | R14 | P2 | The gate writes a file. | The script writes a hash or a pin in the repository. | The case `no_write_in_root` compares the file list of the scratch root. |
 | R15 | P2 | A message and an exit disagree. | The tool-failure path prints the gate line. The verdict path prints the tool-failure line. | Negative assertions in each case. |
-| R16 | P2 | The test uses the real `pnpm`. | A `PATH` that holds the real `pnpm` makes the 127 case run the real check. | The 127 case uses a `PATH` with no `pnpm`, and asserts `command -v pnpm` fails under it first (finding F1). |
+| R16 | P2 | The test uses a real step 4 tool. | A path that holds a real executable makes the 127 case run the real check. | The 127 case asserts `<tmp>/node_modules/.bin/tsx` is absent first (finding F1). |
 | R17 | P2 | The record is wrong or stale. | A STEP line says `exit 0` for a step that exited 1. The verdict line and the STEP 4 line disagree. | Part B cross-checks the codes (section 6, P2). Section 6, P3 records the currency rule. |
 | R18 | P2 | The record path breaks at closeout (A9). | Part B reads only `measure/tracks/...`. After the archive move the test fails forever. | Part B resolves the path with `track_dir_resolve`. |
 | R19 | P2 | The full run kills the machine. | The architecture check runs outside `HEAVY` and the Postgres process dies. | Every architecture run, including the timing run, goes through `HEAVY` (finding F4). |
@@ -245,7 +246,7 @@ and the A8 token detector (`a8_tokens=4`), and the per-commit scope check of sec
 
 **Risk: high.** Review A, Review B (required), and adversarial (required) apply. Review C and the browser review do not apply.
 
-**Hold condition (question Q1).** Spec D-3 option (C) is a default of 2026-11-12. It waits for the PM confirmation. The track does not record option (C) as a PM decision. Phase 1 does not depend on option (C) and proceeds. The orchestrator should hold task 2.1 (Red) until the PM confirms option (C), or until the orchestrator orders Red on the default. The cost of a late rejection is the Red commit of task 2.1 and the Green commit of task 2.2 (section 9 holds the inactive branch).
+**No hold (PM decision of 2026-11-12).** The PM decided Q1, quoted word for word: "1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision." Option 2 is spec D-3 option (C) with the known manifest drift as the recorded drift. Task 2.1 and task 2.5 proceed. Section 9 stays inactive.
 
 #### 6.5 Task 2.1: Red
 
@@ -257,54 +258,56 @@ bash tests/orchestrator_doctor_gate.sh --part a
 
 The file accepts `--part a`, `--part b`, and no argument (both parts). See finding F2. With no argument it runs part A, then part B, and exits 1 if either part fails.
 
-**Expected result at the base.** `--part a`: exit 1. The failing cases are `pnpm_exit_1_gate_exits_0`, `pnpm_exit_0_gate_exits_0`, `pnpm_exit_2_gate_exits_1`, `pnpm_exit_127_gate_exits_1` (plan), and the added cases that fail at the base (table below). `guard_failure_gate_exits_1` passes at the base (characterization). The base `doctor.sh` runs `pnpm architecture:check` with no flag, so the argv case fails at the base too. `--part b`: exit 1, the record is absent. Red is not a syntax error and not a copy error.
+**Expected result at the base.** `--part a`: exit 1. The failing cases are `tsx_exit_1_gate_exits_0`, `tsx_exit_0_gate_exits_0`, `tsx_exit_2_manifest_drift_gate_exits_0`, `tsx_exit_2_other_line_gate_exits_1`, and the added cases that fail at the base (table below). The three guard failure cases pass at the base (characterization). The base `doctor.sh` calls `pnpm architecture:check` with no flag, and the harness holds no `pnpm`, so the base prints the tool-failure line with 127. `--part b`: exit 1, the record is absent. Red is not a syntax error and not a copy error.
 
 **Part A harness rules.**
 
-- Each case builds `<tmp>`, writes a copy of `measure/doctor.sh` to `<tmp>/measure/doctor.sh`, writes three stub guards to `<tmp>/tests/`, and writes `<tmp>/bin/pnpm`. Each stub guard prints a PASS line and exits with a code that the case sets.
-- The `pnpm` stub appends its argv, one line for each call, to `<tmp>/pnpm.log` and exits with the code that the case sets. The log is not in `<tmp>/bin`, so the stub does not change the file list that case `no_write_in_root` compares.
-- The case runs `cd <tmp>`, sets `PATH=<tmp>/bin:$PATH`, and runs `bash measure/doctor.sh` with stdout and stderr merged. It captures `gate_exit=<n>` and the output.
-- **The 127 case and the tool-failure loop with no stub:** `PATH=<tmp>/bin:/usr/bin:/bin`, with `<tmp>/bin` holding no `pnpm`. `pnpm` lives in `/home/daniebo/.local/bin`, so this `PATH` has no `pnpm`. The case first asserts `command -v pnpm` fails under that `PATH` (`pnpm_absent=1`). When that assertion fails, the case fails with the reason (A4: the case would otherwise run the real check).
+- Each case builds `<tmp>`, writes a copy of `measure/doctor.sh` to `<tmp>/measure/doctor.sh`, writes three stub guards to `<tmp>/tests/`, and creates `<tmp>/packages/architecture-enforcement`, because the step 4 command changes into it. Each case that sets a code writes `<tmp>/node_modules/.bin/tsx`. The relative path `../../node_modules/.bin/tsx` resolves to the stub, so the stub models the real call path.
+- The stub `tsx` appends its argv, one line for each call, to `<tmp>/tsx.log` and exits with the code that the case sets. It prints the case output line on stderr when the case sets one. The log is not under `node_modules`, so the case `no_write_in_root` skips `./tsx.log` in its file list.
+- The case runs `cd <tmp>`, sets `PATH=<tmp>/bin:/usr/bin:/bin`, and runs `bash measure/doctor.sh` with stdout and stderr merged. It captures `gate_exit=<n>` and the output. The real `pnpm` lives at `/home/daniebo/.local/bin`, outside that `PATH`. The harness writes no `pnpm` stub, because step 4 no longer calls `pnpm`. At the base, the `pnpm` call of the old script gives 127, so no case runs the real check.
+- **The 127 case and the tool-failure loop with no stub:** the case still creates `<tmp>/packages/architecture-enforcement`, and it writes no `<tmp>/node_modules/.bin/tsx`, so the command gives 127. The case first asserts that `test -x <tmp>/node_modules/.bin/tsx` fails (`tsx_absent=1`). When that assertion fails, the case fails with the reason (A4: the case would otherwise run a real executable).
 - Exit codes are asserted as integers (`gate_exit`). A substring never proves an exit (A1).
 
-**The plan cases stay as written** (`pnpm_exit_1_gate_exits_0`, `pnpm_exit_0_gate_exits_0`, `guard_failure_gate_exits_1`, `pnpm_exit_2_gate_exits_1`, `pnpm_exit_127_gate_exits_1`), with these additions to their assertions:
+**The plan cases, with the names of task 2.5:** `tsx_exit_1_gate_exits_0`, `tsx_exit_0_gate_exits_0`, `guard_catalog_failure_gate_exits_1`, `guard_marker_failure_gate_exits_1`, `guard_truthfulness_failure_gate_exits_1`, `tsx_exit_2_manifest_drift_gate_exits_0`, `tsx_exit_2_other_line_gate_exits_1`, `tsx_exit_127_gate_exits_1`, `tsx_argv_exact`, `tool_failure_codes`, `architecture_line_shows_code`, and `no_write_in_root`.
 
-- `pnpm_exit_1_gate_exits_0` and `pnpm_exit_0_gate_exits_0` also assert that the output holds no `tool failure` text and holds no `did not produce a boundary verdict` text.
-- `pnpm_exit_2_gate_exits_1` and `pnpm_exit_127_gate_exits_1` also assert that the output holds no `DOCTOR: the three structural guard steps gate this exit code` text (R15).
-- `guard_failure_gate_exits_1` runs once for each of the three guards: `guard_catalog_failure_gate_exits_1`, `guard_marker_failure_gate_exits_1`, and `guard_truthfulness_failure_gate_exits_1`. Each asserts `gate_exit=1`, `pnpm_calls=0` (the `pnpm.log` is empty or absent), and no `ARCHITECTURE:` line.
+- `tsx_exit_1_gate_exits_0` and `tsx_exit_0_gate_exits_0` also assert that the output holds no `tool failure` text and holds no `did not produce a boundary verdict` text.
+- `tsx_exit_2_other_line_gate_exits_1` and `tsx_exit_127_gate_exits_1` also assert that the output holds no `DOCTOR: the three structural guard steps gate this exit code` text (R15).
+- `guard_failure_gate_exits_1` runs once for each of the three guards: `guard_catalog_failure_gate_exits_1`, `guard_marker_failure_gate_exits_1`, and `guard_truthfulness_failure_gate_exits_1`. Each asserts `gate_exit=1`, `tsx_calls=0` (no `tsx.log`, or an empty one), and no `ARCHITECTURE:` line.
 
-**Added cases (the strategy adds them).**
+**Added cases (the strategy adds them; task 2.5 pins the names).**
 
 | Case | Setup | Expected | At the base |
 |---|---|---|---|
-| `architecture_argv_exact` | the guards pass, `pnpm` exits 0 | `pnpm.log` holds exactly one line, and that line is `architecture:check --skip-input-snapshot-pin`. `pnpm_calls=1`. | fails (the base has no flag) |
-| `tool_failure_codes` | a loop over the stub codes 2, 3, 126, 137, and the 127 case with no stub. The loop asserts `codes_checked=5` first. | each run: `gate_exit=1`, the output holds `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1` | fails for codes 2, 3, 126, 137 (the base exits with the pnpm code, not 1) |
+| `tsx_argv_exact` | the guards pass, the stub `tsx` exits 0 | `tsx.log` holds exactly one line, and that line is `src/architecture-check-cli.ts --skip-input-snapshot-pin`. `tsx_calls=1`. | fails (the base runs `pnpm architecture:check` with no flag, and no `pnpm` exists) |
+| `tsx_exit_2_manifest_drift_gate_exits_0` | the stub `tsx` exits 2 and prints `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports` on stderr | `gate_exit=0`, the output holds `ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code` | fails (the base prints the tool-failure line with 127) |
+| `tsx_exit_2_other_line_gate_exits_1` | the stub `tsx` exits 2 and prints `Architecture check failed: another failure` on stderr | `gate_exit=1`, the output holds `ARCHITECTURE: step 4 exits 2; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1` | fails (the base prints 127, and no 2 line) |
+| `tool_failure_codes` | a loop over the stub codes 2 (no output line), 3, 126, and 137, plus the 127 case with no stub. The loop asserts `codes_checked=5` first. | each run: `gate_exit=1`, the output holds `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1` | fails (the base prints 127 for every code) |
 | `architecture_line_shows_code` | the stub exits 0, then 1 | the first run holds `step 4 exits 0;`, the second holds `step 4 exits 1;` (kills a hard-coded code) | fails |
-| `no_write_in_root` | the guards pass, `pnpm` exits 1 | the sorted `find <tmp> -type f` list before and after the run is equal, apart from `pnpm.log` | passes (characterization) |
+| `no_write_in_root` | the guards pass, the stub `tsx` exits 1 | the sorted `find <tmp> -type f` list before and after the run is equal, apart from `tsx.log` | passes (characterization) |
 
-`cases_total` for part A is at least 11 (5 plan cases, 2 extra guard cases, and 4 added cases, with a loop counted as one case). The floor in section 1.7 is 11.
+`cases_total` for part A is at least 12 (2 `tsx` exit cases, 3 guard cases, 2 exit-2 cases, the 127 case, 3 added cases, and the characterization case). The floor in section 1.7 is 12.
 
 **Part B rules (the record).** Part B reads the record with the `track_dir_resolve` helper of the guard (archive first, then `measure/tracks`), so the test survives the archive move (R18, A9). It keeps the plan checks:
 
 - four lines match `^- STEP [1-4]: .+, exit [0-9]+, [0-9]{4}-[0-9]{2}-[0-9]{2}$`, one for each step number;
-- one line starts `- VERDICT: ARCHITECTURE: step 4 exits ` and holds `; the owner of the remaining drift is architecture_ci_input_pin_20261110`;
+- one line starts `- VERDICT: ARCHITECTURE: step 4 exits ` and holds `; the owner of the remaining drift is architecture_ci_input_pin_20261110`, or holds `; the known manifest drift is owned by architecture_ci_input_pin_20261110`;
 - one line holds `OWNER: architecture_ci_input_pin_20261110 owns tasks 1.4 (pin refresh) and 1.4d (debt baseline)`.
 
 The strategy adds these checks to part B. Each reads a labeled integer or a literal:
 
-- The command text of each STEP line equals the literal of plan task 2.3 (`bash tests/orchestrator_catalog.sh`, `bash tests/orchestrator_marker_vocabulary.sh`, `bash tests/orchestrator_review_execution_truthfulness.sh`, `pnpm architecture:check --skip-input-snapshot-pin`).
+- The command text of each STEP line equals the literal of plan task 2.5 (`bash tests/orchestrator_catalog.sh`, `bash tests/orchestrator_marker_vocabulary.sh`, `bash tests/orchestrator_review_execution_truthfulness.sh`, `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)`).
 - The exit codes of STEP 1, STEP 2, and STEP 3 are `0`. A gate that exits 0 needs three passing guards, so another code is a false record (A5).
-- The exit code of STEP 4 is `0` or `1`. Another code is a tool failure, and the gate would exit 1.
+- The exit code of STEP 4 is `0`, `1`, or `2`. A `2` is valid only when the VERDICT line holds `; the known manifest drift is owned by architecture_ci_input_pin_20261110`. Another code is a tool failure, and the gate would exit 1.
 - The code in the VERDICT line equals the code of the STEP 4 line (R17).
 - A line `- DOCTOR: the three structural guard steps gate this exit code` exists.
-- A line `- DURATION: step 4 took <N> s` exists, and `<N>` is an integer or a decimal number.
+- A line matches `^- DURATION: step 4 took [0-9]+([.][0-9]+)? s, from the timing run at [0-9a-f]{7,12}$`, and its short sha equals the `- HEAD:` value (Review B N2).
 - A line `- HEAD: <short-sha>` exists, and the short sha is 7 to 12 hexadecimal characters.
 
 Part B checks the form and the cross-consistency of the record. It does not check that the record is current. Currency is the job of the live run at task 3.4 (R17, section 6.7). The case counts are `record_lines_checked=<n>`, with a floor of 8.
 
 **Red commit:** `test(measure): pin the doctor gate behavior (track_id: doctor_gate_repair_20261112)`, test file only.
 
-#### 6.6 Task 2.2: Green
+#### 6.6 Task 2.2 and task 2.5: Green
 
 **GREEN_TEST_COMMAND:**
 
@@ -319,22 +322,27 @@ It exits 0 with `cases_failed=0`. Part B is not part of this check, because the 
 1. The timing run of step 4. The plan says a plain local run. The strategy runs it through `HEAVY`, because the architecture check is a heavy job and the machine has one heavy lock (R19):
 
    ```bash
-   HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && time pnpm architecture:check --skip-input-snapshot-pin'
+   HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && time (cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)'
    ```
 
-   The note records `step4_seconds=<N>` and the exit code. This run is a measurement, not the gate proof.
+   The note records `step4_seconds=<N>` and the CLI exit code. This run is a measurement, not the gate proof.
 2. The full doctor run through `HEAVY` (plan rule 19, the command in section 1.1). The note records the exit code of the run, the four step results, the printed ARCHITECTURE line, and `step4_seconds`.
+
+Task 2.5 repeats item 1 and item 2 at the record HEAD. It saves the timing output to `measure/runs/doctor_gate_repair_20261112/step4-timing-<short-head>.log` and the gate output to `measure/runs/doctor_gate_repair_20261112/doctor-run-<short-head>.log`. The record of task 2.5 reads those logs (Review A F204, Review B N2).
 
 **Expected outcomes of the full run on master (M11).**
 
-| Step 4 exit | The doctor exit | The action |
+| Step 4 CLI exit | The doctor exit | The action |
 |---|---|---|
-| 1 | 0 | The expected result. Record it. |
-| 0 | 0 | Record it. The sibling track landed its work. |
-| 2, 127, 137, or another code | 1 | A tool failure. Stop. Record the exit and the log. Report to the orchestrator. Do not widen the change and do not edit the architecture package. |
+| 0 | 0 | Record it. The sibling track landed its work. Record the boundary line with code 0. |
+| 1 | 0 | Record it. Record the boundary line with code 1. |
+| 2 with the manifest-drift line | 0 | The known drift that F421 names. Record the known-drift line and its owner. |
+| 2 with any other output, and 3, 126, 127, 137, or another code | 1 | A tool failure. Stop. Record the exit, the log, and the output. Report to the orchestrator. Do not widen the change and do not edit the architecture package. |
 | 124 (the heavy limit) | 124 | Stop (plan rule 20). The orchestrator asks the owner. |
 
 A doctor exit of 1 with a step 4 tool failure is a true result. It is not a defect of the gate.
+
+The record of task 2.3 holds a false boundary verdict, because the pnpm wrapper reported the CLI exit 2 as 1 (Review A F201). Task 2.5 corrects `measure/doctor.sh` and the record.
 
 **Commit:** `fix(measure): record the architecture verdict in doctor (track_id: doctor_gate_repair_20261112)`.
 
@@ -348,7 +356,7 @@ bash tests/orchestrator_doctor_gate.sh
 
 With no argument the file runs both parts. It exits 0.
 
-**Evidence rules for the record (A5).** Each STEP line comes from the output of the full run of task 2.2 or 2.4. A STEP exit of 0 for steps 1 to 3 needs the PASS line of that step in the saved output. The saved output goes to `measure/runs/doctor_gate_repair_20261112/doctor-run-<short-head>.log`. The step 4 code comes from the ARCHITECTURE line. The VERDICT line copies that line. No value comes from memory.
+**Evidence rules for the record (A5).** Each value comes from a saved run log at the record HEAD. Each STEP line comes from the output of the full run of task 2.5. A STEP exit of 0 for steps 1 to 3 needs the PASS line of that step in the saved output. The saved output goes to `measure/runs/doctor_gate_repair_20261112/doctor-run-<short-head>.log`. The STEP 4 line records the real CLI exit and the command text `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)`. The VERDICT line copies the ARCHITECTURE line. The DURATION line reads `- DURATION: step 4 took <N> s, from the timing run at <short-sha>`, and its sha equals the `- HEAD:` value. The `<N>` value comes from `measure/runs/doctor_gate_repair_20261112/step4-timing-<short-head>.log`. No value comes from memory.
 
 **Commit:** `docs(measure): record the doctor gate evidence (track_id: doctor_gate_repair_20261112)`.
 
@@ -362,7 +370,9 @@ bash tests/orchestrator_doctor_gate.sh
 
 and the full doctor run through `HEAVY` (section 1.1), and the per-commit scope check of section 1.5 (`doctor_out_of_scope_paths=0`). The note records each exit code and `step4_seconds`. `git worktree list --porcelain` shows one worktree.
 
-**Review B reading points (P2).** (1) `set -euo pipefail` stays, and no guard gets `|| true`. (2) The capture block restores `set -e`. (3) Every code other than 0 and 1 exits 1. (4) The command is `pnpm architecture:check --skip-input-snapshot-pin` and nothing else runs from `pnpm`. (5) The script writes no file. (6) The restore condition of spec D-3 (the close of sibling task 1.4d, owner the Monorepo orchestrator) is written down. The default: the Green role puts one comment in `measure/doctor.sh` that names the condition and the owner (finding F5). (7) The line `the owner of the remaining drift is architecture_ci_input_pin_20261110` also prints for exit 0, where no drift remains. The text is pinned by the spec. Review B records it as a Nit (A5).
+**Review B reading points (P2).** (1) `set -euo pipefail` stays, and no guard gets `|| true`. (2) The capture block restores `set -e`. (3) Every code other than 0, 1, and the known-drift exit 2 exits 1. (4) The gate runs `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)` and nothing else. No pnpm layer sits between the CLI and the gate, because each layer reports 1 for a failed child (Review A F201, Review B F251). (5) The script writes no file. (6) The restore condition of spec D-3 is written down. The rule: the Green role puts one comment in `measure/doctor.sh` that names the condition and the owner (finding F5). (7) The line `the owner of the remaining drift is architecture_ci_input_pin_20261110` also prints for exit 0, where no drift remains. The text is pinned by the spec. Review B records it as a Nit (A5, N1). (8) The exit-2 branch reads the output of the CLI. A tool crash with any other line exits 1.
+
+Restore line (unchanged): the architecture step gates the doctor exit code again when `architecture_ci_input_pin_20261110` closes its pin refresh task 1.4d. Owner: the Monorepo orchestrator. The orchestrator watches the close of task 1.4d and opens the follow-up change.
 
 ### P3: the gate is green on master
 
@@ -442,25 +452,28 @@ It runs the copy of the test file. A mutant is killed when the named case prints
 
 | Mutant | Killed by |
 |---|---|
-| no `set +e` before the capture (a pnpm exit of 1 stops the script) | `pnpm_exit_1_gate_exits_0` |
-| `\|\| true` after the `pnpm` call (the code is lost) | `tool_failure_codes` |
-| code 1 is treated as a tool failure | `pnpm_exit_1_gate_exits_0` |
-| code 2 is treated as a verdict | `pnpm_exit_2_gate_exits_1` |
+| no `set +e` before the capture (an exit of 1 stops the script) | `tsx_exit_1_gate_exits_0` |
+| `\|\| true` after the command (the code is lost) | `tool_failure_codes` |
+| the gate calls `pnpm architecture:check` (the wrapper reports 2 as 1) | `tsx_exit_2_manifest_drift_gate_exits_0` and `tsx_exit_2_other_line_gate_exits_1` |
+| code 1 is treated as a tool failure | `tsx_exit_1_gate_exits_0` |
+| every exit 2 gives the known-drift line | `tsx_exit_2_other_line_gate_exits_1` and `tool_failure_codes` |
+| every exit 2 gives the tool-failure line | `tsx_exit_2_manifest_drift_gate_exits_0` |
+| the drift match is the shorter prefix `Architecture check failed:` | `tsx_exit_2_other_line_gate_exits_1` |
 | only code 2 is treated as a tool failure (`-eq 2`) | `tool_failure_codes` (codes 3, 126, 127, 137) |
 | a catalog guard with `\|\| true` | `guard_catalog_failure_gate_exits_1` |
 | a marker guard with `\|\| true` | `guard_marker_failure_gate_exits_1` |
 | a truthfulness guard with `\|\| true` | `guard_truthfulness_failure_gate_exits_1` |
 | `set -e` removed | the three guard failure cases |
-| the architecture step runs before the guards, or runs after a failed guard | the three guard failure cases (`pnpm_calls=0`) |
-| the flag `--skip-input-snapshot-pin` is dropped | `architecture_argv_exact` |
-| the command is `pnpm architecture:pin:refresh` | `architecture_argv_exact` |
-| the command runs twice | `architecture_argv_exact` (`pnpm_calls=1`) |
+| the architecture step runs before the guards, or runs after a failed guard | the three guard failure cases (`tsx_calls=0`) |
+| the flag `--skip-input-snapshot-pin` is dropped | `tsx_argv_exact` |
+| the command is `pnpm architecture:pin:refresh` | `tsx_argv_exact` |
+| the command runs twice | `tsx_argv_exact` (`tsx_calls=1`) |
 | the printed code is a fixed `1` | `architecture_line_shows_code` |
-| the tool-failure path prints the gate line | `pnpm_exit_2_gate_exits_1` and `tool_failure_codes` |
-| the verdict path prints the tool-failure line | `pnpm_exit_1_gate_exits_0` and `pnpm_exit_0_gate_exits_0` |
-| the tool-failure path exits 0 after it prints | `pnpm_exit_2_gate_exits_1` and `tool_failure_codes` |
+| the tool-failure path prints the gate line | `tsx_exit_2_other_line_gate_exits_1` and `tool_failure_codes` |
+| the verdict path prints the tool-failure line | `tsx_exit_1_gate_exits_0` and `tsx_exit_0_gate_exits_0` |
+| the tool-failure path exits 0 after it prints | `tsx_exit_2_other_line_gate_exits_1` and `tool_failure_codes` |
 | the script writes a file in its root | `no_write_in_root` |
-| the 127 case runs with the real `pnpm` on `PATH` (a test mutant) | the `pnpm_absent` assertion of the 127 case |
+| the 127 case runs with a real executable on the path (a test mutant) | the `tsx_absent` assertion of the 127 case |
 
 ### 7.3 Part B mutants (the record)
 
@@ -476,7 +489,7 @@ The adversarial role also edits a scratch copy of the record, never the real one
 
 ## 8. Findings and questions for the orchestrator
 
-- **F1 (Major, plan task 2.1, case `pnpm_exit_127_gate_exits_1`): the 127 case cannot run as the plan states it.** The plan sets `PATH=<tmp>/bin:$PATH`, and says an empty `<tmp>/bin` gives 127. `pnpm` lives in `/home/daniebo/.local/bin`, so the real `pnpm` is found and the case runs the real check, with an unknown exit code and a heavy run. Rule: the case uses `PATH=<tmp>/bin:/usr/bin:/bin` and asserts that `command -v pnpm` fails under it (section 6.5). This is a plan correction. It does not change a pinned string.
+- **F1 (Major, plan task 2.1, case `tsx_exit_127_gate_exits_1`): the 127 case cannot use the normal `PATH`.** The plan sets `PATH=<tmp>/bin:$PATH`, and says an empty `<tmp>/bin` gives 127. `pnpm` lives in `/home/daniebo/.local/bin`, so the real `pnpm` is found and the case runs the real check, with an unknown exit code and a heavy run. Rule: the case uses `PATH=<tmp>/bin:/usr/bin:/bin` and asserts that no step 4 tool exists at `<tmp>/node_modules/.bin/tsx` (section 6.5). This is a plan correction. It does not change a pinned string.
 - **F2 (Major, plan tasks 2.1 to 2.3, AC-5 and AC-6): task 2.2 cannot pass.** Its check is `bash tests/orchestrator_doctor_gate.sh` exits 0. That file holds part B, and part B reads the record that task 2.3 writes. Rule: the file accepts `--part a`, `--part b`, and no argument. Task 2.2 checks `--part a`. Task 2.3 checks the full file. AC-5 reads `--part a` and AC-6 reads `--part b`. The no-argument run still exits 0 at task 2.3, so the spec wording of AC-5 and AC-6 holds. **Default:** adopt the selector. The Red role of task 2.1 implements it.
 - **F3 (Minor, plan task 1.2): the predicate does not match a marker of two or more characters.** `- [xx] task` and `- []` pass the guard. The base guard accepts them too, so this is not a regression. FR-1 says a marker outside the set fails. **Default:** keep the predicate of the plan (zero-decision rule). Review B records the residual. The adversarial role reports it and does not count it as a missed mutant.
 - **F4 (Minor, plan task 2.2): the step 4 timing run is a plain run.** The architecture check is a heavy job and the machine has one heavy lock and 7.3 GB of RAM. **Default:** run the timing through `HEAVY` (section 6.6). The acceptance text does not change.
@@ -484,18 +497,18 @@ The adversarial role also edits a scratch copy of the record, never the real one
 - **F6 (Minor, plan tasks 1.4, 2.4, AC-7): `git diff --name-only <phase_base_sha>..HEAD` lists other tracks.** Master is shared. **Default:** the per-commit scope check of section 1.5 is the gate.
 - **F7 (Minor, plan task 3.1): the registry says "green at <short-sha>" before task 3.4.** **Default:** the sha is the HEAD of the task 2.4 run with exit 0. The rule is in section 6.9.
 - **F8 (Nit):** the ARCHITECTURE line names the owner of the remaining drift when step 4 exits 0. The spec pins the text. **Default:** keep it.
-- **Q1 (PM, open): option (C) of spec D-3.** The doctor gate records the architecture verdict and does not gate on it. **Default:** option (C). The default waits for the PM confirmation and the track does not record it as a PM decision. The orchestrator should send the question now, because the due date is 2026-11-14. Phase 1 proceeds. The orchestrator holds task 2.1 until the answer, or orders Red on the default.
+- **Q1 (PM, decided 2026-11-12): option (C) of spec D-3.** The doctor gate records the architecture verdict and does not gate on it. The PM decided Q1, quoted word for word: "1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision." Option 2 holds the known manifest drift as the recorded drift, and it keeps every other CLI exit 2 a tool failure. The alternative, option (A), stays inactive (section 9).
 - **Q2 (orchestrator): when do Review A and Review B run?** **Default:** once, at task 3.2, on the full track diff (the plan). The orchestrator may add a Review B run at the P2 acceptance, because P2 is high risk.
 - **Q3 (orchestrator): the strategy adds cases to both test files** (section 6.1 and section 6.5). **Default:** the Red roles write all the added cases. A plan case that the Red role cannot write as stated goes back to the strategy role.
 
-## 9. Inactive branch: the PM rejects option (C)
+## 9. Inactive branch: option (A)
 
-This section is inactive until the PM answer.
+This section is inactive. The PM decided option 2 on 2026-11-12.
 
-- Option (A) keeps the architecture step as a gating step in CI mode. The step exits 1 on master today and the sibling track owns the fix. AC-1 cannot pass on master until the sibling tasks 1.4 and 1.4d close.
-- The cases `pnpm_exit_1_gate_exits_0` and `pnpm_exit_0_gate_exits_0` would become `pnpm_exit_1_gate_exits_1` and `pnpm_exit_0_gate_exits_0`. The code-1 mutants of section 7.2 change their expected exit.
+- Option (A) keeps the architecture step as a gating step in CI mode. The CLI exits 2 on master today and the sibling track owns the fix. AC-1 cannot pass on master until the sibling tasks 1.4 and 1.4d close.
+- The cases `tsx_exit_1_gate_exits_0` and `tsx_exit_0_gate_exits_0` would become `tsx_exit_1_gate_exits_1` and `tsx_exit_0_gate_exits_0`. The code-1 mutants of section 7.2 change their expected exit.
 - Task 2.2 would change `doctor.sh` only to add the flag. Task 3.4 would wait for the sibling track.
-- The orchestrator then asks the strategy role for a revision. No other part of this file changes.
+- On a reversal, the orchestrator asks the strategy role for a revision. No other part of this file changes.
 
 ## 10. Anti-pattern coverage
 
@@ -505,8 +518,8 @@ The catalog is `measure/anti-patterns.md` (A1 to A16). Per phase, each row names
 |---|---|---|---|---|
 | A1 | yes | yes | no | Exit codes are integers (`gate_exit`, the case exit), never a substring. The catalog test does not read the A8 text, so the A8 token detector reads it. Falsification: a guard that prints PASS and exits 1 passes a substring-only test. |
 | A2 | no | no | no | No publish gate in this track. |
-| A3 | yes | yes | yes | Every count is `label=<n>`: `cases_total`, `cases_failed`, `plans_checked`, `fail_lines`, `markers_checked`, `codes_checked`, `pnpm_calls`, `a8_tokens`, `step4_seconds`, `doctor_out_of_scope_paths`. A count check parses the label. Falsification: a date or a bare number passes a count check. |
-| A4 | yes | yes | no | Floors on `cases_total`. Each loop asserts its size first. Every exit-0 case has a plan count of at least 1. The 127 case asserts `pnpm_absent=1`. The guard failure cases assert `pnpm_calls=0` against a fixture where the control writes a call. Falsification: a loop runs over an empty list, or a case passes with the real `pnpm`. |
+| A3 | yes | yes | yes | Every count is `label=<n>`: `cases_total`, `cases_failed`, `plans_checked`, `fail_lines`, `markers_checked`, `codes_checked`, `tsx_calls`, `a8_tokens`, `step4_seconds`, `doctor_out_of_scope_paths`. A count check parses the label. Falsification: a date or a bare number passes a count check. |
+| A4 | yes | yes | no | Floors on `cases_total`. Each loop asserts its size first. Every exit-0 case has a plan count of at least 1. The 127 case asserts `tsx_absent=1`. The guard failure cases assert `tsx_calls=0` against a fixture where the control writes a call. Falsification: a loop runs over an empty list, or a case passes with a real executable. |
 | A5 | yes | yes | yes | A plan note quotes the exit code and the labeled counts. A record STEP line needs the PASS line in the saved output. Part B cross-checks the codes. Falsification: a record says `exit 0` for a step that exited 1. |
 | A6 | no | no | yes | The registry sha is the HEAD of a run with exit 0 (section 6.9). Falsification: the registry says green for a sha with no green run. |
 | A7 | yes | no | no | The marker loop holds near-misses (`X`, `!`, `-`, `.`, `1`, `a`). No filter uses a bare word as an exclusion token. Falsification: a near-miss marker passes the guard. |

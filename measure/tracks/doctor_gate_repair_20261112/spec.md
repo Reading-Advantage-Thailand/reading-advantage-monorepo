@@ -26,6 +26,10 @@ Quoted word for word:
 
 > 4. Gate manifest: accepted (unchanged; separate track).
 
+Decision of 2026-11-12 after the Phase 2 reviews, quoted word for word:
+
+> 1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision.
+
 ### 1.2 Findings to repair
 
 - **F411 — the marker vocabulary guard.** The guard rejects the canonical pending marker in active plans.
@@ -144,7 +148,7 @@ The default is option (a). The reasons:
 
 The residual risk of option (a): a task that was started and still shows `- [ ] ` is not flagged during the work. The closeout gate and the evidence gate still catch it.
 
-### D-3 F421 default: the doctor gate records the architecture verdict and does not gate on it
+### D-3 F421: the doctor gate records the architecture verdict and does not gate on it
 
 The architecture check compares committed byte hashes with the current working tree. On a moving master that comparison fails after any change to an analyzed file. The AGENTS.md policy says a hash proves content identity, not correctness, and says to treat existing hash machinery as local legacy behavior. The boundary check itself stays a CI gate on every push.
 
@@ -154,7 +158,11 @@ Three options exist.
 - **Option (B): doctor.sh refreshes the pins before the check.** That rewrites the five hash fields of the committed manifest on every run. It adds manifest churn, it propagates hash machinery, and the sibling track owns the refresh.
 - **Option (C): doctor.sh runs the check in CI mode, captures its exit code, prints the verdict and its owner, and leaves the gate exit code to the three structural guard tests.** The boundary check keeps gating every push in CI.
 
-The default is option (C). Default of 2026-11-12, waiting for the PM confirmation. This track does not record option (C) as a PM decision.
+The PM decision of 2026-11-12 holds option (C). Quoted word for word:
+
+> 1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision.
+
+Option 2 is option (C) of this decision. The PM decision also holds the classification of the CLI exit. The known manifest-drift failure counts as the recorded drift that F421 names. Any other CLI exit 2 stays a tool failure. The doctor gate must read the real CLI exit with no pnpm wrapper, because two pnpm layers map a failed child to 1.
 
 The reasons:
 
@@ -193,11 +201,18 @@ The PASS line reads `PASS: all active track plans use only [ ], [~], [x], or [b]
 
 ### FR-3 The doctor gate records the architecture verdict
 
-`measure/doctor.sh` must run `pnpm architecture:check --skip-input-snapshot-pin`. It must capture the exit code of that command, print a line that names the step and the exit code, and must keep the doctor gate exit code independent of that exit code when the code is 0 or 1. The three structural guard steps must keep gating the exit code.
+`measure/doctor.sh` must run the architecture CLI with no pnpm wrapper. From the repository root, the command reads `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)`. The local path `node_modules/.bin/tsx` holds the executable `tsx`. The command writes its output to the terminal. The script must capture the exit code and the output of the command.
 
-An exit code other than 0 or 1 is a tool failure. For that code, the script must print `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict`, print `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`, and exit 1.
+The root script `architecture:check` holds two pnpm layers. Each layer reports exit 1 for a failed child. The script must not read the exit of the root script, because that exit hides a CLI exit 2.
 
-For an exit code of 0 or 1, the script must print `ARCHITECTURE: step 4 exits <code>; the owner of the remaining drift is architecture_ci_input_pin_20261110`, print `DOCTOR: the three structural guard steps gate this exit code`, and exit 0 when the three guard steps pass.
+The classification holds one rule for each outcome:
+
+- **Exit 0.** The script must print `ARCHITECTURE: step 4 exits 0; the owner of the remaining drift is architecture_ci_input_pin_20261110`, print `DOCTOR: the three structural guard steps gate this exit code`, and continue.
+- **Exit 1.** The script must print `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110`, print `DOCTOR: the three structural guard steps gate this exit code`, and continue.
+- **Exit 2 with the output line `Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports`.** The script must print `ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110`, print `DOCTOR: the three structural guard steps gate this exit code`, and continue.
+- **Exit 2 with any other output, and any other code (126, 127, 137, and so on).** The script must print `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict`, print `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`, and exit 1.
+
+The three structural guard steps must keep gating the exit code. The gate exit code must not depend on the architecture verdict when the verdict is 0, 1, or the known manifest drift.
 
 ### FR-4 The gate record names every step
 
@@ -227,8 +242,8 @@ Each criterion has a falsifiable test. A recorded run proves a criterion that ha
 2. **AC-2, the guard accepts a pending marker.** Run `bash tests/orchestrator_marker_vocabulary_cases.sh`. The exit code is 0. A fixture plan that holds a top-level `- [ ] ` line passes the guard. A fixture plan that holds a top-level line with a marker outside {` `, `~`, `x`, `b`} fails the guard with exit code 1.
 3. **AC-3, the repository sweep passes.** Run `bash tests/orchestrator_marker_vocabulary.sh`. The exit code is 0 and the output holds no `FAIL: unsupported task marker` line.
 4. **AC-4, the catalog stays whole.** Run `bash tests/orchestrator_catalog.sh`. The exit code is 0 and the output names entries A1 to A15.
-5. **AC-5, the doctor gate holds four steps and one recorded verdict.** Run `bash tests/orchestrator_doctor_gate.sh`. The exit code is 0. The test runs a copy of `measure/doctor.sh` in a temporary root with stub guard scripts and a stub `pnpm` on `PATH`. Each case name states its expected exit. A stub guard failure exits 1. A `pnpm` exit of 1 gives gate exit 0 with the ARCHITECTURE line and the DOCTOR line. A `pnpm` exit of 2 or 127 gives gate exit 1 with the tool-failure line. The gate exit code does not depend on the architecture verdict when that verdict is 0 or 1.
-6. **AC-6, the gate record is complete.** Run `bash tests/orchestrator_doctor_gate.sh`. The exit code is 0. The gate record holds four lines of the form `- STEP <n>: <command>, exit <code>, <YYYY-MM-DD>`, the verdict line, and the owner line for `architecture_ci_input_pin_20261110`. The owner line reads `OWNER: architecture_ci_input_pin_20261110 owns tasks 1.4 (pin refresh) and 1.4d (debt baseline)`.
+5. **AC-5, the doctor gate holds four steps and one recorded verdict.** Run `bash tests/orchestrator_doctor_gate.sh`. The exit code is 0. The test runs a copy of `measure/doctor.sh` in a temporary root with stub guard scripts and a stub `tsx` at the relative path of the step 4 command. Each case name states its expected exit. A stub guard failure exits 1. A stub `tsx` exit of 1 gives gate exit 0 with the boundary line. A stub `tsx` exit of 2 with the manifest-drift line gives gate exit 0 with the known-drift line. A stub `tsx` exit of 2 with another line gives gate exit 1 with the tool-failure lines. The gate exit code does not depend on the architecture verdict when the verdict is 0, 1, or the known manifest drift.
+6. **AC-6, the gate record is complete.** Run `bash tests/orchestrator_doctor_gate.sh`. The exit code is 0. Each value comes from a saved run log at the record HEAD. The gate record holds four lines of the form `- STEP <n>: <command>, exit <code>, <YYYY-MM-DD>`. The STEP 4 line records the real CLI exit and the command text `(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)`. The VERDICT line copies the ARCHITECTURE line. The DURATION line names its source run. The record holds the verdict line and the owner line for `architecture_ci_input_pin_20261110`. The owner line reads `OWNER: architecture_ci_input_pin_20261110 owns tasks 1.4 (pin refresh) and 1.4d (debt baseline)`.
 7. **AC-7, no product file changed.** Run `git diff --name-only <base>..HEAD`. The list holds no path under `apps/`, `packages/`, or `services/`.
 8. **AC-8, the registry carries the track.** Read `measure/tracks.md`. The entry for `doctor_gate_repair_20261112` names the due date of 2026-11-14 and the findings F411 and F421.
 
@@ -243,8 +258,8 @@ Each criterion has a falsifiable test. A recorded run proves a criterion that ha
 
 ## 8. Open questions
 
-Each item has a default. The track proceeds with the default unless the PM says otherwise.
+Each item has a default. The track proceeds with the default unless the PM says otherwise. The PM decided OQ-1 on 2026-11-12.
 
-- **OQ-1, the doctor gate and the architecture verdict.** The default of D-3 option (C) is that the doctor gate records the architecture verdict and does not gate on it. Default of 2026-11-12, waiting for the PM confirmation. The restore line is in D-3. The alternative is option (A), which keeps the verdict as a gating step and needs the sibling track to land tasks 1.4 and 1.4d first.
+- **OQ-1, the doctor gate and the architecture verdict.** The PM decided this item on 2026-11-12, quoted word for word: "1. Doctor Q1: option 2, the path you continue on after the failed Phase 2 reviews. Record it as the PM decision." Option 2 is D-3 option (C): the doctor gate records the architecture verdict and does not gate on it, and the known manifest-drift failure counts as the recorded drift. The restore line is in D-3. The alternative is option (A), which keeps the verdict as a gating step and needs the sibling track to land tasks 1.4 and 1.4d first.
 - **OQ-2, the catalog entry A8.** The default of D-1 and FR-2 is to reword entry A8 so that it states the marker set that the guard accepts, and to keep its heading and its guard line. The alternative is to leave A8 as it is, which makes the catalog and the guard disagree.
-- **OQ-3, the runtime of the architecture step.** The heavy-run limit is 1800 s and no measured time exists for `pnpm architecture:check --skip-input-snapshot-pin`. The default is to record the step 4 seconds in the task 2.2 check and in the gate record. When the heavy run ends with exit 124, the task stops and the orchestrator asks the owner for the next action.
+- **OQ-3, the runtime of the architecture step.** The heavy-run limit is 1800 s. The measured step 4 time is 165.684 s from task 2.2. The default is to record the step 4 seconds in the task 2.5 check and in the gate record. When the heavy run ends with exit 124, the task stops and the orchestrator asks the owner for the next action.
