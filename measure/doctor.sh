@@ -17,7 +17,11 @@ architecture_status=$?
 set -e
 printf '%s\n' "$architecture_output"
 
-if [ "$architecture_status" -eq 0 ] || [ "$architecture_status" -eq 1 ]; then
+# Exit 1 is a boundary verdict only when the output holds the CLI verdict line.
+# Exit 1 without that line (a failed cd, an uncaught Node error) is a tool failure.
+verdict_line_pattern='architecture check: [^ ]+ \(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\)'
+
+if [ "$architecture_status" -eq 0 ] || { [ "$architecture_status" -eq 1 ] && grep -qxE -- "$verdict_line_pattern" <<<"$architecture_output"; }; then
   printf 'ARCHITECTURE: step 4 exits %d; the owner of the remaining drift is architecture_ci_input_pin_20261110\n' "$architecture_status"
   printf 'DOCTOR: the three structural guard steps gate this exit code\n'
   exit 0
