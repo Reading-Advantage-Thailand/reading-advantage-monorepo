@@ -339,6 +339,58 @@ export function ordered(doc, expected, label) {
   return ids;
 }
 
+/** The text rule of a Cloud Scheduler call: `gcloud`, optional flags, then `scheduler`. */
+const SCHEDULER_CALL = /\bgcloud\b(?:\s+(?:--?\S+|\\\n))*\s+scheduler\b/;
+
+/**
+ * Find the steps of a Cloud Build file that call Cloud Scheduler.
+ *
+ * A step calls Cloud Scheduler when its text holds `gcloud scheduler`, when it runs the
+ * `cloud-builders/gcloud` image with `scheduler` as the first argument, or when a script that
+ * it runs holds `gcloud scheduler`. A script path is a token that ends in `.sh`. A leading `./`
+ * is removed. The helper excludes nothing: a comment in a script counts as a call.
+ *
+ * @param {{ steps?: Record<string, unknown>[] }} doc The parsed file.
+ * @param {(path: string) => string} readScript Returns the text of a script by repository path.
+ * @returns {{ step: string, file: string | null }[]} One item per calling step; `file` is the script path, or null for a direct call.
+ * @throws {Error} When a script path of a step cannot be read. The message names the path.
+ */
+export function schedulerCalls(doc, readScript) {
+  const found = [];
+  for (const step of doc.steps ?? []) {
+    const id = String(step.id ?? "");
+    const args = (step.args ?? []).map(String);
+    const firstArg = args.find((value) => !value.startsWith("-"));
+    if (
+      SCHEDULER_CALL.test(stepText(step)) ||
+      (String(step.name ?? "").includes("cloud-builders/gcloud") && firstArg === "scheduler")
+    ) {
+      found.push({ step: id, file: null });
+      continue;
+    }
+    const paths = new Set();
+    for (const arg of args) {
+      for (const token of arg.split(/[\s"'`=,;()]+/)) {
+        if (token.endsWith(".sh")) paths.add(token.replace(/^\.\//, ""));
+      }
+    }
+    for (const path of paths) {
+      let text;
+      try {
+        text = readScript(path);
+      } catch {
+        throw new Error(`step ${id}: cannot read script ${path}`);
+      }
+      if (typeof text !== "string") throw new Error(`step ${id}: cannot read script ${path}`);
+      if (SCHEDULER_CALL.test(text)) {
+        found.push({ step: id, file: path });
+        break;
+      }
+    }
+  }
+  return found;
+}
+
 /**
  * Compute the rendered tag of a table row.
  *

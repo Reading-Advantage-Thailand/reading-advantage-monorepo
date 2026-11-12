@@ -2,7 +2,8 @@
  * Red tests for Phase 2 of the track `per_app_cicd_20261107`.
  *
  * The cases are F-01 to F-16 of `measure/tracks/per_app_cicd_20261107/test-strategy.md`
- * section P2.4. They are artifact tests of the Cloud Build files and of the traffic
+ * section P2.4, plus F-20 and F-21 of `measure/tracks/master_push_readiness_20261112/test-strategy.md`.
+ * They are artifact tests of the Cloud Build files and of the traffic
  * runbook. They never run Cloud Build.
  *
  * Run with the Red command of test-strategy section P2.3.
@@ -10,6 +11,7 @@
  * @module cloudbuild-files.test
  */
 import { describe, it } from "vitest";
+import { parse } from "yaml";
 import {
   allWorkflowFiles,
   cloudbuild,
@@ -20,6 +22,7 @@ import {
   pushAndTrafficFiles,
   readTable,
   readText,
+  schedulerCalls,
   sectionText,
   stepIds,
   stepText,
@@ -564,5 +567,163 @@ describe("F: Cloud Build files", () => {
       bad.length === 0,
       `invalid_substitutions=${bad.length}: ${bad.slice(0, 8).join(",")}`,
     );
+  });
+
+  it("F-20 the codecamp push file calls no gcloud scheduler", () => {
+    const pushFile = "apps/codecamp-advantage/cloudbuild.yaml";
+    const trafficFile = "apps/codecamp-advantage/cloudbuild-traffic.yaml";
+    const pushDoc = cloudbuild(pushFile);
+    const pushSteps = (pushDoc.steps ?? []).length;
+    must(pushSteps >= 4, `push_steps=${pushSteps}`);
+    const calls = schedulerCalls(pushDoc, readText);
+    must(
+      calls.length === 0,
+      `${pushFile} calls gcloud scheduler: scheduler_calls=${calls.length} ${calls
+        .map((call) => `step=${call.step} script=${call.file ?? "(step text)"}`)
+        .join("; ")}`,
+    );
+    // The positive control proves that the real reader resolves a real script.
+    const control = schedulerCalls(cloudbuild(trafficFile), readText);
+    must(
+      control.length === 1,
+      `scheduler_calls_traffic=${control.length} in ${trafficFile}, expected scheduler_calls_traffic=1`,
+    );
+  });
+
+  it("F-20-fixture the scheduler check fails on a fixture push file", () => {
+    const scripts = {
+      "x/run.sh": "set -e\ngcloud scheduler jobs describe j\n",
+      "x/clean.sh": "gcloud run deploy s\n",
+    };
+    const read = (path) => {
+      if (!(path in scripts)) throw new Error(`no inline text for ${path}`);
+      return scripts[path];
+    };
+    const yamlOf = (steps) => `steps:\n${steps}`;
+    const rows = [
+      {
+        row: "X1",
+        yaml: yamlOf(
+          '  - id: a\n    entrypoint: bash\n    args: ["-c", "gcloud scheduler jobs create http j --project=p"]\n',
+        ),
+        length: 1,
+      },
+      {
+        row: "X2",
+        yaml: yamlOf('  - id: a\n    entrypoint: bash\n    args: ["-c", "./x/run.sh"]\n'),
+        length: 1,
+        file: "x/run.sh",
+      },
+      {
+        row: "X3",
+        yaml: yamlOf(
+          '  - id: a\n    name: gcr.io/cloud-builders/gcloud\n    args: ["scheduler", "jobs", "update", "http", "j"]\n',
+        ),
+        length: 1,
+      },
+      {
+        row: "X4",
+        yaml: yamlOf(
+          '  - id: a\n    entrypoint: bash\n    args: ["-c", "gcloud --project=p scheduler jobs list"]\n',
+        ),
+        length: 1,
+      },
+      {
+        row: "X5",
+        yaml: yamlOf('  - id: a\n    entrypoint: bash\n    args: ["-c", "./x/missing.sh"]\n'),
+        throws: "x/missing.sh",
+      },
+      {
+        row: "X6",
+        yaml: yamlOf(
+          '  - id: a\n    entrypoint: bash\n    args: ["-c", "./x/clean.sh"]\n  - id: b\n    name: gcr.io/cloud-builders/docker\n    args: ["push", "img"]\n',
+        ),
+        length: 0,
+        steps: 2,
+      },
+    ];
+    must(rows.length === 6, `fixture_rows=${rows.length}`);
+    for (const row of rows) {
+      const doc = parse(row.yaml);
+      if (row.throws) {
+        let message = null;
+        try {
+          schedulerCalls(doc, read);
+        } catch (error) {
+          message = String(error.message);
+        }
+        must(message !== null, `${row.row}: the helper did not throw for a missing script`);
+        must(message.includes(row.throws), `${row.row}: the message does not name ${row.throws}`);
+        continue;
+      }
+      const calls = schedulerCalls(doc, read);
+      must(
+        calls.length === row.length,
+        `${row.row}: scheduler_calls=${calls.length} expected scheduler_calls=${row.length}`,
+      );
+      if (row.file) must(calls[0].file === row.file, `${row.row}: file=${calls[0].file}`);
+      if (row.steps) must(doc.steps.length === row.steps, `${row.row}: steps_checked=${doc.steps.length}`);
+    }
+  });
+
+  it("F-21 the codecamp push file holds no Cloud Build copy of the tick token", () => {
+    const pushFile = "apps/codecamp-advantage/cloudbuild.yaml";
+    const trafficFile = "apps/codecamp-advantage/cloudbuild-traffic.yaml";
+    const token = "CODECAMP_REVIEW_WORKER_TICK_TOKEN";
+    const runtimeItem = `REVIEW_WORKER_TICK_TOKEN=${token}:latest`;
+    const push = cloudbuild(pushFile);
+    const traffic = cloudbuild(trafficFile);
+    const pushSteps = push.steps ?? [];
+    must(pushSteps.length >= 4, `push_steps=${pushSteps.length}`);
+    const problems = [];
+
+    for (const step of pushSteps) {
+      if ((step.secretEnv ?? []).map(String).includes(token)) {
+        problems.push(`${pushFile}: step ${step.id} lists ${token} in secretEnv`);
+      }
+    }
+    for (const entry of push.availableSecrets?.secretManager ?? []) {
+      if (
+        String(entry.env ?? "") === token ||
+        String(entry.versionName ?? "").includes(`/secrets/${token}/`)
+      ) {
+        problems.push(`${pushFile}: availableSecrets holds an entry for ${token}`);
+      }
+    }
+    const deploy = pushSteps.find((step) => step.id === "deploy-cloudrun");
+    must(deploy, `${pushFile}: deploy-cloudrun step missing`);
+    const setSecrets = (deploy.args ?? []).map(String).filter((value) => value.startsWith("--set-secrets="));
+    must(setSecrets.length === 1, `set_secrets_args=${setSecrets.length} in ${pushFile}`);
+    const items = setSecrets[0].slice("--set-secrets=".length).split(",");
+    must(items.length >= 13, `set_secrets_items=${items.length}`);
+    if (!items.includes(runtimeItem)) {
+      problems.push(`${pushFile}: --set-secrets lacks ${runtimeItem}`);
+    }
+
+    const scheduler = (traffic.steps ?? []).find((step) => step.id === "configure-review-worker-scheduler");
+    if (!scheduler) {
+      problems.push(`${trafficFile}: step configure-review-worker-scheduler is missing`);
+    } else {
+      if (!(scheduler.secretEnv ?? []).map(String).includes(token)) {
+        problems.push(`${trafficFile}: scheduler step lacks ${token} in secretEnv`);
+      }
+      if (!(scheduler.env ?? []).map(String).includes("PROJECT_ID=$PROJECT_ID")) {
+        problems.push(`${trafficFile}: scheduler step lacks PROJECT_ID=$PROJECT_ID in env`);
+      }
+    }
+    const trafficSecrets = traffic.availableSecrets?.secretManager ?? [];
+    const tokenEntry = trafficSecrets.find(
+      (entry) =>
+        String(entry.env ?? "") === token &&
+        String(entry.versionName ?? "") === `projects/$PROJECT_ID/secrets/${token}/versions/latest`,
+    );
+    if (!tokenEntry) problems.push(`${trafficFile}: availableSecrets lacks the entry for ${token}`);
+    if (!trafficSecrets.some((entry) => String(entry.env ?? "") === "CODECAMP_DATABASE_URL")) {
+      problems.push(`${trafficFile}: availableSecrets lost the CODECAMP_DATABASE_URL entry`);
+    }
+    if (trafficSecrets.length !== 2) {
+      problems.push(`${trafficFile}: traffic_secrets=${trafficSecrets.length} expected traffic_secrets=2`);
+    }
+    must(problems.length === 0, `tick_token_problems=${problems.length}: ${problems.join("; ")}`);
   });
 });
