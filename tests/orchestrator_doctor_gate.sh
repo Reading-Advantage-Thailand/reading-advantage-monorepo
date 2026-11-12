@@ -2,17 +2,26 @@
 # Cases for the doctor gate: the behavior of measure/doctor.sh and the gate
 # record of the track.
 # Part A runs a copy of measure/doctor.sh in a temporary root. The root holds
-# three stub guard scripts and a stub pnpm on PATH. Part B reads the gate
-# record of the track through the track_dir_resolve helper, so the record
-# stays readable after the archive move.
+# three stub guard scripts and a stub tsx at node_modules/.bin/tsx. The step 4
+# command changes into packages/architecture-enforcement, so the stub tsx
+# models the real call path of the CLI. No pnpm layer sits between the stub
+# and the gate.
+# Part B reads the gate record of the track through the track_dir_resolve
+# helper, so the record stays readable after the archive move.
 # Every case removes its own temporary root. No fixture enters the repository.
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DOCTOR_SRC="$ROOT/measure/doctor.sh"
 TRACK_ID="doctor_gate_repair_20261112"
-PART_A_FLOOR=11
+PART_A_FLOOR=12
 RECORD_LINES_FLOOR=8
+TSX_ARGV="src/architecture-check-cli.ts --skip-input-snapshot-pin"
+CLI_COMMAND="(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)"
+DRIFT_LINE="Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports"
+OTHER_LINE="Architecture check failed: another failure"
+OWNER_CLAUSE="; the owner of the remaining drift is architecture_ci_input_pin_20261110"
+KNOWN_DRIFT_CLAUSE="; the known manifest drift is owned by architecture_ci_input_pin_20261110"
 
 CASES_TOTAL=0
 CASES_FAILED=0
@@ -76,41 +85,43 @@ write_all_guards() {
   write_stub_guard "orchestrator_review_execution_truthfulness.sh" "$guard_code"
 }
 
-# write_stub_pnpm: the stub logs its argv in pnpm.log at the root of the
-# scratch tree. The log stays out of bin, so the file list of the root does
-# not change because of the stub.
-write_stub_pnpm() {
-  local pnpm_code="$1"
-  local pnpm_path="$tmp_root/bin/pnpm"
-  mkdir -p "$tmp_root/bin"
+# write_stub_tsx: the stub tsx sits at the path of the real step 4 command.
+# It logs its argv in tsx.log at the root of the scratch tree and exits with
+# the code that the case sets. It prints the case message on stderr when the
+# case sets one.
+write_stub_tsx() {
+  local tsx_code="$1"
+  local tsx_path="$tmp_root/node_modules/.bin/tsx"
+  mkdir -p "$tmp_root/node_modules/.bin"
   {
     cat <<EOF
 #!/usr/bin/env bash
-printf '%s\n' "\$*" >>"$tmp_root/pnpm.log"
-exit $pnpm_code
+printf '%s\n' "\$*" >>"$tmp_root/tsx.log"
+if [ -n "\${DOCTOR_GATE_TSX_MESSAGE:-}" ]; then
+  printf '%s\n' "\$DOCTOR_GATE_TSX_MESSAGE" >&2
+fi
+exit $tsx_code
 EOF
-  } >"$pnpm_path"
-  chmod +x "$pnpm_path"
+  } >"$tsx_path"
+  chmod +x "$tsx_path"
 }
 
-# run_gate: run the copy of doctor.sh in the scratch root. The mode "stub"
-# puts the scratch bin first on PATH. The mode "no_stub" uses a PATH without
-# any pnpm, so the shell returns 127.
+# reset_tsx: remove the stub tsx and its log, and clear the case message.
+reset_tsx() {
+  rm -rf "$tmp_root/node_modules" "$tmp_root/tsx.log"
+  unset DOCTOR_GATE_TSX_MESSAGE
+}
+
+# run_gate: run the copy of doctor.sh in the scratch root. The PATH holds no
+# pnpm and no tsx outside the scratch tree, so no real tool runs.
 run_gate() {
-  local path_mode="${1:-stub}"
-  local gate_path
-  if [ "$path_mode" = "no_stub" ]; then
-    gate_path="$tmp_root/bin:/usr/bin:/bin"
-  else
-    gate_path="$tmp_root/bin:$PATH"
-  fi
-  gate_output="$(cd "$tmp_root" && PATH="$gate_path" bash measure/doctor.sh 2>&1)"
+  gate_output="$(cd "$tmp_root" && PATH="$tmp_root/bin:/usr/bin:/bin" bash measure/doctor.sh 2>&1)"
   gate_rc=$?
 }
 
-# pnpm_is_absent: the restricted PATH holds no pnpm.
-pnpm_is_absent() {
-  if ( PATH="$tmp_root/bin:/usr/bin:/bin"; command -v pnpm >/dev/null 2>&1 ); then
+# tsx_is_absent: the scratch tree holds no step 4 tool.
+tsx_is_absent() {
+  if [ -x "$tmp_root/node_modules/.bin/tsx" ]; then
     return 1
   fi
   return 0
@@ -123,21 +134,21 @@ output_has() {
   esac
 }
 
-pnpm_call_count() {
-  if [ -f "$tmp_root/pnpm.log" ]; then
-    grep -c '' "$tmp_root/pnpm.log"
+tsx_call_count() {
+  if [ -f "$tmp_root/tsx.log" ]; then
+    grep -c '' "$tmp_root/tsx.log"
   else
     echo 0
   fi
 }
 
 # list_root_files: the sorted file list of the scratch root, apart from
-# pnpm.log, which the stub writes.
+# tsx.log, which the stub writes.
 list_root_files() {
   local out=""
   local line
   while IFS= read -r line; do
-    if [ "$line" = "./pnpm.log" ]; then
+    if [ "$line" = "./tsx.log" ]; then
       continue
     fi
     out="$out$line
@@ -146,16 +157,16 @@ list_root_files() {
   printf '%s' "$out"
 }
 
-# Case pnpm_exit_1_gate_exits_0: a boundary verdict of 1 does not gate.
-case_pnpm_exit_1_gate_exits_0() {
+# Case tsx_exit_1_gate_exits_0: a boundary verdict of 1 does not gate.
+case_tsx_exit_1_gate_exits_0() {
   write_all_guards 0
-  write_stub_pnpm 1
-  run_gate stub
+  write_stub_tsx 1
+  run_gate
   if [ "$gate_rc" -ne 0 ]; then
     case_fail_reason="expected gate exit 0, got exit ${gate_rc}"
     return
   fi
-  if ! output_has 'ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110'; then
+  if ! output_has "ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110"; then
     case_fail_reason="the ARCHITECTURE line for exit 1 is missing"
     return
   fi
@@ -172,16 +183,16 @@ case_pnpm_exit_1_gate_exits_0() {
   fi
 }
 
-# Case pnpm_exit_0_gate_exits_0: a boundary verdict of 0 does not gate.
-case_pnpm_exit_0_gate_exits_0() {
+# Case tsx_exit_0_gate_exits_0: a boundary verdict of 0 does not gate.
+case_tsx_exit_0_gate_exits_0() {
   write_all_guards 0
-  write_stub_pnpm 0
-  run_gate stub
+  write_stub_tsx 0
+  run_gate
   if [ "$gate_rc" -ne 0 ]; then
     case_fail_reason="expected gate exit 0, got exit ${gate_rc}"
     return
   fi
-  if ! output_has 'ARCHITECTURE: step 4 exits 0; the owner of the remaining drift is architecture_ci_input_pin_20261110'; then
+  if ! output_has "ARCHITECTURE: step 4 exits 0; the owner of the remaining drift is architecture_ci_input_pin_20261110"; then
     case_fail_reason="the ARCHITECTURE line for exit 0 is missing"
     return
   fi
@@ -204,16 +215,16 @@ guard_failure_run() {
   local failing_guard="$1"
   write_all_guards 0
   write_stub_guard "$failing_guard" 1
-  write_stub_pnpm 0
-  run_gate stub
+  write_stub_tsx 0
+  run_gate
   if [ "$gate_rc" -ne 1 ]; then
     case_fail_reason="expected gate exit 1, got exit ${gate_rc}"
     return
   fi
   local calls
-  calls="$(pnpm_call_count)"
+  calls="$(tsx_call_count)"
   if [ "$calls" -ne 0 ]; then
-    case_fail_reason="pnpm_calls=${calls} expected=0"
+    case_fail_reason="tsx_calls=${calls} expected=0"
     return
   fi
   if output_has 'ARCHITECTURE:'; then
@@ -236,11 +247,41 @@ case_guard_truthfulness_failure_gate_exits_1() {
   guard_failure_run "orchestrator_review_execution_truthfulness.sh"
 }
 
-# Case pnpm_exit_2_gate_exits_1: a tool failure exits 1.
-case_pnpm_exit_2_gate_exits_1() {
+# Case tsx_exit_2_manifest_drift_gate_exits_0: the known manifest drift is
+# the recorded drift, so the gate exit code does not depend on it.
+case_tsx_exit_2_manifest_drift_gate_exits_0() {
   write_all_guards 0
-  write_stub_pnpm 2
-  run_gate stub
+  write_stub_tsx 2
+  export DOCTOR_GATE_TSX_MESSAGE="$DRIFT_LINE"
+  run_gate
+  if [ "$gate_rc" -ne 0 ]; then
+    case_fail_reason="expected gate exit 0, got exit ${gate_rc}"
+    return
+  fi
+  if ! output_has "ARCHITECTURE: step 4 exits 2; the known manifest drift is owned by architecture_ci_input_pin_20261110"; then
+    case_fail_reason="the known manifest drift ARCHITECTURE line is missing"
+    return
+  fi
+  if ! output_has 'DOCTOR: the three structural guard steps gate this exit code'; then
+    case_fail_reason="the DOCTOR gate line is missing"
+    return
+  fi
+  if output_has 'tool failure'; then
+    case_fail_reason="the output holds a tool failure text"
+    return
+  fi
+  if output_has 'did not produce a boundary verdict'; then
+    case_fail_reason="the output holds a boundary verdict failure text"
+  fi
+}
+
+# Case tsx_exit_2_other_line_gate_exits_1: an exit 2 with any other output
+# is a tool failure.
+case_tsx_exit_2_other_line_gate_exits_1() {
+  write_all_guards 0
+  write_stub_tsx 2
+  export DOCTOR_GATE_TSX_MESSAGE="$OTHER_LINE"
+  run_gate
   if [ "$gate_rc" -ne 1 ]; then
     case_fail_reason="expected gate exit 1, got exit ${gate_rc}"
     return
@@ -258,14 +299,16 @@ case_pnpm_exit_2_gate_exits_1() {
   fi
 }
 
-# Case pnpm_exit_127_gate_exits_1: no pnpm on PATH is a tool failure.
-case_pnpm_exit_127_gate_exits_1() {
+# Case tsx_exit_127_gate_exits_1: no step 4 tool on the path is a tool
+# failure. The case asserts that the tool is absent before the gate runs.
+case_tsx_exit_127_gate_exits_1() {
   write_all_guards 0
-  run_gate no_stub
-  if ! pnpm_is_absent; then
-    case_fail_reason="pnpm_absent=0 expected=1, the restricted PATH holds a pnpm"
+  reset_tsx
+  if ! tsx_is_absent; then
+    case_fail_reason="tsx_absent=0 expected=1, the scratch tree holds a step 4 tool"
     return
   fi
+  run_gate
   if [ "$gate_rc" -ne 1 ]; then
     case_fail_reason="expected gate exit 1, got exit ${gate_rc}"
     return
@@ -283,28 +326,30 @@ case_pnpm_exit_127_gate_exits_1() {
   fi
 }
 
-# Case architecture_argv_exact: the architecture command holds one call and
-# the pinned argv.
-case_architecture_argv_exact() {
+# Case tsx_argv_exact: the architecture command holds one call and the pinned
+# argv.
+case_tsx_argv_exact() {
   write_all_guards 0
-  write_stub_pnpm 0
-  run_gate stub
+  write_stub_tsx 0
+  run_gate
   local calls
-  calls="$(pnpm_call_count)"
+  calls="$(tsx_call_count)"
   if [ "$calls" -ne 1 ]; then
-    case_fail_reason="pnpm_calls=${calls} expected=1"
+    case_fail_reason="tsx_calls=${calls} expected=1"
     return
   fi
-  if ! grep -qxF -- 'architecture:check --skip-input-snapshot-pin' "$tmp_root/pnpm.log"; then
-    case_fail_reason="the pnpm log does not hold the pinned argv"
+  if ! grep -qxF -- "$TSX_ARGV" "$tmp_root/tsx.log"; then
+    case_fail_reason="the tsx log does not hold the pinned argv"
     return
   fi
-  if grep -qF -- 'architecture:pin:refresh' "$tmp_root/pnpm.log"; then
-    case_fail_reason="the pnpm log holds the pin refresh command"
+  if grep -qF -- 'architecture:pin:refresh' "$tmp_root/tsx.log"; then
+    case_fail_reason="the tsx log holds the pin refresh command"
   fi
 }
 
 # Case tool_failure_codes: every code other than 0 and 1 is a tool failure.
+# The loop runs the codes 2, 3, 126, and 137 with a stub, and the code 127
+# with no stub.
 case_tool_failure_codes() {
   local codes=( 2 3 126 137 127 )
   local codes_checked=0
@@ -314,19 +359,17 @@ case_tool_failure_codes() {
   fi
   local code
   for code in "${codes[@]}"; do
-    rm -rf "$tmp_root/tests" "$tmp_root/bin" "$tmp_root/pnpm.log"
-    mkdir -p "$tmp_root/tests" "$tmp_root/bin"
+    reset_tsx
     write_all_guards 0
     if [ "$code" = "127" ]; then
-      run_gate no_stub
-      if ! pnpm_is_absent; then
-        case_fail_reason="code 127: pnpm_absent=0 expected=1"
+      if ! tsx_is_absent; then
+        case_fail_reason="code 127: tsx_absent=0 expected=1"
         return
       fi
     else
-      write_stub_pnpm "$code"
-      run_gate stub
+      write_stub_tsx "$code"
     fi
+    run_gate
     codes_checked=$((codes_checked + 1))
     if [ "$gate_rc" -ne 1 ]; then
       case_fail_reason="code ${code}: expected gate exit 1, got exit ${gate_rc}"
@@ -354,15 +397,15 @@ case_tool_failure_codes() {
 # the run, not a fixed code.
 case_architecture_line_shows_code() {
   write_all_guards 0
-  write_stub_pnpm 0
-  run_gate stub
+  write_stub_tsx 0
+  run_gate
   if ! output_has 'step 4 exits 0;'; then
     case_fail_reason="the ARCHITECTURE line does not hold the code 0"
     return
   fi
-  rm -f "$tmp_root/pnpm.log"
-  write_stub_pnpm 1
-  run_gate stub
+  reset_tsx
+  write_stub_tsx 1
+  run_gate
   if ! output_has 'step 4 exits 1;'; then
     case_fail_reason="the ARCHITECTURE line does not hold the code 1"
   fi
@@ -371,20 +414,18 @@ case_architecture_line_shows_code() {
 # Case no_write_in_root: the gate writes no file in its root.
 case_no_write_in_root() {
   write_all_guards 0
-  write_stub_pnpm 1
+  write_stub_tsx 1
   local before
   before="$(list_root_files)"
-  run_gate stub
+  run_gate
   local after
   after="$(list_root_files)"
-  if [ "$before" != "$after" ]; then
-    case_fail_reason="the file list of the root changed during the run"
+  if [ -z "$gate_output" ]; then
+    case_fail_reason="the gate printed no output"
     return
   fi
-  local calls
-  calls="$(pnpm_call_count)"
-  if [ "$calls" -lt 1 ]; then
-    case_fail_reason="pnpm_calls=${calls} expected=1, the control wrote no call"
+  if [ "$before" != "$after" ]; then
+    case_fail_reason="the file list of the root changed during the run"
   fi
 }
 
@@ -451,6 +492,39 @@ verdict_exit_code() {
   printf '%s\n' "${text%%;*}"
 }
 
+head_line_of() {
+  local line
+  for line in "${record_lines[@]}"; do
+    case "$line" in
+      "- HEAD: "*) printf '%s\n' "$line"; return 0 ;;
+    esac
+  done
+  return 1
+}
+
+head_sha_of() {
+  local line="$1"
+  local text="${line#- HEAD: }"
+  printf '%s\n' "$text"
+}
+
+duration_line_of() {
+  local line
+  for line in "${record_lines[@]}"; do
+    if grep -qE '^- DURATION: step 4 took [0-9]+([.][0-9]+)? s, from the timing run at [0-9a-f]{7,12}$' <<<"$line"; then
+      printf '%s\n' "$line"
+      return 0
+    fi
+  done
+  return 1
+}
+
+duration_sha_of() {
+  local line="$1"
+  local text="${line##*at }"
+  printf '%s\n' "$text"
+}
+
 record_line_count() {
   local line
   local count=0
@@ -514,7 +588,7 @@ case_record_step_commands() {
       1) expected="bash tests/orchestrator_catalog.sh" ;;
       2) expected="bash tests/orchestrator_marker_vocabulary.sh" ;;
       3) expected="bash tests/orchestrator_review_execution_truthfulness.sh" ;;
-      4) expected="pnpm architecture:check --skip-input-snapshot-pin" ;;
+      4) expected="$CLI_COMMAND" ;;
     esac
     if ! line="$(step_line_for "$step_number")"; then
       case_fail_reason="the record holds no STEP ${step_number} line"
@@ -532,8 +606,8 @@ case_record_step_commands() {
   fi
 }
 
-# Case record_step_exit_codes: steps 1 to 3 exited 0, and step 4 exited 0
-# or 1.
+# Case record_step_exit_codes: steps 1 to 3 exited 0. Step 4 exited 0, 1, or
+# 2, and a 2 holds only with the known manifest drift.
 case_record_step_exit_codes() {
   load_record
   if [ ! -f "$record_path" ]; then
@@ -559,13 +633,18 @@ case_record_step_exit_codes() {
     return
   fi
   code="$(step_exit_code "$line")"
-  if [ "$code" != "0" ] && [ "$code" != "1" ]; then
-    case_fail_reason="the STEP 4 exit code is ${code}, expected 0 or 1"
+  if [ "$code" = "2" ]; then
+    if ! record_has "$KNOWN_DRIFT_CLAUSE"; then
+      case_fail_reason="the STEP 4 exit code is 2, and the VERDICT line does not hold the known manifest drift"
+      return
+    fi
+  elif [ "$code" != "0" ] && [ "$code" != "1" ]; then
+    case_fail_reason="the STEP 4 exit code is ${code}, expected 0, 1, or 2"
   fi
 }
 
-# Case record_verdict_line: the record holds the verdict line and its owner
-# clause.
+# Case record_verdict_line: the record holds the verdict line and one of its
+# two owner clauses.
 case_record_verdict_line() {
   load_record
   if [ ! -f "$record_path" ]; then
@@ -577,8 +656,8 @@ case_record_verdict_line() {
     case_fail_reason="the record holds no VERDICT line"
     return
   fi
-  if ! record_has '; the owner of the remaining drift is architecture_ci_input_pin_20261110'; then
-    case_fail_reason="the VERDICT line does not hold the owner clause"
+  if ! record_has "$OWNER_CLAUSE" && ! record_has "$KNOWN_DRIFT_CLAUSE"; then
+    case_fail_reason="the VERDICT line does not hold an owner clause"
   fi
 }
 
@@ -633,7 +712,8 @@ case_record_doctor_line() {
   fi
 }
 
-# Case record_duration_line: the record holds the duration of step 4.
+# Case record_duration_line: the record holds the duration of step 4 and
+# names its source run.
 case_record_duration_line() {
   load_record
   if [ ! -f "$record_path" ]; then
@@ -641,14 +721,42 @@ case_record_duration_line() {
     return
   fi
   local line
-  local found=0
-  for line in "${record_lines[@]}"; do
-    if grep -qE '^- DURATION: step 4 took [0-9]+([.][0-9]+)? s$' <<<"$line"; then
-      found=$((found + 1))
-    fi
-  done
-  if [ "$found" -ne 1 ]; then
-    case_fail_reason="duration_lines_checked=${found} expected=1"
+  if ! line="$(duration_line_of)"; then
+    case_fail_reason="the record holds no DURATION line with a source run"
+    return
+  fi
+  local seconds
+  seconds="${line#- DURATION: step 4 took }"
+  seconds="${seconds%% s,*}"
+  if ! [[ "$seconds" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+    case_fail_reason="the DURATION value is not a number of seconds"
+  fi
+}
+
+# Case record_duration_sha_matches_head: the sha of the DURATION source run
+# equals the HEAD value of the record.
+case_record_duration_sha_matches_head() {
+  load_record
+  if [ ! -f "$record_path" ]; then
+    case_fail_reason="the record file is absent: $record_path"
+    return
+  fi
+  local duration_line
+  local head_line
+  if ! duration_line="$(duration_line_of)"; then
+    case_fail_reason="the record holds no DURATION line with a source run"
+    return
+  fi
+  if ! head_line="$(head_line_of)"; then
+    case_fail_reason="the record holds no HEAD line"
+    return
+  fi
+  local duration_sha
+  local head_sha
+  duration_sha="$(duration_sha_of "$duration_line")"
+  head_sha="$(head_sha_of "$head_line")"
+  if [ "$duration_sha" != "$head_sha" ]; then
+    case_fail_reason="the DURATION sha ${duration_sha} differs from the HEAD sha ${head_sha}"
   fi
 }
 
@@ -696,7 +804,7 @@ run_case() {
     CASES_FAILED=$((CASES_FAILED + 1))
     return
   }
-  mkdir -p "$tmp_root/measure" "$tmp_root/tests" "$tmp_root/bin"
+  mkdir -p "$tmp_root/measure" "$tmp_root/tests" "$tmp_root/bin" "$tmp_root/packages/architecture-enforcement"
   cp "$DOCTOR_SRC" "$tmp_root/measure/doctor.sh"
   "case_$name"
   if [ -n "$case_fail_reason" ]; then
@@ -711,14 +819,15 @@ run_case() {
 run_part_a() {
   local total_before="$CASES_TOTAL"
   local failed_before="$CASES_FAILED"
-  run_case pnpm_exit_1_gate_exits_0
-  run_case pnpm_exit_0_gate_exits_0
+  run_case tsx_exit_1_gate_exits_0
+  run_case tsx_exit_0_gate_exits_0
   run_case guard_catalog_failure_gate_exits_1
   run_case guard_marker_failure_gate_exits_1
   run_case guard_truthfulness_failure_gate_exits_1
-  run_case pnpm_exit_2_gate_exits_1
-  run_case pnpm_exit_127_gate_exits_1
-  run_case architecture_argv_exact
+  run_case tsx_exit_2_manifest_drift_gate_exits_0
+  run_case tsx_exit_2_other_line_gate_exits_1
+  run_case tsx_exit_127_gate_exits_1
+  run_case tsx_argv_exact
   run_case tool_failure_codes
   run_case architecture_line_shows_code
   run_case no_write_in_root
@@ -738,6 +847,7 @@ run_part_b() {
   run_case record_owner_line
   run_case record_doctor_line
   run_case record_duration_line
+  run_case record_duration_sha_matches_head
   run_case record_head_line
   run_case record_lines_floor
   PART_B_TOTAL=$((CASES_TOTAL - total_before))
