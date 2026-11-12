@@ -1,7 +1,8 @@
 steps:
-  # The push holds no database step (decision D7 of the track per_app_cicd_20261107). The new
-  # revision must start against the old schema. The database steps run only in
-  # cloudbuild-traffic.yaml, by hand, on Daniel's word.
+  # The push holds no database step and no scheduler step (decision D7 of the track
+  # per_app_cicd_20261107). The new revision must start against the old schema. The database
+  # steps and the review worker scheduler step run only in cloudbuild-traffic.yaml, by hand,
+  # on Daniel's word.
 
   - name: "gcr.io/cloud-builders/docker"
     id: "build-image"
@@ -50,24 +51,8 @@ steps:
       - "--member=allUsers"
       - "--role=roles/run.invoker"
 
-  - name: "gcr.io/cloud-builders/gcloud"
-    id: "configure-review-worker-scheduler"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - "./apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh"
-    env:
-      - "PROJECT_ID=$PROJECT_ID"
-    secretEnv:
-      - "CODECAMP_REVIEW_WORKER_TICK_TOKEN"
-
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
-
-availableSecrets:
-  secretManager:
-    - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_REVIEW_WORKER_TICK_TOKEN/versions/latest"
-      env: "CODECAMP_REVIEW_WORKER_TICK_TOKEN"
 
 options:
   logging: CLOUD_LOGGING_ONLY

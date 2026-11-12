@@ -4,7 +4,7 @@
 # production database of codecamp-advantage and then moves traffic to the revision that a push built with
 # --no-traffic. The tag is sso-candidate: the latest push owns it.
 #
-# Order: release source bind, migrate, doctor check, traffic move.
+# Order: release source bind, migrate, doctor check, review worker scheduler, traffic move.
 # See docs/runbooks/traffic-moves.md.
 steps:
   # The first step compares the uploaded repository root with the release commit and stops the
@@ -41,6 +41,19 @@ steps:
     secretEnv:
       - "CODECAMP_DATABASE_URL"
 
+  # The scheduler step runs last but one. It creates or updates the review worker tick job on the
+  # live host. A failed step stops the build before the traffic move.
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "configure-review-worker-scheduler"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "./apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh"
+    env:
+      - "PROJECT_ID=$PROJECT_ID"
+    secretEnv:
+      - "CODECAMP_REVIEW_WORKER_TICK_TOKEN"
+
   # The traffic move runs last. It sends all traffic to the tagged revision of the push.
   - name: "gcr.io/cloud-builders/gcloud"
     id: "update-traffic"
@@ -60,6 +73,8 @@ availableSecrets:
   secretManager:
     - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_DATABASE_URL/versions/latest"
       env: "CODECAMP_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_REVIEW_WORKER_TICK_TOKEN/versions/latest"
+      env: "CODECAMP_REVIEW_WORKER_TICK_TOKEN"
 
 options:
   logging: CLOUD_LOGGING_ONLY
