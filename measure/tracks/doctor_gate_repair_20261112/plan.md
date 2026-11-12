@@ -83,7 +83,7 @@ Blast radius: `tests/orchestrator_marker_vocabulary.sh` (the predicate at line 5
 
 Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_gate.sh` and `doctor-gate-evidence.md`. Step 4 keeps the boundary check. The gate exit code no longer depends on it.
 
-- [ ] 2.1 Red: the doctor gate behavior and the gate record. Create `tests/orchestrator_doctor_gate.sh` with two parts.
+- [x] 2.1 Red: the doctor gate behavior and the gate record. Create `tests/orchestrator_doctor_gate.sh` with two parts. Commit `b6a2531c5` (automated evidence).
   - Part A, the gate behavior. Each case builds its own root in `<tmp>`. It writes these files: `<tmp>/measure/doctor.sh` (a copy of `measure/doctor.sh`), `<tmp>/tests/orchestrator_catalog.sh`, `<tmp>/tests/orchestrator_marker_vocabulary.sh`, and `<tmp>/tests/orchestrator_review_execution_truthfulness.sh` (stub guards that print a PASS line and exit 0), and `<tmp>/bin/pnpm` (an executable stub whose exit code the case sets). Each case runs `cd <tmp>`, `PATH=<tmp>/bin:$PATH`, `bash measure/doctor.sh 2>&1`, and captures the exit code and the output. The case name states the expected exit.
   - Case `pnpm_exit_1_gate_exits_0`: the stubs exit 0 and the pnpm stub exits 1. Expect exit 0. The output holds `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`.
   - Case `pnpm_exit_0_gate_exits_0`: the pnpm stub exits 0. Expect exit 0. The output holds `ARCHITECTURE: step 4 exits 0; the owner of the remaining drift is architecture_ci_input_pin_20261110`.
@@ -95,7 +95,28 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
   - Expected result at the base: exit 1. Four behavior cases fail. `pnpm_exit_1_gate_exits_0` gets the gate exit 1 from `set -euo pipefail` and no ARCHITECTURE line. `pnpm_exit_0_gate_exits_0` misses the ARCHITECTURE line. `pnpm_exit_2_gate_exits_1` exits 2. `pnpm_exit_127_gate_exits_1` exits 127. `guard_failure_gate_exits_1` passes at the base. Part B fails because the record is absent. Red is not a syntax error.
   - Check: `bash tests/orchestrator_doctor_gate.sh` exits 1 at the base, with the four named behavior cases and part B failing.
   - Commit: `test(measure): pin the doctor gate behavior (track_id: doctor_gate_repair_20261112)`, with the test file only.
-- [ ] 2.2 Green: `measure/doctor.sh`. Keep `set -euo pipefail` and the three guard steps as bare lines. Then:
+  - The file follows test-strategy.md section 6.5. It takes `--part a`, `--part b`, and no argument. The no-argument run runs both parts and exits 1 when a case fails. Each case builds its own root in `<tmp>`, copies `measure/doctor.sh` into `<tmp>/measure/`, writes three stub guards into `<tmp>/tests/`, and writes a stub `pnpm` into `<tmp>/bin/`. The stub logs its argv in `<tmp>/pnpm.log`. Each case removes its own `<tmp>` root. No fixture enters the repository.
+  - Evidence of the Red round (role: Measure Mid Red; model: minimax-cn-coding-plan/MiniMax-M3.1-Flash):
+    - `phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec`; `role_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec`; commit `b6a2531c597a700c1df08a184f3f908d450b8553`.
+    - Command: `bash tests/orchestrator_doctor_gate.sh --part a`. Exit 1 at the base. `cases_total=11 cases_failed=7`. The floor of 11 is met.
+    - Command: `bash tests/orchestrator_doctor_gate.sh --part b`. Exit 1 at the base. `cases_total=11 cases_failed=11`. The record is absent.
+    - Command: `bash tests/orchestrator_doctor_gate.sh`. Exit 1 at the base. `cases_total=22 cases_failed=18`.
+    - Command: `bash -n tests/orchestrator_doctor_gate.sh`. Exit 0.
+    - Case `pnpm_exit_1_gate_exits_0`: FAIL (expected gate exit 0, got exit 1).
+    - Case `pnpm_exit_0_gate_exits_0`: FAIL (the ARCHITECTURE line for exit 0 is missing).
+    - Case `guard_catalog_failure_gate_exits_1`: PASS. Case `guard_marker_failure_gate_exits_1`: PASS. Case `guard_truthfulness_failure_gate_exits_1`: PASS. These three are the named characterization cases.
+    - Case `pnpm_exit_2_gate_exits_1`: FAIL (expected gate exit 1, got exit 2).
+    - Case `pnpm_exit_127_gate_exits_1`: FAIL (expected gate exit 1, got exit 127).
+    - Case `architecture_argv_exact`: FAIL (the pnpm log does not hold the pinned argv).
+    - Case `tool_failure_codes`: FAIL (code 2: expected gate exit 1, got exit 2). The loop asserts `codes_checked=5` before it runs.
+    - Case `architecture_line_shows_code`: FAIL (the ARCHITECTURE line does not hold the code 0).
+    - Case `no_write_in_root`: PASS. This is the named characterization case.
+    - Part B cases `record_file_present`, `record_step_lines`, `record_step_commands`, `record_step_exit_codes`, `record_verdict_line`, `record_verdict_code_matches_step4`, `record_owner_line`, `record_doctor_line`, `record_duration_line`, `record_head_line`, and `record_lines_floor`: FAIL. The reason of each is that the record file is absent.
+    - The failing part A cases are the four plan behavior cases and the three added cases. The base runs `pnpm architecture:check` with no flag, and `set -euo pipefail` stops the script at the first non-zero exit.
+    - The 127 case and the 127 run of the tool-failure loop use `PATH=<tmp>/bin:/usr/bin:/bin`. Each asserts `pnpm_absent=1` before the run, so no real `pnpm` runs.
+    - A scratch copy of the test file, a scratch copy of `measure/doctor.sh` that holds the planned behavior, and a scratch record in the planned form make all 22 cases pass. The scratch root was outside the repository and was removed. The real `measure/doctor.sh` and the real record did not change.
+    - The commit holds `tests/orchestrator_doctor_gate.sh` only. No production file changed.
+- [~] 2.2 Green: `measure/doctor.sh`. Keep `set -euo pipefail` and the three guard steps as bare lines. Then:
   - Run the architecture step inside a capture block: `set +e`, `pnpm architecture:check --skip-input-snapshot-pin`, `architecture_status=$?`, `set -e`.
   - Print one ARCHITECTURE line. For an exit code of 0 or 1, the line reads `ARCHITECTURE: step 4 exits <code>; the owner of the remaining drift is architecture_ci_input_pin_20261110`.
   - For any other exit code (2, 127, and every code other than 0 or 1), print `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict`, then print `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`, then exit 1. A tool crash never passes the gate.
