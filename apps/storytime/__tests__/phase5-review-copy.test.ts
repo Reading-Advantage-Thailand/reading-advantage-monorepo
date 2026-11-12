@@ -32,6 +32,14 @@
 //     the server, and prints `review_port=<n>`.
 //   - The teacher-app item holds a sign-in line, so Daniel can open that item. The line sits in
 //     an element with the attribute `data-review-signin`, and its text is not empty.
+//   - The review page holds one page-level sign-in note. The note sits in an element with the
+//     attribute `data-review-signin-all`, outside every item block. The page holds exactly one
+//     such element. Its text names the path `/th/sign-in`, and it says that one sign-in opens
+//     all five items. The text holds the words `one sign-in` and `all five` in one sentence, in
+//     either order, so a loose text cannot pass.
+//   - No sign-in text of the page names `launcher` or `password`. The sign-in texts of the page
+//     are the `data-review-signin` line of the teacher-app item and the `data-review-signin-all`
+//     note. The check reads both texts, so it never passes on an empty list.
 //   - The launch script lives in `apps/storytime/scripts/review/launch-review-copy.ts`. The flat
 //     path `apps/storytime/scripts/launch-review-copy.ts` is the second accepted path. It exports
 //     `planLaunch(options)`: the options hold `port`, `contentDir`, `answersPath`, `passwordFile`,
@@ -100,6 +108,18 @@ interface ReviewAnswer {
   verdict: string;
   /** The comment of the owner. */
   comment: string;
+}
+
+/** One element of the review page, found by an attribute. */
+interface PageElement {
+  /** The start index of the element in the page. */
+  start: number;
+  /** The end index of the element in the page. */
+  end: number;
+  /** The text of the element, with the inner tags removed. */
+  text: string;
+  /** The value of the attribute of the element. */
+  value: string;
 }
 
 /** The options of the launch of the review copy. */
@@ -232,6 +252,72 @@ function blocksOf(page: string): Map<string, string> {
     blocks.set(entry.id, page.slice(entry.start, end));
   });
   return blocks;
+}
+
+/**
+ * Gives the range of the element that starts at an index.
+ * @param page The HTML of the page.
+ * @param index The index of the opening tag of the element.
+ * @returns The start index and the end index of the element, or null when the element has no end.
+ */
+function elementRangeAt(page: string, index: number): { start: number; end: number } | null {
+  const tag = /^<([a-zA-Z][a-zA-Z0-9-]*)/.exec(page.slice(index))?.[1];
+  if (!tag) return null;
+  const token = new RegExp(`<(/?)${tag}\\b[^>]*>`, "g");
+  token.lastIndex = index;
+  let depth = 0;
+  let hit = token.exec(page);
+  while (hit !== null) {
+    if (hit[1] === "/") {
+      depth -= 1;
+      if (depth === 0) return { start: index, end: hit.index + hit[0].length };
+    } else {
+      depth += 1;
+    }
+    hit = token.exec(page);
+  }
+  return null;
+}
+
+/**
+ * Gives the text of an element of the page, with the inner tags removed.
+ * @param page The HTML of the page.
+ * @param range The start index and the end index of the element.
+ * @returns The text of the element.
+ */
+function innerTextOf(page: string, range: { start: number; end: number }): string {
+  const openEnd = page.indexOf(">", range.start);
+  const closeStart = page.lastIndexOf("</", range.end);
+  const inner = page.slice(openEnd + 1, closeStart > openEnd ? closeStart : range.end);
+  return inner.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/**
+ * Gives every element of the page that holds an attribute.
+ * @param page The HTML of the page.
+ * @param name The name of the attribute.
+ * @returns The range, the text, and the value of each element.
+ */
+function pageElements(page: string, name: string): PageElement[] {
+  const open = new RegExp(
+    `<([a-zA-Z][a-zA-Z0-9-]*)[^>]*\\s${name}(?=[\\s=/>])(?:=["']([^"']*)["'])?[^>]*>`,
+    "g",
+  );
+  const found: PageElement[] = [];
+  let hit = open.exec(page);
+  while (hit !== null) {
+    const range = elementRangeAt(page, hit.index);
+    if (range) {
+      found.push({
+        start: range.start,
+        end: range.end,
+        text: innerTextOf(page, range),
+        value: hit[2] ?? "",
+      });
+    }
+    hit = open.exec(page);
+  }
+  return found;
 }
 
 /**
@@ -417,6 +503,69 @@ describe("Phase 5 review copy and review page (tasks 5.6 and 5.7, spec FR-5 and 
       text.toLowerCase().includes(hint.toLowerCase()),
     );
     expect(tells, "the sign-in line of the teacher-app item names no sign-in").toBe(true);
+  });
+
+  it("holds one page-level sign-in note outside every item block", async () => {
+    const module = await loadModule();
+    const page = renderPage(module);
+    const notes = pageElements(page, "data-review-signin-all");
+    expect(
+      notes.length,
+      "the review page holds no page-level sign-in note with the attribute data-review-signin-all",
+    ).toBe(1);
+    const note = notes[0];
+    expect(note, "the review page holds no page-level sign-in note").toBeDefined();
+    const text = note?.text ?? "";
+    expect(text.length, "the page-level sign-in note holds no text").toBeGreaterThan(0);
+    expect(
+      text.toLowerCase(),
+      "the page-level sign-in note names no path /th/sign-in",
+    ).toContain("/th/sign-in");
+    // A loose text cannot pass: the note must hold the words "one sign-in" and "all five" in
+    // one sentence, in either order. A note that only says "sign-in", that writes the count as
+    // the digit 5, or that puts the two claims in two different sentences fails this check.
+    const claims = /one sign[-\s]?in[^.]{0,140}all five|all five[^.]{0,140}one sign[-\s]?in/i;
+    expect(
+      claims.test(text),
+      "the page-level sign-in note does not say that one sign-in opens all five items",
+    ).toBe(true);
+    const items = pageElements(page, "data-review-item");
+    expect(items.length, "the review page holds other than five item blocks").toBe(5);
+    for (const item of items) {
+      const inside = (note?.start ?? 0) < item.end && (note?.end ?? 0) > item.start;
+      expect(
+        inside,
+        `the page-level sign-in note sits inside the item block ${item.value}`,
+      ).toBe(false);
+    }
+  });
+
+  it("names no launcher and no password in the sign-in texts of the review page", async () => {
+    const module = await loadModule();
+    const page = renderPage(module);
+    const notes = pageElements(page, "data-review-signin-all");
+    expect(
+      notes.length,
+      "the review page holds no page-level sign-in note, so no sign-in text covers the five items",
+    ).toBe(1);
+    const teacherBlock = blocksOf(page).get("teacher-app") ?? "";
+    expect(
+      teacherBlock,
+      "the teacher-app item holds no sign-in line with the attribute data-review-signin",
+    ).toMatch(/data-review-signin(?=[\s=/>])/);
+    const lines = pageElements(page, "data-review-signin");
+    expect(
+      lines.length,
+      "the review page holds no sign-in line for the teacher-app item",
+    ).toBeGreaterThanOrEqual(1);
+    const texts = [...notes, ...lines].map((element) => element.text.toLowerCase());
+    expect(texts.length, "the review page holds fewer than two sign-in texts").toBeGreaterThanOrEqual(
+      2,
+    );
+    for (const text of texts) {
+      expect(text, "a sign-in text of the review page names the launcher").not.toContain("launcher");
+      expect(text, "a sign-in text of the review page names the password").not.toContain("password");
+    }
   });
 
   it("holds a launch script that plans the review copy without a server or a database", async () => {
