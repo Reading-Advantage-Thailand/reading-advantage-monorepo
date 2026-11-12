@@ -116,7 +116,7 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
     - The 127 case and the 127 run of the tool-failure loop use `PATH=<tmp>/bin:/usr/bin:/bin`. Each asserts `pnpm_absent=1` before the run, so no real `pnpm` runs.
     - A scratch copy of the test file, a scratch copy of `measure/doctor.sh` that holds the planned behavior, and a scratch record in the planned form make all 22 cases pass. The scratch root was outside the repository and was removed. The real `measure/doctor.sh` and the real record did not change.
     - The commit holds `tests/orchestrator_doctor_gate.sh` only. No production file changed.
-- [~] 2.2 Green: `measure/doctor.sh`. Keep `set -euo pipefail` and the three guard steps as bare lines. Then:
+- [x] 2.2 Green: `measure/doctor.sh`. Commit `49f96a7d8` (automated evidence). Keep `set -euo pipefail` and the three guard steps as bare lines. Then:
   - Run the architecture step inside a capture block: `set +e`, `pnpm architecture:check --skip-input-snapshot-pin`, `architecture_status=$?`, `set -e`.
   - Print one ARCHITECTURE line. For an exit code of 0 or 1, the line reads `ARCHITECTURE: step 4 exits <code>; the owner of the remaining drift is architecture_ci_input_pin_20261110`.
   - For any other exit code (2, 127, and every code other than 0 or 1), print `ARCHITECTURE: step 4 exits <code>; this is a tool failure, not a boundary verdict`, then print `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`, then exit 1. A tool crash never passes the gate.
@@ -126,7 +126,14 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
   - Check: the full doctor run through the heavy-run prefix. Record the exit code of each of the four steps, the architecture verdict line, and the measured seconds.
   - If the heavy run exits 124, stop the task. The orchestrator reports the stop and asks the owner for the next action.
   - Commit: `fix(measure): record the architecture verdict in doctor (track_id: doctor_gate_repair_20261112)`.
-- [ ] 2.3 Green: the gate record. Write `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md` with these lines:
+  - Evidence of the Green round (role: Measure Jr Green; model: deepseek/deepseek-flash; `phase_base_sha=e592f824607cc220c02096e0a66d3174d1fe78ec`; `role_base_sha=02e9ee7e3d113269777d829ac7054e9dc0850e6b`; commit `49f96a7d845ccafca56c50ff5b1efddabad06691`):
+    - `bash -n measure/doctor.sh` exits 0.
+    - `bash tests/orchestrator_doctor_gate.sh --part a` exits 0. `cases_total=11 cases_failed=0`.
+    - Timing run through HEAVY on 2026-11-12: `time pnpm architecture:check --skip-input-snapshot-pin` exits 1, `real 2m45.684s`. `step4_seconds=165.684`. This run is a measurement, not the gate proof.
+    - Full run through HEAVY at HEAD `49f96a7d8`: doctor exits 0. Steps 1, 2, and 3 exit 0 and print `PASS: A12/A13 guard declarations and archive directories verified (6 guards)`, `PASS: measure anti-pattern catalog exists with A1-A15`, `PASS: all active track plans use only [ ], [~], [x], or [b] task markers (93 plans checked)`, and `PASS: executed review tracks are not fully blocked by deferred:review-execution`. Step 4 exits 1. The output holds `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`.
+    - Saved output: `measure/runs/doctor_gate_repair_20261112/doctor-run-49f96a7d8.log`. The log is not committed.
+    - Outcome table row 1 applies: step 4 exit 1, doctor exit 0. The commit holds `measure/doctor.sh` only. The Red test file did not change.
+- [x] 2.3 Green: the gate record. Commit `657059226` (automated evidence). Write `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md` with these lines:
   - `- HEAD: <short-sha>` and `- DATE: <YYYY-MM-DD>`.
   - `- STEP 1: bash tests/orchestrator_catalog.sh, exit <code>, <YYYY-MM-DD>`
   - `- STEP 2: bash tests/orchestrator_marker_vocabulary.sh, exit <code>, <YYYY-MM-DD>`
@@ -138,7 +145,16 @@ Blast radius: `measure/doctor.sh` and the new files `tests/orchestrator_doctor_g
   - `- DOCTOR: the three structural guard steps gate this exit code`
   - Check: `bash tests/orchestrator_doctor_gate.sh` exits 0 and reports the four step lines, the verdict line, and the owner line.
   - Commit: `docs(measure): record the doctor gate evidence (track_id: doctor_gate_repair_20261112)`.
-- [ ] 2.4 Phase check at one HEAD. Run `bash tests/orchestrator_doctor_gate.sh` and the full doctor run through the heavy-run prefix at one HEAD. Record each exit code and the step 4 seconds. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, and files under `measure/tracks/doctor_gate_repair_20261112/`. Record the result as automated.
+  - Evidence: `bash tests/orchestrator_doctor_gate.sh` exits 0 at HEAD `657059226f488c4af177067ad19d12434ed634f7`. `cases_total=22 cases_failed=0`. The record holds `HEAD: 49f96a7d8`, `STEP 1` to `STEP 3` at exit 0, `STEP 4` at exit 1, and `DURATION: step 4 took 165.684 s`. Every value comes from the saved output of the full run at `49f96a7d8`. The commit holds `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md` only.
+- [x] 2.4 Phase check at one HEAD. Record `657059226f488c4af177067ad19d12434ed634f7` (automated evidence). Run `bash tests/orchestrator_doctor_gate.sh` and the full doctor run through the heavy-run prefix at one HEAD. Record each exit code and the step 4 seconds. Run `git diff --name-only <phase_base_sha>..HEAD`. The list holds only `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, and files under `measure/tracks/doctor_gate_repair_20261112/`. Record the result as automated.
+  - Evidence at `HEAD=657059226f488c4af177067ad19d12434ed634f7` (both runs ran at this HEAD):
+    - `bash tests/orchestrator_doctor_gate.sh` exits 0. `cases_total=22 cases_failed=0`.
+    - `bash -n measure/doctor.sh` exits 0. `bash -n tests/orchestrator_doctor_gate.sh` exits 0.
+    - Full run through HEAVY at this HEAD: doctor exits 0. Steps 1 to 3 exit 0 and print their PASS lines (`(6 guards)`, `A1-A15`, `(93 plans checked)`, and the review-execution PASS line). Step 4 exits 1. The output holds `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`. `step4_seconds=165.684`, from the timing run of task 2.2.
+    - `bash tests/orchestrator_marker_vocabulary_cases.sh` exits 0, `cases_total=15 cases_failed=0`. `bash tests/orchestrator_catalog.sh` exits 0 with `PASS: measure anti-pattern catalog exists with A1-A15`.
+    - This track's paths in `git diff --name-only e592f8246..HEAD`: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, `measure/tracks/doctor_gate_repair_20261112/plan.md`, and `measure/tracks/doctor_gate_repair_20261112/doctor-gate-evidence.md`. No path under `apps/`, `packages/`, or `services/`.
+    - The range also holds `e3fd1aa38` (storytime_app_rebuild_20261025) and `09bb8e109` (accounting_drive_intake_20261109). Those paths belong to other tracks and are not listed.
+    - `git worktree list --porcelain` shows 7 worktrees. This track created none of the six other worktrees.
 
 ## Phase 3: The gate is green on master
 
