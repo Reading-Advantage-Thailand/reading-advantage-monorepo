@@ -247,13 +247,29 @@ Phase 2 acceptance note, 2026-11-12:
 
 Blast radius: `measure/doctor.sh`, `tests/orchestrator_doctor_gate.sh`, the registry entry in `measure/tracks.md`, and the track record. Tasks 3.0a and 3.0b change the exit 1 rule of `measure/doctor.sh`. The other tasks change no code path.
 
-- [ ] 3.0a Red: the exit 1 verdict rule. Add the cases to `tests/orchestrator_doctor_gate.sh` part A.
+- [~] 3.0a Red: the exit 1 verdict rule. Add the cases to `tests/orchestrator_doctor_gate.sh` part A.
   - Case 1: the stub CLI exits 1 and prints no verdict line. Expect gate exit 1. The output holds `ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict` and `DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1`.
   - Case 2, the m-cd case: the `cd` of the step 4 command fails in the scratch root. Expect gate exit 1. The output holds the two tool-failure lines.
   - Case 3, the positive control: the stub exits 1 and prints a whole verdict line. Expect gate exit 0. The output holds `ARCHITECTURE: step 4 exits 1; the owner of the remaining drift is architecture_ci_input_pin_20261110` and `DOCTOR: the three structural guard steps gate this exit code`.
   - Cases 1 and 2 fail at the base. Case 3 passes at the base. The base maps every exit 1 to a boundary verdict.
   - Red command: `bash tests/orchestrator_doctor_gate.sh --part a`. It must exit 1 at the base.
   - Commit: `test(measure): pin the doctor exit 1 verdict rule (track_id: doctor_gate_repair_20261112)`.
+  - Evidence of the Red round (role: Measure Mid Red; model: minimax-cn-coding-plan/MiniMax-M3.1-Flash):
+    - `phase_base_sha=6a059f1a909ce58db31533a8c81a28db62626fc1`; `role_base_sha=ce06cba2ee6152edf8180aa6d8ac5cb6a7c464be`; test commit `90a3abbd83129af288862d9a05fab1d9708e038c`.
+    - The strategy check passed before the work started. `git log -1 --format=%s -- measure/tracks/doctor_gate_repair_20261112/test-strategy.md` printed `docs(measure): add the doctor p3 exit 1 strategy (track_id: doctor_gate_repair_20261112)`.
+    - The commit holds `tests/orchestrator_doctor_gate.sh` only. No production file changed. `measure/doctor.sh` did not change.
+    - Command: `bash tests/orchestrator_doctor_gate.sh --part a`. Exit 1 at the base. `cases_total=19 cases_failed=4`. The floor of 19 is met.
+    - Command: `bash tests/orchestrator_doctor_gate.sh --part b`. Exit 0. `cases_total=12 cases_failed=0`.
+    - Command: `bash -n tests/orchestrator_doctor_gate.sh`. Exit 0.
+    - Case `tsx_exit_1_no_verdict_gate_exits_1`: FAIL (expected gate exit 1, got exit 0). The case asserts `tsx_message_set=0` before the run.
+    - Case `step4_cd_fails_gate_exits_1`: FAIL (expected gate exit 1, got exit 0). The m-cd case asserts `arch_dir_absent=1` before the run and `tsx_calls=0` after the run.
+    - Case `tsx_exit_1_verdict_in_longer_line_gate_exits_1`: FAIL (fixture_index=1: expected gate exit 1, got exit 0). The loop asserts `fixtures_checked=2` before it runs.
+    - Case `tsx_exit_1_malformed_verdict_gate_exits_1`: FAIL (shape_index=1: expected gate exit 1, got exit 0). The loop asserts `shapes_checked=7` before it runs.
+    - Case `tsx_exit_1_verdict_line_gate_exits_0`: PASS. Case `tsx_exit_2_verdict_line_gate_exits_1`: PASS. These two are the named characterization cases.
+    - The 13 cases of Phase 2 hold their expected results. The three changed cases `tsx_exit_1_gate_exits_0`, `architecture_line_shows_code`, and `no_write_in_root` pass with the new fixture.
+    - `failed_cases=tsx_exit_1_no_verdict_gate_exits_1,step4_cd_fails_gate_exits_1,tsx_exit_1_verdict_in_longer_line_gate_exits_1,tsx_exit_1_malformed_verdict_gate_exits_1`.
+    - A scratch copy of the test file and a scratch copy of `measure/doctor.sh` that holds the planned rule of task 3.0b make all 19 cases pass with `cases_total=19 cases_failed=0`. The scratch root sat outside the repository and was removed. The real `measure/doctor.sh` did not change.
+    - The stub gains `DOCTOR_GATE_TSX_STDOUT`. The real CLI writes the verdict line to stdout. `reset_tsx` unsets both message variables, and each new case calls it first.
 - [ ] 3.0b Green: the exit 1 rule of `measure/doctor.sh`.
   - Count exit 1 as a boundary verdict only when the step 4 output holds the verdict line. Match that line as a whole line, in the same kind as the `grep -qxF` match of the drift rule, with a pattern that holds the counts: `architecture check: [^ ]+ \(files=[0-9]+, findings=[0-9]+, parseErrors=[0-9]+\)`.
   - Change no other rule. The exit 0 rule, the exit 2 rules, and the printed text of every rule stay as FR-3 states.
