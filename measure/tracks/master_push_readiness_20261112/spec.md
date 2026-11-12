@@ -16,7 +16,7 @@ PM assignment A-55 is the master push of about 11-17. This track holds the in-re
 - **Phase 1:** the failing `cd-apps` matrix job of the codecamp-advantage app. It blocks the push.
 - **Phase 2:** the 4 old Primary test failures and the 2 Primary test suites that do not load. It does not block the push.
 
-This track does not push, deploy, move traffic, or change IAM.
+This track does not push, deploy, or move traffic. It changes IAM only in the `deferred:pm` grant of task 1.7.
 
 ### 1.1 PM decisions of 2026-11-12
 
@@ -103,11 +103,13 @@ Reasons: the push stays a no-traffic build, the fix follows decision D7, and the
 
 ### D-2 Alternative, not chosen: option A, grant the permission
 
-Daniel grants the scheduler permission to the Cloud Build service account, and the push file keeps the step. This option is not the default. The push then still changes live behavior before the traffic word. The PM can still choose option A. If the PM chooses it, the Green tasks of Phase 1 reduce to the IAM task, and the new check of FR-3 does not apply.
+The session grants the scheduler permission to the Cloud Build service account (the `deferred:pm` task), and the push file keeps the step. This option is not the default. The push then still changes live behavior before the traffic word. The PM can still choose option A. If the PM chooses it, the Green tasks of Phase 1 reduce to the IAM task, and the new check of FR-3 does not apply.
 
-### D-3 The IAM grant is a human gate in both options
+### D-3 The IAM grant is a PM setup item in both options
 
-The scheduler step needs `cloudscheduler.jobs.get`, `cloudscheduler.jobs.create`, and `cloudscheduler.jobs.update` for the Cloud Build service account. In option B, the grant must exist before the first codecamp traffic move. In option A, it must exist before the next push. This track does not grant it. The plan holds one task with the tag `deferred:daniel`.
+The scheduler step needs `cloudscheduler.jobs.get`, `cloudscheduler.jobs.create`, and `cloudscheduler.jobs.update` for the Cloud Build service account. In option B, the grant must exist before the first codecamp traffic move. In option A, it must exist before the next push. The PM decision of 2026-11-13 quotes: "2. Codecamp fix: Option B accepted, with the step just before update-traffic, so the rule "the traffic move runs last" stays. The scheduler permission is NOT deferred:daniel: it is an IAM setup item, so mark it deferred:pm. The session grants the narrowest role that works (for example roles/cloudscheduler.admin for the Cloud Build service account, on the codecamp project only), at the task before the first codecamp traffic move, logs the exact command, and the PM records it. Daniel's gate there is only his traffic word."
+
+The session grants the narrowest role that works at plan task 1.7, logs the exact command in the plan, and the PM records it. The plan task has the tag `deferred:pm`. Daniel's gate at the codecamp traffic move is only his traffic word. `codecamp-advantage` runs in project `reading-advantage` (`scripts/ci/apps.json`), which other apps share, so the grant covers that project. This track runs no grant before task 1.7.
 
 ### D-4 Phase 2 is a follow-up and does not block the push
 
@@ -137,7 +139,7 @@ Cases F-11 and F-16 of `scripts/ci/__tests__/cloudbuild-files.test.mjs` list the
 
 ### FR-6 The runbook names the step and its precondition
 
-The codecamp section of `docs/runbooks/traffic-moves.md` names the step `configure-review-worker-scheduler`. It states the three IAM permissions of D-3 and states that the grant is a precondition of the first traffic move.
+The codecamp section of `docs/runbooks/traffic-moves.md` names the step `configure-review-worker-scheduler`. It states the three IAM permissions of D-3 and states that the grant is a precondition of the first traffic move. It states that the session makes the grant under the `deferred:pm` task and that Daniel's gate at the traffic move is only his traffic word.
 
 ### FR-7 The registry carries the track
 
@@ -149,7 +151,7 @@ Task 2.0 lists each failing test and each suite that does not load, by file and 
 
 ## 5. Constraints
 
-- No push, no deploy, no Cloud Run change, no IAM change. No `gcloud` or `gh` command that writes.
+- No push, no deploy, no Cloud Run change, no IAM change except the `deferred:pm` grant of task 1.7. No other `gcloud` or `gh` command that writes.
 - No edit of `apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh`.
 - No edit of the plan of `codecamp_pr_review_recovery_20260820` or of `per_app_cicd_20261107`.
 - No new hash, checksum, or manifest (AGENTS.md, Hashing and Provenance Policy).
@@ -166,14 +168,14 @@ Task 2.0 lists each failing test and each suite that does not load, by file and 
 3. **AC-3.** The new FR-3 check passes, and it fails on a fixture push file that calls `gcloud scheduler`.
 4. **AC-4.** `grep -n "gcloud scheduler" apps/codecamp-advantage/cloudbuild.yaml` prints no line.
 5. **AC-5.** The runbook section of FR-6 holds the step name and the three permissions.
-6. **AC-6 (deferred:daniel).** The IAM grant exists before the first codecamp traffic move.
+6. **AC-6 (deferred:pm).** The IAM grant exists before the first codecamp traffic move, and its exact command sits in the command log of plan task 1.7.
 7. **AC-7 (deferred:daniel-push).** After Daniel's push word, the next `cd-apps` run ends in `success` for codecamp-advantage.
 8. **AC-8.** Task 2.0 lists every Primary failure and every suite that does not load, each with its reason.
 
 ## 7. Out of scope
 
 - The scheduler script and the tick route. Track `codecamp_pr_review_recovery_20260820` owns them.
-- The IAM grant itself and the push itself. Daniel owns both.
+- The IAM grant itself (a `deferred:pm` setup item, task 1.7) and the push itself (Daniel's push word).
 - The run 42596115488 failure of six apps. A later commit fixed it.
 - Any change to the live codecamp-advantage service or to live traffic.
 

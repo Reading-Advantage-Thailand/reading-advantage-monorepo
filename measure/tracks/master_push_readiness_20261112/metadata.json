@@ -10,7 +10,7 @@
   "author_model": "claude-code/claude-sonnet-5-5",
   "priority": "P1",
   "owner_chain": [
-    "Daniel (owner; push word, IAM grant, deploy gate)",
+    "Daniel (owner; push word, traffic word, deploy gate)",
     "Monorepo orchestrator (track owner)",
     "PM orchestrator (assignment A-55, decisions of 2026-11-12)"
   ],
@@ -18,7 +18,8 @@
     "PM, 2026-11-12, decision 2: \"Before that push: find and fix the failing cd-apps matrix job (11-09 and 11-12 runs ended in \"failure\"). Add it as an A-55 task, a light role, due 11-15.\"",
     "PM, 2026-11-12, decision 3: \"The 4 old Primary test failures and the 2 suites that do not load: one follow-up task, after the push list is ready (not a push blocker, because live has them too). Name it in the A-55 plan.\"",
     "Spec D-1: option B, move the scheduler step from the push file to the traffic file, is the default. The PM can still choose option A.",
-    "Spec D-3: the IAM grant to the Cloud Build service account is a human gate (deferred:daniel) in both options."
+    "PM, 2026-11-13, decision 2: \"2. Codecamp fix: Option B accepted, with the step just before update-traffic, so the rule \"the traffic move runs last\" stays. The scheduler permission is NOT deferred:daniel: it is an IAM setup item, so mark it deferred:pm. The session grants the narrowest role that works (for example roles/cloudscheduler.admin for the Cloud Build service account, on the codecamp project only), at the task before the first codecamp traffic move, logs the exact command, and the PM records it. Daniel's gate there is only his traffic word.\"",
+    "Spec D-3: the IAM grant to the Cloud Build service account is a PM setup item (deferred:pm) in both options."
   ],
   "dates": {
     "opened": "2026-11-12",
@@ -40,7 +41,7 @@
     "migration": false
   },
   "constraints": [
-    "No push, no deploy, no Cloud Run change, no IAM change; no gcloud or gh command that writes",
+    "No push, no deploy, no Cloud Run change, no IAM change except the deferred:pm grant of plan task 1.7; no other gcloud or gh command that writes",
     "No edit of apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh",
     "No change to the plans of other tracks (codecamp_pr_review_recovery_20260820, per_app_cicd_20261107)",
     "No new hash, checksum, or manifest (AGENTS.md Hashing and Provenance Policy)",

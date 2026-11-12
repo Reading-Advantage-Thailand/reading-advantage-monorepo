@@ -2,7 +2,7 @@
 
 > **Track ID:** `master_push_readiness_20261112` · **Spec:** [spec.md](./spec.md)
 > **Due:** Phase 1 on 2026-11-15 (PM decision 2). Phase 2 starts after the deploy word list goes to Daniel.
-> No push. No deploy. No IAM change.
+> No push. No deploy. No IAM change, except the `deferred:pm` grant of task 1.7.
 
 ## Rules for this plan
 
@@ -11,7 +11,7 @@
 - Phase 1 uses light roles only. Red runs on a model family other than the Green family. The orchestrator sets the models.
 - Stage named paths only. Never run `git add -A`, `git add .`, or `git add -u`. Commit with a pathspec: `git commit -m <msg> -- <paths>`.
 - No push, no deploy, no amend, no `--no-verify`, no `git reset`, `checkout`, `restore`, `revert`, or `stash`.
-- No `gcloud` or `gh` command that writes. No IAM change.
+- No `gcloud` or `gh` command that writes. No IAM change, except the grant of task 1.7.
 - No new hash, checksum, or manifest (`AGENTS.md`, Hashing and Provenance Policy).
 - Do not edit `apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh`. Do not edit the plan of `codecamp_pr_review_recovery_20260820`.
 - Commit headers are 100 characters or less and use a lower-case subject. Each header carries `(track_id: master_push_readiness_20261112)`.
@@ -42,7 +42,8 @@ Blast radius: `apps/codecamp-advantage/cloudbuild.yaml`, `apps/codecamp-advantag
   - Run `bash measure/doctor.sh` only when the doctor track has closed. Run `grep -n "gcloud scheduler" apps/codecamp-advantage/cloudbuild.yaml`. Record each exit code.
   - Check: the four commands pass, and the grep prints no line. This is the Phase 1 done-when.
 - [ ] 1.6 Tell the owner of `codecamp_pr_review_recovery_20260820` about the move. The Monorepo orchestrator sends a short message. No edit of that plan.
-- [b] 1.7 deferred:daniel — IAM grant. Daniel grants `cloudscheduler.jobs.get`, `cloudscheduler.jobs.create`, and `cloudscheduler.jobs.update` to the Cloud Build service account of project `reading-advantage`, before the first codecamp traffic move. The grant is also needed before the first push of master that carries commit `fd6a99142`, if the accounting scheduler starts at that push (see spec section 2.7). Do not grant it in this track.
+- [b] 1.7 deferred:pm — IAM setup item. Before the first codecamp traffic move, the session grants the narrowest role that works to the Cloud Build service account of project `reading-advantage` (for example `roles/cloudscheduler.admin`). The role must cover `cloudscheduler.jobs.get`, `cloudscheduler.jobs.create`, and `cloudscheduler.jobs.update`. The session logs the exact command in this plan, and the PM records it. `codecamp-advantage` runs in project `reading-advantage` (`scripts/ci/apps.json`), which other apps share, so the grant covers that project. The grant is also needed before the first push of master that carries commit `fd6a99142`, if the accounting scheduler starts at that push (see spec section 2.7). Daniel's gate at the codecamp traffic move is only his traffic word. Do not grant it before this task runs.
+  - Command log: (empty until the grant runs)
 - [b] 1.8 deferred:daniel-push — after Daniel's push word, the next `cd-apps` run ends in `success` for codecamp-advantage. Record the run id.
 - [ ] 1.9 Push check (read-only, before the deploy word list goes to Daniel): A-52 Phase 3 is accepted, and `grep -n 'gcloud scheduler' apps/*/cloudbuild.yaml` and the scripts those push files run print no line, or each line is named on the deploy word list with its IAM grant. Review A of A-52 Phase 3 holds this risk as finding F301.
 

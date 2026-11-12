@@ -12,7 +12,7 @@ The `cd-apps` job of codecamp-advantage fails at build step 4, because the push 
 
 - The fix is fixed: option B (spec D-1). Option A is recorded as the alternative, with the reason it is not the default.
 - The tasks name the files, the step id, the secret, the tests, and the commit headers.
-- The IAM grant and the push check are human gates with tags `deferred:daniel` and `deferred:daniel-push`.
+- The IAM grant is a PM setup item with the tag `deferred:pm`. The push check is a human gate with the tag `deferred:daniel-push`.
 - Phase 2 task 2.0 lists the items first. Tasks after 2.1 depend on that list, so the plan names them as added after task 2.1. This is the one planned gap, and it follows PM decision 3.
 - Three open questions hold defaults. No task waits on an answer.
 
