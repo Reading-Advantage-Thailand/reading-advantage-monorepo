@@ -1,0 +1,51 @@
+{
+  "track_id": "master_push_readiness_20261112",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-11-12T00:00:00Z",
+  "updated_at": "2026-11-12T00:00:00Z",
+  "opened": "2026-11-12",
+  "due": "2026-11-15",
+  "description": "In-repo plan of PM assignment A-55 (master push of about 11-17): fix the failing cd-apps codecamp-advantage job by moving the scheduler step to the traffic file (Phase 1), then list and fix the old Primary test failures (Phase 2).",
+  "author_model": "claude-code/claude-sonnet-5-5",
+  "priority": "P1",
+  "owner_chain": [
+    "Daniel (owner; push word, IAM grant, deploy gate)",
+    "Monorepo orchestrator (track owner)",
+    "PM orchestrator (assignment A-55, decisions of 2026-11-12)"
+  ],
+  "decisions": [
+    "PM, 2026-11-12, decision 2: \"Before that push: find and fix the failing cd-apps matrix job (11-09 and 11-12 runs ended in \"failure\"). Add it as an A-55 task, a light role, due 11-15.\"",
+    "PM, 2026-11-12, decision 3: \"The 4 old Primary test failures and the 2 suites that do not load: one follow-up task, after the push list is ready (not a push blocker, because live has them too). Name it in the A-55 plan.\"",
+    "Spec D-1: option B, move the scheduler step from the push file to the traffic file, is the default. The PM can still choose option A.",
+    "Spec D-3: the IAM grant to the Cloud Build service account is a human gate (deferred:daniel) in both options."
+  ],
+  "dates": {
+    "opened": "2026-11-12",
+    "due": "2026-11-15"
+  },
+  "scope": {
+    "program": "monorepo",
+    "files": [
+      "apps/codecamp-advantage/cloudbuild.yaml",
+      "apps/codecamp-advantage/cloudbuild-traffic.yaml",
+      "apps/codecamp-advantage/lib/__tests__/review-worker-deployment-contract.test.ts",
+      "scripts/ci/__tests__/cloudbuild-files.test.mjs",
+      "docs/runbooks/traffic-moves.md",
+      "measure/tracks/master_push_readiness_20261112",
+      "measure/tracks.md"
+    ],
+    "product_change": false,
+    "migration": false
+  },
+  "constraints": [
+    "No push, no deploy, no Cloud Run change, no IAM change; no gcloud or gh command that writes",
+    "No edit of apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh",
+    "No change to the plans of other tracks (codecamp_pr_review_recovery_20260820, per_app_cicd_20261107)",
+    "No new hash, checksum, or manifest (AGENTS.md Hashing and Provenance Policy)",
+    "Tests first; one commit per task with a pathspec",
+    "Phase 1 uses light roles only"
+  ],
+  "estimated_tasks": 12,
+  "actual_tasks": 0
+}
